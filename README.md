@@ -14,7 +14,13 @@ LifeCompanion mono repository containing LifeCompanion app, server, side project
 
 ### [lifecompanionaac.org](https://lifecompanionaac.org)
 
-**TODO : write short and clean general info for LC**
+LifeCompanion is a **free custom-made digital assistant for Augmentative and Alternative Communication and computer access.** Highly customizable, it can be used as communication assistance software thanks to its speech synthesis, but also as computer access tool (visual/virtual keyboard, mouse movements, shortcuts, etc.)
+
+LifeCompanion is developed since 2015 by [CMRRF Kerpape](http://kerpape.mutualite56.fr/fr) (rehabilitation center located in Lorient, France) and [CoWork'HIT](https://coworkhit.com/) (innovative center on autonomy and technology located in Lorient, France).
+It has been used in various reasearch and innovation projects, and was recently supported by French ["Agence du Numérique en Santé"](https://esante.gouv.fr/) for [Structures 3.0 project](https://lifecompanionaac.org/categories/projects/lc-ms-structures-3-0)
+
+LifeCompanion is currently available in french only, but we are seeking for partners to translate it.
+
 
 ## Changelog
 
