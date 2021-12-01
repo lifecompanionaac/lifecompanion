@@ -1,5 +1,15 @@
 # LIFECOMPANION CHANGELOG
 
+## 1.1.1 - XX/XX/2021
+
+### Fonctionnalités
+
+- Ajout de la possibilité de choisir la couleur du contour de la souris virtuel
+
+### Corrections/ajustements
+
+-
+
 ## 1.1.0 - 05/11/2021
 
 ### Fonctionnalités

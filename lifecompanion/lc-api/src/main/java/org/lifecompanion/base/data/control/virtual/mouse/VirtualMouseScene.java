@@ -42,12 +42,12 @@ public class VirtualMouseScene extends Scene implements LCViewInitHelper {
 	/**
 	 * Root for this scene
 	 */
-	private Group root;
+	private final Group root;
 
 	/**
 	 * All possible drawing
 	 */
-	private Map<VirtualMouseDrawing, VirtualMouseDrawingI> possiblesDrawing;
+	private final Map<VirtualMouseDrawing, VirtualMouseDrawingI> possiblesDrawing;
 
 	public VirtualMouseScene(final Group root) {
 		super(root);

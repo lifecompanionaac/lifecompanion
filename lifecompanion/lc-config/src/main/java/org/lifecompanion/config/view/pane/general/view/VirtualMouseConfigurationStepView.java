@@ -41,7 +41,7 @@ import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 
 public class VirtualMouseConfigurationStepView extends BorderPane implements GeneralConfigurationStepViewI, LCViewInitHelper {
     private Slider sliderMouseSpeed, sliderMouseSize;
-    private ColorPicker pickerMouseColor;
+    private ColorPicker pickerMouseColor,pickerMouseStrokeColor;
     private ComboBox<VirtualMouseDrawing> comboboxVirtualMouseDrawing;
 
     private LCConfigurationI model;
@@ -94,6 +94,13 @@ public class VirtualMouseConfigurationStepView extends BorderPane implements Gen
         labelMouseColor.setMinWidth(GeneralConfigurationStepViewI.LEFT_COLUMN_MIN_WIDTH);
         GridPane.setHalignment(pickerMouseColor, HPos.RIGHT);
 
+        this.pickerMouseStrokeColor = new ColorPicker();
+        UIUtils.createAndAttachTooltip(pickerMouseStrokeColor, "tooltip.explain.use.param.virtual.mouse.stroke.color");
+        pickerMouseStrokeColor.setMaxWidth(Double.MAX_VALUE);
+        Label labelMouseStrokeColor = new Label(Translation.getText("virtual.mouse.stroke.color"));
+        labelMouseColor.setMinWidth(GeneralConfigurationStepViewI.LEFT_COLUMN_MIN_WIDTH);
+        GridPane.setHalignment(pickerMouseStrokeColor, HPos.RIGHT);
+
         this.sliderMouseSize = UIUtils.createBaseSlider(4, 20, 10);
         UIUtils.createAndAttachTooltip(sliderMouseSize, "tooltip.explain.use.param.virtual.mouse.size");
         Label labelMouseSize = new Label(Translation.getText("virtual.mouse.size"));
@@ -124,6 +131,8 @@ public class VirtualMouseConfigurationStepView extends BorderPane implements Gen
         gridPaneTotal.add(comboboxVirtualMouseDrawing, 1, gridRowIndex++);
         gridPaneTotal.add(labelMouseColor, 0, gridRowIndex);
         gridPaneTotal.add(pickerMouseColor, 1, gridRowIndex++);
+        gridPaneTotal.add(labelMouseStrokeColor, 0, gridRowIndex);
+        gridPaneTotal.add(pickerMouseStrokeColor, 1, gridRowIndex++);
         gridPaneTotal.add(labelMouseSize, 0, gridRowIndex);
         gridPaneTotal.add(sliderMouseSize, 1, gridRowIndex++);
 
@@ -135,6 +144,7 @@ public class VirtualMouseConfigurationStepView extends BorderPane implements Gen
     @Override
     public void saveChanges() {
         model.getVirtualMouseParameters().mouseColorProperty().set(pickerMouseColor.getValue());
+        model.getVirtualMouseParameters().mouseStrokeColorProperty().set(pickerMouseStrokeColor.getValue());
         model.getVirtualMouseParameters().mouseSizeProperty().set((int) sliderMouseSize.getValue());
         model.getVirtualMouseParameters().mouseSpeedProperty().set((int) sliderMouseSpeed.getValue());
         model.getVirtualMouseParameters().mouseDrawingProperty().set(this.comboboxVirtualMouseDrawing.getValue());
@@ -144,6 +154,7 @@ public class VirtualMouseConfigurationStepView extends BorderPane implements Gen
     public void bind(LCConfigurationI model) {
         this.model = model;
         this.pickerMouseColor.setValue(model.getVirtualMouseParameters().mouseColorProperty().get());
+        this.pickerMouseStrokeColor.setValue(model.getVirtualMouseParameters().mouseStrokeColorProperty().get());
         this.sliderMouseSize.adjustValue(model.getVirtualMouseParameters().mouseSizeProperty().get());
         this.sliderMouseSpeed.adjustValue(model.getVirtualMouseParameters().mouseSpeedProperty().get());
         this.comboboxVirtualMouseDrawing.getSelectionModel().select(model.getVirtualMouseParameters().mouseDrawingProperty().get());

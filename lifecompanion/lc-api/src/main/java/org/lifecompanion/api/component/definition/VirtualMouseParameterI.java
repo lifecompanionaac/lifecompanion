@@ -33,20 +33,25 @@ public interface VirtualMouseParameterI extends XMLSerializable<IOContextI> {
 	/**
 	 * @return the mouse drawing color
 	 */
-	public ObjectProperty<Color> mouseColorProperty();
+	ObjectProperty<Color> mouseColorProperty();
+
+	/**
+	 * @return the mouse stroke drawing color
+	 */
+	ObjectProperty<Color> mouseStrokeColorProperty();
 
 	/**
 	 * @return the type of drawing we want for the mouse
 	 */
-	public ObjectProperty<VirtualMouseDrawing> mouseDrawingProperty();
+	ObjectProperty<VirtualMouseDrawing> mouseDrawingProperty();
 
 	/**
 	 * @return the size of virtual mouse drawing
 	 */
-	public IntegerProperty mouseSizeProperty();
+	IntegerProperty mouseSizeProperty();
 
 	/**
 	 * @return the mouse speed on move
 	 */
-	public IntegerProperty mouseSpeedProperty();
+	IntegerProperty mouseSpeedProperty();
 }

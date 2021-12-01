@@ -19,11 +19,10 @@
 package org.lifecompanion.config.data.action.impl;
 
 import javafx.collections.ObservableList;
-import javafx.scene.paint.Color;
 import org.lifecompanion.api.action.definition.UndoRedoActionI;
-import org.lifecompanion.api.component.definition.*;
+import org.lifecompanion.api.component.definition.LCConfigurationI;
+import org.lifecompanion.api.component.definition.RootGraphicComponentI;
 import org.lifecompanion.api.exception.LCException;
-import org.lifecompanion.base.data.action.definition.BasePropertyChangeAction;
 import org.lifecompanion.base.data.common.PositionSize;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -108,7 +107,8 @@ public class LCConfigurationComponentActions {
      * To change the grid size on configuration
      */
     public static class ChangeGridSizeConfigurationAction extends BaseConfigurationLayoutChangeAction implements UndoRedoActionI {
-        private int previous, current;
+        private int previous;
+        private final int current;
 
         public ChangeGridSizeConfigurationAction(final LCConfigurationI configurationP, final int currentP) {
             super(configurationP);
@@ -139,183 +139,9 @@ public class LCConfigurationComponentActions {
         }
     }
 
-    /**
-     * Action to change the first selected component
-     */
-    public static class ChangeFirstComponentAction extends BasePropertyChangeAction<GridComponentI> implements UndoRedoActionI {
-
-        public ChangeFirstComponentAction(final LCConfigurationI configuration, final GridComponentI wantedValueP) {
-            super(configuration.firstSelectionPartProperty(), wantedValueP);
-        }
-
-        @Override
-        public String getNameID() {
-            return "action.change.first.selected.component";
-        }
-    }
-
-    public static class ChangeConfigBackgroundColorAction extends BasePropertyChangeAction<Color> implements UndoRedoActionI {
-
-        public ChangeConfigBackgroundColorAction(final LCConfigurationI configuration, final Color wantedValueP) {
-            super(configuration.backgroundColorProperty(), wantedValueP);
-        }
-
-        @Override
-        public String getNameID() {
-            return "action.change.config.background.color";
-        }
-    }
-
-    public static class ChangeKeepRatioProperty extends BasePropertyChangeAction<Boolean> implements UndoRedoActionI {
-        public ChangeKeepRatioProperty(final LCConfigurationI configuration, final Boolean wantedValueP) {
-            super(configuration.keepConfigurationRatioProperty(), wantedValueP);
-        }
-
-        @Override
-        public String getNameID() {
-            return "action.change.config.keep.ratio";
-        }
-    }
-
-    public static class ChangeVirtualKeyboardAction extends BasePropertyChangeAction<Boolean> implements UndoRedoActionI {
-
-        public ChangeVirtualKeyboardAction(final LCConfigurationI configuration, final Boolean wantedValueP) {
-            super(configuration.virtualKeyboardProperty(), wantedValueP);
-        }
-
-        @Override
-        public String getNameID() {
-            return "action.change.config.virtual.keyboard";
-        }
-    }
-
-    public static class ChangeSecuredConfigurationModedAction extends BasePropertyChangeAction<Boolean> implements UndoRedoActionI {
-
-        public ChangeSecuredConfigurationModedAction(final LCConfigurationI configuration, final Boolean wantedValueP) {
-            super(configuration.securedConfigurationModeProperty(), wantedValueP);
-        }
-
-        @Override
-        public String getNameID() {
-            return "action.change.config.secured.configuration.mode";
-        }
-    }
-    //========================================================================
-
-    // Class part : "Size"
-    //========================================================================
-    public static class ChangeFramePositionOnLaunchAction extends BasePropertyChangeAction<FramePosition> implements UndoRedoActionI {
-
-        public ChangeFramePositionOnLaunchAction(final LCConfigurationI configuration, final FramePosition wantedValueP) {
-            super(configuration.framePositionOnLaunchProperty(), wantedValueP);
-        }
-
-        @Override
-        public String getNameID() {
-            return "action.change.configuration.frame.position.on.launch";
-        }
-    }
-
-    public static class ChangeFrameOpacityAction extends BasePropertyChangeAction<Number> implements UndoRedoActionI {
-
-        public ChangeFrameOpacityAction(final LCConfigurationI configuration, final Number wantedValueP) {
-            super(configuration.frameOpacityProperty(), wantedValueP);
-        }
-
-        @Override
-        public String getNameID() {
-            return "action.change.config.frame.opacity";
-        }
-    }
-
-    public static class ChangeMouseColorAction extends BasePropertyChangeAction<Color> implements UndoRedoActionI {
-
-        public ChangeMouseColorAction(final LCConfigurationI configuration, final Color wantedValueP) {
-            super(configuration.getVirtualMouseParameters().mouseColorProperty(), wantedValueP);
-        }
-
-        @Override
-        public String getNameID() {
-            return "action.change.virtual.mouse.color";
-        }
-    }
-
-    public static class ChangeMouseSizeAction extends BasePropertyChangeAction<Number> implements UndoRedoActionI {
-
-        public ChangeMouseSizeAction(final LCConfigurationI configuration, final Number wantedValueP) {
-            super(configuration.getVirtualMouseParameters().mouseSizeProperty(), wantedValueP);
-        }
-
-        @Override
-        public String getNameID() {
-            return "action.change.virtual.mouse.size";
-        }
-    }
-
-    public static class ChangeMouseSpeedAction extends BasePropertyChangeAction<Number> implements UndoRedoActionI {
-
-        public ChangeMouseSpeedAction(final LCConfigurationI configuration, final Number wantedValueP) {
-            super(configuration.getVirtualMouseParameters().mouseSpeedProperty(), wantedValueP);
-        }
-
-        @Override
-        public String getNameID() {
-            return "action.change.virtual.mouse.speed";
-        }
-    }
-
-    public static class ChangeMouseDrawingAction extends BasePropertyChangeAction<VirtualMouseDrawing> implements UndoRedoActionI {
-
-        public ChangeMouseDrawingAction(final LCConfigurationI configuration, final VirtualMouseDrawing wantedValueP) {
-            super(configuration.getVirtualMouseParameters().mouseDrawingProperty(), wantedValueP);
-        }
-
-        @Override
-        public String getNameID() {
-            return "action.change.virtual.mouse.draw";
-        }
-    }
-
-    public static class ChangePredictionCharSpace extends BasePropertyChangeAction<String> implements UndoRedoActionI {
-
-        public ChangePredictionCharSpace(final LCConfigurationI configuration, final String oldValueP, final String wantedValueP) {
-            super(configuration.getPredictionParameters().charPredictionSpaceCharProperty(), oldValueP, wantedValueP);
-        }
-
-        @Override
-        public String getNameID() {
-            return "action.change.prediction.char.space";
-        }
-    }
-
-    public static class ChangeWordPredictorId extends BasePropertyChangeAction<String> implements UndoRedoActionI {
-
-        public ChangeWordPredictorId(final LCConfigurationI configuration, final String wantedValueP) {
-            super(configuration.getPredictionParameters().selectedWordPredictorIdProperty(), wantedValueP);
-        }
-
-        @Override
-        public String getNameID() {
-            return "action.change.word.predictor.id";
-        }
-    }
-
-    public static class ChangeCharPredictorId extends BasePropertyChangeAction<String> implements UndoRedoActionI {
-
-        public ChangeCharPredictorId(final LCConfigurationI configuration, final String wantedValueP) {
-            super(configuration.getPredictionParameters().selectedCharPredictorIdProperty(), wantedValueP);
-        }
-
-        @Override
-        public String getNameID() {
-            return "action.change.char.predictor.id";
-        }
-    }
-    //========================================================================
 
     // Class part : "Abstract"
     //========================================================================
-
     /**
      * Helper class for action to use configuration component
      */
@@ -331,7 +157,7 @@ public class LCConfigurationComponentActions {
      * Helper class for action that change the configuration layout of children
      */
     public abstract static class BaseConfigurationLayoutChangeAction extends BaseConfigurationAction {
-        private Map<RootGraphicComponentI, PositionSize> savedLayout;
+        private final Map<RootGraphicComponentI, PositionSize> savedLayout;
 
         public BaseConfigurationLayoutChangeAction(final LCConfigurationI configurationP) {
             super(configurationP);

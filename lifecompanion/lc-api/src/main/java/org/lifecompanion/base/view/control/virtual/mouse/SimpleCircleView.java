@@ -19,41 +19,75 @@
 
 package org.lifecompanion.base.view.control.virtual.mouse;
 
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.StrokeType;
 import org.lifecompanion.base.data.control.virtual.mouse.VirtualMouseController;
 import org.lifecompanion.base.data.control.virtual.mouse.VirtualMouseDrawingI;
 
-public class SimpleCircleView extends Circle implements VirtualMouseDrawingI {
+import java.util.Arrays;
+import java.util.List;
 
-	private final static double BASE_CIRCLE_RADIUS = 30.0, BASE_CIRCLE_STROKE = 7.0;
+public class SimpleCircleView extends Group implements VirtualMouseDrawingI {
 
-	public SimpleCircleView() {
-		this.setFill(Color.TRANSPARENT);
-	}
+    private final static double BASE_CIRCLE_RADIUS = 40.0, BASE_CIRCLE_STROKE = 10.0, BASE_EXT_INT_STROKE = 4.0;
 
-	@Override
-	public Node getView() {
-		return this;
-	}
+    private final Circle baseCircle, extCircle, intCircle;
+    private final List<Circle> circles;
 
-	@Override
-	public void bind(final VirtualMouseController mouseController) {
-		this.layoutXProperty().bind(mouseController.mouseXProperty());
-		this.layoutYProperty().bind(mouseController.mouseYProperty());
-		this.strokeProperty().bind(mouseController.colorProperty());
-		this.radiusProperty().bind(mouseController.sizeScaleProperty().multiply(SimpleCircleView.BASE_CIRCLE_RADIUS));
-		this.strokeWidthProperty().bind(mouseController.sizeScaleProperty().multiply(SimpleCircleView.BASE_CIRCLE_STROKE));
-	}
+    public SimpleCircleView() {
 
-	@Override
-	public void unbind() {
-		this.layoutXProperty().unbind();
-		this.layoutYProperty().unbind();
-		this.strokeProperty().unbind();
-		this.radiusProperty().unbind();
-		this.strokeWidthProperty().unbind();
-	}
+        baseCircle = new Circle();
+        baseCircle.setFill(Color.TRANSPARENT);
+        baseCircle.setStrokeType(StrokeType.INSIDE);
+
+        extCircle = new Circle();
+        extCircle.setFill(Color.TRANSPARENT);
+        extCircle.setStrokeType(StrokeType.OUTSIDE);
+
+        intCircle = new Circle();
+        intCircle.setFill(Color.TRANSPARENT);
+        intCircle.setStrokeType(StrokeType.INSIDE);
+
+        circles = Arrays.asList(baseCircle, extCircle, intCircle);
+        this.getChildren().addAll(circles);
+    }
+
+    @Override
+    public Node getView() {
+        return this;
+    }
+
+    @Override
+    public void bind(final VirtualMouseController mouseController) {
+        this.layoutXProperty().bind(mouseController.mouseXProperty());
+        this.layoutYProperty().bind(mouseController.mouseYProperty());
+
+        extCircle.strokeProperty().bind(mouseController.strokeColorProperty());
+        extCircle.radiusProperty().bind(baseCircle.radiusProperty());
+        extCircle.strokeWidthProperty().bind(mouseController.sizeScaleProperty().multiply(SimpleCircleView.BASE_EXT_INT_STROKE));
+
+        intCircle.strokeProperty().bind(mouseController.strokeColorProperty());
+        intCircle.radiusProperty().bind(baseCircle.radiusProperty().subtract(baseCircle.strokeWidthProperty()));
+        intCircle.strokeWidthProperty().bind(mouseController.sizeScaleProperty().multiply(SimpleCircleView.BASE_EXT_INT_STROKE));
+
+        baseCircle.strokeProperty().bind(mouseController.colorProperty());
+        baseCircle.radiusProperty().bind(mouseController.sizeScaleProperty().multiply(SimpleCircleView.BASE_CIRCLE_RADIUS));
+        baseCircle.strokeWidthProperty().bind(mouseController.sizeScaleProperty().multiply(SimpleCircleView.BASE_CIRCLE_STROKE));
+
+    }
+
+    @Override
+    public void unbind() {
+        this.layoutXProperty().unbind();
+        this.layoutYProperty().unbind();
+        for (Circle circle : circles) {
+            circle.strokeProperty().unbind();
+            circle.radiusProperty().unbind();
+            circle.strokeWidthProperty().unbind();
+        }
+    }
 
 }

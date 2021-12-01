@@ -22,9 +22,9 @@ package org.lifecompanion.base.data.control.virtual.mouse;
 import javafx.scene.Node;
 
 public interface VirtualMouseDrawingI {
-	public Node getView();
+	Node getView();
 
-	public void bind(VirtualMouseController mouseController);
+	void bind(VirtualMouseController mouseController);
 
-	public void unbind();
+	void unbind();
 }

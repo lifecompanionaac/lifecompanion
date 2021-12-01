@@ -18,17 +18,17 @@
  */
 package org.lifecompanion.base.data.component.simple;
 
-import org.jdom2.Element;
-
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.paint.Color;
+import org.jdom2.Element;
 import org.lifecompanion.api.component.definition.VirtualMouseDrawing;
 import org.lifecompanion.api.component.definition.VirtualMouseParameterI;
 import org.lifecompanion.api.exception.LCException;
 import org.lifecompanion.api.io.IOContextI;
+import org.lifecompanion.base.data.config.LCGraphicStyle;
 import org.lifecompanion.framework.commons.fx.io.XMLGenericProperty;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 
@@ -40,19 +40,23 @@ import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 public class VirtualMouseParameter implements VirtualMouseParameterI {
 
     @XMLGenericProperty(Color.class)
-    private ObjectProperty<Color> mouseColor;
+    private final ObjectProperty<Color> mouseColor;
+
+    @XMLGenericProperty(Color.class)
+    private final ObjectProperty<Color> mouseStrokeColor;
 
     @XMLGenericProperty(VirtualMouseDrawing.class)
-    private ObjectProperty<VirtualMouseDrawing> mouseDrawing;
+    private final ObjectProperty<VirtualMouseDrawing> mouseDrawing;
 
-    private IntegerProperty mouseSize;
-    private IntegerProperty mouseSpeed;
+    private final IntegerProperty mouseSize;
+    private final IntegerProperty mouseSpeed;
 
     public VirtualMouseParameter() {
-        this.mouseColor = new SimpleObjectProperty<>(this, "mouseColor", Color.CADETBLUE);
-        this.mouseDrawing = new SimpleObjectProperty<>(this, "mouseDrawing", VirtualMouseDrawing.SIMPLE_CIRCLE);
-        this.mouseSize = new SimpleIntegerProperty(this, "mouseSize", 10);//4 -> 20 : 10 = ratio 1.0
-        this.mouseSpeed = new SimpleIntegerProperty(this, "mouseSpeed", 5);// 1 -> 10 : 5 = average speed
+        this.mouseColor = new SimpleObjectProperty<>(Color.CADETBLUE);
+        this.mouseStrokeColor = new SimpleObjectProperty<>(LCGraphicStyle.LC_BLACK);
+        this.mouseDrawing = new SimpleObjectProperty<>(VirtualMouseDrawing.SIMPLE_CIRCLE);
+        this.mouseSize = new SimpleIntegerProperty(10);//4 -> 20 : 10 = ratio 1.0
+        this.mouseSpeed = new SimpleIntegerProperty(5);// 1 -> 10 : 5 = average speed
     }
 
     // Class part : "Properties"
@@ -60,6 +64,11 @@ public class VirtualMouseParameter implements VirtualMouseParameterI {
     @Override
     public ObjectProperty<Color> mouseColorProperty() {
         return this.mouseColor;
+    }
+
+    @Override
+    public ObjectProperty<Color> mouseStrokeColorProperty() {
+        return mouseStrokeColor;
     }
 
     @Override

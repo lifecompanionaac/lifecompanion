@@ -107,7 +107,7 @@ public enum VirtualMouseController implements ModeListenerI {
     /**
      * View color
      */
-    private final ObjectProperty<Color> color;
+    private final ObjectProperty<Color> color, strokeColor;
 
     /**
      * Mouse drawing
@@ -125,6 +125,7 @@ public enum VirtualMouseController implements ModeListenerI {
         this.sizeScale = new SimpleDoubleProperty();
         this.timePerPixelSpeed = new SimpleDoubleProperty();
         this.color = new SimpleObjectProperty<>();
+        this.strokeColor = new SimpleObjectProperty<>();
         this.mouseDrawing = new SimpleObjectProperty<>();
         this.timeline = new Timeline();
         this.timeline.setCycleCount(1);
@@ -158,6 +159,10 @@ public enum VirtualMouseController implements ModeListenerI {
 
     public ReadOnlyObjectProperty<Color> colorProperty() {
         return this.color;
+    }
+
+    public ReadOnlyObjectProperty<Color> strokeColorProperty() {
+        return this.strokeColor;
     }
 
     public ReadOnlyObjectProperty<VirtualMouseDrawing> mouseDrawingProperty() {
@@ -362,7 +367,7 @@ public enum VirtualMouseController implements ModeListenerI {
 
     private void moveFrameToAvoidMouse() {
         //Dirty but optimized : other rectangles are not created when not needed
-        LOGGER.info("Contains : {},{} = {},{}",this.frameWidth / 2, this.frameHeight / 2,this.mouseX.get(), this.mouseY.get());
+        LOGGER.info("Contains : {},{} = {},{}", this.frameWidth / 2, this.frameHeight / 2, this.mouseX.get(), this.mouseY.get());
         //Top left
         if (new Rectangle2D(0, 0, this.frameWidth / 2, this.frameHeight / 2).contains(this.mouseX.get(), this.mouseY.get())) {
             AppController.INSTANCE.moveFrameTo(FramePosition.BOTTOM_RIGHT);
@@ -454,6 +459,7 @@ public enum VirtualMouseController implements ModeListenerI {
                     () -> 1.0 / configuration.getVirtualMouseParameters().mouseSpeedProperty().get() * VirtualMouseController.TIME_PER_PIXEL,
                     configuration.getVirtualMouseParameters().mouseSpeedProperty()));
             this.color.bind(configuration.getVirtualMouseParameters().mouseColorProperty());
+            this.strokeColor.bind(configuration.getVirtualMouseParameters().mouseStrokeColorProperty());
             this.mouseDrawing.bind(configuration.getVirtualMouseParameters().mouseDrawingProperty());
         }
     }
@@ -464,6 +470,7 @@ public enum VirtualMouseController implements ModeListenerI {
             this.sizeScale.unbind();
             this.timePerPixelSpeed.unbind();
             this.color.unbind();
+            this.strokeColor.unbind();
             this.mouseDrawing.unbind();
             this.hideMouseFrame();
         }

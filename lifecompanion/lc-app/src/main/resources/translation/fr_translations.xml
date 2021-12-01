@@ -1210,6 +1210,7 @@
   <text key="configuration.menu.no.name">Configuration sans nom</text>
   <!--org.lifecompanion.config.data.action.impl, org.lifecompanion.config.view.pane.general.view-->
   <text key="virtual.mouse.color">Couleur du curseur virtuel</text>
+  <text key="virtual.mouse.stroke.color">Couleur du contour du curseur virtuel</text>
   <text key="virtual.mouse.size">Taille du curseur virtuel</text>
   <text key="virtual.mouse.speed">Vitesse de déplacement</text>
   <!--org.lifecompanion.config.data.component.profile-->
@@ -1549,6 +1550,7 @@
 		LifeCompanion ne pourra pas
 		détecter d'appui de touches de clavier.</text>
   <text key="tooltip.explain.use.param.virtual.mouse.color">La couleur du curseur de la souris virtuelle.</text>
+  <text key="tooltip.explain.use.param.virtual.mouse.stroke.color">La couleur du contour du curseur de la souris virtuelle.</text>
   <text key="tooltip.explain.use.param.virtual.mouse.draw">Permet de changer le dessin du curseur de la souris
 		virtuelle.</text>
   <text key="tooltip.explain.use.param.virtual.mouse.size">La taille de la souris virtuelle affichée (plus la
