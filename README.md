@@ -8,7 +8,7 @@
 
 LifeCompanion mono repository containing LifeCompanion app, server, side projects, resources and documentation.
 
-**DISCLAIMER : LifeCompanion was a running project long before opening its source code to community. Some parts may be : unoptimized, dirty, untested, weird... We are aweware that some code, build, deployment could be improved, but as the development is heavely priorized and constrainted by costs, only some key features are focused :-) That said, you're welcome to contribute !**
+**DISCLAIMER : LifeCompanion was a running project long before opening its source code to community. Some parts may be : unoptimized, dirty, untested, weird... We are aware that some code, build, deployment could be improved, but as the development is heavely priorized and constrainted by costs, only some key features are focused :-) That said, you're welcome to contribute !**
 
 # General information
 

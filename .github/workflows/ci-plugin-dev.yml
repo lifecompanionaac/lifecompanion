@@ -9,7 +9,7 @@ on:
 
 jobs:
   call-workflow-passing-data:
-    uses: lifecompanionaac/lifecompanion-fv/.github/workflows/ci-lifecompanion.yml@master
+    uses: lifecompanionaac/lifecompanion/.github/workflows/ci-lifecompanion.yml@master
     with:
       target_env: dev
       runs_on: ubuntu-latest

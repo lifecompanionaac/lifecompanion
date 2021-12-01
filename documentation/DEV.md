@@ -25,7 +25,7 @@ TODO : main/develop/features
 
 Development environment installed and tested on Windows 10 and Ubuntu.
 
-## Note on Gralde command
+## Note on Gradle command
 
 ### Gradle task designation
 
@@ -57,7 +57,7 @@ To solve that, explicitly call your Gradle exe on Windows call : `.\gradlew.bat 
 ### How to build/run LifeCompanion application
 
 1. Build and publish **lifecompanion-framework** libs : run task `gradle publishToMavenLocal` in **lifecompanion-framework**
-1. Download [lifecompanion build resources](https://drive.google.com/drive/folders/1hfDceAcCTd5Xz-No9hoi4PBfrxtkYLO9?usp=sharing) in **lifecompanion/lc-app/data** (and extract every zips to a folder from its name without ".zip") - you can also copy data directory from an installed version of LifeCompanion
+1. Copy **data** folder from an official LifeCompanion installation in **lifecompanion/lc-app/data** - if you're an official dev, you can copy it from S3
 1. Copy **installation.properties** and **launcher.properties** from **resources/default-data** to **lifecompanion/lc-app/data** (in *installation.properties* change *userDataDirectory* to your wanted path)
 1. Run task `gradle :lc-app:run` in **lifecompanion**
 
