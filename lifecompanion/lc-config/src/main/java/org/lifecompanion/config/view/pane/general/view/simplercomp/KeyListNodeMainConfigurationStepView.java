@@ -68,7 +68,7 @@ public class KeyListNodeMainConfigurationStepView extends BorderPane implements 
     public void initUI() {
         keyListContentConfigView = new KeyListContentConfigView();
         this.setCenter(keyListContentConfigView);
-        this.setPadding(new Insets(GeneralConfigurationStepViewI.PADDING));
+        this.setPadding(new Insets(GeneralConfigurationStepViewI.PADDING/2, GeneralConfigurationStepViewI.PADDING, GeneralConfigurationStepViewI.PADDING, GeneralConfigurationStepViewI.PADDING));
     }
     //========================================================================
 
@@ -84,14 +84,14 @@ public class KeyListNodeMainConfigurationStepView extends BorderPane implements 
     public void bind(LCConfigurationI model) {
         this.model = model;
         editedRoot = (KeyListNodeI) model.rootKeyListNodeProperty().get().duplicate(false);
-        this.keyListContentConfigView.editNodeProperty().set(editedRoot);
+        this.keyListContentConfigView.rootKeyListNodeProperty().set(editedRoot);
     }
 
     @Override
     public void unbind(LCConfigurationI model) {
         this.model = null;
         this.editedRoot = null;
-        keyListContentConfigView.editNodeProperty().set(null);
+        keyListContentConfigView.rootKeyListNodeProperty().set(null);
     }
 
     @Override
