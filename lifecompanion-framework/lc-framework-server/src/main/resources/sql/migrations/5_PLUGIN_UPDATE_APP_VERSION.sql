@@ -1,0 +1,1 @@
+ALTER TABLE application_plugin_update ADD COLUMN min_app_version VARCHAR(255);

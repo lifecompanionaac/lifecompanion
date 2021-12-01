@@ -1,0 +1,104 @@
+/*
+ * LifeCompanion AAC and its sub projects
+ *
+ * Copyright (C) 2014 to 2019 Mathieu THEBAUD
+ * Copyright (C) 2020 to 2021 CMRRF KERPAPE (Lorient, France)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, version 3 of the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package org.lifecompanion.base.data.component.keyoption.simplercomp;
+
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import org.jdom2.Element;
+import org.lifecompanion.api.component.definition.simplercomp.KeyListNodeI;
+import org.lifecompanion.api.component.definition.useaction.BaseUseActionI;
+import org.lifecompanion.api.component.definition.useaction.UseActionEvent;
+import org.lifecompanion.api.exception.LCException;
+import org.lifecompanion.api.io.IOContextI;
+import org.lifecompanion.base.data.useaction.impl.keylist.current.SelectKeyNodeAction;
+import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
+
+import java.util.List;
+
+/**
+ * @author Mathieu THEBAUD <math.thebaud@gmail.com>
+ */
+public class KeyListNodeKeyOption extends AbstractSimplerKeyActionContainerKeyOption<KeyListNodeI> {
+    private final SelectKeyNodeAction selectKeyNodeAction;
+    private final IntegerProperty selectedLevel;
+    private final BooleanProperty specificLevel;
+    private final BooleanProperty displayLevelBellow;
+
+    public KeyListNodeKeyOption() {
+        super();
+        this.optionNameId = "key.option.key.list.category.display.name";
+        this.iconName = "icon_type_keylist_key.png";
+
+        selectKeyNodeAction = new SelectKeyNodeAction();
+        selectKeyNodeAction.attachedToKeyOptionProperty().set(true);
+
+        selectedLevel = new SimpleIntegerProperty(1);
+        specificLevel = new SimpleBooleanProperty(false);
+        displayLevelBellow = new SimpleBooleanProperty(true);
+    }
+
+    public IntegerProperty selectedLevelProperty() {
+        return selectedLevel;
+    }
+
+    public BooleanProperty specificLevelProperty() {
+        return specificLevel;
+    }
+
+    public BooleanProperty displayLevelBellowProperty() {
+        return displayLevelBellow;
+    }
+
+    @Override
+    protected List<BaseUseActionI<?>> getActionsToAddFor(UseActionEvent event) {
+        final List<BaseUseActionI<?>> actionsToAddFor = super.getActionsToAddFor(event);
+        if (event == UseActionEvent.ACTIVATION) {
+            actionsToAddFor.add(0, selectKeyNodeAction);
+        }
+        return actionsToAddFor;
+    }
+
+    @Override
+    protected List<BaseUseActionI<?>> getActionsToRemoveFor(UseActionEvent event) {
+        final List<BaseUseActionI<?>> actionsToRemoveFor = super.getActionsToRemoveFor(event);
+        if (event == UseActionEvent.ACTIVATION) {
+            actionsToRemoveFor.add(selectKeyNodeAction);
+        }
+        return actionsToRemoveFor;
+    }
+
+    @Override
+    public Element serialize(final IOContextI context) {
+        Element elem = super.serialize(context);
+        XMLObjectSerializer.serializeInto(KeyListNodeKeyOption.class, this, elem);
+        return elem;
+    }
+
+    @Override
+    public void deserialize(final Element node, final IOContextI context) throws LCException {
+        super.deserialize(node, context);
+        XMLObjectSerializer.deserializeInto(KeyListNodeKeyOption.class, this, node);
+        // Find a previous update incorrect default value problem
+        if (this.selectedLevel.get() <= 0) {
+            selectedLevel.set(1);
+        }
+    }
+}

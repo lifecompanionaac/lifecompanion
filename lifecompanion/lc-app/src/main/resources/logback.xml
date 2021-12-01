@@ -1,0 +1,29 @@
+<configuration>
+	<appender name="CONSOLE_APPENDER" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<charset>UTF-8</charset>
+			<pattern>[%d{HH:mm:ss.SSS}][%-5level][%thread][%logger{0}] %msg%n%ex
+			</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="FILE_APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${java.io.tmpdir}/LifeCompanion/logs/application.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${java.io.tmpdir}/LifeCompanion/logs/application.%d{yyyy-MM-dd}.log</fileNamePattern>
+			<maxHistory>30</maxHistory>
+			<totalSizeCap>10MB</totalSizeCap>
+		</rollingPolicy>
+		<encoder>
+			<charset>UTF-8</charset>
+			<pattern>[%d{dd/MM/yyyy-HH:mm:ss.SSS}][%-5level][%thread][%logger{120}] %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+
+	<root level="INFO">
+		<appender-ref ref="CONSOLE_APPENDER" />
+		<appender-ref ref="FILE_APPENDER" />
+	</root>
+</configuration>
+

@@ -1,0 +1,19 @@
+name: ci-installer-dev
+
+on: workflow_dispatch
+
+jobs:
+  call-workflow-passing-data:
+    uses: lifecompanionaac/lifecompanion-fv/.github/workflows/ci-lifecompanion.yml@master
+    with:
+      target_env: dev
+      runs_on: windows-latest
+      gradle_command: :lc-installer:publishInstaller
+      install_innosetup: true
+    secrets:
+      framework_server_url: ${{ secrets.LIFECOMPANION_FRAMEWORK_SERVER_URL_DEV }}
+      framework_server_login: ${{ secrets.LIFECOMPANION_FRAMEWORK_SERVER_LOGIN_DEV }}
+      framework_server_password: ${{ secrets.LIFECOMPANION_FRAMEWORK_SERVER_PASSWORD_DEV }}
+      app_server_url: ${{ secrets.LIFECOMPANION_APP_SERVER_URL_DEV }}
+      app_server_query_parameters: ${{ secrets.LIFECOMPANION_APP_SERVER_QUERY_PARAMETERS_DEV }}
+      app_server_public_key: ${{ secrets.LIFECOMPANION_APP_SERVER_PUBLIC_KEY_DEV }}

@@ -1,0 +1,91 @@
+import org.lifecompanion.build.PublishLauncherTask
+
+plugins {
+    id 'edu.sc.seis.launch4j' version '2.5.0'
+    id 'org.javamodularity.moduleplugin' version '1.6.0'
+    id 'org.lifecompanion.gradle.plugin.publish-launcher'
+}
+
+ext {
+    mainClassNameWithoutModule = 'org.lifecompanion.launcher.LauncherApplication'
+}
+
+version = project.property('lifecompanion.launcher.version')
+
+dependencies {
+    implementation 'org.lifecompanion:lc-framework-commons:1.0.0'
+}
+
+processResources {
+    outputs.upToDateWhen { false }
+    filesMatching('**launcher.properties') {
+        expand(
+                'version': project.version,
+                'buildDate': new Date().getTime(),
+                'launcherPath': getLauncherPathFromOs('WINDOWS') // resource is only used on Windows
+        )
+    }
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': "$mainClassNameWithoutModule"
+    }
+    from {
+        configurations.runtimeClasspath.filter({ (it.name.startsWith('org.lifecompanion.launcher') || it.name.startsWith('org.lifecompanion.framework.commons')) }).collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+}
+
+launch4j {
+    mainClassName = "$mainClassNameWithoutModule"
+    bundledJrePath = './application'
+    outputDir = 'launchers/WINDOWS'
+    outfile = 'LifeCompanion.exe'
+    copyright = 'Mathieu THEBAUD'
+    companyName = 'CMRRF Kerpape'
+    fileDescription = 'LifeCompanion'
+    productName = 'LifeCompanion'
+    internalName = 'LifeCompanion'
+    icon = "${projectDir}/build-src/lifecompanion_icon.ico"
+}
+
+task publishWindowsLauncher(type : PublishLauncherTask) {
+    dependsOn 'createExe'
+    file =  "$buildDir/launchers/WINDOWS/LifeCompanion.exe"
+    system = 'WINDOWS'
+}
+
+task publishUnixLauncher(type : PublishLauncherTask) {
+    dependsOn  prepareSHLauncher('UNIX')
+    file =  "$buildDir/launchers/UNIX/lifecompanion.sh"
+    system = 'UNIX'
+}
+
+task publishMacLauncher(type : PublishLauncherTask) {
+    dependsOn  prepareSHLauncher('MAC')
+    file =  "$buildDir/launchers/MAC/lifecompanion.sh"
+    system = 'MAC'
+}
+
+def prepareSHLauncher(String system) {
+    return tasks.create("prepareSh${system}", Copy) {
+        group = 'lifecompanion'
+        description '(INTERNAL TASK) Prepare the template SH script for Unix and Mac launchers'
+        outputs.upToDateWhen { false }
+        from file("$buildDir/../build-src/lifecompanion.sh")
+        into file("$buildDir/launchers/$system")
+        filesMatching('lifecompanion.sh') {
+            expand(
+                    'version': project.version,
+                    'buildDate': new Date().getTime(),
+                    'launcherPath': getLauncherPathFromOs(system)
+            )
+        }
+    }
+}
+
+static String getLauncherPathFromOs(String osName) {
+    return 'WINDOWS'.equalsIgnoreCase(osName) ? 'LifeCompanion.exe' : 'MAC'.equalsIgnoreCase(osName) ? 'MacOS/lifecompanion.sh' : 'launcher/lifecompanion.sh';
+}

@@ -1,0 +1,116 @@
+import com.github.jk1.license.render.TextReportRenderer
+
+plugins {
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.0.10'
+    id 'org.beryx.jlink' version '2.23.8'
+    id 'com.github.jk1.dependency-license-report' version '1.17'
+    id 'org.lifecompanion.gradle.plugin.env-conf'
+    id 'org.lifecompanion.gradle.plugin.download-jdk-jfx'
+    id 'org.lifecompanion.gradle.plugin.publish-application'
+}
+
+javafx {
+    version = '16'
+    modules = ['javafx.controls', 'javafx.swing', 'javafx.media']
+}
+
+version = project.property('lifecompanion.app.version')
+mainClassName = "org.lifecompanion.app.launcher.LCApplication"
+
+ext {
+    devCpArg = System.getenv('org.lifecompanion.dev.cp.arg') != null && !System.getenv('org.lifecompanion.dev.cp.arg').isBlank() ? System.getenv('org.lifecompanion.dev.cp.arg') : '/null'
+    sharedJvmArgAppTest = [
+            '-Dglass.win.uiScale=100%',
+
+            // Splash screen
+            '-splash:data/lifecompanion_splashscreen.png',
+
+            // Unfocusable stage : need internal sun* API
+            '--add-exports=javafx.graphics/com.sun.glass.ui=org.lifecompanion.api',
+
+            // ControlsFX : open internal sun* API
+            '--add-opens=javafx.base/com.sun.javafx.runtime=org.controlsfx.controls',
+            '--add-opens=javafx.base/com.sun.javafx.collections=org.controlsfx.controls',
+            '--add-opens=javafx.graphics/com.sun.javafx.css=org.controlsfx.controls',
+            '--add-opens=javafx.graphics/com.sun.javafx.scene=org.controlsfx.controls',
+            '--add-opens=javafx.graphics/com.sun.javafx.scene.traversal=org.controlsfx.controls',
+            '--add-opens=javafx.graphics/javafx.scene=org.controlsfx.controls',
+            '--add-opens=javafx.controls/com.sun.javafx.scene.control=org.controlsfx.controls',
+            '--add-opens=javafx.controls/com.sun.javafx.scene.control.behavior=org.controlsfx.controls',
+            '--add-opens=javafx.controls/javafx.scene.control.skin=org.controlsfx.controls'
+    ]
+}
+
+// Application run in dev only
+application {
+    applicationDefaultJvmArgs = sharedJvmArgAppTest + [
+            // Plugin
+             '-cp', devCpArg,
+
+            // Debug args (VisualVM)
+            '-Dcom.sun.management.jmxremote.port=9999', '-Dcom.sun.management.jmxremote.authenticate=false', '-Dcom.sun.management.jmxremote.ssl=false', // debug only
+
+            // LC dev mode
+            '-Dorg.lifecompanion.debug.skip.update.check=true',
+            '-Dorg.lifecompanion.load.plugins.from.cp=true',
+            '-Dorg.lifecompanion.kill.sapi.on.launch=true'
+    ]
+}
+
+dependencies {
+    implementation 'ch.qos.logback:logback-classic:1.3.0-alpha4'
+    api 'org.lifecompanion:lc-framework-commons-fx:1.0.0'
+    api 'org.lifecompanion:lc-framework-client:1.0.0'
+    api project(':lc-api')
+    api project(':lc-config')
+}
+
+jlink {
+    mergedModule {
+        excludeRequires 'javafx.base', 'ch.qos.logback.classic' // easybind use it
+    }
+    targetPlatform('win_x64') {
+        jdkHome = "${project.property('jdk_win_x64')}"
+        addExtraModulePath("${project.property('jfx_win_x64')}")
+    }
+    targetPlatform('linux_x64') {
+        jdkHome = "${project.property('jdk_linux_x64')}"
+        addExtraModulePath("${project.property('jfx_linux_x64')}")
+    }
+    targetPlatform('mac_x64') {
+        jdkHome = "${project.property('jdk_mac_x64')}"
+        addExtraModulePath("${project.property('jfx_mac_x64')}")
+    }
+    options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages',
+               '--add-modules','java.base,jdk.localedata,jdk.crypto.cryptoki']// locale data - translations / crypto - email
+}
+
+licenseReport {
+    configurations = ALL
+    // Exclude IDE and own dependencies from licence report
+    excludeGroups = ['org.jetbrains', 'org.jetbrains.kotlin', 'org.lifecompanion']
+    renderers = [new TextReportRenderer()]
+}
+
+processResources {
+    outputs.upToDateWhen { false }
+    dependsOn generateLicenseReport
+    filesMatching('**app.properties') {
+        expand(
+                'appId': appId,
+                'version': project.version,
+                'buildDate': new Date().getTime(),
+                'updateServerUrl': project.property('lifecompanion.framework.server.url'),
+                'appServerUrl': project.property('lifecompanion.app.server.url'),
+                'appServerQueryParameters' : project.property('lifecompanion.app.server.query.parameters'),
+                'installationPublicKey': project.property('lifecompanion.app.server.public_key')
+        )
+    }
+    from('/build/reports/dependency-license/') {
+        include 'THIRD-PARTY-NOTICES.txt'
+    }
+    from('../../') {
+        include 'LICENSE'
+    }
+}

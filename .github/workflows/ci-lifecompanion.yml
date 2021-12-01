@@ -1,0 +1,117 @@
+name: ci-lifecompanion
+
+on:
+  workflow_call:
+    inputs:
+      target_env:
+        required: true
+        type: string
+      runs_on:
+        required: true
+        type: string
+      gradle_command:
+        required: true
+        type: string
+      install_innosetup:
+        type: boolean
+      download_build_resources:
+        type: boolean
+    secrets:
+      framework_server_url:
+        required: true
+      framework_server_login:
+        required: true
+      framework_server_password:
+        required: true
+      app_server_url:
+        required: true
+      app_server_query_parameters:
+        required: false
+      app_server_public_key:
+        required: true
+      aws_access_key_id:
+        required: false
+      aws_secret_access_key:
+        required: false
+
+# TODO : be able to select branch or tag
+# TODO : comment and description on fields
+
+jobs:
+  build:
+    runs-on: ${{inputs.runs_on}}
+    env:
+      INNOSETUP_DIR: /tmp/innosetup/
+      BUILD_RES_DIR: build-resources
+      
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '16'
+          distribution: 'adopt'
+      
+      - name : Add +X on gralde scripts
+        run: chmod +x lifecompanion-framework/gradlew & chmod +x lifecompanion/gradlew
+            
+      - name: Download LifeCompanion build resources
+        if: ${{inputs.download_build_resources}}
+        uses: prewk/s3-cp-action@v2
+        with:
+          aws_access_key_id: ${{ secrets.aws_access_key_id }}
+          aws_secret_access_key: ${{ secrets.aws_secret_access_key }}
+          aws_region: eu-west-1
+          source: 's3://resources.builds.lifecompanionaac.org/prod'
+          dest: './${{env.BUILD_RES_DIR}}'
+          flags: --recursive
+          
+      - name: Download InnoSetup installer
+        if: ${{inputs.install_innosetup}}
+        uses: carlosperate/download-file-action@v1.0.3
+        id: download-inno-setup
+        with:
+            file-url: 'https://jrsoftware.org/download.php/is.exe'
+            file-name: 'innosetup.exe'
+            location: '.'
+    
+      - name: Install InnoSetup
+        if: ${{inputs.install_innosetup}}
+        run: ./innosetup.exe /portable=1 /SILENT /DIR="${{env.INNOSETUP_DIR}}"
+      
+      - name: Prepare target env configuration
+        run: |
+          echo "lifecompanion.framework.server.url = $LIFECOMPANION_FRAMEWORK_SERVER_URL" >> env/.env.${{inputs.target_env}}
+          echo "lifecompanion.framework.server.login = $LIFECOMPANION_FRAMEWORK_SERVER_LOGIN" >> env/.env.${{inputs.target_env}}
+          echo "lifecompanion.framework.server.password = $LIFECOMPANION_FRAMEWORK_SERVER_PASSWORD" >> env/.env.${{inputs.target_env}}
+          echo "lifecompanion.app.server.url = $LIFECOMPANION_APP_SERVER_URL" >> env/.env.${{inputs.target_env}}
+          echo "lifecompanion.app.server.query.parameters = $LIFECOMPANION_APP_SERVER_QUERY_PARAMETERS" >> env/.env.${{inputs.target_env}}
+          echo "lifecompanion.app.server.public_key = $LIFECOMPANION_APP_SERVER_PUBLIC_KEY" >> env/.env.${{inputs.target_env}}
+        shell: bash
+        env:
+          LIFECOMPANION_FRAMEWORK_SERVER_URL: ${{secrets.framework_server_url}}
+          LIFECOMPANION_FRAMEWORK_SERVER_LOGIN: ${{secrets.framework_server_login}}
+          LIFECOMPANION_FRAMEWORK_SERVER_PASSWORD: ${{secrets.framework_server_password}}
+          LIFECOMPANION_APP_SERVER_URL: ${{secrets.app_server_url}}
+          LIFECOMPANION_APP_SERVER_QUERY_PARAMETERS: ${{secrets.app_server_query_parameters}}
+          LIFECOMPANION_APP_SERVER_PUBLIC_KEY: ${{secrets.app_server_public_key}}
+            
+      - name: Build LifeCompanion framework
+        uses: gradle/gradle-build-action@v2
+        with:
+          build-root-directory: lifecompanion-framework
+          arguments: publishToMavenLocal
+          
+      - name: Call update build and publish command
+        uses: gradle/gradle-build-action@v2
+        with:
+          build-root-directory: lifecompanion
+          arguments: |
+            ${{inputs.gradle_command}}
+            -Penv=${{inputs.target_env}}
+            -Pinnosetup.path=${{env.INNOSETUP_DIR}}ISCC.exe
+            -Plifecompanion.build.resources.directory=../../${{env.BUILD_RES_DIR}}
+            -Pvisibility=PUBLISHED
+            --stacktrace

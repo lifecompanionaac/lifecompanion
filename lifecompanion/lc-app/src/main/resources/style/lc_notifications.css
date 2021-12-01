@@ -1,0 +1,63 @@
+.button {
+	-fx-opacity : 1.0;
+	-fx-background-color: none;
+	-fx-content-display: graphic-only;
+}
+
+.button:hover {
+	-fx-opacity: 0.8;
+}
+
+.button:pressed {
+	-fx-opacity: 0.6;
+}
+
+.button-action {
+    -fx-font-size: 1.4em;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-content-display: none;
+}
+
+.progress-bar {
+    -fx-background-color: transparent transparent transparent;
+    -fx-border-color: white;
+    -fx-border-width: 1.0;
+}
+
+.progress-bar > .track {
+    -fx-background-color: transparent transparent transparent;
+}
+
+.progress-bar > .bar {
+    -fx-background-color: white white;
+    -fx-background-radius: 0;
+}
+
+.label-title {
+    -fx-font-weight: bold;
+    -fx-font-size: 1.2em;
+    -fx-text-fill: white;
+}
+
+.label-progress {
+    -fx-font-weight: normal;
+    -fx-font-size: 0.8em;
+    -fx-text-fill: white;
+}
+
+.notification-background {
+    -fx-background-radius: 8.0;
+}
+.notification-background-info {
+    -fx-background-color: #323233;
+}
+.notification-background-task {
+    -fx-background-color: #323233;
+}
+.notification-background-warning {
+    -fx-background-color: #e68a00;
+}
+.notification-background-error {
+    -fx-background-color: #bd3b0f;
+}

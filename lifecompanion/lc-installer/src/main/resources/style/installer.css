@@ -1,0 +1,23 @@
+.label-explain-title {
+	-fx-alignement: center;
+	-fx-font-size: 13.0px;
+	-fx-font-weight: bold;
+}
+
+.label-i-text {
+    -fx-text-fill: gray;
+	-fx-font-style: italic;
+}
+
+.text-area-install-log {
+    -fx-font-size: 10px;
+}
+
+.error-label {
+    -fx-text-fill: darkred;
+	-fx-font-weight: bold;
+}
+
+.success-label {
+	-fx-font-weight: bold;
+}

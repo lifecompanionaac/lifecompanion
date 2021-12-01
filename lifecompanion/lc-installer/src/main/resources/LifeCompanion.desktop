@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Name=LifeCompanion
+GenericName=LifeCompanion
+Comment=LifeCompanion
+Exec=INSTALL_PATH/launcher/lifecompanion.sh
+Terminal=false
+Icon=INSTALL_PATH/launcher/lifecompanion.png
+Type=Application
+Categories=Utility;

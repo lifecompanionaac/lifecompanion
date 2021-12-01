@@ -1,0 +1,22 @@
+name: ci-plugin-dev
+
+on: 
+  workflow_dispatch:
+    inputs:
+      pluginJarName:
+        description: 'Plugin file name (should be located in lc-plugins-jar directory)'     
+        required: true
+
+jobs:
+  call-workflow-passing-data:
+    uses: lifecompanionaac/lifecompanion-fv/.github/workflows/ci-lifecompanion.yml@master
+    with:
+      target_env: dev
+      runs_on: ubuntu-latest
+      gradle_command: publishPluginJar -PpluginJarFile=lc-plugins-jar/${{ github.event.inputs.pluginJarName }}
+    secrets:
+      framework_server_url: ${{ secrets.LIFECOMPANION_FRAMEWORK_SERVER_URL_DEV }}
+      framework_server_login: ${{ secrets.LIFECOMPANION_FRAMEWORK_SERVER_LOGIN_DEV }}
+      framework_server_password: ${{ secrets.LIFECOMPANION_FRAMEWORK_SERVER_PASSWORD_DEV }}
+      app_server_url: ${{ secrets.LIFECOMPANION_APP_SERVER_URL_DEV }}
+      app_server_public_key: ${{ secrets.LIFECOMPANION_APP_SERVER_PUBLIC_KEY_DEV }}

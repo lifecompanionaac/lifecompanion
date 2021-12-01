@@ -1,0 +1,1 @@
+ALTER TABLE software_stat ADD COLUMN push_tries INT;

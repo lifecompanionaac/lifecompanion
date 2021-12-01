@@ -1,0 +1,85 @@
+<texts>
+	<!-- NEW -->
+	<text key="lc.installer.stage.title">Installation de LifeCompanion</text>
+
+	<text key="lc.installer.steps.button.cancel">Quitter</text>
+	<text key="lc.installer.steps.button.next">Suivant</text>
+	<text key="lc.installer.steps.button.previous">Précédent</text>
+
+	<text key="lc.installer.step.init.label.explain.title">Bienvenue dans LifeCompanion</text>
+	<text key="lc.installer.step.init.label.explain.text">LifeCompanion est un assistant numérique dédié principalement à l'aide à la communication et à
+		l'accès à l'ordinateur. LifeCompanion est développé par le Laboratoire d'Électronique du Centre Mutualiste de Rééducation et de Réadaptation
+		fonctionnelles de Kerpape (Lorient, France) et distribué gratuitement sous licence open-source GNU General Public License. En installant LifeCompanion, vous acceptez les conditions telles que décrites dans la licence du logiciel.\n\nAucune utilisation ou exploitation
+		commerciale n'est autorisée sans accord explicite du CMRRF de Kerpape.\n\nL'installation va télécharger les fichiers
+		nécessaires au fonctionnement de LifeCompanion. Cela devrait prendre une dizaine de minutes.
+		Vous pourrez ensuite directement utiliser LifeCompanion sur cet ordinateur.\n\nRetrouvez toutes les informations de LifeCompanion sur :
+	</text>
+	<text key="lc.installer.step.init.label.website">http://lifecompanionaac.org</text>
+	<text key="file.chooser.directory">Sélectionner un dossier</text>
+	<text key="lc.installer.step.config.file.selector.data.dir">Dossier utilisateur</text>
+	<text key="lc.installer.step.config.file.selector.soft.dir">Dossier d'installation</text>
+	<text key="lc.installer.step.init.button.retry.connection">Réessayer la connexion au réseau</text>
+	<text key="lc.installer.step.init.label.connection.failed">Il semble que vous n'êtes pas connecté à internet, merci
+		de vous connecter et de réessayer pour pouvoir installer LifeCompanion.
+	</text>
+	<text key="lc.installer.checking.internet.connection">Vérification de la connexion internet...</text>
+	<text key="lc.installer.step.config.explain.text">Sélectionnez les paramètres d'installation de
+		LifeCompanion, ou laissez ceux par défaut.
+	</text>
+
+	<text key="lc.installer.installation.result.success">Installation de LifeCompanion terminée</text>
+	<text key="lc.installer.installation.result.failed.general">L'installation de LifeCompanion a échoué.\n</text>
+	<text key="lc.installer.installation.result.failed.download">Vérifiez la connexion internet et réessayer plus
+		tard.
+	</text>
+	<text key="lc.installer.installation.result.failed.admin">Vérifiez que cet installeur est lancé avec les bons droits
+		et que les dossiers sélectionnés sont corrects.
+	</text>
+	<text key="lc.installer.installation.result.failed.system">Vérifiez que votre système est compatible et que cet
+		installeur a été lancé avec les bons droits.
+	</text>
+	<text key="lc.installer.installation.result.failed.unknown">Une erreur inattendue s'est produite, veuillez réessayer
+		l'installation.
+	</text>
+	<text key="lc.installer.task.text.finished">Merci d'avoir installé LifeCompanion, vous pouvez dès à présent
+		l'utiliser pour communiquer et accéder à votre ordinateur. N'hésitez pas à visiter le site lifecompanionaac.org pour nous faire des retours sur votre utilisation, trouver de la documentation et supporter le projet.\n\n
+		Vous pouvez maintenant fermer cette fenêtre et démarrer LifeCompanion.
+	</text>
+	<text key="lc.installer.task.button.finished">Fermer et terminer</text>
+
+	<text key="lc.installer.confirm.exit.dialog.title">LifeCompanion - installation</text>
+	<text key="lc.installer.confirm.exit.dialog.header">Confirmez vous l'annulation ?</text>
+	<text key="lc.installer.confirm.exit.dialog.message">Si vous quitter l'installation, vous devrez la relancer depuis
+		le début pour pouvoir utiliser LifeCompanion.
+	</text>
+
+	<text key="lc.installer.button.restart.installation">Réessayer l'installation</text>
+
+	<text key="lc.installer.install.step.title">Installation de LifeCompanion</text>
+	<text key="lc.installer.task.installing.progress.general.directories">Création des dossiers d'installation</text>
+	<text key="lc.installer.task.installing.progress.detail.directory">Création du dossier {}</text>
+	<text key="lc.installer.task.installing.progress.detail.directory.rights">Attribution des droits aux dossiers
+		d'installation
+	</text>
+	<text key="lc.installer.task.installing.progress.general.downloading">Téléchargement des fichiers</text>
+	<text key="lc.installer.task.installing.progress.detail.downloading">{} ({})</text>
+	<text key="lc.installer.task.installing.progress.general.installation.configuration">Sauvegarde de la configuration
+		d'installation
+	</text>
+	<text key="lc.installer.task.installing.progress.general.system.specific">Création des raccourcis</text>
+	<text key="lc.installer.task.installing.progress.detail.file.association">Association des fichiers avec
+		LifeCompanion
+	</text>
+	<text key="lc.installer.task.installing.progress.detail.file.desktop.shortcut">Création du raccourci bureau</text>
+	<text key="lc.installer.task.installing.progress.detail.file.menu.shortcut">Création des entrées dans les menus
+	</text>
+
+	<text key="lc.installer.file.association.config">Fichier de configuration LifeCompanion</text>
+	<text key="lc.installer.file.association.profile">Fichier de profil LifeCompanion</text>
+
+	<text key="lc.installer.step.config.plugin.ids">Extensions à installer (ID séparés par des points virgule (";"))</text>
+
+	<text key="lc.installer.task.installing.progress.plugin.installation">Installation de l'extension : {}</text>
+	<text key="lc.installer.task.installing.progress.plugin.installation.detail">Extension installée : {}, version {} ({})</text>
+	<text key="lc.installer.task.installing.progress.plugin.installation.failed">Aucun extension trouvée pour {}</text>
+</texts>

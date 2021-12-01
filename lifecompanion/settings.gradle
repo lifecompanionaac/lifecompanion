@@ -1,0 +1,8 @@
+rootProject.name = 'lifecompanion'
+
+include 'lc-app-launcher'
+include 'lc-api'
+include 'lc-config'
+include 'lc-app'
+include 'lc-installer'
+include 'lc-tool-scripts'

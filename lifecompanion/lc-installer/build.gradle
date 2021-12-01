@@ -1,0 +1,97 @@
+import org.gradle.internal.os.OperatingSystem
+import org.lifecompanion.build.PublishInstallerTask;
+
+plugins {
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.0.10'
+    id 'org.beryx.jlink' version '2.23.8'
+    id 'org.lifecompanion.gradle.plugin.env-conf'
+    id 'org.lifecompanion.gradle.plugin.download-jdk-jfx'
+    id 'org.lifecompanion.gradle.plugin.publish-installer'
+}
+
+javafx {
+    version = '16'
+    modules = ['javafx.controls']
+}
+
+version = project.property('lifecompanion.installer.version')
+mainClassName = "org.lifecompanion.installer.InstallerApp"
+
+dependencies {
+    implementation 'com.github.oshi:oshi-core:4.5.2'
+    implementation 'com.github.vatbub:mslinks:1.0.5'
+    implementation 'ch.qos.logback:logback-classic:1.3.0-alpha4'
+    implementation 'org.lifecompanion:lc-framework-commons-fx:1.0.0'
+    implementation 'org.lifecompanion:lc-framework-client:1.0.0'
+}
+
+jlink {
+    mergedModule {
+        additive = true
+        requires 'org.slf4j' // needed
+    }
+    targetPlatform('win_x64') {
+        jdkHome = "${project.property('jdk_win_x64')}"
+        addExtraModulePath("${project.property('jfx_win_x64')}")
+    }
+    targetPlatform('linux_x64') {
+        jdkHome = "${project.property('jdk_linux_x64')}"
+        addExtraModulePath("${project.property('jfx_linux_x64')}")
+    }
+    targetPlatform('mac_x64') {
+        jdkHome = "${project.property('jdk_mac_x64')}"
+        addExtraModulePath("${project.property('jfx_mac_x64')}")
+    }
+    options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
+    launcher {
+        name = 'lifecompanion-installer'
+        args = ['-Djava.net.useSystemProxies=true']
+    }
+}
+
+processResources {
+    outputs.upToDateWhen { false }
+    filesMatching('**installer.properties') {
+        expand(
+                'appId': appId,
+                'version': project.version,
+                'buildDate': new Date().getTime(),
+                'updateServerUrl': project.property('lifecompanion.framework.server.url'),
+                'appServerUrl': project.property('lifecompanion.app.server.url'),
+                'appServerQueryParameters' : project.property('lifecompanion.app.server.query.parameters'),
+                'installationPublicKey': project.property('lifecompanion.app.server.public_key')
+        )
+    }
+}
+
+task publishWindowsInstaller(type : PublishInstallerTask) {
+    dependsOn 'createInnoSetupPackage'
+    file =  "installer/LifeCompanion-setup-${project.version}.exe"
+    system = 'WINDOWS'
+}
+
+task publishUnixInstaller(type : PublishInstallerTask) {
+    dependsOn 'jlinkZip'
+    file =  'image-linux_x64.zip'
+    system = 'UNIX'
+}
+
+task publishMacInstaller(type : PublishInstallerTask) {
+    dependsOn 'jlinkZip'
+    file =  'image-mac_x64.zip'
+    system = 'MAC'
+}
+
+task createInnoSetupPackage(type: Exec) {
+    group = 'lifecompanion'
+    description 'Build the JVM from JLink and package it into an InnoSetup installer (with script from build-src)'
+    dependsOn 'jlinkZip'
+    onlyIf {
+        OperatingSystem.current().isWindows()
+    }
+    commandLine project.property('innosetup.path'), 'build-src/lc-installer.iss',
+            "-DAppVersion=${project.version}",
+            "-DInputDir=${project.buildDir.path}/image/lifecompanion-installer-win_x64",
+            "/O${project.buildDir.path}/installer"
+}

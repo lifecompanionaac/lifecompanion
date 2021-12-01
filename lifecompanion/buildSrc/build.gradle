@@ -1,0 +1,45 @@
+plugins {
+    id 'java-gradle-plugin'
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+dependencies {
+    implementation 'org.lifecompanion:lc-framework-client:1.0.0'
+    implementation 'org.apache.commons:commons-compress:1.21'
+}
+
+gradlePlugin {
+    plugins {
+        publishPuglin {
+            id = 'org.lifecompanion.gradle.plugin.publish-plugin'
+            implementationClass = 'org.lifecompanion.build.PublishPluginPlugin'
+        }
+        publishPluginJar {
+            id = 'org.lifecompanion.gradle.plugin.publish-plugin-jar'
+            implementationClass = 'org.lifecompanion.build.PublishPluginJarPlugin'
+        }
+        publishInstaller {
+            id = 'org.lifecompanion.gradle.plugin.publish-installer'
+            implementationClass = 'org.lifecompanion.build.PublishInstallerPlugin'
+        }
+        publishLauncher {
+            id = 'org.lifecompanion.gradle.plugin.publish-launcher'
+            implementationClass = 'org.lifecompanion.build.PublishLauncherPlugin'
+        }
+        publishApplicatiion {
+            id = 'org.lifecompanion.gradle.plugin.publish-application'
+            implementationClass = 'org.lifecompanion.build.PublishApplicationPlugin'
+        }
+        downloadJdkJfxPlugin {
+            id = 'org.lifecompanion.gradle.plugin.download-jdk-jfx'
+            implementationClass = 'org.lifecompanion.build.DownloadJdkAndJfxPlugin'
+        }
+        envPlugin {
+            id = 'org.lifecompanion.gradle.plugin.env-conf'
+            implementationClass = 'org.lifecompanion.build.EnvPlugin'
+        }
+    }
+}

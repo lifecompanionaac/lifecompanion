@@ -1,0 +1,61 @@
+plugins {
+    id 'application'
+    id 'com.heroku.sdk.heroku-gradle' version '1.0.4'
+}
+
+dependencies {
+    implementation 'ch.qos.logback:logback-classic:1.3.0-alpha4'
+    implementation 'com.sparkjava:spark-core:2.9.2'
+    implementation 'com.auth0:java-jwt:3.8.1'
+    implementation 'org.postgresql:postgresql:42.2.11'
+    implementation 'org.sql2o:sql2o:1.6.0'
+    implementation 'org.mindrot:jbcrypt:0.4'
+    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'commons-fileupload:commons-fileupload:1.4'
+    implementation 'org.mybatis:mybatis:3.5.5'
+    implementation 'com.squareup.okhttp3:okhttp:4.5.0'
+    implementation 'software.amazon.awssdk:s3:2.17.15'
+    implementation project(':lc-framework-commons')
+}
+
+mainClassName = "org.lifecompanion.framework.server.LifeCompanionFrameworkServer"
+version = "1.10.1"
+
+ext {
+    env = project.hasProperty('env') ? project.property('env') : 'local'
+}
+
+application {
+    applicationDefaultJvmArgs = [
+            '-Dorg.lifecompanion.framework.server.dev.database.url=postgres://postgres:postgres@localhost:5432/postgres',
+            '-Dorg.lifecompanion.framework.server.dev.port=1234'
+    ]
+}
+
+processResources {
+    outputs.upToDateWhen { false }
+    filesMatching('**server.properties') { expand('serverVersion': project.version) }
+}
+
+jar {
+    duplicatesStrategy DuplicatesStrategy.EXCLUDE
+    manifest {
+        attributes 'Main-Class': 'org.lifecompanion.framework.server.LifeCompanionFrameworkServer'
+    }
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+}
+
+heroku {
+    jdkVersion = 16
+    appName = (env == 'prod' ? 'lifecompanionaac' : 'lifecompanionaac-dev')
+    processTypes(web: 'java -jar lc-framework-server/build/libs/lc-framework-server-' + project.version + '.jar $PORT')
+}
+
+task publishServerUpdate {
+    group = 'server'
+    description 'Build and publish a new server update'
+    dependsOn 'clean'
+    dependsOn 'jar'
+    dependsOn 'deployHeroku'
+    tasks.findByName('deployHeroku').mustRunAfter 'jar'
+}

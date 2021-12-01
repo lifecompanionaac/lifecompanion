@@ -1,0 +1,10 @@
+DROP TABLE IF EXISTS app_user;
+DROP TABLE IF EXISTS application_installer;
+DROP TABLE IF EXISTS application_update_file;
+DROP TABLE IF EXISTS application_update;
+DROP TABLE IF EXISTS application_launcher_update;
+DROP TABLE IF EXISTS application_plugin_update;
+DROP TABLE IF EXISTS application_plugin;
+DROP TABLE IF EXISTS application;
+DROP TABLE IF EXISTS database_migration;
+DROP TABLE IF EXISTS software_stat;

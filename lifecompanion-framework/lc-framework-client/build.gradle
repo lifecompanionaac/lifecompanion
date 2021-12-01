@@ -1,0 +1,20 @@
+plugins {
+    id 'maven-publish'
+}
+
+dependencies {
+    api 'com.squareup.okhttp3:okhttp:4.5.0'
+    api 'com.google.code.gson:gson:2.8.5'
+    api project(':lc-framework-commons')
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = 'org.lifecompanion'
+            artifactId = 'lc-framework-client'
+            version = '1.0.0'
+            from components.java
+        }
+    }
+}

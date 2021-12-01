@@ -1,0 +1,25 @@
+plugins {
+    id 'maven-publish'
+    id 'org.openjfx.javafxplugin' version '0.0.10'
+}
+
+javafx {
+    version = '16'
+    modules = ['javafx.controls']
+    configuration = 'compileOnly'
+}
+
+dependencies {
+    api project(':lc-framework-commons')
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
+            groupId = 'org.lifecompanion'
+            artifactId = 'lc-framework-commons-fx'
+            version = '1.0.0'
+        }
+    }
+}

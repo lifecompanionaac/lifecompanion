@@ -1,0 +1,21 @@
+plugins {
+    id 'maven-publish'
+}
+
+dependencies {
+	api 'commons-io:commons-io:2.6'
+	api 'commons-codec:commons-codec:1.12'
+	api 'javax.persistence:persistence-api:1.0.2'
+	api 'org.jdom:jdom:2.0.2'
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = 'org.lifecompanion'
+            artifactId = 'lc-framework-commons'
+			version = '1.0.0'
+            from components.java
+        }
+    }
+}

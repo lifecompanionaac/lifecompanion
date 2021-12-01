@@ -1,0 +1,157 @@
+/*
+ * LifeCompanion AAC and its sub projects
+ *
+ * Copyright (C) 2014 to 2019 Mathieu THEBAUD
+ * Copyright (C) 2020 to 2021 CMRRF KERPAPE (Lorient, France)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, version 3 of the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package org.lifecompanion.config.view.reusable.image;
+
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.geometry.Pos;
+import javafx.scene.control.Button;
+import javafx.scene.layout.BorderPane;
+import org.controlsfx.glyphfont.FontAwesome;
+import org.fxmisc.easybind.EasyBind;
+import org.lifecompanion.api.component.definition.GridPartKeyComponentI;
+import org.lifecompanion.api.component.definition.ImageUseComponentI;
+import org.lifecompanion.api.component.definition.simplercomp.KeyListNodeI;
+import org.lifecompanion.api.component.definition.keyoption.KeyOptionI;
+import org.lifecompanion.api.component.definition.simplercomp.SimplerKeyContentContainerI;
+import org.lifecompanion.api.image2.ImageElementI;
+import org.lifecompanion.api.ui.config.ConfigurationProfileLevelEnum;
+import org.lifecompanion.base.data.common.LCUtils;
+import org.lifecompanion.base.data.common.UIUtils;
+import org.lifecompanion.base.data.config.LCGraphicStyle;
+import org.lifecompanion.base.view.reusable.impl.BaseConfigurationViewBorderPane;
+import org.lifecompanion.config.data.action.impl.KeyActions;
+import org.lifecompanion.config.data.common.LCConfigBindingUtils;
+import org.lifecompanion.config.data.config.LCGlyphFont;
+import org.lifecompanion.config.view.common.ConfigUIUtils;
+import org.lifecompanion.config.view.pane.tabs.selected.part.imageusecomp.ImageUseComponentConfigurationStage;
+import org.lifecompanion.framework.commons.translation.Translation;
+import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+
+public class ImageUseComponentSelectorControl extends BaseConfigurationViewBorderPane<ImageUseComponentI> implements LCViewInitHelper {
+
+    /**
+     * Button show parameters
+     */
+    private Button buttonParameters;
+
+    /**
+     * Change listener for the image
+     */
+    private ChangeListener<ImageElementI> changeListenerImage;
+
+
+    /**
+     * Image selector control
+     */
+    private Image2SelectorControl imageSelectorControl;
+
+    /**
+     * Property to disable image selection
+     */
+    private final BooleanProperty disableImageSelection;
+
+    public ImageUseComponentSelectorControl() {
+        this.disableImageSelection = new SimpleBooleanProperty(false);
+        this.initAll();
+    }
+
+    // Class part : "UI"
+    //========================================================================
+    @Override
+    public void initUI() {
+        //Create buttons
+        this.buttonParameters = UIUtils.createLeftTextButton(Translation.getText("image.use.show.advanced.parameters"),
+                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.GEARS).size(18).color(LCGraphicStyle.MAIN_PRIMARY),
+                "tooltip.image.use.show.advanced.parameters");
+        BorderPane.setAlignment(buttonParameters, Pos.CENTER);
+
+        //Image selector control
+        this.imageSelectorControl = new Image2SelectorControl();
+
+        //Image
+        this.setCenter(this.imageSelectorControl);
+        this.setBottom(this.buttonParameters);
+    }
+
+    @Override
+    public void initListener() {
+        //Disable remove when there is no image
+        this.buttonParameters.disableProperty().bind(this.disableImageSelection.or(this.imageSelectorControl.selectedImageProperty().isNull()));
+        this.imageSelectorControl.disableImageSelectionProperty().bind(this.disableImageSelection);
+        this.imageSelectorControl.setDefaultSearchTextSupplier(() -> {
+            final ImageUseComponentI imageUseComponent = model.get();
+            if (imageUseComponent != null) {
+                if (imageUseComponent instanceof GridPartKeyComponentI)
+                    return ((GridPartKeyComponentI) imageUseComponent).textContentProperty().get();
+                if (imageUseComponent instanceof SimplerKeyContentContainerI)
+                    return ((SimplerKeyContentContainerI) imageUseComponent).textProperty().get();
+            }
+            return null;
+        });
+        //Actions
+        this.buttonParameters.setOnAction((ev) -> {
+            ImageUseComponentConfigurationStage.getInstance().prepareAndShow(model.get());
+        });
+    }
+    //========================================================================
+
+    // BINDING
+    //========================================================================
+    public ObjectProperty<ImageUseComponentI> modelProperty() {
+        return this.model;
+    }
+
+    @Override
+    public void initBinding() {
+        this.changeListenerImage = LCConfigBindingUtils.createSimpleBinding(this.imageSelectorControl.selectedImageProperty(), this.model,
+                m -> m.imageVTwoProperty().get(), KeyActions.ChangeImageAction::new);
+        ConfigUIUtils.bindShowForLevelFrom(this.buttonParameters, ConfigurationProfileLevelEnum.NORMAL);
+    }
+
+
+    @Override
+    public void bind(final ImageUseComponentI model) {
+        //Disable image selection
+        if (model instanceof GridPartKeyComponentI) {
+            GridPartKeyComponentI key = (GridPartKeyComponentI) model;
+            this.disableImageSelection.bind(EasyBind.select(key.keyOptionProperty()).selectObject(KeyOptionI::disableImageProperty));
+        } else {
+            this.disableImageSelection.set(false);
+        }
+        this.imageSelectorControl.selectedImageProperty().set(model.imageVTwoProperty().get());
+        model.imageVTwoProperty().addListener(this.changeListenerImage);
+    }
+
+    @Override
+    public void unbind(final ImageUseComponentI model) {
+        this.disableImageSelection.unbind();
+        model.imageVTwoProperty().removeListener(this.changeListenerImage);
+    }
+
+    @Override
+    protected void clearFieldsAfterUnbind() {
+        this.imageSelectorControl.selectedImageProperty().set(null);
+    }
+//========================================================================
+
+}

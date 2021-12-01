@@ -1,0 +1,25 @@
+<configuration>
+    <!-- Console appender -->
+    <appender name="CONSOLE_APPENDER"
+              class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>[%d{HH:mm:ss.SSS}][%-5level][%thread][%logger{0}] %msg%n%ex{full}
+            </pattern>
+        </encoder>
+    </appender>
+
+    <appender name="FILE_APPENDER" class="ch.qos.logback.core.FileAppender">
+        <file>${java.io.tmpdir}/LifeCompanion/logs/installer.log</file>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>[%d{dd/MM/yyyy-HH:mm:ss.SSS}][%-5level][%thread][%logger{120}] %msg%n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE_APPENDER"/>
+        <appender-ref ref="FILE_APPENDER"/>
+    </root>
+</configuration>

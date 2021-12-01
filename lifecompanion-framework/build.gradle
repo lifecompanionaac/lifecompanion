@@ -1,0 +1,27 @@
+buildscript {
+  repositories {
+    maven {
+      url 'https://plugins.gradle.org/m2/'
+    }
+  }
+  dependencies {
+    classpath 'org.javamodularity:moduleplugin:1.6.0'
+  }
+}
+
+subprojects {
+    apply plugin: 'java-library'
+    apply plugin: 'org.javamodularity.moduleplugin'
+    
+    sourceCompatibility = 11
+    targetCompatibility = 11
+      
+	repositories {
+        mavenCentral()
+        mavenLocal()
+    }
+    
+    dependencies {
+    	api 'org.slf4j:slf4j-api:2.0.0-alpha1'
+    }
+}

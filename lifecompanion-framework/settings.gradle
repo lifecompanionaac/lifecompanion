@@ -1,0 +1,6 @@
+rootProject.name = 'lifecompanion-framework'
+
+include 'lc-framework-commons'
+include 'lc-framework-commons-fx'
+include 'lc-framework-server'
+include 'lc-framework-client'

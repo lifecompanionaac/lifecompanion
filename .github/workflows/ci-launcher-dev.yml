@@ -1,0 +1,17 @@
+name: ci-launcher-dev
+
+on: workflow_dispatch
+
+jobs:
+  call-workflow-passing-data:
+    uses: lifecompanionaac/lifecompanion-fv/.github/workflows/ci-lifecompanion.yml@master
+    with:
+      target_env: dev
+      runs_on: ubuntu-latest
+      gradle_command: :lc-app-launcher:publishLauncher
+    secrets:
+      framework_server_url: ${{ secrets.LIFECOMPANION_FRAMEWORK_SERVER_URL_DEV }}
+      framework_server_login: ${{ secrets.LIFECOMPANION_FRAMEWORK_SERVER_LOGIN_DEV }}
+      framework_server_password: ${{ secrets.LIFECOMPANION_FRAMEWORK_SERVER_PASSWORD_DEV }}
+      app_server_url: ${{ secrets.LIFECOMPANION_APP_SERVER_URL_DEV }}
+      app_server_public_key: ${{ secrets.LIFECOMPANION_APP_SERVER_PUBLIC_KEY_DEV }}

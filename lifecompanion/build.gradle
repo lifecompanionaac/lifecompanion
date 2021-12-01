@@ -1,0 +1,56 @@
+plugins{
+    id 'org.lifecompanion.gradle.plugin.publish-plugin-jar'
+}
+
+subprojects {
+    apply plugin: 'java-library'
+    apply plugin: 'maven-publish'
+
+    repositories {
+        mavenCentral()
+        mavenLocal()
+        maven { url 'https://jitpack.io' }
+        maven { url 'https://oss.sonatype.org/content/groups/public' }
+    }
+
+    ext {
+        env = project.hasProperty('env') ? project.property('env') : 'local'
+    }
+
+    sourceCompatibility = 12
+    targetCompatibility = 16
+
+    dependencies {
+        implementation 'org.slf4j:slf4j-api:2.0.0-alpha1'
+    }
+
+    // Publish every sub projects (only really useful for api, config and app)
+    publishing {
+        publications {
+            maven(MavenPublication) {
+                from components.java
+                groupId 'org.lifecompanion'
+                artifactId project.name
+                version project.property("lifecompanion.app.version")
+                pom {
+                    name = "LifeCompanion AAC"
+                    description = "LifeCompanion AAC"
+                    url = "https://github.com/lifecompanionaac"
+                    licenses {
+                        license {
+                            name = "GNU General Public License 3.0"
+                            url = "http://www.gnu.org/licenses/gpl-3.0.txt"
+                        }
+                    }
+                    developers {
+                        developer {
+                            id = "mthebaud"
+                            name = "Mathieu THEBAUD"
+                            email = "math.thebaud@gmail.com"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
