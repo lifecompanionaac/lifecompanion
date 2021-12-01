@@ -155,11 +155,11 @@ An .env file contains following properties :
 
 **This part is meant to be read by official developpers and is not needed by anyone who just want to contribute.**
 
+**Most of this logic in implemented with [GitHub actions on official repository](../.github/workflows) so these tasks are not run on developer env.**
+
 All task bellow are depending on a destination environment and should be run with `-Penv=dev` or `-Penv=prod` argument (on Gradle task) if you want to target other env. than local. Content of the task should also be adapted to destination env (e.g. tags)
 
 Creating updates depends on custom Gradle task and plugin, all located in *lifecompanion/buildSrc*
-
-Most of this logic in implemented with [GitHub actions on official repository](.github/workflows) so these tasks are not run on developer env.
 
 ### Create LifeCompanion update
 
