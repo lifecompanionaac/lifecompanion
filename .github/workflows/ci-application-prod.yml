@@ -3,9 +3,7 @@ name: ci-application-prod
 on:
   push:
     tags:        
-      - 'lifecompanion/lc-app/*'
-    tags-ignore:
-      - 'lifecompanion/lc-app/*-dev'
+      - 'lifecompanion/lc-app/*-prod'
 
 jobs:
   call-workflow-passing-data:
