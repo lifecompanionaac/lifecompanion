@@ -5,6 +5,7 @@
 # LifeCompanion AAC
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![.github/workflows/ci-application-prod.yml](https://github.com/lifecompanionaac/lifecompanion/actions/workflows/ci-application-prod.yml/badge.svg)](https://github.com/lifecompanionaac/lifecompanion/actions/workflows/ci-application-prod.yml)
 
 LifeCompanion mono repository containing LifeCompanion app, server, side projects, resources and documentation.
 
@@ -51,10 +52,9 @@ LifeCompanion is currently available in french only, but we are seeking for part
 	- **old-code-snippet** : old code that we would like to keep for a later use
 - **resources** : commons resource for LifeCompanion (icons, licence, etc)
     - **app-icons** : svg source for icons used in applications
-	- **lifecompanion-logo** : svg source for LifeCompanion and partners logos
+	- **lifecompanion-logo** : svg source for LifeCompanion and partners logos + exports from svg
 	- **default-data** : contains default file to be copied in app data folder
-	- **license** : code template for License
-	- **lifecompanion-logo** : contains all LifeCompanion communication logo
+	- **license** : code template for copyright notice
 - **documentation** : contains LifeCompanion app and framework documentation
 
 # Build and run from source

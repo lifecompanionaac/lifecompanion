@@ -1,3 +1,10 @@
+# THIS PAGE WILL BE WRITTEN LATER - WIP
+
+
+# TODO - to integrate
+
+- Plugin launch command in dev `org.lifecompanion.dev.cp.arg=../lc-plugins/lc-homeassistant-plugin/build/libs/*`
+
 # LifeCompanion plugin API
 
 ## General principles
