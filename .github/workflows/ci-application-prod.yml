@@ -1,0 +1,26 @@
+name: ci-application-prod
+
+on:
+  push:
+    tags:        
+      - 'lifecompanion/lc-app/*'
+    tags-ignore:
+      - 'lifecompanion/lc-app/*-dev'
+
+jobs:
+  call-workflow-passing-data:
+    uses: lifecompanionaac/lifecompanion/.github/workflows/ci-lifecompanion.yml@master
+    with:
+      target_env: prod
+      runs_on: ubuntu-latest
+      gradle_command: :lc-app:publishApplication
+      download_build_resources: true
+    secrets:
+      framework_server_url: ${{ secrets.LIFECOMPANION_FRAMEWORK_SERVER_URL_PROD }}
+      framework_server_login: ${{ secrets.LIFECOMPANION_FRAMEWORK_SERVER_LOGIN_PROD }}
+      framework_server_password: ${{ secrets.LIFECOMPANION_FRAMEWORK_SERVER_PASSWORD_PROD }}
+      app_server_url: ${{ secrets.LIFECOMPANION_APP_SERVER_URL_PROD }}
+      app_server_query_parameters: ${{ secrets.LIFECOMPANION_APP_SERVER_QUERY_PARAMETERS_PROD }}
+      app_server_public_key: ${{ secrets.LIFECOMPANION_APP_SERVER_PUBLIC_KEY_PROD }}
+      aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

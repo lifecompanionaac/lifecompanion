@@ -1,6 +1,9 @@
 name: ci-installer-dev
 
-on: workflow_dispatch
+on:
+  push:
+    tags:        
+      - 'lifecompanion/lc-installer/*-dev'
 
 jobs:
   call-workflow-passing-data:

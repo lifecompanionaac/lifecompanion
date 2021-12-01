@@ -1,6 +1,9 @@
 name: ci-launcher-dev
 
-on: workflow_dispatch
+on:
+  push:
+    tags:        
+      - 'lifecompanion/lc-launcher/*-dev'
 
 jobs:
   call-workflow-passing-data:

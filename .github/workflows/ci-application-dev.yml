@@ -1,6 +1,9 @@
 name: ci-application-dev
 
-on: workflow_dispatch
+on:
+  push:
+    tags:        
+      - 'lifecompanion/lc-app/*-dev'
 
 jobs:
   call-workflow-passing-data:
