@@ -19,10 +19,8 @@
 
 package org.lifecompanion.config.view.pane.general.view.simplercomp.keylist;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.*;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -40,6 +38,7 @@ import org.controlsfx.glyphfont.FontAwesome;
 import org.fxmisc.easybind.EasyBind;
 import org.fxmisc.easybind.monadic.MonadicBinding;
 import org.lifecompanion.api.component.definition.simplercomp.KeyListNodeI;
+import org.lifecompanion.base.data.common.LCUtils;
 import org.lifecompanion.base.data.common.ListBindingWithMapper;
 import org.lifecompanion.base.data.common.UIUtils;
 import org.lifecompanion.base.data.component.simplercomp.KeyListLeaf;
@@ -54,12 +53,13 @@ import org.lifecompanion.config.view.pane.main.notification2.LCNotificationContr
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.lang.LangUtils;
+import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.framework.utils.Pair;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
     private static final double TREE_VIEW_HEIGHT = 200.0;
@@ -67,6 +67,10 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
 
 
     private Button buttonAddKey, buttonAddCategory, buttonAddLinkKey, buttonDelete, buttonMoveUp, buttonMoveDown, buttonCut, buttonCopy, buttonPaste, buttonExportKeys, buttonImportKeys, buttonShowHideProperties;
+
+    private TextField textFieldSearchNode;
+    private Button buttonSearch, buttonNextFound, buttonClearSearch;
+    private Label labelFoundNodeInfo;
 
     private HBox selectionPathContainer;
     private KeyListNodePropertiesEditionView keyListNodePropertiesEditionView;
@@ -77,16 +81,18 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
     private final HashMap<KeyListNodeI, KeyListNodeTreeItem> keyListTreeItems;
     private final BooleanProperty propertiesShowing;
 
+    private final ObjectProperty<List<KeyListNodeI>> searchResult;
+    private final IntegerProperty foundIndex;
+    private String lastSearch;
+
     public KeyListContentConfigView() {
         this.rootKeyListNode = new SimpleObjectProperty<>();
         this.cutOrCopiedNode = new SimpleObjectProperty<>();
         this.keyListTreeItems = new HashMap<>();
         this.propertiesShowing = new SimpleBooleanProperty(true);
+        searchResult = new SimpleObjectProperty<>();
+        foundIndex = new SimpleIntegerProperty();
         initAll();
-    }
-
-    ObjectProperty<KeyListNodeI> cutOrCopiedNodeProperty() {
-        return cutOrCopiedNode;
     }
 
     public ObjectProperty<KeyListNodeI> rootKeyListNodeProperty() {
@@ -99,6 +105,7 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
     public void initUI() {
         selectionPathContainer = new HBox(5.0);
         selectionPathContainer.setAlignment(Pos.CENTER_LEFT);
+        selectionPathContainer.setMinHeight(23.0);
 
         // TOP : list + add button
         this.buttonAddCategory = createActionButton(FontAwesome.Glyph.FOLDER, LCGraphicStyle.MAIN_PRIMARY, "tooltip.keylist.button.add.category");
@@ -145,6 +152,18 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         this.buttonImportKeys.setMaxWidth(Double.MAX_VALUE);
         this.buttonImportKeys.setAlignment(Pos.CENTER);
 
+        textFieldSearchNode = new TextField();
+        textFieldSearchNode.setPromptText(Translation.getText("generaL.configuration.view.key.list.search.prompt"));
+        textFieldSearchNode.setPrefColumnCount(30);
+        buttonSearch = createSearchBarButton(FontAwesome.Glyph.SEARCH, LCGraphicStyle.MAIN_DARK, "todo", 16);
+        buttonNextFound = createSearchBarButton(FontAwesome.Glyph.CHEVRON_RIGHT, LCGraphicStyle.MAIN_DARK, "todo", 18);
+        buttonClearSearch = createSearchBarButton(FontAwesome.Glyph.TIMES, LCGraphicStyle.SECOND_DARK, "todo", 18);
+        labelFoundNodeInfo = new Label();
+
+        HBox searchBox = new HBox(10.0, textFieldSearchNode, buttonSearch, buttonClearSearch, labelFoundNodeInfo, buttonNextFound);
+        searchBox.setAlignment(Pos.CENTER);
+        VBox.setMargin(searchBox, new Insets(10, 0, 0, 0));
+
         HBox boxExportImportsButtons = new HBox(10.0, buttonImportKeys, buttonExportKeys);
         boxExportImportsButtons.setAlignment(Pos.CENTER);
 
@@ -153,14 +172,21 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         VBox.setVgrow(boxTreeAndCommands, Priority.ALWAYS);
 
         buttonShowHideProperties = UIUtils.createLeftTextButton(Translation.getText("keylist.config.hide.key.properties"), LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.EYE_SLASH).size(18).color(LCGraphicStyle.MAIN_DARK), "TODO");
+        buttonShowHideProperties.setAlignment(Pos.CENTER_RIGHT);
 
         keyListNodePropertiesEditionView = new KeyListNodePropertiesEditionView();
-        VBox.setMargin(keyListNodePropertiesEditionView, new Insets(5, 0, 0, 0));
+        VBox.setMargin(keyListNodePropertiesEditionView, new Insets(2, 0, 0, 0));
 
         // Total
         this.setSpacing(2.0);
-        this.getChildren().addAll(boxExportImportsButtons, selectionPathContainer, boxTreeAndCommands, buttonShowHideProperties, keyListNodePropertiesEditionView);
+        this.getChildren().addAll(boxExportImportsButtons, selectionPathContainer, boxTreeAndCommands, searchBox, buttonShowHideProperties, keyListNodePropertiesEditionView);
         this.setAlignment(Pos.CENTER);
+    }
+
+    private Button createSearchBarButton(FontAwesome.Glyph icon, Color color, String tooltip, int size) {
+        final Button button = UIUtils.createGraphicButton(LCGlyphFont.FONT_AWESOME.create(icon).size(size).color(color), tooltip);
+        button.getStyleClass().add("padding-0");
+        return button;
     }
 
     private Button createActionButton(FontAwesome.Glyph glyph, Color color, String tooltip) {
@@ -172,6 +198,11 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
     }
     //========================================================================
 
+    /*
+     * TODO ON SEARCH
+     *  - launching the same search should go to the next result
+     *  - if user change its search text, search result should be cleared
+     */
 
     // LISTENER
     //========================================================================
@@ -183,7 +214,6 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         this.buttonMoveUp.setOnAction(createMoveNodeListener(-1));
         this.buttonMoveDown.setOnAction(createMoveNodeListener(+1));
         this.buttonDelete.setOnAction(e -> ifSelectedItemNotNull(selectedNode -> removeNode(selectedNode, "keylist.action.removed.action.notification.title")));
-
         this.buttonCopy.setOnAction(e -> ifSelectedItemNotNull(selectedNode -> {
             KeyListNodeI duplicated = (KeyListNodeI) selectedNode.duplicate(true);
             duplicated.textProperty().set(Translation.getText("general.configuration.view.key.list.copy.label.key.text") + " " + duplicated.textProperty().get());
@@ -200,35 +230,21 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
                 addNodeToSelectedDestination(toPaste);
             }
         });
-
         this.buttonExportKeys.setOnAction(e ->
                 ConfigActionController.INSTANCE.executeAction(new KeyListActions.ExportKeyListsAction(buttonExportKeys, this.rootKeyListNode.get())));
         this.buttonImportKeys.setOnAction(e ->
                 ConfigActionController.INSTANCE.executeAction(new KeyListActions.ImportKeyListsAction(buttonImportKeys, this::addNodeToSelectedDestination)));
 
         buttonShowHideProperties.setOnAction(e -> toggleProperties());
+
+        buttonSearch.setOnAction(e -> executeSearch());
+        textFieldSearchNode.setOnAction(buttonSearch.getOnAction());
+        buttonClearSearch.setOnAction(e -> clearSearch());
+        buttonNextFound.setOnAction(e -> {
+            showNextSearchResult();
+        });
     }
 
-    private void toggleProperties() {
-        if (this.propertiesShowing.get()) hideProperties();
-        else showProperties();
-    }
-
-    private void hideProperties() {
-        keyListNodePropertiesEditionView.setVisible(false);
-        keyListNodePropertiesEditionView.setManaged(false);
-        keyListTreeView.setMaxHeight(Double.MAX_VALUE);
-        buttonShowHideProperties.setText(Translation.getText("keylist.config.show.key.properties"));
-        this.propertiesShowing.set(false);
-    }
-
-    private void showProperties() {
-        keyListNodePropertiesEditionView.setVisible(true);
-        keyListNodePropertiesEditionView.setManaged(true);
-        keyListTreeView.setMaxHeight(TREE_VIEW_HEIGHT);
-        buttonShowHideProperties.setText(Translation.getText("keylist.config.hide.key.properties"));
-        this.propertiesShowing.set(true);
-    }
 
     private void removeNode(KeyListNodeI selectedNode, String notificationTitle) {
         final KeyListNodeI parentNode = selectedNode.parentProperty().get();
@@ -264,6 +280,89 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
     }
     //========================================================================
 
+    // PROP PANEL
+    //========================================================================
+    private void toggleProperties() {
+        if (this.propertiesShowing.get()) hideProperties();
+        else showProperties();
+    }
+
+    private void hideProperties() {
+        keyListNodePropertiesEditionView.setVisible(false);
+        keyListNodePropertiesEditionView.setManaged(false);
+        keyListTreeView.setMaxHeight(Double.MAX_VALUE);
+        buttonShowHideProperties.setText(Translation.getText("keylist.config.show.key.properties"));
+        this.propertiesShowing.set(false);
+    }
+
+    private void showProperties() {
+        keyListNodePropertiesEditionView.setVisible(true);
+        keyListNodePropertiesEditionView.setManaged(true);
+        keyListTreeView.setMaxHeight(TREE_VIEW_HEIGHT);
+        buttonShowHideProperties.setText(Translation.getText("keylist.config.hide.key.properties"));
+        this.propertiesShowing.set(true);
+    }
+    //========================================================================
+
+    // SEARCH
+    //========================================================================
+    private void showNextSearchResult() {
+        if (foundIndex.get() + 1 < searchResult.get().size()) {
+            foundIndex.set(foundIndex.get() + 1);
+        } else {
+            foundIndex.set(0);
+        }
+        updateDisplayedResult();
+    }
+
+    private void clearSearch() {
+        searchResult.set(null);
+        textFieldSearchNode.clear();
+        lastSearch = null;
+    }
+
+    private static final Comparator<Pair<KeyListNodeI, Double>> SCORE_MAP_COMPARATOR = (e1, e2) -> Double.compare(e2.getRight(), e1.getRight());
+
+    private void executeSearch() {
+        final String searchText = StringUtils.stripToEmpty(this.textFieldSearchNode.getText()).toLowerCase();
+
+        foundIndex.set(0);
+        // Create a list with all nodes
+        List<KeyListNodeI> allNodes = new ArrayList<>(100);
+        this.rootKeyListNode.get().traverseTreeToBottom(allNodes::add);
+
+        // Search for similarity
+        final List<KeyListNodeI> foundNodes = allNodes
+                .parallelStream()
+                .map(node -> Pair.of(node, getSimilarityScore(node, searchText)))
+                .sorted(SCORE_MAP_COMPARATOR)
+                .filter(e -> e.getRight() > LCUtils.SIMILARITY_CONTAINS)
+                .map(Pair::getLeft)
+                .collect(Collectors.toList());
+        this.searchResult.set(foundNodes);
+        updateDisplayedResult();
+    }
+
+    private void updateDisplayedResult() {
+        int i = foundIndex.get();
+        final List<KeyListNodeI> resultList = searchResult.get();
+        if (resultList != null && i >= 0 && i < resultList.size()) {
+            final KeyListNodeI toSelect = resultList.get(i);
+            selectAndScrollTo(toSelect);
+        }
+    }
+
+    public double getSimilarityScore(KeyListNodeI node, String searchFull) {
+        double score = 0.0;
+        score += LCUtils.getSimilarityScoreFor(searchFull, node,
+                n -> Pair.of(n.textProperty().get(), 1.0),
+                n -> Pair.of(n.textToWriteProperty().get(), node.enableWriteProperty().get() ? 0.8 : 0),
+                n -> Pair.of(n.textToSpeakProperty().get(), node.enableSpeakProperty().get() ? 0.8 : 0)
+        );
+        return score;
+    }
+    //========================================================================
+
     // BINDING
     //========================================================================
     @Override
@@ -274,12 +373,27 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         this.buttonMoveUp.disableProperty().bind(keyListTreeView.getSelectionModel().selectedItemProperty().isNull());
         this.buttonMoveDown.disableProperty().bind(keyListTreeView.getSelectionModel().selectedItemProperty().isNull());
         this.buttonDelete.disableProperty().bind(keyListTreeView.getSelectionModel().selectedItemProperty().isNull());
+
+        this.buttonSearch.disableProperty().bind(textFieldSearchNode.textProperty().isEmpty());
+        this.buttonClearSearch.disableProperty().bind(searchResult.isNull().and(textFieldSearchNode.textProperty().isEmpty()));
+        this.buttonNextFound.visibleProperty().bind(searchResult.isNotNull());
+        this.labelFoundNodeInfo.visibleProperty().bind(searchResult.isNotNull());
+
+        labelFoundNodeInfo.textProperty().bind(Bindings.createStringBinding(
+                () -> {
+                    final List<KeyListNodeI> resultList = searchResult.get();
+                    return resultList != null && !resultList.isEmpty() ? (foundIndex.get() + 1) + " / " + resultList.size() : Translation.getText("generaL.configuration.view.key.list.search.empty");
+                },
+                searchResult, foundIndex)
+        );
+
         this.rootKeyListNode.addListener((obs, ov, nv) -> {
             keyListTreeItems.clear();
             if (nv != null) {
                 this.keyListTreeView.setRoot(new KeyListNodeTreeItem(nv));
                 updatePathForSelection(null);
             } else {
+                clearSearch();
                 this.keyListTreeView.setRoot(null);
                 this.keyListTreeView.getSelectionModel().clearSelection();
             }
@@ -290,7 +404,6 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
                 .orElse((KeyListNodeI) null);
         currentSelectedNode.addListener((obs, ov, nv) -> updatePathForSelection(nv));
         this.keyListNodePropertiesEditionView.selectedNodeProperty().bind(currentSelectedNode);
-
     }
     //========================================================================
 

@@ -69,7 +69,7 @@ public class KeyListNodeMainConfigurationStepView extends BorderPane implements 
     public void initUI() {
         keyListContentConfigView = new KeyListContentConfigView();
         this.setCenter(keyListContentConfigView);
-        this.setPadding(new Insets(GeneralConfigurationStepViewI.PADDING/2, GeneralConfigurationStepViewI.PADDING, GeneralConfigurationStepViewI.PADDING, GeneralConfigurationStepViewI.PADDING));
+        this.setPadding(new Insets(GeneralConfigurationStepViewI.PADDING / 2, GeneralConfigurationStepViewI.PADDING, GeneralConfigurationStepViewI.PADDING / 2, GeneralConfigurationStepViewI.PADDING));
     }
     //========================================================================
 

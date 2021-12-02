@@ -1609,6 +1609,8 @@
   <text key="general.configuration.view.key.list.button.export.keys">Exporter les listes de cases</text>
   <text key="general.configuration.view.key.list.button.import.keys">Importer des listes de cases</text>
   <text key="notification.keylist.node.added">Élément ajouté</text>
+  <text key="generaL.configuration.view.key.list.search.prompt">Rechercher du vocabulaire...</text>
+  <text key="generaL.configuration.view.key.list.search.empty">0/0</text>
   <text key="general.configuration.view.key.list.copy.label.key.text">(copie)</text>
   <text key="general.configuration.view.user.action.copy.label.key.text">(copie)</text>
   <text key="user.action.sequence.start.field.sequence">Séquence à lancer</text>
