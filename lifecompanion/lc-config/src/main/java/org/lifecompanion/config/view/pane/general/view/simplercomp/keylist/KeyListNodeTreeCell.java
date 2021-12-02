@@ -41,7 +41,7 @@ import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 
 public class KeyListNodeTreeCell extends TreeCell<KeyListNodeI> implements LCViewInitHelper {
-    public final static double CELL_HEIGHT = 35;
+    public final static double CELL_HEIGHT = 25;
 
     private final KeyListContentConfigView keyListContentConfigView;
 
@@ -53,7 +53,6 @@ public class KeyListNodeTreeCell extends TreeCell<KeyListNodeI> implements LCVie
     private Rectangle rectangleColors;
 
     KeyListNodeTreeCell(KeyListContentConfigView keyListContentConfigView) {
-        this.setStyle("-fx-indent: 30;");
         this.getStyleClass().add("keylist-tree-cell");
         this.keyListContentConfigView = keyListContentConfigView;
         initAll();
@@ -79,7 +78,7 @@ public class KeyListNodeTreeCell extends TreeCell<KeyListNodeI> implements LCVie
         rectangleColors.setStrokeWidth(2.0);
 
         graphics = new HBox(10, glyphPane, labelText, imageView, rectangleColors);
-        graphics.setPadding(new Insets(0, 0, 0, 8));
+        graphics.setPadding(new Insets(0, 0, 0, 2));
         graphics.setAlignment(Pos.CENTER_LEFT);
 
         this.setAlignment(Pos.CENTER_LEFT);

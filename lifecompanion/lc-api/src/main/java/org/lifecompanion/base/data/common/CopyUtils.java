@@ -72,12 +72,14 @@ public class CopyUtils {
             Pair<Boolean, XMLSerializable<IOContextI>> duplicatedResult = IOManager.create(serialized, context, null);
             XMLSerializable<IOContextI> duplicated = duplicatedResult.getRight();
             duplicated.deserialize(serialized, context);
-            if (changeID && duplicated instanceof TreeIdentifiableComponentI) {
-                HashMap<String, String> idChanges = new HashMap<>();
-                CopyUtils.changeIDs((TreeIdentifiableComponentI) duplicated, idChanges);
-                CopyUtils.dispatchIdChanges((TreeIdentifiableComponentI) duplicated, idChanges);
-            } else {
-                LOGGER.info("Ignored ID change on {} because it does not extends TreeIdentifiableComponentI interface", duplicated);
+            if (changeID) {
+                if (duplicated instanceof TreeIdentifiableComponentI) {
+                    HashMap<String, String> idChanges = new HashMap<>();
+                    CopyUtils.changeIDs((TreeIdentifiableComponentI) duplicated, idChanges);
+                    CopyUtils.dispatchIdChanges((TreeIdentifiableComponentI) duplicated, idChanges);
+                } else {
+                    LOGGER.info("Ignored ID change on {} because it does not extends TreeIdentifiableComponentI interface", duplicated);
+                }
             }
             return (DuplicableComponentI) duplicated;
         } catch (LCException e) {

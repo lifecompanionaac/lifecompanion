@@ -78,5 +78,10 @@
 /*== SPECIFIC TUNNINGS ==*/
 
 .keylist-tree-cell .tree-disclosure-node {
-   -fx-padding: 12px 0.229em 0.333333em 0.229em;
+   -fx-padding: 8 6 4 8;
 }
+.keylist-tree-cell{
+    -fx-indent: 40;
+}
+
+/* "-fx-indent: 30;")*/

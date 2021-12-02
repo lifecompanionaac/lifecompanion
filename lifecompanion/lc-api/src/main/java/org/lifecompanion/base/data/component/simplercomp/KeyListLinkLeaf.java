@@ -19,18 +19,10 @@
 
 package org.lifecompanion.base.data.component.simplercomp;
 
-import java.util.Map;
-
 public class KeyListLinkLeaf extends KeyListLeaf {
     public KeyListLinkLeaf() {
         super(true);
         this.enableSpeakProperty().set(false);
         this.enableWriteProperty().set(false);
-    }
-
-    @Override
-    public void idsChanged(Map<String, String> changes) {
-        super.idsChanged(changes);
-        System.out.println("ID CHANGED " + changes);
     }
 }

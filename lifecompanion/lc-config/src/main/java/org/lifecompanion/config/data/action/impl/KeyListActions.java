@@ -35,7 +35,6 @@ import org.lifecompanion.config.data.control.FileChooserType;
 import org.lifecompanion.config.data.control.LCStateController;
 import org.lifecompanion.config.view.common.LCFileChooser;
 import org.lifecompanion.framework.commons.translation.Translation;
-import org.lifecompanion.framework.commons.utils.lang.LangUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -94,9 +93,9 @@ public class KeyListActions {
 
     public static class ImportKeyListsAction implements BaseConfigActionI {
         private final Node source;
-        private final Consumer<List<KeyListNodeI>> importedNodeConsumer;
+        private final Consumer<KeyListNodeI> importedNodeConsumer;
 
-        public ImportKeyListsAction(Node source, Consumer<List<KeyListNodeI>> importedNodeConsumer) {
+        public ImportKeyListsAction(Node source, Consumer<KeyListNodeI> importedNodeConsumer) {
             this.source = source;
             this.importedNodeConsumer = importedNodeConsumer;
         }
@@ -104,11 +103,11 @@ public class KeyListActions {
         @Override
         public void doAction() throws LCException {
             FileChooser keyListFileChooser = LCFileChooser.getChooserKeyList(FileChooserType.KEYLIST_IMPORT);
-            List<File> keyListImportFiles = keyListFileChooser.showOpenMultipleDialog(UIUtils.getSourceWindow(source));
-            if (LangUtils.isNotEmpty(keyListImportFiles)) {
-                LCStateController.INSTANCE.updateDefaultDirectory(FileChooserType.KEYLIST_IMPORT, keyListImportFiles.get(0).getParentFile());
-                KeyListImportTask keyListExportTask = IOManager.INSTANCE.createImportKeyListTask(keyListImportFiles);
-                keyListExportTask.setOnSucceeded(e -> importedNodeConsumer.accept(keyListExportTask.getValue()));
+            File keyListImportFile = keyListFileChooser.showOpenDialog(UIUtils.getSourceWindow(source));
+            if (keyListImportFile != null) {
+                LCStateController.INSTANCE.updateDefaultDirectory(FileChooserType.KEYLIST_IMPORT, keyListImportFile.getParentFile());
+                KeyListImportTask keyListExportTask = IOManager.INSTANCE.createImportKeyListTask(List.of(keyListImportFile));
+                keyListExportTask.setOnSucceeded(e -> importedNodeConsumer.accept(keyListExportTask.getValue().get(0)));
                 AsyncExecutorController.INSTANCE.addAndExecute(true, false, keyListExportTask);
             }
         }

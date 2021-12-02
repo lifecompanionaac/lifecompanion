@@ -33,11 +33,13 @@ import org.lifecompanion.base.data.common.LCUtils;
 import org.lifecompanion.base.data.io.IOManager;
 import org.lifecompanion.framework.commons.fx.io.XMLIgnoreNullValue;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
+import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.framework.utils.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 public abstract class AbstractKeyListNode extends AbstractSimplerKeyActionContainer implements KeyListNodeI {
@@ -95,6 +97,15 @@ public abstract class AbstractKeyListNode extends AbstractSimplerKeyActionContai
     @Override
     public boolean isTreeIdentifiableComponentLeaf() {
         return isLeafNode();
+    }
+
+    @Override
+    public void idsChanged(Map<String, String> changes) {
+        super.idsChanged(changes);
+        String previousId = this.linkedNodeIdProperty().get();
+        if (StringUtils.isNotBlank(previousId) && changes.containsKey(previousId)) {
+            this.linkedNodeIdProperty().set(changes.get(previousId));
+        }
     }
 
     @Override

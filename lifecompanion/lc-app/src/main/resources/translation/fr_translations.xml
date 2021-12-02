@@ -1182,6 +1182,8 @@
   <text key="file.type.plugin.zip">Fichier ZIP</text>
   <text key="first.selected.component">Élément de départ</text>
   <text key="keylist.default.file.export.name">Listes de cases</text>
+  <text key="keylist.config.show.key.properties">Afficher la configuration de l'élément sélectionné</text>
+  <text key="keylist.config.hide.key.properties">Masquer la configuration de l'élément sélectionné</text>
   <text key="package.log.chooser.title">Choisir l'emplacement du ZIP</text>
   <text key="package.log.task.title">Package des logs</text>
   <text key="paste.action.name">Copie d'un élément</text>
