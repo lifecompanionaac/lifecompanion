@@ -5,6 +5,11 @@
 ### Fonctionnalités
 
 - Ajout de la possibilité de choisir la couleur du contour de la souris virtuel
+- Refonte de l'interface des "Listes de cases"
+	- Meilleure visualisation de l'ensemble du vocabulaire : sous forme d'arbre
+	- Plus facile de modifier l'organisation : fonction remonter/couper/coller/etc... bien plus accessibles
+	- Import/export facilité : tout le vocabulaire est exporté et importé d'un seul coup
+	- Regroupement de la partie "Apparance de la case" afin de gagner en place
 
 ### Corrections/ajustements
 
