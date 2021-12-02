@@ -17,26 +17,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.lifecompanion.config.view.pane.general.view.simplercomp;
+package org.lifecompanion.config.view.pane.general.view.simplercomp.keylist;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import org.controlsfx.glyphfont.FontAwesome;
-import org.controlsfx.glyphfont.Glyph;
 import org.fxmisc.easybind.EasyBind;
 import org.fxmisc.easybind.monadic.MonadicBinding;
 import org.lifecompanion.api.component.definition.simplercomp.KeyListNodeI;
-import org.lifecompanion.base.data.common.LCUtils;
+import org.lifecompanion.base.data.common.ListBindingWithMapper;
 import org.lifecompanion.base.data.common.UIUtils;
 import org.lifecompanion.base.data.component.simplercomp.KeyListLeaf;
 import org.lifecompanion.base.data.component.simplercomp.KeyListLinkLeaf;
@@ -49,25 +48,40 @@ import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 
-public class KeyListContentConfigView extends BorderPane implements LCViewInitHelper {
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
+public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
     private final ObjectProperty<KeyListNodeI> rootKeyListNode;
 
-    private Glyph listGlyph, keyGlyph, linkGlyph;
+
+    private Button buttonAddKey, buttonAddCategory, buttonAddLinkKey, buttonDelete, buttonMoveUp, buttonMoveDown, buttonCut, buttonCopy, buttonPaste, buttonExportKeys, buttonImportKeys;
+    private HBox selectionPathContainer;
+    private KeyListNodePropertiesEditionView keyListNodePropertiesEditionView;
 
     private TreeView<KeyListNodeI> keyListTreeView;
 
-    private Button buttonAddKey, buttonAddCategory, buttonAddLinkKey, buttonDelete, buttonMoveUp, buttonMoveDown, buttonCut, buttonCopy, buttonPaste, buttonExportKeys, buttonImportKeys;
 
-    private HBox selectionPathContainer;
-
-    /**
-     * To edit node properties
-     */
-    private KeyListNodePropertiesEditionView keyListNodePropertiesEditionView;
+    private final ObjectProperty<KeyListNodeI> draggedNode;
+    private final ObjectProperty<KeyListNodeI> cutOrCopiedNode;
+    private final HashMap<KeyListNodeI, KeyListNodeTreeItem> keyListTreeItems;
 
     public KeyListContentConfigView() {
         this.rootKeyListNode = new SimpleObjectProperty<>();
+        draggedNode = new SimpleObjectProperty<>();
+        cutOrCopiedNode = new SimpleObjectProperty<>();
+        keyListTreeItems = new HashMap<>();
         initAll();
+    }
+
+    ObjectProperty<KeyListNodeI> draggedNodeProperty() {
+        return draggedNode;
+    }
+
+    ObjectProperty<KeyListNodeI> cutOrCopiedNodeProperty() {
+        return cutOrCopiedNode;
     }
 
     public ObjectProperty<KeyListNodeI> rootKeyListNodeProperty() {
@@ -82,15 +96,15 @@ public class KeyListContentConfigView extends BorderPane implements LCViewInitHe
         selectionPathContainer.setAlignment(Pos.CENTER_LEFT);
 
         // TOP : list + add button
-        this.buttonAddCategory = createButton(FontAwesome.Glyph.FOLDER, LCGraphicStyle.MAIN_PRIMARY, "todo");
-        this.buttonAddKey = createButton(FontAwesome.Glyph.PICTURE_ALT, LCGraphicStyle.MAIN_PRIMARY, "todo");
-        this.buttonAddLinkKey = createButton(FontAwesome.Glyph.LINK, LCGraphicStyle.MAIN_PRIMARY, "todo");
-        buttonMoveUp = createButton(FontAwesome.Glyph.CHEVRON_UP, LCGraphicStyle.MAIN_PRIMARY, "todo");
-        buttonMoveDown = createButton(FontAwesome.Glyph.CHEVRON_DOWN, LCGraphicStyle.MAIN_PRIMARY, "todo");
-        buttonCopy = createButton(FontAwesome.Glyph.COPY, LCGraphicStyle.MAIN_DARK, "todo");
-        buttonCut = createButton(FontAwesome.Glyph.CUT, LCGraphicStyle.MAIN_DARK, "todo");
-        buttonPaste = createButton(FontAwesome.Glyph.PASTE, LCGraphicStyle.MAIN_DARK, "todo");
-        buttonDelete = createButton(FontAwesome.Glyph.TRASH, LCGraphicStyle.SECOND_DARK, "todo");
+        this.buttonAddCategory = createActionButton(FontAwesome.Glyph.FOLDER, LCGraphicStyle.MAIN_PRIMARY, "todo");
+        this.buttonAddKey = createActionButton(FontAwesome.Glyph.PICTURE_ALT, LCGraphicStyle.MAIN_PRIMARY, "todo");
+        this.buttonAddLinkKey = createActionButton(FontAwesome.Glyph.LINK, LCGraphicStyle.MAIN_PRIMARY, "todo");
+        buttonMoveUp = createActionButton(FontAwesome.Glyph.CHEVRON_UP, LCGraphicStyle.MAIN_PRIMARY, "todo");
+        buttonMoveDown = createActionButton(FontAwesome.Glyph.CHEVRON_DOWN, LCGraphicStyle.MAIN_PRIMARY, "todo");
+        buttonCopy = createActionButton(FontAwesome.Glyph.COPY, LCGraphicStyle.MAIN_PRIMARY, "todo");
+        buttonCut = createActionButton(FontAwesome.Glyph.CUT, LCGraphicStyle.MAIN_PRIMARY, "todo");
+        buttonPaste = createActionButton(FontAwesome.Glyph.PASTE, LCGraphicStyle.MAIN_DARK, "todo");
+        buttonDelete = createActionButton(FontAwesome.Glyph.TRASH, LCGraphicStyle.SECOND_DARK, "todo");
 
         // Command buttons
         GridPane gridButtons = new GridPane();
@@ -111,18 +125,11 @@ public class KeyListContentConfigView extends BorderPane implements LCViewInitHe
         gridButtons.add(buttonMoveDown, 1, rowIndex++);
 
         keyListTreeView = new TreeView<>();
-        keyListTreeView.setCellFactory(tv -> new KeyListNodeTreeCell());
+        keyListTreeView.setCellFactory(tv -> new KeyListNodeTreeCell(this));
         keyListTreeView.setShowRoot(false);
         keyListTreeView.setMaxHeight(200.0);
+        keyListTreeView.setFixedCellSize(KeyListNodeTreeCell.CELL_HEIGHT + 5);
         HBox.setHgrow(keyListTreeView, Priority.ALWAYS);
-
-        keyListTreeView.setOnDragExited(da -> {
-            // FIXME : find a way to scroll up/down
-            //            if (da.getY() > 0) {
-            //treeViewItems.refresh();
-            //            }
-        });
-
 
         this.buttonExportKeys = UIUtils.createLeftTextButton(Translation.getText("general.configuration.view.key.list.button.export.keys"), LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.UPLOAD).size(14).color(LCGraphicStyle.MAIN_DARK), null);
         this.buttonExportKeys.setMaxWidth(Double.MAX_VALUE);
@@ -137,85 +144,36 @@ public class KeyListContentConfigView extends BorderPane implements LCViewInitHe
 
         HBox boxTreeAndCommands = new HBox(5.0, keyListTreeView, gridButtons);
         boxTreeAndCommands.setAlignment(Pos.CENTER);
+        VBox.setVgrow(boxTreeAndCommands, Priority.ALWAYS);
 
-        VBox boxTop = new VBox(2.0, boxExportImportsButtons, selectionPathContainer, boxTreeAndCommands);
-        boxTop.setMaxWidth(Double.MAX_VALUE);
-        boxTop.setAlignment(Pos.CENTER);
+        Button buttonExpandCollapse = UIUtils.createGraphicButton(LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.CHEVRON_UP).size(18).color(LCGraphicStyle.MAIN_DARK), "TODO");
+
         keyListNodePropertiesEditionView = new KeyListNodePropertiesEditionView();
+        BorderPane.setMargin(keyListNodePropertiesEditionView, new Insets(5, 0, 0, 0));
+
+        buttonExpandCollapse.setOnAction(e -> {
+            if (keyListNodePropertiesEditionView.isVisible()) {
+                keyListNodePropertiesEditionView.setVisible(false);
+                keyListNodePropertiesEditionView.setManaged(false);
+                keyListTreeView.setMaxHeight(Double.MAX_VALUE);
+            } else {
+                keyListNodePropertiesEditionView.setVisible(true);
+                keyListNodePropertiesEditionView.setManaged(true);
+                keyListTreeView.setMaxHeight(200.0);
+            }
+        });
 
         // Total
-        this.setTop(boxTop);
-        this.setCenter(keyListNodePropertiesEditionView);
+        this.setSpacing(2.0);
+        this.getChildren().addAll(boxExportImportsButtons, selectionPathContainer, boxTreeAndCommands, buttonExpandCollapse, keyListNodePropertiesEditionView);
     }
 
-    private Button createButton(FontAwesome.Glyph trash, Color color, String tooltip) {
-        final Button button = UIUtils.createGraphicButton(LCGlyphFont.FONT_AWESOME.create(trash)
-                .size(18).color(color), tooltip);
-        //button.getStyleClass().addAll("padding-0");
+    private Button createActionButton(FontAwesome.Glyph glyph, Color color, String tooltip) {
+        final Button button = UIUtils.createGraphicButton(LCGlyphFont.FONT_AWESOME.create(glyph)
+                .size(22).color(color), tooltip);
+        button.setAlignment(Pos.CENTER);
+        GridPane.setHalignment(button, HPos.CENTER);
         return button;
-    }
-
-    private KeyListNodeI dragged;
-
-    private class KeyListNodeTreeCell extends TreeCell<KeyListNodeI> {
-        private final ImageView imageView;
-
-        KeyListNodeTreeCell() {
-            final String nodeIdForImageLoading = "KeyListNodeTreeCell" + this.hashCode();
-            imageView = new ImageView();
-            imageView.setFitHeight(20);
-            imageView.setFitWidth(20);
-            imageView.setSmooth(true);
-            this.itemProperty().addListener((obs, ov, nv) -> {
-                if (ov != null) {
-                    ov.removeExternalLoadingRequest(nodeIdForImageLoading);
-                }
-                if (nv != null)
-                    nv.addExternalLoadingRequest(nodeIdForImageLoading);
-            });
-            this.setOnDragDetected(me -> {
-                dragged = getItem();
-                Dragboard dragboard = this.startDragAndDrop(TransferMode.ANY);
-                ClipboardContent content = new ClipboardContent();
-                content.putImage(this.snapshot(null, null));
-                dragboard.setContent(content);
-            });
-            this.setOnDragOver(me -> {
-                if (dragged != null && dragged != this.getItem()) {
-                    me.acceptTransferModes(TransferMode.ANY);
-                    // TODO : add timer on this
-                    if (!this.getTreeItem().isLeaf() && !this.getTreeItem().isExpanded()) {
-                        this.getTreeItem().setExpanded(true);
-                    }
-                }
-            });
-            this.setOnDragDropped(me -> {
-
-            });
-        }
-
-        @Override
-        protected void updateItem(KeyListNodeI item, boolean empty) {
-            super.updateItem(item, empty);
-            if (item == null || empty) {
-                LCUtils.unbindAndSetNull(textProperty());
-                LCUtils.unbindAndSetNull(graphicProperty());
-            } else {
-                imageView.imageProperty().bind(item.loadedImageProperty());
-                textProperty().bind(item.textProperty());
-                graphicProperty().set(imageView);
-            }
-        }
-    }
-
-    private static class KeyListNodeTreeItem extends TreeItem<KeyListNodeI> {
-        public KeyListNodeTreeItem(KeyListNodeI value) {
-            super(value);
-            if (!value.isLeafNode()) {
-                BindingUtil.mapContent(getChildren(), value.getChildren(), KeyListNodeTreeItem::new);
-            }
-        }
-
     }
     //========================================================================
 
@@ -224,25 +182,30 @@ public class KeyListContentConfigView extends BorderPane implements LCViewInitHe
     //========================================================================
     @Override
     public void initListener() {
-        this.buttonAddKey.setOnAction(ev -> {
-            final TreeItem<KeyListNodeI> selectedItem = this.keyListTreeView.getSelectionModel().getSelectedItem();
-            if (selectedItem != null && selectedItem.getValue() != null) {
-                final KeyListNodeI selectedNode = selectedItem.getValue();
-                final KeyListNodeI parentNode = selectedNode.parentProperty().get();
-                final int i = parentNode.getChildren().indexOf(selectedNode);
-                parentNode.getChildren().add(i + 1, new KeyListNode());
+        this.buttonAddKey.setOnAction(createAddNodeListener(KeyListLeaf::new));
+        this.buttonAddLinkKey.setOnAction(createAddNodeListener(KeyListLinkLeaf::new));
+        this.buttonAddCategory.setOnAction(createAddNodeListener(KeyListNode::new));
+        this.buttonMoveUp.setOnAction(createMoveNodeListener(-1));
+        this.buttonMoveDown.setOnAction(createMoveNodeListener(+1));
+        this.buttonDelete.setOnAction(e -> ifSelectedItemNotNull(this::removeNode));
+
+        this.buttonCopy.setOnAction(e -> ifSelectedItemNotNull(selectedNode -> {
+            KeyListNodeI duplicated = (KeyListNodeI) selectedNode.duplicate(true);
+            duplicated.textProperty().set(Translation.getText("general.configuration.view.key.list.copy.label.key.text") + " " + duplicated.textProperty().get());
+            cutOrCopiedNode.set(duplicated);
+        }));
+        this.buttonCut.setOnAction(e -> ifSelectedItemNotNull(selectedNode -> {
+            cutOrCopiedNode.set(selectedNode);
+            removeNode(selectedNode);
+        }));
+        this.buttonPaste.setOnAction(e -> {
+            final KeyListNodeI toPaste = cutOrCopiedNode.get();
+            if (toPaste != null) {
+                cutOrCopiedNode.set(null);
+                addNodeToSelectedDestination(toPaste);
             }
         });
-        this.buttonDelete.setOnAction(e -> {
-            final TreeItem<KeyListNodeI> selectedItem = this.keyListTreeView.getSelectionModel().getSelectedItem();
-            if (selectedItem != null && selectedItem.getValue() != null) {
-                final KeyListNodeI selectedNode = selectedItem.getValue();
-                final KeyListNodeI parentNode = selectedNode.parentProperty().get();
-                parentNode.getChildren().remove(selectedNode);
-            }
-        });
-        this.buttonAddCategory.setOnAction(this::addButtonOnAction);
-        this.buttonAddLinkKey.setOnAction(this::addButtonOnAction);
+
         //        this.buttonExportKeys.setOnAction(e ->
         //                ConfigActionController.INSTANCE.executeAction(new KeyListActions.ExportKeyListsAction(buttonExportKeys, new ArrayList<>(this.listItemList.getSelectionModel().getSelectedItems()))));
         this.buttonImportKeys.setOnAction(e -> {
@@ -262,8 +225,7 @@ public class KeyListContentConfigView extends BorderPane implements LCViewInitHe
                 //                }
             }));
         });
-        //        this.keyListNodePropertiesEditionView.setAddRequestListener(() -> commonListViewActionContainer.addAndScrollTo(new KeyListLeaf()));
-        //        this.keyListNodePropertiesEditionView.setRemoveRequestListener(commonListViewActionContainer::deleteItem);
+
 
         //        this.commonListViewActionContainer.setDuplicateFunction(item -> {
         //            KeyListNodeI duplicated = (KeyListNodeI) item.duplicate(true);
@@ -285,7 +247,68 @@ public class KeyListContentConfigView extends BorderPane implements LCViewInitHe
         //        this.commonListViewActionContainer.setDragFinishedConsumer((movedCount, dragDestination) -> LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo(Translation.getText("general.configuration.view.keylist.moved." +
         //                (movedCount > 1 ? "plural." : "") + "result", movedCount, getFullNameForNode(dragDestination)))));
         //        this.commonListViewActionContainer.setDoubleClicConsumer(this::configureNodeChildren);
+
+        keyListTreeView.setOnDragExited(da -> {
+            // FIXME : find a way to scroll up/down
+            //            if (da.getY() > 0) {
+            //treeViewItems.refresh();
+            //            }
+        });
     }
+
+    private void removeNode(KeyListNodeI selectedNode) {
+        final KeyListNodeI parentNode = selectedNode.parentProperty().get();
+        parentNode.getChildren().remove(selectedNode);
+        // TODO : notification with undo button ?
+    }
+
+    private void ifSelectedItemNotNull(Consumer<KeyListNodeI> action) {
+        final TreeItem<KeyListNodeI> selectedItem = this.keyListTreeView.getSelectionModel().getSelectedItem();
+        if (selectedItem != null && selectedItem.getValue() != null) {
+            action.accept(selectedItem.getValue());
+        }
+    }
+
+    private EventHandler<ActionEvent> createMoveNodeListener(final int indexMove) {
+        return ae -> {
+            ifSelectedItemNotNull(selectedNode -> {
+                final ObservableList<KeyListNodeI> children = selectedNode.parentProperty().get().getChildren();
+                int index = children.indexOf(selectedNode);
+                if (index + indexMove >= 0 && index + indexMove < children.size()) {
+                    Collections.swap(children, index, index + indexMove);
+                    selectAndScrollTo(selectedNode);
+                }
+            });
+        };
+    }
+
+    private EventHandler<ActionEvent> createAddNodeListener(Supplier<KeyListNodeI> supplier) {
+        return ev -> addNodeToSelectedDestination(supplier.get());
+    }
+
+    private void addNodeToSelectedDestination(KeyListNodeI added) {
+        // TODO : what's happening if selecting a node with children ?
+        //  should added node be in the selected node children, or beside ?
+        if (keyListTreeView.getRoot() != null) {
+            final TreeItem<KeyListNodeI> selectedItem = this.keyListTreeView.getSelectionModel().getSelectedItem();
+            if (selectedItem != null && selectedItem.getValue() != null) {
+                final KeyListNodeI selectedNode = selectedItem.getValue();
+                if (selectedNode.isLeafNode()) {
+                    final KeyListNodeI parentNode = selectedNode.parentProperty().get();
+                    final int i = parentNode.getChildren().indexOf(selectedNode);
+                    parentNode.getChildren().add(i + 1, added);
+                } else {
+                    selectedNode.getChildren().add(0, added);
+                }
+            } else {
+                keyListTreeView.getRoot().getValue().getChildren().add(added);
+            }
+            selectAndScrollTo(added);
+            // TODO : notification?
+        }
+    }
+
+
     //========================================================================
 
     // BINDING
@@ -293,8 +316,10 @@ public class KeyListContentConfigView extends BorderPane implements LCViewInitHe
     @Override
     public void initBinding() {
         this.rootKeyListNode.addListener((obs, ov, nv) -> {
+            keyListTreeItems.clear();
             if (nv != null) {
                 this.keyListTreeView.setRoot(new KeyListNodeTreeItem(nv));
+                createAndAddLinkForNode(nv);
             } else {
                 this.keyListTreeView.setRoot(null);
             }
@@ -307,18 +332,14 @@ public class KeyListContentConfigView extends BorderPane implements LCViewInitHe
                 while (current != null) {
                     KeyListNodeI nodeForLink = current;
                     final KeyListNodeI currentParent = nodeForLink.parentProperty().get();
-                    final Hyperlink hyperlink = new Hyperlink(getFullNameForNode(nodeForLink));
-                    hyperlink.setOnAction(e -> {
-                        // TODO : fix node in tree
-                        //rootKeyListNode.set(nodeForLink)
-                        //keyListTreeView.getSelectionModel().select();
-                    });
-                    selectionPathContainer.getChildren().add(0, hyperlink);
+                    createAndAddLinkForNode(nodeForLink);
                     current = currentParent;
                     if (current != null) {
-                        selectionPathContainer.getChildren().add(0, LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.CHEVRON_RIGHT).size(12).color(LCGraphicStyle.MAIN_DARK));
+                        selectionPathContainer.getChildren().add(0, LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.CHEVRON_RIGHT).size(10).color(LCGraphicStyle.MAIN_DARK));
                     }
                 }
+            } else if (rootKeyListNode.get() != null) {
+                createAndAddLinkForNode(rootKeyListNode.get());
             }
         });
 
@@ -326,30 +347,55 @@ public class KeyListContentConfigView extends BorderPane implements LCViewInitHe
         this.keyListNodePropertiesEditionView.selectedNodeProperty().bind(keyListNodeIMonadicBinding);
     }
 
+    private void createAndAddLinkForNode(KeyListNodeI nodeForLink) {
+        final Hyperlink hyperlink = new Hyperlink(getFullNameForNode(nodeForLink));
+        if (nodeForLink != rootKeyListNode.get()) {
+            hyperlink.setOnAction(e -> {
+                selectAndScrollTo(nodeForLink);
+            });
+        }
+        selectionPathContainer.getChildren().add(0, hyperlink);
+    }
+
     private String getFullNameForNode(KeyListNodeI node) {
         return (node.parentProperty().get() == null ? Translation.getText("general.configuration.view.keylist.root.node.text") :
-                StringUtils.isNotBlank(node.textProperty().get()) ? node.textProperty().get() : Translation.getText("general.configuration.view.keylist.empty.node.text"))
-                + " " + Translation.getText("general.configuration.view.keylist.node.level", node.levelProperty());
+                StringUtils.isNotBlank(node.textProperty().get()) ? node.textProperty().get() : Translation.getText("general.configuration.view.keylist.empty.node.text"));
     }
     //========================================================================
 
 
     // HELPER
     //========================================================================
-    private void addButtonOnAction(ActionEvent actionEvent) {
-        KeyListNodeI added = actionEvent.getSource() == buttonAddCategory ? new KeyListNode() : actionEvent.getSource() == buttonAddKey ? new KeyListLeaf() : new KeyListLinkLeaf();
-        //this.commonListViewActionContainer.addAndScrollTo(added);
-    }
+    public void selectAndScrollTo(KeyListNodeI item) {
+        final KeyListNodeTreeItem keyListNodeTreeItem = this.keyListTreeItems.get(item);
+        if (keyListNodeTreeItem != null) {
+            keyListTreeView.getSelectionModel().select(keyListNodeTreeItem);
 
-    void configureNodeChildren(KeyListNodeI item) {
-        if (item != null && !item.isLeafNode()) {
-            rootKeyListNode.set(item);
+            // Scroll to selection
+            final int selectedIndex = this.keyListTreeView.getSelectionModel().getSelectedIndex();
+            int indexToSelect = selectedIndex;
+            // try to go back 3 index behind (better for UX)
+            while (indexToSelect-- > 0 && selectedIndex - indexToSelect < 2) ;
+            this.keyListTreeView.scrollTo(indexToSelect);
         }
     }
+    //========================================================================
 
-    public void selectToBeEditedInTree(KeyListNodeI item) {
-        rootKeyListNode.set(item.parentProperty().get());
-        //this.commonListViewActionContainer.selectAndScrollTo(item);
+    // TREE ITEM
+    //========================================================================
+    private class KeyListNodeTreeItem extends TreeItem<KeyListNodeI> {
+        public KeyListNodeTreeItem(KeyListNodeI value) {
+            super(value);
+            keyListTreeItems.put(value, this);
+            if (!value.isLeafNode()) {
+                ListBindingWithMapper.mapContent(getChildren(), value.getChildren(), KeyListNodeTreeItem::new);
+            }
+            this.expandedProperty().addListener((obs, ov, nv) -> {
+                if (nv) {
+                    selectAndScrollTo(value);
+                }
+            });
+        }
     }
     //========================================================================
 

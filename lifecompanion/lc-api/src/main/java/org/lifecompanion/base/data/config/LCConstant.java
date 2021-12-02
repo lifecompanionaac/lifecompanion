@@ -72,7 +72,7 @@ public class LCConstant {
 
     // Class part : "CSS Style"
     // ========================================================================
-    public final static String[] CSS_STYLE_PATH = {"style/main_css.css"};
+    public final static String[] CSS_STYLE_PATH = {"style/main_css.css", "style/lifecompanion.css"};
     public final static String[] CSS_NOTIFICATION_STYLE_PATH = {"style/lc_notifications.css"};
     // ========================================================================
 

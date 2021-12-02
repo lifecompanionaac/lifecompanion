@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.lifecompanion.config.view.pane.general.view.simplercomp;
+package org.lifecompanion.config.view.pane.general.view.simplercomp.keylist;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -25,6 +25,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import org.lifecompanion.api.component.definition.simplercomp.KeyListNodeI;
 import org.lifecompanion.config.view.pane.compselector.KeyListSelectorControl;
+import org.lifecompanion.config.view.pane.general.view.simplercomp.AbstractSimplerKeyActionContainerPropertiesEditionView;
 import org.lifecompanion.framework.commons.translation.Translation;
 
 public class KeyListNodePropertiesEditionView extends AbstractSimplerKeyActionContainerPropertiesEditionView<KeyListNodeI> {

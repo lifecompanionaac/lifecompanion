@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.lifecompanion.config.view.pane.general.view.simplercomp;
+package org.lifecompanion.config.view.pane.general.view.simplercomp.useractionsequence;
 
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -43,7 +43,7 @@ public class UserActionSequencesEditionView extends BorderPane implements LCView
     private ComboBox<UserActionSequenceI> comboBoxSequences;
     private UserActionSequenceItemsEditionView userActionSequenceItemsEditionView;
 
-    UserActionSequencesEditionView() {
+    public UserActionSequencesEditionView() {
         initAll();
     }
 

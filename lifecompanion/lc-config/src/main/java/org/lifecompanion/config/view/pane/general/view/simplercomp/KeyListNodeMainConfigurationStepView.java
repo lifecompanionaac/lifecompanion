@@ -27,6 +27,7 @@ import org.lifecompanion.api.component.definition.simplercomp.KeyListNodeI;
 import org.lifecompanion.base.data.control.KeyListController;
 import org.lifecompanion.base.view.reusable.GeneralConfigurationStep;
 import org.lifecompanion.base.view.reusable.GeneralConfigurationStepViewI;
+import org.lifecompanion.config.view.pane.general.view.simplercomp.keylist.KeyListContentConfigView;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 
 public class KeyListNodeMainConfigurationStepView extends BorderPane implements GeneralConfigurationStepViewI, LCViewInitHelper {
@@ -100,7 +101,7 @@ public class KeyListNodeMainConfigurationStepView extends BorderPane implements 
             String nodeId = (String) stepArgs[0];
             final KeyListNodeI nodeToEditInCurrentTree = KeyListController.findNodeByIdInSubtree(editedRoot, nodeId);
             if (nodeToEditInCurrentTree != null) {
-                keyListContentConfigView.selectToBeEditedInTree(nodeToEditInCurrentTree);
+                keyListContentConfigView.selectAndScrollTo(nodeToEditInCurrentTree);
             }
         }
     }

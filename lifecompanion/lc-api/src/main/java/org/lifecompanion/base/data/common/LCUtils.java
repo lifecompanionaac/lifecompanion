@@ -340,6 +340,8 @@ public class LCUtils {
     public final static Consumer<?> EMPTY_CONSUMER = (o) -> {
     };
 
+    // Should be checked and replaced with V2 implementation
+    @Deprecated
     public static <T> ListChangeListener<T> createListChangeListener(final Consumer<T> forEachAdd, final Consumer<T> forEachRemove) {
         ListChangeListener<T> changeListener = (change) -> {
             while (change.next()) {
@@ -358,6 +360,28 @@ public class LCUtils {
             }
         };
         return changeListener;
+    }
+
+    // This version is correctly implemented for other actions that simple add/remove
+    public static <T> ListChangeListener<T> createListChangeListenerV2(final Consumer<T> forEachAdd, final Consumer<T> forEachRemove) {
+        return (c) -> {
+            while (c.next()) {
+                if (c.wasPermutated() || c.wasUpdated()) {
+                    // Don't do anything
+                } else {
+                    consumeEachIn(c.getAddedSubList(), forEachAdd);
+                    consumeEachIn(c.getRemoved(), forEachRemove);
+                }
+            }
+        };
+    }
+
+    public static <T> void consumeEachIn(List<? extends T> list, Consumer<T> consumer) {
+        if (consumer != null && list != null) {
+            for (T item : list) {
+                consumer.accept(item);
+            }
+        }
     }
 
     public static void unbindAndSetNull(final Property<?> prop) {

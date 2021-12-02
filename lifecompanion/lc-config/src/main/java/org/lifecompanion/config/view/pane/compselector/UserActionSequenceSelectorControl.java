@@ -27,8 +27,8 @@ import org.lifecompanion.api.component.definition.simplercomp.UserActionSequence
 import org.lifecompanion.api.component.definition.simplercomp.UserActionSequencesI;
 import org.lifecompanion.base.data.common.LCUtils;
 import org.lifecompanion.base.data.common.UIUtils;
-import org.lifecompanion.config.view.pane.general.view.simplercomp.SimpleKeyListContentListCell;
-import org.lifecompanion.config.view.pane.general.view.simplercomp.UserActionSequenceListCell;
+import org.lifecompanion.config.view.pane.general.view.simplercomp.keylist.SimpleKeyListContentListCell;
+import org.lifecompanion.config.view.pane.general.view.simplercomp.useractionsequence.UserActionSequenceListCell;
 import org.lifecompanion.config.view.reusable.SearchComboBox;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;

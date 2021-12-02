@@ -17,21 +17,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.lifecompanion.config.view.pane.general.view.simplercomp;
+package org.lifecompanion.config.view.pane.general.view.simplercomp.keylist;
 
 import javafx.scene.control.ListCell;
-import org.lifecompanion.api.component.definition.simplercomp.UserActionSequenceI;
+import org.lifecompanion.api.component.definition.simplercomp.KeyListNodeI;
 
+public class SimpleKeyListContentListCell<T extends KeyListNodeI> extends ListCell<T> {
 
-public class UserActionSequenceListCell extends ListCell<UserActionSequenceI> {
+    public final static double CELL_HEIGHT = 30.0;
+
+    public SimpleKeyListContentListCell() {
+        this.setPrefHeight(CELL_HEIGHT);
+        this.setMinHeight(CELL_HEIGHT);
+        this.setMaxHeight(CELL_HEIGHT);
+    }
+
     @Override
-    protected void updateItem(final UserActionSequenceI itemP, final boolean emptyP) {
+    protected void updateItem(final T itemP, final boolean emptyP) {
         super.updateItem(itemP, emptyP);
         if (itemP == null || emptyP) {
             this.textProperty().unbind();
-            this.setText(null);
         } else {
-            this.textProperty().bind(itemP.nameProperty());
+            this.textProperty().bind(itemP.textProperty());
         }
     }
 }
+

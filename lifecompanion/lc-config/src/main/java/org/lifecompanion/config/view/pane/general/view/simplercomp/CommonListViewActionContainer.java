@@ -63,24 +63,24 @@ public class CommonListViewActionContainer<T> {
     }
     //========================================================================
 
-    void addAndScrollTo(T item) {
+    public void addAndScrollTo(T item) {
         listView.getItems().add(item);
         selectAndScrollTo(item);
     }
 
-    void selectAndScrollTo(T item) {
+    public void selectAndScrollTo(T item) {
         listView.getSelectionModel().clearSelection();
         listView.getSelectionModel().select(item);
         listView.scrollTo(item);
     }
 
-    void deleteItem(T item) {
+    public void deleteItem(T item) {
         if (item != null) {
             listView.getItems().remove(item);
         }
     }
 
-    void moveUp(T item) {
+    public void moveUp(T item) {
         if (item != null) {
             final ObservableList<T> items = listView.getItems();
             int index = items.indexOf(item);
@@ -92,7 +92,7 @@ public class CommonListViewActionContainer<T> {
     }
 
 
-    void moveDown(T item) {
+    public void moveDown(T item) {
         if (item != null) {
             final ObservableList<T> items = listView.getItems();
             int index = items.indexOf(item);
@@ -103,7 +103,7 @@ public class CommonListViewActionContainer<T> {
         }
     }
 
-    void duplicate(T item) {
+    public void duplicate(T item) {
         if (item != null) {
             T duplicated = duplicateFunction.apply(item);
             final ObservableList<T> items = listView.getItems();
@@ -113,7 +113,7 @@ public class CommonListViewActionContainer<T> {
         }
     }
 
-    void doubleClicOn(T item) {
+    public void doubleClicOn(T item) {
         if (doubleClicConsumer != null) {
             doubleClicConsumer.accept(item);
         }
@@ -123,7 +123,7 @@ public class CommonListViewActionContainer<T> {
     //========================================================================
     private List<T> draggedNodes;
 
-    void dragStart(T dragSource) {
+    public void dragStart(T dragSource) {
         this.draggedNodes = new ArrayList<>(listView.getSelectionModel().getSelectedItems());
         if (!draggedNodes.contains(dragSource)) {
             draggedNodes.add(dragSource);
@@ -131,7 +131,7 @@ public class CommonListViewActionContainer<T> {
     }
 
 
-    void dragEnd(T dragDestination) {
+    public void dragEnd(T dragDestination) {
         if (dragEndPriorTester.test(dragDestination)) {
             int movedCount = 0;
             for (T draggedNode : draggedNodes) {

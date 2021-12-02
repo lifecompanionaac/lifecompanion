@@ -17,13 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.lifecompanion.config.view.pane.general.view.simplercomp;
+package org.lifecompanion.config.view.pane.general.view.simplercomp.keylist;
 
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.Glyph;
 import org.lifecompanion.api.component.definition.simplercomp.KeyListNodeI;
 import org.lifecompanion.base.data.config.LCGraphicStyle;
 import org.lifecompanion.config.data.config.LCGlyphFont;
+import org.lifecompanion.config.view.pane.general.view.simplercomp.CommonListViewActionContainer;
+import org.lifecompanion.config.view.pane.general.view.simplercomp.DetailledSimplerKeyContentContainerListCell;
 
 public class DetailledKeyListContentListCell extends DetailledSimplerKeyContentContainerListCell<KeyListNodeI> {
     private static final int GLYPH_SIZE = 12;

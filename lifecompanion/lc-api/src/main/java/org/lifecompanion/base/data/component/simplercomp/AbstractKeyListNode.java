@@ -61,9 +61,14 @@ public abstract class AbstractKeyListNode extends AbstractSimplerKeyActionContai
         this.level = new SimpleIntegerProperty(1);
         this.linkedNodeId = new SimpleStringProperty();
         if (this.children != null) {
-            this.children.addListener(LCUtils.createListChangeListener(
+            this.children.addListener(LCUtils.createListChangeListenerV2(
                     added -> ((AbstractKeyListNode) added).parent.set(this),
-                    removed -> ((AbstractKeyListNode) removed).parent.set(null)
+                    removed -> {
+                        // Before removing the parent, we should check the count because our add/removed mapping is * > 1
+                        if (!children.contains(removed)) {
+                            ((AbstractKeyListNode) removed).parent.set(null);
+                        }
+                    }
             ));
         }
         this.parent.addListener((obs, ov, nv) -> {

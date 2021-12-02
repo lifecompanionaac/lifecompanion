@@ -1,4 +1,4 @@
-package org.lifecompanion.config.view.pane.general.view.simplercomp;
+package org.lifecompanion.base.data.common;
 
 import javafx.beans.WeakListener;
 import javafx.collections.ListChangeListener;
@@ -10,7 +10,11 @@ import java.util.function.Function;
 
 import static java.util.stream.Collectors.toList;
 
-public class BindingUtil {
+/**
+ * Copied from Bindings#bindContent and changed to include content mapping.<br>
+ * <a href="https://stackoverflow.com/questions/43890528/observablelist-bind-content-with-elements-conversion">Source from StackOverflow</a>
+ */
+public class ListBindingWithMapper {
 
     public static <E, F> void mapContent(ObservableList<F> mapped, ObservableList<? extends E> source,
                                          Function<? super E, ? extends F> mapper) {

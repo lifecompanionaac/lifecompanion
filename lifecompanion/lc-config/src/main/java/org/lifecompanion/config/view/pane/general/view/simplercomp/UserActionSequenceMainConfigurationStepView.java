@@ -26,6 +26,7 @@ import org.lifecompanion.api.component.definition.LCConfigurationI;
 import org.lifecompanion.api.component.definition.simplercomp.UserActionSequencesI;
 import org.lifecompanion.base.view.reusable.GeneralConfigurationStep;
 import org.lifecompanion.base.view.reusable.GeneralConfigurationStepViewI;
+import org.lifecompanion.config.view.pane.general.view.simplercomp.useractionsequence.UserActionSequencesEditionView;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 
 public class UserActionSequenceMainConfigurationStepView extends BorderPane implements GeneralConfigurationStepViewI, LCViewInitHelper {

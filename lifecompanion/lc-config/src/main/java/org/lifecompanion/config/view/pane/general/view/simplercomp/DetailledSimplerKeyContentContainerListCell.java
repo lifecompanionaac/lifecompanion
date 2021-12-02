@@ -28,15 +28,13 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.paint.Color;
 import org.controlsfx.glyphfont.FontAwesome;
-import org.controlsfx.glyphfont.Glyph;
-import org.lifecompanion.api.component.definition.simplercomp.KeyListNodeI;
 import org.lifecompanion.api.component.definition.simplercomp.SimplerKeyContentContainerI;
 import org.lifecompanion.base.data.common.UIUtils;
 import org.lifecompanion.base.data.config.LCGraphicStyle;
 import org.lifecompanion.config.data.config.LCGlyphFont;
 
 public class DetailledSimplerKeyContentContainerListCell<T extends SimplerKeyContentContainerI> extends AbstractKeyListContentListCell<T> {
-    static final double CELL_HEIGHT = 100.0;
+    public static final double CELL_HEIGHT = 100.0;
     private static final int BUTTON_SIZE = 14;
 
     protected final HBox fillerPane;

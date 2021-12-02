@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.lifecompanion.config.view.pane.general.view.simplercomp;
+package org.lifecompanion.config.view.pane.general.view.simplercomp.useractionsequence;
 
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
@@ -26,6 +26,7 @@ import javafx.scene.layout.GridPane;
 import org.controlsfx.control.ToggleSwitch;
 import org.lifecompanion.api.component.definition.simplercomp.UserActionSequenceItemI;
 import org.lifecompanion.base.view.reusable.DurationPickerControl;
+import org.lifecompanion.config.view.pane.general.view.simplercomp.AbstractSimplerKeyActionContainerPropertiesEditionView;
 import org.lifecompanion.framework.commons.translation.Translation;
 
 

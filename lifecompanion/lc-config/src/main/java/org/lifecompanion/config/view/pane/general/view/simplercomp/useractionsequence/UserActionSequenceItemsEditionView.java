@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.lifecompanion.config.view.pane.general.view.simplercomp;
+package org.lifecompanion.config.view.pane.general.view.simplercomp.useractionsequence;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -37,6 +37,8 @@ import org.lifecompanion.base.data.component.simplercomp.UserActionSequenceItem;
 import org.lifecompanion.base.data.config.LCGraphicStyle;
 import org.lifecompanion.base.view.reusable.GeneralConfigurationStepViewI;
 import org.lifecompanion.config.data.config.LCGlyphFont;
+import org.lifecompanion.config.view.pane.general.view.simplercomp.CommonListViewActionContainer;
+import org.lifecompanion.config.view.pane.general.view.simplercomp.DetailledSimplerKeyContentContainerListCell;
 import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
@@ -52,7 +54,7 @@ public class UserActionSequenceItemsEditionView extends ScrollPane implements LC
 
     private UserActionSequenceItemPropertiesEditionView userActionSequenceItemPropertiesEditionView;
 
-    UserActionSequenceItemsEditionView() {
+    public UserActionSequenceItemsEditionView() {
         editedSequence = new SimpleObjectProperty<>();
         initAll();
     }
