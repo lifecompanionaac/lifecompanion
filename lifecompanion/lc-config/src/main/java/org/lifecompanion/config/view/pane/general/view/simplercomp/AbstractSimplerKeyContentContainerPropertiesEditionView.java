@@ -29,6 +29,7 @@ import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.controlsfx.control.ToggleSwitch;
@@ -101,6 +102,7 @@ public abstract class AbstractSimplerKeyContentContainerPropertiesEditionView<T 
         labelText.setMaxWidth(Double.MAX_VALUE);
         GridPane.setHgrow(labelText, Priority.ALWAYS);
         fieldText = new TextField();
+        fieldText.minWidthProperty().bind(gridPaneConfiguration.widthProperty().divide(2.0));
 
         gridPaneConfiguration.add(labelGeneralPart, 0, rowIndex++, columnCount, 1);
         gridPaneConfiguration.add(labelText, 0, rowIndex);
@@ -136,18 +138,13 @@ public abstract class AbstractSimplerKeyContentContainerPropertiesEditionView<T 
 
         VBox boxImage = new VBox(GeneralConfigurationStepViewI.GRID_V_GAP, imageUseComponentSelectorControl, new Label(Translation.getText("general.configuration.view.key.list.field.text.position")), comboBoxTextPosition);
 
-        GridPane imageAndColors = new GridPane();
-        imageAndColors.setVgap(GeneralConfigurationStepViewI.GRID_V_GAP);
-        imageAndColors.setHgap(GeneralConfigurationStepViewI.GRID_H_GAP);
-        imageAndColors.add(boxImage, 0, 0);
-        imageAndColors.add(new Separator(Orientation.VERTICAL), 1, 0);
-        imageAndColors.add(gridColors, 2, 0);
+        HBox.setHgrow(gridColors, Priority.SOMETIMES);
+        HBox.setHgrow(boxImage, Priority.SOMETIMES);
+        HBox boxImagesAndColors = new HBox(GeneralConfigurationStepViewI.GRID_H_GAP, boxImage, new Separator(Orientation.VERTICAL), gridColors);
+        gridColors.maxWidthProperty().bind(boxImagesAndColors.widthProperty().divide(2.1));
+        boxImage.maxWidthProperty().bind(boxImagesAndColors.widthProperty().divide(2.1));
 
-        GridPane.setHgrow(boxImage, Priority.ALWAYS);
-        GridPane.setHgrow(gridColors, Priority.ALWAYS);
-        gridColors.prefWidthProperty().bind(imageAndColors.widthProperty().divide(2.1));
-
-        gridPaneConfiguration.add(imageAndColors, 0, rowIndex, columnCount, 5);
+        gridPaneConfiguration.add(boxImagesAndColors, 0, rowIndex, columnCount, 4);
 
         // Total
         this.setFitToWidth(true);
