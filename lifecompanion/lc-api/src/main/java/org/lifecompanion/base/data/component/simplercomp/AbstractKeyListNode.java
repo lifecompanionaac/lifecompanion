@@ -33,6 +33,7 @@ import org.lifecompanion.base.data.common.LCUtils;
 import org.lifecompanion.base.data.io.IOManager;
 import org.lifecompanion.framework.commons.fx.io.XMLIgnoreNullValue;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
+import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.framework.utils.Pair;
 import org.slf4j.Logger;
@@ -137,6 +138,15 @@ public abstract class AbstractKeyListNode extends AbstractSimplerKeyActionContai
     public StringProperty linkedNodeIdProperty() {
         return linkedNodeId;
     }
+
+    @Override
+    public String getHumanReadableText() {
+        if (StringUtils.isNotBlank(textProperty().get())) return textProperty().get();
+        if (enableWriteProperty().get() && StringUtils.isNotBlank(textToWriteProperty().get())) return textToWriteProperty().get();
+        if (enableSpeakProperty().get() && StringUtils.isNotBlank(textToSpeakProperty().get())) return textToSpeakProperty().get();
+        return Translation.getText("general.configuration.view.keylist.empty.text.in.node");
+    }
+
     //========================================================================
 
     // IO

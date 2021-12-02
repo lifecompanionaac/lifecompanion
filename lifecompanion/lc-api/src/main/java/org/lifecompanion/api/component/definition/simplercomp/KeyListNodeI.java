@@ -53,4 +53,6 @@ public interface KeyListNodeI extends SimplerKeyActionContainerI {
     ReadOnlyIntegerProperty levelProperty();
 
     void traverseTreeToBottom(Consumer<KeyListNodeI> nodeConsumer);
+
+    String getHumanReadableText();
 }

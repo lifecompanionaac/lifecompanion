@@ -96,7 +96,10 @@ public class NotificationScene extends Scene implements LCViewInitHelper {
         if (notification.getAction() != null) {
             Button buttonAction = UIUtils.createSimpleTextButton(StringUtils.toUpperCase(notification.getActionButtonName()), null);
             buttonAction.getStyleClass().add("button-action");
-            buttonAction.setOnAction(e -> notification.getAction().run());
+            buttonAction.setOnAction(e -> {
+                closeRequestListener.run();
+                notification.getAction().run();
+            });
             buttonAction.setAlignment(Pos.CENTER);
             boxButton.getChildren().add(0, buttonAction);
         }

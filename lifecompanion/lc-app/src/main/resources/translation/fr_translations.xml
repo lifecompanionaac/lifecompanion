@@ -69,6 +69,15 @@
   <text key="profile.backup.task">Création d'une sauvegarde de secours du profil</text>
   <text key="configuration.removed.notification.title">Configuration supprimée</text>
   <text key="profile.removed.notif.title">Profil supprimé</text>
+  <text key="tooltip.keylist.button.add.category">Ajouter une liste</text>
+  <text key="tooltip.keylist.button.add.key">Ajouter une case</text>
+  <text key="tooltip.keylist.button.add.link">Ajouter un lien</text>
+  <text key="tooltip.keylist.button.move.up">Remonter l'élément dans la liste</text>
+  <text key="tooltip.keylist.button.move.down">Descendre l'élément dans la liste</text>
+  <text key="tooltip.keylist.button.copy">Copier l'élément sélectionné</text>
+  <text key="tooltip.keylist.button.cut">Couper l'élément sélectionné</text>
+  <text key="tooltip.keylist.button.paste">Coller l'élément précédemment copié/coupé</text>
+  <text key="tooltip.keylist.button.delete">Supprimer l'élément sélectionné</text>
   <text key="action.stop.currently.playing.sound.name">Arrêter les sons en cours de lecture</text>
   <text key="action.stop.currently.playing.sound.description">Si des sons sont en cours de lecture, cela stop leur lecture. Les prochaines actions de lecture de son fonctionneront normalement.</text>
   <!--org.lifecompanion.api.useaction.category-->
@@ -1187,6 +1196,9 @@
   <text key="package.log.chooser.title">Choisir l'emplacement du ZIP</text>
   <text key="package.log.task.title">Package des logs</text>
   <text key="paste.action.name">Copie d'un élément</text>
+	<text key="keylist.action.remove.cancel">Annuler</text>
+	<text key="keylist.action.cut.action.notification.title">"{}" coupé</text>
+	<text key="keylist.action.removed.action.notification.title">"{}" supprimé</text>
   <text key="paste.key.style.action">Cloner le style d'une case sur d'autres cases</text>
   <text key="pdf.export.chooser.dialog.title">Exporter les grilles en PDF</text>
   <text key="pdf.export.default.file.name">{}-{}-Grilles-LifeCompanion</text>
@@ -1594,8 +1606,9 @@
   <text key="general.configuration.view.key.button.add.list">Liste</text>
   <text key="general.configuration.view.key.list.button.configuration.key">Configurer les cases de cette liste ({}
 		case(s))</text>
-  <text key="general.configuration.view.key.list.button.export.keys">Exporter les cases/listes sélectionnées</text>
-  <text key="general.configuration.view.key.list.button.import.keys">Importer des cases/listes</text>
+  <text key="general.configuration.view.key.list.button.export.keys">Exporter les listes de cases</text>
+  <text key="general.configuration.view.key.list.button.import.keys">Importer des listes de cases</text>
+  <text key="notification.keylist.node.added">Élément ajouté</text>
   <text key="general.configuration.view.key.list.copy.label.key.text">(copie)</text>
   <text key="general.configuration.view.user.action.copy.label.key.text">(copie)</text>
   <text key="user.action.sequence.start.field.sequence">Séquence à lancer</text>

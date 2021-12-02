@@ -49,10 +49,11 @@ import org.lifecompanion.base.data.config.LCGraphicStyle;
 import org.lifecompanion.config.data.action.impl.KeyListActions;
 import org.lifecompanion.config.data.config.LCGlyphFont;
 import org.lifecompanion.config.data.control.ConfigActionController;
+import org.lifecompanion.config.data.notif.LCNotification;
+import org.lifecompanion.config.view.pane.main.notification2.LCNotificationController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.lang.LangUtils;
-import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -100,15 +101,15 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         selectionPathContainer.setAlignment(Pos.CENTER_LEFT);
 
         // TOP : list + add button
-        this.buttonAddCategory = createActionButton(FontAwesome.Glyph.FOLDER, LCGraphicStyle.MAIN_PRIMARY, "todo");
-        this.buttonAddKey = createActionButton(FontAwesome.Glyph.PICTURE_ALT, LCGraphicStyle.MAIN_PRIMARY, "todo");
-        this.buttonAddLinkKey = createActionButton(FontAwesome.Glyph.LINK, LCGraphicStyle.MAIN_PRIMARY, "todo");
-        buttonMoveUp = createActionButton(FontAwesome.Glyph.CHEVRON_UP, LCGraphicStyle.MAIN_PRIMARY, "todo");
-        buttonMoveDown = createActionButton(FontAwesome.Glyph.CHEVRON_DOWN, LCGraphicStyle.MAIN_PRIMARY, "todo");
-        buttonCopy = createActionButton(FontAwesome.Glyph.COPY, LCGraphicStyle.MAIN_PRIMARY, "todo");
-        buttonCut = createActionButton(FontAwesome.Glyph.CUT, LCGraphicStyle.MAIN_PRIMARY, "todo");
-        buttonPaste = createActionButton(FontAwesome.Glyph.PASTE, LCGraphicStyle.MAIN_DARK, "todo");
-        buttonDelete = createActionButton(FontAwesome.Glyph.TRASH, LCGraphicStyle.SECOND_DARK, "todo");
+        this.buttonAddCategory = createActionButton(FontAwesome.Glyph.FOLDER, LCGraphicStyle.MAIN_PRIMARY, "tooltip.keylist.button.add.category");
+        this.buttonAddKey = createActionButton(FontAwesome.Glyph.PICTURE_ALT, LCGraphicStyle.MAIN_PRIMARY, "tooltip.keylist.button.add.key");
+        this.buttonAddLinkKey = createActionButton(FontAwesome.Glyph.LINK, LCGraphicStyle.MAIN_PRIMARY, "tooltip.keylist.button.add.link");
+        buttonMoveUp = createActionButton(FontAwesome.Glyph.CHEVRON_UP, LCGraphicStyle.MAIN_PRIMARY, "tooltip.keylist.button.move.up");
+        buttonMoveDown = createActionButton(FontAwesome.Glyph.CHEVRON_DOWN, LCGraphicStyle.MAIN_PRIMARY, "tooltip.keylist.button.move.down");
+        buttonCopy = createActionButton(FontAwesome.Glyph.COPY, LCGraphicStyle.MAIN_PRIMARY, "tooltip.keylist.button.copy");
+        buttonCut = createActionButton(FontAwesome.Glyph.CUT, LCGraphicStyle.MAIN_PRIMARY, "tooltip.keylist.button.cut");
+        buttonPaste = createActionButton(FontAwesome.Glyph.PASTE, LCGraphicStyle.MAIN_DARK, "tooltip.keylist.button.paste");
+        buttonDelete = createActionButton(FontAwesome.Glyph.TRASH, LCGraphicStyle.SECOND_DARK, "tooltip.keylist.button.delete");
 
         // Command buttons
         GridPane gridButtons = new GridPane();
@@ -181,7 +182,7 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         this.buttonAddCategory.setOnAction(createAddNodeListener(KeyListNode::new));
         this.buttonMoveUp.setOnAction(createMoveNodeListener(-1));
         this.buttonMoveDown.setOnAction(createMoveNodeListener(+1));
-        this.buttonDelete.setOnAction(e -> ifSelectedItemNotNull(this::removeNode));
+        this.buttonDelete.setOnAction(e -> ifSelectedItemNotNull(selectedNode -> removeNode(selectedNode, "keylist.action.removed.action.notification.title")));
 
         this.buttonCopy.setOnAction(e -> ifSelectedItemNotNull(selectedNode -> {
             KeyListNodeI duplicated = (KeyListNodeI) selectedNode.duplicate(true);
@@ -190,7 +191,7 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         }));
         this.buttonCut.setOnAction(e -> ifSelectedItemNotNull(selectedNode -> {
             cutOrCopiedNode.set(selectedNode);
-            removeNode(selectedNode);
+            removeNode(selectedNode, "keylist.action.cut.action.notification.title");
         }));
         this.buttonPaste.setOnAction(e -> {
             final KeyListNodeI toPaste = cutOrCopiedNode.get();
@@ -229,10 +230,20 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         this.propertiesShowing.set(true);
     }
 
-    private void removeNode(KeyListNodeI selectedNode) {
+    private void removeNode(KeyListNodeI selectedNode, String notificationTitle) {
         final KeyListNodeI parentNode = selectedNode.parentProperty().get();
+        int previousIndex = parentNode.getChildren().indexOf(selectedNode);
         parentNode.getChildren().remove(selectedNode);
-        // TODO : notification with undo button ?
+        LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo(Translation.getText(notificationTitle, selectedNode.getHumanReadableText()), true, "keylist.action.remove.cancel", () -> {
+            if (!parentNode.getChildren().contains(selectedNode)) {
+                if (previousIndex > 0 && previousIndex <= parentNode.getChildren().size()) {
+                    parentNode.getChildren().add(previousIndex, selectedNode);
+                } else {
+                    parentNode.getChildren().add(0, selectedNode);
+                }
+                selectAndScrollTo(selectedNode);
+            }
+        }));
     }
 
     private EventHandler<ActionEvent> createMoveNodeListener(final int indexMove) {
@@ -257,44 +268,54 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
     //========================================================================
     @Override
     public void initBinding() {
+        this.buttonPaste.disableProperty().bind(this.cutOrCopiedNode.isNull());
+        this.buttonCopy.disableProperty().bind(keyListTreeView.getSelectionModel().selectedItemProperty().isNull());
+        this.buttonCut.disableProperty().bind(keyListTreeView.getSelectionModel().selectedItemProperty().isNull());
+        this.buttonMoveUp.disableProperty().bind(keyListTreeView.getSelectionModel().selectedItemProperty().isNull());
+        this.buttonMoveDown.disableProperty().bind(keyListTreeView.getSelectionModel().selectedItemProperty().isNull());
+        this.buttonDelete.disableProperty().bind(keyListTreeView.getSelectionModel().selectedItemProperty().isNull());
         this.rootKeyListNode.addListener((obs, ov, nv) -> {
             keyListTreeItems.clear();
             if (nv != null) {
                 this.keyListTreeView.setRoot(new KeyListNodeTreeItem(nv));
-                createAndAddLinkForNode(nv);
+                updatePathForSelection(null);
             } else {
                 this.keyListTreeView.setRoot(null);
+                this.keyListTreeView.getSelectionModel().clearSelection();
             }
         });
-        // FIXME : check this for memory
         final MonadicBinding<KeyListNodeI> currentSelectedNode = EasyBind
                 .select(keyListTreeView.getSelectionModel().selectedItemProperty())
                 .selectObject(TreeItem::valueProperty)
                 .orElse((KeyListNodeI) null);
-
-        // Update path
-        currentSelectedNode.addListener((obs, ov, nv) -> {
-            selectionPathContainer.getChildren().clear();
-            if (nv != null) {
-                KeyListNodeI current = nv;
-                while (current != null) {
-                    KeyListNodeI nodeForLink = current;
-                    final KeyListNodeI currentParent = nodeForLink.parentProperty().get();
-                    createAndAddLinkForNode(nodeForLink);
-                    current = currentParent;
-                    if (current != null) {
-                        selectionPathContainer.getChildren().add(0, LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.CHEVRON_RIGHT).size(10).color(LCGraphicStyle.MAIN_DARK));
-                    }
-                }
-            } else if (rootKeyListNode.get() != null) {
-                createAndAddLinkForNode(rootKeyListNode.get());
-            }
-        });
+        currentSelectedNode.addListener((obs, ov, nv) -> updatePathForSelection(nv));
         this.keyListNodePropertiesEditionView.selectedNodeProperty().bind(currentSelectedNode);
+
+    }
+    //========================================================================
+
+    // SELECTION PATH
+    //========================================================================
+    private void updatePathForSelection(KeyListNodeI selected) {
+        selectionPathContainer.getChildren().clear();
+        if (selected != null) {
+            KeyListNodeI current = selected;
+            while (current != null) {
+                KeyListNodeI nodeForLink = current;
+                final KeyListNodeI currentParent = nodeForLink.parentProperty().get();
+                createAndAddLinkForNode(nodeForLink);
+                current = currentParent;
+                if (current != null) {
+                    selectionPathContainer.getChildren().add(0, LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.CHEVRON_RIGHT).size(10).color(LCGraphicStyle.MAIN_DARK));
+                }
+            }
+        } else if (rootKeyListNode.get() != null) {
+            createAndAddLinkForNode(rootKeyListNode.get());
+        }
     }
 
     private void createAndAddLinkForNode(KeyListNodeI nodeForLink) {
-        final Hyperlink hyperlink = new Hyperlink(getFullNameForNode(nodeForLink));
+        final Hyperlink hyperlink = new Hyperlink((nodeForLink.parentProperty().get() == null ? Translation.getText("general.configuration.view.keylist.root.node.text") : nodeForLink.getHumanReadableText()));
         if (nodeForLink != rootKeyListNode.get()) {
             hyperlink.setOnAction(e -> {
                 selectAndScrollTo(nodeForLink);
@@ -307,11 +328,6 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
 
     // FUNCTIONAL
     //========================================================================
-    private String getFullNameForNode(KeyListNodeI node) {
-        return (node.parentProperty().get() == null ? Translation.getText("general.configuration.view.keylist.root.node.text") :
-                StringUtils.isNotBlank(node.textProperty().get()) ? node.textProperty().get() : Translation.getText("general.configuration.view.keylist.empty.node.text"));
-    }
-
     private void addNodeToSelectedDestination(KeyListNodeI toAdd) {
         addNodeToSelectedDestination(List.of(toAdd));
     }
@@ -331,9 +347,10 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
             } else {
                 keyListTreeView.getRoot().getValue().getChildren().addAll(toAdd);
             }
-            if (LangUtils.isNotEmpty(toAdd))
+            if (LangUtils.isNotEmpty(toAdd)) {
                 selectAndScrollTo(toAdd.get(0));
-            // TODO : notification?
+                LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo("notification.keylist.node.added").withMsDuration(LCGraphicStyle.SHORT_NOTIFICATION_DURATION_MS));
+            }
         }
     }
 

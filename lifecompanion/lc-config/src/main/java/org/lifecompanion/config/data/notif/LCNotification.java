@@ -72,6 +72,11 @@ public class LCNotification {
         this.msDuration = msDuration;
     }
 
+    public LCNotification withMsDuration(long msDuration) {
+        setMsDuration(msDuration);
+        return this;
+    }
+
     public void setAutomaticClose(boolean automaticClose) {
         this.automaticClose = automaticClose;
     }
