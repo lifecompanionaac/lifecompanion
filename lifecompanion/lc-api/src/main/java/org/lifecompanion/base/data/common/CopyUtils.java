@@ -18,10 +18,9 @@
  */
 package org.lifecompanion.base.data.common;
 
-import javafx.collections.ObservableList;
 import org.jdom2.Element;
 import org.lifecompanion.api.component.definition.DuplicableComponentI;
-import org.lifecompanion.api.component.definition.TreeDisplayableComponentI;
+import org.lifecompanion.api.component.definition.TreeIdentifiableComponentI;
 import org.lifecompanion.api.exception.LCException;
 import org.lifecompanion.api.io.IOContextI;
 import org.lifecompanion.api.io.XMLSerializable;
@@ -32,6 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.function.Supplier;
 
 /**
@@ -62,7 +62,7 @@ public class CopyUtils {
      */
     public static <T extends DuplicableComponentI & XMLSerializable<IOContextI>> DuplicableComponentI createDeepCopyViaXMLSerialization(
             final T source, final boolean changeID) {
-        //Copy, but ID musn't be the same
+        //Copy, but ID mustn't be the same
         IOContext context = new IOContext(LCUtils.getTempDir("componentcopy"));
         context.setFallbackOnDefaultInstanceOnFail(false);
         //Serialize element to copy
@@ -72,10 +72,12 @@ public class CopyUtils {
             Pair<Boolean, XMLSerializable<IOContextI>> duplicatedResult = IOManager.create(serialized, context, null);
             XMLSerializable<IOContextI> duplicated = duplicatedResult.getRight();
             duplicated.deserialize(serialized, context);
-            if (changeID) {
+            if (changeID && duplicated instanceof TreeIdentifiableComponentI) {
                 HashMap<String, String> idChanges = new HashMap<>();
-                CopyUtils.changeIDs((TreeDisplayableComponentI) duplicated, idChanges);
-                CopyUtils.dispatchIdChanges((TreeDisplayableComponentI) duplicated, idChanges);
+                CopyUtils.changeIDs((TreeIdentifiableComponentI) duplicated, idChanges);
+                CopyUtils.dispatchIdChanges((TreeIdentifiableComponentI) duplicated, idChanges);
+            } else {
+                LOGGER.info("Ignored ID change on {} because it does not extends TreeIdentifiableComponentI interface", duplicated);
             }
             return (DuplicableComponentI) duplicated;
         } catch (LCException e) {
@@ -89,25 +91,25 @@ public class CopyUtils {
      *
      * @param component the root component, its ID will be changed too
      */
-    private static void changeIDs(final TreeDisplayableComponentI component, final HashMap<String, String> idChanges) {
+    private static void changeIDs(final TreeIdentifiableComponentI component, final HashMap<String, String> idChanges) {
         String previousId = component.getID();
         String newId = component.generateID();
         idChanges.put(previousId, newId);
-        if (!component.isNodeLeaf()) {
-            ObservableList<TreeDisplayableComponentI> childrenNode = component.getChildrenNode();
-            for (TreeDisplayableComponentI child : childrenNode) {
+        if (!component.isTreeIdentifiableComponentLeaf()) {
+            List<TreeIdentifiableComponentI> childrenNode = component.getTreeIdentifiableChildren();
+            for (TreeIdentifiableComponentI child : childrenNode) {
                 CopyUtils.changeIDs(child, idChanges);
             }
         }
     }
 
-    private static void dispatchIdChanges(final TreeDisplayableComponentI component, final HashMap<String, String> idChanges) {
+    private static void dispatchIdChanges(final TreeIdentifiableComponentI component, final HashMap<String, String> idChanges) {
         if (component instanceof DuplicableComponentI) {
             ((DuplicableComponentI) component).idsChanged(idChanges);
         }
-        if (!component.isNodeLeaf()) {
-            ObservableList<TreeDisplayableComponentI> childrenNode = component.getChildrenNode();
-            for (TreeDisplayableComponentI child : childrenNode) {
+        if (!component.isTreeIdentifiableComponentLeaf()) {
+            List<TreeIdentifiableComponentI> childrenNode = component.getTreeIdentifiableChildren();
+            for (TreeIdentifiableComponentI child : childrenNode) {
                 CopyUtils.dispatchIdChanges(child, idChanges);
             }
         }

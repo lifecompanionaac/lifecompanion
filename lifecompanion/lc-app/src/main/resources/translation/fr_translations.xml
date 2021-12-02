@@ -1633,6 +1633,7 @@
   <text key="general.configuration.view.key.list.selected.keylist.title">Liste : "{}"</text>
   <text key="general.configuration.view.key.list.selected.link.title">Case lien : "{}"</text>
   <text key="general.configuration.view.keylist.empty.node.text">Liste</text>
+  <text key="general.configuration.view.keylist.empty.text.in.node">(sans texte)</text>
   <text key="general.configuration.view.keylist.node.level">(niv. {})</text>
   <text key="general.configuration.view.keylist.root.node.text">Listes</text>
   <text key="general.configuration.view.step.key.list.categories.title">Listes de cases</text>

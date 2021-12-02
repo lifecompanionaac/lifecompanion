@@ -128,6 +128,7 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         keyListTreeView.setCellFactory(tv -> new KeyListNodeTreeCell(this));
         keyListTreeView.setShowRoot(false);
         keyListTreeView.setMaxHeight(200.0);
+        keyListTreeView.setMinHeight(200.0);
         keyListTreeView.setFixedCellSize(KeyListNodeTreeCell.CELL_HEIGHT + 5);
         HBox.setHgrow(keyListTreeView, Priority.ALWAYS);
 
@@ -206,8 +207,7 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
             }
         });
 
-        //        this.buttonExportKeys.setOnAction(e ->
-        //                ConfigActionController.INSTANCE.executeAction(new KeyListActions.ExportKeyListsAction(buttonExportKeys, new ArrayList<>(this.listItemList.getSelectionModel().getSelectedItems()))));
+        this.buttonExportKeys.setOnAction(e -> ConfigActionController.INSTANCE.executeAction(new KeyListActions.ExportKeyListsAction(buttonExportKeys, this.rootKeyListNode.get())));
         this.buttonImportKeys.setOnAction(e -> {
             ConfigActionController.INSTANCE.executeAction(new KeyListActions.ImportKeyListsAction(buttonImportKeys, importedNode -> {
                 //                // FIXME : check if need to duplicate imported node (if already present in the current node tree)
@@ -227,11 +227,6 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         });
 
 
-        //        this.commonListViewActionContainer.setDuplicateFunction(item -> {
-        //            KeyListNodeI duplicated = (KeyListNodeI) item.duplicate(true);
-        //            duplicated.textProperty().set(Translation.getText("general.configuration.view.key.list.copy.label.key.text") + " " + duplicated.textProperty().get());
-        //            return duplicated;
-        //        });
         //        this.commonListViewActionContainer.setDragEndPriorTester(dragDestination -> !dragDestination.isLeafNode());
         //        this.commonListViewActionContainer.setDragEndAcceptor((dragDestination, draggedNode) -> {
         //            // For each node : remove from its parent and moves it to the new parent

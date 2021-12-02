@@ -19,6 +19,7 @@
 
 package org.lifecompanion.config.view.pane.general.view.simplercomp.keylist;
 
+import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -35,7 +36,9 @@ import org.lifecompanion.api.component.definition.simplercomp.KeyListNodeI;
 import org.lifecompanion.base.data.common.LCUtils;
 import org.lifecompanion.base.data.config.LCGraphicStyle;
 import org.lifecompanion.config.data.config.LCGlyphFont;
+import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 
 public class KeyListNodeTreeCell extends TreeCell<KeyListNodeI> implements LCViewInitHelper {
     public final static double CELL_HEIGHT = 35;
@@ -126,10 +129,15 @@ public class KeyListNodeTreeCell extends TreeCell<KeyListNodeI> implements LCVie
         } else {
             glyphPane.getChildren().clear();
             imageView.imageProperty().bind(item.loadedImageProperty());
-            labelText.textProperty().bind(item.textProperty());
             glyphPane.getChildren().add(item.isLinkNode() ? linkGlyph : item.isLeafNode() ? keyGlyph : listGlyph);
             rectangleColors.strokeProperty().bind(item.strokeColorProperty());
             rectangleColors.fillProperty().bind(item.backgroundColorProperty());
+            labelText.textProperty().bind(Bindings.createStringBinding(() -> {
+                if (StringUtils.isNotBlank(item.textProperty().get())) return item.textProperty().get();
+                if (item.enableWriteProperty().get() && StringUtils.isNotBlank(item.textToWriteProperty().get())) return item.textToWriteProperty().get();
+                if (item.enableSpeakProperty().get() && StringUtils.isNotBlank(item.textToSpeakProperty().get())) return item.textToSpeakProperty().get();
+                return Translation.getText("general.configuration.view.keylist.empty.text.in.node");
+            }, item.textProperty(), item.enableWriteProperty(), item.textToWriteProperty(), item.enableSpeakProperty(), item.textToSpeakProperty()));
             setGraphic(graphics);
         }
     }

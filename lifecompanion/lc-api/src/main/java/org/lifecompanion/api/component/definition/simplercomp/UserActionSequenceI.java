@@ -23,13 +23,14 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import org.lifecompanion.api.component.definition.DuplicableComponentI;
 import org.lifecompanion.api.component.definition.IdentifiableComponentI;
+import org.lifecompanion.api.component.definition.TreeIdentifiableComponentI;
 import org.lifecompanion.api.io.IOContextI;
 import org.lifecompanion.api.io.XMLSerializable;
 
 /**
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
-public interface UserActionSequenceI extends XMLSerializable<IOContextI>, DuplicableComponentI, IdentifiableComponentI {
+public interface UserActionSequenceI extends XMLSerializable<IOContextI>, DuplicableComponentI, IdentifiableComponentI, TreeIdentifiableComponentI {
     StringProperty nameProperty();
 
     ObservableList<UserActionSequenceItemI> getItems();

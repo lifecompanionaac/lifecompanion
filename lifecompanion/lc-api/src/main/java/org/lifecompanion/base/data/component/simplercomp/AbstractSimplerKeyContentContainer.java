@@ -19,7 +19,6 @@
 
 package org.lifecompanion.base.data.component.simplercomp;
 
-import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.*;
 import javafx.beans.value.ObservableBooleanValue;
 import javafx.geometry.Rectangle2D;
@@ -28,6 +27,7 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import org.jdom2.Element;
 import org.lifecompanion.api.component.definition.ImageUseComponentI;
+import org.lifecompanion.api.component.definition.TreeIdentifiableComponentI;
 import org.lifecompanion.api.component.definition.simplercomp.SimplerKeyContentContainerI;
 import org.lifecompanion.api.exception.LCException;
 import org.lifecompanion.api.image2.ImageElementI;
@@ -42,6 +42,7 @@ import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.Map;
 
 public abstract class AbstractSimplerKeyContentContainer implements SimplerKeyContentContainerI {
@@ -116,6 +117,16 @@ public abstract class AbstractSimplerKeyContentContainer implements SimplerKeyCo
 
     protected void changeId(String id) {
         this.id = id;
+    }
+
+    @Override
+    public boolean isTreeIdentifiableComponentLeaf() {
+        return true;
+    }
+
+    @Override
+    public <T extends TreeIdentifiableComponentI> List<T> getTreeIdentifiableChildren() {
+        return null;
     }
 
     @Override

@@ -26,7 +26,6 @@ import org.lifecompanion.api.exception.LCException;
 import org.lifecompanion.api.io.IOContextI;
 import org.lifecompanion.base.data.common.CopyUtils;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
-import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 
 public class UserActionSequenceItem extends AbstractSimplerKeyActionContainer implements UserActionSequenceItemI {
 
@@ -53,11 +52,7 @@ public class UserActionSequenceItem extends AbstractSimplerKeyActionContainer im
 
     @Override
     public UserActionSequenceItem duplicate(boolean changeId) {
-        final UserActionSequenceItem deepCopyViaXMLSerialization = (UserActionSequenceItem) CopyUtils.createDeepCopyViaXMLSerialization(this, false);
-        if (changeId) {
-            deepCopyViaXMLSerialization.changeId(StringUtils.getNewID());
-        }
-        return deepCopyViaXMLSerialization;
+        return (UserActionSequenceItem) CopyUtils.createDeepCopyViaXMLSerialization(this, changeId);
     }
 
     @Override

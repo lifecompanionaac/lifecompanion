@@ -23,6 +23,7 @@ import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.jdom2.Element;
+import org.lifecompanion.api.component.definition.TreeIdentifiableComponentI;
 import org.lifecompanion.api.component.definition.simplercomp.KeyListNodeI;
 import org.lifecompanion.api.exception.LCException;
 import org.lifecompanion.api.io.IOContextI;
@@ -32,7 +33,6 @@ import org.lifecompanion.base.data.common.LCUtils;
 import org.lifecompanion.base.data.io.IOManager;
 import org.lifecompanion.framework.commons.fx.io.XMLIgnoreNullValue;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
-import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.framework.utils.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,16 +84,22 @@ public abstract class AbstractKeyListNode extends AbstractSimplerKeyActionContai
     //========================================================================
     @Override
     public KeyListNodeI duplicate(boolean changeId) {
-        final AbstractKeyListNode deepCopyViaXMLSerialization = (AbstractKeyListNode) CopyUtils.createDeepCopyViaXMLSerialization(this, false);
-        if (changeId) {
-            deepCopyViaXMLSerialization.changeId(StringUtils.getNewID());
-        }
-        return deepCopyViaXMLSerialization;
+        return (AbstractKeyListNode) CopyUtils.createDeepCopyViaXMLSerialization(this, true);
     }
 
     @Override
     public boolean isLeafNode() {
         return leaf;
+    }
+
+    @Override
+    public boolean isTreeIdentifiableComponentLeaf() {
+        return isLeafNode();
+    }
+
+    @Override
+    public <T extends TreeIdentifiableComponentI> List<T> getTreeIdentifiableChildren() {
+        return (List<T>) getChildren();
     }
 
     @Override

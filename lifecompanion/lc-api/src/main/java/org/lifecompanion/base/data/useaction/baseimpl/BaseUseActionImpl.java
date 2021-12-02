@@ -145,7 +145,7 @@ public abstract class BaseUseActionImpl<T extends UseActionTriggerComponentI> im
 
     @Override
     public DuplicableComponentI duplicate(final boolean changeID) {
-        return CopyUtils.createDeepCopyViaXMLSerialization(this, false);//Action haven't any ID
+        return CopyUtils.createDeepCopyViaXMLSerialization(this, false);//Action don't have IDs
     }
 
     @Override

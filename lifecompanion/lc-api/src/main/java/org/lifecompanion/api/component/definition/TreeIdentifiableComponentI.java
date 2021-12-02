@@ -16,21 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package org.lifecompanion.api.component.definition;
 
-package org.lifecompanion.base.data.component.simplercomp;
+import java.util.List;
 
-import java.util.Map;
+/**
+ * @author Mathieu THEBAUD <math.thebaud@gmail.com>
+ */
+public interface TreeIdentifiableComponentI extends IdentifiableComponentI {
+    <T extends TreeIdentifiableComponentI> List<T> getTreeIdentifiableChildren();
 
-public class KeyListLinkLeaf extends KeyListLeaf {
-    public KeyListLinkLeaf() {
-        super(true);
-        this.enableSpeakProperty().set(false);
-        this.enableWriteProperty().set(false);
-    }
-
-    @Override
-    public void idsChanged(Map<String, String> changes) {
-        super.idsChanged(changes);
-        System.out.println("ID CHANGED " + changes);
-    }
+    boolean isTreeIdentifiableComponentLeaf();
 }

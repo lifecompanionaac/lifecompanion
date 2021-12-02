@@ -19,15 +19,13 @@
 
 package org.lifecompanion.api.component.definition.simplercomp;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.paint.Color;
 import org.lifecompanion.api.component.definition.DuplicableComponentI;
 import org.lifecompanion.api.component.definition.ImageUseComponentI;
-import org.lifecompanion.api.component.definition.StackChildComponentI;
+import org.lifecompanion.api.component.definition.TreeIdentifiableComponentI;
 import org.lifecompanion.api.io.IOContextI;
 import org.lifecompanion.api.io.XMLSerializable;
 
@@ -38,7 +36,7 @@ import org.lifecompanion.api.io.XMLSerializable;
  *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
-public interface SimplerKeyContentContainerI extends ImageUseComponentI, XMLSerializable<IOContextI>, DuplicableComponentI {
+public interface SimplerKeyContentContainerI extends ImageUseComponentI, XMLSerializable<IOContextI>, DuplicableComponentI, TreeIdentifiableComponentI {
 
     // CONTENT DISPLAYED
     //========================================================================

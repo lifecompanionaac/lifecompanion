@@ -24,6 +24,7 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.jdom2.Element;
+import org.lifecompanion.api.component.definition.TreeIdentifiableComponentI;
 import org.lifecompanion.api.component.definition.simplercomp.UserActionSequenceI;
 import org.lifecompanion.api.component.definition.simplercomp.UserActionSequenceItemI;
 import org.lifecompanion.api.exception.LCException;
@@ -33,6 +34,7 @@ import org.lifecompanion.base.data.io.IOManager;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 
+import java.util.List;
 import java.util.Map;
 
 public class UserActionSequence implements UserActionSequenceI {
@@ -58,11 +60,17 @@ public class UserActionSequence implements UserActionSequenceI {
 
     @Override
     public UserActionSequence duplicate(boolean changeId) {
-        final UserActionSequence deepCopyViaXMLSerialization = (UserActionSequence) CopyUtils.createDeepCopyViaXMLSerialization(this, false);
-        if (changeId) {
-            deepCopyViaXMLSerialization.generateID();
-        }
-        return deepCopyViaXMLSerialization;
+        return (UserActionSequence) CopyUtils.createDeepCopyViaXMLSerialization(this, changeId);
+    }
+
+    @Override
+    public <T extends TreeIdentifiableComponentI> List<T> getTreeIdentifiableChildren() {
+        return (List<T>) getItems();
+    }
+
+    @Override
+    public boolean isTreeIdentifiableComponentLeaf() {
+        return false;
     }
 
     @Override
@@ -113,6 +121,5 @@ public class UserActionSequence implements UserActionSequenceI {
                 "name=" + name.get() +
                 '}';
     }
-
 
 }

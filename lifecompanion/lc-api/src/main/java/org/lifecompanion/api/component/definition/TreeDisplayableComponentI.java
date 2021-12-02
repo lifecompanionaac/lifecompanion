@@ -25,34 +25,36 @@ import javafx.collections.ObservableList;
 /**
  * Represent a component that can be viewed as a tree node.<br>
  * This is the case for all current component.
+ *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
-public interface TreeDisplayableComponentI extends UserNamedComponentI, IdentifiableComponentI {
+public interface TreeDisplayableComponentI extends UserNamedComponentI, IdentifiableComponentI, TreeIdentifiableComponentI {
 
-	/**
-	 * The returned {@link ObservableList} must never change, its content can change but on the same component, the list must always be the same.<br>
-	 * @return a observable list that contains every children of this node.<br>
-	 * Could return null if {@link #isNodeLeaf()} return true
-	 */
-	<T extends TreeDisplayableComponentI> ObservableList<T> getChildrenNode();
+    /**
+     * The returned {@link ObservableList} must never change, its content can change but on the same component, the list must always be the same.<br>
+     *
+     * @return a observable list that contains every children of this node.<br>
+     * Could return null if {@link #isNodeLeaf()} return true
+     */
+    <T extends TreeDisplayableComponentI> ObservableList<T> getChildrenNode();
 
-	/**
-	 * @return a boolean that indicate if this node could have children.<br>
-	 * This boolean musn't change on two component of the same type.
-	 */
-	boolean isNodeLeaf();
+    /**
+     * @return a boolean that indicate if this node could have children.<br>
+     * This boolean musn't change on two component of the same type.
+     */
+    boolean isNodeLeaf();
 
-	/**
-	 * @return the type of this node.<br>
-	 * Musn't return null
-	 */
-	TreeDisplayableType getNodeType();
+    /**
+     * @return the type of this node.<br>
+     * Musn't return null
+     */
+    TreeDisplayableType getNodeType();
 
-	/**
-	 * @return to disable the children node change listener
-	 * @deprecated this is an internal API and should not be used
-	 */
-	@Deprecated
-	BooleanProperty _disableChangeListenerProperty();
+    /**
+     * @return to disable the children node change listener
+     * @deprecated this is an internal API and should not be used
+     */
+    @Deprecated
+    BooleanProperty _disableChangeListenerProperty();
 
 }

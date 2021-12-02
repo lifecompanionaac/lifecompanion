@@ -21,10 +21,12 @@ package org.lifecompanion.config.data.action.impl;
 import javafx.scene.Node;
 import javafx.stage.FileChooser;
 import org.lifecompanion.api.action.definition.BaseConfigActionI;
+import org.lifecompanion.api.component.definition.LCConfigurationDescriptionI;
 import org.lifecompanion.api.component.definition.simplercomp.KeyListNodeI;
 import org.lifecompanion.api.exception.LCException;
 import org.lifecompanion.base.data.common.LCUtils;
 import org.lifecompanion.base.data.common.UIUtils;
+import org.lifecompanion.base.data.control.AppController;
 import org.lifecompanion.base.data.control.AsyncExecutorController;
 import org.lifecompanion.base.data.io.IOManager;
 import org.lifecompanion.base.data.io.task.KeyListExportTask;
@@ -34,16 +36,15 @@ import org.lifecompanion.config.data.control.LCStateController;
 import org.lifecompanion.config.view.common.LCFileChooser;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.lang.LangUtils;
-import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 /**
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
@@ -57,32 +58,33 @@ public class KeyListActions {
     public static class ExportKeyListsAction implements BaseConfigActionI {
         private static final int MAX_FILE_NAME_LENGTH = 127;
         private final Node source;
-        private final List<KeyListNodeI> keys;
+        private final KeyListNodeI node;
 
-        public ExportKeyListsAction(Node source, List<KeyListNodeI> keys) {
+        public ExportKeyListsAction(Node source, KeyListNodeI node) {
             this.source = source;
-            this.keys = keys;
+            this.node = node;
         }
 
         @Override
         public void doAction() throws LCException {
             FileChooser keyListFileChooser = LCFileChooser.getChooserKeyList(FileChooserType.KEYLIST_EXPORT);
-            keyListFileChooser.setInitialFileName(DATE_FORMAT_FILENAME.format(new Date()) + "_" + generateDefaultName());
+
+            LCConfigurationDescriptionI configurationDescription = AppController.INSTANCE.currentConfigDescriptionProperty().get();
+            if (configurationDescription == null) {
+                configurationDescription = AppController.INSTANCE.currentProfileProperty().get().getConfigurationById(AppController.INSTANCE.currentConfigConfigurationProperty().get().getID());
+            }
+            String configurationName = Translation.getText("keylist.default.file.export.name") + (configurationDescription != null ? " - " + configurationDescription.configurationNameProperty().get() :
+                    "");
+
+            keyListFileChooser.setInitialFileName(DATE_FORMAT_FILENAME.format(new Date()) + "_" + LCUtils.getValidFileName(configurationName) + "");
             File keyListExportFile = keyListFileChooser.showSaveDialog(UIUtils.getSourceWindow(source));
             if (keyListExportFile != null) {
                 LCStateController.INSTANCE.updateDefaultDirectory(FileChooserType.KEYLIST_EXPORT, keyListExportFile.getParentFile());
-                KeyListExportTask keyListExportTask = IOManager.INSTANCE.createExportKeyListTask(keyListExportFile, keys);
+                KeyListExportTask keyListExportTask = IOManager.INSTANCE.createExportKeyListTask(keyListExportFile, List.of(node));
                 AsyncExecutorController.INSTANCE.addAndExecute(true, false, keyListExportTask);
             }
         }
 
-        private String generateDefaultName() {
-            String fileName = keys.stream().map(k -> k.textProperty().get()).filter(StringUtils::isNotBlank).collect(Collectors.joining("_"));
-            if (fileName.length() > MAX_FILE_NAME_LENGTH) {
-                fileName = fileName.substring(0, MAX_FILE_NAME_LENGTH);
-            }
-            return LCUtils.getValidFileName(StringUtils.isNotBlank(fileName) ? fileName : Translation.getText("keylist.default.file.export.name"));
-        }
 
         @Override
         public String getNameID() {

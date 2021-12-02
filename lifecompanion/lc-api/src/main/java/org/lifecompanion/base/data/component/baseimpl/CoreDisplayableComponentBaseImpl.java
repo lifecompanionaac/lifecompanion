@@ -34,6 +34,7 @@ import org.lifecompanion.framework.commons.fx.io.XMLIgnoreNullValue;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -243,6 +244,15 @@ public abstract class CoreDisplayableComponentBaseImpl implements DisplayableCom
     public void idsChanged(final Map<String, String> changes) {
     }
 
+    @Override
+    public <T extends TreeIdentifiableComponentI> List<T> getTreeIdentifiableChildren() {
+        return (List<T>) this.getChildrenNode();
+    }
+
+    @Override
+    public boolean isTreeIdentifiableComponentLeaf() {
+        return isNodeLeaf();
+    }
 
     /**
      * {@inheritDoc}

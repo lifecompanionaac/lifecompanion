@@ -66,11 +66,10 @@ public class UserActionSequences implements UserActionSequencesI {
 
     @Override
     public UserActionSequences duplicate(boolean changeId) {
-        return (UserActionSequences) CopyUtils.createDeepCopyViaXMLSerialization(this, false);
+        return (UserActionSequences) CopyUtils.createDeepCopyViaXMLSerialization(this, changeId);
     }
 
     @Override
     public void idsChanged(Map<String, String> changes) {
-
     }
 }
