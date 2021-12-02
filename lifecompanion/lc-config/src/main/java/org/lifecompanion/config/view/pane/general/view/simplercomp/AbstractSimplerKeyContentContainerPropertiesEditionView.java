@@ -30,6 +30,7 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import org.controlsfx.control.ToggleSwitch;
 import org.lifecompanion.api.component.definition.simplercomp.SimplerKeyContentContainerI;
 import org.lifecompanion.base.data.common.UIUtils;
@@ -117,21 +118,36 @@ public abstract class AbstractSimplerKeyContentContainerPropertiesEditionView<T 
         comboBoxTextPosition.setMaxWidth(Double.MAX_VALUE);
         colorPickerBackgroundColor = new ColorPicker();
         colorPickerBackgroundColor.setMaxWidth(Double.MAX_VALUE);
+        GridPane.setHgrow(colorPickerBackgroundColor, Priority.ALWAYS);
         colorPickerStrokeColor = new ColorPicker();
         colorPickerStrokeColor.setMaxWidth(Double.MAX_VALUE);
 
         gridPaneConfiguration.add(labelVisualPart, 0, rowIndex++, columnCount, 1);
-        gridPaneConfiguration.add(imageUseComponentSelectorControl, 0, rowIndex, columnCount, 3);
-        rowIndex += 3;
-        gridPaneConfiguration.add(new Label(Translation.getText("general.configuration.view.key.list.field.text.position")), 0, rowIndex);
-        gridPaneConfiguration.add(comboBoxTextPosition, 1, rowIndex++, 2, 1);
-        gridPaneConfiguration.add(new Separator(Orientation.HORIZONTAL), 0, rowIndex++, columnCount, 1);
-        gridPaneConfiguration.add(new Label(Translation.getText("general.configuration.view.key.list.field.background.color")), 0, rowIndex);
-        gridPaneConfiguration.add(createDeleteColorSwitch(colorPickerBackgroundColor), 1, rowIndex);
-        gridPaneConfiguration.add(colorPickerBackgroundColor, 2, rowIndex++);
-        gridPaneConfiguration.add(new Label(Translation.getText("general.configuration.view.key.list.field.stroke.color")), 0, rowIndex);
-        gridPaneConfiguration.add(createDeleteColorSwitch(colorPickerStrokeColor), 1, rowIndex);
-        gridPaneConfiguration.add(colorPickerStrokeColor, 2, rowIndex++);
+
+        GridPane gridColors = new GridPane();
+        gridColors.setVgap(GeneralConfigurationStepViewI.GRID_V_GAP);
+        gridColors.setHgap(GeneralConfigurationStepViewI.GRID_H_GAP);
+        gridColors.add(new Label(Translation.getText("general.configuration.view.key.list.field.background.color")), 0, 0, 2, 1);
+        gridColors.add(createDeleteColorSwitch(colorPickerBackgroundColor), 0, 1);
+        gridColors.add(colorPickerBackgroundColor, 1, 1);
+        gridColors.add(new Label(Translation.getText("general.configuration.view.key.list.field.stroke.color")), 0, 2, 2, 1);
+        gridColors.add(createDeleteColorSwitch(colorPickerStrokeColor), 0, 3);
+        gridColors.add(colorPickerStrokeColor, 1, 3);
+
+        VBox boxImage = new VBox(GeneralConfigurationStepViewI.GRID_V_GAP, imageUseComponentSelectorControl, new Label(Translation.getText("general.configuration.view.key.list.field.text.position")), comboBoxTextPosition);
+
+        GridPane imageAndColors = new GridPane();
+        imageAndColors.setVgap(GeneralConfigurationStepViewI.GRID_V_GAP);
+        imageAndColors.setHgap(GeneralConfigurationStepViewI.GRID_H_GAP);
+        imageAndColors.add(boxImage, 0, 0);
+        imageAndColors.add(new Separator(Orientation.VERTICAL), 1, 0);
+        imageAndColors.add(gridColors, 2, 0);
+
+        GridPane.setHgrow(boxImage, Priority.ALWAYS);
+        GridPane.setHgrow(gridColors, Priority.ALWAYS);
+        gridColors.prefWidthProperty().bind(imageAndColors.widthProperty().divide(2.1));
+
+        gridPaneConfiguration.add(imageAndColors, 0, rowIndex, columnCount, 5);
 
         // Total
         this.setFitToWidth(true);

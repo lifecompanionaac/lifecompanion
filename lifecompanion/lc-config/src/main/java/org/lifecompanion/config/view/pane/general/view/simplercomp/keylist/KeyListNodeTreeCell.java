@@ -94,25 +94,6 @@ public class KeyListNodeTreeCell extends TreeCell<KeyListNodeI> implements LCVie
             if (nv != null)
                 nv.addExternalLoadingRequest(nodeIdForImageLoading);
         });
-        this.setOnDragDetected(me -> {
-            keyListContentConfigView.draggedNodeProperty().set(getItem());
-            Dragboard dragboard = this.startDragAndDrop(TransferMode.ANY);
-            ClipboardContent content = new ClipboardContent();
-            content.putImage(this.snapshot(null, null));
-            dragboard.setContent(content);
-        });
-        this.setOnDragOver(me -> {
-            if (keyListContentConfigView.draggedNodeProperty().get() != null && keyListContentConfigView.draggedNodeProperty().get() != this.getItem()) {
-                me.acceptTransferModes(TransferMode.ANY);
-                // TODO : add timer on this
-                if (!this.getTreeItem().isLeaf() && !this.getTreeItem().isExpanded()) {
-                    this.getTreeItem().setExpanded(true);
-                }
-            }
-        });
-        this.setOnDragDropped(me -> {
-
-        });
     }
 
     @Override

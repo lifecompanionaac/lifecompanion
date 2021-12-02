@@ -19,6 +19,7 @@
 
 package org.lifecompanion.base.data.io.task;
 
+import org.lifecompanion.api.component.definition.DuplicableComponentI;
 import org.lifecompanion.api.component.definition.simplercomp.KeyListNodeI;
 import org.lifecompanion.base.data.common.LCUtils;
 import org.lifecompanion.framework.commons.translation.Translation;
@@ -54,7 +55,13 @@ public class KeyListImportTask extends AbstractKeyListLoadingTask<List<KeyListNo
             final File tempDir = LCUtils.getTempDir("keylist-import");
             IOUtils.unzipInto(sourceFile, tempDir, null);
             final KeyListNodeI nodeFromDirectory = this.loadNodeFromDirectory(tempDir);
-            result.addAll(nodeFromDirectory.getChildren());
+
+            // Imported node is duplicated to avoid duplicates... then its children are added to current item
+            final DuplicableComponentI importedNodeDuplicated = nodeFromDirectory.duplicate(true);
+
+            System.out.println("Imported count "+nodeFromDirectory.getChildren().size());
+
+            result.addAll(((KeyListNodeI) importedNodeDuplicated).getChildren());
         }
         return result;
     }

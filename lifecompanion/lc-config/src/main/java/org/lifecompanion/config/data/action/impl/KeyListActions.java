@@ -40,7 +40,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.function.Consumer;
@@ -57,11 +56,11 @@ public class KeyListActions {
     public static class ExportKeyListsAction implements BaseConfigActionI {
         private static final int MAX_FILE_NAME_LENGTH = 127;
         private final Node source;
-        private final KeyListNodeI node;
+        private final KeyListNodeI rootNode;
 
-        public ExportKeyListsAction(Node source, KeyListNodeI node) {
+        public ExportKeyListsAction(Node source, KeyListNodeI rootNode) {
             this.source = source;
-            this.node = node;
+            this.rootNode = rootNode;
         }
 
         @Override
@@ -79,7 +78,7 @@ public class KeyListActions {
             File keyListExportFile = keyListFileChooser.showSaveDialog(UIUtils.getSourceWindow(source));
             if (keyListExportFile != null) {
                 LCStateController.INSTANCE.updateDefaultDirectory(FileChooserType.KEYLIST_EXPORT, keyListExportFile.getParentFile());
-                KeyListExportTask keyListExportTask = IOManager.INSTANCE.createExportKeyListTask(keyListExportFile, List.of(node));
+                KeyListExportTask keyListExportTask = IOManager.INSTANCE.createExportKeyListTask(keyListExportFile, rootNode.getChildren());
                 AsyncExecutorController.INSTANCE.addAndExecute(true, false, keyListExportTask);
             }
         }
@@ -93,11 +92,11 @@ public class KeyListActions {
 
     public static class ImportKeyListsAction implements BaseConfigActionI {
         private final Node source;
-        private final Consumer<KeyListNodeI> importedNodeConsumer;
+        private final Consumer<List<KeyListNodeI>> importedNodesConsumer;
 
-        public ImportKeyListsAction(Node source, Consumer<KeyListNodeI> importedNodeConsumer) {
+        public ImportKeyListsAction(Node source, Consumer<List<KeyListNodeI>> importedNodesConsumer) {
             this.source = source;
-            this.importedNodeConsumer = importedNodeConsumer;
+            this.importedNodesConsumer = importedNodesConsumer;
         }
 
         @Override
@@ -106,9 +105,9 @@ public class KeyListActions {
             File keyListImportFile = keyListFileChooser.showOpenDialog(UIUtils.getSourceWindow(source));
             if (keyListImportFile != null) {
                 LCStateController.INSTANCE.updateDefaultDirectory(FileChooserType.KEYLIST_IMPORT, keyListImportFile.getParentFile());
-                KeyListImportTask keyListExportTask = IOManager.INSTANCE.createImportKeyListTask(List.of(keyListImportFile));
-                keyListExportTask.setOnSucceeded(e -> importedNodeConsumer.accept(keyListExportTask.getValue().get(0)));
-                AsyncExecutorController.INSTANCE.addAndExecute(true, false, keyListExportTask);
+                KeyListImportTask keyListImportTask = IOManager.INSTANCE.createImportKeyListTask(List.of(keyListImportFile));
+                keyListImportTask.setOnSucceeded(e -> importedNodesConsumer.accept(keyListImportTask.getValue()));
+                AsyncExecutorController.INSTANCE.addAndExecute(true, false, keyListImportTask);
             }
         }
 

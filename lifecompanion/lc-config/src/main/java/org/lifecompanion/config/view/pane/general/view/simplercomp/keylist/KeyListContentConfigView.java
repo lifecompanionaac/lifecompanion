@@ -39,7 +39,6 @@ import javafx.scene.paint.Color;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.fxmisc.easybind.EasyBind;
 import org.fxmisc.easybind.monadic.MonadicBinding;
-import org.lifecompanion.api.component.definition.DuplicableComponentI;
 import org.lifecompanion.api.component.definition.simplercomp.KeyListNodeI;
 import org.lifecompanion.base.data.common.ListBindingWithMapper;
 import org.lifecompanion.base.data.common.UIUtils;
@@ -52,10 +51,12 @@ import org.lifecompanion.config.data.config.LCGlyphFont;
 import org.lifecompanion.config.data.control.ConfigActionController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.framework.commons.utils.lang.LangUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -64,30 +65,23 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
     private final ObjectProperty<KeyListNodeI> rootKeyListNode;
 
 
-    private Button buttonAddKey, buttonAddCategory, buttonAddLinkKey, buttonDelete, buttonMoveUp, buttonMoveDown, buttonCut, buttonCopy, buttonPaste, buttonExportKeys, buttonImportKeys, buttonExpandCollapse;
+    private Button buttonAddKey, buttonAddCategory, buttonAddLinkKey, buttonDelete, buttonMoveUp, buttonMoveDown, buttonCut, buttonCopy, buttonPaste, buttonExportKeys, buttonImportKeys, buttonShowHideProperties;
 
     private HBox selectionPathContainer;
     private KeyListNodePropertiesEditionView keyListNodePropertiesEditionView;
 
     private TreeView<KeyListNodeI> keyListTreeView;
 
-
-    private final ObjectProperty<KeyListNodeI> draggedNode;
     private final ObjectProperty<KeyListNodeI> cutOrCopiedNode;
     private final HashMap<KeyListNodeI, KeyListNodeTreeItem> keyListTreeItems;
     private final BooleanProperty propertiesShowing;
 
     public KeyListContentConfigView() {
         this.rootKeyListNode = new SimpleObjectProperty<>();
-        this.draggedNode = new SimpleObjectProperty<>();
         this.cutOrCopiedNode = new SimpleObjectProperty<>();
         this.keyListTreeItems = new HashMap<>();
         this.propertiesShowing = new SimpleBooleanProperty(true);
         initAll();
-    }
-
-    ObjectProperty<KeyListNodeI> draggedNodeProperty() {
-        return draggedNode;
     }
 
     ObjectProperty<KeyListNodeI> cutOrCopiedNodeProperty() {
@@ -157,14 +151,14 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         boxTreeAndCommands.setAlignment(Pos.CENTER);
         VBox.setVgrow(boxTreeAndCommands, Priority.ALWAYS);
 
-        buttonExpandCollapse = UIUtils.createLeftTextButton(Translation.getText("keylist.config.hide.key.properties"), LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.EYE_SLASH).size(18).color(LCGraphicStyle.MAIN_DARK), "TODO");
+        buttonShowHideProperties = UIUtils.createLeftTextButton(Translation.getText("keylist.config.hide.key.properties"), LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.EYE_SLASH).size(18).color(LCGraphicStyle.MAIN_DARK), "TODO");
 
         keyListNodePropertiesEditionView = new KeyListNodePropertiesEditionView();
         VBox.setMargin(keyListNodePropertiesEditionView, new Insets(5, 0, 0, 0));
 
         // Total
         this.setSpacing(2.0);
-        this.getChildren().addAll(boxExportImportsButtons, selectionPathContainer, boxTreeAndCommands, buttonExpandCollapse, keyListNodePropertiesEditionView);
+        this.getChildren().addAll(boxExportImportsButtons, selectionPathContainer, boxTreeAndCommands, buttonShowHideProperties, keyListNodePropertiesEditionView);
         this.setAlignment(Pos.CENTER);
     }
 
@@ -206,55 +200,12 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
             }
         });
 
-        this.buttonExportKeys.setOnAction(e -> ConfigActionController.INSTANCE.executeAction(new KeyListActions.ExportKeyListsAction(buttonExportKeys, this.rootKeyListNode.get())));
-        this.buttonImportKeys.setOnAction(e -> {
-            ConfigActionController.INSTANCE.executeAction(new KeyListActions.ImportKeyListsAction(buttonImportKeys, importedNode -> {
-                // Imported node is duplicated to avoid duplicates...
-                final DuplicableComponentI importedNodeDuplicated = importedNode.duplicate(true);
-                addNodeToSelectedDestination((KeyListNodeI) importedNodeDuplicated);
-            }));
-        });
+        this.buttonExportKeys.setOnAction(e ->
+                ConfigActionController.INSTANCE.executeAction(new KeyListActions.ExportKeyListsAction(buttonExportKeys, this.rootKeyListNode.get())));
+        this.buttonImportKeys.setOnAction(e ->
+                ConfigActionController.INSTANCE.executeAction(new KeyListActions.ImportKeyListsAction(buttonImportKeys, this::addNodeToSelectedDestination)));
 
-
-        // FIXME : check if need to duplicate imported node (if already present in the current node tree)
-        //                List<KeyListNodeI> nodesToAdd = importedNode;
-        //                if (!nodesToAdd.isEmpty()) {
-        //                    // Add just after current item, or to the edited node
-        //                    final KeyListNodeI selectedItem = this.listItemList.getSelectionModel().getSelectedItem();
-        //                    if (selectedItem != null) {
-        //                        final int addIndex = editedNode.get().getChildren().indexOf(selectedItem);
-        //                        editedNode.get().getChildren().addAll(addIndex + 1, nodesToAdd);
-        //                    } else {
-        //                        editedNode.get().getChildren().addAll(nodesToAdd);
-        //                    }
-        //                    commonListViewActionContainer.selectAndScrollTo(nodesToAdd.get(0));
-        //                }
-
-        buttonExpandCollapse.setOnAction(e -> toggleProperties());
-
-
-        //        this.commonListViewActionContainer.setDragEndPriorTester(dragDestination -> !dragDestination.isLeafNode());
-        //        this.commonListViewActionContainer.setDragEndAcceptor((dragDestination, draggedNode) -> {
-        //            // For each node : remove from its parent and moves it to the new parent
-        //            // only if : not the node moved on itself or moved to its current parent
-        //            final KeyListNodeI draggedNodeParent = draggedNode.parentProperty().get();
-        //            if (draggedNodeParent != dragDestination && dragDestination != draggedNode) {
-        //                draggedNodeParent.getChildren().remove(draggedNode);
-        //                dragDestination.getChildren().add(draggedNode);
-        //                return true;
-        //            }
-        //            return false;
-        //        });
-        //        this.commonListViewActionContainer.setDragFinishedConsumer((movedCount, dragDestination) -> LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo(Translation.getText("general.configuration.view.keylist.moved." +
-        //                (movedCount > 1 ? "plural." : "") + "result", movedCount, getFullNameForNode(dragDestination)))));
-        //        this.commonListViewActionContainer.setDoubleClicConsumer(this::configureNodeChildren);
-
-        keyListTreeView.setOnDragExited(da -> {
-            // FIXME : find a way to scroll up/down
-            //            if (da.getY() > 0) {
-            //treeViewItems.refresh();
-            //            }
-        });
+        buttonShowHideProperties.setOnAction(e -> toggleProperties());
     }
 
     private void toggleProperties() {
@@ -266,7 +217,7 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         keyListNodePropertiesEditionView.setVisible(false);
         keyListNodePropertiesEditionView.setManaged(false);
         keyListTreeView.setMaxHeight(Double.MAX_VALUE);
-        buttonExpandCollapse.setText(Translation.getText("keylist.config.show.key.properties"));
+        buttonShowHideProperties.setText(Translation.getText("keylist.config.show.key.properties"));
         this.propertiesShowing.set(false);
     }
 
@@ -274,7 +225,7 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         keyListNodePropertiesEditionView.setVisible(true);
         keyListNodePropertiesEditionView.setManaged(true);
         keyListTreeView.setMaxHeight(TREE_VIEW_HEIGHT);
-        buttonExpandCollapse.setText(Translation.getText("keylist.config.hide.key.properties"));
+        buttonShowHideProperties.setText(Translation.getText("keylist.config.hide.key.properties"));
         this.propertiesShowing.set(true);
     }
 
@@ -282,13 +233,6 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         final KeyListNodeI parentNode = selectedNode.parentProperty().get();
         parentNode.getChildren().remove(selectedNode);
         // TODO : notification with undo button ?
-    }
-
-    private void ifSelectedItemNotNull(Consumer<KeyListNodeI> action) {
-        final TreeItem<KeyListNodeI> selectedItem = this.keyListTreeView.getSelectionModel().getSelectedItem();
-        if (selectedItem != null && selectedItem.getValue() != null) {
-            action.accept(selectedItem.getValue());
-        }
     }
 
     private EventHandler<ActionEvent> createMoveNodeListener(final int indexMove) {
@@ -307,28 +251,6 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
     private EventHandler<ActionEvent> createAddNodeListener(Supplier<KeyListNodeI> supplier) {
         return ev -> addNodeToSelectedDestination(supplier.get());
     }
-
-    private void addNodeToSelectedDestination(KeyListNodeI added) {
-        if (keyListTreeView.getRoot() != null) {
-            final TreeItem<KeyListNodeI> selectedItem = this.keyListTreeView.getSelectionModel().getSelectedItem();
-            if (selectedItem != null && selectedItem.getValue() != null) {
-                final KeyListNodeI selectedNode = selectedItem.getValue();
-                if (selectedNode.isLeafNode()) {
-                    final KeyListNodeI parentNode = selectedNode.parentProperty().get();
-                    final int i = parentNode.getChildren().indexOf(selectedNode);
-                    parentNode.getChildren().add(i + 1, added);
-                } else {
-                    selectedNode.getChildren().add(0, added);
-                }
-            } else {
-                keyListTreeView.getRoot().getValue().getChildren().add(added);
-            }
-            selectAndScrollTo(added);
-            // TODO : notification?
-        }
-    }
-
-
     //========================================================================
 
     // BINDING
@@ -344,8 +266,14 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
                 this.keyListTreeView.setRoot(null);
             }
         });
-        final MonadicBinding<KeyListNodeI> keyListNodeIMonadicBinding = EasyBind.select(keyListTreeView.getSelectionModel().selectedItemProperty()).selectObject(TreeItem::valueProperty).orElse((KeyListNodeI) null);
-        keyListNodeIMonadicBinding.addListener((obs, ov, nv) -> {
+        // FIXME : check this for memory
+        final MonadicBinding<KeyListNodeI> currentSelectedNode = EasyBind
+                .select(keyListTreeView.getSelectionModel().selectedItemProperty())
+                .selectObject(TreeItem::valueProperty)
+                .orElse((KeyListNodeI) null);
+
+        // Update path
+        currentSelectedNode.addListener((obs, ov, nv) -> {
             selectionPathContainer.getChildren().clear();
             if (nv != null) {
                 KeyListNodeI current = nv;
@@ -362,9 +290,7 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
                 createAndAddLinkForNode(rootKeyListNode.get());
             }
         });
-
-        // FIXME : check this for memory
-        this.keyListNodePropertiesEditionView.selectedNodeProperty().bind(keyListNodeIMonadicBinding);
+        this.keyListNodePropertiesEditionView.selectedNodeProperty().bind(currentSelectedNode);
     }
 
     private void createAndAddLinkForNode(KeyListNodeI nodeForLink) {
@@ -376,16 +302,41 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         }
         selectionPathContainer.getChildren().add(0, hyperlink);
     }
+    //========================================================================
 
+
+    // FUNCTIONAL
+    //========================================================================
     private String getFullNameForNode(KeyListNodeI node) {
         return (node.parentProperty().get() == null ? Translation.getText("general.configuration.view.keylist.root.node.text") :
                 StringUtils.isNotBlank(node.textProperty().get()) ? node.textProperty().get() : Translation.getText("general.configuration.view.keylist.empty.node.text"));
     }
-    //========================================================================
 
+    private void addNodeToSelectedDestination(KeyListNodeI toAdd) {
+        addNodeToSelectedDestination(List.of(toAdd));
+    }
 
-    // HELPER
-    //========================================================================
+    private void addNodeToSelectedDestination(List<KeyListNodeI> toAdd) {
+        if (keyListTreeView.getRoot() != null) {
+            final TreeItem<KeyListNodeI> selectedItem = this.keyListTreeView.getSelectionModel().getSelectedItem();
+            if (selectedItem != null && selectedItem.getValue() != null) {
+                final KeyListNodeI selectedNode = selectedItem.getValue();
+                if (selectedNode.isLeafNode()) {
+                    final KeyListNodeI parentNode = selectedNode.parentProperty().get();
+                    final int i = parentNode.getChildren().indexOf(selectedNode);
+                    parentNode.getChildren().addAll(i + 1, toAdd);
+                } else {
+                    selectedNode.getChildren().addAll(0, toAdd);
+                }
+            } else {
+                keyListTreeView.getRoot().getValue().getChildren().addAll(toAdd);
+            }
+            if (LangUtils.isNotEmpty(toAdd))
+                selectAndScrollTo(toAdd.get(0));
+            // TODO : notification?
+        }
+    }
+
     public void selectAndScrollTo(KeyListNodeI item) {
         final KeyListNodeTreeItem keyListNodeTreeItem = this.keyListTreeItems.get(item);
         if (keyListNodeTreeItem != null) {
@@ -397,6 +348,13 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
             // try to go back 3 index behind (better for UX)
             while (indexToSelect-- > 0 && selectedIndex - indexToSelect < 2) ;
             this.keyListTreeView.scrollTo(indexToSelect);
+        }
+    }
+
+    private void ifSelectedItemNotNull(Consumer<KeyListNodeI> action) {
+        final TreeItem<KeyListNodeI> selectedItem = this.keyListTreeView.getSelectionModel().getSelectedItem();
+        if (selectedItem != null && selectedItem.getValue() != null) {
+            action.accept(selectedItem.getValue());
         }
     }
     //========================================================================
