@@ -58,14 +58,13 @@ public interface GeneralConfigurationStepViewI extends BaseConfigurationViewI<LC
     Node getViewNode();
 
     default void beforeShow(Object[] stepArgs) {
-
     }
 
     default void afterHide() {
     }
 
-    default boolean requestCancel() {
-        return true;
+    default boolean shouldCancelBeConfirmed() {
+        return false;
     }
     //========================================================================
 

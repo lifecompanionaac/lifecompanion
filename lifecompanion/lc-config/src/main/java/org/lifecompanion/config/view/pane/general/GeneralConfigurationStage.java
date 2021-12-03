@@ -43,7 +43,7 @@ public class GeneralConfigurationStage extends Stage {
         this.setOnShowing(we -> scene.onShowing());
         this.setOnHiding(we -> scene.onHiding());
         this.setOnCloseRequest(we -> {
-            scene.cancelSelected();
+            scene.cancelSelected(scene.getRoot());
             we.consume();
         });
     }
