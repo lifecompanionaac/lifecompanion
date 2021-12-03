@@ -23,7 +23,9 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -44,8 +46,8 @@ import org.lifecompanion.config.data.config.LCGlyphFont;
 import org.lifecompanion.config.view.common.ConfigUIUtils;
 import org.lifecompanion.config.view.common.SystemVirtualKeyboardHelper;
 import org.lifecompanion.config.view.pane.general.view.*;
-import org.lifecompanion.config.view.pane.general.view.simplercomp.KeyListNodeMainConfigurationStepView;
 import org.lifecompanion.config.view.pane.general.view.predict4all.*;
+import org.lifecompanion.config.view.pane.general.view.simplercomp.KeyListNodeMainConfigurationStepView;
 import org.lifecompanion.config.view.pane.general.view.simplercomp.UserActionSequenceMainConfigurationStepView;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
@@ -55,6 +57,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 public class GeneralConfigurationScene extends Scene implements LCViewInitHelper {
@@ -175,7 +178,7 @@ public class GeneralConfigurationScene extends Scene implements LCViewInitHelper
 
     @Override
     public void initListener() {
-        this.buttonCancel.setOnAction(e -> cancelSelected());
+        this.buttonCancel.setOnAction(e -> cancelSelected(buttonCancel));
         this.buttonOk.setOnAction(e -> okSelected());
         SystemVirtualKeyboardHelper.INSTANCE.registerScene(this);
         SessionStatsController.INSTANCE.registerScene(this);
@@ -196,13 +199,25 @@ public class GeneralConfigurationScene extends Scene implements LCViewInitHelper
         });
     }
 
-    // TODO : should call every steps ?
-    public boolean requestCancel() {
+    // TODO : it might be possible to add another security to limit implementation effort
+    // a timer that activate this alert is the stage stay shown for more than 3 min ?
+    public boolean shouldCancelBeConfirmed() {
+        for (GeneralConfigurationStepViewI view : this.views.values()) {
+            if (view.shouldCancelBeConfirmed()) return true;
+        }
         return false;
     }
 
-    void cancelSelected() {
-        this.requestCancel();//TODO : handle
+    void cancelSelected(Node source) {
+        if (this.shouldCancelBeConfirmed()) {
+            Alert dlg = ConfigUIUtils.createDialog(source, Alert.AlertType.CONFIRMATION);
+            dlg.getDialogPane().setContentText(Translation.getText("general.config.scene.cancel.warning.message"));
+            dlg.getDialogPane().setHeaderText(Translation.getText("general.config.scene.cancel.warning.header"));
+            Optional<ButtonType> returned = dlg.showAndWait();
+            if (returned.get() != ButtonType.OK) {
+                return;
+            }
+        }
         clearCurrentStepAndDoOnEverySteps(GeneralConfigurationStepViewI::cancelChanges);
     }
 

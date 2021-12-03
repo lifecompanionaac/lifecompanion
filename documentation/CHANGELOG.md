@@ -13,7 +13,7 @@
 
 ### Corrections/ajustements
 
--
+- Ajout d'un message d'avertissement sur la fenêtre des paramètres généraux en cas d'annulation (évite les mauvaises manipulations)
 
 ## 1.1.0 - 05/11/2021
 
@@ -292,7 +292,7 @@
 
 ### Corrections/ajustements
 
-- Ticket #328 : supprimer le mot supprime tout le texte 
+- Ticket #328 : supprimer le mot supprime tout le texte
 
 ## 0.16.1-SNAPSHOT - 21/01/2021
 
