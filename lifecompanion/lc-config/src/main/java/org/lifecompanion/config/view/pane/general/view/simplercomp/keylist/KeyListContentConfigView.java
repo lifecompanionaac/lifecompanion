@@ -159,6 +159,8 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         buttonNextFound = createSearchBarButton(FontAwesome.Glyph.CHEVRON_RIGHT, LCGraphicStyle.MAIN_DARK, "todo", 18);
         buttonClearSearch = createSearchBarButton(FontAwesome.Glyph.TIMES, LCGraphicStyle.SECOND_DARK, "todo", 18);
         labelFoundNodeInfo = new Label();
+        labelFoundNodeInfo.setPrefWidth(40.0);
+        labelFoundNodeInfo.getStyleClass().add("text-weight-bold");
 
         HBox searchBox = new HBox(10.0, textFieldSearchNode, buttonSearch, buttonClearSearch, labelFoundNodeInfo, buttonNextFound);
         searchBox.setAlignment(Pos.CENTER);
@@ -198,11 +200,6 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
     }
     //========================================================================
 
-    /*
-     * TODO ON SEARCH
-     *  - launching the same search should go to the next result
-     *  - if user change its search text, search result should be cleared
-     */
 
     // LISTENER
     //========================================================================
@@ -239,7 +236,8 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
 
         buttonSearch.setOnAction(e -> executeSearch());
         textFieldSearchNode.setOnAction(buttonSearch.getOnAction());
-        buttonClearSearch.setOnAction(e -> clearSearch());
+        textFieldSearchNode.textProperty().addListener((obs, ov, nv) -> clearSearch(false));
+        buttonClearSearch.setOnAction(e -> clearSearch(true));
         buttonNextFound.setOnAction(e -> {
             showNextSearchResult();
         });
@@ -315,32 +313,41 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         updateDisplayedResult();
     }
 
-    private void clearSearch() {
+    private void clearSearch(boolean clearTextField) {
         searchResult.set(null);
-        textFieldSearchNode.clear();
         lastSearch = null;
+        if (clearTextField) {
+            textFieldSearchNode.clear();
+        }
     }
 
     private static final Comparator<Pair<KeyListNodeI, Double>> SCORE_MAP_COMPARATOR = (e1, e2) -> Double.compare(e2.getRight(), e1.getRight());
 
     private void executeSearch() {
-        final String searchText = StringUtils.stripToEmpty(this.textFieldSearchNode.getText()).toLowerCase();
+        final String searchText = this.textFieldSearchNode.getText();
 
-        foundIndex.set(0);
-        // Create a list with all nodes
-        List<KeyListNodeI> allNodes = new ArrayList<>(100);
-        this.rootKeyListNode.get().traverseTreeToBottom(allNodes::add);
+        if (StringUtils.isDifferent(searchText, lastSearch)) {
+            lastSearch = searchText;
 
-        // Search for similarity
-        final List<KeyListNodeI> foundNodes = allNodes
-                .parallelStream()
-                .map(node -> Pair.of(node, getSimilarityScore(node, searchText)))
-                .sorted(SCORE_MAP_COMPARATOR)
-                .filter(e -> e.getRight() > LCUtils.SIMILARITY_CONTAINS)
-                .map(Pair::getLeft)
-                .collect(Collectors.toList());
-        this.searchResult.set(foundNodes);
-        updateDisplayedResult();
+            foundIndex.set(0);
+            // Create a list with all nodes
+            List<KeyListNodeI> allNodes = new ArrayList<>(100);
+            this.rootKeyListNode.get().traverseTreeToBottom(allNodes::add);
+
+            // Search for similarity
+            final List<KeyListNodeI> foundNodes = allNodes
+                    .parallelStream()
+                    .map(node -> Pair.of(node, getSimilarityScore(node, searchText)))
+                    .sorted(SCORE_MAP_COMPARATOR)
+                    .filter(e -> e.getRight() > LCUtils.SIMILARITY_CONTAINS)
+                    .map(Pair::getLeft)
+                    .collect(Collectors.toList());
+            this.searchResult.set(foundNodes);
+            updateDisplayedResult();
+        } else {
+            showNextSearchResult();
+        }
+        textFieldSearchNode.requestFocus();
     }
 
     private void updateDisplayedResult() {
@@ -393,7 +400,7 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
                 this.keyListTreeView.setRoot(new KeyListNodeTreeItem(nv));
                 updatePathForSelection(null);
             } else {
-                clearSearch();
+                clearSearch(true);
                 this.keyListTreeView.setRoot(null);
                 this.keyListTreeView.getSelectionModel().clearSelection();
             }
@@ -418,23 +425,23 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
                 final KeyListNodeI currentParent = nodeForLink.parentProperty().get();
                 createAndAddLinkForNode(nodeForLink);
                 current = currentParent;
-                if (current != null) {
+                if (current != null && current.parentProperty().get() != null) {
                     selectionPathContainer.getChildren().add(0, LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.CHEVRON_RIGHT).size(10).color(LCGraphicStyle.MAIN_DARK));
                 }
             }
-        } else if (rootKeyListNode.get() != null) {
-            createAndAddLinkForNode(rootKeyListNode.get());
         }
     }
 
     private void createAndAddLinkForNode(KeyListNodeI nodeForLink) {
-        final Hyperlink hyperlink = new Hyperlink((nodeForLink.parentProperty().get() == null ? Translation.getText("general.configuration.view.keylist.root.node.text") : nodeForLink.getHumanReadableText()));
         if (nodeForLink != rootKeyListNode.get()) {
-            hyperlink.setOnAction(e -> {
-                selectAndScrollTo(nodeForLink);
-            });
+            final Hyperlink hyperlink = new Hyperlink((nodeForLink.getHumanReadableText()));
+            if (nodeForLink != rootKeyListNode.get()) {
+                hyperlink.setOnAction(e -> {
+                    selectAndScrollTo(nodeForLink);
+                });
+            }
+            selectionPathContainer.getChildren().add(0, hyperlink);
         }
-        selectionPathContainer.getChildren().add(0, hyperlink);
     }
     //========================================================================
 
