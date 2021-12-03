@@ -73,8 +73,12 @@ public class KeyListNodeMainConfigurationStepView extends BorderPane implements 
     }
     //========================================================================
 
-
     KeyListNodeI editedRoot;
+
+    @Override
+    public boolean shouldCancelBeConfirmed() {
+        return keyListContentConfigView.isDirty();
+    }
 
     @Override
     public void saveChanges() {

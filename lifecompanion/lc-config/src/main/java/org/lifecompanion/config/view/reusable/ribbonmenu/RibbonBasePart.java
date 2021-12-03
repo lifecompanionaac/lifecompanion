@@ -19,13 +19,19 @@
 
 package org.lifecompanion.config.view.reusable.ribbonmenu;
 
+import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
+import org.lifecompanion.api.component.definition.GridPartKeyComponentI;
+import org.lifecompanion.api.component.definition.keyoption.KeyOptionI;
 import org.lifecompanion.base.data.common.LCUtils;
 import org.lifecompanion.base.view.reusable.impl.BaseConfigurationViewBorderPane;
 
@@ -87,9 +93,33 @@ public abstract class RibbonBasePart<T> extends BaseConfigurationViewBorderPane<
         this.labelTitle.setText(title);
     }
 
-    protected void initVisibleAndManagedBinding(Function<T, Boolean> visibleAndManagedFct) {
-        final BooleanBinding visibleAndManaged = Bindings.createBooleanBinding(() -> this.model.get() != null && LCUtils.nullToFalse(visibleAndManagedFct.apply(model.get())), this.model);
+    // FIXME : should check with memory > doesn't this creates memory leaks ?
+    protected void initVisibleAndManagedBinding(Class<?> mandatoryComponentType, Class<? extends KeyOptionI> rejectedKeyOptionType) {
+        BooleanProperty keyOptionOk = new SimpleBooleanProperty();
+        BooleanProperty modelOk = new SimpleBooleanProperty();
+        BooleanBinding visibleAndManaged = keyOptionOk.and(modelOk);
         this.visibleProperty().bind(visibleAndManaged);
         this.managedProperty().bind(visibleAndManaged);
+        InvalidationListener checkKeyOptionInvListener = inv -> {
+            T modelV = model.get();
+            if (modelV instanceof GridPartKeyComponentI) {
+                KeyOptionI keyOptionI = ((GridPartKeyComponentI) modelV).keyOptionProperty().get();
+                keyOptionOk.set(keyOptionI == null || !rejectedKeyOptionType.isAssignableFrom(keyOptionI.getClass()));
+            } else {
+                keyOptionOk.set(true);
+            }
+        };
+        ChangeListener<T> modelChangeListener = (obs, ov, nv) -> {
+            if (ov instanceof GridPartKeyComponentI) {
+                ((GridPartKeyComponentI) ov).keyOptionProperty().removeListener(checkKeyOptionInvListener);
+            }
+            if (nv instanceof GridPartKeyComponentI) {
+                ((GridPartKeyComponentI) nv).keyOptionProperty().addListener(checkKeyOptionInvListener);
+            }
+            modelOk.set(nv != null && mandatoryComponentType.isAssignableFrom(nv.getClass()));
+            checkKeyOptionInvListener.invalidated(null);
+        };
+        modelChangeListener.changed(model, null, model.get());
+        model.addListener(modelChangeListener);
     }
 }

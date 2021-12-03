@@ -159,7 +159,7 @@ public class KeyTextRibbonPart extends RibbonBasePart<GridPartKeyComponent> impl
             }
         });
         // TODO : also bind on key option change
-        this.initVisibleAndManagedBinding(component -> !(component.keyOptionProperty().get() instanceof KeyListNodeKeyOption));
+        this.initVisibleAndManagedBinding(GridPartKeyComponentI.class, KeyListNodeKeyOption.class);
     }
 
     @Override

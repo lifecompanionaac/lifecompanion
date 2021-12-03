@@ -85,6 +85,8 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
     private final IntegerProperty foundIndex;
     private String lastSearch;
 
+    private boolean dirty;
+
     public KeyListContentConfigView() {
         this.rootKeyListNode = new SimpleObjectProperty<>();
         this.cutOrCopiedNode = new SimpleObjectProperty<>();
@@ -97,6 +99,15 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
 
     public ObjectProperty<KeyListNodeI> rootKeyListNodeProperty() {
         return rootKeyListNode;
+    }
+
+    /**
+     * Implementation note : will true only if structural changes are made (add, remove, move) and false if only node properties are changed (for easier dev)
+     *
+     * @return true if the edited key list nodes were modified.<br>
+     */
+    public boolean isDirty() {
+        return dirty;
     }
 
     // UI
@@ -245,6 +256,7 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
 
 
     private void removeNode(KeyListNodeI selectedNode, String notificationTitle) {
+        this.dirty = true;
         final KeyListNodeI parentNode = selectedNode.parentProperty().get();
         int previousIndex = parentNode.getChildren().indexOf(selectedNode);
         parentNode.getChildren().remove(selectedNode);
@@ -263,6 +275,7 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
     private EventHandler<ActionEvent> createMoveNodeListener(final int indexMove) {
         return ae -> {
             ifSelectedItemNotNull(selectedNode -> {
+                this.dirty = true;
                 final ObservableList<KeyListNodeI> children = selectedNode.parentProperty().get().getChildren();
                 int index = children.indexOf(selectedNode);
                 if (index + indexMove >= 0 && index + indexMove < children.size()) {
@@ -396,6 +409,7 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
 
         this.rootKeyListNode.addListener((obs, ov, nv) -> {
             keyListTreeItems.clear();
+            this.dirty = false;
             if (nv != null) {
                 this.keyListTreeView.setRoot(new KeyListNodeTreeItem(nv));
                 updatePathForSelection(null);
@@ -453,6 +467,7 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
     }
 
     private void addNodeToSelectedDestination(List<KeyListNodeI> toAdd) {
+        this.dirty = true;
         if (keyListTreeView.getRoot() != null) {
             final TreeItem<KeyListNodeI> selectedItem = this.keyListTreeView.getSelectionModel().getSelectedItem();
             if (selectedItem != null && selectedItem.getValue() != null) {

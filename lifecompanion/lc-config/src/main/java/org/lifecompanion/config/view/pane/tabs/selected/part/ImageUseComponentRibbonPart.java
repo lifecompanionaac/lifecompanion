@@ -62,8 +62,7 @@ public class ImageUseComponentRibbonPart extends RibbonBasePart<ImageUseComponen
             }
         });
         this.imageUseComponentSelectorControl.modelProperty().bind(model);
-        // TODO : also bind on key option change
-        this.initVisibleAndManagedBinding(comp -> !(comp instanceof GridPartKeyComponentI) || !(((GridPartKeyComponentI) comp).keyOptionProperty().get() instanceof KeyListNodeKeyOption));
+        this.initVisibleAndManagedBinding(GridPartKeyComponentI.class, KeyListNodeKeyOption.class);
     }
 
     @Override
