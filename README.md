@@ -55,10 +55,10 @@ LifeCompanion is currently available in french only, but we are seeking for part
 	- **lifecompanion-logo** : svg source for LifeCompanion and partners logos + exports from svg
 	- **default-data** : contains default file to be copied in app data folder
 	- **license** : code template for copyright notice
-- **documentation** : contains LifeCompanion app and framework documentation
+- **docs** : contains LifeCompanion app and framework documentation
 
 # Build and run from source
 
-- [Dev notes page](documentation/DEV.md) : to understand LifeCompanion build/run/update process
-- [Plugin API page](documentation/PLUGINS.md) : to develop LifeCompanion plugins
+- [Dev notes page](docs/DEV.md) : to understand LifeCompanion build/run/update process
+- [Plugin API page](docs/PLUGINS.md) : to develop LifeCompanion plugins
 
