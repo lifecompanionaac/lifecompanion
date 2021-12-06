@@ -1,6 +1,6 @@
 # LIFECOMPANION CHANGELOG
 
-## 1.1.1 - XX/XX/2021
+## 1.2.0 - 06/12/2021
 
 ### Fonctionnalités
 
@@ -14,6 +14,7 @@
 ### Corrections/ajustements
 
 - Ajout d'un message d'avertissement sur la fenêtre des paramètres généraux en cas d'annulation (évite les mauvaises manipulations)
+- Correction de l'affichage lorsque le type de case change de "Liste de cases" à autre chose
 
 ## 1.1.0 - 05/11/2021
 
