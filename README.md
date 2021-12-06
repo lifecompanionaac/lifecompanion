@@ -27,7 +27,7 @@ LifeCompanion is currently available in french only, but we are seeking for part
 ## Changelog
 
 - [LifeCompanion feature changelog (french)](https://lifecompanionaac.org/categories/documentations/lifecompanion-changelog)
-- [LifeCompanion dev updates changelog](documentation/CHANGELOG.md)
+- [LifeCompanion dev updates changelog](docs/CHANGELOG.md)
 
 # Repo organization
 
