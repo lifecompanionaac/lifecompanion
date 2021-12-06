@@ -53,6 +53,7 @@ public class LifeCompanionFrameworkServer {
         } catch (Exception e) {
             LOGGER.warn("Can't read server properties", e);
         }
+        final String serverVersionF = serverVersion;
 
         // SERVER CONFIG
         if (args.length > 0) {
@@ -86,6 +87,7 @@ public class LifeCompanionFrameworkServer {
         // PUBLIC
         path("/public", () -> {
             get("/wakeup", ServerController.wakeup);
+            get("/version", (req, res) -> serverVersionF);
             post("/login", PublicUserController.login);
 
             get("/installer/:application/:system", ApplicationInstallerController.downloadFromWeb);
@@ -120,6 +122,7 @@ public class LifeCompanionFrameworkServer {
                 post("/initialize-update", ApplicationUpdateController.initialize);
                 post("/upload-file", ApplicationUpdateController.uploadFile);
                 post("/finish-update", ApplicationUpdateController.finish);
+                post("/delete-update/:id", ApplicationUpdateController.deleteUpdate);
                 post("/clean-previous-update/:application", ApplicationUpdateController.cleanPreviousUpdates);
             });
 

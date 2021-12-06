@@ -64,6 +64,12 @@ import java.util.stream.Collectors;
 public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
     private static final double TREE_VIEW_HEIGHT = 200.0;
     private final ObjectProperty<KeyListNodeI> rootKeyListNode;
+    private final ObjectProperty<List<KeyListNodeI>> searchResult;
+    private final IntegerProperty foundIndex;
+    private String lastSearch;
+    private boolean dirty;
+    private final ObjectProperty<KeyListNodeI> cutOrCopiedNode;
+    private final HashMap<KeyListNodeI, KeyListNodeTreeItem> keyListTreeItems;
 
 
     private Button buttonAddKey, buttonAddCategory, buttonAddLinkKey, buttonDelete, buttonMoveUp, buttonMoveDown, buttonCut, buttonCopy, buttonPaste, buttonExportKeys, buttonImportKeys, buttonShowHideProperties;
@@ -77,15 +83,8 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
 
     private TreeView<KeyListNodeI> keyListTreeView;
 
-    private final ObjectProperty<KeyListNodeI> cutOrCopiedNode;
-    private final HashMap<KeyListNodeI, KeyListNodeTreeItem> keyListTreeItems;
     private final BooleanProperty propertiesShowing;
 
-    private final ObjectProperty<List<KeyListNodeI>> searchResult;
-    private final IntegerProperty foundIndex;
-    private String lastSearch;
-
-    private boolean dirty;
 
     public KeyListContentConfigView() {
         this.rootKeyListNode = new SimpleObjectProperty<>();
@@ -409,14 +408,15 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
 
         this.rootKeyListNode.addListener((obs, ov, nv) -> {
             keyListTreeItems.clear();
+            clearSearch(true);
+            updatePathForSelection(null);
+            this.keyListTreeView.getSelectionModel().clearSelection();
+            cutOrCopiedNode.set(null);
             this.dirty = false;
             if (nv != null) {
                 this.keyListTreeView.setRoot(new KeyListNodeTreeItem(nv));
-                updatePathForSelection(null);
             } else {
-                clearSearch(true);
                 this.keyListTreeView.setRoot(null);
-                this.keyListTreeView.getSelectionModel().clearSelection();
             }
         });
         final MonadicBinding<KeyListNodeI> currentSelectedNode = EasyBind

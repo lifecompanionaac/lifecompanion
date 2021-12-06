@@ -289,4 +289,38 @@ public enum ApplicationUpdateService {
     public void addUpdateDoneStat(Request request, AddApplicationUpdateStatDto addApplicationUpdateStatDto) {
         SoftwareStatService.INSTANCE.pushStat(request, SoftwareStatService.StatEvent.APP_UPDATE_DONE, addApplicationUpdateStatDto.getVersion(), addApplicationUpdateStatDto.getSystemType(), addApplicationUpdateStatDto.getRecordedDate());
     }
+
+    public List<String> deleteUpdate(String applicationUpdateId) throws IOException {
+        List<String> logs = new ArrayList<>();
+        final List<ApplicationUpdateFile> filesForUpdates = ApplicationUpdateDao.INSTANCE.getFilesForUpdate(applicationUpdateId, null);
+        try (Connection connection = DataSource.INSTANCE.getSql2o().beginTransaction()) {
+
+            final ApplicationUpdate applicationUpdate = ApplicationUpdateDao.INSTANCE.getById(applicationUpdateId);
+            if (applicationUpdate != null) {
+                logs.add("Deleted update will be " + applicationUpdate.getVersion() + " / " + applicationUpdate.getApplicationId() + " / " + applicationUpdate.getUpdateDate());
+
+                // Get all files linked to this application update and remove then from storage (then from DB)
+                for (ApplicationUpdateFile updateFile : filesForUpdates) {
+                    String fileStorageId = updateFile.getFileStorageId();
+                    if (StringUtils.isNotBlank(fileStorageId)) {
+                        try {
+                            FileStorageService.INSTANCE.removeFile(fileStorageId);
+                        } catch (IOException e) {
+                            throw new IOException("Couldn't remove file " + updateFile.getId() + " with storage ID " + fileStorageId + " from storage, abort update deletion", e);
+                        }
+                        ApplicationUpdateDao.INSTANCE.deleteApplicationUpdateFile(connection, updateFile.getId());
+                        logs.add("Deleted application update file : " + updateFile.getTargetPath() + "(" + updateFile.getSystem() + ") - " + updateFile.getFileState());
+                    }
+                }
+                // Once files are all delete, delete the application update itself
+                ApplicationUpdateDao.INSTANCE.deleteApplicationUpdate(connection, applicationUpdateId);
+                logs.add("Deleted application update " + applicationUpdateId);
+
+                connection.commit();
+            } else {
+                logs.add("No update found for ID " + applicationUpdateId);
+            }
+        }
+        return logs;
+    }
 }

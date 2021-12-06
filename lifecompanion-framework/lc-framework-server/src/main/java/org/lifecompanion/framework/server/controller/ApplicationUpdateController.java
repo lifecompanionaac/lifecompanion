@@ -68,4 +68,7 @@ public class ApplicationUpdateController {
         ApplicationUpdateService.INSTANCE.addUpdateDoneStat(request, fromJson(request.body(), AddApplicationUpdateStatDto.class));
         return toJson(null);
     };
+
+
+    public static final Route deleteUpdate = (request, response) -> ApplicationUpdateService.INSTANCE.deleteUpdate(request.params("id"));
 }
