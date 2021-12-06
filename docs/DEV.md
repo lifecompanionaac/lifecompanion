@@ -209,13 +209,13 @@ INSERT INTO application(id) VALUES ('lifecompanion');
 
 #### Create LifeCompanion server update
 
-*Note on env : you can target dev environment and then promote it to prod on Heroku, or directly target prod env.*
+*Note on env : for the specific case of LifeCompanion update server, note that we always publish in dev as the dev application is then promoted to prod on Heroku*
 
 1. Update server version in build.gradle if needed
 1. Check your scripts in **src/main/resources/sql/migrations** and add them to `DataSource.MIGRATIONS_SCRIPT_NAMES`
 1. Check that you have the correct **HEROKU_API_KEY** env variable
-1. Commit and tag repo with **lifecompanion-framework/lc-framework-server/X.X.X-prod**
-1. Run `gradlew :lc-framework-server:publishServerUpdate -Penv=prod` in **lifecompanion-framework** 
+1. Commit and tag repo with **lifecompanion-framework/lc-framework-server/X.X.X**
+1. Run `gradlew :lc-framework-server:publishServerUpdate -Penv=dev` in **lifecompanion-framework** 
 1. If you have migration scripts, you can check them in Heroku log
 
 ---

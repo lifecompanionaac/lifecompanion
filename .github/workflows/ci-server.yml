@@ -1,0 +1,39 @@
+name: ci-server
+
+on:
+  push:
+    tags:        
+      - 'lifecompanion-framework/lc-framework-server/*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '16'
+          distribution: 'adopt'
+      
+      - name : Add +X on gralde scripts
+        run: chmod +x lifecompanion-framework/gradlew
+            
+      - name: Build LifeCompanion framework
+        uses: gradle/gradle-build-action@v2
+        with:
+          build-root-directory: lifecompanion-framework
+          arguments: publishToMavenLocal
+          
+      - name: Call update build and publish command
+        uses: gradle/gradle-build-action@v2
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        with:
+          build-root-directory: lifecompanion-framework
+          arguments: |
+            :lc-framework-server:publishServerUpdate
+            -Penv=dev
+            --stacktrace

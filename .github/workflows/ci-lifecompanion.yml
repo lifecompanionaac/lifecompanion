@@ -113,5 +113,5 @@ jobs:
             -Penv=${{inputs.target_env}}
             -Pinnosetup.path=${{env.INNOSETUP_DIR}}ISCC.exe
             -Plifecompanion.build.resources.directory=../../${{env.BUILD_RES_DIR}}
-            -Pvisibility=PUBLISHED
+            -Pvisibility=PREVIEW
             --stacktrace
