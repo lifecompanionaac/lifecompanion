@@ -20,6 +20,7 @@
 package org.lifecompanion.config.view.pane.general.view.simplercomp.keylist;
 
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.ObjectBinding;
 import javafx.beans.property.*;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -386,13 +387,6 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
     //========================================================================
     @Override
     public void initBinding() {
-        this.buttonPaste.disableProperty().bind(this.cutOrCopiedNode.isNull());
-        this.buttonCopy.disableProperty().bind(keyListTreeView.getSelectionModel().selectedItemProperty().isNull());
-        this.buttonCut.disableProperty().bind(keyListTreeView.getSelectionModel().selectedItemProperty().isNull());
-        this.buttonMoveUp.disableProperty().bind(keyListTreeView.getSelectionModel().selectedItemProperty().isNull());
-        this.buttonMoveDown.disableProperty().bind(keyListTreeView.getSelectionModel().selectedItemProperty().isNull());
-        this.buttonDelete.disableProperty().bind(keyListTreeView.getSelectionModel().selectedItemProperty().isNull());
-
         this.buttonSearch.disableProperty().bind(textFieldSearchNode.textProperty().isEmpty());
         this.buttonClearSearch.disableProperty().bind(searchResult.isNull().and(textFieldSearchNode.textProperty().isEmpty()));
         this.buttonNextFound.visibleProperty().bind(searchResult.isNotNull());
@@ -405,7 +399,6 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
                 },
                 searchResult, foundIndex)
         );
-
         this.rootKeyListNode.addListener((obs, ov, nv) -> {
             keyListTreeItems.clear();
             clearSearch(true);
@@ -419,12 +412,26 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
                 this.keyListTreeView.setRoot(null);
             }
         });
+
+        // Bind on current selection value (but not root item)
+        // this was necessary because it seems impossible to clear selection on tree view (to disabled selection on parent item)
         final MonadicBinding<KeyListNodeI> currentSelectedNode = EasyBind
                 .select(keyListTreeView.getSelectionModel().selectedItemProperty())
                 .selectObject(TreeItem::valueProperty)
                 .orElse((KeyListNodeI) null);
-        currentSelectedNode.addListener((obs, ov, nv) -> updatePathForSelection(nv));
-        this.keyListNodePropertiesEditionView.selectedNodeProperty().bind(currentSelectedNode);
+        final ObjectBinding<KeyListNodeI> currentSelectionAndNotRoot = Bindings.createObjectBinding(() ->
+                        currentSelectedNode.get() != rootKeyListNode.get() ? currentSelectedNode.get() : null
+                , currentSelectedNode, rootKeyListNode);
+
+        currentSelectionAndNotRoot.addListener((obs, ov, nv) -> updatePathForSelection(nv));
+        this.keyListNodePropertiesEditionView.selectedNodeProperty().bind(currentSelectionAndNotRoot);
+
+        this.buttonPaste.disableProperty().bind(this.cutOrCopiedNode.isNull());
+        this.buttonCopy.disableProperty().bind(currentSelectionAndNotRoot.isNull());
+        this.buttonCut.disableProperty().bind(currentSelectionAndNotRoot.isNull());
+        this.buttonMoveUp.disableProperty().bind(currentSelectionAndNotRoot.isNull());
+        this.buttonMoveDown.disableProperty().bind(currentSelectionAndNotRoot.isNull());
+        this.buttonDelete.disableProperty().bind(currentSelectionAndNotRoot.isNull());
     }
     //========================================================================
 
@@ -470,9 +477,9 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         this.dirty = true;
         if (keyListTreeView.getRoot() != null) {
             final TreeItem<KeyListNodeI> selectedItem = this.keyListTreeView.getSelectionModel().getSelectedItem();
-            if (selectedItem != null && selectedItem.getValue() != null) {
+            if (selectedItem != null && selectedItem.getValue() != null && selectedItem.getValue() != rootKeyListNode.get()) {
                 final KeyListNodeI selectedNode = selectedItem.getValue();
-                if (selectedNode.isLeafNode()) {
+                if (selectedNode.isLeafNode() || !selectedNode.getChildren().isEmpty()) {
                     final KeyListNodeI parentNode = selectedNode.parentProperty().get();
                     final int i = parentNode.getChildren().indexOf(selectedNode);
                     parentNode.getChildren().addAll(i + 1, toAdd);
@@ -505,7 +512,7 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
 
     private void ifSelectedItemNotNull(Consumer<KeyListNodeI> action) {
         final TreeItem<KeyListNodeI> selectedItem = this.keyListTreeView.getSelectionModel().getSelectedItem();
-        if (selectedItem != null && selectedItem.getValue() != null) {
+        if (selectedItem != null && selectedItem.getValue() != null && selectedItem.getValue() != rootKeyListNode.get()) {
             action.accept(selectedItem.getValue());
         }
     }

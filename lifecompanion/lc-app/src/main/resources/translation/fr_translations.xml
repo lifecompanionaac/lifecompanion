@@ -269,7 +269,7 @@
 		validation. Il est cependant possible de sélectionner directement une
 		case pour une sélection plus
 		rapide.</text>
-  <text key="selection.mode.direct.mouse.clic">Sélection directe à la souris</text>
+  <text key="selection.mode.direct.mouse.clic">Sélection directe (pointeur de souris/tactile)</text>
   <text key="selection.mode.direct.mouse.clic.description">Permet de sélectionner les cases en sélectionnant
 		(clic/pression)
 		directement
