@@ -260,6 +260,7 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         final KeyListNodeI parentNode = selectedNode.parentProperty().get();
         int previousIndex = parentNode.getChildren().indexOf(selectedNode);
         parentNode.getChildren().remove(selectedNode);
+        keyListTreeView.getSelectionModel().clearSelection();
         LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo(Translation.getText(notificationTitle, selectedNode.getHumanReadableText()), true, "keylist.action.remove.cancel", () -> {
             if (!parentNode.getChildren().contains(selectedNode)) {
                 if (previousIndex > 0 && previousIndex <= parentNode.getChildren().size()) {

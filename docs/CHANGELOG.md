@@ -1,5 +1,16 @@
 # LIFECOMPANION CHANGELOG
 
+## 1.2.2 - XX/XX/2022
+
+### Fonctionnalités
+
+- ....
+
+### Corrections/ajustements
+
+- Correction d'un problème lors de la suppression des listes de case
+
+
 ## 1.2.1 - 12/12/2021
 
 ### Corrections/ajustements
