@@ -9,6 +9,7 @@
 ### Corrections/ajustements
 
 - Correction d'un problème lors de la suppression des listes de case
+- Correction d'un problème d'affichage lors de l'export en PDF dans certains cas
 
 
 ## 1.2.1 - 12/12/2021

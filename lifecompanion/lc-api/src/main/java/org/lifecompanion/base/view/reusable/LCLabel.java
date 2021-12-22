@@ -18,7 +18,6 @@
  */
 package org.lifecompanion.base.view.reusable;
 
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
@@ -243,7 +242,7 @@ public class LCLabel extends BorderPane implements TextStyleBinder.TextStyleBind
                     }
                 }
                 return wantedFont;
-            }, this.font, this.enableAutoFontSizing, this.labelText.textProperty(), this.labelText.layoutBoundsProperty()));
+            }, this.font, this.enableAutoFontSizing, this.labelText.textProperty(), this.labelText.layoutBoundsProperty(), this.layoutBoundsProperty()));
         } catch (Throwable t) {
             LCLabel.LOGGER.warn("Couldn't bind the font dynamically in the label, so the label font will be binded to the original font", t);
             this.labelText.fontProperty().bind(this.font);
