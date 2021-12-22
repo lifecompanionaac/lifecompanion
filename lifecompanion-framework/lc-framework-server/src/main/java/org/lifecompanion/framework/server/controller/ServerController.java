@@ -19,11 +19,8 @@
 
 package org.lifecompanion.framework.server.controller;
 
-import org.lifecompanion.framework.model.server.dto.InitializeApplicationUpdateDto;
-import org.lifecompanion.framework.server.service.model.ApplicationUpdateService;
 import spark.Route;
 
-import static org.lifecompanion.framework.server.service.JsonService.fromJson;
 import static org.lifecompanion.framework.server.service.JsonService.toJson;
 
 public class ServerController {
@@ -31,4 +28,10 @@ public class ServerController {
         return toJson(null);
     };
 
+    public static final Route blankImage = (req, res) -> {
+        res.type("image/png");
+        return "";
+    };
+
+    public static final Route robots = (req, res) -> "User-agent: *\nDisallow: /";
 }

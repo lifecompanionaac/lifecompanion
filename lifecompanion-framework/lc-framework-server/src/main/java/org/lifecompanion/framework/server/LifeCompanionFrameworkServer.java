@@ -84,9 +84,13 @@ public class LifeCompanionFrameworkServer {
         // GLOBAL
         before(Filters.addCurrentUser);
 
+        // ROBOTS.TXT
+        get("/robots.txt", ServerController.robots);
+
         // PUBLIC
         path("/public", () -> {
             get("/wakeup", ServerController.wakeup);
+            get("/blank-image.png", ServerController.blankImage);
             get("/version", (req, res) -> serverVersionF);
             post("/login", PublicUserController.login);
 
@@ -133,6 +137,7 @@ public class LifeCompanionFrameworkServer {
 
         // AFTER
         after(Filters.typeJson);
+        after(Filters.robotsTag);
 
         // DATABASE
         DataSource.INSTANCE.checkDatabaseMigrations();

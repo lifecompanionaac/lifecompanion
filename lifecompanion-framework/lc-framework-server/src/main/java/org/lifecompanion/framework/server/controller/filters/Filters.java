@@ -52,4 +52,8 @@ public class Filters {
     public static final Filter typeJson = (request, response) -> {
         response.type("application/json");
     };
+
+    public static final Filter robotsTag = (request, response) -> {
+        response.header("X-Robots-Tag", "none");
+    };
 }
