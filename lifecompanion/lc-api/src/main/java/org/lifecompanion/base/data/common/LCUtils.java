@@ -438,6 +438,17 @@ public class LCUtils {
         }
     }
 
+    public static String toWebColor(final Color c) {
+        if (c != null) {
+            return String.format((Locale) null, "#%02x%02x%02x",
+                    Math.round(c.getRed() * 255),
+                    Math.round(c.getGreen() * 255),
+                    Math.round(c.getBlue() * 255));
+        } else {
+            return null;
+        }
+    }
+
     public static boolean isSupportedImage(final File imgFile) {
         for (int i = 0; i < LCConstant.IMAGE_EXTENSIONS.length; i++) {
             if (StringUtils.endsWithIgnoreCase(FileNameUtils.getExtension(imgFile), LCConstant.IMAGE_EXTENSIONS[i])) {
