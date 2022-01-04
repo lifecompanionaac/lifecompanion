@@ -48,6 +48,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static javafx.concurrent.Worker.State.*;
 
+/**
+ * Note that notification doesn't have an owner because we don't want the notification input to be block if the source window is not focused
+ */
 public class NotificationStage extends Stage {
     private final static AtomicInteger SESSION_NOTIFICATION_COUNT = new AtomicInteger(0);
 

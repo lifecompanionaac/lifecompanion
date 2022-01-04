@@ -16,4 +16,4 @@ dependencies {
     implementation 'org.jsoup:jsoup:1.14.2'
 }
 
-mainClassName = "scripts.imagedictionaries.FontAwesomeCreationScript"
+mainClassName = "scripts.TestColorPicker"
