@@ -62,7 +62,7 @@ public class LCColorPicker extends HBox implements LCViewInitHelper {
 
         this.previewRectangle = new Rectangle(15.0, 15.0);
         Pane panePreview = new Pane(previewRectangle);
-        panePreview.setStyle("-fx-background-image: url(transparent-clean.png);-fx-background-size: contain");
+        panePreview.getStyleClass().add("background-image-transparent");
 
         this.buttonPick.setGraphic(panePreview);
         this.buttonPick.setGraphicTextGap(5.0);

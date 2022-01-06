@@ -22,9 +22,9 @@ package scripts;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.control.Separator;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -39,11 +39,12 @@ import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 
 
 public class LCColorPickerSelection extends VBox implements LCViewInitHelper {
-    private final static int MAIN_COLOR_COUNT = 10;
-    private final static int COLOR_VARIANT_COUNT = 6;
+    private final static int MAIN_COLOR_COUNT = 13;
+    private final static int COLOR_VARIANT_COUNT = 5;
 
     private Button customColorButton;
     private final LCColorPicker colorPicker;
+    private HBox boxTransparent;
 
 
     public LCColorPickerSelection(LCColorPicker colorPicker) {
@@ -55,8 +56,7 @@ public class LCColorPickerSelection extends VBox implements LCViewInitHelper {
     public void initUI() {
         this.setPadding(new Insets(10.0));
         this.setSpacing(5.0);
-        this.setStyle("-fx-background-color: gray, white;-fx-background-insets: 1;");
-        this.setEffect(new DropShadow());//FIXME : better effect
+        this.getStyleClass().add("color-picker-selection-pane");
         this.setAlignment(Pos.CENTER);
 
         // First part : base colors
@@ -72,11 +72,14 @@ public class LCColorPickerSelection extends VBox implements LCViewInitHelper {
         }
 
         // Transparent button
-        final ImageView transparent = new ImageView(new Image("transparent-clean.png"));// FIXME : from IconManager
-        transparent.setFitHeight(20);
+        final ImageView transparent = new ImageView(new Image("icons/transparent-background.png"));// FIXME : from IconManager
+        transparent.setFitHeight(COLOR_SQUARE_SIZE);
         transparent.setPreserveRatio(true);
-        HBox boxTransparent = new HBox(5.0, transparent, new Text(Translation.getText("Aucune (transparent)")));
+        boxTransparent = new HBox(5.0, transparent, new Text(Translation.getText("Aucune (transparent)")));
         boxTransparent.setAlignment(Pos.CENTER);
+        boxTransparent.getStyleClass().add("border-hover");
+        final Group groupBoxTransparent = new Group(boxTransparent);
+        groupBoxTransparent.getStyleClass().addAll("scale-110-hover", "text-font-size-90");
 
         // User defined colors (TODO)
 
@@ -89,17 +92,20 @@ public class LCColorPickerSelection extends VBox implements LCViewInitHelper {
 
         // Pick a color button (TODO)
 
-        this.getChildren().addAll(tilePaneBaseColors, boxTransparent, new Separator(Orientation.HORIZONTAL), customColorButton);
+
+        this.getChildren().addAll(tilePaneBaseColors, groupBoxTransparent, new Separator(Orientation.HORIZONTAL), customColorButton);
 
     }
 
+    private static final double COLOR_SQUARE_SIZE = 16;
+
     private Rectangle createBaseColor(Color color) {
-        Rectangle rectangle = new Rectangle(14, 14);
+        Rectangle rectangle = new Rectangle(COLOR_SQUARE_SIZE, COLOR_SQUARE_SIZE);
         rectangle.setFill(color);
         rectangle.setOnMouseClicked(me -> {
             colorPicker.colorSelected(color);
         });
-        // FIXME : style for "on over" : reduce opacity
+        rectangle.getStyleClass().addAll("scale-130-hover", "stroke-hover");
         return rectangle;
     }
 
@@ -107,9 +113,11 @@ public class LCColorPickerSelection extends VBox implements LCViewInitHelper {
     public void initListener() {
         this.customColorButton.setOnAction(e -> {
             LCColorCustomColorDialog colorCustomColorDialog = new LCColorCustomColorDialog(this.colorPicker, this.colorPicker.valueProperty().get());
-            //colorCustomColorDialog.initOwner(UIUtils.getSourceWindow(customColorButton));
             colorCustomColorDialog.initModality(Modality.APPLICATION_MODAL);
             colorCustomColorDialog.show();
+        });
+        this.boxTransparent.setOnMouseClicked(me -> {
+            colorPicker.colorSelected(Color.TRANSPARENT);
         });
     }
 
@@ -120,16 +128,21 @@ public class LCColorPickerSelection extends VBox implements LCViewInitHelper {
 
     private Color[][] getBaseColors() {
         Color[][] colors = new Color[MAIN_COLOR_COUNT][COLOR_VARIANT_COUNT];
-        for (int i = 0; i < colors.length; i++) {
-            Color base = Color.hsb(i * (360.0 / colors.length), 1, 0.80);
+        // First : black to white
+        for (int j = 0; j < colors[0].length; j++) {
+            colors[0][j] = Color.WHITE.deriveColor(0.0, 1, (colors[0].length - j) * (1.0 / colors[0].length), 1);
+        }
+        // Then : others
+        for (int i = 1; i < colors.length; i++) {
+            Color base = Color.hsb((i - 1) * (360.0 / (colors.length - 1)), 0.9, 0.70);
             for (int j = 0; j < colors[i].length; j++) {
-                Color fColor = base.deriveColor(0.0, (colors[i].length - j) * (1.0 / colors[i].length), 1, 1);
-                colors[i][j] = fColor;
+                colors[i][j] = base.deriveColor(0.0, (colors[i].length - j) * (0.9 / colors[i].length), 1, 1);
             }
         }
         return colors;
     }
 
+    // TODO - Add it later ?
     //    Button buttonPick = new Button("Pick");
     //            buttonPick.setOnAction(e -> {
     //        Stage stage = new Stage();

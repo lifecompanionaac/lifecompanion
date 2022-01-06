@@ -31,6 +31,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -129,7 +131,7 @@ public class LCColorCustomColorDialog extends Stage implements LCViewInitHelper 
         opacityShowPane = new Pane();
         opacityShowPane.setPrefSize(BAND_SIZE, TOTAL_SIZE - BAND_SIZE);
         opacitySelectorPane = new Pane();
-        opacitySelectorPane.setStyle("-fx-background-image: url(transparent-clean.png);-fx-background-size: contain");
+        opacitySelectorPane.getStyleClass().add("background-image-transparent");
         opacitySelectorPane.setPrefSize(BAND_SIZE, TOTAL_SIZE - BAND_SIZE);
         opacitySelectionRect = createShowSelectionRectangle(BAND_SIZE, SELECTION_SIZE);
         opacitySelectorPane.getChildren().addAll(opacityShowPane, opacitySelectionRect);
@@ -144,10 +146,10 @@ public class LCColorCustomColorDialog extends Stage implements LCViewInitHelper 
 
         resultRectangle = new Rectangle(BAND_SIZE, BAND_SIZE);
         Pane paneResult = new Pane(resultRectangle);
-        paneResult.setStyle("-fx-background-image: url(transparent-clean.png);-fx-background-size: contain");
+        paneResult.getStyleClass().add("background-image-transparent");
         previousColorRectangle = new Rectangle(BAND_SIZE, BAND_SIZE);
         Pane paneResultP = new Pane(previousColorRectangle);
-        paneResultP.setStyle("-fx-background-image: url(transparent-clean.png);-fx-background-size: contain");
+        paneResultP.getStyleClass().add("background-image-transparent");
 
         // TODO : text align + text size with css
         final Label labelPreviousColor = new Label("Actuelle");
@@ -157,9 +159,10 @@ public class LCColorCustomColorDialog extends Stage implements LCViewInitHelper 
         boxResult.setAlignment(Pos.CENTER);
 
         fieldColorHex = new TextField();
-        Button buttonCopyHex = new Button("CC"); //FIXME
+        buttonCopyHex = new Button("CC"); //FIXME
         HBox boxFieldColorHex = new HBox(5.0, fieldColorHex, buttonCopyHex);
         boxFieldColorHex.setAlignment(Pos.CENTER);
+        boxFieldColorHex.getStyleClass().add("text-font-size-90");
 
         // TODO : better button
         buttonCancel = new Button("Annuler");
@@ -174,6 +177,7 @@ public class LCColorCustomColorDialog extends Stage implements LCViewInitHelper 
         // TODO : check style with other styles
         this.initStyle(StageStyle.UTILITY);
         Scene sceneContent = new Scene(totalVbox);
+        sceneContent.getStylesheets().add("lc_colorpicker.css");
         this.setScene(sceneContent);
     }
 
@@ -237,6 +241,16 @@ public class LCColorCustomColorDialog extends Stage implements LCViewInitHelper 
         buttonOk.setOnAction(e -> {
             hide();
             colorPicker.colorSelected(selectedColor.get());
+        });
+
+        buttonCopyHex.setOnAction(event -> {
+            if (selectedColor.get() != null) {
+                final Clipboard clipboard = Clipboard.getSystemClipboard();
+                final ClipboardContent content = new ClipboardContent();
+                content.putString(LCUtils.toWebColor(selectedColor.get()));
+                clipboard.setContent(content);
+                // FIXME : notification ?
+            }
         });
     }
 

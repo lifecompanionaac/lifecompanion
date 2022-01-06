@@ -34,6 +34,7 @@ public class TestColorPicker extends Application {
         vbox.setAlignment(Pos.CENTER);
         vbox.setPadding(new Insets(20));
         Scene scene = new Scene(vbox);
+        scene.getStylesheets().add("lc_colorpicker.css");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
