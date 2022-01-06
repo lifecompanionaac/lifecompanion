@@ -35,6 +35,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.transform.Scale;
+import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
@@ -400,6 +401,15 @@ public class UIUtils {
     public static void setFixedSize(Region region, double width, double height) {
         setFixedWidth(region, width);
         setFixedHeight(region, height);
+    }
+    //========================================================================
+
+    // STAGE
+    //========================================================================
+    public static void applyDefaultStageConfiguration(Stage stage) {
+        stage.setTitle(LCConstant.NAME);
+        stage.setForceIntegerRenderScale(LCGraphicStyle.FORCE_INTEGER_RENDER_SCALE);
+        stage.getIcons().add(IconManager.get(LCConstant.LC_ICON_PATH));
     }
     //========================================================================
 }

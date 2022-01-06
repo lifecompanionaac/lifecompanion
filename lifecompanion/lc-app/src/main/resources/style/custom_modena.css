@@ -1,0 +1,85 @@
+.combo-box-base .arrow-button .arrow {
+	-fx-background-color: -fx-main-primary;
+}
+.combo-box-base  {
+    -fx-background-color: transparent, #FAFAFA;
+    -fx-background-radius: 3.0;
+    -fx-border-radius: 3.0;
+    -fx-border-color: lightgrey;
+}
+.combo-box-base:focused {
+    -fx-background-color: transparent, #FAFAFA;
+    -fx-background-radius: 3.0;
+    -fx-border-radius: 3.0;
+    -fx-border-color: lightgrey;
+}
+
+.choice-box .open-button .arrow{
+	-fx-background-color: -fx-main-primary;
+}
+.choice-box {
+    -fx-background-color: transparent, #FAFAFA;
+    -fx-background-radius: 3.0;
+    -fx-border-radius: 3.0;
+    -fx-border-color: lightgray;
+}
+.choice-box:focused {
+    -fx-background-color: transparent, #FAFAFA;
+    -fx-background-radius: 3.0;
+    -fx-border-radius: 3.0;
+    -fx-border-color: lightgray;
+}
+
+.menu-button .arrow-button .arrow {
+	-fx-background-color: -fx-main-primary;
+}
+.menu-button  {
+    -fx-background-color: transparent, #FAFAFA;
+    -fx-background-radius: 3.0;
+    -fx-border-radius: 3.0;
+    -fx-border-color: lightgrey;
+}
+.menu-button:focused {
+    -fx-background-color: transparent, #FAFAFA;
+    -fx-background-radius: 3.0;
+    -fx-border-radius: 3.0;
+    -fx-border-color: lightgrey;
+}
+
+.spinner .increment-arrow-button .increment-arrow{
+	-fx-background-color: -fx-main-primary;
+}
+.spinner .decrement-arrow-button .decrement-arrow{
+	-fx-background-color: -fx-main-primary;
+}
+.spinner .decrement-arrow-button {
+	-fx-background-color: transparent, #FAFAFA;
+}
+.spinner .increment-arrow-button {
+	-fx-background-color: transparent, #FAFAFA;
+}
+
+.scroll-pane:focused {
+    -fx-background-color:transparent;
+}
+.scroll-pane {
+	-fx-background-color:transparent;
+    -fx-border-color:transparent, transparent;
+    -fx-border-width:0.0;
+}
+
+.list-view {
+    -fx-border-color:lightgrey;
+    -fx-border-width:1.0;
+}
+.list-view:focused {
+	-fx-background-color:transparent;
+}
+
+.cell .text {
+	-fx-text-fill: lightgrey;
+}
+
+.dialog-pane .content {
+    -fx-wrap-text: true;
+}

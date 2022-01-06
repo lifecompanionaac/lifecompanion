@@ -29,6 +29,7 @@ import org.lifecompanion.base.data.style2.MultipleStylePropertyHelper;
 import org.lifecompanion.base.data.style2.PropertyChangeListener;
 import org.lifecompanion.config.data.control.SelectionController;
 import org.lifecompanion.config.view.pane.tabs.style2.view.key.KeyStyleEditView;
+import org.lifecompanion.config.view.reusable.colorpicker.LCColorPicker;
 import org.lifecompanion.config.view.reusable.ribbonmenu.RibbonBasePart;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
@@ -70,16 +71,16 @@ public class MultiKeyStyleRibbonPart extends RibbonBasePart<Void> implements LCV
     public void initListener() {
         MultiKeyHelper.initStyleConfigActionListener(this.keyStyleView.getFieldBackgroundColor(),
                 this.keyStyleView.getModifiedIndicatorFieldBackgroundColor(),
-                ComboBoxBase::setOnAction,
-                ComboBoxBase::getValue,
-                ComboBoxBase::setValue,
+                LCColorPicker::setOnAction,
+                LCColorPicker::getValue,
+                LCColorPicker::setValue,
                 k -> k.getKeyStyle().backgroundColorProperty(),
                 this.backgroundColorProperty);
         MultiKeyHelper.initStyleConfigActionListener(this.keyStyleView.getFieldStrokeColor(),
                 this.keyStyleView.getModificationIndicatorFieldStrokeColor(),
-                ComboBoxBase::setOnAction,
-                ComboBoxBase::getValue,
-                ComboBoxBase::setValue,
+                LCColorPicker::setOnAction,
+                LCColorPicker::getValue,
+                LCColorPicker::setValue,
                 k -> k.getKeyStyle().strokeColorProperty(),
                 this.strokeColorProperty);
         MultiKeyHelper.initStyleConfigActionListener(this.keyStyleView.getSpinnerStrokeSize(),

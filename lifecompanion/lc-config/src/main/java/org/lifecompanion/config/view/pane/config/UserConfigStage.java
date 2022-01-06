@@ -23,21 +23,18 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
-import org.lifecompanion.base.data.config.IconManager;
-import org.lifecompanion.base.data.config.LCConstant;
+import org.lifecompanion.base.data.common.UIUtils;
 import org.lifecompanion.base.data.config.LCGraphicStyle;
 
 public class UserConfigStage extends Stage {
 
     public UserConfigStage(Window owner) {
-        this.setTitle(LCConstant.NAME);
+        UIUtils.applyDefaultStageConfiguration(this);
         this.initModality(Modality.APPLICATION_MODAL);
         this.initStyle(StageStyle.UTILITY);
         this.initOwner(owner);
         this.setWidth(LCGraphicStyle.DEFAULT_TOOL_STAGE_WIDTH);
         this.setHeight(LCGraphicStyle.DEFAULT_TOOL_STAGE_HEIGHT);
         this.setResizable(LCGraphicStyle.TOOL_STAGE_RESIZABLE);
-        this.setForceIntegerRenderScale(LCGraphicStyle.FORCE_INTEGER_RENDER_SCALE);
-        this.getIcons().add(IconManager.get(LCConstant.LC_ICON_PATH));
     }
 }

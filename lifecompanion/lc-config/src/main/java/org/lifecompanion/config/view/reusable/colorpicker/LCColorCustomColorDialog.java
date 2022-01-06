@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package scripts;
+package org.lifecompanion.config.view.reusable.colorpicker;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
@@ -43,7 +43,13 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.base.data.common.LCUtils;
+import org.lifecompanion.base.data.common.UIUtils;
+import org.lifecompanion.base.data.config.LCConstant;
+import org.lifecompanion.base.data.config.LCGraphicStyle;
+import org.lifecompanion.config.data.config.LCGlyphFont;
+import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.slf4j.Logger;
@@ -152,21 +158,24 @@ public class LCColorCustomColorDialog extends Stage implements LCViewInitHelper 
         paneResultP.getStyleClass().add("background-image-transparent");
 
         // TODO : text align + text size with css
-        final Label labelPreviousColor = new Label("Actuelle");
+        final Label labelPreviousColor = new Label(Translation.getText("lc.colorpicker.previous.value"));
         labelPreviousColor.setTextAlignment(TextAlignment.RIGHT);
-        final Label labelCurrentColor = new Label("Nouvelle");
+        final Label labelCurrentColor = new Label(Translation.getText("lc.colorpicker.current.value"));
         HBox boxResult = new HBox(5.0, labelPreviousColor, paneResultP, paneResult, labelCurrentColor);
         boxResult.setAlignment(Pos.CENTER);
 
         fieldColorHex = new TextField();
-        buttonCopyHex = new Button("CC"); //FIXME
+        buttonCopyHex = UIUtils.createGraphicButton(LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.COPY).size(14).color(LCGraphicStyle.MAIN_DARK), null);
         HBox boxFieldColorHex = new HBox(5.0, fieldColorHex, buttonCopyHex);
         boxFieldColorHex.setAlignment(Pos.CENTER);
         boxFieldColorHex.getStyleClass().add("text-font-size-90");
 
         // TODO : better button
-        buttonCancel = new Button("Annuler");
-        buttonOk = new Button("OK");
+        buttonOk = UIUtils.createLeftTextButton(Translation.getText("general.configuration.scene.ok.button"),
+                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.CHECK).size(16).color(LCGraphicStyle.MAIN_DARK), null);
+        buttonCancel = UIUtils.createLeftTextButton(Translation.getText("general.configuration.scene.cancel.button"),
+                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.TIMES).size(16).color(LCGraphicStyle.SECOND_DARK), null);
+
         HBox boxButton = new HBox(10.0, buttonCancel, buttonOk);
         boxButton.setAlignment(Pos.CENTER_RIGHT);
         VBox.setMargin(boxButton, new Insets(10, 0, 0, 0));
@@ -174,10 +183,16 @@ public class LCColorCustomColorDialog extends Stage implements LCViewInitHelper 
         totalVbox.getChildren().addAll(boxFieldColorHex, borderPaneSelector, boxResult, boxButton);
 
         // Stage
-        // TODO : check style with other styles
         this.initStyle(StageStyle.UTILITY);
+        UIUtils.applyDefaultStageConfiguration(this);
+        this.setResizable(false);
+
         Scene sceneContent = new Scene(totalVbox);
-        sceneContent.getStylesheets().add("lc_colorpicker.css");
+        sceneContent.getStylesheets().addAll(LCConstant.CSS_STYLE_PATH);
+        // FIXME : move to configuration ?
+        //        SystemVirtualKeyboardHelper.INSTANCE.registerScene(this);
+        //        SessionStatsController.INSTANCE.registerScene(this);
+
         this.setScene(sceneContent);
     }
 
@@ -240,7 +255,7 @@ public class LCColorCustomColorDialog extends Stage implements LCViewInitHelper 
         buttonCancel.setOnAction(e -> this.hide());
         buttonOk.setOnAction(e -> {
             hide();
-            colorPicker.colorSelected(selectedColor.get());
+            colorPicker.colorSelectedAndHide(selectedColor.get());
         });
 
         buttonCopyHex.setOnAction(event -> {

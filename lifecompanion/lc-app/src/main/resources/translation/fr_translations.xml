@@ -29,6 +29,12 @@
   <!--org.lifecompanion.api.definition.selection-->
   <text key="notification.grid.added.to.stack">Grille ajoutée dans la pile de grille</text>
   <text key="notification.key.list.paste">Cases collées dans la grille</text>
+  <text key="lc.colorpicker.null.value">Aucune</text>
+  <text key="lc.colorpicker.transparent.value">Transparent</text>
+  <text key="lc.colorpicker.previous.value">Actuelle</text>
+  <text key="lc.colorpicker.current.value">Nouvelle</text>
+  <text key="lc.colorpicker.custom.color">Autre couleur</text>
+  <text key="lc.colorpicker.change.current.color">Autre couleur</text>
   <text key="notification.grid.part.copied.in.another.part">{} collé(e) dans la grille</text>
   <text key="notification.grid.replaced.previous.notification">Grille sélectionnée remplacée par la grille collée</text>
   <text key="notification.grid.replaced.previous.notification">Grille sélectionnée remplacée par la grille collée</text>

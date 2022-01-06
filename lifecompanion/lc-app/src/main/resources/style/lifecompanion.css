@@ -48,6 +48,16 @@
 	-fx-alignment: center;
 }
 
+/*== BACKGROUND ==*/
+
+.base-background-with-gray-border-1 {
+    -fx-background-color: lightgrey, #FAFAFA;
+    -fx-background-insets: 0, 1;
+    -fx-background-radius: 3;
+}
+
+/*== BORDERS ==*/
+
 .border-bottom-gray {
     -fx-border-color: transparent transparent gray transparent;
 }
@@ -57,8 +67,39 @@
 }
 
 
-/*== PADDING/MARGIN ==*/
+/*== HOVER ==*/
+.scale-110-hover:hover {
+    -fx-scale-x: 1.1;
+    -fx-scale-y: 1.1;
+}
 
+.scale-130-hover:hover {
+   -fx-scale-x: 1.3;
+   -fx-scale-y: 1.3;
+}
+
+.border-hover {
+    -fx-border-width: 1.0;
+    -fx-border-style: solid;
+    -fx-border-color: transparent;
+    -fx-padding: 5.0;
+}
+
+.border-hover:hover {
+   -fx-border-color: dimgray;
+}
+
+.stroke-hover {
+   -fx-stroke-width: 1.0;
+   -fx-stroke: transparent;
+}
+
+.stroke-hover:hover {
+   -fx-stroke-width: 1.0;
+   -fx-stroke: dimgray;
+}
+
+/*== PADDING/MARGIN ==*/
 .padding-0 {
     -fx-padding: 0;
 }
@@ -74,14 +115,25 @@
     -fx-background-color: white;
 }
 
+/*== SPECIFIC FEATURES ==*/
 
-/*== SPECIFIC TUNNINGS ==*/
+.background-image-transparent {
+    -fx-background-image: url(/icons/transparent-background.png);
+    -fx-background-size: contain;
+}
+
+/*== SPECIFIC TUNINGS ==*/
 
 .keylist-tree-cell .tree-disclosure-node {
    -fx-padding: 8 6 4 8;
 }
 .keylist-tree-cell{
     -fx-indent: 40;
+}
+
+/*== SPECIFIC DEV ==*/
+.popup-bottom-dropshadow {
+    -fx-effect: dropshadow(three-pass-box, gray, 10, 0, 0, 5);
 }
 
 /* "-fx-indent: 30;")*/

@@ -28,16 +28,16 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.paint.Color;
 import org.lifecompanion.api.style2.definition.AbstractShapeCompStyleI;
-import org.lifecompanion.api.style2.definition.StyleI;
 import org.lifecompanion.base.data.common.UIUtils;
 import org.lifecompanion.config.data.common.LCConfigBindingUtils;
 import org.lifecompanion.config.view.pane.tabs.style2.view.AbstractStyleEditView;
+import org.lifecompanion.config.view.reusable.colorpicker.LCColorPicker;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 
 public abstract class AbstractShapeStyleEditView<T extends AbstractShapeCompStyleI<T>> extends AbstractStyleEditView<T> implements LCViewInitHelper {
 
-    private ColorPicker fieldBackgroundColor, fieldStrokeColor;
+    private LCColorPicker fieldBackgroundColor, fieldStrokeColor;
     private Spinner<Integer> spinnerShapeRadius, spinnerStrokeSize;
     private Label labelStrokeSize, labelShapeRadius;
 
@@ -54,8 +54,8 @@ public abstract class AbstractShapeStyleEditView<T extends AbstractShapeCompStyl
     public void initUI() {
         super.initUI();
         //Create fields
-        this.fieldStrokeColor = new ColorPicker();
-        this.fieldBackgroundColor = new ColorPicker();
+        this.fieldStrokeColor = new LCColorPicker();
+        this.fieldBackgroundColor = new LCColorPicker();
         this.spinnerShapeRadius = UIUtils.createIntSpinner(0, 180, 2, 2, 75.0);
         this.spinnerStrokeSize = UIUtils.createIntSpinner(0, 180, 2, 2, 75.0);
 
@@ -125,7 +125,7 @@ public abstract class AbstractShapeStyleEditView<T extends AbstractShapeCompStyl
         }
     }
 
-    public ColorPicker getFieldBackgroundColor() {
+    public LCColorPicker getFieldBackgroundColor() {
         return fieldBackgroundColor;
     }
 
@@ -133,7 +133,7 @@ public abstract class AbstractShapeStyleEditView<T extends AbstractShapeCompStyl
         return modifiedIndicatorFieldBackgroundColor;
     }
 
-    public ColorPicker getFieldStrokeColor() {
+    public LCColorPicker getFieldStrokeColor() {
         return fieldStrokeColor;
     }
 
