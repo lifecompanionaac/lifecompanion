@@ -23,7 +23,6 @@ import javafx.collections.FXCollections;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
@@ -36,12 +35,13 @@ import org.lifecompanion.base.data.common.UIUtils;
 import org.lifecompanion.base.view.reusable.GeneralConfigurationStep;
 import org.lifecompanion.base.view.reusable.GeneralConfigurationStepViewI;
 import org.lifecompanion.config.view.pane.tabs.general.cell.VirtualMouseDrawingListCell;
+import org.lifecompanion.config.view.reusable.colorpicker.LCColorPicker;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 
 public class VirtualMouseConfigurationStepView extends BorderPane implements GeneralConfigurationStepViewI, LCViewInitHelper {
     private Slider sliderMouseSpeed, sliderMouseSize;
-    private ColorPicker pickerMouseColor,pickerMouseStrokeColor;
+    private LCColorPicker pickerMouseColor, pickerMouseStrokeColor;
     private ComboBox<VirtualMouseDrawing> comboboxVirtualMouseDrawing;
 
     private LCConfigurationI model;
@@ -87,16 +87,14 @@ public class VirtualMouseConfigurationStepView extends BorderPane implements Gen
         labelMousePartExplain.getStyleClass().add("explain-text");
         labelMousePartExplain.setMaxWidth(Double.MAX_VALUE);
 
-        this.pickerMouseColor = new ColorPicker();
+        this.pickerMouseColor = new LCColorPicker();
         UIUtils.createAndAttachTooltip(pickerMouseColor, "tooltip.explain.use.param.virtual.mouse.color");
-        pickerMouseColor.setMaxWidth(Double.MAX_VALUE);
         Label labelMouseColor = new Label(Translation.getText("virtual.mouse.color"));
         labelMouseColor.setMinWidth(GeneralConfigurationStepViewI.LEFT_COLUMN_MIN_WIDTH);
         GridPane.setHalignment(pickerMouseColor, HPos.RIGHT);
 
-        this.pickerMouseStrokeColor = new ColorPicker();
+        this.pickerMouseStrokeColor = new LCColorPicker(LCColorPicker.ColorPickerMode.DARK);
         UIUtils.createAndAttachTooltip(pickerMouseStrokeColor, "tooltip.explain.use.param.virtual.mouse.stroke.color");
-        pickerMouseStrokeColor.setMaxWidth(Double.MAX_VALUE);
         Label labelMouseStrokeColor = new Label(Translation.getText("virtual.mouse.stroke.color"));
         labelMouseColor.setMinWidth(GeneralConfigurationStepViewI.LEFT_COLUMN_MIN_WIDTH);
         GridPane.setHalignment(pickerMouseStrokeColor, HPos.RIGHT);
@@ -105,7 +103,7 @@ public class VirtualMouseConfigurationStepView extends BorderPane implements Gen
         UIUtils.createAndAttachTooltip(sliderMouseSize, "tooltip.explain.use.param.virtual.mouse.size");
         Label labelMouseSize = new Label(Translation.getText("virtual.mouse.size"));
         labelMouseSize.setMaxWidth(Double.MAX_VALUE);
-        GridPane.setHgrow(labelMouseSize,Priority.ALWAYS);
+        GridPane.setHgrow(labelMouseSize, Priority.ALWAYS);
 
         this.sliderMouseSpeed = UIUtils.createBaseSlider(1, 10, 5);
         UIUtils.createAndAttachTooltip(sliderMouseSpeed, "tooltip.explain.use.param.virtual.mouse.speed");

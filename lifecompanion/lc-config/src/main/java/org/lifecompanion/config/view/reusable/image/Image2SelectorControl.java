@@ -62,7 +62,6 @@ public class Image2SelectorControl extends BorderPane implements LCViewInitHelpe
      */
     private final ObjectProperty<ImageElementI> selectedImage;
 
-
     /**
      * Property to disable image selection
      */

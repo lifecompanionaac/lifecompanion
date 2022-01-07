@@ -19,54 +19,53 @@
 
 package org.lifecompanion.config.view.useaction.impl.miscellaneous.note;
 
-import org.lifecompanion.framework.commons.translation.Translation;
-import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
-import org.lifecompanion.base.data.common.UIUtils;
-import org.lifecompanion.api.component.definition.useaction.UseActionConfigurationViewI;
-import org.lifecompanion.api.component.definition.useevent.UseVariableDefinitionI;
-import org.lifecompanion.base.data.useaction.impl.miscellaneous.note.OpenCloseNoteKeyAction;
 import javafx.collections.ObservableList;
-import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import org.lifecompanion.api.component.definition.useaction.UseActionConfigurationViewI;
+import org.lifecompanion.api.component.definition.useevent.UseVariableDefinitionI;
+import org.lifecompanion.base.data.common.UIUtils;
+import org.lifecompanion.base.data.useaction.impl.miscellaneous.note.OpenCloseNoteKeyAction;
+import org.lifecompanion.config.view.reusable.colorpicker.LCColorPicker;
+import org.lifecompanion.framework.commons.translation.Translation;
 
 public class SaveLoadNoteConfigView extends VBox implements UseActionConfigurationViewI<OpenCloseNoteKeyAction> {
 
-	private ColorPicker pickerWantedColor;
-	private Spinner<Integer> spinnerStrokeSize;
+    private LCColorPicker pickerWantedColor;
+    private Spinner<Integer> spinnerStrokeSize;
 
-	@Override
-	public Region getConfigurationView() {
-		return this;
-	}
+    @Override
+    public Region getConfigurationView() {
+        return this;
+    }
 
-	@Override
-	public Class<OpenCloseNoteKeyAction> getConfiguredActionType() {
-		return OpenCloseNoteKeyAction.class;
-	}
+    @Override
+    public Class<OpenCloseNoteKeyAction> getConfiguredActionType() {
+        return OpenCloseNoteKeyAction.class;
+    }
 
-	@Override
-	public void editEnds(final OpenCloseNoteKeyAction element) {
-		element.wantedActivatedColorProperty().set(this.pickerWantedColor.getValue());
-		element.wantedStrokeSizeProperty().set(this.spinnerStrokeSize.getValue());
-	}
+    @Override
+    public void editEnds(final OpenCloseNoteKeyAction element) {
+        element.wantedActivatedColorProperty().set(this.pickerWantedColor.getValue());
+        element.wantedStrokeSizeProperty().set(this.spinnerStrokeSize.getValue());
+    }
 
-	@Override
-	public void editStarts(final OpenCloseNoteKeyAction element, final ObservableList<UseVariableDefinitionI> possibleVariables) {
-		this.pickerWantedColor.setValue(element.wantedActivatedColorProperty().get());
-		this.spinnerStrokeSize.getValueFactory().setValue(element.wantedStrokeSizeProperty().get());
-	}
+    @Override
+    public void editStarts(final OpenCloseNoteKeyAction element, final ObservableList<UseVariableDefinitionI> possibleVariables) {
+        this.pickerWantedColor.setValue(element.wantedActivatedColorProperty().get());
+        this.spinnerStrokeSize.getValueFactory().setValue(element.wantedStrokeSizeProperty().get());
+    }
 
-	@Override
-	public void initUI() {
-		Label labelWantedColor = new Label(Translation.getText("use.action.save.load.note.color.field"));
-		this.pickerWantedColor = new ColorPicker();
-		Label labelWantedStrokeSize = new Label(Translation.getText("use.action.save.load.note.stroke.size.field"));
-		this.spinnerStrokeSize = UIUtils.createIntSpinner(0, 30, 3, 1, 75.0);
-		this.setSpacing(5.0);
-		this.getChildren().addAll(labelWantedColor, this.pickerWantedColor, labelWantedStrokeSize, spinnerStrokeSize);
-	}
+    @Override
+    public void initUI() {
+        Label labelWantedColor = new Label(Translation.getText("use.action.save.load.note.color.field"));
+        this.pickerWantedColor = new LCColorPicker();
+        Label labelWantedStrokeSize = new Label(Translation.getText("use.action.save.load.note.stroke.size.field"));
+        this.spinnerStrokeSize = UIUtils.createIntSpinner(0, 30, 3, 1, 75.0);
+        this.setSpacing(5.0);
+        this.getChildren().addAll(labelWantedColor, this.pickerWantedColor, labelWantedStrokeSize, spinnerStrokeSize);
+    }
 
 }

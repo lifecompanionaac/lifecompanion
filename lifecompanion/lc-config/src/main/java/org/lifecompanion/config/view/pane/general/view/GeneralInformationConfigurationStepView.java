@@ -24,7 +24,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
@@ -47,6 +46,7 @@ import org.lifecompanion.config.data.config.LCGlyphFont;
 import org.lifecompanion.config.data.control.ConfigActionController;
 import org.lifecompanion.config.view.common.ConfigUIUtils;
 import org.lifecompanion.config.view.pane.compselector.ComponentSelectorControl;
+import org.lifecompanion.config.view.reusable.colorpicker.LCColorPicker;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 
@@ -56,7 +56,7 @@ public class GeneralInformationConfigurationStepView extends BorderPane implemen
     private ToggleSwitch toggleSecuredConfigurationMode;
     private ToggleSwitch toggleVirtualKeyboard;
     private ComponentSelectorControl<GridComponentI> firstPartSelector;
-    private ColorPicker pickerBackgroundColor;
+    private LCColorPicker pickerBackgroundColor;
 
     private LCConfigurationI model;
 
@@ -112,9 +112,8 @@ public class GeneralInformationConfigurationStepView extends BorderPane implemen
         GridPane.setHalignment(buttonEditConfigurationInformation, HPos.CENTER);
 
         Label labelPartDisplay = UIUtils.createTitleLabel(Translation.getText("general.configuration.info.general.configuration.style"));
-        this.pickerBackgroundColor = new ColorPicker();
+        this.pickerBackgroundColor = new LCColorPicker();
         UIUtils.createAndAttachTooltip(pickerBackgroundColor, "tooltip.explain.configuration.style.background.color");
-        pickerBackgroundColor.setMaxWidth(Double.MAX_VALUE);
         Label labelBColor = new Label(Translation.getText("configuration.background.color"));
 
         Label labelGeneralConfiguration = UIUtils.createTitleLabel(Translation.getText("general.configuration.info.general.configuration"));
@@ -149,6 +148,7 @@ public class GeneralInformationConfigurationStepView extends BorderPane implemen
 
         gridPaneTotal.add(labelPartDisplay, 0, gridRowIndex++, 2, 1);
         gridPaneTotal.add(labelBColor, 0, gridRowIndex);
+        GridPane.setHalignment(pickerBackgroundColor,HPos.RIGHT);
         gridPaneTotal.add(pickerBackgroundColor, 1, gridRowIndex++);
 
         gridPaneTotal.add(labelGeneralConfiguration, 0, gridRowIndex++, 2, 1);

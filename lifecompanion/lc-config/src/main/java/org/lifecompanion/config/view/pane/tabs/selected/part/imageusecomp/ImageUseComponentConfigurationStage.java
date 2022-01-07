@@ -26,6 +26,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.lifecompanion.api.component.definition.ImageUseComponentI;
+import org.lifecompanion.base.data.common.LCUtils;
+import org.lifecompanion.base.data.common.UIUtils;
 import org.lifecompanion.base.data.config.IconManager;
 import org.lifecompanion.base.data.config.LCConstant;
 import org.lifecompanion.base.data.config.LCGraphicStyle;
@@ -37,12 +39,11 @@ public class ImageUseComponentConfigurationStage extends Stage {
     private final ImageUseComponentConfigurationView imageUseComponentConfigurationView;
 
     public ImageUseComponentConfigurationStage() {
-        this.setTitle(LCConstant.NAME);
+        UIUtils.applyDefaultStageConfiguration(this);
         this.initModality(Modality.APPLICATION_MODAL);
         this.initStyle(StageStyle.UTILITY);
         this.setWidth(ImageSelectorDialog.IMAGE_DIALOGS_WIDTH);
         this.setHeight(ImageSelectorDialog.IMAGE_DIALOGS_HEIGHT);
-        this.setForceIntegerRenderScale(LCGraphicStyle.FORCE_INTEGER_RENDER_SCALE);
         imageUseComponentConfigurationView = new ImageUseComponentConfigurationView();
         imageUseComponentConfigurationView.getStylesheets().addAll(LCConstant.CSS_STYLE_PATH);
         this.setScene(new Scene(imageUseComponentConfigurationView));
@@ -53,7 +54,6 @@ public class ImageUseComponentConfigurationStage extends Stage {
             }
         });
         this.setOnHidden(e -> imageUseComponentConfigurationView.modelProperty().set(null));
-        this.getIcons().add(IconManager.get(LCConstant.LC_ICON_PATH));
     }
 
     public static ImageUseComponentConfigurationStage getInstance() {

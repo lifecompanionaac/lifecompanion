@@ -36,6 +36,7 @@ import org.lifecompanion.config.data.action.impl.KeyOptionActions.ChangeNoteKeyS
 import org.lifecompanion.config.data.common.LCConfigBindingUtils;
 import org.lifecompanion.config.data.control.ConfigActionController;
 import org.lifecompanion.config.view.keyoption.BaseKeyOptionConfigView;
+import org.lifecompanion.config.view.reusable.colorpicker.LCColorPicker;
 import org.lifecompanion.framework.commons.translation.Translation;
 
 /**
@@ -44,7 +45,7 @@ import org.lifecompanion.framework.commons.translation.Translation;
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public class NoteKeyOptionConfigView extends BaseKeyOptionConfigView<NoteKeyOption> {
-    private ColorPicker pickerWantedColor;
+    private LCColorPicker pickerWantedColor;
     private Spinner<Integer> spinnerStrokeSize;
     private ComboBox<NoteKeyDisplayMode> comboboxDisplayMode;
     private TextField textFieldCustomText;
@@ -64,7 +65,7 @@ public class NoteKeyOptionConfigView extends BaseKeyOptionConfigView<NoteKeyOpti
     public void initUI() {
         super.initUI();
         Label labelWantedColor = new Label(Translation.getText("use.action.save.load.note.color.field"));
-        this.pickerWantedColor = new ColorPicker();
+        this.pickerWantedColor = new LCColorPicker();
         Label labelWantedStrokeSize = new Label(Translation.getText("use.action.save.load.note.stroke.size.field"));
         this.spinnerStrokeSize = UIUtils.createIntSpinner(0, 30, 3, 1, 130.0);
         Label labelDisplayMode = new Label(Translation.getText("label.note.key.display.mode"));

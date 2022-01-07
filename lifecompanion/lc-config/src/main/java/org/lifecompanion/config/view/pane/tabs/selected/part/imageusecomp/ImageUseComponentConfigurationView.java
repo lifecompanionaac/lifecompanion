@@ -25,7 +25,10 @@ import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.Separator;
+import javafx.scene.control.Slider;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import org.controlsfx.control.ToggleSwitch;
@@ -42,6 +45,7 @@ import org.lifecompanion.config.data.config.LCGlyphFont;
 import org.lifecompanion.config.data.control.ConfigActionController;
 import org.lifecompanion.config.view.common.ConfigUIUtils;
 import org.lifecompanion.config.view.reusable.ViewportSelectorControl;
+import org.lifecompanion.config.view.reusable.colorpicker.LCColorPicker;
 import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
@@ -80,7 +84,7 @@ public class ImageUseComponentConfigurationView extends BaseConfigurationViewBor
     /**
      * Color picker to select color to replace
      */
-    private ColorPicker pickerColorToReplace, pickerReplacingColor;
+    private LCColorPicker pickerColorToReplace, pickerReplacingColor;
 
     /**
      * Pane that contains color replacement fields
@@ -143,9 +147,9 @@ public class ImageUseComponentConfigurationView extends BaseConfigurationViewBor
         //Color replacement
         this.toggleEnableReplaceColor = ConfigUIUtils.createToggleSwitch("image.use.enable.color.replace",
                 "tooltip.explain.image.enable.color.replace");
-        this.pickerColorToReplace = new ColorPicker();
+        this.pickerColorToReplace = new LCColorPicker();
         UIUtils.createAndAttachTooltip(pickerColorToReplace, "tooltip.explain.image.color.replace");
-        this.pickerReplacingColor = new ColorPicker();
+        this.pickerReplacingColor = new LCColorPicker();
         UIUtils.createAndAttachTooltip(pickerReplacingColor, "tooltip.explain.image.color.replacing");
         this.sliderReplaceThreshold = UIUtils.createBaseSlider(0.0, 200.0, 10.0);
         UIUtils.createAndAttachTooltip(sliderReplaceThreshold, "tooltip.explain.image.color.replace.threshold");

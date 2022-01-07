@@ -59,7 +59,6 @@ public class ImageUseComponentSelectorControl extends BaseConfigurationViewBorde
      */
     private ChangeListener<ImageElementI> changeListenerImage;
 
-
     /**
      * Image selector control
      */

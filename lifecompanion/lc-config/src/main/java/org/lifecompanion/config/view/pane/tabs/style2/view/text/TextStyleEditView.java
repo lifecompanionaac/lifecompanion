@@ -42,6 +42,7 @@ import org.lifecompanion.config.data.config.LCGlyphFont;
 import org.lifecompanion.config.data.control.ConfigActionController;
 import org.lifecompanion.config.view.pane.tabs.style2.view.AbstractStyleEditView;
 import org.lifecompanion.config.view.reusable.FontListCell;
+import org.lifecompanion.config.view.reusable.colorpicker.LCColorPicker;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 
@@ -50,7 +51,7 @@ import java.util.Map;
 
 public class TextStyleEditView extends AbstractStyleEditView<TextCompStyleI> implements LCViewInitHelper {
 
-    private ColorPicker fieldColor;
+    private LCColorPicker fieldColor;
     private CheckBox boxBold, boxItalic, boxUnderline, boxUpperCase;
     private ComboBox<String> comboboxFontFamilly;
     private Spinner<Integer> spinnerSize;
@@ -94,7 +95,7 @@ public class TextStyleEditView extends AbstractStyleEditView<TextCompStyleI> imp
         super.initUI();
 
         //Create fields
-        this.fieldColor = new ColorPicker();
+        this.fieldColor = new LCColorPicker();
         this.boxBold = new CheckBox(Translation.getText("text.style.font.bold"));
         this.boxItalic = new CheckBox(Translation.getText("text.style.font.italic"));
         this.boxUnderline = new CheckBox(Translation.getText("text.style.font.underline"));
@@ -123,6 +124,7 @@ public class TextStyleEditView extends AbstractStyleEditView<TextCompStyleI> imp
         GridPane.setHalignment(this.spinnerSize, HPos.RIGHT);
         this.fieldGrid.add(new Label(Translation.getText("text.style.font.color")), 0, 2);
         this.fieldGrid.add(this.fieldColor, 1, 2);
+        GridPane.setHalignment(this.fieldColor, HPos.RIGHT);
         this.fieldGrid.add(modifiedIndicatorFieldColor = this.createModifiedIndicator(TextCompStyleI::colorProperty, fieldColor), 2, 2);
         GridPane.setHalignment(this.fieldColor, HPos.RIGHT);
         this.labelTextAlign = new Label(Translation.getText("text.style.text.align"));
@@ -233,7 +235,7 @@ public class TextStyleEditView extends AbstractStyleEditView<TextCompStyleI> imp
         return textAlignButtons;
     }
 
-    public ColorPicker getFieldColor() {
+    public LCColorPicker getFieldColor() {
         return fieldColor;
     }
 

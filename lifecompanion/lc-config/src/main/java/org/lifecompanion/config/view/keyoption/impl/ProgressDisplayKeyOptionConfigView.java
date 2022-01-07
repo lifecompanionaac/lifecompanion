@@ -22,7 +22,6 @@ package org.lifecompanion.config.view.keyoption.impl;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
-import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
@@ -33,6 +32,7 @@ import org.lifecompanion.base.data.component.keyoption.ProgressDisplayKeyOption;
 import org.lifecompanion.config.data.action.impl.KeyOptionActions;
 import org.lifecompanion.config.data.common.LCConfigBindingUtils;
 import org.lifecompanion.config.view.keyoption.BaseKeyOptionConfigView;
+import org.lifecompanion.config.view.reusable.colorpicker.LCColorPicker;
 import org.lifecompanion.framework.commons.translation.Translation;
 
 /**
@@ -44,7 +44,7 @@ public class ProgressDisplayKeyOptionConfigView extends BaseKeyOptionConfigView<
     private ChangeListener<ProgressDisplayKeyOption.ProgressDisplayType> changeListenerProgressDisplayType;
     private ChangeListener<Color> changeListenerProgressColor;
 
-    private ColorPicker pickerProgressColor;
+    private LCColorPicker pickerProgressColor;
     private ComboBox<ProgressDisplayKeyOption.ProgressDisplayMode> comboboxProgressDisplayMode;
     private ComboBox<ProgressDisplayKeyOption.ProgressDisplayType> comboboxProgressDisplayType;
 
@@ -56,7 +56,7 @@ public class ProgressDisplayKeyOptionConfigView extends BaseKeyOptionConfigView<
     @Override
     public void initUI() {
         super.initUI();
-        this.pickerProgressColor = new ColorPicker();
+        this.pickerProgressColor = new LCColorPicker();
         this.comboboxProgressDisplayMode = new ComboBox<>(FXCollections.observableArrayList(ProgressDisplayKeyOption.ProgressDisplayMode.values()));
         comboboxProgressDisplayMode.setCellFactory(lv -> new ProgressDisplayModeListCell());
         comboboxProgressDisplayMode.setButtonCell(new ProgressDisplayModeListCell());
@@ -64,9 +64,9 @@ public class ProgressDisplayKeyOptionConfigView extends BaseKeyOptionConfigView<
         comboboxProgressDisplayType.setCellFactory(lv -> new ProgressDisplayTypeListCell());
         comboboxProgressDisplayType.setButtonCell(new ProgressDisplayTypeListCell());
 
-        UIUtils.setFixedWidth(comboboxProgressDisplayMode, 120.0);
-        UIUtils.setFixedWidth(comboboxProgressDisplayType, 120.0);
-        UIUtils.setFixedWidth(pickerProgressColor, 120.0);
+        UIUtils.setFixedWidth(comboboxProgressDisplayMode, 150.0);
+        UIUtils.setFixedWidth(comboboxProgressDisplayType, 150.0);
+        UIUtils.setFixedWidth(pickerProgressColor, 150.0);
 
         int rowIndex = 0;
         GridPane gridPane = new GridPane();

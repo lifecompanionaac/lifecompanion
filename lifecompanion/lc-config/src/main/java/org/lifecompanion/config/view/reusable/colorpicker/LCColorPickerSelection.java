@@ -36,6 +36,7 @@ import javafx.stage.Modality;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.base.data.common.UIUtils;
 import org.lifecompanion.base.data.config.IconManager;
+import org.lifecompanion.base.data.config.LCConstant;
 import org.lifecompanion.base.data.config.LCGraphicStyle;
 import org.lifecompanion.config.data.config.LCGlyphFont;
 import org.lifecompanion.framework.commons.translation.Translation;
@@ -59,6 +60,7 @@ public class LCColorPickerSelection extends VBox implements LCViewInitHelper {
     private TilePane tilePaneUserColors;
 
     public LCColorPickerSelection(LCColorPicker colorPicker) {
+        this.getStylesheets().addAll(LCConstant.CSS_STYLE_PATH);
         this.colorPicker = colorPicker;
         initAll();
     }

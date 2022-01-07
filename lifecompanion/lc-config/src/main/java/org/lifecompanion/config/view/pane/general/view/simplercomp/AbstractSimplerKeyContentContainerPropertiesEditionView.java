@@ -37,6 +37,7 @@ import org.lifecompanion.api.component.definition.simplercomp.SimplerKeyContentC
 import org.lifecompanion.base.data.common.UIUtils;
 import org.lifecompanion.base.view.reusable.GeneralConfigurationStepViewI;
 import org.lifecompanion.config.view.reusable.ContentDisplayListCell;
+import org.lifecompanion.config.view.reusable.colorpicker.LCColorPicker;
 import org.lifecompanion.config.view.reusable.image.ImageUseComponentSelectorControl;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
@@ -50,7 +51,7 @@ public abstract class AbstractSimplerKeyContentContainerPropertiesEditionView<T 
     private ComboBox<ContentDisplay> comboBoxTextPosition;
     protected TextField fieldText;
     private Label labelText;
-    private ColorPicker colorPickerBackgroundColor, colorPickerStrokeColor;
+    private LCColorPicker colorPickerBackgroundColor, colorPickerStrokeColor;
     private ImageUseComponentSelectorControl imageUseComponentSelectorControl;
     private GridPane gridPaneConfiguration;
 
@@ -118,10 +119,10 @@ public abstract class AbstractSimplerKeyContentContainerPropertiesEditionView<T 
         this.comboBoxTextPosition.setButtonCell(new ContentDisplayListCell(false));
         this.comboBoxTextPosition.setCellFactory(lv -> new ContentDisplayListCell(true));
         comboBoxTextPosition.setMaxWidth(Double.MAX_VALUE);
-        colorPickerBackgroundColor = new ColorPicker();
+        colorPickerBackgroundColor = new LCColorPicker();
         colorPickerBackgroundColor.setMaxWidth(Double.MAX_VALUE);
         GridPane.setHgrow(colorPickerBackgroundColor, Priority.ALWAYS);
-        colorPickerStrokeColor = new ColorPicker();
+        colorPickerStrokeColor = new LCColorPicker(LCColorPicker.ColorPickerMode.DARK);
         colorPickerStrokeColor.setMaxWidth(Double.MAX_VALUE);
 
         gridPaneConfiguration.add(labelVisualPart, 0, rowIndex++, columnCount, 1);
@@ -192,7 +193,7 @@ public abstract class AbstractSimplerKeyContentContainerPropertiesEditionView<T 
 
     // HELPER
     //========================================================================
-    private Node createDeleteColorSwitch(ColorPicker colorPickerToBind) {
+    private Node createDeleteColorSwitch(LCColorPicker colorPickerToBind) {
         ToggleSwitch toggleSwitch = new ToggleSwitch();
         colorPickerToBind.disableProperty().bind(toggleSwitch.selectedProperty().not());
         toggleSwitch.selectedProperty().addListener((obs, ov, nv) -> {

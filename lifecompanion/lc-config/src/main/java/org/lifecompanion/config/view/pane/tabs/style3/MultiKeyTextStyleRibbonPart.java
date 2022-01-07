@@ -30,6 +30,7 @@ import org.lifecompanion.base.data.style2.MultipleStylePropertyHelper;
 import org.lifecompanion.base.data.style2.PropertyChangeListener;
 import org.lifecompanion.config.data.control.SelectionController;
 import org.lifecompanion.config.view.pane.tabs.style2.view.text.TextStyleEditView;
+import org.lifecompanion.config.view.reusable.colorpicker.LCColorPicker;
 import org.lifecompanion.config.view.reusable.ribbonmenu.RibbonBasePart;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
@@ -83,9 +84,9 @@ public class MultiKeyTextStyleRibbonPart extends RibbonBasePart<Void> implements
                 this.fontFamilyProperty);
         MultiKeyHelper.initStyleConfigActionListener(this.textStyleEditView.getFieldColor(),
                 this.textStyleEditView.getModifiedIndicatorFieldColor(),
-                ComboBoxBase::setOnAction,
-                ComboBoxBase::getValue,
-                ComboBoxBase::setValue,
+                LCColorPicker::setOnAction,
+                LCColorPicker::getValue,
+                LCColorPicker::setValue,
                 k -> k.getKeyTextStyle().colorProperty(),
                 this.colorProperty);
         MultiKeyHelper.initStyleConfigActionListener(this.textStyleEditView.getSpinnerSize(),

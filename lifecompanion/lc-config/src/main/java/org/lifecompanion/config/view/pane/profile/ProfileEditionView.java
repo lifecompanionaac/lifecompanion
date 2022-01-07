@@ -25,7 +25,9 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.api.component.definition.LCConfigurationDescriptionI;
@@ -42,6 +44,7 @@ import org.lifecompanion.config.data.control.ConfigActionController;
 import org.lifecompanion.config.view.common.ConfigUIUtils;
 import org.lifecompanion.config.view.pane.configuration.DefaultConfigurationListPane;
 import org.lifecompanion.config.view.pane.profilconfig.ProfileConfigStepViewI;
+import org.lifecompanion.config.view.reusable.colorpicker.LCColorPicker;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.utils.Pair;
@@ -66,7 +69,7 @@ public class ProfileEditionView extends BorderPane implements LCViewInitHelper, 
     /**
      * Field to select profile color
      */
-    private ColorPicker fieldColor;
+    private LCColorPicker fieldColor;
 
     /**
      * The current profile in create
@@ -107,8 +110,8 @@ public class ProfileEditionView extends BorderPane implements LCViewInitHelper, 
 
         //Profile color
         Label labelColor = new Label(Translation.getText("profile.label.color"));
-        this.fieldColor = new ColorPicker();
-        fieldColor.setPrefWidth(300.0);
+        this.fieldColor = new LCColorPicker();
+        fieldColor.setMaxWidth(300.0);
 
         //Box for profile icon
         this.profileIconView = new ProfileIconView();

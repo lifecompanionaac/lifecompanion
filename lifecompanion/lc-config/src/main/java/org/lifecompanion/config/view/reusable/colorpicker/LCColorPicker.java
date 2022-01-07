@@ -120,8 +120,11 @@ public class LCColorPicker extends HBox implements LCViewInitHelper {
         this.buttonPick.setGraphicTextGap(5.0);
 
         HBox.setHgrow(buttonPick, Priority.ALWAYS);
+        //this.setAlignment(Pos.CENTER_LEFT);
         this.buttonPick.setMaxWidth(Double.MAX_VALUE);
         this.setPrefWidth(150.0);
+        //this.setMaxWidth(Region.USE_PREF_SIZE);
+        //        this.setPrefWidth(150.0);
         this.getChildren().add(buttonPick);
 
         // Popup
@@ -179,6 +182,10 @@ public class LCColorPicker extends HBox implements LCViewInitHelper {
         if (nv != null) {
             userColors.computeIfAbsent(nv, k -> new AtomicInteger(0)).incrementAndGet();
         }
+        fireAllMostUsedColorsListeners();
+    };
+
+    private static void fireAllMostUsedColorsListeners() {
         final List<Color> mostUsedColors = userColors.entrySet().stream().sorted((e1, e2) -> Integer.compare(e2.getValue().get(), e1.getValue().get())).map(Map.Entry::getKey).collect(Collectors.toList());
         mostUsedColorsListeners.forEach(listenerRef -> {
             final Consumer<List<Color>> listener = listenerRef.get();
@@ -186,13 +193,14 @@ public class LCColorPicker extends HBox implements LCViewInitHelper {
                 listener.accept(mostUsedColors);
             }
         });
-    };
+    }
 
     private final Consumer<List<Color>> mostUsedColorsListener = this::mostUsedColorsUpdated;
 
     public void registerForMostUsedColors(LCColorPicker colorPicker) {
         colorPicker.valueProperty().addListener(colorChangeListener);
         mostUsedColorsListeners.add(new WeakReference<>(mostUsedColorsListener));
+        fireAllMostUsedColorsListeners();
     }
     //========================================================================
 }

@@ -181,6 +181,10 @@ public class UIUtils {
         control.setTooltip(createTooltip(Translation.getText(tooltipTextId)));
     }
 
+    public static void createAndAttachTooltip(Node node, String tooltipTextId) {
+        Tooltip.install(node, createTooltip(Translation.getText(tooltipTextId)));
+    }
+
     /**
      * @return a toggle group that disabled unselected button selection
      */

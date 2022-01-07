@@ -21,7 +21,6 @@ package org.lifecompanion.config.view.pane.tabs.style2.view.shape;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.HPos;
 import javafx.scene.Node;
-import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
 import javafx.scene.layout.GridPane;

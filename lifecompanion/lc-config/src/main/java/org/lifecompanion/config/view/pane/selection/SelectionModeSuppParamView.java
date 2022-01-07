@@ -43,6 +43,7 @@ import org.lifecompanion.base.view.reusable.impl.BaseConfigurationViewBorderPane
 import org.lifecompanion.config.view.common.ConfigUIUtils;
 import org.lifecompanion.config.view.reusable.KeySelectorControl;
 import org.lifecompanion.config.view.reusable.MouseButtonSelectorControl;
+import org.lifecompanion.config.view.reusable.colorpicker.LCColorPicker;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 
@@ -72,7 +73,7 @@ public class SelectionModeSuppParamView extends BaseConfigurationViewBorderPane<
     /**
      * Color pickers
      */
-    private ColorPicker colorPickerSelection, colorPickerActivation, colorPickerProgressColor;
+    private LCColorPicker colorPickerSelection, colorPickerActivation, colorPickerProgressColor;
 
     /**
      * Slider for the selection view size
@@ -274,10 +275,10 @@ public class SelectionModeSuppParamView extends BaseConfigurationViewBorderPane<
 
         // Style part
         titlePartStyle = UIUtils.createTitleLabel("selection.mode.param.title.general.style.configuration");
-        this.colorPickerActivation = new ColorPicker();
+        this.colorPickerActivation = new LCColorPicker();
         colorPickerActivation.setMaxWidth(Double.MAX_VALUE);
         UIUtils.createAndAttachTooltip(colorPickerActivation, "tooltip.explain.selection.param.activation.color");
-        this.colorPickerSelection = new ColorPicker();
+        this.colorPickerSelection = new LCColorPicker();
         colorPickerSelection.setMaxWidth(Double.MAX_VALUE);
         UIUtils.createAndAttachTooltip(colorPickerSelection, "tooltip.explain.selection.param.selection.color");
         this.toggleManifyKeyOver = ConfigUIUtils.createToggleSwitch("selection.mode.manify.key.over", "tooltip.explain.selection.param.manify.key");
@@ -296,7 +297,7 @@ public class SelectionModeSuppParamView extends BaseConfigurationViewBorderPane<
         titlePartProgressStyle = UIUtils.createTitleLabel("selection.mode.param.title.progress.style.configuration");
         this.toggleEnableProgressDrawing = ConfigUIUtils.createToggleSwitch("selection.mode.param.draw.scanning.progress",
                 "tooltip.explain.selection.param.enable.draw.progress");
-        this.colorPickerProgressColor = new ColorPicker();
+        this.colorPickerProgressColor = new LCColorPicker();
         colorPickerProgressColor.setMaxWidth(Double.MAX_VALUE);
         UIUtils.createAndAttachTooltip(colorPickerProgressColor, "tooltip.explain.selection.param.progress.color");
         this.comboboxDrawProgressMode = new ComboBox<>(FXCollections.observableArrayList(ProgressDrawMode.values()));

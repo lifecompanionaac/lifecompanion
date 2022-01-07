@@ -20,7 +20,6 @@ package org.lifecompanion.config.view.useaction.impl.configuration.change;
 
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
-import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -31,15 +30,15 @@ import org.lifecompanion.api.component.definition.GridPartKeyComponentI;
 import org.lifecompanion.api.component.definition.useaction.UseActionConfigurationViewI;
 import org.lifecompanion.api.component.definition.useevent.UseVariableDefinitionI;
 import org.lifecompanion.base.data.useaction.impl.configuration.change.ChangeKeyBackgroundColorAction;
-import org.lifecompanion.base.data.useaction.impl.selection.key.SimulateKeyActivationAction;
 import org.lifecompanion.config.view.common.ConfigUIUtils;
 import org.lifecompanion.config.view.pane.compselector.ComponentSelectorControl;
+import org.lifecompanion.config.view.reusable.colorpicker.LCColorPicker;
 import org.lifecompanion.framework.commons.translation.Translation;
 
 public class ChangeKeyBackgroundColorActionConfigView extends VBox implements UseActionConfigurationViewI<ChangeKeyBackgroundColorAction> {
 
     private ComponentSelectorControl<GridPartKeyComponentI> componentSelector;
-    private ColorPicker pickerWantedColor;
+    private LCColorPicker pickerWantedColor;
     private ToggleSwitch toggleSwitchRestoreParentStyle;
 
     @Override
@@ -60,7 +59,7 @@ public class ChangeKeyBackgroundColorActionConfigView extends VBox implements Us
         this.componentSelector = new ComponentSelectorControl<>(GridPartKeyComponentI.class,
                 Translation.getText("key.action.change.background.color.field.selected.key"));
         //Image
-        this.pickerWantedColor = new ColorPicker();
+        this.pickerWantedColor = new LCColorPicker();
         this.toggleSwitchRestoreParentStyle = ConfigUIUtils.createToggleSwitch("key.action.change.background.color.field.restore.parent", "");
 
         Label labelColor = new Label(Translation.getText("key.action.change.background.color.field.wanted.color"));
