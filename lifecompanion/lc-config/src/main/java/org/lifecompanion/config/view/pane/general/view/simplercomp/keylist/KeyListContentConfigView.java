@@ -192,7 +192,7 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
 
         // Total
         this.setSpacing(2.0);
-        this.getChildren().addAll(boxExportImportsButtons, selectionPathContainer, boxTreeAndCommands, searchBox, buttonShowHideProperties, keyListNodePropertiesEditionView);
+        this.getChildren().addAll(boxExportImportsButtons, searchBox, selectionPathContainer, boxTreeAndCommands, buttonShowHideProperties, keyListNodePropertiesEditionView);
         this.setAlignment(Pos.CENTER);
     }
 

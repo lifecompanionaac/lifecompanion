@@ -12,6 +12,7 @@
 
 ### Corrections/ajustements
 
+- Ticket #21 : déplacement du champs de recherche dans les listes de cases
 - Ticket #22 : lors du clic sur "Nouvelle configuration", cela ouvre maintenant la même fenêtre que lorsqu'on sélectionne "Ajouter"
 - Ticket #29 : le déplacement du curseur dans l'éditeur de texte ne se fait plus en mode configuration
 - Correction d'un problème lors de la suppression des listes de case
