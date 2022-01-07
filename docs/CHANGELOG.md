@@ -4,10 +4,15 @@
 
 ### Fonctionnalités
 
-- ....
+- Ticket #53 : nouveau **champs pour sélectionner des couleurs**
+	- Meilleur panel de couleur par défaut
+	- Couleurs de fonds/de contour différentes par défaut
+	- Sélection de "transparent" directement
+	- Configuration d'une couleur facilité
 
 ### Corrections/ajustements
 
+- Ticket #29 : le déplacement du curseur dans l'éditeur de texte ne se fait plus en mode configuration
 - Correction d'un problème lors de la suppression des listes de case
 - Correction d'un problème d'affichage lors de l'export en PDF dans certains cas
 

@@ -41,6 +41,7 @@ import org.lifecompanion.api.control.events.WritingEventSource;
 import org.lifecompanion.api.image2.ImageElementI;
 import org.lifecompanion.api.style2.definition.TextCompStyleI;
 import org.lifecompanion.base.data.common.LCUtils;
+import org.lifecompanion.base.data.control.AppController;
 import org.lifecompanion.base.data.control.WritingStateController;
 import org.lifecompanion.base.view.component.text.TextDisplayerBaseImplView;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
@@ -91,7 +92,11 @@ public class TextDisplayer3 extends Pane implements LCViewInitHelper {
 
     @Override
     public void initListener() {
-        this.setOnMouseReleased(me -> WritingStateController.INSTANCE.moveCaretToPosition(WritingEventSource.USER_PHYSICAL_INPUT, this.textDisplayer, me.getX(), me.getY()));
+        this.setOnMouseReleased(me -> {
+            if (AppController.INSTANCE.isUseMode()) {
+                WritingStateController.INSTANCE.moveCaretToPosition(WritingEventSource.USER_PHYSICAL_INPUT, this.textDisplayer, me.getX(), me.getY());
+            }
+        });
     }
 
     private void repaint(List<TextDisplayerLineI> lines) {
