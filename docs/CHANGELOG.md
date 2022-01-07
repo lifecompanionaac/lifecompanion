@@ -18,7 +18,7 @@
 - Ticket #29 : le déplacement du curseur dans l'éditeur de texte ne se fait plus en mode configuration
 - Correction d'un problème lors de la suppression des listes de case
 - Correction d'un problème d'affichage lors de l'export en PDF dans certains cas
-
+- L'action "Sélectionner une liste choisie" est maintenant simulée en mode configuration 
 
 ## 1.2.1 - 12/12/2021
 

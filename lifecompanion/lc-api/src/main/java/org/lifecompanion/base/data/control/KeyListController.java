@@ -37,6 +37,7 @@ import org.lifecompanion.base.data.common.LCUtils;
 import org.lifecompanion.base.data.component.keyoption.simplercomp.KeyListNodeKeyOption;
 import org.lifecompanion.base.data.useaction.impl.keylist.current.*;
 import org.lifecompanion.base.data.useaction.impl.keylist.general.GoRootKeyNodeAction;
+import org.lifecompanion.base.data.useaction.impl.keylist.general.SelectSpecificKeyListAction;
 import org.lifecompanion.base.data.useaction.impl.keylist.selected.NextKeysOnSpecificLevelAction;
 import org.lifecompanion.base.data.useaction.impl.keylist.selected.PreviousKeysOnSpecificLevelAction;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
@@ -327,6 +328,7 @@ public enum KeyListController implements ModeListenerI {
             GoRootKeyNodeAction goRootKeyNodeAction = key.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION, GoRootKeyNodeAction.class);
             NextKeysOnSpecificLevelAction nextKeysOnSpecificLevelAction = key.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION, NextKeysOnSpecificLevelAction.class);
             PreviousKeysOnSpecificLevelAction previousKeysOnSpecificLevelAction = key.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION, PreviousKeysOnSpecificLevelAction.class);
+            SelectSpecificKeyListAction selectSpecificKeyListAction = key.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION, SelectSpecificKeyListAction.class);
             if (nextInCurrentKeyListAction != null) {
                 nextInCurrent();
             } else if (previousInCurrentKeyListAction != null) {
@@ -343,6 +345,10 @@ public enum KeyListController implements ModeListenerI {
                 nextOnLevel(nextKeysOnSpecificLevelAction.selectedLevelProperty().get());
             } else if (previousKeysOnSpecificLevelAction != null) {
                 previousOnLevel(previousKeysOnSpecificLevelAction.selectedLevelProperty().get());
+            } else if (selectSpecificKeyListAction != null) {
+                if (StringUtils.isNotBlank(selectSpecificKeyListAction.linkedNodeIdProperty().get())) {
+                    selectNodeById(selectSpecificKeyListAction.linkedNodeIdProperty().get());
+                }
             }
         }
     }
@@ -357,7 +363,8 @@ public enum KeyListController implements ModeListenerI {
                 || key.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION, GoParentCurrentKeyNodeAction.class) != null
                 || key.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION, GoRootKeyNodeAction.class) != null
                 || key.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION, NextKeysOnSpecificLevelAction.class) != null
-                || key.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION, PreviousKeysOnSpecificLevelAction.class) != null;
+                || key.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION, PreviousKeysOnSpecificLevelAction.class) != null
+                || key.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION, SelectSpecificKeyListAction.class) != null;
     }
 
     private boolean isKeylistKeyOptionWithValidSelectAction(GridPartKeyComponentI key) {
