@@ -22,6 +22,7 @@ package org.lifecompanion.config.view.reusable.colorpicker;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
@@ -35,12 +36,14 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
 import javafx.stage.Popup;
 import javafx.stage.Window;
-import org.lifecompanion.base.data.common.LCUtils;
-import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 
-// TODO : handle size to max possible with
-// TODO : extends HBox or directly MenuButton ?
+import java.lang.ref.WeakReference;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
+
 public class LCColorPicker extends HBox implements LCViewInitHelper {
     private final ObjectProperty<Color> value;
     private final ObjectProperty<EventHandler<ActionEvent>> onAction;
@@ -48,11 +51,20 @@ public class LCColorPicker extends HBox implements LCViewInitHelper {
     private MenuButton buttonPick;
     private Popup popupColorSelection;
     private Rectangle previewRectangle;
+    private LCColorPickerSelection colorPickerSelection;
+
+    private final ColorPickerMode mode;
 
     public LCColorPicker() {
+        this(ColorPickerMode.BASE);
+    }
+
+    public LCColorPicker(final ColorPickerMode mode) {
+        this.mode = mode;
         this.value = new SimpleObjectProperty<>();
         this.onAction = new SimpleObjectProperty<>();
         initAll();
+        registerForMostUsedColors(this);
     }
 
     void colorSelectedAndHide(Color color) {
@@ -88,6 +100,10 @@ public class LCColorPicker extends HBox implements LCViewInitHelper {
         return onActionProperty().get();
     }
 
+    public ColorPickerMode getMode() {
+        return mode;
+    }
+
     @Override
     public void initUI() {
         // Pick button
@@ -100,18 +116,19 @@ public class LCColorPicker extends HBox implements LCViewInitHelper {
         Pane panePreview = new Pane(previewRectangle);
         panePreview.getStyleClass().add("background-image-transparent");
 
-        HBox.setHgrow(buttonPick, Priority.ALWAYS);
-        this.buttonPick.setMaxWidth(Double.MAX_VALUE);
         this.buttonPick.setGraphic(panePreview);
         this.buttonPick.setGraphicTextGap(5.0);
 
+        HBox.setHgrow(buttonPick, Priority.ALWAYS);
+        this.buttonPick.setMaxWidth(Double.MAX_VALUE);
+        this.setPrefWidth(150.0);
         this.getChildren().add(buttonPick);
 
         // Popup
         this.popupColorSelection = new Popup();
         popupColorSelection.autoFixProperty().set(true);
         popupColorSelection.autoHideProperty().set(true);
-        LCColorPickerSelection colorPickerSelection = new LCColorPickerSelection(this);
+        colorPickerSelection = new LCColorPickerSelection(this);
         popupColorSelection.getContent().add(colorPickerSelection);
     }
 
@@ -125,7 +142,7 @@ public class LCColorPicker extends HBox implements LCViewInitHelper {
                 Scene scene = this.getScene();
                 Window window = scene.getWindow();
                 Point2D point2D = buttonPick.localToScene(0, 0);
-                popupColorSelection.show(buttonPick, window.getX() + scene.getX() + point2D.getX(), window.getY() + scene.getY() + point2D.getY() + buttonPick.getHeight());
+                popupColorSelection.show(buttonPick, window.getX() + scene.getX() + point2D.getX() - 8.0, window.getY() + scene.getY() + point2D.getY() + buttonPick.getHeight() - 4.0);
             }
         });
         this.value.addListener((obs, ov, nv) -> {
@@ -138,16 +155,44 @@ public class LCColorPicker extends HBox implements LCViewInitHelper {
 
     @Override
     public void initBinding() {
-        this.buttonPick.textProperty().bind(Bindings.createStringBinding(() -> {
-            final Color color = value.get();
-            if (color == null) {
-                return Translation.getText("lc.colorpicker.null.value");
-            } else if (color.getOpacity() < 0.001) {
-                return Translation.getText("lc.colorpicker.transparent.value");
-            } else {
-                return LCUtils.toWebColor(color);
-            }
-        }, value));
+        this.buttonPick.textProperty().bind(Bindings.createStringBinding(() -> MaterialColors.INSTANCE.getColorName(value.get()), value));
         this.previewRectangle.fillProperty().bind(value);
     }
+
+
+    public enum ColorPickerMode {
+        BASE, DARK;
+    }
+
+    // MOST USED VALUES
+    //========================================================================
+    public void mostUsedColorsUpdated(List<Color> mostUsedColors) {
+        colorPickerSelection.mostUsedColorsUpdated(mostUsedColors);
+    }
+
+    private static final Map<Color, AtomicInteger> userColors = new HashMap<>();
+    private static final Set<WeakReference<Consumer<List<Color>>>> mostUsedColorsListeners = new HashSet<>();
+    private static final ChangeListener<Color> colorChangeListener = (obs, ov, nv) -> {
+        if (ov != null && userColors.containsKey(ov)) {
+            //userColors.get(ov).decrementAndGet();
+        }
+        if (nv != null) {
+            userColors.computeIfAbsent(nv, k -> new AtomicInteger(0)).incrementAndGet();
+        }
+        final List<Color> mostUsedColors = userColors.entrySet().stream().sorted((e1, e2) -> Integer.compare(e2.getValue().get(), e1.getValue().get())).map(Map.Entry::getKey).collect(Collectors.toList());
+        mostUsedColorsListeners.forEach(listenerRef -> {
+            final Consumer<List<Color>> listener = listenerRef.get();
+            if (listener != null) {
+                listener.accept(mostUsedColors);
+            }
+        });
+    };
+
+    private final Consumer<List<Color>> mostUsedColorsListener = this::mostUsedColorsUpdated;
+
+    public void registerForMostUsedColors(LCColorPicker colorPicker) {
+        colorPicker.valueProperty().addListener(colorChangeListener);
+        mostUsedColorsListeners.add(new WeakReference<>(mostUsedColorsListener));
+    }
+    //========================================================================
 }

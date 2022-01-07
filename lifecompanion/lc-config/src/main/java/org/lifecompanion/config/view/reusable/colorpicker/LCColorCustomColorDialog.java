@@ -40,7 +40,6 @@ import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.controlsfx.glyphfont.FontAwesome;
@@ -48,7 +47,11 @@ import org.lifecompanion.base.data.common.LCUtils;
 import org.lifecompanion.base.data.common.UIUtils;
 import org.lifecompanion.base.data.config.LCConstant;
 import org.lifecompanion.base.data.config.LCGraphicStyle;
+import org.lifecompanion.base.data.control.stats.SessionStatsController;
 import org.lifecompanion.config.data.config.LCGlyphFont;
+import org.lifecompanion.config.data.notif.LCNotification;
+import org.lifecompanion.config.view.common.SystemVirtualKeyboardHelper;
+import org.lifecompanion.config.view.pane.main.notification2.LCNotificationController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
@@ -157,9 +160,8 @@ public class LCColorCustomColorDialog extends Stage implements LCViewInitHelper 
         Pane paneResultP = new Pane(previousColorRectangle);
         paneResultP.getStyleClass().add("background-image-transparent");
 
-        // TODO : text align + text size with css
         final Label labelPreviousColor = new Label(Translation.getText("lc.colorpicker.previous.value"));
-        labelPreviousColor.setTextAlignment(TextAlignment.RIGHT);
+        labelPreviousColor.getStyleClass().add(".text-label-right");
         final Label labelCurrentColor = new Label(Translation.getText("lc.colorpicker.current.value"));
         HBox boxResult = new HBox(5.0, labelPreviousColor, paneResultP, paneResult, labelCurrentColor);
         boxResult.setAlignment(Pos.CENTER);
@@ -170,14 +172,13 @@ public class LCColorCustomColorDialog extends Stage implements LCViewInitHelper 
         boxFieldColorHex.setAlignment(Pos.CENTER);
         boxFieldColorHex.getStyleClass().add("text-font-size-90");
 
-        // TODO : better button
         buttonOk = UIUtils.createLeftTextButton(Translation.getText("general.configuration.scene.ok.button"),
                 LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.CHECK).size(16).color(LCGraphicStyle.MAIN_DARK), null);
         buttonCancel = UIUtils.createLeftTextButton(Translation.getText("general.configuration.scene.cancel.button"),
                 LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.TIMES).size(16).color(LCGraphicStyle.SECOND_DARK), null);
 
-        HBox boxButton = new HBox(10.0, buttonCancel, buttonOk);
-        boxButton.setAlignment(Pos.CENTER_RIGHT);
+        HBox boxButton = new HBox(8.0, buttonCancel, buttonOk);
+        boxButton.setAlignment(Pos.CENTER);
         VBox.setMargin(boxButton, new Insets(10, 0, 0, 0));
 
         totalVbox.getChildren().addAll(boxFieldColorHex, borderPaneSelector, boxResult, boxButton);
@@ -189,9 +190,8 @@ public class LCColorCustomColorDialog extends Stage implements LCViewInitHelper 
 
         Scene sceneContent = new Scene(totalVbox);
         sceneContent.getStylesheets().addAll(LCConstant.CSS_STYLE_PATH);
-        // FIXME : move to configuration ?
-        //        SystemVirtualKeyboardHelper.INSTANCE.registerScene(this);
-        //        SessionStatsController.INSTANCE.registerScene(this);
+        SystemVirtualKeyboardHelper.INSTANCE.registerScene(sceneContent);
+        SessionStatsController.INSTANCE.registerScene(sceneContent);
 
         this.setScene(sceneContent);
     }
@@ -264,8 +264,13 @@ public class LCColorCustomColorDialog extends Stage implements LCViewInitHelper 
                 final ClipboardContent content = new ClipboardContent();
                 content.putString(LCUtils.toWebColor(selectedColor.get()));
                 clipboard.setContent(content);
-                // FIXME : notification ?
+                LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo("lc.colorpicker.web.color.copied").withMsDuration(LCGraphicStyle.SHORT_NOTIFICATION_DURATION_MS));
             }
+        });
+
+        this.setOnHidden(e -> {
+            SystemVirtualKeyboardHelper.INSTANCE.unregisterScene(this.getScene());
+            SessionStatsController.INSTANCE.unregisterScene(this.getScene());
         });
     }
 

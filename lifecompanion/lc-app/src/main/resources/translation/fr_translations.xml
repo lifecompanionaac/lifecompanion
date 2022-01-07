@@ -35,6 +35,7 @@
   <text key="lc.colorpicker.current.value">Nouvelle</text>
   <text key="lc.colorpicker.custom.color">Autre couleur</text>
   <text key="lc.colorpicker.change.current.color">Autre couleur</text>
+  <text key="lc.colorpicker.web.color.copied">Code couleur copié</text>
   <text key="notification.grid.part.copied.in.another.part">{} collé(e) dans la grille</text>
   <text key="notification.grid.replaced.previous.notification">Grille sélectionnée remplacée par la grille collée</text>
   <text key="notification.grid.replaced.previous.notification">Grille sélectionnée remplacée par la grille collée</text>

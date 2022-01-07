@@ -48,6 +48,11 @@
 	-fx-alignment: center;
 }
 
+.text-label-right {
+	-fx-text-alignment: right;
+	-fx-alignment: right;
+}
+
 /*== BACKGROUND ==*/
 
 .base-background-with-gray-border-1 {

@@ -54,7 +54,7 @@ public abstract class AbstractShapeStyleEditView<T extends AbstractShapeCompStyl
     public void initUI() {
         super.initUI();
         //Create fields
-        this.fieldStrokeColor = new LCColorPicker();
+        this.fieldStrokeColor = new LCColorPicker(LCColorPicker.ColorPickerMode.DARK);
         this.fieldBackgroundColor = new LCColorPicker();
         this.spinnerShapeRadius = UIUtils.createIntSpinner(0, 180, 2, 2, 75.0);
         this.spinnerStrokeSize = UIUtils.createIntSpinner(0, 180, 2, 2, 75.0);

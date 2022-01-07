@@ -40,25 +40,23 @@ import org.lifecompanion.base.data.config.LCGraphicStyle;
 import org.lifecompanion.config.data.config.LCGlyphFont;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.framework.commons.utils.lang.LangUtils;
+import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.List;
 
 
 public class LCColorPickerSelection extends VBox implements LCViewInitHelper {
     private final static int MAIN_COLOR_COUNT = 19;
-    private final static int COLOR_VARIANT_COUNT = 10;
+    private final static int COLOR_VARIANT_COUNT = 6;
+
+    private final static int USER_COLOR_ROWS = 1;
+
 
     private Button customColorButton;
     private final LCColorPicker colorPicker;
     private HBox boxTransparent;
-
-    private Button buttonDarker, buttonBrighter;
-
+    private TilePane tilePaneUserColors;
 
     public LCColorPickerSelection(LCColorPicker colorPicker) {
         this.colorPicker = colorPicker;
@@ -94,25 +92,31 @@ public class LCColorPickerSelection extends VBox implements LCViewInitHelper {
         final Group groupBoxTransparent = new Group(boxTransparent);
         groupBoxTransparent.getStyleClass().addAll("scale-110-hover", "text-font-size-90");
 
-        // User defined colors (TODO)
+        // User defined colors
+        tilePaneUserColors = new TilePane();
+        tilePaneUserColors.setHgap(2.0);
+        tilePaneUserColors.setVgap(2.0);
+        tilePaneUserColors.setPrefColumns(MAIN_COLOR_COUNT);
 
         // Custom color
         customColorButton = UIUtils.createRightTextButton(Translation.getText("lc.colorpicker.custom.color"),
                 LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.SLIDERS).size(14).color(LCGraphicStyle.MAIN_DARK),
                 null);
 
-        //        // Brighter/darker - later ?
-        //        buttonDarker = UIUtils.createGraphicButton(LCGlyphFont.FONT_MATERIAL.create('\ue3ab').size(12).color(LCGraphicStyle.MAIN_DARK),
-        //                null);
-        //        buttonBrighter = UIUtils.createGraphicButton(LCGlyphFont.FONT_MATERIAL.create('\ue3aa').size(12).color(LCGraphicStyle.MAIN_DARK),
-        //                null);
-        //        HBox boxBrighterDarker = new HBox(3.0,buttonDarker,new Label(Translation.getText("")))
+        // LATER ?
+        // Pick a color button ?
+        // Brighter/darker on a color
 
+        this.getChildren().addAll(tilePaneBaseColors, groupBoxTransparent, new Separator(Orientation.HORIZONTAL), tilePaneUserColors, new Separator(Orientation.HORIZONTAL), customColorButton);
+    }
 
-        // Pick a color button (TODO)
-
-        this.getChildren().addAll(tilePaneBaseColors, groupBoxTransparent, new Separator(Orientation.HORIZONTAL), customColorButton);
-
+    public void mostUsedColorsUpdated(List<Color> mostUsedColors) {
+        tilePaneUserColors.getChildren().clear();
+        if (LangUtils.isNotEmpty(mostUsedColors)) {
+            for (Color color : mostUsedColors.subList(0, Math.min(mostUsedColors.size(), USER_COLOR_ROWS * MAIN_COLOR_COUNT))) {
+                tilePaneUserColors.getChildren().add(createBaseColor(color));
+            }
+        }
     }
 
     private static final double COLOR_SQUARE_SIZE = 16;
@@ -146,49 +150,26 @@ public class LCColorPickerSelection extends VBox implements LCViewInitHelper {
 
 
     private Color[][] getBaseColors() {
-        final List<String> withoutA = List.of("Brown 50", "Gray 50", "Blue Gray 50");
-        Color[][] colors = new Color[MAIN_COLOR_COUNT][COLOR_VARIANT_COUNT];
+        final List<String> vars = List.of("100", "300", "400", "600", "800", "900");
+        final List<List<MaterialColors.MaterialColor>> colorsByTitle = MaterialColors.INSTANCE.getColorsByTitle();
+        Color[][] colors = new Color[colorsByTitle.size()][COLOR_VARIANT_COUNT];
+        for (int i = 0; i < colorsByTitle.size(); i++) {
+            final List<MaterialColors.MaterialColor> colorsForTitle = colorsByTitle.get(i);
+            for (int i1 = 0; i1 < vars.size(); i1++) {
+                int finalI1 = i1;
+                int finalI = i;
+                colorsForTitle.stream().filter(c -> StringUtils.isEquals(vars.get(finalI1), c.getSubTitle())).findAny().ifPresent(mc -> {
+                    //System.out.println(finalI+","+finalI1+" = "+mc.getTitle()+", "+mc.getSubTitle()+" = "+mc.getColor());
+                    colors[finalI][finalI1] = colorPicker.getMode() == LCColorPicker.ColorPickerMode.BASE ? mc.getColor() : mc.getColor().darker();
+                });
+            }
 
-        try {
-            int mi = 0;
-            List<String> lineList = new ArrayList<>();
-            try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream("E:\\Desktop\\colors.txt"), StandardCharsets.UTF_8))) {
-                String line;
-                while ((line = bufferedReader.readLine()) != null) {
-                    lineList.add(line);
-                }
-            }
-            final String[] lines = lineList.toArray(new String[0]);
-            for (int i = 0; i < lines.length; i++) {
-                String title = lines[i];
-                for (int j = 0; j < 10; j++) {
-                    String subTitle = lines[i + j * 2];
-                    final String val = lines[i + j * 2 + 1];
-                    System.out.println(title + " [" + subTitle + "] = " + val);
-                    colors[mi][j] = Color.web(val, 1);
-                }
-                i += withoutA.contains(title) ? 19 : 27;
-                mi++;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-
-        //        // First : black to white
-        //        for (int j = 0; j < colors[0].length; j++) {
-        //            colors[0][j] = Color.WHITE.deriveColor(0.0, 1, (colors[0].length - j) * (1.0 / colors[0].length), 1);
-        //        }
-        //        // Then : others
-        //        for (int i = 1; i < colors.length; i++) {
-        //            Color base = Color.hsb((i - 1) * (360.0 / (colors.length - 1)), 0.9, 0.70);
-        //            for (int j = 0; j < colors[i].length; j++) {
-        //                colors[i][j] = base.deriveColor(0.0, (colors[i].length - j) * (0.9 / colors[i].length), 1, 1);
-        //            }
-        //        }
         return colors;
     }
 
-    // TODO - Add it later ?
+
+    // TEST : for pick color button feature
     //    Button buttonPick = new Button("Pick");
     //            buttonPick.setOnAction(e -> {
     //        Stage stage = new Stage();
