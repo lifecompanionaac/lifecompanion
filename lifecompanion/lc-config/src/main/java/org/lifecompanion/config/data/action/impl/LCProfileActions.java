@@ -37,7 +37,6 @@ import org.lifecompanion.base.data.control.AppController;
 import org.lifecompanion.base.data.control.AsyncExecutorController;
 import org.lifecompanion.base.data.io.IOManager;
 import org.lifecompanion.base.data.io.task.*;
-import org.lifecompanion.config.data.action.impl.LCConfigurationActions.NewConfigAction;
 import org.lifecompanion.config.data.component.profile.ProfileConfigSelectionController;
 import org.lifecompanion.config.data.component.profile.ProfileConfigStep;
 import org.lifecompanion.config.data.control.ConfigActionController;
@@ -180,7 +179,7 @@ public class LCProfileActions {
                     this.executeProfileRemove();
                     //Now, we need to select again a profil
                     AppController.INSTANCE.currentProfileProperty().set(null);
-                    ConfigActionController.INSTANCE.executeAction(new NewConfigAction(source, false));
+                    AppController.INSTANCE.newConfigModeConfiguration();
                     ProfileConfigSelectionController.INSTANCE.setProfileStep(ProfileConfigStep.PROFILE_LIST, null, null);
                 }
             } else {
@@ -237,7 +236,7 @@ public class LCProfileActions {
                     // Once full profile is loaded : notify, create new config, set current profile
                     Runnable afterFullLoading = () -> {
                         LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo(Translation.getText("action.select.profile.notif.title", profileToSelect.nameProperty())));
-                        ConfigActionController.INSTANCE.executeAction(new NewConfigAction(source, false));
+                        AppController.INSTANCE.newConfigModeConfiguration();
                     };
 
                     // Once previous profile is changed : fully load the profile

@@ -49,7 +49,14 @@ public class ConfigAddView extends BorderPane implements LCViewInitHelper, Profi
     //========================================================================
     @Override
     public void initUI() {
-        Triple<HBox, Label, Node> header = ConfigUIUtils.createHeader("config.add.view.title", e -> ProfileConfigSelectionController.INSTANCE.setConfigStep(ProfileConfigStep.CONFIGURATION_LIST, null, null));
+        Triple<HBox, Label, Node> header = ConfigUIUtils.createHeader("config.add.view.title", e -> {
+            final ProfileConfigStep previousStep = ProfileConfigSelectionController.INSTANCE.getPreviousStep();
+            if (previousStep != null) {
+                ProfileConfigSelectionController.INSTANCE.setConfigStep(previousStep, null, null);
+            } else {
+                ProfileConfigSelectionController.INSTANCE.hideStage();
+            }
+        });
 
         // Action grid
         GridPane gridPaneActions = new GridPane();

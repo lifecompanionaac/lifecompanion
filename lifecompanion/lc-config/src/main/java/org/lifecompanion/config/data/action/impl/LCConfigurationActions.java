@@ -82,7 +82,7 @@ import static org.lifecompanion.config.data.control.FileChooserType.EXPORT_PDF;
 public class LCConfigurationActions {
     private final static Logger LOGGER = LoggerFactory.getLogger(LCConfigurationActions.class);
 
-    public static final EventHandler<ActionEvent> HANDLER_NEW = (ea) -> ConfigActionController.INSTANCE.executeAction(new NewConfigAction(getSourceFromEvent(ea)));
+    public static final EventHandler<ActionEvent> HANDLER_NEW = (ea) -> ConfigActionController.INSTANCE.executeAction(new ShowNewConfigAction(getSourceFromEvent(ea)));
     public static final EventHandler<ActionEvent> HANDLER_MANAGE = (ea) -> ConfigActionController.INSTANCE.executeAction(new ManageConfigurationDialogAction());
     public static final EventHandler<ActionEvent> HANDLER_SAVE = (ea) -> ConfigActionController.INSTANCE.executeAction(new SaveAction());
 
@@ -94,30 +94,17 @@ public class LCConfigurationActions {
     public static final KeyCombination KEY_COMBINATION_SAVE = new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN);
 
 
-    public static class NewConfigAction implements BaseConfigActionI {
+    public static class ShowNewConfigAction implements BaseConfigActionI {
         private final Node source;
-        private boolean askAndNotify = true;
 
-        /**
-         * @param source
-         * @param askAndNotifyP if we should ask the user when current config is unsaved, and if we should create a notification on creation
-         */
-        public NewConfigAction(Node source, final boolean askAndNotifyP) {
-            this(source);
-            this.askAndNotify = askAndNotifyP;
-        }
-
-        public NewConfigAction(Node source) {
+        public ShowNewConfigAction(Node source) {
             this.source = source;
         }
 
         @Override
         public void doAction() throws LCException {
-            GlobalActions.checkModificationForCurrentConfiguration(askAndNotify, this, source, Translation.getText("new.config.action.confirm.message"), "new.config.action.confirm.button", () -> {
-                AppController.INSTANCE.newConfigModeConfiguration();
-                if (this.askAndNotify) {
-                    LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo("action.new.notif.title"));
-                }
+            GlobalActions.checkModificationForCurrentConfiguration(this, source, Translation.getText("new.config.action.confirm.message"), "new.config.action.confirm.button", () -> {
+                ProfileConfigSelectionController.INSTANCE.setConfigStep(ProfileConfigStep.CONFIGURATION_ADD, null, null);
             });
         }
 
@@ -128,9 +115,6 @@ public class LCConfigurationActions {
     }
 
     public static class NewConfigInListAction implements BaseConfigActionI {
-
-        public NewConfigInListAction() {
-        }
 
         @Override
         public void doAction() throws LCException {
@@ -788,8 +772,7 @@ public class LCConfigurationActions {
 
             //If the configuration is the currently loaded configuration
             if (AppController.INSTANCE.currentConfigDescriptionProperty().get() == this.configDescription) {
-                NewConfigAction newAction = new NewConfigAction(source, false);
-                newAction.doAction();
+                AppController.INSTANCE.newConfigModeConfiguration();
             }
 
             if (this.removedCallback != null) {

@@ -94,7 +94,7 @@ public class ConfigurationSelectionView extends BorderPane implements ProfileCon
     //========================================================================
     @Override
     public void initUI() {
-        Triple<HBox,Label,Node> header = ConfigUIUtils.createHeader("configuration.selection.view.title", e -> ProfileConfigSelectionController.INSTANCE.setProfileStep(ProfileConfigStep.PROFILE_LIST, null, null));
+        Triple<HBox, Label, Node> header = ConfigUIUtils.createHeader("configuration.selection.view.title", e -> ProfileConfigSelectionController.INSTANCE.setProfileStep(ProfileConfigStep.PROFILE_LIST, null, null));
         this.setTop(header.getLeft());
 
         //Search filter
@@ -150,7 +150,7 @@ public class ConfigurationSelectionView extends BorderPane implements ProfileCon
                                 || StringUtils.containsIgnoreCase(desc.configurationDescriptionProperty().get(), nv));
             }
         });
-        this.buttonAddConfiguration.setOnAction(e -> ProfileConfigSelectionController.INSTANCE.setConfigStep(ProfileConfigStep.CONFIGURATION_ADD, null, null));
+        this.buttonAddConfiguration.setOnAction(e -> ProfileConfigSelectionController.INSTANCE.setConfigStep(ProfileConfigStep.CONFIGURATION_ADD, ProfileConfigStep.CONFIGURATION_LIST, null));
         this.buttonChangeProfile.setOnAction((ea) -> ProfileConfigSelectionController.INSTANCE.setProfileStep(ProfileConfigStep.PROFILE_LIST, null, null));
     }
 
