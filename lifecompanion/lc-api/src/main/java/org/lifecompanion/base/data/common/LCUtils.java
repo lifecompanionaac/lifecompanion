@@ -449,6 +449,16 @@ public class LCUtils {
         }
     }
 
+    /**
+     * Compare using web string as double are "to precise" for 0-255 values of colors.
+     * Note that it doesn't compare opacity
+     */
+    public static boolean colorEquals(Color c1, Color c2) {
+        if (c1 == c2) return true;
+        else if (c1 == null || c2 == null) return false;
+        else return toWebColor(c1).equals(toWebColor(c2));
+    }
+
     public static boolean isSupportedImage(final File imgFile) {
         for (int i = 0; i < LCConstant.IMAGE_EXTENSIONS.length; i++) {
             if (StringUtils.endsWithIgnoreCase(FileNameUtils.getExtension(imgFile), LCConstant.IMAGE_EXTENSIONS[i])) {

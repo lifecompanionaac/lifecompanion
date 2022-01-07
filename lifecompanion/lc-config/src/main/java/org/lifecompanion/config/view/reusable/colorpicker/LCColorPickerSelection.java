@@ -162,7 +162,7 @@ public class LCColorPickerSelection extends VBox implements LCViewInitHelper {
                 int finalI = i;
                 colorsForTitle.stream().filter(c -> StringUtils.isEquals(vars.get(finalI1), c.getSubTitle())).findAny().ifPresent(mc -> {
                     //System.out.println(finalI+","+finalI1+" = "+mc.getTitle()+", "+mc.getSubTitle()+" = "+mc.getColor());
-                    colors[finalI][finalI1] = colorPicker.getMode() == LCColorPicker.ColorPickerMode.BASE ? mc.getColor() : mc.getColor().darker();
+                    colors[finalI][finalI1] = colorPicker.getMode() == LCColorPicker.ColorPickerMode.BASE ? mc.getColor() : MaterialColors.darker(mc.getColor());
                 });
             }
 

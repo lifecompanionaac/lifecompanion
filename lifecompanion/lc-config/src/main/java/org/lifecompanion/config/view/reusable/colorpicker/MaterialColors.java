@@ -24,10 +24,6 @@ import javafx.scene.paint.Color;
 import org.lifecompanion.base.data.common.LCUtils;
 import org.lifecompanion.framework.commons.translation.Translation;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -60,13 +56,22 @@ public enum MaterialColors {
         return colorsByTitle;
     }
 
+    public static Color darker(Color color) {
+        return color.darker();
+    }
+
     public String getColorName(Color color) {
         if (color == null) {
             return Translation.getText("lc.colorpicker.null.value");
         } else if (color.getOpacity() < 0.001) {
             return Translation.getText("lc.colorpicker.transparent.value");
         } else {
-            return getColors().stream().filter(c -> c.getColor().equals(color)).findAny().map(mc -> mc.getTitle() + " " + mc.getSubTitle()).orElse(LCUtils.toWebColor(color));
+            // Find base color
+            return getColors().stream().filter(c -> LCUtils.colorEquals(c.getColor(), color)).findAny().map(mc -> mc.getTitle() + " " + mc.getSubTitle())
+                    // Find dark color
+                    .orElse(getColors().stream().filter(c -> LCUtils.colorEquals(darker(c.getColor()), color)).findAny().map(mc -> mc.getTitle() + " " + mc.getSubTitle() + "-D")
+                            // No name : use web notation
+                            .orElse(LCUtils.toWebColor(color)));
         }
     }
 
