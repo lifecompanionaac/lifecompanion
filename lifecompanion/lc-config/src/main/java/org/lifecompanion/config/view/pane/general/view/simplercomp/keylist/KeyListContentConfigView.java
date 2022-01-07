@@ -29,7 +29,9 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -45,6 +47,7 @@ import org.lifecompanion.base.data.common.UIUtils;
 import org.lifecompanion.base.data.component.simplercomp.KeyListLeaf;
 import org.lifecompanion.base.data.component.simplercomp.KeyListLinkLeaf;
 import org.lifecompanion.base.data.component.simplercomp.KeyListNode;
+import org.lifecompanion.base.data.config.IconManager;
 import org.lifecompanion.base.data.config.LCGraphicStyle;
 import org.lifecompanion.config.data.action.impl.KeyListActions;
 import org.lifecompanion.config.data.config.LCGlyphFont;
@@ -120,7 +123,7 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
 
         // TOP : list + add button
         this.buttonAddCategory = createActionButton(FontAwesome.Glyph.FOLDER, LCGraphicStyle.MAIN_PRIMARY, "tooltip.keylist.button.add.category");
-        this.buttonAddKey = createActionButton(FontAwesome.Glyph.PICTURE_ALT, LCGraphicStyle.MAIN_PRIMARY, "tooltip.keylist.button.add.key");
+        this.buttonAddKey = createActionButton(new ImageView(IconManager.get("keylist/icon_add_leaf.png")), "tooltip.keylist.button.add.key");
         this.buttonAddLinkKey = createActionButton(FontAwesome.Glyph.LINK, LCGraphicStyle.MAIN_PRIMARY, "tooltip.keylist.button.add.link");
         buttonMoveUp = createActionButton(FontAwesome.Glyph.CHEVRON_UP, LCGraphicStyle.MAIN_PRIMARY, "tooltip.keylist.button.move.up");
         buttonMoveDown = createActionButton(FontAwesome.Glyph.CHEVRON_DOWN, LCGraphicStyle.MAIN_PRIMARY, "tooltip.keylist.button.move.down");
@@ -135,6 +138,7 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         gridButtons.setVgap(2.0);
         gridButtons.setAlignment(Pos.CENTER);
         int rowIndex = 0;
+        GridPane.setMargin(buttonAddKey, new Insets(3.5, 0, 0, 0));
         gridButtons.add(buttonAddKey, 0, rowIndex);
         gridButtons.add(buttonAddCategory, 1, rowIndex++);
         gridButtons.add(buttonDelete, 0, rowIndex);
@@ -203,8 +207,11 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
     }
 
     private Button createActionButton(FontAwesome.Glyph glyph, Color color, String tooltip) {
-        final Button button = UIUtils.createGraphicButton(LCGlyphFont.FONT_AWESOME.create(glyph)
-                .size(22).color(color), tooltip);
+        return createActionButton(LCGlyphFont.FONT_AWESOME.create(glyph).size(22).color(color), tooltip);
+    }
+
+    private Button createActionButton(Node graphics, String tooltip) {
+        final Button button = UIUtils.createGraphicButton(graphics, tooltip);
         button.setAlignment(Pos.CENTER);
         GridPane.setHalignment(button, HPos.CENTER);
         return button;

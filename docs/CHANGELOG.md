@@ -12,6 +12,7 @@
 
 ### Corrections/ajustements
 
+- Ticket #20 : changement d'icône pour les cases dans les listes de case
 - Ticket #21 : déplacement du champs de recherche dans les listes de cases
 - Ticket #22 : lors du clic sur "Nouvelle configuration", cela ouvre maintenant la même fenêtre que lorsqu'on sélectionne "Ajouter"
 - Ticket #29 : le déplacement du curseur dans l'éditeur de texte ne se fait plus en mode configuration

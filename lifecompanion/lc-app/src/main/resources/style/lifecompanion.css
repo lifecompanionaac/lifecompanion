@@ -109,6 +109,10 @@
     -fx-padding: 0;
 }
 
+.padding-3_5 {
+    -fx-padding: 3.5;
+}
+
 /*== LIST VIEW AND LIST CELL ==*/
 
 .list-cell-selection-disabled:filled {

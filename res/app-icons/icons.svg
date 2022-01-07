@@ -24,9 +24,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="7.9195959"
-     inkscape:cx="1364.4636"
-     inkscape:cy="3897.3579"
+     inkscape:zoom="1.979899"
+     inkscape:cx="-1289.9648"
+     inkscape:cy="76.013979"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -19703,5 +19703,61 @@
          inkscape:export-xdpi="102.4"
          inkscape:export-ydpi="102.4" />
     </g>
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot4168-8-2-5-2"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#03a9f4;fill-opacity:1;stroke:none"
+       transform="matrix(0.54663192,0,0,0.50016988,-804.07219,-197.43656)"
+       inkscape:export-filename="E:\Desktop\icon_add_leaf.png"
+       inkscape:export-xdpi="24.792496"
+       inkscape:export-ydpi="24.792496"><flowRegion
+         id="flowRegion4170-2-8-16-4"
+         style="fill:#03a9f4;fill-opacity:1"><rect
+           id="rect4172-9-5-6-2"
+           width="125.76399"
+           height="94.449265"
+           x="-133.84521"
+           y="492.2326"
+           style="fill:#03a9f4;fill-opacity:1" /></flowRegion><flowPara
+         id="flowPara4174-4-97-30-94"
+         style="font-size:64px;fill:#03a9f4;fill-opacity:1"><flowSpan
+           style="fill:#03a9f4;fill-opacity:1;stroke:none;stroke-opacity:1"
+           id="flowSpan4176-6-7-9-9">Abc</flowSpan></flowPara></flowRoot>
+    <path
+       id="path5448-7-60-9-9"
+       d="M -815.64049,30.593339 V -1.9780902 c 0,-2.985714 -2.4429,-5.428571 -5.4286,-5.428571 h -48.8572 c -2.9857,0 -5.4285,2.442857 -5.4285,5.428571 V 30.593339 c 0,2.985714 2.4428,5.428571 5.4285,5.428571 h 48.8572 c 2.9857,0 5.4286,-2.442857 5.4286,-5.428571 z m -39.3572,-14.928572 6.7857,8.17 9.5,-12.241428 12.2143,16.285714 h -38 z"
+       inkscape:connector-curvature="0"
+       style="fill:#03a9f4;fill-opacity:1;stroke-width:2.71429"
+       inkscape:export-filename="E:\Desktop\icon_add_leaf.png"
+       inkscape:export-xdpi="24.792496"
+       inkscape:export-ydpi="24.792496" />
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot4168-8-2-5-2-7"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#808080;fill-opacity:1;stroke:none"
+       transform="matrix(0.54663192,0,0,0.50016988,-801.04171,-63.591352)"
+       inkscape:export-filename="E:\Desktop\icon_type_leaf.png"
+       inkscape:export-xdpi="19.834"
+       inkscape:export-ydpi="19.834"><flowRegion
+         id="flowRegion4170-2-8-16-4-3"
+         style="fill:#808080;fill-opacity:1"><rect
+           id="rect4172-9-5-6-2-8"
+           width="125.76399"
+           height="94.449265"
+           x="-133.84521"
+           y="492.2326"
+           style="fill:#808080;fill-opacity:1" /></flowRegion><flowPara
+         id="flowPara4174-4-97-30-94-3"
+         style="font-size:64px;fill:#808080;fill-opacity:1"><flowSpan
+           style="fill:#808080;fill-opacity:1;stroke:none;stroke-opacity:1"
+           id="flowSpan4176-6-7-9-9-2">Abc</flowSpan></flowPara></flowRoot>
+    <path
+       id="path5448-7-60-9-9-6"
+       d="m -812.61001,164.43855 v -32.57143 c 0,-2.98571 -2.4429,-5.42857 -5.4286,-5.42857 h -48.8572 c -2.9857,0 -5.4285,2.44286 -5.4285,5.42857 v 32.57143 c 0,2.98571 2.4428,5.42857 5.4285,5.42857 h 48.8572 c 2.9857,0 5.4286,-2.44286 5.4286,-5.42857 z m -39.3572,-14.92857 6.7857,8.17 9.5,-12.24143 12.2143,16.28571 h -38 z"
+       inkscape:connector-curvature="0"
+       style="fill:#808080;fill-opacity:1;stroke-width:2.71429"
+       inkscape:export-filename="E:\Desktop\icon_type_leaf.png"
+       inkscape:export-xdpi="19.834"
+       inkscape:export-ydpi="19.834" />
   </g>
 </svg>

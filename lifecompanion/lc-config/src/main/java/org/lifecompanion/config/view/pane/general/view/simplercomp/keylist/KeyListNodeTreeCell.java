@@ -22,15 +22,17 @@ package org.lifecompanion.config.view.pane.general.view.simplercomp.keylist;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeCell;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
 import org.controlsfx.glyphfont.FontAwesome;
-import org.controlsfx.glyphfont.Glyph;
 import org.lifecompanion.api.component.definition.simplercomp.KeyListNodeI;
 import org.lifecompanion.base.data.common.LCUtils;
+import org.lifecompanion.base.data.config.IconManager;
 import org.lifecompanion.base.data.config.LCGraphicStyle;
 import org.lifecompanion.config.data.config.LCGlyphFont;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
@@ -41,7 +43,7 @@ public class KeyListNodeTreeCell extends TreeCell<KeyListNodeI> implements LCVie
     private final KeyListContentConfigView keyListContentConfigView;
 
     private ImageView imageView;
-    private Glyph listGlyph, keyGlyph, linkGlyph;
+    private Node listGlyph, keyGlyph, linkGlyph;
     private HBox graphics;
     private HBox glyphPane;
     private Label labelText;
@@ -56,7 +58,9 @@ public class KeyListNodeTreeCell extends TreeCell<KeyListNodeI> implements LCVie
     @Override
     public void initUI() {
         listGlyph = LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.FOLDER).size(14).color(LCGraphicStyle.LC_GRAY);
-        keyGlyph = LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.PICTURE_ALT).size(14).color(LCGraphicStyle.LC_GRAY);
+        final HBox paneImageView = new HBox(new ImageView(IconManager.get("keylist/icon_type_leaf.png")));
+        paneImageView.getStyleClass().add("padding-3_5");
+        this.keyGlyph = paneImageView;
         linkGlyph = LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.LINK).size(14).color(LCGraphicStyle.LC_GRAY);
         glyphPane = new HBox();
         glyphPane.setAlignment(Pos.CENTER);
