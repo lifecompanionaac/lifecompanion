@@ -40,6 +40,7 @@ import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.controlsfx.glyphfont.FontAwesome;
@@ -58,15 +59,15 @@ import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class LCColorCustomColorDialog extends Stage implements LCViewInitHelper {
-    private static final Logger LOGGER = LoggerFactory.getLogger(LCColorCustomColorDialog.class);
+import java.util.function.Consumer;
+
+public class LCColorCustomColorStage extends Stage implements LCViewInitHelper {
+    private static final Logger LOGGER = LoggerFactory.getLogger(LCColorCustomColorStage.class);
 
     private static final Color DEFAULT_COLOR = Color.TRANSPARENT;
     private static final double SELECTION_SIZE = 10;
     private static final double BAND_SIZE = 20;
     private static final double TOTAL_SIZE = 200;
-
-    private final LCColorPicker colorPicker;
 
     private final DoubleProperty hue;
     private final DoubleProperty saturation;
@@ -84,18 +85,15 @@ public class LCColorCustomColorDialog extends Stage implements LCViewInitHelper 
 
     private final ObjectProperty<Color> selectedColor;
 
-    public LCColorCustomColorDialog(LCColorPicker colorPicker, Color previousColor) {
-        this.colorPicker = colorPicker;
+    private Consumer<Color> onNextSelection;
+
+    public LCColorCustomColorStage() {
         this.selectedColor = new SimpleObjectProperty<>();
         this.hue = new ColorDoubleProperty(0);
         this.saturation = new ColorDoubleProperty(1);
         this.brightness = new ColorDoubleProperty(1);
         this.opacity = new ColorDoubleProperty(1.0);
         initAll();
-        final Color previousColorClean = previousColor != null ? previousColor : DEFAULT_COLOR;
-        previousColorRectangle.setFill(previousColorClean);
-        setCurrentColorTo(previousColorClean);
-        this.hueSelectorPane.requestFocus();
     }
 
     private void setCurrentColorTo(Color color) {
@@ -185,6 +183,7 @@ public class LCColorCustomColorDialog extends Stage implements LCViewInitHelper 
 
         // Stage
         this.initStyle(StageStyle.UTILITY);
+        this.initModality(Modality.APPLICATION_MODAL);
         UIUtils.applyDefaultStageConfiguration(this);
         this.setResizable(false);
 
@@ -194,6 +193,15 @@ public class LCColorCustomColorDialog extends Stage implements LCViewInitHelper 
         SessionStatsController.INSTANCE.registerScene(sceneContent);
 
         this.setScene(sceneContent);
+    }
+
+    void showCustomDialog(Color previousColor, Consumer<Color> onSelection) {
+        this.onNextSelection = onSelection;
+        final Color previousColorClean = previousColor != null ? previousColor : DEFAULT_COLOR;
+        previousColorRectangle.setFill(previousColorClean);
+        setCurrentColorTo(previousColorClean);
+        this.hueSelectorPane.requestFocus();
+        this.show();
     }
 
     private Rectangle createShowSelectionRectangle(double w, double h) {
@@ -254,10 +262,11 @@ public class LCColorCustomColorDialog extends Stage implements LCViewInitHelper 
 
         buttonCancel.setOnAction(e -> this.hide());
         buttonOk.setOnAction(e -> {
-            hide();
-            colorPicker.colorSelectedAndHide(selectedColor.get());
+            if (onNextSelection != null) {
+                onNextSelection.accept(selectedColor.get());
+            }
+            this.hide();
         });
-
         buttonCopyHex.setOnAction(event -> {
             if (selectedColor.get() != null) {
                 final Clipboard clipboard = Clipboard.getSystemClipboard();
@@ -271,6 +280,7 @@ public class LCColorCustomColorDialog extends Stage implements LCViewInitHelper 
         this.setOnHidden(e -> {
             SystemVirtualKeyboardHelper.INSTANCE.unregisterScene(this.getScene());
             SessionStatsController.INSTANCE.unregisterScene(this.getScene());
+            onNextSelection = null;
         });
     }
 

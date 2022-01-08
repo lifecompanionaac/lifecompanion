@@ -21,8 +21,10 @@ package org.lifecompanion.config.view.reusable.colorpicker;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
+import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Separator;
 import javafx.scene.image.ImageView;
@@ -32,7 +34,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
-import javafx.stage.Modality;
+import javafx.stage.Popup;
+import javafx.stage.Window;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.base.data.common.UIUtils;
 import org.lifecompanion.base.data.config.IconManager;
@@ -45,32 +48,42 @@ import org.lifecompanion.framework.commons.utils.lang.LangUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 
-public class LCColorPickerSelection extends VBox implements LCViewInitHelper {
+public class LCColorPickerPopup extends Popup implements LCViewInitHelper {
     private final static int MAIN_COLOR_COUNT = 19;
     private final static int COLOR_VARIANT_COUNT = 6;
 
     private final static int USER_COLOR_ROWS = 1;
 
-
     private Button customColorButton;
-    private final LCColorPicker colorPicker;
     private HBox boxTransparent;
     private TilePane tilePaneUserColors;
 
-    public LCColorPickerSelection(LCColorPicker colorPicker) {
-        this.getStylesheets().addAll(LCConstant.CSS_STYLE_PATH);
-        this.colorPicker = colorPicker;
+    private final LCColorPicker.ColorPickerMode mode;
+
+    private Consumer<Color> onNextSelection;
+    private Color previousColor;
+
+    private LCColorCustomColorStage colorCustomColorDialog;
+
+    public LCColorPickerPopup(LCColorPicker.ColorPickerMode mode) {
+        this.mode = mode;
         initAll();
     }
 
     @Override
     public void initUI() {
-        this.setPadding(new Insets(10.0));
-        this.setSpacing(5.0);
-        this.getStyleClass().addAll("popup-bottom-dropshadow", "base-background-with-gray-border-1");
-        this.setAlignment(Pos.CENTER);
+        this.setAutoFix(true);
+        this.setAutoHide(true);
+
+        VBox total = new VBox();
+        total.getStylesheets().addAll(LCConstant.CSS_STYLE_PATH);
+        total.setPadding(new Insets(10.0));
+        total.setSpacing(5.0);
+        total.getStyleClass().addAll("popup-bottom-dropshadow", "base-background-with-gray-border-1");
+        total.setAlignment(Pos.CENTER);
 
         // First part : base colors
         final Color[][] baseColors = getBaseColors();
@@ -109,47 +122,35 @@ public class LCColorPickerSelection extends VBox implements LCViewInitHelper {
         // Pick a color button ?
         // Brighter/darker on a color
 
-        this.getChildren().addAll(tilePaneBaseColors, groupBoxTransparent, new Separator(Orientation.HORIZONTAL), tilePaneUserColors, new Separator(Orientation.HORIZONTAL), customColorButton);
+        total.getChildren().addAll(tilePaneBaseColors, groupBoxTransparent, new Separator(Orientation.HORIZONTAL), tilePaneUserColors, new Separator(Orientation.HORIZONTAL), customColorButton);
+        this.getContent().add(total);
+
+        // Custom color dialog
+        colorCustomColorDialog = new LCColorCustomColorStage();
     }
 
-    public void mostUsedColorsUpdated(List<Color> mostUsedColors) {
-        tilePaneUserColors.getChildren().clear();
-        if (LangUtils.isNotEmpty(mostUsedColors)) {
-            for (Color color : mostUsedColors.subList(0, Math.min(mostUsedColors.size(), USER_COLOR_ROWS * MAIN_COLOR_COUNT))) {
-                tilePaneUserColors.getChildren().add(createBaseColor(color));
-            }
-        }
-    }
 
     private static final double COLOR_SQUARE_SIZE = 16;
 
     private Rectangle createBaseColor(Color color) {
         Rectangle rectangle = new Rectangle(COLOR_SQUARE_SIZE, COLOR_SQUARE_SIZE);
         rectangle.setFill(color);
-        rectangle.setOnMouseClicked(me -> {
-            colorPicker.colorSelectedAndHide(color);
-        });
+        rectangle.setOnMouseClicked(me -> colorSelectedAndHide(color));
         rectangle.getStyleClass().addAll("scale-130-hover", "stroke-hover");
         return rectangle;
     }
 
     @Override
     public void initListener() {
-        this.customColorButton.setOnAction(e -> {
-            LCColorCustomColorDialog colorCustomColorDialog = new LCColorCustomColorDialog(this.colorPicker, this.colorPicker.valueProperty().get());
-            colorCustomColorDialog.initModality(Modality.APPLICATION_MODAL);
-            colorCustomColorDialog.show();
-        });
-        this.boxTransparent.setOnMouseClicked(me -> {
-            colorPicker.colorSelectedAndHide(Color.TRANSPARENT);
-        });
+        this.customColorButton.setOnAction(e -> colorCustomColorDialog.showCustomDialog(previousColor, this.onNextSelection));
+        this.boxTransparent.setOnMouseClicked(me -> colorSelectedAndHide(Color.TRANSPARENT));
+        this.setOnHidden(e -> onNextSelection = null);
     }
 
     @Override
     public void initBinding() {
         LCViewInitHelper.super.initBinding();
     }
-
 
     private Color[][] getBaseColors() {
         final List<String> vars = List.of("100", "300", "400", "600", "800", "900");
@@ -161,13 +162,38 @@ public class LCColorPickerSelection extends VBox implements LCViewInitHelper {
                 int finalI1 = i1;
                 int finalI = i;
                 colorsForTitle.stream().filter(c -> StringUtils.isEquals(vars.get(finalI1), c.getSubTitle())).findAny().ifPresent(mc -> {
-                    //System.out.println(finalI+","+finalI1+" = "+mc.getTitle()+", "+mc.getSubTitle()+" = "+mc.getColor());
-                    colors[finalI][finalI1] = colorPicker.getMode() == LCColorPicker.ColorPickerMode.BASE ? mc.getColor() : MaterialColors.darker(mc.getColor());
+                    colors[finalI][finalI1] = this.mode == LCColorPicker.ColorPickerMode.BASE ? mc.getColor() : MaterialColors.darker(mc.getColor());
                 });
             }
-
         }
         return colors;
+    }
+
+    public void showOnPicker(LCColorPicker lcColorPicker, Consumer<Color> onSelection) {
+        this.onNextSelection = onSelection;
+        previousColor = lcColorPicker.getValue();
+        updateMostUsedColors();
+        Scene scene = lcColorPicker.getScene();
+        Window window = scene.getWindow();
+        Point2D point2D = lcColorPicker.getButtonPick().localToScene(0, 0);
+        this.show(lcColorPicker.getButtonPick(), window.getX() + scene.getX() + point2D.getX() - 8.0, window.getY() + scene.getY() + point2D.getY() + lcColorPicker.getButtonPick().getHeight() - 4.0);
+    }
+
+    private void colorSelectedAndHide(Color color) {
+        if (onNextSelection != null) {
+            onNextSelection.accept(color);
+        }
+        this.hide();
+    }
+
+    private void updateMostUsedColors() {
+        tilePaneUserColors.getChildren().clear();
+        final List<Color> mostUsedColors = LCColorPicker.getMostUsedColorsList();
+        if (LangUtils.isNotEmpty(mostUsedColors)) {
+            for (Color color : mostUsedColors.subList(0, Math.min(mostUsedColors.size(), USER_COLOR_ROWS * MAIN_COLOR_COUNT))) {
+                tilePaneUserColors.getChildren().add(createBaseColor(color));
+            }
+        }
     }
 
 
