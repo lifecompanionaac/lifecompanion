@@ -20,7 +20,6 @@
 package org.lifecompanion.base.data.image2;
 
 import com.google.gson.annotations.SerializedName;
-import gnu.trove.impl.sync.TSynchronizedShortObjectMap;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -95,7 +94,7 @@ public class ImageElement implements ImageElementI {
     public ImageElement() {
         super();
         this.loadedImage = new SimpleObjectProperty<>(this, "loadedImage");
-        this.loadingRequest = new HashMap<>(30);
+        this.loadingRequest = new HashMap<>(4, 0.95f);
     }
 
     @Override
@@ -194,7 +193,7 @@ public class ImageElement implements ImageElementI {
 
     @Override
     public void requestImageUnload(final String componentId) {
-        this.loadingRequest.put(componentId, false);
+        this.loadingRequest.remove(componentId);
         this.loadOrUnloadImage(-1, -1);
     }
 
