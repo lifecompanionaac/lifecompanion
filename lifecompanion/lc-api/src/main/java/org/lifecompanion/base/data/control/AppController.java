@@ -224,7 +224,7 @@ public enum AppController {
                 else if (newMode.isRestoreConfigurationNeeded() && newAppMode.configurationBeforeChangeProperty().get() != null) {
                     this.LOGGER.debug("Change mode from {} to {} and restore the configuration before change", previousMode, newMode);
                     startedConfiguration = newAppMode.configurationBeforeChangeProperty().get();
-                    //Only set the use informations from current configuration
+                    //Only set the use information from current configuration
                 }
                 //No match : create a new configuration
                 else {

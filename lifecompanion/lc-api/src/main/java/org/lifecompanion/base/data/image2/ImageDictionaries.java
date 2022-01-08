@@ -19,12 +19,10 @@
 
 package org.lifecompanion.base.data.image2;
 
-import gnu.trove.impl.sync.TSynchronizedShortObjectMap;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.scene.image.Image;
 import javafx.util.Pair;
-import org.lifecompanion.api.component.definition.ImageUseComponentI;
 import org.lifecompanion.api.component.definition.LCConfigurationI;
 import org.lifecompanion.api.image2.ImageDictionaryI;
 import org.lifecompanion.api.image2.ImageElementI;
@@ -34,7 +32,6 @@ import org.lifecompanion.base.data.common.LCUtils;
 import org.lifecompanion.base.data.common.UIUtils;
 import org.lifecompanion.base.data.config.LCConstant;
 import org.lifecompanion.base.data.config.UserBaseConfiguration;
-import org.lifecompanion.base.data.control.AppController;
 import org.lifecompanion.base.data.control.InstallationConfigurationController;
 import org.lifecompanion.base.data.io.json.JsonHelper;
 import org.lifecompanion.framework.commons.translation.Translation;
@@ -44,18 +41,19 @@ import org.lifecompanion.framework.commons.utils.lang.LangUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.framework.utils.FluentHashMap;
 import org.lifecompanion.framework.utils.LCNamedThreadFactory;
-import org.predict4all.nlp.utils.DaemonThreadFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.concurrent.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 public enum ImageDictionaries implements LCStateListener, ModeListenerI {
     INSTANCE;
@@ -331,14 +329,17 @@ public enum ImageDictionaries implements LCStateListener, ModeListenerI {
     @Override
     public void lcStart() {
         this.loadDictionaries();
-//        LCNamedThreadFactory.daemonThreadFactory("Image-Watcher").newThread(() -> {
-//            while (true) {
-//                Set<ImageElement> imageLoaded = new ArrayList<>(this.allImages.values()).stream().map(img -> (ImageElement) img).filter(img -> img.loadedImageProperty().get() != null).collect(Collectors.toSet());
-//                System.err.println("Loaded image : " + imageLoaded.size());
-//                //imageLoaded.stream().forEach(img -> System.err.println("\t" + img.getName() + " = " + (img.getLoadingRequest().entrySet().stream().filter(Map.Entry::getValue).map(Map.Entry::getKey).collect(Collectors.joining(" ")))));
-//                LCUtils.safeSleep(5_000);
-//            }
-//        }).start();
+        if (LCUtils.safeParseBoolean(System.getProperty("org.lifecompanion.debug.loaded.images"))) {
+            LOGGER.info("Debug loaded images enabled");
+            LCNamedThreadFactory.daemonThreadFactory("Image-Watcher").newThread(() -> {
+                while (true) {
+                    Set<ImageElement> imageLoaded = new ArrayList<>(this.allImages.values()).stream().map(img -> (ImageElement) img).filter(img -> img.loadedImageProperty().get() != null).collect(Collectors.toSet());
+                    LOGGER.info("Loaded image count : {}", imageLoaded.size());
+                    //imageLoaded.stream().forEach(img -> System.err.println("\t" + img.getName() + " = " + (img.getLoadingRequest().entrySet().stream().filter(Map.Entry::getValue).map(Map.Entry::getKey).collect(Collectors.joining(" ")))));
+                    LCUtils.safeSleep(5_000);
+                }
+            }).start();
+        }
     }
 
     @Override
