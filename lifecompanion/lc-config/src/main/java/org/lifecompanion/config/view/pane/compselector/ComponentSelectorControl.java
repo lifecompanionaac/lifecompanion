@@ -33,7 +33,7 @@ import org.lifecompanion.base.data.common.LCUtils;
 import org.lifecompanion.base.data.common.UIUtils;
 import org.lifecompanion.base.data.control.AppController;
 import org.lifecompanion.config.data.common.LCConfigBindingUtils;
-import org.lifecompanion.config.view.reusable.SearchComboBox;
+import org.lifecompanion.config.view.reusable.searchcombobox.SearchComboBox;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
@@ -105,16 +105,15 @@ public class ComponentSelectorControl<T extends DisplayableComponentI> extends V
             this.label = new Label(this.labelText);
         }
         // Search combobox
-        searchComboBox = new SearchComboBox<>(searchText ->
-                StringUtils.isBlank(searchText) ? this::isValidItem : c -> this.isValidItem(c) && LCUtils.getSimilarityScoreFor(searchText, c) > 0
-                , comp -> comp != null ? comp.nameProperty().get() : Translation.getText("component.selector.control.no.selection"),
+        searchComboBox = new SearchComboBox<>(
+                lv -> new DisplayableComponentListCell<>(),
+                searchText -> StringUtils.isBlank(searchText) ? this::isValidItem : c -> this.isValidItem(c) && LCUtils.getSimilarityScoreFor(searchText, c) > 0,
+                comp -> comp != null ? comp.nameProperty().get() : Translation.getText("component.selector.control.no.selection"),
                 searchText -> StringUtils.isBlank(searchText) ? null : (c1, c2) -> Double.compare(
                         LCUtils.getSimilarityScoreFor(searchText, c2),
                         LCUtils.getSimilarityScoreFor(searchText, c1))
         );
-        searchComboBox.setCellFactory(lv -> new DisplayableComponentListCell<>());
-        UIUtils.setFixedWidth(searchComboBox, 250.0);
-        searchComboBox.setVisibleRowCount(2);
+        //UIUtils.setFixedWidth(searchComboBox, 250.0);
 
         this.setSpacing(5.0);
         if (label != null) {

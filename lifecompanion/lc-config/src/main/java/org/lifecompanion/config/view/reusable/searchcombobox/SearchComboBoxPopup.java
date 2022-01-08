@@ -1,0 +1,146 @@
+/*
+ * LifeCompanion AAC and its sub projects
+ *
+ * Copyright (C) 2014 to 2019 Mathieu THEBAUD
+ * Copyright (C) 2020 to 2021 CMRRF KERPAPE (Lorient, France)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, version 3 of the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package org.lifecompanion.config.view.reusable.searchcombobox;
+
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
+import javafx.geometry.Insets;
+import javafx.geometry.Point2D;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
+import javafx.stage.Popup;
+import javafx.stage.Window;
+import org.controlsfx.control.textfield.TextFields;
+import org.lifecompanion.base.data.common.UIUtils;
+import org.lifecompanion.base.data.config.LCConstant;
+import org.lifecompanion.framework.commons.translation.Translation;
+import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+
+public class SearchComboBoxPopup<T> extends Popup implements LCViewInitHelper {
+    private TextField fieldSearch;
+    private ListView<T> listView;
+
+    private FilteredList<T> filteredItems;
+    private SortedList<T> sortedItems;
+
+    private VBox content;
+
+    private final SearchComboBox<T> searchComboBox;
+
+    public SearchComboBoxPopup(SearchComboBox<T> searchComboBox) {
+        this.searchComboBox = searchComboBox;
+        initAll();
+    }
+
+    // UI
+    //========================================================================
+    @Override
+    public void initUI() {
+        this.setAutoFix(true);
+        this.setAutoHide(true);
+
+        content = new VBox();
+        content.getStylesheets().addAll(LCConstant.CSS_STYLE_PATH);
+        content.setPadding(new Insets(10.0));
+        content.setSpacing(5.0);
+        content.getStyleClass().addAll("popup-bottom-dropshadow", "base-background-with-gray-border-1");
+        content.setAlignment(Pos.CENTER);
+
+        fieldSearch = TextFields.createClearableTextField();
+        fieldSearch.setPromptText(Translation.getText("tooltip.search.combobox.prompt.text"));
+
+        this.listView = new ListView<>();
+        this.listView.setPlaceholder(new Label(Translation.getText("tooltip.search.combobox.placeholder.empty.list")));
+        this.listView.setCellFactory(searchComboBox.getCellFactory());
+        UIUtils.setFixedHeight(listView, 300);
+
+        content.getChildren().addAll(fieldSearch, listView);
+        this.getContent().add(content);
+    }
+
+    @Override
+    public void initListener() {
+        this.fieldSearch.textProperty().addListener(inv -> searchUpdated());
+        // Implementation note : we are forced to use mouse clicked event as the selection item listener cause list view crash
+        // if we clear items on selection (because popup is hidden)
+        this.listView.setOnMouseClicked(e -> {
+            final T item = this.listView.getSelectionModel().getSelectedItem();
+            if (item != null) {
+                searchComboBox.itemSelected(item);
+                this.hide();
+            }
+        });
+        this.setOnHidden(e -> {
+            setItems(null);
+            fieldSearch.clear();
+        });
+    }
+
+    @Override
+    public void initBinding() {
+    }
+    //========================================================================
+
+
+    // POPUP
+    //========================================================================
+    public void showOnSearchCombobox(SearchComboBox<T> searchComboBox) {
+        this.content.setPrefWidth(searchComboBox.getButtonOpenPopup().getWidth());
+        setItems(searchComboBox.getItems());
+        Scene scene = searchComboBox.getScene();
+        Window window = scene.getWindow();
+        Point2D point2D = searchComboBox.getButtonOpenPopup().localToScene(0, 0);
+        this.show(searchComboBox.getButtonOpenPopup(), window.getX() + scene.getX() + point2D.getX() - 8.0, window.getY() + scene.getY() + point2D.getY() + searchComboBox.getButtonOpenPopup().getHeight() - 4.0);
+        this.fieldSearch.requestFocus();
+    }
+    //========================================================================
+
+    // SEARCH
+    //========================================================================
+    private void searchUpdated() {
+        if (filteredItems != null && sortedItems != null) {
+            String text = fieldSearch.getText();
+            this.filteredItems.setPredicate(this.searchComboBox.getPredicateBuilder().apply(text));
+            this.sortedItems.setComparator(searchComboBox.getComparatorBuilder() != null ? searchComboBox.getComparatorBuilder().apply(text) : null);
+        }
+    }
+    //========================================================================
+
+    // ITEMS
+    //========================================================================
+    private void setItems(ObservableList<T> items) {
+        if (items != null) {
+            this.filteredItems = new FilteredList<>(items);
+            this.sortedItems = new SortedList<>(this.filteredItems);
+            this.listView.setItems(sortedItems);
+            this.searchUpdated();
+        } else {
+            this.filteredItems = null;
+            this.sortedItems = null;
+            this.listView.setItems(null);
+        }
+    }
+    //========================================================================
+}

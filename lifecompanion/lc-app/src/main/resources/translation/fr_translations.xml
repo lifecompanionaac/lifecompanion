@@ -2357,6 +2357,7 @@
   <text key="tooltip.search.combobox.button.clear">Supprime la valeur sélectionnée</text>
   <text key="tooltip.search.combobox.button.select">Cliquer pour sélectionner un élément dans la liste déroulante</text>
   <text key="tooltip.search.combobox.placeholder.empty.list">Aucun élément</text>
+  <text key="tooltip.search.combobox.prompt.text">Rechercher des éléments</text>
   <text key="tooltip.text.position.bottom">Place le texte en dessous de l'image</text>
   <text key="tooltip.text.position.center">Superpose le texte au centre par dessus l'image</text>
   <text key="tooltip.text.position.left">Place le texte à gauche de l'image</text>

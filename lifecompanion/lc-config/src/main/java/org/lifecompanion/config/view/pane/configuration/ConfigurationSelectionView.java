@@ -40,6 +40,7 @@ import org.lifecompanion.base.data.common.Triple;
 import org.lifecompanion.base.data.common.UIUtils;
 import org.lifecompanion.base.data.config.LCGraphicStyle;
 import org.lifecompanion.base.data.control.AppController;
+import org.lifecompanion.base.view.pane.configuration.ConfigurationSimpleListCell;
 import org.lifecompanion.base.view.pane.profile.ProfileIconView;
 import org.lifecompanion.config.data.action.impl.LCConfigurationActions;
 import org.lifecompanion.config.data.component.profile.ProfileConfigSelectionController;
@@ -48,6 +49,7 @@ import org.lifecompanion.config.data.config.LCGlyphFont;
 import org.lifecompanion.config.data.control.ConfigActionController;
 import org.lifecompanion.config.view.common.ConfigUIUtils;
 import org.lifecompanion.config.view.pane.profilconfig.ProfileConfigStepViewI;
+import org.lifecompanion.config.view.reusable.searchcombobox.SearchComboBox;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
@@ -92,6 +94,8 @@ public class ConfigurationSelectionView extends BorderPane implements ProfileCon
 
     // Class part : "UI"
     //========================================================================
+    SearchComboBox<LCConfigurationDescriptionI> searchComboBox;
+
     @Override
     public void initUI() {
         Triple<HBox, Label, Node> header = ConfigUIUtils.createHeader("configuration.selection.view.title", e -> ProfileConfigSelectionController.INSTANCE.setProfileStep(ProfileConfigStep.PROFILE_LIST, null, null));
@@ -100,6 +104,15 @@ public class ConfigurationSelectionView extends BorderPane implements ProfileCon
         //Search filter
         this.fieldSearchFilter = TextFields.createClearableTextField();
         this.fieldSearchFilter.setPromptText(Translation.getText("configuration.list.search.tips"));
+
+        searchComboBox = new SearchComboBox<>(
+                (lv) -> new ConfigurationSimpleListCell(),
+                searchText ->
+                        StringUtils.isBlank(searchText) ? null : desc -> StringUtils.startWithIgnoreCase(desc.configurationNameProperty().get(), searchText)
+                                || StringUtils.containsIgnoreCase(desc.configurationNameProperty().get(), searchText)
+                                || StringUtils.containsIgnoreCase(desc.configurationDescriptionProperty().get(), searchText),
+                desc -> desc != null ? desc.configurationNameProperty().get() + " (" + desc.configurationAuthorProperty().get() + ")" : Translation.getText("configuration.selector.control.no.selection")
+        );
 
         // Current profile information
         this.labelProfileName = new Label();
@@ -123,7 +136,7 @@ public class ConfigurationSelectionView extends BorderPane implements ProfileCon
         configurationListView.setSelectionModel(new DisableSelectionSelectionModel<>());
         VBox.setVgrow(configurationListView, Priority.ALWAYS);
 
-        VBox boxCenter = new VBox(10.0, gridPaneCurrentProfile, fieldSearchFilter, configurationListView);
+        VBox boxCenter = new VBox(10.0, gridPaneCurrentProfile, searchComboBox, configurationListView);
         boxCenter.setPadding(new Insets(10.0));
 
         buttonAddConfiguration = UIUtils.createRightTextButton(Translation.getText("configuration.selection.add.configuration.button"),
@@ -181,6 +194,7 @@ public class ConfigurationSelectionView extends BorderPane implements ProfileCon
             this.previousListBinding.unsubscribe();
         }
         this.previousListBinding = EasyBind.listBind(this.configurationList, AppController.INSTANCE.currentProfileProperty().get().getConfiguration());
+        searchComboBox.setItems(AppController.INSTANCE.currentProfileProperty().get().getConfiguration());
     }
 
     @Override
