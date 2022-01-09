@@ -196,7 +196,11 @@ public class LCUtils {
         if (previousCall != null) previousCall.cancel(true);
         runningCalls.put(callId, executorService.submit(() -> {
             Thread.sleep(ms);
-            call.run();
+            try {
+                call.run();
+            } catch (Throwable t) {
+                LOGGER.error("Problem in debounce call for {}", callId, t);
+            }
             return null;
         }));
     }

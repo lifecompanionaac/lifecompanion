@@ -108,7 +108,7 @@ public class SearchComboBox<T> extends HBox implements LCViewInitHelper {
             if (searchComboBoxPopup.isShowing()) {
                 searchComboBoxPopup.hide();
             } else {
-                searchComboBoxPopup.showOnSearchCombobox(this);
+                searchComboBoxPopup.showOnSearchCombobox();
             }
         });
     }

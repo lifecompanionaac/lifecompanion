@@ -19,6 +19,8 @@
 
 package org.lifecompanion.config.view.reusable.searchcombobox;
 
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
@@ -33,10 +35,18 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Popup;
 import javafx.stage.Window;
 import org.controlsfx.control.textfield.TextFields;
+import org.lifecompanion.base.data.common.LCUtils;
 import org.lifecompanion.base.data.common.UIUtils;
 import org.lifecompanion.base.data.config.LCConstant;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.framework.commons.utils.lang.LangUtils;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class SearchComboBoxPopup<T> extends Popup implements LCViewInitHelper {
     private TextField fieldSearch;
@@ -106,39 +116,54 @@ public class SearchComboBoxPopup<T> extends Popup implements LCViewInitHelper {
 
     // POPUP
     //========================================================================
-    public void showOnSearchCombobox(SearchComboBox<T> searchComboBox) {
+    public void showOnSearchCombobox() {
         this.content.setPrefWidth(searchComboBox.getButtonOpenPopup().getWidth());
-        setItems(searchComboBox.getItems());
         Scene scene = searchComboBox.getScene();
         Window window = scene.getWindow();
         Point2D point2D = searchComboBox.getButtonOpenPopup().localToScene(0, 0);
         this.show(searchComboBox.getButtonOpenPopup(), window.getX() + scene.getX() + point2D.getX() - 8.0, window.getY() + scene.getY() + point2D.getY() + searchComboBox.getButtonOpenPopup().getHeight() - 4.0);
-        this.fieldSearch.requestFocus();
+        //this.fieldSearch.requestFocus();
+        setItems(searchComboBox.getItems());
     }
     //========================================================================
 
     // SEARCH
     //========================================================================
     private void searchUpdated() {
-        if (filteredItems != null && sortedItems != null) {
-            String text = fieldSearch.getText();
-            this.filteredItems.setPredicate(this.searchComboBox.getPredicateBuilder().apply(text));
-            this.sortedItems.setComparator(searchComboBox.getComparatorBuilder() != null ? searchComboBox.getComparatorBuilder().apply(text) : null);
-        }
+        // FIXME : loading indicator ?
+        String text = fieldSearch.getText();
+        LCUtils.debounce(300, "SearchComboBoxPopup", () -> {
+            if (LangUtils.isNotEmpty(sourceItems)) {
+                ArrayList<T> copy = new ArrayList<>(sourceItems);
+                final Predicate<T> predicate = this.searchComboBox.getPredicateBuilder().apply(text);
+                final List<T> itemsFiltered = copy.stream().filter(predicate).collect(Collectors.toList());
+                if (searchComboBox.getComparatorBuilder() != null) {
+                    final Comparator<T> comparator = searchComboBox.getComparatorBuilder().apply(text);
+                    if (comparator != null) {
+                        itemsFiltered.sort(comparator);
+                    }
+                }
+                final ObservableList<T> itemsToSet = FXCollections.observableArrayList(itemsFiltered);
+                Platform.runLater(() -> {
+                    if (sourceItems != null) {// To avoid update while popup is disposed
+                        this.listView.scrollTo(0);
+                        listView.setItems(itemsToSet);
+                    }
+                });
+            }
+        });
     }
     //========================================================================
 
     // ITEMS
     //========================================================================
+    private ObservableList<T> sourceItems;
+
     private void setItems(ObservableList<T> items) {
+        sourceItems = items;
         if (items != null) {
-            this.filteredItems = new FilteredList<>(items);
-            this.sortedItems = new SortedList<>(this.filteredItems);
-            this.listView.setItems(sortedItems);
             this.searchUpdated();
         } else {
-            this.filteredItems = null;
-            this.sortedItems = null;
             this.listView.setItems(null);
         }
     }
