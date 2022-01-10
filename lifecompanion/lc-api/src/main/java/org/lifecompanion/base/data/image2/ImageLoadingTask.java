@@ -19,7 +19,6 @@
 
 package org.lifecompanion.base.data.image2;
 
-import gnu.trove.impl.sync.TSynchronizedShortObjectMap;
 import javafx.beans.property.ObjectProperty;
 import javafx.concurrent.Task;
 import javafx.scene.image.Image;
@@ -29,6 +28,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ImageLoadingTask extends Task<Image> {
     private static final Logger LOGGER = LoggerFactory.getLogger(ImageLoadingTask.class);
@@ -42,8 +42,10 @@ public class ImageLoadingTask extends Task<Image> {
     private final boolean smooth;
     private final Runnable callback;
 
-    public ImageLoadingTask(final String imageId, final ObjectProperty<Image> targetP, final File pathP, final double widthP, final double heightP,
-                            final boolean keepRatioP, final boolean smoothP, final Runnable callbackP) {
+    // Added as this task is finished when runOnFXThread is executed so original isCancelled wasn't working (as the task is terminated)
+    private final AtomicBoolean cancelTaskAndSetTarget;
+
+    public ImageLoadingTask(final String imageId, final ObjectProperty<Image> targetP, final File pathP, final double widthP, final double heightP, final boolean keepRatioP, final boolean smoothP, final Runnable callbackP) {
         this.imageId = imageId;
         this.target = targetP;
         this.path = pathP;
@@ -52,6 +54,19 @@ public class ImageLoadingTask extends Task<Image> {
         this.keepRatio = keepRatioP;
         this.smooth = smoothP;
         this.callback = callbackP;
+        cancelTaskAndSetTarget = new AtomicBoolean(false);
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return super.isCancelled() || cancelTaskAndSetTarget.get();
+    }
+
+    @Override
+    public boolean cancel(boolean mayInterruptIfRunning) {
+        final boolean cancel = super.cancel(mayInterruptIfRunning);
+        cancelTaskAndSetTarget.set(true);
+        return cancel;
     }
 
     public File getPath() {
@@ -65,8 +80,9 @@ public class ImageLoadingTask extends Task<Image> {
                 Image image = new Image(fis, this.width, this.height, this.keepRatio, this.smooth);
                 if (!isCancelled()) {
                     LCUtils.runOnFXThread(() -> {
-                        if (target != null && !isCancelled())
+                        if (target != null && !isCancelled()) {
                             this.target.set(image);
+                        }
                     });
                     if (callback != null) {
                         this.callback.run();

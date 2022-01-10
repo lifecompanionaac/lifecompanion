@@ -36,9 +36,11 @@ import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.apache.pdfbox.util.Matrix;
-import org.lifecompanion.api.component.definition.*;
+import org.lifecompanion.api.component.definition.GridComponentI;
+import org.lifecompanion.api.component.definition.LCConfigurationDescriptionI;
+import org.lifecompanion.api.component.definition.LCConfigurationI;
+import org.lifecompanion.api.component.definition.LCProfileI;
 import org.lifecompanion.api.component.definition.simplercomp.KeyListNodeI;
-import org.lifecompanion.api.image2.ImageElementI;
 import org.lifecompanion.api.ui.ComponentViewI;
 import org.lifecompanion.api.ui.ViewProviderI;
 import org.lifecompanion.base.data.common.LCTask;
@@ -48,7 +50,6 @@ import org.lifecompanion.base.data.config.LCConstant;
 import org.lifecompanion.base.data.control.AppController;
 import org.lifecompanion.base.data.control.KeyListController;
 import org.lifecompanion.base.data.control.update.InstallationController;
-import org.lifecompanion.base.data.image2.ImageDictionaries;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.use.data.ui.UseViewProvider;
@@ -243,9 +244,9 @@ public class ExportGridsToPdfTask extends LCTask<Void> {
 
 
     private ImageExportResult executePrint(GridPrintTask gridPrintTask, int taskIndex, int pageIndex) throws InterruptedException {
-        loadAllImagesIn(gridPrintTask.gridToSnap);
+        LCUtils.loadAllImagesIn(EXPORT_IMAGE_LOADING_KEY, MAX_IMAGE_LOADING_TIME, gridPrintTask.gridToSnap);
         ImageExportResult result = printGrid(gridPrintTask, taskIndex, pageIndex);
-        unloadAllImagesIn(gridPrintTask.gridToSnap);
+        LCUtils.unloadAllImagesIn(EXPORT_IMAGE_LOADING_KEY, gridPrintTask.gridToSnap);
         updateProgress(progress.incrementAndGet(), totalWork);
         return result;
     }
@@ -329,33 +330,4 @@ public class ExportGridsToPdfTask extends LCTask<Void> {
         }
         return new ImageExportResult(gridName, imageFile, landscape.get());
     }
-
-    // IMAGE LOADING
-    //========================================================================
-    private void loadAllImagesIn(GridComponentI gridToSnap) {
-        LCUtils.exploreTree(gridToSnap, (node) -> {
-            if (node instanceof ImageUseComponentI) {
-                final ImageUseComponentI imageUseComponent = (ImageUseComponentI) node;
-                imageUseComponent.addExternalLoadingRequest(EXPORT_IMAGE_LOADING_KEY);
-            }
-        });
-        waitForImageToLoad();
-    }
-
-    private void unloadAllImagesIn(GridComponentI gridToSnap) {
-        LCUtils.exploreTree(gridToSnap, (node) -> {
-            if (node instanceof ImageUseComponentI) {
-                final ImageUseComponentI imageUseComponent = (ImageUseComponentI) node;
-                imageUseComponent.removeExternalLoadingRequest(EXPORT_IMAGE_LOADING_KEY);
-            }
-        });
-    }
-
-    private void waitForImageToLoad() {
-        LCUtils.safeSleep(100);
-        long start = System.currentTimeMillis();
-        while (System.currentTimeMillis() - start < MAX_IMAGE_LOADING_TIME && ImageDictionaries.INSTANCE.isRunningImageLoadingTask())
-            LCUtils.safeSleep(100);
-    }
-    //========================================================================
 }

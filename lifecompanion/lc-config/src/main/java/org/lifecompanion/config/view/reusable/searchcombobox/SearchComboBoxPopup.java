@@ -30,6 +30,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Popup;
@@ -51,9 +52,6 @@ import java.util.stream.Collectors;
 public class SearchComboBoxPopup<T> extends Popup implements LCViewInitHelper {
     private TextField fieldSearch;
     private ListView<T> listView;
-
-    private FilteredList<T> filteredItems;
-    private SortedList<T> sortedItems;
 
     private VBox content;
 
@@ -84,6 +82,7 @@ public class SearchComboBoxPopup<T> extends Popup implements LCViewInitHelper {
         this.listView = new ListView<>();
         this.listView.setPlaceholder(new Label(Translation.getText("tooltip.search.combobox.placeholder.empty.list")));
         this.listView.setCellFactory(searchComboBox.getCellFactory());
+        listView.setFixedCellSize(150.0);
         UIUtils.setFixedHeight(listView, 300);
 
         content.getChildren().addAll(fieldSearch, listView);
@@ -130,9 +129,9 @@ public class SearchComboBoxPopup<T> extends Popup implements LCViewInitHelper {
     // SEARCH
     //========================================================================
     private void searchUpdated() {
-        // FIXME : loading indicator ?
+        // TODO : loading indicator ?
         String text = fieldSearch.getText();
-        LCUtils.debounce(300, "SearchComboBoxPopup", () -> {
+        LCUtils.debounce(300, "search-combobox-popup", () -> {
             if (LangUtils.isNotEmpty(sourceItems)) {
                 ArrayList<T> copy = new ArrayList<>(sourceItems);
                 final Predicate<T> predicate = this.searchComboBox.getPredicateBuilder().apply(text);
@@ -146,8 +145,8 @@ public class SearchComboBoxPopup<T> extends Popup implements LCViewInitHelper {
                 final ObservableList<T> itemsToSet = FXCollections.observableArrayList(itemsFiltered);
                 Platform.runLater(() -> {
                     if (sourceItems != null) {// To avoid update while popup is disposed
-                        this.listView.scrollTo(0);
                         listView.setItems(itemsToSet);
+                        this.listView.scrollTo(0);
                     }
                 });
             }

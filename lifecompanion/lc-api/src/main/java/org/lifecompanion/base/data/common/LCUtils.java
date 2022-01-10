@@ -50,6 +50,7 @@ import org.lifecompanion.api.component.definition.useaction.UseActionEvent;
 import org.lifecompanion.api.component.definition.useaction.UseActionTriggerComponentI;
 import org.lifecompanion.base.data.component.simple.GridPartKeyComponent;
 import org.lifecompanion.base.data.config.LCConstant;
+import org.lifecompanion.base.data.image2.ImageDictionaries;
 import org.lifecompanion.base.data.useaction.impl.text.write.WriteAndSpeakTextAction;
 import org.lifecompanion.framework.commons.utils.io.FileNameUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
@@ -786,6 +787,35 @@ public class LCUtils {
         if (!node.isNodeLeaf() && node.getChildrenNode() != null) {
             node.getChildrenNode().forEach(n -> exploreTree(n, consumer));
         }
+    }
+    //========================================================================
+
+    // IMAGE LOADING
+    //========================================================================
+    public static void loadAllImagesIn(String loadRequestId, long timeout, TreeDisplayableComponentI component) {
+        LCUtils.exploreTree(component, node -> {
+            if (node instanceof ImageUseComponentI) {
+                final ImageUseComponentI imageUseComponent = (ImageUseComponentI) node;
+                imageUseComponent.addExternalLoadingRequest(loadRequestId);
+            }
+        });
+        waitForImageToLoad(timeout);
+    }
+
+    public static void unloadAllImagesIn(String loadRequestId, TreeDisplayableComponentI component) {
+        LCUtils.exploreTree(component, node -> {
+            if (node instanceof ImageUseComponentI) {
+                final ImageUseComponentI imageUseComponent = (ImageUseComponentI) node;
+                imageUseComponent.removeExternalLoadingRequest(loadRequestId);
+            }
+        });
+    }
+
+    private static void waitForImageToLoad(long timeout) {
+        LCUtils.safeSleep(100);
+        long start = System.currentTimeMillis();
+        while (System.currentTimeMillis() - start < timeout && ImageDictionaries.INSTANCE.isRunningImageLoadingTask())
+            LCUtils.safeSleep(100);
     }
     //========================================================================
 }
