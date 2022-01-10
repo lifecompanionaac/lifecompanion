@@ -23,11 +23,8 @@ import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.OverrunStyle;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import org.lifecompanion.api.component.definition.DisplayableComponentI;
-import org.lifecompanion.api.ui.ComponentViewI;
-import org.lifecompanion.base.data.common.UIUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,27 +53,40 @@ public class DisplayableComponentListCell<T extends DisplayableComponentI> exten
         this.setAlignment(Pos.CENTER);
         this.setGraphic(this.componentSnapshot);
         this.setTextOverrun(OverrunStyle.LEADING_ELLIPSIS);
+
+        this.itemProperty().addListener((obs, ov, nv) -> {
+            if (ov != null) {
+                NodeSnapshotCache.INSTANCE.cancelRequestSnapshot(ov);
+            }
+        });
     }
 
     @Override
     protected void updateItem(final T item, final boolean empty) {
         super.updateItem(item, empty);
+        //System.out.println("updateItem(" + item + "," + empty + ")");
         if (item == null || empty) {
             this.componentSnapshot.imageProperty().set(null);
             this.textProperty().unbind();
             this.textProperty().set(null);
         } else {
             this.textProperty().bind(item.nameProperty());
-            ComponentViewI<?> display = item.getDisplay();
-            if (display != null) {
-                Region itemView = display.getView();
-                try {
-                    // StackChildComponentI displayedProperty > image are not loaded if the child is not visible
-                    this.componentSnapshot.setImage(UIUtils.takeNodeSnapshot(itemView, -1, 150));
-                } catch (Throwable t) {
-                    DisplayableComponentListCell.LOGGER.warn("Impossible to take a component snapshot for component {}", item.nameProperty().get(), t);
-                }
-            }
+            componentSnapshot.setImage(null);
+            NodeSnapshotCache.INSTANCE.requestSnapshot(item, -1, 150, img -> componentSnapshot.setImage(img));
+            //            ComponentViewI<?> display = item.getDisplay();
+            //            if (display != null) {
+            //                Region itemView = display.getView();
+            //                try {
+            //                    // StackChildComponentI displayedProperty > image are not loaded if the child is not visible
+            //                    final String loadRequestId = "displayable-component-list-cell";
+            //                    LCUtils.loadAllImagesIn(loadRequestId, 5, item);
+            //                    this.componentSnapshot.setImage(UIUtils.takeNodeSnapshot(itemView, -1, 150));
+            //                    LCUtils.unloadAllImagesIn(loadRequestId, item);
+            //                    //System.err.println("LOAD REQUEST FOR "+);
+            //                } catch (Throwable t) {
+            //                    DisplayableComponentListCell.LOGGER.warn("Impossible to take a component snapshot for component {}", item.nameProperty().get(), t);
+            //                }
+            //            }
         }
     }
 }
