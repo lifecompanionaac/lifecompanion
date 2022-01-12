@@ -22,11 +22,14 @@ package org.lifecompanion.config.view.pane.compselector;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import org.lifecompanion.api.component.definition.DisplayableComponentI;
 import org.lifecompanion.api.ui.ComponentViewI;
 import org.lifecompanion.base.data.common.LCUtils;
 import org.lifecompanion.base.data.common.UIUtils;
+import org.lifecompanion.base.data.control.AppController;
+import org.lifecompanion.framework.utils.LCNamedThreadFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,7 +50,7 @@ public enum NodeSnapshotCache {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NodeSnapshotCache.class);
 
-    private static long CLEAR_AFTER_LAST_USE = 5_000;
+    private static final long CLEAR_AFTER_LAST_USE = 10_000;
 
     private final ExecutorService loadingService;
     private final ConcurrentHashMap<String, CopyOnWriteArrayList<ComponentSnapshotTask>> runningLoadingTasks;
@@ -56,7 +59,7 @@ public enum NodeSnapshotCache {
     private final Timer cleanupTimer;
 
     NodeSnapshotCache() {
-        this.loadingService = Executors.newSingleThreadExecutor();
+        this.loadingService = Executors.newSingleThreadExecutor(LCNamedThreadFactory.daemonThreadFactory("Node-Snapshot-Cache"));
         this.runningLoadingTasks = new ConcurrentHashMap<>();
         this.snapshotCache = new ConcurrentHashMap<>();
         this.cleanupTimer = new Timer(true);
@@ -66,10 +69,13 @@ public enum NodeSnapshotCache {
                 snapshotCache.keySet().removeIf(id -> {
                     final CachedSnapshot cachedSnapshot = snapshotCache.get(id);
                     if (cachedSnapshot == null) return false;
-                    final boolean b = System.currentTimeMillis() - cachedSnapshot.lastUsed >= CLEAR_AFTER_LAST_USE;
-                    System.out.println("Delete " + b + " - " + snapshotCache.size());
-                    return b;
+                    return System.currentTimeMillis() - cachedSnapshot.lastUsed >= CLEAR_AFTER_LAST_USE;
                 });
+                LOGGER.info("Node snapshot cache size : {}", snapshotCache.size());
+                if (AppController.INSTANCE.currentConfigConfigurationProperty().get() != null) {
+                    LOGGER.info("Initialized : {}/{}",
+                            AppController.INSTANCE.currentConfigConfigurationProperty().get().getAllComponent().values().stream().filter(DisplayableComponentI::isDisplayInitialized).count(), AppController.INSTANCE.currentConfigConfigurationProperty().get().getAllComponent().size());
+                }
             }
         }, 1000, 1000);
     }
@@ -143,14 +149,28 @@ public enum NodeSnapshotCache {
             this.h = h;
         }
 
+        /*
+         Fix note : inject viewprovider in getDisplay and also inject "ignoreCache" param.
+         Both params will be stored in view and injected to children.
+         /!\ this can only work if the view doesn't created gc dependency to the model > view is stored in model, but view should not store the model >> wtf ?
+         */
+
         @Override
         protected Image call() throws Exception {
             if (!isCancelled()) {
                 LCUtils.loadAllImagesIn(LOAD_REQUEST_ID, 1000, component);
                 return LCUtils.runOnFXThreadAndWaitFor(() -> {
                     ComponentViewI<?> display = component.getDisplay();
+                    final Parent parent = display.getView().getParent();
                     Image r = UIUtils.takeNodeSnapshot(display.getView(), w, h);
                     LCUtils.unloadAllImagesIn(LOAD_REQUEST_ID, component);
+                    if (parent == null) {
+                        LCUtils.exploreTree(component, child -> {
+                            if (child instanceof DisplayableComponentI) {
+                                ((DisplayableComponentI) child).clearCachedDisplay();
+                            }
+                        });
+                    }
                     return r;
                 });
             }

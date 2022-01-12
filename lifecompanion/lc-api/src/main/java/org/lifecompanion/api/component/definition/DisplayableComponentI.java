@@ -47,6 +47,13 @@ public interface DisplayableComponentI extends XMLSerializable<IOContextI>, Tree
     ComponentViewI<?> getDisplay();
 
     /**
+     * To clear cached display on this component.
+     */
+    void clearCachedDisplay();
+
+    boolean isDisplayInitialized();
+
+    /**
      * @return a type name for this component that can be shown to user
      */
     String getDisplayableTypeName();

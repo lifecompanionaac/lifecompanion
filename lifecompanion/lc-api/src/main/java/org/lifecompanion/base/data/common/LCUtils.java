@@ -54,6 +54,7 @@ import org.lifecompanion.base.data.image2.ImageDictionaries;
 import org.lifecompanion.base.data.useaction.impl.text.write.WriteAndSpeakTextAction;
 import org.lifecompanion.framework.commons.utils.io.FileNameUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.framework.utils.LCNamedThreadFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -187,11 +188,7 @@ public class LCUtils {
     public static void debounce(long ms, String callId, Runnable call) {
         if (executorService == null) {
             runningCalls = new ConcurrentHashMap<>(5);
-            executorService = Executors.newSingleThreadExecutor(r -> {
-                Thread t = new Thread(r, "debounce-thread");
-                t.setDaemon(true);
-                return t;
-            });
+            executorService = Executors.newSingleThreadExecutor(LCNamedThreadFactory.daemonThreadFactory("Debounce-Feature"));
         }
         Future<?> previousCall = runningCalls.get(callId);
         if (previousCall != null) previousCall.cancel(true);

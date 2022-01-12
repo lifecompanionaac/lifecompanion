@@ -66,7 +66,7 @@ public class BaseViewProvider implements ViewProviderI {
                 try {
                     ComponentViewI view = componentViewClass.getConstructor().newInstance();
                     view.initialize(component);
-                    this.generated.put(component, view);
+                    //this.generated.put(component, view);
                     return view;
                 } catch (Exception e) {
                     BaseViewProvider.LOGGER.error("Problem when instantiate a component view for the component type {}",

@@ -90,6 +90,11 @@ public abstract class CoreDisplayableComponentBaseImpl implements DisplayableCom
     private final transient BooleanProperty disableChangeListener;
 
     /**
+     * Cached display for this component
+     */
+    private ComponentViewI<?> display;
+
+    /**
      * Create the core for a displayable component.<br>
      * Initialize its ID and its properties.
      */
@@ -189,7 +194,20 @@ public abstract class CoreDisplayableComponentBaseImpl implements DisplayableCom
      */
     @Override
     public ComponentViewI<?> getDisplay() {
-        return AppController.INSTANCE.getViewProvider().getViewFor(this);
+        if (display == null) {
+            display = AppController.INSTANCE.getViewProvider().getViewFor(this);
+        }
+        return display;
+    }
+
+    @Override
+    public void clearCachedDisplay() {
+        display = null;
+    }
+
+    @Override
+    public boolean isDisplayInitialized() {
+        return display != null;
     }
 
     /**
