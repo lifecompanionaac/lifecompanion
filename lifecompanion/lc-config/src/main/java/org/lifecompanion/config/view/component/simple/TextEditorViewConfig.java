@@ -19,7 +19,9 @@
 
 package org.lifecompanion.config.view.component.simple;
 
+import org.lifecompanion.api.ui.ViewProviderI;
 import org.lifecompanion.base.data.common.LCUtils;
+import org.lifecompanion.base.data.component.simple.GridPartTextEditorComponent;
 import org.lifecompanion.base.data.component.simple.TextEditorComponent;
 import org.lifecompanion.base.data.control.WritingStateController;
 import org.lifecompanion.base.view.component.simple.TextEditorViewBase;
@@ -28,39 +30,40 @@ import org.lifecompanion.config.view.component.option.MoveButtonOption;
 import org.lifecompanion.config.view.component.option.RootComponentOption;
 
 public class TextEditorViewConfig extends TextEditorViewBase {
-	private RootComponentOption rootComponentOption;
+    private RootComponentOption rootComponentOption;
 
-	public TextEditorViewConfig() {}
+    public TextEditorViewConfig() {
+    }
 
-	@Override
-	public void initUI() {
-		super.initUI();
-		//Button option
-		ButtonComponentOption selectOption = new ButtonComponentOption(this.model);
-		MoveButtonOption<TextEditorComponent> moveOption = new MoveButtonOption<>(this.model);
-		selectOption.addOption(moveOption);
-		//Root component UI
-		this.rootComponentOption = new RootComponentOption(this.model);
-		this.rootComponentOption.bindSize(this);
-		this.getChildren().add(this.rootComponentOption);
-		this.rootComponentOption.getChildren().add(selectOption);
-		//UIUtils.applyPerformanceConfiguration(this);
-	}
+    @Override
+    public void initUI() {
+        super.initUI();
+        //Button option
+        ButtonComponentOption selectOption = new ButtonComponentOption(this.model);
+        MoveButtonOption<TextEditorComponent> moveOption = new MoveButtonOption<>(this.model);
+        selectOption.addOption(moveOption);
+        //Root component UI
+        this.rootComponentOption = new RootComponentOption(this.model);
+        this.rootComponentOption.bindSize(this);
+        this.getChildren().add(this.rootComponentOption);
+        this.rootComponentOption.getChildren().add(selectOption);
+        //UIUtils.applyPerformanceConfiguration(this);
+    }
 
-	@Override
-	public void showToFront() {
-		super.showToFront();
-		this.rootComponentOption.toFront();
-	}
+    @Override
+    public void showToFront() {
+        super.showToFront();
+        this.rootComponentOption.toFront();
+    }
 
-	@Override
-	public void initialize(final TextEditorComponent componentP) {
-		super.initialize(componentP);
-		WritingStateController.INSTANCE.initExampleEntriesIfNeeded();
-	}
+    @Override
+    public void initialize(ViewProviderI viewProvider, boolean useCache, final TextEditorComponent componentP) {
+        super.initialize(viewProvider, useCache, componentP);
+        WritingStateController.INSTANCE.initExampleEntriesIfNeeded();
+    }
 
-	@Override
-	public void updateCaretScroll(final double yPercent) {
-		//In config mode, we don't any automatic scroll on canvas update
-	}
+    @Override
+    public void updateCaretScroll(final double yPercent) {
+        //In config mode, we don't any automatic scroll on canvas update
+    }
 }

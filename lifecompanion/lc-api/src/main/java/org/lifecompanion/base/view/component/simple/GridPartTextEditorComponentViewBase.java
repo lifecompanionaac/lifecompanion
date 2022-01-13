@@ -43,12 +43,6 @@ public class GridPartTextEditorComponentViewBase extends TextDisplayerBaseImplVi
     }
 
     @Override
-    public void initialize(final GridPartTextEditorComponent componentP) {
-        this.model = componentP;
-        this.initAll();
-    }
-
-    @Override
     protected DoubleProperty modelWidthProperty() {
         return this.model.layoutWidthProperty();
     }

@@ -36,7 +36,9 @@ public interface ComponentViewI<T extends DisplayableComponentI> {
      *
      * @param component the component that will be displayed.
      */
-    void initialize(T component);
+    void initialize(ViewProviderI viewProvider, boolean useCache, T component);
+
+    // unbind and clear
 
     /**
      * @return the view to represent the component that was given to {@link #initialize(DisplayableComponentI)}<br>

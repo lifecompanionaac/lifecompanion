@@ -297,6 +297,7 @@ public class UIUtils {
     public static Image takeNodeSnapshot(final Node node, final double wantedWidth, final double wantedHeight, boolean canScaleUp) {
         Image snapshot = null;
         //Check if node has a parent
+        System.out.println("Node has parent " + node.getParent());
         if (node.getParent() != null) {
             snapshot = UIUtils.executeSnapshot(node, wantedWidth, wantedHeight, canScaleUp);
         } else {

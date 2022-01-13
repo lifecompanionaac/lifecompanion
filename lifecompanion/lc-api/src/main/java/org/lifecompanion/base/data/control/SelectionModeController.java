@@ -28,6 +28,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import org.lifecompanion.api.component.definition.*;
 import org.lifecompanion.api.definition.selection.*;
+import org.lifecompanion.api.mode.AppMode;
 import org.lifecompanion.api.mode.ModeListenerI;
 import org.lifecompanion.base.data.common.LCUtils;
 import org.lifecompanion.base.data.definition.selection.SelectionModeParameter;
@@ -715,7 +716,7 @@ public enum SelectionModeController implements ModeListenerI {
             //Show in view
             final GridPartComponentI toShowToFrontFinal = toShowToFront;
             LCUtils.runOnFXThread(() -> {
-                toShowToFrontFinal.showToFront();//Show the target to front
+                toShowToFrontFinal.showToFront(AppController.INSTANCE.getViewProvider(AppMode.USE), true);//Show the target to front
                 this.getSelectionModeConfiguration().getSelectionView().toFront();//Show the selection model to front (over displayed component)
             });
         }

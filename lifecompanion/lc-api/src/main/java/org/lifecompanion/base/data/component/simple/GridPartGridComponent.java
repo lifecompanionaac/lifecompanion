@@ -26,6 +26,7 @@ import org.lifecompanion.api.component.definition.grid.ComponentGridI;
 import org.lifecompanion.api.definition.selection.SelectionModeParameterI;
 import org.lifecompanion.api.exception.LCException;
 import org.lifecompanion.api.io.IOContextI;
+import org.lifecompanion.api.ui.ViewProviderI;
 import org.lifecompanion.base.data.component.baseimpl.GridPartComponentBaseImpl;
 import org.lifecompanion.base.data.definition.selection.SelectionModeParameter;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
@@ -202,14 +203,14 @@ public class GridPartGridComponent extends GridPartComponentBaseImpl implements 
      * {@inheritDoc}
      */
     @Override
-    public void showToFront() {
+    public void showToFront(ViewProviderI viewProvider, boolean useCache) {
         //Display this grid in the stack parent when needed
         if (this.stackParent.get() != null) {
             if (this.stackParent.get().isDirectStackChild(this)) {
                 this.stackParent.get().displayedComponentProperty().set(this);
             }
         }
-        super.showToFront();
+        super.showToFront(viewProvider, useCache);
     }
 
     /**

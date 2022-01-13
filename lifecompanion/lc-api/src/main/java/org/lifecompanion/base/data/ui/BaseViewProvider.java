@@ -21,6 +21,7 @@ package org.lifecompanion.base.data.ui;
 import org.lifecompanion.api.component.definition.DisplayableComponentI;
 import org.lifecompanion.api.ui.ComponentViewI;
 import org.lifecompanion.api.ui.ViewProviderI;
+import org.lifecompanion.api.ui.ViewProviderType;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +43,10 @@ public class BaseViewProvider implements ViewProviderI {
     protected final Map<Class<? extends DisplayableComponentI>, Class<? extends ComponentViewI<?>>> types;
     protected final Map<DisplayableComponentI, ComponentViewI<?>> generated;
 
-    public BaseViewProvider(final Map<Class<? extends DisplayableComponentI>, Class<? extends ComponentViewI<?>>> typesP) {
+    private final ViewProviderType type;
+
+    public BaseViewProvider(ViewProviderType type, final Map<Class<? extends DisplayableComponentI>, Class<? extends ComponentViewI<?>>> typesP) {
+        this.type = type;
         this.types = typesP;
         this.generated = new HashMap<>();
         BaseViewProvider.LOGGER.info("View provider created with {} view types", this.types.size());
@@ -57,7 +61,7 @@ public class BaseViewProvider implements ViewProviderI {
 
     @Override
     @SuppressWarnings({"rawtypes", "unchecked"})
-    public ComponentViewI<?> getViewFor(final DisplayableComponentI component) {
+    public ComponentViewI<?> getViewFor(final DisplayableComponentI component, boolean useCache) {
         if (this.generated.containsKey(component)) {
             return this.generated.get(component);
         } else {
@@ -65,7 +69,7 @@ public class BaseViewProvider implements ViewProviderI {
             if (componentViewClass != null) {
                 try {
                     ComponentViewI view = componentViewClass.getConstructor().newInstance();
-                    view.initialize(component);
+                    view.initialize(this, useCache, component);
                     //this.generated.put(component, view);
                     return view;
                 } catch (Exception e) {
@@ -98,6 +102,11 @@ public class BaseViewProvider implements ViewProviderI {
     @Override
     public void clearAllViewCaches() {
         clearViewCacheForConfiguration(null);
+    }
+
+    @Override
+    public ViewProviderType getType() {
+        return type;
     }
     //========================================================================
 

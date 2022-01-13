@@ -319,6 +319,16 @@ public class LCConfigurationComponent extends CoreDisplayableComponentBaseImpl i
         });
     }
 
+    // FIXME
+    @Override
+    public void clearViewCache() {
+        super.clearViewCache();
+        for (DisplayableComponentI value : this.allComponents.values()) {
+            if (value != this)
+                value.clearViewCache();
+        }
+    }
+
     // Class part : "Getter"
     //========================================================================
     @Override

@@ -73,8 +73,8 @@ public enum NodeSnapshotCache {
                 });
                 LOGGER.info("Node snapshot cache size : {}", snapshotCache.size());
                 if (AppController.INSTANCE.currentConfigConfigurationProperty().get() != null) {
-                    LOGGER.info("Initialized : {}/{}",
-                            AppController.INSTANCE.currentConfigConfigurationProperty().get().getAllComponent().values().stream().filter(DisplayableComponentI::isDisplayInitialized).count(), AppController.INSTANCE.currentConfigConfigurationProperty().get().getAllComponent().size());
+                    //                    LOGGER.info("Initialized : {}/{}",
+                    //                            AppController.INSTANCE.currentConfigConfigurationProperty().get().getAllComponent().values().stream().filter(DisplayableComponentI::isDisplayInitialized).count(), AppController.INSTANCE.currentConfigConfigurationProperty().get().getAllComponent().size());
                 }
             }
         }, 1000, 1000);
@@ -160,18 +160,19 @@ public enum NodeSnapshotCache {
             if (!isCancelled()) {
                 LCUtils.loadAllImagesIn(LOAD_REQUEST_ID, 1000, component);
                 return LCUtils.runOnFXThreadAndWaitFor(() -> {
-                    ComponentViewI<?> display = component.getDisplay();
-                    final Parent parent = display.getView().getParent();
-                    Image r = UIUtils.takeNodeSnapshot(display.getView(), w, h);
-                    LCUtils.unloadAllImagesIn(LOAD_REQUEST_ID, component);
-                    if (parent == null) {
-                        LCUtils.exploreTree(component, child -> {
-                            if (child instanceof DisplayableComponentI) {
-                                ((DisplayableComponentI) child).clearCachedDisplay();
-                            }
-                        });
-                    }
-                    return r;
+//                    ComponentViewI<?> display = component.getDisplay();
+//                    final Parent parent = display.getView().getParent();
+//                    Image r = UIUtils.takeNodeSnapshot(display.getView(), w, h);
+//                    LCUtils.unloadAllImagesIn(LOAD_REQUEST_ID, component);
+//                    if (parent == null) {
+//                        LCUtils.exploreTree(component, child -> {
+//                            if (child instanceof DisplayableComponentI) {
+//                                ((DisplayableComponentI) child).clearCachedDisplay();
+//                            }
+//                        });
+//                    }
+//                    return r;
+                    return null;
                 });
             }
             return null;

@@ -27,6 +27,7 @@ import javafx.scene.layout.Region;
 import org.lifecompanion.api.component.definition.LCConfigurationI;
 import org.lifecompanion.api.component.definition.RootGraphicComponentI;
 import org.lifecompanion.api.ui.ComponentViewI;
+import org.lifecompanion.api.ui.ViewProviderI;
 import org.lifecompanion.base.data.common.LCUtils;
 import org.lifecompanion.base.data.config.LCGraphicStyle;
 import org.lifecompanion.base.data.config.UserBaseConfiguration;
@@ -38,9 +39,8 @@ import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public class LCConfigurationViewBase extends Pane implements LCViewInitHelper, ComponentViewI<LCConfigurationI> {
-    /**
-     * Currently represented component
-     */
+    protected ViewProviderI viewProvider;
+    protected boolean useCache;
     protected LCConfigurationI model;
 
     protected StringProperty configurationCssStyle;
@@ -51,13 +51,15 @@ public class LCConfigurationViewBase extends Pane implements LCViewInitHelper, C
     }
 
     @Override
-    public void initialize(final LCConfigurationI componentP) {
+    public void initialize(ViewProviderI viewProvider, boolean useCache, LCConfigurationI componentP) {
+        this.viewProvider = viewProvider;
+        this.useCache = useCache;
         this.model = componentP;
         this.configurationCssStyle = new SimpleStringProperty();
         this.initAll();
         ObservableList<RootGraphicComponentI> children = this.model.getChildren();
         for (RootGraphicComponentI comp : children) {
-            paneForRootComponents.getChildren().add(comp.getDisplay().getView());
+            paneForRootComponents.getChildren().add(comp.getDisplay(viewProvider, useCache).getView());
         }
     }
 
@@ -86,9 +88,9 @@ public class LCConfigurationViewBase extends Pane implements LCViewInitHelper, C
     public void initBinding() {
         //Binding on children, remove or add component when changes happens
         this.model.getChildren().addListener(LCUtils.createListChangeListener((added) -> {
-            paneForRootComponents.getChildren().add(added.getDisplay().getView());
+            paneForRootComponents.getChildren().add(added.getDisplay(viewProvider, useCache).getView());
         }, (removed) -> {
-            paneForRootComponents.getChildren().remove(removed.getDisplay().getView());
+            paneForRootComponents.getChildren().remove(removed.getDisplay(viewProvider, useCache).getView());
         }));
     }
 

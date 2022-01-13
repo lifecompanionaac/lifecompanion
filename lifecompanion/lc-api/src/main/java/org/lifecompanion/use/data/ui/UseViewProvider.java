@@ -23,6 +23,7 @@ import java.util.Map;
 
 import org.lifecompanion.api.component.definition.DisplayableComponentI;
 import org.lifecompanion.api.ui.ComponentViewI;
+import org.lifecompanion.api.ui.ViewProviderType;
 import org.lifecompanion.base.data.component.simple.*;
 import org.lifecompanion.base.data.ui.BaseViewProvider;
 import org.lifecompanion.base.view.component.simple.GridPartStackViewBase;
@@ -55,7 +56,7 @@ public class UseViewProvider extends BaseViewProvider {
     }
 
     public UseViewProvider() {
-        super(UseViewProvider.VIEWS);
+        super(ViewProviderType.USE, UseViewProvider.VIEWS);
     }
     //========================================================================
 

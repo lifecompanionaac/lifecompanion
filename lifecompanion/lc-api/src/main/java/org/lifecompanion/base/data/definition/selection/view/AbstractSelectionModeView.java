@@ -39,6 +39,7 @@ import org.lifecompanion.api.definition.selection.ProgressDrawMode;
 import org.lifecompanion.api.definition.selection.ScanningDirection;
 import org.lifecompanion.api.style2.property.definition.StylePropertyI;
 import org.lifecompanion.base.data.common.LCUtils;
+import org.lifecompanion.base.data.control.AppController;
 import org.lifecompanion.base.data.definition.selection.impl.DrawSelectionModeI;
 import org.lifecompanion.base.view.component.simple.LCConfigurationChildContainerPane;
 import org.slf4j.Logger;
@@ -183,7 +184,7 @@ public class AbstractSelectionModeView<T extends DrawSelectionModeI> extends Gro
                         for (RootGraphicComponentI comp : allRootComponents) {
                             if (comp instanceof WriterDisplayerI) {
                                 WriterDisplayerI textDisplayerComponent = (WriterDisplayerI) comp;
-                                final Region view = textDisplayerComponent.getDisplay().getView();
+                                final Region view = AppController.INSTANCE.getViewForCurrentMode(textDisplayerComponent).getView();
                                 clipShape = Shape.subtract(clipShape, rectangleFromBounds(view.getBoundsInParent()));
                             }
                         }
@@ -223,7 +224,7 @@ public class AbstractSelectionModeView<T extends DrawSelectionModeI> extends Gro
         StylePropertyI<Number> radiusProp = keyP instanceof GridPartKeyComponentI ? keyP.getKeyStyle().shapeRadiusProperty()
                 : keyP.getGridShapeStyle().shapeRadiusProperty();
         //Launch
-        this.updateMoveAnimation(enableAnimation, keyP.getDisplay().getView(), pos,
+        this.updateMoveAnimation(enableAnimation, AppController.INSTANCE.getViewForCurrentMode(keyP).getView(), pos,
                 new Pair<>(keyP.layoutWidthProperty().get(), keyP.layoutHeightProperty().get()),
                 LCUtils.nullToZeroDouble(radiusProp.value().getValue()), this.partTranslateTransition, this.keyStrokeRectangle,
                 this.keyProgressRectangle, this.keyProgressRectangleVisible, () -> {

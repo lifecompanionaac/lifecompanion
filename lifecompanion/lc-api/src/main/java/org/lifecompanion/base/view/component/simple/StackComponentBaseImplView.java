@@ -25,6 +25,7 @@ import javafx.scene.layout.Region;
 import org.lifecompanion.api.component.definition.GridPartComponentI;
 import org.lifecompanion.api.component.definition.StackComponentI;
 import org.lifecompanion.api.ui.ComponentViewI;
+import org.lifecompanion.api.ui.ViewProviderI;
 import org.lifecompanion.base.data.common.LCUtils;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 
@@ -34,75 +35,82 @@ import java.util.Map;
 /**
  * Implementation that handle the common operation on StackComponent.<br>
  * Subclass must always call parent in overriden method.
- * @author Mathieu THEBAUD <math.thebaud@gmail.com>
+ *
  * @param <T> the real stack component type displayed
+ * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public abstract class StackComponentBaseImplView<T extends StackComponentI> extends Pane implements ComponentViewI<T>, LCViewInitHelper {
-	/**
-	 * All the component that are into this stack
-	 */
-	protected Map<GridPartComponentI, Region> componentsUI;
+    protected ViewProviderI viewProvider;
+    protected boolean useCache;
 
-	/**
-	 * Displayed component
-	 */
-	protected T model;
+    /**
+     * All the component that are into this stack
+     */
+    protected Map<GridPartComponentI, Region> componentsUI;
 
-	/**
-	 * Create the base for displaying stack component
-	 */
-	protected StackComponentBaseImplView() {
-		this.componentsUI = new HashMap<>();
-	}
+    /**
+     * Displayed component
+     */
+    protected T model;
 
-	@Override
-	public void initBinding() {
-		//Currently displayed component on top
-		this.model.displayedComponentProperty().addListener((ChangeListener<GridPartComponentI>) (observableP, oldValueP, newValueP) -> {
-			this.displayedChanged(oldValueP, newValueP);
-		});
-	}
+    /**
+     * Create the base for displaying stack component
+     */
+    protected StackComponentBaseImplView() {
+        this.componentsUI = new HashMap<>();
+    }
 
-	@Override
-	public void initialize(final T componentP) {
-		this.model = componentP;
-		this.initAll();
-		//Default
-		this.displayedChanged(null, this.model.displayedComponentProperty().get());
-	}
+    @Override
+    public void initBinding() {
+        //Currently displayed component on top
+        this.model.displayedComponentProperty().addListener((ChangeListener<GridPartComponentI>) (observableP, oldValueP, newValueP) -> {
+            this.displayedChanged(oldValueP, newValueP);
+        });
+    }
 
-	/**
-	 * This method must be called to change the currently displayed component
-	 * @param oldValueP the component that was displayed before
-	 * @param newValueP the new component that must be displayed now
-	 */
-	protected void displayedChanged(final GridPartComponentI oldValueP, final GridPartComponentI newValueP) {
-		//Remove previous
-		if (oldValueP != null) {
-			Region removed = this.componentsUI.get(oldValueP);
-			LCUtils.runOnFXThread(() -> this.getChildren().remove(removed));
-		}
-		//Check if new value is in map
-		if (newValueP != null) {
-			if (!this.componentsUI.containsKey(newValueP)) {
-				Region added = newValueP.getDisplay().getView();
-				this.componentsUI.put(newValueP, added);
-			}
-			//Display new
-			LCUtils.runOnFXThread(() -> this.getChildren().add(this.componentsUI.get(newValueP)));
-		}
-	}
+    @Override
+    public void initialize(ViewProviderI viewProvider, boolean useCache, final T componentP) {
+        this.viewProvider = viewProvider;
+        this.useCache = useCache;
+        this.model = componentP;
+        this.initAll();
+        //Default
+        this.displayedChanged(null, this.model.displayedComponentProperty().get());
+    }
 
-	@Override
-	public Region getView() {
-		return this;
-	}
+    /**
+     * This method must be called to change the currently displayed component
+     *
+     * @param oldValueP the component that was displayed before
+     * @param newValueP the new component that must be displayed now
+     */
+    protected void displayedChanged(final GridPartComponentI oldValueP, final GridPartComponentI newValueP) {
+        //Remove previous
+        if (oldValueP != null) {
+            Region removed = this.componentsUI.get(oldValueP);
+            LCUtils.runOnFXThread(() -> this.getChildren().remove(removed));
+        }
+        //Check if new value is in map
+        if (newValueP != null) {
+            if (!this.componentsUI.containsKey(newValueP)) {
+                Region added = newValueP.getDisplay(viewProvider, useCache).getView();
+                this.componentsUI.put(newValueP, added);
+            }
+            //Display new
+            LCUtils.runOnFXThread(() -> this.getChildren().add(this.componentsUI.get(newValueP)));
+        }
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void showToFront() {
-		this.toFront();
-	}
+    @Override
+    public Region getView() {
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void showToFront() {
+        this.toFront();
+    }
 }

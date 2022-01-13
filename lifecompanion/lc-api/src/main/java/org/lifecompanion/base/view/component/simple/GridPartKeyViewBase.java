@@ -26,6 +26,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.shape.Rectangle;
 import org.lifecompanion.api.style2.definition.KeyCompStyleI;
 import org.lifecompanion.api.ui.ComponentViewI;
+import org.lifecompanion.api.ui.ViewProviderI;
 import org.lifecompanion.base.data.common.LCUtils;
 import org.lifecompanion.base.data.component.simple.GridPartKeyComponent;
 import org.lifecompanion.base.data.control.WritingStateController;
@@ -42,6 +43,8 @@ import org.lifecompanion.framework.commons.utils.lang.StringUtils;
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public class GridPartKeyViewBase extends Pane implements ComponentViewI<GridPartKeyComponent>, LCViewInitHelper {
+    protected ViewProviderI viewProvider;
+    protected boolean useCache;
     protected GridPartKeyComponent model;
     protected LCLabel labelContent;
 
@@ -128,7 +131,9 @@ public class GridPartKeyViewBase extends Pane implements ComponentViewI<GridPart
     }
 
     @Override
-    public void initialize(final GridPartKeyComponent componentP) {
+    public void initialize(ViewProviderI viewProvider, boolean useCache, final GridPartKeyComponent componentP) {
+        this.viewProvider = viewProvider;
+        this.useCache = useCache;
         this.model = componentP;
         this.initAll();
     }

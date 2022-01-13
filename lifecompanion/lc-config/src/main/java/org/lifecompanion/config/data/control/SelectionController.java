@@ -23,6 +23,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.lifecompanion.api.component.definition.*;
+import org.lifecompanion.api.mode.AppMode;
 import org.lifecompanion.base.data.common.LCUtils;
 import org.lifecompanion.base.data.component.baseimpl.RootGraphicComponentBaseImpl;
 import org.lifecompanion.base.data.control.AppController;
@@ -183,7 +184,7 @@ public enum SelectionController {
             if (rootP != null) {
                 rootP.selectedProperty().set(true);
                 rootP.showSelectedProperty().set(true);
-                rootP.showToFront();
+                rootP.showToFront(AppController.INSTANCE.getViewProvider(AppMode.CONFIG), true);
             }
         }
     }
@@ -431,7 +432,7 @@ public enum SelectionController {
 
     private void addSelection(final GridPartComponentI part) {
         this.select(part);
-        part.showToFront();
+        part.showToFront(AppController.INSTANCE.getViewProvider(AppMode.CONFIG), true);
         List<GridPartComponentI> selectionList = this.getSelection(part.getLevel());
         selectionList.add(part);
     }

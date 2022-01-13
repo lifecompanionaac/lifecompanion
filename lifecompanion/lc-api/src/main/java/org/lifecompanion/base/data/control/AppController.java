@@ -31,6 +31,7 @@ import org.lifecompanion.api.image2.ImageElementI;
 import org.lifecompanion.api.mode.AppMode;
 import org.lifecompanion.api.mode.LCModeI;
 import org.lifecompanion.api.mode.LCStateListener;
+import org.lifecompanion.api.ui.ComponentViewI;
 import org.lifecompanion.api.ui.ViewProviderI;
 import org.lifecompanion.base.data.common.LCTask;
 import org.lifecompanion.base.data.common.LCUtils;
@@ -540,6 +541,7 @@ public enum AppController {
                 }
                 //Clear mode
                 this.appModes.get(AppMode.CONFIG).getViewProvider().clearAllViewCaches();
+                //previous.clearViewCache();
                 this.appModes.get(AppMode.CONFIG).configurationBeforeChangeProperty().set(null);
                 //Fire a delete on previous component of configuration
                 fireConfigurationRemoved(previous);
@@ -662,6 +664,14 @@ public enum AppController {
 
     public ViewProviderI getViewProvider() {
         return this.viewProvider;
+    }
+
+    public ViewProviderI getViewProvider(AppMode mode) {
+        return appModes.get(mode).getViewProvider();
+    }
+
+    public ComponentViewI<?> getViewForCurrentMode(DisplayableComponentI comp) {
+        return comp.getDisplay(appModes.get(this.currentMode.get()).getViewProvider(), true);
     }
 
     /**

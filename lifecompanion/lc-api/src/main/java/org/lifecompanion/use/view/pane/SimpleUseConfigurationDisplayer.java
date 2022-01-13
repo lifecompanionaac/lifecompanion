@@ -281,7 +281,7 @@ public class SimpleUseConfigurationDisplayer extends Group implements LCViewInit
     public void updateConfiguration(final LCConfigurationI newValueP) {
         restoreAfterConfigurationChangingDisplayed();
         if (newValueP != null) {
-            Region view = newValueP.getDisplay().getView();
+            Region view = newValueP.getDisplay(AppController.INSTANCE.getViewProvider(AppMode.USE), true).getView();
             this.configurationView = view;
             this.backgroundColor.bind(newValueP.backgroundColorProperty());
             this.configWith.bind(this.configurationView.widthProperty());

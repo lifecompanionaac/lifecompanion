@@ -27,6 +27,7 @@ import org.lifecompanion.api.style2.definition.GridStyleUserI;
 import org.lifecompanion.api.style2.definition.KeyCompStyleI;
 import org.lifecompanion.api.style2.definition.ShapeCompStyleI;
 import org.lifecompanion.api.style2.definition.TextCompStyleI;
+import org.lifecompanion.api.ui.ViewProviderI;
 import org.lifecompanion.base.data.common.LCUtils;
 import org.lifecompanion.base.data.style2.impl.GridShapeCompStyle;
 import org.lifecompanion.base.data.style2.impl.KeyCompStyle;
@@ -334,15 +335,15 @@ public abstract class GridPartComponentBaseImpl extends DisplayableComponentBase
     }
 
     @Override
-    public void showToFront() {
-        super.showToFront();
+    public void showToFront(ViewProviderI viewProvider, boolean useCache) {
+        super.showToFront(viewProvider, useCache);
         //Root
         if (this.gridParent.get() != null) {
-            this.gridParent.get().showToFront();
+            this.gridParent.get().showToFront(viewProvider, useCache);
         }
         //Stack
         if (this.stackParent.get() != null) {
-            this.stackParent.get().showToFront();
+            this.stackParent.get().showToFront(viewProvider, useCache);
         }
     }
 

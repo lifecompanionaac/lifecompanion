@@ -299,22 +299,23 @@ public class ExportGridsToPdfTask extends LCTask<Void> {
         AtomicBoolean landscape = new AtomicBoolean();
         final Image image = LCUtils.runOnFXThreadAndWaitFor(() -> {
             try {
-                final ComponentViewI<?> viewForGrid = useViewProviderToSnap.getViewFor(printTask.gridToSnap);
-                final Region regionForGrid = viewForGrid.getView();
-                Bounds regionBounds = regionForGrid.getBoundsInParent();
-                double scale;
-                if (regionBounds.getWidth() > regionBounds.getHeight()) {
-                    landscape.set(true);
-                    scale = maxImageSize / regionBounds.getWidth();
-                } else {
-                    scale = maxImageSize / regionBounds.getHeight();
-                }
-                fxGroupAttachedToScene.getChildren().add(regionForGrid);
-                SnapshotParameters snapParams = new SnapshotParameters();
-                snapParams.setTransform(new Scale(scale, scale));
-                final Image tmpImage = regionForGrid.snapshot(snapParams, null);
-                fxGroupAttachedToScene.getChildren().remove(regionForGrid);
-                return tmpImage;
+//                final ComponentViewI<?> viewForGrid = useViewProviderToSnap.getViewFor(printTask.gridToSnap);
+//                final Region regionForGrid = viewForGrid.getView();
+//                Bounds regionBounds = regionForGrid.getBoundsInParent();
+//                double scale;
+//                if (regionBounds.getWidth() > regionBounds.getHeight()) {
+//                    landscape.set(true);
+//                    scale = maxImageSize / regionBounds.getWidth();
+//                } else {
+//                    scale = maxImageSize / regionBounds.getHeight();
+//                }
+//                fxGroupAttachedToScene.getChildren().add(regionForGrid);
+//                SnapshotParameters snapParams = new SnapshotParameters();
+//                snapParams.setTransform(new Scale(scale, scale));
+//                final Image tmpImage = regionForGrid.snapshot(snapParams, null);
+//                fxGroupAttachedToScene.getChildren().remove(regionForGrid);
+//
+                return null;
             } catch (Exception e) {
                 LOGGER.error("Exception while taking snapshot", e);
                 return null;

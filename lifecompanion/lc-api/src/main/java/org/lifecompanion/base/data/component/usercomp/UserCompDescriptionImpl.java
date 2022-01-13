@@ -29,10 +29,12 @@ import org.lifecompanion.api.component.definition.DisplayableComponentI;
 import org.lifecompanion.api.component.definition.usercomp.UserCompDescriptionI;
 import org.lifecompanion.api.component.definition.usercomp.UserCompI;
 import org.lifecompanion.api.exception.LCException;
+import org.lifecompanion.api.mode.AppMode;
 import org.lifecompanion.api.ui.AddTypeEnum;
 import org.lifecompanion.base.data.common.LCUtils;
 import org.lifecompanion.base.data.common.UIUtils;
 import org.lifecompanion.base.data.config.LCConstant;
+import org.lifecompanion.base.data.control.AppController;
 import org.lifecompanion.base.data.control.AsyncExecutorController;
 import org.lifecompanion.framework.commons.fx.io.XMLGenericProperty;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
@@ -148,7 +150,7 @@ public class UserCompDescriptionImpl implements UserCompDescriptionI {
     //========================================================================
     public static UserCompDescriptionI createUserComp(final DisplayableComponentI component, final String name, final String author) {
         UserCompDescriptionI comp = new UserCompDescriptionImpl(component);
-        comp.componentImageProperty().set(UIUtils.takeNodeSnapshot(component.getDisplay().getView(), -1, -1));
+        comp.componentImageProperty().set(UIUtils.takeNodeSnapshot(AppController.INSTANCE.getViewForCurrentMode(component).getView(), -1, -1));
         comp.nameProperty().set(name);
         comp.authorProperty().set(author);
         return comp;

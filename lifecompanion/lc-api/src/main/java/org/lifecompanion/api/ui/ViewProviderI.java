@@ -36,7 +36,7 @@ public interface ViewProviderI {
      * @param component the component class to display.
      * @return a new view instance for the given component, or null if the given type is unknown.
      */
-    ComponentViewI<?> getViewFor(DisplayableComponentI component);
+    ComponentViewI<?> getViewFor(DisplayableComponentI component, boolean useCache);
 
     /**
      * Remove all the view that are saved in the cache for a faster loaded when request a view.<br>
@@ -45,4 +45,6 @@ public interface ViewProviderI {
     void clearViewCacheForConfiguration(String configurationId);
 
     void clearAllViewCaches();
+
+    ViewProviderType getType();
 }

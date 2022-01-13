@@ -41,12 +41,6 @@ public class TextEditorViewBase extends TextDisplayerBaseImplView<TextEditorComp
     }
 
     @Override
-    public void initialize(final TextEditorComponent componentP) {
-        this.model = componentP;
-        this.initAll();
-    }
-
-    @Override
     protected DoubleProperty modelWidthProperty() {
         return this.model.widthProperty();
     }

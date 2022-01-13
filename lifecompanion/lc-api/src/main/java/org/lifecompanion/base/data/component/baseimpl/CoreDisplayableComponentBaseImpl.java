@@ -26,9 +26,11 @@ import org.lifecompanion.api.component.definition.*;
 import org.lifecompanion.api.exception.LCException;
 import org.lifecompanion.api.io.IOContextI;
 import org.lifecompanion.api.ui.ComponentViewI;
+import org.lifecompanion.api.ui.ViewProviderI;
+import org.lifecompanion.api.ui.ViewProviderType;
 import org.lifecompanion.base.data.common.CopyUtils;
 import org.lifecompanion.base.data.component.utils.ComponentNameEnum;
-import org.lifecompanion.base.data.control.AppController;
+import org.lifecompanion.base.data.dev.LogEntry;
 import org.lifecompanion.base.data.io.IOManager;
 import org.lifecompanion.framework.commons.fx.io.XMLIgnoreNullValue;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
@@ -88,11 +90,6 @@ public abstract class CoreDisplayableComponentBaseImpl implements DisplayableCom
      * Disable change listener
      */
     private final transient BooleanProperty disableChangeListener;
-
-    /**
-     * Cached display for this component
-     */
-    private ComponentViewI<?> display;
 
     /**
      * Create the core for a displayable component.<br>
@@ -189,33 +186,38 @@ public abstract class CoreDisplayableComponentBaseImpl implements DisplayableCom
         return this.id;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    private final ComponentViewI[] displayCache = new ComponentViewI[ViewProviderType.values().length];
+
     @Override
-    public ComponentViewI<?> getDisplay() {
-        if (display == null) {
-            display = AppController.INSTANCE.getViewProvider().getViewFor(this);
+    public ComponentViewI<?> getDisplay(ViewProviderI viewProvider, boolean useCache) {
+        if (useCache) {
+            final int index = viewProvider.getType().getCacheIndex();
+            if (displayCache[index] == null) {
+                System.out.println("Init for " + this);
+                displayCache[index] = viewProvider.getViewFor(this, true);
+            }
+            return displayCache[index];
+        } else {
+            System.err.println("Without cache for " + this);
+            return viewProvider.getViewFor(this, false);
         }
-        return display;
     }
 
     @Override
-    public void clearCachedDisplay() {
-        display = null;
-    }
-
-    @Override
-    public boolean isDisplayInitialized() {
-        return display != null;
+    public void clearViewCache() {
+        for (int i = 0; i < this.displayCache.length; i++) {
+            displayCache[i] = null;
+        }
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void showToFront() {
-        this.getDisplay().showToFront();
+    public void showToFront(ViewProviderI viewProvider, boolean useCache) {
+        getDisplay(viewProvider, useCache).showToFront();
+        //FIXME
+        //this.getDisplay().showToFront();
     }
 
     /**

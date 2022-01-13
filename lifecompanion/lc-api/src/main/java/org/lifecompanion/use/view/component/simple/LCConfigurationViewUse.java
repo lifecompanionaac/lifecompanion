@@ -39,11 +39,6 @@ public class LCConfigurationViewUse extends LCConfigurationViewBase {
     private Node lastMainSelectionMode, lastSecondarySelectionMode;
 
     @Override
-    public void initialize(final LCConfigurationI componentP) {
-        super.initialize(componentP);
-    }
-
-    @Override
     public void initBinding() {
         this.model.selectionModeProperty().addListener(createSelectionModeViewChangeListener(true));
         this.model.directSelectionOnMouseOnScanningSelectionModeProperty().addListener(createSelectionModeViewChangeListener(false));

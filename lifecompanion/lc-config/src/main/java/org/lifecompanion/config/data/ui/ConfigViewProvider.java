@@ -21,6 +21,7 @@ package org.lifecompanion.config.data.ui;
 
 import org.lifecompanion.api.component.definition.DisplayableComponentI;
 import org.lifecompanion.api.ui.ComponentViewI;
+import org.lifecompanion.api.ui.ViewProviderType;
 import org.lifecompanion.base.data.component.simple.*;
 import org.lifecompanion.base.data.ui.BaseViewProvider;
 import org.lifecompanion.config.view.component.simple.*;
@@ -30,26 +31,28 @@ import java.util.Map;
 
 /**
  * View provider for component displayed in configuration mode.
+ *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public class ConfigViewProvider extends BaseViewProvider {
-	// Class part : "Initialization"
-	//========================================================================
-	private static final Map<Class<? extends DisplayableComponentI>, Class<? extends ComponentViewI<?>>> VIEWS = new HashMap<>();
 
-	static {
-		ConfigViewProvider.VIEWS.put(LCConfigurationComponent.class, LCConfigurationViewConfig.class);
-		ConfigViewProvider.VIEWS.put(GridPartGridComponent.class, GridPartGridViewConfig.class);
-		ConfigViewProvider.VIEWS.put(GridPartKeyComponent.class, GridPartKeyViewConfig.class);
-		ConfigViewProvider.VIEWS.put(StackComponent.class, StackViewConfig.class);
-		ConfigViewProvider.VIEWS.put(TextEditorComponent.class, TextEditorViewConfig.class);
-		ConfigViewProvider.VIEWS.put(GridPartStackComponent.class, GridPartStackViewConfig.class);
-		ConfigViewProvider.VIEWS.put(GridPartTextEditorComponent.class, GridPartTextEditorViewConfig.class);
-	}
+    // Class part : "Initialization"
+    //========================================================================
+    private static final Map<Class<? extends DisplayableComponentI>, Class<? extends ComponentViewI<?>>> VIEWS = new HashMap<>();
 
-	public ConfigViewProvider() {
-		super(ConfigViewProvider.VIEWS);
-	}
-	//========================================================================
+    static {
+        ConfigViewProvider.VIEWS.put(LCConfigurationComponent.class, LCConfigurationViewConfig.class);
+        ConfigViewProvider.VIEWS.put(GridPartGridComponent.class, GridPartGridViewConfig.class);
+        ConfigViewProvider.VIEWS.put(GridPartKeyComponent.class, GridPartKeyViewConfig.class);
+        ConfigViewProvider.VIEWS.put(StackComponent.class, StackViewConfig.class);
+        ConfigViewProvider.VIEWS.put(TextEditorComponent.class, TextEditorViewConfig.class);
+        ConfigViewProvider.VIEWS.put(GridPartStackComponent.class, GridPartStackViewConfig.class);
+        ConfigViewProvider.VIEWS.put(GridPartTextEditorComponent.class, GridPartTextEditorViewConfig.class);
+    }
+
+    public ConfigViewProvider() {
+        super(ViewProviderType.CONFIG, ConfigViewProvider.VIEWS);
+    }
+    //========================================================================
 
 }

@@ -28,110 +28,127 @@ import javafx.scene.layout.Region;
 import org.lifecompanion.api.component.definition.WriterDisplayerI;
 import org.lifecompanion.api.style2.definition.ShapeCompStyleI;
 import org.lifecompanion.api.ui.ComponentViewI;
+import org.lifecompanion.api.ui.ViewProviderI;
+import org.lifecompanion.base.data.component.simple.TextEditorComponent;
 import org.lifecompanion.base.data.style.impl.ShapeStyleBinder;
 import org.lifecompanion.base.view.component.text3.TextDisplayer3;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 
 /**
  * Class that handle the common view component of a {@link WriterDisplayerI}.
- * @author Mathieu THEBAUD <math.thebaud@gmail.com>
+ *
  * @param <T> the real displayed {@link WriterDisplayerI} subtype
+ * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public abstract class TextDisplayerBaseImplView<T extends WriterDisplayerI> extends Pane implements ComponentViewI<T>, LCViewInitHelper {
-	/**
-	 * Displayed model
-	 */
-	protected T model;
+    protected ViewProviderI viewProvider;
+    protected boolean useCache;
 
-	/**
-	 * Scroll for text content
-	 */
-	private ScrollPane scrollText;
+    /**
+     * Displayed model
+     */
+    protected T model;
 
-	/**
-	 * Text displayer
-	 */
-	private TextDisplayer3 textDisplayer;
+    /**
+     * Scroll for text content
+     */
+    private ScrollPane scrollText;
 
-	private final AtomicReference<Double> wantedScrollPercent;
+    /**
+     * Text displayer
+     */
+    private TextDisplayer3 textDisplayer;
 
-	public TextDisplayerBaseImplView() {
-		wantedScrollPercent = new AtomicReference<Double>();
-	}
+    private final AtomicReference<Double> wantedScrollPercent;
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void initUI() {
-		this.scrollText = new ScrollPane();
-		textDisplayer = new TextDisplayer3(model, widthProperty().subtract(22.0), heightProperty(), this);
-		this.scrollText.setContent(textDisplayer);
-		this.scrollText.prefHeightProperty().bind(this.heightProperty());
-		this.scrollText.setFitToWidth(true);
-		this.getChildren().add(this.scrollText);
-		this.scrollText.getStyleClass().add("text-displayer-scroll-pane");
+    public TextDisplayerBaseImplView() {
+        wantedScrollPercent = new AtomicReference<Double>();
+    }
 
-		ShapeCompStyleI shapeCompStyle = this.model.getTextDisplayerShapeStyle();
-		ShapeStyleBinder.bindNode(this, shapeCompStyle);
-		ShapeStyleBinder.bindNodeSize(this.scrollText, this.model.getTextDisplayerShapeStyle(), this.modelWidthProperty(),
-				this.modelHeightProperty());
-	}
+    @Override
+    public void initialize(ViewProviderI viewProvider, boolean useCache, final T componentP) {
+        this.viewProvider = viewProvider;
+        this.useCache = useCache;
+        this.model = componentP;
+        this.initAll();
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void initListener() {
-		this.scrollText.setOnMouseClicked((ea) -> {
-			if (ea.getButton() == MouseButton.PRIMARY) {
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void initUI() {
+        this.scrollText = new ScrollPane();
+        textDisplayer = new TextDisplayer3(model, widthProperty().subtract(22.0), heightProperty(), this);
+        this.scrollText.setContent(textDisplayer);
+        this.scrollText.prefHeightProperty().bind(this.heightProperty());
+        this.scrollText.setFitToWidth(true);
+        this.getChildren().add(this.scrollText);
+        this.scrollText.getStyleClass().add("text-displayer-scroll-pane");
 
-			} else if (ea.getButton() == MouseButton.SECONDARY) {
+        ShapeCompStyleI shapeCompStyle = this.model.getTextDisplayerShapeStyle();
+        ShapeStyleBinder.bindNode(this, shapeCompStyle);
+        ShapeStyleBinder.bindNodeSize(this.scrollText, this.model.getTextDisplayerShapeStyle(), this.modelWidthProperty(),
+                this.modelHeightProperty());
+    }
 
-			} else {}
-		});
-		this.textDisplayer.heightProperty().addListener((obs, ov, nv) -> {
-			final Double wantedScrollValue = wantedScrollPercent.getAndSet(null);
-			if (wantedScrollValue != null) {
-				this.scrollText.setVvalue(wantedScrollValue);
-			}
-		});
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void initListener() {
+        this.scrollText.setOnMouseClicked((ea) -> {
+            if (ea.getButton() == MouseButton.PRIMARY) {
 
-	/**
-	 * Set the value of the canvas scroll.</br>
-	 * The value is immediately set, and planned to be set on next height change (bug fix because height is not immediately correct)
-	 * @param yPercent scroll y value (0.0 -> 1.0)
-	 */
-	public void updateCaretScroll(final double yPercent) {
-		this.scrollText.setVvalue(yPercent);
-		this.wantedScrollPercent.set(yPercent);
-	}
+            } else if (ea.getButton() == MouseButton.SECONDARY) {
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void initBinding() {}
+            } else {
+            }
+        });
+        this.textDisplayer.heightProperty().addListener((obs, ov, nv) -> {
+            final Double wantedScrollValue = wantedScrollPercent.getAndSet(null);
+            if (wantedScrollValue != null) {
+                this.scrollText.setVvalue(wantedScrollValue);
+            }
+        });
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Region getView() {
-		return this;
-	}
+    /**
+     * Set the value of the canvas scroll.</br>
+     * The value is immediately set, and planned to be set on next height change (bug fix because height is not immediately correct)
+     *
+     * @param yPercent scroll y value (0.0 -> 1.0)
+     */
+    public void updateCaretScroll(final double yPercent) {
+        this.scrollText.setVvalue(yPercent);
+        this.wantedScrollPercent.set(yPercent);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void showToFront() {
-		this.toFront();
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void initBinding() {
+    }
 
-	protected abstract DoubleProperty modelWidthProperty();
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Region getView() {
+        return this;
+    }
 
-	protected abstract DoubleProperty modelHeightProperty();
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void showToFront() {
+        this.toFront();
+    }
+
+    protected abstract DoubleProperty modelWidthProperty();
+
+    protected abstract DoubleProperty modelHeightProperty();
 
 }

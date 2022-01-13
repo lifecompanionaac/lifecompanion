@@ -23,12 +23,14 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import org.lifecompanion.api.component.definition.GridPartComponentI;
 import org.lifecompanion.api.ui.ComponentViewI;
+import org.lifecompanion.api.ui.ViewProviderI;
 import org.lifecompanion.base.data.common.LCUtils;
 import org.lifecompanion.base.data.common.UIUtils;
 import org.lifecompanion.base.data.common.Unbindable;
 import org.lifecompanion.base.data.component.simple.GridPartGridComponent;
 import org.lifecompanion.base.data.style.impl.ShapeStyleBinder;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 
 import java.util.List;
 
@@ -38,8 +40,10 @@ import java.util.List;
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public class GridPartGridViewBase extends Pane implements ComponentViewI<GridPartGridComponent>, LCViewInitHelper {
-
+    protected ViewProviderI viewProvider;
+    protected boolean useCache;
     protected GridPartGridComponent model;
+
     private ListChangeListener<GridPartComponentI> gridPartChangeListener;
     private Unbindable shapeStyleBinding;
 
@@ -59,21 +63,26 @@ public class GridPartGridViewBase extends Pane implements ComponentViewI<GridPar
         this.prefHeightProperty().bind(this.model.layoutHeightProperty());
         //When grid content change
         this.model.getGrid().getGridContent().addListener(gridPartChangeListener = LCUtils.createListChangeListener((added) -> {
-            GridPartGridViewBase.this.getChildren().add(added.getDisplay().getView());
+            GridPartGridViewBase.this.getChildren().add(added.getDisplay(viewProvider, useCache).getView());
         }, (removed) -> {
-            GridPartGridViewBase.this.getChildren().remove(removed.getDisplay().getView());
+            GridPartGridViewBase.this.getChildren().remove(removed.getDisplay(viewProvider, useCache).getView());
         }));
         //Bind style
         shapeStyleBinding = ShapeStyleBinder.bindNode(this, this.model.getGridShapeStyle());
     }
 
     @Override
-    public void initialize(final GridPartGridComponent componentP) {
+    public void initialize(ViewProviderI viewProvider, boolean useCache, GridPartGridComponent componentP) {
+        this.viewProvider = viewProvider;
+        this.useCache = useCache;
         this.model = componentP;
+        if (StringUtils.isEquals("test", model.nameProperty().get())) {
+            System.err.println("Initialize " + viewProvider + " / " + useCache);
+        }
         this.initAll();
         List<GridPartComponentI> allComponent = this.model.getGrid().getGridContent();
         for (GridPartComponentI comp : allComponent) {
-            GridPartGridViewBase.this.getChildren().add(comp.getDisplay().getView());
+            GridPartGridViewBase.this.getChildren().add(comp.getDisplay(viewProvider, useCache).getView());
         }
     }
 

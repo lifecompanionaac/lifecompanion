@@ -32,9 +32,11 @@ import org.controlsfx.glyphfont.FontAwesome;
 import org.fxmisc.easybind.EasyBind;
 import org.lifecompanion.api.component.definition.DisplayableComponentI;
 import org.lifecompanion.api.component.definition.usercomp.UserCompDescriptionI;
+import org.lifecompanion.api.ui.ComponentViewI;
 import org.lifecompanion.base.data.common.UIUtils;
 import org.lifecompanion.base.data.config.IconManager;
 import org.lifecompanion.base.data.config.LCGraphicStyle;
+import org.lifecompanion.base.data.control.AppController;
 import org.lifecompanion.base.view.reusable.UndoRedoTextInputWrapper;
 import org.lifecompanion.base.view.reusable.impl.BaseConfigurationViewBorderPane;
 import org.lifecompanion.config.data.action.impl.BaseComponentAction;
@@ -53,6 +55,8 @@ import org.slf4j.LoggerFactory;
 /**
  * Common base for a lot of selected component.<br>
  * Show selected component.
+ *
+ * // FIXME : update component only on dialog display
  *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
@@ -175,9 +179,12 @@ public class CommonComponentView extends BaseConfigurationViewBorderPane<Display
     }
 
     private void updateComponentImage(DisplayableComponentI nv) {
-        if (nv != null && nv.getDisplay() != null) {
+        if (nv != null && AppController.INSTANCE.getViewForCurrentMode(nv) != null) {
+            final ComponentViewI<?> viewForCurrentMode = AppController.INSTANCE.getViewForCurrentMode(nv);
+            System.out.println("View " + nv + " = " + viewForCurrentMode);
             imageViewComponentType.setImage(nv.getNodeType().isIconValid() ? IconManager.get(nv.getNodeType().getIconPath()) : null);
-            Region itemView = nv.getDisplay().getView();
+            final ComponentViewI<?> viewForCurrentMode1 = AppController.INSTANCE.getViewForCurrentMode(nv);
+            Region itemView = viewForCurrentMode1.getView();
             try {
                 this.imageViewComponent.setImage(UIUtils.takeNodeSnapshot(itemView, -1, -1));
             } catch (Throwable t) {

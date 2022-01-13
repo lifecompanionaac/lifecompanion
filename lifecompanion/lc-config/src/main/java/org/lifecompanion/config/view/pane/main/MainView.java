@@ -28,12 +28,14 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.TransferMode;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.transform.Scale;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.api.component.definition.RootGraphicComponentI;
+import org.lifecompanion.api.mode.AppMode;
 import org.lifecompanion.api.ui.AddTypeEnum;
 import org.lifecompanion.base.data.common.UIUtils;
 import org.lifecompanion.base.data.config.LCConstant;
@@ -129,8 +131,9 @@ public class MainView extends StackPane implements LCViewInitHelper {
                         Scale scaleTransform = new Scale();
                         scaleTransform.xProperty().bind(AppController.INSTANCE.configurationScaleProperty());
                         scaleTransform.yProperty().bind(AppController.INSTANCE.configurationScaleProperty());
-                        Group group = new Group(newValueP.getDisplay().getView());
-                        newValueP.getDisplay().getView().getTransforms().add(scaleTransform);
+                        final Region viewForNewValue = newValueP.getDisplay(AppController.INSTANCE.getViewProvider(AppMode.CONFIG), true).getView();
+                        Group group = new Group(viewForNewValue);
+                        viewForNewValue.getTransforms().add(scaleTransform);
                         this.scrollcenter.setContent(group);
                     }
                 });

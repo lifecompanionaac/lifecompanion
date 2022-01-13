@@ -279,7 +279,7 @@ public class LCConfigurationActions {
             // Update the config description image because we are on JavaFX Thread
             // Unknown bug : snapshot can sometimes fail
             try {
-                configDescription.configurationImageProperty().set(UIUtils.takeNodeSnapshot(configuration.getDisplay().getView(), -1, -1));
+                configDescription.configurationImageProperty().set(UIUtils.takeNodeSnapshot(AppController.INSTANCE.getViewForCurrentMode(configuration).getView(), -1, -1));
             } catch (Throwable t) {
                 LCConfigurationActions.LOGGER.warn("Couldn't take a snapshot of configuration", t);
             }

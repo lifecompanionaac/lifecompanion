@@ -44,14 +44,16 @@ public interface DisplayableComponentI extends XMLSerializable<IOContextI>, Tree
      *
      * @return the component view.
      */
-    ComponentViewI<?> getDisplay();
+    ComponentViewI<?> getDisplay(ViewProviderI viewProvider, boolean useCache);
 
-    /**
-     * To clear cached display on this component.
-     */
-    void clearCachedDisplay();
+    public void clearViewCache();
 
-    boolean isDisplayInitialized();
+    //    /**
+    //     * To clear cached display on this component.
+    //     */
+    //    void clearCachedDisplay();
+    //
+    //    boolean isDisplayInitialized();
 
     /**
      * @return a type name for this component that can be shown to user
@@ -63,7 +65,7 @@ public interface DisplayableComponentI extends XMLSerializable<IOContextI>, Tree
      * This method must handle the case of component into other.<br>
      * E.g. : a component into a stack must become the displayed component. A recursive call to parent is a good way to achieve this.
      */
-    void showToFront();
+    void showToFront(ViewProviderI viewProvider, boolean useCache);//FIXME ; inject ViewProviderType here (or view provider if the view wasn't initialized yet ?)
 
     /**
      * @return a property that indicate if this component is currently displayed in stack (or in configuration view), this is useful for stack child that doesn't know the direct stack child of their stack parent.<br>
@@ -75,6 +77,7 @@ public interface DisplayableComponentI extends XMLSerializable<IOContextI>, Tree
 
     /**
      * To dispatch a value of the displayed property to this component and its children.
+     *
      * @param displayed the displayed property to dispatch
      */
     void dispatchDisplayedProperty(boolean displayed);
