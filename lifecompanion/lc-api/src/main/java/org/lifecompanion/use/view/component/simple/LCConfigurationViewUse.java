@@ -38,11 +38,23 @@ public class LCConfigurationViewUse extends LCConfigurationViewBase {
 
     private Node lastMainSelectionMode, lastSecondarySelectionMode;
 
+    private ChangeListener<SelectionModeI> selectionModeViewChangeListener, directSelectionMouse;
+    private ChangeListener<Boolean> hideMainSelectionChangeListener;
+
+    @Override
+    public void unbindComponentAndChildren() {
+        this.model.selectionModeProperty().removeListener(selectionModeViewChangeListener);
+        this.model.directSelectionOnMouseOnScanningSelectionModeProperty().removeListener(directSelectionMouse);
+        this.model.hideMainSelectionModeViewProperty().removeListener(hideMainSelectionChangeListener);
+        super.unbindComponentAndChildren();
+    }
+
     @Override
     public void initBinding() {
-        this.model.selectionModeProperty().addListener(createSelectionModeViewChangeListener(true));
-        this.model.directSelectionOnMouseOnScanningSelectionModeProperty().addListener(createSelectionModeViewChangeListener(false));
-        this.model.hideMainSelectionModeViewProperty().addListener((obs, ov, nv) -> {
+        super.initBinding();
+        this.model.selectionModeProperty().addListener(selectionModeViewChangeListener = createSelectionModeViewChangeListener(true));
+        this.model.directSelectionOnMouseOnScanningSelectionModeProperty().addListener(directSelectionMouse = createSelectionModeViewChangeListener(false));
+        this.model.hideMainSelectionModeViewProperty().addListener(hideMainSelectionChangeListener = (obs, ov, nv) -> {
             if (lastMainSelectionMode != null && !lastMainSelectionMode.visibleProperty().isBound()) {
                 lastMainSelectionMode.setVisible(!nv);
             }

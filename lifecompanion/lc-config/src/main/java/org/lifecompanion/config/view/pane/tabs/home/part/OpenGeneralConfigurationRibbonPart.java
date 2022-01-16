@@ -18,19 +18,29 @@
  */
 package org.lifecompanion.config.view.pane.tabs.home.part;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
 import org.controlsfx.glyphfont.FontAwesome;
+import org.lifecompanion.api.component.definition.LCConfigurationI;
+import org.lifecompanion.base.data.common.LCUtils;
 import org.lifecompanion.base.data.common.UIUtils;
 import org.lifecompanion.base.data.config.LCGraphicStyle;
-import org.lifecompanion.config.data.component.general.GeneralConfigurationController;
-import org.lifecompanion.base.view.reusable.GeneralConfigurationStep;
+import org.lifecompanion.base.data.control.AppController;
 import org.lifecompanion.config.data.config.LCGlyphFont;
+import org.lifecompanion.config.view.pane.compselector.NodeSnapshotCache;
 import org.lifecompanion.config.view.reusable.ribbonmenu.RibbonBasePart;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.util.UUID;
 
 /**
  * @author Mathieu THEBAUD
@@ -57,9 +67,32 @@ public class OpenGeneralConfigurationRibbonPart extends RibbonBasePart<Void> imp
         this.setContent(boxContent);
     }
 
+    BooleanProperty running = new SimpleBooleanProperty(false);
+
     @Override
     public void initListener() {
-        this.buttonOpenGeneralConfig.setOnAction(e -> GeneralConfigurationController.INSTANCE.showStep(GeneralConfigurationStep.GENERAL_INFORMATION));
+        //   this.buttonOpenGeneralConfig.setOnAction(e -> GeneralConfigurationController.INSTANCE.showStep(GeneralConfigurationStep.GENERAL_INFORMATION));
+        this.buttonOpenGeneralConfig.setOnAction(e -> {
+            if (!running.get()) {
+                final File tempDir = LCUtils.getTempDir("export-images-test");
+                tempDir.mkdirs();
+                running.set(true);
+                final LCConfigurationI configuration = AppController.INSTANCE.currentConfigConfigurationProperty().get();
+                configuration.getAllComponent().values().forEach(d -> {
+                    NodeSnapshotCache.INSTANCE.requestSnapshot(d, -1, 150, img -> {
+                        try {
+                            BufferedImage buffImage = SwingFXUtils.fromFXImage(img, null);
+                            ImageIO.write(buffImage, "png", new File(tempDir.getPath() + "/" + UUID.randomUUID().toString() + ".png"));
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
+                    });
+                });
+            } else {
+                running.set(false);
+                NodeSnapshotCache.INSTANCE.cancelAllSnapshotRequest();
+            }
+        });
     }
 
     @Override

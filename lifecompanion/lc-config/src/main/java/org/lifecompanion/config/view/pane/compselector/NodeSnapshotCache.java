@@ -33,10 +33,7 @@ import org.lifecompanion.use.data.ui.UseViewProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
@@ -81,12 +78,21 @@ public enum NodeSnapshotCache {
     }
 
     public void cancelRequestSnapshot(DisplayableComponentI component) {
-        CopyOnWriteArrayList<ComponentSnapshotTask> previousTasks = runningLoadingTasks.remove(component.getID());
+        cancelRequestSnapshot(component.getID());
+    }
+
+    public void cancelRequestSnapshot(String componentId) {
+        CopyOnWriteArrayList<ComponentSnapshotTask> previousTasks = runningLoadingTasks.remove(componentId);
         if (previousTasks != null) {
             List<ComponentSnapshotTask> clearTasks = new ArrayList<>(previousTasks);
             previousTasks.removeAll(clearTasks);
             clearTasks.forEach(ComponentSnapshotTask::cancel);
         }
+    }
+
+    public void cancelAllSnapshotRequest() {
+        Set<String> toRemove = new HashSet<>(runningLoadingTasks.keySet());
+        toRemove.forEach(this::cancelRequestSnapshot);
     }
 
     public void requestSnapshot(DisplayableComponentI component, double w, double h, Consumer<Image> callback) {

@@ -26,11 +26,7 @@ import org.lifecompanion.api.ui.ComponentViewI;
 import org.lifecompanion.api.ui.ViewProviderType;
 import org.lifecompanion.base.data.component.simple.*;
 import org.lifecompanion.base.data.ui.BaseViewProvider;
-import org.lifecompanion.base.view.component.simple.GridPartStackViewBase;
-import org.lifecompanion.base.view.component.simple.GridPartTextEditorComponentViewBase;
-import org.lifecompanion.base.view.component.simple.StackViewBase;
-import org.lifecompanion.base.view.component.simple.TextEditorViewBase;
-import org.lifecompanion.use.view.component.simple.GridPartGridViewUse;
+import org.lifecompanion.base.view.component.simple.*;
 import org.lifecompanion.use.view.component.simple.GridPartKeyViewUse;
 import org.lifecompanion.use.view.component.simple.LCConfigurationViewUse;
 
@@ -47,7 +43,7 @@ public class UseViewProvider extends BaseViewProvider {
 
     static {
         UseViewProvider.VIEWS.put(LCConfigurationComponent.class, LCConfigurationViewUse.class);
-        UseViewProvider.VIEWS.put(GridPartGridComponent.class, GridPartGridViewUse.class);
+        UseViewProvider.VIEWS.put(GridPartGridComponent.class, GridPartGridViewBase.class);
         UseViewProvider.VIEWS.put(GridPartKeyComponent.class, GridPartKeyViewUse.class);
         UseViewProvider.VIEWS.put(StackComponent.class, StackViewBase.class);
         UseViewProvider.VIEWS.put(TextEditorComponent.class, TextEditorViewBase.class);

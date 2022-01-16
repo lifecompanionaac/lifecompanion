@@ -29,6 +29,7 @@ import org.lifecompanion.base.view.component.simple.GridPartKeyViewBase;
 
 public class GridPartKeyViewUse extends GridPartKeyViewBase {
 
+    private ChangeListener<KeyOptionI> keyOptionChanged;
     private final ChangeListener<Region> changeListenerKeyOptionAddedNode;
 
     public GridPartKeyViewUse() {
@@ -64,9 +65,9 @@ public class GridPartKeyViewUse extends GridPartKeyViewBase {
     public void initBinding() {
         super.initBinding();
         // On key option change, bind added node
-        final ChangeListener<KeyOptionI> keyOptionChanged = (obs, ov, nv) -> {
+        keyOptionChanged = (obs, ov, nv) -> {
             if (ov != null) {
-                nv.keyViewAddedNodeProperty().removeListener(changeListenerKeyOptionAddedNode);
+                ov.keyViewAddedNodeProperty().removeListener(changeListenerKeyOptionAddedNode);
                 this.changeListenerKeyOptionAddedNode.changed(null, ov.keyViewAddedNodeProperty().get(), null);
             }
             if (nv != null) {
@@ -76,5 +77,13 @@ public class GridPartKeyViewUse extends GridPartKeyViewBase {
         };
         keyOptionChanged.changed(null, null, model.keyOptionProperty().get());
         this.model.keyOptionProperty().addListener(keyOptionChanged);
+    }
+
+    @Override
+    public void unbindComponentAndChildren() {
+        final KeyOptionI prevValue = model.keyOptionProperty().get();
+        this.model.keyOptionProperty().removeListener(keyOptionChanged);
+        keyOptionChanged.changed(model.keyOptionProperty(), prevValue, null);
+        super.unbindComponentAndChildren();
     }
 }
