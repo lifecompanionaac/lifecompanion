@@ -19,28 +19,30 @@
 
 package org.lifecompanion.base.data.component.baseimpl.text;
 
-import java.util.List;
-import java.util.function.Consumer;
-
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.DoubleBinding;
 import org.lifecompanion.api.component.definition.text.CachedLineListenerDataI;
 import org.lifecompanion.api.component.definition.text.TextBoundsProviderI;
 import org.lifecompanion.api.component.definition.text.TextDisplayerLineI;
 
+import java.util.List;
+import java.util.function.Consumer;
+
 public class CachedLineListenerData implements CachedLineListenerDataI {
     private final Consumer<List<TextDisplayerLineI>> listener;
     private final DoubleBinding maxWidth;
     private final TextBoundsProviderI textBoundsProvider;
     private final InvalidationListener associatedInvalidationListener;
+    private final Runnable unbind;
 
     public CachedLineListenerData(Consumer<List<TextDisplayerLineI>> listener, DoubleBinding maxWidth, TextBoundsProviderI textBoundsProvider,
-                                  InvalidationListener associatedInvalidationListener) {
+                                  InvalidationListener associatedInvalidationListener, Runnable unbind) {
         super();
         this.listener = listener;
         this.maxWidth = maxWidth;
         this.textBoundsProvider = textBoundsProvider;
         this.associatedInvalidationListener = associatedInvalidationListener;
+        this.unbind = unbind;
     }
 
     @Override
@@ -61,5 +63,10 @@ public class CachedLineListenerData implements CachedLineListenerDataI {
     @Override
     public Consumer<List<TextDisplayerLineI>> getListener() {
         return this.listener;
+    }
+
+    @Override
+    public void unbind() {
+        this.unbind.run();
     }
 }

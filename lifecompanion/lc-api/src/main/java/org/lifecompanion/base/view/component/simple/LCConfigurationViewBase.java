@@ -21,6 +21,7 @@ package org.lifecompanion.base.view.component.simple;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
@@ -46,6 +47,8 @@ public class LCConfigurationViewBase extends Pane implements LCViewInitHelper, C
     protected StringProperty configurationCssStyle;
 
     protected LCConfigurationChildContainerPane paneForRootComponents;
+
+    private ListChangeListener<RootGraphicComponentI> childrenChangeListener;
 
     public LCConfigurationViewBase() {
     }
@@ -87,11 +90,24 @@ public class LCConfigurationViewBase extends Pane implements LCViewInitHelper, C
     @Override
     public void initBinding() {
         //Binding on children, remove or add component when changes happens
-        this.model.getChildren().addListener(LCUtils.createListChangeListener((added) -> {
+        this.model.getChildren().addListener(childrenChangeListener = LCUtils.createListChangeListener((added) -> {
             paneForRootComponents.getChildren().add(added.getDisplay(viewProvider, useCache).getView());
         }, (removed) -> {
             paneForRootComponents.getChildren().remove(removed.getDisplay(viewProvider, useCache).getView());
         }));
+    }
+
+    @Override
+    public void unbindComponentAndChildren() {
+        this.model.getChildren().removeListener(childrenChangeListener);
+        this.configurationCssStyle.unbind();
+        this.styleProperty().unbind();
+        this.minWidthProperty().unbind();
+        this.maxWidthProperty().unbind();
+        this.minHeightProperty().unbind();
+        this.maxHeightProperty().unbind();
+        LCUtils.exploreComponentViewChildrenToUnbind(this);
+        this.model = null;
     }
 
     /**

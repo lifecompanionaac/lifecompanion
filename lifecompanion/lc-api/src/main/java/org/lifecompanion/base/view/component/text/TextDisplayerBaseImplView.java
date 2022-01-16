@@ -18,8 +18,6 @@
  */
 package org.lifecompanion.base.view.component.text;
 
-import java.util.concurrent.atomic.AtomicReference;
-
 import javafx.beans.property.DoubleProperty;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseButton;
@@ -29,10 +27,12 @@ import org.lifecompanion.api.component.definition.WriterDisplayerI;
 import org.lifecompanion.api.style2.definition.ShapeCompStyleI;
 import org.lifecompanion.api.ui.ComponentViewI;
 import org.lifecompanion.api.ui.ViewProviderI;
-import org.lifecompanion.base.data.component.simple.TextEditorComponent;
+import org.lifecompanion.base.data.common.Unbindable;
 import org.lifecompanion.base.data.style.impl.ShapeStyleBinder;
 import org.lifecompanion.base.view.component.text3.TextDisplayer3;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Class that handle the common view component of a {@link WriterDisplayerI}.
@@ -73,6 +73,8 @@ public abstract class TextDisplayerBaseImplView<T extends WriterDisplayerI> exte
         this.initAll();
     }
 
+    private Unbindable shapeStyleUnbind, shapeStyleSizeUnbind;
+
     /**
      * {@inheritDoc}
      */
@@ -87,10 +89,19 @@ public abstract class TextDisplayerBaseImplView<T extends WriterDisplayerI> exte
         this.scrollText.getStyleClass().add("text-displayer-scroll-pane");
 
         ShapeCompStyleI shapeCompStyle = this.model.getTextDisplayerShapeStyle();
-        ShapeStyleBinder.bindNode(this, shapeCompStyle);
-        ShapeStyleBinder.bindNodeSize(this.scrollText, this.model.getTextDisplayerShapeStyle(), this.modelWidthProperty(),
+        shapeStyleUnbind = ShapeStyleBinder.bindNode(this, shapeCompStyle);
+        shapeStyleSizeUnbind = ShapeStyleBinder.bindNodeSize(this.scrollText, this.model.getTextDisplayerShapeStyle(), this.modelWidthProperty(),
                 this.modelHeightProperty());
     }
+
+    @Override
+    public void unbindComponentAndChildren() {
+        this.textDisplayer.unbindComponentAndChildren();
+        shapeStyleUnbind.unbind();
+        shapeStyleSizeUnbind.unbind();
+        this.model = null;
+    }
+
 
     /**
      * {@inheritDoc}

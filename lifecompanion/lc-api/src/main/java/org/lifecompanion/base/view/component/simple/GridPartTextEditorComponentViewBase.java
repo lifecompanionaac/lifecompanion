@@ -51,4 +51,13 @@ public class GridPartTextEditorComponentViewBase extends TextDisplayerBaseImplVi
     protected DoubleProperty modelHeightProperty() {
         return this.model.layoutHeightProperty();
     }
+
+    @Override
+    public void unbindComponentAndChildren() {
+        super.unbindComponentAndChildren();
+        this.layoutXProperty().unbind();
+        this.layoutYProperty().unbind();
+        this.prefWidthProperty().unbind();
+        this.prefHeightProperty().unbind();
+    }
 }

@@ -73,6 +73,8 @@ public enum WritingStateController implements ModeListenerI, WritingStateControl
         this.totalTextBuilder = new StringBuilder();
 
         this.writingEventListeners = new HashSet<>(2);
+
+        AppController.INSTANCE.currentConfigConfigurationProperty().addListener(inv -> initExampleEntriesIfNeeded());
     }
     //========================================================================
 

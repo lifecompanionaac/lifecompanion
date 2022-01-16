@@ -161,7 +161,10 @@ public class TextDisplayerPropertyWrapper {
             cachedLines = lines;
             listener.accept(lines);
         };
-        this.cachedLinesListener = new CachedLineListenerData(listener, maxWithProperty, textBoundsProvider, wil);
+        this.cachedLinesListener = new CachedLineListenerData(listener, maxWithProperty, textBoundsProvider, wil, () -> {
+            maxWithProperty.removeListener(wil);
+            cachedLinesListener = null;
+        });
         maxWithProperty.addListener(wil);
         return cachedLinesListener;
     }

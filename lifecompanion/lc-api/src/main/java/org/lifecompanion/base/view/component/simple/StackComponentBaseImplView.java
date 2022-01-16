@@ -53,6 +53,8 @@ public abstract class StackComponentBaseImplView<T extends StackComponentI> exte
      */
     protected T model;
 
+    private ChangeListener<GridPartComponentI> displayedChangeListener;
+
     /**
      * Create the base for displaying stack component
      */
@@ -63,9 +65,7 @@ public abstract class StackComponentBaseImplView<T extends StackComponentI> exte
     @Override
     public void initBinding() {
         //Currently displayed component on top
-        this.model.displayedComponentProperty().addListener((ChangeListener<GridPartComponentI>) (observableP, oldValueP, newValueP) -> {
-            this.displayedChanged(oldValueP, newValueP);
-        });
+        this.model.displayedComponentProperty().addListener(displayedChangeListener = (obs, oldv, newv) -> this.displayedChanged(oldv, newv));
     }
 
     @Override
@@ -76,6 +76,14 @@ public abstract class StackComponentBaseImplView<T extends StackComponentI> exte
         this.initAll();
         //Default
         this.displayedChanged(null, this.model.displayedComponentProperty().get());
+    }
+
+    @Override
+    public void unbindComponentAndChildren() {
+        this.model.displayedComponentProperty().removeListener(displayedChangeListener);
+        LCUtils.exploreComponentViewChildrenToUnbind(this);
+        this.componentsUI.values().forEach(LCUtils::exploreComponentViewChildrenToUnbind);
+        this.model = null;
     }
 
     /**

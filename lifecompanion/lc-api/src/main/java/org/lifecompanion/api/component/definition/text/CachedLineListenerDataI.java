@@ -26,11 +26,13 @@ import javafx.beans.InvalidationListener;
 import javafx.beans.binding.DoubleBinding;
 
 public interface CachedLineListenerDataI {
-	public Consumer<List<TextDisplayerLineI>> getListener();
+	Consumer<List<TextDisplayerLineI>> getListener();
 
-	public DoubleBinding maxWidthProperty();
+	DoubleBinding maxWidthProperty();
 
-	public TextBoundsProviderI getTextBoundsProvider();
+	TextBoundsProviderI getTextBoundsProvider();
 
-	public InvalidationListener getAssociatedInvalidationListener();
+	InvalidationListener getAssociatedInvalidationListener();
+
+	void unbind();
 }

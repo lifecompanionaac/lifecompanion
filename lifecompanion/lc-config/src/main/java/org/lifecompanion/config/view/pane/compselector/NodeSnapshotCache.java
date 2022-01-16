@@ -22,7 +22,6 @@ package org.lifecompanion.config.view.pane.compselector;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
-import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import org.lifecompanion.api.component.definition.DisplayableComponentI;
 import org.lifecompanion.api.ui.ComponentViewI;
@@ -30,6 +29,7 @@ import org.lifecompanion.base.data.common.LCUtils;
 import org.lifecompanion.base.data.common.UIUtils;
 import org.lifecompanion.base.data.control.AppController;
 import org.lifecompanion.framework.utils.LCNamedThreadFactory;
+import org.lifecompanion.use.data.ui.UseViewProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -102,8 +102,8 @@ public enum NodeSnapshotCache {
                     CopyOnWriteArrayList<ComponentSnapshotTask> loadingTasks = runningLoadingTasks.get(component.getID());
                     if (loadingTasks != null) {
                         loadingTasks.remove(task);
-                        LCUtils.unloadAllImagesIn(LOAD_REQUEST_ID, component);
                     }
+                    LCUtils.unloadAllImagesIn(LOAD_REQUEST_ID, component);
                     if (task.getException() != null) {
                         LOGGER.error("Problem on snaphsot", task.getException());
                     }
@@ -160,19 +160,11 @@ public enum NodeSnapshotCache {
             if (!isCancelled()) {
                 LCUtils.loadAllImagesIn(LOAD_REQUEST_ID, 1000, component);
                 return LCUtils.runOnFXThreadAndWaitFor(() -> {
-//                    ComponentViewI<?> display = component.getDisplay();
-//                    final Parent parent = display.getView().getParent();
-//                    Image r = UIUtils.takeNodeSnapshot(display.getView(), w, h);
-//                    LCUtils.unloadAllImagesIn(LOAD_REQUEST_ID, component);
-//                    if (parent == null) {
-//                        LCUtils.exploreTree(component, child -> {
-//                            if (child instanceof DisplayableComponentI) {
-//                                ((DisplayableComponentI) child).clearCachedDisplay();
-//                            }
-//                        });
-//                    }
-//                    return r;
-                    return null;
+                    ComponentViewI display = component.getDisplay(new UseViewProvider(), false);
+                    Image r = UIUtils.takeNodeSnapshot(display.getView(), w, h);
+                    LCUtils.unloadAllImagesIn(LOAD_REQUEST_ID, component);
+                    display.unbindComponentAndChildren();
+                    return r;
                 });
             }
             return null;

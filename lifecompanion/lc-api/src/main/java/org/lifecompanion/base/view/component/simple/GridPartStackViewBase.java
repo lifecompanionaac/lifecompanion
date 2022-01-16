@@ -43,4 +43,13 @@ public class GridPartStackViewBase extends StackComponentBaseImplView<GridPartSt
 		this.prefWidthProperty().bind(this.model.layoutWidthProperty());
 		this.prefHeightProperty().bind(this.model.layoutHeightProperty());
 	}
+
+	@Override
+	public void unbindComponentAndChildren() {
+		super.unbindComponentAndChildren();
+		this.layoutXProperty().unbind();
+		this.layoutYProperty().unbind();
+		this.prefWidthProperty().unbind();
+		this.prefHeightProperty().unbind();
+	}
 }

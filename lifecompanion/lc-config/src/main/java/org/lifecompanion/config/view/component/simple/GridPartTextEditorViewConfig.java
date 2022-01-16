@@ -57,10 +57,4 @@ public class GridPartTextEditorViewConfig extends GridPartTextEditorComponentVie
             possiblySelected.showPossibleSelectedProperty().set(false);
         });
     }
-
-    @Override
-    public void initialize(ViewProviderI viewProvider, boolean useCache, final GridPartTextEditorComponent componentP) {
-        super.initialize(viewProvider, useCache, componentP);
-        WritingStateController.INSTANCE.initExampleEntriesIfNeeded();
-    }
 }

@@ -30,7 +30,6 @@ import org.lifecompanion.api.ui.ViewProviderI;
 import org.lifecompanion.api.ui.ViewProviderType;
 import org.lifecompanion.base.data.common.CopyUtils;
 import org.lifecompanion.base.data.component.utils.ComponentNameEnum;
-import org.lifecompanion.base.data.dev.LogEntry;
 import org.lifecompanion.base.data.io.IOManager;
 import org.lifecompanion.framework.commons.fx.io.XMLIgnoreNullValue;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
@@ -193,12 +192,10 @@ public abstract class CoreDisplayableComponentBaseImpl implements DisplayableCom
         if (useCache) {
             final int index = viewProvider.getType().getCacheIndex();
             if (displayCache[index] == null) {
-                System.out.println("Init for " + this);
                 displayCache[index] = viewProvider.getViewFor(this, true);
             }
             return displayCache[index];
         } else {
-            System.err.println("Without cache for " + this);
             return viewProvider.getViewFor(this, false);
         }
     }
@@ -206,7 +203,10 @@ public abstract class CoreDisplayableComponentBaseImpl implements DisplayableCom
     @Override
     public void clearViewCache() {
         for (int i = 0; i < this.displayCache.length; i++) {
-            displayCache[i] = null;
+            if (displayCache[i] != null) {
+                displayCache[i].unbindComponentAndChildren();
+                displayCache[i] = null;
+            }
         }
     }
 
@@ -216,8 +216,6 @@ public abstract class CoreDisplayableComponentBaseImpl implements DisplayableCom
     @Override
     public void showToFront(ViewProviderI viewProvider, boolean useCache) {
         getDisplay(viewProvider, useCache).showToFront();
-        //FIXME
-        //this.getDisplay().showToFront();
     }
 
     /**

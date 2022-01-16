@@ -57,12 +57,6 @@ public class TextEditorViewConfig extends TextEditorViewBase {
     }
 
     @Override
-    public void initialize(ViewProviderI viewProvider, boolean useCache, final TextEditorComponent componentP) {
-        super.initialize(viewProvider, useCache, componentP);
-        WritingStateController.INSTANCE.initExampleEntriesIfNeeded();
-    }
-
-    @Override
     public void updateCaretScroll(final double yPercent) {
         //In config mode, we don't any automatic scroll on canvas update
     }

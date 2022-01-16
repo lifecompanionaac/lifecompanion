@@ -38,6 +38,8 @@ public interface ComponentViewI<T extends DisplayableComponentI> {
      */
     void initialize(ViewProviderI viewProvider, boolean useCache, T component);
 
+    void unbindComponentAndChildren();
+
     // unbind and clear
 
     /**

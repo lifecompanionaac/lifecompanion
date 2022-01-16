@@ -180,8 +180,6 @@ public class CommonComponentView extends BaseConfigurationViewBorderPane<Display
 
     private void updateComponentImage(DisplayableComponentI nv) {
         if (nv != null && AppController.INSTANCE.getViewForCurrentMode(nv) != null) {
-            final ComponentViewI<?> viewForCurrentMode = AppController.INSTANCE.getViewForCurrentMode(nv);
-            System.out.println("View " + nv + " = " + viewForCurrentMode);
             imageViewComponentType.setImage(nv.getNodeType().isIconValid() ? IconManager.get(nv.getNodeType().getIconPath()) : null);
             final ComponentViewI<?> viewForCurrentMode1 = AppController.INSTANCE.getViewForCurrentMode(nv);
             Region itemView = viewForCurrentMode1.getView();

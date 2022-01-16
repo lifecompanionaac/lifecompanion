@@ -46,7 +46,7 @@ public interface DisplayableComponentI extends XMLSerializable<IOContextI>, Tree
      */
     ComponentViewI<?> getDisplay(ViewProviderI viewProvider, boolean useCache);
 
-    public void clearViewCache();
+    void clearViewCache();
 
     //    /**
     //     * To clear cached display on this component.

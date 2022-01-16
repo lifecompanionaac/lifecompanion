@@ -24,25 +24,37 @@ import org.lifecompanion.base.data.component.simple.StackComponent;
 
 /**
  * Base display for {@link StackComponent}
+ *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public class StackViewBase extends StackComponentBaseImplView<StackComponent> {
 
-	public StackViewBase() {
-		super();
-	}
+    public StackViewBase() {
+        super();
+    }
 
-	@Override
-	public void initUI() {}
+    @Override
+    public void initUI() {
+    }
 
-	@Override
-	public void initBinding() {
-		super.initBinding();
-		//Position and size
-		this.layoutXProperty().bind(this.model.xProperty());
-		this.layoutYProperty().bind(this.model.yProperty());
-		this.prefWidthProperty().bind(this.model.widthProperty());
-		this.prefHeightProperty().bind(this.model.heightProperty());
-		this.rotateProperty().bind(this.model.rotateProperty());
-	}
+    @Override
+    public void initBinding() {
+        super.initBinding();
+        //Position and size
+        this.layoutXProperty().bind(this.model.xProperty());
+        this.layoutYProperty().bind(this.model.yProperty());
+        this.prefWidthProperty().bind(this.model.widthProperty());
+        this.prefHeightProperty().bind(this.model.heightProperty());
+        this.rotateProperty().bind(this.model.rotateProperty());
+    }
+
+    @Override
+    public void unbindComponentAndChildren() {
+        super.unbindComponentAndChildren();
+        this.layoutXProperty().unbind();
+        this.layoutYProperty().unbind();
+        this.prefWidthProperty().unbind();
+        this.prefHeightProperty().unbind();
+        this.rotateProperty().unbind();
+    }
 }

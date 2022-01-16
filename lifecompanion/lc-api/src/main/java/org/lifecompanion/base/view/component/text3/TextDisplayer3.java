@@ -33,10 +33,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import org.lifecompanion.api.component.definition.WriterDisplayerI;
-import org.lifecompanion.api.component.definition.text.TextBoundsProviderI;
-import org.lifecompanion.api.component.definition.text.TextDisplayerLineI;
-import org.lifecompanion.api.component.definition.text.TextDisplayerWordI;
-import org.lifecompanion.api.component.definition.text.TextDisplayerWordPartI;
+import org.lifecompanion.api.component.definition.text.*;
 import org.lifecompanion.api.control.events.WritingEventSource;
 import org.lifecompanion.api.image2.ImageElementI;
 import org.lifecompanion.api.style2.definition.TextCompStyleI;
@@ -53,13 +50,15 @@ import java.util.List;
 public class TextDisplayer3 extends Pane implements LCViewInitHelper {
     private final WriterDisplayerI textDisplayer;
 
-    private DoubleBinding maxWidthProperty;
-    private ReadOnlyDoubleProperty height;
+    private final DoubleBinding maxWidthProperty;
+    private final ReadOnlyDoubleProperty height;
 
-    private TextDisplayerBaseImplView<?> parentView;
+    private final TextDisplayerBaseImplView<?> parentView;
     private javafx.scene.shape.Line caretLine;
-    private TextBoundsProviderImpl BOUNDS_PROVIDER = new TextBoundsProviderImpl();
-    private List<Node> previousChildren;
+    private final TextBoundsProviderImpl BOUNDS_PROVIDER = new TextBoundsProviderImpl();
+    private final List<Node> previousChildren;
+
+    private CachedLineListenerDataI cachedLineListenerData;
 
     public TextDisplayer3(final WriterDisplayerI textDisplayer, DoubleBinding doubleBinding, ReadOnlyDoubleProperty height,
                           TextDisplayerBaseImplView<?> parentView) {
@@ -69,6 +68,10 @@ public class TextDisplayer3 extends Pane implements LCViewInitHelper {
         this.parentView = parentView;
         previousChildren = new ArrayList<>();
         this.initAll();
+    }
+
+    public void unbindComponentAndChildren() {
+        cachedLineListenerData.unbind();
     }
 
     @Override
@@ -81,7 +84,7 @@ public class TextDisplayer3 extends Pane implements LCViewInitHelper {
     @Override
     public void initBinding() {
         // TODO : Batch updates ?
-        this.textDisplayer.setCachedLinesUpdateListener(lines -> {
+        cachedLineListenerData = this.textDisplayer.setCachedLinesUpdateListener(lines -> {
             if (Platform.isFxApplicationThread()) {
                 this.repaint(lines);
             } else {

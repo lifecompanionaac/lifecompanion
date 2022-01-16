@@ -32,10 +32,12 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableMap;
 import javafx.concurrent.Task;
 import javafx.geometry.Bounds;
+import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
@@ -48,6 +50,7 @@ import org.lifecompanion.api.component.definition.grid.ComponentGridI;
 import org.lifecompanion.api.component.definition.keyoption.KeyOptionI;
 import org.lifecompanion.api.component.definition.useaction.UseActionEvent;
 import org.lifecompanion.api.component.definition.useaction.UseActionTriggerComponentI;
+import org.lifecompanion.api.ui.ComponentViewI;
 import org.lifecompanion.base.data.component.simple.GridPartKeyComponent;
 import org.lifecompanion.base.data.config.LCConstant;
 import org.lifecompanion.base.data.image2.ImageDictionaries;
@@ -815,4 +818,14 @@ public class LCUtils {
             LCUtils.safeSleep(100);
     }
     //========================================================================
+
+    public static void exploreComponentViewChildrenToUnbind(Node node) {
+        if (node instanceof Pane) {
+            for (Node child : ((Pane) node).getChildren()) {
+                if (child instanceof ComponentViewI) {
+                    ((ComponentViewI<?>) child).unbindComponentAndChildren();
+                }
+            }
+        }
+    }
 }

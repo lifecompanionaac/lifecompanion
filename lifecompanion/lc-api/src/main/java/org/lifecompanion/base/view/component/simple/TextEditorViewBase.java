@@ -49,4 +49,14 @@ public class TextEditorViewBase extends TextDisplayerBaseImplView<TextEditorComp
     protected DoubleProperty modelHeightProperty() {
         return this.model.heightProperty();
     }
+
+    @Override
+    public void unbindComponentAndChildren() {
+        super.unbindComponentAndChildren();
+        this.layoutXProperty().unbind();
+        this.layoutYProperty().unbind();
+        this.prefWidthProperty().unbind();
+        this.prefHeightProperty().unbind();
+        this.rotateProperty().unbind();
+    }
 }

@@ -28,6 +28,7 @@ import org.lifecompanion.api.style2.definition.KeyCompStyleI;
 import org.lifecompanion.api.ui.ComponentViewI;
 import org.lifecompanion.api.ui.ViewProviderI;
 import org.lifecompanion.base.data.common.LCUtils;
+import org.lifecompanion.base.data.common.Unbindable;
 import org.lifecompanion.base.data.component.simple.GridPartKeyComponent;
 import org.lifecompanion.base.data.control.WritingStateController;
 import org.lifecompanion.base.data.style.impl.ShapeStyleBinder;
@@ -43,10 +44,11 @@ import org.lifecompanion.framework.commons.utils.lang.StringUtils;
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public class GridPartKeyViewBase extends Pane implements ComponentViewI<GridPartKeyComponent>, LCViewInitHelper {
-    protected ViewProviderI viewProvider;
-    protected boolean useCache;
     protected GridPartKeyComponent model;
     protected LCLabel labelContent;
+    protected ImageView keyImageView;
+
+    private Unbindable shapeStyleUnbind, shapeStyleClipUnbind, textStyleUnbind;
 
     public GridPartKeyViewBase() {
     }
@@ -73,7 +75,7 @@ public class GridPartKeyViewBase extends Pane implements ComponentViewI<GridPart
         this.labelContent.prefHeightProperty()
                 .bind(this.model.layoutHeightProperty().subtract(keyStyle.strokeSizeProperty().valueAsInt().multiply(2.0)));
         this.labelContent.enableAutoFontSizingProperty().bind(keyStyle.autoFontSizeProperty().value());
-        TextStyleBinder.bindTextStyleBindableComp(this.labelContent, this.model.getKeyTextStyle());
+        textStyleUnbind = TextStyleBinder.bindTextStyleBindableComp(this.labelContent, this.model.getKeyTextStyle());
 
         //Position
         this.labelContent.contentDisplayProperty().bind(this.model.textPositionProperty());
@@ -96,7 +98,7 @@ public class GridPartKeyViewBase extends Pane implements ComponentViewI<GridPart
                 this.model.getKeyTextStyle().upperCaseProperty().value()));
 
         //Bind the image
-        ImageView keyImageView = new ImageView();
+        keyImageView = new ImageView();
         keyImageView.setSmooth(true);
         keyImageView.preserveRatioProperty().bind(this.model.preserveRatioProperty());
         keyImageView.rotateProperty().bind(this.model.rotateProperty());
@@ -112,9 +114,9 @@ public class GridPartKeyViewBase extends Pane implements ComponentViewI<GridPart
         this.labelContent.graphicProperty().set(keyImageViewWrapper);
 
         //Bind style
-        ShapeStyleBinder.bindNode(this, keyStyle);
+        shapeStyleUnbind = ShapeStyleBinder.bindNode(this, keyStyle);
         Rectangle rectangleClip = new Rectangle();
-        ShapeStyleBinder.bindClipComp(rectangleClip, this.model.layoutWidthProperty(), this.model.layoutHeightProperty(), keyStyle);
+        shapeStyleClipUnbind = ShapeStyleBinder.bindClipComp(rectangleClip, this.model.layoutWidthProperty(), this.model.layoutHeightProperty(), keyStyle);
         this.labelContent.setClip(rectangleClip);
 
         // Shadow effect
@@ -132,10 +134,38 @@ public class GridPartKeyViewBase extends Pane implements ComponentViewI<GridPart
 
     @Override
     public void initialize(ViewProviderI viewProvider, boolean useCache, final GridPartKeyComponent componentP) {
-        this.viewProvider = viewProvider;
-        this.useCache = useCache;
         this.model = componentP;
         this.initAll();
+    }
+
+    @Override
+    public void unbindComponentAndChildren() {
+        this.prefWidthProperty().unbind();
+        this.prefHeightProperty().unbind();
+        this.layoutXProperty().unbind();
+        this.layoutYProperty().unbind();
+
+        this.labelContent.layoutXProperty().unbind();
+        this.labelContent.layoutYProperty().unbind();
+        this.labelContent.prefWidthProperty().unbind();
+        this.labelContent.prefHeightProperty().unbind();
+        this.labelContent.enableAutoFontSizingProperty().unbind();
+        textStyleUnbind.unbind();
+
+        this.labelContent.contentDisplayProperty().unbind();
+        this.labelContent.textProperty().unbind();
+
+        //Bind the image
+        keyImageView.preserveRatioProperty().unbind();
+        keyImageView.rotateProperty().unbind();
+        keyImageView.viewportProperty().unbind();
+        LCUtils.unbindAndSetNull(keyImageView.imageProperty());
+
+        //Bind style
+        shapeStyleUnbind.unbind();
+        shapeStyleClipUnbind.unbind();
+
+        this.model = null;
     }
 
     /**
