@@ -29,6 +29,7 @@ import org.lifecompanion.base.data.config.IconManager;
 import org.lifecompanion.base.data.config.LCConstant;
 import org.lifecompanion.base.data.config.LCGraphicStyle;
 import org.lifecompanion.base.data.control.stats.SessionStatsController;
+import org.lifecompanion.config.data.control.SelectionController;
 import org.lifecompanion.config.view.common.SystemVirtualKeyboardHelper;
 
 public class CommonComponentStage extends Stage {
@@ -55,7 +56,8 @@ public class CommonComponentStage extends Stage {
                 this.hide();
             }
         });
-        this.setOnShown(e -> commonComponentView.requestFieldNameFocus());
+        this.setOnShown(e -> commonComponentView.show(SelectionController.INSTANCE.selectedComponentBothProperty().get()));
+        this.setOnHiding(e -> commonComponentView.hide());
         this.getIcons().add(IconManager.get(LCConstant.LC_ICON_PATH));
     }
 

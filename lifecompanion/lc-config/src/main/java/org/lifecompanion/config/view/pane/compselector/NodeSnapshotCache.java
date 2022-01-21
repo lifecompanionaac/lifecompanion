@@ -83,7 +83,7 @@ public enum NodeSnapshotCache {
         cancelRequestSnapshot(component.getID());
     }
 
-    public void cancelRequestSnapshot(String componentId) {
+    private void cancelRequestSnapshot(String componentId) {
         CopyOnWriteArrayList<ComponentSnapshotTask> previousTasks = runningLoadingTasks.remove(componentId);
         if (previousTasks != null) {
             List<ComponentSnapshotTask> clearTasks = new ArrayList<>(previousTasks);
