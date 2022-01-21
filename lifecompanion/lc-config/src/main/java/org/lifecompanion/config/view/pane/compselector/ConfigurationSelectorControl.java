@@ -25,10 +25,9 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import org.lifecompanion.api.component.definition.LCConfigurationDescriptionI;
 import org.lifecompanion.api.component.definition.LCProfileI;
-import org.lifecompanion.base.data.common.UIUtils;
 import org.lifecompanion.base.data.control.AppController;
 import org.lifecompanion.base.view.pane.configuration.ConfigurationSimpleListCell;
-import org.lifecompanion.config.view.reusable.SearchComboBox;
+import org.lifecompanion.config.view.reusable.searchcombobox.SearchComboBox;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
@@ -45,14 +44,9 @@ public class ConfigurationSelectorControl extends VBox implements LCViewInitHelp
     private SearchComboBox<LCConfigurationDescriptionI> comboBoxConfigurations;
 
     /**
-     * Label for this control
-     */
-    private Label label;
-
-    /**
      * Text in label (default for constructor)
      */
-    private String labelText;
+    private final String labelText;
 
     public ConfigurationSelectorControl(final String labelTextP) {
         this.labelText = labelTextP;
@@ -61,21 +55,18 @@ public class ConfigurationSelectorControl extends VBox implements LCViewInitHelp
 
     @Override
     public void initUI() {
-        comboBoxConfigurations = new SearchComboBox<>(searchText ->
-                StringUtils.isBlank(searchText) ? null : desc -> StringUtils.startWithIgnoreCase(desc.configurationNameProperty().get(), searchText)
-                        || StringUtils.containsIgnoreCase(desc.configurationNameProperty().get(), searchText)
-                        || StringUtils.containsIgnoreCase(desc.configurationDescriptionProperty().get(), searchText)
+        comboBoxConfigurations = new SearchComboBox<>(
+                lv -> new ConfigurationSimpleListCell(),
+                searchText ->
+                        StringUtils.isBlank(searchText) ? null : desc -> StringUtils.startWithIgnoreCase(desc.configurationNameProperty().get(), searchText)
+                                || StringUtils.containsIgnoreCase(desc.configurationNameProperty().get(), searchText)
+                                || StringUtils.containsIgnoreCase(desc.configurationDescriptionProperty().get(), searchText)
                 , desc -> desc != null ?
                 desc.configurationNameProperty().get() + " (" + desc.configurationAuthorProperty().get() + ")" : Translation.getText("configuration.selector.control.no.selection"));
-        comboBoxConfigurations.setCellFactory((lv) -> new ConfigurationSimpleListCell());
-        UIUtils.setFixedWidth(comboBoxConfigurations, 250.0);
-        comboBoxConfigurations.setVisibleRowCount(2);
-
-        this.label = new Label(this.labelText);
-
+        comboBoxConfigurations.setFixedCellSize(120.0);
         this.setPadding(new Insets(5.0));
         this.setSpacing(5.0);
-        this.getChildren().addAll(label, comboBoxConfigurations);
+        this.getChildren().addAll(new Label(this.labelText), comboBoxConfigurations);
     }
 
     public ObjectProperty<LCConfigurationDescriptionI> valueProperty() {

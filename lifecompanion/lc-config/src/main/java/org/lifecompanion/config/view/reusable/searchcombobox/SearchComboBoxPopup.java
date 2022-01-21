@@ -22,15 +22,12 @@ package org.lifecompanion.config.view.reusable.searchcombobox;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
-import javafx.collections.transformation.SortedList;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Popup;
@@ -134,7 +131,8 @@ public class SearchComboBoxPopup<T> extends Popup implements LCViewInitHelper {
         LCUtils.debounce(300, "search-combobox-popup", () -> {
             if (LangUtils.isNotEmpty(sourceItems)) {
                 ArrayList<T> copy = new ArrayList<>(sourceItems);
-                final Predicate<T> predicate = this.searchComboBox.getPredicateBuilder().apply(text);
+                final Predicate<T> builtPredicate = this.searchComboBox.getPredicateBuilder().apply(text);
+                final Predicate<T> predicate = builtPredicate != null ? builtPredicate : c -> true;
                 final List<T> itemsFiltered = copy.stream().filter(predicate).collect(Collectors.toList());
                 if (searchComboBox.getComparatorBuilder() != null) {
                     final Comparator<T> comparator = searchComboBox.getComparatorBuilder().apply(text);
@@ -165,6 +163,10 @@ public class SearchComboBoxPopup<T> extends Popup implements LCViewInitHelper {
         } else {
             this.listView.setItems(null);
         }
+    }
+
+    public void setFixedCellSize(double size) {
+        listView.setFixedCellSize(size);
     }
     //========================================================================
 }

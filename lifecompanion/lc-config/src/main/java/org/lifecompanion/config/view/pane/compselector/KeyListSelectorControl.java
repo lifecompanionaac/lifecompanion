@@ -28,8 +28,9 @@ import javafx.scene.layout.VBox;
 import org.lifecompanion.api.component.definition.simplercomp.KeyListNodeI;
 import org.lifecompanion.base.data.common.LCUtils;
 import org.lifecompanion.base.data.common.UIUtils;
+import org.lifecompanion.config.view.pane.general.view.simplercomp.keylist.KeyListCellHandler;
 import org.lifecompanion.config.view.pane.general.view.simplercomp.keylist.SimpleKeyListContentListCell;
-import org.lifecompanion.config.view.reusable.SearchComboBox;
+import org.lifecompanion.config.view.reusable.searchcombobox.SearchComboBox;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
@@ -61,22 +62,20 @@ public class KeyListSelectorControl extends VBox implements LCViewInitHelper {
             this.label = new Label(this.labelText);
         }
         // Search combobox
-        searchComboBox = new SearchComboBox<>(searchText ->
-                StringUtils.isBlank(searchText) ? null : c -> LCUtils.getSimilarityScoreFor(searchText, c, getNameGetterForCategory()) > 0
+        searchComboBox = new SearchComboBox<>(lv -> new SimpleKeyListContentListCell(),
+                searchText ->
+                        StringUtils.isBlank(searchText) ? null : c -> LCUtils.getSimilarityScoreFor(searchText, c, getNameGetterForCategory()) > 0
                 , comp -> comp != null ? comp.textProperty().get() : Translation.getText("key.list.selector.control.no.value"),
                 searchText -> StringUtils.isBlank(searchText) ? null : (c1, c2) -> Double.compare(
                         LCUtils.getSimilarityScoreFor(searchText, c2, getNameGetterForCategory()),
                         LCUtils.getSimilarityScoreFor(searchText, c1, getNameGetterForCategory())
                 ));
-        searchComboBox.setCellFactory(lv -> new SimpleKeyListContentListCell<>());
-        searchComboBox.setVisibleRowCount(2);
-
+        searchComboBox.setFixedCellSize(KeyListCellHandler.CELL_HEIGHT + 5);
         this.setSpacing(5.0);
         if (label != null) {
             this.getChildren().add(label);
         }
         this.getChildren().add(searchComboBox);
-        this.setMaxHeight(SimpleKeyListContentListCell.CELL_HEIGHT);
     }
 
     private Function<KeyListNodeI, Pair<String, Double>>[] getNameGetterForCategory() {

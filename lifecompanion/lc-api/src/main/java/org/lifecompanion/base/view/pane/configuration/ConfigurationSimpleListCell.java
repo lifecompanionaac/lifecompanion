@@ -29,7 +29,7 @@ public class ConfigurationSimpleListCell extends ListCell<LCConfigurationDescrip
 	/**
 	 * Image view to see configuration preview
 	 */
-	private ImageView configurationImage;
+	private final ImageView configurationImage;
 
 	public ConfigurationSimpleListCell() {
 		//Images view

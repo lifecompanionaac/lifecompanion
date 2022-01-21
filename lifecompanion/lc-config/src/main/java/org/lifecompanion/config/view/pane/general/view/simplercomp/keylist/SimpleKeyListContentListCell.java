@@ -22,24 +22,17 @@ package org.lifecompanion.config.view.pane.general.view.simplercomp.keylist;
 import javafx.scene.control.ListCell;
 import org.lifecompanion.api.component.definition.simplercomp.KeyListNodeI;
 
-public class SimpleKeyListContentListCell<T extends KeyListNodeI> extends ListCell<T> {
-
-    public final static double CELL_HEIGHT = 30.0;
+public class SimpleKeyListContentListCell extends ListCell<KeyListNodeI> {
+    private final KeyListCellHandler keyListCellHandler;
 
     public SimpleKeyListContentListCell() {
-        this.setPrefHeight(CELL_HEIGHT);
-        this.setMinHeight(CELL_HEIGHT);
-        this.setMaxHeight(CELL_HEIGHT);
+        keyListCellHandler = new KeyListCellHandler(this);
     }
 
     @Override
-    protected void updateItem(final T itemP, final boolean emptyP) {
+    protected void updateItem(final KeyListNodeI itemP, final boolean emptyP) {
         super.updateItem(itemP, emptyP);
-        if (itemP == null || emptyP) {
-            this.textProperty().unbind();
-        } else {
-            this.textProperty().bind(itemP.textProperty());
-        }
+        keyListCellHandler.cellUpdateItem(itemP, emptyP);
     }
 }
 

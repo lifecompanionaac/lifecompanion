@@ -79,6 +79,10 @@ public class SearchComboBox<T> extends HBox implements LCViewInitHelper {
         return value;
     }
 
+    public void setFixedCellSize(double size){
+        this.searchComboBoxPopup.setFixedCellSize(size);
+    }
+
     // UI
     //========================================================================
     @Override

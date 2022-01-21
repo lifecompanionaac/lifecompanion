@@ -74,7 +74,6 @@ public enum NodeSnapshotCache {
                     if (cachedSnapshot == null) return false;
                     return System.currentTimeMillis() - cachedSnapshot.lastUsed >= CLEAR_AFTER_LAST_USE;
                 });
-                LOGGER.info("Node snapshot cache size : {}", snapshotCache.size());
             }
         }, 1000, 5000);
     }

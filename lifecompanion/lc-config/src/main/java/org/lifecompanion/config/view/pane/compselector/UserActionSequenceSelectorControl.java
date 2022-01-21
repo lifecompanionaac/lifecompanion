@@ -27,9 +27,8 @@ import org.lifecompanion.api.component.definition.simplercomp.UserActionSequence
 import org.lifecompanion.api.component.definition.simplercomp.UserActionSequencesI;
 import org.lifecompanion.base.data.common.LCUtils;
 import org.lifecompanion.base.data.common.UIUtils;
-import org.lifecompanion.config.view.pane.general.view.simplercomp.keylist.SimpleKeyListContentListCell;
 import org.lifecompanion.config.view.pane.general.view.simplercomp.useractionsequence.UserActionSequenceListCell;
-import org.lifecompanion.config.view.reusable.SearchComboBox;
+import org.lifecompanion.config.view.reusable.searchcombobox.SearchComboBox;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
@@ -61,22 +60,22 @@ public class UserActionSequenceSelectorControl extends VBox implements LCViewIni
             this.label = new Label(this.labelText);
         }
         // Search combobox
-        searchComboBox = new SearchComboBox<>(searchText ->
-                StringUtils.isBlank(searchText) ? null : c -> LCUtils.getSimilarityScoreFor(searchText, c, getNameGetterForCategory()) > 0
+        searchComboBox = new SearchComboBox<>(
+                lv -> new UserActionSequenceListCell(),
+                searchText -> StringUtils.isBlank(searchText) ? null : c -> LCUtils.getSimilarityScoreFor(searchText, c, getNameGetterForCategory()) > 0
                 , comp -> comp != null ? comp.nameProperty().get() : Translation.getText("key.list.selector.control.no.value"),
                 searchText -> StringUtils.isBlank(searchText) ? null : (c1, c2) -> Double.compare(
                         LCUtils.getSimilarityScoreFor(searchText, c2, getNameGetterForCategory()),
                         LCUtils.getSimilarityScoreFor(searchText, c1, getNameGetterForCategory())
                 ));
-        searchComboBox.setCellFactory(lv -> new UserActionSequenceListCell());
-        searchComboBox.setVisibleRowCount(2);
+        searchComboBox.setFixedCellSize(35.0);
 
         this.setSpacing(5.0);
         if (label != null) {
             this.getChildren().add(label);
         }
         this.getChildren().add(searchComboBox);
-        this.setMaxHeight(SimpleKeyListContentListCell.CELL_HEIGHT);
+        //this.setMaxHeight(SimpleKeyListContentListCell.CELL_HEIGHT);
     }
 
     private Function<UserActionSequenceI, Pair<String, Double>>[] getNameGetterForCategory() {

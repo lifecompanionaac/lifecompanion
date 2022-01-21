@@ -152,11 +152,11 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         gridButtons.add(buttonMoveDown, 1, rowIndex++);
 
         keyListTreeView = new TreeView<>();
-        keyListTreeView.setCellFactory(tv -> new KeyListNodeTreeCell(this));
+        keyListTreeView.setCellFactory(tv -> new KeyListNodeTreeCell());
         keyListTreeView.setShowRoot(false);
         keyListTreeView.setMaxHeight(TREE_VIEW_HEIGHT);
         keyListTreeView.setMinHeight(TREE_VIEW_HEIGHT);
-        keyListTreeView.setFixedCellSize(KeyListNodeTreeCell.CELL_HEIGHT + 5);
+        keyListTreeView.setFixedCellSize(KeyListCellHandler.CELL_HEIGHT + 5);
         HBox.setHgrow(keyListTreeView, Priority.ALWAYS);
 
         this.buttonExportKeys = UIUtils.createLeftTextButton(Translation.getText("general.configuration.view.key.list.button.export.keys"), LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.UPLOAD).size(14).color(LCGraphicStyle.MAIN_DARK), null);

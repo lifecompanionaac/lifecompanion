@@ -365,6 +365,7 @@ public class LCConfigurationActions {
             Alert dialog = ConfigUIUtils.createDialog(source, Alert.AlertType.NONE);
             dialog.setHeaderText(Translation.getText("config.duplicate.question.select.config"));
             ConfigurationSelectorControl configurationSelectorControl = new ConfigurationSelectorControl(Translation.getText("config.duplicate.field.config"));
+            configurationSelectorControl.setPrefWidth(400.0);
             dialog.getDialogPane().setContent(configurationSelectorControl);
             ButtonType typeCancel = new ButtonType(Translation.getText("button.type.cancel"), ButtonBar.ButtonData.CANCEL_CLOSE);
             ButtonType typeDuplicate = new ButtonType(Translation.getText("button.type.duplicate"), ButtonBar.ButtonData.YES);
