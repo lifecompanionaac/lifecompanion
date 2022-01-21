@@ -231,7 +231,6 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         this.buttonDelete.setOnAction(e -> ifSelectedItemNotNull(selectedNode -> removeNode(selectedNode, "keylist.action.removed.action.notification.title")));
         this.buttonCopy.setOnAction(e -> ifSelectedItemNotNull(selectedNode -> {
             KeyListNodeI duplicated = (KeyListNodeI) selectedNode.duplicate(true);
-            duplicated.textProperty().set(Translation.getText("general.configuration.view.key.list.copy.label.key.text") + " " + duplicated.textProperty().get());
             cutOrCopiedNode.set(duplicated);
         }));
         this.buttonCut.setOnAction(e -> ifSelectedItemNotNull(selectedNode -> {
