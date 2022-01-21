@@ -123,8 +123,6 @@ public class ExportGridsToPdfTask extends LCTask<Void> {
         scene.setFill(configuration.backgroundColorProperty().getValue());
 
         this.useViewProviderToSnap = new UseViewProvider();
-        ViewProviderI previousProvider = AppController.INSTANCE.getViewProvider();
-        AppController.INSTANCE.setViewProvider(useViewProviderToSnap);
 
         List<GridPrintTask> gridPrintTasks = new ArrayList<>();
 
@@ -161,10 +159,6 @@ public class ExportGridsToPdfTask extends LCTask<Void> {
                 }
             }
         }
-
-        // Restore view provider to default
-        AppController.INSTANCE.setViewProvider(previousProvider);
-        //useViewProviderToSnap.clearAllViewCaches();//VIEWCACHE
 
         // TODO : default names
         final String profileName = profile != null ? profile.nameProperty().get() : "PROFILE?";
@@ -243,7 +237,7 @@ public class ExportGridsToPdfTask extends LCTask<Void> {
     }
 
 
-    private ImageExportResult executePrint(GridPrintTask gridPrintTask, int taskIndex, int pageIndex) throws InterruptedException {
+    private ImageExportResult executePrint(GridPrintTask gridPrintTask, int taskIndex, int pageIndex) {
         LCUtils.loadAllImagesIn(EXPORT_IMAGE_LOADING_KEY, MAX_IMAGE_LOADING_TIME, gridPrintTask.gridToSnap);
         ImageExportResult result = printGrid(gridPrintTask, taskIndex, pageIndex);
         LCUtils.unloadAllImagesIn(EXPORT_IMAGE_LOADING_KEY, gridPrintTask.gridToSnap);

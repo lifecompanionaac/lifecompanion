@@ -104,11 +104,6 @@ public enum AppController {
     private Runnable nextModeChangeAfterLoadingCallback;
 
     /**
-     * The current view provider
-     */
-    private ViewProviderI viewProvider;
-
-    /**
      * The current profile in use, can be null
      */
     private final ObjectProperty<LCProfileI> currentProfile;
@@ -205,7 +200,6 @@ public enum AppController {
             //Set the new
             if (newMode != null) {
                 LCModeI newAppMode = this.appModes.get(newMode);
-                this.viewProvider = newAppMode.getViewProvider();
                 LCConfigurationI startedConfiguration = null;
                 //We need a copy of the previous configuration
                 if (configuration != null && copyNeeded) {
@@ -658,26 +652,12 @@ public enum AppController {
         nextModeChangeAfterLoadingCallback = callback;
     }
 
-    public ViewProviderI getViewProvider() {
-        return this.viewProvider;
-    }
-
     public ViewProviderI getViewProvider(AppMode mode) {
         return appModes.get(mode).getViewProvider();
     }
 
     public ComponentViewI<?> getViewForCurrentMode(DisplayableComponentI comp) {
         return comp.getDisplay(appModes.get(this.currentMode.get()).getViewProvider(), true);
-    }
-
-    /**
-     * Should be used carefully as the view provider is changed with current mode.<br>
-     * Might be used manually by dev for test/special features purposes.
-     *
-     * @param viewProvider the new view provider to use
-     */
-    public void setViewProvider(ViewProviderI viewProvider) {
-        this.viewProvider = viewProvider;
     }
 
     /**
