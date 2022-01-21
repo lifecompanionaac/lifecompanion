@@ -23,6 +23,7 @@
 - Ticket #22 : lors du clic sur "Nouvelle configuration", cela ouvre maintenant la même fenêtre que lorsqu'on sélectionne "Ajouter"
 - Ticket #29 : le déplacement du curseur dans l'éditeur de texte ne se fait plus en mode configuration
 - Ticket #86 : le mot "copie" n'est plus ajouté devant le texte d'une case copiée
+- Ticket #23 : changement du nom de certaines actions
 - Correction d'un problème lors de la suppression des listes de case
 - Correction d'un problème d'affichage lors de l'export en PDF dans certains cas
 - L'action "Sélectionner une liste choisie" est maintenant simulée en mode configuration
