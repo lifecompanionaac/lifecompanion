@@ -63,7 +63,7 @@ public class ConfigurationSelectorControl extends VBox implements LCViewInitHelp
                                 || StringUtils.containsIgnoreCase(desc.configurationDescriptionProperty().get(), searchText)
                 , desc -> desc != null ?
                 desc.configurationNameProperty().get() + " (" + desc.configurationAuthorProperty().get() + ")" : Translation.getText("configuration.selector.control.no.selection"));
-        comboBoxConfigurations.setFixedCellSize(120.0);
+        comboBoxConfigurations.setFixedCellSize(140.0);
         this.setPadding(new Insets(5.0));
         this.setSpacing(5.0);
         this.getChildren().addAll(new Label(this.labelText), comboBoxConfigurations);

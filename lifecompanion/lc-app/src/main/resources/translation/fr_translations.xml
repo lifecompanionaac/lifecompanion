@@ -541,13 +541,13 @@
 		actuellement affichée. Lorsque la fin de la liste est atteinte, cela boucle automatiquement en début de liste.</text>
 	<text key="action.next.key.in.keylist.in.current.noloop.description">Permet de passer aux cases suivantes dans la liste
 		actuellement affichée. Lorsque la fin de la liste est atteinte, l'action n'a plus d'effet.</text>
-  <text key="action.next.key.in.keylist.in.current.name">Cases suivantes (liste courante)</text>
+  <text key="action.next.key.in.keylist.in.current.name">Cases suivantes en bouclant (liste courante)</text>
   <text key="action.previous.key.in.keylist.in.current.description">Permet de passer aux cases précédentes dans la
 		liste actuellement affichée. Lorsque le début de la liste est atteint, cela boucle automatiquement en fin de liste.</text>
   <text key="action.next.key.in.keylist.in.current.noloop.name">Cases suivantes sans boucler (liste courante)</text>
   <text key="action.previous.key.in.keylist.in.current.noloop.description">Permet de passer aux cases précédentes dans la
 		liste actuellement affichée. Lorsque le début de la liste est atteint, l'action n'a plus d'effet.</text>
-  <text key="action.previous.key.in.keylist.in.current.name">Cases précédentes (liste courante)</text>
+  <text key="action.previous.key.in.keylist.in.current.name">Cases précédentes en bouclant (liste courante)</text>
   <text key="action.previous.key.in.keylist.in.current.noloop.name">Cases précédentes sans boucler (liste courante)</text>
   <text key="go.parent.list.current.list.description">Permet dans la liste courante, de remonter au niveau au dessus
 		(liste avant), afin de revenir en arrière</text>
