@@ -56,6 +56,7 @@ import org.lifecompanion.config.data.notif.LCNotification;
 import org.lifecompanion.config.view.common.ConfigUIUtils;
 import org.lifecompanion.config.view.common.LCFileChooser;
 import org.lifecompanion.config.view.pane.compselector.ConfigurationSelectorControl;
+import org.lifecompanion.config.view.pane.compselector.NodeSnapshotCache;
 import org.lifecompanion.config.view.pane.main.notification2.LCNotificationController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
@@ -279,7 +280,8 @@ public class LCConfigurationActions {
             // Update the config description image because we are on JavaFX Thread
             // Unknown bug : snapshot can sometimes fail
             try {
-                configDescription.configurationImageProperty().set(UIUtils.takeNodeSnapshot(AppController.INSTANCE.getViewForCurrentMode(configuration).getView(), -1, -1));
+                // FIXME : bad background style on configuration
+                configDescription.configurationImageProperty().set(NodeSnapshotCache.getComponentSnapshot(configuration, false, -1, -1));
             } catch (Throwable t) {
                 LCConfigurationActions.LOGGER.warn("Couldn't take a snapshot of configuration", t);
             }

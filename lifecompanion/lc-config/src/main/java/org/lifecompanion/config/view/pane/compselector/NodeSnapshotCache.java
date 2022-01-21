@@ -25,20 +25,23 @@ import javafx.event.EventHandler;
 import javafx.scene.image.Image;
 import org.lifecompanion.api.component.definition.DisplayableComponentI;
 import org.lifecompanion.api.ui.ComponentViewI;
+import org.lifecompanion.api.ui.ViewProviderI;
 import org.lifecompanion.base.data.common.LCUtils;
 import org.lifecompanion.base.data.common.UIUtils;
-import org.lifecompanion.base.data.control.AppController;
 import org.lifecompanion.framework.utils.LCNamedThreadFactory;
 import org.lifecompanion.use.data.ui.UseViewProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 
 public enum NodeSnapshotCache {
     INSTANCE;
@@ -47,11 +50,14 @@ public enum NodeSnapshotCache {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NodeSnapshotCache.class);
 
-    private static final long CLEAR_AFTER_LAST_USE = 10_000;
+    private static final ViewProviderI USE_VIEW_PROVIDER = new UseViewProvider();
+
+    private static final long IMAGE_LOADING_TIMEOUT = 2000, CLEAR_AFTER_LAST_USE = 5_000;
 
     private final ExecutorService loadingService;
     private final ConcurrentHashMap<String, CopyOnWriteArrayList<ComponentSnapshotTask>> runningLoadingTasks;
     private final ConcurrentHashMap<String, CachedSnapshot> snapshotCache;
+
 
     private final Timer cleanupTimer;
 
@@ -69,12 +75,8 @@ public enum NodeSnapshotCache {
                     return System.currentTimeMillis() - cachedSnapshot.lastUsed >= CLEAR_AFTER_LAST_USE;
                 });
                 LOGGER.info("Node snapshot cache size : {}", snapshotCache.size());
-                if (AppController.INSTANCE.currentConfigConfigurationProperty().get() != null) {
-                    //                    LOGGER.info("Initialized : {}/{}",
-                    //                            AppController.INSTANCE.currentConfigConfigurationProperty().get().getAllComponent().values().stream().filter(DisplayableComponentI::isDisplayInitialized).count(), AppController.INSTANCE.currentConfigConfigurationProperty().get().getAllComponent().size());
-                }
             }
-        }, 1000, 1000);
+        }, 1000, 5000);
     }
 
     public void cancelRequestSnapshot(DisplayableComponentI component) {
@@ -90,16 +92,11 @@ public enum NodeSnapshotCache {
         }
     }
 
-    public void cancelAllSnapshotRequest() {
-        Set<String> toRemove = new HashSet<>(runningLoadingTasks.keySet());
-        toRemove.forEach(this::cancelRequestSnapshot);
-    }
-
-    public void requestSnapshot(DisplayableComponentI component, double w, double h, Consumer<Image> callback) {
+    public void requestSnapshot(DisplayableComponentI component, double w, double h, BiConsumer<DisplayableComponentI, Image> callback) {
         final CachedSnapshot cachedSnapshot = snapshotCache.get(component.getID());
         if (cachedSnapshot != null) {
             cachedSnapshot.updateLastUsed();
-            callback.accept(cachedSnapshot.image);
+            callback.accept(component, cachedSnapshot.image);
         } else {
             if (!this.runningLoadingTasks.containsKey(component.getID())) {
                 ComponentSnapshotTask task = new ComponentSnapshotTask(component, w, h);
@@ -111,7 +108,7 @@ public enum NodeSnapshotCache {
                     }
                     LCUtils.unloadAllImagesIn(LOAD_REQUEST_ID, component);
                     if (task.getException() != null) {
-                        LOGGER.error("Problem on snaphsot", task.getException());
+                        LOGGER.error("Problem to make a component snaphsot", task.getException());
                     }
                 };
                 task.setOnCancelled(eventHandlerTaskFinished);
@@ -121,7 +118,7 @@ public enum NodeSnapshotCache {
                     final Image img = task.getValue();
                     if (img != null) {
                         snapshotCache.put(component.getID(), new CachedSnapshot(img));
-                        callback.accept(img);
+                        callback.accept(component, img);
                     }
                 });
                 if (!this.loadingService.isShutdown()) {
@@ -164,16 +161,25 @@ public enum NodeSnapshotCache {
         @Override
         protected Image call() throws Exception {
             if (!isCancelled()) {
-                LCUtils.loadAllImagesIn(LOAD_REQUEST_ID, 1000, component);
-                return LCUtils.runOnFXThreadAndWaitFor(() -> {
-                    ComponentViewI display = component.getDisplay(new UseViewProvider(), false);
-                    Image r = UIUtils.takeNodeSnapshot(display.getView(), w, h);
-                    LCUtils.unloadAllImagesIn(LOAD_REQUEST_ID, component);
-                    display.unbindComponentAndChildren();
-                    return r;
-                });
+                return getComponentSnapshot(component, true, w, h);
             }
             return null;
         }
     }
+
+    public static Image getComponentSnapshot(DisplayableComponentI component, boolean loadAllImages, double width, double height) {
+        if (loadAllImages) {
+            LCUtils.loadAllImagesIn(LOAD_REQUEST_ID, IMAGE_LOADING_TIMEOUT, component);
+        }
+        return LCUtils.runOnFXThreadAndWaitFor(() -> {
+            ComponentViewI display = component.getDisplay(USE_VIEW_PROVIDER, false);
+            try {
+                return UIUtils.takeNodeSnapshot(display.getView(), width, height, true, 1.0);
+            } finally {
+                display.unbindComponentAndChildren();
+                LCUtils.unloadAllImagesIn(LOAD_REQUEST_ID, component);
+            }
+        });
+    }
+
 }

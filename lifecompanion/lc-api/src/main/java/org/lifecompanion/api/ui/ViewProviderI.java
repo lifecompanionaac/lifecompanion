@@ -38,13 +38,5 @@ public interface ViewProviderI {
      */
     ComponentViewI<?> getViewFor(DisplayableComponentI component, boolean useCache);
 
-    /**
-     * Remove all the view that are saved in the cache for a faster loaded when request a view.<br>
-     * This is useful when object that are equals but that are different instance request a view.
-     */
-    void clearViewCacheForConfiguration(String configurationId);
-
-    void clearAllViewCaches();
-
     ViewProviderType getType();
 }

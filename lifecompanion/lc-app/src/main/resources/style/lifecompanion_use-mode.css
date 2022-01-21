@@ -1,0 +1,6 @@
+.text-displayer-scroll-pane > .viewport {
+   -fx-background-color: transparent;
+}
+.text-displayer-scroll-pane > .scroll-bar {
+   -fx-background-color: transparent;
+}

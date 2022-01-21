@@ -9,9 +9,15 @@
 	- Couleurs de fonds/de contour différentes par défaut
 	- Sélection de "transparent" directement
 	- Configuration d'une couleur facilité
+- Les **champs permettant de sélectionner des grilles, cases, configuration... font peau neuve**
+	- Plus de problème d'affichage
+	- Bien meilleure qualité des éléments affichés et intégration des photos
+	- Recherche optimisée
 
 ### Corrections/ajustements
 
+- Optimisation de la mémoire
+- Amélioration de la qualité de l'export PDF
 - Ticket #20 : changement d'icône pour les cases dans les listes de case
 - Ticket #21 : déplacement du champs de recherche dans les listes de cases
 - Ticket #22 : lors du clic sur "Nouvelle configuration", cela ouvre maintenant la même fenêtre que lorsqu'on sélectionne "Ajouter"

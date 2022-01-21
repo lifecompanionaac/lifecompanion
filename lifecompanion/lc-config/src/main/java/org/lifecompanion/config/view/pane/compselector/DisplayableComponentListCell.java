@@ -25,29 +25,26 @@ import javafx.scene.control.OverrunStyle;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import org.lifecompanion.api.component.definition.DisplayableComponentI;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.lifecompanion.base.data.common.LCUtils;
+import org.lifecompanion.base.data.common.UIUtils;
 
 public class DisplayableComponentListCell<T extends DisplayableComponentI> extends ListCell<T> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(DisplayableComponentListCell.class);
+    private static final double CELL_SIZE = 150.0;
 
     /**
      * Image view to see configuration preview
      */
-    private ImageView componentSnapshot;
+    private final ImageView componentSnapshot;
 
     public DisplayableComponentListCell() {
         this.componentSnapshot = new ImageView();
         this.componentSnapshot.fitWidthProperty().bind(this.widthProperty().subtract(20));
         this.componentSnapshot.fitHeightProperty().bind(this.heightProperty().subtract(40));
-
-        this.setMaxWidth(150.0);
-        this.setPrefWidth(150.0);
-        this.setPrefHeight(150.0);
-        this.setMaxHeight(150.0);
-
         this.componentSnapshot.setPreserveRatio(true);
         this.componentSnapshot.setSmooth(true);
+
+        UIUtils.setFixedSize(this, CELL_SIZE, CELL_SIZE);
+
         this.setContentDisplay(ContentDisplay.TOP);
         StackPane.setAlignment(this.componentSnapshot, Pos.CENTER);
         this.setAlignment(Pos.CENTER);
@@ -64,29 +61,17 @@ public class DisplayableComponentListCell<T extends DisplayableComponentI> exten
     @Override
     protected void updateItem(final T item, final boolean empty) {
         super.updateItem(item, empty);
-        //System.out.println("updateItem(" + item + "," + empty + ")");
         if (item == null || empty) {
-            this.componentSnapshot.imageProperty().set(null);
-            this.textProperty().unbind();
-            this.textProperty().set(null);
+            this.componentSnapshot.setImage(null);
+            LCUtils.unbindAndSetNull(textProperty());
         } else {
             this.textProperty().bind(item.nameProperty());
             componentSnapshot.setImage(null);
-            NodeSnapshotCache.INSTANCE.requestSnapshot(item, -1, 150, img -> componentSnapshot.setImage(img));
-            //            ComponentViewI<?> display = item.getDisplay();
-            //            if (display != null) {
-            //                Region itemView = display.getView();
-            //                try {
-            //                    // StackChildComponentI displayedProperty > image are not loaded if the child is not visible
-            //                    final String loadRequestId = "displayable-component-list-cell";
-            //                    LCUtils.loadAllImagesIn(loadRequestId, 5, item);
-            //                    this.componentSnapshot.setImage(UIUtils.takeNodeSnapshot(itemView, -1, 150));
-            //                    LCUtils.unloadAllImagesIn(loadRequestId, item);
-            //                    //System.err.println("LOAD REQUEST FOR "+);
-            //                } catch (Throwable t) {
-            //                    DisplayableComponentListCell.LOGGER.warn("Impossible to take a component snapshot for component {}", item.nameProperty().get(), t);
-            //                }
-            //            }
+            NodeSnapshotCache.INSTANCE.requestSnapshot(item, -1, CELL_SIZE, (comp, image) -> {
+                if (this.getItem() == comp) {
+                    componentSnapshot.setImage(image);
+                }
+            });
         }
     }
 }

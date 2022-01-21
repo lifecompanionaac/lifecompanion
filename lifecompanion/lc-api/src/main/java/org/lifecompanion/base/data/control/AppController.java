@@ -201,10 +201,6 @@ public enum AppController {
                 } else {
                     configuration.dispatchRemovedPropertyValue(true);
                 }
-                //Clear view cache : only if provider exist
-                if (previousAppMode.getViewProvider() != null) {
-                    previousAppMode.getViewProvider().clearAllViewCaches();
-                }
             }
             //Set the new
             if (newMode != null) {
@@ -540,7 +536,7 @@ public enum AppController {
                     this.currentConfigDescription.get().loadedConfigurationProperty().set(null);
                 }
                 //Clear mode
-                this.appModes.get(AppMode.CONFIG).getViewProvider().clearAllViewCaches();
+                // this.appModes.get(AppMode.CONFIG).getViewProvider().clearAllViewCaches(); //VIEWCACHE
                 //previous.clearViewCache();
                 this.appModes.get(AppMode.CONFIG).configurationBeforeChangeProperty().set(null);
                 //Fire a delete on previous component of configuration
@@ -554,7 +550,7 @@ public enum AppController {
 
         // Fix #416 : should not clear if same configuration
         if (previousConfigId != null && StringUtils.isDifferent(previousConfigId, config.getID())) {
-            this.appModes.get(AppMode.CONFIG).getViewProvider().clearViewCacheForConfiguration(previousConfigId);
+            //this.appModes.get(AppMode.CONFIG).getViewProvider().clearViewCacheForConfiguration(previousConfigId);//VIEWCACHE
         }
     }
 
@@ -585,11 +581,11 @@ public enum AppController {
                         fireConfigurationRemoved(previouslyLoadedConfiguration);
                     }
                     previousConfigDesc.loadedConfigurationProperty().set(null);
-                    this.appModes.get(AppMode.USE).getViewProvider().clearAllViewCaches();
+                    //this.appModes.get(AppMode.USE).getViewProvider().clearAllViewCaches();//VIEWCACHE
                 }
                 final LCModeI configMode = this.appModes.get(AppMode.CONFIG);
                 if (configMode != null) {
-                    configMode.getViewProvider().clearAllViewCaches();
+                    //configMode.getViewProvider().clearAllViewCaches();//VIEWCACHE
                     LCConfigurationI configurationBeforeChange = configMode.configurationBeforeChangeProperty().get();
                     fireConfigurationRemoved(configurationBeforeChange);
                     configMode.configurationBeforeChangeProperty().set(null);
@@ -611,7 +607,7 @@ public enum AppController {
 
                 // Clear view cache for previous config
                 if (previousConfigId != null) {
-                    this.appModes.get(AppMode.USE).getViewProvider().clearViewCacheForConfiguration(previousConfigId);
+                    //this.appModes.get(AppMode.USE).getViewProvider().clearViewCacheForConfiguration(previousConfigId);//VIEWCACHE
                 }
             });
         }

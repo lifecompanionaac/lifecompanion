@@ -164,7 +164,7 @@ public class ExportGridsToPdfTask extends LCTask<Void> {
 
         // Restore view provider to default
         AppController.INSTANCE.setViewProvider(previousProvider);
-        useViewProviderToSnap.clearAllViewCaches();
+        //useViewProviderToSnap.clearAllViewCaches();//VIEWCACHE
 
         // TODO : default names
         final String profileName = profile != null ? profile.nameProperty().get() : "PROFILE?";
@@ -299,23 +299,25 @@ public class ExportGridsToPdfTask extends LCTask<Void> {
         AtomicBoolean landscape = new AtomicBoolean();
         final Image image = LCUtils.runOnFXThreadAndWaitFor(() -> {
             try {
-//                final ComponentViewI<?> viewForGrid = useViewProviderToSnap.getViewFor(printTask.gridToSnap);
-//                final Region regionForGrid = viewForGrid.getView();
-//                Bounds regionBounds = regionForGrid.getBoundsInParent();
-//                double scale;
-//                if (regionBounds.getWidth() > regionBounds.getHeight()) {
-//                    landscape.set(true);
-//                    scale = maxImageSize / regionBounds.getWidth();
-//                } else {
-//                    scale = maxImageSize / regionBounds.getHeight();
-//                }
-//                fxGroupAttachedToScene.getChildren().add(regionForGrid);
-//                SnapshotParameters snapParams = new SnapshotParameters();
-//                snapParams.setTransform(new Scale(scale, scale));
-//                final Image tmpImage = regionForGrid.snapshot(snapParams, null);
-//                fxGroupAttachedToScene.getChildren().remove(regionForGrid);
-//
-                return null;
+                final ComponentViewI<?> viewForGrid = printTask.gridToSnap.getDisplay(useViewProviderToSnap, false);
+                final Region regionForGrid = viewForGrid.getView();
+                Bounds regionBounds = regionForGrid.getBoundsInParent();
+                double scale;
+                if (regionBounds.getWidth() > regionBounds.getHeight()) {
+                    landscape.set(true);
+                    scale = maxImageSize / regionBounds.getWidth();
+                } else {
+                    scale = maxImageSize / regionBounds.getHeight();
+                }
+                fxGroupAttachedToScene.getChildren().add(regionForGrid);
+                SnapshotParameters snapParams = new SnapshotParameters();
+                if (scale > 1.0)
+                    snapParams.setTransform(new Scale(scale, scale));
+                LOGGER.info("Scale to {}", scale);
+                final Image tmpImage = regionForGrid.snapshot(snapParams, null);
+                fxGroupAttachedToScene.getChildren().remove(regionForGrid);
+                viewForGrid.unbindComponentAndChildren();
+                return tmpImage;
             } catch (Exception e) {
                 LOGGER.error("Exception while taking snapshot", e);
                 return null;
