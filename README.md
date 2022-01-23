@@ -51,7 +51,7 @@ LifeCompanion is currently available in french only, but we are seeking for part
 	- **win-input-gap** : two scripts made with AutoHotKey to send and receive global key event (useful for virtual keyboard implementation on Windows)
 	- **win10-voices-to-sapi** : tool that copy Windows 10 voices to SAPI voice (quick Python script using Windows registry)
 	- **old-code-snippet** : old code that we would like to keep for a later use
-- **resources** : commons resource for LifeCompanion (icons, licence, etc)
+- **res** : commons resource for LifeCompanion (icons, licence, etc)
     - **app-icons** : svg source for icons used in applications
 	- **lifecompanion-logo** : svg source for LifeCompanion and partners logos + exports from svg
 	- **default-data** : contains default file to be copied in app data folder

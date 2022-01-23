@@ -31,13 +31,13 @@ public interface LCStateListener {
 	 * Software initialization should be done here (light initialization).<br>
 	 * Called once in application life cycle.
 	 */
-	public void lcStart();
+	void lcStart();
 
 	/**
 	 * Called by LifeCompanion when the application exits.<br>
 	 * Saving and resource closing should be done here.<br>
 	 * Called once in application life cycle.
 	 */
-	public void lcExit();
+	void lcExit();
 	//========================================================================
 }

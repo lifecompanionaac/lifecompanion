@@ -15,6 +15,11 @@ javafx {
     modules = ['javafx.controls', 'javafx.swing', 'javafx.media']
 }
 
+compileJava {
+    // Unfocusable stage : need internal sun* API
+    options.compilerArgs += ["--add-exports=javafx.graphics/com.sun.glass.ui=org.lifecompanion.app"]
+}
+
 version = project.property('lifecompanion.app.version')
 mainClassName = "org.lifecompanion.app.launcher.LCApplication"
 
@@ -27,7 +32,7 @@ ext {
             '-splash:data/lifecompanion_splashscreen.png',
 
             // Unfocusable stage : need internal sun* API
-            '--add-exports=javafx.graphics/com.sun.glass.ui=org.lifecompanion.api',
+            '--add-exports=javafx.graphics/com.sun.glass.ui=org.lifecompanion.app',
 
             // ControlsFX : open internal sun* API
             '--add-opens=javafx.base/com.sun.javafx.runtime=org.controlsfx.controls',
@@ -63,8 +68,30 @@ dependencies {
     implementation 'ch.qos.logback:logback-classic:1.3.0-alpha4'
     api 'org.lifecompanion:lc-framework-commons-fx:1.0.0'
     api 'org.lifecompanion:lc-framework-client:1.0.0'
-    api project(':lc-api')
-    api project(':lc-config')
+
+    api 'org.fxmisc.easybind:easybind:1.0.3'
+    api 'net.sf.trove4j:trove4j:3.0.3'
+    api 'io.github.classgraph:classgraph:4.8.72'
+    api ('io.github.mthebaud:predict4all:1.2.0'){
+        exclude group: 'com.google.code.gson', module: 'gson'
+    }
+    api 'com.sparkjava:spark-core:2.9.3'
+
+    api ('org.controlsfx:controlsfx:11.0.1') {
+        exclude group: 'org.openjfx'
+    }
+
+    api 'com.github.vatbub:mslinks:1.0.5'
+
+    api 'org.apache.pdfbox:pdfbox:2.0.22'
+
+    api 'com.github.lifecompanionaac:BridJ:1.1.0'
+    // Fix found https://github.com/sarxos/webcam-capture/issues/586 until there is a Java9+ release
+    api('com.github.sarxos:webcam-capture:0.3.12') {
+        // The exclude is necessary so we don't have 2 versions of the same packages
+        exclude group: 'com.nativelibs4java', module: 'bridj'
+        exclude group: 'ch.qos.logback'
+    }
 }
 
 jlink {
