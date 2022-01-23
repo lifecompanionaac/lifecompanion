@@ -54,8 +54,9 @@ public class LCApplication extends Application {
             LCApplication.LOGGER.error("A uncaught exception was thrown on the JavaFX Thread", e);
             ErrorHandlingController.INSTANCE.showErrorNotificationWithExceptionDetails(Translation.getText("unknown.error.happened.notif.title"), e);
         });
-        LCLauncher launcher = new LCLauncher(stage, argsCollection);
-        launcher.startLoading();
+        //        LCLauncher launcher = new LCLauncher(stage, argsCollection);
+        //        launcher.startLoading();
+        new LCLauncherV2(stage, argsCollection).startLifeCompanion();
     }
 
     /**

@@ -17,23 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.lifecompanion.api.action.definition;
+package org.lifecompanion.base.data.control.refacto;
 
-/**
- * This class represent a {@link UndoRedoActionI} that can be created by typing a command as String.<br>
- * This action must be able to parse a command, a to create a String for this action.<br>
- * Not in use for now.
- */
-public interface StringSerializableActionI extends BaseConfigActionI {
-	public String getCommandID();
-
-	public String getHelpMessageID();
-
-	public String getCommandString();
-
-	/**
-	 * Must set the command properties from the given args
-	 * @param commandString the command arguments as string
-	 */
-	public void createFromString(String... args);
+public enum AppModeV2 {
+    EDIT, USE;
 }

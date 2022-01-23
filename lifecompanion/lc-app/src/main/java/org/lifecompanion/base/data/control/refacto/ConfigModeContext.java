@@ -17,25 +17,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.lifecompanion.api.action.exception;
+package org.lifecompanion.base.data.control.refacto;
 
-import org.lifecompanion.api.action.definition.StringSerializableActionI;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.stage.Stage;
+import org.lifecompanion.api.component.definition.LCConfigurationDescriptionI;
+import org.lifecompanion.api.component.definition.LCConfigurationI;
 
-/**
- * Exception thrown when a action can't be parsed.<br>
- * Base use case : the {@link StringSerializableActionI} thrown a {@link ActionParseException} and the UI show its {@link StringSerializableActionI#getHelpMessageID()}<br>
- * Not currently use.
- * @author Mathieu THEBAUD <math.thebaud@gmail.com>
- */
-public class ActionParseException extends Exception {
-	private static final long serialVersionUID = 1L;
+public class ConfigModeContext {
+    private final ObjectProperty<LCConfigurationI> configuration;
+    private final ObjectProperty<LCConfigurationDescriptionI> configurationDescription;
+    private final Stage stage;
 
-	public ActionParseException(final String messageP, final Throwable causeP) {
-		super(messageP, causeP);
-	}
-
-	public ActionParseException(final String messageP) {
-		super(messageP);
-	}
-
+    public ConfigModeContext(Stage stage) {
+        this.stage = stage;
+        this.configuration = new SimpleObjectProperty<>();
+        this.configurationDescription = new SimpleObjectProperty<>();
+    }
 }
