@@ -30,11 +30,10 @@ import org.lifecompanion.api.component.definition.usercomp.UserCompDescriptionI;
 import org.lifecompanion.api.exception.LCException;
 import org.lifecompanion.base.data.common.LCUtils;
 import org.lifecompanion.base.data.component.usercomp.UserCompDescriptionImpl;
-import org.lifecompanion.base.data.control.AppController;
 import org.lifecompanion.base.data.control.AsyncExecutorController;
+import org.lifecompanion.base.data.control.refacto.ProfileController;
 import org.lifecompanion.base.data.io.IOManager;
 import org.lifecompanion.base.data.io.task.UserCompSavingTask;
-import org.lifecompanion.config.data.control.LCStateController;
 import org.lifecompanion.config.data.control.usercomp.UserCompController;
 import org.lifecompanion.config.data.notif.LCNotification;
 import org.lifecompanion.config.view.common.ConfigUIUtils;
@@ -65,7 +64,7 @@ public class UserCompActions {
 
         @Override
         public void doAction() throws LCException {
-            LCProfileI profile = AppController.INSTANCE.currentProfileProperty().get();
+            LCProfileI profile = ProfileController.INSTANCE.currentProfileProperty().get();
             String author = profile.nameProperty().get();
             UserCompDescriptionI userComp = UserCompDescriptionImpl.createUserComp(this.component, this.component.nameProperty().get(), author);
             //Check if comp already exist
@@ -91,7 +90,7 @@ public class UserCompActions {
      * @param userComp the user component to save
      */
     private static void saveUserComp(final UserCompDescriptionI userComp) {
-        LCProfileI profile = AppController.INSTANCE.currentProfileProperty().get();
+        LCProfileI profile = ProfileController.INSTANCE.currentProfileProperty().get();
         //Save the comp
         UserCompSavingTask savingTask = IOManager.INSTANCE.createUserCompSavingTask(userComp, profile);
         AsyncExecutorController.INSTANCE.addAndExecute(true, false, savingTask);
@@ -111,12 +110,12 @@ public class UserCompActions {
 
         @Override
         public void doAction() throws LCException {
-            Alert dlg = ConfigUIUtils.createDialog(source, AlertType.CONFIRMATION);
+            Alert dlg = ConfigUIUtils.createAlert(source, AlertType.CONFIRMATION);
             dlg.getDialogPane().setContentText(Translation.getText("action.remove.user.comp.message", this.compToDelete.size()));
             dlg.getDialogPane().setHeaderText(Translation.getText("action.remove.user.comp.header"));
             Optional<ButtonType> returned = dlg.showAndWait();
             if (returned.get() == ButtonType.OK) {
-                LCProfileI profile = AppController.INSTANCE.currentProfileProperty().get();
+                LCProfileI profile = ProfileController.INSTANCE.currentProfileProperty().get();
                 //First, delete from list
                 LCUtils.runOnFXThread(() -> {
                     UserCompController.INSTANCE.getUserComponents().removeAll(this.compToDelete);
@@ -153,7 +152,7 @@ public class UserCompActions {
             if (EditUserCompAction.editView == null) {
                 EditUserCompAction.editView = new UserCompEditView();
             }
-            Alert dlg = ConfigUIUtils.createDialog(source, AlertType.NONE);
+            Alert dlg = ConfigUIUtils.createAlert(source, AlertType.NONE);
             dlg.getDialogPane().setContent(EditUserCompAction.editView);
             ButtonType buttonTypeSave = new ButtonType(Translation.getText("user.comp.save.button"), ButtonData.YES);
             ButtonType buttonTypeCancel = new ButtonType(Translation.getText("user.comp.cancel.button"), ButtonData.CANCEL_CLOSE);

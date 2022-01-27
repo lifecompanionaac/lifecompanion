@@ -24,7 +24,7 @@ import javafx.scene.layout.VBox;
 import org.lifecompanion.api.component.definition.LCConfigurationI;
 import org.lifecompanion.api.component.definition.useaction.UseActionConfigurationViewI;
 import org.lifecompanion.api.component.definition.useevent.UseVariableDefinitionI;
-import org.lifecompanion.base.data.control.AppController;
+import org.lifecompanion.base.data.control.refacto.AppModeController;
 import org.lifecompanion.base.data.useaction.impl.keylist.general.SelectSpecificKeyListAction;
 import org.lifecompanion.config.view.pane.categorized.AbstractCategorizedListManageView;
 import org.lifecompanion.config.view.pane.compselector.KeyListSelectorControl;
@@ -53,7 +53,7 @@ public class SelectSpecificKeyListActionConfigView extends VBox implements UseAc
 
     @Override
     public void editStarts(final SelectSpecificKeyListAction element, final ObservableList<UseVariableDefinitionI> possibleVariables) {
-        final LCConfigurationI configuration = AppController.INSTANCE.currentConfigConfigurationProperty().get();
+        final LCConfigurationI configuration = AppModeController.INSTANCE.getEditModeContext().configurationProperty().get();
         this.linkedNodeSelector.setInputKeyNode(configuration.rootKeyListNodeProperty().get());
         this.linkedNodeSelector.selectedKeylistCategoryIdProperty().set(element.linkedNodeIdProperty().get());
     }

@@ -19,48 +19,49 @@
 
 package org.lifecompanion.config.view.pane.left;
 
-import org.controlsfx.glyphfont.FontAwesome;
-
-import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
-import org.lifecompanion.base.data.common.UIUtils;
-import org.lifecompanion.config.data.config.LCGlyphFont;
-import org.lifecompanion.base.data.config.LCGraphicStyle;
-import org.lifecompanion.base.data.control.AppController;
-import org.lifecompanion.config.view.scene.ConfigurationScene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
+import org.controlsfx.glyphfont.FontAwesome;
+import org.lifecompanion.base.data.common.UIUtils;
+import org.lifecompanion.base.data.config.LCGraphicStyle;
+import org.lifecompanion.base.data.control.refacto.AppModeController;
+import org.lifecompanion.config.data.config.LCGlyphFont;
+import org.lifecompanion.config.view.scene.ConfigurationScene;
+import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 
 /**
  * Bottom part of the menu, just contains a single button to collapse menu
+ *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public class BottomDetailView extends HBox implements LCViewInitHelper {
-	private Button buttonCollapse;
+    private Button buttonCollapse;
 
-	public BottomDetailView() {
-		this.initAll();
-	}
+    public BottomDetailView() {
+        this.initAll();
+    }
 
-	@Override
-	public void initUI() {
-		//Style
-		this.getStyleClass().addAll("main-menu-section", "main-menu-section-bottom");
-		//Action
-		this.buttonCollapse = UIUtils.createTextButtonWithGraphics(null,
-				LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.CHEVRON_LEFT).sizeFactor(1).color(LCGraphicStyle.MAIN_PRIMARY),
-				"tooltip.main.menu.collapse");
-		//Total
-		this.getChildren().addAll(this.buttonCollapse);
-	}
+    @Override
+    public void initUI() {
+        //Style
+        this.getStyleClass().addAll("main-menu-section", "main-menu-section-bottom");
+        //Action
+        this.buttonCollapse = UIUtils.createTextButtonWithGraphics(null,
+                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.CHEVRON_LEFT).sizeFactor(1).color(LCGraphicStyle.MAIN_PRIMARY),
+                "tooltip.main.menu.collapse");
+        //Total
+        this.getChildren().addAll(this.buttonCollapse);
+    }
 
-	@Override
-	public void initListener() {
-		this.buttonCollapse.setOnAction((me) -> {
-			ConfigurationScene scene = (ConfigurationScene) AppController.INSTANCE.getMainStage().getScene();
-			scene.hideMenu();
-		});
-	}
+    @Override
+    public void initListener() {
+        this.buttonCollapse.setOnAction((me) -> {
+            ConfigurationScene scene = (ConfigurationScene) AppModeController.INSTANCE.getEditModeContext().getStage().getScene();
+            scene.hideMenu();
+        });
+    }
 
-	@Override
-	public void initBinding() {}
+    @Override
+    public void initBinding() {
+    }
 }

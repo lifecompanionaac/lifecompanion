@@ -25,7 +25,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import org.lifecompanion.api.component.definition.LCProfileI;
 import org.lifecompanion.base.data.common.UIUtils;
-import org.lifecompanion.base.data.component.profile.LCProfileManager;
+import org.lifecompanion.base.data.control.refacto.ProfileController;
 import org.lifecompanion.config.view.pane.profile.ProfileSimpleListCell;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 
@@ -52,7 +52,7 @@ public class ProfileSelectorControl extends VBox implements LCViewInitHelper {
 
     @Override
     public void initUI() {
-        this.comboBoxProfile = new ComboBox<>(LCProfileManager.INSTANCE.getProfiles());
+        this.comboBoxProfile = new ComboBox<>(ProfileController.INSTANCE.getProfiles());
         this.comboBoxProfile.setCellFactory(lv -> new ProfileSimpleListCell());
         this.comboBoxProfile.setButtonCell(new ProfileSimpleListCell());
         UIUtils.setFixedWidth(comboBoxProfile, 250.0);

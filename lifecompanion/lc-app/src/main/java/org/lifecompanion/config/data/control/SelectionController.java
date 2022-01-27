@@ -23,10 +23,10 @@ import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.lifecompanion.api.component.definition.*;
-import org.lifecompanion.api.mode.AppMode;
 import org.lifecompanion.base.data.common.LCUtils;
 import org.lifecompanion.base.data.component.baseimpl.RootGraphicComponentBaseImpl;
-import org.lifecompanion.base.data.control.AppController;
+import org.lifecompanion.base.data.control.refacto.AppModeController;
+import org.lifecompanion.base.data.control.refacto.AppModeV2;
 
 import java.util.*;
 
@@ -130,7 +130,7 @@ public enum SelectionController {
         this.selectedRoot.addListener(this.selectedComponentListener);
 
         //Clear selection on configuration change
-        AppController.INSTANCE.currentConfigConfigurationProperty().addListener((obs, ov, nv) -> this.configurationChanged());
+        AppModeController.INSTANCE.getEditModeContext().configurationProperty().addListener((obs, ov, nv) -> this.configurationChanged());
     }
     //========================================================================
 
@@ -184,7 +184,7 @@ public enum SelectionController {
             if (rootP != null) {
                 rootP.selectedProperty().set(true);
                 rootP.showSelectedProperty().set(true);
-                rootP.showToFront(AppController.INSTANCE.getViewProvider(AppMode.CONFIG), true);
+                rootP.showToFront(AppModeV2.EDIT.getViewProvider(), true);
             }
         }
     }
@@ -432,7 +432,7 @@ public enum SelectionController {
 
     private void addSelection(final GridPartComponentI part) {
         this.select(part);
-        part.showToFront(AppController.INSTANCE.getViewProvider(AppMode.CONFIG), true);
+        part.showToFront(AppModeV2.EDIT.getViewProvider(), true);
         List<GridPartComponentI> selectionList = this.getSelection(part.getLevel());
         selectionList.add(part);
     }

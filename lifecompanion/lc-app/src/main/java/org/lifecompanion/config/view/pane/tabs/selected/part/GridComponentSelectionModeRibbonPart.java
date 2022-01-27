@@ -33,7 +33,7 @@ import org.lifecompanion.base.data.common.Triple;
 import org.lifecompanion.base.data.common.UIUtils;
 import org.lifecompanion.base.data.config.LCConstant;
 import org.lifecompanion.base.data.config.LCGraphicStyle;
-import org.lifecompanion.base.data.control.AppController;
+import org.lifecompanion.base.data.control.refacto.AppModeController;
 import org.lifecompanion.base.view.reusable.AnimatedBorderPane;
 import org.lifecompanion.config.data.action.impl.SelectionModeActions;
 import org.lifecompanion.config.data.common.LCConfigBindingUtils;
@@ -109,7 +109,7 @@ public class GridComponentSelectionModeRibbonPart extends RibbonBasePart<Selecti
     @Override
     public void initListener() {
         this.changeListenerUseParentMode = LCConfigBindingUtils.createSimpleBinding(this.toggleEnableParentSelectionMode.selectedProperty(),
-                this.model, m -> m.useParentSelectionModeProperty().get(), (m, e) -> new SelectionModeActions.ChangeUseParentAction(AppController.INSTANCE.currentConfigConfigurationProperty().get(), m, e));
+                this.model, m -> m.useParentSelectionModeProperty().get(), (m, e) -> new SelectionModeActions.ChangeUseParentAction(AppModeController.INSTANCE.getEditModeContext().configurationProperty().get(), m, e));
         this.buttonOpenSelectionModeConfiguration.setOnAction(e -> {
             showConfigStage();
         });
@@ -142,7 +142,7 @@ public class GridComponentSelectionModeRibbonPart extends RibbonBasePart<Selecti
 
     private void initConfigStage() {
         if (configStageDialogPane == null) {
-            configStageDialogPane = ConfigUIUtils.createDialog(buttonOpenSelectionModeConfiguration, null);
+            configStageDialogPane = ConfigUIUtils.createAlert(buttonOpenSelectionModeConfiguration, null);
             configStageDialogPane.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL, ButtonType.OK);
             configStageDialogPane.getDialogPane().getStylesheets().addAll(LCConstant.CSS_STYLE_PATH);
             configStageDialogPane.getDialogPane().getStyleClass().addAll("selection-mode-config-dialog");

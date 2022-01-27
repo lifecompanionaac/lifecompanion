@@ -21,8 +21,8 @@ package org.lifecompanion.base.data.component.keyoption.simplercomp;
 import org.lifecompanion.api.component.definition.simplercomp.UserActionSequenceItemI;
 import org.lifecompanion.api.component.definition.useaction.BaseUseActionI;
 import org.lifecompanion.api.component.definition.useaction.UseActionTriggerComponentI;
-import org.lifecompanion.api.mode.AppMode;
-import org.lifecompanion.base.data.control.AppController;
+import org.lifecompanion.base.data.control.refacto.AppModeController;
+import org.lifecompanion.base.data.control.refacto.AppModeV2;
 import org.lifecompanion.base.data.useaction.impl.media.sound.PlaySoundAction;
 import org.lifecompanion.base.data.useaction.impl.speak.text.SpeakTextAction;
 import org.lifecompanion.framework.commons.translation.Translation;
@@ -43,7 +43,7 @@ public class UserActionSequenceCurrentKeyOption extends AbstractSimplerKeyConten
 
     @Override
     protected String getDefaultTextContentProperty() {
-        return AppController.INSTANCE.currentModeProperty().get() == AppMode.CONFIG ? Translation.getText("key.option.user.action.current.key.default.text") : "";
+        return AppModeController.INSTANCE.modeProperty().get() == AppModeV2.EDIT ? Translation.getText("key.option.user.action.current.key.default.text") : "";
     }
 
     public List<BaseUseActionI<UseActionTriggerComponentI>> getActionsToExecuteOnStart() {

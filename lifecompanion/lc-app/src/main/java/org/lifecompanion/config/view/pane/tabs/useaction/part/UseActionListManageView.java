@@ -110,7 +110,7 @@ public class UseActionListManageView
     @Override
     protected boolean checkEditPossible(Node source, final BaseUseActionI<?> item) {
         if (item.attachedToKeyOptionProperty().get()) {
-            Alert dialog = ConfigUIUtils.createDialog(source, AlertType.WARNING);
+            Alert dialog = ConfigUIUtils.createAlert(source, AlertType.WARNING);
             dialog.setHeaderText(Translation.getText("alert.message.disable.edit.action.header"));
             dialog.setContentText(Translation.getText("alert.message.disable.edit.action.message", item.getName()));
             dialog.show();

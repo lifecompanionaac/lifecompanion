@@ -138,7 +138,7 @@ public class AboutSubmenu extends VBox implements LCViewInitHelper, UserConfigSu
         this.linkWebsite.setOnAction(a -> {
             boolean openOk = UIUtils.openUrlInDefaultBrowser(InstallationController.INSTANCE.getBuildProperties().getAppServerUrl());
             if (!openOk) {
-                Alert dlg = ConfigUIUtils.createDialog(this.linkWebsite, AlertType.ERROR);
+                Alert dlg = ConfigUIUtils.createAlert(this.linkWebsite, AlertType.ERROR);
                 dlg.setContentText(Translation.getText("action.cant.open.browser.message", InstallationController.INSTANCE.getBuildProperties().getAppServerUrl()));
                 dlg.setHeaderText(Translation.getText("action.cant.open.browser.header"));
                 dlg.show();

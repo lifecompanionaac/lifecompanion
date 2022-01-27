@@ -19,6 +19,21 @@
 
 package org.lifecompanion.base.data.control.refacto;
 
+import org.lifecompanion.api.ui.ViewProviderI;
+import org.lifecompanion.config.data.ui.ConfigViewProvider;
+import org.lifecompanion.use.data.ui.UseViewProvider;
+
 public enum AppModeV2 {
-    EDIT, USE;
+    EDIT(new ConfigViewProvider()), USE(new UseViewProvider());
+
+    private final ViewProviderI viewProvider;
+
+
+    AppModeV2(ViewProviderI viewProvider) {
+        this.viewProvider = viewProvider;
+    }
+
+    public ViewProviderI getViewProvider() {
+        return viewProvider;
+    }
 }

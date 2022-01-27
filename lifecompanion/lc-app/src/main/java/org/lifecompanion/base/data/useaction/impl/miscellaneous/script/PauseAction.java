@@ -26,10 +26,10 @@ import org.lifecompanion.api.component.definition.useaction.UseActionTriggerComp
 import org.lifecompanion.api.component.definition.useevent.UseVariableI;
 import org.lifecompanion.api.exception.LCException;
 import org.lifecompanion.api.io.IOContextI;
-import org.lifecompanion.api.mode.AppMode;
 import org.lifecompanion.api.useaction.category.DefaultUseActionSubCategories;
 import org.lifecompanion.base.data.common.LCUtils;
-import org.lifecompanion.base.data.control.AppController;
+import org.lifecompanion.base.data.control.refacto.AppModeController;
+import org.lifecompanion.base.data.control.refacto.AppModeV2;
 import org.lifecompanion.base.data.useaction.baseimpl.SimpleUseActionImpl;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
@@ -61,7 +61,7 @@ public class PauseAction extends SimpleUseActionImpl<UseActionTriggerComponentI>
         // Pause with a busy wait
         final long startTime = System.currentTimeMillis();
         final int waitingTime = this.pause.get();
-        while ((System.currentTimeMillis() - startTime) <= waitingTime && AppController.INSTANCE.currentModeProperty().get() == AppMode.USE) {
+        while ((System.currentTimeMillis() - startTime) <= waitingTime && AppModeController.INSTANCE.modeProperty().get() == AppModeV2.USE) {
             LCUtils.safeSleep(Math.min(CHECK_PAUSE_TIMING, Math.max(waitingTime - (System.currentTimeMillis() - startTime), 0)));
         }
     }

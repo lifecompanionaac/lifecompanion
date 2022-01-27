@@ -32,7 +32,9 @@ import org.lifecompanion.api.mode.LCStateListener;
 import org.lifecompanion.base.data.common.LCUtils;
 import org.lifecompanion.base.data.config.LCConstant;
 import org.lifecompanion.base.data.config.UserBaseConfiguration;
-import org.lifecompanion.base.data.control.AppController;
+import org.lifecompanion.base.data.control.refacto.AppModeController;
+import org.lifecompanion.base.data.control.refacto.AppModeV2;
+import org.lifecompanion.base.data.control.refacto.ProfileController;
 import org.lifecompanion.base.data.control.update.InstallationController;
 import org.lifecompanion.base.data.io.json.JsonHelper;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
@@ -120,12 +122,12 @@ public enum SessionStatsController implements LCStateListener {
             this.currentSessionPartId = StringUtils.getNewID();
 
             // Register info
-            final LCProfileI currentProfile = AppController.INSTANCE.currentProfileProperty().get();
+            final LCProfileI currentProfile = ProfileController.INSTANCE.currentProfileProperty().get();
             SessionPart sessionPart = new SessionPart(
                     (mode == AppMode.USE ? SessionType.USE : SessionType.CONFIG).getId(),
                     new Date(),
                     configuration.getID(),
-                    AppController.INSTANCE.currentConfigDescriptionProperty().get() != null ? AppController.INSTANCE.currentConfigDescriptionProperty().get().configurationNameProperty().get() : null,
+                    AppModeController.INSTANCE.getEditModeContext().configurationDescriptionProperty().get() != null ? AppModeController.INSTANCE.getEditModeContext().configurationDescriptionProperty().get().configurationNameProperty().get() : null,
                     currentProfile == null ? null : currentProfile.getID(),
                     currentProfile == null ? null : currentProfile.nameProperty().get()
             );
@@ -170,13 +172,13 @@ public enum SessionStatsController implements LCStateListener {
     //========================================================================
     @Override
     public void lcStart() {
-        AppController.INSTANCE.currentConfigDescriptionProperty().addListener((obs, ov, nv) -> {
-            if (AppController.INSTANCE.currentModeProperty().get() == AppMode.CONFIG) {
+        AppModeController.INSTANCE.getEditModeContext().configurationDescriptionProperty().addListener((obs, ov, nv) -> {
+            if (AppModeController.INSTANCE.modeProperty().get() == AppModeV2.EDIT) {
                 if (ov != null) {
                     this.modeStopped(AppMode.CONFIG);
                 }
                 if (nv != null) {
-                    this.modeStarted(AppMode.CONFIG, AppController.INSTANCE.currentConfigConfigurationProperty().get());
+                    this.modeStarted(AppMode.CONFIG, AppModeController.INSTANCE.getEditModeContext().configurationProperty().get());
                 }
             }
         });

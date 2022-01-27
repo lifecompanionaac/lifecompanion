@@ -30,8 +30,8 @@ import org.lifecompanion.api.component.definition.useevent.UseVariableI;
 import org.lifecompanion.api.exception.LCException;
 import org.lifecompanion.api.io.IOContextI;
 import org.lifecompanion.api.useaction.category.DefaultUseActionSubCategories;
-import org.lifecompanion.base.data.control.AppController;
 import org.lifecompanion.base.data.control.SelectionModeController;
+import org.lifecompanion.base.data.control.refacto.ProfileController;
 import org.lifecompanion.base.data.useaction.baseimpl.SimpleUseActionImpl;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
@@ -72,7 +72,7 @@ public class ChangeConfigurationAction extends SimpleUseActionImpl<UseActionTrig
 
 	public LCConfigurationDescriptionI getConfigurationDescription() {
 		if (!StringUtils.isBlank(this.configurationId.get())) {
-			LCProfileI currentProfile = AppController.INSTANCE.currentProfileProperty().get();
+			LCProfileI currentProfile = ProfileController.INSTANCE.currentProfileProperty().get();
 			if (currentProfile != null) {
 				return currentProfile.getConfigurationById(this.configurationId.get());
 			}

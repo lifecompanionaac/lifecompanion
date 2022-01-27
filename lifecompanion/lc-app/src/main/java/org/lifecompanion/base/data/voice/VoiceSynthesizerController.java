@@ -29,7 +29,7 @@ import org.lifecompanion.api.mode.ModeListenerI;
 import org.lifecompanion.api.voice.*;
 import org.lifecompanion.base.data.common.LCUtils;
 import org.lifecompanion.base.data.config.UserBaseConfiguration;
-import org.lifecompanion.base.data.control.AppController;
+import org.lifecompanion.base.data.control.refacto.AppModeController;
 import org.lifecompanion.base.data.plugins.PluginManager;
 import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
@@ -137,7 +137,7 @@ public enum VoiceSynthesizerController implements LCStateListener, ModeListenerI
     //========================================================================
     public void speakSync(final String text, final Runnable speakEndCallback) {
         if (!this.disableVoiceSynthesizer.get()) {
-            final VoiceSynthesizerParameterI parameters = AppController.INSTANCE.currentUseConfigurationProperty().get().getVoiceSynthesizerParameter();
+            final VoiceSynthesizerParameterI parameters = AppModeController.INSTANCE.getUseModeContext().configurationProperty().get().getVoiceSynthesizerParameter();
             Future<?> futureTask = this.submitExecutorTask(text, parameters, speakEndCallback);
             try {
                 futureTask.get();
@@ -374,7 +374,7 @@ public enum VoiceSynthesizerController implements LCStateListener, ModeListenerI
      * @param system      the system type
      * @param synthesizer the default synthesizer for this system
      */
-    public void setDefaultVoiceSynthesizer(final SystemType system, final VoiceSynthesizerI synthesizer) {
+    private void setDefaultVoiceSynthesizer(final SystemType system, final VoiceSynthesizerI synthesizer) {
         if (this.voiceSynthesizers.contains(synthesizer)) {
             this.systemDefaultSynthesizers.put(system, synthesizer);
             this.LOGGER.info("Default voice synthesizer for {} set : {}", system, synthesizer.getId());
@@ -386,6 +386,12 @@ public enum VoiceSynthesizerController implements LCStateListener, ModeListenerI
 
     @Override
     public void lcStart() {
+        SAPIVoiceSynthesizer synthesizer = new SAPIVoiceSynthesizer();
+        registrerVoiceSynthesizer(synthesizer);
+        setDefaultVoiceSynthesizer(SystemType.WINDOWS, synthesizer);
+        SayCommandVoiceSynthesizer sayCommandVoiceSynthesizer = new SayCommandVoiceSynthesizer();
+        registrerVoiceSynthesizer(sayCommandVoiceSynthesizer);
+        setDefaultVoiceSynthesizer(SystemType.MAC, sayCommandVoiceSynthesizer);
     }
 
     @Override

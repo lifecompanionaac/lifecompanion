@@ -191,6 +191,8 @@ public class LCConfigurationComponent extends CoreDisplayableComponentBaseImpl i
 
     private final transient BooleanProperty hideMainSelectionModeView;
 
+    private final DoubleProperty configurationScaleInEditMode;
+
     /**
      * Create a empty configuration
      */
@@ -234,6 +236,7 @@ public class LCConfigurationComponent extends CoreDisplayableComponentBaseImpl i
         this.frameOpacity = new SimpleDoubleProperty(this, "frameOpacity", 1.0);
         this.displayedConfigurationScaleY = new SimpleDoubleProperty(this, "displayedConfigurationScaleY", 1.0);
         this.displayedConfigurationScaleX = new SimpleDoubleProperty(this, "displayedConfigurationScaleX", 1.0);
+        this.configurationScaleInEditMode = new SimpleDoubleProperty(1.0);
         this.eventManager = new UseEventManager(this);
         this.virtualMouseParameter = new VirtualMouseParameter();
         this.predictionParameter = new PredictionParameter();
@@ -649,6 +652,11 @@ public class LCConfigurationComponent extends CoreDisplayableComponentBaseImpl i
     @Override
     public DoubleProperty displayedConfigurationScaleYProperty() {
         return displayedConfigurationScaleY;
+    }
+
+    @Override
+    public DoubleProperty configurationScaleInEditModeProperty() {
+        return configurationScaleInEditMode;
     }
 
     @Override

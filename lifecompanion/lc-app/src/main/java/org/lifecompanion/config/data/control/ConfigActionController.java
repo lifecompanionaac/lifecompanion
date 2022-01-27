@@ -28,7 +28,7 @@ import javafx.collections.ObservableList;
 import org.lifecompanion.api.action.definition.BaseConfigActionI;
 import org.lifecompanion.api.action.definition.UndoRedoActionI;
 import org.lifecompanion.api.exception.LCException;
-import org.lifecompanion.base.data.control.AppController;
+import org.lifecompanion.base.data.control.refacto.AppModeController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.slf4j.Logger;
@@ -78,7 +78,7 @@ public enum ConfigActionController {
     }
 
     private void initBinding() {
-        AppController.INSTANCE.currentConfigConfigurationProperty().addListener((obs, ov, nv) -> this.clearUndoRedo());
+        AppModeController.INSTANCE.getEditModeContext().configurationProperty().addListener((obs, ov, nv) -> this.clearUndoRedo());
     }
 
     private void addActionToHistory(final BaseConfigActionI action) {
@@ -104,7 +104,7 @@ public enum ConfigActionController {
         this.addActionToHistory(action);
         // Unsaved changes on configuration
         if (action instanceof UndoRedoActionI || forceUnsavedAction) {
-            AppController.INSTANCE.increaseUnsavedActionOnCurrentConfiguration();
+            AppModeController.INSTANCE.getEditModeContext().increaseUnsavedActionOnCurrentConfiguration();
         }
         // Redo/undo
         if (action instanceof UndoRedoActionI) {

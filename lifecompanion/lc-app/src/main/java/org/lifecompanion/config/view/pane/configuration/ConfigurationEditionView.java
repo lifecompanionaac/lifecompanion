@@ -37,7 +37,7 @@ import org.lifecompanion.base.data.common.DisableSelectionSelectionModel;
 import org.lifecompanion.base.data.common.Triple;
 import org.lifecompanion.base.data.common.UIUtils;
 import org.lifecompanion.base.data.config.LCGraphicStyle;
-import org.lifecompanion.base.data.control.AppController;
+import org.lifecompanion.base.data.control.refacto.ProfileController;
 import org.lifecompanion.config.data.action.impl.LCConfigurationActions;
 import org.lifecompanion.config.data.component.profile.ProfileConfigSelectionController;
 import org.lifecompanion.config.data.component.profile.ProfileConfigStep;
@@ -205,14 +205,14 @@ public class ConfigurationEditionView extends BorderPane implements ProfileConfi
     public void initListener() {
         buttonValidate.setOnAction(e -> closeCurrentEdit(false));
         this.buttonRemove.setOnAction(e -> ConfigActionController.INSTANCE
-                .executeAction(new LCConfigurationActions.RemoveConfigurationAction(buttonRemove, AppController.INSTANCE.currentProfileProperty().get(), this.editedConfiguration.get(),
+                .executeAction(new LCConfigurationActions.RemoveConfigurationAction(buttonRemove, ProfileController.INSTANCE.currentProfileProperty().get(), this.editedConfiguration.get(),
                         removedConfig -> ProfileConfigSelectionController.INSTANCE.setConfigStep(ProfileConfigStep.CONFIGURATION_LIST, null, null))));
         this.buttonExport.setOnAction(e ->
                 ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.EditConfigurationAction(this.editedConfiguration.get(),
                         configDescription -> ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.ExportConfigAction(buttonRemove, configDescription))))
         );
         if (this.buttonDesktopShortcut != null) {
-            this.buttonDesktopShortcut.setOnAction(e -> ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.CreateDesktopShortcut(AppController.INSTANCE.currentProfileProperty().get(), this.editedConfiguration.get())));
+            this.buttonDesktopShortcut.setOnAction(e -> ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.CreateDesktopShortcut(ProfileController.INSTANCE.currentProfileProperty().get(), this.editedConfiguration.get())));
         }
         this.toggleSwitchLaunchInUseMode.selectedProperty().addListener((obs, ov, nv) -> {
             if (nv != this.editedConfiguration.get().launchInUseModeProperty().get()) {

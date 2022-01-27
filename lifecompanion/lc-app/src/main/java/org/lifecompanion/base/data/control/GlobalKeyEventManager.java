@@ -24,6 +24,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import org.lifecompanion.api.component.definition.LCConfigurationI;
 import org.lifecompanion.api.mode.ModeListenerI;
+import org.lifecompanion.base.data.control.refacto.AppModeController;
 import org.lifecompanion.base.data.control.virtual.keyboard.impl.WinAutoHotKeyKeyboardReceiverController;
 
 import java.util.HashSet;
@@ -61,7 +62,7 @@ public enum GlobalKeyEventManager implements ModeListenerI {
     }
 
     private boolean dispatchEvent(LCKeyEvent keyEvent) {
-        if (AppController.INSTANCE.isUseMode()) {
+        if (AppModeController.INSTANCE.isUseMode()) {
             for (Consumer<LCKeyEvent> keyListener : this.keyEventListener) {
                 keyListener.accept(keyEvent);
             }

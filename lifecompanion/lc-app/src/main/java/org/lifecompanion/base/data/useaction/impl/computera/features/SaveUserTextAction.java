@@ -27,8 +27,9 @@ import java.util.Map;
 import org.jdom2.Element;
 import org.lifecompanion.api.component.definition.LCConfigurationDescriptionI;
 import org.lifecompanion.api.component.definition.LCProfileI;
-import org.lifecompanion.base.data.control.AppController;
 import org.lifecompanion.base.data.control.WritingStateController;
+import org.lifecompanion.base.data.control.refacto.AppModeController;
+import org.lifecompanion.base.data.control.refacto.ProfileController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -93,11 +94,11 @@ public class SaveUserTextAction extends SimpleUseActionImpl<UseActionTriggerComp
 			// Generate file name and path
 			StringBuilder fileName = new StringBuilder(DATE_FORMAT_FILENAME.format(new Date()));
 
-			LCProfileI profile = AppController.INSTANCE.currentProfileProperty().get();
+			LCProfileI profile = ProfileController.INSTANCE.currentProfileProperty().get();
 			if (profile != null) {
 				fileName.append("_").append(profile.nameProperty().get());
 			}
-			LCConfigurationDescriptionI configDescription = AppController.INSTANCE.currentConfigDescriptionProperty().get();
+			LCConfigurationDescriptionI configDescription = AppModeController.INSTANCE.getEditModeContext().configurationDescriptionProperty().get();
 			if (configDescription != null) {
 				fileName.append("_").append(LCUtils.getValidFileName(configDescription.configurationNameProperty().get()));
 			}

@@ -28,7 +28,6 @@ import org.lifecompanion.api.exception.LCException;
 import org.lifecompanion.api.io.IOContextI;
 import org.lifecompanion.api.useaction.category.DefaultUseActionSubCategories;
 import org.lifecompanion.base.data.common.UIUtils;
-import org.lifecompanion.base.data.control.AppController;
 import org.lifecompanion.base.data.control.UseVariableController;
 import org.lifecompanion.base.data.useaction.baseimpl.SimpleUseActionImpl;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
@@ -69,7 +68,7 @@ public class OpenUrlInDefaultBrowserAction extends SimpleUseActionImpl<UseAction
     // ========================================================================
     @Override
     public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
-        if (!StringUtils.isBlank(url.get()) && !AppController.INSTANCE.isOnEmbeddedDevice()) {
+        if (StringUtils.isNotBlank(url.get())) {
             try {
                 UIUtils.openUrlInDefaultBrowser(UseVariableController.INSTANCE.createText(this.url.get(), variables, varValue -> URLEncoder.encode(varValue, StandardCharsets.UTF_8)));
             } catch (Exception e) {

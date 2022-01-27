@@ -25,7 +25,6 @@ import java.util.Map;
 
 import org.jdom2.Element;
 import org.lifecompanion.api.io.IOContextI;
-import org.lifecompanion.base.data.control.AppController;
 import org.lifecompanion.base.data.control.UseVariableController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,10 +74,10 @@ public class RunProgramUseAction extends SimpleUseActionImpl<UseActionTriggerCom
 	// ========================================================================
 	@Override
 	public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
-		if (!StringUtils.isBlank(programPath.get()) && !AppController.INSTANCE.isOnEmbeddedDevice()) {
+		if (StringUtils.isNotBlank(programPath.get())){
 			try {
 				List<String> cmds = new ArrayList<>(Arrays.asList(programPath.get()));
-				if (!StringUtils.isBlank(programArgs.get())) {
+				if (StringUtils.isNotBlank(programArgs.get())) {
 					cmds.add(UseVariableController.INSTANCE.createText(this.programArgs.get(), variables));
 				}
 				new ProcessBuilder().command(cmds).start();

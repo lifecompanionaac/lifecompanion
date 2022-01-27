@@ -23,7 +23,7 @@ import javafx.stage.Stage;
 import org.lifecompanion.app.instance.DoubleLaunchListenerImpl;
 import org.lifecompanion.app.instance.OneInstanceChecker;
 import org.lifecompanion.base.data.config.LCConstant;
-import org.lifecompanion.base.data.control.AppController;
+import org.lifecompanion.base.data.control.refacto.LifeCompanionController;
 import org.lifecompanion.base.data.control.update.InstallationController;
 import org.lifecompanion.config.data.control.ErrorHandlingController;
 import org.lifecompanion.framework.commons.translation.Translation;
@@ -88,7 +88,7 @@ public class LCApplication extends Application {
     @Override
     public void stop() throws Exception {
         LCApplication.LOGGER.info("Will launch the exit task...");
-        AppController.INSTANCE.lcExit();
+        LifeCompanionController.INSTANCE.lcExit();
         OneInstanceChecker.INSTANCE.stopRmiServer();
         LCApplication.LOGGER.info("Every exit task are done, LifeCompanion will close...");
     }

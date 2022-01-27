@@ -58,12 +58,12 @@ public class ProfileConfigSelectionScene extends Scene implements LCViewInitHelp
     private ProfileConfigStepViewI currentStepView;
     private final Map<ProfileConfigStep, ProfileConfigStepViewI> stepViews;
 
-    public ProfileConfigSelectionScene(final AnimatedBorderPane borderPaneP) {
-        super(borderPaneP);
+    public ProfileConfigSelectionScene() {
+        super(new AnimatedBorderPane());
         this.stepViews = new HashMap<>();
-        this.borderPane = borderPaneP;
+        this.borderPane = (AnimatedBorderPane) getRoot();
         this.getStylesheets().addAll(LCConstant.CSS_STYLE_PATH);
-        // don't call initAll() > it's loaded in background on app startup
+        // DON'T CALL initAll() > it's loaded in background on app startup
     }
 
     // Class part : "UI"

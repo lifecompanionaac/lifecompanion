@@ -42,7 +42,7 @@ import javafx.util.StringConverter;
 import org.lifecompanion.base.data.config.IconManager;
 import org.lifecompanion.base.data.config.LCConstant;
 import org.lifecompanion.base.data.config.LCGraphicStyle;
-import org.lifecompanion.base.data.control.AppController;
+import org.lifecompanion.base.data.control.refacto.AppModeController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -396,7 +396,7 @@ public class UIUtils {
                 return (Node) event.getTarget();
             }
         }
-        return AppController.INSTANCE.getMainStage().getScene().getRoot();
+        return AppModeController.INSTANCE.getEditModeContext().getStage().getScene().getRoot();
     }
 
     // MANUAL SIZING

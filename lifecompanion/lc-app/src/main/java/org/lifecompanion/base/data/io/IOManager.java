@@ -30,8 +30,8 @@ import org.lifecompanion.api.io.IOContextI;
 import org.lifecompanion.api.io.XMLSerializable;
 import org.lifecompanion.base.data.common.LCUtils;
 import org.lifecompanion.base.data.config.LCConstant;
-import org.lifecompanion.base.data.control.AppController;
 import org.lifecompanion.base.data.control.InstallationConfigurationController;
+import org.lifecompanion.base.data.control.refacto.ProfileController;
 import org.lifecompanion.base.data.io.task.*;
 import org.lifecompanion.base.data.plugins.PluginInfo;
 import org.lifecompanion.base.data.plugins.PluginManager;
@@ -322,7 +322,7 @@ public enum IOManager {
     //========================================================================
 
     private File getDirectoryForUseInformation(final LCConfigurationI configuration) {
-        LCProfileI currentProfile = AppController.INSTANCE.currentProfileProperty().get();
+        LCProfileI currentProfile = ProfileController.INSTANCE.currentProfileProperty().get();
         File directory;
         if (currentProfile != null) {
             directory = IOManager.INSTANCE.getConfigurationPath(currentProfile.getID(), configuration.getID());

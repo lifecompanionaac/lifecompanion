@@ -16,23 +16,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.lifecompanion.base.data.component.profile;
 
+package org.lifecompanion.base.data.control.refacto;
+
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.lifecompanion.api.component.definition.LCProfileI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Class to manage existing profile in LifeCompanion.<br>
- * This class keep all existing profile and load them when needed.
- *
- * @author Mathieu THEBAUD <math.thebaud@gmail.com>
- */
-public enum LCProfileManager {
+public enum ProfileController {
     INSTANCE;
-    private final Logger LOGGER = LoggerFactory.getLogger(LCProfileManager.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(ProfileController.class);
 
     /**
      * List of all existing profile in LC
@@ -40,14 +38,17 @@ public enum LCProfileManager {
     private final ObservableList<LCProfileI> profiles;
 
     /**
+     * The current profile in use, can be null
+     */
+    private final ObjectProperty<LCProfileI> currentProfile;
+
+    /**
      * Private singleton constructor
      */
-    LCProfileManager() {
+    ProfileController() {
+        currentProfile = new SimpleObjectProperty<>();
         this.profiles = FXCollections.observableArrayList();
     }
-
-    // Class part : "Public API"
-    //========================================================================
 
     /**
      * @return list of all found profiles in LifeCompanion
@@ -70,5 +71,19 @@ public enum LCProfileManager {
         }
         return null;
     }
-    //========================================================================
+
+    /**
+     * @return the currently selected profile
+     */
+    public ReadOnlyObjectProperty<LCProfileI> currentProfileProperty() {
+        return this.currentProfile;
+    }
+
+    public void selectProfile(LCProfileI profile) {
+        currentProfile.set(profile);
+    }
+
+    public void clearSelectedProfile() {
+        currentProfile.set(null);
+    }
 }

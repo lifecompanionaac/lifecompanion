@@ -36,7 +36,7 @@ import org.lifecompanion.base.data.common.Triple;
 import org.lifecompanion.base.data.common.UIUtils;
 import org.lifecompanion.base.data.config.LCConstant;
 import org.lifecompanion.base.data.config.LCGraphicStyle;
-import org.lifecompanion.base.data.control.AppController;
+import org.lifecompanion.base.data.control.refacto.AppModeController;
 import org.lifecompanion.base.data.control.stats.SessionStatsController;
 import org.lifecompanion.base.data.plugins.PluginManager;
 import org.lifecompanion.base.view.reusable.AnimatedBorderPane;
@@ -78,14 +78,14 @@ public class GeneralConfigurationScene extends Scene implements LCViewInitHelper
     private final Map<String, Label> stepButtons;
     private LCConfigurationI boundConfiguration;
 
-    public GeneralConfigurationScene(BorderPane root) {
-        super(root);
-        rootBorderBorderPane = root;
+    public GeneralConfigurationScene() {
+        super(new BorderPane());
+        rootBorderBorderPane = (BorderPane) getRoot();
         this.views = new HashMap<>();
         this.stepButtons = new HashMap<>();
         this.getStylesheets().addAll(LCConstant.CSS_STYLE_PATH);
         PluginManager.INSTANCE.getStylesheets().registerListenerAndDrainCache((stylesheets) -> this.getStylesheets().addAll(stylesheets));
-        // don't call initAll() > it's loaded in background on app startup
+        // DON'T CALL initAll() > it's loaded in background on app startup
     }
 
     @Override
@@ -210,7 +210,7 @@ public class GeneralConfigurationScene extends Scene implements LCViewInitHelper
 
     void cancelSelected(Node source) {
         if (this.shouldCancelBeConfirmed()) {
-            Alert dlg = ConfigUIUtils.createDialog(source, Alert.AlertType.CONFIRMATION);
+            Alert dlg = ConfigUIUtils.createAlert(source, Alert.AlertType.CONFIRMATION);
             dlg.getDialogPane().setContentText(Translation.getText("general.config.scene.cancel.warning.message"));
             dlg.getDialogPane().setHeaderText(Translation.getText("general.config.scene.cancel.warning.header"));
             Optional<ButtonType> returned = dlg.showAndWait();
@@ -223,7 +223,7 @@ public class GeneralConfigurationScene extends Scene implements LCViewInitHelper
 
     void okSelected() {
         clearCurrentStepAndDoOnEverySteps(GeneralConfigurationStepViewI::saveChanges);
-        AppController.INSTANCE.increaseUnsavedActionOnCurrentConfiguration();
+        AppModeController.INSTANCE.getEditModeContext().increaseUnsavedActionOnCurrentConfiguration();
     }
 
     private void clearCurrentStepAndDoOnEverySteps(Consumer<GeneralConfigurationStepViewI> method) {
@@ -260,7 +260,7 @@ public class GeneralConfigurationScene extends Scene implements LCViewInitHelper
 
     public void onShowing() {
         // Bind on every step if there is a configuration
-        this.boundConfiguration = AppController.INSTANCE.currentConfigConfigurationProperty().get();
+        this.boundConfiguration = AppModeController.INSTANCE.getEditModeContext().configurationProperty().get();
         if (boundConfiguration != null) {
             for (GeneralConfigurationStepViewI view : this.views.values()) {
                 view.bind(boundConfiguration);

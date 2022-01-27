@@ -35,6 +35,8 @@ import org.lifecompanion.api.mode.AppMode;
 import org.lifecompanion.api.mode.ModeListenerI;
 import org.lifecompanion.base.data.common.LCUtils;
 import org.lifecompanion.base.data.component.keyoption.simplercomp.KeyListNodeKeyOption;
+import org.lifecompanion.base.data.control.refacto.AppModeController;
+import org.lifecompanion.base.data.control.refacto.AppModeV2;
 import org.lifecompanion.base.data.useaction.impl.keylist.current.*;
 import org.lifecompanion.base.data.useaction.impl.keylist.general.GoRootKeyNodeAction;
 import org.lifecompanion.base.data.useaction.impl.keylist.general.SelectSpecificKeyListAction;
@@ -81,8 +83,8 @@ public enum KeyListController implements ModeListenerI {
         nodeHistory = new ArrayList<>();
 
         // In config mode : refresh from scratch on every changes in config (but try to restore state)
-        final InvalidationListener invalidationListenerToFireRefreshFromScratch = inv -> refreshKeyListFromScratch(AppController.INSTANCE.currentConfigConfigurationProperty().get(), true);
-        AppController.INSTANCE.currentConfigConfigurationProperty().addListener((obs, ov, nv) -> {
+        final InvalidationListener invalidationListenerToFireRefreshFromScratch = inv -> refreshKeyListFromScratch(AppModeController.INSTANCE.getEditModeContext().configurationProperty().get(), true);
+        AppModeController.INSTANCE.getEditModeContext().configurationProperty().addListener((obs, ov, nv) -> {
             if (ov != null) {
                 ov.unsavedActionProperty().removeListener(invalidationListenerToFireRefreshFromScratch);
             }
@@ -210,7 +212,7 @@ public enum KeyListController implements ModeListenerI {
                 Platform.runLater(() -> keyOption.currentSimplerKeyContentContainerProperty().set(keyIndex >= 0 && keyIndex < nodeChildren.size() ? nodeChildren.get(keyIndex) : null));
             }
         });
-        if (AppController.INSTANCE.currentModeProperty().get() == AppMode.USE) {
+        if (AppModeController.INSTANCE.modeProperty().get() == AppModeV2.USE) {
             Platform.runLater(SelectionModeController.INSTANCE::generateScanningForCurrentGridAndRestart);
         }
     }

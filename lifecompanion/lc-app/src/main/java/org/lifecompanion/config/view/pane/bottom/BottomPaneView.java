@@ -41,7 +41,8 @@ import org.lifecompanion.api.component.definition.LCProfileI;
 import org.lifecompanion.api.component.definition.TreeDisplayableType;
 import org.lifecompanion.base.data.common.LCUtils;
 import org.lifecompanion.base.data.config.IconManager;
-import org.lifecompanion.base.data.control.AppController;
+import org.lifecompanion.base.data.control.refacto.AppModeController;
+import org.lifecompanion.base.data.control.refacto.ProfileController;
 import org.lifecompanion.base.view.reusable.GeneralConfigurationStep;
 import org.lifecompanion.config.data.component.general.GeneralConfigurationController;
 import org.lifecompanion.config.data.component.profile.ProfileConfigSelectionController;
@@ -135,14 +136,14 @@ public class BottomPaneView extends HBox implements LCViewInitHelper {
     @Override
     public void initListener() {
         this.labelCurrentProfile.setOnMouseClicked(me -> {
-            LCProfileI profile = AppController.INSTANCE.currentProfileProperty().get();
+            LCProfileI profile = ProfileController.INSTANCE.currentProfileProperty().get();
             if (profile != null) {
                 ProfileConfigSelectionController.INSTANCE.setProfileStep(ProfileConfigStep.PROFILE_EDIT, null, profile);
             }
         });
         this.labelConfigurationSize.setOnMouseClicked(me -> GeneralConfigurationController.INSTANCE.showStep(GeneralConfigurationStep.STAGE_SETTINGS));
         this.labelCurrentConfigurationName.setOnMouseClicked(me -> {
-            LCConfigurationDescriptionI configuration = AppController.INSTANCE.currentConfigDescriptionProperty().get();
+            LCConfigurationDescriptionI configuration = AppModeController.INSTANCE.getEditModeContext().configurationDescriptionProperty().get();
             if (configuration != null) {
                 ProfileConfigSelectionController.INSTANCE.setConfigStep(ProfileConfigStep.CONFIGURATION_EDIT, null, configuration);
             }
@@ -159,7 +160,7 @@ public class BottomPaneView extends HBox implements LCViewInitHelper {
     @Override
     public void initBinding() {
         //Bind message
-        AppController.INSTANCE.currentConfigConfigurationProperty()
+        AppModeController.INSTANCE.getEditModeContext().configurationProperty()
                 .addListener((observableP, oldValueP, newValueP) -> {
                     Platform.runLater(() -> {
                         BottomPaneView.this.labelCurrentUnsavedModifications
@@ -171,10 +172,9 @@ public class BottomPaneView extends HBox implements LCViewInitHelper {
                     //Bind size
                     this.labelConfigurationSize.textProperty().unbind();
                     this.labelConfigurationSize.textProperty().bind(Bindings.createStringBinding(() -> (int) newValueP.computedWidthProperty().get() + "x" + (int) newValueP.computedHeightProperty().get(), newValueP.computedWidthProperty(), newValueP.computedHeightProperty()));
-
                 });
         //Bind configuration description name
-        this.labelCurrentConfigurationName.textProperty().bind(EasyBind.select(AppController.INSTANCE.currentConfigDescriptionProperty())
+        this.labelCurrentConfigurationName.textProperty().bind(EasyBind.select(AppModeController.INSTANCE.getEditModeContext().configurationDescriptionProperty())
                 .selectObject(LCConfigurationDescriptionI::configurationNameProperty).orElse(Translation.getText("configuration.menu.no.name")));
         //Bind component name
         this.labelCurrentComponentName.textProperty().bind(EasyBind.select(SelectionController.INSTANCE.selectedComponentBothProperty())
@@ -192,7 +192,7 @@ public class BottomPaneView extends HBox implements LCViewInitHelper {
             }
         });
         //Bind profile name
-        AppController.INSTANCE.currentProfileProperty().addListener((obs, ov, nv) -> {
+        ProfileController.INSTANCE.currentProfileProperty().addListener((obs, ov, nv) -> {
             if (ov != null) {
                 this.labelCurrentProfile.textProperty().unbind();
             }

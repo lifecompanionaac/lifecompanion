@@ -20,8 +20,7 @@ package org.lifecompanion.config.view.pane.tabs.useaction.part.multi;
 
 import org.lifecompanion.api.component.definition.LCConfigurationI;
 import org.lifecompanion.api.component.definition.useaction.UseActionEvent;
-import org.lifecompanion.base.data.control.AppController;
-import org.lifecompanion.config.data.control.SelectionController;
+import org.lifecompanion.base.data.control.refacto.AppModeController;
 import org.lifecompanion.config.view.reusable.ribbonmenu.RibbonBasePart;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
@@ -64,7 +63,7 @@ public class MultiUseActionListRibbonPart extends RibbonBasePart<LCConfiguration
 
     @Override
     public void initBinding() {
-        this.model.bind(AppController.INSTANCE.currentConfigConfigurationProperty());
+        this.model.bind(AppModeController.INSTANCE.getEditModeContext().configurationProperty());
         this.useActionListManageView.modelProperty().bind(model);
     }
     //========================================================================

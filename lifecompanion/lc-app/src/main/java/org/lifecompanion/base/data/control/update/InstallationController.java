@@ -24,15 +24,23 @@ import javafx.beans.property.*;
 import javafx.concurrent.Task;
 import org.lifecompanion.api.mode.LCStateListener;
 import org.lifecompanion.base.data.common.LCUtils;
+import org.lifecompanion.base.data.common.UIUtils;
 import org.lifecompanion.base.data.config.LCConstant;
 import org.lifecompanion.base.data.config.ResourceHelper;
 import org.lifecompanion.base.data.control.InstallationConfigurationController;
+import org.lifecompanion.base.data.control.refacto.AppModeController;
+import org.lifecompanion.base.data.control.refacto.AppModeV2;
 import org.lifecompanion.base.data.plugins.PluginInfo;
 import org.lifecompanion.base.data.plugins.PluginManager;
+import org.lifecompanion.config.data.action.impl.GlobalActions;
+import org.lifecompanion.config.data.control.ConfigActionController;
+import org.lifecompanion.config.data.notif.LCNotification;
+import org.lifecompanion.config.view.pane.main.notification2.LCNotificationController;
 import org.lifecompanion.framework.client.http.AppServerClient;
 import org.lifecompanion.framework.client.props.ApplicationBuildProperties;
 import org.lifecompanion.framework.client.props.LauncherProperties;
 import org.lifecompanion.framework.client.service.AppServerService;
+import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.app.VersionUtils;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
@@ -50,6 +58,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
+import static org.lifecompanion.base.data.config.LCConstant.URL_PATH_CHANGELOG;
 import static org.lifecompanion.framework.commons.ApplicationConstant.*;
 
 /**
@@ -263,12 +272,6 @@ public enum InstallationController implements LCStateListener {
         writeLastUpdateDate(FILE_LAST_PLUGIN_UPDATE_DATE, date);
     }
 
-    private Consumer<PluginInfo> pluginUpdateCallback;
-
-    public void setPluginUpdateCallback(Consumer<PluginInfo> pluginUpdateCallback) {
-        this.pluginUpdateCallback = pluginUpdateCallback;
-    }
-
     public void launchPluginUpdateCheckTask(boolean manualRequest) {
         if (!skipUpdates) {
             this.submitTask(createCheckAndDowloadPluginTask(!manualRequest), this::tryToAddPluginsAfterDownload);
@@ -286,13 +289,12 @@ public enum InstallationController implements LCStateListener {
     private void tryToAddPluginAfterDownload(Pair<ApplicationPluginUpdate, File> updatedPlugin) {
         try {
             Pair<String, PluginInfo> added = PluginManager.INSTANCE.tryToAddPluginFrom(updatedPlugin.getRight());
-            if (pluginUpdateCallback != null) {
-                pluginUpdateCallback.accept(added.getRight());
-            }
+            showPluginUpdateNotification(added.getRight());
         } catch (Exception e) {
             LOGGER.error("Couldn't add the plugin for {}", updatedPlugin.getRight());
         }
     }
+
 
     public DownloadPluginTask createPluginDownloadTask(String pluginId) {
         return new DownloadPluginTask(appServerClient, buildProperties.getAppId(), enablePreviewUpdates, false, pluginId);
@@ -322,14 +324,10 @@ public enum InstallationController implements LCStateListener {
 
     // NOTIFICATION CALLBACK
     //========================================================================
-    private Runnable updateFinishedCallback, updateDownloadFinishedCallback;
+    private Runnable updateFinishedCallback;
 
     public void setUpdateFinishedCallback(Runnable updateFinishedCallback) {
         this.updateFinishedCallback = updateFinishedCallback;
-    }
-
-    public void setUpdateDownloadFinishedCallback(Runnable updateDownloadFinishedCallback) {
-        this.updateDownloadFinishedCallback = updateDownloadFinishedCallback;
     }
     //========================================================================
 
@@ -360,9 +358,9 @@ public enum InstallationController implements LCStateListener {
         if (!skipUpdates) {
             if (updateFinished) {
                 this.submitTask(new DeleteUpdateTempFileTask(appServerClient, buildProperties.getAppId(), enablePreviewUpdates, !manualRequest), updateDirDeleted -> {
-                    if (updateDirDeleted && updateFinishedCallback != null) {
+                    if (updateDirDeleted) {
                         updateFinished = false;
-                        updateFinishedCallback.run();
+                        showUpdateInstallationDoneNotification();
                     }
                 });
             } else {
@@ -371,8 +369,8 @@ public enum InstallationController implements LCStateListener {
                         if (updateProgress != null) {
                             LOGGER.info("Update progress detected, LifeCompanion will be updating... (background task)");
                             this.submitTask(new DownloadUpdateAndLauncherTask(appServerClient, buildProperties.getAppId(), enablePreviewUpdates, !manualRequest, updateProgress), downloadFinished -> {
-                                if (downloadFinished && updateDownloadFinishedCallback != null) {
-                                    updateDownloadFinishedCallback.run();
+                                if (downloadFinished) {
+                                    showUpdateDownloadFinishedNotification();
                                 }
                             });
                         } else {
@@ -385,6 +383,36 @@ public enum InstallationController implements LCStateListener {
                 }
             }
         }
+    }
+    //========================================================================
+
+    // UI
+    //========================================================================
+    private void showUpdateDownloadFinishedNotification() {
+        LCUtils.runOnFXThread(() -> {
+            if (AppModeController.INSTANCE.isEditMode()){
+                LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo("notification.info.update.download.finished.title", false,
+                        "notification.info.update.download.finish.restart.button", () -> ConfigActionController.INSTANCE.executeAction(new GlobalActions.RestartAction(AppModeController.INSTANCE.getEditModeContext().getStage().getScene().getRoot())))
+                );
+            }
+        });
+    }
+
+    private void showUpdateInstallationDoneNotification() {
+        LCUtils.runOnFXThread(() -> {
+            if (AppModeController.INSTANCE.isEditMode()){
+                LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo(Translation.getText("notification.info.update.done.title", InstallationController.INSTANCE.getBuildProperties().getVersionLabel()), false));
+                UIUtils.openUrlInDefaultBrowser(InstallationController.INSTANCE.getBuildProperties().getAppServerUrl() + URL_PATH_CHANGELOG);
+            }
+        });
+    }
+
+    private void showPluginUpdateNotification(PluginInfo pluginInfo) {
+        LCUtils.runOnFXThread(() -> {
+            if (AppModeController.INSTANCE.isEditMode()){
+                LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo(Translation.getText("notification.info.plugin.update.done.title", pluginInfo.getPluginName(), pluginInfo.getPluginVersion()), true));
+            }
+        });
     }
     //========================================================================
 

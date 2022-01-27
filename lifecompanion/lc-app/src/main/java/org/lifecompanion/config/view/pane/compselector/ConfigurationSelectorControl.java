@@ -25,7 +25,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import org.lifecompanion.api.component.definition.LCConfigurationDescriptionI;
 import org.lifecompanion.api.component.definition.LCProfileI;
-import org.lifecompanion.base.data.control.AppController;
+import org.lifecompanion.base.data.control.refacto.ProfileController;
 import org.lifecompanion.base.view.pane.configuration.ConfigurationSimpleListCell;
 import org.lifecompanion.config.view.reusable.searchcombobox.SearchComboBox;
 import org.lifecompanion.framework.commons.translation.Translation;
@@ -82,7 +82,7 @@ public class ConfigurationSelectorControl extends VBox implements LCViewInitHelp
                 comboBoxConfigurations.setItems(null);
             }
         };
-        profileChangeListener.changed(null, null, AppController.INSTANCE.currentProfileProperty().get());
-        AppController.INSTANCE.currentProfileProperty().addListener(profileChangeListener);
+        profileChangeListener.changed(null, null, ProfileController.INSTANCE.currentProfileProperty().get());
+        ProfileController.INSTANCE.currentProfileProperty().addListener(profileChangeListener);
     }
 }

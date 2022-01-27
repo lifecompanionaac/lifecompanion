@@ -22,8 +22,8 @@ package org.lifecompanion.config.view.keyoption.impl;
 import org.controlsfx.control.ToggleSwitch;
 import org.controlsfx.glyphfont.FontAwesome;
 
+import org.lifecompanion.base.data.control.refacto.AppModeController;
 import org.lifecompanion.framework.commons.translation.Translation;
-import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.config.data.action.impl.KeyOptionActions.ChangeEnableSpeakAction;
 import org.lifecompanion.config.data.action.impl.KeyOptionActions.ChangeQuickComAddSpaceAction;
@@ -34,7 +34,6 @@ import org.lifecompanion.base.data.common.UIUtils;
 import org.lifecompanion.base.data.component.keyoption.QuickComKeyOption;
 import org.lifecompanion.config.data.config.LCGlyphFont;
 import org.lifecompanion.base.data.config.LCGraphicStyle;
-import org.lifecompanion.base.data.control.AppController;
 import org.lifecompanion.config.data.control.ConfigActionController;
 import org.lifecompanion.base.data.voice.VoiceSynthesizerController;
 import org.lifecompanion.config.view.common.ConfigUIUtils;
@@ -114,7 +113,7 @@ public class QuickComOptionConfigView extends BaseKeyOptionConfigView<QuickComKe
 		});
 		this.buttonPlayExample.setOnAction(a -> {
 			VoiceSynthesizerController.INSTANCE.speakAsync(this.fieldTextToSpeak.getText(),
-					AppController.INSTANCE.currentConfigConfigurationProperty().get().getVoiceSynthesizerParameter(), null);
+					AppModeController.INSTANCE.getEditModeContext().configurationProperty().get().getVoiceSynthesizerParameter(), null);
 		});
 
 	}

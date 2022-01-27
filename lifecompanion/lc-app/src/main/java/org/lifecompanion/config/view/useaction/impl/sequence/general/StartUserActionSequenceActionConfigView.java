@@ -24,7 +24,7 @@ import javafx.scene.layout.VBox;
 import org.lifecompanion.api.component.definition.LCConfigurationI;
 import org.lifecompanion.api.component.definition.useaction.UseActionConfigurationViewI;
 import org.lifecompanion.api.component.definition.useevent.UseVariableDefinitionI;
-import org.lifecompanion.base.data.control.AppController;
+import org.lifecompanion.base.data.control.refacto.AppModeController;
 import org.lifecompanion.base.data.useaction.impl.sequence.general.StartUserActionSequenceAction;
 import org.lifecompanion.config.view.pane.categorized.AbstractCategorizedListManageView;
 import org.lifecompanion.config.view.pane.compselector.UserActionSequenceSelectorControl;
@@ -53,7 +53,7 @@ public class StartUserActionSequenceActionConfigView extends VBox implements Use
 
     @Override
     public void editStarts(final StartUserActionSequenceAction element, final ObservableList<UseVariableDefinitionI> possibleVariables) {
-        final LCConfigurationI configuration = AppController.INSTANCE.currentConfigConfigurationProperty().get();
+        final LCConfigurationI configuration = AppModeController.INSTANCE.getEditModeContext().configurationProperty().get();
         this.userActionSequenceSelectorControl.setInputUserActionSequences(configuration.userActionSequencesProperty().get());
         this.userActionSequenceSelectorControl.selectedSequenceId().set(element.sequenceToStartIdProperty().get());
     }

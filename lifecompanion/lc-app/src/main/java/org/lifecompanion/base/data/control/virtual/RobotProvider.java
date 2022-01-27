@@ -19,7 +19,6 @@
 
 package org.lifecompanion.base.data.control.virtual;
 
-import org.lifecompanion.base.data.control.AppController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,15 +34,10 @@ public class RobotProvider {
 
 	public static Robot getInstance() {
 		if (RobotProvider.instance == null) {
-			//Check embedded
-			if (AppController.INSTANCE.isOnEmbeddedDevice()) {
-				throw new UnsupportedOperationException("Can't instanciate the AWT Robot on a embedded device");
-			}
-			//Instance
 			try {
 				RobotProvider.instance = new Robot();
 			} catch (Throwable t) {
-				RobotProvider.LOGGER.warn("Couldn't instanciate the AWT robot instance", t);
+				RobotProvider.LOGGER.warn("Couldn't create the AWT robot instance", t);
 			}
 		}
 		return RobotProvider.instance;

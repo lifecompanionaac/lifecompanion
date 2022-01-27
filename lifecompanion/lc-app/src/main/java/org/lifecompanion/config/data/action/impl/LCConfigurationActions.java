@@ -42,8 +42,9 @@ import org.lifecompanion.base.data.common.UIUtils;
 import org.lifecompanion.base.data.component.profile.LCConfigurationDescription;
 import org.lifecompanion.base.data.component.simple.LCConfigurationComponent;
 import org.lifecompanion.base.data.config.LCConstant;
-import org.lifecompanion.base.data.control.AppController;
 import org.lifecompanion.base.data.control.AsyncExecutorController;
+import org.lifecompanion.base.data.control.refacto.AppModeController;
+import org.lifecompanion.base.data.control.refacto.ProfileController;
 import org.lifecompanion.base.data.io.IOManager;
 import org.lifecompanion.base.data.io.task.*;
 import org.lifecompanion.config.data.component.profile.ProfileConfigSelectionController;
@@ -85,7 +86,7 @@ public class LCConfigurationActions {
 
     public static final EventHandler<ActionEvent> HANDLER_NEW = (ea) -> ConfigActionController.INSTANCE.executeAction(new ShowNewConfigAction(getSourceFromEvent(ea)));
     public static final EventHandler<ActionEvent> HANDLER_MANAGE = (ea) -> ConfigActionController.INSTANCE.executeAction(new ManageConfigurationDialogAction());
-    public static final EventHandler<ActionEvent> HANDLER_SAVE = (ea) -> ConfigActionController.INSTANCE.executeAction(new SaveAction());
+    public static final EventHandler<ActionEvent> HANDLER_SAVE = (ea) -> ConfigActionController.INSTANCE.executeAction(new SaveAction(getSourceFromEvent(ea)));
 
     public static final EventHandler<ActionEvent> HANDLER_EXPORT = (ea) -> ConfigActionController.INSTANCE.executeAction(new ExportConfigAction(getSourceFromEvent(ea)));
     public static final EventHandler<ActionEvent> HANDLER_IMPORT_OPEN = (ea) -> ConfigActionController.INSTANCE.executeAction(new ImportOpenConfigAction(getSourceFromEvent(ea)));
@@ -149,7 +150,7 @@ public class LCConfigurationActions {
 
         @Override
         public void doAction() throws LCException {
-            LCProfileI currentProfile = AppController.INSTANCE.currentProfileProperty().get();
+            LCProfileI currentProfile = ProfileController.INSTANCE.currentProfileProperty().get();
             LCConfigurationDescriptionI currentDefaultConfiguration = currentProfile.getCurrentDefaultConfiguration();
             //Reset only if enabled and it's not the current
             if (value && currentDefaultConfiguration != null && currentDefaultConfiguration != this.configuration) {
@@ -182,7 +183,7 @@ public class LCConfigurationActions {
         @Override
         public void doAction() throws LCException {
             //Add to configuration list
-            LCProfileI currentProfile = AppController.INSTANCE.currentProfileProperty().get();
+            LCProfileI currentProfile = ProfileController.INSTANCE.currentProfileProperty().get();
             currentProfile.getConfiguration().add(0, this.configDescription);
             //Save the configuration
             ConfigurationSavingTask saveTask = IOManager.INSTANCE
@@ -216,7 +217,7 @@ public class LCConfigurationActions {
 
         @Override
         public void doAction() throws LCException {
-            final LCProfileI profile = AppController.INSTANCE.currentProfileProperty().get();
+            final LCProfileI profile = ProfileController.INSTANCE.currentProfileProperty().get();
             final ConfigurationDuplicateTask configurationDuplicateTask = IOManager.INSTANCE.createConfigurationDuplicateTaskFromDefaultConfigurationDir(defaultConfiguration.getLeft(), defaultConfiguration.getRight(), profile);
             configurationDuplicateTask.setOnSucceeded(e -> {
                 // Add to profile and then open
@@ -240,8 +241,12 @@ public class LCConfigurationActions {
         private final Consumer<Boolean> callback;
         private final Node source;
 
-        public SaveAction() {
-            this(AppController.INSTANCE.getMainStageRoot(), null);
+        //        public SaveAction() {
+        //            this(AppController.INSTANCE.getMainStageRoot(), null);
+        //        }
+
+        public SaveAction(final Node source) {
+            this(source, null);
         }
 
         public SaveAction(final Node source, final Consumer<Boolean> callbackP) {
@@ -251,10 +256,11 @@ public class LCConfigurationActions {
 
         @Override
         public void doAction() throws LCException {
-            LCConfigurationI configuration = AppController.INSTANCE.currentConfigConfigurationProperty().get();
+            LCConfigurationI configuration = AppModeController.INSTANCE.getEditModeContext().configurationProperty().get();
 
             //Check if the configuration description exist, and create when needed
-            LCProfileI currentProfile = AppController.INSTANCE.currentProfileProperty().get();
+            // FIXME : this will not happen now that the create view had been uniformized
+            LCProfileI currentProfile = ProfileController.INSTANCE.currentProfileProperty().get();
             if (currentProfile.getConfigurationById(configuration.getID()) == null) {
                 //Ask for name
                 TextInputDialog dialog = ConfigUIUtils.createInputDialog(source, Translation.getText("action.save.config.default.name"));
@@ -268,7 +274,7 @@ public class LCConfigurationActions {
                     configDescription.loadedConfigurationProperty().set(configuration);
                     configDescription.configurationNameProperty().set(result.get());
                     currentProfile.getConfiguration().add(configDescription);
-                    AppController.INSTANCE.currentConfigDescriptionProperty().set(configDescription);
+                    AppModeController.INSTANCE.switchEditModeConfiguration(configuration, configDescription);
                 } else {
                     return;
                 }
@@ -276,7 +282,7 @@ public class LCConfigurationActions {
 
             //Create the task
             ConfigurationSavingTask saveConfigTask = IOManager.INSTANCE.createSaveConfigurationTask(configuration, currentProfile);
-            LCConfigurationDescriptionI configDescription = AppController.INSTANCE.currentConfigDescriptionProperty().get();
+            LCConfigurationDescriptionI configDescription = AppModeController.INSTANCE.getEditModeContext().configurationDescriptionProperty().get();
             // Update the config description image because we are on JavaFX Thread
             // Unknown bug : snapshot can sometimes fail
             try {
@@ -362,7 +368,7 @@ public class LCConfigurationActions {
         @Override
         public void doAction() throws LCException {
             // Select a configuration to duplicate
-            Alert dialog = ConfigUIUtils.createDialog(source, Alert.AlertType.NONE);
+            Alert dialog = ConfigUIUtils.createAlert(source, Alert.AlertType.NONE);
             dialog.setHeaderText(Translation.getText("config.duplicate.question.select.config"));
             ConfigurationSelectorControl configurationSelectorControl = new ConfigurationSelectorControl(Translation.getText("config.duplicate.field.config"));
             configurationSelectorControl.setPrefWidth(400.0);
@@ -375,7 +381,7 @@ public class LCConfigurationActions {
                 LCConfigurationDescriptionI selectedConfigurationDescription = configurationSelectorControl.valueProperty().get();
                 if (selectedConfigurationDescription != null) {
                     // Duplicate selected configuration on profile
-                    LCProfileI currentProfile = AppController.INSTANCE.currentProfileProperty().get();
+                    LCProfileI currentProfile = ProfileController.INSTANCE.currentProfileProperty().get();
                     ConfigurationDuplicateTask duplicateTask = IOManager.INSTANCE.createConfigurationDuplicateTaskFromCurrentProfile(selectedConfigurationDescription, currentProfile);
                     duplicateTask.setOnSucceeded(e -> {
                         // Add duplicated
@@ -420,7 +426,7 @@ public class LCConfigurationActions {
         @Override
         public void doAction() throws LCException {
             //Choose the file
-            LCProfileI currentProfile = AppController.INSTANCE.currentProfileProperty().get();
+            LCProfileI currentProfile = ProfileController.INSTANCE.currentProfileProperty().get();
             if (this.configurationPath == null) {
                 FileChooser configChooser = LCFileChooser.getChooserConfiguration(FileChooserType.CONFIG_IMPORT);
                 this.configurationPath = configChooser.showOpenDialog(UIUtils.getSourceWindow(source));
@@ -449,7 +455,7 @@ public class LCConfigurationActions {
                 ButtonType result;
 
                 if (previousConfigDescription != null) {
-                    Alert dlg = ConfigUIUtils.createDialog(source, AlertType.WARNING);
+                    Alert dlg = ConfigUIUtils.createAlert(source, AlertType.WARNING);
                     dlg.getDialogPane().setHeaderText(Translation.getText("action.import.existing.configuration.header", currentProfile.nameProperty().get()));
                     dlg.getDialogPane().setContentText(Translation.getText("action.import.existing.configuration.message",
                             previousConfigDescription.configurationNameProperty().get(),
@@ -556,8 +562,8 @@ public class LCConfigurationActions {
         @Override
         public void doAction() throws LCException {
             //Check if the configuration is already saved
-            LCProfileI currentProfile = AppController.INSTANCE.currentProfileProperty().get();
-            LCConfigurationI currentConfiguration = AppController.INSTANCE.currentConfigConfigurationProperty().get();
+            LCProfileI currentProfile = ProfileController.INSTANCE.currentProfileProperty().get();
+            LCConfigurationI currentConfiguration = AppModeController.INSTANCE.getEditModeContext().configurationProperty().get();
 
             // If config description is null, take it from current config
             if (configurationDescription == null) {
@@ -597,9 +603,9 @@ public class LCConfigurationActions {
 
         @Override
         public void doAction() throws LCException {
-            LCProfileI currentProfile = AppController.INSTANCE.currentProfileProperty().get();
-            LCConfigurationI currentConfiguration = AppController.INSTANCE.currentConfigConfigurationProperty().get();
-            LCConfigurationDescriptionI currentConfigurationDescription = AppController.INSTANCE.currentConfigDescriptionProperty().get();
+            LCProfileI currentProfile = ProfileController.INSTANCE.currentProfileProperty().get();
+            LCConfigurationI currentConfiguration = AppModeController.INSTANCE.getEditModeContext().configurationProperty().get();
+            LCConfigurationDescriptionI currentConfigurationDescription = AppModeController.INSTANCE.getEditModeContext().configurationDescriptionProperty().get();
 
             FileChooser configChooser = LCFileChooser.getOtherFileChooser(Translation.getText("pdf.export.chooser.dialog.title"), new FileChooser.ExtensionFilter("PDF", "*.pdf"), EXPORT_PDF);
             configChooser.setInitialFileName(Translation.getText("pdf.export.default.file.name", IOManager.DATE_FORMAT_FILENAME_WITHOUT_TIME.format(new Date()), LCUtils.getValidFileName(currentConfigurationDescription.configurationNameProperty().get())));
@@ -642,23 +648,28 @@ public class LCConfigurationActions {
     public static class OpenConfigurationAction implements BaseConfigActionI {
         private final Node source;
         private final LCConfigurationDescriptionI configDescription;
-        private boolean askUnsaved = true;
-        private Runnable callback;
+        private final boolean askUnsaved;
+        private final Consumer<Boolean> callback;
 
         public OpenConfigurationAction(final Node source, final LCConfigurationDescriptionI configP) {
+            this(source, configP, true, null);
+        }
+
+        public OpenConfigurationAction(final Node source, final LCConfigurationDescriptionI configP, final boolean askUnsavedP, Consumer<Boolean> callback) {
             this.source = source;
             this.configDescription = configP;
+            this.askUnsaved = askUnsavedP;
+            this.callback = callback;
         }
 
         public OpenConfigurationAction(final Node source, final LCConfigurationDescriptionI configP, final boolean askUnsavedP) {
-            this(source, configP);
-            this.askUnsaved = askUnsavedP;
+            this(source, configP, askUnsavedP, null);
         }
 
         @Override
         public void doAction() throws LCException {
             GlobalActions.checkModificationForCurrentConfiguration(askUnsaved, this, source, Translation.getText("open.config.action.confirm.message"), "open.config.action.confirm.button", () -> {
-                LCProfileI currentProfile = AppController.INSTANCE.currentProfileProperty().get();
+                LCProfileI currentProfile = ProfileController.INSTANCE.currentProfileProperty().get();
                 // Check plugin dependencies
                 PluginActions.warnOnPluginDependencies(source,
                         new File(IOManager.INSTANCE.getConfigurationPath(currentProfile.getID(), configDescription.getConfigurationId()) + File.separator + LCConstant.CONFIGURATION_XML_NAME),
@@ -668,10 +679,14 @@ public class LCConfigurationActions {
                             loadTask.setOnSucceeded((ea) -> {
                                 //Set current configuration
                                 LCConfigurationComponent value = (LCConfigurationComponent) ea.getSource().getValue();
-                                AppController.INSTANCE.changeConfigModeConfiguration(value, this.configDescription);
-                                //Callback
+                                AppModeController.INSTANCE.switchEditModeConfiguration(value, this.configDescription);
                                 if (this.callback != null) {
-                                    this.callback.run();
+                                    this.callback.accept(true);
+                                }
+                            });
+                            loadTask.setOnFailed((ea) -> {
+                                if (this.callback != null) {
+                                    this.callback.accept(false);
                                 }
                             });
                             AsyncExecutorController.INSTANCE.addAndExecute(true, false, loadTask);
@@ -720,7 +735,7 @@ public class LCConfigurationActions {
      * @throws LCException if saving failed
      */
     private static void saveConfigurationDescription(final LCConfigurationDescriptionI configDescription) throws LCException {
-        LCProfileI profile = AppController.INSTANCE.currentProfileProperty().get();
+        LCProfileI profile = ProfileController.INSTANCE.currentProfileProperty().get();
         try {
             ConfigurationDescriptionSavingTask configDescriptionSaveTask = IOManager.INSTANCE.createSaveConfigDescriptionTask(configDescription,
                     profile);
@@ -757,7 +772,7 @@ public class LCConfigurationActions {
         public void doAction() throws LCException {
             if (this.askAndNotify) {
                 //Ask confirm
-                Alert dlg = ConfigUIUtils.createDialog(source, AlertType.CONFIRMATION);
+                Alert dlg = ConfigUIUtils.createAlert(source, AlertType.CONFIRMATION);
                 dlg.getDialogPane().setContentText(
                         Translation.getText("action.remove.config.confirm.message", this.configDescription.configurationNameProperty().get()));
                 dlg.getDialogPane().setHeaderText(Translation.getText("action.remove.config.confirm.header"));
@@ -774,8 +789,8 @@ public class LCConfigurationActions {
             LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo("configuration.removed.notification.title"));
 
             //If the configuration is the currently loaded configuration
-            if (AppController.INSTANCE.currentConfigDescriptionProperty().get() == this.configDescription) {
-                AppController.INSTANCE.newConfigModeConfiguration();
+            if (AppModeController.INSTANCE.getEditModeContext().configurationDescriptionProperty().get() == this.configDescription) {
+                // AppModeController.INSTANCE.getConfigModeContext().switchToNew(); //
             }
 
             if (this.removedCallback != null) {
@@ -811,7 +826,7 @@ public class LCConfigurationActions {
 
     private static LCConfigurationDescriptionI createConfigurationForCurrentProfile() {
         LCConfigurationDescriptionI description = new LCConfigurationDescription();
-        description.configurationAuthorProperty().set(AppController.INSTANCE.currentProfileProperty().get().nameProperty().get());
+        description.configurationAuthorProperty().set(ProfileController.INSTANCE.currentProfileProperty().get().nameProperty().get());
         return description;
     }
 

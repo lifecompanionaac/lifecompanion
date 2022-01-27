@@ -49,7 +49,6 @@ import org.lifecompanion.base.data.common.LCTask;
 import org.lifecompanion.base.data.common.UIUtils;
 import org.lifecompanion.base.data.config.LCGraphicStyle;
 import org.lifecompanion.base.data.config.ResourceHelper;
-import org.lifecompanion.base.data.control.AppController;
 import org.lifecompanion.base.data.control.AsyncExecutorController;
 import org.lifecompanion.base.data.prediction.predict4all.P4AConfigurationSteps;
 import org.lifecompanion.base.data.prediction.predict4all.predictor.Predict4AllWordPredictorHelper;
@@ -461,7 +460,7 @@ public class P4ADictionaryConfigurationView extends ScrollPane implements Genera
                     if (showConfirm) {
                         final int addedF = added;
                         Platform.runLater(() -> {
-                            Alert dialog = ConfigUIUtils.createDialog(P4ADictionaryConfigurationView.this, Alert.AlertType.INFORMATION);
+                            Alert dialog = ConfigUIUtils.createAlert(P4ADictionaryConfigurationView.this, Alert.AlertType.INFORMATION);
                             dialog.setContentText(Translation.getText("predict4all.action.imported.success.title"));
                             dialog.setContentText(Translation.getText(factor > 1.0 ? "predict4all.action.imported.success.prio.message"
                                     : "predict4all.action.imported.success.deprio.message", addedF));

@@ -31,7 +31,7 @@ import org.lifecompanion.api.image2.ImageElementI;
 import org.lifecompanion.api.io.IOContextI;
 import org.lifecompanion.base.data.config.LCConstant;
 import org.lifecompanion.base.data.config.UserBaseConfiguration;
-import org.lifecompanion.base.data.control.AppController;
+import org.lifecompanion.base.data.control.refacto.AppModeController;
 import org.lifecompanion.base.data.image2.ImageDictionaries;
 import org.lifecompanion.framework.commons.fx.io.*;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
@@ -220,16 +220,16 @@ public class ImageUseComponentPropertyWrapper {
             }
         });
         // On mode changed, check that image should be loaded
-        AppController.INSTANCE.currentModeProperty().addListener(new WeakInvalidationListener(invalidationListenerForAppMode));
+        AppModeController.INSTANCE.modeProperty().addListener(new WeakInvalidationListener(invalidationListenerForAppMode));
     }
 
     // FIXME : config value
     private double getWantedImageWidthValue() {
-        return LOADING_SCALE_FACTOR * (AppController.INSTANCE.isUseMode() || this.imageUseComponent.wantedImageWidthProperty().get() > 0 ? this.imageUseComponent.wantedImageWidthProperty().get() : 100.0);
+        return LOADING_SCALE_FACTOR * (AppModeController.INSTANCE.isUseMode() || this.imageUseComponent.wantedImageWidthProperty().get() > 0 ? this.imageUseComponent.wantedImageWidthProperty().get() : 100.0);
     }
 
     private double getWantedImageHeightValue() {
-        return LOADING_SCALE_FACTOR * (AppController.INSTANCE.isUseMode() || this.imageUseComponent.wantedImageHeightProperty().get() > 0 ? this.imageUseComponent.wantedImageHeightProperty().get() : 100.0);
+        return LOADING_SCALE_FACTOR * (AppModeController.INSTANCE.isUseMode() || this.imageUseComponent.wantedImageHeightProperty().get() > 0 ? this.imageUseComponent.wantedImageHeightProperty().get() : 100.0);
     }
 
 

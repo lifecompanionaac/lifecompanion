@@ -29,6 +29,7 @@ import org.lifecompanion.api.ui.ComponentViewI;
 import org.lifecompanion.api.ui.ViewProviderI;
 import org.lifecompanion.api.ui.ViewProviderType;
 import org.lifecompanion.base.data.common.CopyUtils;
+import org.lifecompanion.base.data.common.LCUtils;
 import org.lifecompanion.base.data.component.utils.ComponentNameEnum;
 import org.lifecompanion.base.data.io.IOManager;
 import org.lifecompanion.framework.commons.fx.io.XMLIgnoreNullValue;
@@ -248,6 +249,10 @@ public abstract class CoreDisplayableComponentBaseImpl implements DisplayableCom
     @Override
     public void dispatchDisplayedProperty(final boolean displayedP) {
         this.displayed.set(displayedP);
+        if (!displayedP && this instanceof LCConfigurationI) {
+            System.err.println("Dispatch displayed property ");
+            LCUtils.printStackTrace();
+        }
     }
 
     /**

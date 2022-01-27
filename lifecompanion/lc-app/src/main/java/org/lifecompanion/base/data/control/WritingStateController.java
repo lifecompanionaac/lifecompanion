@@ -32,6 +32,7 @@ import org.lifecompanion.base.data.config.IconManager;
 import org.lifecompanion.base.data.control.events.WritingControllerState;
 import org.lifecompanion.base.data.control.events.WritingEvent;
 import org.lifecompanion.base.data.control.prediction.WordPredictionController;
+import org.lifecompanion.base.data.control.refacto.AppModeController;
 import org.lifecompanion.base.data.control.virtual.keyboard.VirtualKeyboardController;
 import org.lifecompanion.base.data.image2.StaticImageElement;
 import org.lifecompanion.framework.commons.translation.Translation;
@@ -74,7 +75,7 @@ public enum WritingStateController implements ModeListenerI, WritingStateControl
 
         this.writingEventListeners = new HashSet<>(2);
 
-        AppController.INSTANCE.currentConfigConfigurationProperty().addListener(inv -> initExampleEntriesIfNeeded());
+        AppModeController.INSTANCE.getEditModeContext().configurationProperty().addListener(inv -> initExampleEntriesIfNeeded());
     }
     //========================================================================
 
@@ -427,7 +428,7 @@ public enum WritingStateController implements ModeListenerI, WritingStateControl
         this.writingStateEntryContainer.setCurrentDisplayerAndBindChangeListenerCaret(referenceWriterDisplayer);
         this.writingStateEntryContainer.setWriterEntries(configuration.getUseModeWriterEntries());
 
-        if (!AppController.INSTANCE.isOnEmbeddedDevice() && configuration.virtualKeyboardProperty().get()) {
+        if (configuration.virtualKeyboardProperty().get()) {
             this.writingDevices.add(VirtualKeyboardController.INSTANCE);
         }
     }
@@ -451,7 +452,7 @@ public enum WritingStateController implements ModeListenerI, WritingStateControl
     }
 
     public void initExampleEntriesIfNeeded() {
-        if (getWriterEntries().isEmpty() && !AppController.INSTANCE.isUseMode()) {
+        if (getWriterEntries().isEmpty() && !AppModeController.INSTANCE.isUseMode()) {
             this.getWriterEntries().add(new WriterEntry(Translation.getText("text.editor.example.line1.first") + " ", false));
             WriterEntry imageEntry = new WriterEntry(Translation.getText("text.editor.example.line1.second") + " ", false);
             imageEntry.imageProperty().set(new StaticImageElement(IconManager.get("example_image_entry.png")));

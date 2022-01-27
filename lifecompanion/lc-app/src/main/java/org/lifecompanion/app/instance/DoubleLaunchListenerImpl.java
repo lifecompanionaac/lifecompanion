@@ -28,13 +28,10 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.lifecompanion.base.data.common.LCUtils;
 import org.lifecompanion.base.data.config.LCConstant;
-import org.lifecompanion.base.data.control.AppController;
+import org.lifecompanion.base.data.control.refacto.StageUtils;
 import org.lifecompanion.config.view.common.ConfigUIUtils;
-import org.lifecompanion.config.view.common.SystemVirtualKeyboardHelper;
 import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
 import org.lifecompanion.framework.commons.translation.Translation;
-
-import java.util.Optional;
 
 /**
  * Implementation for {@link DoubleLaunchListener}
@@ -47,10 +44,10 @@ public class DoubleLaunchListenerImpl implements DoubleLaunchListener {
     public void doubleRunDetected() {
         LCUtils.runOnFXThread(() -> {
             //Show main frame
-            Stage mainFrame = AppController.INSTANCE.getMainStage();
-            mainFrame.setIconified(false);
-            mainFrame.show();
-            mainFrame.requestFocus();
+            Stage stage = StageUtils.getEditOrUseStageVisible();
+            stage.setIconified(false);
+            stage.show();
+            stage.requestFocus();
 
             // Time left before hiding the dialog (to avoid block)
             IntegerProperty timeLeft = new SimpleIntegerProperty(LCConstant.DOUBLE_LAUNCH_DISPLAY_DELAY);
@@ -58,7 +55,7 @@ public class DoubleLaunchListenerImpl implements DoubleLaunchListener {
             timeLineAutoHide.setCycleCount(LCConstant.DOUBLE_LAUNCH_DISPLAY_DELAY);
 
             //When a double run is detected, show a dialog to user
-            Alert dialog = ConfigUIUtils.createDialog(mainFrame.getScene().getRoot(), AlertType.ERROR);
+            Alert dialog = ConfigUIUtils.createAlert(stage.getScene().getRoot(), AlertType.ERROR);
             dialog.headerTextProperty().bind(TranslationFX.getTextBinding("double.run.detected.header", timeLeft));
             dialog.setContentText(Translation.getText("double.run.detected.message"));
             timeLineAutoHide.setOnFinished(e -> dialog.hide());

@@ -26,7 +26,6 @@ import javafx.concurrent.Task;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
-import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.effect.BoxBlur;
 import javafx.scene.effect.ColorAdjust;
@@ -36,7 +35,7 @@ import javafx.stage.StageStyle;
 import javafx.stage.Window;
 import javafx.util.Duration;
 import org.lifecompanion.base.data.config.LCGraphicStyle;
-import org.lifecompanion.base.data.control.AppController;
+import org.lifecompanion.base.data.control.refacto.StageUtils;
 import org.lifecompanion.config.data.control.ErrorHandlingController;
 import org.lifecompanion.config.data.notif.LCNotification;
 import org.lifecompanion.framework.commons.translation.Translation;
@@ -67,7 +66,7 @@ public class NotificationStage extends Stage {
         this.scene = scene;
         this.scene.setCloseRequestListener(this::hideWithAnimation);
 
-        Stage sourceWindow = AppController.INSTANCE.getMainStage();
+        Stage sourceWindow = StageUtils.getEditOrUseStageVisible();
         this.setTitle(Translation.getText("notification.stage.win.title", SESSION_NOTIFICATION_COUNT.incrementAndGet()));
         this.initStyle(StageStyle.TRANSPARENT);
         this.setAlwaysOnTop(true);

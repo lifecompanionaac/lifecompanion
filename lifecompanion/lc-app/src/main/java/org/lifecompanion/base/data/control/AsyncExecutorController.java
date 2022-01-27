@@ -20,6 +20,7 @@
 package org.lifecompanion.base.data.control;
 
 import javafx.concurrent.Task;
+import org.lifecompanion.api.mode.LCStateListener;
 import org.lifecompanion.base.data.common.LCTask;
 import org.lifecompanion.base.data.config.LCConstant;
 import org.lifecompanion.framework.utils.LCNamedThreadFactory;
@@ -29,7 +30,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public enum AsyncExecutorController {
+public enum AsyncExecutorController implements LCStateListener {
     INSTANCE;
 
     /**
@@ -76,7 +77,12 @@ public enum AsyncExecutorController {
         this.configurationActionThreadPool.submit(task);
     }
 
-    public void close() {
+    @Override
+    public void lcStart() {
+    }
+
+    @Override
+    public void lcExit() {
         this.configurationActionThreadPool.shutdown();
     }
 

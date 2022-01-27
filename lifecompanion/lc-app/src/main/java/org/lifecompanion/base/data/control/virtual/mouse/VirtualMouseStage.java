@@ -27,7 +27,6 @@ import javafx.stage.StageStyle;
 import org.lifecompanion.base.data.common.LCUtils;
 import org.lifecompanion.base.data.config.IconManager;
 import org.lifecompanion.base.data.config.LCConstant;
-import org.lifecompanion.base.data.control.AppController;
 import org.lifecompanion.framework.commons.translation.Translation;
 
 /**
@@ -48,10 +47,6 @@ public class VirtualMouseStage extends Stage {
      */
     public static VirtualMouseStage getInstance() {
         if (VirtualMouseStage.instance == null) {
-            //Check embedded
-            if (AppController.INSTANCE.isOnEmbeddedDevice()) {
-                throw new UnsupportedOperationException("Can't instanciate the virtual mouse stage on a embedded device");
-            }
             VirtualMouseStage.instance = new VirtualMouseStage();
         }
         return VirtualMouseStage.instance;

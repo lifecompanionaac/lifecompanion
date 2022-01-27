@@ -24,8 +24,8 @@ import org.lifecompanion.api.exception.LCException;
 import org.lifecompanion.api.io.XMLSerializable;
 import org.lifecompanion.api.mode.LCStateListener;
 import org.lifecompanion.base.data.config.LCConstant;
-import org.lifecompanion.base.data.control.AppController;
 import org.lifecompanion.base.data.control.InstallationConfigurationController;
+import org.lifecompanion.base.data.control.refacto.ProfileController;
 import org.lifecompanion.base.data.io.XMLHelper;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.framework.commons.fx.io.XMLUtils;
@@ -72,8 +72,8 @@ public enum LCStateController implements XMLSerializable<Void>, LCStateListener 
 
     private void initBinding() {
         //On profile change, set the last selected profile
-        AppController.INSTANCE.currentProfileProperty().addListener((obs) -> {
-            LCProfileI current = AppController.INSTANCE.currentProfileProperty().get();
+        ProfileController.INSTANCE.currentProfileProperty().addListener((obs) -> {
+            LCProfileI current = ProfileController.INSTANCE.currentProfileProperty().get();
             if (current != null) {
                 this.selectedProfile = current.getID();
             }

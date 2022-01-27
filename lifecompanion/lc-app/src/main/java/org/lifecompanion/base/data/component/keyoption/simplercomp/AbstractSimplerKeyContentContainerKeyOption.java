@@ -29,10 +29,9 @@ import org.lifecompanion.api.component.definition.useaction.BaseUseActionI;
 import org.lifecompanion.api.component.definition.useaction.UseActionEvent;
 import org.lifecompanion.api.exception.LCException;
 import org.lifecompanion.api.io.IOContextI;
-import org.lifecompanion.api.mode.AppMode;
-import org.lifecompanion.base.data.common.LCUtils;
 import org.lifecompanion.base.data.component.keyoption.AbstractKeyOption;
-import org.lifecompanion.base.data.control.AppController;
+import org.lifecompanion.base.data.control.refacto.AppModeController;
+import org.lifecompanion.base.data.control.refacto.AppModeV2;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -119,19 +118,19 @@ public abstract class AbstractSimplerKeyContentContainerKeyOption<T extends Simp
                         simplerKeyContentContainer.strokeColorProperty().get() != null ? simplerKeyContentContainer.strokeColorProperty().get() : null
                 );
             }
-            updateKeyFor(key, simplerKeyContentContainer, AppController.INSTANCE.currentModeProperty().get());
+            updateKeyFor(key, simplerKeyContentContainer, AppModeController.INSTANCE.modeProperty().get());
         }
     }
 
-    protected void updateKeyFor(GridPartKeyComponentI key, T simplerKeyContentContainer, AppMode appMode) {
+    protected void updateKeyFor(GridPartKeyComponentI key, T simplerKeyContentContainer, AppModeV2 appMode) {
         if (key != null) {
             handleActionsUpdate(key, simplerKeyContentContainer, appMode);
         }
     }
 
-    protected void handleActionsUpdate(GridPartKeyComponentI key, T keyContentContainer, AppMode appMode) {
+    protected void handleActionsUpdate(GridPartKeyComponentI key, T keyContentContainer, AppModeV2 appMode) {
         // Remove actions if content is empty, or in config mode (don't want to change key behavior in config mode)
-        if (keyContentContainer == null || appMode != AppMode.USE) {
+        if (keyContentContainer == null || appMode != AppModeV2.USE) {
             removeAllActionsFrom(key);
         }
         // Add actions if needed (content or in use mode)

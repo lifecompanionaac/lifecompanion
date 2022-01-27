@@ -24,7 +24,6 @@ import org.lifecompanion.api.component.definition.*;
 import org.lifecompanion.api.control.events.WritingEventSource;
 import org.lifecompanion.api.mode.ModeListenerI;
 import org.lifecompanion.api.prediction.WordPredictionI;
-import org.lifecompanion.base.data.control.AppController;
 import org.lifecompanion.base.data.control.WritingStateController;
 import org.lifecompanion.base.data.control.virtual.keyboard.impl.RobotVirtualKeyboard;
 import org.lifecompanion.base.data.control.virtual.keyboard.impl.WinAutoHotKeyVirtualKeyboard;
@@ -269,10 +268,8 @@ public enum VirtualKeyboardController implements WritingDeviceI, ModeListenerI {
 
     @Override
     public void modeStart(final LCConfigurationI configuration) {
-        if (!AppController.INSTANCE.isOnEmbeddedDevice()) {
-            virtualKeyboardImplementation = SystemType.current() == SystemType.WINDOWS ? new WinAutoHotKeyVirtualKeyboard() : new RobotVirtualKeyboard();
-            virtualKeyboardImplementation.modeStart(configuration);
-        }
+        virtualKeyboardImplementation = SystemType.current() == SystemType.WINDOWS ? new WinAutoHotKeyVirtualKeyboard() : new RobotVirtualKeyboard();
+        virtualKeyboardImplementation.modeStart(configuration);
     }
 
     @Override

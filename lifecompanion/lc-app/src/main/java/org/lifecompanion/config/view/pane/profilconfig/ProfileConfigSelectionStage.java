@@ -32,7 +32,10 @@ import org.lifecompanion.base.data.config.LCGraphicStyle;
  */
 public class ProfileConfigSelectionStage extends Stage {
 
-    public ProfileConfigSelectionStage(final Stage owner, final ProfileConfigSelectionScene profileScene) {
+    private final ProfileConfigSelectionScene profileConfigSelectionScene;
+
+    public ProfileConfigSelectionStage(final Stage owner, final ProfileConfigSelectionScene profileConfigSelectionScene) {
+        this.profileConfigSelectionScene = profileConfigSelectionScene;
         this.setTitle(LCConstant.NAME);
         this.initModality(Modality.APPLICATION_MODAL);
         this.initStyle(StageStyle.UTILITY);
@@ -40,13 +43,17 @@ public class ProfileConfigSelectionStage extends Stage {
         this.setWidth(LCGraphicStyle.DEFAULT_TOOL_STAGE_WIDTH);
         this.setHeight(LCGraphicStyle.DEFAULT_TOOL_STAGE_HEIGHT);
         this.setResizable(LCGraphicStyle.TOOL_STAGE_RESIZABLE);
-        this.setScene(profileScene);
+        this.setScene(profileConfigSelectionScene);
         this.setForceIntegerRenderScale(LCGraphicStyle.FORCE_INTEGER_RENDER_SCALE);
         this.getIcons().add(IconManager.get(LCConstant.LC_ICON_PATH));
         this.setOnCloseRequest((we) -> {
-            if (profileScene.cancelRequest()) {
+            if (profileConfigSelectionScene.cancelRequest()) {
                 we.consume();
             }
         });
+    }
+
+    public ProfileConfigSelectionScene getProfileConfigSelectionScene() {
+        return profileConfigSelectionScene;
     }
 }

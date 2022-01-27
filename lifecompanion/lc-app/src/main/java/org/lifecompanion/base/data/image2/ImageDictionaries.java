@@ -281,6 +281,8 @@ public enum ImageDictionaries implements LCStateListener, ModeListenerI {
     // IO
     //========================================================================
     public void loadDictionaries() {
+        // TODO : parallel loading for dictionaries ?
+        long start = System.currentTimeMillis();
         File imageDictionariesRoot = new File(LCConstant.DEFAULT_IMAGE_DICTIONARIES);
         File[] potentialDictionaries = imageDictionariesRoot.listFiles();
         if (potentialDictionaries != null) {
@@ -304,6 +306,7 @@ public enum ImageDictionaries implements LCStateListener, ModeListenerI {
             this.configurationImageDictionary.setCustomDictionary(true);
             this.dictionaries.add(configurationImageDictionary);
         }
+        LOGGER.info("Image dictionaries loading done in {} s", (System.currentTimeMillis() - start) / 1000.0);
     }
 
     private ImageDictionary loadImageDictionary(File potentialDictionaryDirectory) {

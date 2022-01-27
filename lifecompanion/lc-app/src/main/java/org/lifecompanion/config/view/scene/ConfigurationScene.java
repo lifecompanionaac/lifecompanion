@@ -32,7 +32,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 import org.lifecompanion.base.data.config.LCConstant;
-import org.lifecompanion.base.data.control.AppController;
+import org.lifecompanion.base.data.control.refacto.AppModeController;
 import org.lifecompanion.base.data.control.stats.SessionStatsController;
 import org.lifecompanion.config.data.action.impl.*;
 import org.lifecompanion.config.data.control.ComponentActionController;
@@ -151,7 +151,7 @@ public class ConfigurationScene extends Scene implements LCViewInitHelper {
             } else if (OptionActions.KEY_COMBINATION_COPY.match(eventP)) {
                 ComponentActionController.INSTANCE.copyComponent(SelectionController.INSTANCE.selectedComponentBothProperty().get());
             } else if (OptionActions.KEY_COMBINATION_PASTE.match(eventP)) {
-                ComponentActionController.INSTANCE.pasteComponent(AppController.INSTANCE.currentConfigConfigurationProperty().get(),
+                ComponentActionController.INSTANCE.pasteComponent(AppModeController.INSTANCE.getEditModeContext().configurationProperty().get(),
                         SelectionController.INSTANCE.selectedComponentBothProperty().get(),
                         new ArrayList<>(SelectionController.INSTANCE.getSelectedKeys()));
             } else if (KeyActions.KEY_COMBINATION_COPY_STYLE.match(eventP)) {

@@ -29,13 +29,12 @@ import javafx.stage.Stage;
 import org.fxmisc.easybind.EasyBind;
 import org.lifecompanion.api.component.definition.LCProfileI;
 import org.lifecompanion.base.data.common.UIUtils;
-import org.lifecompanion.base.data.config.LCConstant;
-import org.lifecompanion.base.data.control.AppController;
+import org.lifecompanion.base.data.control.refacto.AppModeController;
+import org.lifecompanion.base.data.control.refacto.ProfileController;
 import org.lifecompanion.base.data.control.stats.SessionStatsController;
 import org.lifecompanion.base.view.pane.profile.ProfileIconView;
 import org.lifecompanion.config.data.component.profile.ProfileConfigSelectionController;
 import org.lifecompanion.config.data.component.profile.ProfileConfigStep;
-import org.lifecompanion.config.data.config.tips.ConfigTipsController;
 import org.lifecompanion.config.view.common.SystemVirtualKeyboardHelper;
 import org.lifecompanion.config.view.pane.config.UserConfigStage;
 import org.lifecompanion.config.view.pane.config.UserConfigurationView;
@@ -92,13 +91,12 @@ public class ProfileDetailView extends HBox implements LCViewInitHelper {
             this.initUserConfigurationView();
             this.userConfigurationView.showView();
         });
-        this.linkShowConfigTips.setOnAction(e -> ConfigTipsController.INSTANCE.showConfigTipsStage());
     }
 
     private void initUserConfigurationView() {
         //Init if needed
         if (this.userConfigurationView == null) {
-            Stage userConfigStage = new UserConfigStage(AppController.INSTANCE.getMainStage());
+            Stage userConfigStage = new UserConfigStage(AppModeController.INSTANCE.getEditModeContext().getStage());
             userConfigStage.centerOnScreen();
             this.userConfigurationView = new UserConfigurationView(userConfigStage);
             Scene settingScene = new Scene(this.userConfigurationView);
@@ -110,7 +108,7 @@ public class ProfileDetailView extends HBox implements LCViewInitHelper {
 
     @Override
     public void initBinding() {
-        this.labelProfileName.textProperty().bind(EasyBind.select(AppController.INSTANCE.currentProfileProperty()).selectObject(LCProfileI::nameProperty));
-        this.profileIconView.profileProperty().bind(AppController.INSTANCE.currentProfileProperty());
+        this.labelProfileName.textProperty().bind(EasyBind.select(ProfileController.INSTANCE.currentProfileProperty()).selectObject(LCProfileI::nameProperty));
+        this.profileIconView.profileProperty().bind(ProfileController.INSTANCE.currentProfileProperty());
     }
 }

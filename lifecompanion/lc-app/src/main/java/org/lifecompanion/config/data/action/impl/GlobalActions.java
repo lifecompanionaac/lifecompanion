@@ -32,11 +32,11 @@ import javafx.scene.input.KeyCombination;
 import javafx.stage.FileChooser;
 import org.lifecompanion.api.action.definition.BaseConfigActionI;
 import org.lifecompanion.api.exception.LCException;
-import org.lifecompanion.api.mode.AppMode;
 import org.lifecompanion.base.data.common.LCTask;
 import org.lifecompanion.base.data.common.UIUtils;
-import org.lifecompanion.base.data.control.AppController;
 import org.lifecompanion.base.data.control.AsyncExecutorController;
+import org.lifecompanion.base.data.control.refacto.AppModeController;
+import org.lifecompanion.base.data.control.refacto.AppModeV2;
 import org.lifecompanion.base.data.control.update.InstallationController;
 import org.lifecompanion.config.data.control.ConfigActionController;
 import org.lifecompanion.config.data.control.FileChooserType;
@@ -78,7 +78,7 @@ public class GlobalActions {
                     source,
                     Translation.getText("go.to.use.mode.save.before.message"),
                     "go.to.use.mode.save.before.button",
-                    () -> AppController.INSTANCE.currentModeProperty().set(AppMode.USE)
+                    () -> AppModeController.INSTANCE.startUseModeAfterEdit() //AppModeController.INSTANCE.modeProperty().set(AppMode.USE)
             );
         }
 
@@ -172,12 +172,12 @@ public class GlobalActions {
     }
 
     public static void checkModificationForCurrentConfiguration(boolean condition, BaseConfigActionI action, Node source, String message, String thenButtonNameId, PostCheckModificationAction postContinueAction) throws LCException {
-        if (condition && AppController.INSTANCE.currentModeProperty().get() != AppMode.USE) {
+        if (condition && AppModeController.INSTANCE.modeProperty().get() != AppModeV2.USE) {
             //Confirm
-            if (AppController.INSTANCE.currentConfigConfigurationProperty().get() != null) {
-                int unsaved = AppController.INSTANCE.currentConfigConfigurationProperty().get().unsavedActionProperty().get();
+            if (AppModeController.INSTANCE.getEditModeContext().configurationProperty().get() != null) {
+                int unsaved = AppModeController.INSTANCE.getEditModeContext().configurationProperty().get().unsavedActionProperty().get();
                 if (unsaved > 0) {
-                    Alert dlg = ConfigUIUtils.createDialog(source, Alert.AlertType.CONFIRMATION);
+                    Alert dlg = ConfigUIUtils.createAlert(source, Alert.AlertType.CONFIRMATION);
                     ButtonType typeYes = new ButtonType(Translation.getText("button.type.save.and.then", Translation.getText(thenButtonNameId)), ButtonBar.ButtonData.YES);
                     ButtonType typeNo = new ButtonType(Translation.getText("button.type.then.only", StringUtils.capitalize(Translation.getText(thenButtonNameId))), ButtonBar.ButtonData.NO);
                     ButtonType typeCancel = new ButtonType(Translation.getText("button.type.cancel"), ButtonBar.ButtonData.CANCEL_CLOSE);

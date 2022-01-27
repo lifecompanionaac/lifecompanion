@@ -39,8 +39,12 @@ public enum GeneralConfigurationController {
         enableTransition = new SimpleBooleanProperty();
     }
 
-    public void setStage(GeneralConfigurationStage stage) {
+    public void initStage(GeneralConfigurationStage stage) {
         this.stage = stage;
+    }
+
+    public GeneralConfigurationStage getStage() {
+        return stage;
     }
 
     public Object[] getStepArgs() {

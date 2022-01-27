@@ -32,9 +32,9 @@ import org.lifecompanion.api.exception.LCException;
 import org.lifecompanion.base.data.common.LCTask;
 import org.lifecompanion.base.data.common.LCUtils;
 import org.lifecompanion.base.data.common.UIUtils;
-import org.lifecompanion.base.data.component.profile.LCProfileManager;
-import org.lifecompanion.base.data.control.AppController;
 import org.lifecompanion.base.data.control.AsyncExecutorController;
+import org.lifecompanion.base.data.control.refacto.AppModeController;
+import org.lifecompanion.base.data.control.refacto.ProfileController;
 import org.lifecompanion.base.data.io.IOManager;
 import org.lifecompanion.base.data.io.task.*;
 import org.lifecompanion.config.data.component.profile.ProfileConfigSelectionController;
@@ -129,7 +129,7 @@ public class LCProfileActions {
 
         @Override
         public void doAction() throws LCException {
-            LCProfileManager.INSTANCE.getProfiles().add(this.profileToSave);
+            ProfileController.INSTANCE.getProfiles().add(this.profileToSave);
             super.doAction();
         }
 
@@ -169,8 +169,8 @@ public class LCProfileActions {
 
         @Override
         public void doAction() throws LCException {
-            if (AppController.INSTANCE.currentProfileProperty().get() == this.profileToRemove) {
-                Alert dlg = ConfigUIUtils.createDialog(source, AlertType.CONFIRMATION);
+            if (ProfileController.INSTANCE.currentProfileProperty().get() == this.profileToRemove) {
+                Alert dlg = ConfigUIUtils.createAlert(source, AlertType.CONFIRMATION);
                 dlg.getDialogPane().setContentText(Translation.getText("action.remove.profile.confirm.current.profile",
                         this.profileToRemove.nameProperty().get(), this.profileToRemove.configurationCountProperty().get()));
                 dlg.getDialogPane().setHeaderText(Translation.getText("action.remove.profile.confirm.header"));
@@ -178,13 +178,13 @@ public class LCProfileActions {
                 if (returned.get() == ButtonType.OK) {
                     this.executeProfileRemove();
                     //Now, we need to select again a profil
-                    AppController.INSTANCE.currentProfileProperty().set(null);
-                    AppController.INSTANCE.newConfigModeConfiguration();
+                    ProfileController.INSTANCE.clearSelectedProfile();
+                    //AppController.INSTANCE.newConfigModeConfiguration();
                     ProfileConfigSelectionController.INSTANCE.setProfileStep(ProfileConfigStep.PROFILE_LIST, null, null);
                 }
             } else {
                 //Ask for confirm
-                Alert dlg = ConfigUIUtils.createDialog(source, AlertType.CONFIRMATION);
+                Alert dlg = ConfigUIUtils.createAlert(source, AlertType.CONFIRMATION);
                 dlg.getDialogPane().setContentText(Translation.getText("action.remove.profile.confirm.message", this.profileToRemove.nameProperty().get(),
                         this.profileToRemove.configurationCountProperty().get()));
                 dlg.getDialogPane().setHeaderText(Translation.getText("action.remove.profile.confirm.header"));
@@ -201,7 +201,7 @@ public class LCProfileActions {
          */
         private void executeProfileRemove() {
             backupThenDeleteProfileDirectory(profileToRemove, true, () -> LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo("profile.removed.notif.title")));
-            LCProfileManager.INSTANCE.getProfiles().remove(this.profileToRemove);
+            ProfileController.INSTANCE.getProfiles().remove(this.profileToRemove);
         }
 
         @Override
@@ -224,19 +224,19 @@ public class LCProfileActions {
 
         @Override
         public void doAction() throws LCException {
-            LCProfileI currentProfile = AppController.INSTANCE.currentProfileProperty().get();
+            LCProfileI currentProfile = ProfileController.INSTANCE.currentProfileProperty().get();
 
             if (profileToSelect != currentProfile) {
-                int unsaved = AppController.INSTANCE.currentConfigConfigurationProperty().get().unsavedActionProperty().get();
+                int unsaved = AppModeController.INSTANCE.getEditModeContext().configurationProperty().get().unsavedActionProperty().get();
                 //Check if we can change profile
                 GlobalActions.checkModificationForCurrentConfiguration(currentProfile != null, this, source, Translation.getText("select.profile.action.confirm.message"), "select.profile.action.confirm.button", () -> {
                     // First, select the profile
-                    AppController.INSTANCE.currentProfileProperty().set(profileToSelect);
+                    ProfileController.INSTANCE.selectProfile(profileToSelect);
 
                     // Once full profile is loaded : notify, create new config, set current profile
                     Runnable afterFullLoading = () -> {
                         LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo(Translation.getText("action.select.profile.notif.title", profileToSelect.nameProperty())));
-                        AppController.INSTANCE.newConfigModeConfiguration();
+                        // AppModeController.INSTANCE.getConfigModeContext().switchToNew();
                     };
 
                     // Once previous profile is changed : fully load the profile
@@ -323,9 +323,9 @@ public class LCProfileActions {
                 LCStateController.INSTANCE.updateDefaultDirectory(FileChooserType.PROFILE_IMPORT, this.profileImportFile.getParentFile());
                 ProfileImportTask profileImportTask = IOManager.INSTANCE.createProfileImportTask(this.profileImportFile);
                 //Check if a existing profile have the same ID
-                LCProfileI previousProfile = LCProfileManager.INSTANCE.getByID(profileImportTask.getImportedProfileId());
+                LCProfileI previousProfile = ProfileController.INSTANCE.getByID(profileImportTask.getImportedProfileId());
                 if (previousProfile != null) {
-                    Alert dlg = ConfigUIUtils.createDialog(source, AlertType.CONFIRMATION);
+                    Alert dlg = ConfigUIUtils.createAlert(source, AlertType.CONFIRMATION);
                     dlg.getDialogPane().setContentText(Translation.getText("action.import.existing.profile.text"));
                     dlg.getDialogPane().setHeaderText(Translation.getText("action.import.existing.profile.header"));
                     Optional<ButtonType> returned = dlg.showAndWait();
@@ -337,10 +337,10 @@ public class LCProfileActions {
                     LCProfileI importedProfile = profileImportTask.getValue();
                     //Remove when needed
                     if (previousProfile != null) {
-                        LCProfileManager.INSTANCE.getProfiles().remove(previousProfile);
+                        ProfileController.INSTANCE.getProfiles().remove(previousProfile);
                     }
                     //Add to profile list
-                    LCProfileManager.INSTANCE.getProfiles().add(0, importedProfile);
+                    ProfileController.INSTANCE.getProfiles().add(0, importedProfile);
 
                     if (this.successCallback != null) {
                         this.successCallback.accept(importedProfile);
@@ -373,7 +373,7 @@ public class LCProfileActions {
         @Override
         public void doAction() throws LCException {
             // Select the profile to duplicate
-            Alert dialog = ConfigUIUtils.createDialog(source, Alert.AlertType.NONE);
+            Alert dialog = ConfigUIUtils.createAlert(source, Alert.AlertType.NONE);
             dialog.setHeaderText(Translation.getText("config.duplicate.question.select.profile"));
             ProfileSelectorControl profileSelectorControl = new ProfileSelectorControl(Translation.getText("config.duplicate.field.profile"));
             dialog.getDialogPane().setContent(profileSelectorControl);
@@ -388,7 +388,7 @@ public class LCProfileActions {
                     ProfileDuplicateTask duplicateTask = IOManager.INSTANCE.createProfileDuplicateTask(selectedProfile);
                     duplicateTask.setOnSucceeded(e -> {
                         LCProfileI duplicatedProfile = duplicateTask.getValue();
-                        LCProfileManager.INSTANCE.getProfiles().add(0, duplicatedProfile);
+                        ProfileController.INSTANCE.getProfiles().add(0, duplicatedProfile);
                         ProfileConfigSelectionController.INSTANCE.setProfileStep(ProfileConfigStep.PROFILE_EDIT, ProfileConfigStep.PROFILE_LIST, duplicatedProfile);
                     });
                     AsyncExecutorController.INSTANCE.addAndExecute(true, false, duplicateTask);

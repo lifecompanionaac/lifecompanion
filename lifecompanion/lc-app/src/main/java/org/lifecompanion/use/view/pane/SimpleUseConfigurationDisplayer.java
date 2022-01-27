@@ -38,20 +38,22 @@ import javafx.scene.paint.Color;
 import javafx.scene.transform.Scale;
 import org.lifecompanion.api.component.definition.LCConfigurationI;
 import org.lifecompanion.api.control.events.WritingEventSource;
-import org.lifecompanion.api.mode.AppMode;
+import org.lifecompanion.api.ui.ViewProviderI;
 import org.lifecompanion.base.data.common.LCUtils;
 import org.lifecompanion.base.data.config.IconManager;
 import org.lifecompanion.base.data.config.LCConstant;
-import org.lifecompanion.base.data.control.AppController;
 import org.lifecompanion.base.data.control.GlobalKeyEventManager;
 import org.lifecompanion.base.data.control.SelectionModeController;
 import org.lifecompanion.base.data.control.WritingStateController;
+import org.lifecompanion.base.data.control.refacto.AppModeController;
+import org.lifecompanion.base.data.control.refacto.AppModeV2;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 /**
@@ -93,7 +95,10 @@ public class SimpleUseConfigurationDisplayer extends Group implements LCViewInit
     private final DoubleProperty scaleY;
     private final SimpleObjectProperty<Color> backgroundColor;
 
-    public SimpleUseConfigurationDisplayer(final ReadOnlyDoubleProperty wantedWidthP, final ReadOnlyDoubleProperty wantedHeightP) {
+    private final LCConfigurationI configuration;
+
+    public SimpleUseConfigurationDisplayer(LCConfigurationI configuration, final ReadOnlyDoubleProperty wantedWidthP, final ReadOnlyDoubleProperty wantedHeightP) {
+        this.configuration = configuration;
         this.wantedHeight = wantedHeightP;
         this.wantedWidth = wantedWidthP;
         this.pressedKey = new HashSet<>();
@@ -130,17 +135,18 @@ public class SimpleUseConfigurationDisplayer extends Group implements LCViewInit
         nodeConfigurationChanging = borderPane;
     }
 
+    private Consumer<Boolean> configurationChangingListener;
+
     @Override
     public void initListener() {
         // Configuration change indicator
-        SelectionModeController.INSTANCE.setListenerStartChangeConfigurationInUseMode(changing -> {
+        SelectionModeController.INSTANCE.addConfigurationChangingListener(configurationChangingListener = changing -> {
             if (changing) {
                 showConfigurationChanging();
             } else {
                 restoreAfterConfigurationChangingDisplayed();
             }
         });
-        SelectionModeController.INSTANCE.setClearPressedKeyListener(pressedKey::clear);
         // Register filter for selection mode controller event
         this.addEventFilter(KeyEvent.ANY, (event) -> {
             // Keyboard event without filter except no repeat
@@ -206,31 +212,9 @@ public class SimpleUseConfigurationDisplayer extends Group implements LCViewInit
 
     }
 
-    private void showConfigurationChanging() {
-        LCUtils.runOnFXThread(() -> {
-            this.getTransforms().clear();
-            this.layoutXProperty().unbind();
-            this.layoutYProperty().unbind();
-            this.setLayoutX(0.0);
-            this.setLayoutY(0.0);
-            this.getChildren().add(nodeConfigurationChanging);
-        });
-    }
-
-    private void restoreAfterConfigurationChangingDisplayed() {
-        LCUtils.runOnFXThread(() -> {
-            this.getChildren().remove(nodeConfigurationChanging);
-            bindLayoutXAndY();
-        });
-    }
-
-    public void addMouseListener(final Scene element) {
-        this.addMouseListener(element, null);
-    }
-
     public void addMouseListener(final Scene element, final Predicate<MouseEvent> eventFilter) {
         EventHandler<MouseEvent> mouseEventFilter = (event) -> {
-            if (AppController.INSTANCE.currentModeProperty().get() == AppMode.USE && (eventFilter == null || eventFilter.test(event))
+            if (AppModeController.INSTANCE.isUseMode() && (eventFilter == null || eventFilter.test(event))
                     && SelectionModeController.INSTANCE.globalMouseEvent(event)) {
                 event.consume();
             }
@@ -242,70 +226,54 @@ public class SimpleUseConfigurationDisplayer extends Group implements LCViewInit
         element.addEventFilter(MouseEvent.MOUSE_PRESSED, mouseEventFilter);
     }
 
+    private void showConfigurationChanging() {
+        LCUtils.runOnFXThread(() -> {
+            this.getTransforms().clear();
+            LCUtils.unbindAndSet(layoutXProperty(), 0.0);
+            LCUtils.unbindAndSet(layoutYProperty(), 0.0);
+            this.getChildren().add(nodeConfigurationChanging);
+        });
+    }
+
+    private void restoreAfterConfigurationChangingDisplayed() {
+        LCUtils.runOnFXThread(() -> {
+            this.getChildren().remove(nodeConfigurationChanging);
+            bindLayoutXAndY();
+            if (currentScaleTransform != null) {
+                this.getTransforms().clear();
+                this.getTransforms().add(this.currentScaleTransform);
+            }
+        });
+    }
+
     @Override
     public void initBinding() {
-        AppController.INSTANCE.currentUseConfigurationProperty()
-                .addListener((observableP, oldValueP, newValueP) -> {
-                    if (oldValueP != null) {
-                        this.getChildren().remove(this.configurationView);
-                        // Free configuration binding and set
-                        this.freePreviousConfiguration(oldValueP);
-                    }
-                    // Display the view
-                    this.updateConfiguration(newValueP);
-                });
         bindLayoutXAndY();
-    }
+        this.configurationView = ViewProviderI.getComponentView(configuration, AppModeV2.USE).getView();
+        this.backgroundColor.bind(configuration.backgroundColorProperty());
+        this.configWith.bind(this.configurationView.widthProperty());
+        this.configHeight.bind(this.configurationView.heightProperty());
 
-    // To center elements
-    private void bindLayoutXAndY() {
-        this.layoutXProperty().bind(this.wantedWidth.subtract(this.configWith.multiply(this.scaleX)).divide(2.0));
-        this.layoutYProperty().bind(this.wantedHeight.subtract(this.configHeight.multiply(this.scaleY)).divide(2.0));
-    }
-
-    private void freePreviousConfiguration(LCConfigurationI previous) {
-        previous.displayedConfigurationScaleXProperty().unbind();
-        previous.displayedConfigurationScaleXProperty().set(1.0);
-        previous.displayedConfigurationScaleYProperty().unbind();
-        previous.displayedConfigurationScaleYProperty().set(1.0);
-        this.configurationView = null;
-        this.configWith.unbind();
-        this.configHeight.unbind();
-        this.backgroundColor.unbind();
-        this.scaleX.unbind();
-        this.scaleY.unbind();
-        this.currentScaleTransform.xProperty().unbind();
-        this.currentScaleTransform.yProperty().unbind();
-    }
-
-    public void updateConfiguration(final LCConfigurationI newValueP) {
-        restoreAfterConfigurationChangingDisplayed();
-        if (newValueP != null) {
-            Region view = newValueP.getDisplay(AppController.INSTANCE.getViewProvider(AppMode.USE), true).getView();
-            this.configurationView = view;
-            this.backgroundColor.bind(newValueP.backgroundColorProperty());
-            this.configWith.bind(this.configurationView.widthProperty());
-            this.configHeight.bind(this.configurationView.heightProperty());
-            this.showConfiguration(newValueP);
-        }
-    }
-
-    private void showConfiguration(final LCConfigurationI config) {
-        this.ratio = config.computedWidthProperty().get() / config.computedHeightProperty().get();
-        this.enableKeepRatio = config.keepConfigurationRatioProperty().get();
+        this.ratio = configuration.computedWidthProperty().get() / configuration.computedHeightProperty().get();
+        this.enableKeepRatio = configuration.keepConfigurationRatioProperty().get();
         // Compute scale for this configuration view
         this.currentScaleTransform = new Scale();
-        // this.currentScaleTransform.
         this.updateCurrentScale();
         // Display and apply scale
         this.getTransforms().clear();
         this.getTransforms().add(this.currentScaleTransform);
         this.getChildren().add(this.configurationView);
         // Inform config of the display scaling (providing clean scaled finite values)
-        config.displayedConfigurationScaleXProperty().bind(LCUtils.bindToValueOrIfInfinityOrNan(currentScaleTransform.xProperty(), 1.0));
-        config.displayedConfigurationScaleYProperty().bind(LCUtils.bindToValueOrIfInfinityOrNan(currentScaleTransform.yProperty(), 1.0));
+        configuration.displayedConfigurationScaleXProperty().bind(LCUtils.bindToValueOrIfInfinityOrNan(currentScaleTransform.xProperty(), 1.0));
+        configuration.displayedConfigurationScaleYProperty().bind(LCUtils.bindToValueOrIfInfinityOrNan(currentScaleTransform.yProperty(), 1.0));
         // To receive key event
         this.requestFocus();
+    }
+
+    // To center elements
+    private void bindLayoutXAndY() {
+        this.layoutXProperty().bind(this.wantedWidth.subtract(this.configWith.multiply(this.scaleX)).divide(2.0));
+        this.layoutYProperty().bind(this.wantedHeight.subtract(this.configHeight.multiply(this.scaleY)).divide(2.0));
     }
 
     private void updateCurrentScale() {
@@ -330,6 +298,23 @@ public class SimpleUseConfigurationDisplayer extends Group implements LCViewInit
 
     public ReadOnlyObjectProperty<Color> backgroundColorProperty() {
         return this.backgroundColor;
+    }
+
+    public void unbindAndClean() {
+        SelectionModeController.INSTANCE.removeConfigurationChangingListener(configurationChangingListener);
+        LCUtils.unbindAndSetNull(backgroundColor);
+        LCUtils.unbindAndSet(configuration.displayedConfigurationScaleXProperty(), 1.0);
+        LCUtils.unbindAndSet(configuration.displayedConfigurationScaleYProperty(), 1.0);
+        LCUtils.unbindAndSet(configWith, 0.0);
+        LCUtils.unbindAndSet(configHeight, 0.0);
+        LCUtils.unbindAndSet(scaleX, 0.0);
+        LCUtils.unbindAndSet(scaleY, 0.0);
+        this.getTransforms().clear();
+        if (currentScaleTransform != null) {
+            LCUtils.unbindAndSet(currentScaleTransform.xProperty(), 1.0);
+            LCUtils.unbindAndSet(currentScaleTransform.yProperty(), 1.0);
+        }
+        LCUtils.exploreComponentViewChildrenToUnbind(this);
     }
 
 }

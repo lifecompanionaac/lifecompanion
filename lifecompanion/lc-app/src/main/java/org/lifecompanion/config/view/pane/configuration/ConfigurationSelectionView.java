@@ -39,7 +39,7 @@ import org.lifecompanion.base.data.common.DisableSelectionSelectionModel;
 import org.lifecompanion.base.data.common.Triple;
 import org.lifecompanion.base.data.common.UIUtils;
 import org.lifecompanion.base.data.config.LCGraphicStyle;
-import org.lifecompanion.base.data.control.AppController;
+import org.lifecompanion.base.data.control.refacto.ProfileController;
 import org.lifecompanion.base.view.pane.profile.ProfileIconView;
 import org.lifecompanion.config.data.action.impl.LCConfigurationActions;
 import org.lifecompanion.config.data.component.profile.ProfileConfigSelectionController;
@@ -156,8 +156,8 @@ public class ConfigurationSelectionView extends BorderPane implements ProfileCon
 
     @Override
     public void initBinding() {
-        this.labelProfileName.textProperty().bind(EasyBind.select(AppController.INSTANCE.currentProfileProperty()).selectObject(LCProfileI::nameProperty));
-        this.profileIconView.profileProperty().bind(AppController.INSTANCE.currentProfileProperty());
+        this.labelProfileName.textProperty().bind(EasyBind.select(ProfileController.INSTANCE.currentProfileProperty()).selectObject(LCProfileI::nameProperty));
+        this.profileIconView.profileProperty().bind(ProfileController.INSTANCE.currentProfileProperty());
     }
     //========================================================================
 
@@ -180,7 +180,7 @@ public class ConfigurationSelectionView extends BorderPane implements ProfileCon
         if (this.previousListBinding != null) {
             this.previousListBinding.unsubscribe();
         }
-        this.previousListBinding = EasyBind.listBind(this.configurationList, AppController.INSTANCE.currentProfileProperty().get().getConfiguration());
+        this.previousListBinding = EasyBind.listBind(this.configurationList, ProfileController.INSTANCE.currentProfileProperty().get().getConfiguration());
     }
 
     @Override

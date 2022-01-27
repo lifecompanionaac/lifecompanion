@@ -25,7 +25,6 @@ import javafx.scene.input.DataFormat;
 import javafx.scene.input.KeyCode;
 import org.lifecompanion.api.component.definition.LCConfigurationI;
 import org.lifecompanion.base.data.common.LCUtils;
-import org.lifecompanion.base.data.control.AppController;
 import org.lifecompanion.base.data.control.virtual.RobotProvider;
 import org.lifecompanion.base.data.control.virtual.keyboard.VirtualKeyboardController;
 import org.lifecompanion.base.data.control.virtual.keyboard.VirtualKeyboardI;
@@ -94,9 +93,7 @@ public class RobotVirtualKeyboard implements VirtualKeyboardI {
     //========================================================================
     @Override
     public void modeStart(final LCConfigurationI configuration) {
-        if (!AppController.INSTANCE.isOnEmbeddedDevice()) {
-            this.robot = RobotProvider.getInstance();
-        }
+        this.robot = RobotProvider.getInstance();
     }
 
     @Override

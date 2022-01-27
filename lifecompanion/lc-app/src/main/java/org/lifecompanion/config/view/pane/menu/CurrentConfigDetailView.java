@@ -31,7 +31,8 @@ import org.lifecompanion.api.component.definition.LCConfigurationI;
 import org.lifecompanion.api.ui.config.ConfigurationProfileLevelEnum;
 import org.lifecompanion.base.data.common.UIUtils;
 import org.lifecompanion.base.data.config.LCGraphicStyle;
-import org.lifecompanion.base.data.control.AppController;
+import org.lifecompanion.base.data.control.refacto.AppModeController;
+import org.lifecompanion.base.data.control.refacto.ProfileController;
 import org.lifecompanion.config.data.action.impl.LCConfigurationActions;
 import org.lifecompanion.config.data.action.impl.LCConfigurationActions.RemoveConfigurationAction;
 import org.lifecompanion.config.data.config.LCGlyphFont;
@@ -93,14 +94,14 @@ public class CurrentConfigDetailView extends VBox implements LCViewInitHelper {
     public void initListener() {
         this.buttonSave.setOnAction(LCConfigurationActions.HANDLER_SAVE);
         this.buttonExport.setOnAction(LCConfigurationActions.HANDLER_EXPORT);
-        this.buttonRemove.setOnAction((ea) -> ConfigActionController.INSTANCE.executeAction(new RemoveConfigurationAction(buttonRemove, AppController.INSTANCE.currentProfileProperty().get(),
-                AppController.INSTANCE.currentConfigDescriptionProperty().get())));
+        this.buttonRemove.setOnAction((ea) -> ConfigActionController.INSTANCE.executeAction(new RemoveConfigurationAction(buttonRemove, ProfileController.INSTANCE.currentProfileProperty().get(),
+                AppModeController.INSTANCE.getEditModeContext().configurationDescriptionProperty().get())));
 
     }
 
     @Override
     public void initBinding() {
-        AppController.INSTANCE.currentConfigDescriptionProperty().addListener((obs, ov, nv) -> {
+        AppModeController.INSTANCE.getEditModeContext().configurationDescriptionProperty().addListener((obs, ov, nv) -> {
             if (ov != null) {
                 this.labelConfigName.textProperty().unbind();
                 this.labelLastSaveDate.textProperty().unbind();
@@ -126,10 +127,10 @@ public class CurrentConfigDetailView extends VBox implements LCViewInitHelper {
             }
         });
         //Can't remove/export unsaved configuration
-        this.buttonRemove.disableProperty().bind(AppController.INSTANCE.currentConfigDescriptionProperty().isNull());
-        this.buttonExport.disableProperty().bind(AppController.INSTANCE.currentConfigDescriptionProperty().isNull());
+        this.buttonRemove.disableProperty().bind(AppModeController.INSTANCE.getEditModeContext().configurationDescriptionProperty().isNull());
+        this.buttonExport.disableProperty().bind(AppModeController.INSTANCE.getEditModeContext().configurationDescriptionProperty().isNull());
         //Bind unsaved modifications
-        AppController.INSTANCE.currentConfigConfigurationProperty()
+        AppModeController.INSTANCE.getEditModeContext().configurationProperty()
                 .addListener((ChangeListener<LCConfigurationI>) (observableP, oldValueP, newValueP) -> {
                     //Init value
                     Platform.runLater(() -> {

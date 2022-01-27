@@ -22,6 +22,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.input.KeyEvent;
+import org.lifecompanion.api.component.definition.LCConfigurationI;
 import org.lifecompanion.base.data.action.definition.CommonActions;
 import org.lifecompanion.base.data.common.UIUtils;
 import org.lifecompanion.base.data.config.LCConstant;
@@ -35,6 +36,8 @@ import org.lifecompanion.use.view.pane.SimpleUseConfigurationDisplayer;
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public class ConfigUseScene extends Scene implements LCViewInitHelper {
+
+    // FIXME : clear/unbind this scene/stage
 
     /**
      * The root of this scene
@@ -56,19 +59,18 @@ public class ConfigUseScene extends Scene implements LCViewInitHelper {
      */
     private Button buttonFullscreen;
 
-    public ConfigUseScene(final Group rootP) {
-        super(rootP);
-        this.root = rootP;
-        this.getStylesheets().addAll(LCConstant.CSS_STYLE_PATH);
-    }
+    private final LCConfigurationI configuration;
 
-    public SimpleUseConfigurationDisplayer getConfigurationDisplayer() {
-        return this.configurationDisplayer;
+    public ConfigUseScene(LCConfigurationI configuration) {
+        super(new Group());
+        this.configuration = configuration;
+        this.root = (Group) getRoot();
+        this.getStylesheets().addAll(LCConstant.CSS_STYLE_PATH);
     }
 
     @Override
     public void initUI() {
-        this.configurationDisplayer = new SimpleUseConfigurationDisplayer(this.widthProperty(), this.heightProperty());
+        this.configurationDisplayer = new SimpleUseConfigurationDisplayer(this.configuration, this.widthProperty(), this.heightProperty());
         this.root.getChildren().add(this.configurationDisplayer);
 
         // Button go config mode
@@ -113,5 +115,10 @@ public class ConfigUseScene extends Scene implements LCViewInitHelper {
         this.buttonFullscreen.setOnAction(CommonActions.HANDLER_SWITCH_FULLSCREEN);
 
         SessionStatsController.INSTANCE.registerScene(this);
+    }
+
+    public void unbindAndClean() {
+        SessionStatsController.INSTANCE.unregisterScene(this);
+        this.configurationDisplayer.unbindAndClean();
     }
 }

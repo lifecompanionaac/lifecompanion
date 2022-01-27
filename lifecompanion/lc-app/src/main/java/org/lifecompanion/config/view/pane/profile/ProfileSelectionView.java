@@ -32,8 +32,8 @@ import org.lifecompanion.api.component.definition.LCProfileI;
 import org.lifecompanion.base.data.common.DisableSelectionSelectionModel;
 import org.lifecompanion.base.data.common.Triple;
 import org.lifecompanion.base.data.common.UIUtils;
-import org.lifecompanion.base.data.component.profile.LCProfileManager;
 import org.lifecompanion.base.data.config.LCGraphicStyle;
+import org.lifecompanion.base.data.control.refacto.ProfileController;
 import org.lifecompanion.config.data.action.impl.LCProfileActions;
 import org.lifecompanion.config.data.action.impl.LCProfileActions.ProfileExportAction;
 import org.lifecompanion.config.data.action.impl.LCProfileActions.RemoveProfileAction;
@@ -156,7 +156,7 @@ public class ProfileSelectionView extends BorderPane implements LCViewInitHelper
 
     @Override
     public void initBinding() {
-        this.profileListView.setItems(LCProfileManager.INSTANCE.getProfiles());
+        this.profileListView.setItems(ProfileController.INSTANCE.getProfiles());
         this.buttonRemove.disableProperty().bind(this.profileListView.getSelectionModel().selectedItemProperty().isNull());
         this.buttonEdit.disableProperty().bind(this.profileListView.getSelectionModel().selectedItemProperty().isNull());
         this.buttonExport.disableProperty().bind(this.profileListView.getSelectionModel().selectedItemProperty().isNull());

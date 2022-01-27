@@ -28,9 +28,11 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import org.lifecompanion.api.component.definition.*;
 import org.lifecompanion.api.definition.selection.*;
-import org.lifecompanion.api.mode.AppMode;
 import org.lifecompanion.api.mode.ModeListenerI;
 import org.lifecompanion.base.data.common.LCUtils;
+import org.lifecompanion.base.data.control.refacto.AppModeController;
+import org.lifecompanion.base.data.control.refacto.AppModeV2;
+import org.lifecompanion.base.data.control.refacto.ProfileController;
 import org.lifecompanion.base.data.definition.selection.SelectionModeParameter;
 import org.lifecompanion.base.data.definition.selection.impl.*;
 import org.lifecompanion.base.data.io.IOManager;
@@ -126,7 +128,7 @@ public enum SelectionModeController implements ModeListenerI {
     /**
      * Listener called when there is a configuration change in use mode
      */
-    private Consumer<Boolean> listenerConfigurationChanging;
+    private final Set<Consumer<Boolean>> configurationChangingListeners;
 
     SelectionModeController() {
         this.currentOverPart = new SimpleObjectProperty<>(this, "currentOverPart", null);
@@ -142,10 +144,16 @@ public enum SelectionModeController implements ModeListenerI {
                 this.gridChanged(nv);
             }
         };
+        configurationChangingListeners = new HashSet<>();
+        AppModeController.INSTANCE.modeProperty().addListener((obs, ov, nv) -> {
+            if (nv == AppModeV2.EDIT) {
+                previousConfigurationInUseMode = null;
+            }
+        });
     }
 
     private SelectionModeI getSelectionModeConfiguration() {
-        return AppController.INSTANCE.currentUseConfigurationProperty().get().selectionModeProperty().get();
+        return AppModeController.INSTANCE.getUseModeContext().configurationProperty().get().selectionModeProperty().get();
     }
 
     private SelectionModeParameterI getSelectionModeParameter() {
@@ -412,20 +420,6 @@ public enum SelectionModeController implements ModeListenerI {
     }
     //========================================================================
 
-    // Class part : "Key event listener"
-    //========================================================================
-    // Issue : key not released if a dialog is shown
-    public void clearPressedKeys() {
-        if (this.clearPressedKeyListener != null) {
-            this.clearPressedKeyListener.run();
-        }
-    }
-
-    public void setClearPressedKeyListener(Runnable clearPressedKeyListener) {
-        this.clearPressedKeyListener = clearPressedKeyListener;
-    }
-    //========================================================================
-
     /**
      * To add a listener on every global mouse event fired by user.
      *
@@ -523,7 +517,6 @@ public enum SelectionModeController implements ModeListenerI {
         this.currentPressComponents.clear();
         this.currentHistoryIndex = -1;
         this.playingProperty.unbind();
-        previousConfigurationInUseMode = null;
         final DirectSelectionModeI directSelectionModeI = configuration.directSelectionOnMouseOnScanningSelectionModeProperty().get();
         if (directSelectionModeI != null) {
             directSelectionModeI.dispose();
@@ -601,7 +594,7 @@ public enum SelectionModeController implements ModeListenerI {
     }
 
     private void gridChanged(final GridComponentI newGrid) {
-        LCConfigurationI configuration = AppController.INSTANCE.currentUseConfigurationProperty().get();
+        LCConfigurationI configuration = AppModeController.INSTANCE.getUseModeContext().configurationProperty().get();
         SelectionModeI currentMode = this.getSelectionModeConfiguration();
         this.LOGGER.debug("Grid changed for a scanning selection mode, current mode is {}", currentMode);
         //If there there is a existing mode, but the new grid change the selection mode
@@ -716,7 +709,7 @@ public enum SelectionModeController implements ModeListenerI {
             //Show in view
             final GridPartComponentI toShowToFrontFinal = toShowToFront;
             LCUtils.runOnFXThread(() -> {
-                toShowToFrontFinal.showToFront(AppController.INSTANCE.getViewProvider(AppMode.USE), true);//Show the target to front
+                toShowToFrontFinal.showToFront(AppModeV2.USE.getViewProvider(), true);
                 this.getSelectionModeConfiguration().getSelectionView().toFront();//Show the selection model to front (over displayed component)
             });
         }
@@ -825,8 +818,12 @@ public enum SelectionModeController implements ModeListenerI {
         }
     }
 
-    public void setListenerStartChangeConfigurationInUseMode(Consumer<Boolean> listenerStartChangeConfigurationInUseMode) {
-        this.listenerConfigurationChanging = listenerStartChangeConfigurationInUseMode;
+    public void addConfigurationChangingListener(Consumer<Boolean> listenerStartChangeConfigurationInUseMode) {
+        this.configurationChangingListeners.add(listenerStartChangeConfigurationInUseMode);
+    }
+
+    public void removeConfigurationChangingListener(Consumer<Boolean> listenerStartChangeConfigurationInUseMode) {
+        this.configurationChangingListeners.remove(listenerStartChangeConfigurationInUseMode);
     }
 
     /**
@@ -837,23 +834,22 @@ public enum SelectionModeController implements ModeListenerI {
      */
     public void changeConfigurationInUseMode(final LCConfigurationDescriptionI configurationDescription) {
         //If there is a configuration and a profile
-        if (configurationDescription != null && AppController.INSTANCE.currentProfileProperty().get() != null) {
+        if (configurationDescription != null && ProfileController.INSTANCE.currentProfileProperty().get() != null) {
             UserActionController.INSTANCE.pauseActionLaunch();
             //Enable changing view
-            if (listenerConfigurationChanging != null) {
-                listenerConfigurationChanging.accept(true);
-            }
-            System.gc();
-            //Load the configuration (synch. because the action are executed in another Thread)
-            ConfigurationLoadingTask configurationLoadingTask = IOManager.INSTANCE.createLoadConfigurationTask(configurationDescription,
-                    AppController.INSTANCE.currentProfileProperty().get());
+            configurationChangingListeners.forEach(l -> l.accept(true));
+            System.gc();// FIXME ?
+            //Load the configuration (synch. because the action is executed in another Thread)
+            ConfigurationLoadingTask configurationLoadingTask = IOManager.INSTANCE.createLoadConfigurationTask(configurationDescription, ProfileController.INSTANCE.currentProfileProperty().get());
             try {
                 LCConfigurationI loadedConfiguration = LCUtils.executeInCurrentThread(configurationLoadingTask);
-                //Change
-                AppController.INSTANCE.changeUseModeConfiguration(loadedConfiguration, configurationDescription);
+                final LCConfigurationDescriptionI previous = AppModeController.INSTANCE.getUseModeContext().configurationDescriptionProperty().get();
+                System.err.println("Previous is " + previous.configurationNameProperty().get());
+                AppModeController.INSTANCE.switchUseModeConfiguration(loadedConfiguration, configurationDescription);
+                this.previousConfigurationInUseMode = previous;
             } catch (Throwable t) {
                 this.LOGGER.warn("Couldn't load the configuration for change configuration use action", t);
-                listenerConfigurationChanging.accept(false);
+                configurationChangingListeners.forEach(l -> l.accept(false));
                 UserActionController.INSTANCE.unpauseActionLaunch();
             }
         }
@@ -866,10 +862,6 @@ public enum SelectionModeController implements ModeListenerI {
         if (this.previousConfigurationInUseMode != null) {
             this.changeConfigurationInUseMode(this.previousConfigurationInUseMode);
         }
-    }
-
-    public void setPreviousConfigurationInUseMode(final LCConfigurationDescriptionI configurationDescription) {
-        this.previousConfigurationInUseMode = configurationDescription;
     }
     //========================================================================
 

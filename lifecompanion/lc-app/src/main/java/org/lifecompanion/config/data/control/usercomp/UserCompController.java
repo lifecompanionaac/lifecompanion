@@ -23,8 +23,8 @@ import javafx.collections.ObservableList;
 import org.lifecompanion.api.component.definition.usercomp.UserCompDescriptionI;
 import org.lifecompanion.api.mode.LCStateListener;
 import org.lifecompanion.base.data.common.LCUtils;
-import org.lifecompanion.base.data.control.AppController;
 import org.lifecompanion.base.data.control.AsyncExecutorController;
+import org.lifecompanion.base.data.control.refacto.ProfileController;
 import org.lifecompanion.base.data.io.IOManager;
 import org.lifecompanion.base.data.io.task.MultiUserCompDescriptionLoadingTask;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
@@ -92,7 +92,7 @@ public enum UserCompController implements LCStateListener {
     @SuppressWarnings("unchecked")
     @Override
     public void lcStart() {
-        AppController.INSTANCE.currentProfileProperty().addListener((obs, ov, nv) -> {
+        ProfileController.INSTANCE.currentProfileProperty().addListener((obs, ov, nv) -> {
             if (nv != null) {
                 MultiUserCompDescriptionLoadingTask loadTask = IOManager.INSTANCE.createMultiUserCompDescriptionLoadingTask(nv);
                 loadTask.setOnSucceeded(e -> {

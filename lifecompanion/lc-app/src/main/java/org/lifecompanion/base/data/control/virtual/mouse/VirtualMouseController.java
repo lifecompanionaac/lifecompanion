@@ -37,7 +37,8 @@ import org.lifecompanion.api.component.definition.LCConfigurationI;
 import org.lifecompanion.api.component.definition.VirtualMouseDrawing;
 import org.lifecompanion.api.mode.ModeListenerI;
 import org.lifecompanion.base.data.common.LCUtils;
-import org.lifecompanion.base.data.control.AppController;
+import org.lifecompanion.base.data.control.refacto.AppModeController;
+import org.lifecompanion.base.data.control.refacto.StageUtils;
 import org.lifecompanion.base.data.control.virtual.RobotProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -304,10 +305,10 @@ public enum VirtualMouseController implements ModeListenerI {
     private void frameToFrontAndFocus() {
         //mouse stage and main frame to front
         LCUtils.runOnFXThread(() -> {
-            AppController.INSTANCE.getMainStage().toFront();
+            AppModeController.INSTANCE.getUseModeContext().stageProperty().get().toFront();
             this.virtualMouseStage.toFront();
-            AppController.INSTANCE.getMainStage().requestFocus();
-            this.centerMouseOnMainFrame();
+            AppModeController.INSTANCE.getUseModeContext().stageProperty().get().requestFocus();
+            this.centerMouseOnStage();
         });
     }
     //========================================================================
@@ -338,30 +339,28 @@ public enum VirtualMouseController implements ModeListenerI {
      * @param amount amount of wheel move
      */
     private void executeMouseWheel(final int amount) {
-        if (!AppController.INSTANCE.isOnEmbeddedDevice()) {
-            final Rectangle2D screenBounds = Screen.getPrimary().getBounds();
-            final Stage mainFrame = AppController.INSTANCE.getMainStage();
-            double x = screenBounds.getWidth() / 2.0, y = screenBounds.getHeight() / 2.0;
-            while (x > 0 && x > y && new Rectangle2D(mainFrame.getX(), mainFrame.getY(), mainFrame.getWidth(), mainFrame.getHeight()).contains(x, y)) {
-                x -= 10.0;
-                y -= 10.0;
-            }
-            if (x > 0 && y > 0) {
-                mouseMoveDirect(x, y);
-                this.robot.delay(MOUSE_SCROLL_DELAY);
-                this.robot.mouseWheel(amount);
-                centerMouseOnMainFrame();
-                LOGGER.info("Found a position where the mouse can be set to scroll : {}x{}", x, y);
-            }
+        final Rectangle2D screenBounds = Screen.getPrimary().getBounds();
+        final Stage stage = AppModeController.INSTANCE.getUseModeContext().stageProperty().get();
+        double x = screenBounds.getWidth() / 2.0, y = screenBounds.getHeight() / 2.0;
+        while (x > 0 && x > y && new Rectangle2D(stage.getX(), stage.getY(), stage.getWidth(), stage.getHeight()).contains(x, y)) {
+            x -= 10.0;
+            y -= 10.0;
+        }
+        if (x > 0 && y > 0) {
+            mouseMoveDirect(x, y);
+            this.robot.delay(MOUSE_SCROLL_DELAY);
+            this.robot.mouseWheel(amount);
+            centerMouseOnStage();
+            LOGGER.info("Found a position where the mouse can be set to scroll : {}x{}", x, y);
         }
     }
 
 
-    public void centerMouseOnMainFrame() {
+    public void centerMouseOnStage() {
         this.checkRobotInit();
-        Stage mainFrame = AppController.INSTANCE.getMainStage();
-        double x = mainFrame.getX() + mainFrame.getWidth() / 2.0;
-        double y = mainFrame.getY() + mainFrame.getHeight() / 2.0;
+        Stage stage = AppModeController.INSTANCE.getUseModeContext().stageProperty().get();
+        double x = stage.getX() + stage.getWidth() / 2.0;
+        double y = stage.getY() + stage.getHeight() / 2.0;
         this.moveMouseToWithDelay(x, y);
     }
 
@@ -370,20 +369,20 @@ public enum VirtualMouseController implements ModeListenerI {
         LOGGER.info("Contains : {},{} = {},{}", this.frameWidth / 2, this.frameHeight / 2, this.mouseX.get(), this.mouseY.get());
         //Top left
         if (new Rectangle2D(0, 0, this.frameWidth / 2, this.frameHeight / 2).contains(this.mouseX.get(), this.mouseY.get())) {
-            AppController.INSTANCE.moveFrameTo(FramePosition.BOTTOM_RIGHT);
+            StageUtils.moveStageTo(AppModeController.INSTANCE.getEditModeContext().getStage(), FramePosition.BOTTOM_RIGHT);
         }
         //Top right
         else if (new Rectangle2D(this.frameWidth / 2, 0, this.frameWidth / 2, this.frameHeight / 2).contains(this.mouseX.get(), this.mouseY.get())) {
-            AppController.INSTANCE.moveFrameTo(FramePosition.BOTTOM_LEFT);
+            StageUtils.moveStageTo(AppModeController.INSTANCE.getEditModeContext().getStage(), FramePosition.BOTTOM_LEFT);
         }
         //Bottom right
         else if (new Rectangle2D(this.frameWidth / 2, this.frameHeight / 2, this.frameWidth / 2, this.frameHeight / 2).contains(this.mouseX.get(),
                 this.mouseY.get())) {
-            AppController.INSTANCE.moveFrameTo(FramePosition.TOP_LEFT);
+            StageUtils.moveStageTo(AppModeController.INSTANCE.getEditModeContext().getStage(), FramePosition.TOP_LEFT);
         }
         //Bottom left
         else if (new Rectangle2D(0, this.frameHeight / 2, this.frameWidth / 2, this.frameHeight / 2).contains(this.mouseX.get(), this.mouseY.get())) {
-            AppController.INSTANCE.moveFrameTo(FramePosition.TOP_RIGHT);
+            StageUtils.moveStageTo(AppModeController.INSTANCE.getEditModeContext().getStage(), FramePosition.TOP_RIGHT);
         }
     }
 
@@ -402,23 +401,21 @@ public enum VirtualMouseController implements ModeListenerI {
                 });
             }
         } else {
-            if (!AppController.INSTANCE.isOnEmbeddedDevice()) {
-                this.checkRobotInit();
-                Rectangle2D primaryScreenBounds = Screen.getPrimary().getBounds();
-                this.frameWidth = primaryScreenBounds.getWidth();
-                this.frameHeight = primaryScreenBounds.getHeight();
+            this.checkRobotInit();
+            Rectangle2D primaryScreenBounds = Screen.getPrimary().getBounds();
+            this.frameWidth = primaryScreenBounds.getWidth();
+            this.frameHeight = primaryScreenBounds.getHeight();
 
-                LCUtils.runOnFXThread(() -> {
-                    this.virtualMouseStage = VirtualMouseStage.getInstance();
-                    this.virtualMouseStage.show();
-                    final Rectangle2D screenBounds = Screen.getPrimary().getBounds();
-                    this.mouseX.set(screenBounds.getWidth() / 2.0);
-                    this.mouseY.set(screenBounds.getHeight() / 2.0);
-                    this.frameToFrontAndFocus();
-                    this.checkFramePositionWithMouse();
-                    callback.run();
-                });
-            }
+            LCUtils.runOnFXThread(() -> {
+                this.virtualMouseStage = VirtualMouseStage.getInstance();
+                this.virtualMouseStage.show();
+                final Rectangle2D screenBounds = Screen.getPrimary().getBounds();
+                this.mouseX.set(screenBounds.getWidth() / 2.0);
+                this.mouseY.set(screenBounds.getHeight() / 2.0);
+                this.frameToFrontAndFocus();
+                this.checkFramePositionWithMouse();
+                callback.run();
+            });
         }
     }
 
@@ -443,9 +440,8 @@ public enum VirtualMouseController implements ModeListenerI {
     }
 
     private Rectangle2D getMainFrameBounds() {
-        Stage mainFrame = AppController.INSTANCE.getMainStage();
-        Rectangle2D frameBounds = new Rectangle2D(mainFrame.getX(), mainFrame.getY(), mainFrame.getWidth(), mainFrame.getHeight());
-        return frameBounds;
+        Stage stage = AppModeController.INSTANCE.getUseModeContext().stageProperty().get();
+        return new Rectangle2D(stage.getX(), stage.getY(), stage.getWidth(), stage.getHeight());
     }
     //========================================================================
 
@@ -453,27 +449,23 @@ public enum VirtualMouseController implements ModeListenerI {
     //========================================================================
     @Override
     public void modeStart(final LCConfigurationI configuration) {
-        if (!AppController.INSTANCE.isOnEmbeddedDevice()) {
-            this.sizeScale.bind(configuration.getVirtualMouseParameters().mouseSizeProperty().divide(10.0));
-            this.timePerPixelSpeed.bind(Bindings.createDoubleBinding(
-                    () -> 1.0 / configuration.getVirtualMouseParameters().mouseSpeedProperty().get() * VirtualMouseController.TIME_PER_PIXEL,
-                    configuration.getVirtualMouseParameters().mouseSpeedProperty()));
-            this.color.bind(configuration.getVirtualMouseParameters().mouseColorProperty());
-            this.strokeColor.bind(configuration.getVirtualMouseParameters().mouseStrokeColorProperty());
-            this.mouseDrawing.bind(configuration.getVirtualMouseParameters().mouseDrawingProperty());
-        }
+        this.sizeScale.bind(configuration.getVirtualMouseParameters().mouseSizeProperty().divide(10.0));
+        this.timePerPixelSpeed.bind(Bindings.createDoubleBinding(
+                () -> 1.0 / configuration.getVirtualMouseParameters().mouseSpeedProperty().get() * VirtualMouseController.TIME_PER_PIXEL,
+                configuration.getVirtualMouseParameters().mouseSpeedProperty()));
+        this.color.bind(configuration.getVirtualMouseParameters().mouseColorProperty());
+        this.strokeColor.bind(configuration.getVirtualMouseParameters().mouseStrokeColorProperty());
+        this.mouseDrawing.bind(configuration.getVirtualMouseParameters().mouseDrawingProperty());
     }
 
     @Override
     public void modeStop(final LCConfigurationI configuration) {
-        if (!AppController.INSTANCE.isOnEmbeddedDevice()) {
-            this.sizeScale.unbind();
-            this.timePerPixelSpeed.unbind();
-            this.color.unbind();
-            this.strokeColor.unbind();
-            this.mouseDrawing.unbind();
-            this.hideMouseFrame();
-        }
+        this.sizeScale.unbind();
+        this.timePerPixelSpeed.unbind();
+        this.color.unbind();
+        this.strokeColor.unbind();
+        this.mouseDrawing.unbind();
+        this.hideMouseFrame();
     }
     //========================================================================
 }

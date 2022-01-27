@@ -30,7 +30,7 @@ import org.lifecompanion.base.data.component.simple.GridPartGridComponent;
 import org.lifecompanion.base.data.style.impl.ShapeStyleBinder;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Base view for a grid part grid component.
@@ -59,7 +59,10 @@ public class GridPartGridViewBase extends Pane implements ComponentViewI<GridPar
         this.layoutYProperty().bind(this.model.layoutYProperty());
         this.prefWidthProperty().bind(this.model.layoutWidthProperty());
         this.prefHeightProperty().bind(this.model.layoutHeightProperty());
-        //When grid content change
+        //When grid content change (and init with initial content)
+        for (GridPartComponentI comp : new ArrayList<>(this.model.getGrid().getGridContent())) {
+            GridPartGridViewBase.this.getChildren().add(comp.getDisplay(viewProvider, useCache).getView());
+        }
         this.model.getGrid().getGridContent().addListener(gridPartChangeListener = LCUtils.createListChangeListener((added) -> {
             GridPartGridViewBase.this.getChildren().add(added.getDisplay(viewProvider, useCache).getView());
         }, (removed) -> {
@@ -75,10 +78,6 @@ public class GridPartGridViewBase extends Pane implements ComponentViewI<GridPar
         this.useCache = useCache;
         this.model = componentP;
         this.initAll();
-        List<GridPartComponentI> allComponent = this.model.getGrid().getGridContent();
-        for (GridPartComponentI comp : allComponent) {
-            GridPartGridViewBase.this.getChildren().add(comp.getDisplay(viewProvider, useCache).getView());
-        }
     }
 
     @Override

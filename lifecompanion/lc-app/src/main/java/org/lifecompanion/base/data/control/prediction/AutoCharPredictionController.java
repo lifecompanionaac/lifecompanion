@@ -43,6 +43,12 @@ public class AutoCharPredictionController extends AbstractPredictionController<C
         this.initializePredictorListener(PluginManager.INSTANCE.getCharPredictors());
     }
 
+    @Override
+    public void lcStart() {
+        super.lcStart();
+        getAvailablePredictor().add(LCCharPredictor.INSTANCE);
+    }
+
     // Class part : "Abstract implementations"
     //========================================================================
     @Override

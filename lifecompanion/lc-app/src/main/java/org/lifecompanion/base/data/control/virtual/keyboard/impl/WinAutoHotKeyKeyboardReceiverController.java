@@ -24,7 +24,6 @@ import org.lifecompanion.api.component.definition.LCConfigurationI;
 import org.lifecompanion.api.control.events.WritingEventSource;
 import org.lifecompanion.api.mode.ModeListenerI;
 import org.lifecompanion.base.data.config.LCConstant;
-import org.lifecompanion.base.data.control.AppController;
 import org.lifecompanion.base.data.control.GlobalKeyEventManager;
 import org.lifecompanion.base.data.control.WritingStateController;
 import org.lifecompanion.base.data.control.virtual.keyboard.mapping.Win32ToFxKeyCodeConverter;
@@ -191,7 +190,7 @@ public enum WinAutoHotKeyKeyboardReceiverController implements ModeListenerI {
     //========================================================================
     @Override
     public void modeStart(LCConfigurationI configuration) {
-        if (SystemType.current() == SystemType.WINDOWS && !AppController.INSTANCE.isOnEmbeddedDevice() && configuration.virtualKeyboardProperty().get()) {
+        if (SystemType.current() == SystemType.WINDOWS && configuration.virtualKeyboardProperty().get()) {
             startListenerServer();
             final Set<KeyCode> blockedKeyCodes = GlobalKeyEventManager.INSTANCE.getBlockedKeyCodes();
             LOGGER.info("Detected {} keys to block in external input hook", blockedKeyCodes.size());

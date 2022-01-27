@@ -89,6 +89,8 @@ public interface LCConfigurationI extends DisplayableComponentI, VoiceSynthesize
 
     DoubleProperty displayedConfigurationScaleYProperty();
 
+    DoubleProperty configurationScaleInEditModeProperty();
+
     /**
      * @return a property that define this configuration height.<br>
      * This height is managed by the configuration implementation itself, it can be fixed, but it can also change

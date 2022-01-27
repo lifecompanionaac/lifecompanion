@@ -18,18 +18,16 @@
  */
 package org.lifecompanion.config.data.config;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Arrays;
-import java.util.Optional;
-
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.GlyphFont;
 import org.controlsfx.glyphfont.GlyphFontRegistry;
-import org.lifecompanion.base.data.config.LCGraphicStyle;
 import org.lifecompanion.base.data.config.ResourceHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
 
 /**
  * Class for glyph font.<br>
@@ -61,9 +59,9 @@ public class LCGlyphFont {
                 GlyphFontRegistry.register("Material Icons", miis, 14);
                 LCGlyphFont.FONT_MATERIAL = GlyphFontRegistry.font("Material Icons");
             }
-            LCGlyphFont.LOGGER.info("Font loaded ");
+            LCGlyphFont.LOGGER.info("Icon fonts loaded");
         } catch (IOException e) {
-            LOGGER.error("Error when loading Glyphfonts", e);
+            LOGGER.error("Error when loading icon fonts", e);
         }
     }
     //========================================================================

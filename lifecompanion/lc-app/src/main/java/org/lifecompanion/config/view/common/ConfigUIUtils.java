@@ -44,7 +44,6 @@ import org.lifecompanion.base.data.common.UIUtils;
 import org.lifecompanion.base.data.config.IconManager;
 import org.lifecompanion.base.data.config.LCConstant;
 import org.lifecompanion.base.data.config.LCGraphicStyle;
-import org.lifecompanion.base.data.control.AppController;
 import org.lifecompanion.config.data.config.LCGlyphFont;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.slf4j.Logger;
@@ -69,16 +68,15 @@ public class ConfigUIUtils {
 
     // Class part : "Dialog"
     //========================================================================
-    public static Alert createDialog(Node source, final AlertType type) {
-        return ConfigUIUtils.createBaseDialog(source, type);
+    public static TextInputDialog createInputDialog(Node source, final String defaultValue) {
+        return createInputDialog(UIUtils.getSourceWindow(source), defaultValue);
     }
 
-
-    public static TextInputDialog createInputDialog(Node source, final String defaultValue) {
+    public static TextInputDialog createInputDialog(Window window, final String defaultValue) {
         TextInputDialog dialog = new TextInputDialog(defaultValue);
         ConfigUIUtils.setDialogIcon(dialog);
         dialog.setTitle(LCConstant.NAME);
-        dialog.initOwner(UIUtils.getSourceWindow(source));
+        dialog.initOwner(window);
         SystemVirtualKeyboardHelper.INSTANCE.registerSceneFromDialog(dialog);
         return dialog;
     }
@@ -95,11 +93,15 @@ public class ConfigUIUtils {
         return stage;
     }
 
-    private static Alert createBaseDialog(Node source, final AlertType type) {
+    public static Alert createAlert(Node source, final AlertType type) {
+        return createAlert(UIUtils.getSourceWindow(source), type);
+    }
+
+    public static Alert createAlert(Window window, final AlertType type) {
         Alert dlg = new Alert(type);
         ConfigUIUtils.setDialogIcon(dlg);
         dlg.setTitle(LCConstant.NAME);
-        dlg.initOwner(UIUtils.getSourceWindow(source));
+        dlg.initOwner(window);
         dlg.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
         SystemVirtualKeyboardHelper.INSTANCE.registerSceneFromDialog(dlg);
         return dlg;
@@ -174,22 +176,23 @@ public class ConfigUIUtils {
     private static SimpleObjectProperty<ConfigurationProfileLevelEnum> currentLevelProperty;
     private static Map<ConfigurationProfileLevelEnum, BooleanBinding> simpleFromLevelBindings;
 
+    // FIXME : not used anymore : delete
     private static void initializeProfileBinding() {
-        currentLevelProperty = new SimpleObjectProperty<>();
+        currentLevelProperty = new SimpleObjectProperty<>(ConfigurationProfileLevelEnum.EXPERT);
         simpleFromLevelBindings = new HashMap<>();
-        AppController.INSTANCE.currentProfileProperty().addListener((obs, ov, nv) -> {
-            if (ov != null) {
-                currentLevelProperty.unbind();
-            }
-            if (nv != null) {
-                currentLevelProperty.bind(nv.levelProperty());
-            } else {
-                currentLevelProperty.set(null);
-            }
-        });
-        if (AppController.INSTANCE.currentProfileProperty().get() != null) {
-            currentLevelProperty.bind(AppController.INSTANCE.currentProfileProperty().get().levelProperty());
-        }
+        //        AppController.INSTANCE.currentProfileProperty().addListener((obs, ov, nv) -> {
+        //            if (ov != null) {
+        //                currentLevelProperty.unbind();
+        //            }
+        //            if (nv != null) {
+        //                currentLevelProperty.bind(nv.levelProperty());
+        //            } else {
+        //                currentLevelProperty.set(null);
+        //            }
+        //        });
+        //        if (AppController.INSTANCE.currentProfileProperty().get() != null) {
+        //            currentLevelProperty.bind(AppController.INSTANCE.currentProfileProperty().get().levelProperty());
+        //        }
     }
 
     public static void bindShowForLevelFrom(final Node node, final ConfigurationProfileLevelEnum minLevel) {

@@ -21,9 +21,8 @@ package org.lifecompanion.app.dev;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.AppenderBase;
-import org.lifecompanion.base.data.control.AppController;
+import org.lifecompanion.base.data.control.refacto.DevModeController;
 import org.lifecompanion.base.data.dev.LogEntry;
-import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -42,8 +41,8 @@ public class DevLogAppender extends AppenderBase<ILoggingEvent> {
 
     @Override
     protected void append(ILoggingEvent eventObject) {
-        if (!AppController.INSTANCE.isDisableLog()) {
-            AppController.INSTANCE.appendLog(new LogEntry(eventObject.getTimeStamp(), eventObject.getThreadName(),
+        if (!DevModeController.INSTANCE.isDisableLog()) {
+            DevModeController.INSTANCE.appendLog(new LogEntry(eventObject.getTimeStamp(), eventObject.getThreadName(),
                     convertLoggerName(eventObject.getLoggerName()), eventObject.getFormattedMessage(), convertLevel(eventObject.getLevel())));
         }
     }

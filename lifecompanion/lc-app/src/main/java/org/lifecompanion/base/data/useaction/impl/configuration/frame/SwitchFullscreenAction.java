@@ -19,37 +19,35 @@
 
 package org.lifecompanion.base.data.useaction.impl.configuration.frame;
 
-import java.util.Map;
-
-import org.lifecompanion.base.data.common.LCUtils;
+import javafx.stage.Stage;
 import org.lifecompanion.api.component.definition.useaction.UseActionEvent;
 import org.lifecompanion.api.component.definition.useaction.UseActionTriggerComponentI;
 import org.lifecompanion.api.component.definition.useevent.UseVariableI;
-import org.lifecompanion.base.data.control.AppController;
-import org.lifecompanion.base.data.useaction.baseimpl.SimpleUseActionImpl;
 import org.lifecompanion.api.useaction.category.DefaultUseActionSubCategories;
-import javafx.stage.Stage;
+import org.lifecompanion.base.data.common.LCUtils;
+import org.lifecompanion.base.data.control.refacto.AppModeController;
+import org.lifecompanion.base.data.useaction.baseimpl.SimpleUseActionImpl;
+
+import java.util.Map;
 
 public class SwitchFullscreenAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
 
-	public SwitchFullscreenAction() {
-		super(UseActionTriggerComponentI.class);
-		this.order = 0;
-		this.category = DefaultUseActionSubCategories.FRAME;
-		this.nameID = "action.switch.fullscreen.frame.name";
-		this.staticDescriptionID = "action.switch.fullscreen.frame.description";
-		this.configIconPath = "configuration/icon_enable_fullscreen.png";
-		this.parameterizableAction = false;
-		this.variableDescriptionProperty().set(this.getStaticDescription());
-	}
+    public SwitchFullscreenAction() {
+        super(UseActionTriggerComponentI.class);
+        this.order = 0;
+        this.category = DefaultUseActionSubCategories.FRAME;
+        this.nameID = "action.switch.fullscreen.frame.name";
+        this.staticDescriptionID = "action.switch.fullscreen.frame.description";
+        this.configIconPath = "configuration/icon_enable_fullscreen.png";
+        this.parameterizableAction = false;
+        this.variableDescriptionProperty().set(this.getStaticDescription());
+    }
 
-	@Override
-	public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
-		if (!AppController.INSTANCE.isOnEmbeddedDevice()) {
-			final Stage mainFrame = AppController.INSTANCE.getMainStage();
-			LCUtils.runOnFXThread(() -> {
-				mainFrame.setMaximized(!mainFrame.isMaximized());
-			});
-		}
-	}
+    @Override
+    public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
+        LCUtils.runOnFXThread(() -> {
+            final Stage stage = AppModeController.INSTANCE.getUseModeContext().stageProperty().get();
+            stage.setMaximized(!stage.isMaximized());
+        });
+    }
 }

@@ -69,7 +69,7 @@ public class OpenGeneralConfigurationRibbonPart extends RibbonBasePart<Void> imp
         //                final File tempDir = LCUtils.getTempDir("export-images-test");
         //                tempDir.mkdirs();
         //                running.set(true);
-        //                final LCConfigurationI configuration = AppController.INSTANCE.currentConfigConfigurationProperty().get();
+        //                final LCConfigurationI configuration = AppModeController.INSTANCE.getEditModeContext().configurationProperty().get();
         //                configuration.getAllComponent().values().forEach(d -> {
         //                    NodeSnapshotCache.INSTANCE.requestSnapshot(d, -1, 150, img -> {
         //                        try {

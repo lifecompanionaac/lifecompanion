@@ -24,7 +24,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import org.lifecompanion.api.action.definition.UndoRedoActionI;
 import org.lifecompanion.api.component.definition.*;
-import org.lifecompanion.base.data.control.AppController;
+import org.lifecompanion.base.data.control.refacto.AppModeController;
 import org.lifecompanion.config.data.action.impl.GridStackActions;
 import org.lifecompanion.config.data.action.impl.OptionActions.PasteComponentAction;
 import org.lifecompanion.config.data.action.impl.RemoveActions.RemoveGridPartAction;
@@ -63,7 +63,7 @@ public enum ComponentActionController {
     private ComponentActionController() {
         this.copiedComponent = new SimpleObjectProperty<>();
         this.styleCopySource = new SimpleObjectProperty<>(this, "styleCopySource");
-        AppController.INSTANCE.currentConfigConfigurationProperty().addListener((obs, ov, nv) -> {
+        AppModeController.INSTANCE.getEditModeContext().configurationProperty().addListener((obs, ov, nv) -> {
             this.clearCopiedComponent();
             this.styleCopySource.set(null);
         });

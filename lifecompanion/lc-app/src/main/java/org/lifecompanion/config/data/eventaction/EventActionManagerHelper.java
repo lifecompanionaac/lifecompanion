@@ -24,12 +24,6 @@ import org.lifecompanion.api.component.definition.eventaction.CategorizedElement
 import org.lifecompanion.api.component.definition.eventaction.CategoryElementI;
 import org.lifecompanion.api.component.definition.eventaction.MainCategoryI;
 import org.lifecompanion.api.component.definition.eventaction.SubCategoryI;
-import org.lifecompanion.api.component.definition.useaction.BaseUseActionI;
-import org.lifecompanion.api.component.definition.useaction.UseActionMainCategoryI;
-import org.lifecompanion.api.component.definition.useaction.UseActionSubCategoryI;
-import org.lifecompanion.api.component.definition.useaction.UseActionTriggerComponentI;
-import org.lifecompanion.api.component.definition.useevent.UseEventMainCategoryI;
-import org.lifecompanion.base.data.control.AppController;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 
 import java.util.*;
@@ -38,13 +32,11 @@ import java.util.stream.Collectors;
 public class EventActionManagerHelper {
 
     public static <T extends SubCategoryI<?, ?>> void sortMainCategoriesAndSubCategories(ObservableList<? extends MainCategoryI<? extends T>> mainCategories) {
-        if (!AppController.INSTANCE.isUseModeOnly()) {
-            Collections.sort(mainCategories, Comparator.comparingInt(CategoryElementI::order));
-            for (MainCategoryI<? extends T> category : mainCategories) {
-                Collections.sort(category.getSubCategories(), Comparator.comparingInt(CategoryElementI::order));
-                for (T subCategory : category.getSubCategories()) {
-                    Collections.sort(subCategory.getContent(), Comparator.comparingInt(CategorizedElementI::order));
-                }
+        Collections.sort(mainCategories, Comparator.comparingInt(CategoryElementI::order));
+        for (MainCategoryI<? extends T> category : mainCategories) {
+            Collections.sort(category.getSubCategories(), Comparator.comparingInt(CategoryElementI::order));
+            for (T subCategory : category.getSubCategories()) {
+                Collections.sort(subCategory.getContent(), Comparator.comparingInt(CategorizedElementI::order));
             }
         }
     }

@@ -19,9 +19,8 @@
 
 package org.lifecompanion.base.data.control.refacto;
 
-import javafx.beans.property.SimpleObjectProperty;
-import org.lifecompanion.api.component.definition.LCProfileI;
 import org.lifecompanion.api.mode.LCStateListener;
+import org.lifecompanion.base.data.control.AsyncExecutorController;
 import org.lifecompanion.base.data.control.UserActionController;
 import org.lifecompanion.base.data.control.prediction.AutoCharPredictionController;
 import org.lifecompanion.base.data.control.prediction.CustomCharPredictionController;
@@ -39,27 +38,21 @@ import org.lifecompanion.config.view.pane.main.notification2.LCNotificationContr
 public enum LifeCompanionController {
     INSTANCE;
 
-    private final SimpleObjectProperty<AppModeV2> mode;
-
-    private final SimpleObjectProperty<LCProfileI> profile;  // FIXME : move to profile manager ?
-
-    private UseModeContext useModeContext;
-    private ConfigModeContext configModeContext;
+    private boolean started = false;
 
     LifeCompanionController() {
-        mode = new SimpleObjectProperty<>();
-        profile = new SimpleObjectProperty<>();
     }
-
 
     // START/STOP
     //========================================================================
     final LCStateListener[] STATE_LISTENER = {
+            AsyncExecutorController.INSTANCE,
+
             // COPIED FROM APP CONTROLLER
-            VoiceSynthesizerController.INSTANCE,// TODO : should initialize default voices
+            VoiceSynthesizerController.INSTANCE,
             UserActionController.INSTANCE,
-            WordPredictionController.INSTANCE,// TODO : should initialize default predictor
-            AutoCharPredictionController.INSTANCE, // TODO : should initialize default predictor
+            WordPredictionController.INSTANCE,
+            AutoCharPredictionController.INSTANCE,
             CustomCharPredictionController.INSTANCE,
             ImageDictionaries.INSTANCE,
             InstallationController.INSTANCE,
@@ -72,11 +65,21 @@ public enum LifeCompanionController {
             LCNotificationController.INSTANCE,
             ErrorHandlingController.INSTANCE
     };
-    // TODO : app modes ?
 
-    public void init(ConfigModeContext configModeContext, UseModeContext useModeContext, AppModeV2 startIn) {
-        this.configModeContext = configModeContext;
-        this.useModeContext = useModeContext;
+    public void lcStart() {
+        started = true;
+        for (LCStateListener stateListener : STATE_LISTENER) {
+            stateListener.lcStart();
+        }
+    }
+
+    public void lcExit() {
+        AppModeController.INSTANCE.clearCurrentMode();
+        if (started) {
+            for (LCStateListener stateListener : STATE_LISTENER) {
+                stateListener.lcExit();
+            }
+        }
     }
     //========================================================================
 

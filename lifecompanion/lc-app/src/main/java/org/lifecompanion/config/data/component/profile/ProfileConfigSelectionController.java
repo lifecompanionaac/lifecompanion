@@ -25,8 +25,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import org.lifecompanion.api.component.definition.LCConfigurationDescriptionI;
 import org.lifecompanion.api.component.definition.LCProfileI;
-import org.lifecompanion.base.data.control.AppController;
 import org.lifecompanion.base.data.control.AsyncExecutorController;
+import org.lifecompanion.base.data.control.refacto.ProfileController;
 import org.lifecompanion.base.data.io.task.LoadAvailableDefaultConfigurationTask;
 import org.lifecompanion.config.view.common.ConfigUIUtils;
 import org.lifecompanion.config.view.pane.profilconfig.ProfileConfigSelectionStage;
@@ -53,7 +53,7 @@ public enum ProfileConfigSelectionController {
     /**
      * Stage to manage profile and configurations
      */
-    private ProfileConfigSelectionStage profileConfigSelectionStage;
+    private ProfileConfigSelectionStage stage;
 
     private ProfileConfigStep previousStep;
     private final BooleanProperty enableViewTransition;
@@ -89,12 +89,16 @@ public enum ProfileConfigSelectionController {
     }
 
     public void hideStage() {
-        this.profileConfigSelectionStage.hide();
+        this.stage.hide();
     }
 
-    public void setStage(ProfileConfigSelectionStage profileConfigSelectionStage) {
-        this.profileConfigSelectionStage = profileConfigSelectionStage;
-        this.profileConfigSelectionStage.setOnHidden(e -> currentStep.set(null));
+    public void initStage(ProfileConfigSelectionStage profileConfigSelectionStage) {
+        this.stage = profileConfigSelectionStage;
+        this.stage.setOnHidden(e -> currentStep.set(null));
+    }
+
+    public ProfileConfigSelectionStage getStage() {
+        return stage;
     }
 
     public ReadOnlyObjectProperty<ProfileConfigStep> currentStepProperty() {
@@ -125,8 +129,8 @@ public enum ProfileConfigSelectionController {
     // UI
     //========================================================================
     public boolean showNoProfileWarning(Node source) {
-        if (AppController.INSTANCE.currentProfileProperty().get() == null) {
-            Alert dlg = ConfigUIUtils.createDialog(source, Alert.AlertType.CONFIRMATION);
+        if (ProfileController.INSTANCE.currentProfileProperty().get() == null) {
+            Alert dlg = ConfigUIUtils.createAlert(source, Alert.AlertType.CONFIRMATION);
             dlg.setHeaderText(Translation.getText("profile.alert.no.selected.header"));
             dlg.setContentText(Translation.getText("profile.alert.no.selected.message"));
             Optional<ButtonType> result = dlg.showAndWait();
@@ -155,12 +159,12 @@ public enum ProfileConfigSelectionController {
 
     public void setStep(final ProfileConfigStep step, ProfileConfigStep previousStep) {
         this.previousStep = previousStep;
-        if (!this.profileConfigSelectionStage.isShowing()) {
+        if (!this.stage.isShowing()) {
             this.enableViewTransition.set(false);
         }
         this.currentStep.set(step);
-        if (!this.profileConfigSelectionStage.isShowing()) {
-            this.profileConfigSelectionStage.show();
+        if (!this.stage.isShowing()) {
+            this.stage.show();
             this.enableViewTransition.set(true);
         }
     }

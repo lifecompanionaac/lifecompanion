@@ -70,14 +70,15 @@ public abstract class AbstractProfileLoadUtilsTask<T> extends LCTask<T> {
 
     protected LCProfileI loadFullProfileAndConfigurationDescription(final File directory, LCProfileI profile) throws Exception {
         //Load the profile XML with the full loading flag
-        Platform.runLater(() -> {
-            try {
-                XMLHelper.loadXMLSerializable(new File(directory.getPath() + File.separator + LCConstant.PROFILE_XML_NAME), profile, new ProfileIOContext(directory, true));
-            } catch (Exception e) {
-                LOGGER.error("Couldn't load full profile information", e);
-                throw new RuntimeException(e);
-            }
-        });
+        //        Platform.runLater(() -> {
+        //            try {
+        //                XMLHelper.loadXMLSerializable(new File(directory.getPath() + File.separator + LCConstant.PROFILE_XML_NAME), profile, new ProfileIOContext(directory, true));
+        //            } catch (Exception e) {
+        //                LOGGER.error("Couldn't load full profile information", e);
+        //                throw new RuntimeException(e);
+        //            }
+        //        });
+        XMLHelper.loadXMLSerializable(new File(directory.getPath() + File.separator + LCConstant.PROFILE_XML_NAME), profile, new ProfileIOContext(directory, true));
 
         // Load each possible configuration description
         File configurationDirectory = new File(directory.getPath() + File.separator + LCConstant.CONFIGURATION_DIRECTORY + File.separator);
@@ -97,7 +98,8 @@ public abstract class AbstractProfileLoadUtilsTask<T> extends LCTask<T> {
         }
         //Sort configurations
         Collections.sort(configurationDescriptions, (c1, c2) -> c2.configurationLastDateProperty().get().compareTo(c1.configurationLastDateProperty().get()));
-        Platform.runLater(() -> profile.getConfiguration().setAll(configurationDescriptions));
+        profile.getConfiguration().setAll(configurationDescriptions);
+        //Platform.runLater(() -> profile.getConfiguration().setAll(configurationDescriptions));
         return profile;
     }
 }

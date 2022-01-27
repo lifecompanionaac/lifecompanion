@@ -28,8 +28,10 @@ import org.lifecompanion.base.data.config.LCConstant;
 import org.lifecompanion.base.data.config.LCGraphicStyle;
 
 public class GeneralConfigurationStage extends Stage {
+    private final GeneralConfigurationScene generalConfigurationScene;
 
-    public GeneralConfigurationStage(Window owner, GeneralConfigurationScene scene) {
+    public GeneralConfigurationStage(Window owner, GeneralConfigurationScene generalConfigurationScene) {
+        this.generalConfigurationScene = generalConfigurationScene;
         this.setTitle(LCConstant.NAME);
         this.initModality(Modality.APPLICATION_MODAL);
         this.initStyle(StageStyle.UTILITY);
@@ -38,13 +40,17 @@ public class GeneralConfigurationStage extends Stage {
         this.setHeight(LCGraphicStyle.DEFAULT_TOOL_STAGE_HEIGHT);
         this.setResizable(LCGraphicStyle.TOOL_STAGE_RESIZABLE);
         this.setForceIntegerRenderScale(LCGraphicStyle.FORCE_INTEGER_RENDER_SCALE);
-        this.setScene(scene);
+        this.setScene(generalConfigurationScene);
         this.getIcons().add(IconManager.get(LCConstant.LC_ICON_PATH));
-        this.setOnShowing(we -> scene.onShowing());
-        this.setOnHiding(we -> scene.onHiding());
+        this.setOnShowing(we -> generalConfigurationScene.onShowing());
+        this.setOnHiding(we -> generalConfigurationScene.onHiding());
         this.setOnCloseRequest(we -> {
-            scene.cancelSelected(scene.getRoot());
+            generalConfigurationScene.cancelSelected(generalConfigurationScene.getRoot());
             we.consume();
         });
+    }
+
+    public GeneralConfigurationScene getGeneralConfigurationScene() {
+        return generalConfigurationScene;
     }
 }

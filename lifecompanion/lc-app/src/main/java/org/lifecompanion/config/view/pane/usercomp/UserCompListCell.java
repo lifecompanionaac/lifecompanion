@@ -35,8 +35,8 @@ import org.lifecompanion.api.component.definition.usercomp.UserCompDescriptionI;
 import org.lifecompanion.api.exception.LCException;
 import org.lifecompanion.base.data.common.UIUtils;
 import org.lifecompanion.base.data.config.LCConstant;
-import org.lifecompanion.base.data.control.AppController;
 import org.lifecompanion.base.data.control.AsyncExecutorController;
+import org.lifecompanion.base.data.control.refacto.ProfileController;
 import org.lifecompanion.base.data.io.IOManager;
 import org.lifecompanion.base.data.io.task.UserCompLoadingTask;
 import org.lifecompanion.config.data.action.impl.PluginActions;
@@ -112,7 +112,7 @@ public class UserCompListCell extends ListCell<UserCompDescriptionI> {
             // Try to load it if it wasn't loaded yet
             if (item != null && !item.getUserComponent().isLoaded()) {
                 // First, check plugin warning
-                LCProfileI currentProfile = AppController.INSTANCE.currentProfileProperty().get();
+                LCProfileI currentProfile = ProfileController.INSTANCE.currentProfileProperty().get();
                 PluginActions.warnOnPluginDependencies(this,
                         new File(IOManager.INSTANCE.getUserCompPath(currentProfile.getID(), item.getSavedComponentId()) + File.separator + LCConstant.USER_COMP_XML_NAME),
                         () -> {
@@ -129,7 +129,7 @@ public class UserCompListCell extends ListCell<UserCompDescriptionI> {
                                     sb.append(Translation.getText("user.comp.loading.failed.message.start"));
                                     sb.append(error.getClass().getSimpleName()).append(" : ").append(error.getMessage());
                                 }
-                                Alert dlg = ConfigUIUtils.createDialog(this, AlertType.ERROR);
+                                Alert dlg = ConfigUIUtils.createAlert(this, AlertType.ERROR);
                                 dlg.setHeaderText(Translation.getText("user.comp.loading.failed.header"));
                                 dlg.getDialogPane().setContentText(sb.toString());
                                 dlg.show();

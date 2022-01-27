@@ -27,8 +27,8 @@ import org.controlsfx.dialog.ExceptionDialog;
 import org.lifecompanion.api.exception.LCException;
 import org.lifecompanion.api.mode.LCStateListener;
 import org.lifecompanion.base.data.common.LCUtils;
-import org.lifecompanion.base.data.control.AppController;
 import org.lifecompanion.base.data.control.AsyncExecutorController;
+import org.lifecompanion.base.data.control.refacto.StageUtils;
 import org.lifecompanion.config.data.notif.LCNotification;
 import org.lifecompanion.config.view.common.ConfigUIUtils;
 import org.lifecompanion.config.view.pane.main.notification2.LCNotificationController;
@@ -92,14 +92,14 @@ public enum ErrorHandlingController implements LCStateListener {
                 this.displayedErrorDialogCount++;
                 if (cause instanceof LCException) {
                     LCException lcE = (LCException) cause;
-                    Alert dlg = ConfigUIUtils.createDialog(AppController.INSTANCE.getMainStageRoot(), Alert.AlertType.ERROR);
+                    Alert dlg = ConfigUIUtils.createAlert(StageUtils.getEditOrUseStageVisible(), Alert.AlertType.ERROR);
                     dlg.getDialogPane().setContentText(lcE.getUserMessage());
                     dlg.getDialogPane().setHeaderText(lcE.getUserHeader() != null ? lcE.getUserHeader() : Translation.getText("exception.dialog.generic.error.header"));
                     dlg.setOnHidden(DECREASE_ERROR_DIALOG_COUNT_HANDLER);
                     dlg.show();
                 } else {
                     ExceptionDialog dialog = new ExceptionDialog(cause);
-                    dialog.initOwner(AppController.INSTANCE.getMainStage());
+                    dialog.initOwner(StageUtils.getEditOrUseStageVisible());
                     dialog.titleProperty().set(Translation.getText("unknown.error.on.fx.thread.title"));
                     dialog.setHeaderText(Translation.getText("unknown.error.on.fx.thread.message"));
                     dialog.setOnHidden(DECREASE_ERROR_DIALOG_COUNT_HANDLER);

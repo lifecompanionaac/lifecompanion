@@ -40,7 +40,7 @@ import org.lifecompanion.api.definition.selection.FireEventInput;
 import org.lifecompanion.base.data.common.UIUtils;
 import org.lifecompanion.base.data.config.IconManager;
 import org.lifecompanion.base.data.config.LCGraphicStyle;
-import org.lifecompanion.base.data.control.AppController;
+import org.lifecompanion.base.data.control.refacto.AppModeController;
 import org.lifecompanion.base.data.definition.selection.SelectionModeEnum;
 import org.lifecompanion.base.view.reusable.GeneralConfigurationStepViewI;
 import org.lifecompanion.base.view.reusable.impl.BaseConfigurationViewBorderPane;
@@ -114,7 +114,7 @@ public class SelectionModeMainParamView extends BaseConfigurationViewBorderPane<
     public void saveChanges() {
         if (model.get().getSelectionModeParameter().selectionModeTypeProperty().get() != comboboxSelectionMode.getValue().getModeClass()) {
             ConfigActionController.INSTANCE.executeAction(new SelectionModeActions.ChangeSelectionModeAction(
-                    AppController.INSTANCE.currentConfigConfigurationProperty().get(), model.get(), comboboxSelectionMode.getValue().getModeClass()));
+                    AppModeController.INSTANCE.getEditModeContext().configurationProperty().get(), model.get(), comboboxSelectionMode.getValue().getModeClass()));
         }
         model.get().getSelectionModeParameter().fireActivationEventProperty().set(comboBoxFireActionEvent.getValue());
         model.get().getSelectionModeParameter().fireEventInputProperty().set(comboBoxFireEventInput.getValue());

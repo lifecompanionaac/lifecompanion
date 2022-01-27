@@ -19,20 +19,6 @@
 
 package org.lifecompanion.config.view.pane.top;
 
-import java.util.Locale;
-
-import org.controlsfx.glyphfont.FontAwesome;
-import org.fxmisc.easybind.EasyBind;
-
-import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
-import org.lifecompanion.config.data.config.LCGlyphFont;
-import org.lifecompanion.base.data.control.AppController;
-import org.lifecompanion.config.view.pane.tabs.RibbonTabAction;
-import org.lifecompanion.config.view.pane.tabs.RibbonTabHome;
-import org.lifecompanion.config.view.pane.tabs.RibbonTabSelected;
-import org.lifecompanion.config.view.pane.tabs.RibbonTabStyle;
-import org.lifecompanion.config.view.pane.tabs.api.AbstractTabContent;
-import org.lifecompanion.config.view.scene.ConfigurationScene;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -42,64 +28,78 @@ import javafx.scene.control.TabPane.TabClosingPolicy;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import org.controlsfx.glyphfont.FontAwesome;
+import org.fxmisc.easybind.EasyBind;
+import org.lifecompanion.base.data.control.refacto.AppModeController;
+import org.lifecompanion.config.data.config.LCGlyphFont;
+import org.lifecompanion.config.view.pane.tabs.RibbonTabAction;
+import org.lifecompanion.config.view.pane.tabs.RibbonTabHome;
+import org.lifecompanion.config.view.pane.tabs.RibbonTabSelected;
+import org.lifecompanion.config.view.pane.tabs.RibbonTabStyle;
+import org.lifecompanion.config.view.pane.tabs.api.AbstractTabContent;
+import org.lifecompanion.config.view.scene.ConfigurationScene;
+import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+
+import java.util.Locale;
 
 /**
  * Class that contains all the ribbons in different tabs and the menu button.
+ *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public class RibbonTabs extends StackPane implements LCViewInitHelper {
-	private Button buttonMenu;
-	private TabPane tabPane;
-	//private Tab tabSelectedPart;
+    private Button buttonMenu;
+    private TabPane tabPane;
+    //private Tab tabSelectedPart;
 
-	public RibbonTabs() {
-		this.initAll();
-	}
+    public RibbonTabs() {
+        this.initAll();
+    }
 
-	@Override
-	public void initUI() {
-		//Create buttons
-		this.buttonMenu = new Button();
-		this.buttonMenu.setBackground(null);
-		this.buttonMenu.setGraphic(LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.BARS).sizeFactor(2).color(Color.WHITE));
-		this.buttonMenu.setShape(new Circle(32.0));
-		this.buttonMenu.setStyle("-fx-background-color:-fx-main-primary;");
-		StackPane.setAlignment(this.buttonMenu, Pos.TOP_LEFT);
-		StackPane.setMargin(this.buttonMenu, new Insets(3.0));
-		this.buttonMenu.setCache(true);
-		//Create tab pane
-		this.tabPane = new TabPane();
-		this.tabPane.getStyleClass().add("ribbon-tabs");
-		this.tabPane.tabClosingPolicyProperty().set(TabClosingPolicy.UNAVAILABLE);
-		//Add tabs
-		this.addTab(new RibbonTabHome());
-		this.addTab(new RibbonTabSelected());
-		this.addTab(new RibbonTabStyle());
-		this.addTab(new RibbonTabAction());
+    @Override
+    public void initUI() {
+        //Create buttons
+        this.buttonMenu = new Button();
+        this.buttonMenu.setBackground(null);
+        this.buttonMenu.setGraphic(LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.BARS).sizeFactor(2).color(Color.WHITE));
+        this.buttonMenu.setShape(new Circle(32.0));
+        this.buttonMenu.setStyle("-fx-background-color:-fx-main-primary;");
+        StackPane.setAlignment(this.buttonMenu, Pos.TOP_LEFT);
+        StackPane.setMargin(this.buttonMenu, new Insets(3.0));
+        this.buttonMenu.setCache(true);
+        //Create tab pane
+        this.tabPane = new TabPane();
+        this.tabPane.getStyleClass().add("ribbon-tabs");
+        this.tabPane.tabClosingPolicyProperty().set(TabClosingPolicy.UNAVAILABLE);
+        //Add tabs
+        this.addTab(new RibbonTabHome());
+        this.addTab(new RibbonTabSelected());
+        this.addTab(new RibbonTabStyle());
+        this.addTab(new RibbonTabAction());
 
-		//Add all
-		this.getChildren().addAll(this.tabPane, this.buttonMenu);
-	}
+        //Add all
+        this.getChildren().addAll(this.tabPane, this.buttonMenu);
+    }
 
-	private Tab addTab(final AbstractTabContent tabContent) {
-		Tab tab = new Tab();
-		tab.setContent(tabContent);
-		tab.textProperty().bind(EasyBind.map(tabContent.tabTitleProperty(), s -> s.toUpperCase(Locale.FRENCH)));
-		tab.disableProperty().bind(tabContent.disableTabProperty());
-		this.tabPane.getTabs().add(tab);
-		return tab;
-	}
+    private Tab addTab(final AbstractTabContent tabContent) {
+        Tab tab = new Tab();
+        tab.setContent(tabContent);
+        tab.textProperty().bind(EasyBind.map(tabContent.tabTitleProperty(), String::toUpperCase));
+        tab.disableProperty().bind(tabContent.disableTabProperty());
+        this.tabPane.getTabs().add(tab);
+        return tab;
+    }
 
-	public Button getMenuButton() {
-		return this.buttonMenu;
-	}
+    public Button getMenuButton() {
+        return this.buttonMenu;
+    }
 
-	@Override
-	public void initListener() {
-		//Button behavior
-		this.buttonMenu.setOnAction(ea -> {
-			ConfigurationScene scene = (ConfigurationScene) AppController.INSTANCE.getMainStage().getScene();
-			scene.switchMenu();
-		});
-	}
+    @Override
+    public void initListener() {
+        //Button behavior
+        this.buttonMenu.setOnAction(ea -> {
+            ConfigurationScene scene = (ConfigurationScene) AppModeController.INSTANCE.getEditModeContext().getStage().getScene();
+            scene.switchMenu();
+        });
+    }
 }

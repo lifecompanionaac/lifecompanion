@@ -27,8 +27,8 @@ import javafx.stage.FileChooser;
 import org.lifecompanion.api.action.definition.BaseConfigActionI;
 import org.lifecompanion.api.exception.LCException;
 import org.lifecompanion.base.data.common.UIUtils;
-import org.lifecompanion.base.data.control.AppController;
 import org.lifecompanion.base.data.control.AsyncExecutorController;
+import org.lifecompanion.base.data.control.refacto.DevModeController;
 import org.lifecompanion.base.data.control.update.DownloadPluginTask;
 import org.lifecompanion.base.data.control.update.InstallationController;
 import org.lifecompanion.base.data.io.task.CheckElementPluginTask;
@@ -64,8 +64,8 @@ public class PluginActions {
     private static boolean firstAdd = true;
 
     private static void showAddPluginWarningDialog(Node source) {
-        if (!AppController.INSTANCE.devModeProperty().get() && firstAdd) {
-            Alert warningDialog = ConfigUIUtils.createDialog(source, Alert.AlertType.WARNING);
+        if (!DevModeController.INSTANCE.devModeProperty().get() && firstAdd) {
+            Alert warningDialog = ConfigUIUtils.createAlert(source, Alert.AlertType.WARNING);
             warningDialog.getButtonTypes().clear();
             warningDialog.setHeaderText(Translation.getText("add.plugin.warning.dialog.header"));
             warningDialog.setContentText(Translation.getText("add.plugin.warning.dialog.message"));
@@ -78,7 +78,7 @@ public class PluginActions {
     private static void addPluginFromFile(Node source, File pluginFile) {
         try {
             String loadResult = PluginManager.INSTANCE.tryToAddPluginFrom(pluginFile).getLeft();
-            Alert dialog = ConfigUIUtils.createDialog(source, Alert.AlertType.INFORMATION);
+            Alert dialog = ConfigUIUtils.createAlert(source, Alert.AlertType.INFORMATION);
             dialog.setHeaderText(Translation.getText("plugin.loading.header.text.info"));
             dialog.setContentText(loadResult);
             dialog.show();
@@ -161,7 +161,7 @@ public class PluginActions {
         @Override
         public void doAction() throws LCException {
             // Confirm
-            Alert dlg = ConfigUIUtils.createDialog(source, Alert.AlertType.CONFIRMATION);
+            Alert dlg = ConfigUIUtils.createAlert(source, Alert.AlertType.CONFIRMATION);
             dlg.getDialogPane().setHeaderText(Translation.getText("action.delete.plugin.confirm.header"));
 
             StringBuilder sb = new StringBuilder();
@@ -189,7 +189,7 @@ public class PluginActions {
             try {
                 String errorMessage = checkElementPluginTask.get();
                 if (errorMessage != null) {
-                    Alert dlg = ConfigUIUtils.createDialog(source, Alert.AlertType.WARNING);
+                    Alert dlg = ConfigUIUtils.createAlert(source, Alert.AlertType.WARNING);
                     dlg.setHeaderText(Translation.getText("configuration.warning.plugin.message.header"));
                     dlg.setContentText(Translation.getText("configuration.warning.plugin.message") + errorMessage);
                     ButtonType typeCancel = new ButtonType(Translation.getText("button.type.cancel"), ButtonBar.ButtonData.CANCEL_CLOSE);

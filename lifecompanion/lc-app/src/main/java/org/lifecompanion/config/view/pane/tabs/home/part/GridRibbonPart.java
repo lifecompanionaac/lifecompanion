@@ -19,8 +19,8 @@
 
 package org.lifecompanion.config.view.pane.tabs.home.part;
 
+import org.lifecompanion.base.data.control.refacto.AppModeController;
 import org.lifecompanion.framework.commons.translation.Translation;
-import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.config.data.action.impl.LCConfigurationComponentActions.ChangeGridSizeConfigurationAction;
 import org.lifecompanion.config.data.action.impl.LCConfigurationComponentActions.DisableGridOnConfigurationAction;
@@ -30,7 +30,6 @@ import org.lifecompanion.base.data.common.UIUtils;
 import org.lifecompanion.api.component.definition.LCConfigurationI;
 import org.lifecompanion.config.data.config.LCGlyphFont;
 import org.lifecompanion.base.data.config.LCGraphicStyle;
-import org.lifecompanion.base.data.control.AppController;
 import org.lifecompanion.config.data.control.ConfigActionController;
 import org.lifecompanion.api.ui.config.ConfigurationProfileLevelEnum;
 import org.lifecompanion.config.view.common.ConfigUIUtils;
@@ -151,7 +150,7 @@ public class GridRibbonPart extends RibbonBasePart<LCConfigurationI> implements 
 	//========================================================================
 	@Override
 	public void initBinding() {
-		this.model.bind(AppController.INSTANCE.currentConfigConfigurationProperty());
+		this.model.bind(AppModeController.INSTANCE.getEditModeContext().configurationProperty());
 		this.sliderGridSize.disableProperty().bind(this.buttonDisableGrid.selectedProperty());
 		ConfigUIUtils.bindShowForLevelFrom(this, ConfigurationProfileLevelEnum.NORMAL);
 	}

@@ -35,11 +35,12 @@ import javafx.scene.shape.Circle;
 import javafx.scene.transform.Scale;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.api.component.definition.RootGraphicComponentI;
-import org.lifecompanion.api.mode.AppMode;
 import org.lifecompanion.api.ui.AddTypeEnum;
+import org.lifecompanion.api.ui.ViewProviderI;
 import org.lifecompanion.base.data.common.UIUtils;
 import org.lifecompanion.base.data.config.LCConstant;
-import org.lifecompanion.base.data.control.AppController;
+import org.lifecompanion.base.data.control.refacto.AppModeController;
+import org.lifecompanion.base.data.control.refacto.AppModeV2;
 import org.lifecompanion.config.data.action.impl.GlobalActions;
 import org.lifecompanion.config.data.action.impl.OptionActions;
 import org.lifecompanion.config.data.action.impl.OptionActions.AddRootComponentAction;
@@ -117,9 +118,10 @@ public class MainView extends StackPane implements LCViewInitHelper {
     public void initBinding() {
         this.buttonResetSelection.disableProperty().bind(SelectionController.INSTANCE.selectedComponentBothProperty().isNull());
         // On configuration change, display the new configuration
-        AppController.INSTANCE.currentConfigConfigurationProperty()
+        AppModeController.INSTANCE.getEditModeContext().configurationProperty()
                 .addListener((observableP, oldValueP, newValueP) -> {
                     if (oldValueP != null) {
+                        oldValueP.clearViewCache();
                         // Fix memory leak : remove previous children
                         final Node previousContent = this.scrollcenter.getContent();
                         if (previousContent instanceof Group) {
@@ -129,9 +131,9 @@ public class MainView extends StackPane implements LCViewInitHelper {
                     }
                     if (newValueP != null) {
                         Scale scaleTransform = new Scale();
-                        scaleTransform.xProperty().bind(AppController.INSTANCE.configurationScaleProperty());
-                        scaleTransform.yProperty().bind(AppController.INSTANCE.configurationScaleProperty());
-                        final Region viewForNewValue = newValueP.getDisplay(AppController.INSTANCE.getViewProvider(AppMode.CONFIG), true).getView();
+                        scaleTransform.xProperty().bind(AppModeController.INSTANCE.getEditModeContext().configurationScaleProperty());
+                        scaleTransform.yProperty().bind(AppModeController.INSTANCE.getEditModeContext().configurationScaleProperty());
+                        final Region viewForNewValue = ViewProviderI.getComponentView(newValueP, AppModeV2.EDIT).getView();
                         Group group = new Group(viewForNewValue);
                         viewForNewValue.getTransforms().add(scaleTransform);
                         this.scrollcenter.setContent(group);
@@ -157,9 +159,9 @@ public class MainView extends StackPane implements LCViewInitHelper {
             if (scrollEvent.isShortcutDown()) {
                 scrollEvent.consume();
                 if (scrollEvent.getDeltaY() > 0) {
-                    AppController.INSTANCE.zoomIn();
+                    AppModeController.INSTANCE.getEditModeContext().zoomIn();
                 } else {
-                    AppController.INSTANCE.zoomOut();
+                    AppModeController.INSTANCE.getEditModeContext().zoomOut();
                 }
             }
         });
@@ -171,7 +173,7 @@ public class MainView extends StackPane implements LCViewInitHelper {
                 if (DragController.INSTANCE.isDragComponentIsPresentOn(AddTypeEnum.ROOT)) {
                     RootGraphicComponentI dragged = DragController.INSTANCE.createNewCompFor(AddTypeEnum.ROOT);
                     RootGraphicComponentI component = dragged;
-                    double scale = AppController.INSTANCE.configurationScaleProperty().get();
+                    double scale = AppModeController.INSTANCE.getEditModeContext().configurationScaleProperty().get();
                     // Center the component
                     component.xProperty()
                             .set(Math.max(LCConstant.CONFIG_ROOT_COMPONENT_GAP,
@@ -183,7 +185,7 @@ public class MainView extends StackPane implements LCViewInitHelper {
                                             + ea.getY() * (1.0 / scale) - component.heightProperty().get() / 2.0));
                     // Do add
                     OptionActions.AddRootComponentAction action = new AddRootComponentAction(this,
-                            AppController.INSTANCE.currentConfigConfigurationProperty().get(), component);
+                            AppModeController.INSTANCE.getEditModeContext().configurationProperty().get(), component);
                     ConfigActionController.INSTANCE.executeAction(action);
 
                     // Remove added

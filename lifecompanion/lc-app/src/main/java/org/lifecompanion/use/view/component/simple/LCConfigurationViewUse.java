@@ -52,8 +52,12 @@ public class LCConfigurationViewUse extends LCConfigurationViewBase {
     @Override
     public void initBinding() {
         super.initBinding();
-        this.model.selectionModeProperty().addListener(selectionModeViewChangeListener = createSelectionModeViewChangeListener(true));
-        this.model.directSelectionOnMouseOnScanningSelectionModeProperty().addListener(directSelectionMouse = createSelectionModeViewChangeListener(false));
+        selectionModeViewChangeListener = createSelectionModeViewChangeListener(true);
+        selectionModeViewChangeListener.changed(null, null, model.selectionModeProperty().get());
+        this.model.selectionModeProperty().addListener(selectionModeViewChangeListener);
+        directSelectionMouse = createSelectionModeViewChangeListener(false);
+        directSelectionMouse.changed(null, null, model.directSelectionOnMouseOnScanningSelectionModeProperty().get());
+        this.model.directSelectionOnMouseOnScanningSelectionModeProperty().addListener(directSelectionMouse);
         this.model.hideMainSelectionModeViewProperty().addListener(hideMainSelectionChangeListener = (obs, ov, nv) -> {
             if (lastMainSelectionMode != null && !lastMainSelectionMode.visibleProperty().isBound()) {
                 lastMainSelectionMode.setVisible(!nv);

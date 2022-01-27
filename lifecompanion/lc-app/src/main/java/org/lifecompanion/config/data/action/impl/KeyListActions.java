@@ -26,8 +26,9 @@ import org.lifecompanion.api.component.definition.simplercomp.KeyListNodeI;
 import org.lifecompanion.api.exception.LCException;
 import org.lifecompanion.base.data.common.LCUtils;
 import org.lifecompanion.base.data.common.UIUtils;
-import org.lifecompanion.base.data.control.AppController;
 import org.lifecompanion.base.data.control.AsyncExecutorController;
+import org.lifecompanion.base.data.control.refacto.AppModeController;
+import org.lifecompanion.base.data.control.refacto.ProfileController;
 import org.lifecompanion.base.data.io.IOManager;
 import org.lifecompanion.base.data.io.task.KeyListExportTask;
 import org.lifecompanion.base.data.io.task.KeyListImportTask;
@@ -67,9 +68,9 @@ public class KeyListActions {
         public void doAction() throws LCException {
             FileChooser keyListFileChooser = LCFileChooser.getChooserKeyList(FileChooserType.KEYLIST_EXPORT);
 
-            LCConfigurationDescriptionI configurationDescription = AppController.INSTANCE.currentConfigDescriptionProperty().get();
+            LCConfigurationDescriptionI configurationDescription = AppModeController.INSTANCE.getEditModeContext().configurationDescriptionProperty().get();
             if (configurationDescription == null) {
-                configurationDescription = AppController.INSTANCE.currentProfileProperty().get().getConfigurationById(AppController.INSTANCE.currentConfigConfigurationProperty().get().getID());
+                configurationDescription = ProfileController.INSTANCE.currentProfileProperty().get().getConfigurationById(AppModeController.INSTANCE.getEditModeContext().configurationProperty().get().getID());
             }
             String configurationName = Translation.getText("keylist.default.file.export.name") + (configurationDescription != null ? " - " + configurationDescription.configurationNameProperty().get() :
                     "");

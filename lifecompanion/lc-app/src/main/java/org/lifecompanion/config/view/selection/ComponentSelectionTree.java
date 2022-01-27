@@ -25,7 +25,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import org.lifecompanion.api.component.definition.*;
-import org.lifecompanion.base.data.control.AppController;
+import org.lifecompanion.base.data.control.refacto.AppModeController;
 import org.lifecompanion.base.view.reusable.impl.BaseConfigurationViewBorderPane;
 import org.lifecompanion.config.data.control.SelectionController;
 import org.lifecompanion.framework.commons.translation.Translation;
@@ -130,7 +130,7 @@ public class ComponentSelectionTree extends BaseConfigurationViewBorderPane<LCCo
 
     @Override
     public void initBinding() {
-        this.model.bind(AppController.INSTANCE.currentConfigConfigurationProperty());
+        this.model.bind(AppModeController.INSTANCE.getEditModeContext().configurationProperty());
     }
 
     // Class part : "Override"

@@ -31,7 +31,7 @@ import org.lifecompanion.api.component.definition.DisplayableComponentI;
 import org.lifecompanion.api.component.definition.LCConfigurationI;
 import org.lifecompanion.base.data.common.LCUtils;
 import org.lifecompanion.base.data.common.UIUtils;
-import org.lifecompanion.base.data.control.AppController;
+import org.lifecompanion.base.data.control.refacto.AppModeController;
 import org.lifecompanion.config.data.common.LCConfigBindingUtils;
 import org.lifecompanion.config.view.reusable.searchcombobox.SearchComboBox;
 import org.lifecompanion.framework.commons.translation.Translation;
@@ -149,8 +149,8 @@ public class ComponentSelectorControl<T extends DisplayableComponentI> extends V
                 allComponentMap.addListener(this.currentMapChangeListener = LCConfigBindingUtils.createBindMapValue(items));
             }
         };
-        configurationChangeListener.changed(null, null, AppController.INSTANCE.currentConfigConfigurationProperty().get());
-        AppController.INSTANCE.currentConfigConfigurationProperty().addListener(configurationChangeListener);
+        configurationChangeListener.changed(null, null, AppModeController.INSTANCE.getEditModeContext().configurationProperty().get());
+        AppModeController.INSTANCE.getEditModeContext().configurationProperty().addListener(configurationChangeListener);
     }
 
     public void clearSelection() {

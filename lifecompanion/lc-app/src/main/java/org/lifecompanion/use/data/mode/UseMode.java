@@ -34,20 +34,16 @@ import org.lifecompanion.base.data.control.*;
 import org.lifecompanion.base.data.control.prediction.AutoCharPredictionController;
 import org.lifecompanion.base.data.control.prediction.CustomCharPredictionController;
 import org.lifecompanion.base.data.control.prediction.WordPredictionController;
+import org.lifecompanion.base.data.control.refacto.AppModeController;
 import org.lifecompanion.base.data.control.stats.SessionStatsController;
-import org.lifecompanion.base.data.control.virtual.keyboard.impl.WinAutoHotKeyKeyboardReceiverController;
 import org.lifecompanion.base.data.control.virtual.keyboard.VirtualKeyboardController;
+import org.lifecompanion.base.data.control.virtual.keyboard.impl.WinAutoHotKeyKeyboardReceiverController;
 import org.lifecompanion.base.data.control.virtual.mouse.VirtualMouseController;
 import org.lifecompanion.base.data.image2.ImageDictionaries;
 import org.lifecompanion.base.data.io.IOManager;
 import org.lifecompanion.base.data.media.SoundPlayer;
 import org.lifecompanion.base.data.plugins.PluginManager;
-import org.lifecompanion.base.data.prediction.LCCharPredictor;
-import org.lifecompanion.base.data.prediction.predict4all.predictor.Predict4AllWordPredictor;
-import org.lifecompanion.base.data.voice.SAPIVoiceSynthesizer;
-import org.lifecompanion.base.data.voice.SayCommandVoiceSynthesizer;
 import org.lifecompanion.base.data.voice.VoiceSynthesizerController;
-import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.use.data.ui.UseViewProvider;
 import org.slf4j.Logger;
@@ -110,16 +106,16 @@ public class UseMode implements LCModeI {
     @Override
     public void lcStart() {
         //Voice
-        UseMode.LOGGER.info("Initialize voices synthesizer in use mode");
-        SAPIVoiceSynthesizer synthesizer = new SAPIVoiceSynthesizer();
-        VoiceSynthesizerController.INSTANCE.registrerVoiceSynthesizer(synthesizer);
-        VoiceSynthesizerController.INSTANCE.setDefaultVoiceSynthesizer(SystemType.WINDOWS, synthesizer);
-        SayCommandVoiceSynthesizer sayCommandVoiceSynthesizer = new SayCommandVoiceSynthesizer();
-        VoiceSynthesizerController.INSTANCE.registrerVoiceSynthesizer(sayCommandVoiceSynthesizer);
-        VoiceSynthesizerController.INSTANCE.setDefaultVoiceSynthesizer(SystemType.MAC, sayCommandVoiceSynthesizer);
+        //        UseMode.LOGGER.info("Initialize voices synthesizer in use mode");
+        //        SAPIVoiceSynthesizer synthesizer = new SAPIVoiceSynthesizer();
+        //        VoiceSynthesizerController.INSTANCE.registrerVoiceSynthesizer(synthesizer);
+        //        VoiceSynthesizerController.INSTANCE.setDefaultVoiceSynthesizer(SystemType.WINDOWS, synthesizer);
+        //        SayCommandVoiceSynthesizer sayCommandVoiceSynthesizer = new SayCommandVoiceSynthesizer();
+        //        VoiceSynthesizerController.INSTANCE.registrerVoiceSynthesizer(sayCommandVoiceSynthesizer);
+        //        VoiceSynthesizerController.INSTANCE.setDefaultVoiceSynthesizer(SystemType.MAC, sayCommandVoiceSynthesizer);
         //Prediction
-        AutoCharPredictionController.INSTANCE.getAvailablePredictor().add(LCCharPredictor.INSTANCE);
-        WordPredictionController.INSTANCE.getAvailablePredictor().add(new Predict4AllWordPredictor());
+        //        AutoCharPredictionController.INSTANCE.getAvailablePredictor().add(LCCharPredictor.INSTANCE);
+        //        WordPredictionController.INSTANCE.getAvailablePredictor().add(new Predict4AllWordPredictor());
 
     }
 
@@ -161,38 +157,38 @@ public class UseMode implements LCModeI {
         for (ModeListenerI useModeListenerI : UseMode.useModeListeners) {
             useModeListenerI.modeStart(configuration);
         }
-        if (!AppController.INSTANCE.isOnEmbeddedDevice()) {
-            //Prepare frame if not on embedded device
-            LCUtils.runOnFXThread(() -> {
-                final Stage mainStage = AppController.INSTANCE.getMainStage();
-                LCProfileI currentProfile = AppController.INSTANCE.currentProfileProperty().get();
-                LCConfigurationDescriptionI currentConfigDescription = AppController.INSTANCE.currentConfigDescriptionProperty().get();
-                mainStage.setTitle(
-                        AppController.INSTANCE.getMainStageDefaultTitle() +
-                                (currentProfile != null ? " - " + currentProfile.nameProperty().get() : "") +
-                                (currentConfigDescription != null ? " - " + currentConfigDescription.configurationNameProperty().get() : "")
-                );
-                mainStage.setFullScreenExitHint(Translation.getText("fullscreen.exit.hint"));
-                mainStage.setIconified(false);
-                mainStage.setFullScreen(false);
-                mainStage.setMaximized(false);
-                mainStage.setAlwaysOnTop(true);
-                mainStage.opacityProperty().bind(configuration.frameOpacityProperty());
-                if (configuration.fullScreenOnLaunchProperty().get()) {
-                    mainStage.setMaximized(true);
-                } else {
-                    mainStage.setMaximized(false);
-                    mainStage.setWidth(configuration.computedFrameWidthProperty().get());
-                    mainStage.setHeight(configuration.computedFrameHeightProperty().get());
-                    AppController.INSTANCE.moveFrameTo(configuration.framePositionOnLaunchProperty().get());
-                }
-                //Focusable/always on top state
-                if (configuration.virtualKeyboardProperty().get()) {
-                    LOGGER.info("Virtual keyboard detected for the stage, will change the focusable state for main stage");
-                    LCUtils.setFocusableSafe(mainStage, false);
-                }
-            });
-        }
+//        if (!AppController.INSTANCE.isOnEmbeddedDevice()) {
+//            //Prepare frame if not on embedded device
+//            LCUtils.runOnFXThread(() -> {
+//                final Stage mainStage = AppController.INSTANCE.getMainStage();
+//                LCProfileI currentProfile = AppController.INSTANCE.currentProfileProperty().get();
+//                LCConfigurationDescriptionI currentConfigDescription = AppModeController.INSTANCE.getEditModeContext().configurationDescriptionProperty().get();
+//                mainStage.setTitle(
+//                        AppController.INSTANCE.getMainStageDefaultTitle() +
+//                                (currentProfile != null ? " - " + currentProfile.nameProperty().get() : "") +
+//                                (currentConfigDescription != null ? " - " + currentConfigDescription.configurationNameProperty().get() : "")
+//                );
+//                mainStage.setFullScreenExitHint(Translation.getText("fullscreen.exit.hint"));
+//                mainStage.setIconified(false);
+//                mainStage.setFullScreen(false);
+//                mainStage.setMaximized(false);
+//                mainStage.setAlwaysOnTop(true);
+//                mainStage.opacityProperty().bind(configuration.frameOpacityProperty());
+//                if (configuration.fullScreenOnLaunchProperty().get()) {
+//                    mainStage.setMaximized(true);
+//                } else {
+//                    mainStage.setMaximized(false);
+//                    mainStage.setWidth(configuration.computedFrameWidthProperty().get());
+//                    mainStage.setHeight(configuration.computedFrameHeightProperty().get());
+//                    //AppController.INSTANCE.moveFrameTo(configuration.framePositionOnLaunchProperty().get());
+//                }
+//                //Focusable/always on top state
+//                if (configuration.virtualKeyboardProperty().get()) {
+//                    LOGGER.info("Virtual keyboard detected for the stage, will change the focusable state for main stage");
+//                    LCUtils.setFocusableSafe(mainStage, false);
+//                }
+//            });
+//        }
         SessionStatsController.INSTANCE.modeStarted(AppMode.USE, configuration);
     }
 
@@ -208,14 +204,14 @@ public class UseMode implements LCModeI {
         IOManager.INSTANCE.saveUseInformation(configuration);
 
         //Focusable/always on top state
-        if (!AppController.INSTANCE.isOnEmbeddedDevice()) {
-            LCUtils.runOnFXThread(() -> {
-                AppController.INSTANCE.getMainStage().setAlwaysOnTop(false);
-                if (configuration.virtualKeyboardProperty().get()) {
-                    LCUtils.setFocusableSafe(AppController.INSTANCE.getMainStage(), true);
-                }
-            });
-        }
+//        if (!AppController.INSTANCE.isOnEmbeddedDevice()) {
+//            LCUtils.runOnFXThread(() -> {
+//                AppController.INSTANCE.getMainStage().setAlwaysOnTop(false);
+//                if (configuration.virtualKeyboardProperty().get()) {
+//                    LCUtils.setFocusableSafe(AppController.INSTANCE.getMainStage(), true);
+//                }
+//            });
+//        }
         SessionStatsController.INSTANCE.modeStopped(AppMode.USE);
     }
 

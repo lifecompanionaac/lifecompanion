@@ -36,7 +36,7 @@ import org.lifecompanion.api.component.definition.LCConfigurationDescriptionI;
 import org.lifecompanion.api.component.definition.LCConfigurationI;
 import org.lifecompanion.base.data.common.UIUtils;
 import org.lifecompanion.base.data.config.LCGraphicStyle;
-import org.lifecompanion.base.data.control.AppController;
+import org.lifecompanion.base.data.control.refacto.AppModeController;
 import org.lifecompanion.base.view.reusable.GeneralConfigurationStep;
 import org.lifecompanion.base.view.reusable.GeneralConfigurationStepViewI;
 import org.lifecompanion.config.data.action.impl.LCConfigurationActions;
@@ -183,7 +183,7 @@ public class GeneralInformationConfigurationStepView extends BorderPane implemen
     @Override
     public void initListener() {
         buttonEditConfigurationInformation.setOnAction(e -> {
-            LCConfigurationDescriptionI configuration = AppController.INSTANCE.currentConfigDescriptionProperty().get();
+            LCConfigurationDescriptionI configuration = AppModeController.INSTANCE.getEditModeContext().configurationDescriptionProperty().get();
             if (configuration != null) {
                 ProfileConfigSelectionController.INSTANCE.setConfigStep(ProfileConfigStep.CONFIGURATION_EDIT, null, configuration);
             }
@@ -208,7 +208,7 @@ public class GeneralInformationConfigurationStepView extends BorderPane implemen
         this.toggleSecuredConfigurationMode.setSelected(model.securedConfigurationModeProperty().get());
         this.toggleVirtualKeyboard.setSelected(model.virtualKeyboardProperty().get());
         this.pickerBackgroundColor.setValue(model.backgroundColorProperty().get());
-        LCConfigurationDescriptionI configurationDescription = AppController.INSTANCE.currentConfigDescriptionProperty().get();
+        LCConfigurationDescriptionI configurationDescription = AppModeController.INSTANCE.getEditModeContext().configurationDescriptionProperty().get();
         if (configurationDescription != null) {
             this.labelName.textProperty().bind(configurationDescription.configurationNameProperty());
             this.labelAuthor.textProperty().bind(configurationDescription.configurationAuthorProperty());

@@ -19,17 +19,14 @@
 
 package org.lifecompanion.base.data.control.refacto;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.stage.Stage;
-import org.lifecompanion.api.component.definition.LCConfigurationI;
-
-public class UseModeContext {
-    private final ObjectProperty<LCConfigurationI> configuration;
-    private final ObjectProperty<Stage> stage;
-
-    public UseModeContext() {
-        this.configuration = new SimpleObjectProperty<>();
-        this.stage = new SimpleObjectProperty<>();
+public class UseModeContext extends AbstractModeContext {
+    @Override
+    public void cleanAfterStop() {
+        this.configurationDescription.set(null);
+        this.configuration.set(null);
+        if (stage.get() != null) {
+            stage.get().hide();
+            this.stage.set(null);
+        }
     }
 }

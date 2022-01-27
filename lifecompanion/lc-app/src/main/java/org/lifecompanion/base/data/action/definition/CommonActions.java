@@ -18,20 +18,34 @@
  */
 package org.lifecompanion.base.data.action.definition;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import org.lifecompanion.api.action.definition.BaseConfigActionI;
 import org.lifecompanion.api.component.definition.LCConfigurationI;
-import org.lifecompanion.api.mode.AppMode;
 import org.lifecompanion.base.data.common.LCUtils;
-import org.lifecompanion.base.data.control.AppController;
+import org.lifecompanion.base.data.config.LCConstant;
+import org.lifecompanion.base.data.control.refacto.AppModeController;
+import org.lifecompanion.base.data.control.refacto.StageUtils;
+import org.lifecompanion.config.view.common.ConfigUIUtils;
+import org.lifecompanion.config.view.common.SystemVirtualKeyboardHelper;
+import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
+import org.lifecompanion.framework.commons.translation.Translation;
+import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 
-import java.util.function.BiFunction;
+import java.util.Optional;
+import java.util.Random;
 
 import static org.lifecompanion.base.data.common.UIUtils.getSourceFromEvent;
 
@@ -72,14 +86,35 @@ public class CommonActions {
 
         @Override
         public void doAction() {
-            LCConfigurationI configuration = AppController.INSTANCE.currentUseConfigurationProperty().get();
-            BiFunction<Node, LCConfigurationI, Boolean> confirmFunction = AppController.INSTANCE.getConfirmConfigurationModeFunction();
-            if (this.useConfirmFct && confirmFunction != null && !confirmFunction.apply(source, configuration)) {
-                return;
+            LCConfigurationI configuration = AppModeController.INSTANCE.getUseModeContext().configurationProperty().get();
+
+            if (useConfirmFct && configuration.securedConfigurationModeProperty().get()) {
+                // Issue #180 - Secure dialog should automatically be closed (can be the user error)
+                IntegerProperty timeLeft = new SimpleIntegerProperty(LCConstant.GO_TO_CONFIG_MODE_DELAY);
+                Timeline timeLineAutoHide = new Timeline(new KeyFrame(Duration.seconds(1), (e) -> timeLeft.set(timeLeft.get() - 1)));
+                timeLineAutoHide.setCycleCount(LCConstant.GO_TO_CONFIG_MODE_DELAY);
+                //Generate a 1000 - 9999 code
+                Random random = new Random();
+                String number = "" + (random.nextInt(8999) + 1000);
+                TextInputDialog dialog = ConfigUIUtils.createInputDialog(StageUtils.getEditOrUseStageVisible(), null);
+                dialog.headerTextProperty().bind(TranslationFX.getTextBinding("action.confirm.go.config.header", timeLeft));
+                dialog.setContentText(Translation.getText("action.confirm.go.config.message", number));
+                timeLineAutoHide.setOnFinished(e -> dialog.hide());
+                timeLineAutoHide.play();
+                SystemVirtualKeyboardHelper.INSTANCE.showIfEnabled();
+                Optional<String> enteredString = dialog.showAndWait();
+                timeLineAutoHide.stop();
+                //Check code
+                if (enteredString.isEmpty() || StringUtils.isDifferent(enteredString.get(), number)) {
+                    if (enteredString.isPresent()) {
+                        Alert warning = ConfigUIUtils.createAlert(source, Alert.AlertType.ERROR);
+                        warning.setContentText(Translation.getText("action.confirm.go.config.error"));
+                        warning.show();
+                    }
+                    return;
+                }
             }
-            if (!AppController.INSTANCE.isUseModeOnly()) {
-                AppController.INSTANCE.currentModeProperty().set(AppMode.CONFIG);
-            }
+            AppModeController.INSTANCE.startEditMode();
         }
 
         @Override
@@ -93,8 +128,8 @@ public class CommonActions {
         @Override
         public void doAction() {
             LCUtils.runOnFXThread(() -> {
-                Stage mainFrame = AppController.INSTANCE.getMainStage();
-                mainFrame.setFullScreen(!mainFrame.isFullScreen());
+                final Stage stage = AppModeController.INSTANCE.getUseModeContext().stageProperty().get();
+                stage.setFullScreen(!stage.isFullScreen());
             });
         }
 

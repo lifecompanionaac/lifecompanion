@@ -53,6 +53,12 @@ public class WordPredictionController extends AbstractPredictionController<WordP
         this.initializePredictorListener(PluginManager.INSTANCE.getWordPredictors());
     }
 
+    @Override
+    public void lcStart() {
+        super.lcStart();
+        WordPredictionController.INSTANCE.getAvailablePredictor().add(new Predict4AllWordPredictor());
+    }
+
     // Class part : "Public API"
     //========================================================================
 

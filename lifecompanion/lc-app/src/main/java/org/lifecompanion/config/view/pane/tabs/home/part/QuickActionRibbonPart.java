@@ -23,6 +23,7 @@ import java.util.ArrayList;
 
 import org.controlsfx.glyphfont.FontAwesome;
 
+import org.lifecompanion.base.data.control.refacto.AppModeController;
 import org.lifecompanion.config.data.action.impl.GlobalActions;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
@@ -32,7 +33,6 @@ import org.lifecompanion.api.component.definition.GridComponentI;
 import org.lifecompanion.api.component.definition.StackComponentI;
 import org.lifecompanion.config.data.config.LCGlyphFont;
 import org.lifecompanion.base.data.config.LCGraphicStyle;
-import org.lifecompanion.base.data.control.AppController;
 import org.lifecompanion.config.data.control.ComponentActionController;
 import org.lifecompanion.config.data.control.ConfigActionController;
 import org.lifecompanion.config.data.control.SelectionController;
@@ -104,7 +104,7 @@ public class QuickActionRibbonPart extends RibbonBasePart<Void> implements LCVie
 			ComponentActionController.INSTANCE.copyComponent(SelectionController.INSTANCE.selectedComponentBothProperty().get());
 		});
 		this.buttonPaste.setOnAction((ea) -> {
-			ComponentActionController.INSTANCE.pasteComponent(AppController.INSTANCE.currentConfigConfigurationProperty().get(),
+			ComponentActionController.INSTANCE.pasteComponent(AppModeController.INSTANCE.getEditModeContext().configurationProperty().get(),
 					SelectionController.INSTANCE.selectedComponentBothProperty().get(),
 					new ArrayList<>(SelectionController.INSTANCE.getSelectedKeys()));
 		});

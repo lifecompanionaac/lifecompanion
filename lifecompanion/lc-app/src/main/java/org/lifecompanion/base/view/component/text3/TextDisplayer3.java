@@ -38,8 +38,8 @@ import org.lifecompanion.api.control.events.WritingEventSource;
 import org.lifecompanion.api.image2.ImageElementI;
 import org.lifecompanion.api.style2.definition.TextCompStyleI;
 import org.lifecompanion.base.data.common.LCUtils;
-import org.lifecompanion.base.data.control.AppController;
 import org.lifecompanion.base.data.control.WritingStateController;
+import org.lifecompanion.base.data.control.refacto.AppModeController;
 import org.lifecompanion.base.view.component.text.TextDisplayerBaseImplView;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.predict4all.nlp.Separator;
@@ -96,7 +96,7 @@ public class TextDisplayer3 extends Pane implements LCViewInitHelper {
     @Override
     public void initListener() {
         this.setOnMouseReleased(me -> {
-            if (AppController.INSTANCE.isUseMode()) {
+            if (AppModeController.INSTANCE.isUseMode()) {
                 WritingStateController.INSTANCE.moveCaretToPosition(WritingEventSource.USER_PHYSICAL_INPUT, this.textDisplayer, me.getX(), me.getY());
             }
         });

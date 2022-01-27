@@ -25,8 +25,8 @@ import org.jdom2.Element;
 import org.lifecompanion.api.component.definition.simplercomp.UserActionSequenceItemI;
 import org.lifecompanion.api.exception.LCException;
 import org.lifecompanion.api.io.IOContextI;
-import org.lifecompanion.api.mode.AppMode;
-import org.lifecompanion.base.data.control.AppController;
+import org.lifecompanion.base.data.control.refacto.AppModeController;
+import org.lifecompanion.base.data.control.refacto.AppModeV2;
 import org.lifecompanion.framework.commons.fx.io.XMLGenericProperty;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.framework.commons.translation.Translation;
@@ -63,7 +63,7 @@ public class UserActionSequenceItemKeyOption extends AbstractSimplerKeyContentCo
 
     @Override
     protected String getDefaultTextContentProperty() {
-        return AppController.INSTANCE.currentModeProperty().get() == AppMode.CONFIG ? Translation.getText("key.option.user.action.items.key.default.text") : "";
+        return AppModeController.INSTANCE.modeProperty().get() == AppModeV2.EDIT ? Translation.getText("key.option.user.action.items.key.default.text") : "";
     }
     //========================================================================
 

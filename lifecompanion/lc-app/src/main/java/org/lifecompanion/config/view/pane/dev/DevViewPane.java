@@ -25,7 +25,7 @@ import javafx.scene.control.TabPane.TabClosingPolicy;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import org.lifecompanion.base.data.common.LCUtils;
-import org.lifecompanion.base.data.control.AppController;
+import org.lifecompanion.base.data.control.refacto.DevModeController;
 import org.lifecompanion.base.data.dev.LogEntry;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
@@ -79,7 +79,7 @@ public class DevViewPane extends BorderPane implements LCViewInitHelper {
     @Override
     public void initUI() {
         //Log tab
-        this.logEntryListView = new ListView<>(AppController.INSTANCE.getLogEntries());
+        this.logEntryListView = new ListView<>(DevModeController.INSTANCE.getLogEntries());
         this.logEntryListView.setCellFactory(lv -> new LogEntryListCell());
         Tab tabLog = new Tab(Translation.getText("dev.stage.tab.log"), this.logEntryListView);
 
