@@ -48,6 +48,8 @@ public enum ProfileController {
     ProfileController() {
         currentProfile = new SimpleObjectProperty<>();
         this.profiles = FXCollections.observableArrayList();
+        // On profile change, current edited configuration should be reset
+        currentProfile.addListener((obs, ov, nv) -> AppModeController.INSTANCE.switchEditModeConfiguration(null, null));
     }
 
     /**

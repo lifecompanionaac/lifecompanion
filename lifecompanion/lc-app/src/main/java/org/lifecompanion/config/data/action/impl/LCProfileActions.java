@@ -179,7 +179,6 @@ public class LCProfileActions {
                     this.executeProfileRemove();
                     //Now, we need to select again a profil
                     ProfileController.INSTANCE.clearSelectedProfile();
-                    //AppController.INSTANCE.newConfigModeConfiguration();
                     ProfileConfigSelectionController.INSTANCE.setProfileStep(ProfileConfigStep.PROFILE_LIST, null, null);
                 }
             } else {
@@ -235,7 +234,6 @@ public class LCProfileActions {
                     // Once full profile is loaded : notify, create new config, set current profile
                     Runnable afterFullLoading = () -> {
                         LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo(Translation.getText("action.select.profile.notif.title", profileToSelect.nameProperty())));
-                        // AppModeController.INSTANCE.getConfigModeContext().switchToNew();
                     };
 
                     // Once previous profile is changed : fully load the profile

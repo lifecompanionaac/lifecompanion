@@ -123,7 +123,9 @@ public enum AppModeController {
     }
 
     private void handleNoConfigInEditMode() {
-        ProfileConfigSelectionController.INSTANCE.setStep(ProfileConfigStep.CONFIGURATION_LIST, null);
+        if (ProfileController.INSTANCE.currentProfileProperty().get() != null) {
+            ProfileConfigSelectionController.INSTANCE.setStep(ProfileConfigStep.CONFIGURATION_LIST, null);
+        }
     }
 
     public void startUseModeAfterEdit() {
