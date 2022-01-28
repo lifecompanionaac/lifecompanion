@@ -28,6 +28,11 @@
 	\n\nQue souhaitez vous faire ?</text>
   <!--org.lifecompanion.api.definition.selection-->
   <text key="notification.grid.added.to.stack">Grille ajoutée dans la pile de grille</text>
+  <text key="no.configuration.placeholder.message">Aucune configuration éditée.\nPour commencer à utiliser LifeCompanion, vous pouvez</text>
+  <text key="no.configuration.placeholder.link.create.blank">Créer une nouvelle configuration</text>
+  <text key="no.configuration.placeholder.link.open">Ouvrir l'une de vos configurations</text>
+  <text key="no.configuration.placeholder.link.create.from.model">Créer une configuration à partir d'un modèle</text>
+  <text key="no.configuration.placeholder.link.import.configuration">Importer une configuration à partir d'un fichier</text>
   <text key="notification.key.list.paste">Cases collées dans la grille</text>
   <text key="lc.colorpicker.null.value">Aucune</text>
   <text key="lc.colorpicker.transparent.value">Transparent</text>
@@ -1830,6 +1835,7 @@
   <text key="configuration.menu.item.save">Sauvegarder</text>
   <text key="configuration.menu.label.last.date">Dernière sauvegarde : {}</text>
   <text key="configuration.menu.label.no.last.date">Pas encore sauvegardée</text>
+  <text key="configuration.label.no.current">Aucune configuration</text>
   <text key="configuration.menu.label.unsaved.modif">Modifications non enregistrées : {}</text>
   <text key="my.configurations.menu.detail.title">Mes configurations</text>
   <text key="my.configurations.menu.item.import">Importer</text>

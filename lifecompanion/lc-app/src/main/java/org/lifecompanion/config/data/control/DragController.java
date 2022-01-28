@@ -28,6 +28,7 @@ import org.lifecompanion.api.component.definition.usercomp.UserCompDescriptionI;
 import org.lifecompanion.api.ui.AddTypeEnum;
 import org.lifecompanion.api.ui.PossibleAddComponentI;
 import org.lifecompanion.base.data.component.simple.GridPartKeyComponent;
+import org.lifecompanion.base.data.control.refacto.AppModeController;
 import org.lifecompanion.base.data.ui.PossibleAddComponents;
 import org.lifecompanion.config.data.action.impl.GridStackActions.AddGridInStackAction;
 import org.slf4j.Logger;
@@ -80,9 +81,10 @@ public enum DragController {
     // Class part : "Utils"
     //========================================================================
     public boolean isDragShouldBeAcceptedOn(final AddTypeEnum addType, final boolean onKey) {
-        return onKey && (this.currentDraggedKey.get() != null)
-                || DragController.isAllowedTarget(addType, this.currentDraggedPossibleAdd.get())
-                || this.currentDraggedUserComp.get() != null && addType == this.currentDraggedUserComp.get().getTargetType();
+        return AppModeController.INSTANCE.getEditModeContext().getConfiguration() != null &&
+                (onKey && (this.currentDraggedKey.get() != null)
+                        || DragController.isAllowedTarget(addType, this.currentDraggedPossibleAdd.get())
+                        || this.currentDraggedUserComp.get() != null && addType == this.currentDraggedUserComp.get().getTargetType());
     }
 
     public boolean isDragComponentIsPresentOn(final AddTypeEnum addType) {

@@ -116,6 +116,7 @@ public class QuickActionRibbonPart extends RibbonBasePart<Void> implements LCVie
 
 	@Override
 	public void initBinding() {
+		this.buttonGoUseMode.disableProperty().bind(AppModeController.INSTANCE.getEditModeContext().configurationProperty().isNull());
 		//Undo/redo
 		this.buttonUndo.disableProperty().bind(ConfigActionController.INSTANCE.undoDisabledProperty());
 		this.buttonRedo.disableProperty().bind(ConfigActionController.INSTANCE.redoDisabledProperty());

@@ -106,6 +106,7 @@ public class ZoomRibbonPart extends RibbonBasePart<DisplayableComponentBaseImpl>
                 .bind(Bindings.createStringBinding(
                         () -> ZoomRibbonPart.DECIMAL_ZOOM_FORMAT.format(AppModeController.INSTANCE.getEditModeContext().configurationScaleProperty().get() * 100.0) + " %",
                         AppModeController.INSTANCE.getEditModeContext().configurationScaleProperty()));
+        this.disableProperty().bind(AppModeController.INSTANCE.getEditModeContext().configurationProperty().isNull());
     }
 
     // Class part : "Bind/unbind"

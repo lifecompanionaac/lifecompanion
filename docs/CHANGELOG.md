@@ -13,6 +13,9 @@
 	- Plus de problème d'affichage
 	- Bien meilleure qualité des éléments affichés et intégration des photos
 	- Recherche optimisée
+- Il est maintenant possible de ne plus avoir de configuration courante
+	- Optimisation de la mémoire
+	- Proposition d'actions en fonction
 
 ### Corrections/ajustements
 
@@ -24,6 +27,7 @@
 - Ticket #29 : le déplacement du curseur dans l'éditeur de texte ne se fait plus en mode configuration
 - Ticket #86 : le mot "copie" n'est plus ajouté devant le texte d'une case copiée
 - Ticket #23 : changement du nom de certaines actions
+- Ticket #93 : le bouton retour lors de la création d'une configuration ne créer plus la configuration
 - Correction d'un problème lors de la suppression des listes de case
 - Correction d'un problème d'affichage lors de l'export en PDF dans certains cas
 - L'action "Sélectionner une liste choisie" est maintenant simulée en mode configuration

@@ -790,8 +790,8 @@ public class LCConfigurationActions {
             LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo("configuration.removed.notification.title"));
 
             //If the configuration is the currently loaded configuration
-            if (AppModeController.INSTANCE.getEditModeContext().configurationDescriptionProperty().get() == this.configDescription) {
-                // AppModeController.INSTANCE.getConfigModeContext().switchToNew(); //
+            if (AppModeController.INSTANCE.getEditModeContext().getConfigurationDescription() == this.configDescription) {
+                AppModeController.INSTANCE.switchEditModeConfiguration(null, null);
             }
 
             if (this.removedCallback != null) {

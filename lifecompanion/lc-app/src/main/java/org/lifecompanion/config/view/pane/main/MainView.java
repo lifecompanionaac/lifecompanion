@@ -24,6 +24,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
@@ -45,8 +46,11 @@ import org.lifecompanion.base.data.config.LCConstant;
 import org.lifecompanion.base.data.control.refacto.AppMode;
 import org.lifecompanion.base.data.control.refacto.AppModeController;
 import org.lifecompanion.config.data.action.impl.GlobalActions;
+import org.lifecompanion.config.data.action.impl.LCConfigurationActions;
 import org.lifecompanion.config.data.action.impl.OptionActions;
 import org.lifecompanion.config.data.action.impl.OptionActions.AddRootComponentAction;
+import org.lifecompanion.config.data.component.profile.ProfileConfigSelectionController;
+import org.lifecompanion.config.data.component.profile.ProfileConfigStep;
 import org.lifecompanion.config.data.config.LCGlyphFont;
 import org.lifecompanion.config.data.control.ConfigActionController;
 import org.lifecompanion.config.data.control.DragController;
@@ -77,6 +81,8 @@ public class MainView extends StackPane implements LCViewInitHelper {
 
     private VBox noConfigurationPlaceholder;
 
+    private Hyperlink linkCreateBlank, linkOpenConfiguration, linkCreateModel, linkImportConfiguration;
+
     /**
      * Create a main pane
      */
@@ -97,8 +103,14 @@ public class MainView extends StackPane implements LCViewInitHelper {
         this.getChildren().add(this.scrollcenter);
         StackPane.setAlignment(this.scrollcenter, Pos.CENTER);
 
-        final Label labelMessage = new Label(Translation.getText("Pas de configuration actuellement"));
-        noConfigurationPlaceholder = new VBox(10.0, labelMessage);
+        final Label labelMessage = new Label(Translation.getText("no.configuration.placeholder.message"));
+        labelMessage.getStyleClass().addAll("text-font-size-120", "text-label-center");
+        VBox.setMargin(labelMessage, new Insets(0.0, 0.0, 5.0, 0.0));
+        linkCreateBlank = createActionLink("no.configuration.placeholder.link.create.blank");
+        linkOpenConfiguration = createActionLink("no.configuration.placeholder.link.open");
+        linkCreateModel = createActionLink("no.configuration.placeholder.link.create.from.model");
+        linkImportConfiguration = createActionLink("no.configuration.placeholder.link.import.configuration");
+        noConfigurationPlaceholder = new VBox(6.0, labelMessage, linkOpenConfiguration, linkImportConfiguration, linkCreateModel, linkCreateBlank);
         noConfigurationPlaceholder.setAlignment(Pos.CENTER);
         noConfigurationPlaceholder.prefWidthProperty().bind(scrollcenter.widthProperty().subtract(20.0));
 
@@ -112,6 +124,12 @@ public class MainView extends StackPane implements LCViewInitHelper {
         this.getChildren().addAll(this.buttonResetSelection, this.buttonGoUseMode);
 
         displayNoConfigurationMessage();
+    }
+
+    private Hyperlink createActionLink(String translation) {
+        final Hyperlink hyperlink = new Hyperlink(Translation.getText(translation));
+        hyperlink.getStyleClass().add("text-font-size-120");
+        return hyperlink;
     }
 
     private Button createQuickActionButton(final boolean primary, final String tooltipId, final Enum<?> glyph) {
@@ -130,6 +148,7 @@ public class MainView extends StackPane implements LCViewInitHelper {
     @Override
     public void initBinding() {
         this.buttonResetSelection.disableProperty().bind(SelectionController.INSTANCE.selectedComponentBothProperty().isNull());
+        this.buttonGoUseMode.visibleProperty().bind(AppModeController.INSTANCE.getEditModeContext().configurationProperty().isNotNull());
         // On configuration change, display the new configuration
         AppModeController.INSTANCE.getEditModeContext().configurationProperty()
                 .addListener((observableP, oldValueP, newValueP) -> {
@@ -148,6 +167,7 @@ public class MainView extends StackPane implements LCViewInitHelper {
                         displayNoConfigurationMessage();
                     }
                 });
+
     }
 
     private void displayConfiguration(LCConfigurationI newValueP) {
@@ -197,22 +217,22 @@ public class MainView extends StackPane implements LCViewInitHelper {
                 Bounds contentBounds = this.scrollcenter.getContent().getBoundsInParent();
                 if (DragController.INSTANCE.isDragComponentIsPresentOn(AddTypeEnum.ROOT)) {
                     RootGraphicComponentI dragged = DragController.INSTANCE.createNewCompFor(AddTypeEnum.ROOT);
-                    RootGraphicComponentI component = dragged;
-                    double scale = AppModeController.INSTANCE.getEditModeContext().configurationScaleProperty().get();
-                    // Center the component
-                    component.xProperty()
-                            .set(Math.max(LCConstant.CONFIG_ROOT_COMPONENT_GAP,
-                                    (contentBounds.getWidth() - viewportBounds.getWidth()) * this.scrollcenter.getHvalue() + ea.getX() * (1.0 / scale)
-                                            - component.widthProperty().get() / 2.0));
-                    component.yProperty()
-                            .set(Math.max(LCConstant.CONFIG_ROOT_COMPONENT_GAP,
-                                    (contentBounds.getHeight() - viewportBounds.getHeight()) * this.scrollcenter.getVvalue()
-                                            + ea.getY() * (1.0 / scale) - component.heightProperty().get() / 2.0));
-                    // Do add
-                    OptionActions.AddRootComponentAction action = new AddRootComponentAction(this,
-                            AppModeController.INSTANCE.getEditModeContext().configurationProperty().get(), component);
-                    ConfigActionController.INSTANCE.executeAction(action);
-
+                    if (dragged != null && AppModeController.INSTANCE.getEditModeContext().getConfiguration() != null) {
+                        double scale = AppModeController.INSTANCE.getEditModeContext().configurationScaleProperty().get();
+                        // Center the component
+                        dragged.xProperty()
+                                .set(Math.max(LCConstant.CONFIG_ROOT_COMPONENT_GAP,
+                                        (contentBounds.getWidth() - viewportBounds.getWidth()) * this.scrollcenter.getHvalue() + ea.getX() * (1.0 / scale)
+                                                - dragged.widthProperty().get() / 2.0));
+                        dragged.yProperty()
+                                .set(Math.max(LCConstant.CONFIG_ROOT_COMPONENT_GAP,
+                                        (contentBounds.getHeight() - viewportBounds.getHeight()) * this.scrollcenter.getVvalue()
+                                                + ea.getY() * (1.0 / scale) - dragged.heightProperty().get() / 2.0));
+                        // Do add
+                        OptionActions.AddRootComponentAction action = new AddRootComponentAction(this,
+                                AppModeController.INSTANCE.getEditModeContext().configurationProperty().get(), dragged);
+                        ConfigActionController.INSTANCE.executeAction(action);
+                    }
                     // Remove added
                     DragController.INSTANCE.resetCurrentDraggedComp();
                 }
@@ -220,5 +240,9 @@ public class MainView extends StackPane implements LCViewInitHelper {
                 LOGGER.error("Problem when dragging a component to main view", t);
             }
         });
+        linkCreateBlank.setOnAction(e -> ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.NewConfigInListAction()));
+        linkCreateModel.setOnAction(e -> ProfileConfigSelectionController.INSTANCE.setConfigStep(ProfileConfigStep.CONFIGURATION_ADD_FROM_DEFAULT, null, null));
+        linkOpenConfiguration.setOnAction(e -> ProfileConfigSelectionController.INSTANCE.setConfigStep(ProfileConfigStep.CONFIGURATION_LIST, null, null));
+        linkImportConfiguration.setOnAction(LCConfigurationActions.HANDLER_IMPORT_OPEN);
     }
 }

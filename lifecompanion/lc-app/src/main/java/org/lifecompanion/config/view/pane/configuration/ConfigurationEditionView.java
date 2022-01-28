@@ -96,7 +96,7 @@ public class ConfigurationEditionView extends BorderPane implements ProfileConfi
     //========================================================================
     @Override
     public void initUI() {
-        Triple<HBox, Label, Node> header = ConfigUIUtils.createHeader("configuration.edit.title", e -> closeCurrentEdit(false));
+        Triple<HBox, Label, Node> header = ConfigUIUtils.createHeader("configuration.edit.title", e -> closeCurrentEdit(false, true));
 
         this.configurationPreview = new ImageView();
         this.configurationPreview.setFitHeight(200);
@@ -203,7 +203,7 @@ public class ConfigurationEditionView extends BorderPane implements ProfileConfi
 
     @Override
     public void initListener() {
-        buttonValidate.setOnAction(e -> closeCurrentEdit(false));
+        buttonValidate.setOnAction(e -> closeCurrentEdit(false, false));
         this.buttonRemove.setOnAction(e -> ConfigActionController.INSTANCE
                 .executeAction(new LCConfigurationActions.RemoveConfigurationAction(buttonRemove, ProfileController.INSTANCE.currentProfileProperty().get(), this.editedConfiguration.get(),
                         removedConfig -> ProfileConfigSelectionController.INSTANCE.setConfigStep(ProfileConfigStep.CONFIGURATION_LIST, null, null))));
@@ -225,15 +225,17 @@ public class ConfigurationEditionView extends BorderPane implements ProfileConfi
 
     // Class part : "Step part"
     //========================================================================
-    private void closeCurrentEdit(boolean closeRequest) {
+    private void closeCurrentEdit(boolean closeRequest, boolean buttonBack) {
         // Should save current configuration information
         ProfileConfigStep currentStep = ProfileConfigSelectionController.INSTANCE.currentStepProperty().get();
         if (currentStep != null) {
             if (currentStep == ProfileConfigStep.CONFIGURATION_EDIT) {
                 ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.EditConfigurationAction(this.editedConfiguration.get(), null));
-            } else if (currentStep == ProfileConfigStep.CONFIGURATION_CREATE) {
-                ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.AddNewConfigAction(this, this.editedConfiguration.get()));
-                closeRequest = true;
+            } else if (currentStep == ProfileConfigStep.CONFIGURATION_CREATE && !closeRequest) {
+                if (!buttonBack) {
+                    ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.AddNewConfigAction(this, this.editedConfiguration.get()));
+                    closeRequest = true;
+                }
             }
         }
         if (!closeRequest) {
@@ -248,7 +250,7 @@ public class ConfigurationEditionView extends BorderPane implements ProfileConfi
 
     @Override
     public boolean cancelRequest() {
-        closeCurrentEdit(true);
+        closeCurrentEdit(true, false);
         return false;
     }
 

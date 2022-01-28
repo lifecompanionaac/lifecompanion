@@ -18,7 +18,7 @@
  */
 package org.lifecompanion.config.view.pane.menu;
 
-import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -26,6 +26,8 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import org.controlsfx.glyphfont.FontAwesome;
+import org.fxmisc.easybind.EasyBind;
+import org.lifecompanion.api.component.definition.LCConfigurationDescriptionI;
 import org.lifecompanion.api.ui.config.ConfigurationProfileLevelEnum;
 import org.lifecompanion.base.data.common.LCUtils;
 import org.lifecompanion.base.data.common.UIUtils;
@@ -63,10 +65,10 @@ public class CurrentConfigDetailView extends VBox implements LCViewInitHelper {
         this.labelPartTitle.getStyleClass().add("menu-part-title");
         this.labelPartTitle.setMaxWidth(Double.MAX_VALUE);
         //Display config infos
-        this.labelConfigName = new Label(Translation.getText("configuration.menu.no.name"));
+        this.labelConfigName = new Label(Translation.getText("configuration.label.no.current"));
         this.labelConfigName.getStyleClass().add("import-blue-title");
         VBox.setMargin(this.labelConfigName, new Insets(0, 0, 0, 8));
-        this.labelLastSaveDate = new Label(Translation.getText("configuration.menu.label.no.last.date"));
+        this.labelLastSaveDate = new Label(Translation.getText("configuration.label.no.current"));
         this.labelUnsavedModif = new Label();
         this.labelLastSaveDate.setStyle("-fx-text-fill: gray");
         this.labelUnsavedModif.setStyle("-fx-text-fill: gray");
@@ -102,31 +104,24 @@ public class CurrentConfigDetailView extends VBox implements LCViewInitHelper {
     @Override
     public void initBinding() {
         // FIXME : memory leak on listener
+        final ChangeListener<Date> dateChangeListener = (obsd, ovd, nvd) -> {
+            LCUtils.runOnFXThread(() -> this.labelLastSaveDate.setText(nvd != null
+                    ? Translation.getText("configuration.menu.label.last.date", StringUtils.dateToStringDateWithOnlyHoursMinuteSecond(nvd))
+                    : Translation.getText("configuration.menu.label.no.last.date")));
+        };
         AppModeController.INSTANCE.getEditModeContext().configurationDescriptionProperty().addListener((obs, ov, nv) -> {
             if (ov != null) {
-                this.labelConfigName.textProperty().unbind();
-                this.labelLastSaveDate.textProperty().unbind();
+                ov.configurationLastDateProperty().removeListener(dateChangeListener);
             }
             if (nv != null) {
-                this.labelConfigName.textProperty().bind(nv.configurationNameProperty());
-                //Date change outside JavaFX Thread, so use listener
-                nv.configurationLastDateProperty().addListener((obsd, ovd, nvd) -> {
-                    Platform.runLater(() -> this.labelLastSaveDate.setText(nvd != null
-                            ? Translation.getText("configuration.menu.label.last.date", StringUtils.dateToStringDateWithOnlyHoursMinuteSecond(nvd))
-                            : Translation.getText("configuration.menu.label.no.last.date")));
-                });
-                Platform.runLater(() -> {
-                    Date currentDate = nv.configurationLastDateProperty().get();
-                    this.labelLastSaveDate.setText(currentDate != null
-                            ? Translation.getText("configuration.menu.label.last.date",
-                            StringUtils.dateToStringDateWithOnlyHoursMinuteSecond(currentDate))
-                            : Translation.getText("configuration.menu.label.no.last.date"));
-                });
+                dateChangeListener.changed(null, null, nv.configurationLastDateProperty().get());
+                nv.configurationLastDateProperty().addListener(dateChangeListener);//Date change outside JavaFX Thread, so use listener
             } else {
-                this.labelConfigName.setText(Translation.getText("configuration.menu.no.name"));
-                this.labelLastSaveDate.setText(Translation.getText("configuration.menu.label.no.last.date"));
+                this.labelLastSaveDate.setText(Translation.getText("configuration.label.no.current"));
             }
         });
+        this.labelConfigName.textProperty().bind(EasyBind.select(AppModeController.INSTANCE.getEditModeContext().configurationDescriptionProperty())
+                .selectObject(LCConfigurationDescriptionI::configurationNameProperty).orElse(Translation.getText("configuration.label.no.current")));
         //Can't remove/export unsaved configuration
         this.buttonRemove.disableProperty().bind(AppModeController.INSTANCE.getEditModeContext().configurationDescriptionProperty().isNull());
         this.buttonExport.disableProperty().bind(AppModeController.INSTANCE.getEditModeContext().configurationDescriptionProperty().isNull());

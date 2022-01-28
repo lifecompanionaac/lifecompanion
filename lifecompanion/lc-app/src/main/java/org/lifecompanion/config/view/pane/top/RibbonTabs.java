@@ -40,8 +40,6 @@ import org.lifecompanion.config.view.pane.tabs.api.AbstractTabContent;
 import org.lifecompanion.config.view.scene.ConfigurationScene;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 
-import java.util.Locale;
-
 /**
  * Class that contains all the ribbons in different tabs and the menu button.
  *
@@ -85,7 +83,7 @@ public class RibbonTabs extends StackPane implements LCViewInitHelper {
         Tab tab = new Tab();
         tab.setContent(tabContent);
         tab.textProperty().bind(EasyBind.map(tabContent.tabTitleProperty(), String::toUpperCase));
-        tab.disableProperty().bind(tabContent.disableTabProperty());
+        tab.disableProperty().bind(tabContent.disableTabProperty().or(AppModeController.INSTANCE.getEditModeContext().configurationProperty().isNull()));
         this.tabPane.getTabs().add(tab);
         return tab;
     }

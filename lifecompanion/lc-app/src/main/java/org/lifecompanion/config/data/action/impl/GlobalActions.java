@@ -35,8 +35,8 @@ import org.lifecompanion.api.exception.LCException;
 import org.lifecompanion.base.data.common.LCTask;
 import org.lifecompanion.base.data.common.UIUtils;
 import org.lifecompanion.base.data.control.AsyncExecutorController;
-import org.lifecompanion.base.data.control.refacto.AppModeController;
 import org.lifecompanion.base.data.control.refacto.AppMode;
+import org.lifecompanion.base.data.control.refacto.AppModeController;
 import org.lifecompanion.base.data.control.update.InstallationController;
 import org.lifecompanion.config.data.control.ConfigActionController;
 import org.lifecompanion.config.data.control.FileChooserType;
@@ -73,13 +73,15 @@ public class GlobalActions {
 
         @Override
         public void doAction() throws LCException {
-            checkModificationForCurrentConfiguration(
-                    this,
-                    source,
-                    Translation.getText("go.to.use.mode.save.before.message"),
-                    "go.to.use.mode.save.before.button",
-                    () -> AppModeController.INSTANCE.startUseModeAfterEdit() //AppModeController.INSTANCE.modeProperty().set(AppMode.USE)
-            );
+            if (AppModeController.INSTANCE.getEditModeContext().getConfiguration() != null) {
+                checkModificationForCurrentConfiguration(
+                        this,
+                        source,
+                        Translation.getText("go.to.use.mode.save.before.message"),
+                        "go.to.use.mode.save.before.button",
+                        () -> AppModeController.INSTANCE.startUseModeAfterEdit() //AppModeController.INSTANCE.modeProperty().set(AppMode.USE)
+                );
+            }
         }
 
         @Override

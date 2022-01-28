@@ -27,6 +27,7 @@ import javafx.scene.text.TextAlignment;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.base.data.common.UIUtils;
 import org.lifecompanion.base.data.config.LCGraphicStyle;
+import org.lifecompanion.base.data.control.refacto.AppModeController;
 import org.lifecompanion.base.view.reusable.GeneralConfigurationStep;
 import org.lifecompanion.config.data.component.general.GeneralConfigurationController;
 import org.lifecompanion.config.data.config.LCGlyphFont;
@@ -59,32 +60,14 @@ public class OpenGeneralConfigurationRibbonPart extends RibbonBasePart<Void> imp
         this.setContent(boxContent);
     }
 
-    BooleanProperty running = new SimpleBooleanProperty(false);
-
     @Override
     public void initListener() {
         this.buttonOpenGeneralConfig.setOnAction(e -> GeneralConfigurationController.INSTANCE.showStep(GeneralConfigurationStep.GENERAL_INFORMATION));
-        //        this.buttonOpenGeneralConfig.setOnAction(e -> {
-        //            if (!running.get()) {
-        //                final File tempDir = LCUtils.getTempDir("export-images-test");
-        //                tempDir.mkdirs();
-        //                running.set(true);
-        //                final LCConfigurationI configuration = AppModeController.INSTANCE.getEditModeContext().configurationProperty().get();
-        //                configuration.getAllComponent().values().forEach(d -> {
-        //                    NodeSnapshotCache.INSTANCE.requestSnapshot(d, -1, 150, img -> {
-        //                        try {
-        //                            BufferedImage buffImage = SwingFXUtils.fromFXImage(img, null);
-        //                            ImageIO.write(buffImage, "png", new File(tempDir.getPath() + "/" + UUID.randomUUID().toString() + ".png"));
-        //                        } catch (Exception ex) {
-        //                            ex.printStackTrace();
-        //                        }
-        //                    });
-        //                });
-        //            } else {
-        //                running.set(false);
-        //                NodeSnapshotCache.INSTANCE.cancelAllSnapshotRequest();
-        //            }
-        //        });
+    }
+
+    @Override
+    public void initBinding() {
+        this.buttonOpenGeneralConfig.disableProperty().bind(AppModeController.INSTANCE.getEditModeContext().configurationProperty().isNull());
     }
 
     @Override

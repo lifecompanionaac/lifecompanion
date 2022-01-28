@@ -121,6 +121,7 @@ public class GridRibbonPart extends RibbonBasePart<LCConfigurationI> implements 
 	//========================================================================
 	@Override
 	public void initListener() {
+		this.disableProperty().bind(AppModeController.INSTANCE.getEditModeContext().configurationProperty().isNull());
 		this.buttonEnableGrid.setOnAction((ea) -> {
 			if (this.model.get() != null && !this.model.get().useGridProperty().get()) {
 				EnableGridOnConfigurationAction action = new EnableGridOnConfigurationAction(this.model.get());

@@ -168,15 +168,14 @@ public class BottomPaneView extends HBox implements LCViewInitHelper {
                         LCUtils.unbindAndSet(labelConfigurationSize.textProperty(), "");
                     }
                     if (newValueP != null) {
-                        //this.labelConfigurationSize.textProperty().bind(Bindings.createStringBinding(() -> (int) newValueP.computedWidthProperty().get() + "x" + (int) newValueP.computedHeightProperty().get(), newValueP.computedWidthProperty(), newValueP.computedHeightProperty()));
-
-                        this.labelConfigurationSize.textProperty().bind(TranslationFX.getTextBinding("status.bar.label.configuration.size", newValueP.computedWidthProperty(), newValueP.computedHeightProperty()));
+                        // Specific binding as we want it as String
+                        this.labelConfigurationSize.textProperty().bind(Bindings.createStringBinding(() -> (int) newValueP.computedWidthProperty().get() + "x" + (int) newValueP.computedHeightProperty().get(), newValueP.computedWidthProperty(), newValueP.computedHeightProperty()));
                         this.labelCurrentUnsavedModifications.textProperty().bind(TranslationFX.getTextBinding("status.bar.label.current.unsaved.modifications", newValueP.unsavedActionProperty()));
                     }
                 });
         //Bind configuration description name
         this.labelCurrentConfigurationName.textProperty().bind(EasyBind.select(AppModeController.INSTANCE.getEditModeContext().configurationDescriptionProperty())
-                .selectObject(LCConfigurationDescriptionI::configurationNameProperty).orElse(Translation.getText("configuration.menu.no.name")));
+                .selectObject(LCConfigurationDescriptionI::configurationNameProperty).orElse(Translation.getText("configuration.label.no.current")));
         //Bind component name
         this.labelCurrentComponentName.textProperty().bind(EasyBind.select(SelectionController.INSTANCE.selectedComponentBothProperty())
                 .selectObject(DisplayableComponentI::nameProperty).orElse(Translation.getText("no.component.selected.simple")));
