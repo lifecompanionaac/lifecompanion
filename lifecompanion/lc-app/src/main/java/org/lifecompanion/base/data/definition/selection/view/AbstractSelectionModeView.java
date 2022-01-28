@@ -40,7 +40,7 @@ import org.lifecompanion.api.definition.selection.ScanningDirection;
 import org.lifecompanion.api.style2.property.definition.StylePropertyI;
 import org.lifecompanion.api.ui.ViewProviderI;
 import org.lifecompanion.base.data.common.LCUtils;
-import org.lifecompanion.base.data.control.refacto.AppModeV2;
+import org.lifecompanion.base.data.control.refacto.AppMode;
 import org.lifecompanion.base.data.definition.selection.impl.DrawSelectionModeI;
 import org.lifecompanion.base.view.component.simple.LCConfigurationChildContainerPane;
 import org.slf4j.Logger;
@@ -184,7 +184,7 @@ public class AbstractSelectionModeView<T extends DrawSelectionModeI> extends Gro
                         for (RootGraphicComponentI comp : allRootComponents) {
                             if (comp instanceof WriterDisplayerI) {
                                 WriterDisplayerI textDisplayerComponent = (WriterDisplayerI) comp;
-                                final Region view = ViewProviderI.getComponentView(textDisplayerComponent, AppModeV2.USE).getView();
+                                final Region view = ViewProviderI.getComponentView(textDisplayerComponent, AppMode.USE).getView();
                                 clipShape = Shape.subtract(clipShape, rectangleFromBounds(view.getBoundsInParent()));
                             }
                         }
@@ -224,7 +224,7 @@ public class AbstractSelectionModeView<T extends DrawSelectionModeI> extends Gro
         StylePropertyI<Number> radiusProp = keyP instanceof GridPartKeyComponentI ? keyP.getKeyStyle().shapeRadiusProperty()
                 : keyP.getGridShapeStyle().shapeRadiusProperty();
         //Launch
-        this.updateMoveAnimation(enableAnimation, ViewProviderI.getComponentView(keyP, AppModeV2.USE).getView(), pos,
+        this.updateMoveAnimation(enableAnimation, ViewProviderI.getComponentView(keyP, AppMode.USE).getView(), pos,
                 new Pair<>(keyP.layoutWidthProperty().get(), keyP.layoutHeightProperty().get()),
                 LCUtils.nullToZeroDouble(radiusProp.value().getValue()), this.partTranslateTransition, this.keyStrokeRectangle,
                 this.keyProgressRectangle, this.keyProgressRectangleVisible, () -> {

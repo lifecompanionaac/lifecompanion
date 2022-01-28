@@ -24,23 +24,26 @@ import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.transform.Scale;
 import org.controlsfx.glyphfont.FontAwesome;
+import org.lifecompanion.api.component.definition.LCConfigurationI;
 import org.lifecompanion.api.component.definition.RootGraphicComponentI;
 import org.lifecompanion.api.ui.AddTypeEnum;
 import org.lifecompanion.api.ui.ViewProviderI;
 import org.lifecompanion.base.data.common.UIUtils;
 import org.lifecompanion.base.data.config.LCConstant;
+import org.lifecompanion.base.data.control.refacto.AppMode;
 import org.lifecompanion.base.data.control.refacto.AppModeController;
-import org.lifecompanion.base.data.control.refacto.AppModeV2;
 import org.lifecompanion.config.data.action.impl.GlobalActions;
 import org.lifecompanion.config.data.action.impl.OptionActions;
 import org.lifecompanion.config.data.action.impl.OptionActions.AddRootComponentAction;
@@ -48,6 +51,7 @@ import org.lifecompanion.config.data.config.LCGlyphFont;
 import org.lifecompanion.config.data.control.ConfigActionController;
 import org.lifecompanion.config.data.control.DragController;
 import org.lifecompanion.config.data.control.SelectionController;
+import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,6 +75,8 @@ public class MainView extends StackPane implements LCViewInitHelper {
      */
     private Button buttonResetSelection, buttonGoUseMode;
 
+    private VBox noConfigurationPlaceholder;
+
     /**
      * Create a main pane
      */
@@ -91,6 +97,11 @@ public class MainView extends StackPane implements LCViewInitHelper {
         this.getChildren().add(this.scrollcenter);
         StackPane.setAlignment(this.scrollcenter, Pos.CENTER);
 
+        final Label labelMessage = new Label(Translation.getText("Pas de configuration actuellement"));
+        noConfigurationPlaceholder = new VBox(10.0, labelMessage);
+        noConfigurationPlaceholder.setAlignment(Pos.CENTER);
+        noConfigurationPlaceholder.prefWidthProperty().bind(scrollcenter.widthProperty().subtract(20.0));
+
         // Quick actions buttons
         this.buttonResetSelection = this.createQuickActionButton(false, "tooltip.quick.action.clear.selection", FontAwesome.Glyph.REMOVE);
         StackPane.setAlignment(this.buttonResetSelection, Pos.BOTTOM_RIGHT);
@@ -99,6 +110,8 @@ public class MainView extends StackPane implements LCViewInitHelper {
         StackPane.setAlignment(this.buttonGoUseMode, Pos.BOTTOM_RIGHT);
         StackPane.setMargin(this.buttonGoUseMode, new Insets(0, 15.0, 15.0, 0.0));
         this.getChildren().addAll(this.buttonResetSelection, this.buttonGoUseMode);
+
+        displayNoConfigurationMessage();
     }
 
     private Button createQuickActionButton(final boolean primary, final String tooltipId, final Enum<?> glyph) {
@@ -130,15 +143,27 @@ public class MainView extends StackPane implements LCViewInitHelper {
                         this.scrollcenter.setContent(null);
                     }
                     if (newValueP != null) {
-                        Scale scaleTransform = new Scale();
-                        scaleTransform.xProperty().bind(AppModeController.INSTANCE.getEditModeContext().configurationScaleProperty());
-                        scaleTransform.yProperty().bind(AppModeController.INSTANCE.getEditModeContext().configurationScaleProperty());
-                        final Region viewForNewValue = ViewProviderI.getComponentView(newValueP, AppModeV2.EDIT).getView();
-                        Group group = new Group(viewForNewValue);
-                        viewForNewValue.getTransforms().add(scaleTransform);
-                        this.scrollcenter.setContent(group);
+                        displayConfiguration(newValueP);
+                    } else {
+                        displayNoConfigurationMessage();
                     }
                 });
+    }
+
+    private void displayConfiguration(LCConfigurationI newValueP) {
+        Scale scaleTransform = new Scale();
+        scaleTransform.xProperty().bind(AppModeController.INSTANCE.getEditModeContext().configurationScaleProperty());
+        scaleTransform.yProperty().bind(AppModeController.INSTANCE.getEditModeContext().configurationScaleProperty());
+        final Region viewForNewValue = ViewProviderI.getComponentView(newValueP, AppMode.EDIT).getView();
+        Group group = new Group(viewForNewValue);
+        viewForNewValue.getTransforms().add(scaleTransform);
+        this.scrollcenter.setContent(group);
+    }
+
+    private void displayNoConfigurationMessage() {
+        scrollcenter.setContent(noConfigurationPlaceholder);
+        scrollcenter.setFitToHeight(true);
+        scrollcenter.setFitToHeight(true);
     }
 
     /**

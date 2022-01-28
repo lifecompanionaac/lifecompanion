@@ -17,34 +17,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.lifecompanion.api.mode;
+package org.lifecompanion.base.data.control.refacto;
 
-/**
- * The possible application mode.<br>
- * @author Mathieu THEBAUD <math.thebaud@gmail.com>
- */
+import org.lifecompanion.api.ui.ViewProviderI;
+import org.lifecompanion.config.data.ui.ConfigViewProvider;
+import org.lifecompanion.use.data.ui.UseViewProvider;
+
 public enum AppMode {
-	CONFIG(true, true), USE(false, false);
+    EDIT(new ConfigViewProvider()), USE(new UseViewProvider());
 
-	private boolean copyNeeded = false;
-	private boolean restoreConfigurationNeeded = false;
+    private final ViewProviderI viewProvider;
 
-	AppMode(final boolean copyNeededP, final boolean restoreConfigurationNeededP) {
-		this.copyNeeded = copyNeededP;
-		this.restoreConfigurationNeeded = restoreConfigurationNeededP;
-	}
 
-	/**
-	 * @return if a copy of the configuration should be done before using it in the next mode
-	 */
-	public boolean isCopyNeeded() {
-		return this.copyNeeded;
-	}
+    AppMode(ViewProviderI viewProvider) {
+        this.viewProvider = viewProvider;
+    }
 
-	/**
-	 * @return if the previous should be restored on this mode start
-	 */
-	public boolean isRestoreConfigurationNeeded() {
-		return this.restoreConfigurationNeeded;
-	}
+    public ViewProviderI getViewProvider() {
+        return viewProvider;
+    }
 }

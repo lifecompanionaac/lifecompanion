@@ -19,7 +19,7 @@
 package org.lifecompanion.api.ui;
 
 import org.lifecompanion.api.component.definition.DisplayableComponentI;
-import org.lifecompanion.base.data.control.refacto.AppModeV2;
+import org.lifecompanion.base.data.control.refacto.AppMode;
 
 /**
  * Provider to provide a view for each component that is displayable.<br>
@@ -41,7 +41,7 @@ public interface ViewProviderI {
 
     ViewProviderType getType();
 
-    static ComponentViewI<?> getComponentView(DisplayableComponentI comp, AppModeV2 mode) {
+    static ComponentViewI<?> getComponentView(DisplayableComponentI comp, AppMode mode) {
         return comp.getDisplay(mode.getViewProvider(), true);
     }
 }

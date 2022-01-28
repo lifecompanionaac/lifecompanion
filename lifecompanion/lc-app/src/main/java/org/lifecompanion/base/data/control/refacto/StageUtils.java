@@ -75,6 +75,6 @@ public class StageUtils {
     }
 
     public static Stage getEditOrUseStageVisible() {
-        return AppModeController.INSTANCE.modeProperty().get() == AppModeV2.EDIT || AppModeController.INSTANCE.getUseModeContext().stageProperty().get() == null ? AppModeController.INSTANCE.getEditModeContext().getStage() : AppModeController.INSTANCE.getUseModeContext().stageProperty().get();
+        return AppModeController.INSTANCE.modeProperty().get() == AppMode.EDIT || AppModeController.INSTANCE.getUseModeContext().stageProperty().get() == null ? AppModeController.INSTANCE.getEditModeContext().getStage() : AppModeController.INSTANCE.getUseModeContext().stageProperty().get();
     }
 }

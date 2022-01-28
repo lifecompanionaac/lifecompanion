@@ -19,7 +19,6 @@
 package org.lifecompanion.config.view.pane.menu;
 
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -27,8 +26,8 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import org.controlsfx.glyphfont.FontAwesome;
-import org.lifecompanion.api.component.definition.LCConfigurationI;
 import org.lifecompanion.api.ui.config.ConfigurationProfileLevelEnum;
+import org.lifecompanion.base.data.common.LCUtils;
 import org.lifecompanion.base.data.common.UIUtils;
 import org.lifecompanion.base.data.config.LCGraphicStyle;
 import org.lifecompanion.base.data.control.refacto.AppModeController;
@@ -38,6 +37,7 @@ import org.lifecompanion.config.data.action.impl.LCConfigurationActions.RemoveCo
 import org.lifecompanion.config.data.config.LCGlyphFont;
 import org.lifecompanion.config.data.control.ConfigActionController;
 import org.lifecompanion.config.view.common.ConfigUIUtils;
+import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
@@ -101,6 +101,7 @@ public class CurrentConfigDetailView extends VBox implements LCViewInitHelper {
 
     @Override
     public void initBinding() {
+        // FIXME : memory leak on listener
         AppModeController.INSTANCE.getEditModeContext().configurationDescriptionProperty().addListener((obs, ov, nv) -> {
             if (ov != null) {
                 this.labelConfigName.textProperty().unbind();
@@ -130,18 +131,13 @@ public class CurrentConfigDetailView extends VBox implements LCViewInitHelper {
         this.buttonRemove.disableProperty().bind(AppModeController.INSTANCE.getEditModeContext().configurationDescriptionProperty().isNull());
         this.buttonExport.disableProperty().bind(AppModeController.INSTANCE.getEditModeContext().configurationDescriptionProperty().isNull());
         //Bind unsaved modifications
-        AppModeController.INSTANCE.getEditModeContext().configurationProperty()
-                .addListener((ChangeListener<LCConfigurationI>) (observableP, oldValueP, newValueP) -> {
-                    //Init value
-                    Platform.runLater(() -> {
-                        this.labelUnsavedModif
-                                .setText(Translation.getText("configuration.menu.label.unsaved.modif", newValueP.unsavedActionProperty().get()));
-                    });
-                    //Bind unsaved
-                    newValueP.unsavedActionProperty().addListener((ChangeListener<Number>) (observableP1, oldValueP1, newValueP1) -> Platform
-                            .runLater(() -> this.labelUnsavedModif.setText(Translation.getText("configuration.menu.label.unsaved.modif", newValueP1))));
-                });
+        this.labelUnsavedModif.textProperty().bind(TranslationFX.getTextBinding("configuration.menu.label.unsaved.modif", AppModeController.INSTANCE.getEditModeContext().configurationUnsavedActionProperty()));
+
         //Visibility
         ConfigUIUtils.bindShowForLevelFrom(this.buttonExport, ConfigurationProfileLevelEnum.NORMAL);
+    }
+
+    private void updateUnsavedLabel(Number newValue) {
+        LCUtils.runOnFXThread(() -> this.labelUnsavedModif.setText(Translation.getText("configuration.menu.label.unsaved.modif", newValue)));
     }
 }

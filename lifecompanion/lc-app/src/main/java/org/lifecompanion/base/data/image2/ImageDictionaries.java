@@ -332,9 +332,13 @@ public enum ImageDictionaries implements LCStateListener, ModeListenerI {
     @Override
     public void lcStart() {
         this.loadDictionaries();
+        startImageLoadingDebug();
+    }
+
+    private void startImageLoadingDebug() {
         if (LCUtils.safeParseBoolean(System.getProperty("org.lifecompanion.debug.loaded.images"))) {
-            LOGGER.info("Debug loaded images enabled");
-            LCNamedThreadFactory.daemonThreadFactory("Image-Watcher").newThread(() -> {
+            LOGGER.info("Loaded images debug enabled");
+            LCNamedThreadFactory.daemonThreadFactory("ImageLoadingDebug").newThread(() -> {
                 while (true) {
                     Set<ImageElement> imageLoaded = new ArrayList<>(this.allImages.values()).stream().map(img -> (ImageElement) img).filter(img -> img.loadedImageProperty().get() != null).collect(Collectors.toSet());
                     LOGGER.info("Loaded image count : {}", imageLoaded.size());

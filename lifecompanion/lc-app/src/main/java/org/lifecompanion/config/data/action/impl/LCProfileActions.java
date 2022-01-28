@@ -227,7 +227,6 @@ public class LCProfileActions {
             LCProfileI currentProfile = ProfileController.INSTANCE.currentProfileProperty().get();
 
             if (profileToSelect != currentProfile) {
-                int unsaved = AppModeController.INSTANCE.getEditModeContext().configurationProperty().get().unsavedActionProperty().get();
                 //Check if we can change profile
                 GlobalActions.checkModificationForCurrentConfiguration(currentProfile != null, this, source, Translation.getText("select.profile.action.confirm.message"), "select.profile.action.confirm.button", () -> {
                     // First, select the profile

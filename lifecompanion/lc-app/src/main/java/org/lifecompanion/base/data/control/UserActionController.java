@@ -23,11 +23,10 @@ import org.lifecompanion.api.component.definition.LCConfigurationI;
 import org.lifecompanion.api.component.definition.useaction.*;
 import org.lifecompanion.api.component.definition.useevent.UseEventListenerI;
 import org.lifecompanion.api.component.definition.useevent.UseVariableI;
-import org.lifecompanion.api.mode.AppMode;
 import org.lifecompanion.api.mode.LCStateListener;
 import org.lifecompanion.api.mode.ModeListenerI;
 import org.lifecompanion.base.data.control.refacto.AppModeController;
-import org.lifecompanion.base.data.control.refacto.AppModeV2;
+import org.lifecompanion.base.data.control.refacto.AppMode;
 import org.lifecompanion.base.data.useaction.baseimpl.ActionExecutionResult;
 import org.lifecompanion.framework.commons.utils.lang.CollectionUtils;
 import org.lifecompanion.framework.utils.LCNamedThreadFactory;
@@ -267,7 +266,7 @@ public enum UserActionController implements LCStateListener, ModeListenerI {
         for (BaseUseActionI<?> action : actionList) {
             if (action.isSimple()) {
                 SimpleUseActionI<?> simpleAction = (SimpleUseActionI<?>) action;
-                if (AppModeController.INSTANCE.modeProperty().get() == AppModeV2.USE) {
+                if (AppModeController.INSTANCE.modeProperty().get() == AppMode.USE) {
                     try {
                         simpleAction.execute(eventType, variables);
                         movingAction |= simpleAction.isMovingAction();

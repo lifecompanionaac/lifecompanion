@@ -27,13 +27,12 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import org.lifecompanion.api.component.definition.LCConfigurationI;
 import org.lifecompanion.api.component.definition.LCProfileI;
-import org.lifecompanion.api.mode.AppMode;
 import org.lifecompanion.api.mode.LCStateListener;
 import org.lifecompanion.base.data.common.LCUtils;
 import org.lifecompanion.base.data.config.LCConstant;
 import org.lifecompanion.base.data.config.UserBaseConfiguration;
 import org.lifecompanion.base.data.control.refacto.AppModeController;
-import org.lifecompanion.base.data.control.refacto.AppModeV2;
+import org.lifecompanion.base.data.control.refacto.AppMode;
 import org.lifecompanion.base.data.control.refacto.ProfileController;
 import org.lifecompanion.base.data.control.update.InstallationController;
 import org.lifecompanion.base.data.io.json.JsonHelper;
@@ -173,12 +172,12 @@ public enum SessionStatsController implements LCStateListener {
     @Override
     public void lcStart() {
         AppModeController.INSTANCE.getEditModeContext().configurationDescriptionProperty().addListener((obs, ov, nv) -> {
-            if (AppModeController.INSTANCE.modeProperty().get() == AppModeV2.EDIT) {
+            if (AppModeController.INSTANCE.modeProperty().get() == AppMode.EDIT) {
                 if (ov != null) {
-                    this.modeStopped(AppMode.CONFIG);
+                    this.modeStopped(AppMode.EDIT);
                 }
                 if (nv != null) {
-                    this.modeStarted(AppMode.CONFIG, AppModeController.INSTANCE.getEditModeContext().configurationProperty().get());
+                    this.modeStarted(AppMode.EDIT, AppModeController.INSTANCE.getEditModeContext().configurationProperty().get());
                 }
             }
         });
@@ -220,7 +219,9 @@ public enum SessionStatsController implements LCStateListener {
 
     public void registerSceneFromDialog(Dialog dialog) {
         if (dialog != null && dialog.getDialogPane() != null && dialog.getDialogPane().getScene() != null) {
-            registerScene(dialog.getDialogPane().getScene());
+            final Scene scene = dialog.getDialogPane().getScene();
+            registerScene(scene);
+            dialog.setOnHidden(e -> unregisterScene(scene));
         }
     }
 

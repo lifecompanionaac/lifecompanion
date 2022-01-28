@@ -35,25 +35,21 @@ public abstract class AbstractModeContext {
         this.configuration = new SimpleObjectProperty<>();
         this.configurationDescription = new SimpleObjectProperty<>();
         this.stage = new SimpleObjectProperty<>();
-        this.configuration.addListener((obs, ov, nv) -> {
-            if (ov != null) {
-                clearPreviousConfiguration(ov);
-            }
-        });
-        this.configurationDescription.addListener((obs, ov, nv) -> {
-            if (ov != null) ov.loadedConfigurationProperty().set(null);
-        });
+        initBindings();
     }
 
-    private void clearPreviousConfiguration(LCConfigurationI configuration) {
-        if (configuration != null) {
-            configuration.dispatchDisplayedProperty(false);
-            configuration.dispatchRemovedPropertyValue(true);
-        }
-    }
-
+    // PROPS
+    //========================================================================
     public final ReadOnlyObjectProperty<LCConfigurationI> configurationProperty() {
         return configuration;
+    }
+
+    public LCConfigurationI getConfiguration() {
+        return configuration.get();
+    }
+
+    public LCConfigurationDescriptionI getConfigurationDescription() {
+        return configurationDescription.get();
     }
 
     public final ReadOnlyObjectProperty<LCConfigurationDescriptionI> configurationDescriptionProperty() {
@@ -71,11 +67,37 @@ public abstract class AbstractModeContext {
     final void initStage(Stage stage) {
         this.stage.set(stage);
     }
+    //========================================================================
 
+
+    // BASE BEHAVIOR
+    //========================================================================
     abstract void cleanAfterStop();
+
+    private void initBindings() {
+        this.configuration.addListener((obs, ov, nv) -> {
+            if (ov != null) {
+                ov.dispatchDisplayedProperty(false);
+                ov.dispatchRemovedPropertyValue(true);
+            }
+            if (nv != null) {
+                nv.dispatchRemovedPropertyValue(false);
+                nv.dispatchDisplayedProperty(true);
+            }
+        });
+        this.configurationDescription.addListener((obs, ov, nv) -> {
+            if (ov != null) ov.loadedConfigurationProperty().set(null);
+        });
+    }
 
     void switchTo(final LCConfigurationI configuration, final LCConfigurationDescriptionI configurationDescription) {
         this.configuration.set(configuration);
         this.configurationDescription.set(configurationDescription);
+        if (configurationDescription != null) {
+            configurationDescription.loadedConfigurationProperty().set(configuration);
+        }
     }
+    //========================================================================
+
+
 }

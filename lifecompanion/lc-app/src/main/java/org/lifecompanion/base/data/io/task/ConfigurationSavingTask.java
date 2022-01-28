@@ -92,8 +92,6 @@ public class ConfigurationSavingTask extends AbstractSavingUtilsTask<Void> {
         this.configurationDescription.configurationLastDateProperty().set(new Date());
         LCUtils.executeInCurrentThread(IOManager.INSTANCE.createSaveConfigDescriptionTask(this.configurationDescription, this.directory));
 
-
-        this.configuration.unsavedActionProperty().set(0);
         this.updateProgress(5, 5);
         ConfigurationSavingTask.LOGGER.info("Configuration successfully saved to {}", this.directory);
         return null;

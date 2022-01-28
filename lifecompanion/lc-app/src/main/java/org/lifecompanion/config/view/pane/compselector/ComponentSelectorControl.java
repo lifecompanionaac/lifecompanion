@@ -139,6 +139,7 @@ public class ComponentSelectorControl<T extends DisplayableComponentI> extends V
         ChangeListener<LCConfigurationI> configurationChangeListener = (obs, ov, nv) -> {
             if (ov != null && currentMapChangeListener != null) {
                 ov.getAllComponent().removeListener((MapChangeListener<String, DisplayableComponentI>) this.currentMapChangeListener);
+                this.currentMapChangeListener = null;
                 this.searchComboBox.setItems(null);
             }
             if (nv != null) {

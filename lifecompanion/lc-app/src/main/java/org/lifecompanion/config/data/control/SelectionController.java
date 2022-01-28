@@ -26,7 +26,7 @@ import org.lifecompanion.api.component.definition.*;
 import org.lifecompanion.base.data.common.LCUtils;
 import org.lifecompanion.base.data.component.baseimpl.RootGraphicComponentBaseImpl;
 import org.lifecompanion.base.data.control.refacto.AppModeController;
-import org.lifecompanion.base.data.control.refacto.AppModeV2;
+import org.lifecompanion.base.data.control.refacto.AppMode;
 
 import java.util.*;
 
@@ -184,7 +184,7 @@ public enum SelectionController {
             if (rootP != null) {
                 rootP.selectedProperty().set(true);
                 rootP.showSelectedProperty().set(true);
-                rootP.showToFront(AppModeV2.EDIT.getViewProvider(), true);
+                rootP.showToFront(AppMode.EDIT.getViewProvider(), true);
             }
         }
     }
@@ -432,7 +432,7 @@ public enum SelectionController {
 
     private void addSelection(final GridPartComponentI part) {
         this.select(part);
-        part.showToFront(AppModeV2.EDIT.getViewProvider(), true);
+        part.showToFront(AppMode.EDIT.getViewProvider(), true);
         List<GridPartComponentI> selectionList = this.getSelection(part.getLevel());
         selectionList.add(part);
     }

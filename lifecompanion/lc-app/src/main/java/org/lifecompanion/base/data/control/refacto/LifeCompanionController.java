@@ -19,7 +19,10 @@
 
 package org.lifecompanion.base.data.control.refacto;
 
+import javafx.beans.value.ChangeListener;
+import org.lifecompanion.api.component.definition.LCConfigurationI;
 import org.lifecompanion.api.mode.LCStateListener;
+import org.lifecompanion.base.data.common.LCUtils;
 import org.lifecompanion.base.data.control.AsyncExecutorController;
 import org.lifecompanion.base.data.control.UserActionController;
 import org.lifecompanion.base.data.control.prediction.AutoCharPredictionController;
@@ -34,9 +37,20 @@ import org.lifecompanion.config.data.control.ErrorHandlingController;
 import org.lifecompanion.config.data.control.LCStateController;
 import org.lifecompanion.config.data.control.usercomp.UserCompController;
 import org.lifecompanion.config.view.pane.main.notification2.LCNotificationController;
+import org.lifecompanion.framework.utils.LCNamedThreadFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Objects;
 
 public enum LifeCompanionController {
     INSTANCE;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(LifeCompanionController.class);
+
 
     private boolean started = false;
 
@@ -67,6 +81,7 @@ public enum LifeCompanionController {
     };
 
     public void lcStart() {
+        startCheckConfigurationMemoryLeak();
         started = true;
         for (LCStateListener stateListener : STATE_LISTENER) {
             stateListener.lcStart();
@@ -82,5 +97,36 @@ public enum LifeCompanionController {
         }
     }
     //========================================================================
+
+    // CHECK FOR MEMORY LEAKS
+    //========================================================================
+    private void startCheckConfigurationMemoryLeak() {
+        if (LCUtils.safeParseBoolean(System.getProperty("org.lifecompanion.debug.configuration.memory.leak"))) {
+            LOGGER.info("Configuration memory leak debug enabled");
+            final HashSet<WeakReference<LCConfigurationI>> configurationsRef = new HashSet<>();
+            ChangeListener<LCConfigurationI> configAdded = (obs, ov, nv) -> {
+                if (nv != null) {
+                    configurationsRef.add(new WeakReference<>(nv));
+                }
+            };
+            AppModeController.INSTANCE.getEditModeContext().configurationProperty().addListener(configAdded);
+            AppModeController.INSTANCE.getUseModeContext().configurationProperty().addListener(configAdded);
+            LCNamedThreadFactory.daemonThreadFactory("ConfigurationMemoryLeakDebug").newThread(() -> {
+                while (true) {
+                    System.gc();
+                    final long count = new ArrayList<>(configurationsRef)
+                            .stream()
+                            .map(WeakReference::get)
+                            .filter(Objects::nonNull)
+                            .distinct()
+                            .count();
+                    LOGGER.info("Loaded configuration in memory (from contexts) : {}", count);
+                    LCUtils.safeSleep(10_000);
+                }
+            }).start();
+        }
+    }
+    //========================================================================
+
 
 }

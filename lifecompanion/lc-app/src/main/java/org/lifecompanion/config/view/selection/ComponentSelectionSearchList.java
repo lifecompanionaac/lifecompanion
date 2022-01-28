@@ -145,6 +145,7 @@ public class ComponentSelectionSearchList extends BaseConfigurationViewBorderPan
     @Override
     public void unbind(final LCConfigurationI component) {
         component.getAllComponent().removeListener(this.currentMapChangeListener);
+        this.currentMapChangeListener = null;
         // Issue #191 : fix memory leak in sorted list
         this.filteredList = null;
         this.sortedList = null;

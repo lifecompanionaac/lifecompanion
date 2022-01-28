@@ -1315,6 +1315,7 @@
   <text key="no.component.selected.simple">Aucun élément sélectionné</text>
   <text key="profile.name.no.loaded">Aucun profil chargé</text>
   <text key="status.bar.label.current.unsaved.modifications">{} modification(s) non enregistrée(s)</text>
+  <text key="status.bar.label.configuration.size">{} x {}</text>
   <text key="tooltip.explain.component.name.custom">Permet de choisir un nom personnalisé pour cet
 		élément.\nSi aucun nom n'est choisi alors le nom est determiné
 		automatiquement (texte de la case, numéro de grille,

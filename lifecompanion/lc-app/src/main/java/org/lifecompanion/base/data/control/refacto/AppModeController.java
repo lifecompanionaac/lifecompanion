@@ -19,7 +19,6 @@
 
 package org.lifecompanion.base.data.control.refacto;
 
-import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -27,7 +26,6 @@ import javafx.stage.Stage;
 import org.lifecompanion.api.component.definition.LCConfigurationDescriptionI;
 import org.lifecompanion.api.component.definition.LCConfigurationI;
 import org.lifecompanion.api.component.definition.LCProfileI;
-import org.lifecompanion.api.mode.AppMode;
 import org.lifecompanion.api.mode.ModeListenerI;
 import org.lifecompanion.base.data.common.LCTask;
 import org.lifecompanion.base.data.common.LCUtils;
@@ -57,11 +55,9 @@ import java.util.List;
 public enum AppModeController {
     INSTANCE;
 
-    private final ObjectProperty<AppModeV2> mode;
+    private final ObjectProperty<AppMode> mode;
     private final UseModeContext useModeContext;
     private final EditModeContext editModeContext;
-
-    private String previousUseModeConfigurationID;
 
     AppModeController() {
         mode = new SimpleObjectProperty<>();
@@ -72,7 +68,9 @@ public enum AppModeController {
         this.editModeContext = new EditModeContext();
     }
 
-    public ReadOnlyObjectProperty<AppModeV2> modeProperty() {
+    // PROPS
+    //========================================================================
+    public ReadOnlyObjectProperty<AppMode> modeProperty() {
         return mode;
     }
 
@@ -89,27 +87,38 @@ public enum AppModeController {
     }
 
     public boolean isUseMode() {
-        return this.mode.get() == AppModeV2.USE;
+        return this.mode.get() == AppMode.USE;
     }
 
     public boolean isEditMode() {
-        return this.mode.get() == AppModeV2.EDIT;
+        return this.mode.get() == AppMode.EDIT;
     }
+    //========================================================================
+
 
     public void startEditMode() {
         LCUtils.runOnFXThread(() -> {
-            mode.set(AppModeV2.EDIT);
+            final LCConfigurationI usedConfiguration = useModeContext.getConfiguration();
+            mode.set(AppMode.EDIT);
             editModeContext.getStage().show();
             LCProfileI profile = ProfileController.INSTANCE.currentProfileProperty().get();
-            if (previousUseModeConfigurationID != null && profile != null) {
-                final LCConfigurationDescriptionI usedConfigurationDesc = profile.getConfigurationById(previousUseModeConfigurationID);
-                LCConfigurationActions.OpenConfigurationAction openConfigAction = new LCConfigurationActions.OpenConfigurationAction(editModeContext.getStage().getScene().getRoot(), usedConfigurationDesc, false, loaded -> {
+            final LCConfigurationI previousConfigurationEditMode = editModeContext.getPreviousConfiguration();
+            // Load previously edited configuration : just restore as current configuration
+            if (previousConfigurationEditMode != null) {
+                editModeContext.switchTo(previousConfigurationEditMode, editModeContext.getConfigurationDescription());
+            }
+            // There is no previously edited  configuration this happens when
+            // - user launch LifeCompanion directly in use mode
+            // - user go to another configuration in use mode (with ChangeConfigurationAction)
+            else if (usedConfiguration != null && profile != null) {
+                final LCConfigurationDescriptionI usedConfigurationDesc = profile.getConfigurationById(usedConfiguration.getID());
+                ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.OpenConfigurationAction(editModeContext.getStage().getScene().getRoot(), usedConfigurationDesc, false, loaded -> {
                     if (!loaded) handleNoConfigInEditMode();
-                });
-                ConfigActionController.INSTANCE.executeAction(openConfigAction);
+                }));
             } else {
                 handleNoConfigInEditMode();
             }
+            editModeContext.clearPreviouslyEditedConfiguration();
         });
     }
 
@@ -118,15 +127,13 @@ public enum AppModeController {
     }
 
     public void startUseModeAfterEdit() {
-        final LCConfigurationI configuration = editModeContext.configurationProperty().get();
-        final LCConfigurationI duplicated = (LCConfigurationI) configuration.duplicate(false);
-        LCUtils.runOnFXThread(() -> startUseModeForConfiguration(duplicated, editModeContext.configurationDescriptionProperty().get()));
+        LCUtils.runOnFXThread(() -> startUseModeForConfiguration((LCConfigurationI) editModeContext.getConfiguration().duplicate(false), editModeContext.configurationDescriptionProperty().get()));
     }
 
     public void startUseModeForConfiguration(LCConfigurationI configuration, LCConfigurationDescriptionI configurationDescription) {
         LCUtils.runOnFXThread(() -> {
             this.useModeContext.switchTo(configuration, configurationDescription);
-            mode.set(AppModeV2.USE);
+            mode.set(AppMode.USE);
             //editModeContext.getStage().hide();
             launchUseMode();
         });
@@ -194,19 +201,18 @@ public enum AppModeController {
         AsyncExecutorController.INSTANCE.addAndExecute(true, false, startUseMode);
     }
 
-    private void stopModeIfNeeded(AppModeV2 modeToStop) {
-        if (modeToStop == AppModeV2.USE) {
+    private void stopModeIfNeeded(AppMode modeToStop) {
+        if (modeToStop == AppMode.USE) {
             final LCConfigurationI configuration = useModeContext.configurationProperty().get();
             if (configuration != null) {
-                previousUseModeConfigurationID = configuration.getID();
                 USE_MODE_LISTENERS.forEach(modeListenerI -> modeListenerI.modeStop(configuration));
                 IOManager.INSTANCE.saveUseInformation(configuration);
             }
             SessionStatsController.INSTANCE.modeStopped(AppMode.USE);
             useModeContext.cleanAfterStop();
         }
-        if (modeToStop == AppModeV2.EDIT) {
-            SessionStatsController.INSTANCE.modeStopped(AppMode.CONFIG);
+        if (modeToStop == AppMode.EDIT) {
+            SessionStatsController.INSTANCE.modeStopped(AppMode.EDIT);
             editModeContext.cleanAfterStop();
         }
     }

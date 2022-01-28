@@ -52,21 +52,18 @@ public enum NodeSnapshotCache {
 
     private static final ViewProviderI USE_VIEW_PROVIDER = new UseViewProvider();
 
-    private static final long IMAGE_LOADING_TIMEOUT = 2000, CLEAR_AFTER_LAST_USE = 5_000;
+    private static final long IMAGE_LOADING_TIMEOUT = 2000, CLEAR_AFTER_LAST_USE = 30_000;
 
     private final ExecutorService loadingService;
     private final ConcurrentHashMap<String, CopyOnWriteArrayList<ComponentSnapshotTask>> runningLoadingTasks;
     private final ConcurrentHashMap<String, CachedSnapshot> snapshotCache;
 
-
-    private final Timer cleanupTimer;
-
     NodeSnapshotCache() {
         this.loadingService = Executors.newSingleThreadExecutor(LCNamedThreadFactory.daemonThreadFactory("Node-Snapshot-Cache"));
         this.runningLoadingTasks = new ConcurrentHashMap<>();
         this.snapshotCache = new ConcurrentHashMap<>();
-        this.cleanupTimer = new Timer(true);
-        this.cleanupTimer.scheduleAtFixedRate(new TimerTask() {
+        Timer cleanupTimer = new Timer(true);
+        cleanupTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 snapshotCache.keySet().removeIf(id -> {

@@ -30,8 +30,8 @@ import org.lifecompanion.api.component.definition.*;
 import org.lifecompanion.api.definition.selection.*;
 import org.lifecompanion.api.mode.ModeListenerI;
 import org.lifecompanion.base.data.common.LCUtils;
+import org.lifecompanion.base.data.control.refacto.AppMode;
 import org.lifecompanion.base.data.control.refacto.AppModeController;
-import org.lifecompanion.base.data.control.refacto.AppModeV2;
 import org.lifecompanion.base.data.control.refacto.ProfileController;
 import org.lifecompanion.base.data.definition.selection.SelectionModeParameter;
 import org.lifecompanion.base.data.definition.selection.impl.*;
@@ -146,14 +146,15 @@ public enum SelectionModeController implements ModeListenerI {
         };
         configurationChangingListeners = new HashSet<>();
         AppModeController.INSTANCE.modeProperty().addListener((obs, ov, nv) -> {
-            if (nv == AppModeV2.EDIT) {
+            if (nv == AppMode.EDIT) {
                 previousConfigurationInUseMode = null;
             }
         });
     }
 
     private SelectionModeI getSelectionModeConfiguration() {
-        return AppModeController.INSTANCE.getUseModeContext().configurationProperty().get().selectionModeProperty().get();
+        final LCConfigurationI configuration = AppModeController.INSTANCE.getUseModeContext().getConfiguration();
+        return configuration != null ? configuration.selectionModeProperty().get() : null;
     }
 
     private SelectionModeParameterI getSelectionModeParameter() {
@@ -246,7 +247,7 @@ public enum SelectionModeController implements ModeListenerI {
                 }
             }
             return true;
-        } else if (this.isValidNextScanSelectionModeKeyboardEvent(keyEvent)) {
+        } else if (this.isValidNextScanSelectionModeKeyboardEvent(keyEvent) && selectionMode instanceof ScanningSelectionModeI) {
             ScanningSelectionModeI scanningSelection = (ScanningSelectionModeI) selectionMode;
             if (keyEvent.getEventType() == KeyEvent.KEY_PRESSED) {
                 scanningSelection.nextScanSelectionPress();
@@ -709,7 +710,7 @@ public enum SelectionModeController implements ModeListenerI {
             //Show in view
             final GridPartComponentI toShowToFrontFinal = toShowToFront;
             LCUtils.runOnFXThread(() -> {
-                toShowToFrontFinal.showToFront(AppModeV2.USE.getViewProvider(), true);
+                toShowToFrontFinal.showToFront(AppMode.USE.getViewProvider(), true);
                 this.getSelectionModeConfiguration().getSelectionView().toFront();//Show the selection model to front (over displayed component)
             });
         }
@@ -843,10 +844,10 @@ public enum SelectionModeController implements ModeListenerI {
             ConfigurationLoadingTask configurationLoadingTask = IOManager.INSTANCE.createLoadConfigurationTask(configurationDescription, ProfileController.INSTANCE.currentProfileProperty().get());
             try {
                 LCConfigurationI loadedConfiguration = LCUtils.executeInCurrentThread(configurationLoadingTask);
-                final LCConfigurationDescriptionI previous = AppModeController.INSTANCE.getUseModeContext().configurationDescriptionProperty().get();
-                System.err.println("Previous is " + previous.configurationNameProperty().get());
+                final LCConfigurationDescriptionI previous = AppModeController.INSTANCE.getUseModeContext().getConfigurationDescription();
                 AppModeController.INSTANCE.switchUseModeConfiguration(loadedConfiguration, configurationDescription);
                 this.previousConfigurationInUseMode = previous;
+                AppModeController.INSTANCE.getEditModeContext().clearPreviouslyEditedConfiguration();
             } catch (Throwable t) {
                 this.LOGGER.warn("Couldn't load the configuration for change configuration use action", t);
                 configurationChangingListeners.forEach(l -> l.accept(false));

@@ -249,10 +249,6 @@ public abstract class CoreDisplayableComponentBaseImpl implements DisplayableCom
     @Override
     public void dispatchDisplayedProperty(final boolean displayedP) {
         this.displayed.set(displayedP);
-        if (!displayedP && this instanceof LCConfigurationI) {
-            System.err.println("Dispatch displayed property ");
-            LCUtils.printStackTrace();
-        }
     }
 
     /**

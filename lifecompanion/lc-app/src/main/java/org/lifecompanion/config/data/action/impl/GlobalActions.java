@@ -36,7 +36,7 @@ import org.lifecompanion.base.data.common.LCTask;
 import org.lifecompanion.base.data.common.UIUtils;
 import org.lifecompanion.base.data.control.AsyncExecutorController;
 import org.lifecompanion.base.data.control.refacto.AppModeController;
-import org.lifecompanion.base.data.control.refacto.AppModeV2;
+import org.lifecompanion.base.data.control.refacto.AppMode;
 import org.lifecompanion.base.data.control.update.InstallationController;
 import org.lifecompanion.config.data.control.ConfigActionController;
 import org.lifecompanion.config.data.control.FileChooserType;
@@ -172,10 +172,10 @@ public class GlobalActions {
     }
 
     public static void checkModificationForCurrentConfiguration(boolean condition, BaseConfigActionI action, Node source, String message, String thenButtonNameId, PostCheckModificationAction postContinueAction) throws LCException {
-        if (condition && AppModeController.INSTANCE.modeProperty().get() != AppModeV2.USE) {
+        if (condition && AppModeController.INSTANCE.modeProperty().get() != AppMode.USE) {
             //Confirm
-            if (AppModeController.INSTANCE.getEditModeContext().configurationProperty().get() != null) {
-                int unsaved = AppModeController.INSTANCE.getEditModeContext().configurationProperty().get().unsavedActionProperty().get();
+            if (AppModeController.INSTANCE.getEditModeContext().getConfiguration() != null) {
+                int unsaved = AppModeController.INSTANCE.getEditModeContext().getConfigurationUnsavedAction();
                 if (unsaved > 0) {
                     Alert dlg = ConfigUIUtils.createAlert(source, Alert.AlertType.CONFIRMATION);
                     ButtonType typeYes = new ButtonType(Translation.getText("button.type.save.and.then", Translation.getText(thenButtonNameId)), ButtonBar.ButtonData.YES);

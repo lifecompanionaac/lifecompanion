@@ -80,15 +80,11 @@ public enum SystemVirtualKeyboardHelper {
 
     // PUBLIC API
     //========================================================================
-    public void registerSceneFromDialog(Dialog dialog) {
+    public void registerSceneFromDialog(Dialog<?> dialog) {
         if (dialog != null && dialog.getDialogPane() != null && dialog.getDialogPane().getScene() != null) {
-            registerScene(dialog.getDialogPane().getScene());
-        }
-    }
-
-    public void registerSceneFromNode(Node node) {
-        if (node != null && node.getScene() != null) {
-            registerScene(node.getScene());
+            final Scene scene = dialog.getDialogPane().getScene();
+            registerScene(scene);
+            dialog.setOnHidden(e -> unregisterScene(scene));
         }
     }
 
@@ -122,7 +118,7 @@ public enum SystemVirtualKeyboardHelper {
 
     public void unregisterScene(Scene scene) {
         final Runnable unbind = registredScenes.remove(scene);
-        if(unbind!=null){
+        if (unbind != null) {
             unbind.run();
         }
     }

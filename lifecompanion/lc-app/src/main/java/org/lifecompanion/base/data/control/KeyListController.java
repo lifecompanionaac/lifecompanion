@@ -19,7 +19,6 @@
 package org.lifecompanion.base.data.control;
 
 import javafx.application.Platform;
-import javafx.beans.InvalidationListener;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -31,12 +30,11 @@ import org.lifecompanion.api.component.definition.LCConfigurationI;
 import org.lifecompanion.api.component.definition.keyoption.KeyOptionI;
 import org.lifecompanion.api.component.definition.simplercomp.KeyListNodeI;
 import org.lifecompanion.api.component.definition.useaction.UseActionEvent;
-import org.lifecompanion.api.mode.AppMode;
 import org.lifecompanion.api.mode.ModeListenerI;
 import org.lifecompanion.base.data.common.LCUtils;
 import org.lifecompanion.base.data.component.keyoption.simplercomp.KeyListNodeKeyOption;
 import org.lifecompanion.base.data.control.refacto.AppModeController;
-import org.lifecompanion.base.data.control.refacto.AppModeV2;
+import org.lifecompanion.base.data.control.refacto.AppMode;
 import org.lifecompanion.base.data.useaction.impl.keylist.current.*;
 import org.lifecompanion.base.data.useaction.impl.keylist.general.GoRootKeyNodeAction;
 import org.lifecompanion.base.data.useaction.impl.keylist.general.SelectSpecificKeyListAction;
@@ -83,15 +81,16 @@ public enum KeyListController implements ModeListenerI {
         nodeHistory = new ArrayList<>();
 
         // In config mode : refresh from scratch on every changes in config (but try to restore state)
-        final InvalidationListener invalidationListenerToFireRefreshFromScratch = inv -> refreshKeyListFromScratch(AppModeController.INSTANCE.getEditModeContext().configurationProperty().get(), true);
+        AppModeController.INSTANCE.getEditModeContext().configurationUnsavedActionProperty().addListener((obs, ov, nv) -> {
+            final LCConfigurationI configuration = AppModeController.INSTANCE.getEditModeContext().getConfiguration();
+            if (configuration != null) {
+                refreshKeyListFromScratch(configuration, true);
+            }
+        });
         AppModeController.INSTANCE.getEditModeContext().configurationProperty().addListener((obs, ov, nv) -> {
-            if (ov != null) {
-                ov.unsavedActionProperty().removeListener(invalidationListenerToFireRefreshFromScratch);
-            }
             if (nv != null) {
-                nv.unsavedActionProperty().addListener(invalidationListenerToFireRefreshFromScratch);
+                refreshKeyListFromScratch(nv, true);
             }
-            invalidationListenerToFireRefreshFromScratch.invalidated(null);
         });
     }
 
@@ -212,7 +211,7 @@ public enum KeyListController implements ModeListenerI {
                 Platform.runLater(() -> keyOption.currentSimplerKeyContentContainerProperty().set(keyIndex >= 0 && keyIndex < nodeChildren.size() ? nodeChildren.get(keyIndex) : null));
             }
         });
-        if (AppModeController.INSTANCE.modeProperty().get() == AppModeV2.USE) {
+        if (AppModeController.INSTANCE.modeProperty().get() == AppMode.USE) {
             Platform.runLater(SelectionModeController.INSTANCE::generateScanningForCurrentGridAndRestart);
         }
     }

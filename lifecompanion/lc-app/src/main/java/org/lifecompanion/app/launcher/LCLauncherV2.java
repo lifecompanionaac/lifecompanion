@@ -82,11 +82,6 @@ public class LCLauncherV2 {
     public void startLifeCompanion() {
         AppModeController.INSTANCE.initEditModeStage(stage);
 
-        // FIXME REMOVE BACKWARD
-        //        AppController.INSTANCE.registerMode(new ConfigMode(new ConfigurationScene(new StackPane())));
-        //        AppController.INSTANCE.registerMode(new UseMode(new ConfigUseScene()));
-        //        AppController.INSTANCE.setMainFrame(stage);
-
         preload();
         loadAndShowStageAndLoadingScene();
         if (InstallationController.INSTANCE.isUpdateDownloadFinished()) {
@@ -132,11 +127,9 @@ public class LCLauncherV2 {
             GeneralConfigurationController.INSTANCE.getStage().getGeneralConfigurationScene().initAll();
 
             LOGGER.info("UI background loading done in {} s, will define post load action", (System.currentTimeMillis() - start) / 1000.0);
-            LCUtils.runOnFXThread(() -> stage.setScene(configurationScene));
-
             try {
                 final AfterLoad afterLoad = getAfterLoad();
-                LCUtils.runOnFXThread(() -> handleAfterLoadAction(afterLoad));
+                LCUtils.runOnFXThread(() -> handleAfterLoadAction(configurationScene, afterLoad));
             } catch (Exception e) {
                 LOGGER.error("Unexpected issue while defining post load actions, will show profile selection step", e);
                 //FIXME
@@ -144,7 +137,7 @@ public class LCLauncherV2 {
         }).start();
     }
 
-    private void handleAfterLoadAction(AfterLoad afterLoad) {
+    private void handleAfterLoadAction(ConfigurationScene configurationScene, AfterLoad afterLoad) {
         LOGGER.info("After load action will be {}", afterLoad.afterLoadAction);
 
         if (afterLoad.profile != null) {
@@ -170,11 +163,16 @@ public class LCLauncherV2 {
             ConfigActionController.INSTANCE.executeAction(importOpenConfig);
         }
 
+        loadingScene.stopAndClear();
+        stage.setScene(configurationScene);
+
         if (afterLoad.afterLoadAction != AfterLoadAction.LAUNCH_USE) {
             AppModeController.INSTANCE.startEditMode();
         } else {
             AppModeController.INSTANCE.startUseModeForConfiguration(afterLoad.configuration, afterLoad.configurationDescription);
         }
+
+
     }
 
     private void showProfileCreateOrList() {

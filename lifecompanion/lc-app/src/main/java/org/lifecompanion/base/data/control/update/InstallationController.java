@@ -29,7 +29,6 @@ import org.lifecompanion.base.data.config.LCConstant;
 import org.lifecompanion.base.data.config.ResourceHelper;
 import org.lifecompanion.base.data.control.InstallationConfigurationController;
 import org.lifecompanion.base.data.control.refacto.AppModeController;
-import org.lifecompanion.base.data.control.refacto.AppModeV2;
 import org.lifecompanion.base.data.plugins.PluginInfo;
 import org.lifecompanion.base.data.plugins.PluginManager;
 import org.lifecompanion.config.data.action.impl.GlobalActions;

@@ -298,6 +298,7 @@ public class LCConfigurationActions {
                 }
             });
             saveConfigTask.setOnSucceeded((wse) -> {
+                AppModeController.INSTANCE.getEditModeContext().resetUnsavedActionOnCurrentConfiguration();
                 if (this.callback != null) {
                     this.callback.accept(true);
                 }

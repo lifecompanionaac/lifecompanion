@@ -46,7 +46,7 @@ import org.lifecompanion.base.data.control.GlobalKeyEventManager;
 import org.lifecompanion.base.data.control.SelectionModeController;
 import org.lifecompanion.base.data.control.WritingStateController;
 import org.lifecompanion.base.data.control.refacto.AppModeController;
-import org.lifecompanion.base.data.control.refacto.AppModeV2;
+import org.lifecompanion.base.data.control.refacto.AppMode;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.slf4j.Logger;
@@ -249,7 +249,7 @@ public class SimpleUseConfigurationDisplayer extends Group implements LCViewInit
     @Override
     public void initBinding() {
         bindLayoutXAndY();
-        this.configurationView = ViewProviderI.getComponentView(configuration, AppModeV2.USE).getView();
+        this.configurationView = ViewProviderI.getComponentView(configuration, AppMode.USE).getView();
         this.backgroundColor.bind(configuration.backgroundColorProperty());
         this.configWith.bind(this.configurationView.widthProperty());
         this.configHeight.bind(this.configurationView.heightProperty());

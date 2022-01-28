@@ -60,7 +60,8 @@ application {
             '-Dorg.lifecompanion.debug.skip.update.check=true',
             '-Dorg.lifecompanion.load.plugins.from.cp=true',
             '-Dorg.lifecompanion.kill.sapi.on.launch=true',
-            '-Dorg.lifecompanion.debug.loaded.images=true'
+            '-Dorg.lifecompanion.debug.loaded.images=true',
+            '-Dorg.lifecompanion.debug.configuration.memory.leak=true'
     ]
 }
 

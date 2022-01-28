@@ -18,7 +18,6 @@
  */
 package org.lifecompanion.config.view.pane.bottom;
 
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -49,6 +48,7 @@ import org.lifecompanion.config.data.component.profile.ProfileConfigSelectionCon
 import org.lifecompanion.config.data.component.profile.ProfileConfigStep;
 import org.lifecompanion.config.data.control.ConfigActionController;
 import org.lifecompanion.config.data.control.SelectionController;
+import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
@@ -157,21 +157,22 @@ public class BottomPaneView extends HBox implements LCViewInitHelper {
         this.labelCurrentDetailName.setOnMouseClicked(showCurrentComponentPart);
     }
 
+
     @Override
     public void initBinding() {
         //Bind message
         AppModeController.INSTANCE.getEditModeContext().configurationProperty()
                 .addListener((observableP, oldValueP, newValueP) -> {
-                    Platform.runLater(() -> {
-                        BottomPaneView.this.labelCurrentUnsavedModifications
-                                .setText(Translation.getText("status.bar.label.current.unsaved.modifications", newValueP.unsavedActionProperty().get()));
-                    });
-                    //Bind unsaved
-                    newValueP.unsavedActionProperty().addListener((observableP1, oldValueP1, newValueP1) -> LCUtils.runOnFXThread(() -> BottomPaneView.this.labelCurrentUnsavedModifications
-                            .setText(Translation.getText("status.bar.label.current.unsaved.modifications", newValueP1))));
-                    //Bind size
-                    this.labelConfigurationSize.textProperty().unbind();
-                    this.labelConfigurationSize.textProperty().bind(Bindings.createStringBinding(() -> (int) newValueP.computedWidthProperty().get() + "x" + (int) newValueP.computedHeightProperty().get(), newValueP.computedWidthProperty(), newValueP.computedHeightProperty()));
+                    if (oldValueP != null) {
+                        LCUtils.unbindAndSet(labelCurrentUnsavedModifications.textProperty(), "");
+                        LCUtils.unbindAndSet(labelConfigurationSize.textProperty(), "");
+                    }
+                    if (newValueP != null) {
+                        //this.labelConfigurationSize.textProperty().bind(Bindings.createStringBinding(() -> (int) newValueP.computedWidthProperty().get() + "x" + (int) newValueP.computedHeightProperty().get(), newValueP.computedWidthProperty(), newValueP.computedHeightProperty()));
+
+                        this.labelConfigurationSize.textProperty().bind(TranslationFX.getTextBinding("status.bar.label.configuration.size", newValueP.computedWidthProperty(), newValueP.computedHeightProperty()));
+                        this.labelCurrentUnsavedModifications.textProperty().bind(TranslationFX.getTextBinding("status.bar.label.current.unsaved.modifications", newValueP.unsavedActionProperty()));
+                    }
                 });
         //Bind configuration description name
         this.labelCurrentConfigurationName.textProperty().bind(EasyBind.select(AppModeController.INSTANCE.getEditModeContext().configurationDescriptionProperty())
@@ -179,6 +180,8 @@ public class BottomPaneView extends HBox implements LCViewInitHelper {
         //Bind component name
         this.labelCurrentComponentName.textProperty().bind(EasyBind.select(SelectionController.INSTANCE.selectedComponentBothProperty())
                 .selectObject(DisplayableComponentI::nameProperty).orElse(Translation.getText("no.component.selected.simple")));
+
+        this.labelCurrentUnsavedModifications.textProperty().bind(TranslationFX.getTextBinding("status.bar.label.current.unsaved.modifications", AppModeController.INSTANCE.getEditModeContext().configurationUnsavedActionProperty()));
 
         //Bind parent name + graphics
         SelectionController.INSTANCE.selectedComponentBothProperty().addListener((obs, ov, nv) -> {

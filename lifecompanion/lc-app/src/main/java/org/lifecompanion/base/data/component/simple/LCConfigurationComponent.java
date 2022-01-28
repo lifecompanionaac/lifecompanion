@@ -350,6 +350,7 @@ public class LCConfigurationComponent extends CoreDisplayableComponentBaseImpl i
     /**
      * {@inheritDoc}
      */
+    // FIXME : does this bellongs to here ?
     @Override
     public IntegerProperty unsavedActionProperty() {
         return this.unsavedAction;
