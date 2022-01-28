@@ -28,7 +28,7 @@
 	\n\nQue souhaitez vous faire ?</text>
   <!--org.lifecompanion.api.definition.selection-->
   <text key="notification.grid.added.to.stack">Grille ajoutée dans la pile de grille</text>
-  <text key="no.configuration.placeholder.message">Aucune configuration éditée.\nPour commencer à utiliser LifeCompanion, vous pouvez</text>
+  <text key="no.configuration.placeholder.message">Pas de configuration ouverte.\nPour commencer à utiliser LifeCompanion, vous pouvez</text>
   <text key="no.configuration.placeholder.link.create.blank">Créer une nouvelle configuration</text>
   <text key="no.configuration.placeholder.link.open">Ouvrir l'une de vos configurations</text>
   <text key="no.configuration.placeholder.link.create.from.model">Créer une configuration à partir d'un modèle</text>
@@ -1243,9 +1243,7 @@
   <text key="virtual.mouse.speed">Vitesse de déplacement</text>
   <!--org.lifecompanion.config.data.component.profile-->
   <text key="profile.alert.no.selected.header">Aucun profil sélectionné</text>
-  <text key="profile.alert.no.selected.message">Vous ne pouvez pas utiliser LifeCompanion sans profil,
-		vous devez en sélectionner un.\nVoulez vous vraiment ne sélectionner
-		aucun profil et quitter l'application ?</text>
+  <text key="profile.alert.no.selected.message">Vous devez créer ou sélectionner un profil pour pouvoir utiliser LifeCompanion.\nVoulez vous quitter l'application ?</text>
   <!--org.lifecompanion.config.data.component.task-->
   <text key="pdf.export.file.title">Export des grilles - {} - {}</text>
   <text key="task.export.grids.pdf.name">Export des grilles en PDF</text>

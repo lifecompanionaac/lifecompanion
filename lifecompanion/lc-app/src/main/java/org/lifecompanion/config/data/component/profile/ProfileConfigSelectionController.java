@@ -94,7 +94,11 @@ public enum ProfileConfigSelectionController {
 
     public void initStage(ProfileConfigSelectionStage profileConfigSelectionStage) {
         this.stage = profileConfigSelectionStage;
-        this.stage.setOnHidden(e -> currentStep.set(null));
+        this.stage.setOnHidden(e -> {
+            currentStep.set(null);
+            configurationOption = null;
+            profileOption = null;
+        });
     }
 
     public ProfileConfigSelectionStage getStage() {

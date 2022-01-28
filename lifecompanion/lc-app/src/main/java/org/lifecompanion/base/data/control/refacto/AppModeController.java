@@ -136,7 +136,6 @@ public enum AppModeController {
         LCUtils.runOnFXThread(() -> {
             this.useModeContext.switchTo(configuration, configurationDescription);
             mode.set(AppMode.USE);
-            //editModeContext.getStage().hide();
             launchUseMode();
         });
     }
@@ -198,6 +197,7 @@ public enum AppModeController {
             UseModeStage useModeStage = new UseModeStage(currentProfile, configuration, configurationDescription, startUseMode.getValue());
             useModeContext.initStage(useModeStage);
             useModeStage.show();
+            editModeContext.getStage().hide();
         });
         startUseMode.setOnFailed(e -> startEditMode());
         AsyncExecutorController.INSTANCE.addAndExecute(true, false, startUseMode);
