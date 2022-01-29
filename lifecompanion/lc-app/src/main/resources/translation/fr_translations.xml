@@ -1173,6 +1173,9 @@
     <text key="new.config.action.confirm.message">Voulez vous sauvegarder avant de créer une nouvelle configuration ?</text>
     <text key="new.config.action.confirm.button">créer</text>
 
+	<text key="close.config.action.confirm.message">Voulez vous sauvegarder avant de la fermer ?</text>
+	<text key="close.config.action.confirm.button">fermer</text>
+
     <text key="import.config.action.confirm.message">Voulez vous sauvegarder avant d'importer une autre configuration ?</text>
     <text key="import.config.action.confirm.button">importer</text>
 
@@ -1829,6 +1832,7 @@
   <!--org.lifecompanion.config.view.pane.menu-->
   <text key="configuration.menu.detail.title">Configuration actuelle</text>
   <text key="configuration.menu.item.delete">Supprimer</text>
+  <text key="configuration.menu.item.close">Fermer</text>
   <text key="configuration.menu.item.export">Exporter</text>
   <text key="configuration.menu.item.save">Sauvegarder</text>
   <text key="configuration.menu.label.last.date">Dernière sauvegarde : {}</text>

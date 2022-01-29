@@ -18,243 +18,260 @@
  */
 package org.lifecompanion.framework.commons.fx.io;
 
+import javafx.scene.paint.Color;
+
 import java.io.File;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
-
-import javafx.scene.paint.Color;
 
 /**
  * Class that hold data writers for each existing data type.
+ *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public class DataWriters {
 
-	// Class part : "Initialization"
-	// ========================================================================
-	public final static NullDataType NULL_DATA_TYPE = new NullDataType();
+    // Class part : "Initialization"
+    // ========================================================================
+    public final static NullDataType NULL_DATA_TYPE = new NullDataType();
 
-	@SuppressWarnings("rawtypes")
-	public final static Map<Class, DataTypeI<?>> DATA_TYPES = new HashMap<>();
+    @SuppressWarnings("rawtypes")
+    public final static Map<Class, DataTypeI<?>> DATA_TYPES = new HashMap<>();
 
-	static {
-		DataWriters.DATA_TYPES.put(Integer.class, new IntegerDataType());
-		DataWriters.DATA_TYPES.put(int.class, new IntegerDataType());
-		DataWriters.DATA_TYPES.put(Double.class, new DoubleDataType());
-		DataWriters.DATA_TYPES.put(double.class, new DoubleDataType());
-		DataWriters.DATA_TYPES.put(Long.class, new LongDataType());
-		DataWriters.DATA_TYPES.put(long.class, new LongDataType());
-		DataWriters.DATA_TYPES.put(Boolean.class, new BooleanDataType());
-		DataWriters.DATA_TYPES.put(boolean.class, new BooleanDataType());
-		DataWriters.DATA_TYPES.put(Float.class, new FloatDataType());
-		DataWriters.DATA_TYPES.put(float.class, new FloatDataType());
-		DataWriters.DATA_TYPES.put(String.class, new StringDataType());
-		DataWriters.DATA_TYPES.put(Color.class, new ColorDataType());
-		DataWriters.DATA_TYPES.put(Date.class, new DateDataType());
-		DataWriters.DATA_TYPES.put(File.class, new FileDataType());
-	}
-	// ========================================================================
+    static {
+        DataWriters.DATA_TYPES.put(Integer.class, new IntegerDataType());
+        DataWriters.DATA_TYPES.put(int.class, new IntegerDataType());
+        DataWriters.DATA_TYPES.put(Double.class, new DoubleDataType());
+        DataWriters.DATA_TYPES.put(double.class, new DoubleDataType());
+        DataWriters.DATA_TYPES.put(Long.class, new LongDataType());
+        DataWriters.DATA_TYPES.put(long.class, new LongDataType());
+        DataWriters.DATA_TYPES.put(Boolean.class, new BooleanDataType());
+        DataWriters.DATA_TYPES.put(boolean.class, new BooleanDataType());
+        DataWriters.DATA_TYPES.put(Float.class, new FloatDataType());
+        DataWriters.DATA_TYPES.put(float.class, new FloatDataType());
+        DataWriters.DATA_TYPES.put(String.class, new StringDataType());
+        DataWriters.DATA_TYPES.put(Color.class, new ColorDataType());
+        DataWriters.DATA_TYPES.put(Date.class, new DateDataType());
+        DataWriters.DATA_TYPES.put(File.class, new FileDataType());
+    }
+    // ========================================================================
 
-	// Class part : "Interface"
-	// ========================================================================
-	/**
-	 * Represent a type that can be written/read from/to string
-	 * @param <T> the data type
-	 */
-	public static interface DataTypeI<T> {
-		public String valueToString(T value);
+    // Class part : "Interface"
+    // ========================================================================
 
-		public T stringToValue(String string);
-	}
+    /**
+     * Represent a type that can be written/read from/to string
+     *
+     * @param <T> the data type
+     */
+    public static interface DataTypeI<T> {
+        public String valueToString(T value);
 
-	public static boolean isValidType(final Class<?> type) {
-		return DataWriters.DATA_TYPES.containsKey(type) || type.isEnum();
-	}
+        public T stringToValue(String string);
+    }
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public static <T> DataTypeI<T> getDataType(final Class<?> type) {
-		if (type.isEnum()) {
-			return new EnumDataType(type);
-		}
-		return (DataTypeI<T>) DataWriters.DATA_TYPES.get(type);
-	}
-	// ========================================================================
+    public static boolean isValidType(final Class<?> type) {
+        return DataWriters.DATA_TYPES.containsKey(type) || type.isEnum();
+    }
 
-	// Class part : "Implementations"
-	// ========================================================================
-	static class NullDataType implements DataTypeI<Object> {
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public static <T> DataTypeI<T> getDataType(final Class<?> type) {
+        if (type.isEnum()) {
+            return new EnumDataType(type);
+        }
+        return (DataTypeI<T>) DataWriters.DATA_TYPES.get(type);
+    }
+    // ========================================================================
 
-		@Override
-		public String valueToString(final Object valueP) {
-			return "null";
-		}
+    // Class part : "Implementations"
+    // ========================================================================
+    static class NullDataType implements DataTypeI<Object> {
 
-		@Override
-		public Object stringToValue(final String stringP) {
-			if ("null".equalsIgnoreCase(stringP)) {
-				return null;
-			} else {
-				// Return something != null if the data is not null
-				return true;
-			}
-		}
-	}
+        @Override
+        public String valueToString(final Object valueP) {
+            return "null";
+        }
 
-	public static abstract class PrintValueDataType<T> implements DataTypeI<T> {
-		@Override
-		public String valueToString(final T valueP) {
-			return valueP != null ? valueToStringIfNotNUll(valueP) : "null";
-		}
+        @Override
+        public Object stringToValue(final String stringP) {
+            if ("null".equalsIgnoreCase(stringP)) {
+                return null;
+            } else {
+                // Return something != null if the data is not null
+                return true;
+            }
+        }
+    }
 
-		protected abstract String valueToStringIfNotNUll(final T valueP);
-	}
+    public static abstract class PrintValueDataType<T> implements DataTypeI<T> {
+        @Override
+        public String valueToString(final T valueP) {
+            return valueP != null ? valueToStringIfNotNUll(valueP) : "null";
+        }
 
-	private static class IntegerDataType extends PrintValueDataType<Integer> {
+        protected abstract String valueToStringIfNotNUll(final T valueP);
+    }
 
-		@Override
-		public Integer stringToValue(final String stringP) {
-			return Integer.parseInt(stringP);
-		}
+    private static class IntegerDataType extends PrintValueDataType<Integer> {
 
-		@Override
-		protected String valueToStringIfNotNUll(final Integer valueP) {
-			return Integer.toString(valueP);
-		}
+        @Override
+        public Integer stringToValue(final String stringP) {
+            return Integer.parseInt(stringP);
+        }
 
-	}
+        @Override
+        protected String valueToStringIfNotNUll(final Integer valueP) {
+            return Integer.toString(valueP);
+        }
 
-	private static class DoubleDataType extends PrintValueDataType<Double> {
+    }
 
-		@Override
-		public Double stringToValue(final String stringP) {
-			return Double.parseDouble(stringP);
-		}
+    private static class DoubleDataType extends PrintValueDataType<Double> {
 
-		@Override
-		protected String valueToStringIfNotNUll(final Double valueP) {
-			return Double.toString(valueP);
-		}
+        @Override
+        public Double stringToValue(final String stringP) {
+            return Double.parseDouble(stringP);
+        }
 
-	}
+        @Override
+        protected String valueToStringIfNotNUll(final Double valueP) {
+            return Double.toString(valueP);
+        }
 
-	private static class FloatDataType extends PrintValueDataType<Float> {
+    }
 
-		@Override
-		public Float stringToValue(final String stringP) {
-			return Float.parseFloat(stringP);
-		}
+    private static class FloatDataType extends PrintValueDataType<Float> {
 
-		@Override
-		protected String valueToStringIfNotNUll(Float valueP) {
-			return Float.toString(valueP);
-		}
+        @Override
+        public Float stringToValue(final String stringP) {
+            return Float.parseFloat(stringP);
+        }
 
-	}
+        @Override
+        protected String valueToStringIfNotNUll(Float valueP) {
+            return Float.toString(valueP);
+        }
 
-	private static class LongDataType extends PrintValueDataType<Long> {
+    }
 
-		@Override
-		public Long stringToValue(final String stringP) {
-			return Long.parseLong(stringP);
-		}
+    private static class LongDataType extends PrintValueDataType<Long> {
 
-		@Override
-		protected String valueToStringIfNotNUll(Long valueP) {
-			return Long.toString(valueP);
-		}
+        @Override
+        public Long stringToValue(final String stringP) {
+            return Long.parseLong(stringP);
+        }
 
-	}
+        @Override
+        protected String valueToStringIfNotNUll(Long valueP) {
+            return Long.toString(valueP);
+        }
 
-	// Just to be able to call the datatype
-	private static class StringDataType extends PrintValueDataType<String> {
+    }
 
-		@Override
-		public String stringToValue(final String stringP) {
-			return stringP;
-		}
+    // Just to be able to call the datatype
+    private static class StringDataType extends PrintValueDataType<String> {
 
-		@Override
-		protected String valueToStringIfNotNUll(String valueP) {
-			return valueP;
-		}
+        @Override
+        public String stringToValue(final String stringP) {
+            return stringP;
+        }
 
-	}
+        @Override
+        protected String valueToStringIfNotNUll(String valueP) {
+            return valueP;
+        }
 
-	private static class BooleanDataType extends PrintValueDataType<Boolean> {
+    }
 
-		@Override
-		public Boolean stringToValue(final String stringP) {
-			return Boolean.parseBoolean(stringP);
-		}
+    private static class BooleanDataType extends PrintValueDataType<Boolean> {
 
-		@Override
-		protected String valueToStringIfNotNUll(Boolean valueP) {
-			return Boolean.toString(valueP);
-		}
+        @Override
+        public Boolean stringToValue(final String stringP) {
+            return Boolean.parseBoolean(stringP);
+        }
 
-	}
+        @Override
+        protected String valueToStringIfNotNUll(Boolean valueP) {
+            return Boolean.toString(valueP);
+        }
 
-	private static class ColorDataType implements DataTypeI<Color> {
+    }
 
-		@Override
-		public String valueToString(final Color val) {
-			return new StringBuilder(15).append((int) (val.getRed() * 255)).append(";").append((int) (val.getGreen() * 255)).append(";")
-					.append((int) (val.getBlue() * 255)).append(";").append(val.getOpacity()).toString();
-		}
+    private static class ColorDataType implements DataTypeI<Color> {
 
-		@Override
-		public Color stringToValue(final String stringP) {
-			String[] split = stringP.split(";");
-			return Color.rgb(Integer.parseInt(split[0]), Integer.parseInt(split[1]), Integer.parseInt(split[2]), Double.parseDouble(split[3]));
-		}
+        @Override
+        public String valueToString(final Color c) {
+            return String.format((Locale) null, "#%02x%02x%02x%02x",
+                    Math.round(c.getRed() * 255.0),
+                    Math.round(c.getGreen() * 255.0),
+                    Math.round(c.getBlue() * 255.0),
+                    Math.round(c.getOpacity() * 255.0)
+            );
+        }
 
-	}
+        @Override
+        public Color stringToValue(final String stringP) {
+            // Backward compatibility
+            if (!stringP.startsWith("#") || stringP.contains(";")) {
+                String[] split = stringP.split(";");
+                return Color.rgb(Integer.parseInt(split[0]), Integer.parseInt(split[1]), Integer.parseInt(split[2]), Double.parseDouble(split[3]));
+            } else {
+                return Color.rgb(
+                        Integer.valueOf(stringP.substring(1, 3), 16),
+                        Integer.valueOf(stringP.substring(3, 5), 16),
+                        Integer.valueOf(stringP.substring(5, 7), 16),
+                        Integer.valueOf(stringP.substring(7, 9), 16) / 255.0
+                );
+            }
+        }
+    }
 
-	private static class DateDataType implements DataTypeI<Date> {
+    private static class DateDataType implements DataTypeI<Date> {
 
-		@Override
-		public String valueToString(final Date valueP) {
-			return Long.toString(valueP.getTime());
-		}
+        @Override
+        public String valueToString(final Date valueP) {
+            return Long.toString(valueP.getTime());
+        }
 
-		@Override
-		public Date stringToValue(final String stringP) {
-			return new Date(Long.parseLong(stringP));
-		}
+        @Override
+        public Date stringToValue(final String stringP) {
+            return new Date(Long.parseLong(stringP));
+        }
 
-	}
+    }
 
-	private static class EnumDataType<T extends Enum<T>> implements DataTypeI<Enum<T>> {
-		private Class<T> enumType;
+    private static class EnumDataType<T extends Enum<T>> implements DataTypeI<Enum<T>> {
+        private Class<T> enumType;
 
-		EnumDataType(final Class<T> enumTypeP) {
-			this.enumType = enumTypeP;
-		}
+        EnumDataType(final Class<T> enumTypeP) {
+            this.enumType = enumTypeP;
+        }
 
-		@Override
-		public String valueToString(final Enum<T> valueP) {
-			return valueP.name();
-		}
+        @Override
+        public String valueToString(final Enum<T> valueP) {
+            return valueP.name();
+        }
 
-		@Override
-		public Enum<T> stringToValue(final String stringP) {
-			return Enum.valueOf(this.enumType, stringP);
-		}
-	}
+        @Override
+        public Enum<T> stringToValue(final String stringP) {
+            return Enum.valueOf(this.enumType, stringP);
+        }
+    }
 
-	private static class FileDataType implements DataTypeI<File> {
+    private static class FileDataType implements DataTypeI<File> {
 
-		@Override
-		public String valueToString(final File valueP) {
-			return valueP.getAbsolutePath();
-		}
+        @Override
+        public String valueToString(final File valueP) {
+            return valueP.getAbsolutePath();
+        }
 
-		@Override
-		public File stringToValue(final String stringP) {
-			return new File(stringP);
-		}
-	}
-	// ========================================================================
+        @Override
+        public File stringToValue(final String stringP) {
+            return new File(stringP);
+        }
+    }
+    // ========================================================================
 
 }

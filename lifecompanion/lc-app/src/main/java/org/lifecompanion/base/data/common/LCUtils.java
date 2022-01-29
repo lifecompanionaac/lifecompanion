@@ -443,12 +443,25 @@ public class LCUtils {
         }
     }
 
-    public static String toWebColor(final Color c) {
+    public static String toWebColorWithoutAlpha(final Color c) {
         if (c != null) {
             return String.format((Locale) null, "#%02x%02x%02x",
                     Math.round(c.getRed() * 255),
                     Math.round(c.getGreen() * 255),
                     Math.round(c.getBlue() * 255));
+        } else {
+            return null;
+        }
+    }
+
+    public static String toWebColorWithAlpha(final Color c) {
+        if (c != null) {
+            return String.format((Locale) null, "#%02x%02x%02x%02x",
+                    Math.round(c.getRed() * 255),
+                    Math.round(c.getGreen() * 255),
+                    Math.round(c.getBlue() * 255),
+                    Math.round(c.getOpacity() * 255)
+            );
         } else {
             return null;
         }
@@ -461,7 +474,7 @@ public class LCUtils {
     public static boolean colorEquals(Color c1, Color c2) {
         if (c1 == c2) return true;
         else if (c1 == null || c2 == null) return false;
-        else return toWebColor(c1).equals(toWebColor(c2));
+        else return toWebColorWithoutAlpha(c1).equals(toWebColorWithoutAlpha(c2));
     }
 
     public static boolean isSupportedImage(final File imgFile) {

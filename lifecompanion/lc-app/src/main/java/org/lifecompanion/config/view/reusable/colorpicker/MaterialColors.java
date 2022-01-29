@@ -71,7 +71,7 @@ public enum MaterialColors {
                     // Find dark color
                     .orElse(getColors().stream().filter(c -> LCUtils.colorEquals(darker(c.getColor()), color)).findAny().map(mc -> mc.getTitle() + " " + mc.getSubTitle() + "-D")
                             // No name : use web notation
-                            .orElse(LCUtils.toWebColor(color)));
+                            .orElse(LCUtils.toWebColorWithoutAlpha(color)));
         }
     }
 

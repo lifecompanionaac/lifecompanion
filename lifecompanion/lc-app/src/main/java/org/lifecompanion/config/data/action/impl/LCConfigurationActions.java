@@ -116,6 +116,28 @@ public class LCConfigurationActions {
         }
     }
 
+    public static class CloseConfigAction implements BaseConfigActionI {
+        private final Node source;
+
+        public CloseConfigAction(Node source) {
+            this.source = source;
+        }
+
+        @Override
+        public void doAction() throws LCException {
+            GlobalActions.checkModificationForCurrentConfiguration(this, source,
+                    Translation.getText("close.config.action.confirm.message"),
+                    "close.config.action.confirm.button",
+                    AppModeController.INSTANCE::closeEditModeConfiguration
+            );
+        }
+
+        @Override
+        public String getNameID() {
+            return "action.new.name";
+        }
+    }
+
     public static class NewConfigInListAction implements BaseConfigActionI {
 
         @Override
@@ -675,12 +697,10 @@ public class LCConfigurationActions {
                 PluginActions.warnOnPluginDependencies(source,
                         new File(IOManager.INSTANCE.getConfigurationPath(currentProfile.getID(), configDescription.getConfigurationId()) + File.separator + LCConstant.CONFIGURATION_XML_NAME),
                         () -> {
-                            ConfigurationLoadingTask loadTask = IOManager.INSTANCE.createLoadConfigurationTask(this.configDescription,
-                                    currentProfile);
+                            ConfigurationLoadingTask loadTask = IOManager.INSTANCE.createLoadConfigurationTask(this.configDescription, currentProfile);
                             loadTask.setOnSucceeded((ea) -> {
                                 //Set current configuration
-                                LCConfigurationComponent value = (LCConfigurationComponent) ea.getSource().getValue();
-                                AppModeController.INSTANCE.switchEditModeConfiguration(value, this.configDescription);
+                                AppModeController.INSTANCE.switchEditModeConfiguration(loadTask.getValue(), this.configDescription);
                                 if (this.callback != null) {
                                     this.callback.accept(true);
                                 }
@@ -791,7 +811,7 @@ public class LCConfigurationActions {
 
             //If the configuration is the currently loaded configuration
             if (AppModeController.INSTANCE.getEditModeContext().getConfigurationDescription() == this.configDescription) {
-                AppModeController.INSTANCE.switchEditModeConfiguration(null, null);
+                AppModeController.INSTANCE.closeEditModeConfiguration();
             }
 
             if (this.removedCallback != null) {

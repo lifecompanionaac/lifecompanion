@@ -33,9 +33,7 @@ import org.lifecompanion.base.data.common.LCUtils;
 import org.lifecompanion.base.data.common.UIUtils;
 import org.lifecompanion.base.data.config.LCGraphicStyle;
 import org.lifecompanion.base.data.control.refacto.AppModeController;
-import org.lifecompanion.base.data.control.refacto.ProfileController;
 import org.lifecompanion.config.data.action.impl.LCConfigurationActions;
-import org.lifecompanion.config.data.action.impl.LCConfigurationActions.RemoveConfigurationAction;
 import org.lifecompanion.config.data.config.LCGlyphFont;
 import org.lifecompanion.config.data.control.ConfigActionController;
 import org.lifecompanion.config.view.common.ConfigUIUtils;
@@ -51,7 +49,7 @@ public class CurrentConfigDetailView extends VBox implements LCViewInitHelper {
     private Label labelLastSaveDate;
     private Label labelPartTitle;
     private Label labelUnsavedModif;
-    private Button buttonSave, buttonExport, buttonRemove;
+    private Button buttonSave, buttonExport, buttonClose;
 
     public CurrentConfigDetailView() {
         this.initAll();
@@ -83,10 +81,10 @@ public class CurrentConfigDetailView extends VBox implements LCViewInitHelper {
         this.buttonExport = UIUtils.createFixedWidthTextButton(Translation.getText("configuration.menu.item.export"),
                 LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.UPLOAD).sizeFactor(2).color(LCGraphicStyle.MAIN_DARK), MainMenu.BUTTON_WIDTH,
                 "tooltip.export.current.configuration");
-        this.buttonRemove = UIUtils.createFixedWidthTextButton(Translation.getText("configuration.menu.item.delete"),
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.TRASH).sizeFactor(2).color(LCGraphicStyle.SECOND_DARK), MainMenu.BUTTON_WIDTH,
+        this.buttonClose = UIUtils.createFixedWidthTextButton(Translation.getText("configuration.menu.item.close"),
+                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.TIMES_CIRCLE_ALT).size(30).color(LCGraphicStyle.SECOND_DARK), MainMenu.BUTTON_WIDTH,
                 "tooltip.remove.current.configuration");
-        boxButton1.getChildren().addAll(this.buttonSave, this.buttonExport, this.buttonRemove);
+        boxButton1.getChildren().addAll(this.buttonSave, this.buttonExport, this.buttonClose);
         boxButton1.setAlignment(Pos.CENTER);
         //Total
         this.getChildren().addAll(this.labelPartTitle, this.labelConfigName, this.labelLastSaveDate, this.labelUnsavedModif, boxButton1);
@@ -96,14 +94,11 @@ public class CurrentConfigDetailView extends VBox implements LCViewInitHelper {
     public void initListener() {
         this.buttonSave.setOnAction(LCConfigurationActions.HANDLER_SAVE);
         this.buttonExport.setOnAction(LCConfigurationActions.HANDLER_EXPORT);
-        this.buttonRemove.setOnAction((ea) -> ConfigActionController.INSTANCE.executeAction(new RemoveConfigurationAction(buttonRemove, ProfileController.INSTANCE.currentProfileProperty().get(),
-                AppModeController.INSTANCE.getEditModeContext().configurationDescriptionProperty().get())));
-
+        this.buttonClose.setOnAction((ea) -> ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.CloseConfigAction(buttonClose)));
     }
 
     @Override
     public void initBinding() {
-        // FIXME : memory leak on listener
         final ChangeListener<Date> dateChangeListener = (obsd, ovd, nvd) -> {
             LCUtils.runOnFXThread(() -> this.labelLastSaveDate.setText(nvd != null
                     ? Translation.getText("configuration.menu.label.last.date", StringUtils.dateToStringDateWithOnlyHoursMinuteSecond(nvd))
@@ -123,16 +118,12 @@ public class CurrentConfigDetailView extends VBox implements LCViewInitHelper {
         this.labelConfigName.textProperty().bind(EasyBind.select(AppModeController.INSTANCE.getEditModeContext().configurationDescriptionProperty())
                 .selectObject(LCConfigurationDescriptionI::configurationNameProperty).orElse(Translation.getText("configuration.label.no.current")));
         //Can't remove/export unsaved configuration
-        this.buttonRemove.disableProperty().bind(AppModeController.INSTANCE.getEditModeContext().configurationDescriptionProperty().isNull());
+        this.buttonClose.disableProperty().bind(AppModeController.INSTANCE.getEditModeContext().configurationDescriptionProperty().isNull());
         this.buttonExport.disableProperty().bind(AppModeController.INSTANCE.getEditModeContext().configurationDescriptionProperty().isNull());
         //Bind unsaved modifications
         this.labelUnsavedModif.textProperty().bind(TranslationFX.getTextBinding("configuration.menu.label.unsaved.modif", AppModeController.INSTANCE.getEditModeContext().configurationUnsavedActionProperty()));
 
         //Visibility
         ConfigUIUtils.bindShowForLevelFrom(this.buttonExport, ConfigurationProfileLevelEnum.NORMAL);
-    }
-
-    private void updateUnsavedLabel(Number newValue) {
-        LCUtils.runOnFXThread(() -> this.labelUnsavedModif.setText(Translation.getText("configuration.menu.label.unsaved.modif", newValue)));
     }
 }

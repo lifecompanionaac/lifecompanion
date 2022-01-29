@@ -271,7 +271,7 @@ public class LCColorCustomColorStage extends Stage implements LCViewInitHelper {
             if (selectedColor.get() != null) {
                 final Clipboard clipboard = Clipboard.getSystemClipboard();
                 final ClipboardContent content = new ClipboardContent();
-                content.putString(LCUtils.toWebColor(selectedColor.get()));
+                content.putString(LCUtils.toWebColorWithoutAlpha(selectedColor.get()));
                 clipboard.setContent(content);
                 LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo("lc.colorpicker.web.color.copied").withMsDuration(LCGraphicStyle.SHORT_NOTIFICATION_DURATION_MS));
             }
@@ -301,7 +301,7 @@ public class LCColorCustomColorStage extends Stage implements LCViewInitHelper {
                             new Stop(1, c.deriveColor(0, 1, 1, 0))),
                     CornerRadii.EMPTY, Insets.EMPTY));
         }, selectedColor));
-        selectedColor.addListener((obs, ov, nv) -> fieldColorHex.setText(LCUtils.toWebColor(nv)));
+        selectedColor.addListener((obs, ov, nv) -> fieldColorHex.setText(LCUtils.toWebColorWithoutAlpha(nv)));
         fieldColorHex.focusedProperty().addListener(inv -> updateAfterFieldUpdate());
         fieldColorHex.setOnAction(e -> updateAfterFieldUpdate());
     }

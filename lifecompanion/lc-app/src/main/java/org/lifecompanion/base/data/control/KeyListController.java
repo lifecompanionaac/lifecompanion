@@ -33,8 +33,8 @@ import org.lifecompanion.api.component.definition.useaction.UseActionEvent;
 import org.lifecompanion.api.mode.ModeListenerI;
 import org.lifecompanion.base.data.common.LCUtils;
 import org.lifecompanion.base.data.component.keyoption.simplercomp.KeyListNodeKeyOption;
-import org.lifecompanion.base.data.control.refacto.AppModeController;
 import org.lifecompanion.base.data.control.refacto.AppMode;
+import org.lifecompanion.base.data.control.refacto.AppModeController;
 import org.lifecompanion.base.data.useaction.impl.keylist.current.*;
 import org.lifecompanion.base.data.useaction.impl.keylist.general.GoRootKeyNodeAction;
 import org.lifecompanion.base.data.useaction.impl.keylist.general.SelectSpecificKeyListAction;
@@ -90,6 +90,8 @@ public enum KeyListController implements ModeListenerI {
         AppModeController.INSTANCE.getEditModeContext().configurationProperty().addListener((obs, ov, nv) -> {
             if (nv != null) {
                 refreshKeyListFromScratch(nv, true);
+            } else {
+                clearCurrentConfiguration();
             }
         });
     }
@@ -277,7 +279,7 @@ public enum KeyListController implements ModeListenerI {
     private void refreshKeyListFromScratch(LCConfigurationI configuration, boolean tryToRestoreState) {
         String previouslySelectedNodeIdToRestore = tryToRestoreState && currentNode.get() != null ? currentNode.get().getID() : null;
 
-        clearUseModeData();
+        clearCurrentConfiguration();
         rootKeyListNode = configuration.rootKeyListNodeProperty().get();
 
         // Find all keys that display key list
@@ -303,10 +305,10 @@ public enum KeyListController implements ModeListenerI {
 
     @Override
     public void modeStop(LCConfigurationI configuration) {
-        clearUseModeData();
+        clearCurrentConfiguration();
     }
 
-    private void clearUseModeData() {
+    private void clearCurrentConfiguration() {
         this.currentNode.set(null);
         this.statusForGridAndCategoryMap.clear();
         this.keyOptionsPerGrid.clear();

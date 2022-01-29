@@ -46,6 +46,7 @@ import org.lifecompanion.base.data.component.utils.ComponentHolder;
 import org.lifecompanion.base.data.config.LCConstant;
 import org.lifecompanion.base.data.config.LCGraphicStyle;
 import org.lifecompanion.base.data.control.StyleController2;
+import org.lifecompanion.base.data.control.refacto.ConfigurationMemoryLeakChecker;
 import org.lifecompanion.base.data.definition.selection.SelectionModeParameter;
 import org.lifecompanion.base.data.io.IOManager;
 import org.lifecompanion.base.data.plugins.PluginManager;
@@ -262,6 +263,8 @@ public class LCConfigurationComponent extends CoreDisplayableComponentBaseImpl i
         this.configurationParent.set(this);
         this.firstSelectionPart = new ComponentHolder<>(this.firstSelectionPartId, this.thisProperty);
         this.pluginsConfigProperties = PluginManager.INSTANCE.getPluginConfigurationPropertiesMap(thisProperty);
+
+        ConfigurationMemoryLeakChecker.registerConfiguration(this);
     }
 
     /**

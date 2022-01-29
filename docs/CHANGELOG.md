@@ -13,9 +13,10 @@
 	- Plus de problème d'affichage
 	- Bien meilleure qualité des éléments affichés et intégration des photos
 	- Recherche optimisée
-- Il est maintenant possible de ne plus avoir de configuration courante
+- Il est maintenant possible de fermer la configuration courante
 	- Optimisation de la mémoire
 	- Proposition d'actions en fonction
+	- Centralisation des actions au même endroit
 
 ### Corrections/ajustements
 

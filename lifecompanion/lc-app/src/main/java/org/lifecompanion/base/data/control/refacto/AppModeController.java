@@ -43,8 +43,6 @@ import org.lifecompanion.base.data.media.SoundPlayer;
 import org.lifecompanion.base.data.plugins.PluginManager;
 import org.lifecompanion.base.data.voice.VoiceSynthesizerController;
 import org.lifecompanion.config.data.action.impl.LCConfigurationActions;
-import org.lifecompanion.config.data.component.profile.ProfileConfigSelectionController;
-import org.lifecompanion.config.data.component.profile.ProfileConfigStep;
 import org.lifecompanion.config.data.control.ConfigActionController;
 import org.lifecompanion.use.view.scene.ConfigUseScene;
 import org.lifecompanion.use.view.scene.UseModeStage;
@@ -105,27 +103,17 @@ public enum AppModeController {
             final LCConfigurationI previousConfigurationEditMode = editModeContext.getPreviousConfiguration();
             // Load previously edited configuration : just restore as current configuration
             if (previousConfigurationEditMode != null) {
-                editModeContext.switchTo(previousConfigurationEditMode, editModeContext.getConfigurationDescription());
+                editModeContext.switchTo(previousConfigurationEditMode, editModeContext.getPreviousConfigurationDescription());
             }
             // There is no previously edited  configuration this happens when
             // - user launch LifeCompanion directly in use mode
             // - user go to another configuration in use mode (with ChangeConfigurationAction)
             else if (usedConfiguration != null && profile != null) {
                 final LCConfigurationDescriptionI usedConfigurationDesc = profile.getConfigurationById(usedConfiguration.getID());
-                ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.OpenConfigurationAction(editModeContext.getStage().getScene().getRoot(), usedConfigurationDesc, false, loaded -> {
-                    if (!loaded) handleNoConfigInEditMode();
-                }));
-            } else {
-                handleNoConfigInEditMode();
+                ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.OpenConfigurationAction(editModeContext.getStage().getScene().getRoot(), usedConfigurationDesc, false));
             }
             editModeContext.clearPreviouslyEditedConfiguration();
         });
-    }
-
-    private void handleNoConfigInEditMode() {
-        if (ProfileController.INSTANCE.currentProfileProperty().get() != null) {
-            ProfileConfigSelectionController.INSTANCE.setStep(ProfileConfigStep.CONFIGURATION_LIST, null);
-        }
     }
 
     public void startUseModeAfterEdit() {
@@ -144,9 +132,13 @@ public enum AppModeController {
         LCUtils.runOnFXThread(() -> editModeContext.switchTo(configuration, configurationDescription));
     }
 
+    public void closeEditModeConfiguration() {
+        switchEditModeConfiguration(null, null);
+    }
+
     public void switchUseModeConfiguration(LCConfigurationI configuration, LCConfigurationDescriptionI configurationDescription) {
         LCUtils.runOnFXThread(() -> {
-            clearCurrentMode();
+            clearCurrentMode();// this will allow stop then start on use mode
             startUseModeForConfiguration(configuration, configurationDescription);
         });
     }
