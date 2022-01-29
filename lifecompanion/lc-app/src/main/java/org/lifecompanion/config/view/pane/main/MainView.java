@@ -103,14 +103,16 @@ public class MainView extends StackPane implements LCViewInitHelper {
         this.getChildren().add(this.scrollcenter);
         StackPane.setAlignment(this.scrollcenter, Pos.CENTER);
 
-        final Label labelMessage = new Label(Translation.getText("no.configuration.placeholder.message"));
-        labelMessage.getStyleClass().addAll("text-font-size-120", "text-label-center");
-        VBox.setMargin(labelMessage, new Insets(0.0, 0.0, 5.0, 0.0));
+        final Label labelMessage1 = new Label(Translation.getText("no.configuration.placeholder.message1"));
+        labelMessage1.getStyleClass().addAll("text-font-size-120", "text-label-center", "text-weight-bold");
+        final Label labelMessage2 = new Label(Translation.getText("no.configuration.placeholder.message2"));
+        labelMessage2.getStyleClass().addAll("text-font-size-120", "text-label-center");
+        VBox.setMargin(labelMessage2, new Insets(0.0, 0.0, 8.0, 0.0));
         linkCreateBlank = createActionLink("no.configuration.placeholder.link.create.blank");
         linkOpenConfiguration = createActionLink("no.configuration.placeholder.link.open");
         linkCreateModel = createActionLink("no.configuration.placeholder.link.create.from.model");
         linkImportConfiguration = createActionLink("no.configuration.placeholder.link.import.configuration");
-        noConfigurationPlaceholder = new VBox(6.0, labelMessage, linkOpenConfiguration, linkImportConfiguration, linkCreateModel, linkCreateBlank);
+        noConfigurationPlaceholder = new VBox(4.0, labelMessage1, labelMessage2, linkOpenConfiguration, linkImportConfiguration, linkCreateModel, linkCreateBlank);
         noConfigurationPlaceholder.setAlignment(Pos.CENTER);
         noConfigurationPlaceholder.prefWidthProperty().bind(scrollcenter.widthProperty().subtract(20.0));
 

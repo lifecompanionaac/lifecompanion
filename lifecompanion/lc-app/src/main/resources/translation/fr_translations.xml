@@ -28,7 +28,8 @@
 	\n\nQue souhaitez vous faire ?</text>
   <!--org.lifecompanion.api.definition.selection-->
   <text key="notification.grid.added.to.stack">Grille ajoutée dans la pile de grille</text>
-  <text key="no.configuration.placeholder.message">Pas de configuration ouverte.\nPour commencer à utiliser LifeCompanion, vous pouvez</text>
+  <text key="no.configuration.placeholder.message1">Pas de configuration ouverte</text>
+  <text key="no.configuration.placeholder.message2">Pour commencer à utiliser LifeCompanion, vous pouvez</text>
   <text key="no.configuration.placeholder.link.create.blank">Créer une nouvelle configuration</text>
   <text key="no.configuration.placeholder.link.open">Ouvrir l'une de vos configurations</text>
   <text key="no.configuration.placeholder.link.create.from.model">Créer une configuration à partir d'un modèle</text>
