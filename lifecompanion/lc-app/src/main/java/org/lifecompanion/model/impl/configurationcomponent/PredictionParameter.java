@@ -24,8 +24,8 @@ import org.jdom2.Element;
 import org.lifecompanion.model.api.configurationcomponent.PredictionParameterI;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.io.IOContextI;
-import org.lifecompanion.base.data.control.prediction.AutoCharPredictionController;
-import org.lifecompanion.base.data.control.prediction.WordPredictionController;
+import org.lifecompanion.controller.textprediction.AutoCharPredictionController;
+import org.lifecompanion.controller.textprediction.WordPredictionController;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 
 public class PredictionParameter implements PredictionParameterI {

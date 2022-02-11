@@ -29,7 +29,7 @@ import org.lifecompanion.model.api.profile.LCProfileI;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.io.ProfileIOContextI;
 import org.lifecompanion.model.api.ui.editmode.ConfigurationProfileLevelEnum;
-import org.lifecompanion.base.data.config.LCGraphicStyle;
+import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.framework.commons.fx.io.XMLGenericProperty;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;

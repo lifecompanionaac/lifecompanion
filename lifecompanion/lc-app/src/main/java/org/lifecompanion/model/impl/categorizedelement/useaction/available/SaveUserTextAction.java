@@ -27,9 +27,9 @@ import java.util.Map;
 import org.jdom2.Element;
 import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
 import org.lifecompanion.model.api.profile.LCProfileI;
-import org.lifecompanion.base.data.control.WritingStateController;
+import org.lifecompanion.controller.textcomponent.WritingStateController;
 import org.lifecompanion.controller.lifecycle.AppModeController;
-import org.lifecompanion.base.data.control.refacto.ProfileController;
+import org.lifecompanion.controller.profile.ProfileController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

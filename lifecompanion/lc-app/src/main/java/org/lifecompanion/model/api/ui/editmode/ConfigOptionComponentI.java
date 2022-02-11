@@ -34,15 +34,15 @@ public interface ConfigOptionComponentI {
 	 * @return the orientation of the component.<br>
 	 * To place the component on first line, use horizontal.
 	 */
-	public Orientation getOrientation();
+	Orientation getOrientation();
 
 	/**
 	 * @return the list of component of this option
 	 */
-	public List<Node> getOptions();
+	List<Node> getOptions();
 
 	/**
 	 * @return true if the component must be hidden when the configured component is not selected
 	 */
-	public boolean hideOnUnselect();
+	boolean hideOnUnselect();
 }

@@ -19,13 +19,13 @@
 package org.lifecompanion.util;
 
 import org.jdom2.Element;
+import org.lifecompanion.controller.io.IOHelper;
 import org.lifecompanion.model.api.configurationcomponent.DuplicableComponentI;
 import org.lifecompanion.model.api.configurationcomponent.TreeIdentifiableComponentI;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.io.XMLSerializable;
 import org.lifecompanion.model.impl.io.IOContext;
-import org.lifecompanion.controller.io.IOManager;
 import org.lifecompanion.framework.utils.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,7 +69,7 @@ public class CopyUtils {
         Element serialized = source.serialize(context);
         try {
             //Load serialized version
-            Pair<Boolean, XMLSerializable<IOContextI>> duplicatedResult = IOManager.create(serialized, context, null);
+            Pair<Boolean, XMLSerializable<IOContextI>> duplicatedResult = IOHelper.create(serialized, context, null);
             XMLSerializable<IOContextI> duplicated = duplicatedResult.getRight();
             duplicated.deserialize(serialized, context);
             if (changeID) {

@@ -23,7 +23,7 @@ import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
-import org.lifecompanion.base.data.control.UseVariableController;
+import org.lifecompanion.controller.usevariable.UseVariableController;
 
 import java.io.File;
 import java.util.List;

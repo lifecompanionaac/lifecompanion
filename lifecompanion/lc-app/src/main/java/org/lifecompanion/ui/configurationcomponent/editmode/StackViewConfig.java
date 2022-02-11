@@ -23,10 +23,10 @@ import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.api.configurationcomponent.GridPartComponentI;
 import org.lifecompanion.model.impl.configurationcomponent.StackComponent;
 import org.lifecompanion.ui.configurationcomponent.base.StackViewBase;
-import org.lifecompanion.config.view.component.option.ButtonComponentOption;
-import org.lifecompanion.config.view.component.option.MoveButtonOption;
-import org.lifecompanion.config.view.component.option.RootComponentOption;
-import org.lifecompanion.config.view.component.option.StackButtonOption;
+import org.lifecompanion.ui.configurationcomponent.editmode.componentoption.ButtonComponentOption;
+import org.lifecompanion.ui.configurationcomponent.editmode.componentoption.MoveButtonOption;
+import org.lifecompanion.ui.configurationcomponent.editmode.componentoption.RootComponentOption;
+import org.lifecompanion.ui.configurationcomponent.editmode.componentoption.StackButtonOption;
 
 /**
  * Node that display a {@link StackComponent}

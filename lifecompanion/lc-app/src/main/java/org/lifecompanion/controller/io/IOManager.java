@@ -19,6 +19,7 @@
 package org.lifecompanion.controller.io;
 
 import org.jdom2.Element;
+import org.lifecompanion.controller.io.task.*;
 import org.lifecompanion.model.api.configurationcomponent.ConfigurationChildComponentI;
 import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
@@ -29,9 +30,9 @@ import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.io.XMLSerializable;
 import org.lifecompanion.util.LCUtils;
-import org.lifecompanion.base.data.config.LCConstant;
-import org.lifecompanion.base.data.control.InstallationConfigurationController;
-import org.lifecompanion.base.data.control.refacto.ProfileController;
+import org.lifecompanion.model.impl.constant.LCConstant;
+import org.lifecompanion.controller.appinstallation.InstallationConfigurationController;
+import org.lifecompanion.controller.profile.ProfileController;
 import org.lifecompanion.model.impl.plugin.PluginInfo;
 import org.lifecompanion.controller.plugin.PluginManager;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
@@ -65,19 +66,6 @@ public enum IOManager {
     public static final SimpleDateFormat DATE_FORMAT_FILENAME_WITH_TIME = new SimpleDateFormat("yyyyMMdd_HH-mm");
     public static final SimpleDateFormat DATE_FORMAT_FILENAME_WITH_TIME_SECOND = new SimpleDateFormat("yyyyMMdd_HH-mm-ss");
     //========================================================================
-
-    /**
-     * Contains a map that convert type from loaded element (e.g. <strong>nodeType</strong> attribute)
-     * to real Java types.<br>
-     * This method is new, so the previously saved type are converted with {@link LCBackwardCompatibility}.<br>
-     * This map is meant to be initialized just once on startup.
-     */
-    private static Map<String, Pair<Class<? extends XMLSerializable>, PluginInfo>> typeAlias;
-
-    /**
-     * Boolean that becomes true once default {@link XMLSerializable} from default modules are discovered (typeAlias will be filled with them)
-     */
-    private static final AtomicBoolean defaultTypeInitialized = new AtomicBoolean(false);
 
 
     // PATH GETTER
@@ -289,9 +277,9 @@ public enum IOManager {
     }
     //========================================================================
 
-    // Class part : "Use informations"
-    //========================================================================
 
+    // USE INFORMATION
+    //========================================================================
     /**
      * Try to save the configuration use informations.<br>
      * If there is a current profile, and the configuration directory exist, save in the configuration directory.<br>
@@ -318,7 +306,6 @@ public enum IOManager {
             LOGGER.warn("Couldn't load the configuration use information for configuration {}", configuration.getID(), e);
         }
     }
-    //========================================================================
 
     private File getDirectoryForUseInformation(final LCConfigurationI configuration) {
         LCProfileI currentProfile = ProfileController.INSTANCE.currentProfileProperty().get();
@@ -331,113 +318,6 @@ public enum IOManager {
                     directory);
         }
         return directory;
-    }
-
-    // TYPES
-    //========================================================================
-    public static final String ATB_TYPE = "nodeType";
-    public static final String ATB_PLUGIN_ID = "dependencyPluginId";
-
-    /**
-     * Create the base serialize object from a xml serialized component.<br>
-     * This will not call {@link XMLSerializable#deserialize(Element, Object)} on the create object.
-     *
-     * @param element the element that contains the object serialized
-     * @return the created component
-     * @throws LCException if the component can't be created
-     */
-    @SuppressWarnings("unchecked")
-    public static Pair<Boolean, XMLSerializable<IOContextI>> create(final Element element, IOContextI ioContext, Supplier<XMLSerializable<IOContextI>> fallbackSupplier) throws LCException {
-        String className = element.getAttributeValue(ATB_TYPE);
-        try {
-            // Check if the plugin dependency is loaded, if not use fallback when enable
-            String pluginDependencyId = element.getAttributeValue(ATB_PLUGIN_ID);
-            if (pluginDependencyId != null && !PluginManager.INSTANCE.isPluginLoaded(pluginDependencyId)) {
-                if (ioContext.isFallbackOnDefaultInstanceOnFail()) {
-                    return Pair.of(true, fallbackSupplier != null ? fallbackSupplier.get() : null);
-                } else {
-                    throw LCException.newException().withMessage("error.io.manager.xml.element.read", element.getName(), element.getAttributes()).build();
-                }
-            }
-            // Normal situation, no plugin or plugin is loaded
-            else {
-                Class<XMLSerializable<IOContextI>> loadedClass = getClassForName(className);
-                XMLSerializable<IOContextI> createdObject = loadedClass.getDeclaredConstructor().newInstance();
-                return Pair.of(false, createdObject);
-            }
-        } catch (Throwable t) {
-            // Unknown error on loading
-            IOManager.LOGGER.warn("Problem while creating the object from a serialized object in XML", t);
-            if (ioContext.isFallbackOnDefaultInstanceOnFail()) {
-                return Pair.of(true, fallbackSupplier != null ? fallbackSupplier.get() : null);
-            } else {
-                throw LCException.newException().withMessage("error.io.manager.xml.element.read", element.getName(), element.getAttributes()).withCause(t).build();
-            }
-        }
-    }
-
-
-    /**
-     * Set the base element on a XML serializable object to be deserialized
-     *
-     * @param caller the calling class
-     * @param node   the node where we must put the base
-     */
-    public static Element addTypeAlias(final XMLSerializable<?> caller, final Element node, IOContextI ioContext) {
-        node.setAttribute(ATB_TYPE, caller.getClass().getSimpleName());
-        Pair<Class<? extends XMLSerializable>, PluginInfo> pluginInfoForType = getTypeAlias().get(caller.getClass().getSimpleName());
-        // When the saved element is from a plugin : "flag" the XML element to be dependent on the plugin and add the plugin id to dependencies list
-        if (pluginInfoForType != null && pluginInfoForType.getRight() != null) {
-            node.setAttribute(ATB_PLUGIN_ID, pluginInfoForType.getRight().getPluginId());
-            ioContext.getAutomaticPluginDependencyIds().add(pluginInfoForType.getRight().getPluginId());
-        }
-        return node;
-    }
-
-    public static <T> Class<T> getClassForName(final String className) throws ClassNotFoundException {
-        if (getTypeAlias().containsKey(className)) {
-            return (Class<T>) getTypeAlias().get(className).getLeft();
-        } else {
-            // Backward compatibility : type were directly written in XML
-            return (Class<T>) Class.forName(LCBackwardCompatibility.getBackwardCompatibleType(className));
-        }
-    }
-
-    private static void initializeTypeMap() {
-        if (!defaultTypeInitialized.getAndSet(true)) {
-            addSerializableTypes(ReflectionHelper.findImplementationsInModules(XMLSerializable.class), null);
-        }
-    }
-
-    private static Map<String, Pair<Class<? extends XMLSerializable>, PluginInfo>> getTypeAlias() {
-        initializeTypeMap();
-        return typeAlias;
-    }
-
-    public static void addSerializableTypes(List<Class<? extends XMLSerializable>> types, PluginInfo pluginInfo) {
-        if (typeAlias == null) {
-            typeAlias = new HashMap<>(150);
-        }
-        for (Class<? extends XMLSerializable> type : types) {
-            String typeName = type.getSimpleName();
-            Pair<Class<? extends XMLSerializable>, PluginInfo> previous = typeAlias.put(typeName, Pair.of(type, pluginInfo));
-            if (previous != null) {
-                LOGGER.error("Found two types with the same name : {} / {} and {}", typeName, previous.getLeft().getName(), type.getName());
-            }
-        }
-    }
-    //========================================================================
-
-    // STYLE
-    //========================================================================
-    // FIXME : change method names
-    public static <T extends ConfigurationChildComponentI> void serializeComponentDependencies(final IOContextI context, final T element, final Element node) {
-        PluginManager.INSTANCE.serializePluginInformation(element, context, node);
-    }
-
-    public static <T extends ConfigurationChildComponentI> void deserializeComponentDependencies(final IOContextI context, final T element, final Element node) throws LCException {
-        //Plugins
-        PluginManager.INSTANCE.deserializePluginInformation(element, context, node);
     }
     //========================================================================
 }

@@ -22,6 +22,7 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.collections.ObservableList;
 import org.jdom2.Element;
+import org.lifecompanion.controller.io.IOHelper;
 import org.lifecompanion.model.api.configurationcomponent.*;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.io.IOContextI;
@@ -29,7 +30,6 @@ import org.lifecompanion.model.api.ui.configurationcomponent.ComponentViewI;
 import org.lifecompanion.model.api.ui.configurationcomponent.ViewProviderI;
 import org.lifecompanion.model.api.ui.configurationcomponent.ViewProviderType;
 import org.lifecompanion.util.CopyUtils;
-import org.lifecompanion.controller.io.IOManager;
 import org.lifecompanion.framework.commons.fx.io.XMLIgnoreNullValue;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
@@ -317,7 +317,7 @@ public abstract class CoreDisplayableComponentBaseImpl implements DisplayableCom
     @Override
     public Element serialize(final IOContextI contextP) {
         Element xmlElement = new Element(CoreDisplayableComponentBaseImpl.NODE_COMP);
-        IOManager.addTypeAlias(this, xmlElement, contextP);
+        IOHelper.addTypeAlias(this, xmlElement, contextP);
         XMLObjectSerializer.serializeInto(CoreDisplayableComponentBaseImpl.class, this, xmlElement);
         return xmlElement;
     }

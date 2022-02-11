@@ -22,6 +22,7 @@ import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.io.XMLSerializable;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
 import org.lifecompanion.framework.commons.SystemType;
+import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStepViewI;
 
 import java.util.List;
 
@@ -37,7 +38,7 @@ public interface BasePredictorI extends ModeListenerI, XMLSerializable<IOContext
     String getId();
 
     /**
-     * @return the configuration step ID ({@link org.lifecompanion.base.view.reusable.GeneralConfigurationStepViewI}
+     * @return the configuration step ID ({@link GeneralConfigurationStepViewI}
      */
     String getConfigStepId();
 

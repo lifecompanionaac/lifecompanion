@@ -32,7 +32,7 @@ import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseAction
 import org.lifecompanion.model.api.voicesynthesizer.VoiceAndSynthesizerInfoI;
 import org.lifecompanion.model.api.voicesynthesizer.VoiceSynthesizerI;
 import org.lifecompanion.model.api.voicesynthesizer.VoiceSynthesizerParameterI;
-import org.lifecompanion.base.data.control.UserActionController;
+import org.lifecompanion.controller.categorizedelement.useaction.UserActionController;
 import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
 import org.lifecompanion.controller.voicesynthesizer.VoiceSynthesizerController;
 import org.lifecompanion.model.impl.voicesynthesizer.VoiceSynthesizerInfoImpl;

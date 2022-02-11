@@ -21,8 +21,8 @@ package org.lifecompanion.model.impl.textprediction.predict4all;
 
 import org.lifecompanion.model.api.textprediction.WordPredictionI;
 import org.lifecompanion.model.api.textprediction.WordPredictionResultI;
-import org.lifecompanion.base.data.config.LCConstant;
-import org.lifecompanion.base.data.control.refacto.ProfileController;
+import org.lifecompanion.model.impl.constant.LCConstant;
+import org.lifecompanion.controller.profile.ProfileController;
 import org.lifecompanion.controller.io.IOManager;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;

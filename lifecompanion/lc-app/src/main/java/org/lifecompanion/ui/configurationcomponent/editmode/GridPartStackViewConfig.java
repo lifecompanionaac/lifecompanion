@@ -22,9 +22,9 @@ package org.lifecompanion.ui.configurationcomponent.editmode;
 import org.lifecompanion.model.api.configurationcomponent.GridPartComponentI;
 import org.lifecompanion.model.impl.configurationcomponent.GridPartStackComponent;
 import org.lifecompanion.ui.configurationcomponent.base.GridPartStackViewBase;
-import org.lifecompanion.config.view.component.option.ButtonComponentOption;
-import org.lifecompanion.config.view.component.option.SelectableOption;
-import org.lifecompanion.config.view.component.option.StackButtonOption;
+import org.lifecompanion.ui.configurationcomponent.editmode.componentoption.ButtonComponentOption;
+import org.lifecompanion.ui.configurationcomponent.editmode.componentoption.SelectableOption;
+import org.lifecompanion.ui.configurationcomponent.editmode.componentoption.StackButtonOption;
 
 /**
  * Configuration view for stack component.

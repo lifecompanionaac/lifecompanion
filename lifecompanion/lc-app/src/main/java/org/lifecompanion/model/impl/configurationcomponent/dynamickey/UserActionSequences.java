@@ -22,12 +22,12 @@ package org.lifecompanion.model.impl.configurationcomponent.dynamickey;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.jdom2.Element;
+import org.lifecompanion.controller.io.IOHelper;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.UserActionSequenceI;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.UserActionSequencesI;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.util.CopyUtils;
-import org.lifecompanion.controller.io.IOManager;
 
 import java.util.Map;
 
@@ -48,7 +48,7 @@ public class UserActionSequences implements UserActionSequencesI {
     @Override
     public Element serialize(IOContextI context) {
         Element node = new Element(NODE_NAME);
-        IOManager.addTypeAlias(this, node, context);
+        IOHelper.addTypeAlias(this, node, context);
         for (UserActionSequenceI userActionSequence : userActionSequences) {
             node.addContent(userActionSequence.serialize(context));
         }

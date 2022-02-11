@@ -27,7 +27,7 @@ import javafx.scene.image.Image;
 import org.lifecompanion.model.api.imagedictionary.ImageDictionaryI;
 import org.lifecompanion.model.api.imagedictionary.ImageElementI;
 import org.lifecompanion.util.LCUtils;
-import org.lifecompanion.base.data.config.UserBaseConfiguration;
+import org.lifecompanion.controller.userconfiguration.UserBaseConfiguration;
 import org.lifecompanion.framework.commons.utils.io.FileNameUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 

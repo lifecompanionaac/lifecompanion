@@ -22,11 +22,11 @@ import javafx.beans.property.ObjectProperty;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import org.jdom2.Element;
+import org.lifecompanion.controller.io.IOHelper;
 import org.lifecompanion.model.api.configurationcomponent.*;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.io.XMLSerializable;
-import org.lifecompanion.controller.io.IOManager;
 import org.lifecompanion.framework.commons.fx.io.XMLUtils;
 import org.lifecompanion.framework.utils.Pair;
 
@@ -316,7 +316,7 @@ public interface StackComponentBaseImpl extends TreeDisplayableComponentI, Stack
         List<GridComponentI> loadedComponents = new ArrayList<>(grids.size() + 5);
         GridComponentI toDisplay = null;
         for (Element grid : grids) {
-            Pair<Boolean, XMLSerializable<IOContextI>> loadedComponentResult = IOManager.create(grid, contextP, null);
+            Pair<Boolean, XMLSerializable<IOContextI>> loadedComponentResult = IOHelper.create(grid, contextP, null);
             if (!loadedComponentResult.getLeft()) {
                 GridComponentI loadedComponent = (GridComponentI) loadedComponentResult.getRight();
                 loadedComponent.deserialize(grid, contextP);

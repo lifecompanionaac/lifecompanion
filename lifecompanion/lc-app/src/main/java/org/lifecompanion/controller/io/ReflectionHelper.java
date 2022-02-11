@@ -36,7 +36,7 @@ public class ReflectionHelper {
         long start = System.currentTimeMillis();
         try (ScanResult scanResult = new ClassGraph()
                 .enableClassInfo()
-                .whitelistModules("org.lifecompanion.api", "org.lifecompanion.config", "org.lifecompanion.app")
+                .whitelistModules("org.lifecompanion.app")
                 .disableJarScanning()
                 .scan()
         ) {

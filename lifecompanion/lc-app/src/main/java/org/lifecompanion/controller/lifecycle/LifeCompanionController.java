@@ -20,20 +20,20 @@
 package org.lifecompanion.controller.lifecycle;
 
 import org.lifecompanion.model.api.lifecycle.LCStateListener;
-import org.lifecompanion.base.data.control.AsyncExecutorController;
-import org.lifecompanion.base.data.control.UserActionController;
-import org.lifecompanion.base.data.control.prediction.AutoCharPredictionController;
-import org.lifecompanion.base.data.control.prediction.CustomCharPredictionController;
-import org.lifecompanion.base.data.control.prediction.WordPredictionController;
-import org.lifecompanion.base.data.control.stats.SessionStatsController;
-import org.lifecompanion.base.data.control.update.InstallationController;
+import org.lifecompanion.controller.editaction.AsyncExecutorController;
+import org.lifecompanion.controller.categorizedelement.useaction.UserActionController;
+import org.lifecompanion.controller.textprediction.AutoCharPredictionController;
+import org.lifecompanion.controller.textprediction.CustomCharPredictionController;
+import org.lifecompanion.controller.textprediction.WordPredictionController;
+import org.lifecompanion.controller.metrics.SessionStatsController;
+import org.lifecompanion.controller.appinstallation.InstallationController;
 import org.lifecompanion.model.impl.imagedictionary.ImageDictionaries;
 import org.lifecompanion.controller.plugin.PluginManager;
 import org.lifecompanion.controller.voicesynthesizer.VoiceSynthesizerController;
-import org.lifecompanion.config.data.control.ErrorHandlingController;
-import org.lifecompanion.config.data.control.LCStateController;
-import org.lifecompanion.config.data.control.usercomp.UserCompController;
-import org.lifecompanion.config.view.pane.main.notification2.LCNotificationController;
+import org.lifecompanion.controller.editmode.ErrorHandlingController;
+import org.lifecompanion.controller.editmode.LCStateController;
+import org.lifecompanion.controller.profile.UserCompController;
+import org.lifecompanion.ui.notification.LCNotificationController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -24,7 +24,7 @@ import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTrigger
 import org.lifecompanion.model.api.usevariable.UseVariableI;
 import org.lifecompanion.model.api.textcomponent.WritingEventSource;
 import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseActionSubCategories;
-import org.lifecompanion.base.data.control.WritingStateController;
+import org.lifecompanion.controller.textcomponent.WritingStateController;
 import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
 
 import java.util.Map;

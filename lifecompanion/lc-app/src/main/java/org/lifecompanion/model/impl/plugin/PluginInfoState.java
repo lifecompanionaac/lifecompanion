@@ -20,7 +20,7 @@
 package org.lifecompanion.model.impl.plugin;
 
 import javafx.scene.paint.Color;
-import org.lifecompanion.base.data.config.LCGraphicStyle;
+import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.framework.commons.translation.Translation;
 
 public enum PluginInfoState {

@@ -52,7 +52,7 @@ import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTrigger
 import org.lifecompanion.model.api.configurationcomponent.*;
 import org.lifecompanion.model.api.ui.configurationcomponent.ComponentViewI;
 import org.lifecompanion.model.impl.configurationcomponent.GridPartKeyComponent;
-import org.lifecompanion.base.data.config.LCConstant;
+import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.imagedictionary.ImageDictionaries;
 import org.lifecompanion.model.impl.categorizedelement.useaction.available.WriteAndSpeakTextAction;
 import org.lifecompanion.framework.commons.utils.io.FileNameUtils;

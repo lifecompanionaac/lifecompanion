@@ -22,8 +22,8 @@ package org.lifecompanion.ui.configurationcomponent.editmode;
 import org.lifecompanion.model.api.configurationcomponent.GridPartComponentI;
 import org.lifecompanion.model.impl.configurationcomponent.GridPartTextEditorComponent;
 import org.lifecompanion.ui.configurationcomponent.base.GridPartTextEditorComponentViewBase;
-import org.lifecompanion.config.data.control.SelectionController;
-import org.lifecompanion.config.view.component.option.SelectableOption;
+import org.lifecompanion.controller.editmode.SelectionController;
+import org.lifecompanion.ui.configurationcomponent.editmode.componentoption.SelectableOption;
 
 public class GridPartTextEditorViewConfig extends GridPartTextEditorComponentViewBase {
     private SelectableOption<GridPartTextEditorComponent> selectableOption;

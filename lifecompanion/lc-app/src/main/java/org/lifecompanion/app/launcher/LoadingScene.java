@@ -34,9 +34,9 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
-import org.lifecompanion.base.data.config.IconManager;
-import org.lifecompanion.base.data.config.LCConstant;
-import org.lifecompanion.base.data.control.update.InstallationController;
+import org.lifecompanion.controller.resource.IconManager;
+import org.lifecompanion.model.impl.constant.LCConstant;
+import org.lifecompanion.controller.appinstallation.InstallationController;
 import org.lifecompanion.framework.commons.translation.Translation;
 
 public class LoadingScene extends Scene {

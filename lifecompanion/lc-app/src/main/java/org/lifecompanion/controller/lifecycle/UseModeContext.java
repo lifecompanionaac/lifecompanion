@@ -19,8 +19,6 @@
 
 package org.lifecompanion.controller.lifecycle;
 
-import org.lifecompanion.controller.lifecycle.AbstractModeContext;
-
 public class UseModeContext extends AbstractModeContext {
     @Override
     public void cleanAfterStop() {

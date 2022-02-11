@@ -23,7 +23,7 @@ import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.textprediction.CharPredictorI;
-import org.lifecompanion.base.data.config.LCConstant;
+import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.slf4j.Logger;

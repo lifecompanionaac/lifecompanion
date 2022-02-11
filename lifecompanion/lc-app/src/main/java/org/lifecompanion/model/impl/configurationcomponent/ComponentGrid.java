@@ -24,6 +24,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.jdom2.Element;
+import org.lifecompanion.controller.io.IOHelper;
 import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
 import org.lifecompanion.model.api.configurationcomponent.GridPartComponentI;
 import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
@@ -32,7 +33,6 @@ import org.lifecompanion.model.api.configurationcomponent.KeyFactory;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.io.XMLSerializable;
-import org.lifecompanion.controller.io.IOManager;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.framework.commons.utils.lang.CollectionUtils;
 import org.lifecompanion.framework.utils.Pair;
@@ -1070,7 +1070,7 @@ public class ComponentGrid implements XMLSerializable<IOContextI>, ComponentGrid
         List<Element> gridComponents = nodeP.getChildren();
         for (Element gridComponent : gridComponents) {
             // Load the child
-            Pair<Boolean, XMLSerializable<IOContextI>> gridPartResult = IOManager.create(gridComponent, contextP, GridPartKeyComponent::new);
+            Pair<Boolean, XMLSerializable<IOContextI>> gridPartResult = IOHelper.create(gridComponent, contextP, GridPartKeyComponent::new);
             GridPartComponentI gridPart = (GridPartComponentI) gridPartResult.getRight();
             if (!gridPartResult.getLeft()) {
                 gridPart.deserialize(gridComponent, contextP);

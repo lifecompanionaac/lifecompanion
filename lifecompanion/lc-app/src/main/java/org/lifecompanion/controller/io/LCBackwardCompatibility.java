@@ -43,13 +43,23 @@ public class LCBackwardCompatibility {
             .with("fr.forusoftware.lifecompanion.data.component.simple.ComponentSpan", "org.lifecompanion.model.impl.configurationcomponent.ComponentSpan")
             // Config
             .with("fr.forusoftware.lifecompanion.data.component.simple.VirtualMouseParameter", "org.lifecompanion.model.impl.configurationcomponent.VirtualMouseParameter")
-            // Selection modes
+
+            // Selection modes (really old LifeCompanion version)
             .with("fr.forusoftware.lifecompanion.data.definition.selection.impl.AutoActivationSelectionMode", "org.lifecompanion.model.impl.selectionmode.AutoActivationSelectionMode")
             .with("fr.forusoftware.lifecompanion.data.definition.selection.impl.ColumnRowScanSelectionMode", "org.lifecompanion.model.impl.selectionmode.ColumnRowScanSelectionMode")
             .with("fr.forusoftware.lifecompanion.data.definition.selection.impl.DirectActivationSelectionMode", "org.lifecompanion.model.impl.selectionmode.DirectActivationSelectionMode")
             .with("fr.forusoftware.lifecompanion.data.definition.selection.impl.HorizontalDirectKeyScanSelectionMode", "org.lifecompanion.model.impl.selectionmode.HorizontalDirectKeyScanSelectionMode")
             .with("fr.forusoftware.lifecompanion.data.definition.selection.impl.VerticalDirectKeyScanSelectionMode", "org.lifecompanion.model.impl.selectionmode.VerticalDirectKeyScanSelectionMode")
             .with("fr.forusoftware.lifecompanion.data.definition.selection.impl.RowColumnScanSelectionMode", "org.lifecompanion.model.impl.selectionmode.RowColumnScanSelectionMode")
+
+            // Selection modes (old LifeCompanion version (<= 1.2.1))
+            .with("org.lifecompanion.base.data.definition.selection.impl.RowColumnScanSelectionMode", "org.lifecompanion.model.impl.selectionmode.RowColumnScanSelectionMode")
+            .with("org.lifecompanion.base.data.definition.selection.impl.ColumnRowScanSelectionMode", "org.lifecompanion.model.impl.selectionmode.ColumnRowScanSelectionMode")
+            .with("org.lifecompanion.base.data.definition.selection.impl.DirectActivationSelectionMode", "org.lifecompanion.model.impl.selectionmode.DirectActivationSelectionMode")
+            .with("org.lifecompanion.base.data.definition.selection.impl.HorizontalDirectKeyScanSelectionMode", "org.lifecompanion.model.impl.selectionmode.HorizontalDirectKeyScanSelectionMode")
+            .with("org.lifecompanion.base.data.definition.selection.impl.VerticalDirectKeyScanSelectionMode", "org.lifecompanion.model.impl.selectionmode.VerticalDirectKeyScanSelectionMode")
+            .with("org.lifecompanion.base.data.definition.selection.impl.RowColumnScanSelectionMode", "org.lifecompanion.model.impl.selectionmode.RowColumnScanSelectionMode")
+
             // Key options
             .with("fr.forusoftware.lifecompanion.data.component.keyoption.AutoCharKeyOption", "org.lifecompanion.model.impl.configurationcomponent.keyoption.AutoCharKeyOption")
             .with("fr.forusoftware.lifecompanion.data.component.keyoption.BasicKeyOption", "org.lifecompanion.model.impl.configurationcomponent.keyoption.BasicKeyOption")
@@ -62,11 +72,11 @@ public class LCBackwardCompatibility {
     public static String getBackwardCompatibleType(String type) {
         // Actions
         if (type.startsWith("fr.forusoftware.lifecompanion.data.useaction.impl")) {
-            return type.replace("fr.forusoftware.lifecompanion.data.useaction.impl", "org.lifecompanion.base.data.useaction.impl");
+            return type.replace("fr.forusoftware.lifecompanion.data.useaction.impl", "org.lifecompanion.model.impl.categorizedelement.useaction.available");
         }
         // Events
         if (type.startsWith("fr.forusoftware.lifecompanion.data.useevent.impl")) {
-            return type.replace("fr.forusoftware.lifecompanion.data.useevent.impl", "org.lifecompanion.base.data.useevent.impl");
+            return type.replace("fr.forusoftware.lifecompanion.data.useevent.impl", "org.lifecompanion.model.impl.categorizedelement.useevent.available");
         }
         return PREVIOUS_TYPE_CORRESPONDANCES.getOrDefault(type, type);
     }

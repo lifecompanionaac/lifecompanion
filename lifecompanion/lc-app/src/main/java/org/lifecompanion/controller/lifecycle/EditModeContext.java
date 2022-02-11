@@ -20,17 +20,15 @@
 package org.lifecompanion.controller.lifecycle;
 
 import javafx.beans.property.*;
-import org.lifecompanion.controller.lifecycle.AbstractModeContext;
-import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.util.LCUtils;
-import org.lifecompanion.base.data.config.LCGraphicStyle;
-import org.lifecompanion.base.data.config.UserBaseConfiguration;
-import org.lifecompanion.config.data.action.impl.LCConfigurationActions;
-import org.lifecompanion.config.data.control.ConfigActionController;
-import org.lifecompanion.config.data.notif.LCNotification;
-import org.lifecompanion.config.view.pane.main.notification2.LCNotificationController;
+import org.lifecompanion.model.impl.constant.LCGraphicStyle;
+import org.lifecompanion.controller.userconfiguration.UserBaseConfiguration;
+import org.lifecompanion.controller.editaction.LCConfigurationActions;
+import org.lifecompanion.controller.editmode.ConfigActionController;
+import org.lifecompanion.model.impl.notification.LCNotification;
+import org.lifecompanion.ui.notification.LCNotificationController;
 import org.lifecompanion.framework.commons.translation.Translation;
 
 public class EditModeContext extends AbstractModeContext {

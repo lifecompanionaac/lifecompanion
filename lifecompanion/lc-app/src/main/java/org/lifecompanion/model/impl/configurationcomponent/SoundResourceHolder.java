@@ -21,11 +21,11 @@ package org.lifecompanion.model.impl.configurationcomponent;
 
 import javafx.beans.property.*;
 import org.jdom2.Element;
+import org.lifecompanion.controller.io.IOHelper;
 import org.lifecompanion.model.api.configurationcomponent.SoundResourceHolderI;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.io.IOResourceI;
-import org.lifecompanion.controller.io.IOManager;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.slf4j.Logger;
@@ -112,7 +112,7 @@ public class SoundResourceHolder implements SoundResourceHolderI {
             } catch (IOException e) {
                 LOGGER.warn("Couldn't save the sound resource file path is {}", this.filePath.get(), e);
             }
-            return IOManager.addTypeAlias(this, XMLObjectSerializer.serializeInto(SoundResourceHolder.class, this, new Element(NODE_NAME)), context);
+            return IOHelper.addTypeAlias(this, XMLObjectSerializer.serializeInto(SoundResourceHolder.class, this, new Element(NODE_NAME)), context);
         } else
             return null;
     }

@@ -30,7 +30,7 @@ import org.lifecompanion.model.api.usevariable.UseVariableI;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.categorizedelement.useevent.DefaultUseEventSubCategories;
-import org.lifecompanion.base.data.control.GlobalKeyEventManager;
+import org.lifecompanion.controller.configurationcomponent.GlobalKeyEventManager;
 import org.lifecompanion.model.impl.categorizedelement.useevent.BaseUseEventGeneratorImpl;
 import org.lifecompanion.model.impl.usevariable.StringUseVariable;
 import org.lifecompanion.model.impl.usevariable.UseVariableDefinition;

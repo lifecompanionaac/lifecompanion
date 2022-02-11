@@ -33,7 +33,7 @@ import org.lifecompanion.model.api.selectionmode.DirectSelectionModeI;
 import org.lifecompanion.model.api.selectionmode.FireActionEvent;
 import org.lifecompanion.model.api.selectionmode.SelectionModeI;
 import org.lifecompanion.model.api.selectionmode.SelectionModeParameterI;
-import org.lifecompanion.base.data.control.UserActionController;
+import org.lifecompanion.controller.categorizedelement.useaction.UserActionController;
 import org.lifecompanion.ui.selectionmode.AbstractSelectionModeView;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.ObjectProperty;

@@ -21,6 +21,7 @@ package org.lifecompanion.model.impl.categorizedelement.useevent;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.jdom2.Element;
+import org.lifecompanion.controller.io.IOHelper;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.categorizedelement.useevent.UseEventGeneratorHolderI;
 import org.lifecompanion.model.api.categorizedelement.useevent.UseEventGeneratorI;
@@ -30,7 +31,6 @@ import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.io.XMLSerializable;
 import org.lifecompanion.util.LCUtils;
-import org.lifecompanion.controller.io.IOManager;
 import org.lifecompanion.framework.utils.Pair;
 
 import java.util.List;
@@ -92,7 +92,7 @@ public class UseEventManager implements UseEventManagerI {
     public Element serialize(final IOContextI context) {
         //Base
         Element element = new Element(UseEventManager.NODE_USE_EVENT_MANAGER);
-        IOManager.addTypeAlias(this, element, context);
+        IOHelper.addTypeAlias(this, element, context);
         //Generator list
         Element generatorsElement = new Element(UseEventManager.NODE_EVENT_GENERATORS);
         element.addContent(generatorsElement);
@@ -108,7 +108,7 @@ public class UseEventManager implements UseEventManagerI {
         Element generatorsElement = node.getChild(UseEventManager.NODE_EVENT_GENERATORS);
         List<Element> generatorsChildren = generatorsElement.getChildren();
         for (Element generatorElement : generatorsChildren) {
-            Pair<Boolean, XMLSerializable<IOContextI>> generatorResult = IOManager.create(generatorElement, context, null);
+            Pair<Boolean, XMLSerializable<IOContextI>> generatorResult = IOHelper.create(generatorElement, context, null);
             if (!generatorResult.getLeft()) {
                 UseEventGeneratorI generator = (UseEventGeneratorI) generatorResult.getRight();
                 generator.deserialize(generatorElement, context);

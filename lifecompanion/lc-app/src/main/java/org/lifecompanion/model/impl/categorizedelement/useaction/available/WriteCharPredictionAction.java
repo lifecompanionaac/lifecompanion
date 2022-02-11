@@ -28,7 +28,7 @@ import org.lifecompanion.model.api.textcomponent.WritingEventSource;
 import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseActionSubCategories;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.AutoCharKeyOption;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.CustomCharKeyOption;
-import org.lifecompanion.base.data.control.WritingStateController;
+import org.lifecompanion.controller.textcomponent.WritingStateController;
 import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 

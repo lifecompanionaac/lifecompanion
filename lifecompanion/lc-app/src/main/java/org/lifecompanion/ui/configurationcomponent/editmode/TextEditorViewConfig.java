@@ -21,9 +21,9 @@ package org.lifecompanion.ui.configurationcomponent.editmode;
 
 import org.lifecompanion.model.impl.configurationcomponent.TextEditorComponent;
 import org.lifecompanion.ui.configurationcomponent.base.TextEditorViewBase;
-import org.lifecompanion.config.view.component.option.ButtonComponentOption;
-import org.lifecompanion.config.view.component.option.MoveButtonOption;
-import org.lifecompanion.config.view.component.option.RootComponentOption;
+import org.lifecompanion.ui.configurationcomponent.editmode.componentoption.ButtonComponentOption;
+import org.lifecompanion.ui.configurationcomponent.editmode.componentoption.MoveButtonOption;
+import org.lifecompanion.ui.configurationcomponent.editmode.componentoption.RootComponentOption;
 
 public class TextEditorViewConfig extends TextEditorViewBase {
     private RootComponentOption rootComponentOption;

@@ -24,8 +24,6 @@ import java.util.Map;
 
 import org.lifecompanion.controller.virtualmouse.VirtualMouseController;
 import org.lifecompanion.model.api.configurationcomponent.VirtualMouseDrawing;
-import org.lifecompanion.base.view.control.virtual.mouse.SimpleCircleView;
-import org.lifecompanion.base.view.control.virtual.mouse.TargetView;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

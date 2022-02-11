@@ -21,7 +21,7 @@ package org.lifecompanion.model.impl.profile;
 import org.jdom2.Element;
 import org.lifecompanion.model.api.profile.LcTechInfoI;
 import org.lifecompanion.model.impl.exception.LCException;
-import org.lifecompanion.base.data.control.update.InstallationController;
+import org.lifecompanion.controller.appinstallation.InstallationController;
 import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.slf4j.Logger;

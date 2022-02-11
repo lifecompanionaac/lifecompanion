@@ -25,7 +25,7 @@ import java.util.Map;
 
 import org.jdom2.Element;
 import org.lifecompanion.model.api.io.IOContextI;
-import org.lifecompanion.base.data.control.UseVariableController;
+import org.lifecompanion.controller.usevariable.UseVariableController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

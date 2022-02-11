@@ -36,7 +36,7 @@ import org.lifecompanion.model.api.style.ShapeCompStyleI;
 import org.lifecompanion.model.api.style.TextCompStyleI;
 import org.lifecompanion.model.impl.textcomponent.CachedLineListenerData;
 import org.lifecompanion.model.impl.textcomponent.TextDisplayerLineGenerator;
-import org.lifecompanion.base.data.control.WritingStateController;
+import org.lifecompanion.controller.textcomponent.WritingStateController;
 import org.lifecompanion.model.impl.style.StyleSerialializer;
 import org.lifecompanion.model.impl.style.TextDisplayerShapeCompStyle;
 import org.lifecompanion.model.impl.style.TextDisplayerTextCompStyle;

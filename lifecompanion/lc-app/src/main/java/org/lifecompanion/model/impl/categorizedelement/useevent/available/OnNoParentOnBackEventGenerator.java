@@ -21,7 +21,7 @@ package org.lifecompanion.model.impl.categorizedelement.useevent.available;
 
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.categorizedelement.useevent.DefaultUseEventSubCategories;
-import org.lifecompanion.base.data.control.KeyListController;
+import org.lifecompanion.controller.configurationcomponent.dynamickey.KeyListController;
 import org.lifecompanion.model.impl.categorizedelement.useevent.BaseUseEventGeneratorImpl;
 
 public class OnNoParentOnBackEventGenerator extends BaseUseEventGeneratorImpl {

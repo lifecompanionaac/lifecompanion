@@ -27,9 +27,9 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.lifecompanion.util.LCUtils;
-import org.lifecompanion.base.data.config.LCConstant;
+import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.util.StageUtils;
-import org.lifecompanion.config.view.common.ConfigUIUtils;
+import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
 import org.lifecompanion.framework.commons.translation.Translation;
 

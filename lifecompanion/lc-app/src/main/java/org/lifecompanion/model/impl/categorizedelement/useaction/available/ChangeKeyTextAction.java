@@ -32,7 +32,7 @@ import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseActionSubCategories;
 import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.model.impl.configurationcomponent.ComponentHolder;
-import org.lifecompanion.base.data.control.UseVariableController;
+import org.lifecompanion.controller.usevariable.UseVariableController;
 import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.framework.commons.fx.translation.TranslationFX;

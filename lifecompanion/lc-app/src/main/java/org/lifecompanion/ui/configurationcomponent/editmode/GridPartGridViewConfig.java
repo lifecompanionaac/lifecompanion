@@ -21,7 +21,7 @@ package org.lifecompanion.ui.configurationcomponent.editmode;
 
 import org.lifecompanion.model.impl.configurationcomponent.GridPartGridComponent;
 import org.lifecompanion.ui.configurationcomponent.base.GridPartGridViewBase;
-import org.lifecompanion.config.view.component.option.SelectableOption;
+import org.lifecompanion.ui.configurationcomponent.editmode.componentoption.SelectableOption;
 
 /**
  * Node that display a {@link GridPartGridComponent}

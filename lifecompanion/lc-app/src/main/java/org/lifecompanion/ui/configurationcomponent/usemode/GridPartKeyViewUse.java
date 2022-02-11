@@ -24,7 +24,7 @@ import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
 import org.lifecompanion.model.api.configurationcomponent.keyoption.KeyOptionI;
-import org.lifecompanion.base.data.control.SelectionModeController;
+import org.lifecompanion.controller.selectionmode.SelectionModeController;
 import org.lifecompanion.ui.configurationcomponent.base.GridPartKeyViewBase;
 
 public class GridPartKeyViewUse extends GridPartKeyViewBase {

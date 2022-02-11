@@ -25,6 +25,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.jdom2.Element;
+import org.lifecompanion.controller.io.IOHelper;
 import org.lifecompanion.model.api.configurationcomponent.ConfigurationChildComponentI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.configurationcomponent.keyoption.KeyOptionConfigurationViewI;
@@ -49,11 +50,10 @@ import org.lifecompanion.model.api.voicesynthesizer.VoiceSynthesizerI;
 import org.lifecompanion.model.impl.plugin.PluginInfo;
 import org.lifecompanion.model.impl.plugin.PluginInfoState;
 import org.lifecompanion.util.LCUtils;
-import org.lifecompanion.base.data.config.LCConstant;
-import org.lifecompanion.base.data.config.UserBaseConfiguration;
-import org.lifecompanion.base.data.control.update.InstallationController;
-import org.lifecompanion.controller.io.IOManager;
-import org.lifecompanion.base.view.reusable.GeneralConfigurationStepViewI;
+import org.lifecompanion.model.impl.constant.LCConstant;
+import org.lifecompanion.controller.userconfiguration.UserBaseConfiguration;
+import org.lifecompanion.controller.appinstallation.InstallationController;
+import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStepViewI;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.app.VersionUtils;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
@@ -260,7 +260,7 @@ public enum PluginManager implements LCStateListener, ModeListenerI {
                 ) {
                     // Register every serializable types to IOManager
                     List<Class<? extends XMLSerializable>> serializableClassesInPlugin = getClassesInPlugin(scanResult, XMLSerializable.class);
-                    IOManager.addSerializableTypes(serializableClassesInPlugin, pluginInfo);
+                    IOHelper.addSerializableTypes(serializableClassesInPlugin, pluginInfo);
 
                     // Find and register plugin custom implementations
                     for (PluginImplementationLoadingHelper pluginImplementationLoadingHelper : pluginImplementationLoadingHelpers) {

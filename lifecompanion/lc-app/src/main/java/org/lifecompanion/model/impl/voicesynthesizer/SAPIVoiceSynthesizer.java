@@ -23,7 +23,7 @@ import com.google.gson.GsonBuilder;
 import okhttp3.*;
 import org.lifecompanion.model.api.voicesynthesizer.VoiceInfoI;
 import org.lifecompanion.util.LCUtils;
-import org.lifecompanion.base.data.config.LCConstant;
+import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;

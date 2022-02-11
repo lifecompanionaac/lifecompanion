@@ -30,11 +30,11 @@ import org.lifecompanion.model.api.ui.configurationcomponent.ViewProviderI;
 import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.util.Unbindable;
 import org.lifecompanion.model.impl.configurationcomponent.GridPartKeyComponent;
-import org.lifecompanion.base.data.control.WritingStateController;
+import org.lifecompanion.controller.textcomponent.WritingStateController;
 import org.lifecompanion.model.impl.style.ShapeStyleBinder;
 import org.lifecompanion.model.impl.style.TextStyleBinder;
-import org.lifecompanion.base.view.reusable.ImageViewPane;
-import org.lifecompanion.base.view.reusable.LCLabel;
+import org.lifecompanion.ui.common.pane.generic.ImageViewPane;
+import org.lifecompanion.ui.common.pane.generic.LCLabel;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 

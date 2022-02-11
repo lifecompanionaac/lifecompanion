@@ -20,7 +20,7 @@
 package org.lifecompanion.ui.configurationcomponent.editmode;
 
 import org.lifecompanion.ui.configurationcomponent.base.LCConfigurationViewBase;
-import org.lifecompanion.config.data.control.SelectionController;
+import org.lifecompanion.controller.editmode.SelectionController;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;

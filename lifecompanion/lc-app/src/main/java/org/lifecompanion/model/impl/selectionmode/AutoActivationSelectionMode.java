@@ -25,7 +25,7 @@ import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.selectionmode.AutoDirectSelectionModeI;
 import org.lifecompanion.model.api.selectionmode.DirectSelectionModeI;
 import org.lifecompanion.model.api.selectionmode.SelectionModeI;
-import org.lifecompanion.base.data.control.UserActionController;
+import org.lifecompanion.controller.categorizedelement.useaction.UserActionController;
 import org.lifecompanion.ui.selectionmode.AutoActivationSelectionModeView;
 
 import java.util.concurrent.ScheduledFuture;

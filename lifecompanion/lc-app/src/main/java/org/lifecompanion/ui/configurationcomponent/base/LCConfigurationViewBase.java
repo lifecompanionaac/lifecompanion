@@ -30,8 +30,8 @@ import org.lifecompanion.model.api.configurationcomponent.RootGraphicComponentI;
 import org.lifecompanion.model.api.ui.configurationcomponent.ComponentViewI;
 import org.lifecompanion.model.api.ui.configurationcomponent.ViewProviderI;
 import org.lifecompanion.util.LCUtils;
-import org.lifecompanion.base.data.config.LCGraphicStyle;
-import org.lifecompanion.base.data.config.UserBaseConfiguration;
+import org.lifecompanion.model.impl.constant.LCGraphicStyle;
+import org.lifecompanion.controller.userconfiguration.UserBaseConfiguration;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 
 /**

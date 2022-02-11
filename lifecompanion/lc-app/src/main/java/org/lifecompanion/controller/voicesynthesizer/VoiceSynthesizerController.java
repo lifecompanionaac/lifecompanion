@@ -30,7 +30,7 @@ import org.lifecompanion.model.impl.voicesynthesizer.SAPIVoiceSynthesizer;
 import org.lifecompanion.model.impl.voicesynthesizer.SayCommandVoiceSynthesizer;
 import org.lifecompanion.model.impl.voicesynthesizer.VoiceSynthesizerInfoImpl;
 import org.lifecompanion.util.LCUtils;
-import org.lifecompanion.base.data.config.UserBaseConfiguration;
+import org.lifecompanion.controller.userconfiguration.UserBaseConfiguration;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.plugin.PluginManager;
 import org.lifecompanion.framework.commons.SystemType;

@@ -25,8 +25,8 @@ import javafx.stage.Stage;
 import org.lifecompanion.controller.lifecycle.AppMode;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.model.api.configurationcomponent.FramePosition;
-import org.lifecompanion.base.data.config.LCConstant;
-import org.lifecompanion.base.data.control.update.InstallationController;
+import org.lifecompanion.model.impl.constant.LCConstant;
+import org.lifecompanion.controller.appinstallation.InstallationController;
 
 public class StageUtils {
     public static String getStageDefaultTitle() {

@@ -24,6 +24,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.collections.*;
 import javafx.scene.paint.Color;
 import org.jdom2.Element;
+import org.lifecompanion.controller.io.IOHelper;
 import org.lifecompanion.model.api.configurationcomponent.*;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.UserActionSequencesI;
@@ -41,12 +42,11 @@ import org.lifecompanion.model.api.style.TextCompStyleI;
 import org.lifecompanion.model.api.voicesynthesizer.VoiceSynthesizerParameterI;
 import org.lifecompanion.model.impl.configurationcomponent.dynamickey.KeyListNode;
 import org.lifecompanion.model.impl.configurationcomponent.dynamickey.UserActionSequences;
-import org.lifecompanion.base.data.config.LCConstant;
-import org.lifecompanion.base.data.config.LCGraphicStyle;
-import org.lifecompanion.base.data.control.StyleController2;
+import org.lifecompanion.model.impl.constant.LCConstant;
+import org.lifecompanion.model.impl.constant.LCGraphicStyle;
+import org.lifecompanion.controller.style.StyleController2;
 import org.lifecompanion.util.ConfigurationMemoryLeakChecker;
 import org.lifecompanion.model.impl.selectionmode.SelectionModeParameter;
-import org.lifecompanion.controller.io.IOManager;
 import org.lifecompanion.controller.plugin.PluginManager;
 import org.lifecompanion.model.impl.categorizedelement.useevent.UseEventManager;
 import org.lifecompanion.model.impl.voicesynthesizer.VoiceSynthesizerParameter;
@@ -909,7 +909,7 @@ public class LCConfigurationComponent extends CoreDisplayableComponentBaseImpl i
         //Virtual mouse
         node.addContent(this.virtualMouseParameter.serialize(ioContext));
         //Serialize dependencies
-        IOManager.serializeComponentDependencies(ioContext, this, node);
+        IOHelper.serializeComponentDependencies(ioContext, this, node);
         return node;
     }
 
@@ -919,7 +919,7 @@ public class LCConfigurationComponent extends CoreDisplayableComponentBaseImpl i
     @Override
     public void deserialize(final Element node, final IOContextI ioContext) throws LCException {
         super.deserialize(node, ioContext);
-        IOManager.deserializeComponentDependencies(ioContext, this, node);
+        IOHelper.deserializeComponentDependencies(ioContext, this, node);
         //Voice synthesizer
         Element voiceParameterNode = node.getChild(VoiceSynthesizerParameter.NODE_VOICE_PARAMETERS);
         this.voiceSynthesizerParameter.deserialize(voiceParameterNode, ioContext);
@@ -957,7 +957,7 @@ public class LCConfigurationComponent extends CoreDisplayableComponentBaseImpl i
         List<RootGraphicComponentI> loadedComponents = new ArrayList<>(childrenList.size() + 5);
         for (Element childElement : childrenList) {
             //Load and add
-            Pair<Boolean, XMLSerializable<IOContextI>> childComponentResult = IOManager.create(childElement, ioContext, null);
+            Pair<Boolean, XMLSerializable<IOContextI>> childComponentResult = IOHelper.create(childElement, ioContext, null);
             if (!childComponentResult.getLeft()) {
                 RootGraphicComponentI childComponent = (RootGraphicComponentI) childComponentResult.getRight();
                 childComponent.deserialize(childElement, ioContext);

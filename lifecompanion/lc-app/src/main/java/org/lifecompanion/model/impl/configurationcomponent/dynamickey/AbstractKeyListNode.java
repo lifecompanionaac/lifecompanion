@@ -23,6 +23,7 @@ import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.jdom2.Element;
+import org.lifecompanion.controller.io.IOHelper;
 import org.lifecompanion.model.api.configurationcomponent.TreeIdentifiableComponentI;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
 import org.lifecompanion.model.impl.exception.LCException;
@@ -30,7 +31,6 @@ import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.io.XMLSerializable;
 import org.lifecompanion.util.CopyUtils;
 import org.lifecompanion.util.LCUtils;
-import org.lifecompanion.controller.io.IOManager;
 import org.lifecompanion.framework.commons.fx.io.XMLIgnoreNullValue;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.framework.commons.translation.Translation;
@@ -177,7 +177,7 @@ public abstract class AbstractKeyListNode extends AbstractSimplerKeyActionContai
         if (!this.leaf) {
             final List<Element> nodeChildren = node.getChildren(NODE_NAME);
             for (Element child : nodeChildren) {
-                Pair<Boolean, XMLSerializable<IOContextI>> childComponentResult = IOManager.create(child, context, null);
+                Pair<Boolean, XMLSerializable<IOContextI>> childComponentResult = IOHelper.create(child, context, null);
                 if (!childComponentResult.getLeft()) {
                     KeyListNodeI keyListNode = (KeyListNodeI) childComponentResult.getRight();
                     keyListNode.deserialize(child, context);

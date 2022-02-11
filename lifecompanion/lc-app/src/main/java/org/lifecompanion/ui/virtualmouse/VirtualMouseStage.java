@@ -25,8 +25,8 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.lifecompanion.util.LCUtils;
-import org.lifecompanion.base.data.config.IconManager;
-import org.lifecompanion.base.data.config.LCConstant;
+import org.lifecompanion.controller.resource.IconManager;
+import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.framework.commons.translation.Translation;
 
 /**

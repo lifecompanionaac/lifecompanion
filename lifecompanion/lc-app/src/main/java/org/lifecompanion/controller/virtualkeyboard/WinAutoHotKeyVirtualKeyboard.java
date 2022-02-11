@@ -21,7 +21,7 @@ package org.lifecompanion.controller.virtualkeyboard;
 
 import javafx.scene.input.KeyCode;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
-import org.lifecompanion.base.data.config.LCConstant;
+import org.lifecompanion.model.impl.constant.LCConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

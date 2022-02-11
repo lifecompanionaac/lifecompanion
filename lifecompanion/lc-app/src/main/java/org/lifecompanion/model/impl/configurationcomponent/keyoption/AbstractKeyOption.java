@@ -21,11 +21,11 @@ package org.lifecompanion.model.impl.configurationcomponent.keyoption;
 import javafx.beans.property.*;
 import javafx.scene.layout.Region;
 import org.jdom2.Element;
+import org.lifecompanion.controller.io.IOHelper;
 import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
 import org.lifecompanion.model.api.configurationcomponent.keyoption.KeyOptionI;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.io.IOContextI;
-import org.lifecompanion.controller.io.IOManager;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,7 +69,7 @@ public abstract class AbstractKeyOption implements KeyOptionI {
     @Override
     public Element serialize(final IOContextI context) {
         Element element = new Element(KeyOptionI.NODE_KEY_OPTION);
-        IOManager.addTypeAlias(this, element, context);
+        IOHelper.addTypeAlias(this, element, context);
         return element;
     }
 

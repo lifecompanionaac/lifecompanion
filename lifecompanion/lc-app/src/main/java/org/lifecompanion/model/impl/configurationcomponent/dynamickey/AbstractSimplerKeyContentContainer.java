@@ -26,6 +26,7 @@ import javafx.scene.control.ContentDisplay;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import org.jdom2.Element;
+import org.lifecompanion.controller.io.IOHelper;
 import org.lifecompanion.model.api.configurationcomponent.ImageUseComponentI;
 import org.lifecompanion.model.api.configurationcomponent.TreeIdentifiableComponentI;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.SimplerKeyContentContainerI;
@@ -34,7 +35,6 @@ import org.lifecompanion.model.api.imagedictionary.ImageElementI;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.model.impl.configurationcomponent.ImageUseComponentPropertyWrapper;
-import org.lifecompanion.controller.io.IOManager;
 import org.lifecompanion.framework.commons.fx.io.XMLGenericProperty;
 import org.lifecompanion.framework.commons.fx.io.XMLIgnoreNullValue;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
@@ -256,7 +256,7 @@ public abstract class AbstractSimplerKeyContentContainer implements SimplerKeyCo
     @Override
     public Element serialize(IOContextI context) {
         Element node = new Element(getNodeName());
-        IOManager.addTypeAlias(this, node, context);
+        IOHelper.addTypeAlias(this, node, context);
         XMLObjectSerializer.serializeInto(AbstractSimplerKeyContentContainer.class, this, node);
         this.imageUseComponentPropertyWrapper.serialize(node, context);
         return node;

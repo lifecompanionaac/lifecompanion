@@ -28,6 +28,7 @@ import javafx.scene.control.ContentDisplay;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import org.jdom2.Element;
+import org.lifecompanion.controller.io.IOHelper;
 import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
 import org.lifecompanion.model.api.configurationcomponent.TreeDisplayableComponentI;
 import org.lifecompanion.model.api.configurationcomponent.TreeDisplayableType;
@@ -40,7 +41,6 @@ import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.io.XMLSerializable;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.BasicKeyOption;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.QuickComKeyOption;
-import org.lifecompanion.controller.io.IOManager;
 import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionManager;
 import org.lifecompanion.model.impl.categorizedelement.useaction.available.WriteCharPredictionAction;
 import org.lifecompanion.model.impl.categorizedelement.useaction.available.WriteWordPredictionAction;
@@ -390,7 +390,7 @@ public class GridPartKeyComponent extends GridPartComponentBaseImpl implements G
         Element keyOptionNode = nodeP.getChild(KeyOptionI.NODE_KEY_OPTION);
         KeyOptionI loadedkeyOption;
         if (keyOptionNode != null) {
-            Pair<Boolean, XMLSerializable<IOContextI>> loadedkeyOptionResult = IOManager.create(keyOptionNode, contextP, BasicKeyOption::new);
+            Pair<Boolean, XMLSerializable<IOContextI>> loadedkeyOptionResult = IOHelper.create(keyOptionNode, contextP, BasicKeyOption::new);
             loadedkeyOption = (KeyOptionI) loadedkeyOptionResult.getRight();
             if (!loadedkeyOptionResult.getLeft()) {
                 loadedkeyOption.deserialize(keyOptionNode, contextP);

@@ -25,7 +25,7 @@ import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.io.IOContextI;
-import org.lifecompanion.base.data.control.UseVariableController;
+import org.lifecompanion.controller.usevariable.UseVariableController;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 
 import java.util.Map;
