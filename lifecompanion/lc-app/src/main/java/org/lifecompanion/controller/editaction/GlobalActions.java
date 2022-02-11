@@ -40,7 +40,7 @@ import org.lifecompanion.controller.appinstallation.InstallationController;
 import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.controller.editmode.FileChooserType;
 import org.lifecompanion.util.ConfigUIUtils;
-import org.lifecompanion.controller.editmode.LCFileChooser;
+import org.lifecompanion.controller.editmode.LCFileChoosers;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
@@ -147,7 +147,7 @@ public class GlobalActions {
 
         @Override
         public void doAction() throws LCException {
-            FileChooser chooser = LCFileChooser.getOtherFileChooser(Translation.getText("package.log.chooser.title"),
+            FileChooser chooser = LCFileChoosers.getOtherFileChooser(Translation.getText("package.log.chooser.title"),
                     new FileChooser.ExtensionFilter(Translation.getText("file.type.plugin.zip"), Collections.singletonList("*.zip")), FileChooserType.OTHER_MISC_EXTERNAL);
             chooser.setInitialFileName("LifeCompanion_logs_" + PackageLogAction.DEFAULT_DATE_FORMAT.format(new Date()) + ".zip");
             File zipFile = chooser.showSaveDialog(UIUtils.getSourceWindow(source));

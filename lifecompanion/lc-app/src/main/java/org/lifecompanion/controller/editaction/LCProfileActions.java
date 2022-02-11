@@ -26,9 +26,11 @@ import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.stage.FileChooser;
 import org.lifecompanion.controller.editmode.*;
-import org.lifecompanion.controller.io.IOManager;
+import org.lifecompanion.controller.io.IOHelper;
 import org.lifecompanion.controller.io.task.*;
 import org.lifecompanion.controller.profile.ProfileController;
+import org.lifecompanion.controller.profileconfigselect.ProfileConfigSelectionController;
+import org.lifecompanion.controller.profileconfigselect.ProfileConfigStep;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
 import org.lifecompanion.framework.commons.utils.lang.LangUtils;
@@ -77,7 +79,7 @@ public class LCProfileActions {
         @Override
         public void doAction() throws LCException {
             //Save it
-            ProfileSavingTask profileSaveTask = IOManager.INSTANCE.createSaveProfileTask(this.profileToSave);
+            ProfileSavingTask profileSaveTask = IOHelper.createSaveProfileTask(this.profileToSave);
             profileSaveTask.setOnSucceeded(e -> {
                 if (callback != null) {
                     callback.accept(profileToSave);
@@ -101,7 +103,7 @@ public class LCProfileActions {
                 if (LangUtils.isNotEmpty(defaultConfigurationToAdd)) {
                     List<ConfigurationDuplicateTask> configurationDuplicateTasks = new ArrayList<>();
                     for (Pair<LCConfigurationDescriptionI, File> defaultConfig : defaultConfigurationToAdd) {
-                        configurationDuplicateTasks.add(IOManager.INSTANCE.createConfigurationDuplicateTaskFromDefaultConfigurationDir(defaultConfig.getLeft(), defaultConfig.getRight(), profileToSave));
+                        configurationDuplicateTasks.add(IOHelper.createConfigurationDuplicateTaskFromDefaultConfigurationDir(defaultConfig.getLeft(), defaultConfig.getRight(), profileToSave));
                     }
                     Task<Void> createAllDefaultConfigTask = new LCTask<Void>("task.add.available.default.configuration.list") {
                         @Override
@@ -231,7 +233,7 @@ public class LCProfileActions {
 
                     // Once previous profile is changed : fully load the profile
                     Runnable afterPreviousProfileHandled = () -> {
-                        ProfileFullLoadingTask loadFullProfileTask = IOManager.INSTANCE.createLoadFullProfileTask(profileToSelect, true);
+                        ProfileFullLoadingTask loadFullProfileTask = IOHelper.createLoadFullProfileTask(profileToSelect, true);
                         loadFullProfileTask.setOnSucceeded(event -> afterFullLoading.run());
                         AsyncExecutorController.INSTANCE.addAndExecute(true, false, loadFullProfileTask);
                     };
@@ -239,7 +241,7 @@ public class LCProfileActions {
                     // Save previous profile if needed before loading the new one
                     if (currentProfile != null) {
                         // Save previous profile
-                        ProfileSavingTask previousProfileSaveTask = IOManager.INSTANCE.createSaveProfileTask(currentProfile);
+                        ProfileSavingTask previousProfileSaveTask = IOHelper.createSaveProfileTask(currentProfile);
                         previousProfileSaveTask.setOnSucceeded(e -> afterPreviousProfileHandled.run());
                         AsyncExecutorController.INSTANCE.addAndExecute(true, false, previousProfileSaveTask);
                     } else {
@@ -267,12 +269,12 @@ public class LCProfileActions {
 
         @Override
         public void doAction() throws LCException {
-            FileChooser profileChooser = LCFileChooser.getChooserProfile(FileChooserType.PROFILE_EXPORT);
+            FileChooser profileChooser = LCFileChoosers.getChooserProfile(FileChooserType.PROFILE_EXPORT);
             profileChooser.setInitialFileName(DATE_FORMAT_FILENAME.format(new Date()) + "_" + LCUtils.getValidFileName(selectedProfile.nameProperty().get()));
             File profileExportFile = profileChooser.showSaveDialog(UIUtils.getSourceWindow(source));
             if (profileExportFile != null) {
                 LCStateController.INSTANCE.updateDefaultDirectory(FileChooserType.PROFILE_EXPORT, profileExportFile.getParentFile());
-                ProfileExportTask profileExportTask = IOManager.INSTANCE.createProfileExportTask(this.selectedProfile, profileExportFile);
+                ProfileExportTask profileExportTask = IOHelper.createProfileExportTask(this.selectedProfile, profileExportFile);
                 AsyncExecutorController.INSTANCE.addAndExecute(true, false, profileExportTask);
             }
         }
@@ -305,13 +307,13 @@ public class LCProfileActions {
 
         @Override
         public void doAction() throws LCException {
-            FileChooser profileChooser = LCFileChooser.getChooserProfile(FileChooserType.PROFILE_IMPORT);
+            FileChooser profileChooser = LCFileChoosers.getChooserProfile(FileChooserType.PROFILE_IMPORT);
             if (this.profileImportFile == null) {
                 this.profileImportFile = profileChooser.showOpenDialog(UIUtils.getSourceWindow(source));
             }
             if (this.profileImportFile != null) {
                 LCStateController.INSTANCE.updateDefaultDirectory(FileChooserType.PROFILE_IMPORT, this.profileImportFile.getParentFile());
-                ProfileImportTask profileImportTask = IOManager.INSTANCE.createProfileImportTask(this.profileImportFile);
+                ProfileImportTask profileImportTask = IOHelper.createProfileImportTask(this.profileImportFile);
                 //Check if a existing profile have the same ID
                 LCProfileI previousProfile = ProfileController.INSTANCE.getByID(profileImportTask.getImportedProfileId());
                 if (previousProfile != null) {
@@ -375,7 +377,7 @@ public class LCProfileActions {
             if (buttonType.get() == typeDuplicate) {
                 LCProfileI selectedProfile = profileSelectorControl.valueProperty().get();
                 if (selectedProfile != null) {
-                    ProfileDuplicateTask duplicateTask = IOManager.INSTANCE.createProfileDuplicateTask(selectedProfile);
+                    ProfileDuplicateTask duplicateTask = IOHelper.createProfileDuplicateTask(selectedProfile);
                     duplicateTask.setOnSucceeded(e -> {
                         LCProfileI duplicatedProfile = duplicateTask.getValue();
                         ProfileController.INSTANCE.getProfiles().add(0, duplicatedProfile);
@@ -401,8 +403,8 @@ public class LCProfileActions {
      * Profile are moved to avoid a complete delete : delete a profile is very dangerous and a user could want to restore its profile.
      */
     private static void backupThenDeleteProfileDirectory(LCProfileI profile, boolean deleteDirectories, Runnable postAction) {
-        ProfileBackupAndThenTask backupProfileTask = IOManager.INSTANCE.createProfileBackupTask(profile, IOManager.INSTANCE.getBackupProfileDestinationPath(profile), deleteDirectories ? () -> {
-            File profileDirectory = new File(IOManager.INSTANCE.getProfileDirectoryPath(profile.getID()));
+        ProfileBackupAndThenTask backupProfileTask = IOHelper.createProfileBackupTask(profile, IOHelper.getBackupProfileDestinationPath(profile), deleteDirectories ? () -> {
+            File profileDirectory = new File(IOHelper.getProfileDirectoryPath(profile.getID()));
             // Now try to delete configuration directory (may fail sometimes if resources are not cleared, that's why we also delete directories on startup)
             IOUtils.deleteDirectoryAndChildren(profileDirectory);
         } : null);

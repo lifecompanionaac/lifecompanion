@@ -33,7 +33,7 @@ import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.profile.ProfileController;
-import org.lifecompanion.controller.io.IOManager;
+import org.lifecompanion.controller.io.IOHelper;
 import org.lifecompanion.controller.editaction.GlobalActions;
 import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.controller.editmode.ErrorHandlingController;
@@ -132,13 +132,13 @@ public class MiscConfigSubmenu extends VBox implements LCViewInitHelper, UserCon
         this.buttonOpenLogFolder.setOnAction(e -> this.openFileOrFolder(buttonOpenLogFolder, System.getProperty("java.io.tmpdir") + File.separator + "LifeCompanion" + File.separator + "logs"));
         this.buttonExecuteGC.setOnAction(e -> Runtime.getRuntime().gc());
         this.buttonOpenCurrentProfileFolder.setOnAction(
-                e -> this.openFileOrFolder(buttonOpenCurrentProfileFolder, IOManager.INSTANCE.getProfileDirectoryPath(ProfileController.INSTANCE.currentProfileProperty().get().getID())));
+                e -> this.openFileOrFolder(buttonOpenCurrentProfileFolder, IOHelper.getProfileDirectoryPath(ProfileController.INSTANCE.currentProfileProperty().get().getID())));
         this.buttonOpenCurrentConfigFolder.setOnAction(
-                e -> this.openFileOrFolder(buttonOpenCurrentConfigFolder, IOManager.INSTANCE.getConfigurationDirectoryPath(ProfileController.INSTANCE.currentProfileProperty().get().getID(),
+                e -> this.openFileOrFolder(buttonOpenCurrentConfigFolder, IOHelper.getConfigurationDirectoryPath(ProfileController.INSTANCE.currentProfileProperty().get().getID(),
                         AppModeController.INSTANCE.getEditModeContext().configurationProperty().get().getID())));
         this.buttonOpenLogFile.setOnAction(e -> this.openFileOrFolder(buttonOpenLogFile, System.getProperty("java.io.tmpdir") + File.separator + "LifeCompanion" + File.separator + "logs" + File.separator + "application.log"));
         this.buttonOpenConfigCleanXml.setOnAction(e -> {
-            File configurationDirectory = new File(IOManager.INSTANCE.getConfigurationDirectoryPath(ProfileController.INSTANCE.currentProfileProperty().get().getID(),
+            File configurationDirectory = new File(IOHelper.getConfigurationDirectoryPath(ProfileController.INSTANCE.currentProfileProperty().get().getID(),
                     AppModeController.INSTANCE.getEditModeContext().configurationProperty().get().getID()));
             final File destDirTempConfig = LCUtils.getTempDir("configuration-debug-dir");
             exploreAndFormatXmlFiles(configurationDirectory, destDirTempConfig, configurationDirectory);

@@ -38,7 +38,7 @@ import org.lifecompanion.model.api.style.TextCompStyleI;
 import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.controller.editaction.StyleActions.ChangeStylePropAction;
 import org.lifecompanion.util.binding.LCConfigBindingUtils;
-import org.lifecompanion.controller.resource.LCGlyphFont;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.ui.common.pane.generic.cell.FontListCell;
 import org.lifecompanion.ui.common.control.generic.colorpicker.LCColorPicker;
@@ -142,7 +142,7 @@ public class TextStyleEditView extends AbstractStyleEditView<TextCompStyleI> imp
     }
 
     private ToggleButton createTextAlignToggle(final TextAlignment value, final Glyph glyph, final String tooltipEnd) {
-        ToggleButton button = UIUtils.createGraphicsToggleButton(null, LCGlyphFont.FONT_AWESOME.create(glyph).size(12).color(Color.GRAY),
+        ToggleButton button = UIUtils.createGraphicsToggleButton(null, GlyphFontHelper.FONT_AWESOME.create(glyph).size(12).color(Color.GRAY),
                 "tooltip.align.text." + tooltipEnd);
         button.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         this.textAlignButtons.put(value, button);

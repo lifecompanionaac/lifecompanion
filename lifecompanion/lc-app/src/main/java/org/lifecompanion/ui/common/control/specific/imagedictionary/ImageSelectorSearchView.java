@@ -41,10 +41,10 @@ import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.appinstallation.InstallationConfigurationController;
 import org.lifecompanion.model.impl.imagedictionary.ImageDictionaries;
-import org.lifecompanion.controller.resource.LCGlyphFont;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.controller.editmode.FileChooserType;
 import org.lifecompanion.controller.editmode.LCStateController;
-import org.lifecompanion.controller.editmode.LCFileChooser;
+import org.lifecompanion.controller.editmode.LCFileChoosers;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.slf4j.Logger;
@@ -119,11 +119,11 @@ public class ImageSelectorSearchView extends BorderPane implements LCViewInitHel
 
         // Add from computer
         this.buttonImportFromComputer = UIUtils.createRightTextButton(Translation.getText("image.dictionary.import.image.from.computer.button"),
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.FOLDER_OPEN).size(22).color(LCGraphicStyle.MAIN_PRIMARY), "image.dictionary.import.image.from.computer.button.tooltip");
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.FOLDER_OPEN).size(22).color(LCGraphicStyle.MAIN_PRIMARY), "image.dictionary.import.image.from.computer.button.tooltip");
         this.buttonTakeFromCamera = UIUtils.createRightTextButton(Translation.getText("image.dictionary.take.image.webcam"),
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.CAMERA).size(22).color(LCGraphicStyle.MAIN_PRIMARY), "image.dictionary.take.image.webcam.tooltip");
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CAMERA).size(22).color(LCGraphicStyle.MAIN_PRIMARY), "image.dictionary.take.image.webcam.tooltip");
         this.buttonImportFromClipboard = UIUtils.createRightTextButton(Translation.getText("image.dictionary.take.image.from.clipboard"),
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.PASTE).size(22).color(LCGraphicStyle.MAIN_PRIMARY), "image.dictionary.take.image.from.clipboard.tooltip");
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.PASTE).size(22).color(LCGraphicStyle.MAIN_PRIMARY), "image.dictionary.take.image.from.clipboard.tooltip");
         VBox boxButtonBottom = new VBox(5.0, buttonImportFromComputer, buttonTakeFromCamera, buttonImportFromClipboard);
         boxButtonBottom.setAlignment(Pos.CENTER);
         setMargin(boxButtonBottom, new Insets(10.0, 0, 0, 0));
@@ -138,7 +138,7 @@ public class ImageSelectorSearchView extends BorderPane implements LCViewInitHel
     public void initListener() {
         this.fieldSearchFilter.textProperty().addListener((obs, ov, nv) -> fireSearchFor(nv));
         this.buttonImportFromComputer.setOnAction(e -> {
-            FileChooser fileChooserImage = LCFileChooser.getChooserImage(FileChooserType.SELECT_IMAGES);
+            FileChooser fileChooserImage = LCFileChoosers.getChooserImage(FileChooserType.SELECT_IMAGES);
             File chosenFile = fileChooserImage.showOpenDialog(UIUtils.getSourceWindow(buttonImportFromComputer));
             if (chosenFile != null) {
                 LCStateController.INSTANCE.updateDefaultDirectory(FileChooserType.SELECT_IMAGES, chosenFile.getParentFile());

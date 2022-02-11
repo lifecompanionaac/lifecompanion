@@ -37,9 +37,9 @@ import org.lifecompanion.model.impl.profile.LCProfile;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.ui.common.pane.specific.ProfileIconView;
 import org.lifecompanion.controller.editaction.LCProfileActions;
-import org.lifecompanion.controller.editmode.ProfileConfigSelectionController;
-import org.lifecompanion.controller.editmode.ProfileConfigStep;
-import org.lifecompanion.controller.resource.LCGlyphFont;
+import org.lifecompanion.controller.profileconfigselect.ProfileConfigSelectionController;
+import org.lifecompanion.controller.profileconfigselect.ProfileConfigStep;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.ui.common.pane.specific.DefaultConfigurationListPane;
@@ -119,7 +119,7 @@ public class ProfileEditionView extends BorderPane implements LCViewInitHelper, 
         GridPane.setValignment(profileIconView, VPos.CENTER);
 
         buttonValidate = UIUtils.createLeftTextButton(Translation.getText("profile.config.view.button.ok"),
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.CHECK).size(16).color(LCGraphicStyle.MAIN_PRIMARY), null);
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CHECK).size(16).color(LCGraphicStyle.MAIN_PRIMARY), null);
         GridPane.setHalignment(buttonValidate, HPos.LEFT);
 
         // Information
@@ -137,9 +137,9 @@ public class ProfileEditionView extends BorderPane implements LCViewInitHelper, 
         // Action buttons
         GridPane gridPaneActions = new GridPane();
         this.buttonExport = ConfigUIUtils.createActionTableEntry(0, "profile.selection.export.profile.button",
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.UPLOAD).size(30).color(LCGraphicStyle.MAIN_DARK), gridPaneActions);
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.UPLOAD).size(30).color(LCGraphicStyle.MAIN_DARK), gridPaneActions);
         this.buttonRemove = ConfigUIUtils.createActionTableEntry(2, "profile.selection.remove.profile.button",
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.TRASH).size(30).color(LCGraphicStyle.SECOND_DARK), gridPaneActions);
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.TRASH).size(30).color(LCGraphicStyle.SECOND_DARK), gridPaneActions);
         Label labelActions = UIUtils.createTitleLabel("profile.edition.general.actions.title");
         editionActionNodes = Arrays.asList(labelActions, gridPaneActions);
 

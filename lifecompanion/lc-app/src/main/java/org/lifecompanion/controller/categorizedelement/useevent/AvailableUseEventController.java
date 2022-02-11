@@ -26,7 +26,7 @@ import org.lifecompanion.model.api.categorizedelement.useevent.UseEventMainCateg
 import org.lifecompanion.model.api.categorizedelement.useevent.UseEventSubCategoryI;
 import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.controller.io.ReflectionHelper;
-import org.lifecompanion.controller.plugin.PluginManager;
+import org.lifecompanion.controller.plugin.PluginController;
 import org.lifecompanion.framework.commons.utils.lang.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,9 +38,9 @@ import java.util.List;
  *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
-public enum AvailableUseEventManager {
+public enum AvailableUseEventController {
     INSTANCE;
-    private final Logger LOGGER = LoggerFactory.getLogger(AvailableUseEventManager.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(AvailableUseEventController.class);
 
     /**
      * List that contains every event generator
@@ -55,7 +55,7 @@ public enum AvailableUseEventManager {
     /**
      * Private singleton constructor
      */
-    private AvailableUseEventManager() {
+    private AvailableUseEventController() {
         this.availableEventGenerator = FXCollections.observableArrayList();
         this.mainCategories = FXCollections.observableArrayList();
         this.initActionListListener();
@@ -117,7 +117,7 @@ public enum AvailableUseEventManager {
             this.addEventType(possibleEvent);
         }
         //Added by plugin manager
-        PluginManager.INSTANCE.getUseEventGenerators().registerListenerAndDrainCache(this::addEventType);
+        PluginController.INSTANCE.getUseEventGenerators().registerListenerAndDrainCache(this::addEventType);
     }
 
     private void addEventType(final Class<? extends UseEventGeneratorI> possibleEvent) {

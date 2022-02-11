@@ -38,7 +38,7 @@ import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStep;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStepViewI;
-import org.lifecompanion.controller.resource.LCGlyphFont;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.ui.common.pane.specific.cell.FramePositionDetailledCell;
 import org.lifecompanion.ui.common.pane.specific.cell.FramePositionSimpleCell;
@@ -133,8 +133,8 @@ public class UseStageConfigurationStepView extends BorderPane implements General
         Label labelExplainConfigurationSize = new Label(Translation.getText("general.configuration.stage.configuration.size.explain"));
         labelExplainConfigurationSize.getStyleClass().add("explain-text");
 
-        glyphKeep = LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.LOCK).size(12).color(LCGraphicStyle.MAIN_DARK);
-        glyphNotKept = LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.UNLOCK).size(12).color(LCGraphicStyle.MAIN_DARK);
+        glyphKeep = GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.LOCK).size(12).color(LCGraphicStyle.MAIN_DARK);
+        glyphNotKept = GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.UNLOCK).size(12).color(LCGraphicStyle.MAIN_DARK);
         buttonKeepRatioFrameSize = UIUtils.createGraphicButton(glyphKeep, "general.configuration.stage.size.keep.ratio");
         buttonKeepRatioFrameSize.getStyleClass().add("button-without-padding");
         buttonKeepRatioFrameSize.setMinWidth(20.0);

@@ -30,9 +30,9 @@ import org.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.util.model.Triple;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.editaction.LCProfileActions;
-import org.lifecompanion.controller.editmode.ProfileConfigSelectionController;
-import org.lifecompanion.controller.editmode.ProfileConfigStep;
-import org.lifecompanion.controller.resource.LCGlyphFont;
+import org.lifecompanion.controller.profileconfigselect.ProfileConfigSelectionController;
+import org.lifecompanion.controller.profileconfigselect.ProfileConfigStep;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
@@ -59,11 +59,11 @@ public class ProfileAddView extends BorderPane implements LCViewInitHelper, Prof
         // Action grid
         GridPane gridPaneActions = new GridPane();
         this.buttonCreateNew = ConfigUIUtils.createActionTableEntry(0, "profile.selection.create.new.profile.button",
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.PLUS_CIRCLE).size(30).color(LCGraphicStyle.MAIN_DARK), gridPaneActions);
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.PLUS_CIRCLE).size(30).color(LCGraphicStyle.MAIN_DARK), gridPaneActions);
         this.buttonImport = ConfigUIUtils.createActionTableEntry(2, "profile.selection.create.import.profile.button",
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.DOWNLOAD).size(30).color(LCGraphicStyle.MAIN_DARK), gridPaneActions);
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.DOWNLOAD).size(30).color(LCGraphicStyle.MAIN_DARK), gridPaneActions);
         this.buttonDuplicate = ConfigUIUtils.createActionTableEntry(4, "profile.selection.create.duplicate.profile.button",
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.COPY).size(30).color(LCGraphicStyle.MAIN_DARK), gridPaneActions);
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.COPY).size(30).color(LCGraphicStyle.MAIN_DARK), gridPaneActions);
         BorderPane.setMargin(gridPaneActions, new Insets(10.0));
         BorderPane.setAlignment(gridPaneActions, Pos.CENTER);
 

@@ -34,8 +34,8 @@ import java.util.Arrays;
  *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
-public class LCGlyphFont {
-    private final static Logger LOGGER = LoggerFactory.getLogger(LCGlyphFont.class);
+public class GlyphFontHelper {
+    private final static Logger LOGGER = LoggerFactory.getLogger(GlyphFontHelper.class);
 
     // Class part : "Icon font"
     //========================================================================
@@ -46,19 +46,19 @@ public class LCGlyphFont {
      * Load the web font.
      */
     public static void loadFont() {
-        //Override the default ControlFX FontAwesome : local font is a up to date version and offline
+        //Override the default ControlFX FontAwesome : local font is an up-to-date offline version
         try {
             try (InputStream fais = ResourceHelper.getInputStreamForPath("/font/fontawesome-webfont.ttf")) {
                 GlyphFontRegistry.register("FontAwesome", fais, 14);
-                LCGlyphFont.FONT_AWESOME = GlyphFontRegistry.font("FontAwesome");
-                LCGlyphFont.FONT_AWESOME.registerAll(Arrays.asList(FontAwesome.Glyph.values()));
+                GlyphFontHelper.FONT_AWESOME = GlyphFontRegistry.font("FontAwesome");
+                GlyphFontHelper.FONT_AWESOME.registerAll(Arrays.asList(FontAwesome.Glyph.values()));
             }
             //Allow Enum usage
             try (InputStream miis = ResourceHelper.getInputStreamForPath("/font/MaterialIcons-Regular.ttf")) {
                 GlyphFontRegistry.register("Material Icons", miis, 14);
-                LCGlyphFont.FONT_MATERIAL = GlyphFontRegistry.font("Material Icons");
+                GlyphFontHelper.FONT_MATERIAL = GlyphFontRegistry.font("Material Icons");
             }
-            LCGlyphFont.LOGGER.info("Icon fonts loaded");
+            GlyphFontHelper.LOGGER.info("Icon fonts loaded");
         } catch (IOException e) {
             LOGGER.error("Error when loading icon fonts", e);
         }

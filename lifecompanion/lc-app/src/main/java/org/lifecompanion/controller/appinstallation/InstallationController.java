@@ -28,7 +28,7 @@ import org.lifecompanion.ui.notification.LCNotificationController;
 import org.lifecompanion.controller.appinstallation.task.*;
 import org.lifecompanion.controller.editaction.GlobalActions;
 import org.lifecompanion.controller.lifecycle.AppModeController;
-import org.lifecompanion.controller.plugin.PluginManager;
+import org.lifecompanion.controller.plugin.PluginController;
 import org.lifecompanion.controller.resource.ResourceHelper;
 import org.lifecompanion.framework.client.http.AppServerClient;
 import org.lifecompanion.framework.client.props.ApplicationBuildProperties;
@@ -291,7 +291,7 @@ public enum InstallationController implements LCStateListener {
 
     private void tryToAddPluginAfterDownload(Pair<ApplicationPluginUpdate, File> updatedPlugin) {
         try {
-            Pair<String, PluginInfo> added = PluginManager.INSTANCE.tryToAddPluginFrom(updatedPlugin.getRight());
+            Pair<String, PluginInfo> added = PluginController.INSTANCE.tryToAddPluginFrom(updatedPlugin.getRight());
             showPluginUpdateNotification(added.getRight());
         } catch (Exception e) {
             LOGGER.error("Couldn't add the plugin for {}", updatedPlugin.getRight());

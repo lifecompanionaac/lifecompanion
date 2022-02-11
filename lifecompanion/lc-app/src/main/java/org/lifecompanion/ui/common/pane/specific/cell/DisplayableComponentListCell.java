@@ -24,7 +24,7 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.OverrunStyle;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
-import org.lifecompanion.controller.editmode.NodeSnapshotCache;
+import org.lifecompanion.controller.editmode.DisplayableComponentSnapshotController;
 import org.lifecompanion.model.api.configurationcomponent.DisplayableComponentI;
 import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.util.UIUtils;
@@ -54,7 +54,7 @@ public class DisplayableComponentListCell<T extends DisplayableComponentI> exten
 
         this.itemProperty().addListener((obs, ov, nv) -> {
             if (ov != null) {
-                NodeSnapshotCache.INSTANCE.cancelRequestSnapshot(ov);
+                DisplayableComponentSnapshotController.INSTANCE.cancelRequestSnapshot(ov);
             }
         });
     }
@@ -68,7 +68,7 @@ public class DisplayableComponentListCell<T extends DisplayableComponentI> exten
         } else {
             this.textProperty().bind(item.nameProperty());
             componentSnapshot.setImage(null);
-            NodeSnapshotCache.INSTANCE.requestSnapshot(item, -1, CELL_SIZE, (comp, image) -> {
+            DisplayableComponentSnapshotController.INSTANCE.requestSnapshot(item, -1, CELL_SIZE, (comp, image) -> {
                 if (this.getItem() == comp) {
                     componentSnapshot.setImage(image);
                 }

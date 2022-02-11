@@ -28,7 +28,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.TextInputControl;
 import javafx.scene.input.MouseEvent;
-import org.lifecompanion.controller.userconfiguration.UserBaseConfiguration;
+import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
 import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.framework.utils.FluentHashMap;
 import org.lifecompanion.framework.utils.LCNamedThreadFactory;
@@ -44,13 +44,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public enum SystemVirtualKeyboardHelper {
+public enum SystemVirtualKeyboardController {
     INSTANCE;
 
     private static final long EVENT_DISTANCE_TIMING_THRESHOLD = 300;
     private static final long TOUCH_EVENT_DISTANCE_TIMING_THRESHOLD = 10_000;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(SystemVirtualKeyboardHelper.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SystemVirtualKeyboardController.class);
 
 
     private final static Map<SystemVirtualKeyboardType, String> CMDS = FluentHashMap
@@ -67,7 +67,7 @@ public enum SystemVirtualKeyboardHelper {
 
     private final Map<Scene, Runnable> registredScenes;
 
-    SystemVirtualKeyboardHelper() {
+    SystemVirtualKeyboardController() {
         vkTaskRunning = new AtomicBoolean(false);
         registredScenes = new HashMap<>();
         if (SystemType.current() == SystemType.WINDOWS) {
@@ -123,7 +123,7 @@ public enum SystemVirtualKeyboardHelper {
     }
 
     public void showIfEnabled() {
-        if (SystemType.current() == SystemType.WINDOWS && UserBaseConfiguration.INSTANCE.autoVirtualKeyboardShowProperty().get() && touchEventWasDetectedAtLeastOnce) {
+        if (SystemType.current() == SystemType.WINDOWS && UserConfigurationController.INSTANCE.autoVirtualKeyboardShowProperty().get() && touchEventWasDetectedAtLeastOnce) {
             launchShowTask();
         }
     }
@@ -132,7 +132,7 @@ public enum SystemVirtualKeyboardHelper {
     // TOOLS/LAUNCH
     //========================================================================
     private void checkIfShowTouchKeyboard(final TextInputControl closestTextInputControl) {
-        if (UserBaseConfiguration.INSTANCE.autoVirtualKeyboardShowProperty().get()) {
+        if (UserConfigurationController.INSTANCE.autoVirtualKeyboardShowProperty().get()) {
             long now = System.currentTimeMillis();
             if ((now - lastTouchEvent) < TOUCH_EVENT_DISTANCE_TIMING_THRESHOLD && ((now - lastFocusOwnerChange) < EVENT_DISTANCE_TIMING_THRESHOLD || closestTextInputControl != null)) {
                 launchShowTask();

@@ -19,7 +19,7 @@
 package org.lifecompanion.ui.app.categorizedelement.useevent;
 
 import org.lifecompanion.model.api.categorizedelement.useevent.UseEventGeneratorI;
-import org.lifecompanion.controller.categorizedelement.useevent.AvailableUseEventManager;
+import org.lifecompanion.controller.categorizedelement.useevent.AvailableUseEventController;
 import org.lifecompanion.ui.common.pane.specific.cell.AbstractCategorizedItemView;
 
 import java.util.function.Consumer;
@@ -27,6 +27,6 @@ import java.util.function.Consumer;
 public class UseEventItemView extends AbstractCategorizedItemView<UseEventGeneratorI> {
 
     public UseEventItemView(UseEventGeneratorI item, final Consumer<UseEventGeneratorI> selectionCallbackP) {
-        super(item, selectionCallbackP, AvailableUseEventManager.INSTANCE::createUseEvent);
+        super(item, selectionCallbackP, AvailableUseEventController.INSTANCE::createUseEvent);
     }
 }

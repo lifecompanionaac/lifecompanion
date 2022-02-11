@@ -36,7 +36,7 @@ import java.util.function.Consumer;
  * This can represent events related to JavaFX input stack (directly fired on stage) but also on external device (on Windows only, see {@link WinAutoHotKeyKeyboardReceiverController}).<br>
  * This class was created to keep listeners on a same semantic level no matter they input source was.
  */
-public enum GlobalKeyEventManager implements ModeListenerI {
+public enum GlobalKeyEventController implements ModeListenerI {
     INSTANCE;
 
     /**
@@ -46,7 +46,7 @@ public enum GlobalKeyEventManager implements ModeListenerI {
 
     private final Set<KeyCode> blockedKeyCodes;
 
-    GlobalKeyEventManager() {
+    GlobalKeyEventController() {
         this.keyEventListener = new HashSet<>();
         this.blockedKeyCodes = new HashSet<>();
     }

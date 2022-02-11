@@ -28,7 +28,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import org.controlsfx.control.ToggleSwitch;
 import org.lifecompanion.util.UIUtils;
-import org.lifecompanion.controller.userconfiguration.UserBaseConfiguration;
+import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
 import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.framework.commons.translation.Translation;
@@ -154,31 +154,31 @@ public class StageConfigSubmenu extends ScrollPane implements UserConfigSubmenuI
 
     @Override
     public void updateFields() {
-        this.spinnerFrameWidth.getValueFactory().setValue(UserBaseConfiguration.INSTANCE.mainFrameWidthProperty().get());
-        this.spinnerFrameHeight.getValueFactory().setValue(UserBaseConfiguration.INSTANCE.mainFrameHeightProperty().get());
-        this.spinnerStrokeSize.getValueFactory().setValue(UserBaseConfiguration.INSTANCE.selectionStrokeSizeProperty().get());
-        this.spinnerDashSize.getValueFactory().setValue(UserBaseConfiguration.INSTANCE.selectionDashSizeProperty().get());
-        this.toggleEnableFullScreen.setSelected(UserBaseConfiguration.INSTANCE.launchMaximizedProperty().get());
-        this.toggleEnableTipsStartup.setSelected(UserBaseConfiguration.INSTANCE.showTipsOnStartupProperty().get());
+        this.spinnerFrameWidth.getValueFactory().setValue(UserConfigurationController.INSTANCE.mainFrameWidthProperty().get());
+        this.spinnerFrameHeight.getValueFactory().setValue(UserConfigurationController.INSTANCE.mainFrameHeightProperty().get());
+        this.spinnerStrokeSize.getValueFactory().setValue(UserConfigurationController.INSTANCE.selectionStrokeSizeProperty().get());
+        this.spinnerDashSize.getValueFactory().setValue(UserConfigurationController.INSTANCE.selectionDashSizeProperty().get());
+        this.toggleEnableFullScreen.setSelected(UserConfigurationController.INSTANCE.launchMaximizedProperty().get());
+        this.toggleEnableTipsStartup.setSelected(UserConfigurationController.INSTANCE.showTipsOnStartupProperty().get());
         this.spinnerUnsavedModification.getValueFactory()
-                .setValue(UserBaseConfiguration.INSTANCE.unsavedChangeInConfigurationThresholdProperty().get());
-        this.toggleEnableLaunchLCSystemStartup.setSelected(UserBaseConfiguration.INSTANCE.launchLCSystemStartupProperty().get());
-        this.toggleEnableRecordAndSendSessionStats.setSelected(UserBaseConfiguration.INSTANCE.recordAndSendSessionStatsProperty().get());
-        this.toggleEnableAutoShowVirtualKeyboard.setSelected(UserBaseConfiguration.INSTANCE.autoVirtualKeyboardShowProperty().get());
+                .setValue(UserConfigurationController.INSTANCE.unsavedChangeInConfigurationThresholdProperty().get());
+        this.toggleEnableLaunchLCSystemStartup.setSelected(UserConfigurationController.INSTANCE.launchLCSystemStartupProperty().get());
+        this.toggleEnableRecordAndSendSessionStats.setSelected(UserConfigurationController.INSTANCE.recordAndSendSessionStatsProperty().get());
+        this.toggleEnableAutoShowVirtualKeyboard.setSelected(UserConfigurationController.INSTANCE.autoVirtualKeyboardShowProperty().get());
     }
 
     @Override
     public void updateModel() {
-        UserBaseConfiguration.INSTANCE.mainFrameWidthProperty().set(this.spinnerFrameWidth.getValue());
-        UserBaseConfiguration.INSTANCE.mainFrameHeightProperty().set(this.spinnerFrameHeight.getValue());
-        UserBaseConfiguration.INSTANCE.launchMaximizedProperty().set(this.toggleEnableFullScreen.isSelected());
-        UserBaseConfiguration.INSTANCE.selectionStrokeSizeProperty().set(this.spinnerStrokeSize.getValue());
-        UserBaseConfiguration.INSTANCE.selectionDashSizeProperty().set(this.spinnerDashSize.getValue());
-        UserBaseConfiguration.INSTANCE.showTipsOnStartupProperty().set(this.toggleEnableTipsStartup.isSelected());
-        UserBaseConfiguration.INSTANCE.unsavedChangeInConfigurationThresholdProperty().set(this.spinnerUnsavedModification.getValue());
-        UserBaseConfiguration.INSTANCE.launchLCSystemStartupProperty().set(toggleEnableLaunchLCSystemStartup.isSelected());
-        UserBaseConfiguration.INSTANCE.recordAndSendSessionStatsProperty().set(toggleEnableRecordAndSendSessionStats.isSelected());
-        UserBaseConfiguration.INSTANCE.autoVirtualKeyboardShowProperty().set(this.toggleEnableAutoShowVirtualKeyboard.isSelected());
+        UserConfigurationController.INSTANCE.mainFrameWidthProperty().set(this.spinnerFrameWidth.getValue());
+        UserConfigurationController.INSTANCE.mainFrameHeightProperty().set(this.spinnerFrameHeight.getValue());
+        UserConfigurationController.INSTANCE.launchMaximizedProperty().set(this.toggleEnableFullScreen.isSelected());
+        UserConfigurationController.INSTANCE.selectionStrokeSizeProperty().set(this.spinnerStrokeSize.getValue());
+        UserConfigurationController.INSTANCE.selectionDashSizeProperty().set(this.spinnerDashSize.getValue());
+        UserConfigurationController.INSTANCE.showTipsOnStartupProperty().set(this.toggleEnableTipsStartup.isSelected());
+        UserConfigurationController.INSTANCE.unsavedChangeInConfigurationThresholdProperty().set(this.spinnerUnsavedModification.getValue());
+        UserConfigurationController.INSTANCE.launchLCSystemStartupProperty().set(toggleEnableLaunchLCSystemStartup.isSelected());
+        UserConfigurationController.INSTANCE.recordAndSendSessionStatsProperty().set(toggleEnableRecordAndSendSessionStats.isSelected());
+        UserConfigurationController.INSTANCE.autoVirtualKeyboardShowProperty().set(this.toggleEnableAutoShowVirtualKeyboard.isSelected());
     }
 
     @Override

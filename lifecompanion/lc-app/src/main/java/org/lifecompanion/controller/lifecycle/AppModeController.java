@@ -23,14 +23,14 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.stage.Stage;
-import org.lifecompanion.controller.configurationcomponent.GlobalKeyEventManager;
+import org.lifecompanion.controller.configurationcomponent.GlobalKeyEventController;
 import org.lifecompanion.controller.configurationcomponent.NoteKeyController;
 import org.lifecompanion.controller.configurationcomponent.UseModeProgressDisplayerController;
 import org.lifecompanion.controller.configurationcomponent.dynamickey.KeyListController;
 import org.lifecompanion.controller.configurationcomponent.dynamickey.UserActionSequenceController;
 import org.lifecompanion.controller.editaction.AsyncExecutorController;
 import org.lifecompanion.controller.profile.ProfileController;
-import org.lifecompanion.controller.categorizedelement.useaction.UserActionController;
+import org.lifecompanion.controller.categorizedelement.useaction.UseActionController;
 import org.lifecompanion.controller.selectionmode.SelectionModeController;
 import org.lifecompanion.controller.textcomponent.WritingStateController;
 import org.lifecompanion.controller.usevariable.UseVariableController;
@@ -48,13 +48,13 @@ import org.lifecompanion.controller.virtualkeyboard.VirtualKeyboardController;
 import org.lifecompanion.controller.virtualkeyboard.WinAutoHotKeyKeyboardReceiverController;
 import org.lifecompanion.controller.virtualmouse.VirtualMouseController;
 import org.lifecompanion.model.impl.imagedictionary.ImageDictionaries;
-import org.lifecompanion.controller.io.IOManager;
-import org.lifecompanion.controller.media.SoundPlayer;
-import org.lifecompanion.controller.plugin.PluginManager;
+import org.lifecompanion.controller.io.IOHelper;
+import org.lifecompanion.controller.media.SoundPlayerController;
+import org.lifecompanion.controller.plugin.PluginController;
 import org.lifecompanion.controller.voicesynthesizer.VoiceSynthesizerController;
 import org.lifecompanion.controller.editaction.LCConfigurationActions;
 import org.lifecompanion.controller.editmode.ConfigActionController;
-import org.lifecompanion.ui.ConfigUseScene;
+import org.lifecompanion.ui.UseModeScene;
 import org.lifecompanion.ui.UseModeStage;
 
 import java.util.Arrays;
@@ -158,23 +158,23 @@ public enum AppModeController {
     }
 
     private static final List<ModeListenerI> USE_MODE_LISTENERS = Arrays.asList(//
-            PluginManager.INSTANCE,
+            PluginController.INSTANCE,
             WordPredictionController.INSTANCE, //
             VirtualKeyboardController.INSTANCE, //
             VirtualMouseController.INSTANCE, //
             WritingStateController.INSTANCE, //
             CustomCharPredictionController.INSTANCE, //
             AutoCharPredictionController.INSTANCE, //
-            UserActionController.INSTANCE, //
+            UseActionController.INSTANCE, //
             UseVariableController.INSTANCE, //
             KeyListController.INSTANCE, //
             UserActionSequenceController.INSTANCE, //
             UseModeProgressDisplayerController.INSTANCE, //
-            SoundPlayer.INSTANCE, //
+            SoundPlayerController.INSTANCE, //
             VoiceSynthesizerController.INSTANCE, //
             NoteKeyController.INSTANCE, //
             ImageDictionaries.INSTANCE,//
-            GlobalKeyEventManager.INSTANCE,//
+            GlobalKeyEventController.INSTANCE,//
             WinAutoHotKeyKeyboardReceiverController.INSTANCE, //
             SelectionModeController.INSTANCE//Selection in last, because it will start scanning
     );
@@ -184,12 +184,12 @@ public enum AppModeController {
         final LCConfigurationI configuration = useModeContext.configurationProperty().get();
         final LCConfigurationDescriptionI configurationDescription = useModeContext.configurationDescription.get();
 
-        final LCTask<ConfigUseScene> startUseMode = new LCTask<>("change.mode.task.title") {
+        final LCTask<UseModeScene> startUseMode = new LCTask<>("change.mode.task.title") {
             @Override
-            protected ConfigUseScene call() {
-                final ConfigUseScene useScene = new ConfigUseScene(configuration);
+            protected UseModeScene call() {
+                final UseModeScene useScene = new UseModeScene(configuration);
                 useScene.initAll();
-                IOManager.INSTANCE.loadUseInformation(configuration);
+                IOHelper.loadUseInformation(configuration);
                 USE_MODE_LISTENERS.forEach(modeListenerI -> modeListenerI.modeStart(configuration));
                 SessionStatsController.INSTANCE.modeStarted(AppMode.USE, configuration);
                 return useScene;
@@ -210,7 +210,7 @@ public enum AppModeController {
             final LCConfigurationI configuration = useModeContext.configurationProperty().get();
             if (configuration != null) {
                 USE_MODE_LISTENERS.forEach(modeListenerI -> modeListenerI.modeStop(configuration));
-                IOManager.INSTANCE.saveUseInformation(configuration);
+                IOHelper.saveUseInformation(configuration);
             }
             SessionStatsController.INSTANCE.modeStopped(AppMode.USE);
             useModeContext.cleanAfterStop();

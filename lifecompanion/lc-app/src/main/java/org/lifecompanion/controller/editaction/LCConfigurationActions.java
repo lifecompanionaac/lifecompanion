@@ -46,17 +46,17 @@ import org.lifecompanion.model.impl.configurationcomponent.LCConfigurationCompon
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.profile.ProfileController;
-import org.lifecompanion.controller.editmode.ProfileConfigSelectionController;
-import org.lifecompanion.controller.editmode.ProfileConfigStep;
+import org.lifecompanion.controller.profileconfigselect.ProfileConfigSelectionController;
+import org.lifecompanion.controller.profileconfigselect.ProfileConfigStep;
 import org.lifecompanion.controller.io.task.ExportGridsToPdfTask;
 import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.controller.editmode.FileChooserType;
 import org.lifecompanion.controller.editmode.LCStateController;
 import org.lifecompanion.model.impl.notification.LCNotification;
 import org.lifecompanion.util.ConfigUIUtils;
-import org.lifecompanion.controller.editmode.LCFileChooser;
+import org.lifecompanion.controller.editmode.LCFileChoosers;
 import org.lifecompanion.ui.common.control.specific.selector.ConfigurationSelectorControl;
-import org.lifecompanion.controller.editmode.NodeSnapshotCache;
+import org.lifecompanion.controller.editmode.DisplayableComponentSnapshotController;
 import org.lifecompanion.ui.notification.LCNotificationController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
@@ -207,7 +207,7 @@ public class LCConfigurationActions {
             LCProfileI currentProfile = ProfileController.INSTANCE.currentProfileProperty().get();
             currentProfile.getConfiguration().add(0, this.configDescription);
             //Save the configuration
-            ConfigurationSavingTask saveTask = IOManager.INSTANCE
+            ConfigurationSavingTask saveTask = IOHelper
                     .createSaveConfigurationTask(this.configDescription.loadedConfigurationProperty().get(), currentProfile);
             try {
                 LCUtils.executeInCurrentThread(saveTask);
@@ -239,7 +239,7 @@ public class LCConfigurationActions {
         @Override
         public void doAction() throws LCException {
             final LCProfileI profile = ProfileController.INSTANCE.currentProfileProperty().get();
-            final ConfigurationDuplicateTask configurationDuplicateTask = IOManager.INSTANCE.createConfigurationDuplicateTaskFromDefaultConfigurationDir(defaultConfiguration.getLeft(), defaultConfiguration.getRight(), profile);
+            final ConfigurationDuplicateTask configurationDuplicateTask = IOHelper.createConfigurationDuplicateTaskFromDefaultConfigurationDir(defaultConfiguration.getLeft(), defaultConfiguration.getRight(), profile);
             configurationDuplicateTask.setOnSucceeded(e -> {
                 // Add to profile and then open
                 LCConfigurationDescriptionI duplicated = configurationDuplicateTask.getValue();
@@ -302,13 +302,13 @@ public class LCConfigurationActions {
             }
 
             //Create the task
-            ConfigurationSavingTask saveConfigTask = IOManager.INSTANCE.createSaveConfigurationTask(configuration, currentProfile);
+            ConfigurationSavingTask saveConfigTask = IOHelper.createSaveConfigurationTask(configuration, currentProfile);
             LCConfigurationDescriptionI configDescription = AppModeController.INSTANCE.getEditModeContext().configurationDescriptionProperty().get();
             // Update the config description image because we are on JavaFX Thread
             // Unknown bug : snapshot can sometimes fail
             try {
                 // FIXME : bad background style on configuration
-                configDescription.configurationImageProperty().set(NodeSnapshotCache.getComponentSnapshot(configuration, false, -1, -1));
+                configDescription.configurationImageProperty().set(DisplayableComponentSnapshotController.getComponentSnapshot(configuration, false, -1, -1));
             } catch (Throwable t) {
                 LCConfigurationActions.LOGGER.warn("Couldn't take a snapshot of configuration", t);
             }
@@ -404,7 +404,7 @@ public class LCConfigurationActions {
                 if (selectedConfigurationDescription != null) {
                     // Duplicate selected configuration on profile
                     LCProfileI currentProfile = ProfileController.INSTANCE.currentProfileProperty().get();
-                    ConfigurationDuplicateTask duplicateTask = IOManager.INSTANCE.createConfigurationDuplicateTaskFromCurrentProfile(selectedConfigurationDescription, currentProfile);
+                    ConfigurationDuplicateTask duplicateTask = IOHelper.createConfigurationDuplicateTaskFromCurrentProfile(selectedConfigurationDescription, currentProfile);
                     duplicateTask.setOnSucceeded(e -> {
                         // Add duplicated
                         LCConfigurationDescriptionI duplicate = duplicateTask.getValue();
@@ -450,14 +450,14 @@ public class LCConfigurationActions {
             //Choose the file
             LCProfileI currentProfile = ProfileController.INSTANCE.currentProfileProperty().get();
             if (this.configurationPath == null) {
-                FileChooser configChooser = LCFileChooser.getChooserConfiguration(FileChooserType.CONFIG_IMPORT);
+                FileChooser configChooser = LCFileChoosers.getChooserConfiguration(FileChooserType.CONFIG_IMPORT);
                 this.configurationPath = configChooser.showOpenDialog(UIUtils.getSourceWindow(source));
             }
             if (this.configurationPath != null) {
                 LCStateController.INSTANCE.updateDefaultDirectory(FileChooserType.CONFIG_IMPORT, this.configurationPath.getParentFile());
 
                 //Check if configuration file is valid and already exist ?
-                ConfigurationImportTask configurationImportTask = IOManager.INSTANCE.createConfigurationImport(currentProfile, this.configurationPath);
+                ConfigurationImportTask configurationImportTask = IOHelper.createConfigurationImport(currentProfile, this.configurationPath);
                 String importedConfigurationID = configurationImportTask.getImportedConfigurationID();
                 LCConfigurationDescriptionI previousConfigDescription = currentProfile.getConfigurationById(importedConfigurationID);
 
@@ -527,7 +527,7 @@ public class LCConfigurationActions {
                 if (result == null) {
                     oncePreviousConfigurationHadBeenHandled.run();
                 } else if (result == typeKeepBoth) {
-                    ConfigurationDuplicateTask duplicateTask = IOManager.INSTANCE.createConfigurationDuplicateTaskFromCurrentProfileChangeIdOnly(previousConfigDescription, currentProfile);
+                    ConfigurationDuplicateTask duplicateTask = IOHelper.createConfigurationDuplicateTaskFromCurrentProfileChangeIdOnly(previousConfigDescription, currentProfile);
                     duplicateTask.setOnSucceeded(e -> {
                         LCConfigurationDescriptionI duplicated = duplicateTask.getValue();
                         currentProfile.getConfiguration().add(0, duplicated);
@@ -593,14 +593,14 @@ public class LCConfigurationActions {
             }
 
             GlobalActions.checkModificationForCurrentConfiguration(StringUtils.isEquals(configurationDescription.getConfigurationId(), currentConfiguration.getID()), this, source, Translation.getText("export.config.action.confirm.message"), "export.config.action.confirm.button", () -> {
-                FileChooser configChooser = LCFileChooser.getChooserConfiguration(FileChooserType.CONFIG_EXPORT);
+                FileChooser configChooser = LCFileChoosers.getChooserConfiguration(FileChooserType.CONFIG_EXPORT);
                 // Issue #139 : default name for configuration
-                configChooser.setInitialFileName(IOManager.DATE_FORMAT_FILENAME_WITHOUT_TIME.format(new Date()) + "_"
+                configChooser.setInitialFileName(IOHelper.DATE_FORMAT_FILENAME_WITHOUT_TIME.format(new Date()) + "_"
                         + LCUtils.getValidFileName(configurationDescription.configurationNameProperty().get()));
                 File configExportFile = configChooser.showSaveDialog(UIUtils.getSourceWindow(source));
                 if (configExportFile != null) {
                     LCStateController.INSTANCE.updateDefaultDirectory(FileChooserType.CONFIG_EXPORT, configExportFile.getParentFile());
-                    ConfigurationExportTask exportConfigTask = IOManager.INSTANCE.createConfigurationExportTask(configurationDescription, currentProfile,
+                    ConfigurationExportTask exportConfigTask = IOHelper.createConfigurationExportTask(configurationDescription, currentProfile,
                             configExportFile);
                     //Execute
                     AsyncExecutorController.INSTANCE.addAndExecute(true, false, exportConfigTask);
@@ -629,8 +629,8 @@ public class LCConfigurationActions {
             LCConfigurationI currentConfiguration = AppModeController.INSTANCE.getEditModeContext().configurationProperty().get();
             LCConfigurationDescriptionI currentConfigurationDescription = AppModeController.INSTANCE.getEditModeContext().configurationDescriptionProperty().get();
 
-            FileChooser configChooser = LCFileChooser.getOtherFileChooser(Translation.getText("pdf.export.chooser.dialog.title"), new FileChooser.ExtensionFilter("PDF", "*.pdf"), EXPORT_PDF);
-            configChooser.setInitialFileName(Translation.getText("pdf.export.default.file.name", IOManager.DATE_FORMAT_FILENAME_WITHOUT_TIME.format(new Date()), LCUtils.getValidFileName(currentConfigurationDescription.configurationNameProperty().get())));
+            FileChooser configChooser = LCFileChoosers.getOtherFileChooser(Translation.getText("pdf.export.chooser.dialog.title"), new FileChooser.ExtensionFilter("PDF", "*.pdf"), EXPORT_PDF);
+            configChooser.setInitialFileName(Translation.getText("pdf.export.default.file.name", IOHelper.DATE_FORMAT_FILENAME_WITHOUT_TIME.format(new Date()), LCUtils.getValidFileName(currentConfigurationDescription.configurationNameProperty().get())));
 
             File pdfFile = configChooser.showSaveDialog(UIUtils.getSourceWindow(source));
             if (pdfFile != null) {
@@ -694,9 +694,9 @@ public class LCConfigurationActions {
                 LCProfileI currentProfile = ProfileController.INSTANCE.currentProfileProperty().get();
                 // Check plugin dependencies
                 PluginActions.warnOnPluginDependencies(source,
-                        new File(IOManager.INSTANCE.getConfigurationPath(currentProfile.getID(), configDescription.getConfigurationId()) + File.separator + LCConstant.CONFIGURATION_XML_NAME),
+                        new File(IOHelper.getConfigurationPath(currentProfile.getID(), configDescription.getConfigurationId()) + File.separator + LCConstant.CONFIGURATION_XML_NAME),
                         () -> {
-                            ConfigurationLoadingTask loadTask = IOManager.INSTANCE.createLoadConfigurationTask(this.configDescription, currentProfile);
+                            ConfigurationLoadingTask loadTask = IOHelper.createLoadConfigurationTask(this.configDescription, currentProfile);
                             loadTask.setOnSucceeded((ea) -> {
                                 //Set current configuration
                                 AppModeController.INSTANCE.switchEditModeConfiguration(loadTask.getValue(), this.configDescription);
@@ -757,7 +757,7 @@ public class LCConfigurationActions {
     private static void saveConfigurationDescription(final LCConfigurationDescriptionI configDescription) throws LCException {
         LCProfileI profile = ProfileController.INSTANCE.currentProfileProperty().get();
         try {
-            ConfigurationDescriptionSavingTask configDescriptionSaveTask = IOManager.INSTANCE.createSaveConfigDescriptionTask(configDescription,
+            ConfigurationDescriptionSavingTask configDescriptionSaveTask = IOHelper.createSaveConfigDescriptionTask(configDescription,
                     profile);
             LCUtils.executeInCurrentThread(configDescriptionSaveTask);
             LCConfigurationActions.LOGGER.info("Configuration description saved for {}", configDescription.getConfigurationId());
@@ -858,8 +858,8 @@ public class LCConfigurationActions {
      * Backup the removed configuration to a hidden directory, then remove the configuration and directory and configuration from the list.
      */
     private static void backupThenDeleteConfigurationDirectory(LCConfigurationDescriptionI configurationDescription, LCProfileI profile, boolean deleteConfigurationDirectory, Runnable postAction) {
-        ConfigurationBackupAndThenTask backupConfigurationTask = IOManager.INSTANCE.createConfigurationBackupTask(configurationDescription, profile, IOManager.INSTANCE.getBackupConfigurationDestinationPath(configurationDescription), deleteConfigurationDirectory ? () -> {
-            final File configDir = new File(IOManager.INSTANCE.getConfigurationDirectoryPath(profile.getID(), configurationDescription.getConfigurationId()));
+        ConfigurationBackupAndThenTask backupConfigurationTask = IOHelper.createConfigurationBackupTask(configurationDescription, profile, IOHelper.getBackupConfigurationDestinationPath(configurationDescription), deleteConfigurationDirectory ? () -> {
+            final File configDir = new File(IOHelper.getConfigurationDirectoryPath(profile.getID(), configurationDescription.getConfigurationId()));
             // Now try to delete configuration directory (may fail sometimes if resources are not cleared, that's why we also delete directories on startup)
             IOUtils.deleteDirectoryAndChildren(configDir);
         } : null);

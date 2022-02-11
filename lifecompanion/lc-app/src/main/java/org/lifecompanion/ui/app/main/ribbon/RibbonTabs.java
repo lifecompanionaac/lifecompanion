@@ -31,12 +31,12 @@ import javafx.scene.shape.Circle;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.fxmisc.easybind.EasyBind;
 import org.lifecompanion.controller.lifecycle.AppModeController;
-import org.lifecompanion.controller.resource.LCGlyphFont;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.ui.app.main.ribbon.available.RibbonTabAction;
 import org.lifecompanion.ui.app.main.ribbon.available.RibbonTabHome;
 import org.lifecompanion.ui.app.main.ribbon.available.RibbonTabSelected;
 import org.lifecompanion.ui.app.main.ribbon.available.RibbonTabStyle;
-import org.lifecompanion.ui.ConfigurationScene;
+import org.lifecompanion.ui.EditModeScene;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 
 /**
@@ -58,7 +58,7 @@ public class RibbonTabs extends StackPane implements LCViewInitHelper {
         //Create buttons
         this.buttonMenu = new Button();
         this.buttonMenu.setBackground(null);
-        this.buttonMenu.setGraphic(LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.BARS).sizeFactor(2).color(Color.WHITE));
+        this.buttonMenu.setGraphic(GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.BARS).sizeFactor(2).color(Color.WHITE));
         this.buttonMenu.setShape(new Circle(32.0));
         this.buttonMenu.setStyle("-fx-background-color:-fx-main-primary;");
         StackPane.setAlignment(this.buttonMenu, Pos.TOP_LEFT);
@@ -95,7 +95,7 @@ public class RibbonTabs extends StackPane implements LCViewInitHelper {
     public void initListener() {
         //Button behavior
         this.buttonMenu.setOnAction(ea -> {
-            ConfigurationScene scene = (ConfigurationScene) AppModeController.INSTANCE.getEditModeContext().getStage().getScene();
+            EditModeScene scene = (EditModeScene) AppModeController.INSTANCE.getEditModeContext().getStage().getScene();
             scene.switchMenu();
         });
     }

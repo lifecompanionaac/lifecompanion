@@ -39,7 +39,7 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
-import org.lifecompanion.controller.resource.IconManager;
+import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.lifecycle.AppModeController;
@@ -116,7 +116,7 @@ public class UIUtils {
     }
 
     public static Button createRightTextButton(final String label, final String imageURL, final String tooltipTranslationID) {
-        return UIUtils.createRightTextButton(label, new ImageView(IconManager.get(imageURL, -1, UIUtils.BUTTON_MAX_HEIGHT, true, true)),
+        return UIUtils.createRightTextButton(label, new ImageView(IconHelper.get(imageURL, -1, UIUtils.BUTTON_MAX_HEIGHT, true, true)),
                 tooltipTranslationID);
     }
 
@@ -135,7 +135,7 @@ public class UIUtils {
     }
 
     public static Button createTextButtonWithIcon(final String label, final String imageURL, final String tooltipTranslationID) {
-        return UIUtils.createTextButtonWithGraphics(label, new ImageView(IconManager.get(imageURL, -1, UIUtils.BUTTON_MAX_HEIGHT, true, true)),
+        return UIUtils.createTextButtonWithGraphics(label, new ImageView(IconHelper.get(imageURL, -1, UIUtils.BUTTON_MAX_HEIGHT, true, true)),
                 tooltipTranslationID);
     }
 
@@ -148,7 +148,7 @@ public class UIUtils {
     }
 
     public static ToggleButton createTextToggleButton(final String label, final String imageURL, final String tooltipTranslationID) {
-        return UIUtils.createGraphicsToggleButton(label, new ImageView(IconManager.get(imageURL, -1, UIUtils.BUTTON_MAX_HEIGHT, true, true)),
+        return UIUtils.createGraphicsToggleButton(label, new ImageView(IconHelper.get(imageURL, -1, UIUtils.BUTTON_MAX_HEIGHT, true, true)),
                 tooltipTranslationID);
     }
 
@@ -426,7 +426,7 @@ public class UIUtils {
     public static void applyDefaultStageConfiguration(Stage stage) {
         stage.setTitle(LCConstant.NAME);
         stage.setForceIntegerRenderScale(LCGraphicStyle.FORCE_INTEGER_RENDER_SCALE);
-        stage.getIcons().add(IconManager.get(LCConstant.LC_ICON_PATH));
+        stage.getIcons().add(IconHelper.get(LCConstant.LC_ICON_PATH));
     }
     //========================================================================
 }

@@ -39,7 +39,7 @@ import org.lifecompanion.model.api.ui.editmode.AddTypeEnum;
 import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.dynamickey.KeyListNodeKeyOption;
 import org.lifecompanion.model.impl.configurationcomponent.GridPartKeyComponent;
-import org.lifecompanion.controller.resource.IconManager;
+import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.controller.configurationcomponent.dynamickey.KeyListController;
 import org.lifecompanion.model.impl.imagedictionary.ImageDictionaries;
 import org.lifecompanion.model.impl.categorizedelement.useaction.available.MoveToGridAction;
@@ -92,7 +92,7 @@ public class GridPartKeyViewConfig extends GridPartKeyViewBase {
             //Get the enum for the value
             if (option != null) {
                 if (option.getIconUrl() != null) {
-                    this.imageViewOptionType.setImage(IconManager.get(option.getIconUrl(), 16, 16, true, true));
+                    this.imageViewOptionType.setImage(IconHelper.get(option.getIconUrl(), 16, 16, true, true));
                 } else {
                     this.imageViewOptionType.setImage(null);
                 }

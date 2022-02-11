@@ -20,7 +20,7 @@ package org.lifecompanion.model.impl.categorizedelement.useaction;
 
 import javafx.beans.property.*;
 import org.jdom2.Element;
-import org.lifecompanion.controller.io.IOHelper;
+import org.lifecompanion.controller.io.ConfigurationComponentIOHelper;
 import org.lifecompanion.model.api.configurationcomponent.DuplicableComponentI;
 import org.lifecompanion.model.api.categorizedelement.useaction.BaseUseActionI;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
@@ -158,7 +158,7 @@ public abstract class BaseUseActionImpl<T extends UseActionTriggerComponentI> im
     public Element serialize(final IOContextI contextP) {
         //Create base component
         Element xmlElement = new Element(BaseUseActionI.NODE_ACTION);
-        IOHelper.addTypeAlias(this, xmlElement, contextP);
+        ConfigurationComponentIOHelper.addTypeAlias(this, xmlElement, contextP);
         return xmlElement;
     }
 

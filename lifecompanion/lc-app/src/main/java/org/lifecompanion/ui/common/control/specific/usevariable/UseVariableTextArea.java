@@ -30,7 +30,7 @@ import org.lifecompanion.model.api.ui.editmode.ConfigurationProfileLevelEnum;
 import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.usevariable.UseVariableController;
-import org.lifecompanion.controller.resource.LCGlyphFont;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
@@ -64,7 +64,7 @@ public class UseVariableTextArea extends BorderPane implements LCViewInitHelper 
         //Button
         this.boxButtons = new HBox();
         this.buttonAddVariable = UIUtils.createLeftTextButton(Translation.getText("use.variable.insert.to.text.button"),
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.CHAIN).size(16).color(LCGraphicStyle.MAIN_PRIMARY),
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CHAIN).size(16).color(LCGraphicStyle.MAIN_PRIMARY),
                 "tooltip.use.variable.add.to.text");
         this.boxButtons.getChildren().addAll(this.buttonAddVariable);
 

@@ -24,7 +24,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.controller.metrics.SessionStatsController;
-import org.lifecompanion.controller.systemvk.SystemVirtualKeyboardHelper;
+import org.lifecompanion.controller.systemvk.SystemVirtualKeyboardController;
 
 public class CategorizedContentScene extends Scene {
     private final BorderPane borderPane;
@@ -33,7 +33,7 @@ public class CategorizedContentScene extends Scene {
         super(new BorderPane());
         this.borderPane = (BorderPane) this.getRoot();
         this.getStylesheets().addAll(LCConstant.CSS_STYLE_PATH);
-        SystemVirtualKeyboardHelper.INSTANCE.registerScene(this);
+        SystemVirtualKeyboardController.INSTANCE.registerScene(this);
         SessionStatsController.INSTANCE.registerScene(this);
     }
 

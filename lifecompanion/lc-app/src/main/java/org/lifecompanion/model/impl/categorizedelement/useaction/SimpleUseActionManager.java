@@ -22,7 +22,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import org.jdom2.Element;
-import org.lifecompanion.controller.io.IOHelper;
+import org.lifecompanion.controller.io.ConfigurationComponentIOHelper;
 import org.lifecompanion.model.api.categorizedelement.useaction.BaseUseActionI;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionManagerI;
@@ -196,7 +196,7 @@ public class SimpleUseActionManager implements UseActionManagerI {
     public Element serialize(final IOContextI contextP) {
         //This action manager
         Element xmlElement = new Element(SimpleUseActionManager.NODE_USE_ACTION_MANAGER);
-        IOHelper.addTypeAlias(this, xmlElement, contextP);
+        ConfigurationComponentIOHelper.addTypeAlias(this, xmlElement, contextP);
         //Create base for each action
         Element actionsEventNode = new Element(SimpleUseActionManager.NODE_ACTIONS_EVENT);
         xmlElement.addContent(actionsEventNode);
@@ -234,7 +234,7 @@ public class SimpleUseActionManager implements UseActionManagerI {
             for (Element actionNode : eventNodeChildren) {
                 try {
                     //Read the action and add it
-                    Pair<Boolean, XMLSerializable<IOContextI>> useActionResult = IOHelper.create(actionNode, contextP, null);
+                    Pair<Boolean, XMLSerializable<IOContextI>> useActionResult = ConfigurationComponentIOHelper.create(actionNode, contextP, null);
                     if (!useActionResult.getLeft()) {
                         BaseUseActionI<?> useAction = (BaseUseActionI<?>) useActionResult.getRight();
                         useAction.deserialize(actionNode, contextP);

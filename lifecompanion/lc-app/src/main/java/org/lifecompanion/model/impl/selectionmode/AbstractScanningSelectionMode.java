@@ -34,7 +34,7 @@ import org.lifecompanion.model.api.categorizedelement.useaction.ActionExecutionR
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
 import org.lifecompanion.controller.selectionmode.SelectionModeController;
-import org.lifecompanion.controller.categorizedelement.useaction.UserActionController;
+import org.lifecompanion.controller.categorizedelement.useaction.UseActionController;
 import org.lifecompanion.ui.selectionmode.AbstractSelectionModeView;
 import org.lifecompanion.model.api.selectionmode.*;
 import org.slf4j.Logger;
@@ -123,7 +123,7 @@ public abstract class AbstractScanningSelectionMode<T extends AbstractSelectionM
             SelectionModeController.INSTANCE.currentOverPartProperty().set(nv);// "Bind" the selection mode controller value
             if (ov instanceof UseActionTriggerComponentI) {
                 UseActionTriggerComponentI actionTriggerComp = (UseActionTriggerComponentI) ov;
-                UserActionController.INSTANCE.endEventOn(actionTriggerComp, UseActionEvent.OVER, null);
+                UseActionController.INSTANCE.endEventOn(actionTriggerComp, UseActionEvent.OVER, null);
             }
         });
     }
@@ -251,7 +251,7 @@ public abstract class AbstractScanningSelectionMode<T extends AbstractSelectionM
                     || this.callFireActionNoCurrentPart(FireActionEvent.ON_PRESS, skipAction) && this.currentPart.get() != null) {
                 //Actions
                 this.executeMouseEvent(FireActionEvent.ON_PRESS, skipAction, () -> this.simpleActionOnPress = true,
-                        (key, event) -> UserActionController.INSTANCE.startEventOn(key, event, null));
+                        (key, event) -> UseActionController.INSTANCE.startEventOn(key, event, null));
             }
         }
     }
@@ -274,7 +274,7 @@ public abstract class AbstractScanningSelectionMode<T extends AbstractSelectionM
                     this.executeMouseEvent(FireActionEvent.ON_RELEASE, skipAction, () -> {
                         pauseToExecuteSimpleActions = true;
                         this.pause();
-                    }, (key, event) -> UserActionController.INSTANCE.endEventOn(key, event, null));
+                    }, (key, event) -> UseActionController.INSTANCE.endEventOn(key, event, null));
                 }
             } else {
                 AbstractScanningSelectionMode.LOGGER.debug("Event selectionRelease was skipped because time to activation is not correct");
@@ -373,7 +373,7 @@ public abstract class AbstractScanningSelectionMode<T extends AbstractSelectionM
                         }
                         this.activationDone();
                         //After action execution, scanning restart, on simply play if grid changed
-                        UserActionController.INSTANCE.executeSimpleOn(keyPart, UseActionEvent.ACTIVATION, null, (result) -> {
+                        UseActionController.INSTANCE.executeSimpleOn(keyPart, UseActionEvent.ACTIVATION, null, (result) -> {
                             pauseToExecuteSimpleActions = false;
                             if (!this.restartScanningOnNextAction) {
                                 this.simpleActionOnPress = false;
@@ -442,7 +442,7 @@ public abstract class AbstractScanningSelectionMode<T extends AbstractSelectionM
         //Start over event
         if (newPart != null && this.currentPart.get() instanceof UseActionTriggerComponentI) {
             UseActionTriggerComponentI keyPart = (UseActionTriggerComponentI) this.currentPart.get();
-            UserActionController.INSTANCE.startEventOn(keyPart, UseActionEvent.OVER, null);
+            UseActionController.INSTANCE.startEventOn(keyPart, UseActionEvent.OVER, null);
             //Execute simple action
             if (keyPart.getActionManager().hasSimpleAction(UseActionEvent.OVER)) {
                 this.pause();
@@ -451,7 +451,7 @@ public abstract class AbstractScanningSelectionMode<T extends AbstractSelectionM
                 this.executingActionOnCurrentPart = true;
                 AbstractScanningSelectionMode.LOGGER.debug("Execute simple over action");
                 executeActionOver = true;
-                UserActionController.INSTANCE.executeSimpleOn(keyPart, UseActionEvent.OVER, null, actionAfterRunnable);
+                UseActionController.INSTANCE.executeSimpleOn(keyPart, UseActionEvent.OVER, null, actionAfterRunnable);
             }
         }
         if (firstScan && !executeActionOver) {

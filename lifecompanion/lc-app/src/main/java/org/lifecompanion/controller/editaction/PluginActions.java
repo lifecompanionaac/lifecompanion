@@ -32,13 +32,13 @@ import org.lifecompanion.controller.appinstallation.task.DownloadPluginTask;
 import org.lifecompanion.controller.appinstallation.InstallationController;
 import org.lifecompanion.controller.io.task.CheckElementPluginTask;
 import org.lifecompanion.model.impl.plugin.PluginInfo;
-import org.lifecompanion.controller.plugin.PluginManager;
+import org.lifecompanion.controller.plugin.PluginController;
 import org.lifecompanion.controller.editmode.ErrorHandlingController;
 import org.lifecompanion.controller.editmode.FileChooserType;
 import org.lifecompanion.controller.editmode.LCStateController;
 import org.lifecompanion.model.impl.notification.LCNotification;
 import org.lifecompanion.util.ConfigUIUtils;
-import org.lifecompanion.controller.editmode.LCFileChooser;
+import org.lifecompanion.controller.editmode.LCFileChoosers;
 import org.lifecompanion.ui.notification.LCNotificationController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
@@ -76,7 +76,7 @@ public class PluginActions {
 
     private static void addPluginFromFile(Node source, File pluginFile) {
         try {
-            String loadResult = PluginManager.INSTANCE.tryToAddPluginFrom(pluginFile).getLeft();
+            String loadResult = PluginController.INSTANCE.tryToAddPluginFrom(pluginFile).getLeft();
             Alert dialog = ConfigUIUtils.createAlert(source, Alert.AlertType.INFORMATION);
             dialog.setHeaderText(Translation.getText("plugin.loading.header.text.info"));
             dialog.setContentText(loadResult);
@@ -98,7 +98,7 @@ public class PluginActions {
         @Override
         public void doAction() throws LCException {
             showAddPluginWarningDialog(source);
-            FileChooser pluginFileChooser = LCFileChooser.getOtherFileChooser(Translation.getText("add.plugin.chooser.title"),
+            FileChooser pluginFileChooser = LCFileChoosers.getOtherFileChooser(Translation.getText("add.plugin.chooser.title"),
                     new FileChooser.ExtensionFilter(Translation.getText("file.type.plugin.jar"), Arrays.asList("*.jar")), FileChooserType.PLUGIN_ADD);
             File selectedPluginFile = pluginFileChooser.showOpenDialog(UIUtils.getSourceWindow(source));
             if (selectedPluginFile != null) {
@@ -171,7 +171,7 @@ public class PluginActions {
                 return;
             }
             // Delete it
-            PluginManager.INSTANCE.removePlugin(pluginInfo);
+            PluginController.INSTANCE.removePlugin(pluginInfo);
         }
 
         @Override

@@ -27,7 +27,7 @@ import org.lifecompanion.model.api.categorizedelement.useaction.UseActionSubCate
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
 import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.controller.io.ReflectionHelper;
-import org.lifecompanion.controller.plugin.PluginManager;
+import org.lifecompanion.controller.plugin.PluginController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,9 +38,9 @@ import java.util.List;
  *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
-public enum AvailableUseActionManager {
+public enum AvailableUseActionController {
     INSTANCE;
-    private final Logger LOGGER = LoggerFactory.getLogger(AvailableUseActionManager.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(AvailableUseActionController.class);
 
     /**
      * List that contains every action
@@ -55,7 +55,7 @@ public enum AvailableUseActionManager {
     /**
      * Private singleton constructor
      */
-    AvailableUseActionManager() {
+    AvailableUseActionController() {
         this.availableAction = FXCollections.observableArrayList();
         this.mainCategories = FXCollections.observableArrayList();
         this.initActionListListener();
@@ -72,7 +72,7 @@ public enum AvailableUseActionManager {
      */
     private void initActionListListener() {
         this.availableAction.addListener(LCUtils.createListChangeListener(this::addAction, null));
-        PluginManager.INSTANCE.getUseActions().registerListenerAndDrainCache(this::addActionType);
+        PluginController.INSTANCE.getUseActions().registerListenerAndDrainCache(this::addActionType);
     }
 
     /**

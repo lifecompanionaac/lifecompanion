@@ -38,18 +38,20 @@ import javafx.stage.Window;
 import org.controlsfx.control.ToggleSwitch;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.Glyph;
-import org.lifecompanion.controller.systemvk.SystemVirtualKeyboardHelper;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
+import org.lifecompanion.controller.resource.IconHelper;
+import org.lifecompanion.controller.systemvk.SystemVirtualKeyboardController;
+import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.model.api.ui.editmode.ConfigurationProfileLevelEnum;
-import org.lifecompanion.controller.resource.IconManager;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
-import org.lifecompanion.controller.resource.LCGlyphFont;
-import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.util.model.Triple;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -77,7 +79,7 @@ public class ConfigUIUtils {
         ConfigUIUtils.setDialogIcon(dialog);
         dialog.setTitle(LCConstant.NAME);
         dialog.initOwner(window);
-        SystemVirtualKeyboardHelper.INSTANCE.registerSceneFromDialog(dialog);
+        SystemVirtualKeyboardController.INSTANCE.registerSceneFromDialog(dialog);
         return dialog;
     }
 
@@ -88,7 +90,7 @@ public class ConfigUIUtils {
         stage.setTitle(LCConstant.NAME);
         stage.setWidth(width);
         stage.setHeight(height);
-        stage.getIcons().add(IconManager.get(LCConstant.LC_ICON_PATH));
+        stage.getIcons().add(IconHelper.get(LCConstant.LC_ICON_PATH));
         stage.setForceIntegerRenderScale(LCGraphicStyle.FORCE_INTEGER_RENDER_SCALE);
         return stage;
     }
@@ -103,14 +105,14 @@ public class ConfigUIUtils {
         dlg.setTitle(LCConstant.NAME);
         dlg.initOwner(window);
         dlg.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
-        SystemVirtualKeyboardHelper.INSTANCE.registerSceneFromDialog(dlg);
+        SystemVirtualKeyboardController.INSTANCE.registerSceneFromDialog(dlg);
         return dlg;
     }
 
 
     private static void setDialogIcon(final Dialog<?> dialog) {
         Stage ownerWindow = (Stage) dialog.getDialogPane().getScene().getWindow();
-        ownerWindow.getIcons().add(IconManager.get(LCConstant.LC_ICON_PATH));
+        ownerWindow.getIcons().add(IconHelper.get(LCConstant.LC_ICON_PATH));
     }
 
     //========================================================================
@@ -136,7 +138,7 @@ public class ConfigUIUtils {
         Node nodePrevious = null;
         if (previousCallback != null) {
             boxTop.getStyleClass().add("header-title-hoverable");
-            Glyph iconPrevious = LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.CHEVRON_LEFT).size(16).color(Color.WHITE);
+            Glyph iconPrevious = GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CHEVRON_LEFT).size(16).color(Color.WHITE);
             HBox.setMargin(iconPrevious, new Insets(10.0, 0.0, 10.0, 10.0));
             boxTop.getChildren().add(0, iconPrevious);
             boxTop.setOnMouseClicked(e -> {
@@ -154,9 +156,15 @@ public class ConfigUIUtils {
         return Triple.of(boxTop, labelTitle, nodePrevious);
     }
 
+    // FIXME : replace with action provider constructor
+    @Deprecated
     public static Button createActionTableEntry(int rowIndex, String actionTranslationId, Node buttonGraphic, GridPane gridPane) {
+        return createActionTableEntry(rowIndex, actionTranslationId, buttonGraphic, gridPane, null);
+    }
+
+    public static Button createActionTableEntry(int rowIndex, String actionTranslationId, Node buttonGraphic, GridPane gridPane, Runnable action) {
         Label labelTitle = new Label(Translation.getText(actionTranslationId + ".title"));
-        labelTitle.getStyleClass().add("action-grid-title");
+        labelTitle.getStyleClass().add("text-weight-bold");
         GridPane.setHgrow(labelTitle, Priority.ALWAYS);
         Label labelDescription = new Label(Translation.getText(actionTranslationId + ".description"));
         labelDescription.setWrapText(true);
@@ -167,6 +175,14 @@ public class ConfigUIUtils {
         gridPane.add(labelTitle, 0, rowIndex);
         gridPane.add(labelDescription, 0, rowIndex + 1);
         gridPane.add(buttonAction, 1, rowIndex, 1, 2);
+        if (action != null) {
+            // FIXME : hover should be "global" on line
+            List<Node> nodes = Arrays.asList(labelTitle, labelDescription, buttonAction);
+            for (Node node : nodes) {
+                node.getStyleClass().addAll("opacity-60-pressed", "opacity-80-hover");
+                node.setOnMouseClicked(me -> action.run());
+            }
+        }
         return buttonAction;
     }
     //========================================================================

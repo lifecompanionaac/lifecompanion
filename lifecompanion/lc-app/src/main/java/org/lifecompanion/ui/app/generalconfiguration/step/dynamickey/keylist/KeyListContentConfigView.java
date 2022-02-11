@@ -49,10 +49,10 @@ import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.configurationcomponent.dynamickey.KeyListLeaf;
 import org.lifecompanion.model.impl.configurationcomponent.dynamickey.KeyListLinkLeaf;
 import org.lifecompanion.model.impl.configurationcomponent.dynamickey.KeyListNode;
-import org.lifecompanion.controller.resource.IconManager;
+import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.editaction.KeyListActions;
-import org.lifecompanion.controller.resource.LCGlyphFont;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.model.impl.notification.LCNotification;
 import org.lifecompanion.ui.notification.LCNotificationController;
@@ -125,7 +125,7 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
 
         // TOP : list + add button
         this.buttonAddCategory = createActionButton(FontAwesome.Glyph.FOLDER, LCGraphicStyle.MAIN_PRIMARY, "tooltip.keylist.button.add.category");
-        this.buttonAddKey = createActionButton(new ImageView(IconManager.get("keylist/icon_add_leaf.png")), "tooltip.keylist.button.add.key");
+        this.buttonAddKey = createActionButton(new ImageView(IconHelper.get("keylist/icon_add_leaf.png")), "tooltip.keylist.button.add.key");
         this.buttonAddLinkKey = createActionButton(FontAwesome.Glyph.LINK, LCGraphicStyle.MAIN_PRIMARY, "tooltip.keylist.button.add.link");
         buttonMoveUp = createActionButton(FontAwesome.Glyph.CHEVRON_UP, LCGraphicStyle.MAIN_PRIMARY, "tooltip.keylist.button.move.up");
         buttonMoveDown = createActionButton(FontAwesome.Glyph.CHEVRON_DOWN, LCGraphicStyle.MAIN_PRIMARY, "tooltip.keylist.button.move.down");
@@ -161,11 +161,11 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         keyListTreeView.setFixedCellSize(KeyListCellHandler.CELL_HEIGHT + 5);
         HBox.setHgrow(keyListTreeView, Priority.ALWAYS);
 
-        this.buttonExportKeys = UIUtils.createLeftTextButton(Translation.getText("general.configuration.view.key.list.button.export.keys"), LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.UPLOAD).size(14).color(LCGraphicStyle.MAIN_DARK), null);
+        this.buttonExportKeys = UIUtils.createLeftTextButton(Translation.getText("general.configuration.view.key.list.button.export.keys"), GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.UPLOAD).size(14).color(LCGraphicStyle.MAIN_DARK), null);
         this.buttonExportKeys.setMaxWidth(Double.MAX_VALUE);
         this.buttonExportKeys.setAlignment(Pos.CENTER);
 
-        this.buttonImportKeys = UIUtils.createLeftTextButton(Translation.getText("general.configuration.view.key.list.button.import.keys"), LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.DOWNLOAD).size(14).color(LCGraphicStyle.MAIN_DARK), null);
+        this.buttonImportKeys = UIUtils.createLeftTextButton(Translation.getText("general.configuration.view.key.list.button.import.keys"), GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.DOWNLOAD).size(14).color(LCGraphicStyle.MAIN_DARK), null);
         this.buttonImportKeys.setMaxWidth(Double.MAX_VALUE);
         this.buttonImportKeys.setAlignment(Pos.CENTER);
 
@@ -190,7 +190,7 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         boxTreeAndCommands.setAlignment(Pos.CENTER);
         VBox.setVgrow(boxTreeAndCommands, Priority.ALWAYS);
 
-        buttonShowHideProperties = UIUtils.createLeftTextButton(Translation.getText("keylist.config.hide.key.properties"), LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.EYE_SLASH).size(18).color(LCGraphicStyle.MAIN_DARK), "TODO");
+        buttonShowHideProperties = UIUtils.createLeftTextButton(Translation.getText("keylist.config.hide.key.properties"), GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.EYE_SLASH).size(18).color(LCGraphicStyle.MAIN_DARK), "TODO");
         buttonShowHideProperties.setAlignment(Pos.CENTER_RIGHT);
 
         keyListNodePropertiesEditionView = new KeyListNodePropertiesEditionView();
@@ -203,13 +203,13 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
     }
 
     private Button createSearchBarButton(FontAwesome.Glyph icon, Color color, String tooltip, int size) {
-        final Button button = UIUtils.createGraphicButton(LCGlyphFont.FONT_AWESOME.create(icon).size(size).color(color), tooltip);
+        final Button button = UIUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(icon).size(size).color(color), tooltip);
         button.getStyleClass().add("padding-0");
         return button;
     }
 
     private Button createActionButton(FontAwesome.Glyph glyph, Color color, String tooltip) {
-        return createActionButton(LCGlyphFont.FONT_AWESOME.create(glyph).size(22).color(color), tooltip);
+        return createActionButton(GlyphFontHelper.FONT_AWESOME.create(glyph).size(22).color(color), tooltip);
     }
 
     private Button createActionButton(Node graphics, String tooltip) {
@@ -456,7 +456,7 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
                 createAndAddLinkForNode(nodeForLink);
                 current = currentParent;
                 if (current != null && current.parentProperty().get() != null) {
-                    selectionPathContainer.getChildren().add(0, LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.CHEVRON_RIGHT).size(10).color(LCGraphicStyle.MAIN_DARK));
+                    selectionPathContainer.getChildren().add(0, GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CHEVRON_RIGHT).size(10).color(LCGraphicStyle.MAIN_DARK));
                 }
             }
         }

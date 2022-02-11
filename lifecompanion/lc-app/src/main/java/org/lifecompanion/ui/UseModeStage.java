@@ -26,7 +26,7 @@ import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.profile.LCProfileI;
 import org.lifecompanion.util.LCUtils;
-import org.lifecompanion.controller.resource.IconManager;
+import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.util.javafx.StageUtils;
@@ -34,19 +34,19 @@ import org.lifecompanion.controller.editaction.GlobalActions;
 
 public class UseModeStage extends Stage {
 
-    public UseModeStage(LCProfileI profile, LCConfigurationI configuration, LCConfigurationDescriptionI configurationDescription, ConfigUseScene configUseScene) {
+    public UseModeStage(LCProfileI profile, LCConfigurationI configuration, LCConfigurationDescriptionI configurationDescription, UseModeScene useModeScene) {
         this.setForceIntegerRenderScale(LCGraphicStyle.FORCE_INTEGER_RENDER_SCALE);
         this.initStyle(StageStyle.DECORATED);
         this.setTitle(StageUtils.getStageDefaultTitle() +
                 (profile != null ? " - " + profile.nameProperty().get() : "") +
                 (configurationDescription != null ? " - " + configurationDescription.configurationNameProperty().get() : "")
         );
-        this.setScene(configUseScene);
+        this.setScene(useModeScene);
         this.setWidth(configuration.computedFrameWidthProperty().get());
         this.setHeight(configuration.computedFrameHeightProperty().get());
         this.opacityProperty().bind(configuration.frameOpacityProperty());
         this.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
-        this.getIcons().add(IconManager.get(LCConstant.LC_ICON_PATH));
+        this.getIcons().add(IconHelper.get(LCConstant.LC_ICON_PATH));
         this.setAlwaysOnTop(true);
         this.setOnCloseRequest((we) -> {
             we.consume();
@@ -58,12 +58,11 @@ public class UseModeStage extends Stage {
             StageUtils.moveStageTo(this, configuration.framePositionOnLaunchProperty().get());
         }
         if (configuration.virtualKeyboardProperty().get()) {
-            //LOGGER.info("Virtual keyboard detected for the stage, will change the focusable state for main stage");
             LCUtils.setFocusableSafe(this, false);
         }
         this.setOnHidden(e -> {
             this.opacityProperty().unbind();
-            configUseScene.unbindAndClean();
+            useModeScene.unbindAndClean();
         });
     }
 }

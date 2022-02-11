@@ -28,7 +28,7 @@ import org.lifecompanion.model.api.lifecycle.ModeListenerI;
 import org.lifecompanion.model.api.textcomponent.*;
 import org.lifecompanion.model.api.textprediction.WordPredictionI;
 import org.lifecompanion.model.impl.configurationcomponent.WriterEntry;
-import org.lifecompanion.controller.resource.IconManager;
+import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.model.impl.textcomponent.WritingControllerState;
 import org.lifecompanion.model.impl.textcomponent.WritingEvent;
 import org.lifecompanion.controller.textprediction.WordPredictionController;
@@ -455,7 +455,7 @@ public enum WritingStateController implements ModeListenerI, WritingStateControl
         if (getWriterEntries().isEmpty() && !AppModeController.INSTANCE.isUseMode()) {
             this.getWriterEntries().add(new WriterEntry(Translation.getText("text.editor.example.line1.first") + " ", false));
             WriterEntry imageEntry = new WriterEntry(Translation.getText("text.editor.example.line1.second") + " ", false);
-            imageEntry.imageProperty().set(new StaticImageElement(IconManager.get("example_image_entry.png")));
+            imageEntry.imageProperty().set(new StaticImageElement(IconHelper.get("example_image_entry.png")));
             this.getWriterEntries().add(imageEntry);
             this.getWriterEntries().add(new WriterEntry(Translation.getText("text.editor.example.line2"), false));
             this.moveCaretForward(WritingEventSource.SYSTEM);

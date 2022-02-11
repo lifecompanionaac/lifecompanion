@@ -41,7 +41,7 @@ import org.lifecompanion.controller.textprediction.WordPredictionController;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStep;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStepViewI;
 import org.lifecompanion.controller.editmode.GeneralConfigurationController;
-import org.lifecompanion.controller.resource.LCGlyphFont;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.ui.common.pane.specific.cell.BasePredictorDetailListCell;
 import org.lifecompanion.ui.common.pane.specific.cell.BasePredictorSimpleListCell;
 import org.lifecompanion.framework.commons.translation.Translation;
@@ -99,7 +99,7 @@ public class PredictorsConfigurationStepView extends BorderPane implements Gener
         this.comboboxWordPredictor.setButtonCell(new BasePredictorSimpleListCell<>());
         this.comboboxWordPredictor.setMaxWidth(Double.MAX_VALUE);
         this.buttonWordPredictionConfiguration = UIUtils.createRightTextButton(Translation.getText("general.configuration.predictors.button.configure.word.prediction"),
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.GEAR).size(20).color(LCGraphicStyle.MAIN_DARK),
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.GEAR).size(20).color(LCGraphicStyle.MAIN_DARK),
                 null);
         GridPane.setHalignment(buttonWordPredictionConfiguration, HPos.CENTER);
 
@@ -112,7 +112,7 @@ public class PredictorsConfigurationStepView extends BorderPane implements Gener
         this.comboboxCharPredictor.setMaxWidth(Double.MAX_VALUE);
         GridPane.setHgrow(comboboxCharPredictor, Priority.ALWAYS);
         this.buttonCharPredictionConfiguration = UIUtils.createRightTextButton(Translation.getText("general.configuration.predictors.button.configure.char.prediction"),
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.GEAR).size(20).color(LCGraphicStyle.MAIN_DARK),
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.GEAR).size(20).color(LCGraphicStyle.MAIN_DARK),
                 null);
         GridPane.setHalignment(buttonCharPredictionConfiguration, HPos.CENTER);
 

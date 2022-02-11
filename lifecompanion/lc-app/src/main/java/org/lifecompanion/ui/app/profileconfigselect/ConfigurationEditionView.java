@@ -40,9 +40,9 @@ import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.profile.ProfileController;
 import org.lifecompanion.controller.editaction.LCConfigurationActions;
-import org.lifecompanion.controller.editmode.ProfileConfigSelectionController;
-import org.lifecompanion.controller.editmode.ProfileConfigStep;
-import org.lifecompanion.controller.resource.LCGlyphFont;
+import org.lifecompanion.controller.profileconfigselect.ProfileConfigSelectionController;
+import org.lifecompanion.controller.profileconfigselect.ProfileConfigStep;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.framework.commons.SystemType;
@@ -119,7 +119,7 @@ public class ConfigurationEditionView extends BorderPane implements ProfileConfi
         labelExplainLaunchInUseMode.setWrapText(true);
 
         buttonValidate = UIUtils.createLeftTextButton(Translation.getText("profile.config.view.button.ok"),
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.CHECK).size(16).color(LCGraphicStyle.MAIN_PRIMARY), null);
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CHECK).size(16).color(LCGraphicStyle.MAIN_PRIMARY), null);
         GridPane.setHalignment(buttonValidate, HPos.RIGHT);
 
         // Info fields
@@ -140,12 +140,12 @@ public class ConfigurationEditionView extends BorderPane implements ProfileConfi
         // Actions
         GridPane gridPaneButton = new GridPane();
         this.buttonExport = ConfigUIUtils.createActionTableEntry(2, "configuration.selection.export.configuration.button",
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.UPLOAD).size(30).color(LCGraphicStyle.MAIN_DARK), gridPaneButton);
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.UPLOAD).size(30).color(LCGraphicStyle.MAIN_DARK), gridPaneButton);
         this.buttonRemove = ConfigUIUtils.createActionTableEntry(4, "configuration.selection.remove.configuration.button",
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.TRASH).size(30).color(LCGraphicStyle.SECOND_DARK), gridPaneButton);
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.TRASH).size(30).color(LCGraphicStyle.SECOND_DARK), gridPaneButton);
         if (SystemType.current() == SystemType.WINDOWS) {
             this.buttonDesktopShortcut = ConfigUIUtils.createActionTableEntry(6, "configuration.selection.create.desktop.link.button",
-                    LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.EXTERNAL_LINK).size(30).color(LCGraphicStyle.MAIN_DARK), gridPaneButton);
+                    GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.EXTERNAL_LINK).size(30).color(LCGraphicStyle.MAIN_DARK), gridPaneButton);
         }
 
         // Changelog entries

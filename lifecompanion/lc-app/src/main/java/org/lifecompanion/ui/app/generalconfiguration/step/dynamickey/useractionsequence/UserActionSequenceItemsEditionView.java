@@ -36,7 +36,7 @@ import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.configurationcomponent.dynamickey.UserActionSequenceItem;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStepViewI;
-import org.lifecompanion.controller.resource.LCGlyphFont;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.ui.app.generalconfiguration.step.dynamickey.CommonListViewActionContainer;
 import org.lifecompanion.ui.common.pane.specific.cell.DetailledSimplerKeyContentContainerListCell;
 import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
@@ -71,7 +71,7 @@ public class UserActionSequenceItemsEditionView extends ScrollPane implements LC
         fieldSequenceName.setPromptText(Translation.getText("sequence.configuration.view.field.sequence.name"));
         VBox.setMargin(fieldSequenceName, new Insets(0, 10, 0, 10));
 
-        buttonAddItem = UIUtils.createGraphicButton(LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.PLUS_CIRCLE).size(18).color(LCGraphicStyle.MAIN_DARK), null);
+        buttonAddItem = UIUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.PLUS_CIRCLE).size(18).color(LCGraphicStyle.MAIN_DARK), null);
 
         // Sequence items
         listViewItems = new ListView<>();

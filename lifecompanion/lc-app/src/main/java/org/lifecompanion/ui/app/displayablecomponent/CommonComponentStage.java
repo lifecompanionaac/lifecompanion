@@ -25,12 +25,12 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import org.lifecompanion.controller.resource.IconManager;
+import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.metrics.SessionStatsController;
 import org.lifecompanion.controller.editmode.SelectionController;
-import org.lifecompanion.controller.systemvk.SystemVirtualKeyboardHelper;
+import org.lifecompanion.controller.systemvk.SystemVirtualKeyboardController;
 
 public class CommonComponentStage extends Stage {
     private static CommonComponentStage instance;
@@ -47,7 +47,7 @@ public class CommonComponentStage extends Stage {
         commonComponentView = new CommonComponentView();
         commonComponentView.getStylesheets().addAll(LCConstant.CSS_STYLE_PATH);
         final Scene commonComponentScene = new Scene(commonComponentView);
-        SystemVirtualKeyboardHelper.INSTANCE.registerScene(commonComponentScene);
+        SystemVirtualKeyboardController.INSTANCE.registerScene(commonComponentScene);
         SessionStatsController.INSTANCE.registerScene(commonComponentScene);
         this.setScene(commonComponentScene);
         this.addEventFilter(KeyEvent.KEY_RELEASED, k -> {
@@ -58,7 +58,7 @@ public class CommonComponentStage extends Stage {
         });
         this.setOnShown(e -> commonComponentView.show(SelectionController.INSTANCE.selectedComponentBothProperty().get()));
         this.setOnHiding(e -> commonComponentView.hide());
-        this.getIcons().add(IconManager.get(LCConstant.LC_ICON_PATH));
+        this.getIcons().add(IconHelper.get(LCConstant.LC_ICON_PATH));
     }
 
     public static CommonComponentStage getInstance() {

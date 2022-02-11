@@ -19,7 +19,7 @@
 package org.lifecompanion.util;
 
 import org.jdom2.Element;
-import org.lifecompanion.controller.io.IOHelper;
+import org.lifecompanion.controller.io.ConfigurationComponentIOHelper;
 import org.lifecompanion.model.api.configurationcomponent.DuplicableComponentI;
 import org.lifecompanion.model.api.configurationcomponent.TreeIdentifiableComponentI;
 import org.lifecompanion.model.impl.exception.LCException;
@@ -69,7 +69,7 @@ public class CopyUtils {
         Element serialized = source.serialize(context);
         try {
             //Load serialized version
-            Pair<Boolean, XMLSerializable<IOContextI>> duplicatedResult = IOHelper.create(serialized, context, null);
+            Pair<Boolean, XMLSerializable<IOContextI>> duplicatedResult = ConfigurationComponentIOHelper.create(serialized, context, null);
             XMLSerializable<IOContextI> duplicated = duplicatedResult.getRight();
             duplicated.deserialize(serialized, context);
             if (changeID) {

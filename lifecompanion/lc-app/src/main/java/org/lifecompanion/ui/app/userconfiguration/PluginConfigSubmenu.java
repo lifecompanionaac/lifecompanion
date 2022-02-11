@@ -29,10 +29,10 @@ import org.lifecompanion.ui.common.pane.specific.cell.PluginInfoListCell;
 import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.model.impl.plugin.PluginInfo;
-import org.lifecompanion.controller.plugin.PluginManager;
+import org.lifecompanion.controller.plugin.PluginController;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStepViewI;
 import org.lifecompanion.controller.editaction.PluginActions;
-import org.lifecompanion.controller.resource.LCGlyphFont;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
@@ -49,17 +49,17 @@ public class PluginConfigSubmenu extends BorderPane implements LCViewInitHelper,
     public void initUI() {
         Label labelPluginList = UIUtils.createTitleLabel("general.configuration.view.step.plugin.list.plugin.label");
 
-        listViewPlugins = new ListView<>(PluginManager.INSTANCE.getPluginInfoList());
+        listViewPlugins = new ListView<>(PluginController.INSTANCE.getPluginInfoList());
         listViewPlugins.setCellFactory(lv -> new PluginInfoListCell(lv));
 
         VBox boxCenter = new VBox(10.0, labelPluginList, listViewPlugins);
 
         buttonAddPlugin = UIUtils.createRightTextButton(Translation.getText("general.configuration.view.step.plugin.add.button"),
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.PLUS_CIRCLE).size(22).color(LCGraphicStyle.MAIN_DARK), "TODO");
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.PLUS_CIRCLE).size(22).color(LCGraphicStyle.MAIN_DARK), "TODO");
         buttonAddPlugin.getStyleClass().add("button-icon-text-bigger");
 
         buttonAddPluginFromWeb = UIUtils.createRightTextButton(Translation.getText("general.configuration.view.step.plugin.add.from.repo.button"),
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.PLUS_CIRCLE).size(22).color(LCGraphicStyle.MAIN_DARK), "TODO");
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.PLUS_CIRCLE).size(22).color(LCGraphicStyle.MAIN_DARK), "TODO");
         buttonAddPluginFromWeb.getStyleClass().add("button-icon-text-bigger");
 
         VBox boxButtons = new VBox(10.0, buttonAddPlugin, buttonAddPluginFromWeb);

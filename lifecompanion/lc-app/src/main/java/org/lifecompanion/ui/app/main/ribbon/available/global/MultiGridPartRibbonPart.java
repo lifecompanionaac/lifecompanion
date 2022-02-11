@@ -31,7 +31,7 @@ import org.lifecompanion.model.api.configurationcomponent.SpanModifiableComponen
 import org.lifecompanion.model.api.ui.editmode.ConfigurationProfileLevelEnum;
 import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.configurationcomponent.DisplayableComponentBaseImpl;
-import org.lifecompanion.controller.resource.IconManager;
+import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.controller.editaction.GridActions.*;
 import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.controller.editmode.SelectionController;
@@ -218,7 +218,7 @@ public class MultiGridPartRibbonPart extends RibbonBasePart<DisplayableComponent
                 this.setGraphic(null);
                 this.setText(null);
             } else {
-                imageView.setImage(IconManager.get(item.iconPath));
+                imageView.setImage(IconHelper.get(item.iconPath));
                 this.setGraphic(imageView);
                 this.setText(Translation.getText(item.name));
             }

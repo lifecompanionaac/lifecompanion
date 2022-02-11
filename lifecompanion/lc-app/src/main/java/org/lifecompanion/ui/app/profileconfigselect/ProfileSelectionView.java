@@ -38,9 +38,9 @@ import org.lifecompanion.controller.profile.ProfileController;
 import org.lifecompanion.controller.editaction.LCProfileActions;
 import org.lifecompanion.controller.editaction.LCProfileActions.ProfileExportAction;
 import org.lifecompanion.controller.editaction.LCProfileActions.RemoveProfileAction;
-import org.lifecompanion.controller.editmode.ProfileConfigSelectionController;
-import org.lifecompanion.controller.editmode.ProfileConfigStep;
-import org.lifecompanion.controller.resource.LCGlyphFont;
+import org.lifecompanion.controller.profileconfigselect.ProfileConfigSelectionController;
+import org.lifecompanion.controller.profileconfigselect.ProfileConfigStep;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.framework.commons.translation.Translation;
@@ -89,17 +89,17 @@ public class ProfileSelectionView extends BorderPane implements LCViewInitHelper
 
         //Create buttons
         this.buttonAdd = UIUtils.createGraphicMaterialButton(
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.PLUS_CIRCLE).size(40).color(LCGraphicStyle.SECOND_PRIMARY),
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.PLUS_CIRCLE).size(40).color(LCGraphicStyle.SECOND_PRIMARY),
                 "tooltip.profile.list.add");
         this.buttonRemove = UIUtils.createGraphicButton(
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.TRASH).size(20).color(LCGraphicStyle.SECOND_DARK), "tooltip.profile.list.remove");
-        this.buttonEdit = UIUtils.createGraphicButton(LCGlyphFont.FONT_MATERIAL.create('\uE254').size(22).color(LCGraphicStyle.MAIN_DARK),
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.TRASH).size(20).color(LCGraphicStyle.SECOND_DARK), "tooltip.profile.list.remove");
+        this.buttonEdit = UIUtils.createGraphicButton(GlyphFontHelper.FONT_MATERIAL.create('\uE254').size(22).color(LCGraphicStyle.MAIN_DARK),
                 "tooltip.profile.list.edit");
         this.buttonImport = UIUtils.createGraphicButton(
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.DOWNLOAD).size(20).color(LCGraphicStyle.MAIN_PRIMARY),
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.DOWNLOAD).size(20).color(LCGraphicStyle.MAIN_PRIMARY),
                 "tooltip.profile.list.import");
         this.buttonExport = UIUtils.createGraphicButton(
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.UPLOAD).size(20).color(LCGraphicStyle.MAIN_DARK), "tooltip.profile.list.export");
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.UPLOAD).size(20).color(LCGraphicStyle.MAIN_DARK), "tooltip.profile.list.export");
         //Place and style add
         StackPane.setAlignment(this.buttonAdd, Pos.TOP_LEFT);
         StackPane.setMargin(this.buttonAdd, new Insets(-30, 10, 5, -7));
@@ -115,7 +115,7 @@ public class ProfileSelectionView extends BorderPane implements LCViewInitHelper
         StackPane.setMargin(this.buttonImport, new Insets(-6, 0, 0, 0));
 
         buttonAddProfile = UIUtils.createRightTextButton(Translation.getText("profile.selection.add.profile.button"),
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.PLUS_CIRCLE).size(22).color(LCGraphicStyle.MAIN_PRIMARY), "profile.selection.add.profile.button.tooltip");
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.PLUS_CIRCLE).size(22).color(LCGraphicStyle.MAIN_PRIMARY), "profile.selection.add.profile.button.tooltip");
         buttonAddProfile.getStyleClass().add("button-icon-text-bigger");
         HBox bottomButtons = new HBox(10.0, buttonAddProfile);
         BorderPane.setMargin(bottomButtons, new Insets(0, 10.0, 10.0, 10.0));

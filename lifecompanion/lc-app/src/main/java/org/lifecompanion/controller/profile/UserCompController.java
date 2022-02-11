@@ -24,7 +24,7 @@ import org.lifecompanion.model.api.profile.UserCompDescriptionI;
 import org.lifecompanion.model.api.lifecycle.LCStateListener;
 import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.controller.editaction.AsyncExecutorController;
-import org.lifecompanion.controller.io.IOManager;
+import org.lifecompanion.controller.io.IOHelper;
 import org.lifecompanion.controller.io.task.MultiUserCompDescriptionLoadingTask;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.slf4j.Logger;
@@ -93,7 +93,7 @@ public enum UserCompController implements LCStateListener {
     public void lcStart() {
         ProfileController.INSTANCE.currentProfileProperty().addListener((obs, ov, nv) -> {
             if (nv != null) {
-                MultiUserCompDescriptionLoadingTask loadTask = IOManager.INSTANCE.createMultiUserCompDescriptionLoadingTask(nv);
+                MultiUserCompDescriptionLoadingTask loadTask = IOHelper.createMultiUserCompDescriptionLoadingTask(nv);
                 loadTask.setOnSucceeded(e -> {
                     List<UserCompDescriptionI> loadedComps = (List<UserCompDescriptionI>) e.getSource().getValue();
                     //Remove all delete

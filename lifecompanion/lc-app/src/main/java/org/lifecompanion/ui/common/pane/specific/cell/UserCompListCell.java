@@ -37,7 +37,7 @@ import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.controller.editaction.AsyncExecutorController;
 import org.lifecompanion.controller.profile.ProfileController;
-import org.lifecompanion.controller.io.IOManager;
+import org.lifecompanion.controller.io.IOHelper;
 import org.lifecompanion.controller.io.task.UserCompLoadingTask;
 import org.lifecompanion.controller.editaction.PluginActions;
 import org.lifecompanion.controller.editaction.UserCompActions.EditUserCompAction;
@@ -114,9 +114,9 @@ public class UserCompListCell extends ListCell<UserCompDescriptionI> {
                 // First, check plugin warning
                 LCProfileI currentProfile = ProfileController.INSTANCE.currentProfileProperty().get();
                 PluginActions.warnOnPluginDependencies(this,
-                        new File(IOManager.INSTANCE.getUserCompPath(currentProfile.getID(), item.getSavedComponentId()) + File.separator + LCConstant.USER_COMP_XML_NAME),
+                        new File(IOHelper.getUserCompPath(currentProfile.getID(), item.getSavedComponentId()) + File.separator + LCConstant.USER_COMP_XML_NAME),
                         () -> {
-                            UserCompLoadingTask loadTask = IOManager.INSTANCE.createUserCompLoadingTask(item, currentProfile);
+                            UserCompLoadingTask loadTask = IOHelper.createUserCompLoadingTask(item, currentProfile);
                             loadTask.setOnSucceeded(event -> LOGGER.info("User component loaded on first mouse press"));
                             loadTask.setOnFailed(event -> {
                                 Throwable error = event.getSource().getException();

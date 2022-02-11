@@ -37,7 +37,7 @@ import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.ui.common.pane.generic.AnimatedBorderPane;
 import org.lifecompanion.controller.editaction.SelectionModeActions;
 import org.lifecompanion.util.binding.LCConfigBindingUtils;
-import org.lifecompanion.controller.resource.LCGlyphFont;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.controller.editmode.SelectionController;
 import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.ui.common.pane.specific.selectionmode.SelectionModeMainParamView;
@@ -93,7 +93,7 @@ public class GridComponentSelectionModeRibbonPart extends RibbonBasePart<Selecti
         selectionModeSuppParamView.setPrefWidth(DIALOG_WIDTH - 10.0);
 
         this.buttonOpenSelectionModeConfiguration = UIUtils.createTextButtonWithGraphics(Translation.getText("selection.mode.use.configuration.grid.config.button"),
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.GEAR).sizeFactor(2).color(LCGraphicStyle.MAIN_DARK), "selection.mode.use.configuration.grid.config.button");
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.GEAR).sizeFactor(2).color(LCGraphicStyle.MAIN_DARK), "selection.mode.use.configuration.grid.config.button");
         buttonOpenSelectionModeConfiguration.setTextAlignment(TextAlignment.CENTER);
 
         this.toggleEnableParentSelectionMode = ConfigUIUtils.createToggleSwitch("selection.mode.use.configuration.mode",

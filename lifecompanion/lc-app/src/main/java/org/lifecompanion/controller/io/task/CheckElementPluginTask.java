@@ -21,7 +21,7 @@ package org.lifecompanion.controller.io.task;
 
 import org.lifecompanion.controller.io.XMLHelper;
 import org.lifecompanion.util.model.LCTask;
-import org.lifecompanion.controller.plugin.PluginManager;
+import org.lifecompanion.controller.plugin.PluginController;
 
 import java.io.File;
 
@@ -41,6 +41,6 @@ public class CheckElementPluginTask extends LCTask<String> {
 
     @Override
     protected String call() throws Exception {
-        return PluginManager.INSTANCE.checkPluginDependencies(XMLHelper.readXml(xmlFile));
+        return PluginController.INSTANCE.checkPluginDependencies(XMLHelper.readXml(xmlFile));
     }
 }

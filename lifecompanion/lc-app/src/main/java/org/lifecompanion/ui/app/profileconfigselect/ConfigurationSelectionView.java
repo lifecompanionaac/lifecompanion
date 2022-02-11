@@ -43,9 +43,9 @@ import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.profile.ProfileController;
 import org.lifecompanion.ui.common.pane.specific.ProfileIconView;
 import org.lifecompanion.controller.editaction.LCConfigurationActions;
-import org.lifecompanion.controller.editmode.ProfileConfigSelectionController;
-import org.lifecompanion.controller.editmode.ProfileConfigStep;
-import org.lifecompanion.controller.resource.LCGlyphFont;
+import org.lifecompanion.controller.profileconfigselect.ProfileConfigSelectionController;
+import org.lifecompanion.controller.profileconfigselect.ProfileConfigStep;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.framework.commons.translation.Translation;
@@ -105,7 +105,7 @@ public class ConfigurationSelectionView extends BorderPane implements ProfileCon
         this.labelProfileName = new Label();
         this.labelProfileName.getStyleClass().add("current-profile-in-config-list");
         buttonChangeProfile = UIUtils.createRightTextButton(Translation.getText("configuration.list.profile.change.action"),
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.REFRESH).size(14).color(LCGraphicStyle.MAIN_PRIMARY), null);
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.REFRESH).size(14).color(LCGraphicStyle.MAIN_PRIMARY), null);
         buttonChangeProfile.getStyleClass().add("button-in-current-profil-config-list");
         this.profileIconView = new ProfileIconView();
         this.profileIconView.setIconSizeFactor(0.6);
@@ -127,7 +127,7 @@ public class ConfigurationSelectionView extends BorderPane implements ProfileCon
         boxCenter.setPadding(new Insets(10.0));
 
         buttonAddConfiguration = UIUtils.createRightTextButton(Translation.getText("configuration.selection.add.configuration.button"),
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.PLUS_CIRCLE).size(22).color(LCGraphicStyle.MAIN_PRIMARY), "configuration.selection.add.configuration.button.tooltip");
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.PLUS_CIRCLE).size(22).color(LCGraphicStyle.MAIN_PRIMARY), "configuration.selection.add.configuration.button.tooltip");
         buttonAddConfiguration.getStyleClass().add("button-icon-text-bigger");
         HBox bottomButtons = new HBox(10.0, buttonAddConfiguration);
         bottomButtons.setAlignment(Pos.CENTER);

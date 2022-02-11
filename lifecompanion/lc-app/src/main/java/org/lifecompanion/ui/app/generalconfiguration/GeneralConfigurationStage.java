@@ -23,7 +23,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
-import org.lifecompanion.controller.resource.IconManager;
+import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 
@@ -41,7 +41,7 @@ public class GeneralConfigurationStage extends Stage {
         this.setResizable(LCGraphicStyle.TOOL_STAGE_RESIZABLE);
         this.setForceIntegerRenderScale(LCGraphicStyle.FORCE_INTEGER_RENDER_SCALE);
         this.setScene(generalConfigurationScene);
-        this.getIcons().add(IconManager.get(LCConstant.LC_ICON_PATH));
+        this.getIcons().add(IconHelper.get(LCConstant.LC_ICON_PATH));
         this.setOnShowing(we -> generalConfigurationScene.onShowing());
         this.setOnHiding(we -> generalConfigurationScene.onHiding());
         this.setOnCloseRequest(we -> {

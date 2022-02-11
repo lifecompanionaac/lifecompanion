@@ -83,6 +83,10 @@
    -fx-scale-y: 1.3;
 }
 
+.opacity-80-hover:hover {
+	-fx-opacity: 0.8;
+}
+
 .border-hover {
     -fx-border-width: 1.0;
     -fx-border-style: solid;
@@ -102,6 +106,11 @@
 .stroke-hover:hover {
    -fx-stroke-width: 1.0;
    -fx-stroke: dimgray;
+}
+
+/*== PRESSED ==*/
+.opacity-60-pressed:pressed {
+	-fx-opacity: 0.6;
 }
 
 /*== PADDING/MARGIN ==*/

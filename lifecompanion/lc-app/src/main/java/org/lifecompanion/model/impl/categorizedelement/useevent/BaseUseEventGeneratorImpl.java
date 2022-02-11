@@ -20,7 +20,7 @@ package org.lifecompanion.model.impl.categorizedelement.useevent;
 
 import javafx.beans.property.*;
 import org.jdom2.Element;
-import org.lifecompanion.controller.io.IOHelper;
+import org.lifecompanion.controller.io.ConfigurationComponentIOHelper;
 import org.lifecompanion.model.api.configurationcomponent.DuplicableComponentI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
@@ -156,7 +156,7 @@ public abstract class BaseUseEventGeneratorImpl implements UseEventGeneratorI {
     @Override
     public Element serialize(final IOContextI context) {
         Element element = new Element(BaseUseEventGeneratorImpl.NODE_USE_EVENT_GENERATOR);
-        IOHelper.addTypeAlias(this, element, context);
+        ConfigurationComponentIOHelper.addTypeAlias(this, element, context);
         //Action manager
         element.addContent(this.useActionManager.serialize(context));
         return element;

@@ -40,10 +40,10 @@ import java.util.concurrent.CountDownLatch;
  *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
-public enum SoundPlayer implements ModeListenerI {
+public enum SoundPlayerController implements ModeListenerI {
     INSTANCE;
 
-    private final Logger LOGGER = LoggerFactory.getLogger(SoundPlayer.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(SoundPlayerController.class);
 
     /**
      * Specific sound player that can be use on embedded devices
@@ -60,7 +60,7 @@ public enum SoundPlayer implements ModeListenerI {
      */
     private final CopyOnWriteArrayList<MediaPlayer> currentMediaPlayer;
 
-    SoundPlayer() {
+    SoundPlayerController() {
         this.disableSoundPlayer = new SimpleBooleanProperty(false);
         this.currentMediaPlayer = new CopyOnWriteArrayList<>();
     }

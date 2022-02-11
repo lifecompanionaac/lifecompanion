@@ -24,7 +24,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.lifecompanion.util.UIUtils;
-import org.lifecompanion.controller.resource.IconManager;
+import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 
@@ -53,7 +53,7 @@ public class CategorizedContentStage extends Stage {
         this.onHiddenListeners = new HashSet<>();
         this.categorizedContentScene = new CategorizedContentScene();
         this.setScene(categorizedContentScene);
-        this.getIcons().add(IconManager.get(LCConstant.LC_ICON_PATH));
+        this.getIcons().add(IconHelper.get(LCConstant.LC_ICON_PATH));
         this.setOnHidden(e -> onHiddenListeners.forEach(Runnable::run));
     }
 

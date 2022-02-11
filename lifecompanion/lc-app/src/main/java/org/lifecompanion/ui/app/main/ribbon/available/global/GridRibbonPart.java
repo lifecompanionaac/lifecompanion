@@ -28,7 +28,7 @@ import org.lifecompanion.controller.editaction.LCConfigurationComponentActions.E
 import org.lifecompanion.util.binding.LCConfigBindingUtils;
 import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
-import org.lifecompanion.controller.resource.LCGlyphFont;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.model.api.ui.editmode.ConfigurationProfileLevelEnum;
@@ -111,7 +111,7 @@ public class GridRibbonPart extends RibbonBasePart<LCConfigurationI> implements 
 	}
 
 	private ToggleButton createRadioButton(final String text, final char iconChar, final Color color, final String tooltipTranslationID) {
-		ToggleButton btn = UIUtils.createGraphicsToggleButton(text, LCGlyphFont.FONT_MATERIAL.create(iconChar).size(24).color(color),
+		ToggleButton btn = UIUtils.createGraphicsToggleButton(text, GlyphFontHelper.FONT_MATERIAL.create(iconChar).size(24).color(color),
 				tooltipTranslationID);
 		this.gridEnabledGroup.getToggles().add(btn);
 		return btn;

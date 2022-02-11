@@ -24,7 +24,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.collections.*;
 import javafx.scene.paint.Color;
 import org.jdom2.Element;
-import org.lifecompanion.controller.io.IOHelper;
+import org.lifecompanion.controller.io.ConfigurationComponentIOHelper;
 import org.lifecompanion.model.api.configurationcomponent.*;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.UserActionSequencesI;
@@ -44,10 +44,10 @@ import org.lifecompanion.model.impl.configurationcomponent.dynamickey.KeyListNod
 import org.lifecompanion.model.impl.configurationcomponent.dynamickey.UserActionSequences;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
-import org.lifecompanion.controller.style.StyleController2;
+import org.lifecompanion.controller.style.StyleController;
 import org.lifecompanion.util.debug.ConfigurationMemoryLeakChecker;
 import org.lifecompanion.model.impl.selectionmode.SelectionModeParameter;
-import org.lifecompanion.controller.plugin.PluginManager;
+import org.lifecompanion.controller.plugin.PluginController;
 import org.lifecompanion.model.impl.categorizedelement.useevent.UseEventManager;
 import org.lifecompanion.model.impl.voicesynthesizer.VoiceSynthesizerParameter;
 import org.lifecompanion.framework.commons.fx.io.XMLGenericProperty;
@@ -245,22 +245,22 @@ public class LCConfigurationComponent extends CoreDisplayableComponentBaseImpl i
         this.userActionSequences = new SimpleObjectProperty<>(new UserActionSequences());
         // Styles : create and bind to default values
         this.gridShapeStyle = new GridShapeCompStyle();
-        this.gridShapeStyle.parentComponentStyleProperty().set(StyleController2.INSTANCE.getDefaultShapeStyleForGrid());
+        this.gridShapeStyle.parentComponentStyleProperty().set(StyleController.INSTANCE.getDefaultShapeStyleForGrid());
         this.keyStyle = new KeyCompStyle();
-        this.keyStyle.parentComponentStyleProperty().set(StyleController2.INSTANCE.getDefaultKeyStyle());
+        this.keyStyle.parentComponentStyleProperty().set(StyleController.INSTANCE.getDefaultKeyStyle());
         this.keyTextStyle = new KeyTextCompStyle();
-        this.keyTextStyle.parentComponentStyleProperty().set(StyleController2.INSTANCE.getDefaultTextStyleForKey());
+        this.keyTextStyle.parentComponentStyleProperty().set(StyleController.INSTANCE.getDefaultTextStyleForKey());
         this.textDisplayerShapeStyle = new TextDisplayerShapeCompStyle();
-        this.textDisplayerShapeStyle.parentComponentStyleProperty().set(StyleController2.INSTANCE.getDefaultShapeStyleForTextEditor());
+        this.textDisplayerShapeStyle.parentComponentStyleProperty().set(StyleController.INSTANCE.getDefaultShapeStyleForTextEditor());
         this.textDisplayerTextStyle = new TextDisplayerTextCompStyle();
-        this.textDisplayerTextStyle.parentComponentStyleProperty().set(StyleController2.INSTANCE.getDefaultTextStyleForTextEditor());
+        this.textDisplayerTextStyle.parentComponentStyleProperty().set(StyleController.INSTANCE.getDefaultTextStyleForTextEditor());
 
         this.initListener();
         //Useful to be able to create configuration copy via XML serialization
         //Done after every initialization, because the configuration is added to "All components"
         this.configurationParent.set(this);
         this.firstSelectionPart = new ComponentHolder<>(this.firstSelectionPartId, this.thisProperty);
-        this.pluginsConfigProperties = PluginManager.INSTANCE.getPluginConfigurationPropertiesMap(thisProperty);
+        this.pluginsConfigProperties = PluginController.INSTANCE.getPluginConfigurationPropertiesMap(thisProperty);
 
         ConfigurationMemoryLeakChecker.registerConfiguration(this);
     }
@@ -909,7 +909,7 @@ public class LCConfigurationComponent extends CoreDisplayableComponentBaseImpl i
         //Virtual mouse
         node.addContent(this.virtualMouseParameter.serialize(ioContext));
         //Serialize dependencies
-        IOHelper.serializeComponentDependencies(ioContext, this, node);
+        ConfigurationComponentIOHelper.serializeComponentDependencies(ioContext, this, node);
         return node;
     }
 
@@ -919,7 +919,7 @@ public class LCConfigurationComponent extends CoreDisplayableComponentBaseImpl i
     @Override
     public void deserialize(final Element node, final IOContextI ioContext) throws LCException {
         super.deserialize(node, ioContext);
-        IOHelper.deserializeComponentDependencies(ioContext, this, node);
+        ConfigurationComponentIOHelper.deserializeComponentDependencies(ioContext, this, node);
         //Voice synthesizer
         Element voiceParameterNode = node.getChild(VoiceSynthesizerParameter.NODE_VOICE_PARAMETERS);
         this.voiceSynthesizerParameter.deserialize(voiceParameterNode, ioContext);
@@ -957,7 +957,7 @@ public class LCConfigurationComponent extends CoreDisplayableComponentBaseImpl i
         List<RootGraphicComponentI> loadedComponents = new ArrayList<>(childrenList.size() + 5);
         for (Element childElement : childrenList) {
             //Load and add
-            Pair<Boolean, XMLSerializable<IOContextI>> childComponentResult = IOHelper.create(childElement, ioContext, null);
+            Pair<Boolean, XMLSerializable<IOContextI>> childComponentResult = ConfigurationComponentIOHelper.create(childElement, ioContext, null);
             if (!childComponentResult.getLeft()) {
                 RootGraphicComponentI childComponent = (RootGraphicComponentI) childComponentResult.getRight();
                 childComponent.deserialize(childElement, ioContext);

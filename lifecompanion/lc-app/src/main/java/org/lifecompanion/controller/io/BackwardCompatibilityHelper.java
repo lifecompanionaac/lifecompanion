@@ -26,7 +26,7 @@ import org.lifecompanion.framework.utils.FluentHashMap;
  *
  * @author Mathieu THEBAUD
  */
-public class LCBackwardCompatibility {
+public class BackwardCompatibilityHelper {
 
     private static final FluentHashMap<String, String> PREVIOUS_TYPE_CORRESPONDANCES = FluentHashMap
             // Components

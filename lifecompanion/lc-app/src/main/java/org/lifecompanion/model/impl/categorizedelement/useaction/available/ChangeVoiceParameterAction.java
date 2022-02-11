@@ -32,7 +32,7 @@ import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseAction
 import org.lifecompanion.model.api.voicesynthesizer.VoiceAndSynthesizerInfoI;
 import org.lifecompanion.model.api.voicesynthesizer.VoiceSynthesizerI;
 import org.lifecompanion.model.api.voicesynthesizer.VoiceSynthesizerParameterI;
-import org.lifecompanion.controller.categorizedelement.useaction.UserActionController;
+import org.lifecompanion.controller.categorizedelement.useaction.UseActionController;
 import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
 import org.lifecompanion.controller.voicesynthesizer.VoiceSynthesizerController;
 import org.lifecompanion.model.impl.voicesynthesizer.VoiceSynthesizerInfoImpl;
@@ -93,7 +93,7 @@ public class ChangeVoiceParameterAction extends SimpleUseActionImpl<UseActionTri
             }
             //If we restore, try to restore previous setting at the end
             if (this.restore) {
-                UserActionController.INSTANCE.getEndOfSimpleActionExecutionListener(UseActionEvent.ACTIVATION).add((r) -> {
+                UseActionController.INSTANCE.getEndOfSimpleActionExecutionListener(UseActionEvent.ACTIVATION).add((r) -> {
                     syntParam.selectedVoiceSynthesizerProperty().set(this.previousVoiceSynthesizer);
                     syntParam.getVoiceParameter().voiceIdProperty().set(this.previousVoiceId);
                     VoiceSynthesizerController.INSTANCE.selectCorrectVoice(syntParam.getVoiceParameter(), this.previousVoiceSynthesizer);

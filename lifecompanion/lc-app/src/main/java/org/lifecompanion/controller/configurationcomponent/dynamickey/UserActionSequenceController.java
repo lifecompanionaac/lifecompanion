@@ -21,7 +21,7 @@ package org.lifecompanion.controller.configurationcomponent.dynamickey;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
-import org.lifecompanion.controller.categorizedelement.useaction.UserActionController;
+import org.lifecompanion.controller.categorizedelement.useaction.UseActionController;
 import org.lifecompanion.controller.configurationcomponent.UseModeProgressDisplayerController;
 import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
 import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
@@ -185,7 +185,7 @@ public enum UserActionSequenceController implements ModeListenerI {
                     } else {
                         UseModeProgressDisplayerController.INSTANCE.hideAllProgress();
                     }
-                    UserActionController.INSTANCE.executeSimpleDetachedActionsInNewThread(currentItemKeyAndKeyOption.get().getLeft(), currentItemKeyAndKeyOption.get().getRight().getActionsToExecuteOnStart(), result -> tempDisableNextAndPrevious.decrementAndGet());
+                    UseActionController.INSTANCE.executeSimpleDetachedActionsInNewThread(currentItemKeyAndKeyOption.get().getLeft(), currentItemKeyAndKeyOption.get().getRight().getActionsToExecuteOnStart(), result -> tempDisableNextAndPrevious.decrementAndGet());
                 }
             } else {
                 currentItemKeyOptions.forEach((grid, keyOptions) -> keyOptions.forEach(ko -> ko.currentSimplerKeyContentContainerProperty().set(null)));

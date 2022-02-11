@@ -33,7 +33,7 @@ import org.lifecompanion.model.api.selectionmode.DirectSelectionModeI;
 import org.lifecompanion.model.api.selectionmode.FireActionEvent;
 import org.lifecompanion.model.api.selectionmode.SelectionModeI;
 import org.lifecompanion.model.api.selectionmode.SelectionModeParameterI;
-import org.lifecompanion.controller.categorizedelement.useaction.UserActionController;
+import org.lifecompanion.controller.categorizedelement.useaction.UseActionController;
 import org.lifecompanion.ui.selectionmode.AbstractSelectionModeView;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.ObjectProperty;
@@ -93,7 +93,7 @@ public abstract class AbstractDirectSelectionMode<T extends AbstractSelectionMod
 				this.currentScheduledOver.cancel(false);
 				this.currentScheduledOver = null;
 			} else {
-				UserActionController.INSTANCE.endEventOn(key, UseActionEvent.OVER, null);
+				UseActionController.INSTANCE.endEventOn(key, UseActionEvent.OVER, null);
 			}
 			//Fire the current next listener if present
 			if (this.nextSelectionListener != null) {
@@ -126,10 +126,10 @@ public abstract class AbstractDirectSelectionMode<T extends AbstractSelectionMod
 					this.nextSelectionListener.get();
 					this.nextSelectionListener = null;
 				} else {
-					UserActionController.INSTANCE.executeSimpleOn(keyP, UseActionEvent.ACTIVATION, null, this::handleActivationResult);
+					UseActionController.INSTANCE.executeSimpleOn(keyP, UseActionEvent.ACTIVATION, null, this::handleActivationResult);
 				}
 			}
-			UserActionController.INSTANCE.startEventOn(keyP, UseActionEvent.ACTIVATION, null);
+			UseActionController.INSTANCE.startEventOn(keyP, UseActionEvent.ACTIVATION, null);
 		}
 	}
 
@@ -145,12 +145,12 @@ public abstract class AbstractDirectSelectionMode<T extends AbstractSelectionMod
 						this.nextSelectionListener.get();
 						this.nextSelectionListener = null;
 					} else {
-						UserActionController.INSTANCE.executeSimpleOn(keyP, UseActionEvent.ACTIVATION, null, this::handleActivationResult);
+						UseActionController.INSTANCE.executeSimpleOn(keyP, UseActionEvent.ACTIVATION, null, this::handleActivationResult);
 					}
 				}
 			}
 			//End on action should never be skipped because action are always started (selectionPress(...) always starts complex activation)
-			UserActionController.INSTANCE.endEventOn(keyP, UseActionEvent.ACTIVATION, null);
+			UseActionController.INSTANCE.endEventOn(keyP, UseActionEvent.ACTIVATION, null);
 		}
 	}
 
@@ -214,8 +214,8 @@ public abstract class AbstractDirectSelectionMode<T extends AbstractSelectionMod
 		@Override
 		public Void call() throws Exception {
 			//Execute and just start over event after timer, but event will ends when mouse leave the key
-			UserActionController.INSTANCE.executeSimpleOn(this.key, UseActionEvent.OVER, null, null);
-			UserActionController.INSTANCE.startEventOn(this.key, UseActionEvent.OVER, null);
+			UseActionController.INSTANCE.executeSimpleOn(this.key, UseActionEvent.OVER, null, null);
+			UseActionController.INSTANCE.startEventOn(this.key, UseActionEvent.OVER, null);
 			return null;
 		}
 	}

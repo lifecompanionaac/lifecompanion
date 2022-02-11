@@ -25,7 +25,7 @@ import org.lifecompanion.model.impl.configurationcomponent.keyoption.dynamickey.
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.note.NoteKeyOption;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.dynamickey.UserActionSequenceCurrentKeyOption;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.dynamickey.UserActionSequenceItemKeyOption;
-import org.lifecompanion.controller.plugin.PluginManager;
+import org.lifecompanion.controller.plugin.PluginController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -79,7 +79,7 @@ public enum AvailableKeyOptionManager {
                         new VariableInformationKeyOption())
         );
         Consumer<Class<? extends KeyOptionI>> addConsumer = this::addKeyOptionType;
-        PluginManager.INSTANCE.getKeyOptions().registerListenerAndDrainCache(addConsumer);
+        PluginController.INSTANCE.getKeyOptions().registerListenerAndDrainCache(addConsumer);
     }
 
     private void addKeyOptionType(final Class<? extends KeyOptionI> possibleKeyOption) {

@@ -29,14 +29,16 @@ import org.lifecompanion.controller.editaction.GlobalActions;
 import org.lifecompanion.controller.editaction.LCConfigurationActions;
 import org.lifecompanion.controller.editaction.LCProfileActions;
 import org.lifecompanion.controller.editmode.*;
-import org.lifecompanion.controller.io.IOManager;
+import org.lifecompanion.controller.io.IOHelper;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.lifecycle.LifeCompanionController;
 import org.lifecompanion.controller.profile.ProfileController;
-import org.lifecompanion.controller.resource.IconManager;
-import org.lifecompanion.controller.resource.LCGlyphFont;
-import org.lifecompanion.controller.translation.TranslationManager;
-import org.lifecompanion.controller.userconfiguration.UserBaseConfiguration;
+import org.lifecompanion.controller.profileconfigselect.ProfileConfigSelectionController;
+import org.lifecompanion.controller.profileconfigselect.ProfileConfigStep;
+import org.lifecompanion.controller.resource.IconHelper;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
+import org.lifecompanion.controller.translation.TranslationLoader;
+import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
 import org.lifecompanion.framework.commons.utils.io.FileNameUtils;
 import org.lifecompanion.framework.commons.utils.lang.CollectionUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
@@ -47,7 +49,7 @@ import org.lifecompanion.model.api.profile.LCProfileI;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.model.impl.exception.LCException;
-import org.lifecompanion.ui.ConfigurationScene;
+import org.lifecompanion.ui.EditModeScene;
 import org.lifecompanion.ui.LoadingScene;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationScene;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStage;
@@ -100,16 +102,16 @@ public class LifeCompanionBootstrap {
     public void preload() {
         long start = System.currentTimeMillis();
         try {
-            UserBaseConfiguration.INSTANCE.load();
+            UserConfigurationController.INSTANCE.load();
         } catch (Exception e) {
             LOGGER.warn("The user configuration can't be loaded", e);
         }
         //Load text
-        String language = UserBaseConfiguration.INSTANCE.userLanguageProperty().get();
+        String language = UserConfigurationController.INSTANCE.userLanguageProperty().get();
         for (String languageFile : LCConstant.INT_PATH_TEXT_FILES) {
-            TranslationManager.INSTANCE.loadLanguageResource(language, languageFile);
+            TranslationLoader.loadLanguageResource(language, languageFile);
         }
-        LCGlyphFont.loadFont();
+        GlyphFontHelper.loadFont();
         LOGGER.info("Preload done in {} ms", System.currentTimeMillis() - start);
     }
     //========================================================================
@@ -121,8 +123,8 @@ public class LifeCompanionBootstrap {
             long start = System.currentTimeMillis();
             LifeCompanionController.INSTANCE.lcStart();
 
-            final ConfigurationScene configurationScene = new ConfigurationScene(new StackPane());
-            configurationScene.initAll();
+            final EditModeScene editModeScene = new EditModeScene(new StackPane());
+            editModeScene.initAll();
 
             ProfileConfigSelectionController.INSTANCE.getStage().getProfileConfigSelectionScene().initAll();
             GeneralConfigurationController.INSTANCE.getStage().getGeneralConfigurationScene().initAll();
@@ -130,7 +132,7 @@ public class LifeCompanionBootstrap {
             LOGGER.info("UI background loading done in {} s, will define post load action", (System.currentTimeMillis() - start) / 1000.0);
             try {
                 final AfterLoad afterLoad = getAfterLoad();
-                LCUtils.runOnFXThread(() -> handleAfterLoadAction(configurationScene, afterLoad));
+                LCUtils.runOnFXThread(() -> handleAfterLoadAction(editModeScene, afterLoad));
             } catch (Exception e) {
                 LOGGER.error("Unexpected issue while defining post load actions, will show profile selection step", e);
                 //FIXME
@@ -138,7 +140,7 @@ public class LifeCompanionBootstrap {
         }).start();
     }
 
-    private void handleAfterLoadAction(ConfigurationScene configurationScene, AfterLoad afterLoad) {
+    private void handleAfterLoadAction(EditModeScene editModeScene, AfterLoad afterLoad) {
         LOGGER.info("After load action will be {}", afterLoad.afterLoadAction);
 
         if (afterLoad.profile != null) {
@@ -165,7 +167,7 @@ public class LifeCompanionBootstrap {
         }
 
         loadingScene.stopAndClear();
-        stage.setScene(configurationScene);
+        stage.setScene(editModeScene);
 
         if (afterLoad.afterLoadAction != AfterLoadAction.LAUNCH_USE) {
             AppModeController.INSTANCE.startEditMode();
@@ -185,7 +187,7 @@ public class LifeCompanionBootstrap {
 
     private AfterLoad getAfterLoad() throws Exception {
         // First, load all profile
-        final List<LCProfileI> profiles = LCUtils.executeInCurrentThread(IOManager.INSTANCE.createLoadAllProfileDescriptionTask());
+        final List<LCProfileI> profiles = LCUtils.executeInCurrentThread(IOHelper.createLoadAllProfileDescriptionTask());
         ProfileController.INSTANCE.getProfiles().setAll(profiles); // FIXME FX Thread ?
 
         // Check if profile to import
@@ -197,7 +199,7 @@ public class LifeCompanionBootstrap {
         if (profileIDToSelect != null) {
             try {
                 LCProfileI profileToSelect = ProfileController.INSTANCE.getByID(profileIDToSelect);
-                profileToSelect = LCUtils.executeInCurrentThread(IOManager.INSTANCE.createLoadFullProfileTask(profileToSelect, false));
+                profileToSelect = LCUtils.executeInCurrentThread(IOHelper.createLoadFullProfileTask(profileToSelect, false));
 
                 // Check if a configuration is imported
                 File configurationFile = this.getFirstLifeCompanionFile(LCConstant.CONFIG_FILE_EXTENSION);
@@ -208,7 +210,7 @@ public class LifeCompanionBootstrap {
                 // Try to launch a configuration in use mode
                 final LCConfigurationDescriptionI configurationToLaunchFor = getConfigurationToLaunchFor(profileToSelect);
                 if (configurationToLaunchFor != null) {
-                    final LCConfigurationI configuration = LCUtils.executeInCurrentThread(IOManager.INSTANCE.createLoadConfigurationTask(configurationToLaunchFor, profileToSelect));
+                    final LCConfigurationI configuration = LCUtils.executeInCurrentThread(IOHelper.createLoadConfigurationTask(configurationToLaunchFor, profileToSelect));
                     return new AfterLoad(AfterLoadAction.LAUNCH_USE, configurationToLaunchFor, configuration, profileToSelect, null);
                 }
 
@@ -238,12 +240,12 @@ public class LifeCompanionBootstrap {
         this.stage.setForceIntegerRenderScale(LCGraphicStyle.FORCE_INTEGER_RENDER_SCALE);
         this.stage.initStyle(StageStyle.DECORATED);
         this.stage.setTitle(StageUtils.getStageDefaultTitle());
-        this.stage.setWidth(UserBaseConfiguration.INSTANCE.mainFrameWidthProperty().get());
-        this.stage.setHeight(UserBaseConfiguration.INSTANCE.mainFrameHeightProperty().get());
-        this.stage.setMaximized(UserBaseConfiguration.INSTANCE.launchMaximizedProperty().get());
+        this.stage.setWidth(UserConfigurationController.INSTANCE.mainFrameWidthProperty().get());
+        this.stage.setHeight(UserConfigurationController.INSTANCE.mainFrameHeightProperty().get());
+        this.stage.setMaximized(UserConfigurationController.INSTANCE.launchMaximizedProperty().get());
         this.stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
         this.stage.centerOnScreen();
-        this.stage.getIcons().add(IconManager.get(LCConstant.LC_ICON_PATH));
+        this.stage.getIcons().add(IconHelper.get(LCConstant.LC_ICON_PATH));
         this.stage.setOnCloseRequest((we) -> {
             we.consume();
             GlobalActions.HANDLER_CANCEL.handle(null);
@@ -301,7 +303,7 @@ public class LifeCompanionBootstrap {
                 if (extensionToSearch.equalsIgnoreCase(ext)) {
                     try {
                         File path = new File(arg);
-                        IOManager.INSTANCE.getFileID(path);// to check if the file is an profile or configuration
+                        IOHelper.getFileID(path);// to check if the file is an profile or configuration
                         return path;
                     } catch (LCException e) {
                         //Will return null

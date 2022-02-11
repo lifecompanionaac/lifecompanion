@@ -21,7 +21,7 @@ package org.lifecompanion.model.impl.configurationcomponent.keyoption;
 import javafx.beans.property.*;
 import javafx.scene.layout.Region;
 import org.jdom2.Element;
-import org.lifecompanion.controller.io.IOHelper;
+import org.lifecompanion.controller.io.ConfigurationComponentIOHelper;
 import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
 import org.lifecompanion.model.api.configurationcomponent.keyoption.KeyOptionI;
 import org.lifecompanion.model.impl.exception.LCException;
@@ -69,7 +69,7 @@ public abstract class AbstractKeyOption implements KeyOptionI {
     @Override
     public Element serialize(final IOContextI context) {
         Element element = new Element(KeyOptionI.NODE_KEY_OPTION);
-        IOHelper.addTypeAlias(this, element, context);
+        ConfigurationComponentIOHelper.addTypeAlias(this, element, context);
         return element;
     }
 

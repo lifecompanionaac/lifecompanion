@@ -22,7 +22,7 @@ import org.lifecompanion.model.api.configurationcomponent.keyoption.KeyOptionCon
 import org.lifecompanion.model.api.configurationcomponent.keyoption.KeyOptionI;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.BasicKeyOption;
 import org.lifecompanion.controller.io.ReflectionHelper;
-import org.lifecompanion.controller.plugin.PluginManager;
+import org.lifecompanion.controller.plugin.PluginController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,7 +58,7 @@ public enum KeyOptionViewProvider {
             this.addConfigurationViewType(configViewSubType);
         }
         //Plugin
-        PluginManager.INSTANCE.getKeyOptionConfigViews().registerListenerAndDrainCache(this::addConfigurationViewType);
+        PluginController.INSTANCE.getKeyOptionConfigViews().registerListenerAndDrainCache(this::addConfigurationViewType);
     }
 
     @SuppressWarnings("rawtypes")

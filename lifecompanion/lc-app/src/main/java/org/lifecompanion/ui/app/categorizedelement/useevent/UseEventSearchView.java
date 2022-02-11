@@ -24,7 +24,7 @@ import java.util.function.Consumer;
 
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.model.api.categorizedelement.useevent.UseEventGeneratorI;
-import org.lifecompanion.controller.categorizedelement.useevent.AvailableUseEventManager;
+import org.lifecompanion.controller.categorizedelement.useevent.AvailableUseEventController;
 import org.lifecompanion.ui.app.categorizedelement.AbstractCategorizedSearchView;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
@@ -46,7 +46,7 @@ public class UseEventSearchView extends AbstractCategorizedSearchView<UseEventGe
 
 	@Override
 	protected List<UseEventGeneratorI> searchForElement(final String terms) {
-		return AvailableUseEventManager.INSTANCE.searchUseEvent(terms);
+		return AvailableUseEventController.INSTANCE.searchUseEvent(terms);
 	}
 
 	@Override

@@ -28,12 +28,9 @@ import org.lifecompanion.model.impl.style.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Still a problem here : default style are not separated from whole style list, each change on default style impact every profile.<br>
- */
-public enum StyleController2 {
+public enum StyleController {
     INSTANCE;
-    private final static Logger LOGGER = LoggerFactory.getLogger(StyleController2.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(StyleController.class);
 
     private static final String DEFAULT_FONT = "Deja Vu Sans";
 
@@ -44,7 +41,7 @@ public enum StyleController2 {
     private final TextCompStyleI defaultTextStyleForTextEditor;
 
 
-    StyleController2() {
+    StyleController() {
         this.defaultShapeStyleForGrid = new GridShapeCompStyle() {
             {
                 this.backgroundColorProperty().selected().setValue(LCGraphicStyle.LC_VERY_LIGHT_GRAY);

@@ -30,9 +30,9 @@ import org.lifecompanion.model.impl.voicesynthesizer.SAPIVoiceSynthesizer;
 import org.lifecompanion.model.impl.voicesynthesizer.SayCommandVoiceSynthesizer;
 import org.lifecompanion.model.impl.voicesynthesizer.VoiceSynthesizerInfoImpl;
 import org.lifecompanion.util.LCUtils;
-import org.lifecompanion.controller.userconfiguration.UserBaseConfiguration;
+import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
 import org.lifecompanion.controller.lifecycle.AppModeController;
-import org.lifecompanion.controller.plugin.PluginManager;
+import org.lifecompanion.controller.plugin.PluginController;
 import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.framework.utils.LCNamedThreadFactory;
@@ -115,7 +115,7 @@ public enum VoiceSynthesizerController implements LCStateListener, ModeListenerI
     }
 
     private void init() {
-        PluginManager.INSTANCE.getVoiceSynthesizers().registerListenerAndDrainCache((pluginId, voiceSynthType) -> {
+        PluginController.INSTANCE.getVoiceSynthesizers().registerListenerAndDrainCache((pluginId, voiceSynthType) -> {
             try {
                 VoiceSynthesizerI synthesizer = voiceSynthType.getConstructor().newInstance();
                 registrerVoiceSynthesizer(synthesizer);
@@ -309,7 +309,7 @@ public enum VoiceSynthesizerController implements LCStateListener, ModeListenerI
         this.checkInitialize(synthesizer);
         if (voiceInfo == null || !synthesizer.getVoices().contains(voiceInfo)) {
             this.LOGGER.info("Incorrect voice info, will select the default voice (voice was {})", voiceInfo);
-            return synthesizer.getDefaultVoice(Locale.forLanguageTag(UserBaseConfiguration.INSTANCE.userLanguageProperty().get()));
+            return synthesizer.getDefaultVoice(Locale.forLanguageTag(UserConfigurationController.INSTANCE.userLanguageProperty().get()));
         }
         return voiceInfo;
     }

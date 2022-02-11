@@ -31,7 +31,7 @@ import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.model.impl.profile.UserCompDescriptionImpl;
 import org.lifecompanion.controller.profile.ProfileController;
-import org.lifecompanion.controller.io.IOManager;
+import org.lifecompanion.controller.io.IOHelper;
 import org.lifecompanion.controller.io.task.UserCompSavingTask;
 import org.lifecompanion.controller.profile.UserCompController;
 import org.lifecompanion.model.impl.notification.LCNotification;
@@ -91,7 +91,7 @@ public class UserCompActions {
     private static void saveUserComp(final UserCompDescriptionI userComp) {
         LCProfileI profile = ProfileController.INSTANCE.currentProfileProperty().get();
         //Save the comp
-        UserCompSavingTask savingTask = IOManager.INSTANCE.createUserCompSavingTask(userComp, profile);
+        UserCompSavingTask savingTask = IOHelper.createUserCompSavingTask(userComp, profile);
         AsyncExecutorController.INSTANCE.addAndExecute(true, false, savingTask);
     }
 
@@ -122,7 +122,7 @@ public class UserCompActions {
                 });
                 //Then delete data
                 for (UserCompDescriptionI toDelete : this.compToDelete) {
-                    IOUtils.deleteDirectoryAndChildren(IOManager.INSTANCE.getUserCompPath(profile.getID(), toDelete.getSavedComponentId()));
+                    IOUtils.deleteDirectoryAndChildren(IOHelper.getUserCompPath(profile.getID(), toDelete.getSavedComponentId()));
                 }
             }
         }

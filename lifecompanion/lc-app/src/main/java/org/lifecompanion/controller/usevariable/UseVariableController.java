@@ -41,7 +41,7 @@ import org.lifecompanion.model.api.usevariable.UseVariableI;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
 import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.VariableInformationKeyOption;
-import org.lifecompanion.controller.plugin.PluginManager;
+import org.lifecompanion.controller.plugin.PluginController;
 import org.lifecompanion.model.impl.usevariable.StringUseVariable;
 import org.lifecompanion.model.impl.usevariable.UseVariableDefinition;
 import org.lifecompanion.framework.commons.utils.lang.CollectionUtils;
@@ -169,7 +169,7 @@ public enum UseVariableController implements ModeListenerI {
         this.addDef(new UseVariableDefinition("CurrentTextInClipboard", "use.variable.current.text.in.clipboard.name",
                 "use.variable.current.text.in.clipboard.description", "use.variable.current.text.in.clipboard.example"));
         //Init plugin
-        PluginManager.INSTANCE.getUseVariableDefinitions().registerListenerAndDrainCache(this::addDef);
+        PluginController.INSTANCE.getUseVariableDefinitions().registerListenerAndDrainCache(this::addDef);
     }
 
     private void addDef(final UseVariableDefinitionI def) {
@@ -238,7 +238,7 @@ public enum UseVariableController implements ModeListenerI {
         vars.put(currentOverPartNameDef.getId(), new StringUseVariable(currentOverPartNameDef, currentOverPartName));
         vars.put(currentOverGridNameDef.getId(), new StringUseVariable(currentOverGridNameDef, currentOverGridName));
         //Generate plugin variable and merge
-        Map<String, UseVariableI<?>> pluginVariables = PluginManager.INSTANCE.generatePluginsUseVariable();
+        Map<String, UseVariableI<?>> pluginVariables = PluginController.INSTANCE.generatePluginsUseVariable();
         vars.putAll(pluginVariables);
         //Call listener
         for (Consumer<Map<String, UseVariableI<?>>> listener : this.variableUpdateListeners) {

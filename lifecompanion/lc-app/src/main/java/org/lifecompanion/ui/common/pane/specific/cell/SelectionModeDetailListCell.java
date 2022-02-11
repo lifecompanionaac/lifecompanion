@@ -18,7 +18,7 @@
  */
 package org.lifecompanion.ui.common.pane.specific.cell;
 
-import org.lifecompanion.controller.resource.IconManager;
+import org.lifecompanion.controller.resource.IconHelper;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.ContentDisplay;
@@ -81,7 +81,7 @@ public class SelectionModeDetailListCell extends ListCell<SelectionModeEnum> {
 		if (item != null && !empty) {
 			this.labelModeDescription.setText(item.getDescription());
 			this.labelModeName.setText(item.getName());
-			this.imageView.setImage(IconManager.get(SelectionModeEnum.ICON_URL_SELECTION_MODE + item.getLogoUrl()));
+			this.imageView.setImage(IconHelper.get(SelectionModeEnum.ICON_URL_SELECTION_MODE + item.getLogoUrl()));
 		}
 	}
 

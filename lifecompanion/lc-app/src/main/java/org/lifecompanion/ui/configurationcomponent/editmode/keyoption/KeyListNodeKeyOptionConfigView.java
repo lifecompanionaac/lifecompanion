@@ -35,7 +35,7 @@ import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStep;
 import org.lifecompanion.controller.editaction.KeyOptionActions;
 import org.lifecompanion.util.binding.LCConfigBindingUtils;
 import org.lifecompanion.controller.editmode.GeneralConfigurationController;
-import org.lifecompanion.controller.resource.LCGlyphFont;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.framework.commons.translation.Translation;
 
@@ -71,7 +71,7 @@ public class KeyListNodeKeyOptionConfigView extends BaseKeyOptionConfigView<KeyL
         toggleDisplayLevelBellow = ConfigUIUtils.createToggleSwitch("keylist.key.option.field.display.level.bellow.toggle", null);
 
         buttonConfigureKeyList = UIUtils.createLeftTextButton(Translation.getText("keylist.key.option.button.configuration.key"),
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.GEARS).size(14).color(LCGraphicStyle.MAIN_DARK), null);
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.GEARS).size(14).color(LCGraphicStyle.MAIN_DARK), null);
 
         GridPane gridPaneConfig = new GridPane();
         gridPaneConfig.setVgap(5.0);

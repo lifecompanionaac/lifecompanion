@@ -24,7 +24,7 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.jdom2.Element;
-import org.lifecompanion.controller.io.IOHelper;
+import org.lifecompanion.controller.io.ConfigurationComponentIOHelper;
 import org.lifecompanion.model.api.configurationcomponent.TreeIdentifiableComponentI;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.UserActionSequenceI;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.UserActionSequenceItemI;
@@ -95,7 +95,7 @@ public class UserActionSequence implements UserActionSequenceI {
     @Override
     public Element serialize(IOContextI context) {
         Element node = new Element(NODE_NAME);
-        IOHelper.addTypeAlias(this, node, context);
+        ConfigurationComponentIOHelper.addTypeAlias(this, node, context);
         XMLObjectSerializer.serializeInto(UserActionSequence.class, this, node);
         for (UserActionSequenceItemI item : items) {
             node.addContent(item.serialize(context));

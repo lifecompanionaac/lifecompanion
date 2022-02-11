@@ -40,9 +40,9 @@ import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.textcomponent.WritingEventSource;
 import org.lifecompanion.model.api.ui.configurationcomponent.ViewProviderI;
 import org.lifecompanion.util.LCUtils;
-import org.lifecompanion.controller.resource.IconManager;
+import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.model.impl.constant.LCConstant;
-import org.lifecompanion.controller.configurationcomponent.GlobalKeyEventManager;
+import org.lifecompanion.controller.configurationcomponent.GlobalKeyEventController;
 import org.lifecompanion.controller.selectionmode.SelectionModeController;
 import org.lifecompanion.controller.textcomponent.WritingStateController;
 import org.lifecompanion.controller.lifecycle.AppModeController;
@@ -117,8 +117,8 @@ public class SimpleUseConfigurationDisplayer extends Group implements LCViewInit
         progressIndicator.setPrefSize(100.0, 100.0);
         final Label labelChangingConfig = new Label(Translation.getText("use.mode.changing.configuration"));
         labelChangingConfig.getStyleClass().addAll("text-font-size-200", "text-weight-bold");
-        ImageView imageViewText = new ImageView(IconManager.get(LCConstant.LC_BIG_ICON_PATH));
-        ImageView imageViewCopyright = new ImageView(IconManager.get(LCConstant.LC_COPYRIGHT_ICON_PATH));
+        ImageView imageViewText = new ImageView(IconHelper.get(LCConstant.LC_BIG_ICON_PATH));
+        ImageView imageViewCopyright = new ImageView(IconHelper.get(LCConstant.LC_COPYRIGHT_ICON_PATH));
         imageViewCopyright.setFitHeight(80.0);
         imageViewCopyright.setPreserveRatio(true);
         VBox.setMargin(imageViewCopyright, new Insets(0, 0, 10, 0));
@@ -151,7 +151,7 @@ public class SimpleUseConfigurationDisplayer extends Group implements LCViewInit
         this.addEventFilter(KeyEvent.ANY, (event) -> {
             // Keyboard event without filter except no repeat
             if (event.getEventType() != KeyEvent.KEY_PRESSED || !this.pressedKey.contains(event.getCode())) {
-                GlobalKeyEventManager.INSTANCE.javaFxEventFired(event);
+                GlobalKeyEventController.INSTANCE.javaFxEventFired(event);
             }
             // Filter the next key event on key press (happens before key typed)
             if (KeyEvent.KEY_PRESSED == event.getEventType() && !this.pressedKey.contains(event.getCode())

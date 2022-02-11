@@ -43,12 +43,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.BiConsumer;
 
-public enum NodeSnapshotCache {
+public enum DisplayableComponentSnapshotController {
     INSTANCE;
 
     private static final String LOAD_REQUEST_ID = "displayable-component-list-cell";
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(NodeSnapshotCache.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DisplayableComponentSnapshotController.class);
 
     private static final ViewProviderI USE_VIEW_PROVIDER = new UseViewProvider();
 
@@ -58,7 +58,7 @@ public enum NodeSnapshotCache {
     private final ConcurrentHashMap<String, CopyOnWriteArrayList<ComponentSnapshotTask>> runningLoadingTasks;
     private final ConcurrentHashMap<String, CachedSnapshot> snapshotCache;
 
-    NodeSnapshotCache() {
+    DisplayableComponentSnapshotController() {
         this.loadingService = Executors.newSingleThreadExecutor(LCNamedThreadFactory.daemonThreadFactory("Node-Snapshot-Cache"));
         this.runningLoadingTasks = new ConcurrentHashMap<>();
         this.snapshotCache = new ConcurrentHashMap<>();

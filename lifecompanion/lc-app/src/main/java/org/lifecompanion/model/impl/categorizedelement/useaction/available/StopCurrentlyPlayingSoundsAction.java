@@ -23,7 +23,7 @@ import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
 import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseActionSubCategories;
-import org.lifecompanion.controller.media.SoundPlayer;
+import org.lifecompanion.controller.media.SoundPlayerController;
 import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
 
 import java.util.Map;
@@ -45,7 +45,7 @@ public class StopCurrentlyPlayingSoundsAction extends SimpleUseActionImpl<UseAct
     //========================================================================
     @Override
     public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
-        SoundPlayer.INSTANCE.stopEveryPlayer();
+        SoundPlayerController.INSTANCE.stopEveryPlayer();
     }
     //========================================================================
 }

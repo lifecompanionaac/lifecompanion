@@ -27,7 +27,7 @@ import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseActionSubCategories;
 import org.lifecompanion.model.impl.configurationcomponent.SoundResourceHolder;
-import org.lifecompanion.controller.media.SoundPlayer;
+import org.lifecompanion.controller.media.SoundPlayerController;
 import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
 import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
 import org.slf4j.Logger;
@@ -71,7 +71,7 @@ public class PlaySoundAction extends SimpleUseActionImpl<UseActionTriggerCompone
     @Override
     public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
         if (this.soundResourceHolder.filePathProperty().get() != null) {
-            SoundPlayer.INSTANCE.playSoundSync(this.soundResourceHolder.filePathProperty().get(), maxGainOnPlay);
+            SoundPlayerController.INSTANCE.playSoundSync(this.soundResourceHolder.filePathProperty().get(), maxGainOnPlay);
         }
     }
     //========================================================================

@@ -30,7 +30,7 @@ import org.fxmisc.easybind.EasyBind;
 import org.lifecompanion.model.api.imagedictionary.ImageElementI;
 import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
-import org.lifecompanion.controller.resource.LCGlyphFont;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 
@@ -87,9 +87,9 @@ public class Image2SelectorControl extends BorderPane implements LCViewInitHelpe
     public void initUI() {
         //Create buttons
         this.buttonRemoveImage = UIUtils.createTextButtonWithGraphics(Translation.getText("remove.image.component"),
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.TRASH).size(20.0).color(LCGraphicStyle.SECOND_DARK), "tooltip.remove.image.button");
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.TRASH).size(20.0).color(LCGraphicStyle.SECOND_DARK), "tooltip.remove.image.button");
         this.buttonSelectImage = UIUtils.createTextButtonWithGraphics(Translation.getText("select.image.component"),
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.PICTURE_ALT).size(20.0).color(LCGraphicStyle.MAIN_PRIMARY),
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.PICTURE_ALT).size(20.0).color(LCGraphicStyle.MAIN_PRIMARY),
                 "tooltip.select.image.button");
 
         //Image

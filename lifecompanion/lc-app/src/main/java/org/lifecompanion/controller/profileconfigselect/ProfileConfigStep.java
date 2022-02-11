@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.lifecompanion.controller.editmode;
+package org.lifecompanion.controller.profileconfigselect;
 
 public enum ProfileConfigStep {
     PROFILE_CREATE, PROFILE_EDIT, PROFILE_LIST, PROFILE_ADD,

@@ -21,7 +21,7 @@ package org.lifecompanion.ui.common.pane.specific.cell;
 
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.model.api.configurationcomponent.FramePosition;
-import org.lifecompanion.controller.resource.IconManager;
+import org.lifecompanion.controller.resource.IconHelper;
 import javafx.scene.control.ListCell;
 import javafx.scene.image.ImageView;
 
@@ -40,7 +40,7 @@ public class FramePositionDetailledCell extends ListCell<FramePosition> {
 			this.setGraphic(null);
 		} else {
 			this.setText(StringUtils.capitalize(item.getText()));
-			this.imageView.setImage(IconManager.get(item.getImagePath()));
+			this.imageView.setImage(IconHelper.get(item.getImagePath()));
 			this.setGraphic(this.imageView);
 		}
 	}

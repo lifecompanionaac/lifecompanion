@@ -28,7 +28,7 @@ import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStep;
 import org.lifecompanion.controller.editmode.GeneralConfigurationController;
-import org.lifecompanion.controller.resource.LCGlyphFont;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.ui.configurationcomponent.editmode.categorizedelement.useevent.available.RibbonBasePart;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
@@ -46,7 +46,7 @@ public class OpenGeneralConfigurationRibbonPart extends RibbonBasePart<Void> imp
     @Override
     public void initUI() {
         this.buttonOpenGeneralConfig = UIUtils.createTextButtonWithGraphics(Translation.getText("menu.item.general.config.open"),
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.GEAR).sizeFactor(2).color(LCGraphicStyle.MAIN_DARK), "menu.item.general.config.open.tooltip");
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.GEAR).sizeFactor(2).color(LCGraphicStyle.MAIN_DARK), "menu.item.general.config.open.tooltip");
         this.buttonOpenGeneralConfig.setWrapText(true);
         buttonOpenGeneralConfig.setPrefWidth(100.0);
         buttonOpenGeneralConfig.setTextAlignment(TextAlignment.CENTER);

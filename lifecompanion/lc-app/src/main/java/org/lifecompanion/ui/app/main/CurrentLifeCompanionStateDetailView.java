@@ -40,13 +40,13 @@ import org.lifecompanion.model.api.profile.LCProfileI;
 import org.lifecompanion.model.api.configurationcomponent.TreeDisplayableType;
 import org.lifecompanion.ui.app.displayablecomponent.CommonComponentStage;
 import org.lifecompanion.util.LCUtils;
-import org.lifecompanion.controller.resource.IconManager;
+import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.profile.ProfileController;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStep;
 import org.lifecompanion.controller.editmode.GeneralConfigurationController;
-import org.lifecompanion.controller.editmode.ProfileConfigSelectionController;
-import org.lifecompanion.controller.editmode.ProfileConfigStep;
+import org.lifecompanion.controller.profileconfigselect.ProfileConfigSelectionController;
+import org.lifecompanion.controller.profileconfigselect.ProfileConfigStep;
 import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.controller.editmode.SelectionController;
 import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
@@ -63,7 +63,7 @@ import java.util.Map;
  *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
-public class BottomPaneView extends HBox implements LCViewInitHelper {
+public class CurrentLifeCompanionStateDetailView extends HBox implements LCViewInitHelper {
     private static final double CONFIG_ACTION_LIST_WIDTH = 350, CONFIG_ACTION_LIST_HEIGHT = 100;
 
     private Label labelCurrentConfigurationName;
@@ -77,7 +77,7 @@ public class BottomPaneView extends HBox implements LCViewInitHelper {
 
     private final Map<TreeDisplayableType, ImageView> componentTypeImageViews;
 
-    public BottomPaneView() {
+    public CurrentLifeCompanionStateDetailView() {
         componentTypeImageViews = new HashMap<>();
         this.initAll();
     }
@@ -114,8 +114,8 @@ public class BottomPaneView extends HBox implements LCViewInitHelper {
         BorderPane.setMargin(this.configActionListView, new Insets(10));
         BorderPane.setMargin(labelTitleActions, new Insets(0, 5, 0, 5));
         labelTitleActions.setMaxWidth(Double.MAX_VALUE);
-        this.configActionListView.setPrefWidth(BottomPaneView.CONFIG_ACTION_LIST_WIDTH);
-        this.configActionListView.setPrefHeight(BottomPaneView.CONFIG_ACTION_LIST_HEIGHT);
+        this.configActionListView.setPrefWidth(CurrentLifeCompanionStateDetailView.CONFIG_ACTION_LIST_WIDTH);
+        this.configActionListView.setPrefHeight(CurrentLifeCompanionStateDetailView.CONFIG_ACTION_LIST_HEIGHT);
         this.paneConfigAction.setTop(labelTitleActions);
 
         // Box right : current component name
@@ -127,7 +127,7 @@ public class BottomPaneView extends HBox implements LCViewInitHelper {
 
         // Init component icons
         for (TreeDisplayableType compTypes : TreeDisplayableType.values()) {
-            componentTypeImageViews.put(compTypes, compTypes.isIconValid() ? new ImageView(IconManager.get(compTypes.getIconPath())) : null);
+            componentTypeImageViews.put(compTypes, compTypes.isIconValid() ? new ImageView(IconHelper.get(compTypes.getIconPath())) : null);
         }
 
         //Add

@@ -39,7 +39,7 @@ import org.lifecompanion.util.model.Triple;
 import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.ui.common.pane.generic.AnimatedBorderPane;
-import org.lifecompanion.controller.resource.LCGlyphFont;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
@@ -171,7 +171,7 @@ public abstract class AbstractCategorizedMainView<V extends CategorizedElementI<
     public void initUI() {
         //Top : button and title
         this.buttonSearch = UIUtils.createGraphicButton(
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.SEARCH).sizeFactor(1).color(LCGraphicStyle.LC_WHITE),
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.SEARCH).sizeFactor(1).color(LCGraphicStyle.LC_WHITE),
                 this.getSearchButtonTooltipID());
 
         Triple<HBox, Label, Node> header = ConfigUIUtils.createHeader("", m -> previous());
@@ -183,10 +183,10 @@ public abstract class AbstractCategorizedMainView<V extends CategorizedElementI<
 
         //Bottom : button to cancel, or save
         this.buttonCancel = UIUtils.createTextButtonWithGraphics(Translation.getText("action.view.cancel"),
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.TIMES).size(16).color(LCGraphicStyle.SECOND_PRIMARY),
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.TIMES).size(16).color(LCGraphicStyle.SECOND_PRIMARY),
                 this.getButtonCancelTooltipID());
         this.buttonOk = UIUtils.createTextButtonWithGraphics("",
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.CHECK).size(16).color(LCGraphicStyle.MAIN_PRIMARY), this.getButtonOkTooltipID());
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CHECK).size(16).color(LCGraphicStyle.MAIN_PRIMARY), this.getButtonOkTooltipID());
         HBox boxBottom = new HBox(this.buttonCancel, this.buttonOk);
         boxBottom.setAlignment(Pos.CENTER_RIGHT);
         this.setBottom(boxBottom);

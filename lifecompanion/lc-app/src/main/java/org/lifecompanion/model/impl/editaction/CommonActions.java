@@ -39,7 +39,7 @@ import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.util.javafx.StageUtils;
 import org.lifecompanion.util.ConfigUIUtils;
-import org.lifecompanion.controller.systemvk.SystemVirtualKeyboardHelper;
+import org.lifecompanion.controller.systemvk.SystemVirtualKeyboardController;
 import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
@@ -101,7 +101,7 @@ public class CommonActions {
                 dialog.setContentText(Translation.getText("action.confirm.go.config.message", number));
                 timeLineAutoHide.setOnFinished(e -> dialog.hide());
                 timeLineAutoHide.play();
-                SystemVirtualKeyboardHelper.INSTANCE.showIfEnabled();
+                SystemVirtualKeyboardController.INSTANCE.showIfEnabled();
                 Optional<String> enteredString = dialog.showAndWait();
                 timeLineAutoHide.stop();
                 //Check code

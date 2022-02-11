@@ -49,9 +49,9 @@ import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.metrics.SessionStatsController;
-import org.lifecompanion.controller.resource.LCGlyphFont;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.model.impl.notification.LCNotification;
-import org.lifecompanion.controller.systemvk.SystemVirtualKeyboardHelper;
+import org.lifecompanion.controller.systemvk.SystemVirtualKeyboardController;
 import org.lifecompanion.ui.notification.LCNotificationController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
@@ -165,15 +165,15 @@ public class LCColorCustomColorStage extends Stage implements LCViewInitHelper {
         boxResult.setAlignment(Pos.CENTER);
 
         fieldColorHex = new TextField();
-        buttonCopyHex = UIUtils.createGraphicButton(LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.COPY).size(14).color(LCGraphicStyle.MAIN_DARK), null);
+        buttonCopyHex = UIUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.COPY).size(14).color(LCGraphicStyle.MAIN_DARK), null);
         HBox boxFieldColorHex = new HBox(5.0, fieldColorHex, buttonCopyHex);
         boxFieldColorHex.setAlignment(Pos.CENTER);
         boxFieldColorHex.getStyleClass().add("text-font-size-90");
 
         buttonOk = UIUtils.createLeftTextButton(Translation.getText("general.configuration.scene.ok.button"),
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.CHECK).size(16).color(LCGraphicStyle.MAIN_DARK), null);
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CHECK).size(16).color(LCGraphicStyle.MAIN_DARK), null);
         buttonCancel = UIUtils.createLeftTextButton(Translation.getText("general.configuration.scene.cancel.button"),
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.TIMES).size(16).color(LCGraphicStyle.SECOND_DARK), null);
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.TIMES).size(16).color(LCGraphicStyle.SECOND_DARK), null);
 
         HBox boxButton = new HBox(8.0, buttonCancel, buttonOk);
         boxButton.setAlignment(Pos.CENTER);
@@ -189,7 +189,7 @@ public class LCColorCustomColorStage extends Stage implements LCViewInitHelper {
 
         Scene sceneContent = new Scene(totalVbox);
         sceneContent.getStylesheets().addAll(LCConstant.CSS_STYLE_PATH);
-        SystemVirtualKeyboardHelper.INSTANCE.registerScene(sceneContent);
+        SystemVirtualKeyboardController.INSTANCE.registerScene(sceneContent);
         SessionStatsController.INSTANCE.registerScene(sceneContent);
 
         this.setScene(sceneContent);
@@ -278,7 +278,7 @@ public class LCColorCustomColorStage extends Stage implements LCViewInitHelper {
         });
 
         this.setOnHidden(e -> {
-            SystemVirtualKeyboardHelper.INSTANCE.unregisterScene(this.getScene());
+            SystemVirtualKeyboardController.INSTANCE.unregisterScene(this.getScene());
             SessionStatsController.INSTANCE.unregisterScene(this.getScene());
             onNextSelection = null;
         });

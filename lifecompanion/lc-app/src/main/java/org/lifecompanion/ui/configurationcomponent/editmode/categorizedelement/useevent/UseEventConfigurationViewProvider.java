@@ -21,7 +21,7 @@ package org.lifecompanion.ui.configurationcomponent.editmode.categorizedelement.
 import org.lifecompanion.model.api.categorizedelement.useevent.UseEventGeneratorConfigurationViewI;
 import org.lifecompanion.model.api.categorizedelement.useevent.UseEventGeneratorI;
 import org.lifecompanion.controller.io.ReflectionHelper;
-import org.lifecompanion.controller.plugin.PluginManager;
+import org.lifecompanion.controller.plugin.PluginController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,7 +53,7 @@ public enum UseEventConfigurationViewProvider {
             this.addConfigurationViewClass(element);
         }
         //Added by plugin manager
-        PluginManager.INSTANCE.getUseEventGeneratorConfigViews().registerListenerAndDrainCache(this::addConfigurationViewClass);
+        PluginController.INSTANCE.getUseEventGeneratorConfigViews().registerListenerAndDrainCache(this::addConfigurationViewClass);
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})

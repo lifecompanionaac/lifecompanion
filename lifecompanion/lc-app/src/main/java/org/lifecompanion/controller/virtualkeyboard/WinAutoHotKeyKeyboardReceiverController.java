@@ -24,7 +24,7 @@ import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.textcomponent.WritingEventSource;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
 import org.lifecompanion.model.impl.constant.LCConstant;
-import org.lifecompanion.controller.configurationcomponent.GlobalKeyEventManager;
+import org.lifecompanion.controller.configurationcomponent.GlobalKeyEventController;
 import org.lifecompanion.controller.textcomponent.WritingStateController;
 import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
@@ -108,14 +108,14 @@ public enum WinAutoHotKeyKeyboardReceiverController implements ModeListenerI {
             WritingStateController.INSTANCE.space(WritingEventSource.EXTERNAL_USER_INPUT);
         }
         if (keyCode != null) {
-            GlobalKeyEventManager.INSTANCE.genericLcEventFired(new GlobalKeyEventManager.LCKeyEvent(keyCode, GlobalKeyEventManager.LCKeyEventType.PRESSED));
+            GlobalKeyEventController.INSTANCE.genericLcEventFired(new GlobalKeyEventController.LCKeyEvent(keyCode, GlobalKeyEventController.LCKeyEventType.PRESSED));
         }
     }
 
     private void keyUp(String keyCodeAsString) {
         final KeyCode keyCode = getKeyCodeSafe(keyCodeAsString);
         if (keyCode != null) {
-            GlobalKeyEventManager.INSTANCE.genericLcEventFired(new GlobalKeyEventManager.LCKeyEvent(keyCode, GlobalKeyEventManager.LCKeyEventType.RELEASED));
+            GlobalKeyEventController.INSTANCE.genericLcEventFired(new GlobalKeyEventController.LCKeyEvent(keyCode, GlobalKeyEventController.LCKeyEventType.RELEASED));
         }
     }
 
@@ -191,7 +191,7 @@ public enum WinAutoHotKeyKeyboardReceiverController implements ModeListenerI {
     public void modeStart(LCConfigurationI configuration) {
         if (SystemType.current() == SystemType.WINDOWS && configuration.virtualKeyboardProperty().get()) {
             startListenerServer();
-            final Set<KeyCode> blockedKeyCodes = GlobalKeyEventManager.INSTANCE.getBlockedKeyCodes();
+            final Set<KeyCode> blockedKeyCodes = GlobalKeyEventController.INSTANCE.getBlockedKeyCodes();
             LOGGER.info("Detected {} keys to block in external input hook", blockedKeyCodes.size());
             String injectedKeys = blockedKeyCodes.stream().map(k -> Win32ToFxKeyCodeConverter.javaFXKeyCodeToAutoHotKey(k, null)).collect(Collectors.joining());
             LOGGER.info("Injected AHK keys : {}", injectedKeys);

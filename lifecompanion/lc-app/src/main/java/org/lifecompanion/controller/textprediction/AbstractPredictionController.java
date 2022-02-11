@@ -38,7 +38,7 @@ import org.lifecompanion.model.api.lifecycle.ModeListenerI;
 import org.lifecompanion.model.api.textprediction.BasePredictorI;
 import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.controller.textcomponent.WritingStateController;
-import org.lifecompanion.controller.plugin.PluginImplementationLoadingHelper;
+import org.lifecompanion.controller.plugin.PluginImplementationLoadingHandler;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -130,8 +130,8 @@ public abstract class AbstractPredictionController<T extends BasePredictorI, K, 
         };
     }
 
-    protected void initializePredictorListener(final PluginImplementationLoadingHelper<Class<? extends T>> pluginImplementationLoadingHelper) {
-        pluginImplementationLoadingHelper.registerListenerAndDrainCache((pluginId, predictorType) -> {
+    protected void initializePredictorListener(final PluginImplementationLoadingHandler<Class<? extends T>> pluginImplementationLoadingHandler) {
+        pluginImplementationLoadingHandler.registerListenerAndDrainCache((pluginId, predictorType) -> {
                     try {
                         T predictorInstance = predictorType.getConstructor().newInstance();
                         availablePredictor.add(predictorInstance);

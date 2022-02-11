@@ -23,7 +23,7 @@ import org.lifecompanion.model.api.configurationcomponent.GridChildComponentI;
 import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
 import org.lifecompanion.model.api.configurationcomponent.SelectableComponentI;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
-import org.lifecompanion.controller.userconfiguration.UserBaseConfiguration;
+import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
 import org.lifecompanion.model.api.style.AbstractShapeCompStyleI;
 import org.lifecompanion.model.api.style.GridStyleUserI;
 import javafx.beans.binding.Bindings;
@@ -45,7 +45,7 @@ public class SelectableOption<T extends SelectableComponentI & GridChildComponen
 		super(modelP);
 		//Style
 		this.stroke.setFill(null);
-		this.stroke.strokeWidthProperty().bind(UserBaseConfiguration.INSTANCE.selectionStrokeSizeProperty());
+		this.stroke.strokeWidthProperty().bind(UserConfigurationController.INSTANCE.selectionStrokeSizeProperty());
 		this.stroke.setLayoutX(-LCGraphicStyle.SELECTED_STROKE_GAP);
 		this.stroke.setLayoutY(-LCGraphicStyle.SELECTED_STROKE_GAP);
 		this.stroke.setStrokeLineCap(StrokeLineCap.ROUND);
@@ -67,7 +67,7 @@ public class SelectableOption<T extends SelectableComponentI & GridChildComponen
 			shapeStyle = ((GridStyleUserI) this.model).getGridShapeStyle();
 		}
 		ShapeStyleBinder.bindArcSizeComp(this.stroke, shapeStyle, this.stroke.widthProperty(), this.stroke.heightProperty(),
-				UserBaseConfiguration.INSTANCE.selectionStrokeSizeProperty(), 1);
+				UserConfigurationController.INSTANCE.selectionStrokeSizeProperty(), 1);
 		//Bind show selected
 		modelP.showSelectedProperty().addListener((obs, oV, nV) -> {
 			if (nV || !this.model.showPossibleSelectedProperty().get()) {
@@ -77,8 +77,8 @@ public class SelectableOption<T extends SelectableComponentI & GridChildComponen
 		});
 		modelP.showPossibleSelectedProperty().addListener((obs, oV, nV) -> {
 			if (nV && !this.model.showSelectedProperty().get()) {
-				this.stroke.getStrokeDashArray().addAll(UserBaseConfiguration.INSTANCE.selectionDashSizeProperty().get(),
-						UserBaseConfiguration.INSTANCE.selectionDashSizeProperty().get());
+				this.stroke.getStrokeDashArray().addAll(UserConfigurationController.INSTANCE.selectionDashSizeProperty().get(),
+						UserConfigurationController.INSTANCE.selectionDashSizeProperty().get());
 				SelectableOption.this.stroke.toFront();
 			} else {
 				this.stroke.getStrokeDashArray().clear();

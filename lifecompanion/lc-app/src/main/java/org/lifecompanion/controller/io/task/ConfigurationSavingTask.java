@@ -19,7 +19,7 @@
 
 package org.lifecompanion.controller.io.task;
 
-import org.lifecompanion.controller.io.IOManager;
+import org.lifecompanion.controller.io.IOHelper;
 import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.profile.LCProfileI;
@@ -70,10 +70,10 @@ public class ConfigurationSavingTask extends AbstractSavingUtilsTask<Void> {
         this.saveXmlSerializable(this.configuration, this.directory, LCConstant.CONFIGURATION_XML_NAME);
 
         // Save key list
-        LCUtils.executeInCurrentThread(IOManager.INSTANCE.createSaveKeyListTask(configuration, this.directory));
+        LCUtils.executeInCurrentThread(IOHelper.createSaveKeyListTask(configuration, this.directory));
 
         // Save sequences
-        LCUtils.executeInCurrentThread(IOManager.INSTANCE.createSaveSequenceTask(configuration, this.directory));
+        LCUtils.executeInCurrentThread(IOHelper.createSaveSequenceTask(configuration, this.directory));
 
         // Generate changelog entry
         ChangelogEntry changelogEntry = new ChangelogEntry(
@@ -90,7 +90,7 @@ public class ConfigurationSavingTask extends AbstractSavingUtilsTask<Void> {
 
         //Configuration description update
         this.configurationDescription.configurationLastDateProperty().set(new Date());
-        LCUtils.executeInCurrentThread(IOManager.INSTANCE.createSaveConfigDescriptionTask(this.configurationDescription, this.directory));
+        LCUtils.executeInCurrentThread(IOHelper.createSaveConfigDescriptionTask(this.configurationDescription, this.directory));
 
         this.updateProgress(5, 5);
         ConfigurationSavingTask.LOGGER.info("Configuration successfully saved to {}", this.directory);

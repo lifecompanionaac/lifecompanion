@@ -41,7 +41,7 @@ import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.ui.common.pane.generic.BaseConfigurationViewBorderPane;
 import org.lifecompanion.controller.editaction.KeyActions;
 import org.lifecompanion.util.binding.LCConfigBindingUtils;
-import org.lifecompanion.controller.resource.LCGlyphFont;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.ui.common.control.specific.ViewportSelectorControl;
@@ -131,10 +131,10 @@ public class ImageUseComponentConfigurationView extends BaseConfigurationViewBor
         this.togglePreserveRatio = ConfigUIUtils.createToggleSwitch("image.use.preserve.ratio", "tooltip.explain.image.preserve.ratio");
         //Advanced parameters
         this.buttonRotateLeft = UIUtils.createTextButtonWithGraphics(Translation.getText("rotate.image.left"),
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.ROTATE_LEFT).size(20.0).color(LCGraphicStyle.SECOND_DARK),
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.ROTATE_LEFT).size(20.0).color(LCGraphicStyle.SECOND_DARK),
                 "tooltip.rotate.image.left");
         this.buttonRotateRight = UIUtils.createTextButtonWithGraphics(Translation.getText("rotate.image.right"),
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.ROTATE_RIGHT).size(20.0).color(LCGraphicStyle.SECOND_DARK),
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.ROTATE_RIGHT).size(20.0).color(LCGraphicStyle.SECOND_DARK),
                 "tooltip.rotate.image.right");
         this.labelRotation = new Label();
         HBox rotateButtonBox = new HBox(this.buttonRotateLeft, this.buttonRotateRight);
@@ -177,7 +177,7 @@ public class ImageUseComponentConfigurationView extends BaseConfigurationViewBor
 
         // Button ok
         buttonOk = UIUtils.createLeftTextButton(Translation.getText("image.use.button.ok"),
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.CHECK).size(16).color(LCGraphicStyle.MAIN_DARK), null);
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CHECK).size(16).color(LCGraphicStyle.MAIN_DARK), null);
         HBox buttonBox = new HBox(buttonOk);
         buttonBox.setAlignment(Pos.CENTER_RIGHT);
         BorderPane.setMargin(buttonBox, new Insets(0.0, 0.0, 5.0, 0.0));

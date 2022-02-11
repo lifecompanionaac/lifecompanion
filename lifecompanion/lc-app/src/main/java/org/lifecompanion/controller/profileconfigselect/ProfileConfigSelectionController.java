@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.lifecompanion.controller.editmode;
+package org.lifecompanion.controller.profileconfigselect;
 
 import javafx.application.Platform;
 import javafx.beans.property.*;

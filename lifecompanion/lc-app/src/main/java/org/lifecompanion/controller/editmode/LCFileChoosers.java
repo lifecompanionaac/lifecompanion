@@ -29,7 +29,7 @@ import org.lifecompanion.framework.commons.translation.Translation;
  *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
-public class LCFileChooser {
+public class LCFileChoosers {
 
     private static FileChooser configurationFileChooser;
     private static FileChooser keylistFileChooser;
@@ -41,9 +41,9 @@ public class LCFileChooser {
     // PRIVATE
     //========================================================================
     private static FileChooser getOrInitConfigurationFileChooser() {
-        if (LCFileChooser.configurationFileChooser == null) {
-            LCFileChooser.configurationFileChooser = new FileChooser();
-            LCFileChooser.configurationFileChooser.getExtensionFilters()
+        if (LCFileChoosers.configurationFileChooser == null) {
+            LCFileChoosers.configurationFileChooser = new FileChooser();
+            LCFileChoosers.configurationFileChooser.getExtensionFilters()
                     .add(new ExtensionFilter(Translation.getText("file.chooser.config.description"), "*." + LCConstant.CONFIG_FILE_EXTENSION));
         }
         return configurationFileChooser;
@@ -51,8 +51,8 @@ public class LCFileChooser {
 
     private static FileChooser getOrInitKeyListFileChooser() {
         if (keylistFileChooser == null) {
-            LCFileChooser.keylistFileChooser = new FileChooser();
-            LCFileChooser.keylistFileChooser.getExtensionFilters()
+            LCFileChoosers.keylistFileChooser = new FileChooser();
+            LCFileChoosers.keylistFileChooser.getExtensionFilters()
                     .add(new ExtensionFilter(Translation.getText("file.chooser.keylist.description"), "*." + LCConstant.KEYLIST_FILE_EXTENSION));
         }
         return keylistFileChooser;
@@ -60,8 +60,8 @@ public class LCFileChooser {
 
     private static FileChooser getOrInitProfileFileChooser() {
         if (profileFileChooser == null) {
-            LCFileChooser.profileFileChooser = new FileChooser();
-            LCFileChooser.profileFileChooser.getExtensionFilters()
+            LCFileChoosers.profileFileChooser = new FileChooser();
+            LCFileChoosers.profileFileChooser.getExtensionFilters()
                     .add(new ExtensionFilter(Translation.getText("file.chooser.profile.description"), "*." + LCConstant.PROFILE_FILE_EXTENSION));
         }
         return profileFileChooser;
@@ -69,21 +69,21 @@ public class LCFileChooser {
 
     private static FileChooser getOrInitImageFileChooser() {
         if (imageFileChooser == null) {
-            LCFileChooser.imageFileChooser = new FileChooser();
-            LCFileChooser.imageFileChooser.setTitle(Translation.getText("file.chooser.image.title"));
+            LCFileChoosers.imageFileChooser = new FileChooser();
+            LCFileChoosers.imageFileChooser.setTitle(Translation.getText("file.chooser.image.title"));
             String[] exts = new String[LCConstant.IMAGE_EXTENSIONS.length];
             for (int i = 0; i < exts.length; i++) {
                 exts[i] = "*." + LCConstant.IMAGE_EXTENSIONS[i];
             }
-            LCFileChooser.imageFileChooser.getExtensionFilters().add(new ExtensionFilter(Translation.getText("file.chooser.image.description"), exts));
+            LCFileChoosers.imageFileChooser.getExtensionFilters().add(new ExtensionFilter(Translation.getText("file.chooser.image.description"), exts));
         }
         return imageFileChooser;
     }
 
     private static DirectoryChooser getOrInitDirectoryChooser() {
         if (directoryChooser == null) {
-            LCFileChooser.directoryChooser = new DirectoryChooser();
-            LCFileChooser.directoryChooser.setTitle(Translation.getText("file.chooser.directory"));
+            LCFileChoosers.directoryChooser = new DirectoryChooser();
+            LCFileChoosers.directoryChooser.setTitle(Translation.getText("file.chooser.directory"));
         }
         return directoryChooser;
     }
@@ -93,32 +93,32 @@ public class LCFileChooser {
     // PUBLIC
     //========================================================================
     public static FileChooser getChooserConfiguration(final FileChooserType fileChooserType) {
-        return initializeDirectory(LCFileChooser.getOrInitConfigurationFileChooser(), fileChooserType);
+        return initializeDirectory(LCFileChoosers.getOrInitConfigurationFileChooser(), fileChooserType);
     }
 
     public static FileChooser getChooserKeyList(final FileChooserType fileChooserType) {
-        return initializeDirectory(LCFileChooser.getOrInitKeyListFileChooser(), fileChooserType);
+        return initializeDirectory(LCFileChoosers.getOrInitKeyListFileChooser(), fileChooserType);
     }
 
     public static FileChooser getChooserProfile(final FileChooserType fileChooserType) {
-        return initializeDirectory(LCFileChooser.getOrInitProfileFileChooser(), fileChooserType);
+        return initializeDirectory(LCFileChoosers.getOrInitProfileFileChooser(), fileChooserType);
     }
 
     public static FileChooser getChooserImage(final FileChooserType fileChooserType) {
-        return initializeDirectory(LCFileChooser.getOrInitImageFileChooser(), fileChooserType);
+        return initializeDirectory(LCFileChoosers.getOrInitImageFileChooser(), fileChooserType);
     }
 
     public static FileChooser getOtherFileChooser(final String title, final ExtensionFilter extensionFilter, final FileChooserType fileChooserType) {
-        if (LCFileChooser.otherFileChooser == null) {
-            LCFileChooser.otherFileChooser = new FileChooser();
+        if (LCFileChoosers.otherFileChooser == null) {
+            LCFileChoosers.otherFileChooser = new FileChooser();
         }
-        LCFileChooser.otherFileChooser.setTitle(title);
-        LCFileChooser.otherFileChooser.getExtensionFilters().clear();
+        LCFileChoosers.otherFileChooser.setTitle(title);
+        LCFileChoosers.otherFileChooser.getExtensionFilters().clear();
         if (extensionFilter != null) {
-            LCFileChooser.otherFileChooser.getExtensionFilters().add(extensionFilter);
+            LCFileChoosers.otherFileChooser.getExtensionFilters().add(extensionFilter);
         }
         initializeDirectory(otherFileChooser, fileChooserType);
-        return LCFileChooser.otherFileChooser;
+        return LCFileChoosers.otherFileChooser;
     }
 
     public static DirectoryChooser getChooserDirectory(final FileChooserType fileChooserType) {
@@ -130,7 +130,7 @@ public class LCFileChooser {
         if (title != null) {
             directoryChooser.setTitle(title);
         }
-        return LCFileChooser.directoryChooser;
+        return LCFileChoosers.directoryChooser;
     }
     //========================================================================
 

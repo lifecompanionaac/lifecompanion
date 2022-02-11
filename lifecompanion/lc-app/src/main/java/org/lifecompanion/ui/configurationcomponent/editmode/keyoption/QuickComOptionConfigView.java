@@ -32,7 +32,7 @@ import org.lifecompanion.controller.editaction.KeyOptionActions.ChangeTextToWrit
 import org.lifecompanion.util.binding.LCConfigBindingUtils;
 import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.QuickComKeyOption;
-import org.lifecompanion.controller.resource.LCGlyphFont;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.controller.voicesynthesizer.VoiceSynthesizerController;
@@ -76,7 +76,7 @@ public class QuickComOptionConfigView extends BaseKeyOptionConfigView<QuickComKe
 
 		//Play example
 		this.buttonPlayExample = UIUtils.createGraphicButton(
-				LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.VOLUME_UP).size(12).color(LCGraphicStyle.MAIN_PRIMARY),
+				GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.VOLUME_UP).size(12).color(LCGraphicStyle.MAIN_PRIMARY),
 				"tooltip.quick.com.play.example");
 
 		//Undo/redo wrapper

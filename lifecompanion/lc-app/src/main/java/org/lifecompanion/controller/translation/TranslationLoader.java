@@ -26,12 +26,11 @@ import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
 
-public enum TranslationManager {
-    INSTANCE;
+public class TranslationLoader {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(TranslationManager.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(TranslationLoader.class);
 
-    public void loadLanguageResource(String code, String name) {
+    public static void loadLanguageResource(String code, String name) {
         String resourcePath = "/translation/" + code + name;
         try (InputStream inputStreamForPath = ResourceHelper.getInputStreamForPath(resourcePath)) {
             Translation.INSTANCE.load(resourcePath, inputStreamForPath);

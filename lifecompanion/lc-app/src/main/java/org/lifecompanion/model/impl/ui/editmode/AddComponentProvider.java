@@ -22,7 +22,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.lifecompanion.model.api.ui.editmode.PossibleAddComponentCategoryI;
 import org.lifecompanion.model.api.ui.editmode.PossibleAddComponentI;
-import org.lifecompanion.controller.plugin.PluginManager;
+import org.lifecompanion.controller.plugin.PluginController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,7 +54,7 @@ public enum AddComponentProvider {
         this.addPossibleComp(PossibleAddComponents.AddNoteKey.INSTANCE);
         this.addPossibleComp(PossibleAddComponents.AddVariableInformationKey.INSTANCE);
         //Plugin
-        PluginManager.INSTANCE.getPossibleAddComponents().registerListenerAndDrainCache(addCompType -> {
+        PluginController.INSTANCE.getPossibleAddComponents().registerListenerAndDrainCache(addCompType -> {
             try {
                 addPossibleComp(addCompType.getConstructor().newInstance());
             } catch (Exception e) {

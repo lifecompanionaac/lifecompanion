@@ -37,8 +37,8 @@ import org.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
 import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
-import org.lifecompanion.controller.editmode.ProfileConfigSelectionController;
-import org.lifecompanion.controller.resource.LCGlyphFont;
+import org.lifecompanion.controller.profileconfigselect.ProfileConfigSelectionController;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.utils.Pair;
@@ -139,7 +139,7 @@ public class DefaultConfigurationListPane extends VBox implements LCViewInitHelp
                         defaultConfigurationToggles.put(toggleEnableConfiguration, defaultConfiguration);
                         selectionNode = toggleEnableConfiguration;
                     } else {
-                        final Button selectConfigButton = UIUtils.createGraphicButton(LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.CHEVRON_RIGHT).size(20).color(LCGraphicStyle.MAIN_DARK), null);
+                        final Button selectConfigButton = UIUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CHEVRON_RIGHT).size(20).color(LCGraphicStyle.MAIN_DARK), null);
                         selectConfigButton.setOnAction(e -> {
                             if (this.onConfigurationSelected != null) onConfigurationSelected.accept(defaultConfiguration);
                         });

@@ -35,7 +35,7 @@ import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.editaction.UserCompActions;
 import org.lifecompanion.controller.editaction.UserCompActions.DeleteUserComp;
-import org.lifecompanion.controller.resource.LCGlyphFont;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.controller.profile.UserCompController;
 import org.lifecompanion.framework.commons.translation.Translation;
@@ -81,14 +81,14 @@ public class UserCompView extends TitledPane implements LCViewInitHelper {
         //Button to add/remove
         HBox boxButtonLabel = new HBox();
         this.buttonRemove = UIUtils.createGraphicButton(
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.TRASH_ALT).size(18).color(LCGraphicStyle.SECOND_PRIMARY),
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.TRASH_ALT).size(18).color(LCGraphicStyle.SECOND_PRIMARY),
                 "tooltip.user.comp.remove");
         buttonEdit = UIUtils.createGraphicButton(
-                LCGlyphFont.FONT_MATERIAL.create('\uE254').size(17).color(LCGraphicStyle.MAIN_PRIMARY),
+                GlyphFontHelper.FONT_MATERIAL.create('\uE254').size(17).color(LCGraphicStyle.MAIN_PRIMARY),
                 "tooltip.user.comp.edit");
 
         this.buttonMenu = UIUtils.createGraphicMenuButton(
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.ELLIPSIS_V).size(18).color(LCGraphicStyle.MAIN_DARK), "tooltip.user.comp.menu");
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.ELLIPSIS_V).size(18).color(LCGraphicStyle.MAIN_DARK), "tooltip.user.comp.menu");
         //Advance function button
         this.menuItemSelectAll = new MenuItem(Translation.getText("user.comp.list.select.all"));
         this.menuItemClearSelection = new MenuItem(Translation.getText("user.comp.list.clear"));
@@ -105,7 +105,7 @@ public class UserCompView extends TitledPane implements LCViewInitHelper {
         this.fieldSearchFilter = TextFields.createClearableTextField();
         this.fieldSearchFilter.setPromptText(Translation.getText("user.comp.search.tip"));
         HBox.setHgrow(this.fieldSearchFilter, Priority.ALWAYS);
-        HBox boxFilter = new HBox(5.0, LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.SEARCH).sizeFactor(1).color(LCGraphicStyle.MAIN_LIGHT),
+        HBox boxFilter = new HBox(5.0, GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.SEARCH).sizeFactor(1).color(LCGraphicStyle.MAIN_LIGHT),
                 this.fieldSearchFilter);
         boxFilter.setAlignment(Pos.CENTER_LEFT);
 

@@ -32,7 +32,7 @@ import org.lifecompanion.model.api.configurationcomponent.dynamickey.SimplerKeyC
 import org.lifecompanion.ui.app.generalconfiguration.step.dynamickey.CommonListViewActionContainer;
 import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
-import org.lifecompanion.controller.resource.LCGlyphFont;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
 
 public class DetailledSimplerKeyContentContainerListCell<T extends SimplerKeyContentContainerI> extends AbstractKeyListContentListCell<T> {
     public static final double CELL_HEIGHT = 100.0;
@@ -90,7 +90,7 @@ public class DetailledSimplerKeyContentContainerListCell<T extends SimplerKeyCon
     }
 
     private Button createButton(FontAwesome.Glyph trash, Color color, String tooltip) {
-        final Button button = UIUtils.createGraphicButton(LCGlyphFont.FONT_AWESOME.create(trash)
+        final Button button = UIUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(trash)
                 .size(BUTTON_SIZE).color(color), tooltip);
         button.getStyleClass().addAll("button-without-padding");
         return button;

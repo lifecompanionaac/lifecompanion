@@ -28,7 +28,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import org.lifecompanion.model.api.categorizedelement.CategorizedElementI;
 import org.lifecompanion.util.UIUtils;
-import org.lifecompanion.controller.resource.IconManager;
+import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.ui.app.categorizedelement.AbstractCategorizedListManageView;
 import org.lifecompanion.ui.app.categorizedelement.CategorizedIconView;
 
@@ -105,7 +105,7 @@ public class AbstractCategorizedElementListCellView<T extends CategorizedElement
             this.labelActionName.textProperty().set(item.getName());
             this.labelActionDescription.textProperty().bind(item.variableDescriptionProperty());
             this.useActionIcon.circleColorProperty().set(item.getCategory().getColor());
-            this.useActionIcon.imageProperty().set(IconManager.get(item.getConfigIconPath()));
+            this.useActionIcon.imageProperty().set(IconHelper.get(item.getConfigIconPath()));
             this.tooltip.textProperty().bind(item.variableDescriptionProperty());
         }
     }

@@ -22,7 +22,7 @@ package org.lifecompanion.ui.app.categorizedelement.useaction;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import org.lifecompanion.model.api.categorizedelement.useaction.BaseUseActionI;
-import org.lifecompanion.controller.categorizedelement.useaction.AvailableUseActionManager;
+import org.lifecompanion.controller.categorizedelement.useaction.AvailableUseActionController;
 import org.lifecompanion.ui.app.categorizedelement.AbstractCategorizedSearchView;
 import org.lifecompanion.framework.commons.translation.Translation;
 
@@ -49,7 +49,7 @@ public class UseActionSearchView extends AbstractCategorizedSearchView<BaseUseAc
 
 	@Override
 	protected List<BaseUseActionI<?>> searchForElement(final String terms) {
-		return AvailableUseActionManager.INSTANCE.searchAction(terms);
+		return AvailableUseActionController.INSTANCE.searchAction(terms);
 	}
 
 	@Override

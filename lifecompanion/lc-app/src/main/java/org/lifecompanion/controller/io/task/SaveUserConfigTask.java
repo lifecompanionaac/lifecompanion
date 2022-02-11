@@ -22,7 +22,7 @@ package org.lifecompanion.controller.io.task;
 import mslinks.ShellLink;
 import org.lifecompanion.controller.appinstallation.InstallationController;
 import org.lifecompanion.util.model.LCTask;
-import org.lifecompanion.controller.userconfiguration.UserBaseConfiguration;
+import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
 import org.lifecompanion.framework.commons.SystemType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 
 /**
- * Task to save {@link UserBaseConfiguration}
+ * Task to save {@link UserConfigurationController}
  *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
@@ -46,12 +46,12 @@ public class SaveUserConfigTask extends LCTask<Void> {
 
     @Override
     protected Void call() throws Exception {
-        UserBaseConfiguration.INSTANCE.save();
+        UserConfigurationController.INSTANCE.save();
         // Only on Windows : launch on startup property : create or delete the shortcut when needed
         if (SystemType.current() == SystemType.WINDOWS) {
             File startupLauncherShortcutPath = getStartupShortcutPath();
             LOGGER.info("Will check startup shortcut from path : {}, exists {}", startupLauncherShortcutPath, startupLauncherShortcutPath.exists());
-            final boolean launchOnStartupEnabled = UserBaseConfiguration.INSTANCE.launchLCSystemStartupProperty().get();
+            final boolean launchOnStartupEnabled = UserConfigurationController.INSTANCE.launchLCSystemStartupProperty().get();
             if (startupLauncherShortcutPath.exists() && !launchOnStartupEnabled) {
                 final boolean deleted = startupLauncherShortcutPath.delete();
                 LOGGER.info("Startup disabled, removed shortcut : {}", deleted);

@@ -33,8 +33,8 @@ import org.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
-import org.lifecompanion.controller.media.SoundPlayer;
-import org.lifecompanion.controller.resource.LCGlyphFont;
+import org.lifecompanion.controller.media.SoundPlayerController;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.controller.editmode.ErrorHandlingController;
 import org.lifecompanion.model.impl.notification.LCNotification;
 import org.lifecompanion.ui.notification.LCNotificationController;
@@ -123,7 +123,7 @@ public class SoundRecordingControl extends HBox implements LCViewInitHelper {
     public void initUI() {
         //UI
         this.buttonRecordPlayStop = UIUtils.createGraphicsToggleButton(Translation.getText("sound.record.start.button"),
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.MICROPHONE).sizeFactor(1).color(LCGraphicStyle.SECOND_DARK), null);
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.MICROPHONE).sizeFactor(1).color(LCGraphicStyle.SECOND_DARK), null);
         buttonRecordPlayStop.getStyleClass().add("record-sound-toggle");
         buttonRecordPlayStop.setContentDisplay(ContentDisplay.LEFT);
         buttonRecordPlayStop.setMinWidth(100.0);
@@ -132,7 +132,7 @@ public class SoundRecordingControl extends HBox implements LCViewInitHelper {
         this.labelCurrentSoundDuration = new Label();
         labelCurrentSoundDuration.getStyleClass().add("text-font-size-120");
         buttonPlayCurrent = UIUtils.createGraphicButton(
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.PLAY).sizeFactor(1).color(LCGraphicStyle.MAIN_PRIMARY),
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.PLAY).sizeFactor(1).color(LCGraphicStyle.MAIN_PRIMARY),
                 "tooltip.explain.play.recorded.sound");
 
         //Transition when recording
@@ -163,7 +163,7 @@ public class SoundRecordingControl extends HBox implements LCViewInitHelper {
         });
         this.buttonPlayCurrent.setOnAction(e -> {
             if (this.currentRecordedFile.get() != null) {
-                SoundPlayer.INSTANCE.playSoundAsync(this.currentRecordedFile.get(), true);
+                SoundPlayerController.INSTANCE.playSoundAsync(this.currentRecordedFile.get(), true);
             }
         });
 
@@ -292,7 +292,7 @@ public class SoundRecordingControl extends HBox implements LCViewInitHelper {
     //========================================================================
     public void dispose() {
         stopRecording(true);
-        SoundPlayer.INSTANCE.stopEveryPlayer();
+        SoundPlayerController.INSTANCE.stopEveryPlayer();
     }
 
     public void setFileAndDuration(File file, int duration) {

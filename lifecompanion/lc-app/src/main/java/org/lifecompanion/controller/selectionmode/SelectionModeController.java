@@ -26,7 +26,7 @@ import javafx.collections.ObservableMap;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-import org.lifecompanion.controller.categorizedelement.useaction.UserActionController;
+import org.lifecompanion.controller.categorizedelement.useaction.UseActionController;
 import org.lifecompanion.model.api.configurationcomponent.*;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
 import org.lifecompanion.model.impl.selectionmode.*;
@@ -34,7 +34,7 @@ import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.controller.lifecycle.AppMode;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.profile.ProfileController;
-import org.lifecompanion.controller.io.IOManager;
+import org.lifecompanion.controller.io.IOHelper;
 import org.lifecompanion.controller.io.task.ConfigurationLoadingTask;
 import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
 import org.lifecompanion.model.api.selectionmode.*;
@@ -837,12 +837,12 @@ public enum SelectionModeController implements ModeListenerI {
     public void changeConfigurationInUseMode(final LCConfigurationDescriptionI configurationDescription) {
         //If there is a configuration and a profile
         if (configurationDescription != null && ProfileController.INSTANCE.currentProfileProperty().get() != null) {
-            UserActionController.INSTANCE.pauseActionLaunch();
+            UseActionController.INSTANCE.pauseActionLaunch();
             //Enable changing view
             configurationChangingListeners.forEach(l -> l.accept(true));
             System.gc();// FIXME ?
             //Load the configuration (synch. because the action is executed in another Thread)
-            ConfigurationLoadingTask configurationLoadingTask = IOManager.INSTANCE.createLoadConfigurationTask(configurationDescription, ProfileController.INSTANCE.currentProfileProperty().get());
+            ConfigurationLoadingTask configurationLoadingTask = IOHelper.createLoadConfigurationTask(configurationDescription, ProfileController.INSTANCE.currentProfileProperty().get());
             try {
                 LCConfigurationI loadedConfiguration = LCUtils.executeInCurrentThread(configurationLoadingTask);
                 final LCConfigurationDescriptionI previous = AppModeController.INSTANCE.getUseModeContext().getConfigurationDescription();
@@ -852,7 +852,7 @@ public enum SelectionModeController implements ModeListenerI {
             } catch (Throwable t) {
                 this.LOGGER.warn("Couldn't load the configuration for change configuration use action", t);
                 configurationChangingListeners.forEach(l -> l.accept(false));
-                UserActionController.INSTANCE.unpauseActionLaunch();
+                UseActionController.INSTANCE.unpauseActionLaunch();
             }
         }
     }

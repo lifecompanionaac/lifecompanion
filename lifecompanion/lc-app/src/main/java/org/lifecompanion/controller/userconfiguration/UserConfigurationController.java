@@ -34,9 +34,9 @@ import java.util.Properties;
  *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
-public enum UserBaseConfiguration {
+public enum UserConfigurationController {
     INSTANCE;
-    private final Logger LOGGER = LoggerFactory.getLogger(UserBaseConfiguration.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(UserConfigurationController.class);
 
     //Properties name
     private static final String PROP_LANGUAGE = "language", PROP_FRAME_WIDTH = "frame-width", PROP_FRAME_HEIGHT = "frame-height",
@@ -57,7 +57,7 @@ public enum UserBaseConfiguration {
     private final BooleanProperty recordAndSendSessionStats;
     private final BooleanProperty autoVirtualKeyboardShow;
 
-    UserBaseConfiguration() {
+    UserConfigurationController() {
         this.userLanguage = new SimpleStringProperty(this, "userLanguage", "fr");
         this.mainFrameWidth = new SimpleIntegerProperty(this, "mainFrameWidth", 1200);
         this.mainFrameHeight = new SimpleIntegerProperty(this, "mainFrameHeight", 800);
@@ -85,34 +85,34 @@ public enum UserBaseConfiguration {
         File configFile = getConfigFile();
         try (FileInputStream fis = new FileInputStream(configFile)) {
             prop.load(fis);
-            if (prop.containsKey(UserBaseConfiguration.PROP_LANGUAGE)) {
-                this.userLanguage.set(prop.getProperty(UserBaseConfiguration.PROP_LANGUAGE));
+            if (prop.containsKey(UserConfigurationController.PROP_LANGUAGE)) {
+                this.userLanguage.set(prop.getProperty(UserConfigurationController.PROP_LANGUAGE));
             }
-            if (prop.containsKey(UserBaseConfiguration.PROP_FRAME_WIDTH)) {
-                this.mainFrameWidth.set(Integer.parseInt(prop.getProperty(UserBaseConfiguration.PROP_FRAME_WIDTH)));
+            if (prop.containsKey(UserConfigurationController.PROP_FRAME_WIDTH)) {
+                this.mainFrameWidth.set(Integer.parseInt(prop.getProperty(UserConfigurationController.PROP_FRAME_WIDTH)));
             }
-            if (prop.containsKey(UserBaseConfiguration.PROP_FRAME_HEIGHT)) {
-                this.mainFrameHeight.set(Integer.parseInt(prop.getProperty(UserBaseConfiguration.PROP_FRAME_HEIGHT)));
+            if (prop.containsKey(UserConfigurationController.PROP_FRAME_HEIGHT)) {
+                this.mainFrameHeight.set(Integer.parseInt(prop.getProperty(UserConfigurationController.PROP_FRAME_HEIGHT)));
             }
-            if (prop.containsKey(UserBaseConfiguration.PROP_LAUNCH_MAXIMIZED)) {
-                this.launchMaximized.set(Boolean.parseBoolean(prop.getProperty(UserBaseConfiguration.PROP_LAUNCH_MAXIMIZED)));
+            if (prop.containsKey(UserConfigurationController.PROP_LAUNCH_MAXIMIZED)) {
+                this.launchMaximized.set(Boolean.parseBoolean(prop.getProperty(UserConfigurationController.PROP_LAUNCH_MAXIMIZED)));
             }
-            if (prop.containsKey(UserBaseConfiguration.PROP_TIPS_STARTUP)) {
-                this.showTipsOnStartup.set(Boolean.parseBoolean(prop.getProperty(UserBaseConfiguration.PROP_TIPS_STARTUP)));
+            if (prop.containsKey(UserConfigurationController.PROP_TIPS_STARTUP)) {
+                this.showTipsOnStartup.set(Boolean.parseBoolean(prop.getProperty(UserConfigurationController.PROP_TIPS_STARTUP)));
             }
-            if (prop.containsKey(UserBaseConfiguration.PROP_SELECTION_STROKE_SIZE)) {
-                this.selectionStrokeSize.set(Double.parseDouble(prop.getProperty(UserBaseConfiguration.PROP_SELECTION_STROKE_SIZE)));
+            if (prop.containsKey(UserConfigurationController.PROP_SELECTION_STROKE_SIZE)) {
+                this.selectionStrokeSize.set(Double.parseDouble(prop.getProperty(UserConfigurationController.PROP_SELECTION_STROKE_SIZE)));
             }
-            if (prop.containsKey(UserBaseConfiguration.PROP_SELECTION_DASH_SIZE)) {
-                this.selectionDashSize.set(Double.parseDouble(prop.getProperty(UserBaseConfiguration.PROP_SELECTION_DASH_SIZE)));
+            if (prop.containsKey(UserConfigurationController.PROP_SELECTION_DASH_SIZE)) {
+                this.selectionDashSize.set(Double.parseDouble(prop.getProperty(UserConfigurationController.PROP_SELECTION_DASH_SIZE)));
             }
-            if (prop.containsKey(UserBaseConfiguration.PROP_UNSAVED_CHANGE_THRESHOLD)) {
+            if (prop.containsKey(UserConfigurationController.PROP_UNSAVED_CHANGE_THRESHOLD)) {
                 this.unsavedChangeInConfigurationThreshold.set(Integer.parseInt(prop.getProperty(PROP_UNSAVED_CHANGE_THRESHOLD)));
             }
-            if (prop.containsKey(UserBaseConfiguration.PROP_RECORD_SEND_SESSION_STATS)) {
+            if (prop.containsKey(UserConfigurationController.PROP_RECORD_SEND_SESSION_STATS)) {
                 this.recordAndSendSessionStats.set(Boolean.parseBoolean(prop.getProperty(PROP_RECORD_SEND_SESSION_STATS)));
             }
-            if (prop.containsKey(UserBaseConfiguration.PROP_ENABLE_AUTO_VK_SHOW)) {
+            if (prop.containsKey(UserConfigurationController.PROP_ENABLE_AUTO_VK_SHOW)) {
                 this.autoVirtualKeyboardShow.set(Boolean.parseBoolean(prop.getProperty(PROP_ENABLE_AUTO_VK_SHOW)));
             }
         } catch (FileNotFoundException e) {
@@ -129,14 +129,14 @@ public enum UserBaseConfiguration {
     public void save() throws IOException {
         File configFile = getConfigFile();
         Properties prop = new Properties();
-        prop.setProperty(UserBaseConfiguration.PROP_LANGUAGE, "" + this.userLanguage.get());
-        prop.setProperty(UserBaseConfiguration.PROP_FRAME_WIDTH, "" + this.mainFrameWidth.get());
-        prop.setProperty(UserBaseConfiguration.PROP_FRAME_HEIGHT, "" + this.mainFrameHeight.get());
-        prop.setProperty(UserBaseConfiguration.PROP_LAUNCH_MAXIMIZED, "" + this.launchMaximized.get());
-        prop.setProperty(UserBaseConfiguration.PROP_RECORD_SEND_SESSION_STATS, "" + this.recordAndSendSessionStats.get());
-        prop.setProperty(UserBaseConfiguration.PROP_TIPS_STARTUP, "" + this.showTipsOnStartup.get());
-        prop.setProperty(UserBaseConfiguration.PROP_SELECTION_STROKE_SIZE, "" + this.selectionStrokeSize.get());
-        prop.setProperty(UserBaseConfiguration.PROP_SELECTION_DASH_SIZE, "" + this.selectionDashSize.get());
+        prop.setProperty(UserConfigurationController.PROP_LANGUAGE, "" + this.userLanguage.get());
+        prop.setProperty(UserConfigurationController.PROP_FRAME_WIDTH, "" + this.mainFrameWidth.get());
+        prop.setProperty(UserConfigurationController.PROP_FRAME_HEIGHT, "" + this.mainFrameHeight.get());
+        prop.setProperty(UserConfigurationController.PROP_LAUNCH_MAXIMIZED, "" + this.launchMaximized.get());
+        prop.setProperty(UserConfigurationController.PROP_RECORD_SEND_SESSION_STATS, "" + this.recordAndSendSessionStats.get());
+        prop.setProperty(UserConfigurationController.PROP_TIPS_STARTUP, "" + this.showTipsOnStartup.get());
+        prop.setProperty(UserConfigurationController.PROP_SELECTION_STROKE_SIZE, "" + this.selectionStrokeSize.get());
+        prop.setProperty(UserConfigurationController.PROP_SELECTION_DASH_SIZE, "" + this.selectionDashSize.get());
         prop.setProperty(PROP_UNSAVED_CHANGE_THRESHOLD, "" + this.unsavedChangeInConfigurationThreshold.get());
         prop.setProperty(PROP_ENABLE_AUTO_VK_SHOW, "" + this.autoVirtualKeyboardShow.get());
         IOUtils.createParentDirectoryIfNeeded(configFile);

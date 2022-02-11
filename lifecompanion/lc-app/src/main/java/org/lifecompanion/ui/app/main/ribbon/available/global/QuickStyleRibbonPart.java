@@ -31,7 +31,7 @@ import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.configurationcomponent.DisplayableComponentBaseImpl;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.editaction.KeyActions;
-import org.lifecompanion.controller.resource.LCGlyphFont;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.controller.editmode.ComponentActionController;
 import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.controller.editmode.SelectionController;
@@ -66,10 +66,10 @@ public class QuickStyleRibbonPart extends RibbonBasePart<DisplayableComponentBas
 
         //Buttons style clone
         this.buttonCopyKeyStyle = UIUtils.createTextButtonWithGraphics(Translation.getText("buttons.copy.key.style"),
-                LCGlyphFont.FONT_AWESOME.create('\uF24D').sizeFactor(2).color(LCGraphicStyle.MAIN_PRIMARY), "tooltip.buttons.copy.key.style");
+                GlyphFontHelper.FONT_AWESOME.create('\uF24D').sizeFactor(2).color(LCGraphicStyle.MAIN_PRIMARY), "tooltip.buttons.copy.key.style");
         this.buttonCopyKeyStyle.setTextAlignment(TextAlignment.CENTER);
         this.buttonPasteKeyStyle = UIUtils.createTextButtonWithGraphics(Translation.getText("buttons.paste.key.style"),
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.PAINT_BRUSH).sizeFactor(2).color(LCGraphicStyle.SECOND_DARK),
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.PAINT_BRUSH).sizeFactor(2).color(LCGraphicStyle.SECOND_DARK),
                 "tooltip.buttons.paste.key.style");
         this.buttonPasteKeyStyle.setTextAlignment(TextAlignment.CENTER);
         HBox boxCloneStyle = new HBox(2.0, this.buttonCopyKeyStyle, this.buttonPasteKeyStyle);
@@ -77,7 +77,7 @@ public class QuickStyleRibbonPart extends RibbonBasePart<DisplayableComponentBas
 
         //Button to delete key style
         this.buttonDeleteStyle = UIUtils.createTextButtonWithGraphics(Translation.getText("buttons.delete.key.styles"),
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.ERASER).sizeFactor(2).color(LCGraphicStyle.SECOND_DARK),
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.ERASER).sizeFactor(2).color(LCGraphicStyle.SECOND_DARK),
                 "tooltip.buttons.delete.key.styles");
 
         //Total

@@ -32,7 +32,7 @@ import org.lifecompanion.model.api.configurationcomponent.GridPartComponentI;
 import org.lifecompanion.model.api.configurationcomponent.RootGraphicComponentI;
 import org.lifecompanion.model.api.configurationcomponent.SelectableComponentI;
 import org.lifecompanion.model.api.ui.editmode.ConfigOptionComponentI;
-import org.lifecompanion.controller.resource.LCGlyphFont;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.controller.editmode.SelectionController;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.slf4j.Logger;
@@ -198,7 +198,7 @@ public class ButtonComponentOption extends BaseOptionRegion<SelectableComponentI
      */
     public static void applyComponentOptionButtonStyle(final ButtonBase button, final Enum<?> glyph) {
         if (glyph != null) {
-            button.setGraphic(LCGlyphFont.FONT_AWESOME.create(glyph).sizeFactor(1).color(Color.WHITE));
+            button.setGraphic(GlyphFontHelper.FONT_AWESOME.create(glyph).sizeFactor(1).color(Color.WHITE));
         }
         Circle buttonShape = new Circle(1.0);//Radius is ignored when != 0
         button.setShape(buttonShape);
@@ -217,7 +217,7 @@ public class ButtonComponentOption extends BaseOptionRegion<SelectableComponentI
      * @param glyph
      */
     public static void applyButtonBaseStyle(final ButtonBase button, final Enum<?> glyph) {
-        button.setGraphic(LCGlyphFont.FONT_AWESOME.create(glyph).sizeFactor(1).color(Color.WHITE));
+        button.setGraphic(GlyphFontHelper.FONT_AWESOME.create(glyph).sizeFactor(1).color(Color.WHITE));
         button.setShape(new Circle(16.0));
         //FIX : set a space for text allow the icon to be correctly displayed
         button.setText(" ");

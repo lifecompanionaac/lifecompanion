@@ -19,7 +19,7 @@
 package org.lifecompanion.ui.app.categorizedelement.useaction;
 
 import org.lifecompanion.model.api.categorizedelement.useaction.BaseUseActionI;
-import org.lifecompanion.controller.categorizedelement.useaction.AvailableUseActionManager;
+import org.lifecompanion.controller.categorizedelement.useaction.AvailableUseActionController;
 import org.lifecompanion.ui.common.pane.specific.cell.AbstractCategorizedItemView;
 
 import java.util.function.Consumer;
@@ -32,6 +32,6 @@ import java.util.function.Consumer;
 public class UseActionItemView extends AbstractCategorizedItemView<BaseUseActionI<?>> {
 
     public UseActionItemView(BaseUseActionI<?> item, final Consumer<BaseUseActionI<?>> selectionCallbackP) {
-        super(item, selectionCallbackP, AvailableUseActionManager.INSTANCE::createNewAction);
+        super(item, selectionCallbackP, AvailableUseActionController.INSTANCE::createNewAction);
     }
 }

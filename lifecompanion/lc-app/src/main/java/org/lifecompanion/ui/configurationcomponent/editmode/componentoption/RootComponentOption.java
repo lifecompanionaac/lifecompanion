@@ -25,7 +25,7 @@ import org.lifecompanion.util.model.PositionSize;
 import org.lifecompanion.model.api.configurationcomponent.RootGraphicComponentI;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
-import org.lifecompanion.controller.userconfiguration.UserBaseConfiguration;
+import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
 import org.lifecompanion.controller.editmode.ConfigActionController;
 import javafx.scene.Cursor;
 import javafx.scene.shape.Circle;
@@ -52,7 +52,7 @@ public class RootComponentOption extends BaseOptionRegion<RootGraphicComponentI>
 
 	// Class part : "Resize"
 	//========================================================================
-	private static final double SIZE = UserBaseConfiguration.INSTANCE.selectionStrokeSizeProperty().get() * 1.8;
+	private static final double SIZE = UserConfigurationController.INSTANCE.selectionStrokeSizeProperty().get() * 1.8;
 	private static final double GAP = 1;
 	private Circle lt, lb, rt, rb, lm, rm, tm, bm;
 	private Rectangle stroke;
@@ -114,7 +114,7 @@ public class RootComponentOption extends BaseOptionRegion<RootGraphicComponentI>
 		this.stroke.setFill(null);
 		this.stroke.setStroke(LCGraphicStyle.SECOND_DARK);
 		this.stroke.visibleProperty().bind(this.model.showSelectedProperty());
-		this.stroke.strokeWidthProperty().bind(UserBaseConfiguration.INSTANCE.selectionStrokeSizeProperty());
+		this.stroke.strokeWidthProperty().bind(UserConfigurationController.INSTANCE.selectionStrokeSizeProperty());
 		// Add
 		this.getChildren().addAll(this.stroke, this.lt, this.lb, this.rt, this.rb, this.lm, this.rm, this.tm, this.bm);
 		// Resize

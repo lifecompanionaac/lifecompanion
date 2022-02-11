@@ -46,9 +46,9 @@ import java.util.function.Consumer;
  *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
-public enum UserActionController implements LCStateListener, ModeListenerI {
+public enum UseActionController implements LCStateListener, ModeListenerI {
     INSTANCE;
-    private final Logger LOGGER = LoggerFactory.getLogger(UserActionController.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(UseActionController.class);
 
     private static final int ACTION_THREAD_POOL_SIZE = 4;
 
@@ -80,7 +80,7 @@ public enum UserActionController implements LCStateListener, ModeListenerI {
     // TODO : action shouldn't be fire in config mode!
     // check in execute and in event listener
 
-    UserActionController() {
+    UseActionController() {
         this.nextSimpleActionExecutionListener = new HashMap<>();
         this.endOfSimpleActionExecutionListener = new HashMap<>();
         for (UseActionEvent event : UseActionEvent.values()) {
@@ -337,7 +337,7 @@ public enum UserActionController implements LCStateListener, ModeListenerI {
     //========================================================================
     @Override
     public void modeStart(final LCConfigurationI configuration) {
-        this.threadPool = Executors.newFixedThreadPool(UserActionController.ACTION_THREAD_POOL_SIZE, LCNamedThreadFactory.threadFactory("UserActionController"));
+        this.threadPool = Executors.newFixedThreadPool(UseActionController.ACTION_THREAD_POOL_SIZE, LCNamedThreadFactory.threadFactory("UserActionController"));
         this.unpauseActionLaunch();
         configuration.getEventManager().attachAndStart(this.useEventListener, configuration);
     }

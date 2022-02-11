@@ -40,9 +40,9 @@ import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStep;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStepViewI;
 import org.lifecompanion.controller.editaction.LCConfigurationActions;
-import org.lifecompanion.controller.editmode.ProfileConfigSelectionController;
-import org.lifecompanion.controller.editmode.ProfileConfigStep;
-import org.lifecompanion.controller.resource.LCGlyphFont;
+import org.lifecompanion.controller.profileconfigselect.ProfileConfigSelectionController;
+import org.lifecompanion.controller.profileconfigselect.ProfileConfigStep;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.ui.common.control.specific.selector.ComponentSelectorControl;
@@ -168,7 +168,7 @@ public class GeneralInformationConfigurationStepView extends BorderPane implemen
         Label labelPartActions = UIUtils.createTitleLabel(Translation.getText("general.configuration.info.general.configuration.actions"));
         gridPaneActions.add(labelPartActions, 0, gridActionsRowIndex++, 2, 1);
         this.buttonPrintGridsPdf = ConfigUIUtils.createActionTableEntry(gridActionsRowIndex, "configuration.selection.print.grids.pdf.configuration.button",
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.FILE_PDF_ALT).size(30).color(LCGraphicStyle.SECOND_DARK), gridPaneActions);
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.FILE_PDF_ALT).size(30).color(LCGraphicStyle.SECOND_DARK), gridPaneActions);
         gridActionsRowIndex += 2;
 
         gridPaneTotal.add(gridPaneActions, 0, gridRowIndex, 2, gridActionsRowIndex);

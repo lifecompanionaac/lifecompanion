@@ -21,7 +21,7 @@ package org.lifecompanion.model.impl.configurationcomponent;
 
 import javafx.beans.property.*;
 import org.jdom2.Element;
-import org.lifecompanion.controller.io.IOHelper;
+import org.lifecompanion.controller.io.ConfigurationComponentIOHelper;
 import org.lifecompanion.model.api.configurationcomponent.SoundResourceHolderI;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.io.IOContextI;
@@ -112,7 +112,7 @@ public class SoundResourceHolder implements SoundResourceHolderI {
             } catch (IOException e) {
                 LOGGER.warn("Couldn't save the sound resource file path is {}", this.filePath.get(), e);
             }
-            return IOHelper.addTypeAlias(this, XMLObjectSerializer.serializeInto(SoundResourceHolder.class, this, new Element(NODE_NAME)), context);
+            return ConfigurationComponentIOHelper.addTypeAlias(this, XMLObjectSerializer.serializeInto(SoundResourceHolder.class, this, new Element(NODE_NAME)), context);
         } else
             return null;
     }

@@ -25,7 +25,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.jdom2.Element;
-import org.lifecompanion.controller.io.IOHelper;
+import org.lifecompanion.controller.io.ConfigurationComponentIOHelper;
 import org.lifecompanion.model.api.configurationcomponent.ConfigurationChildComponentI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.configurationcomponent.keyoption.KeyOptionConfigurationViewI;
@@ -51,7 +51,7 @@ import org.lifecompanion.model.impl.plugin.PluginInfo;
 import org.lifecompanion.model.impl.plugin.PluginInfoState;
 import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.model.impl.constant.LCConstant;
-import org.lifecompanion.controller.userconfiguration.UserBaseConfiguration;
+import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
 import org.lifecompanion.controller.appinstallation.InstallationController;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStepViewI;
 import org.lifecompanion.framework.commons.translation.Translation;
@@ -78,10 +78,10 @@ import java.util.stream.Collectors;
  *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
-public enum PluginManager implements LCStateListener, ModeListenerI {
+public enum PluginController implements LCStateListener, ModeListenerI {
     INSTANCE;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(PluginManager.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PluginController.class);
 
     /**
      * Plugin infos list
@@ -93,7 +93,7 @@ public enum PluginManager implements LCStateListener, ModeListenerI {
      */
     private final Map<String, PluginI> loadedPlugins; // TODO pair of Plugin and PluginInfo ?
 
-    PluginManager() {
+    PluginController() {
         this.loadedPlugins = new HashMap<>();
         this.pluginInfoList = FXCollections.observableArrayList();
     }
@@ -133,7 +133,7 @@ public enum PluginManager implements LCStateListener, ModeListenerI {
                     }
                 }
             } catch (Throwable t) {
-                PluginManager.LOGGER.warn("Couldn't generate plugin use variable for plugin {}", plugin.getClass(), t);
+                PluginController.LOGGER.warn("Couldn't generate plugin use variable for plugin {}", plugin.getClass(), t);
             }
         }
         return vars;
@@ -143,73 +143,73 @@ public enum PluginManager implements LCStateListener, ModeListenerI {
 
     // PLUGIN LOADING
     //========================================================================
-    private final PluginImplementationLoadingHelper<Class<? extends BaseUseActionI>> useActions = new PluginImplementationLoadingHelper<>(BaseUseActionI.class);
-    private final PluginImplementationLoadingHelper<Class<? extends UseActionConfigurationViewI>> useActionConfigViews = new PluginImplementationLoadingHelper<>(UseActionConfigurationViewI.class);
-    private final PluginImplementationLoadingHelper<Class<? extends CharPredictorI>> charPredictors = new PluginImplementationLoadingHelper<>(CharPredictorI.class);
-    private final PluginImplementationLoadingHelper<Class<? extends WordPredictorI>> wordPredictors = new PluginImplementationLoadingHelper<>(WordPredictorI.class);
-    private final PluginImplementationLoadingHelper<Class<? extends VoiceSynthesizerI>> voiceSynthesizers = new PluginImplementationLoadingHelper<>(VoiceSynthesizerI.class);
-    private final PluginImplementationLoadingHelper<Class<? extends UseEventGeneratorI>> useEventGenerators = new PluginImplementationLoadingHelper<>(UseEventGeneratorI.class);
-    private final PluginImplementationLoadingHelper<Class<? extends UseEventGeneratorConfigurationViewI>> useEventGeneratorConfigViews = new PluginImplementationLoadingHelper<>(UseEventGeneratorConfigurationViewI.class);
-    private final PluginImplementationLoadingHelper<Class<? extends KeyOptionI>> keyOptions = new PluginImplementationLoadingHelper<>(KeyOptionI.class);
-    private final PluginImplementationLoadingHelper<Class<? extends KeyOptionConfigurationViewI>> keyOptionConfigViews = new PluginImplementationLoadingHelper<>(KeyOptionConfigurationViewI.class);
-    private final PluginImplementationLoadingHelper<Class<? extends PossibleAddComponentI>> possibleAddComponents = new PluginImplementationLoadingHelper<>(PossibleAddComponentI.class);
-    private final PluginImplementationLoadingHelper<Class<? extends GeneralConfigurationStepViewI>> generalConfigurationSteps = new PluginImplementationLoadingHelper<>(GeneralConfigurationStepViewI.class);
-    private final PluginImplementationLoadingHelper<UseVariableDefinitionI> useVariableDefinitions = new PluginImplementationLoadingHelper<>(null);
-    private final PluginImplementationLoadingHelper<String[]> stylesheets = new PluginImplementationLoadingHelper<>(null);
+    private final PluginImplementationLoadingHandler<Class<? extends BaseUseActionI>> useActions = new PluginImplementationLoadingHandler<>(BaseUseActionI.class);
+    private final PluginImplementationLoadingHandler<Class<? extends UseActionConfigurationViewI>> useActionConfigViews = new PluginImplementationLoadingHandler<>(UseActionConfigurationViewI.class);
+    private final PluginImplementationLoadingHandler<Class<? extends CharPredictorI>> charPredictors = new PluginImplementationLoadingHandler<>(CharPredictorI.class);
+    private final PluginImplementationLoadingHandler<Class<? extends WordPredictorI>> wordPredictors = new PluginImplementationLoadingHandler<>(WordPredictorI.class);
+    private final PluginImplementationLoadingHandler<Class<? extends VoiceSynthesizerI>> voiceSynthesizers = new PluginImplementationLoadingHandler<>(VoiceSynthesizerI.class);
+    private final PluginImplementationLoadingHandler<Class<? extends UseEventGeneratorI>> useEventGenerators = new PluginImplementationLoadingHandler<>(UseEventGeneratorI.class);
+    private final PluginImplementationLoadingHandler<Class<? extends UseEventGeneratorConfigurationViewI>> useEventGeneratorConfigViews = new PluginImplementationLoadingHandler<>(UseEventGeneratorConfigurationViewI.class);
+    private final PluginImplementationLoadingHandler<Class<? extends KeyOptionI>> keyOptions = new PluginImplementationLoadingHandler<>(KeyOptionI.class);
+    private final PluginImplementationLoadingHandler<Class<? extends KeyOptionConfigurationViewI>> keyOptionConfigViews = new PluginImplementationLoadingHandler<>(KeyOptionConfigurationViewI.class);
+    private final PluginImplementationLoadingHandler<Class<? extends PossibleAddComponentI>> possibleAddComponents = new PluginImplementationLoadingHandler<>(PossibleAddComponentI.class);
+    private final PluginImplementationLoadingHandler<Class<? extends GeneralConfigurationStepViewI>> generalConfigurationSteps = new PluginImplementationLoadingHandler<>(GeneralConfigurationStepViewI.class);
+    private final PluginImplementationLoadingHandler<UseVariableDefinitionI> useVariableDefinitions = new PluginImplementationLoadingHandler<>(null);
+    private final PluginImplementationLoadingHandler<String[]> stylesheets = new PluginImplementationLoadingHandler<>(null);
 
-    public PluginImplementationLoadingHelper<Class<? extends BaseUseActionI>> getUseActions() {
+    public PluginImplementationLoadingHandler<Class<? extends BaseUseActionI>> getUseActions() {
         return useActions;
     }
 
-    public PluginImplementationLoadingHelper<Class<? extends UseActionConfigurationViewI>> getUseActionConfigViews() {
+    public PluginImplementationLoadingHandler<Class<? extends UseActionConfigurationViewI>> getUseActionConfigViews() {
         return useActionConfigViews;
     }
 
-    public PluginImplementationLoadingHelper<Class<? extends CharPredictorI>> getCharPredictors() {
+    public PluginImplementationLoadingHandler<Class<? extends CharPredictorI>> getCharPredictors() {
         return charPredictors;
     }
 
-    public PluginImplementationLoadingHelper<Class<? extends WordPredictorI>> getWordPredictors() {
+    public PluginImplementationLoadingHandler<Class<? extends WordPredictorI>> getWordPredictors() {
         return wordPredictors;
     }
 
-    public PluginImplementationLoadingHelper<Class<? extends VoiceSynthesizerI>> getVoiceSynthesizers() {
+    public PluginImplementationLoadingHandler<Class<? extends VoiceSynthesizerI>> getVoiceSynthesizers() {
         return voiceSynthesizers;
     }
 
-    public PluginImplementationLoadingHelper<Class<? extends UseEventGeneratorI>> getUseEventGenerators() {
+    public PluginImplementationLoadingHandler<Class<? extends UseEventGeneratorI>> getUseEventGenerators() {
         return useEventGenerators;
     }
 
-    public PluginImplementationLoadingHelper<Class<? extends UseEventGeneratorConfigurationViewI>> getUseEventGeneratorConfigViews() {
+    public PluginImplementationLoadingHandler<Class<? extends UseEventGeneratorConfigurationViewI>> getUseEventGeneratorConfigViews() {
         return useEventGeneratorConfigViews;
     }
 
-    public PluginImplementationLoadingHelper<Class<? extends KeyOptionI>> getKeyOptions() {
+    public PluginImplementationLoadingHandler<Class<? extends KeyOptionI>> getKeyOptions() {
         return keyOptions;
     }
 
-    public PluginImplementationLoadingHelper<Class<? extends KeyOptionConfigurationViewI>> getKeyOptionConfigViews() {
+    public PluginImplementationLoadingHandler<Class<? extends KeyOptionConfigurationViewI>> getKeyOptionConfigViews() {
         return keyOptionConfigViews;
     }
 
-    public PluginImplementationLoadingHelper<Class<? extends PossibleAddComponentI>> getPossibleAddComponents() {
+    public PluginImplementationLoadingHandler<Class<? extends PossibleAddComponentI>> getPossibleAddComponents() {
         return possibleAddComponents;
     }
 
-    public PluginImplementationLoadingHelper<UseVariableDefinitionI> getUseVariableDefinitions() {
+    public PluginImplementationLoadingHandler<UseVariableDefinitionI> getUseVariableDefinitions() {
         return useVariableDefinitions;
     }
 
-    public PluginImplementationLoadingHelper<String[]> getStylesheets() {
+    public PluginImplementationLoadingHandler<String[]> getStylesheets() {
         return stylesheets;
     }
 
-    public PluginImplementationLoadingHelper<Class<? extends GeneralConfigurationStepViewI>> getGeneralConfigurationSteps() {
+    public PluginImplementationLoadingHandler<Class<? extends GeneralConfigurationStepViewI>> getGeneralConfigurationSteps() {
         return generalConfigurationSteps;
     }
 
-    private final List<PluginImplementationLoadingHelper<? extends Class<?>>> pluginImplementationLoadingHelpers = Arrays.asList(
+    private final List<PluginImplementationLoadingHandler<? extends Class<?>>> pluginImplementationLoadingHandlers = Arrays.asList(
             useActions, useActionConfigViews, charPredictors, wordPredictors, voiceSynthesizers, useEventGenerators,
             useEventGeneratorConfigViews, keyOptions, keyOptionConfigViews, possibleAddComponents, generalConfigurationSteps
     );
@@ -260,11 +260,11 @@ public enum PluginManager implements LCStateListener, ModeListenerI {
                 ) {
                     // Register every serializable types to IOManager
                     List<Class<? extends XMLSerializable>> serializableClassesInPlugin = getClassesInPlugin(scanResult, XMLSerializable.class);
-                    IOHelper.addSerializableTypes(serializableClassesInPlugin, pluginInfo);
+                    ConfigurationComponentIOHelper.addSerializableTypes(serializableClassesInPlugin, pluginInfo);
 
                     // Find and register plugin custom implementations
-                    for (PluginImplementationLoadingHelper pluginImplementationLoadingHelper : pluginImplementationLoadingHelpers) {
-                        scanForImplementationInPlugin(pluginInfo, scanResult, pluginImplementationLoadingHelper);
+                    for (PluginImplementationLoadingHandler pluginImplementationLoadingHandler : pluginImplementationLoadingHandlers) {
+                        scanForImplementationInPlugin(pluginInfo, scanResult, pluginImplementationLoadingHandler);
                     }
                 }
                 pluginInfo.stateProperty().set(PluginInfoState.LOADED);
@@ -277,10 +277,10 @@ public enum PluginManager implements LCStateListener, ModeListenerI {
         }
     }
 
-    private <T extends Class<T>> void scanForImplementationInPlugin(PluginInfo pluginInfo, ScanResult scanResult, PluginImplementationLoadingHelper<T> pluginImplementationLoadingHelper) {
-        List<Class<? extends T>> classes = getClassesInPlugin(scanResult, pluginImplementationLoadingHelper.getType());
-        pluginImplementationLoadingHelper.elementAdded(pluginInfo.getPluginId(), (Collection<T>) classes);
-        LOGGER.info("Found {} {} implementations in plugin {}", classes.size(), pluginImplementationLoadingHelper.getType().getName(), pluginInfo.getPluginId());
+    private <T extends Class<T>> void scanForImplementationInPlugin(PluginInfo pluginInfo, ScanResult scanResult, PluginImplementationLoadingHandler<T> pluginImplementationLoadingHandler) {
+        List<Class<? extends T>> classes = getClassesInPlugin(scanResult, pluginImplementationLoadingHandler.getType());
+        pluginImplementationLoadingHandler.elementAdded(pluginInfo.getPluginId(), (Collection<T>) classes);
+        LOGGER.info("Found {} {} implementations in plugin {}", classes.size(), pluginImplementationLoadingHandler.getType().getName(), pluginInfo.getPluginId());
     }
 
     private <T> List<Class<? extends T>> getClassesInPlugin(ScanResult scanResult, Class<T> type) {
@@ -291,14 +291,14 @@ public enum PluginManager implements LCStateListener, ModeListenerI {
     private void startPlugin(PluginInfo pluginInfo, PluginI plugin) {
         plugin.start(null);//TODO : datafolder
         // Load language
-        String[] languageFiles = plugin.getLanguageFiles(UserBaseConfiguration.INSTANCE.userLanguageProperty().get());
+        String[] languageFiles = plugin.getLanguageFiles(UserConfigurationController.INSTANCE.userLanguageProperty().get());
         if (languageFiles != null) {
             for (String languageFilePath : languageFiles) {
                 try (InputStream fis = plugin.getClass().getResourceAsStream(languageFilePath)) {
                     Translation.INSTANCE.load(languageFilePath, fis);
-                    PluginManager.LOGGER.info("Plugin language file {} loaded for {}", languageFilePath, pluginInfo.getPluginName());
+                    PluginController.LOGGER.info("Plugin language file {} loaded for {}", languageFilePath, pluginInfo.getPluginName());
                 } catch (Exception e) {
-                    PluginManager.LOGGER.error("Couldn't load the {} plugin language file {}", pluginInfo.getPluginId(), languageFilePath, e);
+                    PluginController.LOGGER.error("Couldn't load the {} plugin language file {}", pluginInfo.getPluginId(), languageFilePath, e);
                     //result.getErrorTextIds().add("plugin.error.invalid.lang.file");
                 }
             }
@@ -494,11 +494,11 @@ public enum PluginManager implements LCStateListener, ModeListenerI {
         }
 
         // Save dependencies
-        Element pluginDependenciesElement = new Element(PluginManager.NODE_PLUGIN_DEPENDENCIES);
+        Element pluginDependenciesElement = new Element(PluginController.NODE_PLUGIN_DEPENDENCIES);
         usedPluginIds.stream().flatMap(id -> getPluginById(id, pi -> pi.stateProperty().get() == PluginInfoState.LOADED).stream()).map(pi -> pi.serialize(context)).forEach(pluginDependenciesElement::addContent);
 
         // Save information
-        Element pluginInformations = new Element(PluginManager.NODE_PLUGIN_CUSTOM_INFORMATIONS);
+        Element pluginInformations = new Element(PluginController.NODE_PLUGIN_CUSTOM_INFORMATIONS);
         for (String pluginId : usedPluginIds) {
 
             PluginConfigPropertiesI configurationProperties = parentConfiguration != null ? parentConfiguration.getPluginConfigProperties(pluginId, PluginConfigPropertiesI.class) : null;
@@ -527,10 +527,10 @@ public enum PluginManager implements LCStateListener, ModeListenerI {
             return;
         }
         LCConfigurationI parentConfiguration = pluginUser.configurationParentProperty().get();
-        Element pluginsElement = configurationElement.getChild(PluginManager.NODE_PLUGINS);
+        Element pluginsElement = configurationElement.getChild(PluginController.NODE_PLUGINS);
         if (pluginsElement != null) {
             // Load each plugin custom information
-            Element pluginInformations = pluginsElement.getChild(PluginManager.NODE_PLUGIN_CUSTOM_INFORMATIONS);
+            Element pluginInformations = pluginsElement.getChild(PluginController.NODE_PLUGIN_CUSTOM_INFORMATIONS);
             for (Element pluginInformation : pluginInformations.getChildren()) {
                 String pluginId = pluginInformation.getAttributeValue(ATB_PLUGIN_ID);
                 PluginI pluginI = this.loadedPlugins.get(pluginId);
@@ -546,12 +546,12 @@ public enum PluginManager implements LCStateListener, ModeListenerI {
 
     // FIXME user dependencies
     public String checkPluginDependencies(final Element xmlRoot) throws LCException {
-        Element pluginsElement = xmlRoot.getChild(PluginManager.NODE_PLUGINS);
+        Element pluginsElement = xmlRoot.getChild(PluginController.NODE_PLUGINS);
         if (pluginsElement != null) {
 
             StringBuilder warningMessage = new StringBuilder();
 
-            Element pluginDependenciesElement = pluginsElement.getChild(PluginManager.NODE_PLUGIN_DEPENDENCIES);
+            Element pluginDependenciesElement = pluginsElement.getChild(PluginController.NODE_PLUGIN_DEPENDENCIES);
             for (Element pluginDependencyElement : pluginDependenciesElement.getChildren()) {
                 PluginInfo usedPluginInfo = new PluginInfo();
                 usedPluginInfo.deserialize(pluginDependencyElement, null);

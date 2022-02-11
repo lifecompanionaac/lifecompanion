@@ -39,7 +39,7 @@ import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.ui.common.pane.generic.BaseConfigurationViewBorderPane;
 import org.lifecompanion.controller.editaction.KeyActions;
 import org.lifecompanion.util.binding.LCConfigBindingUtils;
-import org.lifecompanion.controller.resource.LCGlyphFont;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
@@ -77,7 +77,7 @@ public class ImageUseComponentSelectorControl extends BaseConfigurationViewBorde
     public void initUI() {
         //Create buttons
         this.buttonParameters = UIUtils.createLeftTextButton(Translation.getText("image.use.show.advanced.parameters"),
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.GEARS).size(18).color(LCGraphicStyle.MAIN_PRIMARY),
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.GEARS).size(18).color(LCGraphicStyle.MAIN_PRIMARY),
                 "tooltip.image.use.show.advanced.parameters");
         BorderPane.setAlignment(buttonParameters, Pos.CENTER);
 

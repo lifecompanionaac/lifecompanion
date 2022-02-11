@@ -43,7 +43,7 @@ import org.lifecompanion.model.impl.voicesynthesizer.VoiceSynthesizerParameter;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStep;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStepViewI;
 import org.lifecompanion.controller.editmode.GeneralConfigurationController;
-import org.lifecompanion.controller.resource.LCGlyphFont;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.ui.common.pane.specific.voicesynthesizer.VoiceInfoStringConverter;
 import org.lifecompanion.ui.common.pane.specific.cell.VoiceSynthesizerDetailListCell;
 import org.lifecompanion.ui.common.pane.specific.cell.VoiceSynthesizerSimpleListCell;
@@ -116,7 +116,7 @@ public class VoiceSynthesizerMainConfigurationStepView extends BorderPane implem
         this.fieldExample = new TextField(Translation.getText("voice.synthesizer.test.default.text"));
         Label labelExample = new Label(Translation.getText("voice.synthesizer.test"));
         this.buttonPlayExample = UIUtils.createGraphicButton(
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.VOLUME_UP).size(18).color(LCGraphicStyle.MAIN_PRIMARY),
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.VOLUME_UP).size(18).color(LCGraphicStyle.MAIN_PRIMARY),
                 "tooltip.voice.play.example");
         HBox.setHgrow(this.fieldExample, Priority.ALWAYS);
         HBox boxExample = new HBox(5, this.fieldExample, this.buttonPlayExample);

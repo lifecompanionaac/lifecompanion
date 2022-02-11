@@ -31,9 +31,9 @@ import javafx.scene.shape.Rectangle;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
 import org.lifecompanion.util.LCUtils;
-import org.lifecompanion.controller.resource.IconManager;
+import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
-import org.lifecompanion.controller.resource.LCGlyphFont;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 
 public class KeyListCellHandler implements LCViewInitHelper {
@@ -56,11 +56,11 @@ public class KeyListCellHandler implements LCViewInitHelper {
 
     @Override
     public void initUI() {
-        listGlyph = LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.FOLDER).size(14).color(LCGraphicStyle.LC_GRAY);
-        final HBox paneImageView = new HBox(new ImageView(IconManager.get("keylist/icon_type_leaf.png")));
+        listGlyph = GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.FOLDER).size(14).color(LCGraphicStyle.LC_GRAY);
+        final HBox paneImageView = new HBox(new ImageView(IconHelper.get("keylist/icon_type_leaf.png")));
         paneImageView.getStyleClass().add("padding-3_5");
         this.keyGlyph = paneImageView;
-        linkGlyph = LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.LINK).size(14).color(LCGraphicStyle.LC_GRAY);
+        linkGlyph = GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.LINK).size(14).color(LCGraphicStyle.LC_GRAY);
         glyphPane = new HBox();
         glyphPane.setAlignment(Pos.CENTER);
 

@@ -33,9 +33,9 @@ import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.profile.ProfileController;
 import org.lifecompanion.controller.metrics.SessionStatsController;
 import org.lifecompanion.ui.common.pane.specific.ProfileIconView;
-import org.lifecompanion.controller.editmode.ProfileConfigSelectionController;
-import org.lifecompanion.controller.editmode.ProfileConfigStep;
-import org.lifecompanion.controller.systemvk.SystemVirtualKeyboardHelper;
+import org.lifecompanion.controller.profileconfigselect.ProfileConfigSelectionController;
+import org.lifecompanion.controller.profileconfigselect.ProfileConfigStep;
+import org.lifecompanion.controller.systemvk.SystemVirtualKeyboardController;
 import org.lifecompanion.ui.app.userconfiguration.UserConfigStage;
 import org.lifecompanion.ui.app.userconfiguration.UserConfigurationView;
 import org.lifecompanion.framework.commons.translation.Translation;
@@ -100,7 +100,7 @@ public class ProfileDetailView extends HBox implements LCViewInitHelper {
             userConfigStage.centerOnScreen();
             this.userConfigurationView = new UserConfigurationView(userConfigStage);
             Scene settingScene = new Scene(this.userConfigurationView);
-            SystemVirtualKeyboardHelper.INSTANCE.registerScene(settingScene);
+            SystemVirtualKeyboardController.INSTANCE.registerScene(settingScene);
             SessionStatsController.INSTANCE.registerScene(settingScene);
             userConfigStage.setScene(settingScene);
         }

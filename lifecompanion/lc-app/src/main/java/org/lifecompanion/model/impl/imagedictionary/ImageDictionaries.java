@@ -31,7 +31,7 @@ import org.lifecompanion.model.api.lifecycle.ModeListenerI;
 import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.constant.LCConstant;
-import org.lifecompanion.controller.userconfiguration.UserBaseConfiguration;
+import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
 import org.lifecompanion.controller.appinstallation.InstallationConfigurationController;
 import org.lifecompanion.controller.io.JsonHelper;
 import org.lifecompanion.framework.commons.translation.Translation;
@@ -141,7 +141,7 @@ public enum ImageDictionaries implements LCStateListener, ModeListenerI {
                     imagePath = copiedImageTargetForCustomDir;
                 }
                 // Create the updated/new image
-                ImageElement newerImage = new ImageElement(id, originalFilenameWithoutExtension, FluentHashMap.map(UserBaseConfiguration.INSTANCE.userLanguageProperty().get(), new String[]{originalFilenameWithoutExtension}), imagePath);
+                ImageElement newerImage = new ImageElement(id, originalFilenameWithoutExtension, FluentHashMap.map(UserConfigurationController.INSTANCE.userLanguageProperty().get(), new String[]{originalFilenameWithoutExtension}), imagePath);
                 newerImage.setDictionary(dictionary);
                 allImages.put(id, newerImage);
                 // If previous image existed (and don't exist anymore)

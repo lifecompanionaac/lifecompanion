@@ -19,14 +19,14 @@
 
 package org.lifecompanion.controller.io.task;
 
-import org.lifecompanion.controller.userconfiguration.UserBaseConfiguration;
+import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
 import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.util.model.LCTask;
 
 import java.io.File;
 
 /**
- * Task to load {@link UserBaseConfiguration}
+ * Task to load {@link UserConfigurationController}
  *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
@@ -38,11 +38,11 @@ public class LoadUserConfigTask extends LCTask<Void> {
 
     @Override
     protected Void call() throws Exception {
-        UserBaseConfiguration.INSTANCE.load();
+        UserConfigurationController.INSTANCE.load();
         // On windows, load startup enabled
         if (SystemType.current() == SystemType.WINDOWS) {
             File startupLauncherShortcutPath = SaveUserConfigTask.getStartupShortcutPath();
-            UserBaseConfiguration.INSTANCE.launchLCSystemStartupProperty().set(startupLauncherShortcutPath.exists());
+            UserConfigurationController.INSTANCE.launchLCSystemStartupProperty().set(startupLauncherShortcutPath.exists());
         }
         return null;
     }

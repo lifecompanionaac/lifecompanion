@@ -30,7 +30,7 @@ import org.lifecompanion.model.api.usevariable.UseVariableI;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.categorizedelement.useevent.DefaultUseEventSubCategories;
-import org.lifecompanion.controller.configurationcomponent.GlobalKeyEventManager;
+import org.lifecompanion.controller.configurationcomponent.GlobalKeyEventController;
 import org.lifecompanion.model.impl.categorizedelement.useevent.BaseUseEventGeneratorImpl;
 import org.lifecompanion.model.impl.usevariable.StringUseVariable;
 import org.lifecompanion.model.impl.usevariable.UseVariableDefinition;
@@ -76,14 +76,14 @@ public class KeyTypedKeyboardEventGenerator extends BaseUseEventGeneratorImpl {
     @Override
     public void modeStart(final LCConfigurationI configuration) {
         // Listener clear on modeStop
-        GlobalKeyEventManager.INSTANCE.addKeyEventListenerForCurrentUseMode((keyEvent) -> {
-            if (keyEvent.getEventType() == GlobalKeyEventManager.LCKeyEventType.PRESSED && (this.keyPressed.get() == null || keyEvent.getKeyCode() == this.keyPressed.get())) {
+        GlobalKeyEventController.INSTANCE.addKeyEventListenerForCurrentUseMode((keyEvent) -> {
+            if (keyEvent.getEventType() == GlobalKeyEventController.LCKeyEventType.PRESSED && (this.keyPressed.get() == null || keyEvent.getKeyCode() == this.keyPressed.get())) {
                 List<UseVariableI<?>> variables = Arrays.asList(new StringUseVariable(this.keyNameDefinition, keyEvent.getKeyCode().getName()));
                 this.useEventListener.fireEvent(this, variables, null);
             }
         });
         if (this.keyPressed.get() != null) {
-            GlobalKeyEventManager.INSTANCE.addKeyCodeToBlockForCurrentUseMode(this.keyPressed.get());
+            GlobalKeyEventController.INSTANCE.addKeyCodeToBlockForCurrentUseMode(this.keyPressed.get());
         }
     }
 

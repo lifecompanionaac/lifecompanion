@@ -21,14 +21,14 @@ package org.lifecompanion.controller.lifecycle;
 
 import org.lifecompanion.model.api.lifecycle.LCStateListener;
 import org.lifecompanion.controller.editaction.AsyncExecutorController;
-import org.lifecompanion.controller.categorizedelement.useaction.UserActionController;
+import org.lifecompanion.controller.categorizedelement.useaction.UseActionController;
 import org.lifecompanion.controller.textprediction.AutoCharPredictionController;
 import org.lifecompanion.controller.textprediction.CustomCharPredictionController;
 import org.lifecompanion.controller.textprediction.WordPredictionController;
 import org.lifecompanion.controller.metrics.SessionStatsController;
 import org.lifecompanion.controller.appinstallation.InstallationController;
 import org.lifecompanion.model.impl.imagedictionary.ImageDictionaries;
-import org.lifecompanion.controller.plugin.PluginManager;
+import org.lifecompanion.controller.plugin.PluginController;
 import org.lifecompanion.controller.voicesynthesizer.VoiceSynthesizerController;
 import org.lifecompanion.controller.editmode.ErrorHandlingController;
 import org.lifecompanion.controller.editmode.LCStateController;
@@ -55,7 +55,7 @@ public enum LifeCompanionController {
 
             // COPIED FROM APP CONTROLLER
             VoiceSynthesizerController.INSTANCE,
-            UserActionController.INSTANCE,
+            UseActionController.INSTANCE,
             WordPredictionController.INSTANCE,
             AutoCharPredictionController.INSTANCE,
             CustomCharPredictionController.INSTANCE,
@@ -65,7 +65,7 @@ public enum LifeCompanionController {
 
             // COPIED FROM CONFIG
             LCStateController.INSTANCE,
-            PluginManager.INSTANCE,
+            PluginController.INSTANCE,
             UserCompController.INSTANCE,
             LCNotificationController.INSTANCE,
             ErrorHandlingController.INSTANCE

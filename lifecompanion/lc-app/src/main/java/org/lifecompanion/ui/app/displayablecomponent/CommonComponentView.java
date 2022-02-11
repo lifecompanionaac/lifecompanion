@@ -35,15 +35,15 @@ import org.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.model.api.configurationcomponent.DisplayableComponentI;
 import org.lifecompanion.model.api.profile.UserCompDescriptionI;
 import org.lifecompanion.util.UIUtils;
-import org.lifecompanion.controller.resource.IconManager;
+import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.ui.common.util.UndoRedoTextInputWrapper;
 import org.lifecompanion.controller.editaction.BaseComponentAction;
 import org.lifecompanion.controller.editaction.BaseComponentAction.ChangeComponentNameAction;
 import org.lifecompanion.controller.editaction.UserCompActions.CreateOrUpdateUserComp;
-import org.lifecompanion.controller.resource.LCGlyphFont;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.controller.editmode.ConfigActionController;
-import org.lifecompanion.controller.editmode.NodeSnapshotCache;
+import org.lifecompanion.controller.editmode.DisplayableComponentSnapshotController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.slf4j.Logger;
@@ -129,7 +129,7 @@ public class CommonComponentView extends BorderPane implements LCViewInitHelper 
 
         //Button to save component
         this.buttonSaveComponent = UIUtils.createLeftTextButton(Translation.getText("menu.select.save.component"),
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.SAVE).size(18).color(LCGraphicStyle.MAIN_DARK),
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.SAVE).size(18).color(LCGraphicStyle.MAIN_DARK),
                 "tooltip.menu.select.save.component");
         Separator sep = new Separator(Orientation.HORIZONTAL);
 
@@ -138,7 +138,7 @@ public class CommonComponentView extends BorderPane implements LCViewInitHelper 
 
         // Button ok (hide stage)
         buttonOk = UIUtils.createLeftTextButton(Translation.getText("image.use.button.ok"),
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.CHECK).size(16).color(LCGraphicStyle.MAIN_DARK), null);
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CHECK).size(16).color(LCGraphicStyle.MAIN_DARK), null);
         HBox buttonBox = new HBox(buttonOk);
         buttonBox.setAlignment(Pos.CENTER_RIGHT);
         BorderPane.setMargin(buttonBox, new Insets(0.0, 0.0, 5.0, 0.0));
@@ -173,12 +173,12 @@ public class CommonComponentView extends BorderPane implements LCViewInitHelper 
     public void show(final DisplayableComponentI component) {
         currentComponent = component;
         if (component != null) {
-            NodeSnapshotCache.INSTANCE.requestSnapshot(component, -1, -1, (c, img) -> {
+            DisplayableComponentSnapshotController.INSTANCE.requestSnapshot(component, -1, -1, (c, img) -> {
                 if (c == currentComponent) {
                     imageViewComponent.setImage(img);
                 }
             });
-            imageViewComponentType.setImage(component.getNodeType().isIconValid() ? IconManager.get(component.getNodeType().getIconPath()) : null);
+            imageViewComponentType.setImage(component.getNodeType().isIconValid() ? IconHelper.get(component.getNodeType().getIconPath()) : null);
             this.labelDefaultName.setText(Translation.getText("component.name.custom.default.name", component.defaultNameProperty().get()));
             this.fieldName.textProperty().bindBidirectional(component.userNameProperty());
             this.fieldNameWrapper.clearPreviousValue();
@@ -188,7 +188,7 @@ public class CommonComponentView extends BorderPane implements LCViewInitHelper 
 
     public void hide() {
         if (currentComponent != null) {
-            NodeSnapshotCache.INSTANCE.cancelRequestSnapshot(currentComponent);
+            DisplayableComponentSnapshotController.INSTANCE.cancelRequestSnapshot(currentComponent);
             this.fieldName.textProperty().unbindBidirectional(currentComponent.userNameProperty());
         }
         this.fieldName.clear();

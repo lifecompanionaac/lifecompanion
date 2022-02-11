@@ -22,7 +22,7 @@ package org.lifecompanion.ui.common.pane.generic.cell;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.ListCell;
 import javafx.scene.image.ImageView;
-import org.lifecompanion.controller.resource.IconManager;
+import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.utils.FluentHashMap;
 
@@ -56,7 +56,7 @@ public class ContentDisplayListCell extends ListCell<ContentDisplay> {
         } else {
             ContentDisplayInfo info = CONTENT_DISPLAY_INFO_MAP.get(item);
             if (imageView != null) {
-                imageView.setImage(IconManager.get(info.imageUrl));
+                imageView.setImage(IconHelper.get(info.imageUrl));
                 this.setGraphic(imageView);
             }
             this.setText(Translation.getText(info.textId));

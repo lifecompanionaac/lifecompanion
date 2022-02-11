@@ -23,7 +23,7 @@ import org.lifecompanion.model.api.textprediction.WordPredictionI;
 import org.lifecompanion.model.api.textprediction.WordPredictionResultI;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.controller.profile.ProfileController;
-import org.lifecompanion.controller.io.IOManager;
+import org.lifecompanion.controller.io.IOHelper;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
@@ -235,9 +235,9 @@ public class Predict4AllWordPredictorHelper {
     // PATH
     //========================================================================
     public static File getAndInitializeCurrentProfileRoot(String configurationId) {
-        File newP4ADir = new File(IOManager.INSTANCE.getConfigurationDirectoryPath(ProfileController.INSTANCE.currentProfileProperty().get().getID(), configurationId) + File.separator + P4A_PROFILE_DIR_NAME + File.separator);
+        File newP4ADir = new File(IOHelper.getConfigurationDirectoryPath(ProfileController.INSTANCE.currentProfileProperty().get().getID(), configurationId) + File.separator + P4A_PROFILE_DIR_NAME + File.separator);
         // Backward compatibility : copy old profile configuration when needed
-        File oldP4ADir = new File(IOManager.INSTANCE.getProfileDirectoryPath(ProfileController.INSTANCE.currentProfileProperty().get().getID()) + File.separator + P4A_PROFILE_DIR_NAME + File.separator);
+        File oldP4ADir = new File(IOHelper.getProfileDirectoryPath(ProfileController.INSTANCE.currentProfileProperty().get().getID()) + File.separator + P4A_PROFILE_DIR_NAME + File.separator);
         if (!newP4ADir.exists() && oldP4ADir.exists()) {
             try {
                 IOUtils.copyDirectory(oldP4ADir, newP4ADir);

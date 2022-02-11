@@ -32,7 +32,7 @@ import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseActionSubCategories;
 import org.lifecompanion.model.impl.configurationcomponent.ComponentHolder;
 import org.lifecompanion.controller.selectionmode.SelectionModeController;
-import org.lifecompanion.controller.categorizedelement.useaction.UserActionController;
+import org.lifecompanion.controller.categorizedelement.useaction.UseActionController;
 import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
@@ -81,7 +81,7 @@ public class MoveToGridAndGoBackAction extends SimpleUseActionImpl<GridPartKeyCo
         GridPartKeyComponentI parentKey = this.parentComponentProperty().get();
         if (parentKey != null) {
             //On next, go back to the current key grid
-            UserActionController.INSTANCE.getNextSimpleActionExecutionListener(UseActionEvent.ACTIVATION).add((result) -> {
+            UseActionController.INSTANCE.getNextSimpleActionExecutionListener(UseActionEvent.ACTIVATION).add((result) -> {
                 GridComponentI gridParent = parentKey.gridParentProperty().get();
                 //Return in component, only if the executed action was not a moving action
                 if (gridParent != null && !result.isMovingActionExecuted()

@@ -29,7 +29,7 @@ import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.imagedictionary.ImageElementI;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.note.NoteKeyOption;
-import org.lifecompanion.controller.resource.IconManager;
+import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.model.impl.imagedictionary.StaticImageElement;
 import org.lifecompanion.model.impl.categorizedelement.useaction.available.OpenCloseNoteKeyAction;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
@@ -100,7 +100,7 @@ public enum NoteKeyController implements ModeListenerI {
 
     private ImageElementI createAndLoadIfNull(ImageElementI current, String stateImageName) {
         if (current == null) {
-            return new StaticImageElement(IconManager.get("note-key-state/" + stateImageName));
+            return new StaticImageElement(IconHelper.get("note-key-state/" + stateImageName));
         } else {
             return current;
         }

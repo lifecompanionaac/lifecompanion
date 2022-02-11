@@ -58,7 +58,7 @@ import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStep;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStepViewI;
 import org.lifecompanion.controller.editmode.FileChooserType;
 import org.lifecompanion.util.ConfigUIUtils;
-import org.lifecompanion.controller.editmode.LCFileChooser;
+import org.lifecompanion.controller.editmode.LCFileChoosers;
 import org.lifecompanion.ui.app.generalconfiguration.step.predict4all.correction.VocabularyListModifyDic;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
@@ -421,7 +421,7 @@ public class P4ADictionaryConfigurationView extends ScrollPane implements Genera
     // Class part : "ACTIONS"
     //========================================================================
     private void executeWordChoice(final Button btnSrc, final double factor) {
-        FileChooser wordFileChooser = LCFileChooser.getOtherFileChooser(Translation.getText("predict4all.config.file.chooser.import.words.title"),
+        FileChooser wordFileChooser = LCFileChoosers.getOtherFileChooser(Translation.getText("predict4all.config.file.chooser.import.words.title"),
                 new FileChooser.ExtensionFilter(Translation.getText("predict4all.config.file.chooser.import.words.extension"), Collections.singletonList("*.txt")), FileChooserType.OTHER_MISC_NO_EXTERNAL);
         File selectedFile = wordFileChooser.showOpenDialog(UIUtils.getSourceWindow(this));
         if (selectedFile != null) {

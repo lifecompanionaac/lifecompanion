@@ -27,7 +27,7 @@ import javafx.scene.image.Image;
 import org.lifecompanion.model.api.imagedictionary.ImageDictionaryI;
 import org.lifecompanion.model.api.imagedictionary.ImageElementI;
 import org.lifecompanion.util.LCUtils;
-import org.lifecompanion.controller.userconfiguration.UserBaseConfiguration;
+import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
 import org.lifecompanion.framework.commons.utils.io.FileNameUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 
@@ -140,7 +140,7 @@ public class ImageElement implements ImageElementI {
 
     @Override
     public String[] getKeywords() {
-        return keywords != null ? this.keywords.getOrDefault(UserBaseConfiguration.INSTANCE.userLanguageProperty().get(), this.keywords.entrySet().iterator().next().getValue()) : new String[0];
+        return keywords != null ? this.keywords.getOrDefault(UserConfigurationController.INSTANCE.userLanguageProperty().get(), this.keywords.entrySet().iterator().next().getValue()) : new String[0];
     }
 
     @Override

@@ -23,10 +23,10 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.controller.lifecycle.AppModeController;
-import org.lifecompanion.controller.resource.LCGlyphFont;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
-import org.lifecompanion.ui.ConfigurationScene;
+import org.lifecompanion.ui.EditModeScene;
 import org.lifecompanion.util.UIUtils;
 import javafx.scene.layout.VBox;
 
@@ -47,23 +47,23 @@ public class MainMenu extends VBox implements LCViewInitHelper {
 		//Children
 		ProfileDetailView profileDetailView = new ProfileDetailView();
 		CurrentConfigDetailView currentConfigDetailView = new CurrentConfigDetailView();
-		ProfilConfigDetailView profilConfigDetailView = new ProfilConfigDetailView();
+		ConfigActionView configActionView = new ConfigActionView();
 
 		//Collapse button
 		this.buttonCollapse = UIUtils.createTextButtonWithGraphics(null,
-				LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.CHEVRON_LEFT).sizeFactor(1).color(LCGraphicStyle.MAIN_PRIMARY),
+				GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CHEVRON_LEFT).sizeFactor(1).color(LCGraphicStyle.MAIN_PRIMARY),
 				"tooltip.main.menu.collapse");
 		HBox boxButton = new HBox(buttonCollapse);
 		boxButton.getStyleClass().addAll("main-menu-section", "main-menu-section-bottom");
 
-		this.getChildren().addAll(profileDetailView, currentConfigDetailView, profilConfigDetailView, boxButton);
+		this.getChildren().addAll(profileDetailView, currentConfigDetailView, configActionView, boxButton);
 		UIUtils.applyPerformanceConfiguration(this);
 	}
 
 	@Override
 	public void initListener() {
 		this.buttonCollapse.setOnAction((me) -> {
-			ConfigurationScene scene = (ConfigurationScene) AppModeController.INSTANCE.getEditModeContext().getStage().getScene();
+			EditModeScene scene = (EditModeScene) AppModeController.INSTANCE.getEditModeContext().getStage().getScene();
 			scene.hideMenu();
 		});
 	}

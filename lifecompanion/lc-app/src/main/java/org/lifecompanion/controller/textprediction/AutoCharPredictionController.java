@@ -23,7 +23,7 @@ import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
 import org.lifecompanion.model.api.configurationcomponent.PredictionParameterI;
 import org.lifecompanion.model.api.textprediction.CharPredictorI;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.AutoCharKeyOption;
-import org.lifecompanion.controller.plugin.PluginManager;
+import org.lifecompanion.controller.plugin.PluginController;
 import org.lifecompanion.model.impl.textprediction.charprediction.LCCharPredictor;
 
 import java.util.List;
@@ -40,7 +40,7 @@ public class AutoCharPredictionController extends AbstractPredictionController<C
 
     protected AutoCharPredictionController() {
         super(AutoCharKeyOption.class);
-        this.initializePredictorListener(PluginManager.INSTANCE.getCharPredictors());
+        this.initializePredictorListener(PluginController.INSTANCE.getCharPredictors());
     }
 
     @Override

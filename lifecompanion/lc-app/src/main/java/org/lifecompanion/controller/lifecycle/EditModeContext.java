@@ -24,7 +24,7 @@ import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
-import org.lifecompanion.controller.userconfiguration.UserBaseConfiguration;
+import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
 import org.lifecompanion.controller.editaction.LCConfigurationActions;
 import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.model.impl.notification.LCNotification;
@@ -46,7 +46,7 @@ public class EditModeContext extends AbstractModeContext {
             }
         });
         this.configurationUnsavedAction.addListener((obs, ov, nv) -> {
-            int threshold = UserBaseConfiguration.INSTANCE.unsavedChangeInConfigurationThresholdProperty().get();
+            int threshold = UserConfigurationController.INSTANCE.unsavedChangeInConfigurationThresholdProperty().get();
             // Value become larger than threshold : show a warning notification that suggest saving
             if (LCUtils.nullToZeroInt(ov) < threshold && LCUtils.nullToZeroInt(nv) >= threshold && AppModeController.INSTANCE.isEditMode()) {
                 LCNotificationController.INSTANCE.showNotification(LCNotification.createWarning(Translation.getText("notification.warning.unsaved.changes.configuration.title", nv),

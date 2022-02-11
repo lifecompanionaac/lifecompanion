@@ -34,7 +34,7 @@ import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.editaction.LCConfigurationActions;
-import org.lifecompanion.controller.resource.LCGlyphFont;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
@@ -47,7 +47,6 @@ import java.util.Date;
 public class CurrentConfigDetailView extends VBox implements LCViewInitHelper {
     private Label labelConfigName;
     private Label labelLastSaveDate;
-    private Label labelPartTitle;
     private Label labelUnsavedModif;
     private Button buttonSave, buttonExport, buttonClose;
 
@@ -59,9 +58,9 @@ public class CurrentConfigDetailView extends VBox implements LCViewInitHelper {
     public void initUI() {
         //Style
         this.getStyleClass().add("main-menu-section");
-        this.labelPartTitle = new Label(Translation.getText("configuration.menu.detail.title"));
-        this.labelPartTitle.getStyleClass().add("menu-part-title");
-        this.labelPartTitle.setMaxWidth(Double.MAX_VALUE);
+        Label labelPartTitle = new Label(Translation.getText("configuration.menu.detail.title"));
+        labelPartTitle.getStyleClass().add("menu-part-title");
+        labelPartTitle.setMaxWidth(Double.MAX_VALUE);
         //Display config infos
         this.labelConfigName = new Label(Translation.getText("configuration.label.no.current"));
         this.labelConfigName.getStyleClass().add("import-blue-title");
@@ -76,18 +75,18 @@ public class CurrentConfigDetailView extends VBox implements LCViewInitHelper {
         HBox boxButton1 = new HBox();
         VBox.setMargin(boxButton1, new Insets(10, 0, 0, 0));
         this.buttonSave = UIUtils.createFixedWidthTextButton(Translation.getText("configuration.menu.item.save"),
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.SAVE).sizeFactor(2).color(LCGraphicStyle.MAIN_PRIMARY), MainMenu.BUTTON_WIDTH,
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.SAVE).sizeFactor(2).color(LCGraphicStyle.MAIN_PRIMARY), MainMenu.BUTTON_WIDTH,
                 "tooltip.save.current.configuration");
         this.buttonExport = UIUtils.createFixedWidthTextButton(Translation.getText("configuration.menu.item.export"),
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.UPLOAD).sizeFactor(2).color(LCGraphicStyle.MAIN_DARK), MainMenu.BUTTON_WIDTH,
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.UPLOAD).sizeFactor(2).color(LCGraphicStyle.MAIN_DARK), MainMenu.BUTTON_WIDTH,
                 "tooltip.export.current.configuration");
         this.buttonClose = UIUtils.createFixedWidthTextButton(Translation.getText("configuration.menu.item.close"),
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.TIMES).size(30).color(LCGraphicStyle.SECOND_DARK), MainMenu.BUTTON_WIDTH,
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.TIMES).size(30).color(LCGraphicStyle.SECOND_DARK), MainMenu.BUTTON_WIDTH,
                 "tooltip.remove.current.configuration");
         boxButton1.getChildren().addAll(this.buttonSave, this.buttonExport, this.buttonClose);
         boxButton1.setAlignment(Pos.CENTER);
         //Total
-        this.getChildren().addAll(this.labelPartTitle, this.labelConfigName, this.labelLastSaveDate, this.labelUnsavedModif, boxButton1);
+        this.getChildren().addAll(labelPartTitle, this.labelConfigName, this.labelLastSaveDate, this.labelUnsavedModif, boxButton1);
     }
 
     @Override

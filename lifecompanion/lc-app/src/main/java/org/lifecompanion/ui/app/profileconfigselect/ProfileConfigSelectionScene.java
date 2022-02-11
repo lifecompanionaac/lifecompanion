@@ -22,9 +22,9 @@ import javafx.scene.Scene;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.controller.metrics.SessionStatsController;
 import org.lifecompanion.ui.common.pane.generic.AnimatedBorderPane;
-import org.lifecompanion.controller.editmode.ProfileConfigSelectionController;
-import org.lifecompanion.controller.editmode.ProfileConfigStep;
-import org.lifecompanion.controller.systemvk.SystemVirtualKeyboardHelper;
+import org.lifecompanion.controller.profileconfigselect.ProfileConfigSelectionController;
+import org.lifecompanion.controller.profileconfigselect.ProfileConfigStep;
+import org.lifecompanion.controller.systemvk.SystemVirtualKeyboardController;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -94,7 +94,7 @@ public class ProfileConfigSelectionScene extends Scene implements LCViewInitHelp
 
     @Override
     public void initListener() {
-        SystemVirtualKeyboardHelper.INSTANCE.registerScene(this);
+        SystemVirtualKeyboardController.INSTANCE.registerScene(this);
         SessionStatsController.INSTANCE.registerScene(this);
     }
     //========================================================================

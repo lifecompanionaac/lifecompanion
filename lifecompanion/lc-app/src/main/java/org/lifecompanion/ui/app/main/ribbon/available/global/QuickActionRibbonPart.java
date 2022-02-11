@@ -31,7 +31,7 @@ import org.lifecompanion.controller.editaction.UndoRedoActions;
 import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
 import org.lifecompanion.model.api.configurationcomponent.StackComponentI;
-import org.lifecompanion.controller.resource.LCGlyphFont;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.editmode.ComponentActionController;
 import org.lifecompanion.controller.editmode.ConfigActionController;
@@ -68,21 +68,21 @@ public class QuickActionRibbonPart extends RibbonBasePart<Void> implements LCVie
 		paneBaseActions.setAlignment(Pos.CENTER);
 		paneBaseActions.setPrefWrapLength(150);
 		this.buttonUndo = UIUtils.createTextButtonWithGraphics(Translation.getText("menu.edit.item.undo"),
-				LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.UNDO).sizeFactor(2).color(LCGraphicStyle.MAIN_DARK), "tooltip.undo.action.button");
+				GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.UNDO).sizeFactor(2).color(LCGraphicStyle.MAIN_DARK), "tooltip.undo.action.button");
 		this.buttonRedo = UIUtils.createTextButtonWithGraphics(Translation.getText("menu.edit.item.redo"),
-				LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.REPEAT).sizeFactor(2).color(LCGraphicStyle.MAIN_DARK),
+				GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.REPEAT).sizeFactor(2).color(LCGraphicStyle.MAIN_DARK),
 				"tooltip.redo.action.button");
 		this.buttonGoUseMode = UIUtils.createTextButtonWithGraphics(Translation.getText("menu.go.use.mode"),
-				LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.PLAY).sizeFactor(2).color(LCGraphicStyle.MAIN_PRIMARY),
+				GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.PLAY).sizeFactor(2).color(LCGraphicStyle.MAIN_PRIMARY),
 				"tooltip.go.use.mode.button");
 		this.buttonCopy = UIUtils.createTextButtonWithGraphics(Translation.getText("menu.edit.item.copy"),
-				LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.COPY).sizeFactor(2).color(LCGraphicStyle.SECOND_DARK),
+				GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.COPY).sizeFactor(2).color(LCGraphicStyle.SECOND_DARK),
 				"tooltip.copy.select.button");
 		this.buttonPaste = UIUtils.createTextButtonWithGraphics(Translation.getText("menu.edit.item.paste"),
-				LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.PASTE).sizeFactor(2).color(LCGraphicStyle.SECOND_DARK),
+				GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.PASTE).sizeFactor(2).color(LCGraphicStyle.SECOND_DARK),
 				"tooltip.paste.select.button");
 		this.buttonRemove = UIUtils.createTextButtonWithGraphics(Translation.getText("menu.edit.item.remove"),
-				LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.TRASH).sizeFactor(2).color(LCGraphicStyle.SECOND_DARK),
+				GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.TRASH).sizeFactor(2).color(LCGraphicStyle.SECOND_DARK),
 				"tooltip.remove.select.button");
 		this.buttonRemove.setDisable(true);
 		HBox boxButtonFL = new HBox(this.buttonUndo, this.buttonRedo, this.buttonGoUseMode);

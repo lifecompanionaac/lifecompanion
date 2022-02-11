@@ -33,7 +33,7 @@ import javafx.scene.paint.Color;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.constant.LCConstant;
-import org.lifecompanion.controller.resource.LCGlyphFont;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.model.impl.notification.LCNotification;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
@@ -88,7 +88,7 @@ public class NotificationScene extends Scene implements LCViewInitHelper {
 
         // Close button
         if (!notification.isAutomaticClose() && notification.getType() != LCNotification.LCNotificationType.TASK) {
-            buttonClose = UIUtils.createGraphicButton(LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.CLOSE).size(18).color(Color.WHITE), null);
+            buttonClose = UIUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CLOSE).size(18).color(Color.WHITE), null);
             boxButton.getChildren().add(buttonClose);
         }
 

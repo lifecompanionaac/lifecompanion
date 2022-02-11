@@ -28,12 +28,12 @@ import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.profile.ProfileController;
-import org.lifecompanion.controller.io.IOManager;
+import org.lifecompanion.controller.io.IOHelper;
 import org.lifecompanion.controller.io.task.KeyListExportTask;
 import org.lifecompanion.controller.io.task.KeyListImportTask;
 import org.lifecompanion.controller.editmode.FileChooserType;
 import org.lifecompanion.controller.editmode.LCStateController;
-import org.lifecompanion.controller.editmode.LCFileChooser;
+import org.lifecompanion.controller.editmode.LCFileChoosers;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,7 +65,7 @@ public class KeyListActions {
 
         @Override
         public void doAction() throws LCException {
-            FileChooser keyListFileChooser = LCFileChooser.getChooserKeyList(FileChooserType.KEYLIST_EXPORT);
+            FileChooser keyListFileChooser = LCFileChoosers.getChooserKeyList(FileChooserType.KEYLIST_EXPORT);
 
             LCConfigurationDescriptionI configurationDescription = AppModeController.INSTANCE.getEditModeContext().configurationDescriptionProperty().get();
             if (configurationDescription == null) {
@@ -78,7 +78,7 @@ public class KeyListActions {
             File keyListExportFile = keyListFileChooser.showSaveDialog(UIUtils.getSourceWindow(source));
             if (keyListExportFile != null) {
                 LCStateController.INSTANCE.updateDefaultDirectory(FileChooserType.KEYLIST_EXPORT, keyListExportFile.getParentFile());
-                KeyListExportTask keyListExportTask = IOManager.INSTANCE.createExportKeyListTask(keyListExportFile, rootNode.getChildren());
+                KeyListExportTask keyListExportTask = IOHelper.createExportKeyListTask(keyListExportFile, rootNode.getChildren());
                 AsyncExecutorController.INSTANCE.addAndExecute(true, false, keyListExportTask);
             }
         }
@@ -101,11 +101,11 @@ public class KeyListActions {
 
         @Override
         public void doAction() throws LCException {
-            FileChooser keyListFileChooser = LCFileChooser.getChooserKeyList(FileChooserType.KEYLIST_IMPORT);
+            FileChooser keyListFileChooser = LCFileChoosers.getChooserKeyList(FileChooserType.KEYLIST_IMPORT);
             File keyListImportFile = keyListFileChooser.showOpenDialog(UIUtils.getSourceWindow(source));
             if (keyListImportFile != null) {
                 LCStateController.INSTANCE.updateDefaultDirectory(FileChooserType.KEYLIST_IMPORT, keyListImportFile.getParentFile());
-                KeyListImportTask keyListImportTask = IOManager.INSTANCE.createImportKeyListTask(List.of(keyListImportFile));
+                KeyListImportTask keyListImportTask = IOHelper.createImportKeyListTask(List.of(keyListImportFile));
                 keyListImportTask.setOnSucceeded(e -> importedNodesConsumer.accept(keyListImportTask.getValue()));
                 AsyncExecutorController.INSTANCE.addAndExecute(true, false, keyListImportTask);
             }

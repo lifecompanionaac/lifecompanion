@@ -26,7 +26,7 @@ import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.util.UIUtils;
-import org.lifecompanion.controller.resource.LCGlyphFont;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
@@ -69,7 +69,7 @@ public class ComponentSelectionPopTrigger extends BorderPane implements LCViewIn
 		boxRight.getStyleClass().add("box-selection-button");
 		boxRight.setAlignment(Pos.CENTER);
 		this.buttonPop = UIUtils.createGraphicButton(
-				LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.CHEVRON_RIGHT).sizeFactor(1).color(LCGraphicStyle.MAIN_PRIMARY),
+				GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CHEVRON_RIGHT).sizeFactor(1).color(LCGraphicStyle.MAIN_PRIMARY),
 				"tooltip.component.selection.view");
 		boxRight.getChildren().add(this.buttonPop);
 		this.buttonPop.setRotate(180.0);

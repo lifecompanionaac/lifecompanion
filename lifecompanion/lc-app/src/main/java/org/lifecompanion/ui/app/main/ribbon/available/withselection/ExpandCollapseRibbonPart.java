@@ -28,7 +28,7 @@ import org.lifecompanion.model.api.configurationcomponent.GridPartComponentI;
 import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.editaction.ExpandCollapseActions;
-import org.lifecompanion.controller.resource.LCGlyphFont;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.controller.editmode.SelectionController;
 import org.lifecompanion.ui.configurationcomponent.editmode.categorizedelement.useevent.available.RibbonBasePart;
@@ -60,10 +60,10 @@ public class ExpandCollapseRibbonPart extends RibbonBasePart<GridPartComponentI>
         this.setTitle(Translation.getText("ribbon.expand.collapse.title"));
 
 
-        this.buttonETop = UIUtils.createGraphicButton(LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.CHEVRON_UP).size(16).color(LCGraphicStyle.SECOND_PRIMARY), "tooltip.expand.top");
-        this.buttonEBottom = UIUtils.createGraphicButton(LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.CHEVRON_DOWN).size(16).color(LCGraphicStyle.SECOND_PRIMARY), "tooltip.expand.bottom");
-        this.buttonELeft = UIUtils.createGraphicButton(LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.CHEVRON_LEFT).size(16).color(LCGraphicStyle.SECOND_PRIMARY), "tooltip.expand.left");
-        this.buttonERight = UIUtils.createGraphicButton(LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.CHEVRON_RIGHT).size(16).color(LCGraphicStyle.SECOND_PRIMARY), "tooltip.expand.right");
+        this.buttonETop = UIUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CHEVRON_UP).size(16).color(LCGraphicStyle.SECOND_PRIMARY), "tooltip.expand.top");
+        this.buttonEBottom = UIUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CHEVRON_DOWN).size(16).color(LCGraphicStyle.SECOND_PRIMARY), "tooltip.expand.bottom");
+        this.buttonELeft = UIUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CHEVRON_LEFT).size(16).color(LCGraphicStyle.SECOND_PRIMARY), "tooltip.expand.left");
+        this.buttonERight = UIUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CHEVRON_RIGHT).size(16).color(LCGraphicStyle.SECOND_PRIMARY), "tooltip.expand.right");
 
         StackPane.setAlignment(this.buttonEBottom, Pos.BOTTOM_CENTER);
         StackPane.setAlignment(this.buttonETop, Pos.TOP_CENTER);
@@ -77,10 +77,10 @@ public class ExpandCollapseRibbonPart extends RibbonBasePart<GridPartComponentI>
         totalVbox.getChildren().addAll(paneExpand2, new Label(Translation.getText("button.expand.title")));
 
 
-        this.buttonCTop = UIUtils.createGraphicButton(LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.CHEVRON_DOWN).size(16).color(LCGraphicStyle.SECOND_PRIMARY), "tooltip.collapse.top");
-        this.buttonCBottom = UIUtils.createGraphicButton(LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.CHEVRON_UP).size(16).color(LCGraphicStyle.SECOND_PRIMARY), "tooltip.collapse.bottom");
-        this.buttonCLeft = UIUtils.createGraphicButton(LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.CHEVRON_RIGHT).size(16).color(LCGraphicStyle.SECOND_PRIMARY), "tooltip.collapse.left");
-        this.buttonCRight = UIUtils.createGraphicButton(LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.CHEVRON_LEFT).size(16).color(LCGraphicStyle.SECOND_PRIMARY), "tooltip.collapse.right");
+        this.buttonCTop = UIUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CHEVRON_DOWN).size(16).color(LCGraphicStyle.SECOND_PRIMARY), "tooltip.collapse.top");
+        this.buttonCBottom = UIUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CHEVRON_UP).size(16).color(LCGraphicStyle.SECOND_PRIMARY), "tooltip.collapse.bottom");
+        this.buttonCLeft = UIUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CHEVRON_RIGHT).size(16).color(LCGraphicStyle.SECOND_PRIMARY), "tooltip.collapse.left");
+        this.buttonCRight = UIUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CHEVRON_LEFT).size(16).color(LCGraphicStyle.SECOND_PRIMARY), "tooltip.collapse.right");
 
         StackPane.setAlignment(this.buttonCBottom, Pos.BOTTOM_CENTER);
         StackPane.setAlignment(this.buttonCTop, Pos.TOP_CENTER);

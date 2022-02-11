@@ -34,7 +34,7 @@ import org.lifecompanion.model.impl.metrics.SessionPart;
 import org.lifecompanion.model.impl.metrics.SessionType;
 import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.model.impl.constant.LCConstant;
-import org.lifecompanion.controller.userconfiguration.UserBaseConfiguration;
+import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.lifecycle.AppMode;
 import org.lifecompanion.controller.profile.ProfileController;
@@ -74,7 +74,7 @@ public enum SessionStatsController implements LCStateListener {
         currentUserInteractionInLastMinute = new AtomicInteger();
         registredScenes = new HashMap<>();
         InstallationController.INSTANCE.setInstallationRegistrationInformationSetCallback(() -> {
-            if (UserBaseConfiguration.INSTANCE.recordAndSendSessionStatsProperty().get()) {
+            if (UserConfigurationController.INSTANCE.recordAndSendSessionStatsProperty().get()) {
                 LCNamedThreadFactory.daemonThreadFactoryWithPriority("SendPendingSessionStats", Thread.MIN_PRIORITY).newThread(new SendPendingSessionStatsRunnable()).start();
                 LCNamedThreadFactory.daemonThreadFactoryWithPriority("RegisterUserInteractionForSessionStats", Thread.MIN_PRIORITY).newThread(new RegisterUserInteractionRunnable()).start();
             }
@@ -86,7 +86,7 @@ public enum SessionStatsController implements LCStateListener {
     public final static SimpleDateFormat DATE_FORMAT_FOR_DATA_MAP = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public void pushEvent(String typeId, Map<String, Object> data) {
-        if (UserBaseConfiguration.INSTANCE.recordAndSendSessionStatsProperty().get() && currentSessionPartId != null) {
+        if (UserConfigurationController.INSTANCE.recordAndSendSessionStatsProperty().get() && currentSessionPartId != null) {
             File eventDataFile = new File(getAndCreateCurrentSessionPartDirectory() + File.separator + EVENT_DIRNAME + File.separator + StringUtils.getNewID() + File.separator + LCConstant.SESSION_DATA_FILENAME);
             IOUtils.createParentDirectoryIfNeeded(eventDataFile);
             try (PrintWriter pw = new PrintWriter(eventDataFile, StandardCharsets.UTF_8)) {
@@ -120,7 +120,7 @@ public enum SessionStatsController implements LCStateListener {
      * @param configuration the associated configuration to the started mode
      */
     public void modeStarted(AppMode mode, LCConfigurationI configuration) {
-        if (UserBaseConfiguration.INSTANCE.recordAndSendSessionStatsProperty().get()) {
+        if (UserConfigurationController.INSTANCE.recordAndSendSessionStatsProperty().get()) {
             // New session part started
             this.currentSessionPartId = StringUtils.getNewID();
 
@@ -208,7 +208,7 @@ public enum SessionStatsController implements LCStateListener {
 
         @Override
         public void run() {
-            while (UserBaseConfiguration.INSTANCE.recordAndSendSessionStatsProperty().get()) {
+            while (UserConfigurationController.INSTANCE.recordAndSendSessionStatsProperty().get()) {
                 try {
                     LCUtils.safeSleep(60_000);
                     pushAndClearLastUserInteractionCount();
@@ -230,7 +230,7 @@ public enum SessionStatsController implements LCStateListener {
     }
 
     public void registerScene(Scene scene) {
-        if (UserBaseConfiguration.INSTANCE.recordAndSendSessionStatsProperty().get()) {
+        if (UserConfigurationController.INSTANCE.recordAndSendSessionStatsProperty().get()) {
             if (!registredScenes.containsKey(scene)) {
                 Runnable unbind = () -> {
                     scene.removeEventFilter(MouseEvent.MOUSE_PRESSED, eventHandlerToIncreaseInteractionCount);

@@ -40,7 +40,7 @@ import org.lifecompanion.model.impl.textprediction.predict4all.PredictorModelDto
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStep;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStepViewI;
 import org.lifecompanion.controller.editmode.GeneralConfigurationController;
-import org.lifecompanion.controller.resource.LCGlyphFont;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.ui.common.pane.specific.cell.MinCountToFireListCell;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.slf4j.Logger;
@@ -94,13 +94,13 @@ public class Predict4AllRootEntryConfigurationView extends VBox implements Gener
         HBox.setHgrow(labelMinCountPrediction, Priority.ALWAYS);
 
         buttonDictionaryConfig = UIUtils.createRightTextButton(Translation.getText("predict4all.action.button.dictionary.configuration"),
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.GEAR).size(20).color(LCGraphicStyle.MAIN_DARK),
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.GEAR).size(20).color(LCGraphicStyle.MAIN_DARK),
                 "predict4all.action.button.dictionary.configuration.explain");
         buttonDictionaryConfig.setAlignment(Pos.CENTER);
         buttonDictionaryConfig.setMaxWidth(Double.MAX_VALUE);
 
         buttonTrainingConfig = UIUtils.createRightTextButton(Translation.getText("predict4all.action.button.training.configuration"),
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.GEAR).size(20).color(LCGraphicStyle.MAIN_DARK),
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.GEAR).size(20).color(LCGraphicStyle.MAIN_DARK),
                 "predict4all.action.button.training.configuration.explain");
         buttonTrainingConfig.setAlignment(Pos.CENTER);
         buttonTrainingConfig.setMaxWidth(Double.MAX_VALUE);
@@ -112,7 +112,7 @@ public class Predict4AllRootEntryConfigurationView extends VBox implements Gener
         this.toggleEnableCorrection.setMaxWidth(Double.MAX_VALUE);
 
         buttonCorrectionConfig = UIUtils.createRightTextButton(Translation.getText("predict4all.action.button.correction.configuration"),
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.GEAR).size(20).color(LCGraphicStyle.MAIN_DARK),
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.GEAR).size(20).color(LCGraphicStyle.MAIN_DARK),
                 "predict4all.action.button.correction.configuration.explain");
 
         buttonCorrectionConfig.setAlignment(Pos.CENTER);

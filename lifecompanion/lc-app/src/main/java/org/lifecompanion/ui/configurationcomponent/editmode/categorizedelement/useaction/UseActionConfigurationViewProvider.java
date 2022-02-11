@@ -21,7 +21,7 @@ package org.lifecompanion.ui.configurationcomponent.editmode.categorizedelement.
 import org.lifecompanion.model.api.categorizedelement.useaction.BaseUseActionI;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionConfigurationViewI;
 import org.lifecompanion.controller.io.ReflectionHelper;
-import org.lifecompanion.controller.plugin.PluginManager;
+import org.lifecompanion.controller.plugin.PluginController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,7 +47,7 @@ public enum UseActionConfigurationViewProvider {
     UseActionConfigurationViewProvider() {
         this.viewTypes = new HashMap<>();
         this.initializeConfigurations();
-        PluginManager.INSTANCE.getUseActionConfigViews().registerListenerAndDrainCache(this::addConfigurationViewClass);
+        PluginController.INSTANCE.getUseActionConfigViews().registerListenerAndDrainCache(this::addConfigurationViewClass);
     }
 
     // Class part : "Init"

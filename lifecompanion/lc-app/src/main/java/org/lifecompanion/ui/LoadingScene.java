@@ -34,7 +34,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
-import org.lifecompanion.controller.resource.IconManager;
+import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.controller.appinstallation.InstallationController;
 import org.lifecompanion.framework.commons.translation.Translation;
@@ -45,9 +45,9 @@ public class LoadingScene extends Scene {
     public LoadingScene(VBox vbox) {
         super(vbox);
 
-        ImageView imageViewIcon = new ImageView(IconManager.get(LCConstant.LC_BIG_ICON_ONLY_PATH));
-        ImageView imageViewText = new ImageView(IconManager.get(LCConstant.LC_BIG_TITLE_ONLY_ICON_PATH));
-        ImageView imageViewCopyright = new ImageView(IconManager.get(LCConstant.LC_COPYRIGHT_ICON_PATH));
+        ImageView imageViewIcon = new ImageView(IconHelper.get(LCConstant.LC_BIG_ICON_ONLY_PATH));
+        ImageView imageViewText = new ImageView(IconHelper.get(LCConstant.LC_BIG_TITLE_ONLY_ICON_PATH));
+        ImageView imageViewCopyright = new ImageView(IconHelper.get(LCConstant.LC_COPYRIGHT_ICON_PATH));
 
         RotateTransition rotateTransition = new RotateTransition(Duration.millis(1500), imageViewIcon);
         rotateTransition.setToAngle(360.0);

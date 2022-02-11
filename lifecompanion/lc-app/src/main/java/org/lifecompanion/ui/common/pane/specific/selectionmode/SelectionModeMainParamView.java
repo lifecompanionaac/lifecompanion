@@ -42,14 +42,14 @@ import org.lifecompanion.ui.common.pane.specific.cell.FireEventInputListCell;
 import org.lifecompanion.ui.common.pane.specific.cell.SelectionModeDetailListCell;
 import org.lifecompanion.ui.common.pane.specific.cell.SelectionModeSimpleListCell;
 import org.lifecompanion.util.UIUtils;
-import org.lifecompanion.controller.resource.IconManager;
+import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.model.impl.selectionmode.SelectionModeEnum;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStepViewI;
 import org.lifecompanion.ui.common.pane.generic.BaseConfigurationViewBorderPane;
 import org.lifecompanion.controller.editaction.SelectionModeActions;
-import org.lifecompanion.controller.resource.LCGlyphFont;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.ui.common.control.specific.KeyCodeSelectorControl;
 import org.lifecompanion.ui.common.control.generic.MouseButtonSelectorControl;
@@ -132,7 +132,7 @@ public class SelectionModeMainParamView extends BaseConfigurationViewBorderPane<
     public void initUI() {
         // Preload selection mode images - fix to correctly display combobox on first show
         for (SelectionModeEnum mode : SelectionModeEnum.values()) {
-            IconManager.get(SelectionModeEnum.ICON_URL_SELECTION_MODE + mode.getLogoUrl());
+            IconHelper.get(SelectionModeEnum.ICON_URL_SELECTION_MODE + mode.getLogoUrl());
         }
 
         // Selection mode
@@ -180,7 +180,7 @@ public class SelectionModeMainParamView extends BaseConfigurationViewBorderPane<
         GridPane.setHalignment(spinnerTimeBeforeRepeat, HPos.RIGHT);
 
         this.buttonShowSelectionModeConfiguration = UIUtils.createRightTextButton(Translation.getText("selection.mode.button.param.show.advanced.parameter"),
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.GEAR).size(20).color(LCGraphicStyle.MAIN_DARK),
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.GEAR).size(20).color(LCGraphicStyle.MAIN_DARK),
                 null);
         GridPane.setHalignment(buttonShowSelectionModeConfiguration, HPos.CENTER);
 

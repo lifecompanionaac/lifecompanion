@@ -32,7 +32,7 @@ import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseActionSubCategories;
 import org.lifecompanion.model.impl.configurationcomponent.ComponentHolder;
-import org.lifecompanion.controller.categorizedelement.useaction.UserActionController;
+import org.lifecompanion.controller.categorizedelement.useaction.UseActionController;
 import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
@@ -75,7 +75,7 @@ public class SimulateKeyActivationAction extends SimpleUseActionImpl<UseActionTr
     public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
         GridPartKeyComponentI key = this.targetKey.componentProperty().get();
         if (key != null) {
-            UserActionController.INSTANCE.executeSimpleOn(key, UseActionEvent.ACTIVATION, variables, false, null);
+            UseActionController.INSTANCE.executeSimpleOn(key, UseActionEvent.ACTIVATION, variables, false, null);
         }
     }
 

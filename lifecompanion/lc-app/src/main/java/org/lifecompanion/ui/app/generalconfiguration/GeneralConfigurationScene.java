@@ -40,12 +40,12 @@ import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.metrics.SessionStatsController;
-import org.lifecompanion.controller.plugin.PluginManager;
+import org.lifecompanion.controller.plugin.PluginController;
 import org.lifecompanion.ui.common.pane.generic.AnimatedBorderPane;
 import org.lifecompanion.controller.editmode.GeneralConfigurationController;
-import org.lifecompanion.controller.resource.LCGlyphFont;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.util.ConfigUIUtils;
-import org.lifecompanion.controller.systemvk.SystemVirtualKeyboardHelper;
+import org.lifecompanion.controller.systemvk.SystemVirtualKeyboardController;
 import org.lifecompanion.ui.app.generalconfiguration.step.dynamickey.KeyListNodeMainConfigurationStepView;
 import org.lifecompanion.ui.app.generalconfiguration.step.dynamickey.UserActionSequenceMainConfigurationStepView;
 import org.lifecompanion.framework.commons.translation.Translation;
@@ -83,7 +83,7 @@ public class GeneralConfigurationScene extends Scene implements LCViewInitHelper
         this.views = new HashMap<>();
         this.stepButtons = new HashMap<>();
         this.getStylesheets().addAll(LCConstant.CSS_STYLE_PATH);
-        PluginManager.INSTANCE.getStylesheets().registerListenerAndDrainCache((stylesheets) -> this.getStylesheets().addAll(stylesheets));
+        PluginController.INSTANCE.getStylesheets().registerListenerAndDrainCache((stylesheets) -> this.getStylesheets().addAll(stylesheets));
         // DON'T CALL initAll() > it's loaded in background on app startup
     }
 
@@ -128,9 +128,9 @@ public class GeneralConfigurationScene extends Scene implements LCViewInitHelper
 
         // Center bottom : ok, cancel buttons
         buttonOk = UIUtils.createLeftTextButton(Translation.getText("general.configuration.scene.ok.button"),
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.CHECK).size(16).color(LCGraphicStyle.MAIN_DARK), null);
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CHECK).size(16).color(LCGraphicStyle.MAIN_DARK), null);
         buttonCancel = UIUtils.createLeftTextButton(Translation.getText("general.configuration.scene.cancel.button"),
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.TIMES).size(16).color(LCGraphicStyle.SECOND_DARK), null);
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.TIMES).size(16).color(LCGraphicStyle.SECOND_DARK), null);
         HBox buttonBox = new HBox(buttonCancel, buttonOk);
         buttonBox.setAlignment(Pos.CENTER_RIGHT);
         BorderPane.setMargin(buttonBox, new Insets(10.0));
@@ -179,7 +179,7 @@ public class GeneralConfigurationScene extends Scene implements LCViewInitHelper
     public void initListener() {
         this.buttonCancel.setOnAction(e -> cancelSelected(buttonCancel));
         this.buttonOk.setOnAction(e -> okSelected());
-        SystemVirtualKeyboardHelper.INSTANCE.registerScene(this);
+        SystemVirtualKeyboardController.INSTANCE.registerScene(this);
         SessionStatsController.INSTANCE.registerScene(this);
     }
 
@@ -189,7 +189,7 @@ public class GeneralConfigurationScene extends Scene implements LCViewInitHelper
         GeneralConfigurationController.INSTANCE.enableTransitionProperty().addListener((obs, ov, nv) -> viewContentBorderPane.setEnableTransition(nv));
         // TODO : bind on configuration change !
 
-        PluginManager.INSTANCE.getGeneralConfigurationSteps().registerListenerAndDrainCache(generalConfigViewType -> {
+        PluginController.INSTANCE.getGeneralConfigurationSteps().registerListenerAndDrainCache(generalConfigViewType -> {
             try {
                 this.addStepImplementation(generalConfigViewType.getConstructor().newInstance());
             } catch (Exception e) {

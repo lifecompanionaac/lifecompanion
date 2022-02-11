@@ -39,7 +39,7 @@ import org.lifecompanion.model.api.imagedictionary.ImageDictionaryI;
 import org.lifecompanion.model.api.imagedictionary.ImageElementI;
 import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
-import org.lifecompanion.controller.resource.LCGlyphFont;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
@@ -88,7 +88,7 @@ class ImageDictionariesListView extends VBox implements LCViewInitHelper {
 
                 // Copyright
                 Button buttonCopyright = UIUtils.createGraphicButton(
-                        LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.COPYRIGHT).size(12).color(LCGraphicStyle.LC_BLACK), dictionary.getUrl());
+                        GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.COPYRIGHT).size(12).color(LCGraphicStyle.LC_BLACK), dictionary.getUrl());
                 buttonCopyright.setOnAction(e -> UIUtils.openUrlInDefaultBrowser(dictionary.getUrl()));
                 buttonCopyright.getStyleClass().add("button-with-bottom-padding-only");
 

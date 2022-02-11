@@ -27,7 +27,7 @@ import org.lifecompanion.model.api.textprediction.WordPredictionResultI;
 import org.lifecompanion.model.api.textprediction.WordPredictorI;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.WordPredictionKeyOption;
 import org.lifecompanion.controller.textcomponent.WritingStateController;
-import org.lifecompanion.controller.plugin.PluginManager;
+import org.lifecompanion.controller.plugin.PluginController;
 import org.lifecompanion.model.impl.textprediction.predict4all.Predict4AllWordPredictor;
 import org.lifecompanion.model.impl.textprediction.WordPrediction;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
@@ -50,7 +50,7 @@ public class WordPredictionController extends AbstractPredictionController<WordP
 
     protected WordPredictionController() {
         super(WordPredictionKeyOption.class);
-        this.initializePredictorListener(PluginManager.INSTANCE.getWordPredictors());
+        this.initializePredictorListener(PluginController.INSTANCE.getWordPredictors());
     }
 
     @Override

@@ -22,7 +22,7 @@ import javafx.beans.property.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import org.jdom2.Element;
-import org.lifecompanion.controller.io.IOHelper;
+import org.lifecompanion.controller.io.ConfigurationComponentIOHelper;
 import org.lifecompanion.model.api.selectionmode.*;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.io.IOContextI;
@@ -346,7 +346,7 @@ public class SelectionModeParameter implements SelectionModeParameterI {
         String selectModeName = XMLUtils.readString(SelectionModeParameter.ATB_SELECT_MODE_TYPE, node);
         if (selectModeName != null) {
             try {
-                this.selectionModeType.set(IOHelper.getClassForName(selectModeName));
+                this.selectionModeType.set(ConfigurationComponentIOHelper.getClassForName(selectModeName));
             } catch (ClassNotFoundException e) {
                 SelectionModeParameter.LOGGER.warn("Couldn't load the select mode class", e);
             }

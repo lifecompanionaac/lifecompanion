@@ -32,10 +32,10 @@ import org.lifecompanion.util.model.Triple;
 import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
-import org.lifecompanion.controller.userconfiguration.UserBaseConfiguration;
+import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
 import org.lifecompanion.controller.editaction.AsyncExecutorController;
 import org.lifecompanion.ui.common.pane.generic.AnimatedBorderPane;
-import org.lifecompanion.controller.resource.LCGlyphFont;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.controller.io.task.LoadUserConfigTask;
 import org.lifecompanion.controller.io.task.SaveUserConfigTask;
 import org.lifecompanion.util.ConfigUIUtils;
@@ -50,7 +50,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * View to display and set {@link UserBaseConfiguration}
+ * View to display and set {@link UserConfigurationController}
  *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
@@ -102,9 +102,9 @@ public class UserConfigurationView extends BorderPane implements LCViewInitHelpe
 
         // Center bottom : ok, cancel buttons
         buttonOk = UIUtils.createLeftTextButton(Translation.getText("general.configuration.scene.ok.button"),
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.CHECK).size(16).color(LCGraphicStyle.MAIN_DARK), null);
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CHECK).size(16).color(LCGraphicStyle.MAIN_DARK), null);
         buttonCancel = UIUtils.createLeftTextButton(Translation.getText("general.configuration.scene.cancel.button"),
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.TIMES).size(16).color(LCGraphicStyle.SECOND_DARK), null);
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.TIMES).size(16).color(LCGraphicStyle.SECOND_DARK), null);
         HBox buttonBox = new HBox(buttonCancel, buttonOk);
         buttonBox.setAlignment(Pos.CENTER_RIGHT);
         BorderPane.setMargin(buttonBox, new Insets(10.0));

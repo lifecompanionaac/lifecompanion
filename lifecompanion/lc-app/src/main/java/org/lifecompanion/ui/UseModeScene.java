@@ -35,9 +35,7 @@ import org.lifecompanion.ui.configurationcomponent.usemode.SimpleUseConfiguratio
  *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
-public class ConfigUseScene extends Scene implements LCViewInitHelper {
-
-    // FIXME : clear/unbind this scene/stage
+public class UseModeScene extends Scene implements LCViewInitHelper {
 
     /**
      * The root of this scene
@@ -61,7 +59,7 @@ public class ConfigUseScene extends Scene implements LCViewInitHelper {
 
     private final LCConfigurationI configuration;
 
-    public ConfigUseScene(LCConfigurationI configuration) {
+    public UseModeScene(LCConfigurationI configuration) {
         super(new Group());
         this.configuration = configuration;
         this.root = (Group) getRoot();

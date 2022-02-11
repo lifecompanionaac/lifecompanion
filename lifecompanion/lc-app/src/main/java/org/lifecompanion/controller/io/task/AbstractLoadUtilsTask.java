@@ -19,7 +19,7 @@
 package org.lifecompanion.controller.io.task;
 
 import org.jdom2.Element;
-import org.lifecompanion.controller.io.IOManager;
+import org.lifecompanion.controller.io.IOHelper;
 import org.lifecompanion.controller.io.XMLHelper;
 import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
@@ -72,11 +72,11 @@ public abstract class AbstractLoadUtilsTask<T> extends LCTask<T> {
         this.loadElementIn(config, directory, LCConstant.CONFIGURATION_XML_NAME);
 
         // Load keylist
-        final KeyListNodeI keyListNode = LCUtils.executeInCurrentThread(IOManager.INSTANCE.createLoadKeyListTask(directory));
+        final KeyListNodeI keyListNode = LCUtils.executeInCurrentThread(IOHelper.createLoadKeyListTask(directory));
         config.rootKeyListNodeProperty().set(keyListNode);
 
         // Load sequences
-        final UserActionSequencesI sequences = LCUtils.executeInCurrentThread(IOManager.INSTANCE.createLoadSequenceTask(directory));
+        final UserActionSequencesI sequences = LCUtils.executeInCurrentThread(IOHelper.createLoadSequenceTask(directory));
         config.userActionSequencesProperty().set(sequences);
 
         AbstractLoadUtilsTask.LOGGER.info("Configuration successfully loaded from {}", directory);

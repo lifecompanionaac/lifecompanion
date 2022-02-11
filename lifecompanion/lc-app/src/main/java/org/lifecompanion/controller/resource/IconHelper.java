@@ -33,8 +33,8 @@ import javafx.scene.image.Image;
  *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
-public class IconManager {
-    private final static Logger LOGGER = LoggerFactory.getLogger(IconManager.class);
+public class IconHelper {
+    private final static Logger LOGGER = LoggerFactory.getLogger(IconHelper.class);
     /**
      * Map that contains each loaded icons
      */
@@ -45,14 +45,14 @@ public class IconManager {
     }
 
     public static Image get(final String path, final int width, final int height, final boolean preserveRatio, final boolean smooth) {
-        if (IconManager.icons.containsKey(path)) {
-            return IconManager.icons.get(path);
+        if (IconHelper.icons.containsKey(path)) {
+            return IconHelper.icons.get(path);
         } else {
             String iconPath = LCConstant.INT_PATH_ICONS + path;
-            IconManager.LOGGER.debug("Will try to load a icon without resize or change : {}", iconPath);
+            IconHelper.LOGGER.debug("Will try to load a icon without resize or change : {}", iconPath);
             try (InputStream is = ResourceHelper.getInputStreamForPath(iconPath)) {
                 Image img = new Image(is, width, height, preserveRatio, smooth);
-                IconManager.icons.put(path, img);
+                IconHelper.icons.put(path, img);
                 return img;
             } catch (IOException e) {
                 LOGGER.error("Error while loading image resource from {}", iconPath, e);
@@ -62,7 +62,7 @@ public class IconManager {
     }
 
     /**
-     * To remove a image cached into {@link IconManager}.<br>
+     * To remove a image cached into {@link IconHelper}.<br>
      * Noop if the image was not cached.
      *
      * @param path the image to remove.

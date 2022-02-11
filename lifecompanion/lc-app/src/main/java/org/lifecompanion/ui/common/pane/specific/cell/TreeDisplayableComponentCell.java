@@ -21,7 +21,7 @@ package org.lifecompanion.ui.common.pane.specific.cell;
 import javafx.scene.control.Cell;
 import javafx.scene.image.ImageView;
 import org.lifecompanion.model.api.configurationcomponent.TreeDisplayableComponentI;
-import org.lifecompanion.controller.resource.IconManager;
+import org.lifecompanion.controller.resource.IconHelper;
 
 /**
  * Cell to display all elements of the configuration.
@@ -46,7 +46,7 @@ public class TreeDisplayableComponentCell {
                 cell.graphicProperty().set(imView);
             }
             //Display icon
-            imView.setImage(item.getNodeType().isIconValid() ? IconManager.get(item.getNodeType().getIconPath()) : null);
+            imView.setImage(item.getNodeType().isIconValid() ? IconHelper.get(item.getNodeType().getIconPath()) : null);
         }
     }
 }

@@ -32,11 +32,11 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.util.UIUtils;
-import org.lifecompanion.controller.resource.IconManager;
+import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.appinstallation.InstallationController;
-import org.lifecompanion.controller.resource.LCGlyphFont;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.model.impl.notification.LCNotification;
 import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.ui.notification.LCNotificationController;
@@ -80,12 +80,12 @@ public class AboutSubmenu extends VBox implements LCViewInitHelper, UserConfigSu
     @Override
     public void initUI() {
         // Top : logo, general info, website
-        imageViewLogo = new ImageView(IconManager.get(LCConstant.LC_BIG_ICON_PATH));
+        imageViewLogo = new ImageView(IconHelper.get(LCConstant.LC_BIG_ICON_PATH));
         imageViewLogo.setFitHeight(70);
         imageViewLogo.setSmooth(true);
         imageViewLogo.setPreserveRatio(true);
 
-        imageViewCopyright = new ImageView(IconManager.get(LCConstant.LC_COPYRIGHT_ICON_PATH));
+        imageViewCopyright = new ImageView(IconHelper.get(LCConstant.LC_COPYRIGHT_ICON_PATH));
         imageViewCopyright.setFitHeight(70);
         imageViewCopyright.setSmooth(true);
         imageViewCopyright.setPreserveRatio(true);
@@ -120,7 +120,7 @@ public class AboutSubmenu extends VBox implements LCViewInitHelper, UserConfigSu
 
         // Update part
         this.buttonCheckUpdate = UIUtils.createLeftTextButton(Translation.getText("about.tab.check.update.now"),
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.REFRESH).size(14).color(LCGraphicStyle.MAIN_PRIMARY), null);
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.REFRESH).size(14).color(LCGraphicStyle.MAIN_PRIMARY), null);
         this.labelLastUpdateDate = new Label();
         this.progressBarUpdateTask = new ProgressBar(-1);
         this.labelUpdateTaskMessage = new Label();

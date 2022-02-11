@@ -27,7 +27,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 import org.lifecompanion.model.api.categorizedelement.MainCategoryI;
 import org.lifecompanion.util.UIUtils;
-import org.lifecompanion.controller.resource.IconManager;
+import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 
 import java.util.function.Consumer;
@@ -74,7 +74,7 @@ public class AbstractMainCategoryItemView<T extends MainCategoryI<?>> extends La
     @Override
     public void initBinding() {
         this.backgroundShape.setFill(item.getColor());
-        this.imageView.setImage(IconManager.get(item.getConfigIconPath()));
+        this.imageView.setImage(IconHelper.get(item.getConfigIconPath()));
         this.setText(item.getName());
         this.setTooltip(this.tooltip);
         this.tooltip.setText(item.getStaticDescription());

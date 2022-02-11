@@ -30,7 +30,7 @@ import org.lifecompanion.model.api.configurationcomponent.ImageUseComponentI;
 import org.lifecompanion.model.api.imagedictionary.ImageElementI;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.impl.constant.LCConstant;
-import org.lifecompanion.controller.userconfiguration.UserBaseConfiguration;
+import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.model.impl.imagedictionary.ImageDictionaries;
 import org.lifecompanion.framework.commons.fx.io.*;
@@ -415,7 +415,7 @@ public class ImageUseComponentPropertyWrapper {
         ImageElementI imageElement = ImageDictionaries.INSTANCE.getById(imageId);
         String imageName = XMLUtils.readString(ImageUseComponentPropertyWrapper.ATB_IMAGE_NAME, element);
         if (StringUtils.isNotBlank(imageName) && imageElement != null && (imageElement.getDictionary() == null || imageElement.getDictionary().isCustomDictionary())) {
-            imageElement.updateNameAndKeywords(imageName, UserBaseConfiguration.INSTANCE.userLanguageProperty().get(), new String[]{imageName});
+            imageElement.updateNameAndKeywords(imageName, UserConfigurationController.INSTANCE.userLanguageProperty().get(), new String[]{imageName});
         }
         return imageElement;
     }

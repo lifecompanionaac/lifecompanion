@@ -20,7 +20,7 @@
 package org.lifecompanion.model.impl.categorizedelement.useevent.available;
 
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
-import org.lifecompanion.controller.media.SoundPlayer;
+import org.lifecompanion.controller.media.SoundPlayerController;
 import org.lifecompanion.model.impl.categorizedelement.useevent.BaseUseEventGeneratorImpl;
 import org.lifecompanion.model.api.categorizedelement.useevent.DefaultUseEventSubCategories;
 import javafx.beans.value.ChangeListener;
@@ -49,12 +49,12 @@ public class SoundPlayerEnabledEventGenerator extends BaseUseEventGeneratorImpl 
 				this.useEventListener.fireEvent(this, null, null);
 			}
 		};
-		SoundPlayer.INSTANCE.disableSoundPlayerProperty().addListener(this.changeListener);
+		SoundPlayerController.INSTANCE.disableSoundPlayerProperty().addListener(this.changeListener);
 	}
 
 	@Override
 	public void modeStop(final LCConfigurationI configuration) {
-		SoundPlayer.INSTANCE.disableSoundPlayerProperty().removeListener(this.changeListener);
+		SoundPlayerController.INSTANCE.disableSoundPlayerProperty().removeListener(this.changeListener);
 	}
 	//========================================================================
 }

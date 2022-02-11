@@ -19,7 +19,7 @@
 
 package org.lifecompanion.controller.resource;
 
-import org.lifecompanion.controller.plugin.PluginManager;
+import org.lifecompanion.controller.plugin.PluginController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,7 +45,7 @@ public class ResourceHelper {
                 }
                 // Try to load resource from plugin (e.g. this load from traditional classpath)
                 else {
-                    resourceAsStream = PluginManager.INSTANCE.getResourceFromPlugin(resourcePath);
+                    resourceAsStream = PluginController.INSTANCE.getResourceFromPlugin(resourcePath);
                     if (resourceAsStream != null) {
                         return resourceAsStream;
                     }

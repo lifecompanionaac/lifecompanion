@@ -28,7 +28,7 @@ import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.util.UIUtils;
-import org.lifecompanion.controller.resource.IconManager;
+import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.controller.editmode.DragController;
 import org.lifecompanion.model.api.ui.editmode.PossibleAddComponentCategoryI;
 import org.lifecompanion.model.api.ui.editmode.PossibleAddComponentI;
@@ -133,7 +133,7 @@ public class AddComponentView extends TitledPane implements LCViewInitHelper {
 		TilePane pane = new TilePane(5.0, 5.0);
 		Consumer<PossibleAddComponentI<?>> addListener = (comp) -> {
 			Label label = new Label(Translation.getText(comp.getNameID()));
-			Image img = IconManager.get(comp.getIconPath());
+			Image img = IconHelper.get(comp.getIconPath());
 			label.setContentDisplay(ContentDisplay.TOP);
 			label.setTextAlignment(TextAlignment.CENTER);
 			label.setAlignment(Pos.CENTER);

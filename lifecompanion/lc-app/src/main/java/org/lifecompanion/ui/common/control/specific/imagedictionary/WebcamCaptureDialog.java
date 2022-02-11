@@ -41,7 +41,7 @@ import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.appinstallation.InstallationConfigurationController;
-import org.lifecompanion.controller.resource.LCGlyphFont;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.controller.editmode.LCStateController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
@@ -128,9 +128,9 @@ public class WebcamCaptureDialog extends Dialog<File> implements LCViewInitHelpe
 
         // Button
         buttonTakePicture = UIUtils.createGraphicButton(
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.CAMERA).size(44).color(LCGraphicStyle.SECOND_DARK), "image.webcam.button.take.picture");
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CAMERA).size(44).color(LCGraphicStyle.SECOND_DARK), "image.webcam.button.take.picture");
         buttonSwitchCamera = UIUtils.createGraphicButton(
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.REFRESH).size(18).color(LCGraphicStyle.LC_GRAY), "image.webcam.button.switch.camera");
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.REFRESH).size(18).color(LCGraphicStyle.LC_GRAY), "image.webcam.button.switch.camera");
         takenImagePreview = new ImageView();
         takenImagePreview.setFitWidth(100.0);
         takenImagePreview.setFitHeight(100.0);

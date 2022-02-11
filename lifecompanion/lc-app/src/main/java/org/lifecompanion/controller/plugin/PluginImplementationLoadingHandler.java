@@ -27,12 +27,12 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-public class PluginImplementationLoadingHelper<T> {
+public class PluginImplementationLoadingHandler<T> {
     private final T type;
     private final List<Pair<String, T>> cachedElements;
     private BiConsumer<String, T> addListener;
 
-    PluginImplementationLoadingHelper(T type) {
+    PluginImplementationLoadingHandler(T type) {
         this.type = type;
         cachedElements = new ArrayList<>();
     }

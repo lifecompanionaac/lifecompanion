@@ -25,7 +25,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.text.TextAlignment;
 import org.lifecompanion.model.api.categorizedelement.CategorizedElementI;
 import org.lifecompanion.util.UIUtils;
-import org.lifecompanion.controller.resource.IconManager;
+import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.ui.app.categorizedelement.CategorizedIconView;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 
@@ -83,7 +83,7 @@ public class AbstractCategorizedItemView<T extends CategorizedElementI<?>> exten
         this.setTooltip(this.tooltip);
         this.useActionIconView.circleColorProperty().set(item.getCategory().getColor());
         this.setText(item.getName());
-        this.useActionIconView.imageProperty().set(IconManager.get(item.getConfigIconPath()));
+        this.useActionIconView.imageProperty().set(IconHelper.get(item.getConfigIconPath()));
         this.tooltip.setText(item.getStaticDescription());
     }
 

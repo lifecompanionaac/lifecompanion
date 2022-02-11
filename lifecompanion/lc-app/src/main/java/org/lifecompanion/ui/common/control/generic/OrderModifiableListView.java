@@ -32,7 +32,7 @@ import javafx.util.Callback;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
-import org.lifecompanion.controller.resource.LCGlyphFont;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 
 /**
@@ -79,18 +79,18 @@ public class OrderModifiableListView<T> extends BorderPane implements LCViewInit
         VBox buttons = new VBox();
         buttons.setAlignment(Pos.CENTER);
         //TODO : tooltip
-        this.buttonAdd = UIUtils.createGraphicButton(LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.PLUS_CIRCLE)
+        this.buttonAdd = UIUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.PLUS_CIRCLE)
                 .size(OrderModifiableListView.ICON_SIZE).color(LCGraphicStyle.MAIN_PRIMARY), null);
         this.buttonModify = UIUtils.createGraphicButton(
-                LCGlyphFont.FONT_MATERIAL.create('\uE254').size(OrderModifiableListView.ICON_SIZE - 2.0).color(LCGraphicStyle.MAIN_PRIMARY), null);
+                GlyphFontHelper.FONT_MATERIAL.create('\uE254').size(OrderModifiableListView.ICON_SIZE - 2.0).color(LCGraphicStyle.MAIN_PRIMARY), null);
         this.buttonModify.setVisible(false);
         this.buttonModify.managedProperty().bind(this.buttonModify.visibleProperty());
-        this.buttonRemove = UIUtils.createGraphicButton(LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.TRASH_ALT)
+        this.buttonRemove = UIUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.TRASH_ALT)
                 .size(OrderModifiableListView.ICON_SIZE).color(LCGraphicStyle.SECOND_PRIMARY), null);
         this.buttonUp = UIUtils.createGraphicButton(
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.CHEVRON_UP).size(OrderModifiableListView.ICON_SIZE).color(LCGraphicStyle.MAIN_DARK),
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CHEVRON_UP).size(OrderModifiableListView.ICON_SIZE).color(LCGraphicStyle.MAIN_DARK),
                 null);
-        this.buttonDown = UIUtils.createGraphicButton(LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.CHEVRON_DOWN)
+        this.buttonDown = UIUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CHEVRON_DOWN)
                 .size(OrderModifiableListView.ICON_SIZE).color(LCGraphicStyle.MAIN_DARK), null);
         buttons.getChildren().addAll(this.buttonAdd, this.buttonModify, this.buttonRemove, this.buttonUp, this.buttonDown);
         //Total

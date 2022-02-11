@@ -30,20 +30,22 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 import org.lifecompanion.controller.editaction.*;
-import org.lifecompanion.model.impl.constant.LCConstant;
-import org.lifecompanion.controller.lifecycle.AppModeController;
-import org.lifecompanion.controller.metrics.SessionStatsController;
 import org.lifecompanion.controller.editmode.ComponentActionController;
 import org.lifecompanion.controller.editmode.SelectionController;
-import org.lifecompanion.controller.systemvk.SystemVirtualKeyboardHelper;
-import org.lifecompanion.ui.app.main.BottomPaneView;
-import org.lifecompanion.ui.app.main.LeftPartView;
+import org.lifecompanion.controller.lifecycle.AppModeController;
+import org.lifecompanion.controller.metrics.SessionStatsController;
+import org.lifecompanion.controller.systemvk.SystemVirtualKeyboardController;
+import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.model.impl.constant.LCConstant;
+import org.lifecompanion.ui.app.main.CurrentLifeCompanionStateDetailView;
 import org.lifecompanion.ui.app.main.MainView;
+import org.lifecompanion.ui.app.main.addcomponent.AddComponentView;
 import org.lifecompanion.ui.app.main.mainmenu.MainMenu;
 import org.lifecompanion.ui.app.main.ribbon.RibbonTabs;
-import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.ui.app.main.usercomponent.UserCompView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,8 +56,8 @@ import java.util.ArrayList;
  *
  * @author Mathieu THEBAUD
  */
-public class ConfigurationScene extends Scene implements LCViewInitHelper {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ConfigurationScene.class);
+public class EditModeScene extends Scene implements LCViewInitHelper {
+    private static final Logger LOGGER = LoggerFactory.getLogger(EditModeScene.class);
 
 
     //Animation
@@ -65,14 +67,10 @@ public class ConfigurationScene extends Scene implements LCViewInitHelper {
     private Timeline animationShow, animationHide;
     private boolean menuShowing = false;
 
-    //Element
-    private MainView mainPane;
-    private LeftPartView leftPane;
     private BorderPane borderPane;
     private RibbonTabs topRibbons;
-    private BottomPaneView bottomPane;
     private MainMenu mainMenu;
-    private StackPane rootStackPane;
+    private final StackPane rootStackPane;
 
     /**
      * Create the configuration scene in the given root.<br>
@@ -80,7 +78,7 @@ public class ConfigurationScene extends Scene implements LCViewInitHelper {
      *
      * @param rootP the scene root
      */
-    public ConfigurationScene(final StackPane rootP) {
+    public EditModeScene(final StackPane rootP) {
         super(rootP);
         this.rootStackPane = rootP;
         this.getStylesheets().addAll(LCConstant.CSS_STYLE_PATH);
@@ -91,27 +89,28 @@ public class ConfigurationScene extends Scene implements LCViewInitHelper {
         this.topRibbons = new RibbonTabs();
 
         //Center
-        this.mainPane = new MainView();
-        this.leftPane = new LeftPartView();
-        SplitPane center = new SplitPane(this.leftPane, mainPane);
+        //Element
+        MainView mainPane = new MainView();
+        VBox leftPane = new VBox(new AddComponentView(), new UserCompView());
+        SplitPane center = new SplitPane(leftPane, mainPane);
         center.setOrientation(Orientation.HORIZONTAL);
         center.setDividerPositions(0.30);
-        SplitPane.setResizableWithParent(this.leftPane, false);
+        SplitPane.setResizableWithParent(leftPane, false);
 
         //Bottom
-        this.bottomPane = new BottomPaneView();
+        CurrentLifeCompanionStateDetailView bottomPane = new CurrentLifeCompanionStateDetailView();
 
         //Total configuration pane
         this.borderPane = new BorderPane();
         this.borderPane.setCenter(center);
         this.borderPane.setTop(this.topRibbons);
-        this.borderPane.setBottom(this.bottomPane);
+        this.borderPane.setBottom(bottomPane);
 
         //Menu pane
         this.mainMenu = new MainMenu();
         StackPane.setMargin(this.mainMenu, new Insets(50, 0, 0, 0));
         StackPane.setAlignment(this.mainMenu, Pos.TOP_LEFT);
-        this.mainMenu.setTranslateX(ConfigurationScene.COLLAPSED_LAYOUT_X);
+        this.mainMenu.setTranslateX(EditModeScene.COLLAPSED_LAYOUT_X);
 
         //Add to root
         this.rootStackPane.getChildren().addAll(this.borderPane, this.mainMenu);
@@ -169,7 +168,7 @@ public class ConfigurationScene extends Scene implements LCViewInitHelper {
         //When leave menu, close it
         this.mainMenu.setOnMouseExited((ea) -> this.hideMenu());
 
-        SystemVirtualKeyboardHelper.INSTANCE.registerScene(this);
+        SystemVirtualKeyboardController.INSTANCE.registerScene(this);
         SessionStatsController.INSTANCE.registerScene(this);
     }
 
@@ -185,16 +184,16 @@ public class ConfigurationScene extends Scene implements LCViewInitHelper {
         this.animationShow.setCycleCount(1);
         final KeyValue kvE = new KeyValue(this.mainMenu.translateXProperty(), 0, Interpolator.EASE_OUT);
         final KeyValue kvER = new KeyValue(this.topRibbons.getMenuButton().rotateProperty(), 90, Interpolator.EASE_BOTH);
-        final KeyFrame kfE = new KeyFrame(Duration.millis(ConfigurationScene.MENU_ANIMATION_DURATION), kvE);
-        final KeyFrame kfEM = new KeyFrame(Duration.millis(ConfigurationScene.BUTTON_ANIMATION_DURATION), kvER);
+        final KeyFrame kfE = new KeyFrame(Duration.millis(EditModeScene.MENU_ANIMATION_DURATION), kvE);
+        final KeyFrame kfEM = new KeyFrame(Duration.millis(EditModeScene.BUTTON_ANIMATION_DURATION), kvER);
         this.animationShow.getKeyFrames().addAll(kfE, kfEM);
         //Animation to hide menu
         this.animationHide = new Timeline();
         this.animationHide.setCycleCount(1);
-        final KeyValue kvC = new KeyValue(this.mainMenu.translateXProperty(), ConfigurationScene.COLLAPSED_LAYOUT_X, Interpolator.EASE_IN);
+        final KeyValue kvC = new KeyValue(this.mainMenu.translateXProperty(), EditModeScene.COLLAPSED_LAYOUT_X, Interpolator.EASE_IN);
         final KeyValue kvCR = new KeyValue(this.topRibbons.getMenuButton().rotateProperty(), 0, Interpolator.EASE_BOTH);
-        final KeyFrame kfC = new KeyFrame(Duration.millis(ConfigurationScene.MENU_ANIMATION_DURATION), kvC);
-        final KeyFrame kfCM = new KeyFrame(Duration.millis(ConfigurationScene.BUTTON_ANIMATION_DURATION), kvCR);
+        final KeyFrame kfC = new KeyFrame(Duration.millis(EditModeScene.MENU_ANIMATION_DURATION), kvC);
+        final KeyFrame kfCM = new KeyFrame(Duration.millis(EditModeScene.BUTTON_ANIMATION_DURATION), kvCR);
         this.animationHide.getKeyFrames().addAll(kfC, kfCM);
     }
 

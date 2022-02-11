@@ -49,9 +49,9 @@ import org.lifecompanion.controller.editaction.GlobalActions;
 import org.lifecompanion.controller.editaction.LCConfigurationActions;
 import org.lifecompanion.controller.editaction.OptionActions;
 import org.lifecompanion.controller.editaction.OptionActions.AddRootComponentAction;
-import org.lifecompanion.controller.editmode.ProfileConfigSelectionController;
-import org.lifecompanion.controller.editmode.ProfileConfigStep;
-import org.lifecompanion.controller.resource.LCGlyphFont;
+import org.lifecompanion.controller.profileconfigselect.ProfileConfigSelectionController;
+import org.lifecompanion.controller.profileconfigselect.ProfileConfigStep;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.controller.editmode.DragController;
 import org.lifecompanion.controller.editmode.SelectionController;
@@ -135,7 +135,7 @@ public class MainView extends StackPane implements LCViewInitHelper {
     }
 
     private Button createQuickActionButton(final boolean primary, final String tooltipId, final Enum<?> glyph) {
-        Button button = UIUtils.createGraphicButton(LCGlyphFont.FONT_AWESOME.create(glyph).size(12).color(Color.WHITE), tooltipId);
+        Button button = UIUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(glyph).size(12).color(Color.WHITE), tooltipId);
         Circle buttonShape = new Circle(1.0);// Radius is ignored when != 0
         button.setShape(buttonShape);
         button.setCenterShape(true);

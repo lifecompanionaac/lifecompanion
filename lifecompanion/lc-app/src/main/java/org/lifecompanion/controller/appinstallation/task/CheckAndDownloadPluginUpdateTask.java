@@ -24,7 +24,7 @@ import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.plugin.PluginInfo;
 import org.lifecompanion.model.impl.plugin.PluginInfoState;
-import org.lifecompanion.controller.plugin.PluginManager;
+import org.lifecompanion.controller.plugin.PluginController;
 import org.lifecompanion.framework.client.http.AppServerClient;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.model.server.update.ApplicationPluginUpdate;
@@ -59,7 +59,7 @@ public class CheckAndDownloadPluginUpdateTask extends AbstractPluginDownloadTask
         LCUtils.safeSleep(TASK_START_LONG_DELAY);
 
         // Copy current plugin list and check/download update for each plugin
-        List<PluginInfo> pluginInfoList = new ArrayList<>(PluginManager.INSTANCE.getPluginInfoList());
+        List<PluginInfo> pluginInfoList = new ArrayList<>(PluginController.INSTANCE.getPluginInfoList());
         int progress = 0;
         for (PluginInfo pluginInfo : pluginInfoList) {
             try {

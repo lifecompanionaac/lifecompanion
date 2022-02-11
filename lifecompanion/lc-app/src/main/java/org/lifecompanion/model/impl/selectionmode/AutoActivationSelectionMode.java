@@ -25,7 +25,7 @@ import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.selectionmode.AutoDirectSelectionModeI;
 import org.lifecompanion.model.api.selectionmode.DirectSelectionModeI;
 import org.lifecompanion.model.api.selectionmode.SelectionModeI;
-import org.lifecompanion.controller.categorizedelement.useaction.UserActionController;
+import org.lifecompanion.controller.categorizedelement.useaction.UseActionController;
 import org.lifecompanion.ui.selectionmode.AutoActivationSelectionModeView;
 
 import java.util.concurrent.ScheduledFuture;
@@ -121,10 +121,10 @@ public class AutoActivationSelectionMode extends AbstractDirectSelectionMode<Aut
                 AutoActivationSelectionMode.this.strokeColor
                         .set(AutoActivationSelectionMode.this.parameters.selectionActivationViewColorProperty().get());
                 //With timer, there is no delay
-                UserActionController.INSTANCE.startEventOn(this.key, UseActionEvent.ACTIVATION, null);
-                UserActionController.INSTANCE.endEventOn(this.key, UseActionEvent.ACTIVATION, null);
+                UseActionController.INSTANCE.startEventOn(this.key, UseActionEvent.ACTIVATION, null);
+                UseActionController.INSTANCE.endEventOn(this.key, UseActionEvent.ACTIVATION, null);
                 //Execute simple
-                UserActionController.INSTANCE.executeSimpleOn(this.key, UseActionEvent.ACTIVATION, null,
+                UseActionController.INSTANCE.executeSimpleOn(this.key, UseActionEvent.ACTIVATION, null,
                         AutoActivationSelectionMode.this::handleActivationResult);
             }
             return null;

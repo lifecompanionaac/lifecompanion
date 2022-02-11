@@ -20,7 +20,7 @@ package org.lifecompanion.ui.app.categorizedelement.useaction;
 
 import javafx.collections.ObservableList;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionMainCategoryI;
-import org.lifecompanion.controller.categorizedelement.useaction.AvailableUseActionManager;
+import org.lifecompanion.controller.categorizedelement.useaction.AvailableUseActionController;
 import org.lifecompanion.ui.app.categorizedelement.AbstractMainCategoriesView;
 import org.lifecompanion.ui.common.pane.specific.cell.AbstractMainCategoryItemView;
 
@@ -44,6 +44,6 @@ public class UseActionMainCategoriesView extends AbstractMainCategoriesView<UseA
 
     @Override
     protected ObservableList<UseActionMainCategoryI> getMainCategories() {
-        return AvailableUseActionManager.INSTANCE.getMainCategories();
+        return AvailableUseActionController.INSTANCE.getMainCategories();
     }
 }

@@ -31,7 +31,7 @@ import org.lifecompanion.model.api.ui.configurationcomponent.ComponentViewI;
 import org.lifecompanion.model.api.ui.configurationcomponent.ViewProviderI;
 import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
-import org.lifecompanion.controller.userconfiguration.UserBaseConfiguration;
+import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 
 /**
@@ -79,8 +79,8 @@ public class LCConfigurationViewBase extends Pane implements LCViewInitHelper, C
                         .append(";").toString(), this.model.backgroundColorProperty()));
         this.styleProperty().bind(this.configurationCssStyle);
         //Bind max/min size on configuration, plus a add, to avoid blocking the user actions in bottom/right side
-        double SIDE_ADD = UserBaseConfiguration.INSTANCE.selectionStrokeSizeProperty().get() + LCGraphicStyle.SELECTED_STROKE_GAP
-                + UserBaseConfiguration.INSTANCE.selectionStrokeSizeProperty().get() + 5.0;
+        double SIDE_ADD = UserConfigurationController.INSTANCE.selectionStrokeSizeProperty().get() + LCGraphicStyle.SELECTED_STROKE_GAP
+                + UserConfigurationController.INSTANCE.selectionStrokeSizeProperty().get() + 5.0;
         this.minWidthProperty().bind(this.model.computedWidthProperty().add(SIDE_ADD));
         this.maxWidthProperty().bind(this.model.computedWidthProperty().add(SIDE_ADD));
         this.minHeightProperty().bind(this.model.computedHeightProperty().add(SIDE_ADD));

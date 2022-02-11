@@ -35,7 +35,7 @@ import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.model.impl.voicesynthesizer.PronunciationException;
 import org.lifecompanion.controller.voicesynthesizer.VoiceSynthesizerController;
-import org.lifecompanion.controller.resource.LCGlyphFont;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 
@@ -96,13 +96,13 @@ public class PronunciationExceptionView extends BorderPane implements LCViewInit
 
         //Buttons
         this.buttonAdd = UIUtils.createGraphicButton(
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.PLUS_CIRCLE).size(14).color(LCGraphicStyle.MAIN_PRIMARY),
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.PLUS_CIRCLE).size(14).color(LCGraphicStyle.MAIN_PRIMARY),
                 "tooltip.pronunciation.exception.add.button");
         this.buttonRemove = UIUtils.createGraphicButton(
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.TRASH).size(14).color(LCGraphicStyle.SECOND_PRIMARY),
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.TRASH).size(14).color(LCGraphicStyle.SECOND_PRIMARY),
                 "tooltip.pronunciation.exception.remove.button");
         this.buttonSpeak = UIUtils.createGraphicButton(
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.VOLUME_UP).size(14).color(LCGraphicStyle.MAIN_DARK),
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.VOLUME_UP).size(14).color(LCGraphicStyle.MAIN_DARK),
                 "tooltip.pronunciation.exception.speak.button");
         HBox boxButtons = new HBox(10, this.buttonAdd, this.buttonRemove, this.buttonSpeak);
 

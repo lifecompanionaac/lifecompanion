@@ -44,7 +44,7 @@ import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNode
 import org.lifecompanion.model.api.ui.configurationcomponent.ComponentViewI;
 import org.lifecompanion.util.model.LCTask;
 import org.lifecompanion.util.LCUtils;
-import org.lifecompanion.controller.resource.IconManager;
+import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.controller.configurationcomponent.dynamickey.KeyListController;
 import org.lifecompanion.controller.appinstallation.InstallationController;
@@ -165,7 +165,7 @@ public class ExportGridsToPdfTask extends LCTask<Void> {
 
         // Temp save LC logo
         File logoFile = new File(exportedImageDir.getPath() + File.separator + "lc_logo.png");
-        BufferedImage logoBuffImage = SwingFXUtils.fromFXImage(IconManager.get(LCConstant.LC_BIG_ICON_PATH), null);
+        BufferedImage logoBuffImage = SwingFXUtils.fromFXImage(IconHelper.get(LCConstant.LC_BIG_ICON_PATH), null);
         ImageIO.write(logoBuffImage, "png", logoFile);
         float logoDrawWidth = LOGO_HEIGHT / logoBuffImage.getHeight() * logoBuffImage.getWidth();
 

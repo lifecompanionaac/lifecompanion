@@ -33,7 +33,7 @@ import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.configurationcomponent.DisplayableComponentBaseImpl;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.lifecycle.AppModeController;
-import org.lifecompanion.controller.resource.LCGlyphFont;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.ui.configurationcomponent.editmode.categorizedelement.useevent.available.RibbonBasePart;
 import org.lifecompanion.framework.commons.translation.Translation;
@@ -70,13 +70,13 @@ public class ZoomRibbonPart extends RibbonBasePart<DisplayableComponentBaseImpl>
         gridPane.setVgap(5.0);
         gridPane.setAlignment(Pos.CENTER);
         this.buttonIncreaseZoom = UIUtils.createGraphicButton(
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.SEARCH_PLUS).size(20).color(LCGraphicStyle.MAIN_DARK),
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.SEARCH_PLUS).size(20).color(LCGraphicStyle.MAIN_DARK),
                 "tooltip.buttons.zoom.increase");
         this.buttonDecreaseZoom = UIUtils.createGraphicButton(
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.SEARCH_MINUS).size(20).color(LCGraphicStyle.SECOND_DARK),
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.SEARCH_MINUS).size(20).color(LCGraphicStyle.SECOND_DARK),
                 "tooltip.buttons.zoom.decrease");
         this.buttonResetZoom = UIUtils.createRightTextButton(Translation.getText("reset.zoom.level.label"),
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.UNDO).size(18).color(LCGraphicStyle.SECOND_DARK), "tooltip.buttons.zoom.reset");
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.UNDO).size(18).color(LCGraphicStyle.SECOND_DARK), "tooltip.buttons.zoom.reset");
         this.labelZoomLevel = new Label();
         gridPane.add(this.buttonDecreaseZoom, 0, 0);
         gridPane.add(this.buttonIncreaseZoom, 1, 0);
