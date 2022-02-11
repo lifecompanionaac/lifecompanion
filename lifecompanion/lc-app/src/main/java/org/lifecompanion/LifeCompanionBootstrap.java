@@ -17,48 +17,45 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.lifecompanion.app.launcher;
+package org.lifecompanion;
 
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import org.lifecompanion.controller.resource.IconManager;
-import org.lifecompanion.controller.translation.TranslationManager;
-import org.lifecompanion.controller.userconfiguration.UserBaseConfiguration;
-import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
-import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
-import org.lifecompanion.model.api.profile.LCProfileI;
-import org.lifecompanion.model.impl.constant.LCConstant;
-import org.lifecompanion.model.impl.constant.LCGraphicStyle;
-import org.lifecompanion.model.impl.exception.LCException;
-import org.lifecompanion.util.LCUtils;
-import org.lifecompanion.util.UIUtils;
-import org.lifecompanion.controller.lifecycle.AppModeController;
-import org.lifecompanion.controller.lifecycle.LifeCompanionController;
-import org.lifecompanion.controller.profile.ProfileController;
-import org.lifecompanion.util.StageUtils;
 import org.lifecompanion.controller.appinstallation.InstallationController;
-import org.lifecompanion.controller.io.IOManager;
 import org.lifecompanion.controller.editaction.GlobalActions;
 import org.lifecompanion.controller.editaction.LCConfigurationActions;
 import org.lifecompanion.controller.editaction.LCProfileActions;
-import org.lifecompanion.controller.editmode.GeneralConfigurationController;
-import org.lifecompanion.controller.editmode.ProfileConfigSelectionController;
-import org.lifecompanion.controller.editmode.ProfileConfigStep;
+import org.lifecompanion.controller.editmode.*;
+import org.lifecompanion.controller.io.IOManager;
+import org.lifecompanion.controller.lifecycle.AppModeController;
+import org.lifecompanion.controller.lifecycle.LifeCompanionController;
+import org.lifecompanion.controller.profile.ProfileController;
+import org.lifecompanion.controller.resource.IconManager;
 import org.lifecompanion.controller.resource.LCGlyphFont;
-import org.lifecompanion.controller.editmode.ConfigActionController;
-import org.lifecompanion.controller.editmode.LCStateController;
-import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationScene;
-import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStage;
-import org.lifecompanion.ui.app.profileconfigselect.ProfileConfigSelectionScene;
-import org.lifecompanion.ui.app.profileconfigselect.ProfileConfigSelectionStage;
-import org.lifecompanion.ui.ConfigurationScene;
+import org.lifecompanion.controller.translation.TranslationManager;
+import org.lifecompanion.controller.userconfiguration.UserBaseConfiguration;
 import org.lifecompanion.framework.commons.utils.io.FileNameUtils;
 import org.lifecompanion.framework.commons.utils.lang.CollectionUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.framework.utils.LCNamedThreadFactory;
+import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
+import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
+import org.lifecompanion.model.api.profile.LCProfileI;
+import org.lifecompanion.model.impl.constant.LCConstant;
+import org.lifecompanion.model.impl.constant.LCGraphicStyle;
+import org.lifecompanion.model.impl.exception.LCException;
+import org.lifecompanion.ui.ConfigurationScene;
+import org.lifecompanion.ui.LoadingScene;
+import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationScene;
+import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStage;
+import org.lifecompanion.ui.app.profileconfigselect.ProfileConfigSelectionScene;
+import org.lifecompanion.ui.app.profileconfigselect.ProfileConfigSelectionStage;
+import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.util.javafx.StageUtils;
+import org.lifecompanion.util.UIUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -68,8 +65,8 @@ import java.util.List;
 
 import static org.lifecompanion.model.impl.constant.LCConstant.URL_PATH_GET_STARTED;
 
-public class LCLauncherV2 {
-    private static final Logger LOGGER = LoggerFactory.getLogger(LCLauncherV2.class);
+public class LifeCompanionBootstrap {
+    private static final Logger LOGGER = LoggerFactory.getLogger(LifeCompanionBootstrap.class);
 
     private final long startAt;
     private final Stage stage;
@@ -77,7 +74,7 @@ public class LCLauncherV2 {
 
     private LoadingScene loadingScene;
 
-    public LCLauncherV2(Stage stage, List<String> args) {
+    public LifeCompanionBootstrap(Stage stage, List<String> args) {
         this.stage = stage;
         this.args = args;
         this.startAt = System.currentTimeMillis();
@@ -120,7 +117,7 @@ public class LCLauncherV2 {
     // LOADING THREAD
     //========================================================================
     private void startBackgroundLoad() {
-        LCNamedThreadFactory.threadFactory("LCLauncher").newThread(() -> {
+        LCNamedThreadFactory.threadFactory("LifeCompanionBootstrap").newThread(() -> {
             long start = System.currentTimeMillis();
             LifeCompanionController.INSTANCE.lcStart();
 
@@ -175,8 +172,6 @@ public class LCLauncherV2 {
         } else {
             AppModeController.INSTANCE.startUseModeForConfiguration(afterLoad.configuration, afterLoad.configurationDescription);
         }
-
-
     }
 
     private void showProfileCreateOrList() {
@@ -202,7 +197,7 @@ public class LCLauncherV2 {
         if (profileIDToSelect != null) {
             try {
                 LCProfileI profileToSelect = ProfileController.INSTANCE.getByID(profileIDToSelect);
-                profileToSelect = LCUtils.executeInCurrentThread(IOManager.INSTANCE.createLoadFullProfileTask(profileToSelect));
+                profileToSelect = LCUtils.executeInCurrentThread(IOManager.INSTANCE.createLoadFullProfileTask(profileToSelect, false));
 
                 // Check if a configuration is imported
                 File configurationFile = this.getFirstLifeCompanionFile(LCConstant.CONFIG_FILE_EXTENSION);

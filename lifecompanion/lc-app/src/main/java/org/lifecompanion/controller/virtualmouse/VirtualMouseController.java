@@ -39,8 +39,8 @@ import org.lifecompanion.model.api.lifecycle.ModeListenerI;
 import org.lifecompanion.ui.virtualmouse.VirtualMouseStage;
 import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.controller.lifecycle.AppModeController;
-import org.lifecompanion.util.StageUtils;
-import org.lifecompanion.util.RobotProvider;
+import org.lifecompanion.util.javafx.StageUtils;
+import org.lifecompanion.util.javafx.RobotProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

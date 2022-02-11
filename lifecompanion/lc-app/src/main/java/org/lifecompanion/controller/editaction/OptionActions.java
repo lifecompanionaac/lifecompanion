@@ -26,7 +26,7 @@ import javafx.scene.input.KeyCombination;
 import org.lifecompanion.model.api.configurationcomponent.*;
 import org.lifecompanion.model.api.editaction.UndoRedoActionI;
 import org.lifecompanion.model.impl.exception.LCException;
-import org.lifecompanion.util.PositionSize;
+import org.lifecompanion.util.model.PositionSize;
 import org.lifecompanion.controller.editaction.GridActions.ReplaceComponentAction;
 import org.lifecompanion.controller.editaction.GridActions.ReplaceMultiCompAction;
 import org.lifecompanion.controller.editaction.GridStackActions.AddGridInStackAction;

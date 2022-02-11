@@ -25,7 +25,7 @@ import java.util.List;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.controller.editaction.KeyActions.ChangeViewportAction;
-import org.lifecompanion.util.PositionSize;
+import org.lifecompanion.util.model.PositionSize;
 import org.lifecompanion.model.api.configurationcomponent.ImageUseComponentI;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;

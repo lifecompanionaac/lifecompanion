@@ -27,7 +27,7 @@ import javafx.scene.control.ListCell;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.dynamickey.UserActionSequenceDisplayFilter;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.dynamickey.UserActionSequenceItemKeyOption;
 import org.lifecompanion.controller.editaction.KeyOptionActions;
-import org.lifecompanion.util.LCConfigBindingUtils;
+import org.lifecompanion.util.binding.LCConfigBindingUtils;
 import org.lifecompanion.framework.commons.translation.Translation;
 
 public class UserActionSequenceItemKeyOptionConfigView extends BaseKeyOptionConfigView<UserActionSequenceItemKeyOption> {

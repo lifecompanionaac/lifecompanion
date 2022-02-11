@@ -36,7 +36,7 @@ import org.jdom2.Element;
 import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.io.IOContextI;
-import org.lifecompanion.util.Unbindable;
+import org.lifecompanion.util.binding.Unbindable;
 import org.lifecompanion.model.impl.style.ShapeStyleBinder;
 import org.lifecompanion.framework.commons.fx.io.XMLGenericProperty;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;

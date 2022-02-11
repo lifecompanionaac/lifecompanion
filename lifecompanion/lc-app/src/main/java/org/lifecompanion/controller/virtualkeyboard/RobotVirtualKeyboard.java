@@ -25,7 +25,7 @@ import javafx.scene.input.DataFormat;
 import javafx.scene.input.KeyCode;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.util.LCUtils;
-import org.lifecompanion.util.RobotProvider;
+import org.lifecompanion.util.javafx.RobotProvider;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.framework.utils.FluentHashMap;
 import org.slf4j.Logger;

@@ -28,7 +28,7 @@ import org.lifecompanion.model.api.configurationcomponent.dynamickey.UserActionS
 import org.lifecompanion.model.api.imagedictionary.ImageElementI;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.io.XMLSerializable;
-import org.lifecompanion.util.LCTask;
+import org.lifecompanion.util.model.LCTask;
 import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.model.impl.profile.LCConfigurationDescription;
 import org.lifecompanion.model.impl.configurationcomponent.LCConfigurationComponent;

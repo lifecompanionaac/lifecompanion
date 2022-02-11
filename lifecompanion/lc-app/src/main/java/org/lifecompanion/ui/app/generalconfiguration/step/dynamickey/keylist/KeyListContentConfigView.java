@@ -44,7 +44,7 @@ import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNode
 import org.lifecompanion.ui.common.pane.specific.cell.KeyListCellHandler;
 import org.lifecompanion.ui.common.pane.specific.cell.KeyListNodeTreeCell;
 import org.lifecompanion.util.LCUtils;
-import org.lifecompanion.util.ListBindingWithMapper;
+import org.lifecompanion.util.binding.ListBindingWithMapper;
 import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.configurationcomponent.dynamickey.KeyListLeaf;
 import org.lifecompanion.model.impl.configurationcomponent.dynamickey.KeyListLinkLeaf;

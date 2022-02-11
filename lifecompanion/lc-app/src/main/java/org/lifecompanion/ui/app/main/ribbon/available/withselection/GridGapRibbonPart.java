@@ -28,7 +28,7 @@ import org.lifecompanion.model.api.ui.editmode.ConfigurationProfileLevelEnum;
 import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.controller.editaction.GridActions.ChangeGridHGapAction;
 import org.lifecompanion.controller.editaction.GridActions.ChangeGridVGapAction;
-import org.lifecompanion.util.LCConfigBindingUtils;
+import org.lifecompanion.util.binding.LCConfigBindingUtils;
 import org.lifecompanion.controller.editmode.SelectionController;
 import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.ui.configurationcomponent.editmode.categorizedelement.useevent.available.RibbonBasePart;

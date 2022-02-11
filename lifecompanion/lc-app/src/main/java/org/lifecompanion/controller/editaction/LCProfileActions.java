@@ -25,30 +25,25 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.stage.FileChooser;
-import org.lifecompanion.controller.io.*;
+import org.lifecompanion.controller.editmode.*;
+import org.lifecompanion.controller.io.IOManager;
 import org.lifecompanion.controller.io.task.*;
-import org.lifecompanion.model.api.editaction.BaseEditActionI;
-import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
-import org.lifecompanion.model.api.profile.LCProfileI;
-import org.lifecompanion.model.impl.exception.LCException;
-import org.lifecompanion.util.LCTask;
-import org.lifecompanion.util.LCUtils;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.controller.profile.ProfileController;
-import org.lifecompanion.controller.editmode.ProfileConfigSelectionController;
-import org.lifecompanion.controller.editmode.ProfileConfigStep;
-import org.lifecompanion.controller.editmode.ConfigActionController;
-import org.lifecompanion.controller.editmode.FileChooserType;
-import org.lifecompanion.controller.editmode.LCStateController;
-import org.lifecompanion.model.impl.notification.LCNotification;
-import org.lifecompanion.util.ConfigUIUtils;
-import org.lifecompanion.controller.editmode.LCFileChooser;
-import org.lifecompanion.ui.common.control.specific.selector.ProfileSelectorControl;
-import org.lifecompanion.ui.notification.LCNotificationController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
 import org.lifecompanion.framework.commons.utils.lang.LangUtils;
 import org.lifecompanion.framework.utils.Pair;
+import org.lifecompanion.model.api.editaction.BaseEditActionI;
+import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
+import org.lifecompanion.model.api.profile.LCProfileI;
+import org.lifecompanion.model.impl.exception.LCException;
+import org.lifecompanion.model.impl.notification.LCNotification;
+import org.lifecompanion.ui.common.control.specific.selector.ProfileSelectorControl;
+import org.lifecompanion.ui.notification.LCNotificationController;
+import org.lifecompanion.util.ConfigUIUtils;
+import org.lifecompanion.util.model.LCTask;
+import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.util.UIUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -236,7 +231,7 @@ public class LCProfileActions {
 
                     // Once previous profile is changed : fully load the profile
                     Runnable afterPreviousProfileHandled = () -> {
-                        ProfileFullLoadingTask loadFullProfileTask = IOManager.INSTANCE.createLoadFullProfileTask(profileToSelect);
+                        ProfileFullLoadingTask loadFullProfileTask = IOManager.INSTANCE.createLoadFullProfileTask(profileToSelect, true);
                         loadFullProfileTask.setOnSucceeded(event -> afterFullLoading.run());
                         AsyncExecutorController.INSTANCE.addAndExecute(true, false, loadFullProfileTask);
                     };

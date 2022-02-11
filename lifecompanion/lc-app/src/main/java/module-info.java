@@ -21,11 +21,7 @@ open module org.lifecompanion.app {
     requires org.apache.pdfbox;
     requires trove4j;
     requires spark.core;
-
     requires org.lifecompanion.framework.client;
     requires org.lifecompanion.framework.commons;
     requires org.lifecompanion.framework.commons.fx;
-
-    exports org.lifecompanion.app.launcher;
-    exports org.lifecompanion.app.instance;
 }

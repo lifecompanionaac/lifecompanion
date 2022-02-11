@@ -22,7 +22,7 @@ package org.lifecompanion.controller.io.task;
 import org.lifecompanion.controller.io.IOManager;
 import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
-import org.lifecompanion.util.LCTask;
+import org.lifecompanion.util.model.LCTask;
 import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.controller.userconfiguration.UserBaseConfiguration;

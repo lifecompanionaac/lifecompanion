@@ -22,7 +22,7 @@ import org.jdom2.Element;
 import org.lifecompanion.controller.io.XMLHelper;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.io.IOContextI;
-import org.lifecompanion.util.LCTask;
+import org.lifecompanion.util.model.LCTask;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.framework.commons.fx.io.XMLUtils;
 import org.slf4j.Logger;

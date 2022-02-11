@@ -32,7 +32,7 @@ import javafx.scene.input.KeyCombination;
 import javafx.stage.FileChooser;
 import org.lifecompanion.model.api.editaction.BaseEditActionI;
 import org.lifecompanion.model.impl.exception.LCException;
-import org.lifecompanion.util.LCTask;
+import org.lifecompanion.util.model.LCTask;
 import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.controller.lifecycle.AppMode;
 import org.lifecompanion.controller.lifecycle.AppModeController;

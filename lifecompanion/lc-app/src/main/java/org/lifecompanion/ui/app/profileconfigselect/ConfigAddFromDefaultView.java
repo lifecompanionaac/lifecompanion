@@ -24,7 +24,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import org.lifecompanion.ui.common.pane.specific.DefaultConfigurationListPane;
-import org.lifecompanion.util.Triple;
+import org.lifecompanion.util.model.Triple;
 import org.lifecompanion.controller.editaction.LCConfigurationActions;
 import org.lifecompanion.controller.editmode.ProfileConfigSelectionController;
 import org.lifecompanion.controller.editmode.ProfileConfigStep;

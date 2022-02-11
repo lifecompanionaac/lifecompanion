@@ -16,15 +16,33 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.lifecompanion.app.instance;
 
-import java.rmi.Remote;
-import java.rmi.RemoteException;
+package org.lifecompanion.util.model;
 
-/**
- * Interface that can be called on RMI to fire a double launch event.
- * @author Mathieu THEBAUD <math.thebaud@gmail.com>
- */
-public interface DoubleLaunchListener extends Remote {
-	public void doubleRunDetected() throws RemoteException;
+public class Triple<T, V, U> {
+    private final T left;
+    private final V middle;
+    private final U right;
+
+    private Triple(T left, V middle, U right) {
+        this.left = left;
+        this.middle = middle;
+        this.right = right;
+    }
+
+    public T getLeft() {
+        return left;
+    }
+
+    public V getMiddle() {
+        return middle;
+    }
+
+    public U getRight() {
+        return right;
+    }
+
+    public static <T, V, U> Triple<T, V, U> of(T left, V middle, U right) {
+        return new Triple<>(left, middle, right);
+    }
 }

@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.lifecompanion.util;
+package org.lifecompanion.util.model;
 
 import javafx.concurrent.Task;
 import org.lifecompanion.framework.commons.translation.Translation;

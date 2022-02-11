@@ -33,7 +33,7 @@ import org.lifecompanion.ui.common.pane.specific.cell.DisplayableComponentListCe
 import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.controller.lifecycle.AppModeController;
-import org.lifecompanion.util.LCConfigBindingUtils;
+import org.lifecompanion.util.binding.LCConfigBindingUtils;
 import org.lifecompanion.ui.common.control.generic.searchcombobox.SearchComboBox;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;

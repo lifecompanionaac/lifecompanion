@@ -30,7 +30,7 @@ import javafx.scene.paint.Color;
 import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.ProgressDisplayKeyOption;
 import org.lifecompanion.controller.editaction.KeyOptionActions;
-import org.lifecompanion.util.LCConfigBindingUtils;
+import org.lifecompanion.util.binding.LCConfigBindingUtils;
 import org.lifecompanion.ui.common.control.generic.colorpicker.LCColorPicker;
 import org.lifecompanion.framework.commons.translation.Translation;
 

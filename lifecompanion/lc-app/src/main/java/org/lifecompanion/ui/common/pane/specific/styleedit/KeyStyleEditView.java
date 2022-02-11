@@ -22,7 +22,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.scene.Node;
 import org.controlsfx.control.ToggleSwitch;
 import org.lifecompanion.model.api.style.KeyCompStyleI;
-import org.lifecompanion.util.LCConfigBindingUtils;
+import org.lifecompanion.util.binding.LCConfigBindingUtils;
 import org.lifecompanion.util.ConfigUIUtils;
 
 public class KeyStyleEditView extends AbstractShapeStyleEditView<KeyCompStyleI> {

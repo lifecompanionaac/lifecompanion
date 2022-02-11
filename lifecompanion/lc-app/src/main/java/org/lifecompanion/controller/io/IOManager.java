@@ -18,26 +18,19 @@
  */
 package org.lifecompanion.controller.io;
 
-import org.jdom2.Element;
-import org.lifecompanion.controller.io.task.*;
-import org.lifecompanion.model.api.configurationcomponent.ConfigurationChildComponentI;
-import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
-import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
-import org.lifecompanion.model.api.profile.LCProfileI;
-import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
-import org.lifecompanion.model.api.profile.UserCompDescriptionI;
-import org.lifecompanion.model.impl.exception.LCException;
-import org.lifecompanion.model.api.io.IOContextI;
-import org.lifecompanion.model.api.io.XMLSerializable;
-import org.lifecompanion.util.LCUtils;
-import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.controller.appinstallation.InstallationConfigurationController;
+import org.lifecompanion.controller.io.task.*;
 import org.lifecompanion.controller.profile.ProfileController;
-import org.lifecompanion.model.impl.plugin.PluginInfo;
-import org.lifecompanion.controller.plugin.PluginManager;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
-import org.lifecompanion.framework.utils.Pair;
+import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
+import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
+import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
+import org.lifecompanion.model.api.profile.LCProfileI;
+import org.lifecompanion.model.api.profile.UserCompDescriptionI;
+import org.lifecompanion.model.impl.constant.LCConstant;
+import org.lifecompanion.model.impl.exception.LCException;
+import org.lifecompanion.util.LCUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,11 +38,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Supplier;
 
 /**
  * Class that manage all the operation linked to saving/loading of configuration.
@@ -110,8 +99,8 @@ public enum IOManager {
         return new ProfileSavingTask(new File(getProfileRoot().getPath() + File.separator + profile.getID() + File.separator), profile);
     }
 
-    public ProfileFullLoadingTask createLoadFullProfileTask(final LCProfileI profileDescription) {
-        return new ProfileFullLoadingTask(new File(getProfileRoot().getPath() + File.separator + profileDescription.getID() + File.separator), profileDescription);
+    public ProfileFullLoadingTask createLoadFullProfileTask(final LCProfileI profileDescription, boolean runChangesOnFXThread) {
+        return new ProfileFullLoadingTask(new File(getProfileRoot().getPath() + File.separator + profileDescription.getID() + File.separator), profileDescription, runChangesOnFXThread);
     }
 
     public MultipleProfileDescriptionLoadingTask createLoadAllProfileDescriptionTask() {
@@ -280,6 +269,7 @@ public enum IOManager {
 
     // USE INFORMATION
     //========================================================================
+
     /**
      * Try to save the configuration use informations.<br>
      * If there is a current profile, and the configuration directory exist, save in the configuration directory.<br>

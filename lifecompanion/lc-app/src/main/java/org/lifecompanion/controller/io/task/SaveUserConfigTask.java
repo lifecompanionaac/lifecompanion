@@ -21,7 +21,7 @@ package org.lifecompanion.controller.io.task;
 
 import mslinks.ShellLink;
 import org.lifecompanion.controller.appinstallation.InstallationController;
-import org.lifecompanion.util.LCTask;
+import org.lifecompanion.util.model.LCTask;
 import org.lifecompanion.controller.userconfiguration.UserBaseConfiguration;
 import org.lifecompanion.framework.commons.SystemType;
 import org.slf4j.Logger;

@@ -33,7 +33,7 @@ import org.lifecompanion.model.impl.configurationcomponent.keyoption.dynamickey.
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStep;
 import org.lifecompanion.controller.editaction.KeyOptionActions;
-import org.lifecompanion.util.LCConfigBindingUtils;
+import org.lifecompanion.util.binding.LCConfigBindingUtils;
 import org.lifecompanion.controller.editmode.GeneralConfigurationController;
 import org.lifecompanion.controller.resource.LCGlyphFont;
 import org.lifecompanion.util.ConfigUIUtils;

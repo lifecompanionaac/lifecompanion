@@ -29,7 +29,7 @@ import org.lifecompanion.controller.editaction.KeyOptionActions.ChangeEnableSpea
 import org.lifecompanion.controller.editaction.KeyOptionActions.ChangeQuickComAddSpaceAction;
 import org.lifecompanion.controller.editaction.KeyOptionActions.ChangeTextToSpeakAction;
 import org.lifecompanion.controller.editaction.KeyOptionActions.ChangeTextToWriteAction;
-import org.lifecompanion.util.LCConfigBindingUtils;
+import org.lifecompanion.util.binding.LCConfigBindingUtils;
 import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.QuickComKeyOption;
 import org.lifecompanion.controller.resource.LCGlyphFont;

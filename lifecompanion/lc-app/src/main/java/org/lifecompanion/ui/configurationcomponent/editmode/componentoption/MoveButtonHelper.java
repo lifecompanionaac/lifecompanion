@@ -22,7 +22,7 @@ package org.lifecompanion.ui.configurationcomponent.editmode.componentoption;
 import javafx.scene.control.ButtonBase;
 import org.lifecompanion.model.api.configurationcomponent.MovableComponentI;
 import org.lifecompanion.model.api.configurationcomponent.ResizableComponentI;
-import org.lifecompanion.util.PositionSize;
+import org.lifecompanion.util.model.PositionSize;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.controller.editaction.OptionActions;
 import org.lifecompanion.controller.editmode.ConfigActionController;

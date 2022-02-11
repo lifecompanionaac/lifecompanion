@@ -16,9 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package org.lifecompanion.controller.doublelaunch;
 
-package org.lifecompanion.util;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
 
-public interface Unbindable {
-    void unbind();
+/**
+ * Interface that can be called on RMI to fire a double launch event.
+ * @author Mathieu THEBAUD <math.thebaud@gmail.com>
+ */
+public interface DoubleLaunchListener extends Remote {
+	public void doubleRunDetected() throws RemoteException;
 }

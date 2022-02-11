@@ -32,7 +32,7 @@ import javafx.scene.text.TextAlignment;
 import org.fxmisc.easybind.EasyBind;
 import org.fxmisc.easybind.monadic.MonadicBinding;
 import org.lifecompanion.model.api.style.TextCompStyleI;
-import org.lifecompanion.util.Unbindable;
+import org.lifecompanion.util.binding.Unbindable;
 
 /**
  * Usefull class to bind view component to their text style properties.

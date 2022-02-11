@@ -33,7 +33,7 @@ import org.lifecompanion.model.api.style.StylePropertyI;
 import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.model.impl.style.PropertyChangeListener;
 import org.lifecompanion.controller.editaction.StyleActions;
-import org.lifecompanion.util.GridPartKeyPropertyChangeListener;
+import org.lifecompanion.util.model.GridPartKeyPropertyChangeListener;
 import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.controller.editmode.SelectionController;
 

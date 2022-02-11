@@ -31,7 +31,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
-import org.lifecompanion.util.Triple;
+import org.lifecompanion.util.model.Triple;
 import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.profile.LCProfile;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;

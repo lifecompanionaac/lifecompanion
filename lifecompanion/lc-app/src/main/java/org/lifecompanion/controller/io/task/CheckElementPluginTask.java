@@ -20,7 +20,7 @@
 package org.lifecompanion.controller.io.task;
 
 import org.lifecompanion.controller.io.XMLHelper;
-import org.lifecompanion.util.LCTask;
+import org.lifecompanion.util.model.LCTask;
 import org.lifecompanion.controller.plugin.PluginManager;
 
 import java.io.File;

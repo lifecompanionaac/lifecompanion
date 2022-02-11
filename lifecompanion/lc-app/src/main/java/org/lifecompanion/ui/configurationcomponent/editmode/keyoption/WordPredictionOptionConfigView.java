@@ -26,7 +26,7 @@ import org.controlsfx.control.ToggleSwitch;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.WordPredictionKeyOption;
 import org.lifecompanion.controller.editaction.KeyOptionActions.ChangeWordPredictionAddSpace;
 import org.lifecompanion.controller.editaction.KeyOptionActions.ChangeWordPredictionCorrectionColor;
-import org.lifecompanion.util.LCConfigBindingUtils;
+import org.lifecompanion.util.binding.LCConfigBindingUtils;
 import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.ui.common.control.generic.colorpicker.LCColorPicker;

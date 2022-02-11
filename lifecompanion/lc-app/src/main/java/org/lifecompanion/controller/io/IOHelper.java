@@ -25,6 +25,7 @@ import org.lifecompanion.framework.utils.Pair;
 import org.lifecompanion.model.api.configurationcomponent.ConfigurationChildComponentI;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.io.XMLSerializable;
+import org.lifecompanion.model.api.selectionmode.SelectionModeI;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.impl.plugin.PluginInfo;
 import org.slf4j.Logger;
@@ -46,13 +47,14 @@ public class IOHelper {
      * Boolean that becomes true once default {@link XMLSerializable} from default modules are discovered (typeAlias will be filled with them)
      */
     private static final AtomicBoolean defaultTypeInitialized = new AtomicBoolean(false);
+
     /**
      * Contains a map that convert type from loaded element (e.g. <strong>nodeType</strong> attribute)
      * to real Java types.<br>
      * This method is new, so the previously saved type are converted with {@link LCBackwardCompatibility}.<br>
      * This map is meant to be initialized just once on startup.
      */
-    private static Map<String, Pair<Class<? extends XMLSerializable>, PluginInfo>> typeAlias;
+    private static Map<String, Pair<Class<?>, PluginInfo>> typeAlias;
 
     /**
      * Create the base serialize object from a xml serialized component.<br>
@@ -100,7 +102,7 @@ public class IOHelper {
      */
     public static Element addTypeAlias(final XMLSerializable<?> caller, final Element node, IOContextI ioContext) {
         node.setAttribute(ATB_TYPE, caller.getClass().getSimpleName());
-        Pair<Class<? extends XMLSerializable>, PluginInfo> pluginInfoForType = getTypeAlias().get(caller.getClass().getSimpleName());
+        Pair<Class<?>, PluginInfo> pluginInfoForType = getTypeAlias().get(caller.getClass().getSimpleName());
         // When the saved element is from a plugin : "flag" the XML element to be dependent on the plugin and add the plugin id to dependencies list
         if (pluginInfoForType != null && pluginInfoForType.getRight() != null) {
             node.setAttribute(ATB_PLUGIN_ID, pluginInfoForType.getRight().getPluginId());
@@ -121,29 +123,28 @@ public class IOHelper {
     private static void initializeTypeMap() {
         if (!defaultTypeInitialized.getAndSet(true)) {
             addSerializableTypes(ReflectionHelper.findImplementationsInModules(XMLSerializable.class), null);
+            addSerializableTypes(ReflectionHelper.findImplementationsInModules(SelectionModeI.class), null);
         }
     }
 
-    private static Map<String, Pair<Class<? extends XMLSerializable>, PluginInfo>> getTypeAlias() {
+    private static Map<String, Pair<Class<?>, PluginInfo>> getTypeAlias() {
         initializeTypeMap();
         return typeAlias;
     }
 
-    public static void addSerializableTypes(List<Class<? extends XMLSerializable>> types, PluginInfo pluginInfo) {
+    public static void addSerializableTypes(List<? extends Class> types, PluginInfo pluginInfo) {
         if (typeAlias == null) {
             typeAlias = new HashMap<>(150);
         }
-        for (Class<? extends XMLSerializable> type : types) {
+        for (Class<?> type : types) {
             String typeName = type.getSimpleName();
-            Pair<Class<? extends XMLSerializable>, PluginInfo> previous = typeAlias.put(typeName, Pair.of(type, pluginInfo));
+            Pair<Class<?>, PluginInfo> previous = typeAlias.put(typeName, Pair.of(type, pluginInfo));
             if (previous != null) {
                 LOGGER.error("Found two types with the same name : {} / {} and {}", typeName, previous.getLeft().getName(), type.getName());
             }
         }
     }
 
-    // STYLE
-    //========================================================================
     // FIXME : change method names
     public static <T extends ConfigurationChildComponentI> void serializeComponentDependencies(final IOContextI context, final T element, final Element node) {
         PluginManager.INSTANCE.serializePluginInformation(element, context, node);

@@ -44,6 +44,8 @@ import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.framework.commons.translation.Translation;
+import org.lifecompanion.util.converter.BoundDoubleConverter;
+import org.lifecompanion.util.converter.BoundIntConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

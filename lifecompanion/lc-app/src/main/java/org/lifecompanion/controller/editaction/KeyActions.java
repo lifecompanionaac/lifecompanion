@@ -39,7 +39,7 @@ import org.lifecompanion.model.api.style.KeyStyleUserI;
 import org.lifecompanion.model.api.style.StyleChangeUndo;
 import org.lifecompanion.model.api.style.TextDisplayerStyleUserI;
 import org.lifecompanion.model.impl.editaction.BasePropertyChangeAction;
-import org.lifecompanion.util.PositionSize;
+import org.lifecompanion.util.model.PositionSize;
 import org.lifecompanion.model.impl.configurationcomponent.GridPartKeyComponent;
 import org.lifecompanion.controller.editmode.ComponentActionController;
 import org.lifecompanion.controller.editmode.ConfigActionController;

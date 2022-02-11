@@ -335,7 +335,7 @@ public class SelectionModeParameter implements SelectionModeParameterI {
     @Override
     public Element serialize(final IOContextI context) {
         Element node = new Element(SelectionModeParameter.NODE_SELECTION_MODE);
-        XMLUtils.write(this.selectionModeType.get().getName(), SelectionModeParameter.ATB_SELECT_MODE_TYPE, node);
+        XMLUtils.write(this.selectionModeType.get().getSimpleName(), SelectionModeParameter.ATB_SELECT_MODE_TYPE, node);
         XMLObjectSerializer.serializeInto(SelectionModeParameter.class, this, node);
         return node;
     }

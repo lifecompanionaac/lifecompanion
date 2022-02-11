@@ -34,7 +34,7 @@ import org.lifecompanion.controller.editaction.KeyOptionActions.ChangeNoteCustom
 import org.lifecompanion.controller.editaction.KeyOptionActions.ChangeNoteKeyDisplayModeAction;
 import org.lifecompanion.controller.editaction.KeyOptionActions.ChangeNoteKeyStrokeColorAction;
 import org.lifecompanion.controller.editaction.KeyOptionActions.ChangeNoteKeyStrokeSizeAction;
-import org.lifecompanion.util.LCConfigBindingUtils;
+import org.lifecompanion.util.binding.LCConfigBindingUtils;
 import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.ui.common.control.generic.colorpicker.LCColorPicker;
 import org.lifecompanion.framework.commons.translation.Translation;

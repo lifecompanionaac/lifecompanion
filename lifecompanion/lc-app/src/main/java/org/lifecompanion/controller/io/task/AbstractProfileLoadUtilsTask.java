@@ -22,12 +22,12 @@ import org.jdom2.Element;
 import org.lifecompanion.controller.io.XMLHelper;
 import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
 import org.lifecompanion.model.api.profile.LCProfileI;
-import org.lifecompanion.model.impl.exception.LCException;
-import org.lifecompanion.util.LCTask;
-import org.lifecompanion.util.LCUtils;
-import org.lifecompanion.model.impl.profile.LCProfile;
 import org.lifecompanion.model.impl.constant.LCConstant;
+import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.impl.io.ProfileIOContext;
+import org.lifecompanion.model.impl.profile.LCProfile;
+import org.lifecompanion.util.model.LCTask;
+import org.lifecompanion.util.LCUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,16 +69,21 @@ public abstract class AbstractProfileLoadUtilsTask<T> extends LCTask<T> {
         return profile;
     }
 
-    protected LCProfileI loadFullProfileAndConfigurationDescription(final File directory, LCProfileI profile) throws Exception {
+    protected LCProfileI loadFullProfileAndConfigurationDescription(final File directory, LCProfileI profile, boolean runChangesOnFXThread) throws Exception {
         //Load the profile XML with the full loading flag
         final Element profileElement = XMLHelper.readXml(new File(directory.getPath() + File.separator + LCConstant.PROFILE_XML_NAME));
-        LCUtils.runOnFXThread(() -> {
+        final Runnable deserializeProfileInfo = () -> {
             try {
                 profile.deserialize(profileElement, new ProfileIOContext(directory, true));
             } catch (LCException e) {
                 throw new RuntimeException(e);
             }
-        });
+        };
+        if (runChangesOnFXThread) {
+            LCUtils.runOnFXThread(deserializeProfileInfo);
+        } else {
+            deserializeProfileInfo.run();
+        }
 
         // Load each possible configuration description
         File configurationDirectory = new File(directory.getPath() + File.separator + LCConstant.CONFIGURATION_DIRECTORY + File.separator);
@@ -98,7 +103,12 @@ public abstract class AbstractProfileLoadUtilsTask<T> extends LCTask<T> {
         }
         //Sort configurations
         Collections.sort(configurationDescriptions, (c1, c2) -> c2.configurationLastDateProperty().get().compareTo(c1.configurationLastDateProperty().get()));
-        LCUtils.runOnFXThread(() -> profile.getConfiguration().setAll(configurationDescriptions));
+        final Runnable setProfileConfiguration = () -> profile.getConfiguration().setAll(configurationDescriptions);
+        if (runChangesOnFXThread) {
+            LCUtils.runOnFXThread(setProfileConfiguration);
+        } else {
+            setProfileConfiguration.run();
+        }
         return profile;
     }
 }

@@ -82,7 +82,7 @@ public class CurrentConfigDetailView extends VBox implements LCViewInitHelper {
                 LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.UPLOAD).sizeFactor(2).color(LCGraphicStyle.MAIN_DARK), MainMenu.BUTTON_WIDTH,
                 "tooltip.export.current.configuration");
         this.buttonClose = UIUtils.createFixedWidthTextButton(Translation.getText("configuration.menu.item.close"),
-                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.TIMES_CIRCLE_ALT).size(30).color(LCGraphicStyle.SECOND_DARK), MainMenu.BUTTON_WIDTH,
+                LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.TIMES).size(30).color(LCGraphicStyle.SECOND_DARK), MainMenu.BUTTON_WIDTH,
                 "tooltip.remove.current.configuration");
         boxButton1.getChildren().addAll(this.buttonSave, this.buttonExport, this.buttonClose);
         boxButton1.setAlignment(Pos.CENTER);

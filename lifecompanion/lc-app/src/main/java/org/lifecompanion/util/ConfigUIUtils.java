@@ -45,6 +45,7 @@ import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.resource.LCGlyphFont;
 import org.lifecompanion.framework.commons.translation.Translation;
+import org.lifecompanion.util.model.Triple;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

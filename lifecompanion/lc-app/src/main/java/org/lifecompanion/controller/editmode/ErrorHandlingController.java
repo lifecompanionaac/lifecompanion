@@ -28,7 +28,7 @@ import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.lifecycle.LCStateListener;
 import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.controller.editaction.AsyncExecutorController;
-import org.lifecompanion.util.StageUtils;
+import org.lifecompanion.util.javafx.StageUtils;
 import org.lifecompanion.model.impl.notification.LCNotification;
 import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.ui.notification.LCNotificationController;

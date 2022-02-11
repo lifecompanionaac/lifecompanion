@@ -17,9 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.lifecompanion.util;
+package org.lifecompanion.util.converter;
 
 import javafx.util.StringConverter;
+import org.lifecompanion.util.LCUtils;
 
 import java.text.DecimalFormat;
 

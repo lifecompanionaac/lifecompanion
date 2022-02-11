@@ -32,7 +32,7 @@ import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.ui.common.control.generic.MemoryLeakSafeListView;
 import org.lifecompanion.ui.common.pane.generic.BaseConfigurationViewBorderPane;
 import org.lifecompanion.ui.common.pane.specific.cell.SelectionItemListCell;
-import org.lifecompanion.util.LCConfigBindingUtils;
+import org.lifecompanion.util.binding.LCConfigBindingUtils;
 import org.lifecompanion.controller.editmode.SelectionController;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;

@@ -28,7 +28,7 @@ import org.lifecompanion.model.api.style.KeyCompStyleI;
 import org.lifecompanion.model.api.ui.configurationcomponent.ComponentViewI;
 import org.lifecompanion.model.api.ui.configurationcomponent.ViewProviderI;
 import org.lifecompanion.util.LCUtils;
-import org.lifecompanion.util.Unbindable;
+import org.lifecompanion.util.binding.Unbindable;
 import org.lifecompanion.model.impl.configurationcomponent.GridPartKeyComponent;
 import org.lifecompanion.controller.textcomponent.WritingStateController;
 import org.lifecompanion.model.impl.style.ShapeStyleBinder;

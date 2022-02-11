@@ -37,7 +37,7 @@ import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.controller.lifecycle.AppModeController;
-import org.lifecompanion.util.StageUtils;
+import org.lifecompanion.util.javafx.StageUtils;
 import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.controller.systemvk.SystemVirtualKeyboardHelper;
 import org.lifecompanion.framework.commons.fx.translation.TranslationFX;

@@ -25,7 +25,7 @@ import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.controller.editaction.LCConfigurationComponentActions.ChangeGridSizeConfigurationAction;
 import org.lifecompanion.controller.editaction.LCConfigurationComponentActions.DisableGridOnConfigurationAction;
 import org.lifecompanion.controller.editaction.LCConfigurationComponentActions.EnableGridOnConfigurationAction;
-import org.lifecompanion.util.LCConfigBindingUtils;
+import org.lifecompanion.util.binding.LCConfigBindingUtils;
 import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.controller.resource.LCGlyphFont;

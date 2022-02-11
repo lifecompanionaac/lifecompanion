@@ -24,7 +24,7 @@ import org.lifecompanion.model.api.imagedictionary.ImageElementI;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.io.IOResourceI;
 import org.lifecompanion.model.api.io.XMLSerializable;
-import org.lifecompanion.util.LCTask;
+import org.lifecompanion.util.model.LCTask;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.io.IOContext;
 import org.lifecompanion.framework.commons.utils.io.FileNameUtils;

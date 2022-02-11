@@ -34,7 +34,7 @@ import org.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.ui.app.generalconfiguration.step.*;
 import org.lifecompanion.ui.app.generalconfiguration.step.predict4all.*;
-import org.lifecompanion.util.Triple;
+import org.lifecompanion.util.model.Triple;
 import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;

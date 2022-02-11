@@ -17,12 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.lifecompanion.util;
+package org.lifecompanion.util.converter;
 
 import java.text.DecimalFormat;
 import java.text.ParseException;
 
 import javafx.util.StringConverter;
+import org.lifecompanion.util.LCUtils;
 
 /**
  * Converter to convert a input double between two given bounds.</br>

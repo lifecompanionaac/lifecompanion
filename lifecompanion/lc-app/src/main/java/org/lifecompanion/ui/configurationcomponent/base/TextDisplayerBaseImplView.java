@@ -27,7 +27,7 @@ import org.lifecompanion.model.api.configurationcomponent.WriterDisplayerI;
 import org.lifecompanion.model.api.style.ShapeCompStyleI;
 import org.lifecompanion.model.api.ui.configurationcomponent.ComponentViewI;
 import org.lifecompanion.model.api.ui.configurationcomponent.ViewProviderI;
-import org.lifecompanion.util.Unbindable;
+import org.lifecompanion.util.binding.Unbindable;
 import org.lifecompanion.model.impl.style.ShapeStyleBinder;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 

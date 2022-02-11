@@ -20,7 +20,7 @@ package org.lifecompanion.controller.io.task;
 
 import org.lifecompanion.controller.io.XMLHelper;
 import org.lifecompanion.model.api.profile.LCProfileI;
-import org.lifecompanion.util.LCTask;
+import org.lifecompanion.util.model.LCTask;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.io.ProfileIOContext;
 import org.slf4j.Logger;

@@ -29,7 +29,7 @@ import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.controller.resource.IconManager;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
-import org.lifecompanion.util.StageUtils;
+import org.lifecompanion.util.javafx.StageUtils;
 import org.lifecompanion.controller.editaction.GlobalActions;
 
 public class UseModeStage extends Stage {

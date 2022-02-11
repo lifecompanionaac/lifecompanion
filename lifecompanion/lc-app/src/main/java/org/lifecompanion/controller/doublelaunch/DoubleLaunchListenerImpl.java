@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.lifecompanion.app.instance;
+package org.lifecompanion.controller.doublelaunch;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -28,7 +28,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.model.impl.constant.LCConstant;
-import org.lifecompanion.util.StageUtils;
+import org.lifecompanion.util.javafx.StageUtils;
 import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
 import org.lifecompanion.framework.commons.translation.Translation;

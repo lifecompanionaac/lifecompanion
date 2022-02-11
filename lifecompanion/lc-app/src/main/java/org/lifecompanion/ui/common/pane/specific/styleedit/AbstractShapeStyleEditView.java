@@ -28,7 +28,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.paint.Color;
 import org.lifecompanion.model.api.style.AbstractShapeCompStyleI;
 import org.lifecompanion.util.UIUtils;
-import org.lifecompanion.util.LCConfigBindingUtils;
+import org.lifecompanion.util.binding.LCConfigBindingUtils;
 import org.lifecompanion.ui.common.control.generic.colorpicker.LCColorPicker;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;

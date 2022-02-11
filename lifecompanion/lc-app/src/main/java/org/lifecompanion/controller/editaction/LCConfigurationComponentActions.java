@@ -23,7 +23,7 @@ import org.lifecompanion.model.api.editaction.UndoRedoActionI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.configurationcomponent.RootGraphicComponentI;
 import org.lifecompanion.model.impl.exception.LCException;
-import org.lifecompanion.util.PositionSize;
+import org.lifecompanion.util.model.PositionSize;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

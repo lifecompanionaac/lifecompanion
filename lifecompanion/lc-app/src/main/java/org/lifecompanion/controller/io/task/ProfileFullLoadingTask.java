@@ -30,20 +30,23 @@ import java.io.File;
 public class ProfileFullLoadingTask extends AbstractProfileLoadUtilsTask<LCProfileI> {
     private final File directory;
     private final LCProfileI profile;
+    private final boolean runChangesOnFXThread;
 
     /**
      * Create the profile loading task
      *
-     * @param directoryP the directory that contains a profile
+     * @param directoryP           the directory that contains a profile
+     * @param runChangesOnFXThread
      */
-    public ProfileFullLoadingTask(final File directoryP, LCProfileI profile) {
+    public ProfileFullLoadingTask(final File directoryP, LCProfileI profile, boolean runChangesOnFXThread) {
         this.directory = directoryP;
         this.profile = profile;
+        this.runChangesOnFXThread = runChangesOnFXThread;
     }
 
     @Override
     protected LCProfileI call() throws Exception {
-        return this.loadFullProfileAndConfigurationDescription(this.directory, this.profile);
+        return this.loadFullProfileAndConfigurationDescription(this.directory, this.profile, runChangesOnFXThread);
     }
 
 }

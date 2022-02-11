@@ -17,32 +17,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.lifecompanion.util;
+package org.lifecompanion.util.javafx;
 
-public class Triple<T, V, U> {
-    private final T left;
-    private final V middle;
-    private final U right;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-    private Triple(T left, V middle, U right) {
-        this.left = left;
-        this.middle = middle;
-        this.right = right;
-    }
+import java.awt.*;
 
-    public T getLeft() {
-        return left;
-    }
+/**
+ * Just a simple class to provide the AWT {@link Robot} instance.
+ * @author Mathieu THEBAUD <math.thebaud@gmail.com>
+ */
+public class RobotProvider {
+	private final static Logger LOGGER = LoggerFactory.getLogger(RobotProvider.class);
+	private static Robot instance;
 
-    public V getMiddle() {
-        return middle;
-    }
-
-    public U getRight() {
-        return right;
-    }
-
-    public static <T, V, U> Triple<T, V, U> of(T left, V middle, U right) {
-        return new Triple<>(left, middle, right);
-    }
+	public static Robot getInstance() {
+		if (RobotProvider.instance == null) {
+			try {
+				RobotProvider.instance = new Robot();
+			} catch (Throwable t) {
+				RobotProvider.LOGGER.warn("Couldn't create the AWT robot instance", t);
+			}
+		}
+		return RobotProvider.instance;
+	}
 }

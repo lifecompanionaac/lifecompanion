@@ -21,7 +21,7 @@ package org.lifecompanion.controller.editaction;
 
 import javafx.concurrent.Task;
 import org.lifecompanion.model.api.lifecycle.LCStateListener;
-import org.lifecompanion.util.LCTask;
+import org.lifecompanion.util.model.LCTask;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.framework.utils.LCNamedThreadFactory;
 

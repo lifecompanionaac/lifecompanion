@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.lifecompanion.util;
+package org.lifecompanion.util.binding;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.Property;
@@ -29,6 +29,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.Spinner;
 import org.lifecompanion.model.api.editaction.BaseEditActionI;
 import org.lifecompanion.controller.editmode.ConfigActionController;
+import org.lifecompanion.util.LCUtils;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;

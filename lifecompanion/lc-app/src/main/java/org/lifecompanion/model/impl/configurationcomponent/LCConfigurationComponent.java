@@ -45,7 +45,7 @@ import org.lifecompanion.model.impl.configurationcomponent.dynamickey.UserAction
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.style.StyleController2;
-import org.lifecompanion.util.ConfigurationMemoryLeakChecker;
+import org.lifecompanion.util.debug.ConfigurationMemoryLeakChecker;
 import org.lifecompanion.model.impl.selectionmode.SelectionModeParameter;
 import org.lifecompanion.controller.plugin.PluginManager;
 import org.lifecompanion.model.impl.categorizedelement.useevent.UseEventManager;

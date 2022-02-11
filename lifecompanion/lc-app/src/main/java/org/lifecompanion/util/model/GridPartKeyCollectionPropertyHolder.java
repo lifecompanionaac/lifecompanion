@@ -17,9 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.lifecompanion.util;
+package org.lifecompanion.util.model;
 
 import javafx.collections.ObservableList;
+import org.lifecompanion.util.LCUtils;
 
 import java.util.List;
 

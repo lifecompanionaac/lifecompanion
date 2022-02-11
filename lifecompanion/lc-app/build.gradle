@@ -21,7 +21,7 @@ compileJava {
 }
 
 version = project.property('lifecompanion.app.version')
-mainClassName = "org.lifecompanion.app.launcher.LCApplication"
+mainClassName = "org.lifecompanion.LifeCompanion"
 
 ext {
     devCpArg = System.getenv('org.lifecompanion.dev.cp.arg') != null && !System.getenv('org.lifecompanion.dev.cp.arg').isBlank() ? System.getenv('org.lifecompanion.dev.cp.arg') : '/null'
@@ -86,8 +86,8 @@ dependencies {
 
     api 'org.apache.pdfbox:pdfbox:2.0.22'
 
-    api 'com.github.lifecompanionaac:BridJ:1.1.0'
     // Fix found https://github.com/sarxos/webcam-capture/issues/586 until there is a Java9+ release
+    api 'com.github.lifecompanionaac:BridJ:1.1.0'
     api('com.github.sarxos:webcam-capture:0.3.12') {
         // The exclude is necessary so we don't have 2 versions of the same packages
         exclude group: 'com.nativelibs4java', module: 'bridj'

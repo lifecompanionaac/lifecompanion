@@ -19,26 +19,23 @@
 
 package org.lifecompanion.ui.app.main.mainmenu;
 
+import javafx.scene.control.Button;
+import javafx.scene.layout.HBox;
+import org.controlsfx.glyphfont.FontAwesome;
+import org.lifecompanion.controller.lifecycle.AppModeController;
+import org.lifecompanion.controller.resource.LCGlyphFont;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.model.impl.constant.LCGraphicStyle;
+import org.lifecompanion.ui.ConfigurationScene;
 import org.lifecompanion.util.UIUtils;
 import javafx.scene.layout.VBox;
 
-/**
- * Left menu, that contains every items that are not into ribbons.
- * @author Mathieu THEBAUD <math.thebaud@gmail.com>
- */
 public class MainMenu extends VBox implements LCViewInitHelper {
 	public static final int MENU_WIDTH = 250;
 	public static final double BUTTON_WIDTH = 90;
 
-	private ProfileDetailView profileDetailView;
-	private CurrentConfigDetailView currentConfigDetailView;
-	private ProfilConfigDetailView profilConfigDetailView;
-	private BottomDetailView bottomDetailView;
+	private Button buttonCollapse;
 
-	/**
-	 * Create a new main menu.
-	 */
 	public MainMenu() {
 		this.initAll();
 	}
@@ -48,12 +45,26 @@ public class MainMenu extends VBox implements LCViewInitHelper {
 		this.setMaxWidth(MainMenu.MENU_WIDTH);
 		this.getStyleClass().add("main-menu");
 		//Children
-		this.profileDetailView = new ProfileDetailView();
-		this.currentConfigDetailView = new CurrentConfigDetailView();
-		this.profilConfigDetailView = new ProfilConfigDetailView();
-		this.bottomDetailView = new BottomDetailView();
-		this.getChildren().addAll(this.profileDetailView, this.currentConfigDetailView, this.profilConfigDetailView, this.bottomDetailView);
+		ProfileDetailView profileDetailView = new ProfileDetailView();
+		CurrentConfigDetailView currentConfigDetailView = new CurrentConfigDetailView();
+		ProfilConfigDetailView profilConfigDetailView = new ProfilConfigDetailView();
+
+		//Collapse button
+		this.buttonCollapse = UIUtils.createTextButtonWithGraphics(null,
+				LCGlyphFont.FONT_AWESOME.create(FontAwesome.Glyph.CHEVRON_LEFT).sizeFactor(1).color(LCGraphicStyle.MAIN_PRIMARY),
+				"tooltip.main.menu.collapse");
+		HBox boxButton = new HBox(buttonCollapse);
+		boxButton.getStyleClass().addAll("main-menu-section", "main-menu-section-bottom");
+
+		this.getChildren().addAll(profileDetailView, currentConfigDetailView, profilConfigDetailView, boxButton);
 		UIUtils.applyPerformanceConfiguration(this);
 	}
 
+	@Override
+	public void initListener() {
+		this.buttonCollapse.setOnAction((me) -> {
+			ConfigurationScene scene = (ConfigurationScene) AppModeController.INSTANCE.getEditModeContext().getStage().getScene();
+			scene.hideMenu();
+		});
+	}
 }

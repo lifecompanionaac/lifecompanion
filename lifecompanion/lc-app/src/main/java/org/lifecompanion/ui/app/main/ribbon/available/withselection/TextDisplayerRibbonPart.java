@@ -28,7 +28,7 @@ import org.lifecompanion.controller.editaction.TextDisplayerActions.SetEnableIma
 import org.lifecompanion.controller.editaction.TextDisplayerActions.SetEnableWordWrapAction;
 import org.lifecompanion.controller.editaction.TextDisplayerActions.SetImageHeightAction;
 import org.lifecompanion.controller.editaction.TextDisplayerActions.SetLineSpacingAction;
-import org.lifecompanion.util.LCConfigBindingUtils;
+import org.lifecompanion.util.binding.LCConfigBindingUtils;
 import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.api.configurationcomponent.DisplayableComponentI;
 import org.lifecompanion.controller.editmode.SelectionController;

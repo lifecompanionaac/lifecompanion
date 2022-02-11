@@ -20,7 +20,7 @@ package org.lifecompanion.controller.io.task;
 
 import org.lifecompanion.model.api.profile.LCProfileI;
 import org.lifecompanion.util.CopyUtils;
-import org.lifecompanion.util.LCTask;
+import org.lifecompanion.util.model.LCTask;
 import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.model.impl.profile.LCProfile;
 import org.lifecompanion.model.impl.io.ProfileIOContext;

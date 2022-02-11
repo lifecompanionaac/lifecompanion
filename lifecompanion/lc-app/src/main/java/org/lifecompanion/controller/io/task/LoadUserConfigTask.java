@@ -21,7 +21,7 @@ package org.lifecompanion.controller.io.task;
 
 import org.lifecompanion.controller.userconfiguration.UserBaseConfiguration;
 import org.lifecompanion.framework.commons.SystemType;
-import org.lifecompanion.util.LCTask;
+import org.lifecompanion.util.model.LCTask;
 
 import java.io.File;
 

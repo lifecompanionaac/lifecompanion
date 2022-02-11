@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.lifecompanion.app.launcher;
+package org.lifecompanion.ui;
 
 import javafx.animation.Interpolator;
 import javafx.animation.ParallelTransition;
@@ -40,7 +40,7 @@ import org.lifecompanion.controller.appinstallation.InstallationController;
 import org.lifecompanion.framework.commons.translation.Translation;
 
 public class LoadingScene extends Scene {
-    private ParallelTransition parallelTransition;
+    private final ParallelTransition parallelTransition;
 
     public LoadingScene(VBox vbox) {
         super(vbox);

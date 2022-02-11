@@ -30,7 +30,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.shape.Rectangle;
 import org.fxmisc.easybind.EasyBind;
 import org.lifecompanion.model.api.style.AbstractShapeCompStyleI;
-import org.lifecompanion.util.Unbindable;
+import org.lifecompanion.util.binding.Unbindable;
 
 /**
  * Class to bind rendering part to shape style.
