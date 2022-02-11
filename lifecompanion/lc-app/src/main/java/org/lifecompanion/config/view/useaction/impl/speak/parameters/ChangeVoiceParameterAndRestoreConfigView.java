@@ -19,7 +19,7 @@
 
 package org.lifecompanion.config.view.useaction.impl.speak.parameters;
 
-import org.lifecompanion.base.data.useaction.impl.speak.parameters.ChangeVoiceParameterAndRestoreAction;
+import org.lifecompanion.model.impl.categorizedelement.useaction.available.ChangeVoiceParameterAndRestoreAction;
 
 /**
  * Action configuration view for {@link ChangeVoiceParameterAndRestoreAction}

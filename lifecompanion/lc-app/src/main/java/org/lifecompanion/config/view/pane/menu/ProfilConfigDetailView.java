@@ -22,13 +22,12 @@ package org.lifecompanion.config.view.pane.menu;
 import org.controlsfx.glyphfont.FontAwesome;
 
 import org.lifecompanion.framework.commons.translation.Translation;
-import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.config.data.action.impl.LCConfigurationActions;
-import org.lifecompanion.base.data.common.UIUtils;
+import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.config.data.config.LCGlyphFont;
 import org.lifecompanion.base.data.config.LCGraphicStyle;
-import org.lifecompanion.api.ui.config.ConfigurationProfileLevelEnum;
+import org.lifecompanion.model.api.ui.editmode.ConfigurationProfileLevelEnum;
 import org.lifecompanion.config.view.common.ConfigUIUtils;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;

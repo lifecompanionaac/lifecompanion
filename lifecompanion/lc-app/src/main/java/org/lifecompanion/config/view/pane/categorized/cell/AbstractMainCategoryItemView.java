@@ -25,8 +25,8 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
-import org.lifecompanion.api.component.definition.eventaction.MainCategoryI;
-import org.lifecompanion.base.data.common.UIUtils;
+import org.lifecompanion.model.api.categorizedelement.MainCategoryI;
+import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.base.data.config.IconManager;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 

@@ -23,7 +23,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import org.lifecompanion.base.data.common.Triple;
+import org.lifecompanion.util.Triple;
 import org.lifecompanion.config.data.action.impl.LCConfigurationActions;
 import org.lifecompanion.config.data.component.profile.ProfileConfigSelectionController;
 import org.lifecompanion.config.data.component.profile.ProfileConfigStep;
@@ -54,7 +54,7 @@ public class ConfigAddFromDefaultView extends BorderPane implements LCViewInitHe
     public void initListener() {
         defaultConfigurationListPane.setOnConfigurationSelected(configAndDir -> {
             ProfileConfigSelectionController.INSTANCE.hideStage();
-            ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.AddNewConfigFromDefaultAction(defaultConfigurationListPane, configAndDir));
+            ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.AddNewEditFromDefaultAction(defaultConfigurationListPane, configAndDir));
         });
     }
     //========================================================================

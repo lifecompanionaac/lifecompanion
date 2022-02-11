@@ -30,11 +30,11 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.TextAlignment;
 import org.controlsfx.glyphfont.FontAwesome;
-import org.lifecompanion.api.action.definition.BaseConfigActionI;
-import org.lifecompanion.api.component.definition.eventaction.CategorizedElementI;
-import org.lifecompanion.api.component.definition.eventaction.MainCategoryI;
-import org.lifecompanion.api.component.definition.eventaction.SubCategoryI;
-import org.lifecompanion.base.data.common.UIUtils;
+import org.lifecompanion.model.api.editaction.BaseEditActionI;
+import org.lifecompanion.model.api.categorizedelement.CategorizedElementI;
+import org.lifecompanion.model.api.categorizedelement.MainCategoryI;
+import org.lifecompanion.model.api.categorizedelement.SubCategoryI;
+import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.base.data.config.LCGraphicStyle;
 import org.lifecompanion.base.view.reusable.impl.BaseConfigurationViewBorderPane;
 import org.lifecompanion.config.data.config.LCGlyphFont;
@@ -322,15 +322,15 @@ public abstract class AbstractCategorizedListManageView<M, V extends Categorized
 
     protected abstract AbstractCategorizedElementListCellView<V> createCategorizedListCellView(BiConsumer<Node, V> selectionCallback);
 
-    protected abstract BaseConfigActionI createEditAction(V editedElement);
+    protected abstract BaseEditActionI createEditAction(V editedElement);
 
-    protected abstract BaseConfigActionI createAddAction(Node source, M model, V addedElement);
+    protected abstract BaseEditActionI createAddAction(Node source, M model, V addedElement);
 
-    protected abstract BaseConfigActionI createRemoveAction(Node source, M model, V removedElement);
+    protected abstract BaseEditActionI createRemoveAction(Node source, M model, V removedElement);
 
-    protected abstract BaseConfigActionI createShiftUpAction(M model, V element);
+    protected abstract BaseEditActionI createShiftUpAction(M model, V element);
 
-    protected abstract BaseConfigActionI createShiftDownAction(M model, V element);
+    protected abstract BaseEditActionI createShiftDownAction(M model, V element);
 
     protected abstract ObservableList<V> getContentFromModel(M model);
 

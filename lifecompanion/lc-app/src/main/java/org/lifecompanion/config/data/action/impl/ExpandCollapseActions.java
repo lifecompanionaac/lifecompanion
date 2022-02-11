@@ -19,10 +19,10 @@
 
 package org.lifecompanion.config.data.action.impl;
 
-import org.lifecompanion.base.data.action.definition.BaseGridChangeAction;
-import org.lifecompanion.api.component.definition.SpanModifiableComponentI;
-import org.lifecompanion.api.component.definition.grid.ComponentGridI;
-import org.lifecompanion.api.exception.LCException;
+import org.lifecompanion.model.impl.editaction.BaseGridChangeAction;
+import org.lifecompanion.model.api.configurationcomponent.SpanModifiableComponentI;
+import org.lifecompanion.model.api.configurationcomponent.ComponentGridI;
+import org.lifecompanion.model.impl.exception.LCException;
 
 /**
  * Class that keep all expand/collapse action

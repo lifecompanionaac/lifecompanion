@@ -19,19 +19,19 @@
 
 package org.lifecompanion.config.view.component.option;
 
-import org.lifecompanion.api.component.definition.GridChildComponentI;
-import org.lifecompanion.api.component.definition.GridPartKeyComponentI;
-import org.lifecompanion.api.component.definition.SelectableComponentI;
+import org.lifecompanion.model.api.configurationcomponent.GridChildComponentI;
+import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
+import org.lifecompanion.model.api.configurationcomponent.SelectableComponentI;
 import org.lifecompanion.base.data.config.LCGraphicStyle;
 import org.lifecompanion.base.data.config.UserBaseConfiguration;
-import org.lifecompanion.api.style2.definition.AbstractShapeCompStyleI;
-import org.lifecompanion.api.style2.definition.GridStyleUserI;
+import org.lifecompanion.model.api.style.AbstractShapeCompStyleI;
+import org.lifecompanion.model.api.style.GridStyleUserI;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeLineCap;
-import org.lifecompanion.base.data.style.impl.ShapeStyleBinder;
+import org.lifecompanion.model.impl.style.ShapeStyleBinder;
 
 /**
  * Option that allow a component to be selected

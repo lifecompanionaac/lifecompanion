@@ -18,16 +18,14 @@
  */
 package org.lifecompanion.config.view.pane.tabs.home.part;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
 import org.controlsfx.glyphfont.FontAwesome;
-import org.lifecompanion.base.data.common.UIUtils;
+import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.base.data.config.LCGraphicStyle;
-import org.lifecompanion.base.data.control.refacto.AppModeController;
+import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.base.view.reusable.GeneralConfigurationStep;
 import org.lifecompanion.config.data.component.general.GeneralConfigurationController;
 import org.lifecompanion.config.data.config.LCGlyphFont;

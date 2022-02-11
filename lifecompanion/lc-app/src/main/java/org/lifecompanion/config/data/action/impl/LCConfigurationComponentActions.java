@@ -19,11 +19,11 @@
 package org.lifecompanion.config.data.action.impl;
 
 import javafx.collections.ObservableList;
-import org.lifecompanion.api.action.definition.UndoRedoActionI;
-import org.lifecompanion.api.component.definition.LCConfigurationI;
-import org.lifecompanion.api.component.definition.RootGraphicComponentI;
-import org.lifecompanion.api.exception.LCException;
-import org.lifecompanion.base.data.common.PositionSize;
+import org.lifecompanion.model.api.editaction.UndoRedoActionI;
+import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
+import org.lifecompanion.model.api.configurationcomponent.RootGraphicComponentI;
+import org.lifecompanion.model.impl.exception.LCException;
+import org.lifecompanion.util.PositionSize;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -23,7 +23,7 @@ import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.layout.VBox;
-import org.lifecompanion.api.voice.VoiceSynthesizerI;
+import org.lifecompanion.model.api.voicesynthesizer.VoiceSynthesizerI;
 import org.lifecompanion.framework.commons.translation.Translation;
 
 import java.util.stream.Collectors;

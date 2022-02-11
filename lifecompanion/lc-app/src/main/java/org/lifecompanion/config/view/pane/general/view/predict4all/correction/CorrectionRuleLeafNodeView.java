@@ -32,7 +32,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
 import org.controlsfx.control.ToggleSwitch;
-import org.lifecompanion.base.data.common.UIUtils;
+import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.config.view.pane.general.view.predict4all.P4AConfigUtils;
 import org.lifecompanion.config.view.pane.general.view.predict4all.P4ACorrectionConfigurationView;
 import org.lifecompanion.framework.commons.translation.Translation;

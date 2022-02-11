@@ -19,10 +19,8 @@
 
 package org.lifecompanion.config.view.reusable;
 
-import javafx.beans.property.ListProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
-import javafx.beans.property.SimpleListProperty;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -32,7 +30,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 import org.controlsfx.glyphfont.FontAwesome;
-import org.lifecompanion.base.data.common.UIUtils;
+import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.base.data.config.LCGraphicStyle;
 import org.lifecompanion.base.view.reusable.MemoryLeakSafeListView;
 import org.lifecompanion.config.data.config.LCGlyphFont;

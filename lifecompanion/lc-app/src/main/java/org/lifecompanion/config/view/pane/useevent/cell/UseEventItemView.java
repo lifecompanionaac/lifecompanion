@@ -18,7 +18,7 @@
  */
 package org.lifecompanion.config.view.pane.useevent.cell;
 
-import org.lifecompanion.api.component.definition.useevent.UseEventGeneratorI;
+import org.lifecompanion.model.api.categorizedelement.useevent.UseEventGeneratorI;
 import org.lifecompanion.config.data.eventaction.AvailableUseEventManager;
 import org.lifecompanion.config.view.pane.categorized.cell.AbstractCategorizedItemView;
 

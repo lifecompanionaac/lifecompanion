@@ -19,11 +19,11 @@
 
 package org.lifecompanion.config.data.action.impl;
 
-import org.lifecompanion.api.component.definition.WriterDisplayerI;
-import org.lifecompanion.base.data.action.definition.BasePropertyChangeAction;
+import org.lifecompanion.model.api.configurationcomponent.WriterDisplayerI;
+import org.lifecompanion.model.impl.editaction.BasePropertyChangeAction;
 
 /**
- * All actions link to {@link org.lifecompanion.api.component.definition.WriterDisplayerI}
+ * All actions link to {@link WriterDisplayerI}
  *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */

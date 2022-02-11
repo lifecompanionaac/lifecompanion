@@ -31,7 +31,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import org.controlsfx.glyphfont.FontAwesome;
-import org.lifecompanion.base.data.common.UIUtils;
+import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.base.data.config.LCConstant;
 import org.lifecompanion.config.data.config.LCGlyphFont;
 import org.lifecompanion.config.data.notif.LCNotification;

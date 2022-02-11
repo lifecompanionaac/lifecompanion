@@ -27,7 +27,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import org.controlsfx.glyphfont.FontAwesome;
-import org.lifecompanion.base.data.common.Triple;
+import org.lifecompanion.util.Triple;
 import org.lifecompanion.base.data.config.LCGraphicStyle;
 import org.lifecompanion.config.data.action.impl.LCProfileActions;
 import org.lifecompanion.config.data.component.profile.ProfileConfigSelectionController;

@@ -24,7 +24,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import org.controlsfx.control.ToggleSwitch;
-import org.lifecompanion.api.component.definition.simplercomp.UserActionSequenceItemI;
+import org.lifecompanion.model.api.configurationcomponent.dynamickey.UserActionSequenceItemI;
 import org.lifecompanion.base.view.reusable.DurationPickerControl;
 import org.lifecompanion.config.view.pane.general.view.simplercomp.AbstractSimplerKeyActionContainerPropertiesEditionView;
 import org.lifecompanion.framework.commons.translation.Translation;

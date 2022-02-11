@@ -21,7 +21,7 @@ package org.lifecompanion.config.view.pane.useaction;
 
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
-import org.lifecompanion.api.component.definition.useaction.BaseUseActionI;
+import org.lifecompanion.model.api.categorizedelement.useaction.BaseUseActionI;
 import org.lifecompanion.config.data.eventaction.AvailableUseActionManager;
 import org.lifecompanion.config.view.pane.categorized.AbstractCategorizedSearchView;
 import org.lifecompanion.framework.commons.translation.Translation;

@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package scripts; import org.lifecompanion.base.data.prediction.charpredictor.CharPredictorData;
+package scripts; import org.lifecompanion.model.impl.textprediction.charprediction.CharPredictorData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

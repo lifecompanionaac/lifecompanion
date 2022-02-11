@@ -20,7 +20,7 @@
 package org.lifecompanion.config.view.reusable;
 
 import javafx.scene.control.ListCell;
-import org.lifecompanion.base.data.common.UIUtils;
+import org.lifecompanion.util.UIUtils;
 
 public class FontListCell extends ListCell<String> {
 

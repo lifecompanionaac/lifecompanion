@@ -20,12 +20,12 @@ package org.lifecompanion.config.data.eventaction;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import org.lifecompanion.api.component.definition.useevent.UseEventGeneratorI;
-import org.lifecompanion.api.component.definition.useevent.UseEventMainCategoryI;
-import org.lifecompanion.api.component.definition.useevent.UseEventSubCategoryI;
-import org.lifecompanion.base.data.common.LCUtils;
-import org.lifecompanion.base.data.io.ReflectionHelper;
-import org.lifecompanion.base.data.plugins.PluginManager;
+import org.lifecompanion.model.api.categorizedelement.useevent.UseEventGeneratorI;
+import org.lifecompanion.model.api.categorizedelement.useevent.UseEventMainCategoryI;
+import org.lifecompanion.model.api.categorizedelement.useevent.UseEventSubCategoryI;
+import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.controller.io.ReflectionHelper;
+import org.lifecompanion.controller.plugin.PluginManager;
 import org.lifecompanion.framework.commons.utils.lang.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

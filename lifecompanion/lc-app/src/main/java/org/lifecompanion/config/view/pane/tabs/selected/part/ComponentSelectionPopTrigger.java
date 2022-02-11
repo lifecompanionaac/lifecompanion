@@ -21,11 +21,11 @@ package org.lifecompanion.config.view.pane.tabs.selected.part;
 
 import org.controlsfx.glyphfont.FontAwesome;
 
-import org.lifecompanion.base.data.control.refacto.AppModeController;
+import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
-import org.lifecompanion.base.data.common.UIUtils;
+import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.config.data.config.LCGlyphFont;
 import org.lifecompanion.base.data.config.LCGraphicStyle;
 import org.lifecompanion.config.view.selection.ComponentSelectionSearchList;

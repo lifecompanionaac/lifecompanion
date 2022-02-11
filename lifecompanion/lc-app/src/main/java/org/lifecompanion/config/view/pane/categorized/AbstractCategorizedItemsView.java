@@ -21,8 +21,8 @@ package org.lifecompanion.config.view.pane.categorized;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.layout.TilePane;
-import org.lifecompanion.api.component.definition.eventaction.CategorizedElementI;
-import org.lifecompanion.base.data.common.LCUtils;
+import org.lifecompanion.model.api.categorizedelement.CategorizedElementI;
+import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.config.view.pane.categorized.cell.AbstractCategorizedItemView;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 

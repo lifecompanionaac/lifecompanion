@@ -23,11 +23,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import org.lifecompanion.api.component.definition.useevent.UseEventGeneratorConfigurationViewI;
-import org.lifecompanion.api.component.definition.useevent.UseVariableDefinitionI;
-import org.lifecompanion.base.data.common.UIUtils;
+import org.lifecompanion.model.api.categorizedelement.useevent.UseEventGeneratorConfigurationViewI;
+import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
+import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.base.data.control.UseVariableController;
-import org.lifecompanion.base.data.useevent.impl.configuration.variable.VariableValueChangedEventGenerator;
+import org.lifecompanion.model.impl.categorizedelement.useevent.available.VariableValueChangedEventGenerator;
 import org.lifecompanion.config.view.reusable.UseVariableDefinitionListCell;
 import org.lifecompanion.framework.commons.translation.Translation;
 

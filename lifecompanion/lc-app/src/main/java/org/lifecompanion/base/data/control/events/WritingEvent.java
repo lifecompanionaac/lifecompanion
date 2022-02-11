@@ -19,10 +19,10 @@
 
 package org.lifecompanion.base.data.control.events;
 
-import org.lifecompanion.api.control.events.WritingControllerStateI;
-import org.lifecompanion.api.control.events.WritingEventI;
-import org.lifecompanion.api.control.events.WritingEventSource;
-import org.lifecompanion.api.control.events.WritingEventType;
+import org.lifecompanion.model.api.textcomponent.WritingControllerStateI;
+import org.lifecompanion.model.api.textcomponent.WritingEventI;
+import org.lifecompanion.model.api.textcomponent.WritingEventSource;
+import org.lifecompanion.model.api.textcomponent.WritingEventType;
 
 import java.util.Map;
 

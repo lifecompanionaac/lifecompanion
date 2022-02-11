@@ -22,14 +22,14 @@ package org.lifecompanion.use.view.scene;
 import javafx.scene.input.KeyCombination;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import org.lifecompanion.api.component.definition.LCConfigurationDescriptionI;
-import org.lifecompanion.api.component.definition.LCConfigurationI;
-import org.lifecompanion.api.component.definition.LCProfileI;
-import org.lifecompanion.base.data.common.LCUtils;
+import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
+import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
+import org.lifecompanion.model.api.profile.LCProfileI;
+import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.base.data.config.IconManager;
 import org.lifecompanion.base.data.config.LCConstant;
 import org.lifecompanion.base.data.config.LCGraphicStyle;
-import org.lifecompanion.base.data.control.refacto.StageUtils;
+import org.lifecompanion.util.StageUtils;
 import org.lifecompanion.config.data.action.impl.GlobalActions;
 
 public class UseModeStage extends Stage {

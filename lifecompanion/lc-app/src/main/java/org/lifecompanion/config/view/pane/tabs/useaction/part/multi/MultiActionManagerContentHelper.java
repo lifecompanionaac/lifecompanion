@@ -22,10 +22,10 @@ package org.lifecompanion.config.view.pane.tabs.useaction.part.multi;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import org.lifecompanion.api.component.definition.useaction.BaseUseActionI;
-import org.lifecompanion.api.component.definition.useaction.UseActionEvent;
-import org.lifecompanion.api.component.definition.useaction.UseActionTriggerComponentI;
-import org.lifecompanion.base.data.common.LCUtils;
+import org.lifecompanion.model.api.categorizedelement.useaction.BaseUseActionI;
+import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
+import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
+import org.lifecompanion.util.LCUtils;
 
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;

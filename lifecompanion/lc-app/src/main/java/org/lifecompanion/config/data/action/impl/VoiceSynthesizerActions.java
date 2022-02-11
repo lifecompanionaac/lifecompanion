@@ -19,14 +19,14 @@
 
 package org.lifecompanion.config.data.action.impl;
 
-import org.lifecompanion.base.data.action.definition.BasePropertyChangeAction;
-import org.lifecompanion.api.action.definition.UndoRedoActionI;
-import org.lifecompanion.api.component.definition.VoiceSynthesizerUserI;
-import org.lifecompanion.api.exception.LCException;
-import org.lifecompanion.api.voice.PronunciationExceptionI;
-import org.lifecompanion.api.voice.VoiceInfoI;
-import org.lifecompanion.api.voice.VoiceSynthesizerI;
-import org.lifecompanion.api.voice.VoiceSynthesizerParameterI;
+import org.lifecompanion.model.impl.editaction.BasePropertyChangeAction;
+import org.lifecompanion.model.api.editaction.UndoRedoActionI;
+import org.lifecompanion.model.api.configurationcomponent.VoiceSynthesizerUserI;
+import org.lifecompanion.model.impl.exception.LCException;
+import org.lifecompanion.model.api.voicesynthesizer.PronunciationExceptionI;
+import org.lifecompanion.model.api.voicesynthesizer.VoiceInfoI;
+import org.lifecompanion.model.api.voicesynthesizer.VoiceSynthesizerI;
+import org.lifecompanion.model.api.voicesynthesizer.VoiceSynthesizerParameterI;
 
 /**
  * All actions relative to voice synthesizer.

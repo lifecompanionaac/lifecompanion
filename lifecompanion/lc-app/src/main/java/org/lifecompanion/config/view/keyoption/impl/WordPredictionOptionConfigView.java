@@ -23,7 +23,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import org.controlsfx.control.ToggleSwitch;
-import org.lifecompanion.base.data.component.keyoption.WordPredictionKeyOption;
+import org.lifecompanion.model.impl.configurationcomponent.keyoption.WordPredictionKeyOption;
 import org.lifecompanion.config.data.action.impl.KeyOptionActions.ChangeWordPredictionAddSpace;
 import org.lifecompanion.config.data.action.impl.KeyOptionActions.ChangeWordPredictionCorrectionColor;
 import org.lifecompanion.config.data.common.LCConfigBindingUtils;

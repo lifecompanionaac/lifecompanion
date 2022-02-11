@@ -25,18 +25,16 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.stage.FileChooser;
-import org.lifecompanion.api.action.definition.BaseConfigActionI;
-import org.lifecompanion.api.component.definition.LCConfigurationDescriptionI;
-import org.lifecompanion.api.component.definition.LCProfileI;
-import org.lifecompanion.api.exception.LCException;
-import org.lifecompanion.base.data.common.LCTask;
-import org.lifecompanion.base.data.common.LCUtils;
-import org.lifecompanion.base.data.common.UIUtils;
+import org.lifecompanion.controller.io.*;
+import org.lifecompanion.model.api.editaction.BaseEditActionI;
+import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
+import org.lifecompanion.model.api.profile.LCProfileI;
+import org.lifecompanion.model.impl.exception.LCException;
+import org.lifecompanion.util.LCTask;
+import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.base.data.control.AsyncExecutorController;
-import org.lifecompanion.base.data.control.refacto.AppModeController;
 import org.lifecompanion.base.data.control.refacto.ProfileController;
-import org.lifecompanion.base.data.io.IOManager;
-import org.lifecompanion.base.data.io.task.*;
 import org.lifecompanion.config.data.component.profile.ProfileConfigSelectionController;
 import org.lifecompanion.config.data.component.profile.ProfileConfigStep;
 import org.lifecompanion.config.data.control.ConfigActionController;
@@ -72,7 +70,7 @@ public class LCProfileActions {
 
     // Actions
     //========================================================================
-    public static abstract class AbstractSaveProfileAction implements BaseConfigActionI {
+    public static abstract class AbstractSaveProfileAction implements BaseEditActionI {
         protected final LCProfileI profileToSave;
         protected final Consumer<LCProfileI> callback;
 
@@ -158,7 +156,7 @@ public class LCProfileActions {
     /**
      * Action to remove a profile
      */
-    public static class RemoveProfileAction implements BaseConfigActionI {
+    public static class RemoveProfileAction implements BaseEditActionI {
         private final Node source;
         private LCProfileI profileToRemove;
 
@@ -212,7 +210,7 @@ public class LCProfileActions {
     /**
      * Action to select a profile
      */
-    public static class SelectProfileAction implements BaseConfigActionI {
+    public static class SelectProfileAction implements BaseEditActionI {
         private final Node source;
         private LCProfileI profileToSelect;
 
@@ -262,7 +260,7 @@ public class LCProfileActions {
         }
     }
 
-    public static class ProfileExportAction implements BaseConfigActionI {
+    public static class ProfileExportAction implements BaseEditActionI {
         private static final SimpleDateFormat DATE_FORMAT_FILENAME = new SimpleDateFormat("yyyyMMdd");
         private final Node source;
         private final LCProfileI selectedProfile;
@@ -291,7 +289,7 @@ public class LCProfileActions {
 
     }
 
-    public static class ProfileImportAction implements BaseConfigActionI {
+    public static class ProfileImportAction implements BaseEditActionI {
         private File profileImportFile;
         private final Node source;
         private final Consumer<LCProfileI> successCallback;
@@ -360,7 +358,7 @@ public class LCProfileActions {
     /**
      * To duplicate a selected configuration
      */
-    public static class DuplicateProfileAction implements BaseConfigActionI {
+    public static class DuplicateProfileAction implements BaseEditActionI {
         private final Node source;
 
         public DuplicateProfileAction(Node source) {

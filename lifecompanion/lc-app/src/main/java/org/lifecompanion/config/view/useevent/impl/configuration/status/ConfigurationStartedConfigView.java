@@ -19,11 +19,10 @@
 
 package org.lifecompanion.config.view.useevent.impl.configuration.status;
 
-import org.lifecompanion.base.data.useevent.impl.configuration.status.ConfigurationStartedEventGenerator;
+import org.lifecompanion.model.impl.categorizedelement.useevent.available.ConfigurationStartedEventGenerator;
 import org.lifecompanion.framework.commons.translation.Translation;
-import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
-import org.lifecompanion.base.data.common.UIUtils;
-import org.lifecompanion.api.component.definition.useevent.UseEventGeneratorConfigurationViewI;
+import org.lifecompanion.util.UIUtils;
+import org.lifecompanion.model.api.categorizedelement.useevent.UseEventGeneratorConfigurationViewI;
 import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
 import javafx.scene.layout.Region;

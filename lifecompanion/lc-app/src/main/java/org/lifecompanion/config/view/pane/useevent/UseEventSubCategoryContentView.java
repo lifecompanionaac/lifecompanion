@@ -21,8 +21,8 @@ package org.lifecompanion.config.view.pane.useevent;
 
 import java.util.function.Consumer;
 
-import org.lifecompanion.api.component.definition.useevent.UseEventGeneratorI;
-import org.lifecompanion.api.component.definition.useevent.UseEventSubCategoryI;
+import org.lifecompanion.model.api.categorizedelement.useevent.UseEventGeneratorI;
+import org.lifecompanion.model.api.categorizedelement.useevent.UseEventSubCategoryI;
 import org.lifecompanion.config.view.pane.categorized.AbstractSubCategoryContentView;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;

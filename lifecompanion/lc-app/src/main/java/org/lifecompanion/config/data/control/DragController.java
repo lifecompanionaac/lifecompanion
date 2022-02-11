@@ -20,16 +20,16 @@ package org.lifecompanion.config.data.control;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import org.lifecompanion.api.action.definition.BaseConfigActionI;
-import org.lifecompanion.api.component.definition.GridComponentI;
-import org.lifecompanion.api.component.definition.GridPartKeyComponentI;
-import org.lifecompanion.api.component.definition.StackComponentI;
-import org.lifecompanion.api.component.definition.usercomp.UserCompDescriptionI;
-import org.lifecompanion.api.ui.AddTypeEnum;
-import org.lifecompanion.api.ui.PossibleAddComponentI;
-import org.lifecompanion.base.data.component.simple.GridPartKeyComponent;
-import org.lifecompanion.base.data.control.refacto.AppModeController;
-import org.lifecompanion.base.data.ui.PossibleAddComponents;
+import org.lifecompanion.model.api.editaction.BaseEditActionI;
+import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
+import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
+import org.lifecompanion.model.api.configurationcomponent.StackComponentI;
+import org.lifecompanion.model.api.profile.UserCompDescriptionI;
+import org.lifecompanion.model.api.ui.editmode.AddTypeEnum;
+import org.lifecompanion.model.api.ui.editmode.PossibleAddComponentI;
+import org.lifecompanion.model.impl.configurationcomponent.GridPartKeyComponent;
+import org.lifecompanion.controller.lifecycle.AppModeController;
+import org.lifecompanion.model.impl.ui.editmode.PossibleAddComponents;
 import org.lifecompanion.config.data.action.impl.GridStackActions.AddGridInStackAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -118,7 +118,7 @@ public enum DragController {
                 && this.currentDraggedUserComp.get().getUserComponent().getLoadedComponent() instanceof GridComponentI;
     }
 
-    public BaseConfigActionI createAddInStackAction(final GridPartKeyComponent model) {
+    public BaseEditActionI createAddInStackAction(final GridPartKeyComponent model) {
         GridComponentI gridParent = model.gridParentProperty().get();
         if (gridParent != null && gridParent.stackParentProperty().get() != null) {
             StackComponentI stackParent = gridParent.stackParentProperty().get();
@@ -129,7 +129,7 @@ public enum DragController {
         return null;
     }
 
-    public BaseConfigActionI createAddUserCompInStackAction(final GridPartKeyComponent model) {
+    public BaseEditActionI createAddUserCompInStackAction(final GridPartKeyComponent model) {
         GridComponentI gridParent = model.gridParentProperty().get();
         if (this.currentDraggedUserComp.get() != null && gridParent != null && gridParent.stackParentProperty().get() != null) {
             StackComponentI stackParent = gridParent.stackParentProperty().get();

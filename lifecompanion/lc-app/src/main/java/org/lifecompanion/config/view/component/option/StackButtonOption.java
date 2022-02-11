@@ -25,8 +25,8 @@ import java.util.List;
 import org.controlsfx.glyphfont.FontAwesome;
 
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
-import org.lifecompanion.api.component.definition.StackComponentI;
-import org.lifecompanion.api.ui.config.ConfigOptionComponentI;
+import org.lifecompanion.model.api.configurationcomponent.StackComponentI;
+import org.lifecompanion.model.api.ui.editmode.ConfigOptionComponentI;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.control.Button;

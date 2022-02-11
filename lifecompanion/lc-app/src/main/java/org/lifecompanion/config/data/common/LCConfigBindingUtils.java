@@ -27,16 +27,15 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.SelectionModel;
 import javafx.scene.control.Slider;
 import javafx.scene.control.Spinner;
-import org.lifecompanion.api.action.definition.BaseConfigActionI;
-import org.lifecompanion.base.data.common.LCUtils;
+import org.lifecompanion.model.api.editaction.BaseEditActionI;
+import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.config.data.control.ConfigActionController;
 
 import java.util.function.BiFunction;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import static org.lifecompanion.base.data.common.LCUtils.tolerantRound;
+import static org.lifecompanion.util.LCUtils.tolerantRound;
 
 /**
  * Class to create binding with config action and fields in config UI.
@@ -48,7 +47,7 @@ public class LCConfigBindingUtils {
     // Class part : "UI Binding"
     //========================================================================
     public static <T> ChangeListener<Number> createSliderBindingWithScale(final int scale, final Slider slider, final ObjectProperty<T> modelProperty,
-                                                                          final Function<T, ObservableNumberValue> propertyRetriever, final BiFunction<T, Number, BaseConfigActionI> actionCreator) {
+                                                                          final Function<T, ObservableNumberValue> propertyRetriever, final BiFunction<T, Number, BaseEditActionI> actionCreator) {
         //Change on field
         ChangeListener<Number> changeListenerField = (obs, ov, nv) -> {
             T model = modelProperty.get();
@@ -83,12 +82,12 @@ public class LCConfigBindingUtils {
     //	}
 
     public static <T> ChangeListener<Number> createSliderBindingWithoutScale(final Slider slider, final ObjectProperty<T> modelProperty,
-                                                                             final Function<T, ObservableNumberValue> propertyRetriever, final BiFunction<T, Number, BaseConfigActionI> actionCreator) {
+                                                                             final Function<T, ObservableNumberValue> propertyRetriever, final BiFunction<T, Number, BaseEditActionI> actionCreator) {
         return LCConfigBindingUtils.createSliderBindingWithScale(0, slider, modelProperty, propertyRetriever, actionCreator);
     }
 
     public static <T, K> ChangeListener<T> createSelectionModelBinding(final SelectionModel<T> selectionModel, final ObjectProperty<K> modelProperty,
-                                                                       final Function<K, T> propertyRetriever, final BiFunction<K, T, BaseConfigActionI> actionCreator) {
+                                                                       final Function<K, T> propertyRetriever, final BiFunction<K, T, BaseEditActionI> actionCreator) {
         return LCConfigBindingUtils.createSelectionModelBinding(selectionModel, modelProperty, propertyRetriever, t1 -> t1, t2 -> t2, actionCreator);
         //		//Bind combobox
         //		selectionModel.selectedItemProperty().addListener((obs, ov, nv) -> {
@@ -112,14 +111,14 @@ public class LCConfigBindingUtils {
 
     public static <T, K, V> ChangeListener<V> createSelectionModelBinding(final SelectionModel<T> selectionModel,
                                                                           final ObjectProperty<K> modelProperty, final Function<K, V> propertyRetriever, final Function<T, V> toModelConverter,
-                                                                          final Function<V, T> toSelectionModeConverter, final BiFunction<K, V, BaseConfigActionI> actionCreator) {
+                                                                          final Function<V, T> toSelectionModeConverter, final BiFunction<K, V, BaseEditActionI> actionCreator) {
         //Bind combobox
         selectionModel.selectedItemProperty().addListener((obs, ov, nv) -> {
             K model = modelProperty.get();
             if (model != null) {
                 T prop = toSelectionModeConverter.apply(propertyRetriever.apply(model));
                 if (!LCUtils.safeEquals(prop, nv)) {
-                    BaseConfigActionI action = actionCreator.apply(model, toModelConverter.apply(nv));
+                    BaseEditActionI action = actionCreator.apply(model, toModelConverter.apply(nv));
                     ConfigActionController.INSTANCE.executeAction(action);
                 }
             }
@@ -137,7 +136,7 @@ public class LCConfigBindingUtils {
     }
 
     public static <T> ChangeListener<Number> createIntegerSpinnerBinding(final Spinner<Integer> spinner, final ObjectProperty<T> modelProperty,
-                                                                         final Function<T, ObservableValue<Number>> propertyRetriever, final BiFunction<T, Integer, BaseConfigActionI> actionCreator) {
+                                                                         final Function<T, ObservableValue<Number>> propertyRetriever, final BiFunction<T, Integer, BaseEditActionI> actionCreator) {
         //Field listener
         spinner.valueProperty().addListener((obs, ov, nv) -> {
             T model = modelProperty.get();
@@ -158,13 +157,13 @@ public class LCConfigBindingUtils {
     }
 
     public static <T> ChangeListener<Number> createDoubleSpinnerBinding(final Spinner<Double> spinner, final ObjectProperty<T> modelProperty,
-                                                                        final Function<T, ObservableDoubleValue> propertyRetriever, final BiFunction<T, Double, BaseConfigActionI> actionCreator) {
+                                                                        final Function<T, ObservableDoubleValue> propertyRetriever, final BiFunction<T, Double, BaseEditActionI> actionCreator) {
         return LCConfigBindingUtils.createDoubleSpinnerBindingWithCondition(spinner, modelProperty, propertyRetriever, actionCreator, null);
     }
 
     public static <T> ChangeListener<Number> createDoubleSpinnerBindingWithCondition(final Spinner<Double> spinner,
                                                                                      final ObjectProperty<T> modelProperty, final Function<T, ObservableDoubleValue> propertyRetriever,
-                                                                                     final BiFunction<T, Double, BaseConfigActionI> actionCreator, final Predicate<T> actionCondition) {
+                                                                                     final BiFunction<T, Double, BaseEditActionI> actionCreator, final Predicate<T> actionCondition) {
         //Field listener
         spinner.valueProperty().addListener((obs, ov, nv) -> {
             T model = modelProperty.get();
@@ -187,7 +186,7 @@ public class LCConfigBindingUtils {
 
     public static <T> ChangeListener<Number> createIntegerToDoubleSpinnerBinding(final Spinner<Double> spinner, final ObjectProperty<T> modelProperty,
                                                                                  final Function<T, ObservableIntegerValue> propertyRetriever, final double factor,
-                                                                                 final BiFunction<T, Integer, BaseConfigActionI> actionCreator) {
+                                                                                 final BiFunction<T, Integer, BaseEditActionI> actionCreator) {
         //Field listener
         spinner.valueProperty().addListener((obs, ov, nv) -> {
             T model = modelProperty.get();
@@ -209,7 +208,7 @@ public class LCConfigBindingUtils {
 
     public static <K, T, E> ChangeListener<T> createSimpleBindingWithTransformer(final Property<T> fieldValueProperty,
                                                                                  final Function<T, T> transformer, final ReadOnlyObjectProperty<K> modelProperty, final Function<K, T> propertyRetriever,
-                                                                                 final BiFunction<K, T, BaseConfigActionI> actionCreator) {
+                                                                                 final BiFunction<K, T, BaseEditActionI> actionCreator) {
         //Field listener
         fieldValueProperty.addListener((obs, ov, nv) -> {
             K model = modelProperty.get();
@@ -231,7 +230,7 @@ public class LCConfigBindingUtils {
     }
 
     public static <K, T, E> ChangeListener<T> createSimpleBinding(final Property<T> fieldValueProperty, final ReadOnlyObjectProperty<K> modelProperty,
-                                                                  final Function<K, T> propertyRetriever, final BiFunction<K, T, BaseConfigActionI> actionCreator) {
+                                                                  final Function<K, T> propertyRetriever, final BiFunction<K, T, BaseEditActionI> actionCreator) {
         return LCConfigBindingUtils.createSimpleBindingWithTransformer(fieldValueProperty, null, modelProperty, propertyRetriever, actionCreator);
     }
     //========================================================================

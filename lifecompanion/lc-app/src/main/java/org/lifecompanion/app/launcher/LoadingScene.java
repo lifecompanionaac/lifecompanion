@@ -34,7 +34,6 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
-import org.lifecompanion.base.data.common.UIUtils;
 import org.lifecompanion.base.data.config.IconManager;
 import org.lifecompanion.base.data.config.LCConstant;
 import org.lifecompanion.base.data.control.update.InstallationController;

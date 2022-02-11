@@ -19,7 +19,7 @@
 
 package org.lifecompanion.base.data.config;
 
-import org.lifecompanion.base.data.plugins.PluginManager;
+import org.lifecompanion.controller.plugin.PluginManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

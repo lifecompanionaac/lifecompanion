@@ -19,7 +19,7 @@
 
 package org.lifecompanion.config.view.pane.voice;
 
-import org.lifecompanion.api.voice.VoiceInfoI;
+import org.lifecompanion.model.api.voicesynthesizer.VoiceInfoI;
 import javafx.util.StringConverter;
 
 /**

@@ -19,7 +19,7 @@
 
 package org.lifecompanion.config.view.pane.predictor;
 
-import org.lifecompanion.api.prediction.BasePredictorI;
+import org.lifecompanion.model.api.textprediction.BasePredictorI;
 import javafx.scene.control.ListCell;
 
 /**

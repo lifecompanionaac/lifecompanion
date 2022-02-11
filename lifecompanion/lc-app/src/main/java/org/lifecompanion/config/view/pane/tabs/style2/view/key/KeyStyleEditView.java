@@ -21,7 +21,7 @@ package org.lifecompanion.config.view.pane.tabs.style2.view.key;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Node;
 import org.controlsfx.control.ToggleSwitch;
-import org.lifecompanion.api.style2.definition.KeyCompStyleI;
+import org.lifecompanion.model.api.style.KeyCompStyleI;
 import org.lifecompanion.config.data.common.LCConfigBindingUtils;
 import org.lifecompanion.config.view.common.ConfigUIUtils;
 import org.lifecompanion.config.view.pane.tabs.style2.view.shape.AbstractShapeStyleEditView;

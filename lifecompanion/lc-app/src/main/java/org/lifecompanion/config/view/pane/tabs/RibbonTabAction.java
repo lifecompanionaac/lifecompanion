@@ -18,9 +18,9 @@
  */
 package org.lifecompanion.config.view.pane.tabs;
 
-import org.lifecompanion.api.component.definition.DisplayableComponentI;
-import org.lifecompanion.api.component.definition.useaction.UseActionTriggerComponentI;
-import org.lifecompanion.base.data.component.simple.GridPartKeyComponent;
+import org.lifecompanion.model.api.configurationcomponent.DisplayableComponentI;
+import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
+import org.lifecompanion.model.impl.configurationcomponent.GridPartKeyComponent;
 import org.lifecompanion.config.view.pane.tabs.api.AbstractRibbonTabContent;
 import org.lifecompanion.config.view.pane.tabs.api.AbstractSelectionChangeRibbonTab;
 import org.lifecompanion.config.view.pane.tabs.part.ActionRibbonParts;

@@ -21,7 +21,7 @@ package org.lifecompanion.config.view.reusable.colorpicker;
 
 
 import javafx.scene.paint.Color;
-import org.lifecompanion.base.data.common.LCUtils;
+import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.framework.commons.translation.Translation;
 
 import java.util.ArrayList;

@@ -22,10 +22,10 @@ package org.lifecompanion.base.data.control;
 import javafx.event.EventType;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import org.lifecompanion.api.component.definition.LCConfigurationI;
-import org.lifecompanion.api.mode.ModeListenerI;
-import org.lifecompanion.base.data.control.refacto.AppModeController;
-import org.lifecompanion.base.data.control.virtual.keyboard.impl.WinAutoHotKeyKeyboardReceiverController;
+import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
+import org.lifecompanion.model.api.lifecycle.ModeListenerI;
+import org.lifecompanion.controller.lifecycle.AppModeController;
+import org.lifecompanion.controller.virtualkeyboard.WinAutoHotKeyKeyboardReceiverController;
 
 import java.util.HashSet;
 import java.util.Set;

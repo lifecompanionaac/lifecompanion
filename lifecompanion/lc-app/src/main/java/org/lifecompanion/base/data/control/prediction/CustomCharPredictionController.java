@@ -19,15 +19,15 @@
 package org.lifecompanion.base.data.control.prediction;
 
 import javafx.util.Pair;
-import org.lifecompanion.api.component.definition.GridComponentI;
-import org.lifecompanion.api.component.definition.GridPartKeyComponentI;
-import org.lifecompanion.api.component.definition.LCConfigurationI;
-import org.lifecompanion.api.component.definition.PredictionParameterI;
-import org.lifecompanion.api.component.definition.grid.ComponentGridI;
-import org.lifecompanion.api.prediction.CharPredictorI;
-import org.lifecompanion.base.data.common.LCUtils;
-import org.lifecompanion.base.data.component.keyoption.CustomCharKeyOption;
-import org.lifecompanion.base.data.prediction.LCCharPredictor;
+import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
+import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
+import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
+import org.lifecompanion.model.api.configurationcomponent.PredictionParameterI;
+import org.lifecompanion.model.api.configurationcomponent.ComponentGridI;
+import org.lifecompanion.model.api.textprediction.CharPredictorI;
+import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.model.impl.configurationcomponent.keyoption.CustomCharKeyOption;
+import org.lifecompanion.model.impl.textprediction.charprediction.LCCharPredictor;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 
 import java.util.*;

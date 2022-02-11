@@ -24,9 +24,9 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.OverrunStyle;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
-import org.lifecompanion.api.component.definition.DisplayableComponentI;
-import org.lifecompanion.base.data.common.LCUtils;
-import org.lifecompanion.base.data.common.UIUtils;
+import org.lifecompanion.model.api.configurationcomponent.DisplayableComponentI;
+import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.util.UIUtils;
 
 public class DisplayableComponentListCell<T extends DisplayableComponentI> extends ListCell<T> {
     private static final double CELL_SIZE = 150.0;

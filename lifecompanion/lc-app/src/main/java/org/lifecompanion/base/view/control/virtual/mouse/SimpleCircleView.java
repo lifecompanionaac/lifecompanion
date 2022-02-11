@@ -24,8 +24,8 @@ import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.StrokeType;
-import org.lifecompanion.base.data.control.virtual.mouse.VirtualMouseController;
-import org.lifecompanion.base.data.control.virtual.mouse.VirtualMouseDrawingI;
+import org.lifecompanion.controller.virtualmouse.VirtualMouseController;
+import org.lifecompanion.ui.virtualmouse.VirtualMouseDrawingI;
 
 import java.util.Arrays;
 import java.util.List;

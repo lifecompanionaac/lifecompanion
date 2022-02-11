@@ -20,10 +20,9 @@
 package org.lifecompanion.config.view.useaction.impl.computera.keyboard;
 
 import org.lifecompanion.framework.commons.translation.Translation;
-import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
-import org.lifecompanion.api.component.definition.useaction.UseActionConfigurationViewI;
-import org.lifecompanion.api.component.definition.useevent.UseVariableDefinitionI;
-import org.lifecompanion.base.data.useaction.impl.computera.keyboard.SimulateKeyboardKeyPressedAction;
+import org.lifecompanion.model.api.categorizedelement.useaction.UseActionConfigurationViewI;
+import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
+import org.lifecompanion.model.impl.categorizedelement.useaction.available.SimulateKeyboardKeyPressedAction;
 import org.lifecompanion.config.view.reusable.KeySelectorControl;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;

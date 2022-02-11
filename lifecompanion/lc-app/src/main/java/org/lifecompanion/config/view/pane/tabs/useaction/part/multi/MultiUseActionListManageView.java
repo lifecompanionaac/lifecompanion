@@ -24,10 +24,9 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import org.lifecompanion.api.action.definition.BaseConfigActionI;
-import org.lifecompanion.api.component.definition.LCConfigurationI;
-import org.lifecompanion.api.component.definition.useaction.*;
-import org.lifecompanion.api.component.definition.useevent.UseEventGeneratorI;
+import org.lifecompanion.model.api.editaction.BaseEditActionI;
+import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
+import org.lifecompanion.model.api.categorizedelement.useevent.UseEventGeneratorI;
 import org.lifecompanion.config.data.action.impl.UseActionConfigActions;
 import org.lifecompanion.config.data.control.SelectionController;
 import org.lifecompanion.config.view.common.ConfigUIUtils;
@@ -37,6 +36,7 @@ import org.lifecompanion.config.view.pane.categorized.cell.AbstractCategorizedEl
 import org.lifecompanion.config.view.pane.useaction.UseActionMainView;
 import org.lifecompanion.config.view.pane.useaction.cell.BaseUseActionElementListCellView;
 import org.lifecompanion.framework.commons.translation.Translation;
+import org.lifecompanion.model.api.categorizedelement.useaction.*;
 
 import java.util.ArrayList;
 import java.util.function.BiConsumer;
@@ -77,7 +77,7 @@ public class MultiUseActionListManageView extends AbstractCategorizedListManageV
     }
 
     @Override
-    protected BaseConfigActionI createEditAction(final BaseUseActionI<?> editedElement) {
+    protected BaseEditActionI createEditAction(final BaseUseActionI<?> editedElement) {
         return new UseActionConfigActions.MultiEditUseActionAction(editedElement, new ArrayList<>(currentMultiActionManagerContentHelper.getSourceList()), currentMultiActionManagerContentHelper.getEventType());
     }
 
@@ -87,22 +87,22 @@ public class MultiUseActionListManageView extends AbstractCategorizedListManageV
     }
 
     @Override
-    protected BaseConfigActionI createAddAction(Node source, final LCConfigurationI model, final BaseUseActionI<?> addedElement) {
+    protected BaseEditActionI createAddAction(Node source, final LCConfigurationI model, final BaseUseActionI<?> addedElement) {
         return new UseActionConfigActions.MultiAddUseActionAction(source, addedElement, new ArrayList<>(currentMultiActionManagerContentHelper.getSourceList()), currentMultiActionManagerContentHelper.getEventType());
     }
 
     @Override
-    protected BaseConfigActionI createRemoveAction(Node source, final LCConfigurationI model, final BaseUseActionI<?> removedElement) {
+    protected BaseEditActionI createRemoveAction(Node source, final LCConfigurationI model, final BaseUseActionI<?> removedElement) {
         return new UseActionConfigActions.MultiRemoveUseActionAction(source, removedElement, new ArrayList<>(currentMultiActionManagerContentHelper.getSourceList()), currentMultiActionManagerContentHelper.getEventType());
     }
 
     @Override
-    protected BaseConfigActionI createShiftUpAction(final LCConfigurationI model, final BaseUseActionI<?> element) {
+    protected BaseEditActionI createShiftUpAction(final LCConfigurationI model, final BaseUseActionI<?> element) {
         return null;
     }
 
     @Override
-    protected BaseConfigActionI createShiftDownAction(final LCConfigurationI model, final BaseUseActionI<?> element) {
+    protected BaseEditActionI createShiftDownAction(final LCConfigurationI model, final BaseUseActionI<?> element) {
         return null;
     }
 

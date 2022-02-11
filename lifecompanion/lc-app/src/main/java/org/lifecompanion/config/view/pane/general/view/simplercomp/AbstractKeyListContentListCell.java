@@ -26,10 +26,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
-import org.lifecompanion.api.component.definition.simplercomp.KeyListNodeI;
-import org.lifecompanion.api.component.definition.simplercomp.SimplerKeyContentContainerI;
-import org.lifecompanion.api.image2.ImageElementI;
-import org.lifecompanion.base.data.common.LCUtils;
+import org.lifecompanion.model.api.configurationcomponent.dynamickey.SimplerKeyContentContainerI;
+import org.lifecompanion.util.LCUtils;
 
 public abstract class AbstractKeyListContentListCell<T extends SimplerKeyContentContainerI> extends ListCell<T> {
     private static final double STROKE_SIZE_SIDE = 4.0;

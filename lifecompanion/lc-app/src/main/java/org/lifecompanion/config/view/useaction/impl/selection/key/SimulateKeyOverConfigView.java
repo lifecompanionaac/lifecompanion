@@ -23,11 +23,10 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import org.lifecompanion.api.component.definition.GridPartKeyComponentI;
-import org.lifecompanion.api.component.definition.useaction.UseActionConfigurationViewI;
-import org.lifecompanion.api.component.definition.useevent.UseVariableDefinitionI;
-import org.lifecompanion.base.data.useaction.impl.selection.key.SimulateKeyActivationAction;
-import org.lifecompanion.base.data.useaction.impl.selection.key.SimulateKeyOverAction;
+import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
+import org.lifecompanion.model.api.categorizedelement.useaction.UseActionConfigurationViewI;
+import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
+import org.lifecompanion.model.impl.categorizedelement.useaction.available.SimulateKeyOverAction;
 import org.lifecompanion.config.view.pane.compselector.ComponentSelectorControl;
 import org.lifecompanion.framework.commons.translation.Translation;
 

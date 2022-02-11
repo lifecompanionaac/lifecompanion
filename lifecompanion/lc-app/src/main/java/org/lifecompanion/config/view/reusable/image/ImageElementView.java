@@ -24,9 +24,9 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.TextAlignment;
-import org.lifecompanion.api.image2.ImageElementI;
-import org.lifecompanion.base.data.common.UIUtils;
-import org.lifecompanion.base.data.image2.ImageDictionaries;
+import org.lifecompanion.model.api.imagedictionary.ImageElementI;
+import org.lifecompanion.util.UIUtils;
+import org.lifecompanion.model.impl.imagedictionary.ImageDictionaries;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 
 import java.util.function.Consumer;

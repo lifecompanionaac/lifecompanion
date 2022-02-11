@@ -23,7 +23,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
-import org.lifecompanion.api.component.definition.simplercomp.KeyListNodeI;
+import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
 import org.lifecompanion.config.view.pane.compselector.KeyListSelectorControl;
 import org.lifecompanion.config.view.pane.general.view.simplercomp.AbstractSimplerKeyActionContainerPropertiesEditionView;
 import org.lifecompanion.framework.commons.translation.Translation;

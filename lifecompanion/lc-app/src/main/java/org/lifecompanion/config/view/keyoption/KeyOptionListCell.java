@@ -19,7 +19,7 @@
 
 package org.lifecompanion.config.view.keyoption;
 
-import org.lifecompanion.api.component.definition.keyoption.KeyOptionI;
+import org.lifecompanion.model.api.configurationcomponent.keyoption.KeyOptionI;
 import javafx.scene.control.ListCell;
 
 public class KeyOptionListCell extends ListCell<KeyOptionI> {

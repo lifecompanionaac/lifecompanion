@@ -20,16 +20,15 @@
 package org.lifecompanion.config.view.pane.tabs.selected.part;
 
 import org.lifecompanion.framework.commons.translation.Translation;
-import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.config.data.action.impl.GridActions.ChangeColumnAction;
 import org.lifecompanion.config.data.action.impl.GridActions.ChangeRowAction;
 import org.lifecompanion.config.data.common.LCConfigBindingUtils;
-import org.lifecompanion.base.data.common.UIUtils;
-import org.lifecompanion.api.component.definition.GridComponentI;
-import org.lifecompanion.api.component.definition.GridPartComponentI;
+import org.lifecompanion.util.UIUtils;
+import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
+import org.lifecompanion.model.api.configurationcomponent.GridPartComponentI;
 import org.lifecompanion.config.data.control.SelectionController;
-import org.lifecompanion.api.ui.config.ConfigurationProfileLevelEnum;
+import org.lifecompanion.model.api.ui.editmode.ConfigurationProfileLevelEnum;
 import org.lifecompanion.config.view.common.ConfigUIUtils;
 import org.lifecompanion.config.view.reusable.ribbonmenu.RibbonBasePart;
 import javafx.beans.value.ChangeListener;

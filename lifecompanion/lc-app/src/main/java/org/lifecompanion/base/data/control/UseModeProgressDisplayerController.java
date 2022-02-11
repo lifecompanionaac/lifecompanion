@@ -19,11 +19,11 @@
 package org.lifecompanion.base.data.control;
 
 import javafx.concurrent.Task;
-import org.lifecompanion.api.component.definition.GridComponentI;
-import org.lifecompanion.api.component.definition.LCConfigurationI;
-import org.lifecompanion.api.mode.ModeListenerI;
-import org.lifecompanion.base.data.common.LCUtils;
-import org.lifecompanion.base.data.component.keyoption.ProgressDisplayKeyOption;
+import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
+import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
+import org.lifecompanion.model.api.lifecycle.ModeListenerI;
+import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.model.impl.configurationcomponent.keyoption.ProgressDisplayKeyOption;
 import org.lifecompanion.framework.commons.utils.lang.CollectionUtils;
 import org.lifecompanion.framework.utils.LCNamedThreadFactory;
 import org.slf4j.Logger;

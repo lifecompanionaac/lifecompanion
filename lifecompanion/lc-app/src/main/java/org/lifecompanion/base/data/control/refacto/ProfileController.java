@@ -24,7 +24,8 @@ import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import org.lifecompanion.api.component.definition.LCProfileI;
+import org.lifecompanion.controller.lifecycle.AppModeController;
+import org.lifecompanion.model.api.profile.LCProfileI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

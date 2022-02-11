@@ -23,7 +23,7 @@ import javafx.stage.Stage;
 import org.lifecompanion.app.instance.DoubleLaunchListenerImpl;
 import org.lifecompanion.app.instance.OneInstanceChecker;
 import org.lifecompanion.base.data.config.LCConstant;
-import org.lifecompanion.base.data.control.refacto.LifeCompanionController;
+import org.lifecompanion.controller.lifecycle.LifeCompanionController;
 import org.lifecompanion.base.data.control.update.InstallationController;
 import org.lifecompanion.config.data.control.ErrorHandlingController;
 import org.lifecompanion.framework.commons.translation.Translation;

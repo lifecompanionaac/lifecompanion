@@ -21,11 +21,11 @@ package org.lifecompanion.config.view.pane.tabs.useevent;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import org.lifecompanion.api.action.definition.BaseConfigActionI;
-import org.lifecompanion.api.component.definition.useevent.UseEventGeneratorHolderI;
-import org.lifecompanion.api.component.definition.useevent.UseEventGeneratorI;
-import org.lifecompanion.api.component.definition.useevent.UseEventMainCategoryI;
-import org.lifecompanion.api.component.definition.useevent.UseEventSubCategoryI;
+import org.lifecompanion.model.api.editaction.BaseEditActionI;
+import org.lifecompanion.model.api.categorizedelement.useevent.UseEventGeneratorHolderI;
+import org.lifecompanion.model.api.categorizedelement.useevent.UseEventGeneratorI;
+import org.lifecompanion.model.api.categorizedelement.useevent.UseEventMainCategoryI;
+import org.lifecompanion.model.api.categorizedelement.useevent.UseEventSubCategoryI;
 import org.lifecompanion.config.data.action.impl.UseEventGeneratorActions.AddUseEventAction;
 import org.lifecompanion.config.data.action.impl.UseEventGeneratorActions.EditUseEventAction;
 import org.lifecompanion.config.data.action.impl.UseEventGeneratorActions.RemoveUseEventAction;
@@ -58,27 +58,27 @@ public class UseEventListManageView
     }
 
     @Override
-    protected BaseConfigActionI createEditAction(final UseEventGeneratorI editedElement) {
+    protected BaseEditActionI createEditAction(final UseEventGeneratorI editedElement) {
         return new EditUseEventAction();
     }
 
     @Override
-    protected BaseConfigActionI createAddAction(Node source, final UseEventGeneratorHolderI model, final UseEventGeneratorI addedElement) {
+    protected BaseEditActionI createAddAction(Node source, final UseEventGeneratorHolderI model, final UseEventGeneratorI addedElement) {
         return new AddUseEventAction(model.getEventManager(), addedElement);
     }
 
     @Override
-    protected BaseConfigActionI createRemoveAction(Node source, final UseEventGeneratorHolderI model, final UseEventGeneratorI removedElement) {
+    protected BaseEditActionI createRemoveAction(Node source, final UseEventGeneratorHolderI model, final UseEventGeneratorI removedElement) {
         return new RemoveUseEventAction(model.getEventManager(), removedElement);
     }
 
     @Override
-    protected BaseConfigActionI createShiftUpAction(final UseEventGeneratorHolderI model, final UseEventGeneratorI element) {
+    protected BaseEditActionI createShiftUpAction(final UseEventGeneratorHolderI model, final UseEventGeneratorI element) {
         return null;
     }
 
     @Override
-    protected BaseConfigActionI createShiftDownAction(final UseEventGeneratorHolderI model, final UseEventGeneratorI element) {
+    protected BaseEditActionI createShiftDownAction(final UseEventGeneratorHolderI model, final UseEventGeneratorI element) {
         return null;
     }
 

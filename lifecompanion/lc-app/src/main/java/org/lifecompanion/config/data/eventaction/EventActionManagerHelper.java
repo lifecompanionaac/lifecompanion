@@ -20,10 +20,10 @@
 package org.lifecompanion.config.data.eventaction;
 
 import javafx.collections.ObservableList;
-import org.lifecompanion.api.component.definition.eventaction.CategorizedElementI;
-import org.lifecompanion.api.component.definition.eventaction.CategoryElementI;
-import org.lifecompanion.api.component.definition.eventaction.MainCategoryI;
-import org.lifecompanion.api.component.definition.eventaction.SubCategoryI;
+import org.lifecompanion.model.api.categorizedelement.CategorizedElementI;
+import org.lifecompanion.model.api.categorizedelement.CategoryElementI;
+import org.lifecompanion.model.api.categorizedelement.MainCategoryI;
+import org.lifecompanion.model.api.categorizedelement.SubCategoryI;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 
 import java.util.*;

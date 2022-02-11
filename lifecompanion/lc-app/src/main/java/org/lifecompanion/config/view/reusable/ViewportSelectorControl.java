@@ -23,11 +23,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.lifecompanion.framework.commons.translation.Translation;
-import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.config.data.action.impl.KeyActions.ChangeViewportAction;
-import org.lifecompanion.base.data.common.PositionSize;
-import org.lifecompanion.api.component.definition.ImageUseComponentI;
+import org.lifecompanion.util.PositionSize;
+import org.lifecompanion.model.api.configurationcomponent.ImageUseComponentI;
 import org.lifecompanion.base.data.config.LCConstant;
 import org.lifecompanion.base.data.config.LCGraphicStyle;
 import org.lifecompanion.config.data.control.ConfigActionController;

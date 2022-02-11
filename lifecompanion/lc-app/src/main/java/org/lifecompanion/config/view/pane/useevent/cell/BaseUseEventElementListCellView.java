@@ -19,7 +19,7 @@
 package org.lifecompanion.config.view.pane.useevent.cell;
 
 import javafx.scene.Node;
-import org.lifecompanion.api.component.definition.useevent.UseEventGeneratorI;
+import org.lifecompanion.model.api.categorizedelement.useevent.UseEventGeneratorI;
 import org.lifecompanion.config.view.pane.categorized.cell.AbstractCategorizedElementListCellView;
 
 import java.util.function.BiConsumer;

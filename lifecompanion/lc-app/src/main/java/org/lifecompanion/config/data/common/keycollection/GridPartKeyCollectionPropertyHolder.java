@@ -20,7 +20,7 @@
 package org.lifecompanion.config.data.common.keycollection;
 
 import javafx.collections.ObservableList;
-import org.lifecompanion.base.data.common.LCUtils;
+import org.lifecompanion.util.LCUtils;
 
 import java.util.List;
 

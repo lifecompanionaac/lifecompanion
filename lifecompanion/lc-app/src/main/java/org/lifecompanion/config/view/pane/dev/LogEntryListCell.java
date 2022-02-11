@@ -19,7 +19,7 @@
 
 package org.lifecompanion.config.view.pane.dev;
 
-import org.lifecompanion.base.data.dev.LogEntry;
+import org.lifecompanion.model.impl.devmode.LogEntry;
 import javafx.scene.control.ListCell;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;

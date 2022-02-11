@@ -19,7 +19,7 @@
 
 package org.lifecompanion.config.view.keyoption.impl;
 
-import org.lifecompanion.base.data.component.keyoption.note.NoteKeyDisplayMode;
+import org.lifecompanion.model.impl.configurationcomponent.keyoption.note.NoteKeyDisplayMode;
 import javafx.scene.control.ListCell;
 
 public class NoteKeyDisplayModeListCell extends ListCell<NoteKeyDisplayMode> {

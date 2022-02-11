@@ -19,7 +19,7 @@
 package org.lifecompanion.config.view.pane.useaction.cell;
 
 import javafx.scene.Node;
-import org.lifecompanion.api.component.definition.useaction.BaseUseActionI;
+import org.lifecompanion.model.api.categorizedelement.useaction.BaseUseActionI;
 import org.lifecompanion.config.view.pane.categorized.cell.AbstractCategorizedElementListCellView;
 
 import java.util.function.BiConsumer;

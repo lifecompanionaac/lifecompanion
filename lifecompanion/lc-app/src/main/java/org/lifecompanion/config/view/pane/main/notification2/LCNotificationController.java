@@ -22,8 +22,8 @@ package org.lifecompanion.config.view.pane.main.notification2;
 import javafx.animation.KeyValue;
 import javafx.beans.value.WritableValue;
 import javafx.stage.Stage;
-import org.lifecompanion.api.mode.LCStateListener;
-import org.lifecompanion.base.data.common.LCUtils;
+import org.lifecompanion.model.api.lifecycle.LCStateListener;
+import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.base.data.control.AsyncExecutorController;
 import org.lifecompanion.config.data.notif.LCNotification;
 

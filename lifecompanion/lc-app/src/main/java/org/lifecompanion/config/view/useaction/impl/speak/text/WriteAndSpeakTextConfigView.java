@@ -22,11 +22,10 @@ package org.lifecompanion.config.view.useaction.impl.speak.text;
 import org.controlsfx.control.ToggleSwitch;
 
 import org.lifecompanion.framework.commons.translation.Translation;
-import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
-import org.lifecompanion.api.component.definition.useaction.UseActionConfigurationViewI;
-import org.lifecompanion.api.component.definition.useevent.UseVariableDefinitionI;
-import org.lifecompanion.base.data.useaction.impl.text.write.WriteAndSpeakTextAction;
+import org.lifecompanion.model.api.categorizedelement.useaction.UseActionConfigurationViewI;
+import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
+import org.lifecompanion.model.impl.categorizedelement.useaction.available.WriteAndSpeakTextAction;
 import org.lifecompanion.config.view.common.ConfigUIUtils;
 import org.lifecompanion.config.view.reusable.UseVariableTextArea;
 import javafx.collections.ObservableList;

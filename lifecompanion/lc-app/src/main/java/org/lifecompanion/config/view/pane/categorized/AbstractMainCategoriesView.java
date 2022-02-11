@@ -22,8 +22,8 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.TilePane;
-import org.lifecompanion.api.component.definition.eventaction.MainCategoryI;
-import org.lifecompanion.base.data.common.LCUtils;
+import org.lifecompanion.model.api.categorizedelement.MainCategoryI;
+import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.config.view.pane.categorized.cell.AbstractMainCategoryItemView;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 

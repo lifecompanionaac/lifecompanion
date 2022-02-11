@@ -18,7 +18,7 @@
  */
 package org.lifecompanion.config.view.pane.useaction.cell;
 
-import org.lifecompanion.api.component.definition.useaction.BaseUseActionI;
+import org.lifecompanion.model.api.categorizedelement.useaction.BaseUseActionI;
 import org.lifecompanion.config.data.eventaction.AvailableUseActionManager;
 import org.lifecompanion.config.view.pane.categorized.cell.AbstractCategorizedItemView;
 

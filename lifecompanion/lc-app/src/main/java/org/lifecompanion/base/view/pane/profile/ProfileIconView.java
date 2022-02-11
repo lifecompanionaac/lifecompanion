@@ -28,7 +28,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import org.lifecompanion.api.component.definition.LCProfileI;
+import org.lifecompanion.model.api.profile.LCProfileI;
 import org.lifecompanion.base.data.config.LCGraphicStyle;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 

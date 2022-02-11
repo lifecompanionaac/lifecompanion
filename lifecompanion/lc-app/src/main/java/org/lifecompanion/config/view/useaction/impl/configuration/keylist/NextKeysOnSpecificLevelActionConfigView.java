@@ -24,10 +24,10 @@ import javafx.scene.control.Spinner;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
-import org.lifecompanion.api.component.definition.useaction.UseActionConfigurationViewI;
-import org.lifecompanion.api.component.definition.useevent.UseVariableDefinitionI;
-import org.lifecompanion.base.data.common.UIUtils;
-import org.lifecompanion.base.data.useaction.impl.keylist.selected.NextKeysOnSpecificLevelAction;
+import org.lifecompanion.model.api.categorizedelement.useaction.UseActionConfigurationViewI;
+import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
+import org.lifecompanion.util.UIUtils;
+import org.lifecompanion.model.impl.categorizedelement.useaction.available.NextKeysOnSpecificLevelAction;
 import org.lifecompanion.framework.commons.translation.Translation;
 
 public class NextKeysOnSpecificLevelActionConfigView extends GridPane implements UseActionConfigurationViewI<NextKeysOnSpecificLevelAction> {

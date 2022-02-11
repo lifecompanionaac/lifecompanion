@@ -19,7 +19,7 @@
 
 package org.lifecompanion.config.data.config.task;
 
-import org.lifecompanion.base.data.common.LCTask;
+import org.lifecompanion.util.LCTask;
 import org.lifecompanion.base.data.config.UserBaseConfiguration;
 import org.lifecompanion.framework.commons.SystemType;
 

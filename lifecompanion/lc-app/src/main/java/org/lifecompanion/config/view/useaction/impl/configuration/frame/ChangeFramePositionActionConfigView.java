@@ -20,11 +20,10 @@
 package org.lifecompanion.config.view.useaction.impl.configuration.frame;
 
 import org.lifecompanion.framework.commons.translation.Translation;
-import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
-import org.lifecompanion.api.component.definition.FramePosition;
-import org.lifecompanion.api.component.definition.useaction.UseActionConfigurationViewI;
-import org.lifecompanion.api.component.definition.useevent.UseVariableDefinitionI;
-import org.lifecompanion.base.data.useaction.impl.configuration.frame.ChangeFramePositionAction;
+import org.lifecompanion.model.api.configurationcomponent.FramePosition;
+import org.lifecompanion.model.api.categorizedelement.useaction.UseActionConfigurationViewI;
+import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
+import org.lifecompanion.model.impl.categorizedelement.useaction.available.ChangeFramePositionAction;
 import org.lifecompanion.config.view.pane.tabs.style.cell.FramePositionDetailledCell;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

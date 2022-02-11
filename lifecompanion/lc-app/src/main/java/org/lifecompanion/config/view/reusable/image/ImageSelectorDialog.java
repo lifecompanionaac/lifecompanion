@@ -22,9 +22,9 @@ package org.lifecompanion.config.view.reusable.image;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.stage.StageStyle;
-import org.lifecompanion.api.image2.ImageElementI;
+import org.lifecompanion.model.api.imagedictionary.ImageElementI;
 import org.lifecompanion.base.data.config.LCConstant;
-import org.lifecompanion.base.data.image2.ImageDictionaries;
+import org.lifecompanion.model.impl.imagedictionary.ImageDictionaries;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 
 public class ImageSelectorDialog extends Dialog<ImageElementI> implements LCViewInitHelper {

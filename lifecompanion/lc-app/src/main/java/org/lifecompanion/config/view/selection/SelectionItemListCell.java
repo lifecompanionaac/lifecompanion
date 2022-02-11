@@ -19,7 +19,7 @@
 
 package org.lifecompanion.config.view.selection;
 
-import org.lifecompanion.api.component.definition.DisplayableComponentI;
+import org.lifecompanion.model.api.configurationcomponent.DisplayableComponentI;
 import javafx.scene.control.ListCell;
 
 /**

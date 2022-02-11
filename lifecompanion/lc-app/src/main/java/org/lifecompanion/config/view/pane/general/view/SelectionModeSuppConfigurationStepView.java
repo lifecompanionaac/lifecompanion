@@ -21,8 +21,8 @@ package org.lifecompanion.config.view.pane.general.view;
 
 import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
-import org.lifecompanion.api.component.definition.LCConfigurationI;
-import org.lifecompanion.base.data.definition.selection.SelectionModeEnum;
+import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
+import org.lifecompanion.model.impl.selectionmode.SelectionModeEnum;
 import org.lifecompanion.base.view.reusable.GeneralConfigurationStepViewI;
 import org.lifecompanion.base.view.reusable.GeneralConfigurationStep;
 import org.lifecompanion.config.view.pane.selection.SelectionModeSuppParamView;

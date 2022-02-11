@@ -32,7 +32,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 import org.lifecompanion.base.data.config.LCConstant;
-import org.lifecompanion.base.data.control.refacto.AppModeController;
+import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.base.data.control.stats.SessionStatsController;
 import org.lifecompanion.config.data.action.impl.*;
 import org.lifecompanion.config.data.control.ComponentActionController;

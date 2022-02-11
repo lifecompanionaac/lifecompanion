@@ -19,8 +19,8 @@
 
 package org.lifecompanion.base.data.control.events;
 
-import org.lifecompanion.api.control.events.WritingControllerStateI;
-import org.lifecompanion.api.prediction.WordPredictionResultI;
+import org.lifecompanion.model.api.textcomponent.WritingControllerStateI;
+import org.lifecompanion.model.api.textprediction.WordPredictionResultI;
 
 public class WritingControllerState implements WritingControllerStateI {
 	private final String typedTextBeforeCaret, typedTextAfterCaret;

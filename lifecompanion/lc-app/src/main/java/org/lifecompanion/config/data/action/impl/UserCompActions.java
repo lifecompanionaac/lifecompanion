@@ -23,17 +23,17 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
-import org.lifecompanion.api.action.definition.BaseConfigActionI;
-import org.lifecompanion.api.component.definition.DisplayableComponentI;
-import org.lifecompanion.api.component.definition.LCProfileI;
-import org.lifecompanion.api.component.definition.usercomp.UserCompDescriptionI;
-import org.lifecompanion.api.exception.LCException;
-import org.lifecompanion.base.data.common.LCUtils;
-import org.lifecompanion.base.data.component.usercomp.UserCompDescriptionImpl;
+import org.lifecompanion.model.api.editaction.BaseEditActionI;
+import org.lifecompanion.model.api.configurationcomponent.DisplayableComponentI;
+import org.lifecompanion.model.api.profile.LCProfileI;
+import org.lifecompanion.model.api.profile.UserCompDescriptionI;
+import org.lifecompanion.model.impl.exception.LCException;
+import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.model.impl.profile.UserCompDescriptionImpl;
 import org.lifecompanion.base.data.control.AsyncExecutorController;
 import org.lifecompanion.base.data.control.refacto.ProfileController;
-import org.lifecompanion.base.data.io.IOManager;
-import org.lifecompanion.base.data.io.task.UserCompSavingTask;
+import org.lifecompanion.controller.io.IOManager;
+import org.lifecompanion.controller.io.UserCompSavingTask;
 import org.lifecompanion.config.data.control.usercomp.UserCompController;
 import org.lifecompanion.config.data.notif.LCNotification;
 import org.lifecompanion.config.view.common.ConfigUIUtils;
@@ -55,7 +55,7 @@ public class UserCompActions {
     /**
      * To create or add an existing user comp.
      */
-    public static class CreateOrUpdateUserComp implements BaseConfigActionI {
+    public static class CreateOrUpdateUserComp implements BaseEditActionI {
         private DisplayableComponentI component;
 
         public CreateOrUpdateUserComp(final DisplayableComponentI componentP) {
@@ -99,7 +99,7 @@ public class UserCompActions {
     /**
      * To delete a list of user comp.
      */
-    public static class DeleteUserComp implements BaseConfigActionI {
+    public static class DeleteUserComp implements BaseEditActionI {
         private final Node source;
         private final List<UserCompDescriptionI> compToDelete;
 
@@ -137,7 +137,7 @@ public class UserCompActions {
     /**
      * Action to edit the user comp informations
      */
-    public static class EditUserCompAction implements BaseConfigActionI {
+    public static class EditUserCompAction implements BaseEditActionI {
         private static UserCompEditView editView;
         private final Node source;
         private final UserCompDescriptionI userComp;

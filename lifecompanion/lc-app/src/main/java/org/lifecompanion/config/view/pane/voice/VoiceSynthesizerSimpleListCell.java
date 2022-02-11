@@ -19,7 +19,7 @@
 
 package org.lifecompanion.config.view.pane.voice;
 
-import org.lifecompanion.api.voice.VoiceSynthesizerI;
+import org.lifecompanion.model.api.voicesynthesizer.VoiceSynthesizerI;
 import javafx.scene.control.ListCell;
 
 /**

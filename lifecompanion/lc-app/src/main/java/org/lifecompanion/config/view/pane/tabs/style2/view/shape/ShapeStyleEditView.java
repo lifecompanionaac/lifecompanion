@@ -18,7 +18,7 @@
  */
 package org.lifecompanion.config.view.pane.tabs.style2.view.shape;
 
-import org.lifecompanion.api.style2.definition.ShapeCompStyleI;
+import org.lifecompanion.model.api.style.ShapeCompStyleI;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 
 public class ShapeStyleEditView extends AbstractShapeStyleEditView<ShapeCompStyleI> implements LCViewInitHelper {

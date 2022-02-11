@@ -21,8 +21,8 @@ package org.lifecompanion.config.view.pane.useaction;
 
 import java.util.function.Consumer;
 
-import org.lifecompanion.api.component.definition.useaction.BaseUseActionI;
-import org.lifecompanion.api.component.definition.useaction.UseActionSubCategoryI;
+import org.lifecompanion.model.api.categorizedelement.useaction.BaseUseActionI;
+import org.lifecompanion.model.api.categorizedelement.useaction.UseActionSubCategoryI;
 import org.lifecompanion.config.view.pane.categorized.AbstractSubCategoryContentView;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;

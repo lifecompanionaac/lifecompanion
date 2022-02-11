@@ -22,7 +22,7 @@ package org.lifecompanion.config.view.keyoption.impl;
 import org.controlsfx.control.ToggleSwitch;
 import org.controlsfx.glyphfont.FontAwesome;
 
-import org.lifecompanion.base.data.control.refacto.AppModeController;
+import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.config.data.action.impl.KeyOptionActions.ChangeEnableSpeakAction;
@@ -30,12 +30,12 @@ import org.lifecompanion.config.data.action.impl.KeyOptionActions.ChangeQuickCom
 import org.lifecompanion.config.data.action.impl.KeyOptionActions.ChangeTextToSpeakAction;
 import org.lifecompanion.config.data.action.impl.KeyOptionActions.ChangeTextToWriteAction;
 import org.lifecompanion.config.data.common.LCConfigBindingUtils;
-import org.lifecompanion.base.data.common.UIUtils;
-import org.lifecompanion.base.data.component.keyoption.QuickComKeyOption;
+import org.lifecompanion.util.UIUtils;
+import org.lifecompanion.model.impl.configurationcomponent.keyoption.QuickComKeyOption;
 import org.lifecompanion.config.data.config.LCGlyphFont;
 import org.lifecompanion.base.data.config.LCGraphicStyle;
 import org.lifecompanion.config.data.control.ConfigActionController;
-import org.lifecompanion.base.data.voice.VoiceSynthesizerController;
+import org.lifecompanion.controller.voicesynthesizer.VoiceSynthesizerController;
 import org.lifecompanion.config.view.common.ConfigUIUtils;
 import org.lifecompanion.config.view.keyoption.BaseKeyOptionConfigView;
 import org.lifecompanion.base.view.reusable.UndoRedoTextInputWrapper;

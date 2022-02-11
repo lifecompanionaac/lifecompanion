@@ -19,11 +19,11 @@
 
 package org.lifecompanion.config.data.action.impl;
 
-import org.lifecompanion.api.action.definition.BaseConfigActionI;
-import org.lifecompanion.api.action.definition.UndoRedoActionI;
-import org.lifecompanion.api.component.definition.useevent.UseEventGeneratorI;
-import org.lifecompanion.api.component.definition.useevent.UseEventManagerI;
-import org.lifecompanion.api.exception.LCException;
+import org.lifecompanion.model.api.editaction.BaseEditActionI;
+import org.lifecompanion.model.api.editaction.UndoRedoActionI;
+import org.lifecompanion.model.api.categorizedelement.useevent.UseEventGeneratorI;
+import org.lifecompanion.model.api.categorizedelement.useevent.UseEventManagerI;
+import org.lifecompanion.model.impl.exception.LCException;
 
 /**
  * Class that keep every config actions relative to use action.
@@ -92,7 +92,7 @@ public class UseEventGeneratorActions {
 		}
 	}
 
-	public static class EditUseEventAction implements BaseConfigActionI {
+	public static class EditUseEventAction implements BaseEditActionI {
 
 		@Override
 		public void doAction() throws LCException {

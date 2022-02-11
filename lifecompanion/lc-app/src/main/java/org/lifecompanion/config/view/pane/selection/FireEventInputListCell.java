@@ -19,7 +19,7 @@
 
 package org.lifecompanion.config.view.pane.selection;
 
-import org.lifecompanion.api.definition.selection.FireEventInput;
+import org.lifecompanion.model.api.selectionmode.FireEventInput;
 import javafx.scene.control.ListCell;
 
 /**

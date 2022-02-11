@@ -26,7 +26,7 @@ import javafx.scene.control.Separator;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
-import org.lifecompanion.api.component.definition.ChangelogEntryI;
+import org.lifecompanion.model.api.profile.ChangelogEntryI;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 

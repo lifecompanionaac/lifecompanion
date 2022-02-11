@@ -20,9 +20,8 @@
 package org.lifecompanion.config.view.useevent.impl.control.key;
 
 import org.lifecompanion.framework.commons.translation.Translation;
-import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
-import org.lifecompanion.api.component.definition.useevent.UseEventGeneratorConfigurationViewI;
-import org.lifecompanion.base.data.useevent.impl.control.key.KeyTypedKeyboardEventGenerator;
+import org.lifecompanion.model.api.categorizedelement.useevent.UseEventGeneratorConfigurationViewI;
+import org.lifecompanion.model.impl.categorizedelement.useevent.available.KeyTypedKeyboardEventGenerator;
 import org.lifecompanion.config.view.reusable.KeySelectorControl;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Region;

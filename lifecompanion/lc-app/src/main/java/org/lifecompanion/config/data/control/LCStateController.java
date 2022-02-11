@@ -19,14 +19,14 @@
 package org.lifecompanion.config.data.control;
 
 import org.jdom2.Element;
-import org.lifecompanion.api.component.definition.LCProfileI;
-import org.lifecompanion.api.exception.LCException;
-import org.lifecompanion.api.io.XMLSerializable;
-import org.lifecompanion.api.mode.LCStateListener;
+import org.lifecompanion.model.api.profile.LCProfileI;
+import org.lifecompanion.model.impl.exception.LCException;
+import org.lifecompanion.model.api.io.XMLSerializable;
+import org.lifecompanion.model.api.lifecycle.LCStateListener;
 import org.lifecompanion.base.data.config.LCConstant;
 import org.lifecompanion.base.data.control.InstallationConfigurationController;
 import org.lifecompanion.base.data.control.refacto.ProfileController;
-import org.lifecompanion.base.data.io.XMLHelper;
+import org.lifecompanion.controller.io.XMLHelper;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.framework.commons.fx.io.XMLUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;

@@ -19,12 +19,12 @@
 package org.lifecompanion.base.data.control.prediction;
 
 import javafx.application.Platform;
-import org.lifecompanion.api.component.definition.GridComponentI;
-import org.lifecompanion.api.component.definition.PredictionParameterI;
-import org.lifecompanion.api.prediction.CharPredictorI;
-import org.lifecompanion.base.data.component.keyoption.AutoCharKeyOption;
-import org.lifecompanion.base.data.plugins.PluginManager;
-import org.lifecompanion.base.data.prediction.LCCharPredictor;
+import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
+import org.lifecompanion.model.api.configurationcomponent.PredictionParameterI;
+import org.lifecompanion.model.api.textprediction.CharPredictorI;
+import org.lifecompanion.model.impl.configurationcomponent.keyoption.AutoCharKeyOption;
+import org.lifecompanion.controller.plugin.PluginManager;
+import org.lifecompanion.model.impl.textprediction.charprediction.LCCharPredictor;
 
 import java.util.List;
 import java.util.Set;

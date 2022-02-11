@@ -20,10 +20,8 @@ package org.lifecompanion.base.data.config;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.*;
 
-import org.lifecompanion.base.data.plugins.PluginManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

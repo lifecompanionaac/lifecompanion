@@ -19,7 +19,7 @@
 
 package org.lifecompanion.config.view.pane.selection;
 
-import org.lifecompanion.api.definition.selection.ProgressDrawMode;
+import org.lifecompanion.model.api.selectionmode.ProgressDrawMode;
 import javafx.scene.control.ListCell;
 
 /**

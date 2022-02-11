@@ -19,17 +19,17 @@
 package org.lifecompanion.base.data.control;
 
 import javafx.collections.ObservableList;
-import org.lifecompanion.api.component.definition.LCConfigurationI;
-import org.lifecompanion.api.component.definition.useaction.*;
-import org.lifecompanion.api.component.definition.useevent.UseEventListenerI;
-import org.lifecompanion.api.component.definition.useevent.UseVariableI;
-import org.lifecompanion.api.mode.LCStateListener;
-import org.lifecompanion.api.mode.ModeListenerI;
-import org.lifecompanion.base.data.control.refacto.AppModeController;
-import org.lifecompanion.base.data.control.refacto.AppMode;
-import org.lifecompanion.base.data.useaction.baseimpl.ActionExecutionResult;
+import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
+import org.lifecompanion.model.api.categorizedelement.useevent.UseEventListenerI;
+import org.lifecompanion.model.api.usevariable.UseVariableI;
+import org.lifecompanion.model.api.lifecycle.LCStateListener;
+import org.lifecompanion.model.api.lifecycle.ModeListenerI;
+import org.lifecompanion.controller.lifecycle.AppModeController;
+import org.lifecompanion.controller.lifecycle.AppMode;
+import org.lifecompanion.model.impl.categorizedelement.useaction.ActionExecutionResult;
 import org.lifecompanion.framework.commons.utils.lang.CollectionUtils;
 import org.lifecompanion.framework.utils.LCNamedThreadFactory;
+import org.lifecompanion.model.api.categorizedelement.useaction.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

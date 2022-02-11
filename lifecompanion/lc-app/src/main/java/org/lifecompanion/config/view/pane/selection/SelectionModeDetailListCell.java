@@ -27,7 +27,7 @@ import javafx.scene.control.ListCell;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
-import org.lifecompanion.base.data.definition.selection.SelectionModeEnum;
+import org.lifecompanion.model.impl.selectionmode.SelectionModeEnum;
 
 /**
  * List cell to display a style mode with its detail.

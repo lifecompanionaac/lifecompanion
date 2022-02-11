@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import org.lifecompanion.framework.commons.translation.Translation;
-import org.lifecompanion.api.component.definition.useevent.UseEventGeneratorI;
+import org.lifecompanion.model.api.categorizedelement.useevent.UseEventGeneratorI;
 import org.lifecompanion.config.data.eventaction.AvailableUseEventManager;
 import org.lifecompanion.config.view.pane.categorized.AbstractCategorizedSearchView;
 import javafx.collections.ObservableList;

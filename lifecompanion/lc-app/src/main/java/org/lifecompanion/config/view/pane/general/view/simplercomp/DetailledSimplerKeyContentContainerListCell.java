@@ -28,8 +28,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.paint.Color;
 import org.controlsfx.glyphfont.FontAwesome;
-import org.lifecompanion.api.component.definition.simplercomp.SimplerKeyContentContainerI;
-import org.lifecompanion.base.data.common.UIUtils;
+import org.lifecompanion.model.api.configurationcomponent.dynamickey.SimplerKeyContentContainerI;
+import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.base.data.config.LCGraphicStyle;
 import org.lifecompanion.config.data.config.LCGlyphFont;
 

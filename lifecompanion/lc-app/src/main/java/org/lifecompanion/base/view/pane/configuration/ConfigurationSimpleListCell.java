@@ -19,7 +19,7 @@
 
 package org.lifecompanion.base.view.pane.configuration;
 
-import org.lifecompanion.api.component.definition.LCConfigurationDescriptionI;
+import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
 import javafx.geometry.Pos;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.ListCell;

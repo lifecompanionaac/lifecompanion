@@ -18,12 +18,12 @@
  */
 package org.lifecompanion.config.view.pane.tabs;
 
-import org.lifecompanion.api.component.definition.DisplayableComponentI;
-import org.lifecompanion.base.data.component.simple.*;
+import org.lifecompanion.model.api.configurationcomponent.DisplayableComponentI;
 import org.lifecompanion.config.view.pane.tabs.api.AbstractRibbonTabContent;
 import org.lifecompanion.config.view.pane.tabs.api.AbstractSelectionChangeRibbonTab;
 import org.lifecompanion.config.view.pane.tabs.part.SelectedRibbonParts.*;
 import org.lifecompanion.framework.commons.translation.Translation;
+import org.lifecompanion.model.impl.configurationcomponent.*;
 
 import java.util.HashMap;
 import java.util.Map;

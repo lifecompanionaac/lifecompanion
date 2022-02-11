@@ -23,8 +23,8 @@ import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
-import org.lifecompanion.api.action.definition.BaseConfigActionI;
-import org.lifecompanion.api.exception.LCException;
+import org.lifecompanion.model.api.editaction.BaseEditActionI;
+import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.base.data.config.LCGraphicStyle;
 import org.lifecompanion.config.data.control.ConfigActionController;
 import org.lifecompanion.config.data.notif.LCNotification;
@@ -55,7 +55,7 @@ public class UndoRedoActions {
     /**
      * Undo last action
      */
-    public static class UndoAction implements BaseConfigActionI {
+    public static class UndoAction implements BaseEditActionI {
         @Override
         public void doAction() throws LCException {
             ConfigActionController.INSTANCE.undo();
@@ -73,7 +73,7 @@ public class UndoRedoActions {
     /**
      * Redo last action
      */
-    public static class RedoAction implements BaseConfigActionI {
+    public static class RedoAction implements BaseEditActionI {
         @Override
         public void doAction() throws LCException {
             ConfigActionController.INSTANCE.redo();

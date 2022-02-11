@@ -32,21 +32,20 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.stage.FileChooser;
 import javafx.util.Pair;
-import org.lifecompanion.api.action.definition.BaseConfigActionI;
-import org.lifecompanion.api.component.definition.LCConfigurationDescriptionI;
-import org.lifecompanion.api.component.definition.LCConfigurationI;
-import org.lifecompanion.api.component.definition.LCProfileI;
-import org.lifecompanion.api.exception.LCException;
-import org.lifecompanion.base.data.common.LCUtils;
-import org.lifecompanion.base.data.common.UIUtils;
-import org.lifecompanion.base.data.component.profile.LCConfigurationDescription;
-import org.lifecompanion.base.data.component.simple.LCConfigurationComponent;
+import org.lifecompanion.controller.io.*;
+import org.lifecompanion.model.api.editaction.BaseEditActionI;
+import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
+import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
+import org.lifecompanion.model.api.profile.LCProfileI;
+import org.lifecompanion.model.impl.exception.LCException;
+import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.util.UIUtils;
+import org.lifecompanion.model.impl.profile.LCConfigurationDescription;
+import org.lifecompanion.model.impl.configurationcomponent.LCConfigurationComponent;
 import org.lifecompanion.base.data.config.LCConstant;
 import org.lifecompanion.base.data.control.AsyncExecutorController;
-import org.lifecompanion.base.data.control.refacto.AppModeController;
+import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.base.data.control.refacto.ProfileController;
-import org.lifecompanion.base.data.io.IOManager;
-import org.lifecompanion.base.data.io.task.*;
 import org.lifecompanion.config.data.component.profile.ProfileConfigSelectionController;
 import org.lifecompanion.config.data.component.profile.ProfileConfigStep;
 import org.lifecompanion.config.data.component.task.ExportGridsToPdfTask;
@@ -72,7 +71,7 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-import static org.lifecompanion.base.data.common.UIUtils.getSourceFromEvent;
+import static org.lifecompanion.util.UIUtils.getSourceFromEvent;
 import static org.lifecompanion.config.data.control.FileChooserType.EXPORT_PDF;
 
 /**
@@ -84,22 +83,22 @@ import static org.lifecompanion.config.data.control.FileChooserType.EXPORT_PDF;
 public class LCConfigurationActions {
     private final static Logger LOGGER = LoggerFactory.getLogger(LCConfigurationActions.class);
 
-    public static final EventHandler<ActionEvent> HANDLER_NEW = (ea) -> ConfigActionController.INSTANCE.executeAction(new ShowNewConfigAction(getSourceFromEvent(ea)));
+    public static final EventHandler<ActionEvent> HANDLER_NEW = (ea) -> ConfigActionController.INSTANCE.executeAction(new ShowNewEditAction(getSourceFromEvent(ea)));
     public static final EventHandler<ActionEvent> HANDLER_MANAGE = (ea) -> ConfigActionController.INSTANCE.executeAction(new ManageConfigurationDialogAction());
     public static final EventHandler<ActionEvent> HANDLER_SAVE = (ea) -> ConfigActionController.INSTANCE.executeAction(new SaveAction(getSourceFromEvent(ea)));
 
-    public static final EventHandler<ActionEvent> HANDLER_EXPORT = (ea) -> ConfigActionController.INSTANCE.executeAction(new ExportConfigAction(getSourceFromEvent(ea)));
-    public static final EventHandler<ActionEvent> HANDLER_IMPORT_OPEN = (ea) -> ConfigActionController.INSTANCE.executeAction(new ImportOpenConfigAction(getSourceFromEvent(ea)));
+    public static final EventHandler<ActionEvent> HANDLER_EXPORT = (ea) -> ConfigActionController.INSTANCE.executeAction(new ExportEditAction(getSourceFromEvent(ea)));
+    public static final EventHandler<ActionEvent> HANDLER_IMPORT_OPEN = (ea) -> ConfigActionController.INSTANCE.executeAction(new ImportOpenEditAction(getSourceFromEvent(ea)));
 
     public static final KeyCombination KEY_COMBINATION_NEW = new KeyCodeCombination(KeyCode.N, KeyCombination.SHORTCUT_DOWN);
     public static final KeyCombination KEY_COMBINATION_OPEN = new KeyCodeCombination(KeyCode.O, KeyCombination.SHORTCUT_DOWN);
     public static final KeyCombination KEY_COMBINATION_SAVE = new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN);
 
 
-    public static class ShowNewConfigAction implements BaseConfigActionI {
+    public static class ShowNewEditAction implements BaseEditActionI {
         private final Node source;
 
-        public ShowNewConfigAction(Node source) {
+        public ShowNewEditAction(Node source) {
             this.source = source;
         }
 
@@ -116,10 +115,10 @@ public class LCConfigurationActions {
         }
     }
 
-    public static class CloseConfigAction implements BaseConfigActionI {
+    public static class CloseEditAction implements BaseEditActionI {
         private final Node source;
 
-        public CloseConfigAction(Node source) {
+        public CloseEditAction(Node source) {
             this.source = source;
         }
 
@@ -138,7 +137,7 @@ public class LCConfigurationActions {
         }
     }
 
-    public static class NewConfigInListAction implements BaseConfigActionI {
+    public static class NewEditInListAction implements BaseEditActionI {
 
         @Override
         public void doAction() throws LCException {
@@ -161,11 +160,11 @@ public class LCConfigurationActions {
     /**
      * Set default configuration for current profile
      */
-    public static class SetDefaultConfigAction implements BaseConfigActionI {
+    public static class SetDefaultEditAction implements BaseEditActionI {
         private final LCConfigurationDescriptionI configuration;
         private final boolean value;
 
-        public SetDefaultConfigAction(final LCConfigurationDescriptionI configuration, boolean value) {
+        public SetDefaultEditAction(final LCConfigurationDescriptionI configuration, boolean value) {
             this.configuration = configuration;
             this.value = value;
         }
@@ -193,11 +192,11 @@ public class LCConfigurationActions {
     /**
      * To create and add the configuration from dialog
      */
-    public static class AddNewConfigAction implements BaseConfigActionI {
+    public static class AddNewEditAction implements BaseEditActionI {
         private final Node source;
         private final LCConfigurationDescriptionI configDescription;
 
-        public AddNewConfigAction(final Node source, final LCConfigurationDescriptionI configDescriptionP) {
+        public AddNewEditAction(final Node source, final LCConfigurationDescriptionI configDescriptionP) {
             this.source = source;
             this.configDescription = configDescriptionP;
         }
@@ -228,11 +227,11 @@ public class LCConfigurationActions {
         }
     }
 
-    public static class AddNewConfigFromDefaultAction implements BaseConfigActionI {
+    public static class AddNewEditFromDefaultAction implements BaseEditActionI {
         private final Node source;
         private final org.lifecompanion.framework.utils.Pair<LCConfigurationDescriptionI, File> defaultConfiguration;
 
-        public AddNewConfigFromDefaultAction(final Node source, org.lifecompanion.framework.utils.Pair<LCConfigurationDescriptionI, File> defaultConfiguration) {
+        public AddNewEditFromDefaultAction(final Node source, org.lifecompanion.framework.utils.Pair<LCConfigurationDescriptionI, File> defaultConfiguration) {
             this.source = source;
             this.defaultConfiguration = defaultConfiguration;
         }
@@ -259,7 +258,7 @@ public class LCConfigurationActions {
     /**
      * Save configuration, or execute save as if configuration was never saved.
      */
-    public static class SaveAction implements BaseConfigActionI {
+    public static class SaveAction implements BaseEditActionI {
         private final Consumer<Boolean> callback;
         private final Node source;
 
@@ -338,27 +337,27 @@ public class LCConfigurationActions {
     /**
      * To import and directly open a configuration
      */
-    public static class ImportOpenConfigAction implements BaseConfigActionI {
+    public static class ImportOpenEditAction implements BaseEditActionI {
         private final Node source;
         private File configurationPath;
 
-        public ImportOpenConfigAction(final Node source) {
+        public ImportOpenEditAction(final Node source) {
             this.source = source;
         }
 
-        public ImportOpenConfigAction(final Node source, final File configurationPathP) {
+        public ImportOpenEditAction(final Node source, final File configurationPathP) {
             this(source);
             this.configurationPath = configurationPathP;
         }
 
-        public ImportOpenConfigAction(final File configurationPathP) {
+        public ImportOpenEditAction(final File configurationPathP) {
             this(null, configurationPathP);
         }
 
         @Override
         public void doAction() throws LCException {
             GlobalActions.checkModificationForCurrentConfiguration(this, source, Translation.getText("import.config.action.confirm.message"), "import.config.action.confirm.button", () -> {
-                new ImportConfigAction(source, this.configurationPath, desc -> {
+                new ImportEditAction(source, this.configurationPath, desc -> {
                     if (desc != null) {
                         OpenConfigurationAction openConfigAction = new OpenConfigurationAction(source, desc, false);
                         try {
@@ -381,10 +380,10 @@ public class LCConfigurationActions {
     /**
      * To duplicate a selected configuration
      */
-    public static class DuplicateConfigAction implements BaseConfigActionI {
+    public static class DuplicateEditAction implements BaseEditActionI {
         private final Node source;
 
-        public DuplicateConfigAction(Node source) {
+        public DuplicateEditAction(Node source) {
             this.source = source;
         }
 
@@ -427,7 +426,7 @@ public class LCConfigurationActions {
     /**
      * Action to import a configuration from file
      */
-    public static class ImportConfigAction implements BaseConfigActionI {
+    public static class ImportEditAction implements BaseEditActionI {
         private static final int ANSWER_DELAY = 4_000;
 
         private final Node source;
@@ -435,11 +434,11 @@ public class LCConfigurationActions {
         private File configurationPath;
 
 
-        public ImportConfigAction(final Node source) {
+        public ImportEditAction(final Node source) {
             this.source = source;
         }
 
-        public ImportConfigAction(final Node source, final File configurationPathP, final Consumer<LCConfigurationDescriptionI> callbackP) {
+        public ImportEditAction(final Node source, final File configurationPathP, final Consumer<LCConfigurationDescriptionI> callbackP) {
             this(source);
             this.callback = callbackP;
             this.configurationPath = configurationPathP;
@@ -569,16 +568,16 @@ public class LCConfigurationActions {
     /**
      * Export the configuration, can be done only when configuration is saved
      */
-    public static class ExportConfigAction implements BaseConfigActionI {
+    public static class ExportEditAction implements BaseEditActionI {
         private LCConfigurationDescriptionI configurationDescription;
         private final Node source;
 
-        public ExportConfigAction(Node source, LCConfigurationDescriptionI configurationDescription) {
+        public ExportEditAction(Node source, LCConfigurationDescriptionI configurationDescription) {
             this.source = source;
             this.configurationDescription = configurationDescription;
         }
 
-        public ExportConfigAction(Node source) {
+        public ExportEditAction(Node source) {
             this(source, null);
         }
 
@@ -617,10 +616,10 @@ public class LCConfigurationActions {
         }
     }
 
-    public static class ExportConfigGridsToPdfAction implements BaseConfigActionI {
+    public static class ExportEditGridsToPdfAction implements BaseEditActionI {
         private final Node source;
 
-        public ExportConfigGridsToPdfAction(Node source) {
+        public ExportEditGridsToPdfAction(Node source) {
             this.source = source;
         }
 
@@ -654,7 +653,7 @@ public class LCConfigurationActions {
         }
     }
 
-    public static class ManageConfigurationDialogAction implements BaseConfigActionI {
+    public static class ManageConfigurationDialogAction implements BaseEditActionI {
 
         @Override
         public void doAction() throws LCException {
@@ -668,7 +667,7 @@ public class LCConfigurationActions {
 
     }
 
-    public static class OpenConfigurationAction implements BaseConfigActionI {
+    public static class OpenConfigurationAction implements BaseEditActionI {
         private final Node source;
         private final LCConfigurationDescriptionI configDescription;
         private final boolean askUnsaved;
@@ -725,7 +724,7 @@ public class LCConfigurationActions {
     /**
      * Configuration edition (just for history)
      */
-    public static class EditConfigurationAction implements BaseConfigActionI {
+    public static class EditConfigurationAction implements BaseEditActionI {
         private final LCConfigurationDescriptionI configDescription;
         private final Consumer<LCConfigurationDescriptionI> callback;
 
@@ -771,7 +770,7 @@ public class LCConfigurationActions {
     /**
      * To remove a configuration from a profile
      */
-    public static class RemoveConfigurationAction implements BaseConfigActionI {
+    public static class RemoveConfigurationAction implements BaseEditActionI {
         private final Node source;
         private final Consumer<LCConfigurationDescriptionI> removedCallback;
         private final LCProfileI profile;
@@ -825,7 +824,7 @@ public class LCConfigurationActions {
         }
     }
 
-    public static class CreateDesktopShortcut implements BaseConfigActionI {
+    public static class CreateDesktopShortcut implements BaseEditActionI {
         private final LCProfileI profile;
         private final LCConfigurationDescriptionI configuration;
 

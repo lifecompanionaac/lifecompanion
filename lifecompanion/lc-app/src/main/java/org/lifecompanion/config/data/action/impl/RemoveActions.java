@@ -19,13 +19,13 @@
 
 package org.lifecompanion.config.data.action.impl;
 
-import org.lifecompanion.api.action.definition.UndoRedoActionI;
-import org.lifecompanion.api.component.definition.*;
-import org.lifecompanion.api.exception.LCException;
-import org.lifecompanion.base.data.action.definition.BaseGridChangeAction;
-import org.lifecompanion.config.data.notif.LCNotification;
-import org.lifecompanion.config.view.pane.main.notification2.LCNotificationController;
-import org.lifecompanion.framework.commons.translation.Translation;
+import org.lifecompanion.model.api.configurationcomponent.GridPartComponentI;
+import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
+import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
+import org.lifecompanion.model.api.configurationcomponent.RootGraphicComponentI;
+import org.lifecompanion.model.api.editaction.UndoRedoActionI;
+import org.lifecompanion.model.impl.exception.LCException;
+import org.lifecompanion.model.impl.editaction.BaseGridChangeAction;
 
 import java.util.ArrayList;
 import java.util.List;

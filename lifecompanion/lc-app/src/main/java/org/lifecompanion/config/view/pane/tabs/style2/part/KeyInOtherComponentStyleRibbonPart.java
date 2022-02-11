@@ -19,7 +19,7 @@
 package org.lifecompanion.config.view.pane.tabs.style2.part;
 
 import org.fxmisc.easybind.EasyBind;
-import org.lifecompanion.api.style2.definition.KeyStyleUserI;
+import org.lifecompanion.model.api.style.KeyStyleUserI;
 import org.lifecompanion.config.data.control.SelectionController;
 import org.lifecompanion.config.view.pane.tabs.style2.view.key.KeyStyleEditView;
 import org.lifecompanion.config.view.reusable.ribbonmenu.RibbonBasePart;

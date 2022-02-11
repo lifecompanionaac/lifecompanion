@@ -19,7 +19,7 @@
 
 package org.lifecompanion.base.data.control.update;
 
-import org.lifecompanion.base.data.common.LCTask;
+import org.lifecompanion.util.LCTask;
 import org.lifecompanion.framework.client.http.AppServerClient;
 import org.lifecompanion.framework.client.props.LauncherProperties;
 import org.lifecompanion.framework.client.service.AppServerService;

@@ -20,7 +20,7 @@
 package org.lifecompanion.config.view.pane.general.view.simplercomp.useractionsequence;
 
 import javafx.scene.control.ListCell;
-import org.lifecompanion.api.component.definition.simplercomp.UserActionSequenceI;
+import org.lifecompanion.model.api.configurationcomponent.dynamickey.UserActionSequenceI;
 
 
 public class UserActionSequenceListCell extends ListCell<UserActionSequenceI> {

@@ -20,7 +20,7 @@
 package org.lifecompanion.config.view.pane.tabs.general.cell;
 
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
-import org.lifecompanion.api.component.definition.VirtualMouseDrawing;
+import org.lifecompanion.model.api.configurationcomponent.VirtualMouseDrawing;
 import org.lifecompanion.base.data.config.IconManager;
 import javafx.scene.control.ListCell;
 import javafx.scene.image.ImageView;

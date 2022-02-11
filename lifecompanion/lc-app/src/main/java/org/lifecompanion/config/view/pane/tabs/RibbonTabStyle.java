@@ -18,17 +18,16 @@
  */
 package org.lifecompanion.config.view.pane.tabs;
 
-import org.lifecompanion.api.component.definition.DisplayableComponentI;
-import org.lifecompanion.api.component.definition.GridPartKeyComponentI;
-import org.lifecompanion.api.style2.definition.GridStyleUserI;
-import org.lifecompanion.api.style2.definition.KeyStyleUserI;
-import org.lifecompanion.api.style2.definition.TextDisplayerStyleUserI;
-import org.lifecompanion.base.data.component.simple.*;
+import org.lifecompanion.model.api.configurationcomponent.DisplayableComponentI;
+import org.lifecompanion.model.api.style.GridStyleUserI;
+import org.lifecompanion.model.api.style.KeyStyleUserI;
+import org.lifecompanion.model.api.style.TextDisplayerStyleUserI;
 import org.lifecompanion.config.view.pane.tabs.api.AbstractRibbonTabContent;
 import org.lifecompanion.config.view.pane.tabs.api.AbstractSelectionChangeRibbonTab;
 import org.lifecompanion.config.view.pane.tabs.part.StyleRibbonParts;
 import org.lifecompanion.config.view.pane.tabs.part.StyleRibbonParts.*;
 import org.lifecompanion.framework.commons.translation.Translation;
+import org.lifecompanion.model.impl.configurationcomponent.*;
 
 import java.util.HashMap;
 import java.util.Map;

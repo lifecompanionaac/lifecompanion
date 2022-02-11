@@ -30,13 +30,13 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.stage.FileChooser;
-import org.lifecompanion.api.action.definition.BaseConfigActionI;
-import org.lifecompanion.api.exception.LCException;
-import org.lifecompanion.base.data.common.LCTask;
-import org.lifecompanion.base.data.common.UIUtils;
+import org.lifecompanion.model.api.editaction.BaseEditActionI;
+import org.lifecompanion.model.impl.exception.LCException;
+import org.lifecompanion.util.LCTask;
+import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.base.data.control.AsyncExecutorController;
-import org.lifecompanion.base.data.control.refacto.AppMode;
-import org.lifecompanion.base.data.control.refacto.AppModeController;
+import org.lifecompanion.controller.lifecycle.AppMode;
+import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.base.data.control.update.InstallationController;
 import org.lifecompanion.config.data.control.ConfigActionController;
 import org.lifecompanion.config.data.control.FileChooserType;
@@ -54,7 +54,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Optional;
 
-import static org.lifecompanion.base.data.common.UIUtils.getSourceFromEvent;
+import static org.lifecompanion.util.UIUtils.getSourceFromEvent;
 
 public class GlobalActions {
     public static final EventHandler<ActionEvent> HANDLER_GO_USE_MODE = (ea) -> ConfigActionController.INSTANCE.executeAction(new GoUseModeAction(getSourceFromEvent(ea)));
@@ -64,7 +64,7 @@ public class GlobalActions {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GlobalActions.class);
 
-    public static class GoUseModeAction implements BaseConfigActionI {
+    public static class GoUseModeAction implements BaseEditActionI {
         private final Node source;
 
         public GoUseModeAction(Node source) {
@@ -90,7 +90,7 @@ public class GlobalActions {
         }
     }
 
-    public static class ExitLCAction implements BaseConfigActionI {
+    public static class ExitLCAction implements BaseEditActionI {
         private final Node source;
 
         public ExitLCAction(Node source) {
@@ -114,7 +114,7 @@ public class GlobalActions {
         }
     }
 
-    public static class RestartAction implements BaseConfigActionI {
+    public static class RestartAction implements BaseEditActionI {
         private final Node source;
 
         public RestartAction(Node source) {
@@ -138,7 +138,7 @@ public class GlobalActions {
         }
     }
 
-    public static class PackageLogAction implements BaseConfigActionI {
+    public static class PackageLogAction implements BaseEditActionI {
         private static final SimpleDateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy_HH-mm");
         private final Node source;
 
@@ -169,11 +169,11 @@ public class GlobalActions {
         }
     }
 
-    public static void checkModificationForCurrentConfiguration(BaseConfigActionI action, Node source, String message, String thenButtonNameId, PostCheckModificationAction postContinueAction) throws LCException {
+    public static void checkModificationForCurrentConfiguration(BaseEditActionI action, Node source, String message, String thenButtonNameId, PostCheckModificationAction postContinueAction) throws LCException {
         checkModificationForCurrentConfiguration(true, action, source, message, thenButtonNameId, postContinueAction);
     }
 
-    public static void checkModificationForCurrentConfiguration(boolean condition, BaseConfigActionI action, Node source, String message, String thenButtonNameId, PostCheckModificationAction postContinueAction) throws LCException {
+    public static void checkModificationForCurrentConfiguration(boolean condition, BaseEditActionI action, Node source, String message, String thenButtonNameId, PostCheckModificationAction postContinueAction) throws LCException {
         if (condition && AppModeController.INSTANCE.modeProperty().get() != AppMode.USE) {
             //Confirm
             if (AppModeController.INSTANCE.getEditModeContext().getConfiguration() != null) {

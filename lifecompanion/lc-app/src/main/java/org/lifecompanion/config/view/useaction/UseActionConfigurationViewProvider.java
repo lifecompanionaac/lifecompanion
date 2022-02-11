@@ -18,10 +18,10 @@
  */
 package org.lifecompanion.config.view.useaction;
 
-import org.lifecompanion.api.component.definition.useaction.BaseUseActionI;
-import org.lifecompanion.api.component.definition.useaction.UseActionConfigurationViewI;
-import org.lifecompanion.base.data.io.ReflectionHelper;
-import org.lifecompanion.base.data.plugins.PluginManager;
+import org.lifecompanion.model.api.categorizedelement.useaction.BaseUseActionI;
+import org.lifecompanion.model.api.categorizedelement.useaction.UseActionConfigurationViewI;
+import org.lifecompanion.controller.io.ReflectionHelper;
+import org.lifecompanion.controller.plugin.PluginManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -23,8 +23,7 @@ import javafx.collections.FXCollections;
 import javafx.geometry.HPos;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
-import org.lifecompanion.api.definition.selection.MouseButton;
+import org.lifecompanion.model.api.selectionmode.MouseButton;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 
 public class MouseButtonSelectorControl extends ComboBox<MouseButton> implements LCViewInitHelper {

@@ -23,15 +23,15 @@ import java.util.List;
 import java.util.Set;
 
 import javafx.collections.ObservableMap;
-import org.lifecompanion.api.component.definition.DisplayableComponentI;
-import org.lifecompanion.api.component.definition.GridPartKeyComponentI;
-import org.lifecompanion.api.component.definition.LCConfigurationI;
-import org.lifecompanion.api.image2.ImageElementI;
-import org.lifecompanion.api.mode.ModeListenerI;
-import org.lifecompanion.base.data.component.keyoption.note.NoteKeyOption;
+import org.lifecompanion.model.api.configurationcomponent.DisplayableComponentI;
+import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
+import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
+import org.lifecompanion.model.api.imagedictionary.ImageElementI;
+import org.lifecompanion.model.api.lifecycle.ModeListenerI;
+import org.lifecompanion.model.impl.configurationcomponent.keyoption.note.NoteKeyOption;
 import org.lifecompanion.base.data.config.IconManager;
-import org.lifecompanion.base.data.image2.StaticImageElement;
-import org.lifecompanion.base.data.useaction.impl.miscellaneous.note.OpenCloseNoteKeyAction;
+import org.lifecompanion.model.impl.imagedictionary.StaticImageElement;
+import org.lifecompanion.model.impl.categorizedelement.useaction.available.OpenCloseNoteKeyAction;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 
 /**

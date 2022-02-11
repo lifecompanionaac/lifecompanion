@@ -20,7 +20,7 @@
 package org.lifecompanion.config.view.pane.selection;
 
 import javafx.scene.control.ListCell;
-import org.lifecompanion.api.definition.selection.ScanningMode;
+import org.lifecompanion.model.api.selectionmode.ScanningMode;
 
 /**
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>

@@ -18,11 +18,11 @@
  */
 package org.lifecompanion.config.view.keyoption;
 
-import org.lifecompanion.api.component.definition.keyoption.KeyOptionConfigurationViewI;
-import org.lifecompanion.api.component.definition.keyoption.KeyOptionI;
-import org.lifecompanion.base.data.component.keyoption.BasicKeyOption;
-import org.lifecompanion.base.data.io.ReflectionHelper;
-import org.lifecompanion.base.data.plugins.PluginManager;
+import org.lifecompanion.model.api.configurationcomponent.keyoption.KeyOptionConfigurationViewI;
+import org.lifecompanion.model.api.configurationcomponent.keyoption.KeyOptionI;
+import org.lifecompanion.model.impl.configurationcomponent.keyoption.BasicKeyOption;
+import org.lifecompanion.controller.io.ReflectionHelper;
+import org.lifecompanion.controller.plugin.PluginManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

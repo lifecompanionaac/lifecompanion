@@ -30,10 +30,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import org.controlsfx.glyphfont.FontAwesome;
-import org.lifecompanion.api.component.definition.LCConfigurationDescriptionI;
-import org.lifecompanion.base.data.common.Triple;
-import org.lifecompanion.base.data.common.UIUtils;
-import org.lifecompanion.base.data.component.profile.LCProfile;
+import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
+import org.lifecompanion.util.Triple;
+import org.lifecompanion.util.UIUtils;
+import org.lifecompanion.model.impl.profile.LCProfile;
 import org.lifecompanion.base.data.config.LCGraphicStyle;
 import org.lifecompanion.base.view.pane.profile.ProfileIconView;
 import org.lifecompanion.config.data.action.impl.LCProfileActions;
@@ -48,6 +48,7 @@ import org.lifecompanion.config.view.reusable.colorpicker.LCColorPicker;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.utils.Pair;
+import org.lifecompanion.model.api.profile.LCProfileI;
 
 import java.io.File;
 import java.util.Arrays;
@@ -74,7 +75,7 @@ public class ProfileEditionView extends BorderPane implements LCViewInitHelper, 
     /**
      * The current profile in create
      */
-    private final ObjectProperty<org.lifecompanion.api.component.definition.LCProfileI> editedProfile;
+    private final ObjectProperty<LCProfileI> editedProfile;
 
     /**
      * View to display the icon of the created profile

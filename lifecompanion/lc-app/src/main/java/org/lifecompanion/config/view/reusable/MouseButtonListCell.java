@@ -20,7 +20,7 @@
 package org.lifecompanion.config.view.reusable;
 
 import javafx.scene.control.ListCell;
-import org.lifecompanion.api.definition.selection.MouseButton;
+import org.lifecompanion.model.api.selectionmode.MouseButton;
 
 public class MouseButtonListCell extends ListCell<MouseButton> {
 

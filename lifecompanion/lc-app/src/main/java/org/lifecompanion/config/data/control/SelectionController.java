@@ -22,11 +22,11 @@ import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import org.lifecompanion.api.component.definition.*;
-import org.lifecompanion.base.data.common.LCUtils;
-import org.lifecompanion.base.data.component.baseimpl.RootGraphicComponentBaseImpl;
-import org.lifecompanion.base.data.control.refacto.AppModeController;
-import org.lifecompanion.base.data.control.refacto.AppMode;
+import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.model.impl.configurationcomponent.RootGraphicComponentBaseImpl;
+import org.lifecompanion.controller.lifecycle.AppModeController;
+import org.lifecompanion.controller.lifecycle.AppMode;
+import org.lifecompanion.model.api.configurationcomponent.*;
 
 import java.util.*;
 

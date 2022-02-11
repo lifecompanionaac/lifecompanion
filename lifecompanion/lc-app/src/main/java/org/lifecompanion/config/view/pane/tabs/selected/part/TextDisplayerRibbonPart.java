@@ -21,7 +21,7 @@ package org.lifecompanion.config.view.pane.tabs.selected.part;
 
 import org.controlsfx.control.ToggleSwitch;
 
-import org.lifecompanion.api.component.definition.WriterDisplayerI;
+import org.lifecompanion.model.api.configurationcomponent.WriterDisplayerI;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.config.data.action.impl.TextDisplayerActions.SetEnableImageAction;
@@ -29,10 +29,10 @@ import org.lifecompanion.config.data.action.impl.TextDisplayerActions.SetEnableW
 import org.lifecompanion.config.data.action.impl.TextDisplayerActions.SetImageHeightAction;
 import org.lifecompanion.config.data.action.impl.TextDisplayerActions.SetLineSpacingAction;
 import org.lifecompanion.config.data.common.LCConfigBindingUtils;
-import org.lifecompanion.base.data.common.UIUtils;
-import org.lifecompanion.api.component.definition.DisplayableComponentI;
+import org.lifecompanion.util.UIUtils;
+import org.lifecompanion.model.api.configurationcomponent.DisplayableComponentI;
 import org.lifecompanion.config.data.control.SelectionController;
-import org.lifecompanion.api.ui.config.ConfigurationProfileLevelEnum;
+import org.lifecompanion.model.api.ui.editmode.ConfigurationProfileLevelEnum;
 import org.lifecompanion.config.view.common.ConfigUIUtils;
 import org.lifecompanion.config.view.reusable.ribbonmenu.RibbonBasePart;
 import javafx.beans.value.ChangeListener;

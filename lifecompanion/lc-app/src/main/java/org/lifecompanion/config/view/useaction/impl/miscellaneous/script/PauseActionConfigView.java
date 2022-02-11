@@ -23,10 +23,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import org.lifecompanion.api.component.definition.useaction.UseActionConfigurationViewI;
-import org.lifecompanion.api.component.definition.useevent.UseVariableDefinitionI;
-import org.lifecompanion.base.data.common.UIUtils;
-import org.lifecompanion.base.data.useaction.impl.miscellaneous.script.PauseAction;
+import org.lifecompanion.model.api.categorizedelement.useaction.UseActionConfigurationViewI;
+import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
+import org.lifecompanion.util.UIUtils;
+import org.lifecompanion.model.impl.categorizedelement.useaction.available.PauseAction;
 import org.lifecompanion.framework.commons.translation.Translation;
 
 public class PauseActionConfigView extends VBox implements UseActionConfigurationViewI<PauseAction> {

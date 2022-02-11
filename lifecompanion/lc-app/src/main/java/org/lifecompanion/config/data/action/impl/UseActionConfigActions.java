@@ -21,13 +21,13 @@ package org.lifecompanion.config.data.action.impl;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import org.lifecompanion.api.action.definition.BaseConfigActionI;
-import org.lifecompanion.api.action.definition.UndoRedoActionI;
-import org.lifecompanion.api.component.definition.useaction.BaseUseActionI;
-import org.lifecompanion.api.component.definition.useaction.UseActionEvent;
-import org.lifecompanion.api.component.definition.useaction.UseActionManagerI;
-import org.lifecompanion.api.component.definition.useaction.UseActionTriggerComponentI;
-import org.lifecompanion.api.exception.LCException;
+import org.lifecompanion.model.api.editaction.BaseEditActionI;
+import org.lifecompanion.model.api.editaction.UndoRedoActionI;
+import org.lifecompanion.model.api.categorizedelement.useaction.BaseUseActionI;
+import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
+import org.lifecompanion.model.api.categorizedelement.useaction.UseActionManagerI;
+import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
+import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.config.view.common.ConfigUIUtils;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.utils.Pair;
@@ -320,7 +320,7 @@ public class UseActionConfigActions {
     /**
      * When a use action is modified
      */
-    public static class EditUseActionAction implements BaseConfigActionI {
+    public static class EditUseActionAction implements BaseEditActionI {
 
         @Override
         public void doAction() throws LCException {

@@ -24,11 +24,11 @@ import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
-import org.lifecompanion.api.component.definition.DisplayableComponentI;
-import org.lifecompanion.api.component.definition.GridPartComponentI;
-import org.lifecompanion.api.component.definition.LCConfigurationI;
-import org.lifecompanion.api.component.definition.RootGraphicComponentI;
-import org.lifecompanion.base.data.control.refacto.AppModeController;
+import org.lifecompanion.model.api.configurationcomponent.DisplayableComponentI;
+import org.lifecompanion.model.api.configurationcomponent.GridPartComponentI;
+import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
+import org.lifecompanion.model.api.configurationcomponent.RootGraphicComponentI;
+import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.base.view.reusable.MemoryLeakSafeListView;
 import org.lifecompanion.base.view.reusable.impl.BaseConfigurationViewBorderPane;
 import org.lifecompanion.config.data.common.LCConfigBindingUtils;
@@ -38,7 +38,7 @@ import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.lifecompanion.base.data.common.LCUtils.getSimilarityScoreFor;
+import static org.lifecompanion.util.LCUtils.getSimilarityScoreFor;
 
 /**
  * A view to display the selection tree result

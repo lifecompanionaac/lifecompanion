@@ -20,7 +20,6 @@
 package org.lifecompanion.config.view.reusable.ribbonmenu;
 
 import javafx.beans.InvalidationListener;
-import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -30,12 +29,9 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
-import org.lifecompanion.api.component.definition.GridPartKeyComponentI;
-import org.lifecompanion.api.component.definition.keyoption.KeyOptionI;
-import org.lifecompanion.base.data.common.LCUtils;
+import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
+import org.lifecompanion.model.api.configurationcomponent.keyoption.KeyOptionI;
 import org.lifecompanion.base.view.reusable.impl.BaseConfigurationViewBorderPane;
-
-import java.util.function.Function;
 
 /**
  * Base class for a ribbon part.<br>

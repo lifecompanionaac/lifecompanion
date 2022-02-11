@@ -23,20 +23,20 @@ import java.util.ArrayList;
 
 import org.controlsfx.glyphfont.FontAwesome;
 
-import org.lifecompanion.base.data.control.refacto.AppModeController;
+import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.config.data.action.impl.GlobalActions;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.config.data.action.impl.UndoRedoActions;
-import org.lifecompanion.base.data.common.UIUtils;
-import org.lifecompanion.api.component.definition.GridComponentI;
-import org.lifecompanion.api.component.definition.StackComponentI;
+import org.lifecompanion.util.UIUtils;
+import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
+import org.lifecompanion.model.api.configurationcomponent.StackComponentI;
 import org.lifecompanion.config.data.config.LCGlyphFont;
 import org.lifecompanion.base.data.config.LCGraphicStyle;
 import org.lifecompanion.config.data.control.ComponentActionController;
 import org.lifecompanion.config.data.control.ConfigActionController;
 import org.lifecompanion.config.data.control.SelectionController;
-import org.lifecompanion.api.ui.config.ConfigurationProfileLevelEnum;
+import org.lifecompanion.model.api.ui.editmode.ConfigurationProfileLevelEnum;
 import org.lifecompanion.config.view.common.ConfigUIUtils;
 import org.lifecompanion.config.view.reusable.ribbonmenu.RibbonBasePart;
 import javafx.geometry.Pos;

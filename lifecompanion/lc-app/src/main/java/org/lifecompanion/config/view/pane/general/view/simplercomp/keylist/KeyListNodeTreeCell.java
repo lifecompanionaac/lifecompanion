@@ -20,7 +20,7 @@
 package org.lifecompanion.config.view.pane.general.view.simplercomp.keylist;
 
 import javafx.scene.control.TreeCell;
-import org.lifecompanion.api.component.definition.simplercomp.KeyListNodeI;
+import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
 
 public class KeyListNodeTreeCell extends TreeCell<KeyListNodeI> {
     private final KeyListCellHandler keyListCellHandler;

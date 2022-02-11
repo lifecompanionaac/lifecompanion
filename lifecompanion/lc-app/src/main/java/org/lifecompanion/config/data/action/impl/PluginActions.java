@@ -24,16 +24,16 @@ import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextInputDialog;
 import javafx.stage.FileChooser;
-import org.lifecompanion.api.action.definition.BaseConfigActionI;
-import org.lifecompanion.api.exception.LCException;
-import org.lifecompanion.base.data.common.UIUtils;
+import org.lifecompanion.model.api.editaction.BaseEditActionI;
+import org.lifecompanion.model.impl.exception.LCException;
+import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.base.data.control.AsyncExecutorController;
-import org.lifecompanion.base.data.control.refacto.DevModeController;
+import org.lifecompanion.controller.devmode.DevModeController;
 import org.lifecompanion.base.data.control.update.DownloadPluginTask;
 import org.lifecompanion.base.data.control.update.InstallationController;
-import org.lifecompanion.base.data.io.task.CheckElementPluginTask;
-import org.lifecompanion.base.data.plugins.PluginInfo;
-import org.lifecompanion.base.data.plugins.PluginManager;
+import org.lifecompanion.controller.io.CheckElementPluginTask;
+import org.lifecompanion.model.impl.plugin.PluginInfo;
+import org.lifecompanion.controller.plugin.PluginManager;
 import org.lifecompanion.config.data.control.ErrorHandlingController;
 import org.lifecompanion.config.data.control.FileChooserType;
 import org.lifecompanion.config.data.control.LCStateController;
@@ -88,7 +88,7 @@ public class PluginActions {
         }
     }
 
-    public static class AddPluginAction implements BaseConfigActionI {
+    public static class AddPluginAction implements BaseEditActionI {
 
         private final Node source;
 
@@ -115,7 +115,7 @@ public class PluginActions {
     }
 
 
-    public static class AddPluginFromWeb implements BaseConfigActionI {
+    public static class AddPluginFromWeb implements BaseEditActionI {
 
         private final Node source;
 
@@ -149,7 +149,7 @@ public class PluginActions {
         }
     }
 
-    public static class RemovePluginAction implements BaseConfigActionI {
+    public static class RemovePluginAction implements BaseEditActionI {
         private final Node source;
         private final PluginInfo pluginInfo;
 

@@ -19,13 +19,11 @@
 
 package org.lifecompanion.config.view.useaction.impl.configuration.change;
 
-import org.lifecompanion.base.data.useaction.impl.configuration.change.ChangeKeyBackgroundColorAction;
 import org.lifecompanion.framework.commons.translation.Translation;
-import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
-import org.lifecompanion.api.component.definition.GridPartKeyComponentI;
-import org.lifecompanion.api.component.definition.useaction.UseActionConfigurationViewI;
-import org.lifecompanion.api.component.definition.useevent.UseVariableDefinitionI;
-import org.lifecompanion.base.data.useaction.impl.configuration.change.ChangeKeyTextAction;
+import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
+import org.lifecompanion.model.api.categorizedelement.useaction.UseActionConfigurationViewI;
+import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
+import org.lifecompanion.model.impl.categorizedelement.useaction.available.ChangeKeyTextAction;
 import org.lifecompanion.config.view.pane.compselector.ComponentSelectorControl;
 import org.lifecompanion.config.view.reusable.UseVariableTextArea;
 import javafx.collections.ObservableList;

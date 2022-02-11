@@ -18,15 +18,15 @@
  */
 package org.lifecompanion.config.data.action.impl;
 
-import org.lifecompanion.api.component.definition.DisplayableComponentI;
-import org.lifecompanion.api.component.definition.LCConfigurationI;
-import org.lifecompanion.api.component.definition.SelectionModeUserI;
-import org.lifecompanion.api.definition.selection.AutoDirectSelectionModeI;
-import org.lifecompanion.api.definition.selection.DirectSelectionModeI;
-import org.lifecompanion.api.definition.selection.ScanningSelectionModeI;
-import org.lifecompanion.api.definition.selection.SelectionModeI;
-import org.lifecompanion.api.exception.LCException;
-import org.lifecompanion.base.data.action.definition.BasePropertyChangeAction;
+import org.lifecompanion.model.api.configurationcomponent.DisplayableComponentI;
+import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
+import org.lifecompanion.model.api.configurationcomponent.SelectionModeUserI;
+import org.lifecompanion.model.api.selectionmode.AutoDirectSelectionModeI;
+import org.lifecompanion.model.api.selectionmode.DirectSelectionModeI;
+import org.lifecompanion.model.api.selectionmode.ScanningSelectionModeI;
+import org.lifecompanion.model.api.selectionmode.SelectionModeI;
+import org.lifecompanion.model.impl.exception.LCException;
+import org.lifecompanion.model.impl.editaction.BasePropertyChangeAction;
 
 import java.util.ArrayList;
 import java.util.List;

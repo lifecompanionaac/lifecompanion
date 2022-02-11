@@ -26,7 +26,7 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
 import javafx.util.Callback;
-import org.lifecompanion.base.data.common.LCUtils;
+import org.lifecompanion.util.LCUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -35,7 +35,7 @@ import javafx.stage.StageStyle;
 import javafx.stage.Window;
 import javafx.util.Duration;
 import org.lifecompanion.base.data.config.LCGraphicStyle;
-import org.lifecompanion.base.data.control.refacto.StageUtils;
+import org.lifecompanion.util.StageUtils;
 import org.lifecompanion.config.data.control.ErrorHandlingController;
 import org.lifecompanion.config.data.notif.LCNotification;
 import org.lifecompanion.framework.commons.translation.Translation;

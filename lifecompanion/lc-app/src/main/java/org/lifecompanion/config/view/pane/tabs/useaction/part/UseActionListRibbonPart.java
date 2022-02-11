@@ -18,11 +18,9 @@
  */
 package org.lifecompanion.config.view.pane.tabs.useaction.part;
 
-import javafx.beans.InvalidationListener;
-import org.lifecompanion.api.component.definition.useaction.UseActionEvent;
-import org.lifecompanion.api.component.definition.useaction.UseActionTriggerComponentI;
+import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
+import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
 import org.lifecompanion.config.data.control.SelectionController;
-import org.lifecompanion.config.view.pane.tabs.useaction.part.multi.MultiUseActionListRibbonPart;
 import org.lifecompanion.config.view.reusable.ribbonmenu.RibbonBasePart;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;

@@ -30,7 +30,7 @@ import javafx.stage.StageStyle;
 import org.controlsfx.control.textfield.TextFields;
 import org.fxmisc.easybind.EasyBind;
 import org.fxmisc.easybind.Subscription;
-import org.lifecompanion.api.component.definition.useevent.UseVariableDefinitionI;
+import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
 import org.lifecompanion.base.data.config.LCConstant;
 import org.lifecompanion.base.data.control.UseVariableController;
 import org.lifecompanion.framework.commons.translation.Translation;

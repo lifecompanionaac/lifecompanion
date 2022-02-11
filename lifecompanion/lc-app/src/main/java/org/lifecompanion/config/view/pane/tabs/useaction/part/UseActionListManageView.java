@@ -24,9 +24,8 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import org.lifecompanion.api.action.definition.BaseConfigActionI;
-import org.lifecompanion.api.component.definition.useaction.*;
-import org.lifecompanion.api.component.definition.useevent.UseEventGeneratorI;
+import org.lifecompanion.model.api.editaction.BaseEditActionI;
+import org.lifecompanion.model.api.categorizedelement.useevent.UseEventGeneratorI;
 import org.lifecompanion.config.data.action.impl.UseActionConfigActions.*;
 import org.lifecompanion.config.view.common.ConfigUIUtils;
 import org.lifecompanion.config.view.pane.categorized.AbstractCategorizedListManageView;
@@ -35,6 +34,7 @@ import org.lifecompanion.config.view.pane.categorized.cell.AbstractCategorizedEl
 import org.lifecompanion.config.view.pane.useaction.UseActionMainView;
 import org.lifecompanion.config.view.pane.useaction.cell.BaseUseActionElementListCellView;
 import org.lifecompanion.framework.commons.translation.Translation;
+import org.lifecompanion.model.api.categorizedelement.useaction.*;
 
 import java.util.function.BiConsumer;
 
@@ -73,27 +73,27 @@ public class UseActionListManageView
     }
 
     @Override
-    protected BaseConfigActionI createEditAction(final BaseUseActionI<?> editedElement) {
+    protected BaseEditActionI createEditAction(final BaseUseActionI<?> editedElement) {
         return new EditUseActionAction();
     }
 
     @Override
-    protected BaseConfigActionI createAddAction(Node source, final UseActionTriggerComponentI model, final BaseUseActionI<?> addedElement) {
+    protected BaseEditActionI createAddAction(Node source, final UseActionTriggerComponentI model, final BaseUseActionI<?> addedElement) {
         return new AddUseActionAction(source, model.getActionManager(), addedElement, this.eventType);
     }
 
     @Override
-    protected BaseConfigActionI createRemoveAction(Node source, final UseActionTriggerComponentI model, final BaseUseActionI<?> removedElement) {
+    protected BaseEditActionI createRemoveAction(Node source, final UseActionTriggerComponentI model, final BaseUseActionI<?> removedElement) {
         return new RemoveUseActionAction(source, model.getActionManager(), removedElement, this.eventType);
     }
 
     @Override
-    protected BaseConfigActionI createShiftUpAction(final UseActionTriggerComponentI model, final BaseUseActionI<?> element) {
+    protected BaseEditActionI createShiftUpAction(final UseActionTriggerComponentI model, final BaseUseActionI<?> element) {
         return new ShiftActionUpAction(element, model.getActionManager(), this.eventType);
     }
 
     @Override
-    protected BaseConfigActionI createShiftDownAction(final UseActionTriggerComponentI model, final BaseUseActionI<?> element) {
+    protected BaseEditActionI createShiftDownAction(final UseActionTriggerComponentI model, final BaseUseActionI<?> element) {
         return new ShiftActionDownAction(element, model.getActionManager(), this.eventType);
     }
 

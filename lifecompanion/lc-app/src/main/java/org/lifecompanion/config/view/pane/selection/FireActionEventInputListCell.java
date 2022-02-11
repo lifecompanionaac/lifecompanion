@@ -20,8 +20,7 @@
 package org.lifecompanion.config.view.pane.selection;
 
 import javafx.scene.control.ListCell;
-import org.lifecompanion.api.definition.selection.FireActionEvent;
-import org.lifecompanion.api.definition.selection.FireEventInput;
+import org.lifecompanion.model.api.selectionmode.FireActionEvent;
 
 /**
  * List cell to display a {@link FireActionEvent} by its name

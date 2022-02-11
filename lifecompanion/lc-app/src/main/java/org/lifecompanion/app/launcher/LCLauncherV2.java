@@ -24,19 +24,19 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import org.lifecompanion.api.component.definition.LCConfigurationDescriptionI;
-import org.lifecompanion.api.component.definition.LCConfigurationI;
-import org.lifecompanion.api.component.definition.LCProfileI;
-import org.lifecompanion.api.exception.LCException;
-import org.lifecompanion.base.data.common.LCUtils;
-import org.lifecompanion.base.data.common.UIUtils;
+import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
+import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
+import org.lifecompanion.model.api.profile.LCProfileI;
+import org.lifecompanion.model.impl.exception.LCException;
+import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.base.data.config.*;
-import org.lifecompanion.base.data.control.refacto.AppModeController;
-import org.lifecompanion.base.data.control.refacto.LifeCompanionController;
+import org.lifecompanion.controller.lifecycle.AppModeController;
+import org.lifecompanion.controller.lifecycle.LifeCompanionController;
 import org.lifecompanion.base.data.control.refacto.ProfileController;
-import org.lifecompanion.base.data.control.refacto.StageUtils;
+import org.lifecompanion.util.StageUtils;
 import org.lifecompanion.base.data.control.update.InstallationController;
-import org.lifecompanion.base.data.io.IOManager;
+import org.lifecompanion.controller.io.IOManager;
 import org.lifecompanion.config.data.action.impl.GlobalActions;
 import org.lifecompanion.config.data.action.impl.LCConfigurationActions;
 import org.lifecompanion.config.data.action.impl.LCProfileActions;
@@ -159,7 +159,7 @@ public class LCLauncherV2 {
         }
 
         if (afterLoad.afterLoadAction == AfterLoadAction.IMPORT_CONFIG) {
-            LCConfigurationActions.ImportOpenConfigAction importOpenConfig = new LCConfigurationActions.ImportOpenConfigAction(afterLoad.file);
+            LCConfigurationActions.ImportOpenEditAction importOpenConfig = new LCConfigurationActions.ImportOpenEditAction(afterLoad.file);
             ConfigActionController.INSTANCE.executeAction(importOpenConfig);
         }
 

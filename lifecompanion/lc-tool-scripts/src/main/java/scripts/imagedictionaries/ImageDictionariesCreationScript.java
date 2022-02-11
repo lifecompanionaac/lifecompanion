@@ -39,8 +39,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
-import static org.lifecompanion.base.data.common.LCUtils.convertTo32Argb;
-import static org.lifecompanion.base.data.common.LCUtils.isEgalsTo;
+import static org.lifecompanion.util.LCUtils.convertTo32Argb;
+import static org.lifecompanion.util.LCUtils.isEgalsTo;
 import static org.lifecompanion.framework.commons.utils.io.FileNameUtils.getExtension;
 import static org.lifecompanion.framework.commons.utils.io.FileNameUtils.getNameWithoutExtension;
 import static org.lifecompanion.framework.commons.utils.io.IOUtils.fileSha256HexToString;

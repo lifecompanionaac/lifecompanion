@@ -20,9 +20,8 @@
 package org.lifecompanion.config.view.pane.usercomp;
 
 import org.lifecompanion.framework.commons.translation.Translation;
-import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
-import org.lifecompanion.api.component.definition.usercomp.UserCompDescriptionI;
+import org.lifecompanion.model.api.profile.UserCompDescriptionI;
 import org.lifecompanion.base.view.reusable.BaseConfigurationViewI;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;

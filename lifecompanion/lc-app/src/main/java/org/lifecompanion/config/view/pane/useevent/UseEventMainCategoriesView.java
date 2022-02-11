@@ -19,7 +19,7 @@
 package org.lifecompanion.config.view.pane.useevent;
 
 import javafx.collections.ObservableList;
-import org.lifecompanion.api.component.definition.useevent.UseEventMainCategoryI;
+import org.lifecompanion.model.api.categorizedelement.useevent.UseEventMainCategoryI;
 import org.lifecompanion.config.data.eventaction.AvailableUseEventManager;
 import org.lifecompanion.config.view.pane.categorized.AbstractMainCategoriesView;
 import org.lifecompanion.config.view.pane.categorized.cell.AbstractMainCategoryItemView;

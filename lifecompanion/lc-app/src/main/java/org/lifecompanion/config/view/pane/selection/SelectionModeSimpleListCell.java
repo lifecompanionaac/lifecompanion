@@ -20,7 +20,7 @@
 package org.lifecompanion.config.view.pane.selection;
 
 import javafx.scene.control.ListCell;
-import org.lifecompanion.base.data.definition.selection.SelectionModeEnum;
+import org.lifecompanion.model.impl.selectionmode.SelectionModeEnum;
 
 /**
  * List cell to display a selection mode with its name only

@@ -20,9 +20,8 @@
 package org.lifecompanion.config.view.useevent.impl.time.value;
 
 import org.lifecompanion.framework.commons.translation.Translation;
-import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
-import org.lifecompanion.api.component.definition.useevent.UseEventGeneratorConfigurationViewI;
-import org.lifecompanion.base.data.useevent.impl.time.value.DayOfWeekEventGenerator;
+import org.lifecompanion.model.api.categorizedelement.useevent.UseEventGeneratorConfigurationViewI;
+import org.lifecompanion.model.impl.categorizedelement.useevent.available.DayOfWeekEventGenerator;
 import org.lifecompanion.base.view.reusable.DayPickerControl;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;

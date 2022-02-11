@@ -20,13 +20,13 @@ package org.lifecompanion.config.data.control.usercomp;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import org.lifecompanion.api.component.definition.usercomp.UserCompDescriptionI;
-import org.lifecompanion.api.mode.LCStateListener;
-import org.lifecompanion.base.data.common.LCUtils;
+import org.lifecompanion.model.api.profile.UserCompDescriptionI;
+import org.lifecompanion.model.api.lifecycle.LCStateListener;
+import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.base.data.control.AsyncExecutorController;
 import org.lifecompanion.base.data.control.refacto.ProfileController;
-import org.lifecompanion.base.data.io.IOManager;
-import org.lifecompanion.base.data.io.task.MultiUserCompDescriptionLoadingTask;
+import org.lifecompanion.controller.io.IOManager;
+import org.lifecompanion.controller.io.MultiUserCompDescriptionLoadingTask;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

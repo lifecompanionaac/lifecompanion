@@ -20,11 +20,11 @@
 package org.lifecompanion.config.data.action.impl;
 
 import javafx.scene.control.ContentDisplay;
-import org.lifecompanion.api.action.definition.UndoRedoActionI;
-import org.lifecompanion.api.component.definition.GridComponentI;
-import org.lifecompanion.api.component.definition.StackComponentI;
-import org.lifecompanion.api.exception.LCException;
-import org.lifecompanion.base.data.component.keyoption.BasicKeyOption;
+import org.lifecompanion.model.api.editaction.UndoRedoActionI;
+import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
+import org.lifecompanion.model.api.configurationcomponent.StackComponentI;
+import org.lifecompanion.model.impl.exception.LCException;
+import org.lifecompanion.model.impl.configurationcomponent.keyoption.BasicKeyOption;
 import org.lifecompanion.config.data.control.SelectionController;
 import org.lifecompanion.config.data.notif.LCNotification;
 import org.lifecompanion.config.view.pane.main.notification2.LCNotificationController;

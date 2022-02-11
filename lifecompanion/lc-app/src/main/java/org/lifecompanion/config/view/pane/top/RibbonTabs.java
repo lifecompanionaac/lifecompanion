@@ -30,7 +30,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.fxmisc.easybind.EasyBind;
-import org.lifecompanion.base.data.control.refacto.AppModeController;
+import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.config.data.config.LCGlyphFont;
 import org.lifecompanion.config.view.pane.tabs.RibbonTabAction;
 import org.lifecompanion.config.view.pane.tabs.RibbonTabHome;

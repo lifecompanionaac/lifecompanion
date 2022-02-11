@@ -33,7 +33,7 @@ import org.controlsfx.control.ToggleSwitch;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.Glyph;
 import org.controlsfx.glyphfont.GlyphFontRegistry;
-import org.lifecompanion.base.data.common.UIUtils;
+import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.base.data.config.LCGraphicStyle;
 import org.lifecompanion.config.view.pane.general.view.predict4all.P4AConfigUtils;
 import org.lifecompanion.config.view.pane.general.view.predict4all.P4ACorrectionConfigurationView;

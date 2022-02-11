@@ -23,7 +23,7 @@ import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.layout.VBox;
-import org.lifecompanion.api.prediction.BasePredictorI;
+import org.lifecompanion.model.api.textprediction.BasePredictorI;
 import org.lifecompanion.framework.commons.translation.Translation;
 
 import java.util.stream.Collectors;

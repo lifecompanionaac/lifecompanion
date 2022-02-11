@@ -20,11 +20,11 @@ package org.lifecompanion.base.data.control;
 
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
-import org.lifecompanion.api.style2.definition.KeyCompStyleI;
-import org.lifecompanion.api.style2.definition.ShapeCompStyleI;
-import org.lifecompanion.api.style2.definition.TextCompStyleI;
+import org.lifecompanion.model.api.style.KeyCompStyleI;
+import org.lifecompanion.model.api.style.ShapeCompStyleI;
+import org.lifecompanion.model.api.style.TextCompStyleI;
 import org.lifecompanion.base.data.config.LCGraphicStyle;
-import org.lifecompanion.base.data.style2.impl.*;
+import org.lifecompanion.model.impl.style.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

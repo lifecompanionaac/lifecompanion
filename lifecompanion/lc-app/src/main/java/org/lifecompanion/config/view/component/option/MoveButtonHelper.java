@@ -20,9 +20,9 @@
 package org.lifecompanion.config.view.component.option;
 
 import javafx.scene.control.ButtonBase;
-import org.lifecompanion.api.component.definition.MovableComponentI;
-import org.lifecompanion.api.component.definition.ResizableComponentI;
-import org.lifecompanion.base.data.common.PositionSize;
+import org.lifecompanion.model.api.configurationcomponent.MovableComponentI;
+import org.lifecompanion.model.api.configurationcomponent.ResizableComponentI;
+import org.lifecompanion.util.PositionSize;
 import org.lifecompanion.base.data.config.LCConstant;
 import org.lifecompanion.config.data.action.impl.OptionActions;
 import org.lifecompanion.config.data.control.ConfigActionController;

@@ -31,12 +31,12 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import org.controlsfx.control.ToggleSwitch;
 import org.controlsfx.glyphfont.FontAwesome;
-import org.lifecompanion.api.component.definition.GridComponentI;
-import org.lifecompanion.api.component.definition.LCConfigurationDescriptionI;
-import org.lifecompanion.api.component.definition.LCConfigurationI;
-import org.lifecompanion.base.data.common.UIUtils;
+import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
+import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
+import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
+import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.base.data.config.LCGraphicStyle;
-import org.lifecompanion.base.data.control.refacto.AppModeController;
+import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.base.view.reusable.GeneralConfigurationStep;
 import org.lifecompanion.base.view.reusable.GeneralConfigurationStepViewI;
 import org.lifecompanion.config.data.action.impl.LCConfigurationActions;
@@ -188,7 +188,7 @@ public class GeneralInformationConfigurationStepView extends BorderPane implemen
                 ProfileConfigSelectionController.INSTANCE.setConfigStep(ProfileConfigStep.CONFIGURATION_EDIT, null, configuration);
             }
         });
-        this.buttonPrintGridsPdf.setOnAction(e -> ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.ExportConfigGridsToPdfAction(buttonPrintGridsPdf)));
+        this.buttonPrintGridsPdf.setOnAction(e -> ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.ExportEditGridsToPdfAction(buttonPrintGridsPdf)));
     }
     //========================================================================
 

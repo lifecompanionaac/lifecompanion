@@ -19,8 +19,8 @@
 
 package org.lifecompanion.config.data.action.impl;
 
-import org.lifecompanion.base.data.action.definition.BasePropertyChangeAction;
-import org.lifecompanion.api.component.definition.UserNamedComponentI;
+import org.lifecompanion.model.impl.editaction.BasePropertyChangeAction;
+import org.lifecompanion.model.api.configurationcomponent.UserNamedComponentI;
 
 /**
  * Class that keep commons action on components.

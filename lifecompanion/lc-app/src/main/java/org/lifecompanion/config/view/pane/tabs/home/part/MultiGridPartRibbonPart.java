@@ -24,24 +24,18 @@ import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.TextAlignment;
-import org.controlsfx.glyphfont.FontAwesome;
-import org.lifecompanion.api.action.definition.BaseConfigActionI;
-import org.lifecompanion.api.component.definition.GridPartComponentI;
-import org.lifecompanion.api.component.definition.SpanModifiableComponentI;
-import org.lifecompanion.api.ui.config.ConfigurationProfileLevelEnum;
-import org.lifecompanion.base.data.common.UIUtils;
-import org.lifecompanion.base.data.component.baseimpl.DisplayableComponentBaseImpl;
+import org.lifecompanion.model.api.editaction.BaseEditActionI;
+import org.lifecompanion.model.api.configurationcomponent.GridPartComponentI;
+import org.lifecompanion.model.api.configurationcomponent.SpanModifiableComponentI;
+import org.lifecompanion.model.api.ui.editmode.ConfigurationProfileLevelEnum;
+import org.lifecompanion.util.UIUtils;
+import org.lifecompanion.model.impl.configurationcomponent.DisplayableComponentBaseImpl;
 import org.lifecompanion.base.data.config.IconManager;
-import org.lifecompanion.base.data.config.LCGraphicStyle;
 import org.lifecompanion.config.data.action.impl.GridActions.*;
-import org.lifecompanion.config.data.config.LCGlyphFont;
 import org.lifecompanion.config.data.control.ConfigActionController;
 import org.lifecompanion.config.data.control.SelectionController;
 import org.lifecompanion.config.view.common.ConfigUIUtils;
-import org.lifecompanion.config.view.pane.useaction.UseActionMainView;
 import org.lifecompanion.config.view.reusable.ribbonmenu.RibbonBasePart;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
@@ -178,9 +172,9 @@ public class MultiGridPartRibbonPart extends RibbonBasePart<DisplayableComponent
         LEFT("button.add.key.on.left.grid", "actions/icon_add_key_left.png", AddKeyOnLeftAction::new);
 
         private final String name, iconPath;
-        private final Function<GridPartComponentI, BaseConfigActionI> actionConstructor;
+        private final Function<GridPartComponentI, BaseEditActionI> actionConstructor;
 
-        AddKeyPosition(String name, String iconPath, Function<GridPartComponentI, BaseConfigActionI> actionConstructor) {
+        AddKeyPosition(String name, String iconPath, Function<GridPartComponentI, BaseEditActionI> actionConstructor) {
             this.name = name;
             this.iconPath = iconPath;
             this.actionConstructor = actionConstructor;

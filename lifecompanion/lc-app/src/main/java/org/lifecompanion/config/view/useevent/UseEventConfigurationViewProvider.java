@@ -18,10 +18,10 @@
  */
 package org.lifecompanion.config.view.useevent;
 
-import org.lifecompanion.api.component.definition.useevent.UseEventGeneratorConfigurationViewI;
-import org.lifecompanion.api.component.definition.useevent.UseEventGeneratorI;
-import org.lifecompanion.base.data.io.ReflectionHelper;
-import org.lifecompanion.base.data.plugins.PluginManager;
+import org.lifecompanion.model.api.categorizedelement.useevent.UseEventGeneratorConfigurationViewI;
+import org.lifecompanion.model.api.categorizedelement.useevent.UseEventGeneratorI;
+import org.lifecompanion.controller.io.ReflectionHelper;
+import org.lifecompanion.controller.plugin.PluginManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

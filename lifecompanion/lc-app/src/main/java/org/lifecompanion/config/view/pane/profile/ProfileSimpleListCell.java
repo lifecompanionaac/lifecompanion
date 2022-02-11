@@ -19,7 +19,7 @@
 package org.lifecompanion.config.view.pane.profile;
 
 import javafx.scene.control.ListCell;
-import org.lifecompanion.api.component.definition.LCProfileI;
+import org.lifecompanion.model.api.profile.LCProfileI;
 
 public class ProfileSimpleListCell extends ListCell<LCProfileI> {
     public ProfileSimpleListCell() {

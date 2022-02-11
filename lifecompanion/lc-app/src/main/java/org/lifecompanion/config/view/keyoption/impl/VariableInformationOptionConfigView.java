@@ -20,9 +20,8 @@
 package org.lifecompanion.config.view.keyoption.impl;
 
 import org.lifecompanion.framework.commons.translation.Translation;
-import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
 import org.lifecompanion.config.data.action.impl.KeyOptionActions.ChangeInformationToDisplayAction;
-import org.lifecompanion.base.data.component.keyoption.VariableInformationKeyOption;
+import org.lifecompanion.model.impl.configurationcomponent.keyoption.VariableInformationKeyOption;
 import org.lifecompanion.config.data.control.ConfigActionController;
 import org.lifecompanion.config.view.keyoption.BaseKeyOptionConfigView;
 import org.lifecompanion.base.view.reusable.UndoRedoTextInputWrapper;

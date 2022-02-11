@@ -18,30 +18,14 @@
  */
 package org.lifecompanion.config.data.action.impl;
 
-import javafx.collections.ObservableList;
-import javafx.collections.ObservableMap;
-import javafx.scene.Node;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ButtonType;
-import org.lifecompanion.api.action.definition.UndoRedoActionI;
-import org.lifecompanion.api.component.definition.DisplayableComponentI;
-import org.lifecompanion.api.component.definition.LCConfigurationI;
-import org.lifecompanion.api.exception.LCException;
-import org.lifecompanion.api.style2.definition.*;
-import org.lifecompanion.api.style2.property.definition.StylePropertyI;
-import org.lifecompanion.base.data.common.LCUtils;
-import org.lifecompanion.base.data.control.StyleController2;
-import org.lifecompanion.config.view.common.ConfigUIUtils;
-import org.lifecompanion.framework.commons.translation.Translation;
+import org.lifecompanion.model.api.editaction.UndoRedoActionI;
+import org.lifecompanion.model.impl.exception.LCException;
+import org.lifecompanion.model.api.style.StylePropertyI;
+import org.lifecompanion.util.LCUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**

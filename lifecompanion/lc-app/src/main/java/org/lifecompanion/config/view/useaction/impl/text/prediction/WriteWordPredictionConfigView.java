@@ -21,9 +21,9 @@ package org.lifecompanion.config.view.useaction.impl.text.prediction;
 
 import org.controlsfx.control.ToggleSwitch;
 
-import org.lifecompanion.api.component.definition.useaction.UseActionConfigurationViewI;
-import org.lifecompanion.api.component.definition.useevent.UseVariableDefinitionI;
-import org.lifecompanion.base.data.useaction.impl.text.prediction.WriteWordPredictionAction;
+import org.lifecompanion.model.api.categorizedelement.useaction.UseActionConfigurationViewI;
+import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
+import org.lifecompanion.model.impl.categorizedelement.useaction.available.WriteWordPredictionAction;
 import org.lifecompanion.config.view.common.ConfigUIUtils;
 import javafx.collections.ObservableList;
 import javafx.scene.layout.Region;

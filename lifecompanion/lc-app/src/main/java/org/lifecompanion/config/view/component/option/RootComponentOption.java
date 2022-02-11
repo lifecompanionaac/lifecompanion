@@ -21,8 +21,8 @@ package org.lifecompanion.config.view.component.option;
 
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.config.data.action.impl.OptionActions.ResizeAction;
-import org.lifecompanion.base.data.common.PositionSize;
-import org.lifecompanion.api.component.definition.RootGraphicComponentI;
+import org.lifecompanion.util.PositionSize;
+import org.lifecompanion.model.api.configurationcomponent.RootGraphicComponentI;
 import org.lifecompanion.base.data.config.LCConstant;
 import org.lifecompanion.base.data.config.LCGraphicStyle;
 import org.lifecompanion.base.data.config.UserBaseConfiguration;

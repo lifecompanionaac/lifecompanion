@@ -24,12 +24,12 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import org.lifecompanion.api.component.definition.*;
-import org.lifecompanion.base.data.control.refacto.AppModeController;
+import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.base.view.reusable.impl.BaseConfigurationViewBorderPane;
 import org.lifecompanion.config.data.control.SelectionController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.model.api.configurationcomponent.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

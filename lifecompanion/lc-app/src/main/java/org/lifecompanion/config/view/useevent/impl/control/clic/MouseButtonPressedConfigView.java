@@ -23,8 +23,8 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
-import org.lifecompanion.api.component.definition.useevent.UseEventGeneratorConfigurationViewI;
-import org.lifecompanion.base.data.useevent.impl.control.clic.MouseButtonPressedEventGenerator;
+import org.lifecompanion.model.api.categorizedelement.useevent.UseEventGeneratorConfigurationViewI;
+import org.lifecompanion.model.impl.categorizedelement.useevent.available.MouseButtonPressedEventGenerator;
 import org.lifecompanion.config.view.reusable.MouseButtonSelectorControl;
 import org.lifecompanion.framework.commons.translation.Translation;
 

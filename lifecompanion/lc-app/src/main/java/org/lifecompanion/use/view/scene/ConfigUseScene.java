@@ -22,13 +22,13 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.input.KeyEvent;
-import org.lifecompanion.api.component.definition.LCConfigurationI;
-import org.lifecompanion.base.data.action.definition.CommonActions;
-import org.lifecompanion.base.data.common.UIUtils;
+import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
+import org.lifecompanion.model.impl.editaction.CommonActions;
+import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.base.data.config.LCConstant;
 import org.lifecompanion.base.data.control.stats.SessionStatsController;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
-import org.lifecompanion.use.view.pane.SimpleUseConfigurationDisplayer;
+import org.lifecompanion.ui.configurationcomponent.usemode.SimpleUseConfigurationDisplayer;
 
 /**
  * The scene that display the component when the application is in use mode in "normal" LifeCompanion (use and config mode)<br>

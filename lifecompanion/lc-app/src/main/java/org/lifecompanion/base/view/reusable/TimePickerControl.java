@@ -26,8 +26,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
-import org.lifecompanion.base.data.common.BoundIntConverter;
-import org.lifecompanion.base.data.common.UIUtils;
+import org.lifecompanion.util.BoundIntConverter;
+import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 

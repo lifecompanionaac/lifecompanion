@@ -19,7 +19,7 @@
 
 package org.lifecompanion.config.view.reusable;
 
-import org.lifecompanion.api.component.definition.useevent.UseVariableDefinitionI;
+import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;

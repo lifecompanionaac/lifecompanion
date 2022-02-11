@@ -23,10 +23,9 @@ import java.io.File;
 
 import org.lifecompanion.config.data.control.FileChooserType;
 import org.lifecompanion.framework.commons.translation.Translation;
-import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
-import org.lifecompanion.api.component.definition.useaction.UseActionConfigurationViewI;
-import org.lifecompanion.api.component.definition.useevent.UseVariableDefinitionI;
-import org.lifecompanion.base.data.useaction.impl.computera.features.RunProgramUseAction;
+import org.lifecompanion.model.api.categorizedelement.useaction.UseActionConfigurationViewI;
+import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
+import org.lifecompanion.model.impl.categorizedelement.useaction.available.RunProgramUseAction;
 import org.lifecompanion.config.view.reusable.FileSelectorControl;
 import org.lifecompanion.config.view.reusable.UseVariableTextArea;
 import javafx.collections.ObservableList;

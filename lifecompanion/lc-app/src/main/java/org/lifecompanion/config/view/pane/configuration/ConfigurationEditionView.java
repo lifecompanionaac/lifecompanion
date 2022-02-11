@@ -31,11 +31,11 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import org.controlsfx.control.ToggleSwitch;
 import org.controlsfx.glyphfont.FontAwesome;
-import org.lifecompanion.api.component.definition.ChangelogEntryI;
-import org.lifecompanion.api.component.definition.LCConfigurationDescriptionI;
-import org.lifecompanion.base.data.common.DisableSelectionSelectionModel;
-import org.lifecompanion.base.data.common.Triple;
-import org.lifecompanion.base.data.common.UIUtils;
+import org.lifecompanion.model.api.profile.ChangelogEntryI;
+import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
+import org.lifecompanion.util.DisableSelectionSelectionModel;
+import org.lifecompanion.util.Triple;
+import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.base.data.config.LCGraphicStyle;
 import org.lifecompanion.base.data.control.refacto.ProfileController;
 import org.lifecompanion.config.data.action.impl.LCConfigurationActions;
@@ -209,14 +209,14 @@ public class ConfigurationEditionView extends BorderPane implements ProfileConfi
                         removedConfig -> ProfileConfigSelectionController.INSTANCE.setConfigStep(ProfileConfigStep.CONFIGURATION_LIST, null, null))));
         this.buttonExport.setOnAction(e ->
                 ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.EditConfigurationAction(this.editedConfiguration.get(),
-                        configDescription -> ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.ExportConfigAction(buttonRemove, configDescription))))
+                        configDescription -> ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.ExportEditAction(buttonRemove, configDescription))))
         );
         if (this.buttonDesktopShortcut != null) {
             this.buttonDesktopShortcut.setOnAction(e -> ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.CreateDesktopShortcut(ProfileController.INSTANCE.currentProfileProperty().get(), this.editedConfiguration.get())));
         }
         this.toggleSwitchLaunchInUseMode.selectedProperty().addListener((obs, ov, nv) -> {
             if (nv != this.editedConfiguration.get().launchInUseModeProperty().get()) {
-                ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.SetDefaultConfigAction(this.editedConfiguration.get(), toggleSwitchLaunchInUseMode.isSelected()));
+                ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.SetDefaultEditAction(this.editedConfiguration.get(), toggleSwitchLaunchInUseMode.isSelected()));
             }
         });
     }
@@ -233,7 +233,7 @@ public class ConfigurationEditionView extends BorderPane implements ProfileConfi
                 ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.EditConfigurationAction(this.editedConfiguration.get(), null));
             } else if (currentStep == ProfileConfigStep.CONFIGURATION_CREATE && !closeRequest) {
                 if (!buttonBack) {
-                    ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.AddNewConfigAction(this, this.editedConfiguration.get()));
+                    ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.AddNewEditAction(this, this.editedConfiguration.get()));
                     closeRequest = true;
                 }
             }

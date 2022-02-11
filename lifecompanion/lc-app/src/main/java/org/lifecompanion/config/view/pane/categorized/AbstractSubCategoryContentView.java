@@ -26,8 +26,8 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.TextAlignment;
-import org.lifecompanion.api.component.definition.eventaction.CategorizedElementI;
-import org.lifecompanion.api.component.definition.eventaction.SubCategoryI;
+import org.lifecompanion.model.api.categorizedelement.CategorizedElementI;
+import org.lifecompanion.model.api.categorizedelement.SubCategoryI;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 
 import java.util.function.Consumer;

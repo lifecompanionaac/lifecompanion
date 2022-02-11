@@ -19,7 +19,7 @@
 
 package org.lifecompanion.config.view.selection;
 
-import org.lifecompanion.api.component.definition.TreeDisplayableComponentI;
+import org.lifecompanion.model.api.configurationcomponent.TreeDisplayableComponentI;
 import javafx.scene.control.TreeCell;
 
 /**

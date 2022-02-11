@@ -19,8 +19,8 @@
 
 package org.lifecompanion.config.view.keyoption;
 
-import org.lifecompanion.api.component.definition.keyoption.KeyOptionConfigurationViewI;
-import org.lifecompanion.api.component.definition.keyoption.KeyOptionI;
+import org.lifecompanion.model.api.configurationcomponent.keyoption.KeyOptionConfigurationViewI;
+import org.lifecompanion.model.api.configurationcomponent.keyoption.KeyOptionI;
 import org.lifecompanion.base.view.reusable.impl.BaseConfigurationViewVBox;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.layout.Region;

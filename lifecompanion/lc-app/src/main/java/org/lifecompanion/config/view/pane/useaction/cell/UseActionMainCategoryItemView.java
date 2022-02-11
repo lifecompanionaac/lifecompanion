@@ -18,7 +18,7 @@
  */
 package org.lifecompanion.config.view.pane.useaction.cell;
 
-import org.lifecompanion.api.component.definition.useaction.UseActionMainCategoryI;
+import org.lifecompanion.model.api.categorizedelement.useaction.UseActionMainCategoryI;
 import org.lifecompanion.config.view.pane.categorized.cell.AbstractMainCategoryItemView;
 
 import java.util.function.Consumer;

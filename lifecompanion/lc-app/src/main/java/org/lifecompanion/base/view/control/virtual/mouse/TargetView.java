@@ -25,8 +25,8 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.shape.Rectangle;
-import org.lifecompanion.base.data.control.virtual.mouse.VirtualMouseController;
-import org.lifecompanion.base.data.control.virtual.mouse.VirtualMouseDrawingI;
+import org.lifecompanion.controller.virtualmouse.VirtualMouseController;
+import org.lifecompanion.ui.virtualmouse.VirtualMouseDrawingI;
 
 import java.util.ArrayList;
 import java.util.Arrays;

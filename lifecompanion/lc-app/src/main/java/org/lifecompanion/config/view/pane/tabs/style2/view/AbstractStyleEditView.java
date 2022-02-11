@@ -24,10 +24,10 @@ import javafx.scene.Node;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
-import org.lifecompanion.api.action.definition.BaseConfigActionI;
-import org.lifecompanion.api.style2.definition.StyleI;
-import org.lifecompanion.api.style2.property.definition.StylePropertyI;
-import org.lifecompanion.base.data.common.UIUtils;
+import org.lifecompanion.model.api.editaction.BaseEditActionI;
+import org.lifecompanion.model.api.style.StyleI;
+import org.lifecompanion.model.api.style.StylePropertyI;
+import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.base.data.config.LCGraphicStyle;
 import org.lifecompanion.base.view.reusable.impl.BaseConfigurationViewBorderPane;
 import org.lifecompanion.config.data.action.impl.StyleActions.ChangeStylePropAction;
@@ -115,7 +115,7 @@ public abstract class AbstractStyleEditView<T extends StyleI<?>> extends BaseCon
         }
     }
 
-    protected <P> BaseConfigActionI createChangePropAction(final StylePropertyI<P> model, final P value) {
+    protected <P> BaseEditActionI createChangePropAction(final StylePropertyI<P> model, final P value) {
         return new ChangeStylePropAction<>(model, value);
     }
 }

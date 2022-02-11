@@ -20,7 +20,7 @@ package org.lifecompanion.config.view.selection;
 
 import javafx.scene.control.Cell;
 import javafx.scene.image.ImageView;
-import org.lifecompanion.api.component.definition.TreeDisplayableComponentI;
+import org.lifecompanion.model.api.configurationcomponent.TreeDisplayableComponentI;
 import org.lifecompanion.base.data.config.IconManager;
 
 /**

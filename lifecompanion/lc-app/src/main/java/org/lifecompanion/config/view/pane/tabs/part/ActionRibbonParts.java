@@ -18,7 +18,7 @@
  */
 package org.lifecompanion.config.view.pane.tabs.part;
 
-import org.lifecompanion.api.component.definition.useaction.UseActionEvent;
+import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.config.view.pane.tabs.api.AbstractRibbonTabContent;
 import org.lifecompanion.config.view.pane.tabs.useaction.part.UseActionListRibbonPart;
 import org.lifecompanion.config.view.pane.tabs.useaction.part.multi.MultiUseActionListRibbonPart;

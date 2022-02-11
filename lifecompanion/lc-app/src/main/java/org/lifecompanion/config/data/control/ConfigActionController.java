@@ -25,10 +25,10 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import org.lifecompanion.api.action.definition.BaseConfigActionI;
-import org.lifecompanion.api.action.definition.UndoRedoActionI;
-import org.lifecompanion.api.exception.LCException;
-import org.lifecompanion.base.data.control.refacto.AppModeController;
+import org.lifecompanion.model.api.editaction.BaseEditActionI;
+import org.lifecompanion.model.api.editaction.UndoRedoActionI;
+import org.lifecompanion.model.impl.exception.LCException;
+import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.slf4j.Logger;
@@ -81,15 +81,15 @@ public enum ConfigActionController {
         AppModeController.INSTANCE.getEditModeContext().configurationProperty().addListener((obs, ov, nv) -> this.clearUndoRedo());
     }
 
-    private void addActionToHistory(final BaseConfigActionI action) {
+    private void addActionToHistory(final BaseEditActionI action) {
         this.actionStringList.add(this.actionToString(new Date(), action));
     }
 
-    private String actionToString(final Date date, final BaseConfigActionI action) {
+    private String actionToString(final Date date, final BaseEditActionI action) {
         return StringUtils.dateToStringDateWithOnlyHoursMinuteSecond(date) + " - " + Translation.getText(action.getNameID());
     }
 
-    public void addAction(final BaseConfigActionI action) {
+    public void addAction(final BaseEditActionI action) {
         this.addAction(action, false);
     }
 
@@ -99,7 +99,7 @@ public enum ConfigActionController {
      *
      * @param action the action
      */
-    public void addAction(final BaseConfigActionI action, final boolean forceUnsavedAction) {
+    public void addAction(final BaseEditActionI action, final boolean forceUnsavedAction) {
         // this.history.add(new Pair<>(new Date(), action));
         this.addActionToHistory(action);
         // Unsaved changes on configuration
@@ -174,11 +174,11 @@ public enum ConfigActionController {
     }
 
     /**
-     * Execute the action and add it with {@link #addAction(BaseConfigActionI)} on the calling Thread.
+     * Execute the action and add it with {@link #addAction(BaseEditActionI)} on the calling Thread.
      *
      * @param action the action to add (null is allowed and NOP)
      */
-    public void executeAction(final BaseConfigActionI action) {
+    public void executeAction(final BaseEditActionI action) {
         if (action != null) {
             try {
                 action.doAction();
@@ -189,7 +189,7 @@ public enum ConfigActionController {
         }
     }
 
-    public void reportErrorOnConfigActionDoRedoUndo(BaseConfigActionI action, LCException exception, String methodName, String errorNotificationMessageId) {
+    public void reportErrorOnConfigActionDoRedoUndo(BaseEditActionI action, LCException exception, String methodName, String errorNotificationMessageId) {
         LOGGER.error("Problem on action \"{}\" when calling " + methodName, action.getNameID(), exception);
         ErrorHandlingController.INSTANCE.showErrorNotificationWithExceptionDetails(Translation.getText(errorNotificationMessageId, Translation.getText(action.getNameID())), exception);
     }

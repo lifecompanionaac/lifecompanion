@@ -18,9 +18,9 @@
  */
 package org.lifecompanion.config.view.pane.tabs.selected.part;
 
-import org.lifecompanion.api.component.definition.GridPartKeyComponentI;
-import org.lifecompanion.api.component.definition.ImageUseComponentI;
-import org.lifecompanion.base.data.component.keyoption.simplercomp.KeyListNodeKeyOption;
+import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
+import org.lifecompanion.model.api.configurationcomponent.ImageUseComponentI;
+import org.lifecompanion.model.impl.configurationcomponent.keyoption.dynamickey.KeyListNodeKeyOption;
 import org.lifecompanion.config.data.control.SelectionController;
 import org.lifecompanion.config.view.reusable.image.ImageUseComponentSelectorControl;
 import org.lifecompanion.config.view.reusable.ribbonmenu.RibbonBasePart;

@@ -20,18 +20,18 @@ package org.lifecompanion.config.data.action.impl;
 
 import javafx.scene.Node;
 import javafx.stage.FileChooser;
-import org.lifecompanion.api.action.definition.BaseConfigActionI;
-import org.lifecompanion.api.component.definition.LCConfigurationDescriptionI;
-import org.lifecompanion.api.component.definition.simplercomp.KeyListNodeI;
-import org.lifecompanion.api.exception.LCException;
-import org.lifecompanion.base.data.common.LCUtils;
-import org.lifecompanion.base.data.common.UIUtils;
+import org.lifecompanion.model.api.editaction.BaseEditActionI;
+import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
+import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
+import org.lifecompanion.model.impl.exception.LCException;
+import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.base.data.control.AsyncExecutorController;
-import org.lifecompanion.base.data.control.refacto.AppModeController;
+import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.base.data.control.refacto.ProfileController;
-import org.lifecompanion.base.data.io.IOManager;
-import org.lifecompanion.base.data.io.task.KeyListExportTask;
-import org.lifecompanion.base.data.io.task.KeyListImportTask;
+import org.lifecompanion.controller.io.IOManager;
+import org.lifecompanion.controller.io.KeyListExportTask;
+import org.lifecompanion.controller.io.KeyListImportTask;
 import org.lifecompanion.config.data.control.FileChooserType;
 import org.lifecompanion.config.data.control.LCStateController;
 import org.lifecompanion.config.view.common.LCFileChooser;
@@ -54,7 +54,7 @@ public class KeyListActions {
     private static final SimpleDateFormat DATE_FORMAT_FILENAME = new SimpleDateFormat("yyyyMMdd");
 
 
-    public static class ExportKeyListsAction implements BaseConfigActionI {
+    public static class ExportKeyListsAction implements BaseEditActionI {
         private static final int MAX_FILE_NAME_LENGTH = 127;
         private final Node source;
         private final KeyListNodeI rootNode;
@@ -91,7 +91,7 @@ public class KeyListActions {
         }
     }
 
-    public static class ImportKeyListsAction implements BaseConfigActionI {
+    public static class ImportKeyListsAction implements BaseEditActionI {
         private final Node source;
         private final Consumer<List<KeyListNodeI>> importedNodesConsumer;
 

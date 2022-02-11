@@ -20,7 +20,7 @@
 package org.lifecompanion.config.view.pane.menu;
 
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
-import org.lifecompanion.base.data.common.UIUtils;
+import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.config.view.pane.left.BottomDetailView;
 import javafx.scene.layout.VBox;
 

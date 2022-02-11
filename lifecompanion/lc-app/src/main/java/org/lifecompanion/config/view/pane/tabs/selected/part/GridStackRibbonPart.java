@@ -19,7 +19,7 @@
 
 package org.lifecompanion.config.view.pane.tabs.selected.part;
 
-import org.lifecompanion.api.component.definition.StackComponentI;
+import org.lifecompanion.model.api.configurationcomponent.StackComponentI;
 import org.lifecompanion.config.data.control.SelectionController;
 
 public class GridStackRibbonPart extends AbstractStackPartRibbonPart {

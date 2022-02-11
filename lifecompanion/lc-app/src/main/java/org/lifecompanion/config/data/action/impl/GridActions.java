@@ -29,20 +29,20 @@ import java.util.function.BiConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.lifecompanion.base.data.action.definition.BaseGridChangeAction;
-import org.lifecompanion.base.data.action.definition.BasePropertyChangeAction;
-import org.lifecompanion.api.action.definition.UndoRedoActionI;
-import org.lifecompanion.base.data.common.LCUtils;
-import org.lifecompanion.api.component.definition.GridComponentI;
-import org.lifecompanion.api.component.definition.GridPartComponentI;
-import org.lifecompanion.api.component.definition.GridPartKeyComponentI;
-import org.lifecompanion.api.component.definition.grid.ComponentGridI;
-import org.lifecompanion.base.data.component.simple.GridPartGridComponent;
-import org.lifecompanion.base.data.component.simple.GridPartKeyComponent;
+import org.lifecompanion.model.impl.editaction.BaseGridChangeAction;
+import org.lifecompanion.model.impl.editaction.BasePropertyChangeAction;
+import org.lifecompanion.model.api.editaction.UndoRedoActionI;
+import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
+import org.lifecompanion.model.api.configurationcomponent.GridPartComponentI;
+import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
+import org.lifecompanion.model.api.configurationcomponent.ComponentGridI;
+import org.lifecompanion.model.impl.configurationcomponent.GridPartGridComponent;
+import org.lifecompanion.model.impl.configurationcomponent.GridPartKeyComponent;
 import org.lifecompanion.config.data.control.SelectionController;
-import org.lifecompanion.api.exception.LCException;
-import org.lifecompanion.api.ui.AddTypeEnum;
-import org.lifecompanion.api.ui.PossibleAddComponentI;
+import org.lifecompanion.model.impl.exception.LCException;
+import org.lifecompanion.model.api.ui.editmode.AddTypeEnum;
+import org.lifecompanion.model.api.ui.editmode.PossibleAddComponentI;
 
 /**
  * Class for actions on a {@link GridPartGridComponent} like change row/column, add keys, etc...

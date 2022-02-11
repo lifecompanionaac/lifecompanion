@@ -20,10 +20,10 @@
 package org.lifecompanion.config.data.action.impl;
 
 import mslinks.ShellLink;
-import org.lifecompanion.api.component.definition.LCConfigurationDescriptionI;
-import org.lifecompanion.api.component.definition.LCProfileI;
-import org.lifecompanion.base.data.common.LCTask;
-import org.lifecompanion.base.data.common.LCUtils;
+import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
+import org.lifecompanion.model.api.profile.LCProfileI;
+import org.lifecompanion.util.LCTask;
+import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.base.data.config.LCConstant;
 import org.lifecompanion.config.data.config.task.UserConfigUtils;
 import org.lifecompanion.framework.commons.SystemType;

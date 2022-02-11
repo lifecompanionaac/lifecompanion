@@ -19,19 +19,19 @@
 
 package org.lifecompanion.config.view.pane.tabs.home.part;
 
-import org.lifecompanion.base.data.control.refacto.AppModeController;
+import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.config.data.action.impl.LCConfigurationComponentActions.ChangeGridSizeConfigurationAction;
 import org.lifecompanion.config.data.action.impl.LCConfigurationComponentActions.DisableGridOnConfigurationAction;
 import org.lifecompanion.config.data.action.impl.LCConfigurationComponentActions.EnableGridOnConfigurationAction;
 import org.lifecompanion.config.data.common.LCConfigBindingUtils;
-import org.lifecompanion.base.data.common.UIUtils;
-import org.lifecompanion.api.component.definition.LCConfigurationI;
+import org.lifecompanion.util.UIUtils;
+import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.config.data.config.LCGlyphFont;
 import org.lifecompanion.base.data.config.LCGraphicStyle;
 import org.lifecompanion.config.data.control.ConfigActionController;
-import org.lifecompanion.api.ui.config.ConfigurationProfileLevelEnum;
+import org.lifecompanion.model.api.ui.editmode.ConfigurationProfileLevelEnum;
 import org.lifecompanion.config.view.common.ConfigUIUtils;
 import org.lifecompanion.config.view.reusable.ribbonmenu.RibbonBasePart;
 import javafx.beans.value.ChangeListener;

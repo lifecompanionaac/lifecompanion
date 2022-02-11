@@ -19,14 +19,13 @@
 
 package org.lifecompanion.config.view.pane.tabs.style3;
 
-import javafx.scene.control.ComboBoxBase;
 import javafx.scene.control.Spinner;
 import javafx.scene.paint.Color;
 import org.controlsfx.control.ToggleSwitch;
-import org.lifecompanion.api.component.definition.GridPartKeyComponentI;
-import org.lifecompanion.api.style2.definition.KeyCompStyleI;
-import org.lifecompanion.base.data.style2.MultipleStylePropertyHelper;
-import org.lifecompanion.base.data.style2.PropertyChangeListener;
+import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
+import org.lifecompanion.model.api.style.KeyCompStyleI;
+import org.lifecompanion.model.impl.style.MultipleStylePropertyHelper;
+import org.lifecompanion.model.impl.style.PropertyChangeListener;
 import org.lifecompanion.config.data.control.SelectionController;
 import org.lifecompanion.config.view.pane.tabs.style2.view.key.KeyStyleEditView;
 import org.lifecompanion.config.view.reusable.colorpicker.LCColorPicker;

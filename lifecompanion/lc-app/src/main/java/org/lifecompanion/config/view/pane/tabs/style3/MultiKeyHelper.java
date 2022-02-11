@@ -26,12 +26,12 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.text.TextAlignment;
 import org.controlsfx.control.ToggleSwitch;
-import org.lifecompanion.api.action.definition.BaseConfigActionI;
-import org.lifecompanion.api.component.definition.GridPartKeyComponentI;
-import org.lifecompanion.api.style2.definition.KeyStyleUserI;
-import org.lifecompanion.api.style2.property.definition.StylePropertyI;
-import org.lifecompanion.base.data.common.LCUtils;
-import org.lifecompanion.base.data.style2.PropertyChangeListener;
+import org.lifecompanion.model.api.editaction.BaseEditActionI;
+import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
+import org.lifecompanion.model.api.style.KeyStyleUserI;
+import org.lifecompanion.model.api.style.StylePropertyI;
+import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.model.impl.style.PropertyChangeListener;
 import org.lifecompanion.config.data.action.impl.StyleActions;
 import org.lifecompanion.config.data.common.keycollection.GridPartKeyPropertyChangeListener;
 import org.lifecompanion.config.data.control.ConfigActionController;
@@ -75,7 +75,7 @@ public class MultiKeyHelper {
                                                                BiConsumer<V, EventHandler<ActionEvent>> actionEventSetter,
                                                                Function<V, T> fieldValueGetter,
                                                                BiConsumer<V, T> fieldValueSetter,
-                                                               BiFunction<List<GridPartKeyComponentI>, T, BaseConfigActionI> actionConstructor,
+                                                               BiFunction<List<GridPartKeyComponentI>, T, BaseEditActionI> actionConstructor,
                                                                GridPartKeyPropertyChangeListener<?, ?, T> propertyChangeGetter) {
         final EventHandler<ActionEvent> eventHandler = event -> {
             ConfigActionController.INSTANCE.executeAction(actionConstructor.apply(new ArrayList<>(SelectionController.INSTANCE.getSelectedKeys()), fieldValueGetter.apply(field)));

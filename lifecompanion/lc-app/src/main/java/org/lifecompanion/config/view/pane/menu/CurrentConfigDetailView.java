@@ -27,12 +27,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.fxmisc.easybind.EasyBind;
-import org.lifecompanion.api.component.definition.LCConfigurationDescriptionI;
-import org.lifecompanion.api.ui.config.ConfigurationProfileLevelEnum;
-import org.lifecompanion.base.data.common.LCUtils;
-import org.lifecompanion.base.data.common.UIUtils;
+import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
+import org.lifecompanion.model.api.ui.editmode.ConfigurationProfileLevelEnum;
+import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.base.data.config.LCGraphicStyle;
-import org.lifecompanion.base.data.control.refacto.AppModeController;
+import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.config.data.action.impl.LCConfigurationActions;
 import org.lifecompanion.config.data.config.LCGlyphFont;
 import org.lifecompanion.config.data.control.ConfigActionController;
@@ -94,7 +94,7 @@ public class CurrentConfigDetailView extends VBox implements LCViewInitHelper {
     public void initListener() {
         this.buttonSave.setOnAction(LCConfigurationActions.HANDLER_SAVE);
         this.buttonExport.setOnAction(LCConfigurationActions.HANDLER_EXPORT);
-        this.buttonClose.setOnAction((ea) -> ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.CloseConfigAction(buttonClose)));
+        this.buttonClose.setOnAction((ea) -> ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.CloseEditAction(buttonClose)));
     }
 
     @Override

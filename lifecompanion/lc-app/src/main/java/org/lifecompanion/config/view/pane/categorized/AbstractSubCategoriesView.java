@@ -22,9 +22,9 @@ package org.lifecompanion.config.view.pane.categorized;
 import java.util.function.Consumer;
 
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
-import org.lifecompanion.api.component.definition.eventaction.CategorizedElementI;
-import org.lifecompanion.api.component.definition.eventaction.MainCategoryI;
-import org.lifecompanion.api.component.definition.eventaction.SubCategoryI;
+import org.lifecompanion.model.api.categorizedelement.CategorizedElementI;
+import org.lifecompanion.model.api.categorizedelement.MainCategoryI;
+import org.lifecompanion.model.api.categorizedelement.SubCategoryI;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Node;

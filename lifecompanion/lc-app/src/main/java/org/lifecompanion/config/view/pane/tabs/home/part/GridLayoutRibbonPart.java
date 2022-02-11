@@ -21,18 +21,17 @@ package org.lifecompanion.config.view.pane.tabs.home.part;
 import java.util.function.BiFunction;
 
 import org.lifecompanion.framework.commons.translation.Translation;
-import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
-import org.lifecompanion.api.action.definition.BaseConfigActionI;
+import org.lifecompanion.model.api.editaction.BaseEditActionI;
 import org.lifecompanion.config.data.action.impl.GridActions.AddColumnGenericAction;
 import org.lifecompanion.config.data.action.impl.GridActions.AddRowGenericAction;
 import org.lifecompanion.config.data.action.impl.GridActions.RemoveColumnGenericAction;
 import org.lifecompanion.config.data.action.impl.GridActions.RemoveRowGenericAction;
-import org.lifecompanion.base.data.common.UIUtils;
-import org.lifecompanion.api.component.definition.DisplayableComponentI;
-import org.lifecompanion.api.component.definition.GridComponentI;
-import org.lifecompanion.api.component.definition.GridPartComponentI;
-import org.lifecompanion.api.component.definition.StackComponentI;
+import org.lifecompanion.util.UIUtils;
+import org.lifecompanion.model.api.configurationcomponent.DisplayableComponentI;
+import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
+import org.lifecompanion.model.api.configurationcomponent.GridPartComponentI;
+import org.lifecompanion.model.api.configurationcomponent.StackComponentI;
 import org.lifecompanion.config.data.control.ConfigActionController;
 import org.lifecompanion.config.data.control.SelectionController;
 import org.lifecompanion.config.view.reusable.ribbonmenu.RibbonBasePart;
@@ -96,7 +95,7 @@ public class GridLayoutRibbonPart extends RibbonBasePart<DisplayableComponentI> 
 	}
 
 	private void createButtonListener(final Button button,
-			final BiFunction<GridComponentI, GridPartComponentI, BaseConfigActionI> actionConstructor) {
+			final BiFunction<GridComponentI, GridPartComponentI, BaseEditActionI> actionConstructor) {
 		button.setOnAction((ea) -> {
 			final DisplayableComponentI modelValue = this.model.get();
 			GridPartComponentI gridPartComp = null;

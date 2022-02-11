@@ -20,8 +20,8 @@
 package org.lifecompanion.base.data.control;
 
 import javafx.concurrent.Task;
-import org.lifecompanion.api.mode.LCStateListener;
-import org.lifecompanion.base.data.common.LCTask;
+import org.lifecompanion.model.api.lifecycle.LCStateListener;
+import org.lifecompanion.util.LCTask;
 import org.lifecompanion.base.data.config.LCConstant;
 import org.lifecompanion.framework.utils.LCNamedThreadFactory;
 

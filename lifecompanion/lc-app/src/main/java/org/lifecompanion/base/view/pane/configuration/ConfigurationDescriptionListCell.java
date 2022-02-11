@@ -20,7 +20,7 @@
 package org.lifecompanion.base.view.pane.configuration;
 
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
-import org.lifecompanion.api.component.definition.LCConfigurationDescriptionI;
+import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;

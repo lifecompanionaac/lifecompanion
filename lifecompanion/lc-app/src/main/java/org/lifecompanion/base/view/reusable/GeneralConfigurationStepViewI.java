@@ -20,7 +20,7 @@
 package org.lifecompanion.base.view.reusable;
 
 import javafx.scene.Node;
-import org.lifecompanion.api.component.definition.LCConfigurationI;
+import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 
 public interface GeneralConfigurationStepViewI extends BaseConfigurationViewI<LCConfigurationI>, LCViewInitHelper {

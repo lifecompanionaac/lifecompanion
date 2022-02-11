@@ -19,11 +19,11 @@
 
 package org.lifecompanion.base.data.control.update;
 
-import org.lifecompanion.base.data.common.LCUtils;
+import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.base.data.config.LCConstant;
-import org.lifecompanion.base.data.plugins.PluginInfo;
-import org.lifecompanion.base.data.plugins.PluginInfoState;
-import org.lifecompanion.base.data.plugins.PluginManager;
+import org.lifecompanion.model.impl.plugin.PluginInfo;
+import org.lifecompanion.model.impl.plugin.PluginInfoState;
+import org.lifecompanion.controller.plugin.PluginManager;
 import org.lifecompanion.framework.client.http.AppServerClient;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.model.server.update.ApplicationPluginUpdate;

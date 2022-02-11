@@ -20,16 +20,16 @@
 package org.lifecompanion.config.data.action.impl;
 
 import javafx.scene.paint.Color;
-import org.lifecompanion.base.data.action.definition.BasePropertyChangeAction;
-import org.lifecompanion.base.data.component.keyoption.ProgressDisplayKeyOption;
-import org.lifecompanion.base.data.component.keyoption.QuickComKeyOption;
-import org.lifecompanion.base.data.component.keyoption.VariableInformationKeyOption;
-import org.lifecompanion.base.data.component.keyoption.WordPredictionKeyOption;
-import org.lifecompanion.base.data.component.keyoption.note.NoteKeyDisplayMode;
-import org.lifecompanion.base.data.component.keyoption.note.NoteKeyOption;
-import org.lifecompanion.base.data.component.keyoption.simplercomp.KeyListNodeKeyOption;
-import org.lifecompanion.base.data.component.keyoption.simplercomp.UserActionSequenceDisplayFilter;
-import org.lifecompanion.base.data.component.keyoption.simplercomp.UserActionSequenceItemKeyOption;
+import org.lifecompanion.model.impl.editaction.BasePropertyChangeAction;
+import org.lifecompanion.model.impl.configurationcomponent.keyoption.ProgressDisplayKeyOption;
+import org.lifecompanion.model.impl.configurationcomponent.keyoption.QuickComKeyOption;
+import org.lifecompanion.model.impl.configurationcomponent.keyoption.VariableInformationKeyOption;
+import org.lifecompanion.model.impl.configurationcomponent.keyoption.WordPredictionKeyOption;
+import org.lifecompanion.model.impl.configurationcomponent.keyoption.note.NoteKeyDisplayMode;
+import org.lifecompanion.model.impl.configurationcomponent.keyoption.note.NoteKeyOption;
+import org.lifecompanion.model.impl.configurationcomponent.keyoption.dynamickey.KeyListNodeKeyOption;
+import org.lifecompanion.model.impl.configurationcomponent.keyoption.dynamickey.UserActionSequenceDisplayFilter;
+import org.lifecompanion.model.impl.configurationcomponent.keyoption.dynamickey.UserActionSequenceItemKeyOption;
 
 /**
  * All actions relative to key options.

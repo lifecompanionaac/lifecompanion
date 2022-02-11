@@ -27,7 +27,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import org.controlsfx.glyphfont.FontAwesome;
-import org.lifecompanion.base.data.common.Triple;
+import org.lifecompanion.util.Triple;
 import org.lifecompanion.base.data.config.LCGraphicStyle;
 import org.lifecompanion.config.data.action.impl.LCConfigurationActions;
 import org.lifecompanion.config.data.component.profile.ProfileConfigSelectionController;
@@ -77,12 +77,12 @@ public class ConfigAddView extends BorderPane implements LCViewInitHelper, Profi
 
     @Override
     public void initListener() {
-        this.buttonCreateNew.setOnAction(e -> ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.NewConfigInListAction()));
+        this.buttonCreateNew.setOnAction(e -> ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.NewEditInListAction()));
         this.buttonImport.setOnAction(e ->
-                ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.ImportConfigAction(buttonImport, null,
+                ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.ImportEditAction(buttonImport, null,
                         configurationDescription -> ProfileConfigSelectionController.INSTANCE.setConfigStep(ProfileConfigStep.CONFIGURATION_LIST, null, null)))
         );
-        buttonDuplicate.setOnAction(e -> ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.DuplicateConfigAction((buttonDuplicate))));
+        buttonDuplicate.setOnAction(e -> ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.DuplicateEditAction((buttonDuplicate))));
         this.buttonAddFromDefault.setOnAction(e -> ProfileConfigSelectionController.INSTANCE.setConfigStep(ProfileConfigStep.CONFIGURATION_ADD_FROM_DEFAULT, ProfileConfigStep.CONFIGURATION_ADD, null));
     }
     //========================================================================

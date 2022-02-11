@@ -19,17 +19,17 @@
 package org.lifecompanion.base.data.control.prediction;
 
 import javafx.application.Platform;
-import org.lifecompanion.api.component.definition.GridComponentI;
-import org.lifecompanion.api.component.definition.LCConfigurationI;
-import org.lifecompanion.api.component.definition.PredictionParameterI;
-import org.lifecompanion.api.prediction.WordPredictionI;
-import org.lifecompanion.api.prediction.WordPredictionResultI;
-import org.lifecompanion.api.prediction.WordPredictorI;
-import org.lifecompanion.base.data.component.keyoption.WordPredictionKeyOption;
+import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
+import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
+import org.lifecompanion.model.api.configurationcomponent.PredictionParameterI;
+import org.lifecompanion.model.api.textprediction.WordPredictionI;
+import org.lifecompanion.model.api.textprediction.WordPredictionResultI;
+import org.lifecompanion.model.api.textprediction.WordPredictorI;
+import org.lifecompanion.model.impl.configurationcomponent.keyoption.WordPredictionKeyOption;
 import org.lifecompanion.base.data.control.WritingStateController;
-import org.lifecompanion.base.data.plugins.PluginManager;
-import org.lifecompanion.base.data.prediction.predict4all.predictor.Predict4AllWordPredictor;
-import org.lifecompanion.base.data.prediction2.WordPrediction;
+import org.lifecompanion.controller.plugin.PluginManager;
+import org.lifecompanion.model.impl.textprediction.predict4all.Predict4AllWordPredictor;
+import org.lifecompanion.model.impl.textprediction.WordPrediction;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 
 import java.util.List;

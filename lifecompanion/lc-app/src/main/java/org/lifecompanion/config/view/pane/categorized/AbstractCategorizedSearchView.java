@@ -27,7 +27,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import org.controlsfx.control.textfield.TextFields;
-import org.lifecompanion.api.component.definition.eventaction.CategorizedElementI;
+import org.lifecompanion.model.api.categorizedelement.CategorizedElementI;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 

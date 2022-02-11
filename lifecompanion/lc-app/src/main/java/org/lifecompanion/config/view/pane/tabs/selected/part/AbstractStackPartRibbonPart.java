@@ -21,9 +21,9 @@ package org.lifecompanion.config.view.pane.tabs.selected.part;
 
 import javafx.beans.value.ChangeListener;
 import javafx.scene.control.ListCell;
-import org.lifecompanion.api.component.definition.GridComponentI;
-import org.lifecompanion.api.component.definition.StackComponentI;
-import org.lifecompanion.base.data.common.UIUtils;
+import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
+import org.lifecompanion.model.api.configurationcomponent.StackComponentI;
+import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.config.data.action.impl.GridStackActions;
 import org.lifecompanion.config.data.action.impl.GridStackActions.AddGridInStackAction;
 import org.lifecompanion.config.data.action.impl.GridStackActions.RemoveGridInStackAction;

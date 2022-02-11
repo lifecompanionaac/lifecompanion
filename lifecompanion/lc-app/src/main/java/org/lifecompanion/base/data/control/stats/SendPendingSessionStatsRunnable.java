@@ -21,11 +21,11 @@ package org.lifecompanion.base.data.control.stats;
 
 import com.google.gson.*;
 import okhttp3.*;
-import org.lifecompanion.base.data.common.LCUtils;
+import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.base.data.config.LCConstant;
 import org.lifecompanion.base.data.config.UserBaseConfiguration;
 import org.lifecompanion.base.data.control.update.InstallationController;
-import org.lifecompanion.base.data.io.json.JsonHelper;
+import org.lifecompanion.controller.io.JsonHelper;
 import org.lifecompanion.framework.client.http.AppServerClient;
 import org.lifecompanion.framework.client.props.ApplicationBuildProperties;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
