@@ -104,7 +104,7 @@ public class LauncherApplication {
         cmds.add("lifecompanion.merged.module=org.slf4j");
 
         // Unfocusable stage : need internal sun* API
-        cmds.add("--add-exports=javafx.graphics/com.sun.glass.ui=org.lifecompanion.api");
+        cmds.add("--add-exports=javafx.graphics/com.sun.glass.ui=org.lifecompanion.app");
 
         // ControlsFX : open internal sun* API
         cmds.add("--add-opens=javafx.base/com.sun.javafx.runtime=org.controlsfx.controls");
@@ -121,7 +121,7 @@ public class LauncherApplication {
         cmds.add("-splash:data/lifecompanion_splashscreen.png");
 
         cmds.add("-m");
-        cmds.add("org.lifecompanion.app/org.lifecompanion.app.launcher.LCApplication");
+        cmds.add("org.lifecompanion.app/org.lifecompanion.LifeCompanion");
         if (updateDownloadFinished) {
             cmds.add(ARG_UPDATE_DOWNLOAD_FINISHED);
         }

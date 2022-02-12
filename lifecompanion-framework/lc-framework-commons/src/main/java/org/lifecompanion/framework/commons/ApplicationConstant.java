@@ -26,6 +26,7 @@ public class ApplicationConstant {
     public final static String DIR_NAME_APPLICATION_UPDATE = "update";
     public final static String DIR_NAME_APPLICATION_DATA = "data";
 
+    public final static String DIR_NAME_LAUNCHER_UPDATED = "updated-launcher";
     public final static String DIR_NAME_SOFTWARE_RESOURCES_UPDATED = "updated-data";
     public final static String DIR_NAME_USER_DATA_UPDATED = "updated-user-data";
 

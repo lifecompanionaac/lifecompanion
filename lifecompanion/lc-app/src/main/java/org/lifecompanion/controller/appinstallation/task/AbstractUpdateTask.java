@@ -112,11 +112,11 @@ public abstract class AbstractUpdateTask<V> extends LCTask<V> {
                         destDownloadLauncherFile.delete();
                         LOGGER.info("Launcher updated to {}", lastLauncher.getVersion());
                         // On Mac and Unix, launcher should be executable
-                        setLaunchExecutable(launcherFile);
+                        setLauncherExecutable(launcherFile);
                     } catch (Exception e) {
                         LOGGER.error("Problem with launcher update, backing up the previous launcher from {}", backupLauncherFile, e);
                         IOUtils.copyFiles(backupLauncherFile, launcherFile);
-                        setLaunchExecutable(launcherFile);
+                        setLauncherExecutable(launcherFile);
                         return false;
                     }
                 } else {
@@ -130,7 +130,7 @@ public abstract class AbstractUpdateTask<V> extends LCTask<V> {
         return true;
     }
 
-    protected void setLaunchExecutable(File launcherFile) {
+    protected void setLauncherExecutable(File launcherFile) {
         if (SystemType.current() == SystemType.MAC || SystemType.current() == SystemType.UNIX) {
             launcherFile.setExecutable(true);
         }

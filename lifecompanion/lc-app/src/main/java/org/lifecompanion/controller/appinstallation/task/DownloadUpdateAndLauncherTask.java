@@ -20,7 +20,6 @@
 package org.lifecompanion.controller.appinstallation.task;
 
 import org.lifecompanion.controller.appinstallation.InstallationController;
-import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.framework.client.http.AppServerClient;
 import org.lifecompanion.framework.client.service.AppServerService;
 import org.lifecompanion.framework.commons.ApplicationConstant;
@@ -33,10 +32,13 @@ import org.lifecompanion.framework.model.client.UpdateFileProgressType;
 import org.lifecompanion.framework.model.client.UpdateProgress;
 import org.lifecompanion.framework.model.client.UpdateProgressType;
 import org.lifecompanion.framework.model.server.update.TargetType;
+import org.lifecompanion.util.LCUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.Optional;
 
 public class DownloadUpdateAndLauncherTask extends AbstractUpdateTask<Boolean> {
     private static final Logger LOGGER = LoggerFactory.getLogger(DownloadUpdateAndLauncherTask.class);
@@ -65,10 +67,14 @@ public class DownloadUpdateAndLauncherTask extends AbstractUpdateTask<Boolean> {
                 if (updateFile.getStatus() == UpdateFileProgressType.PROCESSED) {
                     LOGGER.info("Previous file {} was already downloaded/copied, skip it", updateFile.getTargetPath());
                 } else if (updateFile.getStatus() == UpdateFileProgressType.TO_DOWNLOAD) {
-                    appServerService.downloadAndInstallFile(appServerService, updateFile,
+                    appServerService.downloadAndInstallFileV2(
+                            appServerService,
+                            updateFile,
                             updateDirectory,
+                            new File(updateDirectory.getPath() + File.separator + ApplicationConstant.DIR_NAME_LAUNCHER_UPDATED),
                             new File(updateDirectory.getPath() + File.separator + ApplicationConstant.DIR_NAME_SOFTWARE_RESOURCES_UPDATED),
-                            new File(updateDirectory.getPath() + File.separator + ApplicationConstant.DIR_NAME_USER_DATA_UPDATED));
+                            new File(updateDirectory.getPath() + File.separator + ApplicationConstant.DIR_NAME_USER_DATA_UPDATED)
+                    );
                     updateFile.setStatus(UpdateFileProgressType.PROCESSED);
                 } else if (updateFile.getStatus() == UpdateFileProgressType.TO_COPY) {
                     if (updateFile.getTargetType() == TargetType.SOFTWARE_DATA) {
@@ -105,12 +111,30 @@ public class DownloadUpdateAndLauncherTask extends AbstractUpdateTask<Boolean> {
             final CheckAndDownloadPluginUpdateTask checkAndDowloadPluginTask = InstallationController.INSTANCE.createCheckAndDowloadPluginTask(false);
             InstallationController.INSTANCE.tryToAddPluginsAfterDownload(LCUtils.executeInCurrentThread(checkAndDowloadPluginTask));
 
-            LOGGER.info("Update processed, file are downloaded/copied, will now check for launcher update");
-            boolean launcherUpdateIsOk = downloadAndInstallLauncherUpdate(appServerService);
-            if (launcherUpdateIsOk) {
-                updateProgress.setStatus(UpdateProgressType.DONE);
-                saveJson(updateProgress, stateFile);
-                new File(updateDirectory.getPath() + File.separator + ApplicationConstant.UPDATE_DOWNLOAD_FINISHED_FLAG_FILE).createNewFile();
+            LOGGER.info("Update processed, file are downloaded/copied, will now check to install launcher update");
+            // If the launcher was updated, copy it before set update finished
+            final Optional<UpdateFileProgress> launcherFileProgressFound = updateProgress.getFiles() != null ? updateProgress.getFiles().stream().filter(updateFileProgress -> updateFileProgress.getTargetType() == TargetType.LAUNCHER).findAny() : Optional.empty();
+            if (launcherFileProgressFound.isPresent()) {
+                updateMessage(Translation.getText("update.task.check.launcher.install2"));
+                final UpdateFileProgress launcherFileProgress = launcherFileProgressFound.get();
+                //Replace launcher file, if doesn't fail, update is ready
+                final String updatedLauncherPath = updateDirectory.getPath() + File.separator + ApplicationConstant.DIR_NAME_LAUNCHER_UPDATED + File.separator + launcherFileProgress.getTargetPath();
+                File launcherUpdatedFile = new File(updatedLauncherPath);
+                File launcherFile = new File(launcherFileProgress.getTargetPath());
+                File launcherBackupFile = new File(updatedLauncherPath + "-backup");
+                IOUtils.copyFiles(launcherFile, launcherBackupFile);
+                try {
+                    IOUtils.copyFiles(launcherUpdatedFile, launcherFile);
+                    setLauncherExecutable(launcherFile);
+                    setUpdateFinished(updateDirectory, stateFile);
+                } catch (Exception e) {
+                    LOGGER.error("Launcher update failed (wanted to update {} with {}) will copy previous launcher back", launcherFile, launcherUpdatedFile, e);
+                    IOUtils.copyFiles(launcherBackupFile, launcherFile);
+                    setLauncherExecutable(launcherFile);
+                    return false;
+                }
+            } else {
+                setUpdateFinished(updateDirectory, stateFile);
             }
             return true;
         } else {
@@ -119,5 +143,10 @@ public class DownloadUpdateAndLauncherTask extends AbstractUpdateTask<Boolean> {
         }
     }
 
-
+    private void setUpdateFinished(File updateDirectory, File stateFile) throws IOException {
+        updateProgress.setStatus(UpdateProgressType.DONE);
+        saveJson(updateProgress, stateFile);
+        final boolean created = new File(updateDirectory.getPath() + File.separator + ApplicationConstant.UPDATE_DOWNLOAD_FINISHED_FLAG_FILE).createNewFile();
+        LOGGER.info("Update done flag file created : {}", created);
+    }
 }

@@ -3,7 +3,7 @@ import org.lifecompanion.build.PublishLauncherTask
 plugins {
     id 'edu.sc.seis.launch4j' version '2.5.0'
     id 'org.javamodularity.moduleplugin' version '1.6.0'
-    id 'org.lifecompanion.gradle.plugin.publish-launcher'
+    // id 'org.lifecompanion.gradle.plugin.publish-launcher'
 }
 
 ext {
@@ -18,11 +18,12 @@ dependencies {
 
 processResources {
     outputs.upToDateWhen { false }
+    // resource is only used on Windows, other system generated their properties on launch
     filesMatching('**launcher.properties') {
         expand(
                 'version': project.version,
                 'buildDate': new Date().getTime(),
-                'launcherPath': getLauncherPathFromOs('WINDOWS') // resource is only used on Windows
+                'launcherPath': getLauncherPathFromOs('WINDOWS')
         )
     }
 }
@@ -51,22 +52,30 @@ launch4j {
     icon = "${projectDir}/build-src/lifecompanion_icon.ico"
 }
 
-task publishWindowsLauncher(type : PublishLauncherTask) {
-    dependsOn 'createExe'
-    file =  "$buildDir/launchers/WINDOWS/LifeCompanion.exe"
-    system = 'WINDOWS'
-}
+//task publishWindowsLauncher(type : PublishLauncherTask) {
+//    dependsOn 'createExe'
+//    file =  "$buildDir/launchers/WINDOWS/LifeCompanion.exe"
+//    system = 'WINDOWS'
+//}
+//
+//task publishUnixLauncher(type : PublishLauncherTask) {
+//    dependsOn  prepareSHLauncher('UNIX')
+//    file =  "$buildDir/launchers/UNIX/lifecompanion.sh"
+//    system = 'UNIX'
+//}
+//
+//task publishMacLauncher(type : PublishLauncherTask) {
+//    dependsOn  prepareSHLauncher('MAC')
+//    file =  "$buildDir/launchers/MAC/lifecompanion.sh"
+//    system = 'MAC'
+//}
 
-task publishUnixLauncher(type : PublishLauncherTask) {
-    dependsOn  prepareSHLauncher('UNIX')
-    file =  "$buildDir/launchers/UNIX/lifecompanion.sh"
-    system = 'UNIX'
-}
-
-task publishMacLauncher(type : PublishLauncherTask) {
+task prepareLaunchers {
+    group 'lifecompanion'
+    dependsOn 'clean'
     dependsOn  prepareSHLauncher('MAC')
-    file =  "$buildDir/launchers/MAC/lifecompanion.sh"
-    system = 'MAC'
+    dependsOn  prepareSHLauncher('UNIX')
+    dependsOn 'createExe'
 }
 
 def prepareSHLauncher(String system) {

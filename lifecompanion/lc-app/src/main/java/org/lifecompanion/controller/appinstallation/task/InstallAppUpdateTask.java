@@ -19,7 +19,6 @@
 
 package org.lifecompanion.controller.appinstallation.task;
 
-import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.framework.client.http.AppServerClient;
 import org.lifecompanion.framework.commons.configuration.InstallationConfiguration;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
@@ -28,6 +27,7 @@ import org.lifecompanion.framework.model.client.UpdateFileProgress;
 import org.lifecompanion.framework.model.client.UpdateFileProgressType;
 import org.lifecompanion.framework.model.client.UpdateProgress;
 import org.lifecompanion.framework.model.server.update.TargetType;
+import org.lifecompanion.model.impl.constant.LCConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -87,7 +87,7 @@ public class InstallAppUpdateTask extends AbstractUpdateTask<Boolean> {
             }
         }
         // Note : we don't use update file list as the user could add its own file to software directories and we don't want these files to be deleted
-        Set<String> dirNamesToIgnore = new HashSet<>(Arrays.asList(DIR_NAME_SOFTWARE_RESOURCES_UPDATED, DIR_NAME_USER_DATA_UPDATED));
+        Set<String> dirNamesToIgnore = new HashSet<>(Arrays.asList(DIR_NAME_SOFTWARE_RESOURCES_UPDATED, DIR_NAME_USER_DATA_UPDATED, DIR_NAME_LAUNCHER_UPDATED));
         copyFileFrom(updateDirectory, updateDirectory, applicationDirectory, dirNamesToIgnore);
 
         File softwareResourcesDir = new File(updateDirectory.getPath() + File.separator + DIR_NAME_SOFTWARE_RESOURCES_UPDATED);

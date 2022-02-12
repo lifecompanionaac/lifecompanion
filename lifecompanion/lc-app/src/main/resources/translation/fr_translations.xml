@@ -1411,6 +1411,7 @@
   <text key="update.task.download.app.file">Mise à jour du fichier {} ({})</text>
 
   <text key="update.task.check.launcher.install">Installation du lanceur {}</text>
+  <text key="update.task.check.launcher.install2">Installation du lanceur</text>
   <text key="update.task.check.plugin.update">Vérification des mises à jour des extensions</text>
   <text key="update.task.check.plugin.update.check.for">Vérification d'une mise à jour pour {}</text>
   <text key="user.config.unsaved.modification.threshold">Nombre de modifications non enregistrées avant

@@ -65,7 +65,8 @@ public class MacSystemInstallation extends DefaultSystemInstallation {
 
         // Exec rights on launcher
         File launcherFile = new File(configuration.getInstallationSoftwareDirectory().getPath() + File.separator + "MacOS" + File.separator + "lifecompanion.sh");
-        launcherFile.setExecutable(true);
+        final boolean setExecutable = launcherFile.setExecutable(true);
+        LOGGER.info("Launcher set executable result : {}", setExecutable);
     }
 
     @Override

@@ -19,7 +19,7 @@ dependencies {
 }
 
 mainClassName = "org.lifecompanion.framework.server.LifeCompanionFrameworkServer"
-version = "1.12.0"
+version = "1.13.0"
 
 ext {
     env = project.hasProperty('env') ? project.property('env') : 'local'

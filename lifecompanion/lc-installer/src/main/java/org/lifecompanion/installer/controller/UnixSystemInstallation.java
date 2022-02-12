@@ -63,7 +63,8 @@ public class UnixSystemInstallation extends DefaultSystemInstallation {
 
         // Exec rights on launcher
         File launcherFile = new File(configuration.getInstallationSoftwareDirectory().getAbsolutePath() + File.separator + "launcher" + File.separator + "lifecompanion.sh");
-        launcherFile.setExecutable(true);
+        final boolean setExecutable = launcherFile.setExecutable(true);
+        LOGGER.info("Launcher set executable result : {}", setExecutable);
     }
 
     @Override

@@ -155,6 +155,7 @@ public class AppServerService {
         return new File(filePath.getParentFile().getPath() + File.separator + FileNameUtils.getNameWithoutExtension(filePath));
     }
 
+    @Deprecated
     public boolean downloadAndInstallFile(AppServerService appServerService, UpdateFileProgress file, File softwareDataDir, File softwareResourcesDir, File userDataDir) throws ApiException, IOException {
         File destPath = null;
         if (file.getTargetType() == TargetType.SOFTWARE_DATA) {
@@ -165,7 +166,45 @@ public class AppServerService {
             destPath = new File(userDataDir.getPath() + File.separator + file.getTargetPath());
         }
         LOGGER.debug("Will download update file {} to {}", file, destPath);
-        // Check that the file to unzip wasn't already downloaded
+        // Check that the file to unzip wasn't already downloaded and extracted
+        if (file.isToUnzip()) {
+            File fileToUnzipDestination = getFileToUnzipDestination(destPath);
+            if (fileToUnzipDestination.exists() && fileToUnzipDestination.listFiles() != null && fileToUnzipDestination.listFiles().length > 0) {
+                LOGGER.info("File {} wasn't downloaded and unzipped because it was already existing and unzipped", destPath);
+                return true;
+            }
+        }
+        // Check that the file to download doesn't already exist and its hash is correct
+        if (destPath.exists() && StringUtils.isEquals(IOUtils.fileSha256HexToString(destPath), file.getFileHash())) {
+            LOGGER.info("File {} wasn't downloaded because it was already in destination path and its hash was correct", destPath);
+            return true;
+        }
+
+        // None of the check worked, we should download the file again
+        appServerService.downloadFileAndCheckIt(
+                () -> appServerService.getApplicationFileDownloadUrl(file.getFileId()),
+                destPath,
+                file.getFileHash(),
+                ApplicationConstant.DOWNLOAD_ATTEMPT_COUNT_BEFORE_FAIL);
+        if (file.isToUnzip()) {
+            appServerService.extractZip(destPath);
+        }
+        return false;
+    }
+
+    public boolean downloadAndInstallFileV2(AppServerService appServerService, UpdateFileProgress file, File softwareDataDir, File launcherDir, File softwareResourcesDir, File userDataDir) throws ApiException, IOException {
+        File destPath = null;
+        if (file.getTargetType() == TargetType.SOFTWARE_DATA) {
+            destPath = new File(softwareDataDir.getPath() + File.separator + file.getTargetPath());
+        } else if (file.getTargetType() == TargetType.SOFTWARE_RESOURCES) {
+            destPath = new File(softwareResourcesDir.getPath() + File.separator + file.getTargetPath());
+        } else if (file.getTargetType() == TargetType.USER_DATA) {
+            destPath = new File(userDataDir.getPath() + File.separator + file.getTargetPath());
+        } else if (file.getTargetType() == TargetType.LAUNCHER) {
+            destPath = new File(launcherDir.getPath() + File.separator + file.getTargetPath());
+        }
+        LOGGER.debug("Will download update file {} to {}", file, destPath);
+        // Check that the file to unzip wasn't already downloaded and extracted
         if (file.isToUnzip()) {
             File fileToUnzipDestination = getFileToUnzipDestination(destPath);
             if (fileToUnzipDestination.exists() && fileToUnzipDestination.listFiles() != null && fileToUnzipDestination.listFiles().length > 0) {

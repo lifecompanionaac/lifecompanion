@@ -21,9 +21,21 @@ package org.lifecompanion.framework.model.server.update;
 
 public enum TargetType {
     // "application" directory
-    SOFTWARE_DATA,
+    SOFTWARE_DATA(true),
     // "data" directory
-    SOFTWARE_RESOURCES,
+    SOFTWARE_RESOURCES(false),
     // user configured directory
-    USER_DATA;
+    USER_DATA(false),
+    // launcher file (one unique file per update)
+    LAUNCHER(true);
+
+    private final boolean systemTypeDependant;
+
+    TargetType(boolean systemTypeDependant) {
+        this.systemTypeDependant = systemTypeDependant;
+    }
+
+    public boolean isSystemTypeDependant() {
+        return systemTypeDependant;
+    }
 }

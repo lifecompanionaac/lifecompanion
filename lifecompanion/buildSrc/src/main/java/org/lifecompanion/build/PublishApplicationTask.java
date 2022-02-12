@@ -46,6 +46,16 @@ public abstract class PublishApplicationTask extends DefaultTask {
             .with(SystemType.UNIX, "linux_x64")
             .with(SystemType.MAC, "mac_x64");
 
+    private static final Map<SystemType, String> PATH_TO_LAUNCHER = FluentHashMap
+            .map(SystemType.WINDOWS, "launchers/WINDOWS/LifeCompanion.exe")
+            .with(SystemType.UNIX, "launchers/UNIX/lifecompanion.sh")
+            .with(SystemType.MAC, "launchers/MAC/lifecompanion.sh");
+
+    private static final Map<SystemType, String> LAUNCHER_PATH = FluentHashMap
+            .map(SystemType.WINDOWS, "LifeCompanion.exe")
+            .with(SystemType.MAC, "MacOS/lifecompanion.sh")
+            .with(SystemType.UNIX, "launcher/lifecompanion.sh");
+
     private static final Set<String> TO_UNZIP_PATH = Set.of(
             "resources/images/arasaac.zip",
             "resources/images/sclera.zip",
@@ -87,6 +97,12 @@ public abstract class PublishApplicationTask extends DefaultTask {
                 exploreAndHashFiles(softwareResourcesRoot, TargetType.SOFTWARE_RESOURCES, system, softwareResourcesRoot, files, TO_UNZIP_PATH, PRESET_STORAGE_IDS);
                 LOGGER.lifecycle("Found {} software resources files in directory ({})", files.size() - beforeSize, softwareResourcesRoot);
 
+                File launcherFile = new File(getProject().getRootProject().getProjectDir().getAbsolutePath() + File.separator + "lc-app-launcher" + File.separator + "build" + File.separator + PATH_TO_LAUNCHER.get(system));
+                if (!launcherFile.exists())
+                    throw new IllegalArgumentException("Launcher wasn't prepared before update, run `prepareLaunchers` task on 'lc-app-launcher' before (expecting launcher file : " + launcherFile.getAbsolutePath() + ")");
+                addFileTo(TargetType.LAUNCHER, system, launcherFile, LAUNCHER_PATH.get(system), files, TO_UNZIP_PATH, PRESET_STORAGE_IDS);
+                LOGGER.lifecycle("Launcher file got for {} : {}", system, launcherFile.getName());
+
                 // Initialize update
                 InitializeApplicationUpdateDto initializeApplicationUpdateDto = new InitializeApplicationUpdateDto(appId, system, null, null, version, files.values());
 
@@ -124,18 +140,23 @@ public abstract class PublishApplicationTask extends DefaultTask {
                 }
             }
         } else {
-            String path = IOUtils.getRelativePath(file.getAbsolutePath(), root.getAbsolutePath());
-            files.put(path, new ApplicationUpdateFileDto(
-                            path,
-                            IOUtils.fileSha256HexToString(file),
-                            targetType,
-                            file.length(),
-                            targetType == TargetType.SOFTWARE_DATA ? system : null,
-                            toUnzipPathSet.contains(path),
-                            presetStorageIdsMap.get(path),
-                            file
-                    )
-            );
+            String targetPath = IOUtils.getRelativePath(file.getAbsolutePath(), root.getAbsolutePath());
+            addFileTo(targetType, system, file, targetPath, files, toUnzipPathSet, presetStorageIdsMap);
         }
+    }
+
+    private static void addFileTo(TargetType targetType, SystemType system, File file, String targetPath, Map<String, ApplicationUpdateFileDto> files, Set<String> toUnzipPathSet, Map<String, String> presetStorageIdsMap) throws IOException {
+
+        files.put(targetPath, new ApplicationUpdateFileDto(
+                        targetPath,
+                        IOUtils.fileSha256HexToString(file),
+                        targetType,
+                        file.length(),
+                        targetType.isSystemTypeDependant() ? system : null,
+                        toUnzipPathSet.contains(targetPath),
+                        presetStorageIdsMap.get(targetPath),
+                        file
+                )
+        );
     }
 }
