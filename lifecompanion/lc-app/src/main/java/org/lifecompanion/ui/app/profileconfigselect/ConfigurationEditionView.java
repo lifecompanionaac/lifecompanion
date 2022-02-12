@@ -31,23 +31,24 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import org.controlsfx.control.ToggleSwitch;
 import org.controlsfx.glyphfont.FontAwesome;
-import org.lifecompanion.model.api.profile.ChangelogEntryI;
-import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
-import org.lifecompanion.ui.common.pane.specific.cell.ChangelogEntryListCell;
-import org.lifecompanion.util.javafx.DisableSelectionSelectionModel;
-import org.lifecompanion.util.model.Triple;
-import org.lifecompanion.util.UIUtils;
-import org.lifecompanion.model.impl.constant.LCGraphicStyle;
-import org.lifecompanion.controller.profile.ProfileController;
 import org.lifecompanion.controller.editaction.LCConfigurationActions;
+import org.lifecompanion.controller.editmode.ConfigActionController;
+import org.lifecompanion.controller.profile.ProfileController;
 import org.lifecompanion.controller.profileconfigselect.ProfileConfigSelectionController;
 import org.lifecompanion.controller.profileconfigselect.ProfileConfigStep;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
-import org.lifecompanion.controller.editmode.ConfigActionController;
-import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.model.api.profile.ChangelogEntryI;
+import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
+import org.lifecompanion.model.impl.constant.LCGraphicStyle;
+import org.lifecompanion.ui.common.pane.specific.cell.ChangelogEntryListCell;
+import org.lifecompanion.util.ConfigUIUtils;
+import org.lifecompanion.util.UIControlHelper;
+import org.lifecompanion.util.UIUtils;
+import org.lifecompanion.util.javafx.DisableSelectionSelectionModel;
+import org.lifecompanion.util.model.Triple;
 
 import java.util.stream.Collectors;
 
@@ -80,7 +81,9 @@ public class ConfigurationEditionView extends BorderPane implements ProfileConfi
      */
     private final ObjectProperty<LCConfigurationDescriptionI> editedConfiguration;
 
-    private Button buttonValidate, buttonExport, buttonRemove, buttonDesktopShortcut;
+    private Button buttonValidate;
+
+    private Node nodeExportAction, nodeRemoveAction, nodeDesktopShortcut;
 
     /**
      * Display changelog entries list
@@ -96,7 +99,7 @@ public class ConfigurationEditionView extends BorderPane implements ProfileConfi
     //========================================================================
     @Override
     public void initUI() {
-        Triple<HBox, Label, Node> header = ConfigUIUtils.createHeader("configuration.edit.title", e -> closeCurrentEdit(false, true));
+        Triple<HBox, Label, Node> header = UIControlHelper.createHeader("configuration.edit.title", e -> closeCurrentEdit(false, true));
 
         this.configurationPreview = new ImageView();
         this.configurationPreview.setFitHeight(200);
@@ -138,15 +141,21 @@ public class ConfigurationEditionView extends BorderPane implements ProfileConfi
         gridPaneInfo.add(buttonValidate, 1, 8);
 
         // Actions
-        GridPane gridPaneButton = new GridPane();
-        this.buttonExport = ConfigUIUtils.createActionTableEntry(2, "configuration.selection.export.configuration.button",
-                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.UPLOAD).size(30).color(LCGraphicStyle.MAIN_DARK), gridPaneButton);
-        this.buttonRemove = ConfigUIUtils.createActionTableEntry(4, "configuration.selection.remove.configuration.button",
-                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.TRASH).size(30).color(LCGraphicStyle.SECOND_DARK), gridPaneButton);
+        this.nodeExportAction = UIControlHelper.createActionTableEntry("configuration.selection.export.configuration.button",
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.UPLOAD).size(30).color(LCGraphicStyle.MAIN_DARK),
+                () -> ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.EditConfigurationAction(this.editedConfiguration.get(),
+                        configDescription -> ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.ExportEditAction(nodeExportAction, configDescription)))));
+        this.nodeRemoveAction = UIControlHelper.createActionTableEntry("configuration.selection.remove.configuration.button",
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.TRASH).size(30).color(LCGraphicStyle.SECOND_DARK),
+                () -> ConfigActionController.INSTANCE
+                        .executeAction(new LCConfigurationActions.RemoveConfigurationAction(nodeRemoveAction, ProfileController.INSTANCE.currentProfileProperty().get(), this.editedConfiguration.get(),
+                                removedConfig -> ProfileConfigSelectionController.INSTANCE.setConfigStep(ProfileConfigStep.CONFIGURATION_LIST, null, null))));
         if (SystemType.current() == SystemType.WINDOWS) {
-            this.buttonDesktopShortcut = ConfigUIUtils.createActionTableEntry(6, "configuration.selection.create.desktop.link.button",
-                    GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.EXTERNAL_LINK).size(30).color(LCGraphicStyle.MAIN_DARK), gridPaneButton);
+            this.nodeDesktopShortcut = UIControlHelper.createActionTableEntry("configuration.selection.create.desktop.link.button",
+                    GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.EXTERNAL_LINK).size(30).color(LCGraphicStyle.MAIN_DARK),
+                    () -> ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.CreateDesktopShortcut(ProfileController.INSTANCE.currentProfileProperty().get(), this.editedConfiguration.get())));
         }
+        VBox boxActionButtons = new VBox(5.0, nodeExportAction, nodeRemoveAction, nodeDesktopShortcut);
 
         // Changelog entries
         listViewChangelogEntries = new ListView<>();
@@ -157,9 +166,9 @@ public class ConfigurationEditionView extends BorderPane implements ProfileConfi
 
         // Total
         VBox boxCenter = new VBox(3.0,
-                UIUtils.createTitleLabel("configuration.edition.general.information.title"), gridPaneInfo,
-                UIUtils.createTitleLabel("configuration.edition.general.actions.title"), gridPaneButton,
-                UIUtils.createTitleLabel("configuration.edition.general.changelog.entries"), listViewChangelogEntries
+                UIControlHelper.createTitleLabel("configuration.edition.general.information.title"), gridPaneInfo,
+                UIControlHelper.createTitleLabel("configuration.edition.general.actions.title"), boxActionButtons,
+                UIControlHelper.createTitleLabel("configuration.edition.general.changelog.entries"), listViewChangelogEntries
         );
         boxCenter.setPadding(new Insets(10.0));
 
@@ -189,10 +198,10 @@ public class ConfigurationEditionView extends BorderPane implements ProfileConfi
                 this.listViewChangelogEntries.setItems(createChangelogList(nv));
             }
         });
-        this.buttonExport.disableProperty().bind(ProfileConfigSelectionController.INSTANCE.currentStepProperty().isEqualTo(ProfileConfigStep.CONFIGURATION_CREATE));
-        this.buttonRemove.disableProperty().bind(ProfileConfigSelectionController.INSTANCE.currentStepProperty().isEqualTo(ProfileConfigStep.CONFIGURATION_CREATE));
-        if (this.buttonDesktopShortcut != null) {
-            this.buttonDesktopShortcut.disableProperty().bind(ProfileConfigSelectionController.INSTANCE.currentStepProperty().isEqualTo(ProfileConfigStep.CONFIGURATION_CREATE));
+        this.nodeExportAction.disableProperty().bind(ProfileConfigSelectionController.INSTANCE.currentStepProperty().isEqualTo(ProfileConfigStep.CONFIGURATION_CREATE));
+        this.nodeRemoveAction.disableProperty().bind(ProfileConfigSelectionController.INSTANCE.currentStepProperty().isEqualTo(ProfileConfigStep.CONFIGURATION_CREATE));
+        if (this.nodeDesktopShortcut != null) {
+            this.nodeDesktopShortcut.disableProperty().bind(ProfileConfigSelectionController.INSTANCE.currentStepProperty().isEqualTo(ProfileConfigStep.CONFIGURATION_CREATE));
         }
         this.toggleSwitchLaunchInUseMode.disableProperty().bind(ProfileConfigSelectionController.INSTANCE.currentStepProperty().isEqualTo(ProfileConfigStep.CONFIGURATION_CREATE));
     }
@@ -204,16 +213,6 @@ public class ConfigurationEditionView extends BorderPane implements ProfileConfi
     @Override
     public void initListener() {
         buttonValidate.setOnAction(e -> closeCurrentEdit(false, false));
-        this.buttonRemove.setOnAction(e -> ConfigActionController.INSTANCE
-                .executeAction(new LCConfigurationActions.RemoveConfigurationAction(buttonRemove, ProfileController.INSTANCE.currentProfileProperty().get(), this.editedConfiguration.get(),
-                        removedConfig -> ProfileConfigSelectionController.INSTANCE.setConfigStep(ProfileConfigStep.CONFIGURATION_LIST, null, null))));
-        this.buttonExport.setOnAction(e ->
-                ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.EditConfigurationAction(this.editedConfiguration.get(),
-                        configDescription -> ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.ExportEditAction(buttonRemove, configDescription))))
-        );
-        if (this.buttonDesktopShortcut != null) {
-            this.buttonDesktopShortcut.setOnAction(e -> ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.CreateDesktopShortcut(ProfileController.INSTANCE.currentProfileProperty().get(), this.editedConfiguration.get())));
-        }
         this.toggleSwitchLaunchInUseMode.selectedProperty().addListener((obs, ov, nv) -> {
             if (nv != this.editedConfiguration.get().launchInUseModeProperty().get()) {
                 ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.SetDefaultEditAction(this.editedConfiguration.get(), toggleSwitchLaunchInUseMode.isSelected()));

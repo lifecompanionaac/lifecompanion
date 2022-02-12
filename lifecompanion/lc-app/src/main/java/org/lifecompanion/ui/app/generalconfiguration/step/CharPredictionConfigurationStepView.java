@@ -28,7 +28,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
-import org.lifecompanion.util.UIUtils;
+import org.lifecompanion.util.UIControlHelper;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStep;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStepViewI;
 import org.lifecompanion.framework.commons.translation.Translation;
@@ -88,7 +88,7 @@ public class CharPredictionConfigurationStepView extends BorderPane implements G
         this.fieldCharPrediction = new TextField();
         fieldCharPrediction.setMaxWidth(Double.MAX_VALUE);
         GridPane.setHgrow(fieldCharPrediction, Priority.ALWAYS);
-        Label labelGenPartTitle = UIUtils.createTitleLabel(Translation.getText("general.configuration.char.predictor.general.configuration.part"));
+        Label labelGenPartTitle = UIControlHelper.createTitleLabel(Translation.getText("general.configuration.char.predictor.general.configuration.part"));
 
         int gridRowIndex = 0;
         gridPaneTotal.add(labelGenPartTitle, 0, gridRowIndex++, 2, 1);

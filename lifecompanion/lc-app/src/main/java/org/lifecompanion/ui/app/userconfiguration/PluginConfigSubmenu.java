@@ -26,6 +26,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.ui.common.pane.specific.cell.PluginInfoListCell;
+import org.lifecompanion.util.UIControlHelper;
 import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.model.impl.plugin.PluginInfo;
@@ -47,7 +48,7 @@ public class PluginConfigSubmenu extends BorderPane implements LCViewInitHelper,
 
     @Override
     public void initUI() {
-        Label labelPluginList = UIUtils.createTitleLabel("general.configuration.view.step.plugin.list.plugin.label");
+        Label labelPluginList = UIControlHelper.createTitleLabel("general.configuration.view.step.plugin.list.plugin.label");
 
         listViewPlugins = new ListView<>(PluginController.INSTANCE.getPluginInfoList());
         listViewPlugins.setCellFactory(lv -> new PluginInfoListCell(lv));

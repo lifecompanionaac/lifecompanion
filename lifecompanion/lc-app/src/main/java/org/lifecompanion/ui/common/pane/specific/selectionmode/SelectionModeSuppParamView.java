@@ -39,6 +39,7 @@ import org.lifecompanion.model.api.selectionmode.ScanningMode;
 import org.lifecompanion.ui.common.pane.specific.cell.FireEventInputListCell;
 import org.lifecompanion.ui.common.pane.specific.cell.ProgressDrawModeSimpleListCell;
 import org.lifecompanion.ui.common.pane.specific.cell.ScanningModeSimpleListCell;
+import org.lifecompanion.util.UIControlHelper;
 import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.selectionmode.SelectionModeEnum;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStepViewI;
@@ -213,7 +214,7 @@ public class SelectionModeSuppParamView extends BaseConfigurationViewBorderPane<
         labelScanningMode = new Label(Translation.getText("selection.mode.scanning.mode.label"));
 
         // Manual scanning input part
-        titlePartManualScanning = UIUtils.createTitleLabel("selection.mode.param.title.part.manual.scanning.part");
+        titlePartManualScanning = UIControlHelper.createTitleLabel("selection.mode.param.title.part.manual.scanning.part");
 
         this.comboBoxNextScanEventInput = new ComboBox<>(FXCollections.observableArrayList(FireEventInput.values()));
         this.comboBoxNextScanEventInput.setCellFactory((lv) -> new FireEventInputListCell());
@@ -238,7 +239,7 @@ public class SelectionModeSuppParamView extends BaseConfigurationViewBorderPane<
         mouseNodes = Arrays.asList(labelMouseButton, mouseButtonSelectorControl);
 
         // Auto activation
-        titlePartActivation = UIUtils.createTitleLabel("selection.mode.param.title.part.activation.configuration");
+        titlePartActivation = UIControlHelper.createTitleLabel("selection.mode.param.title.part.activation.configuration");
         this.spinnerAutoActivation = UIUtils.createDoubleSpinner(0.0, 100.0, 2.0, 0.1, GeneralConfigurationStepViewI.FIELD_WIDTH);
         UIUtils.createAndAttachTooltip(spinnerAutoActivation, "tooltip.explain.auto.activation.time");
         labelTimeActivation = new Label(Translation.getText("selection.mode.auto.time.activation"));
@@ -255,7 +256,7 @@ public class SelectionModeSuppParamView extends BaseConfigurationViewBorderPane<
         GridPane.setHalignment(this.spinnerAutoOver, HPos.RIGHT);
 
         // Auto scanning
-        titlePartAutoScanning = UIUtils.createTitleLabel("selection.mode.param.title.part.auto.scanning.configuration");
+        titlePartAutoScanning = UIControlHelper.createTitleLabel("selection.mode.param.title.part.auto.scanning.configuration");
         labelScanPause = new Label(Translation.getText("selection.mode.param.scan.pause"));
         this.spinnerScanPause = UIUtils.createDoubleSpinner(0.1, 100.0, 2.0, 0.1, GeneralConfigurationStepViewI.FIELD_WIDTH);
         UIUtils.createAndAttachTooltip(spinnerScanPause, "tooltip.explain.selection.param.scan.pause");
@@ -270,14 +271,14 @@ public class SelectionModeSuppParamView extends BaseConfigurationViewBorderPane<
                 "tooltip.explain.selection.param.scan.start.on.clic");
 
         // Scanning part (auto + manual)
-        titlePartScanning = UIUtils.createTitleLabel("selection.mode.param.title.part.scanning.configuration");
+        titlePartScanning = UIControlHelper.createTitleLabel("selection.mode.param.title.part.scanning.configuration");
         labelScanMaxSame = new Label(Translation.getText("selection.mode.param.max.scan.same"));
         this.spinnerMaxScan = UIUtils.createIntSpinner(1, 20, 2, 1, GeneralConfigurationStepViewI.FIELD_WIDTH);
         GridPane.setHalignment(spinnerMaxScan, HPos.RIGHT);
         UIUtils.createAndAttachTooltip(spinnerMaxScan, "tooltip.explain.selection.param.scan.max.scan");
 
         // Style part
-        titlePartStyle = UIUtils.createTitleLabel("selection.mode.param.title.general.style.configuration");
+        titlePartStyle = UIControlHelper.createTitleLabel("selection.mode.param.title.general.style.configuration");
         this.colorPickerActivation = new LCColorPicker();
         colorPickerActivation.setMaxWidth(Double.MAX_VALUE);
         UIUtils.createAndAttachTooltip(colorPickerActivation, "tooltip.explain.selection.param.activation.color");
@@ -297,7 +298,7 @@ public class SelectionModeSuppParamView extends BaseConfigurationViewBorderPane<
         labelSelectionViewSize = new Label(Translation.getText("selection.mode.param.selection.view.size"));
 
         // Scanning style part
-        titlePartProgressStyle = UIUtils.createTitleLabel("selection.mode.param.title.progress.style.configuration");
+        titlePartProgressStyle = UIControlHelper.createTitleLabel("selection.mode.param.title.progress.style.configuration");
         this.toggleEnableProgressDrawing = ConfigUIUtils.createToggleSwitch("selection.mode.param.draw.scanning.progress",
                 "tooltip.explain.selection.param.enable.draw.progress");
         this.colorPickerProgressColor = new LCColorPicker();

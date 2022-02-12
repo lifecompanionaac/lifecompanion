@@ -29,17 +29,17 @@ import javafx.scene.layout.*;
 import org.controlsfx.control.textfield.TextFields;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.fxmisc.easybind.EasyBind;
-import org.lifecompanion.model.api.profile.UserCompDescriptionI;
-import org.lifecompanion.ui.common.pane.specific.cell.UserCompListCell;
-import org.lifecompanion.util.UIUtils;
-import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.editaction.UserCompActions;
 import org.lifecompanion.controller.editaction.UserCompActions.DeleteUserComp;
-import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.controller.profile.UserCompController;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.model.api.profile.UserCompDescriptionI;
+import org.lifecompanion.model.impl.constant.LCGraphicStyle;
+import org.lifecompanion.ui.common.pane.specific.cell.UserCompListCell;
+import org.lifecompanion.util.UIUtils;
 
 import java.util.ArrayList;
 import java.util.function.Predicate;
@@ -71,7 +71,7 @@ public class UserCompView extends TitledPane implements LCViewInitHelper {
     @Override
     public void initUI() {
         //Init
-        this.getStyleClass().add("left-titled-pane");
+        this.getStyleClass().add("text-fill-primary");
         this.setText(Translation.getText("panel.user.comp.title").toUpperCase());
         this.setExpanded(false);
 
@@ -112,7 +112,7 @@ public class UserCompView extends TitledPane implements LCViewInitHelper {
         //List of user components
         this.userCompListView = new ListView<>(this.filteredList);
         this.userCompListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        this.userCompListView.getStyleClass().add("user-comp-list-view");
+        this.userCompListView.getStyleClass().addAll("border-transparent", "background-transparent");
         this.userCompListView.setCellFactory(lv -> new UserCompListCell());
         BorderPane.setMargin(this.userCompListView, new Insets(5.0, 0.0, 0.0, 0.0));
 

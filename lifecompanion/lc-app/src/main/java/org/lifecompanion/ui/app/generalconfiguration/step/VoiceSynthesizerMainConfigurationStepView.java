@@ -36,6 +36,7 @@ import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.voicesynthesizer.VoiceInfoI;
 import org.lifecompanion.model.api.voicesynthesizer.VoiceSynthesizerI;
 import org.lifecompanion.model.api.voicesynthesizer.VoiceSynthesizerParameterI;
+import org.lifecompanion.util.UIControlHelper;
 import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.voicesynthesizer.VoiceSynthesizerController;
@@ -143,17 +144,17 @@ public class VoiceSynthesizerMainConfigurationStepView extends BorderPane implem
         grid.setAlignment(Pos.TOP_CENTER);
 
         int gridRowIndex = 0;
-        grid.add(UIUtils.createTitleLabel("voice.synthesizer.title.part.engine.and.voice"), 0, gridRowIndex++, 2, 1);
+        grid.add(UIControlHelper.createTitleLabel("voice.synthesizer.title.part.engine.and.voice"), 0, gridRowIndex++, 2, 1);
         grid.add(labelEngine, 0, gridRowIndex);
         grid.add(this.comboboxVoiceEngine, 1, gridRowIndex++);
         grid.add(labelVoice, 0, gridRowIndex);
         grid.add(this.choiceBoxVoice, 1, gridRowIndex++);
 
-        grid.add(UIUtils.createTitleLabel("voice.synthesizer.title.part.test.synthesizer"), 0, gridRowIndex++, 2, 1);
+        grid.add(UIControlHelper.createTitleLabel("voice.synthesizer.title.part.test.synthesizer"), 0, gridRowIndex++, 2, 1);
         grid.add(labelExample, 0, gridRowIndex++);
         grid.add(boxExample, 0, gridRowIndex++, 2, 1);
 
-        grid.add(UIUtils.createTitleLabel("voice.synthesizer.title.part.synthesizer.configuration"), 0, gridRowIndex++, 2, 1);
+        grid.add(UIControlHelper.createTitleLabel("voice.synthesizer.title.part.synthesizer.configuration"), 0, gridRowIndex++, 2, 1);
         grid.add(new Label(Translation.getText("voice.synthesizer.volume")), 0, gridRowIndex);
         grid.add(this.sliderVolume, 1, gridRowIndex++);
         grid.add(new Label(Translation.getText("voice.synthesizer.rate")), 0, gridRowIndex);

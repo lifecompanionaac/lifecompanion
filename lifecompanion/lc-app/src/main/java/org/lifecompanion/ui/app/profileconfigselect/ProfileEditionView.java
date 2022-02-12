@@ -30,24 +30,24 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import org.controlsfx.glyphfont.FontAwesome;
-import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
-import org.lifecompanion.util.model.Triple;
-import org.lifecompanion.util.UIUtils;
-import org.lifecompanion.model.impl.profile.LCProfile;
-import org.lifecompanion.model.impl.constant.LCGraphicStyle;
-import org.lifecompanion.ui.common.pane.specific.ProfileIconView;
 import org.lifecompanion.controller.editaction.LCProfileActions;
+import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.controller.profileconfigselect.ProfileConfigSelectionController;
 import org.lifecompanion.controller.profileconfigselect.ProfileConfigStep;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
-import org.lifecompanion.controller.editmode.ConfigActionController;
-import org.lifecompanion.util.ConfigUIUtils;
-import org.lifecompanion.ui.common.pane.specific.DefaultConfigurationListPane;
-import org.lifecompanion.ui.common.control.generic.colorpicker.LCColorPicker;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.utils.Pair;
+import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
 import org.lifecompanion.model.api.profile.LCProfileI;
+import org.lifecompanion.model.impl.constant.LCGraphicStyle;
+import org.lifecompanion.model.impl.profile.LCProfile;
+import org.lifecompanion.ui.common.control.generic.colorpicker.LCColorPicker;
+import org.lifecompanion.ui.common.pane.specific.DefaultConfigurationListPane;
+import org.lifecompanion.ui.common.pane.specific.ProfileIconView;
+import org.lifecompanion.util.UIControlHelper;
+import org.lifecompanion.util.UIUtils;
+import org.lifecompanion.util.model.Triple;
 
 import java.io.File;
 import java.util.Arrays;
@@ -81,7 +81,7 @@ public class ProfileEditionView extends BorderPane implements LCViewInitHelper, 
      */
     private ProfileIconView profileIconView;
 
-    private Button buttonRemove, buttonExport, buttonValidate;
+    private Button buttonValidate;
     private List<Node> editionActionNodes;
 
     private DefaultConfigurationListPane defaultConfigurationListPane;
@@ -99,7 +99,7 @@ public class ProfileEditionView extends BorderPane implements LCViewInitHelper, 
     //========================================================================
     @Override
     public void initUI() {
-        Triple<HBox, Label, Node> header = ConfigUIUtils.createHeader("profile.edition.view.title.config", node -> closeCurrentEdit(false, true));
+        Triple<HBox, Label, Node> header = UIControlHelper.createHeader("profile.edition.view.title.config", node -> closeCurrentEdit(false, true));
 
         //Profile name
         Label labelName = new Label(Translation.getText("profile.label.name"));
@@ -135,19 +135,31 @@ public class ProfileEditionView extends BorderPane implements LCViewInitHelper, 
         gridPaneIconInfo.setMinHeight(150.0);
 
         // Action buttons
-        GridPane gridPaneActions = new GridPane();
-        this.buttonExport = ConfigUIUtils.createActionTableEntry(0, "profile.selection.export.profile.button",
-                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.UPLOAD).size(30).color(LCGraphicStyle.MAIN_DARK), gridPaneActions);
-        this.buttonRemove = ConfigUIUtils.createActionTableEntry(2, "profile.selection.remove.profile.button",
-                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.TRASH).size(30).color(LCGraphicStyle.SECOND_DARK), gridPaneActions);
-        Label labelActions = UIUtils.createTitleLabel("profile.edition.general.actions.title");
-        editionActionNodes = Arrays.asList(labelActions, gridPaneActions);
+        final Node nodeExport = UIControlHelper.createActionTableEntry("profile.selection.export.profile.button",
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.UPLOAD).size(30).color(LCGraphicStyle.MAIN_DARK),
+                () -> {
+                    if (this.editedProfile.get() != null) {
+                        ConfigActionController.INSTANCE.executeAction(
+                                new LCProfileActions.EditProfileAction(this.editedProfile.get(),
+                                        profile -> ConfigActionController.INSTANCE.executeAction(new LCProfileActions.ProfileExportAction(this, profile))));
+                    }
+                });
+        final Node nodeRemove = UIControlHelper.createActionTableEntry("profile.selection.remove.profile.button",
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.TRASH).size(30).color(LCGraphicStyle.SECOND_DARK),
+                () -> {
+                    if (this.editedProfile.get() != null) {
+                        ConfigActionController.INSTANCE.executeAction(new LCProfileActions.RemoveProfileAction(this, this.editedProfile.get()));
+                    }
+                });
+        VBox boxActions = new VBox(nodeExport, nodeRemove);
+        Label labelActions = UIControlHelper.createTitleLabel("profile.edition.general.actions.title");
+        editionActionNodes = Arrays.asList(labelActions, boxActions);
 
         // Default configuration to add on profile
         defaultConfigurationListPane = new DefaultConfigurationListPane(true);
 
         //Add
-        VBox boxCenter = new VBox(10.0, UIUtils.createTitleLabel("profile.edition.general.information.title"), gridPaneIconInfo, labelActions, gridPaneActions, defaultConfigurationListPane);
+        VBox boxCenter = new VBox(10.0, UIControlHelper.createTitleLabel("profile.edition.general.information.title"), gridPaneIconInfo, labelActions, boxActions, defaultConfigurationListPane);
         boxCenter.setPadding(new Insets(10.0));
         this.setTop(header.getLeft());
         this.setCenter(boxCenter);
@@ -157,18 +169,6 @@ public class ProfileEditionView extends BorderPane implements LCViewInitHelper, 
     @Override
     public void initListener() {
         buttonValidate.setOnAction(e -> closeCurrentEdit(false, false));
-        this.buttonRemove.setOnAction((ea) -> {
-            if (this.editedProfile.get() != null) {
-                ConfigActionController.INSTANCE.executeAction(new LCProfileActions.RemoveProfileAction(buttonExport, this.editedProfile.get()));
-            }
-        });
-        this.buttonExport.setOnAction((ea) -> {
-            if (this.editedProfile.get() != null) {
-                ConfigActionController.INSTANCE.executeAction(
-                        new LCProfileActions.EditProfileAction(this.editedProfile.get(),
-                                profile -> ConfigActionController.INSTANCE.executeAction(new LCProfileActions.ProfileExportAction(buttonExport, profile))));
-            }
-        });
     }
 
 

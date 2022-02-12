@@ -1,4 +1,4 @@
-/*==== COMMON CLASSES ====*/
+/*========= COMMON CLASSES =========*/
 /*
  * Here : WIP CSS REWORK
  * GOAL : convert "feature oriented" css classes to "specification oriented" css classes.
@@ -8,7 +8,7 @@
  * This is separated from old css started with dev (main_css.css)
  */
 
-/*== TEXT ==*/
+/*======= TEXT =======*/
 
 .text-weight-bold {
     -fx-font-weight: bold;
@@ -22,6 +22,18 @@
     -fx-text-fill: gray;
 }
 
+.text-fill-dimgrey {
+    -fx-text-fill: dimgrey;
+}
+
+.text-fill-white {
+    -fx-text-fill: white;
+}
+
+.text-fill-primary {
+    -fx-text-fill: -fx-main-primary;
+}
+
 .text-wrap-enabled {
     -fx-wrap-text: true;
 }
@@ -30,12 +42,22 @@
     -fx-font-size: 0.9em;
 }
 
+.text-font-size-110 {
+    -fx-font-size: 1.2em;
+}
+
+
 .text-font-size-120 {
     -fx-font-size: 1.2em;
 }
 
 .text-font-size-200 {
     -fx-font-size: 2em;
+}
+
+.text-h3 {
+    -fx-font-weight: bold;
+    -fx-font-size: 1.3em;
 }
 
 .text-h4 {
@@ -53,7 +75,7 @@
 	-fx-alignment: right;
 }
 
-/*== BACKGROUND ==*/
+/*======= BACKGROUND =======*/
 
 .base-background-with-gray-border-1 {
     -fx-background-color: lightgrey, #FAFAFA;
@@ -61,7 +83,15 @@
     -fx-background-radius: 3;
 }
 
-/*== BORDERS ==*/
+.background-primary-dark {
+    -fx-background-color: -fx-main-dark;
+}
+
+.background-transparent {
+    -fx-background-color: transparent;
+}
+
+/*======= BORDERS =======*/
 
 .border-bottom-gray {
     -fx-border-color: transparent transparent gray transparent;
@@ -71,8 +101,12 @@
     -fx-border-color: gray transparent transparent transparent;
 }
 
+.border-transparent {
+    -fx-border-color: transparent;
+}
 
-/*== HOVER ==*/
+
+/*======= HOVER =======*/
 .scale-110-hover:hover {
     -fx-scale-x: 1.1;
     -fx-scale-y: 1.1;
@@ -108,12 +142,12 @@
    -fx-stroke: dimgray;
 }
 
-/*== PRESSED ==*/
+/*======= PRESSED =======*/
 .opacity-60-pressed:pressed {
 	-fx-opacity: 0.6;
 }
 
-/*== PADDING/MARGIN ==*/
+/*======= PADDING/MARGIN =======*/
 .padding-0 {
     -fx-padding: 0;
 }
@@ -122,7 +156,7 @@
     -fx-padding: 3.5;
 }
 
-/*== LIST VIEW AND LIST CELL ==*/
+/*======= LIST VIEW AND LIST CELL =======*/
 
 .list-cell-selection-disabled:filled {
     -fx-border-color: transparent transparent lightgray transparent;
@@ -133,15 +167,19 @@
     -fx-background-color: white;
 }
 
-/*== SPECIFIC FEATURES ==*/
+/*======= SPECIFIC FEATURES =======*/
 
 .background-image-transparent {
     -fx-background-image: url(/icons/transparent-background.png);
     -fx-background-size: contain;
 }
 
-/*== SPECIFIC TUNINGS ==*/
+.soft-selection-cell:filled:selected:focused, .soft-selection-cell:filled:selected  {
+    -fx-background-color: #DCE1E3;
+    -fx-border-color: lightgray transparent lightgray transparent;
+}
 
+/*======= SPECIFIC TUNINGS =======*/
 .keylist-tree-cell .tree-disclosure-node {
    -fx-padding: 8 6 4 8;
 }
@@ -149,7 +187,7 @@
     -fx-indent: 40;
 }
 
-/*== SPECIFIC DEV ==*/
+/*======= SPECIFIC DEV =======*/
 .popup-bottom-dropshadow {
     -fx-effect: dropshadow(three-pass-box, gray, 10, 0, 0, 5);
 }

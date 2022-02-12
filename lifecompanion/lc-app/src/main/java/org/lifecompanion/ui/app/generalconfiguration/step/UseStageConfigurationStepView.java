@@ -33,6 +33,7 @@ import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.Glyph;
 import org.lifecompanion.model.api.configurationcomponent.FramePosition;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
+import org.lifecompanion.util.UIControlHelper;
 import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
@@ -115,7 +116,7 @@ public class UseStageConfigurationStepView extends BorderPane implements General
     @Override
     public void initUI() {
 
-        Label labelConfigurationSize = UIUtils.createTitleLabel(Translation.getText("general.configuration.stage.configuration.size.title"));
+        Label labelConfigurationSize = UIControlHelper.createTitleLabel(Translation.getText("general.configuration.stage.configuration.size.title"));
 
         this.toggleEnableAutoSizing = ConfigUIUtils.createToggleSwitch("config.size.auto", "tooltip.explain.configuration.size.auto");
         //Size
@@ -139,7 +140,7 @@ public class UseStageConfigurationStepView extends BorderPane implements General
         buttonKeepRatioFrameSize.getStyleClass().add("button-without-padding");
         buttonKeepRatioFrameSize.setMinWidth(20.0);
 
-        Label labelStageSize = UIUtils.createTitleLabel(Translation.getText("general.configuration.stage.stage.size.title"));
+        Label labelStageSize = UIControlHelper.createTitleLabel(Translation.getText("general.configuration.stage.stage.size.title"));
         //Size
         this.spinnerFrameWidth = UIUtils.createDoubleSpinner(LCConstant.CONFIG_ROOT_COMPONENT_GAP, Double.MAX_VALUE, 50, 10.0, 110.0);
         UIUtils.createAndAttachTooltip(spinnerFrameWidth, "tooltip.explain.configuration.frame.width");

@@ -34,6 +34,7 @@ import org.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.ui.app.generalconfiguration.step.*;
 import org.lifecompanion.ui.app.generalconfiguration.step.predict4all.*;
+import org.lifecompanion.util.UIControlHelper;
 import org.lifecompanion.util.model.Triple;
 import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.constant.LCConstant;
@@ -118,7 +119,7 @@ public class GeneralConfigurationScene extends Scene implements LCViewInitHelper
         addStepImplementation(new UserActionSequenceMainConfigurationStepView());
 
         // Center top : title and previous button
-        Triple<HBox, Label, Node> header = ConfigUIUtils.createHeader("", this::previousClic);
+        Triple<HBox, Label, Node> header = UIControlHelper.createHeader("", this::previousClic);
         labelTitle = header.getMiddle();
         nodePreviousIndicator = header.getRight();
         boxMenuLeft.setPadding(new Insets(50.0, 0.0, 0.0, 0.0));

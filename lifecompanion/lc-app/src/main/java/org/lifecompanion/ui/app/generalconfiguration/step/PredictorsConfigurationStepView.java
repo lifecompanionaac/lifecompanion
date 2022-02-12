@@ -34,6 +34,7 @@ import org.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.textprediction.CharPredictorI;
 import org.lifecompanion.model.api.textprediction.WordPredictorI;
+import org.lifecompanion.util.UIControlHelper;
 import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.textprediction.AutoCharPredictionController;
@@ -91,7 +92,7 @@ public class PredictorsConfigurationStepView extends BorderPane implements Gener
     @Override
     public void initUI() {
         //Word prediction
-        Label labelPartWP = UIUtils.createTitleLabel(Translation.getText("general.configuration.predictors.part.word.predictor"));
+        Label labelPartWP = UIControlHelper.createTitleLabel(Translation.getText("general.configuration.predictors.part.word.predictor"));
         Label labelWordPredictor = new Label(Translation.getText("word.prediction.engine"));
         labelWordPredictor.setMinWidth(GeneralConfigurationStepViewI.LEFT_COLUMN_MIN_WIDTH);
         this.comboboxWordPredictor = new ComboBox<>(WordPredictionController.INSTANCE.getAvailablePredictor());
@@ -104,7 +105,7 @@ public class PredictorsConfigurationStepView extends BorderPane implements Gener
         GridPane.setHalignment(buttonWordPredictionConfiguration, HPos.CENTER);
 
         //Letter prediction
-        Label labelPartCP = UIUtils.createTitleLabel(Translation.getText("general.configuration.predictors.part.char.predictor"));
+        Label labelPartCP = UIControlHelper.createTitleLabel(Translation.getText("general.configuration.predictors.part.char.predictor"));
         Label labelCharPredictor = new Label(Translation.getText("char.prediction.engine"));
         this.comboboxCharPredictor = new ComboBox<>(AutoCharPredictionController.INSTANCE.getAvailablePredictor());
         this.comboboxCharPredictor.setCellFactory((lv) -> new BasePredictorDetailListCell<>());

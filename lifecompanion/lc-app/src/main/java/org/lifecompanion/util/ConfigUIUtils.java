@@ -49,9 +49,7 @@ import org.lifecompanion.util.model.Triple;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -125,66 +123,6 @@ public class ConfigUIUtils {
         return toggleSwitch;
     }
 
-    // STAGE HEADER
-    //========================================================================
-    public static Triple<HBox, Label, Node> createHeader(String titleId, Consumer<Node> previousCallback) {
-        Label labelTitle = new Label(Translation.getText(titleId));
-        labelTitle.getStyleClass().add("header-title");
-        labelTitle.setMaxWidth(Double.MAX_VALUE);
-        HBox.setHgrow(labelTitle, Priority.ALWAYS);
-        HBox.setMargin(labelTitle, new Insets(8.0));
-        HBox boxTop = new HBox(labelTitle);
-
-        Node nodePrevious = null;
-        if (previousCallback != null) {
-            boxTop.getStyleClass().add("header-title-hoverable");
-            Glyph iconPrevious = GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CHEVRON_LEFT).size(16).color(Color.WHITE);
-            HBox.setMargin(iconPrevious, new Insets(10.0, 0.0, 10.0, 10.0));
-            boxTop.getChildren().add(0, iconPrevious);
-            boxTop.setOnMouseClicked(e -> {
-                if (iconPrevious.isVisible()) {
-                    previousCallback.accept(boxTop);
-                }
-            });
-            Tooltip.install(boxTop, UIUtils.createTooltip(Translation.getText("profile.config.selection.steps.previous.button.tooltip")));
-            nodePrevious = iconPrevious;
-        }
-        boxTop.setAlignment(Pos.CENTER_LEFT);
-        boxTop.getStyleClass().add("toolframe-header-background");
-        boxTop.setPrefHeight(50.0);
-
-        return Triple.of(boxTop, labelTitle, nodePrevious);
-    }
-
-    // FIXME : replace with action provider constructor
-    @Deprecated
-    public static Button createActionTableEntry(int rowIndex, String actionTranslationId, Node buttonGraphic, GridPane gridPane) {
-        return createActionTableEntry(rowIndex, actionTranslationId, buttonGraphic, gridPane, null);
-    }
-
-    public static Button createActionTableEntry(int rowIndex, String actionTranslationId, Node buttonGraphic, GridPane gridPane, Runnable action) {
-        Label labelTitle = new Label(Translation.getText(actionTranslationId + ".title"));
-        labelTitle.getStyleClass().add("text-weight-bold");
-        GridPane.setHgrow(labelTitle, Priority.ALWAYS);
-        Label labelDescription = new Label(Translation.getText(actionTranslationId + ".description"));
-        labelDescription.setWrapText(true);
-        GridPane.setMargin(labelDescription, new Insets(0, 0, 20.0, 0));
-        Button buttonAction = UIUtils.createGraphicButton(buttonGraphic, actionTranslationId + ".description");
-        buttonAction.setMinWidth(50.0);
-        GridPane.setValignment(buttonAction, VPos.TOP);
-        gridPane.add(labelTitle, 0, rowIndex);
-        gridPane.add(labelDescription, 0, rowIndex + 1);
-        gridPane.add(buttonAction, 1, rowIndex, 1, 2);
-        if (action != null) {
-            // FIXME : hover should be "global" on line
-            List<Node> nodes = Arrays.asList(labelTitle, labelDescription, buttonAction);
-            for (Node node : nodes) {
-                node.getStyleClass().addAll("opacity-60-pressed", "opacity-80-hover");
-                node.setOnMouseClicked(me -> action.run());
-            }
-        }
-        return buttonAction;
-    }
     //========================================================================
 
     // Class part : "Profile level"

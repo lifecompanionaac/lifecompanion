@@ -34,7 +34,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.controlsfx.control.ToggleSwitch;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.SimplerKeyContentContainerI;
-import org.lifecompanion.util.UIUtils;
+import org.lifecompanion.util.UIControlHelper;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStepViewI;
 import org.lifecompanion.ui.common.pane.generic.cell.ContentDisplayListCell;
 import org.lifecompanion.ui.common.control.generic.colorpicker.LCColorPicker;
@@ -98,7 +98,7 @@ public abstract class AbstractSimplerKeyContentContainerPropertiesEditionView<T 
         gridPaneConfiguration.setPadding(new Insets(5.0));
 
         // General
-        Label labelGeneralPart = UIUtils.createTitleLabel(Translation.getText("general.configuration.view.key.list.part.title.general"));
+        Label labelGeneralPart = UIControlHelper.createTitleLabel(Translation.getText("general.configuration.view.key.list.part.title.general"));
         labelText = new Label(Translation.getText("general.configuration.view.key.list.field.text"));
         labelText.setMaxWidth(Double.MAX_VALUE);
         GridPane.setHgrow(labelText, Priority.ALWAYS);
@@ -112,7 +112,7 @@ public abstract class AbstractSimplerKeyContentContainerPropertiesEditionView<T 
         rowIndex = addFieldsAfterTextInGeneralPart(gridPaneConfiguration, rowIndex, columnCount);
 
         // Visual
-        Label labelVisualPart = UIUtils.createTitleLabel(Translation.getText("general.configuration.view.key.list.part.title.visual"));
+        Label labelVisualPart = UIControlHelper.createTitleLabel(Translation.getText("general.configuration.view.key.list.part.title.visual"));
         imageUseComponentSelectorControl = new ImageUseComponentSelectorControl();
 
         comboBoxTextPosition = new ComboBox<>(FXCollections.observableArrayList(ContentDisplay.CENTER, ContentDisplay.BOTTOM, ContentDisplay.TOP, ContentDisplay.LEFT, ContentDisplay.RIGHT));

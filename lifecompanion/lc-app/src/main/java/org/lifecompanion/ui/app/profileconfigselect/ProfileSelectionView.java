@@ -30,6 +30,7 @@ import javafx.scene.layout.StackPane;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.model.api.profile.LCProfileI;
 import org.lifecompanion.ui.common.pane.specific.cell.ProfileAdvancedListCell;
+import org.lifecompanion.util.UIControlHelper;
 import org.lifecompanion.util.javafx.DisableSelectionSelectionModel;
 import org.lifecompanion.util.model.Triple;
 import org.lifecompanion.util.UIUtils;
@@ -42,7 +43,6 @@ import org.lifecompanion.controller.profileconfigselect.ProfileConfigSelectionCo
 import org.lifecompanion.controller.profileconfigselect.ProfileConfigStep;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.controller.editmode.ConfigActionController;
-import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 
@@ -75,7 +75,7 @@ public class ProfileSelectionView extends BorderPane implements LCViewInitHelper
     //========================================================================
     @Override
     public void initUI() {
-        Triple<HBox, Label, Node> header = ConfigUIUtils.createHeader("profile.selection.view.title", null);
+        Triple<HBox, Label, Node> header = UIControlHelper.createHeader("profile.selection.view.title", null);
         this.setTop(header.getLeft());
 
         //List view to display profile

@@ -35,6 +35,7 @@ import javafx.scene.layout.VBox;
 import org.controlsfx.control.ToggleSwitch;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
+import org.lifecompanion.util.UIControlHelper;
 import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.profileconfigselect.ProfileConfigSelectionController;
@@ -66,7 +67,7 @@ public class DefaultConfigurationListPane extends VBox implements LCViewInitHelp
     @Override
     public void initUI() {
         // Default configuration to add on profile
-        Label labelDefaultConfiguration = UIUtils.createTitleLabel("profile.edition.general.default.configuration.title");
+        Label labelDefaultConfiguration = UIControlHelper.createTitleLabel("profile.edition.general.default.configuration.title");
         Label labelExplain = new Label(Translation.getText("profile.edition.general.default.configuration.explain"));
         labelExplain.setMinHeight(100.0);
         labelExplain.getStyleClass().add("explain-text");

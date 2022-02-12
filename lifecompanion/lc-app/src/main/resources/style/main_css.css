@@ -15,22 +15,6 @@
    -fx-second-dark:#C62828;
 }
 
-/*==== BASE UI COMPONENT ====*/
-
-.search-combo-box {
-    -fx-padding: 6.0 5.0 4.0 5.0;
-}
-
-/*==== TASK VIEW ====*/
-.task-title-label{
-	-fx-font-size: 12.0px;
-    -fx-font-weight: bold;
-}
-.task-message-label{
-	-fx-font-size: 11.0px;
-    -fx-padding: 0.0 0.0 0.0 5.0;
-}
-
 
 .log-text-area {
 	-fx-font-family: "Consolas";
@@ -44,53 +28,6 @@
 }
 
 /*==== LEFT PART ====*/
-.left-titled-pane{
-	-fx-text-fill: -fx-main-primary;
-}
-.left-part-sub-title{
-	-fx-padding: 5.0 0.0 5.0 10.0;
-	-fx-border-color: transparent transparent lightgray transparent;
-	-fx-font: normal 14.0 "Calibri";
-	-fx-text-fill: rgb(100.0,100.0,100.0);
-}
-.left-titled-pane .title  {
-	-fx-text-fill: -fx-main-primary;
-	-fx-font-size: 16.0px;
-	-fx-font-family: "Calibri";
-	-fx-font-weight: bold;
-	-fx-background-color: white,white;
-	-fx-border-color: lightgray transparent lightgray transparent;
-	-fx-border-width: 1.0 0.0 2.0 0.0;
-	-fx-background-radius: 0.0;
-    -fx-border-radius: 0.0;
-}
-.left-titled-pane .title:hover  {
-   -fx-opacity: 0.95;
-}
-.left-titled-pane .arrow-button .arrow{
-	-fx-background-color: -fx-main-primary;
-}
-/* Label of item that can be added */
-.label-add-item{
-	-fx-text-fill: gray;
-}
-.label-add-item:hover{
-	-fx-opacity: 0.85;
-}
-
-.user-comp-list-view {
-	-fx-background-color:transparent;
-	-fx-border-color: transparent;
-}
-
-.user-comp-list-cell {
-	-fx-background-color: transparent;
-}
-
-.user-comp-list-cell:filled:selected:focused, .user-comp-list-cell:filled:selected  {
-    -fx-background-color: #DCE1E3;
-    -fx-border-color: lightgray transparent lightgray transparent;
-}
 
 /* Style for gallery item */
 .gallery-item:hover{
@@ -325,14 +262,6 @@
 .use-action-header {
 	-fx-background-color: -fx-main-primary;
 }
-.header-title{
-	-fx-font: normal bold 18.0 "Calibri";
-	-fx-text-fill: white;
-}
-
-.header-title-hoverable:hover{
-    -fx-opacity: 0.8;
-}
 
 .main-category-grid-cell:hover{
 	-fx-effect: dropshadow( gaussian , rgba(0.0,0.0,0.0,0.7) , 20.0,0.0,1.0,1.0 );
@@ -387,13 +316,6 @@
     -fx-font-familly: "Calibri";
 }
 
-.user-comp-title {
-	 -fx-text-fill: -fx-main-dark;
-    -fx-font-size: 14.0px;
-    -fx-padding: 2.0 0.0 0.0 0.0;  
-    -fx-font-familly: "Calibri";
-}
-
 .use-action-cell-name {
 	-fx-text-fill: -fx-main-dark;
     -fx-font-size: 14.0px;
@@ -410,12 +332,6 @@
 	-fx-font: normal 14.0 "Calibri";
 	-fx-padding: 15.0 0.0 0.0 0.0;
 	-fx-text-fill: dimgray;
-}
-
-/* === TOOLFRAME === */
-.toolframe-header-background{
-	-fx-background-color: -fx-main-dark;
-	-fx-border-color: transparent;
 }
 
 /* === VOICE SYNTHESIZER LIST === */
@@ -583,12 +499,6 @@
 
 .button-icon-text-bigger {
     -fx-font-size: 14.0;
-}
-
-.generic-part-title {
-    -fx-font: normal 14.0 "Calibri";
-    -fx-text-fill: dimgrey;
-    -fx-border-color: transparent transparent gray transparent;
 }
 
 .bottom-border {

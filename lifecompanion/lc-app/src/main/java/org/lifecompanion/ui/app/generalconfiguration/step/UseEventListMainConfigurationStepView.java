@@ -27,7 +27,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
-import org.lifecompanion.util.UIUtils;
+import org.lifecompanion.util.UIControlHelper;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStep;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStepViewI;
 import org.lifecompanion.ui.app.categorizedelement.useaction.UseActionListManageView;
@@ -80,11 +80,11 @@ public class UseEventListMainConfigurationStepView extends BorderPane implements
         labelExplainEvents.setMaxWidth(Double.MAX_VALUE);
 
         // first part : IF
-        Label labelEvent = UIUtils.createTitleLabel(Translation.getText("useevent.part.event.title"));
+        Label labelEvent = UIControlHelper.createTitleLabel(Translation.getText("useevent.part.event.title"));
         this.useEventListManageView = new UseEventListManageView(true);
 
         // second part : THEN
-        Label labelAction = UIUtils.createTitleLabel(Translation.getText("useevent.part.action.title"));
+        Label labelAction = UIControlHelper.createTitleLabel(Translation.getText("useevent.part.action.title"));
         this.useActionListManageView = new UseActionListManageView(UseActionEvent.EVENT, true, this.useEventListManageView.selectedItemProperty());
 
         VBox boxTotal = new VBox(10.0, labelExplainEvents, labelEvent, useEventListManageView, labelAction, useActionListManageView);

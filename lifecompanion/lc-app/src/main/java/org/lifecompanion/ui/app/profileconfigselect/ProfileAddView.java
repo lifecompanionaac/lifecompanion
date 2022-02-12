@@ -21,21 +21,20 @@ package org.lifecompanion.ui.app.profileconfigselect;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import org.controlsfx.glyphfont.FontAwesome;
-import org.lifecompanion.util.model.Triple;
-import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.editaction.LCProfileActions;
+import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.controller.profileconfigselect.ProfileConfigSelectionController;
 import org.lifecompanion.controller.profileconfigselect.ProfileConfigStep;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
-import org.lifecompanion.controller.editmode.ConfigActionController;
-import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.model.impl.constant.LCGraphicStyle;
+import org.lifecompanion.util.UIControlHelper;
+import org.lifecompanion.util.model.Triple;
 
 /**
  * View that allow user to select a profile.
@@ -43,7 +42,6 @@ import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
  * @author Mathieu THEBAUD
  */
 public class ProfileAddView extends BorderPane implements LCViewInitHelper, ProfileConfigStepViewI {
-    private Button buttonCreateNew, buttonImport, buttonDuplicate;
 
     public ProfileAddView() {
         this.initAll();
@@ -53,30 +51,26 @@ public class ProfileAddView extends BorderPane implements LCViewInitHelper, Prof
     //========================================================================
     @Override
     public void initUI() {
-        Triple<HBox, Label, Node> header = ConfigUIUtils.createHeader("profile.add.view.title",
+        Triple<HBox, Label, Node> header = UIControlHelper.createHeader("profile.add.view.title",
                 e -> ProfileConfigSelectionController.INSTANCE.setProfileStep(ProfileConfigSelectionController.INSTANCE.getPreviousStep(), null, null));
 
         // Action grid
-        GridPane gridPaneActions = new GridPane();
-        this.buttonCreateNew = ConfigUIUtils.createActionTableEntry(0, "profile.selection.create.new.profile.button",
-                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.PLUS_CIRCLE).size(30).color(LCGraphicStyle.MAIN_DARK), gridPaneActions);
-        this.buttonImport = ConfigUIUtils.createActionTableEntry(2, "profile.selection.create.import.profile.button",
-                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.DOWNLOAD).size(30).color(LCGraphicStyle.MAIN_DARK), gridPaneActions);
-        this.buttonDuplicate = ConfigUIUtils.createActionTableEntry(4, "profile.selection.create.duplicate.profile.button",
-                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.COPY).size(30).color(LCGraphicStyle.MAIN_DARK), gridPaneActions);
-        BorderPane.setMargin(gridPaneActions, new Insets(10.0));
-        BorderPane.setAlignment(gridPaneActions, Pos.CENTER);
+        final Node nodeNew = UIControlHelper.createActionTableEntry("profile.selection.create.new.profile.button",
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.PLUS_CIRCLE).size(30).color(LCGraphicStyle.MAIN_DARK),
+                () -> ProfileConfigSelectionController.INSTANCE.setProfileStep(ProfileConfigStep.PROFILE_CREATE, ProfileConfigStep.PROFILE_LIST, null));
+        final Node nodeImport = UIControlHelper.createActionTableEntry("profile.selection.create.import.profile.button",
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.DOWNLOAD).size(30).color(LCGraphicStyle.MAIN_DARK),
+                () -> ConfigActionController.INSTANCE.executeAction(new LCProfileActions.ProfileImportAction(this,
+                        (p -> ProfileConfigSelectionController.INSTANCE.setProfileStep(ProfileConfigStep.PROFILE_LIST, null, null)))));
+        final Node nodeDuplicate = UIControlHelper.createActionTableEntry("profile.selection.create.duplicate.profile.button",
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.COPY).size(30).color(LCGraphicStyle.MAIN_DARK),
+                () -> ConfigActionController.INSTANCE.executeAction(new LCProfileActions.DuplicateProfileAction(this)));
+        VBox boxActions = new VBox(nodeNew, nodeImport, nodeDuplicate);
+        BorderPane.setMargin(boxActions, new Insets(10.0));
+        BorderPane.setAlignment(boxActions, Pos.CENTER);
 
         this.setTop(header.getLeft());
-        this.setCenter(gridPaneActions);
-    }
-
-    @Override
-    public void initListener() {
-        this.buttonCreateNew.setOnAction(e -> ProfileConfigSelectionController.INSTANCE.setProfileStep(ProfileConfigStep.PROFILE_CREATE, ProfileConfigStep.PROFILE_LIST, null));
-        this.buttonImport.setOnAction(e -> ConfigActionController.INSTANCE.executeAction(new LCProfileActions.ProfileImportAction(buttonImport,
-                (p -> ProfileConfigSelectionController.INSTANCE.setProfileStep(ProfileConfigStep.PROFILE_LIST, null, null)))));
-        this.buttonDuplicate.setOnAction(e -> ConfigActionController.INSTANCE.executeAction(new LCProfileActions.DuplicateProfileAction(buttonDuplicate)));
+        this.setCenter(boxActions);
     }
     //========================================================================
 

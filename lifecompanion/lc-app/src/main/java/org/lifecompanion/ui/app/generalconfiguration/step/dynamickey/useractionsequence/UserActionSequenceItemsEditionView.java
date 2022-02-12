@@ -32,6 +32,7 @@ import javafx.scene.layout.VBox;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.UserActionSequenceI;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.UserActionSequenceItemI;
+import org.lifecompanion.util.UIControlHelper;
 import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.configurationcomponent.dynamickey.UserActionSequenceItem;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
@@ -66,7 +67,7 @@ public class UserActionSequenceItemsEditionView extends ScrollPane implements LC
     @Override
     public void initUI() {
         // Sequence props
-        labelSequenceTitle = UIUtils.createTitleLabel(null);
+        labelSequenceTitle = UIControlHelper.createTitleLabel(null);
         fieldSequenceName = new TextField();
         fieldSequenceName.setPromptText(Translation.getText("sequence.configuration.view.field.sequence.name"));
         VBox.setMargin(fieldSequenceName, new Insets(0, 10, 0, 10));

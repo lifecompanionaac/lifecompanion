@@ -29,6 +29,7 @@ import javafx.scene.text.TextAlignment;
 import org.controlsfx.control.ToggleSwitch;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.model.api.configurationcomponent.SelectionModeUserI;
+import org.lifecompanion.util.UIControlHelper;
 import org.lifecompanion.util.model.Triple;
 import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.constant.LCConstant;
@@ -152,7 +153,7 @@ public class GridComponentSelectionModeRibbonPart extends RibbonBasePart<Selecti
             configStageAnimatedBorderPane = new AnimatedBorderPane();
             configStageDialogPane.getDialogPane().setContent(configStageAnimatedBorderPane);
 
-            Triple<HBox, Label, Node> header = ConfigUIUtils.createHeader("Mode de sélection pour la grille", previous -> configStageAnimatedBorderPane.changeCenter(selectionModeMainParamView));
+            Triple<HBox, Label, Node> header = UIControlHelper.createHeader("Mode de sélection pour la grille", previous -> configStageAnimatedBorderPane.changeCenter(selectionModeMainParamView));
             header.getRight().visibleProperty().bind(configStageAnimatedBorderPane.centerProperty().isEqualTo(selectionModeSuppParamView));
             configStageAnimatedBorderPane.setTop(header.getLeft());
         }

@@ -29,30 +29,32 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import org.controlsfx.control.ToggleSwitch;
 import org.controlsfx.glyphfont.FontAwesome;
-import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
-import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
-import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
-import org.lifecompanion.util.UIUtils;
-import org.lifecompanion.model.impl.constant.LCGraphicStyle;
-import org.lifecompanion.controller.lifecycle.AppModeController;
-import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStep;
-import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStepViewI;
 import org.lifecompanion.controller.editaction.LCConfigurationActions;
+import org.lifecompanion.controller.editmode.ConfigActionController;
+import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.profileconfigselect.ProfileConfigSelectionController;
 import org.lifecompanion.controller.profileconfigselect.ProfileConfigStep;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
-import org.lifecompanion.controller.editmode.ConfigActionController;
-import org.lifecompanion.util.ConfigUIUtils;
-import org.lifecompanion.ui.common.control.specific.selector.ComponentSelectorControl;
-import org.lifecompanion.ui.common.control.generic.colorpicker.LCColorPicker;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
+import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
+import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
+import org.lifecompanion.model.impl.constant.LCGraphicStyle;
+import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStep;
+import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStepViewI;
+import org.lifecompanion.ui.common.control.generic.colorpicker.LCColorPicker;
+import org.lifecompanion.ui.common.control.specific.selector.ComponentSelectorControl;
+import org.lifecompanion.util.ConfigUIUtils;
+import org.lifecompanion.util.UIControlHelper;
+import org.lifecompanion.util.UIUtils;
 
 public class GeneralInformationConfigurationStepView extends BorderPane implements GeneralConfigurationStepViewI, LCViewInitHelper {
     private Label labelName, labelAuthor;
-    private Button buttonEditConfigurationInformation, buttonPrintGridsPdf;
+    private Button buttonEditConfigurationInformation;
     private ToggleSwitch toggleSecuredConfigurationMode;
     private ToggleSwitch toggleVirtualKeyboard;
     private ComponentSelectorControl<GridComponentI> firstPartSelector;
@@ -107,16 +109,16 @@ public class GeneralInformationConfigurationStepView extends BorderPane implemen
         Label labelNameField = new Label(Translation.getText("general.configuration.info.label.name"));
         labelNameField.setMinWidth(GeneralConfigurationStepViewI.LEFT_COLUMN_MIN_WIDTH);
         Label labelAuthorField = new Label(Translation.getText("general.configuration.info.label.author"));
-        Label labelGeneralInfo = UIUtils.createTitleLabel(Translation.getText("general.configuration.info.info.description.title"));
+        Label labelGeneralInfo = UIControlHelper.createTitleLabel(Translation.getText("general.configuration.info.info.description.title"));
         buttonEditConfigurationInformation = UIUtils.createSimpleTextButton(Translation.getText("general.configuration.info.button.edit.information"), null);
         GridPane.setHalignment(buttonEditConfigurationInformation, HPos.CENTER);
 
-        Label labelPartDisplay = UIUtils.createTitleLabel(Translation.getText("general.configuration.info.general.configuration.style"));
+        Label labelPartDisplay = UIControlHelper.createTitleLabel(Translation.getText("general.configuration.info.general.configuration.style"));
         this.pickerBackgroundColor = new LCColorPicker();
         UIUtils.createAndAttachTooltip(pickerBackgroundColor, "tooltip.explain.configuration.style.background.color");
         Label labelBColor = new Label(Translation.getText("configuration.background.color"));
 
-        Label labelGeneralConfiguration = UIUtils.createTitleLabel(Translation.getText("general.configuration.info.general.configuration"));
+        Label labelGeneralConfiguration = UIControlHelper.createTitleLabel(Translation.getText("general.configuration.info.general.configuration"));
         this.firstPartSelector = new ComponentSelectorControl<>(GridComponentI.class);
         this.firstPartSelector.setTooltipText("tooltip.explain.use.param.first.part");
         firstPartSelector.setAlignment(Pos.CENTER_RIGHT);
@@ -148,7 +150,7 @@ public class GeneralInformationConfigurationStepView extends BorderPane implemen
 
         gridPaneTotal.add(labelPartDisplay, 0, gridRowIndex++, 2, 1);
         gridPaneTotal.add(labelBColor, 0, gridRowIndex);
-        GridPane.setHalignment(pickerBackgroundColor,HPos.RIGHT);
+        GridPane.setHalignment(pickerBackgroundColor, HPos.RIGHT);
         gridPaneTotal.add(pickerBackgroundColor, 1, gridRowIndex++);
 
         gridPaneTotal.add(labelGeneralConfiguration, 0, gridRowIndex++, 2, 1);
@@ -161,18 +163,13 @@ public class GeneralInformationConfigurationStepView extends BorderPane implemen
         gridPaneTotal.add(labelExplainVirtualKeyboard, 0, gridRowIndex++, 2, 1);
 
         // Actions
-        GridPane gridPaneActions = new GridPane();
-        int gridActionsRowIndex = 0;
-        gridPaneActions.setHgap(GeneralConfigurationStepViewI.GRID_H_GAP);
-        gridPaneActions.setVgap(GeneralConfigurationStepViewI.GRID_V_GAP);
-        Label labelPartActions = UIUtils.createTitleLabel(Translation.getText("general.configuration.info.general.configuration.actions"));
-        gridPaneActions.add(labelPartActions, 0, gridActionsRowIndex++, 2, 1);
-        this.buttonPrintGridsPdf = ConfigUIUtils.createActionTableEntry(gridActionsRowIndex, "configuration.selection.print.grids.pdf.configuration.button",
-                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.FILE_PDF_ALT).size(30).color(LCGraphicStyle.SECOND_DARK), gridPaneActions);
-        gridActionsRowIndex += 2;
+        Label labelPartActions = UIControlHelper.createTitleLabel(Translation.getText("general.configuration.info.general.configuration.actions"));
+        final Node pdfActionNode = UIControlHelper.createActionTableEntry("configuration.selection.print.grids.pdf.configuration.button",
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.FILE_PDF_ALT).size(30).color(LCGraphicStyle.SECOND_DARK),
+                () -> ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.ExportEditGridsToPdfAction(gridPaneTotal)));
+        VBox boxActions = new VBox(GeneralConfigurationStepViewI.GRID_V_GAP, labelPartActions, pdfActionNode);
 
-        gridPaneTotal.add(gridPaneActions, 0, gridRowIndex, 2, gridActionsRowIndex);
-        gridRowIndex += gridActionsRowIndex;
+        gridPaneTotal.add(boxActions, 0, gridRowIndex, 2, 2);
 
         gridPaneTotal.setPadding(new Insets(GeneralConfigurationStepViewI.PADDING));
         ScrollPane scrollPane = new ScrollPane(gridPaneTotal);
@@ -188,7 +185,6 @@ public class GeneralInformationConfigurationStepView extends BorderPane implemen
                 ProfileConfigSelectionController.INSTANCE.setConfigStep(ProfileConfigStep.CONFIGURATION_EDIT, null, configuration);
             }
         });
-        this.buttonPrintGridsPdf.setOnAction(e -> ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.ExportEditGridsToPdfAction(buttonPrintGridsPdf)));
     }
     //========================================================================
 

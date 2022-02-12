@@ -35,12 +35,12 @@ import org.lifecompanion.model.api.categorizedelement.CategorizedConfigurationVi
 import org.lifecompanion.model.api.categorizedelement.CategorizedElementI;
 import org.lifecompanion.model.api.categorizedelement.MainCategoryI;
 import org.lifecompanion.model.api.categorizedelement.SubCategoryI;
+import org.lifecompanion.util.UIControlHelper;
 import org.lifecompanion.util.model.Triple;
 import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.ui.common.pane.generic.AnimatedBorderPane;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
-import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.slf4j.Logger;
@@ -174,7 +174,7 @@ public abstract class AbstractCategorizedMainView<V extends CategorizedElementI<
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.SEARCH).sizeFactor(1).color(LCGraphicStyle.LC_WHITE),
                 this.getSearchButtonTooltipID());
 
-        Triple<HBox, Label, Node> header = ConfigUIUtils.createHeader("", m -> previous());
+        Triple<HBox, Label, Node> header = UIControlHelper.createHeader("", m -> previous());
         header.getLeft().getChildren().add(buttonSearch);
         labelTitle = header.getMiddle();
         nodePreviousIndicator = header.getRight();

@@ -46,6 +46,7 @@ import org.controlsfx.glyphfont.GlyphFontRegistry;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.ui.common.pane.specific.cell.P4AWordListCell;
+import org.lifecompanion.util.UIControlHelper;
 import org.lifecompanion.util.model.LCTask;
 import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
@@ -147,7 +148,7 @@ public class P4ADictionaryConfigurationView extends ScrollPane implements Genera
         HBox.setHgrow(labelSliderFilter, Priority.ALWAYS);
         HBox boxSlider = new HBox(5.0, labelSliderFilter, sliderFilterVocabulary);
 
-        VBox boxTop = new VBox(5.0, UIUtils.createTitleLabel("predict4all.config.part.title.word.list"), this.fieldSearchWord, boxSlider, labelWordCount, this.toggleUserWordOnly, this.toggleHideDisabledWords);
+        VBox boxTop = new VBox(5.0, UIControlHelper.createTitleLabel("predict4all.config.part.title.word.list"), this.fieldSearchWord, boxSlider, labelWordCount, this.toggleUserWordOnly, this.toggleHideDisabledWords);
 
         // Center : word list
         this.listViewWords = new ListView<>(this.sortedList);
@@ -173,7 +174,7 @@ public class P4ADictionaryConfigurationView extends ScrollPane implements Genera
         labelExplainPrioDeprio.getStyleClass().add("explain-text");
         Label labelPrioPart = new Label(Translation.getText("predict4all.config.part.title.words.priorized"));
         labelPrioPart.setStyle("-fx-font-weight: bold;");
-        VBox boxPriorizeVoc = new VBox(5.0, UIUtils.createTitleLabel("predict4all.config.part.title.priorize.deprio"), labelExplainPrioDeprio, labelPrioPart);
+        VBox boxPriorizeVoc = new VBox(5.0, UIControlHelper.createTitleLabel("predict4all.config.part.title.priorize.deprio"), labelExplainPrioDeprio, labelPrioPart);
         Arrays.stream(VocabularyListModifyDic.values()).filter(VocabularyListModifyDic::isPriorize).forEach(dic -> boxPriorizeVoc.getChildren().add(this.createToggleFor(dic)));
         Label labelDeprioPart = new Label(Translation.getText("predict4all.config.part.title.words.depriorized"));
         labelDeprioPart.setStyle("-fx-font-weight: bold;");

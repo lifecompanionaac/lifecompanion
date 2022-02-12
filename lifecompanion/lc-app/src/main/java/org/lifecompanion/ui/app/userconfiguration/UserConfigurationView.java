@@ -28,6 +28,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.controlsfx.glyphfont.FontAwesome;
+import org.lifecompanion.util.UIControlHelper;
 import org.lifecompanion.util.model.Triple;
 import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.constant.LCConstant;
@@ -38,7 +39,6 @@ import org.lifecompanion.ui.common.pane.generic.AnimatedBorderPane;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.controller.io.task.LoadUserConfigTask;
 import org.lifecompanion.controller.io.task.SaveUserConfigTask;
-import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.slf4j.Logger;
@@ -92,7 +92,7 @@ public class UserConfigurationView extends BorderPane implements LCViewInitHelpe
         this.addConfigTab(new MiscConfigSubmenu());
 
         // Center top : title and previous button
-        Triple<HBox, Label, Node> header = ConfigUIUtils.createHeader("", e -> this.parentStage.hide());
+        Triple<HBox, Label, Node> header = UIControlHelper.createHeader("", e -> this.parentStage.hide());
         labelTitle = header.getMiddle();
         nodePreviousIndicator = header.getRight();
         boxMenuLeft.setPadding(new Insets(50.0, 0.0, 0.0, 0.0));

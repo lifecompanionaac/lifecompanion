@@ -201,14 +201,6 @@ public class UIUtils {
     }
     //========================================================================
 
-    public static Label createTitleLabel(String titleId) {
-        Label label = new Label(Translation.getText(titleId));
-        label.getStyleClass().add("generic-part-title");
-        label.setTextAlignment(TextAlignment.LEFT);
-        label.setMaxWidth(Double.MAX_VALUE);
-        return label;
-    }
-
     // Class part : "Spinner"
     //========================================================================
     public static Spinner<Integer> createIntSpinner(final int min, final int max, final int initialValue, final int step, final double width) {

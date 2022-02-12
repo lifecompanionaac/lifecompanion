@@ -65,7 +65,7 @@ public class LifeCompanion extends Application {
     public static void main(final String[] args) {
         LOGGER.info("Logs are saved to {}", new File(System.getProperty("java.io.tmpdir") + "/LifeCompanion/logs/application.log").getAbsolutePath());
         argsCollection = args != null ? new ArrayList<>(Arrays.asList(args)) : new ArrayList<>();
-        boolean doubleRun = DoubleLaunchController.INSTANCE.checkDoubleRun(new DoubleLaunchListenerImpl());
+        boolean doubleRun = false;// DoubleLaunchController.INSTANCE.checkDoubleRun(new DoubleLaunchListenerImpl());
         if (!doubleRun) {
             // Verify update args (to be able to avoid app startup when updateDownloadFinished)
             InstallationController.INSTANCE.handleLaunchArgs(argsCollection);

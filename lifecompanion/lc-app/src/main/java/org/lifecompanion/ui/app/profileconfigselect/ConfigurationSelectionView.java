@@ -36,6 +36,7 @@ import org.fxmisc.easybind.Subscription;
 import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
 import org.lifecompanion.model.api.profile.LCProfileI;
 import org.lifecompanion.ui.common.pane.specific.cell.ConfigurationDescriptionAdvancedListCell;
+import org.lifecompanion.util.UIControlHelper;
 import org.lifecompanion.util.javafx.DisableSelectionSelectionModel;
 import org.lifecompanion.util.model.Triple;
 import org.lifecompanion.util.UIUtils;
@@ -47,7 +48,6 @@ import org.lifecompanion.controller.profileconfigselect.ProfileConfigSelectionCo
 import org.lifecompanion.controller.profileconfigselect.ProfileConfigStep;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.controller.editmode.ConfigActionController;
-import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
@@ -94,7 +94,7 @@ public class ConfigurationSelectionView extends BorderPane implements ProfileCon
     //========================================================================
     @Override
     public void initUI() {
-        Triple<HBox, Label, Node> header = ConfigUIUtils.createHeader("configuration.selection.view.title", e -> ProfileConfigSelectionController.INSTANCE.setProfileStep(ProfileConfigStep.PROFILE_LIST, null, null));
+        Triple<HBox, Label, Node> header = UIControlHelper.createHeader("configuration.selection.view.title", e -> ProfileConfigSelectionController.INSTANCE.setProfileStep(ProfileConfigStep.PROFILE_LIST, null, null));
         this.setTop(header.getLeft());
 
         //Search filter

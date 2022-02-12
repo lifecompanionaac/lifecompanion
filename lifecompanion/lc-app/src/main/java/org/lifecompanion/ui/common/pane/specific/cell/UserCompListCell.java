@@ -30,21 +30,21 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
-import org.lifecompanion.model.api.profile.LCProfileI;
-import org.lifecompanion.model.api.profile.UserCompDescriptionI;
-import org.lifecompanion.model.impl.exception.LCException;
-import org.lifecompanion.util.UIUtils;
-import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.controller.editaction.AsyncExecutorController;
-import org.lifecompanion.controller.profile.ProfileController;
-import org.lifecompanion.controller.io.IOHelper;
-import org.lifecompanion.controller.io.task.UserCompLoadingTask;
 import org.lifecompanion.controller.editaction.PluginActions;
 import org.lifecompanion.controller.editaction.UserCompActions.EditUserCompAction;
 import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.controller.editmode.DragController;
-import org.lifecompanion.util.ConfigUIUtils;
+import org.lifecompanion.controller.io.IOHelper;
+import org.lifecompanion.controller.io.task.UserCompLoadingTask;
+import org.lifecompanion.controller.profile.ProfileController;
 import org.lifecompanion.framework.commons.translation.Translation;
+import org.lifecompanion.model.api.profile.LCProfileI;
+import org.lifecompanion.model.api.profile.UserCompDescriptionI;
+import org.lifecompanion.model.impl.constant.LCConstant;
+import org.lifecompanion.model.impl.exception.LCException;
+import org.lifecompanion.util.ConfigUIUtils;
+import org.lifecompanion.util.UIUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,7 +64,7 @@ public class UserCompListCell extends ListCell<UserCompDescriptionI> {
     private Tooltip tooltip;
 
     public UserCompListCell() {
-        this.getStyleClass().add("user-comp-list-cell");
+        this.getStyleClass().addAll("background-transparent", "soft-selection-cell");
         //Base content
         this.boxContent = new BorderPane();
         this.labelName = new Label();
@@ -72,7 +72,7 @@ public class UserCompListCell extends ListCell<UserCompDescriptionI> {
         this.labelName.setWrapText(true);
         this.labelName.setTextAlignment(TextAlignment.CENTER);
         this.labelName.setAlignment(Pos.CENTER);
-        this.labelName.getStyleClass().add("user-comp-title");
+        this.labelName.getStyleClass().addAll("text-h4","text-fill-dimgrey");
 
         this.tooltip = UIUtils.createTooltip(Translation.getText("tooltip.explain.user.comp.add"));
 
@@ -134,7 +134,7 @@ public class UserCompListCell extends ListCell<UserCompDescriptionI> {
                                 dlg.getDialogPane().setContentText(sb.toString());
                                 dlg.show();
                             });
-                            AsyncExecutorController.INSTANCE.addAndExecute( false, false, loadTask);
+                            AsyncExecutorController.INSTANCE.addAndExecute(false, false, loadTask);
                         });
             }
         });

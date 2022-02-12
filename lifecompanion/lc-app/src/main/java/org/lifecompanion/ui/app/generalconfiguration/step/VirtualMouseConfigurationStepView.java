@@ -31,6 +31,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.configurationcomponent.VirtualMouseDrawing;
+import org.lifecompanion.util.UIControlHelper;
 import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStep;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStepViewI;
@@ -81,7 +82,7 @@ public class VirtualMouseConfigurationStepView extends BorderPane implements Gen
     //========================================================================
     @Override
     public void initUI() {
-        Label labelMousePartTitle = UIUtils.createTitleLabel(Translation.getText("general.configuration.mouse.config.part.circle.mouse.title"));
+        Label labelMousePartTitle = UIControlHelper.createTitleLabel(Translation.getText("general.configuration.mouse.config.part.circle.mouse.title"));
         GridPane.setHgrow(labelMousePartTitle, Priority.ALWAYS);
         Label labelMousePartExplain = new Label(Translation.getText("general.configuration.mouse.config.part.circle.mouse.explain"));
         labelMousePartExplain.getStyleClass().add("explain-text");

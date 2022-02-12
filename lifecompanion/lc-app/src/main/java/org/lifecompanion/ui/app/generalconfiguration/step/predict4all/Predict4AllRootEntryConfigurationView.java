@@ -32,6 +32,7 @@ import javafx.scene.layout.VBox;
 import org.controlsfx.control.ToggleSwitch;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
+import org.lifecompanion.util.UIControlHelper;
 import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.model.impl.textprediction.predict4all.P4AConfigurationSteps;
@@ -133,9 +134,9 @@ public class Predict4AllRootEntryConfigurationView extends VBox implements Gener
         this.setPadding(new Insets(GeneralConfigurationStepViewI.PADDING));
         this.setSpacing(8.0);
         this.getChildren().addAll(
-                UIUtils.createTitleLabel("predict4all.config.part.title.prediction"), boxSpinnerMinCountPred, buttonDictionaryConfig,
-                UIUtils.createTitleLabel("predict4all.config.part.title.dynamic.model"), this.toggleDynamicModelEnabled, this.toggleAddNewWord, boxSpinnerCountValidateWords, buttonTrainingConfig,
-                UIUtils.createTitleLabel("predict4all.config.part.title.correction"), this.toggleEnableCorrection, boxSpinnerMinCountCorr, buttonCorrectionConfig,
+                UIControlHelper.createTitleLabel("predict4all.config.part.title.prediction"), boxSpinnerMinCountPred, buttonDictionaryConfig,
+                UIControlHelper.createTitleLabel("predict4all.config.part.title.dynamic.model"), this.toggleDynamicModelEnabled, this.toggleAddNewWord, boxSpinnerCountValidateWords, buttonTrainingConfig,
+                UIControlHelper.createTitleLabel("predict4all.config.part.title.correction"), this.toggleEnableCorrection, boxSpinnerMinCountCorr, buttonCorrectionConfig,
                 new Separator(Orientation.HORIZONTAL), this.buttonTestingConfig
         );
     }

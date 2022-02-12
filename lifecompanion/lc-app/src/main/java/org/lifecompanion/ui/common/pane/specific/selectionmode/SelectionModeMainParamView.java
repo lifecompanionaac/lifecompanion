@@ -41,6 +41,7 @@ import org.lifecompanion.ui.common.pane.specific.cell.FireActionEventInputListCe
 import org.lifecompanion.ui.common.pane.specific.cell.FireEventInputListCell;
 import org.lifecompanion.ui.common.pane.specific.cell.SelectionModeDetailListCell;
 import org.lifecompanion.ui.common.pane.specific.cell.SelectionModeSimpleListCell;
+import org.lifecompanion.util.UIControlHelper;
 import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
@@ -195,13 +196,13 @@ public class SelectionModeMainParamView extends BaseConfigurationViewBorderPane<
         labelSelectionMode.setMaxWidth(Double.MAX_VALUE);
         GridPane.setHgrow(labelSelectionMode, Priority.ALWAYS);
         labelSelectionMode.setMinWidth(GeneralConfigurationStepViewI.LEFT_COLUMN_MIN_WIDTH);
-        gridPaneConfiguration.add(UIUtils.createTitleLabel("general.configuration.view.step.selection.mode.title"), 0, gridRowIndex++, 2, 1);
+        gridPaneConfiguration.add(UIControlHelper.createTitleLabel("general.configuration.view.step.selection.mode.title"), 0, gridRowIndex++, 2, 1);
         gridPaneConfiguration.add(labelSelectionMode, 0, gridRowIndex);
         gridPaneConfiguration.add(comboboxSelectionMode, 1, gridRowIndex++);
         gridPaneConfiguration.add(buttonShowSelectionModeConfiguration, 0, gridRowIndex++, 2, 1);
 
         // Input configuration
-        gridPaneConfiguration.add(UIUtils.createTitleLabel("general.configuration.selection.mode.title.part.input.type"), 0, gridRowIndex++, 2, 1);
+        gridPaneConfiguration.add(UIControlHelper.createTitleLabel("general.configuration.selection.mode.title.part.input.type"), 0, gridRowIndex++, 2, 1);
         Label labelInputType = new Label(Translation.getText("general.configuration.selection.input.type.label"));
         gridPaneConfiguration.add(labelInputType, 0, gridRowIndex);
         gridPaneConfiguration.add(comboBoxFireEventInput, 1, gridRowIndex++);
@@ -213,7 +214,7 @@ public class SelectionModeMainParamView extends BaseConfigurationViewBorderPane<
         gridPaneConfiguration.add(mouseButtonSelectorControl, 1, gridRowIndex++);
 
         // Fire action
-        gridPaneConfiguration.add(UIUtils.createTitleLabel("general.configuration.selection.mode.title.filter.actions"), 0, gridRowIndex++, 2, 1);
+        gridPaneConfiguration.add(UIControlHelper.createTitleLabel("general.configuration.selection.mode.title.filter.actions"), 0, gridRowIndex++, 2, 1);
         gridPaneConfiguration.add(new Label(Translation.getText("general.configuration.selection.mode.title.filter.actions.field")), 0, gridRowIndex);
         gridPaneConfiguration.add(comboBoxFireActionEvent, 1, gridRowIndex++);
 
