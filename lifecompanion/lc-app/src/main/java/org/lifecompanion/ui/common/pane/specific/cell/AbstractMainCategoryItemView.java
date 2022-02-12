@@ -55,7 +55,7 @@ public class AbstractMainCategoryItemView<T extends MainCategoryI<?>> extends La
     public void initUI() {
         this.setContentDisplay(ContentDisplay.TOP);
         this.setAlignment(Pos.CENTER);
-        this.getStyleClass().add("main-category-grid-cell");
+        this.getStyleClass().add("dropshadow-hover");
         //Create graphics
         StackPane centerPane = new StackPane();
         this.backgroundShape = new Rectangle(100, 80);

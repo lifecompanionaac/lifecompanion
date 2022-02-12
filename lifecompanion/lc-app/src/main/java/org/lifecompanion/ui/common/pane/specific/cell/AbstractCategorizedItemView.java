@@ -60,7 +60,7 @@ public class AbstractCategorizedItemView<T extends CategorizedElementI<?>> exten
         this.setAlignment(Pos.TOP_CENTER);
         this.setTextAlignment(TextAlignment.CENTER);
         this.setWrapText(true);
-        this.getStyleClass().add("use-action-grid-cell");
+        this.getStyleClass().add("dropshadow-hover");
         //Icon view
         this.useActionIconView = new CategorizedIconView();
         //Tooltip : description

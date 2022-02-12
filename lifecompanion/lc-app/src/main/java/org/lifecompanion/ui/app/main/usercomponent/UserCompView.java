@@ -77,7 +77,9 @@ public class UserCompView extends TitledPane implements LCViewInitHelper {
 
         //Header
         StackPane headerPane = new StackPane();
-        headerPane.getStyleClass().add("bottom-border-part");
+        headerPane.getStyleClass().add("border-bottom-gray");
+        headerPane.setPadding(new Insets(2.0));
+        VBox.setMargin(headerPane, new Insets(1.0, 1.0, 5.0, 1.0));
         //Button to add/remove
         HBox boxButtonLabel = new HBox();
         this.buttonRemove = UIUtils.createGraphicButton(

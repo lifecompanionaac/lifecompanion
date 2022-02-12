@@ -30,6 +30,10 @@
     -fx-text-fill: white;
 }
 
+.text-fill-red {
+    -fx-text-fill: red;
+}
+
 .text-fill-primary {
     -fx-text-fill: -fx-main-primary;
 }
@@ -43,9 +47,8 @@
 }
 
 .text-font-size-110 {
-    -fx-font-size: 1.2em;
+    -fx-font-size: 1.1em;
 }
-
 
 .text-font-size-120 {
     -fx-font-size: 1.2em;
@@ -140,6 +143,10 @@
 .stroke-hover:hover {
    -fx-stroke-width: 1.0;
    -fx-stroke: dimgray;
+}
+
+.dropshadow-hover:hover{
+    -fx-effect: dropshadow( gaussian , rgba(0.0,0.0,0.0,0.7) , 20.0,0.0,1.0,1.0 );
 }
 
 /*======= PRESSED =======*/

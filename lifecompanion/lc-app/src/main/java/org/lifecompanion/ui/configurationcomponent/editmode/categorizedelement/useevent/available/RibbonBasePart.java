@@ -57,7 +57,7 @@ public abstract class RibbonBasePart<T> extends BaseConfigurationViewBorderPane<
     public RibbonBasePart() {
         //Label
         this.labelTitle = new Label();
-        this.labelTitle.getStyleClass().add("ribbon-part-title");
+        this.labelTitle.getStyleClass().addAll("text-fill-gray", "text-font-size-110", "text-label-center");
         BorderPane.setAlignment(this.labelTitle, Pos.CENTER);
         BorderPane.setMargin(this.labelTitle, new Insets(6, 0, 0, 0));
         this.setBottom(this.labelTitle);

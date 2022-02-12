@@ -24,11 +24,10 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.text.TextAlignment;
+import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.model.api.categorizedelement.CategorizedElementI;
 import org.lifecompanion.model.api.categorizedelement.SubCategoryI;
-import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.util.UIControlHelper;
 
 import java.util.function.Consumer;
 
@@ -58,11 +57,9 @@ public abstract class AbstractSubCategoryContentView<V extends CategorizedElemen
     @Override
     public void initUI() {
         //Top : title
-        Label labelTitle = new Label(this.subCategory.getName());
-        labelTitle.setTextAlignment(TextAlignment.CENTER);
-        HBox boxTop = new HBox(labelTitle);
-        boxTop.getStyleClass().add("sub-category-title");
-        this.setTop(boxTop);
+        Label labelTitle = UIControlHelper.createTitleLabel(this.subCategory.getName());
+        BorderPane.setMargin(labelTitle, new Insets(0.0, 0.0, 4.0, 0.0));
+        this.setTop(labelTitle);
 
         //Center : display actions
         Node useActionGridView = this.getCategorizedItemsView(this.subCategory.getContent(), this.selectionCallback);

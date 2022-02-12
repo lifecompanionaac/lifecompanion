@@ -132,7 +132,7 @@ public class DevViewPane extends BorderPane implements LCViewInitHelper {
     private TextArea createTextAreaForStream(final PrintStream printStream, final Consumer<PrintStream> setter, final boolean err) {
         final TextArea textArea = new TextArea();
         textArea.getStyleClass().add("log-text-area");
-        textArea.getStyleClass().add(err ? "text-color-err" : "text-color-out");
+        textArea.getStyleClass().add(err ? "text-fill-red" : "");
         PrintStream printStreamH = new PrintStream(printStream) {
             @Override
             public void write(final byte[] bytes, final int i, final int i1) {

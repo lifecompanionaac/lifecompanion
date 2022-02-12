@@ -20,37 +20,6 @@
 	-fx-font-family: "Consolas";
 	-fx-font-size: 11.0px;
 }
-.text-color-err{
-	-fx-text-fill: red;
-}
-.text-color-out{
-	-fx-text-fill: black;
-}
-
-/*==== LEFT PART ====*/
-
-/* Style for gallery item */
-.gallery-item:hover{
-	-fx-opacity: 0.85;
-}
-.gallery-item-textfield{
-	-fx-border-color:null;
-	-fx-text-fill: white;
-	-fx-background-color: linear-gradient(to top,  rgba(50.0,50.0,50.0, 0.8),rgba(50.0,50.0,50.0,0.4) 80.0%,rgba(50.0,50.0,50.0,0.0) 100.0%);
-}
-.gallery-item-textfield:disabled{
-	-fx-opacity: 1.0;
-}
-.bottom-border-part{
-	-fx-border-color: transparent transparent -fx-main-primary transparent;
-	-fx-border-width: 1.0;
-	-fx-border-insets: 1.0 1.0 5.0 1.0;
-}
-.top-border-node{
-	-fx-padding: 5.0 1.0 1.0 1.0;
-	-fx-border-color: lightgray transparent transparent transparent;
-	-fx-border-width: 1.0 0.0 0.0 0.0;
-}
 
 /*==== RIBBON ====*/
 /* Container for tabs */
@@ -106,19 +75,7 @@
 .ribbon-tabs *.tab-content-area {
     -fx-padding: 6.0px 1.0px 6.0px 1.0px;
 }
-/* Style for ribbon part title */
-.ribbon-part-title {
-	-fx-alignement: center;
-	-fx-text-fill: gray;
-	-fx-font-size: 12.0px;
-	-fx-font-family: "Calibri";
-}
-.label-type-title{
-	-fx-alignement: center;
-	-fx-font-size: 13.0px;
-	-fx-font-family: "Calibri";
-	-fx-font-weight: bold;
-}
+
 .box-selection-button{
 	-fx-border-color: lightgray;
 	-fx-border-width: 1.0 1.0 1.0 0.0;
@@ -145,18 +102,6 @@
 	-fx-border-color: lightgray;
 	-fx-border-width: 1.5;
 	-fx-border-radius: 5.0;
-}
-
-.remove-style-property-button {
-	/*-fx-padding: 0.0;
-	-fx-border-width: 1.0;
-	-fx-border-radius: 0.0;*/
-	-fx-padding: 0.0 2.0 0.0 2.0;
-	-fx-background-color: transparent;
-}
-.remove-style-property-button:selected {
-	-fx-background-color: gray,lightgray;
-	-fx-background-insets: 0.0,1.0;
 }
 
 /* All button that contains only graphics */
@@ -255,21 +200,7 @@
 }
 
 /*==== ACTIONS ====*/
-.sub-category-title{
-	-fx-border-color: transparent transparent gray transparent;
-	-fx-font: normal 14.0 "Calibri";
-}
-.use-action-header {
-	-fx-background-color: -fx-main-primary;
-}
 
-.main-category-grid-cell:hover{
-	-fx-effect: dropshadow( gaussian , rgba(0.0,0.0,0.0,0.7) , 20.0,0.0,1.0,1.0 );
-}
-
-.use-action-grid-cell:hover{
-	-fx-effect: dropshadow( gaussian , rgba(0.0,0.0,0.0,0.7) , 20.0,0.0,1.0,1.0 );	
-}
 
 .transparent-border-scroll-pane {
 	-fx-background-color: transparent;

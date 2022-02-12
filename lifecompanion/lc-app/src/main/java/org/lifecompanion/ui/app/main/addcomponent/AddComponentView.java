@@ -42,7 +42,6 @@ import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.model.api.ui.editmode.PossibleAddComponentCategoryI;
 import org.lifecompanion.model.api.ui.editmode.PossibleAddComponentI;
 import org.lifecompanion.model.impl.ui.editmode.AddComponentProvider;
-import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.util.UIControlHelper;
 import org.lifecompanion.util.UIUtils;
@@ -116,6 +115,7 @@ public class AddComponentView extends TitledPane implements LCViewInitHelper {
             Label labelTitle = UIControlHelper.createTitleLabel(category.getTitle());
             labelTitle.setPadding(new Insets(5.0, 0.0, 5.0, 10.0));
             paneCategory.setTop(labelTitle);
+            BorderPane.setMargin(labelTitle, new Insets(0.0, 0, 5.0, 0));
             //Content
             TilePane categoryPane = this.createCategoryContent(category);
             paneCategory.setCenter(categoryPane);
@@ -143,7 +143,6 @@ public class AddComponentView extends TitledPane implements LCViewInitHelper {
             label.setTooltip(UIUtils.createTooltip(Translation.getText(comp.getDescriptionID())));
             this.addCompViews.put(comp, label);
             label.getStyleClass().addAll("text-fill-gray", "opacity-80-hover");
-            ConfigUIUtils.bindShowForLevelFrom(label, comp.getMinimumLevel());
             this.setDragAction(comp, label);
         };
         category.getPossibleAddList().forEach(addListener);
