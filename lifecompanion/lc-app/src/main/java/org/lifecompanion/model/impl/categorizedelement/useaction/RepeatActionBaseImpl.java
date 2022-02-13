@@ -20,7 +20,7 @@ package org.lifecompanion.model.impl.categorizedelement.useaction;
 
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
-import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.util.ThreadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,12 +55,12 @@ public abstract class RepeatActionBaseImpl<T extends UseActionTriggerComponentI>
         //First execution directly on event start
         this.executeFirstBeforeRepeat(eventType);
         //Repeat after a while
-        LCUtils.safeSleep(this.getDelayBeforeRepeatStartMillis());
+        ThreadUtils.safeSleep(this.getDelayBeforeRepeatStartMillis());
         if (this.repeatEvent) {
             this.repeatThread = new Thread(() -> {
                 while (this.repeatEvent) {
                     this.executeOnRepeat(eventType);
-                    LCUtils.safeSleep(this.getDelayBetweenEachRepeatMillis());
+                    ThreadUtils.safeSleep(this.getDelayBetweenEachRepeatMillis());
                 }
             });
             this.repeatThread.setDaemon(true);

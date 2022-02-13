@@ -30,10 +30,10 @@ import javafx.scene.layout.VBox;
 import org.lifecompanion.model.api.configurationcomponent.DisplayableComponentI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.ui.common.pane.specific.cell.DisplayableComponentListCell;
-import org.lifecompanion.util.LCUtils;
-import org.lifecompanion.util.UIUtils;
+import org.lifecompanion.util.javafx.FXControlUtils;
+import org.lifecompanion.util.model.ConfigurationComponentUtils;
 import org.lifecompanion.controller.lifecycle.AppModeController;
-import org.lifecompanion.util.binding.LCConfigBindingUtils;
+import org.lifecompanion.util.binding.BindingUtils;
 import org.lifecompanion.ui.common.control.generic.searchcombobox.SearchComboBox;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
@@ -108,11 +108,11 @@ public class ComponentSelectorControl<T extends DisplayableComponentI> extends V
         // Search combobox
         searchComboBox = new SearchComboBox<>(
                 lv -> new DisplayableComponentListCell<>(),
-                searchText -> StringUtils.isBlank(searchText) ? this::isValidItem : c -> this.isValidItem(c) && LCUtils.getSimilarityScoreFor(searchText, c) > 0,
+                searchText -> StringUtils.isBlank(searchText) ? this::isValidItem : c -> this.isValidItem(c) && ConfigurationComponentUtils.getSimilarityScoreFor(searchText, c) > 0,
                 comp -> comp != null ? comp.nameProperty().get() : Translation.getText("component.selector.control.no.selection"),
                 searchText -> StringUtils.isBlank(searchText) ? null : (c1, c2) -> Double.compare(
-                        LCUtils.getSimilarityScoreFor(searchText, c2),
-                        LCUtils.getSimilarityScoreFor(searchText, c1))
+                        ConfigurationComponentUtils.getSimilarityScoreFor(searchText, c2),
+                        ConfigurationComponentUtils.getSimilarityScoreFor(searchText, c1))
         );
         //UIUtils.setFixedWidth(searchComboBox, 250.0);
 
@@ -124,7 +124,7 @@ public class ComponentSelectorControl<T extends DisplayableComponentI> extends V
     }
 
     public void setTooltipText(String tooltipTextId) {
-        Tooltip.install(searchComboBox, UIUtils.createTooltip(tooltipTextId));
+        Tooltip.install(searchComboBox, FXControlUtils.createTooltip(tooltipTextId));
     }
 
     private boolean isValidItem(final DisplayableComponentI item) {
@@ -148,7 +148,7 @@ public class ComponentSelectorControl<T extends DisplayableComponentI> extends V
                 ObservableList<T> items = FXCollections.observableArrayList();
                 items.addAll((Collection<T>) nv.getAllComponent().values());
                 this.searchComboBox.setItems(items);
-                allComponentMap.addListener(this.currentMapChangeListener = LCConfigBindingUtils.createBindMapValue(items));
+                allComponentMap.addListener(this.currentMapChangeListener = BindingUtils.createBindMapValue(items));
             }
         };
         configurationChangeListener.changed(null, null, AppModeController.INSTANCE.getEditModeContext().configurationProperty().get());

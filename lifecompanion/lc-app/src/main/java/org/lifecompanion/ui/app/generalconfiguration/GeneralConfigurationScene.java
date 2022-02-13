@@ -34,9 +34,9 @@ import org.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.ui.app.generalconfiguration.step.*;
 import org.lifecompanion.ui.app.generalconfiguration.step.predict4all.*;
-import org.lifecompanion.util.UIControlHelper;
+import org.lifecompanion.util.javafx.DialogUtils;
+import org.lifecompanion.util.javafx.FXControlUtils;
 import org.lifecompanion.util.model.Triple;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.lifecycle.AppModeController;
@@ -45,7 +45,6 @@ import org.lifecompanion.controller.plugin.PluginController;
 import org.lifecompanion.ui.common.pane.generic.AnimatedBorderPane;
 import org.lifecompanion.controller.editmode.GeneralConfigurationController;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
-import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.controller.systemvk.SystemVirtualKeyboardController;
 import org.lifecompanion.ui.app.generalconfiguration.step.dynamickey.KeyListNodeMainConfigurationStepView;
 import org.lifecompanion.ui.app.generalconfiguration.step.dynamickey.UserActionSequenceMainConfigurationStepView;
@@ -119,7 +118,7 @@ public class GeneralConfigurationScene extends Scene implements LCViewInitHelper
         addStepImplementation(new UserActionSequenceMainConfigurationStepView());
 
         // Center top : title and previous button
-        Triple<HBox, Label, Node> header = UIControlHelper.createHeader("", this::previousClic);
+        Triple<HBox, Label, Node> header = FXControlUtils.createHeader("", this::previousClic);
         labelTitle = header.getMiddle();
         nodePreviousIndicator = header.getRight();
         boxMenuLeft.setPadding(new Insets(50.0, 0.0, 0.0, 0.0));
@@ -128,9 +127,9 @@ public class GeneralConfigurationScene extends Scene implements LCViewInitHelper
         viewContentBorderPane = new AnimatedBorderPane();
 
         // Center bottom : ok, cancel buttons
-        buttonOk = UIUtils.createLeftTextButton(Translation.getText("general.configuration.scene.ok.button"),
+        buttonOk = FXControlUtils.createLeftTextButton(Translation.getText("general.configuration.scene.ok.button"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CHECK).size(16).color(LCGraphicStyle.MAIN_DARK), null);
-        buttonCancel = UIUtils.createLeftTextButton(Translation.getText("general.configuration.scene.cancel.button"),
+        buttonCancel = FXControlUtils.createLeftTextButton(Translation.getText("general.configuration.scene.cancel.button"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.TIMES).size(16).color(LCGraphicStyle.SECOND_DARK), null);
         HBox buttonBox = new HBox(buttonCancel, buttonOk);
         buttonBox.setAlignment(Pos.CENTER_RIGHT);
@@ -210,7 +209,7 @@ public class GeneralConfigurationScene extends Scene implements LCViewInitHelper
 
     void cancelSelected(Node source) {
         if (this.shouldCancelBeConfirmed()) {
-            Alert dlg = ConfigUIUtils.createAlert(source, Alert.AlertType.CONFIRMATION);
+            Alert dlg = DialogUtils.createAlert(source, Alert.AlertType.CONFIRMATION);
             dlg.getDialogPane().setContentText(Translation.getText("general.config.scene.cancel.warning.message"));
             dlg.getDialogPane().setHeaderText(Translation.getText("general.config.scene.cancel.warning.header"));
             Optional<ButtonType> returned = dlg.showAndWait();

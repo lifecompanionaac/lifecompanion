@@ -26,7 +26,7 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
-import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -96,7 +96,7 @@ public enum SoundPlayerController implements ModeListenerI {
     }
 
     public void switchDisableSoundPlayer() {
-        LCUtils.runOnFXThread(() -> {
+        FXThreadUtils.runOnFXThread(() -> {
             this.disableSoundPlayer.set(!this.disableSoundPlayer.get());
             if (this.disableSoundPlayer.get()) {
                 this.stopEveryPlayer();

@@ -25,9 +25,9 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionConfigurationViewI;
 import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.categorizedelement.useaction.available.PauseAction;
 import org.lifecompanion.framework.commons.translation.Translation;
+import org.lifecompanion.util.javafx.FXControlUtils;
 
 public class PauseActionConfigView extends VBox implements UseActionConfigurationViewI<PauseAction> {
 
@@ -46,7 +46,7 @@ public class PauseActionConfigView extends VBox implements UseActionConfiguratio
     @Override
     public void initUI() {
         Label labelTimeToReach = new Label(Translation.getText("use.action.pause.time"));
-        this.spinnerPauseTime = UIUtils.createDoubleSpinner(1.0, 60 * 60, 2.0, 1.0, 120.0);// 1 hour max
+        this.spinnerPauseTime = FXControlUtils.createDoubleSpinner(1.0, 60 * 60, 2.0, 1.0, 120.0);// 1 hour max
         this.spinnerPauseTime.setMaxWidth(Double.MAX_VALUE);
         this.getChildren().addAll(labelTimeToReach, this.spinnerPauseTime);
     }

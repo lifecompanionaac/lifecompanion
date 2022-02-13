@@ -31,7 +31,7 @@ import org.lifecompanion.model.api.usevariable.UseVariableI;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseActionSubCategories;
-import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.util.javafx.StageUtils;
 import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
@@ -71,7 +71,7 @@ public class ChangeFramePositionAction extends SimpleUseActionImpl<UseActionTrig
     public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
         if ( this.framePosition.get() != null) {
             final Stage stage = AppModeController.INSTANCE.getUseModeContext().stageProperty().get();
-            LCUtils.runOnFXThread(() -> {
+            FXThreadUtils.runOnFXThread(() -> {
                 if (!stage.isFullScreen() && !stage.isMaximized()) {
                     StageUtils.moveStageTo(AppModeController.INSTANCE.getEditModeContext().getStage(), this.framePosition.get());
                 }

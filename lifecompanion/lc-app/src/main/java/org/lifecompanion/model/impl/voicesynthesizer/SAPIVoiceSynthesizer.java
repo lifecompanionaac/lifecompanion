@@ -22,11 +22,11 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import okhttp3.*;
 import org.lifecompanion.model.api.voicesynthesizer.VoiceInfoI;
-import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
+import org.lifecompanion.util.LangUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -97,7 +97,7 @@ public class SAPIVoiceSynthesizer extends AbstractVoiceSynthesizer {
                 .build();
 
         // Dev debug : kill/close on launch
-        if (LCUtils.safeParseBoolean(System.getProperty("org.lifecompanion.kill.sapi.on.launch"))) {
+        if (LangUtils.safeParseBoolean(System.getProperty("org.lifecompanion.kill.sapi.on.launch"))) {
             try {
                 disposeRequest(httpClient.newBuilder().connectTimeout(2, TimeUnit.SECONDS).build());
             } catch (Exception e) {

@@ -33,7 +33,7 @@ import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNode
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
 import org.lifecompanion.model.impl.categorizedelement.useaction.available.*;
-import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.util.model.ConfigurationComponentUtils;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.dynamickey.KeyListNodeKeyOption;
 import org.lifecompanion.controller.lifecycle.AppMode;
 import org.lifecompanion.controller.lifecycle.AppModeController;
@@ -280,7 +280,7 @@ public enum KeyListController implements ModeListenerI {
         rootKeyListNode = configuration.rootKeyListNodeProperty().get();
 
         // Find all keys that display key list
-        LCUtils.findKeyOptionsByGrid(KeyListNodeKeyOption.class, configuration, keyOptionsPerGrid, null);
+        ConfigurationComponentUtils.findKeyOptionsByGrid(KeyListNodeKeyOption.class, configuration, keyOptionsPerGrid, null);
 
         // Sort these keys options by their possibles displayed categories
         keyOptionsPerGrid.forEach((grid, keyOptions) -> {

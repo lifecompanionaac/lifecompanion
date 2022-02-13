@@ -31,7 +31,6 @@ import org.jdom2.Element;
 import org.lifecompanion.model.impl.usevariable.StringUseVariable;
 import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
-import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
 import org.lifecompanion.model.impl.exception.LCException;
@@ -42,6 +41,7 @@ import org.lifecompanion.model.impl.usevariable.UseVariableDefinition;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import org.lifecompanion.util.ThreadUtils;
 
 /**
  * Generate a event after mode start on a specific day
@@ -86,7 +86,7 @@ public class DayOfWeekEventGenerator extends BaseUseEventGeneratorImpl {
 		//TODO : may cause problem if user doesn't stop LC everyday, see if needed
 		if (LocalDate.now().getDayOfWeek().getValue() == this.wantedDay.get()) {
 			Thread t = new Thread(() -> {
-				LCUtils.safeSleep(DayOfWeekEventGenerator.DELAY_ON_START);//Delay on start
+				ThreadUtils.safeSleep(DayOfWeekEventGenerator.DELAY_ON_START);//Delay on start
 				this.useEventListener.fireEvent(this, Arrays.asList(new StringUseVariable(this.useVariableWantedDayLabel,
 						DayOfWeek.of(this.wantedDay.get()).getDisplayName(TextStyle.FULL, Locale.getDefault()))), null);
 			});

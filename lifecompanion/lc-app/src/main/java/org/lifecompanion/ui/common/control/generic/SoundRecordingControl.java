@@ -30,8 +30,9 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.util.Duration;
 import org.controlsfx.glyphfont.FontAwesome;
-import org.lifecompanion.util.LCUtils;
-import org.lifecompanion.util.UIUtils;
+import org.lifecompanion.util.StringUtils;
+import org.lifecompanion.util.javafx.FXControlUtils;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.media.SoundPlayerController;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
@@ -41,6 +42,7 @@ import org.lifecompanion.ui.notification.LCNotificationController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.io.FileNameUtils;
+import org.lifecompanion.util.javafx.FXUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -122,16 +124,16 @@ public class SoundRecordingControl extends HBox implements LCViewInitHelper {
     @Override
     public void initUI() {
         //UI
-        this.buttonRecordPlayStop = UIUtils.createGraphicsToggleButton(Translation.getText("sound.record.start.button"),
+        this.buttonRecordPlayStop = FXControlUtils.createGraphicsToggleButton(Translation.getText("sound.record.start.button"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.MICROPHONE).sizeFactor(1).color(LCGraphicStyle.SECOND_DARK), null);
         buttonRecordPlayStop.getStyleClass().add("record-sound-toggle");
         buttonRecordPlayStop.setContentDisplay(ContentDisplay.LEFT);
         buttonRecordPlayStop.setMinWidth(100.0);
-        UIUtils.applyPerformanceConfiguration(buttonRecordPlayStop);
+        FXUtils.applyPerformanceConfiguration(buttonRecordPlayStop);
 
         this.labelCurrentSoundDuration = new Label();
         labelCurrentSoundDuration.getStyleClass().add("text-font-size-120");
-        buttonPlayCurrent = UIUtils.createGraphicButton(
+        buttonPlayCurrent = FXControlUtils.createGraphicButton(
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.PLAY).sizeFactor(1).color(LCGraphicStyle.MAIN_PRIMARY),
                 "tooltip.explain.play.recorded.sound");
 
@@ -178,7 +180,7 @@ public class SoundRecordingControl extends HBox implements LCViewInitHelper {
 
     @Override
     public void initBinding() {
-        this.labelCurrentSoundDuration.textProperty().bind(Bindings.createStringBinding(() -> LCUtils.durationToString(this.currentSoundDurationInSecond.get()), currentSoundDurationInSecond));
+        this.labelCurrentSoundDuration.textProperty().bind(Bindings.createStringBinding(() -> StringUtils.durationToString(this.currentSoundDurationInSecond.get()), currentSoundDurationInSecond));
         buttonRecordPlayStop.textProperty().bind(Bindings.createStringBinding(
                 () -> Translation.getText(recordingProperty.get() ? "sound.record.stop.button" : "sound.record.start.button"), recordingProperty));
         this.buttonPlayCurrent.disableProperty().bind(this.currentRecordedFile.isNull().or(recordingProperty));
@@ -238,7 +240,7 @@ public class SoundRecordingControl extends HBox implements LCViewInitHelper {
 
                 if (format == null) {
                     LOGGER.error("Line not supported for {}", info);
-                    LCUtils.runOnFXThread(() -> LCNotificationController.INSTANCE.showNotification(LCNotification.createWarning("record.sound.action.not.available.title")));
+                    FXThreadUtils.runOnFXThread(() -> LCNotificationController.INSTANCE.showNotification(LCNotification.createWarning("record.sound.action.not.available.title")));
                     return;
                 }
 
@@ -256,7 +258,7 @@ public class SoundRecordingControl extends HBox implements LCViewInitHelper {
                 timer.scheduleAtFixedRate(new TimerTask() {
                     @Override
                     public void run() {
-                        LCUtils.runOnFXThread(() -> {
+                        FXThreadUtils.runOnFXThread(() -> {
                             currentSoundDurationInSecond.set((int) ((System.currentTimeMillis() - startTime) / 1000));
                         });
                     }
@@ -271,16 +273,16 @@ public class SoundRecordingControl extends HBox implements LCViewInitHelper {
 
                 //Set the result file
                 if (!cancelSoundSaving) {
-                    LCUtils.runOnFXThread(() -> {
+                    FXThreadUtils.runOnFXThread(() -> {
                         currentRecordedFile.set(tempFile);
                     });
                 }
             } catch (Exception e) {
                 LOGGER.error("Error while recording sound", e);
-                LCUtils.runOnFXThread(() -> ErrorHandlingController.INSTANCE.showErrorNotificationWithExceptionDetails( Translation.getText("record.sound.action.error.message"),  e));
+                FXThreadUtils.runOnFXThread(() -> ErrorHandlingController.INSTANCE.showErrorNotificationWithExceptionDetails( Translation.getText("record.sound.action.error.message"),  e));
             } finally {
                 this.timer.cancel();
-                LCUtils.runOnFXThread(() -> {
+                FXThreadUtils.runOnFXThread(() -> {
                     recordingProperty.set(false);
                 });
             }

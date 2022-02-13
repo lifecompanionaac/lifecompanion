@@ -27,8 +27,9 @@ import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.ui.EditModeScene;
-import org.lifecompanion.util.UIUtils;
 import javafx.scene.layout.VBox;
+import org.lifecompanion.util.javafx.FXControlUtils;
+import org.lifecompanion.util.javafx.FXUtils;
 
 public class MainMenu extends VBox implements LCViewInitHelper {
 	public static final int MENU_WIDTH = 250;
@@ -50,14 +51,14 @@ public class MainMenu extends VBox implements LCViewInitHelper {
 		ConfigActionView configActionView = new ConfigActionView();
 
 		//Collapse button
-		this.buttonCollapse = UIUtils.createTextButtonWithGraphics(null,
+		this.buttonCollapse = FXControlUtils.createTextButtonWithGraphics(null,
 				GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CHEVRON_LEFT).sizeFactor(1).color(LCGraphicStyle.MAIN_PRIMARY),
 				"tooltip.main.menu.collapse");
 		HBox boxButton = new HBox(buttonCollapse);
 		boxButton.getStyleClass().addAll("main-menu-section", "main-menu-section-bottom");
 
 		this.getChildren().addAll(profileDetailView, currentConfigDetailView, configActionView, boxButton);
-		UIUtils.applyPerformanceConfiguration(this);
+		FXUtils.applyPerformanceConfiguration(this);
 	}
 
 	@Override

@@ -32,7 +32,7 @@ import org.lifecompanion.framework.model.client.UpdateFileProgressType;
 import org.lifecompanion.framework.model.client.UpdateProgress;
 import org.lifecompanion.framework.model.client.UpdateProgressType;
 import org.lifecompanion.framework.model.server.update.TargetType;
-import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.util.ThreadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -110,7 +110,7 @@ public class DownloadUpdateAndLauncherTask extends AbstractUpdateTask<Boolean> {
 
             LOGGER.info("Update processed, will now check for plugin update");
             final CheckAndDownloadPluginUpdateTask checkAndDowloadPluginTask = InstallationController.INSTANCE.createCheckAndDowloadPluginTask(false);
-            InstallationController.INSTANCE.tryToAddPluginsAfterDownload(LCUtils.executeInCurrentThread(checkAndDowloadPluginTask));
+            InstallationController.INSTANCE.tryToAddPluginsAfterDownload(ThreadUtils.executeInCurrentThread(checkAndDowloadPluginTask));
 
             LOGGER.info("Update processed, file are downloaded/copied, will now check to install launcher update");
             // If the launcher was updated, copy it before set update finished

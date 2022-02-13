@@ -24,22 +24,23 @@ import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+import javafx.scene.control.ListView;
 import org.lifecompanion.model.api.configurationcomponent.DisplayableComponentI;
 import org.lifecompanion.model.api.configurationcomponent.GridPartComponentI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.configurationcomponent.RootGraphicComponentI;
 import org.lifecompanion.controller.lifecycle.AppModeController;
-import org.lifecompanion.ui.common.control.generic.MemoryLeakSafeListView;
 import org.lifecompanion.ui.common.pane.generic.BaseConfigurationViewBorderPane;
 import org.lifecompanion.ui.common.pane.specific.cell.SelectionItemListCell;
-import org.lifecompanion.util.binding.LCConfigBindingUtils;
+import org.lifecompanion.util.binding.BindingUtils;
 import org.lifecompanion.controller.editmode.SelectionController;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.lifecompanion.util.LCUtils.getSimilarityScoreFor;
+
+import static org.lifecompanion.util.model.ConfigurationComponentUtils.getSimilarityScoreFor;
 
 /**
  * A view to display the selection tree result
@@ -51,7 +52,7 @@ public class ComponentSelectionSearchList extends BaseConfigurationViewBorderPan
     /**
      * List view that show result list
      */
-    private MemoryLeakSafeListView<DisplayableComponentI> componentListView;
+    private ListView<DisplayableComponentI> componentListView;
 
     /**
      * Current map change listener (binded to model map)
@@ -75,14 +76,14 @@ public class ComponentSelectionSearchList extends BaseConfigurationViewBorderPan
 
     @Override
     public void initUI() {
-        this.componentListView = new MemoryLeakSafeListView<>();
+        this.componentListView = new ListView<>();
         this.componentListView.setCellFactory((lv) -> new SelectionItemListCell());
         this.setCenter(this.componentListView);
     }
 
     @Override
     public void initListener() {
-        this.componentListView.selectedItemProperty()
+        this.componentListView.getSelectionModel().selectedItemProperty()
                 .addListener((observableP, oldValueP, newValueP) -> {
                     if (newValueP != null && newValueP != SelectionController.INSTANCE.selectedComponentBothProperty().get()) {
                         if (newValueP instanceof RootGraphicComponentI) {
@@ -135,11 +136,11 @@ public class ComponentSelectionSearchList extends BaseConfigurationViewBorderPan
     public void bind(final LCConfigurationI component) {
         ObservableMap<String, DisplayableComponentI> allComponentMap = component.getAllComponent();
         ObservableList<DisplayableComponentI> listItems = FXCollections.observableArrayList();
-        this.currentMapChangeListener = LCConfigBindingUtils.createBindMapValue(listItems);
+        this.currentMapChangeListener = BindingUtils.createBindMapValue(listItems);
         listItems.addAll(allComponentMap.values());
         filteredList = new FilteredList<>(listItems);
         sortedList = new SortedList<>(filteredList);
-        this.componentListView.setItemsFixML(sortedList);
+        this.componentListView.setItems(sortedList);
         allComponentMap.addListener(this.currentMapChangeListener);
     }
 
@@ -150,7 +151,7 @@ public class ComponentSelectionSearchList extends BaseConfigurationViewBorderPan
         // Issue #191 : fix memory leak in sorted list
         this.filteredList = null;
         this.sortedList = null;
-        this.componentListView.setItemsFixML(null);
+        this.componentListView.setItems(null);
     }
     // ========================================================================
 }

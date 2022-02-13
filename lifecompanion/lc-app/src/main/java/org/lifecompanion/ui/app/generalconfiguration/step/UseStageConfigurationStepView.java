@@ -33,14 +33,12 @@ import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.Glyph;
 import org.lifecompanion.model.api.configurationcomponent.FramePosition;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
-import org.lifecompanion.util.UIControlHelper;
-import org.lifecompanion.util.UIUtils;
+import org.lifecompanion.util.javafx.FXControlUtils;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStep;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStepViewI;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
-import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.ui.common.pane.specific.cell.FramePositionDetailledCell;
 import org.lifecompanion.ui.common.pane.specific.cell.FramePositionSimpleCell;
 import org.lifecompanion.framework.commons.translation.Translation;
@@ -116,58 +114,58 @@ public class UseStageConfigurationStepView extends BorderPane implements General
     @Override
     public void initUI() {
 
-        Label labelConfigurationSize = UIControlHelper.createTitleLabel(Translation.getText("general.configuration.stage.configuration.size.title"));
+        Label labelConfigurationSize = FXControlUtils.createTitleLabel(Translation.getText("general.configuration.stage.configuration.size.title"));
 
-        this.toggleEnableAutoSizing = ConfigUIUtils.createToggleSwitch("config.size.auto", "tooltip.explain.configuration.size.auto");
+        this.toggleEnableAutoSizing = FXControlUtils.createToggleSwitch("config.size.auto", "tooltip.explain.configuration.size.auto");
         //Size
         Label labelWidth = new Label(Translation.getText("config.size.width"));
         labelWidth.setMinWidth(GeneralConfigurationStepViewI.LEFT_COLUMN_MIN_WIDTH);
         Label labelHeight = new Label(Translation.getText("config.size.height"));
-        this.spinnerWidth = UIUtils.createDoubleSpinner(LCConstant.CONFIG_ROOT_COMPONENT_GAP, Double.MAX_VALUE, 50, 10.0, 110.0);
-        UIUtils.createAndAttachTooltip(spinnerWidth, "tooltip.explain.configuration.size.width");
+        this.spinnerWidth = FXControlUtils.createDoubleSpinner(LCConstant.CONFIG_ROOT_COMPONENT_GAP, Double.MAX_VALUE, 50, 10.0, 110.0);
+        FXControlUtils.createAndAttachTooltip(spinnerWidth, "tooltip.explain.configuration.size.width");
         GridPane.setHalignment(spinnerWidth, HPos.RIGHT);
-        this.spinnerHeight = UIUtils.createDoubleSpinner(LCConstant.CONFIG_ROOT_COMPONENT_GAP, Double.MAX_VALUE, 50, 10.0, 110.0);
+        this.spinnerHeight = FXControlUtils.createDoubleSpinner(LCConstant.CONFIG_ROOT_COMPONENT_GAP, Double.MAX_VALUE, 50, 10.0, 110.0);
         GridPane.setHalignment(spinnerHeight, HPos.RIGHT);
-        UIUtils.createAndAttachTooltip(spinnerHeight, "tooltip.explain.configuration.size.height");
-        this.toggleKeepConfigurationRatio = ConfigUIUtils.createToggleSwitch("configuration.keep.ratio.field",
+        FXControlUtils.createAndAttachTooltip(spinnerHeight, "tooltip.explain.configuration.size.height");
+        this.toggleKeepConfigurationRatio = FXControlUtils.createToggleSwitch("configuration.keep.ratio.field",
                 "tooltip.explain.configuration.style.keep.ratio");
         Label labelExplainConfigurationSize = new Label(Translation.getText("general.configuration.stage.configuration.size.explain"));
         labelExplainConfigurationSize.getStyleClass().add("explain-text");
 
         glyphKeep = GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.LOCK).size(12).color(LCGraphicStyle.MAIN_DARK);
         glyphNotKept = GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.UNLOCK).size(12).color(LCGraphicStyle.MAIN_DARK);
-        buttonKeepRatioFrameSize = UIUtils.createGraphicButton(glyphKeep, "general.configuration.stage.size.keep.ratio");
+        buttonKeepRatioFrameSize = FXControlUtils.createGraphicButton(glyphKeep, "general.configuration.stage.size.keep.ratio");
         buttonKeepRatioFrameSize.getStyleClass().add("button-without-padding");
         buttonKeepRatioFrameSize.setMinWidth(20.0);
 
-        Label labelStageSize = UIControlHelper.createTitleLabel(Translation.getText("general.configuration.stage.stage.size.title"));
+        Label labelStageSize = FXControlUtils.createTitleLabel(Translation.getText("general.configuration.stage.stage.size.title"));
         //Size
-        this.spinnerFrameWidth = UIUtils.createDoubleSpinner(LCConstant.CONFIG_ROOT_COMPONENT_GAP, Double.MAX_VALUE, 50, 10.0, 110.0);
-        UIUtils.createAndAttachTooltip(spinnerFrameWidth, "tooltip.explain.configuration.frame.width");
+        this.spinnerFrameWidth = FXControlUtils.createDoubleSpinner(LCConstant.CONFIG_ROOT_COMPONENT_GAP, Double.MAX_VALUE, 50, 10.0, 110.0);
+        FXControlUtils.createAndAttachTooltip(spinnerFrameWidth, "tooltip.explain.configuration.frame.width");
         GridPane.setHalignment(spinnerFrameWidth, HPos.RIGHT);
-        this.spinnerFrameHeight = UIUtils.createDoubleSpinner(LCConstant.CONFIG_ROOT_COMPONENT_GAP, Double.MAX_VALUE, 50, 10.0, 110.0);
-        UIUtils.createAndAttachTooltip(spinnerFrameHeight, "tooltip.explain.configuration.frame.height");
+        this.spinnerFrameHeight = FXControlUtils.createDoubleSpinner(LCConstant.CONFIG_ROOT_COMPONENT_GAP, Double.MAX_VALUE, 50, 10.0, 110.0);
+        FXControlUtils.createAndAttachTooltip(spinnerFrameHeight, "tooltip.explain.configuration.frame.height");
         GridPane.setHalignment(spinnerFrameHeight, HPos.RIGHT);
         Label labelStageWidth = new Label(Translation.getText("configuration.frame.width"));
         Label labelStageHeight = new Label(Translation.getText("configuration.frame.height"));
-        this.toggleEnableFullScreen = ConfigUIUtils.createToggleSwitch("configuration.launch.fullscreen",
+        this.toggleEnableFullScreen = FXControlUtils.createToggleSwitch("configuration.launch.fullscreen",
                 "tooltip.explain.configuration.full.screen");
         this.comboboxFramePosition = new ComboBox<>(FXCollections.observableArrayList(FramePosition.values()));
         this.comboboxFramePosition.setCellFactory((lv) -> new FramePositionDetailledCell());
         this.comboboxFramePosition.setButtonCell(new FramePositionSimpleCell());
         this.comboboxFramePosition.setMaxWidth(Double.MAX_VALUE);
         GridPane.setHgrow(comboboxFramePosition, Priority.ALWAYS);
-        UIUtils.createAndAttachTooltip(comboboxFramePosition, "tooltip.explain.configuration.frame.position");
+        FXControlUtils.createAndAttachTooltip(comboboxFramePosition, "tooltip.explain.configuration.frame.position");
         Label labelFramePosition = new Label(Translation.getText("frame.position.on.launch"));
 
-        this.sliderFrameOpacity = UIUtils.createBaseSlider(0.0, 1.0, 1.0);
+        this.sliderFrameOpacity = FXControlUtils.createBaseSlider(0.0, 1.0, 1.0);
         this.sliderFrameOpacity.setShowTickLabels(false);
         this.sliderFrameOpacity.setMajorTickUnit(0.1);
         this.sliderFrameOpacity.setMinorTickCount(0);
         GridPane.setHgrow(sliderFrameOpacity, Priority.ALWAYS);
         sliderFrameOpacity.setMaxWidth(Double.MAX_VALUE);
-        UIUtils.createAndAttachTooltip(sliderFrameOpacity, "tooltip.explain.configuration.style.opacity");
-        this.toggleKeepConfigurationRatio = ConfigUIUtils.createToggleSwitch("configuration.keep.ratio.field",
+        FXControlUtils.createAndAttachTooltip(sliderFrameOpacity, "tooltip.explain.configuration.style.opacity");
+        this.toggleKeepConfigurationRatio = FXControlUtils.createToggleSwitch("configuration.keep.ratio.field",
                 "tooltip.explain.configuration.style.keep.ratio");
         Label labelFOpacity = new Label(Translation.getText("configuration.frame.opacity"));
 

@@ -25,9 +25,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.TextAlignment;
 import org.lifecompanion.model.api.imagedictionary.ImageElementI;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.imagedictionary.ImageDictionaries;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.util.javafx.FXControlUtils;
 
 import java.util.function.Consumer;
 
@@ -58,7 +58,7 @@ public class ImageElementView extends BorderPane implements LCViewInitHelper {
         this.setBottom(labelName);
 
         if (descriptionTooltip == null) {
-            descriptionTooltip = UIUtils.createTooltip("");
+            descriptionTooltip = FXControlUtils.createTooltip("");
         }
         // Same tooltip for every node : change text before showing
         Tooltip.install(this, descriptionTooltip);

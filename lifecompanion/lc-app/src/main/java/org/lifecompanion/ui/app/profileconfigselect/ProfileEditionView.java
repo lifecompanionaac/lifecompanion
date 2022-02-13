@@ -45,8 +45,7 @@ import org.lifecompanion.model.impl.profile.LCProfile;
 import org.lifecompanion.ui.common.control.generic.colorpicker.LCColorPicker;
 import org.lifecompanion.ui.common.pane.specific.DefaultConfigurationListPane;
 import org.lifecompanion.ui.common.pane.specific.ProfileIconView;
-import org.lifecompanion.util.UIControlHelper;
-import org.lifecompanion.util.UIUtils;
+import org.lifecompanion.util.javafx.FXControlUtils;
 import org.lifecompanion.util.model.Triple;
 
 import java.io.File;
@@ -99,7 +98,7 @@ public class ProfileEditionView extends BorderPane implements LCViewInitHelper, 
     //========================================================================
     @Override
     public void initUI() {
-        Triple<HBox, Label, Node> header = UIControlHelper.createHeader("profile.edition.view.title.config", node -> closeCurrentEdit(false, true));
+        Triple<HBox, Label, Node> header = FXControlUtils.createHeader("profile.edition.view.title.config", node -> closeCurrentEdit(false, true));
 
         //Profile name
         Label labelName = new Label(Translation.getText("profile.label.name"));
@@ -118,7 +117,7 @@ public class ProfileEditionView extends BorderPane implements LCViewInitHelper, 
         this.profileIconView.setIconSizeFactor(2.0);
         GridPane.setValignment(profileIconView, VPos.CENTER);
 
-        buttonValidate = UIUtils.createLeftTextButton(Translation.getText("profile.config.view.button.ok"),
+        buttonValidate = FXControlUtils.createLeftTextButton(Translation.getText("profile.config.view.button.ok"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CHECK).size(16).color(LCGraphicStyle.MAIN_PRIMARY), null);
         GridPane.setHalignment(buttonValidate, HPos.LEFT);
 
@@ -135,7 +134,7 @@ public class ProfileEditionView extends BorderPane implements LCViewInitHelper, 
         gridPaneIconInfo.setMinHeight(150.0);
 
         // Action buttons
-        final Node nodeExport = UIControlHelper.createActionTableEntry("profile.selection.export.profile.button",
+        final Node nodeExport = FXControlUtils.createActionTableEntry("profile.selection.export.profile.button",
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.UPLOAD).size(30).color(LCGraphicStyle.MAIN_DARK),
                 () -> {
                     if (this.editedProfile.get() != null) {
@@ -144,7 +143,7 @@ public class ProfileEditionView extends BorderPane implements LCViewInitHelper, 
                                         profile -> ConfigActionController.INSTANCE.executeAction(new LCProfileActions.ProfileExportAction(this, profile))));
                     }
                 });
-        final Node nodeRemove = UIControlHelper.createActionTableEntry("profile.selection.remove.profile.button",
+        final Node nodeRemove = FXControlUtils.createActionTableEntry("profile.selection.remove.profile.button",
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.TRASH).size(30).color(LCGraphicStyle.SECOND_DARK),
                 () -> {
                     if (this.editedProfile.get() != null) {
@@ -152,14 +151,14 @@ public class ProfileEditionView extends BorderPane implements LCViewInitHelper, 
                     }
                 });
         VBox boxActions = new VBox(nodeExport, nodeRemove);
-        Label labelActions = UIControlHelper.createTitleLabel("profile.edition.general.actions.title");
+        Label labelActions = FXControlUtils.createTitleLabel("profile.edition.general.actions.title");
         editionActionNodes = Arrays.asList(labelActions, boxActions);
 
         // Default configuration to add on profile
         defaultConfigurationListPane = new DefaultConfigurationListPane(true);
 
         //Add
-        VBox boxCenter = new VBox(10.0, UIControlHelper.createTitleLabel("profile.edition.general.information.title"), gridPaneIconInfo, labelActions, boxActions, defaultConfigurationListPane);
+        VBox boxCenter = new VBox(10.0, FXControlUtils.createTitleLabel("profile.edition.general.information.title"), gridPaneIconInfo, labelActions, boxActions, defaultConfigurationListPane);
         boxCenter.setPadding(new Insets(10.0));
         this.setTop(header.getLeft());
         this.setCenter(boxCenter);

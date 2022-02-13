@@ -19,16 +19,28 @@
 
 package org.lifecompanion.util.javafx;
 
+import com.sun.glass.ui.Window;
 import javafx.geometry.Rectangle2D;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import org.lifecompanion.controller.appinstallation.InstallationController;
 import org.lifecompanion.controller.lifecycle.AppMode;
 import org.lifecompanion.controller.lifecycle.AppModeController;
+import org.lifecompanion.controller.resource.IconHelper;
+import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.model.api.configurationcomponent.FramePosition;
 import org.lifecompanion.model.impl.constant.LCConstant;
-import org.lifecompanion.controller.appinstallation.InstallationController;
+import org.lifecompanion.model.impl.constant.LCGraphicStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.List;
+
+@SuppressWarnings("restriction")
 public class StageUtils {
+    private static final Logger LOGGER = LoggerFactory.getLogger(StageUtils.class);
+
+
     public static String getStageDefaultTitle() {
         return LCConstant.NAME + " v" + InstallationController.INSTANCE.getBuildProperties().getVersionLabel();
     }
@@ -78,5 +90,34 @@ public class StageUtils {
 
     public static Stage getEditOrUseStageVisible() {
         return AppModeController.INSTANCE.modeProperty().get() == AppMode.EDIT || AppModeController.INSTANCE.getUseModeContext().stageProperty().get() == null ? AppModeController.INSTANCE.getEditModeContext().getStage() : AppModeController.INSTANCE.getUseModeContext().stageProperty().get();
+    }
+
+    /**
+     * Method that use the internal API to set the stage focusable property.<br>
+     * This is a workaround, this should be changed if a public API to change focus state is exposed.
+     *
+     * @param stage     the stage to change
+     * @param focusable the focusable value
+     * @deprecated internal API, should be changed ASAP
+     */
+    @Deprecated
+    public static void setFocusableSafe(final Stage stage, final boolean focusable) {
+        try {
+            List<Window> allSunWindow = Window.getWindows();
+            for (Window window : allSunWindow) {
+                if (StringUtils.isEquals(stage.getTitle(), window.getTitle())) {
+                    window.setFocusable(focusable);
+                    LOGGER.info("Focusable state set to {}, enabled {}, focused {}", window.getTitle(), window.isEnabled(), window.isFocused());
+                }
+            }
+        } catch (Throwable t) {
+            LOGGER.warn("Couldn't use sun* internal API to change the window properties", t);
+        }
+    }
+
+    public static void applyDefaultStageConfiguration(Stage stage) {
+        stage.setTitle(LCConstant.NAME);
+        stage.setForceIntegerRenderScale(LCGraphicStyle.FORCE_INTEGER_RENDER_SCALE);
+        stage.getIcons().add(IconHelper.get(LCConstant.LC_ICON_PATH));
     }
 }

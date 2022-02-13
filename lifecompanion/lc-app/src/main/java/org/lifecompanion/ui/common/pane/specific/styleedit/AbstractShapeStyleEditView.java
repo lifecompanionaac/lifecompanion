@@ -27,11 +27,11 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.paint.Color;
 import org.lifecompanion.model.api.style.AbstractShapeCompStyleI;
-import org.lifecompanion.util.UIUtils;
-import org.lifecompanion.util.binding.LCConfigBindingUtils;
+import org.lifecompanion.util.binding.EditActionUtils;
 import org.lifecompanion.ui.common.control.generic.colorpicker.LCColorPicker;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.util.javafx.FXControlUtils;
 
 public abstract class AbstractShapeStyleEditView<T extends AbstractShapeCompStyleI<T>> extends AbstractStyleEditView<T> implements LCViewInitHelper {
 
@@ -54,8 +54,8 @@ public abstract class AbstractShapeStyleEditView<T extends AbstractShapeCompStyl
         //Create fields
         this.fieldStrokeColor = new LCColorPicker(LCColorPicker.ColorPickerMode.DARK);
         this.fieldBackgroundColor = new LCColorPicker();
-        this.spinnerShapeRadius = UIUtils.createIntSpinner(0, 180, 2, 2, 75.0);
-        this.spinnerStrokeSize = UIUtils.createIntSpinner(0, 180, 2, 2, 75.0);
+        this.spinnerShapeRadius = FXControlUtils.createIntSpinner(0, 180, 2, 2, 75.0);
+        this.spinnerStrokeSize = FXControlUtils.createIntSpinner(0, 180, 2, 2, 75.0);
 
         this.fieldGrid.add(new Label(Translation.getText("shape.style.background.color")), 0, 0);
         this.fieldGrid.add(this.fieldBackgroundColor, 1, 0);
@@ -86,13 +86,13 @@ public abstract class AbstractShapeStyleEditView<T extends AbstractShapeCompStyl
     public void initListener() {
         super.initListener();
         if (bindOnModel) {
-            this.changeListenerBackgroundColor = LCConfigBindingUtils.createSimpleBinding(this.fieldBackgroundColor.valueProperty(), this.model,
+            this.changeListenerBackgroundColor = EditActionUtils.createSimpleBinding(this.fieldBackgroundColor.valueProperty(), this.model,
                     c -> c.backgroundColorProperty().value().getValue(), (model, nv) -> this.createChangePropAction(model.backgroundColorProperty(), nv));
-            this.changeListenerStrokeColor = LCConfigBindingUtils.createSimpleBinding(this.fieldStrokeColor.valueProperty(), this.model,
+            this.changeListenerStrokeColor = EditActionUtils.createSimpleBinding(this.fieldStrokeColor.valueProperty(), this.model,
                     c -> c.strokeColorProperty().value().getValue(), (model, nv) -> this.createChangePropAction(model.strokeColorProperty(), nv));
-            this.changeListenerShapeRadius = LCConfigBindingUtils.createIntegerSpinnerBinding(this.spinnerShapeRadius, this.model,
+            this.changeListenerShapeRadius = EditActionUtils.createIntegerSpinnerBinding(this.spinnerShapeRadius, this.model,
                     g -> g.shapeRadiusProperty().value(), (m, nv) -> this.createChangePropAction(m.shapeRadiusProperty(), nv));
-            this.changeListenerStrokeSize = LCConfigBindingUtils.createIntegerSpinnerBinding(this.spinnerStrokeSize, this.model,
+            this.changeListenerStrokeSize = EditActionUtils.createIntegerSpinnerBinding(this.spinnerStrokeSize, this.model,
                     g -> g.strokeSizeProperty().value(), (m, nv) -> this.createChangePropAction(m.strokeSizeProperty(), nv));
         }
     }

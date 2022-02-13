@@ -26,8 +26,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
 import org.controlsfx.glyphfont.FontAwesome;
-import org.lifecompanion.model.api.ui.editmode.ConfigurationProfileLevelEnum;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.configurationcomponent.DisplayableComponentBaseImpl;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.editaction.KeyActions;
@@ -35,10 +33,10 @@ import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.controller.editmode.ComponentActionController;
 import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.controller.editmode.SelectionController;
-import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.ui.configurationcomponent.editmode.categorizedelement.useevent.available.RibbonBasePart;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.util.javafx.FXControlUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -65,10 +63,10 @@ public class QuickStyleRibbonPart extends RibbonBasePart<DisplayableComponentBas
         totalBox.setAlignment(Pos.CENTER);
 
         //Buttons style clone
-        this.buttonCopyKeyStyle = UIUtils.createTextButtonWithGraphics(Translation.getText("buttons.copy.key.style"),
+        this.buttonCopyKeyStyle = FXControlUtils.createTextButtonWithGraphics(Translation.getText("buttons.copy.key.style"),
                 GlyphFontHelper.FONT_AWESOME.create('\uF24D').sizeFactor(2).color(LCGraphicStyle.MAIN_PRIMARY), "tooltip.buttons.copy.key.style");
         this.buttonCopyKeyStyle.setTextAlignment(TextAlignment.CENTER);
-        this.buttonPasteKeyStyle = UIUtils.createTextButtonWithGraphics(Translation.getText("buttons.paste.key.style"),
+        this.buttonPasteKeyStyle = FXControlUtils.createTextButtonWithGraphics(Translation.getText("buttons.paste.key.style"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.PAINT_BRUSH).sizeFactor(2).color(LCGraphicStyle.SECOND_DARK),
                 "tooltip.buttons.paste.key.style");
         this.buttonPasteKeyStyle.setTextAlignment(TextAlignment.CENTER);
@@ -76,7 +74,7 @@ public class QuickStyleRibbonPart extends RibbonBasePart<DisplayableComponentBas
         boxCloneStyle.setAlignment(Pos.CENTER);
 
         //Button to delete key style
-        this.buttonDeleteStyle = UIUtils.createTextButtonWithGraphics(Translation.getText("buttons.delete.key.styles"),
+        this.buttonDeleteStyle = FXControlUtils.createTextButtonWithGraphics(Translation.getText("buttons.delete.key.styles"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.ERASER).sizeFactor(2).color(LCGraphicStyle.SECOND_DARK),
                 "tooltip.buttons.delete.key.styles");
 
@@ -107,7 +105,6 @@ public class QuickStyleRibbonPart extends RibbonBasePart<DisplayableComponentBas
         this.buttonCopyKeyStyle.disableProperty().bind(SelectionController.INSTANCE.selectedComponentBothProperty().isNull());
         this.buttonPasteKeyStyle.disableProperty().bind(SelectionController.INSTANCE.selectedComponentBothProperty().isNull()
                 .or(ComponentActionController.INSTANCE.styleCopySourceProperty().isNull()));
-        ConfigUIUtils.bindShowForLevelFrom(this, ConfigurationProfileLevelEnum.NORMAL);
     }
 
     @Override

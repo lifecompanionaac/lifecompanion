@@ -55,9 +55,10 @@ import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationScene;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStage;
 import org.lifecompanion.ui.app.profileconfigselect.ProfileConfigSelectionScene;
 import org.lifecompanion.ui.app.profileconfigselect.ProfileConfigSelectionStage;
-import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.util.DesktopUtils;
+import org.lifecompanion.util.ThreadUtils;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.util.javafx.StageUtils;
-import org.lifecompanion.util.UIUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -132,7 +133,7 @@ public class LifeCompanionBootstrap {
             LOGGER.info("UI background loading done in {} s, will define post load action", (System.currentTimeMillis() - start) / 1000.0);
             try {
                 final AfterLoad afterLoad = getAfterLoad();
-                LCUtils.runOnFXThread(() -> handleAfterLoadAction(editModeScene, afterLoad));
+                FXThreadUtils.runOnFXThread(() -> handleAfterLoadAction(editModeScene, afterLoad));
             } catch (Exception e) {
                 LOGGER.error("Unexpected issue while defining post load actions, will show profile selection step", e);
                 //FIXME
@@ -179,7 +180,7 @@ public class LifeCompanionBootstrap {
     private void showProfileCreateOrList() {
         if (ProfileController.INSTANCE.getProfiles().isEmpty()) {
             ProfileConfigSelectionController.INSTANCE.setStep(ProfileConfigStep.PROFILE_CREATE, ProfileConfigStep.PROFILE_LIST);
-            UIUtils.openUrlInDefaultBrowser(InstallationController.INSTANCE.getBuildProperties().getAppServerUrl() + URL_PATH_GET_STARTED);
+            DesktopUtils.openUrlInDefaultBrowser(InstallationController.INSTANCE.getBuildProperties().getAppServerUrl() + URL_PATH_GET_STARTED);
         } else {
             ProfileConfigSelectionController.INSTANCE.setStep(ProfileConfigStep.PROFILE_LIST, null);
         }
@@ -187,7 +188,7 @@ public class LifeCompanionBootstrap {
 
     private AfterLoad getAfterLoad() throws Exception {
         // First, load all profile
-        final List<LCProfileI> profiles = LCUtils.executeInCurrentThread(IOHelper.createLoadAllProfileDescriptionTask());
+        final List<LCProfileI> profiles = ThreadUtils.executeInCurrentThread(IOHelper.createLoadAllProfileDescriptionTask());
         ProfileController.INSTANCE.getProfiles().setAll(profiles); // FIXME FX Thread ?
 
         // Check if profile to import
@@ -199,7 +200,7 @@ public class LifeCompanionBootstrap {
         if (profileIDToSelect != null) {
             try {
                 LCProfileI profileToSelect = ProfileController.INSTANCE.getByID(profileIDToSelect);
-                profileToSelect = LCUtils.executeInCurrentThread(IOHelper.createLoadFullProfileTask(profileToSelect, false));
+                profileToSelect = ThreadUtils.executeInCurrentThread(IOHelper.createLoadFullProfileTask(profileToSelect, false));
 
                 // Check if a configuration is imported
                 File configurationFile = this.getFirstLifeCompanionFile(LCConstant.CONFIG_FILE_EXTENSION);
@@ -210,7 +211,7 @@ public class LifeCompanionBootstrap {
                 // Try to launch a configuration in use mode
                 final LCConfigurationDescriptionI configurationToLaunchFor = getConfigurationToLaunchFor(profileToSelect);
                 if (configurationToLaunchFor != null) {
-                    final LCConfigurationI configuration = LCUtils.executeInCurrentThread(IOHelper.createLoadConfigurationTask(configurationToLaunchFor, profileToSelect));
+                    final LCConfigurationI configuration = ThreadUtils.executeInCurrentThread(IOHelper.createLoadConfigurationTask(configurationToLaunchFor, profileToSelect));
                     return new AfterLoad(AfterLoadAction.LAUNCH_USE, configurationToLaunchFor, configuration, profileToSelect, null);
                 }
 

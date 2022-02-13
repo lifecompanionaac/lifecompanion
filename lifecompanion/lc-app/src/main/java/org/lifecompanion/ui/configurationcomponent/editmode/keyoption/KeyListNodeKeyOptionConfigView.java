@@ -28,16 +28,15 @@ import javafx.scene.layout.Priority;
 import org.controlsfx.control.ToggleSwitch;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.dynamickey.KeyListNodeKeyOption;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStep;
 import org.lifecompanion.controller.editaction.KeyOptionActions;
-import org.lifecompanion.util.binding.LCConfigBindingUtils;
+import org.lifecompanion.util.binding.EditActionUtils;
 import org.lifecompanion.controller.editmode.GeneralConfigurationController;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
-import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.framework.commons.translation.Translation;
+import org.lifecompanion.util.javafx.FXControlUtils;
 
 
 /**
@@ -64,13 +63,13 @@ public class KeyListNodeKeyOptionConfigView extends BaseKeyOptionConfigView<KeyL
         final Label labelLevelSelectionField = new Label(Translation.getText("keylist.key.option.field.level.value.spinner"));
         GridPane.setHgrow(labelLevelSelectionField, Priority.ALWAYS);
         labelLevelSelectionField.setMaxWidth(Double.MAX_VALUE);
-        spinnerSelectedLevel = UIUtils.createIntSpinner(1, 999, 1, 1, 60.0);
+        spinnerSelectedLevel = FXControlUtils.createIntSpinner(1, 999, 1, 1, 60.0);
         labelLevelSelectionField.disableProperty().bind(spinnerSelectedLevel.disabledProperty());
 
-        toggleSwitchSpecificLevel = ConfigUIUtils.createToggleSwitch("keylist.key.option.field.specific.level.toggle", null);
-        toggleDisplayLevelBellow = ConfigUIUtils.createToggleSwitch("keylist.key.option.field.display.level.bellow.toggle", null);
+        toggleSwitchSpecificLevel = FXControlUtils.createToggleSwitch("keylist.key.option.field.specific.level.toggle", null);
+        toggleDisplayLevelBellow = FXControlUtils.createToggleSwitch("keylist.key.option.field.display.level.bellow.toggle", null);
 
-        buttonConfigureKeyList = UIUtils.createLeftTextButton(Translation.getText("keylist.key.option.button.configuration.key"),
+        buttonConfigureKeyList = FXControlUtils.createLeftTextButton(Translation.getText("keylist.key.option.button.configuration.key"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.GEARS).size(14).color(LCGraphicStyle.MAIN_DARK), null);
 
         GridPane gridPaneConfig = new GridPane();
@@ -87,11 +86,11 @@ public class KeyListNodeKeyOptionConfigView extends BaseKeyOptionConfigView<KeyL
     @Override
     public void initListener() {
         super.initListener();
-        changeListenerSelectedLevel = LCConfigBindingUtils.createIntegerSpinnerBinding(this.spinnerSelectedLevel, this.model,
+        changeListenerSelectedLevel = EditActionUtils.createIntegerSpinnerBinding(this.spinnerSelectedLevel, this.model,
                 KeyListNodeKeyOption::selectedLevelProperty, KeyOptionActions.ChangeKeyListOptionSelectedLevelAction::new);
-        changeListenerDisplayLevelBellow = LCConfigBindingUtils.createSimpleBinding(this.toggleDisplayLevelBellow.selectedProperty(), this.model,
+        changeListenerDisplayLevelBellow = EditActionUtils.createSimpleBinding(this.toggleDisplayLevelBellow.selectedProperty(), this.model,
                 m -> m.displayLevelBellowProperty().get(), KeyOptionActions.ChangeKeyListOptionDisplayLevelBellowAction::new);
-        changeListenerSpecificLevel = LCConfigBindingUtils.createSimpleBinding(this.toggleSwitchSpecificLevel.selectedProperty(), this.model,
+        changeListenerSpecificLevel = EditActionUtils.createSimpleBinding(this.toggleSwitchSpecificLevel.selectedProperty(), this.model,
                 m -> m.specificLevelProperty().get(), KeyOptionActions.ChangeKeyListOptionSpecificLevelAction::new);
         this.buttonConfigureKeyList.setOnAction(e -> {
             final KeyListNodeKeyOption keyOption = this.model.get();

@@ -26,8 +26,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.ui.common.pane.specific.cell.PluginInfoListCell;
-import org.lifecompanion.util.UIControlHelper;
-import org.lifecompanion.util.UIUtils;
+import org.lifecompanion.util.javafx.FXControlUtils;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.model.impl.plugin.PluginInfo;
 import org.lifecompanion.controller.plugin.PluginController;
@@ -48,18 +47,18 @@ public class PluginConfigSubmenu extends BorderPane implements LCViewInitHelper,
 
     @Override
     public void initUI() {
-        Label labelPluginList = UIControlHelper.createTitleLabel("general.configuration.view.step.plugin.list.plugin.label");
+        Label labelPluginList = FXControlUtils.createTitleLabel("general.configuration.view.step.plugin.list.plugin.label");
 
         listViewPlugins = new ListView<>(PluginController.INSTANCE.getPluginInfoList());
         listViewPlugins.setCellFactory(lv -> new PluginInfoListCell(lv));
 
         VBox boxCenter = new VBox(10.0, labelPluginList, listViewPlugins);
 
-        buttonAddPlugin = UIUtils.createRightTextButton(Translation.getText("general.configuration.view.step.plugin.add.button"),
+        buttonAddPlugin = FXControlUtils.createRightTextButton(Translation.getText("general.configuration.view.step.plugin.add.button"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.PLUS_CIRCLE).size(22).color(LCGraphicStyle.MAIN_DARK), "TODO");
         buttonAddPlugin.getStyleClass().add("button-icon-text-bigger");
 
-        buttonAddPluginFromWeb = UIUtils.createRightTextButton(Translation.getText("general.configuration.view.step.plugin.add.from.repo.button"),
+        buttonAddPluginFromWeb = FXControlUtils.createRightTextButton(Translation.getText("general.configuration.view.step.plugin.add.from.repo.button"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.PLUS_CIRCLE).size(22).color(LCGraphicStyle.MAIN_DARK), "TODO");
         buttonAddPluginFromWeb.getStyleClass().add("button-icon-text-bigger");
 

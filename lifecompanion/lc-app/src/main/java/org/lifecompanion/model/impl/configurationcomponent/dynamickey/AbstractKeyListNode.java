@@ -30,12 +30,12 @@ import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.io.XMLSerializable;
 import org.lifecompanion.util.CopyUtils;
-import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.framework.commons.fx.io.XMLIgnoreNullValue;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.framework.utils.Pair;
+import org.lifecompanion.util.binding.BindingUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,7 +64,7 @@ public abstract class AbstractKeyListNode extends AbstractSimplerKeyActionContai
         this.level = new SimpleIntegerProperty(1);
         this.linkedNodeId = new SimpleStringProperty();
         if (this.children != null) {
-            this.children.addListener(LCUtils.createListChangeListenerV2(
+            this.children.addListener(BindingUtils.createListChangeListenerV2(
                     added -> ((AbstractKeyListNode) added).parent.set(this),
                     removed -> {
                         // Before removing the parent, we should check the count because our add/removed mapping is * > 1

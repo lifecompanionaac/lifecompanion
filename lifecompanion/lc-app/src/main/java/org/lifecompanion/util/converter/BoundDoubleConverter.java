@@ -23,7 +23,7 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 
 import javafx.util.StringConverter;
-import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.util.LangUtils;
 
 /**
  * Converter to convert a input double between two given bounds.</br>
@@ -45,7 +45,7 @@ public class BoundDoubleConverter extends StringConverter<Double> {
 	public Double fromString(String text) {
 		double val;
 		try {
-			val = LCUtils.toBoundDouble(DOUBLE_DECIMAL_FORMAT.parse(text).doubleValue(), min, max);
+			val = LangUtils.toBoundDouble(DOUBLE_DECIMAL_FORMAT.parse(text).doubleValue(), min, max);
 		} catch (ParseException e) {
 			val = min;
 		}

@@ -21,7 +21,7 @@ package org.lifecompanion.model.impl.style;
 
 import javafx.collections.ObservableList;
 import org.lifecompanion.model.api.style.StyleI;
-import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.util.binding.BindingUtils;
 
 import java.util.*;
 import java.util.function.Function;
@@ -37,7 +37,7 @@ public class MultipleStylePropertyHelper<K, T extends StyleI<?>> {
         this.styleGetter = styleGetter;
         this.propertyChangeListeners = properties;
         this.elements.forEach(this::elementAdded);
-        this.elements.addListener(LCUtils.createListChangeListener(this::elementAdded, this::elementRemoved));
+        this.elements.addListener(BindingUtils.createListChangeListener(this::elementAdded, this::elementRemoved));
     }
 
     // ABSTRACT

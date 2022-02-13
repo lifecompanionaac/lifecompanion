@@ -20,7 +20,6 @@
 package org.lifecompanion.ui.configurationcomponent.editmode.categorizedelement.useaction.available;
 
 import org.lifecompanion.framework.commons.translation.Translation;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionConfigurationViewI;
 import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
 import org.lifecompanion.model.impl.categorizedelement.useaction.available.ScrollDownMouseAction;
@@ -30,6 +29,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import org.lifecompanion.util.javafx.FXControlUtils;
 
 public class ScrollDownMouseActionConfigView extends VBox implements UseActionConfigurationViewI<ScrollDownMouseAction> {
 
@@ -49,7 +49,7 @@ public class ScrollDownMouseActionConfigView extends VBox implements UseActionCo
 	public void initUI() {
 		this.setSpacing(10.0);
 		this.setPadding(new Insets(10.0));
-		sliderScrollAmount = UIUtils.createBaseSlider(1.0, 20.0, 5.0);
+		sliderScrollAmount = FXControlUtils.createBaseSlider(1.0, 20.0, 5.0);
 		sliderScrollAmount.setMajorTickUnit(1.0);
 		final Label labelScrollAmount = new Label(Translation.getText("use.action.mouse.scroll.amount.label"));
 		labelScrollAmount.setWrapText(true);

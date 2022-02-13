@@ -22,32 +22,27 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.Property;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.value.*;
-import javafx.collections.MapChangeListener;
-import javafx.collections.ObservableList;
 import javafx.scene.control.SelectionModel;
 import javafx.scene.control.Slider;
 import javafx.scene.control.Spinner;
-import org.lifecompanion.model.api.editaction.BaseEditActionI;
 import org.lifecompanion.controller.editmode.ConfigActionController;
-import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.model.api.editaction.BaseEditActionI;
+import org.lifecompanion.util.LangUtils;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import static org.lifecompanion.util.LCUtils.tolerantRound;
+import static org.lifecompanion.util.LangUtils.tolerantRound;
 
 /**
  * Class to create binding with config action and fields in config UI.
  *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
-public class LCConfigBindingUtils {
+public class EditActionUtils {
 
-    // Class part : "UI Binding"
-    //========================================================================
-    public static <T> ChangeListener<Number> createSliderBindingWithScale(final int scale, final Slider slider, final ObjectProperty<T> modelProperty,
-                                                                          final Function<T, ObservableNumberValue> propertyRetriever, final BiFunction<T, Number, BaseEditActionI> actionCreator) {
+    public static <T> ChangeListener<Number> createSliderBindingWithScale(final int scale, final Slider slider, final ObjectProperty<T> modelProperty, final Function<T, ObservableNumberValue> propertyRetriever, final BiFunction<T, Number, BaseEditActionI> actionCreator) {
         //Change on field
         ChangeListener<Number> changeListenerField = (obs, ov, nv) -> {
             T model = modelProperty.get();
@@ -68,45 +63,19 @@ public class LCConfigBindingUtils {
             }
         });
         //Create listener on model
-        ChangeListener<Number> changeListenerModel = (obs, ov, nv) -> {
+        return (obs, ov, nv) -> {
             if (tolerantRound(nv.doubleValue(), scale) != tolerantRound(slider.valueProperty().doubleValue(), scale)) {
                 slider.adjustValue(tolerantRound(nv.doubleValue(), scale));
             }
         };
-        return changeListenerModel;
     }
 
-    //	public static <T> ChangeListener<Number> createSliderBinding(final Slider slider, final ObjectProperty<T> modelProperty,
-    //			final Function<T, ObservableNumberValue> propertyRetriever, final BiFunction<T, Number, BaseConfigActionI> actionCreator) {
-    //		return LCConfigBindingUtils.createSliderBindingWithScale(3, slider, modelProperty, propertyRetriever, actionCreator);
-    //	}
-
-    public static <T> ChangeListener<Number> createSliderBindingWithoutScale(final Slider slider, final ObjectProperty<T> modelProperty,
-                                                                             final Function<T, ObservableNumberValue> propertyRetriever, final BiFunction<T, Number, BaseEditActionI> actionCreator) {
-        return LCConfigBindingUtils.createSliderBindingWithScale(0, slider, modelProperty, propertyRetriever, actionCreator);
+    public static <T> ChangeListener<Number> createSliderBindingWithoutScale(final Slider slider, final ObjectProperty<T> modelProperty, final Function<T, ObservableNumberValue> propertyRetriever, final BiFunction<T, Number, BaseEditActionI> actionCreator) {
+        return EditActionUtils.createSliderBindingWithScale(0, slider, modelProperty, propertyRetriever, actionCreator);
     }
 
-    public static <T, K> ChangeListener<T> createSelectionModelBinding(final SelectionModel<T> selectionModel, final ObjectProperty<K> modelProperty,
-                                                                       final Function<K, T> propertyRetriever, final BiFunction<K, T, BaseEditActionI> actionCreator) {
-        return LCConfigBindingUtils.createSelectionModelBinding(selectionModel, modelProperty, propertyRetriever, t1 -> t1, t2 -> t2, actionCreator);
-        //		//Bind combobox
-        //		selectionModel.selectedItemProperty().addListener((obs, ov, nv) -> {
-        //			K model = modelProperty.get();
-        //			if (model != null) {
-        //				T prop = propertyRetriever.apply(model);
-        //				if (prop != nv) {
-        //					BaseConfigActionI action = actionCreator.apply(model, nv);
-        //					ConfigActionController.INSTANCE.executeAction(action);
-        //				}
-        //			}
-        //		});
-        //		//Create listener for model
-        //		ChangeListener<T> changeListener = (obs, ov, nv) -> {
-        //			if (selectionModel.getSelectedItem() != nv) {
-        //				selectionModel.select(nv);
-        //			}
-        //		};
-        //		return changeListener;
+    public static <T, K> ChangeListener<T> createSelectionModelBinding(final SelectionModel<T> selectionModel, final ObjectProperty<K> modelProperty, final Function<K, T> propertyRetriever, final BiFunction<K, T, BaseEditActionI> actionCreator) {
+        return EditActionUtils.createSelectionModelBinding(selectionModel, modelProperty, propertyRetriever, t1 -> t1, t2 -> t2, actionCreator);
     }
 
     public static <T, K, V> ChangeListener<V> createSelectionModelBinding(final SelectionModel<T> selectionModel,
@@ -117,14 +86,14 @@ public class LCConfigBindingUtils {
             K model = modelProperty.get();
             if (model != null) {
                 T prop = toSelectionModeConverter.apply(propertyRetriever.apply(model));
-                if (!LCUtils.safeEquals(prop, nv)) {
+                if (!LangUtils.safeEquals(prop, nv)) {
                     BaseEditActionI action = actionCreator.apply(model, toModelConverter.apply(nv));
                     ConfigActionController.INSTANCE.executeAction(action);
                 }
             }
         });
         //Create listener for model
-        ChangeListener<V> changeListener = (obs, ov, nv) -> {
+        return (obs, ov, nv) -> {
             if (nv != null) {
                 T selectionVal = toSelectionModeConverter.apply(nv);
                 if (selectionModel.getSelectedItem() != selectionVal) {
@@ -132,7 +101,6 @@ public class LCConfigBindingUtils {
                 }
             }
         };
-        return changeListener;
     }
 
     public static <T> ChangeListener<Number> createIntegerSpinnerBinding(final Spinner<Integer> spinner, final ObjectProperty<T> modelProperty,
@@ -148,40 +116,36 @@ public class LCConfigBindingUtils {
             }
         });
         //Model listener
-        ChangeListener<Number> modelListener = (obs, ov, nv) -> {
+        return (obs, ov, nv) -> {
             if (spinner.getValue().intValue() != nv.intValue()) {
                 spinner.getValueFactory().setValue(nv.intValue());
             }
         };
-        return modelListener;
     }
 
     public static <T> ChangeListener<Number> createDoubleSpinnerBinding(final Spinner<Double> spinner, final ObjectProperty<T> modelProperty,
                                                                         final Function<T, ObservableDoubleValue> propertyRetriever, final BiFunction<T, Double, BaseEditActionI> actionCreator) {
-        return LCConfigBindingUtils.createDoubleSpinnerBindingWithCondition(spinner, modelProperty, propertyRetriever, actionCreator, null);
+        return EditActionUtils.createDoubleSpinnerBindingWithCondition(spinner, modelProperty, propertyRetriever, actionCreator, null);
     }
 
     public static <T> ChangeListener<Number> createDoubleSpinnerBindingWithCondition(final Spinner<Double> spinner,
                                                                                      final ObjectProperty<T> modelProperty, final Function<T, ObservableDoubleValue> propertyRetriever,
                                                                                      final BiFunction<T, Double, BaseEditActionI> actionCreator, final Predicate<T> actionCondition) {
-        //Field listener
         spinner.valueProperty().addListener((obs, ov, nv) -> {
             T model = modelProperty.get();
             if (model != null) {
                 ObservableDoubleValue prop = propertyRetriever.apply(model);
-                boolean cond = actionCondition != null ? actionCondition.test(model) : true;
+                boolean cond = actionCondition == null || actionCondition.test(model);
                 if (cond && tolerantRound(prop.getValue().doubleValue()) != tolerantRound(nv)) {
                     ConfigActionController.INSTANCE.executeAction(actionCreator.apply(model, nv));
                 }
             }
         });
-        //Model listener
-        ChangeListener<Number> modelListener = (obs, ov, nv) -> {
+        return (obs, ov, nv) -> {
             if (tolerantRound(spinner.getValue()) != tolerantRound(nv.doubleValue())) {
                 spinner.getValueFactory().setValue(nv.doubleValue());
             }
         };
-        return modelListener;
     }
 
     public static <T> ChangeListener<Number> createIntegerToDoubleSpinnerBinding(final Spinner<Double> spinner, final ObjectProperty<T> modelProperty,
@@ -198,12 +162,11 @@ public class LCConfigBindingUtils {
             }
         });
         //Model listener
-        ChangeListener<Number> modelListener = (obs, ov, nv) -> {
+        return (obs, ov, nv) -> {
             if (tolerantRound(spinner.getValue().doubleValue()) != tolerantRound(nv.doubleValue() / factor)) {
                 spinner.getValueFactory().setValue(nv.doubleValue() / factor);
             }
         };
-        return modelListener;
     }
 
     public static <K, T, E> ChangeListener<T> createSimpleBindingWithTransformer(final Property<T> fieldValueProperty,
@@ -231,24 +194,7 @@ public class LCConfigBindingUtils {
 
     public static <K, T, E> ChangeListener<T> createSimpleBinding(final Property<T> fieldValueProperty, final ReadOnlyObjectProperty<K> modelProperty,
                                                                   final Function<K, T> propertyRetriever, final BiFunction<K, T, BaseEditActionI> actionCreator) {
-        return LCConfigBindingUtils.createSimpleBindingWithTransformer(fieldValueProperty, null, modelProperty, propertyRetriever, actionCreator);
+        return EditActionUtils.createSimpleBindingWithTransformer(fieldValueProperty, null, modelProperty, propertyRetriever, actionCreator);
     }
-    //========================================================================
-
-    // Class part : "Bindings"
-    //========================================================================
-    public static <K, V> MapChangeListener<K, V> createBindMapValue(final ObservableList<V> list) {
-        return (change) -> {
-            V added = change.getValueAdded();
-            if (added != null) {
-                list.add(added);
-            }
-            V removed = change.getValueRemoved();
-            if (removed != null) {
-                list.remove(removed);
-            }
-        };
-    }
-    //========================================================================
 
 }

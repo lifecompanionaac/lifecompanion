@@ -33,12 +33,12 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Popup;
 import javafx.stage.Window;
 import org.controlsfx.control.textfield.TextFields;
-import org.lifecompanion.util.LCUtils;
-import org.lifecompanion.util.UIUtils;
+import org.lifecompanion.util.ThreadUtils;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.lang.LangUtils;
+import org.lifecompanion.util.javafx.FXUtils;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -80,7 +80,7 @@ public class SearchComboBoxPopup<T> extends Popup implements LCViewInitHelper {
         this.listView.setPlaceholder(new Label(Translation.getText("tooltip.search.combobox.placeholder.empty.list")));
         this.listView.setCellFactory(searchComboBox.getCellFactory());
         listView.setFixedCellSize(150.0);
-        UIUtils.setFixedHeight(listView, 300);
+        FXUtils.setFixedHeight(listView, 300);
 
         content.getChildren().addAll(fieldSearch, listView);
         this.getContent().add(content);
@@ -128,7 +128,7 @@ public class SearchComboBoxPopup<T> extends Popup implements LCViewInitHelper {
     private void searchUpdated() {
         // TODO : loading indicator ?
         String text = fieldSearch.getText();
-        LCUtils.debounce(300, "search-combobox-popup", () -> {
+        ThreadUtils.debounce(300, "search-combobox-popup", () -> {
             if (LangUtils.isNotEmpty(sourceItems)) {
                 ArrayList<T> copy = new ArrayList<>(sourceItems);
                 final Predicate<T> builtPredicate = this.searchComboBox.getPredicateBuilder().apply(text);

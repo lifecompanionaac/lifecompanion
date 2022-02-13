@@ -29,20 +29,19 @@ import org.lifecompanion.controller.editaction.KeyOptionActions.ChangeEnableSpea
 import org.lifecompanion.controller.editaction.KeyOptionActions.ChangeQuickComAddSpaceAction;
 import org.lifecompanion.controller.editaction.KeyOptionActions.ChangeTextToSpeakAction;
 import org.lifecompanion.controller.editaction.KeyOptionActions.ChangeTextToWriteAction;
-import org.lifecompanion.util.binding.LCConfigBindingUtils;
-import org.lifecompanion.util.UIUtils;
+import org.lifecompanion.util.binding.EditActionUtils;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.QuickComKeyOption;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.controller.voicesynthesizer.VoiceSynthesizerController;
-import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.ui.common.util.UndoRedoTextInputWrapper;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import org.lifecompanion.util.javafx.FXControlUtils;
 
 public class QuickComOptionConfigView extends BaseKeyOptionConfigView<QuickComKeyOption> {
 
@@ -64,18 +63,18 @@ public class QuickComOptionConfigView extends BaseKeyOptionConfigView<QuickComKe
 	public void initUI() {
 		super.initUI();
 		//Fields
-		this.toggleEnableSpaceAfter = ConfigUIUtils.createToggleSwitch("quick.communication.enable.space",
+		this.toggleEnableSpaceAfter = FXControlUtils.createToggleSwitch("quick.communication.enable.space",
 				"tooltip.explain.quick.communication.space");
-		this.toggleEnableSpeak = ConfigUIUtils.createToggleSwitch("quick.communication.enable.speak", "tooltip.explain.quick.communication.speak");
+		this.toggleEnableSpeak = FXControlUtils.createToggleSwitch("quick.communication.enable.speak", "tooltip.explain.quick.communication.speak");
 		Label labelWrite = new Label(Translation.getText("quick.communication.text.to.write"));
 		Label labelSpeak = new Label(Translation.getText("quick.communication.text.to.speak"));
 		this.fieldTextToWrite = new TextField();
-		UIUtils.createAndAttachTooltip(fieldTextToWrite, "tooltip.explain.quick.communication.text.write");
+		FXControlUtils.createAndAttachTooltip(fieldTextToWrite, "tooltip.explain.quick.communication.text.write");
 		this.fieldTextToSpeak = new TextField();
-		UIUtils.createAndAttachTooltip(fieldTextToSpeak, "tooltip.explain.quick.communication.text.speak");
+		FXControlUtils.createAndAttachTooltip(fieldTextToSpeak, "tooltip.explain.quick.communication.text.speak");
 
 		//Play example
-		this.buttonPlayExample = UIUtils.createGraphicButton(
+		this.buttonPlayExample = FXControlUtils.createGraphicButton(
 				GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.VOLUME_UP).size(12).color(LCGraphicStyle.MAIN_PRIMARY),
 				"tooltip.quick.com.play.example");
 
@@ -122,9 +121,9 @@ public class QuickComOptionConfigView extends BaseKeyOptionConfigView<QuickComKe
 		super.initBinding();
 		this.fieldTextToSpeak.disableProperty().bind(this.toggleEnableSpeak.selectedProperty().not());
 		this.buttonPlayExample.disableProperty().bind(this.fieldTextToSpeak.disableProperty());
-		this.changeListenerAddSpaceAfter = LCConfigBindingUtils.createSimpleBinding(this.toggleEnableSpaceAfter.selectedProperty(), this.model,
+		this.changeListenerAddSpaceAfter = EditActionUtils.createSimpleBinding(this.toggleEnableSpaceAfter.selectedProperty(), this.model,
 				m -> m.addSpaceProperty().get(), ChangeQuickComAddSpaceAction::new);
-		this.changeListenerEnableSpeak = LCConfigBindingUtils.createSimpleBinding(this.toggleEnableSpeak.selectedProperty(), this.model,
+		this.changeListenerEnableSpeak = EditActionUtils.createSimpleBinding(this.toggleEnableSpeak.selectedProperty(), this.model,
 				m -> m.enableSpeakProperty().get(), ChangeEnableSpeakAction::new);
 		//This listener allows user to see the end of the text while typing text
 		this.changeListenerTextToWrite = (obs, ov, nv) -> {

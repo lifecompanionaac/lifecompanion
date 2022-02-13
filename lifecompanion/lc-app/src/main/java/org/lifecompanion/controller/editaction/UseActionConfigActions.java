@@ -28,9 +28,9 @@ import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionManagerI;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
 import org.lifecompanion.model.impl.exception.LCException;
-import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.utils.Pair;
+import org.lifecompanion.util.javafx.DialogUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -129,7 +129,7 @@ public class UseActionConfigActions {
                 }
             }
             if (notRemovedBecauseOfKeyOptionCount > 0) {
-                Alert dialog = ConfigUIUtils.createAlert(source, AlertType.WARNING);
+                Alert dialog = DialogUtils.createAlert(source, AlertType.WARNING);
                 dialog.setHeaderText(Translation.getText("alert.message.disable.remove.action.header"));
                 dialog.setContentText(Translation.getText("alert.message.disable.remove.action.message", this.useAction.getName()));
                 dialog.show();
@@ -240,7 +240,7 @@ public class UseActionConfigActions {
             if (this.useAction.allowedParent().isAssignableFrom(this.useActionManager.getActionParent().getClass())) {
                 this.useActionManager.componentActions().get(this.eventType).add(this.useAction);
             } else {
-                Alert dialog = ConfigUIUtils.createAlert(source, AlertType.WARNING);
+                Alert dialog = DialogUtils.createAlert(source, AlertType.WARNING);
                 dialog.setHeaderText(Translation.getText("alert.message.invalid.action.parent.header"));
                 dialog.setContentText(Translation.getText("alert.message.invalid.action.parent.message", this.useAction.getName()));
                 dialog.show();
@@ -288,7 +288,7 @@ public class UseActionConfigActions {
         public void doAction() throws LCException {
             //Check if action can be modified
             if (this.useAction.attachedToKeyOptionProperty().get()) {
-                Alert dialog = ConfigUIUtils.createAlert(source, AlertType.WARNING);
+                Alert dialog = DialogUtils.createAlert(source, AlertType.WARNING);
                 dialog.setHeaderText(Translation.getText("alert.message.disable.remove.action.header"));
                 dialog.setContentText(Translation.getText("alert.message.disable.remove.action.message", this.useAction.getName()));
                 dialog.show();

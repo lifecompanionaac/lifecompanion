@@ -31,11 +31,11 @@ import javafx.util.StringConverter;
 import org.controlsfx.control.ToggleSwitch;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.GlyphFontRegistry;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.util.javafx.FXControlUtils;
 import org.predict4all.nlp.words.model.Word;
 
 import java.util.Date;
@@ -65,21 +65,21 @@ public class WordDetailPane extends VBox implements LCViewInitHelper {
 
         // Word configuration
         this.toggleForceInvalid = new ToggleSwitch(Translation.getText("predict4all.config.force.invalid.word"));
-        UIUtils.createAndAttachTooltip(this.toggleForceInvalid, "predict4all.config.force.invalid.word.tooltip");
+        FXControlUtils.createAndAttachTooltip(this.toggleForceInvalid, "predict4all.config.force.invalid.word.tooltip");
         this.toggleForceInvalid.setMaxWidth(Double.MAX_VALUE);
 
         this.toggleForceValid = new ToggleSwitch(Translation.getText("predict4all.config.force.valid.word"));
-        UIUtils.createAndAttachTooltip(this.toggleForceValid, "predict4all.config.force.valid.word.tooltip");
+        FXControlUtils.createAndAttachTooltip(this.toggleForceValid, "predict4all.config.force.valid.word.tooltip");
         this.toggleForceValid.setMaxWidth(Double.MAX_VALUE);
 
-        this.sliderFactor = UIUtils.createBaseSlider(-P4AConfigUtils.FACTOR_BOUND, P4AConfigUtils.FACTOR_BOUND, 0.0);
+        this.sliderFactor = FXControlUtils.createBaseSlider(-P4AConfigUtils.FACTOR_BOUND, P4AConfigUtils.FACTOR_BOUND, 0.0);
         this.sliderFactor.setMajorTickUnit(P4AConfigUtils.FACTOR_BOUND);
         this.sliderFactor.setMinorTickCount(9);
         this.sliderFactor.setSnapToTicks(false);
         this.sliderFactor.setShowTickLabels(true);
         this.sliderFactor.setShowTickMarks(true);
         this.sliderFactor.setLabelFormatter(WordDetailPane.STR_CONVERTER_FACTOR);
-        this.buttonResetSlider = UIUtils.createGraphicButton(
+        this.buttonResetSlider = FXControlUtils.createGraphicButton(
                 GlyphFontRegistry.font("FontAwesome").create(FontAwesome.Glyph.UNDO).size(12).color(LCGraphicStyle.SECOND_DARK), "todo");
         this.buttonResetSlider.setPadding(new Insets(0.0, 0.0, 3.0, 0.0));
 

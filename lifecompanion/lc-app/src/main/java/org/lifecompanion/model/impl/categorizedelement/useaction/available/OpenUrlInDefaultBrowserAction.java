@@ -27,12 +27,12 @@ import org.lifecompanion.model.api.usevariable.UseVariableI;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseActionSubCategories;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.controller.usevariable.UseVariableController;
 import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.util.DesktopUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,7 +70,7 @@ public class OpenUrlInDefaultBrowserAction extends SimpleUseActionImpl<UseAction
     public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
         if (StringUtils.isNotBlank(url.get())) {
             try {
-                UIUtils.openUrlInDefaultBrowser(UseVariableController.INSTANCE.createText(this.url.get(), variables, varValue -> URLEncoder.encode(varValue, StandardCharsets.UTF_8)));
+                DesktopUtils.openUrlInDefaultBrowser(UseVariableController.INSTANCE.createText(this.url.get(), variables, varValue -> URLEncoder.encode(varValue, StandardCharsets.UTF_8)));
             } catch (Exception e) {
                 LOGGER.warn("Couldn't not open URL in default browser / url is {}", url.get(), e);
             }

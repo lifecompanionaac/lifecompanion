@@ -38,8 +38,8 @@ import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.profile.LCProfileI;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.util.model.LCTask;
-import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.controller.textprediction.AutoCharPredictionController;
 import org.lifecompanion.controller.textprediction.CustomCharPredictionController;
 import org.lifecompanion.controller.textprediction.WordPredictionController;
@@ -105,7 +105,7 @@ public enum AppModeController {
 
 
     public void startEditMode() {
-        LCUtils.runOnFXThread(() -> {
+        FXThreadUtils.runOnFXThread(() -> {
             final LCConfigurationI usedConfiguration = useModeContext.getConfiguration();
             mode.set(AppMode.EDIT);
             editModeContext.getStage().show();
@@ -127,11 +127,11 @@ public enum AppModeController {
     }
 
     public void startUseModeAfterEdit() {
-        LCUtils.runOnFXThread(() -> startUseModeForConfiguration((LCConfigurationI) editModeContext.getConfiguration().duplicate(false), editModeContext.configurationDescriptionProperty().get()));
+        FXThreadUtils.runOnFXThread(() -> startUseModeForConfiguration((LCConfigurationI) editModeContext.getConfiguration().duplicate(false), editModeContext.configurationDescriptionProperty().get()));
     }
 
     public void startUseModeForConfiguration(LCConfigurationI configuration, LCConfigurationDescriptionI configurationDescription) {
-        LCUtils.runOnFXThread(() -> {
+        FXThreadUtils.runOnFXThread(() -> {
             this.useModeContext.switchTo(configuration, configurationDescription);
             mode.set(AppMode.USE);
             launchUseMode();
@@ -139,7 +139,7 @@ public enum AppModeController {
     }
 
     public void switchEditModeConfiguration(LCConfigurationI configuration, LCConfigurationDescriptionI configurationDescription) {
-        LCUtils.runOnFXThread(() -> editModeContext.switchTo(configuration, configurationDescription));
+        FXThreadUtils.runOnFXThread(() -> editModeContext.switchTo(configuration, configurationDescription));
     }
 
     public void closeEditModeConfiguration() {
@@ -147,7 +147,7 @@ public enum AppModeController {
     }
 
     public void switchUseModeConfiguration(LCConfigurationI configuration, LCConfigurationDescriptionI configurationDescription) {
-        LCUtils.runOnFXThread(() -> {
+        FXThreadUtils.runOnFXThread(() -> {
             clearCurrentMode();// this will allow stop then start on use mode
             startUseModeForConfiguration(configuration, configurationDescription);
         });

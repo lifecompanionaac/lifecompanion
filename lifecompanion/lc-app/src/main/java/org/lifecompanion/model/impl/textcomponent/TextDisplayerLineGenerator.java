@@ -28,8 +28,8 @@ import org.lifecompanion.model.api.textcomponent.TextDisplayerWordPartI;
 import org.lifecompanion.model.api.textcomponent.WritingStateControllerI;
 import org.lifecompanion.model.api.style.TextCompStyleI;
 import org.lifecompanion.ui.configurationcomponent.base.TextDisplayer3;
-import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.util.LangUtils;
 import org.predict4all.nlp.Separator;
 
 import java.util.ArrayList;
@@ -279,8 +279,8 @@ public class TextDisplayerLineGenerator {
 
             // Go thought each entry char
             final String entryTextBefore = entry.entryTextProperty().get();
-            final String entryText = LCUtils
-                    .nullToEmpty(LCUtils.isTrue(defaultTextStyle != null ? defaultTextStyle.upperCaseProperty().value().getValue() : false)
+            final String entryText = LangUtils
+                    .nullToEmpty(LangUtils.isTrue(defaultTextStyle != null ? defaultTextStyle.upperCaseProperty().value().getValue() : false)
                             ? StringUtils.toUpperCase(entryTextBefore)
                             : entryTextBefore);
             for (int c = 0; c < entryText.length(); c++) {

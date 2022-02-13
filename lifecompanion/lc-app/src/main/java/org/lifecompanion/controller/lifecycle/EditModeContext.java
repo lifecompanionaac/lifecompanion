@@ -22,7 +22,9 @@ package org.lifecompanion.controller.lifecycle;
 import javafx.beans.property.*;
 import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
-import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.util.LangUtils;
+import org.lifecompanion.util.binding.BindingUtils;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
 import org.lifecompanion.controller.editaction.LCConfigurationActions;
@@ -37,8 +39,8 @@ public class EditModeContext extends AbstractModeContext {
         super();
         this.configuration.addListener((obs, ov, nv) -> {
             if (ov != null) {
-                LCUtils.unbindAndSet(configurationUnsavedAction, 0);
-                LCUtils.unbindAndSet(configurationScale, 1.0);
+                BindingUtils.unbindAndSet(configurationUnsavedAction, 0);
+                BindingUtils.unbindAndSet(configurationScale, 1.0);
             }
             if (nv != null) {
                 configurationUnsavedAction.bind(nv.unsavedActionProperty());
@@ -48,7 +50,7 @@ public class EditModeContext extends AbstractModeContext {
         this.configurationUnsavedAction.addListener((obs, ov, nv) -> {
             int threshold = UserConfigurationController.INSTANCE.unsavedChangeInConfigurationThresholdProperty().get();
             // Value become larger than threshold : show a warning notification that suggest saving
-            if (LCUtils.nullToZeroInt(ov) < threshold && LCUtils.nullToZeroInt(nv) >= threshold && AppModeController.INSTANCE.isEditMode()) {
+            if (LangUtils.nullToZeroInt(ov) < threshold && LangUtils.nullToZeroInt(nv) >= threshold && AppModeController.INSTANCE.isEditMode()) {
                 LCNotificationController.INSTANCE.showNotification(LCNotification.createWarning(Translation.getText("notification.warning.unsaved.changes.configuration.title", nv),
                         "notification.warning.unsaved.changes.action.name", () -> ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.SaveAction(getStage().getScene().getRoot()))));
             }
@@ -128,14 +130,14 @@ public class EditModeContext extends AbstractModeContext {
     public void increaseUnsavedActionOnCurrentConfiguration() {
         final LCConfigurationI configuration = AppModeController.INSTANCE.getEditModeContext().getConfiguration();
         if (configuration != null) {
-            LCUtils.runOnFXThread(() -> configuration.unsavedActionProperty().set(configuration.unsavedActionProperty().get() + 1));
+            FXThreadUtils.runOnFXThread(() -> configuration.unsavedActionProperty().set(configuration.unsavedActionProperty().get() + 1));
         }
     }
 
     public void resetUnsavedActionOnCurrentConfiguration() {
         final LCConfigurationI configuration = AppModeController.INSTANCE.getEditModeContext().getConfiguration();
         if (configuration != null) {
-            LCUtils.runOnFXThread(() -> configuration.unsavedActionProperty().set(0));
+            FXThreadUtils.runOnFXThread(() -> configuration.unsavedActionProperty().set(0));
         }
     }
     //========================================================================

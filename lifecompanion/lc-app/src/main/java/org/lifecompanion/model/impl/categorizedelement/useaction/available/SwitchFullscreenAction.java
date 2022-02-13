@@ -24,7 +24,7 @@ import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
 import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseActionSubCategories;
-import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
 
@@ -45,7 +45,7 @@ public class SwitchFullscreenAction extends SimpleUseActionImpl<UseActionTrigger
 
     @Override
     public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
-        LCUtils.runOnFXThread(() -> {
+        FXThreadUtils.runOnFXThread(() -> {
             final Stage stage = AppModeController.INSTANCE.getUseModeContext().stageProperty().get();
             stage.setMaximized(!stage.isMaximized());
         });

@@ -27,12 +27,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.ProgressDisplayKeyOption;
 import org.lifecompanion.controller.editaction.KeyOptionActions;
-import org.lifecompanion.util.binding.LCConfigBindingUtils;
+import org.lifecompanion.util.binding.EditActionUtils;
 import org.lifecompanion.ui.common.control.generic.colorpicker.LCColorPicker;
 import org.lifecompanion.framework.commons.translation.Translation;
+import org.lifecompanion.util.javafx.FXUtils;
 
 /**
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
@@ -63,9 +63,9 @@ public class ProgressDisplayKeyOptionConfigView extends BaseKeyOptionConfigView<
         comboboxProgressDisplayType.setCellFactory(lv -> new ProgressDisplayTypeListCell());
         comboboxProgressDisplayType.setButtonCell(new ProgressDisplayTypeListCell());
 
-        UIUtils.setFixedWidth(comboboxProgressDisplayMode, 150.0);
-        UIUtils.setFixedWidth(comboboxProgressDisplayType, 150.0);
-        UIUtils.setFixedWidth(pickerProgressColor, 150.0);
+        FXUtils.setFixedWidth(comboboxProgressDisplayMode, 150.0);
+        FXUtils.setFixedWidth(comboboxProgressDisplayType, 150.0);
+        FXUtils.setFixedWidth(pickerProgressColor, 150.0);
 
         int rowIndex = 0;
         GridPane gridPane = new GridPane();
@@ -89,12 +89,12 @@ public class ProgressDisplayKeyOptionConfigView extends BaseKeyOptionConfigView<
     @Override
     public void initBinding() {
         super.initBinding();
-        changeListenerProgressColor = LCConfigBindingUtils.createSimpleBinding(this.pickerProgressColor.valueProperty(), this.model,
+        changeListenerProgressColor = EditActionUtils.createSimpleBinding(this.pickerProgressColor.valueProperty(), this.model,
                 c -> c.progressColorProperty().get(), KeyOptionActions.ChangeProgressDisplayColorAction::new);
-        this.changeListenerProgressDisplayMode = LCConfigBindingUtils.createSelectionModelBinding(this.comboboxProgressDisplayMode.getSelectionModel(), //
+        this.changeListenerProgressDisplayMode = EditActionUtils.createSelectionModelBinding(this.comboboxProgressDisplayMode.getSelectionModel(), //
                 this.model, model -> model.progressDisplayModeProperty().get(), //
                 KeyOptionActions.ChangeProgressDisplayModeAction::new);
-        this.changeListenerProgressDisplayType = LCConfigBindingUtils.createSelectionModelBinding(this.comboboxProgressDisplayType.getSelectionModel(), //
+        this.changeListenerProgressDisplayType = EditActionUtils.createSelectionModelBinding(this.comboboxProgressDisplayType.getSelectionModel(), //
                 this.model, model -> model.progressDisplayTypeProperty().get(), //
                 KeyOptionActions.ChangeProgressDisplayTypeAction::new);
     }

@@ -24,7 +24,8 @@ import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DataFormat;
 import javafx.scene.input.KeyCode;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
-import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.util.ThreadUtils;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.util.javafx.RobotProvider;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.framework.utils.FluentHashMap;
@@ -112,7 +113,7 @@ public class RobotVirtualKeyboard implements VirtualKeyboardI {
         }
         final String textToCopyPaste = textWithoutSpaceAtTheEnd;
         final int spaceToAdd = spaceCount;
-        LCUtils.runOnFXThread(() -> {
+        FXThreadUtils.runOnFXThread(() -> {
             //Set content in the clip board
             final Clipboard clipboard = Clipboard.getSystemClipboard();
 
@@ -167,9 +168,9 @@ public class RobotVirtualKeyboard implements VirtualKeyboardI {
 
         @Override
         public void run() {
-            LCUtils.safeSleep(DELAY_BEFORE_RESTORING_CLIPBOARD);
+            ThreadUtils.safeSleep(DELAY_BEFORE_RESTORING_CLIPBOARD);
             if (!cancelled) {
-                LCUtils.runOnFXThread(() -> {
+                FXThreadUtils.runOnFXThread(() -> {
                     if (!cancelled) {
                         final Clipboard clipboard = Clipboard.getSystemClipboard();
                         clipboard.setContent(originalContent);

@@ -34,7 +34,6 @@ import org.lifecompanion.model.api.editaction.BaseEditActionI;
 import org.lifecompanion.model.api.categorizedelement.CategorizedElementI;
 import org.lifecompanion.model.api.categorizedelement.MainCategoryI;
 import org.lifecompanion.model.api.categorizedelement.SubCategoryI;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.ui.common.pane.generic.BaseConfigurationViewBorderPane;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
@@ -43,6 +42,7 @@ import org.lifecompanion.ui.common.pane.specific.cell.AbstractCategorizedElement
 import org.lifecompanion.ui.app.categorizedelement.useaction.UseActionListManageView;
 import org.lifecompanion.ui.common.control.generic.OrderModifiableListView;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.util.javafx.FXControlUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -104,7 +104,7 @@ public abstract class AbstractCategorizedListManageView<M, V extends Categorized
     @Override
     public void initUI() {
         //Button when empty
-        this.buttonAddElementWhenEmpty = UIUtils.createTextButtonWithGraphics(this.getAddWhenEmptyButtonText(),
+        this.buttonAddElementWhenEmpty = FXControlUtils.createTextButtonWithGraphics(this.getAddWhenEmptyButtonText(),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.PLUS_CIRCLE).sizeFactor(2).color(LCGraphicStyle.MAIN_DARK),
                 "tooltip.add.action.empty");
         this.buttonAddElementWhenEmpty.setTextAlignment(TextAlignment.CENTER);

@@ -24,7 +24,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import org.lifecompanion.ui.common.pane.specific.DefaultConfigurationListPane;
-import org.lifecompanion.util.UIControlHelper;
+import org.lifecompanion.util.javafx.FXControlUtils;
 import org.lifecompanion.util.model.Triple;
 import org.lifecompanion.controller.editaction.LCConfigurationActions;
 import org.lifecompanion.controller.profileconfigselect.ProfileConfigSelectionController;
@@ -43,7 +43,7 @@ public class ConfigAddFromDefaultView extends BorderPane implements LCViewInitHe
     //========================================================================
     @Override
     public void initUI() {
-        Triple<HBox, Label, Node> header = UIControlHelper.createHeader("config.add.from.default.title.title", e -> ProfileConfigSelectionController.INSTANCE.setConfigStep(ProfileConfigStep.CONFIGURATION_ADD, ProfileConfigStep.PROFILE_LIST, null));
+        Triple<HBox, Label, Node> header = FXControlUtils.createHeader("config.add.from.default.title.title", e -> ProfileConfigSelectionController.INSTANCE.setConfigStep(ProfileConfigStep.CONFIGURATION_ADD, ProfileConfigStep.PROFILE_LIST, null));
         defaultConfigurationListPane = new DefaultConfigurationListPane(false);
         defaultConfigurationListPane.setPadding(new Insets(10.0));
         this.setTop(header.getLeft());

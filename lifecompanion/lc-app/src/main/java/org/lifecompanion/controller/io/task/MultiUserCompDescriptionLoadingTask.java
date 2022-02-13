@@ -20,8 +20,8 @@
 package org.lifecompanion.controller.io.task;
 
 import org.lifecompanion.model.api.profile.UserCompDescriptionI;
+import org.lifecompanion.util.ThreadUtils;
 import org.lifecompanion.util.model.LCTask;
-import org.lifecompanion.util.LCUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,7 +55,7 @@ public class MultiUserCompDescriptionLoadingTask extends LCTask<List<UserCompDes
 				MultiUserCompDescriptionLoadingTask.LOGGER.info("Found a user comp to load in {}", userCompDir);
 				//Try to load
 				try {
-					UserCompDescriptionI loadedProfile = LCUtils.executeInCurrentThread(new UserCompDescriptionLoadingTask(userCompDir));
+					UserCompDescriptionI loadedProfile = ThreadUtils.executeInCurrentThread(new UserCompDescriptionLoadingTask(userCompDir));
 					resultList.add(loadedProfile);
 				} catch (Exception e) {
 					MultiUserCompDescriptionLoadingTask.LOGGER.warn("Couldn't load the comp in {}", userCompDir, e);

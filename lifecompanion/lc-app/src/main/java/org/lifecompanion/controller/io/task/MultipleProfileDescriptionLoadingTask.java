@@ -19,8 +19,8 @@
 package org.lifecompanion.controller.io.task;
 
 import org.lifecompanion.model.api.profile.LCProfileI;
+import org.lifecompanion.util.ThreadUtils;
 import org.lifecompanion.util.model.LCTask;
-import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,7 +58,7 @@ public class MultipleProfileDescriptionLoadingTask extends LCTask<List<LCProfile
                     MultipleProfileDescriptionLoadingTask.LOGGER.info("Found a profile to load in {}", profileDirectory);
                     //Try to load
                     try {
-                        LCProfileI loadedProfile = LCUtils.executeInCurrentThread(new ProfileDescriptionLoadingTask(profileDirectory));
+                        LCProfileI loadedProfile = ThreadUtils.executeInCurrentThread(new ProfileDescriptionLoadingTask(profileDirectory));
                         this.resultList.add(loadedProfile);
                     } catch (Exception e) {
                         MultipleProfileDescriptionLoadingTask.LOGGER.warn("Couldn't load the profile in {}", profileDirectory, e);

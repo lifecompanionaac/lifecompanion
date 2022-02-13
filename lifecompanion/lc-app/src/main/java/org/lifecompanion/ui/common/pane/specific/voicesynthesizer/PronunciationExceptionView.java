@@ -31,13 +31,13 @@ import javafx.scene.layout.HBox;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.model.api.configurationcomponent.VoiceSynthesizerUserI;
 import org.lifecompanion.model.api.voicesynthesizer.PronunciationExceptionI;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.model.impl.voicesynthesizer.PronunciationException;
 import org.lifecompanion.controller.voicesynthesizer.VoiceSynthesizerController;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.util.javafx.FXControlUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -95,13 +95,13 @@ public class PronunciationExceptionView extends BorderPane implements LCViewInit
         this.tableViewExceptions.getColumns().add(this.replaceWordColumn);
 
         //Buttons
-        this.buttonAdd = UIUtils.createGraphicButton(
+        this.buttonAdd = FXControlUtils.createGraphicButton(
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.PLUS_CIRCLE).size(14).color(LCGraphicStyle.MAIN_PRIMARY),
                 "tooltip.pronunciation.exception.add.button");
-        this.buttonRemove = UIUtils.createGraphicButton(
+        this.buttonRemove = FXControlUtils.createGraphicButton(
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.TRASH).size(14).color(LCGraphicStyle.SECOND_PRIMARY),
                 "tooltip.pronunciation.exception.remove.button");
-        this.buttonSpeak = UIUtils.createGraphicButton(
+        this.buttonSpeak = FXControlUtils.createGraphicButton(
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.VOLUME_UP).size(14).color(LCGraphicStyle.MAIN_DARK),
                 "tooltip.pronunciation.exception.speak.button");
         HBox boxButtons = new HBox(10, this.buttonAdd, this.buttonRemove, this.buttonSpeak);

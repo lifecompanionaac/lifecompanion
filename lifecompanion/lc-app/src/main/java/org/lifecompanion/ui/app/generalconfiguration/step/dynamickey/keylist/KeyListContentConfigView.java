@@ -43,9 +43,9 @@ import org.fxmisc.easybind.monadic.MonadicBinding;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
 import org.lifecompanion.ui.common.pane.specific.cell.KeyListCellHandler;
 import org.lifecompanion.ui.common.pane.specific.cell.KeyListNodeTreeCell;
-import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.util.javafx.FXControlUtils;
+import org.lifecompanion.util.model.ConfigurationComponentUtils;
 import org.lifecompanion.util.binding.ListBindingWithMapper;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.configurationcomponent.dynamickey.KeyListLeaf;
 import org.lifecompanion.model.impl.configurationcomponent.dynamickey.KeyListLinkLeaf;
 import org.lifecompanion.model.impl.configurationcomponent.dynamickey.KeyListNode;
@@ -161,11 +161,11 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         keyListTreeView.setFixedCellSize(KeyListCellHandler.CELL_HEIGHT + 5);
         HBox.setHgrow(keyListTreeView, Priority.ALWAYS);
 
-        this.buttonExportKeys = UIUtils.createLeftTextButton(Translation.getText("general.configuration.view.key.list.button.export.keys"), GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.UPLOAD).size(14).color(LCGraphicStyle.MAIN_DARK), null);
+        this.buttonExportKeys = FXControlUtils.createLeftTextButton(Translation.getText("general.configuration.view.key.list.button.export.keys"), GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.UPLOAD).size(14).color(LCGraphicStyle.MAIN_DARK), null);
         this.buttonExportKeys.setMaxWidth(Double.MAX_VALUE);
         this.buttonExportKeys.setAlignment(Pos.CENTER);
 
-        this.buttonImportKeys = UIUtils.createLeftTextButton(Translation.getText("general.configuration.view.key.list.button.import.keys"), GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.DOWNLOAD).size(14).color(LCGraphicStyle.MAIN_DARK), null);
+        this.buttonImportKeys = FXControlUtils.createLeftTextButton(Translation.getText("general.configuration.view.key.list.button.import.keys"), GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.DOWNLOAD).size(14).color(LCGraphicStyle.MAIN_DARK), null);
         this.buttonImportKeys.setMaxWidth(Double.MAX_VALUE);
         this.buttonImportKeys.setAlignment(Pos.CENTER);
 
@@ -190,7 +190,7 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         boxTreeAndCommands.setAlignment(Pos.CENTER);
         VBox.setVgrow(boxTreeAndCommands, Priority.ALWAYS);
 
-        buttonShowHideProperties = UIUtils.createLeftTextButton(Translation.getText("keylist.config.hide.key.properties"), GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.EYE_SLASH).size(18).color(LCGraphicStyle.MAIN_DARK), "TODO");
+        buttonShowHideProperties = FXControlUtils.createLeftTextButton(Translation.getText("keylist.config.hide.key.properties"), GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.EYE_SLASH).size(18).color(LCGraphicStyle.MAIN_DARK), "TODO");
         buttonShowHideProperties.setAlignment(Pos.CENTER_RIGHT);
 
         keyListNodePropertiesEditionView = new KeyListNodePropertiesEditionView();
@@ -203,7 +203,7 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
     }
 
     private Button createSearchBarButton(FontAwesome.Glyph icon, Color color, String tooltip, int size) {
-        final Button button = UIUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(icon).size(size).color(color), tooltip);
+        final Button button = FXControlUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(icon).size(size).color(color), tooltip);
         button.getStyleClass().add("padding-0");
         return button;
     }
@@ -213,7 +213,7 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
     }
 
     private Button createActionButton(Node graphics, String tooltip) {
-        final Button button = UIUtils.createGraphicButton(graphics, tooltip);
+        final Button button = FXControlUtils.createGraphicButton(graphics, tooltip);
         button.setAlignment(Pos.CENTER);
         GridPane.setHalignment(button, HPos.CENTER);
         return button;
@@ -361,7 +361,7 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
                     .parallelStream()
                     .map(node -> Pair.of(node, getSimilarityScore(node, searchText)))
                     .sorted(SCORE_MAP_COMPARATOR)
-                    .filter(e -> e.getRight() > LCUtils.SIMILARITY_CONTAINS)
+                    .filter(e -> e.getRight() > ConfigurationComponentUtils.SIMILARITY_CONTAINS)
                     .map(Pair::getLeft)
                     .collect(Collectors.toList());
             this.searchResult.set(foundNodes);
@@ -383,7 +383,7 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
 
     public double getSimilarityScore(KeyListNodeI node, String searchFull) {
         double score = 0.0;
-        score += LCUtils.getSimilarityScoreFor(searchFull, node,
+        score += ConfigurationComponentUtils.getSimilarityScoreFor(searchFull, node,
                 n -> Pair.of(n.textProperty().get(), 1.0),
                 n -> Pair.of(n.textToWriteProperty().get(), node.enableWriteProperty().get() ? 0.8 : 0),
                 n -> Pair.of(n.textToSpeakProperty().get(), node.enableSpeakProperty().get() ? 0.8 : 0)

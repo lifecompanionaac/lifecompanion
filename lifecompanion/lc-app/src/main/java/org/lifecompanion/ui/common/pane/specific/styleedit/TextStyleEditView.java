@@ -35,15 +35,15 @@ import javafx.scene.text.TextAlignment;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.FontAwesome.Glyph;
 import org.lifecompanion.model.api.style.TextCompStyleI;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.controller.editaction.StyleActions.ChangeStylePropAction;
-import org.lifecompanion.util.binding.LCConfigBindingUtils;
+import org.lifecompanion.util.binding.EditActionUtils;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.ui.common.pane.generic.cell.FontListCell;
 import org.lifecompanion.ui.common.control.generic.colorpicker.LCColorPicker;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.util.javafx.FXControlUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -99,14 +99,14 @@ public class TextStyleEditView extends AbstractStyleEditView<TextCompStyleI> imp
         this.boxItalic = new CheckBox(Translation.getText("text.style.font.italic"));
         this.boxUnderline = new CheckBox(Translation.getText("text.style.font.underline"));
         this.boxUpperCase = new CheckBox(Translation.getText("text.style.font.uppercase"));
-        this.spinnerSize = UIUtils.createIntSpinner(1, 250, 12, 2, 75.0);
+        this.spinnerSize = FXControlUtils.createIntSpinner(1, 250, 12, 2, 75.0);
         this.comboboxFontFamilly = new ComboBox<>(FXCollections.observableList(Font.getFamilies()));
         this.comboboxFontFamilly.setCellFactory(lv -> new FontListCell());
         this.comboboxFontFamilly.setButtonCell(new FontListCell());
 
         //Text align
         this.textAlignButtons = new HashMap<>();
-        this.textAlignGroup = UIUtils.createAlwaysSelectedToggleGroup();
+        this.textAlignGroup = FXControlUtils.createAlwaysSelectedToggleGroup();
         this.boxTextAlign = new HBox();
         this.boxTextAlign.setAlignment(Pos.CENTER_RIGHT);
         this.boxTextAlign.getChildren().add(this.createTextAlignToggle(TextAlignment.LEFT, FontAwesome.Glyph.ALIGN_LEFT, "left"));
@@ -142,7 +142,7 @@ public class TextStyleEditView extends AbstractStyleEditView<TextCompStyleI> imp
     }
 
     private ToggleButton createTextAlignToggle(final TextAlignment value, final Glyph glyph, final String tooltipEnd) {
-        ToggleButton button = UIUtils.createGraphicsToggleButton(null, GlyphFontHelper.FONT_AWESOME.create(glyph).size(12).color(Color.GRAY),
+        ToggleButton button = FXControlUtils.createGraphicsToggleButton(null, GlyphFontHelper.FONT_AWESOME.create(glyph).size(12).color(Color.GRAY),
                 "tooltip.align.text." + tooltipEnd);
         button.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         this.textAlignButtons.put(value, button);
@@ -161,20 +161,20 @@ public class TextStyleEditView extends AbstractStyleEditView<TextCompStyleI> imp
     public void initListener() {
         super.initListener();
         if (bindOnModel) {
-            this.changeListenerFont = LCConfigBindingUtils.createSelectionModelBinding(this.comboboxFontFamilly.getSelectionModel(), //
+            this.changeListenerFont = EditActionUtils.createSelectionModelBinding(this.comboboxFontFamilly.getSelectionModel(), //
                     this.model, model -> model.fontFamilyProperty().value().getValue(), //
                     (model, fontFamily) -> this.createChangePropAction(model.fontFamilyProperty(), fontFamily));
-            this.changeListenerFontSize = LCConfigBindingUtils.createIntegerSpinnerBinding(this.spinnerSize, this.model,
+            this.changeListenerFontSize = EditActionUtils.createIntegerSpinnerBinding(this.spinnerSize, this.model,
                     g -> g.fontSizeProperty().value(), (m, nv) -> new ChangeStylePropAction<>(m.fontSizeProperty(), nv));
-            this.changeListenerColor = LCConfigBindingUtils.createSimpleBinding(this.fieldColor.valueProperty(), this.model,
+            this.changeListenerColor = EditActionUtils.createSimpleBinding(this.fieldColor.valueProperty(), this.model,
                     c -> c.colorProperty().value().getValue(), (model, nv) -> this.createChangePropAction(model.colorProperty(), nv));
-            this.changeListenerBold = LCConfigBindingUtils.createSimpleBinding(this.boxBold.selectedProperty(), this.model,
+            this.changeListenerBold = EditActionUtils.createSimpleBinding(this.boxBold.selectedProperty(), this.model,
                     c -> c.boldProperty().value().getValue(), (model, nv) -> this.createChangePropAction(model.boldProperty(), nv));
-            this.changeListenerUnderline = LCConfigBindingUtils.createSimpleBinding(this.boxUnderline.selectedProperty(), this.model,
+            this.changeListenerUnderline = EditActionUtils.createSimpleBinding(this.boxUnderline.selectedProperty(), this.model,
                     c -> c.underlineProperty().value().getValue(), (model, nv) -> this.createChangePropAction(model.underlineProperty(), nv));
-            this.changeListenerUpperCase = LCConfigBindingUtils.createSimpleBinding(this.boxUpperCase.selectedProperty(), this.model,
+            this.changeListenerUpperCase = EditActionUtils.createSimpleBinding(this.boxUpperCase.selectedProperty(), this.model,
                     c -> c.upperCaseProperty().value().getValue(), (model, nv) -> this.createChangePropAction(model.upperCaseProperty(), nv));
-            this.changeListenerItalic = LCConfigBindingUtils.createSimpleBinding(this.boxItalic.selectedProperty(), this.model,
+            this.changeListenerItalic = EditActionUtils.createSimpleBinding(this.boxItalic.selectedProperty(), this.model,
                     c -> c.italicProperty().value().getValue(), (model, nv) -> this.createChangePropAction(model.italicProperty(), nv));
             this.changeListenerTextAlignment = (obs, ov, nv) -> {
                 //Check change ?

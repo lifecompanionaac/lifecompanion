@@ -25,9 +25,9 @@ import org.lifecompanion.model.api.categorizedelement.useaction.BaseUseActionI;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionMainCategoryI;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionSubCategoryI;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
-import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.controller.io.ReflectionHelper;
 import org.lifecompanion.controller.plugin.PluginController;
+import org.lifecompanion.util.binding.BindingUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,7 +71,7 @@ public enum AvailableUseActionController {
      * Create action listener on list
      */
     private void initActionListListener() {
-        this.availableAction.addListener(LCUtils.createListChangeListener(this::addAction, null));
+        this.availableAction.addListener(BindingUtils.createListChangeListener(this::addAction, null));
         PluginController.INSTANCE.getUseActions().registerListenerAndDrainCache(this::addActionType);
     }
 

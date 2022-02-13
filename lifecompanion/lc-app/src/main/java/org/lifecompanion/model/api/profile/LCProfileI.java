@@ -27,7 +27,6 @@ import org.lifecompanion.model.api.configurationcomponent.IdentifiableComponentI
 import org.lifecompanion.model.api.configurationcomponent.NamedComponentI;
 import org.lifecompanion.model.api.io.ProfileIOContextI;
 import org.lifecompanion.model.api.io.XMLSerializable;
-import org.lifecompanion.model.api.ui.editmode.ConfigurationProfileLevelEnum;
 
 /**
  * Profile in LifeCompanion.<br>
@@ -58,11 +57,6 @@ public interface LCProfileI extends XMLSerializable<ProfileIOContextI>, Identifi
      * @return the property that define the base color use by the profile
      */
     ObjectProperty<Color> colorProperty();
-
-    /**
-     * @return the profile level (to hide/show element in configuration)
-     */
-    ObjectProperty<ConfigurationProfileLevelEnum> levelProperty();
 
     /**
      * @param configurationID the ID of the wanted configuration description

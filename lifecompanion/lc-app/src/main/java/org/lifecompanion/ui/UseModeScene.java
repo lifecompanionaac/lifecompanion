@@ -24,11 +24,11 @@ import javafx.scene.control.Button;
 import javafx.scene.input.KeyEvent;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.impl.editaction.CommonActions;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.controller.metrics.SessionStatsController;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.ui.configurationcomponent.usemode.SimpleUseConfigurationDisplayer;
+import org.lifecompanion.util.javafx.FXControlUtils;
 
 /**
  * The scene that display the component when the application is in use mode in "normal" LifeCompanion (use and config mode)<br>
@@ -72,13 +72,13 @@ public class UseModeScene extends Scene implements LCViewInitHelper {
         this.root.getChildren().add(this.configurationDisplayer);
 
         // Button go config mode
-        this.buttonGoToConfigMode = UIUtils.createTextButtonWithIcon(null, "actions/icon_go_back_config_mode.png", null);
+        this.buttonGoToConfigMode = FXControlUtils.createTextButtonWithIcon(null, "actions/icon_go_back_config_mode.png", null);
         this.buttonGoToConfigMode.setLayoutX(-5.0);
         this.buttonGoToConfigMode.setLayoutY(-10.0);
         this.buttonGoToConfigMode.setFocusTraversable(false);
 
         // Button to switch fullscreen state
-        buttonFullscreen = UIUtils.createTextButtonWithIcon(null, "actions/icon_switch_fullscreen.png", null);
+        buttonFullscreen = FXControlUtils.createTextButtonWithIcon(null, "actions/icon_switch_fullscreen.png", null);
         this.buttonFullscreen.layoutXProperty().bind(widthProperty().subtract(32.0));
         this.buttonFullscreen.setLayoutY(-10.0);
         this.buttonFullscreen.setFocusTraversable(false);

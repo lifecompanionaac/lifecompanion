@@ -35,8 +35,8 @@ import org.controlsfx.control.textfield.TextFields;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.model.api.imagedictionary.ImageDictionaryI;
 import org.lifecompanion.model.api.imagedictionary.ImageElementI;
-import org.lifecompanion.util.LCUtils;
-import org.lifecompanion.util.UIUtils;
+import org.lifecompanion.util.IOUtils;
+import org.lifecompanion.util.ThreadUtils;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.appinstallation.InstallationConfigurationController;
@@ -47,6 +47,8 @@ import org.lifecompanion.controller.editmode.LCStateController;
 import org.lifecompanion.controller.editmode.LCFileChoosers;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.util.javafx.FXControlUtils;
+import org.lifecompanion.util.javafx.FXUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -118,11 +120,11 @@ public class ImageSelectorSearchView extends BorderPane implements LCViewInitHel
         setMargin(fieldSearchFilter, new Insets(10.0));
 
         // Add from computer
-        this.buttonImportFromComputer = UIUtils.createRightTextButton(Translation.getText("image.dictionary.import.image.from.computer.button"),
+        this.buttonImportFromComputer = FXControlUtils.createRightTextButton(Translation.getText("image.dictionary.import.image.from.computer.button"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.FOLDER_OPEN).size(22).color(LCGraphicStyle.MAIN_PRIMARY), "image.dictionary.import.image.from.computer.button.tooltip");
-        this.buttonTakeFromCamera = UIUtils.createRightTextButton(Translation.getText("image.dictionary.take.image.webcam"),
+        this.buttonTakeFromCamera = FXControlUtils.createRightTextButton(Translation.getText("image.dictionary.take.image.webcam"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CAMERA).size(22).color(LCGraphicStyle.MAIN_PRIMARY), "image.dictionary.take.image.webcam.tooltip");
-        this.buttonImportFromClipboard = UIUtils.createRightTextButton(Translation.getText("image.dictionary.take.image.from.clipboard"),
+        this.buttonImportFromClipboard = FXControlUtils.createRightTextButton(Translation.getText("image.dictionary.take.image.from.clipboard"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.PASTE).size(22).color(LCGraphicStyle.MAIN_PRIMARY), "image.dictionary.take.image.from.clipboard.tooltip");
         VBox boxButtonBottom = new VBox(5.0, buttonImportFromComputer, buttonTakeFromCamera, buttonImportFromClipboard);
         boxButtonBottom.setAlignment(Pos.CENTER);
@@ -139,17 +141,17 @@ public class ImageSelectorSearchView extends BorderPane implements LCViewInitHel
         this.fieldSearchFilter.textProperty().addListener((obs, ov, nv) -> fireSearchFor(nv));
         this.buttonImportFromComputer.setOnAction(e -> {
             FileChooser fileChooserImage = LCFileChoosers.getChooserImage(FileChooserType.SELECT_IMAGES);
-            File chosenFile = fileChooserImage.showOpenDialog(UIUtils.getSourceWindow(buttonImportFromComputer));
+            File chosenFile = fileChooserImage.showOpenDialog(FXUtils.getSourceWindow(buttonImportFromComputer));
             if (chosenFile != null) {
                 LCStateController.INSTANCE.updateDefaultDirectory(FileChooserType.SELECT_IMAGES, chosenFile.getParentFile());
             }
-            if (chosenFile != null && LCUtils.isSupportedImage(chosenFile) && selectionCallback != null) {
+            if (chosenFile != null && IOUtils.isSupportedImage(chosenFile) && selectionCallback != null) {
                 selectionCallback.accept(ImageDictionaries.INSTANCE.getOrAddToUserImagesDictionary(chosenFile));
             }
         });
         this.buttonTakeFromCamera.setOnAction(e -> {
             final File takenPicture = WebcamCaptureDialog.getInstance().showAndWait().orElse(null);
-            if (takenPicture != null && LCUtils.isSupportedImage(takenPicture) && selectionCallback != null) {
+            if (takenPicture != null && IOUtils.isSupportedImage(takenPicture) && selectionCallback != null) {
                 selectionCallback.accept(ImageDictionaries.INSTANCE.getOrAddToUserImagesDictionary(takenPicture));
             }
         });
@@ -169,7 +171,7 @@ public class ImageSelectorSearchView extends BorderPane implements LCViewInitHel
     }
 
     private void fireSearchFor(String search) {
-        LCUtils.debounce(600, "image-search-gallery", () -> {
+        ThreadUtils.debounce(600, "image-search-gallery", () -> {
             List<Pair<ImageDictionaryI, List<List<ImageElementI>>>> searchResult = ImageDictionaries.INSTANCE.searchImage(search);
             Platform.runLater(() -> this.imageDictionariesListView.setDisplayedImages(searchResult));
         });

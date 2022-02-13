@@ -25,7 +25,6 @@ import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import javafx.animation.Interpolator;
@@ -39,6 +38,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
+import org.lifecompanion.util.javafx.FXControlUtils;
+import org.lifecompanion.util.javafx.FXUtils;
 
 /**
  * A component that just display a simple button to trigger the selection tree view to show.
@@ -68,7 +69,7 @@ public class ComponentSelectionPopTrigger extends BorderPane implements LCViewIn
 		VBox boxRight = new VBox();
 		boxRight.getStyleClass().add("box-selection-button");
 		boxRight.setAlignment(Pos.CENTER);
-		this.buttonPop = UIUtils.createGraphicButton(
+		this.buttonPop = FXControlUtils.createGraphicButton(
 				GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CHEVRON_RIGHT).sizeFactor(1).color(LCGraphicStyle.MAIN_PRIMARY),
 				"tooltip.component.selection.view");
 		boxRight.getChildren().add(this.buttonPop);
@@ -113,7 +114,7 @@ public class ComponentSelectionPopTrigger extends BorderPane implements LCViewIn
 		this.animationCollapse.setOnFinished((ea) -> {
 			this.selectionPaneView.setVisible(false);
 		});
-		UIUtils.applyPerformanceConfiguration(boxRight);
+		FXUtils.applyPerformanceConfiguration(boxRight);
 	}
 
 	@Override

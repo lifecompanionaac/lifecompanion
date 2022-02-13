@@ -23,7 +23,6 @@ import org.lifecompanion.controller.io.IOHelper;
 import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.profile.LCProfileI;
-import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.model.impl.profile.ChangelogEntry;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.metrics.SessionEventType;
@@ -31,6 +30,7 @@ import org.lifecompanion.controller.metrics.SessionStatsController;
 import org.lifecompanion.controller.appinstallation.InstallationController;
 import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.framework.utils.FluentHashMap;
+import org.lifecompanion.util.ThreadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,10 +70,10 @@ public class ConfigurationSavingTask extends AbstractSavingUtilsTask<Void> {
         this.saveXmlSerializable(this.configuration, this.directory, LCConstant.CONFIGURATION_XML_NAME);
 
         // Save key list
-        LCUtils.executeInCurrentThread(IOHelper.createSaveKeyListTask(configuration, this.directory));
+        ThreadUtils.executeInCurrentThread(IOHelper.createSaveKeyListTask(configuration, this.directory));
 
         // Save sequences
-        LCUtils.executeInCurrentThread(IOHelper.createSaveSequenceTask(configuration, this.directory));
+        ThreadUtils.executeInCurrentThread(IOHelper.createSaveSequenceTask(configuration, this.directory));
 
         // Generate changelog entry
         ChangelogEntry changelogEntry = new ChangelogEntry(
@@ -90,7 +90,7 @@ public class ConfigurationSavingTask extends AbstractSavingUtilsTask<Void> {
 
         //Configuration description update
         this.configurationDescription.configurationLastDateProperty().set(new Date());
-        LCUtils.executeInCurrentThread(IOHelper.createSaveConfigDescriptionTask(this.configurationDescription, this.directory));
+        ThreadUtils.executeInCurrentThread(IOHelper.createSaveConfigDescriptionTask(this.configurationDescription, this.directory));
 
         this.updateProgress(5, 5);
         ConfigurationSavingTask.LOGGER.info("Configuration successfully saved to {}", this.directory);

@@ -30,9 +30,9 @@ import javafx.scene.paint.Color;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.SimplerKeyContentContainerI;
 import org.lifecompanion.ui.app.generalconfiguration.step.dynamickey.CommonListViewActionContainer;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
+import org.lifecompanion.util.javafx.FXControlUtils;
 
 public class DetailledSimplerKeyContentContainerListCell<T extends SimplerKeyContentContainerI> extends AbstractKeyListContentListCell<T> {
     public static final double CELL_HEIGHT = 100.0;
@@ -90,7 +90,7 @@ public class DetailledSimplerKeyContentContainerListCell<T extends SimplerKeyCon
     }
 
     private Button createButton(FontAwesome.Glyph trash, Color color, String tooltip) {
-        final Button button = UIUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(trash)
+        final Button button = FXControlUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(trash)
                 .size(BUTTON_SIZE).color(color), tooltip);
         button.getStyleClass().addAll("button-without-padding");
         return button;

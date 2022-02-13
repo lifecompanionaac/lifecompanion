@@ -42,10 +42,10 @@ import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.impl.notification.LCNotification;
 import org.lifecompanion.ui.common.control.specific.selector.ProfileSelectorControl;
 import org.lifecompanion.ui.notification.LCNotificationController;
-import org.lifecompanion.util.ConfigUIUtils;
+import org.lifecompanion.util.ThreadUtils;
+import org.lifecompanion.util.javafx.DialogUtils;
+import org.lifecompanion.util.javafx.FXUtils;
 import org.lifecompanion.util.model.LCTask;
-import org.lifecompanion.util.LCUtils;
-import org.lifecompanion.util.UIUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -109,7 +109,7 @@ public class LCProfileActions {
                         @Override
                         protected Void call() throws Exception {
                             for (ConfigurationDuplicateTask duplicateTask : configurationDuplicateTasks) {
-                                LCUtils.executeInCurrentThread(duplicateTask);
+                                ThreadUtils.executeInCurrentThread(duplicateTask);
                             }
                             return null;
                         }
@@ -165,7 +165,7 @@ public class LCProfileActions {
         @Override
         public void doAction() throws LCException {
             if (ProfileController.INSTANCE.currentProfileProperty().get() == this.profileToRemove) {
-                Alert dlg = ConfigUIUtils.createAlert(source, AlertType.CONFIRMATION);
+                Alert dlg = DialogUtils.createAlert(source, AlertType.CONFIRMATION);
                 dlg.getDialogPane().setContentText(Translation.getText("action.remove.profile.confirm.current.profile",
                         this.profileToRemove.nameProperty().get(), this.profileToRemove.configurationCountProperty().get()));
                 dlg.getDialogPane().setHeaderText(Translation.getText("action.remove.profile.confirm.header"));
@@ -178,7 +178,7 @@ public class LCProfileActions {
                 }
             } else {
                 //Ask for confirm
-                Alert dlg = ConfigUIUtils.createAlert(source, AlertType.CONFIRMATION);
+                Alert dlg = DialogUtils.createAlert(source, AlertType.CONFIRMATION);
                 dlg.getDialogPane().setContentText(Translation.getText("action.remove.profile.confirm.message", this.profileToRemove.nameProperty().get(),
                         this.profileToRemove.configurationCountProperty().get()));
                 dlg.getDialogPane().setHeaderText(Translation.getText("action.remove.profile.confirm.header"));
@@ -270,8 +270,8 @@ public class LCProfileActions {
         @Override
         public void doAction() throws LCException {
             FileChooser profileChooser = LCFileChoosers.getChooserProfile(FileChooserType.PROFILE_EXPORT);
-            profileChooser.setInitialFileName(DATE_FORMAT_FILENAME.format(new Date()) + "_" + LCUtils.getValidFileName(selectedProfile.nameProperty().get()));
-            File profileExportFile = profileChooser.showSaveDialog(UIUtils.getSourceWindow(source));
+            profileChooser.setInitialFileName(DATE_FORMAT_FILENAME.format(new Date()) + "_" + org.lifecompanion.util.IOUtils.getValidFileName(selectedProfile.nameProperty().get()));
+            File profileExportFile = profileChooser.showSaveDialog(FXUtils.getSourceWindow(source));
             if (profileExportFile != null) {
                 LCStateController.INSTANCE.updateDefaultDirectory(FileChooserType.PROFILE_EXPORT, profileExportFile.getParentFile());
                 ProfileExportTask profileExportTask = IOHelper.createProfileExportTask(this.selectedProfile, profileExportFile);
@@ -309,7 +309,7 @@ public class LCProfileActions {
         public void doAction() throws LCException {
             FileChooser profileChooser = LCFileChoosers.getChooserProfile(FileChooserType.PROFILE_IMPORT);
             if (this.profileImportFile == null) {
-                this.profileImportFile = profileChooser.showOpenDialog(UIUtils.getSourceWindow(source));
+                this.profileImportFile = profileChooser.showOpenDialog(FXUtils.getSourceWindow(source));
             }
             if (this.profileImportFile != null) {
                 LCStateController.INSTANCE.updateDefaultDirectory(FileChooserType.PROFILE_IMPORT, this.profileImportFile.getParentFile());
@@ -317,7 +317,7 @@ public class LCProfileActions {
                 //Check if a existing profile have the same ID
                 LCProfileI previousProfile = ProfileController.INSTANCE.getByID(profileImportTask.getImportedProfileId());
                 if (previousProfile != null) {
-                    Alert dlg = ConfigUIUtils.createAlert(source, AlertType.CONFIRMATION);
+                    Alert dlg = DialogUtils.createAlert(source, AlertType.CONFIRMATION);
                     dlg.getDialogPane().setContentText(Translation.getText("action.import.existing.profile.text"));
                     dlg.getDialogPane().setHeaderText(Translation.getText("action.import.existing.profile.header"));
                     Optional<ButtonType> returned = dlg.showAndWait();
@@ -365,7 +365,7 @@ public class LCProfileActions {
         @Override
         public void doAction() throws LCException {
             // Select the profile to duplicate
-            Alert dialog = ConfigUIUtils.createAlert(source, Alert.AlertType.NONE);
+            Alert dialog = DialogUtils.createAlert(source, Alert.AlertType.NONE);
             dialog.setHeaderText(Translation.getText("config.duplicate.question.select.profile"));
             ProfileSelectorControl profileSelectorControl = new ProfileSelectorControl(Translation.getText("config.duplicate.field.profile"));
             dialog.getDialogPane().setContent(profileSelectorControl);

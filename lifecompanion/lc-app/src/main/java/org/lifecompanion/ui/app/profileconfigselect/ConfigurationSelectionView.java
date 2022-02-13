@@ -36,10 +36,9 @@ import org.fxmisc.easybind.Subscription;
 import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
 import org.lifecompanion.model.api.profile.LCProfileI;
 import org.lifecompanion.ui.common.pane.specific.cell.ConfigurationDescriptionAdvancedListCell;
-import org.lifecompanion.util.UIControlHelper;
+import org.lifecompanion.util.javafx.FXControlUtils;
 import org.lifecompanion.util.javafx.DisableSelectionSelectionModel;
 import org.lifecompanion.util.model.Triple;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.profile.ProfileController;
 import org.lifecompanion.ui.common.pane.specific.ProfileIconView;
@@ -94,7 +93,7 @@ public class ConfigurationSelectionView extends BorderPane implements ProfileCon
     //========================================================================
     @Override
     public void initUI() {
-        Triple<HBox, Label, Node> header = UIControlHelper.createHeader("configuration.selection.view.title", e -> ProfileConfigSelectionController.INSTANCE.setProfileStep(ProfileConfigStep.PROFILE_LIST, null, null));
+        Triple<HBox, Label, Node> header = FXControlUtils.createHeader("configuration.selection.view.title", e -> ProfileConfigSelectionController.INSTANCE.setProfileStep(ProfileConfigStep.PROFILE_LIST, null, null));
         this.setTop(header.getLeft());
 
         //Search filter
@@ -104,7 +103,7 @@ public class ConfigurationSelectionView extends BorderPane implements ProfileCon
         // Current profile information
         this.labelProfileName = new Label();
         this.labelProfileName.getStyleClass().add("current-profile-in-config-list");
-        buttonChangeProfile = UIUtils.createRightTextButton(Translation.getText("configuration.list.profile.change.action"),
+        buttonChangeProfile = FXControlUtils.createRightTextButton(Translation.getText("configuration.list.profile.change.action"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.REFRESH).size(14).color(LCGraphicStyle.MAIN_PRIMARY), null);
         buttonChangeProfile.getStyleClass().add("button-in-current-profil-config-list");
         this.profileIconView = new ProfileIconView();
@@ -126,7 +125,7 @@ public class ConfigurationSelectionView extends BorderPane implements ProfileCon
         VBox boxCenter = new VBox(10.0, gridPaneCurrentProfile, fieldSearchFilter, configurationListView);
         boxCenter.setPadding(new Insets(10.0));
 
-        buttonAddConfiguration = UIUtils.createRightTextButton(Translation.getText("configuration.selection.add.configuration.button"),
+        buttonAddConfiguration = FXControlUtils.createRightTextButton(Translation.getText("configuration.selection.add.configuration.button"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.PLUS_CIRCLE).size(22).color(LCGraphicStyle.MAIN_PRIMARY), "configuration.selection.add.configuration.button.tooltip");
         buttonAddConfiguration.getStyleClass().add("button-icon-text-bigger");
         HBox bottomButtons = new HBox(10.0, buttonAddConfiguration);

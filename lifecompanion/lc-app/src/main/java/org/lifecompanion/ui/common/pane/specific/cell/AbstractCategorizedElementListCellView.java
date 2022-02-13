@@ -27,10 +27,10 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import org.lifecompanion.model.api.categorizedelement.CategorizedElementI;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.ui.app.categorizedelement.AbstractCategorizedListManageView;
 import org.lifecompanion.ui.app.categorizedelement.CategorizedIconView;
+import org.lifecompanion.util.javafx.FXControlUtils;
 
 import java.util.function.BiConsumer;
 
@@ -74,7 +74,7 @@ public class AbstractCategorizedElementListCellView<T extends CategorizedElement
         this.borderPane.setLeft(this.useActionIcon);
         BorderPane.setMargin(this.useActionIcon, new Insets(0, 10, 0, 2));
         //Tootip
-        this.tooltip = UIUtils.createTooltip(null);
+        this.tooltip = FXControlUtils.createTooltip(null);
         //Double clic, edit
         this.setOnMouseClicked((me) -> {
             if (this.getItem() != null && me.getClickCount() > 1 && this.getItem().isParameterizableElement()) {

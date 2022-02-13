@@ -21,7 +21,8 @@ package org.lifecompanion.util.debug;
 
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.framework.utils.LCNamedThreadFactory;
-import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.util.LangUtils;
+import org.lifecompanion.util.ThreadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +39,7 @@ public class ConfigurationMemoryLeakChecker {
     private static final AtomicBoolean RUNNING = new AtomicBoolean(false);
 
     public static void registerConfiguration(LCConfigurationI configuration) {
-        if (LCUtils.safeParseBoolean(System.getProperty("org.lifecompanion.debug.configuration.memory.leak"))) {
+        if (LangUtils.safeParseBoolean(System.getProperty("org.lifecompanion.debug.configuration.memory.leak"))) {
             CONFIGURATIONS.add(new WeakReference<>(configuration));
             if (!RUNNING.getAndSet(true)) {
                 LOGGER.info("Configuration memory leak debug enabled");
@@ -52,7 +53,7 @@ public class ConfigurationMemoryLeakChecker {
                                 .distinct()
                                 .count();
                         LOGGER.info("Loaded configuration in memory (from contexts) : {}", count);
-                        LCUtils.safeSleep(10_000);
+                        ThreadUtils.safeSleep(10_000);
                     }
                 }).start();
             }

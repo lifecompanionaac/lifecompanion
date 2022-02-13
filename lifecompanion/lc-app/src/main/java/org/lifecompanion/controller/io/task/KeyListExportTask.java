@@ -20,7 +20,6 @@
 package org.lifecompanion.controller.io.task;
 
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
-import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.model.impl.configurationcomponent.dynamickey.KeyListNode;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
@@ -43,7 +42,7 @@ public class KeyListExportTask extends KeyListSavingTask {
     private final List<KeyListNodeI> keyListNodes;
 
     public KeyListExportTask(final File destFile, final List<KeyListNodeI> keyListNodes) {
-        super(LCUtils.getTempDir("keylist-export"), null);
+        super(org.lifecompanion.util.IOUtils.getTempDir("keylist-export"), null);
         updateTitle(Translation.getText("task.export.keylist.title"));
         this.destFile = destFile;
         this.keyListNodes = keyListNodes;

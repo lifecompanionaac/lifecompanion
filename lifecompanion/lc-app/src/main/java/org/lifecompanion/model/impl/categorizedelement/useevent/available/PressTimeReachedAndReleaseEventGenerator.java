@@ -22,7 +22,6 @@ import org.jdom2.Element;
 
 import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
-import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.controller.selectionmode.SelectionModeController;
 import org.lifecompanion.model.impl.exception.LCException;
@@ -31,6 +30,7 @@ import org.lifecompanion.model.impl.categorizedelement.useevent.BaseUseEventGene
 import org.lifecompanion.model.api.categorizedelement.useevent.DefaultUseEventSubCategories;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import org.lifecompanion.util.binding.BindingUtils;
 
 public class PressTimeReachedAndReleaseEventGenerator extends BaseUseEventGeneratorImpl {
 
@@ -46,7 +46,7 @@ public class PressTimeReachedAndReleaseEventGenerator extends BaseUseEventGenera
 		this.staticDescriptionID = "use.event.press.time.reached.and.released.static.description";
 		this.configIconPath = "control/icon_press_release_reach_time.png";
 		this.variableDescriptionProperty().bind(TranslationFX.getTextBinding("use.event.press.time.reached.and.released.variable.description",
-				LCUtils.createDivide1000Binding(this.timeToReach)));
+				BindingUtils.createDivide1000Binding(this.timeToReach)));
 	}
 
 	public IntegerProperty timeToReachProperty() {

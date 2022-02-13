@@ -30,7 +30,7 @@ import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 import org.lifecompanion.model.impl.exception.LCException;
-import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.profile.ProfileController;
 import org.lifecompanion.controller.io.IOHelper;
@@ -140,7 +140,7 @@ public class MiscConfigSubmenu extends VBox implements LCViewInitHelper, UserCon
         this.buttonOpenConfigCleanXml.setOnAction(e -> {
             File configurationDirectory = new File(IOHelper.getConfigurationDirectoryPath(ProfileController.INSTANCE.currentProfileProperty().get().getID(),
                     AppModeController.INSTANCE.getEditModeContext().configurationProperty().get().getID()));
-            final File destDirTempConfig = LCUtils.getTempDir("configuration-debug-dir");
+            final File destDirTempConfig = org.lifecompanion.util.IOUtils.getTempDir("configuration-debug-dir");
             exploreAndFormatXmlFiles(configurationDirectory, destDirTempConfig, configurationDirectory);
             openFileOrFolder(buttonOpenConfigCleanXml, destDirTempConfig.getPath());
         });
@@ -202,7 +202,7 @@ public class MiscConfigSubmenu extends VBox implements LCViewInitHelper, UserCon
                 long maxMemory = runtime.maxMemory();
                 long freeMemory = runtime.freeMemory();
                 long totalMemory = runtime.totalMemory();
-                LCUtils.runOnFXThread(() -> labelMemoryInfo.setText(Translation.getText("misc.config.tab.memory.info",
+                FXThreadUtils.runOnFXThread(() -> labelMemoryInfo.setText(Translation.getText("misc.config.tab.memory.info",
                         FileNameUtils.getFileSize(totalMemory - freeMemory), FileNameUtils.getFileSize(totalMemory), FileNameUtils.getFileSize(maxMemory))));
             }
         }, 500, 1000);

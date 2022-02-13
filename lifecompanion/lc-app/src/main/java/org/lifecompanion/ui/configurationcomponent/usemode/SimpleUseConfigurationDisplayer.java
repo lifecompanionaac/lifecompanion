@@ -39,7 +39,8 @@ import javafx.scene.transform.Scale;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.textcomponent.WritingEventSource;
 import org.lifecompanion.model.api.ui.configurationcomponent.ViewProviderI;
-import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.util.binding.BindingUtils;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.controller.configurationcomponent.GlobalKeyEventController;
@@ -49,6 +50,7 @@ import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.lifecycle.AppMode;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.util.model.ConfigurationComponentUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -227,16 +229,16 @@ public class SimpleUseConfigurationDisplayer extends Group implements LCViewInit
     }
 
     private void showConfigurationChanging() {
-        LCUtils.runOnFXThread(() -> {
+        FXThreadUtils.runOnFXThread(() -> {
             this.getTransforms().clear();
-            LCUtils.unbindAndSet(layoutXProperty(), 0.0);
-            LCUtils.unbindAndSet(layoutYProperty(), 0.0);
+            BindingUtils.unbindAndSet(layoutXProperty(), 0.0);
+            BindingUtils.unbindAndSet(layoutYProperty(), 0.0);
             this.getChildren().add(nodeConfigurationChanging);
         });
     }
 
     private void restoreAfterConfigurationChangingDisplayed() {
-        LCUtils.runOnFXThread(() -> {
+        FXThreadUtils.runOnFXThread(() -> {
             this.getChildren().remove(nodeConfigurationChanging);
             bindLayoutXAndY();
             if (currentScaleTransform != null) {
@@ -264,8 +266,8 @@ public class SimpleUseConfigurationDisplayer extends Group implements LCViewInit
         this.getTransforms().add(this.currentScaleTransform);
         this.getChildren().add(this.configurationView);
         // Inform config of the display scaling (providing clean scaled finite values)
-        configuration.displayedConfigurationScaleXProperty().bind(LCUtils.bindToValueOrIfInfinityOrNan(currentScaleTransform.xProperty(), 1.0));
-        configuration.displayedConfigurationScaleYProperty().bind(LCUtils.bindToValueOrIfInfinityOrNan(currentScaleTransform.yProperty(), 1.0));
+        configuration.displayedConfigurationScaleXProperty().bind(BindingUtils.bindToValueOrIfInfinityOrNan(currentScaleTransform.xProperty(), 1.0));
+        configuration.displayedConfigurationScaleYProperty().bind(BindingUtils.bindToValueOrIfInfinityOrNan(currentScaleTransform.yProperty(), 1.0));
         // To receive key event
         this.requestFocus();
     }
@@ -302,19 +304,19 @@ public class SimpleUseConfigurationDisplayer extends Group implements LCViewInit
 
     public void unbindAndClean() {
         SelectionModeController.INSTANCE.removeConfigurationChangingListener(configurationChangingListener);
-        LCUtils.unbindAndSetNull(backgroundColor);
-        LCUtils.unbindAndSet(configuration.displayedConfigurationScaleXProperty(), 1.0);
-        LCUtils.unbindAndSet(configuration.displayedConfigurationScaleYProperty(), 1.0);
-        LCUtils.unbindAndSet(configWith, 0.0);
-        LCUtils.unbindAndSet(configHeight, 0.0);
-        LCUtils.unbindAndSet(scaleX, 0.0);
-        LCUtils.unbindAndSet(scaleY, 0.0);
+        BindingUtils.unbindAndSetNull(backgroundColor);
+        BindingUtils.unbindAndSet(configuration.displayedConfigurationScaleXProperty(), 1.0);
+        BindingUtils.unbindAndSet(configuration.displayedConfigurationScaleYProperty(), 1.0);
+        BindingUtils.unbindAndSet(configWith, 0.0);
+        BindingUtils.unbindAndSet(configHeight, 0.0);
+        BindingUtils.unbindAndSet(scaleX, 0.0);
+        BindingUtils.unbindAndSet(scaleY, 0.0);
         this.getTransforms().clear();
         if (currentScaleTransform != null) {
-            LCUtils.unbindAndSet(currentScaleTransform.xProperty(), 1.0);
-            LCUtils.unbindAndSet(currentScaleTransform.yProperty(), 1.0);
+            BindingUtils.unbindAndSet(currentScaleTransform.xProperty(), 1.0);
+            BindingUtils.unbindAndSet(currentScaleTransform.yProperty(), 1.0);
         }
-        LCUtils.exploreComponentViewChildrenToUnbind(this);
+        ConfigurationComponentUtils.exploreComponentViewChildrenToUnbind(this);
     }
 
 }

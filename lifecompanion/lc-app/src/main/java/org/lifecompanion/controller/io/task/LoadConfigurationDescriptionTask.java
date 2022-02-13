@@ -20,7 +20,6 @@
 package org.lifecompanion.controller.io.task;
 
 import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
-import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +38,7 @@ public class LoadConfigurationDescriptionTask extends AbstractLoadUtilsTask<LCCo
 
     @Override
     protected LCConfigurationDescriptionI call() throws Exception {
-        File tempDir = LCUtils.getTempDir("read-configuration-description");
+        File tempDir = org.lifecompanion.util.IOUtils.getTempDir("read-configuration-description");
         tempDir.mkdirs();
         IOUtils.unzipInto(this.configurationFile, tempDir, "^(?!.*lifecompanion-configuration-description\\.xml).*");
         LOGGER.info("Configuration description loaded from temp directory : {}", tempDir);

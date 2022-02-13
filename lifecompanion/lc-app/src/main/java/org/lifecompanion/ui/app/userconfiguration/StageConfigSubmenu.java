@@ -27,12 +27,11 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import org.controlsfx.control.ToggleSwitch;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
-import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.util.javafx.FXControlUtils;
 
 /**
  * Stage configuration
@@ -78,16 +77,16 @@ public class StageConfigSubmenu extends ScrollPane implements UserConfigSubmenuI
     public void initUI() {
         int row = 0;
         Label labelConfigGeneral = createTitleLabel("user.config.part.ui.general");
-        toggleEnableLaunchLCSystemStartup = ConfigUIUtils.createToggleSwitch("user.config.launch.lc.startup", null);
-        toggleEnableRecordAndSendSessionStats = ConfigUIUtils.createToggleSwitch("user.config.enable.session.stats", null);
-        toggleEnableAutoShowVirtualKeyboard = ConfigUIUtils.createToggleSwitch("user.config.auto.show.virtual.keyboard", null);
+        toggleEnableLaunchLCSystemStartup = FXControlUtils.createToggleSwitch("user.config.launch.lc.startup", null);
+        toggleEnableRecordAndSendSessionStats = FXControlUtils.createToggleSwitch("user.config.enable.session.stats", null);
+        toggleEnableAutoShowVirtualKeyboard = FXControlUtils.createToggleSwitch("user.config.auto.show.virtual.keyboard", null);
 
         //Selection parameter
-        this.spinnerStrokeSize = UIUtils.createDoubleSpinner(1.0, 20.0, 3.0, 1.0, 110.0);
+        this.spinnerStrokeSize = FXControlUtils.createDoubleSpinner(1.0, 20.0, 3.0, 1.0, 110.0);
         Label labelStrokeSize = new Label(Translation.getText("user.config.selection.stroke.size"));
         GridPane.setHgrow(labelStrokeSize, Priority.ALWAYS);
         Label labelDashSize = new Label(Translation.getText("user.config.selection.dash.size"));
-        this.spinnerDashSize = UIUtils.createDoubleSpinner(1.0, 20.0, 3.0, 1.0, 110.0);
+        this.spinnerDashSize = FXControlUtils.createDoubleSpinner(1.0, 20.0, 3.0, 1.0, 110.0);
         GridPane gridPaneStyleParam = createConfigPane();
         gridPaneStyleParam.add(labelStrokeSize, 0, row);
         gridPaneStyleParam.add(this.spinnerStrokeSize, 1, row++);
@@ -96,12 +95,12 @@ public class StageConfigSubmenu extends ScrollPane implements UserConfigSubmenuI
         Label labelConfigStylePart = createTitleLabel("user.config.part.ui.config");
 
         //Frame parameter
-        this.spinnerFrameWidth = UIUtils.createIntSpinner(10, Integer.MAX_VALUE, 50, 100, 110);
-        this.spinnerFrameHeight = UIUtils.createIntSpinner(10, Integer.MAX_VALUE, 50, 100, 110);
+        this.spinnerFrameWidth = FXControlUtils.createIntSpinner(10, Integer.MAX_VALUE, 50, 100, 110);
+        this.spinnerFrameHeight = FXControlUtils.createIntSpinner(10, Integer.MAX_VALUE, 50, 100, 110);
         Label labelWidth = new Label(Translation.getText("user.config.stage.width"));
         GridPane.setHgrow(labelWidth, Priority.ALWAYS);
         Label labelHeight = new Label(Translation.getText("user.config.stage.height"));
-        this.toggleEnableFullScreen = ConfigUIUtils.createToggleSwitch("user.config.stage.fullscreen", null);
+        this.toggleEnableFullScreen = FXControlUtils.createToggleSwitch("user.config.stage.fullscreen", null);
         GridPane.setMargin(this.toggleEnableFullScreen, new Insets(5.0, 0.0, 5.0, 0.0));
         GridPane gridPaneStageParam = createConfigPane();
         gridPaneStageParam.add(this.toggleEnableFullScreen, 0, row++, 2, 1);
@@ -113,7 +112,7 @@ public class StageConfigSubmenu extends ScrollPane implements UserConfigSubmenuI
 
         //Unsaved modification
         Label labelConfigTitle = createTitleLabel("user.config.configuration.title");
-        this.spinnerUnsavedModification = UIUtils.createIntSpinner(1, 5000, 5, 10, 110.0);
+        this.spinnerUnsavedModification = FXControlUtils.createIntSpinner(1, 5000, 5, 10, 110.0);
         Label labelUnsavedThreshold = new Label(Translation.getText("user.config.unsaved.modification.threshold"));
         GridPane.setHgrow(labelUnsavedThreshold, Priority.ALWAYS);
         GridPane gridPaneConfiguration = createConfigPane();
@@ -122,7 +121,7 @@ public class StageConfigSubmenu extends ScrollPane implements UserConfigSubmenuI
 
         //Tips
         Label labelConfigTips = createTitleLabel("user.config.tips.title");
-        toggleEnableTipsStartup = ConfigUIUtils.createToggleSwitch("user.config.tips.show.startup", null);
+        toggleEnableTipsStartup = FXControlUtils.createToggleSwitch("user.config.tips.show.startup", null);
         GridPane.setHgrow(toggleEnableTipsStartup, Priority.ALWAYS);
         GridPane.setMargin(this.toggleEnableTipsStartup, new Insets(5.0, 0.0, 5.0, 0.0));
 

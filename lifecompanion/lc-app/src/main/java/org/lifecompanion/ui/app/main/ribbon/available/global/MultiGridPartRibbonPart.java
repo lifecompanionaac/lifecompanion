@@ -28,17 +28,15 @@ import javafx.scene.layout.VBox;
 import org.lifecompanion.model.api.editaction.BaseEditActionI;
 import org.lifecompanion.model.api.configurationcomponent.GridPartComponentI;
 import org.lifecompanion.model.api.configurationcomponent.SpanModifiableComponentI;
-import org.lifecompanion.model.api.ui.editmode.ConfigurationProfileLevelEnum;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.configurationcomponent.DisplayableComponentBaseImpl;
 import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.controller.editaction.GridActions.*;
 import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.controller.editmode.SelectionController;
-import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.ui.configurationcomponent.editmode.categorizedelement.useevent.available.RibbonBasePart;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.util.javafx.FXControlUtils;
 
 import java.util.function.Function;
 
@@ -75,7 +73,7 @@ public class MultiGridPartRibbonPart extends RibbonBasePart<DisplayableComponent
         totalBox.setAlignment(Pos.CENTER);
 
         //Action button
-        this.buttonSplitPart = UIUtils.createTextButtonWithIcon(Translation.getText("grid.part.split.keys"), "actions/icon_split_grid_part.png",
+        this.buttonSplitPart = FXControlUtils.createTextButtonWithIcon(Translation.getText("grid.part.split.keys"), "actions/icon_split_grid_part.png",
                 "tooltip.split.key.part");
 
         this.comboBoxAddKey = new ComboBox<>(FXCollections.observableArrayList(AddKeyPosition.values()));
@@ -116,9 +114,6 @@ public class MultiGridPartRibbonPart extends RibbonBasePart<DisplayableComponent
         this.spanInvalidationListener = (inv) -> {
             this.updateButtonSplitDisable(this.model.get());
         };
-        //Visibility
-        ConfigUIUtils.bindShowForLevelFrom(this, ConfigurationProfileLevelEnum.NORMAL);
-        ConfigUIUtils.bindShowForLevelFrom(this.buttonSplitPart, ConfigurationProfileLevelEnum.EXPERT);
     }
 
     private void updateButtonSplitDisable(final DisplayableComponentBaseImpl comp) {

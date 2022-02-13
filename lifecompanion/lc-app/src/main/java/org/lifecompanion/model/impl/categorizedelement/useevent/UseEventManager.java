@@ -30,8 +30,8 @@ import org.lifecompanion.model.api.categorizedelement.useevent.UseEventManagerI;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.io.XMLSerializable;
-import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.framework.utils.Pair;
+import org.lifecompanion.util.binding.BindingUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -50,7 +50,7 @@ public class UseEventManager implements UseEventManagerI {
     public UseEventManager(final UseEventGeneratorHolderI parentP) {
         this.parent = parentP;
         this.eventGenerators = FXCollections.observableArrayList();
-        this.eventGenerators.addListener(LCUtils.createListChangeListener((add) -> {
+        this.eventGenerators.addListener(BindingUtils.createListChangeListener((add) -> {
             add.configurationParentProperty().bind(parentP.configurationParentProperty());
         }, (removed) -> {
             removed.configurationParentProperty().unbind();

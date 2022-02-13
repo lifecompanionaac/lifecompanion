@@ -22,8 +22,8 @@ package org.lifecompanion.ui.selectionmode;
 import javafx.util.Pair;
 import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
 import org.lifecompanion.model.api.selectionmode.ScanningDirection;
-import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.model.impl.selectionmode.RowColumnScanSelectionMode;
+import org.lifecompanion.util.model.ConfigurationComponentLayoutUtils;
 
 public class RowColumnScanSelectionModeView extends AbstractPartScanSelectionModeView {
 
@@ -33,11 +33,11 @@ public class RowColumnScanSelectionModeView extends AbstractPartScanSelectionMod
 
 	@Override
 	protected Pair<Double, Double> getPosition(final int primaryIndex, final int span, final GridComponentI grid) {
-		return LCUtils.getLinePosition(grid, primaryIndex);
+		return ConfigurationComponentLayoutUtils.getLinePosition(grid, primaryIndex);
 	}
 
 	@Override
 	protected Pair<Double, Double> getSize(final int primaryIndex, final int span, final GridComponentI grid) {
-		return LCUtils.getLineSize(grid, primaryIndex, span);
+		return ConfigurationComponentLayoutUtils.getLineSize(grid, primaryIndex, span);
 	}
 }

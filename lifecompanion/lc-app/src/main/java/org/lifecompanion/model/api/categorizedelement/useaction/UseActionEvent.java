@@ -19,8 +19,6 @@
 
 package org.lifecompanion.model.api.categorizedelement.useaction;
 
-import org.lifecompanion.model.api.ui.editmode.ConfigurationProfileLevelEnum;
-
 /**
  * Define the different way that could trigger a user action.<br>
  * <ul>
@@ -32,10 +30,10 @@ import org.lifecompanion.model.api.ui.editmode.ConfigurationProfileLevelEnum;
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public enum UseActionEvent {
-    ACTIVATION("use.action.event.type.activation", ConfigurationProfileLevelEnum.BEGINNER), //Fired on activation of the parent component
-    OVER("use.action.event.type.over", ConfigurationProfileLevelEnum.NORMAL), //Fire on parent over/scan
-    EVENT("use.action.event.type.event.fired", ConfigurationProfileLevelEnum.BEGINNER),//Fire on use event fired
-    INTERNAL("use.action.event.type.event.system", ConfigurationProfileLevelEnum.BEGINNER)//Fire on internal activation
+    ACTIVATION("use.action.event.type.activation"), //Fired on activation of the parent component
+    OVER("use.action.event.type.over"), //Fire on parent over/scan
+    EVENT("use.action.event.type.event.fired"),//Fire on use event fired
+    INTERNAL("use.action.event.type.event.system")//Fire on internal activation
     ;
 
     /**
@@ -43,21 +41,12 @@ public enum UseActionEvent {
      */
     private String eventLabelId;
 
-    /**
-     * Minimum level to display this use event type
-     */
-    private ConfigurationProfileLevelEnum minimumLevel;
-
-    UseActionEvent(final String eventLabelIdP, final ConfigurationProfileLevelEnum minimumLevelP) {
+    UseActionEvent(final String eventLabelIdP) {
         this.eventLabelId = eventLabelIdP;
-        this.minimumLevel = minimumLevelP;
     }
 
     public String getEventLabelId() {
         return this.eventLabelId;
     }
 
-    public ConfigurationProfileLevelEnum getMinimumLevel() {
-        return this.minimumLevel;
-    }
 }

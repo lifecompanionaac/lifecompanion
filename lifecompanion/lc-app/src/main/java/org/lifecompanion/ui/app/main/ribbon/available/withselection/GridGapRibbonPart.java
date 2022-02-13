@@ -24,16 +24,14 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
 import javafx.scene.layout.TilePane;
 import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
-import org.lifecompanion.model.api.ui.editmode.ConfigurationProfileLevelEnum;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.controller.editaction.GridActions.ChangeGridHGapAction;
 import org.lifecompanion.controller.editaction.GridActions.ChangeGridVGapAction;
-import org.lifecompanion.util.binding.LCConfigBindingUtils;
+import org.lifecompanion.util.binding.EditActionUtils;
 import org.lifecompanion.controller.editmode.SelectionController;
-import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.ui.configurationcomponent.editmode.categorizedelement.useevent.available.RibbonBasePart;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.util.javafx.FXControlUtils;
 
 /**
  * Pane to configure, the grid gap on the selected component.
@@ -60,10 +58,10 @@ public class GridGapRibbonPart extends RibbonBasePart<GridComponentI> implements
         this.setTitle(Translation.getText("pane.title.grid.gap"));
         TilePane rows = new TilePane();
         rows.setPrefColumns(1);
-        this.spinnerHGap = UIUtils.createDoubleSpinner(1, 150, 2, 1, 75.0);
-        UIUtils.createAndAttachTooltip(spinnerHGap, "tooltip.explain.grid.hgap.spinner");
-        this.spinnerVGap = UIUtils.createDoubleSpinner(1, 150, 2, 1, 75.0);
-        UIUtils.createAndAttachTooltip(spinnerVGap, "tooltip.explain.grid.vgap.spinner");
+        this.spinnerHGap = FXControlUtils.createDoubleSpinner(1, 150, 2, 1, 75.0);
+        FXControlUtils.createAndAttachTooltip(spinnerHGap, "tooltip.explain.grid.hgap.spinner");
+        this.spinnerVGap = FXControlUtils.createDoubleSpinner(1, 150, 2, 1, 75.0);
+        FXControlUtils.createAndAttachTooltip(spinnerVGap, "tooltip.explain.grid.vgap.spinner");
         Label labelVGap = new Label(Translation.getText("grid.vgap"));
         TilePane.setAlignment(labelVGap, Pos.CENTER);
         Label labelHGap = new Label(Translation.getText("grid.hgap"));
@@ -77,9 +75,9 @@ public class GridGapRibbonPart extends RibbonBasePart<GridComponentI> implements
      */
     @Override
     public void initListener() {
-        this.changeListenerHGap = LCConfigBindingUtils.createDoubleSpinnerBinding(this.spinnerHGap, this.model, GridComponentI::hGapProperty,
+        this.changeListenerHGap = EditActionUtils.createDoubleSpinnerBinding(this.spinnerHGap, this.model, GridComponentI::hGapProperty,
                 ChangeGridHGapAction::new);
-        this.changeListenerVGap = LCConfigBindingUtils.createDoubleSpinnerBinding(this.spinnerVGap, this.model, GridComponentI::vGapProperty,
+        this.changeListenerVGap = EditActionUtils.createDoubleSpinnerBinding(this.spinnerVGap, this.model, GridComponentI::vGapProperty,
                 ChangeGridVGapAction::new);
     }
 
@@ -107,6 +105,5 @@ public class GridGapRibbonPart extends RibbonBasePart<GridComponentI> implements
                         this.model.set(null);
                     }
                 });
-        ConfigUIUtils.bindShowForLevelFrom(this, ConfigurationProfileLevelEnum.NORMAL);
     }
 }

@@ -27,7 +27,6 @@ import org.lifecompanion.controller.editaction.GridActions.AddColumnGenericActio
 import org.lifecompanion.controller.editaction.GridActions.AddRowGenericAction;
 import org.lifecompanion.controller.editaction.GridActions.RemoveColumnGenericAction;
 import org.lifecompanion.controller.editaction.GridActions.RemoveRowGenericAction;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.api.configurationcomponent.DisplayableComponentI;
 import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
 import org.lifecompanion.model.api.configurationcomponent.GridPartComponentI;
@@ -41,6 +40,7 @@ import javafx.geometry.HPos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
+import org.lifecompanion.util.javafx.FXControlUtils;
 
 /**
  * Part that is showed when a grid component is selected
@@ -63,10 +63,10 @@ public class GridLayoutRibbonPart extends RibbonBasePart<DisplayableComponentI> 
 	@Override
 	public void initUI() {
 
-		this.buttonAddRow = UIUtils.createTextButtonWithIcon(null, "actions/icon_add_row.png", "tooltip.add.row.comp");
-		this.buttonAddColumn = UIUtils.createTextButtonWithIcon(null, "actions/icon_add_column.png", "tooltip.add.column.comp");
-		this.buttonRemoveColumn = UIUtils.createTextButtonWithIcon(null, "actions/icon_remove_column.png", "tooltip.remove.column.comp");
-		this.buttonRemoveRow = UIUtils.createTextButtonWithIcon(null, "actions/icon_remove_row.png", "tooltip.remove.row.comp");
+		this.buttonAddRow = FXControlUtils.createTextButtonWithIcon(null, "actions/icon_add_row.png", "tooltip.add.row.comp");
+		this.buttonAddColumn = FXControlUtils.createTextButtonWithIcon(null, "actions/icon_add_column.png", "tooltip.add.column.comp");
+		this.buttonRemoveColumn = FXControlUtils.createTextButtonWithIcon(null, "actions/icon_remove_column.png", "tooltip.remove.column.comp");
+		this.buttonRemoveRow = FXControlUtils.createTextButtonWithIcon(null, "actions/icon_remove_row.png", "tooltip.remove.row.comp");
 
 		GridPane gridPane = new GridPane();
 		gridPane.setHgap(5);

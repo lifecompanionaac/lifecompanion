@@ -42,9 +42,6 @@ import java.util.function.Supplier;
 public class CopyUtils {
     private final static Logger LOGGER = LoggerFactory.getLogger(CopyUtils.class);
 
-    private CopyUtils() {
-    }
-
     public static <C, T extends XMLSerializable<C>> T createSimpleCopy(T source, C context, Supplier<T> constructor) throws LCException {
         Element xmlElement = source.serialize(context);
         T result = constructor.get();
@@ -63,7 +60,7 @@ public class CopyUtils {
     public static <T extends DuplicableComponentI & XMLSerializable<IOContextI>> DuplicableComponentI createDeepCopyViaXMLSerialization(
             final T source, final boolean changeID) {
         //Copy, but ID mustn't be the same
-        IOContext context = new IOContext(LCUtils.getTempDir("componentcopy"));
+        IOContext context = new IOContext(IOUtils.getTempDir("componentcopy"));
         context.setFallbackOnDefaultInstanceOnFail(false);
         //Serialize element to copy
         Element serialized = source.serialize(context);

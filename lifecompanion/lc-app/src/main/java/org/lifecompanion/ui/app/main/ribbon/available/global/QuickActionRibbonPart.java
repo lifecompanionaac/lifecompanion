@@ -28,7 +28,6 @@ import org.lifecompanion.controller.editaction.GlobalActions;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.controller.editaction.UndoRedoActions;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
 import org.lifecompanion.model.api.configurationcomponent.StackComponentI;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
@@ -36,13 +35,12 @@ import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.editmode.ComponentActionController;
 import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.controller.editmode.SelectionController;
-import org.lifecompanion.model.api.ui.editmode.ConfigurationProfileLevelEnum;
-import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.ui.configurationcomponent.editmode.categorizedelement.useevent.available.RibbonBasePart;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
+import org.lifecompanion.util.javafx.FXControlUtils;
 
 /**
  * Ribbon part that allow access to quick actions
@@ -67,21 +65,21 @@ public class QuickActionRibbonPart extends RibbonBasePart<Void> implements LCVie
 		FlowPane paneBaseActions = new FlowPane();
 		paneBaseActions.setAlignment(Pos.CENTER);
 		paneBaseActions.setPrefWrapLength(150);
-		this.buttonUndo = UIUtils.createTextButtonWithGraphics(Translation.getText("menu.edit.item.undo"),
+		this.buttonUndo = FXControlUtils.createTextButtonWithGraphics(Translation.getText("menu.edit.item.undo"),
 				GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.UNDO).sizeFactor(2).color(LCGraphicStyle.MAIN_DARK), "tooltip.undo.action.button");
-		this.buttonRedo = UIUtils.createTextButtonWithGraphics(Translation.getText("menu.edit.item.redo"),
+		this.buttonRedo = FXControlUtils.createTextButtonWithGraphics(Translation.getText("menu.edit.item.redo"),
 				GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.REPEAT).sizeFactor(2).color(LCGraphicStyle.MAIN_DARK),
 				"tooltip.redo.action.button");
-		this.buttonGoUseMode = UIUtils.createTextButtonWithGraphics(Translation.getText("menu.go.use.mode"),
+		this.buttonGoUseMode = FXControlUtils.createTextButtonWithGraphics(Translation.getText("menu.go.use.mode"),
 				GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.PLAY).sizeFactor(2).color(LCGraphicStyle.MAIN_PRIMARY),
 				"tooltip.go.use.mode.button");
-		this.buttonCopy = UIUtils.createTextButtonWithGraphics(Translation.getText("menu.edit.item.copy"),
+		this.buttonCopy = FXControlUtils.createTextButtonWithGraphics(Translation.getText("menu.edit.item.copy"),
 				GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.COPY).sizeFactor(2).color(LCGraphicStyle.SECOND_DARK),
 				"tooltip.copy.select.button");
-		this.buttonPaste = UIUtils.createTextButtonWithGraphics(Translation.getText("menu.edit.item.paste"),
+		this.buttonPaste = FXControlUtils.createTextButtonWithGraphics(Translation.getText("menu.edit.item.paste"),
 				GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.PASTE).sizeFactor(2).color(LCGraphicStyle.SECOND_DARK),
 				"tooltip.paste.select.button");
-		this.buttonRemove = UIUtils.createTextButtonWithGraphics(Translation.getText("menu.edit.item.remove"),
+		this.buttonRemove = FXControlUtils.createTextButtonWithGraphics(Translation.getText("menu.edit.item.remove"),
 				GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.TRASH).sizeFactor(2).color(LCGraphicStyle.SECOND_DARK),
 				"tooltip.remove.select.button");
 		this.buttonRemove.setDisable(true);
@@ -138,9 +136,6 @@ public class QuickActionRibbonPart extends RibbonBasePart<Void> implements LCVie
 			}
 			this.buttonRemove.setDisable(removeDisable);
 		});
-		//Show for profile level
-		ConfigUIUtils.bindShowForLevelFrom(this.buttonCopy, ConfigurationProfileLevelEnum.NORMAL);
-		ConfigUIUtils.bindShowForLevelFrom(this.buttonPaste, ConfigurationProfileLevelEnum.NORMAL);
 	}
 
 }

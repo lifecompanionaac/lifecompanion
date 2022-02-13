@@ -23,19 +23,17 @@ import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.controller.editaction.GridActions.ChangeColumnAction;
 import org.lifecompanion.controller.editaction.GridActions.ChangeRowAction;
-import org.lifecompanion.util.binding.LCConfigBindingUtils;
-import org.lifecompanion.util.UIUtils;
+import org.lifecompanion.util.binding.EditActionUtils;
 import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
 import org.lifecompanion.model.api.configurationcomponent.GridPartComponentI;
 import org.lifecompanion.controller.editmode.SelectionController;
-import org.lifecompanion.model.api.ui.editmode.ConfigurationProfileLevelEnum;
-import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.ui.configurationcomponent.editmode.categorizedelement.useevent.available.RibbonBasePart;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
 import javafx.scene.layout.TilePane;
+import org.lifecompanion.util.javafx.FXControlUtils;
 
 /**
  * Pane to configure, the row/column on the selected component.
@@ -67,10 +65,10 @@ public class RowColumnRibbonPart extends RibbonBasePart<GridComponentI> implemen
 		this.setTitle(Translation.getText("pane.title.rowcolumn.count"));
 		TilePane rows = new TilePane();
 		rows.setPrefColumns(1);
-		this.spinnerRow = UIUtils.createIntSpinner(1, 150, 2, 1, 75.0);
-		UIUtils.createAndAttachTooltip(spinnerRow, "tooltip.explain.grid.row.spinner");
-		this.spinnerColumn = UIUtils.createIntSpinner(1, 150, 2, 1, 75.0);
-		UIUtils.createAndAttachTooltip(spinnerColumn, "tooltip.explain.grid.column.spinner");
+		this.spinnerRow = FXControlUtils.createIntSpinner(1, 150, 2, 1, 75.0);
+		FXControlUtils.createAndAttachTooltip(spinnerRow, "tooltip.explain.grid.row.spinner");
+		this.spinnerColumn = FXControlUtils.createIntSpinner(1, 150, 2, 1, 75.0);
+		FXControlUtils.createAndAttachTooltip(spinnerColumn, "tooltip.explain.grid.column.spinner");
 		Label labelRow = new Label(Translation.getText("pane.row.count"));
 		TilePane.setAlignment(labelRow, Pos.CENTER);
 		Label labelColumn = new Label(Translation.getText("pane.column.count"));
@@ -84,9 +82,9 @@ public class RowColumnRibbonPart extends RibbonBasePart<GridComponentI> implemen
 	 */
 	@Override
 	public void initListener() {
-		this.changeListenerColumn = LCConfigBindingUtils.createIntegerSpinnerBinding(this.spinnerColumn, this.model,
+		this.changeListenerColumn = EditActionUtils.createIntegerSpinnerBinding(this.spinnerColumn, this.model,
 				GridComponentI::columnCountProperty, (model, nv) -> new ChangeColumnAction(model.getGrid(), nv));
-		this.changeListenerRow = LCConfigBindingUtils.createIntegerSpinnerBinding(this.spinnerRow, this.model, GridComponentI::rowCountProperty,
+		this.changeListenerRow = EditActionUtils.createIntegerSpinnerBinding(this.spinnerRow, this.model, GridComponentI::rowCountProperty,
 				(model, nv) -> new ChangeRowAction(model.getGrid(), nv));
 	}
 
@@ -125,6 +123,5 @@ public class RowColumnRibbonPart extends RibbonBasePart<GridComponentI> implemen
 						this.model.set(null);
 					}
 				});
-		ConfigUIUtils.bindShowForLevelFrom(this, ConfigurationProfileLevelEnum.NORMAL);
 	}
 }

@@ -27,11 +27,11 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Spinner;
 import javafx.scene.layout.HBox;
 import javafx.util.StringConverter;
-import org.lifecompanion.util.LCUtils;
-import org.lifecompanion.util.UIUtils;
+import org.lifecompanion.util.LangUtils;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.util.javafx.FXControlUtils;
 
 import java.util.stream.Stream;
 
@@ -54,7 +54,7 @@ public class DurationPickerControl extends HBox implements LCViewInitHelper {
 
     @Override
     public void initUI() {
-        this.spinnerDuration = UIUtils.createDoubleSpinner(0, Double.MAX_VALUE, duration.get(), 1, 100);
+        this.spinnerDuration = FXControlUtils.createDoubleSpinner(0, Double.MAX_VALUE, duration.get(), 1, 100);
         this.spinnerDuration.getStyleClass().remove(Spinner.STYLE_CLASS_SPLIT_ARROWS_HORIZONTAL);
         this.spinnerDuration.getStyleClass().add(Spinner.STYLE_CLASS_ARROWS_ON_LEFT_VERTICAL);
 
@@ -88,7 +88,7 @@ public class DurationPickerControl extends HBox implements LCViewInitHelper {
     }
 
     private void setSpinnerValueIfDiff(double newValue) {
-        if (LCUtils.tolerantRound(newValue) != LCUtils.tolerantRound(this.spinnerDuration.getValue())) {
+        if (LangUtils.tolerantRound(newValue) != LangUtils.tolerantRound(this.spinnerDuration.getValue())) {
             this.spinnerDuration.getValueFactory().setValue(newValue);
         }
     }

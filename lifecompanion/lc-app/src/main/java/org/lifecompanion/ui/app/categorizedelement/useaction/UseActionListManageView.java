@@ -27,14 +27,13 @@ import javafx.scene.control.Alert.AlertType;
 import org.lifecompanion.model.api.editaction.BaseEditActionI;
 import org.lifecompanion.model.api.categorizedelement.useevent.UseEventGeneratorI;
 import org.lifecompanion.controller.editaction.UseActionConfigActions.*;
-import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.ui.app.categorizedelement.AbstractCategorizedListManageView;
 import org.lifecompanion.ui.app.categorizedelement.AbstractCategorizedMainView;
 import org.lifecompanion.ui.common.pane.specific.cell.AbstractCategorizedElementListCellView;
-import org.lifecompanion.ui.app.categorizedelement.useaction.UseActionMainView;
 import org.lifecompanion.ui.common.pane.specific.cell.BaseUseActionElementListCellView;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.model.api.categorizedelement.useaction.*;
+import org.lifecompanion.util.javafx.DialogUtils;
 
 import java.util.function.BiConsumer;
 
@@ -110,7 +109,7 @@ public class UseActionListManageView
     @Override
     protected boolean checkEditPossible(Node source, final BaseUseActionI<?> item) {
         if (item.attachedToKeyOptionProperty().get()) {
-            Alert dialog = ConfigUIUtils.createAlert(source, AlertType.WARNING);
+            Alert dialog = DialogUtils.createAlert(source, AlertType.WARNING);
             dialog.setHeaderText(Translation.getText("alert.message.disable.edit.action.header"));
             dialog.setContentText(Translation.getText("alert.message.disable.edit.action.message", item.getName()));
             dialog.show();

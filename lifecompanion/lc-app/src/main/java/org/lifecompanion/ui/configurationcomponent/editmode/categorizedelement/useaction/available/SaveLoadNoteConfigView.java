@@ -26,10 +26,10 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionConfigurationViewI;
 import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.categorizedelement.useaction.available.OpenCloseNoteKeyAction;
 import org.lifecompanion.ui.common.control.generic.colorpicker.LCColorPicker;
 import org.lifecompanion.framework.commons.translation.Translation;
+import org.lifecompanion.util.javafx.FXControlUtils;
 
 public class SaveLoadNoteConfigView extends VBox implements UseActionConfigurationViewI<OpenCloseNoteKeyAction> {
 
@@ -63,7 +63,7 @@ public class SaveLoadNoteConfigView extends VBox implements UseActionConfigurati
         Label labelWantedColor = new Label(Translation.getText("use.action.save.load.note.color.field"));
         this.pickerWantedColor = new LCColorPicker();
         Label labelWantedStrokeSize = new Label(Translation.getText("use.action.save.load.note.stroke.size.field"));
-        this.spinnerStrokeSize = UIUtils.createIntSpinner(0, 30, 3, 1, 75.0);
+        this.spinnerStrokeSize = FXControlUtils.createIntSpinner(0, 30, 3, 1, 75.0);
         this.setSpacing(5.0);
         this.getChildren().addAll(labelWantedColor, this.pickerWantedColor, labelWantedStrokeSize, spinnerStrokeSize);
     }

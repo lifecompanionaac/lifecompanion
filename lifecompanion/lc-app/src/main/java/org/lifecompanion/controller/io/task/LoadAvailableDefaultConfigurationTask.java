@@ -22,8 +22,8 @@ package org.lifecompanion.controller.io.task;
 import org.lifecompanion.controller.io.IOHelper;
 import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
+import org.lifecompanion.util.ThreadUtils;
 import org.lifecompanion.util.model.LCTask;
-import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
 import org.lifecompanion.framework.commons.utils.io.FileNameUtils;
@@ -53,7 +53,7 @@ public class LoadAvailableDefaultConfigurationTask extends LCTask<List<Pair<LCCo
                 if (LCConstant.CONFIG_FILE_EXTENSION.equalsIgnoreCase(ext)) {
                     try {
                         final ConfigurationImportTask customConfigurationImport = IOHelper.createCustomConfigurationImport(new File(LCConstant.EXT_PATH_DEFAULT_CONFIGURATIONS_EXTRACTED), configurationFile);
-                        final javafx.util.Pair<LCConfigurationDescriptionI, LCConfigurationI> importValue = LCUtils.executeInCurrentThread(customConfigurationImport);
+                        final javafx.util.Pair<LCConfigurationDescriptionI, LCConfigurationI> importValue = ThreadUtils.executeInCurrentThread(customConfigurationImport);
                         configurationDescriptions.add(Pair.of(importValue.getKey(), customConfigurationImport.getImportDirectory()));
                     } catch (Exception e) {
                         LOGGER.warn("Couldn't load the default configuration from {}", configurationFile, e);

@@ -22,9 +22,9 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.layout.TilePane;
 import org.lifecompanion.model.api.categorizedelement.CategorizedElementI;
-import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.ui.common.pane.specific.cell.AbstractCategorizedItemView;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.util.binding.BindingUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -62,7 +62,7 @@ public abstract class AbstractCategorizedItemsView<T extends CategorizedElementI
             this.getChildren().add(cellView);
         }
         //On list change
-        this.items.addListener(LCUtils.createListChangeListener((added) -> {
+        this.items.addListener(BindingUtils.createListChangeListener((added) -> {
             //Get view
             AbstractCategorizedItemView<T> addedView;
             if (this.itemsView.containsKey(added)) {

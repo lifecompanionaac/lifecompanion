@@ -26,7 +26,6 @@ import javafx.scene.control.TextInputDialog;
 import javafx.stage.FileChooser;
 import org.lifecompanion.model.api.editaction.BaseEditActionI;
 import org.lifecompanion.model.impl.exception.LCException;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.controller.devmode.DevModeController;
 import org.lifecompanion.controller.appinstallation.task.DownloadPluginTask;
 import org.lifecompanion.controller.appinstallation.InstallationController;
@@ -37,13 +36,14 @@ import org.lifecompanion.controller.editmode.ErrorHandlingController;
 import org.lifecompanion.controller.editmode.FileChooserType;
 import org.lifecompanion.controller.editmode.LCStateController;
 import org.lifecompanion.model.impl.notification.LCNotification;
-import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.controller.editmode.LCFileChoosers;
 import org.lifecompanion.ui.notification.LCNotificationController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.framework.model.server.update.ApplicationPluginUpdate;
 import org.lifecompanion.framework.utils.Pair;
+import org.lifecompanion.util.javafx.DialogUtils;
+import org.lifecompanion.util.javafx.FXUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,7 +64,7 @@ public class PluginActions {
 
     private static void showAddPluginWarningDialog(Node source) {
         if (!DevModeController.INSTANCE.devModeProperty().get() && firstAdd) {
-            Alert warningDialog = ConfigUIUtils.createAlert(source, Alert.AlertType.WARNING);
+            Alert warningDialog = DialogUtils.createAlert(source, Alert.AlertType.WARNING);
             warningDialog.getButtonTypes().clear();
             warningDialog.setHeaderText(Translation.getText("add.plugin.warning.dialog.header"));
             warningDialog.setContentText(Translation.getText("add.plugin.warning.dialog.message"));
@@ -77,7 +77,7 @@ public class PluginActions {
     private static void addPluginFromFile(Node source, File pluginFile) {
         try {
             String loadResult = PluginController.INSTANCE.tryToAddPluginFrom(pluginFile).getLeft();
-            Alert dialog = ConfigUIUtils.createAlert(source, Alert.AlertType.INFORMATION);
+            Alert dialog = DialogUtils.createAlert(source, Alert.AlertType.INFORMATION);
             dialog.setHeaderText(Translation.getText("plugin.loading.header.text.info"));
             dialog.setContentText(loadResult);
             dialog.show();
@@ -100,7 +100,7 @@ public class PluginActions {
             showAddPluginWarningDialog(source);
             FileChooser pluginFileChooser = LCFileChoosers.getOtherFileChooser(Translation.getText("add.plugin.chooser.title"),
                     new FileChooser.ExtensionFilter(Translation.getText("file.type.plugin.jar"), Arrays.asList("*.jar")), FileChooserType.PLUGIN_ADD);
-            File selectedPluginFile = pluginFileChooser.showOpenDialog(UIUtils.getSourceWindow(source));
+            File selectedPluginFile = pluginFileChooser.showOpenDialog(FXUtils.getSourceWindow(source));
             if (selectedPluginFile != null) {
                 LCStateController.INSTANCE.updateDefaultDirectory(FileChooserType.PLUGIN_ADD, selectedPluginFile.getParentFile());
                 addPluginFromFile(source, selectedPluginFile);
@@ -125,7 +125,7 @@ public class PluginActions {
         @Override
         public void doAction() throws LCException {
             showAddPluginWarningDialog(source);
-            TextInputDialog inputDialog = ConfigUIUtils.createInputDialog(source, "");
+            TextInputDialog inputDialog = DialogUtils.createInputDialog(source, "");
             inputDialog.setHeaderText(Translation.getText("plugin.installation.dialog.selection.header"));
             inputDialog.setContentText(Translation.getText("plugin.installation.dialog.selection.message"));
             inputDialog.showAndWait().ifPresent(pluginId -> {
@@ -160,7 +160,7 @@ public class PluginActions {
         @Override
         public void doAction() throws LCException {
             // Confirm
-            Alert dlg = ConfigUIUtils.createAlert(source, Alert.AlertType.CONFIRMATION);
+            Alert dlg = DialogUtils.createAlert(source, Alert.AlertType.CONFIRMATION);
             dlg.getDialogPane().setHeaderText(Translation.getText("action.delete.plugin.confirm.header"));
 
             StringBuilder sb = new StringBuilder();
@@ -188,7 +188,7 @@ public class PluginActions {
             try {
                 String errorMessage = checkElementPluginTask.get();
                 if (errorMessage != null) {
-                    Alert dlg = ConfigUIUtils.createAlert(source, Alert.AlertType.WARNING);
+                    Alert dlg = DialogUtils.createAlert(source, Alert.AlertType.WARNING);
                     dlg.setHeaderText(Translation.getText("configuration.warning.plugin.message.header"));
                     dlg.setContentText(Translation.getText("configuration.warning.plugin.message") + errorMessage);
                     ButtonType typeCancel = new ButtonType(Translation.getText("button.type.cancel"), ButtonBar.ButtonData.CANCEL_CLOSE);

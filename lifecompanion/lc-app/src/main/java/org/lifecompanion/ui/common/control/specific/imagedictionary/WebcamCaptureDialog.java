@@ -37,7 +37,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.StageStyle;
 import org.controlsfx.glyphfont.FontAwesome;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.appinstallation.InstallationConfigurationController;
@@ -46,6 +45,7 @@ import org.lifecompanion.controller.editmode.LCStateController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.util.javafx.FXControlUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -127,9 +127,9 @@ public class WebcamCaptureDialog extends Dialog<File> implements LCViewInitHelpe
         progressIndicatorLoadingWebcam.setPrefSize(100.0, 100.0);
 
         // Button
-        buttonTakePicture = UIUtils.createGraphicButton(
+        buttonTakePicture = FXControlUtils.createGraphicButton(
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CAMERA).size(44).color(LCGraphicStyle.SECOND_DARK), "image.webcam.button.take.picture");
-        buttonSwitchCamera = UIUtils.createGraphicButton(
+        buttonSwitchCamera = FXControlUtils.createGraphicButton(
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.REFRESH).size(18).color(LCGraphicStyle.LC_GRAY), "image.webcam.button.switch.camera");
         takenImagePreview = new ImageView();
         takenImagePreview.setFitWidth(100.0);

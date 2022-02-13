@@ -26,8 +26,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.lifecompanion.model.api.configurationcomponent.ImageUseComponentI;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.constant.LCConstant;
+import org.lifecompanion.util.javafx.StageUtils;
 
 public class ImageUseComponentConfigurationStage extends Stage {
     private static ImageUseComponentConfigurationStage instance;
@@ -35,7 +35,7 @@ public class ImageUseComponentConfigurationStage extends Stage {
     private final ImageUseComponentConfigurationView imageUseComponentConfigurationView;
 
     public ImageUseComponentConfigurationStage() {
-        UIUtils.applyDefaultStageConfiguration(this);
+        StageUtils.applyDefaultStageConfiguration(this);
         this.initModality(Modality.APPLICATION_MODAL);
         this.initStyle(StageStyle.UTILITY);
         this.setWidth(ImageSelectorDialog.IMAGE_DIALOGS_WIDTH);

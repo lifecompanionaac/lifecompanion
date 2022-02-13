@@ -29,7 +29,8 @@ import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.UserActionSequenceI;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.UserActionSequenceItemI;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
-import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.util.model.ConfigurationComponentUtils;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.dynamickey.UserActionSequenceCurrentKeyOption;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.dynamickey.UserActionSequenceDisplayFilter;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.dynamickey.UserActionSequenceItemKeyOption;
@@ -101,7 +102,7 @@ public enum UserActionSequenceController implements ModeListenerI {
                     currentItem.set(sequence.getItems().get(currentItemIndex + 1));
                 } else if (currentItem.get() != null) {
                     // It is the last item in the sequence, set it as done and fire action/event
-                    LCUtils.runOnFXThread(() -> {
+                    FXThreadUtils.runOnFXThread(() -> {
                         currentItem.get().actionExecutedProperty().set(true);
                         currentItem.get().currentActionProperty().set(false);
                     });
@@ -141,7 +142,7 @@ public enum UserActionSequenceController implements ModeListenerI {
 
     private void currentItemChanged() {
         final UserActionSequenceItemI currentItem = this.currentItem.get();
-        LCUtils.runOnFXThread(() -> {
+        FXThreadUtils.runOnFXThread(() -> {
             final UserActionSequenceI sequence = currentSequence.get();
             if (sequence != null) {
                 currentSequenceItemKeyOptions.forEach((grid, keyOptions) -> {
@@ -253,8 +254,8 @@ public enum UserActionSequenceController implements ModeListenerI {
     public void modeStart(LCConfigurationI configuration) {
         currentConfiguration = configuration;
 
-        LCUtils.findKeyOptionsByGrid(UserActionSequenceCurrentKeyOption.class, configuration, currentItemKeyOptions, null);
-        LCUtils.findKeyOptionsByGrid(UserActionSequenceItemKeyOption.class, configuration, currentSequenceItemKeyOptions, null);
+        ConfigurationComponentUtils.findKeyOptionsByGrid(UserActionSequenceCurrentKeyOption.class, configuration, currentItemKeyOptions, null);
+        ConfigurationComponentUtils.findKeyOptionsByGrid(UserActionSequenceItemKeyOption.class, configuration, currentSequenceItemKeyOptions, null);
 
         // Set the parent for every sub items in every sequences
         for (UserActionSequenceI userActionSequence : configuration.userActionSequencesProperty().get().getUserActionSequences()) {

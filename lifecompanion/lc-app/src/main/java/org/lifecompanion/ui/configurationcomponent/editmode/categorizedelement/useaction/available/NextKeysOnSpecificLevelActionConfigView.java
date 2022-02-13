@@ -26,9 +26,9 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionConfigurationViewI;
 import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.categorizedelement.useaction.available.NextKeysOnSpecificLevelAction;
 import org.lifecompanion.framework.commons.translation.Translation;
+import org.lifecompanion.util.javafx.FXControlUtils;
 
 public class NextKeysOnSpecificLevelActionConfigView extends GridPane implements UseActionConfigurationViewI<NextKeysOnSpecificLevelAction> {
 
@@ -49,7 +49,7 @@ public class NextKeysOnSpecificLevelActionConfigView extends GridPane implements
         final Label labelLevelSelectionField = new Label(Translation.getText("keylist.action.field.specific.level.selection"));
         GridPane.setHgrow(labelLevelSelectionField, Priority.ALWAYS);
         labelLevelSelectionField.setMaxWidth(Double.MAX_VALUE);
-        spinnerSelectedLevel = UIUtils.createIntSpinner(1, 999, 1, 1, 120.0);
+        spinnerSelectedLevel = FXControlUtils.createIntSpinner(1, 999, 1, 1, 120.0);
         int rowIndex = 0;
         this.add(labelLevelSelectionField, 0, rowIndex);
         this.add(spinnerSelectedLevel, 1, rowIndex++);

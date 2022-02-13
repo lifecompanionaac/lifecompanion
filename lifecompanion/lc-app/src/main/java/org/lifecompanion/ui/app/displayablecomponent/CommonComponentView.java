@@ -34,7 +34,6 @@ import javafx.scene.layout.VBox;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.model.api.configurationcomponent.DisplayableComponentI;
 import org.lifecompanion.model.api.profile.UserCompDescriptionI;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.ui.common.util.UndoRedoTextInputWrapper;
@@ -46,6 +45,8 @@ import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.controller.editmode.DisplayableComponentSnapshotController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.util.javafx.FXControlUtils;
+import org.lifecompanion.util.javafx.FXUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -112,7 +113,7 @@ public class CommonComponentView extends BorderPane implements LCViewInitHelper 
         labelDefaultName.getStyleClass().add("explain-text");
 
         this.fieldName = new TextField();
-        UIUtils.createAndAttachTooltip(fieldName, "tooltip.explain.component.name.custom");
+        FXControlUtils.createAndAttachTooltip(fieldName, "tooltip.explain.component.name.custom");
         this.fieldNameWrapper = new UndoRedoTextInputWrapper(this.fieldName, ConfigActionController.INSTANCE.undoRedoEnabled());
         HBox.setHgrow(fieldName, Priority.ALWAYS);
 
@@ -128,7 +129,7 @@ public class CommonComponentView extends BorderPane implements LCViewInitHelper 
         this.imageViewComponent.setSmooth(true);
 
         //Button to save component
-        this.buttonSaveComponent = UIUtils.createLeftTextButton(Translation.getText("menu.select.save.component"),
+        this.buttonSaveComponent = FXControlUtils.createLeftTextButton(Translation.getText("menu.select.save.component"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.SAVE).size(18).color(LCGraphicStyle.MAIN_DARK),
                 "tooltip.menu.select.save.component");
         Separator sep = new Separator(Orientation.HORIZONTAL);
@@ -137,7 +138,7 @@ public class CommonComponentView extends BorderPane implements LCViewInitHelper 
         totalBox.getChildren().addAll(this.imageViewComponent, labelDefaultName, labelName, boxFieldName, sep, this.buttonSaveComponent);
 
         // Button ok (hide stage)
-        buttonOk = UIUtils.createLeftTextButton(Translation.getText("image.use.button.ok"),
+        buttonOk = FXControlUtils.createLeftTextButton(Translation.getText("image.use.button.ok"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CHECK).size(16).color(LCGraphicStyle.MAIN_DARK), null);
         HBox buttonBox = new HBox(buttonOk);
         buttonBox.setAlignment(Pos.CENTER_RIGHT);
@@ -151,7 +152,7 @@ public class CommonComponentView extends BorderPane implements LCViewInitHelper 
 
     @Override
     public void initListener() {
-        this.buttonOk.setOnAction(ev -> UIUtils.getSourceWindow(this).hide());
+        this.buttonOk.setOnAction(ev -> FXUtils.getSourceWindow(this).hide());
         this.fieldNameWrapper.setListener((oldV, newV) -> {
             if (currentComponent != null) {
                 ChangeComponentNameAction textAction = new BaseComponentAction.ChangeComponentNameAction(currentComponent, oldV, newV);

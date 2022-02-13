@@ -31,9 +31,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.GlyphFontRegistry;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.util.javafx.FXControlUtils;
 
 import java.util.function.Consumer;
 
@@ -174,7 +174,7 @@ public class CorrectionRuleStringListView extends BorderPane implements LCViewIn
             this.label = new Label();
             this.label.setMaxWidth(Double.MAX_VALUE);
             this.label.getStyleClass().add("correction-rule-list-view-label");
-            this.buttonRemove = UIUtils.createGraphicButton(
+            this.buttonRemove = FXControlUtils.createGraphicButton(
                     GlyphFontRegistry.font("FontAwesome").create(FontAwesome.Glyph.TRASH).size(10).color(LCGraphicStyle.SECOND_DARK), "TODO");
             this.buttonRemove.getStyleClass().add("small-button");
             this.boxTotal = new HBox(0.0, this.label, this.buttonRemove);

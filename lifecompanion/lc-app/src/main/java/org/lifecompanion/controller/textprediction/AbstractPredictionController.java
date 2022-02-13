@@ -36,7 +36,7 @@ import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.lifecycle.LCStateListener;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
 import org.lifecompanion.model.api.textprediction.BasePredictorI;
-import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.util.model.ConfigurationComponentUtils;
 import org.lifecompanion.controller.textcomponent.WritingStateController;
 import org.lifecompanion.controller.plugin.PluginImplementationLoadingHandler;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
@@ -319,7 +319,7 @@ public abstract class AbstractPredictionController<T extends BasePredictorI, K, 
     // Class part : "Prediction keys preparation"
     //========================================================================
     private void preparePredictionKeys(final LCConfigurationI configuration) {
-        this.wantedPredictionCount = LCUtils.findKeyOptionsByGrid(this.keyOptionType, configuration, this.predictionOptions, this::isValidKey);
+        this.wantedPredictionCount = ConfigurationComponentUtils.findKeyOptionsByGrid(this.keyOptionType, configuration, this.predictionOptions, this::isValidKey);
     }
     //========================================================================
 

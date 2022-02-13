@@ -31,17 +31,17 @@ public interface PossibleAddComponentI<T extends DisplayableComponentI> {
 	/**
 	 * @return the icon that represent this component
 	 */
-	public String getIconPath();
+	String getIconPath();
 
 	/**
 	 * @return name of the component
 	 */
-	public String getNameID();
+	String getNameID();
 
 	/**
 	 * @return a description of the added component
 	 */
-	public String getDescriptionID();
+	String getDescriptionID();
 
 	/**
 	 * To create the component to add.
@@ -51,21 +51,15 @@ public interface PossibleAddComponentI<T extends DisplayableComponentI> {
 	 * As it, the component can be configured
 	 * @return the new component for the given {@link AddTypeEnum}, if the add type is correct
 	 */
-	public T getNewComponent(AddTypeEnum addType, Object... optionalParams);
+	T getNewComponent(AddTypeEnum addType, Object... optionalParams);
 
 	/**
 	 * @return all the add types that this component accept
 	 */
-	public AddTypeEnum[] getAllowedAddType();
-
-	/**
-	 * Minimum level to see this add component
-	 * @return the minimum profile level to display this add component
-	 */
-	public ConfigurationProfileLevelEnum getMinimumLevel();
+	AddTypeEnum[] getAllowedAddType();
 
 	/**
 	 * @return the category for this possible category
 	 */
-	public PossibleAddComponentCategoryI getCategory();
+	PossibleAddComponentCategoryI getCategory();
 }

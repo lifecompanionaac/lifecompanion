@@ -39,8 +39,9 @@ import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.profile.LCProfileI;
 import org.lifecompanion.model.impl.exception.LCException;
-import org.lifecompanion.util.LCUtils;
-import org.lifecompanion.util.UIUtils;
+import org.lifecompanion.util.ThreadUtils;
+import org.lifecompanion.util.javafx.DialogUtils;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.model.impl.profile.LCConfigurationDescription;
 import org.lifecompanion.model.impl.configurationcomponent.LCConfigurationComponent;
 import org.lifecompanion.model.impl.constant.LCConstant;
@@ -53,7 +54,6 @@ import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.controller.editmode.FileChooserType;
 import org.lifecompanion.controller.editmode.LCStateController;
 import org.lifecompanion.model.impl.notification.LCNotification;
-import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.controller.editmode.LCFileChoosers;
 import org.lifecompanion.ui.common.control.specific.selector.ConfigurationSelectorControl;
 import org.lifecompanion.controller.editmode.DisplayableComponentSnapshotController;
@@ -62,6 +62,7 @@ import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.framework.utils.LCNamedThreadFactory;
+import org.lifecompanion.util.javafx.FXUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,7 +72,7 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-import static org.lifecompanion.util.UIUtils.getSourceFromEvent;
+import static org.lifecompanion.util.javafx.FXUtils.getSourceFromEvent;
 import static org.lifecompanion.controller.editmode.FileChooserType.EXPORT_PDF;
 
 /**
@@ -210,7 +211,7 @@ public class LCConfigurationActions {
             ConfigurationSavingTask saveTask = IOHelper
                     .createSaveConfigurationTask(this.configDescription.loadedConfigurationProperty().get(), currentProfile);
             try {
-                LCUtils.executeInCurrentThread(saveTask);
+                ThreadUtils.executeInCurrentThread(saveTask);
                 LCConfigurationActions.LOGGER.info("New configuration saved after the edit screen displayed");
                 //Now select the created configuration
                 ProfileConfigSelectionController.INSTANCE.hideStage();
@@ -284,7 +285,7 @@ public class LCConfigurationActions {
             LCProfileI currentProfile = ProfileController.INSTANCE.currentProfileProperty().get();
             if (currentProfile.getConfigurationById(configuration.getID()) == null) {
                 //Ask for name
-                TextInputDialog dialog = ConfigUIUtils.createInputDialog(source, Translation.getText("action.save.config.default.name"));
+                TextInputDialog dialog = DialogUtils.createInputDialog(source, Translation.getText("action.save.config.default.name"));
                 dialog.setHeaderText(Translation.getText("action.save.config.dialog.header"));
                 dialog.setContentText(Translation.getText("action.save.config.dialog.message"));
 
@@ -390,7 +391,7 @@ public class LCConfigurationActions {
         @Override
         public void doAction() throws LCException {
             // Select a configuration to duplicate
-            Alert dialog = ConfigUIUtils.createAlert(source, Alert.AlertType.NONE);
+            Alert dialog = DialogUtils.createAlert(source, Alert.AlertType.NONE);
             dialog.setHeaderText(Translation.getText("config.duplicate.question.select.config"));
             ConfigurationSelectorControl configurationSelectorControl = new ConfigurationSelectorControl(Translation.getText("config.duplicate.field.config"));
             configurationSelectorControl.setPrefWidth(400.0);
@@ -451,7 +452,7 @@ public class LCConfigurationActions {
             LCProfileI currentProfile = ProfileController.INSTANCE.currentProfileProperty().get();
             if (this.configurationPath == null) {
                 FileChooser configChooser = LCFileChoosers.getChooserConfiguration(FileChooserType.CONFIG_IMPORT);
-                this.configurationPath = configChooser.showOpenDialog(UIUtils.getSourceWindow(source));
+                this.configurationPath = configChooser.showOpenDialog(FXUtils.getSourceWindow(source));
             }
             if (this.configurationPath != null) {
                 LCStateController.INSTANCE.updateDefaultDirectory(FileChooserType.CONFIG_IMPORT, this.configurationPath.getParentFile());
@@ -464,7 +465,7 @@ public class LCConfigurationActions {
                 // Read imported configuration description
                 final LCConfigurationDescriptionI importedConfigurationDescription;
                 try {
-                    importedConfigurationDescription = LCUtils.executeInCurrentThread(new LoadConfigurationDescriptionTask(configurationPath));
+                    importedConfigurationDescription = ThreadUtils.executeInCurrentThread(new LoadConfigurationDescriptionTask(configurationPath));
                 } catch (Exception e) {
                     LOGGER.error("Couldn't read imported configuration description");
                     throw LCException.newException().withMessageId("exception.invalid.config.profil.file").withCause(e).build();
@@ -477,7 +478,7 @@ public class LCConfigurationActions {
                 ButtonType result;
 
                 if (previousConfigDescription != null) {
-                    Alert dlg = ConfigUIUtils.createAlert(source, AlertType.WARNING);
+                    Alert dlg = DialogUtils.createAlert(source, AlertType.WARNING);
                     dlg.getDialogPane().setHeaderText(Translation.getText("action.import.existing.configuration.header", currentProfile.nameProperty().get()));
                     dlg.getDialogPane().setContentText(Translation.getText("action.import.existing.configuration.message",
                             previousConfigDescription.configurationNameProperty().get(),
@@ -493,8 +494,8 @@ public class LCConfigurationActions {
 
                     // Launch a thread to enable button after a delay : we don't want the user to make the choice too quickly !
                     LCNamedThreadFactory.daemonThreadFactory("DelayBeforeAnswerWaiting").newThread(() -> {
-                        LCUtils.safeSleep(ANSWER_DELAY);
-                        LCUtils.runOnFXThread(() -> {
+                        ThreadUtils.safeSleep(ANSWER_DELAY);
+                        FXThreadUtils.runOnFXThread(() -> {
                             dlg.getDialogPane().setCursor(null);
                             dlg.getDialogPane().lookupButton(typeKeepBoth).setDisable(false);
                             dlg.getDialogPane().lookupButton(typeReplacePrevious).setDisable(false);
@@ -596,8 +597,8 @@ public class LCConfigurationActions {
                 FileChooser configChooser = LCFileChoosers.getChooserConfiguration(FileChooserType.CONFIG_EXPORT);
                 // Issue #139 : default name for configuration
                 configChooser.setInitialFileName(IOHelper.DATE_FORMAT_FILENAME_WITHOUT_TIME.format(new Date()) + "_"
-                        + LCUtils.getValidFileName(configurationDescription.configurationNameProperty().get()));
-                File configExportFile = configChooser.showSaveDialog(UIUtils.getSourceWindow(source));
+                        + org.lifecompanion.util.IOUtils.getValidFileName(configurationDescription.configurationNameProperty().get()));
+                File configExportFile = configChooser.showSaveDialog(FXUtils.getSourceWindow(source));
                 if (configExportFile != null) {
                     LCStateController.INSTANCE.updateDefaultDirectory(FileChooserType.CONFIG_EXPORT, configExportFile.getParentFile());
                     ConfigurationExportTask exportConfigTask = IOHelper.createConfigurationExportTask(configurationDescription, currentProfile,
@@ -630,9 +631,9 @@ public class LCConfigurationActions {
             LCConfigurationDescriptionI currentConfigurationDescription = AppModeController.INSTANCE.getEditModeContext().configurationDescriptionProperty().get();
 
             FileChooser configChooser = LCFileChoosers.getOtherFileChooser(Translation.getText("pdf.export.chooser.dialog.title"), new FileChooser.ExtensionFilter("PDF", "*.pdf"), EXPORT_PDF);
-            configChooser.setInitialFileName(Translation.getText("pdf.export.default.file.name", IOHelper.DATE_FORMAT_FILENAME_WITHOUT_TIME.format(new Date()), LCUtils.getValidFileName(currentConfigurationDescription.configurationNameProperty().get())));
+            configChooser.setInitialFileName(Translation.getText("pdf.export.default.file.name", IOHelper.DATE_FORMAT_FILENAME_WITHOUT_TIME.format(new Date()), org.lifecompanion.util.IOUtils.getValidFileName(currentConfigurationDescription.configurationNameProperty().get())));
 
-            File pdfFile = configChooser.showSaveDialog(UIUtils.getSourceWindow(source));
+            File pdfFile = configChooser.showSaveDialog(FXUtils.getSourceWindow(source));
             if (pdfFile != null) {
                 LCStateController.INSTANCE.updateDefaultDirectory(EXPORT_PDF, pdfFile.getParentFile());
                 ExportGridsToPdfTask exportGridsToPdfTask = new ExportGridsToPdfTask(currentConfiguration, pdfFile, currentProfile, currentConfigurationDescription);
@@ -759,7 +760,7 @@ public class LCConfigurationActions {
         try {
             ConfigurationDescriptionSavingTask configDescriptionSaveTask = IOHelper.createSaveConfigDescriptionTask(configDescription,
                     profile);
-            LCUtils.executeInCurrentThread(configDescriptionSaveTask);
+            ThreadUtils.executeInCurrentThread(configDescriptionSaveTask);
             LCConfigurationActions.LOGGER.info("Configuration description saved for {}", configDescription.getConfigurationId());
         } catch (Exception e) {
             LCConfigurationActions.LOGGER.warn("Couldn't save the configuration description for {}", configDescription.getConfigurationId());
@@ -792,7 +793,7 @@ public class LCConfigurationActions {
         public void doAction() throws LCException {
             if (this.askAndNotify) {
                 //Ask confirm
-                Alert dlg = ConfigUIUtils.createAlert(source, AlertType.CONFIRMATION);
+                Alert dlg = DialogUtils.createAlert(source, AlertType.CONFIRMATION);
                 dlg.getDialogPane().setContentText(
                         Translation.getText("action.remove.config.confirm.message", this.configDescription.configurationNameProperty().get()));
                 dlg.getDialogPane().setHeaderText(Translation.getText("action.remove.config.confirm.header"));

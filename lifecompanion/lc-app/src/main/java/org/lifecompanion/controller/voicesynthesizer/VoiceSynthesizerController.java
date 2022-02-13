@@ -29,7 +29,7 @@ import org.lifecompanion.model.api.lifecycle.ModeListenerI;
 import org.lifecompanion.model.impl.voicesynthesizer.SAPIVoiceSynthesizer;
 import org.lifecompanion.model.impl.voicesynthesizer.SayCommandVoiceSynthesizer;
 import org.lifecompanion.model.impl.voicesynthesizer.VoiceSynthesizerInfoImpl;
-import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.plugin.PluginController;
@@ -214,7 +214,7 @@ public enum VoiceSynthesizerController implements LCStateListener, ModeListenerI
      * Switch the {@link #disableVoiceSynthesizerProperty()} value
      */
     public void switchDisableVoiceSynthesizer() {
-        LCUtils.runOnFXThread(() -> this.disableVoiceSynthesizer.set(!this.disableVoiceSynthesizer.get()));
+        FXThreadUtils.runOnFXThread(() -> this.disableVoiceSynthesizer.set(!this.disableVoiceSynthesizer.get()));
     }
 
 

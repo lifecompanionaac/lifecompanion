@@ -24,10 +24,10 @@ import org.lifecompanion.controller.categorizedelement.CategorizedElementSearchH
 import org.lifecompanion.model.api.categorizedelement.useevent.UseEventGeneratorI;
 import org.lifecompanion.model.api.categorizedelement.useevent.UseEventMainCategoryI;
 import org.lifecompanion.model.api.categorizedelement.useevent.UseEventSubCategoryI;
-import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.controller.io.ReflectionHelper;
 import org.lifecompanion.controller.plugin.PluginController;
 import org.lifecompanion.framework.commons.utils.lang.CollectionUtils;
+import org.lifecompanion.util.binding.BindingUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,7 +71,7 @@ public enum AvailableUseEventController {
      * Create action listener on list
      */
     private void initActionListListener() {
-        this.availableEventGenerator.addListener(LCUtils.createListChangeListener(this::addUseEvent, this::removeUseEvent));
+        this.availableEventGenerator.addListener(BindingUtils.createListChangeListener(this::addUseEvent, this::removeUseEvent));
     }
 
     /**

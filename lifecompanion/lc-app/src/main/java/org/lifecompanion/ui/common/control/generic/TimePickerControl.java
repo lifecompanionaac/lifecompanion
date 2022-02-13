@@ -27,9 +27,9 @@ import javafx.scene.control.Spinner;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import org.lifecompanion.util.converter.BoundIntConverter;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.util.javafx.FXControlUtils;
 
 import java.text.DecimalFormat;
 
@@ -73,13 +73,13 @@ public class TimePickerControl extends HBox implements LCViewInitHelper {
     public void initUI() {
         //Hours
         Label labelSeparator = new Label(":");
-        this.spinnerHour = UIUtils.createIntSpinner(0, 23, 10, 1, 70);
+        this.spinnerHour = FXControlUtils.createIntSpinner(0, 23, 10, 1, 70);
         this.spinnerHour.getStyleClass().remove(Spinner.STYLE_CLASS_SPLIT_ARROWS_HORIZONTAL);
         this.spinnerHour.getStyleClass().add(Spinner.STYLE_CLASS_ARROWS_ON_LEFT_VERTICAL);
         this.spinnerHour.getValueFactory().setConverter(new BoundIntConverter(0, 23, TWO_DIGIT));
 
         //Minutes
-        this.spinnerMinutes = UIUtils.createIntSpinner(0, 59, 30, 10, 70);
+        this.spinnerMinutes = FXControlUtils.createIntSpinner(0, 59, 30, 10, 70);
         this.spinnerMinutes.getStyleClass().remove(Spinner.STYLE_CLASS_SPLIT_ARROWS_HORIZONTAL);
         this.spinnerMinutes.getStyleClass().add(Spinner.STYLE_CLASS_ARROWS_ON_LEFT_VERTICAL);
         this.spinnerMinutes.getValueFactory().setConverter(new BoundIntConverter(0, 59, TWO_DIGIT));

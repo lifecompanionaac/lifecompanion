@@ -30,9 +30,9 @@ import org.lifecompanion.model.api.editaction.BaseEditActionI;
 import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
 import org.lifecompanion.model.api.style.KeyStyleUserI;
 import org.lifecompanion.model.api.style.StylePropertyI;
-import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.model.impl.style.PropertyChangeListener;
 import org.lifecompanion.controller.editaction.StyleActions;
+import org.lifecompanion.util.LangUtils;
 import org.lifecompanion.util.model.GridPartKeyPropertyChangeListener;
 import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.controller.editmode.SelectionController;
@@ -149,15 +149,15 @@ public class MultiKeyHelper {
     }
 
     public static BiConsumer<Spinner<Integer>, Number> createSpinnerSetValue() {
-        return (spinner, value) -> spinner.getValueFactory().setValue(LCUtils.nullToZeroInt(value));
+        return (spinner, value) -> spinner.getValueFactory().setValue(LangUtils.nullToZeroInt(value));
     }
 
     public static BiConsumer<ToggleSwitch, Boolean> createToggleSwitchSetValue() {
-        return (toggleSwitch, value) -> toggleSwitch.setSelected(LCUtils.nullToFalse(value));
+        return (toggleSwitch, value) -> toggleSwitch.setSelected(LangUtils.nullToFalse(value));
     }
 
     public static BiConsumer<CheckBox, Boolean> createCheckboxSetValue() {
-        return (checkBox, value) -> checkBox.setSelected(LCUtils.nullToFalse(value));
+        return (checkBox, value) -> checkBox.setSelected(LangUtils.nullToFalse(value));
     }
 
     public static Function<ToggleGroup, TextAlignment> createToggleButtonGroupValueGetter(Map<TextAlignment, ToggleButton> textAlignButtons) {

@@ -30,14 +30,13 @@ import org.lifecompanion.model.api.categorizedelement.useevent.UseEventGenerator
 import org.lifecompanion.controller.editaction.UseActionConfigActions;
 import org.lifecompanion.controller.editmode.SelectionController;
 import org.lifecompanion.ui.app.main.ribbon.available.withselection.useaction.MultiActionManagerContentHelper;
-import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.ui.app.categorizedelement.AbstractCategorizedListManageView;
 import org.lifecompanion.ui.app.categorizedelement.AbstractCategorizedMainView;
 import org.lifecompanion.ui.common.pane.specific.cell.AbstractCategorizedElementListCellView;
-import org.lifecompanion.ui.app.categorizedelement.useaction.UseActionMainView;
 import org.lifecompanion.ui.common.pane.specific.cell.BaseUseActionElementListCellView;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.model.api.categorizedelement.useaction.*;
+import org.lifecompanion.util.javafx.DialogUtils;
 
 import java.util.ArrayList;
 import java.util.function.BiConsumer;
@@ -136,7 +135,7 @@ public class MultiUseActionListManageView extends AbstractCategorizedListManageV
     protected boolean checkEditPossible(Node source, final BaseUseActionI<?> item) {
         // In the source list, search if this action type is bound to key option
         if (oneOfTheActionsHasKeyOptionAttached(item.getClass())) {
-            Alert dialog = ConfigUIUtils.createAlert(source, AlertType.WARNING);
+            Alert dialog = DialogUtils.createAlert(source, AlertType.WARNING);
             dialog.setHeaderText(Translation.getText("alert.message.disable.edit.action.header"));
             dialog.setContentText(Translation.getText("alert.message.disable.edit.action.message", item.getName()));
             dialog.show();

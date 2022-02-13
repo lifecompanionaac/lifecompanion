@@ -35,10 +35,10 @@ import org.lifecompanion.model.api.style.StyleChangeUndo;
 import org.lifecompanion.model.api.style.TextCompStyleI;
 import org.lifecompanion.model.api.style.IntegerStylePropertyI;
 import org.lifecompanion.model.api.style.StylePropertyI;
-import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.framework.commons.fx.io.XMLCustomProperty;
 import org.lifecompanion.framework.commons.fx.io.XMLIgnoreNullValue;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
+import org.lifecompanion.util.LangUtils;
 
 public abstract class AbstractTextCompStyle extends AbstractStyle<TextCompStyleI> implements TextCompStyleI {
 
@@ -105,10 +105,10 @@ public abstract class AbstractTextCompStyle extends AbstractStyle<TextCompStyleI
         this.fontSize.value().addListener(updateFontListener);
         //Map italic and bold
         this.fontPosture.bind(EasyBind.map(this.italic.value(), (i) -> {
-            return LCUtils.isTrue(i) ? FontPosture.ITALIC : FontPosture.REGULAR;
+            return LangUtils.isTrue(i) ? FontPosture.ITALIC : FontPosture.REGULAR;
         }));
         this.fontWeight.bind(EasyBind.map(this.bold.value(), (b) -> {
-            return LCUtils.isTrue(b) ? FontWeight.BOLD : FontWeight.NORMAL;
+            return LangUtils.isTrue(b) ? FontWeight.BOLD : FontWeight.NORMAL;
         }));
     }
 

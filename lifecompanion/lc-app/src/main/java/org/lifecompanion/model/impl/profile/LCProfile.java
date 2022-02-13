@@ -28,7 +28,6 @@ import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
 import org.lifecompanion.model.api.profile.LCProfileI;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.io.ProfileIOContextI;
-import org.lifecompanion.model.api.ui.editmode.ConfigurationProfileLevelEnum;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.framework.commons.fx.io.XMLGenericProperty;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
@@ -62,12 +61,6 @@ public class LCProfile implements LCProfileI {
     private final ObjectProperty<Color> color;
 
     /**
-     * Profile level
-     */
-    @XMLGenericProperty(ConfigurationProfileLevelEnum.class)
-    private final ObjectProperty<ConfigurationProfileLevelEnum> level;
-
-    /**
      * Configuration count (displayed)
      */
 
@@ -88,7 +81,6 @@ public class LCProfile implements LCProfileI {
         this.id = StringUtils.getNewID();
         this.name = new SimpleStringProperty(this, "name");
         this.configurationList = FXCollections.observableArrayList();
-        this.level = new SimpleObjectProperty<>(this, "level", ConfigurationProfileLevelEnum.EXPERT);
         this.color = new SimpleObjectProperty<>(this, "color", LCGraphicStyle.MAIN_PRIMARY);
         this.configurationListProperty = new SimpleListProperty<>(this.configurationList);
         this.configurationCount = new SimpleIntegerProperty();
@@ -133,14 +125,6 @@ public class LCProfile implements LCProfileI {
     @Override
     public String getID() {
         return this.id;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public ObjectProperty<ConfigurationProfileLevelEnum> levelProperty() {
-        return this.level;
     }
 
     /**
@@ -224,11 +208,7 @@ public class LCProfile implements LCProfileI {
         // Read attribute
         XMLObjectSerializer.deserializeInto(LCProfile.class, this, nodeP);
         // Configuration description are not saved as a part of the profile XML because they are saved as separated XML file
-
         fullyLoaded.set(contextP.isFullLoading());
-
-        // Backward compatibility : before deleting level, we manually set it to EXPERT
-        level.set(ConfigurationProfileLevelEnum.EXPERT);
     }
     //========================================================================
 

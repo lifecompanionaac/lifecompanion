@@ -19,7 +19,6 @@
 
 package org.lifecompanion.ui.configurationcomponent.editmode;
 
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.api.configurationcomponent.GridPartComponentI;
 import org.lifecompanion.model.impl.configurationcomponent.StackComponent;
 import org.lifecompanion.ui.configurationcomponent.base.StackViewBase;
@@ -27,6 +26,7 @@ import org.lifecompanion.ui.configurationcomponent.editmode.componentoption.Butt
 import org.lifecompanion.ui.configurationcomponent.editmode.componentoption.MoveButtonOption;
 import org.lifecompanion.ui.configurationcomponent.editmode.componentoption.RootComponentOption;
 import org.lifecompanion.ui.configurationcomponent.editmode.componentoption.StackButtonOption;
+import org.lifecompanion.util.javafx.FXUtils;
 
 /**
  * Node that display a {@link StackComponent}
@@ -53,7 +53,7 @@ public class StackViewConfig extends StackViewBase {
 		this.rootComponentOption.bindSize(this);
 		this.getChildren().add(this.rootComponentOption);
 		this.rootComponentOption.getChildren().add(this.selectOption);
-		UIUtils.applyPerformanceConfiguration(this);
+		FXUtils.applyPerformanceConfiguration(this);
 	}
 
 	@Override

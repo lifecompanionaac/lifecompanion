@@ -28,10 +28,10 @@ import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
 import org.lifecompanion.model.api.profile.LCProfileI;
 import org.lifecompanion.controller.editaction.AsyncExecutorController;
 import org.lifecompanion.controller.io.task.LoadAvailableDefaultConfigurationTask;
-import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.ui.app.profileconfigselect.ProfileConfigSelectionStage;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.utils.Pair;
+import org.lifecompanion.util.javafx.DialogUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -134,7 +134,7 @@ public enum ProfileConfigSelectionController {
     //========================================================================
     public boolean showNoProfileWarning(Node source) {
         if (ProfileController.INSTANCE.currentProfileProperty().get() == null) {
-            Alert dlg = ConfigUIUtils.createAlert(source, Alert.AlertType.CONFIRMATION);
+            Alert dlg = DialogUtils.createAlert(source, Alert.AlertType.CONFIRMATION);
             dlg.setHeaderText(Translation.getText("profile.alert.no.selected.header"));
             dlg.setContentText(Translation.getText("profile.alert.no.selected.message"));
             Optional<ButtonType> result = dlg.showAndWait();

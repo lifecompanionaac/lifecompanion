@@ -22,8 +22,8 @@ import org.jdom2.Element;
 import org.lifecompanion.controller.io.XMLHelper;
 import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
 import org.lifecompanion.util.CopyUtils;
+import org.lifecompanion.util.ThreadUtils;
 import org.lifecompanion.util.model.LCTask;
-import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.model.impl.profile.LCConfigurationDescription;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.textprediction.predict4all.Predict4AllWordPredictorHelper;
@@ -88,7 +88,7 @@ public class ConfigurationDuplicateTask extends LCTask<LCConfigurationDescriptio
         }
 
         // Save new description
-        LCUtils.executeInCurrentThread(new ConfigurationDescriptionSavingTask(this.configurationDestDirectory, configDescription));
+        ThreadUtils.executeInCurrentThread(new ConfigurationDescriptionSavingTask(this.configurationDestDirectory, configDescription));
 
         //Load configuration ID, and change its ID
         File destConfigFile = new File(this.configurationDestDirectory.getPath() + File.separator + LCConstant.CONFIGURATION_XML_NAME);

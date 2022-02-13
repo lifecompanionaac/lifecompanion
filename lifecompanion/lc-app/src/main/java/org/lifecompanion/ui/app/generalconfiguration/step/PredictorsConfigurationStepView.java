@@ -34,8 +34,7 @@ import org.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.textprediction.CharPredictorI;
 import org.lifecompanion.model.api.textprediction.WordPredictorI;
-import org.lifecompanion.util.UIControlHelper;
-import org.lifecompanion.util.UIUtils;
+import org.lifecompanion.util.javafx.FXControlUtils;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.textprediction.AutoCharPredictionController;
 import org.lifecompanion.controller.textprediction.WordPredictionController;
@@ -92,27 +91,27 @@ public class PredictorsConfigurationStepView extends BorderPane implements Gener
     @Override
     public void initUI() {
         //Word prediction
-        Label labelPartWP = UIControlHelper.createTitleLabel(Translation.getText("general.configuration.predictors.part.word.predictor"));
+        Label labelPartWP = FXControlUtils.createTitleLabel(Translation.getText("general.configuration.predictors.part.word.predictor"));
         Label labelWordPredictor = new Label(Translation.getText("word.prediction.engine"));
         labelWordPredictor.setMinWidth(GeneralConfigurationStepViewI.LEFT_COLUMN_MIN_WIDTH);
         this.comboboxWordPredictor = new ComboBox<>(WordPredictionController.INSTANCE.getAvailablePredictor());
         this.comboboxWordPredictor.setCellFactory((lv) -> new BasePredictorDetailListCell<>());
         this.comboboxWordPredictor.setButtonCell(new BasePredictorSimpleListCell<>());
         this.comboboxWordPredictor.setMaxWidth(Double.MAX_VALUE);
-        this.buttonWordPredictionConfiguration = UIUtils.createRightTextButton(Translation.getText("general.configuration.predictors.button.configure.word.prediction"),
+        this.buttonWordPredictionConfiguration = FXControlUtils.createRightTextButton(Translation.getText("general.configuration.predictors.button.configure.word.prediction"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.GEAR).size(20).color(LCGraphicStyle.MAIN_DARK),
                 null);
         GridPane.setHalignment(buttonWordPredictionConfiguration, HPos.CENTER);
 
         //Letter prediction
-        Label labelPartCP = UIControlHelper.createTitleLabel(Translation.getText("general.configuration.predictors.part.char.predictor"));
+        Label labelPartCP = FXControlUtils.createTitleLabel(Translation.getText("general.configuration.predictors.part.char.predictor"));
         Label labelCharPredictor = new Label(Translation.getText("char.prediction.engine"));
         this.comboboxCharPredictor = new ComboBox<>(AutoCharPredictionController.INSTANCE.getAvailablePredictor());
         this.comboboxCharPredictor.setCellFactory((lv) -> new BasePredictorDetailListCell<>());
         this.comboboxCharPredictor.setButtonCell(new BasePredictorSimpleListCell<>());
         this.comboboxCharPredictor.setMaxWidth(Double.MAX_VALUE);
         GridPane.setHgrow(comboboxCharPredictor, Priority.ALWAYS);
-        this.buttonCharPredictionConfiguration = UIUtils.createRightTextButton(Translation.getText("general.configuration.predictors.button.configure.char.prediction"),
+        this.buttonCharPredictionConfiguration = FXControlUtils.createRightTextButton(Translation.getText("general.configuration.predictors.button.configure.char.prediction"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.GEAR).size(20).color(LCGraphicStyle.MAIN_DARK),
                 null);
         GridPane.setHalignment(buttonCharPredictionConfiguration, HPos.CENTER);

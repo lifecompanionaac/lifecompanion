@@ -31,10 +31,10 @@ import javafx.scene.layout.VBox;
 import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
 import org.lifecompanion.model.api.configurationcomponent.keyoption.KeyOptionConfigurationViewI;
 import org.lifecompanion.model.api.configurationcomponent.keyoption.KeyOptionI;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.AvailableKeyOptionManager;
 import org.lifecompanion.model.impl.configurationcomponent.GridPartKeyComponent;
 import org.lifecompanion.controller.editaction.KeyActions;
+import org.lifecompanion.util.javafx.FXControlUtils;
 import org.lifecompanion.util.model.GridPartKeyCollectionPropertyHolder;
 import org.lifecompanion.util.model.GridPartKeyPropertyChangeListener;
 import org.lifecompanion.controller.editmode.SelectionController;
@@ -95,7 +95,7 @@ public class AbstractKeyOptionRibbonPart extends RibbonBasePart<GridPartKeyCompo
         this.comboKeyOptionType = new ComboBox<>(AvailableKeyOptionManager.INSTANCE.getKeyOptions());
         this.comboKeyOptionType.setCellFactory((lv) -> new KeyOptionListCell());
         this.comboKeyOptionType.setButtonCell(new KeyOptionListCell());
-        UIUtils.createAndAttachTooltip(comboKeyOptionType, "tooltip.explain.select.key.option");
+        FXControlUtils.createAndAttachTooltip(comboKeyOptionType, "tooltip.explain.select.key.option");
         Separator separator = new Separator(Orientation.HORIZONTAL);
         VBox.setMargin(separator, new Insets(5, 0, 5, 0));
 

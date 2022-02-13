@@ -24,7 +24,6 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import org.lifecompanion.controller.appinstallation.InstallationController;
-import org.lifecompanion.util.model.LCTask;
 import org.lifecompanion.controller.io.JsonHelper;
 import org.lifecompanion.framework.client.http.AppServerClient;
 import org.lifecompanion.framework.client.props.ApplicationBuildProperties;
@@ -32,6 +31,7 @@ import org.lifecompanion.framework.commons.ApplicationConstant;
 import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.util.model.LCTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -99,11 +99,18 @@ public class GetInstallationIdTask extends LCTask<InstallationController.Install
         }
 
         // Read installation file (if not present, will fail)
-        final String installationKeyBase64Encrypted = IOUtils.readFileLines(installationKeyFile, StandardCharsets.UTF_8.name());
-        cipher.init(Cipher.DECRYPT_MODE, publicKey);
-        final String decodedInstallationInfo = new String(cipher.doFinal(Base64.getDecoder().decode(StringUtils.stripToEmpty(installationKeyBase64Encrypted))), StandardCharsets.UTF_8);
-        final InstallationController.InstallationRegistrationInformation installationRegistrationInformation = JsonHelper.GSON.fromJson(decodedInstallationInfo, InstallationController.InstallationRegistrationInformation.class);
-        LOGGER.info("Read installation information from stored installation key : {}", installationRegistrationInformation);
+        final InstallationController.InstallationRegistrationInformation installationRegistrationInformation;
+        try {
+            final String installationKeyBase64Encrypted = IOUtils.readFileLines(installationKeyFile, StandardCharsets.UTF_8.name());
+            cipher.init(Cipher.DECRYPT_MODE, publicKey);
+            final String decodedInstallationInfo = new String(cipher.doFinal(Base64.getDecoder().decode(StringUtils.stripToEmpty(installationKeyBase64Encrypted))), StandardCharsets.UTF_8);
+            installationRegistrationInformation = JsonHelper.GSON.fromJson(decodedInstallationInfo, InstallationController.InstallationRegistrationInformation.class);
+            LOGGER.info("Read installation information from stored installation key : {}", installationRegistrationInformation);
+        } catch (Exception e) {
+            installationKeyFile.delete();
+            LOGGER.warn("Reading installation information from file failed : {} - {}", e.getClass().getSimpleName(), e.getMessage());
+            throw e;
+        }
 
         // Check that device ID in stored key and current device ID are the same
         if (!StringUtils.isEquals(installationRegistrationInformation.getDeviceId(), deviceId)) {

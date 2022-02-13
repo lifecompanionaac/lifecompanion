@@ -25,7 +25,7 @@ import javafx.scene.control.TabPane.TabClosingPolicy;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import org.lifecompanion.ui.common.pane.generic.cell.LogEntryListCell;
-import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.controller.devmode.DevModeController;
 import org.lifecompanion.model.impl.devmode.LogEntry;
 import org.lifecompanion.framework.commons.translation.Translation;
@@ -120,7 +120,7 @@ public class DevViewPane extends BorderPane implements LCViewInitHelper {
                 long maxMemory = runtime.maxMemory();
                 long freeMemory = runtime.freeMemory();
                 long totalMemory = runtime.totalMemory();
-                LCUtils.runOnFXThread(() -> labelMemoryInfo.setText(Translation.getText("dev.stage.memory.infos",
+                FXThreadUtils.runOnFXThread(() -> labelMemoryInfo.setText(Translation.getText("dev.stage.memory.infos",
                         FileNameUtils.getFileSize(totalMemory - freeMemory), FileNameUtils.getFileSize(totalMemory), FileNameUtils.getFileSize(maxMemory))));
             }
         }, 4000, 1000);
@@ -138,7 +138,7 @@ public class DevViewPane extends BorderPane implements LCViewInitHelper {
             public void write(final byte[] bytes, final int i, final int i1) {
                 super.write(bytes, i, i1);
                 final String text = new String(bytes, i, i1);
-                LCUtils.runOnFXThread(() -> {
+                FXThreadUtils.runOnFXThread(() -> {
                     textArea.appendText(text);
                     textArea.end();
                 });

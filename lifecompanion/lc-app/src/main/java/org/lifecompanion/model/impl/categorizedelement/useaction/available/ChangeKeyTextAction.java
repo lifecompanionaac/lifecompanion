@@ -30,7 +30,7 @@ import org.lifecompanion.model.api.usevariable.UseVariableI;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseActionSubCategories;
-import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.model.impl.configurationcomponent.ComponentHolder;
 import org.lifecompanion.controller.usevariable.UseVariableController;
 import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
@@ -81,7 +81,7 @@ public class ChangeKeyTextAction extends SimpleUseActionImpl<UseActionTriggerCom
         if (wantedKeyChanged != null) {
             StringProperty textContent = wantedKeyChanged.textContentProperty();
             if (!textContent.isBound()) {
-                LCUtils.runOnFXThread(() -> textContent.set(UseVariableController.INSTANCE.createText(this.wantedKeyText.get(), variables)));
+                FXThreadUtils.runOnFXThread(() -> textContent.set(UseVariableController.INSTANCE.createText(this.wantedKeyText.get(), variables)));
             }
         }
     }

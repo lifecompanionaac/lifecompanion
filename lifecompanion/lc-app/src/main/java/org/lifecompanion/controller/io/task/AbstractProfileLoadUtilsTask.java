@@ -26,8 +26,9 @@ import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.impl.io.ProfileIOContext;
 import org.lifecompanion.model.impl.profile.LCProfile;
+import org.lifecompanion.util.ThreadUtils;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.util.model.LCTask;
-import org.lifecompanion.util.LCUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -80,7 +81,7 @@ public abstract class AbstractProfileLoadUtilsTask<T> extends LCTask<T> {
             }
         };
         if (runChangesOnFXThread) {
-            LCUtils.runOnFXThread(deserializeProfileInfo);
+            FXThreadUtils.runOnFXThread(deserializeProfileInfo);
         } else {
             deserializeProfileInfo.run();
         }
@@ -94,7 +95,7 @@ public abstract class AbstractProfileLoadUtilsTask<T> extends LCTask<T> {
                 AbstractProfileLoadUtilsTask.LOGGER.info("Will try to load the configuration description in the directory {}", configDir);
                 try {
                     ConfigurationDescriptionLoadingTask loadDescription = new ConfigurationDescriptionLoadingTask(configDir);
-                    LCConfigurationDescriptionI description = LCUtils.executeInCurrentThread(loadDescription);
+                    LCConfigurationDescriptionI description = ThreadUtils.executeInCurrentThread(loadDescription);
                     configurationDescriptions.add(description);
                 } catch (Exception e) {
                     AbstractProfileLoadUtilsTask.LOGGER.warn("Couldn't load the configuration description in {}", configDir, e);
@@ -105,7 +106,7 @@ public abstract class AbstractProfileLoadUtilsTask<T> extends LCTask<T> {
         Collections.sort(configurationDescriptions, (c1, c2) -> c2.configurationLastDateProperty().get().compareTo(c1.configurationLastDateProperty().get()));
         final Runnable setProfileConfiguration = () -> profile.getConfiguration().setAll(configurationDescriptions);
         if (runChangesOnFXThread) {
-            LCUtils.runOnFXThread(setProfileConfiguration);
+            FXThreadUtils.runOnFXThread(setProfileConfiguration);
         } else {
             setProfileConfiguration.run();
         }

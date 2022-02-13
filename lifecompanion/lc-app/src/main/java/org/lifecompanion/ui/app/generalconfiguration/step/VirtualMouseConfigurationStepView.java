@@ -31,8 +31,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.configurationcomponent.VirtualMouseDrawing;
-import org.lifecompanion.util.UIControlHelper;
-import org.lifecompanion.util.UIUtils;
+import org.lifecompanion.util.javafx.FXControlUtils;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStep;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStepViewI;
 import org.lifecompanion.ui.common.pane.specific.cell.VirtualMouseDrawingListCell;
@@ -82,32 +81,32 @@ public class VirtualMouseConfigurationStepView extends BorderPane implements Gen
     //========================================================================
     @Override
     public void initUI() {
-        Label labelMousePartTitle = UIControlHelper.createTitleLabel(Translation.getText("general.configuration.mouse.config.part.circle.mouse.title"));
+        Label labelMousePartTitle = FXControlUtils.createTitleLabel(Translation.getText("general.configuration.mouse.config.part.circle.mouse.title"));
         GridPane.setHgrow(labelMousePartTitle, Priority.ALWAYS);
         Label labelMousePartExplain = new Label(Translation.getText("general.configuration.mouse.config.part.circle.mouse.explain"));
         labelMousePartExplain.getStyleClass().add("explain-text");
         labelMousePartExplain.setMaxWidth(Double.MAX_VALUE);
 
         this.pickerMouseColor = new LCColorPicker();
-        UIUtils.createAndAttachTooltip(pickerMouseColor, "tooltip.explain.use.param.virtual.mouse.color");
+        FXControlUtils.createAndAttachTooltip(pickerMouseColor, "tooltip.explain.use.param.virtual.mouse.color");
         Label labelMouseColor = new Label(Translation.getText("virtual.mouse.color"));
         labelMouseColor.setMinWidth(GeneralConfigurationStepViewI.LEFT_COLUMN_MIN_WIDTH);
         GridPane.setHalignment(pickerMouseColor, HPos.RIGHT);
 
         this.pickerMouseStrokeColor = new LCColorPicker(LCColorPicker.ColorPickerMode.DARK);
-        UIUtils.createAndAttachTooltip(pickerMouseStrokeColor, "tooltip.explain.use.param.virtual.mouse.stroke.color");
+        FXControlUtils.createAndAttachTooltip(pickerMouseStrokeColor, "tooltip.explain.use.param.virtual.mouse.stroke.color");
         Label labelMouseStrokeColor = new Label(Translation.getText("virtual.mouse.stroke.color"));
         labelMouseColor.setMinWidth(GeneralConfigurationStepViewI.LEFT_COLUMN_MIN_WIDTH);
         GridPane.setHalignment(pickerMouseStrokeColor, HPos.RIGHT);
 
-        this.sliderMouseSize = UIUtils.createBaseSlider(4, 20, 10);
-        UIUtils.createAndAttachTooltip(sliderMouseSize, "tooltip.explain.use.param.virtual.mouse.size");
+        this.sliderMouseSize = FXControlUtils.createBaseSlider(4, 20, 10);
+        FXControlUtils.createAndAttachTooltip(sliderMouseSize, "tooltip.explain.use.param.virtual.mouse.size");
         Label labelMouseSize = new Label(Translation.getText("virtual.mouse.size"));
         labelMouseSize.setMaxWidth(Double.MAX_VALUE);
         GridPane.setHgrow(labelMouseSize, Priority.ALWAYS);
 
-        this.sliderMouseSpeed = UIUtils.createBaseSlider(1, 10, 5);
-        UIUtils.createAndAttachTooltip(sliderMouseSpeed, "tooltip.explain.use.param.virtual.mouse.speed");
+        this.sliderMouseSpeed = FXControlUtils.createBaseSlider(1, 10, 5);
+        FXControlUtils.createAndAttachTooltip(sliderMouseSpeed, "tooltip.explain.use.param.virtual.mouse.speed");
         Label labelMouseSpeed = new Label(Translation.getText("virtual.mouse.speed"));
 
         Label labelMouseDrawing = new Label(Translation.getText("virtual.mouse.drawing.label"));
@@ -115,7 +114,7 @@ public class VirtualMouseConfigurationStepView extends BorderPane implements Gen
         this.comboboxVirtualMouseDrawing.setButtonCell(new VirtualMouseDrawingListCell());
         this.comboboxVirtualMouseDrawing.setCellFactory(lv -> new VirtualMouseDrawingListCell());
         this.comboboxVirtualMouseDrawing.setMaxWidth(Double.MAX_VALUE);
-        UIUtils.createAndAttachTooltip(comboboxVirtualMouseDrawing, "tooltip.explain.use.param.virtual.mouse.draw");
+        FXControlUtils.createAndAttachTooltip(comboboxVirtualMouseDrawing, "tooltip.explain.use.param.virtual.mouse.draw");
 
         GridPane gridPaneTotal = new GridPane();
         gridPaneTotal.setHgap(GeneralConfigurationStepViewI.GRID_H_GAP);

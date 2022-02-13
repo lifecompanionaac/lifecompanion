@@ -23,9 +23,9 @@ import javafx.geometry.Pos;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.TilePane;
 import org.lifecompanion.model.api.categorizedelement.MainCategoryI;
-import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.ui.common.pane.specific.cell.AbstractMainCategoryItemView;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.util.binding.BindingUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -79,7 +79,7 @@ public abstract class AbstractMainCategoriesView<T extends MainCategoryI<?>> ext
             tilePaneCategories.getChildren().add(this.createCell(action));
         }
         //On list change
-        this.getMainCategories().addListener(LCUtils.createListChangeListener((added) -> {
+        this.getMainCategories().addListener(BindingUtils.createListChangeListener((added) -> {
             //Get view
             AbstractMainCategoryItemView<T> addedView;
             if (this.views.containsKey(added)) {

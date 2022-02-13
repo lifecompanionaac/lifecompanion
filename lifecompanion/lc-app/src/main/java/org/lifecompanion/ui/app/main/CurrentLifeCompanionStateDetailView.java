@@ -39,7 +39,6 @@ import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
 import org.lifecompanion.model.api.profile.LCProfileI;
 import org.lifecompanion.model.api.configurationcomponent.TreeDisplayableType;
 import org.lifecompanion.ui.app.displayablecomponent.CommonComponentStage;
-import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.profile.ProfileController;
@@ -53,6 +52,7 @@ import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.util.binding.BindingUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -165,8 +165,8 @@ public class CurrentLifeCompanionStateDetailView extends HBox implements LCViewI
         AppModeController.INSTANCE.getEditModeContext().configurationProperty()
                 .addListener((observableP, oldValueP, newValueP) -> {
                     if (oldValueP != null) {
-                        LCUtils.unbindAndSet(labelCurrentUnsavedModifications.textProperty(), "");
-                        LCUtils.unbindAndSet(labelConfigurationSize.textProperty(), "");
+                        BindingUtils.unbindAndSet(labelCurrentUnsavedModifications.textProperty(), "");
+                        BindingUtils.unbindAndSet(labelConfigurationSize.textProperty(), "");
                     }
                     if (newValueP != null) {
                         // Specific binding as we want it as String
@@ -186,7 +186,7 @@ public class CurrentLifeCompanionStateDetailView extends HBox implements LCViewI
         //Bind parent name + graphics
         SelectionController.INSTANCE.selectedComponentBothProperty().addListener((obs, ov, nv) -> {
             if (ov != null) {
-                LCUtils.unbindAndSetNull(this.labelCurrentDetailName.textProperty());
+                BindingUtils.unbindAndSetNull(this.labelCurrentDetailName.textProperty());
                 labelCurrentComponentName.setGraphic(null);
             }
             if (nv != null) {

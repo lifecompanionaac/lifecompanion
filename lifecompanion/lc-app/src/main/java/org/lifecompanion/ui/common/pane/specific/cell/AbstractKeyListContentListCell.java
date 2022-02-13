@@ -27,7 +27,7 @@ import javafx.scene.control.ListCell;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.SimplerKeyContentContainerI;
-import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.util.javafx.ColorUtils;
 
 public abstract class AbstractKeyListContentListCell<T extends SimplerKeyContentContainerI> extends ListCell<T> {
     private static final double STROKE_SIZE_SIDE = 4.0;
@@ -96,10 +96,10 @@ public abstract class AbstractKeyListContentListCell<T extends SimplerKeyContent
             this.boxContent.styleProperty().bind(Bindings.createStringBinding(() -> {
                 StringBuilder styleSb = new StringBuilder();
                 if (itemP.backgroundColorProperty().get() != null) {
-                    styleSb.append("-fx-background-color:").append(LCUtils.toCssColor(itemP.backgroundColorProperty().get())).append(";");
+                    styleSb.append("-fx-background-color:").append(ColorUtils.toCssColor(itemP.backgroundColorProperty().get())).append(";");
                 }
                 if (itemP.strokeColorProperty().get() != null) {
-                    styleSb.append("-fx-border-color:").append(LCUtils.toCssColor(itemP.strokeColorProperty().get())).append(";")
+                    styleSb.append("-fx-border-color:").append(ColorUtils.toCssColor(itemP.strokeColorProperty().get())).append(";")
                             .append("-fx-border-width: ").append(STROKE_SIZE_TOP_BOTTOM).append(" ").append(STROKE_SIZE_SIDE).append(" ").append(STROKE_SIZE_TOP_BOTTOM).append(" ").append(STROKE_SIZE_SIDE).append(";")
                             .append("-fx-background-insets: ").append(STROKE_SIZE_TOP_BOTTOM - 1).append(" ").append(STROKE_SIZE_SIDE - 1).append(" ").append(STROKE_SIZE_TOP_BOTTOM - 1).append(" ").append(STROKE_SIZE_SIDE - 1).append(";")
                             .append("-fx-border-style: solid inside;");

@@ -25,7 +25,6 @@ import org.lifecompanion.model.impl.metrics.SessionEvent;
 import org.lifecompanion.model.impl.metrics.SessionEventType;
 import org.lifecompanion.model.impl.metrics.SessionPart;
 import org.lifecompanion.model.impl.metrics.SoftwareSession;
-import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
 import org.lifecompanion.controller.appinstallation.InstallationController;
@@ -35,6 +34,7 @@ import org.lifecompanion.framework.client.props.ApplicationBuildProperties;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.framework.utils.FluentHashMap;
+import org.lifecompanion.util.ThreadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,7 +52,7 @@ public class SendPendingSessionStatsRunnable implements Runnable {
 
     @Override
     public void run() {
-        LCUtils.safeSleep(20_000);
+        ThreadUtils.safeSleep(20_000);
         LOGGER.info("Send pending session stats thread started");
         try {
             if (UserConfigurationController.INSTANCE.recordAndSendSessionStatsProperty().get()) {

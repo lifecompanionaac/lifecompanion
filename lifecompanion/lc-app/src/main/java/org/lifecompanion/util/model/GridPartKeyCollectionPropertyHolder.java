@@ -20,7 +20,7 @@
 package org.lifecompanion.util.model;
 
 import javafx.collections.ObservableList;
-import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.util.binding.BindingUtils;
 
 import java.util.List;
 
@@ -33,7 +33,7 @@ public class GridPartKeyCollectionPropertyHolder<K> {
         this.elements = elements;
         this.propertyChangeListeners = properties;
         this.elements.forEach(this::elementAdded);
-        this.elements.addListener(LCUtils.createListChangeListener(this::elementAdded, this::elementRemoved));
+        this.elements.addListener(BindingUtils.createListChangeListener(this::elementAdded, this::elementRemoved));
     }
 
     // ABSTRACT

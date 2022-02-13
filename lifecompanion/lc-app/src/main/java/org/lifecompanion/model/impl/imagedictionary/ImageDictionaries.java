@@ -28,8 +28,8 @@ import org.lifecompanion.model.api.imagedictionary.ImageDictionaryI;
 import org.lifecompanion.model.api.imagedictionary.ImageElementI;
 import org.lifecompanion.model.api.lifecycle.LCStateListener;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
-import org.lifecompanion.util.LCUtils;
-import org.lifecompanion.util.UIUtils;
+import org.lifecompanion.util.model.ConfigurationComponentUtils;
+import org.lifecompanion.util.ThreadUtils;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
 import org.lifecompanion.controller.appinstallation.InstallationConfigurationController;
@@ -41,6 +41,7 @@ import org.lifecompanion.framework.commons.utils.lang.LangUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.framework.utils.FluentHashMap;
 import org.lifecompanion.framework.utils.LCNamedThreadFactory;
+import org.lifecompanion.util.javafx.ImageUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -178,7 +179,7 @@ public enum ImageDictionaries implements LCStateListener, ModeListenerI {
             imageLoadingTask.setOnSucceeded(e -> {
                 try {
                     Image loadedImage = imageLoadingTask.get();
-                    CachedThumbnailInformation info = new CachedThumbnailInformation(loadedImage, UIUtils.computeFullImageViewPort(loadedImage));
+                    CachedThumbnailInformation info = new CachedThumbnailInformation(loadedImage, ImageUtils.computeFullImageViewPort(loadedImage));
                     loadedThumbnails.put(imageElementI.getId(), info);
                     callback.accept(info);
                 } catch (Exception ex) {
@@ -217,7 +218,7 @@ public enum ImageDictionaries implements LCStateListener, ModeListenerI {
                         .parallelStream()
                         .map(e -> new Pair<>(e, getSimilarityScore(e.getKeywords(), searchFull)))
                         .sorted(SCORE_MAP_COMPARATOR)
-                        .filter(e -> e.getValue() > LCUtils.SIMILARITY_CONTAINS)
+                        .filter(e -> e.getValue() > ConfigurationComponentUtils.SIMILARITY_CONTAINS)
                         .map(Pair::getKey)
                         .collect(Collectors.toList());
                 if (LangUtils.isNotEmpty(resultList)) {
@@ -238,7 +239,7 @@ public enum ImageDictionaries implements LCStateListener, ModeListenerI {
     public double getSimilarityScore(String[] keywords, String searchFull) {
         double score = 0.0;
         for (String source : keywords) {
-            score += LCUtils.getSimilarityScoreFor(searchFull, source, s -> org.lifecompanion.framework.utils.Pair.of(s, 1.0));
+            score += ConfigurationComponentUtils.getSimilarityScoreFor(searchFull, source, s -> org.lifecompanion.framework.utils.Pair.of(s, 1.0));
         }
         return score;
     }
@@ -336,14 +337,14 @@ public enum ImageDictionaries implements LCStateListener, ModeListenerI {
     }
 
     private void startImageLoadingDebug() {
-        if (LCUtils.safeParseBoolean(System.getProperty("org.lifecompanion.debug.loaded.images"))) {
+        if (org.lifecompanion.util.LangUtils.safeParseBoolean(System.getProperty("org.lifecompanion.debug.loaded.images"))) {
             LOGGER.info("Loaded images debug enabled");
             LCNamedThreadFactory.daemonThreadFactory("ImageLoadingDebug").newThread(() -> {
                 while (true) {
                     Set<ImageElement> imageLoaded = new ArrayList<>(this.allImages.values()).stream().map(img -> (ImageElement) img).filter(img -> img.loadedImageProperty().get() != null).collect(Collectors.toSet());
                     LOGGER.info("Loaded image count : {}", imageLoaded.size());
                     //imageLoaded.stream().forEach(img -> System.err.println("\t" + img.getName() + " = " + (img.getLoadingRequest().entrySet().stream().filter(Map.Entry::getValue).map(Map.Entry::getKey).collect(Collectors.joining(" ")))));
-                    LCUtils.safeSleep(5_000);
+                    ThreadUtils.safeSleep(5_000);
                 }
             }).start();
         }

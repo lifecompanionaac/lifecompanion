@@ -26,8 +26,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.VBox;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
-import org.lifecompanion.util.LCUtils;
-import org.lifecompanion.util.UIUtils;
+import org.lifecompanion.util.javafx.FXControlUtils;
+import org.lifecompanion.util.model.ConfigurationComponentUtils;
 import org.lifecompanion.ui.common.pane.specific.cell.KeyListCellHandler;
 import org.lifecompanion.ui.common.pane.specific.cell.SimpleKeyListContentListCell;
 import org.lifecompanion.ui.common.control.generic.searchcombobox.SearchComboBox;
@@ -64,11 +64,11 @@ public class KeyListSelectorControl extends VBox implements LCViewInitHelper {
         // Search combobox
         searchComboBox = new SearchComboBox<>(lv -> new SimpleKeyListContentListCell(),
                 searchText ->
-                        StringUtils.isBlank(searchText) ? null : c -> LCUtils.getSimilarityScoreFor(searchText, c, getNameGetterForCategory()) > 0
+                        StringUtils.isBlank(searchText) ? null : c -> ConfigurationComponentUtils.getSimilarityScoreFor(searchText, c, getNameGetterForCategory()) > 0
                 , comp -> comp != null ? comp.textProperty().get() : Translation.getText("key.list.selector.control.no.value"),
                 searchText -> StringUtils.isBlank(searchText) ? null : (c1, c2) -> Double.compare(
-                        LCUtils.getSimilarityScoreFor(searchText, c2, getNameGetterForCategory()),
-                        LCUtils.getSimilarityScoreFor(searchText, c1, getNameGetterForCategory())
+                        ConfigurationComponentUtils.getSimilarityScoreFor(searchText, c2, getNameGetterForCategory()),
+                        ConfigurationComponentUtils.getSimilarityScoreFor(searchText, c1, getNameGetterForCategory())
                 ));
         searchComboBox.setFixedCellSize(KeyListCellHandler.CELL_HEIGHT + 5);
         this.setSpacing(5.0);
@@ -84,7 +84,7 @@ public class KeyListSelectorControl extends VBox implements LCViewInitHelper {
     }
 
     public void setTooltipText(String tooltipTextId) {
-        Tooltip.install(searchComboBox, UIUtils.createTooltip(tooltipTextId));
+        Tooltip.install(searchComboBox, FXControlUtils.createTooltip(tooltipTextId));
     }
 
     @Override

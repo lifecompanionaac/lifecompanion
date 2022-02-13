@@ -28,9 +28,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.controlsfx.glyphfont.FontAwesome;
-import org.lifecompanion.util.UIControlHelper;
+import org.lifecompanion.util.javafx.FXControlUtils;
 import org.lifecompanion.util.model.Triple;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
@@ -92,7 +91,7 @@ public class UserConfigurationView extends BorderPane implements LCViewInitHelpe
         this.addConfigTab(new MiscConfigSubmenu());
 
         // Center top : title and previous button
-        Triple<HBox, Label, Node> header = UIControlHelper.createHeader("", e -> this.parentStage.hide());
+        Triple<HBox, Label, Node> header = FXControlUtils.createHeader("", e -> this.parentStage.hide());
         labelTitle = header.getMiddle();
         nodePreviousIndicator = header.getRight();
         boxMenuLeft.setPadding(new Insets(50.0, 0.0, 0.0, 0.0));
@@ -101,9 +100,9 @@ public class UserConfigurationView extends BorderPane implements LCViewInitHelpe
         viewContentBorderPane = new AnimatedBorderPane();
 
         // Center bottom : ok, cancel buttons
-        buttonOk = UIUtils.createLeftTextButton(Translation.getText("general.configuration.scene.ok.button"),
+        buttonOk = FXControlUtils.createLeftTextButton(Translation.getText("general.configuration.scene.ok.button"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CHECK).size(16).color(LCGraphicStyle.MAIN_DARK), null);
-        buttonCancel = UIUtils.createLeftTextButton(Translation.getText("general.configuration.scene.cancel.button"),
+        buttonCancel = FXControlUtils.createLeftTextButton(Translation.getText("general.configuration.scene.cancel.button"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.TIMES).size(16).color(LCGraphicStyle.SECOND_DARK), null);
         HBox buttonBox = new HBox(buttonCancel, buttonOk);
         buttonBox.setAlignment(Pos.CENTER_RIGHT);

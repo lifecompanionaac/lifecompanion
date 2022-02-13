@@ -33,12 +33,12 @@ import org.controlsfx.control.ToggleSwitch;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.Glyph;
 import org.controlsfx.glyphfont.GlyphFontRegistry;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.ui.app.generalconfiguration.step.predict4all.P4AConfigUtils;
 import org.lifecompanion.ui.app.generalconfiguration.step.predict4all.P4ACorrectionConfigurationView;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.util.javafx.FXControlUtils;
 import org.predict4all.nlp.words.correction.CorrectionRule;
 import org.predict4all.nlp.words.correction.CorrectionRuleNode;
 import org.predict4all.nlp.words.correction.CorrectionRuleNodeType;
@@ -80,7 +80,7 @@ public abstract class CorrectionRuleBaseNodeView extends BorderPane implements L
     @Override
     public void initUI() {
         this.glyphForBtn = GlyphFontRegistry.font("FontAwesome").create(FontAwesome.Glyph.CHEVRON_RIGHT).size(16).color(LCGraphicStyle.MAIN_DARK);
-        this.buttonToggleRuleDisplay = UIUtils.createGraphicButton(this.glyphForBtn, "tooltip.button.toggle.show.correction.rule");
+        this.buttonToggleRuleDisplay = FXControlUtils.createGraphicButton(this.glyphForBtn, "tooltip.button.toggle.show.correction.rule");
         this.fieldRuleName = new TextField();
         this.labelRuleName = new Label();
         this.labelRuleName.getStyleClass().add("correction-rule-title");
@@ -92,7 +92,7 @@ public abstract class CorrectionRuleBaseNodeView extends BorderPane implements L
         this.menuItemRemove = new MenuItem(Translation.getText("predict4all.menu.button.remove.rule"));
         this.menuItemAddCategory = new MenuItem(Translation.getText("predict4all.menu.button.add.category"));
         this.menuItemAddRule = new MenuItem(Translation.getText("predict4all.menu.button.add.rule"));
-        this.buttonMenu = UIUtils.createGraphicMenuButton(null, "tooltip.button.toggle.show.correction.rule.menu");
+        this.buttonMenu = FXControlUtils.createGraphicMenuButton(null, "tooltip.button.toggle.show.correction.rule.menu");
         this.buttonMenu.getItems().addAll(this.menuItemAddRule, this.menuItemAddCategory, new SeparatorMenuItem(), this.menuItemRemove);
         HBox.setMargin(this.buttonMenu, new Insets(0.0, 0.0, 0.0, -10.0));
 

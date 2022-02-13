@@ -26,8 +26,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import org.lifecompanion.controller.editmode.DisplayableComponentSnapshotController;
 import org.lifecompanion.model.api.configurationcomponent.DisplayableComponentI;
-import org.lifecompanion.util.LCUtils;
-import org.lifecompanion.util.UIUtils;
+import org.lifecompanion.util.binding.BindingUtils;
+import org.lifecompanion.util.javafx.FXUtils;
 
 public class DisplayableComponentListCell<T extends DisplayableComponentI> extends ListCell<T> {
     private static final double CELL_SIZE = 150.0;
@@ -44,7 +44,7 @@ public class DisplayableComponentListCell<T extends DisplayableComponentI> exten
         this.componentSnapshot.setPreserveRatio(true);
         this.componentSnapshot.setSmooth(true);
 
-        UIUtils.setFixedSize(this, CELL_SIZE, CELL_SIZE);
+        FXUtils.setFixedSize(this, CELL_SIZE, CELL_SIZE);
 
         this.setContentDisplay(ContentDisplay.TOP);
         StackPane.setAlignment(this.componentSnapshot, Pos.CENTER);
@@ -64,7 +64,7 @@ public class DisplayableComponentListCell<T extends DisplayableComponentI> exten
         super.updateItem(item, empty);
         if (item == null || empty) {
             this.componentSnapshot.setImage(null);
-            LCUtils.unbindAndSetNull(textProperty());
+            BindingUtils.unbindAndSetNull(textProperty());
         } else {
             this.textProperty().bind(item.nameProperty());
             componentSnapshot.setImage(null);

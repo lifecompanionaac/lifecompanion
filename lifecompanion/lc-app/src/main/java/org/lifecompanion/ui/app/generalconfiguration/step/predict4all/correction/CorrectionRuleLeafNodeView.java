@@ -34,10 +34,10 @@ import javafx.util.StringConverter;
 import org.controlsfx.control.ToggleSwitch;
 import org.lifecompanion.ui.common.pane.specific.cell.CorrectionCategoryDetailledListCell;
 import org.lifecompanion.ui.common.pane.specific.cell.CorrectionCategoryListCell;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.ui.app.generalconfiguration.step.predict4all.P4AConfigUtils;
 import org.lifecompanion.ui.app.generalconfiguration.step.predict4all.P4ACorrectionConfigurationView;
 import org.lifecompanion.framework.commons.translation.Translation;
+import org.lifecompanion.util.javafx.FXControlUtils;
 import org.predict4all.nlp.words.correction.CorrectionRuleNode;
 
 public class CorrectionRuleLeafNodeView extends CorrectionRuleBaseNodeView {
@@ -75,7 +75,7 @@ public class CorrectionRuleLeafNodeView extends CorrectionRuleBaseNodeView {
         this.toggleBidirectinonal = new ToggleSwitch(Translation.getText("predict4all.config.rule.edit.bidir"));
         this.toggleBidirectinonal.setMaxWidth(Double.MAX_VALUE);
 
-        this.sliderCost = UIUtils.createBaseSlider(0.0, 2.0, 1.0);
+        this.sliderCost = FXControlUtils.createBaseSlider(0.0, 2.0, 1.0);
         this.sliderCost.setMinorTickCount(4);
         this.sliderCost.setMajorTickUnit(1.0);
         this.sliderCost.setShowTickMarks(true);

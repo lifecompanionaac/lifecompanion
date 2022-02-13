@@ -25,9 +25,9 @@ import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
 import org.lifecompanion.model.api.configurationcomponent.GridPartComponentI;
 import org.lifecompanion.model.impl.configurationcomponent.GridComponentInformation;
 import org.lifecompanion.model.api.selectionmode.SelectionModeI;
-import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.ui.selectionmode.DirectKeyScanSelectionModeView;
 import org.lifecompanion.framework.commons.utils.lang.CollectionUtils;
+import org.lifecompanion.util.ThreadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -86,7 +86,7 @@ public abstract class AbstractDirectKeyScanSelectionMode extends AbstractScannin
 		//If we scanned to much times this grid
 		if (this.checkRestartAndMaxScanValid()) {
 			// Issue #195 : dirty fix...
-			LCUtils.safeSleep(DELAY_BEFORE_RESTART);
+			ThreadUtils.safeSleep(DELAY_BEFORE_RESTART);
 			//Create the component to scan list
 			this.currentIndex = 0;
 			this.updateCurrentComponent(true);

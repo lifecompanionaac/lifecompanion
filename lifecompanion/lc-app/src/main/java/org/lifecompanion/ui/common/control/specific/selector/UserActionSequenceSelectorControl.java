@@ -25,8 +25,8 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.layout.VBox;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.UserActionSequenceI;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.UserActionSequencesI;
-import org.lifecompanion.util.LCUtils;
-import org.lifecompanion.util.UIUtils;
+import org.lifecompanion.util.javafx.FXControlUtils;
+import org.lifecompanion.util.model.ConfigurationComponentUtils;
 import org.lifecompanion.ui.app.generalconfiguration.step.dynamickey.useractionsequence.UserActionSequenceListCell;
 import org.lifecompanion.ui.common.control.generic.searchcombobox.SearchComboBox;
 import org.lifecompanion.framework.commons.translation.Translation;
@@ -62,11 +62,11 @@ public class UserActionSequenceSelectorControl extends VBox implements LCViewIni
         // Search combobox
         searchComboBox = new SearchComboBox<>(
                 lv -> new UserActionSequenceListCell(),
-                searchText -> StringUtils.isBlank(searchText) ? null : c -> LCUtils.getSimilarityScoreFor(searchText, c, getNameGetterForCategory()) > 0
+                searchText -> StringUtils.isBlank(searchText) ? null : c -> ConfigurationComponentUtils.getSimilarityScoreFor(searchText, c, getNameGetterForCategory()) > 0
                 , comp -> comp != null ? comp.nameProperty().get() : Translation.getText("key.list.selector.control.no.value"),
                 searchText -> StringUtils.isBlank(searchText) ? null : (c1, c2) -> Double.compare(
-                        LCUtils.getSimilarityScoreFor(searchText, c2, getNameGetterForCategory()),
-                        LCUtils.getSimilarityScoreFor(searchText, c1, getNameGetterForCategory())
+                        ConfigurationComponentUtils.getSimilarityScoreFor(searchText, c2, getNameGetterForCategory()),
+                        ConfigurationComponentUtils.getSimilarityScoreFor(searchText, c1, getNameGetterForCategory())
                 ));
         searchComboBox.setFixedCellSize(35.0);
 
@@ -84,7 +84,7 @@ public class UserActionSequenceSelectorControl extends VBox implements LCViewIni
     }
 
     public void setTooltipText(String tooltipTextId) {
-        Tooltip.install(searchComboBox, UIUtils.createTooltip(tooltipTextId));
+        Tooltip.install(searchComboBox, FXControlUtils.createTooltip(tooltipTextId));
     }
 
     @Override

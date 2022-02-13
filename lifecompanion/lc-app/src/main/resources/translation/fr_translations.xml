@@ -44,7 +44,6 @@
   <text key="lc.colorpicker.web.color.copied">Code couleur copié</text>
   <text key="notification.grid.part.copied.in.another.part">{} collé(e) dans la grille</text>
   <text key="notification.grid.replaced.previous.notification">Grille sélectionnée remplacée par la grille collée</text>
-  <text key="notification.grid.replaced.previous.notification">Grille sélectionnée remplacée par la grille collée</text>
   <text key="fire.action.event.onpress">A l'appui</text>
   <text key="fire.action.event.onrelease">Au relachement</text>
   <text key="config.duplicated.for.import.prefix">[ANCIENNE]</text>

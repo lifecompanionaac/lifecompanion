@@ -30,13 +30,14 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.UserActionSequenceI;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.configurationcomponent.dynamickey.UserActionSequence;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.lang.LangUtils;
+import org.lifecompanion.util.javafx.FXControlUtils;
+import org.lifecompanion.util.javafx.FXUtils;
 
 public class UserActionSequencesEditionView extends BorderPane implements LCViewInitHelper {
     private Button buttonAddSequence, buttonRemoveSequence;
@@ -52,10 +53,10 @@ public class UserActionSequencesEditionView extends BorderPane implements LCView
         comboBoxSequences = new ComboBox<>();
         comboBoxSequences.setButtonCell(new UserActionSequenceListCell());
         comboBoxSequences.setCellFactory(lv -> new UserActionSequenceListCell());
-        UIUtils.setFixedWidth(comboBoxSequences, 300.0);
+        FXUtils.setFixedWidth(comboBoxSequences, 300.0);
 
-        this.buttonAddSequence = UIUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.PLUS_CIRCLE).size(16).color(LCGraphicStyle.MAIN_DARK), null);
-        this.buttonRemoveSequence = UIUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.TRASH).size(16).color(LCGraphicStyle.SECOND_DARK), null);
+        this.buttonAddSequence = FXControlUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.PLUS_CIRCLE).size(16).color(LCGraphicStyle.MAIN_DARK), null);
+        this.buttonRemoveSequence = FXControlUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.TRASH).size(16).color(LCGraphicStyle.SECOND_DARK), null);
 
         final Label labelEdited = new Label(Translation.getText("field.sequence.selected.to.edit"));
         labelEdited.setMaxWidth(Double.MAX_VALUE);

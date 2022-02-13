@@ -19,8 +19,10 @@
 
 package org.lifecompanion.ui.common.control.generic;
 
+import javafx.beans.property.ListProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.SimpleListProperty;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -30,10 +32,10 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 import org.controlsfx.glyphfont.FontAwesome;
-import org.lifecompanion.util.UIUtils;
-import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.model.impl.constant.LCGraphicStyle;
+import org.lifecompanion.util.javafx.FXControlUtils;
 
 /**
  * View to display a list and to provide a way to change item order, add/remove item in the list.
@@ -46,7 +48,9 @@ public class OrderModifiableListView<T> extends BorderPane implements LCViewInit
     /**
      * Children inside the list
      */
-    private MemoryLeakSafeListView<T> listChildren;
+    private ListView<T> listChildren;
+
+    private final ListProperty<T> listProperty;
 
     /**
      * Button for base functions
@@ -70,6 +74,7 @@ public class OrderModifiableListView<T> extends BorderPane implements LCViewInit
     public OrderModifiableListView(final boolean allowEmptyListP, final Pos rightOrLeft) {
         this.allowEmptyList = allowEmptyListP;
         this.rightOrLeft = rightOrLeft;
+        this.listProperty = new SimpleListProperty<>();
         this.initAll();
     }
 
@@ -79,18 +84,18 @@ public class OrderModifiableListView<T> extends BorderPane implements LCViewInit
         VBox buttons = new VBox();
         buttons.setAlignment(Pos.CENTER);
         //TODO : tooltip
-        this.buttonAdd = UIUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.PLUS_CIRCLE)
+        this.buttonAdd = FXControlUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.PLUS_CIRCLE)
                 .size(OrderModifiableListView.ICON_SIZE).color(LCGraphicStyle.MAIN_PRIMARY), null);
-        this.buttonModify = UIUtils.createGraphicButton(
+        this.buttonModify = FXControlUtils.createGraphicButton(
                 GlyphFontHelper.FONT_MATERIAL.create('\uE254').size(OrderModifiableListView.ICON_SIZE - 2.0).color(LCGraphicStyle.MAIN_PRIMARY), null);
         this.buttonModify.setVisible(false);
         this.buttonModify.managedProperty().bind(this.buttonModify.visibleProperty());
-        this.buttonRemove = UIUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.TRASH_ALT)
+        this.buttonRemove = FXControlUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.TRASH_ALT)
                 .size(OrderModifiableListView.ICON_SIZE).color(LCGraphicStyle.SECOND_PRIMARY), null);
-        this.buttonUp = UIUtils.createGraphicButton(
+        this.buttonUp = FXControlUtils.createGraphicButton(
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CHEVRON_UP).size(OrderModifiableListView.ICON_SIZE).color(LCGraphicStyle.MAIN_DARK),
                 null);
-        this.buttonDown = UIUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CHEVRON_DOWN)
+        this.buttonDown = FXControlUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CHEVRON_DOWN)
                 .size(OrderModifiableListView.ICON_SIZE).color(LCGraphicStyle.MAIN_DARK), null);
         buttons.getChildren().addAll(this.buttonAdd, this.buttonModify, this.buttonRemove, this.buttonUp, this.buttonDown);
         //Total
@@ -99,7 +104,7 @@ public class OrderModifiableListView<T> extends BorderPane implements LCViewInit
         } else {
             this.setLeft(buttons);
         }
-        this.listChildren = new MemoryLeakSafeListView<>();
+        this.listChildren = new ListView<>();
         this.listChildren.setMaxHeight(110.0);
         this.listChildren.setMaxWidth(130.0);
         this.setCenter(listChildren);
@@ -107,15 +112,16 @@ public class OrderModifiableListView<T> extends BorderPane implements LCViewInit
 
     @Override
     public void initBinding() {
+        this.listProperty.bind(listChildren.itemsProperty());
         //disable remove if there is no selection
         int minSize = this.allowEmptyList ? 0 : 1;
-        this.buttonRemove.disableProperty().bind(this.listChildren.getPropertyChildrenList().sizeProperty().isEqualTo(minSize)
-                .or(this.listChildren.selectedItemProperty().isNull()));
+        this.buttonRemove.disableProperty().bind(this.listProperty.sizeProperty().isEqualTo(minSize)
+                .or(this.listChildren.getSelectionModel().selectedItemProperty().isNull()));
         //Disable up/down by selected item
-        this.buttonUp.disableProperty().bind(this.listChildren.selectedItemProperty().isNull()
-                .or(this.listChildren.selectedIndexProperty().isEqualTo(0)));
-        this.buttonDown.disableProperty().bind(this.listChildren.selectedItemProperty().isNull().or(this.listChildren
-                .selectedIndexProperty().isEqualTo(this.listChildren.getPropertyChildrenList().sizeProperty().subtract(1))));
+        this.buttonUp.disableProperty().bind(this.listChildren.getSelectionModel().selectedItemProperty().isNull()
+                .or(this.listChildren.getSelectionModel().selectedIndexProperty().isEqualTo(0)));
+        this.buttonDown.disableProperty().bind(this.listChildren.getSelectionModel().selectedItemProperty().isNull().or(this.listChildren
+                .getSelectionModel().selectedIndexProperty().isEqualTo(this.listProperty.sizeProperty().subtract(1))));
     }
 
     // Class part : "Needed getter and setter"
@@ -145,11 +151,11 @@ public class OrderModifiableListView<T> extends BorderPane implements LCViewInit
     }
 
     public ReadOnlyObjectProperty<T> selectedItemProperty() {
-        return listChildren.selectedItemProperty();
+        return listChildren.getSelectionModel().selectedItemProperty();
     }
 
     public T getSelectedItem() {
-        return listChildren.getSelectedItem();
+        return listChildren.getSelectionModel().getSelectedItem();
     }
 
     public void scrollTo(T item) {
@@ -165,15 +171,15 @@ public class OrderModifiableListView<T> extends BorderPane implements LCViewInit
     }
 
     public ReadOnlyBooleanProperty listEmptyProperty() {
-        return this.listChildren.getPropertyChildrenList().emptyProperty();
+        return this.listProperty.emptyProperty();
     }
 
     public void setItems(ObservableList<T> items) {
-        listChildren.setItemsFixML(items);
+        listChildren.setItems(items);
     }
 
     public void select(T item) {
-        this.listChildren.select(item);
+        this.listChildren.getSelectionModel().select(item);
     }
     //========================================================================
 

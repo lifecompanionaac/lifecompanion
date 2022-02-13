@@ -26,10 +26,11 @@ import javafx.scene.image.Image;
 import org.lifecompanion.model.api.configurationcomponent.DisplayableComponentI;
 import org.lifecompanion.model.api.ui.configurationcomponent.ComponentViewI;
 import org.lifecompanion.model.api.ui.configurationcomponent.ViewProviderI;
-import org.lifecompanion.util.LCUtils;
-import org.lifecompanion.util.UIUtils;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.framework.utils.LCNamedThreadFactory;
 import org.lifecompanion.model.impl.ui.configurationcomponent.UseViewProvider;
+import org.lifecompanion.util.javafx.SnapshotUtils;
+import org.lifecompanion.util.model.ImageDictionaryUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -102,7 +103,7 @@ public enum DisplayableComponentSnapshotController {
                     if (loadingTasks != null) {
                         loadingTasks.remove(task);
                     }
-                    LCUtils.unloadAllImagesIn(LOAD_REQUEST_ID, component);
+                    ImageDictionaryUtils.unloadAllImagesIn(LOAD_REQUEST_ID, component);
                     if (task.getException() != null) {
                         LOGGER.error("Problem to make a component snaphsot", task.getException());
                     }
@@ -165,15 +166,15 @@ public enum DisplayableComponentSnapshotController {
 
     public static Image getComponentSnapshot(DisplayableComponentI component, boolean loadAllImages, double width, double height) {
         if (loadAllImages) {
-            LCUtils.loadAllImagesIn(LOAD_REQUEST_ID, IMAGE_LOADING_TIMEOUT, component);
+            ImageDictionaryUtils.loadAllImagesIn(LOAD_REQUEST_ID, IMAGE_LOADING_TIMEOUT, component);
         }
-        return LCUtils.runOnFXThreadAndWaitFor(() -> {
+        return FXThreadUtils.runOnFXThreadAndWaitFor(() -> {
             ComponentViewI<?> display = component.getDisplay(USE_VIEW_PROVIDER, false);
             try {
-                return UIUtils.takeNodeSnapshot(display.getView(), width, height, true, 1.0);
+                return SnapshotUtils.takeNodeSnapshot(display.getView(), width, height, true, 1.0);
             } finally {
                 display.unbindComponentAndChildren();
-                LCUtils.unloadAllImagesIn(LOAD_REQUEST_ID, component);
+                ImageDictionaryUtils.unloadAllImagesIn(LOAD_REQUEST_ID, component);
             }
         });
     }

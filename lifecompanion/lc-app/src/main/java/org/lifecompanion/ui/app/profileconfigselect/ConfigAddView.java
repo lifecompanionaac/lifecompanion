@@ -33,7 +33,7 @@ import org.lifecompanion.controller.profileconfigselect.ProfileConfigStep;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
-import org.lifecompanion.util.UIControlHelper;
+import org.lifecompanion.util.javafx.FXControlUtils;
 import org.lifecompanion.util.model.Triple;
 
 public class ConfigAddView extends BorderPane implements LCViewInitHelper, ProfileConfigStepViewI {
@@ -46,7 +46,7 @@ public class ConfigAddView extends BorderPane implements LCViewInitHelper, Profi
     //========================================================================
     @Override
     public void initUI() {
-        Triple<HBox, Label, Node> header = UIControlHelper.createHeader("config.add.view.title", e -> {
+        Triple<HBox, Label, Node> header = FXControlUtils.createHeader("config.add.view.title", e -> {
             final ProfileConfigStep previousStep = ProfileConfigSelectionController.INSTANCE.getPreviousStep();
             if (previousStep != null) {
                 ProfileConfigSelectionController.INSTANCE.setConfigStep(previousStep, null, null);
@@ -56,17 +56,17 @@ public class ConfigAddView extends BorderPane implements LCViewInitHelper, Profi
         });
 
         // Action grid
-        final Node nodeNew = UIControlHelper.createActionTableEntry("config.selection.create.new.config.button",
+        final Node nodeNew = FXControlUtils.createActionTableEntry("config.selection.create.new.config.button",
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.PLUS_CIRCLE).size(30).color(LCGraphicStyle.MAIN_DARK),
                 () -> ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.NewEditInListAction()));
-        final Node nodeImport = UIControlHelper.createActionTableEntry("config.selection.create.import.config.button",
+        final Node nodeImport = FXControlUtils.createActionTableEntry("config.selection.create.import.config.button",
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.DOWNLOAD).size(30).color(LCGraphicStyle.MAIN_DARK),
                 () -> ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.ImportEditAction(this, null,
                         configurationDescription -> ProfileConfigSelectionController.INSTANCE.setConfigStep(ProfileConfigStep.CONFIGURATION_LIST, null, null))));
-        final Node nodeDefault = UIControlHelper.createActionTableEntry("config.selection.add.from.default.config.button",
+        final Node nodeDefault = FXControlUtils.createActionTableEntry("config.selection.add.from.default.config.button",
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.TH_LARGE).size(28).color(LCGraphicStyle.MAIN_DARK),
                 () -> ProfileConfigSelectionController.INSTANCE.setConfigStep(ProfileConfigStep.CONFIGURATION_ADD_FROM_DEFAULT, ProfileConfigStep.CONFIGURATION_ADD, null));
-        final Node nodeDuplicate = UIControlHelper.createActionTableEntry("config.selection.create.duplicate.config.button",
+        final Node nodeDuplicate = FXControlUtils.createActionTableEntry("config.selection.create.duplicate.config.button",
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.COPY).size(28).color(LCGraphicStyle.MAIN_DARK),
                 () -> ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.DuplicateEditAction((this))));
         VBox boxActions = new VBox(nodeNew, nodeImport, nodeDefault, nodeDuplicate);

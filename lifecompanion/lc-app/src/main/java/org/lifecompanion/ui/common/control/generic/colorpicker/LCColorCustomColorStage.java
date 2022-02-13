@@ -44,8 +44,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.controlsfx.glyphfont.FontAwesome;
-import org.lifecompanion.util.LCUtils;
-import org.lifecompanion.util.UIUtils;
+import org.lifecompanion.util.LangUtils;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.metrics.SessionStatsController;
@@ -56,6 +55,9 @@ import org.lifecompanion.ui.notification.LCNotificationController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.util.javafx.ColorUtils;
+import org.lifecompanion.util.javafx.FXControlUtils;
+import org.lifecompanion.util.javafx.StageUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -165,14 +167,14 @@ public class LCColorCustomColorStage extends Stage implements LCViewInitHelper {
         boxResult.setAlignment(Pos.CENTER);
 
         fieldColorHex = new TextField();
-        buttonCopyHex = UIUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.COPY).size(14).color(LCGraphicStyle.MAIN_DARK), null);
+        buttonCopyHex = FXControlUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.COPY).size(14).color(LCGraphicStyle.MAIN_DARK), null);
         HBox boxFieldColorHex = new HBox(5.0, fieldColorHex, buttonCopyHex);
         boxFieldColorHex.setAlignment(Pos.CENTER);
         boxFieldColorHex.getStyleClass().add("text-font-size-90");
 
-        buttonOk = UIUtils.createLeftTextButton(Translation.getText("general.configuration.scene.ok.button"),
+        buttonOk = FXControlUtils.createLeftTextButton(Translation.getText("general.configuration.scene.ok.button"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CHECK).size(16).color(LCGraphicStyle.MAIN_DARK), null);
-        buttonCancel = UIUtils.createLeftTextButton(Translation.getText("general.configuration.scene.cancel.button"),
+        buttonCancel = FXControlUtils.createLeftTextButton(Translation.getText("general.configuration.scene.cancel.button"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.TIMES).size(16).color(LCGraphicStyle.SECOND_DARK), null);
 
         HBox boxButton = new HBox(8.0, buttonCancel, buttonOk);
@@ -184,7 +186,7 @@ public class LCColorCustomColorStage extends Stage implements LCViewInitHelper {
         // Stage
         this.initStyle(StageStyle.UTILITY);
         this.initModality(Modality.APPLICATION_MODAL);
-        UIUtils.applyDefaultStageConfiguration(this);
+        StageUtils.applyDefaultStageConfiguration(this);
         this.setResizable(false);
 
         Scene sceneContent = new Scene(totalVbox);
@@ -239,22 +241,22 @@ public class LCColorCustomColorStage extends Stage implements LCViewInitHelper {
     @Override
     public void initListener() {
         final EventHandler<MouseEvent> hueEH = me -> {
-            hue.set(360.0 * LCUtils.toBoundDouble(me.getX() / hueSelectorPane.getWidth(), 0, 1));
+            hue.set(360.0 * LangUtils.toBoundDouble(me.getX() / hueSelectorPane.getWidth(), 0, 1));
             hueSelectorPane.requestFocus();
         };
         hueSelectorPane.setOnMousePressed(hueEH);
         hueSelectorPane.setOnMouseDragged(hueEH);
 
         final EventHandler<MouseEvent> colorEH = me -> {
-            saturation.set(LCUtils.toBoundDouble(me.getX() / colorSelectionPane.getWidth(), 0, 1));
-            brightness.set(LCUtils.toBoundDouble((colorSelectionPane.getHeight() - me.getY()) / colorSelectionPane.getHeight(), 0, 1));
+            saturation.set(LangUtils.toBoundDouble(me.getX() / colorSelectionPane.getWidth(), 0, 1));
+            brightness.set(LangUtils.toBoundDouble((colorSelectionPane.getHeight() - me.getY()) / colorSelectionPane.getHeight(), 0, 1));
             colorSelectionPane.requestFocus();
         };
         colorSelectionPane.setOnMousePressed(colorEH);
         colorSelectionPane.setOnMouseDragged(colorEH);
 
         final EventHandler<MouseEvent> opacityEH = me -> {
-            opacity.set(LCUtils.toBoundDouble((opacityShowPane.getHeight() - me.getY()) / opacityShowPane.getHeight(), 0, 1));
+            opacity.set(LangUtils.toBoundDouble((opacityShowPane.getHeight() - me.getY()) / opacityShowPane.getHeight(), 0, 1));
             colorSelectionPane.requestFocus();
         };
         opacitySelectorPane.setOnMousePressed(opacityEH);
@@ -271,7 +273,7 @@ public class LCColorCustomColorStage extends Stage implements LCViewInitHelper {
             if (selectedColor.get() != null) {
                 final Clipboard clipboard = Clipboard.getSystemClipboard();
                 final ClipboardContent content = new ClipboardContent();
-                content.putString(LCUtils.toWebColorWithoutAlpha(selectedColor.get()));
+                content.putString(ColorUtils.toWebColorWithoutAlpha(selectedColor.get()));
                 clipboard.setContent(content);
                 LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo("lc.colorpicker.web.color.copied").withMsDuration(LCGraphicStyle.SHORT_NOTIFICATION_DURATION_MS));
             }
@@ -301,7 +303,7 @@ public class LCColorCustomColorStage extends Stage implements LCViewInitHelper {
                             new Stop(1, c.deriveColor(0, 1, 1, 0))),
                     CornerRadii.EMPTY, Insets.EMPTY));
         }, selectedColor));
-        selectedColor.addListener((obs, ov, nv) -> fieldColorHex.setText(LCUtils.toWebColorWithoutAlpha(nv)));
+        selectedColor.addListener((obs, ov, nv) -> fieldColorHex.setText(ColorUtils.toWebColorWithoutAlpha(nv)));
         fieldColorHex.focusedProperty().addListener(inv -> updateAfterFieldUpdate());
         fieldColorHex.setOnAction(e -> updateAfterFieldUpdate());
     }

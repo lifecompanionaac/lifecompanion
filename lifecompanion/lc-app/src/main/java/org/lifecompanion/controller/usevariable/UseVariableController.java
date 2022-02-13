@@ -39,7 +39,7 @@ import org.lifecompanion.model.api.categorizedelement.useevent.UseEventGenerator
 import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
-import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.VariableInformationKeyOption;
 import org.lifecompanion.controller.plugin.PluginController;
 import org.lifecompanion.model.impl.usevariable.StringUseVariable;
@@ -356,7 +356,7 @@ public enum UseVariableController implements ModeListenerI {
     // Class part : "Information key option"
     //========================================================================
     public void requestVariablesUpdate() {
-        LCUtils.runOnFXThread(this::updateInformationKeyOptions);
+        FXThreadUtils.runOnFXThread(this::updateInformationKeyOptions);
     }
 
     private void updateInformationKeyOptions() {

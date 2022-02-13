@@ -23,8 +23,8 @@ import mslinks.ShellLink;
 import org.lifecompanion.controller.appinstallation.InstallationController;
 import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
 import org.lifecompanion.model.api.profile.LCProfileI;
+import org.lifecompanion.util.IOUtils;
 import org.lifecompanion.util.model.LCTask;
-import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.framework.commons.utils.system.WindowsRegUtils;
@@ -64,7 +64,7 @@ public class CreateConfigurationDesktopShortcutTask extends LCTask<Void> {
                 LOGGER.warn("Couldn't read desktop path, will fallback to default location", e);
                 desktopDirectory = new File(System.getProperty("user.home") + File.separator + "Desktop");
             }
-            File desktopShortcutPath = new File(desktopDirectory.getAbsolutePath() + File.separator + LCUtils.getValidFileName(configuration.configurationNameProperty().get()) + ".lnk");
+            File desktopShortcutPath = new File(desktopDirectory.getAbsolutePath() + File.separator + IOUtils.getValidFileName(configuration.configurationNameProperty().get()) + ".lnk");
             if (!desktopShortcutPath.exists()) {
                 ShellLink lLink = ShellLink.createLink(InstallationController.INSTANCE.getLauncherPath().getAbsolutePath());
                 lLink.setCMDArgs(LCConstant.ARG_LAUNCH_CONFIG + " " + profile.getID() + " " + configuration.getConfigurationId());

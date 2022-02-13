@@ -37,7 +37,7 @@ import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.configurationcomponent.VirtualMouseDrawing;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
 import org.lifecompanion.ui.virtualmouse.VirtualMouseStage;
-import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.util.javafx.StageUtils;
 import org.lifecompanion.util.javafx.RobotProvider;
@@ -240,7 +240,7 @@ public enum VirtualMouseController implements ModeListenerI {
 
     public void hideMouseFrame() {
         if (this.virtualMouseStage != null) {
-            LCUtils.runOnFXThread(() -> this.virtualMouseStage.hide());
+            FXThreadUtils.runOnFXThread(() -> this.virtualMouseStage.hide());
         }
     }
 
@@ -305,7 +305,7 @@ public enum VirtualMouseController implements ModeListenerI {
 
     private void frameToFrontAndFocus() {
         //mouse stage and main frame to front
-        LCUtils.runOnFXThread(() -> {
+        FXThreadUtils.runOnFXThread(() -> {
             AppModeController.INSTANCE.getUseModeContext().stageProperty().get().toFront();
             this.virtualMouseStage.toFront();
             AppModeController.INSTANCE.getUseModeContext().stageProperty().get().requestFocus();
@@ -395,7 +395,7 @@ public enum VirtualMouseController implements ModeListenerI {
             if (this.virtualMouseStage.isShowing()) {
                 callback.run();
             } else {
-                LCUtils.runOnFXThread(() -> {
+                FXThreadUtils.runOnFXThread(() -> {
                     this.virtualMouseStage.show();
                     this.frameToFrontAndFocus();
                     callback.run();
@@ -407,7 +407,7 @@ public enum VirtualMouseController implements ModeListenerI {
             this.frameWidth = primaryScreenBounds.getWidth();
             this.frameHeight = primaryScreenBounds.getHeight();
 
-            LCUtils.runOnFXThread(() -> {
+            FXThreadUtils.runOnFXThread(() -> {
                 this.virtualMouseStage = VirtualMouseStage.getInstance();
                 this.virtualMouseStage.show();
                 final Rectangle2D screenBounds = Screen.getPrimary().getBounds();

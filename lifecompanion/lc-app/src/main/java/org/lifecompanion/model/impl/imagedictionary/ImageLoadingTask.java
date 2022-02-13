@@ -22,7 +22,7 @@ package org.lifecompanion.model.impl.imagedictionary;
 import javafx.beans.property.ObjectProperty;
 import javafx.concurrent.Task;
 import javafx.scene.image.Image;
-import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -79,7 +79,7 @@ public class ImageLoadingTask extends Task<Image> {
             try (FileInputStream fis = new FileInputStream(this.path)) {
                 Image image = new Image(fis, this.width, this.height, this.keepRatio, this.smooth);
                 if (!isCancelled()) {
-                    LCUtils.runOnFXThread(() -> {
+                    FXThreadUtils.runOnFXThread(() -> {
                         if (target != null && !isCancelled()) {
                             this.target.set(image);
                         }

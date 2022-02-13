@@ -24,11 +24,12 @@ import javafx.scene.layout.Region;
 import org.lifecompanion.model.api.configurationcomponent.GridPartComponentI;
 import org.lifecompanion.model.api.ui.configurationcomponent.ComponentViewI;
 import org.lifecompanion.model.api.ui.configurationcomponent.ViewProviderI;
-import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.util.binding.BindingUtils;
 import org.lifecompanion.util.binding.Unbindable;
 import org.lifecompanion.model.impl.configurationcomponent.GridPartGridComponent;
 import org.lifecompanion.model.impl.style.ShapeStyleBinder;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.util.model.ConfigurationComponentUtils;
 
 import java.util.ArrayList;
 
@@ -63,7 +64,7 @@ public class GridPartGridViewBase extends Pane implements ComponentViewI<GridPar
         for (GridPartComponentI comp : new ArrayList<>(this.model.getGrid().getGridContent())) {
             GridPartGridViewBase.this.getChildren().add(comp.getDisplay(viewProvider, useCache).getView());
         }
-        this.model.getGrid().getGridContent().addListener(gridPartChangeListener = LCUtils.createListChangeListener((added) -> {
+        this.model.getGrid().getGridContent().addListener(gridPartChangeListener = BindingUtils.createListChangeListener((added) -> {
             GridPartGridViewBase.this.getChildren().add(added.getDisplay(viewProvider, useCache).getView());
         }, (removed) -> {
             GridPartGridViewBase.this.getChildren().remove(removed.getDisplay(viewProvider, useCache).getView());
@@ -89,7 +90,7 @@ public class GridPartGridViewBase extends Pane implements ComponentViewI<GridPar
         this.model.getGrid().getGridContent().removeListener(gridPartChangeListener);
         shapeStyleBinding.unbind();
         this.model = null;
-        LCUtils.exploreComponentViewChildrenToUnbind(this);
+        ConfigurationComponentUtils.exploreComponentViewChildrenToUnbind(this);
     }
 
     @Override

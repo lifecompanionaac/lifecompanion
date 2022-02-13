@@ -30,13 +30,13 @@ import org.lifecompanion.model.api.profile.LCProfileI;
 import org.lifecompanion.controller.textcomponent.WritingStateController;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.profile.ProfileController;
+import org.lifecompanion.util.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
-import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
@@ -100,7 +100,7 @@ public class SaveUserTextAction extends SimpleUseActionImpl<UseActionTriggerComp
 			}
 			LCConfigurationDescriptionI configDescription = AppModeController.INSTANCE.getEditModeContext().configurationDescriptionProperty().get();
 			if (configDescription != null) {
-				fileName.append("_").append(LCUtils.getValidFileName(configDescription.configurationNameProperty().get()));
+				fileName.append("_").append(IOUtils.getValidFileName(configDescription.configurationNameProperty().get()));
 			}
 			fileName.append(".txt");
 			this.checkDestinationFolder();

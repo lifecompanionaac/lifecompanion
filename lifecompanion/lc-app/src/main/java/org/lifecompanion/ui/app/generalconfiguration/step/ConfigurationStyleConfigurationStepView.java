@@ -26,7 +26,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
-import org.lifecompanion.util.UIControlHelper;
+import org.lifecompanion.util.javafx.FXControlUtils;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStep;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStepViewI;
 import org.lifecompanion.ui.common.pane.specific.styleedit.AbstractStyleEditView;
@@ -104,7 +104,7 @@ public class ConfigurationStyleConfigurationStepView extends BorderPane implemen
     }
 
     private void addStyleEditView(VBox box, String titleId, AbstractStyleEditView styleEditView, Function<LCConfigurationI, Object> styleGetter) {
-        Label labelTitle = UIControlHelper.createTitleLabel(Translation.getText(titleId));
+        Label labelTitle = FXControlUtils.createTitleLabel(Translation.getText(titleId));
         box.getChildren().addAll(labelTitle, styleEditView);
         this.styleEditViews.add(Pair.of(styleEditView, styleGetter));
     }

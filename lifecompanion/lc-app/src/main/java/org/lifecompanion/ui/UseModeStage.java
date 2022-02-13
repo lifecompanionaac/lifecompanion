@@ -25,7 +25,6 @@ import javafx.stage.StageStyle;
 import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.profile.LCProfileI;
-import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
@@ -58,7 +57,7 @@ public class UseModeStage extends Stage {
             StageUtils.moveStageTo(this, configuration.framePositionOnLaunchProperty().get());
         }
         if (configuration.virtualKeyboardProperty().get()) {
-            LCUtils.setFocusableSafe(this, false);
+            StageUtils.setFocusableSafe(this, false);
         }
         this.setOnHidden(e -> {
             this.opacityProperty().unbind();

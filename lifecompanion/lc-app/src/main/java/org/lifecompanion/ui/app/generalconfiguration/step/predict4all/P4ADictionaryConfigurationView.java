@@ -46,9 +46,10 @@ import org.controlsfx.glyphfont.GlyphFontRegistry;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.ui.common.pane.specific.cell.P4AWordListCell;
-import org.lifecompanion.util.UIControlHelper;
+import org.lifecompanion.util.javafx.DialogUtils;
+import org.lifecompanion.util.javafx.FXUtils;
+import org.lifecompanion.util.javafx.FXControlUtils;
 import org.lifecompanion.util.model.LCTask;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.resource.ResourceHelper;
 import org.lifecompanion.controller.editaction.AsyncExecutorController;
@@ -58,7 +59,6 @@ import org.lifecompanion.model.impl.textprediction.predict4all.PredictorModelDto
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStep;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStepViewI;
 import org.lifecompanion.controller.editmode.FileChooserType;
-import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.controller.editmode.LCFileChoosers;
 import org.lifecompanion.ui.app.generalconfiguration.step.predict4all.correction.VocabularyListModifyDic;
 import org.lifecompanion.framework.commons.translation.Translation;
@@ -148,7 +148,7 @@ public class P4ADictionaryConfigurationView extends ScrollPane implements Genera
         HBox.setHgrow(labelSliderFilter, Priority.ALWAYS);
         HBox boxSlider = new HBox(5.0, labelSliderFilter, sliderFilterVocabulary);
 
-        VBox boxTop = new VBox(5.0, UIControlHelper.createTitleLabel("predict4all.config.part.title.word.list"), this.fieldSearchWord, boxSlider, labelWordCount, this.toggleUserWordOnly, this.toggleHideDisabledWords);
+        VBox boxTop = new VBox(5.0, FXControlUtils.createTitleLabel("predict4all.config.part.title.word.list"), this.fieldSearchWord, boxSlider, labelWordCount, this.toggleUserWordOnly, this.toggleHideDisabledWords);
 
         // Center : word list
         this.listViewWords = new ListView<>(this.sortedList);
@@ -161,7 +161,7 @@ public class P4ADictionaryConfigurationView extends ScrollPane implements Genera
         // Bottom : add custom word
         this.fieldAddedWord = new TextField();
         this.fieldAddedWord.setPromptText(Translation.getText("predict4all.config.prompt.add.user.word"));
-        this.buttonAddWord = UIUtils.createGraphicButton(GlyphFontRegistry.font("FontAwesome").create(FontAwesome.Glyph.PLUS_CIRCLE).size(16).color(LCGraphicStyle.MAIN_PRIMARY),
+        this.buttonAddWord = FXControlUtils.createGraphicButton(GlyphFontRegistry.font("FontAwesome").create(FontAwesome.Glyph.PLUS_CIRCLE).size(16).color(LCGraphicStyle.MAIN_PRIMARY),
                 "predict4all.config.prompt.add.user.word");
         this.buttonAddWord.getStyleClass().add("small-button");
         this.buttonAddWord.setPadding(new Insets(0.0, 0.0, 1.0, 0.0));
@@ -174,7 +174,7 @@ public class P4ADictionaryConfigurationView extends ScrollPane implements Genera
         labelExplainPrioDeprio.getStyleClass().add("explain-text");
         Label labelPrioPart = new Label(Translation.getText("predict4all.config.part.title.words.priorized"));
         labelPrioPart.setStyle("-fx-font-weight: bold;");
-        VBox boxPriorizeVoc = new VBox(5.0, UIControlHelper.createTitleLabel("predict4all.config.part.title.priorize.deprio"), labelExplainPrioDeprio, labelPrioPart);
+        VBox boxPriorizeVoc = new VBox(5.0, FXControlUtils.createTitleLabel("predict4all.config.part.title.priorize.deprio"), labelExplainPrioDeprio, labelPrioPart);
         Arrays.stream(VocabularyListModifyDic.values()).filter(VocabularyListModifyDic::isPriorize).forEach(dic -> boxPriorizeVoc.getChildren().add(this.createToggleFor(dic)));
         Label labelDeprioPart = new Label(Translation.getText("predict4all.config.part.title.words.depriorized"));
         labelDeprioPart.setStyle("-fx-font-weight: bold;");
@@ -424,7 +424,7 @@ public class P4ADictionaryConfigurationView extends ScrollPane implements Genera
     private void executeWordChoice(final Button btnSrc, final double factor) {
         FileChooser wordFileChooser = LCFileChoosers.getOtherFileChooser(Translation.getText("predict4all.config.file.chooser.import.words.title"),
                 new FileChooser.ExtensionFilter(Translation.getText("predict4all.config.file.chooser.import.words.extension"), Collections.singletonList("*.txt")), FileChooserType.OTHER_MISC_NO_EXTERNAL);
-        File selectedFile = wordFileChooser.showOpenDialog(UIUtils.getSourceWindow(this));
+        File selectedFile = wordFileChooser.showOpenDialog(FXUtils.getSourceWindow(this));
         if (selectedFile != null) {
             try {
                 FileInputStream fis = new FileInputStream(selectedFile);
@@ -462,7 +462,7 @@ public class P4ADictionaryConfigurationView extends ScrollPane implements Genera
                     if (showConfirm) {
                         final int addedF = added;
                         Platform.runLater(() -> {
-                            Alert dialog = ConfigUIUtils.createAlert(P4ADictionaryConfigurationView.this, Alert.AlertType.INFORMATION);
+                            Alert dialog = DialogUtils.createAlert(P4ADictionaryConfigurationView.this, Alert.AlertType.INFORMATION);
                             dialog.setContentText(Translation.getText("predict4all.action.imported.success.title"));
                             dialog.setContentText(Translation.getText(factor > 1.0 ? "predict4all.action.imported.success.prio.message"
                                     : "predict4all.action.imported.success.deprio.message", addedF));

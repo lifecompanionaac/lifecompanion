@@ -39,10 +39,12 @@ import org.lifecompanion.model.api.selectionmode.ProgressDrawMode;
 import org.lifecompanion.model.api.selectionmode.ScanningDirection;
 import org.lifecompanion.model.api.style.StylePropertyI;
 import org.lifecompanion.model.api.ui.configurationcomponent.ViewProviderI;
-import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.util.LangUtils;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.controller.lifecycle.AppMode;
 import org.lifecompanion.model.impl.selectionmode.DrawSelectionModeI;
 import org.lifecompanion.ui.configurationcomponent.base.LCConfigurationChildContainerPane;
+import org.lifecompanion.util.model.ConfigurationComponentLayoutUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -206,11 +208,11 @@ public class AbstractSelectionModeView<T extends DrawSelectionModeI> extends Gro
     // Class part : "Public API"
     //========================================================================
     public void moveToPart(final GridPartComponentI gridPart, final long progressTime, final boolean enableAnimation) {
-        LCUtils.runOnFXThread(() -> this.updatePartMoveAnimation(gridPart, progressTime, enableAnimation));
+        FXThreadUtils.runOnFXThread(() -> this.updatePartMoveAnimation(gridPart, progressTime, enableAnimation));
     }
 
     public void moveNullPart() {
-        LCUtils.runOnFXThread(this::scaleDownPreviousViews);
+        FXThreadUtils.runOnFXThread(this::scaleDownPreviousViews);
     }
 
     public void dispose() {
@@ -220,13 +222,13 @@ public class AbstractSelectionModeView<T extends DrawSelectionModeI> extends Gro
 
     private void updatePartMoveAnimation(final GridPartComponentI keyP, final long progressTime, final boolean enableAnimation) {
         //Get values
-        Pair<Double, Double> pos = LCUtils.getConfigurationPosition(keyP);
+        Pair<Double, Double> pos = ConfigurationComponentLayoutUtils.getConfigurationPosition(keyP);
         StylePropertyI<Number> radiusProp = keyP instanceof GridPartKeyComponentI ? keyP.getKeyStyle().shapeRadiusProperty()
                 : keyP.getGridShapeStyle().shapeRadiusProperty();
         //Launch
         this.updateMoveAnimation(enableAnimation, ViewProviderI.getComponentView(keyP, AppMode.USE).getView(), pos,
                 new Pair<>(keyP.layoutWidthProperty().get(), keyP.layoutHeightProperty().get()),
-                LCUtils.nullToZeroDouble(radiusProp.value().getValue()), this.partTranslateTransition, this.keyStrokeRectangle,
+                LangUtils.nullToZeroDouble(radiusProp.value().getValue()), this.partTranslateTransition, this.keyStrokeRectangle,
                 this.keyProgressRectangle, this.keyProgressRectangleVisible, () -> {
                     this.startProgressTransition(pos, progressTime, keyP);
                 });
@@ -304,7 +306,7 @@ public class AbstractSelectionModeView<T extends DrawSelectionModeI> extends Gro
             strokeRectangle.setTranslateY(position.getValue());
             strokeRectangle.setWidth(size.getKey());
             strokeRectangle.setHeight(size.getValue());
-            double arcValue = LCUtils.computeArcAndStroke(shapeRadius, size.getKey(), size.getValue(), strokeSize);
+            double arcValue = ConfigurationComponentLayoutUtils.computeArcAndStroke(shapeRadius, size.getKey(), size.getValue(), strokeSize);
             strokeRectangle.setArcWidth(arcValue);
             strokeRectangle.setArcHeight(arcValue);
             strokeRectangle.setStrokeWidth(strokeSize);
@@ -422,7 +424,7 @@ public class AbstractSelectionModeView<T extends DrawSelectionModeI> extends Gro
                                          final double stroke) {
         final KeyValue kvW = new KeyValue(rectangle.widthProperty(), width, Interpolator.EASE_BOTH);
         final KeyValue kvH = new KeyValue(rectangle.heightProperty(), height, Interpolator.EASE_BOTH);
-        double arcValue = LCUtils.computeArcAndStroke(round, width, height, stroke);
+        double arcValue = ConfigurationComponentLayoutUtils.computeArcAndStroke(round, width, height, stroke);
         final KeyValue kvRW = new KeyValue(rectangle.arcWidthProperty(), arcValue, Interpolator.EASE_BOTH);
         final KeyValue kvRH = new KeyValue(rectangle.arcHeightProperty(), arcValue, Interpolator.EASE_BOTH);
         final KeyValue kvStr = new KeyValue(rectangle.strokeWidthProperty(), stroke, Interpolator.EASE_BOTH);

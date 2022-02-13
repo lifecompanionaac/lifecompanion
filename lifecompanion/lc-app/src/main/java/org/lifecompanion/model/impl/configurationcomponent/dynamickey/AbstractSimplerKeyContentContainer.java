@@ -33,12 +33,12 @@ import org.lifecompanion.model.api.configurationcomponent.dynamickey.SimplerKeyC
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.imagedictionary.ImageElementI;
 import org.lifecompanion.model.api.io.IOContextI;
-import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.model.impl.configurationcomponent.ImageUseComponentPropertyWrapper;
 import org.lifecompanion.framework.commons.fx.io.XMLGenericProperty;
 import org.lifecompanion.framework.commons.fx.io.XMLIgnoreNullValue;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.util.binding.BindingUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -145,9 +145,9 @@ public abstract class AbstractSimplerKeyContentContainer implements SimplerKeyCo
             this.wantedImageWidth.bind(imageUseComponent.wantedImageWidthProperty());
             this.wantedImageHeight.bind(imageUseComponent.wantedImageHeightProperty());
         } else {
-            LCUtils.unbindAndSet(imageUseComponentDisplayed, false);
-            LCUtils.unbindAndSet(wantedImageWidth, 0.0);
-            LCUtils.unbindAndSet(wantedImageHeight, 0.0);
+            BindingUtils.unbindAndSet(imageUseComponentDisplayed, false);
+            BindingUtils.unbindAndSet(wantedImageWidth, 0.0);
+            BindingUtils.unbindAndSet(wantedImageHeight, 0.0);
         }
     }
 

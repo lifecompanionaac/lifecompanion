@@ -44,8 +44,9 @@ import org.lifecompanion.framework.utils.Pair;
 import org.lifecompanion.model.api.lifecycle.LCStateListener;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.plugin.PluginInfo;
-import org.lifecompanion.util.LCUtils;
-import org.lifecompanion.util.UIUtils;
+import org.lifecompanion.util.DesktopUtils;
+import org.lifecompanion.util.LangUtils;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -161,7 +162,7 @@ public enum InstallationController implements LCStateListener {
         this.updateDownloadFinished = args.removeIf(ARG_UPDATE_DOWNLOAD_FINISHED::equals);
         this.updateFinished = args.removeIf(ARG_UPDATE_FINISHED::equals);
         this.enablePreviewUpdates = args.removeIf(ARG_ENABLE_PREVIEW_UPDATES::equals);
-        this.skipUpdates = LCUtils.safeParseBoolean(System.getProperty("org.lifecompanion.debug.skip.update.check"));
+        this.skipUpdates = LangUtils.safeParseBoolean(System.getProperty("org.lifecompanion.debug.skip.update.check"));
     }
 
     public boolean isUpdateDownloadFinished() {
@@ -181,13 +182,13 @@ public enum InstallationController implements LCStateListener {
     }
 
     public void writeLastUpdateCheckDate(Date date) {
-        LCUtils.runOnFXThread(() -> this.lastUpdateCheckDate.set(date));
+        FXThreadUtils.runOnFXThread(() -> this.lastUpdateCheckDate.set(date));
         writeLastUpdateDate(FILE_LAST_UPDATE_DATE, date);
     }
 
     public Date readLastUpdateCheckDate() {
         Date lastUpdateDate = readLastUpdateCheckDate(FILE_LAST_UPDATE_DATE);
-        LCUtils.runOnFXThread(() -> lastUpdateCheckDate.set(lastUpdateDate));
+        FXThreadUtils.runOnFXThread(() -> lastUpdateCheckDate.set(lastUpdateDate));
         return lastUpdateDate;
     }
 
@@ -214,7 +215,7 @@ public enum InstallationController implements LCStateListener {
     private void clearLastUpdateCheckDate() {
         try {
             final boolean deleted = FILE_LAST_UPDATE_DATE.delete();
-            LCUtils.runOnFXThread(() -> this.lastUpdateCheckDate.set(null));
+            FXThreadUtils.runOnFXThread(() -> this.lastUpdateCheckDate.set(null));
             LOGGER.info("Last update check file {} deleted {}", FILE_LAST_UPDATE_DATE, deleted);
             final boolean deletedPlugin = FILE_LAST_PLUGIN_UPDATE_DATE.delete();
             LOGGER.info("Last plugin update check file {} deleted {}", FILE_LAST_UPDATE_DATE, deletedPlugin);
@@ -392,7 +393,7 @@ public enum InstallationController implements LCStateListener {
     // UI
     //========================================================================
     private void showUpdateDownloadFinishedNotification() {
-        LCUtils.runOnFXThread(() -> {
+        FXThreadUtils.runOnFXThread(() -> {
             if (AppModeController.INSTANCE.isEditMode()) {
                 LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo("notification.info.update.download.finished.title", false,
                         "notification.info.update.download.finish.restart.button", () -> ConfigActionController.INSTANCE.executeAction(new GlobalActions.RestartAction(AppModeController.INSTANCE.getEditModeContext().getStage().getScene().getRoot())))
@@ -402,16 +403,16 @@ public enum InstallationController implements LCStateListener {
     }
 
     private void showUpdateInstallationDoneNotification() {
-        LCUtils.runOnFXThread(() -> {
+        FXThreadUtils.runOnFXThread(() -> {
             if (AppModeController.INSTANCE.isEditMode()) {
                 LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo(Translation.getText("notification.info.update.done.title", InstallationController.INSTANCE.getBuildProperties().getVersionLabel()), false));
-                UIUtils.openUrlInDefaultBrowser(InstallationController.INSTANCE.getBuildProperties().getAppServerUrl() + URL_PATH_CHANGELOG);
+                DesktopUtils.openUrlInDefaultBrowser(InstallationController.INSTANCE.getBuildProperties().getAppServerUrl() + URL_PATH_CHANGELOG);
             }
         });
     }
 
     private void showPluginUpdateNotification(PluginInfo pluginInfo) {
-        LCUtils.runOnFXThread(() -> {
+        FXThreadUtils.runOnFXThread(() -> {
             if (AppModeController.INSTANCE.isEditMode()) {
                 LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo(Translation.getText("notification.info.plugin.update.done.title", pluginInfo.getPluginName(), pluginInfo.getPluginVersion()), true));
             }

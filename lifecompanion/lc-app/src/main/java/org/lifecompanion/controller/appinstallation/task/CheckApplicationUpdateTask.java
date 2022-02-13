@@ -34,7 +34,7 @@ import org.lifecompanion.framework.model.client.UpdateProgressType;
 import org.lifecompanion.framework.model.server.update.ApplicationUpdate;
 import org.lifecompanion.framework.model.server.update.TargetType;
 import org.lifecompanion.model.impl.constant.LCConstant;
-import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.util.ThreadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,7 +66,7 @@ public class CheckApplicationUpdateTask extends AbstractUpdateTask<UpdateProgres
         }
 
         // Doesn't directly check for update
-        LCUtils.safeSleep(TASK_START_LONG_DELAY);
+        ThreadUtils.safeSleep(TASK_START_LONG_DELAY);
 
         updateMessage(Translation.getText("update.task.check.application.update.request.server"));
         try {

@@ -20,12 +20,12 @@
 package org.lifecompanion.ui.common.pane.generic.cell;
 
 import javafx.scene.control.ListCell;
-import org.lifecompanion.util.UIUtils;
+import org.lifecompanion.util.javafx.FXUtils;
 
 public class FontListCell extends ListCell<String> {
 
     public FontListCell() {
-        UIUtils.setFixedSize(this, 180.0, 28.0);
+        FXUtils.setFixedSize(this, 180.0, 28.0);
     }
 
     @Override

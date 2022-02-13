@@ -44,9 +44,7 @@ import org.lifecompanion.model.api.profile.ChangelogEntryI;
 import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.ui.common.pane.specific.cell.ChangelogEntryListCell;
-import org.lifecompanion.util.ConfigUIUtils;
-import org.lifecompanion.util.UIControlHelper;
-import org.lifecompanion.util.UIUtils;
+import org.lifecompanion.util.javafx.FXControlUtils;
 import org.lifecompanion.util.javafx.DisableSelectionSelectionModel;
 import org.lifecompanion.util.model.Triple;
 
@@ -99,7 +97,7 @@ public class ConfigurationEditionView extends BorderPane implements ProfileConfi
     //========================================================================
     @Override
     public void initUI() {
-        Triple<HBox, Label, Node> header = UIControlHelper.createHeader("configuration.edit.title", e -> closeCurrentEdit(false, true));
+        Triple<HBox, Label, Node> header = FXControlUtils.createHeader("configuration.edit.title", e -> closeCurrentEdit(false, true));
 
         this.configurationPreview = new ImageView();
         this.configurationPreview.setFitHeight(200);
@@ -116,12 +114,12 @@ public class ConfigurationEditionView extends BorderPane implements ProfileConfi
         Label labelAuthor = new Label(Translation.getText("configuration.description.author"));
         GridPane.setValignment(fieldDescription, VPos.TOP);
 
-        toggleSwitchLaunchInUseMode = ConfigUIUtils.createToggleSwitch("configuration.selection.default.configuration.toggle", "configuration.selection.default.configuration.toggle.explain");
+        toggleSwitchLaunchInUseMode = FXControlUtils.createToggleSwitch("configuration.selection.default.configuration.toggle", "configuration.selection.default.configuration.toggle.explain");
         Label labelExplainLaunchInUseMode = new Label(Translation.getText("configuration.selection.default.configuration.toggle.explain"));
         labelExplainLaunchInUseMode.getStyleClass().add("explain-text");
         labelExplainLaunchInUseMode.setWrapText(true);
 
-        buttonValidate = UIUtils.createLeftTextButton(Translation.getText("profile.config.view.button.ok"),
+        buttonValidate = FXControlUtils.createLeftTextButton(Translation.getText("profile.config.view.button.ok"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CHECK).size(16).color(LCGraphicStyle.MAIN_PRIMARY), null);
         GridPane.setHalignment(buttonValidate, HPos.RIGHT);
 
@@ -141,17 +139,17 @@ public class ConfigurationEditionView extends BorderPane implements ProfileConfi
         gridPaneInfo.add(buttonValidate, 1, 8);
 
         // Actions
-        this.nodeExportAction = UIControlHelper.createActionTableEntry("configuration.selection.export.configuration.button",
+        this.nodeExportAction = FXControlUtils.createActionTableEntry("configuration.selection.export.configuration.button",
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.UPLOAD).size(30).color(LCGraphicStyle.MAIN_DARK),
                 () -> ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.EditConfigurationAction(this.editedConfiguration.get(),
                         configDescription -> ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.ExportEditAction(nodeExportAction, configDescription)))));
-        this.nodeRemoveAction = UIControlHelper.createActionTableEntry("configuration.selection.remove.configuration.button",
+        this.nodeRemoveAction = FXControlUtils.createActionTableEntry("configuration.selection.remove.configuration.button",
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.TRASH).size(30).color(LCGraphicStyle.SECOND_DARK),
                 () -> ConfigActionController.INSTANCE
                         .executeAction(new LCConfigurationActions.RemoveConfigurationAction(nodeRemoveAction, ProfileController.INSTANCE.currentProfileProperty().get(), this.editedConfiguration.get(),
                                 removedConfig -> ProfileConfigSelectionController.INSTANCE.setConfigStep(ProfileConfigStep.CONFIGURATION_LIST, null, null))));
         if (SystemType.current() == SystemType.WINDOWS) {
-            this.nodeDesktopShortcut = UIControlHelper.createActionTableEntry("configuration.selection.create.desktop.link.button",
+            this.nodeDesktopShortcut = FXControlUtils.createActionTableEntry("configuration.selection.create.desktop.link.button",
                     GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.EXTERNAL_LINK).size(30).color(LCGraphicStyle.MAIN_DARK),
                     () -> ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.CreateDesktopShortcut(ProfileController.INSTANCE.currentProfileProperty().get(), this.editedConfiguration.get())));
         }
@@ -166,9 +164,9 @@ public class ConfigurationEditionView extends BorderPane implements ProfileConfi
 
         // Total
         VBox boxCenter = new VBox(3.0,
-                UIControlHelper.createTitleLabel("configuration.edition.general.information.title"), gridPaneInfo,
-                UIControlHelper.createTitleLabel("configuration.edition.general.actions.title"), boxActionButtons,
-                UIControlHelper.createTitleLabel("configuration.edition.general.changelog.entries"), listViewChangelogEntries
+                FXControlUtils.createTitleLabel("configuration.edition.general.information.title"), gridPaneInfo,
+                FXControlUtils.createTitleLabel("configuration.edition.general.actions.title"), boxActionButtons,
+                FXControlUtils.createTitleLabel("configuration.edition.general.changelog.entries"), listViewChangelogEntries
         );
         boxCenter.setPadding(new Insets(10.0));
 

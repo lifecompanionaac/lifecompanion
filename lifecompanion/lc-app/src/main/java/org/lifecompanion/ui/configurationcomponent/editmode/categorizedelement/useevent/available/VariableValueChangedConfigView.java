@@ -25,11 +25,11 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import org.lifecompanion.model.api.categorizedelement.useevent.UseEventGeneratorConfigurationViewI;
 import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.controller.usevariable.UseVariableController;
 import org.lifecompanion.model.impl.categorizedelement.useevent.available.VariableValueChangedEventGenerator;
 import org.lifecompanion.ui.common.pane.specific.cell.UseVariableDefinitionListCell;
 import org.lifecompanion.framework.commons.translation.Translation;
+import org.lifecompanion.util.javafx.FXControlUtils;
 
 public class VariableValueChangedConfigView extends VBox implements UseEventGeneratorConfigurationViewI<VariableValueChangedEventGenerator> {
 
@@ -69,7 +69,7 @@ public class VariableValueChangedConfigView extends VBox implements UseEventGene
         comboBoxuseVariable = new ComboBox<>(UseVariableController.INSTANCE.getPossibleVariableList(null));
         this.comboBoxuseVariable.setCellFactory((lv) -> new UseVariableDefinitionListCell());
         this.comboBoxuseVariable.setButtonCell(new UseVariableDefinitionListCell(true));
-        spinnerDelayBetweenEvent = UIUtils.createDoubleSpinner(0.0001, 60.0 * 60.0, 1.0, 0.1, 100.0);
+        spinnerDelayBetweenEvent = FXControlUtils.createDoubleSpinner(0.0001, 60.0 * 60.0, 1.0, 0.1, 100.0);
 
         this.setSpacing(10.0);
         this.getChildren().addAll(new Label(Translation.getText("label.field.variable.value.changed.event.variable.name")), comboBoxuseVariable,

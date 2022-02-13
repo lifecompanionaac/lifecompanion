@@ -30,7 +30,9 @@ import org.lifecompanion.controller.categorizedelement.useaction.UseActionContro
 import org.lifecompanion.model.api.configurationcomponent.*;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
 import org.lifecompanion.model.impl.selectionmode.*;
-import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.util.ThreadUtils;
+import org.lifecompanion.util.binding.BindingUtils;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.controller.lifecycle.AppMode;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.profile.ProfileController;
@@ -571,7 +573,7 @@ public enum SelectionModeController implements ModeListenerI {
     // Class part : "Internal useful methods"
     //========================================================================
     private void startScanningGrid(final GridComponentI grid) {
-        LCUtils.runOnFXThread(() -> {
+        FXThreadUtils.runOnFXThread(() -> {
             //Stop previous
             this.stopCurrentScan();
             //Change the grid, this can fire a selection mode change
@@ -634,7 +636,7 @@ public enum SelectionModeController implements ModeListenerI {
         newSelectionMode.currentGridProperty().set(grid);
 
         newSelectionMode.currentGridProperty().addListener(this.changeListenerGrid);
-        LCUtils.runOnFXThread(() -> {
+        FXThreadUtils.runOnFXThread(() -> {
             configuration.selectionModeProperty().set(newSelectionMode);
             if (newSelectionMode instanceof ScanningSelectionModeI && grid != null) {
                 ((ScanningSelectionModeI) newSelectionMode).play();
@@ -647,7 +649,7 @@ public enum SelectionModeController implements ModeListenerI {
         if (newSelectionMode instanceof ScanningSelectionModeI) {
             this.playingProperty.bind(((ScanningSelectionModeI) newSelectionMode).playingProperty());
         } else {
-            LCUtils.unbindAndSet(playingProperty, true);
+            BindingUtils.unbindAndSet(playingProperty, true);
         }
 
         // Enable supp mode when needed : only if enable and the current mode is a scanning mode
@@ -665,7 +667,7 @@ public enum SelectionModeController implements ModeListenerI {
             directActivationSelectionMode.setParameters(parameterForDirectSelectionMode);
             directActivationSelectionMode.init(null);
             // Set on configuration
-            LCUtils.runOnFXThread(() -> configuration.directSelectionOnMouseOnScanningSelectionModeProperty().set(directActivationSelectionMode));
+            FXThreadUtils.runOnFXThread(() -> configuration.directSelectionOnMouseOnScanningSelectionModeProperty().set(directActivationSelectionMode));
         }
     }
 
@@ -700,7 +702,7 @@ public enum SelectionModeController implements ModeListenerI {
                 selectionMode.currentGridProperty().set(gridParent);
             }
             //Go to part (on FX thread, after the potential new selection mode set)
-            LCUtils.runOnFXThread(() -> this.getSelectionModeConfiguration().goToGridPart(gridPart));
+            FXThreadUtils.runOnFXThread(() -> this.getSelectionModeConfiguration().goToGridPart(gridPart));
         }
         //Show (even if its a direct selection mode, because grid can be behind others
         if (toShowToFront != null) {
@@ -710,7 +712,7 @@ public enum SelectionModeController implements ModeListenerI {
             }
             //Show in view
             final GridPartComponentI toShowToFrontFinal = toShowToFront;
-            LCUtils.runOnFXThread(() -> {
+            FXThreadUtils.runOnFXThread(() -> {
                 toShowToFrontFinal.showToFront(AppMode.USE.getViewProvider(), true);
                 this.getSelectionModeConfiguration().getSelectionView().toFront();//Show the selection model to front (over displayed component)
             });
@@ -844,7 +846,7 @@ public enum SelectionModeController implements ModeListenerI {
             //Load the configuration (synch. because the action is executed in another Thread)
             ConfigurationLoadingTask configurationLoadingTask = IOHelper.createLoadConfigurationTask(configurationDescription, ProfileController.INSTANCE.currentProfileProperty().get());
             try {
-                LCConfigurationI loadedConfiguration = LCUtils.executeInCurrentThread(configurationLoadingTask);
+                LCConfigurationI loadedConfiguration = ThreadUtils.executeInCurrentThread(configurationLoadingTask);
                 final LCConfigurationDescriptionI previous = AppModeController.INSTANCE.getUseModeContext().getConfigurationDescription();
                 AppModeController.INSTANCE.switchUseModeConfiguration(loadedConfiguration, configurationDescription);
                 this.previousConfigurationInUseMode = previous;

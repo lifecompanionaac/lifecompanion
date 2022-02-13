@@ -32,7 +32,6 @@ import org.lifecompanion.model.impl.metrics.SessionEvent;
 import org.lifecompanion.model.impl.metrics.SessionEventType;
 import org.lifecompanion.model.impl.metrics.SessionPart;
 import org.lifecompanion.model.impl.metrics.SessionType;
-import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
 import org.lifecompanion.controller.lifecycle.AppModeController;
@@ -44,6 +43,7 @@ import org.lifecompanion.framework.commons.utils.io.IOUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.framework.utils.FluentHashMap;
 import org.lifecompanion.framework.utils.LCNamedThreadFactory;
+import org.lifecompanion.util.ThreadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -210,7 +210,7 @@ public enum SessionStatsController implements LCStateListener {
         public void run() {
             while (UserConfigurationController.INSTANCE.recordAndSendSessionStatsProperty().get()) {
                 try {
-                    LCUtils.safeSleep(60_000);
+                    ThreadUtils.safeSleep(60_000);
                     pushAndClearLastUserInteractionCount();
                 } catch (Throwable t) {
                     LOGGER.warn("Couldn't register user interaction count for stats", t);

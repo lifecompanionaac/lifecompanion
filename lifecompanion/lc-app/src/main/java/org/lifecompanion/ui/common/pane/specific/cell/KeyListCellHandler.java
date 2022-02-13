@@ -30,11 +30,11 @@ import javafx.scene.layout.HBox;
 import javafx.scene.shape.Rectangle;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
-import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.util.binding.BindingUtils;
 
 public class KeyListCellHandler implements LCViewInitHelper {
     public final static double CELL_HEIGHT = 25;
@@ -97,10 +97,10 @@ public class KeyListCellHandler implements LCViewInitHelper {
     void cellUpdateItem(KeyListNodeI item, boolean empty) {
         if (item == null || empty) {
             thisCell.setGraphic(null);
-            LCUtils.unbindAndSetNull(imageView.imageProperty());
-            LCUtils.unbindAndSetNull(labelText.textProperty());
-            LCUtils.unbindAndSetNull(rectangleColors.strokeProperty());
-            LCUtils.unbindAndSetNull(rectangleColors.fillProperty());
+            BindingUtils.unbindAndSetNull(imageView.imageProperty());
+            BindingUtils.unbindAndSetNull(labelText.textProperty());
+            BindingUtils.unbindAndSetNull(rectangleColors.strokeProperty());
+            BindingUtils.unbindAndSetNull(rectangleColors.fillProperty());
             glyphPane.getChildren().clear();
         } else {
             glyphPane.getChildren().clear();

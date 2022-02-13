@@ -23,13 +23,13 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
+import org.lifecompanion.util.javafx.StageUtils;
 
 public class UserConfigStage extends Stage {
 
     public UserConfigStage(Window owner) {
-        UIUtils.applyDefaultStageConfiguration(this);
+        StageUtils.applyDefaultStageConfiguration(this);
         this.initModality(Modality.APPLICATION_MODAL);
         this.initStyle(StageStyle.UTILITY);
         this.initOwner(owner);

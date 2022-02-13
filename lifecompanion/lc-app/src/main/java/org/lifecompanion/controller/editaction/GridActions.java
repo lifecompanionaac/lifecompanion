@@ -26,13 +26,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
+import org.lifecompanion.util.model.ConfigurationComponentUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.lifecompanion.model.impl.editaction.BaseGridChangeAction;
 import org.lifecompanion.model.impl.editaction.BasePropertyChangeAction;
 import org.lifecompanion.model.api.editaction.UndoRedoActionI;
-import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
 import org.lifecompanion.model.api.configurationcomponent.GridPartComponentI;
 import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
@@ -198,7 +198,7 @@ public class GridActions {
 			this.keyAdder = keyAdderP;
 			this.keyThatReplaces = new HashMap<>();
 			// Sort keys by their position in grid
-			Collections.sort(this.keys, LCUtils.positionInGridParentIncludingParentComparator());
+			Collections.sort(this.keys, ConfigurationComponentUtils.positionInGridParentIncludingParentComparator());
 		}
 
 		@Override

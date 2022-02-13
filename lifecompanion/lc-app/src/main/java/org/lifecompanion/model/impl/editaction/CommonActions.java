@@ -34,11 +34,11 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.lifecompanion.model.api.editaction.BaseEditActionI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
-import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.util.javafx.DialogUtils;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.util.javafx.StageUtils;
-import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.controller.systemvk.SystemVirtualKeyboardController;
 import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
 import org.lifecompanion.framework.commons.translation.Translation;
@@ -47,7 +47,7 @@ import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import java.util.Optional;
 import java.util.Random;
 
-import static org.lifecompanion.util.UIUtils.getSourceFromEvent;
+import static org.lifecompanion.util.javafx.FXUtils.getSourceFromEvent;
 
 /**
  * Actions shared between configuration and use mode.<br>
@@ -96,7 +96,7 @@ public class CommonActions {
                 //Generate a 1000 - 9999 code
                 Random random = new Random();
                 String number = "" + (random.nextInt(8999) + 1000);
-                TextInputDialog dialog = ConfigUIUtils.createInputDialog(StageUtils.getEditOrUseStageVisible(), null);
+                TextInputDialog dialog = DialogUtils.createInputDialog(StageUtils.getEditOrUseStageVisible(), null);
                 dialog.headerTextProperty().bind(TranslationFX.getTextBinding("action.confirm.go.config.header", timeLeft));
                 dialog.setContentText(Translation.getText("action.confirm.go.config.message", number));
                 timeLineAutoHide.setOnFinished(e -> dialog.hide());
@@ -107,7 +107,7 @@ public class CommonActions {
                 //Check code
                 if (enteredString.isEmpty() || StringUtils.isDifferent(enteredString.get(), number)) {
                     if (enteredString.isPresent()) {
-                        Alert warning = ConfigUIUtils.createAlert(source, Alert.AlertType.ERROR);
+                        Alert warning = DialogUtils.createAlert(source, Alert.AlertType.ERROR);
                         warning.setContentText(Translation.getText("action.confirm.go.config.error"));
                         warning.show();
                     }
@@ -127,7 +127,7 @@ public class CommonActions {
 
         @Override
         public void doAction() {
-            LCUtils.runOnFXThread(() -> {
+            FXThreadUtils.runOnFXThread(() -> {
                 final Stage stage = AppModeController.INSTANCE.getUseModeContext().stageProperty().get();
                 stage.setFullScreen(!stage.isFullScreen());
             });

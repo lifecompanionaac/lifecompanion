@@ -41,7 +41,6 @@ import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.configurationcomponent.RootGraphicComponentI;
 import org.lifecompanion.model.api.ui.editmode.AddTypeEnum;
 import org.lifecompanion.model.api.ui.configurationcomponent.ViewProviderI;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.controller.lifecycle.AppMode;
 import org.lifecompanion.controller.lifecycle.AppModeController;
@@ -57,6 +56,7 @@ import org.lifecompanion.controller.editmode.DragController;
 import org.lifecompanion.controller.editmode.SelectionController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.util.javafx.FXControlUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -135,7 +135,7 @@ public class MainView extends StackPane implements LCViewInitHelper {
     }
 
     private Button createQuickActionButton(final boolean primary, final String tooltipId, final Enum<?> glyph) {
-        Button button = UIUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(glyph).size(12).color(Color.WHITE), tooltipId);
+        Button button = FXControlUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(glyph).size(12).color(Color.WHITE), tooltipId);
         Circle buttonShape = new Circle(1.0);// Radius is ignored when != 0
         button.setShape(buttonShape);
         button.setCenterShape(true);

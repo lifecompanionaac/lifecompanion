@@ -26,7 +26,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import org.lifecompanion.ui.common.pane.specific.cell.NoteKeyDisplayModeListCell;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.note.NoteKeyDisplayMode;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.note.NoteKeyOption;
 import org.lifecompanion.ui.common.util.UndoRedoTextInputWrapper;
@@ -34,10 +33,11 @@ import org.lifecompanion.controller.editaction.KeyOptionActions.ChangeNoteCustom
 import org.lifecompanion.controller.editaction.KeyOptionActions.ChangeNoteKeyDisplayModeAction;
 import org.lifecompanion.controller.editaction.KeyOptionActions.ChangeNoteKeyStrokeColorAction;
 import org.lifecompanion.controller.editaction.KeyOptionActions.ChangeNoteKeyStrokeSizeAction;
-import org.lifecompanion.util.binding.LCConfigBindingUtils;
+import org.lifecompanion.util.binding.EditActionUtils;
 import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.ui.common.control.generic.colorpicker.LCColorPicker;
 import org.lifecompanion.framework.commons.translation.Translation;
+import org.lifecompanion.util.javafx.FXControlUtils;
 
 /**
  * Configuration view for note key option.
@@ -67,7 +67,7 @@ public class NoteKeyOptionConfigView extends BaseKeyOptionConfigView<NoteKeyOpti
         Label labelWantedColor = new Label(Translation.getText("use.action.save.load.note.color.field"));
         this.pickerWantedColor = new LCColorPicker();
         Label labelWantedStrokeSize = new Label(Translation.getText("use.action.save.load.note.stroke.size.field"));
-        this.spinnerStrokeSize = UIUtils.createIntSpinner(0, 30, 3, 1, 130.0);
+        this.spinnerStrokeSize = FXControlUtils.createIntSpinner(0, 30, 3, 1, 130.0);
         Label labelDisplayMode = new Label(Translation.getText("label.note.key.display.mode"));
         this.comboboxDisplayMode = new ComboBox<>(FXCollections.observableArrayList(NoteKeyDisplayMode.values()));
         this.comboboxDisplayMode.setButtonCell(new NoteKeyDisplayModeListCell());
@@ -88,11 +88,11 @@ public class NoteKeyOptionConfigView extends BaseKeyOptionConfigView<NoteKeyOpti
     @Override
     public void initListener() {
         super.initListener();
-        changeListenerStrokeSize = LCConfigBindingUtils.createIntegerSpinnerBinding(this.spinnerStrokeSize, this.model,
+        changeListenerStrokeSize = EditActionUtils.createIntegerSpinnerBinding(this.spinnerStrokeSize, this.model,
                 NoteKeyOption::wantedStrokeSizeProperty, ChangeNoteKeyStrokeSizeAction::new);
-        changeListenerStrokeColor = LCConfigBindingUtils.createSimpleBinding(this.pickerWantedColor.valueProperty(), this.model,
+        changeListenerStrokeColor = EditActionUtils.createSimpleBinding(this.pickerWantedColor.valueProperty(), this.model,
                 c -> c.wantedActivatedColorProperty().get(), ChangeNoteKeyStrokeColorAction::new);
-        this.changeListenerDisplayMode = LCConfigBindingUtils.createSelectionModelBinding(this.comboboxDisplayMode.getSelectionModel(), //
+        this.changeListenerDisplayMode = EditActionUtils.createSelectionModelBinding(this.comboboxDisplayMode.getSelectionModel(), //
                 this.model, model -> model.displayModeProperty().get(), //
                 ChangeNoteKeyDisplayModeAction::new);
         this.fieldCustomTextWrapper.setListener((oldV, newV) -> {

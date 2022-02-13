@@ -26,13 +26,13 @@ import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionConfigurationViewI;
 import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
 import org.lifecompanion.model.impl.categorizedelement.useaction.available.WriteAndSpeakTextAction;
-import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.ui.common.control.specific.usevariable.UseVariableTextArea;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Region;
+import org.lifecompanion.util.javafx.FXControlUtils;
 
 /**
  * Action configuration view for {@link WriteAndSpeakTextAction}
@@ -45,8 +45,8 @@ public class WriteAndSpeakTextConfigView extends GridPane implements UseActionCo
 
 	@Override
 	public void initUI() {
-		this.toggleEnableSpaceAfter = ConfigUIUtils.createToggleSwitch("quick.communication.enable.space", null);
-		this.toggleEnableSpeak = ConfigUIUtils.createToggleSwitch("quick.communication.enable.speak", null);
+		this.toggleEnableSpaceAfter = FXControlUtils.createToggleSwitch("quick.communication.enable.space", null);
+		this.toggleEnableSpeak = FXControlUtils.createToggleSwitch("quick.communication.enable.speak", null);
 		Label labelWrite = new Label(Translation.getText("quick.communication.text.to.write"));
 		Label labelSpeak = new Label(Translation.getText("quick.communication.text.to.speak"));
 		this.fieldTextToWrite = new UseVariableTextArea();

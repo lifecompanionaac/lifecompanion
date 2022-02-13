@@ -28,12 +28,9 @@ import org.lifecompanion.controller.editaction.TextDisplayerActions.SetEnableIma
 import org.lifecompanion.controller.editaction.TextDisplayerActions.SetEnableWordWrapAction;
 import org.lifecompanion.controller.editaction.TextDisplayerActions.SetImageHeightAction;
 import org.lifecompanion.controller.editaction.TextDisplayerActions.SetLineSpacingAction;
-import org.lifecompanion.util.binding.LCConfigBindingUtils;
-import org.lifecompanion.util.UIUtils;
+import org.lifecompanion.util.binding.EditActionUtils;
 import org.lifecompanion.model.api.configurationcomponent.DisplayableComponentI;
 import org.lifecompanion.controller.editmode.SelectionController;
-import org.lifecompanion.model.api.ui.editmode.ConfigurationProfileLevelEnum;
-import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.ui.configurationcomponent.editmode.categorizedelement.useevent.available.RibbonBasePart;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Orientation;
@@ -42,6 +39,7 @@ import javafx.scene.control.Separator;
 import javafx.scene.control.Spinner;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
+import org.lifecompanion.util.javafx.FXControlUtils;
 
 /**
  * Pane to base properties of a {@link WriterDisplayerI}
@@ -66,22 +64,22 @@ public class TextDisplayerRibbonPart extends RibbonBasePart<WriterDisplayerI> im
 		gridPane.setVgap(3.0);
 		//Line spacing
 		Label labelLineSpacing = new Label(Translation.getText("text.displayer.line.spacing"));
-		this.spinnerLineSpacing = UIUtils.createDoubleSpinner(0, 200, 2, 2, 75);
-		UIUtils.createAndAttachTooltip(spinnerLineSpacing, "tooltip.explain.text.editor.line.spacing");
+		this.spinnerLineSpacing = FXControlUtils.createDoubleSpinner(0, 200, 2, 2, 75);
+		FXControlUtils.createAndAttachTooltip(spinnerLineSpacing, "tooltip.explain.text.editor.line.spacing");
 		gridPane.add(labelLineSpacing, 0, 0);
 		gridPane.add(this.spinnerLineSpacing, 1, 0);
 		GridPane.setHgrow(labelLineSpacing, Priority.ALWAYS);
 		gridPane.add(new Separator(Orientation.HORIZONTAL), 0, 2, 2, 1);
 		//Images
-		this.toggleEnableImage = ConfigUIUtils.createToggleSwitch("text.displayer.enable.image", "tooltip.explain.text.editor.enable.image");
+		this.toggleEnableImage = FXControlUtils.createToggleSwitch("text.displayer.enable.image", "tooltip.explain.text.editor.enable.image");
 		gridPane.add(this.toggleEnableImage, 0, 3, 2, 1);
-		this.spinnerImageHeight = UIUtils.createDoubleSpinner(0, 500, 2, 2, 75);
-		UIUtils.createAndAttachTooltip(spinnerImageHeight, "tooltip.explain.text.editor.image.height");
+		this.spinnerImageHeight = FXControlUtils.createDoubleSpinner(0, 500, 2, 2, 75);
+		FXControlUtils.createAndAttachTooltip(spinnerImageHeight, "tooltip.explain.text.editor.image.height");
 		gridPane.add(new Label(Translation.getText("text.displayer.image.height")), 0, 4);
 		gridPane.add(this.spinnerImageHeight, 1, 4);
 		//Word wrap
 		gridPane.add(new Separator(Orientation.HORIZONTAL), 0, 5, 2, 1);
-		this.toggleEnableWordWrap = ConfigUIUtils.createToggleSwitch("text.displayer.enable.word.wrap", "tooltip.explain.text.editor.word.wrap");
+		this.toggleEnableWordWrap = FXControlUtils.createToggleSwitch("text.displayer.enable.word.wrap", "tooltip.explain.text.editor.word.wrap");
 		gridPane.add(this.toggleEnableWordWrap, 0, 6, 2, 1);
 
 		this.setContent(gridPane);
@@ -89,13 +87,13 @@ public class TextDisplayerRibbonPart extends RibbonBasePart<WriterDisplayerI> im
 
 	@Override
 	public void initListener() {
-		this.changeListenerLineSpacing = LCConfigBindingUtils.createDoubleSpinnerBinding(this.spinnerLineSpacing, this.model,
+		this.changeListenerLineSpacing = EditActionUtils.createDoubleSpinnerBinding(this.spinnerLineSpacing, this.model,
 				WriterDisplayerI::lineSpacingProperty, (model, nv) -> new SetLineSpacingAction(model, nv));
-		this.changeListenerImageHeight = LCConfigBindingUtils.createDoubleSpinnerBindingWithCondition(this.spinnerImageHeight, this.model,
+		this.changeListenerImageHeight = EditActionUtils.createDoubleSpinnerBindingWithCondition(this.spinnerImageHeight, this.model,
 				WriterDisplayerI::imageHeightProperty, (model, nv) -> new SetImageHeightAction(model, nv), m -> m.enableImageProperty().get());
-		this.changeListenerEnableImage = LCConfigBindingUtils.createSimpleBinding(this.toggleEnableImage.selectedProperty(), this.model,
+		this.changeListenerEnableImage = EditActionUtils.createSimpleBinding(this.toggleEnableImage.selectedProperty(), this.model,
 				m -> m.enableImageProperty().get(), (model, nv) -> new SetEnableImageAction(model, nv));
-		this.changeListenerEnableWordWrap = LCConfigBindingUtils.createSimpleBinding(this.toggleEnableWordWrap.selectedProperty(), this.model,
+		this.changeListenerEnableWordWrap = EditActionUtils.createSimpleBinding(this.toggleEnableWordWrap.selectedProperty(), this.model,
 				m -> m.enableWordWrapProperty().get(), (model, nv) -> new SetEnableWordWrapAction(model, nv));
 	}
 
@@ -110,7 +108,6 @@ public class TextDisplayerRibbonPart extends RibbonBasePart<WriterDisplayerI> im
 					}
 				});
 		this.spinnerImageHeight.disableProperty().bind(this.toggleEnableImage.selectedProperty().not());
-		ConfigUIUtils.bindShowForLevelFrom(this, ConfigurationProfileLevelEnum.NORMAL);
 	}
 
 	@Override

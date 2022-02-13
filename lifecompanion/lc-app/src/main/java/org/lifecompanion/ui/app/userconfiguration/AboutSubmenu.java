@@ -31,18 +31,20 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
 import org.controlsfx.glyphfont.FontAwesome;
-import org.lifecompanion.util.UIUtils;
+import org.lifecompanion.util.DesktopUtils;
 import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.appinstallation.InstallationController;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.model.impl.notification.LCNotification;
-import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.ui.notification.LCNotificationController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.util.javafx.DialogUtils;
+import org.lifecompanion.util.javafx.FXControlUtils;
+import org.lifecompanion.util.javafx.FXUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -109,8 +111,8 @@ public class AboutSubmenu extends VBox implements LCViewInitHelper, UserConfigSu
 
         linkWebsite = new Hyperlink(InstallationController.INSTANCE.getBuildProperties().getAppServerUrl());
 
-        buttonInstallationId = UIUtils.createSimpleTextButton(Translation.getText("about.tab.button.installation.id", Translation.getText("about.tab.id.null")), null);
-        buttonDeviceId = UIUtils.createSimpleTextButton(Translation.getText("about.tab.button.device.id", Translation.getText("about.tab.id.null")), null);
+        buttonInstallationId = FXControlUtils.createSimpleTextButton(Translation.getText("about.tab.button.installation.id", Translation.getText("about.tab.id.null")), null);
+        buttonDeviceId = FXControlUtils.createSimpleTextButton(Translation.getText("about.tab.button.device.id", Translation.getText("about.tab.id.null")), null);
         buttonDeviceId.setManaged(false);
         buttonDeviceId.setVisible(false);
 
@@ -119,7 +121,7 @@ public class AboutSubmenu extends VBox implements LCViewInitHelper, UserConfigSu
 
 
         // Update part
-        this.buttonCheckUpdate = UIUtils.createLeftTextButton(Translation.getText("about.tab.check.update.now"),
+        this.buttonCheckUpdate = FXControlUtils.createLeftTextButton(Translation.getText("about.tab.check.update.now"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.REFRESH).size(14).color(LCGraphicStyle.MAIN_PRIMARY), null);
         this.labelLastUpdateDate = new Label();
         this.progressBarUpdateTask = new ProgressBar(-1);
@@ -136,16 +138,16 @@ public class AboutSubmenu extends VBox implements LCViewInitHelper, UserConfigSu
     @Override
     public void initListener() {
         this.linkWebsite.setOnAction(a -> {
-            boolean openOk = UIUtils.openUrlInDefaultBrowser(InstallationController.INSTANCE.getBuildProperties().getAppServerUrl());
+            boolean openOk = DesktopUtils.openUrlInDefaultBrowser(InstallationController.INSTANCE.getBuildProperties().getAppServerUrl());
             if (!openOk) {
-                Alert dlg = ConfigUIUtils.createAlert(this.linkWebsite, AlertType.ERROR);
+                Alert dlg = DialogUtils.createAlert(this.linkWebsite, AlertType.ERROR);
                 dlg.setContentText(Translation.getText("action.cant.open.browser.message", InstallationController.INSTANCE.getBuildProperties().getAppServerUrl()));
                 dlg.setHeaderText(Translation.getText("action.cant.open.browser.header"));
                 dlg.show();
             }
         });
-        this.buttonLicense.setOnAction(e -> new LicenseShowStage(UIUtils.getSourceWindow(buttonLicense), "LICENSE").show());
-        this.buttonThirdPartyLicenses.setOnAction(e -> new LicenseShowStage(UIUtils.getSourceWindow(buttonThirdPartyLicenses), "custom-THIRD-PARTY-NOTICES.txt", "THIRD-PARTY-NOTICES.txt").show());
+        this.buttonLicense.setOnAction(e -> new LicenseShowStage(FXUtils.getSourceWindow(buttonLicense), "LICENSE").show());
+        this.buttonThirdPartyLicenses.setOnAction(e -> new LicenseShowStage(FXUtils.getSourceWindow(buttonThirdPartyLicenses), "custom-THIRD-PARTY-NOTICES.txt", "THIRD-PARTY-NOTICES.txt").show());
         buttonDeviceId.setOnAction(e -> setContentInfoWith(InstallationController.InstallationRegistrationInformation::getDeviceId));
         buttonInstallationId.setOnAction(e -> setContentInfoWith(InstallationController.InstallationRegistrationInformation::getInstallationId));
         buttonCheckUpdate.setOnAction(e -> InstallationController.INSTANCE.launchUpdateCheckProcess(true));

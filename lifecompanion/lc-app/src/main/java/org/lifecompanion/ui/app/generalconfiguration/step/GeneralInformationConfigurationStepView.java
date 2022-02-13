@@ -48,9 +48,7 @@ import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStep;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStepViewI;
 import org.lifecompanion.ui.common.control.generic.colorpicker.LCColorPicker;
 import org.lifecompanion.ui.common.control.specific.selector.ComponentSelectorControl;
-import org.lifecompanion.util.ConfigUIUtils;
-import org.lifecompanion.util.UIControlHelper;
-import org.lifecompanion.util.UIUtils;
+import org.lifecompanion.util.javafx.FXControlUtils;
 
 public class GeneralInformationConfigurationStepView extends BorderPane implements GeneralConfigurationStepViewI, LCViewInitHelper {
     private Label labelName, labelAuthor;
@@ -109,16 +107,16 @@ public class GeneralInformationConfigurationStepView extends BorderPane implemen
         Label labelNameField = new Label(Translation.getText("general.configuration.info.label.name"));
         labelNameField.setMinWidth(GeneralConfigurationStepViewI.LEFT_COLUMN_MIN_WIDTH);
         Label labelAuthorField = new Label(Translation.getText("general.configuration.info.label.author"));
-        Label labelGeneralInfo = UIControlHelper.createTitleLabel(Translation.getText("general.configuration.info.info.description.title"));
-        buttonEditConfigurationInformation = UIUtils.createSimpleTextButton(Translation.getText("general.configuration.info.button.edit.information"), null);
+        Label labelGeneralInfo = FXControlUtils.createTitleLabel(Translation.getText("general.configuration.info.info.description.title"));
+        buttonEditConfigurationInformation = FXControlUtils.createSimpleTextButton(Translation.getText("general.configuration.info.button.edit.information"), null);
         GridPane.setHalignment(buttonEditConfigurationInformation, HPos.CENTER);
 
-        Label labelPartDisplay = UIControlHelper.createTitleLabel(Translation.getText("general.configuration.info.general.configuration.style"));
+        Label labelPartDisplay = FXControlUtils.createTitleLabel(Translation.getText("general.configuration.info.general.configuration.style"));
         this.pickerBackgroundColor = new LCColorPicker();
-        UIUtils.createAndAttachTooltip(pickerBackgroundColor, "tooltip.explain.configuration.style.background.color");
+        FXControlUtils.createAndAttachTooltip(pickerBackgroundColor, "tooltip.explain.configuration.style.background.color");
         Label labelBColor = new Label(Translation.getText("configuration.background.color"));
 
-        Label labelGeneralConfiguration = UIControlHelper.createTitleLabel(Translation.getText("general.configuration.info.general.configuration"));
+        Label labelGeneralConfiguration = FXControlUtils.createTitleLabel(Translation.getText("general.configuration.info.general.configuration"));
         this.firstPartSelector = new ComponentSelectorControl<>(GridComponentI.class);
         this.firstPartSelector.setTooltipText("tooltip.explain.use.param.first.part");
         firstPartSelector.setAlignment(Pos.CENTER_RIGHT);
@@ -126,12 +124,12 @@ public class GeneralInformationConfigurationStepView extends BorderPane implemen
         Label labelExplainFirstPart = new Label(Translation.getText("tooltip.explain.use.param.first.part"));
         labelExplainFirstPart.getStyleClass().add("explain-text");
 
-        this.toggleVirtualKeyboard = ConfigUIUtils.createToggleSwitch("configuration.for.virtual.keyboard",
+        this.toggleVirtualKeyboard = FXControlUtils.createToggleSwitch("configuration.for.virtual.keyboard",
                 "tooltip.explain.use.param.virtual.keyboard");
         Label labelExplainVirtualKeyboard = new Label(Translation.getText("tooltip.explain.use.param.virtual.keyboard"));
         labelExplainVirtualKeyboard.getStyleClass().add("explain-text");
 
-        this.toggleSecuredConfigurationMode = ConfigUIUtils.createToggleSwitch("configuration.secured.config.mode",
+        this.toggleSecuredConfigurationMode = FXControlUtils.createToggleSwitch("configuration.secured.config.mode",
                 "tooltip.explain.use.param.secured.config.mode");
         Label labelExplainSecuredConfigMode = new Label(Translation.getText("tooltip.explain.use.param.secured.config.mode"));
         labelExplainSecuredConfigMode.getStyleClass().add("explain-text");
@@ -163,8 +161,8 @@ public class GeneralInformationConfigurationStepView extends BorderPane implemen
         gridPaneTotal.add(labelExplainVirtualKeyboard, 0, gridRowIndex++, 2, 1);
 
         // Actions
-        Label labelPartActions = UIControlHelper.createTitleLabel(Translation.getText("general.configuration.info.general.configuration.actions"));
-        final Node pdfActionNode = UIControlHelper.createActionTableEntry("configuration.selection.print.grids.pdf.configuration.button",
+        Label labelPartActions = FXControlUtils.createTitleLabel(Translation.getText("general.configuration.info.general.configuration.actions"));
+        final Node pdfActionNode = FXControlUtils.createActionTableEntry("configuration.selection.print.grids.pdf.configuration.button",
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.FILE_PDF_ALT).size(30).color(LCGraphicStyle.SECOND_DARK),
                 () -> ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.ExportEditGridsToPdfAction(gridPaneTotal)));
         VBox boxActions = new VBox(GeneralConfigurationStepViewI.GRID_V_GAP, labelPartActions, pdfActionNode);

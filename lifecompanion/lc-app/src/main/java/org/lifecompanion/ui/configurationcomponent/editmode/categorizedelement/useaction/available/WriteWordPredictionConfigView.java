@@ -24,10 +24,10 @@ import org.controlsfx.control.ToggleSwitch;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionConfigurationViewI;
 import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
 import org.lifecompanion.model.impl.categorizedelement.useaction.available.WriteWordPredictionAction;
-import org.lifecompanion.util.ConfigUIUtils;
 import javafx.collections.ObservableList;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import org.lifecompanion.util.javafx.FXControlUtils;
 
 /**
  * Configuration view for {@link WriteWordPredictionAction}
@@ -39,7 +39,7 @@ public class WriteWordPredictionConfigView extends VBox implements UseActionConf
 
 	@Override
 	public void initUI() {
-		this.toggleEnableSpaceAfter = ConfigUIUtils.createToggleSwitch("word.prediction.add.space.after", null);
+		this.toggleEnableSpaceAfter = FXControlUtils.createToggleSwitch("word.prediction.add.space.after", null);
 		this.getChildren().addAll(this.toggleEnableSpaceAfter);
 	}
 

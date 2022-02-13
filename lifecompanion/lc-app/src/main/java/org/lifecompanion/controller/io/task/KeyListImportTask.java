@@ -21,7 +21,6 @@ package org.lifecompanion.controller.io.task;
 
 import org.lifecompanion.model.api.configurationcomponent.DuplicableComponentI;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
-import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
 import org.slf4j.Logger;
@@ -52,7 +51,7 @@ public class KeyListImportTask extends AbstractKeyListLoadingTask<List<KeyListNo
     protected List<KeyListNodeI> call() throws Exception {
         List<KeyListNodeI> result = new ArrayList<>();
         for (File sourceFile : sourceFiles) {
-            final File tempDir = LCUtils.getTempDir("keylist-import");
+            final File tempDir = org.lifecompanion.util.IOUtils.getTempDir("keylist-import");
             IOUtils.unzipInto(sourceFile, tempDir, null);
             final KeyListNodeI nodeFromDirectory = this.loadNodeFromDirectory(tempDir);
 

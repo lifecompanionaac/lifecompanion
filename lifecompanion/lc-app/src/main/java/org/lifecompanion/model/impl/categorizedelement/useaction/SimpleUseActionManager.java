@@ -30,9 +30,9 @@ import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTrigger
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.io.XMLSerializable;
-import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.framework.commons.fx.io.XMLUtils;
 import org.lifecompanion.framework.utils.Pair;
+import org.lifecompanion.util.binding.BindingUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -68,7 +68,7 @@ public class SimpleUseActionManager implements UseActionManagerI {
         this.actions = new HashMap<>();
         this.realParent = realParentP;
         //Create listener : set the real parent to added action, remove it from removed
-        ListChangeListener<BaseUseActionI> actionListener = LCUtils.createListChangeListener((added) -> {
+        ListChangeListener<BaseUseActionI> actionListener = BindingUtils.createListChangeListener((added) -> {
             added.parentComponentProperty().set(this.realParent);
         }, (removed) -> {
             removed.parentComponentProperty().set(null);

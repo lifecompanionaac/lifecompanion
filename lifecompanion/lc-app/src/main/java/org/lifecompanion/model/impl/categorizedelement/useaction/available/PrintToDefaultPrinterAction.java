@@ -28,10 +28,10 @@ import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTrigger
 import org.lifecompanion.model.api.usevariable.UseVariableI;
 import org.lifecompanion.model.api.style.TextCompStyleI;
 import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseActionSubCategories;
-import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.controller.textcomponent.WritingStateController;
 import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.util.LangUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -109,7 +109,7 @@ public class PrintToDefaultPrinterAction extends SimpleUseActionImpl<UseActionTr
         if (writer != null) {
             final String text = WritingStateController.INSTANCE.currentTextProperty().get();
             Text textEntry = new Text(
-                    LCUtils.isTrue(writer.getTextDisplayerTextStyle().upperCaseProperty().value().getValue()) ? StringUtils.toUpperCase(text) : text);
+                    LangUtils.isTrue(writer.getTextDisplayerTextStyle().upperCaseProperty().value().getValue()) ? StringUtils.toUpperCase(text) : text);
             TextCompStyleI textStyle = writer.getTextDisplayerTextStyle();
             textEntry.setFont(textStyle.fontProperty().get());
             textEntry.setFill(textStyle.colorProperty().value().getValue());

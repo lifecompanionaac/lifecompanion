@@ -20,7 +20,7 @@
 package org.lifecompanion.util.converter;
 
 import javafx.util.StringConverter;
-import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.util.LangUtils;
 
 import java.text.DecimalFormat;
 
@@ -49,7 +49,7 @@ public class BoundIntConverter extends StringConverter<Integer> {
     public Integer fromString(String text) {
         int val;
         try {
-            val = LCUtils.toBoundInt(Integer.parseInt(text), min, max);
+            val = LangUtils.toBoundInt(Integer.parseInt(text), min, max);
         } catch (NumberFormatException nfe) {
             val = min;
         }

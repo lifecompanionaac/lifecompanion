@@ -30,7 +30,7 @@ import org.lifecompanion.model.api.profile.LCProfileI;
 import org.lifecompanion.model.api.profile.UserCompDescriptionI;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.exception.LCException;
-import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.util.ThreadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -84,11 +84,11 @@ public class IOHelper {
     }
 
     public static File getBackupProfileDestinationPath(final LCProfileI profile) {
-        return new File(getProfileRoot().getPath() + File.separator + LCConstant.BACKUP_DIR + File.separator + LCConstant.PROFILE_DIRECTORY + File.separator + profile.getID() + File.separator + DATE_FORMAT_FILENAME_WITH_TIME_SECOND.format(new Date()) + "_" + LCUtils.getValidFileName(profile.nameProperty().get()) + "." + LCConstant.PROFILE_FILE_EXTENSION);
+        return new File(getProfileRoot().getPath() + File.separator + LCConstant.BACKUP_DIR + File.separator + LCConstant.PROFILE_DIRECTORY + File.separator + profile.getID() + File.separator + DATE_FORMAT_FILENAME_WITH_TIME_SECOND.format(new Date()) + "_" + org.lifecompanion.util.IOUtils.getValidFileName(profile.nameProperty().get()) + "." + LCConstant.PROFILE_FILE_EXTENSION);
     }
 
     public static File getBackupConfigurationDestinationPath(final LCConfigurationDescriptionI configurationDescription) {
-        return new File(getProfileRoot().getPath() + File.separator + LCConstant.BACKUP_DIR + File.separator + LCConstant.CONFIGURATION_DIRECTORY + File.separator + configurationDescription.getConfigurationId() + File.separator + DATE_FORMAT_FILENAME_WITH_TIME_SECOND.format(new Date()) + "_" + LCUtils.getValidFileName(configurationDescription.configurationNameProperty().get()) + "." + LCConstant.CONFIG_FILE_EXTENSION);
+        return new File(getProfileRoot().getPath() + File.separator + LCConstant.BACKUP_DIR + File.separator + LCConstant.CONFIGURATION_DIRECTORY + File.separator + configurationDescription.getConfigurationId() + File.separator + DATE_FORMAT_FILENAME_WITH_TIME_SECOND.format(new Date()) + "_" + org.lifecompanion.util.IOUtils.getValidFileName(configurationDescription.configurationNameProperty().get()) + "." + LCConstant.CONFIG_FILE_EXTENSION);
     }
     //========================================================================
 
@@ -280,7 +280,7 @@ public class IOHelper {
         File savingDirectory = getDirectoryForUseInformation(configuration);
         UseInformationSavingTask useInfoSavingTask = new UseInformationSavingTask(savingDirectory, configuration);
         try {
-            LCUtils.executeInCurrentThread(useInfoSavingTask);
+            ThreadUtils.executeInCurrentThread(useInfoSavingTask);
         } catch (Exception e) {
             LOGGER.warn("Couldn't save the configuration use information for configuration {}", configuration.getID(), e);
         }
@@ -290,7 +290,7 @@ public class IOHelper {
         File loadingDirectory = getDirectoryForUseInformation(configuration);
         UseInformationLoadingTask useInfoLoadingTask = new UseInformationLoadingTask(loadingDirectory, configuration);
         try {
-            LCUtils.executeInCurrentThread(useInfoLoadingTask);
+            ThreadUtils.executeInCurrentThread(useInfoLoadingTask);
         } catch (Exception e) {
             LOGGER.warn("Couldn't load the configuration use information for configuration {}", configuration.getID(), e);
         }

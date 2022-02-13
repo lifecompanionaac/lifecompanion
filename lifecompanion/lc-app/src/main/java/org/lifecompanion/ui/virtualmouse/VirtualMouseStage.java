@@ -24,10 +24,10 @@ import javafx.scene.Group;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.framework.commons.translation.Translation;
+import org.lifecompanion.util.javafx.StageUtils;
 
 /**
  * Stage use to show the different mouse selection item.
@@ -66,7 +66,7 @@ public class VirtualMouseStage extends Stage {
         this.setAlwaysOnTop(true);
         this.setMaximized(true);
         this.setTitle(LCConstant.NAME + " - " + Translation.getText("virtual.mouse.stage.title.com"));
-        LCUtils.setFocusableSafe(this, false);
+        StageUtils.setFocusableSafe(this, false);
         this.centerOnScreen();
         //Scene
         this.setScene(new VirtualMouseScene(new Group()));

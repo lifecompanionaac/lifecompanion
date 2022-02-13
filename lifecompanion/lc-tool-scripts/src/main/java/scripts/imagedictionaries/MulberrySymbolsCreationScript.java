@@ -27,7 +27,6 @@ import com.google.gson.GsonBuilder;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 import org.jetbrains.annotations.NotNull;
-import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.framework.utils.FluentHashMap;
@@ -93,7 +92,7 @@ public class MulberrySymbolsCreationScript {
 
         LoggingProgressIndicator pi2 = new LoggingProgressIndicator(symbols.size(), "Image conversion");
 
-        final File tempDir = LCUtils.getTempDir("export-mulberry");
+        final File tempDir = org.lifecompanion.util.IOUtils.getTempDir("export-mulberry");
         final List<ImageElement> images = symbols.parallelStream().map(symbol -> {
             final File tempSvgFile = new File(tempDir + "/" + UUID.randomUUID().toString() + ".png");
             IOUtils.createParentDirectoryIfNeeded(tempSvgFile);

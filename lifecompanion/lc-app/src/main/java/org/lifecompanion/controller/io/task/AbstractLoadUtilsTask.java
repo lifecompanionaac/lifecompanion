@@ -28,8 +28,8 @@ import org.lifecompanion.model.api.configurationcomponent.dynamickey.UserActionS
 import org.lifecompanion.model.api.imagedictionary.ImageElementI;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.io.XMLSerializable;
+import org.lifecompanion.util.ThreadUtils;
 import org.lifecompanion.util.model.LCTask;
-import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.model.impl.profile.LCConfigurationDescription;
 import org.lifecompanion.model.impl.configurationcomponent.LCConfigurationComponent;
 import org.lifecompanion.model.impl.constant.LCConstant;
@@ -72,11 +72,11 @@ public abstract class AbstractLoadUtilsTask<T> extends LCTask<T> {
         this.loadElementIn(config, directory, LCConstant.CONFIGURATION_XML_NAME);
 
         // Load keylist
-        final KeyListNodeI keyListNode = LCUtils.executeInCurrentThread(IOHelper.createLoadKeyListTask(directory));
+        final KeyListNodeI keyListNode = ThreadUtils.executeInCurrentThread(IOHelper.createLoadKeyListTask(directory));
         config.rootKeyListNodeProperty().set(keyListNode);
 
         // Load sequences
-        final UserActionSequencesI sequences = LCUtils.executeInCurrentThread(IOHelper.createLoadSequenceTask(directory));
+        final UserActionSequencesI sequences = ThreadUtils.executeInCurrentThread(IOHelper.createLoadSequenceTask(directory));
         config.userActionSequencesProperty().set(sequences);
 
         AbstractLoadUtilsTask.LOGGER.info("Configuration successfully loaded from {}", directory);

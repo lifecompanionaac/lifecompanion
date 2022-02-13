@@ -26,8 +26,9 @@ import org.lifecompanion.model.api.configurationcomponent.GridPartComponentI;
 import org.lifecompanion.model.api.configurationcomponent.StackComponentI;
 import org.lifecompanion.model.api.ui.configurationcomponent.ComponentViewI;
 import org.lifecompanion.model.api.ui.configurationcomponent.ViewProviderI;
-import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.util.model.ConfigurationComponentUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -81,8 +82,8 @@ public abstract class StackComponentBaseImplView<T extends StackComponentI> exte
     @Override
     public void unbindComponentAndChildren() {
         this.model.displayedComponentProperty().removeListener(displayedChangeListener);
-        LCUtils.exploreComponentViewChildrenToUnbind(this);
-        this.componentsUI.values().forEach(LCUtils::exploreComponentViewChildrenToUnbind);
+        ConfigurationComponentUtils.exploreComponentViewChildrenToUnbind(this);
+        this.componentsUI.values().forEach(ConfigurationComponentUtils::exploreComponentViewChildrenToUnbind);
         this.model = null;
     }
 
@@ -96,7 +97,7 @@ public abstract class StackComponentBaseImplView<T extends StackComponentI> exte
         //Remove previous
         if (oldValueP != null) {
             Region removed = this.componentsUI.get(oldValueP);
-            LCUtils.runOnFXThread(() -> this.getChildren().remove(removed));
+            FXThreadUtils.runOnFXThread(() -> this.getChildren().remove(removed));
         }
         //Check if new value is in map
         if (newValueP != null) {
@@ -105,7 +106,7 @@ public abstract class StackComponentBaseImplView<T extends StackComponentI> exte
                 this.componentsUI.put(newValueP, added);
             }
             //Display new
-            LCUtils.runOnFXThread(() -> this.getChildren().add(this.componentsUI.get(newValueP)));
+            FXThreadUtils.runOnFXThread(() -> this.getChildren().add(this.componentsUI.get(newValueP)));
         }
     }
 

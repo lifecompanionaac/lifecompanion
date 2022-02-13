@@ -35,9 +35,8 @@ import org.lifecompanion.model.api.categorizedelement.CategorizedConfigurationVi
 import org.lifecompanion.model.api.categorizedelement.CategorizedElementI;
 import org.lifecompanion.model.api.categorizedelement.MainCategoryI;
 import org.lifecompanion.model.api.categorizedelement.SubCategoryI;
-import org.lifecompanion.util.UIControlHelper;
+import org.lifecompanion.util.javafx.FXControlUtils;
 import org.lifecompanion.util.model.Triple;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.ui.common.pane.generic.AnimatedBorderPane;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
@@ -170,11 +169,11 @@ public abstract class AbstractCategorizedMainView<V extends CategorizedElementI<
     @Override
     public void initUI() {
         //Top : button and title
-        this.buttonSearch = UIUtils.createGraphicButton(
+        this.buttonSearch = FXControlUtils.createGraphicButton(
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.SEARCH).sizeFactor(1).color(LCGraphicStyle.LC_WHITE),
                 this.getSearchButtonTooltipID());
 
-        Triple<HBox, Label, Node> header = UIControlHelper.createHeader("", m -> previous());
+        Triple<HBox, Label, Node> header = FXControlUtils.createHeader("", m -> previous());
         header.getLeft().getChildren().add(buttonSearch);
         labelTitle = header.getMiddle();
         nodePreviousIndicator = header.getRight();
@@ -182,10 +181,10 @@ public abstract class AbstractCategorizedMainView<V extends CategorizedElementI<
         this.setTop(header.getLeft());
 
         //Bottom : button to cancel, or save
-        this.buttonCancel = UIUtils.createTextButtonWithGraphics(Translation.getText("action.view.cancel"),
+        this.buttonCancel = FXControlUtils.createTextButtonWithGraphics(Translation.getText("action.view.cancel"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.TIMES).size(16).color(LCGraphicStyle.SECOND_PRIMARY),
                 this.getButtonCancelTooltipID());
-        this.buttonOk = UIUtils.createTextButtonWithGraphics("",
+        this.buttonOk = FXControlUtils.createTextButtonWithGraphics("",
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CHECK).size(16).color(LCGraphicStyle.MAIN_PRIMARY), this.getButtonOkTooltipID());
         HBox boxBottom = new HBox(this.buttonCancel, this.buttonOk);
         boxBottom.setAlignment(Pos.CENTER_RIGHT);

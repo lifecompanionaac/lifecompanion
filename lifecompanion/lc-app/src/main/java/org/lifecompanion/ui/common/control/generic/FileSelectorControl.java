@@ -31,13 +31,14 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser.ExtensionFilter;
 import org.controlsfx.glyphfont.FontAwesome;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.controller.editmode.FileChooserType;
 import org.lifecompanion.controller.editmode.LCStateController;
 import org.lifecompanion.controller.editmode.LCFileChoosers;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.util.javafx.FXControlUtils;
+import org.lifecompanion.util.javafx.FXUtils;
 
 import java.io.File;
 
@@ -106,10 +107,10 @@ public class FileSelectorControl extends VBox implements LCViewInitHelper {
         this.fieldFileName = new TextField();
         this.fieldFileName.setEditable(false);
         this.fieldFileName.textProperty().bind(this.fileName);
-        this.buttonSelectFile = UIUtils.createGraphicButton(
+        this.buttonSelectFile = FXControlUtils.createGraphicButton(
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.FILE).sizeFactor(1).color(LCGraphicStyle.MAIN_PRIMARY),
                 "tooltip.file.selector.select.file");
-        this.buttonRemoveFile = UIUtils.createGraphicButton(
+        this.buttonRemoveFile = FXControlUtils.createGraphicButton(
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.TRASH).sizeFactor(1).color(LCGraphicStyle.SECOND_PRIMARY),
                 "tooltip.file.selector.remove");
 
@@ -124,10 +125,10 @@ public class FileSelectorControl extends VBox implements LCViewInitHelper {
         this.buttonSelectFile.setOnAction((ea) -> {
             if (mode == FileSelectorControlMode.FILE) {
                 this.value.set(LCFileChoosers.getOtherFileChooser(this.openDialogTitle, this.extensionFilter, this.fileChooserType)
-                        .showOpenDialog(UIUtils.getSourceWindow(buttonSelectFile)));
+                        .showOpenDialog(FXUtils.getSourceWindow(buttonSelectFile)));
             } else {
                 this.value.set(LCFileChoosers.getChooserDirectory(this.fileChooserType, this.openDialogTitle)
-                        .showDialog(UIUtils.getSourceWindow(buttonSelectFile)));
+                        .showDialog(FXUtils.getSourceWindow(buttonSelectFile)));
             }
         });
         this.buttonRemoveFile.setOnAction((ea) -> {

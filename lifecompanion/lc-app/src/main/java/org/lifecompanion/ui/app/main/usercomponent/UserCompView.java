@@ -39,7 +39,7 @@ import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.model.api.profile.UserCompDescriptionI;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.ui.common.pane.specific.cell.UserCompListCell;
-import org.lifecompanion.util.UIUtils;
+import org.lifecompanion.util.javafx.FXControlUtils;
 
 import java.util.ArrayList;
 import java.util.function.Predicate;
@@ -82,14 +82,14 @@ public class UserCompView extends TitledPane implements LCViewInitHelper {
         VBox.setMargin(headerPane, new Insets(1.0, 1.0, 5.0, 1.0));
         //Button to add/remove
         HBox boxButtonLabel = new HBox();
-        this.buttonRemove = UIUtils.createGraphicButton(
+        this.buttonRemove = FXControlUtils.createGraphicButton(
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.TRASH_ALT).size(18).color(LCGraphicStyle.SECOND_PRIMARY),
                 "tooltip.user.comp.remove");
-        buttonEdit = UIUtils.createGraphicButton(
+        buttonEdit = FXControlUtils.createGraphicButton(
                 GlyphFontHelper.FONT_MATERIAL.create('\uE254').size(17).color(LCGraphicStyle.MAIN_PRIMARY),
                 "tooltip.user.comp.edit");
 
-        this.buttonMenu = UIUtils.createGraphicMenuButton(
+        this.buttonMenu = FXControlUtils.createGraphicMenuButton(
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.ELLIPSIS_V).size(18).color(LCGraphicStyle.MAIN_DARK), "tooltip.user.comp.menu");
         //Advance function button
         this.menuItemSelectAll = new MenuItem(Translation.getText("user.comp.list.select.all"));

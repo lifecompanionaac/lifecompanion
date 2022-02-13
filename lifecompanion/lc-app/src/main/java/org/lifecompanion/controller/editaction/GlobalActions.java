@@ -32,14 +32,14 @@ import javafx.scene.input.KeyCombination;
 import javafx.stage.FileChooser;
 import org.lifecompanion.model.api.editaction.BaseEditActionI;
 import org.lifecompanion.model.impl.exception.LCException;
+import org.lifecompanion.util.javafx.DialogUtils;
+import org.lifecompanion.util.javafx.FXUtils;
 import org.lifecompanion.util.model.LCTask;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.controller.lifecycle.AppMode;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.appinstallation.InstallationController;
 import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.controller.editmode.FileChooserType;
-import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.controller.editmode.LCFileChoosers;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
@@ -53,7 +53,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Optional;
 
-import static org.lifecompanion.util.UIUtils.getSourceFromEvent;
+import static org.lifecompanion.util.javafx.FXUtils.getSourceFromEvent;
 
 public class GlobalActions {
     public static final EventHandler<ActionEvent> HANDLER_GO_USE_MODE = (ea) -> ConfigActionController.INSTANCE.executeAction(new GoUseModeAction(getSourceFromEvent(ea)));
@@ -150,7 +150,7 @@ public class GlobalActions {
             FileChooser chooser = LCFileChoosers.getOtherFileChooser(Translation.getText("package.log.chooser.title"),
                     new FileChooser.ExtensionFilter(Translation.getText("file.type.plugin.zip"), Collections.singletonList("*.zip")), FileChooserType.OTHER_MISC_EXTERNAL);
             chooser.setInitialFileName("LifeCompanion_logs_" + PackageLogAction.DEFAULT_DATE_FORMAT.format(new Date()) + ".zip");
-            File zipFile = chooser.showSaveDialog(UIUtils.getSourceWindow(source));
+            File zipFile = chooser.showSaveDialog(FXUtils.getSourceWindow(source));
             if (zipFile != null) {
                 AsyncExecutorController.INSTANCE.addAndExecute(true, false, new LCTask<>("package.log.task.title") {
                     @Override
@@ -178,7 +178,7 @@ public class GlobalActions {
             if (AppModeController.INSTANCE.getEditModeContext().getConfiguration() != null) {
                 int unsaved = AppModeController.INSTANCE.getEditModeContext().getConfigurationUnsavedAction();
                 if (unsaved > 0) {
-                    Alert dlg = ConfigUIUtils.createAlert(source, Alert.AlertType.CONFIRMATION);
+                    Alert dlg = DialogUtils.createAlert(source, Alert.AlertType.CONFIRMATION);
                     ButtonType typeYes = new ButtonType(Translation.getText("button.type.save.and.then", Translation.getText(thenButtonNameId)), ButtonBar.ButtonData.YES);
                     ButtonType typeNo = new ButtonType(Translation.getText("button.type.then.only", StringUtils.capitalize(Translation.getText(thenButtonNameId))), ButtonBar.ButtonData.NO);
                     ButtonType typeCancel = new ButtonType(Translation.getText("button.type.cancel"), ButtonBar.ButtonData.CANCEL_CLOSE);

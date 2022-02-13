@@ -36,11 +36,11 @@ import org.lifecompanion.model.api.configurationcomponent.WriterDisplayerI;
 import org.lifecompanion.model.api.textcomponent.WritingEventSource;
 import org.lifecompanion.model.api.imagedictionary.ImageElementI;
 import org.lifecompanion.model.api.style.TextCompStyleI;
-import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.controller.textcomponent.WritingStateController;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.model.api.textcomponent.*;
+import org.lifecompanion.util.javafx.FXUtils;
 import org.predict4all.nlp.Separator;
 
 import java.util.ArrayList;
@@ -242,7 +242,7 @@ public class TextDisplayer3 extends Pane implements LCViewInitHelper {
         @Override
         public Bounds getBounds(final String text, final TextCompStyleI textStyle) {
             Font originalFont = textStyle.fontProperty().get();
-            return LCUtils.getTextBounds(text, originalFont);
+            return FXUtils.getTextBounds(text, originalFont);
         }
 
     }

@@ -42,8 +42,10 @@ import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.profile.LCProfileI;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
 import org.lifecompanion.model.api.ui.configurationcomponent.ComponentViewI;
+import org.lifecompanion.util.IOUtils;
+import org.lifecompanion.util.javafx.FXThreadUtils;
+import org.lifecompanion.util.model.ImageDictionaryUtils;
 import org.lifecompanion.util.model.LCTask;
-import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.controller.configurationcomponent.dynamickey.KeyListController;
@@ -91,7 +93,7 @@ public class ExportGridsToPdfTask extends LCTask<Void> {
         this.configuration = configuration;
         this.profile = profile;
         this.configurationDescription = configurationDescription;
-        this.exportedImageDir = LCUtils.getTempDir("export-images-for-config");
+        this.exportedImageDir = IOUtils.getTempDir("export-images-for-config");
         this.exportedImageDir.mkdirs();
         this.destPdf = destPdf;
         this.progress = new AtomicInteger(0);
@@ -153,7 +155,7 @@ public class ExportGridsToPdfTask extends LCTask<Void> {
                 KeyListController.INSTANCE.selectNode(gridPrintTask.nodeToSelect);
                 for (int p = 0; p < gridPrintTask.pageCount; p++) {
                     exportResults.add(executePrint(gridPrintTask, i, p));
-                    LCUtils.runOnFXThreadAndWaitFor(() -> KeyListController.INSTANCE.nextIn(gridPrintTask.nodeToSelect, true));
+                    FXThreadUtils.runOnFXThreadAndWaitFor(() -> KeyListController.INSTANCE.nextIn(gridPrintTask.nodeToSelect, true));
                 }
             }
         }
@@ -236,9 +238,9 @@ public class ExportGridsToPdfTask extends LCTask<Void> {
 
 
     private ImageExportResult executePrint(GridPrintTask gridPrintTask, int taskIndex, int pageIndex) {
-        LCUtils.loadAllImagesIn(EXPORT_IMAGE_LOADING_KEY, MAX_IMAGE_LOADING_TIME, gridPrintTask.gridToSnap);
+        ImageDictionaryUtils.loadAllImagesIn(EXPORT_IMAGE_LOADING_KEY, MAX_IMAGE_LOADING_TIME, gridPrintTask.gridToSnap);
         ImageExportResult result = printGrid(gridPrintTask, taskIndex, pageIndex);
-        LCUtils.unloadAllImagesIn(EXPORT_IMAGE_LOADING_KEY, gridPrintTask.gridToSnap);
+        ImageDictionaryUtils.unloadAllImagesIn(EXPORT_IMAGE_LOADING_KEY, gridPrintTask.gridToSnap);
         updateProgress(progress.incrementAndGet(), totalWork);
         return result;
     }
@@ -286,10 +288,10 @@ public class ExportGridsToPdfTask extends LCTask<Void> {
 
     private ImageExportResult printGrid(GridPrintTask printTask, int taskIndex, int pageIndex) {
         String gridName = printTask.gridToSnap.nameProperty().get() + (printTask.nodeToSelect != null ? (" - " + printTask.nodeToSelect.textProperty().get() + " (" + (pageIndex + 1) + "/" + printTask.pageCount + ")") : "");
-        final String fileName = LCUtils.getValidFileName(taskIndex + "_" + printTask.gridToSnap.nameProperty().get() + "_" + (printTask.nodeToSelect != null ? (printTask.nodeToSelect.textProperty().get() + "_" + pageIndex) : ""));
+        final String fileName = IOUtils.getValidFileName(taskIndex + "_" + printTask.gridToSnap.nameProperty().get() + "_" + (printTask.nodeToSelect != null ? (printTask.nodeToSelect.textProperty().get() + "_" + pageIndex) : ""));
         File imageFile = new File(exportedImageDir + File.separator + fileName + ".png");
         AtomicBoolean landscape = new AtomicBoolean();
-        final Image image = LCUtils.runOnFXThreadAndWaitFor(() -> {
+        final Image image = FXThreadUtils.runOnFXThreadAndWaitFor(() -> {
             try {
                 final ComponentViewI<?> viewForGrid = printTask.gridToSnap.getDisplay(useViewProviderToSnap, false);
                 final Region regionForGrid = viewForGrid.getView();

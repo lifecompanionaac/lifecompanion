@@ -17,25 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.lifecompanion.model.api.ui.editmode;
+package org.lifecompanion.util.model;
 
-import org.lifecompanion.framework.commons.translation.Translation;
-
-/**
- * Different profile level (simple, advanced, expert) associated with profile to hide show configuration fields.<br>
- * The enum order represent the level order.
- * @author Mathieu THEBAUD <math.thebaud@gmail.com>
- */
-public enum ConfigurationProfileLevelEnum {
-	BEGINNER("profile.level.beginner"), NORMAL("profile.level.normal"), EXPERT("profile.level.expert");
-
-	private String nameID;
-
-	ConfigurationProfileLevelEnum(final String nameID) {
-		this.nameID = nameID;
-	}
-
-	public String getName() {
-		return Translation.getText(this.nameID);
-	}
+public class ConfigurationComponentPositionSizeUtils {
 }

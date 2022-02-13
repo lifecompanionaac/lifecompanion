@@ -43,8 +43,8 @@ import org.lifecompanion.model.api.profile.LCProfileI;
 import org.lifecompanion.model.api.profile.UserCompDescriptionI;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.exception.LCException;
-import org.lifecompanion.util.ConfigUIUtils;
-import org.lifecompanion.util.UIUtils;
+import org.lifecompanion.util.javafx.DialogUtils;
+import org.lifecompanion.util.javafx.FXControlUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -74,7 +74,7 @@ public class UserCompListCell extends ListCell<UserCompDescriptionI> {
         this.labelName.setAlignment(Pos.CENTER);
         this.labelName.getStyleClass().addAll("text-h4","text-fill-dimgrey");
 
-        this.tooltip = UIUtils.createTooltip(Translation.getText("tooltip.explain.user.comp.add"));
+        this.tooltip = FXControlUtils.createTooltip(Translation.getText("tooltip.explain.user.comp.add"));
 
         //Label style and positions
         VBox boxLabel = new VBox(this.labelName);
@@ -129,7 +129,7 @@ public class UserCompListCell extends ListCell<UserCompDescriptionI> {
                                     sb.append(Translation.getText("user.comp.loading.failed.message.start"));
                                     sb.append(error.getClass().getSimpleName()).append(" : ").append(error.getMessage());
                                 }
-                                Alert dlg = ConfigUIUtils.createAlert(this, AlertType.ERROR);
+                                Alert dlg = DialogUtils.createAlert(this, AlertType.ERROR);
                                 dlg.setHeaderText(Translation.getText("user.comp.loading.failed.header"));
                                 dlg.getDialogPane().setContentText(sb.toString());
                                 dlg.show();

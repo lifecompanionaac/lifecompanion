@@ -25,14 +25,11 @@ import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.controller.editaction.LCConfigurationComponentActions.ChangeGridSizeConfigurationAction;
 import org.lifecompanion.controller.editaction.LCConfigurationComponentActions.DisableGridOnConfigurationAction;
 import org.lifecompanion.controller.editaction.LCConfigurationComponentActions.EnableGridOnConfigurationAction;
-import org.lifecompanion.util.binding.LCConfigBindingUtils;
-import org.lifecompanion.util.UIUtils;
+import org.lifecompanion.util.binding.EditActionUtils;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.editmode.ConfigActionController;
-import org.lifecompanion.model.api.ui.editmode.ConfigurationProfileLevelEnum;
-import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.ui.configurationcomponent.editmode.categorizedelement.useevent.available.RibbonBasePart;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Pos;
@@ -43,6 +40,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import org.lifecompanion.util.javafx.FXControlUtils;
 
 /**
  * Grid part to enable and parameter the grid in the current configuration.
@@ -90,12 +88,12 @@ public class GridRibbonPart extends RibbonBasePart<LCConfigurationI> implements 
 	@Override
 	public void initUI() {
 		this.setTitle(Translation.getText("pane.title.config.grid"));
-		this.sliderGridSize = UIUtils.createBaseSlider(5.0, 30.0, 10.0);
+		this.sliderGridSize = FXControlUtils.createBaseSlider(5.0, 30.0, 10.0);
 		this.sliderGridSize.setShowTickLabels(true);
 		this.sliderGridSize.setMajorTickUnit(5.0);
 		this.sliderGridSize.setMinorTickCount(4);
-		UIUtils.createAndAttachTooltip(sliderGridSize, "tooltip.explain.grid.size");
-		this.gridEnabledGroup = UIUtils.createAlwaysSelectedToggleGroup();
+		FXControlUtils.createAndAttachTooltip(sliderGridSize, "tooltip.explain.grid.size");
+		this.gridEnabledGroup = FXControlUtils.createAlwaysSelectedToggleGroup();
 		Label labelGridSize = new Label(Translation.getText("label.grid.size"));
 		this.buttonDisableGrid = this.createRadioButton(Translation.getText("label.use.grid.disable"), GridRibbonPart.DISABLE_ICON,
 				LCGraphicStyle.SECOND_PRIMARY, "tooltip.disable.configuration.grid");
@@ -111,7 +109,7 @@ public class GridRibbonPart extends RibbonBasePart<LCConfigurationI> implements 
 	}
 
 	private ToggleButton createRadioButton(final String text, final char iconChar, final Color color, final String tooltipTranslationID) {
-		ToggleButton btn = UIUtils.createGraphicsToggleButton(text, GlyphFontHelper.FONT_MATERIAL.create(iconChar).size(24).color(color),
+		ToggleButton btn = FXControlUtils.createGraphicsToggleButton(text, GlyphFontHelper.FONT_MATERIAL.create(iconChar).size(24).color(color),
 				tooltipTranslationID);
 		this.gridEnabledGroup.getToggles().add(btn);
 		return btn;
@@ -135,7 +133,7 @@ public class GridRibbonPart extends RibbonBasePart<LCConfigurationI> implements 
 			}
 		});
 		//To change with keyboard change
-		this.changeListenerGridSize = LCConfigBindingUtils.createSliderBindingWithScale(1, this.sliderGridSize, this.model,
+		this.changeListenerGridSize = EditActionUtils.createSliderBindingWithScale(1, this.sliderGridSize, this.model,
 				model -> model.gridSizeProperty(), (model, nv) -> new ChangeGridSizeConfigurationAction(model, nv.intValue()));
 		this.changeListenerUseGrid = (obs, ov, nv) -> {
 			if (nv) {
@@ -153,7 +151,6 @@ public class GridRibbonPart extends RibbonBasePart<LCConfigurationI> implements 
 	public void initBinding() {
 		this.model.bind(AppModeController.INSTANCE.getEditModeContext().configurationProperty());
 		this.sliderGridSize.disableProperty().bind(this.buttonDisableGrid.selectedProperty());
-		ConfigUIUtils.bindShowForLevelFrom(this, ConfigurationProfileLevelEnum.NORMAL);
 	}
 
 	@Override

@@ -26,9 +26,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 import org.lifecompanion.model.api.categorizedelement.MainCategoryI;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.util.javafx.FXControlUtils;
 
 import java.util.function.Consumer;
 
@@ -68,7 +68,7 @@ public class AbstractMainCategoryItemView<T extends MainCategoryI<?>> extends La
         centerPane.getChildren().addAll(this.backgroundShape, this.imageView);
         this.setGraphic(centerPane);
         //Create tooltip
-        this.tooltip = UIUtils.createTooltip(null);
+        this.tooltip = FXControlUtils.createTooltip(null);
     }
 
     @Override

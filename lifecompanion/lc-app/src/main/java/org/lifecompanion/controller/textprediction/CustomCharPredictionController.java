@@ -25,10 +25,11 @@ import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.configurationcomponent.PredictionParameterI;
 import org.lifecompanion.model.api.configurationcomponent.ComponentGridI;
 import org.lifecompanion.model.api.textprediction.CharPredictorI;
-import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.CustomCharKeyOption;
 import org.lifecompanion.model.impl.textprediction.charprediction.LCCharPredictor;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.util.model.ConfigurationComponentUtils;
 
 import java.util.*;
 
@@ -79,7 +80,7 @@ public class CustomCharPredictionController extends AbstractPredictionController
                 List<Pair<ComponentGridI, Pair<Integer, Integer>>> positionInStack = this.positionByGrid.get(grid);
                 Map<String, GridPartKeyComponentI> keysInStack = this.predictionKeyByGrid.get(grid);
                 if (!keysInStack.isEmpty()) {
-                    LCUtils.runOnFXThread(() -> {
+                    FXThreadUtils.runOnFXThread(() -> {
                         for (int i = 0; i < positionInStack.size(); i++) {
                             if (i < result.size() && accepted.contains(result.get(i))) {
                                 //Prediction should be accepted
@@ -98,7 +99,7 @@ public class CustomCharPredictionController extends AbstractPredictionController
                                         position.getValue());
                                 if (originalKey != keyForPrediction && keyForPrediction != null) {
                                     //Switch the two
-                                    LCUtils.invertKeys(originalKey, keyForPrediction);
+                                    ConfigurationComponentUtils.invertKeys(originalKey, keyForPrediction);
                                 }
                             }
                             //Happen if the prediction is not in accepted char

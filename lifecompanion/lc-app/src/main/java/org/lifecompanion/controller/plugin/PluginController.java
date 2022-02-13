@@ -49,7 +49,6 @@ import org.lifecompanion.model.api.ui.editmode.PossibleAddComponentI;
 import org.lifecompanion.model.api.voicesynthesizer.VoiceSynthesizerI;
 import org.lifecompanion.model.impl.plugin.PluginInfo;
 import org.lifecompanion.model.impl.plugin.PluginInfoState;
-import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
 import org.lifecompanion.controller.appinstallation.InstallationController;
@@ -423,7 +422,7 @@ public enum PluginController implements LCStateListener, ModeListenerI {
                 }
 
                 // This part is for dev only
-                if (LCUtils.safeParseBoolean(System.getProperty("org.lifecompanion.load.plugins.from.cp"))) {
+                if (org.lifecompanion.util.LangUtils.safeParseBoolean(System.getProperty("org.lifecompanion.load.plugins.from.cp"))) {
                     List<File> jarFiles = new ClassGraph().getClasspathFiles();
                     for (File jarFile : jarFiles) {
                         if (jarFile.getName().contains("plugin")) {

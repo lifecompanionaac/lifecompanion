@@ -37,7 +37,6 @@ import javafx.scene.text.Text;
 import javafx.stage.Popup;
 import javafx.stage.Window;
 import org.controlsfx.glyphfont.FontAwesome;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
@@ -46,6 +45,7 @@ import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.lang.LangUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.util.javafx.FXControlUtils;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -114,7 +114,7 @@ public class LCColorPickerPopup extends Popup implements LCViewInitHelper {
         tilePaneUserColors.setPrefColumns(MAIN_COLOR_COUNT);
 
         // Custom color
-        customColorButton = UIUtils.createRightTextButton(Translation.getText("lc.colorpicker.custom.color"),
+        customColorButton = FXControlUtils.createRightTextButton(Translation.getText("lc.colorpicker.custom.color"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.SLIDERS).size(14).color(LCGraphicStyle.MAIN_DARK),
                 null);
 

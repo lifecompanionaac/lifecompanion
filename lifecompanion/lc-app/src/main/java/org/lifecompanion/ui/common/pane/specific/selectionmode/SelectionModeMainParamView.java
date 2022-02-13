@@ -41,8 +41,7 @@ import org.lifecompanion.ui.common.pane.specific.cell.FireActionEventInputListCe
 import org.lifecompanion.ui.common.pane.specific.cell.FireEventInputListCell;
 import org.lifecompanion.ui.common.pane.specific.cell.SelectionModeDetailListCell;
 import org.lifecompanion.ui.common.pane.specific.cell.SelectionModeSimpleListCell;
-import org.lifecompanion.util.UIControlHelper;
-import org.lifecompanion.util.UIUtils;
+import org.lifecompanion.util.javafx.FXControlUtils;
 import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.lifecycle.AppModeController;
@@ -141,7 +140,7 @@ public class SelectionModeMainParamView extends BaseConfigurationViewBorderPane<
         this.comboboxSelectionMode.setCellFactory((lv) -> new SelectionModeDetailListCell());
         this.comboboxSelectionMode.setButtonCell(new SelectionModeSimpleListCell());
         this.comboboxSelectionMode.setVisibleRowCount(4);
-        UIUtils.createAndAttachTooltip(comboboxSelectionMode, "tooltip.explain.selection.mode.param.mode.selection");
+        FXControlUtils.createAndAttachTooltip(comboboxSelectionMode, "tooltip.explain.selection.mode.param.mode.selection");
 
         // Input event
         this.comboBoxFireEventInput = new ComboBox<>(FXCollections.observableArrayList(FireEventInput.values()));
@@ -151,7 +150,7 @@ public class SelectionModeMainParamView extends BaseConfigurationViewBorderPane<
         Label labelInputFireEvent = new Label(Translation.getText("selection.mode.inputevent.label"));
         labelInputFireEvent.getStyleClass().add("menu-part-title");
         labelInputFireEvent.setMaxWidth(Double.MAX_VALUE);
-        UIUtils.createAndAttachTooltip(comboBoxFireEventInput, "tooltip.explain.selection.event.input");
+        FXControlUtils.createAndAttachTooltip(comboBoxFireEventInput, "tooltip.explain.selection.event.input");
 
         // Keyboard input parameters
         this.inputEventKeySelector = new KeyCodeSelectorControl(null);
@@ -173,14 +172,14 @@ public class SelectionModeMainParamView extends BaseConfigurationViewBorderPane<
         labelTimeToFireAction.setWrapText(true);
         Label labelTimeBeforeRepeat = new Label(Translation.getText("selection.mode.param.time.before.repeat"));
         labelTimeBeforeRepeat.setWrapText(true);
-        this.spinnerTimeToFireAction = UIUtils.createDoubleSpinner(0.0, 120.0, 0.0, 0.1, 150);
-        UIUtils.createAndAttachTooltip(spinnerTimeToFireAction, "tooltip.explain.selection.time.to.fire.action");
-        this.spinnerTimeBeforeRepeat = UIUtils.createDoubleSpinner(0.0, 120.0, 0.0, 0.1, 150);
-        UIUtils.createAndAttachTooltip(spinnerTimeBeforeRepeat, "tooltip.explain.selection.time.before.repeat");
+        this.spinnerTimeToFireAction = FXControlUtils.createDoubleSpinner(0.0, 120.0, 0.0, 0.1, 150);
+        FXControlUtils.createAndAttachTooltip(spinnerTimeToFireAction, "tooltip.explain.selection.time.to.fire.action");
+        this.spinnerTimeBeforeRepeat = FXControlUtils.createDoubleSpinner(0.0, 120.0, 0.0, 0.1, 150);
+        FXControlUtils.createAndAttachTooltip(spinnerTimeBeforeRepeat, "tooltip.explain.selection.time.before.repeat");
         GridPane.setHalignment(spinnerTimeToFireAction, HPos.RIGHT);
         GridPane.setHalignment(spinnerTimeBeforeRepeat, HPos.RIGHT);
 
-        this.buttonShowSelectionModeConfiguration = UIUtils.createRightTextButton(Translation.getText("selection.mode.button.param.show.advanced.parameter"),
+        this.buttonShowSelectionModeConfiguration = FXControlUtils.createRightTextButton(Translation.getText("selection.mode.button.param.show.advanced.parameter"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.GEAR).size(20).color(LCGraphicStyle.MAIN_DARK),
                 null);
         GridPane.setHalignment(buttonShowSelectionModeConfiguration, HPos.CENTER);
@@ -196,13 +195,13 @@ public class SelectionModeMainParamView extends BaseConfigurationViewBorderPane<
         labelSelectionMode.setMaxWidth(Double.MAX_VALUE);
         GridPane.setHgrow(labelSelectionMode, Priority.ALWAYS);
         labelSelectionMode.setMinWidth(GeneralConfigurationStepViewI.LEFT_COLUMN_MIN_WIDTH);
-        gridPaneConfiguration.add(UIControlHelper.createTitleLabel("general.configuration.view.step.selection.mode.title"), 0, gridRowIndex++, 2, 1);
+        gridPaneConfiguration.add(FXControlUtils.createTitleLabel("general.configuration.view.step.selection.mode.title"), 0, gridRowIndex++, 2, 1);
         gridPaneConfiguration.add(labelSelectionMode, 0, gridRowIndex);
         gridPaneConfiguration.add(comboboxSelectionMode, 1, gridRowIndex++);
         gridPaneConfiguration.add(buttonShowSelectionModeConfiguration, 0, gridRowIndex++, 2, 1);
 
         // Input configuration
-        gridPaneConfiguration.add(UIControlHelper.createTitleLabel("general.configuration.selection.mode.title.part.input.type"), 0, gridRowIndex++, 2, 1);
+        gridPaneConfiguration.add(FXControlUtils.createTitleLabel("general.configuration.selection.mode.title.part.input.type"), 0, gridRowIndex++, 2, 1);
         Label labelInputType = new Label(Translation.getText("general.configuration.selection.input.type.label"));
         gridPaneConfiguration.add(labelInputType, 0, gridRowIndex);
         gridPaneConfiguration.add(comboBoxFireEventInput, 1, gridRowIndex++);
@@ -214,7 +213,7 @@ public class SelectionModeMainParamView extends BaseConfigurationViewBorderPane<
         gridPaneConfiguration.add(mouseButtonSelectorControl, 1, gridRowIndex++);
 
         // Fire action
-        gridPaneConfiguration.add(UIControlHelper.createTitleLabel("general.configuration.selection.mode.title.filter.actions"), 0, gridRowIndex++, 2, 1);
+        gridPaneConfiguration.add(FXControlUtils.createTitleLabel("general.configuration.selection.mode.title.filter.actions"), 0, gridRowIndex++, 2, 1);
         gridPaneConfiguration.add(new Label(Translation.getText("general.configuration.selection.mode.title.filter.actions.field")), 0, gridRowIndex);
         gridPaneConfiguration.add(comboBoxFireActionEvent, 1, gridRowIndex++);
 

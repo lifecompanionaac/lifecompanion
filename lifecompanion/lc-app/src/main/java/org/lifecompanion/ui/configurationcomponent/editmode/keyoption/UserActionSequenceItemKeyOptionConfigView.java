@@ -27,7 +27,7 @@ import javafx.scene.control.ListCell;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.dynamickey.UserActionSequenceDisplayFilter;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.dynamickey.UserActionSequenceItemKeyOption;
 import org.lifecompanion.controller.editaction.KeyOptionActions;
-import org.lifecompanion.util.binding.LCConfigBindingUtils;
+import org.lifecompanion.util.binding.EditActionUtils;
 import org.lifecompanion.framework.commons.translation.Translation;
 
 public class UserActionSequenceItemKeyOptionConfigView extends BaseKeyOptionConfigView<UserActionSequenceItemKeyOption> {
@@ -52,7 +52,7 @@ public class UserActionSequenceItemKeyOptionConfigView extends BaseKeyOptionConf
     @Override
     public void initListener() {
         super.initListener();
-        this.changeListenerDisplayFilter = LCConfigBindingUtils.createSelectionModelBinding(this.comboBoxDisplayFilter.getSelectionModel(), //
+        this.changeListenerDisplayFilter = EditActionUtils.createSelectionModelBinding(this.comboBoxDisplayFilter.getSelectionModel(), //
                 this.model, model -> model.displayFilterProperty().get(), //
                 KeyOptionActions.ChangeUserActionSequenceDisplayFilter::new);
     }

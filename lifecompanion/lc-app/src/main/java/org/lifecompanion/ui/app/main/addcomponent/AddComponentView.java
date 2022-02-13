@@ -42,9 +42,8 @@ import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.model.api.ui.editmode.PossibleAddComponentCategoryI;
 import org.lifecompanion.model.api.ui.editmode.PossibleAddComponentI;
 import org.lifecompanion.model.impl.ui.editmode.AddComponentProvider;
-import org.lifecompanion.util.LCUtils;
-import org.lifecompanion.util.UIControlHelper;
-import org.lifecompanion.util.UIUtils;
+import org.lifecompanion.util.binding.BindingUtils;
+import org.lifecompanion.util.javafx.FXControlUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -112,7 +111,7 @@ public class AddComponentView extends TitledPane implements LCViewInitHelper {
         Consumer<PossibleAddComponentCategoryI> addListener = (category) -> {
             BorderPane paneCategory = new BorderPane();
             //Title
-            Label labelTitle = UIControlHelper.createTitleLabel(category.getTitle());
+            Label labelTitle = FXControlUtils.createTitleLabel(category.getTitle());
             labelTitle.setPadding(new Insets(5.0, 0.0, 5.0, 10.0));
             paneCategory.setTop(labelTitle);
             BorderPane.setMargin(labelTitle, new Insets(0.0, 0, 5.0, 0));
@@ -124,7 +123,7 @@ public class AddComponentView extends TitledPane implements LCViewInitHelper {
             this.categoryNodes.put(category, paneCategory);
         };
         AddComponentProvider.INSTANCE.getCategories().forEach(addListener);
-        AddComponentProvider.INSTANCE.getCategories().addListener(LCUtils.createListChangeListener(addListener, (category) -> {
+        AddComponentProvider.INSTANCE.getCategories().addListener(BindingUtils.createListChangeListener(addListener, (category) -> {
             this.boxCategories.getChildren().remove(this.categoryNodes.get(category));
             this.categoryNodes.remove(category);
         }));
@@ -140,13 +139,13 @@ public class AddComponentView extends TitledPane implements LCViewInitHelper {
             label.setAlignment(Pos.CENTER);
             label.setGraphic(new ImageView(img));
             pane.getChildren().add(label);
-            label.setTooltip(UIUtils.createTooltip(Translation.getText(comp.getDescriptionID())));
+            label.setTooltip(FXControlUtils.createTooltip(Translation.getText(comp.getDescriptionID())));
             this.addCompViews.put(comp, label);
             label.getStyleClass().addAll("text-fill-gray", "opacity-80-hover");
             this.setDragAction(comp, label);
         };
         category.getPossibleAddList().forEach(addListener);
-        category.getPossibleAddList().addListener(LCUtils.createListChangeListener(addListener, (comp) -> {
+        category.getPossibleAddList().addListener(BindingUtils.createListChangeListener(addListener, (comp) -> {
             pane.getChildren().remove(this.addCompViews.get(comp));
             this.addCompViews.remove(comp);
         }));

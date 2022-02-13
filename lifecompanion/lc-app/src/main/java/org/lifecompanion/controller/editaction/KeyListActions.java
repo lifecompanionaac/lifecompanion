@@ -24,8 +24,7 @@ import org.lifecompanion.model.api.editaction.BaseEditActionI;
 import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
 import org.lifecompanion.model.impl.exception.LCException;
-import org.lifecompanion.util.LCUtils;
-import org.lifecompanion.util.UIUtils;
+import org.lifecompanion.util.IOUtils;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.profile.ProfileController;
 import org.lifecompanion.controller.io.IOHelper;
@@ -35,6 +34,7 @@ import org.lifecompanion.controller.editmode.FileChooserType;
 import org.lifecompanion.controller.editmode.LCStateController;
 import org.lifecompanion.controller.editmode.LCFileChoosers;
 import org.lifecompanion.framework.commons.translation.Translation;
+import org.lifecompanion.util.javafx.FXUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -74,8 +74,8 @@ public class KeyListActions {
             String configurationName = Translation.getText("keylist.default.file.export.name") + (configurationDescription != null ? " - " + configurationDescription.configurationNameProperty().get() :
                     "");
 
-            keyListFileChooser.setInitialFileName(DATE_FORMAT_FILENAME.format(new Date()) + "_" + LCUtils.getValidFileName(configurationName) + "");
-            File keyListExportFile = keyListFileChooser.showSaveDialog(UIUtils.getSourceWindow(source));
+            keyListFileChooser.setInitialFileName(DATE_FORMAT_FILENAME.format(new Date()) + "_" + IOUtils.getValidFileName(configurationName) + "");
+            File keyListExportFile = keyListFileChooser.showSaveDialog(FXUtils.getSourceWindow(source));
             if (keyListExportFile != null) {
                 LCStateController.INSTANCE.updateDefaultDirectory(FileChooserType.KEYLIST_EXPORT, keyListExportFile.getParentFile());
                 KeyListExportTask keyListExportTask = IOHelper.createExportKeyListTask(keyListExportFile, rootNode.getChildren());
@@ -102,7 +102,7 @@ public class KeyListActions {
         @Override
         public void doAction() throws LCException {
             FileChooser keyListFileChooser = LCFileChoosers.getChooserKeyList(FileChooserType.KEYLIST_IMPORT);
-            File keyListImportFile = keyListFileChooser.showOpenDialog(UIUtils.getSourceWindow(source));
+            File keyListImportFile = keyListFileChooser.showOpenDialog(FXUtils.getSourceWindow(source));
             if (keyListImportFile != null) {
                 LCStateController.INSTANCE.updateDefaultDirectory(FileChooserType.KEYLIST_IMPORT, keyListImportFile.getParentFile());
                 KeyListImportTask keyListImportTask = IOHelper.createImportKeyListTask(List.of(keyListImportFile));

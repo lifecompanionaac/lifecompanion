@@ -30,7 +30,7 @@ import org.lifecompanion.model.api.profile.UserCompDescriptionI;
 import org.lifecompanion.model.api.profile.UserCompI;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.ui.editmode.AddTypeEnum;
-import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.controller.editaction.AsyncExecutorController;
 import org.lifecompanion.framework.commons.fx.io.XMLGenericProperty;
@@ -106,7 +106,7 @@ public class UserCompDescriptionImpl implements UserCompDescriptionI {
                     try (FileInputStream imageIS = new FileInputStream(imageFile)) {
                         final Image value = new Image(imageIS);
                         UserCompDescriptionImpl.LOGGER.info("User component preview was loaded from {}", imageFile);
-                        LCUtils.runOnFXThread(() -> this.componentImage.set(value));
+                        FXThreadUtils.runOnFXThread(() -> this.componentImage.set(value));
                     } catch (IOException e) {
                         UserCompDescriptionImpl.LOGGER.warn("Couldn't load the configuration preview image", e);
                     }

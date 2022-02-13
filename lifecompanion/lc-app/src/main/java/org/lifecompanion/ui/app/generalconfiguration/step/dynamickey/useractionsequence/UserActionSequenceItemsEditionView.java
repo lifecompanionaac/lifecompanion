@@ -32,8 +32,7 @@ import javafx.scene.layout.VBox;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.UserActionSequenceI;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.UserActionSequenceItemI;
-import org.lifecompanion.util.UIControlHelper;
-import org.lifecompanion.util.UIUtils;
+import org.lifecompanion.util.javafx.FXControlUtils;
 import org.lifecompanion.model.impl.configurationcomponent.dynamickey.UserActionSequenceItem;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStepViewI;
@@ -67,12 +66,12 @@ public class UserActionSequenceItemsEditionView extends ScrollPane implements LC
     @Override
     public void initUI() {
         // Sequence props
-        labelSequenceTitle = UIControlHelper.createTitleLabel(null);
+        labelSequenceTitle = FXControlUtils.createTitleLabel(null);
         fieldSequenceName = new TextField();
         fieldSequenceName.setPromptText(Translation.getText("sequence.configuration.view.field.sequence.name"));
         VBox.setMargin(fieldSequenceName, new Insets(0, 10, 0, 10));
 
-        buttonAddItem = UIUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.PLUS_CIRCLE).size(18).color(LCGraphicStyle.MAIN_DARK), null);
+        buttonAddItem = FXControlUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.PLUS_CIRCLE).size(18).color(LCGraphicStyle.MAIN_DARK), null);
 
         // Sequence items
         listViewItems = new ListView<>();

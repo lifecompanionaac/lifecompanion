@@ -29,10 +29,12 @@ import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.configurationcomponent.RootGraphicComponentI;
 import org.lifecompanion.model.api.ui.configurationcomponent.ComponentViewI;
 import org.lifecompanion.model.api.ui.configurationcomponent.ViewProviderI;
-import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.util.binding.BindingUtils;
+import org.lifecompanion.util.javafx.ColorUtils;
+import org.lifecompanion.util.model.ConfigurationComponentUtils;
 
 /**
  * Represent the view base for the {@link LCConfigurationI} object.
@@ -75,7 +77,7 @@ public class LCConfigurationViewBase extends Pane implements LCViewInitHelper, C
     public void initUI() {
         paneForRootComponents = new LCConfigurationChildContainerPane(this, model);
         this.configurationCssStyle.bind(Bindings.createStringBinding(
-                () -> new StringBuilder(50).append("-fx-background-color:").append(LCUtils.toCssColor(this.model.backgroundColorProperty().get()))
+                () -> new StringBuilder(50).append("-fx-background-color:").append(ColorUtils.toCssColor(this.model.backgroundColorProperty().get()))
                         .append(";").toString(), this.model.backgroundColorProperty()));
         this.styleProperty().bind(this.configurationCssStyle);
         //Bind max/min size on configuration, plus a add, to avoid blocking the user actions in bottom/right side
@@ -90,7 +92,7 @@ public class LCConfigurationViewBase extends Pane implements LCViewInitHelper, C
     @Override
     public void initBinding() {
         //Binding on children, remove or add component when changes happens
-        this.model.getChildren().addListener(childrenChangeListener = LCUtils.createListChangeListener((added) -> {
+        this.model.getChildren().addListener(childrenChangeListener = BindingUtils.createListChangeListener((added) -> {
             paneForRootComponents.getChildren().add(added.getDisplay(viewProvider, useCache).getView());
         }, (removed) -> {
             paneForRootComponents.getChildren().remove(removed.getDisplay(viewProvider, useCache).getView());
@@ -106,7 +108,7 @@ public class LCConfigurationViewBase extends Pane implements LCViewInitHelper, C
         this.maxWidthProperty().unbind();
         this.minHeightProperty().unbind();
         this.maxHeightProperty().unbind();
-        LCUtils.exploreComponentViewChildrenToUnbind(this);
+        ConfigurationComponentUtils.exploreComponentViewChildrenToUnbind(this);
         this.model = null;
     }
 

@@ -31,7 +31,7 @@ import javafx.util.StringConverter;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.ui.common.pane.specific.cell.CorrectionRuleTypeDetailledListCell;
 import org.lifecompanion.ui.common.pane.specific.cell.CorrectionRuleTypeListCell;
-import org.lifecompanion.util.UIControlHelper;
+import org.lifecompanion.util.javafx.FXControlUtils;
 import org.lifecompanion.model.impl.textprediction.predict4all.P4AConfigurationSteps;
 import org.lifecompanion.model.impl.textprediction.predict4all.PredictorModelDto;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStep;
@@ -101,8 +101,8 @@ public class P4ACorrectionConfigurationView extends BorderPane implements Genera
         boxDefaultRules.setAlignment(Pos.CENTER);
         HBox.setHgrow(labelDefaultRule, Priority.ALWAYS);
 
-        VBox boxCenter = new VBox(6.0, UIControlHelper.createTitleLabel("predict4all.config.part.title.correction.param"), boxSpinnerMinCountPred,
-                UIControlHelper.createTitleLabel("predict4all.config.part.title.correction.rules"), boxDefaultRules, this.scrollPane);
+        VBox boxCenter = new VBox(6.0, FXControlUtils.createTitleLabel("predict4all.config.part.title.correction.param"), boxSpinnerMinCountPred,
+                FXControlUtils.createTitleLabel("predict4all.config.part.title.correction.rules"), boxDefaultRules, this.scrollPane);
         this.setPadding(new Insets(GeneralConfigurationStepViewI.PADDING));
         this.setCenter(boxCenter);
     }

@@ -26,7 +26,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.image.Image;
 import org.lifecompanion.model.api.imagedictionary.ImageDictionaryI;
 import org.lifecompanion.model.api.imagedictionary.ImageElementI;
-import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
 import org.lifecompanion.framework.commons.utils.io.FileNameUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
@@ -209,7 +209,7 @@ public class ImageElement implements ImageElementI {
             lastRequestedWidth = 0.0;
             lastRequestedHeight = 0.0;
             this.dictionary.cancelLoadImage(id);
-            LCUtils.runOnFXThread(() -> this.loadedImage.set(null));
+            FXThreadUtils.runOnFXThread(() -> this.loadedImage.set(null));
         }
     }
 

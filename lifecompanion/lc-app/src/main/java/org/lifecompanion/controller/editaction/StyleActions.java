@@ -21,7 +21,7 @@ package org.lifecompanion.controller.editaction;
 import org.lifecompanion.model.api.editaction.UndoRedoActionI;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.style.StylePropertyI;
-import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.util.LangUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -90,7 +90,7 @@ public class StyleActions {
         @Override
         public void doAction() throws LCException {
             this.oldValue = this.property.selected().getValue();
-            this.property.selected().setValue(!LCUtils.safeEquals(this.property.parent().getValue(), this.newValue) ? this.newValue : null);
+            this.property.selected().setValue(!LangUtils.safeEquals(this.property.parent().getValue(), this.newValue) ? this.newValue : null);
         }
 
         @Override

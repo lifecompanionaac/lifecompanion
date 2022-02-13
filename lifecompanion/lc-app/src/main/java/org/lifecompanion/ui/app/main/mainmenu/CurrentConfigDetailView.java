@@ -28,15 +28,13 @@ import javafx.scene.layout.VBox;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.fxmisc.easybind.EasyBind;
 import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
-import org.lifecompanion.model.api.ui.editmode.ConfigurationProfileLevelEnum;
-import org.lifecompanion.util.LCUtils;
-import org.lifecompanion.util.UIUtils;
+import org.lifecompanion.util.javafx.FXControlUtils;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.editaction.LCConfigurationActions;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.controller.editmode.ConfigActionController;
-import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
@@ -74,13 +72,13 @@ public class CurrentConfigDetailView extends VBox implements LCViewInitHelper {
         //Action line 1
         HBox boxButton1 = new HBox();
         VBox.setMargin(boxButton1, new Insets(10, 0, 0, 0));
-        this.buttonSave = UIUtils.createFixedWidthTextButton(Translation.getText("configuration.menu.item.save"),
+        this.buttonSave = FXControlUtils.createFixedWidthTextButton(Translation.getText("configuration.menu.item.save"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.SAVE).sizeFactor(2).color(LCGraphicStyle.MAIN_PRIMARY), MainMenu.BUTTON_WIDTH,
                 "tooltip.save.current.configuration");
-        this.buttonExport = UIUtils.createFixedWidthTextButton(Translation.getText("configuration.menu.item.export"),
+        this.buttonExport = FXControlUtils.createFixedWidthTextButton(Translation.getText("configuration.menu.item.export"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.UPLOAD).sizeFactor(2).color(LCGraphicStyle.MAIN_DARK), MainMenu.BUTTON_WIDTH,
                 "tooltip.export.current.configuration");
-        this.buttonClose = UIUtils.createFixedWidthTextButton(Translation.getText("configuration.menu.item.close"),
+        this.buttonClose = FXControlUtils.createFixedWidthTextButton(Translation.getText("configuration.menu.item.close"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.TIMES).size(30).color(LCGraphicStyle.SECOND_DARK), MainMenu.BUTTON_WIDTH,
                 "tooltip.remove.current.configuration");
         boxButton1.getChildren().addAll(this.buttonSave, this.buttonExport, this.buttonClose);
@@ -99,7 +97,7 @@ public class CurrentConfigDetailView extends VBox implements LCViewInitHelper {
     @Override
     public void initBinding() {
         final ChangeListener<Date> dateChangeListener = (obsd, ovd, nvd) -> {
-            LCUtils.runOnFXThread(() -> this.labelLastSaveDate.setText(nvd != null
+            FXThreadUtils.runOnFXThread(() -> this.labelLastSaveDate.setText(nvd != null
                     ? Translation.getText("configuration.menu.label.last.date", StringUtils.dateToStringDateWithOnlyHoursMinuteSecond(nvd))
                     : Translation.getText("configuration.menu.label.no.last.date")));
         };
@@ -121,8 +119,5 @@ public class CurrentConfigDetailView extends VBox implements LCViewInitHelper {
         this.buttonExport.disableProperty().bind(AppModeController.INSTANCE.getEditModeContext().configurationDescriptionProperty().isNull());
         //Bind unsaved modifications
         this.labelUnsavedModif.textProperty().bind(TranslationFX.getTextBinding("configuration.menu.label.unsaved.modif", AppModeController.INSTANCE.getEditModeContext().configurationUnsavedActionProperty()));
-
-        //Visibility
-        ConfigUIUtils.bindShowForLevelFrom(this.buttonExport, ConfigurationProfileLevelEnum.NORMAL);
     }
 }

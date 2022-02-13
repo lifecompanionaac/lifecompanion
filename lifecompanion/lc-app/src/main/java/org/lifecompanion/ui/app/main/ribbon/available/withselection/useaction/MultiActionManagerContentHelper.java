@@ -25,7 +25,7 @@ import javafx.collections.ObservableList;
 import org.lifecompanion.model.api.categorizedelement.useaction.BaseUseActionI;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
-import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.util.binding.BindingUtils;
 
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -42,9 +42,9 @@ public class MultiActionManagerContentHelper {
         this.sourceList = sourceList;
         this.eventType = eventType;
         resultList = FXCollections.observableArrayList();
-        actionListSubListener = LCUtils.createListChangeListener(this::actionAdded, this::actionRemoved);
+        actionListSubListener = BindingUtils.createListChangeListener(this::actionAdded, this::actionRemoved);
         this.sourceList.forEach(this::elementAdded);
-        sourceListListChangeListener = LCUtils.createListChangeListener(this::elementAdded, this::elementRemoved);
+        sourceListListChangeListener = BindingUtils.createListChangeListener(this::elementAdded, this::elementRemoved);
         this.sourceList.addListener(sourceListListChangeListener);
     }
 

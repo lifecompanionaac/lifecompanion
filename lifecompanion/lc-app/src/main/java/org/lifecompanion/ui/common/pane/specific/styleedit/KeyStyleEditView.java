@@ -22,8 +22,8 @@ import javafx.beans.value.ChangeListener;
 import javafx.scene.Node;
 import org.controlsfx.control.ToggleSwitch;
 import org.lifecompanion.model.api.style.KeyCompStyleI;
-import org.lifecompanion.util.binding.LCConfigBindingUtils;
-import org.lifecompanion.util.ConfigUIUtils;
+import org.lifecompanion.util.binding.EditActionUtils;
+import org.lifecompanion.util.javafx.FXControlUtils;
 
 public class KeyStyleEditView extends AbstractShapeStyleEditView<KeyCompStyleI> {
     private ToggleSwitch toggleEnableAutoFontSizing;
@@ -37,7 +37,7 @@ public class KeyStyleEditView extends AbstractShapeStyleEditView<KeyCompStyleI> 
     @Override
     public void initUI() {
         super.initUI();
-        this.toggleEnableAutoFontSizing = ConfigUIUtils.createToggleSwitch("key.style.enable.auto.font.size", "key.style.auto.font.size.explain");
+        this.toggleEnableAutoFontSizing = FXControlUtils.createToggleSwitch("key.style.enable.auto.font.size", "key.style.auto.font.size.explain");
         this.fieldGrid.add(this.toggleEnableAutoFontSizing, 0, 4, 2, 1);
         this.fieldGrid.add(modificationIndicatorToggleAutoFont = this.createModifiedIndicator(KeyCompStyleI::autoFontSizeProperty, toggleEnableAutoFontSizing), 2, 4);
     }
@@ -46,7 +46,7 @@ public class KeyStyleEditView extends AbstractShapeStyleEditView<KeyCompStyleI> 
     public void initListener() {
         super.initListener();
         if (bindOnModel) {
-            this.changeListenerAutoFontSize = LCConfigBindingUtils.createSimpleBinding(this.toggleEnableAutoFontSizing.selectedProperty(), this.model,
+            this.changeListenerAutoFontSize = EditActionUtils.createSimpleBinding(this.toggleEnableAutoFontSizing.selectedProperty(), this.model,
                     m -> m.autoFontSizeProperty().value().getValue(), (m, v) -> this.createChangePropAction(m.autoFontSizeProperty(), v));
         }
     }

@@ -21,12 +21,12 @@ package org.lifecompanion.ui.configurationcomponent.editmode.categorizedelement.
 
 import org.lifecompanion.model.impl.categorizedelement.useevent.available.ConfigurationStartedEventGenerator;
 import org.lifecompanion.framework.commons.translation.Translation;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.api.categorizedelement.useevent.UseEventGeneratorConfigurationViewI;
 import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import org.lifecompanion.util.javafx.FXControlUtils;
 
 public class ConfigurationStartedConfigView extends VBox implements UseEventGeneratorConfigurationViewI<ConfigurationStartedEventGenerator> {
 
@@ -54,7 +54,7 @@ public class ConfigurationStartedConfigView extends VBox implements UseEventGene
 
 	@Override
 	public void initUI() {
-		spinnerDelay = UIUtils.createDoubleSpinner(0.0001, 60.0 * 60.0, 1.0, 0.1, 100.0);
+		spinnerDelay = FXControlUtils.createDoubleSpinner(0.0001, 60.0 * 60.0, 1.0, 0.1, 100.0);
 		this.setSpacing(10.0);
 		this.getChildren().addAll(new Label(Translation.getText("label.field.configuration.started.delay.launch")), spinnerDelay);
 	}

@@ -36,8 +36,7 @@ import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.voicesynthesizer.VoiceInfoI;
 import org.lifecompanion.model.api.voicesynthesizer.VoiceSynthesizerI;
 import org.lifecompanion.model.api.voicesynthesizer.VoiceSynthesizerParameterI;
-import org.lifecompanion.util.UIControlHelper;
-import org.lifecompanion.util.UIUtils;
+import org.lifecompanion.util.javafx.FXControlUtils;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.voicesynthesizer.VoiceSynthesizerController;
 import org.lifecompanion.model.impl.voicesynthesizer.VoiceSynthesizerParameter;
@@ -105,35 +104,35 @@ public class VoiceSynthesizerMainConfigurationStepView extends BorderPane implem
         this.comboboxVoiceEngine.setMaxWidth(Double.MAX_VALUE);
         this.comboboxVoiceEngine.setButtonCell(new VoiceSynthesizerSimpleListCell());
         this.comboboxVoiceEngine.setCellFactory((l) -> new VoiceSynthesizerDetailListCell());
-        UIUtils.createAndAttachTooltip(comboboxVoiceEngine, "tooltip.explain.voice.synthesizer.voice.engine");
+        FXControlUtils.createAndAttachTooltip(comboboxVoiceEngine, "tooltip.explain.voice.synthesizer.voice.engine");
 
         this.choiceBoxVoice = new ChoiceBox<>();
         this.choiceBoxVoice.setMaxWidth(Double.MAX_VALUE);
         GridPane.setHgrow(choiceBoxVoice,Priority.ALWAYS);
         this.choiceBoxVoice.setConverter(new VoiceInfoStringConverter());
-        UIUtils.createAndAttachTooltip(choiceBoxVoice, "tooltip.explain.voice.synthesizer.voice.select");
+        FXControlUtils.createAndAttachTooltip(choiceBoxVoice, "tooltip.explain.voice.synthesizer.voice.select");
 
         //Example
         this.fieldExample = new TextField(Translation.getText("voice.synthesizer.test.default.text"));
         Label labelExample = new Label(Translation.getText("voice.synthesizer.test"));
-        this.buttonPlayExample = UIUtils.createGraphicButton(
+        this.buttonPlayExample = FXControlUtils.createGraphicButton(
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.VOLUME_UP).size(18).color(LCGraphicStyle.MAIN_PRIMARY),
                 "tooltip.voice.play.example");
         HBox.setHgrow(this.fieldExample, Priority.ALWAYS);
         HBox boxExample = new HBox(5, this.fieldExample, this.buttonPlayExample);
         boxExample.setAlignment(Pos.CENTER);
 
-        this.buttonOpenPrononciationException = UIUtils.createSimpleTextButton(Translation.getText("voice.synthesizer.configure.pron.exceptions"), null);
+        this.buttonOpenPrononciationException = FXControlUtils.createSimpleTextButton(Translation.getText("voice.synthesizer.configure.pron.exceptions"), null);
         GridPane.setHalignment(buttonOpenPrononciationException, HPos.CENTER);
 
         //Parameters
-        this.sliderVolume = UIUtils.createBaseSlider(0, 100, 100);
+        this.sliderVolume = FXControlUtils.createBaseSlider(0, 100, 100);
         this.sliderVolume.setMajorTickUnit(10.0);
         this.sliderVolume.setMinorTickCount(1);
-        this.sliderRate = UIUtils.createBaseSlider(-10, 10, 0);
+        this.sliderRate = FXControlUtils.createBaseSlider(-10, 10, 0);
         this.sliderRate.setMajorTickUnit(5);
         this.sliderRate.setMinorTickCount(5);
-        this.sliderPitch = UIUtils.createBaseSlider(-10, 10, 0);
+        this.sliderPitch = FXControlUtils.createBaseSlider(-10, 10, 0);
         this.sliderPitch.setMajorTickUnit(5);
         this.sliderPitch.setMinorTickCount(5);
 
@@ -144,17 +143,17 @@ public class VoiceSynthesizerMainConfigurationStepView extends BorderPane implem
         grid.setAlignment(Pos.TOP_CENTER);
 
         int gridRowIndex = 0;
-        grid.add(UIControlHelper.createTitleLabel("voice.synthesizer.title.part.engine.and.voice"), 0, gridRowIndex++, 2, 1);
+        grid.add(FXControlUtils.createTitleLabel("voice.synthesizer.title.part.engine.and.voice"), 0, gridRowIndex++, 2, 1);
         grid.add(labelEngine, 0, gridRowIndex);
         grid.add(this.comboboxVoiceEngine, 1, gridRowIndex++);
         grid.add(labelVoice, 0, gridRowIndex);
         grid.add(this.choiceBoxVoice, 1, gridRowIndex++);
 
-        grid.add(UIControlHelper.createTitleLabel("voice.synthesizer.title.part.test.synthesizer"), 0, gridRowIndex++, 2, 1);
+        grid.add(FXControlUtils.createTitleLabel("voice.synthesizer.title.part.test.synthesizer"), 0, gridRowIndex++, 2, 1);
         grid.add(labelExample, 0, gridRowIndex++);
         grid.add(boxExample, 0, gridRowIndex++, 2, 1);
 
-        grid.add(UIControlHelper.createTitleLabel("voice.synthesizer.title.part.synthesizer.configuration"), 0, gridRowIndex++, 2, 1);
+        grid.add(FXControlUtils.createTitleLabel("voice.synthesizer.title.part.synthesizer.configuration"), 0, gridRowIndex++, 2, 1);
         grid.add(new Label(Translation.getText("voice.synthesizer.volume")), 0, gridRowIndex);
         grid.add(this.sliderVolume, 1, gridRowIndex++);
         grid.add(new Label(Translation.getText("voice.synthesizer.rate")), 0, gridRowIndex);

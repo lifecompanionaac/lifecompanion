@@ -30,10 +30,10 @@ import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionConfigurationViewI;
 import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
 import org.lifecompanion.model.impl.categorizedelement.useaction.available.ChangeKeyBackgroundColorAction;
-import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.ui.common.control.specific.selector.ComponentSelectorControl;
 import org.lifecompanion.ui.common.control.generic.colorpicker.LCColorPicker;
 import org.lifecompanion.framework.commons.translation.Translation;
+import org.lifecompanion.util.javafx.FXControlUtils;
 
 public class ChangeKeyBackgroundColorActionConfigView extends VBox implements UseActionConfigurationViewI<ChangeKeyBackgroundColorAction> {
 
@@ -60,7 +60,7 @@ public class ChangeKeyBackgroundColorActionConfigView extends VBox implements Us
                 Translation.getText("key.action.change.background.color.field.selected.key"));
         //Image
         this.pickerWantedColor = new LCColorPicker();
-        this.toggleSwitchRestoreParentStyle = ConfigUIUtils.createToggleSwitch("key.action.change.background.color.field.restore.parent", "");
+        this.toggleSwitchRestoreParentStyle = FXControlUtils.createToggleSwitch("key.action.change.background.color.field.restore.parent", "");
 
         Label labelColor = new Label(Translation.getText("key.action.change.background.color.field.wanted.color"));
         HBox.setHgrow(labelColor, Priority.ALWAYS);

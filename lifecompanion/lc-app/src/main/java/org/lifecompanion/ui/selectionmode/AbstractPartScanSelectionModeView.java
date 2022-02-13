@@ -27,7 +27,8 @@ import javafx.util.Duration;
 import javafx.util.Pair;
 import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
 import org.lifecompanion.model.api.selectionmode.ScanningDirection;
-import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.util.LangUtils;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.model.impl.selectionmode.AbstractPartScanSelectionMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,7 +68,7 @@ public abstract class AbstractPartScanSelectionModeView extends AbstractSelectio
         Pair<Double, Double> size = this.getSize(primaryIndex, span, grid);
         //Launch
         this.updateMoveAnimation(enableAnimation, null, pos, size,
-                LCUtils.nullToZeroDouble(grid.getGridShapeStyle().shapeRadiusProperty().value().getValue()), this.lineTranslateTransition,
+                LangUtils.nullToZeroDouble(grid.getGridShapeStyle().shapeRadiusProperty().value().getValue()), this.lineTranslateTransition,
                 this.lineStrokeRectangle, this.lineProgressRectangle, this.lineProgressRectangleVisible, () -> this.startLineProgressTransition(pos, size, progressTime));
     }
 
@@ -88,7 +89,7 @@ public abstract class AbstractPartScanSelectionModeView extends AbstractSelectio
 
     public void moveToPrimaryIndex(final int primaryIndex, final int span, final GridComponentI grid, final long progressTime,
                                    final boolean enableAnimation) {
-        LCUtils.runOnFXThread(() -> {
+        FXThreadUtils.runOnFXThread(() -> {
             if (this.selectionMode.currentGridProperty().get() == grid) {
                 this.updateLineMoveAnimation(primaryIndex, span, grid, progressTime, enableAnimation);
             } else {

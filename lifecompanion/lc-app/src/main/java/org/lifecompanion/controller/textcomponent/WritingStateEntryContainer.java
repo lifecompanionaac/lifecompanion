@@ -31,7 +31,7 @@ import org.lifecompanion.model.api.textcomponent.TextDisplayerLineI;
 import org.lifecompanion.model.api.textcomponent.WritingEventSource;
 import org.lifecompanion.model.api.textcomponent.WritingStateControllerI;
 import org.lifecompanion.model.api.textprediction.WordPredictionI;
-import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.model.impl.configurationcomponent.WriterEntry;
 import org.lifecompanion.controller.textprediction.WordPredictionController;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
@@ -100,7 +100,7 @@ public class WritingStateEntryContainer implements WritingStateControllerI {
         this.currentDisplayer = null;
         this.textBeforeCaret.removeListener(changeListenerTextBeforeCaret);
         // Disable uppercase if needed
-        LCUtils.runOnFXThread(() -> {
+        FXThreadUtils.runOnFXThread(() -> {
             this.nextCapitalizedAutoEnabled = false;
             this.capitalizeNext.set(false);
             this.upperCase.set(false);
@@ -411,7 +411,7 @@ public class WritingStateEntryContainer implements WritingStateControllerI {
 
     @Override
     public void switchUpperCase(WritingEventSource src) {
-        LCUtils.runOnFXThread(() -> {
+        FXThreadUtils.runOnFXThread(() -> {
             if (this.upperCase.get()) {
                 this.disableUpperCase();
             } else {
@@ -422,7 +422,7 @@ public class WritingStateEntryContainer implements WritingStateControllerI {
 
     @Override
     public void switchCapitalizeNext(WritingEventSource src) {
-        LCUtils.runOnFXThread(() -> {
+        FXThreadUtils.runOnFXThread(() -> {
             if (this.capitalizeNext.get()) {
                 this.disableCapitalizeNext();
             } else {
@@ -658,7 +658,7 @@ public class WritingStateEntryContainer implements WritingStateControllerI {
     }
 
     private void enableUpperCase() {
-        LCUtils.runOnFXThread(() -> {
+        FXThreadUtils.runOnFXThread(() -> {
             this.nextCapitalizedAutoEnabled = false;
             this.capitalizeNext.set(false);
             this.upperCase.set(true);
@@ -666,18 +666,18 @@ public class WritingStateEntryContainer implements WritingStateControllerI {
     }
 
     private void enableCapitalizeNext() {
-        LCUtils.runOnFXThread(() -> {
+        FXThreadUtils.runOnFXThread(() -> {
             this.upperCase.set(false);
             this.capitalizeNext.set(true);
         });
     }
 
     private void disableUpperCase() {
-        LCUtils.runOnFXThread(() -> this.upperCase.set(false));
+        FXThreadUtils.runOnFXThread(() -> this.upperCase.set(false));
     }
 
     private void disableCapitalizeNext() {
-        LCUtils.runOnFXThread(() -> {
+        FXThreadUtils.runOnFXThread(() -> {
             this.nextCapitalizedAutoEnabled = false;
             this.capitalizeNext.set(false);
         });

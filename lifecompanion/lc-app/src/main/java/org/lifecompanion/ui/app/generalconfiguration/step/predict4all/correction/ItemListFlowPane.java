@@ -28,9 +28,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.GlyphFontRegistry;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.util.javafx.FXControlUtils;
 
 public class ItemListFlowPane extends FlowPane implements LCViewInitHelper {
     private Button buttonAdd;
@@ -48,7 +48,7 @@ public class ItemListFlowPane extends FlowPane implements LCViewInitHelper {
         this.setHgap(5.0);
         this.setAlignment(Pos.CENTER_LEFT);
 
-        this.buttonAdd = UIUtils.createGraphicButton(
+        this.buttonAdd = FXControlUtils.createGraphicButton(
                 GlyphFontRegistry.font("FontAwesome").create(FontAwesome.Glyph.PLUS_CIRCLE).size(18).color(LCGraphicStyle.MAIN_DARK), "tooltip.button.add.element.item.flow");
         this.buttonAdd.getStyleClass().add("item-flow-pane-add-button");
 
@@ -118,7 +118,7 @@ public class ItemListFlowPane extends FlowPane implements LCViewInitHelper {
             this.editLabel = new TextField();
             this.editLabel.getStyleClass().add("item-list-flow-pane-field");
 
-            this.buttonRemove = UIUtils.createGraphicButton(
+            this.buttonRemove = FXControlUtils.createGraphicButton(
                     GlyphFontRegistry.font("FontAwesome").create(FontAwesome.Glyph.TIMES_CIRCLE).size(12).color(LCGraphicStyle.LC_GRAY), null);
             this.buttonRemove.getStyleClass().add("small-button");
 

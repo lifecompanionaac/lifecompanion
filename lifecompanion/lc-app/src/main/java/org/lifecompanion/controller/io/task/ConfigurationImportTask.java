@@ -22,11 +22,11 @@ import javafx.util.Pair;
 import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.impl.exception.LCException;
-import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.controller.appinstallation.InstallationController;
 import org.lifecompanion.framework.commons.utils.app.VersionUtils;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.util.ThreadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -79,7 +79,7 @@ public class ConfigurationImportTask extends AbstractLoadUtilsTask<Pair<LCConfig
     @Override
     protected Pair<LCConfigurationDescriptionI, LCConfigurationI> call() throws Exception {
         // Extract the configuration into a temp directory and load the description
-        File tempDir = LCUtils.getTempDir("import-configuration");
+        File tempDir = org.lifecompanion.util.IOUtils.getTempDir("import-configuration");
         tempDir.mkdirs();
         IOUtils.unzipInto(this.configFile, tempDir, null);
         LCConfigurationDescriptionI loadedTempDescription = this.loadDescription(tempDir);
@@ -113,7 +113,7 @@ public class ConfigurationImportTask extends AbstractLoadUtilsTask<Pair<LCConfig
                         "Configuration description will be saved again on import, because launch in use mode changed to {} (previous = {}, profile default = {}, config id = {})",
                         defaultShouldBeSetToTrue, loadedDescription.launchInUseModeProperty().get(), profileDefaultConfigurationId, importedConfigurationID);
                 loadedDescription.launchInUseModeProperty().set(defaultShouldBeSetToTrue);
-                LCUtils.executeInCurrentThread(new ConfigurationDescriptionSavingTask(this.importDirectory, loadedDescription));
+                ThreadUtils.executeInCurrentThread(new ConfigurationDescriptionSavingTask(this.importDirectory, loadedDescription));
             } catch (Exception e) {
                 ConfigurationImportTask.LOGGER.warn(
                         "Configuration was a default configuration and the default property was removed, but couldn't save the description back", e);

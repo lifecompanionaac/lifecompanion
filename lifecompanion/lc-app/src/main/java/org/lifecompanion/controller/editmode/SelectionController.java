@@ -22,11 +22,11 @@ import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.model.impl.configurationcomponent.RootGraphicComponentBaseImpl;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.lifecycle.AppMode;
 import org.lifecompanion.model.api.configurationcomponent.*;
+import org.lifecompanion.util.binding.BindingUtils;
 
 import java.util.*;
 
@@ -399,7 +399,7 @@ public enum SelectionController {
     }
 
     private void createSelectionChangeListener(final int level, final ObservableList<GridPartComponentI> componentList) {
-        componentList.addListener(LCUtils.createListChangeListener((added) -> {
+        componentList.addListener(BindingUtils.createListChangeListener((added) -> {
             if (added instanceof GridPartKeyComponentI) {
                 this.selectedKeys.add((GridPartKeyComponentI) added);
             }

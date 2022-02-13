@@ -28,12 +28,12 @@ import org.lifecompanion.model.api.style.KeyCompStyleI;
 import org.lifecompanion.model.api.style.ShapeCompStyleI;
 import org.lifecompanion.model.api.style.TextCompStyleI;
 import org.lifecompanion.model.api.ui.configurationcomponent.ViewProviderI;
-import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.model.impl.style.GridShapeCompStyle;
 import org.lifecompanion.model.impl.style.KeyCompStyle;
 import org.lifecompanion.model.impl.style.KeyTextCompStyle;
 import org.lifecompanion.model.impl.style.StyleSerialializer;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
+import org.lifecompanion.util.binding.BindingUtils;
 
 import java.util.function.Consumer;
 
@@ -247,11 +247,11 @@ public abstract class GridPartComponentBaseImpl extends DisplayableComponentBase
     private void bindParent(final GridComponentI oldValue, final GridComponentI parent) {
         //Unbind
         if (oldValue != null) {
-            LCUtils.unbindAndSetNull(this.stackParent);
-            LCUtils.unbindAndSetNull(this.rootParent);
-            LCUtils.unbindAndSetNull(this.configurationParent);
+            BindingUtils.unbindAndSetNull(this.stackParent);
+            BindingUtils.unbindAndSetNull(this.rootParent);
+            BindingUtils.unbindAndSetNull(this.configurationParent);
             if (!(this instanceof StackComponentI)) {
-                LCUtils.unbindAndSetNull(this.detailName);
+                BindingUtils.unbindAndSetNull(this.detailName);
             }
         }
         //Bind to parent

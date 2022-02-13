@@ -32,8 +32,7 @@ import javafx.scene.layout.VBox;
 import org.controlsfx.control.ToggleSwitch;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
-import org.lifecompanion.util.UIControlHelper;
-import org.lifecompanion.util.UIUtils;
+import org.lifecompanion.util.javafx.FXControlUtils;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.model.impl.textprediction.predict4all.P4AConfigurationSteps;
 import org.lifecompanion.model.impl.textprediction.predict4all.Predict4AllWordPredictorHelper;
@@ -82,7 +81,7 @@ public class Predict4AllRootEntryConfigurationView extends VBox implements Gener
         // General configuration
         this.toggleDynamicModelEnabled = new ToggleSwitch(Translation.getText("predict4all.config.enable.dynamic.model"));
         this.toggleAddNewWord = new ToggleSwitch(Translation.getText("predict4all.config.learn.new.words"));
-        this.spinnerMinUseCountToValidateNewWord = UIUtils.createIntSpinner(1, 100, 4, 1, 150.0);
+        this.spinnerMinUseCountToValidateNewWord = FXControlUtils.createIntSpinner(1, 100, 4, 1, 150.0);
         this.labelMinCountToAddNewWords = new Label(Translation.getText("predict4all.spinner.min.count.validate"));
         HBox boxSpinnerCountValidateWords = new HBox(5.0, this.labelMinCountToAddNewWords, this.spinnerMinUseCountToValidateNewWord);
         this.labelMinCountToAddNewWords.setMaxWidth(Double.MAX_VALUE);
@@ -94,13 +93,13 @@ public class Predict4AllRootEntryConfigurationView extends VBox implements Gener
         labelMinCountPrediction.setMaxWidth(Double.MAX_VALUE);
         HBox.setHgrow(labelMinCountPrediction, Priority.ALWAYS);
 
-        buttonDictionaryConfig = UIUtils.createRightTextButton(Translation.getText("predict4all.action.button.dictionary.configuration"),
+        buttonDictionaryConfig = FXControlUtils.createRightTextButton(Translation.getText("predict4all.action.button.dictionary.configuration"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.GEAR).size(20).color(LCGraphicStyle.MAIN_DARK),
                 "predict4all.action.button.dictionary.configuration.explain");
         buttonDictionaryConfig.setAlignment(Pos.CENTER);
         buttonDictionaryConfig.setMaxWidth(Double.MAX_VALUE);
 
-        buttonTrainingConfig = UIUtils.createRightTextButton(Translation.getText("predict4all.action.button.training.configuration"),
+        buttonTrainingConfig = FXControlUtils.createRightTextButton(Translation.getText("predict4all.action.button.training.configuration"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.GEAR).size(20).color(LCGraphicStyle.MAIN_DARK),
                 "predict4all.action.button.training.configuration.explain");
         buttonTrainingConfig.setAlignment(Pos.CENTER);
@@ -112,7 +111,7 @@ public class Predict4AllRootEntryConfigurationView extends VBox implements Gener
         this.toggleEnableCorrection = new ToggleSwitch(Translation.getText("predict4all.config.enable.correction"));
         this.toggleEnableCorrection.setMaxWidth(Double.MAX_VALUE);
 
-        buttonCorrectionConfig = UIUtils.createRightTextButton(Translation.getText("predict4all.action.button.correction.configuration"),
+        buttonCorrectionConfig = FXControlUtils.createRightTextButton(Translation.getText("predict4all.action.button.correction.configuration"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.GEAR).size(20).color(LCGraphicStyle.MAIN_DARK),
                 "predict4all.action.button.correction.configuration.explain");
 
@@ -125,7 +124,7 @@ public class Predict4AllRootEntryConfigurationView extends VBox implements Gener
         HBox.setHgrow(labelMinCountCorrection, Priority.ALWAYS);
         boxSpinnerMinCountCorr.setAlignment(Pos.CENTER);
 
-        buttonTestingConfig = UIUtils.createSimpleTextButton(Translation.getText("predict4all.action.button.testing.configuration"),
+        buttonTestingConfig = FXControlUtils.createSimpleTextButton(Translation.getText("predict4all.action.button.testing.configuration"),
                 "predict4all.action.button.testing.configuration.explain");
         buttonTestingConfig.setAlignment(Pos.CENTER);
         buttonTestingConfig.setMaxWidth(Double.MAX_VALUE);
@@ -134,9 +133,9 @@ public class Predict4AllRootEntryConfigurationView extends VBox implements Gener
         this.setPadding(new Insets(GeneralConfigurationStepViewI.PADDING));
         this.setSpacing(8.0);
         this.getChildren().addAll(
-                UIControlHelper.createTitleLabel("predict4all.config.part.title.prediction"), boxSpinnerMinCountPred, buttonDictionaryConfig,
-                UIControlHelper.createTitleLabel("predict4all.config.part.title.dynamic.model"), this.toggleDynamicModelEnabled, this.toggleAddNewWord, boxSpinnerCountValidateWords, buttonTrainingConfig,
-                UIControlHelper.createTitleLabel("predict4all.config.part.title.correction"), this.toggleEnableCorrection, boxSpinnerMinCountCorr, buttonCorrectionConfig,
+                FXControlUtils.createTitleLabel("predict4all.config.part.title.prediction"), boxSpinnerMinCountPred, buttonDictionaryConfig,
+                FXControlUtils.createTitleLabel("predict4all.config.part.title.dynamic.model"), this.toggleDynamicModelEnabled, this.toggleAddNewWord, boxSpinnerCountValidateWords, buttonTrainingConfig,
+                FXControlUtils.createTitleLabel("predict4all.config.part.title.correction"), this.toggleEnableCorrection, boxSpinnerMinCountCorr, buttonCorrectionConfig,
                 new Separator(Orientation.HORIZONTAL), this.buttonTestingConfig
         );
     }

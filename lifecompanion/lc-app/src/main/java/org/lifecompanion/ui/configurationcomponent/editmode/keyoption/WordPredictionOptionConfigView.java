@@ -26,11 +26,11 @@ import org.controlsfx.control.ToggleSwitch;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.WordPredictionKeyOption;
 import org.lifecompanion.controller.editaction.KeyOptionActions.ChangeWordPredictionAddSpace;
 import org.lifecompanion.controller.editaction.KeyOptionActions.ChangeWordPredictionCorrectionColor;
-import org.lifecompanion.util.binding.LCConfigBindingUtils;
+import org.lifecompanion.util.binding.EditActionUtils;
 import org.lifecompanion.controller.editmode.ConfigActionController;
-import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.ui.common.control.generic.colorpicker.LCColorPicker;
 import org.lifecompanion.framework.commons.translation.Translation;
+import org.lifecompanion.util.javafx.FXControlUtils;
 
 /**
  * Configuration view for word prediction option
@@ -53,9 +53,9 @@ public class WordPredictionOptionConfigView extends BaseKeyOptionConfigView<Word
     @Override
     public void initUI() {
         super.initUI();
-        this.toggleEnableSpaceAfter = ConfigUIUtils.createToggleSwitch("word.prediction.add.space.after",
+        this.toggleEnableSpaceAfter = FXControlUtils.createToggleSwitch("word.prediction.add.space.after",
                 "tooltip.explain.word.prediction.add.space");
-        this.toggleEnableColoredCorrection = ConfigUIUtils.createToggleSwitch("word.prediction.color.correction.enable",
+        this.toggleEnableColoredCorrection = FXControlUtils.createToggleSwitch("word.prediction.color.correction.enable",
                 "tooltip.explain.word.prediction.color.correction.enable");
         this.colorPickerCorrection = new LCColorPicker();
         this.getChildren().addAll(this.toggleEnableSpaceAfter, this.toggleEnableColoredCorrection,
@@ -65,9 +65,9 @@ public class WordPredictionOptionConfigView extends BaseKeyOptionConfigView<Word
     @Override
     public void initListener() {
         super.initListener();
-        this.changeListenerAddSpaceAfter = LCConfigBindingUtils.createSimpleBinding(this.toggleEnableSpaceAfter.selectedProperty(), this.model,
+        this.changeListenerAddSpaceAfter = EditActionUtils.createSimpleBinding(this.toggleEnableSpaceAfter.selectedProperty(), this.model,
                 m -> m.addSpaceProperty().get(), ChangeWordPredictionAddSpace::new);
-        changeListenerCorrectionColor = LCConfigBindingUtils.createSimpleBinding(this.colorPickerCorrection.valueProperty(), this.model,
+        changeListenerCorrectionColor = EditActionUtils.createSimpleBinding(this.colorPickerCorrection.valueProperty(), this.model,
                 c -> c.correctionColorProperty().get(), ChangeWordPredictionCorrectionColor::new);
         changeListenerCorrectionColorToggle = (obs, ov, nv) -> {
             this.toggleEnableColoredCorrection.setSelected(nv != null);

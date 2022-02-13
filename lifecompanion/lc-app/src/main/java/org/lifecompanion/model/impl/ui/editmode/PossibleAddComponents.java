@@ -24,7 +24,6 @@ import org.lifecompanion.model.api.ui.editmode.AddTypeEnum;
 import org.lifecompanion.model.api.ui.editmode.PossibleAddCategoryEnum;
 import org.lifecompanion.model.api.ui.editmode.PossibleAddComponentCategoryI;
 import org.lifecompanion.model.api.ui.editmode.PossibleAddComponentI;
-import org.lifecompanion.model.api.ui.editmode.ConfigurationProfileLevelEnum;
 import org.lifecompanion.model.impl.configurationcomponent.*;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.note.NoteKeyOption;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.*;
@@ -80,11 +79,6 @@ public class PossibleAddComponents {
         }
 
         @Override
-        public ConfigurationProfileLevelEnum getMinimumLevel() {
-            return ConfigurationProfileLevelEnum.BEGINNER;
-        }
-
-        @Override
         public PossibleAddComponentCategoryI getCategory() {
             return PossibleAddCategoryEnum.BASE_COMPONENT;
         }
@@ -126,11 +120,6 @@ public class PossibleAddComponents {
         }
 
         @Override
-        public ConfigurationProfileLevelEnum getMinimumLevel() {
-            return ConfigurationProfileLevelEnum.BEGINNER;
-        }
-
-        @Override
         public PossibleAddComponentCategoryI getCategory() {
             return PossibleAddCategoryEnum.GRIDS;
         }
@@ -165,11 +154,6 @@ public class PossibleAddComponents {
         @Override
         public String getDescriptionID() {
             return "component.grid.in.stack.description";
-        }
-
-        @Override
-        public ConfigurationProfileLevelEnum getMinimumLevel() {
-            return ConfigurationProfileLevelEnum.BEGINNER;
         }
 
         @Override
@@ -218,11 +202,6 @@ public class PossibleAddComponents {
         }
 
         @Override
-        public ConfigurationProfileLevelEnum getMinimumLevel() {
-            return ConfigurationProfileLevelEnum.BEGINNER;
-        }
-
-        @Override
         public PossibleAddComponentCategoryI getCategory() {
             return PossibleAddCategoryEnum.BASE_COMPONENT;
         }
@@ -252,11 +231,6 @@ public class PossibleAddComponents {
         @Override
         public String getDescriptionID() {
             return "tooltip.add.key.word.auto";
-        }
-
-        @Override
-        public ConfigurationProfileLevelEnum getMinimumLevel() {
-            return ConfigurationProfileLevelEnum.BEGINNER;
         }
 
         @Override
@@ -360,11 +334,6 @@ public class PossibleAddComponents {
         }
 
         @Override
-        public ConfigurationProfileLevelEnum getMinimumLevel() {
-            return ConfigurationProfileLevelEnum.BEGINNER;
-        }
-
-        @Override
         protected void configureKey(GridPartKeyComponentI key, GridComponentI parentGrid, GridPartKeyComponentI targetKey) {
             key.changeKeyOption(new AutoCharKeyOption(), true);
         }
@@ -408,11 +377,6 @@ public class PossibleAddComponents {
             return "tooltip.add.key.char";
         }
 
-        @Override
-        public ConfigurationProfileLevelEnum getMinimumLevel() {
-            return ConfigurationProfileLevelEnum.EXPERT;
-        }
-
     }
 
     /**
@@ -446,11 +410,6 @@ public class PossibleAddComponents {
             return "tooltip.add.key.basic";
         }
 
-        @Override
-        public ConfigurationProfileLevelEnum getMinimumLevel() {
-            return ConfigurationProfileLevelEnum.NORMAL;
-        }
-
     }
 
     /**
@@ -477,11 +436,6 @@ public class PossibleAddComponents {
         @Override
         public String getDescriptionID() {
             return "tooltip.quick.communication.key.name";
-        }
-
-        @Override
-        public ConfigurationProfileLevelEnum getMinimumLevel() {
-            return ConfigurationProfileLevelEnum.BEGINNER;
         }
 
         @Override
@@ -521,11 +475,6 @@ public class PossibleAddComponents {
             return "tooltip.add.key.variable.information";
         }
 
-        @Override
-        public ConfigurationProfileLevelEnum getMinimumLevel() {
-            return ConfigurationProfileLevelEnum.EXPERT;
-        }
-
     }
 
     /**
@@ -557,11 +506,6 @@ public class PossibleAddComponents {
         @Override
         public String getDescriptionID() {
             return "tooltip.add.key.notekey";
-        }
-
-        @Override
-        public ConfigurationProfileLevelEnum getMinimumLevel() {
-            return ConfigurationProfileLevelEnum.EXPERT;
         }
 
     }

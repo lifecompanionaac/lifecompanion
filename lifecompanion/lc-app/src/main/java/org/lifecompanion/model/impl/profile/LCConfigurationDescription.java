@@ -27,7 +27,7 @@ import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.profile.LcTechInfoI;
 import org.lifecompanion.model.impl.exception.LCException;
-import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.controller.editaction.AsyncExecutorController;
 import org.lifecompanion.framework.commons.fx.io.XMLGenericProperty;
@@ -150,7 +150,7 @@ public class LCConfigurationDescription implements LCConfigurationDescriptionI {
                     try (FileInputStream imageIS = new FileInputStream(imageFile)) {
                         final Image value = new Image(imageIS);
                         LCConfigurationDescription.LOGGER.info("Configuration description preview was loaded from {}", imageFile);
-                        LCUtils.runOnFXThread(() -> this.configurationImage.set(value));
+                        FXThreadUtils.runOnFXThread(() -> this.configurationImage.set(value));
                     } catch (IOException e) {
                         LCConfigurationDescription.LOGGER.warn("Couldn't load the configuration preview image", e);
                     }

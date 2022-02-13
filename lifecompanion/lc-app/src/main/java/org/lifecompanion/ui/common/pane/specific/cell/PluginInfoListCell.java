@@ -25,13 +25,13 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import org.controlsfx.glyphfont.FontAwesome;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.model.impl.plugin.PluginInfo;
 import org.lifecompanion.controller.editaction.PluginActions;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.util.javafx.FXControlUtils;
 
 public class PluginInfoListCell extends ListCell<PluginInfo> {
     private GridPane gridPaneGraphics;
@@ -65,7 +65,7 @@ public class PluginInfoListCell extends ListCell<PluginInfo> {
         labelState.setWrapText(true);
         this.labelState.prefWidthProperty().bind(prefSizeForWrapText);
 
-        buttonRemove = UIUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.TRASH).size(22).color(LCGraphicStyle.SECOND_DARK), "TODO");
+        buttonRemove = FXControlUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.TRASH).size(22).color(LCGraphicStyle.SECOND_DARK), "TODO");
 
         gridPaneGraphics = new GridPane();
         gridPaneGraphics.setHgap(5.0);

@@ -20,13 +20,13 @@ package org.lifecompanion;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
-import org.lifecompanion.controller.doublelaunch.DoubleLaunchListenerImpl;
-import org.lifecompanion.controller.doublelaunch.DoubleLaunchController;
-import org.lifecompanion.model.impl.constant.LCConstant;
-import org.lifecompanion.controller.lifecycle.LifeCompanionController;
 import org.lifecompanion.controller.appinstallation.InstallationController;
+import org.lifecompanion.controller.doublelaunch.DoubleLaunchController;
+import org.lifecompanion.controller.doublelaunch.DoubleLaunchListenerImpl;
 import org.lifecompanion.controller.editmode.ErrorHandlingController;
+import org.lifecompanion.controller.lifecycle.LifeCompanionController;
 import org.lifecompanion.framework.commons.translation.Translation;
+import org.lifecompanion.model.impl.constant.LCConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,7 +65,7 @@ public class LifeCompanion extends Application {
     public static void main(final String[] args) {
         LOGGER.info("Logs are saved to {}", new File(System.getProperty("java.io.tmpdir") + "/LifeCompanion/logs/application.log").getAbsolutePath());
         argsCollection = args != null ? new ArrayList<>(Arrays.asList(args)) : new ArrayList<>();
-        boolean doubleRun = false;// DoubleLaunchController.INSTANCE.checkDoubleRun(new DoubleLaunchListenerImpl());
+        boolean doubleRun = DoubleLaunchController.INSTANCE.checkDoubleRun(new DoubleLaunchListenerImpl());
         if (!doubleRun) {
             // Verify update args (to be able to avoid app startup when updateDownloadFinished)
             InstallationController.INSTANCE.handleLaunchArgs(argsCollection);

@@ -28,7 +28,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.fxmisc.easybind.EasyBind;
 import org.lifecompanion.model.api.profile.LCProfileI;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.profile.ProfileController;
 import org.lifecompanion.controller.metrics.SessionStatsController;
@@ -40,6 +39,7 @@ import org.lifecompanion.ui.app.userconfiguration.UserConfigStage;
 import org.lifecompanion.ui.app.userconfiguration.UserConfigurationView;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.util.javafx.FXControlUtils;
 
 /**
  * View to display the current profile detail, and to allow user to change profile
@@ -66,11 +66,11 @@ public class ProfileDetailView extends HBox implements LCViewInitHelper {
         this.labelProfileName = new Label();
         this.labelProfileName.getStyleClass().add("import-blue-title");
         this.linkManagerProfiles = new Hyperlink(Translation.getText("profile.menu.link.manage.profiles"));
-        linkManagerProfiles.setTooltip(UIUtils.createTooltip(Translation.getText("tooltip.explain.manage.profiles")));
+        linkManagerProfiles.setTooltip(FXControlUtils.createTooltip(Translation.getText("tooltip.explain.manage.profiles")));
         this.linkLifeCompanionPreferences = new Hyperlink(Translation.getText("profile.menu.link.lifecompanion.preferences"));
-        linkLifeCompanionPreferences.setTooltip(UIUtils.createTooltip(Translation.getText("tooltip.explain.open.user.preferences")));
+        linkLifeCompanionPreferences.setTooltip(FXControlUtils.createTooltip(Translation.getText("tooltip.explain.open.user.preferences")));
         this.linkShowConfigTips = new Hyperlink(Translation.getText("profile.menu.link.show.config.tips"));
-        linkShowConfigTips.setTooltip(UIUtils.createTooltip(Translation.getText("tooltip.explain.profile.menu.link.show.config.tips")));
+        linkShowConfigTips.setTooltip(FXControlUtils.createTooltip(Translation.getText("tooltip.explain.profile.menu.link.show.config.tips")));
         this.profileIconView = new ProfileIconView();
         //Box for text and actions
         VBox textActionBox = new VBox();

@@ -28,16 +28,14 @@ import javafx.scene.control.Separator;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import org.controlsfx.glyphfont.FontAwesome;
-import org.lifecompanion.model.api.ui.editmode.ConfigurationProfileLevelEnum;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.configurationcomponent.DisplayableComponentBaseImpl;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
-import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.ui.configurationcomponent.editmode.categorizedelement.useevent.available.RibbonBasePart;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.util.javafx.FXControlUtils;
 
 import java.text.DecimalFormat;
 
@@ -69,13 +67,13 @@ public class ZoomRibbonPart extends RibbonBasePart<DisplayableComponentBaseImpl>
         gridPane.setHgap(5.0);
         gridPane.setVgap(5.0);
         gridPane.setAlignment(Pos.CENTER);
-        this.buttonIncreaseZoom = UIUtils.createGraphicButton(
+        this.buttonIncreaseZoom = FXControlUtils.createGraphicButton(
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.SEARCH_PLUS).size(20).color(LCGraphicStyle.MAIN_DARK),
                 "tooltip.buttons.zoom.increase");
-        this.buttonDecreaseZoom = UIUtils.createGraphicButton(
+        this.buttonDecreaseZoom = FXControlUtils.createGraphicButton(
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.SEARCH_MINUS).size(20).color(LCGraphicStyle.SECOND_DARK),
                 "tooltip.buttons.zoom.decrease");
-        this.buttonResetZoom = UIUtils.createRightTextButton(Translation.getText("reset.zoom.level.label"),
+        this.buttonResetZoom = FXControlUtils.createRightTextButton(Translation.getText("reset.zoom.level.label"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.UNDO).size(18).color(LCGraphicStyle.SECOND_DARK), "tooltip.buttons.zoom.reset");
         this.labelZoomLevel = new Label();
         gridPane.add(this.buttonDecreaseZoom, 0, 0);
@@ -101,7 +99,6 @@ public class ZoomRibbonPart extends RibbonBasePart<DisplayableComponentBaseImpl>
 
     @Override
     public void initBinding() {
-        ConfigUIUtils.bindShowForLevelFrom(this, ConfigurationProfileLevelEnum.NORMAL);
         this.labelZoomLevel.textProperty()
                 .bind(Bindings.createStringBinding(
                         () -> ZoomRibbonPart.DECIMAL_ZOOM_FORMAT.format(AppModeController.INSTANCE.getEditModeContext().configurationScaleProperty().get() * 100.0) + " %",

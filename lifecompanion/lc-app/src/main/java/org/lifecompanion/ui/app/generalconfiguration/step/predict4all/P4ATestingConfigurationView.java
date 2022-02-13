@@ -34,7 +34,6 @@ import okhttp3.MediaType;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.textprediction.WordPredictionI;
 import org.lifecompanion.model.api.textprediction.WordPredictionResultI;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.textprediction.predict4all.P4AConfigurationSteps;
 import org.lifecompanion.model.impl.textprediction.predict4all.Predict4AllWordPredictorHelper;
 import org.lifecompanion.model.impl.textprediction.predict4all.PredictorModelDto;
@@ -42,6 +41,7 @@ import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStep;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStepViewI;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.util.javafx.FXControlUtils;
 import org.predict4all.nlp.prediction.WordPredictor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -83,7 +83,7 @@ public class P4ATestingConfigurationView extends VBox implements GeneralConfigur
         this.textAreaInput.setPrefRowCount(1);
         this.textAreaInput.setWrapText(true);
 
-        this.spinnerPredictionCountToDisplay = UIUtils.createIntSpinner(1, 100, 5, 1, 150.0);
+        this.spinnerPredictionCountToDisplay = FXControlUtils.createIntSpinner(1, 100, 5, 1, 150.0);
         Label labelMinCount = new Label(Translation.getText("predict4all.config.view.label.prediction.count"));
         HBox boxSpinner = new HBox(5.0, labelMinCount, this.spinnerPredictionCountToDisplay);
         labelMinCount.setMaxWidth(Double.MAX_VALUE);

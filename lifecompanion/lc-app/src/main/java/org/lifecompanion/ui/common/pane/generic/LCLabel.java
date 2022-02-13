@@ -34,9 +34,9 @@ import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import org.lifecompanion.model.api.style.TextCompStyleI;
-import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.model.impl.style.TextStyleBinder;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.util.javafx.FXUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -215,7 +215,7 @@ public class LCLabel extends BorderPane implements TextStyleBinder.TextStyleBind
                     double wantedSize = wantedFont.getSize();
                     wantedFont = this.usedTextCompStyle.get().deriveFont(wantedSize);
                     Bounds layoutBounds = this.getLayoutBounds();
-                    Bounds textBounds = LCUtils.getTextBounds(text, wantedFont);
+                    Bounds textBounds = FXUtils.getTextBounds(text, wantedFont);
                     //If the text is large enough
                     if (textBounds.getWidth() < layoutBounds.getWidth() && textBounds.getHeight() < layoutBounds.getHeight()) {
                         return wantedFont;
@@ -237,7 +237,7 @@ public class LCLabel extends BorderPane implements TextStyleBinder.TextStyleBind
                                 && wantedSize > LCLabel.MIN_FONT_SIZE) {
                             wantedSize -= LCLabel.FONT_DECREASE;
                             wantedFont = textStyle.deriveFont(wantedSize);
-                            textBounds = LCUtils.getTextBounds(text, wantedFont);
+                            textBounds = FXUtils.getTextBounds(text, wantedFont);
                         }
                     }
                 }

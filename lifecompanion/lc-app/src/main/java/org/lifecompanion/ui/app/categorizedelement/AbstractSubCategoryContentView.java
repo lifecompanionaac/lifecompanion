@@ -27,7 +27,7 @@ import javafx.scene.layout.BorderPane;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.model.api.categorizedelement.CategorizedElementI;
 import org.lifecompanion.model.api.categorizedelement.SubCategoryI;
-import org.lifecompanion.util.UIControlHelper;
+import org.lifecompanion.util.javafx.FXControlUtils;
 
 import java.util.function.Consumer;
 
@@ -57,7 +57,7 @@ public abstract class AbstractSubCategoryContentView<V extends CategorizedElemen
     @Override
     public void initUI() {
         //Top : title
-        Label labelTitle = UIControlHelper.createTitleLabel(this.subCategory.getName());
+        Label labelTitle = FXControlUtils.createTitleLabel(this.subCategory.getName());
         BorderPane.setMargin(labelTitle, new Insets(0.0, 0.0, 4.0, 0.0));
         this.setTop(labelTitle);
 

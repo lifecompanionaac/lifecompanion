@@ -27,13 +27,13 @@ import javafx.scene.text.Text;
 import org.lifecompanion.model.api.editaction.BaseEditActionI;
 import org.lifecompanion.model.api.style.StyleI;
 import org.lifecompanion.model.api.style.StylePropertyI;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.ui.common.pane.generic.BaseConfigurationViewBorderPane;
 import org.lifecompanion.controller.editaction.StyleActions.ChangeStylePropAction;
 import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.util.javafx.FXControlUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -60,7 +60,7 @@ public abstract class AbstractStyleEditView<T extends StyleI<?>> extends BaseCon
     @Override
     public void initUI() {
         //Tooltip for modified
-        this.tooltipModificationIndicator = UIUtils.createTooltip(Translation.getText("tooltip.different.style.property.text"));
+        this.tooltipModificationIndicator = FXControlUtils.createTooltip(Translation.getText("tooltip.different.style.property.text"));
 
         //Layout fields
         this.fieldGrid = new GridPane();

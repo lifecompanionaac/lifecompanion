@@ -31,10 +31,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.util.Callback;
 import org.controlsfx.glyphfont.FontAwesome;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.util.javafx.FXControlUtils;
 
 import java.util.Comparator;
 import java.util.function.Function;
@@ -92,7 +92,7 @@ public class SearchComboBox<T> extends HBox implements LCViewInitHelper {
         HBox.setHgrow(buttonOpenPopup, Priority.ALWAYS);
         this.buttonOpenPopup.setMaxWidth(Double.MAX_VALUE);
 
-        buttonClearValue = UIUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.TRASH).size(14).color(LCGraphicStyle.SECOND_DARK), "tooltip.search.combobox.button.clear");
+        buttonClearValue = FXControlUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.TRASH).size(14).color(LCGraphicStyle.SECOND_DARK), "tooltip.search.combobox.button.clear");
 
         this.setSpacing(5.0);
         this.getChildren().addAll(buttonOpenPopup, buttonClearValue);

@@ -30,10 +30,11 @@ import org.lifecompanion.model.api.style.AbstractShapeCompStyleI;
 import org.lifecompanion.model.api.style.StyleChangeUndo;
 import org.lifecompanion.model.api.style.IntegerStylePropertyI;
 import org.lifecompanion.model.api.style.StylePropertyI;
-import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.framework.commons.fx.io.XMLCustomProperty;
 import org.lifecompanion.framework.commons.fx.io.XMLIgnoreNullValue;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
+import org.lifecompanion.util.LangUtils;
+import org.lifecompanion.util.javafx.ColorUtils;
 
 public abstract class AbstractShapeCompStyle<T extends AbstractShapeCompStyleI<?>> extends AbstractStyle<T> implements AbstractShapeCompStyleI<T> {
     @XMLCustomProperty(value = Color.class, converter = StylePropertyConverter.class)
@@ -74,11 +75,11 @@ public abstract class AbstractShapeCompStyle<T extends AbstractShapeCompStyleI<?
     }
 
     private void updateCssStyle() {
-        Integer shapeRadiusV = LCUtils.nullToZeroInt(this.shapeRadius.value().getValue());
-        Integer strokeSizeV = LCUtils.nullToZeroInt(this.strokeSize.value().getValue());
+        Integer shapeRadiusV = LangUtils.nullToZeroInt(this.shapeRadius.value().getValue());
+        Integer strokeSizeV = LangUtils.nullToZeroInt(this.strokeSize.value().getValue());
         this.cssStyle.set(new StringBuilder(255)//
-                .append("-fx-background-color:").append(LCUtils.toCssColor(this.backgroundColor.value().getValue())).append(";") //
-                .append("-fx-border-color:").append(LCUtils.toCssColor(this.strokeColor.value().getValue())).append(";")//
+                .append("-fx-background-color:").append(ColorUtils.toCssColor(this.backgroundColor.value().getValue())).append(";") //
+                .append("-fx-border-color:").append(ColorUtils.toCssColor(this.strokeColor.value().getValue())).append(";")//
                 .append("-fx-border-width:").append(strokeSizeV).append("px;")//
                 .append("-fx-border-radius:").append(shapeRadiusV).append("px;")//
                 .append("-fx-background-radius:").append(Math.max(shapeRadiusV - strokeSizeV, 0)).append("px;")//

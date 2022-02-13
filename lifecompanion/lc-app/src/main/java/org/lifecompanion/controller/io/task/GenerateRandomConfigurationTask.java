@@ -25,8 +25,9 @@ import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
 import org.lifecompanion.model.api.profile.LCProfileI;
 import org.lifecompanion.model.api.imagedictionary.ImageDictionaryI;
 import org.lifecompanion.model.api.imagedictionary.ImageElementI;
+import org.lifecompanion.util.IOUtils;
+import org.lifecompanion.util.ThreadUtils;
 import org.lifecompanion.util.model.LCTask;
-import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.model.impl.profile.LCConfigurationDescription;
 import org.lifecompanion.model.impl.profile.LCProfile;
 import org.lifecompanion.model.impl.configurationcomponent.GridPartGridComponent;
@@ -82,14 +83,14 @@ public class GenerateRandomConfigurationTask extends LCTask<Void> {
         desc.configurationNameProperty().set("DEBUG CONFIG - TEST");
         fakeProfile.getConfiguration().add(desc);
 
-        File tempSave = LCUtils.getTempDir("configuration-debug");
+        File tempSave = IOUtils.getTempDir("configuration-debug");
         LOGGER.info("Save configuration in {}", tempSave);
         ConfigurationSavingTask configurationSavingTask = new ConfigurationSavingTask(tempSave, configuration, fakeProfile);
-        LCUtils.executeInCurrentThread(configurationSavingTask);
+        ThreadUtils.executeInCurrentThread(configurationSavingTask);
 
         File destConfig = new File("E:\\Desktop\\DEBUG_CONFIGURATION.lcc");
         ConfigurationExportTask configurationExportTask = new ConfigurationExportTask(desc, tempSave, destConfig);
-        LCUtils.executeInCurrentThread(configurationExportTask);
+        ThreadUtils.executeInCurrentThread(configurationExportTask);
 
         return null;
     }

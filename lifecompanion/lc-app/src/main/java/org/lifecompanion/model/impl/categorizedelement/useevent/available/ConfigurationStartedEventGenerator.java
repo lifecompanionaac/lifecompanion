@@ -25,11 +25,11 @@ import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.categorizedelement.useevent.DefaultUseEventSubCategories;
 import org.lifecompanion.model.impl.categorizedelement.useevent.BaseUseEventGeneratorImpl;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
-import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.io.IOContextI;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import org.lifecompanion.util.ThreadUtils;
 
 public class ConfigurationStartedEventGenerator extends BaseUseEventGeneratorImpl {
 
@@ -62,7 +62,7 @@ public class ConfigurationStartedEventGenerator extends BaseUseEventGeneratorImp
 	public void modeStart(final LCConfigurationI configuration) {
 		this.modeStarted = true;
 		Thread generateStartEventThread = new Thread(() -> {
-			LCUtils.safeSleep(this.delay.get());
+			ThreadUtils.safeSleep(this.delay.get());
 			if (this.modeStarted) {
 				this.useEventListener.fireEvent(this, null, null);
 			}

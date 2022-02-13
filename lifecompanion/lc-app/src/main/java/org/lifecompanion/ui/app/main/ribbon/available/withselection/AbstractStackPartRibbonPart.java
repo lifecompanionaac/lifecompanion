@@ -23,7 +23,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.scene.control.ListCell;
 import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
 import org.lifecompanion.model.api.configurationcomponent.StackComponentI;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.controller.editaction.GridStackActions;
 import org.lifecompanion.controller.editaction.GridStackActions.AddGridInStackAction;
 import org.lifecompanion.controller.editaction.GridStackActions.RemoveGridInStackAction;
@@ -34,6 +33,7 @@ import org.lifecompanion.ui.common.control.generic.OrderModifiableListView;
 import org.lifecompanion.ui.configurationcomponent.editmode.categorizedelement.useevent.available.RibbonBasePart;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.util.javafx.FXControlUtils;
 
 /**
  * Part to add, remove, change grid of a stack.
@@ -62,10 +62,10 @@ public abstract class AbstractStackPartRibbonPart extends RibbonBasePart<StackCo
         //Button on right
         this.modifiableListView = new OrderModifiableListView<>(false);
         this.modifiableListView.setCellFactory(listView -> new GridComponentListCellView());
-        UIUtils.createAndAttachTooltip(this.modifiableListView.getButtonAdd(), "tooltip.explain.add.grid.stack");
-        UIUtils.createAndAttachTooltip(this.modifiableListView.getButtonRemove(), "tooltip.explain.delete.grid.stack");
-        UIUtils.createAndAttachTooltip(this.modifiableListView.getButtonUp(), "tooltip.explain.go.up.stack");
-        UIUtils.createAndAttachTooltip(this.modifiableListView.getButtonDown(), "tooltip.explain.go.down.stack");
+        FXControlUtils.createAndAttachTooltip(this.modifiableListView.getButtonAdd(), "tooltip.explain.add.grid.stack");
+        FXControlUtils.createAndAttachTooltip(this.modifiableListView.getButtonRemove(), "tooltip.explain.delete.grid.stack");
+        FXControlUtils.createAndAttachTooltip(this.modifiableListView.getButtonUp(), "tooltip.explain.go.up.stack");
+        FXControlUtils.createAndAttachTooltip(this.modifiableListView.getButtonDown(), "tooltip.explain.go.down.stack");
         //Total
         this.setContent(this.modifiableListView);
     }

@@ -25,11 +25,11 @@ import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.categorizedelement.useevent.DefaultUseEventSubCategories;
-import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.controller.selectionmode.SelectionModeController;
 import org.lifecompanion.model.impl.categorizedelement.useevent.BaseUseEventGeneratorImpl;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
+import org.lifecompanion.util.binding.BindingUtils;
 
 public class PressTimeReachedEventGenerator extends BaseUseEventGeneratorImpl {
 
@@ -45,7 +45,7 @@ public class PressTimeReachedEventGenerator extends BaseUseEventGeneratorImpl {
 		this.staticDescriptionID = "use.event.press.time.reached.static.description";
 		this.configIconPath = "control/icon_press_reach_time.png";
 		this.variableDescriptionProperty()
-				.bind(TranslationFX.getTextBinding("use.event.press.time.reached.variable.description", LCUtils.createDivide1000Binding(this.timeToReach)));
+				.bind(TranslationFX.getTextBinding("use.event.press.time.reached.variable.description", BindingUtils.createDivide1000Binding(this.timeToReach)));
 	}
 
 	public IntegerProperty timeToReachProperty() {

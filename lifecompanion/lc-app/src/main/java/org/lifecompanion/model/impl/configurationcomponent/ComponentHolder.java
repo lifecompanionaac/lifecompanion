@@ -24,7 +24,7 @@ import java.util.Map;
 import org.lifecompanion.model.api.configurationcomponent.ConfigurationChildComponentI;
 import org.lifecompanion.model.api.configurationcomponent.DisplayableComponentI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
-import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.util.model.ConfigurationComponentUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -77,7 +77,7 @@ public class ComponentHolder<T extends DisplayableComponentI> {
 			}
 		});
 		//Configuration binding
-		LCUtils.addComponentCallback(configChildProp, (allComponent) -> {
+		ConfigurationComponentUtils.addComponentCallback(configChildProp, (allComponent) -> {
 			//Check if the component is already in the list, and set it
 			String idValue = this.id.get();
 			if (idValue != null && allComponent.containsKey(idValue)) {

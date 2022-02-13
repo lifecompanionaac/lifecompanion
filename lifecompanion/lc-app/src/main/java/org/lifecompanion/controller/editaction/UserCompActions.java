@@ -28,14 +28,14 @@ import org.lifecompanion.model.api.configurationcomponent.DisplayableComponentI;
 import org.lifecompanion.model.api.profile.LCProfileI;
 import org.lifecompanion.model.api.profile.UserCompDescriptionI;
 import org.lifecompanion.model.impl.exception.LCException;
-import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.util.javafx.DialogUtils;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.model.impl.profile.UserCompDescriptionImpl;
 import org.lifecompanion.controller.profile.ProfileController;
 import org.lifecompanion.controller.io.IOHelper;
 import org.lifecompanion.controller.io.task.UserCompSavingTask;
 import org.lifecompanion.controller.profile.UserCompController;
 import org.lifecompanion.model.impl.notification.LCNotification;
-import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.ui.notification.LCNotificationController;
 import org.lifecompanion.ui.app.main.usercomponent.UserCompEditView;
 import org.lifecompanion.framework.commons.translation.Translation;
@@ -109,14 +109,14 @@ public class UserCompActions {
 
         @Override
         public void doAction() throws LCException {
-            Alert dlg = ConfigUIUtils.createAlert(source, AlertType.CONFIRMATION);
+            Alert dlg = DialogUtils.createAlert(source, AlertType.CONFIRMATION);
             dlg.getDialogPane().setContentText(Translation.getText("action.remove.user.comp.message", this.compToDelete.size()));
             dlg.getDialogPane().setHeaderText(Translation.getText("action.remove.user.comp.header"));
             Optional<ButtonType> returned = dlg.showAndWait();
             if (returned.get() == ButtonType.OK) {
                 LCProfileI profile = ProfileController.INSTANCE.currentProfileProperty().get();
                 //First, delete from list
-                LCUtils.runOnFXThread(() -> {
+                FXThreadUtils.runOnFXThread(() -> {
                     UserCompController.INSTANCE.getUserComponents().removeAll(this.compToDelete);
                     LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo(Translation.getText("action.delete.user.comp.success.message", compToDelete.size())));
                 });
@@ -151,7 +151,7 @@ public class UserCompActions {
             if (EditUserCompAction.editView == null) {
                 EditUserCompAction.editView = new UserCompEditView();
             }
-            Alert dlg = ConfigUIUtils.createAlert(source, AlertType.NONE);
+            Alert dlg = DialogUtils.createAlert(source, AlertType.NONE);
             dlg.getDialogPane().setContent(EditUserCompAction.editView);
             ButtonType buttonTypeSave = new ButtonType(Translation.getText("user.comp.save.button"), ButtonData.YES);
             ButtonType buttonTypeCancel = new ButtonType(Translation.getText("user.comp.cancel.button"), ButtonData.CANCEL_CLOSE);

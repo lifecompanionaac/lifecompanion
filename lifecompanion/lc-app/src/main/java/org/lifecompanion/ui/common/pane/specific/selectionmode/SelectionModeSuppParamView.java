@@ -39,12 +39,10 @@ import org.lifecompanion.model.api.selectionmode.ScanningMode;
 import org.lifecompanion.ui.common.pane.specific.cell.FireEventInputListCell;
 import org.lifecompanion.ui.common.pane.specific.cell.ProgressDrawModeSimpleListCell;
 import org.lifecompanion.ui.common.pane.specific.cell.ScanningModeSimpleListCell;
-import org.lifecompanion.util.UIControlHelper;
-import org.lifecompanion.util.UIUtils;
+import org.lifecompanion.util.javafx.FXControlUtils;
 import org.lifecompanion.model.impl.selectionmode.SelectionModeEnum;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStepViewI;
 import org.lifecompanion.ui.common.pane.generic.BaseConfigurationViewBorderPane;
-import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.ui.common.control.specific.KeyCodeSelectorControl;
 import org.lifecompanion.ui.common.control.generic.MouseButtonSelectorControl;
 import org.lifecompanion.ui.common.control.generic.colorpicker.LCColorPicker;
@@ -210,11 +208,11 @@ public class SelectionModeSuppParamView extends BaseConfigurationViewBorderPane<
         this.comboBoxScanningMode.setButtonCell(new ScanningModeSimpleListCell());
         this.comboBoxScanningMode.setCellFactory((lv) -> new ScanningModeSimpleListCell());
         comboBoxScanningMode.setMaxWidth(Double.MAX_VALUE);
-        UIUtils.createAndAttachTooltip(comboBoxScanningMode, "tooltip.selection.mode.start.manual.next.scan");
+        FXControlUtils.createAndAttachTooltip(comboBoxScanningMode, "tooltip.selection.mode.start.manual.next.scan");
         labelScanningMode = new Label(Translation.getText("selection.mode.scanning.mode.label"));
 
         // Manual scanning input part
-        titlePartManualScanning = UIControlHelper.createTitleLabel("selection.mode.param.title.part.manual.scanning.part");
+        titlePartManualScanning = FXControlUtils.createTitleLabel("selection.mode.param.title.part.manual.scanning.part");
 
         this.comboBoxNextScanEventInput = new ComboBox<>(FXCollections.observableArrayList(FireEventInput.values()));
         this.comboBoxNextScanEventInput.setCellFactory((lv) -> new FireEventInputListCell());
@@ -222,10 +220,10 @@ public class SelectionModeSuppParamView extends BaseConfigurationViewBorderPane<
         this.comboBoxNextScanEventInput.setMaxWidth(Double.MAX_VALUE);
         labelNextScanEventInput = new Label(Translation.getText("selection.mode.scanning.manual.input.type"));
         labelNextScanEventInput.disableProperty().bind(comboBoxNextScanEventInput.disabledProperty());
-        UIUtils.createAndAttachTooltip(comboBoxNextScanEventInput, "tooltip.selection.mode.scanning.manual.input.type");
+        FXControlUtils.createAndAttachTooltip(comboBoxNextScanEventInput, "tooltip.selection.mode.scanning.manual.input.type");
 
         // Direct mouse selection while scanning mode
-        toggleEnableDirectSelectionOnMouseOnScanningSelectionMode = ConfigUIUtils.createToggleSwitch("selection.mode.enable.direct.selection.on.mouse.on.scanning.mode", "selection.mode.enable.direct.selection.on.mouse.on.scanning.mode.tooltip");
+        toggleEnableDirectSelectionOnMouseOnScanningSelectionMode = FXControlUtils.createToggleSwitch("selection.mode.enable.direct.selection.on.mouse.on.scanning.mode", "selection.mode.enable.direct.selection.on.mouse.on.scanning.mode.tooltip");
 
         // Keyboard input parameters
         this.keySelectorControlKeyboardNextScanKeyCode = new KeyCodeSelectorControl(null);
@@ -239,96 +237,96 @@ public class SelectionModeSuppParamView extends BaseConfigurationViewBorderPane<
         mouseNodes = Arrays.asList(labelMouseButton, mouseButtonSelectorControl);
 
         // Auto activation
-        titlePartActivation = UIControlHelper.createTitleLabel("selection.mode.param.title.part.activation.configuration");
-        this.spinnerAutoActivation = UIUtils.createDoubleSpinner(0.0, 100.0, 2.0, 0.1, GeneralConfigurationStepViewI.FIELD_WIDTH);
-        UIUtils.createAndAttachTooltip(spinnerAutoActivation, "tooltip.explain.auto.activation.time");
+        titlePartActivation = FXControlUtils.createTitleLabel("selection.mode.param.title.part.activation.configuration");
+        this.spinnerAutoActivation = FXControlUtils.createDoubleSpinner(0.0, 100.0, 2.0, 0.1, GeneralConfigurationStepViewI.FIELD_WIDTH);
+        FXControlUtils.createAndAttachTooltip(spinnerAutoActivation, "tooltip.explain.auto.activation.time");
         labelTimeActivation = new Label(Translation.getText("selection.mode.auto.time.activation"));
-        toggleEnableActivationWithSelection = ConfigUIUtils.createToggleSwitch("selection.mode.auto.enable.direct.activation",
+        toggleEnableActivationWithSelection = FXControlUtils.createToggleSwitch("selection.mode.auto.enable.direct.activation",
                 "tooltip.explain.selection.mode.auto.enable.direct.activation");
         GridPane.setHalignment(this.spinnerAutoActivation, HPos.RIGHT);
         GridPane.setHgrow(labelTimeActivation, Priority.ALWAYS);
 
         // Direct activation
-        this.spinnerAutoOver = UIUtils.createDoubleSpinner(0.0, 100.0, 2.0, 0.1, GeneralConfigurationStepViewI.FIELD_WIDTH);
+        this.spinnerAutoOver = FXControlUtils.createDoubleSpinner(0.0, 100.0, 2.0, 0.1, GeneralConfigurationStepViewI.FIELD_WIDTH);
         labelTimeOver = new Label(Translation.getText("selection.mode.auto.time.over"));
         GridPane.setHgrow(labelTimeOver, Priority.ALWAYS);
-        UIUtils.createAndAttachTooltip(spinnerAutoOver, "tooltip.explain.auto.over.time");
+        FXControlUtils.createAndAttachTooltip(spinnerAutoOver, "tooltip.explain.auto.over.time");
         GridPane.setHalignment(this.spinnerAutoOver, HPos.RIGHT);
 
         // Auto scanning
-        titlePartAutoScanning = UIControlHelper.createTitleLabel("selection.mode.param.title.part.auto.scanning.configuration");
+        titlePartAutoScanning = FXControlUtils.createTitleLabel("selection.mode.param.title.part.auto.scanning.configuration");
         labelScanPause = new Label(Translation.getText("selection.mode.param.scan.pause"));
-        this.spinnerScanPause = UIUtils.createDoubleSpinner(0.1, 100.0, 2.0, 0.1, GeneralConfigurationStepViewI.FIELD_WIDTH);
-        UIUtils.createAndAttachTooltip(spinnerScanPause, "tooltip.explain.selection.param.scan.pause");
+        this.spinnerScanPause = FXControlUtils.createDoubleSpinner(0.1, 100.0, 2.0, 0.1, GeneralConfigurationStepViewI.FIELD_WIDTH);
+        FXControlUtils.createAndAttachTooltip(spinnerScanPause, "tooltip.explain.selection.param.scan.pause");
         GridPane.setHalignment(spinnerScanPause, HPos.RIGHT);
         labelScanPause.disableProperty().bind(spinnerScanPause.disabledProperty());
         labelScanFirstPause = new Label(Translation.getText("selection.mode.param.scan.first.pause"));
-        this.spinnerFirstPause = UIUtils.createDoubleSpinner(0.0, 100.0, 1.0, 0.1, GeneralConfigurationStepViewI.FIELD_WIDTH);
+        this.spinnerFirstPause = FXControlUtils.createDoubleSpinner(0.0, 100.0, 1.0, 0.1, GeneralConfigurationStepViewI.FIELD_WIDTH);
         GridPane.setHalignment(spinnerFirstPause, HPos.RIGHT);
-        UIUtils.createAndAttachTooltip(spinnerFirstPause, "tooltip.explain.selection.param.scan.first.pause");
+        FXControlUtils.createAndAttachTooltip(spinnerFirstPause, "tooltip.explain.selection.param.scan.first.pause");
         labelScanFirstPause.disableProperty().bind(spinnerFirstPause.disabledProperty());
-        this.toggleStartScanningOnClic = ConfigUIUtils.createToggleSwitch("selection.mode.start.scanning.on.clic",
+        this.toggleStartScanningOnClic = FXControlUtils.createToggleSwitch("selection.mode.start.scanning.on.clic",
                 "tooltip.explain.selection.param.scan.start.on.clic");
 
         // Scanning part (auto + manual)
-        titlePartScanning = UIControlHelper.createTitleLabel("selection.mode.param.title.part.scanning.configuration");
+        titlePartScanning = FXControlUtils.createTitleLabel("selection.mode.param.title.part.scanning.configuration");
         labelScanMaxSame = new Label(Translation.getText("selection.mode.param.max.scan.same"));
-        this.spinnerMaxScan = UIUtils.createIntSpinner(1, 20, 2, 1, GeneralConfigurationStepViewI.FIELD_WIDTH);
+        this.spinnerMaxScan = FXControlUtils.createIntSpinner(1, 20, 2, 1, GeneralConfigurationStepViewI.FIELD_WIDTH);
         GridPane.setHalignment(spinnerMaxScan, HPos.RIGHT);
-        UIUtils.createAndAttachTooltip(spinnerMaxScan, "tooltip.explain.selection.param.scan.max.scan");
+        FXControlUtils.createAndAttachTooltip(spinnerMaxScan, "tooltip.explain.selection.param.scan.max.scan");
 
         // Style part
-        titlePartStyle = UIControlHelper.createTitleLabel("selection.mode.param.title.general.style.configuration");
+        titlePartStyle = FXControlUtils.createTitleLabel("selection.mode.param.title.general.style.configuration");
         this.colorPickerActivation = new LCColorPicker();
         colorPickerActivation.setMaxWidth(Double.MAX_VALUE);
-        UIUtils.createAndAttachTooltip(colorPickerActivation, "tooltip.explain.selection.param.activation.color");
+        FXControlUtils.createAndAttachTooltip(colorPickerActivation, "tooltip.explain.selection.param.activation.color");
         this.colorPickerSelection = new LCColorPicker();
         colorPickerSelection.setMaxWidth(Double.MAX_VALUE);
-        UIUtils.createAndAttachTooltip(colorPickerSelection, "tooltip.explain.selection.param.selection.color");
-        this.toggleManifyKeyOver = ConfigUIUtils.createToggleSwitch("selection.mode.manify.key.over", "tooltip.explain.selection.param.manify.key");
-        this.toggleSkipEmptyCells = ConfigUIUtils.createToggleSwitch("selection.mode.enable.skip.empty",
+        FXControlUtils.createAndAttachTooltip(colorPickerSelection, "tooltip.explain.selection.param.selection.color");
+        this.toggleManifyKeyOver = FXControlUtils.createToggleSwitch("selection.mode.manify.key.over", "tooltip.explain.selection.param.manify.key");
+        this.toggleSkipEmptyCells = FXControlUtils.createToggleSwitch("selection.mode.enable.skip.empty",
                 "tooltip.explain.selection.param.skip.empty");
         labelColorSelection = new Label(Translation.getText("selection.mode.param.selection.color"));
         labelColorActivation = new Label(Translation.getText("selection.mode.param.activation.color"));
         // Selection view size
-        this.sliderSelectionViewSize = UIUtils.createBaseSlider(0.0, 40, 5);
+        this.sliderSelectionViewSize = FXControlUtils.createBaseSlider(0.0, 40, 5);
         this.sliderSelectionViewSize.setMajorTickUnit(10);
         this.sliderSelectionViewSize.setMinorTickCount(3);
-        UIUtils.createAndAttachTooltip(sliderSelectionViewSize, "tooltip.explain.selection.param.selection.view.size");
+        FXControlUtils.createAndAttachTooltip(sliderSelectionViewSize, "tooltip.explain.selection.param.selection.view.size");
         labelSelectionViewSize = new Label(Translation.getText("selection.mode.param.selection.view.size"));
 
         // Scanning style part
-        titlePartProgressStyle = UIControlHelper.createTitleLabel("selection.mode.param.title.progress.style.configuration");
-        this.toggleEnableProgressDrawing = ConfigUIUtils.createToggleSwitch("selection.mode.param.draw.scanning.progress",
+        titlePartProgressStyle = FXControlUtils.createTitleLabel("selection.mode.param.title.progress.style.configuration");
+        this.toggleEnableProgressDrawing = FXControlUtils.createToggleSwitch("selection.mode.param.draw.scanning.progress",
                 "tooltip.explain.selection.param.enable.draw.progress");
         this.colorPickerProgressColor = new LCColorPicker();
         colorPickerProgressColor.setMaxWidth(Double.MAX_VALUE);
-        UIUtils.createAndAttachTooltip(colorPickerProgressColor, "tooltip.explain.selection.param.progress.color");
+        FXControlUtils.createAndAttachTooltip(colorPickerProgressColor, "tooltip.explain.selection.param.progress.color");
         this.comboboxDrawProgressMode = new ComboBox<>(FXCollections.observableArrayList(ProgressDrawMode.values()));
         this.comboboxDrawProgressMode.setButtonCell(new ProgressDrawModeSimpleListCell());
         this.comboboxDrawProgressMode.setCellFactory((lv) -> new ProgressDrawModeSimpleListCell());
         comboboxDrawProgressMode.setMaxWidth(Double.MAX_VALUE);
-        UIUtils.createAndAttachTooltip(comboboxDrawProgressMode, "tooltip.explain.selection.param.progress.draw.mode");
+        FXControlUtils.createAndAttachTooltip(comboboxDrawProgressMode, "tooltip.explain.selection.param.progress.draw.mode");
         labelDrawProgressMode = new Label(Translation.getText("selection.mode.draw.progress.mode"));
         labelProgressColor = new Label(Translation.getText("selection.mode.param.progress.color"));
         labelProgressColor.disableProperty().bind(colorPickerProgressColor.disabledProperty());
         labelDrawProgressMode.disableProperty().bind(comboboxDrawProgressMode.disabledProperty());
         // Progress bar view size
         labelProgressBarSize = new Label(Translation.getText("selection.mode.param.progress.bar.size"));
-        this.sliderProgressBarSize = UIUtils.createBaseSlider(0.0, 40, 5);
+        this.sliderProgressBarSize = FXControlUtils.createBaseSlider(0.0, 40, 5);
         this.sliderProgressBarSize.setMajorTickUnit(10);
         this.sliderProgressBarSize.setMinorTickCount(3);
-        UIUtils.createAndAttachTooltip(sliderProgressBarSize, "tooltip.explain.selection.param.progress.bar.size");
+        FXControlUtils.createAndAttachTooltip(sliderProgressBarSize, "tooltip.explain.selection.param.progress.bar.size");
         labelProgressBarSize.disableProperty().bind(sliderProgressBarSize.disabledProperty());
 
-        toggleBackgroundReductionEnabled = ConfigUIUtils.createToggleSwitch("selection.mode.param.background.reduction.enabled",
+        toggleBackgroundReductionEnabled = FXControlUtils.createToggleSwitch("selection.mode.param.background.reduction.enabled",
                 "tooltip.explain.selection.mode.param.background.reduction.enabled");
 
         labelBackgroundReductionLevel = new Label(Translation.getText("selection.mode.param.background.reduction.level"));
-        this.sliderBackgroundReductionLevel = UIUtils.createBaseSlider(0.0, 1.0, 0.8);
+        this.sliderBackgroundReductionLevel = FXControlUtils.createBaseSlider(0.0, 1.0, 0.8);
         this.sliderBackgroundReductionLevel.setMajorTickUnit(0.1);
         this.sliderBackgroundReductionLevel.setMinorTickCount(1);
-        UIUtils.createAndAttachTooltip(sliderProgressBarSize, "tooltip.explain.selection.mode.param.background.reduction.level");
+        FXControlUtils.createAndAttachTooltip(sliderProgressBarSize, "tooltip.explain.selection.mode.param.background.reduction.level");
         labelBackgroundReductionLevel.disableProperty().bind(sliderBackgroundReductionLevel.disabledProperty());
 
         // GridPane total

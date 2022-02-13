@@ -36,19 +36,19 @@ import org.controlsfx.glyphfont.FontAwesome;
 import org.fxmisc.easybind.EasyBind;
 import org.fxmisc.easybind.monadic.MonadicBinding;
 import org.lifecompanion.model.api.configurationcomponent.ImageUseComponentI;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.ui.common.pane.generic.BaseConfigurationViewBorderPane;
 import org.lifecompanion.controller.editaction.KeyActions;
-import org.lifecompanion.util.binding.LCConfigBindingUtils;
+import org.lifecompanion.util.binding.EditActionUtils;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.controller.editmode.ConfigActionController;
-import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.ui.common.control.specific.ViewportSelectorControl;
 import org.lifecompanion.ui.common.control.generic.colorpicker.LCColorPicker;
 import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.util.javafx.FXControlUtils;
+import org.lifecompanion.util.javafx.FXUtils;
 
 public class ImageUseComponentConfigurationView extends BaseConfigurationViewBorderPane<ImageUseComponentI> implements LCViewInitHelper {
     /**
@@ -128,12 +128,12 @@ public class ImageUseComponentConfigurationView extends BaseConfigurationViewBor
     @Override
     public void initUI() {
         //Create buttons
-        this.togglePreserveRatio = ConfigUIUtils.createToggleSwitch("image.use.preserve.ratio", "tooltip.explain.image.preserve.ratio");
+        this.togglePreserveRatio = FXControlUtils.createToggleSwitch("image.use.preserve.ratio", "tooltip.explain.image.preserve.ratio");
         //Advanced parameters
-        this.buttonRotateLeft = UIUtils.createTextButtonWithGraphics(Translation.getText("rotate.image.left"),
+        this.buttonRotateLeft = FXControlUtils.createTextButtonWithGraphics(Translation.getText("rotate.image.left"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.ROTATE_LEFT).size(20.0).color(LCGraphicStyle.SECOND_DARK),
                 "tooltip.rotate.image.left");
-        this.buttonRotateRight = UIUtils.createTextButtonWithGraphics(Translation.getText("rotate.image.right"),
+        this.buttonRotateRight = FXControlUtils.createTextButtonWithGraphics(Translation.getText("rotate.image.right"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.ROTATE_RIGHT).size(20.0).color(LCGraphicStyle.SECOND_DARK),
                 "tooltip.rotate.image.right");
         this.labelRotation = new Label();
@@ -145,14 +145,14 @@ public class ImageUseComponentConfigurationView extends BaseConfigurationViewBor
         paneParameters.setPadding(new Insets(10.0));
 
         //Color replacement
-        this.toggleEnableReplaceColor = ConfigUIUtils.createToggleSwitch("image.use.enable.color.replace",
+        this.toggleEnableReplaceColor = FXControlUtils.createToggleSwitch("image.use.enable.color.replace",
                 "tooltip.explain.image.enable.color.replace");
         this.pickerColorToReplace = new LCColorPicker();
-        UIUtils.createAndAttachTooltip(pickerColorToReplace, "tooltip.explain.image.color.replace");
+        FXControlUtils.createAndAttachTooltip(pickerColorToReplace, "tooltip.explain.image.color.replace");
         this.pickerReplacingColor = new LCColorPicker();
-        UIUtils.createAndAttachTooltip(pickerReplacingColor, "tooltip.explain.image.color.replacing");
-        this.sliderReplaceThreshold = UIUtils.createBaseSlider(0.0, 200.0, 10.0);
-        UIUtils.createAndAttachTooltip(sliderReplaceThreshold, "tooltip.explain.image.color.replace.threshold");
+        FXControlUtils.createAndAttachTooltip(pickerReplacingColor, "tooltip.explain.image.color.replacing");
+        this.sliderReplaceThreshold = FXControlUtils.createBaseSlider(0.0, 200.0, 10.0);
+        FXControlUtils.createAndAttachTooltip(sliderReplaceThreshold, "tooltip.explain.image.color.replace.threshold");
         this.sliderReplaceThreshold.setMajorTickUnit(20);
         this.paneColorSelection = new GridPane();
         Label labelColorToReplace = new Label(Translation.getText("image.use.color.to.replace.field"));
@@ -170,13 +170,13 @@ public class ImageUseComponentConfigurationView extends BaseConfigurationViewBor
         paneParameters.getChildren().addAll(sepColor, this.toggleEnableReplaceColor, this.paneColorSelection);
 
         //Viewport selector
-        this.toggleUseViewport = ConfigUIUtils.createToggleSwitch("image.use.use.viewport", "tooltip.explain.image.use.viewport");
+        this.toggleUseViewport = FXControlUtils.createToggleSwitch("image.use.use.viewport", "tooltip.explain.image.use.viewport");
         this.viewportSelectorControl = new ViewportSelectorControl();
         this.viewportSelectorControl.setPrefHeight(250);
         paneParameters.getChildren().addAll(new Separator(Orientation.HORIZONTAL), this.toggleUseViewport, this.viewportSelectorControl);
 
         // Button ok
-        buttonOk = UIUtils.createLeftTextButton(Translation.getText("image.use.button.ok"),
+        buttonOk = FXControlUtils.createLeftTextButton(Translation.getText("image.use.button.ok"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CHECK).size(16).color(LCGraphicStyle.MAIN_DARK), null);
         HBox buttonBox = new HBox(buttonOk);
         buttonBox.setAlignment(Pos.CENTER_RIGHT);
@@ -202,23 +202,23 @@ public class ImageUseComponentConfigurationView extends BaseConfigurationViewBor
             ImageUseComponentI imageUseComp = this.model.get();
             ConfigActionController.INSTANCE.executeAction(new KeyActions.ChangeImageRotateAction(imageUseComp, imageUseComp.rotateProperty().get() + 90.0));
         });
-        this.buttonOk.setOnAction(ev -> UIUtils.getSourceWindow(this).hide());
+        this.buttonOk.setOnAction(ev -> FXUtils.getSourceWindow(this).hide());
     }
 
     @Override
     public void initBinding() {
         this.viewportSelectorControl.modelProperty().bind(this.model);
-        this.changeListenerPreserveRatio = LCConfigBindingUtils.createSimpleBinding(this.togglePreserveRatio.selectedProperty(), this.model,
+        this.changeListenerPreserveRatio = EditActionUtils.createSimpleBinding(this.togglePreserveRatio.selectedProperty(), this.model,
                 m -> m.preserveRatioProperty().get(), KeyActions.ChangePreserveRatioAction::new);
-        this.changeListenerEnableColorReplace = LCConfigBindingUtils.createSimpleBinding(this.toggleEnableReplaceColor.selectedProperty(), this.model,
+        this.changeListenerEnableColorReplace = EditActionUtils.createSimpleBinding(this.toggleEnableReplaceColor.selectedProperty(), this.model,
                 m -> m.enableReplaceColorProperty().get(), KeyActions.ChangeEnableReplaceColorAction::new);
-        this.changeListenerUseViewport = LCConfigBindingUtils.createSimpleBinding(this.toggleUseViewport.selectedProperty(), this.model,
+        this.changeListenerUseViewport = EditActionUtils.createSimpleBinding(this.toggleUseViewport.selectedProperty(), this.model,
                 m -> m.useViewPortProperty().get(), KeyActions.ChangeUseViewportAction::new);
-        this.changeListenerColorToReplace = LCConfigBindingUtils.createSimpleBinding(this.pickerColorToReplace.valueProperty(), this.model,
+        this.changeListenerColorToReplace = EditActionUtils.createSimpleBinding(this.pickerColorToReplace.valueProperty(), this.model,
                 m -> m.colorToReplaceProperty().get(), KeyActions.ChangeToReplaceColorAction::new);
-        this.changeListenerReplacingColor = LCConfigBindingUtils.createSimpleBinding(this.pickerReplacingColor.valueProperty(), this.model,
+        this.changeListenerReplacingColor = EditActionUtils.createSimpleBinding(this.pickerReplacingColor.valueProperty(), this.model,
                 m -> m.replacingColorProperty().get(), KeyActions.ChangeReplacingColorAction::new);
-        this.changeListenerReplaceThreshold = LCConfigBindingUtils.createSliderBindingWithScale(0, this.sliderReplaceThreshold, this.model,
+        this.changeListenerReplaceThreshold = EditActionUtils.createSliderBindingWithScale(0, this.sliderReplaceThreshold, this.model,
                 ImageUseComponentI::replaceColorThresholdProperty, (model, nv) -> new KeyActions.ChangeReplaceColorThresholdAction(model, nv.intValue()));
         this.labelRotation.textProperty().bind(TranslationFX.getTextBinding("image.use.rotation.label.current", EasyBind.select(model).selectObject(ImageUseComponentI::rotateProperty).orElse(0.0)));
     }

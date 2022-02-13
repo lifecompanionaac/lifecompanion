@@ -33,16 +33,14 @@ import org.lifecompanion.model.api.configurationcomponent.ImageUseComponentI;
 import org.lifecompanion.model.api.configurationcomponent.keyoption.KeyOptionI;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.SimplerKeyContentContainerI;
 import org.lifecompanion.model.api.imagedictionary.ImageElementI;
-import org.lifecompanion.model.api.ui.editmode.ConfigurationProfileLevelEnum;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.ui.common.pane.generic.BaseConfigurationViewBorderPane;
 import org.lifecompanion.controller.editaction.KeyActions;
-import org.lifecompanion.util.binding.LCConfigBindingUtils;
+import org.lifecompanion.util.binding.EditActionUtils;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
-import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.util.javafx.FXControlUtils;
 
 public class ImageUseComponentSelectorControl extends BaseConfigurationViewBorderPane<ImageUseComponentI> implements LCViewInitHelper {
 
@@ -76,7 +74,7 @@ public class ImageUseComponentSelectorControl extends BaseConfigurationViewBorde
     @Override
     public void initUI() {
         //Create buttons
-        this.buttonParameters = UIUtils.createLeftTextButton(Translation.getText("image.use.show.advanced.parameters"),
+        this.buttonParameters = FXControlUtils.createLeftTextButton(Translation.getText("image.use.show.advanced.parameters"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.GEARS).size(18).color(LCGraphicStyle.MAIN_PRIMARY),
                 "tooltip.image.use.show.advanced.parameters");
         BorderPane.setAlignment(buttonParameters, Pos.CENTER);
@@ -119,9 +117,8 @@ public class ImageUseComponentSelectorControl extends BaseConfigurationViewBorde
 
     @Override
     public void initBinding() {
-        this.changeListenerImage = LCConfigBindingUtils.createSimpleBinding(this.imageSelectorControl.selectedImageProperty(), this.model,
+        this.changeListenerImage = EditActionUtils.createSimpleBinding(this.imageSelectorControl.selectedImageProperty(), this.model,
                 m -> m.imageVTwoProperty().get(), KeyActions.ChangeImageAction::new);
-        ConfigUIUtils.bindShowForLevelFrom(this.buttonParameters, ConfigurationProfileLevelEnum.NORMAL);
     }
 
 

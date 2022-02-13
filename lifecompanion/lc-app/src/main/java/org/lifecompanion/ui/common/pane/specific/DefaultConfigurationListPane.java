@@ -35,8 +35,7 @@ import javafx.scene.layout.VBox;
 import org.controlsfx.control.ToggleSwitch;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
-import org.lifecompanion.util.UIControlHelper;
-import org.lifecompanion.util.UIUtils;
+import org.lifecompanion.util.javafx.FXControlUtils;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.profileconfigselect.ProfileConfigSelectionController;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
@@ -67,7 +66,7 @@ public class DefaultConfigurationListPane extends VBox implements LCViewInitHelp
     @Override
     public void initUI() {
         // Default configuration to add on profile
-        Label labelDefaultConfiguration = UIControlHelper.createTitleLabel("profile.edition.general.default.configuration.title");
+        Label labelDefaultConfiguration = FXControlUtils.createTitleLabel("profile.edition.general.default.configuration.title");
         Label labelExplain = new Label(Translation.getText("profile.edition.general.default.configuration.explain"));
         labelExplain.setMinHeight(100.0);
         labelExplain.getStyleClass().add("explain-text");
@@ -136,11 +135,11 @@ public class DefaultConfigurationListPane extends VBox implements LCViewInitHelp
                     if (multiSelectMode) {
                         ToggleSwitch toggleEnableConfiguration = new ToggleSwitch();
                         toggleEnableConfiguration.setSelected(true);
-                        toggleEnableConfiguration.setTooltip(UIUtils.createTooltip(Translation.getText("available.default.configuration.tooltip.toggle.add")));
+                        toggleEnableConfiguration.setTooltip(FXControlUtils.createTooltip(Translation.getText("available.default.configuration.tooltip.toggle.add")));
                         defaultConfigurationToggles.put(toggleEnableConfiguration, defaultConfiguration);
                         selectionNode = toggleEnableConfiguration;
                     } else {
-                        final Button selectConfigButton = UIUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CHEVRON_RIGHT).size(20).color(LCGraphicStyle.MAIN_DARK), null);
+                        final Button selectConfigButton = FXControlUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CHEVRON_RIGHT).size(20).color(LCGraphicStyle.MAIN_DARK), null);
                         selectConfigButton.setOnAction(e -> {
                             if (this.onConfigurationSelected != null) onConfigurationSelected.accept(defaultConfiguration);
                         });
@@ -155,7 +154,7 @@ public class DefaultConfigurationListPane extends VBox implements LCViewInitHelp
                     gridPaneDefaultConfigurations.add(labelDescription, 0, rowIndex + 2);
                     gridPaneDefaultConfigurations.add(selectionNode, 1, rowIndex, 1, 3);
 
-                    Tooltip tooltip = UIUtils.createTooltip(Translation.getText("available.default.configuration.preview.image"));
+                    Tooltip tooltip = FXControlUtils.createTooltip(Translation.getText("available.default.configuration.preview.image"));
                     ImageView imageView = new ImageView();
                     imageView.setFitWidth(500);
                     imageView.setFitHeight(400);

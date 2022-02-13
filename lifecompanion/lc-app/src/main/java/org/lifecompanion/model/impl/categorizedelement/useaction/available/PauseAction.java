@@ -27,12 +27,13 @@ import org.lifecompanion.model.api.usevariable.UseVariableI;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseActionSubCategories;
-import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.lifecycle.AppMode;
 import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
+import org.lifecompanion.util.ThreadUtils;
+import org.lifecompanion.util.binding.BindingUtils;
 
 import java.util.Map;
 
@@ -53,7 +54,7 @@ public class PauseAction extends SimpleUseActionImpl<UseActionTriggerComponentI>
         this.configIconPath = "miscellaneous/icon_pause_action.png";
         this.parameterizableAction = true;
         this.variableDescriptionProperty()
-                .bind(TranslationFX.getTextBinding("action.pause.variable.description", LCUtils.createDivide1000Binding(this.pause)));
+                .bind(TranslationFX.getTextBinding("action.pause.variable.description", BindingUtils.createDivide1000Binding(this.pause)));
     }
 
     @Override
@@ -62,7 +63,7 @@ public class PauseAction extends SimpleUseActionImpl<UseActionTriggerComponentI>
         final long startTime = System.currentTimeMillis();
         final int waitingTime = this.pause.get();
         while ((System.currentTimeMillis() - startTime) <= waitingTime && AppModeController.INSTANCE.modeProperty().get() == AppMode.USE) {
-            LCUtils.safeSleep(Math.min(CHECK_PAUSE_TIMING, Math.max(waitingTime - (System.currentTimeMillis() - startTime), 0)));
+            ThreadUtils.safeSleep(Math.min(CHECK_PAUSE_TIMING, Math.max(waitingTime - (System.currentTimeMillis() - startTime), 0)));
         }
     }
 

@@ -29,18 +29,17 @@ import javafx.scene.text.TextAlignment;
 import org.controlsfx.control.ToggleSwitch;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.model.api.configurationcomponent.SelectionModeUserI;
-import org.lifecompanion.util.UIControlHelper;
+import org.lifecompanion.util.javafx.DialogUtils;
+import org.lifecompanion.util.javafx.FXControlUtils;
 import org.lifecompanion.util.model.Triple;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.ui.common.pane.generic.AnimatedBorderPane;
 import org.lifecompanion.controller.editaction.SelectionModeActions;
-import org.lifecompanion.util.binding.LCConfigBindingUtils;
+import org.lifecompanion.util.binding.EditActionUtils;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.controller.editmode.SelectionController;
-import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.ui.common.pane.specific.selectionmode.SelectionModeMainParamView;
 import org.lifecompanion.ui.common.pane.specific.selectionmode.SelectionModeSuppParamView;
 import org.lifecompanion.ui.configurationcomponent.editmode.categorizedelement.useevent.available.RibbonBasePart;
@@ -93,11 +92,11 @@ public class GridComponentSelectionModeRibbonPart extends RibbonBasePart<Selecti
         selectionModeSuppParamView = new SelectionModeSuppParamView();
         selectionModeSuppParamView.setPrefWidth(DIALOG_WIDTH - 10.0);
 
-        this.buttonOpenSelectionModeConfiguration = UIUtils.createTextButtonWithGraphics(Translation.getText("selection.mode.use.configuration.grid.config.button"),
+        this.buttonOpenSelectionModeConfiguration = FXControlUtils.createTextButtonWithGraphics(Translation.getText("selection.mode.use.configuration.grid.config.button"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.GEAR).sizeFactor(2).color(LCGraphicStyle.MAIN_DARK), "selection.mode.use.configuration.grid.config.button");
         buttonOpenSelectionModeConfiguration.setTextAlignment(TextAlignment.CENTER);
 
-        this.toggleEnableParentSelectionMode = ConfigUIUtils.createToggleSwitch("selection.mode.use.configuration.mode",
+        this.toggleEnableParentSelectionMode = FXControlUtils.createToggleSwitch("selection.mode.use.configuration.mode",
                 "tooltip.explain.parent.selection.mode.grid");
 
         VBox boxElements = new VBox(10.0, toggleEnableParentSelectionMode, new Separator(Orientation.HORIZONTAL), buttonOpenSelectionModeConfiguration);
@@ -109,7 +108,7 @@ public class GridComponentSelectionModeRibbonPart extends RibbonBasePart<Selecti
 
     @Override
     public void initListener() {
-        this.changeListenerUseParentMode = LCConfigBindingUtils.createSimpleBinding(this.toggleEnableParentSelectionMode.selectedProperty(),
+        this.changeListenerUseParentMode = EditActionUtils.createSimpleBinding(this.toggleEnableParentSelectionMode.selectedProperty(),
                 this.model, m -> m.useParentSelectionModeProperty().get(), (m, e) -> new SelectionModeActions.ChangeUseParentAction(AppModeController.INSTANCE.getEditModeContext().configurationProperty().get(), m, e));
         this.buttonOpenSelectionModeConfiguration.setOnAction(e -> {
             showConfigStage();
@@ -143,7 +142,7 @@ public class GridComponentSelectionModeRibbonPart extends RibbonBasePart<Selecti
 
     private void initConfigStage() {
         if (configStageDialogPane == null) {
-            configStageDialogPane = ConfigUIUtils.createAlert(buttonOpenSelectionModeConfiguration, null);
+            configStageDialogPane = DialogUtils.createAlert(buttonOpenSelectionModeConfiguration, null);
             configStageDialogPane.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL, ButtonType.OK);
             configStageDialogPane.getDialogPane().getStylesheets().addAll(LCConstant.CSS_STYLE_PATH);
             configStageDialogPane.getDialogPane().getStyleClass().addAll("selection-mode-config-dialog");
@@ -153,7 +152,7 @@ public class GridComponentSelectionModeRibbonPart extends RibbonBasePart<Selecti
             configStageAnimatedBorderPane = new AnimatedBorderPane();
             configStageDialogPane.getDialogPane().setContent(configStageAnimatedBorderPane);
 
-            Triple<HBox, Label, Node> header = UIControlHelper.createHeader("Mode de sélection pour la grille", previous -> configStageAnimatedBorderPane.changeCenter(selectionModeMainParamView));
+            Triple<HBox, Label, Node> header = FXControlUtils.createHeader("Mode de sélection pour la grille", previous -> configStageAnimatedBorderPane.changeCenter(selectionModeMainParamView));
             header.getRight().visibleProperty().bind(configStageAnimatedBorderPane.centerProperty().isEqualTo(selectionModeSuppParamView));
             configStageAnimatedBorderPane.setTop(header.getLeft());
         }

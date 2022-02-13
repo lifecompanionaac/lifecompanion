@@ -24,10 +24,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.text.TextAlignment;
 import org.lifecompanion.model.api.categorizedelement.CategorizedElementI;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.ui.app.categorizedelement.CategorizedIconView;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.util.javafx.FXControlUtils;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -64,7 +64,7 @@ public class AbstractCategorizedItemView<T extends CategorizedElementI<?>> exten
         //Icon view
         this.useActionIconView = new CategorizedIconView();
         //Tooltip : description
-        this.tooltip = UIUtils.createTooltip(null);
+        this.tooltip = FXControlUtils.createTooltip(null);
         //Total
         this.setGraphic(this.useActionIconView);
     }

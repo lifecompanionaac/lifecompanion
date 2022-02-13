@@ -36,7 +36,7 @@ import org.lifecompanion.model.api.configurationcomponent.keyoption.KeyOptionI;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.imagedictionary.ImageElementI;
 import org.lifecompanion.model.api.ui.editmode.AddTypeEnum;
-import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.util.IOUtils;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.dynamickey.KeyListNodeKeyOption;
 import org.lifecompanion.model.impl.configurationcomponent.GridPartKeyComponent;
 import org.lifecompanion.controller.resource.IconHelper;
@@ -217,7 +217,7 @@ public class GridPartKeyViewConfig extends GridPartKeyViewBase {
             }
             //Accept raw images (if change image is enabled)
             if (isCopyingRawImagesFromComputer(ea) && !this.model.keyOptionProperty().get().disableImageProperty().get()) {
-                Optional<File> firstValidImage = ea.getDragboard().getFiles().stream().filter(LCUtils::isSupportedImage).findFirst();
+                Optional<File> firstValidImage = ea.getDragboard().getFiles().stream().filter(IOUtils::isSupportedImage).findFirst();
                 if (firstValidImage.isPresent()) {
                     try {
                         if (this.model.keyOptionProperty().get() == null || !this.model.keyOptionProperty().get().disableImageProperty().get()) {
@@ -247,7 +247,7 @@ public class GridPartKeyViewConfig extends GridPartKeyViewBase {
     private boolean isCopyingRawImagesFromComputer(DragEvent ea) {
         return ea.getTransferMode() == TransferMode.MOVE
                 || ea.getTransferMode() == TransferMode.COPY && ea.getDragboard() != null && ea.getDragboard().getFiles() != null
-                && !ea.getDragboard().getFiles().isEmpty() && ea.getDragboard().getFiles().stream().anyMatch(LCUtils::isSupportedImage);
+                && !ea.getDragboard().getFiles().isEmpty() && ea.getDragboard().getFiles().stream().anyMatch(IOUtils::isSupportedImage);
     }
 
     /**

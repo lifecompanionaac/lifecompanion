@@ -21,8 +21,8 @@ package org.lifecompanion.ui.common.control.generic.colorpicker;
 
 
 import javafx.scene.paint.Color;
-import org.lifecompanion.util.LCUtils;
 import org.lifecompanion.framework.commons.translation.Translation;
+import org.lifecompanion.util.javafx.ColorUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,11 +67,11 @@ public enum MaterialColors {
             return Translation.getText("lc.colorpicker.transparent.value");
         } else {
             // Find base color
-            return getColors().stream().filter(c -> LCUtils.colorEquals(c.getColor(), color)).findAny().map(mc -> mc.getTitle() + " " + mc.getSubTitle())
+            return getColors().stream().filter(c -> ColorUtils.colorEquals(c.getColor(), color)).findAny().map(mc -> mc.getTitle() + " " + mc.getSubTitle())
                     // Find dark color
-                    .orElse(getColors().stream().filter(c -> LCUtils.colorEquals(darker(c.getColor()), color)).findAny().map(mc -> mc.getTitle() + " " + mc.getSubTitle() + "-D")
+                    .orElse(getColors().stream().filter(c -> ColorUtils.colorEquals(darker(c.getColor()), color)).findAny().map(mc -> mc.getTitle() + " " + mc.getSubTitle() + "-D")
                             // No name : use web notation
-                            .orElse(LCUtils.toWebColorWithoutAlpha(color)));
+                            .orElse(ColorUtils.toWebColorWithoutAlpha(color)));
         }
     }
 

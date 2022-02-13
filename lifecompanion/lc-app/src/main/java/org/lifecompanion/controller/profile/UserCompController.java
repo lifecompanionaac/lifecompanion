@@ -22,7 +22,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.lifecompanion.model.api.profile.UserCompDescriptionI;
 import org.lifecompanion.model.api.lifecycle.LCStateListener;
-import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.controller.editaction.AsyncExecutorController;
 import org.lifecompanion.controller.io.IOHelper;
 import org.lifecompanion.controller.io.task.MultiUserCompDescriptionLoadingTask;
@@ -97,14 +97,14 @@ public enum UserCompController implements LCStateListener {
                 loadTask.setOnSucceeded(e -> {
                     List<UserCompDescriptionI> loadedComps = (List<UserCompDescriptionI>) e.getSource().getValue();
                     //Remove all delete
-                    LCUtils.runOnFXThread(() -> {
+                    FXThreadUtils.runOnFXThread(() -> {
                         this.userComponents.clear();
                         for (UserCompDescriptionI toAdd : loadedComps) {
                             this.addCompAfterSave(toAdd);
                         }
                     });
                 });
-                loadTask.setOnFailed(e -> LCUtils.runOnFXThread(this.userComponents::clear));
+                loadTask.setOnFailed(e -> FXThreadUtils.runOnFXThread(this.userComponents::clear));
                 AsyncExecutorController.INSTANCE.addAndExecute(true, true, loadTask);
             }
         });

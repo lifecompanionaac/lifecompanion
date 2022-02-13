@@ -22,7 +22,8 @@ import javafx.concurrent.Task;
 import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
-import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.util.model.ConfigurationComponentUtils;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.ProgressDisplayKeyOption;
 import org.lifecompanion.framework.commons.utils.lang.CollectionUtils;
 import org.lifecompanion.framework.utils.LCNamedThreadFactory;
@@ -73,7 +74,7 @@ public enum UseModeProgressDisplayerController implements ModeListenerI {
                 previousTask.cancel();
             }
             // Update the progress task for each progress display
-            progressDisplayKeyOptions.forEach(p -> LCUtils.runOnFXThread(() -> p.bindAndShowProgress(timerTask.progressProperty())));
+            progressDisplayKeyOptions.forEach(p -> FXThreadUtils.runOnFXThread(() -> p.bindAndShowProgress(timerTask.progressProperty())));
             // Callback on wait finished and launch timer
             timerTask.setOnSucceeded(e -> onFinished.run());
             timerTaskExecutor.submit(timerTask);
@@ -93,7 +94,7 @@ public enum UseModeProgressDisplayerController implements ModeListenerI {
     @Override
     public void modeStart(LCConfigurationI configuration) {
         Map<GridComponentI, List<ProgressDisplayKeyOption>> progressDisplayKeyOption = new HashMap<>();
-        LCUtils.findKeyOptionsByGrid(ProgressDisplayKeyOption.class, configuration, progressDisplayKeyOption, null);
+        ConfigurationComponentUtils.findKeyOptionsByGrid(ProgressDisplayKeyOption.class, configuration, progressDisplayKeyOption, null);
         progressDisplayKeyOptions = progressDisplayKeyOption.values().stream().flatMap(List::stream).collect(Collectors.toList());
         if (!CollectionUtils.isEmpty(this.progressDisplayKeyOptions)) {
             this.timerTaskExecutor = Executors.newSingleThreadScheduledExecutor(LCNamedThreadFactory.daemonThreadFactory("UseModeProgressDisplayerController"));

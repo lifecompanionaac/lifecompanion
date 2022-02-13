@@ -23,7 +23,6 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
 import org.controlsfx.glyphfont.FontAwesome;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStep;
@@ -32,6 +31,7 @@ import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.ui.configurationcomponent.editmode.categorizedelement.useevent.available.RibbonBasePart;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.util.javafx.FXControlUtils;
 
 /**
  * @author Mathieu THEBAUD
@@ -45,7 +45,7 @@ public class OpenGeneralConfigurationRibbonPart extends RibbonBasePart<Void> imp
 
     @Override
     public void initUI() {
-        this.buttonOpenGeneralConfig = UIUtils.createTextButtonWithGraphics(Translation.getText("menu.item.general.config.open"),
+        this.buttonOpenGeneralConfig = FXControlUtils.createTextButtonWithGraphics(Translation.getText("menu.item.general.config.open"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.GEAR).sizeFactor(2).color(LCGraphicStyle.MAIN_DARK), "menu.item.general.config.open.tooltip");
         this.buttonOpenGeneralConfig.setWrapText(true);
         buttonOpenGeneralConfig.setPrefWidth(100.0);

@@ -23,10 +23,10 @@ import javafx.scene.Node;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
+import org.lifecompanion.util.javafx.FXUtils;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -71,7 +71,7 @@ public class CategorizedContentStage extends Stage {
     public void prepareAndShow(Node source, Node content, Runnable onHiddenListener) {
         onHiddenListeners.add(onHiddenListener);
         if (this.getOwner() == null) {
-            this.initOwner(UIUtils.getSourceWindow(source));
+            this.initOwner(FXUtils.getSourceWindow(source));
         }
         this.getCategorizedContentScene().setContentNode(content);
         this.show();

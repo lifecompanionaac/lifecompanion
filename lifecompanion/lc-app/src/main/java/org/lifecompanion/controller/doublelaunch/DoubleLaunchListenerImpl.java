@@ -26,10 +26,10 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import org.lifecompanion.util.LCUtils;
+import org.lifecompanion.util.javafx.DialogUtils;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.util.javafx.StageUtils;
-import org.lifecompanion.util.ConfigUIUtils;
 import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
 import org.lifecompanion.framework.commons.translation.Translation;
 
@@ -42,7 +42,7 @@ public class DoubleLaunchListenerImpl implements DoubleLaunchListener {
 
     @Override
     public void doubleRunDetected() {
-        LCUtils.runOnFXThread(() -> {
+        FXThreadUtils.runOnFXThread(() -> {
             //Show main frame
             Stage stage = StageUtils.getEditOrUseStageVisible();
             stage.setIconified(false);
@@ -55,7 +55,7 @@ public class DoubleLaunchListenerImpl implements DoubleLaunchListener {
             timeLineAutoHide.setCycleCount(LCConstant.DOUBLE_LAUNCH_DISPLAY_DELAY);
 
             //When a double run is detected, show a dialog to user
-            Alert dialog = ConfigUIUtils.createAlert(stage.getScene().getRoot(), AlertType.ERROR);
+            Alert dialog = DialogUtils.createAlert(stage.getScene().getRoot(), AlertType.ERROR);
             dialog.headerTextProperty().bind(TranslationFX.getTextBinding("double.run.detected.header", timeLeft));
             dialog.setContentText(Translation.getText("double.run.detected.message"));
             timeLineAutoHide.setOnFinished(e -> dialog.hide());

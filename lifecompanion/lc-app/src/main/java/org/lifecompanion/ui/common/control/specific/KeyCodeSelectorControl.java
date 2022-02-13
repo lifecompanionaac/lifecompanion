@@ -28,11 +28,11 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.controlsfx.glyphfont.FontAwesome;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.util.javafx.FXControlUtils;
 
 /**
  * Component to select a file from current file system.
@@ -71,7 +71,7 @@ public class KeyCodeSelectorControl extends VBox implements LCViewInitHelper {
         this.fieldKeyName = new TextField();
         this.fieldKeyName.setEditable(false);
         this.fieldKeyName.setPromptText(Translation.getText("key.selector.control.no.key"));
-        this.buttonRemoveKey = UIUtils.createGraphicButton(
+        this.buttonRemoveKey = FXControlUtils.createGraphicButton(
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.TRASH).sizeFactor(1).color(LCGraphicStyle.SECOND_PRIMARY),
                 "tooltip.key.selector.remove.button");
 

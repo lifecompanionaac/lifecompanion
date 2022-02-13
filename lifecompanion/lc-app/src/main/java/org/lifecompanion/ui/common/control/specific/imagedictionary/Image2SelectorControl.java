@@ -28,11 +28,11 @@ import javafx.scene.layout.VBox;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.fxmisc.easybind.EasyBind;
 import org.lifecompanion.model.api.imagedictionary.ImageElementI;
-import org.lifecompanion.util.UIUtils;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.util.javafx.FXControlUtils;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -86,9 +86,9 @@ public class Image2SelectorControl extends BorderPane implements LCViewInitHelpe
     @Override
     public void initUI() {
         //Create buttons
-        this.buttonRemoveImage = UIUtils.createTextButtonWithGraphics(Translation.getText("remove.image.component"),
+        this.buttonRemoveImage = FXControlUtils.createTextButtonWithGraphics(Translation.getText("remove.image.component"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.TRASH).size(20.0).color(LCGraphicStyle.SECOND_DARK), "tooltip.remove.image.button");
-        this.buttonSelectImage = UIUtils.createTextButtonWithGraphics(Translation.getText("select.image.component"),
+        this.buttonSelectImage = FXControlUtils.createTextButtonWithGraphics(Translation.getText("select.image.component"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.PICTURE_ALT).size(20.0).color(LCGraphicStyle.MAIN_PRIMARY),
                 "tooltip.select.image.button");
 
@@ -98,7 +98,7 @@ public class Image2SelectorControl extends BorderPane implements LCViewInitHelpe
         this.imageViewSelected.setFitWidth(Image2SelectorControl.IMAGE_WIDTH);
         this.imageViewSelected.setPreserveRatio(true);
 
-        tooltipImageKeywords = UIUtils.createTooltip("");
+        tooltipImageKeywords = FXControlUtils.createTooltip("");
         Tooltip.install(imageViewSelected, tooltipImageKeywords);
 
         //Add
