@@ -1,6 +1,6 @@
 # LIFECOMPANION CHANGELOG
 
-## 1.2.2 - XX/XX/2022
+## 1.3.0 - XX/XX/2022
 
 ### Fonctionnalités
 
@@ -17,6 +17,9 @@
 	- Optimisation de la mémoire
 	- Proposition d'actions en fonction
 	- Centralisation des actions au même endroit
+- (Technique) Les mises à jour du lanceur et de l'application sont maintenant communes
+	- Maintenance facilité
+	- Diminue les risques de changements "bloquants"
 
 ### Corrections/ajustements
 
@@ -33,6 +36,7 @@
 - Correction d'un problème d'affichage lors de l'export en PDF dans certains cas
 - L'action "Sélectionner une liste choisie" est maintenant simulée en mode configuration
 - Champs pour sélectionner des listes de cases amélioré
+- L'installeur de LifeCompanion intègre maintenant l'accord de licence
 
 ## 1.2.1 - 12/12/2021
 

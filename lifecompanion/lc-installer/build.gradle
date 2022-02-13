@@ -63,6 +63,9 @@ processResources {
                 'installationPublicKey': project.property('lifecompanion.app.server.public_key')
         )
     }
+    from('../../') {
+        include 'LICENSE'
+    }
 }
 
 task publishWindowsInstaller(type : PublishInstallerTask) {

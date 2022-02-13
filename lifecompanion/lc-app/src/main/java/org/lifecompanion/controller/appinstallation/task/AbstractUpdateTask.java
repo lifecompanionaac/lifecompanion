@@ -78,58 +78,6 @@ public abstract class AbstractUpdateTask<V> extends LCTask<V> {
         }
     }
 
-    protected boolean downloadAndInstallLauncherUpdate(final AppServerService appServerService) {
-        updateMessage(Translation.getText("update.task.check.launcher.update.request.server"));
-
-        LauncherProperties launcherProperties = InstallationController.INSTANCE.getLauncherProperties();
-        String versionLabel = launcherProperties.getVersionLabel();
-        LOGGER.info("Launcher version read : {}, will check update", versionLabel);
-
-        // Check for update
-        try {
-            ApplicationLauncherUpdate lastLauncher = appServerService.getLastLauncherInformation(applicationId, SystemType.current(), enablePreviewUpdates);
-            if (lastLauncher != null) {
-                LOGGER.info("Got last launcher information from server : {}", lastLauncher);
-                if (VersionUtils.compare(versionLabel, lastLauncher.getVersion()) < 0) {
-                    LOGGER.info("Launcher update found, will now download it");
-
-                    updateMessage(Translation.getText("update.task.check.launcher.prepare.download"));
-                    // Create temp files to avoid replacing existing launcher if update fail
-                    File launcherFile = new File(lastLauncher.getFilePath());
-                    File destDownloadLauncherFile = new File(DIR_NAME_APPLICATION_UPDATE + File.separator + launcherFile.getName() + "-update");
-                    File backupLauncherFile = new File(DIR_NAME_APPLICATION_UPDATE + launcherFile.getName() + "-backup");
-
-                    IOUtils.copyFiles(launcherFile, backupLauncherFile);
-                    LOGGER.info("Update detect for launcher, will download file {} ({} byte)", lastLauncher.getFilePath(), lastLauncher.getFileSize());
-                    try {
-                        updateMessage(Translation.getText("update.task.check.launcher.download", lastLauncher.getVersion(), FileNameUtils.getFileSize(lastLauncher.getFileSize())));
-                        appServerService.downloadFileAndCheckIt(() -> appServerService.getLauncherDownloadUrl(lastLauncher.getId()), destDownloadLauncherFile, lastLauncher.getFileHash(), DOWNLOAD_ATTEMPT_COUNT_BEFORE_FAIL);
-                        LOGGER.info("Launcher update downloaded, will now copy it to main directory");
-                        updateMessage(Translation.getText("update.task.check.launcher.install", lastLauncher.getVersion()));
-                        IOUtils.copyFiles(destDownloadLauncherFile, launcherFile);
-                        // Remove backup and update temp launcher file
-                        backupLauncherFile.delete();
-                        destDownloadLauncherFile.delete();
-                        LOGGER.info("Launcher updated to {}", lastLauncher.getVersion());
-                        // On Mac and Unix, launcher should be executable
-                        setLauncherExecutable(launcherFile);
-                    } catch (Exception e) {
-                        LOGGER.error("Problem with launcher update, backing up the previous launcher from {}", backupLauncherFile, e);
-                        IOUtils.copyFiles(backupLauncherFile, launcherFile);
-                        setLauncherExecutable(launcherFile);
-                        return false;
-                    }
-                } else {
-                    LOGGER.info("Launcher is already up to date");
-                }
-            }
-        } catch (Throwable t) {
-            LOGGER.warn("Can't check launcher update for launcher {}", versionLabel, t);
-            return false;
-        }
-        return true;
-    }
-
     protected void setLauncherExecutable(File launcherFile) {
         if (SystemType.current() == SystemType.MAC || SystemType.current() == SystemType.UNIX) {
             launcherFile.setExecutable(true);

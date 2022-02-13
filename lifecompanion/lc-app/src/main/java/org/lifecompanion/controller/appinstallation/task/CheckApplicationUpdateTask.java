@@ -20,8 +20,6 @@
 package org.lifecompanion.controller.appinstallation.task;
 
 import org.lifecompanion.controller.appinstallation.InstallationController;
-import org.lifecompanion.util.LCUtils;
-import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.framework.client.http.AppServerClient;
 import org.lifecompanion.framework.client.service.AppServerService;
 import org.lifecompanion.framework.commons.SystemType;
@@ -35,6 +33,8 @@ import org.lifecompanion.framework.model.client.UpdateProgress;
 import org.lifecompanion.framework.model.client.UpdateProgressType;
 import org.lifecompanion.framework.model.server.update.ApplicationUpdate;
 import org.lifecompanion.framework.model.server.update.TargetType;
+import org.lifecompanion.model.impl.constant.LCConstant;
+import org.lifecompanion.util.LCUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -118,9 +118,6 @@ public class CheckApplicationUpdateTask extends AbstractUpdateTask<UpdateProgres
                     } else {
                         LOGGER.info("Got an update from server, but the file list was empty, update is ignored");
                     }
-                } else {
-                    LOGGER.info("Application is already up to date, will now check for a launcher update");
-                    this.downloadAndInstallLauncherUpdate(appServerService);
                 }
             }
         } catch (Throwable t) {

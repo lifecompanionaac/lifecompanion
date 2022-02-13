@@ -56,8 +56,9 @@ public class DownloadUpdateAndLauncherTask extends AbstractUpdateTask<Boolean> {
         final File updateDirectory = new File("." + File.separator + ApplicationConstant.DIR_NAME_APPLICATION_UPDATE);
         final File applicationDirectory = new File("." + File.separator + ApplicationConstant.DIR_NAME_APPLICATION);
         final File stateFile = new File(updateDirectory.getPath() + File.separator + ApplicationConstant.UPDATE_STATE_FILENAME);
+        final File updateDownloadFinishedFlagFile = new File(updateDirectory.getPath() + File.separator + ApplicationConstant.UPDATE_DOWNLOAD_FINISHED_FLAG_FILE);
 
-        if (updateProgress.getStatus() == UpdateProgressType.UPDATING) {
+        if (updateProgress.getStatus() == UpdateProgressType.UPDATING || !updateDownloadFinishedFlagFile.exists()) {
             int progress = 0;
             for (UpdateFileProgress updateFile : updateProgress.getFiles()) {
                 updateMessage(Translation.getText("update.task.download.app.file", updateFile.getTargetPath(), FileNameUtils.getFileSize(updateFile.getFileSize())));
@@ -125,8 +126,11 @@ public class DownloadUpdateAndLauncherTask extends AbstractUpdateTask<Boolean> {
                 IOUtils.copyFiles(launcherFile, launcherBackupFile);
                 try {
                     IOUtils.copyFiles(launcherUpdatedFile, launcherFile);
+                    if (StringUtils.isDifferent(IOUtils.fileSha256HexToString(launcherFile), launcherFileProgress.getFileHash())) {
+                        throw new IOException("Copied launcher file hash is incorrect");
+                    }
                     setLauncherExecutable(launcherFile);
-                    setUpdateFinished(updateDirectory, stateFile);
+                    setUpdateFinished(updateDownloadFinishedFlagFile, stateFile);
                 } catch (Exception e) {
                     LOGGER.error("Launcher update failed (wanted to update {} with {}) will copy previous launcher back", launcherFile, launcherUpdatedFile, e);
                     IOUtils.copyFiles(launcherBackupFile, launcherFile);
@@ -134,7 +138,7 @@ public class DownloadUpdateAndLauncherTask extends AbstractUpdateTask<Boolean> {
                     return false;
                 }
             } else {
-                setUpdateFinished(updateDirectory, stateFile);
+                setUpdateFinished(updateDownloadFinishedFlagFile, stateFile);
             }
             return true;
         } else {
@@ -143,10 +147,10 @@ public class DownloadUpdateAndLauncherTask extends AbstractUpdateTask<Boolean> {
         }
     }
 
-    private void setUpdateFinished(File updateDirectory, File stateFile) throws IOException {
+    private void setUpdateFinished(File updateDownloadFinishedFlagFile, File stateFile) throws IOException {
         updateProgress.setStatus(UpdateProgressType.DONE);
         saveJson(updateProgress, stateFile);
-        final boolean created = new File(updateDirectory.getPath() + File.separator + ApplicationConstant.UPDATE_DOWNLOAD_FINISHED_FLAG_FILE).createNewFile();
+        final boolean created = updateDownloadFinishedFlagFile.createNewFile();
         LOGGER.info("Update done flag file created : {}", created);
     }
 }

@@ -128,7 +128,6 @@ public class FullInstallTask extends Task<InstallResult> {
                 LOGGER.error("Download was cancelled (task or error), task will return failed");
                 return InstallResult.INSTALLATION_FAILED_DOWNLOAD;
             }
-            //downloadAppLauncher(appServerService, totalWork, workProgress);
             downloadPluginsToInstall(appServerService, totalWork, workProgress);
         } catch (Exception e) {
             LOGGER.error("Error while downloading installation files", e);
@@ -183,18 +182,6 @@ public class FullInstallTask extends Task<InstallResult> {
         installConfig.save(new File(this.installerConfiguration.getInstallationSoftwareDirectory() + File.separator + DIR_NAME_APPLICATION_DATA + File.separator + "installation.properties"));
         updateProgress(workProgress.incrementAndGet(), totalWork);
     }
-
-    //    private void downloadAppLauncher(AppServerService appServerService, long totalWork, AtomicLong workProgress) throws ApiException {
-    //        ApplicationLauncherUpdate lastLauncher = appServerService.getLastLauncherInformation(buildProperties.getAppId(), SystemType.current(), false);
-    //        LOGGER.info("Last launcher in install {}", lastLauncher);
-    //        logAppender.accept(Translation.getText("lc.installer.task.installing.progress.detail.downloading", lastLauncher.getFilePath(), FileNameUtils.getFileSize(lastLauncher.getFileSize())));
-    //        File launcherFile = new File(installerConfiguration.getInstallationSoftwareDirectory() + File.separator + lastLauncher.getFilePath());
-    //        appServerService.downloadFileAndCheckIt(() -> appServerService.getLauncherDownloadUrl(lastLauncher.getId()),
-    //                launcherFile,
-    //                lastLauncher.getFileHash(), DOWNLOAD_ATTEMPT_COUNT_BEFORE_FAIL
-    //        );
-    //        updateProgress(workProgress.incrementAndGet(), totalWork);
-    //    }
 
     private void downloadFileToInstall(AppServerService appServerService, long totalWork, AtomicLong workProgress, UpdateFileProgress fileToInstall) throws ApiException, IOException {
         logAppender.accept(Translation.getText("lc.installer.task.installing.progress.detail.downloading", fileToInstall.getTargetPath(), FileNameUtils.getFileSize(fileToInstall.getFileSize())));

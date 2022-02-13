@@ -26,10 +26,7 @@ import org.lifecompanion.framework.model.client.UpdateFileProgress;
 import org.lifecompanion.framework.model.client.UpdateFileProgressType;
 import org.lifecompanion.framework.model.server.dto.*;
 import org.lifecompanion.framework.model.server.error.BusinessLogicError;
-import org.lifecompanion.framework.model.server.update.ApplicationUpdate;
-import org.lifecompanion.framework.model.server.update.ApplicationUpdateFile;
-import org.lifecompanion.framework.model.server.update.FileState;
-import org.lifecompanion.framework.model.server.update.UpdateVisibility;
+import org.lifecompanion.framework.model.server.update.*;
 import org.lifecompanion.framework.server.controller.handler.BusinessLogicException;
 import org.lifecompanion.framework.server.data.dao.ApplicationUpdateDao;
 import org.lifecompanion.framework.server.data.dao.DataSource;
@@ -72,6 +69,12 @@ public enum ApplicationUpdateService {
         return "updates/" + dto.getApplicationUpdateIdInDb() + "/" + (dto.getSystem() != null ? dto.getSystem().getCode() : "ALL") + "/" + dto.getFilePath() + "_" + System.currentTimeMillis();
     }
 
+
+    // Backward compatibility : prior version should get the application diff without "launcher" file types
+    public List<UpdateFileProgress> getLastApplicationUpdateDiffOld(String applicationId, SystemType system, String fromVersion, boolean preview) {
+        final List<UpdateFileProgress> lastApplicationUpdateDiff = getLastApplicationUpdateDiff(applicationId, system, fromVersion, preview);
+        return lastApplicationUpdateDiff.stream().filter(f -> f.getTargetType() != TargetType.LAUNCHER).collect(Collectors.toList());
+    }
 
     public List<UpdateFileProgress> getLastApplicationUpdateDiff(String applicationId, SystemType system, String fromVersion, boolean preview) {
         VersionInfo fromVersionInfo = VersionInfo.parse(fromVersion);

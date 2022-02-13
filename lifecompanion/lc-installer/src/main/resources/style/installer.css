@@ -13,6 +13,14 @@
     -fx-font-size: 10px;
 }
 
+.label-license {
+    -fx-font-family: 'monospace';
+    -fx-font-size: 11px;
+    -fx-background-color: white;
+    -fx-wrap-text: true;
+    -fx-text-fill: dimgrey;
+}
+
 .error-label {
     -fx-text-fill: darkred;
 	-fx-font-weight: bold;

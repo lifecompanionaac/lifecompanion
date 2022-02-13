@@ -48,6 +48,9 @@ public class ApplicationUpdateController {
     public static final Route finish = (request, response) ->
             ApplicationUpdateService.INSTANCE.finishApplicationUpdate(fromJson(request.body(), FinishApplicationUpdateDto.class));
 
+    public static final Route getLastApplicationUpdateDiffOld = (request, response) -> toJson(ApplicationUpdateService.INSTANCE.getLastApplicationUpdateDiffOld(request.params("application"),
+            SystemType.valueOf(request.params("system")), request.params("fromVersion"), Boolean.parseBoolean(request.params("preview"))));
+
     public static final Route getLastApplicationUpdateDiff = (request, response) -> toJson(ApplicationUpdateService.INSTANCE.getLastApplicationUpdateDiff(request.params("application"),
             SystemType.valueOf(request.params("system")), request.params("fromVersion"), Boolean.parseBoolean(request.params("preview"))));
 

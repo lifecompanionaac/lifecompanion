@@ -37,10 +37,7 @@ import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.framework.utils.FluentHashMap;
 import org.lifecompanion.installer.ui.InstallerUIConfiguration;
 import org.lifecompanion.installer.ui.model.InstallerStep;
-import org.lifecompanion.installer.ui.model.step.ConfigStep;
-import org.lifecompanion.installer.ui.model.step.FinishedStep;
-import org.lifecompanion.installer.ui.model.step.InitialStep;
-import org.lifecompanion.installer.ui.model.step.InstallationStep;
+import org.lifecompanion.installer.ui.model.step.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -79,7 +76,7 @@ public enum InstallerManager {
 
     InstallerManager() {
         configuration = new InstallerUIConfiguration();
-        steps = new InstallerStep[]{new InitialStep(), new ConfigStep(), new InstallationStep(), new FinishedStep()};
+        steps = new InstallerStep[]{new InitialStep(), new LicenseStep(), new ConfigStep(), new InstallationStep(), new FinishedStep()};
         this.currentStep = new SimpleObjectProperty<>();
         this.executorService = Executors.newSingleThreadExecutor();
         buildProperties = ApplicationBuildProperties.load(this.getClass().getResourceAsStream("/installer.properties"));

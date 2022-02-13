@@ -71,7 +71,6 @@ public class InstallerApp extends Application {
                 InstallerManager.INSTANCE.getBuildProperties().getBuildDate(),
                 InstallerManager.INSTANCE.getBuildProperties().getAppId(),
                 args);
-        //TODO : should analyse args (as path to EXE on Windows to install default plugins > generate classpath config + download JAR)
         launch(args);
     }
 

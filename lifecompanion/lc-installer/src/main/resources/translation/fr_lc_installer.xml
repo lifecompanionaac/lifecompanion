@@ -24,7 +24,7 @@
 	</text>
 	<text key="lc.installer.checking.internet.connection">Vérification de la connexion internet...</text>
 	<text key="lc.installer.step.config.explain.text">Sélectionnez les paramètres d'installation de
-		LifeCompanion, ou laissez ceux par défaut.
+		LifeCompanion, ou laissez ceux par défaut (conseillé).
 	</text>
 
 	<text key="lc.installer.installation.result.success">Installation de LifeCompanion terminée</text>
@@ -73,6 +73,10 @@
 	<text key="lc.installer.task.installing.progress.detail.file.desktop.shortcut">Création du raccourci bureau</text>
 	<text key="lc.installer.task.installing.progress.detail.file.menu.shortcut">Création des entrées dans les menus
 	</text>
+
+	<text key="lc.installer.step.license.label.explain.title">Licence de LifeCompanion</text>
+	<text key="lc.installer.step.license.label.explain.text">LifeCompanion est publié gratuitement sous licence GNU General Public License v3.0, vous devez accepter les conditions de celle-ci avant d'installer et d'utiliser LifeCompanion.</text>
+	<text key="lc.installer.step.license.accept">Accepter les conditions de la licence</text>
 
 	<text key="lc.installer.file.association.config">Fichier de configuration LifeCompanion</text>
 	<text key="lc.installer.file.association.profile">Fichier de profil LifeCompanion</text>

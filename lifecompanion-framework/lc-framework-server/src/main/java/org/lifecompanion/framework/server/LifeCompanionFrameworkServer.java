@@ -98,7 +98,8 @@ public class LifeCompanionFrameworkServer {
             get("/installer/:application/:system/:preview", ApplicationInstallerController.downloadFromWeb);
 
             get("/get-last-application-update/:application/:preview", ApplicationUpdateController.getLastApplicationUpdate);
-            get("/get-last-update-diff/:application/:system/:fromVersion/:preview", ApplicationUpdateController.getLastApplicationUpdateDiff);
+            get("/get-last-update-diff/:application/:system/:fromVersion/:preview", ApplicationUpdateController.getLastApplicationUpdateDiffOld);
+            get("/v2/get-last-update-diff/:application/:system/:fromVersion/:preview", ApplicationUpdateController.getLastApplicationUpdateDiff);
             get("/get-application-file-url/:id", ApplicationUpdateController.getApplicationFileDownloadUrl);
             get("/download-file/*", ApplicationUpdateController.downloadFile); // this URL is only useful with a local file storage service
             post("/add-update-stat", ApplicationUpdateController.addUpdateDoneStat);
