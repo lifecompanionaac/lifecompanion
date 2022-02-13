@@ -26,7 +26,7 @@ mainClassName = "org.lifecompanion.LifeCompanion"
 ext {
     devCpArg = System.getenv('org.lifecompanion.dev.cp.arg') != null && !System.getenv('org.lifecompanion.dev.cp.arg').isBlank() ? System.getenv('org.lifecompanion.dev.cp.arg') : '/null'
     sharedJvmArgAppTest = [
-            '-Dglass.win.uiScale=100%',
+            '-Dglass.win.uiScale=100%', //FIXME : test if previous bug with uiScale are still here...
 
             // Splash screen
             '-splash:data/lifecompanion_splashscreen.png',
@@ -66,30 +66,44 @@ application {
 }
 
 dependencies {
+    // Logging
     implementation 'ch.qos.logback:logback-classic:1.3.0-alpha4'
+
+    // LifeCompanion framework
     api 'org.lifecompanion:lc-framework-commons-fx:1.0.0'
     api 'org.lifecompanion:lc-framework-client:1.0.0'
 
-    api 'org.fxmisc.easybind:easybind:1.0.3'
+    // For char predictor
     api 'net.sf.trove4j:trove4j:3.0.3'
+
+    // Reflection tool (to detect use action, event, etc.. implementation)
     api 'io.github.classgraph:classgraph:4.8.72'
+
+    // Word prediction
     api ('io.github.mthebaud:predict4all:1.2.0'){
         exclude group: 'com.google.code.gson', module: 'gson'
     }
+
+    // Used to communication with Windows AutoHotKey server (useful for global keyboard events)
     api 'com.sparkjava:spark-core:2.9.3'
 
+    // FX Controls
     api ('org.controlsfx:controlsfx:11.0.1') {
         exclude group: 'org.openjfx'
     }
+    // Binding helper
+    api 'org.fxmisc.easybind:easybind:1.0.3'
 
+    // Create Windows shortcuts for configuration
     api 'com.github.vatbub:mslinks:1.0.5'
 
+    // Configuration export in PDF
     api 'org.apache.pdfbox:pdfbox:2.0.22'
 
-    // Fix found https://github.com/sarxos/webcam-capture/issues/586 until there is a Java9+ release
+    // Select picture with camera
+    // Use our own brij implementation (fix found https://github.com/sarxos/webcam-capture/issues/586 until there is a Java9+ release)
     api 'com.github.lifecompanionaac:BridJ:1.1.0'
     api('com.github.sarxos:webcam-capture:0.3.12') {
-        // The exclude is necessary so we don't have 2 versions of the same packages
         exclude group: 'com.nativelibs4java', module: 'bridj'
         exclude group: 'ch.qos.logback'
     }
