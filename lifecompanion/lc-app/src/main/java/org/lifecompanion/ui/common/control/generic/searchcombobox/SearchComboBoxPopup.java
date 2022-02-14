@@ -33,6 +33,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Popup;
 import javafx.stage.Window;
 import org.controlsfx.control.textfield.TextFields;
+import org.lifecompanion.controller.systemvk.SystemVirtualKeyboardController;
 import org.lifecompanion.util.ThreadUtils;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.framework.commons.translation.Translation;
@@ -84,6 +85,8 @@ public class SearchComboBoxPopup<T> extends Popup implements LCViewInitHelper {
 
         content.getChildren().addAll(fieldSearch, listView);
         this.getContent().add(content);
+
+        SystemVirtualKeyboardController.INSTANCE.registerScene(this.getScene());
     }
 
     @Override
@@ -101,6 +104,7 @@ public class SearchComboBoxPopup<T> extends Popup implements LCViewInitHelper {
         this.setOnHidden(e -> {
             setItems(null);
             fieldSearch.clear();
+            SystemVirtualKeyboardController.INSTANCE.unregisterScene(this.getScene());
         });
     }
 

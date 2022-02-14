@@ -83,7 +83,7 @@ public enum SystemVirtualKeyboardController {
         if (dialog != null && dialog.getDialogPane() != null && dialog.getDialogPane().getScene() != null) {
             final Scene scene = dialog.getDialogPane().getScene();
             registerScene(scene);
-            dialog.setOnHidden(e -> unregisterScene(scene));
+            dialog.setOnHidden(e -> unregisterScene(scene));// FIXME : some callers would like to use "onHidden" ?
         }
     }
 

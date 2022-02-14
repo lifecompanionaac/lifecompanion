@@ -147,7 +147,7 @@ public class GridComponentSelectionModeRibbonPart extends RibbonBasePart<Selecti
             configStageDialogPane.getDialogPane().getStylesheets().addAll(LCConstant.CSS_STYLE_PATH);
             configStageDialogPane.getDialogPane().getStyleClass().addAll("selection-mode-config-dialog");
             configStageDialogPane.setWidth(DIALOG_WIDTH);
-            configStageDialogPane.setWidth(DIALOG_HEIGHT);
+            configStageDialogPane.setHeight(DIALOG_HEIGHT);
 
             configStageAnimatedBorderPane = new AnimatedBorderPane();
             configStageDialogPane.getDialogPane().setContent(configStageAnimatedBorderPane);
