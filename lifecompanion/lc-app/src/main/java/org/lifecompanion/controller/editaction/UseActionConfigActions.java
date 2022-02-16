@@ -19,7 +19,6 @@
 package org.lifecompanion.controller.editaction;
 
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import org.lifecompanion.model.api.editaction.BaseEditActionI;
 import org.lifecompanion.model.api.editaction.UndoRedoActionI;
@@ -129,10 +128,11 @@ public class UseActionConfigActions {
                 }
             }
             if (notRemovedBecauseOfKeyOptionCount > 0) {
-                Alert dialog = DialogUtils.createAlert(source, AlertType.WARNING);
-                dialog.setHeaderText(Translation.getText("alert.message.disable.remove.action.header"));
-                dialog.setContentText(Translation.getText("alert.message.disable.remove.action.message", this.useAction.getName()));
-                dialog.show();
+                DialogUtils
+                        .alertWithSourceAndType(source, AlertType.WARNING)
+                        .withHeaderText(Translation.getText("alert.message.disable.remove.action.header"))
+                        .withContentText(Translation.getText("alert.message.disable.remove.action.message", this.useAction.getName()))
+                        .show();
             }
         }
 
@@ -240,10 +240,10 @@ public class UseActionConfigActions {
             if (this.useAction.allowedParent().isAssignableFrom(this.useActionManager.getActionParent().getClass())) {
                 this.useActionManager.componentActions().get(this.eventType).add(this.useAction);
             } else {
-                Alert dialog = DialogUtils.createAlert(source, AlertType.WARNING);
-                dialog.setHeaderText(Translation.getText("alert.message.invalid.action.parent.header"));
-                dialog.setContentText(Translation.getText("alert.message.invalid.action.parent.message", this.useAction.getName()));
-                dialog.show();
+                DialogUtils.alertWithSourceAndType(source, AlertType.WARNING)
+                        .withHeaderText(Translation.getText("alert.message.invalid.action.parent.header"))
+                        .withContentText(Translation.getText("alert.message.invalid.action.parent.message", this.useAction.getName()))
+                        .show();
             }
         }
 
@@ -288,10 +288,10 @@ public class UseActionConfigActions {
         public void doAction() throws LCException {
             //Check if action can be modified
             if (this.useAction.attachedToKeyOptionProperty().get()) {
-                Alert dialog = DialogUtils.createAlert(source, AlertType.WARNING);
-                dialog.setHeaderText(Translation.getText("alert.message.disable.remove.action.header"));
-                dialog.setContentText(Translation.getText("alert.message.disable.remove.action.message", this.useAction.getName()));
-                dialog.show();
+                DialogUtils
+                        .alertWithSourceAndType(source, AlertType.WARNING)
+                        .withHeaderText(Translation.getText("alert.message.disable.remove.action.header")).withContentText(Translation.getText("alert.message.disable.remove.action.message", this.useAction.getName()))
+                        .show();
             } else {
                 this.useActionManager.componentActions().get(this.eventType).remove(this.useAction);
             }

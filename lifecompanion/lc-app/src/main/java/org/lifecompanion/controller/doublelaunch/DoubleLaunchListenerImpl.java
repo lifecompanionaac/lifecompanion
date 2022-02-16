@@ -55,9 +55,8 @@ public class DoubleLaunchListenerImpl implements DoubleLaunchListener {
             timeLineAutoHide.setCycleCount(LCConstant.DOUBLE_LAUNCH_DISPLAY_DELAY);
 
             //When a double run is detected, show a dialog to user
-            Alert dialog = DialogUtils.createAlert(stage.getScene().getRoot(), AlertType.ERROR);
+            final Alert dialog = DialogUtils.alertWithSourceAndType(stage.getScene().getRoot(), AlertType.ERROR).withContentText(Translation.getText("double.run.detected.message")).build();
             dialog.headerTextProperty().bind(TranslationFX.getTextBinding("double.run.detected.header", timeLeft));
-            dialog.setContentText(Translation.getText("double.run.detected.message"));
             timeLineAutoHide.setOnFinished(e -> dialog.hide());
             timeLineAutoHide.play();
             dialog.show();

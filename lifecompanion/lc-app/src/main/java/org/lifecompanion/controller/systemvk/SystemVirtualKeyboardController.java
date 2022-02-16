@@ -32,6 +32,7 @@ import org.lifecompanion.controller.userconfiguration.UserConfigurationControlle
 import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.framework.utils.FluentHashMap;
 import org.lifecompanion.framework.utils.LCNamedThreadFactory;
+import org.lifecompanion.util.binding.Unbindable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -79,12 +80,13 @@ public enum SystemVirtualKeyboardController {
 
     // PUBLIC API
     //========================================================================
-    public void registerSceneFromDialog(Dialog<?> dialog) {
+    public Unbindable registerSceneFromDialog(Dialog<?> dialog) {
         if (dialog != null && dialog.getDialogPane() != null && dialog.getDialogPane().getScene() != null) {
             final Scene scene = dialog.getDialogPane().getScene();
             registerScene(scene);
-            dialog.setOnHidden(e -> unregisterScene(scene));// FIXME : some callers would like to use "onHidden" ?
+            return () -> unregisterScene(scene);
         }
+        return null;
     }
 
     public void registerScene(Scene scene) {

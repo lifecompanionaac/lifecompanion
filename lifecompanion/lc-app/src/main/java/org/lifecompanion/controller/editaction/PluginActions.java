@@ -19,10 +19,7 @@
 package org.lifecompanion.controller.editaction;
 
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import org.lifecompanion.model.api.editaction.BaseEditActionI;
 import org.lifecompanion.model.impl.exception.LCException;
@@ -48,8 +45,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.Optional;
+import java.util.List;
 
 /**
  * Class that keep actions relative to plugins.
@@ -64,12 +60,12 @@ public class PluginActions {
 
     private static void showAddPluginWarningDialog(Node source) {
         if (!DevModeController.INSTANCE.devModeProperty().get() && firstAdd) {
-            Alert warningDialog = DialogUtils.createAlert(source, Alert.AlertType.WARNING);
-            warningDialog.getButtonTypes().clear();
-            warningDialog.setHeaderText(Translation.getText("add.plugin.warning.dialog.header"));
-            warningDialog.setContentText(Translation.getText("add.plugin.warning.dialog.message"));
-            warningDialog.getButtonTypes().add(new ButtonType(Translation.getText("add.plugin.warning.dialog.ok.button"), ButtonBar.ButtonData.OK_DONE));
-            warningDialog.showAndWait();
+            DialogUtils
+                    .alertWithSourceAndType(source, Alert.AlertType.WARNING)
+                    .withHeaderText(Translation.getText("add.plugin.warning.dialog.header"))
+                    .withContentText(Translation.getText("add.plugin.warning.dialog.message"))
+                    .withButtonTypes((new ButtonType(Translation.getText("add.plugin.warning.dialog.ok.button"), ButtonBar.ButtonData.OK_DONE)))
+                    .showAndWait();
             firstAdd = false;
         }
     }
@@ -77,10 +73,11 @@ public class PluginActions {
     private static void addPluginFromFile(Node source, File pluginFile) {
         try {
             String loadResult = PluginController.INSTANCE.tryToAddPluginFrom(pluginFile).getLeft();
-            Alert dialog = DialogUtils.createAlert(source, Alert.AlertType.INFORMATION);
-            dialog.setHeaderText(Translation.getText("plugin.loading.header.text.info"));
-            dialog.setContentText(loadResult);
-            dialog.show();
+            DialogUtils
+                    .alertWithSourceAndType(source, Alert.AlertType.INFORMATION)
+                    .withHeaderText(Translation.getText("plugin.loading.header.text.info"))
+                    .withContentText(loadResult)
+                    .show();
         } catch (Throwable t) {
             PluginActions.LOGGER.error("Error while loading plugin {}", pluginFile, t);
             ErrorHandlingController.INSTANCE.showErrorNotificationWithExceptionDetails(Translation.getText("plugin.error.unknown.error", pluginFile.getName()), t);
@@ -99,7 +96,7 @@ public class PluginActions {
         public void doAction() throws LCException {
             showAddPluginWarningDialog(source);
             FileChooser pluginFileChooser = LCFileChoosers.getOtherFileChooser(Translation.getText("add.plugin.chooser.title"),
-                    new FileChooser.ExtensionFilter(Translation.getText("file.type.plugin.jar"), Arrays.asList("*.jar")), FileChooserType.PLUGIN_ADD);
+                    new FileChooser.ExtensionFilter(Translation.getText("file.type.plugin.jar"), List.of("*.jar")), FileChooserType.PLUGIN_ADD);
             File selectedPluginFile = pluginFileChooser.showOpenDialog(FXUtils.getSourceWindow(source));
             if (selectedPluginFile != null) {
                 LCStateController.INSTANCE.updateDefaultDirectory(FileChooserType.PLUGIN_ADD, selectedPluginFile.getParentFile());
@@ -125,10 +122,12 @@ public class PluginActions {
         @Override
         public void doAction() throws LCException {
             showAddPluginWarningDialog(source);
-            TextInputDialog inputDialog = DialogUtils.createInputDialog(source, "");
-            inputDialog.setHeaderText(Translation.getText("plugin.installation.dialog.selection.header"));
-            inputDialog.setContentText(Translation.getText("plugin.installation.dialog.selection.message"));
-            inputDialog.showAndWait().ifPresent(pluginId -> {
+            final String pluginId = DialogUtils
+                    .textInputDialogWithSource(source)
+                    .withHeaderText(Translation.getText("plugin.installation.dialog.selection.header"))
+                    .withContentText(Translation.getText("plugin.installation.dialog.selection.message"))
+                    .showAndWait();
+            if (StringUtils.isNotBlank(pluginId)) {
                 DownloadPluginTask pluginDownloadTask = InstallationController.INSTANCE.createPluginDownloadTask(StringUtils.stripToEmpty(pluginId));
                 pluginDownloadTask.setOnSucceeded(result -> {
                     Pair<ApplicationPluginUpdate, File> downloaded = pluginDownloadTask.getValue();
@@ -139,7 +138,7 @@ public class PluginActions {
                     }
                 });
                 AsyncExecutorController.INSTANCE.addAndExecute(true, false, pluginDownloadTask);
-            });
+            }
         }
 
         @Override
@@ -159,15 +158,10 @@ public class PluginActions {
 
         @Override
         public void doAction() throws LCException {
-            // Confirm
-            Alert dlg = DialogUtils.createAlert(source, Alert.AlertType.CONFIRMATION);
-            dlg.getDialogPane().setHeaderText(Translation.getText("action.delete.plugin.confirm.header"));
-
-            StringBuilder sb = new StringBuilder();
-            sb.append(Translation.getText("action.delete.plugin.confirm.message", pluginInfo.getPluginName()));
-            dlg.getDialogPane().setContentText(sb.toString());
-            Optional<ButtonType> returned = dlg.showAndWait();
-            if (returned.get() != ButtonType.OK) {
+            if (DialogUtils.alertWithSourceAndType(source, Alert.AlertType.CONFIRMATION)
+                    .withHeaderText(Translation.getText("action.delete.plugin.confirm.header"))
+                    .withContentText(Translation.getText("action.delete.plugin.confirm.message", pluginInfo.getPluginName()))
+                    .showAndWait() != ButtonType.OK) {
                 return;
             }
             // Delete it
@@ -188,14 +182,14 @@ public class PluginActions {
             try {
                 String errorMessage = checkElementPluginTask.get();
                 if (errorMessage != null) {
-                    Alert dlg = DialogUtils.createAlert(source, Alert.AlertType.WARNING);
-                    dlg.setHeaderText(Translation.getText("configuration.warning.plugin.message.header"));
-                    dlg.setContentText(Translation.getText("configuration.warning.plugin.message") + errorMessage);
                     ButtonType typeCancel = new ButtonType(Translation.getText("button.type.cancel"), ButtonBar.ButtonData.CANCEL_CLOSE);
                     ButtonType typeContinueAnyway = new ButtonType(Translation.getText("button.type.continue.anyway"), ButtonBar.ButtonData.YES);
-                    dlg.getButtonTypes().setAll(typeCancel, typeContinueAnyway);
-                    Optional<ButtonType> buttonType = dlg.showAndWait();
-                    if (buttonType.orElse(null) != typeContinueAnyway) {
+                    ButtonType result = DialogUtils.alertWithSourceAndType(source, Alert.AlertType.WARNING)
+                            .withHeaderText(Translation.getText("configuration.warning.plugin.message.header"))
+                            .withContentText(Translation.getText("configuration.warning.plugin.message") + errorMessage)
+                            .withButtonTypes(typeCancel, typeContinueAnyway)
+                            .showAndWait();
+                    if (result != typeContinueAnyway) {
                         return;
                     }
                 }

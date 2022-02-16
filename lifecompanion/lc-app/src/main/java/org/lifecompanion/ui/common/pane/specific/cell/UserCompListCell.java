@@ -72,7 +72,7 @@ public class UserCompListCell extends ListCell<UserCompDescriptionI> {
         this.labelName.setWrapText(true);
         this.labelName.setTextAlignment(TextAlignment.CENTER);
         this.labelName.setAlignment(Pos.CENTER);
-        this.labelName.getStyleClass().addAll("text-h4","text-fill-dimgrey");
+        this.labelName.getStyleClass().addAll("text-h4", "text-fill-dimgrey");
 
         this.tooltip = FXControlUtils.createTooltip(Translation.getText("tooltip.explain.user.comp.add"));
 
@@ -129,10 +129,11 @@ public class UserCompListCell extends ListCell<UserCompDescriptionI> {
                                     sb.append(Translation.getText("user.comp.loading.failed.message.start"));
                                     sb.append(error.getClass().getSimpleName()).append(" : ").append(error.getMessage());
                                 }
-                                Alert dlg = DialogUtils.createAlert(this, AlertType.ERROR);
-                                dlg.setHeaderText(Translation.getText("user.comp.loading.failed.header"));
-                                dlg.getDialogPane().setContentText(sb.toString());
-                                dlg.show();
+                                DialogUtils
+                                        .alertWithSourceAndType(this, AlertType.ERROR)
+                                        .withHeaderText(Translation.getText("user.comp.loading.failed.header"))
+                                        .withContentText(sb.toString())
+                                        .show();
                             });
                             AsyncExecutorController.INSTANCE.addAndExecute(false, false, loadTask);
                         });

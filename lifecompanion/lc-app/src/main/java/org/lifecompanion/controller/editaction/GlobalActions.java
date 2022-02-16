@@ -51,7 +51,6 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
-import java.util.Optional;
 
 import static org.lifecompanion.util.javafx.FXUtils.getSourceFromEvent;
 
@@ -178,15 +177,17 @@ public class GlobalActions {
             if (AppModeController.INSTANCE.getEditModeContext().getConfiguration() != null) {
                 int unsaved = AppModeController.INSTANCE.getEditModeContext().getConfigurationUnsavedAction();
                 if (unsaved > 0) {
-                    Alert dlg = DialogUtils.createAlert(source, Alert.AlertType.CONFIRMATION);
                     ButtonType typeYes = new ButtonType(Translation.getText("button.type.save.and.then", Translation.getText(thenButtonNameId)), ButtonBar.ButtonData.YES);
                     ButtonType typeNo = new ButtonType(Translation.getText("button.type.then.only", StringUtils.capitalize(Translation.getText(thenButtonNameId))), ButtonBar.ButtonData.NO);
                     ButtonType typeCancel = new ButtonType(Translation.getText("button.type.cancel"), ButtonBar.ButtonData.CANCEL_CLOSE);
-                    dlg.getDialogPane().setContentText(Translation.getText("save.and.then.message.first.part", unsaved, message));
-                    dlg.getDialogPane().setHeaderText(Translation.getText("save.and.then.header"));
-                    dlg.getButtonTypes().setAll(typeNo, typeYes, typeCancel);
-                    Optional<ButtonType> returned = dlg.showAndWait();
-                    if (returned.get() == typeYes) {
+
+                    final ButtonType result = DialogUtils
+                            .alertWithSourceAndType(source, Alert.AlertType.CONFIRMATION)
+                            .withContentText(Translation.getText("save.and.then.message.first.part", unsaved, message))
+                            .withHeaderText(Translation.getText("save.and.then.header"))
+                            .withButtonTypes(typeNo, typeYes, typeCancel)
+                            .showAndWait();
+                    if (result == typeYes) {
                         LCConfigurationActions.SaveAction saveAction = new LCConfigurationActions.SaveAction(source, success -> {
                             if (success) {
                                 try {
@@ -198,7 +199,7 @@ public class GlobalActions {
                         });
                         saveAction.doAction();
                         return;
-                    } else if (returned.get() != typeNo) {
+                    } else if (result != typeNo) {
                         return;
                     }
                 }

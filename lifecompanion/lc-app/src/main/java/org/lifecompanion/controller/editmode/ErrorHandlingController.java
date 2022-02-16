@@ -22,7 +22,6 @@ package org.lifecompanion.controller.editmode;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
-import javafx.scene.control.DialogEvent;
 import org.controlsfx.dialog.ExceptionDialog;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.lifecycle.LCStateListener;
@@ -49,7 +48,7 @@ public enum ErrorHandlingController implements LCStateListener {
 
     private int displayedErrorNotificationCount;
 
-    private final EventHandler<DialogEvent> DECREASE_ERROR_DIALOG_COUNT_HANDLER = e -> displayedErrorDialogCount--;
+    private final Runnable DECREASE_ERROR_DIALOG_COUNT_HANDLER = () -> displayedErrorDialogCount--;
 
     // STATE LISTENER
     //========================================================================
@@ -92,17 +91,19 @@ public enum ErrorHandlingController implements LCStateListener {
                 this.displayedErrorDialogCount++;
                 if (cause instanceof LCException) {
                     LCException lcE = (LCException) cause;
-                    Alert dlg = DialogUtils.createAlert(StageUtils.getEditOrUseStageVisible(), Alert.AlertType.ERROR);
-                    dlg.getDialogPane().setContentText(lcE.getUserMessage());
-                    dlg.getDialogPane().setHeaderText(lcE.getUserHeader() != null ? lcE.getUserHeader() : Translation.getText("exception.dialog.generic.error.header"));
-                    dlg.setOnHidden(DECREASE_ERROR_DIALOG_COUNT_HANDLER);
-                    dlg.show();
+                    DialogUtils
+                            .alertWithSourceAndType(StageUtils.getEditOrUseStageVisible(), Alert.AlertType.ERROR)
+                            .withContentText(lcE.getUserMessage())
+                            .withHeaderText(lcE.getUserHeader() != null ? lcE.getUserHeader() : Translation.getText("exception.dialog.generic.error.header"))
+                            .withOnHidden(DECREASE_ERROR_DIALOG_COUNT_HANDLER)
+                            .show();
                 } else {
+                    // TODO : call apply configuration from DialogUtils (and create custom Exception Dialog)
                     ExceptionDialog dialog = new ExceptionDialog(cause);
                     dialog.initOwner(StageUtils.getEditOrUseStageVisible());
-                    dialog.titleProperty().set(Translation.getText("unknown.error.on.fx.thread.title"));
+                    dialog.setTitle(Translation.getText("unknown.error.on.fx.thread.title"));
                     dialog.setHeaderText(Translation.getText("unknown.error.on.fx.thread.message"));
-                    dialog.setOnHidden(DECREASE_ERROR_DIALOG_COUNT_HANDLER);
+                    dialog.setOnHidden(e -> DECREASE_ERROR_DIALOG_COUNT_HANDLER.run());
                     dialog.show();
                 }
             } else {

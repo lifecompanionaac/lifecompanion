@@ -19,7 +19,6 @@
 package org.lifecompanion.controller.editaction;
 
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
@@ -42,7 +41,6 @@ import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Class that contains all actions related to {@link UserCompDescriptionI}
@@ -109,11 +107,11 @@ public class UserCompActions {
 
         @Override
         public void doAction() throws LCException {
-            Alert dlg = DialogUtils.createAlert(source, AlertType.CONFIRMATION);
-            dlg.getDialogPane().setContentText(Translation.getText("action.remove.user.comp.message", this.compToDelete.size()));
-            dlg.getDialogPane().setHeaderText(Translation.getText("action.remove.user.comp.header"));
-            Optional<ButtonType> returned = dlg.showAndWait();
-            if (returned.get() == ButtonType.OK) {
+            if (DialogUtils
+                    .alertWithSourceAndType(source, AlertType.CONFIRMATION)
+                    .withHeaderText(Translation.getText("action.remove.user.comp.header"))
+                    .withContentText(Translation.getText("action.remove.user.comp.message", this.compToDelete.size()))
+                    .showAndWait() == ButtonType.OK) {
                 LCProfileI profile = ProfileController.INSTANCE.currentProfileProperty().get();
                 //First, delete from list
                 FXThreadUtils.runOnFXThread(() -> {
@@ -151,15 +149,14 @@ public class UserCompActions {
             if (EditUserCompAction.editView == null) {
                 EditUserCompAction.editView = new UserCompEditView();
             }
-            Alert dlg = DialogUtils.createAlert(source, AlertType.NONE);
-            dlg.getDialogPane().setContent(EditUserCompAction.editView);
             ButtonType buttonTypeSave = new ButtonType(Translation.getText("user.comp.save.button"), ButtonData.YES);
             ButtonType buttonTypeCancel = new ButtonType(Translation.getText("user.comp.cancel.button"), ButtonData.CANCEL_CLOSE);
-            dlg.setHeaderText(Translation.getText("user.comp.edit.view.header"));
-            dlg.getDialogPane().getButtonTypes().addAll(buttonTypeCancel, buttonTypeSave);
             EditUserCompAction.editView.bind(this.userComp);
-            Optional<ButtonType> returned = dlg.showAndWait();
-            if (returned.get() == buttonTypeSave) {
+            if (DialogUtils
+                    .alertWithSourceAndType(source, AlertType.NONE)
+                    .withContent(EditUserCompAction.editView)
+                    .withHeaderText(Translation.getText("user.comp.edit.view.header"))
+                    .withButtonTypes(buttonTypeCancel, buttonTypeSave).showAndWait() == buttonTypeSave) {
                 EditUserCompAction.editView.unbind(this.userComp);//Unbind save info.
                 UserCompActions.saveUserComp(this.userComp);
             }

@@ -56,7 +56,6 @@ import org.slf4j.LoggerFactory;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 public class GeneralConfigurationScene extends Scene implements LCViewInitHelper {
@@ -209,11 +208,11 @@ public class GeneralConfigurationScene extends Scene implements LCViewInitHelper
 
     void cancelSelected(Node source) {
         if (this.shouldCancelBeConfirmed()) {
-            Alert dlg = DialogUtils.createAlert(source, Alert.AlertType.CONFIRMATION);
-            dlg.getDialogPane().setContentText(Translation.getText("general.config.scene.cancel.warning.message"));
-            dlg.getDialogPane().setHeaderText(Translation.getText("general.config.scene.cancel.warning.header"));
-            Optional<ButtonType> returned = dlg.showAndWait();
-            if (returned.get() != ButtonType.OK) {
+            if (DialogUtils
+                    .alertWithSourceAndType(source, Alert.AlertType.CONFIRMATION)
+                    .withContentText(Translation.getText("general.config.scene.cancel.warning.message"))
+                    .withHeaderText(Translation.getText("general.config.scene.cancel.warning.header"))
+                    .showAndWait() != ButtonType.OK) {
                 return;
             }
         }

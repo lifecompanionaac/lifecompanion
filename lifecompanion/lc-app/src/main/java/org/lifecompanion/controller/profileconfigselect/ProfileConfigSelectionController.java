@@ -37,7 +37,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 /**
@@ -134,11 +133,11 @@ public enum ProfileConfigSelectionController {
     //========================================================================
     public boolean showNoProfileWarning(Node source) {
         if (ProfileController.INSTANCE.currentProfileProperty().get() == null) {
-            Alert dlg = DialogUtils.createAlert(source, Alert.AlertType.CONFIRMATION);
-            dlg.setHeaderText(Translation.getText("profile.alert.no.selected.header"));
-            dlg.setContentText(Translation.getText("profile.alert.no.selected.message"));
-            Optional<ButtonType> result = dlg.showAndWait();
-            if (result.get() == ButtonType.OK) {
+            if (DialogUtils
+                    .alertWithSourceAndType(source, Alert.AlertType.CONFIRMATION)
+                    .withHeaderText(Translation.getText("profile.alert.no.selected.header"))
+                    .withContentText(Translation.getText("profile.alert.no.selected.message"))
+                    .showAndWait() == ButtonType.OK) {
                 ProfileConfigSelectionController.INSTANCE.hideStage();
                 Platform.exit();
             } else {

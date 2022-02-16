@@ -21,6 +21,7 @@ package org.lifecompanion.util.javafx;
 
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.Region;
@@ -31,35 +32,20 @@ import org.lifecompanion.controller.systemvk.SystemVirtualKeyboardController;
 import org.lifecompanion.model.impl.constant.LCConstant;
 
 public class DialogUtils {
-    public static TextInputDialog createInputDialog(Node source, final String defaultValue) {
-        return createInputDialog(FXUtils.getSourceWindow(source), defaultValue);
+
+    public static AbstractAlertBuilder.TextInputDialogBuilder textInputDialogWithSource(Window window) {
+        return new AbstractAlertBuilder.TextInputDialogBuilder(window);
     }
 
-    public static TextInputDialog createInputDialog(Window window, final String defaultValue) {
-        TextInputDialog dialog = new TextInputDialog(defaultValue);
-        setDialogIcon(dialog);
-        dialog.setTitle(LCConstant.NAME);
-        dialog.initOwner(window);
-        SystemVirtualKeyboardController.INSTANCE.registerSceneFromDialog(dialog);
-        return dialog;
+    public static AbstractAlertBuilder.TextInputDialogBuilder textInputDialogWithSource(Node source) {
+        return new AbstractAlertBuilder.TextInputDialogBuilder(FXUtils.getSourceWindow(source));
     }
 
-    public static Alert createAlert(Node source, final Alert.AlertType type) {
-        return createAlert(FXUtils.getSourceWindow(source), type);
+    public static AbstractAlertBuilder.AlertBuilder alertWithSourceAndType(Window owner, Alert.AlertType type) {
+        return new AbstractAlertBuilder.AlertBuilder(owner, type);
     }
 
-    public static Alert createAlert(Window window, final Alert.AlertType type) {
-        Alert dlg = new Alert(type);
-        setDialogIcon(dlg);
-        dlg.setTitle(LCConstant.NAME);
-        dlg.initOwner(window);
-        dlg.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
-        SystemVirtualKeyboardController.INSTANCE.registerSceneFromDialog(dlg);
-        return dlg;
-    }
-
-    private static void setDialogIcon(final Dialog<?> dialog) {
-        Stage ownerWindow = (Stage) dialog.getDialogPane().getScene().getWindow();
-        ownerWindow.getIcons().add(IconHelper.get(LCConstant.LC_ICON_PATH));
+    public static AbstractAlertBuilder.AlertBuilder alertWithSourceAndType(Node source, Alert.AlertType type) {
+        return new AbstractAlertBuilder.AlertBuilder(FXUtils.getSourceWindow(source), type);
     }
 }

@@ -26,7 +26,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
@@ -69,7 +68,6 @@ import org.slf4j.LoggerFactory;
 import java.awt.*;
 import java.io.File;
 import java.util.Date;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 import static org.lifecompanion.util.javafx.FXUtils.getSourceFromEvent;
@@ -279,28 +277,28 @@ public class LCConfigurationActions {
         @Override
         public void doAction() throws LCException {
             LCConfigurationI configuration = AppModeController.INSTANCE.getEditModeContext().configurationProperty().get();
+            LCProfileI currentProfile = ProfileController.INSTANCE.currentProfileProperty().get();
 
             //Check if the configuration description exist, and create when needed
             // FIXME : this will not happen now that the create view had been uniformized
-            LCProfileI currentProfile = ProfileController.INSTANCE.currentProfileProperty().get();
-            if (currentProfile.getConfigurationById(configuration.getID()) == null) {
-                //Ask for name
-                TextInputDialog dialog = DialogUtils.createInputDialog(source, Translation.getText("action.save.config.default.name"));
-                dialog.setHeaderText(Translation.getText("action.save.config.dialog.header"));
-                dialog.setContentText(Translation.getText("action.save.config.dialog.message"));
-
-                // Get the name
-                Optional<String> result = dialog.showAndWait();
-                if (result.isPresent()) {
-                    LCConfigurationDescriptionI configDescription = LCConfigurationActions.createConfigurationForCurrentProfile();
-                    configDescription.loadedConfigurationProperty().set(configuration);
-                    configDescription.configurationNameProperty().set(result.get());
-                    currentProfile.getConfiguration().add(configDescription);
-                    AppModeController.INSTANCE.switchEditModeConfiguration(configuration, configDescription);
-                } else {
-                    return;
-                }
-            }
+            //            if (currentProfile.getConfigurationById(configuration.getID()) == null) {
+            //                //Ask for name
+            //                TextInputDialog dialog = DialogUtils.createInputDialog(source, Translation.getText("action.save.config.default.name"));
+            //                dialog.setHeaderText(Translation.getText("action.save.config.dialog.header"));
+            //                dialog.setContentText(Translation.getText("action.save.config.dialog.message"));
+            //
+            //                // Get the name
+            //                Optional<String> result = dialog.showAndWait();
+            //                if (result.isPresent()) {
+            //                    LCConfigurationDescriptionI configDescription = LCConfigurationActions.createConfigurationForCurrentProfile();
+            //                    configDescription.loadedConfigurationProperty().set(configuration);
+            //                    configDescription.configurationNameProperty().set(result.get());
+            //                    currentProfile.getConfiguration().add(configDescription);
+            //                    AppModeController.INSTANCE.switchEditModeConfiguration(configuration, configDescription);
+            //                } else {
+            //                    return;
+            //                }
+            //            }
 
             //Create the task
             ConfigurationSavingTask saveConfigTask = IOHelper.createSaveConfigurationTask(configuration, currentProfile);
@@ -390,17 +388,15 @@ public class LCConfigurationActions {
 
         @Override
         public void doAction() throws LCException {
-            // Select a configuration to duplicate
-            Alert dialog = DialogUtils.createAlert(source, Alert.AlertType.NONE);
-            dialog.setHeaderText(Translation.getText("config.duplicate.question.select.config"));
             ConfigurationSelectorControl configurationSelectorControl = new ConfigurationSelectorControl(Translation.getText("config.duplicate.field.config"));
             configurationSelectorControl.setPrefWidth(400.0);
-            dialog.getDialogPane().setContent(configurationSelectorControl);
             ButtonType typeCancel = new ButtonType(Translation.getText("button.type.cancel"), ButtonBar.ButtonData.CANCEL_CLOSE);
             ButtonType typeDuplicate = new ButtonType(Translation.getText("button.type.duplicate"), ButtonBar.ButtonData.YES);
-            dialog.getButtonTypes().setAll(typeCancel, typeDuplicate);
-            Optional<ButtonType> buttonType = dialog.showAndWait();
-            if (buttonType.get() == typeDuplicate) {
+            if (DialogUtils
+                    .alertWithSourceAndType(source, Alert.AlertType.NONE)
+                    .withHeaderText(Translation.getText("config.duplicate.question.select.config"))
+                    .withContent(configurationSelectorControl).withButtonTypes(typeCancel, typeDuplicate)
+                    .showAndWait() == typeDuplicate) {
                 LCConfigurationDescriptionI selectedConfigurationDescription = configurationSelectorControl.valueProperty().get();
                 if (selectedConfigurationDescription != null) {
                     // Duplicate selected configuration on profile
@@ -478,17 +474,18 @@ public class LCConfigurationActions {
                 ButtonType result;
 
                 if (previousConfigDescription != null) {
-                    Alert dlg = DialogUtils.createAlert(source, AlertType.WARNING);
-                    dlg.getDialogPane().setHeaderText(Translation.getText("action.import.existing.configuration.header", currentProfile.nameProperty().get()));
-                    dlg.getDialogPane().setContentText(Translation.getText("action.import.existing.configuration.message",
-                            previousConfigDescription.configurationNameProperty().get(),
-                            getLastModificationDateIn(previousConfigDescription),
-                            getLastModificationAuthorIn(previousConfigDescription),
-                            importedConfigurationDescription.configurationNameProperty().get(),
-                            getLastModificationDateIn(importedConfigurationDescription),
-                            getLastModificationAuthorIn(importedConfigurationDescription)
-                    ));
-                    dlg.getButtonTypes().setAll(typeReplacePrevious, typeKeepBoth, typeCancel);
+                    final Alert dlg = DialogUtils
+                            .alertWithSourceAndType(source, AlertType.WARNING)
+                            .withHeaderText(Translation.getText("action.import.existing.configuration.header", currentProfile.nameProperty().get()))
+                            .withContentText(Translation.getText("action.import.existing.configuration.message",
+                                    previousConfigDescription.configurationNameProperty().get(),
+                                    getLastModificationDateIn(previousConfigDescription),
+                                    getLastModificationAuthorIn(previousConfigDescription),
+                                    importedConfigurationDescription.configurationNameProperty().get(),
+                                    getLastModificationDateIn(importedConfigurationDescription),
+                                    getLastModificationAuthorIn(importedConfigurationDescription)
+                            )).withButtonTypes(typeReplacePrevious, typeKeepBoth, typeCancel)
+                            .build();
                     dlg.getDialogPane().lookupButton(typeKeepBoth).setDisable(true);
                     dlg.getDialogPane().lookupButton(typeReplacePrevious).setDisable(true);
 
@@ -793,12 +790,10 @@ public class LCConfigurationActions {
         public void doAction() throws LCException {
             if (this.askAndNotify) {
                 //Ask confirm
-                Alert dlg = DialogUtils.createAlert(source, AlertType.CONFIRMATION);
-                dlg.getDialogPane().setContentText(
-                        Translation.getText("action.remove.config.confirm.message", this.configDescription.configurationNameProperty().get()));
-                dlg.getDialogPane().setHeaderText(Translation.getText("action.remove.config.confirm.header"));
-                Optional<ButtonType> returned = dlg.showAndWait();
-                if (returned.get() != ButtonType.OK) {
+                if (DialogUtils.alertWithSourceAndType(source, AlertType.CONFIRMATION)
+                        .withContentText(Translation.getText("action.remove.config.confirm.message", this.configDescription.configurationNameProperty().get()))
+                        .withHeaderText(Translation.getText("action.remove.config.confirm.header"))
+                        .showAndWait() != ButtonType.OK) {
                     return;
                 }
             }

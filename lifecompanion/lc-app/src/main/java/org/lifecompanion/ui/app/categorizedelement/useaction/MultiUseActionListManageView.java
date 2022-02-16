@@ -22,7 +22,6 @@ import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import org.lifecompanion.model.api.editaction.BaseEditActionI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
@@ -135,10 +134,11 @@ public class MultiUseActionListManageView extends AbstractCategorizedListManageV
     protected boolean checkEditPossible(Node source, final BaseUseActionI<?> item) {
         // In the source list, search if this action type is bound to key option
         if (oneOfTheActionsHasKeyOptionAttached(item.getClass())) {
-            Alert dialog = DialogUtils.createAlert(source, AlertType.WARNING);
-            dialog.setHeaderText(Translation.getText("alert.message.disable.edit.action.header"));
-            dialog.setContentText(Translation.getText("alert.message.disable.edit.action.message", item.getName()));
-            dialog.show();
+            DialogUtils
+                    .alertWithSourceAndType(source, AlertType.WARNING)
+                    .withHeaderText(Translation.getText("alert.message.disable.edit.action.header"))
+                    .withContentText(Translation.getText("alert.message.disable.edit.action.message", item.getName()))
+                    .show();
             return false;
         }
         return true;

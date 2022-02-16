@@ -96,9 +96,11 @@ public class CommonActions {
                 //Generate a 1000 - 9999 code
                 Random random = new Random();
                 String number = "" + (random.nextInt(8999) + 1000);
-                TextInputDialog dialog = DialogUtils.createInputDialog(StageUtils.getEditOrUseStageVisible(), null);
+                final TextInputDialog dialog = DialogUtils
+                        .textInputDialogWithSource(StageUtils.getEditOrUseStageVisible())
+                        .withContentText(Translation.getText("action.confirm.go.config.message", number))
+                        .build();
                 dialog.headerTextProperty().bind(TranslationFX.getTextBinding("action.confirm.go.config.header", timeLeft));
-                dialog.setContentText(Translation.getText("action.confirm.go.config.message", number));
                 timeLineAutoHide.setOnFinished(e -> dialog.hide());
                 timeLineAutoHide.play();
                 SystemVirtualKeyboardController.INSTANCE.showIfEnabled();
@@ -107,9 +109,7 @@ public class CommonActions {
                 //Check code
                 if (enteredString.isEmpty() || StringUtils.isDifferent(enteredString.get(), number)) {
                     if (enteredString.isPresent()) {
-                        Alert warning = DialogUtils.createAlert(source, Alert.AlertType.ERROR);
-                        warning.setContentText(Translation.getText("action.confirm.go.config.error"));
-                        warning.show();
+                        DialogUtils.alertWithSourceAndType(source, Alert.AlertType.ERROR).withContentText(Translation.getText("action.confirm.go.config.error")).show();
                     }
                     return;
                 }

@@ -18,7 +18,6 @@
  */
 package org.lifecompanion.ui.app.generalconfiguration.step.predict4all;
 
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -47,6 +46,7 @@ import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.ui.common.pane.specific.cell.P4AWordListCell;
 import org.lifecompanion.util.javafx.DialogUtils;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.util.javafx.FXUtils;
 import org.lifecompanion.util.javafx.FXControlUtils;
 import org.lifecompanion.util.model.LCTask;
@@ -461,13 +461,11 @@ public class P4ADictionaryConfigurationView extends ScrollPane implements Genera
                     LOGGER.info("Modified factor for {} words, on a total of {} words", added, total);
                     if (showConfirm) {
                         final int addedF = added;
-                        Platform.runLater(() -> {
-                            Alert dialog = DialogUtils.createAlert(P4ADictionaryConfigurationView.this, Alert.AlertType.INFORMATION);
-                            dialog.setContentText(Translation.getText("predict4all.action.imported.success.title"));
-                            dialog.setContentText(Translation.getText(factor > 1.0 ? "predict4all.action.imported.success.prio.message"
-                                    : "predict4all.action.imported.success.deprio.message", addedF));
-                            dialog.show();
-                        });
+                        FXThreadUtils.runOnFXThread(() -> DialogUtils
+                                .alertWithSourceAndType(P4ADictionaryConfigurationView.this, Alert.AlertType.INFORMATION)
+                                .withHeaderText(Translation.getText("predict4all.action.imported.success.title"))
+                                .withContentText(Translation.getText(factor > 1.0 ? "predict4all.action.imported.success.prio.message" : "predict4all.action.imported.success.deprio.message", addedF))
+                                .show());
                     }
                     return null;
                 } catch (Exception exc) {
@@ -478,7 +476,7 @@ public class P4ADictionaryConfigurationView extends ScrollPane implements Genera
         final EventHandler<WorkerStateEvent> disableSrc = e -> src.setDisable(false);
         importTask.setOnFailed(disableSrc);
         importTask.setOnSucceeded(disableSrc);
-        AsyncExecutorController.INSTANCE.addAndExecute(true,false,importTask);
+        AsyncExecutorController.INSTANCE.addAndExecute(true, false, importTask);
     }
     //========================================================================
 }

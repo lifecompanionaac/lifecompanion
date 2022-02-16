@@ -54,7 +54,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 /**
@@ -165,12 +164,11 @@ public class LCProfileActions {
         @Override
         public void doAction() throws LCException {
             if (ProfileController.INSTANCE.currentProfileProperty().get() == this.profileToRemove) {
-                Alert dlg = DialogUtils.createAlert(source, AlertType.CONFIRMATION);
-                dlg.getDialogPane().setContentText(Translation.getText("action.remove.profile.confirm.current.profile",
-                        this.profileToRemove.nameProperty().get(), this.profileToRemove.configurationCountProperty().get()));
-                dlg.getDialogPane().setHeaderText(Translation.getText("action.remove.profile.confirm.header"));
-                Optional<ButtonType> returned = dlg.showAndWait();
-                if (returned.get() == ButtonType.OK) {
+                if (DialogUtils
+                        .alertWithSourceAndType(source, AlertType.CONFIRMATION)
+                        .withContentText(Translation.getText("action.remove.profile.confirm.current.profile", this.profileToRemove.nameProperty().get(), this.profileToRemove.configurationCountProperty().get()))
+                        .withHeaderText(Translation.getText("action.remove.profile.confirm.header"))
+                        .showAndWait() == ButtonType.OK) {
                     this.executeProfileRemove();
                     //Now, we need to select again a profil
                     ProfileController.INSTANCE.clearSelectedProfile();
@@ -178,12 +176,11 @@ public class LCProfileActions {
                 }
             } else {
                 //Ask for confirm
-                Alert dlg = DialogUtils.createAlert(source, AlertType.CONFIRMATION);
-                dlg.getDialogPane().setContentText(Translation.getText("action.remove.profile.confirm.message", this.profileToRemove.nameProperty().get(),
-                        this.profileToRemove.configurationCountProperty().get()));
-                dlg.getDialogPane().setHeaderText(Translation.getText("action.remove.profile.confirm.header"));
-                Optional<ButtonType> returned = dlg.showAndWait();
-                if (returned.get() == ButtonType.OK) {
+                if (DialogUtils
+                        .alertWithSourceAndType(source, AlertType.CONFIRMATION)
+                        .withContentText(Translation.getText("action.remove.profile.confirm.message", this.profileToRemove.nameProperty().get(), this.profileToRemove.configurationCountProperty().get()))
+                        .withHeaderText(Translation.getText("action.remove.profile.confirm.header"))
+                        .showAndWait() == ButtonType.OK) {
                     this.executeProfileRemove();
                     ProfileConfigSelectionController.INSTANCE.setProfileStep(ProfileConfigStep.PROFILE_LIST, null, null);
                 }
@@ -317,11 +314,11 @@ public class LCProfileActions {
                 //Check if a existing profile have the same ID
                 LCProfileI previousProfile = ProfileController.INSTANCE.getByID(profileImportTask.getImportedProfileId());
                 if (previousProfile != null) {
-                    Alert dlg = DialogUtils.createAlert(source, AlertType.CONFIRMATION);
-                    dlg.getDialogPane().setContentText(Translation.getText("action.import.existing.profile.text"));
-                    dlg.getDialogPane().setHeaderText(Translation.getText("action.import.existing.profile.header"));
-                    Optional<ButtonType> returned = dlg.showAndWait();
-                    if (returned.get() != ButtonType.OK) {
+                    if (DialogUtils
+                            .alertWithSourceAndType(source, AlertType.CONFIRMATION)
+                            .withContentText(Translation.getText("action.import.existing.profile.text"))
+                            .withHeaderText(Translation.getText("action.import.existing.profile.header"))
+                            .showAndWait() != ButtonType.OK) {
                         return;
                     }
                 }
@@ -364,17 +361,15 @@ public class LCProfileActions {
 
         @Override
         public void doAction() throws LCException {
-            // Select the profile to duplicate
-            Alert dialog = DialogUtils.createAlert(source, Alert.AlertType.NONE);
-            dialog.setHeaderText(Translation.getText("config.duplicate.question.select.profile"));
-            ProfileSelectorControl profileSelectorControl = new ProfileSelectorControl(Translation.getText("config.duplicate.field.profile"));
-            dialog.getDialogPane().setContent(profileSelectorControl);
             ButtonType typeCancel = new ButtonType(Translation.getText("button.type.cancel"), ButtonBar.ButtonData.CANCEL_CLOSE);
             ButtonType typeDuplicate = new ButtonType(Translation.getText("button.type.duplicate"), ButtonBar.ButtonData.YES);
-            dialog.getButtonTypes().setAll(typeCancel, typeDuplicate);
-            Optional<ButtonType> buttonType = dialog.showAndWait();
-
-            if (buttonType.get() == typeDuplicate) {
+            ProfileSelectorControl profileSelectorControl = new ProfileSelectorControl(Translation.getText("config.duplicate.field.profile"));
+            if (DialogUtils
+                    .alertWithSourceAndType(source, Alert.AlertType.NONE)
+                    .withHeaderText(Translation.getText("config.duplicate.question.select.profile"))
+                    .withContent(profileSelectorControl)
+                    .withButtonTypes(typeCancel, typeDuplicate)
+                    .showAndWait() == typeDuplicate) {
                 LCProfileI selectedProfile = profileSelectorControl.valueProperty().get();
                 if (selectedProfile != null) {
                     ProfileDuplicateTask duplicateTask = IOHelper.createProfileDuplicateTask(selectedProfile);

@@ -64,7 +64,7 @@ public class GridComponentSelectionModeRibbonPart extends RibbonBasePart<Selecti
     private ToggleSwitch toggleEnableParentSelectionMode;
 
     private AnimatedBorderPane configStageAnimatedBorderPane;
-    private Dialog<ButtonType> configStageDialogPane;
+    private Dialog<ButtonType> configStageDialog;
 
     private Button buttonOpenSelectionModeConfiguration;
 
@@ -127,7 +127,7 @@ public class GridComponentSelectionModeRibbonPart extends RibbonBasePart<Selecti
         configStageAnimatedBorderPane.setEnableTransition(false);
         configStageAnimatedBorderPane.changeCenter(selectionModeMainParamView);
         configStageAnimatedBorderPane.setEnableTransition(true);
-        Optional<ButtonType> buttonType = configStageDialogPane.showAndWait();
+        Optional<ButtonType> buttonType = configStageDialog.showAndWait();
 
         // Save on OK only
         if (buttonType.isPresent() && buttonType.get() == ButtonType.OK) {
@@ -141,16 +141,16 @@ public class GridComponentSelectionModeRibbonPart extends RibbonBasePart<Selecti
     }
 
     private void initConfigStage() {
-        if (configStageDialogPane == null) {
-            configStageDialogPane = DialogUtils.createAlert(buttonOpenSelectionModeConfiguration, null);
-            configStageDialogPane.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL, ButtonType.OK);
-            configStageDialogPane.getDialogPane().getStylesheets().addAll(LCConstant.CSS_STYLE_PATH);
-            configStageDialogPane.getDialogPane().getStyleClass().addAll("selection-mode-config-dialog");
-            configStageDialogPane.setWidth(DIALOG_WIDTH);
-            configStageDialogPane.setHeight(DIALOG_HEIGHT);
-
+        if (configStageDialog == null) {
             configStageAnimatedBorderPane = new AnimatedBorderPane();
-            configStageDialogPane.getDialogPane().setContent(configStageAnimatedBorderPane);
+
+            configStageDialog = DialogUtils.alertWithSourceAndType(buttonOpenSelectionModeConfiguration, null)
+                    .withButtonTypes(ButtonType.CANCEL, ButtonType.OK)
+                    .withContent(configStageAnimatedBorderPane)
+                    .withSize(DIALOG_WIDTH, DIALOG_HEIGHT)
+                    .build();
+            configStageDialog.getDialogPane().getStylesheets().addAll(LCConstant.CSS_STYLE_PATH);
+            configStageDialog.getDialogPane().getStyleClass().addAll("selection-mode-config-dialog");
 
             Triple<HBox, Label, Node> header = FXControlUtils.createHeader("Mode de sélection pour la grille", previous -> configStageAnimatedBorderPane.changeCenter(selectionModeMainParamView));
             header.getRight().visibleProperty().bind(configStageAnimatedBorderPane.centerProperty().isEqualTo(selectionModeSuppParamView));

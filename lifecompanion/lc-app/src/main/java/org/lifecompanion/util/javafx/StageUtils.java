@@ -98,9 +98,7 @@ public class StageUtils {
      *
      * @param stage     the stage to change
      * @param focusable the focusable value
-     * @deprecated internal API, should be changed ASAP
      */
-    @Deprecated
     public static void setFocusableSafe(final Stage stage, final boolean focusable) {
         try {
             List<Window> allSunWindow = Window.getWindows();
