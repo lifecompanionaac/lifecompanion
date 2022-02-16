@@ -186,7 +186,7 @@ public class AbstractSelectionModeView<T extends DrawSelectionModeI> extends Gro
                         for (RootGraphicComponentI comp : allRootComponents) {
                             if (comp instanceof WriterDisplayerI) {
                                 WriterDisplayerI textDisplayerComponent = (WriterDisplayerI) comp;
-                                final Region view = ViewProviderI.getComponentView(textDisplayerComponent, AppMode.USE).getView();
+                                final Region view = ViewProviderI.getOrCreateViewComponentFor(textDisplayerComponent, AppMode.USE).getView();
                                 clipShape = Shape.subtract(clipShape, rectangleFromBounds(view.getBoundsInParent()));
                             }
                         }
@@ -226,7 +226,7 @@ public class AbstractSelectionModeView<T extends DrawSelectionModeI> extends Gro
         StylePropertyI<Number> radiusProp = keyP instanceof GridPartKeyComponentI ? keyP.getKeyStyle().shapeRadiusProperty()
                 : keyP.getGridShapeStyle().shapeRadiusProperty();
         //Launch
-        this.updateMoveAnimation(enableAnimation, ViewProviderI.getComponentView(keyP, AppMode.USE).getView(), pos,
+        this.updateMoveAnimation(enableAnimation, ViewProviderI.getOrCreateViewComponentFor(keyP, AppMode.USE).getView(), pos,
                 new Pair<>(keyP.layoutWidthProperty().get(), keyP.layoutHeightProperty().get()),
                 LangUtils.nullToZeroDouble(radiusProp.value().getValue()), this.partTranslateTransition, this.keyStrokeRectangle,
                 this.keyProgressRectangle, this.keyProgressRectangleVisible, () -> {

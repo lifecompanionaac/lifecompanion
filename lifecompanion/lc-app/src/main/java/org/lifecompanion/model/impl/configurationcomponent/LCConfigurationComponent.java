@@ -323,16 +323,6 @@ public class LCConfigurationComponent extends CoreDisplayableComponentBaseImpl i
         });
     }
 
-    // FIXME
-    @Override
-    public void clearViewCache() {
-        super.clearViewCache();
-        for (DisplayableComponentI value : this.allComponents.values()) {
-            if (value != this)
-                value.clearViewCache();
-        }
-    }
-
     // Class part : "Getter"
     //========================================================================
     @Override
@@ -664,6 +654,13 @@ public class LCConfigurationComponent extends CoreDisplayableComponentBaseImpl i
     @Override
     public ObjectProperty<KeyListNodeI> rootKeyListNodeProperty() {
         return rootKeyListNode;
+    }
+
+    @Override
+    public void clearAllComponentViewCache() {
+        for (DisplayableComponentI value : new ArrayList<>(this.allComponents.values())) {
+            value.clearViewCache();
+        }
     }
     //========================================================================
 

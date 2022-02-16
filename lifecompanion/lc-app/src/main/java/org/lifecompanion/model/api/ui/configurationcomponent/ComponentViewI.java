@@ -40,8 +40,6 @@ public interface ComponentViewI<T extends DisplayableComponentI> {
 
     void unbindComponentAndChildren();
 
-    // unbind and clear
-
     /**
      * @return the view to represent the component that was given to {@link #initialize(DisplayableComponentI)}<br>
      * The returned view musn't change until a new call to {@link #initialize(DisplayableComponentI)} is done.

@@ -191,11 +191,11 @@ public abstract class CoreDisplayableComponentBaseImpl implements DisplayableCom
         if (useCache) {
             final int index = viewProvider.getType().getCacheIndex();
             if (displayCache[index] == null) {
-                displayCache[index] = viewProvider.getViewFor(this, true);
+                displayCache[index] = viewProvider.createComponentViewFor(this, true);
             }
             return displayCache[index];
         } else {
-            return viewProvider.getViewFor(this, false);
+            return viewProvider.createComponentViewFor(this, false);
         }
     }
 

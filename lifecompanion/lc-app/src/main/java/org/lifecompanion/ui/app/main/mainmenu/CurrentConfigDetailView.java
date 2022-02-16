@@ -117,6 +117,7 @@ public class CurrentConfigDetailView extends VBox implements LCViewInitHelper {
         //Can't remove/export unsaved configuration
         this.buttonClose.disableProperty().bind(AppModeController.INSTANCE.getEditModeContext().configurationDescriptionProperty().isNull());
         this.buttonExport.disableProperty().bind(AppModeController.INSTANCE.getEditModeContext().configurationDescriptionProperty().isNull());
+        this.buttonSave.disableProperty().bind(AppModeController.INSTANCE.getEditModeContext().configurationDescriptionProperty().isNull());
         //Bind unsaved modifications
         this.labelUnsavedModif.textProperty().bind(TranslationFX.getTextBinding("configuration.menu.label.unsaved.modif", AppModeController.INSTANCE.getEditModeContext().configurationUnsavedActionProperty()));
     }

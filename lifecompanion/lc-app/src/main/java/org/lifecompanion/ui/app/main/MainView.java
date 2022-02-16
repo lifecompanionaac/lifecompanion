@@ -22,7 +22,6 @@ import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
@@ -155,12 +154,12 @@ public class MainView extends StackPane implements LCViewInitHelper {
         AppModeController.INSTANCE.getEditModeContext().configurationProperty()
                 .addListener((observableP, oldValueP, newValueP) -> {
                     if (oldValueP != null) {
-                        oldValueP.clearViewCache();
-                        // Fix memory leak : remove previous children
-                        final Node previousContent = this.scrollcenter.getContent();
-                        if (previousContent instanceof Group) {
-                            ((Group) previousContent).getChildren().clear();
-                        }
+                        oldValueP.clearAllComponentViewCache();
+                        //                        // Fix memory leak : remove previous children
+                        //                        final Node previousContent = this.scrollcenter.getContent();
+                        //                        if (previousContent instanceof Group) {
+                        //                            ((Group) previousContent).getChildren().clear();
+                        //                        }
                         this.scrollcenter.setContent(null);
                     }
                     if (newValueP != null) {
@@ -176,7 +175,7 @@ public class MainView extends StackPane implements LCViewInitHelper {
         Scale scaleTransform = new Scale();
         scaleTransform.xProperty().bind(AppModeController.INSTANCE.getEditModeContext().configurationScaleProperty());
         scaleTransform.yProperty().bind(AppModeController.INSTANCE.getEditModeContext().configurationScaleProperty());
-        final Region viewForNewValue = ViewProviderI.getComponentView(newValueP, AppMode.EDIT).getView();
+        final Region viewForNewValue = ViewProviderI.getOrCreateViewComponentFor(newValueP, AppMode.EDIT).getView();
         Group group = new Group(viewForNewValue);
         viewForNewValue.getTransforms().add(scaleTransform);
         this.scrollcenter.setContent(group);

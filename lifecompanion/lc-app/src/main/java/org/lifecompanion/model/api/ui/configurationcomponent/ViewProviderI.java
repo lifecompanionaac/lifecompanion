@@ -21,27 +21,18 @@ package org.lifecompanion.model.api.ui.configurationcomponent;
 import org.lifecompanion.model.api.configurationcomponent.DisplayableComponentI;
 import org.lifecompanion.controller.lifecycle.AppMode;
 
-/**
- * Provider to provide a view for each component that is displayable.<br>
- * A view provider instantiate a view when asked for and internally keep the good view for each component type.<br>
- * The view provider must also keep the instantiated component and retrieve them if the same component is asked twice.<br>
- * The view provider is use to allows different view implementation depending on the current mode.
- *
- * @author Mathieu THEBAUD <math.thebaud@gmail.com>
- */
 public interface ViewProviderI {
     /**
-     * Create a new view for the given component type.<br>
-     * If a view was already asked for this component, must return the previous view.
+     * Create a new view for the given component type
      *
      * @param component the component class to display.
      * @return a new view instance for the given component, or null if the given type is unknown.
      */
-    ComponentViewI<?> getViewFor(DisplayableComponentI component, boolean useCache);
+    ComponentViewI<?> createComponentViewFor(DisplayableComponentI component, boolean useCache);
 
     ViewProviderType getType();
 
-    static ComponentViewI<?> getComponentView(DisplayableComponentI comp, AppMode mode) {
+    static ComponentViewI<?> getOrCreateViewComponentFor(DisplayableComponentI comp, AppMode mode) {
         return comp.getDisplay(mode.getViewProvider(), true);
     }
 }

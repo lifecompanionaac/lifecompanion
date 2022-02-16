@@ -84,7 +84,11 @@ public class LCConfigurationActions {
 
     public static final EventHandler<ActionEvent> HANDLER_NEW = (ea) -> ConfigActionController.INSTANCE.executeAction(new ShowNewEditAction(getSourceFromEvent(ea)));
     public static final EventHandler<ActionEvent> HANDLER_MANAGE = (ea) -> ConfigActionController.INSTANCE.executeAction(new ManageConfigurationDialogAction());
-    public static final EventHandler<ActionEvent> HANDLER_SAVE = (ea) -> ConfigActionController.INSTANCE.executeAction(new SaveAction(getSourceFromEvent(ea)));
+    public static final EventHandler<ActionEvent> HANDLER_SAVE = (ea) -> {
+        if (AppModeController.INSTANCE.getEditModeContext().getConfigurationDescription() != null) {
+            ConfigActionController.INSTANCE.executeAction(new SaveAction(getSourceFromEvent(ea)));
+        }
+    };
 
     public static final EventHandler<ActionEvent> HANDLER_EXPORT = (ea) -> ConfigActionController.INSTANCE.executeAction(new ExportEditAction(getSourceFromEvent(ea)));
     public static final EventHandler<ActionEvent> HANDLER_IMPORT_OPEN = (ea) -> ConfigActionController.INSTANCE.executeAction(new ImportOpenEditAction(getSourceFromEvent(ea)));
@@ -279,30 +283,10 @@ public class LCConfigurationActions {
             LCConfigurationI configuration = AppModeController.INSTANCE.getEditModeContext().configurationProperty().get();
             LCProfileI currentProfile = ProfileController.INSTANCE.currentProfileProperty().get();
 
-            //Check if the configuration description exist, and create when needed
-            // FIXME : this will not happen now that the create view had been uniformized
-            //            if (currentProfile.getConfigurationById(configuration.getID()) == null) {
-            //                //Ask for name
-            //                TextInputDialog dialog = DialogUtils.createInputDialog(source, Translation.getText("action.save.config.default.name"));
-            //                dialog.setHeaderText(Translation.getText("action.save.config.dialog.header"));
-            //                dialog.setContentText(Translation.getText("action.save.config.dialog.message"));
-            //
-            //                // Get the name
-            //                Optional<String> result = dialog.showAndWait();
-            //                if (result.isPresent()) {
-            //                    LCConfigurationDescriptionI configDescription = LCConfigurationActions.createConfigurationForCurrentProfile();
-            //                    configDescription.loadedConfigurationProperty().set(configuration);
-            //                    configDescription.configurationNameProperty().set(result.get());
-            //                    currentProfile.getConfiguration().add(configDescription);
-            //                    AppModeController.INSTANCE.switchEditModeConfiguration(configuration, configDescription);
-            //                } else {
-            //                    return;
-            //                }
-            //            }
-
             //Create the task
             ConfigurationSavingTask saveConfigTask = IOHelper.createSaveConfigurationTask(configuration, currentProfile);
             LCConfigurationDescriptionI configDescription = AppModeController.INSTANCE.getEditModeContext().configurationDescriptionProperty().get();
+
             // Update the config description image because we are on JavaFX Thread
             // Unknown bug : snapshot can sometimes fail
             try {

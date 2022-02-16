@@ -235,4 +235,6 @@ public interface LCConfigurationI extends DisplayableComponentI, VoiceSynthesize
      * @return list of available key list categories
      */
     ObjectProperty<KeyListNodeI> rootKeyListNodeProperty();
+
+    void clearAllComponentViewCache();
 }

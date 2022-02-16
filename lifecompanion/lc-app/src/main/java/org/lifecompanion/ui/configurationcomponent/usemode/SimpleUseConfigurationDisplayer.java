@@ -251,7 +251,7 @@ public class SimpleUseConfigurationDisplayer extends Group implements LCViewInit
     @Override
     public void initBinding() {
         bindLayoutXAndY();
-        this.configurationView = ViewProviderI.getComponentView(configuration, AppMode.USE).getView();
+        this.configurationView = ViewProviderI.getOrCreateViewComponentFor(configuration, AppMode.USE).getView();
         this.backgroundColor.bind(configuration.backgroundColorProperty());
         this.configWith.bind(this.configurationView.widthProperty());
         this.configHeight.bind(this.configurationView.heightProperty());

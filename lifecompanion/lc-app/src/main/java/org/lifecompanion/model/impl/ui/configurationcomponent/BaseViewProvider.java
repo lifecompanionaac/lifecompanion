@@ -55,7 +55,7 @@ public class BaseViewProvider implements ViewProviderI {
 
     @Override
     @SuppressWarnings({"rawtypes", "unchecked"})
-    public ComponentViewI<?> getViewFor(final DisplayableComponentI component, boolean useCache) {
+    public ComponentViewI<?> createComponentViewFor(final DisplayableComponentI component, boolean useCache) {
         Class<? extends ComponentViewI<?>> componentViewClass = this.types.get(component.getClass());
         if (componentViewClass != null) {
             try {
