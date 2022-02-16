@@ -26,6 +26,7 @@ import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.image.Image;
 import javafx.scene.transform.Scale;
+import org.lifecompanion.model.impl.constant.LCConstant;
 
 public class SnapshotUtils {
     public static Image executeSnapshot(final Node node, double wantedWidth, double wantedHeight, boolean canScaleUp, double minScale) {
@@ -68,8 +69,7 @@ public class SnapshotUtils {
             new Scene(group);
 
             // FIXME : CSS not applied
-            //            scene.getStylesheets().addAll(LCConstant.CSS_USE_MODE);
-            //            group.getStylesheets().addAll(LCConstant.CSS_USE_MODE);
+            group.getStylesheets().addAll(LCConstant.CSS_USE_MODE);
             //            scene.getStylesheets().add("data:text/css;base64," + Base64.getEncoder().encodeToString((".text-displayer-scroll-pane > .viewport {\n" +
             //                    "   -fx-background-color: transparent;\n" +
             //                    "}\n" +

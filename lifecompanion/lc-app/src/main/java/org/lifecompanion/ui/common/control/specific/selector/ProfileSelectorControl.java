@@ -30,19 +30,7 @@ import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.util.javafx.FXUtils;
 
 public class ProfileSelectorControl extends VBox implements LCViewInitHelper {
-    /**
-     * Search combobox
-     */
     private ComboBox<LCProfileI> comboBoxProfile;
-
-    /**
-     * Label for this control
-     */
-    private Label label;
-
-    /**
-     * Text in label (default for constructor)
-     */
     private final String labelText;
 
     public ProfileSelectorControl(final String labelTextP) {
@@ -56,7 +44,7 @@ public class ProfileSelectorControl extends VBox implements LCViewInitHelper {
         this.comboBoxProfile.setCellFactory(lv -> new ProfileSimpleListCell());
         this.comboBoxProfile.setButtonCell(new ProfileSimpleListCell());
         FXUtils.setFixedWidth(comboBoxProfile, 250.0);
-        this.label = new Label(this.labelText);
+        Label label = new Label(this.labelText);
         this.setPadding(new Insets(5.0));
         this.setSpacing(5.0);
         this.getChildren().addAll(label, comboBoxProfile);

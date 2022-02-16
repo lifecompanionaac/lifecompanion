@@ -83,6 +83,7 @@ public abstract class StackComponentBaseImplView<T extends StackComponentI> exte
     public void unbindComponentAndChildren() {
         this.model.displayedComponentProperty().removeListener(displayedChangeListener);
         ConfigurationComponentUtils.exploreComponentViewChildrenToUnbind(this);
+        // FIXME : this will make a double unbind on children
         this.componentsUI.values().forEach(ConfigurationComponentUtils::exploreComponentViewChildrenToUnbind);
         this.model = null;
     }

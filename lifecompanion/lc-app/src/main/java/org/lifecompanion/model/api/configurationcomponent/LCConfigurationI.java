@@ -134,9 +134,6 @@ public interface LCConfigurationI extends DisplayableComponentI, VoiceSynthesize
      */
     ObjectProperty<SelectionModeI> selectionModeProperty();
 
-    /**
-     * @return FIXME
-     */
     ObjectProperty<DirectSelectionModeI> directSelectionOnMouseOnScanningSelectionModeProperty();
 
     BooleanProperty hideMainSelectionModeViewProperty();

@@ -22,6 +22,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
+import org.lifecompanion.controller.editmode.DisplayableComponentSnapshotController;
 import org.lifecompanion.model.api.editaction.BaseEditActionI;
 import org.lifecompanion.model.api.configurationcomponent.DisplayableComponentI;
 import org.lifecompanion.model.api.profile.LCProfileI;
@@ -62,8 +63,11 @@ public class UserCompActions {
         @Override
         public void doAction() throws LCException {
             LCProfileI profile = ProfileController.INSTANCE.currentProfileProperty().get();
-            String author = profile.nameProperty().get();
-            UserCompDescriptionI userComp = UserCompDescriptionImpl.createUserComp(this.component, this.component.nameProperty().get(), author);
+            UserCompDescriptionI userComp = new UserCompDescriptionImpl(component);
+            userComp.componentImageProperty().set(DisplayableComponentSnapshotController.getComponentSnapshot(component, false, 200, 200));
+            userComp.nameProperty().set(this.component.nameProperty().get());
+            userComp.authorProperty().set(profile.nameProperty().get());
+
             //Check if comp already exist
             UserCompDescriptionI previous = UserCompController.INSTANCE.getCompBy(this.component.getID());
             if (previous != null) {

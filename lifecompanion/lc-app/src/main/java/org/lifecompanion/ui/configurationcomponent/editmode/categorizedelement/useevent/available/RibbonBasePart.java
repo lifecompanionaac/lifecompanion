@@ -89,7 +89,6 @@ public abstract class RibbonBasePart<T> extends BaseConfigurationViewBorderPane<
         this.labelTitle.setText(title);
     }
 
-    // FIXME : should check with memory > doesn't this creates memory leaks ?
     protected void initVisibleAndManagedBinding(Class<?> mandatoryComponentType, Class<? extends KeyOptionI> rejectedKeyOptionType) {
         BooleanProperty keyOptionOk = new SimpleBooleanProperty();
         BooleanProperty modelOk = new SimpleBooleanProperty();

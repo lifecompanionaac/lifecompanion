@@ -466,17 +466,16 @@ public abstract class AbstractScanningSelectionMode<T extends AbstractSelectionM
      */
     private void updateNextMove() {
         if (this.disposed) {
-            // FIXME : this happens sometimes, can't know why, bug is not reproducible efficiently.
+            // KNOWN-ISSUE
+            // this happens sometimes, can't know why, bug is not reproducible efficiently.
             // stop() has not effect because when it happens, animation status is already STOPPED...
-            AbstractScanningSelectionMode.LOGGER.warn(
-                    "Scanning selection mode was disposed updateNextMove is called, stop scanning time line, timeLine statut {}",
-                    this.scanningTimeLine.getStatus());
+            AbstractScanningSelectionMode.LOGGER.warn("Scanning selection mode was disposed updateNextMove is called, stop scanning time line, timeLine statut {}", this.scanningTimeLine.getStatus());
             synchronized (this.scanningTimeLine) {
                 this.scanningTimeLine.stop();
             }
         } else {
             SelectionModeController.INSTANCE.showScanningSelectionModeView(); // Request to display main view
-            
+
             //Check if scanning exist, and the extra start pause
             if (this.isScanningNextPossible()) {
                 this.executeNext();

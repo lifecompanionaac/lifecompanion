@@ -174,7 +174,7 @@ public class CommonComponentView extends BorderPane implements LCViewInitHelper 
     public void show(final DisplayableComponentI component) {
         currentComponent = component;
         if (component != null) {
-            DisplayableComponentSnapshotController.INSTANCE.requestSnapshot(component, -1, -1, (c, img) -> {
+            DisplayableComponentSnapshotController.INSTANCE.requestSnapshotAsync(component, -1, -1, (c, img) -> {
                 if (c == currentComponent) {
                     imageViewComponent.setImage(img);
                 }

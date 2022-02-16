@@ -47,13 +47,13 @@ import java.util.function.BiConsumer;
 public enum DisplayableComponentSnapshotController {
     INSTANCE;
 
-    private static final String LOAD_REQUEST_ID = "displayable-component-list-cell";
+    private static final String LOAD_REQUEST_ID = "displayable-component-snapshot";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DisplayableComponentSnapshotController.class);
 
     private static final ViewProviderI USE_VIEW_PROVIDER = new UseViewProvider();
 
-    private static final long IMAGE_LOADING_TIMEOUT = 2000, CLEAR_AFTER_LAST_USE = 30_000;
+    private static final long IMAGE_LOADING_TIMEOUT = 3000, CLEAR_AFTER_LAST_USE = 60_000;
 
     private final ExecutorService loadingService;
     private final ConcurrentHashMap<String, CopyOnWriteArrayList<ComponentSnapshotTask>> runningLoadingTasks;
@@ -89,7 +89,7 @@ public enum DisplayableComponentSnapshotController {
         }
     }
 
-    public void requestSnapshot(DisplayableComponentI component, double w, double h, BiConsumer<DisplayableComponentI, Image> callback) {
+    public void requestSnapshotAsync(DisplayableComponentI component, double w, double h, BiConsumer<DisplayableComponentI, Image> callback) {
         final CachedSnapshot cachedSnapshot = snapshotCache.get(component.getID());
         if (cachedSnapshot != null) {
             cachedSnapshot.updateLastUsed();
@@ -148,12 +148,6 @@ public enum DisplayableComponentSnapshotController {
             this.w = w;
             this.h = h;
         }
-
-        /*
-         Fix note : inject viewprovider in getDisplay and also inject "ignoreCache" param.
-         Both params will be stored in view and injected to children.
-         /!\ this can only work if the view doesn't created gc dependency to the model > view is stored in model, but view should not store the model >> wtf ?
-         */
 
         @Override
         protected Image call() throws Exception {

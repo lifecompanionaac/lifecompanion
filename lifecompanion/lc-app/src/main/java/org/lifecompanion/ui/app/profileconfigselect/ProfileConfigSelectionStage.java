@@ -34,8 +34,8 @@ public class ProfileConfigSelectionStage extends Stage {
 
     private final ProfileConfigSelectionScene profileConfigSelectionScene;
 
-    public ProfileConfigSelectionStage(final Stage owner, final ProfileConfigSelectionScene profileConfigSelectionScene) {
-        this.profileConfigSelectionScene = profileConfigSelectionScene;
+    public ProfileConfigSelectionStage(final Stage owner) {
+        this.profileConfigSelectionScene = new ProfileConfigSelectionScene();
         this.setTitle(LCConstant.NAME);
         this.initModality(Modality.APPLICATION_MODAL);
         this.initStyle(StageStyle.UTILITY);

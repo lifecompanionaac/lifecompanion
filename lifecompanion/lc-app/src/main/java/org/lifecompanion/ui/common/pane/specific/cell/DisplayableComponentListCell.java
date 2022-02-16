@@ -68,7 +68,7 @@ public class DisplayableComponentListCell<T extends DisplayableComponentI> exten
         } else {
             this.textProperty().bind(item.nameProperty());
             componentSnapshot.setImage(null);
-            DisplayableComponentSnapshotController.INSTANCE.requestSnapshot(item, -1, CELL_SIZE, (comp, image) -> {
+            DisplayableComponentSnapshotController.INSTANCE.requestSnapshotAsync(item, -1, CELL_SIZE, (comp, image) -> {
                 if (this.getItem() == comp) {
                     componentSnapshot.setImage(image);
                 }

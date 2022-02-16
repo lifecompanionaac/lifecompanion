@@ -21,34 +21,13 @@ package org.lifecompanion.model.api.ui.configurationcomponent;
 import javafx.scene.layout.Region;
 import org.lifecompanion.model.api.configurationcomponent.DisplayableComponentI;
 
-/**
- * This interface is use to provide different component representation function of a implementation.<br>
- * Typically, a class that extends a Region can implements this interface and return its instance in {@link #getView()}.<br>
- * For the same {@link #initialize(DisplayableComponentI)} call, the Region returned by {@link #getView()} must be always the same, the view can change on a {@link #initialize(DisplayableComponentI)} call.
- *
- * @param <T> the component that will be displayed in this view.
- * @author Mathieu THEBAUD <math.thebaud@gmail.com>
- */
 public interface ComponentViewI<T extends DisplayableComponentI> {
 
-    /**
-     * Must initialize the view to represent the given component.<br>
-     *
-     * @param component the component that will be displayed.
-     */
     void initialize(ViewProviderI viewProvider, boolean useCache, T component);
 
     void unbindComponentAndChildren();
 
-    /**
-     * @return the view to represent the component that was given to {@link #initialize(DisplayableComponentI)}<br>
-     * The returned view musn't change until a new call to {@link #initialize(DisplayableComponentI)} is done.
-     */
-    Region getView();//This must be the only place where model rely on JavaFX API
+    Region getView();
 
-    /**
-     * Must be called by the component when its {@link DisplayableComponentI#showToFront()} method is called.<br>
-     * This must show the component on the top when it's possible.
-     */
     void showToFront();
 }

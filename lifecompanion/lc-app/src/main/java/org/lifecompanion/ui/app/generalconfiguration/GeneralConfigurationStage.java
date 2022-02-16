@@ -30,8 +30,8 @@ import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 public class GeneralConfigurationStage extends Stage {
     private final GeneralConfigurationScene generalConfigurationScene;
 
-    public GeneralConfigurationStage(Window owner, GeneralConfigurationScene generalConfigurationScene) {
-        this.generalConfigurationScene = generalConfigurationScene;
+    public GeneralConfigurationStage(Window owner) {
+        this.generalConfigurationScene = new GeneralConfigurationScene();
         this.setTitle(LCConstant.NAME);
         this.initModality(Modality.APPLICATION_MODAL);
         this.initStyle(StageStyle.UTILITY);

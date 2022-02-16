@@ -65,7 +65,7 @@ public interface DisplayableComponentI extends XMLSerializable<IOContextI>, Tree
      * This method must handle the case of component into other.<br>
      * E.g. : a component into a stack must become the displayed component. A recursive call to parent is a good way to achieve this.
      */
-    void showToFront(ViewProviderI viewProvider, boolean useCache);//FIXME ; inject ViewProviderType here (or view provider if the view wasn't initialized yet ?)
+    void showToFront(ViewProviderI viewProvider, boolean useCache);
 
     /**
      * @return a property that indicate if this component is currently displayed in stack (or in configuration view), this is useful for stack child that doesn't know the direct stack child of their stack parent.<br>

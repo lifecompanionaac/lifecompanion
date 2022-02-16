@@ -151,23 +151,17 @@ public class MainView extends StackPane implements LCViewInitHelper {
         this.buttonResetSelection.disableProperty().bind(SelectionController.INSTANCE.selectedComponentBothProperty().isNull());
         this.buttonGoUseMode.visibleProperty().bind(AppModeController.INSTANCE.getEditModeContext().configurationProperty().isNotNull());
         // On configuration change, display the new configuration
-        AppModeController.INSTANCE.getEditModeContext().configurationProperty()
-                .addListener((observableP, oldValueP, newValueP) -> {
-                    if (oldValueP != null) {
-                        oldValueP.clearAllComponentViewCache();
-                        //                        // Fix memory leak : remove previous children
-                        //                        final Node previousContent = this.scrollcenter.getContent();
-                        //                        if (previousContent instanceof Group) {
-                        //                            ((Group) previousContent).getChildren().clear();
-                        //                        }
-                        this.scrollcenter.setContent(null);
-                    }
-                    if (newValueP != null) {
-                        displayConfiguration(newValueP);
-                    } else {
-                        displayNoConfigurationMessage();
-                    }
-                });
+        AppModeController.INSTANCE.getEditModeContext().configurationProperty().addListener((observableP, oldValueP, newValueP) -> {
+            if (oldValueP != null) {
+                oldValueP.clearAllComponentViewCache();
+                this.scrollcenter.setContent(null);
+            }
+            if (newValueP != null) {
+                displayConfiguration(newValueP);
+            } else {
+                displayNoConfigurationMessage();
+            }
+        });
 
     }
 

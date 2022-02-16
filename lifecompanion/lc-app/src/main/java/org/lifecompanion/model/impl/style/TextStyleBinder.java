@@ -41,35 +41,23 @@ import org.lifecompanion.util.binding.Unbindable;
  */
 public class TextStyleBinder {
 
-    //Just a tool class
     private TextStyleBinder() {
     }
 
-    // FIXME : replace with Unbindable
-    public static void unbindLabeled(final Labeled label) {
-        label.fontProperty().unbind();
-        label.textFillProperty().unbind();
-        label.underlineProperty().unbind();
-        label.textAlignmentProperty().unbind();
-        label.alignmentProperty().unbind();
+    public interface TextStyleBindable {
+        ObjectProperty<Font> fontProperty();
+
+        ObjectProperty<Paint> textFillProperty();
+
+        BooleanProperty underlineProperty();
+
+        ObjectProperty<TextAlignment> textAlignmentProperty();
+
+        ObjectProperty<Pos> alignmentProperty();
+
+        ObjectProperty<TextCompStyleI> useTextCompStyleProperty();
     }
 
-    public static interface TextStyleBindable {
-        public ObjectProperty<Font> fontProperty();
-
-        public ObjectProperty<Paint> textFillProperty();
-
-        public BooleanProperty underlineProperty();
-
-        public ObjectProperty<TextAlignment> textAlignmentProperty();
-
-        public ObjectProperty<Pos> alignmentProperty();
-
-        public ObjectProperty<TextCompStyleI> useTextCompStyleProperty();
-    }
-
-    // Class part : "NEW"
-    //========================================================================
     public static Unbindable bindTextStyleBindableComp(final TextStyleBindable textStyleBindable, final TextCompStyleI style) {
         textStyleBindable.fontProperty().bind(style.fontProperty());
         textStyleBindable.textFillProperty().bind(style.colorProperty().value());
@@ -84,10 +72,6 @@ public class TextStyleBinder {
             textStyleBindable.textAlignmentProperty().unbind();
             textStyleBindable.alignmentProperty().unbind();
         };
-    }
-
-    public static void bindLabeledComp(final Labeled label, final ObjectProperty<TextCompStyleI> styleProperty) {
-        TextStyleBinder.bindLabeledComp(label, styleProperty, true);
     }
 
     public static void bindLabeledComp(final Labeled label, final ObjectProperty<TextCompStyleI> styleProperty, final boolean bindFill) {
@@ -113,6 +97,4 @@ public class TextStyleBinder {
             }
         }, textAlignment);
     }
-    //========================================================================
-
 }

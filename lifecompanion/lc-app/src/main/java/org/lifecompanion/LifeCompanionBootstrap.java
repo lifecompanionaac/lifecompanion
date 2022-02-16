@@ -28,15 +28,17 @@ import org.lifecompanion.controller.appinstallation.InstallationController;
 import org.lifecompanion.controller.editaction.GlobalActions;
 import org.lifecompanion.controller.editaction.LCConfigurationActions;
 import org.lifecompanion.controller.editaction.LCProfileActions;
-import org.lifecompanion.controller.editmode.*;
+import org.lifecompanion.controller.editmode.ConfigActionController;
+import org.lifecompanion.controller.editmode.GeneralConfigurationController;
+import org.lifecompanion.controller.editmode.LCStateController;
 import org.lifecompanion.controller.io.IOHelper;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.lifecycle.LifeCompanionController;
 import org.lifecompanion.controller.profile.ProfileController;
 import org.lifecompanion.controller.profileconfigselect.ProfileConfigSelectionController;
 import org.lifecompanion.controller.profileconfigselect.ProfileConfigStep;
-import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
+import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.controller.translation.TranslationLoader;
 import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
 import org.lifecompanion.framework.commons.utils.io.FileNameUtils;
@@ -51,9 +53,7 @@ import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.ui.EditModeScene;
 import org.lifecompanion.ui.LoadingScene;
-import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationScene;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStage;
-import org.lifecompanion.ui.app.profileconfigselect.ProfileConfigSelectionScene;
 import org.lifecompanion.ui.app.profileconfigselect.ProfileConfigSelectionStage;
 import org.lifecompanion.util.DesktopUtils;
 import org.lifecompanion.util.ThreadUtils;
@@ -85,7 +85,6 @@ public class LifeCompanionBootstrap {
 
     public void startLifeCompanion() {
         AppModeController.INSTANCE.initEditModeStage(stage);
-
         preload();
         loadAndShowStageAndLoadingScene();
         if (InstallationController.INSTANCE.isUpdateDownloadFinished()) {
@@ -101,7 +100,6 @@ public class LifeCompanionBootstrap {
     // LOADING RES
     //========================================================================
     public void preload() {
-        long start = System.currentTimeMillis();
         try {
             UserConfigurationController.INSTANCE.load();
         } catch (Exception e) {
@@ -113,7 +111,7 @@ public class LifeCompanionBootstrap {
             TranslationLoader.loadLanguageResource(language, languageFile);
         }
         GlyphFontHelper.loadFont();
-        LOGGER.info("Preload done in {} ms", System.currentTimeMillis() - start);
+        LOGGER.info("Preload done in {}s", (System.currentTimeMillis() - startAt) / 1000.0);
     }
     //========================================================================
 
@@ -132,17 +130,19 @@ public class LifeCompanionBootstrap {
 
             LOGGER.info("UI background loading done in {} s, will define post load action", (System.currentTimeMillis() - start) / 1000.0);
             try {
+                start = System.currentTimeMillis();
                 final AfterLoad afterLoad = getAfterLoad();
+                LOGGER.info("After load action definition done in {} s", (System.currentTimeMillis() - start) / 1000.0);
                 FXThreadUtils.runOnFXThread(() -> handleAfterLoadAction(editModeScene, afterLoad));
             } catch (Exception e) {
                 LOGGER.error("Unexpected issue while defining post load actions, will show profile selection step", e);
-                //FIXME
+                FXThreadUtils.runOnFXThread(() -> handleAfterLoadAction(editModeScene, DEFAULT_AFTERLOAD));
             }
         }).start();
     }
 
     private void handleAfterLoadAction(EditModeScene editModeScene, AfterLoad afterLoad) {
-        LOGGER.info("After load action will be {}", afterLoad.afterLoadAction);
+        LOGGER.info("Loading done after {}s / post load action is {}", (System.currentTimeMillis() - startAt) / 1000.0, afterLoad.afterLoadAction);
 
         if (afterLoad.profile != null) {
             ProfileController.INSTANCE.selectProfile(afterLoad.profile);
@@ -189,7 +189,7 @@ public class LifeCompanionBootstrap {
     private AfterLoad getAfterLoad() throws Exception {
         // First, load all profile
         final List<LCProfileI> profiles = ThreadUtils.executeInCurrentThread(IOHelper.createLoadAllProfileDescriptionTask());
-        ProfileController.INSTANCE.getProfiles().setAll(profiles); // FIXME FX Thread ?
+        ProfileController.INSTANCE.getProfiles().setAll(profiles);// it is ok to set profile outside FXThread because there is no UI displayed at this time
 
         // Check if profile to import
         final File profileFile = getFirstLifeCompanionFile(LCConstant.PROFILE_FILE_EXTENSION);
@@ -221,19 +221,17 @@ public class LifeCompanionBootstrap {
                 LOGGER.warn("Couldn't select profile with ID {}", profileIDToSelect, ep);
             }
         }
-
-        // Default : select a profile
-        return new AfterLoad(AfterLoadAction.SELECT_PROFILE, null, null, null, null);
+        return DEFAULT_AFTERLOAD;
     }
+
+    private final static AfterLoad DEFAULT_AFTERLOAD = new AfterLoad(AfterLoadAction.SELECT_PROFILE, null, null, null, null);
     //========================================================================
 
     // STAGES
     //========================================================================
     private void initLifeCompanionStage() {
-        ProfileConfigSelectionStage profileConfigSelectionStage = new ProfileConfigSelectionStage(stage, new ProfileConfigSelectionScene());
-        ProfileConfigSelectionController.INSTANCE.initStage(profileConfigSelectionStage);
-        GeneralConfigurationStage generalConfigurationStage = new GeneralConfigurationStage(stage, new GeneralConfigurationScene());
-        GeneralConfigurationController.INSTANCE.initStage(generalConfigurationStage);
+        ProfileConfigSelectionController.INSTANCE.initStage(new ProfileConfigSelectionStage(stage));
+        GeneralConfigurationController.INSTANCE.initStage(new GeneralConfigurationStage(stage));
     }
 
     private void loadAndShowStageAndLoadingScene() {
@@ -261,7 +259,7 @@ public class LifeCompanionBootstrap {
         if (splashScreen != null) {
             splashScreen.close();
         }
-        LOGGER.info("Loading scene initialized and shown");
+        LOGGER.info("Loading scene initialized and shown after {}s", (System.currentTimeMillis() - startAt) / 1000.0);
     }
     //========================================================================
 

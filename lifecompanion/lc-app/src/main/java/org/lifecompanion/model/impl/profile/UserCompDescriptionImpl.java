@@ -143,17 +143,6 @@ public class UserCompDescriptionImpl implements UserCompDescriptionI {
     }
     //========================================================================
 
-    // Class part : "Creation"
-    //========================================================================
-    public static UserCompDescriptionI createUserComp(final DisplayableComponentI component, final String name, final String author) {
-        UserCompDescriptionI comp = new UserCompDescriptionImpl(component);
-        //comp.componentImageProperty().set(UIUtils.takeNodeSnapshot(AppController.INSTANCE.getViewForCurrentMode(component).getView(), -1, -1));// TODO : should be inject as ComponentSnapshot utils can be used
-        comp.nameProperty().set(name);
-        comp.authorProperty().set(author);
-        return comp;
-    }
-    //========================================================================
-
     // Class part : "IO"
     //========================================================================
     private static final String NODE_USER_COMP_DESCRIPTION = "UserCompDescription";
