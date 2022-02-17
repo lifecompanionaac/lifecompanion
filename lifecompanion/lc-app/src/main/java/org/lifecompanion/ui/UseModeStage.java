@@ -22,14 +22,14 @@ package org.lifecompanion.ui;
 import javafx.scene.input.KeyCombination;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
-import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
-import org.lifecompanion.model.api.profile.LCProfileI;
+import org.lifecompanion.controller.editaction.GlobalActions;
 import org.lifecompanion.controller.resource.IconHelper;
+import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
+import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
+import org.lifecompanion.model.api.profile.LCProfileI;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.util.javafx.StageUtils;
-import org.lifecompanion.controller.editaction.GlobalActions;
 
 public class UseModeStage extends Stage {
 
@@ -56,9 +56,7 @@ public class UseModeStage extends Stage {
         } else {
             StageUtils.moveStageTo(this, configuration.framePositionOnLaunchProperty().get());
         }
-        if (configuration.virtualKeyboardProperty().get()) {
-            StageUtils.setFocusableSafe(this, false);
-        }
+        this.setOnShown(e1 -> StageUtils.setFocusableInternalAPI(this, false));
         this.setOnHidden(e -> {
             this.opacityProperty().unbind();
             useModeScene.unbindAndClean();

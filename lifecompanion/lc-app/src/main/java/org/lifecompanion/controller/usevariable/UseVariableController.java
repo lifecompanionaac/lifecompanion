@@ -21,7 +21,6 @@ package org.lifecompanion.controller.usevariable;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.collections.FXCollections;
@@ -29,23 +28,23 @@ import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.scene.input.Clipboard;
 import javafx.util.Duration;
+import org.lifecompanion.controller.plugin.PluginController;
 import org.lifecompanion.controller.selectionmode.SelectionModeController;
 import org.lifecompanion.controller.textcomponent.WritingStateController;
+import org.lifecompanion.framework.commons.utils.lang.CollectionUtils;
+import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.model.api.categorizedelement.useevent.UseEventGeneratorI;
 import org.lifecompanion.model.api.configurationcomponent.DisplayableComponentI;
 import org.lifecompanion.model.api.configurationcomponent.GridPartComponentI;
 import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
-import org.lifecompanion.model.api.categorizedelement.useevent.UseEventGeneratorI;
+import org.lifecompanion.model.api.lifecycle.ModeListenerI;
 import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
-import org.lifecompanion.model.api.lifecycle.ModeListenerI;
-import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.VariableInformationKeyOption;
-import org.lifecompanion.controller.plugin.PluginController;
 import org.lifecompanion.model.impl.usevariable.StringUseVariable;
 import org.lifecompanion.model.impl.usevariable.UseVariableDefinition;
-import org.lifecompanion.framework.commons.utils.lang.CollectionUtils;
-import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,8 +52,6 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.TextStyle;
 import java.util.*;
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -248,31 +245,10 @@ public enum UseVariableController implements ModeListenerI {
     }
 
     private String getClipboardContent() {
-        AtomicReference<String> value = new AtomicReference<>("");
-        Runnable clipboardRetriever = () -> {
+        return FXThreadUtils.runOnFXThreadAndWaitFor(() -> {
             Clipboard systemClipboard = Clipboard.getSystemClipboard();
-            if (systemClipboard.hasString()) {
-                value.set(systemClipboard.getString());
-            }
-        };
-        if (!Platform.isFxApplicationThread()) {
-            try {
-                Semaphore semaphore = new Semaphore(0);
-                Platform.runLater(() -> {
-                    try {
-                        clipboardRetriever.run();
-                    } finally {
-                        semaphore.release();
-                    }
-                });
-                semaphore.acquire();
-            } catch (Exception e) {
-                LOGGER.error("Error waiting for clipboard content outside FX thread", e);
-            }
-        } else {
-            clipboardRetriever.run();
-        }
-        return value.get();
+            return systemClipboard.hasString() ? systemClipboard.getString() : "";
+        });
     }
 
     /**

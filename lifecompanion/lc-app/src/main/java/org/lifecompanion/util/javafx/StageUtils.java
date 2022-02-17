@@ -27,14 +27,13 @@ import org.lifecompanion.controller.appinstallation.InstallationController;
 import org.lifecompanion.controller.lifecycle.AppMode;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.resource.IconHelper;
-import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.model.api.configurationcomponent.FramePosition;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
+import java.lang.reflect.Method;
 
 @SuppressWarnings("restriction")
 public class StageUtils {
@@ -99,15 +98,18 @@ public class StageUtils {
      * @param stage     the stage to change
      * @param focusable the focusable value
      */
-    public static void setFocusableSafe(final Stage stage, final boolean focusable) {
+    public static void setFocusableInternalAPI(final Stage stage, final boolean focusable) {
         try {
-            List<Window> allSunWindow = Window.getWindows();
-            for (Window window : allSunWindow) {
-                if (StringUtils.isEquals(stage.getTitle(), window.getTitle())) {
-                    window.setFocusable(focusable);
-                    LOGGER.info("Focusable state set to {}, enabled {}, focused {}", window.getTitle(), window.isEnabled(), window.isFocused());
-                }
-            }
+            Method getPeer = javafx.stage.Window.class.getDeclaredMethod("getPeer");
+            getPeer.setAccessible(true);
+            final Object tkStage = getPeer.invoke(stage);
+
+            Method getPlatformWindow = tkStage.getClass().getDeclaredMethod("getPlatformWindow");
+            getPlatformWindow.setAccessible(true);
+
+            Window platformWindow = (Window) getPlatformWindow.invoke(tkStage);
+            platformWindow.setFocusable(focusable);
+            LOGGER.info("Called setFocusable({}) on native  stage", focusable);
         } catch (Throwable t) {
             LOGGER.warn("Couldn't use sun* internal API to change the window properties", t);
         }

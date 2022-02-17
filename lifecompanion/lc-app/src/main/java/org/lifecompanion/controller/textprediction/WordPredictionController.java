@@ -18,7 +18,9 @@
  */
 package org.lifecompanion.controller.textprediction;
 
-import javafx.application.Platform;
+import org.lifecompanion.controller.plugin.PluginController;
+import org.lifecompanion.controller.textcomponent.WritingStateController;
+import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.configurationcomponent.PredictionParameterI;
@@ -26,11 +28,9 @@ import org.lifecompanion.model.api.textprediction.WordPredictionI;
 import org.lifecompanion.model.api.textprediction.WordPredictionResultI;
 import org.lifecompanion.model.api.textprediction.WordPredictorI;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.WordPredictionKeyOption;
-import org.lifecompanion.controller.textcomponent.WritingStateController;
-import org.lifecompanion.controller.plugin.PluginController;
-import org.lifecompanion.model.impl.textprediction.predict4all.Predict4AllWordPredictor;
 import org.lifecompanion.model.impl.textprediction.WordPrediction;
-import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.model.impl.textprediction.predict4all.Predict4AllWordPredictor;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 
 import java.util.List;
 import java.util.Set;
@@ -108,7 +108,7 @@ public class WordPredictionController extends AbstractPredictionController<WordP
             List<WordPredictionKeyOption> options = this.predictionOptions.get(grid);
             for (int i = 0; i < options.size(); i++) {
                 final int index = i;
-                Platform.runLater(() -> {
+                FXThreadUtils.runOnFXThread(() -> {
                     if (index < result.size()) {
                         options.get(index).predictionProperty().set(result.get(index));
                     } else {

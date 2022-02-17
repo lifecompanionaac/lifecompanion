@@ -38,6 +38,7 @@ import org.lifecompanion.model.impl.imagedictionary.StaticImageElement;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.framework.utils.FluentHashMap;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -353,7 +354,7 @@ public enum WritingStateController implements ModeListenerI, WritingStateControl
             // Implementation should make operation on event async (e.g. writing the log a file)
 
             // TODO : this cause the after event result to be incorrect about prediction because prediction is not instant...
-            Platform.runLater(() -> {
+            FXThreadUtils.runOnFXThread(() -> {
                 WritingControllerStateI stateAfterEvent = getCurrentState();
                 for (Consumer<WritingEventI> listener : writingEventListeners) {
                     listener.accept(new WritingEvent(stateBeforeEvent, stateAfterEvent, src, type, values));

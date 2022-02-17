@@ -19,7 +19,6 @@
 
 package org.lifecompanion.ui.configurationcomponent.base;
 
-import javafx.application.Platform;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.geometry.Bounds;
@@ -32,14 +31,14 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import org.lifecompanion.controller.lifecycle.AppModeController;
+import org.lifecompanion.controller.textcomponent.WritingStateController;
+import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.model.api.configurationcomponent.WriterDisplayerI;
-import org.lifecompanion.model.api.textcomponent.WritingEventSource;
 import org.lifecompanion.model.api.imagedictionary.ImageElementI;
 import org.lifecompanion.model.api.style.TextCompStyleI;
-import org.lifecompanion.controller.textcomponent.WritingStateController;
-import org.lifecompanion.controller.lifecycle.AppModeController;
-import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.model.api.textcomponent.*;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.util.javafx.FXUtils;
 import org.predict4all.nlp.Separator;
 
@@ -83,13 +82,10 @@ public class TextDisplayer3 extends Pane implements LCViewInitHelper {
     @Override
     public void initBinding() {
         // TODO : Batch updates ?
-        cachedLineListenerData = this.textDisplayer.setCachedLinesUpdateListener(lines -> {
-            if (Platform.isFxApplicationThread()) {
-                this.repaint(lines);
-            } else {
-                Platform.runLater(() -> repaint(lines));
-            }
-        }, maxWidthProperty, BOUNDS_PROVIDER);
+        cachedLineListenerData = this.textDisplayer.setCachedLinesUpdateListener(
+                lines -> FXThreadUtils.runOnFXThread(() -> this.repaint(lines)),
+                maxWidthProperty, BOUNDS_PROVIDER
+        );
     }
 
     @Override

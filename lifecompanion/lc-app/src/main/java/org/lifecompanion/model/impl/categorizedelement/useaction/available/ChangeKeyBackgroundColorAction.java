@@ -36,6 +36,7 @@ import org.lifecompanion.framework.commons.fx.io.XMLGenericProperty;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
 import org.lifecompanion.framework.commons.translation.Translation;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 
 import java.util.Map;
 
@@ -86,7 +87,7 @@ public class ChangeKeyBackgroundColorAction extends SimpleUseActionImpl<UseActio
     public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
         GridPartKeyComponentI wantedKeyChanged = this.targetKey.componentProperty().get();
         if (wantedKeyChanged != null) {
-            Platform.runLater(() -> wantedKeyChanged.getKeyStyle().backgroundColorProperty().forced().setValue(restoreParentColor.get() ? null : wantedColor.get()));
+            FXThreadUtils.runOnFXThread(() -> wantedKeyChanged.getKeyStyle().backgroundColorProperty().forced().setValue(restoreParentColor.get() ? null : wantedColor.get()));
         }
     }
 

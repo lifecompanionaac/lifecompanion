@@ -18,7 +18,6 @@
  */
 package org.lifecompanion.controller.selectionmode;
 
-import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ObservableList;
@@ -27,19 +26,19 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import org.lifecompanion.controller.categorizedelement.useaction.UseActionController;
+import org.lifecompanion.controller.io.IOHelper;
+import org.lifecompanion.controller.io.task.ConfigurationLoadingTask;
+import org.lifecompanion.controller.lifecycle.AppMode;
+import org.lifecompanion.controller.lifecycle.AppModeController;
+import org.lifecompanion.controller.profile.ProfileController;
 import org.lifecompanion.model.api.configurationcomponent.*;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
+import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
+import org.lifecompanion.model.api.selectionmode.*;
 import org.lifecompanion.model.impl.selectionmode.*;
 import org.lifecompanion.util.ThreadUtils;
 import org.lifecompanion.util.binding.BindingUtils;
 import org.lifecompanion.util.javafx.FXThreadUtils;
-import org.lifecompanion.controller.lifecycle.AppMode;
-import org.lifecompanion.controller.lifecycle.AppModeController;
-import org.lifecompanion.controller.profile.ProfileController;
-import org.lifecompanion.controller.io.IOHelper;
-import org.lifecompanion.controller.io.task.ConfigurationLoadingTask;
-import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
-import org.lifecompanion.model.api.selectionmode.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -416,7 +415,7 @@ public enum SelectionModeController implements ModeListenerI {
         SelectionModeI selectionMode = this.getSelectionModeConfiguration();
         if (selectionMode instanceof DrawSelectionModeI) {
             DrawSelectionModeI drawSelectionMode = (DrawSelectionModeI) selectionMode;
-            Platform.runLater(() -> {
+            FXThreadUtils.runOnFXThread(() -> {
                 drawSelectionMode.strokeFillProperty().set(newColor);
                 drawSelectionMode.progressFillProperty().set(newColor);
             });

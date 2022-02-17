@@ -25,6 +25,7 @@ import org.lifecompanion.model.api.textprediction.CharPredictorI;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.AutoCharKeyOption;
 import org.lifecompanion.controller.plugin.PluginController;
 import org.lifecompanion.model.impl.textprediction.charprediction.LCCharPredictor;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 
 import java.util.List;
 import java.util.Set;
@@ -78,7 +79,7 @@ public class AutoCharPredictionController extends AbstractPredictionController<C
             List<AutoCharKeyOption> options = this.predictionOptions.get(grid);
             for (int i = 0; i < options.size(); i++) {
                 final int index = i;
-                Platform.runLater(() -> {
+                FXThreadUtils.runOnFXThread(() -> {
                     if (index < result.size()) {
                         Character character = result.get(index);
                         if (character != null && Character.isWhitespace(character)) {

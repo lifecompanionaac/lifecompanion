@@ -22,12 +22,12 @@ package org.lifecompanion.ui.configurationcomponent.base;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
+import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.model.api.configurationcomponent.GridPartComponentI;
 import org.lifecompanion.model.api.configurationcomponent.StackComponentI;
 import org.lifecompanion.model.api.ui.configurationcomponent.ComponentViewI;
 import org.lifecompanion.model.api.ui.configurationcomponent.ViewProviderI;
 import org.lifecompanion.util.javafx.FXThreadUtils;
-import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.util.model.ConfigurationComponentUtils;
 
 import java.util.HashMap;
@@ -54,19 +54,19 @@ public abstract class StackComponentBaseImplView<T extends StackComponentI> exte
      */
     protected T model;
 
-    private ChangeListener<GridPartComponentI> displayedChangeListener;
+    private final ChangeListener<GridPartComponentI> displayedChangeListener;
 
     /**
      * Create the base for displaying stack component
      */
     protected StackComponentBaseImplView() {
         this.componentsUI = new HashMap<>();
+        this.displayedChangeListener = (obs, oldv, newv) -> this.displayedChanged(oldv, newv);
     }
 
     @Override
     public void initBinding() {
-        //Currently displayed component on top
-        this.model.displayedComponentProperty().addListener(displayedChangeListener = (obs, oldv, newv) -> this.displayedChanged(oldv, newv));
+        this.model.displayedComponentProperty().addListener(displayedChangeListener);
     }
 
     @Override
@@ -75,15 +75,14 @@ public abstract class StackComponentBaseImplView<T extends StackComponentI> exte
         this.useCache = useCache;
         this.model = componentP;
         this.initAll();
-        //Default
         this.displayedChanged(null, this.model.displayedComponentProperty().get());
     }
 
     @Override
     public void unbindComponentAndChildren() {
         this.model.displayedComponentProperty().removeListener(displayedChangeListener);
+        this.displayedChanged(model.displayedComponentProperty().get(), null);
         ConfigurationComponentUtils.exploreComponentViewChildrenToUnbind(this);
-        // FIXME : this will make a double unbind on children
         this.componentsUI.values().forEach(ConfigurationComponentUtils::exploreComponentViewChildrenToUnbind);
         this.model = null;
     }

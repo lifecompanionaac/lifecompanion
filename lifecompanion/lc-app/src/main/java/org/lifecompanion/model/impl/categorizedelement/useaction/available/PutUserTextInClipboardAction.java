@@ -21,6 +21,7 @@ package org.lifecompanion.model.impl.categorizedelement.useaction.available;
 import java.util.Map;
 
 import org.lifecompanion.controller.textcomponent.WritingStateController;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,7 +60,7 @@ public class PutUserTextInClipboardAction extends SimpleUseActionImpl<UseActionT
 			String currentText = WritingStateController.INSTANCE.currentTextProperty().get();
 			final ClipboardContent content = new ClipboardContent();
 			content.putString(currentText);
-			Platform.runLater(() -> Clipboard.getSystemClipboard().setContent(content));
+			FXThreadUtils.runOnFXThread(() -> Clipboard.getSystemClipboard().setContent(content));
 		} catch (Throwable t) {
 			LOGGER.warn("Couldn't copy user text top clipboard", t);
 		}

@@ -18,27 +18,27 @@
  */
 package org.lifecompanion.controller.configurationcomponent.dynamickey;
 
-import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
+import org.lifecompanion.controller.lifecycle.AppMode;
+import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.selectionmode.SelectionModeController;
+import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.framework.utils.Pair;
+import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
 import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
-import org.lifecompanion.model.api.configurationcomponent.keyoption.KeyOptionI;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
-import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
+import org.lifecompanion.model.api.configurationcomponent.keyoption.KeyOptionI;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
 import org.lifecompanion.model.impl.categorizedelement.useaction.available.*;
-import org.lifecompanion.util.model.ConfigurationComponentUtils;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.dynamickey.KeyListNodeKeyOption;
-import org.lifecompanion.controller.lifecycle.AppMode;
-import org.lifecompanion.controller.lifecycle.AppModeController;
-import org.lifecompanion.framework.commons.utils.lang.StringUtils;
-import org.lifecompanion.framework.utils.Pair;
+import org.lifecompanion.util.javafx.FXThreadUtils;
+import org.lifecompanion.util.model.ConfigurationComponentUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -207,11 +207,11 @@ public enum KeyListController implements ModeListenerI {
             for (int i = 0; i < pageSize; i++) {
                 final KeyListNodeKeyOption keyOption = statusForGridAndCategory.keyOptions.get(i);
                 int keyIndex = pageIndex * pageSize + i;
-                Platform.runLater(() -> keyOption.currentSimplerKeyContentContainerProperty().set(keyIndex >= 0 && keyIndex < nodeChildren.size() ? nodeChildren.get(keyIndex) : null));
+                FXThreadUtils.runOnFXThread(() -> keyOption.currentSimplerKeyContentContainerProperty().set(keyIndex >= 0 && keyIndex < nodeChildren.size() ? nodeChildren.get(keyIndex) : null));
             }
         });
         if (AppModeController.INSTANCE.modeProperty().get() == AppMode.USE) {
-            Platform.runLater(SelectionModeController.INSTANCE::generateScanningForCurrentGridAndRestart);
+            FXThreadUtils.runOnFXThread(SelectionModeController.INSTANCE::generateScanningForCurrentGridAndRestart);
         }
     }
 

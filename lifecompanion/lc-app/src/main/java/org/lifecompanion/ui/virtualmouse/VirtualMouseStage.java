@@ -66,7 +66,7 @@ public class VirtualMouseStage extends Stage {
         this.setAlwaysOnTop(true);
         this.setMaximized(true);
         this.setTitle(LCConstant.NAME + " - " + Translation.getText("virtual.mouse.stage.title.com"));
-        StageUtils.setFocusableSafe(this, false);
+        StageUtils.setFocusableInternalAPI(this, false);
         this.centerOnScreen();
         //Scene
         this.setScene(new VirtualMouseScene(new Group()));
