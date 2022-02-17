@@ -290,7 +290,6 @@ public class LCConfigurationActions {
             // Update the config description image because we are on JavaFX Thread
             // Unknown bug : snapshot can sometimes fail
             try {
-                // FIXME : bad background style on configuration
                 configDescription.configurationImageProperty().set(DisplayableComponentSnapshotController.getComponentSnapshot(configuration, false, -1, -1));
             } catch (Throwable t) {
                 LCConfigurationActions.LOGGER.warn("Couldn't take a snapshot of configuration", t);

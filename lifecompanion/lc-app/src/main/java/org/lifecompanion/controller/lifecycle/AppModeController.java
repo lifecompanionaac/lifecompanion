@@ -70,9 +70,7 @@ public enum AppModeController {
 
     AppModeController() {
         mode = new SimpleObjectProperty<>();
-        mode.addListener((obs, ov, nv) -> {
-            stopModeIfNeeded(ov);
-        });
+        mode.addListener((obs, ov, nv) -> stopModeIfNeeded(ov));
         this.useModeContext = new UseModeContext();
         this.editModeContext = new EditModeContext();
     }

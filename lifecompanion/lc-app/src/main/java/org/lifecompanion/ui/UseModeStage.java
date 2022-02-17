@@ -56,7 +56,11 @@ public class UseModeStage extends Stage {
         } else {
             StageUtils.moveStageTo(this, configuration.framePositionOnLaunchProperty().get());
         }
-        this.setOnShown(e1 -> StageUtils.setFocusableInternalAPI(this, false));
+        this.setOnShown(e1 -> {
+            if (configuration.virtualKeyboardProperty().get()) {
+                StageUtils.setFocusableInternalAPI(this, false);
+            }
+        });
         this.setOnHidden(e -> {
             this.opacityProperty().unbind();
             useModeScene.unbindAndClean();

@@ -42,6 +42,7 @@ import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStepVie
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.util.javafx.FXControlUtils;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.predict4all.nlp.prediction.WordPredictor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -135,7 +136,7 @@ public class P4ATestingConfigurationView extends VBox implements GeneralConfigur
             this.currentPredictions.clear();
             this.threadPool.submit(() -> {
                 WordPredictionResultI prediction = Predict4AllWordPredictorHelper.predictorOn(this.wordPredictor, text, "", this.spinnerPredictionCountToDisplay.getValue());
-                Platform.runLater(() -> this.currentPredictions.setAll(prediction.getPredictions()));
+                FXThreadUtils.runOnFXThread(() -> this.currentPredictions.setAll(prediction.getPredictions()));
                 return null;
             });
         }

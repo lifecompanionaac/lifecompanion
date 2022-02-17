@@ -166,16 +166,6 @@ public class ImageElement implements ImageElementI {
 
     // LOADING
     //========================================================================
-    //    @Override
-    //    public boolean checkIfExistingLoadRequestOrCleanIfNot() {
-    //        if (this.loadingRequest.containsValue(true)) {
-    //            return true;
-    //        } else {
-    //            unloadImage();
-    //            return false;
-    //        }
-    //    }
-
     private double lastRequestedWidth, lastRequestedHeight;
     private boolean cachedKeepRatio, cachedSmooth;
 

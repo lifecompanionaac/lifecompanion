@@ -32,19 +32,19 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.controlsfx.glyphfont.FontAwesome;
-import org.lifecompanion.model.api.configurationcomponent.DisplayableComponentI;
-import org.lifecompanion.model.api.profile.UserCompDescriptionI;
-import org.lifecompanion.controller.resource.IconHelper;
-import org.lifecompanion.model.impl.constant.LCGraphicStyle;
-import org.lifecompanion.ui.common.util.UndoRedoTextInputWrapper;
 import org.lifecompanion.controller.editaction.BaseComponentAction;
 import org.lifecompanion.controller.editaction.BaseComponentAction.ChangeComponentNameAction;
 import org.lifecompanion.controller.editaction.UserCompActions.CreateOrUpdateUserComp;
-import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.controller.editmode.DisplayableComponentSnapshotController;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
+import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.model.api.configurationcomponent.DisplayableComponentI;
+import org.lifecompanion.model.api.profile.UserCompDescriptionI;
+import org.lifecompanion.model.impl.constant.LCGraphicStyle;
+import org.lifecompanion.ui.common.util.UndoRedoTextInputWrapper;
 import org.lifecompanion.util.javafx.FXControlUtils;
 import org.lifecompanion.util.javafx.FXUtils;
 import org.slf4j.Logger;
@@ -174,7 +174,7 @@ public class CommonComponentView extends BorderPane implements LCViewInitHelper 
     public void show(final DisplayableComponentI component) {
         currentComponent = component;
         if (component != null) {
-            DisplayableComponentSnapshotController.INSTANCE.requestSnapshotAsync(component, -1, -1, (c, img) -> {
+            DisplayableComponentSnapshotController.INSTANCE.requestSnapshotAsync(component, false, -1, -1, (c, img) -> {
                 if (c == currentComponent) {
                     imageViewComponent.setImage(img);
                 }

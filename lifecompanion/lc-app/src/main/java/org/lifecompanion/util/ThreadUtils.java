@@ -77,7 +77,7 @@ public class ThreadUtils {
 
     public static void printCurrentThreadStackTraceOnErr() {
         StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-        for (int i = 1; i < stackTrace.length && i < 5; i++) {
+        for (int i = 1; i < stackTrace.length && i < 50; i++) {
             System.err.println(stackTrace[i]);
         }
     }

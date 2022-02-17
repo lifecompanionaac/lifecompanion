@@ -26,15 +26,15 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import org.jdom2.Element;
+import org.lifecompanion.controller.lifecycle.AppModeController;
+import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
+import org.lifecompanion.framework.commons.fx.io.*;
+import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.model.api.configurationcomponent.ImageUseComponentI;
 import org.lifecompanion.model.api.imagedictionary.ImageElementI;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.impl.constant.LCConstant;
-import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
-import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.model.impl.imagedictionary.ImageDictionaries;
-import org.lifecompanion.framework.commons.fx.io.*;
-import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -196,7 +196,7 @@ public class ImageUseComponentPropertyWrapper {
         this.imageVTwo.addListener((obs, ov, nv) -> {
             if (ov != null) {
                 this.loadedImage.unbind();
-                ov.requestImageUnload(this.imageUseComponent.getID());
+                ov.requestImageUnload(getImageUseComponentID());
                 externalLoadingRequest.forEach(ov::requestImageUnload);
             }
             if (nv != null) {
@@ -215,12 +215,17 @@ public class ImageUseComponentPropertyWrapper {
                 if (nv) {
                     this.requestImageLoadingForThisImageUseComponentIfNeeded();
                 } else {
-                    this.imageVTwo.get().requestImageUnload(this.imageUseComponent.getID());
+                    this.imageVTwo.get().requestImageUnload(getImageUseComponentID());
                 }
             }
         });
         // On mode changed, check that image should be loaded
         AppModeController.INSTANCE.modeProperty().addListener(new WeakInvalidationListener(invalidationListenerForAppMode));
+    }
+
+    private String getImageUseComponentID() {
+        // Combine component ID and instance ID (as the same component can be used in use/edit mode at the same time)
+        return this.imageUseComponent.getID() + "-" + this.imageUseComponent.hashCode();
     }
 
     // FIXME : config value
@@ -235,7 +240,7 @@ public class ImageUseComponentPropertyWrapper {
 
     private void requestImageLoadingForThisImageUseComponentIfNeeded() {
         if (this.imageUseComponent.imageUseComponentDisplayedProperty().get()) {
-            this.requestImageLoadingForComponentWithId(this.imageUseComponent.getID());
+            this.requestImageLoadingForComponentWithId(getImageUseComponentID());
         }
     }
 

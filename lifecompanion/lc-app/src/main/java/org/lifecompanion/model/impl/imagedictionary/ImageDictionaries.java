@@ -23,17 +23,10 @@ import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.scene.image.Image;
 import javafx.util.Pair;
-import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
-import org.lifecompanion.model.api.imagedictionary.ImageDictionaryI;
-import org.lifecompanion.model.api.imagedictionary.ImageElementI;
-import org.lifecompanion.model.api.lifecycle.LCStateListener;
-import org.lifecompanion.model.api.lifecycle.ModeListenerI;
-import org.lifecompanion.util.model.ConfigurationComponentUtils;
-import org.lifecompanion.util.ThreadUtils;
-import org.lifecompanion.model.impl.constant.LCConstant;
-import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
 import org.lifecompanion.controller.appinstallation.InstallationConfigurationController;
 import org.lifecompanion.controller.io.JsonHelper;
+import org.lifecompanion.controller.lifecycle.AppModeController;
+import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.io.FileNameUtils;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
@@ -41,7 +34,15 @@ import org.lifecompanion.framework.commons.utils.lang.LangUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.framework.utils.FluentHashMap;
 import org.lifecompanion.framework.utils.LCNamedThreadFactory;
+import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
+import org.lifecompanion.model.api.imagedictionary.ImageDictionaryI;
+import org.lifecompanion.model.api.imagedictionary.ImageElementI;
+import org.lifecompanion.model.api.lifecycle.LCStateListener;
+import org.lifecompanion.model.api.lifecycle.ModeListenerI;
+import org.lifecompanion.model.impl.constant.LCConstant;
+import org.lifecompanion.util.ThreadUtils;
 import org.lifecompanion.util.javafx.ImageUtils;
+import org.lifecompanion.util.model.ConfigurationComponentUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -343,7 +344,17 @@ public enum ImageDictionaries implements LCStateListener, ModeListenerI {
                 while (true) {
                     Set<ImageElement> imageLoaded = new ArrayList<>(this.allImages.values()).stream().map(img -> (ImageElement) img).filter(img -> img.loadedImageProperty().get() != null).collect(Collectors.toSet());
                     LOGGER.info("Loaded image count : {}", imageLoaded.size());
-                    //imageLoaded.stream().forEach(img -> System.err.println("\t" + img.getName() + " = " + (img.getLoadingRequest().entrySet().stream().filter(Map.Entry::getValue).map(Map.Entry::getKey).collect(Collectors.joining(" ")))));
+                    if (AppModeController.INSTANCE.getEditModeContext().getConfiguration() == null && AppModeController.INSTANCE.getUseModeContext().getConfiguration() == null) {
+                        imageLoaded
+                                .forEach(img ->
+                                        System.err.println("\t" + img.getName() + " = " + (img.getLoadingRequest()
+                                                .entrySet()
+                                                .stream()
+                                                .filter(Map.Entry::getValue)
+                                                .map(Map.Entry::getKey)
+                                                .collect(Collectors.joining(" "))))
+                                );
+                    }
                     ThreadUtils.safeSleep(5_000);
                 }
             }).start();

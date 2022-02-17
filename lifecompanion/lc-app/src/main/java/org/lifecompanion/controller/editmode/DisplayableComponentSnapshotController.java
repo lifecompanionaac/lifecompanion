@@ -23,12 +23,12 @@ import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.scene.image.Image;
+import org.lifecompanion.framework.utils.LCNamedThreadFactory;
 import org.lifecompanion.model.api.configurationcomponent.DisplayableComponentI;
 import org.lifecompanion.model.api.ui.configurationcomponent.ComponentViewI;
 import org.lifecompanion.model.api.ui.configurationcomponent.ViewProviderI;
-import org.lifecompanion.util.javafx.FXThreadUtils;
-import org.lifecompanion.framework.utils.LCNamedThreadFactory;
 import org.lifecompanion.model.impl.ui.configurationcomponent.UseViewProvider;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.util.javafx.SnapshotUtils;
 import org.lifecompanion.util.model.ImageDictionaryUtils;
 import org.slf4j.Logger;
@@ -89,9 +89,9 @@ public enum DisplayableComponentSnapshotController {
         }
     }
 
-    public void requestSnapshotAsync(DisplayableComponentI component, double w, double h, BiConsumer<DisplayableComponentI, Image> callback) {
+    public void requestSnapshotAsync(DisplayableComponentI component, boolean useCache, double w, double h, BiConsumer<DisplayableComponentI, Image> callback) {
         final CachedSnapshot cachedSnapshot = snapshotCache.get(component.getID());
-        if (cachedSnapshot != null) {
+        if (useCache && cachedSnapshot != null) {
             cachedSnapshot.updateLastUsed();
             callback.accept(component, cachedSnapshot.image);
         } else {
@@ -114,7 +114,9 @@ public enum DisplayableComponentSnapshotController {
                     eventHandlerTaskFinished.handle(e);
                     final Image img = task.getValue();
                     if (img != null) {
-                        snapshotCache.put(component.getID(), new CachedSnapshot(img));
+                        if (useCache) {
+                            snapshotCache.put(component.getID(), new CachedSnapshot(img));
+                        }
                         callback.accept(component, img);
                     }
                 });
