@@ -26,6 +26,10 @@ import javax.persistence.Column;
 import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.framework.model.server.SystemTypeModifier;
 
+/**
+ * This model has been replaced by {@link ApplicationUpdateFile} with {@link TargetType} LAUNCHER.<br>
+ * We keep this model to ensure backward compatibility with previous installations.
+ */
 public class ApplicationLauncherUpdate {
     private String id;
     private String version;
