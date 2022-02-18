@@ -35,8 +35,8 @@ import java.io.File;
  */
 public class ConfigurationDescriptionSavingTask extends LCTask<Void> {
     private final static Logger LOGGER = LoggerFactory.getLogger(ConfigurationDescriptionSavingTask.class);
-    private File directory;
-    private LCConfigurationDescriptionI description;
+    private final File directory;
+    private final LCConfigurationDescriptionI description;
 
     public ConfigurationDescriptionSavingTask(final File directoryP, final LCConfigurationDescriptionI descriptionP) {
         super("task.title.save.config.description");

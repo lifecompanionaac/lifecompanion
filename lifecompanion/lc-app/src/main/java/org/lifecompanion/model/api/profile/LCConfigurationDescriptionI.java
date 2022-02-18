@@ -29,6 +29,7 @@ import org.lifecompanion.model.api.io.XMLSerializable;
 import java.io.File;
 import java.util.Date;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Represent the description of a {@link LCConfigurationI}, can be use to display a configuration without loading it.
@@ -36,19 +37,20 @@ import java.util.List;
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public interface LCConfigurationDescriptionI extends XMLSerializable<File> {
-    /**
-     * @return a image property that contains a configuration image.<br>
-     * This image can be null until the configuration is saved, or if {@link #requestImageLoad()} was not called yet.
-     */
-    ObjectProperty<Image> configurationImageProperty();
+//    /**
+//     * @return a image property that contains a configuration image.<br>
+//     */
+//    ObjectProperty<Image> configurationImageProperty();
+
+    void setConfigurationImageToSave(Image image);
+
+    Image getConfigurationImageToSave();
 
     /**
      * To request the {@link #configurationImageProperty()} to be loaded.<br>
      * May take a while before the image is loaded (async)
      */
-    void requestImageLoad();
-
-    void unloadImage();
+    void requestImageLoad(Consumer<Image> callback);
 
     /**
      * @return the name of the associated configuration

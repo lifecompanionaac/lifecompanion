@@ -43,6 +43,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Implementation of {@link LCConfigurationDescriptionI}
@@ -57,9 +58,9 @@ public class LCConfigurationDescription implements LCConfigurationDescriptionI {
     private String configurationID;
 
     /**
-     * The image that display this configuration
+     * Image to save for this description - if null, no image will be saved
      */
-    private final ObjectProperty<Image> configurationImage;
+    private Image configurationImageToSave;
 
     /**
      * Date when configuration was the last saved/open/created, must never be null
@@ -98,11 +99,6 @@ public class LCConfigurationDescription implements LCConfigurationDescriptionI {
     private final LcTechInfoI techInfo;
 
     /**
-     * To know if we are already loading the image
-     */
-    private transient boolean loadingImage;
-
-    /**
      * Path to configuration image
      */
     private transient String imagePath;
@@ -116,13 +112,12 @@ public class LCConfigurationDescription implements LCConfigurationDescriptionI {
      * Create the description for a given configuration
      */
     public LCConfigurationDescription() {
-        this.configurationName = new SimpleStringProperty(this, "configurationName");
-        this.configurationDescription = new SimpleStringProperty(this, "configurationDescription");
-        this.configurationAuthor = new SimpleStringProperty(this, "configurationAuthor");
-        this.configurationImage = new SimpleObjectProperty<>(this, "configurationImage");
-        this.loadedConfiguration = new SimpleObjectProperty<>(this, "loadedConfiguration");
-        this.lastDate = new SimpleObjectProperty<>(this, "lastDate", new Date());
-        this.launchInUseMode = new SimpleBooleanProperty(this, "launchInUseMode", false);
+        this.configurationName = new SimpleStringProperty();
+        this.configurationDescription = new SimpleStringProperty();
+        this.configurationAuthor = new SimpleStringProperty();
+        this.loadedConfiguration = new SimpleObjectProperty<>();
+        this.lastDate = new SimpleObjectProperty<>(new Date());
+        this.launchInUseMode = new SimpleBooleanProperty(false);
         this.techInfo = new LcTechInfo();
         this.changelogEntries = new ArrayList<>(50);
         //Change ID with configuration change
@@ -135,40 +130,33 @@ public class LCConfigurationDescription implements LCConfigurationDescriptionI {
     }
 
     @Override
-    public ObjectProperty<Image> configurationImageProperty() {
-        return this.configurationImage;
+    public void setConfigurationImageToSave(Image configurationImageToSave) {
+        this.configurationImageToSave = configurationImageToSave;
     }
 
     @Override
-    public synchronized void requestImageLoad() {
-        if (this.imagePath != null && !this.loadingImage && this.configurationImage.get() == null) {
-            //Read image when exist
-            this.loadingImage = true;
+    public Image getConfigurationImageToSave() {
+        return configurationImageToSave;
+    }
+
+    @Override
+    public void requestImageLoad(final Consumer<Image> callback) {
+        if (this.imagePath != null) {
             File imageFile = new File(this.imagePath);
             if (imageFile.exists()) {
                 AsyncExecutorController.INSTANCE.addAndExecute(false, true, () -> {
                     try (FileInputStream imageIS = new FileInputStream(imageFile)) {
                         final Image value = new Image(imageIS);
-                        FXThreadUtils.runOnFXThread(() -> {
-                            if (loadingImage) {
-                                this.configurationImage.set(value);
-                            }
-                        });
+                        FXThreadUtils.runOnFXThread(() -> callback.accept(value));
                     } catch (IOException e) {
                         LCConfigurationDescription.LOGGER.warn("Couldn't load the configuration preview image", e);
                     }
                 });
             } else {
                 LCConfigurationDescription.LOGGER.warn("There is no image for the configuration description {}", this.configurationID);
+                callback.accept(null);
             }
         }
-    }
-
-    public synchronized void unloadImage() {
-        this.loadingImage = false;
-        FXThreadUtils.runOnFXThread(() -> {
-            this.configurationImage.set(null);
-        });
     }
 
     @Override
@@ -233,11 +221,12 @@ public class LCConfigurationDescription implements LCConfigurationDescriptionI {
         element.addContent(this.techInfo.serialize(contextP));
 
         //Save image when exist
-        if (this.configurationImage.get() != null) {
+        if (this.configurationImageToSave != null) {
             File imageFile = new File(contextP + File.separator + LCConstant.CONFIGURATION_SCREENSHOT_NAME);
-            BufferedImage buffImage = SwingFXUtils.fromFXImage(this.configurationImage.get(), null);
+            BufferedImage buffImage = SwingFXUtils.fromFXImage(configurationImageToSave, null);
             try {
                 ImageIO.write(buffImage, "png", imageFile);
+                configurationImageToSave = null;
                 LCConfigurationDescription.LOGGER.info("Configuration description preview saved to {}", imageFile);
             } catch (IOException e) {
                 LCConfigurationDescription.LOGGER.warn("Couldn't save the configuration preview image", e);

@@ -31,36 +31,31 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.stage.FileChooser;
 import javafx.util.Pair;
-import org.lifecompanion.controller.io.*;
+import org.lifecompanion.controller.editmode.*;
+import org.lifecompanion.controller.io.IOHelper;
 import org.lifecompanion.controller.io.task.*;
-import org.lifecompanion.model.api.editaction.BaseEditActionI;
-import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
-import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
-import org.lifecompanion.model.api.profile.LCProfileI;
-import org.lifecompanion.model.impl.exception.LCException;
-import org.lifecompanion.util.ThreadUtils;
-import org.lifecompanion.util.javafx.DialogUtils;
-import org.lifecompanion.util.javafx.FXThreadUtils;
-import org.lifecompanion.model.impl.profile.LCConfigurationDescription;
-import org.lifecompanion.model.impl.configurationcomponent.LCConfigurationComponent;
-import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.profile.ProfileController;
 import org.lifecompanion.controller.profileconfigselect.ProfileConfigSelectionController;
 import org.lifecompanion.controller.profileconfigselect.ProfileConfigStep;
-import org.lifecompanion.controller.io.task.ExportGridsToPdfTask;
-import org.lifecompanion.controller.editmode.ConfigActionController;
-import org.lifecompanion.controller.editmode.FileChooserType;
-import org.lifecompanion.controller.editmode.LCStateController;
-import org.lifecompanion.model.impl.notification.LCNotification;
-import org.lifecompanion.controller.editmode.LCFileChoosers;
-import org.lifecompanion.ui.common.control.specific.selector.ConfigurationSelectorControl;
-import org.lifecompanion.controller.editmode.DisplayableComponentSnapshotController;
-import org.lifecompanion.ui.notification.LCNotificationController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.framework.utils.LCNamedThreadFactory;
+import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
+import org.lifecompanion.model.api.editaction.BaseEditActionI;
+import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
+import org.lifecompanion.model.api.profile.LCProfileI;
+import org.lifecompanion.model.impl.configurationcomponent.LCConfigurationComponent;
+import org.lifecompanion.model.impl.constant.LCConstant;
+import org.lifecompanion.model.impl.exception.LCException;
+import org.lifecompanion.model.impl.notification.LCNotification;
+import org.lifecompanion.model.impl.profile.LCConfigurationDescription;
+import org.lifecompanion.ui.common.control.specific.selector.ConfigurationSelectorControl;
+import org.lifecompanion.ui.notification.LCNotificationController;
+import org.lifecompanion.util.ThreadUtils;
+import org.lifecompanion.util.javafx.DialogUtils;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.util.javafx.FXUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,8 +65,8 @@ import java.io.File;
 import java.util.Date;
 import java.util.function.Consumer;
 
-import static org.lifecompanion.util.javafx.FXUtils.getSourceFromEvent;
 import static org.lifecompanion.controller.editmode.FileChooserType.EXPORT_PDF;
+import static org.lifecompanion.util.javafx.FXUtils.getSourceFromEvent;
 
 /**
  * Class that hold all software classic action.<br>
@@ -289,7 +284,7 @@ public class LCConfigurationActions {
 
             // Update the config description image because we are on JavaFX Thread
             try {
-                configDescription.configurationImageProperty().set(DisplayableComponentSnapshotController.getComponentSnapshot(configuration, false, -1, -1));
+                configDescription.setConfigurationImageToSave(DisplayableComponentSnapshotController.getComponentSnapshot(configuration, false, -1, -1));
             } catch (Throwable t) {
                 LCConfigurationActions.LOGGER.warn("Couldn't take a snapshot of configuration", t);
             }

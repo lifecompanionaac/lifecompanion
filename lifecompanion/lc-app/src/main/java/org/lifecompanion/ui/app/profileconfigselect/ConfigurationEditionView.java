@@ -44,8 +44,8 @@ import org.lifecompanion.model.api.profile.ChangelogEntryI;
 import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.ui.common.pane.specific.cell.ChangelogEntryListCell;
-import org.lifecompanion.util.javafx.FXControlUtils;
 import org.lifecompanion.util.javafx.DisableSelectionSelectionModel;
+import org.lifecompanion.util.javafx.FXControlUtils;
 import org.lifecompanion.util.model.Triple;
 
 import java.util.stream.Collectors;
@@ -180,16 +180,18 @@ public class ConfigurationEditionView extends BorderPane implements ProfileConfi
     public void initBinding() {
         this.editedConfiguration.addListener((obs, ov, nv) -> {
             if (ov != null) {
-                this.configurationPreview.imageProperty().unbind();
-                this.configurationPreview.imageProperty().set(null);
+                configurationPreview.setImage(null);
                 this.fieldName.textProperty().unbindBidirectional(ov.configurationNameProperty());
                 this.fieldAuthor.textProperty().unbindBidirectional(ov.configurationAuthorProperty());
                 this.fieldDescription.textProperty().unbindBidirectional(ov.configurationDescriptionProperty());
                 this.listViewChangelogEntries.setItems(null);
             }
             if (nv != null) {
-                nv.requestImageLoad();
-                this.configurationPreview.imageProperty().bind(nv.configurationImageProperty());
+                nv.requestImageLoad(image -> {
+                    if (editedConfiguration.get() == nv) {
+                        this.configurationPreview.setImage(image);
+                    }
+                });
                 this.fieldName.textProperty().bindBidirectional(nv.configurationNameProperty());
                 this.fieldAuthor.textProperty().bindBidirectional(nv.configurationAuthorProperty());
                 this.fieldDescription.textProperty().bindBidirectional(nv.configurationDescriptionProperty());

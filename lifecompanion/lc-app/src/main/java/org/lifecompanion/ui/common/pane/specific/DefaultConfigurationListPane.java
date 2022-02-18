@@ -25,7 +25,6 @@ import javafx.geometry.*;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -54,8 +53,6 @@ public class DefaultConfigurationListPane extends VBox implements LCViewInitHelp
     private final boolean multiSelectMode;
     private Consumer<Pair<LCConfigurationDescriptionI, File>> onConfigurationSelected;
     private Hyperlink linkSelectAll, linkUnselectAll;
-
-    private List<Pair<LCConfigurationDescriptionI, File>> currentDefaultConfigurations;
 
     public DefaultConfigurationListPane(boolean multiSelectMode) {
         defaultConfigurationToggles = new HashMap<>();
@@ -112,15 +109,12 @@ public class DefaultConfigurationListPane extends VBox implements LCViewInitHelp
 
 
     public void clearConfigurationImages() {
-        if (currentDefaultConfigurations != null) {
-            currentDefaultConfigurations.forEach(p -> p.getLeft().unloadImage());
-        }
+        this.gridPaneDefaultConfigurations.getChildren().clear();
     }
 
     public void initDefaultConfigurations() {
-        if (this.currentDefaultConfigurations == null) {
+        if (this.gridPaneDefaultConfigurations.getChildren().isEmpty()) {
             ProfileConfigSelectionController.INSTANCE.getDefaultConfiguration(defaultConfigurations -> {
-                this.currentDefaultConfigurations = defaultConfigurations;
                 int rowIndex = 0;
                 for (Pair<LCConfigurationDescriptionI, File> defaultConfiguration : defaultConfigurations) {
                     LCConfigurationDescriptionI configDescription = defaultConfiguration.getLeft();
@@ -130,7 +124,7 @@ public class DefaultConfigurationListPane extends VBox implements LCViewInitHelp
                     imageViewInList.setFitWidth(300);
                     imageViewInList.setFitHeight(200);
                     imageViewInList.setPreserveRatio(true);
-                    imageViewInList.imageProperty().bind(configDescription.configurationImageProperty());
+                    configDescription.requestImageLoad(imageViewInList::setImage);
                     GridPane.setHalignment(imageViewInList, HPos.RIGHT);
                     GridPane.setHgrow(imageViewInList, Priority.ALWAYS);
                     GridPane.setMargin(imageViewInList, new Insets(5.0, 20.0, 5.0, 0.0));
@@ -181,8 +175,6 @@ public class DefaultConfigurationListPane extends VBox implements LCViewInitHelp
                     gridPaneDefaultConfigurations.add(labelDescription, colSpanImg, rowIndex + 2);
                     gridPaneDefaultConfigurations.add(selectionNode, colSpanImg + 1, rowIndex, 1, 3);
 
-                    configDescription.requestImageLoad();
-
                     final Separator separator = new Separator(Orientation.HORIZONTAL);
                     GridPane.setMargin(separator, new Insets(5.0, 30.0, 5.0, 30.0));
                     gridPaneDefaultConfigurations.add(separator, 0, rowIndex + 3, colSpanImg + 2, 1);
@@ -190,8 +182,6 @@ public class DefaultConfigurationListPane extends VBox implements LCViewInitHelp
                     rowIndex += 5;
                 }
             });
-        } else {
-            currentDefaultConfigurations.forEach(p -> p.getLeft().requestImageLoad());
         }
     }
 }

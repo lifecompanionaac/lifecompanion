@@ -33,14 +33,14 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import org.controlsfx.glyphfont.FontAwesome;
-import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
-import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.profileconfigselect.ProfileConfigSelectionController;
 import org.lifecompanion.controller.profileconfigselect.ProfileConfigStep;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
+import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.util.javafx.FXControlUtils;
 
 import java.util.function.Consumer;
@@ -160,16 +160,18 @@ public class ConfigurationDescriptionAdvancedListCell extends ListCell<LCConfigu
     protected void updateItem(final LCConfigurationDescriptionI itemP, final boolean emptyP) {
         super.updateItem(itemP, emptyP);
         if (itemP == null || emptyP) {
-            this.configurationImage.imageProperty().unbind();
-            this.configurationImage.imageProperty().set(null);
+            this.configurationImage.setImage(null);
             this.labelConfigName.textProperty().unbind();
             this.labelConfigDescription.textProperty().unbind();
             this.labelConfigDate.textProperty().unbind();
             this.labelConfigAuthor.textProperty().unbind();
             this.setGraphic(null);
         } else {
-            itemP.requestImageLoad();
-            this.configurationImage.imageProperty().bind(itemP.configurationImageProperty());
+            itemP.requestImageLoad(image -> {
+                if (itemP == getItem()) {
+                    this.configurationImage.setImage(image);
+                }
+            });
             this.labelConfigName.textProperty().bind(Bindings.createStringBinding(
                     () -> itemP.configurationNameProperty().get() + (itemP.launchInUseModeProperty().get() ? (" " + Translation.getText("configuration.launch.in.use.mode.indicator.text")) : ""),
                     itemP.configurationNameProperty(), itemP.launchInUseModeProperty()));

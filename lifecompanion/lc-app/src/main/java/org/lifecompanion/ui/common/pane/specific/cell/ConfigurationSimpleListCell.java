@@ -47,14 +47,16 @@ public class ConfigurationSimpleListCell extends ListCell<LCConfigurationDescrip
 	protected void updateItem(final LCConfigurationDescriptionI itemP, final boolean emptyP) {
 		super.updateItem(itemP, emptyP);
 		if (itemP == null || emptyP) {
-			this.configurationImage.imageProperty().unbind();
-			this.configurationImage.imageProperty().set(null);
+			this.configurationImage.setImage(null);
 			this.textProperty().unbind();
 			this.setText(null);
 			this.setGraphic(null);
 		} else {
-			itemP.requestImageLoad();
-			this.configurationImage.imageProperty().bind(itemP.configurationImageProperty());
+			itemP.requestImageLoad(image -> {
+				if (itemP == getItem()) {
+					this.configurationImage.setImage(image);
+				}
+			});
 			this.textProperty().bind(itemP.configurationNameProperty());
 			this.setGraphic(this.configurationImage);
 		}
