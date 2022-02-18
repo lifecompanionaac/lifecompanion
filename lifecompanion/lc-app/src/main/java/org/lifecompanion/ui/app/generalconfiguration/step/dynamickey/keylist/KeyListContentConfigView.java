@@ -40,27 +40,27 @@ import javafx.scene.paint.Color;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.fxmisc.easybind.EasyBind;
 import org.fxmisc.easybind.monadic.MonadicBinding;
-import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
-import org.lifecompanion.ui.common.pane.specific.cell.KeyListCellHandler;
-import org.lifecompanion.ui.common.pane.specific.cell.KeyListNodeTreeCell;
-import org.lifecompanion.util.javafx.FXControlUtils;
-import org.lifecompanion.util.model.ConfigurationComponentUtils;
-import org.lifecompanion.util.binding.ListBindingWithMapper;
-import org.lifecompanion.model.impl.configurationcomponent.dynamickey.KeyListLeaf;
-import org.lifecompanion.model.impl.configurationcomponent.dynamickey.KeyListLinkLeaf;
-import org.lifecompanion.model.impl.configurationcomponent.dynamickey.KeyListNode;
-import org.lifecompanion.controller.resource.IconHelper;
-import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.editaction.KeyListActions;
-import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.controller.editmode.ConfigActionController;
-import org.lifecompanion.model.impl.notification.LCNotification;
-import org.lifecompanion.ui.notification.LCNotificationController;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
+import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.lang.LangUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.framework.utils.Pair;
+import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
+import org.lifecompanion.model.impl.configurationcomponent.dynamickey.KeyListLeaf;
+import org.lifecompanion.model.impl.configurationcomponent.dynamickey.KeyListLinkLeaf;
+import org.lifecompanion.model.impl.configurationcomponent.dynamickey.KeyListNode;
+import org.lifecompanion.model.impl.constant.LCGraphicStyle;
+import org.lifecompanion.model.impl.notification.LCNotification;
+import org.lifecompanion.ui.common.pane.specific.cell.KeyListCellHandler;
+import org.lifecompanion.ui.common.pane.specific.cell.KeyListNodeTreeCell;
+import org.lifecompanion.ui.notification.LCNotificationController;
+import org.lifecompanion.util.binding.ListBindingWithMapper;
+import org.lifecompanion.util.javafx.FXControlUtils;
+import org.lifecompanion.util.model.ConfigurationComponentUtils;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -448,6 +448,7 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
     //========================================================================
     private void updatePathForSelection(KeyListNodeI selected) {
         selectionPathContainer.getChildren().clear();
+        System.err.println("Clear selection path container");
         if (selected != null) {
             KeyListNodeI current = selected;
             while (current != null) {

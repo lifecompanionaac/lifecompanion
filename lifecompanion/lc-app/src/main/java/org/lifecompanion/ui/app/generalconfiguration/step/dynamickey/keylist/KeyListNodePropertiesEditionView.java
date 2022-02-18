@@ -91,6 +91,7 @@ public class KeyListNodePropertiesEditionView extends AbstractSimplerKeyActionCo
     @Override
     protected void unbindBidirectionalContent(KeyListNodeI ov, KeyListNodeI nv) {
         super.unbindBidirectionalContent(ov, nv);
+        linkedNodeSelector.setInputKeyNode(null);
         if (ov != null) {
             linkedNodeSelector.selectedKeylistCategoryIdProperty().unbindBidirectional(ov.linkedNodeIdProperty());
         }

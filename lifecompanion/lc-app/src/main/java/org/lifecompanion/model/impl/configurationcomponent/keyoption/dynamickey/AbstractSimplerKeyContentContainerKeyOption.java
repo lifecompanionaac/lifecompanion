@@ -23,16 +23,16 @@ import javafx.beans.Observable;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import org.jdom2.Element;
-import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
-import org.lifecompanion.model.api.configurationcomponent.dynamickey.SimplerKeyContentContainerI;
+import org.lifecompanion.controller.lifecycle.AppMode;
+import org.lifecompanion.controller.lifecycle.AppModeController;
+import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.model.api.categorizedelement.useaction.BaseUseActionI;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
-import org.lifecompanion.model.impl.exception.LCException;
+import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
+import org.lifecompanion.model.api.configurationcomponent.dynamickey.SimplerKeyContentContainerI;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.AbstractKeyOption;
-import org.lifecompanion.controller.lifecycle.AppModeController;
-import org.lifecompanion.controller.lifecycle.AppMode;
-import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
+import org.lifecompanion.model.impl.exception.LCException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -119,6 +119,8 @@ public abstract class AbstractSimplerKeyContentContainerKeyOption<T extends Simp
                 );
             }
             updateKeyFor(key, simplerKeyContentContainer, AppModeController.INSTANCE.modeProperty().get());
+        } else if (currentSimplerKeyContentContainer.get() != null) {
+            currentSimplerKeyContentContainer.get().bindImageDisplayProperties(null);
         }
     }
 

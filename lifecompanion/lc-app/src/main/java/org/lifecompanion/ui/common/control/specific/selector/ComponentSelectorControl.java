@@ -101,11 +101,9 @@ public class ComponentSelectorControl<T extends DisplayableComponentI> extends V
 
     @Override
     public void initUI() {
-        //Create label
         if (labelText != null) {
             this.label = new Label(this.labelText);
         }
-        // Search combobox
         searchComboBox = new SearchComboBox<>(
                 lv -> new DisplayableComponentListCell<>(),
                 searchText -> StringUtils.isBlank(searchText) ? this::isValidItem : c -> this.isValidItem(c) && ConfigurationComponentUtils.getSimilarityScoreFor(searchText, c) > 0,
@@ -114,8 +112,6 @@ public class ComponentSelectorControl<T extends DisplayableComponentI> extends V
                         ConfigurationComponentUtils.getSimilarityScoreFor(searchText, c2),
                         ConfigurationComponentUtils.getSimilarityScoreFor(searchText, c1))
         );
-        //UIUtils.setFixedWidth(searchComboBox, 250.0);
-
         this.setSpacing(5.0);
         if (label != null) {
             this.getChildren().add(label);

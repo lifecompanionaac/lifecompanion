@@ -18,8 +18,7 @@
 	- Proposition d'actions en fonction
 	- Centralisation des actions au même endroit
 - (Technique) Les mises à jour du lanceur et de l'application sont maintenant communes
-	- Maintenance facilité
-	- Diminue les risques de changements "bloquants"
+- (Technique) Architecture et organisation : préparation à l'open-source, simplification de la maintenance/des évolutions
 
 ### Corrections/ajustements
 
@@ -29,14 +28,16 @@
 - Ticket #21 : déplacement du champs de recherche dans les listes de cases
 - Ticket #22 : lors du clic sur "Nouvelle configuration", cela ouvre maintenant la même fenêtre que lorsqu'on sélectionne "Ajouter"
 - Ticket #29 : le déplacement du curseur dans l'éditeur de texte ne se fait plus en mode configuration
+- Ticket #78 & #1 : correction de problèmes de chargement des images
 - Ticket #86 : le mot "copie" n'est plus ajouté devant le texte d'une case copiée
 - Ticket #23 : changement du nom de certaines actions
 - Ticket #93 : le bouton retour lors de la création d'une configuration ne créer plus la configuration
+- Ticket #95 : il est maintenant possible de cliquer sur toute la ligne dans les sélection d'action (export, supprimer, etc.)
+- Ticket #5 : L'installeur de LifeCompanion intègre maintenant l'accord de licence
 - Correction d'un problème lors de la suppression des listes de case
 - Correction d'un problème d'affichage lors de l'export en PDF dans certains cas
 - L'action "Sélectionner une liste choisie" est maintenant simulée en mode configuration
-- Champs pour sélectionner des listes de cases amélioré
-- L'installeur de LifeCompanion intègre maintenant l'accord de licence
+
 
 ## 1.2.1 - 12/12/2021
 

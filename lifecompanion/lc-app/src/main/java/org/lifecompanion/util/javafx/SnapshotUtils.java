@@ -68,14 +68,7 @@ public class SnapshotUtils {
             Group group = new Group();
             new Scene(group);
 
-            // FIXME : CSS not applied
             group.getStylesheets().addAll(LCConstant.CSS_USE_MODE);
-            //            scene.getStylesheets().add("data:text/css;base64," + Base64.getEncoder().encodeToString((".text-displayer-scroll-pane > .viewport {\n" +
-            //                    "   -fx-background-color: transparent;\n" +
-            //                    "}\n" +
-            //                    ".text-displayer-scroll-pane > .scroll-bar {\n" +
-            //                    "   -fx-background-color: transparent;\n" +
-            //                    "}").getBytes(StandardCharsets.UTF_8)));
 
             //Take snapshot
             group.getChildren().add(node);

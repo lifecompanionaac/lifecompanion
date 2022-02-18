@@ -53,7 +53,7 @@ public class ConfigurationMemoryLeakChecker {
                                 .distinct()
                                 .count();
                         LOGGER.info("Loaded configuration in memory (from contexts) : {}", count);
-                        ThreadUtils.safeSleep(10_000);
+                        ThreadUtils.safeSleep(5_000);
                     }
                 }).start();
             }

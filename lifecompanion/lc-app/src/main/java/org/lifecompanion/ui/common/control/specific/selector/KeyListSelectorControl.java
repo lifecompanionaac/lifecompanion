@@ -83,10 +83,6 @@ public class KeyListSelectorControl extends VBox implements LCViewInitHelper {
         return new Function[]{getter};
     }
 
-    public void setTooltipText(String tooltipTextId) {
-        Tooltip.install(searchComboBox, FXControlUtils.createTooltip(tooltipTextId));
-    }
-
     @Override
     public void initBinding() {
         // When selection change in combobox, change in ID
