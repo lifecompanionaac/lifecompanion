@@ -21,14 +21,12 @@ package org.lifecompanion.ui.configurationcomponent.base;
 
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.ReadOnlyDoubleProperty;
-import javafx.geometry.Bounds;
 import javafx.geometry.Rectangle2D;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import org.lifecompanion.controller.lifecycle.AppModeController;
@@ -40,7 +38,6 @@ import org.lifecompanion.model.api.style.TextCompStyleI;
 import org.lifecompanion.model.api.textcomponent.*;
 import org.lifecompanion.model.impl.textcomponent.TextDisplayerLineHelper;
 import org.lifecompanion.util.javafx.FXThreadUtils;
-import org.lifecompanion.util.javafx.FXUtils;
 import org.predict4all.nlp.Separator;
 
 import java.util.ArrayList;
@@ -82,12 +79,8 @@ public class TextDisplayer3 extends Pane implements LCViewInitHelper {
 
     @Override
     public void initBinding() {
-        // TODO : Batch updates ?
         cachedLineListenerData = this.textDisplayer.addCachedLinesUpdateListener(
-                lines -> {
-                    System.err.println("Request repaint");
-                    FXThreadUtils.runOnFXThread(() -> this.repaint(lines));
-                },
+                lines -> FXThreadUtils.runOnFXThread(() -> this.repaint(lines)),
                 maxWidthProperty
         );
     }

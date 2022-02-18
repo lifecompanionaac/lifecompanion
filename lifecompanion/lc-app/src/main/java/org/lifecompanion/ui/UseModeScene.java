@@ -63,7 +63,7 @@ public class UseModeScene extends Scene implements LCViewInitHelper {
         super(new Group());
         this.configuration = configuration;
         this.root = (Group) getRoot();
-        this.getStylesheets().addAll(LCConstant.CSS_STYLE_PATH);
+        this.getStylesheets().addAll(LCConstant.CSS_STYLE_PATH);//FIXME : replace with use mode css
     }
 
     @Override

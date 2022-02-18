@@ -1,3 +1,11 @@
+.text-displayer-scroll-pane {
+   -fx-background-color: transparent;
+   -fx-border-color:transparent, transparent;
+   -fx-border-width:0.0;
+}
+.text-displayer-scroll-pane:focused {
+    -fx-background-color:transparent;
+}
 .text-displayer-scroll-pane > .viewport {
    -fx-background-color: transparent;
 }
