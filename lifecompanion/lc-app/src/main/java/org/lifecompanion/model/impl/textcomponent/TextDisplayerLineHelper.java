@@ -19,17 +19,15 @@
 
 package org.lifecompanion.model.impl.textcomponent;
 
+import javafx.scene.text.Font;
+import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.model.api.configurationcomponent.WriterDisplayerI;
 import org.lifecompanion.model.api.configurationcomponent.WriterEntryI;
-import org.lifecompanion.model.api.textcomponent.TextBoundsProviderI;
-import org.lifecompanion.model.api.textcomponent.TextDisplayerLineI;
-import org.lifecompanion.model.api.textcomponent.TextDisplayerWordI;
-import org.lifecompanion.model.api.textcomponent.TextDisplayerWordPartI;
-import org.lifecompanion.model.api.textcomponent.WritingStateControllerI;
 import org.lifecompanion.model.api.style.TextCompStyleI;
+import org.lifecompanion.model.api.textcomponent.*;
 import org.lifecompanion.ui.configurationcomponent.base.TextDisplayer3;
-import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.util.LangUtils;
+import org.lifecompanion.util.javafx.FXUtils;
 import org.predict4all.nlp.Separator;
 
 import java.util.ArrayList;
@@ -42,15 +40,18 @@ import java.util.List;
  *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
-public class TextDisplayerLineGenerator {
+public class TextDisplayerLineHelper {
 
-    public static List<TextDisplayerLineI> generateLines(WritingStateControllerI writingStateController, WriterDisplayerI component, TextBoundsProviderI boundsProvider,
-                                                         TextCompStyleI defaultTextStyle, double maxWidth) {
-        return generateLines(writingStateController.getWriterEntries(), boundsProvider, defaultTextStyle, maxWidth, component.enableWordWrapProperty().get());
+    public static final TextBoundsProviderI BOUNDS_PROVIDER = (text, textStyle) -> {
+        Font originalFont = textStyle.fontProperty().get();
+        return FXUtils.getTextBounds(text, originalFont);
+    };
+
+    public static List<TextDisplayerLineI> generateLines(WritingStateControllerI writingStateController, WriterDisplayerI component, TextCompStyleI defaultTextStyle, double maxWidth) {
+        return generateLines(writingStateController.getWriterEntries(), defaultTextStyle, maxWidth, component.enableWordWrapProperty().get());
     }
 
-    public static List<TextDisplayerLineI> generateLines(List<WriterEntryI> originalEntriesList, TextBoundsProviderI boundsProvider,
-                                                         TextCompStyleI defaultTextStyle, double maxWidth, boolean enableWordWrap) {
+    public static List<TextDisplayerLineI> generateLines(List<WriterEntryI> originalEntriesList, TextCompStyleI defaultTextStyle, double maxWidth, boolean enableWordWrap) {
         // long splitStart = System.currentTimeMillis();
         // Copy entries (thread-safe)
         List<WriterEntryI> entries = new ArrayList<>(originalEntriesList);
@@ -59,11 +60,11 @@ public class TextDisplayerLineGenerator {
         List<TextDisplayerLineI> lines = createSimpleLines(entries, defaultTextStyle);
 
         // Split on multiples lines
-        splitLineForWidth(boundsProvider, defaultTextStyle, maxWidth, enableWordWrap, lines);
+        splitLineForWidth(BOUNDS_PROVIDER, defaultTextStyle, maxWidth, enableWordWrap, lines);
 
         // Split can create empty lines (when width is too small, so we clear thoses empty lines)
         lines.removeIf(textDisplayerLineI -> textDisplayerLineI.getWords().isEmpty());
-        addCaretBoundsAndComputeSizeAndImage(lines, boundsProvider, defaultTextStyle);
+        addCaretBoundsAndComputeSizeAndImage(lines, BOUNDS_PROVIDER, defaultTextStyle);
 
         return lines;
     }

@@ -32,15 +32,15 @@ import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.model.api.configurationcomponent.FramePosition;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.configurationcomponent.VirtualMouseDrawing;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
 import org.lifecompanion.ui.virtualmouse.VirtualMouseStage;
 import org.lifecompanion.util.javafx.FXThreadUtils;
-import org.lifecompanion.controller.lifecycle.AppModeController;
-import org.lifecompanion.util.javafx.StageUtils;
 import org.lifecompanion.util.javafx.RobotProvider;
+import org.lifecompanion.util.javafx.StageUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -306,9 +306,9 @@ public enum VirtualMouseController implements ModeListenerI {
     private void frameToFrontAndFocus() {
         //mouse stage and main frame to front
         FXThreadUtils.runOnFXThread(() -> {
-            AppModeController.INSTANCE.getUseModeContext().stageProperty().get().toFront();
+            AppModeController.INSTANCE.getUseModeContext().getStage().toFront();
             this.virtualMouseStage.toFront();
-            AppModeController.INSTANCE.getUseModeContext().stageProperty().get().requestFocus();
+            AppModeController.INSTANCE.getUseModeContext().getStage().requestFocus();
             this.centerMouseOnStage();
         });
     }
@@ -360,9 +360,11 @@ public enum VirtualMouseController implements ModeListenerI {
     public void centerMouseOnStage() {
         this.checkRobotInit();
         Stage stage = AppModeController.INSTANCE.getUseModeContext().stageProperty().get();
-        double x = stage.getX() + stage.getWidth() / 2.0;
-        double y = stage.getY() + stage.getHeight() / 2.0;
-        this.moveMouseToWithDelay(x, y);
+        if (robot != null && stage != null) {
+            double x = stage.getX() + stage.getWidth() / 2.0;
+            double y = stage.getY() + stage.getHeight() / 2.0;
+            this.moveMouseToWithDelay(x, y);
+        }
     }
 
     private void moveFrameToAvoidMouse() {

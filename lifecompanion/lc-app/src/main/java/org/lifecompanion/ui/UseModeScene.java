@@ -22,12 +22,12 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.input.KeyEvent;
-import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
-import org.lifecompanion.model.impl.editaction.CommonActions;
-import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.controller.metrics.SessionStatsController;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
-import org.lifecompanion.ui.configurationcomponent.usemode.SimpleUseConfigurationDisplayer;
+import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
+import org.lifecompanion.model.impl.constant.LCConstant;
+import org.lifecompanion.model.impl.editaction.CommonActions;
+import org.lifecompanion.ui.configurationcomponent.usemode.UseModeConfigurationDisplayer;
 import org.lifecompanion.util.javafx.FXControlUtils;
 
 /**
@@ -45,7 +45,7 @@ public class UseModeScene extends Scene implements LCViewInitHelper {
     /**
      * The configuration displayer
      */
-    private SimpleUseConfigurationDisplayer configurationDisplayer;
+    private UseModeConfigurationDisplayer configurationDisplayer;
 
     /**
      * Button to go back to configuration mode
@@ -68,7 +68,7 @@ public class UseModeScene extends Scene implements LCViewInitHelper {
 
     @Override
     public void initUI() {
-        this.configurationDisplayer = new SimpleUseConfigurationDisplayer(this.configuration, this.widthProperty(), this.heightProperty());
+        this.configurationDisplayer = new UseModeConfigurationDisplayer(this.configuration, this.widthProperty(), this.heightProperty());
         this.root.getChildren().add(this.configurationDisplayer);
 
         // Button go config mode
@@ -105,9 +105,7 @@ public class UseModeScene extends Scene implements LCViewInitHelper {
             }
         });
         //Filter mouse event to keep the goToConfig event
-        this.configurationDisplayer.addMouseListener(this, (mouseEvent) -> {
-            return mouseEvent.getTarget() != this.buttonGoToConfigMode && mouseEvent.getTarget() != this.buttonFullscreen;
-        });
+        this.configurationDisplayer.addMouseListener(this, (mouseEvent) -> mouseEvent.getTarget() != this.buttonGoToConfigMode && mouseEvent.getTarget() != this.buttonFullscreen);
         this.buttonGoToConfigMode.setOnAction(CommonActions.HANDLER_GO_CONFIG_MODE_CHECK);
         // Button to switch fullscreen mode
         this.buttonFullscreen.setOnAction(CommonActions.HANDLER_SWITCH_FULLSCREEN);
@@ -118,5 +116,11 @@ public class UseModeScene extends Scene implements LCViewInitHelper {
     public void unbindAndClean() {
         SessionStatsController.INSTANCE.unregisterScene(this);
         this.configurationDisplayer.unbindAndClean();
+    }
+
+    public void requestFocus() {
+        if (configurationDisplayer != null) {
+            configurationDisplayer.requestFocus();
+        }
     }
 }

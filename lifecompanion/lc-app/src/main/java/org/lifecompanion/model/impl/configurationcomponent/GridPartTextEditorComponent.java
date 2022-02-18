@@ -26,16 +26,12 @@ import javafx.collections.ObservableList;
 import org.jdom2.Element;
 import org.lifecompanion.model.api.configurationcomponent.TreeDisplayableComponentI;
 import org.lifecompanion.model.api.configurationcomponent.TreeDisplayableType;
-import org.lifecompanion.model.api.textcomponent.CachedLineListenerDataI;
-import org.lifecompanion.model.api.textcomponent.TextBoundsProviderI;
-import org.lifecompanion.model.api.textcomponent.TextDisplayerLineI;
-import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.style.ShapeCompStyleI;
 import org.lifecompanion.model.api.style.TextCompStyleI;
-import org.lifecompanion.model.impl.configurationcomponent.GridPartComponentBaseImpl;
-import org.lifecompanion.model.impl.configurationcomponent.WriterDisplayerComponentBaseImpl;
-import org.lifecompanion.model.impl.configurationcomponent.TextDisplayerPropertyWrapper;
+import org.lifecompanion.model.api.textcomponent.CachedLineListenerDataI;
+import org.lifecompanion.model.api.textcomponent.TextDisplayerLineI;
+import org.lifecompanion.model.impl.exception.LCException;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -89,13 +85,8 @@ public class GridPartTextEditorComponent extends GridPartComponentBaseImpl imple
     }
 
     @Override
-    public CachedLineListenerDataI getCachedLineUpdateListener() {
-        return textDisplayerPropertyWrapper.getCachedLinesListener();
-    }
-
-    @Override
-    public CachedLineListenerDataI setCachedLinesUpdateListener(Consumer<List<TextDisplayerLineI>> listener, DoubleBinding maxWithProperty, TextBoundsProviderI textBoundsProvider) {
-        return textDisplayerPropertyWrapper.setCachedLinesUpdateListener(listener, maxWithProperty, textBoundsProvider);
+    public CachedLineListenerDataI addCachedLinesUpdateListener(Consumer<List<TextDisplayerLineI>> listener, DoubleBinding maxWithProperty) {
+        return textDisplayerPropertyWrapper.addCachedLinesUpdateListener(listener, maxWithProperty);
     }
     //========================================================================
 

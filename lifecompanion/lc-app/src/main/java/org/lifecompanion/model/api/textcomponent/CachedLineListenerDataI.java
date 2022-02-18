@@ -30,8 +30,6 @@ public interface CachedLineListenerDataI {
 
 	DoubleBinding maxWidthProperty();
 
-	TextBoundsProviderI getTextBoundsProvider();
-
 	InvalidationListener getAssociatedInvalidationListener();
 
 	void unbind();

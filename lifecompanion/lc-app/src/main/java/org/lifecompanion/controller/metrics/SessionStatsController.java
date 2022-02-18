@@ -22,27 +22,26 @@ package org.lifecompanion.controller.metrics;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
-import javafx.scene.control.Dialog;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
-import org.lifecompanion.model.api.profile.LCProfileI;
-import org.lifecompanion.model.api.lifecycle.LCStateListener;
-import org.lifecompanion.model.impl.metrics.SessionEvent;
-import org.lifecompanion.model.impl.metrics.SessionEventType;
-import org.lifecompanion.model.impl.metrics.SessionPart;
-import org.lifecompanion.model.impl.metrics.SessionType;
-import org.lifecompanion.model.impl.constant.LCConstant;
-import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
-import org.lifecompanion.controller.lifecycle.AppModeController;
-import org.lifecompanion.controller.lifecycle.AppMode;
-import org.lifecompanion.controller.profile.ProfileController;
 import org.lifecompanion.controller.appinstallation.InstallationController;
 import org.lifecompanion.controller.io.JsonHelper;
+import org.lifecompanion.controller.lifecycle.AppMode;
+import org.lifecompanion.controller.lifecycle.AppModeController;
+import org.lifecompanion.controller.profile.ProfileController;
+import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.framework.utils.FluentHashMap;
 import org.lifecompanion.framework.utils.LCNamedThreadFactory;
+import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
+import org.lifecompanion.model.api.lifecycle.LCStateListener;
+import org.lifecompanion.model.api.profile.LCProfileI;
+import org.lifecompanion.model.impl.constant.LCConstant;
+import org.lifecompanion.model.impl.metrics.SessionEvent;
+import org.lifecompanion.model.impl.metrics.SessionEventType;
+import org.lifecompanion.model.impl.metrics.SessionPart;
+import org.lifecompanion.model.impl.metrics.SessionType;
 import org.lifecompanion.util.ThreadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -220,14 +219,6 @@ public enum SessionStatsController implements LCStateListener {
     }
 
     private final EventHandler<Event> eventHandlerToIncreaseInteractionCount = e -> increaseUserInteractionCount();
-
-    public void registerSceneFromDialog(Dialog dialog) {
-        if (dialog != null && dialog.getDialogPane() != null && dialog.getDialogPane().getScene() != null) {
-            final Scene scene = dialog.getDialogPane().getScene();
-            registerScene(scene);
-            dialog.setOnHidden(e -> unregisterScene(scene));
-        }
-    }
 
     public void registerScene(Scene scene) {
         if (UserConfigurationController.INSTANCE.recordAndSendSessionStatsProperty().get()) {

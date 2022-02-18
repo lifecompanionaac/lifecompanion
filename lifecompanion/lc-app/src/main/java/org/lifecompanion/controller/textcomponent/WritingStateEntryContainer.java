@@ -24,6 +24,8 @@ import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import org.lifecompanion.controller.textprediction.WordPredictionController;
+import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.model.api.configurationcomponent.WriteSpecialChar;
 import org.lifecompanion.model.api.configurationcomponent.WriterDisplayerI;
 import org.lifecompanion.model.api.configurationcomponent.WriterEntryI;
@@ -31,10 +33,9 @@ import org.lifecompanion.model.api.textcomponent.TextDisplayerLineI;
 import org.lifecompanion.model.api.textcomponent.WritingEventSource;
 import org.lifecompanion.model.api.textcomponent.WritingStateControllerI;
 import org.lifecompanion.model.api.textprediction.WordPredictionI;
-import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.model.impl.configurationcomponent.WriterEntry;
-import org.lifecompanion.controller.textprediction.WordPredictionController;
-import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.model.impl.textcomponent.TextDisplayerLineHelper;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.predict4all.nlp.Separator;
 
 import java.util.ArrayList;
@@ -455,8 +456,7 @@ public class WritingStateEntryContainer implements WritingStateControllerI {
                 if (y + toAddOnLine < yInEditor) {
                     y += lineImageHeight + lineTextHeight + displayer.lineSpacingProperty().get();
                 } else {
-                    int nCaret = line.getCaretPositionFromX(xInEditor, displayer.getCachedLineUpdateListener().getTextBoundsProvider(),
-                            displayer.getTextDisplayerTextStyle());
+                    int nCaret = line.getCaretPositionFromX(xInEditor, TextDisplayerLineHelper.BOUNDS_PROVIDER, displayer.getTextDisplayerTextStyle());
                     if (nCaret >= 0) {
                         caretPosition.set(Math.min(nCaret, this.currentTextProperty().get().length()));
                         return;
@@ -722,11 +722,9 @@ public class WritingStateEntryContainer implements WritingStateControllerI {
                 for (int i = direction > 0 ? 0 : lines.size() - 1; i < lines.size() && i >= 0; i += direction > 0 ? 1 : -1) {
                     TextDisplayerLineI line = lines.get(i);
                     if (previous != null) {
-                        double caretXPos = line.getCaretXFromPosition(caret, currentDisplayer.getCachedLineUpdateListener().getTextBoundsProvider(),
-                                currentDisplayer.getTextDisplayerTextStyle());
+                        double caretXPos = line.getCaretXFromPosition(caret, TextDisplayerLineHelper.BOUNDS_PROVIDER, currentDisplayer.getTextDisplayerTextStyle());
                         if (caretXPos >= 0.0) {
-                            int nCaret = previous.getCaretPositionFromX(caretXPos, currentDisplayer.getCachedLineUpdateListener().getTextBoundsProvider(),
-                                    currentDisplayer.getTextDisplayerTextStyle());
+                            int nCaret = previous.getCaretPositionFromX(caretXPos, TextDisplayerLineHelper.BOUNDS_PROVIDER, currentDisplayer.getTextDisplayerTextStyle());
                             if (nCaret >= 0) {
                                 caretPosition.set(Math.min(nCaret, this.currentTextProperty().get().length()));
                             }

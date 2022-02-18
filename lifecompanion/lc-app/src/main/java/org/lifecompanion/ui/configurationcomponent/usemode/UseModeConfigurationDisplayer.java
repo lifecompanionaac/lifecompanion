@@ -21,6 +21,7 @@ package org.lifecompanion.ui.configurationcomponent.usemode;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.*;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -63,8 +64,8 @@ import java.util.function.Predicate;
  *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
-public class SimpleUseConfigurationDisplayer extends Group implements LCViewInitHelper {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SimpleUseConfigurationDisplayer.class);
+public class UseModeConfigurationDisplayer extends Group implements LCViewInitHelper {
+    private static final Logger LOGGER = LoggerFactory.getLogger(UseModeConfigurationDisplayer.class);
 
     /**
      * Wanted width/height for this configuration
@@ -99,7 +100,7 @@ public class SimpleUseConfigurationDisplayer extends Group implements LCViewInit
 
     private final LCConfigurationI configuration;
 
-    public SimpleUseConfigurationDisplayer(LCConfigurationI configuration, final ReadOnlyDoubleProperty wantedWidthP, final ReadOnlyDoubleProperty wantedHeightP) {
+    public UseModeConfigurationDisplayer(LCConfigurationI configuration, final ReadOnlyDoubleProperty wantedWidthP, final ReadOnlyDoubleProperty wantedHeightP) {
         this.configuration = configuration;
         this.wantedHeight = wantedHeightP;
         this.wantedWidth = wantedWidthP;
@@ -141,14 +142,6 @@ public class SimpleUseConfigurationDisplayer extends Group implements LCViewInit
 
     @Override
     public void initListener() {
-        // Configuration change indicator
-        SelectionModeController.INSTANCE.addConfigurationChangingListener(configurationChangingListener = changing -> {
-            if (changing) {
-                showConfigurationChanging();
-            } else {
-                restoreAfterConfigurationChangingDisplayed();
-            }
-        });
         // Register filter for selection mode controller event
         this.addEventFilter(KeyEvent.ANY, (event) -> {
             // Keyboard event without filter except no repeat
@@ -250,6 +243,13 @@ public class SimpleUseConfigurationDisplayer extends Group implements LCViewInit
 
     @Override
     public void initBinding() {
+        SelectionModeController.INSTANCE.addConfigurationChangingListener(configurationChangingListener = changing -> {
+            if (changing) {
+                showConfigurationChanging();
+            } else {
+                restoreAfterConfigurationChangingDisplayed();
+            }
+        });
         bindLayoutXAndY();
         this.configurationView = ViewProviderI.getOrCreateViewComponentFor(configuration, AppMode.USE).getView();
         this.backgroundColor.bind(configuration.backgroundColorProperty());
@@ -268,8 +268,6 @@ public class SimpleUseConfigurationDisplayer extends Group implements LCViewInit
         // Inform config of the display scaling (providing clean scaled finite values)
         configuration.displayedConfigurationScaleXProperty().bind(BindingUtils.bindToValueOrIfInfinityOrNan(currentScaleTransform.xProperty(), 1.0));
         configuration.displayedConfigurationScaleYProperty().bind(BindingUtils.bindToValueOrIfInfinityOrNan(currentScaleTransform.yProperty(), 1.0));
-        // To receive key event
-        this.requestFocus();
     }
 
     // To center elements

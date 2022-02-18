@@ -24,6 +24,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.stage.Stage;
 import org.jdom2.Element;
+import org.lifecompanion.controller.virtualmouse.VirtualMouseController;
 import org.lifecompanion.model.api.configurationcomponent.FramePosition;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
@@ -74,6 +75,7 @@ public class ChangeFramePositionAction extends SimpleUseActionImpl<UseActionTrig
             FXThreadUtils.runOnFXThread(() -> {
                 if (!stage.isFullScreen() && !stage.isMaximized()) {
                     StageUtils.moveStageTo(AppModeController.INSTANCE.getEditModeContext().getStage(), this.framePosition.get());
+                    VirtualMouseController.INSTANCE.centerMouseOnStage();
                 }
             });
         }

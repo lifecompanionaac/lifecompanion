@@ -38,6 +38,7 @@ import org.lifecompanion.model.api.configurationcomponent.WriterDisplayerI;
 import org.lifecompanion.model.api.imagedictionary.ImageElementI;
 import org.lifecompanion.model.api.style.TextCompStyleI;
 import org.lifecompanion.model.api.textcomponent.*;
+import org.lifecompanion.model.impl.textcomponent.TextDisplayerLineHelper;
 import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.util.javafx.FXUtils;
 import org.predict4all.nlp.Separator;
@@ -53,7 +54,7 @@ public class TextDisplayer3 extends Pane implements LCViewInitHelper {
 
     private final TextDisplayerBaseImplView<?> parentView;
     private javafx.scene.shape.Line caretLine;
-    private final TextBoundsProviderImpl BOUNDS_PROVIDER = new TextBoundsProviderImpl();
+
     private final List<Node> previousChildren;
 
     private CachedLineListenerDataI cachedLineListenerData;
@@ -82,9 +83,12 @@ public class TextDisplayer3 extends Pane implements LCViewInitHelper {
     @Override
     public void initBinding() {
         // TODO : Batch updates ?
-        cachedLineListenerData = this.textDisplayer.setCachedLinesUpdateListener(
-                lines -> FXThreadUtils.runOnFXThread(() -> this.repaint(lines)),
-                maxWidthProperty, BOUNDS_PROVIDER
+        cachedLineListenerData = this.textDisplayer.addCachedLinesUpdateListener(
+                lines -> {
+                    System.err.println("Request repaint");
+                    FXThreadUtils.runOnFXThread(() -> this.repaint(lines));
+                },
+                maxWidthProperty
         );
     }
 
@@ -151,7 +155,7 @@ public class TextDisplayer3 extends Pane implements LCViewInitHelper {
 
                     // If caret is located in the word
                     if (caretPosition >= part.getCaretStart() && caretPosition <= part.getCaretEnd()) {
-                        double caretX = part.getCaretPosition(caretPosition, BOUNDS_PROVIDER, textStyle) + xInWord;
+                        double caretX = part.getCaretPosition(caretPosition, TextDisplayerLineHelper.BOUNDS_PROVIDER, textStyle) + xInWord;
                         caretLineIndex = displayCaret(textStyle, caretX, caretLine, lineImageHeight + y, l, line);
                         caretDisplayed = true;
                     }
@@ -231,15 +235,5 @@ public class TextDisplayer3 extends Pane implements LCViewInitHelper {
             double nX = x + wantedWidth / 2.0 - newWidth / 2.0;
             return new Rectangle2D(nX, y - wantedHeight, newWidth, wantedHeight);
         }
-    }
-
-    private static class TextBoundsProviderImpl implements TextBoundsProviderI {
-
-        @Override
-        public Bounds getBounds(final String text, final TextCompStyleI textStyle) {
-            Font originalFont = textStyle.fontProperty().get();
-            return FXUtils.getTextBounds(text, originalFont);
-        }
-
     }
 }

@@ -24,6 +24,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.lifecompanion.controller.editaction.GlobalActions;
 import org.lifecompanion.controller.resource.IconHelper;
+import org.lifecompanion.controller.virtualmouse.VirtualMouseController;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
 import org.lifecompanion.model.api.profile.LCProfileI;
@@ -60,6 +61,8 @@ public class UseModeStage extends Stage {
             if (configuration.virtualKeyboardProperty().get()) {
                 StageUtils.setFocusableInternalAPI(this, false);
             }
+            VirtualMouseController.INSTANCE.centerMouseOnStage();
+            useModeScene.requestFocus();
         });
         this.setOnHidden(e -> {
             this.opacityProperty().unbind();

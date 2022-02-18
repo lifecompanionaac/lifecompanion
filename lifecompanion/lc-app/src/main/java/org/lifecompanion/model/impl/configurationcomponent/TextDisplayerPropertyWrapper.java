@@ -26,23 +26,24 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import org.jdom2.Element;
+import org.lifecompanion.controller.textcomponent.WritingStateController;
+import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.model.api.configurationcomponent.WriterDisplayerI;
-import org.lifecompanion.model.api.textcomponent.CachedLineListenerDataI;
-import org.lifecompanion.model.api.textcomponent.TextBoundsProviderI;
-import org.lifecompanion.model.api.textcomponent.TextDisplayerLineI;
-import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.style.ShapeCompStyleI;
 import org.lifecompanion.model.api.style.TextCompStyleI;
-import org.lifecompanion.model.impl.textcomponent.CachedLineListenerData;
-import org.lifecompanion.model.impl.textcomponent.TextDisplayerLineGenerator;
-import org.lifecompanion.controller.textcomponent.WritingStateController;
+import org.lifecompanion.model.api.textcomponent.CachedLineListenerDataI;
+import org.lifecompanion.model.api.textcomponent.TextDisplayerLineI;
+import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.impl.style.StyleSerialializer;
 import org.lifecompanion.model.impl.style.TextDisplayerShapeCompStyle;
 import org.lifecompanion.model.impl.style.TextDisplayerTextCompStyle;
-import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
+import org.lifecompanion.model.impl.textcomponent.CachedLineListenerData;
+import org.lifecompanion.model.impl.textcomponent.TextDisplayerLineHelper;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 
 /**
@@ -61,28 +62,26 @@ public class TextDisplayerPropertyWrapper {
 
     private final WriterDisplayerI textDisplayerComponent;
 
-    private CachedLineListenerDataI cachedLinesListener;
+    private final Set<CachedLineListenerDataI> cachedLinesListeners;
     private List<TextDisplayerLineI> cachedLines;
-
-    private final InvalidationListener invalidationListenerForWritingState;
 
     public TextDisplayerPropertyWrapper(final WriterDisplayerI textDisplayerComponent) {
         this.textDisplayerComponent = textDisplayerComponent;
-        this.imageHeight = new SimpleDoubleProperty(this, "imageHeight", 80.0);
-        this.lineSpacing = new SimpleDoubleProperty(this, "lineSpacing", 2.0);
-        this.enableImage = new SimpleBooleanProperty(this, "enableImage", false);
-        this.enableWordWrap = new SimpleBooleanProperty(this, "enableWordWrap", true);
+        cachedLinesListeners = new HashSet<>();
+        this.imageHeight = new SimpleDoubleProperty(80.0);
+        this.lineSpacing = new SimpleDoubleProperty(2.0);
+        this.enableImage = new SimpleBooleanProperty(false);
+        this.enableWordWrap = new SimpleBooleanProperty(true);
         this.textDisplayerShapeStyle = new TextDisplayerShapeCompStyle();
         this.textDisplayerTextStyle = new TextDisplayerTextCompStyle();
 
         // This invalidation listener is called on graphics changes (this displayer config) or on global text changed (added via bind method)
-        invalidationListenerForWritingState = inv -> {
-            CachedLineListenerDataI listener = this.getCachedLinesListener();
-            if (listener != null) {
-                List<TextDisplayerLineI> lines = TextDisplayerLineGenerator.generateLines(WritingStateController.INSTANCE, this.textDisplayerComponent, listener.getTextBoundsProvider(), getTextDisplayerTextStyle(), listener.maxWidthProperty().get());
+        InvalidationListener invalidationListenerForWritingState = inv -> {
+            cachedLinesListeners.forEach(listener -> {
+                List<TextDisplayerLineI> lines = TextDisplayerLineHelper.generateLines(WritingStateController.INSTANCE, this.textDisplayerComponent, getTextDisplayerTextStyle(), listener.maxWidthProperty().get());
                 cachedLines = lines;
                 listener.getListener().accept(lines);
-            }
+            });
         };
         this.enableImageProperty().addListener(invalidationListenerForWritingState);
         this.lineSpacingProperty().addListener(invalidationListenerForWritingState);
@@ -100,7 +99,7 @@ public class TextDisplayerPropertyWrapper {
             }
         });
 
-        // Bind to global state
+        // Bind to global state (with weak listeners : listener is still in memory thanks to previous bindings)
         WritingStateController.INSTANCE.currentTextProperty().addListener(new WeakInvalidationListener(invalidationListenerForWritingState));
         WritingStateController.INSTANCE.caretPosition().addListener(new WeakInvalidationListener(invalidationListenerForWritingState));
     }
@@ -134,10 +133,6 @@ public class TextDisplayerPropertyWrapper {
     public List<TextDisplayerLineI> getLastCachedLines() {
         return cachedLines;
     }
-
-    public CachedLineListenerDataI getCachedLinesListener() {
-        return cachedLinesListener;
-    }
     //========================================================================
 
     // IO
@@ -155,18 +150,20 @@ public class TextDisplayerPropertyWrapper {
 
     // LINE UPDATE LISTENER
     //========================================================================
-    public CachedLineListenerDataI setCachedLinesUpdateListener(Consumer<List<TextDisplayerLineI>> listener, DoubleBinding maxWithProperty, TextBoundsProviderI textBoundsProvider) {
+    public CachedLineListenerDataI addCachedLinesUpdateListener(Consumer<List<TextDisplayerLineI>> listener, DoubleBinding maxWithProperty) {
         InvalidationListener wil = i -> {
-            List<TextDisplayerLineI> lines = TextDisplayerLineGenerator.generateLines(WritingStateController.INSTANCE, this.textDisplayerComponent, textBoundsProvider, getTextDisplayerTextStyle(), maxWithProperty.get());
+            List<TextDisplayerLineI> lines = TextDisplayerLineHelper.generateLines(WritingStateController.INSTANCE, this.textDisplayerComponent, getTextDisplayerTextStyle(), maxWithProperty.get());
             cachedLines = lines;
             listener.accept(lines);
         };
-        this.cachedLinesListener = new CachedLineListenerData(listener, maxWithProperty, textBoundsProvider, wil, () -> {
+        final CachedLineListenerData cachedLineListenerData = new CachedLineListenerData(listener, maxWithProperty, wil, listenerDataThis -> {
             maxWithProperty.removeListener(wil);
-            cachedLinesListener = null;
+            cachedLinesListeners.remove(listenerDataThis);
         });
+        this.cachedLinesListeners.add(cachedLineListenerData);
         maxWithProperty.addListener(wil);
-        return cachedLinesListener;
+
+        return cachedLineListenerData;
     }
     //========================================================================
 

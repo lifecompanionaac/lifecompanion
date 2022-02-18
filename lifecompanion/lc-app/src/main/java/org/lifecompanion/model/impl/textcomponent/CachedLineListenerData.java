@@ -22,7 +22,6 @@ package org.lifecompanion.model.impl.textcomponent;
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.DoubleBinding;
 import org.lifecompanion.model.api.textcomponent.CachedLineListenerDataI;
-import org.lifecompanion.model.api.textcomponent.TextBoundsProviderI;
 import org.lifecompanion.model.api.textcomponent.TextDisplayerLineI;
 
 import java.util.List;
@@ -31,16 +30,13 @@ import java.util.function.Consumer;
 public class CachedLineListenerData implements CachedLineListenerDataI {
     private final Consumer<List<TextDisplayerLineI>> listener;
     private final DoubleBinding maxWidth;
-    private final TextBoundsProviderI textBoundsProvider;
     private final InvalidationListener associatedInvalidationListener;
-    private final Runnable unbind;
+    private final Consumer<CachedLineListenerDataI> unbind;
 
-    public CachedLineListenerData(Consumer<List<TextDisplayerLineI>> listener, DoubleBinding maxWidth, TextBoundsProviderI textBoundsProvider,
-                                  InvalidationListener associatedInvalidationListener, Runnable unbind) {
+    public CachedLineListenerData(Consumer<List<TextDisplayerLineI>> listener, DoubleBinding maxWidth, InvalidationListener associatedInvalidationListener, Consumer<CachedLineListenerDataI> unbind) {
         super();
         this.listener = listener;
         this.maxWidth = maxWidth;
-        this.textBoundsProvider = textBoundsProvider;
         this.associatedInvalidationListener = associatedInvalidationListener;
         this.unbind = unbind;
     }
@@ -48,11 +44,6 @@ public class CachedLineListenerData implements CachedLineListenerDataI {
     @Override
     public DoubleBinding maxWidthProperty() {
         return maxWidth;
-    }
-
-    @Override
-    public TextBoundsProviderI getTextBoundsProvider() {
-        return textBoundsProvider;
     }
 
     @Override
@@ -67,6 +58,6 @@ public class CachedLineListenerData implements CachedLineListenerDataI {
 
     @Override
     public void unbind() {
-        this.unbind.run();
+        this.unbind.accept(this);
     }
 }

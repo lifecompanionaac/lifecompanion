@@ -21,10 +21,9 @@ package org.lifecompanion.model.api.configurationcomponent;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
-import org.lifecompanion.model.api.textcomponent.CachedLineListenerDataI;
-import org.lifecompanion.model.api.textcomponent.TextBoundsProviderI;
-import org.lifecompanion.model.api.textcomponent.TextDisplayerLineI;
 import org.lifecompanion.model.api.style.TextDisplayerStyleUserI;
+import org.lifecompanion.model.api.textcomponent.CachedLineListenerDataI;
+import org.lifecompanion.model.api.textcomponent.TextDisplayerLineI;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -53,10 +52,7 @@ public interface WriterDisplayerI extends DisplayableComponentI, TextDisplayerSt
      */
     BooleanProperty enableWordWrapProperty();
 
-    CachedLineListenerDataI setCachedLinesUpdateListener(Consumer<List<TextDisplayerLineI>> listener, DoubleBinding maxWithProperty, TextBoundsProviderI textBoundsProvider);
-
-    CachedLineListenerDataI getCachedLineUpdateListener();
+    CachedLineListenerDataI addCachedLinesUpdateListener(Consumer<List<TextDisplayerLineI>> listener, DoubleBinding maxWithProperty);
 
     List<TextDisplayerLineI> getLastCachedLines();
-
 }
