@@ -19,55 +19,60 @@
 
 package org.lifecompanion.ui.configurationcomponent.editmode.categorizedelement.useaction.available;
 
-import java.io.File;
-
+import javafx.collections.ObservableList;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import org.lifecompanion.controller.editmode.FileChooserType;
 import org.lifecompanion.framework.commons.translation.Translation;
+import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionConfigurationViewI;
 import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
 import org.lifecompanion.model.impl.categorizedelement.useaction.available.SaveUserTextAction;
 import org.lifecompanion.ui.common.control.generic.FileSelectorControl;
 import org.lifecompanion.ui.common.control.generic.FileSelectorControl.FileSelectorControlMode;
-import javafx.collections.ObservableList;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
+
+import java.io.File;
 
 /**
  * Action configuration view for {@link SaveUserTextAction}
+ *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public class SaveUserTextConfigView extends VBox implements UseActionConfigurationViewI<SaveUserTextAction> {
-	private FileSelectorControl fileSelectorControl;
+    private FileSelectorControl fileSelectorControl;
 
-	public SaveUserTextConfigView() {}
+    public SaveUserTextConfigView() {
+    }
 
-	@Override
-	public Region getConfigurationView() {
-		return this;
-	}
+    @Override
+    public Region getConfigurationView() {
+        return this;
+    }
 
-	@Override
-	public void editStarts(final SaveUserTextAction action, final ObservableList<UseVariableDefinitionI> possibleVariables) {
-		File destinationFolderFile = new File(action.getDestinationFolder());
-		this.fileSelectorControl.valueProperty().set(destinationFolderFile);
-	}
+    @Override
+    public void editStarts(final SaveUserTextAction action, final ObservableList<UseVariableDefinitionI> possibleVariables) {
+        if (StringUtils.isNotBlank(action.getDestinationFolder())) {
+            File destinationFolderFile = new File(action.getDestinationFolder());
+            this.fileSelectorControl.valueProperty().set(destinationFolderFile);
+        }
+    }
 
-	@Override
-	public void editEnds(final SaveUserTextAction action) {
-		File selectedFolder = this.fileSelectorControl.valueProperty().get();
-		action.setDestinationFolder(selectedFolder.getAbsolutePath());
-	}
+    @Override
+    public void editEnds(final SaveUserTextAction action) {
+        File selectedFolder = this.fileSelectorControl.valueProperty().get();
+        action.setDestinationFolder(selectedFolder != null ? selectedFolder.getAbsolutePath() : null);
+    }
 
-	@Override
-	public Class<SaveUserTextAction> getConfiguredActionType() {
-		return SaveUserTextAction.class;
-	}
+    @Override
+    public Class<SaveUserTextAction> getConfiguredActionType() {
+        return SaveUserTextAction.class;
+    }
 
-	@Override
-	public void initUI() {
-		this.fileSelectorControl = new FileSelectorControl(Translation.getText("save.user.text.save.directory.name"), FileSelectorControlMode.FOLDER, FileChooserType.SAVE_USER_TEXT);
-		this.fileSelectorControl.setOpenDialogTitle(Translation.getText("save.user.text.save.directory.dialog.title"));
-		this.getChildren().addAll(this.fileSelectorControl);
-	}
+    @Override
+    public void initUI() {
+        this.fileSelectorControl = new FileSelectorControl(Translation.getText("save.user.text.save.directory.name"), FileSelectorControlMode.FOLDER, FileChooserType.SAVE_USER_TEXT);
+        this.fileSelectorControl.setOpenDialogTitle(Translation.getText("save.user.text.save.directory.dialog.title"));
+        this.getChildren().addAll(this.fileSelectorControl);
+    }
 
 }

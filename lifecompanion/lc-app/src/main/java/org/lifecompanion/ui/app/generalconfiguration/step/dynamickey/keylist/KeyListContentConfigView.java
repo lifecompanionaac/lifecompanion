@@ -448,7 +448,6 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
     //========================================================================
     private void updatePathForSelection(KeyListNodeI selected) {
         selectionPathContainer.getChildren().clear();
-        System.err.println("Clear selection path container");
         if (selected != null) {
             KeyListNodeI current = selected;
             while (current != null) {

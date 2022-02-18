@@ -71,10 +71,11 @@ public class ChangeFramePositionAction extends SimpleUseActionImpl<UseActionTrig
     @Override
     public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
         if ( this.framePosition.get() != null) {
-            final Stage stage = AppModeController.INSTANCE.getUseModeContext().stageProperty().get();
+            final Stage stage = AppModeController.INSTANCE.getUseModeContext().getStage();
             FXThreadUtils.runOnFXThread(() -> {
                 if (!stage.isFullScreen() && !stage.isMaximized()) {
-                    StageUtils.moveStageTo(AppModeController.INSTANCE.getEditModeContext().getStage(), this.framePosition.get());
+                    System.out.println("Will move stage to "+framePosition.get());
+                    StageUtils.moveStageTo(stage, this.framePosition.get());
                     VirtualMouseController.INSTANCE.centerMouseOnStage();
                 }
             });

@@ -347,7 +347,7 @@ public enum ImageDictionaries implements LCStateListener, ModeListenerI {
                     if (AppModeController.INSTANCE.getEditModeContext().getConfiguration() == null && AppModeController.INSTANCE.getUseModeContext().getConfiguration() == null) {
                         imageLoaded
                                 .forEach(img ->
-                                        System.err.println("\t" + img.getName() + " = " + (img.getLoadingRequest()
+                                      LOGGER.info("\t" + img.getName() + " = " + (img.getLoadingRequest()
                                                 .entrySet()
                                                 .stream()
                                                 .filter(Map.Entry::getValue)

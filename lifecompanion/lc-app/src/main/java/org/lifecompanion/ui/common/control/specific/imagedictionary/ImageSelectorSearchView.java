@@ -19,7 +19,6 @@
 
 package org.lifecompanion.ui.common.control.specific.imagedictionary;
 
-import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -33,21 +32,22 @@ import javafx.stage.FileChooser;
 import javafx.util.Pair;
 import org.controlsfx.control.textfield.TextFields;
 import org.controlsfx.glyphfont.FontAwesome;
-import org.lifecompanion.model.api.imagedictionary.ImageDictionaryI;
-import org.lifecompanion.model.api.imagedictionary.ImageElementI;
-import org.lifecompanion.util.IOUtils;
-import org.lifecompanion.util.ThreadUtils;
-import org.lifecompanion.model.impl.constant.LCConstant;
-import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.appinstallation.InstallationConfigurationController;
-import org.lifecompanion.model.impl.imagedictionary.ImageDictionaries;
-import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.controller.editmode.FileChooserType;
-import org.lifecompanion.controller.editmode.LCStateController;
 import org.lifecompanion.controller.editmode.LCFileChoosers;
+import org.lifecompanion.controller.editmode.LCStateController;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.model.api.imagedictionary.ImageDictionaryI;
+import org.lifecompanion.model.api.imagedictionary.ImageElementI;
+import org.lifecompanion.model.impl.constant.LCConstant;
+import org.lifecompanion.model.impl.constant.LCGraphicStyle;
+import org.lifecompanion.model.impl.imagedictionary.ImageDictionaries;
+import org.lifecompanion.util.IOUtils;
+import org.lifecompanion.util.ThreadUtils;
 import org.lifecompanion.util.javafx.FXControlUtils;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.util.javafx.FXUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -173,7 +173,7 @@ public class ImageSelectorSearchView extends BorderPane implements LCViewInitHel
     private void fireSearchFor(String search) {
         ThreadUtils.debounce(600, "image-search-gallery", () -> {
             List<Pair<ImageDictionaryI, List<List<ImageElementI>>>> searchResult = ImageDictionaries.INSTANCE.searchImage(search);
-            Platform.runLater(() -> this.imageDictionariesListView.setDisplayedImages(searchResult));
+            FXThreadUtils.runOnFXThread(() -> this.imageDictionariesListView.setDisplayedImages(searchResult));
         });
     }
 

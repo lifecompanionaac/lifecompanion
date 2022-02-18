@@ -16,4 +16,9 @@ dependencies {
     implementation 'org.jsoup:jsoup:1.14.2'
 }
 
-mainClassName = "scripts.TestSnapshot"
+mainClassName = "scripts.TestMedia"
+
+application {
+    applicationDefaultJvmArgs = [
+    ]
+}

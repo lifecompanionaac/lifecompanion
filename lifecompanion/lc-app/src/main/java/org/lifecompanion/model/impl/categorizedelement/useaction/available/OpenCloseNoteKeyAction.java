@@ -37,6 +37,7 @@ import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseAction
 import org.lifecompanion.framework.commons.fx.io.XMLGenericProperty;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 
 import java.util.Map;
 
@@ -119,7 +120,7 @@ public class OpenCloseNoteKeyAction extends SimpleUseActionImpl<GridPartKeyCompo
                 parentKey.getKeyStyle().strokeColorProperty().forced().setValue(null);
                 parentKey.getKeyStyle().strokeSizeProperty().forced().setValue(null);
             }
-            Platform.runLater(() -> savedText.set(textToSerialize));
+            FXThreadUtils.runOnFXThread(() -> savedText.set(textToSerialize));
         }
     }
 
@@ -187,7 +188,7 @@ public class OpenCloseNoteKeyAction extends SimpleUseActionImpl<GridPartKeyCompo
         if (parentKey != null) {
             Element existingNote = elements.get(parentKey.getID());
             if (existingNote != null) {
-                Platform.runLater(() -> this.savedText.set(existingNote.getText()));
+                FXThreadUtils.runOnFXThread(() -> this.savedText.set(existingNote.getText()));
             }
         }
     }

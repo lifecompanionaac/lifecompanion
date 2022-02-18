@@ -37,15 +37,16 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.StageStyle;
 import org.controlsfx.glyphfont.FontAwesome;
-import org.lifecompanion.model.impl.constant.LCConstant;
-import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.appinstallation.InstallationConfigurationController;
-import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.controller.editmode.LCStateController;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.model.impl.constant.LCConstant;
+import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.util.javafx.FXControlUtils;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -199,7 +200,7 @@ public class WebcamCaptureDialog extends Dialog<File> implements LCViewInitHelpe
     }
 
     private void setLoadingView() {
-        Platform.runLater(() -> {
+        FXThreadUtils.runOnFXThread(() -> {
             dialogContent.setCenter(progressIndicatorLoadingWebcam);
             labelWebcamInformations.setText("");
         });
@@ -237,7 +238,7 @@ public class WebcamCaptureDialog extends Dialog<File> implements LCViewInitHelpe
 
                     // Find camera from last selected (if available)
                     final String lastSelectedWebcamName = LCStateController.INSTANCE.getLastSelectedWebcamName();
-                    LOGGER.info("Last selected camera in LC : {}",lastSelectedWebcamName);
+                    LOGGER.info("Last selected camera in LC : {}", lastSelectedWebcamName);
                     for (int i = 0; i < webcams.size(); i++) {
                         if (StringUtils.isEquals(lastSelectedWebcamName, webcams.get(i).getName())) {
                             currentWebcamIndex = i;
@@ -262,13 +263,13 @@ public class WebcamCaptureDialog extends Dialog<File> implements LCViewInitHelpe
                             // Open webcam
                             currentWebcam.open(true);
 
-                            Platform.runLater(() -> dialogContent.setCenter(stackPaneWebcamDisplay));
+                            FXThreadUtils.runOnFXThread(() -> dialogContent.setCenter(stackPaneWebcamDisplay));
                         }
 
                         currentImage = currentWebcam.getImage();
                         if (currentImage != null) {
                             final WritableImage fxImage = SwingFXUtils.toFXImage(currentImage, null);
-                            Platform.runLater(() -> {
+                            FXThreadUtils.runOnFXThread(() -> {
                                 imageViewWebcamPreview.setImage(fxImage);
                                 final Dimension viewSize = currentWebcam.getViewSize();
                                 labelWebcamInformations.setText(Translation.getText("image.webcam.capture.webcam.informations", currentWebcam.getName(), viewSize.width, viewSize.height, (int) currentWebcam.getFPS()));
@@ -279,7 +280,7 @@ public class WebcamCaptureDialog extends Dialog<File> implements LCViewInitHelpe
                     }
                 } catch (Throwable t) {
                     LOGGER.error("Problem with webcam task", t);
-                    Platform.runLater(() -> dialogContent.setCenter(labelNoWebcam));
+                    FXThreadUtils.runOnFXThread(() -> dialogContent.setCenter(labelNoWebcam));
                 }
             }
             return null;

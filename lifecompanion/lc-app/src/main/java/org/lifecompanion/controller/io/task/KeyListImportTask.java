@@ -58,8 +58,6 @@ public class KeyListImportTask extends AbstractKeyListLoadingTask<List<KeyListNo
             // Imported node is duplicated to avoid duplicates... then its children are added to current item
             final DuplicableComponentI importedNodeDuplicated = nodeFromDirectory.duplicate(true);
 
-            System.out.println("Imported count "+nodeFromDirectory.getChildren().size());
-
             result.addAll(((KeyListNodeI) importedNodeDuplicated).getChildren());
         }
         return result;

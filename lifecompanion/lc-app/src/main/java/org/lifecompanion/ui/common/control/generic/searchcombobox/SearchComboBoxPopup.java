@@ -19,7 +19,6 @@
 
 package org.lifecompanion.ui.common.control.generic.searchcombobox;
 
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -34,11 +33,12 @@ import javafx.stage.Popup;
 import javafx.stage.Window;
 import org.controlsfx.control.textfield.TextFields;
 import org.lifecompanion.controller.systemvk.SystemVirtualKeyboardController;
-import org.lifecompanion.util.ThreadUtils;
-import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.lang.LangUtils;
+import org.lifecompanion.model.impl.constant.LCConstant;
+import org.lifecompanion.util.ThreadUtils;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.util.javafx.FXUtils;
 
 import java.util.ArrayList;
@@ -145,7 +145,7 @@ public class SearchComboBoxPopup<T> extends Popup implements LCViewInitHelper {
                     }
                 }
                 final ObservableList<T> itemsToSet = FXCollections.observableArrayList(itemsFiltered);
-                Platform.runLater(() -> {
+                FXThreadUtils.runOnFXThread(() -> {
                     if (sourceItems != null) {// To avoid update while popup is disposed
                         listView.setItems(itemsToSet);
                         this.listView.scrollTo(0);
