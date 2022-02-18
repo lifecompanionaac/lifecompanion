@@ -20,10 +20,7 @@
 package org.lifecompanion.ui.common.pane.specific;
 
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
-import javafx.geometry.Orientation;
-import javafx.geometry.Pos;
-import javafx.geometry.VPos;
+import javafx.geometry.*;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
@@ -34,14 +31,14 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.controlsfx.control.ToggleSwitch;
 import org.controlsfx.glyphfont.FontAwesome;
-import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
-import org.lifecompanion.util.javafx.FXControlUtils;
-import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.profileconfigselect.ProfileConfigSelectionController;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.utils.Pair;
+import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
+import org.lifecompanion.model.impl.constant.LCGraphicStyle;
+import org.lifecompanion.util.javafx.FXControlUtils;
 
 import java.io.File;
 import java.util.HashMap;
@@ -68,7 +65,7 @@ public class DefaultConfigurationListPane extends VBox implements LCViewInitHelp
         // Default configuration to add on profile
         Label labelDefaultConfiguration = FXControlUtils.createTitleLabel("profile.edition.general.default.configuration.title");
         Label labelExplain = new Label(Translation.getText("profile.edition.general.default.configuration.explain"));
-        labelExplain.setMinHeight(100.0);
+        labelExplain.setMinHeight(60.0);
         labelExplain.getStyleClass().add("explain-text");
 
         linkUnselectAll = new Hyperlink(Translation.getText("profile.edition.general.default.configuration.link.unselect.all"));
@@ -119,17 +116,18 @@ public class DefaultConfigurationListPane extends VBox implements LCViewInitHelp
 
                     // Config title
                     Label labelTitle = new Label(configDescription.configurationNameProperty().get());
-                    labelTitle.getStyleClass().add("default-configuration-title");
+                    labelTitle.getStyleClass().addAll("text-fill-primary-dark", "text-font-size-110");
                     GridPane.setHgrow(labelTitle, Priority.ALWAYS);
 
                     // Config author and description
                     Label labelAuthor = new Label(configDescription.configurationAuthorProperty().get());
-                    labelAuthor.getStyleClass().add("default-configuration-author");
+                    labelAuthor.getStyleClass().addAll("text-fill-dimgrey", "text-weight-bold");
 
                     Label labelDescription = new Label(configDescription.configurationDescriptionProperty().get());
-                    labelDescription.getStyleClass().add("default-configuration-description");
+                    labelDescription.getStyleClass().add("text-fill-gray");
                     labelDescription.setWrapText(true);
-                    GridPane.setMargin(labelDescription, new Insets(0, 0, 20.0, 0));
+                    labelDescription.prefWidthProperty().bind(gridPaneDefaultConfigurations.widthProperty().multiply(0.60));
+                    GridPane.setMargin(labelDescription, new Insets(0, 0, 8.0, 0));
 
                     Node selectionNode;
                     if (multiSelectMode) {
@@ -139,7 +137,7 @@ public class DefaultConfigurationListPane extends VBox implements LCViewInitHelp
                         defaultConfigurationToggles.put(toggleEnableConfiguration, defaultConfiguration);
                         selectionNode = toggleEnableConfiguration;
                     } else {
-                        final Button selectConfigButton = FXControlUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CHEVRON_RIGHT).size(20).color(LCGraphicStyle.MAIN_DARK), null);
+                        final Button selectConfigButton = FXControlUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CHEVRON_RIGHT).size(24).color(LCGraphicStyle.MAIN_DARK), null);
                         selectConfigButton.setOnAction(e -> {
                             if (this.onConfigurationSelected != null) onConfigurationSelected.accept(defaultConfiguration);
                         });
@@ -147,34 +145,31 @@ public class DefaultConfigurationListPane extends VBox implements LCViewInitHelp
                         selectionNode = selectConfigButton;
                     }
 
+                    ImageView imageViewInList = new ImageView();
+                    imageViewInList.setFitWidth(300);
+                    imageViewInList.setFitHeight(200);
+                    imageViewInList.setPreserveRatio(true);
+                    imageViewInList.imageProperty().bind(configDescription.configurationImageProperty());
+                    GridPane.setHalignment(imageViewInList, HPos.RIGHT);
+                    GridPane.setHgrow(imageViewInList, Priority.ALWAYS);
+                    GridPane.setMargin(imageViewInList, new Insets(5.0, 10.0, 5.0, 0.0));
+
                     GridPane.setMargin(selectionNode, new Insets(10.0));
                     GridPane.setValignment(selectionNode, VPos.TOP);
-                    gridPaneDefaultConfigurations.add(labelTitle, 0, rowIndex);
-                    gridPaneDefaultConfigurations.add(labelAuthor, 0, rowIndex + 1);
-                    gridPaneDefaultConfigurations.add(labelDescription, 0, rowIndex + 2);
-                    gridPaneDefaultConfigurations.add(selectionNode, 1, rowIndex, 1, 3);
-
-                    Tooltip tooltip = FXControlUtils.createTooltip(Translation.getText("available.default.configuration.preview.image"));
-                    ImageView imageView = new ImageView();
-                    imageView.setFitWidth(500);
-                    imageView.setFitHeight(400);
-                    imageView.setPreserveRatio(true);
-                    imageView.imageProperty().bind(configDescription.configurationImageProperty());
-                    tooltip.setContentDisplay(ContentDisplay.TOP);
-                    tooltip.setGraphic(imageView);
-
-                    Tooltip.install(labelTitle, tooltip);
-                    Tooltip.install(labelAuthor, tooltip);
-                    Tooltip.install(labelDescription, tooltip);
-
-                    final EventHandler<MouseEvent> displayTooltip = e -> tooltip.show((Node) e.getSource(), e.getScreenX(), e.getScreenY());
-                    labelTitle.setOnMouseClicked(displayTooltip);
-                    labelAuthor.setOnMouseClicked(displayTooltip);
-                    labelDescription.setOnMouseClicked(displayTooltip);
+                    int colSpanImg = 2;
+                    gridPaneDefaultConfigurations.add(imageViewInList, 0, rowIndex, colSpanImg, 3);
+                    gridPaneDefaultConfigurations.add(labelTitle, colSpanImg, rowIndex);
+                    gridPaneDefaultConfigurations.add(labelAuthor, colSpanImg, rowIndex + 1);
+                    gridPaneDefaultConfigurations.add(labelDescription, colSpanImg, rowIndex + 2);
+                    gridPaneDefaultConfigurations.add(selectionNode, colSpanImg + 1, rowIndex, 1, 3);
 
                     configDescription.requestImageLoad();
 
-                    rowIndex += 4;
+                    final Separator separator = new Separator(Orientation.HORIZONTAL);
+                    GridPane.setMargin(separator, new Insets(5.0, 30.0, 5.0, 30.0));
+                    gridPaneDefaultConfigurations.add(separator, 0, rowIndex + 3, colSpanImg + 2, 1);
+
+                    rowIndex += 5;
                 }
             });
         }

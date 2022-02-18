@@ -627,18 +627,3 @@
 	-fx-font-size: 11.0px;
 	-fx-padding: 0.0 0.0 0.0 0.0;
 }
-
-.default-configuration-title {
-   	-fx-text-fill: -fx-main-dark;
-    -fx-font-size: 14.0px;
-    -fx-font-familly: "Calibri";
-}
-
-.default-configuration-author {
-   -fx-text-fill: darkgray;
-   -fx-font-weight: bold;
-}
-
-.default-configuration-description {
-   	-fx-text-fill: gray;
-}

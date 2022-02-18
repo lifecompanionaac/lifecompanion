@@ -38,6 +38,10 @@
     -fx-text-fill: -fx-main-primary;
 }
 
+.text-fill-primary-dark {
+    -fx-text-fill: -fx-main-dark;
+}
+
 .text-wrap-enabled {
     -fx-wrap-text: true;
 }
