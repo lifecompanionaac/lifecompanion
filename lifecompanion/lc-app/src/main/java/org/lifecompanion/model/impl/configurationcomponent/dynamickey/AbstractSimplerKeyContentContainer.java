@@ -67,7 +67,7 @@ public abstract class AbstractSimplerKeyContentContainer implements SimplerKeyCo
     private final ObjectProperty<ContentDisplay> textPosition;
 
     protected AbstractSimplerKeyContentContainer() {
-        id = StringUtils.getNewID();
+        this.generateID();
         text = new SimpleStringProperty("");
         backgroundColor = new SimpleObjectProperty<>(null);
         strokeColor = new SimpleObjectProperty<>(null);
@@ -108,6 +108,7 @@ public abstract class AbstractSimplerKeyContentContainer implements SimplerKeyCo
 
     @Override
     public String generateID() {
+        id = StringUtils.getNewID();
         return this.id;
     }
 

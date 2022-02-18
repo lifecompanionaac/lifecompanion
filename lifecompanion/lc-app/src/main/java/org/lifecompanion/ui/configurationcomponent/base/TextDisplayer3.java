@@ -128,7 +128,7 @@ public class TextDisplayer3 extends Pane implements LCViewInitHelper {
                 for (TextDisplayerWordPartI part : parts) {
                     if (textDisplayer.enableImageProperty().get() && part.isImageStart() && part.getEntry().imageProperty().get() != null) {
                         ImageElementI imageForPart = part.getEntry().imageProperty().get();
-                        imageForPart.requestImageLoad(textDisplayer.getID(), part.getImageWidth(), part.getHeight(), true, true);
+                        imageForPart.requestImageLoad(textDisplayer.getID(), part.getImageWidth(), part.getHeight(), true, true); // FIXME : the image load request is never cleaned out
                         Image loadedImage = imageForPart.loadedImageProperty().get();
                         if (loadedImage != null) {
                             final Rectangle2D imgBounds = getImageBoundsToDrawOn(xInWord, y + lineImageHeight, loadedImage.getWidth(),
@@ -139,8 +139,9 @@ public class TextDisplayer3 extends Pane implements LCViewInitHelper {
                             imageView.setFitWidth(imgBounds.getWidth());
                             imageView.setFitHeight(imgBounds.getHeight());
                             previousChildren.add(imageView);
+                        } else {
+                            // TODO : what if image is not yet loaded ?
                         }
-                        // TODO : what if image is not yet loaded ?
                     }
 
                     Text textNode = createTextForPart(textStyle, part, null, lineTextHeight, xInWord, lineImageHeight + y);

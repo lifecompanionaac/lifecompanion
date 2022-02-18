@@ -29,26 +29,31 @@ import org.jdom2.Document;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
-import org.lifecompanion.model.impl.exception.LCException;
-import org.lifecompanion.util.javafx.FXThreadUtils;
-import org.lifecompanion.controller.lifecycle.AppModeController;
-import org.lifecompanion.controller.profile.ProfileController;
-import org.lifecompanion.controller.io.IOHelper;
 import org.lifecompanion.controller.editaction.GlobalActions;
 import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.controller.editmode.ErrorHandlingController;
+import org.lifecompanion.controller.io.IOHelper;
+import org.lifecompanion.controller.lifecycle.AppModeController;
+import org.lifecompanion.controller.profile.ProfileController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.io.FileNameUtils;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
+import org.lifecompanion.model.api.configurationcomponent.IdentifiableComponentI;
+import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
+import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
+import org.lifecompanion.model.impl.configurationcomponent.dynamickey.KeyListLeaf;
+import org.lifecompanion.model.impl.exception.LCException;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Miscellaneous items config tab
@@ -66,11 +71,9 @@ public class MiscConfigSubmenu extends VBox implements LCViewInitHelper, UserCon
     /**
      * Button to open folders
      */
-    private Button buttonOpenRootFolder, buttonOpenCurrentProfileFolder, buttonOpenCurrentConfigFolder, buttonExecuteGC, buttonOpenConfigCleanXml;
+    private Button buttonOpenRootFolder, buttonOpenCurrentProfileFolder, buttonOpenCurrentConfigFolder, buttonExecuteGC, buttonOpenConfigCleanXml, buttonDetectKeylistDuplicates;
 
     private Label labelMemoryInfo;
-
-    // TODO : button clean cache
 
     public MiscConfigSubmenu() {
         this.initAll();
@@ -89,6 +92,7 @@ public class MiscConfigSubmenu extends VBox implements LCViewInitHelper, UserCon
         this.buttonOpenCurrentProfileFolder = this.createButton("button.open.current.profile.folder");
         this.buttonOpenCurrentConfigFolder = this.createButton("button.open.current.config.folder");
         this.buttonOpenConfigCleanXml = this.createButton("button.open.current.config.clean.xml.folder");
+        this.buttonDetectKeylistDuplicates = this.createButton("button.detect.keylist.duplicates");
 
         //Logs
         Label labelTitleLog = this.createLabel("misc.config.tab.part.logs");
@@ -109,7 +113,7 @@ public class MiscConfigSubmenu extends VBox implements LCViewInitHelper, UserCon
         this.setAlignment(Pos.TOP_CENTER);
         this.setSpacing(10.0);
         this.getChildren().addAll(labelExplain, labelTitleFolder, this.buttonOpenRootFolder, this.buttonOpenCurrentProfileFolder,
-                this.buttonOpenCurrentConfigFolder, buttonOpenConfigCleanXml, labelTitleLog, buttonOpenLogFile, buttonOpenLogFolder, this.buttonPackageLogs, labelTitleMemory, labelMemoryInfo, buttonExecuteGC);
+                this.buttonOpenCurrentConfigFolder, buttonOpenConfigCleanXml, buttonDetectKeylistDuplicates, labelTitleLog, buttonOpenLogFile, buttonOpenLogFolder, this.buttonPackageLogs, labelTitleMemory, labelMemoryInfo, buttonExecuteGC);
     }
 
     private Button createButton(final String textId) {
@@ -144,7 +148,11 @@ public class MiscConfigSubmenu extends VBox implements LCViewInitHelper, UserCon
             exploreAndFormatXmlFiles(configurationDirectory, destDirTempConfig, configurationDirectory);
             openFileOrFolder(buttonOpenConfigCleanXml, destDirTempConfig.getPath());
         });
+        this.buttonDetectKeylistDuplicates.setOnAction(e -> {
+            this.detectAndFixKeylistDuplicates();
+        });
     }
+
 
     private static final Format PRETTY_XML_FORMAT = Format
             .getPrettyFormat()
@@ -187,6 +195,28 @@ public class MiscConfigSubmenu extends VBox implements LCViewInitHelper, UserCon
             }
         } else {
             ErrorHandlingController.INSTANCE.showErrorNotificationWithExceptionDetails(Translation.getText("open.folder.lc.error.title"), LCException.newException().withMessage("open.folder.lc.error.directory.not.found", file.getAbsolutePath()).build());
+        }
+    }
+
+    private void detectAndFixKeylistDuplicates() {
+        final LCConfigurationI configuration = AppModeController.INSTANCE.getEditModeContext().getConfiguration();
+        if (configuration != null) {
+            final KeyListNodeI keyListNodes = configuration.rootKeyListNodeProperty().get();
+            HashMap<String, List<KeyListNodeI>> nodesById = new HashMap<>();
+            keyListNodes.traverseTreeToBottom(node -> nodesById.computeIfAbsent(node.getID(), k -> new ArrayList<>()).add(node));
+            nodesById.forEach((id, nodes) -> {
+                if (nodes.size() > 1) {
+                    if (nodes.stream().allMatch(n -> n instanceof KeyListLeaf)) {
+                        nodes.forEach(IdentifiableComponentI::generateID);
+                        LOGGER.info("Solved duplicates for {}", id);
+                    } else {
+                        LOGGER.info("Should check/fix this key list node for ID {}\n\tDuplicates are : {}", id,
+                                nodes.stream()
+                                        .map(n -> "[" + n.getClass().getSimpleName() + "] - " + n.textProperty().get())
+                                        .collect(Collectors.joining(", ")));
+                    }
+                }
+            });
         }
     }
 

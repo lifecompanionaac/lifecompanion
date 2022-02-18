@@ -23,6 +23,7 @@
 	<text key="button.type.replace.previous">Écraser l'ancienne configuration\net remplacer par celle importée</text>
 	<text key="button.type.keep.both">Conserver les deux\nconfigurations</text>
 	<text key="button.type.cancel.import.config">Annuler\nl'import</text>
+	<text key="button.detect.keylist.duplicates">Détecter/corriger les doublons dans les listes de cases</text>
 	<text key="action.import.existing.configuration.header">Cette configuration existe déjà dans le profil "{}"</text>
 	<text key="action.import.existing.configuration.message">Configuration dans le profil\n"{}", modifée le {} par "{}"\n\nConfiguration importée\n"{}", modifiée le {} par "{}"
 	\n\nQue souhaitez vous faire ?</text>
