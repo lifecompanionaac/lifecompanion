@@ -67,6 +67,11 @@ public class ConfigAddFromDefaultView extends BorderPane implements LCViewInitHe
     }
 
     @Override
+    public void afterHide() {
+        this.defaultConfigurationListPane.clearConfigurationImages();
+    }
+
+    @Override
     public boolean cancelRequest() {
         return false;
     }

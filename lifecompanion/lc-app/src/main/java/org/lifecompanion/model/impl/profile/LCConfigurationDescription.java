@@ -22,16 +22,16 @@ import javafx.beans.property.*;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
 import org.jdom2.Element;
-import org.lifecompanion.model.api.profile.ChangelogEntryI;
-import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
-import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
-import org.lifecompanion.model.api.profile.LcTechInfoI;
-import org.lifecompanion.model.impl.exception.LCException;
-import org.lifecompanion.util.javafx.FXThreadUtils;
-import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.controller.editaction.AsyncExecutorController;
 import org.lifecompanion.framework.commons.fx.io.XMLGenericProperty;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
+import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
+import org.lifecompanion.model.api.profile.ChangelogEntryI;
+import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
+import org.lifecompanion.model.api.profile.LcTechInfoI;
+import org.lifecompanion.model.impl.constant.LCConstant;
+import org.lifecompanion.model.impl.exception.LCException;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -149,8 +149,11 @@ public class LCConfigurationDescription implements LCConfigurationDescriptionI {
                 AsyncExecutorController.INSTANCE.addAndExecute(false, true, () -> {
                     try (FileInputStream imageIS = new FileInputStream(imageFile)) {
                         final Image value = new Image(imageIS);
-                        LCConfigurationDescription.LOGGER.info("Configuration description preview was loaded from {}", imageFile);
-                        FXThreadUtils.runOnFXThread(() -> this.configurationImage.set(value));
+                        FXThreadUtils.runOnFXThread(() -> {
+                            if (loadingImage) {
+                                this.configurationImage.set(value);
+                            }
+                        });
                     } catch (IOException e) {
                         LCConfigurationDescription.LOGGER.warn("Couldn't load the configuration preview image", e);
                     }
@@ -159,6 +162,13 @@ public class LCConfigurationDescription implements LCConfigurationDescriptionI {
                 LCConfigurationDescription.LOGGER.warn("There is no image for the configuration description {}", this.configurationID);
             }
         }
+    }
+
+    public synchronized void unloadImage() {
+        this.loadingImage = false;
+        FXThreadUtils.runOnFXThread(() -> {
+            this.configurationImage.set(null);
+        });
     }
 
     @Override

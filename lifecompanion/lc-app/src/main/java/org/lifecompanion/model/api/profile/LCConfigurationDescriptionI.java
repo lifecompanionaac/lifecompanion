@@ -44,9 +44,11 @@ public interface LCConfigurationDescriptionI extends XMLSerializable<File> {
 
     /**
      * To request the {@link #configurationImageProperty()} to be loaded.<br>
-     * May take a while before the image is loaded.
+     * May take a while before the image is loaded (async)
      */
     void requestImageLoad();
+
+    void unloadImage();
 
     /**
      * @return the name of the associated configuration

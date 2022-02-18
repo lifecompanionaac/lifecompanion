@@ -288,7 +288,6 @@ public class LCConfigurationActions {
             LCConfigurationDescriptionI configDescription = AppModeController.INSTANCE.getEditModeContext().configurationDescriptionProperty().get();
 
             // Update the config description image because we are on JavaFX Thread
-            // Unknown bug : snapshot can sometimes fail
             try {
                 configDescription.configurationImageProperty().set(DisplayableComponentSnapshotController.getComponentSnapshot(configuration, false, -1, -1));
             } catch (Throwable t) {

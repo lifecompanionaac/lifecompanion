@@ -19,13 +19,13 @@
 package org.lifecompanion.ui.app.profileconfigselect;
 
 import javafx.scene.Scene;
-import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.controller.metrics.SessionStatsController;
-import org.lifecompanion.ui.common.pane.generic.AnimatedBorderPane;
 import org.lifecompanion.controller.profileconfigselect.ProfileConfigSelectionController;
 import org.lifecompanion.controller.profileconfigselect.ProfileConfigStep;
 import org.lifecompanion.controller.systemvk.SystemVirtualKeyboardController;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.model.impl.constant.LCConstant;
+import org.lifecompanion.ui.common.pane.generic.AnimatedBorderPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -84,6 +84,10 @@ public class ProfileConfigSelectionScene extends Scene implements LCViewInitHelp
         ProfileConfigSelectionController.INSTANCE.currentStepProperty().addListener((obs, ov, nv) -> {
             if (nv != null) {
                 this.displayStepView(nv);
+            }
+            if (ov != null) {
+                ProfileConfigStepViewI stepView = this.stepViews.get(ov);
+                if (stepView != null) stepView.afterHide();
             }
         });
         //Transition

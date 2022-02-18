@@ -235,6 +235,12 @@ public class ProfileEditionView extends BorderPane implements LCViewInitHelper, 
     }
 
     @Override
+    public void afterHide() {
+        this.defaultConfigurationListPane.clearConfigurationImages();
+    }
+
+
+    @Override
     public Node getView() {
         return this;
     }

@@ -19,6 +19,7 @@
 
 package org.lifecompanion.ui.common.pane.specific;
 
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.*;
 import javafx.scene.Node;
@@ -54,6 +55,8 @@ public class DefaultConfigurationListPane extends VBox implements LCViewInitHelp
     private Consumer<Pair<LCConfigurationDescriptionI, File>> onConfigurationSelected;
     private Hyperlink linkSelectAll, linkUnselectAll;
 
+    private List<Pair<LCConfigurationDescriptionI, File>> currentDefaultConfigurations;
+
     public DefaultConfigurationListPane(boolean multiSelectMode) {
         defaultConfigurationToggles = new HashMap<>();
         this.multiSelectMode = multiSelectMode;
@@ -79,7 +82,7 @@ public class DefaultConfigurationListPane extends VBox implements LCViewInitHelp
         ScrollPane scrollPaneDefaultConfigurations = new ScrollPane(gridPaneDefaultConfigurations);
         scrollPaneDefaultConfigurations.setFitToWidth(true);
         VBox.setVgrow(scrollPaneDefaultConfigurations, Priority.ALWAYS);
-        this.setSpacing(5.0);
+        this.setSpacing(8.0);
         this.getChildren().addAll(labelDefaultConfiguration, labelExplain, boxLinks, new Separator(Orientation.HORIZONTAL), scrollPaneDefaultConfigurations);
     }
 
@@ -107,16 +110,34 @@ public class DefaultConfigurationListPane extends VBox implements LCViewInitHelp
         this.onConfigurationSelected = callback;
     }
 
+
+    public void clearConfigurationImages() {
+        if (currentDefaultConfigurations != null) {
+            currentDefaultConfigurations.forEach(p -> p.getLeft().unloadImage());
+        }
+    }
+
     public void initDefaultConfigurations() {
-        if (this.gridPaneDefaultConfigurations.getChildren().isEmpty()) {
+        if (this.currentDefaultConfigurations == null) {
             ProfileConfigSelectionController.INSTANCE.getDefaultConfiguration(defaultConfigurations -> {
+                this.currentDefaultConfigurations = defaultConfigurations;
                 int rowIndex = 0;
                 for (Pair<LCConfigurationDescriptionI, File> defaultConfiguration : defaultConfigurations) {
                     LCConfigurationDescriptionI configDescription = defaultConfiguration.getLeft();
 
+                    // Config image
+                    ImageView imageViewInList = new ImageView();
+                    imageViewInList.setFitWidth(300);
+                    imageViewInList.setFitHeight(200);
+                    imageViewInList.setPreserveRatio(true);
+                    imageViewInList.imageProperty().bind(configDescription.configurationImageProperty());
+                    GridPane.setHalignment(imageViewInList, HPos.RIGHT);
+                    GridPane.setHgrow(imageViewInList, Priority.ALWAYS);
+                    GridPane.setMargin(imageViewInList, new Insets(5.0, 20.0, 5.0, 0.0));
+
                     // Config title
                     Label labelTitle = new Label(configDescription.configurationNameProperty().get());
-                    labelTitle.getStyleClass().addAll("text-fill-primary-dark", "text-font-size-110");
+                    labelTitle.getStyleClass().addAll("text-fill-primary-dark", "text-h4");
                     GridPane.setHgrow(labelTitle, Priority.ALWAYS);
 
                     // Config author and description
@@ -127,6 +148,7 @@ public class DefaultConfigurationListPane extends VBox implements LCViewInitHelp
                     labelDescription.getStyleClass().add("text-fill-gray");
                     labelDescription.setWrapText(true);
                     labelDescription.prefWidthProperty().bind(gridPaneDefaultConfigurations.widthProperty().multiply(0.60));
+                    GridPane.setValignment(labelDescription, VPos.TOP);
                     GridPane.setMargin(labelDescription, new Insets(0, 0, 8.0, 0));
 
                     Node selectionNode;
@@ -137,22 +159,18 @@ public class DefaultConfigurationListPane extends VBox implements LCViewInitHelp
                         defaultConfigurationToggles.put(toggleEnableConfiguration, defaultConfiguration);
                         selectionNode = toggleEnableConfiguration;
                     } else {
-                        final Button selectConfigButton = FXControlUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CHEVRON_RIGHT).size(24).color(LCGraphicStyle.MAIN_DARK), null);
-                        selectConfigButton.setOnAction(e -> {
+                        final Button selectConfigButton = FXControlUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CHEVRON_RIGHT).size(30).color(LCGraphicStyle.MAIN_DARK), null);
+                        final EventHandler<Event> eventHandlerSelect = e -> {
                             if (this.onConfigurationSelected != null) onConfigurationSelected.accept(defaultConfiguration);
-                        });
+                        };
+                        selectConfigButton.setOnMouseClicked(eventHandlerSelect);
+                        labelTitle.setOnMouseClicked(eventHandlerSelect);
+                        labelDescription.setOnMouseClicked(eventHandlerSelect);
+                        labelAuthor.setOnMouseClicked(eventHandlerSelect);
+                        imageViewInList.setOnMouseClicked(eventHandlerSelect);
                         GridPane.setValignment(selectConfigButton, VPos.CENTER);
                         selectionNode = selectConfigButton;
                     }
-
-                    ImageView imageViewInList = new ImageView();
-                    imageViewInList.setFitWidth(300);
-                    imageViewInList.setFitHeight(200);
-                    imageViewInList.setPreserveRatio(true);
-                    imageViewInList.imageProperty().bind(configDescription.configurationImageProperty());
-                    GridPane.setHalignment(imageViewInList, HPos.RIGHT);
-                    GridPane.setHgrow(imageViewInList, Priority.ALWAYS);
-                    GridPane.setMargin(imageViewInList, new Insets(5.0, 10.0, 5.0, 0.0));
 
                     GridPane.setMargin(selectionNode, new Insets(10.0));
                     GridPane.setValignment(selectionNode, VPos.TOP);
@@ -172,6 +190,8 @@ public class DefaultConfigurationListPane extends VBox implements LCViewInitHelp
                     rowIndex += 5;
                 }
             });
+        } else {
+            currentDefaultConfigurations.forEach(p -> p.getLeft().requestImageLoad());
         }
     }
 }

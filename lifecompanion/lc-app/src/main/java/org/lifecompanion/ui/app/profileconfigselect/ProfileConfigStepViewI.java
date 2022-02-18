@@ -42,4 +42,6 @@ public interface ProfileConfigStepViewI {
      * Method called to prepare the view before the view get displayed
      */
     void beforeShow();
+
+    default void afterHide(){}
 }

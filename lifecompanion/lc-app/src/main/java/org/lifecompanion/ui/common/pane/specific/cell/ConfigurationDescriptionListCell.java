@@ -42,10 +42,10 @@ public class ConfigurationDescriptionListCell extends ListCell<LCConfigurationDe
 	/**
 	 * Image view to see configuration preview
 	 */
-	private ImageView configurationImage;
+	private final ImageView configurationImageView;
 
-	private Label labelConfigName;
-	private Label labelConfigInfos;
+	private final Label labelConfigName;
+	private final Label labelConfigInfos;
 	protected BorderPane boxContent;
 
 	public ConfigurationDescriptionListCell() {
@@ -67,14 +67,14 @@ public class ConfigurationDescriptionListCell extends ListCell<LCConfigurationDe
 		this.labelConfigName.setMaxWidth(Double.MAX_VALUE);
 		HBox.setHgrow(boxLabel, Priority.ALWAYS);
 		//Images view
-		this.configurationImage = new ImageView();
-		this.configurationImage.setFitHeight(100);
-		this.configurationImage.fitWidthProperty().bind(this.widthProperty().subtract(20));
-		this.configurationImage.setPreserveRatio(true);
-		this.configurationImage.setSmooth(true);
+		this.configurationImageView = new ImageView();
+		this.configurationImageView.setFitHeight(100);
+		this.configurationImageView.fitWidthProperty().bind(this.widthProperty().subtract(20));
+		this.configurationImageView.setPreserveRatio(true);
+		this.configurationImageView.setSmooth(true);
 		this.setAlignment(Pos.CENTER);
 		//Global content
-		this.boxContent.setCenter(this.configurationImage);
+		this.boxContent.setCenter(this.configurationImageView);
 		this.boxContent.setBottom(boxLabel);
 		this.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
 	}
@@ -83,19 +83,17 @@ public class ConfigurationDescriptionListCell extends ListCell<LCConfigurationDe
 	protected void updateItem(final LCConfigurationDescriptionI itemP, final boolean emptyP) {
 		super.updateItem(itemP, emptyP);
 		if (itemP == null || emptyP) {
-			this.configurationImage.imageProperty().unbind();
-			this.configurationImage.imageProperty().set(null);
+			this.configurationImageView.imageProperty().unbind();
+			this.configurationImageView.imageProperty().set(null);
 			this.labelConfigName.textProperty().unbind();
 			this.labelConfigInfos.textProperty().unbind();
 			this.setGraphic(null);
 		} else {
 			itemP.requestImageLoad();
-			this.configurationImage.imageProperty().bind(itemP.configurationImageProperty());
+			this.configurationImageView.imageProperty().bind(itemP.configurationImageProperty());
 			this.labelConfigName.textProperty().bind(itemP.configurationNameProperty());
-			this.labelConfigInfos.textProperty().bind(Bindings.createStringBinding(() -> {
-				return StringUtils.dateToStringDateWithHour(itemP.configurationLastDateProperty().get()) + "\n"
-						+ itemP.configurationAuthorProperty().get();
-			}, itemP.configurationLastDateProperty(), itemP.configurationAuthorProperty()));
+			this.labelConfigInfos.textProperty().bind(Bindings.createStringBinding(() -> StringUtils.dateToStringDateWithHour(itemP.configurationLastDateProperty().get()) + "\n"
+					+ itemP.configurationAuthorProperty().get(), itemP.configurationLastDateProperty(), itemP.configurationAuthorProperty()));
 			this.setGraphic(this.boxContent);
 		}
 	}
