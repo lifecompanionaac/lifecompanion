@@ -87,18 +87,11 @@ public class LicenseStep extends VBox implements InstallerStep {
         labelLicense.setText(content.toString());
 
         checkBoxAcceptLicense = new CheckBox(Translation.getText("lc.installer.step.license.accept"));
-        checkBoxAcceptLicense.setDisable(true);
-
         this.getChildren().addAll(labelExplainTitle, labelExplainText, scrollPaneLicense, checkBoxAcceptLicense);
     }
 
     @Override
     public void initListener() {
-        scrollPaneLicense.vvalueProperty().addListener((obs, ov, nv) -> {
-            if (nv != null && nv.doubleValue() > 0.95) {
-                checkBoxAcceptLicense.setDisable(false);
-            }
-        });
         nextButtonEnabled.bind(checkBoxAcceptLicense.selectedProperty());
     }
     //========================================================================

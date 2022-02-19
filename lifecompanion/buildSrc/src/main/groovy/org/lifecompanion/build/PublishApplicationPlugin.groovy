@@ -7,6 +7,7 @@ class PublishApplicationPlugin implements Plugin<Project> {
     void apply(Project project) {
         project.task('publishApplication', type: PublishApplicationTask) {
             dependsOn 'clean'
+            dependsOn ':lc-app-launcher:prepareLaunchers'
             dependsOn 'jlink'
             project.tasks.findByName('jlink').mustRunAfter 'clean'
             group 'lifecompanion'

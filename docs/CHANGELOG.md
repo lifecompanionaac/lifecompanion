@@ -38,6 +38,7 @@
 - Correction d'un problème d'affichage lors de l'export en PDF dans certains cas
 - L'action "Sélectionner une liste choisie" est maintenant simulée en mode configuration
 - Les images des configurations par défaut sont maintenant directement affichées
+- Mise à jour des configurations par défaut
 
 
 ## 1.2.1 - 12/12/2021
