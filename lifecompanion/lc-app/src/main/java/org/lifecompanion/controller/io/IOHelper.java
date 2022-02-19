@@ -244,10 +244,10 @@ public class IOHelper {
                 currentDefaultConfiguration != null ? currentDefaultConfiguration.getConfigurationId() : null);
     }
 
-    public static ConfigurationImportTask createCustomConfigurationImport(final File configurationImportRootDirectory, final File configFile) throws LCException {
+    public static ConfigurationImportTask createCustomConfigurationImport(final File configurationImportRootDirectory, final File configFile, boolean loadConfiguration) throws LCException {
         String configurationID = getFileID(configFile);
         File configurationDirectory = new File(configurationImportRootDirectory.getPath() + File.separator + configurationID);
-        return new ConfigurationImportTask(configurationDirectory, configFile, configurationID, false, null);
+        return new ConfigurationImportTask(configurationDirectory, configFile, configurationID, loadConfiguration, null);
     }
 
     public static ProfileImportTask createProfileImportTask(final File profileFile) throws LCException {

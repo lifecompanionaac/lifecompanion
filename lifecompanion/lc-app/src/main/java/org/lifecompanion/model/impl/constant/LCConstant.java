@@ -50,6 +50,8 @@ public class LCConstant {
     public static final int DEFAULT_COLOR_REPLACE_THRESHOLD = 10;
 
     public static final String ARG_LAUNCH_CONFIG = "-directLaunchOn";
+    public static final String ARG_IMPORT_LAUNCH_CONFIG = "-directImportAndLaunch";
+
     // ========================================================================
 
     // Class part : "Files constant"

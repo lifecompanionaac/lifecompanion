@@ -24,6 +24,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Pair;
 import org.lifecompanion.controller.appinstallation.InstallationController;
 import org.lifecompanion.controller.editaction.GlobalActions;
 import org.lifecompanion.controller.editaction.LCConfigurationActions;
@@ -32,6 +33,7 @@ import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.controller.editmode.GeneralConfigurationController;
 import org.lifecompanion.controller.editmode.LCStateController;
 import org.lifecompanion.controller.io.IOHelper;
+import org.lifecompanion.controller.io.task.ConfigurationImportTask;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.lifecycle.LifeCompanionController;
 import org.lifecompanion.controller.profile.ProfileController;
@@ -56,6 +58,7 @@ import org.lifecompanion.ui.LoadingScene;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStage;
 import org.lifecompanion.ui.app.profileconfigselect.ProfileConfigSelectionStage;
 import org.lifecompanion.util.DesktopUtils;
+import org.lifecompanion.util.IOUtils;
 import org.lifecompanion.util.ThreadUtils;
 import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.util.javafx.StageUtils;
@@ -209,16 +212,15 @@ public class LifeCompanionBootstrap {
                 }
 
                 // Try to launch a configuration in use mode
-                final LCConfigurationDescriptionI configurationToLaunchFor = getConfigurationToLaunchFor(profileToSelect);
+                final Pair<LCConfigurationDescriptionI, LCConfigurationI> configurationToLaunchFor = getConfigurationToLaunchFor(profileToSelect);
                 if (configurationToLaunchFor != null) {
-                    final LCConfigurationI configuration = ThreadUtils.executeInCurrentThread(IOHelper.createLoadConfigurationTask(configurationToLaunchFor, profileToSelect));
-                    return new AfterLoad(AfterLoadAction.LAUNCH_USE, configurationToLaunchFor, configuration, profileToSelect, null);
+                    return new AfterLoad(AfterLoadAction.LAUNCH_USE, configurationToLaunchFor.getKey(), configurationToLaunchFor.getValue(), profileToSelect, null);
                 }
 
                 // Default : select a configuration
                 return new AfterLoad(AfterLoadAction.SELECT_CONFIGURATION, null, null, profileToSelect, null);
             } catch (Exception ep) {
-                LOGGER.warn("Couldn't select profile with ID {}", profileIDToSelect, ep);
+                LOGGER.warn("Couldn't select profile or detect launch args", ep);
             }
         }
         return DEFAULT_AFTERLOAD;
@@ -265,24 +267,35 @@ public class LifeCompanionBootstrap {
 
     // ANALYSE ARGS
     //========================================================================
-    private LCConfigurationDescriptionI getConfigurationToLaunchFor(LCProfileI profile) {
-        // Default configuration
-        LCConfigurationDescriptionI configurationToLaunch = profile.getCurrentDefaultConfiguration();
-
-        // Configuration to load from arg
+    private Pair<LCConfigurationDescriptionI, LCConfigurationI> getConfigurationToLaunchFor(LCProfileI profile) throws Exception {
+        // Configuration to load from arg (already in profile)
         final int indexOfLaunchConfigArg = args.indexOf(LCConstant.ARG_LAUNCH_CONFIG);
         if (indexOfLaunchConfigArg >= 0) {
             if (indexOfLaunchConfigArg + 2 < args.size()) {
                 final String configIdToSearch = args.get(indexOfLaunchConfigArg + 2);
                 final LCConfigurationDescriptionI configurationFromId = profile.getConfiguration().stream().filter(configDesc -> StringUtils.isEquals(configIdToSearch, configDesc.getConfigurationId())).findAny().orElse(null);
                 if (configurationFromId != null) {
-                    return configurationFromId;
+                    return loadConfigurationFromProfile(profile, configurationFromId);
                 }
             }
         }
-        return configurationToLaunch;
+        // Configuration to load (not in profile, should import then open)
+        final int indexOfImportLaunchConfigArg = args.indexOf(LCConstant.ARG_IMPORT_LAUNCH_CONFIG);
+        if (indexOfImportLaunchConfigArg >= 0) {
+            if (indexOfImportLaunchConfigArg + 1 < args.size()) {
+                final String configFilePath = args.get(indexOfImportLaunchConfigArg + 1);
+                final ConfigurationImportTask customConfigurationImport = IOHelper.createCustomConfigurationImport(IOUtils.getTempDir("import-and-launch"), new File(configFilePath), true);
+                return ThreadUtils.executeInCurrentThread(customConfigurationImport);
+            }
+        }
+        final LCConfigurationDescriptionI currentDefaultConfiguration = profile.getCurrentDefaultConfiguration();
+        return currentDefaultConfiguration != null ? loadConfigurationFromProfile(profile, currentDefaultConfiguration) : null;
     }
 
+    private Pair<LCConfigurationDescriptionI, LCConfigurationI> loadConfigurationFromProfile(LCProfileI profile, LCConfigurationDescriptionI configurationDescription) throws Exception {
+        final LCConfigurationI configuration = ThreadUtils.executeInCurrentThread(IOHelper.createLoadConfigurationTask(configurationDescription, profile));
+        return new Pair<>(configurationDescription, configuration);
+    }
 
     private String getProfileIDToSelect() {
         final int indexOfLaunchConfigArg = args.indexOf(LCConstant.ARG_LAUNCH_CONFIG);
@@ -296,7 +309,7 @@ public class LifeCompanionBootstrap {
     }
 
     private File getFirstLifeCompanionFile(String extensionToSearch) {
-        if (!CollectionUtils.isEmpty(args)) {
+        if (!CollectionUtils.isEmpty(args) && !args.contains(LCConstant.ARG_IMPORT_LAUNCH_CONFIG)) {
             for (String arg : args) {
                 String ext = FileNameUtils.getExtension(arg);
                 if (extensionToSearch.equalsIgnoreCase(ext)) {

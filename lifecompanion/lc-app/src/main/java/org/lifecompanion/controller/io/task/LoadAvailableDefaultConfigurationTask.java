@@ -20,14 +20,14 @@
 package org.lifecompanion.controller.io.task;
 
 import org.lifecompanion.controller.io.IOHelper;
-import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
-import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
-import org.lifecompanion.util.ThreadUtils;
-import org.lifecompanion.util.model.LCTask;
-import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
 import org.lifecompanion.framework.commons.utils.io.FileNameUtils;
 import org.lifecompanion.framework.utils.Pair;
+import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
+import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
+import org.lifecompanion.model.impl.constant.LCConstant;
+import org.lifecompanion.util.ThreadUtils;
+import org.lifecompanion.util.model.LCTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,7 +52,7 @@ public class LoadAvailableDefaultConfigurationTask extends LCTask<List<Pair<LCCo
                 String ext = FileNameUtils.getExtension(configurationFile);
                 if (LCConstant.CONFIG_FILE_EXTENSION.equalsIgnoreCase(ext)) {
                     try {
-                        final ConfigurationImportTask customConfigurationImport = IOHelper.createCustomConfigurationImport(new File(LCConstant.EXT_PATH_DEFAULT_CONFIGURATIONS_EXTRACTED), configurationFile);
+                        final ConfigurationImportTask customConfigurationImport = IOHelper.createCustomConfigurationImport(new File(LCConstant.EXT_PATH_DEFAULT_CONFIGURATIONS_EXTRACTED), configurationFile, false);
                         final javafx.util.Pair<LCConfigurationDescriptionI, LCConfigurationI> importValue = ThreadUtils.executeInCurrentThread(customConfigurationImport);
                         configurationDescriptions.add(Pair.of(importValue.getKey(), customConfigurationImport.getImportDirectory()));
                     } catch (Exception e) {

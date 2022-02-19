@@ -41,6 +41,7 @@ public class BackwardCompatibilityHelper {
             .with("fr.forusoftware.lifecompanion.data.component.simple.PredictionParameter", "org.lifecompanion.model.impl.configurationcomponent.PredictionParameter")
             .with("fr.forusoftware.lifecompanion.data.component.simple.StackComponent", "org.lifecompanion.model.impl.configurationcomponent.StackComponent")
             .with("fr.forusoftware.lifecompanion.data.component.simple.ComponentSpan", "org.lifecompanion.model.impl.configurationcomponent.ComponentSpan")
+
             // Config
             .with("fr.forusoftware.lifecompanion.data.component.simple.VirtualMouseParameter", "org.lifecompanion.model.impl.configurationcomponent.VirtualMouseParameter")
 
@@ -72,11 +73,11 @@ public class BackwardCompatibilityHelper {
     public static String getBackwardCompatibleType(String type) {
         // Actions
         if (type.startsWith("fr.forusoftware.lifecompanion.data.useaction.impl")) {
-            return type.replace("fr.forusoftware.lifecompanion.data.useaction.impl", "org.lifecompanion.model.impl.categorizedelement.useaction.available");
+            return "org.lifecompanion.model.impl.categorizedelement.useaction.available" + type.substring(type.lastIndexOf('.'));
         }
         // Events
         if (type.startsWith("fr.forusoftware.lifecompanion.data.useevent.impl")) {
-            return type.replace("fr.forusoftware.lifecompanion.data.useevent.impl", "org.lifecompanion.model.impl.categorizedelement.useevent.available");
+            return "org.lifecompanion.model.impl.categorizedelement.useevent.available" + type.substring(type.lastIndexOf('.'));
         }
         return PREVIOUS_TYPE_CORRESPONDANCES.getOrDefault(type, type);
     }

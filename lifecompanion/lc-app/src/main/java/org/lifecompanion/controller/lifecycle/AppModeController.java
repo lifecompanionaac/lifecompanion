@@ -55,7 +55,6 @@ import org.lifecompanion.model.impl.imagedictionary.ImageDictionaries;
 import org.lifecompanion.ui.UseModeScene;
 import org.lifecompanion.ui.UseModeStage;
 import org.lifecompanion.util.javafx.FXThreadUtils;
-import org.lifecompanion.util.javafx.StageUtils;
 import org.lifecompanion.util.model.LCTask;
 
 import java.util.Arrays;
@@ -115,11 +114,16 @@ public enum AppModeController {
                 editModeContext.switchTo(previousConfigurationEditMode, editModeContext.getPreviousConfigurationDescription());
             }
             // There is no previously edited  configuration this happens when
-            // - user launch LifeCompanion directly in use mode
+            // - user launch LifeCompanion directly in use mode (default configuration to launch, or command to import/use)
             // - user go to another configuration in use mode (with ChangeConfigurationAction)
-            else if (usedConfiguration != null && profile != null) {
-                final LCConfigurationDescriptionI usedConfigurationDesc = profile.getConfigurationById(usedConfiguration.getID());
-                ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.OpenConfigurationAction(editModeContext.getStage().getScene().getRoot(), usedConfigurationDesc, false));
+            // will try to open the used configuration in edit mode (may be not possible, for example when the configuration is just used and not imported, cf -directImportAndLaunch arg)
+            else {
+                if (usedConfiguration != null && profile != null) {
+                    final LCConfigurationDescriptionI configurationById = profile.getConfigurationById(usedConfiguration.getID());
+                    if (configurationById != null) {
+                        ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.OpenConfigurationAction(editModeContext.getStage().getScene().getRoot(), configurationById, false));
+                    }
+                }
             }
             editModeContext.clearPreviouslyEditedConfiguration();
         });
