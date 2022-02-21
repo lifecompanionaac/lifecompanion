@@ -118,7 +118,7 @@ public class DownloadUpdateAndLauncherTask extends AbstractUpdateTask<Boolean> {
             if (launcherFileProgressFound.isPresent()) {
                 updateMessage(Translation.getText("update.task.check.launcher.install2"));
                 final UpdateFileProgress launcherFileProgress = launcherFileProgressFound.get();
-                //Replace launcher file, if doesn't fail, update is ready
+                // Replace launcher file, if doesn't fail, update is ready
                 final String updatedLauncherPath = updateDirectory.getPath() + File.separator + ApplicationConstant.DIR_NAME_LAUNCHER_UPDATED + File.separator + launcherFileProgress.getTargetPath();
                 File launcherUpdatedFile = new File(updatedLauncherPath);
                 File launcherFile = new File(launcherFileProgress.getTargetPath());

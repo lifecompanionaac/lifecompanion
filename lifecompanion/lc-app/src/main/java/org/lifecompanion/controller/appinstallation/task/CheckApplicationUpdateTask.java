@@ -107,7 +107,7 @@ public class CheckApplicationUpdateTask extends AbstractUpdateTask<UpdateProgres
                         LOGGER.info("Got fresh update progress from server, contains {} files", updateFilesList.size());
 
                         // Create progress (add existing software_data file to copy)
-                        Set<String> pathFileToRemove = Arrays.stream(updateFiles).filter(f -> f.getStatus() != UpdateFileProgressType.TO_COPY).map(f -> f.getTargetPath()).collect(Collectors.toSet());
+                        Set<String> pathFileToRemove = Arrays.stream(updateFiles).filter(f -> f.getStatus() != UpdateFileProgressType.TO_COPY).map(UpdateFileProgress::getTargetPath).collect(Collectors.toSet());
                         addFileFrom(applicationDirectory, applicationDirectory, pathFileToRemove, updateFilesList);
 
                         // Save update progress state and return
