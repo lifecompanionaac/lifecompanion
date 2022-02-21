@@ -3,7 +3,7 @@ name: ci-launcher-prod
 on:
   push:
     tags:        
-      - 'lifecompanion/lc-launcher/*-prod'
+      - 'lifecompanion/lc-app-launcher/*-prod'
 
 jobs:
   call-workflow-passing-data:
