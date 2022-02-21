@@ -3,7 +3,7 @@ import org.lifecompanion.build.PublishLauncherTask
 plugins {
     id 'edu.sc.seis.launch4j' version '2.5.0'
     id 'org.javamodularity.moduleplugin' version '1.6.0'
-    // id 'org.lifecompanion.gradle.plugin.publish-launcher'
+    id 'org.lifecompanion.gradle.plugin.publish-launcher'
 }
 
 ext {
