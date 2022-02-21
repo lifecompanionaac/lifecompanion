@@ -34,7 +34,6 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 
-// FIXME : should have common class for sound data
 public class SoundResourceHolder implements SoundResourceHolderI {
     private static final Logger LOGGER = LoggerFactory.getLogger(SoundResourceHolder.class);
 
