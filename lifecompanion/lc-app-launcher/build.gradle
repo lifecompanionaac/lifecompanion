@@ -52,34 +52,34 @@ launch4j {
     icon = "${projectDir}/build-src/lifecompanion_icon.ico"
 }
 
-//task publishWindowsLauncher(type : PublishLauncherTask) {
-//    dependsOn 'createExe'
-//    file =  "$buildDir/launchers/WINDOWS/LifeCompanion.exe"
-//    system = 'WINDOWS'
-//}
-//
-//task publishUnixLauncher(type : PublishLauncherTask) {
-//    dependsOn  prepareSHLauncher('UNIX')
-//    file =  "$buildDir/launchers/UNIX/lifecompanion.sh"
-//    system = 'UNIX'
-//}
-//
-//task publishMacLauncher(type : PublishLauncherTask) {
-//    dependsOn  prepareSHLauncher('MAC')
-//    file =  "$buildDir/launchers/MAC/lifecompanion.sh"
-//    system = 'MAC'
-//}
+task publishWindowsLauncher(type: PublishLauncherTask) {
+    dependsOn 'createExe'
+    file = "$buildDir/launchers/WINDOWS/LifeCompanion.exe"
+    system = 'WINDOWS'
+}
+
+task publishUnixLauncher(type: PublishLauncherTask) {
+    dependsOn prepareSHLauncher('UNIX', '')
+    file = "$buildDir/launchers/UNIX/lifecompanion.sh"
+    system = 'UNIX'
+}
+
+task publishMacLauncher(type: PublishLauncherTask) {
+    dependsOn prepareSHLauncher('MAC', '')
+    file = "$buildDir/launchers/MAC/lifecompanion.sh"
+    system = 'MAC'
+}
 
 task prepareLaunchers {
     group 'lifecompanion'
     dependsOn 'clean'
-    dependsOn  prepareSHLauncher('MAC')
-    dependsOn  prepareSHLauncher('UNIX')
+    dependsOn prepareSHLauncher('MAC', 'v2')
+    dependsOn prepareSHLauncher('UNIX', 'v2')
     dependsOn 'createExe'
 }
 
-def prepareSHLauncher(String system) {
-    return tasks.create("prepareSh${system}", Copy) {
+def prepareSHLauncher(String system, String taskSub) {
+    return tasks.create("prepareSh${system}${taskSub}", Copy) {
         group = 'lifecompanion'
         description '(INTERNAL TASK) Prepare the template SH script for Unix and Mac launchers'
         outputs.upToDateWhen { false }

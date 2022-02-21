@@ -28,7 +28,7 @@ mainClassName = "org.lifecompanion.LifeCompanion"
 ext {
     devCpArg = System.getenv('org.lifecompanion.dev.cp.arg') != null && !System.getenv('org.lifecompanion.dev.cp.arg').isBlank() ? System.getenv('org.lifecompanion.dev.cp.arg') : '/null'
     sharedJvmArgAppTest = [
-            '-Dglass.win.uiScale=100%', //FIXME : test if previous bug with uiScale are still here...
+            '-Dglass.win.uiScale=100%', // TODO : test if previous bug with uiScale are still here...
 
             // Splash screen
             '-splash:data/lifecompanion_splashscreen.png',

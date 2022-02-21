@@ -105,6 +105,8 @@ public class LauncherApplication {
 
         // Unfocusable stage : need internal sun* API
         cmds.add("--add-exports=javafx.graphics/com.sun.glass.ui=org.lifecompanion.app");
+        cmds.add("--add-opens=javafx.graphics/javafx.stage=org.lifecompanion.app");
+        cmds.add("--add-opens=javafx.graphics/com.sun.javafx.tk.quantum=org.lifecompanion.app");
 
         // ControlsFX : open internal sun* API
         cmds.add("--add-opens=javafx.base/com.sun.javafx.runtime=org.controlsfx.controls");
