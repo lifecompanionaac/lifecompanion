@@ -19,17 +19,9 @@
 
 package org.lifecompanion.controller.appinstallation.task;
 
-import org.lifecompanion.controller.appinstallation.InstallationController;
-import org.lifecompanion.util.model.LCTask;
 import org.lifecompanion.framework.client.http.AppServerClient;
-import org.lifecompanion.framework.client.props.LauncherProperties;
-import org.lifecompanion.framework.client.service.AppServerService;
 import org.lifecompanion.framework.commons.SystemType;
-import org.lifecompanion.framework.commons.translation.Translation;
-import org.lifecompanion.framework.commons.utils.app.VersionUtils;
-import org.lifecompanion.framework.commons.utils.io.FileNameUtils;
-import org.lifecompanion.framework.commons.utils.io.IOUtils;
-import org.lifecompanion.framework.model.server.update.ApplicationLauncherUpdate;
+import org.lifecompanion.util.model.LCTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,9 +30,6 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
-
-import static org.lifecompanion.framework.commons.ApplicationConstant.DIR_NAME_APPLICATION_UPDATE;
-import static org.lifecompanion.framework.commons.ApplicationConstant.DOWNLOAD_ATTEMPT_COUNT_BEFORE_FAIL;
 
 public abstract class AbstractUpdateTask<V> extends LCTask<V> {
     protected final long TASK_START_LONG_DELAY;

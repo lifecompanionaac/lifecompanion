@@ -42,7 +42,6 @@ public class ApplicationConstant {
     public final static String UPDATE_STATE_FILENAME = "state.json";
     public final static String UPDATE_DOWNLOAD_FINISHED_FLAG_FILE = "updated.flag";
 
-    public final static String LAUNCHER_PROP_FILENAME = "launcher.properties";
     public final static String INSTALLATION_CONFIG_FILENAME = "installation.properties";
     public final static String INSTALLATION_KEY_FILENAME = "installation.key";
 

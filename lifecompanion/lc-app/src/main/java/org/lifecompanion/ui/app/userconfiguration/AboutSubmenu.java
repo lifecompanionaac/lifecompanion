@@ -21,8 +21,8 @@ package org.lifecompanion.ui.app.userconfiguration;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
-import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
@@ -31,17 +31,17 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
 import org.controlsfx.glyphfont.FontAwesome;
-import org.lifecompanion.util.DesktopUtils;
-import org.lifecompanion.controller.resource.IconHelper;
-import org.lifecompanion.model.impl.constant.LCConstant;
-import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.appinstallation.InstallationController;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
-import org.lifecompanion.model.impl.notification.LCNotification;
-import org.lifecompanion.ui.notification.LCNotificationController;
+import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.model.impl.constant.LCConstant;
+import org.lifecompanion.model.impl.constant.LCGraphicStyle;
+import org.lifecompanion.model.impl.notification.LCNotification;
+import org.lifecompanion.ui.notification.LCNotificationController;
+import org.lifecompanion.util.DesktopUtils;
 import org.lifecompanion.util.javafx.DialogUtils;
 import org.lifecompanion.util.javafx.FXControlUtils;
 import org.lifecompanion.util.javafx.FXUtils;
@@ -189,9 +189,7 @@ public class AboutSubmenu extends VBox implements LCViewInitHelper, UserConfigSu
         // Version info
         labelVersionInfo.setText(Translation.getText("about.tab.update.info",
                 InstallationController.INSTANCE.getBuildProperties().getVersionLabel(),
-                StringUtils.dateToStringWithoutHour(InstallationController.INSTANCE.getBuildProperties().getBuildDate()),
-                InstallationController.INSTANCE.getLauncherProperties().getVersionLabel(),
-                StringUtils.dateToStringWithoutHour(InstallationController.INSTANCE.getLauncherProperties().getBuildDate())));
+                StringUtils.dateToStringWithoutHour(InstallationController.INSTANCE.getBuildProperties().getBuildDate())));
 
         // Registration info
         registrationInformation = InstallationController.INSTANCE.getInstallationRegistrationInformation();

@@ -1359,7 +1359,7 @@
   <text key="about.notification.id.copied">Identifiant copié dans le presse papier</text>
   <text key="about.tab.license.app">Licence LifeCompanion</text>
   <text key="about.tab.license.third.party">Licence des tiers</text>
-  <text key="about.tab.update.info">Version : {} ({})\nLanceur : {} ({})</text>
+  <text key="about.tab.update.info">Version : {} ({})</text>
   <text key="about.tab.update.website.url">Serveur de mise à jour utilisé : {}</text>
   <text key="action.cant.open.browser.header">Erreur</text>
   <text key="action.cant.open.browser.message">Impossible d'ouvrir votre navigateur internet.\nMerci d'entrez

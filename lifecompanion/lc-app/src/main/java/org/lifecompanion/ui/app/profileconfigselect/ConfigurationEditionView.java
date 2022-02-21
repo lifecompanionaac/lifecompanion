@@ -148,12 +148,13 @@ public class ConfigurationEditionView extends BorderPane implements ProfileConfi
                 () -> ConfigActionController.INSTANCE
                         .executeAction(new LCConfigurationActions.RemoveConfigurationAction(nodeRemoveAction, ProfileController.INSTANCE.currentProfileProperty().get(), this.editedConfiguration.get(),
                                 removedConfig -> ProfileConfigSelectionController.INSTANCE.setConfigStep(ProfileConfigStep.CONFIGURATION_LIST, null, null))));
+        VBox boxActionButtons = new VBox(5.0, nodeExportAction, nodeRemoveAction);
         if (SystemType.current() == SystemType.WINDOWS) {
             this.nodeDesktopShortcut = FXControlUtils.createActionTableEntry("configuration.selection.create.desktop.link.button",
                     GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.EXTERNAL_LINK).size(30).color(LCGraphicStyle.MAIN_DARK),
                     () -> ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.CreateDesktopShortcut(ProfileController.INSTANCE.currentProfileProperty().get(), this.editedConfiguration.get())));
+            boxActionButtons.getChildren().add(nodeDesktopShortcut);
         }
-        VBox boxActionButtons = new VBox(5.0, nodeExportAction, nodeRemoveAction, nodeDesktopShortcut);
 
         // Changelog entries
         listViewChangelogEntries = new ListView<>();

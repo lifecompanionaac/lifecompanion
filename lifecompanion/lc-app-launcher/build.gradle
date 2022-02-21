@@ -7,22 +7,8 @@ ext {
     mainClassNameWithoutModule = 'org.lifecompanion.launcher.LauncherApplication'
 }
 
-version = project.property('lifecompanion.launcher.version')
-
 dependencies {
     implementation 'org.lifecompanion:lc-framework-commons:1.0.0'
-}
-
-processResources {
-    outputs.upToDateWhen { false }
-    // resource is only used on Windows, other system generated their properties on launch
-    filesMatching('**launcher.properties') {
-        expand(
-                'version': project.version,
-                'buildDate': new Date().getTime(),
-                'launcherPath': getLauncherPathFromOs('WINDOWS')
-        )
-    }
 }
 
 jar {
@@ -64,13 +50,6 @@ def prepareSHLauncher(String system) {
         outputs.upToDateWhen { false }
         from file("$buildDir/../build-src/lifecompanion.sh")
         into file("$buildDir/launchers/$system")
-        filesMatching('lifecompanion.sh') {
-            expand(
-                    'version': project.version,
-                    'buildDate': new Date().getTime(),
-                    'launcherPath': getLauncherPathFromOs(system)
-            )
-        }
     }
 }
 

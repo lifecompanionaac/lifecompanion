@@ -22,28 +22,29 @@ package org.lifecompanion.controller.appinstallation;
 import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.concurrent.Task;
-import org.lifecompanion.controller.editmode.ConfigActionController;
-import org.lifecompanion.model.impl.notification.LCNotification;
-import org.lifecompanion.ui.notification.LCNotificationController;
 import org.lifecompanion.controller.appinstallation.task.*;
 import org.lifecompanion.controller.editaction.GlobalActions;
+import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.plugin.PluginController;
 import org.lifecompanion.controller.resource.ResourceHelper;
 import org.lifecompanion.framework.client.http.AppServerClient;
 import org.lifecompanion.framework.client.props.ApplicationBuildProperties;
-import org.lifecompanion.framework.client.props.LauncherProperties;
 import org.lifecompanion.framework.client.service.AppServerService;
+import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.app.VersionUtils;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.framework.model.server.update.ApplicationPluginUpdate;
+import org.lifecompanion.framework.utils.FluentHashMap;
 import org.lifecompanion.framework.utils.LCNamedThreadFactory;
 import org.lifecompanion.framework.utils.Pair;
 import org.lifecompanion.model.api.lifecycle.LCStateListener;
 import org.lifecompanion.model.impl.constant.LCConstant;
+import org.lifecompanion.model.impl.notification.LCNotification;
 import org.lifecompanion.model.impl.plugin.PluginInfo;
+import org.lifecompanion.ui.notification.LCNotificationController;
 import org.lifecompanion.util.DesktopUtils;
 import org.lifecompanion.util.LangUtils;
 import org.lifecompanion.util.javafx.FXThreadUtils;
@@ -54,6 +55,7 @@ import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
@@ -82,7 +84,6 @@ public enum InstallationController implements LCStateListener {
     private final AppServerClient appServerClient;
 
     private final ApplicationBuildProperties buildProperties;
-    private final LauncherProperties launcherProperties;
 
     private boolean updateDownloadFinished;
     private boolean updateFinished;
@@ -102,7 +103,6 @@ public enum InstallationController implements LCStateListener {
     InstallationController() {
         this.buildProperties = ApplicationBuildProperties.load(ResourceHelper.getInputStreamForPath("/app.properties"));
         this.appServerClient = new AppServerClient(buildProperties.getUpdateServerUrl());
-        this.launcherProperties = LauncherProperties.load(new File(DIR_NAME_APPLICATION_DATA + File.separator + LAUNCHER_PROP_FILENAME));
         this.updateTaskMessage = new SimpleStringProperty();
         this.updateTaskRunning = new SimpleBooleanProperty();
         this.updateTaskProgress = new SimpleDoubleProperty(-1.0);
@@ -110,10 +110,6 @@ public enum InstallationController implements LCStateListener {
         // WARNING : implementation relies on the fact that this is a SINGLE thread executor
         // See lcStart() to understand
         this.executorService = Executors.newSingleThreadExecutor(LCNamedThreadFactory.daemonThreadFactoryWithPriority("InstallationController", Thread.MIN_PRIORITY));
-    }
-
-    public File getLauncherPath() {
-        return new File("." + File.separator + this.launcherProperties.getLauncherPath());
     }
 
     public StringProperty updateTaskMessageProperty() {
@@ -175,10 +171,6 @@ public enum InstallationController implements LCStateListener {
 
     public ApplicationBuildProperties getBuildProperties() {
         return buildProperties;
-    }
-
-    public LauncherProperties getLauncherProperties() {
-        return this.launcherProperties;
     }
 
     public void writeLastUpdateCheckDate(Date date) {
@@ -317,12 +309,21 @@ public enum InstallationController implements LCStateListener {
         Platform.exit();
         try {
             new ProcessBuilder()//
-                    .command(launcherProperties.getLauncherPath(), arg)//
+                    .command(getLauncherPath().getAbsolutePath(), arg)// TO-TEST
                     .redirectError(ProcessBuilder.Redirect.DISCARD).redirectOutput(ProcessBuilder.Redirect.DISCARD)
                     .start();
         } catch (Exception e) {
             LOGGER.error("Couldn't restart LifeCompanion", e);
         }
+    }
+
+    private static final Map<SystemType, String> LAUNCHER_PATH = FluentHashMap
+            .map(SystemType.WINDOWS, "LifeCompanion.exe")
+            .with(SystemType.MAC, "MacOS/lifecompanion.sh")
+            .with(SystemType.UNIX, "launcher/lifecompanion.sh");
+
+    public File getLauncherPath() {
+        return new File(LAUNCHER_PATH.get(SystemType.current()));
     }
     //========================================================================
 

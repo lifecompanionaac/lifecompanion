@@ -11,11 +11,6 @@ if [ ! -d 'data' ]; then
     mkdir 'data'
 fi
 
-# Generate up to date launcher.properties
-echo 'version = ${version}' > 'data/launcher.properties'
-echo 'buildDate = ${buildDate}' >> 'data/launcher.properties'
-echo 'launcherPath = ${launcherPath}' >> 'data/launcher.properties'
-
 # Read xmxConfiguration from installation.properties
 XMX_VALUE='-Xmx1G'
 if [ -f 'data/installation.properties' ]; then

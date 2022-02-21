@@ -45,17 +45,6 @@ public class LauncherApplication {
         // This is not a set : some args can be duplicated
         List<String> argsCollection = new ArrayList<>(Arrays.asList(args));
 
-        // Write launcher information
-        File launcherPropFile = new File(DIR_NAME_APPLICATION_DATA + File.separator + LAUNCHER_PROP_FILENAME);
-        if (launcherPropFile.getParentFile() != null) {
-            launcherPropFile.getParentFile().mkdirs();
-        }
-        try (FileOutputStream fos = new FileOutputStream(launcherPropFile)) {
-            try (InputStream is = LauncherApplication.class.getResourceAsStream("/" + LAUNCHER_PROP_FILENAME)) {
-                IOUtils.copyStream(is, fos);
-            }
-        }
-
         // Read installation configuration
         InstallationConfiguration installationConfiguration = InstallationConfiguration.read(new File(DIR_NAME_APPLICATION_DATA + File.separator + INSTALLATION_CONFIG_FILENAME));
         String xmxParam = installationConfiguration.getXmxConfiguration();
