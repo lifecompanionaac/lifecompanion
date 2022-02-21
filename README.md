@@ -5,7 +5,11 @@
 # LifeCompanion AAC
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+
 [![.github/workflows/ci-application-prod.yml](https://github.com/lifecompanionaac/lifecompanion/actions/workflows/ci-application-prod.yml/badge.svg)](https://github.com/lifecompanionaac/lifecompanion/actions/workflows/ci-application-prod.yml)
+
+[![ci-installer-prod](https://github.com/lifecompanionaac/lifecompanion/actions/workflows/ci-installer-prod.yml/badge.svg)](https://github.com/lifecompanionaac/lifecompanion/actions/workflows/ci-installer-prod.yml)
+
 [![ci-server](https://github.com/lifecompanionaac/lifecompanion/actions/workflows/ci-server.yml/badge.svg)](https://github.com/lifecompanionaac/lifecompanion/actions/workflows/ci-server.yml)
 
 LifeCompanion mono repository containing LifeCompanion app, server, side projects, resources and documentation.
@@ -37,13 +41,10 @@ LifeCompanion is currently available in french only, but we are seeking for part
 	- **lc-framework-client** : lib for server client (to call web services)
 	- **lc-framework-server** : installation and update server (to deploy, update and publish updates on apps)
 - **lifecompanion** : LifeCompanion application core, launcher and installer
-    - **lc-api** : contains core API and model for LifeCompanion (everything to run LifeCompanion in use mode)
-	- **lc-config** : contains all the configuration UI and models
-	- **lc-app** : JavaFX application that merge api and config and create LifeCompanion app - this is the project built to update LifeCompanion
+    - **lc-app** : LifeCompanion JavaFX application
 	- **lc-app-launcher** : launcher to run LifeCompanion (generate exe on Windows and script for Unix/Mac)
 	- **lc-installer** : JavaFX application to install LifeCompanion
-	- **lc-tool-scripts** : Java scripts to do various things (create prediction data, generate image dictionaries, etc.)
-	- **lc-plugins** : official LifeCompanion plugins (contains a sub project for each plugin)
+	- **lc-tool-scripts** : Java scripts to do various things (create prediction data, generate image dictionaries, some test/debug, etc.)
 	- **buildSrc** : build scripts to help LifeCompanion builds and update publishing
 - **env** : contains build env configurations
 - **libs** : external projects and libraries used by LifeCompanion or the framework
@@ -60,6 +61,6 @@ LifeCompanion is currently available in french only, but we are seeking for part
 
 # Build and run from source
 
-- [Dev notes page](docs/DEV.md) : to understand LifeCompanion build/run/update process
-- [Plugin API page](docs/PLUGINS.md) : to develop LifeCompanion plugins
+- [DEV](docs/DEV.md) : to understand LifeCompanion build/run/update process
+- [PLUGINS](docs/PLUGINS.md) : to create LifeCompanion plugins
 
