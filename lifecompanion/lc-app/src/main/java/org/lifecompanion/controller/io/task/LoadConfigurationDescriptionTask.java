@@ -32,7 +32,7 @@ public class LoadConfigurationDescriptionTask extends AbstractLoadUtilsTask<LCCo
     private final File configurationFile;
 
     public LoadConfigurationDescriptionTask(File configurationFile) {
-        super("task.title.config.import");//FIXME
+        super("task.title.config.description.load");
         this.configurationFile = configurationFile;
     }
 

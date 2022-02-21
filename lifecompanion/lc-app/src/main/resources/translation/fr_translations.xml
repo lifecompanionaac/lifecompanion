@@ -13,6 +13,7 @@
   <text key="general.config.scene.cancel.warning.header">Configuration modifiée</text>
   <text key="general.config.scene.cancel.warning.message">Vous avez des modifications sur la configuration qui ne sont pas enregistrées. En fermant cette fenêtre, ces changements seront perdus.</text>
   <text key="virtual.mouse.drawing.target">Cible</text>
+  <text key="task.title.config.description.load">Chargement de la configuration</text>
   <text key="sequence.configuration.view.field.text.to.speak">Prononcer au début de l'étape</text>
   <!--org.lifecompanion.api.component.definition.useaction-->
   <text key="use.action.event.type.activation">à l'activation</text>

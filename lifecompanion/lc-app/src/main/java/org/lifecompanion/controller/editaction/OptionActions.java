@@ -19,22 +19,21 @@
 
 package org.lifecompanion.controller.editaction;
 
-import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
-import org.lifecompanion.model.api.configurationcomponent.*;
-import org.lifecompanion.model.api.editaction.UndoRedoActionI;
-import org.lifecompanion.model.impl.exception.LCException;
-import org.lifecompanion.util.model.PositionSize;
 import org.lifecompanion.controller.editaction.GridActions.ReplaceComponentAction;
 import org.lifecompanion.controller.editaction.GridActions.ReplaceMultiCompAction;
 import org.lifecompanion.controller.editaction.GridStackActions.AddGridInStackAction;
 import org.lifecompanion.controller.editmode.SelectionController;
-import org.lifecompanion.model.impl.notification.LCNotification;
-import org.lifecompanion.ui.notification.LCNotificationController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.lang.CollectionUtils;
+import org.lifecompanion.model.api.configurationcomponent.*;
+import org.lifecompanion.model.api.editaction.UndoRedoActionI;
+import org.lifecompanion.model.impl.exception.LCException;
+import org.lifecompanion.model.impl.notification.LCNotification;
+import org.lifecompanion.ui.notification.LCNotificationController;
+import org.lifecompanion.util.model.PositionSize;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -123,14 +122,12 @@ public class OptionActions {
      * When a component is added to a configuration.
      */
     public static class AddRootComponentAction implements UndoRedoActionI {
-        private LCConfigurationI configuration;
-        private RootGraphicComponentI added;
-        private final Node source;
+        private final LCConfigurationI configuration;
+        private final RootGraphicComponentI added;
 
-        public AddRootComponentAction(Node source, final LCConfigurationI configurationP, final RootGraphicComponentI addedP) {
+        public AddRootComponentAction(final LCConfigurationI configurationP, final RootGraphicComponentI addedP) {
             this.configuration = configurationP;
             this.added = addedP;
-            this.source = source;
         }
 
         @Override
@@ -169,8 +166,9 @@ public class OptionActions {
      */
     public static class ReplaceGridInStackAction implements UndoRedoActionI {
 
-        private StackComponentI stackComponent;
-        private GridComponentI toReplace, component;
+        private final StackComponentI stackComponent;
+        private final GridComponentI toReplace;
+        private final GridComponentI component;
         private boolean select;
 
         public ReplaceGridInStackAction(final StackComponentI stackComponent, final GridComponentI toReplace, final GridComponentI component,
@@ -217,11 +215,11 @@ public class OptionActions {
      * When we copy a component.<br>
      */
     public static class PasteComponentAction implements UndoRedoActionI {
-        private LCConfigurationI targetConfiguration;
-        private ConfigurationChildComponentI toPasteComponent;
-        private ConfigurationChildComponentI targetComponent;
+        private final LCConfigurationI targetConfiguration;
+        private final ConfigurationChildComponentI toPasteComponent;
+        private final ConfigurationChildComponentI targetComponent;
         private UndoRedoActionI pasteAction;
-        private List<GridPartKeyComponentI> keys;
+        private final List<GridPartKeyComponentI> keys;
 
         public PasteComponentAction(final LCConfigurationI targetConfiguration, final ConfigurationChildComponentI toPasteComponent,
                                     final ConfigurationChildComponentI targetComponent, final List<GridPartKeyComponentI> keys) {
@@ -236,7 +234,7 @@ public class OptionActions {
             //Create the action relative the component type and target component
             //Root component
             if (this.toPasteComponent instanceof RootGraphicComponentI) {
-                this.pasteAction = new AddRootComponentAction(null, this.targetConfiguration, (RootGraphicComponentI) this.toPasteComponent);//FIXME : null source node
+                this.pasteAction = new AddRootComponentAction(this.targetConfiguration, (RootGraphicComponentI) this.toPasteComponent);
             }
             if (this.toPasteComponent instanceof GridPartComponentI && this.targetComponent != null) {
                 //Grid part into a stack : add the stack

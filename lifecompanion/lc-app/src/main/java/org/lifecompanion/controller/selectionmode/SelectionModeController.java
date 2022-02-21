@@ -841,7 +841,6 @@ public enum SelectionModeController implements ModeListenerI {
             UseActionController.INSTANCE.pauseActionLaunch();
             //Enable changing view
             configurationChangingListeners.forEach(l -> l.accept(true));
-            System.gc();// FIXME ?
             //Load the configuration (synch. because the action is executed in another Thread)
             ConfigurationLoadingTask configurationLoadingTask = IOHelper.createLoadConfigurationTask(configurationDescription, ProfileController.INSTANCE.currentProfileProperty().get());
             try {

@@ -36,25 +36,25 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.transform.Scale;
 import org.controlsfx.glyphfont.FontAwesome;
-import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
-import org.lifecompanion.model.api.configurationcomponent.RootGraphicComponentI;
-import org.lifecompanion.model.api.ui.editmode.AddTypeEnum;
-import org.lifecompanion.model.api.ui.configurationcomponent.ViewProviderI;
-import org.lifecompanion.model.impl.constant.LCConstant;
-import org.lifecompanion.controller.lifecycle.AppMode;
-import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.editaction.GlobalActions;
 import org.lifecompanion.controller.editaction.LCConfigurationActions;
 import org.lifecompanion.controller.editaction.OptionActions;
 import org.lifecompanion.controller.editaction.OptionActions.AddRootComponentAction;
-import org.lifecompanion.controller.profileconfigselect.ProfileConfigSelectionController;
-import org.lifecompanion.controller.profileconfigselect.ProfileConfigStep;
-import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.controller.editmode.DragController;
 import org.lifecompanion.controller.editmode.SelectionController;
+import org.lifecompanion.controller.lifecycle.AppMode;
+import org.lifecompanion.controller.lifecycle.AppModeController;
+import org.lifecompanion.controller.profileconfigselect.ProfileConfigSelectionController;
+import org.lifecompanion.controller.profileconfigselect.ProfileConfigStep;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
+import org.lifecompanion.model.api.configurationcomponent.RootGraphicComponentI;
+import org.lifecompanion.model.api.ui.configurationcomponent.ViewProviderI;
+import org.lifecompanion.model.api.ui.editmode.AddTypeEnum;
+import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.util.javafx.FXControlUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -224,8 +224,7 @@ public class MainView extends StackPane implements LCViewInitHelper {
                                         (contentBounds.getHeight() - viewportBounds.getHeight()) * this.scrollcenter.getVvalue()
                                                 + ea.getY() * (1.0 / scale) - dragged.heightProperty().get() / 2.0));
                         // Do add
-                        OptionActions.AddRootComponentAction action = new AddRootComponentAction(this,
-                                AppModeController.INSTANCE.getEditModeContext().configurationProperty().get(), dragged);
+                        OptionActions.AddRootComponentAction action = new AddRootComponentAction(AppModeController.INSTANCE.getEditModeContext().getConfiguration(), dragged);
                         ConfigActionController.INSTANCE.executeAction(action);
                     }
                     // Remove added

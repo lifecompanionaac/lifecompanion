@@ -41,7 +41,9 @@ import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.predict4all.nlp.Separator;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class TextDisplayer3 extends Pane implements LCViewInitHelper {
     private final WriterDisplayerI textDisplayer;
@@ -56,6 +58,8 @@ public class TextDisplayer3 extends Pane implements LCViewInitHelper {
 
     private CachedLineListenerDataI cachedLineListenerData;
 
+    private final Set<ImageElementI> currentImagesInEditor;
+
     public TextDisplayer3(final WriterDisplayerI textDisplayer, DoubleBinding doubleBinding, ReadOnlyDoubleProperty height,
                           TextDisplayerBaseImplView<?> parentView) {
         this.textDisplayer = textDisplayer;
@@ -63,11 +67,14 @@ public class TextDisplayer3 extends Pane implements LCViewInitHelper {
         this.height = height;
         this.parentView = parentView;
         previousChildren = new ArrayList<>();
+        currentImagesInEditor = new HashSet<>();
         this.initAll();
     }
 
     public void unbindComponentAndChildren() {
         cachedLineListenerData.unbind();
+        this.currentImagesInEditor.forEach(imageElement -> imageElement.requestImageUnload(textDisplayer.getID()));
+        currentImagesInEditor.clear();
     }
 
     @Override
@@ -94,6 +101,7 @@ public class TextDisplayer3 extends Pane implements LCViewInitHelper {
         });
     }
 
+
     private void repaint(List<TextDisplayerLineI> lines) {
         this.getChildren().removeAll(previousChildren);
         previousChildren.clear();
@@ -106,6 +114,8 @@ public class TextDisplayer3 extends Pane implements LCViewInitHelper {
         // Initialize caret
         int caretPosition = WritingStateController.INSTANCE.caretPosition().get();
         int caretLineIndex = 0;
+
+        Set<ImageElementI> newImagesInEditor = new HashSet<>();
 
         double y = 0.0;
         for (int l = 0; l < lines.size(); l++) {
@@ -128,8 +138,9 @@ public class TextDisplayer3 extends Pane implements LCViewInitHelper {
                 for (TextDisplayerWordPartI part : parts) {
                     if (textDisplayer.enableImageProperty().get() && part.isImageStart() && part.getEntry().imageProperty().get() != null) {
                         ImageElementI imageForPart = part.getEntry().imageProperty().get();
-                        imageForPart.requestImageLoad(textDisplayer.getID(), part.getImageWidth(), part.getHeight(), true, true); // FIXME : the image load request is never cleaned out
+                        imageForPart.requestImageLoad(textDisplayer.getID(), part.getImageWidth(), part.getHeight(), true, true);
                         Image loadedImage = imageForPart.loadedImageProperty().get();
+                        newImagesInEditor.add(imageForPart);
                         if (loadedImage != null) {
                             final Rectangle2D imgBounds = getImageBoundsToDrawOn(xInWord, y + lineImageHeight, loadedImage.getWidth(),
                                     loadedImage.getHeight(), part.getImageWidth(), textDisplayer.imageHeightProperty().get());
@@ -182,6 +193,16 @@ public class TextDisplayer3 extends Pane implements LCViewInitHelper {
 
         // Update scroll relative to the caret
         this.parentView.updateCaretScroll(getCaretPercent(lines, caretLineIndex, caretLine, y));
+
+        // Update image loading request
+        this.currentImagesInEditor.removeIf(imageElement -> {
+            if (!newImagesInEditor.contains(imageElement)) {
+                imageElement.requestImageUnload(textDisplayer.getID());
+                return true;
+            }
+            return false;
+        });
+        currentImagesInEditor.addAll(newImagesInEditor);
     }
 
     private int displayCaret(TextCompStyleI textStyle, double caretX, javafx.scene.shape.Line caretLine, double y, int l, TextDisplayerLineI line) {
