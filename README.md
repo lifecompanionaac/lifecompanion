@@ -5,11 +5,8 @@
 # LifeCompanion AAC
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-
 [![.github/workflows/ci-application-prod.yml](https://github.com/lifecompanionaac/lifecompanion/actions/workflows/ci-application-prod.yml/badge.svg)](https://github.com/lifecompanionaac/lifecompanion/actions/workflows/ci-application-prod.yml)
-
 [![ci-installer-prod](https://github.com/lifecompanionaac/lifecompanion/actions/workflows/ci-installer-prod.yml/badge.svg)](https://github.com/lifecompanionaac/lifecompanion/actions/workflows/ci-installer-prod.yml)
-
 [![ci-server](https://github.com/lifecompanionaac/lifecompanion/actions/workflows/ci-server.yml/badge.svg)](https://github.com/lifecompanionaac/lifecompanion/actions/workflows/ci-server.yml)
 
 LifeCompanion mono repository containing LifeCompanion app, server, side projects, resources and documentation.
