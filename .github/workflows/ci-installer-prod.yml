@@ -1,0 +1,22 @@
+name: ci-installer-prod
+
+on:
+  push:
+    tags:        
+      - 'lifecompanion/lc-installer/*-prod'
+
+jobs:
+  call-workflow-passing-data:
+    uses: lifecompanionaac/lifecompanion/.github/workflows/ci-lifecompanion.yml@main
+    with:
+      target_env: prod
+      runs_on: windows-latest
+      gradle_command: :lc-installer:publishInstaller
+      install_innosetup: true
+    secrets:
+      framework_server_url: ${{ secrets.LIFECOMPANION_FRAMEWORK_SERVER_URL_PROD }}
+      framework_server_login: ${{ secrets.LIFECOMPANION_FRAMEWORK_SERVER_LOGIN_PROD }}
+      framework_server_password: ${{ secrets.LIFECOMPANION_FRAMEWORK_SERVER_PASSWORD_PROD }}
+      app_server_url: ${{ secrets.LIFECOMPANION_APP_SERVER_URL_PROD }}
+      app_server_query_parameters: ${{ secrets.LIFECOMPANION_APP_SERVER_QUERY_PARAMETERS_PROD }}
+      app_server_public_key: ${{ secrets.LIFECOMPANION_APP_SERVER_PUBLIC_KEY_PROD }}
