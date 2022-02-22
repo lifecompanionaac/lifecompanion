@@ -35,23 +35,23 @@ public enum ApplicationUpdateDao {
 
     public void insertApplicationUpdate(Connection connection, ApplicationUpdate applicationUpdate) {
         connection.createQuery(
-                        "INSERT INTO application_update (id,version,version_major,version_minor,version_patch,update_date,visibility,application_id,description)"//
+                        "INSERT INTO application_update (id,version,version_major,version_minor,version_patch,update_date,visibility,application_id,description,api_version)"//
                                 + " VALUES "//
-                                + "(:id,:version,:versionMajor,:versionMinor,:versionPatch,:updateDate,:visibility,:applicationId,:description)")//
+                                + "(:id,:version,:versionMajor,:versionMinor,:versionPatch,:updateDate,:visibility,:applicationId,:description,:apiVersion)")//
                 .bind(applicationUpdate)//
                 .executeUpdate();
     }
 
-    public ApplicationUpdate getLastestUpdateFor(Connection connection, final String applicationId, boolean preview, int minApiVersion) {
+    public ApplicationUpdate getLastestUpdateFor(Connection connection, final String applicationId, boolean preview, int apiVersion) {
         return connection.createQuery("SELECT * FROM application_update WHERE "//
                         + "application_id = :applicationId "//
                         + "AND (visibility = 'PUBLISHED' OR (:preview AND visibility = 'PREVIEW')) "//
-                        + "AND (api_version >=  :minApiVersion) "//
+                        + "AND (api_version =  :apiVersion) "//
                         + "ORDER BY version_major DESC, version_minor DESC, version_patch DESC "//
                         + "LIMIT 1")//
                 .addParameter("applicationId", applicationId)//
                 .addParameter("preview", preview)//
-                .addParameter("minApiVersion", minApiVersion)//
+                .addParameter("apiVersion", apiVersion)//
                 .executeAndFetchFirst(ApplicationUpdate.class);
     }
 

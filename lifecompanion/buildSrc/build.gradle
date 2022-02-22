@@ -25,10 +25,6 @@ gradlePlugin {
             id = 'org.lifecompanion.gradle.plugin.publish-installer'
             implementationClass = 'org.lifecompanion.build.PublishInstallerPlugin'
         }
-        publishLauncher {
-            id = 'org.lifecompanion.gradle.plugin.publish-launcher'
-            implementationClass = 'org.lifecompanion.build.PublishLauncherPlugin'
-        }
         publishApplicatiion {
             id = 'org.lifecompanion.gradle.plugin.publish-application'
             implementationClass = 'org.lifecompanion.build.PublishApplicationPlugin'
