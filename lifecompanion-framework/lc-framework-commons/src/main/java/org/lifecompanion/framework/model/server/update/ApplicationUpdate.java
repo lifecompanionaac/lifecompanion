@@ -50,6 +50,9 @@ public class ApplicationUpdate {
 
     private String description;
 
+    @Column(name = "api_version")
+    private Integer apiVersion;
+
     public String getId() {
         return id;
     }
@@ -121,6 +124,14 @@ public class ApplicationUpdate {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public void setApiVersion(Integer apiVersion) {
+        this.apiVersion = apiVersion;
+    }
+
+    public Integer getApiVersion() {
+        return apiVersion;
     }
 
     @Override

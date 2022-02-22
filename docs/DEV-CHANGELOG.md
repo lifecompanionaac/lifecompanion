@@ -2,7 +2,11 @@
 
 ## SERVER
 
-### 1.13.0 - XX/XX/2022
+### 1.14.0 - 22/02/2022
+
+- New application update column "api version" to ensure backward compatibility
+
+### 1.13.0 - 18/02/2022
 
 - Added a new file target type "LAUNCHER"
 - New application update diff service to include new file target type

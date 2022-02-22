@@ -394,6 +394,8 @@ public class LCConfigurationComponent extends CoreDisplayableComponentBaseImpl i
         super.idsChanged(changes);
         this.eventManager.dispatchIdsChanged(changes);
         this.firstSelectionPart.idsChanged(changes);
+        this.rootKeyListNodeProperty().get().idsChanged(changes);
+        this.userActionSequencesProperty().get().idsChanged(changes);
     }
 
     /**

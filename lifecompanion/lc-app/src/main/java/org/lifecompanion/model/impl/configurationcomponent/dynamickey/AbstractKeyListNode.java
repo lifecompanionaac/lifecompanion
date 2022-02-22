@@ -87,7 +87,7 @@ public abstract class AbstractKeyListNode extends AbstractSimplerKeyActionContai
     //========================================================================
     @Override
     public KeyListNodeI duplicate(boolean changeId) {
-        return (AbstractKeyListNode) CopyUtils.createDeepCopyViaXMLSerialization(this, true);
+        return (AbstractKeyListNode) CopyUtils.createDeepCopyViaXMLSerialization(this, changeId);
     }
 
     @Override

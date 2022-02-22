@@ -42,14 +42,16 @@ public enum ApplicationUpdateDao {
                 .executeUpdate();
     }
 
-    public ApplicationUpdate getLastestUpdateFor(Connection connection, final String applicationId, boolean preview) {
+    public ApplicationUpdate getLastestUpdateFor(Connection connection, final String applicationId, boolean preview, int minApiVersion) {
         return connection.createQuery("SELECT * FROM application_update WHERE "//
                         + "application_id = :applicationId "//
                         + "AND (visibility = 'PUBLISHED' OR (:preview AND visibility = 'PREVIEW')) "//
+                        + "AND (api_version >=  :minApiVersion) "//
                         + "ORDER BY version_major DESC, version_minor DESC, version_patch DESC "//
                         + "LIMIT 1")//
                 .addParameter("applicationId", applicationId)//
                 .addParameter("preview", preview)//
+                .addParameter("minApiVersion", minApiVersion)//
                 .executeAndFetchFirst(ApplicationUpdate.class);
     }
 

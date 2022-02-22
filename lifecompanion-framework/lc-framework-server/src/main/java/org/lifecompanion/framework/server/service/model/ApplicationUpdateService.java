@@ -125,7 +125,7 @@ public enum ApplicationUpdateService {
             }
 
             // Get latest update (include preview updates > update should always be based on the last ones)
-            ApplicationUpdate lastUpdate = ApplicationUpdateDao.INSTANCE.getLastestUpdateFor(connection, dto.getApplicationId(), true);
+            ApplicationUpdate lastUpdate = ApplicationUpdateDao.INSTANCE.getLastestUpdateFor(connection, dto.getApplicationId(), true,0);
 
             // Get the existing update for same version > will update it
             ApplicationUpdate applicationUpdate = ApplicationUpdateDao.INSTANCE.getUpdateByApplicationAndVersion(connection, dto.getApplicationId(), dto.getVersion());
@@ -143,6 +143,7 @@ public enum ApplicationUpdateService {
                 applicationUpdate.setVersionMinor(versionInfo.getMinor());
                 applicationUpdate.setVersionPatch(versionInfo.getPatch());
                 applicationUpdate.setVisibility(UpdateVisibility.UPLOADING);
+                applicationUpdate.setApiVersion(2);
                 applicationUpdate.setUpdateDate(new Date());
                 ApplicationUpdateDao.INSTANCE.insertApplicationUpdate(connection, applicationUpdate);
                 LOGGER.info("Update {} inserted", applicationUpdate.getId());
@@ -249,9 +250,15 @@ public enum ApplicationUpdateService {
         return updateFile;
     }
 
+    public ApplicationUpdate getLastApplicationUpdateOld(String application, boolean preview) {
+        try (Connection connection = DataSource.INSTANCE.getSql2o().open()) {
+            return ApplicationUpdateDao.INSTANCE.getLastestUpdateFor(connection, application, preview, 1);
+        }
+    }
+
     public ApplicationUpdate getLastApplicationUpdate(String application, boolean preview) {
         try (Connection connection = DataSource.INSTANCE.getSql2o().open()) {
-            return ApplicationUpdateDao.INSTANCE.getLastestUpdateFor(connection, application, preview);
+            return ApplicationUpdateDao.INSTANCE.getLastestUpdateFor(connection, application, preview, 2);
         }
     }
 

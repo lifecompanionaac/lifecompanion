@@ -47,7 +47,8 @@ public enum DataSource {
             "2_PLUGINS.sql",
             "3_SOFTWARE_STATS.sql",
             "4_SOFTWARE_STATS_TRY_COUNT.sql",
-            "5_PLUGIN_UPDATE_APP_VERSION.sql"
+            "5_PLUGIN_UPDATE_APP_VERSION.sql",
+            "6_APPLICATION_UPDATE_API_VERSION.sql"
     };
 
     DataSource() {

@@ -68,7 +68,7 @@ Development environment installed and tested on Windows 10 and Ubuntu.
 1. Build and publish **lifecompanion-framework** libs : run task `gradlew publishToMavenLocal` in **lifecompanion-framework**
 1. Copy **data** folder from an official LifeCompanion installation in **lifecompanion/lc-app/data** - (you can copy it from S3 resource bucket, if you have access to it)
 1. Copy **installation.properties** and **launcher.properties** from **resources/default-data** to **lifecompanion/lc-app/data**
-1. In **installation.properties** change **userDataDirectory** to your own path
+1. In **installation.properties** change **userDataDirectory** to your a wanted path (e.g. *My Documens/LifeCompanion-Dev*)
 1. Run task `gradlew :lc-app:run` in **lifecompanion**
 
 ### How to build/run LifeCompanion update server

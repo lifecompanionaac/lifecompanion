@@ -57,6 +57,8 @@ public class ApplicationUpdateController {
 
     public static final Route getApplicationFileDownloadUrl = (request, response) -> ApplicationUpdateService.INSTANCE.getApplicationFileDownloadUrl(request.params("id"));
 
+    public static final Route getLastApplicationUpdateOld = (request, response) -> toJson(ApplicationUpdateService.INSTANCE.getLastApplicationUpdateOld(request.params("application"), Boolean.parseBoolean(request.params("preview"))));
+
     public static final Route getLastApplicationUpdate = (request, response) -> toJson(ApplicationUpdateService.INSTANCE.getLastApplicationUpdate(request.params("application"), Boolean.parseBoolean(request.params("preview"))));
 
     public static final Route cleanPreviousUpdates = (request, response) -> toJson(ApplicationUpdateService.INSTANCE.cleanPreviousUpdates(request.params("application")));
