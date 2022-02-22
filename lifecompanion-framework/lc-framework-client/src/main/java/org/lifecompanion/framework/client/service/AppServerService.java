@@ -70,7 +70,7 @@ public class AppServerService {
     }
 
     public ApplicationUpdate getLastApplicationUpdate(String applicationId, boolean preview) throws ApiException {
-        return this.client.get("public/get-last-application-update/" + applicationId + "/" + preview, ApplicationUpdate.class);
+        return this.client.get("public/v2/get-last-application-update/" + applicationId + "/" + preview, ApplicationUpdate.class);
     }
 
     public String getApplicationFileDownloadUrl(String fileId) throws ApiException {
