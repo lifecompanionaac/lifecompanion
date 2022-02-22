@@ -125,7 +125,7 @@ public enum ApplicationUpdateService {
             }
 
             // Get latest update (include preview updates > update should always be based on the last ones)
-            ApplicationUpdate lastUpdate = ApplicationUpdateDao.INSTANCE.getLastestUpdateFor(connection, dto.getApplicationId(), true,0);
+            ApplicationUpdate lastUpdate = ApplicationUpdateDao.INSTANCE.getLastestUpdateFor(connection, dto.getApplicationId(), true,2);
 
             // Get the existing update for same version > will update it
             ApplicationUpdate applicationUpdate = ApplicationUpdateDao.INSTANCE.getUpdateByApplicationAndVersion(connection, dto.getApplicationId(), dto.getVersion());
