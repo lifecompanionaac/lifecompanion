@@ -91,6 +91,13 @@ public class FullInstallTask extends Task<InstallResult> {
         AtomicLong workProgress = new AtomicLong(0);
         long totalWork = 4;
 
+        // Delete update folder (if exits) : useful to repair problems with updates
+        final File updateDirectory = new File(this.installerConfiguration.getInstallationSoftwareDirectory().getPath() + File.separator + DIR_NAME_APPLICATION_UPDATE);
+        if (updateDirectory.exists()) {
+            LOGGER.info("Detected a previous update directory, will clean it");
+            IOUtils.deleteDirectoryAndChildren(updateDirectory);
+        }
+
         // Download files and launcher
         updateMessage(Translation.getText("lc.installer.task.installing.progress.general.downloading"));
         ExecutorService downloadExecutorService = AppServerService.createDefaultExecutorService();
