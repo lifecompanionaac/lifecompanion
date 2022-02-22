@@ -2,6 +2,11 @@
 
 ## SERVER
 
+### 1.14.2 - 22/02/2022
+
+- Fix insert for application update
+- Fix API now check egality
+
 ### 1.14.0 - 22/02/2022
 
 - New application update column "api version" to ensure backward compatibility

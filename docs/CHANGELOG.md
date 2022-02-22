@@ -10,6 +10,12 @@
 
 - ...
 
+## 1.3.1 - 22/02/2022
+
+### Corrections/ajustements
+
+- Correction d'un rare problème avec les listes de cases
+
 ## 1.3.0 - 21/02/2022
 
 ### Fonctionnalités
