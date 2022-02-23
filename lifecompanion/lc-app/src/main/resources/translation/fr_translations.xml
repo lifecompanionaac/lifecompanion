@@ -591,6 +591,8 @@
   <text key="action.exit.application.description">Quitte LifeCompanion : ferme la fenêtre et quitte sans demander de
 		confirmation</text>
   <text key="action.exit.application.name">Fermer LifeCompanion</text>
+  <text key="action.change.window.size.description">Augmente la taille de la fenêtre de la configuration par le ratio spécifié.</text>
+  <text key="action.change.window.size.name">Changer la taille de la fenêtre</text>
   <!--org.lifecompanion.base.data.useaction.impl.miscellaneous.note-->
   <text key="action.save.note.description">Cette action permet d'ouvrir le bloc-notes avec la note sauvegardée sur
 		cette touche, puis de le refermer la seconde fois. Attention, ouvrir le bloc-notes efface le
