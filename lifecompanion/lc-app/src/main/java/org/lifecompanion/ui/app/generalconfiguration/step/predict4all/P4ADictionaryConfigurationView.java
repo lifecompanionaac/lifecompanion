@@ -45,6 +45,7 @@ import org.controlsfx.glyphfont.GlyphFontRegistry;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.ui.common.pane.specific.cell.P4AWordListCell;
+import org.lifecompanion.util.DesktopUtils;
 import org.lifecompanion.util.javafx.DialogUtils;
 import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.util.javafx.FXUtils;
@@ -215,19 +216,11 @@ public class P4ADictionaryConfigurationView extends ScrollPane implements Genera
         linkSource.getStyleClass().add("link-words-src");
         linkSource.setOnAction(e -> {
             if (dic.getLink() != null) {
-                if (Desktop.isDesktopSupported()) {
-                    try {
-                        Desktop.getDesktop().browse(new URI(dic.getLink()));
-                        LOGGER.info("URL opened");
-                    } catch (Exception ex) {
-                        LOGGER.error("Couldn't open url {} in default browser", dic.getLink(), ex);
-                    }
-                }
+                DesktopUtils.openUrlInDefaultBrowser(dic.getLink());
             }
         });
         VBox.setMargin(linkSource, new Insets(0.0, 0.0, 0.0, 14.0));
-        VBox boxContent = new VBox(2.0, toggle, linkSource);
-        return boxContent;
+        return new VBox(2.0, toggle, linkSource);
     }
 
 

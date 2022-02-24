@@ -19,24 +19,47 @@
 
 package org.lifecompanion.util;
 
+import org.lifecompanion.framework.utils.LCNamedThreadFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.*;
+import java.io.File;
 import java.net.URI;
 
+/**
+ * Implementation note : all Destkop calls are delegated to a daemon Thread.<br>
+ * <strong>This is mandatory for Unix implementation</strong> : if the caller is on main/FX Thread on Unix systems, Destkop open/browse calls will fail and block calling Thread...
+ */
 public class DesktopUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(DesktopUtils.class);
 
     public static boolean openUrlInDefaultBrowser(String url) {
         Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
         if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
-            try {
-                desktop.browse(new URI(url));
-                return true;
-            } catch (Exception e) {
-                LOGGER.warn("Couldn't open default browser to {}", url, e);
-            }
+            LCNamedThreadFactory.daemonThreadFactory("DesktopUtils").newThread(() -> {
+                try {
+                    desktop.browse(new URI(url));
+                } catch (Exception e) {
+                    LOGGER.warn("Couldn't open default browser to {}", url, e);
+                }
+            }).start();
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean openFile(File path) {
+        Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+        if (path != null && path.exists() && desktop != null && desktop.isSupported(Desktop.Action.OPEN)) {
+            LCNamedThreadFactory.daemonThreadFactory("DesktopUtils").newThread(() -> {
+                try {
+                    desktop.open(path);
+                } catch (Exception e) {
+                    LOGGER.warn("Couldn't open file with system from {}", path, e);
+                }
+            }).start();
+            return true;
         }
         return false;
     }

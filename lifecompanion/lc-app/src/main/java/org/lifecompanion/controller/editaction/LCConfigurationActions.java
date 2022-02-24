@@ -53,6 +53,7 @@ import org.lifecompanion.model.impl.notification.LCNotification;
 import org.lifecompanion.model.impl.profile.LCConfigurationDescription;
 import org.lifecompanion.ui.common.control.specific.selector.ConfigurationSelectorControl;
 import org.lifecompanion.ui.notification.LCNotificationController;
+import org.lifecompanion.util.DesktopUtils;
 import org.lifecompanion.util.ThreadUtils;
 import org.lifecompanion.util.javafx.DialogUtils;
 import org.lifecompanion.util.javafx.FXThreadUtils;
@@ -611,13 +612,7 @@ public class LCConfigurationActions {
             if (pdfFile != null) {
                 LCStateController.INSTANCE.updateDefaultDirectory(EXPORT_PDF, pdfFile.getParentFile());
                 ExportGridsToPdfTask exportGridsToPdfTask = new ExportGridsToPdfTask(currentConfiguration, pdfFile, currentProfile, currentConfigurationDescription);
-                exportGridsToPdfTask.setOnSucceeded(ev -> {
-                    try {
-                        Desktop.getDesktop().open(pdfFile);
-                    } catch (Exception e) {
-                        LOGGER.warn("Couldn't open PDF file {} after export", pdfFile, e);
-                    }
-                });
+                exportGridsToPdfTask.setOnSucceeded(ev -> DesktopUtils.openFile(pdfFile));
                 AsyncExecutorController.INSTANCE.addAndExecute(true, false, exportGridsToPdfTask);
             }
         }

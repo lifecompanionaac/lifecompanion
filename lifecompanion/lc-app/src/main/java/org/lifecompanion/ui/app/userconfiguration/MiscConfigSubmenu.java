@@ -44,6 +44,7 @@ import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
 import org.lifecompanion.model.impl.configurationcomponent.dynamickey.KeyListLeaf;
 import org.lifecompanion.model.impl.exception.LCException;
+import org.lifecompanion.util.DesktopUtils;
 import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -186,15 +187,13 @@ public class MiscConfigSubmenu extends VBox implements LCViewInitHelper, UserCon
 
     private void openFileOrFolder(Node source, final String path) {
         File file = new File(path);
-        if (file.exists()) {
-            try {
-                Desktop.getDesktop().open(file);
-            } catch (Throwable t) {
-                MiscConfigSubmenu.LOGGER.error("Impossible to open a lc directory : {}", file.getAbsolutePath(), t);
-                ErrorHandlingController.INSTANCE.showErrorNotificationWithExceptionDetails(Translation.getText("open.folder.lc.error.title"), LCException.newException().withCause(t).withMessage("open.folder.lc.error.unknown", file.getAbsolutePath()).build());
-            }
-        } else {
-            ErrorHandlingController.INSTANCE.showErrorNotificationWithExceptionDetails(Translation.getText("open.folder.lc.error.title"), LCException.newException().withMessage("open.folder.lc.error.directory.not.found", file.getAbsolutePath()).build());
+        if (!DesktopUtils.openFile(file)) {
+            ErrorHandlingController.INSTANCE.showErrorNotificationWithExceptionDetails(
+                    Translation.getText("open.folder.lc.error.title"),
+                    LCException.newException().withMessage("open.folder.lc.error.directory.not.found",
+                                    file.getAbsolutePath())
+                            .build()
+            );
         }
     }
 

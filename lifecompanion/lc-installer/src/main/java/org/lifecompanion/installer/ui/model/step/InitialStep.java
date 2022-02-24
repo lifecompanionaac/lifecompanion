@@ -30,6 +30,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
 import org.lifecompanion.framework.commons.translation.Translation;
+import org.lifecompanion.framework.utils.LCNamedThreadFactory;
 import org.lifecompanion.installer.controller.InstallerManager;
 import org.lifecompanion.installer.task.InitializeInstallationTask;
 import org.lifecompanion.installer.ui.model.InstallerStep;
@@ -88,11 +89,13 @@ public class InitialStep extends VBox implements InstallerStep {
         this.hyperlinkWebsite.setOnAction(e -> {
             Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
             if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
-                try {
-                    desktop.browse(new URI(hyperlinkWebsite.getText()));
-                } catch (Exception ex) {
-                    LOGGER.warn("Couldn't open default browser to {}", hyperlinkWebsite.getText(), ex);
-                }
+                LCNamedThreadFactory.daemonThreadFactory("DesktopUtils").newThread(() -> {
+                    try {
+                        desktop.browse(new URI(hyperlinkWebsite.getText()));
+                    } catch (Exception ex) {
+                        LOGGER.warn("Couldn't open default browser to {}", hyperlinkWebsite.getText(), ex);
+                    }
+                }).start();
             }
         });
     }
