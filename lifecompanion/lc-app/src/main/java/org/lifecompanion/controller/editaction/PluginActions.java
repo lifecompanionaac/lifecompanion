@@ -55,7 +55,6 @@ import java.util.List;
 public class PluginActions {
     private final static Logger LOGGER = LoggerFactory.getLogger(PluginActions.class);
 
-
     private static boolean firstAdd = true;
 
     private static void showAddPluginWarningDialog(Node source) {
@@ -72,11 +71,15 @@ public class PluginActions {
 
     private static void addPluginFromFile(Node source, File pluginFile) {
         try {
-            String loadResult = PluginController.INSTANCE.tryToAddPluginFrom(pluginFile).getLeft();
+            Pair<PluginController.PluginAddResult, PluginInfo> loadResult = PluginController.INSTANCE.tryToAddPluginFrom(pluginFile);
+            PluginInfo addedPluginInfo = loadResult.getRight();
             DialogUtils
                     .alertWithSourceAndType(source, Alert.AlertType.INFORMATION)
                     .withHeaderText(Translation.getText("plugin.loading.header.text.info"))
-                    .withContentText(loadResult)
+                    .withContentText(
+                            loadResult.getLeft() == PluginController.PluginAddResult.ADDED_TO_NEXT_RESTART ? Translation.getText("plugin.load.success.base.message", addedPluginInfo.getPluginName(), addedPluginInfo.getPluginVersion()) :
+                                    loadResult.getLeft() == PluginController.PluginAddResult.NOT_ADDED_ALREADY_SAME_OR_NEWER ? Translation.getText("plugin.load.success.base.not.loaded.update", addedPluginInfo.getPluginName(), addedPluginInfo.getPluginVersion()) : null
+                    )
                     .show();
         } catch (Throwable t) {
             PluginActions.LOGGER.error("Error while loading plugin {}", pluginFile, t);
@@ -130,9 +133,9 @@ public class PluginActions {
             if (StringUtils.isNotBlank(pluginId)) {
                 DownloadPluginTask pluginDownloadTask = InstallationController.INSTANCE.createPluginDownloadTask(StringUtils.stripToEmpty(pluginId));
                 pluginDownloadTask.setOnSucceeded(result -> {
-                    Pair<ApplicationPluginUpdate, File> downloaded = pluginDownloadTask.getValue();
+                    File downloaded = pluginDownloadTask.getValue();
                     if (downloaded != null) {
-                        addPluginFromFile(source, downloaded.getRight());
+                        addPluginFromFile(source, downloaded);
                     } else {
                         LCNotificationController.INSTANCE.showNotification(LCNotification.createError(Translation.getText("plugin.installation.exception.unknown.plugin.id", pluginId)));
                     }

@@ -44,6 +44,7 @@ import org.lifecompanion.model.api.lifecycle.LCStateListener;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.notification.LCNotification;
 import org.lifecompanion.model.impl.plugin.PluginInfo;
+import org.lifecompanion.model.impl.plugin.PluginInfoState;
 import org.lifecompanion.ui.notification.LCNotificationController;
 import org.lifecompanion.util.DesktopUtils;
 import org.lifecompanion.util.LangUtils;
@@ -55,10 +56,12 @@ import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import static org.lifecompanion.framework.commons.ApplicationConstant.*;
 import static org.lifecompanion.model.impl.constant.LCConstant.URL_PATH_CHANGELOG;
@@ -260,20 +263,6 @@ public enum InstallationController implements LCStateListener {
 
     // PLUGIN
     //========================================================================
-    public Date readLastPluginUpdateCheckDate() {
-        return readLastUpdateCheckDate(FILE_LAST_PLUGIN_UPDATE_DATE);
-    }
-
-    public void writeLastPluginUpdateCheckDate(Date date) {
-        writeLastUpdateDate(FILE_LAST_PLUGIN_UPDATE_DATE, date);
-    }
-
-    public void launchPluginUpdateCheckTask(boolean manualRequest) {
-        if (!skipUpdates) {
-            this.submitTask(createCheckAndDowloadPluginTask(!manualRequest), this::tryToAddPluginsAfterDownload);
-        }
-    }
-
     public void tryToAddPluginsAfterDownload(java.util.List<Pair<ApplicationPluginUpdate, File>> updatedPlugins) {
         updatedPlugins.forEach(this::tryToAddPluginAfterDownload);
     }
@@ -284,13 +273,42 @@ public enum InstallationController implements LCStateListener {
 
     private void tryToAddPluginAfterDownload(Pair<ApplicationPluginUpdate, File> updatedPlugin) {
         try {
-            Pair<String, PluginInfo> added = PluginController.INSTANCE.tryToAddPluginFrom(updatedPlugin.getRight());
-            showPluginUpdateNotification(added.getRight());
+//            Pair<String, PluginInfo> added = PluginController.INSTANCE.tryToAddPluginFrom(updatedPlugin.getRight());
+//            showPluginUpdateNotification(added.getRight());
         } catch (Exception e) {
             LOGGER.error("Couldn't add the plugin for {}", updatedPlugin.getRight());
         }
     }
 
+    public Date readLastPluginUpdateCheckDate() {
+        return readLastUpdateCheckDate(FILE_LAST_PLUGIN_UPDATE_DATE);
+    }
+
+    public void writeLastPluginUpdateCheckDate(Date date) {
+        writeLastUpdateDate(FILE_LAST_PLUGIN_UPDATE_DATE, date);
+    }
+
+    public void launchPluginUpdateCheckTask(boolean manualRequest) {
+        if (!skipUpdates) {
+            this.submitTask(createDownloadAllPlugin(!manualRequest, buildProperties.getVersionLabel()), pluginFiles -> {
+                for (File pluginFile : pluginFiles) {
+                    try {
+                        Pair<PluginController.PluginAddResult, PluginInfo> added = PluginController.INSTANCE.tryToAddPluginFrom(pluginFile);
+                        if (added.getLeft() != PluginController.PluginAddResult.NOT_ADDED_ALREADY_SAME_OR_NEWER) {
+                            showPluginUpdateNotification(added.getRight());
+                        }
+                    } catch (Exception e) {
+                        LOGGER.error("Couldn't add the plugin for {}", pluginFile);
+                    }
+                }
+            });
+        }
+    }
+
+    public DownloadAllPluginUpdateTask createDownloadAllPlugin(boolean pauseOnStart, String appVersion) {
+        List<String> pluginIds = PluginController.INSTANCE.getPluginInfoList().stream().filter(p -> p.stateProperty().get() != PluginInfoState.REMOVED).map(PluginInfo::getPluginId).collect(Collectors.toList());
+        return new DownloadAllPluginUpdateTask(appServerClient, buildProperties.getAppId(), enablePreviewUpdates, pauseOnStart, pluginIds, appVersion);
+    }
 
     public DownloadPluginTask createPluginDownloadTask(String pluginId) {
         return new DownloadPluginTask(appServerClient, buildProperties.getAppId(), enablePreviewUpdates, false, pluginId);
@@ -327,20 +345,11 @@ public enum InstallationController implements LCStateListener {
     }
     //========================================================================
 
-    // NOTIFICATION CALLBACK
-    //========================================================================
-    private Runnable updateFinishedCallback;
-
-    public void setUpdateFinishedCallback(Runnable updateFinishedCallback) {
-        this.updateFinishedCallback = updateFinishedCallback;
-    }
-    //========================================================================
-
     // LC start/stop
     //========================================================================
     @Override
     public void lcStart() {
-        // First of all : get the installation ID for LC (single thread executor, so the next tasks will be executed once it's done)
+        // First : get the installation ID for LC (single thread executor, so the next tasks will be executed once it's done)
         this.submitTask(new GetInstallationIdTask(buildProperties), this::setInstallationRegistrationInformation);
 
         // Classic update checking mechanism : note a check happens before this (to check if an update was downloaded and is ready to be installed)
@@ -370,10 +379,10 @@ public enum InstallationController implements LCStateListener {
                 });
             } else {
                 if (!updateDownloadFinished) {
-                    this.submitTask(new CheckApplicationUpdateTask(appServerClient, buildProperties.getAppId(), enablePreviewUpdates, !manualRequest), updateProgress -> {
+                    this.submitTask(new CheckUpdateTask(appServerClient, buildProperties.getAppId(), enablePreviewUpdates, !manualRequest), updateProgress -> {
                         if (updateProgress != null) {
                             LOGGER.info("Update progress detected, LifeCompanion will be updating... (background task)");
-                            this.submitTask(new DownloadUpdateAndLauncherTask(appServerClient, buildProperties.getAppId(), enablePreviewUpdates, !manualRequest, updateProgress), downloadFinished -> {
+                            this.submitTask(new DownloadUpdateTask(appServerClient, buildProperties.getAppId(), enablePreviewUpdates, !manualRequest, updateProgress), downloadFinished -> {
                                 if (downloadFinished) {
                                     showUpdateDownloadFinishedNotification();
                                 }

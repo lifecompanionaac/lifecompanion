@@ -20,6 +20,7 @@
 package org.lifecompanion.controller.appinstallation.task;
 
 import org.lifecompanion.controller.appinstallation.InstallationController;
+import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.framework.client.http.ApiException;
 import org.lifecompanion.framework.client.http.AppServerClient;
@@ -30,10 +31,14 @@ import org.lifecompanion.framework.commons.utils.io.FileNameUtils;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
 import org.lifecompanion.framework.model.server.update.ApplicationPluginUpdate;
 import org.lifecompanion.framework.utils.Pair;
+import org.lifecompanion.model.impl.plugin.PluginInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.lifecompanion.framework.commons.ApplicationConstant.DOWNLOAD_ATTEMPT_COUNT_BEFORE_FAIL;
 
@@ -78,5 +83,66 @@ public abstract class AbstractPluginDownloadTask<T> extends AbstractUpdateTask<T
         }
         LOGGER.info("No plugin version found for {}, current version {}", pluginId, currentPluginVersion);
         return null;
+    }
+
+    protected void downloadAndCheckPluginUpdates(String pluginId) throws ApiException, IOException {
+
+        updateMessage(Translation.getText("update.task.check.plugin.update.check.for", pluginId));
+
+        LOGGER.info("Will try to download all plugin updates for {} ", pluginId);
+        ApplicationPluginUpdate[] pluginUpdates = appServerService.getPluginUpdates(pluginId, enablePreviewUpdates);
+
+        if (pluginUpdates != null) {
+            // Find all updates above the current version and download them
+            for (ApplicationPluginUpdate pluginUpdate : pluginUpdates) {
+                // Only download most recent plugin updates
+                File pluginUpdateFile = new File(pluginUpdateDirectory.getPath() + File.separator + pluginUpdate.getApplicationPluginId() + File.separator + pluginUpdate.getFileName());
+                IOUtils.createParentDirectoryIfNeeded(pluginUpdateFile);
+                LOGGER.info("Found the plugin {}, will try to download version {} (file saved to {})", pluginUpdate.getId(), pluginUpdate.getVersion(), pluginUpdateFile);
+                if (pluginUpdateFile.exists() && StringUtils.isEquals(IOUtils.fileSha256HexToString(pluginUpdateFile), pluginUpdate.getFileHash())) {
+                    LOGGER.info("File {} wasn't downloaded because it was already in destination path and its hash was correct", pluginUpdateFile);
+                } else {
+                    updateMessage(Translation.getText("update.task.check.plugin.update.download", pluginId, pluginUpdate.getVersion(), FileNameUtils.getFileSize(pluginUpdate.getFileSize())));
+                    try {
+                        appServerService.downloadFileAndCheckIt(() -> appServerService.getPluginUpdateDownloadUrl(pluginUpdate.getId()), pluginUpdateFile, pluginUpdate.getFileHash(), DOWNLOAD_ATTEMPT_COUNT_BEFORE_FAIL);
+                        LOGGER.info("Plugin update downloaded");
+                    } catch (ApiException e) {
+                        LOGGER.error("Couldn't download plugin update {} - {}", pluginId, pluginUpdate.getVersion(), e);
+                    }
+                }
+            }
+        } else {
+            LOGGER.info("No plugin version found for {}", pluginId);
+        }
+    }
+
+    public File getLastPluginUpdateForAppVersion(String pluginId, String appVersion) {
+        File pluginUpdateRoot = new File(pluginUpdateDirectory.getPath() + File.separator + pluginId);
+        List<PluginInfo> availablePlugins = new ArrayList<>();
+
+        // Read every available plugin files
+        File[] pluginFiles = pluginUpdateRoot.listFiles();
+        if (pluginFiles != null) {
+            for (File pluginFile : pluginFiles) {
+                try {
+                    PluginInfo pluginInfoFromJar = PluginInfo.createFromJarManifest(pluginFile);
+                    if (StringUtils.isEquals(pluginInfoFromJar.getPluginId(), pluginId)) {
+                        availablePlugins.add(pluginInfoFromJar);
+                    } else throw new IOException("Plugin ID from jar \"" + pluginInfoFromJar.getPluginId() + "\" doesn't match expected plugin ID value \"" + pluginId + "\"");
+                } catch (Exception e) {
+                    LOGGER.info("Couldn't read plugin from jar file : {}", pluginFile, e);
+                }
+            }
+        }
+
+        // Find the last plugin that matches the min app version
+        PluginInfo lastPluginUpdate = availablePlugins
+                .stream()
+                .filter(p -> StringUtils.isNotBlank(p.getPluginMinAppVersion()))
+                .filter(p -> VersionUtils.compare(appVersion, p.getPluginMinAppVersion()) >= 0)
+                .min((p1, p2) -> VersionUtils.compare(p2.getPluginVersion(), p1.getPluginVersion()))
+                .orElse(null);
+
+        return lastPluginUpdate != null ? new File(pluginUpdateRoot.getPath() + File.separator + lastPluginUpdate.getFileName()) : null;
     }
 }

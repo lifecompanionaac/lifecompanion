@@ -19,11 +19,14 @@
 
 package org.lifecompanion.controller.appinstallation.task;
 
+import gnu.trove.impl.sync.TSynchronizedShortObjectMap;
 import org.lifecompanion.controller.appinstallation.InstallationController;
+import org.lifecompanion.controller.plugin.PluginController;
 import org.lifecompanion.framework.client.http.AppServerClient;
 import org.lifecompanion.framework.client.service.AppServerService;
 import org.lifecompanion.framework.commons.ApplicationConstant;
 import org.lifecompanion.framework.commons.translation.Translation;
+import org.lifecompanion.framework.commons.utils.app.VersionUtils;
 import org.lifecompanion.framework.commons.utils.io.FileNameUtils;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
@@ -32,19 +35,22 @@ import org.lifecompanion.framework.model.client.UpdateFileProgressType;
 import org.lifecompanion.framework.model.client.UpdateProgress;
 import org.lifecompanion.framework.model.client.UpdateProgressType;
 import org.lifecompanion.framework.model.server.update.TargetType;
+import org.lifecompanion.framework.utils.Pair;
+import org.lifecompanion.model.impl.constant.LCConstant;
+import org.lifecompanion.model.impl.plugin.PluginInfo;
 import org.lifecompanion.util.ThreadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Optional;
+import java.util.*;
 
-public class DownloadUpdateAndLauncherTask extends AbstractUpdateTask<Boolean> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(DownloadUpdateAndLauncherTask.class);
+public class DownloadUpdateTask extends AbstractUpdateTask<Boolean> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(DownloadUpdateTask.class);
     private final UpdateProgress updateProgress;
 
-    public DownloadUpdateAndLauncherTask(AppServerClient client, String applicationId, boolean enablePreviewUpdates, boolean pauseOnStart, UpdateProgress updateProgress) {
+    public DownloadUpdateTask(AppServerClient client, String applicationId, boolean enablePreviewUpdates, boolean pauseOnStart, UpdateProgress updateProgress) {
         super(client, applicationId, enablePreviewUpdates, pauseOnStart);
         this.updateProgress = updateProgress;
         updateMessage(Translation.getText("update.task.check.application.update.prepare.download"));
@@ -108,9 +114,7 @@ public class DownloadUpdateAndLauncherTask extends AbstractUpdateTask<Boolean> {
                 updateProgress(++progress, updateProgress.getFiles().size());
             }
 
-            LOGGER.info("Update processed, will now check for plugin update");
-            final CheckAndDownloadPluginUpdateTask checkAndDowloadPluginTask = InstallationController.INSTANCE.createCheckAndDowloadPluginTask(false);
-            InstallationController.INSTANCE.tryToAddPluginsAfterDownload(ThreadUtils.executeInCurrentThread(checkAndDowloadPluginTask));
+            preparePluginUpdate();
 
             LOGGER.info("Update processed, file are downloaded/copied, will now check to install launcher update");
             // If the launcher was updated, copy it before set update finished
@@ -145,6 +149,34 @@ public class DownloadUpdateAndLauncherTask extends AbstractUpdateTask<Boolean> {
             LOGGER.info("Current update download is already finished : from {} to {}", updateProgress.getFrom(), updateProgress.getTo());
             return true;
         }
+    }
+
+    public void preparePluginUpdate() throws Exception {
+        LOGGER.info("Update processed, will now check for plugin updates for next app version ({})", updateProgress.getTo());
+        // This will just download last plugin updates (installation of newer plugin update is then handled in InstallAppUpdateTask)
+        DownloadAllPluginUpdateTask downloadAllPlugin = InstallationController.INSTANCE.createDownloadAllPlugin(false, updateProgress.getTo());
+
+        // Create the most "up to date" plugin list merging updated plugins and existing ones
+        Map<String, List<Pair<PluginInfo, File>>> plugins = new HashMap<>();
+
+        List<File> pluginFilesToInstallOnNextUpdate = ThreadUtils.executeInCurrentThread(downloadAllPlugin);
+        for (File pluginFile : pluginFilesToInstallOnNextUpdate) {
+            try {
+                PluginInfo pluginInfo = PluginInfo.createFromJarManifest(pluginFile);
+                plugins.computeIfAbsent(pluginInfo.getPluginId(), id -> new ArrayList<>()).add(Pair.of(pluginInfo, pluginFile));
+            } catch (Exception e) {
+                LOGGER.error("Couldn't read plugin file info", e);
+            }
+        }
+
+        List<PluginInfo> pluginInfoList = new ArrayList<>(PluginController.INSTANCE.getPluginInfoList());
+        pluginInfoList.forEach(p -> plugins.computeIfAbsent(p.getPluginId(), id -> new ArrayList<>()).add(Pair.of(p, new File(LCConstant.PATH_PLUGIN_JAR_DIR + p.getFileName()))));
+
+        // Sort it to get the most up-to-date plugin for next version
+        plugins.forEach((pluginId, infos) -> {
+            Pair<PluginInfo, File> info = infos.stream().min((p1, p2) -> VersionUtils.compare(p2.getLeft().getPluginVersion(), p1.getLeft().getPluginVersion())).orElse(null);
+            System.err.println(info.getLeft() + " - " + info.getRight());
+        });
     }
 
     private void setUpdateFinished(File updateDownloadFinishedFlagFile, File stateFile) throws IOException {

@@ -84,6 +84,10 @@ public class AppServerService {
         return this.client.get("public/get-plugin-updates-order-by-version/" + pluginId + "/" + preview, ApplicationPluginUpdate[].class);
     }
 
+    public ApplicationPluginUpdate[] getPluginUpdates(String pluginId, boolean preview) throws ApiException {
+        return this.client.get("public/get-plugin-updates/" + pluginId + "/" + preview, ApplicationPluginUpdate[].class);
+    }
+
     public String getPluginUpdateDownloadUrl(String pluginUpdateId) throws ApiException {
         return this.client.get("public/get-plugin-update-file-url/" + pluginUpdateId, String.class);
     }

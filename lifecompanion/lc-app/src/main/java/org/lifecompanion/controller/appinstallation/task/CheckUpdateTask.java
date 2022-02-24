@@ -45,10 +45,10 @@ import java.util.stream.Collectors;
 
 import static org.lifecompanion.framework.commons.ApplicationConstant.*;
 
-public class CheckApplicationUpdateTask extends AbstractUpdateTask<UpdateProgress> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(CheckApplicationUpdateTask.class);
+public class CheckUpdateTask extends AbstractUpdateTask<UpdateProgress> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(CheckUpdateTask.class);
 
-    public CheckApplicationUpdateTask(AppServerClient client, String applicationId, boolean enablePreviewUpdates, boolean pauseOnStart) {
+    public CheckUpdateTask(AppServerClient client, String applicationId, boolean enablePreviewUpdates, boolean pauseOnStart) {
         super(client, applicationId, enablePreviewUpdates, pauseOnStart);
         updateMessage(Translation.getText("update.task.check.application.update.start"));
     }

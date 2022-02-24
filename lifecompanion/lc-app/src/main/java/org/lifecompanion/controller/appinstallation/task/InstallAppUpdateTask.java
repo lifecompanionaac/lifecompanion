@@ -19,6 +19,7 @@
 
 package org.lifecompanion.controller.appinstallation.task;
 
+import org.lifecompanion.controller.appinstallation.InstallationController;
 import org.lifecompanion.framework.client.http.AppServerClient;
 import org.lifecompanion.framework.commons.configuration.InstallationConfiguration;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
@@ -28,6 +29,7 @@ import org.lifecompanion.framework.model.client.UpdateFileProgressType;
 import org.lifecompanion.framework.model.client.UpdateProgress;
 import org.lifecompanion.framework.model.server.update.TargetType;
 import org.lifecompanion.model.impl.constant.LCConstant;
+import org.lifecompanion.util.ThreadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -95,6 +97,11 @@ public class InstallAppUpdateTask extends AbstractUpdateTask<Boolean> {
 
         File userDataDir = new File(updateDirectory.getPath() + File.separator + DIR_NAME_USER_DATA_UPDATED);
         copyFileFrom(userDataDir, userDataDir, installationConfiguration.getUserDataDirectory(), Collections.emptySet());
+
+        // Try to install plugin updates (plugin updates should have been downloaded in DownloadUpdateTask)
+        DownloadAllPluginUpdateTask downloadAllPlugin = InstallationController.INSTANCE.createDownloadAllPlugin(false, updateProgress.getTo());
+        List<File> pluginToInstall = ThreadUtils.executeInCurrentThread(downloadAllPlugin);
+
 
         // TODO : check hash after copy
         boolean stateDeletedInUpdate = stateFileInUpdate.delete();

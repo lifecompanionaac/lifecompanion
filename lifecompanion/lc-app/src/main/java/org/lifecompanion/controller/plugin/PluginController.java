@@ -26,6 +26,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.jdom2.Element;
 import org.lifecompanion.controller.io.ConfigurationComponentIOHelper;
+import org.lifecompanion.framework.utils.Triple;
 import org.lifecompanion.model.api.configurationcomponent.ConfigurationChildComponentI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.configurationcomponent.keyoption.KeyOptionConfigurationViewI;
@@ -320,7 +321,12 @@ public enum PluginController implements LCStateListener, ModeListenerI {
 
     // PLUGIN ADD/REMOVE
     //========================================================================
-    public Pair<String, PluginInfo> tryToAddPluginFrom(File pluginFile) throws Exception {
+    public enum PluginAddResult {
+        NOT_ADDED_ALREADY_SAME_OR_NEWER,
+        ADDED_TO_NEXT_RESTART;
+    }
+
+    public Pair<PluginAddResult, PluginInfo> tryToAddPluginFrom(File pluginFile) throws Exception {
         PluginInfo addedPluginInfo = loadPluginInfo(pluginFile);
         if (addedPluginInfo == null) LCException.newException().withMessageId("plugin.error.load.info.from.jar").buildAndThrow();
 
@@ -337,18 +343,18 @@ public enum PluginController implements LCStateListener, ModeListenerI {
         boolean newerVersionFound = false;
         if (!CollectionUtils.isEmpty(pluginsWithSameId)) {
             for (PluginInfo pluginWithSameId : pluginsWithSameId) {
-                // Found a newer version loaded
+                // Found a newer version loaded (or same)
                 if (VersionUtils.compare(pluginWithSameId.getPluginVersion(), addedPluginInfo.getPluginVersion()) >= 0) {
                     newerVersionFound = true;
                 }
-                // Found a older version loaded : remove previous version and add new one
+                // Found an older version loaded : remove previous version and add new one
                 else {
                     removePlugin(pluginWithSameId);
                 }
             }
         }
         if (newerVersionFound) {
-            return Pair.of(Translation.getText("plugin.load.success.base.not.loaded.update", addedPluginInfo.getPluginName(), addedPluginInfo.getPluginVersion()), addedPluginInfo);
+            return Pair.of(PluginAddResult.NOT_ADDED_ALREADY_SAME_OR_NEWER, addedPluginInfo);
         }
 
         // Add to plugin jar directory (if the same file is not already there)
@@ -368,7 +374,7 @@ public enum PluginController implements LCStateListener, ModeListenerI {
         // Add to info list
         pluginInfoList.add(addedPluginInfo);
 
-        return Pair.of(Translation.getText("plugin.load.success.base.message", addedPluginInfo.getPluginName(), addedPluginInfo.getPluginVersion()), addedPluginInfo);
+        return Pair.of(PluginAddResult.ADDED_TO_NEXT_RESTART, addedPluginInfo);
     }
 
     public void removePlugin(PluginInfo pluginInfo) {
@@ -437,7 +443,7 @@ public enum PluginController implements LCStateListener, ModeListenerI {
                 LOGGER.warn("Global problem when trying to load plugins...", t);
             }
 
-            // Launch plugin update check
+            // Launch plugin update check (once plugin are loaded)
             InstallationController.INSTANCE.launchPluginUpdateCheckTask(false);
         }
     }
@@ -554,7 +560,7 @@ public enum PluginController implements LCStateListener, ModeListenerI {
             for (Element pluginDependencyElement : pluginDependenciesElement.getChildren()) {
                 PluginInfo usedPluginInfo = new PluginInfo();
                 usedPluginInfo.deserialize(pluginDependencyElement, null);
-                PluginInfo loadedPluginInfo = getPluginById(usedPluginInfo.getPluginId(),pi -> pi.stateProperty().get() == PluginInfoState.LOADED).stream().findFirst().orElseGet(() -> null);
+                PluginInfo loadedPluginInfo = getPluginById(usedPluginInfo.getPluginId(), pi -> pi.stateProperty().get() == PluginInfoState.LOADED).stream().findFirst().orElseGet(() -> null);
                 if (loadedPluginInfo == null) {
                     warningMessage.append("\n - ").append(Translation.getText("configuration.loading.plugin.not.loaded", usedPluginInfo.getPluginName(), usedPluginInfo.getPluginVersion()));
                 } else if (VersionUtils.compare(loadedPluginInfo.getPluginVersion(), usedPluginInfo.getPluginVersion()) < 0) {

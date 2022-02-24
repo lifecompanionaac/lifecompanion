@@ -19,24 +19,33 @@
 
 package org.lifecompanion.controller.appinstallation.task;
 
+import com.google.gson.JsonArray;
 import org.lifecompanion.controller.appinstallation.InstallationController;
 import org.lifecompanion.framework.client.http.AppServerClient;
-import org.lifecompanion.framework.commons.translation.Translation;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
-public class DownloadPluginTask extends AbstractPluginDownloadTask<File> {
-    private final String pluginId;
+public class DownloadAllPluginUpdateTask extends AbstractPluginDownloadTask<List<File>> {
+    private final String appVersion;
+    private final List<String> pluginIds;
 
-    public DownloadPluginTask(AppServerClient client, String applicationId, boolean enablePreviewUpdates, boolean pauseOnStart, String pluginId) {
+    public DownloadAllPluginUpdateTask(AppServerClient client, String applicationId, boolean enablePreviewUpdates, boolean pauseOnStart, List<String> pluginIds, String appVersion) {
         super(client, applicationId, enablePreviewUpdates, pauseOnStart);
-        this.pluginId = pluginId;
-        this.updateTitle(Translation.getText("download.plugin.task.title", pluginId));
+        this.pluginIds = pluginIds;
+        this.appVersion = appVersion;
+        //this.updateTitle(Translation.getText("download.plugin.task.title", pluginId));
     }
 
     @Override
-    protected File call() throws Exception {
-        this.downloadAndCheckPluginUpdates(pluginId);
-        return getLastPluginUpdateForAppVersion(pluginId, InstallationController.INSTANCE.getBuildProperties().getVersionLabel());
+    protected List<File> call() throws Exception {
+        List<File> pluginFiles = new ArrayList<>();
+        for (String pluginId : pluginIds) {
+            this.downloadAndCheckPluginUpdates(pluginId);
+            File forPlugin = getLastPluginUpdateForAppVersion(pluginId, appVersion);
+            if (forPlugin != null) pluginFiles.add(forPlugin);
+        }
+        return pluginFiles;
     }
 }
