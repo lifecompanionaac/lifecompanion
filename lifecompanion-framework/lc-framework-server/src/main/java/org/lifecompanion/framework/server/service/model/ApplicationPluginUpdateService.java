@@ -79,33 +79,17 @@ public enum ApplicationPluginUpdateService {
             // Once uploaded, update file in DB
             ApplicationPluginUpdateDao.INSTANCE.updateApplicationPluginUpdate(connection, applicationPluginUpdate.getId(), targetVisibility, fileId);
 
-            /*
-             * Note : this part was removed because plugin update can be retro-downloaded function of the app version.
-             * Should develop and service to remove plugin update prior to certain app version
-             */
-            //            if (targetVisibility == UpdateVisibility.PUBLISHED) {
-            //                List<ApplicationPluginUpdate> applicationPluginUpdateBefore = ApplicationPluginUpdateDao.INSTANCE.getApplicationPluginUpdateBellowForApplicationPlugin(connection, applicationPluginUpdate);
-            //                for (ApplicationPluginUpdate previousInstaller : applicationPluginUpdateBefore) {
-            //                    final String fileStorageId = previousInstaller.getFileStorageId();
-            //                    if (StringUtils.isNotBlank(fileStorageId)) {
-            //                        try {
-            //                            FileStorageService.INSTANCE.removeFile(fileStorageId);
-            //                            ApplicationPluginUpdateDao.INSTANCE.updateApplicationPluginUpdateFileStorageId(connection, previousInstaller.getId(), null);
-            //                            LOGGER.info("Removed {} with storage ID {} from storage to only keep the last version", previousInstaller.getFileName(), fileStorageId);
-            //                        } catch (IOException e) {
-            //                            LOGGER.error("Couldn't remove file {} with storage ID {} from storage", previousInstaller, fileStorageId, e);
-            //                        }
-            //                    }
-            //                }
-            //            }
-
             connection.commit();
         }
         return applicationPluginUpdate;
     }
 
-    public List<ApplicationPluginUpdate> getPluginUpdatesOrderByVersion(String pluginId, boolean preview) throws IOException {
-        return ApplicationPluginUpdateDao.INSTANCE.getPluginUpdatesOrderByVersionForPluginIdAndPreview(pluginId, preview);
+    public List<ApplicationPluginUpdate> getLastPluginUpdate(String pluginId, boolean preview) throws IOException {
+        return ApplicationPluginUpdateDao.INSTANCE.getLastPluginUpdate(pluginId, preview);
+    }
+
+    public List<ApplicationPluginUpdate> getPluginUpdates(String pluginId, boolean preview) throws IOException {
+        return ApplicationPluginUpdateDao.INSTANCE.getPluginUpdates(pluginId, preview);
     }
 
     public String getPluginUpdateDownloadUrl(Request request, String id) throws IOException {

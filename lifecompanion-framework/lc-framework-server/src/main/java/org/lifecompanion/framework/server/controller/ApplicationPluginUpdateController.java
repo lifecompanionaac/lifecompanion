@@ -39,5 +39,7 @@ public class ApplicationPluginUpdateController {
 
     public static final Route getPluginUpdateDownloadUrl = (request, response) -> ApplicationPluginUpdateService.INSTANCE.getPluginUpdateDownloadUrl(request, request.params("id"));
 
-    public static final Route getPluginUpdatesOrderByVersion = (request, response) -> toJson(ApplicationPluginUpdateService.INSTANCE.getPluginUpdatesOrderByVersion(request.params("pluginId"), Boolean.parseBoolean(request.params("preview"))));
+    public static final Route getPluginUpdatesOrderByVersion = (request, response) -> toJson(ApplicationPluginUpdateService.INSTANCE.getLastPluginUpdate(request.params("pluginId"), Boolean.parseBoolean(request.params("preview"))));
+
+    public static final Route getPluginUpdates = (request, response) -> toJson(ApplicationPluginUpdateService.INSTANCE.getPluginUpdates(request.params("pluginId"), Boolean.parseBoolean(request.params("preview"))));
 }

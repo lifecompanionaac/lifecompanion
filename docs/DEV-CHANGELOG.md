@@ -2,6 +2,10 @@
 
 ## SERVER
 
+### 1.14.3 - 24/02/2022
+
+- New service to get all plugin updates
+
 ### 1.14.2 - 22/02/2022
 
 - Fix insert for application update

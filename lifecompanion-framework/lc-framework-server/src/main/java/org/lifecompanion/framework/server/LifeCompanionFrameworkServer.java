@@ -109,6 +109,7 @@ public class LifeCompanionFrameworkServer {
             get("/get-launcher-file-url/:id", ApplicationLauncherUpdateController.getLauncherFileDownloadUrl);
 
             get("/get-plugin-updates-order-by-version/:pluginId/:preview", ApplicationPluginUpdateController.getPluginUpdatesOrderByVersion);
+            get("/get-plugin-updates/:pluginId/:preview", ApplicationPluginUpdateController.getPluginUpdates);
             get("/get-plugin-update-file-url/:id", ApplicationPluginUpdateController.getPluginUpdateDownloadUrl);
         });
 
