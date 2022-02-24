@@ -55,57 +55,22 @@ public abstract class AbstractPluginDownloadTask<T> extends AbstractUpdateTask<T
         appServerService = new AppServerService(client);
     }
 
-    protected Pair<ApplicationPluginUpdate, File> tryToDownloadPlugin(String pluginId, String currentPluginVersion) throws ApiException {
-        updateMessage(Translation.getText("update.task.check.plugin.update.check.for", pluginId));
-        LOGGER.info("Will try to download plugin {}, current version {}", pluginId, currentPluginVersion);
-        ApplicationPluginUpdate[] pluginUpdates = appServerService.getPluginUpdatesOrderByVersion(pluginId, enablePreviewUpdates);
-
-        if (pluginUpdates != null) {
-            // Find best matching plugin update (updates are ordered from recent > older)
-            for (ApplicationPluginUpdate pluginUpdate : pluginUpdates) {
-                // Current application version should be equals or older than min app version on plugin
-                if (VersionUtils.compare(InstallationController.INSTANCE.getBuildProperties().getVersionLabel(), pluginUpdate.getMinAppVersion()) >= 0) {
-                    if ((currentPluginVersion == null || VersionUtils.compare(currentPluginVersion, pluginUpdate.getVersion()) < 0)) {
-                        File pluginUpdateFile = new File(pluginUpdateDirectory.getPath() + File.separator + pluginUpdate.getFileName());
-                        IOUtils.createParentDirectoryIfNeeded(pluginUpdateFile);
-                        LOGGER.info("Found the plugin {}, current version {}, will try to download version {} (file saved to {})", pluginUpdate.getId(), currentPluginVersion, pluginUpdate.getVersion(), pluginUpdateFile);
-                        updateMessage(Translation.getText("update.task.check.plugin.update.download", pluginId, pluginUpdate.getVersion(), FileNameUtils.getFileSize(pluginUpdate.getFileSize())));
-                        appServerService.downloadFileAndCheckIt(() -> appServerService.getPluginUpdateDownloadUrl(pluginUpdate.getId()), pluginUpdateFile, pluginUpdate.getFileHash(), DOWNLOAD_ATTEMPT_COUNT_BEFORE_FAIL);
-                        LOGGER.info("Plugin update downloaded");
-                        return Pair.of(pluginUpdate, pluginUpdateFile);
-                    } else {
-                        LOGGER.info("Plugin update : {} ignored because of the current plugin version ({})", pluginUpdate, currentPluginVersion);
-                    }
-                } else {
-                    LOGGER.info("Plugin update : {} ignored because of the app version ({})", pluginUpdate, InstallationController.INSTANCE.getBuildProperties().getVersionLabel());
-                }
-            }
-        }
-        LOGGER.info("No plugin version found for {}, current version {}", pluginId, currentPluginVersion);
-        return null;
-    }
-
     protected void downloadAndCheckPluginUpdates(String pluginId) throws ApiException, IOException {
-
         updateMessage(Translation.getText("update.task.check.plugin.update.check.for", pluginId));
 
-        LOGGER.info("Will try to download all plugin updates for {} ", pluginId);
+        LOGGER.info("Will try to download all plugin updates for \"{}\" ", pluginId);
         ApplicationPluginUpdate[] pluginUpdates = appServerService.getPluginUpdates(pluginId, enablePreviewUpdates);
 
         if (pluginUpdates != null) {
-            // Find all updates above the current version and download them
             for (ApplicationPluginUpdate pluginUpdate : pluginUpdates) {
-                // Only download most recent plugin updates
                 File pluginUpdateFile = new File(pluginUpdateDirectory.getPath() + File.separator + pluginUpdate.getApplicationPluginId() + File.separator + pluginUpdate.getFileName());
                 IOUtils.createParentDirectoryIfNeeded(pluginUpdateFile);
-                LOGGER.info("Found the plugin {}, will try to download version {} (file saved to {})", pluginUpdate.getId(), pluginUpdate.getVersion(), pluginUpdateFile);
-                if (pluginUpdateFile.exists() && StringUtils.isEquals(IOUtils.fileSha256HexToString(pluginUpdateFile), pluginUpdate.getFileHash())) {
-                    LOGGER.info("File {} wasn't downloaded because it was already in destination path and its hash was correct", pluginUpdateFile);
-                } else {
+
+                LOGGER.info("Plugin version found {}, will download or check existing file ({})", pluginUpdate.getVersion(), pluginUpdateFile);
+                if (!pluginUpdateFile.exists() || !StringUtils.isEquals(IOUtils.fileSha256HexToString(pluginUpdateFile), pluginUpdate.getFileHash())) {
                     updateMessage(Translation.getText("update.task.check.plugin.update.download", pluginId, pluginUpdate.getVersion(), FileNameUtils.getFileSize(pluginUpdate.getFileSize())));
                     try {
                         appServerService.downloadFileAndCheckIt(() -> appServerService.getPluginUpdateDownloadUrl(pluginUpdate.getId()), pluginUpdateFile, pluginUpdate.getFileHash(), DOWNLOAD_ATTEMPT_COUNT_BEFORE_FAIL);
-                        LOGGER.info("Plugin update downloaded");
                     } catch (ApiException e) {
                         LOGGER.error("Couldn't download plugin update {} - {}", pluginId, pluginUpdate.getVersion(), e);
                     }

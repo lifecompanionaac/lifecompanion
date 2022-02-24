@@ -398,7 +398,7 @@ public enum PluginController implements LCStateListener, ModeListenerI {
         return pluginInCp;
     }
 
-    private void writeClasspathConfiguration(Set<String> pluginsInCp) {
+    public static void writeClasspathConfiguration(Set<String> pluginsInCp) {
         File cpConfigFile = new File(LCConstant.PATH_PLUGIN_CP_FILE);
         IOUtils.createParentDirectoryIfNeeded(cpConfigFile);
         if (CollectionUtils.isEmpty(pluginsInCp)) {

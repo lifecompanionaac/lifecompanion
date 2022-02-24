@@ -48,6 +48,7 @@ import org.lifecompanion.model.impl.plugin.PluginInfoState;
 import org.lifecompanion.ui.notification.LCNotificationController;
 import org.lifecompanion.util.DesktopUtils;
 import org.lifecompanion.util.LangUtils;
+import org.lifecompanion.util.ThreadUtils;
 import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -263,23 +264,6 @@ public enum InstallationController implements LCStateListener {
 
     // PLUGIN
     //========================================================================
-    public void tryToAddPluginsAfterDownload(java.util.List<Pair<ApplicationPluginUpdate, File>> updatedPlugins) {
-        updatedPlugins.forEach(this::tryToAddPluginAfterDownload);
-    }
-
-    public CheckAndDownloadPluginUpdateTask createCheckAndDowloadPluginTask(boolean pauseOnStart) {
-        return new CheckAndDownloadPluginUpdateTask(appServerClient, buildProperties.getAppId(), enablePreviewUpdates, pauseOnStart);
-    }
-
-    private void tryToAddPluginAfterDownload(Pair<ApplicationPluginUpdate, File> updatedPlugin) {
-        try {
-//            Pair<String, PluginInfo> added = PluginController.INSTANCE.tryToAddPluginFrom(updatedPlugin.getRight());
-//            showPluginUpdateNotification(added.getRight());
-        } catch (Exception e) {
-            LOGGER.error("Couldn't add the plugin for {}", updatedPlugin.getRight());
-        }
-    }
-
     public Date readLastPluginUpdateCheckDate() {
         return readLastUpdateCheckDate(FILE_LAST_PLUGIN_UPDATE_DATE);
     }
@@ -290,7 +274,7 @@ public enum InstallationController implements LCStateListener {
 
     public void launchPluginUpdateCheckTask(boolean manualRequest) {
         if (!skipUpdates) {
-            this.submitTask(createDownloadAllPlugin(!manualRequest, buildProperties.getVersionLabel()), pluginFiles -> {
+            this.submitTask(createDownloadAllPlugin(manualRequest, buildProperties.getVersionLabel()), pluginFiles -> {
                 for (File pluginFile : pluginFiles) {
                     try {
                         Pair<PluginController.PluginAddResult, PluginInfo> added = PluginController.INSTANCE.tryToAddPluginFrom(pluginFile);
@@ -305,9 +289,9 @@ public enum InstallationController implements LCStateListener {
         }
     }
 
-    public DownloadAllPluginUpdateTask createDownloadAllPlugin(boolean pauseOnStart, String appVersion) {
+    public DownloadAllPluginUpdateTask createDownloadAllPlugin(boolean manualRequest, String appVersion) {
         List<String> pluginIds = PluginController.INSTANCE.getPluginInfoList().stream().filter(p -> p.stateProperty().get() != PluginInfoState.REMOVED).map(PluginInfo::getPluginId).collect(Collectors.toList());
-        return new DownloadAllPluginUpdateTask(appServerClient, buildProperties.getAppId(), enablePreviewUpdates, pauseOnStart, pluginIds, appVersion);
+        return new DownloadAllPluginUpdateTask(appServerClient, buildProperties.getAppId(), enablePreviewUpdates, manualRequest, pluginIds, appVersion);
     }
 
     public DownloadPluginTask createPluginDownloadTask(String pluginId) {
@@ -391,6 +375,7 @@ public enum InstallationController implements LCStateListener {
                             LOGGER.info("No update found");
                         }
                     });
+                    // Launch only if manual > on automatic this is fired by PluginController after plugin load
                     if (manualRequest) {
                         launchPluginUpdateCheckTask(true);
                     }

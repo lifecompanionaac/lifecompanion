@@ -20,6 +20,7 @@
 package org.lifecompanion.controller.appinstallation.task;
 
 import org.lifecompanion.controller.appinstallation.InstallationController;
+import org.lifecompanion.controller.plugin.PluginController;
 import org.lifecompanion.framework.client.http.AppServerClient;
 import org.lifecompanion.framework.commons.configuration.InstallationConfiguration;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
@@ -29,6 +30,7 @@ import org.lifecompanion.framework.model.client.UpdateFileProgressType;
 import org.lifecompanion.framework.model.client.UpdateProgress;
 import org.lifecompanion.framework.model.server.update.TargetType;
 import org.lifecompanion.model.impl.constant.LCConstant;
+import org.lifecompanion.model.impl.plugin.PluginInfo;
 import org.lifecompanion.util.ThreadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +38,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.lifecompanion.framework.commons.ApplicationConstant.*;
 
@@ -99,8 +102,7 @@ public class InstallAppUpdateTask extends AbstractUpdateTask<Boolean> {
         copyFileFrom(userDataDir, userDataDir, installationConfiguration.getUserDataDirectory(), Collections.emptySet());
 
         // Try to install plugin updates (plugin updates should have been downloaded in DownloadUpdateTask)
-        DownloadAllPluginUpdateTask downloadAllPlugin = InstallationController.INSTANCE.createDownloadAllPlugin(false, updateProgress.getTo());
-        List<File> pluginToInstall = ThreadUtils.executeInCurrentThread(downloadAllPlugin);
+        installPlugins();
 
 
         // TODO : check hash after copy
@@ -116,6 +118,33 @@ public class InstallAppUpdateTask extends AbstractUpdateTask<Boolean> {
         IOUtils.createParentDirectoryIfNeeded(updateDoneFile);
         IOUtils.writeToFile(updateDoneFile, String.valueOf(new Date().getTime()));
         return true;
+    }
+
+    public void installPlugins() {
+        File nextUpdateDir = new File(LCConstant.PATH_PLUGIN_NEXT_UPDATE_DIR);
+
+        // Clear previous plugins - backward comp > clear only if the next update folder exists
+        if (nextUpdateDir.exists()) {
+            IOUtils.deleteDirectoryAndChildren(new File(LCConstant.PATH_PLUGIN_JAR_DIR));
+        }
+
+        // Find plugins to install and copy the files
+        File[] files = nextUpdateDir.listFiles();
+        if (files != null) {
+            List<PluginInfo> installed = new ArrayList<>();
+            for (File file : files) {
+                try {
+                    PluginInfo pluginInfo = PluginInfo.createFromJarManifest(file);
+                    IOUtils.copyFiles(file, new File(LCConstant.PATH_PLUGIN_JAR_DIR + pluginInfo.getFileName()));
+                    installed.add(pluginInfo);
+                } catch (Exception e) {
+                    LOGGER.warn("Couldn't install plugin from file {}", file, e);
+                }
+            }
+
+            // Update plugin CP with installed plugins
+            PluginController.writeClasspathConfiguration(installed.stream().map(p -> LCConstant.PATH_PLUGIN_JAR_DIR + p.getFileName()).collect(Collectors.toSet()));
+        }
     }
 
     private static void copyFileFrom(File root, File src, File destDir, Set<String> dirNamesToIgnore) throws IOException {

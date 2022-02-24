@@ -19,7 +19,6 @@
 
 package org.lifecompanion.controller.appinstallation.task;
 
-import gnu.trove.impl.sync.TSynchronizedShortObjectMap;
 import org.lifecompanion.controller.appinstallation.InstallationController;
 import org.lifecompanion.controller.plugin.PluginController;
 import org.lifecompanion.framework.client.http.AppServerClient;
@@ -114,7 +113,7 @@ public class DownloadUpdateTask extends AbstractUpdateTask<Boolean> {
                 updateProgress(++progress, updateProgress.getFiles().size());
             }
 
-            preparePluginUpdate();
+            downloadAndPreparePluginsUpdate();
 
             LOGGER.info("Update processed, file are downloaded/copied, will now check to install launcher update");
             // If the launcher was updated, copy it before set update finished
@@ -151,14 +150,12 @@ public class DownloadUpdateTask extends AbstractUpdateTask<Boolean> {
         }
     }
 
-    public void preparePluginUpdate() throws Exception {
-        LOGGER.info("Update processed, will now check for plugin updates for next app version ({})", updateProgress.getTo());
-        // This will just download last plugin updates (installation of newer plugin update is then handled in InstallAppUpdateTask)
-        DownloadAllPluginUpdateTask downloadAllPlugin = InstallationController.INSTANCE.createDownloadAllPlugin(false, updateProgress.getTo());
-
+    public void downloadAndPreparePluginsUpdate() throws Exception {
         // Create the most "up to date" plugin list merging updated plugins and existing ones
         Map<String, List<Pair<PluginInfo, File>>> plugins = new HashMap<>();
 
+        // Download last plugin versions (will download current plugin list up-to-date version)
+        DownloadAllPluginUpdateTask downloadAllPlugin = InstallationController.INSTANCE.createDownloadAllPlugin(true, updateProgress.getTo());
         List<File> pluginFilesToInstallOnNextUpdate = ThreadUtils.executeInCurrentThread(downloadAllPlugin);
         for (File pluginFile : pluginFilesToInstallOnNextUpdate) {
             try {
@@ -169,13 +166,24 @@ public class DownloadUpdateTask extends AbstractUpdateTask<Boolean> {
             }
         }
 
+        // Get all plugin from loaded list (because it can contain local plugin that are not updated online, so they need to be integrated) - local file may also have more up-to-date version
         List<PluginInfo> pluginInfoList = new ArrayList<>(PluginController.INSTANCE.getPluginInfoList());
         pluginInfoList.forEach(p -> plugins.computeIfAbsent(p.getPluginId(), id -> new ArrayList<>()).add(Pair.of(p, new File(LCConstant.PATH_PLUGIN_JAR_DIR + p.getFileName()))));
 
-        // Sort it to get the most up-to-date plugin for next version
+        // Copy next update plugins to a specific directory waiting for the update to be installed (find the most up-to-date file for each plugin)
+        // Note : we are sure here that plugin respect minAppVersion because DownloadAllPluginUpdateTask check it
+        File nextUpdateDir = new File(LCConstant.PATH_PLUGIN_NEXT_UPDATE_DIR);
+        IOUtils.deleteDirectoryAndChildren(nextUpdateDir);
         plugins.forEach((pluginId, infos) -> {
             Pair<PluginInfo, File> info = infos.stream().min((p1, p2) -> VersionUtils.compare(p2.getLeft().getPluginVersion(), p1.getLeft().getPluginVersion())).orElse(null);
-            System.err.println(info.getLeft() + " - " + info.getRight());
+            if (info != null) {
+                LOGGER.info("Found the next update for plugin {}, will be updated to {} with file {}", pluginId, info.getLeft().getPluginVersion(), info.getRight());
+                try {
+                    IOUtils.copyFiles(info.getRight(), new File(nextUpdateDir.getPath() + File.separator + info.getLeft().getFileName()));
+                } catch (IOException e) {
+                    LOGGER.error("Couldn't update plugin {}", pluginId, e);
+                }
+            }
         });
     }
 
