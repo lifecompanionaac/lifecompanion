@@ -2475,6 +2475,8 @@
   <text key="about.tab.check.update.now">Vérifier les mises à jour</text>
   <!--org.lifecompanion.config.view.useaction.impl.text.write-->
   <text key="use.action.write.text.towrite">Texte à écrire</text>
+  <!--org.lifecompanion.config.view.useaction.impl.change.window.size-->
+  <text key="use.action.change.window.size.change.ratio">Ratio du changement de taille</text>
   <!--org.lifecompanion.config.view.useevent.impl.configuration.status-->
   <text key="label.field.configuration.started.delay.launch">Délai avant la génération de l'événement</text>
   <!--org.lifecompanion.config.view.useevent.impl.configuration.variable-->

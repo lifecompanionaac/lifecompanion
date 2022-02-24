@@ -29,15 +29,18 @@ import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseAction
 import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseActionSubCategories;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import javafx.stage.Stage;
+import javafx.stage.Screen;
+import javafx.geometry.Rectangle2D;
+import javafx.collections.ObservableList;
 import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.jdom2.Element;
+import java.lang.Math;
 
 /**
  * Action to change the size of the use window given a ratio.
- *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>, Paul BREUIL <tykapl.breuil@gmail.com>
  */
 public class ChangeWindowSizeAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
@@ -60,19 +63,52 @@ public class ChangeWindowSizeAction extends SimpleUseActionImpl<UseActionTrigger
         return changeRatio;
     }
 
+    // Class part : "Execute"
+    //========================================================================
     @Override
     public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
         Stage stage = AppModeController.INSTANCE.getUseModeContext().getStage();
         FXThreadUtils.runOnFXThread(() -> {
+            Double x = stage.getX();
+            Double y  = stage.getY();
             Double stageWidth = stage.getWidth();
-            stageWidth *= this.changeRatio.get();
-            stage.setWidth(stageWidth);
             Double stageHeight = stage.getHeight();
-            stageHeight *= this.changeRatio.get();
-            stage.setHeight(stageHeight);
+
+            // Removing the fullscreen and maximized status
+            stage.setFullScreen(false);
+            stage.setMaximized(false);
+
+            // Getting the maximum size available for the stage
+            Rectangle2D stageBounds = new Rectangle2D(x, y, stageWidth, stageHeight);
+            ObservableList<Screen> screensContainingStage = Screen.getScreensForRectangle(stageBounds);
+            Double maxAvailableWidth = 0.;
+            Double maxAvailableHeight = 0.;
+            for (Screen screen : screensContainingStage) {
+                Double screenWidth = screen.getBounds().getWidth();
+                if (screenWidth > maxAvailableWidth) {
+                    maxAvailableWidth = screenWidth;
+                }
+                Double screenHeight = screen.getBounds().getHeight();
+                if (screenHeight > maxAvailableHeight) {
+                    maxAvailableHeight = screenHeight;
+                }
+            }
+            // Change window size
+            Double newStageWidth = Math.min(stageWidth*this.changeRatio.get(), maxAvailableWidth);
+            stage.setWidth(newStageWidth);
+            Double newStageHeight = Math.min(stageHeight*this.changeRatio.get(), maxAvailableHeight);
+            stage.setHeight(newStageHeight);
+            // Recenter window to keep the same center point
+            Double xOffset = (stageWidth - newStageWidth)/2;
+            Double yOffset = (stageHeight - newStageHeight)/2;
+            stage.setX(stage.getX() + xOffset);
+            stage.setY(stage.getY() + yOffset);
         });
     }
+    //========================================================================
 
+    // Class part : "XML"
+    //========================================================================
     @Override
     public Element serialize(final IOContextI contextP) {
         Element elem = super.serialize(contextP);
@@ -85,4 +121,5 @@ public class ChangeWindowSizeAction extends SimpleUseActionImpl<UseActionTrigger
         super.deserialize(nodeP, contextP);
         XMLObjectSerializer.deserializeInto(ChangeWindowSizeAction.class, this, nodeP);
     }
+    //========================================================================
 }

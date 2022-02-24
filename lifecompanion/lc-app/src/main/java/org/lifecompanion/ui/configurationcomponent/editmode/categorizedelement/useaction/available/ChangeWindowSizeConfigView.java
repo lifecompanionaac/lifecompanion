@@ -30,6 +30,10 @@ import org.lifecompanion.model.impl.categorizedelement.useaction.available.Chang
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.util.javafx.FXControlUtils;
 
+/**
+ * Action configuration view for {@link ChangeWindowSizeAction}
+ * @author Mathieu THEBAUD <math.thebaud@gmail.com>, Paul BREUIL <tykapl.breuil@gmail.com>
+ */
 public class ChangeWindowSizeConfigView extends GridPane implements UseActionConfigurationViewI<ChangeWindowSizeAction> {
 
     private Spinner<Double> spinnerChangeRatio;
@@ -46,10 +50,10 @@ public class ChangeWindowSizeConfigView extends GridPane implements UseActionCon
 
     @Override
     public void initUI() {
-        final Label labelLevelSelectionField = new Label(Translation.getText("keylist.action.field.specific.level.selection"));
+        final Label labelLevelSelectionField = new Label(Translation.getText("use.action.change.window.size.change.ratio"));
         GridPane.setHgrow(labelLevelSelectionField, Priority.ALWAYS);
         labelLevelSelectionField.setMaxWidth(Double.MAX_VALUE);
-        spinnerChangeRatio = FXControlUtils.createDoubleSpinner(1, 999, 1, 1, 120.0);
+        spinnerChangeRatio = FXControlUtils.createDoubleSpinner(0.1, 10, 1, 0.05, 120.0);
         int rowIndex = 0;
         this.add(labelLevelSelectionField, 0, rowIndex);
         this.add(spinnerChangeRatio, 1, rowIndex++);
