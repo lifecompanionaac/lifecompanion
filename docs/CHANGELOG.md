@@ -8,7 +8,8 @@
 
 ### Corrections/ajustements
 
-- ...
+- Correction des lanceurs sur les systèmes Unix/Mac
+- Correction d'un problème qui pouvait bloquer LifeCompanion sur Unix
 
 ## 1.3.1 - 22/02/2022
 
