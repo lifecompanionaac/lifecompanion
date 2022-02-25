@@ -69,6 +69,10 @@ public class AppServerService {
         return this.client.get("public/v2/get-last-update-diff/" + applicationId + "/" + system + "/" + fromVersion + "/" + preview, UpdateFileProgress[].class);
     }
 
+    public UpdateFileProgress[] getUpdateDiffWithMax(String applicationId, SystemType system, String fromVersion, String maxVersion, boolean preview) throws ApiException {
+        return this.client.get("public/get-update-diff/" + applicationId + "/" + system + "/" + fromVersion + "/" + maxVersion + "/" + preview, UpdateFileProgress[].class);
+    }
+
     public ApplicationUpdate getLastApplicationUpdate(String applicationId, boolean preview) throws ApiException {
         return this.client.get("public/v2/get-last-application-update/" + applicationId + "/" + preview, ApplicationUpdate.class);
     }
