@@ -49,11 +49,11 @@ public class ChangeWindowSizeAction extends SimpleUseActionImpl<UseActionTrigger
 
     public ChangeWindowSizeAction() {
         super(UseActionTriggerComponentI.class);
-        this.order = 1;
-        this.category = DefaultUseActionSubCategories.APPLICATION;
+        this.order = 0;
+        this.category = DefaultUseActionSubCategories.FRAME;
         this.nameID = "action.change.window.size.name";
         this.staticDescriptionID = "action.change.window.size.description";
-        this.configIconPath = "miscellaneous/icon_exit_application_action.png";
+        this.configIconPath = "configuration/icon_move_frame.png";
         this.parameterizableAction = true;
         this.changeRatio = new SimpleDoubleProperty(1);
         this.variableDescriptionProperty().set(getStaticDescription());
@@ -67,37 +67,46 @@ public class ChangeWindowSizeAction extends SimpleUseActionImpl<UseActionTrigger
     //========================================================================
     @Override
     public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
-        Stage stage = AppModeController.INSTANCE.getUseModeContext().getStage();
         FXThreadUtils.runOnFXThread(() -> {
+            final Stage stage = AppModeController.INSTANCE.getUseModeContext().getStage();
             Double x = stage.getX();
             Double y  = stage.getY();
             Double stageWidth = stage.getWidth();
             Double stageHeight = stage.getHeight();
+            Double changeRatio = this.changeRatio.get();
 
-            // Removing the fullscreen and maximized status
-            stage.setFullScreen(false);
-            stage.setMaximized(false);
-
-            // Getting the maximum size available for the stage
-            Rectangle2D stageBounds = new Rectangle2D(x, y, stageWidth, stageHeight);
-            ObservableList<Screen> screensContainingStage = Screen.getScreensForRectangle(stageBounds);
-            Double maxAvailableWidth = 0.;
-            Double maxAvailableHeight = 0.;
-            for (Screen screen : screensContainingStage) {
-                Double screenWidth = screen.getBounds().getWidth();
-                if (screenWidth > maxAvailableWidth) {
-                    maxAvailableWidth = screenWidth;
+            // Handling the Fullscreen/Maximized status
+            if (stage.isFullScreen() || stage.isMaximized()) {
+                if (changeRatio < 1) {
+                    stage.setFullScreen(false);
+                    stage.setMaximized(false);
                 }
-                Double screenHeight = screen.getBounds().getHeight();
-                if (screenHeight > maxAvailableHeight) {
-                    maxAvailableHeight = screenHeight;
-                }
+                return;
             }
+
+            // Getting the screen the config resides in
+            Rectangle2D stageCenterPoint = new Rectangle2D(x + stageWidth/2, y + stageHeight/2, 1, 1);
+            ObservableList<Screen> screensContainingStage = Screen.getScreensForRectangle(stageCenterPoint);
+            if (screensContainingStage.size() == 0) {
+                // Handles when the central point of the stage isn't on any screen
+                Rectangle2D stageBounds = new Rectangle2D(x, y, stageWidth, stageHeight);
+                screensContainingStage = Screen.getScreensForRectangle(stageBounds);
+            }
+            Screen stageScreen = screensContainingStage.get(0);
+            Rectangle2D stageScreenBounds = stageScreen.getBounds();
+            Double maxAvailableWidth = stageScreenBounds.getWidth();
+            Double maxAvailableHeight = stageScreenBounds.getHeight();
+
             // Change window size
-            Double newStageWidth = Math.min(stageWidth*this.changeRatio.get(), maxAvailableWidth);
+            Double newStageWidth = Math.min(stageWidth*changeRatio, maxAvailableWidth);
+            Double newStageHeight = Math.min(stageHeight*changeRatio, maxAvailableHeight);
             stage.setWidth(newStageWidth);
-            Double newStageHeight = Math.min(stageHeight*this.changeRatio.get(), maxAvailableHeight);
             stage.setHeight(newStageHeight);
+            if (newStageWidth > maxAvailableWidth - 1 && newStageHeight > maxAvailableHeight - 1) {
+                stage.setMaximized(true);
+                return;
+            }
+
             // Recenter window to keep the same center point
             Double xOffset = (stageWidth - newStageWidth)/2;
             Double yOffset = (stageHeight - newStageHeight)/2;

@@ -541,6 +541,8 @@
   <text key="action.switch.fullscreen.frame.description">Change le mode de la fenêtre entre plein écran ou non, change
 		pour l'inverse du mode actuel.</text>
   <text key="action.switch.fullscreen.frame.name">Activer/désactiver le plein écran</text>
+  <text key="action.change.window.size.name">Changer la taille de la fenêtre</text>
+  <text key="action.change.window.size.description">Augmente la taille de la fenêtre de la configuration par le ratio spécifié.</text>
   <!--org.lifecompanion.base.data.useaction.impl.configuration.frame, org.lifecompanion.base.data.action.definition-->
   <text key="action.switch.fullscreen">Activer/Désactiver le plein écran</text>
   <!--org.lifecompanion.base.data.useaction.impl.keylist.current-->
@@ -591,8 +593,6 @@
   <text key="action.exit.application.description">Quitte LifeCompanion : ferme la fenêtre et quitte sans demander de
 		confirmation</text>
   <text key="action.exit.application.name">Fermer LifeCompanion</text>
-  <text key="action.change.window.size.description">Augmente la taille de la fenêtre de la configuration par le ratio spécifié.</text>
-  <text key="action.change.window.size.name">Changer la taille de la fenêtre</text>
   <!--org.lifecompanion.base.data.useaction.impl.miscellaneous.note-->
   <text key="action.save.note.description">Cette action permet d'ouvrir le bloc-notes avec la note sauvegardée sur
 		cette touche, puis de le refermer la seconde fois. Attention, ouvrir le bloc-notes efface le
@@ -2441,6 +2441,8 @@
   <text key="use.action.change.selection.color.wanted.color">Couleur voulue</text>
   <!--org.lifecompanion.config.view.useaction.impl.configuration.frame-->
   <text key="frame.position.for.action">Position de la fenêtre</text>
+  <!--org.lifecompanion.config.view.useaction.impl.change.window.size-->
+  <text key="use.action.change.window.size.change.ratio">Ratio du changement de taille</text>
   <!--org.lifecompanion.config.view.useaction.impl.configuration.keylist-->
   <text key="keylist.action.field.specific.level.selection">Effectuer l'action pour le niveau (ou inférieur)</text>
   <!--org.lifecompanion.config.view.useaction.impl.media.sound-->
@@ -2475,8 +2477,6 @@
   <text key="about.tab.check.update.now">Vérifier les mises à jour</text>
   <!--org.lifecompanion.config.view.useaction.impl.text.write-->
   <text key="use.action.write.text.towrite">Texte à écrire</text>
-  <!--org.lifecompanion.config.view.useaction.impl.change.window.size-->
-  <text key="use.action.change.window.size.change.ratio">Ratio du changement de taille</text>
   <!--org.lifecompanion.config.view.useevent.impl.configuration.status-->
   <text key="label.field.configuration.started.delay.launch">Délai avant la génération de l'événement</text>
   <!--org.lifecompanion.config.view.useevent.impl.configuration.variable-->
