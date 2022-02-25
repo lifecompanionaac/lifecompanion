@@ -101,6 +101,7 @@ public class LifeCompanionFrameworkServer {
             get("/v2/get-last-application-update/:application/:preview", ApplicationUpdateController.getLastApplicationUpdate);
             get("/get-last-update-diff/:application/:system/:fromVersion/:preview", ApplicationUpdateController.getLastApplicationUpdateDiffOld);
             get("/v2/get-last-update-diff/:application/:system/:fromVersion/:preview", ApplicationUpdateController.getLastApplicationUpdateDiff);
+            get("/get-update-diff/:application/:system/:fromVersion/:maxVersion/:preview", ApplicationUpdateController.getApplicationUpdateDiff);
             get("/get-application-file-url/:id", ApplicationUpdateController.getApplicationFileDownloadUrl);
             get("/download-file/*", ApplicationUpdateController.downloadFile); // this URL is only useful with a local file storage service
             post("/add-update-stat", ApplicationUpdateController.addUpdateDoneStat);
@@ -109,7 +110,6 @@ public class LifeCompanionFrameworkServer {
             get("/get-launcher-file-url/:id", ApplicationLauncherUpdateController.getLauncherFileDownloadUrl);
 
             get("/get-plugin-updates-order-by-version/:pluginId/:preview", ApplicationPluginUpdateController.getPluginUpdatesOrderByVersion);
-            get("/get-plugin-updates/:pluginId/:preview", ApplicationPluginUpdateController.getPluginUpdates);
             get("/get-plugin-update-file-url/:id", ApplicationPluginUpdateController.getPluginUpdateDownloadUrl);
         });
 

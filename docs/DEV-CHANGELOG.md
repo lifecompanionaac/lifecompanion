@@ -2,6 +2,10 @@
 
 ## SERVER
 
+### 1.14.4 - 25/02/2022
+
+- New service to download a specific app version (in update diff)
+
 ### 1.14.3 - 24/02/2022
 
 - New service to get all plugin updates

@@ -20,6 +20,7 @@
 package org.lifecompanion.framework.server.service.model;
 
 import org.lifecompanion.framework.commons.SystemType;
+import org.lifecompanion.framework.commons.utils.app.VersionUtils;
 import org.lifecompanion.framework.commons.utils.app.VersionUtils.VersionInfo;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.framework.model.client.UpdateFileProgress;
@@ -77,6 +78,10 @@ public enum ApplicationUpdateService {
     }
 
     public List<UpdateFileProgress> getLastApplicationUpdateDiff(String applicationId, SystemType system, String fromVersion, boolean preview) {
+        return getApplicationUpdateDiff(applicationId, system, fromVersion, null, preview);
+    }
+
+    public List<UpdateFileProgress> getApplicationUpdateDiff(String applicationId, SystemType system, String fromVersion, String maxVersion, boolean preview) {
         VersionInfo fromVersionInfo = VersionInfo.parse(fromVersion);
         List<ApplicationUpdate> allUpdateAbove = ApplicationUpdateDao.INSTANCE.getAllUpdateAboveOrderByVersion(applicationId,
                 fromVersionInfo.getMajor(), fromVersionInfo.getMinor(), fromVersionInfo.getPatch(), preview);
@@ -84,10 +89,13 @@ public enum ApplicationUpdateService {
         // Keep only the last version of each file
         Map<String, ApplicationUpdateFile> files = new HashMap<>();
         for (ApplicationUpdate applicationUpdate : allUpdateAbove) {
-            List<ApplicationUpdateFile> filesForUpdate = ApplicationUpdateDao.INSTANCE.getFilesForUpdate(applicationUpdate.getId(), system);
-            for (ApplicationUpdateFile fileForUpdate : filesForUpdate) {
-                if (fileForUpdate.getFileState() != FileState.SAME) {
-                    files.put(fileForUpdate.getTargetPath(), fileForUpdate);
+            // Keep only the update bellow max version (if enabled)
+            if (maxVersion == null || VersionUtils.compare(applicationUpdate.getVersion(), maxVersion) <= 0) {
+                List<ApplicationUpdateFile> filesForUpdate = ApplicationUpdateDao.INSTANCE.getFilesForUpdate(applicationUpdate.getId(), system);
+                for (ApplicationUpdateFile fileForUpdate : filesForUpdate) {
+                    if (fileForUpdate.getFileState() != FileState.SAME) {
+                        files.put(fileForUpdate.getTargetPath(), fileForUpdate);
+                    }
                 }
             }
         }
@@ -125,7 +133,7 @@ public enum ApplicationUpdateService {
             }
 
             // Get latest update (include preview updates > update should always be based on the last ones)
-            ApplicationUpdate lastUpdate = ApplicationUpdateDao.INSTANCE.getLastestUpdateFor(connection, dto.getApplicationId(), true,2);
+            ApplicationUpdate lastUpdate = ApplicationUpdateDao.INSTANCE.getLastestUpdateFor(connection, dto.getApplicationId(), true, 2);
 
             // Get the existing update for same version > will update it
             ApplicationUpdate applicationUpdate = ApplicationUpdateDao.INSTANCE.getUpdateByApplicationAndVersion(connection, dto.getApplicationId(), dto.getVersion());
