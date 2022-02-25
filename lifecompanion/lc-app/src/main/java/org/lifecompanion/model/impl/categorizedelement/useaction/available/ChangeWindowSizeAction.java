@@ -98,8 +98,8 @@ public class ChangeWindowSizeAction extends SimpleUseActionImpl<UseActionTrigger
             Double maxAvailableHeight = stageScreenBounds.getHeight();
 
             // Change window size
-            Double newStageWidth = Math.min(stageWidth*changeRatio, maxAvailableWidth);
-            Double newStageHeight = Math.min(stageHeight*changeRatio, maxAvailableHeight);
+            Double newStageWidth = Math.max(Math.min(stageWidth*changeRatio, maxAvailableWidth), maxAvailableWidth/10);
+            Double newStageHeight = Math.max(Math.min(stageHeight*changeRatio, maxAvailableHeight), maxAvailableHeight/10);
             stage.setWidth(newStageWidth);
             stage.setHeight(newStageHeight);
             if (newStageWidth > maxAvailableWidth - 1 && newStageHeight > maxAvailableHeight - 1) {
