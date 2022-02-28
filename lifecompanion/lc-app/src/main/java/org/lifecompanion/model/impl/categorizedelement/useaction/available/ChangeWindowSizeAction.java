@@ -87,12 +87,18 @@ public class ChangeWindowSizeAction extends SimpleUseActionImpl<UseActionTrigger
             // Getting the screen the config resides in
             Rectangle2D stageCenterPoint = new Rectangle2D(x + stageWidth/2, y + stageHeight/2, 1, 1);
             ObservableList<Screen> screensContainingStage = Screen.getScreensForRectangle(stageCenterPoint);
+            Screen stageScreen;
             if (screensContainingStage.size() == 0) {
                 // Handles when the central point of the stage isn't on any screen
                 Rectangle2D stageBounds = new Rectangle2D(x, y, stageWidth, stageHeight);
                 screensContainingStage = Screen.getScreensForRectangle(stageBounds);
             }
-            Screen stageScreen = screensContainingStage.get(0);
+            if (screensContainingStage.size() == 0) {
+                stageScreen = Screen.getPrimary();
+            }
+            else {
+                stageScreen = screensContainingStage.get(0);
+            }
             Rectangle2D stageScreenBounds = stageScreen.getBounds();
             Double maxAvailableWidth = stageScreenBounds.getWidth();
             Double maxAvailableHeight = stageScreenBounds.getHeight();
