@@ -116,6 +116,16 @@ public enum ApplicationUpdateDao {
         }
     }
 
+    public List<ApplicationUpdateFile> getFilesForUpdate(final String updateId) {
+        try (Connection connection = DataSource.INSTANCE.getSql2o().open()) {
+            return connection.createQuery("SELECT * FROM application_update_file WHERE "
+                            + "application_update_id = :updateId")//
+                    .addParameter("updateId", updateId)//
+                    .executeAndFetch(ApplicationUpdateFile.class);
+        }
+    }
+
+
     public List<ApplicationUpdateFile> getLastModifiedUpdateFile(Connection connection, final String applicationId, SystemType system, final int versionMajor,
                                                                  int versionMinor, int versionPatch, Collection<String> targetPaths) {
         return connection.createQuery("SELECT application_update_file.* FROM application_update_file LEFT JOIN application_update on application_update_file.application_update_id = application_update.id "

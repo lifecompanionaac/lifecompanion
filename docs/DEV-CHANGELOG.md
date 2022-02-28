@@ -2,6 +2,10 @@
 
 ## SERVER
 
+### 1.14.7 - 28/02/2022
+
+- Fix remove update service
+
 ### 1.14.5 - 28/02/2022
 
 - Fix create update service (removed API version filter to create update diff)

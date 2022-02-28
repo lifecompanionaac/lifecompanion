@@ -313,7 +313,7 @@ public enum ApplicationUpdateService {
 
     public List<String> deleteUpdate(String applicationUpdateId) throws IOException {
         List<String> logs = new ArrayList<>();
-        final List<ApplicationUpdateFile> filesForUpdates = ApplicationUpdateDao.INSTANCE.getFilesForUpdate(applicationUpdateId, null);
+        final List<ApplicationUpdateFile> filesForUpdates = ApplicationUpdateDao.INSTANCE.getFilesForUpdate(applicationUpdateId);
         try (Connection connection = DataSource.INSTANCE.getSql2o().beginTransaction()) {
 
             final ApplicationUpdate applicationUpdate = ApplicationUpdateDao.INSTANCE.getById(applicationUpdateId);
