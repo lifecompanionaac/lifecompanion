@@ -2,6 +2,11 @@
 
 ## SERVER
 
+### 1.14.5 - 28/02/2022
+
+- Fix create update service (removed API version filter to create update diff)
+- Fix remove update service
+
 ### 1.14.4 - 25/02/2022
 
 - New service to download a specific app version (in update diff)

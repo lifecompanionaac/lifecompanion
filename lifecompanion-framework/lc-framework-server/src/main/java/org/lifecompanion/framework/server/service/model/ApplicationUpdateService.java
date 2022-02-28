@@ -132,8 +132,8 @@ public enum ApplicationUpdateService {
                 throw new BusinessLogicException(BusinessLogicError.EXISTING_UPDATE_SAME_VERSION_SYSTEM);
             }
 
-            // Get latest update (include preview updates > update should always be based on the last ones)
-            ApplicationUpdate lastUpdate = ApplicationUpdateDao.INSTANCE.getLastestUpdateFor(connection, dto.getApplicationId(), true, 2);
+            // Get the latest update (include preview updates > update should always be based on the last ones)
+            ApplicationUpdate lastUpdate = ApplicationUpdateDao.INSTANCE.getLastestUpdateFor(connection, dto.getApplicationId(), true);
 
             // Get the existing update for same version > will update it
             ApplicationUpdate applicationUpdate = ApplicationUpdateDao.INSTANCE.getUpdateByApplicationAndVersion(connection, dto.getApplicationId(), dto.getVersion());
@@ -329,9 +329,9 @@ public enum ApplicationUpdateService {
                         } catch (IOException e) {
                             throw new IOException("Couldn't remove file " + updateFile.getId() + " with storage ID " + fileStorageId + " from storage, abort update deletion", e);
                         }
-                        ApplicationUpdateDao.INSTANCE.deleteApplicationUpdateFile(connection, updateFile.getId());
-                        logs.add("Deleted application update file : " + updateFile.getTargetPath() + "(" + updateFile.getSystem() + ") - " + updateFile.getFileState());
                     }
+                    ApplicationUpdateDao.INSTANCE.deleteApplicationUpdateFile(connection, updateFile.getId());
+                    logs.add("Deleted application update file : " + updateFile.getTargetPath() + "(" + updateFile.getSystem() + ") - " + updateFile.getFileState());
                 }
                 // Once files are all delete, delete the application update itself
                 ApplicationUpdateDao.INSTANCE.deleteApplicationUpdate(connection, applicationUpdateId);

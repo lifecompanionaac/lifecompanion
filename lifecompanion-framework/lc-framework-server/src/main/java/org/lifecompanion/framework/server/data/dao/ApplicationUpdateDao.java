@@ -55,6 +55,17 @@ public enum ApplicationUpdateDao {
                 .executeAndFetchFirst(ApplicationUpdate.class);
     }
 
+    public ApplicationUpdate getLastestUpdateFor(Connection connection, final String applicationId, boolean preview) {
+        return connection.createQuery("SELECT * FROM application_update WHERE "//
+                        + "application_id = :applicationId "//
+                        + "AND (visibility = 'PUBLISHED' OR (:preview AND visibility = 'PREVIEW')) "//
+                        + "ORDER BY version_major DESC, version_minor DESC, version_patch DESC "//
+                        + "LIMIT 1")//
+                .addParameter("applicationId", applicationId)//
+                .addParameter("preview", preview)//
+                .executeAndFetchFirst(ApplicationUpdate.class);
+    }
+
     public List<ApplicationUpdate> getAllUpdateAboveOrderByVersion(final String applicationId, final int versionMajor,
                                                                    int versionMinor, int versionPatch, boolean preview) {
         try (Connection connection = DataSource.INSTANCE.getSql2o().open()) {
