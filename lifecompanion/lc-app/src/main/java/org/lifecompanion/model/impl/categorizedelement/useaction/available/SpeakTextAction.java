@@ -23,6 +23,8 @@ import java.util.Map;
 
 import org.jdom2.Element;
 
+import org.lifecompanion.controller.easteregg.JPDRetirementController;
+import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.controller.usevariable.UseVariableController;
 import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
@@ -39,48 +41,53 @@ import javafx.beans.property.StringProperty;
 
 /**
  * Simple action to speak a user choosen text
+ *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public class SpeakTextAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
-	private StringProperty textToSpeak;
+    private StringProperty textToSpeak;
 
-	public SpeakTextAction() {
-		super(UseActionTriggerComponentI.class);
-		this.category = DefaultUseActionSubCategories.SPEAK_TEXT;
-		this.nameID = "action.speak.text.name";
-		this.staticDescriptionID = "action.speak.text.static.description";
-		this.configIconPath = "sound/icon_speak_text.png";
-		this.parameterizableAction = true;
-		this.order = 0;
-		this.textToSpeak = new SimpleStringProperty();
-		this.variableDescriptionProperty().bind(TranslationFX.getTextBinding("action.speak.text.variable.description", this.textToSpeak));
-	}
+    public SpeakTextAction() {
+        super(UseActionTriggerComponentI.class);
+        this.category = DefaultUseActionSubCategories.SPEAK_TEXT;
+        this.nameID = "action.speak.text.name";
+        this.staticDescriptionID = "action.speak.text.static.description";
+        this.configIconPath = "sound/icon_speak_text.png";
+        this.parameterizableAction = true;
+        this.order = 0;
+        this.textToSpeak = new SimpleStringProperty();
+        this.variableDescriptionProperty().bind(TranslationFX.getTextBinding("action.speak.text.variable.description", this.textToSpeak));
+    }
 
-	public StringProperty textToSpeakProperty() {
-		return this.textToSpeak;
-	}
+    public StringProperty textToSpeakProperty() {
+        return this.textToSpeak;
+    }
 
-	// Class part : "Execute"
-	//========================================================================
-	@Override
-	public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
-		VoiceSynthesizerController.INSTANCE.speakSync(UseVariableController.INSTANCE.createText(this.textToSpeak.get(), variables));
-	}
-	//========================================================================
+    // Class part : "Execute"
+    //========================================================================
+    @Override
+    public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
+        if (StringUtils.isEquals("jpd", textToSpeak.get())) {//FIXME : remove temp test
+            JPDRetirementController.INSTANCE.startJPDRetirementJourney();
+        } else {
+            VoiceSynthesizerController.INSTANCE.speakSync(UseVariableController.INSTANCE.createText(this.textToSpeak.get(), variables));
+        }
+    }
+    //========================================================================
 
-	// Class part : "XML"
-	//========================================================================
-	@Override
-	public Element serialize(final IOContextI contextP) {
-		Element node = super.serialize(contextP);
-		XMLObjectSerializer.serializeInto(SpeakTextAction.class, this, node);
-		return node;
-	}
+    // Class part : "XML"
+    //========================================================================
+    @Override
+    public Element serialize(final IOContextI contextP) {
+        Element node = super.serialize(contextP);
+        XMLObjectSerializer.serializeInto(SpeakTextAction.class, this, node);
+        return node;
+    }
 
-	@Override
-	public void deserialize(final Element nodeP, final IOContextI contextP) throws LCException {
-		super.deserialize(nodeP, contextP);
-		XMLObjectSerializer.deserializeInto(SpeakTextAction.class, this, nodeP);
-	}
-	//========================================================================
+    @Override
+    public void deserialize(final Element nodeP, final IOContextI contextP) throws LCException {
+        super.deserialize(nodeP, contextP);
+        XMLObjectSerializer.deserializeInto(SpeakTextAction.class, this, nodeP);
+    }
+    //========================================================================
 }

@@ -21,7 +21,8 @@ package org.lifecompanion.ui.configurationcomponent.usemode;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.*;
-import javafx.event.Event;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.WeakChangeListener;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -31,15 +32,19 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Scale;
+import org.lifecompanion.controller.easteregg.JPDRetirementController;
+import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.textcomponent.WritingEventSource;
 import org.lifecompanion.model.api.ui.configurationcomponent.ViewProviderI;
+import org.lifecompanion.ui.easteregg.JPDRetirementView;
 import org.lifecompanion.util.binding.BindingUtils;
 import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.controller.resource.IconHelper;
@@ -91,6 +96,10 @@ public class UseModeConfigurationDisplayer extends Group implements LCViewInitHe
     private Scale currentScaleTransform;
     private Region configurationView;
     private Node nodeConfigurationChanging;
+    private JPDRetirementView jpdRetirementView;
+
+    private ChangeListener<Boolean> changeListenerJpdView;
+    private Consumer<Boolean> configurationChangingListener;
 
     private double ratio;
     private boolean enableKeepRatio = true;
@@ -136,9 +145,13 @@ public class UseModeConfigurationDisplayer extends Group implements LCViewInitHe
         borderPane.prefHeightProperty().bind(wantedHeight);
         borderPane.setStyle("-fx-background-color: white;");
         nodeConfigurationChanging = borderPane;
+
+        if (UserConfigurationController.INSTANCE.enableJPDRetirementEasterEggProperty().get()) {
+            jpdRetirementView = new JPDRetirementView(this, wantedWidth, wantedHeight);
+            JPDRetirementController.INSTANCE.setCurrentView(jpdRetirementView);
+        }
     }
 
-    private Consumer<Boolean> configurationChangingListener;
 
     @Override
     public void initListener() {
@@ -221,18 +234,18 @@ public class UseModeConfigurationDisplayer extends Group implements LCViewInitHe
         element.addEventFilter(MouseEvent.MOUSE_PRESSED, mouseEventFilter);
     }
 
-    private void showConfigurationChanging() {
+    private void showTempNode(Node node) {
         FXThreadUtils.runOnFXThread(() -> {
             this.getTransforms().clear();
             BindingUtils.unbindAndSet(layoutXProperty(), 0.0);
             BindingUtils.unbindAndSet(layoutYProperty(), 0.0);
-            this.getChildren().add(nodeConfigurationChanging);
+            this.getChildren().add(node);
         });
     }
 
-    private void restoreAfterConfigurationChangingDisplayed() {
+    private void hideTempNode(Node node) {
         FXThreadUtils.runOnFXThread(() -> {
-            this.getChildren().remove(nodeConfigurationChanging);
+            this.getChildren().remove(node);
             bindLayoutXAndY();
             if (currentScaleTransform != null) {
                 this.getTransforms().clear();
@@ -245,11 +258,23 @@ public class UseModeConfigurationDisplayer extends Group implements LCViewInitHe
     public void initBinding() {
         SelectionModeController.INSTANCE.addConfigurationChangingListener(configurationChangingListener = changing -> {
             if (changing) {
-                showConfigurationChanging();
+                showTempNode(nodeConfigurationChanging);
             } else {
-                restoreAfterConfigurationChangingDisplayed();
+                hideTempNode(nodeConfigurationChanging);
             }
         });
+        if (UserConfigurationController.INSTANCE.enableJPDRetirementEasterEggProperty().get()) {
+            changeListenerJpdView = (obs, ov, nv) -> {
+                if (nv) {
+                    WritableImage snapshot = this.getParent().snapshot(null, null);
+                    jpdRetirementView.setBaseViewSnapshot(snapshot);
+                    showTempNode(jpdRetirementView);
+                } else {
+                    hideTempNode(jpdRetirementView);
+                }
+            };
+            JPDRetirementController.INSTANCE.showViewProperty().addListener(new WeakChangeListener<>(changeListenerJpdView));
+        }
         bindLayoutXAndY();
         this.configurationView = ViewProviderI.getOrCreateViewComponentFor(configuration, AppMode.USE).getView();
         this.backgroundColor.bind(configuration.backgroundColorProperty());
@@ -300,7 +325,13 @@ public class UseModeConfigurationDisplayer extends Group implements LCViewInitHe
         return this.backgroundColor;
     }
 
+    public Region getConfigurationView() {
+        return configurationView;
+    }
+
     public void unbindAndClean() {
+        changeListenerJpdView = null;
+        JPDRetirementController.INSTANCE.setCurrentView(null);
         SelectionModeController.INSTANCE.removeConfigurationChangingListener(configurationChangingListener);
         BindingUtils.unbindAndSetNull(backgroundColor);
         BindingUtils.unbindAndSet(configuration.displayedConfigurationScaleXProperty(), 1.0);
