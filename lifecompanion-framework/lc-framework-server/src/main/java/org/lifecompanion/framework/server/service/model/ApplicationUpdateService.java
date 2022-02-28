@@ -318,7 +318,11 @@ public enum ApplicationUpdateService {
 
             final ApplicationUpdate applicationUpdate = ApplicationUpdateDao.INSTANCE.getById(applicationUpdateId);
             if (applicationUpdate != null) {
+                LOGGER.info("Deleted update will be {} / {} / {}", applicationUpdate.getVersion(), applicationUpdate.getApplicationId(), applicationUpdate.getUpdateDate());
                 logs.add("Deleted update will be " + applicationUpdate.getVersion() + " / " + applicationUpdate.getApplicationId() + " / " + applicationUpdate.getUpdateDate());
+
+                LOGGER.info("Found {} files for this update", filesForUpdates.size());
+                logs.add("Found " + filesForUpdates.size() + " files for this update");
 
                 // Get all files linked to this application update and remove then from storage (then from DB)
                 for (ApplicationUpdateFile updateFile : filesForUpdates) {
