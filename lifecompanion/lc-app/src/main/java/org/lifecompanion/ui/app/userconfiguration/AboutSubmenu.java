@@ -58,8 +58,8 @@ import java.util.function.Function;
  */
 public class AboutSubmenu extends VBox implements LCViewInitHelper, UserConfigSubmenuI {
     private final static Logger LOGGER = LoggerFactory.getLogger(AboutSubmenu.class);
-    private ImageView imageViewLogo, imageViewCopyright;
-    private Label labelGeneralInfo, labelVersionInfo, labelUpdateWebsite, labelLastUpdateDate;
+    private Label labelVersionInfo;
+    private Label labelLastUpdateDate;
     private Hyperlink buttonThirdPartyLicenses, buttonLicense;
     private Hyperlink linkWebsite;
     private Button buttonInstallationId, buttonDeviceId;
@@ -82,12 +82,12 @@ public class AboutSubmenu extends VBox implements LCViewInitHelper, UserConfigSu
     @Override
     public void initUI() {
         // Top : logo, general info, website
-        imageViewLogo = new ImageView(IconHelper.get(LCConstant.LC_BIG_ICON_PATH));
+        ImageView imageViewLogo = new ImageView(IconHelper.get(LCConstant.LC_BIG_ICON_PATH));
         imageViewLogo.setFitHeight(70);
         imageViewLogo.setSmooth(true);
         imageViewLogo.setPreserveRatio(true);
 
-        imageViewCopyright = new ImageView(IconHelper.get(LCConstant.LC_COPYRIGHT_ICON_PATH));
+        ImageView imageViewCopyright = new ImageView(IconHelper.get(LCConstant.LC_COPYRIGHT_ICON_PATH));
         imageViewCopyright.setFitHeight(70);
         imageViewCopyright.setSmooth(true);
         imageViewCopyright.setPreserveRatio(true);
@@ -95,19 +95,14 @@ public class AboutSubmenu extends VBox implements LCViewInitHelper, UserConfigSu
         HBox boxImages = new HBox(20.0, imageViewCopyright, imageViewLogo);
         boxImages.setAlignment(Pos.CENTER);
 
-        labelGeneralInfo = new Label(Translation.getText("about.tab.general.lc.info"));
-        labelGeneralInfo.getStyleClass().add("general-app-info-label");
-        labelGeneralInfo.setTextAlignment(TextAlignment.JUSTIFY);
-        labelGeneralInfo.setMinHeight(80);
+        Label labelGeneralInfo = new Label(Translation.getText("about.tab.general.lc.info"));
+        labelGeneralInfo.getStyleClass().addAll("text-font-size-110", "text-wrap-enabled", "text-label-justify");
 
         labelVersionInfo = new Label();
-        labelVersionInfo.getStyleClass().add("general-app-info-label");
-        labelVersionInfo.setTextAlignment(TextAlignment.CENTER);
-        labelVersionInfo.setMinHeight(80);
+        labelVersionInfo.getStyleClass().addAll("text-wrap-enabled", "text-label-center");
 
-        labelUpdateWebsite = new Label(Translation.getText("about.tab.update.website.url", InstallationController.INSTANCE.getBuildProperties().getUpdateServerUrl()));
-        labelUpdateWebsite.getStyleClass().add("general-app-info-label");
-        labelUpdateWebsite.setTextAlignment(TextAlignment.CENTER);
+        Label labelUpdateWebsite = new Label(Translation.getText("about.tab.update.website.url", InstallationController.INSTANCE.getBuildProperties().getUpdateServerUrl()));
+        labelUpdateWebsite.getStyleClass().addAll("text-wrap-enabled", "text-label-center");
 
         linkWebsite = new Hyperlink(InstallationController.INSTANCE.getBuildProperties().getAppServerUrl());
 
@@ -131,7 +126,7 @@ public class AboutSubmenu extends VBox implements LCViewInitHelper, UserConfigSu
         this.progressBarUpdateTask.setPrefWidth(150.0);
 
         this.setAlignment(Pos.CENTER);
-        this.setSpacing(5.0);
+        this.setSpacing(10.0);
         this.getChildren().addAll(boxImages, new Separator(Orientation.HORIZONTAL), labelGeneralInfo, linkWebsite, new Separator(Orientation.HORIZONTAL), labelVersionInfo, labelUpdateWebsite, buttonInstallationId, buttonDeviceId, new Separator(Orientation.HORIZONTAL), this.labelLastUpdateDate, buttonCheckUpdate, progressBarUpdateTask, labelUpdateTaskMessage, new Separator(Orientation.HORIZONTAL), buttonLicense, buttonThirdPartyLicenses);
     }
 

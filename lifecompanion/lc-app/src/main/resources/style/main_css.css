@@ -247,17 +247,6 @@
     -fx-font-familly: "Calibri";
 }
 
-.use-action-cell-name {
-	-fx-text-fill: -fx-main-dark;
-    -fx-font-size: 14.0px;
-    -fx-font-familly: "Calibri";
-}
-
-.use-action-cell-description {
-	-fx-text-fill: dimgray;
-    -fx-font-size: 11.0px;
-}
-
 .menu-part-title{
 	-fx-border-color: transparent transparent lightgrey transparent;
 	-fx-font: normal 14.0 "Calibri";
@@ -331,57 +320,10 @@
 }
 
 /* === EVENT === */
-.event-title-head{
-	-fx-font: normal bold 16.0 "Calibri";
-	-fx-text-fill: -fx-main-dark;
-}
-
-/* === EVENT === */
-.plugin-information-title {
-	-fx-text-fill: -fx-main-dark;
-    -fx-font-weight: bold;
-}
-
-.component-selector-control {
-	-fx-focus-traversable: false;
-	-fx-background-color:transparent;
-	-fx-border-width: 0.0;
-	-fx-border-color: transparent;
-}
-
-/* === PROFILE LIST === */
-.custom-list-cell:filled:selected:focused, .custom-list-cell:filled:selected  {
-    -fx-background-color: #DCE1E3;
-    -fx-border-color: lightgray transparent lightgray transparent;
-}
-
 .modified-text-indicator {
 	-fx-font-size: 18.0;
 	-fx-font-weight: bold;
 	-fx-padding: 0.0;
-}
-
-.config-tip-label {
-	-fx-font-size: 18.0;
-	-fx-font-weight: bold;
-	-fx-alignment: center;
-	-fx-text-alignment: center;
-	-fx-border-color: transparent transparent lightgray transparent;
-	-fx-border-width: 0.0 0.0 2.0 0.0;
-}
-
-.config-tip-message-label {
-	-fx-text-alignment: justify;
-	-fx-wrap-text: true;
-}
-
-.general-app-info-label{
-	-fx-font: normal 13.0 "Calibri";
-	-fx-wrap-text: true;
-}
-
-.more-app-info-label{
-	-fx-font: normal 12.0 "Calibri";
 }
 
 .record-sound-toggle {

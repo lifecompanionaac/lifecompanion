@@ -79,8 +79,14 @@
 
 .text-label-right {
 	-fx-text-alignment: right;
-	-fx-alignment: right;
+	-fx-alignment: center-right;
 }
+
+.text-label-justify {
+	-fx-text-alignment: justify;
+	-fx-alignment: center;
+}
+
 
 /*======= BACKGROUND =======*/
 

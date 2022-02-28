@@ -38,17 +38,17 @@ import java.util.function.BiConsumer;
  */
 public class AbstractCategorizedElementListCellView<T extends CategorizedElementI<?>> extends ListCell<T> {
     private static final double ICON_SIZE = 20;
-    private Tooltip tooltip;
-
-    private BiConsumer<Node, T> actionSelectedCallback;
-    private Label labelActionName, labelActionDescription;
-    private CategorizedIconView useActionIcon;
-    private BorderPane borderPane;
+    private final Tooltip tooltip;
+    private final BiConsumer<Node, T> actionSelectedCallback;
+    private final Label labelActionName;
+    private final Label labelActionDescription;
+    private final CategorizedIconView useActionIcon;
+    private final BorderPane borderPane;
 
     public AbstractCategorizedElementListCellView(ListView<T> listView, final BiConsumer<Node, T> actionSelectedCallbackP) {
         super();
         this.actionSelectedCallback = actionSelectedCallbackP;
-        this.getStyleClass().add("custom-list-cell");
+        this.getStyleClass().add("soft-selection-cell");
         //Global
         this.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         this.prefWidthProperty().bind(listView.widthProperty().subtract(20.0));
@@ -56,9 +56,9 @@ public class AbstractCategorizedElementListCellView<T extends CategorizedElement
         this.borderPane = new BorderPane();
         //Labels
         this.labelActionName = new Label();
-        this.labelActionName.getStyleClass().add("use-action-cell-name");
+        this.labelActionName.getStyleClass().addAll("text-font-size-120", "text-fill-primary-dark");
         this.labelActionDescription = new Label();
-        this.labelActionDescription.getStyleClass().add("use-action-cell-description");
+        this.labelActionDescription.getStyleClass().addAll("text-fill-dimgrey","text-font-size-90");
         this.labelActionDescription.maxWidthProperty().bind(listView.widthProperty().subtract(AbstractCategorizedElementListCellView.ICON_SIZE + 60));
         this.labelActionDescription.setWrapText(true);
         VBox boxLabels = new VBox();
