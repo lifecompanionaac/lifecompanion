@@ -144,7 +144,7 @@ public class JPDRetirementView extends BorderPane implements LCViewInitHelper {
             Reflection effect = new Reflection(10.0, 0.1, 0.7, 0.0);
             effect.setInput(new Bloom(0.5));
             t.setEffect(effect);
-            t.setFont(Font.font("Deja Vu Sans", FontWeight.BOLD, 70));
+            t.setFont(Font.font("Deja Vu Sans", FontWeight.BOLD, 65));
             FadeTransition fadeTransition = new FadeTransition(Duration.seconds(2.0), t);
             fadeTransition.setDelay(Duration.seconds(0.8));
             fadeTransition.setToValue(1.0);
@@ -158,7 +158,7 @@ public class JPDRetirementView extends BorderPane implements LCViewInitHelper {
         box.setAlignment(Pos.CENTER);
         setCenter(box);
         sequentialTransition.play();
-        ScaleTransition scaleTransition = new ScaleTransition(Duration.seconds(10), textFlow);
+        ScaleTransition scaleTransition = new ScaleTransition(Duration.seconds(texts.size() * 2.8), textFlow);
         scaleTransition.setToX(1.2);
         scaleTransition.setToY(1.2);
         scaleTransition.play();
