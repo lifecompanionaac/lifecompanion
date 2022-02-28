@@ -19,6 +19,7 @@
 package org.lifecompanion.ui.common.pane.specific.cell;
 
 import javafx.scene.Node;
+import javafx.scene.control.ListView;
 import org.lifecompanion.model.api.categorizedelement.useaction.BaseUseActionI;
 import org.lifecompanion.ui.common.pane.specific.cell.AbstractCategorizedElementListCellView;
 
@@ -32,7 +33,7 @@ import java.util.function.BiConsumer;
  */
 public class BaseUseActionElementListCellView extends AbstractCategorizedElementListCellView<BaseUseActionI<?>> {
 
-    public BaseUseActionElementListCellView(final BiConsumer<Node, BaseUseActionI<?>> actionSelectedCallbackP) {
-        super(actionSelectedCallbackP);
+    public BaseUseActionElementListCellView(ListView<BaseUseActionI<?>> listView, final BiConsumer<Node, BaseUseActionI<?>> actionSelectedCallbackP) {
+        super(listView, actionSelectedCallbackP);
     }
 }

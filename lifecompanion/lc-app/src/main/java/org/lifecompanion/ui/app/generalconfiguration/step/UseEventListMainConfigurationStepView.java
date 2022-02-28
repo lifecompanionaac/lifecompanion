@@ -24,6 +24,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
@@ -82,10 +83,12 @@ public class UseEventListMainConfigurationStepView extends BorderPane implements
         // first part : IF
         Label labelEvent = FXControlUtils.createTitleLabel(Translation.getText("useevent.part.event.title"));
         this.useEventListManageView = new UseEventListManageView(true);
+        this.useEventListManageView.setElementListViewPrefSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
 
         // second part : THEN
         Label labelAction = FXControlUtils.createTitleLabel(Translation.getText("useevent.part.action.title"));
         this.useActionListManageView = new UseActionListManageView(UseActionEvent.EVENT, true, this.useEventListManageView.selectedItemProperty());
+        this.useActionListManageView.setElementListViewPrefSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
 
         VBox boxTotal = new VBox(10.0, labelExplainEvents, labelEvent, useEventListManageView, labelAction, useActionListManageView);
         boxTotal.setMaxHeight(Double.MAX_VALUE);

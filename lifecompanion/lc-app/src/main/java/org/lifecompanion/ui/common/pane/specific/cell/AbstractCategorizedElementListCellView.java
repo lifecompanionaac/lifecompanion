@@ -20,10 +20,7 @@ package org.lifecompanion.ui.common.pane.specific.cell;
 
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import org.lifecompanion.model.api.categorizedelement.CategorizedElementI;
@@ -48,22 +45,21 @@ public class AbstractCategorizedElementListCellView<T extends CategorizedElement
     private CategorizedIconView useActionIcon;
     private BorderPane borderPane;
 
-    public AbstractCategorizedElementListCellView(final BiConsumer<Node, T> actionSelectedCallbackP) {
+    public AbstractCategorizedElementListCellView(ListView<T> listView, final BiConsumer<Node, T> actionSelectedCallbackP) {
         super();
         this.actionSelectedCallback = actionSelectedCallbackP;
         this.getStyleClass().add("custom-list-cell");
         //Global
         this.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-        this.setPrefWidth(AbstractCategorizedListManageView.MAX_USEACTION_LIST_WIDTH - 20);
-        this.setMaxWidth(AbstractCategorizedListManageView.MAX_USEACTION_LIST_WIDTH - 20);
+        this.prefWidthProperty().bind(listView.widthProperty().subtract(20.0));
+        this.maxWidthProperty().bind(listView.widthProperty().subtract(20.0));
         this.borderPane = new BorderPane();
         //Labels
         this.labelActionName = new Label();
         this.labelActionName.getStyleClass().add("use-action-cell-name");
         this.labelActionDescription = new Label();
         this.labelActionDescription.getStyleClass().add("use-action-cell-description");
-        this.labelActionDescription
-                .setMaxWidth(AbstractCategorizedListManageView.MAX_USEACTION_LIST_WIDTH - AbstractCategorizedElementListCellView.ICON_SIZE - 60);
+        this.labelActionDescription.maxWidthProperty().bind(listView.widthProperty().subtract(AbstractCategorizedElementListCellView.ICON_SIZE + 60));
         this.labelActionDescription.setWrapText(true);
         VBox boxLabels = new VBox();
         boxLabels.getChildren().addAll(this.labelActionName, this.labelActionDescription);

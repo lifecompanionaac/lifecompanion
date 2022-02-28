@@ -27,6 +27,7 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.TextAlignment;
 import org.controlsfx.glyphfont.FontAwesome;
@@ -51,13 +52,13 @@ import java.util.function.BiConsumer;
 public abstract class AbstractCategorizedListManageView<M, V extends CategorizedElementI<T>, T extends SubCategoryI<K, V>, K extends MainCategoryI<T>>
         extends BaseConfigurationViewBorderPane<M> implements LCViewInitHelper {
     private final static Logger LOGGER = LoggerFactory.getLogger(UseActionListManageView.class);
-    public static final double MAX_USEACTION_LIST_WIDTH = 350;
+    //public static final double MAX_USEACTION_LIST_WIDTH = 350;
     public static final double STAGE_WIDTH = 520, STAGE_HEIGHT = 500;
 
     /**
      * If we need to display an empty list, or a simple button when there is no action
      */
-    private boolean alwaysDisplay;
+    private final boolean alwaysDisplay;
 
     /**
      * Button to show the list when the list is empty ad {@link #alwaysDisplay} is on false
@@ -111,14 +112,13 @@ public abstract class AbstractCategorizedListManageView<M, V extends Categorized
 
         //List view to display action
         this.elementListView = new OrderModifiableListView<>(true, this.rightOrLeftButton);
-        this.elementListView.setCellFactory(listView -> this.createCategorizedListCellView((source, item) -> {
+        this.elementListView.setCellFactory(listView -> this.createCategorizedListCellView(listView, (source, item) -> {
             if (this.checkEditPossible(source, item)) {
                 this.prepareEditAction(item);
                 this.showCategorizedContentStage();
             }
         }));
-        this.elementListView.setListMaxWidth(AbstractCategorizedListManageView.MAX_USEACTION_LIST_WIDTH);
-        this.elementListView.setListPrefWidth(AbstractCategorizedListManageView.MAX_USEACTION_LIST_WIDTH);
+        this.elementListView.setPrefSize(400.0, 130);
         this.elementListView.getButtonModify().setVisible(true);
         //Border pane
         this.paneList = new BorderPane();
@@ -133,8 +133,7 @@ public abstract class AbstractCategorizedListManageView<M, V extends Categorized
 
         //Use action view
         this.categorizedElementMainView = this.createCategorizedMainView();
-        this.categorizedElementMainView.setPrefSize(AbstractCategorizedListManageView.STAGE_WIDTH,
-                AbstractCategorizedListManageView.STAGE_HEIGHT);
+        this.categorizedElementMainView.setPrefSize(AbstractCategorizedListManageView.STAGE_WIDTH, AbstractCategorizedListManageView.STAGE_HEIGHT);
         BorderPane.setAlignment(categorizedElementMainView, Pos.CENTER);
     }
 
@@ -262,6 +261,10 @@ public abstract class AbstractCategorizedListManageView<M, V extends Categorized
     public BooleanProperty orderListButtonVisibleProperty() {
         return this.orderListButtonVisible;
     }
+
+    public void setElementListViewPrefSize(double prefWidth, double prefHeight) {
+        this.elementListView.setPrefSize(prefWidth, prefHeight);
+    }
     //========================================================================
 
     // Class part : "Model binding"
@@ -320,7 +323,7 @@ public abstract class AbstractCategorizedListManageView<M, V extends Categorized
     //========================================================================
     protected abstract AbstractCategorizedMainView<V, T, K> createCategorizedMainView();
 
-    protected abstract AbstractCategorizedElementListCellView<V> createCategorizedListCellView(BiConsumer<Node, V> selectionCallback);
+    protected abstract AbstractCategorizedElementListCellView<V> createCategorizedListCellView(ListView<V> listView, BiConsumer<Node, V> selectionCallback);
 
     protected abstract BaseEditActionI createEditAction(V editedElement);
 

@@ -19,6 +19,7 @@
 package org.lifecompanion.ui.common.pane.specific.cell;
 
 import javafx.scene.Node;
+import javafx.scene.control.ListView;
 import org.lifecompanion.model.api.categorizedelement.useevent.UseEventGeneratorI;
 import org.lifecompanion.ui.common.pane.specific.cell.AbstractCategorizedElementListCellView;
 
@@ -26,7 +27,7 @@ import java.util.function.BiConsumer;
 
 public class BaseUseEventElementListCellView extends AbstractCategorizedElementListCellView<UseEventGeneratorI> {
 
-    public BaseUseEventElementListCellView(final BiConsumer<Node, UseEventGeneratorI> actionSelectedCallbackP) {
-        super(actionSelectedCallbackP);
+    public BaseUseEventElementListCellView(ListView<UseEventGeneratorI> listView, final BiConsumer<Node, UseEventGeneratorI> actionSelectedCallbackP) {
+        super(listView, actionSelectedCallbackP);
     }
 }

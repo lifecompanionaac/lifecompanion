@@ -105,8 +105,6 @@ public class OrderModifiableListView<T> extends BorderPane implements LCViewInit
             this.setLeft(buttons);
         }
         this.listChildren = new ListView<>();
-        this.listChildren.setMaxHeight(110.0);
-        this.listChildren.setMaxWidth(130.0);
         this.setCenter(listChildren);
     }
 
@@ -160,14 +158,6 @@ public class OrderModifiableListView<T> extends BorderPane implements LCViewInit
 
     public void scrollTo(T item) {
         listChildren.scrollTo(item);
-    }
-
-    public void setListMaxWidth(double maxWidth) {
-        this.listChildren.setMaxWidth(maxWidth);
-    }
-
-    public void setListPrefWidth(double prefWidth) {
-        this.listChildren.setPrefWidth(prefWidth);
     }
 
     public ReadOnlyBooleanProperty listEmptyProperty() {

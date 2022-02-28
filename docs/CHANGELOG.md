@@ -12,6 +12,7 @@
 - Ticket #106 : correction d'un problème avec l'événement "Jour de la semaine"
 - Correction des lanceurs sur les systèmes Unix/Mac
 - Correction d'un problème qui pouvait bloquer LifeCompanion sur Unix
+- Correction de la taille de certains éléments
 
 ## 1.3.1 - 22/02/2022
 

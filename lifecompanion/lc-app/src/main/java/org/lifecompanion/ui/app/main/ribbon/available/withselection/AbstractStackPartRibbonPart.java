@@ -62,6 +62,7 @@ public abstract class AbstractStackPartRibbonPart extends RibbonBasePart<StackCo
         //Button on right
         this.modifiableListView = new OrderModifiableListView<>(false);
         this.modifiableListView.setCellFactory(listView -> new GridComponentListCellView());
+        this.modifiableListView.setPrefSize(250, 130);
         FXControlUtils.createAndAttachTooltip(this.modifiableListView.getButtonAdd(), "tooltip.explain.add.grid.stack");
         FXControlUtils.createAndAttachTooltip(this.modifiableListView.getButtonRemove(), "tooltip.explain.delete.grid.stack");
         FXControlUtils.createAndAttachTooltip(this.modifiableListView.getButtonUp(), "tooltip.explain.go.up.stack");

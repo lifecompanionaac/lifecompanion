@@ -21,6 +21,7 @@ package org.lifecompanion.ui.app.categorizedelement.useevent;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.ListView;
 import org.lifecompanion.model.api.editaction.BaseEditActionI;
 import org.lifecompanion.model.api.categorizedelement.useevent.UseEventGeneratorHolderI;
 import org.lifecompanion.model.api.categorizedelement.useevent.UseEventGeneratorI;
@@ -38,8 +39,7 @@ import org.lifecompanion.framework.commons.translation.Translation;
 
 import java.util.function.BiConsumer;
 
-public class UseEventListManageView
-        extends AbstractCategorizedListManageView<UseEventGeneratorHolderI, UseEventGeneratorI, UseEventSubCategoryI, UseEventMainCategoryI> {
+public class UseEventListManageView extends AbstractCategorizedListManageView<UseEventGeneratorHolderI, UseEventGeneratorI, UseEventSubCategoryI, UseEventMainCategoryI> {
 
     public UseEventListManageView(final boolean alwaysDisplayP) {
         super(alwaysDisplayP, false, Pos.CENTER_RIGHT);
@@ -52,9 +52,8 @@ public class UseEventListManageView
     }
 
     @Override
-    protected AbstractCategorizedElementListCellView<UseEventGeneratorI> createCategorizedListCellView(
-            final BiConsumer<Node, UseEventGeneratorI> selectionCallback) {
-        return new BaseUseEventElementListCellView(selectionCallback);
+    protected AbstractCategorizedElementListCellView<UseEventGeneratorI> createCategorizedListCellView(ListView<UseEventGeneratorI> listView, final BiConsumer<Node, UseEventGeneratorI> selectionCallback) {
+        return new BaseUseEventElementListCellView(listView, selectionCallback);
     }
 
     @Override

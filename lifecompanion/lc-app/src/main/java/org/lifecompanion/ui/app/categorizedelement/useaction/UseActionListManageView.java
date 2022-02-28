@@ -23,6 +23,7 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ListView;
 import org.lifecompanion.model.api.editaction.BaseEditActionI;
 import org.lifecompanion.model.api.categorizedelement.useevent.UseEventGeneratorI;
 import org.lifecompanion.controller.editaction.UseActionConfigActions.*;
@@ -66,8 +67,8 @@ public class UseActionListManageView
     }
 
     @Override
-    protected AbstractCategorizedElementListCellView<BaseUseActionI<?>> createCategorizedListCellView(final BiConsumer<Node, BaseUseActionI<?>> selectionCallback) {
-        return new BaseUseActionElementListCellView(selectionCallback);
+    protected AbstractCategorizedElementListCellView<BaseUseActionI<?>> createCategorizedListCellView(ListView<BaseUseActionI<?>> listView, final BiConsumer<Node, BaseUseActionI<?>> selectionCallback) {
+        return new BaseUseActionElementListCellView(listView, selectionCallback);
     }
 
     @Override
