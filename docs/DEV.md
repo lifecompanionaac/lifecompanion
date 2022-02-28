@@ -181,14 +181,6 @@ Creating updates depends on custom Gradle task and plugin, all located in *lifec
 1. Commit and tag repo with **lifecompanion/lc-installer/X.X.X-prod**
 1. Run `gradlew :lc-installer:publishInstaller -Penv=prod` in **lifecompanion**
 
-### Create LifeCompanion launcher update
-
-1. Check that `org.lifecompanion.launcher.LauncherApplication` and `lifecompanion/lc-app-launcher/build-src/lifecompanion.sh` are coherent with `sharedJvmArgAppTest` in `lifecompanion/lc-app/build.gradle`
-1. Check `lifecompanion.launcher.version` in *lifecompanion/gradle.properties*
-1. Check `visibility` in *lifecompanion/gradle.properties*, it can be PREVIEW, PUBLISHED or HIDDEN
-1. Commit and tag repo with **lifecompanion/lc-app-launcher/X.X.X-prod**
-1. Run `gradlew :lc-app-launcher:publishLauncher -Penv=prod` in **lifecompanion**
-
 ### Deploy LifeCompanion server update in production
 
 #### Prepare a LifeCompanion server
