@@ -9,6 +9,7 @@
 ### Corrections/ajustements
 
 - Ticket #105 : correction problème lors de l'export d'une configuration
+- Ticket #106 : correction d'un problème avec l'événement "Jour de la semaine"
 - Correction des lanceurs sur les systèmes Unix/Mac
 - Correction d'un problème qui pouvait bloquer LifeCompanion sur Unix
 
