@@ -22,6 +22,7 @@ import java.util.Map;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import org.lifecompanion.controller.virtualmouse.VirtualMouseController;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
@@ -37,11 +38,18 @@ import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.jdom2.Element;
+
 import java.lang.Math;
 
 /**
  * Action to change the size of the use window given a ratio.
- * @author Mathieu THEBAUD <math.thebaud@gmail.com>, Paul BREUIL <tykapl.breuil@gmail.com>
+ * TODO - TO DISCUSS :
+ * - name to ChangeStageSizeAction
+ * - Object to primitive (Double)
+ * - Center stage may be optional ?
+ * - add explanation in config view
+ * - add percent format in config UI (e.g. 5% > 200% then divide here)
+ * @author Paul BREUIL <tykapl.breuil@gmail.com>
  */
 public class ChangeWindowSizeAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
 
@@ -81,11 +89,12 @@ public class ChangeWindowSizeAction extends SimpleUseActionImpl<UseActionTrigger
                     stage.setFullScreen(false);
                     stage.setMaximized(false);
                 }
-                return;
+                return; // FIXME : organize code to call centerMouseOnStage
             }
 
             // Getting the screen the config resides in
             Rectangle2D stageCenterPoint = new Rectangle2D(x + stageWidth/2, y + stageHeight/2, 1, 1);
+
             ObservableList<Screen> screensContainingStage = Screen.getScreensForRectangle(stageCenterPoint);
             Screen stageScreen;
             if (screensContainingStage.size() == 0) {
@@ -110,14 +119,16 @@ public class ChangeWindowSizeAction extends SimpleUseActionImpl<UseActionTrigger
             stage.setHeight(newStageHeight);
             if (newStageWidth > maxAvailableWidth - 1 && newStageHeight > maxAvailableHeight - 1) {
                 stage.setMaximized(true);
-                return;
+                //return;
             }
 
+            VirtualMouseController.INSTANCE.centerMouseOnStage(); // should finish with this
+
             // Recenter window to keep the same center point
-            Double xOffset = (stageWidth - newStageWidth)/2;
-            Double yOffset = (stageHeight - newStageHeight)/2;
-            stage.setX(stage.getX() + xOffset);
-            stage.setY(stage.getY() + yOffset);
+//            Double xOffset = (stageWidth - newStageWidth)/2;
+//            Double yOffset = (stageHeight - newStageHeight)/2;
+//            stage.setX(stage.getX() + xOffset);
+//            stage.setY(stage.getY() + yOffset);
         });
     }
     //========================================================================
