@@ -1,13 +1,14 @@
 # LIFECOMPANION CHANGELOG
 
-## 1.3.X - XX/02/2022
+## 1.3.2 - XX/02/2022
 
 ### Fonctionnalités
 
-- ...
+- Les extensions sont maintenant mises à jour en même temps que l'application
 
 ### Corrections/ajustements
 
+- Ticket #105 : correction problème lors de l'export d'une configuration
 - Correction des lanceurs sur les systèmes Unix/Mac
 - Correction d'un problème qui pouvait bloquer LifeCompanion sur Unix
 

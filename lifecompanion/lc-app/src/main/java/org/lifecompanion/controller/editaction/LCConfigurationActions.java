@@ -568,7 +568,7 @@ public class LCConfigurationActions {
                 configurationDescription = currentProfile.getConfigurationById(currentConfiguration.getID());
             }
 
-            GlobalActions.checkModificationForCurrentConfiguration(StringUtils.isEquals(configurationDescription.getConfigurationId(), currentConfiguration.getID()), this, source, Translation.getText("export.config.action.confirm.message"), "export.config.action.confirm.button", () -> {
+            GlobalActions.checkModificationForCurrentConfiguration(currentConfiguration == null || StringUtils.isEquals(configurationDescription.getConfigurationId(), currentConfiguration.getID()), this, source, Translation.getText("export.config.action.confirm.message"), "export.config.action.confirm.button", () -> {
                 FileChooser configChooser = LCFileChoosers.getChooserConfiguration(FileChooserType.CONFIG_EXPORT);
                 // Issue #139 : default name for configuration
                 configChooser.setInitialFileName(IOHelper.DATE_FORMAT_FILENAME_WITHOUT_TIME.format(new Date()) + "_"
