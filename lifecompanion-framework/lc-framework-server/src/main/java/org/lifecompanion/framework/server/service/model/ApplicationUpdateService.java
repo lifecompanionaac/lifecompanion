@@ -22,6 +22,7 @@ package org.lifecompanion.framework.server.service.model;
 import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.framework.commons.utils.app.VersionUtils;
 import org.lifecompanion.framework.commons.utils.app.VersionUtils.VersionInfo;
+import org.lifecompanion.framework.commons.utils.lang.LangUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.framework.model.client.UpdateFileProgress;
 import org.lifecompanion.framework.model.client.UpdateFileProgressType;
@@ -73,15 +74,15 @@ public enum ApplicationUpdateService {
 
     // Backward compatibility : prior version should get the application diff without "launcher" file types
     public List<UpdateFileProgress> getLastApplicationUpdateDiffOld(String applicationId, SystemType system, String fromVersion, boolean preview) {
-        final List<UpdateFileProgress> lastApplicationUpdateDiff = getLastApplicationUpdateDiff(applicationId, system, fromVersion, preview);
+        final List<UpdateFileProgress> lastApplicationUpdateDiff = getApplicationUpdateDiff(applicationId, system, fromVersion, 1, null, preview);
         return lastApplicationUpdateDiff.stream().filter(f -> f.getTargetType() != TargetType.LAUNCHER).collect(Collectors.toList());
     }
 
     public List<UpdateFileProgress> getLastApplicationUpdateDiff(String applicationId, SystemType system, String fromVersion, boolean preview) {
-        return getApplicationUpdateDiff(applicationId, system, fromVersion, null, preview);
+        return getApplicationUpdateDiff(applicationId, system, fromVersion, null, null, preview);
     }
 
-    public List<UpdateFileProgress> getApplicationUpdateDiff(String applicationId, SystemType system, String fromVersion, String maxVersion, boolean preview) {
+    public List<UpdateFileProgress> getApplicationUpdateDiff(String applicationId, SystemType system, String fromVersion, Integer apiVersion, String maxVersion, boolean preview) {
         VersionInfo fromVersionInfo = VersionInfo.parse(fromVersion);
         List<ApplicationUpdate> allUpdateAbove = ApplicationUpdateDao.INSTANCE.getAllUpdateAboveOrderByVersion(applicationId,
                 fromVersionInfo.getMajor(), fromVersionInfo.getMinor(), fromVersionInfo.getPatch(), preview);
@@ -91,10 +92,12 @@ public enum ApplicationUpdateService {
         for (ApplicationUpdate applicationUpdate : allUpdateAbove) {
             // Keep only the update bellow max version (if enabled)
             if (maxVersion == null || VersionUtils.compare(applicationUpdate.getVersion(), maxVersion) <= 0) {
-                List<ApplicationUpdateFile> filesForUpdate = ApplicationUpdateDao.INSTANCE.getFilesForUpdate(applicationUpdate.getId(), system);
-                for (ApplicationUpdateFile fileForUpdate : filesForUpdate) {
-                    if (fileForUpdate.getFileState() != FileState.SAME) {
-                        files.put(fileForUpdate.getTargetPath(), fileForUpdate);
+                if (apiVersion == null || LangUtils.getOr(applicationUpdate.getApiVersion(), 1).equals(apiVersion)) {
+                    List<ApplicationUpdateFile> filesForUpdate = ApplicationUpdateDao.INSTANCE.getFilesForUpdate(applicationUpdate.getId(), system);
+                    for (ApplicationUpdateFile fileForUpdate : filesForUpdate) {
+                        if (fileForUpdate.getFileState() != FileState.SAME) {
+                            files.put(fileForUpdate.getTargetPath(), fileForUpdate);
+                        }
                     }
                 }
             }
