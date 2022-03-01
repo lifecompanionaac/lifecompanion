@@ -55,7 +55,7 @@ public class ApplicationUpdateController {
             SystemType.valueOf(request.params("system")), request.params("fromVersion"), Boolean.parseBoolean(request.params("preview"))));
 
     public static final Route getApplicationUpdateDiff = (request, response) -> toJson(ApplicationUpdateService.INSTANCE.getApplicationUpdateDiff(request.params("application"),
-            SystemType.valueOf(request.params("system")), request.params("fromVersion"), request.params("maxVersion"), Boolean.parseBoolean(request.params("preview"))));
+            SystemType.valueOf(request.params("system")), request.params("fromVersion"), null, request.params("maxVersion"), Boolean.parseBoolean(request.params("preview"))));
 
 
     public static final Route getApplicationFileDownloadUrl = (request, response) -> ApplicationUpdateService.INSTANCE.getApplicationFileDownloadUrl(request.params("id"));
