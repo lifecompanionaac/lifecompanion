@@ -541,8 +541,8 @@
   <text key="action.switch.fullscreen.frame.description">Change le mode de la fenêtre entre plein écran ou non, change
 		pour l'inverse du mode actuel.</text>
   <text key="action.switch.fullscreen.frame.name">Activer/désactiver le plein écran</text>
-  <text key="action.change.window.size.name">Changer la taille de la fenêtre</text>
-  <text key="action.change.window.size.description">Augmente la taille de la fenêtre de la configuration par le ratio spécifié.</text>
+  <text key="action.change.stage.size.name">Changer la taille de la fenêtre</text>
+  <text key="action.change.stage.size.description">Augmente la taille de la fenêtre de la configuration par le pourcentage spécifié.</text>
   <!--org.lifecompanion.base.data.useaction.impl.configuration.frame, org.lifecompanion.base.data.action.definition-->
   <text key="action.switch.fullscreen">Activer/Désactiver le plein écran</text>
   <!--org.lifecompanion.base.data.useaction.impl.keylist.current-->
@@ -2442,7 +2442,8 @@
   <!--org.lifecompanion.config.view.useaction.impl.configuration.frame-->
   <text key="frame.position.for.action">Position de la fenêtre</text>
   <!--org.lifecompanion.config.view.useaction.impl.change.window.size-->
-  <text key="use.action.change.window.size.change.ratio">Ratio du changement de taille</text>
+  <text key="use.action.change.stage.size.change.ratio">Pourcentage du changement de taille</text>
+  <text key="use.action.change.stage.size.description">La taille de la fenêtre sera multipliée par le pourcentage ci-dessus. Ainsi, un pourcentage de 200% doublera la taille de la fenêtre.</text>
   <!--org.lifecompanion.config.view.useaction.impl.configuration.keylist-->
   <text key="keylist.action.field.specific.level.selection">Effectuer l'action pour le niveau (ou inférieur)</text>
   <!--org.lifecompanion.config.view.useaction.impl.media.sound-->

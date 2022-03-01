@@ -43,32 +43,26 @@ import java.lang.Math;
 
 /**
  * Action to change the size of the use window given a ratio.
- * TODO - TO DISCUSS :
- * - name to ChangeStageSizeAction
- * - Object to primitive (Double)
- * - Center stage may be optional ?
- * - add explanation in config view
- * - add percent format in config UI (e.g. 5% > 200% then divide here)
  * @author Paul BREUIL <tykapl.breuil@gmail.com>
  */
-public class ChangeWindowSizeAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
+public class ChangeStageSizeAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
 
-    private final DoubleProperty changeRatio;
+    private final DoubleProperty changeRatioPercent;
 
-    public ChangeWindowSizeAction() {
+    public ChangeStageSizeAction() {
         super(UseActionTriggerComponentI.class);
         this.order = 0;
         this.category = DefaultUseActionSubCategories.FRAME;
-        this.nameID = "action.change.window.size.name";
-        this.staticDescriptionID = "action.change.window.size.description";
-        this.configIconPath = "configuration/icon_move_frame.png";
+        this.nameID = "action.change.stage.size.name";
+        this.staticDescriptionID = "action.change.stage.size.description";
+        this.configIconPath = "configuration/icon_change_stage_ratio.png";
         this.parameterizableAction = true;
-        this.changeRatio = new SimpleDoubleProperty(1);
+        this.changeRatioPercent = new SimpleDoubleProperty(100);
         this.variableDescriptionProperty().set(getStaticDescription());
     }
 
     public DoubleProperty changeRatioProperty() {
-        return changeRatio;
+        return changeRatioPercent;
     }
 
     // Class part : "Execute"
@@ -77,11 +71,12 @@ public class ChangeWindowSizeAction extends SimpleUseActionImpl<UseActionTrigger
     public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
         FXThreadUtils.runOnFXThread(() -> {
             final Stage stage = AppModeController.INSTANCE.getUseModeContext().getStage();
-            Double x = stage.getX();
-            Double y  = stage.getY();
-            Double stageWidth = stage.getWidth();
-            Double stageHeight = stage.getHeight();
-            Double changeRatio = this.changeRatio.get();
+            double x = stage.getX();
+            double y  = stage.getY();
+            double stageWidth = stage.getWidth();
+            double stageHeight = stage.getHeight();
+            double changeRatio = this.changeRatioPercent.get()/100;
+            System.out.println(changeRatio);
 
             // Handling the Fullscreen/Maximized status
             if (stage.isFullScreen() || stage.isMaximized()) {
@@ -89,46 +84,41 @@ public class ChangeWindowSizeAction extends SimpleUseActionImpl<UseActionTrigger
                     stage.setFullScreen(false);
                     stage.setMaximized(false);
                 }
-                return; // FIXME : organize code to call centerMouseOnStage
-            }
-
-            // Getting the screen the config resides in
-            Rectangle2D stageCenterPoint = new Rectangle2D(x + stageWidth/2, y + stageHeight/2, 1, 1);
-
-            ObservableList<Screen> screensContainingStage = Screen.getScreensForRectangle(stageCenterPoint);
-            Screen stageScreen;
-            if (screensContainingStage.size() == 0) {
-                // Handles when the central point of the stage isn't on any screen
-                Rectangle2D stageBounds = new Rectangle2D(x, y, stageWidth, stageHeight);
-                screensContainingStage = Screen.getScreensForRectangle(stageBounds);
-            }
-            if (screensContainingStage.size() == 0) {
-                stageScreen = Screen.getPrimary();
+                else {
+                    return;
+                }
             }
             else {
-                stageScreen = screensContainingStage.get(0);
+                // Getting the screen the config resides in
+                Rectangle2D stageCenterPoint = new Rectangle2D(x + stageWidth/2, y + stageHeight/2, 1, 1);
+    
+                ObservableList<Screen> screensContainingStage = Screen.getScreensForRectangle(stageCenterPoint);
+                Screen stageScreen;
+                if (screensContainingStage.size() == 0) {
+                    // Handles when the central point of the stage isn't on any screen
+                    Rectangle2D stageBounds = new Rectangle2D(x, y, stageWidth, stageHeight);
+                    screensContainingStage = Screen.getScreensForRectangle(stageBounds);
+                }
+                if (screensContainingStage.size() == 0) {
+                    stageScreen = Screen.getPrimary();
+                }
+                else {
+                    stageScreen = screensContainingStage.get(0);
+                }
+                Rectangle2D stageScreenBounds = stageScreen.getBounds();
+                double maxAvailableWidth = stageScreenBounds.getWidth();
+                double maxAvailableHeight = stageScreenBounds.getHeight();
+    
+                // Change window size
+                double newStageWidth = Math.max(Math.min(stageWidth*changeRatio, maxAvailableWidth), maxAvailableWidth/10);
+                double newStageHeight = Math.max(Math.min(stageHeight*changeRatio, maxAvailableHeight), maxAvailableHeight/10);
+                stage.setWidth(newStageWidth);
+                stage.setHeight(newStageHeight);
+                if (newStageWidth > maxAvailableWidth - 1 && newStageHeight > maxAvailableHeight - 1) {
+                    stage.setMaximized(true);
+                }
             }
-            Rectangle2D stageScreenBounds = stageScreen.getBounds();
-            Double maxAvailableWidth = stageScreenBounds.getWidth();
-            Double maxAvailableHeight = stageScreenBounds.getHeight();
-
-            // Change window size
-            Double newStageWidth = Math.max(Math.min(stageWidth*changeRatio, maxAvailableWidth), maxAvailableWidth/10);
-            Double newStageHeight = Math.max(Math.min(stageHeight*changeRatio, maxAvailableHeight), maxAvailableHeight/10);
-            stage.setWidth(newStageWidth);
-            stage.setHeight(newStageHeight);
-            if (newStageWidth > maxAvailableWidth - 1 && newStageHeight > maxAvailableHeight - 1) {
-                stage.setMaximized(true);
-                //return;
-            }
-
-            VirtualMouseController.INSTANCE.centerMouseOnStage(); // should finish with this
-
-            // Recenter window to keep the same center point
-//            Double xOffset = (stageWidth - newStageWidth)/2;
-//            Double yOffset = (stageHeight - newStageHeight)/2;
-//            stage.setX(stage.getX() + xOffset);
-//            stage.setY(stage.getY() + yOffset);
+            VirtualMouseController.INSTANCE.centerMouseOnStage();
         });
     }
     //========================================================================
@@ -138,14 +128,14 @@ public class ChangeWindowSizeAction extends SimpleUseActionImpl<UseActionTrigger
     @Override
     public Element serialize(final IOContextI contextP) {
         Element elem = super.serialize(contextP);
-        XMLObjectSerializer.serializeInto(ChangeWindowSizeAction.class, this, elem);
+        XMLObjectSerializer.serializeInto(ChangeStageSizeAction.class, this, elem);
         return elem;
     }
 
     @Override
     public void deserialize(final Element nodeP, final IOContextI contextP) throws LCException {
         super.deserialize(nodeP, contextP);
-        XMLObjectSerializer.deserializeInto(ChangeWindowSizeAction.class, this, nodeP);
+        XMLObjectSerializer.deserializeInto(ChangeStageSizeAction.class, this, nodeP);
     }
     //========================================================================
 }
