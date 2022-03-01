@@ -77,7 +77,7 @@ public class JPDRetirementView extends BorderPane implements LCViewInitHelper {
     }
 
     public void launchFirstStep() {
-        Media introVideo = new Media(new File("D:\\Dev\\jpd-day\\intro-video_v2.mp4").toURI().toString());
+        Media introVideo = new Media(new File("C:\\Users\\Mathieu\\OneDrive - HIRM\\A-TRIER\\JPD-RETRAITE\\lifecompanion\\intro-video_v2.mp4").toURI().toString());
         MediaPlayer mediaPlayer = new MediaPlayer(introVideo);
         MediaView mediaView = new MediaView(mediaPlayer); // FIXME : be sure that it will be loaded ?
 
