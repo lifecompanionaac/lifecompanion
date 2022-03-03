@@ -19,6 +19,7 @@
 package org.lifecompanion;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.stage.Stage;
 import org.lifecompanion.controller.appinstallation.InstallationController;
 import org.lifecompanion.controller.doublelaunch.DoubleLaunchController;
@@ -54,6 +55,7 @@ public class LifeCompanion extends Application {
             LifeCompanion.LOGGER.error("A uncaught exception was thrown on the JavaFX Thread", e);
             ErrorHandlingController.INSTANCE.showErrorNotificationWithExceptionDetails(Translation.getText("unknown.error.happened.notif.title"), e);
         });
+        Platform.setImplicitExit(false);
         new LifeCompanionBootstrap(stage, argsCollection).startLifeCompanion();
     }
 

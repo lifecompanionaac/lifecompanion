@@ -56,6 +56,7 @@ public enum UserConfigurationController {
     private final transient BooleanProperty launchLCSystemStartup;
     private final BooleanProperty recordAndSendSessionStats;
     private final BooleanProperty autoVirtualKeyboardShow;
+    private final BooleanProperty enableJPDRetirementEasterEgg;
 
     UserConfigurationController() {
         this.userLanguage = new SimpleStringProperty(this, "userLanguage", "fr");
@@ -69,6 +70,7 @@ public enum UserConfigurationController {
         this.recordAndSendSessionStats = new SimpleBooleanProperty(this, "recordAndSendSessionStats", false);
         this.unsavedChangeInConfigurationThreshold = new SimpleIntegerProperty(this, "unsavedChangeInConfigurationThreshold", 80);
         this.autoVirtualKeyboardShow = new SimpleBooleanProperty(this, "autoVirtualKeyboardShow", true);
+        this.enableJPDRetirementEasterEgg = new SimpleBooleanProperty(this, "enableJPDRetirementEasterEgg", true);
     }
 
     private File getConfigFile() {
@@ -188,5 +190,9 @@ public enum UserConfigurationController {
 
     public BooleanProperty autoVirtualKeyboardShowProperty() {
         return autoVirtualKeyboardShow;
+    }
+
+    public BooleanProperty enableJPDRetirementEasterEggProperty() {
+        return enableJPDRetirementEasterEgg;
     }
 }
