@@ -136,8 +136,9 @@ public enum AppModeController {
     public void startUseModeForConfiguration(LCConfigurationI configuration, LCConfigurationDescriptionI configurationDescription) {
         FXThreadUtils.runOnFXThread(() -> {
             this.useModeContext.switchTo(configuration, configurationDescription);
+            boolean notify = !isEditMode();
             mode.set(AppMode.USE);
-            launchUseMode();
+            launchUseMode(notify);
         });
     }
 
@@ -182,7 +183,7 @@ public enum AppModeController {
             SelectionModeController.INSTANCE//Selection in last, because it will start scanning
     );
 
-    private void launchUseMode() {
+    private void launchUseMode(boolean notifyChange) {
         final LCProfileI currentProfile = ProfileController.INSTANCE.currentProfileProperty().get();
         final LCConfigurationI configuration = useModeContext.configurationProperty().get();
         final LCConfigurationDescriptionI configurationDescription = useModeContext.configurationDescription.get();
@@ -205,7 +206,7 @@ public enum AppModeController {
             editModeContext.getStage().hide();
         });
         startUseMode.setOnFailed(e -> startEditMode());
-        AsyncExecutorController.INSTANCE.addAndExecute(true, false, startUseMode);
+        AsyncExecutorController.INSTANCE.addAndExecute(true, notifyChange, startUseMode);
     }
 
     private void stopModeIfNeeded(AppMode modeToStop) {

@@ -21,8 +21,6 @@ package org.lifecompanion.ui.configurationcomponent.usemode;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.*;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.WeakChangeListener;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -39,23 +37,23 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Scale;
+import org.lifecompanion.controller.configurationcomponent.GlobalKeyEventController;
 import org.lifecompanion.controller.easteregg.JPDRetirementController;
+import org.lifecompanion.controller.lifecycle.AppMode;
+import org.lifecompanion.controller.lifecycle.AppModeController;
+import org.lifecompanion.controller.resource.IconHelper;
+import org.lifecompanion.controller.selectionmode.SelectionModeController;
+import org.lifecompanion.controller.textcomponent.WritingStateController;
 import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
+import org.lifecompanion.framework.commons.translation.Translation;
+import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.textcomponent.WritingEventSource;
 import org.lifecompanion.model.api.ui.configurationcomponent.ViewProviderI;
+import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.ui.easteregg.JPDRetirementView;
 import org.lifecompanion.util.binding.BindingUtils;
 import org.lifecompanion.util.javafx.FXThreadUtils;
-import org.lifecompanion.controller.resource.IconHelper;
-import org.lifecompanion.model.impl.constant.LCConstant;
-import org.lifecompanion.controller.configurationcomponent.GlobalKeyEventController;
-import org.lifecompanion.controller.selectionmode.SelectionModeController;
-import org.lifecompanion.controller.textcomponent.WritingStateController;
-import org.lifecompanion.controller.lifecycle.AppModeController;
-import org.lifecompanion.controller.lifecycle.AppMode;
-import org.lifecompanion.framework.commons.translation.Translation;
-import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.util.model.ConfigurationComponentUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -98,7 +96,6 @@ public class UseModeConfigurationDisplayer extends Group implements LCViewInitHe
     private Node nodeConfigurationChanging;
     private JPDRetirementView jpdRetirementView;
 
-    private ChangeListener<Boolean> changeListenerJpdView;
     private Consumer<Boolean> configurationChangingListener;
 
     private double ratio;
@@ -254,6 +251,17 @@ public class UseModeConfigurationDisplayer extends Group implements LCViewInitHe
         });
     }
 
+    // JPD RETIREMENT EASTER EGG
+    //========================================================================
+    public void showJPDRetirementView() {
+        FXThreadUtils.runOnFXThread(() -> {
+            WritableImage snapshot = this.snapshot(null, null);
+            jpdRetirementView.initBeforeShow(snapshot);
+            showTempNode(jpdRetirementView);
+        });
+    }
+    //========================================================================
+
     @Override
     public void initBinding() {
         SelectionModeController.INSTANCE.addConfigurationChangingListener(configurationChangingListener = changing -> {
@@ -263,18 +271,6 @@ public class UseModeConfigurationDisplayer extends Group implements LCViewInitHe
                 hideTempNode(nodeConfigurationChanging);
             }
         });
-        if (UserConfigurationController.INSTANCE.enableJPDRetirementEasterEggProperty().get()) {
-            changeListenerJpdView = (obs, ov, nv) -> {
-                if (nv) {
-                    WritableImage snapshot = this.getParent().snapshot(null, null);
-                    jpdRetirementView.setBaseViewSnapshot(snapshot);
-                    showTempNode(jpdRetirementView);
-                } else {
-                    hideTempNode(jpdRetirementView);
-                }
-            };
-            JPDRetirementController.INSTANCE.showViewProperty().addListener(new WeakChangeListener<>(changeListenerJpdView));
-        }
         bindLayoutXAndY();
         this.configurationView = ViewProviderI.getOrCreateViewComponentFor(configuration, AppMode.USE).getView();
         this.backgroundColor.bind(configuration.backgroundColorProperty());
@@ -330,7 +326,7 @@ public class UseModeConfigurationDisplayer extends Group implements LCViewInitHe
     }
 
     public void unbindAndClean() {
-        changeListenerJpdView = null;
+        this.jpdRetirementView = null;
         JPDRetirementController.INSTANCE.setCurrentView(null);
         SelectionModeController.INSTANCE.removeConfigurationChangingListener(configurationChangingListener);
         BindingUtils.unbindAndSetNull(backgroundColor);
