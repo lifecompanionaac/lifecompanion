@@ -326,7 +326,10 @@ public class UseModeConfigurationDisplayer extends Group implements LCViewInitHe
     }
 
     public void unbindAndClean() {
-        this.jpdRetirementView = null;
+        if(this.jpdRetirementView!=null){
+            this.jpdRetirementView.unbindAndClean();
+            this.jpdRetirementView = null;
+        }
         JPDRetirementController.INSTANCE.setCurrentView(null);
         SelectionModeController.INSTANCE.removeConfigurationChangingListener(configurationChangingListener);
         BindingUtils.unbindAndSetNull(backgroundColor);

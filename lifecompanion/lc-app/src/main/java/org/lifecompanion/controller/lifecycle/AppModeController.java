@@ -29,6 +29,7 @@ import org.lifecompanion.controller.configurationcomponent.NoteKeyController;
 import org.lifecompanion.controller.configurationcomponent.UseModeProgressDisplayerController;
 import org.lifecompanion.controller.configurationcomponent.dynamickey.KeyListController;
 import org.lifecompanion.controller.configurationcomponent.dynamickey.UserActionSequenceController;
+import org.lifecompanion.controller.easteregg.JPDRetirementController;
 import org.lifecompanion.controller.editaction.AsyncExecutorController;
 import org.lifecompanion.controller.editaction.LCConfigurationActions;
 import org.lifecompanion.controller.editmode.ConfigActionController;

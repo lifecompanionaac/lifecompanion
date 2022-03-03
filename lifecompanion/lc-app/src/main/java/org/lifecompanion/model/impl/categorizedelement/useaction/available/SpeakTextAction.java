@@ -67,11 +67,7 @@ public class SpeakTextAction extends SimpleUseActionImpl<UseActionTriggerCompone
     //========================================================================
     @Override
     public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
-        if (StringUtils.isEquals("jpd", textToSpeak.get())) {//FIXME : remove temp test
-            JPDRetirementController.INSTANCE.startJPDRetirementJourney();
-        } else {
-            VoiceSynthesizerController.INSTANCE.speakSync(UseVariableController.INSTANCE.createText(this.textToSpeak.get(), variables));
-        }
+        VoiceSynthesizerController.INSTANCE.speakSync(UseVariableController.INSTANCE.createText(this.textToSpeak.get(), variables));
     }
     //========================================================================
 

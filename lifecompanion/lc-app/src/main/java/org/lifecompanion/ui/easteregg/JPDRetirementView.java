@@ -19,6 +19,7 @@
 
 package org.lifecompanion.ui.easteregg;
 
+import gnu.trove.impl.sync.TSynchronizedShortObjectMap;
 import javafx.animation.*;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.geometry.Pos;
@@ -88,57 +89,68 @@ public class JPDRetirementView extends BorderPane implements LCViewInitHelper {
         this.useModeConfigurationDisplayer.showJPDRetirementView();
         MediaView mediaView = new MediaView(JPDRetirementController.INSTANCE.getMediaPlayerIntroVideo());
         FXThreadUtils.runOnFXThread(() -> {
-            int timeInSecond = 1;
-            RotateTransition rotateTransition = new RotateTransition(Duration.seconds(timeInSecond), imageView);
-            rotateTransition.setToAngle(360 * 10);
-            ScaleTransition scaleTransition = new ScaleTransition(Duration.seconds(timeInSecond), imageView);
-            scaleTransition.setToX(0);
-            scaleTransition.setToY(0);
-            FadeTransition fadeTransition = new FadeTransition(Duration.seconds(timeInSecond), imageView);
-            fadeTransition.setToValue(0.1);
-            ParallelTransition parallelTransition = new ParallelTransition(rotateTransition, scaleTransition, fadeTransition);// FIXME : enable
-            parallelTransition.setDelay(Duration.seconds(0));//FIXME : base delay
+            FadeTransition fadeTransition = new FadeTransition(Duration.millis(20), imageView);
+            fadeTransition.setToValue(0);
+            fadeTransition.setCycleCount(200);
+            fadeTransition.setAutoReverse(true);
+            TranslateTransition translateTransition = new TranslateTransition(Duration.millis(40), imageView);
+            translateTransition.setByY(-8);
+            translateTransition.setByX(-3);
+            translateTransition.setCycleCount(100);
+            translateTransition.setAutoReverse(true);
+
+            ParallelTransition parallelTransition = new ParallelTransition(translateTransition, fadeTransition);
+            parallelTransition.setDelay(Duration.seconds(0.2));
             parallelTransition.setInterpolator(Interpolator.SPLINE(0.7, 0, 0.9, 0.9));
             parallelTransition.play();
+            JPDRetirementController.INSTANCE.getMediaPlayerGlitchSound().play();
 
             parallelTransition.setOnFinished(e -> {
-                mediaView.setFitWidth(wantedWidth.get());
-                mediaView.setFitHeight(wantedHeight.get());
-                mediaView.setPreserveRatio(false);
-                mediaView.setOpacity(0);
-                mediaView.getMediaPlayer().setVolume(0.0);
-                FadeTransition fadeTransition1 = new FadeTransition(Duration.seconds(2), mediaView);
-                fadeTransition1.setToValue(0.9);
+                ScaleTransition scaleTransition = new ScaleTransition(Duration.seconds(0.8), imageView);
+                scaleTransition.setToX(0);
+                scaleTransition.setToY(0);
+                parallelTransition.setInterpolator(Interpolator.SPLINE(0.7, 0, 0.9, 0.9));
+                scaleTransition.setOnFinished(e1 -> {
+                    mediaView.setFitWidth(wantedWidth.get());
+                    mediaView.setFitHeight(wantedHeight.get());
+                    mediaView.setPreserveRatio(false);
+                    mediaView.setOpacity(0);
+                    mediaView.getMediaPlayer().setVolume(0.0);
+                    FadeTransition fadeTransition1 = new FadeTransition(Duration.seconds(2), mediaView);
+                    fadeTransition1.setToValue(0.9);
 
-                setCenter(mediaView);
-                this.setStyle("-fx-background-color: #0f0f0f;");
+                    setCenter(mediaView);
+                    this.setStyle("-fx-background-color: #0f0f0f;");
 
-                AtomicBoolean endReached = new AtomicBoolean();
-                mediaView.getMediaPlayer().currentTimeProperty().addListener((obs, ov, nv) -> {
-                    if (nv.greaterThan(Duration.seconds(1)) && !endReached.getAndSet(true)) {//FIXME : correct duration
-                        FadeTransition fadeTransition2 = new FadeTransition(Duration.seconds(1), mediaView);
-                        fadeTransition2.setToValue(0.0);
-                        fadeTransition2.setOnFinished(e3 -> {
-                            mediaView.getMediaPlayer().stop();
-                            mediaView.getMediaPlayer().dispose();
-                            startTextTransition(
-                                    () -> displayDemoConfigurationIntroAndLaunch(JPDRetirementController.INSTANCE.getDemoConfigurations().get(0)),
-                                    getInitialStepNodes()
-                            );
-                        });
-                        fadeTransition2.play();
-                    }
+                    AtomicBoolean endReached = new AtomicBoolean();
+                    mediaView.getMediaPlayer().currentTimeProperty().addListener((obs, ov, nv) -> {
+                        if (nv.greaterThan(Duration.seconds(6)) && !endReached.getAndSet(true)) {
+                            FadeTransition fadeTransition2 = new FadeTransition(Duration.seconds(1), mediaView);
+                            fadeTransition2.setToValue(0.0);
+                            JPDRetirementController.INSTANCE.getBackgroundSound().play();
+                            fadeTransition2.setOnFinished(e3 -> {
+                                mediaView.getMediaPlayer().stop();
+                                startTextTransition(
+                                        () -> displayDemoConfigurationIntroAndLaunch(JPDRetirementController.INSTANCE.getDemoConfigurations().get(0)),
+                                        getInitialStepNodes()
+                                );
+                            });
+                            fadeTransition2.play();
+                        }
+                    });
+                    JPDRetirementController.INSTANCE.getMediaPlayerOpeningSound().play();
+                    mediaView.getMediaPlayer().play();
+                    fadeTransition1.play();
                 });
-                mediaView.getMediaPlayer().play();
-                fadeTransition1.play();
+                scaleTransition.play();
             });
         });
     }
 
     private List<Node> getInitialStepNodes() {
-        return Arrays.asList(createTextNode("Voyage\n", true, 55),
-                createTextNode("au coeur\n", true, 55),
-                createTextNode("des aides à la communication", true, 55)
+        return Arrays.asList(createTextNode("Voyage au coeur des\n\"SYNTHÈSES DE PAROLE\"", true, 45),
+                createTextNode("\nQuelques unes des contributions de\nJean-Paul DEPARTE, Ingénieur", true, 30),
+                createTextNode("\n\nLaboratoire d'Électronique du CMRRF de Kerpape\n(1982-2021)", true, 24)
         );
     }
 
@@ -146,16 +158,19 @@ public class JPDRetirementView extends BorderPane implements LCViewInitHelper {
         Text t = new Text(text);
         t.setFill(Color.WHITE);
         t.setFont(Font.font("Deja Vu Sans", bold ? FontWeight.BOLD : FontWeight.NORMAL, size));
-        Reflection effect = new Reflection(10.0, 0.1, 0.7, 0.0);
-        effect.setInput(new Bloom(0.5));
-        t.setEffect(effect);
+        t.setEffect(new Bloom(0.5));
         return t;
     }
 
     private List<Node> getNodesFor(JPDRetirementController.DemoConfiguration demoConfiguration) {
-        return Arrays.asList(createTextNode(demoConfiguration.getName() + "\n", true, 55),
-                createTextNode(demoConfiguration.getDescription() + "\n", false, 40),
-                createTextNode(demoConfiguration.getYear(), false, 40)
+        ImageView imageView = new ImageView(demoConfiguration.getImage());
+        imageView.setFitWidth(400);
+        imageView.setFitHeight(300);
+        return Arrays.asList(
+                imageView,
+                createTextNode("\n" + demoConfiguration.getName() + "\n", true, 45),
+                createTextNode(demoConfiguration.getDescription() + "\n", false, 30),
+                createTextNode(demoConfiguration.getYear(), false, 26)
         );
     }
 
@@ -166,7 +181,7 @@ public class JPDRetirementView extends BorderPane implements LCViewInitHelper {
     }
 
     private void startTextTransition(Runnable callback, List<Node> nodes) {
-        double fadeTime = 1.5, delay = 0.2;// FIXME
+        double fadeTime = 1.5, delay = 0.2;
         SequentialTransition sequentialTransition = new SequentialTransition();
         nodes.forEach(t -> {
             t.setOpacity(0.0);
@@ -177,8 +192,10 @@ public class JPDRetirementView extends BorderPane implements LCViewInitHelper {
         });
         TextFlow textFlow = new TextFlow();
         textFlow.getChildren().addAll(nodes);
-        textFlow.setLineSpacing(25.0);
+        textFlow.setLineSpacing(20.0);
+        textFlow.maxWidthProperty().bind(wantedWidth.multiply(0.6));
         textFlow.setTextAlignment(TextAlignment.CENTER);
+
         VBox box = new VBox(textFlow);
         box.setAlignment(Pos.CENTER);
         box.setStyle("-fx-background-color: #0f0f0f;");
@@ -196,21 +213,40 @@ public class JPDRetirementView extends BorderPane implements LCViewInitHelper {
         scaleTransition.setInterpolator(Interpolator.LINEAR);
         SequentialTransition sequentialTransition1 = new SequentialTransition(scaleTransition, new PauseTransition(Duration.seconds(2)));
         sequentialTransition1.setOnFinished(e -> {
-            ParallelTransition parallelTransition = new ParallelTransition();
-            for (Node node : nodes) {
-                FadeTransition fadeTransition1 = new FadeTransition(Duration.seconds(fadeTime), node);
-                fadeTransition1.setToValue(0.0);
-                parallelTransition.getChildren().add(fadeTransition1);
+            if (callback != null) {
+                ParallelTransition parallelTransition = new ParallelTransition();
+                for (Node node : nodes) {
+                    FadeTransition fadeTransition1 = new FadeTransition(Duration.seconds(fadeTime), node);
+                    fadeTransition1.setToValue(0.0);
+                    parallelTransition.getChildren().add(fadeTransition1);
+                }
+                parallelTransition.play();
+                parallelTransition.setOnFinished(e1 -> callback.run());
             }
-            parallelTransition.play();
-            parallelTransition.setOnFinished(e1 -> callback.run());
         });
         sequentialTransition1.play();
     }
 
 
-    public void launchSecondStep() {
+    public void displayConfigurationStep(int index) {
         this.useModeConfigurationDisplayer.showJPDRetirementView();
-        displayDemoConfigurationIntroAndLaunch(JPDRetirementController.INSTANCE.getDemoConfigurations().get(1));
+        displayDemoConfigurationIntroAndLaunch(JPDRetirementController.INSTANCE.getDemoConfigurations().get(index));
+    }
+
+    public void unbindAndClean() {
+        setCenter(null);
+        prefWidthProperty().unbind();
+        prefHeightProperty().unbind();
+    }
+
+    public void launchFinalStep() {
+        this.useModeConfigurationDisplayer.showJPDRetirementView();
+        startTextTransition(
+                null,
+                Arrays.asList(
+                        createTextNode("MERCI encore Jean-Paul !", true, 60),
+                        createTextNode("\nEt bonne retraite ! \uD83D\uDE42", true, 45)
+                )
+        );
     }
 }
