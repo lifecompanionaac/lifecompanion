@@ -2,6 +2,10 @@
 
 ## SERVER
 
+### 1.14.9 - 04/03/2022
+
+- Restore plugin service
+
 ### 1.14.8 - 01/03/2022
 
 - Old get diff service (get file diff for update) now only get files from API version 1
