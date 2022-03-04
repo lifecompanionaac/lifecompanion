@@ -118,7 +118,7 @@ public enum UserConfigurationController {
                 this.autoVirtualKeyboardShow.set(Boolean.parseBoolean(prop.getProperty(PROP_ENABLE_AUTO_VK_SHOW)));
             }
             if (prop.containsKey(UserConfigurationController.PROP_ENABLE_JPD_EASTER_EGG)) {
-                //this.enableJPDRetirementEasterEgg.set(Boolean.parseBoolean(prop.getProperty(PROP_ENABLE_JPD_EASTER_EGG)));
+                this.enableJPDRetirementEasterEgg.set(Boolean.parseBoolean(prop.getProperty(PROP_ENABLE_JPD_EASTER_EGG)));
             }
         } catch (FileNotFoundException e) {
             this.LOGGER.warn("Configuration file {} not found", configFile, e);
