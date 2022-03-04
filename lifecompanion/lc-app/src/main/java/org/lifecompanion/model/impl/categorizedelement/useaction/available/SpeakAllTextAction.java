@@ -21,6 +21,7 @@ package org.lifecompanion.model.impl.categorizedelement.useaction.available;
 
 import java.util.Map;
 
+import org.lifecompanion.controller.easteregg.JPDRetirementController;
 import org.lifecompanion.controller.textcomponent.WritingStateController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
@@ -32,23 +33,24 @@ import org.lifecompanion.controller.voicesynthesizer.VoiceSynthesizerController;
 
 public class SpeakAllTextAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
 
-	public SpeakAllTextAction() {
-		super(UseActionTriggerComponentI.class);
-		this.category = DefaultUseActionSubCategories.SPEAK_TEXT;
-		this.nameID = "action.speak.all.text.name";
-		this.staticDescriptionID = "action.speak.all.text.description";
-		this.configIconPath = "sound/icon_speak_all.png";
-		this.parameterizableAction = false;
-		this.order = 3;
-		this.variableDescriptionProperty().set(Translation.getText("action.speak.all.text.description"));
-	}
+    public SpeakAllTextAction() {
+        super(UseActionTriggerComponentI.class);
+        this.category = DefaultUseActionSubCategories.SPEAK_TEXT;
+        this.nameID = "action.speak.all.text.name";
+        this.staticDescriptionID = "action.speak.all.text.description";
+        this.configIconPath = "sound/icon_speak_all.png";
+        this.parameterizableAction = false;
+        this.order = 3;
+        this.variableDescriptionProperty().set(Translation.getText("action.speak.all.text.description"));
+    }
 
-	// Class part : "Execute"
-	//========================================================================
-	@Override
-	public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
-		String toSpeak = WritingStateController.INSTANCE.currentTextProperty().get();
-		VoiceSynthesizerController.INSTANCE.speakSync(toSpeak);
-	}
-	//========================================================================
+    // Class part : "Execute"
+    //========================================================================
+    @Override
+    public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
+        String toSpeak = WritingStateController.INSTANCE.currentTextProperty().get();
+        VoiceSynthesizerController.INSTANCE.speakSync(toSpeak);
+        JPDRetirementController.INSTANCE.startJPDRetirementJourney(toSpeak);
+    }
+    //========================================================================
 }
