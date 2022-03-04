@@ -41,11 +41,11 @@ public class TimeOfDay implements XMLSerializable<IOContextI>, Comparable<TimeOf
         this.minutes = new SimpleIntegerProperty(0);
     }
 
-    public IntegerProperty hoursProperty() {
+    public IntegerProperty hourProperty() {
         return hours;
     }
 
-    public IntegerProperty minutesProperty() {
+    public IntegerProperty minuteProperty() {
         return minutes;
     }
 
@@ -94,6 +94,6 @@ public class TimeOfDay implements XMLSerializable<IOContextI>, Comparable<TimeOf
     }
 
     public String getHumanReadableString() {
-        return FORMAT.format(hours.get()) + ":" + FORMAT.format(minutes.get());
+        return FORMAT.format(hours.get()) + "h" + FORMAT.format(minutes.get());
     }
 }

@@ -171,6 +171,7 @@
   <text key="use.event.main.category.time.name">Temps/Dates</text>
   <text key="use.event.sub.category.clic.name">Souris/pointeur</text>
   <text key="use.event.sub.category.cyclic.name">Cycle</text>
+  <text key="use.event.sub.category.periodic.name">Périodique</text>
   <text key="use.event.sub.category.keylist.moves.name">Navigation</text>
   <text key="use.event.sub.category.keys.name">Clavier</text>
   <text key="use.event.sub.category.status.name">Status</text>
@@ -886,11 +887,11 @@
 		configuration si celle-ci est lancée le jour de la semaine défini.</text>
   <text key="use.event.day.of.week.generator.variable.description">Génère un événement au lancement de la
 		configuration si celle-ci est lancée le {}</text>
-  <text key="use.event.time.of.day.generator.hour.format">{}h{}</text>
+  <text key="use.event.time.of.day.generator.hour.format">{}</text>
   <text key="use.event.time.of.day.generator.name">Heure de la journée</text>
   <text key="use.event.time.of.day.generator.static.description">Génére un événement lorsqu'une heure définie dans la
 		journée est atteinte.</text>
-  <text key="use.event.time.of.day.generator.variable.description">Génére un événement lorsqu'il est {}h{}</text>
+  <text key="use.event.time.of.day.generator.variable.description">Génére un événement lorsqu'il est {}</text>
   <text key="use.variable.day.of.week.displayable.day.description">Le jour atteint dans l'événement, dans un format
 		lisible</text>
   <text key="use.variable.day.of.week.displayable.day.example">lundi</text>
@@ -3390,14 +3391,18 @@
   <text key="use.action.write.text.text.style">Style différent pour cette entrée</text>
   <text key="use.event.configuration.sound.player.disabled.description">Événement déclenché lorsque le son est
 		désactivé</text>
-  <text key="use.event.cyclic.time.description">Envoie un événement toutes les X minutes tant que LifeCompanion est
-		lancé. L'intervalle peut être choisi.</text>
-  <text key="use.event.cyclic.time.interval.field">Intervalle (en secondes)</text>
-  <text key="use.event.cyclic.time.name">Toutes les X minutes</text>
-  <text key="use.event.cyclic.time.number.of.generated.event.description">Nombre de fois que l'événement est arrivé,
+  <text key="use.event.periodic.time.static.description">Envoie un événement à un intervalle régulier tant que LifeCompanion est lancé.</text>
+  <text key="use.event.periodic.time.variable.description">Envoie un événement toutes les {}.</text>
+  <text key="use.event.periodic.time.interval.field">Intervalle entre deux événements</text>
+  <text key="use.event.periodic.time.name">Intervalle régulier</text>
+  <text key="use.variable.periodic.time.number.of.generated.event.description">Nombre de fois que l'événement est arrivé,
 		la première fois donne 1, ensuite 2, etc...</text>
-  <text key="use.event.cyclic.time.number.of.generated.event.example">12</text>
-  <text key="use.event.cyclic.time.number.of.generated.event.name">Nombre de répétitions</text>
+  <text key="use.variable.periodic.time.number.of.generated.event.example">12</text>
+  <text key="use.variable.periodic.time.number.of.generated.event.name">Nombre de répétitions</text>
+  <text key="use.variable.periodic.time.period.generator.hour.format">{}</text>
+  <text key="use.variable.periodic.time.period.description">La durée de l'intervalle entre deux événements, dans un format lisible.</text>
+  <text key="use.variable.periodic.time.period.example">1h30</text>
+  <text key="use.variable.periodic.time.period.name">Intervalle entre deux événements</text>
   <text key="use.event.main.category.key.list.description">Contient les événements relatifs aux listes de cases :
 		Évenement au changement de liste, au retour en arrière, etc.</text>
   <text key="use.event.time.of.day.and.day.of.week.generator.name">Heure et jour de la semaine</text>
