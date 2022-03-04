@@ -23,6 +23,7 @@ import gnu.trove.impl.sync.TSynchronizedShortObjectMap;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -43,7 +44,9 @@ import org.lifecompanion.model.api.lifecycle.ModeListenerI;
 import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
 import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
+import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.exception.LCException;
+import org.lifecompanion.ui.UseModeScene;
 import org.lifecompanion.ui.easteregg.JPDRetirementView;
 import org.lifecompanion.util.IOUtils;
 import org.lifecompanion.util.ThreadUtils;
@@ -58,6 +61,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
 public enum JPDRetirementController {
@@ -65,35 +69,38 @@ public enum JPDRetirementController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JPDRetirementController.class);
 
-    private JPDRetirementView currentView;
     private MediaPlayer mediaPlayerIntroVideo;
     private MediaPlayer mediaPlayerOpeningSound;
     private MediaPlayer mediaPlayerGlitchSound;
     private MediaPlayer backgroundSound;
     private final List<DemoConfiguration> demoConfigurations;
     private final File rootDirectory;
-    private boolean launched;
+    private final AtomicBoolean launched;
 
     JPDRetirementController() {
-        rootDirectory = new File("D:\\Dev\\jpd-day\\");
+        rootDirectory = new File(LCConstant.EXT_PATH_DATA + "ee-jpd");
         demoConfigurations = new ArrayList<>();
+        launched = new AtomicBoolean();
 
         AppModeController.INSTANCE.modeProperty().addListener((obs, ov, nv) -> {
             if (nv == AppMode.EDIT) {
-                launched = false;
-                currentView = null;
+                launched.set(false);
                 if (mediaPlayerIntroVideo != null) {
                     mediaPlayerIntroVideo.dispose();
+                    mediaPlayerIntroVideo = null;
                 }
                 if (mediaPlayerOpeningSound != null) {
                     mediaPlayerOpeningSound.dispose();
+                    mediaPlayerOpeningSound = null;
                 }
                 if (mediaPlayerGlitchSound != null) {
                     mediaPlayerGlitchSound.dispose();
+                    mediaPlayerGlitchSound = null;
                 }
                 if (backgroundSound != null) {
                     backgroundSound.stop();
                     backgroundSound.dispose();
+                    backgroundSound = null;
                 }
                 demoConfigurations.clear();
             }
@@ -101,14 +108,20 @@ public enum JPDRetirementController {
     }
 
     public void startJPDRetirementJourney(String toSpeak) {
-        if (UserConfigurationController.INSTANCE.enableJPDRetirementEasterEggProperty().get() && !launched) {
+        if (UserConfigurationController.INSTANCE.enableJPDRetirementEasterEggProperty().get() && !launched.getAndSet(true)) {
             if (StringUtils.containsIgnoreCase(toSpeak, "bonne retraite jean-paul")) {
                 LCNamedThreadFactory.daemonThreadFactory("JPDRetirementController").newThread(() -> {
                     loadResources();
-                    this.currentView.launchFirstStep();
+                    createJpdViewAndCall(JPDRetirementView::launchFirstStep);
                 }).start();
             }
         }
+    }
+
+    private void createJpdViewAndCall(Consumer<JPDRetirementView> call) {
+        UseModeScene scene = (UseModeScene) AppModeController.INSTANCE.getUseModeContext().getStage().getScene();
+        JPDRetirementView jpdRetirementView = scene.getConfigurationDisplayer().createJpdRetirementView();
+        call.accept(jpdRetirementView);
     }
 
     private void loadResources() {
@@ -147,9 +160,6 @@ public enum JPDRetirementController {
         return demoConfigurations;
     }
 
-    public void setCurrentView(JPDRetirementView jpdRetirementView) {
-        this.currentView = jpdRetirementView;
-    }
 
     public class DemoConfiguration {
         private final String name;
@@ -208,11 +218,10 @@ public enum JPDRetirementController {
                 .map(c -> (GridPartKeyComponentI) c)
                 .filter(c -> "Jean-Paul".equals(c.textContentProperty().get()))
                 .findAny().ifPresent(key -> {
-                    LOGGER.info("Found in {}", name);
                     key.getActionManager().componentActions().get(UseActionEvent.ACTIVATION).add(new SimpleUseActionImpl<>(UseActionTriggerComponentI.class) {
                         @Override
                         public void execute(UseActionEvent event, Map<String, UseVariableI<?>> variables) {
-                            if (nextStep != null) nextStep.accept(currentView);
+                            createJpdViewAndCall(nextStep);
                         }
                     });
                 });

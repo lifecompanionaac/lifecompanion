@@ -43,7 +43,7 @@ public enum UserConfigurationController {
             PROP_LAUNCH_MAXIMIZED = "start-maximized", PROP_SELECTION_STROKE_SIZE = "selection-stroke-size",
             PROP_SELECTION_DASH_SIZE = "selection-dash-size", PROP_TIPS_STARTUP = "show-tips-on-startup",
             PROP_UNSAVED_CHANGE_THRESHOLD = "unsaved-changes-in-config-warning-threshold",
-            PROP_RECORD_SEND_SESSION_STATS = "record-and-send-session-stats", PROP_ENABLE_AUTO_VK_SHOW = "auto-virtual-keyboard-show";
+            PROP_RECORD_SEND_SESSION_STATS = "record-and-send-session-stats", PROP_ENABLE_AUTO_VK_SHOW = "auto-virtual-keyboard-show", PROP_ENABLE_JPD_EASTER_EGG = "enable-jpd-easter-egg";
 
 
     //Properties
@@ -117,6 +117,9 @@ public enum UserConfigurationController {
             if (prop.containsKey(UserConfigurationController.PROP_ENABLE_AUTO_VK_SHOW)) {
                 this.autoVirtualKeyboardShow.set(Boolean.parseBoolean(prop.getProperty(PROP_ENABLE_AUTO_VK_SHOW)));
             }
+            if (prop.containsKey(UserConfigurationController.PROP_ENABLE_JPD_EASTER_EGG)) {
+                //this.enableJPDRetirementEasterEgg.set(Boolean.parseBoolean(prop.getProperty(PROP_ENABLE_JPD_EASTER_EGG)));
+            }
         } catch (FileNotFoundException e) {
             this.LOGGER.warn("Configuration file {} not found", configFile, e);
         }
@@ -141,6 +144,7 @@ public enum UserConfigurationController {
         prop.setProperty(UserConfigurationController.PROP_SELECTION_DASH_SIZE, "" + this.selectionDashSize.get());
         prop.setProperty(PROP_UNSAVED_CHANGE_THRESHOLD, "" + this.unsavedChangeInConfigurationThreshold.get());
         prop.setProperty(PROP_ENABLE_AUTO_VK_SHOW, "" + this.autoVirtualKeyboardShow.get());
+        prop.setProperty(PROP_ENABLE_JPD_EASTER_EGG, "" + this.enableJPDRetirementEasterEgg.get());
         IOUtils.createParentDirectoryIfNeeded(configFile);
         try (FileOutputStream fos = new FileOutputStream(configFile)) {
             prop.store(fos, LCConstant.NAME + " user configuration file");

@@ -123,4 +123,8 @@ public class UseModeScene extends Scene implements LCViewInitHelper {
             configurationDisplayer.requestFocus();
         }
     }
+
+    public UseModeConfigurationDisplayer getConfigurationDisplayer() {
+        return configurationDisplayer;
+    }
 }

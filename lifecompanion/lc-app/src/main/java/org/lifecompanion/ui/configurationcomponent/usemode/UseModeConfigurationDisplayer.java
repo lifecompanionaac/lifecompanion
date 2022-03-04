@@ -68,8 +68,6 @@ import java.util.function.Predicate;
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public class UseModeConfigurationDisplayer extends Group implements LCViewInitHelper {
-    private static final Logger LOGGER = LoggerFactory.getLogger(UseModeConfigurationDisplayer.class);
-
     /**
      * Wanted width/height for this configuration
      */
@@ -94,7 +92,6 @@ public class UseModeConfigurationDisplayer extends Group implements LCViewInitHe
     private Scale currentScaleTransform;
     private Region configurationView;
     private Node nodeConfigurationChanging;
-    private JPDRetirementView jpdRetirementView;
 
     private Consumer<Boolean> configurationChangingListener;
 
@@ -142,11 +139,6 @@ public class UseModeConfigurationDisplayer extends Group implements LCViewInitHe
         borderPane.prefHeightProperty().bind(wantedHeight);
         borderPane.setStyle("-fx-background-color: white;");
         nodeConfigurationChanging = borderPane;
-
-        if (UserConfigurationController.INSTANCE.enableJPDRetirementEasterEggProperty().get()) {
-            jpdRetirementView = new JPDRetirementView(this, wantedWidth, wantedHeight);
-            JPDRetirementController.INSTANCE.setCurrentView(jpdRetirementView);
-        }
     }
 
 
@@ -251,17 +243,6 @@ public class UseModeConfigurationDisplayer extends Group implements LCViewInitHe
         });
     }
 
-    // JPD RETIREMENT EASTER EGG
-    //========================================================================
-    public void showJPDRetirementView() {
-        FXThreadUtils.runOnFXThread(() -> {
-            WritableImage snapshot = this.snapshot(null, null);
-            jpdRetirementView.initBeforeShow(snapshot);
-            showTempNode(jpdRetirementView);
-        });
-    }
-    //========================================================================
-
     @Override
     public void initBinding() {
         SelectionModeController.INSTANCE.addConfigurationChangingListener(configurationChangingListener = changing -> {
@@ -326,11 +307,6 @@ public class UseModeConfigurationDisplayer extends Group implements LCViewInitHe
     }
 
     public void unbindAndClean() {
-        if(this.jpdRetirementView!=null){
-            this.jpdRetirementView.unbindAndClean();
-            this.jpdRetirementView = null;
-        }
-        JPDRetirementController.INSTANCE.setCurrentView(null);
         SelectionModeController.INSTANCE.removeConfigurationChangingListener(configurationChangingListener);
         BindingUtils.unbindAndSetNull(backgroundColor);
         BindingUtils.unbindAndSet(configuration.displayedConfigurationScaleXProperty(), 1.0);
@@ -346,5 +322,20 @@ public class UseModeConfigurationDisplayer extends Group implements LCViewInitHe
         }
         ConfigurationComponentUtils.exploreComponentViewChildrenToUnbind(this);
     }
+
+    // JPD RETIREMENT EASTER EGG
+    //========================================================================
+    public void showJPDRetirementView(JPDRetirementView jpdRetirementViewP) {
+        FXThreadUtils.runOnFXThread(() -> {
+            WritableImage snapshot = this.snapshot(null, null);
+            jpdRetirementViewP.initBeforeShow(snapshot);
+            showTempNode(jpdRetirementViewP);
+        });
+    }
+
+    public JPDRetirementView createJpdRetirementView() {
+        return new JPDRetirementView(this, wantedWidth, wantedHeight);
+    }
+    //========================================================================
 
 }

@@ -86,7 +86,7 @@ public class JPDRetirementView extends BorderPane implements LCViewInitHelper {
     }
 
     public void launchFirstStep() {
-        this.useModeConfigurationDisplayer.showJPDRetirementView();
+        this.useModeConfigurationDisplayer.showJPDRetirementView(this);
         MediaView mediaView = new MediaView(JPDRetirementController.INSTANCE.getMediaPlayerIntroVideo());
         FXThreadUtils.runOnFXThread(() -> {
             FadeTransition fadeTransition = new FadeTransition(Duration.millis(20), imageView);
@@ -229,18 +229,12 @@ public class JPDRetirementView extends BorderPane implements LCViewInitHelper {
 
 
     public void displayConfigurationStep(int index) {
-        this.useModeConfigurationDisplayer.showJPDRetirementView();
+        this.useModeConfigurationDisplayer.showJPDRetirementView(this);
         displayDemoConfigurationIntroAndLaunch(JPDRetirementController.INSTANCE.getDemoConfigurations().get(index));
     }
 
-    public void unbindAndClean() {
-        setCenter(null);
-        prefWidthProperty().unbind();
-        prefHeightProperty().unbind();
-    }
-
     public void launchFinalStep() {
-        this.useModeConfigurationDisplayer.showJPDRetirementView();
+        this.useModeConfigurationDisplayer.showJPDRetirementView(this);
         startTextTransition(
                 null,
                 Arrays.asList(
