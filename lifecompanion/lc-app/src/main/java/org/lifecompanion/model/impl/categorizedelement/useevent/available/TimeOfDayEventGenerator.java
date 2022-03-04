@@ -48,9 +48,9 @@ import javafx.beans.binding.Bindings;
  */
 public class TimeOfDayEventGenerator extends BaseUseEventGeneratorImpl {
 
-	private IntegerProperty wantedHour, wantedMinute;
-	private TimeOfDay timeOfDay;
-	private UseVariableDefinitionI useVariableWantedHour;
+	private final IntegerProperty wantedHour, wantedMinute;
+	private final TimeOfDay timeOfDay;
+	private final UseVariableDefinitionI useVariableWantedHour;
 
 	public TimeOfDayEventGenerator() {
 		super();
@@ -63,6 +63,8 @@ public class TimeOfDayEventGenerator extends BaseUseEventGeneratorImpl {
 		this.timeOfDay = new TimeOfDay();
 		this.wantedHour = this.timeOfDay.hourProperty();
 		this.wantedMinute = this.timeOfDay.minuteProperty();
+		this.wantedHour.set(10);
+		this.wantedMinute.set(30);
 		this.variableDescriptionProperty()
 				.bind(
 						TranslationFX.getTextBinding("use.event.time.of.day.generator.variable.description", Bindings.createStringBinding(() -> {

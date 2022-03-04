@@ -3391,7 +3391,7 @@
   <text key="use.action.write.text.text.style">Style différent pour cette entrée</text>
   <text key="use.event.configuration.sound.player.disabled.description">Événement déclenché lorsque le son est
 		désactivé</text>
-  <text key="use.event.periodic.time.static.description">Envoie un événement à un intervalle régulier tant que LifeCompanion est lancé.</text>
+  <text key="use.event.periodic.time.static.description">Envoie un événement à un intervalle régulier tant que LifeCompanion est lancé (le premier événement est envoyé au lancement de la configuration).</text>
   <text key="use.event.periodic.time.variable.description">Envoie un événement toutes les {}.</text>
   <text key="use.event.periodic.time.interval.field">Intervalle entre deux événements</text>
   <text key="use.event.periodic.time.name">Intervalle régulier</text>
