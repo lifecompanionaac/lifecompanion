@@ -31,14 +31,15 @@ import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.categorizedelement.useevent.DefaultUseEventSubCategories;
 import org.lifecompanion.controller.configurationcomponent.GlobalKeyEventController;
 import org.lifecompanion.model.impl.categorizedelement.useevent.BaseUseEventGeneratorImpl;
-import org.lifecompanion.model.impl.configurationcomponent.TimeOfDay;
 import org.lifecompanion.model.impl.usevariable.StringUseVariable;
 import org.lifecompanion.model.impl.usevariable.UseVariableDefinition;
 import org.lifecompanion.framework.commons.fx.io.XMLGenericProperty;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
 import org.lifecompanion.framework.commons.translation.Translation;
+import org.lifecompanion.model.impl.configurationcomponent.DurationUnitEnum;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Timer;
@@ -47,19 +48,14 @@ import java.util.TimerTask;
 public class PeriodicEventGenerator extends BaseUseEventGeneratorImpl {
 
     private final UseVariableDefinitionI periodDefinition;
-    private final IntegerProperty hourPeriod, minutePeriod;
-    private final TimeOfDay timeOfDay;
+    private final IntegerProperty periodInMS;
 
     public PeriodicEventGenerator() {
         super();
-        this.parameterizableAction = false;
+        this.parameterizableAction = true;
         this.order = 0;
         this.category = DefaultUseEventSubCategories.PERIODIC;
-        this.timeOfDay = new TimeOfDay();
-        this.hourPeriod = timeOfDay.hourProperty();
-		this.minutePeriod = timeOfDay.minuteProperty();
-        this.hourPeriod.set(1);
-        this.minutePeriod.set(30);
+		this.periodInMS = new SimpleIntegerProperty(100);
         this.nameID = "use.event.periodic.time.name";
         this.staticDescriptionID = "use.event.periodic.time.static.description";
         this.configIconPath = "time/icon_time_of_day_generator.png";
@@ -69,17 +65,32 @@ public class PeriodicEventGenerator extends BaseUseEventGeneratorImpl {
         this.variableDescriptionProperty()
 				.bind(
 						TranslationFX.getTextBinding("use.event.periodic.time.variable.description", Bindings.createStringBinding(() -> {
-								return this.timeOfDay.getHumanReadableString();
-						}, this.hourPeriod, this.minutePeriod)));
+                            return this.getFormattedPeriodString();
+                    }, this.periodInMS)));
     }
 
-    public IntegerProperty hourPeriodProperty() {
-		return this.hourPeriod;
-	}
+    public IntegerProperty periodInMSProperty() {
+        return this.periodInMS;
+    }
 
-	public IntegerProperty minutePeriodProperty() {
-		return this.minutePeriod;
-	}
+    private String getFormattedPeriodString() {
+        int breakHandler = 0;
+        String formattedString = "";
+        ArrayList<DurationUnitEnum> durationUnitsInOrder = DurationUnitEnum.getUnitsInOrder();
+        int periodValue = periodInMS.get();
+        for (DurationUnitEnum durationUnitEnum : durationUnitsInOrder) {
+            int intMsRatio = (int) durationUnitEnum.getToMsRatio();
+            int truncatedValueInUnit = periodValue/intMsRatio;
+            periodValue -= truncatedValueInUnit*intMsRatio;
+            breakHandler += breakHandler*10;
+            if (truncatedValueInUnit > 0) {
+                formattedString += durationUnitEnum.getFormat().format(truncatedValueInUnit) + durationUnitEnum.getSymbol();
+                breakHandler += 1;
+            }
+            if (breakHandler > 9) {break;}
+        }
+        return formattedString;
+    }
 
     // Class part : "Mode start/stop"
     //========================================================================
@@ -88,7 +99,6 @@ public class PeriodicEventGenerator extends BaseUseEventGeneratorImpl {
     @Override
     public void modeStart(final LCConfigurationI configuration) {
         this.timer = new Timer(true);
-        long periodInMS = ((long) this.hourPeriod.getValue())*3600000 + ((long) this.minutePeriod.getValue())*60000;
 		this.timer.scheduleAtFixedRate(new TimerTask() {
 
 			@Override
@@ -98,10 +108,10 @@ public class PeriodicEventGenerator extends BaseUseEventGeneratorImpl {
 									Arrays.asList(
 											new StringUseVariable(PeriodicEventGenerator.this.periodDefinition,
 													Translation.getText("use.variable.periodic.time.period.generator.hour.format",
-                                                    PeriodicEventGenerator.this.timeOfDay.getHumanReadableString()))),
+                                                    PeriodicEventGenerator.this.getFormattedPeriodString()))),
 									null);
 			}
-		}, 100, periodInMS);
+		}, 100, this.periodInMS.get());
     }
 
     @Override
