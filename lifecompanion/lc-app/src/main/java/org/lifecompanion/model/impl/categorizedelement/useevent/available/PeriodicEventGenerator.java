@@ -31,6 +31,7 @@ import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.categorizedelement.useevent.DefaultUseEventSubCategories;
 import org.lifecompanion.controller.configurationcomponent.GlobalKeyEventController;
 import org.lifecompanion.model.impl.categorizedelement.useevent.BaseUseEventGeneratorImpl;
+import org.lifecompanion.model.impl.usevariable.LongUseVariable;
 import org.lifecompanion.model.impl.usevariable.StringUseVariable;
 import org.lifecompanion.model.impl.usevariable.UseVariableDefinition;
 import org.lifecompanion.framework.commons.fx.io.XMLGenericProperty;
@@ -48,10 +49,13 @@ import java.util.TimerTask;
 public class PeriodicEventGenerator extends BaseUseEventGeneratorImpl {
 
     private final UseVariableDefinitionI periodDefinition;
+    private final UseVariableDefinitionI repetitionDefinition;
     private final IntegerProperty periodInMS;
+    private long numberOfRepetitions;
 
     public PeriodicEventGenerator() {
         super();
+        this.numberOfRepetitions = 0;
         this.parameterizableAction = true;
         this.order = 0;
         this.category = DefaultUseEventSubCategories.PERIODIC;
@@ -61,7 +65,10 @@ public class PeriodicEventGenerator extends BaseUseEventGeneratorImpl {
         this.configIconPath = "time/icon_time_of_day_generator.png";
         this.periodDefinition = new UseVariableDefinition("PeriodicEventPeriod", "use.variable.periodic.time.period.name",
                 "use.variable.periodic.time.period.description", "use.variable.periodic.time.period.example");
+        this.repetitionDefinition = new UseVariableDefinition("PeriodicEventNumberOfGeneratedEvents", "use.variable.periodic.time.number.of.generated.event.name",
+                "use.variable.periodic.time.number.of.generated.event.description", "use.variable.periodic.time.number.of.generated.event.example");
         this.generatedVariables.add(this.periodDefinition);
+        this.generatedVariables.add(this.repetitionDefinition);
         this.variableDescriptionProperty()
 				.bind(
 						TranslationFX.getTextBinding("use.event.periodic.time.variable.description", Bindings.createStringBinding(() -> {
@@ -103,12 +110,15 @@ public class PeriodicEventGenerator extends BaseUseEventGeneratorImpl {
 
 			@Override
 			public void run() {
+                PeriodicEventGenerator.this.numberOfRepetitions += 1;
 				PeriodicEventGenerator.this.useEventListener
 							.fireEvent(PeriodicEventGenerator.this,
 									Arrays.asList(
 											new StringUseVariable(PeriodicEventGenerator.this.periodDefinition,
 													Translation.getText("use.variable.periodic.time.period.generator.hour.format",
-                                                    PeriodicEventGenerator.this.getFormattedPeriodString()))),
+                                                    PeriodicEventGenerator.this.getFormattedPeriodString())),
+                                            new LongUseVariable(PeriodicEventGenerator.this.repetitionDefinition,
+                                                    PeriodicEventGenerator.this.numberOfRepetitions)),
 									null);
 			}
 		}, 100, this.periodInMS.get());
