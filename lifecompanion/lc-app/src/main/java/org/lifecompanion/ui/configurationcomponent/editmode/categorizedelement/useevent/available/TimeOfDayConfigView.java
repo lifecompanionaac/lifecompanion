@@ -36,14 +36,14 @@ public class TimeOfDayConfigView extends VBox implements UseEventGeneratorConfig
 
 	@Override
 	public void editStarts(final TimeOfDayEventGenerator element) {
-		this.timePicker.hourProperty().set(element.wantedHourProperty().get());
-		this.timePicker.minuteProperty().set(element.wantedMinuteProperty().get());
+		this.timePicker.hourProperty().set(element.getTimeOfDay().hoursProperty().get());
+		this.timePicker.minuteProperty().set(element.getTimeOfDay().minutesProperty().get());
 	}
 
 	@Override
 	public void editEnds(final TimeOfDayEventGenerator element) {
-		element.wantedHourProperty().set(this.timePicker.hourProperty().get());
-		element.wantedMinuteProperty().set(this.timePicker.minuteProperty().get());
+		element.getTimeOfDay().hoursProperty().set(this.timePicker.hourProperty().get());
+		element.getTimeOfDay().minutesProperty().set(this.timePicker.minuteProperty().get());
 	}
 
 	@Override

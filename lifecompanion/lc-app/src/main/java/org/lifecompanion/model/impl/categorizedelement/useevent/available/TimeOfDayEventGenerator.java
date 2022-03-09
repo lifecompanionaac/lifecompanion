@@ -19,13 +19,12 @@
 
 package org.lifecompanion.model.impl.categorizedelement.useevent.available;
 
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 import org.jdom2.Element;
 
+import org.lifecompanion.controller.io.XMLHelper;
+import org.lifecompanion.framework.commons.fx.io.XMLUtils;
 import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
 import org.lifecompanion.model.impl.usevariable.StringUseVariable;
 import org.lifecompanion.model.impl.usevariable.UseVariableDefinition;
@@ -44,99 +43,101 @@ import javafx.beans.binding.Bindings;
 
 /**
  * Generate a event when a hour in the day is reached.
+ *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public class TimeOfDayEventGenerator extends BaseUseEventGeneratorImpl {
 
-	private final IntegerProperty wantedHour, wantedMinute;
-	private final TimeOfDay timeOfDay;
-	private final UseVariableDefinitionI useVariableWantedHour;
+    private final TimeOfDay timeOfDay;
+    private final UseVariableDefinitionI useVariableWantedHour;
 
-	public TimeOfDayEventGenerator() {
-		super();
-		this.parameterizableAction = true;
-		this.order = 0;
-		this.category = DefaultUseEventSubCategories.CYCLIC;
-		this.nameID = "use.event.time.of.day.generator.name";
-		this.staticDescriptionID = "use.event.time.of.day.generator.static.description";
-		this.configIconPath = "time/icon_time_of_day_generator.png";
-		this.timeOfDay = new TimeOfDay();
-		this.wantedHour = this.timeOfDay.hourProperty();
-		this.wantedMinute = this.timeOfDay.minuteProperty();
-		this.wantedHour.set(10);
-		this.wantedMinute.set(30);
-		this.variableDescriptionProperty()
-				.bind(
-						TranslationFX.getTextBinding("use.event.time.of.day.generator.variable.description", Bindings.createStringBinding(() -> {
-								return this.timeOfDay.getHumanReadableString();
-						}, this.wantedHour, this.wantedMinute)));
-		this.useVariableWantedHour = new UseVariableDefinition("WantedHourDisplayableFormat", "use.variable.time.of.day.displayable.hour.name",
-				"use.variable.time.of.day.displayable.hour.description", "use.variable.time.of.day.displayable.hour.example");
-		this.generatedVariables.add(this.useVariableWantedHour);
-	}
+    public TimeOfDayEventGenerator() {
+        super();
+        this.parameterizableAction = true;
+        this.order = 0;
+        this.category = DefaultUseEventSubCategories.CYCLIC;
+        this.nameID = "use.event.time.of.day.generator.name";
+        this.staticDescriptionID = "use.event.time.of.day.generator.static.description";
+        this.configIconPath = "time/icon_time_of_day_generator.png";
+        this.timeOfDay = new TimeOfDay();
+        this.variableDescriptionProperty()
+                .bind(
+                        TranslationFX.getTextBinding("use.event.time.of.day.generator.variable.description", Bindings.createStringBinding(this.timeOfDay::getHumanReadableString, this.timeOfDay.hoursProperty(), this.timeOfDay.minutesProperty()))
+                );
+        this.useVariableWantedHour = new UseVariableDefinition("WantedHourDisplayableFormat", "use.variable.time.of.day.displayable.hour.name",
+                "use.variable.time.of.day.displayable.hour.description", "use.variable.time.of.day.displayable.hour.example");
+        this.generatedVariables.add(this.useVariableWantedHour);
+    }
 
-	public IntegerProperty wantedHourProperty() {
-		return this.wantedHour;
-	}
+    public TimeOfDay getTimeOfDay() {
+        return timeOfDay;
+    }
 
-	public IntegerProperty wantedMinuteProperty() {
-		return this.wantedMinute;
-	}
+    // Class part : "Mode start/stop"
+    //========================================================================
+    private Timer timer;
 
-	// Class part : "Mode start/stop"
-	//========================================================================
-	private Timer timer;
+    @Override
+    public void modeStart(final LCConfigurationI configuration) {
+        //Change implementation to only instantiate one timer
+        this.timer = new Timer(true);
+        this.timer.scheduleAtFixedRate(new TimerTask() {
+            private boolean generated = false;
 
-	@Override
-	public void modeStart(final LCConfigurationI configuration) {
-		//Change implementation to only instantiate one timer
-		this.timer = new Timer(true);
-		this.timer.scheduleAtFixedRate(new TimerTask() {
-			private boolean generated = false;
+            @Override
+            public void run() {
+                Calendar calendar = Calendar.getInstance();
+                int wantedHour = TimeOfDayEventGenerator.this.timeOfDay.hoursProperty().get();
+                int wantedMinute = TimeOfDayEventGenerator.this.timeOfDay.minutesProperty().get();
+                if (!this.generated && wantedHour == calendar.get(Calendar.HOUR_OF_DAY)
+                        && wantedMinute == calendar.get(Calendar.MINUTE)) {
+                    this.generated = true;
+                    TimeOfDayEventGenerator.this.useEventListener
+                            .fireEvent(TimeOfDayEventGenerator.this,
+                                    List.of(
+                                            new StringUseVariable(TimeOfDayEventGenerator.this.useVariableWantedHour,
+                                                    Translation.getText("use.event.time.of.day.generator.hour.format",
+                                                            TimeOfDayEventGenerator.this.timeOfDay.getHumanReadableString()))),
+                                    null);
+                } else if (wantedHour != calendar.get(Calendar.HOUR_OF_DAY)
+                        || wantedMinute != calendar.get(Calendar.MINUTE)) {
+                    this.generated = false;
+                }
+            }
+        }, 100, 1000);
+    }
 
-			@Override
-			public void run() {
-				Calendar calendar = Calendar.getInstance();
-				int wantedHour = TimeOfDayEventGenerator.this.timeOfDay.hourProperty().getValue();
-				int wantedMinute = TimeOfDayEventGenerator.this.timeOfDay.minuteProperty().getValue();
-				if (!this.generated && wantedHour == calendar.get(Calendar.HOUR_OF_DAY)
-						&& wantedMinute == calendar.get(Calendar.MINUTE)) {
-					this.generated = true;
-					TimeOfDayEventGenerator.this.useEventListener
-							.fireEvent(TimeOfDayEventGenerator.this,
-									Arrays.asList(
-											new StringUseVariable(TimeOfDayEventGenerator.this.useVariableWantedHour,
-													Translation.getText("use.event.time.of.day.generator.hour.format",
-													TimeOfDayEventGenerator.this.timeOfDay.getHumanReadableString()))),
-									null);
-				} else if (wantedHour != calendar.get(Calendar.HOUR_OF_DAY)
-						|| wantedMinute != calendar.get(Calendar.MINUTE)) {
-					this.generated = false;
-				}
-			}
-		}, 100, 1000);
-	}
+    @Override
+    public void modeStop(final LCConfigurationI configuration) {
+        this.timer.cancel();
+        this.timer = null;
+    }
+    //========================================================================
 
-	@Override
-	public void modeStop(final LCConfigurationI configuration) {
-		this.timer.cancel();
-	}
-	//========================================================================
+    // Class part : "IO"
+    //========================================================================
+    @Override
+    public Element serialize(final IOContextI context) {
+        final Element element = super.serialize(context);
+        XMLObjectSerializer.serializeInto(TimeOfDayEventGenerator.class, this, element);
+        element.addContent(timeOfDay.serialize(context));
+        return element;
+    }
 
-	// Class part : "IO"
-	//========================================================================
-	@Override
-	public Element serialize(final IOContextI context) {
-		final Element element = super.serialize(context);
-		XMLObjectSerializer.serializeInto(TimeOfDayEventGenerator.class, this, element);
-		return element;
-	}
-
-	@Override
-	public void deserialize(final Element node, final IOContextI context) throws LCException {
-		super.deserialize(node, context);
-		XMLObjectSerializer.deserializeInto(TimeOfDayEventGenerator.class, this, node);
-	}
-	//========================================================================
+    @Override
+    public void deserialize(final Element node, final IOContextI context) throws LCException {
+        super.deserialize(node, context);
+        XMLObjectSerializer.deserializeInto(TimeOfDayEventGenerator.class, this, node);
+        Element timeOfDayNode = node.getChild(TimeOfDay.NODE_NAME);
+        if (timeOfDayNode != null) {
+            this.timeOfDay.deserialize(timeOfDayNode, context);
+        }
+        // Backward compatibility
+        else if (node.getAttribute("wantedHour") != null && node.getAttribute("wantedMinute") != null) {
+            XMLUtils.read(timeOfDay.hoursProperty(), "wantedHour", node);
+            XMLUtils.read(timeOfDay.minutesProperty(), "wantedMinute", node);
+        }
+    }
+    //========================================================================
 
 }
