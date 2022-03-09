@@ -8,7 +8,8 @@
 
 ### Corrections/ajustements
 
-- ...
+- Ticket #42 : ajout d'une nouvelle action pour changer la taille de la fenêtre
+- Ajout d'un nouvel événement "Intervalle régulier"
 
 ## 1.3.3 - 04/03/2022
 
