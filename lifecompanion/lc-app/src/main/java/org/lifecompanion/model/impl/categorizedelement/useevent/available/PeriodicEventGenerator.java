@@ -62,7 +62,7 @@ public class PeriodicEventGenerator extends BaseUseEventGeneratorImpl {
 		this.periodInMS = new SimpleIntegerProperty(100);
         this.nameID = "use.event.periodic.time.name";
         this.staticDescriptionID = "use.event.periodic.time.static.description";
-        this.configIconPath = "time/icon_time_of_day_generator.png";
+        this.configIconPath = "time/icon_cyclic_event_generator.png";
         this.periodDefinition = new UseVariableDefinition("PeriodicEventPeriod", "use.variable.periodic.time.period.name",
                 "use.variable.periodic.time.period.description", "use.variable.periodic.time.period.example");
         this.repetitionDefinition = new UseVariableDefinition("PeriodicEventNumberOfGeneratedEvents", "use.variable.periodic.time.number.of.generated.event.name",
@@ -71,9 +71,7 @@ public class PeriodicEventGenerator extends BaseUseEventGeneratorImpl {
         this.generatedVariables.add(this.repetitionDefinition);
         this.variableDescriptionProperty()
 				.bind(
-						TranslationFX.getTextBinding("use.event.periodic.time.variable.description", Bindings.createStringBinding(() -> {
-                            return this.getFormattedPeriodString();
-                    }, this.periodInMS)));
+						TranslationFX.getTextBinding("use.event.periodic.time.variable.description", Bindings.createStringBinding(this::getFormattedPeriodString, this.periodInMS)));
     }
 
     public IntegerProperty periodInMSProperty() {
