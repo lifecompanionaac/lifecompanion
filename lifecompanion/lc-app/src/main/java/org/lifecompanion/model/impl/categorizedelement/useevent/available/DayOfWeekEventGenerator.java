@@ -51,6 +51,7 @@ import java.util.Locale;
  */
 public class DayOfWeekEventGenerator extends BaseUseEventGeneratorImpl {
     private static final long DELAY_ON_START = 4000;
+    private static final long DELAY_ON_NEW_DAY = 4000;
 
     private final IntegerProperty wantedDay;
     private final UseVariableDefinitionI useVariableWantedDayLabel;
@@ -98,7 +99,7 @@ public class DayOfWeekEventGenerator extends BaseUseEventGeneratorImpl {
                 calendar.set(Calendar.HOUR_OF_DAY, 0);
                 calendar.set(Calendar.MINUTE, 0);
                 calendar.set(Calendar.SECOND, 0);
-                ThreadUtils.safeSleep(calendar.getTimeInMillis() - System.currentTimeMillis());
+                ThreadUtils.safeSleep(calendar.getTimeInMillis() - System.currentTimeMillis() + DayOfWeekEventGenerator.DELAY_ON_NEW_DAY);
             }
         });
         checkCurrentDayThread.start();

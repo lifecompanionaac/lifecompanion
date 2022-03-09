@@ -36,9 +36,11 @@ import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.impl.categorizedelement.useevent.BaseUseEventGeneratorImpl;
+import org.lifecompanion.model.impl.configurationcomponent.TimeOfDay;
 import org.lifecompanion.model.api.categorizedelement.useevent.DefaultUseEventSubCategories;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.binding.Bindings;
 
 /**
  * Generate a event when a hour in the day is reached.
@@ -46,8 +48,9 @@ import javafx.beans.property.SimpleIntegerProperty;
  */
 public class TimeOfDayEventGenerator extends BaseUseEventGeneratorImpl {
 
-	private IntegerProperty wantedHour, wantedMinute;
-	private UseVariableDefinitionI useVariableWantedHour;
+	private final IntegerProperty wantedHour, wantedMinute;
+	private final TimeOfDay timeOfDay;
+	private final UseVariableDefinitionI useVariableWantedHour;
 
 	public TimeOfDayEventGenerator() {
 		super();
@@ -57,10 +60,16 @@ public class TimeOfDayEventGenerator extends BaseUseEventGeneratorImpl {
 		this.nameID = "use.event.time.of.day.generator.name";
 		this.staticDescriptionID = "use.event.time.of.day.generator.static.description";
 		this.configIconPath = "time/icon_time_of_day_generator.png";
-		this.wantedHour = new SimpleIntegerProperty(10);
-		this.wantedMinute = new SimpleIntegerProperty(30);
+		this.timeOfDay = new TimeOfDay();
+		this.wantedHour = this.timeOfDay.hourProperty();
+		this.wantedMinute = this.timeOfDay.minuteProperty();
+		this.wantedHour.set(10);
+		this.wantedMinute.set(30);
 		this.variableDescriptionProperty()
-				.bind(TranslationFX.getTextBinding("use.event.time.of.day.generator.variable.description", this.wantedHour, this.wantedMinute));
+				.bind(
+						TranslationFX.getTextBinding("use.event.time.of.day.generator.variable.description", Bindings.createStringBinding(() -> {
+								return this.timeOfDay.getHumanReadableString();
+						}, this.wantedHour, this.wantedMinute)));
 		this.useVariableWantedHour = new UseVariableDefinition("WantedHourDisplayableFormat", "use.variable.time.of.day.displayable.hour.name",
 				"use.variable.time.of.day.displayable.hour.description", "use.variable.time.of.day.displayable.hour.example");
 		this.generatedVariables.add(this.useVariableWantedHour);
@@ -88,18 +97,20 @@ public class TimeOfDayEventGenerator extends BaseUseEventGeneratorImpl {
 			@Override
 			public void run() {
 				Calendar calendar = Calendar.getInstance();
-				if (!this.generated && TimeOfDayEventGenerator.this.wantedHour.get() == calendar.get(Calendar.HOUR_OF_DAY)
-						&& TimeOfDayEventGenerator.this.wantedMinute.get() == calendar.get(Calendar.MINUTE)) {
+				int wantedHour = TimeOfDayEventGenerator.this.timeOfDay.hourProperty().getValue();
+				int wantedMinute = TimeOfDayEventGenerator.this.timeOfDay.minuteProperty().getValue();
+				if (!this.generated && wantedHour == calendar.get(Calendar.HOUR_OF_DAY)
+						&& wantedMinute == calendar.get(Calendar.MINUTE)) {
 					this.generated = true;
 					TimeOfDayEventGenerator.this.useEventListener
 							.fireEvent(TimeOfDayEventGenerator.this,
 									Arrays.asList(
 											new StringUseVariable(TimeOfDayEventGenerator.this.useVariableWantedHour,
 													Translation.getText("use.event.time.of.day.generator.hour.format",
-															TimeOfDayEventGenerator.this.wantedHour, TimeOfDayEventGenerator.this.wantedMinute))),
+													TimeOfDayEventGenerator.this.timeOfDay.getHumanReadableString()))),
 									null);
-				} else if (TimeOfDayEventGenerator.this.wantedHour.get() != calendar.get(Calendar.HOUR_OF_DAY)
-						|| TimeOfDayEventGenerator.this.wantedMinute.get() != calendar.get(Calendar.MINUTE)) {
+				} else if (wantedHour != calendar.get(Calendar.HOUR_OF_DAY)
+						|| wantedMinute != calendar.get(Calendar.MINUTE)) {
 					this.generated = false;
 				}
 			}

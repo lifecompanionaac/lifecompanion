@@ -28,10 +28,10 @@ import javafx.scene.control.Spinner;
 import javafx.scene.layout.HBox;
 import javafx.util.StringConverter;
 import org.lifecompanion.util.LangUtils;
-import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.util.javafx.FXControlUtils;
+import org.lifecompanion.model.impl.configurationcomponent.DurationUnitEnum;
 
 import java.util.stream.Stream;
 
@@ -44,7 +44,7 @@ public class DurationPickerControl extends HBox implements LCViewInitHelper {
 
     private Spinner<Double> spinnerDuration;
     private final IntegerProperty duration;
-    private ChoiceBox<DurationUnit> choiceBoxDurationUnit;
+    private ChoiceBox<DurationUnitEnum> choiceBoxDurationUnit;
 
     public DurationPickerControl() {
         this.duration = new SimpleIntegerProperty(1);
@@ -59,9 +59,9 @@ public class DurationPickerControl extends HBox implements LCViewInitHelper {
         this.spinnerDuration.getStyleClass().add(Spinner.STYLE_CLASS_ARROWS_ON_LEFT_VERTICAL);
 
 
-        choiceBoxDurationUnit = new ChoiceBox<>(FXCollections.observableArrayList(DurationUnit.values()));
+        choiceBoxDurationUnit = new ChoiceBox<>(FXCollections.observableArrayList(DurationUnitEnum.values()));
         choiceBoxDurationUnit.setConverter(new DurationUnitConverter());
-        choiceBoxDurationUnit.getSelectionModel().select(DurationUnit.SECOND);
+        choiceBoxDurationUnit.getSelectionModel().select(DurationUnitEnum.SECOND);
 
         this.getChildren().addAll(spinnerDuration, choiceBoxDurationUnit);
         this.setAlignment(Pos.CENTER);
@@ -72,15 +72,15 @@ public class DurationPickerControl extends HBox implements LCViewInitHelper {
     public void initBinding() {
         // Duration changed : change the spinner value with the correct unit convert
         this.duration.addListener((obs, ov, nv) -> {
-            setSpinnerValueIfDiff(nv.doubleValue() / this.choiceBoxDurationUnit.getValue().toMsRatio);
+            setSpinnerValueIfDiff(nv.doubleValue() / this.choiceBoxDurationUnit.getValue().getToMsRatio());
         });
         // Duration unit changed : convert the value
         this.choiceBoxDurationUnit.valueProperty().addListener((obs, ov, nv) -> {
-            setSpinnerValueIfDiff(this.duration.get() / nv.toMsRatio);
+            setSpinnerValueIfDiff(this.duration.get() / nv.getToMsRatio());
         });
         // Spinner change : change the value
         this.spinnerDuration.valueProperty().addListener((obs, ov, nv) -> {
-            int newValue = (int) (nv.doubleValue() * choiceBoxDurationUnit.getValue().toMsRatio);
+            int newValue = (int) (nv.doubleValue() * choiceBoxDurationUnit.getValue().getToMsRatio());
             if (newValue != duration.get()) {
                 duration.set(newValue);
             }
@@ -97,45 +97,28 @@ public class DurationPickerControl extends HBox implements LCViewInitHelper {
         return duration;
     }
 
+    /** 
+    * Automatically sets the checkbox to the biggest unit that gives a value > 1.0.
+    */
     public void tryToPickBestUnit() {
-        // try to find the biggest unit that give > 1.0
-        for (int i = DurationUnit.values().length - 1; i >= 0; i--) {
-            if (duration.get() / DurationUnit.values()[i].toMsRatio >= 1.0) {
-                choiceBoxDurationUnit.getSelectionModel().select(DurationUnit.values()[i]);
+        for (int i = DurationUnitEnum.values().length - 1; i >= 0; i--) {
+            if (duration.get() / DurationUnitEnum.values()[i].getToMsRatio() >= 1.0) {
+                choiceBoxDurationUnit.getSelectionModel().select(DurationUnitEnum.values()[i]);
                 break;
             }
         }
     }
 
-    enum DurationUnit {
-        MILLISECOND("duration.unit.millisecond", 1.0),
-        SECOND("duration.unit.second", 1000.0),
-        MINUTE("duration.unit.minute", 60_000.0),
-        HOUR("duration.unit.hour", 3600_000.0);
-
-        private final String translationId;
-        private final double toMsRatio;
-
-        DurationUnit(String translationId, double toMsRatio) {
-            this.translationId = translationId;
-            this.toMsRatio = toMsRatio;
-        }
-
-        String getTranslatedName() {
-            return Translation.getText(translationId);
-        }
-    }
-
-    static class DurationUnitConverter extends StringConverter<DurationUnit> {
+    static class DurationUnitConverter extends StringConverter<DurationUnitEnum> {
 
         @Override
-        public String toString(DurationUnit object) {
+        public String toString(DurationUnitEnum object) {
             return object != null ? object.getTranslatedName() : null;
         }
 
         @Override
-        public DurationUnit fromString(String string) {
-            return Stream.of(DurationUnit.values()).filter(d -> StringUtils.isEquals(d.getTranslatedName(), string)).findAny().orElse(null);
+        public DurationUnitEnum fromString(String string) {
+            return Stream.of(DurationUnitEnum.values()).filter(d -> StringUtils.isEquals(d.getTranslatedName(), string)).findAny().orElse(null);
         }
     }
 }

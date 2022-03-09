@@ -31,6 +31,7 @@ public enum DefaultUseEventSubCategories implements UseEventSubCategoryI {
 	//========================================================================
 	//TIME
 	CYCLIC("use.event.sub.category.cyclic.name", DefaultUseEventMainCategories.TIME, CategorizedElementColorProvider.nextColor(DefaultUseEventMainCategories.TIME)), //
+	PERIODIC("use.event.sub.category.cyclic.name", DefaultUseEventMainCategories.TIME, CategorizedElementColorProvider.nextColor(DefaultUseEventMainCategories.TIME)), //
 
 	//CONFIGURATION
 	STATUS("use.event.sub.category.status.name", DefaultUseEventMainCategories.CONFIGURATION,
