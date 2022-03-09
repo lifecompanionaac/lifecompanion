@@ -125,6 +125,7 @@ public class PeriodicEventGenerator extends BaseUseEventGeneratorImpl {
     @Override
     public void modeStop(final LCConfigurationI configuration) {
 		this.timer.cancel();
+        this.timer = null;
     }
     //========================================================================
 
