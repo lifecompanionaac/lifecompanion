@@ -1,5 +1,21 @@
 # LIFECOMPANION CHANGELOG
 
+## 1.3.4 - XX/XX/2022
+
+### Fonctionnalités
+
+- ...
+
+### Corrections/ajustements
+
+- ...
+
+## 1.3.3 - 04/03/2022
+
+### Fonctionnalités
+
+- Ajout d'une fonctionnalité "secrète" (tappez "Bonne retraite Jean-Paul" et prononcez le texte pour la découvrir)
+
 ## 1.3.2 - 28/02/2022
 
 ### Fonctionnalités

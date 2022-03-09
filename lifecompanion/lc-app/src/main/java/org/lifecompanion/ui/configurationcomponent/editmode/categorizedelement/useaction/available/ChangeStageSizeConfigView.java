@@ -35,6 +35,7 @@ import org.lifecompanion.util.javafx.FXControlUtils;
 
 /**
  * Action configuration view for {@link ChangeStageSizeAction}
+ *
  * @author Paul BREUIL <tykapl.breuil@gmail.com>
  */
 public class ChangeStageSizeConfigView extends GridPane implements UseActionConfigurationViewI<ChangeStageSizeAction> {
@@ -53,7 +54,6 @@ public class ChangeStageSizeConfigView extends GridPane implements UseActionConf
 
     @Override
     public void initUI() {
-        
         final GridPane spinnerGridPane = new GridPane();
         final Label labelChangeRatioPercent = new Label(Translation.getText("use.action.change.stage.size.change.ratio"));
         GridPane.setHgrow(labelChangeRatioPercent, Priority.ALWAYS);
@@ -61,7 +61,7 @@ public class ChangeStageSizeConfigView extends GridPane implements UseActionConf
         spinnerChangeRatio = FXControlUtils.createDoubleSpinner(0, 1000, 100, 5, 120.0);
         // Adding percent sign to spinner
         SpinnerValueFactory<Double> changeRatioValueFactory = spinnerChangeRatio.getValueFactory();
-        changeRatioValueFactory.setConverter(new StringConverter<Double>() {
+        changeRatioValueFactory.setConverter(new StringConverter<>() {
 
             @Override
             public String toString(Double value) {
@@ -81,8 +81,7 @@ public class ChangeStageSizeConfigView extends GridPane implements UseActionConf
         });
         spinnerChangeRatio.setValueFactory(changeRatioValueFactory);
         Label labelExplain = new Label(Translation.getText("use.action.change.stage.size.description"));
-        labelExplain.setWrapText(true);
-        labelExplain.getStyleClass().add("explain-text");
+        labelExplain.getStyleClass().addAll("text-fill-gray", "text-font-italic", "text-wrap-enabled");
         spinnerGridPane.add(labelChangeRatioPercent, 0, 0);
         spinnerGridPane.add(spinnerChangeRatio, 1, 0);
         this.add(spinnerGridPane, 0, 0);

@@ -76,7 +76,6 @@ public class ChangeStageSizeAction extends SimpleUseActionImpl<UseActionTriggerC
             double stageWidth = stage.getWidth();
             double stageHeight = stage.getHeight();
             double changeRatio = this.changeRatioPercent.get()/100;
-            System.out.println(changeRatio);
 
             // Handling the Fullscreen/Maximized status
             if (stage.isFullScreen() || stage.isMaximized()) {
