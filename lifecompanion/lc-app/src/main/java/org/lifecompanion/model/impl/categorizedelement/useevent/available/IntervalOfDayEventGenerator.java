@@ -23,8 +23,6 @@ import java.util.*;
 
 import org.jdom2.Element;
 
-import org.lifecompanion.controller.io.XMLHelper;
-import org.lifecompanion.framework.commons.fx.io.XMLUtils;
 import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
 import org.lifecompanion.model.impl.usevariable.StringUseVariable;
 import org.lifecompanion.model.impl.usevariable.UseVariableDefinition;
@@ -37,8 +35,6 @@ import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.impl.categorizedelement.useevent.BaseUseEventGeneratorImpl;
 import org.lifecompanion.model.impl.configurationcomponent.TimeOfDay;
 import org.lifecompanion.model.api.categorizedelement.useevent.DefaultUseEventSubCategories;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.binding.Bindings;
 
 /**
@@ -105,11 +101,6 @@ public class IntervalOfDayEventGenerator extends BaseUseEventGeneratorImpl {
             @Override
             public void run() {
                 TimeOfDay nowTimeOfDay = TimeOfDay.now();
-                System.out.println(nowTimeOfDay);
-                System.out.println(IntervalOfDayEventGenerator.this.endTimeOfDay);
-                System.out.println(IntervalOfDayEventGenerator.this.startTimeOfDay);
-                System.out.println(IntervalOfDayEventGenerator.this.startTimeOfDay.compareTo(nowTimeOfDay));
-                System.out.println(IntervalOfDayEventGenerator.this.endTimeOfDay.compareTo(nowTimeOfDay));
                 if (!this.generated && IntervalOfDayEventGenerator.this.startTimeOfDay.compareTo(nowTimeOfDay) <= 0
                         && IntervalOfDayEventGenerator.this.endTimeOfDay.compareTo(nowTimeOfDay) >= 0) {
                     this.generated = true;
