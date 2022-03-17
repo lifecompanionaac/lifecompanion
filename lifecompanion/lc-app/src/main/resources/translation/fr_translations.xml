@@ -544,6 +544,8 @@
   <text key="action.switch.fullscreen.frame.name">Activer/désactiver le plein écran</text>
   <text key="action.change.stage.size.name">Changer la taille de la fenêtre</text>
   <text key="action.change.stage.size.description">Augmente la taille de la fenêtre de la configuration par le pourcentage spécifié.</text>
+  <text key="action.minimize.stage.name">Minimiser la fenêtre</text>
+  <text key="action.minimize.stage.description">Minimise la fenêtre de la configuration LifeCompanion.</text>
   <!--org.lifecompanion.base.data.useaction.impl.configuration.frame, org.lifecompanion.base.data.action.definition-->
   <text key="action.switch.fullscreen">Activer/Désactiver le plein écran</text>
   <!--org.lifecompanion.base.data.useaction.impl.keylist.current-->
