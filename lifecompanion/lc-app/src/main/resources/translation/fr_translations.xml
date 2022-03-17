@@ -885,10 +885,8 @@
   <text key="use.event.on.no.parent.on.back.event.name">Retour quand pas de parent</text>
   <!--org.lifecompanion.base.data.useevent.impl.time.value-->
   <text key="use.event.day.of.week.generator.name">Jour de la semaine</text>
-  <text key="use.event.day.of.week.generator.static.description">Génère un événement après le lancement de la
-		configuration si celle-ci est lancée le jour de la semaine défini.</text>
-  <text key="use.event.day.of.week.generator.variable.description">Génère un événement au lancement de la
-		configuration si celle-ci est lancée le {}</text>
+  <text key="use.event.day.of.week.generator.static.description">Génère un événement lorsque le jour de la semaine défini est atteint.</text>
+  <text key="use.event.day.of.week.generator.variable.description">Génère un événement lorsque l'on est un {}</text>
   <text key="use.event.time.of.day.generator.hour.format">{}</text>
   <text key="use.event.time.of.day.generator.name">Heure de la journée</text>
   <text key="use.event.time.of.day.generator.static.description">Génére un événement lorsqu'une heure définie dans la
@@ -902,6 +900,20 @@
 		lisible.</text>
   <text key="use.variable.time.of.day.displayable.hour.example">10h30</text>
   <text key="use.variable.time.of.day.displayable.hour.name">Heure atteinte</text>
+  <text key="use.event.interval.of.day.generator.name">Intervalle de temps dans la journée</text>
+  <text key="use.event.interval.of.day.generator.static.description">Génére un événement lorsque l'on se situe entre dans un intervalle de temps défini de la journée.</text>
+  <text key="use.event.interval.of.day.generator.variable.description">Génére un événement lorsqu'il est entre {} et {}.</text>
+  <text key="use.event.interval.of.day.start.time.field">Heure de début de l'intervalle</text>
+  <text key="use.event.interval.of.day.end.time.field">Heure de fin de l'intervalle</text>
+  <text key="use.variable.interval.of.day.displayable.start.hour.name">Heure de début</text>
+  <text key="use.variable.interval.of.day.displayable.end.hour.name">Heure de fin</text>
+  <text key="use.variable.interval.of.day.displayable.start.hour.description">L'heure de début de l'intervalle de temps voulu dans l'événement, dans un format
+		lisible.</text>
+  <text key="use.variable.interval.of.day.displayable.end.hour.description">L'heure de fin de l'intervalle de temps voulu dans l'événement, dans un format
+		lisible.</text>
+  <text key="use.variable.interval.of.day.displayable.start.hour.example">10h30</text>
+  <text key="use.variable.interval.of.day.displayable.end.hour.example">11h30</text>
+  <text key="use.event.interval.of.day.generator.hour.format">{}</text>
   <!--org.lifecompanion.base.data.voice-->
   <text key="macos.say.voice.description">Synthèse vocale utilisant les voix de la commande "Say" sur
 		MacOS.\nLes voix MacOS Say ne prennent pas en compte les paramètres "volume", "débit" et "hauteur".</text>
