@@ -33,6 +33,7 @@ import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.util.javafx.FXControlUtils;
+import org.lifecompanion.model.impl.categorizedelement.useaction.available.SimulateKeyboardKeyPressedAction;
 
 /**
  * Component to select a file from current file system.
@@ -97,7 +98,7 @@ public class KeyCodeSelectorControl extends VBox implements LCViewInitHelper {
         this.buttonRemoveKey.disableProperty().bind(this.value.isNull());
         this.value.addListener((obs, ov, nv) -> {
             if (nv != null) {
-                this.fieldKeyName.setText(nv.getName());
+                this.fieldKeyName.setText(SimulateKeyboardKeyPressedAction.getTranslatedKeyCodeName(nv));
             } else {
                 this.fieldKeyName.setText(null);
             }

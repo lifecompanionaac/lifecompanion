@@ -3445,4 +3445,19 @@
   <text key="user.config.save.button">Sauvegarder</text>
   <text key="user.config.tab.information">À Propos</text>
   <text key="virtual.mouse.parameter.button">Paramètres de souris virtuelle</text>
+  <text key="keyboard.key.enter">Entrée</text>
+  <text key="keyboard.key.backspace">Retour Arrière</text>
+  <text key="keyboard.key.tab">Tab</text>
+  <text key="keyboard.key.shift">Maj</text>
+  <text key="keyboard.key.caps.lock">Verr. Maj</text>
+  <text key="keyboard.key.esc">Échap</text>
+  <text key="keyboard.key.space">Barre Espace</text>
+  <text key="keyboard.key.left">Gauche</text>
+  <text key="keyboard.key.right">Droite</text>
+  <text key="keyboard.key.up">Haut</text>
+  <text key="keyboard.key.down">Bas</text>
+  <text key="keyboard.key.comma">,</text>
+  <text key="keyboard.key.minus">-</text>
+  <text key="keyboard.key.period">.</text>
+  <text key="keyboard.key.slash">/</text>
 </texts>
