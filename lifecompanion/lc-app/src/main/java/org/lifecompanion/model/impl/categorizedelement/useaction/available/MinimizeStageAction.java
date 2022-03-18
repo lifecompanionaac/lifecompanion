@@ -66,14 +66,14 @@ public class MinimizeStageAction extends SimpleUseActionImpl<UseActionTriggerCom
     @Override
     public Element serialize(final IOContextI contextP) {
         Element elem = super.serialize(contextP);
-        XMLObjectSerializer.serializeInto(ChangeStageSizeAction.class, this, elem);
+        XMLObjectSerializer.serializeInto(MinimizeStageAction.class, this, elem);
         return elem;
     }
 
     @Override
     public void deserialize(final Element nodeP, final IOContextI contextP) throws LCException {
         super.deserialize(nodeP, contextP);
-        XMLObjectSerializer.deserializeInto(ChangeStageSizeAction.class, this, nodeP);
+        XMLObjectSerializer.deserializeInto(MinimizeStageAction.class, this, nodeP);
     }
     //========================================================================
 }
