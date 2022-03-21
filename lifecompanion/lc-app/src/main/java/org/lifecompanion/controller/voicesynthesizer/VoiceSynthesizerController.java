@@ -138,10 +138,10 @@ public enum VoiceSynthesizerController implements LCStateListener, ModeListenerI
      */
     // Class part : "Public speak API"
     //========================================================================
-    public void speakSync(final String text, final Runnable speakEndCallback) {
+    public void speakSync(final String text, final Runnable speakEndCallback, final boolean spell) {
         if (!this.disableVoiceSynthesizer.get()) {
             final VoiceSynthesizerParameterI parameters = AppModeController.INSTANCE.getUseModeContext().configurationProperty().get().getVoiceSynthesizerParameter();
-            Future<?> futureTask = this.submitExecutorTask(text, parameters, speakEndCallback);
+            Future<?> futureTask = this.submitExecutorTask(text, parameters, speakEndCallback, spell);
             try {
                 futureTask.get();
             } catch (Exception e) {
@@ -155,7 +155,11 @@ public enum VoiceSynthesizerController implements LCStateListener, ModeListenerI
     }
 
     public void speakSync(final String text) {
-        this.speakSync(text, null);
+        this.speakSync(text, null, false);
+    }
+
+    public void spellSync(final String text) {
+        this.speakSync(text, null, true);
     }
 
     /**
@@ -167,7 +171,7 @@ public enum VoiceSynthesizerController implements LCStateListener, ModeListenerI
      */
     public void speakAsync(final String text, final VoiceSynthesizerParameterI parameters, final Runnable speakEndCallback) {
         if (!this.disableVoiceSynthesizer.get()) {
-            this.submitExecutorTask(text, parameters, speakEndCallback);
+            this.submitExecutorTask(text, parameters, speakEndCallback, false);
         } else {
             if (speakEndCallback != null) {
                 speakEndCallback.run();
@@ -218,7 +222,7 @@ public enum VoiceSynthesizerController implements LCStateListener, ModeListenerI
     }
 
 
-    private Future<?> submitExecutorTask(final String text, final VoiceSynthesizerParameterI parameters, final Runnable speakEndCallback) {
+    private Future<?> submitExecutorTask(final String text, final VoiceSynthesizerParameterI parameters, final Runnable speakEndCallback, final boolean spell) {
         //Create task
         SpeakTask speakTask = new SpeakTask(queuedTasks) {
             @Override
@@ -240,7 +244,16 @@ public enum VoiceSynthesizerController implements LCStateListener, ModeListenerI
                 }
                 //Speak with selected synthesizer
                 if (StringUtils.isNotBlank(text)) {
-                    currentSynthesizer.speak(cleanTextBeforeSpeak(text, parameters));
+                    if (spell) {
+                        for (int i = 0; i < text.length(); i++) {
+                            char[] charToSpeakArray = {text.charAt(i)};
+                            String charToSpeakString = new String(charToSpeakArray);
+                            currentSynthesizer.speak(charToSpeakString);
+                        }
+                    }
+                    else {
+                        currentSynthesizer.speak(cleanTextBeforeSpeak(text, parameters));
+                    }
                 }
                 //When speak ends, callback if needed
                 if (speakEndCallback != null) {

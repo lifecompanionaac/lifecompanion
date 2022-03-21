@@ -153,6 +153,7 @@
   <text key="use.action.sub.category.sound.name">Son/Musique</text>
   <text key="use.action.sub.category.speak.parameters.name">Paramètres</text>
   <text key="use.action.sub.category.speak.text.name">Prononcer du texte</text>
+  <text key="use.action.sub.category.spell.text.name">Épeler du texte</text>
   <text key="use.action.sub.category.text.specialchar">Caractères spéciaux</text>
   <text key="use.action.sub.category.text.uppercase.name">Majuscules</text>
   <text key="use.action.sub.category.write.text.name">Écrire du texte</text>
@@ -704,7 +705,7 @@
   <text key="action.switch.voice.synthesizer.activation.name">Activer/désactiver la synthèse vocale</text>
   <!--org.lifecompanion.base.data.useaction.impl.speak.text-->
   <text key="action.speak.all.text.description">Prononce tout le texte actuellement affiché dans
-		l'éditeur avec la synthèse vocale sélectionnée</text>
+		l'éditeur avec la synthèse vocale sélectionnée.</text>
   <text key="action.speak.all.text.name">Prononcer tout le texte</text>
   <text key="action.speak.key.label">Prononcer le texte de la case</text>
   <text key="action.speak.key.label.static.description">Prononce le texte écrit dans la case avec la synthèse
@@ -727,6 +728,9 @@
 		vocale
 		actuellement sélectionnée.</text>
   <text key="action.speak.text.variable.description">Prononce le texte "{}"</text>
+  <text key="action.spell.all.text.description">Épèle tout le texte actuellement affiché dans
+		l'éditeur avec la synthèse vocale sélectionnée.</text>
+  <text key="action.spell.all.text.name">Épeler tout le texte</text>
   <!--org.lifecompanion.base.data.useaction.impl.text.caret-->
   <text key="action.move.caret.backward.description">Déplace le curseur d'un caractère en arrière. Si le
 		curseur est au début du texte, cette action n'a aucun effet.</text>
