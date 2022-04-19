@@ -45,7 +45,7 @@ public class MinimizeStageAction extends SimpleUseActionImpl<UseActionTriggerCom
         this.category = DefaultUseActionSubCategories.FRAME;
         this.nameID = "action.minimize.stage.name";
         this.staticDescriptionID = "action.minimize.stage.description";
-        this.configIconPath = "configuration/icon_change_stage_ratio.png";
+        this.configIconPath = "configuration/icon_minimize_stage.png";
         this.parameterizableAction = false;
         this.variableDescriptionProperty().set(getStaticDescription());
     }

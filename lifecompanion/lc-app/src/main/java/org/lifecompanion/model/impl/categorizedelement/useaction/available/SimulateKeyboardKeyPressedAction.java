@@ -24,18 +24,18 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.input.KeyCode;
 import org.jdom2.Element;
-import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
-import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
-import org.lifecompanion.model.api.usevariable.UseVariableI;
-import org.lifecompanion.model.impl.exception.LCException;
-import org.lifecompanion.model.api.io.IOContextI;
-import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseActionSubCategories;
 import org.lifecompanion.controller.virtualkeyboard.VirtualKeyboardController;
-import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
 import org.lifecompanion.framework.commons.fx.io.XMLGenericProperty;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
-import org.lifecompanion.framework.commons.translation.Translation;
+import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseActionSubCategories;
+import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
+import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
+import org.lifecompanion.model.api.io.IOContextI;
+import org.lifecompanion.model.api.usevariable.UseVariableI;
+import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
+import org.lifecompanion.model.impl.exception.LCException;
+import org.lifecompanion.util.javafx.FXKeyCodeTranslatorUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,31 +57,13 @@ public class SimulateKeyboardKeyPressedAction extends SimpleUseActionImpl<UseAct
         this.staticDescriptionID = "action.simulate.keyboard.key.press.action.description";
         this.configIconPath = "computeraccess/icon_keyboard_key.png";
         this.variableDescriptionProperty()
-                .bind(TranslationFX.getTextBinding("action.simulate.keyboard.key.press.action.description.variable", Bindings.createStringBinding(() -> {
-                    return this.getKeyText(this.keyPressed1, false, false) + this.getKeyText(this.keyPressed2, true, true)
-                            + this.getKeyText(this.keyPressed3, true, true);
-                }, this.keyPressed1, this.keyPressed2, this.keyPressed3)));
+                .bind(TranslationFX.getTextBinding("action.simulate.keyboard.key.press.action.description.variable", Bindings.createStringBinding(() -> this.getKeyText(this.keyPressed1, false) + this.getKeyText(this.keyPressed2, true)
+                        + this.getKeyText(this.keyPressed3, true), this.keyPressed1, this.keyPressed2, this.keyPressed3)));
     }
 
-    /**
-     * Gets the translated name of the KeyCode. The key for the translation is the
-     * String "keyboard.key." to which the default english name with spaces replaced
-     * by dots and put to lowercase is added. For example the keyCode with the name
-     * "Scroll Lock" has a translation searched for with the key
-     * "keyboard.key.scroll.lock".
-     * 
-     * @param keyCode the keyCode whose name should be translated
-     * @return the String of the translated name or the default name if the key
-     *         doesn't exist in the translation
-     */
-    public static String getTranslatedKeyCodeName(final KeyCode keyCode) {
-        String keyCodeKeyString = "keyboard.key." + keyCode.getName().toLowerCase().replace(' ', '.');
-        String translatedText = Translation.getText(keyCodeKeyString);
-        return translatedText.equals(keyCodeKeyString) ? keyCode.getName() : translatedText;
-    }
 
-    private String getKeyText(final ObjectProperty<KeyCode> keyProp, final boolean empty, final boolean comma) {
-        return keyProp.get() != null ? (comma ? ", " : "") + getTranslatedKeyCodeName(keyProp.get()) : empty ? "" : Translation.getText("no.keyboard.key.selected");
+    private String getKeyText(final ObjectProperty<KeyCode> keyProp, final boolean comma) {
+        return (comma ? ", " : "") + FXKeyCodeTranslatorUtils.getTranslatedKeyCodeName(keyProp.get(), "no.keyboard.key.selected");
     }
 
     public ObjectProperty<KeyCode> keyPressed1Property() {

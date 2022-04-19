@@ -2367,7 +2367,7 @@
   <!--org.lifecompanion.config.view.pane.voice, org.lifecompanion.config.view.pane.predictor-->
   <text key="voice.synthesizer.system.compatible">Compatible avec {}</text>
   <!--org.lifecompanion.config.view.reusable-->
-  <text key="key.selector.control.no.key">Appuyez sur la touche voulue</text>
+  <text key="key.selector.control.no.key">Cliquer puis appuyer sur la touche du clavier pour sélectionner</text>
   <text key="mouse.button.middle">Bouton milieu (clic molette)</text>
   <text key="mouse.button.none">Aucun</text>
   <text key="mouse.button.primary">Bouton principal (clic gauche)</text>
@@ -3449,19 +3449,53 @@
   <text key="user.config.save.button">Sauvegarder</text>
   <text key="user.config.tab.information">À Propos</text>
   <text key="virtual.mouse.parameter.button">Paramètres de souris virtuelle</text>
+
   <text key="keyboard.key.enter">Entrée</text>
-  <text key="keyboard.key.backspace">Retour Arrière</text>
-  <text key="keyboard.key.tab">Tab</text>
+  <text key="keyboard.key.back.space">Retour arrière</text>
+  <text key="keyboard.key.tab">Tabulation</text>
   <text key="keyboard.key.shift">Maj</text>
-  <text key="keyboard.key.caps.lock">Verr. Maj</text>
+  <text key="keyboard.key.caps">Verr. Maj</text>
   <text key="keyboard.key.esc">Échap</text>
-  <text key="keyboard.key.space">Barre Espace</text>
-  <text key="keyboard.key.left">Gauche</text>
-  <text key="keyboard.key.right">Droite</text>
-  <text key="keyboard.key.up">Haut</text>
-  <text key="keyboard.key.down">Bas</text>
-  <text key="keyboard.key.comma">,</text>
-  <text key="keyboard.key.minus">-</text>
-  <text key="keyboard.key.period">.</text>
-  <text key="keyboard.key.slash">/</text>
+  <text key="keyboard.key.space">Barre d'espace</text>
+  <text key="keyboard.key.left">Flèche directionelle gauche</text>
+  <text key="keyboard.key.right">Flèche directionelle droite</text>
+  <text key="keyboard.key.up">Flèche directionelle haut</text>
+  <text key="keyboard.key.down">Flèche directionelle bas</text>
+  <text key="keyboard.key.comma">Virgule</text>
+
+  <text key="keyboard.key.period">Point</text>
+  <text key="keyboard.key.slash">Slash</text>
+  <text key="keyboard.key.colon">Deux-point</text>
+  <text key="keyboard.key.semicolon">Point-virgule</text>
+  <text key="keyboard.key.exclamation.mark">Point d'exclamation</text>
+
+  <text key="keyboard.key.numpad0">Pavé numérique 0</text>
+  <text key="keyboard.key.numpad1">Pavé numérique 1</text>
+  <text key="keyboard.key.numpad2">Pavé numérique 2</text>
+  <text key="keyboard.key.numpad3">Pavé numérique 3</text>
+  <text key="keyboard.key.numpad4">Pavé numérique 4</text>
+  <text key="keyboard.key.numpad5">Pavé numérique 5</text>
+  <text key="keyboard.key.numpad6">Pavé numérique 6</text>
+  <text key="keyboard.key.numpad7">Pavé numérique 7</text>
+  <text key="keyboard.key.numpad8">Pavé numérique 8</text>
+  <text key="keyboard.key.numpad9">Pavé numérique 9</text>
+  <text key="keyboard.key.num.lock">Verr num</text>
+  <text key="keyboard.key.insert">Insert</text>
+	<text key="keyboard.key.subtract">Soustraire (pavé numérique)</text>
+	<text key="keyboard.key.decimal">Décimal (pavé numérique)</text>
+  <text key="keyboard.key.multiply">Multiplier (pavé numérique)</text>
+  <text key="keyboard.key.divide">Diviser (pavé numérique)</text>
+  <text key="keyboard.key.add">Additionner (pavé numérique)</text>
+  <text key="keyboard.key.delete">Suppr</text>
+  <text key="keyboard.key.end">Fin</text>
+  <text key="keyboard.key.home">Début</text>
+  <text key="keyboard.key.printscreen">Impr écran</text>
+  <text key="keyboard.key.asterisk">Astérisque</text>
+  <text key="keyboard.key.right.parenthesis">Parenthèse fermante</text>
+  <text key="keyboard.key.equals">Égal</text>
+  <text key="keyboard.key.page.down">Page bas</text>
+  <text key="keyboard.key.page.up">Page haut</text>
+  <text key="keyboard.key.context.menu">Menu contextuel</text>
+  <text key="keyboard.key.undefined">Touche non détectée</text>
+  <text key="keyboard.key.less">Chevron</text>
 </texts>

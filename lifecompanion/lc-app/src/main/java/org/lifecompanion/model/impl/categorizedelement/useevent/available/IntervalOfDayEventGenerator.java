@@ -19,23 +19,24 @@
 
 package org.lifecompanion.model.impl.categorizedelement.useevent.available;
 
-import java.util.*;
-
+import javafx.beans.binding.Bindings;
 import org.jdom2.Element;
-
-import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
-import org.lifecompanion.model.impl.usevariable.StringUseVariable;
-import org.lifecompanion.model.impl.usevariable.UseVariableDefinition;
+import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
 import org.lifecompanion.framework.commons.translation.Translation;
-import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
+import org.lifecompanion.model.api.categorizedelement.useevent.DefaultUseEventSubCategories;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
-import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.io.IOContextI;
+import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
 import org.lifecompanion.model.impl.categorizedelement.useevent.BaseUseEventGeneratorImpl;
 import org.lifecompanion.model.impl.configurationcomponent.TimeOfDay;
-import org.lifecompanion.model.api.categorizedelement.useevent.DefaultUseEventSubCategories;
-import javafx.beans.binding.Bindings;
+import org.lifecompanion.model.impl.exception.LCException;
+import org.lifecompanion.model.impl.usevariable.StringUseVariable;
+import org.lifecompanion.model.impl.usevariable.UseVariableDefinition;
+
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Generate a event when a hour in the day is reached.
@@ -101,25 +102,29 @@ public class IntervalOfDayEventGenerator extends BaseUseEventGeneratorImpl {
             @Override
             public void run() {
                 TimeOfDay nowTimeOfDay = TimeOfDay.now();
-                if (!this.generated && IntervalOfDayEventGenerator.this.startTimeOfDay.compareTo(nowTimeOfDay) <= 0
-                        && IntervalOfDayEventGenerator.this.endTimeOfDay.compareTo(nowTimeOfDay) >= 0) {
+                if (!this.generated
+                        && IntervalOfDayEventGenerator.this.startTimeOfDay.compareTo(nowTimeOfDay) <= 0
+                        && IntervalOfDayEventGenerator.this.endTimeOfDay.compareTo(nowTimeOfDay) >= 0
+                ) {
                     this.generated = true;
                     IntervalOfDayEventGenerator.this.useEventListener
                             .fireEvent(IntervalOfDayEventGenerator.this,
-                                List.of(
-                                    new StringUseVariable(IntervalOfDayEventGenerator.this.useVariableWantedStartHour,
-                                            Translation.getText("use.event.interval.of.day.generator.hour.format",
-                                                IntervalOfDayEventGenerator.this.startTimeOfDay.getHumanReadableString())),
-                                    new StringUseVariable(IntervalOfDayEventGenerator.this.useVariableWantedEndHour,
-                                            Translation.getText("use.event.interval.of.day.generator.hour.format",
-                                                    IntervalOfDayEventGenerator.this.endTimeOfDay.getHumanReadableString()))),
+                                    List.of(
+                                            new StringUseVariable(IntervalOfDayEventGenerator.this.useVariableWantedStartHour,
+                                                    Translation.getText("use.event.interval.of.day.generator.hour.format",
+                                                            IntervalOfDayEventGenerator.this.startTimeOfDay.getHumanReadableString())),
+                                            new StringUseVariable(IntervalOfDayEventGenerator.this.useVariableWantedEndHour,
+                                                    Translation.getText("use.event.interval.of.day.generator.hour.format",
+                                                            IntervalOfDayEventGenerator.this.endTimeOfDay.getHumanReadableString()))),
                                     null);
-                } else if (IntervalOfDayEventGenerator.this.startTimeOfDay.compareTo(nowTimeOfDay) == 1
-                        || IntervalOfDayEventGenerator.this.endTimeOfDay.compareTo(nowTimeOfDay) == -1) {
+                } else if (
+                        IntervalOfDayEventGenerator.this.startTimeOfDay.compareTo(nowTimeOfDay) > 0
+                                || IntervalOfDayEventGenerator.this.endTimeOfDay.compareTo(nowTimeOfDay) < 0
+                ) {
                     this.generated = false;
                 }
             }
-        }, 100, 1000);
+        }, DELAY_BEFORE_GENERATE_MS, 1000);
     }
 
     @Override
@@ -138,10 +143,8 @@ public class IntervalOfDayEventGenerator extends BaseUseEventGeneratorImpl {
     public Element serialize(final IOContextI context) {
         final Element element = super.serialize(context);
         XMLObjectSerializer.serializeInto(IntervalOfDayEventGenerator.class, this, element);
-        element.addContent(XMLObjectSerializer.serializeInto(
-                TimeOfDay.class, startTimeOfDay, new Element(IntervalOfDayEventGenerator.START_TIME_OF_DAY_NODE_NAME)));
-        element.addContent(XMLObjectSerializer.serializeInto(
-                TimeOfDay.class, endTimeOfDay, new Element(IntervalOfDayEventGenerator.END_TIME_OF_DAY_NODE_NAME)));
+        element.addContent(XMLObjectSerializer.serializeInto(TimeOfDay.class, startTimeOfDay, new Element(IntervalOfDayEventGenerator.START_TIME_OF_DAY_NODE_NAME)));
+        element.addContent(XMLObjectSerializer.serializeInto(TimeOfDay.class, endTimeOfDay, new Element(IntervalOfDayEventGenerator.END_TIME_OF_DAY_NODE_NAME)));
         return element;
     }
 

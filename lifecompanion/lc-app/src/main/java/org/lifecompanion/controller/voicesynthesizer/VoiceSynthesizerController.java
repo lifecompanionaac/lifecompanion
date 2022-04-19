@@ -23,20 +23,20 @@ import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.lifecompanion.controller.lifecycle.AppModeController;
+import org.lifecompanion.controller.plugin.PluginController;
+import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
+import org.lifecompanion.framework.commons.SystemType;
+import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.framework.utils.LCNamedThreadFactory;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.lifecycle.LCStateListener;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
+import org.lifecompanion.model.api.voicesynthesizer.*;
 import org.lifecompanion.model.impl.voicesynthesizer.SAPIVoiceSynthesizer;
 import org.lifecompanion.model.impl.voicesynthesizer.SayCommandVoiceSynthesizer;
 import org.lifecompanion.model.impl.voicesynthesizer.VoiceSynthesizerInfoImpl;
 import org.lifecompanion.util.javafx.FXThreadUtils;
-import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
-import org.lifecompanion.controller.lifecycle.AppModeController;
-import org.lifecompanion.controller.plugin.PluginController;
-import org.lifecompanion.framework.commons.SystemType;
-import org.lifecompanion.framework.commons.utils.lang.StringUtils;
-import org.lifecompanion.framework.utils.LCNamedThreadFactory;
-import org.lifecompanion.model.api.voicesynthesizer.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -154,6 +154,10 @@ public enum VoiceSynthesizerController implements LCStateListener, ModeListenerI
         }
     }
 
+    public void speakSync(final String text, final Runnable speakEndCallback) {
+        this.speakSync(text, speakEndCallback, false);
+    }
+
     public void speakSync(final String text) {
         this.speakSync(text, null, false);
     }
@@ -250,8 +254,7 @@ public enum VoiceSynthesizerController implements LCStateListener, ModeListenerI
                             String charToSpeakString = new String(charToSpeakArray);
                             currentSynthesizer.speak(charToSpeakString);
                         }
-                    }
-                    else {
+                    } else {
                         currentSynthesizer.speak(cleanTextBeforeSpeak(text, parameters));
                     }
                 }

@@ -28,12 +28,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.controlsfx.glyphfont.FontAwesome;
-import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.util.javafx.FXControlUtils;
-import org.lifecompanion.model.impl.categorizedelement.useaction.available.SimulateKeyboardKeyPressedAction;
+import org.lifecompanion.util.javafx.FXKeyCodeTranslatorUtils;
 
 /**
  * Component to select a file from current file system.
@@ -96,13 +96,7 @@ public class KeyCodeSelectorControl extends VBox implements LCViewInitHelper {
     @Override
     public void initBinding() {
         this.buttonRemoveKey.disableProperty().bind(this.value.isNull());
-        this.value.addListener((obs, ov, nv) -> {
-            if (nv != null) {
-                this.fieldKeyName.setText(SimulateKeyboardKeyPressedAction.getTranslatedKeyCodeName(nv));
-            } else {
-                this.fieldKeyName.setText(null);
-            }
-        });
+        this.value.addListener((obs, ov, nv) -> this.fieldKeyName.setText(FXKeyCodeTranslatorUtils.getTranslatedKeyCodeName(nv, null)));
     }
     //========================================================================
 
