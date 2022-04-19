@@ -63,8 +63,25 @@ public class SimulateKeyboardKeyPressedAction extends SimpleUseActionImpl<UseAct
                 }, this.keyPressed1, this.keyPressed2, this.keyPressed3)));
     }
 
+    /**
+     * Gets the translated name of the KeyCode. The key for the translation is the
+     * String "keyboard.key." to which the default english name with spaces replaced
+     * by dots and put to lowercase is added. For example the keyCode with the name
+     * "Scroll Lock" has a translation searched for with the key
+     * "keyboard.key.scroll.lock".
+     * 
+     * @param keyCode the keyCode whose name should be translated
+     * @return the String of the translated name or the default name if the key
+     *         doesn't exist in the translation
+     */
+    public static String getTranslatedKeyCodeName(final KeyCode keyCode) {
+        String keyCodeKeyString = "keyboard.key." + keyCode.getName().toLowerCase().replace(' ', '.');
+        String translatedText = Translation.getText(keyCodeKeyString);
+        return translatedText.equals(keyCodeKeyString) ? keyCode.getName() : translatedText;
+    }
+
     private String getKeyText(final ObjectProperty<KeyCode> keyProp, final boolean empty, final boolean comma) {
-        return keyProp.get() != null ? (comma ? ", " : "") + keyProp.get().getName() : empty ? "" : Translation.getText("no.keyboard.key.selected");
+        return keyProp.get() != null ? (comma ? ", " : "") + getTranslatedKeyCodeName(keyProp.get()) : empty ? "" : Translation.getText("no.keyboard.key.selected");
     }
 
     public ObjectProperty<KeyCode> keyPressed1Property() {

@@ -79,6 +79,8 @@ public enum DefaultUseActionSubCategories implements UseActionSubCategoryI {
     //Speak
     SPEAK_TEXT("use.action.sub.category.speak.text.name", DefaultUseActionMainCategories.SPEAK,
             CategorizedElementColorProvider.nextColor(DefaultUseActionMainCategories.SPEAK)), //
+    SPELL_TEXT("use.action.sub.category.spell.text.name", DefaultUseActionMainCategories.SPEAK,
+            CategorizedElementColorProvider.nextColor(DefaultUseActionMainCategories.SPEAK)), //
     SPEAK_PARAMETERS("use.action.sub.category.speak.parameters.name", DefaultUseActionMainCategories.SPEAK,
             CategorizedElementColorProvider.nextColor(DefaultUseActionMainCategories.SPEAK)), //
 

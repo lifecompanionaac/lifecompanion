@@ -153,6 +153,7 @@
   <text key="use.action.sub.category.sound.name">Son/Musique</text>
   <text key="use.action.sub.category.speak.parameters.name">Paramètres</text>
   <text key="use.action.sub.category.speak.text.name">Prononcer du texte</text>
+  <text key="use.action.sub.category.spell.text.name">Épeler du texte</text>
   <text key="use.action.sub.category.text.specialchar">Caractères spéciaux</text>
   <text key="use.action.sub.category.text.uppercase.name">Majuscules</text>
   <text key="use.action.sub.category.write.text.name">Écrire du texte</text>
@@ -544,6 +545,8 @@
   <text key="action.switch.fullscreen.frame.name">Activer/désactiver le plein écran</text>
   <text key="action.change.stage.size.name">Changer la taille de la fenêtre</text>
   <text key="action.change.stage.size.description">Augmente la taille de la fenêtre de la configuration par le pourcentage spécifié.</text>
+  <text key="action.minimize.stage.name">Minimiser la fenêtre</text>
+  <text key="action.minimize.stage.description">Minimise la fenêtre de la configuration LifeCompanion.</text>
   <!--org.lifecompanion.base.data.useaction.impl.configuration.frame, org.lifecompanion.base.data.action.definition-->
   <text key="action.switch.fullscreen">Activer/Désactiver le plein écran</text>
   <!--org.lifecompanion.base.data.useaction.impl.keylist.current-->
@@ -702,7 +705,7 @@
   <text key="action.switch.voice.synthesizer.activation.name">Activer/désactiver la synthèse vocale</text>
   <!--org.lifecompanion.base.data.useaction.impl.speak.text-->
   <text key="action.speak.all.text.description">Prononce tout le texte actuellement affiché dans
-		l'éditeur avec la synthèse vocale sélectionnée</text>
+		l'éditeur avec la synthèse vocale sélectionnée.</text>
   <text key="action.speak.all.text.name">Prononcer tout le texte</text>
   <text key="action.speak.key.label">Prononcer le texte de la case</text>
   <text key="action.speak.key.label.static.description">Prononce le texte écrit dans la case avec la synthèse
@@ -725,6 +728,9 @@
 		vocale
 		actuellement sélectionnée.</text>
   <text key="action.speak.text.variable.description">Prononce le texte "{}"</text>
+  <text key="action.spell.all.text.description">Épèle tout le texte actuellement affiché dans
+		l'éditeur avec la synthèse vocale sélectionnée.</text>
+  <text key="action.spell.all.text.name">Épeler tout le texte</text>
   <!--org.lifecompanion.base.data.useaction.impl.text.caret-->
   <text key="action.move.caret.backward.description">Déplace le curseur d'un caractère en arrière. Si le
 		curseur est au début du texte, cette action n'a aucun effet.</text>
@@ -885,10 +891,8 @@
   <text key="use.event.on.no.parent.on.back.event.name">Retour quand pas de parent</text>
   <!--org.lifecompanion.base.data.useevent.impl.time.value-->
   <text key="use.event.day.of.week.generator.name">Jour de la semaine</text>
-  <text key="use.event.day.of.week.generator.static.description">Génère un événement après le lancement de la
-		configuration si celle-ci est lancée le jour de la semaine défini.</text>
-  <text key="use.event.day.of.week.generator.variable.description">Génère un événement au lancement de la
-		configuration si celle-ci est lancée le {}</text>
+  <text key="use.event.day.of.week.generator.static.description">Génère un événement lorsque le jour de la semaine défini est atteint.</text>
+  <text key="use.event.day.of.week.generator.variable.description">Génère un événement lorsque l'on est un {}</text>
   <text key="use.event.time.of.day.generator.hour.format">{}</text>
   <text key="use.event.time.of.day.generator.name">Heure de la journée</text>
   <text key="use.event.time.of.day.generator.static.description">Génére un événement lorsqu'une heure définie dans la
@@ -902,6 +906,20 @@
 		lisible.</text>
   <text key="use.variable.time.of.day.displayable.hour.example">10h30</text>
   <text key="use.variable.time.of.day.displayable.hour.name">Heure atteinte</text>
+  <text key="use.event.interval.of.day.generator.name">Intervalle de temps dans la journée</text>
+  <text key="use.event.interval.of.day.generator.static.description">Génére un événement lorsque l'on se situe entre dans un intervalle de temps défini de la journée.</text>
+  <text key="use.event.interval.of.day.generator.variable.description">Génére un événement lorsqu'il est entre {} et {}.</text>
+  <text key="use.event.interval.of.day.start.time.field">Heure de début de l'intervalle</text>
+  <text key="use.event.interval.of.day.end.time.field">Heure de fin de l'intervalle</text>
+  <text key="use.variable.interval.of.day.displayable.start.hour.name">Heure de début</text>
+  <text key="use.variable.interval.of.day.displayable.end.hour.name">Heure de fin</text>
+  <text key="use.variable.interval.of.day.displayable.start.hour.description">L'heure de début de l'intervalle de temps voulu dans l'événement, dans un format
+		lisible.</text>
+  <text key="use.variable.interval.of.day.displayable.end.hour.description">L'heure de fin de l'intervalle de temps voulu dans l'événement, dans un format
+		lisible.</text>
+  <text key="use.variable.interval.of.day.displayable.start.hour.example">10h30</text>
+  <text key="use.variable.interval.of.day.displayable.end.hour.example">11h30</text>
+  <text key="use.event.interval.of.day.generator.hour.format">{}</text>
   <!--org.lifecompanion.base.data.voice-->
   <text key="macos.say.voice.description">Synthèse vocale utilisant les voix de la commande "Say" sur
 		MacOS.\nLes voix MacOS Say ne prennent pas en compte les paramètres "volume", "débit" et "hauteur".</text>
@@ -3431,4 +3449,19 @@
   <text key="user.config.save.button">Sauvegarder</text>
   <text key="user.config.tab.information">À Propos</text>
   <text key="virtual.mouse.parameter.button">Paramètres de souris virtuelle</text>
+  <text key="keyboard.key.enter">Entrée</text>
+  <text key="keyboard.key.backspace">Retour Arrière</text>
+  <text key="keyboard.key.tab">Tab</text>
+  <text key="keyboard.key.shift">Maj</text>
+  <text key="keyboard.key.caps.lock">Verr. Maj</text>
+  <text key="keyboard.key.esc">Échap</text>
+  <text key="keyboard.key.space">Barre Espace</text>
+  <text key="keyboard.key.left">Gauche</text>
+  <text key="keyboard.key.right">Droite</text>
+  <text key="keyboard.key.up">Haut</text>
+  <text key="keyboard.key.down">Bas</text>
+  <text key="keyboard.key.comma">,</text>
+  <text key="keyboard.key.minus">-</text>
+  <text key="keyboard.key.period">.</text>
+  <text key="keyboard.key.slash">/</text>
 </texts>

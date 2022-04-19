@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/LifeCompanionAAC/lifecompanion-fv/raw/master/resources/lifecompanion-logo/export/lifecompanion_title_icon_600px.png">
+  <img src="https://github.com/LifeCompanionAAC/lifecompanion/raw/main/res/lifecompanion-logo/export/lifecompanion_title_icon_600px.png">
 </p>
 
 # LifeCompanion AAC
@@ -11,7 +11,7 @@
 
 LifeCompanion mono repository containing LifeCompanion app, server, side projects, resources and documentation.
 
-**DISCLAIMER : LifeCompanion was a running project long before opening its source code to community. Some parts may be : unoptimized, dirty, untested, weird... We are aware that some code, build, deployment could be improved, but as the development is heavely priorized and constrainted by costs, only some key features are focused :-) That said, you're welcome to contribute !**
+**DISCLAIMER : LifeCompanion was a running project long before opening its source code to the community. Some parts may be : unoptimized, dirty, untested, weird... We are aware that some code, build, deployment could be improved, but as the development is heavely prioritized and constrained by costs, only some key features are focused on :-) That said, you're welcome to contribute !**
 
 # General information
 
@@ -19,7 +19,7 @@ LifeCompanion mono repository containing LifeCompanion app, server, side project
 
 LifeCompanion is a **free custom-made digital assistant for Augmentative and Alternative Communication and computer access.** Highly customizable, it can be used as communication assistance software thanks to its speech synthesis, but also as computer access tool (visual/virtual keyboard, mouse movements, shortcuts, etc.)
 
-LifeCompanion is developed since 2015 by [CMRRF Kerpape](http://kerpape.mutualite56.fr/fr) (rehabilitation center located in Lorient, France) and [CoWork'HIT](https://coworkhit.com/) (innovative center on autonomy and technology located in Lorient, France).
+LifeCompanion is being developed since 2015 by [CMRRF Kerpape](http://kerpape.mutualite56.fr/fr) (rehabilitation center located in Lorient, France) and [CoWork'HIT](https://coworkhit.com/) (innovative center on autonomy and technology located in Lorient, France).
 It has been used in various reasearch and innovation projects, and was recently supported by French ["Agence du Numérique en Santé"](https://esante.gouv.fr/) for [Structures 3.0 project](https://lifecompanionaac.org/categories/projects/lc-ms-structures-3-0)
 
 LifeCompanion is currently available in french only, but we are seeking for partners to translate it.
