@@ -100,6 +100,23 @@ namespace LifeCompanion_VoiceSynthesizer
             this.lifeCompanionVoiceSynthesizer = lifeCompanionVoiceSynthesizer;
         }
 
+        private void configureBeforeSpeak()
+        {
+            // Configure speech synthesizer
+            if (!String.IsNullOrEmpty(context.Request.QueryString["volume"]))
+            {
+                this.speechSynthesizer.Volume = Convert.ToInt32(context.Request.QueryString["volume"]);
+            }
+            if (!String.IsNullOrEmpty(context.Request.QueryString["rate"]))
+            {
+                this.speechSynthesizer.Rate = Convert.ToInt32(context.Request.QueryString["rate"]);
+            }
+            if (!String.IsNullOrEmpty(context.Request.QueryString["voice"]))
+            {
+                this.speechSynthesizer.SelectVoice(context.Request.QueryString["voice"]);
+            }
+        }
+
         public void work()
         {
             try
@@ -125,19 +142,7 @@ namespace LifeCompanion_VoiceSynthesizer
                             sw.WriteLine(voiceJson + "\n]");
                             break;
                         case "speak":
-                            // Configure speech synthesizer
-                            if (!String.IsNullOrEmpty(context.Request.QueryString["volume"]))
-                            {
-                                this.speechSynthesizer.Volume = Convert.ToInt32(context.Request.QueryString["volume"]);
-                            }
-                            if (!String.IsNullOrEmpty(context.Request.QueryString["rate"]))
-                            {
-                                this.speechSynthesizer.Rate = Convert.ToInt32(context.Request.QueryString["rate"]);
-                            }
-                            if (!String.IsNullOrEmpty(context.Request.QueryString["voice"]))
-                            {
-                                this.speechSynthesizer.SelectVoice(context.Request.QueryString["voice"]);
-                            }
+                            configureBeforeSpeak();
                             // Speak content
                             using (StreamReader reader = new StreamReader(context.Request.InputStream, Encoding.UTF8))
                             {
@@ -149,6 +154,25 @@ namespace LifeCompanion_VoiceSynthesizer
                                         this.speechSynthesizer.Speak(contentToRead);
                                     }
                                     catch (OperationCanceledException)
+                                    {
+                                        // Ok to ignore (cancel is possible)
+                                    }
+                                }
+                            }
+                            break;
+                        case "speak-ssml":
+                            configureBeforeSpeak();
+                            // Speak content
+                            using (StreamReader reader = new StreamReader(context.Request.InputStream, Encoding.UTF8))
+                            {
+                                string contentToRead = reader.ReadToEnd();
+                                if (contentToRead != null && contentToRead.Trim().Length != 0)
+                                {
+                                    try
+                                    {
+                                        this.speechSynthesizer.SpeakSsml(contentToRead);
+                                    }
+                                    catch (OperationCanceledException e)
                                     {
                                         // Ok to ignore (cancel is possible)
                                     }

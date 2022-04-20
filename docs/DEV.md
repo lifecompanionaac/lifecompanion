@@ -85,6 +85,9 @@ Development environment installed and tested on Windows 10 and Ubuntu.
 1. Install **[Visual Studio](https://visualstudio.microsoft.com/fr/)**
 1. Open project in Visual Studio
 
+If you want to build a custom version : you can disable security certificate.
+If you want to build a production version : you may need to import again the security certificate (password is in LifeCompanion KeePass)
+
 ### How to build/run Win Input GAP
 
 1. Install **[AutoHotKey](https://www.autohotkey.com/)** (tested with 1.1.33.10)
@@ -207,7 +210,7 @@ INSERT INTO application(id) VALUES ('lifecompanion');
 1. Check your scripts in **src/main/resources/sql/migrations** and add them to `DataSource.MIGRATIONS_SCRIPT_NAMES`
 1. Check that you have the correct **HEROKU_API_KEY** env variable
 1. Commit and tag repo with **lifecompanion-framework/lc-framework-server/X.X.X**
-1. Run `gradlew :lc-framework-server:publishServerUpdate -Penv=dev` in **lifecompanion-framework** 
+1. Run `gradlew :lc-framework-server:publishServerUpdate -Penv=dev` in **lifecompanion-framework**
 1. If you have migration scripts, you can check them in Heroku log
 
 ---

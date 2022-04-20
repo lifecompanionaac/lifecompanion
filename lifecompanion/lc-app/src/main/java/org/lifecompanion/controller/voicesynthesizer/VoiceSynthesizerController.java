@@ -23,6 +23,10 @@ import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.jdom2.Element;
+import org.jdom2.Namespace;
+import org.jdom2.Text;
+import org.lifecompanion.controller.io.XMLHelper;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.plugin.PluginController;
 import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
@@ -33,6 +37,8 @@ import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.lifecycle.LCStateListener;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
 import org.lifecompanion.model.api.voicesynthesizer.*;
+import org.lifecompanion.model.impl.exception.UnavailableFeatureException;
+import org.lifecompanion.model.impl.voicesynthesizer.CharacterToSpeechTranslation;
 import org.lifecompanion.model.impl.voicesynthesizer.SAPIVoiceSynthesizer;
 import org.lifecompanion.model.impl.voicesynthesizer.SayCommandVoiceSynthesizer;
 import org.lifecompanion.model.impl.voicesynthesizer.VoiceSynthesizerInfoImpl;
@@ -48,6 +54,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -130,18 +137,11 @@ public enum VoiceSynthesizerController implements LCStateListener, ModeListenerI
         return pluginIdsForSynthesizerId.get(voiceSynthesizerId);
     }
 
-    /**
-     * To speak sync : the method will return when speak finished
-     *
-     * @param text             the text to pronounce
-     * @param speakEndCallback callback called on speak end (can be null)
-     */
-    // Class part : "Public speak API"
-    //========================================================================
-    public void speakSync(final String text, final Runnable speakEndCallback, final boolean spell) {
+
+    private void executeMethodSyncWithUseModeParameter(Consumer<VoiceSynthesizerI> method, final Runnable speakEndCallback) {
         if (!this.disableVoiceSynthesizer.get()) {
             final VoiceSynthesizerParameterI parameters = AppModeController.INSTANCE.getUseModeContext().configurationProperty().get().getVoiceSynthesizerParameter();
-            Future<?> futureTask = this.submitExecutorTask(text, parameters, speakEndCallback, spell);
+            Future<?> futureTask = this.submitExecutorTask(method, parameters, speakEndCallback);
             try {
                 futureTask.get();
             } catch (Exception e) {
@@ -155,15 +155,46 @@ public enum VoiceSynthesizerController implements LCStateListener, ModeListenerI
     }
 
     public void speakSync(final String text, final Runnable speakEndCallback) {
-        this.speakSync(text, speakEndCallback, false);
+        final VoiceSynthesizerParameterI parameters = AppModeController.INSTANCE.getUseModeContext().configurationProperty().get().getVoiceSynthesizerParameter();
+        this.executeMethodSyncWithUseModeParameter(v -> v.speak(cleanTextBeforeSpeak(text, parameters)), speakEndCallback);
     }
 
     public void speakSync(final String text) {
-        this.speakSync(text, null, false);
+        this.speakSync(text, null);
     }
 
-    public void spellSync(final String text) {
-        this.speakSync(text, null, true);
+    public void spellSync(final String text, final long pauseBetweenCharacters) {
+        if (StringUtils.isNotBlank(text)) {
+            final VoiceSynthesizerParameterI parameters = AppModeController.INSTANCE.getUseModeContext().configurationProperty().get().getVoiceSynthesizerParameter();
+            Element speak = new Element("speak");
+            speak.setAttribute("version", "1.0");
+            speak.setAttribute("lang", "fr", Namespace.XML_NAMESPACE);
+            for (int i = 0; i < text.length(); i++) {
+                char c = text.charAt(i);
+                if (CharacterToSpeechTranslation.isManuallyTranslated(c)) {
+                    speak.addContent(new Text(CharacterToSpeechTranslation.getTranslatedName(c)));
+                } else {
+                    Element sayAs = new Element("say-as");
+                    sayAs.setAttribute("interpret-as", "characters");
+                    sayAs.setText(String.valueOf(c));
+                    speak.addContent(sayAs);
+                }
+                if (i < text.length() - 1) {
+                    Element breakE = new Element("break");
+                    breakE.setAttribute("time", pauseBetweenCharacters + "ms");
+                    speak.addContent(breakE);
+                }
+            }
+            System.out.println(XMLHelper.toXmlString(speak));
+            this.executeMethodSyncWithUseModeParameter(v -> {
+                try {
+                    v.speakSsml(XMLHelper.toXmlString(speak));
+                } catch (UnavailableFeatureException e) {
+                    // Fallback method : speak char by char
+                    // FIXME : TODO
+                }
+            }, null);
+        }
     }
 
     /**
@@ -174,8 +205,8 @@ public enum VoiceSynthesizerController implements LCStateListener, ModeListenerI
      * @param speakEndCallback callback that will be called when speak ended (can be null)
      */
     public void speakAsync(final String text, final VoiceSynthesizerParameterI parameters, final Runnable speakEndCallback) {
-        if (!this.disableVoiceSynthesizer.get()) {
-            this.submitExecutorTask(text, parameters, speakEndCallback, false);
+        if (!this.disableVoiceSynthesizer.get() && StringUtils.isNotBlank(text)) {
+            this.submitExecutorTask(v -> v.speak(cleanTextBeforeSpeak(text, parameters)), parameters, speakEndCallback);
         } else {
             if (speakEndCallback != null) {
                 speakEndCallback.run();
@@ -226,7 +257,7 @@ public enum VoiceSynthesizerController implements LCStateListener, ModeListenerI
     }
 
 
-    private Future<?> submitExecutorTask(final String text, final VoiceSynthesizerParameterI parameters, final Runnable speakEndCallback, final boolean spell) {
+    private Future<?> submitExecutorTask(Consumer<VoiceSynthesizerI> method, final VoiceSynthesizerParameterI parameters, final Runnable speakEndCallback) {
         //Create task
         SpeakTask speakTask = new SpeakTask(queuedTasks) {
             @Override
@@ -247,17 +278,19 @@ public enum VoiceSynthesizerController implements LCStateListener, ModeListenerI
                     LOGGER.warn("Could not get valid voice information from selected : {}, voices might not be initialized ?", parameters.getVoiceParameter().selectedVoiceInfoProperty().get());
                 }
                 //Speak with selected synthesizer
-                if (StringUtils.isNotBlank(text)) {
-                    if (spell) {
-                        for (int i = 0; i < text.length(); i++) {
-                            char[] charToSpeakArray = {text.charAt(i)};
-                            String charToSpeakString = new String(charToSpeakArray);
-                            currentSynthesizer.speak(charToSpeakString);
-                        }
-                    } else {
-                        currentSynthesizer.speak(cleanTextBeforeSpeak(text, parameters));
-                    }
-                }
+                //                if (StringUtils.isNotBlank(text)) {
+                //                    if (spell) {
+                //                        // FIXME : find a solution to detect if synthesizer has not been stopped
+                //                        for (int i = 0; i < text.length(); i++) {
+                //                            long l = System.currentTimeMillis();
+                //                            currentSynthesizer.speak(Character.toString(text.charAt(i)));
+                //                            System.out.println("Call : " + (System.currentTimeMillis() - l) + " ms");
+                //                        }
+                //                    } else {
+                //                        currentSynthesizer.speak(cleanTextBeforeSpeak(text, parameters));
+                //                    }
+                //                }
+                method.accept(currentSynthesizer);
                 //When speak ends, callback if needed
                 if (speakEndCallback != null) {
                     speakEndCallback.run();

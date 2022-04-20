@@ -32,17 +32,17 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import org.lifecompanion.model.api.editaction.BaseEditActionI;
-import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
-import org.lifecompanion.util.javafx.DialogUtils;
-import org.lifecompanion.util.javafx.FXThreadUtils;
-import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.controller.lifecycle.AppModeController;
-import org.lifecompanion.util.javafx.StageUtils;
 import org.lifecompanion.controller.systemvk.SystemVirtualKeyboardController;
 import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
+import org.lifecompanion.model.api.editaction.BaseEditActionI;
+import org.lifecompanion.model.impl.constant.LCConstant;
+import org.lifecompanion.util.javafx.DialogUtils;
+import org.lifecompanion.util.javafx.FXThreadUtils;
+import org.lifecompanion.util.javafx.StageUtils;
 
 import java.util.Optional;
 import java.util.Random;
@@ -56,25 +56,13 @@ import static org.lifecompanion.util.javafx.FXUtils.getSourceFromEvent;
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public class CommonActions {
-    // Class part : "Key shortcut"
-    //========================================================================
     public static final KeyCombination KEY_COMBINATION_GO_CONFIG_MODE = new KeyCodeCombination(KeyCode.F5, KeyCombination.SHORTCUT_DOWN);
     public static final KeyCombination KEY_COMBINATION_SWITCH_FULLSCREEN = new KeyCodeCombination(KeyCode.F11);
-    //========================================================================
 
-    // Class part : "Handler"
-    //========================================================================
     public static final EventHandler<ActionEvent> HANDLER_GO_CONFIG_MODE_CHECK = (ea) -> new GoEditModeAction(getSourceFromEvent(ea), true).doAction();
     public static final EventHandler<ActionEvent> HANDLER_GO_CONFIG_MODE_SKIP_CHECK = (ea) -> new GoEditModeAction(getSourceFromEvent(ea), false).doAction();
     public static final EventHandler<ActionEvent> HANDLER_SWITCH_FULLSCREEN = (ea) -> new SwitchFullScreenAction().doAction();
-    //========================================================================
 
-    // Class part : "Actions"
-    //========================================================================
-
-    /**
-     * Action to switch to the config mode if available.
-     */
     public static class GoEditModeAction implements BaseEditActionI {
         private final Node source;
         private boolean useConfirmFct;
@@ -138,6 +126,4 @@ public class CommonActions {
             return "action.switch.fullscreen";
         }
     }
-    //========================================================================
-
 }

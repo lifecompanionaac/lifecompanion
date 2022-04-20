@@ -12,7 +12,8 @@
 - Ticket #57 : ajout de la traduction des touches du clavier
 - Ticket #42 : ajout d'une nouvelle action pour changer la taille de la fenêtre
 - Ticket #72 : ajout d'une action pour réduire la fenêtre
-- Ticket #56 : Ajout d'un nouvel événement "Intervalle de temps dans la journée", permet d'effectuer une action entre deux heures de la journée
+- Ticket #56 : ajout d'un nouvel événement "Intervalle de temps dans la journée", permet d'effectuer une action entre deux heures de la journée
+- Ticket #70 : les raccourcis "CTRL+C" ou "CTRL+V" en mode utilisation permettent de récupérer le texte courant ou de coller un texte copié dans l'éditeur
 - Ajout d'un nouvel événement "Intervalle régulier", permet d'effectuer une action tous les X temps
 - Correction d'un problème sur la souris virtuelle (la souris n'évitait pas la fenêtre courante)
 

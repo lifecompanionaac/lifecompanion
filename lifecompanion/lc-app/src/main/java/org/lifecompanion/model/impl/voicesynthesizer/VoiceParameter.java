@@ -24,92 +24,93 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.jdom2.Element;
-import org.lifecompanion.model.impl.exception.LCException;
+import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.voicesynthesizer.VoiceInfoI;
 import org.lifecompanion.model.api.voicesynthesizer.VoiceParameterI;
-import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
+import org.lifecompanion.model.impl.exception.LCException;
 
 /**
  * Implementation for selected voice.
+ *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public class VoiceParameter implements VoiceParameterI {
 
-	private StringProperty voiceId;
-	private StringProperty voiceName;
-	private StringProperty voiceLanguage;
+    private final StringProperty voiceId;
+    private final StringProperty voiceName;
+    private final StringProperty voiceLanguage;
 
-	private ObjectProperty<VoiceInfoI> selectedVoiceInfo;
+    private final ObjectProperty<VoiceInfoI> selectedVoiceInfo;
 
-	public VoiceParameter() {
-		this.voiceId = new SimpleStringProperty(this, "voiceId", null);
-		this.voiceName = new SimpleStringProperty(this, "voiceName", null);
-		this.voiceLanguage = new SimpleStringProperty(this, "voiceLanguage", null);
-		this.selectedVoiceInfo = new SimpleObjectProperty<>(this, "selectedVoiceInfo", null);
-		this.selectedVoiceInfo.addListener((obs, ov, nv) -> {
-			if (ov != null) {
-				this.voiceId.set(null);
-				this.voiceName.set(null);
-				this.voiceLanguage.set(null);
-			}
-			if (nv != null) {
-				this.voiceId.set(nv.getId());
-				this.voiceName.set(nv.getName());
-				this.voiceLanguage.set(nv.getLocale().getLanguage());
-			}
-		});
-	}
+    public VoiceParameter() {
+        this.voiceId = new SimpleStringProperty(null);
+        this.voiceName = new SimpleStringProperty(null);
+        this.voiceLanguage = new SimpleStringProperty(null);
+        this.selectedVoiceInfo = new SimpleObjectProperty<>(null);
+        this.selectedVoiceInfo.addListener((obs, ov, nv) -> {
+            if (ov != null) {
+                this.voiceId.set(null);
+                this.voiceName.set(null);
+                this.voiceLanguage.set(null);
+            }
+            if (nv != null) {
+                this.voiceId.set(nv.getId());
+                this.voiceName.set(nv.getName());
+                this.voiceLanguage.set(nv.getLocale().getLanguage());
+            }
+        });
+    }
 
-	// Class part : "Properties"
-	//========================================================================
-	@Override
-	public StringProperty voiceIdProperty() {
-		return this.voiceId;
-	}
+    // Class part : "Properties"
+    //========================================================================
+    @Override
+    public StringProperty voiceIdProperty() {
+        return this.voiceId;
+    }
 
-	@Override
-	public StringProperty voiceNameProperty() {
-		return this.voiceName;
-	}
+    @Override
+    public StringProperty voiceNameProperty() {
+        return this.voiceName;
+    }
 
-	@Override
-	public StringProperty voiceLanguageProperty() {
-		return this.voiceLanguage;
-	}
+    @Override
+    public StringProperty voiceLanguageProperty() {
+        return this.voiceLanguage;
+    }
 
-	@Override
-	public ObjectProperty<VoiceInfoI> selectedVoiceInfoProperty() {
-		return this.selectedVoiceInfo;
-	}
-	//========================================================================
+    @Override
+    public ObjectProperty<VoiceInfoI> selectedVoiceInfoProperty() {
+        return this.selectedVoiceInfo;
+    }
+    //========================================================================
 
-	// Class part : "XML"
-	//========================================================================
-	public static final String NODE_VOICE = "VoiceParameter";
+    // Class part : "XML"
+    //========================================================================
+    public static final String NODE_VOICE = "VoiceParameter";
 
-	@Override
-	public Element serialize(final IOContextI contextP) {
-		Element voiceElement = new Element(VoiceParameter.NODE_VOICE);
-		XMLObjectSerializer.serializeInto(VoiceParameter.class, this, voiceElement);
-		return voiceElement;
-	}
+    @Override
+    public Element serialize(final IOContextI contextP) {
+        Element voiceElement = new Element(VoiceParameter.NODE_VOICE);
+        XMLObjectSerializer.serializeInto(VoiceParameter.class, this, voiceElement);
+        return voiceElement;
+    }
 
-	@Override
-	public void deserialize(final Element nodeP, final IOContextI contextP) throws LCException {
-		XMLObjectSerializer.deserializeInto(VoiceParameter.class, this, nodeP);
-		//Correct voice is selected by VoiceSynthesizerParameter, after setting the synthesizer
-	}
-	//========================================================================
+    @Override
+    public void deserialize(final Element nodeP, final IOContextI contextP) throws LCException {
+        XMLObjectSerializer.deserializeInto(VoiceParameter.class, this, nodeP);
+        //Correct voice is selected by VoiceSynthesizerParameter, after setting the synthesizer
+    }
+    //========================================================================
 
 
-	@Override
-	public String toString() {
-		return "VoiceParameter{" +
-				"voiceId=" + voiceId.get() +
-				", voiceName=" + voiceName.get() +
-				", voiceLanguage=" + voiceLanguage.get() +
-				", selectedVoiceInfo=" + selectedVoiceInfo.get() +
-				'}';
-	}
+    @Override
+    public String toString() {
+        return "VoiceParameter{" +
+                "voiceId=" + voiceId.get() +
+                ", voiceName=" + voiceName.get() +
+                ", voiceLanguage=" + voiceLanguage.get() +
+                ", selectedVoiceInfo=" + selectedVoiceInfo.get() +
+                '}';
+    }
 }

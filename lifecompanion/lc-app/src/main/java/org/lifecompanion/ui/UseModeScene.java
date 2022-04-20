@@ -21,10 +21,14 @@ package org.lifecompanion.ui;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.input.KeyEvent;
+import javafx.scene.input.*;
 import org.lifecompanion.controller.metrics.SessionStatsController;
+import org.lifecompanion.controller.textcomponent.WritingStateController;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
+import org.lifecompanion.model.api.textcomponent.WritingEventSource;
+import org.lifecompanion.model.impl.configurationcomponent.WriterEntry;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.editaction.CommonActions;
 import org.lifecompanion.ui.configurationcomponent.usemode.UseModeConfigurationDisplayer;
@@ -36,6 +40,8 @@ import org.lifecompanion.util.javafx.FXControlUtils;
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public class UseModeScene extends Scene implements LCViewInitHelper {
+    private static final KeyCombination KEY_COMBINATION_COPY = new KeyCodeCombination(KeyCode.C, KeyCombination.SHORTCUT_DOWN);
+    private static final KeyCombination KEY_COMBINATION_PASTE = new KeyCodeCombination(KeyCode.V, KeyCombination.SHORTCUT_DOWN);
 
     /**
      * The root of this scene
@@ -103,6 +109,14 @@ public class UseModeScene extends Scene implements LCViewInitHelper {
                 CommonActions.HANDLER_SWITCH_FULLSCREEN.handle(null);
                 eventP.consume();
             }
+            if (KEY_COMBINATION_COPY.match(eventP) && !configuration.virtualKeyboardProperty().get()) {
+                copyFromCurrentTextEditor();
+                eventP.consume();
+            }
+            if (KEY_COMBINATION_PASTE.match(eventP) && !configuration.virtualKeyboardProperty().get()) {
+                pasteToCurrentTextEditor();
+                eventP.consume();
+            }
         });
         //Filter mouse event to keep the goToConfig event
         this.configurationDisplayer.addMouseListener(this, (mouseEvent) -> mouseEvent.getTarget() != this.buttonGoToConfigMode && mouseEvent.getTarget() != this.buttonFullscreen);
@@ -111,6 +125,23 @@ public class UseModeScene extends Scene implements LCViewInitHelper {
         this.buttonFullscreen.setOnAction(CommonActions.HANDLER_SWITCH_FULLSCREEN);
 
         SessionStatsController.INSTANCE.registerScene(this);
+    }
+
+    private void pasteToCurrentTextEditor() {
+        Clipboard systemClipboard = Clipboard.getSystemClipboard();
+        if (systemClipboard.hasString()) {
+            String clipboardString = systemClipboard.getString();
+            if (StringUtils.isNotBlank(clipboardString)) {
+                WritingStateController.INSTANCE.insert(WritingEventSource.USER_ACTIONS, new WriterEntry(clipboardString, true));
+            }
+        }
+    }
+
+    private void copyFromCurrentTextEditor() {
+        String currentText = WritingStateController.INSTANCE.currentTextProperty().get();
+        final ClipboardContent content = new ClipboardContent();
+        content.putString(currentText);
+        Clipboard.getSystemClipboard().setContent(content);
     }
 
     public void unbindAndClean() {

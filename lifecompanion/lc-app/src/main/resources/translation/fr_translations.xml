@@ -3498,4 +3498,10 @@
   <text key="keyboard.key.context.menu">Menu contextuel</text>
   <text key="keyboard.key.undefined">Touche non détectée</text>
   <text key="keyboard.key.less">Chevron</text>
+
+  <text key="char.to.speech.special.space">espace</text>
+  <text key="char.to.speech.special.e.circumflex">E accent circonflexe</text>
+  <text key="char.to.speech.special.e.umlaut">E tréma</text>
+  <text key="char.to.speech.special.linebreak">Saut de ligne</text>
+  <text key="char.to.speech.special.tab">Tabulation</text>
 </texts>

@@ -26,14 +26,14 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.jdom2.Element;
 import org.lifecompanion.controller.voicesynthesizer.VoiceSynthesizerController;
-import org.lifecompanion.model.impl.exception.LCException;
+import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
+import org.lifecompanion.framework.commons.fx.io.XMLUtils;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.voicesynthesizer.PronunciationExceptionI;
 import org.lifecompanion.model.api.voicesynthesizer.VoiceParameterI;
 import org.lifecompanion.model.api.voicesynthesizer.VoiceSynthesizerI;
 import org.lifecompanion.model.api.voicesynthesizer.VoiceSynthesizerParameterI;
-import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
-import org.lifecompanion.framework.commons.fx.io.XMLUtils;
+import org.lifecompanion.model.impl.exception.LCException;
 
 import java.util.List;
 
@@ -44,18 +44,18 @@ import java.util.List;
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public class VoiceSynthesizerParameter implements VoiceSynthesizerParameterI {
-    private IntegerProperty volume;
-    private IntegerProperty rate;
-    private IntegerProperty pitch;
-    private ObjectProperty<VoiceSynthesizerI> selectedVoiceSynthesizer;
-    private ObservableList<PronunciationExceptionI> pronunciationExceptions;
-    private VoiceParameterI voiceParameter;
+    private final IntegerProperty volume;
+    private final IntegerProperty rate;
+    private final IntegerProperty pitch;
+    private final ObjectProperty<VoiceSynthesizerI> selectedVoiceSynthesizer;
+    private final ObservableList<PronunciationExceptionI> pronunciationExceptions;
+    private final VoiceParameterI voiceParameter;
 
     public VoiceSynthesizerParameter() {
-        this.volume = new SimpleIntegerProperty(this, "volume", 100);
-        this.rate = new SimpleIntegerProperty(this, "rate", 0);
-        this.pitch = new SimpleIntegerProperty(this, "pitch", 0);
-        this.selectedVoiceSynthesizer = new SimpleObjectProperty<>(this, "selectedVoiceSynthesizer", null);
+        this.volume = new SimpleIntegerProperty(100);
+        this.rate = new SimpleIntegerProperty(0);
+        this.pitch = new SimpleIntegerProperty(0);
+        this.selectedVoiceSynthesizer = new SimpleObjectProperty<>(null);
         this.pronunciationExceptions = FXCollections.observableArrayList();
         this.voiceParameter = new VoiceParameter();
         //When change the synthesizer, try to find the closest voice

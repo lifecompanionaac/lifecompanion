@@ -19,6 +19,7 @@
 package org.lifecompanion.model.api.voicesynthesizer;
 
 import org.lifecompanion.framework.commons.SystemType;
+import org.lifecompanion.model.impl.exception.UnavailableFeatureException;
 
 import java.util.List;
 import java.util.Locale;
@@ -76,7 +77,7 @@ public interface VoiceSynthesizerI {
 
     /**
      * Should speak the given text in a synchronized manner.<br>
-     * <strong>This method should return only when the speech ended.</strong>
+     * <strong>This method should be sync : return only when the speech ended.</strong>
      *
      * @param text the text to speak, can contains special char.<br>
      *             The synthesizer should clean it if needed.
@@ -84,10 +85,18 @@ public interface VoiceSynthesizerI {
     void speak(String text);
 
     /**
+     * Should try to speak the given SSML input.
+     * <strong>This method should be sync : return only when the speech ended.</strong>
+     *
+     * @param ssml the ssml to speak
+     */
+    void speakSsml(String ssml) throws UnavailableFeatureException;
+
+    /**
      * Should try to current call to {@link #speak(String)}<br>
      * This will be called from a different Thread than the one that called {@link #speak(String)}, it can be used to cancel the current speech.<br>
      * Note that after this call, the synthesizer should be able to get subsequent calls.<br>
-     * Also note that this can be called even the last {@link #speak(String)} has ended, the synthesizer is responsible to ignore the call.
+     * Also note that this can be called even if the last {@link #speak(String)} has ended, the synthesizer is responsible to ignore the call.
      */
     void stopCurrentSpeak();
 
