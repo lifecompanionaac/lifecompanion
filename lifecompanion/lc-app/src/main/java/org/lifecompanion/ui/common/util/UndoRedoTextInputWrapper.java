@@ -19,120 +19,120 @@
 
 package org.lifecompanion.ui.common.util;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import javafx.beans.property.BooleanProperty;
 import javafx.scene.control.TextInputControl;
+import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Textfield that allow user to register change event only when needed, to create undo/redo action.<br>
  * This wrapper allows TextField to execute is base behavior for undo/redo, and fire change when needed just on focus lost
+ *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public class UndoRedoTextInputWrapper {
-	private final static Logger LOGGER = LoggerFactory.getLogger(UndoRedoTextInputWrapper.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(UndoRedoTextInputWrapper.class);
 
-	/**
-	 * The controller text control
-	 */
-	private final TextInputControl textControl;
+    /**
+     * The controller text control
+     */
+    private final TextInputControl textControl;
 
-	/**
-	 * Previous string value
-	 */
-	private String previousStringValue;
+    /**
+     * Previous string value
+     */
+    private String previousStringValue;
 
-	/**
-	 * The property that should be enable/disable on text field focus
-	 */
-	private final BooleanProperty enableDisableProperty;
+    /**
+     * The property that should be enable/disable on text field focus
+     */
+    private final BooleanProperty enableDisableProperty;
 
-	/**
-	 * Listener on change
-	 */
-	private TextChangedListener listener;
+    /**
+     * Listener on change
+     */
+    private TextChangedListener listener;
 
-	/**
-	 * Create a undo/redo text input wrapper.<br>
-	 * The given boolean property will be set to false when text is focused, to allow text field to execute its undo/redo actions, then will be set to true when focus is lost
-	 * @param textControlP the text control to wrap
-	 * @param enableDisablePropertyP a property set to false when text control is focus, and false instead.
-	 */
-	public UndoRedoTextInputWrapper(final TextInputControl textControlP, final BooleanProperty enableDisablePropertyP) {
-		this.textControl = textControlP;
-		this.enableDisableProperty = enableDisablePropertyP;
-		this.textControl.focusedProperty().addListener((obs, ov, nv) -> {
-			String newTextControlValue = this.textControl.getText();
-			if (nv) {
-				this.previousStringValue = newTextControlValue;
-				this.enableDisableProperty.set(false);
-			} else {
-				this.fireChangeEvent();
-				this.enableDisableProperty.set(true);
-			}
-		});
-	}
+    /**
+     * Create a undo/redo text input wrapper.<br>
+     * The given boolean property will be set to false when text is focused, to allow text field to execute its undo/redo actions, then will be set to true when focus is lost
+     *
+     * @param textControlP           the text control to wrap
+     * @param enableDisablePropertyP a property set to false when text control is focus, and false instead.
+     */
+    public UndoRedoTextInputWrapper(final TextInputControl textControlP, final BooleanProperty enableDisablePropertyP) {
+        this.textControl = textControlP;
+        this.enableDisableProperty = enableDisablePropertyP;
+        this.textControl.focusedProperty().addListener((obs, ov, nv) -> {
+            String newTextControlValue = this.textControl.getText();
+            if (nv) {
+                this.previousStringValue = newTextControlValue;
+                this.enableDisableProperty.set(false);
+            } else {
+                this.fireChangeEvent();
+                this.enableDisableProperty.set(true);
+            }
+        });
+    }
 
-	/**
-	 * Method to fire a change event if needed.<br>
-	 * Can be useful if we change the binding of the text field, but we the field doesn't lost focus
-	 */
-	public void fireChangeEvent() {
-		String newTextControlValue = this.textControl.getText();
-		boolean fireEvent = this.isValidChange(this.previousStringValue, newTextControlValue);
-		if (fireEvent && this.listener != null) {
-			UndoRedoTextInputWrapper.LOGGER.debug("Change event will be fired on UndoRedoTextInputWrapper for a change from \"{}\" to \"{}\"",
-					this.previousStringValue, newTextControlValue);
-			this.listener.changed(this.previousStringValue, newTextControlValue);
-		}
-	}
+    /**
+     * Method to fire a change event if needed.<br>
+     * Can be useful if we change the binding of the text field, but we the field doesn't lost focus
+     */
+    public void fireChangeEvent() {
+        String newTextControlValue = this.textControl.getText();
+        boolean fireEvent = this.isValidChange(this.previousStringValue, newTextControlValue);
+        if (fireEvent && this.listener != null) {
+            UndoRedoTextInputWrapper.LOGGER.debug("Change event will be fired on UndoRedoTextInputWrapper for a change from \"{}\" to \"{}\"", this.previousStringValue, newTextControlValue);
+            this.listener.changed(this.previousStringValue, newTextControlValue);
+        }
+    }
 
-	/**
-	 * Method to manually refresh the previous value of the text control.<br>
-	 * This method is useful the component that listen the changes with {@link #getListener()} change
-	 */
-	public void clearPreviousValue() {
-		this.previousStringValue = this.textControl.getText();
-	}
+    /**
+     * Method to manually refresh the previous value of the text control.<br>
+     * This method is useful the component that listen the changes with {@link #getListener()} change
+     */
+    public void clearPreviousValue() {
+        this.previousStringValue = this.textControl.getText();
+    }
 
-	/**
-	 * @param ov the first string
-	 * @param nv the second string
-	 * @return true if two string are different (null and "" are considered as equals)
-	 */
-	private boolean isValidChange(final String ov, final String nv) {
-		if (ov == null && "".equals(nv)) {
-			return false;
-		}
-		if (nv == null && "".equals(ov)) {
-			return false;
-		}
-		return StringUtils.isDifferent(ov, nv);
-	}
+    /**
+     * @param ov the first string
+     * @param nv the second string
+     * @return true if two string are different (null and "" are considered as equals)
+     */
+    private boolean isValidChange(final String ov, final String nv) {
+        if (ov == null && "".equals(nv)) {
+            return false;
+        }
+        if (nv == null && "".equals(ov)) {
+            return false;
+        }
+        return StringUtils.isDifferent(ov, nv);
+    }
 
-	// Class part : "Getter/setter"
-	//========================================================================
-	public TextInputControl getTextControl() {
-		return this.textControl;
-	}
+    // Class part : "Getter/setter"
+    //========================================================================
+    public TextInputControl getTextControl() {
+        return this.textControl;
+    }
 
-	public TextChangedListener getListener() {
-		return this.listener;
-	}
+    public TextChangedListener getListener() {
+        return this.listener;
+    }
 
-	public void setListener(final TextChangedListener listenerP) {
-		this.listener = listenerP;
-	}
+    public void setListener(final TextChangedListener listenerP) {
+        this.listener = listenerP;
+    }
 
-	//========================================================================
+    //========================================================================
 
-	// Class part : "Change listener"
-	//========================================================================
-	public interface TextChangedListener {
-		void changed(String oldText, String newText);
-	}
-	//========================================================================
+    // Class part : "Change listener"
+    //========================================================================
+    public interface TextChangedListener {
+        void changed(String oldText, String newText);
+    }
+    //========================================================================
 
 }

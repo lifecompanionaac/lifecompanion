@@ -22,10 +22,10 @@ import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import org.lifecompanion.model.impl.configurationcomponent.RootGraphicComponentBaseImpl;
-import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.lifecycle.AppMode;
+import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.model.api.configurationcomponent.*;
+import org.lifecompanion.model.impl.configurationcomponent.RootGraphicComponentBaseImpl;
 import org.lifecompanion.util.binding.BindingUtils;
 
 import java.util.*;
@@ -366,7 +366,7 @@ public enum SelectionController {
         if (selectedGridPart != null) {
             GridComponentI gridParent = selectedGridPart.gridParentProperty().get();
             if (gridParent != null) {
-                GridPartComponentI nextSelected = null;
+                GridPartComponentI nextSelected;
                 // next column ?
                 int nextColumn = selectedGridPart.columnProperty().get() + selectedGridPart.columnSpanProperty().get();
                 int nextRow = selectedGridPart.rowProperty().get() + 1;
@@ -380,6 +380,31 @@ public enum SelectionController {
                 // first grid child
                 else {
                     nextSelected = gridParent.getGrid().getComponent(0, 0);
+                }
+                this.setSelectedPart(nextSelected);
+            }
+        }
+    }
+
+    public void selectPreviousGridPartInCurrentGrid() {
+        GridPartComponentI selectedGridPart = this.selectedComponent.get();
+        if (selectedGridPart != null) {
+            GridComponentI gridParent = selectedGridPart.gridParentProperty().get();
+            if (gridParent != null) {
+                GridPartComponentI nextSelected;
+                // previous column ?
+                int previousColumn = selectedGridPart.columnProperty().get() - selectedGridPart.columnSpanProperty().get();
+                int previousRow = selectedGridPart.rowProperty().get() - 1;
+                if (previousColumn >= 0) {
+                    nextSelected = gridParent.getGrid().getComponent(selectedGridPart.rowProperty().get(), previousColumn);
+                }
+                // next line ?
+                else if (previousRow >= 0) {
+                    nextSelected = gridParent.getGrid().getComponent(previousRow, gridParent.getGrid().getColumn() - 1);
+                }
+                // first grid child
+                else {
+                    nextSelected = gridParent.getGrid().getComponent(gridParent.getGrid().getRow() - 1, gridParent.getGrid().getColumn() - 1);
                 }
                 this.setSelectedPart(nextSelected);
             }

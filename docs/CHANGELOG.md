@@ -8,6 +8,8 @@
 
 ### Corrections/ajustements
 
+- Ticket #113 : lors de l'utilisation de "Shift+Tab" ou "Ctrl+Tab", le texte de la case suivante/précédente est maintenant sélectionné complètement par défaut (accélère la saisie)
+- Ticket #110 : le raccourci "Shift+Tab" fait passer à la case précédente lors de l'entrée du texte d'une case
 - Ticket #131 : amélioration de la commande "Lancer un programme" : meilleure gestion des arguments et log des erreurs
 - Ticket #130 : la recherche d'image fonctionne maintenant avec tous les mots (même "de", "je", etc.)
 - Ticket #129 : correction d'un rare problème pour les configurations de clavier/souris virtuels
