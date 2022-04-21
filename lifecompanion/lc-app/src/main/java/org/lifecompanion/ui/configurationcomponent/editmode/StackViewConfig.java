@@ -22,10 +22,7 @@ package org.lifecompanion.ui.configurationcomponent.editmode;
 import org.lifecompanion.model.api.configurationcomponent.GridPartComponentI;
 import org.lifecompanion.model.impl.configurationcomponent.StackComponent;
 import org.lifecompanion.ui.configurationcomponent.base.StackViewBase;
-import org.lifecompanion.ui.configurationcomponent.editmode.componentoption.ButtonComponentOption;
-import org.lifecompanion.ui.configurationcomponent.editmode.componentoption.MoveButtonOption;
-import org.lifecompanion.ui.configurationcomponent.editmode.componentoption.RootComponentOption;
-import org.lifecompanion.ui.configurationcomponent.editmode.componentoption.StackButtonOption;
+import org.lifecompanion.ui.configurationcomponent.editmode.componentoption.*;
 import org.lifecompanion.util.javafx.FXUtils;
 
 /**
@@ -48,6 +45,7 @@ public class StackViewConfig extends StackViewBase {
 		StackButtonOption stackOption = new StackButtonOption(this.model);
 		this.selectOption.addOption(stackOption);
 		this.selectOption.addOption(moveOption);
+		this.selectOption.addOption(new SelectDisplayedComponentButtonOption(this.model));
 		//Root component UI
 		this.rootComponentOption = new RootComponentOption(this.model);
 		this.rootComponentOption.bindSize(this);
