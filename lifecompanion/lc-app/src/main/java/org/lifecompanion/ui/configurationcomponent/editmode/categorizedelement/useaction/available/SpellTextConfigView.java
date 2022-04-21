@@ -26,13 +26,13 @@ import javafx.scene.layout.VBox;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionConfigurationViewI;
 import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
-import org.lifecompanion.model.impl.categorizedelement.useaction.available.SpeakTextAction;
+import org.lifecompanion.model.impl.categorizedelement.useaction.available.SpellTextAction;
 import org.lifecompanion.ui.common.control.specific.usevariable.UseVariableTextArea;
 
-public class SpeakTextConfigView extends VBox implements UseActionConfigurationViewI<SpeakTextAction> {
-    private UseVariableTextArea fieldTextToSpeak;
+public class SpellTextConfigView extends VBox implements UseActionConfigurationViewI<SpellTextAction> {
+    private UseVariableTextArea fieldTextToSpell;
 
-    public SpeakTextConfigView() {
+    public SpellTextConfigView() {
     }
 
     @Override
@@ -41,26 +41,26 @@ public class SpeakTextConfigView extends VBox implements UseActionConfigurationV
     }
 
     @Override
-    public void editStarts(final SpeakTextAction action, final ObservableList<UseVariableDefinitionI> possibleVariables) {
-        this.fieldTextToSpeak.clear();
-        this.fieldTextToSpeak.setAvailableUseVariable(possibleVariables);
-        this.fieldTextToSpeak.setText(action.textToSpeakProperty().get());
+    public void editStarts(final SpellTextAction action, final ObservableList<UseVariableDefinitionI> possibleVariables) {
+        this.fieldTextToSpell.clear();
+        this.fieldTextToSpell.setAvailableUseVariable(possibleVariables);
+        this.fieldTextToSpell.setText(action.textToSpellProperty().get());
     }
 
     @Override
-    public void editEnds(final SpeakTextAction action) {
-        action.textToSpeakProperty().set(this.fieldTextToSpeak.getText());
+    public void editEnds(final SpellTextAction action) {
+        action.textToSpellProperty().set(this.fieldTextToSpell.getText());
     }
 
     @Override
-    public Class<SpeakTextAction> getConfiguredActionType() {
-        return SpeakTextAction.class;
+    public Class<SpellTextAction> getConfiguredActionType() {
+        return SpellTextAction.class;
     }
 
     @Override
     public void initUI() {
-        this.fieldTextToSpeak = new UseVariableTextArea();
-        this.getChildren().addAll(new Label(Translation.getText("use.action.speak.text.to.speak")), this.fieldTextToSpeak);
+        this.fieldTextToSpell = new UseVariableTextArea();
+        this.getChildren().addAll(new Label(Translation.getText("use.action.spell.text.to.spell")), this.fieldTextToSpell);
     }
 
 }

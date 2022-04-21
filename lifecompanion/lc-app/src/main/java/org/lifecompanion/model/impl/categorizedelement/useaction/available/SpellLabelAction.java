@@ -19,33 +19,43 @@
 
 package org.lifecompanion.model.impl.categorizedelement.useaction.available;
 
-import org.lifecompanion.controller.textcomponent.WritingStateController;
 import org.lifecompanion.controller.voicesynthesizer.VoiceSynthesizerController;
-import org.lifecompanion.framework.commons.translation.Translation;
+import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
 import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseActionSubCategories;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
-import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
+import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
 import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
 
 import java.util.Map;
 
-public class SpellAllTextAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
+public class SpellLabelAction extends SimpleUseActionImpl<GridPartKeyComponentI> {
 
-    public SpellAllTextAction() {
-        super(UseActionTriggerComponentI.class);
+    public SpellLabelAction() {
+        super(GridPartKeyComponentI.class);
         this.category = DefaultUseActionSubCategories.SPELL_TEXT;
-        this.nameID = "action.spell.all.text.name";
-        this.staticDescriptionID = "action.spell.all.text.description";
-        this.configIconPath = "sound/spell_all.png";
+        this.nameID = "action.spell.key.label";
+        this.staticDescriptionID = "action.spell.key.label.static.description";
+        this.configIconPath = "sound/spell_key_text.png";
         this.parameterizableAction = false;
-        this.order = 3;
-        this.variableDescriptionProperty().set(Translation.getText("action.spell.all.text.description"));
+        this.order = 1;
+        this.parentComponentProperty().addListener((obs, ov, nv) -> {
+            this.variableDescriptionProperty().unbind();
+            if (nv != null) {
+                this.variableDescriptionProperty()
+                        .bind(TranslationFX.getTextBinding("action.spell.key.label.variable.description", nv.textContentProperty()));
+            }
+        });
     }
 
+    // Class part : "Execute"
+    //========================================================================
     @Override
     public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
-        String toSpeak = WritingStateController.INSTANCE.currentTextProperty().get();
-        VoiceSynthesizerController.INSTANCE.spellSync(toSpeak, VoiceSynthesizerController.DEFAULT_SPELL_PAUSE);
+        GridPartKeyComponentI parentKey = this.parentComponentProperty().get();
+        if (parentKey != null) {
+            VoiceSynthesizerController.INSTANCE.spellSync(parentKey.textContentProperty().get(), VoiceSynthesizerController.DEFAULT_SPELL_PAUSE);
+        }
     }
+    //========================================================================
 }

@@ -8,7 +8,9 @@
 
 ### Corrections/ajustements
 
-- Ticket #67 : ajout d'une action "Épeler tout le texte" pour lire le contenu de l'éditeur
+- Ticket #67 : ajout d'une action "Épeler tout le texte" pour épeler le contenu de l'éditeur
+- Ticket #67 : ajout d'une action "Épeler le texte de la case" pour épeler le texte de la case
+- Ticket #67 : ajout d'une action "Épeler du texte" pour épeler du texte (choisi)
 - Ticket #57 : ajout de la traduction des touches du clavier
 - Ticket #42 : ajout d'une nouvelle action pour changer la taille de la fenêtre
 - Ticket #72 : ajout d'une action pour réduire la fenêtre

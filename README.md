@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/LifeCompanionAAC/lifecompanion/raw/main/res/lifecompanion-logo/export/lifecompanion_title_icon_600px.png">
+  <img src="https://github.com/LifeCompanionAAC/lifecompanion/raw/main/res/logo/export/lifecompanion_title_icon_600px.png">
 </p>
 
 # LifeCompanion AAC

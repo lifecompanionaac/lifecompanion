@@ -67,6 +67,8 @@ import java.util.regex.Pattern;
 public enum VoiceSynthesizerController implements LCStateListener, ModeListenerI {
     INSTANCE;
 
+    public final static long DEFAULT_SPELL_PAUSE = 200;
+
     private final Logger LOGGER = LoggerFactory.getLogger(VoiceSynthesizerController.class);
 
     /**
@@ -164,11 +166,10 @@ public enum VoiceSynthesizerController implements LCStateListener, ModeListenerI
     }
 
     public void spellSync(final String text, final long pauseBetweenCharacters) {
-        if (StringUtils.isNotBlank(text)) {
-            final VoiceSynthesizerParameterI parameters = AppModeController.INSTANCE.getUseModeContext().configurationProperty().get().getVoiceSynthesizerParameter();
+        if (text != null && !text.isEmpty()) {
             Element speak = new Element("speak");
             speak.setAttribute("version", "1.0");
-            speak.setAttribute("lang", "fr", Namespace.XML_NAMESPACE);
+            speak.setAttribute("lang", UserConfigurationController.INSTANCE.userLanguageProperty().get(), Namespace.XML_NAMESPACE);
             for (int i = 0; i < text.length(); i++) {
                 char c = text.charAt(i);
                 if (CharacterToSpeechTranslation.isManuallyTranslated(c)) {
@@ -185,13 +186,15 @@ public enum VoiceSynthesizerController implements LCStateListener, ModeListenerI
                     speak.addContent(breakE);
                 }
             }
-            System.out.println(XMLHelper.toXmlString(speak));
             this.executeMethodSyncWithUseModeParameter(v -> {
                 try {
                     v.speakSsml(XMLHelper.toXmlString(speak));
                 } catch (UnavailableFeatureException e) {
-                    // Fallback method : speak char by char
-                    // FIXME : TODO
+                    // Fallback method : call speak char by char
+                    for (int i = 0; i < text.length(); i++) {
+                        char c = text.charAt(i);
+                        v.speak(CharacterToSpeechTranslation.isManuallyTranslated(c) ? CharacterToSpeechTranslation.getTranslatedName(c) : String.valueOf(c));
+                    }
                 }
             }, null);
         }

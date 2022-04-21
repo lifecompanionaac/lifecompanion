@@ -1,6 +1,6 @@
 # LifeCompanion - dev
 
-This page contains detailled information on LifeCompanion app and side projects developpements.
+This page contains general information on LifeCompanion app and side projects developpements.
 
 # TL;DR
 
