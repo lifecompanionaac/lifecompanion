@@ -93,19 +93,20 @@ public class ButtonComponentOption extends BaseOptionRegion<SelectableComponentI
         this.buttonSelect.setOnAction((ea) -> {
             //Root component
             if (this.model instanceof RootGraphicComponentI) {
-                if (this.model.selectedProperty().get()) {
-                    SelectionController.INSTANCE.setSelectedRoot(null);
-                } else {
-                    SelectionController.INSTANCE.setSelectedRoot((RootGraphicComponentI) this.model);
-                }
+                //                if (this.model.selectedProperty().get()) {
+                //                    SelectionController.INSTANCE.selectRootComponent(null);
+                //                } else {
+                //                }
+                SelectionController.INSTANCE.selectRootComponent((RootGraphicComponentI) this.model, false);
             }
             //Grid component
             else if (this.model instanceof GridPartComponentI) {
-                if (this.model.selectedProperty().get()) {
-                    SelectionController.INSTANCE.setSelectedPart(null);
-                } else {
-                    SelectionController.INSTANCE.setSelectedPart((GridPartComponentI) this.model);
-                }
+                //                if (this.model.selectedProperty().get()) {
+                //                    SelectionController.INSTANCE.setSelectedPart(null);
+                //                } else {
+                //                    SelectionController.INSTANCE.setSelectedPart((GridPartComponentI) this.model);
+                //                }
+                SelectionController.INSTANCE.selectGridPart((GridPartComponentI) this.model, false);
             } else {
                 ButtonComponentOption.LOGGER
                         .warn("The current selectable model type in select button option doesn't allow selection on SelectionController");

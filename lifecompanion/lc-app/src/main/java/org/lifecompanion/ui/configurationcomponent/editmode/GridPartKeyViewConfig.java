@@ -157,22 +157,22 @@ public class GridPartKeyViewConfig extends GridPartKeyViewBase {
             }
             //Select key
             else {
-                SelectionController.INSTANCE.selected(this.model, ea.isShortcutDown(), ea.isShiftDown());
+                SelectionController.INSTANCE.selectKey(this.model, false, ea.isShortcutDown(), ea.isShiftDown());
                 this.toFront();
                 //On selection, update possible selection (because enter event is not fired)
-                GridPartComponentI possiblySelected = SelectionController.INSTANCE.getFirstUnselectedParent(this.model);
-                possiblySelected.showPossibleSelectedProperty().set(true);
+                //                GridPartComponentI possiblySelected = SelectionController.INSTANCE.getFirstUnselectedParent(this.model);
+                //                possiblySelected.showPossibleSelectedProperty().set(true);
             }
         });
         //On mouse entered/exited, update show possible selected / update loaded image (if needed)
         this.setOnMouseEntered((ea) -> {
             // Possibly selected
-            GridPartComponentI possiblySelected = SelectionController.INSTANCE.getFirstUnselectedParent(this.model);
-            possiblySelected.showPossibleSelectedProperty().set(true);
+            //            GridPartComponentI possiblySelected = SelectionController.INSTANCE.getFirstUnselectedParent(this.model);
+            //            possiblySelected.showPossibleSelectedProperty().set(true);
         });
         this.setOnMouseExited((ea) -> {
-            GridPartComponentI possiblySelected = SelectionController.INSTANCE.getFirstUnselectedParent(this.model);
-            possiblySelected.showPossibleSelectedProperty().set(false);
+            //            GridPartComponentI possiblySelected = SelectionController.INSTANCE.getFirstUnselectedParent(this.model);
+            //            possiblySelected.showPossibleSelectedProperty().set(false);
         });
         //Drag over key : accept image and components
         this.setOnDragOver((ea) -> {
@@ -266,19 +266,19 @@ public class GridPartKeyViewConfig extends GridPartKeyViewBase {
         if (moveGrid != null) {
             GridComponentI targetGrid = moveGrid.targetGridProperty().get();
             if (targetGrid != null) {
-                SelectionController.INSTANCE.setSelectedPart(targetGrid);
+                SelectionController.INSTANCE.selectGridPart(targetGrid, true);
             }
         } else if (moveKey != null) {
             GridPartKeyComponentI targetKey = moveKey.targetKeyProperty().get();
             if (targetKey != null) {
-                SelectionController.INSTANCE.setSelectedPart(targetKey);
+                SelectionController.INSTANCE.selectKey(targetKey, true, false, false);
             }
         } else if (nextPageStackAction != null) {
             StackComponentI targetStack = nextPageStackAction.changedPageParentStackProperty().get();
             if (targetStack != null) {
                 GridComponentI nextComponent = targetStack.getNextComponent();
                 if (nextComponent != null) {
-                    SelectionController.INSTANCE.setSelectedPart(nextComponent);
+                    SelectionController.INSTANCE.selectGridPart(nextComponent, true);
                 }
             }
         } else if (previousPageAction != null) {
@@ -286,7 +286,7 @@ public class GridPartKeyViewConfig extends GridPartKeyViewBase {
             if (targetStack != null) {
                 GridComponentI previousComponent = targetStack.getPreviousComponent();
                 if (previousComponent != null) {
-                    SelectionController.INSTANCE.setSelectedPart(previousComponent);
+                    SelectionController.INSTANCE.selectGridPart(previousComponent, true);
                 }
             }
         } else if (nextPageAndLoopInStackAction != null) {
@@ -294,15 +294,15 @@ public class GridPartKeyViewConfig extends GridPartKeyViewBase {
             if (targetStack != null) {
                 GridComponentI nextComponent = targetStack.getNextComponent();
                 if (nextComponent != null) {
-                    SelectionController.INSTANCE.setSelectedPart(nextComponent);
+                    SelectionController.INSTANCE.selectGridPart(nextComponent, true);
                 } else if (!targetStack.getComponentList().isEmpty()) {
-                    SelectionController.INSTANCE.setSelectedPart(targetStack.getComponentList().get(0));
+                    SelectionController.INSTANCE.selectGridPart(targetStack.getComponentList().get(0), true);
                 }
             }
         } else if (moveToGridAndGoBackAction != null) {
             final GridComponentI targetGrid = moveToGridAndGoBackAction.targetGridProperty().get();
             if (targetGrid != null) {
-                SelectionController.INSTANCE.setSelectedPart(targetGrid);
+                SelectionController.INSTANCE.selectGridPart(targetGrid, true);
             }
         }
     }

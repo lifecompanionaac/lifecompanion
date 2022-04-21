@@ -54,7 +54,7 @@ public class ImageUseComponentRibbonPart extends RibbonBasePart<ImageUseComponen
     //========================================================================
     @Override
     public void initBinding() {
-        SelectionController.INSTANCE.selectedComponentProperty().addListener((o, oldV, newV) -> {
+        SelectionController.INSTANCE.selectedGridPartOrKeyProperty().addListener((o, oldV, newV) -> {
             if (newV instanceof ImageUseComponentI) {
                 this.model.set((ImageUseComponentI) newV);
             } else {

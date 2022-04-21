@@ -96,9 +96,9 @@ public class ComponentSelectionTree extends BaseConfigurationViewBorderPane<LCCo
                         TreeDisplayableComponentI component = newValueP.getValue();
                         this.disableScrollTo = true;
                         if (component instanceof RootGraphicComponentI) {
-                            SelectionController.INSTANCE.setSelectedRoot((RootGraphicComponentI) component);
+                            SelectionController.INSTANCE.selectRootComponent((RootGraphicComponentI) component,true);
                         } else if (component instanceof GridPartComponentI) {
-                            SelectionController.INSTANCE.setSelectedPart((GridPartComponentI) component);
+                            SelectionController.INSTANCE.selectGridPart((GridPartComponentI) component,true);//FIXME SELECTION
                         } else {
                             ComponentSelectionTree.LOGGER.warn("Didn't find a correct class to select the component {} in the tree",
                                     component.getClass());

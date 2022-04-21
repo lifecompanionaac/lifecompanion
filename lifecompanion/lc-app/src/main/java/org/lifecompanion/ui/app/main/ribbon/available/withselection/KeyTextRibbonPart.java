@@ -153,7 +153,7 @@ public class KeyTextRibbonPart extends RibbonBasePart<GridPartKeyComponent> impl
 
     @Override
     public void initBinding() {
-        SelectionController.INSTANCE.selectedComponentProperty().addListener((o, oldV, newV) -> {
+        SelectionController.INSTANCE.selectedKeyProperty().addListener((o, oldV, newV) -> {
             if (newV instanceof GridPartKeyComponent) {
                 // #46 : Text field shouldn't be focused automatically
                 //this.fieldKeyText.requestFocus();

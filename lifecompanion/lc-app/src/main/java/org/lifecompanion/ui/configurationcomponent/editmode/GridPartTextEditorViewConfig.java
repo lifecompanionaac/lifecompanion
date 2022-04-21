@@ -42,16 +42,16 @@ public class GridPartTextEditorViewConfig extends GridPartTextEditorComponentVie
         super.initListener();
         //Selection
         this.setOnMouseClicked((ea) -> {
-            SelectionController.INSTANCE.selected(this.model, ea.isShortcutDown(), ea.isShiftDown());
+            SelectionController.INSTANCE.selectGridPart(this.model, false);
             this.toFront();
         });
         this.setOnMouseEntered((ea) -> {
-            GridPartComponentI possiblySelected = SelectionController.INSTANCE.getFirstUnselectedParent(this.model);
-            possiblySelected.showPossibleSelectedProperty().set(true);
+//            GridPartComponentI possiblySelected = SelectionController.INSTANCE.getFirstUnselectedParent(this.model);
+//            possiblySelected.showPossibleSelectedProperty().set(true);
         });
         this.setOnMouseExited((ea) -> {
-            GridPartComponentI possiblySelected = SelectionController.INSTANCE.getFirstUnselectedParent(this.model);
-            possiblySelected.showPossibleSelectedProperty().set(false);
+//            GridPartComponentI possiblySelected = SelectionController.INSTANCE.getFirstUnselectedParent(this.model);
+//            possiblySelected.showPossibleSelectedProperty().set(false);
         });
     }
 }

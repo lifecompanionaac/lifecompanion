@@ -87,9 +87,9 @@ public class ComponentSelectionSearchList extends BaseConfigurationViewBorderPan
                 .addListener((observableP, oldValueP, newValueP) -> {
                     if (newValueP != null && newValueP != SelectionController.INSTANCE.selectedComponentBothProperty().get()) {
                         if (newValueP instanceof RootGraphicComponentI) {
-                            SelectionController.INSTANCE.setSelectedRoot((RootGraphicComponentI) newValueP);
+                            SelectionController.INSTANCE.selectRootComponent((RootGraphicComponentI) newValueP,true);
                         } else if (newValueP instanceof GridPartComponentI) {
-                            SelectionController.INSTANCE.setSelectedPart((GridPartComponentI) newValueP);
+                            SelectionController.INSTANCE.selectGridPart((GridPartComponentI) newValueP,true);//FIXME SELECTION
                         } else {
                             ComponentSelectionSearchList.LOGGER.warn("Didn't find a correct class to select the component {} in the tree",
                                     newValueP.getClass());

@@ -160,7 +160,7 @@ public class GridComponentSelectionModeRibbonPart extends RibbonBasePart<Selecti
 
     @Override
     public void initBinding() {
-        SelectionController.INSTANCE.selectedComponentProperty()
+        SelectionController.INSTANCE.selectedGridPartProperty()
                 .addListener((observableP, oldValueP, newValueP) -> {
                     if (newValueP instanceof SelectionModeUserI) {
                         this.model.set((SelectionModeUserI) newValueP);

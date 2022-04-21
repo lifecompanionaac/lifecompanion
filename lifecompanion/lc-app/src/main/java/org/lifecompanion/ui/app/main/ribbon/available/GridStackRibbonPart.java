@@ -28,7 +28,7 @@ public class GridStackRibbonPart extends AbstractStackPartRibbonPart {
 	@Override
 	public void initModelBinding() {
 		//Selection binding
-		SelectionController.INSTANCE.selectedComponentProperty().addListener((obs, ov, nv) -> {
+		SelectionController.INSTANCE.selectedGridPartProperty().addListener((obs, ov, nv) -> {
 			if (nv instanceof StackComponentI) {
 				this.model.set((StackComponentI) nv);
 			} else {

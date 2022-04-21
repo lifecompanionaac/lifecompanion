@@ -139,7 +139,7 @@ public class OptionActions {
             this.added.dispatchRemovedPropertyValue(false);
             this.configuration.getChildren().add(this.added);
             if (selectAndNotify) {
-                SelectionController.INSTANCE.setSelectedRoot(this.added);
+                SelectionController.INSTANCE.selectRootComponent(this.added,true);
                 LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo(Translation.getText("notification.root.component.added", added.getDisplayableTypeName())));
             }
         }
@@ -187,7 +187,7 @@ public class OptionActions {
             this.component.dispatchRemovedPropertyValue(false);
             //Select
             if (this.select) {
-                SelectionController.INSTANCE.setSelectedPart(this.component);
+                SelectionController.INSTANCE.selectGridPart(this.component,true);
             }
         }
 

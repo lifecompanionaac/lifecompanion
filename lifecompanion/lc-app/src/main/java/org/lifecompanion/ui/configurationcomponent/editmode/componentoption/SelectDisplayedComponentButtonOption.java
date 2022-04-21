@@ -53,7 +53,7 @@ public class SelectDisplayedComponentButtonOption extends BaseOption<StackCompon
     @Override
     public void initListener() {
         this.buttonSelect.setOnAction(e -> {
-            SelectionController.INSTANCE.setSelectedPart(this.model.displayedComponentProperty().get());
+            SelectionController.INSTANCE.selectGridPart(this.model.displayedComponentProperty().get(), true);
         });
     }
 

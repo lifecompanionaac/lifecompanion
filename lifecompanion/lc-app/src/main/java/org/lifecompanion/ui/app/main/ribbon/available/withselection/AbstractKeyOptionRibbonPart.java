@@ -18,7 +18,9 @@
  */
 package org.lifecompanion.ui.app.main.ribbon.available.withselection;
 
+import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
@@ -55,7 +57,7 @@ import java.util.function.BiConsumer;
  *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
-public class AbstractKeyOptionRibbonPart extends RibbonBasePart<GridPartKeyComponent> implements LCViewInitHelper {
+public class AbstractKeyOptionRibbonPart extends RibbonBasePart<GridPartKeyComponentI> implements LCViewInitHelper {
 
     /**
      * The selected key option for the key
@@ -116,7 +118,7 @@ public class AbstractKeyOptionRibbonPart extends RibbonBasePart<GridPartKeyCompo
         changeListenerForModelKeyOption = (obs, ov, nv) -> this.updateConfigurationView(nv);
 
         BiConsumer<ComboBox<KeyOptionI>, Class<? extends KeyOptionI>> fieldValueSetter = (cb, keyOption) ->
-                cb.getItems().stream().filter(v -> v != null && v.getClass().equals(keyOption)).findFirst().ifPresent(v -> cb.setValue(v));
+                cb.getItems().stream().filter(v -> v != null && v.getClass().equals(keyOption)).findFirst().ifPresent(cb::setValue);
         MultiKeyHelper.initMultiKeyConfigActionListener(this.comboKeyOptionType,
                 ComboBoxBase::setOnAction,
                 cb -> cb.getValue() != null ? cb.getValue().getClass() : null,
@@ -127,23 +129,17 @@ public class AbstractKeyOptionRibbonPart extends RibbonBasePart<GridPartKeyCompo
 
     @Override
     public void initBinding() {
-        SelectionController.INSTANCE.selectedComponentProperty().addListener((o, oldV, newV) -> {
-            if (newV instanceof GridPartKeyComponent) {
-                this.model.set((GridPartKeyComponent) newV);
-            } else {
-                this.model.set(null);
-            }
-        });
+        this.model.bind(SelectionController.INSTANCE.selectedKeyProperty());
     }
 
     @Override
-    public void bind(final GridPartKeyComponent component) {
+    public void bind(final GridPartKeyComponentI component) {
         this.updateConfigurationView(component.keyOptionProperty().get()); // when key change, we also change the binded configuration
         component.keyOptionProperty().addListener(changeListenerForModelKeyOption);
     }
 
     @Override
-    public void unbind(final GridPartKeyComponent component) {
+    public void unbind(final GridPartKeyComponentI component) {
         this.unbindDisplayedOptionConfiguration();
         component.keyOptionProperty().removeListener(changeListenerForModelKeyOption);
     }

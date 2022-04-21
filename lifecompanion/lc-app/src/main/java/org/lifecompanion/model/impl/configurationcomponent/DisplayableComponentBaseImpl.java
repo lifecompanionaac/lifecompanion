@@ -55,6 +55,7 @@ public abstract class DisplayableComponentBaseImpl extends CoreDisplayableCompon
     public DisplayableComponentBaseImpl() {
         this.selected = new SimpleBooleanProperty(this, "selected", false);
         this.showSelected = new SimpleBooleanProperty(this, "showSelected", false);
+        showSelected.bind(selected);
         this.possibleSelected = new SimpleBooleanProperty(this, "possibleSelected", false);
     }
 

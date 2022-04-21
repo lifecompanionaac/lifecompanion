@@ -267,7 +267,8 @@ public class GridActions {
 				action.doAction();
 			}
 			// Select pasted
-			SelectionController.INSTANCE.setSelectedKeys(compToSelect);
+			// SelectionController.INSTANCE.selectKeys(compToSelect);
+			// FIXME SELECTION
 		}
 
 		@Override
@@ -315,7 +316,7 @@ public class GridActions {
 				this.component.dispatchRemovedPropertyValue(false);
 				this.grid.replaceComponent(this.toReplace, this.component);
 				if (this.select) {
-					SelectionController.INSTANCE.setSelectedPart(this.component);
+					SelectionController.INSTANCE.selectGridPart(this.component,true);
 				}
 			}
 		}
@@ -559,7 +560,7 @@ public class GridActions {
 				row = this.grid.getRow() - 1;
 			}
 			GridPartComponentI toSelect = this.grid.getComponent(row, column);
-			SelectionController.INSTANCE.setSelectedPart(toSelect);
+			SelectionController.INSTANCE.selectGridPart(toSelect,true);
 		}
 
 		@Override
@@ -587,7 +588,7 @@ public class GridActions {
 				column = this.grid.getColumn() - 1;
 			}
 			GridPartComponentI toSelect = this.grid.getComponent(row, column);
-			SelectionController.INSTANCE.setSelectedPart(toSelect);
+			SelectionController.INSTANCE.selectGridPart(toSelect,true);
 		}
 
 		@Override
