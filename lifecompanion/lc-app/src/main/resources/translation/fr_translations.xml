@@ -2446,6 +2446,8 @@
   <text key="component.select.tree">Selectionner un élément</text>
   <!--org.lifecompanion.config.view.useaction.impl.computera.features-->
   <text key="label.field.run.program.args">Arguments de lancement (optionnels)</text>
+  <text key="label.field.run.program.args.explain">Vous pouvez séparer les différents arguments par des espaces. Si vous souhaitez avoir un argument contenant des espaces, entourez le de guillemets. Par exemple, l'argument : read "Mon fichier", donnera deux arguments : "read" et "Mon fichier"</text>
+
   <text key="label.field.run.program.path">Programme à lancer</text>
   <text key="save.user.text.save.directory.dialog.title">Sélectionner le dossier de sauvegarde</text>
   <text key="save.user.text.save.directory.name">Dossier de sauvegarde des fichiers texte</text>

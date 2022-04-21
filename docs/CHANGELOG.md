@@ -8,6 +8,7 @@
 
 ### Corrections/ajustements
 
+- Ticket #131 : amélioration de la commande "Lancer un programme" : meilleure gestion des arguments et log des erreurs
 - Ticket #130 : la recherche d'image fonctionne maintenant avec tous les mots (même "de", "je", etc.)
 - Ticket #129 : correction d'un rare problème pour les configurations de clavier/souris virtuels
 - Ticket #67 : ajout d'une action "Épeler tout le texte" pour épeler le contenu de l'éditeur

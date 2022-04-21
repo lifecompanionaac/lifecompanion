@@ -19,8 +19,11 @@
 
 package org.lifecompanion.ui.configurationcomponent.editmode.categorizedelement.useaction.available;
 
-import java.io.File;
-
+import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
+import javafx.scene.control.Label;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import org.lifecompanion.controller.editmode.FileChooserType;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionConfigurationViewI;
@@ -28,55 +31,55 @@ import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
 import org.lifecompanion.model.impl.categorizedelement.useaction.available.RunProgramUseAction;
 import org.lifecompanion.ui.common.control.generic.FileSelectorControl;
 import org.lifecompanion.ui.common.control.specific.usevariable.UseVariableTextArea;
-import javafx.collections.ObservableList;
-import javafx.geometry.Insets;
-import javafx.scene.control.Label;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
+
+import java.io.File;
 
 /**
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public class RunProgramConfigView extends VBox implements UseActionConfigurationViewI<RunProgramUseAction> {
-	private UseVariableTextArea textAreaProgramArgs;
-	private FileSelectorControl fileSelectorProgramPath;
+    private UseVariableTextArea textAreaProgramArgs;
+    private FileSelectorControl fileSelectorProgramPath;
 
-	public RunProgramConfigView() {}
+    public RunProgramConfigView() {
+    }
 
-	@Override
-	public Region getConfigurationView() {
-		return this;
-	}
+    @Override
+    public Region getConfigurationView() {
+        return this;
+    }
 
-	@Override
-	public void editStarts(final RunProgramUseAction action, final ObservableList<UseVariableDefinitionI> possibleVariables) {
-		this.textAreaProgramArgs.getTextArea().clear();
-		this.textAreaProgramArgs.setAvailableUseVariable(possibleVariables);
-		this.textAreaProgramArgs.getTextArea().setText(action.programArgsProperty().get());
-		if (action.programPathProperty().get() != null) {
-			this.fileSelectorProgramPath.valueProperty().set(new File(action.programPathProperty().get()));
-		}
-	}
+    @Override
+    public void editStarts(final RunProgramUseAction action, final ObservableList<UseVariableDefinitionI> possibleVariables) {
+        this.textAreaProgramArgs.getTextArea().clear();
+        this.textAreaProgramArgs.setAvailableUseVariable(possibleVariables);
+        this.textAreaProgramArgs.getTextArea().setText(action.programArgsProperty().get());
+        if (action.programPathProperty().get() != null) {
+            this.fileSelectorProgramPath.valueProperty().set(new File(action.programPathProperty().get()));
+        }
+    }
 
-	@Override
-	public void editEnds(final RunProgramUseAction action) {
-		action.programArgsProperty().set(textAreaProgramArgs.getText());
-		File pathVal = fileSelectorProgramPath.valueProperty().get();
-		action.programPathProperty().set(pathVal != null ? pathVal.getPath() : null);
-	}
+    @Override
+    public void editEnds(final RunProgramUseAction action) {
+        action.programArgsProperty().set(textAreaProgramArgs.getText());
+        File pathVal = fileSelectorProgramPath.valueProperty().get();
+        action.programPathProperty().set(pathVal != null ? pathVal.getPath() : null);
+    }
 
-	@Override
-	public Class<RunProgramUseAction> getConfiguredActionType() {
-		return RunProgramUseAction.class;
-	}
+    @Override
+    public Class<RunProgramUseAction> getConfiguredActionType() {
+        return RunProgramUseAction.class;
+    }
 
-	@Override
-	public void initUI() {
-		this.setSpacing(10.0);
-		this.setPadding(new Insets(10.0));
-		fileSelectorProgramPath = new FileSelectorControl(Translation.getText("label.field.run.program.path"),FileChooserType.RUN_PROGRAM);
-		this.textAreaProgramArgs = new UseVariableTextArea();
-		this.getChildren().addAll(fileSelectorProgramPath, new Label(Translation.getText("label.field.run.program.args")), this.textAreaProgramArgs);
-	}
+    @Override
+    public void initUI() {
+        this.setSpacing(10.0);
+        this.setPadding(new Insets(10.0));
+        fileSelectorProgramPath = new FileSelectorControl(Translation.getText("label.field.run.program.path"), FileChooserType.RUN_PROGRAM);
+        this.textAreaProgramArgs = new UseVariableTextArea();
+        Label labelExplain = new Label(Translation.getText("label.field.run.program.args.explain"));
+        labelExplain.getStyleClass().addAll("text-wrap-enabled", "text-font-italic");
+        this.getChildren().addAll(fileSelectorProgramPath, new Label(Translation.getText("label.field.run.program.args")), this.textAreaProgramArgs, labelExplain);
+    }
 
 }
