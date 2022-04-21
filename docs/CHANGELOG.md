@@ -8,6 +8,7 @@
 
 ### Corrections/ajustements
 
+- Ticket #129 : correction d'un rare problème pour les configurations de clavier/souris virtuels
 - Ticket #67 : ajout d'une action "Épeler tout le texte" pour épeler le contenu de l'éditeur
 - Ticket #67 : ajout d'une action "Épeler le texte de la case" pour épeler le texte de la case
 - Ticket #67 : ajout d'une action "Épeler du texte" pour épeler du texte (choisi)

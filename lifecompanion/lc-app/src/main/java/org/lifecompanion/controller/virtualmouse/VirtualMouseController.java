@@ -308,7 +308,10 @@ public enum VirtualMouseController implements ModeListenerI {
         FXThreadUtils.runOnFXThread(() -> {
             AppModeController.INSTANCE.getUseModeContext().getStage().toFront();
             this.virtualMouseStage.toFront();
-            AppModeController.INSTANCE.getUseModeContext().getStage().requestFocus();
+            // Issue #129 : main stage should be focused back if it's a virtual keyboard
+            if (!AppModeController.INSTANCE.getUseModeContext().getConfiguration().virtualKeyboardProperty().get()) {
+                AppModeController.INSTANCE.getUseModeContext().getStage().requestFocus();
+            }
             this.centerMouseOnStage();
         });
     }
