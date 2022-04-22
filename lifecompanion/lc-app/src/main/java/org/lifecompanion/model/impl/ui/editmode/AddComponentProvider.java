@@ -20,11 +20,16 @@ package org.lifecompanion.model.impl.ui.editmode;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.lifecompanion.model.api.ui.editmode.AddComponentCategoryEnum;
+import org.lifecompanion.model.api.ui.editmode.AddComponentI;
 import org.lifecompanion.model.api.ui.editmode.PossibleAddComponentCategoryI;
 import org.lifecompanion.model.api.ui.editmode.PossibleAddComponentI;
 import org.lifecompanion.controller.plugin.PluginController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public enum AddComponentProvider {
     INSTANCE;
@@ -34,12 +39,29 @@ public enum AddComponentProvider {
 
     private ObservableList<PossibleAddComponentCategoryI> categories;
 
+    private final Map<AddComponentCategoryEnum, ObservableList<AddComponentI>> available;
+
     AddComponentProvider() {
         this.categories = FXCollections.observableArrayList();
+        available = new HashMap<>();
         this.initComponents();
     }
 
+    public Map<AddComponentCategoryEnum, ObservableList<AddComponentI>> getAvailable() {
+        return available;
+    }
+
+    private void addComp(AddComponentI addComponent) {
+        available.computeIfAbsent(addComponent.getCategory(), k -> FXCollections.observableArrayList()).add(addComponent);
+    }
+
     private void initComponents() {
+        addComp(new AddComponents.AddStack());
+        addComp(new AddComponents.AddTextEditor());
+        addComp(new AddComponents.AddUserModelRoot());
+        addComp(new AddComponents.AddGridInStack());
+
+
         //Default component : base
         this.addPossibleComp(PossibleAddComponents.AddStack.INSTANCE);
         this.addPossibleComp(PossibleAddComponents.AddTextEditor.INSTANCE);

@@ -4,11 +4,16 @@
 
 ### Fonctionnalités
 
+- **Amélioration de l'arbre de sélection** (onglet "SÉLECTION")
+	- Les cases des grilles ne sont plus affichées (mais toujours possible d'en rechercher)
+	- L'ordre est maintenant correct
+	- Un double clic ouvre maintenant la fenêtre pour changer le nom d'un élément
 - **Changement du système de sélection en mode édition**
 	- Un clic sélectionne maintenant toujours les cases
 	- La sélection des éléments de base ne change pas (clic sur la "main" rouge en haut à gauche)
 	- La sélection des grilles se fait : soit en sélectionnant la pile "parent" / soit en utilisant l'arbre des éléments de l'onglet "Sélection"
 	- Les éléments sélectionnés sont maintenant identifiés par des couleurs : rouge pour les cases, bleue pour les éléments de base (pile, éditeur) et jaune pour les grilles
+
 
 ### Corrections/ajustements
 

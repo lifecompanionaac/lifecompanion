@@ -415,6 +415,9 @@
 		de grille est l'élément racine qui vous permet d'ajouter des grilles
 		et des cases dans une configuration.</text>
   <text key="component.stack.name">Pile de grilles</text>
+  <text key="add.user.model.name">Modèles personnalisés</text>
+  <text key="add.component.grid.in.stack">Nouvelle grille</text>
+  <text key="add.component.grid.in.copy">Copier la grille actuelle</text>
   <text key="component.texteditor.add.description">Ajoute un éditeur de texte, il peut être ajouté sur une
 		case, ou directement dans la configuration. Il permet de visualiser le
 		texte écrit.</text>
@@ -2050,6 +2053,7 @@
   <!--org.lifecompanion.config.view.pane.tabs-->
   <text key="tabs.title.actions">Actions</text>
   <text key="tabs.title.home">Accueil</text>
+  <text key="tabs.title.create">Créer</text>
   <text key="tabs.title.selected">Sélection</text>
   <text key="tabs.title.style">Style</text>
   <!--org.lifecompanion.config.view.pane.tabs.api-->
@@ -3516,4 +3520,8 @@
   <text key="char.to.speech.special.e.umlaut">E tréma</text>
   <text key="char.to.speech.special.linebreak">Saut de ligne</text>
   <text key="char.to.speech.special.tab">Tabulation</text>
+  <text key="ribbon.part.create.root">Créer des éléments de base</text>
+  <text key="ribbon.part.create.grid">Créer des grilles</text>
+  <text key="ribbon.part.create.key">Transformer les cases</text>
+  <text key="ribbon.part.create.misc">Autres</text>
 </texts>

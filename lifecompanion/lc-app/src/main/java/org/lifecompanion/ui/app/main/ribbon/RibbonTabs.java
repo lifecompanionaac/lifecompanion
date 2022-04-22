@@ -32,10 +32,7 @@ import org.controlsfx.glyphfont.FontAwesome;
 import org.fxmisc.easybind.EasyBind;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
-import org.lifecompanion.ui.app.main.ribbon.available.RibbonTabAction;
-import org.lifecompanion.ui.app.main.ribbon.available.RibbonTabHome;
-import org.lifecompanion.ui.app.main.ribbon.available.RibbonTabSelected;
-import org.lifecompanion.ui.app.main.ribbon.available.RibbonTabStyle;
+import org.lifecompanion.ui.app.main.ribbon.available.*;
 import org.lifecompanion.ui.EditModeScene;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 
@@ -70,6 +67,7 @@ public class RibbonTabs extends StackPane implements LCViewInitHelper {
         this.tabPane.tabClosingPolicyProperty().set(TabClosingPolicy.UNAVAILABLE);
         //Add tabs
         this.addTab(new RibbonTabHome());
+        this.addTab(new RibbonTabCreate());
         this.addTab(new RibbonTabSelected());
         this.addTab(new RibbonTabStyle());
         this.addTab(new RibbonTabAction());
