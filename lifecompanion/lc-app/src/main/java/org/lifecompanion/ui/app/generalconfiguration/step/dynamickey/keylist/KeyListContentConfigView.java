@@ -75,7 +75,7 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
     private String lastSearch;
     private boolean dirty;
     private final ObjectProperty<KeyListNodeI> cutOrCopiedNode;
-    private final HashMap<KeyListNodeI, KeyListNodeTreeItem> keyListTreeItems;
+    private final Map<KeyListNodeI, KeyListNodeTreeItem> keyListTreeItems;
 
 
     private Button buttonAddKey, buttonAddCategory, buttonAddLinkKey, buttonDelete, buttonMoveUp, buttonMoveDown, buttonCut, buttonCopy, buttonPaste, buttonExportKeys, buttonImportKeys, buttonShowHideProperties;

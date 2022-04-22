@@ -95,32 +95,24 @@ public interface StackComponentBaseImpl extends TreeDisplayableComponentI, Stack
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings("deprecation")
     @Override
     default void shiftUpComponent(final GridComponentI component) {
         List<GridComponentI> components = this.getComponentList();
         int index = components.indexOf(component);
         if (index > 0) {
-            //Issue #35 : swap list
-            this._disableChangeListenerProperty().set(true);
             Collections.swap(components, index, index - 1);
-            this._disableChangeListenerProperty().set(false);
         }
     }
 
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings("deprecation")
     @Override
     default void shiftDownComponent(final GridComponentI component) {
         List<GridComponentI> components = this.getComponentList();
         int index = components.indexOf(component);
         if (index < components.size() - 1) {
-            //Issue #35 : swap list
-            this._disableChangeListenerProperty().set(true);
             Collections.swap(components, index, index + 1);
-            this._disableChangeListenerProperty().set(false);
         }
     }
 
@@ -163,75 +155,72 @@ public interface StackComponentBaseImpl extends TreeDisplayableComponentI, Stack
         //Add/remove displayed with specific list changes
         components.addListener((ListChangeListener<? super GridComponentI>) changeP -> {
             while (changeP.next()) {
-                //Issue #35 : disable change on swap
-                if (!this._disableChangeListenerProperty().get()) {
-                    if (changeP.wasAdded() || changeP.wasReplaced()) {
-                        List<? extends GridComponentI> addedSubList = changeP.getAddedSubList();
-                        for (GridComponentI c : addedSubList) {
-                            //By default, a stack component is not displayed
-                            c.dispatchDisplayedProperty(false);
-                            c.dispatchRemovedPropertyValue(false);
-                            //Bind size
-                            c.layoutWidthProperty().bind(this.bindableDisplayedWidthProperty());
-                            c.layoutHeightProperty().bind(this.bindableDisplayedHeightProperty());
-                            //Configuration is the same
-                            c.configurationParentProperty().bind(StackComponentBaseImpl.this.configurationParentProperty());
-                            //Stack parent is this object
-                            c.stackParentProperty().set(this);
-                            //Root parent is the same, if this component is a child
-                            if (StackComponentBaseImpl.this instanceof RootChildComponentI) {
-                                c.rootParentProperty().bind(((RootChildComponentI) StackComponentBaseImpl.this).rootParentProperty());
-                            } else if (StackComponentBaseImpl.this instanceof RootGraphicComponentI) {
-                                c.rootParentProperty().set((RootGraphicComponentI) StackComponentBaseImpl.this);
-                            }
-                            //Bind style
-                            c.getGridShapeStyle().parentComponentStyleProperty().set(this.getGridShapeStyle());
-                            c.getKeyStyle().parentComponentStyleProperty().set(this.getKeyStyle());
-                            c.getKeyTextStyle().parentComponentStyleProperty().set(this.getKeyTextStyle());
+                if (changeP.wasAdded() || changeP.wasReplaced()) {
+                    List<? extends GridComponentI> addedSubList = changeP.getAddedSubList();
+                    for (GridComponentI c : addedSubList) {
+                        //By default, a stack component is not displayed
+                        c.dispatchDisplayedProperty(false);
+                        c.dispatchRemovedPropertyValue(false);
+                        //Bind size
+                        c.layoutWidthProperty().bind(this.bindableDisplayedWidthProperty());
+                        c.layoutHeightProperty().bind(this.bindableDisplayedHeightProperty());
+                        //Configuration is the same
+                        c.configurationParentProperty().bind(StackComponentBaseImpl.this.configurationParentProperty());
+                        //Stack parent is this object
+                        c.stackParentProperty().set(this);
+                        //Root parent is the same, if this component is a child
+                        if (StackComponentBaseImpl.this instanceof RootChildComponentI) {
+                            c.rootParentProperty().bind(((RootChildComponentI) StackComponentBaseImpl.this).rootParentProperty());
+                        } else if (StackComponentBaseImpl.this instanceof RootGraphicComponentI) {
+                            c.rootParentProperty().set((RootGraphicComponentI) StackComponentBaseImpl.this);
                         }
-                        //Display the first added component
-                        if (displayed.get() == null) {
-                            GridComponentI added = changeP.getAddedSubList().get(0);
-                            displayed.set(added);
+                        //Bind style
+                        c.getGridShapeStyle().parentComponentStyleProperty().set(this.getGridShapeStyle());
+                        c.getKeyStyle().parentComponentStyleProperty().set(this.getKeyStyle());
+                        c.getKeyTextStyle().parentComponentStyleProperty().set(this.getKeyTextStyle());
+                    }
+                    //Display the first added component
+                    if (displayed.get() == null) {
+                        GridComponentI added = changeP.getAddedSubList().get(0);
+                        displayed.set(added);
+                    }
+                }
+                if (changeP.wasRemoved() || changeP.wasReplaced()) {
+                    List<? extends GridComponentI> removed = changeP.getRemoved();
+                    //If the displayed element is removed, try to show the first
+                    if (removed.contains(displayed.get())) {
+                        //TODO : fix a rare possible bug if the first next component is a removed component (could happen only on multiple remove...)
+                        if (!components.isEmpty()) {
+                            displayed.set(components.get(0));
+                        } else {
+                            displayed.set(null);
                         }
                     }
-                    if (changeP.wasRemoved() || changeP.wasReplaced()) {
-                        List<? extends GridComponentI> removed = changeP.getRemoved();
-                        //If the displayed element is removed, try to show the first
-                        if (removed.contains(displayed.get())) {
-                            //TODO : fix a rare possible bug if the first next component is a removed component (could happen only on multiple remove...)
-                            if (!components.isEmpty()) {
-                                displayed.set(components.get(0));
-                            } else {
-                                displayed.set(null);
-                            }
-                        }
-                        //Remove parent
-                        for (GridComponentI c : removed) {
-                            c.dispatchRemovedPropertyValue(true);
-                            //Unbind size
-                            c.layoutWidthProperty().unbind();
-                            c.layoutHeightProperty().unbind();
-                            //Unbind configuration parent
-                            c.configurationParentProperty().unbind();
-                            c.stackParentProperty().set(null);
-                            //Root parent is the same, if this component is a child
-                            if (StackComponentBaseImpl.this instanceof RootChildComponentI) {
-                                c.rootParentProperty().unbind();
-                            } else if (StackComponentBaseImpl.this instanceof RootGraphicComponentI) {
-                                c.rootParentProperty().set(null);
-                            }
+                    //Remove parent
+                    for (GridComponentI c : removed) {
+                        c.dispatchRemovedPropertyValue(true);
+                        //Unbind size
+                        c.layoutWidthProperty().unbind();
+                        c.layoutHeightProperty().unbind();
+                        //Unbind configuration parent
+                        c.configurationParentProperty().unbind();
+                        c.stackParentProperty().set(null);
+                        //Root parent is the same, if this component is a child
+                        if (StackComponentBaseImpl.this instanceof RootChildComponentI) {
+                            c.rootParentProperty().unbind();
+                        } else if (StackComponentBaseImpl.this instanceof RootGraphicComponentI) {
+                            c.rootParentProperty().set(null);
                         }
                     }
-                    //After each list change
-                    updateNextPreviousPossible.run();
-                    //Check if the stack child is the last
-                    if (components.size() == 1) {
-                        components.get(0).lastStackChildProperty().set(true);
-                    } else {
-                        for (GridComponentI child : components) {
-                            child.lastStackChildProperty().set(false);
-                        }
+                }
+                //After each list change
+                updateNextPreviousPossible.run();
+                //Check if the stack child is the last
+                if (components.size() == 1) {
+                    components.get(0).lastStackChildProperty().set(true);
+                } else {
+                    for (GridComponentI child : components) {
+                        child.lastStackChildProperty().set(false);
                     }
                 }
             }

@@ -18,24 +18,27 @@
  */
 package org.lifecompanion.ui.common.control.specific.componenttree;
 
+import javafx.beans.InvalidationListener;
 import javafx.beans.value.ChangeListener;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import org.lifecompanion.controller.lifecycle.AppModeController;
-import org.lifecompanion.ui.common.pane.generic.BaseConfigurationViewBorderPane;
 import org.lifecompanion.controller.editmode.SelectionController;
+import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
-import org.lifecompanion.model.api.configurationcomponent.*;
+import org.lifecompanion.model.api.configurationcomponent.DisplayableComponentI;
+import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
+import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
+import org.lifecompanion.model.api.configurationcomponent.TreeDisplayableComponentI;
+import org.lifecompanion.ui.common.pane.generic.BaseConfigurationViewBorderPane;
 import org.lifecompanion.ui.common.pane.specific.cell.SelectionItemTreeCell;
+import org.lifecompanion.util.binding.ListBindingWithMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -55,18 +58,12 @@ public class ComponentSelectionTree extends BaseConfigurationViewBorderPane<LCCo
     /**
      * Map that contains all the tree item for each component
      */
-    private Map<TreeDisplayableComponentI, TreeItem<TreeDisplayableComponentI>> treeNodes;
-
-    /**
-     * Map that contains all the listener for each component
-     */
-    private Map<TreeDisplayableComponentI, ListChangeListener<TreeDisplayableComponentI>> nodeChildrenListener;
+    private final Map<TreeDisplayableComponentI, TreeDisplayableComponentTreeItem> componentTreeNodes;
 
     private boolean disableScrollTo, disableSelectOnSelectedItemChanged;
 
     public ComponentSelectionTree() {
-        this.treeNodes = new HashMap<>();
-        this.nodeChildrenListener = new HashMap<>();
+        this.componentTreeNodes = new HashMap<>();
         this.initAll();
         this.setPrefSize(0.0, 0.0);
     }
@@ -101,13 +98,13 @@ public class ComponentSelectionTree extends BaseConfigurationViewBorderPane<LCCo
         //External selection with mouse select the tree
         ChangeListener<? super DisplayableComponentI> selectedChangeListener = (obs, ov, nv) -> {
             if (nv != null) {
-                TreeItem<TreeDisplayableComponentI> treeItem = this.treeNodes.get(nv);
+                TreeItem<TreeDisplayableComponentI> treeItem = this.componentTreeNodes.get(nv);
                 if (treeItem != null) {
                     disableSelectOnSelectedItemChanged = true;
                     this.selectTreeItem(treeItem);
                     disableSelectOnSelectedItemChanged = false;
                 } else {
-                    ComponentSelectionTree.LOGGER.warn("Didn't find a tree for the selected component {}", nv);
+                    LOGGER.warn("Didn't find a tree for the selected component {}", nv);
                 }
             }
         };
@@ -128,8 +125,6 @@ public class ComponentSelectionTree extends BaseConfigurationViewBorderPane<LCCo
         this.model.bind(AppModeController.INSTANCE.getEditModeContext().configurationProperty());
     }
 
-    // Class part : "Override"
-    //========================================================================
     @Override
     protected double computeMinWidth(final double arg0P) {
         return 0.0;
@@ -140,124 +135,29 @@ public class ComponentSelectionTree extends BaseConfigurationViewBorderPane<LCCo
         return 0.0;
     }
 
-    //========================================================================
-
-    // Class part : "Binding"
-    //========================================================================
-
     @Override
     public void bind(final LCConfigurationI component) {
-        TreeItem<TreeDisplayableComponentI> root = new TreeItem<>();
-        this.treeNodes.put(component, root);
-        this.componentTreeView.setRoot(root);
-        //Base
-        ObservableList<? extends TreeDisplayableComponentI> childrenNode = component.getChildrenNode();
-        for (TreeDisplayableComponentI treeNode : childrenNode) {
-            this.nodeAdded(component, treeNode);
-        }
-        childrenNode.addListener(this.createCL(component));
+        this.componentTreeView.setRoot(new TreeDisplayableComponentTreeItem(component));
     }
 
     @Override
     public void unbind(final LCConfigurationI component) {
-        this.nodeRemoved(component, component);
-        this.treeNodes.clear();
-        this.nodeChildrenListener.clear();
-        this.componentTreeView.getSelectionModel().clearSelection();
         this.componentTreeView.setRoot(null);
+        this.componentTreeNodes.clear();
     }
 
-    /**
-     * Add the node from view.<br>
-     * Also add the node children and needed listener on them.
-     *
-     * @param parent the parent node of the node to add
-     * @param item   the added node
-     */
-    private void nodeAdded(final TreeDisplayableComponentI parent, final TreeDisplayableComponentI item) {
-        //Create the item
-        TreeItem<TreeDisplayableComponentI> treeItemView = new TreeItem<>(item);
-        this.treeNodes.put(item, treeItemView);
-        //Get the parent and add
-        TreeItem<TreeDisplayableComponentI> parentView = this.treeNodes.get(parent);
-        parentView.getChildren().add(treeItemView);
-        //Listener
-        if (!item.isNodeLeaf()) {
-            ObservableList<TreeDisplayableComponentI> children = item.getChildrenNode();
-            children.addListener(this.createCL(item));
-            for (TreeDisplayableComponentI child : children) {
-                this.nodeAdded(item, child);
+    private class TreeDisplayableComponentTreeItem extends TreeItem<TreeDisplayableComponentI> {
+        final FilteredList<TreeDisplayableComponentI> filteredListNoKeys;// Keep here to avoid garbage collection
+
+        public TreeDisplayableComponentTreeItem(TreeDisplayableComponentI value) {
+            super(value);
+            componentTreeNodes.put(value, this);
+            if (!value.isNodeLeaf()) {
+                filteredListNoKeys = new FilteredList<>(value.getChildrenNode(), comp -> !(comp instanceof GridPartKeyComponentI));
+                ListBindingWithMapper.mapContent(getChildren(), filteredListNoKeys, TreeDisplayableComponentTreeItem::new);
+            } else {
+                filteredListNoKeys = null;
             }
         }
     }
-
-    /**
-     * Remove the node from view.<br>
-     * Also remove the node children and listener.
-     *
-     * @param parent the parent node of the node to remove
-     * @param item   the removed node
-     */
-    private void nodeRemoved(final TreeDisplayableComponentI parent, final TreeDisplayableComponentI item) {
-        //If item is selected
-        TreeItem<TreeDisplayableComponentI> selectedItem = this.componentTreeView.getSelectionModel().getSelectedItem();
-        if (selectedItem != null && item == selectedItem.getValue()) {
-            this.componentTreeView.getSelectionModel().clearSelection();
-        }
-        //Get the item and its view
-        TreeItem<TreeDisplayableComponentI> itemView = this.treeNodes.get(item);
-        TreeItem<TreeDisplayableComponentI> parentView = this.treeNodes.get(parent);
-        //Remove from parent and listener
-        parentView.getChildren().remove(itemView);
-        if (!item.isNodeLeaf()) {
-            ObservableList<TreeDisplayableComponentI> children = item.getChildrenNode();
-            children.removeListener(this.nodeChildrenListener.get(item));
-            for (TreeDisplayableComponentI child : children) {
-                this.nodeRemoved(item, child);
-            }
-        }
-
-    }
-
-    /**
-     * Create the tree children change listener for a given node.
-     *
-     * @param parent the node that will provide children list to listen
-     * @return the list change listener for this parent children
-     */
-    @SuppressWarnings("deprecation")
-    private ListChangeListener<TreeDisplayableComponentI> createCL(final TreeDisplayableComponentI parent) {
-        ListChangeListener<TreeDisplayableComponentI> cl = (change) -> {
-            TreeItem<TreeDisplayableComponentI> selectedItem = this.componentTreeView.getSelectionModel().getSelectedItem();
-            while (change.next()) {
-                if (!parent._disableChangeListenerProperty().get()) {
-                    if (change.wasAdded()) {
-                        List<? extends TreeDisplayableComponentI> addeds = change.getAddedSubList();
-                        for (TreeDisplayableComponentI add : addeds) {
-                            ComponentSelectionTree.this.nodeAdded(parent, add);
-                        }
-                    }
-                    if (change.wasRemoved()) {
-                        List<? extends TreeDisplayableComponentI> removed = change.getRemoved();
-                        for (TreeDisplayableComponentI remove : removed) {
-                            //Should never select back
-                            if (selectedItem != null && remove == selectedItem.getValue()) {
-                                selectedItem = null;
-                            }
-                            ComponentSelectionTree.this.nodeRemoved(parent, remove);
-
-                        }
-                    }
-                }
-            }
-            //WORKAROUND : sometimes selected item change on item add/remove even if the item is not removed from the tree, this restore the previous selected item if it exists
-            if (selectedItem != null) {
-                this.selectTreeItem(selectedItem);
-            }
-        };
-        this.nodeChildrenListener.put(parent, cl);
-        return cl;
-    }
-
-    //========================================================================
 }

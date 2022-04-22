@@ -49,12 +49,4 @@ public interface TreeDisplayableComponentI extends UserNamedComponentI, Identifi
      * Musn't return null
      */
     TreeDisplayableType getNodeType();
-
-    /**
-     * @return to disable the children node change listener
-     * @deprecated this is an internal API and should not be used
-     */
-    @Deprecated
-    BooleanProperty _disableChangeListenerProperty();
-
 }
