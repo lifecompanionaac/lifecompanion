@@ -148,7 +148,7 @@ public class MainView extends StackPane implements LCViewInitHelper {
      */
     @Override
     public void initBinding() {
-        this.buttonResetSelection.disableProperty().bind(SelectionController.INSTANCE.selectedComponentBothProperty().isNull());
+        this.buttonResetSelection.disableProperty().bind(SelectionController.INSTANCE.selectedDisplayableComponentHelperProperty().isNull());
         this.buttonGoUseMode.visibleProperty().bind(AppModeController.INSTANCE.getEditModeContext().configurationProperty().isNotNull());
         // On configuration change, display the new configuration
         AppModeController.INSTANCE.getEditModeContext().configurationProperty().addListener((observableP, oldValueP, newValueP) -> {

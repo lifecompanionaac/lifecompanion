@@ -18,9 +18,7 @@
  */
 package org.lifecompanion.ui.app.main.ribbon.available.withselection;
 
-import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
@@ -34,7 +32,6 @@ import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
 import org.lifecompanion.model.api.configurationcomponent.keyoption.KeyOptionConfigurationViewI;
 import org.lifecompanion.model.api.configurationcomponent.keyoption.KeyOptionI;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.AvailableKeyOptionManager;
-import org.lifecompanion.model.impl.configurationcomponent.GridPartKeyComponent;
 import org.lifecompanion.controller.editaction.KeyActions;
 import org.lifecompanion.util.javafx.FXControlUtils;
 import org.lifecompanion.util.model.GridPartKeyCollectionPropertyHolder;
@@ -129,7 +126,7 @@ public class AbstractKeyOptionRibbonPart extends RibbonBasePart<GridPartKeyCompo
 
     @Override
     public void initBinding() {
-        this.model.bind(SelectionController.INSTANCE.selectedKeyProperty());
+        this.model.bind(SelectionController.INSTANCE.selectedKeyHelperProperty());
     }
 
     @Override

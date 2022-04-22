@@ -99,7 +99,7 @@ public class TextDisplayerRibbonPart extends RibbonBasePart<WriterDisplayerI> im
 
 	@Override
 	public void initBinding() {
-		SelectionController.INSTANCE.selectedComponentBothProperty()
+		SelectionController.INSTANCE.selectedDisplayableComponentHelperProperty()
 				.addListener((ChangeListener<DisplayableComponentI>) (observableP, oldValueP, newValueP) -> {
 					if (newValueP instanceof WriterDisplayerI) {
 						this.model.set((WriterDisplayerI) newValueP);

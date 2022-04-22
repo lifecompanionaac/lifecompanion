@@ -83,19 +83,7 @@ public class ComponentSelectionSearchList extends BaseConfigurationViewBorderPan
 
     @Override
     public void initListener() {
-        this.componentListView.getSelectionModel().selectedItemProperty()
-                .addListener((observableP, oldValueP, newValueP) -> {
-                    if (newValueP != null && newValueP != SelectionController.INSTANCE.selectedComponentBothProperty().get()) {
-                        if (newValueP instanceof RootGraphicComponentI) {
-                            SelectionController.INSTANCE.selectRootComponent((RootGraphicComponentI) newValueP,true);
-                        } else if (newValueP instanceof GridPartComponentI) {
-                            SelectionController.INSTANCE.selectGridPart((GridPartComponentI) newValueP,true);//FIXME SELECTION
-                        } else {
-                            ComponentSelectionSearchList.LOGGER.warn("Didn't find a correct class to select the component {} in the tree",
-                                    newValueP.getClass());
-                        }
-                    }
-                });
+        this.componentListView.getSelectionModel().selectedItemProperty().addListener((observableP, oldValueP, newValueP) -> SelectionController.INSTANCE.selectDisplayableComponent(newValueP, true));
     }
 
     @Override

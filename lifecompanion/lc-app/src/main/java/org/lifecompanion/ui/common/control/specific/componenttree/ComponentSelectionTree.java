@@ -62,10 +62,7 @@ public class ComponentSelectionTree extends BaseConfigurationViewBorderPane<LCCo
      */
     private Map<TreeDisplayableComponentI, ListChangeListener<TreeDisplayableComponentI>> nodeChildrenListener;
 
-    /**
-     * Hack : to disable scroll to if the selection comes from the tree itself
-     */
-    private boolean disableScrollTo;
+    private boolean disableScrollTo, disableSelectOnSelectedItemChanged;
 
     public ComponentSelectionTree() {
         this.treeNodes = new HashMap<>();
@@ -92,32 +89,29 @@ public class ComponentSelectionTree extends BaseConfigurationViewBorderPane<LCCo
         //Selection on tree select the component
         this.componentTreeView.getSelectionModel().selectedItemProperty()
                 .addListener((observableP, oldValueP, newValueP) -> {
-                    if (newValueP != null && newValueP.getValue() != SelectionController.INSTANCE.selectedComponentBothProperty().get()) {
+                    if (newValueP != null) {
                         TreeDisplayableComponentI component = newValueP.getValue();
                         this.disableScrollTo = true;
-                        if (component instanceof RootGraphicComponentI) {
-                            SelectionController.INSTANCE.selectRootComponent((RootGraphicComponentI) component,true);
-                        } else if (component instanceof GridPartComponentI) {
-                            SelectionController.INSTANCE.selectGridPart((GridPartComponentI) component,true);//FIXME SELECTION
-                        } else {
-                            ComponentSelectionTree.LOGGER.warn("Didn't find a correct class to select the component {} in the tree",
-                                    component.getClass());
+                        if (component instanceof DisplayableComponentI && !disableSelectOnSelectedItemChanged) {// avoid nested selection loops
+                            SelectionController.INSTANCE.selectDisplayableComponent((DisplayableComponentI) component, true);
                         }
                         this.disableScrollTo = false;
                     }
                 });
-        //Selection with mouse select the tree
+        //External selection with mouse select the tree
         ChangeListener<? super DisplayableComponentI> selectedChangeListener = (obs, ov, nv) -> {
             if (nv != null) {
                 TreeItem<TreeDisplayableComponentI> treeItem = this.treeNodes.get(nv);
                 if (treeItem != null) {
+                    disableSelectOnSelectedItemChanged = true;
                     this.selectTreeItem(treeItem);
+                    disableSelectOnSelectedItemChanged = false;
                 } else {
                     ComponentSelectionTree.LOGGER.warn("Didn't find a tree for the selected component {}", nv);
                 }
             }
         };
-        SelectionController.INSTANCE.selectedComponentBothProperty().addListener(selectedChangeListener);
+        SelectionController.INSTANCE.selectedDisplayableComponentHelperProperty().addListener(selectedChangeListener);
     }
 
     private void selectTreeItem(final TreeItem<TreeDisplayableComponentI> treeItem) {

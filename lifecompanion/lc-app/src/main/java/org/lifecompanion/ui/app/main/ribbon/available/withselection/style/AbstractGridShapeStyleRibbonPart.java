@@ -47,7 +47,7 @@ public abstract class AbstractGridShapeStyleRibbonPart extends RibbonBasePart<Gr
 
     @Override
     public void initBinding() {
-        EasyBind.subscribe(SelectionController.INSTANCE.selectedComponentBothProperty(), (c) -> {
+        EasyBind.subscribe(SelectionController.INSTANCE.selectedDisplayableComponentHelperProperty(), (c) -> {
             if (c instanceof GridStyleUserI) {
                 this.model.set((GridStyleUserI) c);
             } else {

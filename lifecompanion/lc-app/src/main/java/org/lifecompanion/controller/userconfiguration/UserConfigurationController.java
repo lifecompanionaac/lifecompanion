@@ -64,7 +64,7 @@ public enum UserConfigurationController {
         this.mainFrameHeight = new SimpleIntegerProperty(this, "mainFrameHeight", 800);
         this.launchMaximized = new SimpleBooleanProperty(this, "launchMaximized", true);
         this.showTipsOnStartup = new SimpleBooleanProperty(this, "showTipsOnStartup", true);
-        this.selectionStrokeSize = new SimpleDoubleProperty(this, "selectionStrokeSize", 2.0);
+        this.selectionStrokeSize = new SimpleDoubleProperty(this, "selectionStrokeSize", 3.0);
         this.selectionDashSize = new SimpleDoubleProperty(this, "selectionDashSize", 5.0);
         this.launchLCSystemStartup = new SimpleBooleanProperty(this, "launchLCSystemStartup", false);
         this.recordAndSendSessionStats = new SimpleBooleanProperty(this, "recordAndSendSessionStats", false);

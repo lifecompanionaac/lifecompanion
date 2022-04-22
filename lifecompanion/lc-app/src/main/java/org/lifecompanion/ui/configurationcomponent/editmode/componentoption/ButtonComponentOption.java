@@ -67,7 +67,7 @@ public class ButtonComponentOption extends BaseOptionRegion<SelectableComponentI
     /**
      * List of current option in this component
      */
-    private List<ConfigOptionComponentI> options;
+    private final List<ConfigOptionComponentI> options;
 
     public ButtonComponentOption(final SelectableComponentI modelP) {
         super(modelP);
@@ -79,6 +79,8 @@ public class ButtonComponentOption extends BaseOptionRegion<SelectableComponentI
     public void initUI() {
         this.gridButtons = new GridPane();
         this.gridButtons.setPickOnBounds(false);
+        this.gridButtons.setHgap(2.0);
+        this.gridButtons.setVgap(2.0);
         //Select button
         this.buttonSelect = new ToggleButton();
         ButtonComponentOption.applyComponentOptionButtonStyle(this.buttonSelect, FontAwesome.Glyph.HAND_ALT_UP);
@@ -93,20 +95,11 @@ public class ButtonComponentOption extends BaseOptionRegion<SelectableComponentI
         this.buttonSelect.setOnAction((ea) -> {
             //Root component
             if (this.model instanceof RootGraphicComponentI) {
-                //                if (this.model.selectedProperty().get()) {
-                //                    SelectionController.INSTANCE.selectRootComponent(null);
-                //                } else {
-                //                }
                 SelectionController.INSTANCE.selectRootComponent((RootGraphicComponentI) this.model, false);
             }
             //Grid component
             else if (this.model instanceof GridPartComponentI) {
-                //                if (this.model.selectedProperty().get()) {
-                //                    SelectionController.INSTANCE.setSelectedPart(null);
-                //                } else {
-                //                    SelectionController.INSTANCE.setSelectedPart((GridPartComponentI) this.model);
-                //                }
-                SelectionController.INSTANCE.selectGridPart((GridPartComponentI) this.model, false);
+                SelectionController.INSTANCE.selectGridPartComponent((GridPartComponentI) this.model, false);
             } else {
                 ButtonComponentOption.LOGGER
                         .warn("The current selectable model type in select button option doesn't allow selection on SelectionController");

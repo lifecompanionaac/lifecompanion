@@ -72,7 +72,6 @@ import java.util.function.Consumer;
  */
 public class GridPartKeyViewConfig extends GridPartKeyViewBase {
     private final static Logger LOGGER = LoggerFactory.getLogger(GridPartKeyViewConfig.class);
-    private SelectableOption<GridPartKeyComponent> selectableOption;
     private ImageView imageViewOptionType;
     private Button buttonSimulateActions;
 
@@ -80,9 +79,9 @@ public class GridPartKeyViewConfig extends GridPartKeyViewBase {
     public void initUI() {
         super.initUI();
         //Select option
-        this.selectableOption = new SelectableOption<>(this.model, false);
-        this.getChildren().add(this.selectableOption);
-        this.selectableOption.bindSize(this);
+        SelectableOption<GridPartKeyComponent> selectableOption = new SelectableOption<>(this.model);
+        this.getChildren().add(selectableOption);
+        selectableOption.bindSize(this);
         //Key option
         this.imageViewOptionType = new ImageView();
         this.imageViewOptionType.setTranslateX(2.0);
@@ -157,23 +156,14 @@ public class GridPartKeyViewConfig extends GridPartKeyViewBase {
             }
             //Select key
             else {
-                SelectionController.INSTANCE.selectKey(this.model, false, ea.isShortcutDown(), ea.isShiftDown());
+                SelectionController.INSTANCE.selectKeyComponent(this.model, false, ea.isShortcutDown(), ea.isShiftDown());
                 this.toFront();
-                //On selection, update possible selection (because enter event is not fired)
-                //                GridPartComponentI possiblySelected = SelectionController.INSTANCE.getFirstUnselectedParent(this.model);
-                //                possiblySelected.showPossibleSelectedProperty().set(true);
             }
         });
         //On mouse entered/exited, update show possible selected / update loaded image (if needed)
-        this.setOnMouseEntered((ea) -> {
-            // Possibly selected
-            //            GridPartComponentI possiblySelected = SelectionController.INSTANCE.getFirstUnselectedParent(this.model);
-            //            possiblySelected.showPossibleSelectedProperty().set(true);
-        });
-        this.setOnMouseExited((ea) -> {
-            //            GridPartComponentI possiblySelected = SelectionController.INSTANCE.getFirstUnselectedParent(this.model);
-            //            possiblySelected.showPossibleSelectedProperty().set(false);
-        });
+        this.setOnMouseEntered((ea) -> this.model.showPossibleSelectedProperty().set(true));
+        this.setOnMouseExited((ea) -> this.model.showPossibleSelectedProperty().set(false));
+
         //Drag over key : accept image and components
         this.setOnDragOver((ea) -> {
             if (DragController.INSTANCE.isDragShouldBeAcceptedOn(AddTypeEnum.GRID_PART, true)) {
@@ -266,19 +256,19 @@ public class GridPartKeyViewConfig extends GridPartKeyViewBase {
         if (moveGrid != null) {
             GridComponentI targetGrid = moveGrid.targetGridProperty().get();
             if (targetGrid != null) {
-                SelectionController.INSTANCE.selectGridPart(targetGrid, true);
+                SelectionController.INSTANCE.selectGridPartComponent(targetGrid, true);
             }
         } else if (moveKey != null) {
             GridPartKeyComponentI targetKey = moveKey.targetKeyProperty().get();
             if (targetKey != null) {
-                SelectionController.INSTANCE.selectKey(targetKey, true, false, false);
+                SelectionController.INSTANCE.selectKeyComponent(targetKey, true, false, false);
             }
         } else if (nextPageStackAction != null) {
             StackComponentI targetStack = nextPageStackAction.changedPageParentStackProperty().get();
             if (targetStack != null) {
                 GridComponentI nextComponent = targetStack.getNextComponent();
                 if (nextComponent != null) {
-                    SelectionController.INSTANCE.selectGridPart(nextComponent, true);
+                    SelectionController.INSTANCE.selectGridPartComponent(nextComponent, true);
                 }
             }
         } else if (previousPageAction != null) {
@@ -286,7 +276,7 @@ public class GridPartKeyViewConfig extends GridPartKeyViewBase {
             if (targetStack != null) {
                 GridComponentI previousComponent = targetStack.getPreviousComponent();
                 if (previousComponent != null) {
-                    SelectionController.INSTANCE.selectGridPart(previousComponent, true);
+                    SelectionController.INSTANCE.selectGridPartComponent(previousComponent, true);
                 }
             }
         } else if (nextPageAndLoopInStackAction != null) {
@@ -294,15 +284,15 @@ public class GridPartKeyViewConfig extends GridPartKeyViewBase {
             if (targetStack != null) {
                 GridComponentI nextComponent = targetStack.getNextComponent();
                 if (nextComponent != null) {
-                    SelectionController.INSTANCE.selectGridPart(nextComponent, true);
+                    SelectionController.INSTANCE.selectGridPartComponent(nextComponent, true);
                 } else if (!targetStack.getComponentList().isEmpty()) {
-                    SelectionController.INSTANCE.selectGridPart(targetStack.getComponentList().get(0), true);
+                    SelectionController.INSTANCE.selectGridPartComponent(targetStack.getComponentList().get(0), true);
                 }
             }
         } else if (moveToGridAndGoBackAction != null) {
             final GridComponentI targetGrid = moveToGridAndGoBackAction.targetGridProperty().get();
             if (targetGrid != null) {
-                SelectionController.INSTANCE.selectGridPart(targetGrid, true);
+                SelectionController.INSTANCE.selectGridPartComponent(targetGrid, true);
             }
         }
     }

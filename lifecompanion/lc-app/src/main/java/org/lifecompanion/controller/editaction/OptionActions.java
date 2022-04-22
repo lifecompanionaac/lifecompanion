@@ -187,7 +187,7 @@ public class OptionActions {
             this.component.dispatchRemovedPropertyValue(false);
             //Select
             if (this.select) {
-                SelectionController.INSTANCE.selectGridPart(this.component,true);
+                SelectionController.INSTANCE.selectGridPartComponent(this.component,true);
             }
         }
 

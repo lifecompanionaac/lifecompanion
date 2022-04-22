@@ -43,7 +43,7 @@ public class GridPartStackViewConfig extends GridPartStackViewBase {
 		StackButtonOption stackOption = new StackButtonOption(this.model);
 		selectOption.addOption(stackOption);
 		//Root component UI
-		this.selectableOption = new SelectableOption<>(this.model, false);
+		this.selectableOption = new SelectableOption<>(this.model);
 		this.selectableOption.bindSize(this);
 		this.getChildren().add(this.selectableOption);
 		this.selectableOption.getChildren().add(selectOption);

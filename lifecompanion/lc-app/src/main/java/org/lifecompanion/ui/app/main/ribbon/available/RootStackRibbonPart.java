@@ -28,7 +28,7 @@ public class RootStackRibbonPart extends AbstractStackPartRibbonPart {
 	@Override
 	public void initModelBinding() {
 		//Selection binding
-		SelectionController.INSTANCE.selectedRootProperty().addListener((o, oldV, newV) -> {
+		SelectionController.INSTANCE.selectedRootComponentProperty().addListener((o, oldV, newV) -> {
 			if (newV instanceof StackComponentI) {
 				this.model.set((StackComponentI) newV);
 			} else {

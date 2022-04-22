@@ -47,7 +47,7 @@ public class TextDisplayerTextStyleRibbonPart extends RibbonBasePart<TextDisplay
 
     @Override
     public void initBinding() {
-        EasyBind.subscribe(SelectionController.INSTANCE.selectedComponentBothProperty(), (c) -> {
+        EasyBind.subscribe(SelectionController.INSTANCE.selectedDisplayableComponentHelperProperty(), (c) -> {
             if (c instanceof TextDisplayerStyleUserI) {
                 this.model.set((TextDisplayerStyleUserI) c);
             } else {

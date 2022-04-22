@@ -25,21 +25,22 @@ import org.lifecompanion.ui.configurationcomponent.editmode.componentoption.Sele
 
 /**
  * Node that display a {@link GridPartGridComponent}
+ *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public class GridPartGridViewConfig extends GridPartGridViewBase {
 
-	@Override
-	public void initUI() {
-		super.initUI();
-		//Selectable component option
-		SelectableOption<GridPartGridComponent> option = new SelectableOption<>(this.model, true);
-		option.bindSize(this);
-		this.getChildren().add(option);
-	}
+    @Override
+    public void initUI() {
+        super.initUI();
+        //Selectable component option
+        SelectableOption<GridPartGridComponent> option = new SelectableOption<>(this.model);
+        option.bindSize(this);
+        this.getChildren().add(option);
+    }
 
-	@Override
-	public String toString() {
-		return "" + this.model;
-	}
+    @Override
+    public String toString() {
+        return "" + this.model;
+    }
 }

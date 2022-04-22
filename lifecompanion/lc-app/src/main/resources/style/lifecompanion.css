@@ -197,6 +197,7 @@
 }
 
 /*======= SPECIFIC TUNINGS =======*/
+
 .keylist-tree-cell .tree-disclosure-node {
    -fx-padding: 8 6 4 8;
 }
@@ -204,9 +205,30 @@
     -fx-indent: 40;
 }
 
+/* Option buttons for root components */
+.option-button-base {
+	-fx-background-color: #C62828;
+	-fx-content-display: graphic-only;
+	-fx-opacity: 0.3;
+}
+.option-button-base:hover {
+	-fx-opacity: 0.8;
+}
+.option-button-base:pressed {
+	-fx-opacity: 0.6;
+}
+.option-button-base:disabled {
+	-fx-opacity: 0.4;
+}
+.option-button-base:selected {
+	-fx-opacity: 1.0;
+}
+.option-op-button {
+	-fx-background-color: #C62828;
+	-fx-content-display: center;
+}
+
 /*======= SPECIFIC DEV =======*/
 .popup-bottom-dropshadow {
     -fx-effect: dropshadow(three-pass-box, gray, 10, 0, 0, 5);
 }
-
-/* "-fx-indent: 30;")*/

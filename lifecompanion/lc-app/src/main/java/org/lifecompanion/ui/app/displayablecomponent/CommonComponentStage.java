@@ -56,7 +56,7 @@ public class CommonComponentStage extends Stage {
                 this.hide();
             }
         });
-        this.setOnShown(e -> commonComponentView.show(SelectionController.INSTANCE.selectedComponentBothProperty().get()));
+        this.setOnShown(e -> commonComponentView.show(SelectionController.INSTANCE.selectedDisplayableComponentHelperProperty().get()));
         this.setOnHiding(e -> commonComponentView.hide());
         this.getIcons().add(IconHelper.get(LCConstant.LC_ICON_PATH));
     }

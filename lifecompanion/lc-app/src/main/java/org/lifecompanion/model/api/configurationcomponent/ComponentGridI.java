@@ -173,8 +173,8 @@ public interface ComponentGridI extends XMLSerializable<IOContextI> {
 
 	/**
 	 * To get a list of all the keys between (and including if they are keys) the two given part.</br>
-	 * This should selected the sub grid where one of the part is the top-left corner, and the other is the bottom-right corner (or the same with top-right and bottom-left).</br>
-	 * If the given parameter are swap, returned list should be the same.
+	 * This should select the sub grid where one of the part is the top-left corner, and the other is the bottom-right corner (or the same with top-right and bottom-left).</br>
+	 * If the given parameters are swapped, returned list should be the same.
 	 * @param part1 one of the sub grid corner
 	 * @param part2 the other sub grid corner
 	 * @return the set containing the wanted subgrid

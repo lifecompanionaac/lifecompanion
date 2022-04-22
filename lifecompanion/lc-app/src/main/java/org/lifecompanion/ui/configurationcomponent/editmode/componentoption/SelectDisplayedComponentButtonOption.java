@@ -28,7 +28,6 @@ import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.model.api.configurationcomponent.StackComponentI;
 import org.lifecompanion.model.api.ui.editmode.ConfigOptionComponentI;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -53,7 +52,7 @@ public class SelectDisplayedComponentButtonOption extends BaseOption<StackCompon
     @Override
     public void initListener() {
         this.buttonSelect.setOnAction(e -> {
-            SelectionController.INSTANCE.selectGridPart(this.model.displayedComponentProperty().get(), true);
+            SelectionController.INSTANCE.selectGridPartComponent(this.model.displayedComponentProperty().get(), true);
         });
     }
 

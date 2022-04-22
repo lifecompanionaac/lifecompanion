@@ -150,7 +150,7 @@ public class CurrentLifeCompanionStateDetailView extends HBox implements LCViewI
             }
         });
         EventHandler<? super MouseEvent> showCurrentComponentPart = me -> {
-            if (SelectionController.INSTANCE.selectedComponentBothProperty().get() != null) {
+            if (SelectionController.INSTANCE.selectedDisplayableComponentHelperProperty().get() != null) {
                 CommonComponentStage.getInstance().show();
             }
         };
@@ -178,13 +178,13 @@ public class CurrentLifeCompanionStateDetailView extends HBox implements LCViewI
         this.labelCurrentConfigurationName.textProperty().bind(EasyBind.select(AppModeController.INSTANCE.getEditModeContext().configurationDescriptionProperty())
                 .selectObject(LCConfigurationDescriptionI::configurationNameProperty).orElse(Translation.getText("configuration.label.no.current")));
         //Bind component name
-        this.labelCurrentComponentName.textProperty().bind(EasyBind.select(SelectionController.INSTANCE.selectedComponentBothProperty())
+        this.labelCurrentComponentName.textProperty().bind(EasyBind.select(SelectionController.INSTANCE.selectedDisplayableComponentHelperProperty())
                 .selectObject(DisplayableComponentI::nameProperty).orElse(Translation.getText("no.component.selected.simple")));
 
         this.labelCurrentUnsavedModifications.textProperty().bind(TranslationFX.getTextBinding("status.bar.label.current.unsaved.modifications", AppModeController.INSTANCE.getEditModeContext().configurationUnsavedActionProperty()));
 
         //Bind parent name + graphics
-        SelectionController.INSTANCE.selectedComponentBothProperty().addListener((obs, ov, nv) -> {
+        SelectionController.INSTANCE.selectedDisplayableComponentHelperProperty().addListener((obs, ov, nv) -> {
             if (ov != null) {
                 BindingUtils.unbindAndSetNull(this.labelCurrentDetailName.textProperty());
                 labelCurrentComponentName.setGraphic(null);

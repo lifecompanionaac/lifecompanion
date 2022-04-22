@@ -47,7 +47,7 @@ public class KeyInOtherComponentStyleRibbonPart extends RibbonBasePart<KeyStyleU
 
     @Override
     public void initBinding() {
-        EasyBind.subscribe(SelectionController.INSTANCE.selectedComponentBothProperty(), (c) -> {
+        EasyBind.subscribe(SelectionController.INSTANCE.selectedDisplayableComponentHelperProperty(), (c) -> {
             if (c instanceof KeyStyleUserI) {
                 this.model.set((KeyStyleUserI) c);
             } else {

@@ -97,7 +97,7 @@ public class GridGapRibbonPart extends RibbonBasePart<GridComponentI> implements
 
     @Override
     public void initBinding() {
-        SelectionController.INSTANCE.selectedGridPartProperty()
+        SelectionController.INSTANCE.selectedGridPartComponentProperty()
                 .addListener((observableP, oldValueP, newValueP) -> {
                     if (newValueP instanceof GridComponentI) {
                         this.model.set((GridComponentI) newValueP);

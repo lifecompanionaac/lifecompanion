@@ -132,12 +132,12 @@ public abstract class AbstractSelectionChangeRibbonTab extends AbstractTabConten
     public void initBinding() {
         InvalidationListener updateSelectionInvListener = inv -> updateSelection();
         SelectionController.INSTANCE.getSelectedKeys().addListener(updateSelectionInvListener);
-        SelectionController.INSTANCE.selectedComponentBothProperty().addListener(updateSelectionInvListener);
+        SelectionController.INSTANCE.selectedDisplayableComponentHelperProperty().addListener(updateSelectionInvListener);
     }
 
     private void updateSelection() {
         // Get select both and selected keys
-        DisplayableComponentI selectedBoth = SelectionController.INSTANCE.selectedComponentBothProperty().get();
+        DisplayableComponentI selectedBoth = SelectionController.INSTANCE.selectedDisplayableComponentHelperProperty().get();
         ObservableList<GridPartKeyComponentI> selectedKeys = SelectionController.INSTANCE.getSelectedKeys();
 
         // Multi selection enabled

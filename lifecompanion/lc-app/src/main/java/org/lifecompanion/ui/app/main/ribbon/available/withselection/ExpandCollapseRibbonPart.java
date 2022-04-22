@@ -120,7 +120,7 @@ public class ExpandCollapseRibbonPart extends RibbonBasePart<GridPartComponentI>
 
     @Override
     public void initBinding() {
-        this.model.bind(SelectionController.INSTANCE.selectedGridPartOrKeyProperty());
+        this.model.bind(SelectionController.INSTANCE.selectedGridPartOrKeyHelperProperty());
     }
 
     @Override

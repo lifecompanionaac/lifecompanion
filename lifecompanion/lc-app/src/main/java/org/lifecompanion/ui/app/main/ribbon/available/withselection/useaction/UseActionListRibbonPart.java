@@ -65,7 +65,7 @@ public class UseActionListRibbonPart extends RibbonBasePart<UseActionTriggerComp
     @Override
     public void initBinding() {
         //Bind on current grid component
-        SelectionController.INSTANCE.selectedComponentBothProperty().addListener((obs, ov, nv) -> {
+        SelectionController.INSTANCE.selectedDisplayableComponentHelperProperty().addListener((obs, ov, nv) -> {
             if (nv instanceof UseActionTriggerComponentI) {
                 this.model.set((UseActionTriggerComponentI) nv);
             } else {
