@@ -36,6 +36,7 @@ import org.lifecompanion.model.api.configurationcomponent.keyoption.KeyOptionI;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.imagedictionary.ImageElementI;
 import org.lifecompanion.model.api.ui.editmode.AddTypeEnum;
+import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.util.IOUtils;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.dynamickey.KeyListNodeKeyOption;
 import org.lifecompanion.model.impl.configurationcomponent.GridPartKeyComponent;
@@ -108,7 +109,7 @@ public class GridPartKeyViewConfig extends GridPartKeyViewBase {
 
         // Execute move action
         this.buttonSimulateActions = new Button();
-        ButtonComponentOption.applyButtonBaseStyle(this.buttonSimulateActions, FontAwesome.Glyph.SHARE);
+        ButtonComponentOption.applyButtonBaseStyle(this.buttonSimulateActions, LCGraphicStyle.SECOND_DARK, FontAwesome.Glyph.SHARE);
         this.buttonSimulateActions.translateXProperty().bind(widthProperty().subtract(buttonSimulateActions.getPrefWidth() + 5));
         this.getChildren().add(this.buttonSimulateActions);
     }

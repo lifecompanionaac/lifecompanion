@@ -12,7 +12,7 @@ public enum AddComponentCategoryEnum {
 
     private String titleId;
 
-    private AddComponentCategoryEnum(final String titleId) {
+    AddComponentCategoryEnum(final String titleId) {
         this.titleId = titleId;
     }
 

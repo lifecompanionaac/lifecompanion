@@ -417,6 +417,9 @@
   <text key="component.stack.name">Pile de grilles</text>
   <text key="add.user.model.name">Modèles personnalisés</text>
   <text key="add.component.grid.in.stack">Nouvelle grille</text>
+  <text key="change.key.to.grid">Transformer en grille</text>
+  <text key="change.key.to.text.editor">Transformer en éditeur</text>
+  <text key="change.key.to.stack">Transformer en pile de grilles</text>
   <text key="add.component.grid.in.copy">Copier la grille actuelle</text>
   <text key="component.texteditor.add.description">Ajoute un éditeur de texte, il peut être ajouté sur une
 		case, ou directement dans la configuration. Il permet de visualiser le

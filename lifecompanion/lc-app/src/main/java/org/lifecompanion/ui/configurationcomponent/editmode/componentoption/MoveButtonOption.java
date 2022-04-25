@@ -27,6 +27,7 @@ import org.lifecompanion.model.api.configurationcomponent.MovableComponentI;
 import org.lifecompanion.model.api.configurationcomponent.ResizableComponentI;
 import org.lifecompanion.model.api.ui.editmode.ConfigOptionComponentI;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 
 import java.util.Arrays;
 import java.util.List;
@@ -48,7 +49,7 @@ public class MoveButtonOption<T extends MovableComponentI & ResizableComponentI>
     @Override
     public void initUI() {
         this.buttonMove = new Button();
-        ButtonComponentOption.applyButtonBaseStyle(this.buttonMove, FontAwesome.Glyph.ARROWS_ALT);
+        ButtonComponentOption.applyButtonBaseStyle(this.buttonMove, LCGraphicStyle.MAIN_DARK, FontAwesome.Glyph.ARROWS_ALT);
         MoveButtonHelper.install(this, buttonMove);
     }
 

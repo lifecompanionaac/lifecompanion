@@ -87,6 +87,11 @@
 	-fx-alignment: center;
 }
 
+/*======= OPACITY =======*/
+
+.opacity-30 {
+	-fx-opacity: 0.3;
+}
 
 /*======= BACKGROUND =======*/
 
@@ -120,6 +125,7 @@
 
 
 /*======= HOVER =======*/
+
 .scale-110-hover:hover {
     -fx-scale-x: 1.1;
     -fx-scale-y: 1.1;
@@ -160,17 +166,41 @@
 }
 
 /*======= PRESSED =======*/
+
 .opacity-60-pressed:pressed {
 	-fx-opacity: 0.6;
 }
 
+/*======= DISABLED =======*/
+
+.opacity-40-disabled:disabled {
+	-fx-opacity: 0.4;
+}
+
+/*======= SELECTED =======*/
+
+.opacity-100-selected:selected {
+	-fx-opacity: 1.0;
+}
+
 /*======= PADDING/MARGIN =======*/
+
 .padding-0 {
     -fx-padding: 0;
 }
 
 .padding-3_5 {
     -fx-padding: 3.5;
+}
+
+/*======= CONTENT DISPLAY =======*/
+
+.content-display-graphic-only {
+    -fx-content-display: graphic-only;
+}
+
+.content-display-center {
+    -fx-content-display: center;
 }
 
 /*======= LIST VIEW AND LIST CELL =======*/
@@ -203,29 +233,6 @@
 }
 .keylist-tree-cell{
     -fx-indent: 40;
-}
-
-/* Option buttons for root components */
-.option-button-base {
-	-fx-background-color: #C62828;
-	-fx-content-display: graphic-only;
-	-fx-opacity: 0.3;
-}
-.option-button-base:hover {
-	-fx-opacity: 0.8;
-}
-.option-button-base:pressed {
-	-fx-opacity: 0.6;
-}
-.option-button-base:disabled {
-	-fx-opacity: 0.4;
-}
-.option-button-base:selected {
-	-fx-opacity: 1.0;
-}
-.option-op-button {
-	-fx-background-color: #C62828;
-	-fx-content-display: center;
 }
 
 /*======= SPECIFIC DEV =======*/

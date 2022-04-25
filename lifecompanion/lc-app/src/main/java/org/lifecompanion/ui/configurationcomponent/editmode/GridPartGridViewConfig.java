@@ -19,8 +19,16 @@
 
 package org.lifecompanion.ui.configurationcomponent.editmode;
 
+import javafx.application.Platform;
+import javafx.beans.InvalidationListener;
+import javafx.scene.control.Button;
+import javafx.scene.control.ToggleButton;
+import org.controlsfx.glyphfont.FontAwesome;
+import org.lifecompanion.controller.editmode.SelectionController;
 import org.lifecompanion.model.impl.configurationcomponent.GridPartGridComponent;
+import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.ui.configurationcomponent.base.GridPartGridViewBase;
+import org.lifecompanion.ui.configurationcomponent.editmode.componentoption.ButtonComponentOption;
 import org.lifecompanion.ui.configurationcomponent.editmode.componentoption.SelectableOption;
 
 /**
@@ -29,6 +37,7 @@ import org.lifecompanion.ui.configurationcomponent.editmode.componentoption.Sele
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public class GridPartGridViewConfig extends GridPartGridViewBase {
+    private ToggleButton buttonSelectGrid;
 
     @Override
     public void initUI() {
@@ -37,6 +46,35 @@ public class GridPartGridViewConfig extends GridPartGridViewBase {
         SelectableOption<GridPartGridComponent> option = new SelectableOption<>(this.model);
         option.bindSize(this);
         this.getChildren().add(option);
+
+        // Select grid
+        this.buttonSelectGrid = new ToggleButton();
+        this.buttonSelectGrid.setFocusTraversable(false);
+        ButtonComponentOption.applyComponentOptionButtonStyle(this.buttonSelectGrid, LCGraphicStyle.THIRD_DARK, FontAwesome.Glyph.TH_LARGE);
+        this.buttonSelectGrid.translateXProperty().bind(widthProperty().subtract(buttonSelectGrid.getPrefWidth() + 5));
+        this.buttonSelectGrid.translateYProperty().bind(heightProperty().subtract(buttonSelectGrid.getPrefHeight() + 5));
+        this.getChildren().add(this.buttonSelectGrid);
+    }
+
+    @Override
+    public void initListener() {
+        super.initListener();
+        this.buttonSelectGrid.setOnAction(e -> SelectionController.INSTANCE.selectGridPartComponent(this.model, false));
+    }
+
+    @Override
+    public void initBinding() {
+        super.initBinding();
+        buttonSelectGrid.toFront();
+        this.model.selectedProperty().addListener((observableP, oldValueP, newValueP) -> this.buttonSelectGrid.setSelected(newValueP));
+        // This is called with runLater() explicitly to avoid nested loop on children order change / dont call toFront() directly on FXThread
+        this.getChildren().addListener((InvalidationListener) inv -> Platform.runLater(() -> buttonSelectGrid.toFront()));
+    }
+
+    @Override
+    public void showToFront() {
+        super.showToFront();
+        this.buttonSelectGrid.toFront();
     }
 
     @Override

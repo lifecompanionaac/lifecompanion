@@ -67,22 +67,6 @@ public class SelectableOption<T extends SelectableComponentI & GridChildComponen
         }
         ShapeStyleBinder.bindArcSizeComp(this.stroke, shapeStyle, this.stroke.widthProperty(), this.stroke.heightProperty(),
                 UserConfigurationController.INSTANCE.selectionStrokeSizeProperty(), 1);
-        //Bind show selected
-        //        modelP.selectedProperty().addListener((obs, oV, nV) -> {
-        //            if (nV || !this.model.showPossibleSelectedProperty().get()) {
-        //                this.stroke.getStrokeDashArray().clear();
-        //                SelectableOption.this.stroke.toFront();
-        //            }
-        //        });
-        //        modelP.showPossibleSelectedProperty().addListener((obs, oV, nV) -> {
-        //            if (nV && !this.model.selectedProperty().get()) {
-        //                this.stroke.getStrokeDashArray().setAll(UserConfigurationController.INSTANCE.selectionDashSizeProperty().get(), UserConfigurationController.INSTANCE.selectionDashSizeProperty().get());
-        //                SelectableOption.this.stroke.toFront();
-        //            } else {
-        //                this.stroke.getStrokeDashArray().clear();
-        //                SelectableOption.this.stroke.toFront();
-        //            }
-        //        });
         modelP.selectedProperty().addListener(inv -> updateStrokeDash());
         modelP.showPossibleSelectedProperty().addListener(inv -> updateStrokeDash());
         this.getChildren().add(this.stroke);

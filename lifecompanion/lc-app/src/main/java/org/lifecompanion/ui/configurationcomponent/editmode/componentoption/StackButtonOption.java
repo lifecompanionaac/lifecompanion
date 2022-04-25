@@ -25,57 +25,60 @@ import java.util.List;
 import org.controlsfx.glyphfont.FontAwesome;
 
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.model.api.configurationcomponent.GridPartComponentI;
 import org.lifecompanion.model.api.configurationcomponent.StackComponentI;
 import org.lifecompanion.model.api.ui.editmode.ConfigOptionComponentI;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 
 /**
  * Button on stack to be able to switch between displayed element.
+ *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public class StackButtonOption extends BaseOption<StackComponentI> implements LCViewInitHelper, ConfigOptionComponentI {
-	private Button buttonNextGrid, buttonPreviousGrid;
+    private Button buttonNextGrid, buttonPreviousGrid;
 
-	public StackButtonOption(final StackComponentI modelP) {
-		super(modelP);
-		this.initAll();
-	}
+    public StackButtonOption(final StackComponentI modelP) {
+        super(modelP);
+        this.initAll();
+    }
 
-	@Override
-	public List<Node> getOptions() {
-		return Arrays.asList(this.buttonPreviousGrid, this.buttonNextGrid);
-	}
+    @Override
+    public List<Node> getOptions() {
+        return Arrays.asList(this.buttonPreviousGrid, this.buttonNextGrid);
+    }
 
-	@Override
-	public Orientation getOrientation() {
-		return Orientation.HORIZONTAL;
-	}
+    @Override
+    public Orientation getOrientation() {
+        return Orientation.HORIZONTAL;
+    }
 
-	@Override
-	public void initUI() {
-		this.buttonPreviousGrid = new Button();
-		ButtonComponentOption.applyButtonBaseStyle(this.buttonPreviousGrid, FontAwesome.Glyph.CHEVRON_LEFT);
-		this.buttonPreviousGrid.disableProperty().bind(this.model.previousPossibleProperty().not());
-		this.buttonNextGrid = new Button();
-		this.buttonNextGrid.disableProperty().bind(this.model.nextPossibleProperty().not());
-		ButtonComponentOption.applyButtonBaseStyle(this.buttonNextGrid, FontAwesome.Glyph.CHEVRON_RIGHT);
-	}
+    @Override
+    public void initUI() {
+        this.buttonPreviousGrid = new Button();
+        ButtonComponentOption.applyButtonBaseStyle(this.buttonPreviousGrid, model instanceof GridPartComponentI ? LCGraphicStyle.THIRD_DARK : LCGraphicStyle.MAIN_DARK, FontAwesome.Glyph.CHEVRON_LEFT);
+        this.buttonPreviousGrid.disableProperty().bind(this.model.previousPossibleProperty().not());
+        this.buttonNextGrid = new Button();
+        this.buttonNextGrid.disableProperty().bind(this.model.nextPossibleProperty().not());
+        ButtonComponentOption.applyButtonBaseStyle(this.buttonNextGrid, model instanceof GridPartComponentI ? LCGraphicStyle.THIRD_DARK : LCGraphicStyle.MAIN_DARK, FontAwesome.Glyph.CHEVRON_RIGHT);
+    }
 
-	@SuppressWarnings("deprecation")
-	@Override
-	public void initListener() {
-		this.buttonNextGrid.setOnAction((ea) -> {
-			this.model.displayNext();
-		});
-		this.buttonPreviousGrid.setOnAction((ea) -> {
-			this.model.displayPrevious();
-		});
-	}
+    @SuppressWarnings("deprecation")
+    @Override
+    public void initListener() {
+        this.buttonNextGrid.setOnAction((ea) -> {
+            this.model.displayNext();
+        });
+        this.buttonPreviousGrid.setOnAction((ea) -> {
+            this.model.displayPrevious();
+        });
+    }
 
-	@Override
-	public boolean hideOnUnselect() {
-		return true;
-	}
+    @Override
+    public boolean hideOnUnselect() {
+        return true;
+    }
 }

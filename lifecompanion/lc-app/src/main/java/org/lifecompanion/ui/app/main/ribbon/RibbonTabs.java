@@ -67,10 +67,10 @@ public class RibbonTabs extends StackPane implements LCViewInitHelper {
         this.tabPane.tabClosingPolicyProperty().set(TabClosingPolicy.UNAVAILABLE);
         //Add tabs
         this.addTab(new RibbonTabHome());
-        this.addTab(new RibbonTabCreate());
         this.addTab(new RibbonTabSelected());
         this.addTab(new RibbonTabStyle());
         this.addTab(new RibbonTabAction());
+        this.addTab(new RibbonTabCreate());
 
         //Add all
         this.getChildren().addAll(this.tabPane, this.buttonMenu);

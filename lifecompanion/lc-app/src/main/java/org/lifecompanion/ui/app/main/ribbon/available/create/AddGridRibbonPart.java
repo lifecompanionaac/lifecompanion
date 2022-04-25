@@ -1,49 +1,20 @@
 package org.lifecompanion.ui.app.main.ribbon.available.create;
 
-import javafx.geometry.Pos;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.TilePane;
-import org.lifecompanion.controller.lifecycle.AppModeController;
-import org.lifecompanion.framework.commons.translation.Translation;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
+import org.lifecompanion.controller.editmode.SelectionController;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
-import org.lifecompanion.ui.configurationcomponent.editmode.categorizedelement.useevent.available.RibbonBasePart;
+import org.lifecompanion.model.api.configurationcomponent.StackComponentI;
+import org.lifecompanion.model.api.ui.editmode.AddComponentCategoryEnum;
 
-public class AddGridRibbonPart extends RibbonBasePart<Void> implements LCViewInitHelper {
+public class AddGridRibbonPart extends AbstractAddComponentRibbonPart implements LCViewInitHelper {
 
     public AddGridRibbonPart() {
-        this.initAll();
+        super(AddComponentCategoryEnum.GRID, 250);
     }
 
     @Override
-    public void initUI() {
-        FlowPane content = new FlowPane();
-        content.setAlignment(Pos.CENTER);
-        content.setPrefWrapLength(250);
-
-        content.getChildren().addAll(
-                AddRibbonHelper.createButton("add.component.grid.in.stack", "component.stack.add.description", "component/icon_add_grid_in_stack.png"),
-                AddRibbonHelper.createButton("add.component.grid.in.copy", "component.texteditor.add.description", "component/icon_add_grid_in_stack.png"),
-                AddRibbonHelper.createButton("add.user.model.name", "component.texteditor.add.description", "component/add_user_model.png")
-                );
-
-        this.setTitle(Translation.getText("ribbon.part.create.grid"));
-        this.setContent(content);
-    }
-
-    @Override
-    public void initListener() {
-    }
-
-    @Override
-    public void initBinding() {
-        this.disableProperty().bind(AppModeController.INSTANCE.getEditModeContext().configurationProperty().isNull());
-    }
-
-    @Override
-    public void bind(final Void modelP) {
-    }
-
-    @Override
-    public void unbind(final Void modelP) {
+    protected BooleanBinding enableTabBinding() {
+        return Bindings.createBooleanBinding(() -> SelectionController.INSTANCE.selectedDisplayableComponentHelperProperty().get() instanceof StackComponentI, SelectionController.INSTANCE.selectedDisplayableComponentHelperProperty());
     }
 }

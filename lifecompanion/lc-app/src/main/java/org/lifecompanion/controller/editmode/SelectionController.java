@@ -270,7 +270,6 @@ public enum SelectionController {
         return selectedDisplayableComponentHelper;
     }
 
-
     public ReadOnlyObjectProperty<RootGraphicComponentI> selectedRootComponentProperty() {
         return selectedRootComponent;
     }

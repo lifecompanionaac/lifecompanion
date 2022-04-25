@@ -60,6 +60,12 @@ public enum AddComponentProvider {
         addComp(new AddComponents.AddTextEditor());
         addComp(new AddComponents.AddUserModelRoot());
         addComp(new AddComponents.AddGridInStack());
+        addComp(new AddComponents.AddGridInStackCopy());
+        addComp(new AddComponents.AddUserModelGridInStack());
+        addComp(new AddComponents.ChangeKeyToStack());
+        addComp(new AddComponents.ChangeKeyToGrid());
+        addComp(new AddComponents.ChangeKeyToTextEditor());
+        addComp(new AddComponents.AddUserModelKey());
 
 
         //Default component : base
