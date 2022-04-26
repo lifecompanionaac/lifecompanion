@@ -123,6 +123,10 @@
     -fx-border-color: transparent;
 }
 
+.border-bottom-lightgrey {
+    -fx-border-color: transparent transparent lightgrey  transparent;
+}
+
 
 /*======= HOVER =======*/
 

@@ -19,7 +19,6 @@
 
 package org.lifecompanion.ui.configurationcomponent.editmode.componentoption;
 
-import javafx.beans.value.ChangeListener;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.control.ButtonBase;
@@ -28,15 +27,14 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import org.controlsfx.glyphfont.FontAwesome;
+import org.lifecompanion.controller.editmode.SelectionController;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
+import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.model.api.configurationcomponent.GridPartComponentI;
 import org.lifecompanion.model.api.configurationcomponent.RootGraphicComponentI;
 import org.lifecompanion.model.api.configurationcomponent.SelectableComponentI;
 import org.lifecompanion.model.api.ui.editmode.ConfigOptionComponentI;
-import org.lifecompanion.controller.resource.GlyphFontHelper;
-import org.lifecompanion.controller.editmode.SelectionController;
-import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.util.javafx.ColorUtils;
-import org.lifecompanion.util.javafx.FXUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -88,7 +86,6 @@ public class ButtonComponentOption extends BaseOptionRegion<SelectableComponentI
         this.gridButtons.setVgap(2.0);
         //Select button
         this.buttonSelect = new ToggleButton();
-        this.buttonSelect.setFocusTraversable(false);
         ButtonComponentOption.applyComponentOptionButtonStyle(this.buttonSelect, selectButtonBackgroundColor, FontAwesome.Glyph.HAND_ALT_UP);
         this.gridButtons.add(this.buttonSelect, this.currentColumn++, this.currentRow++);
         //Display the grid

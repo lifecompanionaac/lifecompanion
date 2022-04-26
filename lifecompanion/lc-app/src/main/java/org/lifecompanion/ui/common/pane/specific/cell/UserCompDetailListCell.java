@@ -45,6 +45,7 @@ import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.ui.app.main.usercomponent.UserCompSelectManageView;
+import org.lifecompanion.util.binding.BindingUtils;
 import org.lifecompanion.util.javafx.DialogUtils;
 import org.lifecompanion.util.javafx.FXControlUtils;
 import org.slf4j.Logger;
@@ -62,54 +63,27 @@ import java.util.function.Consumer;
 public class UserCompDetailListCell extends ListCell<UserCompDescriptionI> {
     private final static Logger LOGGER = LoggerFactory.getLogger(UserCompDetailListCell.class);
 
-    private Button buttonEdit, buttonRemove;
     private final ImageView userCompImage;
-    private final Label labelName;
-    private StackPane stackPane;
 
-    public UserCompDetailListCell(UserCompSelectManageView userCompSelectManageView) {
-        this.getStyleClass().addAll("background-transparent", "soft-selection-cell");
-        //Base content
-        this.labelName = new Label();
-        this.labelName.prefWidthProperty().bind(this.widthProperty().subtract(40));
-        this.labelName.setWrapText(true);
-        this.labelName.setTextAlignment(TextAlignment.CENTER);
-        this.labelName.setAlignment(Pos.CENTER);
-        this.labelName.getStyleClass().addAll("text-h4", "text-fill-dimgrey");
-
-        this.buttonEdit = FXControlUtils.createGraphicButton(GlyphFontHelper.FONT_MATERIAL.create('\uE254').size(22).color(LCGraphicStyle.MAIN_PRIMARY), "tooltip.user.comp.edit");
-        this.buttonRemove = FXControlUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.TRASH_ALT).size(23).color(LCGraphicStyle.SECOND_PRIMARY), "tooltip.user.comp.remove");
-        VBox boxButtons = new VBox(5.0, buttonEdit, buttonRemove);
-        boxButtons.setAlignment(Pos.CENTER_RIGHT);
+    public UserCompDetailListCell() {
+        this.setWrapText(true);
+        this.setTextAlignment(TextAlignment.CENTER);
+        this.setAlignment(Pos.CENTER);
+        this.setTextOverrun(OverrunStyle.LEADING_ELLIPSIS);
 
         this.userCompImage = new ImageView();
-        this.userCompImage.setFitHeight(75);
+        this.userCompImage.setFitHeight(70);
         this.userCompImage.fitWidthProperty().bind(this.widthProperty().subtract(40));
         this.userCompImage.setPreserveRatio(true);
         this.userCompImage.setSmooth(true);
 
-        stackPane = new StackPane(userCompImage, this.labelName, boxButtons);
-        StackPane.setAlignment(labelName, Pos.BOTTOM_CENTER);
-        stackPane.setPadding(new Insets(2.0));
-        this.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+        this.setContentDisplay(ContentDisplay.TOP);
+        this.setGraphicTextGap(6);
 
-        //Double click : edit
         this.setOnMouseClicked(me -> {
             UserCompDescriptionI item = this.getItem();
-            if (item != null) {
-                userCompSelectManageView.selected(item);
-            }
-        });
-        this.buttonEdit.setOnAction(e -> {
-            UserCompDescriptionI item = this.getItem();
-            if (item != null) {
+            if (me.getClickCount() > 1 && item != null) {
                 ConfigActionController.INSTANCE.executeAction(new EditUserCompAction(this, item));
-            }
-        });
-        this.buttonRemove.setOnAction(e -> {
-            UserCompDescriptionI item = this.getItem();
-            if (item != null) {
-                userCompSelectManageView.remove(item);
             }
         });
     }
@@ -118,15 +92,14 @@ public class UserCompDetailListCell extends ListCell<UserCompDescriptionI> {
     protected void updateItem(final UserCompDescriptionI itemP, final boolean emptyP) {
         super.updateItem(itemP, emptyP);
         if (itemP == null || emptyP) {
-            this.userCompImage.imageProperty().unbind();
-            this.userCompImage.imageProperty().set(null);
-            this.labelName.textProperty().unbind();
+            BindingUtils.unbindAndSetNull(userCompImage.imageProperty());
+            BindingUtils.unbindAndSetNull(textProperty());
             this.setGraphic(null);
         } else {
             itemP.requestImageLoad();
             this.userCompImage.imageProperty().bind(itemP.componentImageProperty());
-            this.labelName.textProperty().bind(itemP.nameProperty());
-            this.setGraphic(this.stackPane);
+            this.textProperty().bind(itemP.nameProperty());
+            this.setGraphic(userCompImage);
         }
     }
 }

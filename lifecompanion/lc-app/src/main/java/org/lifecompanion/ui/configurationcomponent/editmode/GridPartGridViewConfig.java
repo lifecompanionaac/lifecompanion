@@ -21,7 +21,6 @@ package org.lifecompanion.ui.configurationcomponent.editmode;
 
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
-import javafx.scene.control.Button;
 import javafx.scene.control.ToggleButton;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.controller.editmode.SelectionController;
@@ -49,7 +48,6 @@ public class GridPartGridViewConfig extends GridPartGridViewBase {
 
         // Select grid
         this.buttonSelectGrid = new ToggleButton();
-        this.buttonSelectGrid.setFocusTraversable(false);
         ButtonComponentOption.applyComponentOptionButtonStyle(this.buttonSelectGrid, LCGraphicStyle.THIRD_DARK, FontAwesome.Glyph.TH_LARGE);
         this.buttonSelectGrid.translateXProperty().bind(widthProperty().subtract(buttonSelectGrid.getPrefWidth() + 5));
         this.buttonSelectGrid.translateYProperty().bind(heightProperty().subtract(buttonSelectGrid.getPrefHeight() + 5));

@@ -56,6 +56,8 @@ public class UserCompSelectManageView extends BorderPane implements LCViewInitHe
     private FilteredList<UserCompDescriptionI> filteredList;
     private TextField fieldSearchFilter;
 
+    private Button buttonEdit, buttonRemove;
+
     public UserCompSelectManageView() {
         this.items = FXCollections.observableArrayList();
         this.filteredList = new FilteredList<>(this.items);
@@ -64,11 +66,11 @@ public class UserCompSelectManageView extends BorderPane implements LCViewInitHe
 
     @Override
     public void initUI() {
-        //Header
-        StackPane headerPane = new StackPane();
-        headerPane.getStyleClass().add("border-bottom-gray");
-        headerPane.setPadding(new Insets(2.0));
-        VBox.setMargin(headerPane, new Insets(1.0, 1.0, 5.0, 1.0));
+        this.buttonEdit = FXControlUtils.createGraphicButton(GlyphFontHelper.FONT_MATERIAL.create('\uE254').size(18).color(LCGraphicStyle.MAIN_PRIMARY), "tooltip.user.comp.edit");
+        this.buttonRemove = FXControlUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.TRASH_ALT).size(19).color(LCGraphicStyle.SECOND_PRIMARY), "tooltip.user.comp.remove");
+        VBox boxButtons = new VBox(5.0, buttonEdit, buttonRemove);
+        boxButtons.setAlignment(Pos.TOP_RIGHT);
+        BorderPane.setMargin(boxButtons, new Insets(10.0, 0.0, 0.0, 0.0));
 
         //Search field
         this.fieldSearchFilter = TextFields.createClearableTextField();
@@ -81,14 +83,14 @@ public class UserCompSelectManageView extends BorderPane implements LCViewInitHe
         this.userCompListView = new ListView<>(this.filteredList);
         this.userCompListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         this.userCompListView.getStyleClass().addAll("border-transparent", "background-transparent");
-        this.userCompListView.setCellFactory(lv -> new UserCompDetailListCell(this));
-        this.userCompListView.setFixedCellSize(130.0);
-        BorderPane.setMargin(this.userCompListView, new Insets(5.0, 0.0, 0.0, 0.0));
+        this.userCompListView.setCellFactory(lv -> new UserCompDetailListCell());
+        this.userCompListView.setFixedCellSize(110);
+        BorderPane.setMargin(this.userCompListView, new Insets(10.0, 0.0, 0.0, 0.0));
 
         //Top
-        VBox boxTop = new VBox(headerPane, boxFilter);
-        this.setTop(boxTop);
+        this.setTop(boxFilter);
         this.setCenter(this.userCompListView);
+        this.setRight(boxButtons);
         this.setPadding(new Insets(10.0));
         this.setPrefWidth(UserCompSelectorDialog.USERCOMP_DIALOG_WIDTH);
         this.setPrefHeight(UserCompSelectorDialog.USERCOMP_DIALOG_HEIGHT);
@@ -97,39 +99,38 @@ public class UserCompSelectManageView extends BorderPane implements LCViewInitHe
     @Override
     public void initListener() {
         this.fieldSearchFilter.textProperty().addListener((obs, ov, nv) -> {
+            // FIXME : use other search method
             Predicate<UserCompDescriptionI> predicate = (p) -> UserCompController.INSTANCE.getPredicateFor(nv).test(p);
             this.filteredList.setPredicate(predicate);
         });
-//        this.buttonRemove.setOnAction(e -> {
-//            ConfigActionController.INSTANCE
-//                    .executeAction(new UserCompActions.DeleteUserComp(buttonRemove, new ArrayList<>(this.userCompListView.getSelectionModel().getSelectedItems())));
-//        });
-//        this.buttonEdit.setOnAction(e -> {
-//            ConfigActionController.INSTANCE.executeAction(new UserCompActions.EditUserCompAction(this, this.userCompListView.getSelectionModel().getSelectedItem()));
-//        });
-//        this.menuItemClearSelection.setOnAction(e -> {
-//            this.userCompListView.getSelectionModel().clearSelection();
-//        });
-//        this.menuItemSelectAll.setOnAction(e -> {
-//            this.userCompListView.getSelectionModel().selectAll();
-//        });
+        //        this.buttonRemove.setOnAction(e -> {
+        //            ConfigActionController.INSTANCE
+        //                    .executeAction(new UserCompActions.DeleteUserComp(buttonRemove, new ArrayList<>(this.userCompListView.getSelectionModel().getSelectedItems())));
+        //        });
+        //        this.buttonEdit.setOnAction(e -> {
+        //            ConfigActionController.INSTANCE.executeAction(new UserCompActions.EditUserCompAction(this, this.userCompListView.getSelectionModel().getSelectedItem()));
+        //        });
+        //        this.menuItemClearSelection.setOnAction(e -> {
+        //            this.userCompListView.getSelectionModel().clearSelection();
+        //        });
+        //        this.menuItemSelectAll.setOnAction(e -> {
+        //            this.userCompListView.getSelectionModel().selectAll();
+        //        });
     }
 
     @Override
     public void initBinding() {
+        this.buttonEdit.disableProperty().bind(userCompListView.getSelectionModel().selectedItemProperty().isNull());
+        this.buttonRemove.disableProperty().bind(userCompListView.getSelectionModel().selectedItemProperty().isNull());
         // TODO : on show/hide
         EasyBind.listBind(this.items, UserCompController.INSTANCE.getUserComponents());
-    }
-
-    public void selected(UserCompDescriptionI item) {
-        if (selectionCallback != null) selectionCallback.accept(item);
     }
 
     public void remove(UserCompDescriptionI item) {
         UserCompController.INSTANCE.getUserComponents().remove(item);
     }
 
-    public void setSelectionCallback(Consumer<UserCompDescriptionI> selectionCallback) {
-        this.selectionCallback = selectionCallback;
+    public UserCompDescriptionI getSelectedUserCompDescription() {
+        return userCompListView.getSelectionModel().getSelectedItem();
     }
 }

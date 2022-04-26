@@ -55,27 +55,25 @@ public class UserCompSelectorDialog extends Dialog<UserCompDescriptionI> impleme
         userCompSelectManageView = new UserCompSelectManageView();
 
         // Dialog content
-        this.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL);
+        this.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
         this.getDialogPane().setContent(userCompSelectManageView);
         this.getDialogPane().getStylesheets().addAll(LCConstant.CSS_STYLE_PATH);
-        this.setResultConverter(dialogButton -> null);
+        this.setResultConverter(dialogButton -> dialogButton == ButtonType.OK ? userCompSelectManageView.getSelectedUserCompDescription() : null);
     }
 
     @Override
     public void initListener() {
-//        this.imageSelectorSearchView.setSelectionCallback(imageElementI -> {
-//            setResult(imageElementI);
-//            hide();
-//        });
-        this.userCompSelectManageView.setSelectionCallback(userComp -> {
-        });
+        //        this.imageSelectorSearchView.setSelectionCallback(imageElementI -> {
+        //            setResult(imageElementI);
+        //            hide();
+        //        });
         this.setOnShown(e -> {
             setResult(null);
             //imageSelectorSearchView.imageSelectorShowed();
         });
         this.setOnHidden(e -> {
             //imageSelectorSearchView.clearResult();
-//            ImageDictionaries.INSTANCE.clearThumbnailCache();
+            //            ImageDictionaries.INSTANCE.clearThumbnailCache();
         });
     }
 
