@@ -13,8 +13,4 @@ public class AddRootRibbonPart extends AbstractAddComponentRibbonPart implements
         super(AddComponentCategoryEnum.ROOT, 200);
     }
 
-    @Override
-    protected BooleanBinding enableTabBinding() {
-        return Bindings.createBooleanBinding(() -> true);
-    }
 }

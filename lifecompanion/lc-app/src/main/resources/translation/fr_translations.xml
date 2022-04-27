@@ -3527,4 +3527,6 @@
   <text key="ribbon.part.create.grid">Créer des grilles</text>
   <text key="ribbon.part.create.key">Transformer les cases</text>
   <text key="ribbon.part.create.misc">Autres</text>
+
+    <text key="user.comp.add.preaction">Préparation du modèle utilisateur</text>
 </texts>

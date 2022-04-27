@@ -10,9 +10,4 @@ public class ChangeKeyRibbonPart extends AbstractAddComponentRibbonPart implemen
     public ChangeKeyRibbonPart() {
         super(AddComponentCategoryEnum.KEY, 300);
     }
-
-    @Override
-    protected BooleanBinding enableTabBinding() {
-        return SelectionController.INSTANCE.selectedKeyHelperProperty().isNotNull();
-    }
 }

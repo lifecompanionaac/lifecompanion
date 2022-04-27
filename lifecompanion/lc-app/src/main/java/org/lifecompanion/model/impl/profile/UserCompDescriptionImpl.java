@@ -25,11 +25,16 @@ import javafx.beans.property.StringProperty;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
 import org.jdom2.Element;
+import org.jdom2.JDOMException;
+import org.lifecompanion.controller.io.ConfigurationComponentIOHelper;
+import org.lifecompanion.controller.io.XMLHelper;
 import org.lifecompanion.model.api.configurationcomponent.DisplayableComponentI;
+import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.profile.UserCompDescriptionI;
 import org.lifecompanion.model.api.profile.UserCompI;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.ui.editmode.AddTypeEnum;
+import org.lifecompanion.model.impl.io.IOContext;
 import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.controller.editaction.AsyncExecutorController;
@@ -52,16 +57,14 @@ import java.io.IOException;
 public class UserCompDescriptionImpl implements UserCompDescriptionI {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserCompDescriptionImpl.class);
 
-    private ObjectProperty<Image> componentImage;
-    private StringProperty name;
-    private StringProperty author;
+    private final ObjectProperty<Image> componentImage;
+    private final StringProperty name;
+    private final StringProperty author;
 
-    @XMLGenericProperty(AddTypeEnum.class)
-    private ObjectProperty<AddTypeEnum> targetType;
+    private Class<? extends DisplayableComponentI> componentType;
 
     private String savedComponentId;
-
-    private UserCompImpl userComponent;
+    private final UserCompImpl userComponent;
 
     /**
      * Path to configuration image
@@ -75,7 +78,6 @@ public class UserCompDescriptionImpl implements UserCompDescriptionI {
 
     public UserCompDescriptionImpl() {
         this.componentImage = new SimpleObjectProperty<>();
-        this.targetType = new SimpleObjectProperty<>();
         this.name = new SimpleStringProperty();
         this.author = new SimpleStringProperty();
         this.userComponent = new UserCompImpl();
@@ -84,8 +86,8 @@ public class UserCompDescriptionImpl implements UserCompDescriptionI {
     public UserCompDescriptionImpl(final DisplayableComponentI comp) {
         this();
         this.userComponent.setLoadedComponent(comp);
+        this.componentType = comp.getClass();
         this.savedComponentId = comp.getID();
-        this.targetType.set(AddTypeEnum.getTypeFor(comp));
     }
 
     // Class part : "Properties"
@@ -129,12 +131,17 @@ public class UserCompDescriptionImpl implements UserCompDescriptionI {
 
     @Override
     public AddTypeEnum getTargetType() {
-        return this.targetType.get();
+        return AddTypeEnum.ROOT;
     }
 
     @Override
     public String getSavedComponentId() {
         return this.savedComponentId;
+    }
+
+    @Override
+    public Class<? extends DisplayableComponentI> getComponentType() {
+        return componentType;
     }
 
     @Override
@@ -168,8 +175,18 @@ public class UserCompDescriptionImpl implements UserCompDescriptionI {
     @Override
     public void deserialize(final Element node, final File context) throws LCException {
         XMLObjectSerializer.deserializeInto(UserCompDescriptionImpl.class, this, node);
-        //Read image when exist
         this.imagePath = new File(context + File.separator + LCConstant.USERCOMP_SCREENSHOT_NAME).getAbsolutePath();
+
+        try {
+            IOContextI ioContext = new IOContext(context);
+            ioContext.setFallbackOnDefaultInstanceOnFail(false);
+            Element displayableCompElement = UserCompImpl.getElementFromRootXml(XMLHelper.readXml(new File(context + File.separator + LCConstant.USER_COMP_XML_NAME)));
+            DisplayableComponentI componentToLoad = (DisplayableComponentI) ConfigurationComponentIOHelper.create(displayableCompElement, ioContext, null).getRight();
+            this.componentType = componentToLoad.getClass();
+        } catch (IOException | JDOMException e) {
+            throw LCException.newException().withCause(e).build();
+        }
+
     }
     //========================================================================
 }

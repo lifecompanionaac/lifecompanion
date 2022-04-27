@@ -26,8 +26,8 @@ import java.io.File;
 
 
 public class UserCompLoadingTask extends AbstractLoadUtilsTask<Void> {
-	private File directory;
-	private UserCompDescriptionI userCompDescription;
+	private final File directory;
+	private final UserCompDescriptionI userCompDescription;
 
 	public UserCompLoadingTask(final File directory, final UserCompDescriptionI userCompDescription) {
 		super("task.title.user.comp.description.loading");

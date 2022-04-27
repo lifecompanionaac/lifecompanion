@@ -67,6 +67,11 @@ public interface UserCompDescriptionI extends XMLSerializable<File> {
     String getSavedComponentId();
 
     /**
+     * @return the real component type. Will always be provided even if {@link #getUserComponent()} is not loaded.
+     */
+    Class<? extends DisplayableComponentI> getComponentType();
+
+    /**
      * @return the user component holder.<br>
      * Is never null, be the component inside can be null if it's not already loaded.
      */

@@ -1,6 +1,7 @@
 package org.lifecompanion.model.api.ui.editmode;
 
 import org.lifecompanion.model.api.configurationcomponent.DisplayableComponentI;
+import org.lifecompanion.model.api.editaction.BaseEditActionI;
 import org.lifecompanion.model.api.editaction.UndoRedoActionI;
 
 public interface AddComponentI {
@@ -23,5 +24,5 @@ public interface AddComponentI {
 
     Class<? extends DisplayableComponentI> getSelectionFilter();
 
-    UndoRedoActionI createAddAction();
+    BaseEditActionI createAddAction();
 }

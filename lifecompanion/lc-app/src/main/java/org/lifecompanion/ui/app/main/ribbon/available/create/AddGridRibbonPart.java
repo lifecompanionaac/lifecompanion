@@ -13,8 +13,4 @@ public class AddGridRibbonPart extends AbstractAddComponentRibbonPart implements
         super(AddComponentCategoryEnum.GRID, 250);
     }
 
-    @Override
-    protected BooleanBinding enableTabBinding() {
-        return Bindings.createBooleanBinding(() -> SelectionController.INSTANCE.selectedDisplayableComponentHelperProperty().get() instanceof StackComponentI, SelectionController.INSTANCE.selectedDisplayableComponentHelperProperty());
-    }
 }

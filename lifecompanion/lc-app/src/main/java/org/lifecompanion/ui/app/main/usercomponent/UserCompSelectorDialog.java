@@ -63,21 +63,12 @@ public class UserCompSelectorDialog extends Dialog<UserCompDescriptionI> impleme
 
     @Override
     public void initListener() {
-        //        this.imageSelectorSearchView.setSelectionCallback(imageElementI -> {
-        //            setResult(imageElementI);
-        //            hide();
-        //        });
-        this.setOnShown(e -> {
-            setResult(null);
-            //imageSelectorSearchView.imageSelectorShowed();
-        });
-        this.setOnHidden(e -> {
-            //imageSelectorSearchView.clearResult();
-            //            ImageDictionaries.INSTANCE.clearThumbnailCache();
-        });
+        this.setOnHidden(e -> userCompSelectManageView.unbind());
     }
 
-    public UserCompDescriptionI requestShow(Class<? extends DisplayableComponentI> type) {
+    public UserCompDescriptionI showWithFilter(Class<? extends DisplayableComponentI> type) {
+        if (this.getResult() != null) this.setResult(null);
+        this.userCompSelectManageView.bindAndFilterOn(type, this::setResult);
         return this.showAndWait().orElse(null);
     }
 }

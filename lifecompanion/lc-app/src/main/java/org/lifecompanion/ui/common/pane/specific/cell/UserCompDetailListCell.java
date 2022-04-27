@@ -65,15 +65,16 @@ public class UserCompDetailListCell extends ListCell<UserCompDescriptionI> {
 
     private final ImageView userCompImage;
 
-    public UserCompDetailListCell() {
+    public UserCompDetailListCell(Consumer<UserCompDescriptionI> directSelectionCallback) {
         this.setWrapText(true);
         this.setTextAlignment(TextAlignment.CENTER);
         this.setAlignment(Pos.CENTER);
-        this.setTextOverrun(OverrunStyle.LEADING_ELLIPSIS);
+        this.prefWidthProperty().bind(widthProperty().subtract(20));
+        this.setWrapText(true);
 
         this.userCompImage = new ImageView();
         this.userCompImage.setFitHeight(70);
-        this.userCompImage.fitWidthProperty().bind(this.widthProperty().subtract(40));
+        this.userCompImage.fitWidthProperty().bind(this.widthProperty().subtract(20));
         this.userCompImage.setPreserveRatio(true);
         this.userCompImage.setSmooth(true);
 
@@ -83,7 +84,7 @@ public class UserCompDetailListCell extends ListCell<UserCompDescriptionI> {
         this.setOnMouseClicked(me -> {
             UserCompDescriptionI item = this.getItem();
             if (me.getClickCount() > 1 && item != null) {
-                ConfigActionController.INSTANCE.executeAction(new EditUserCompAction(this, item));
+                directSelectionCallback.accept(item);
             }
         });
     }
