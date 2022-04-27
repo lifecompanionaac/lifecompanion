@@ -26,7 +26,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.jdom2.Element;
 import org.lifecompanion.controller.io.ConfigurationComponentIOHelper;
-import org.lifecompanion.framework.utils.Triple;
 import org.lifecompanion.model.api.configurationcomponent.ConfigurationChildComponentI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.configurationcomponent.keyoption.KeyOptionConfigurationViewI;
@@ -46,7 +45,6 @@ import org.lifecompanion.model.api.plugin.PluginConfigPropertiesI;
 import org.lifecompanion.model.api.plugin.PluginI;
 import org.lifecompanion.model.api.textprediction.CharPredictorI;
 import org.lifecompanion.model.api.textprediction.WordPredictorI;
-import org.lifecompanion.model.api.ui.editmode.PossibleAddComponentI;
 import org.lifecompanion.model.api.voicesynthesizer.VoiceSynthesizerI;
 import org.lifecompanion.model.impl.plugin.PluginInfo;
 import org.lifecompanion.model.impl.plugin.PluginInfoState;
@@ -152,7 +150,7 @@ public enum PluginController implements LCStateListener, ModeListenerI {
     private final PluginImplementationLoadingHandler<Class<? extends UseEventGeneratorConfigurationViewI>> useEventGeneratorConfigViews = new PluginImplementationLoadingHandler<>(UseEventGeneratorConfigurationViewI.class);
     private final PluginImplementationLoadingHandler<Class<? extends KeyOptionI>> keyOptions = new PluginImplementationLoadingHandler<>(KeyOptionI.class);
     private final PluginImplementationLoadingHandler<Class<? extends KeyOptionConfigurationViewI>> keyOptionConfigViews = new PluginImplementationLoadingHandler<>(KeyOptionConfigurationViewI.class);
-    private final PluginImplementationLoadingHandler<Class<? extends PossibleAddComponentI>> possibleAddComponents = new PluginImplementationLoadingHandler<>(PossibleAddComponentI.class);
+    //private final PluginImplementationLoadingHandler<Class<? extends PossibleAddComponentI>> possibleAddComponents = new PluginImplementationLoadingHandler<>(PossibleAddComponentI.class); - FIXME : provide a way to add element to "CREATE" tab
     private final PluginImplementationLoadingHandler<Class<? extends GeneralConfigurationStepViewI>> generalConfigurationSteps = new PluginImplementationLoadingHandler<>(GeneralConfigurationStepViewI.class);
     private final PluginImplementationLoadingHandler<UseVariableDefinitionI> useVariableDefinitions = new PluginImplementationLoadingHandler<>(null);
     private final PluginImplementationLoadingHandler<String[]> stylesheets = new PluginImplementationLoadingHandler<>(null);
@@ -193,10 +191,6 @@ public enum PluginController implements LCStateListener, ModeListenerI {
         return keyOptionConfigViews;
     }
 
-    public PluginImplementationLoadingHandler<Class<? extends PossibleAddComponentI>> getPossibleAddComponents() {
-        return possibleAddComponents;
-    }
-
     public PluginImplementationLoadingHandler<UseVariableDefinitionI> getUseVariableDefinitions() {
         return useVariableDefinitions;
     }
@@ -211,7 +205,7 @@ public enum PluginController implements LCStateListener, ModeListenerI {
 
     private final List<PluginImplementationLoadingHandler<? extends Class<?>>> pluginImplementationLoadingHandlers = Arrays.asList(
             useActions, useActionConfigViews, charPredictors, wordPredictors, voiceSynthesizers, useEventGenerators,
-            useEventGeneratorConfigViews, keyOptions, keyOptionConfigViews, possibleAddComponents, generalConfigurationSteps
+            useEventGeneratorConfigViews, keyOptions, keyOptionConfigViews, generalConfigurationSteps
     );
 
     private List<PluginInfo> getPluginById(String id) {

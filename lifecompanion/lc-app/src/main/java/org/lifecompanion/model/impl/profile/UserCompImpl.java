@@ -43,11 +43,6 @@ public class UserCompImpl implements UserCompI {
     }
 
     @Override
-    public DisplayableComponentI getLoadedComponent() {
-        return this.loadedComponent;
-    }//FIXME : delete this
-
-    @Override
     public boolean isLoaded() {
         return this.loadedComponent != null;
     }

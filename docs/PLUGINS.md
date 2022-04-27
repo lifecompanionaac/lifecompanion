@@ -13,4 +13,4 @@ Here are the LifeCompanion expected icons size :
 | TYPE												| SIZE (PX)			|
 |---------------------------------------------------|-------------------|
 |**use actions / use event generator**				|32x32				|
-|**add component icon (in create tab)**				|48x48				|
+|**add component icon (in create tab)**				|32x32				|

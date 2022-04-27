@@ -53,7 +53,7 @@ public abstract class AbstractAddComponentRibbonPart extends RibbonBasePart<Void
     }
 
     private Button createButton(AddComponentI addComponent) {
-        BorderPane pane = new BorderPane(new ImageView(IconHelper.get(addComponent.getIconPath(), 32, 32, true, true)));
+        BorderPane pane = new BorderPane(new ImageView(IconHelper.get(addComponent.getIconPath())));
         pane.setMinHeight(32);
         pane.setMinWidth(32);
         Button button = FXControlUtils.createRightTextButton(Translation.getText(addComponent.getNameID()), pane, null);

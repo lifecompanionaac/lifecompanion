@@ -21,13 +21,11 @@ import org.lifecompanion.model.impl.configurationcomponent.*;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.ui.app.main.usercomponent.UserCompSelectorDialog;
-import org.lifecompanion.ui.common.pane.specific.cell.UserCompListCell;
 import org.lifecompanion.util.javafx.DialogUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.util.function.Consumer;
 
 public class AddComponents {
     private static final Logger LOGGER = LoggerFactory.getLogger(AddComponents.class);
@@ -132,7 +130,7 @@ public class AddComponents {
 
     public static class AddStack extends AbstractAddComponent {
         AddStack() {
-            super("component/icon_add_stack.png", "component.stack.name", "component.stack.add.description", AddComponentCategoryEnum.ROOT, null);
+            super("component/stack.png", "component.stack.name", "component.stack.add.description", AddComponentCategoryEnum.ROOT, null);
         }
 
         @Override

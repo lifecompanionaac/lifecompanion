@@ -167,39 +167,11 @@ public class GridPartKeyViewConfig extends GridPartKeyViewBase {
 
         //Drag over key : accept image and components
         this.setOnDragOver((ea) -> {
-            if (DragController.INSTANCE.isDragShouldBeAcceptedOn(AddTypeEnum.GRID_PART, true)) {
-                ea.acceptTransferModes(TransferMode.ANY);
-            }
-            //Accept raw images from computer : will try to add/find them in gallery
-            if (isCopyingRawImagesFromComputer(ea)) {
+            if (isCopyingRawImagesFromComputer(ea) || DragController.INSTANCE.currentDraggedKeyProperty().get() != null) {
                 ea.acceptTransferModes(TransferMode.COPY_OR_MOVE);
             }
         });
         this.setOnDragDropped((ea) -> {
-            //Add comp
-            if (DragController.INSTANCE.isDragComponentIsPresentOn(AddTypeEnum.GRID_PART)) {
-                GridComponentI parent = this.model.gridParentProperty().get();
-                if (parent != null) {
-                    GridPartComponentI dragged = DragController.INSTANCE.createNewCompFor(AddTypeEnum.GRID_PART, parent, model);
-                    if (dragged != null) {
-                        int columnIndex = this.model.getColumnIndex(ea.getX());
-                        int rowIndex = this.model.getRowIndex(ea.getY());
-                        GridActions.SetComponentAction action = new SetComponentAction(parent.getGrid(), rowIndex, columnIndex, dragged);
-                        ConfigActionController.INSTANCE.executeAction(action);
-                    } else if (DragController.INSTANCE.isAddInStackComponent()) {
-                        BaseEditActionI action = DragController.INSTANCE.createAddInStackAction(this.model);
-                        if (action != null) {
-                            ConfigActionController.INSTANCE.executeAction(action);
-                        }
-                    } else if (DragController.INSTANCE.isAddInStackUserComponent()) {
-                        BaseEditActionI action = DragController.INSTANCE.createAddUserCompInStackAction(this.model);
-                        if (action != null) {
-                            ConfigActionController.INSTANCE.executeAction(action);
-                        }
-                    }
-                    DragController.INSTANCE.resetCurrentDraggedComp();
-                }
-            }
             //Accept other key
             GridPartKeyComponentI dragged = DragController.INSTANCE.currentDraggedKeyProperty().get();
             if (dragged != null) {

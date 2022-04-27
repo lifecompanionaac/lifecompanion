@@ -38,7 +38,6 @@ import org.lifecompanion.model.impl.configurationcomponent.GridPartKeyComponent;
 import org.lifecompanion.controller.editmode.SelectionController;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.ui.editmode.AddTypeEnum;
-import org.lifecompanion.model.api.ui.editmode.PossibleAddComponentI;
 
 /**
  * Class for actions on a {@link GridPartGridComponent} like change row/column, add keys, etc...
@@ -180,61 +179,6 @@ public class GridActions {
             return "action.inverse.keys.name";
         }
 
-    }
-
-    /**
-     * Action to change the keys option
-     */
-    // TODO : Check ChangeMultiKeyOptionAction and merge into this kind of method !
-    public static class SetKeyOptionsAction implements UndoRedoActionI {
-        private List<GridPartKeyComponentI> keys;
-        private PossibleAddComponentI<GridPartKeyComponentI> keyAdder;
-        private Map<GridPartKeyComponentI, GridPartKeyComponentI> keyThatReplaces;
-
-        public SetKeyOptionsAction(final List<GridPartKeyComponentI> keys, final PossibleAddComponentI<GridPartKeyComponentI> keyAdderP) {
-            this.keys = keys;
-            this.keyAdder = keyAdderP;
-            this.keyThatReplaces = new HashMap<>();
-            // Sort keys by their position in grid
-            Collections.sort(this.keys, ConfigurationComponentUtils.positionInGridParentIncludingParentComparator());
-        }
-
-        @Override
-        public void doAction() throws LCException {
-            // For each keys, set the option
-            for (GridPartKeyComponentI keyComponent : this.keys) {
-                GridComponentI gridComponent = keyComponent.gridParentProperty().get();
-                GridPartKeyComponentI keyReplace = this.keyAdder.getNewComponent(AddTypeEnum.GRID_PART, gridComponent, keyComponent);
-                // Replace key
-                this.keyThatReplaces.put(keyComponent, keyReplace);
-                gridComponent.getGrid().replaceComponent(keyComponent, keyReplace);
-            }
-        }
-
-        @Override
-        public void undoAction() throws LCException {
-            // For each replaced keys, replace the key that replaced
-            for (GridPartKeyComponentI keyComponent : this.keys) {
-                GridPartKeyComponentI replacingKey = this.keyThatReplaces.get(keyComponent);
-                GridComponentI gridComponent = replacingKey.gridParentProperty().get();
-                gridComponent.getGrid().replaceComponent(replacingKey, keyComponent);
-            }
-        }
-
-        @Override
-        public void redoAction() throws LCException {
-            // For each original keys, replace it again, but without creating new instance
-            for (GridPartKeyComponentI keyComponent : this.keys) {
-                GridPartKeyComponentI replacingKey = this.keyThatReplaces.get(keyComponent);
-                GridComponentI gridComponent = keyComponent.gridParentProperty().get();
-                gridComponent.getGrid().replaceComponent(keyComponent, replacingKey);
-            }
-        }
-
-        @Override
-        public String getNameID() {
-            return "action.set.keys.option";
-        }
     }
 
     /**

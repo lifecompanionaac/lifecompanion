@@ -23,8 +23,7 @@ import org.lifecompanion.ui.app.main.ribbon.AbstractRibbonTabContent;
 import org.lifecompanion.ui.app.main.ribbon.available.create.AddGridRibbonPart;
 import org.lifecompanion.ui.app.main.ribbon.available.create.AddRootRibbonPart;
 import org.lifecompanion.ui.app.main.ribbon.available.create.ChangeKeyRibbonPart;
-import org.lifecompanion.ui.app.main.ribbon.available.global.*;
-import org.lifecompanion.ui.app.main.ribbon.available.withselection.GridLayoutRibbonPart;
+import org.lifecompanion.ui.app.main.ribbon.available.create.MiscAddRibbonPart;
 
 public class RibbonTabCreate extends AbstractRibbonTabContent {
 
@@ -35,7 +34,8 @@ public class RibbonTabCreate extends AbstractRibbonTabContent {
         super(//
                 RibbonTabPart.create(AddRootRibbonPart.class),//
                 RibbonTabPart.create(AddGridRibbonPart.class),//
-                RibbonTabPart.create(ChangeKeyRibbonPart.class)//
+                RibbonTabPart.create(ChangeKeyRibbonPart.class),//
+                RibbonTabPart.create(MiscAddRibbonPart.class)//
         );
         this.tabTitle.set(Translation.getText("tabs.title.create"));
     }

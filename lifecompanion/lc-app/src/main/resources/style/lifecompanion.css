@@ -109,6 +109,12 @@
     -fx-background-color: transparent;
 }
 
+/*======= EFFECT =======*/
+
+.dropshadow-bottom {
+    -fx-effect: dropshadow( gaussian , rgba(0.0,0.0,0.0,0.4) , 10.0,0.0,0.0,1.0 );
+}
+
 /*======= BORDERS =======*/
 
 .border-bottom-gray {
@@ -242,4 +248,49 @@
 /*======= SPECIFIC DEV =======*/
 .popup-bottom-dropshadow {
     -fx-effect: dropshadow(three-pass-box, gray, 10, 0, 0, 5);
+}
+
+/*==== RIBBON TABS (main) ====*/
+.ribbon-tabs {
+	-fx-border-width: 0.0;
+    -fx-border-color: transparent;
+    -fx-background-color: white;
+}
+.ribbon-tabs .tab-header-area .tab {
+	-fx-background-color: white;
+    -fx-padding: 5.0 30.0 5.0 30.0;
+}
+.ribbon-tabs .tab-header-area .tab:selected {
+	-fx-background-color: white;
+	-fx-border-color: lightgray lightgray white lightgray;
+	-fx-border-width: 1.0 1.0 1.0 1.0;
+}
+.ribbon-tabs .tab-header-area .tab:selected:disabled {
+	-fx-background-color: white,white;
+	-fx-border-color: lightgray lightgray white lightgray,lightgray lightgray white lightgray;
+	-fx-border-width: 1.0 1.0 1.0 1.0;
+}
+.ribbon-tabs .tab:selected *.tab-label {
+	-fx-text-fill: -fx-main-primary;
+	-fx-font-weight: bold;
+}
+.ribbon-tabs .tab *.tab-label {
+	-fx-text-fill: gray;
+	-fx-font-size: 16.0px;
+	-fx-font-family: "Calibri";
+}
+.ribbon-tabs .tab-header-area .tab:selected .focus-indicator {
+    -fx-border-width: 0.0;
+    -fx-border-color: transparent;
+}
+ .ribbon-tabs .tab-header-area{
+	-fx-padding: 12.0px 3.0px 0.0px 50.0px;
+}
+.ribbon-tabs *.tab-header-background {
+    -fx-background-color: white;
+    -fx-border-width: 0.0 0.0 1.0 0.0;
+    -fx-border-color: lightgray;
+}
+.ribbon-tabs *.tab-content-area {
+    -fx-padding: 6.0px 1.0px 6.0px 1.0px;
 }

@@ -22,8 +22,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.lifecompanion.model.api.ui.editmode.AddComponentCategoryEnum;
 import org.lifecompanion.model.api.ui.editmode.AddComponentI;
-import org.lifecompanion.model.api.ui.editmode.PossibleAddComponentCategoryI;
-import org.lifecompanion.model.api.ui.editmode.PossibleAddComponentI;
 import org.lifecompanion.controller.plugin.PluginController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,13 +34,9 @@ public enum AddComponentProvider {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AddComponentProvider.class);
 
-
-    private ObservableList<PossibleAddComponentCategoryI> categories;
-
     private final Map<AddComponentCategoryEnum, ObservableList<AddComponentI>> available;
 
     AddComponentProvider() {
-        this.categories = FXCollections.observableArrayList();
         available = new HashMap<>();
         this.initComponents();
     }
@@ -67,38 +61,13 @@ public enum AddComponentProvider {
         addComp(new AddComponents.ChangeKeyToTextEditor());
         addComp(new AddComponents.AddUserModelKey());
 
-
-        //Default component : base
-        this.addPossibleComp(PossibleAddComponents.AddStack.INSTANCE);
-        this.addPossibleComp(PossibleAddComponents.AddTextEditor.INSTANCE);
-        this.addPossibleComp(PossibleAddComponents.AddGridInKey.INSTANCE);
-        this.addPossibleComp(PossibleAddComponents.AddGridInStack.INSTANCE);
-        //Default component : keys
-        this.addPossibleComp(PossibleAddComponents.AddBasicKey.INSTANCE);
-        this.addPossibleComp(PossibleAddComponents.AddQuickCommunicationKey.INSTANCE);
-        this.addPossibleComp(PossibleAddComponents.AddWordPredictionKey.INSTANCE);
-        this.addPossibleComp(PossibleAddComponents.AddCharPredictionKey.INSTANCE);
-        this.addPossibleComp(PossibleAddComponents.AddCharKey.INSTANCE);
-        this.addPossibleComp(PossibleAddComponents.AddNoteKey.INSTANCE);
-        this.addPossibleComp(PossibleAddComponents.AddVariableInformationKey.INSTANCE);
-        //Plugin
-        PluginController.INSTANCE.getPossibleAddComponents().registerListenerAndDrainCache(addCompType -> {
-            try {
-                addPossibleComp(addCompType.getConstructor().newInstance());
-            } catch (Exception e) {
-                LOGGER.error("Can't create possible add component {} from plugin", addCompType, e);
-            }
-        });
-    }
-
-    private void addPossibleComp(final PossibleAddComponentI<?> addComp) {
-        if (!this.categories.contains(addComp.getCategory())) {
-            this.categories.add(addComp.getCategory());
-        }
-        addComp.getCategory().getPossibleAddList().add(addComp);
-    }
-
-    public ObservableList<PossibleAddComponentCategoryI> getCategories() {
-        return this.categories;
+        //Plugin FIXME
+//        PluginController.INSTANCE.getPossibleAddComponents().registerListenerAndDrainCache(addCompType -> {
+//            try {
+//                addPossibleComp(addCompType.getConstructor().newInstance());
+//            } catch (Exception e) {
+//                LOGGER.error("Can't create possible add component {} from plugin", addCompType, e);
+//            }
+//        });
     }
 }

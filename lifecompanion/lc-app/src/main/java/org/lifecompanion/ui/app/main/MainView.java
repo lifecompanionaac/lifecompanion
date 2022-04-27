@@ -189,12 +189,6 @@ public class MainView extends StackPane implements LCViewInitHelper {
         // Clear selection
         this.buttonResetSelection.setOnAction(a -> SelectionController.INSTANCE.clearSelection());
         this.buttonGoUseMode.setOnAction(GlobalActions.HANDLER_GO_USE_MODE);
-        // Drag over : accept some object only
-        this.scrollcenter.setOnDragOver((ea) -> {
-            if (DragController.INSTANCE.isDragShouldBeAcceptedOn(AddTypeEnum.ROOT, false)) {
-                ea.acceptTransferModes(TransferMode.ANY);
-            }
-        });
         this.addEventFilter(ScrollEvent.SCROLL, scrollEvent -> {
             if (scrollEvent.isShortcutDown()) {
                 scrollEvent.consume();
@@ -203,35 +197,6 @@ public class MainView extends StackPane implements LCViewInitHelper {
                 } else {
                     AppModeController.INSTANCE.getEditModeContext().zoomOut();
                 }
-            }
-        });
-        // Get the dragged object
-        this.scrollcenter.setOnDragDropped((ea) -> {
-            try {
-                Bounds viewportBounds = this.scrollcenter.getViewportBounds();
-                Bounds contentBounds = this.scrollcenter.getContent().getBoundsInParent();
-                if (DragController.INSTANCE.isDragComponentIsPresentOn(AddTypeEnum.ROOT)) {
-                    RootGraphicComponentI dragged = DragController.INSTANCE.createNewCompFor(AddTypeEnum.ROOT);
-                    if (dragged != null && AppModeController.INSTANCE.getEditModeContext().getConfiguration() != null) {
-                        double scale = AppModeController.INSTANCE.getEditModeContext().configurationScaleProperty().get();
-                        // Center the component
-                        dragged.xProperty()
-                                .set(Math.max(LCConstant.CONFIG_ROOT_COMPONENT_GAP,
-                                        (contentBounds.getWidth() - viewportBounds.getWidth()) * this.scrollcenter.getHvalue() + ea.getX() * (1.0 / scale)
-                                                - dragged.widthProperty().get() / 2.0));
-                        dragged.yProperty()
-                                .set(Math.max(LCConstant.CONFIG_ROOT_COMPONENT_GAP,
-                                        (contentBounds.getHeight() - viewportBounds.getHeight()) * this.scrollcenter.getVvalue()
-                                                + ea.getY() * (1.0 / scale) - dragged.heightProperty().get() / 2.0));
-                        // Do add
-                        OptionActions.AddRootComponentAction action = new AddRootComponentAction(AppModeController.INSTANCE.getEditModeContext().getConfiguration(), dragged);
-                        ConfigActionController.INSTANCE.executeAction(action);
-                    }
-                    // Remove added
-                    DragController.INSTANCE.resetCurrentDraggedComp();
-                }
-            } catch (Throwable t) {
-                LOGGER.error("Problem when dragging a component to main view", t);
             }
         });
         linkCreateBlank.setOnAction(e -> ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.NewEditInListAction()));

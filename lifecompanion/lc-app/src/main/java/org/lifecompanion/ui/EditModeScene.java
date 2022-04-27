@@ -42,10 +42,8 @@ import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.ui.app.main.CurrentLifeCompanionStateDetailView;
 import org.lifecompanion.ui.app.main.MainView;
-import org.lifecompanion.ui.app.main.addcomponent.AddComponentView;
 import org.lifecompanion.ui.app.main.mainmenu.MainMenu;
 import org.lifecompanion.ui.app.main.ribbon.RibbonTabs;
-import org.lifecompanion.ui.app.main.usercomponent.UserCompView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -88,21 +86,12 @@ public class EditModeScene extends Scene implements LCViewInitHelper {
     public void initUI() {
         this.topRibbons = new RibbonTabs();
 
-        //Center
-        //Element
         MainView mainPane = new MainView();
-        VBox leftPane = new VBox(new AddComponentView(), new UserCompView());
-        SplitPane center = new SplitPane(leftPane, mainPane);
-        center.setOrientation(Orientation.HORIZONTAL);
-        center.setDividerPositions(0.30);
-        SplitPane.setResizableWithParent(leftPane, false);
-
-        //Bottom
         CurrentLifeCompanionStateDetailView bottomPane = new CurrentLifeCompanionStateDetailView();
 
         //Total configuration pane
         this.borderPane = new BorderPane();
-        this.borderPane.setCenter(center);
+        this.borderPane.setCenter(mainPane);
         this.borderPane.setTop(this.topRibbons);
         this.borderPane.setBottom(bottomPane);
 
