@@ -111,7 +111,7 @@ public class GridLayoutRibbonPart extends RibbonBasePart<DisplayableComponentI> 
 
 	@Override
 	public void initBinding() {
-		this.model.bind(SelectionController.INSTANCE.selectedComponentBothProperty());
+		this.model.bind(SelectionController.INSTANCE.selectedDisplayableComponentHelperProperty());
 		this.selectedGrid.addListener((obs, ov, nv) -> {
 			if (nv != null) {
 				this.buttonRemoveColumn.disableProperty().bind(nv.columnCountProperty().lessThan(2));

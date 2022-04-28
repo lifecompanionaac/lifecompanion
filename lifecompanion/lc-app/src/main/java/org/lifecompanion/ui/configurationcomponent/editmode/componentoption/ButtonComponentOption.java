@@ -19,7 +19,6 @@
 
 package org.lifecompanion.ui.configurationcomponent.editmode.componentoption;
 
-import javafx.beans.value.ChangeListener;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.control.ButtonBase;
@@ -28,13 +27,14 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import org.controlsfx.glyphfont.FontAwesome;
+import org.lifecompanion.controller.editmode.SelectionController;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
+import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.model.api.configurationcomponent.GridPartComponentI;
 import org.lifecompanion.model.api.configurationcomponent.RootGraphicComponentI;
 import org.lifecompanion.model.api.configurationcomponent.SelectableComponentI;
 import org.lifecompanion.model.api.ui.editmode.ConfigOptionComponentI;
-import org.lifecompanion.controller.resource.GlyphFontHelper;
-import org.lifecompanion.controller.editmode.SelectionController;
-import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.util.javafx.ColorUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,10 +67,13 @@ public class ButtonComponentOption extends BaseOptionRegion<SelectableComponentI
     /**
      * List of current option in this component
      */
-    private List<ConfigOptionComponentI> options;
+    private final List<ConfigOptionComponentI> options;
 
-    public ButtonComponentOption(final SelectableComponentI modelP) {
+    private final Color selectButtonBackgroundColor;
+
+    public ButtonComponentOption(final SelectableComponentI modelP, Color selectButtonBackgroundColor) {
         super(modelP);
+        this.selectButtonBackgroundColor = selectButtonBackgroundColor;
         this.options = new ArrayList<>();
         this.initAll();
     }
@@ -79,9 +82,11 @@ public class ButtonComponentOption extends BaseOptionRegion<SelectableComponentI
     public void initUI() {
         this.gridButtons = new GridPane();
         this.gridButtons.setPickOnBounds(false);
+        this.gridButtons.setHgap(2.0);
+        this.gridButtons.setVgap(2.0);
         //Select button
         this.buttonSelect = new ToggleButton();
-        ButtonComponentOption.applyComponentOptionButtonStyle(this.buttonSelect, FontAwesome.Glyph.HAND_ALT_UP);
+        ButtonComponentOption.applyComponentOptionButtonStyle(this.buttonSelect, selectButtonBackgroundColor, FontAwesome.Glyph.HAND_ALT_UP);
         this.gridButtons.add(this.buttonSelect, this.currentColumn++, this.currentRow++);
         //Display the grid
         this.getChildren().add(this.gridButtons);
@@ -93,19 +98,11 @@ public class ButtonComponentOption extends BaseOptionRegion<SelectableComponentI
         this.buttonSelect.setOnAction((ea) -> {
             //Root component
             if (this.model instanceof RootGraphicComponentI) {
-                if (this.model.selectedProperty().get()) {
-                    SelectionController.INSTANCE.setSelectedRoot(null);
-                } else {
-                    SelectionController.INSTANCE.setSelectedRoot((RootGraphicComponentI) this.model);
-                }
+                SelectionController.INSTANCE.selectRootComponent((RootGraphicComponentI) this.model, false);
             }
             //Grid component
             else if (this.model instanceof GridPartComponentI) {
-                if (this.model.selectedProperty().get()) {
-                    SelectionController.INSTANCE.setSelectedPart(null);
-                } else {
-                    SelectionController.INSTANCE.setSelectedPart((GridPartComponentI) this.model);
-                }
+                SelectionController.INSTANCE.selectGridPartComponent((GridPartComponentI) this.model, false);
             } else {
                 ButtonComponentOption.LOGGER
                         .warn("The current selectable model type in select button option doesn't allow selection on SelectionController");
@@ -147,7 +144,7 @@ public class ButtonComponentOption extends BaseOptionRegion<SelectableComponentI
     //========================================================================
     @Override
     public void initBinding() {
-        this.model.selectedProperty().addListener((ChangeListener<Boolean>) (observableP, oldValueP, newValueP) -> {
+        this.model.selectedProperty().addListener((observableP, oldValueP, newValueP) -> {
             //Change button
             this.buttonSelect.setSelected(newValueP);
             if (oldValueP && !newValueP) {
@@ -196,14 +193,15 @@ public class ButtonComponentOption extends BaseOptionRegion<SelectableComponentI
      * @param button the button we want to create the style
      * @param glyph  the icon to show in the button
      */
-    public static void applyComponentOptionButtonStyle(final ButtonBase button, final Enum<?> glyph) {
+    public static void applyComponentOptionButtonStyle(final ButtonBase button, Color backgroundColor, final Enum<?> glyph) {
         if (glyph != null) {
             button.setGraphic(GlyphFontHelper.FONT_AWESOME.create(glyph).sizeFactor(1).color(Color.WHITE));
         }
         Circle buttonShape = new Circle(1.0);//Radius is ignored when != 0
         button.setShape(buttonShape);
         button.setCenterShape(true);
-        button.getStyleClass().add("option-button-base");
+        button.getStyleClass().addAll("content-display-graphic-only", "opacity-30", "opacity-60-pressed", "opacity-80-hover", "opacity-40-disabled", "opacity-100-selected");
+        button.setStyle("-fx-background-color:" + ColorUtils.toCssColor(backgroundColor));
         //FIX : when adding a group to root, if the pref size is not set, the button is not visible ?
         button.setPrefSize(24.0, 24.0);
         button.setMaxWidth(Double.MAX_VALUE);
@@ -216,12 +214,13 @@ public class ButtonComponentOption extends BaseOptionRegion<SelectableComponentI
      * @param button
      * @param glyph
      */
-    public static void applyButtonBaseStyle(final ButtonBase button, final Enum<?> glyph) {
+    public static void applyButtonBaseStyle(final ButtonBase button, Color backgroundColor, final Enum<?> glyph) {
         button.setGraphic(GlyphFontHelper.FONT_AWESOME.create(glyph).sizeFactor(1).color(Color.WHITE));
         button.setShape(new Circle(16.0));
         //FIX : set a space for text allow the icon to be correctly displayed
         button.setText(" ");
-        button.getStyleClass().addAll("image-base-button", "option-op-button");
+        button.getStyleClass().addAll("content-display-center", "opacity-60-pressed", "opacity-80-hover", "opacity-40-disabled", "opacity-100-selected");
+        button.setStyle("-fx-background-color:" + ColorUtils.toCssColor(backgroundColor));
         //FIX : when adding a group to root, if the pref size is not set, the button is not visible ?
         button.setPrefSize(24.0, 24.0);
         button.setMaxWidth(Double.MAX_VALUE);

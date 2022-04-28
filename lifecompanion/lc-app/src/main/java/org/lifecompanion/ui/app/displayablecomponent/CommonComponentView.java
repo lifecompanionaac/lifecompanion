@@ -183,6 +183,7 @@ public class CommonComponentView extends BorderPane implements LCViewInitHelper 
             this.labelDefaultName.setText(Translation.getText("component.name.custom.default.name", component.defaultNameProperty().get()));
             this.fieldName.textProperty().bindBidirectional(component.userNameProperty());
             this.fieldNameWrapper.clearPreviousValue();
+            fieldName.selectAll();
             fieldName.requestFocus();
         }
     }

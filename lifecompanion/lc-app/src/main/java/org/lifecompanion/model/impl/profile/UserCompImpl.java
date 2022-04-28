@@ -43,11 +43,6 @@ public class UserCompImpl implements UserCompI {
     }
 
     @Override
-    public DisplayableComponentI getLoadedComponent() {
-        return this.loadedComponent;
-    }
-
-    @Override
     public boolean isLoaded() {
         return this.loadedComponent != null;
     }
@@ -99,6 +94,13 @@ public class UserCompImpl implements UserCompI {
         } else {
             UserCompImpl.LOGGER.warn("No component found for this component");
         }
+    }
+
+    static Element getElementFromRootXml(Element node) {
+        Element childComp = node.getChild(UserCompImpl.NODE_COMP);
+        if (!childComp.getChildren().isEmpty()) {
+            return childComp.getChildren().get(0);
+        } else return null;
     }
     //========================================================================
 

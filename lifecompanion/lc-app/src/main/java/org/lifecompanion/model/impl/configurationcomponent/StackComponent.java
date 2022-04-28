@@ -77,15 +77,6 @@ public class StackComponent extends RootGraphicComponentBaseImpl implements Stac
 
     // Class part : "Properties and base implementation"
     //========================================================================
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean isParentSelected() {
-        return false;
-    }
-
     @Override
     public DoubleProperty bindableDisplayedWidthProperty() {
         return this.widthProperty();

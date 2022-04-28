@@ -87,6 +87,11 @@
 	-fx-alignment: center;
 }
 
+/*======= OPACITY =======*/
+
+.opacity-30 {
+	-fx-opacity: 0.3;
+}
 
 /*======= BACKGROUND =======*/
 
@@ -104,6 +109,12 @@
     -fx-background-color: transparent;
 }
 
+/*======= EFFECT =======*/
+
+.dropshadow-bottom {
+    -fx-effect: dropshadow( gaussian , rgba(0.0,0.0,0.0,0.4) , 10.0,0.0,0.0,1.0 );
+}
+
 /*======= BORDERS =======*/
 
 .border-bottom-gray {
@@ -118,8 +129,13 @@
     -fx-border-color: transparent;
 }
 
+.border-bottom-lightgrey {
+    -fx-border-color: transparent transparent lightgrey  transparent;
+}
+
 
 /*======= HOVER =======*/
+
 .scale-110-hover:hover {
     -fx-scale-x: 1.1;
     -fx-scale-y: 1.1;
@@ -160,17 +176,41 @@
 }
 
 /*======= PRESSED =======*/
+
 .opacity-60-pressed:pressed {
 	-fx-opacity: 0.6;
 }
 
+/*======= DISABLED =======*/
+
+.opacity-40-disabled:disabled {
+	-fx-opacity: 0.4;
+}
+
+/*======= SELECTED =======*/
+
+.opacity-100-selected:selected {
+	-fx-opacity: 1.0;
+}
+
 /*======= PADDING/MARGIN =======*/
+
 .padding-0 {
     -fx-padding: 0;
 }
 
 .padding-3_5 {
     -fx-padding: 3.5;
+}
+
+/*======= CONTENT DISPLAY =======*/
+
+.content-display-graphic-only {
+    -fx-content-display: graphic-only;
+}
+
+.content-display-center {
+    -fx-content-display: center;
 }
 
 /*======= LIST VIEW AND LIST CELL =======*/
@@ -197,6 +237,7 @@
 }
 
 /*======= SPECIFIC TUNINGS =======*/
+
 .keylist-tree-cell .tree-disclosure-node {
    -fx-padding: 8 6 4 8;
 }
@@ -209,4 +250,47 @@
     -fx-effect: dropshadow(three-pass-box, gray, 10, 0, 0, 5);
 }
 
-/* "-fx-indent: 30;")*/
+/*==== RIBBON TABS (main) ====*/
+.ribbon-tabs {
+	-fx-border-width: 0.0;
+    -fx-border-color: transparent;
+    -fx-background-color: white;
+}
+.ribbon-tabs .tab-header-area .tab {
+	-fx-background-color: white;
+    -fx-padding: 5.0 30.0 5.0 30.0;
+}
+.ribbon-tabs .tab-header-area .tab:selected {
+	-fx-background-color: white;
+	-fx-border-color: lightgray lightgray white lightgray;
+	-fx-border-width: 1.0 1.0 1.0 1.0;
+}
+.ribbon-tabs .tab-header-area .tab:selected:disabled {
+	-fx-background-color: white,white;
+	-fx-border-color: lightgray lightgray white lightgray,lightgray lightgray white lightgray;
+	-fx-border-width: 1.0 1.0 1.0 1.0;
+}
+.ribbon-tabs .tab:selected *.tab-label {
+	-fx-text-fill: -fx-main-primary;
+	-fx-font-weight: bold;
+}
+.ribbon-tabs .tab *.tab-label {
+	-fx-text-fill: gray;
+	-fx-font-size: 16.0px;
+	-fx-font-family: "Calibri";
+}
+.ribbon-tabs .tab-header-area .tab:selected .focus-indicator {
+    -fx-border-width: 0.0;
+    -fx-border-color: transparent;
+}
+ .ribbon-tabs .tab-header-area{
+	-fx-padding: 12.0px 3.0px 0.0px 50.0px;
+}
+.ribbon-tabs *.tab-header-background {
+    -fx-background-color: white;
+    -fx-border-width: 0.0 0.0 1.0 0.0;
+    -fx-border-color: lightgray;
+}
+.ribbon-tabs *.tab-content-area {
+    -fx-padding: 6.0px 1.0px 6.0px 1.0px;
+}

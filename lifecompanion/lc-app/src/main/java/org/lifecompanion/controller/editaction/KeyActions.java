@@ -75,7 +75,7 @@ public class KeyActions {
         ConfigActionController.INSTANCE.executeAction(
                 new ChangeStyleOnComponents(
                         ComponentActionController.INSTANCE.styleCopySourceProperty().get(),
-                        SelectionController.INSTANCE.getSelectedKeys().isEmpty() ? Arrays.asList(SelectionController.INSTANCE.selectedComponentBothProperty().get()) : new ArrayList<>(SelectionController.INSTANCE.getSelectedKeys())
+                        SelectionController.INSTANCE.getSelectedKeys().isEmpty() ? Arrays.asList(SelectionController.INSTANCE.selectedDisplayableComponentHelperProperty().get()) : new ArrayList<>(SelectionController.INSTANCE.getSelectedKeys())
                 ));
     };
 

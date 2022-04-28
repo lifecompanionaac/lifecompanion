@@ -87,13 +87,13 @@ public class QuickStyleRibbonPart extends RibbonBasePart<DisplayableComponentBas
     @Override
     public void initListener() {
         this.buttonCopyKeyStyle.setOnAction(ae -> {
-            ComponentActionController.INSTANCE.styleCopySourceProperty().set(SelectionController.INSTANCE.selectedComponentBothProperty().get());
+            ComponentActionController.INSTANCE.styleCopySourceProperty().set(SelectionController.INSTANCE.selectedDisplayableComponentHelperProperty().get());
         });
         this.buttonPasteKeyStyle.setOnAction(KeyActions.HANDLER_PASTE_STYLE);
         this.buttonDeleteStyle.setOnAction(ae -> {
             ConfigActionController.INSTANCE.executeAction(
                     new KeyActions.ClearStyleOnComponents(
-                            SelectionController.INSTANCE.getSelectedKeys().isEmpty() ? Arrays.asList(SelectionController.INSTANCE.selectedComponentBothProperty().get()) : new ArrayList<>(SelectionController.INSTANCE.getSelectedKeys())
+                            SelectionController.INSTANCE.getSelectedKeys().isEmpty() ? Arrays.asList(SelectionController.INSTANCE.selectedDisplayableComponentHelperProperty().get()) : new ArrayList<>(SelectionController.INSTANCE.getSelectedKeys())
                     )
             );
         });
@@ -101,9 +101,9 @@ public class QuickStyleRibbonPart extends RibbonBasePart<DisplayableComponentBas
 
     @Override
     public void initBinding() {
-        this.buttonDeleteStyle.disableProperty().bind(SelectionController.INSTANCE.selectedComponentBothProperty().isNull());
-        this.buttonCopyKeyStyle.disableProperty().bind(SelectionController.INSTANCE.selectedComponentBothProperty().isNull());
-        this.buttonPasteKeyStyle.disableProperty().bind(SelectionController.INSTANCE.selectedComponentBothProperty().isNull()
+        this.buttonDeleteStyle.disableProperty().bind(SelectionController.INSTANCE.selectedDisplayableComponentHelperProperty().isNull());
+        this.buttonCopyKeyStyle.disableProperty().bind(SelectionController.INSTANCE.selectedDisplayableComponentHelperProperty().isNull());
+        this.buttonPasteKeyStyle.disableProperty().bind(SelectionController.INSTANCE.selectedDisplayableComponentHelperProperty().isNull()
                 .or(ComponentActionController.INSTANCE.styleCopySourceProperty().isNull()));
     }
 

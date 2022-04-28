@@ -83,19 +83,7 @@ public class ComponentSelectionSearchList extends BaseConfigurationViewBorderPan
 
     @Override
     public void initListener() {
-        this.componentListView.getSelectionModel().selectedItemProperty()
-                .addListener((observableP, oldValueP, newValueP) -> {
-                    if (newValueP != null && newValueP != SelectionController.INSTANCE.selectedComponentBothProperty().get()) {
-                        if (newValueP instanceof RootGraphicComponentI) {
-                            SelectionController.INSTANCE.setSelectedRoot((RootGraphicComponentI) newValueP);
-                        } else if (newValueP instanceof GridPartComponentI) {
-                            SelectionController.INSTANCE.setSelectedPart((GridPartComponentI) newValueP);
-                        } else {
-                            ComponentSelectionSearchList.LOGGER.warn("Didn't find a correct class to select the component {} in the tree",
-                                    newValueP.getClass());
-                        }
-                    }
-                });
+        this.componentListView.getSelectionModel().selectedItemProperty().addListener((observableP, oldValueP, newValueP) -> SelectionController.INSTANCE.selectDisplayableComponent(newValueP, true));
     }
 
     @Override
@@ -121,7 +109,7 @@ public class ComponentSelectionSearchList extends BaseConfigurationViewBorderPan
             this.sortedList.setComparator(null);
         } else {
             this.filteredList.setPredicate(
-                    (c) -> !(c instanceof LCConfigurationI) && getSimilarityScoreFor(text, c) > 0);
+                    c -> !(c instanceof LCConfigurationI) && getSimilarityScoreFor(text, c) > 0);
             this.sortedList.setComparator((c1, c2) -> Double.compare(getSimilarityScoreFor(text, c2),
                     getSimilarityScoreFor(text, c1)));
         }
@@ -148,7 +136,6 @@ public class ComponentSelectionSearchList extends BaseConfigurationViewBorderPan
     public void unbind(final LCConfigurationI component) {
         component.getAllComponent().removeListener(this.currentMapChangeListener);
         this.currentMapChangeListener = null;
-        // Issue #191 : fix memory leak in sorted list
         this.filteredList = null;
         this.sortedList = null;
         this.componentListView.setItems(null);

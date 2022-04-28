@@ -85,11 +85,6 @@ public abstract class CoreDisplayableComponentBaseImpl implements DisplayableCom
     protected final ObjectProperty<LCConfigurationI> configurationParent;
 
     /**
-     * Disable change listener
-     */
-    private final transient BooleanProperty disableChangeListener;
-
-    /**
      * Create the core for a displayable component.<br>
      * Initialize its ID and its properties.
      */
@@ -101,7 +96,6 @@ public abstract class CoreDisplayableComponentBaseImpl implements DisplayableCom
         this.userName = new SimpleStringProperty(this, "userName");
         this.configurationParent = new SimpleObjectProperty<>(this, "configurationParent");
         this.removed = new SimpleBooleanProperty(this, "removed", false);
-        this.disableChangeListener = new SimpleBooleanProperty(this, "disableChangeListener", false);
         this.defaultName.set(this.getDisplayableTypeName());
         this.displayed = new SimpleBooleanProperty(this, "displayed", false);
         this.initListener();
@@ -293,11 +287,6 @@ public abstract class CoreDisplayableComponentBaseImpl implements DisplayableCom
     @Override
     public StringProperty userNameProperty() {
         return this.userName;
-    }
-
-    @Override
-    public BooleanProperty _disableChangeListenerProperty() {
-        return this.disableChangeListener;
     }
 
     /**

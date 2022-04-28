@@ -27,7 +27,7 @@ import org.lifecompanion.model.impl.exception.LCException;
 
 /**
  * Base class for sub-class of {@link DisplayableComponentI}.<br>
- * A component that extends this class is equals to another only if there two ids are the same.
+ * A component that extends this class is equals to another only if their two ids are the same.
  *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
@@ -39,12 +39,7 @@ public abstract class DisplayableComponentBaseImpl extends CoreDisplayableCompon
     protected transient BooleanProperty selected;
 
     /**
-     * If we show the selection or not
-     */
-    protected transient BooleanProperty showSelected;
-
-    /**
-     * If the component will be selected by next clic
+     * If the component will be selected by next click
      */
     protected transient BooleanProperty possibleSelected;
 
@@ -53,13 +48,10 @@ public abstract class DisplayableComponentBaseImpl extends CoreDisplayableCompon
      * Initialize its ID and its properties.
      */
     public DisplayableComponentBaseImpl() {
-        this.selected = new SimpleBooleanProperty(this, "selected", false);
-        this.showSelected = new SimpleBooleanProperty(this, "showSelected", false);
-        this.possibleSelected = new SimpleBooleanProperty(this, "possibleSelected", false);
+        this.selected = new SimpleBooleanProperty(false);
+        this.possibleSelected = new SimpleBooleanProperty(false);
     }
 
-    // Class part : "Base method"
-    //========================================================================
     /**
      * {@inheritDoc}
      */
@@ -72,21 +64,9 @@ public abstract class DisplayableComponentBaseImpl extends CoreDisplayableCompon
      * {@inheritDoc}
      */
     @Override
-    public BooleanProperty showSelectedProperty() {
-        return this.showSelected;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public BooleanProperty showPossibleSelectedProperty() {
         return this.possibleSelected;
     }
-    //========================================================================
-
-    // Class part : "XML"
-    //========================================================================
 
     @Override
     public Element serialize(final IOContextI contextP) {
@@ -97,5 +77,4 @@ public abstract class DisplayableComponentBaseImpl extends CoreDisplayableCompon
     public void deserialize(final Element nodeP, final IOContextI contextP) throws LCException {
         super.deserialize(nodeP, contextP);
     }
-    //========================================================================
 }

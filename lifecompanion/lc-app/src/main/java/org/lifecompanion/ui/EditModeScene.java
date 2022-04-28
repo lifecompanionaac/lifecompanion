@@ -42,10 +42,8 @@ import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.ui.app.main.CurrentLifeCompanionStateDetailView;
 import org.lifecompanion.ui.app.main.MainView;
-import org.lifecompanion.ui.app.main.addcomponent.AddComponentView;
 import org.lifecompanion.ui.app.main.mainmenu.MainMenu;
 import org.lifecompanion.ui.app.main.ribbon.RibbonTabs;
-import org.lifecompanion.ui.app.main.usercomponent.UserCompView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -88,21 +86,12 @@ public class EditModeScene extends Scene implements LCViewInitHelper {
     public void initUI() {
         this.topRibbons = new RibbonTabs();
 
-        //Center
-        //Element
         MainView mainPane = new MainView();
-        VBox leftPane = new VBox(new AddComponentView(), new UserCompView());
-        SplitPane center = new SplitPane(leftPane, mainPane);
-        center.setOrientation(Orientation.HORIZONTAL);
-        center.setDividerPositions(0.30);
-        SplitPane.setResizableWithParent(leftPane, false);
-
-        //Bottom
         CurrentLifeCompanionStateDetailView bottomPane = new CurrentLifeCompanionStateDetailView();
 
         //Total configuration pane
         this.borderPane = new BorderPane();
-        this.borderPane.setCenter(center);
+        this.borderPane.setCenter(mainPane);
         this.borderPane.setTop(this.topRibbons);
         this.borderPane.setBottom(bottomPane);
 
@@ -143,15 +132,15 @@ public class EditModeScene extends Scene implements LCViewInitHelper {
             } else if (UndoRedoActions.KEY_COMBINATION_REDO.match(eventP)) {
                 UndoRedoActions.HANDLER_REDO.handle(null);
             } else if (UndoRedoActions.KEY_COMBINATION_REMOVE.match(eventP)) {
-                if (SelectionController.INSTANCE.selectedComponentBothProperty().get() != null) {
-                    ComponentActionController.INSTANCE.removeComponent(SelectionController.INSTANCE.selectedComponentBothProperty().get(),
+                if (SelectionController.INSTANCE.selectedDisplayableComponentHelperProperty().get() != null) {
+                    ComponentActionController.INSTANCE.removeComponent(SelectionController.INSTANCE.selectedDisplayableComponentHelperProperty().get(),
                             SelectionController.INSTANCE.getSelectedKeys());
                 }
             } else if (OptionActions.KEY_COMBINATION_COPY.match(eventP)) {
-                ComponentActionController.INSTANCE.copyComponent(SelectionController.INSTANCE.selectedComponentBothProperty().get());
+                ComponentActionController.INSTANCE.copyComponent(SelectionController.INSTANCE.selectedDisplayableComponentHelperProperty().get());
             } else if (OptionActions.KEY_COMBINATION_PASTE.match(eventP)) {
                 ComponentActionController.INSTANCE.pasteComponent(AppModeController.INSTANCE.getEditModeContext().configurationProperty().get(),
-                        SelectionController.INSTANCE.selectedComponentBothProperty().get(),
+                        SelectionController.INSTANCE.selectedDisplayableComponentHelperProperty().get(),
                         new ArrayList<>(SelectionController.INSTANCE.getSelectedKeys()));
             } else if (KeyActions.KEY_COMBINATION_COPY_STYLE.match(eventP)) {
                 KeyActions.HANDLER_COPY_STYLE.handle(null);

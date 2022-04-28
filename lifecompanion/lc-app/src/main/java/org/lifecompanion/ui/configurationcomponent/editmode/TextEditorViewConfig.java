@@ -20,6 +20,7 @@
 package org.lifecompanion.ui.configurationcomponent.editmode;
 
 import org.lifecompanion.model.impl.configurationcomponent.TextEditorComponent;
+import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.ui.configurationcomponent.base.TextEditorViewBase;
 import org.lifecompanion.ui.configurationcomponent.editmode.componentoption.ButtonComponentOption;
 import org.lifecompanion.ui.configurationcomponent.editmode.componentoption.MoveButtonOption;
@@ -35,7 +36,7 @@ public class TextEditorViewConfig extends TextEditorViewBase {
     public void initUI() {
         super.initUI();
         //Button option
-        ButtonComponentOption selectOption = new ButtonComponentOption(this.model);
+        ButtonComponentOption selectOption = new ButtonComponentOption(this.model, LCGraphicStyle.MAIN_DARK);
         MoveButtonOption<TextEditorComponent> moveOption = new MoveButtonOption<>(this.model);
         selectOption.addOption(moveOption);
         //Root component UI

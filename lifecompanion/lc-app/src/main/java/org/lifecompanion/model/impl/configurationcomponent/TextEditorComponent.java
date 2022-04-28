@@ -59,11 +59,6 @@ public class TextEditorComponent extends RootGraphicComponentBaseImpl implements
     // Class part : "Base getter"
     //========================================================================
     @Override
-    public boolean isParentSelected() {
-        return false;
-    }
-
-    @Override
     public ShapeCompStyleI getTextDisplayerShapeStyle() {
         return this.textDisplayerPropertyWrapper.getTextDisplayerShapeStyle();
     }

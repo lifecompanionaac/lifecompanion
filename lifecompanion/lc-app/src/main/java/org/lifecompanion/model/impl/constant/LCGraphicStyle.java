@@ -66,6 +66,10 @@ public class LCGraphicStyle {
     public final static Color SECOND_PRIMARY = Color.web("#F44336", 1);
     public final static Color SECOND_LIGHT = Color.web("#EF9A9A", 1);
     public final static Color SECOND_DARK = Color.web("#C62828", 1);
+
+    public final static Color THIRD_DARK = Color.web("#FF9800", 1);
+
+
     //Useful color
     public final static Color LC_WHITE = Color.web("#E6E6E6", 1);
     public final static Color LC_BLACK = Color.web("#2E2E2E", 1);

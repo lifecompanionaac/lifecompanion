@@ -20,6 +20,7 @@
 package org.lifecompanion.ui.configurationcomponent.editmode.componentoption;
 
 import org.lifecompanion.model.api.configurationcomponent.GridChildComponentI;
+import org.lifecompanion.model.api.configurationcomponent.GridPartComponentI;
 import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
 import org.lifecompanion.model.api.configurationcomponent.SelectableComponentI;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
@@ -32,60 +33,54 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeLineCap;
 import org.lifecompanion.model.impl.style.ShapeStyleBinder;
+import org.lifecompanion.util.binding.BindingUtils;
 
 /**
  * Option that allow a component to be selected
+ *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public class SelectableOption<T extends SelectableComponentI & GridChildComponentI> extends BaseOptionRegion<T> {
 
-	private Rectangle stroke = new Rectangle();
+    private Rectangle stroke = new Rectangle();
 
-	public SelectableOption(final T modelP, final boolean grayStrokeOnNotSelected) {
-		super(modelP);
-		//Style
-		this.stroke.setFill(null);
-		this.stroke.strokeWidthProperty().bind(UserConfigurationController.INSTANCE.selectionStrokeSizeProperty());
-		this.stroke.setLayoutX(-LCGraphicStyle.SELECTED_STROKE_GAP);
-		this.stroke.setLayoutY(-LCGraphicStyle.SELECTED_STROKE_GAP);
-		this.stroke.setStrokeLineCap(StrokeLineCap.ROUND);
-		//Bind size and visible
-		this.stroke.widthProperty().bind(this.widthProperty().add(LCGraphicStyle.SELECTED_STROKE_GAP * 2));
-		this.stroke.heightProperty().bind(this.heightProperty().add(LCGraphicStyle.SELECTED_STROKE_GAP * 2));
-		this.stroke.visibleProperty()
-				.bind(modelP.showSelectedProperty().or(modelP.showPossibleSelectedProperty().or(new SimpleBooleanProperty(grayStrokeOnNotSelected))));
-		//Bind color
-		this.stroke.strokeProperty().bind(Bindings.createObjectBinding(() -> {
-			return modelP.showSelectedProperty().get() || modelP.showPossibleSelectedProperty().get() ? LCGraphicStyle.SECOND_PRIMARY
-					: Color.LIGHTGRAY;
-		}, modelP.showSelectedProperty(), modelP.showPossibleSelectedProperty()));
-		//Bind style (shape)
-		AbstractShapeCompStyleI<?> shapeStyle = null;
-		if (this.model instanceof GridPartKeyComponentI) {
-			shapeStyle = ((GridPartKeyComponentI) this.model).getKeyStyle();
-		} else {
-			shapeStyle = ((GridStyleUserI) this.model).getGridShapeStyle();
-		}
-		ShapeStyleBinder.bindArcSizeComp(this.stroke, shapeStyle, this.stroke.widthProperty(), this.stroke.heightProperty(),
-				UserConfigurationController.INSTANCE.selectionStrokeSizeProperty(), 1);
-		//Bind show selected
-		modelP.showSelectedProperty().addListener((obs, oV, nV) -> {
-			if (nV || !this.model.showPossibleSelectedProperty().get()) {
-				this.stroke.getStrokeDashArray().clear();
-				SelectableOption.this.stroke.toFront();
-			}
-		});
-		modelP.showPossibleSelectedProperty().addListener((obs, oV, nV) -> {
-			if (nV && !this.model.showSelectedProperty().get()) {
-				this.stroke.getStrokeDashArray().addAll(UserConfigurationController.INSTANCE.selectionDashSizeProperty().get(),
-						UserConfigurationController.INSTANCE.selectionDashSizeProperty().get());
-				SelectableOption.this.stroke.toFront();
-			} else {
-				this.stroke.getStrokeDashArray().clear();
-				SelectableOption.this.stroke.toFront();
-			}
-		});
-		this.getChildren().add(this.stroke);
-		this.setPickOnBounds(false);
-	}
+    public SelectableOption(final T modelP) {
+        super(modelP);
+        //Style
+        this.stroke.setFill(null);
+        this.stroke.strokeWidthProperty().bind(UserConfigurationController.INSTANCE.selectionStrokeSizeProperty());
+        this.stroke.setLayoutX(-LCGraphicStyle.SELECTED_STROKE_GAP);
+        this.stroke.setLayoutY(-LCGraphicStyle.SELECTED_STROKE_GAP);
+        this.stroke.setStrokeLineCap(StrokeLineCap.ROUND);
+        //Bind size and visible
+        this.stroke.widthProperty().bind(this.widthProperty().add(LCGraphicStyle.SELECTED_STROKE_GAP * 2));
+        this.stroke.heightProperty().bind(this.heightProperty().add(LCGraphicStyle.SELECTED_STROKE_GAP * 2));
+        this.stroke.visibleProperty().bind(modelP.selectedProperty().or(modelP.showPossibleSelectedProperty()));
+        this.stroke.setStroke(modelP instanceof GridPartKeyComponentI ? LCGraphicStyle.SECOND_DARK : modelP instanceof GridPartComponentI ? LCGraphicStyle.THIRD_DARK : LCGraphicStyle.MAIN_DARK);
+
+        //Bind style (shape)
+        AbstractShapeCompStyleI<?> shapeStyle = null;
+        if (this.model instanceof GridPartKeyComponentI) {
+            shapeStyle = ((GridPartKeyComponentI) this.model).getKeyStyle();
+        } else {
+            shapeStyle = ((GridStyleUserI) this.model).getGridShapeStyle();
+        }
+        ShapeStyleBinder.bindArcSizeComp(this.stroke, shapeStyle, this.stroke.widthProperty(), this.stroke.heightProperty(),
+                UserConfigurationController.INSTANCE.selectionStrokeSizeProperty(), 1);
+        modelP.selectedProperty().addListener(inv -> updateStrokeDash());
+        modelP.showPossibleSelectedProperty().addListener(inv -> updateStrokeDash());
+        this.getChildren().add(this.stroke);
+        this.setPickOnBounds(false);
+    }
+
+    private void updateStrokeDash() {
+        if (!this.model.selectedProperty().get() && this.model.showPossibleSelectedProperty().get()) {
+            this.stroke.getStrokeDashArray().setAll(UserConfigurationController.INSTANCE.selectionDashSizeProperty().get(), UserConfigurationController.INSTANCE.selectionDashSizeProperty().get());
+        } else {
+            this.stroke.getStrokeDashArray().clear();
+        }
+        if (model.selectedProperty().get() || model.showPossibleSelectedProperty().get()) {
+            SelectableOption.this.stroke.toFront();
+        }
+    }
 }

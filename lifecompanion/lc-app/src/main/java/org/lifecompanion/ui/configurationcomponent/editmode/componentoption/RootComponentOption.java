@@ -112,8 +112,8 @@ public class RootComponentOption extends BaseOptionRegion<RootGraphicComponentI>
 		this.stroke.widthProperty().bind(this.widthProperty().add(2.0 * (RootComponentOption.GAP + RootComponentOption.SIZE)));
 		this.stroke.heightProperty().bind(this.heightProperty().add(2.0 * (RootComponentOption.GAP + RootComponentOption.SIZE)));
 		this.stroke.setFill(null);
-		this.stroke.setStroke(LCGraphicStyle.SECOND_DARK);
-		this.stroke.visibleProperty().bind(this.model.showSelectedProperty());
+		this.stroke.setStroke(LCGraphicStyle.MAIN_DARK);
+		this.stroke.visibleProperty().bind(this.model.selectedProperty());
 		this.stroke.strokeWidthProperty().bind(UserConfigurationController.INSTANCE.selectionStrokeSizeProperty());
 		// Add
 		this.getChildren().addAll(this.stroke, this.lt, this.lb, this.rt, this.rb, this.lm, this.rm, this.tm, this.bm);
@@ -135,28 +135,28 @@ public class RootComponentOption extends BaseOptionRegion<RootGraphicComponentI>
 	 */
 	private void setResize(final Circle circ, final Cursor cursor) {
 		//Base style
-		circ.visibleProperty().bind(this.model.showSelectedProperty());
-		circ.setFill(LCGraphicStyle.SECOND_DARK);
+		circ.visibleProperty().bind(this.model.selectedProperty());
+		circ.setFill(LCGraphicStyle.MAIN_DARK);
 		//Enter, cursor and color
 		circ.setOnMouseEntered(me -> {
 			circ.setCursor(cursor);
-			circ.setFill(LCGraphicStyle.SECOND_LIGHT);
+			circ.setFill(LCGraphicStyle.MAIN_LIGHT);
 		});
 		//Exit : color reset
 		circ.setOnMouseExited((ea) -> {
 			if (!ea.isPrimaryButtonDown()) {
-				circ.setFill(LCGraphicStyle.SECOND_DARK);
+				circ.setFill(LCGraphicStyle.MAIN_DARK);
 			}
 		});
 		//On released : end resize
 		circ.setOnMouseReleased((me) -> {
 			this.resizeEnd();
-			circ.setFill(LCGraphicStyle.SECOND_DARK);
+			circ.setFill(LCGraphicStyle.MAIN_DARK);
 		});
 		//On press, start resize
 		circ.setOnMousePressed(me -> {
 			this.resizeStart();
-			circ.setFill(LCGraphicStyle.SECOND_LIGHT);
+			circ.setFill(LCGraphicStyle.MAIN_LIGHT);
 			RootComponentOption.this.sX = me.getX();
 			RootComponentOption.this.sY = me.getY();
 		});

@@ -78,8 +78,10 @@ public class BindingUtils {
                 if (c.wasPermutated() || c.wasUpdated()) {
                     // Don't do anything
                 } else {
-                    LangUtils.consumeEachIn(c.getAddedSubList(), forEachAdd);
+                    // Order is important here : removed should be handled before added
+                    // this is related to ModifiableObservableListBase.setAll implementation (it does clear() then addAll(...) in the same Change)
                     LangUtils.consumeEachIn(c.getRemoved(), forEachRemove);
+                    LangUtils.consumeEachIn(c.getAddedSubList(), forEachAdd);
                 }
             }
         };

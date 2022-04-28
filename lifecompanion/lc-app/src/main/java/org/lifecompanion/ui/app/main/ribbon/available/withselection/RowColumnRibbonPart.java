@@ -115,7 +115,7 @@ public class RowColumnRibbonPart extends RibbonBasePart<GridComponentI> implemen
 	 */
 	@Override
 	public void initBinding() {
-		SelectionController.INSTANCE.selectedComponentProperty()
+		SelectionController.INSTANCE.selectedGridPartComponentProperty()
 				.addListener((ChangeListener<GridPartComponentI>) (observableP, oldValueP, newValueP) -> {
 					if (newValueP instanceof GridComponentI) {
 						this.model.set((GridComponentI) newValueP);

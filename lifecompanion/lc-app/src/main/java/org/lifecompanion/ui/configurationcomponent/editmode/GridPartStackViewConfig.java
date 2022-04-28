@@ -21,6 +21,7 @@ package org.lifecompanion.ui.configurationcomponent.editmode;
 
 import org.lifecompanion.model.api.configurationcomponent.GridPartComponentI;
 import org.lifecompanion.model.impl.configurationcomponent.GridPartStackComponent;
+import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.ui.configurationcomponent.base.GridPartStackViewBase;
 import org.lifecompanion.ui.configurationcomponent.editmode.componentoption.ButtonComponentOption;
 import org.lifecompanion.ui.configurationcomponent.editmode.componentoption.SelectableOption;
@@ -28,36 +29,38 @@ import org.lifecompanion.ui.configurationcomponent.editmode.componentoption.Stac
 
 /**
  * Configuration view for stack component.
+ *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public class GridPartStackViewConfig extends GridPartStackViewBase {
-	private SelectableOption<GridPartStackComponent> selectableOption;
+    private SelectableOption<GridPartStackComponent> selectableOption;
 
-	public GridPartStackViewConfig() {}
+    public GridPartStackViewConfig() {
+    }
 
-	@Override
-	public void initUI() {
-		super.initUI();
-		//Button option
-		ButtonComponentOption selectOption = new ButtonComponentOption(this.model);
-		StackButtonOption stackOption = new StackButtonOption(this.model);
-		selectOption.addOption(stackOption);
-		//Root component UI
-		this.selectableOption = new SelectableOption<>(this.model, false);
-		this.selectableOption.bindSize(this);
-		this.getChildren().add(this.selectableOption);
-		this.selectableOption.getChildren().add(selectOption);
-	}
+    @Override
+    public void initUI() {
+        super.initUI();
+        //Button option
+        ButtonComponentOption selectOption = new ButtonComponentOption(this.model, LCGraphicStyle.THIRD_DARK);
+        StackButtonOption stackOption = new StackButtonOption(this.model);
+        selectOption.addOption(stackOption);
+        //Root component UI
+        this.selectableOption = new SelectableOption<>(this.model);
+        this.selectableOption.bindSize(this);
+        this.getChildren().add(this.selectableOption);
+        this.selectableOption.getChildren().add(selectOption);
+    }
 
-	@Override
-	protected void displayedChanged(final GridPartComponentI oldValueP, final GridPartComponentI newValueP) {
-		super.displayedChanged(oldValueP, newValueP);
-		this.selectableOption.toFront();
-	}
+    @Override
+    protected void displayedChanged(final GridPartComponentI oldValueP, final GridPartComponentI newValueP) {
+        super.displayedChanged(oldValueP, newValueP);
+        this.selectableOption.toFront();
+    }
 
-	@Override
-	public void showToFront() {
-		super.showToFront();
-		this.selectableOption.toFront();
-	}
+    @Override
+    public void showToFront() {
+        super.showToFront();
+        this.selectableOption.toFront();
+    }
 }

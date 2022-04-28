@@ -105,18 +105,21 @@ public enum ComponentActionController {
         ConfigurationChildComponentI copied = this.copiedComponent.get();
         if (copied != null) {
             this.LOGGER.info("Will try to copy the element {} to {}", copied.getID(), keys);
-            ConfigurationChildComponentI cloned = (ConfigurationChildComponentI) copied.duplicate(true);
-            // Issue #117 : name should change on paste
-            if (cloned instanceof UserNamedComponentI) {
-                UserNamedComponentI userNamedComp = (UserNamedComponentI) cloned;
-                if (!StringUtils.isBlank(userNamedComp.userNameProperty().get())) {
-                    userNamedComp.userNameProperty()
-                            .set(Translation.getText("action.paste.component.comp.renamed.copy.of") + " " + userNamedComp.userNameProperty().get());
-                }
-            }
+            ConfigurationChildComponentI cloned = createComponentCopy(copied);
             PasteComponentAction pasteAction = new PasteComponentAction(targetConfiguration, cloned, target, keys);
             ConfigActionController.INSTANCE.executeAction(pasteAction);
         }
+    }
+
+    public static <T extends DuplicableComponentI> T createComponentCopy(T component) {
+        T cloned = (T) component.duplicate(true);
+        if (cloned instanceof UserNamedComponentI) {
+            UserNamedComponentI userNamedComp = (UserNamedComponentI) cloned;
+            if (!StringUtils.isBlank(userNamedComp.userNameProperty().get())) {
+                userNamedComp.userNameProperty().set(Translation.getText("action.paste.component.comp.renamed.copy.of") + " " + userNamedComp.userNameProperty().get());
+            }
+        }
+        return cloned;
     }
 
     /**

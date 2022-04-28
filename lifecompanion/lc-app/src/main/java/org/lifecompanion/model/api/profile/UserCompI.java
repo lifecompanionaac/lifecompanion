@@ -30,12 +30,6 @@ import org.lifecompanion.model.api.io.XMLSerializable;
  */
 public interface UserCompI extends XMLSerializable<IOContextI> {
 	/**
-	 * @return the loaded component for this user component.<br>
-	 * If null, it means that the component is not loaded yet.
-	 */
-	DisplayableComponentI getLoadedComponent();
-
-	/**
 	 * @return true if the displayable component is loaded for this user component
 	 */
 	boolean isLoaded();
@@ -47,7 +41,7 @@ public interface UserCompI extends XMLSerializable<IOContextI> {
 	<T extends DisplayableComponentI> T createNewComponent();
 
 	/**
-	 * Remove the current loaded component ({@link #getLoadedComponent()} will now return null).</br>
+	 * Remove the current loaded component ({@link #createNewComponent()} ()} will fail afterwards).</br>
 	 * No-op component was not loaded yet.
 	 */
 	void unloadComponent();

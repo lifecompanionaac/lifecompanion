@@ -22,27 +22,22 @@ package org.lifecompanion.model.api.configurationcomponent;
 import javafx.beans.property.BooleanProperty;
 
 /**
- * Represent a component that can be selected.
+ * Represent a component that can be selected in edit mode.
+ *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public interface SelectableComponentI {
-	/**
-	 * @return the property that contains true if this component is selected
-	 */
-	public BooleanProperty selectedProperty();
+    /**
+     * <strong>This property shouldn't be manually modified by component user. Only the selection controller ({@link org.lifecompanion.controller.editmode.SelectionController}) will change it.</strong>
+     *
+     * @return the property that contains true if this component is selected.
+     */
+    BooleanProperty selectedProperty();
 
-	/**
-	 * @return the property that contains true if the selection must be rendered
-	 */
-	public BooleanProperty showSelectedProperty();
-
-	/**
-	 * @return the property that contains true to indicate to user that this component is the component that will be selected if the user click
-	 */
-	public BooleanProperty showPossibleSelectedProperty();
-
-	/**
-	 * @return true when this the parent exist and is selected
-	 */
-	public boolean isParentSelected();
+    /**
+     * <strong>This property shouldn't be manually modified by component user. Only the selection controller ({@link org.lifecompanion.controller.editmode.SelectionController}) will change it.</strong>
+     *
+     * @return the property that contains true to indicate to user that this component is the component that will be selected if the user click (e.g. can be used to display an "over" stroke on this component)
+     */
+    BooleanProperty showPossibleSelectedProperty();
 }

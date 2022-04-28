@@ -36,6 +36,7 @@ import org.lifecompanion.model.api.configurationcomponent.keyoption.KeyOptionI;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.imagedictionary.ImageElementI;
 import org.lifecompanion.model.api.ui.editmode.AddTypeEnum;
+import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.util.IOUtils;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.dynamickey.KeyListNodeKeyOption;
 import org.lifecompanion.model.impl.configurationcomponent.GridPartKeyComponent;
@@ -72,7 +73,6 @@ import java.util.function.Consumer;
  */
 public class GridPartKeyViewConfig extends GridPartKeyViewBase {
     private final static Logger LOGGER = LoggerFactory.getLogger(GridPartKeyViewConfig.class);
-    private SelectableOption<GridPartKeyComponent> selectableOption;
     private ImageView imageViewOptionType;
     private Button buttonSimulateActions;
 
@@ -80,9 +80,9 @@ public class GridPartKeyViewConfig extends GridPartKeyViewBase {
     public void initUI() {
         super.initUI();
         //Select option
-        this.selectableOption = new SelectableOption<>(this.model, false);
-        this.getChildren().add(this.selectableOption);
-        this.selectableOption.bindSize(this);
+        SelectableOption<GridPartKeyComponent> selectableOption = new SelectableOption<>(this.model);
+        this.getChildren().add(selectableOption);
+        selectableOption.bindSize(this);
         //Key option
         this.imageViewOptionType = new ImageView();
         this.imageViewOptionType.setTranslateX(2.0);
@@ -109,7 +109,7 @@ public class GridPartKeyViewConfig extends GridPartKeyViewBase {
 
         // Execute move action
         this.buttonSimulateActions = new Button();
-        ButtonComponentOption.applyButtonBaseStyle(this.buttonSimulateActions, FontAwesome.Glyph.SHARE);
+        ButtonComponentOption.applyButtonBaseStyle(this.buttonSimulateActions, LCGraphicStyle.SECOND_DARK, FontAwesome.Glyph.SHARE);
         this.buttonSimulateActions.translateXProperty().bind(widthProperty().subtract(buttonSimulateActions.getPrefWidth() + 5));
         this.getChildren().add(this.buttonSimulateActions);
     }
@@ -157,58 +157,21 @@ public class GridPartKeyViewConfig extends GridPartKeyViewBase {
             }
             //Select key
             else {
-                SelectionController.INSTANCE.selected(this.model, ea.isShortcutDown(), ea.isShiftDown());
+                SelectionController.INSTANCE.selectKeyComponent(this.model, false, ea.isShortcutDown(), ea.isShiftDown());
                 this.toFront();
-                //On selection, update possible selection (because enter event is not fired)
-                GridPartComponentI possiblySelected = SelectionController.INSTANCE.getFirstUnselectedParent(this.model);
-                possiblySelected.showPossibleSelectedProperty().set(true);
             }
         });
         //On mouse entered/exited, update show possible selected / update loaded image (if needed)
-        this.setOnMouseEntered((ea) -> {
-            // Possibly selected
-            GridPartComponentI possiblySelected = SelectionController.INSTANCE.getFirstUnselectedParent(this.model);
-            possiblySelected.showPossibleSelectedProperty().set(true);
-        });
-        this.setOnMouseExited((ea) -> {
-            GridPartComponentI possiblySelected = SelectionController.INSTANCE.getFirstUnselectedParent(this.model);
-            possiblySelected.showPossibleSelectedProperty().set(false);
-        });
+        this.setOnMouseEntered((ea) -> this.model.showPossibleSelectedProperty().set(true));
+        this.setOnMouseExited((ea) -> this.model.showPossibleSelectedProperty().set(false));
+
         //Drag over key : accept image and components
         this.setOnDragOver((ea) -> {
-            if (DragController.INSTANCE.isDragShouldBeAcceptedOn(AddTypeEnum.GRID_PART, true)) {
-                ea.acceptTransferModes(TransferMode.ANY);
-            }
-            //Accept raw images from computer : will try to add/find them in gallery
-            if (isCopyingRawImagesFromComputer(ea)) {
+            if (isCopyingRawImagesFromComputer(ea) || DragController.INSTANCE.currentDraggedKeyProperty().get() != null) {
                 ea.acceptTransferModes(TransferMode.COPY_OR_MOVE);
             }
         });
         this.setOnDragDropped((ea) -> {
-            //Add comp
-            if (DragController.INSTANCE.isDragComponentIsPresentOn(AddTypeEnum.GRID_PART)) {
-                GridComponentI parent = this.model.gridParentProperty().get();
-                if (parent != null) {
-                    GridPartComponentI dragged = DragController.INSTANCE.createNewCompFor(AddTypeEnum.GRID_PART, parent, model);
-                    if (dragged != null) {
-                        int columnIndex = this.model.getColumnIndex(ea.getX());
-                        int rowIndex = this.model.getRowIndex(ea.getY());
-                        GridActions.SetComponentAction action = new SetComponentAction(parent.getGrid(), rowIndex, columnIndex, dragged);
-                        ConfigActionController.INSTANCE.executeAction(action);
-                    } else if (DragController.INSTANCE.isAddInStackComponent()) {
-                        BaseEditActionI action = DragController.INSTANCE.createAddInStackAction(this.model);
-                        if (action != null) {
-                            ConfigActionController.INSTANCE.executeAction(action);
-                        }
-                    } else if (DragController.INSTANCE.isAddInStackUserComponent()) {
-                        BaseEditActionI action = DragController.INSTANCE.createAddUserCompInStackAction(this.model);
-                        if (action != null) {
-                            ConfigActionController.INSTANCE.executeAction(action);
-                        }
-                    }
-                    DragController.INSTANCE.resetCurrentDraggedComp();
-                }
-            }
             //Accept other key
             GridPartKeyComponentI dragged = DragController.INSTANCE.currentDraggedKeyProperty().get();
             if (dragged != null) {
@@ -266,19 +229,19 @@ public class GridPartKeyViewConfig extends GridPartKeyViewBase {
         if (moveGrid != null) {
             GridComponentI targetGrid = moveGrid.targetGridProperty().get();
             if (targetGrid != null) {
-                SelectionController.INSTANCE.setSelectedPart(targetGrid);
+                SelectionController.INSTANCE.selectGridPartComponent(targetGrid, true);
             }
         } else if (moveKey != null) {
             GridPartKeyComponentI targetKey = moveKey.targetKeyProperty().get();
             if (targetKey != null) {
-                SelectionController.INSTANCE.setSelectedPart(targetKey);
+                SelectionController.INSTANCE.selectKeyComponent(targetKey, true, false, false);
             }
         } else if (nextPageStackAction != null) {
             StackComponentI targetStack = nextPageStackAction.changedPageParentStackProperty().get();
             if (targetStack != null) {
                 GridComponentI nextComponent = targetStack.getNextComponent();
                 if (nextComponent != null) {
-                    SelectionController.INSTANCE.setSelectedPart(nextComponent);
+                    SelectionController.INSTANCE.selectGridPartComponent(nextComponent, true);
                 }
             }
         } else if (previousPageAction != null) {
@@ -286,7 +249,7 @@ public class GridPartKeyViewConfig extends GridPartKeyViewBase {
             if (targetStack != null) {
                 GridComponentI previousComponent = targetStack.getPreviousComponent();
                 if (previousComponent != null) {
-                    SelectionController.INSTANCE.setSelectedPart(previousComponent);
+                    SelectionController.INSTANCE.selectGridPartComponent(previousComponent, true);
                 }
             }
         } else if (nextPageAndLoopInStackAction != null) {
@@ -294,15 +257,15 @@ public class GridPartKeyViewConfig extends GridPartKeyViewBase {
             if (targetStack != null) {
                 GridComponentI nextComponent = targetStack.getNextComponent();
                 if (nextComponent != null) {
-                    SelectionController.INSTANCE.setSelectedPart(nextComponent);
+                    SelectionController.INSTANCE.selectGridPartComponent(nextComponent, true);
                 } else if (!targetStack.getComponentList().isEmpty()) {
-                    SelectionController.INSTANCE.setSelectedPart(targetStack.getComponentList().get(0));
+                    SelectionController.INSTANCE.selectGridPartComponent(targetStack.getComponentList().get(0), true);
                 }
             }
         } else if (moveToGridAndGoBackAction != null) {
             final GridComponentI targetGrid = moveToGridAndGoBackAction.targetGridProperty().get();
             if (targetGrid != null) {
-                SelectionController.INSTANCE.setSelectedPart(targetGrid);
+                SelectionController.INSTANCE.selectGridPartComponent(targetGrid, true);
             }
         }
     }

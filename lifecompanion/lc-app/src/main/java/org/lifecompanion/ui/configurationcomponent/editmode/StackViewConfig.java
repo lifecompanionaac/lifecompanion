@@ -21,48 +21,50 @@ package org.lifecompanion.ui.configurationcomponent.editmode;
 
 import org.lifecompanion.model.api.configurationcomponent.GridPartComponentI;
 import org.lifecompanion.model.impl.configurationcomponent.StackComponent;
+import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.ui.configurationcomponent.base.StackViewBase;
 import org.lifecompanion.ui.configurationcomponent.editmode.componentoption.*;
 import org.lifecompanion.util.javafx.FXUtils;
 
 /**
  * Node that display a {@link StackComponent}
+ *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public class StackViewConfig extends StackViewBase {
-	private RootComponentOption rootComponentOption;
+    private RootComponentOption rootComponentOption;
 
-	private ButtonComponentOption selectOption;
+    private ButtonComponentOption selectOption;
 
-	public StackViewConfig() {}
+    public StackViewConfig() {
+    }
 
-	@Override
-	public void initUI() {
-		super.initUI();
-		//Button option
-		this.selectOption = new ButtonComponentOption(this.model);
-		MoveButtonOption<StackComponent> moveOption = new MoveButtonOption<>(this.model);
-		StackButtonOption stackOption = new StackButtonOption(this.model);
-		this.selectOption.addOption(stackOption);
-		this.selectOption.addOption(moveOption);
-		this.selectOption.addOption(new SelectDisplayedComponentButtonOption(this.model));
-		//Root component UI
-		this.rootComponentOption = new RootComponentOption(this.model);
-		this.rootComponentOption.bindSize(this);
-		this.getChildren().add(this.rootComponentOption);
-		this.rootComponentOption.getChildren().add(this.selectOption);
-		FXUtils.applyPerformanceConfiguration(this);
-	}
+    @Override
+    public void initUI() {
+        super.initUI();
+        //Button option
+        this.selectOption = new ButtonComponentOption(this.model, LCGraphicStyle.MAIN_DARK);
+        MoveButtonOption<StackComponent> moveOption = new MoveButtonOption<>(this.model);
+        StackButtonOption stackOption = new StackButtonOption(this.model);
+        this.selectOption.addOption(stackOption);
+        this.selectOption.addOption(moveOption);
+        //Root component UI
+        this.rootComponentOption = new RootComponentOption(this.model);
+        this.rootComponentOption.bindSize(this);
+        this.getChildren().add(this.rootComponentOption);
+        this.rootComponentOption.getChildren().add(this.selectOption);
+        FXUtils.applyPerformanceConfiguration(this);
+    }
 
-	@Override
-	protected void displayedChanged(final GridPartComponentI oldValueP, final GridPartComponentI newValueP) {
-		super.displayedChanged(oldValueP, newValueP);
-		this.rootComponentOption.toFront();
-	}
+    @Override
+    protected void displayedChanged(final GridPartComponentI oldValueP, final GridPartComponentI newValueP) {
+        super.displayedChanged(oldValueP, newValueP);
+        this.rootComponentOption.toFront();
+    }
 
-	@Override
-	public void showToFront() {
-		super.showToFront();
-		this.rootComponentOption.toFront();
-	}
+    @Override
+    public void showToFront() {
+        super.showToFront();
+        this.rootComponentOption.toFront();
+    }
 }

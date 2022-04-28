@@ -99,15 +99,15 @@ public class QuickActionRibbonPart extends RibbonBasePart<Void> implements LCVie
 		this.buttonRedo.setOnAction(UndoRedoActions.HANDLER_REDO);
 		//Copy
 		this.buttonCopy.setOnAction((ea) -> {
-			ComponentActionController.INSTANCE.copyComponent(SelectionController.INSTANCE.selectedComponentBothProperty().get());
+			ComponentActionController.INSTANCE.copyComponent(SelectionController.INSTANCE.selectedDisplayableComponentHelperProperty().get());
 		});
 		this.buttonPaste.setOnAction((ea) -> {
 			ComponentActionController.INSTANCE.pasteComponent(AppModeController.INSTANCE.getEditModeContext().configurationProperty().get(),
-					SelectionController.INSTANCE.selectedComponentBothProperty().get(),
+					SelectionController.INSTANCE.selectedDisplayableComponentHelperProperty().get(),
 					new ArrayList<>(SelectionController.INSTANCE.getSelectedKeys()));
 		});
 		this.buttonRemove.setOnAction((ea) -> {
-			ComponentActionController.INSTANCE.removeComponent(SelectionController.INSTANCE.selectedComponentBothProperty().get(),
+			ComponentActionController.INSTANCE.removeComponent(SelectionController.INSTANCE.selectedDisplayableComponentHelperProperty().get(),
 					SelectionController.INSTANCE.getSelectedKeys());
 		});
 	}
@@ -119,9 +119,9 @@ public class QuickActionRibbonPart extends RibbonBasePart<Void> implements LCVie
 		this.buttonUndo.disableProperty().bind(ConfigActionController.INSTANCE.undoDisabledProperty());
 		this.buttonRedo.disableProperty().bind(ConfigActionController.INSTANCE.redoDisabledProperty());
 		//Copy/paste/remove
-		this.buttonCopy.disableProperty().bind(SelectionController.INSTANCE.selectedComponentBothProperty().isNull());
+		this.buttonCopy.disableProperty().bind(SelectionController.INSTANCE.selectedDisplayableComponentHelperProperty().isNull());
 		this.buttonPaste.disableProperty().bind(ComponentActionController.INSTANCE.copiedComponentProperty().isNull());
-		SelectionController.INSTANCE.selectedComponentBothProperty().addListener((obs, ov, nv) -> {
+		SelectionController.INSTANCE.selectedDisplayableComponentHelperProperty().addListener((obs, ov, nv) -> {
 			boolean removeDisable = false;
 			if (nv != null) {
 				if (nv instanceof GridComponentI) {

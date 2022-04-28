@@ -107,7 +107,7 @@ public class MultiGridPartRibbonPart extends RibbonBasePart<DisplayableComponent
     @SuppressWarnings("unchecked")
     public void initBinding() {
         //Props
-        SelectionController.INSTANCE.selectedComponentBothProperty().addListener((obs, ov, nv) -> {
+        SelectionController.INSTANCE.selectedDisplayableComponentHelperProperty().addListener((obs, ov, nv) -> {
             this.model.set((DisplayableComponentBaseImpl) nv);
         });
         //Span listening for button activation

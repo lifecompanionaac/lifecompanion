@@ -19,17 +19,31 @@
 
 package org.lifecompanion.ui.common.pane.specific.cell;
 
+import javafx.scene.control.TreeItem;
 import org.lifecompanion.model.api.configurationcomponent.TreeDisplayableComponentI;
 import javafx.scene.control.TreeCell;
+import org.lifecompanion.ui.app.displayablecomponent.CommonComponentStage;
+import org.lifecompanion.ui.common.control.specific.componenttree.ComponentSelectionTree;
+
+import java.util.Map;
 
 /**
  * Tree cell to display all elements of the configuration.
+ *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public class SelectionItemTreeCell extends TreeCell<TreeDisplayableComponentI> {
-	@Override
-	protected void updateItem(final TreeDisplayableComponentI item, final boolean empty) {
-		super.updateItem(item, empty);
-		TreeDisplayableComponentCell.updateItem(this, item, empty);
-	}
+    @Override
+    protected void updateItem(final TreeDisplayableComponentI item, final boolean empty) {
+        super.updateItem(item, empty);
+        TreeDisplayableComponentCell.updateItem(this, item, empty);
+        this.setOnMouseClicked(me -> {
+            if (me.getClickCount() >= 2) {
+                TreeItem<TreeDisplayableComponentI> treeItem = this.getTreeItem();
+                if (!treeItem.isExpanded()) {
+                    CommonComponentStage.getInstance().show();
+                }
+            }
+        });
+    }
 }

@@ -19,22 +19,20 @@
 
 package org.lifecompanion.ui.configurationcomponent.editmode;
 
-import org.lifecompanion.model.api.configurationcomponent.GridPartComponentI;
 import org.lifecompanion.model.impl.configurationcomponent.GridPartTextEditorComponent;
 import org.lifecompanion.ui.configurationcomponent.base.GridPartTextEditorComponentViewBase;
 import org.lifecompanion.controller.editmode.SelectionController;
 import org.lifecompanion.ui.configurationcomponent.editmode.componentoption.SelectableOption;
 
 public class GridPartTextEditorViewConfig extends GridPartTextEditorComponentViewBase {
-    private SelectableOption<GridPartTextEditorComponent> selectableOption;
 
     @Override
     public void initUI() {
         super.initUI();
         //Select option
-        this.selectableOption = new SelectableOption<>(this.model, false);
-        this.getChildren().add(this.selectableOption);
-        this.selectableOption.bindSize(this);
+        SelectableOption<GridPartTextEditorComponent> selectableOption = new SelectableOption<>(this.model);
+        this.getChildren().add(selectableOption);
+        selectableOption.bindSize(this);
     }
 
     @Override
@@ -42,16 +40,10 @@ public class GridPartTextEditorViewConfig extends GridPartTextEditorComponentVie
         super.initListener();
         //Selection
         this.setOnMouseClicked((ea) -> {
-            SelectionController.INSTANCE.selected(this.model, ea.isShortcutDown(), ea.isShiftDown());
+            SelectionController.INSTANCE.selectGridPartComponent(this.model, false);
             this.toFront();
         });
-        this.setOnMouseEntered((ea) -> {
-            GridPartComponentI possiblySelected = SelectionController.INSTANCE.getFirstUnselectedParent(this.model);
-            possiblySelected.showPossibleSelectedProperty().set(true);
-        });
-        this.setOnMouseExited((ea) -> {
-            GridPartComponentI possiblySelected = SelectionController.INSTANCE.getFirstUnselectedParent(this.model);
-            possiblySelected.showPossibleSelectedProperty().set(false);
-        });
+        this.setOnMouseEntered((ea) -> this.model.showPossibleSelectedProperty().set(true));
+        this.setOnMouseExited((ea) -> this.model.showPossibleSelectedProperty().set(false));
     }
 }

@@ -122,11 +122,11 @@ public class KeyTextRibbonPart extends RibbonBasePart<GridPartKeyComponent> impl
         this.fieldKeyText.addEventFilter(KeyEvent.KEY_PRESSED, (ef) -> {
             if (ef.isShortcutDown() && ef.getCode() == KeyCode.TAB) {
                 this.fieldKeyTextWrapper.fireChangeEvent();//Focus will not be lost, so we need to fire a change event if needed
-                SelectionController.INSTANCE.selectNextGridPartInCurrentGrid();
+                SelectionController.INSTANCE.selectNextKeyInCurrentGrid();
                 ef.consume();
             } else if (ef.isShiftDown() && ef.getCode() == KeyCode.TAB) {
                 this.fieldKeyTextWrapper.fireChangeEvent();//Focus will not be lost, so we need to fire a change event if needed
-                SelectionController.INSTANCE.selectPreviousGridPartInCurrentGrid();
+                SelectionController.INSTANCE.selectPreviousKeyInCurrentGrid();
                 ef.consume();
             }
         });
@@ -153,7 +153,7 @@ public class KeyTextRibbonPart extends RibbonBasePart<GridPartKeyComponent> impl
 
     @Override
     public void initBinding() {
-        SelectionController.INSTANCE.selectedComponentProperty().addListener((o, oldV, newV) -> {
+        SelectionController.INSTANCE.selectedKeyHelperProperty().addListener((o, oldV, newV) -> {
             if (newV instanceof GridPartKeyComponent) {
                 // #46 : Text field shouldn't be focused automatically
                 //this.fieldKeyText.requestFocus();

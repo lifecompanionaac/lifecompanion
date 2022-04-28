@@ -305,18 +305,6 @@ public abstract class GridPartComponentBaseImpl extends DisplayableComponentBase
      * {@inheritDoc}
      */
     @Override
-    public boolean isParentSelected() {
-        if (this.gridParent.get() != null && this.gridParent.get().selectedProperty().get()) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public boolean isParentExist() {
         return this.gridParent.get() != null;
     }
