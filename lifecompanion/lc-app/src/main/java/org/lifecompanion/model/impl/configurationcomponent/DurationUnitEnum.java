@@ -19,10 +19,10 @@
 
 package org.lifecompanion.model.impl.configurationcomponent;
 
+import org.lifecompanion.framework.commons.translation.Translation;
+
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-
-import org.lifecompanion.framework.commons.translation.Translation;
 
 /**
  * A simple class to store the different units for a duration.
@@ -30,21 +30,21 @@ import org.lifecompanion.framework.commons.translation.Translation;
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public enum DurationUnitEnum {
-    MILLISECOND("duration.unit.millisecond", "ms", 1.0, "000"),
-    SECOND("duration.unit.second", "s", 1000.0, "00"),
-    MINUTE("duration.unit.minute", "mn", 60_000.0, "00"),
-    HOUR("duration.unit.hour", "h", 3600_000.0, "");
+    MILLISECOND("duration.unit.millisecond", "ms", 1.0),
+    SECOND("duration.unit.second", "s", 1000.0),
+    MINUTE("duration.unit.minute", "m", 60_000.0),
+    HOUR("duration.unit.hour", "h", 3600_000.0);
+
+    private static final DecimalFormat DECIMAL_FORMAT_TIME = new DecimalFormat("#.##");
 
     private final String translationId;
     private final String symbol;
     private final double toMsRatio;
-    private final DecimalFormat format;
 
-    DurationUnitEnum(String translationId, String symbol, double toMsRatio, String formatString) {
+    DurationUnitEnum(String translationId, String symbol, double toMsRatio) {
         this.translationId = translationId;
         this.toMsRatio = toMsRatio;
         this.symbol = symbol;
-        this.format = new DecimalFormat(formatString);
     }
 
     /**
@@ -59,8 +59,13 @@ public enum DurationUnitEnum {
         return durationUnitsInOrder;
     }
 
-    public DecimalFormat getFormat() {
-        return this.format;
+    public static String getBestFormattedTime(long timeInMs) {
+        for (int i = values().length - 1; i >= 0; i--) {
+            if (timeInMs / DurationUnitEnum.values()[i].toMsRatio >= 1.0) {
+                return DECIMAL_FORMAT_TIME.format(timeInMs / DurationUnitEnum.values()[i].toMsRatio) + " " + DurationUnitEnum.values()[i].getTranslatedName();
+            }
+        }
+        return null;
     }
 
     public double getToMsRatio() {

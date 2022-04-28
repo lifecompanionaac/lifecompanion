@@ -19,78 +19,77 @@
 
 package org.lifecompanion.model.impl.categorizedelement.useevent.available;
 
-import org.jdom2.Element;
-
-import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
-import org.lifecompanion.model.api.categorizedelement.useevent.DefaultUseEventSubCategories;
-import org.lifecompanion.model.impl.categorizedelement.useevent.BaseUseEventGeneratorImpl;
-import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
-import org.lifecompanion.model.impl.exception.LCException;
-import org.lifecompanion.model.api.io.IOContextI;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import org.jdom2.Element;
+import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
+import org.lifecompanion.model.api.categorizedelement.useevent.DefaultUseEventSubCategories;
+import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
+import org.lifecompanion.model.api.io.IOContextI;
+import org.lifecompanion.model.impl.categorizedelement.useevent.BaseUseEventGeneratorImpl;
+import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.util.ThreadUtils;
 
 public class ConfigurationStartedEventGenerator extends BaseUseEventGeneratorImpl {
 
-	private IntegerProperty delay;
+    private IntegerProperty delay;
 
-	public ConfigurationStartedEventGenerator() {
-		super();
-		this.delay = new SimpleIntegerProperty(1000);
-		this.parameterizableAction = true;
-		this.order = -1;
-		this.category = DefaultUseEventSubCategories.STATUS;
-		this.nameID = "use.event.configuration.started.name";
-		this.staticDescriptionID = "use.event.configuration.started.description";
-		this.configIconPath = "configuration/icon_configuration_started.png";
-		this.variableDescriptionProperty().set(this.getStaticDescription());
-	}
+    public ConfigurationStartedEventGenerator() {
+        super();
+        this.delay = new SimpleIntegerProperty(1000);
+        this.parameterizableAction = true;
+        this.order = -1;
+        this.category = DefaultUseEventSubCategories.STATUS;
+        this.nameID = "use.event.configuration.started.name";
+        this.staticDescriptionID = "use.event.configuration.started.description";
+        this.configIconPath = "configuration/icon_configuration_started.png";
+        this.variableDescriptionProperty().set(this.getStaticDescription());
+    }
 
-	public IntegerProperty delayProperty() {
-		return this.delay;
-	}
+    public IntegerProperty delayProperty() {
+        return this.delay;
+    }
 
-	// Class part : "Mode start/stop"
-	//========================================================================
-	/**
-	 * This boolean is useful if the configuration is stopped before the event is fired (because delay is greater than the configuration up time)
-	 */
-	private boolean modeStarted = false;
+    // Class part : "Mode start/stop"
+    //========================================================================
+    /**
+     * This boolean is useful if the configuration is stopped before the event is fired (because delay is greater than the configuration up time)
+     */
+    private boolean modeStarted = false;
 
-	@Override
-	public void modeStart(final LCConfigurationI configuration) {
-		this.modeStarted = true;
-		Thread generateStartEventThread = new Thread(() -> {
-			ThreadUtils.safeSleep(this.delay.get());
-			if (this.modeStarted) {
-				this.useEventListener.fireEvent(this, null, null);
-			}
-		});
-		generateStartEventThread.setDaemon(true);
-		generateStartEventThread.start();
-	}
+    @Override
+    public void modeStart(final LCConfigurationI configuration) {
+        this.modeStarted = true;
+        Thread generateStartEventThread = new Thread(() -> {
+            ThreadUtils.safeSleep(Math.min(DELAY_BEFORE_GENERATE_MS, this.delay.get()));
+            if (this.modeStarted) {
+                this.useEventListener.fireEvent(this, null, null);
+            }
+        });
+        generateStartEventThread.setDaemon(true);
+        generateStartEventThread.start();
+    }
 
-	@Override
-	public void modeStop(final LCConfigurationI configuration) {
-		this.modeStarted = false;
-	}
-	//========================================================================
+    @Override
+    public void modeStop(final LCConfigurationI configuration) {
+        this.modeStarted = false;
+    }
+    //========================================================================
 
-	// Class part : "IO"
-	//========================================================================
-	@Override
-	public Element serialize(final IOContextI context) {
-		final Element element = super.serialize(context);
-		XMLObjectSerializer.serializeInto(ConfigurationStartedEventGenerator.class, this, element);
-		return element;
-	}
+    // Class part : "IO"
+    //========================================================================
+    @Override
+    public Element serialize(final IOContextI context) {
+        final Element element = super.serialize(context);
+        XMLObjectSerializer.serializeInto(ConfigurationStartedEventGenerator.class, this, element);
+        return element;
+    }
 
-	@Override
-	public void deserialize(final Element node, final IOContextI context) throws LCException {
-		super.deserialize(node, context);
-		XMLObjectSerializer.deserializeInto(ConfigurationStartedEventGenerator.class, this, node);
-	}
-	//========================================================================
+    @Override
+    public void deserialize(final Element node, final IOContextI context) throws LCException {
+        super.deserialize(node, context);
+        XMLObjectSerializer.deserializeInto(ConfigurationStartedEventGenerator.class, this, node);
+    }
+    //========================================================================
 
 }

@@ -104,7 +104,7 @@ public class TimeOfDayEventGenerator extends BaseUseEventGeneratorImpl {
                     this.generated = false;
                 }
             }
-        }, 100, 1000);
+        }, DELAY_BEFORE_GENERATE_MS, 1000);
     }
 
     @Override

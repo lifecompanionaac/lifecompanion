@@ -22,17 +22,18 @@ package org.lifecompanion.model.impl.configurationcomponent;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import org.jdom2.Element;
-import org.lifecompanion.model.impl.exception.LCException;
+import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.io.XMLSerializable;
-import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
+import org.lifecompanion.model.impl.exception.LCException;
 
 import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.Date;
 
 public class TimeOfDay implements XMLSerializable<IOContextI>, Comparable<TimeOfDay> {
-    private static final DecimalFormat FORMAT = new DecimalFormat("00");
+    private static final DecimalFormat HOUR_FORMAT = new DecimalFormat("#0");
+    private static final DecimalFormat MINUTE_FORMAT = new DecimalFormat("00");
     private final IntegerProperty hours;
     private final IntegerProperty minutes;
 
@@ -94,6 +95,6 @@ public class TimeOfDay implements XMLSerializable<IOContextI>, Comparable<TimeOf
     }
 
     public String getHumanReadableString() {
-        return FORMAT.format(hours.get()) + "h" + FORMAT.format(minutes.get());
+        return HOUR_FORMAT.format(hours.get()) + "h" + MINUTE_FORMAT.format(minutes.get());
     }
 }

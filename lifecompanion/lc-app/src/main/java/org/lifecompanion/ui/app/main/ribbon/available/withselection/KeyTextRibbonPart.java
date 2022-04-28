@@ -31,22 +31,22 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import org.fxmisc.easybind.EasyBind;
 import org.fxmisc.easybind.monadic.MonadicBinding;
-import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
-import org.lifecompanion.model.api.configurationcomponent.keyoption.KeyOptionI;
-import org.lifecompanion.model.impl.configurationcomponent.keyoption.dynamickey.KeyListNodeKeyOption;
-import org.lifecompanion.model.impl.configurationcomponent.GridPartKeyComponent;
-import org.lifecompanion.ui.common.control.generic.LimitedTextArea;
-import org.lifecompanion.ui.common.util.UndoRedoTextInputWrapper;
 import org.lifecompanion.controller.editaction.KeyActions;
-import org.lifecompanion.util.model.GridPartKeyCollectionPropertyHolder;
-import org.lifecompanion.util.model.GridPartKeyPropertyChangeListener;
 import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.controller.editmode.SelectionController;
-import org.lifecompanion.ui.app.main.ribbon.available.withselection.style.MultiKeyHelper;
-import org.lifecompanion.ui.common.pane.generic.cell.ContentDisplayListCell;
-import org.lifecompanion.ui.configurationcomponent.editmode.categorizedelement.useevent.available.RibbonBasePart;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
+import org.lifecompanion.model.api.configurationcomponent.keyoption.KeyOptionI;
+import org.lifecompanion.model.impl.configurationcomponent.GridPartKeyComponent;
+import org.lifecompanion.model.impl.configurationcomponent.keyoption.dynamickey.KeyListNodeKeyOption;
+import org.lifecompanion.ui.app.main.ribbon.available.withselection.style.MultiKeyHelper;
+import org.lifecompanion.ui.common.control.generic.LimitedTextArea;
+import org.lifecompanion.ui.common.pane.generic.cell.ContentDisplayListCell;
+import org.lifecompanion.ui.common.util.UndoRedoTextInputWrapper;
+import org.lifecompanion.ui.configurationcomponent.editmode.categorizedelement.useevent.available.RibbonBasePart;
+import org.lifecompanion.util.model.GridPartKeyCollectionPropertyHolder;
+import org.lifecompanion.util.model.GridPartKeyPropertyChangeListener;
 
 import java.util.Arrays;
 
@@ -124,6 +124,10 @@ public class KeyTextRibbonPart extends RibbonBasePart<GridPartKeyComponent> impl
                 this.fieldKeyTextWrapper.fireChangeEvent();//Focus will not be lost, so we need to fire a change event if needed
                 SelectionController.INSTANCE.selectNextGridPartInCurrentGrid();
                 ef.consume();
+            } else if (ef.isShiftDown() && ef.getCode() == KeyCode.TAB) {
+                this.fieldKeyTextWrapper.fireChangeEvent();//Focus will not be lost, so we need to fire a change event if needed
+                SelectionController.INSTANCE.selectPreviousGridPartInCurrentGrid();
+                ef.consume();
             }
         });
 
@@ -154,11 +158,13 @@ public class KeyTextRibbonPart extends RibbonBasePart<GridPartKeyComponent> impl
                 // #46 : Text field shouldn't be focused automatically
                 //this.fieldKeyText.requestFocus();
                 this.model.set((GridPartKeyComponent) newV);
+                if (this.fieldKeyText.isFocused()) {
+                    this.fieldKeyText.selectAll();
+                }
             } else {
                 this.model.set(null);
             }
         });
-        // TODO : also bind on key option change
         this.initVisibleAndManagedBinding(GridPartKeyComponentI.class, KeyListNodeKeyOption.class);
     }
 

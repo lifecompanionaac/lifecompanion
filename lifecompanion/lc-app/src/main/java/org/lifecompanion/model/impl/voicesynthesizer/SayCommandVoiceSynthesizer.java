@@ -18,9 +18,10 @@
  */
 package org.lifecompanion.model.impl.voicesynthesizer;
 
-import org.lifecompanion.model.api.voicesynthesizer.VoiceInfoI;
 import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.framework.commons.translation.Translation;
+import org.lifecompanion.model.api.voicesynthesizer.VoiceInfoI;
+import org.lifecompanion.model.impl.exception.UnavailableFeatureException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -127,6 +128,11 @@ public class SayCommandVoiceSynthesizer extends AbstractVoiceSynthesizer {
         }
 
         this.sayRunningProcess = null;
+    }
+
+    @Override
+    public void speakSsml(String ssml) throws UnavailableFeatureException {
+        throw new UnavailableFeatureException();
     }
 
     @Override

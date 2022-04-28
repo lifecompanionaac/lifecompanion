@@ -40,6 +40,8 @@ import java.text.DecimalFormat;
  */
 public class TimePickerControl extends HBox implements LCViewInitHelper {
     private static final DecimalFormat TWO_DIGIT = new DecimalFormat("00");
+    private static final int HOURS_INITIAL_VALUE = 10;
+    private static final int MINUTES_INITIAL_VALUE = 30;
 
     /**
      * Spinner to select values
@@ -52,8 +54,8 @@ public class TimePickerControl extends HBox implements LCViewInitHelper {
 
     public TimePickerControl(final String textP) {
         this.fieldLabel = textP;
-        this.hour = new SimpleIntegerProperty();
-        this.minute = new SimpleIntegerProperty();
+        this.hour = new SimpleIntegerProperty(HOURS_INITIAL_VALUE);
+        this.minute = new SimpleIntegerProperty(MINUTES_INITIAL_VALUE);
         this.initAll();
     }
 
@@ -73,13 +75,13 @@ public class TimePickerControl extends HBox implements LCViewInitHelper {
     public void initUI() {
         //Hours
         Label labelSeparator = new Label(":");
-        this.spinnerHour = FXControlUtils.createIntSpinner(0, 23, 10, 1, 70);
+        this.spinnerHour = FXControlUtils.createIntSpinner(0, 23, HOURS_INITIAL_VALUE, 1, 70);
         this.spinnerHour.getStyleClass().remove(Spinner.STYLE_CLASS_SPLIT_ARROWS_HORIZONTAL);
         this.spinnerHour.getStyleClass().add(Spinner.STYLE_CLASS_ARROWS_ON_LEFT_VERTICAL);
         this.spinnerHour.getValueFactory().setConverter(new BoundIntConverter(0, 23, TWO_DIGIT));
 
         //Minutes
-        this.spinnerMinutes = FXControlUtils.createIntSpinner(0, 59, 30, 10, 70);
+        this.spinnerMinutes = FXControlUtils.createIntSpinner(0, 59, MINUTES_INITIAL_VALUE, 10, 70);
         this.spinnerMinutes.getStyleClass().remove(Spinner.STYLE_CLASS_SPLIT_ARROWS_HORIZONTAL);
         this.spinnerMinutes.getStyleClass().add(Spinner.STYLE_CLASS_ARROWS_ON_LEFT_VERTICAL);
         this.spinnerMinutes.getValueFactory().setConverter(new BoundIntConverter(0, 59, TWO_DIGIT));

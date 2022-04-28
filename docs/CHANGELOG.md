@@ -8,8 +8,21 @@
 
 ### Corrections/ajustements
 
+- Ticket #113 : lors de l'utilisation de "Shift+Tab" ou "Ctrl+Tab", le texte de la case suivante/précédente est maintenant sélectionné complètement par défaut (accélère la saisie)
+- Ticket #110 : le raccourci "Shift+Tab" fait passer à la case précédente lors de l'entrée du texte d'une case
+- Ticket #131 : amélioration de la commande "Lancer un programme" : meilleure gestion des arguments et log des erreurs
+- Ticket #130 : la recherche d'image fonctionne maintenant avec tous les mots (même "de", "je", etc.)
+- Ticket #129 : correction d'un rare problème pour les configurations de clavier/souris virtuels
+- Ticket #67 : ajout d'une action "Épeler tout le texte" pour épeler le contenu de l'éditeur
+- Ticket #67 : ajout d'une action "Épeler le texte de la case" pour épeler le texte de la case
+- Ticket #67 : ajout d'une action "Épeler du texte" pour épeler du texte (choisi)
+- Ticket #57 : ajout de la traduction des touches du clavier
 - Ticket #42 : ajout d'une nouvelle action pour changer la taille de la fenêtre
-- Ajout d'un nouvel événement "Intervalle régulier"
+- Ticket #72 : ajout d'une action pour réduire la fenêtre
+- Ticket #56 : ajout d'un nouvel événement "Intervalle de temps dans la journée", permet d'effectuer une action entre deux heures de la journée
+- Ticket #70 : les raccourcis "CTRL+C" ou "CTRL+V" en mode utilisation permettent de récupérer le texte courant ou de coller un texte copié dans l'éditeur
+- Ajout d'un nouvel événement "Intervalle régulier", permet d'effectuer une action tous les X temps
+- Correction d'un problème sur la souris virtuelle (la souris n'évitait pas la fenêtre courante)
 
 ## 1.3.3 - 04/03/2022
 

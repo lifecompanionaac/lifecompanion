@@ -30,6 +30,8 @@ import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
 import org.lifecompanion.model.api.profile.LCProfileI;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
+import org.lifecompanion.util.ThreadUtils;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.util.javafx.StageUtils;
 
 public class UseModeStage extends Stage {
@@ -58,12 +60,28 @@ public class UseModeStage extends Stage {
             StageUtils.moveStageTo(this, configuration.framePositionOnLaunchProperty().get());
         }
         this.setOnShown(e1 -> {
-            if (configuration.virtualKeyboardProperty().get()) {
+            boolean vk = configuration.virtualKeyboardProperty().get();
+            if (vk) {
                 StageUtils.setFocusableInternalAPI(this, false);
             }
             VirtualMouseController.INSTANCE.centerMouseOnStage();
-            useModeScene.requestFocus();
+            if (!vk) {
+                useModeScene.requestFocus();
+            } else {
+                // Issue #129
+                // Showing a stage steal the focus and this is a problem for virtual keyboard stages.
+                // To avoid this the stage should be iconified and shown again (dirty but no better solution found currently)
+                Thread fixStageFocusThread = new Thread(() -> {
+                    ThreadUtils.safeSleep(200);
+                    FXThreadUtils.runOnFXThread(() -> this.setIconified(true));
+                    ThreadUtils.safeSleep(200);
+                    FXThreadUtils.runOnFXThread(() -> this.setIconified(false));
+                }, "Fix stage focus thread");
+                fixStageFocusThread.setDaemon(true);
+                fixStageFocusThread.start();
+            }
         });
+        //StageUtils.testOldFocusMethod(this, false);
         this.setOnHidden(e -> {
             this.opacityProperty().unbind();
             useModeScene.unbindAndClean();

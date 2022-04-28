@@ -43,6 +43,11 @@ public class XMLHelper {
         }
     }
 
+    public static String toXmlString(Element element) {
+        XMLOutputter xmlOutputter = new XMLOutputter(FORMAT);
+        return xmlOutputter.outputString(element);
+    }
+
     public static Element readXml(File path) throws IOException, JDOMException {
         SAXBuilder saxBuilder = new SAXBuilder();
         try (BufferedReader is = new BufferedReader(new InputStreamReader(new FileInputStream(path), StandardCharsets.UTF_8))) {

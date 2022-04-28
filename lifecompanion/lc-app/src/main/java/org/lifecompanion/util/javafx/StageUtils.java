@@ -94,6 +94,7 @@ public class StageUtils {
     /**
      * Method that use the internal API to set the stage focusable property.<br>
      * This is a workaround, this should be changed if a public API to change focus state is exposed.
+     * <strong>This method will fail if called before the stage is shown</strong>
      *
      * @param stage     the stage to change
      * @param focusable the focusable value

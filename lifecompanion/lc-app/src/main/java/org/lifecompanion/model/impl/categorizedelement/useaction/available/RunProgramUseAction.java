@@ -18,91 +18,100 @@
  */
 package org.lifecompanion.model.impl.categorizedelement.useaction.available;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import org.jdom2.Element;
-import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.controller.usevariable.UseVariableController;
+import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
+import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseActionSubCategories;
+import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
+import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
+import org.lifecompanion.model.api.io.IOContextI;
+import org.lifecompanion.model.api.usevariable.UseVariableI;
+import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
+import org.lifecompanion.model.impl.exception.LCException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.lifecompanion.framework.commons.utils.lang.StringUtils;
-import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
-import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
-import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
-import org.lifecompanion.model.api.usevariable.UseVariableI;
-import org.lifecompanion.model.impl.exception.LCException;
-import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
-import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseActionSubCategories;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-/**
- * @author Mathieu THEBAUD <math.thebaud@gmail.com>
- */
 public class RunProgramUseAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
-	private static final Logger LOGGER = LoggerFactory.getLogger(RunProgramUseAction.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RunProgramUseAction.class);
 
-	private StringProperty programPath;
-	private StringProperty programArgs;
+    private StringProperty programPath;
+    private StringProperty programArgs;
 
-	public RunProgramUseAction() {
-		super(UseActionTriggerComponentI.class);
-		this.category = DefaultUseActionSubCategories.COMPUTER_FEATURES;
-		this.nameID = "action.run.program.name";
-		this.order = 5;
-		this.staticDescriptionID = "action.run.program.description";
-		this.configIconPath = "computeraccess/icon_run_program.png";
-		this.parameterizableAction = true;
-		programArgs = new SimpleStringProperty();
-		programPath = new SimpleStringProperty();
-		this.variableDescriptionProperty().set(getStaticDescription());
-	}
+    public RunProgramUseAction() {
+        super(UseActionTriggerComponentI.class);
+        this.category = DefaultUseActionSubCategories.COMPUTER_FEATURES;
+        this.nameID = "action.run.program.name";
+        this.order = 5;
+        this.staticDescriptionID = "action.run.program.description";
+        this.configIconPath = "computeraccess/icon_run_program.png";
+        this.parameterizableAction = true;
+        programArgs = new SimpleStringProperty();
+        programPath = new SimpleStringProperty();
+        this.variableDescriptionProperty().set(getStaticDescription());
+    }
 
-	public StringProperty programPathProperty() {
-		return programPath;
-	}
+    public StringProperty programPathProperty() {
+        return programPath;
+    }
 
-	public StringProperty programArgsProperty() {
-		return programArgs;
-	}
+    public StringProperty programArgsProperty() {
+        return programArgs;
+    }
 
-	// Class part : "Execute"
-	// ========================================================================
-	@Override
-	public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
-		if (StringUtils.isNotBlank(programPath.get())){
-			try {
-				List<String> cmds = new ArrayList<>(Arrays.asList(programPath.get()));
-				if (StringUtils.isNotBlank(programArgs.get())) {
-					cmds.add(UseVariableController.INSTANCE.createText(this.programArgs.get(), variables));
-				}
-				new ProcessBuilder().command(cmds).start();
-				LOGGER.info("Process {} was launched successfully", cmds);
-			} catch (Exception e) {
-				LOGGER.error("Couldn't start process {} with args {}", programPath.get(), programArgs, e);
-			}
-		}
-	}
-	// ========================================================================
+    @Override
+    public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
+        if (StringUtils.isNotBlank(programPath.get())) {
+            try {
+                List<String> cmds = new ArrayList<>(Collections.singletonList(programPath.get()));
+                if (StringUtils.isNotBlank(programArgs.get())) {
+                    Pattern regex = Pattern.compile("[^\\s\"']+|\"([^\"]*)\"|'([^']*)'");
+                    Matcher regexMatcher = regex.matcher(programArgs.get());
+                    while (regexMatcher.find()) {
+                        if (regexMatcher.group(1) != null) {
+                            cmds.add(UseVariableController.INSTANCE.createText(regexMatcher.group(1), variables));
+                        } else if (regexMatcher.group(2) != null) {
+                            cmds.add(UseVariableController.INSTANCE.createText(regexMatcher.group(2), variables));
+                        } else {
+                            cmds.add(UseVariableController.INSTANCE.createText(regexMatcher.group(), variables));
+                        }
+                    }
+                }
+                File logDir = new File(System.getProperty("java.io.tmpdir") + "/LifeCompanion/logs/run-program-action/" + System.currentTimeMillis());
+                logDir.mkdirs();
+                LOGGER.info("Will try to run process with command : {}", cmds);
+                new ProcessBuilder()
+                        .command(cmds)
+                        .redirectOutput(new File(logDir + "/out.txt"))
+                        .redirectError(new File(logDir + "/err.txt"))
+                        .start();
+                LOGGER.info("Process {} was launched successfully", cmds);
+            } catch (Exception e) {
+                LOGGER.error("Couldn't start process {} with args {}", programPath.get(), programArgs, e);
+            }
+        }
+    }
 
-	// Class part : "XML"
-	//========================================================================
-	@Override
-	public Element serialize(final IOContextI contextP) {
-		Element elem = super.serialize(contextP);
-		XMLObjectSerializer.serializeInto(RunProgramUseAction.class, this, elem);
-		return elem;
-	}
+    @Override
+    public Element serialize(final IOContextI contextP) {
+        Element elem = super.serialize(contextP);
+        XMLObjectSerializer.serializeInto(RunProgramUseAction.class, this, elem);
+        return elem;
+    }
 
-	@Override
-	public void deserialize(final Element nodeP, final IOContextI contextP) throws LCException {
-		super.deserialize(nodeP, contextP);
-		XMLObjectSerializer.deserializeInto(RunProgramUseAction.class, this, nodeP);
-	}
-	//========================================================================
-
+    @Override
+    public void deserialize(final Element nodeP, final IOContextI contextP) throws LCException {
+        super.deserialize(nodeP, contextP);
+        XMLObjectSerializer.deserializeInto(RunProgramUseAction.class, this, nodeP);
+    }
 }

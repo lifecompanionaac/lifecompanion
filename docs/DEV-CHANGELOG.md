@@ -1,5 +1,9 @@
 ## TECH/DEV CHANGELOG
 
+## LIFECOMPANION PLUGIN API
+
+To be done later...
+
 ## SERVER
 
 ### 1.14.9 - 04/03/2022

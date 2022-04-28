@@ -21,20 +21,20 @@ package org.lifecompanion.model.impl.categorizedelement.useevent;
 import javafx.beans.property.*;
 import org.jdom2.Element;
 import org.lifecompanion.controller.io.ConfigurationComponentIOHelper;
-import org.lifecompanion.model.api.configurationcomponent.DuplicableComponentI;
-import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
+import org.lifecompanion.framework.commons.SystemType;
+import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionManagerI;
 import org.lifecompanion.model.api.categorizedelement.useevent.UseEventGeneratorI;
 import org.lifecompanion.model.api.categorizedelement.useevent.UseEventListenerI;
 import org.lifecompanion.model.api.categorizedelement.useevent.UseEventSubCategoryI;
-import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
-import org.lifecompanion.model.impl.exception.LCException;
+import org.lifecompanion.model.api.configurationcomponent.DuplicableComponentI;
+import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.io.IOContextI;
-import org.lifecompanion.model.impl.constant.LCConstant;
+import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
 import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionManager;
-import org.lifecompanion.framework.commons.SystemType;
-import org.lifecompanion.framework.commons.translation.Translation;
+import org.lifecompanion.model.impl.constant.LCConstant;
+import org.lifecompanion.model.impl.exception.LCException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,15 +46,16 @@ import java.util.Map;
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public abstract class BaseUseEventGeneratorImpl implements UseEventGeneratorI {
+    protected final static long DELAY_BEFORE_GENERATE_MS = 500;
     protected boolean parameterizableAction = true;
     protected int order = Integer.MAX_VALUE;
     protected String staticDescriptionID = "unknow.action.description", nameID = "unknow.action.name", configIconPath;
-    private StringProperty variableDescription;
+    private final StringProperty variableDescription;
     protected UseEventSubCategoryI category;
     protected SystemType[] allowSystems = SystemType.values();
     protected List<UseVariableDefinitionI> generatedVariables;
-    private UseActionManagerI useActionManager;
-    private ObjectProperty<LCConfigurationI> configurationParent;
+    private final UseActionManagerI useActionManager;
+    private final ObjectProperty<LCConfigurationI> configurationParent;
 
     protected UseEventListenerI useEventListener;
 

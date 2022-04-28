@@ -21,11 +21,11 @@ package org.lifecompanion.model.impl.voicesynthesizer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import okhttp3.*;
-import org.lifecompanion.model.api.voicesynthesizer.VoiceInfoI;
-import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
+import org.lifecompanion.model.api.voicesynthesizer.VoiceInfoI;
+import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.util.LangUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -185,6 +185,22 @@ public class SAPIVoiceSynthesizer extends AbstractVoiceSynthesizer {
         RequestBody body = RequestBody.create(text, MEDIA_TYPE);
         Request request = new Request.Builder().url(//
                 HttpUrl.parse(URL + "speak").newBuilder()//
+                        .addQueryParameter("volume", "" + volume)//
+                        .addQueryParameter("rate", "" + rate)//
+                        .addQueryParameter("voice", "" + voice)//
+                        .build())
+                .post(body).build();
+        try (Response response = httpClient.newCall(request).execute()) {
+        } catch (IOException e) {
+            LOGGER.error("Couldn't speak with SAPI voice", e);
+        }
+    }
+
+    @Override
+    public void speakSsml(final String ssml) {
+        RequestBody body = RequestBody.create(ssml, MEDIA_TYPE);
+        Request request = new Request.Builder().url(//
+                HttpUrl.parse(URL + "speak-ssml").newBuilder()//
                         .addQueryParameter("volume", "" + volume)//
                         .addQueryParameter("rate", "" + rate)//
                         .addQueryParameter("voice", "" + voice)//

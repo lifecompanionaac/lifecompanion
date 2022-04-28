@@ -19,49 +19,48 @@
 
 package org.lifecompanion.ui.configurationcomponent.editmode.categorizedelement.useevent.available;
 
-import org.lifecompanion.framework.commons.translation.Translation;
-import org.lifecompanion.model.api.categorizedelement.useevent.UseEventGeneratorConfigurationViewI;
-import org.lifecompanion.model.impl.categorizedelement.useevent.available.PeriodicEventGenerator;
-import org.lifecompanion.ui.common.control.generic.DurationPickerControl;
-
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
+import org.lifecompanion.framework.commons.translation.Translation;
+import org.lifecompanion.model.api.categorizedelement.useevent.UseEventGeneratorConfigurationViewI;
+import org.lifecompanion.model.impl.categorizedelement.useevent.available.PeriodicEventGenerator;
+import org.lifecompanion.ui.common.control.generic.DurationPickerControl;
 
 public class PeriodicConfigView extends HBox implements UseEventGeneratorConfigurationViewI<PeriodicEventGenerator> {
-	private DurationPickerControl durationPicker;
+    private DurationPickerControl durationPicker;
 
-	@Override
-	public Region getConfigurationView() {
-		return this;
-	}
+    @Override
+    public Region getConfigurationView() {
+        return this;
+    }
 
-	@Override
-	public void editStarts(final PeriodicEventGenerator element) {
-		this.durationPicker.durationProperty().set(element.periodInMSProperty().get());
-		this.durationPicker.tryToPickBestUnit();
-	}
+    @Override
+    public void editStarts(final PeriodicEventGenerator element) {
+        this.durationPicker.durationProperty().set(element.periodInMSProperty().get());
+        this.durationPicker.tryToPickBestUnit();
+    }
 
-	@Override
-	public void editEnds(final PeriodicEventGenerator element) {
-		element.periodInMSProperty().set(this.durationPicker.durationProperty().get());
-	}
+    @Override
+    public void editEnds(final PeriodicEventGenerator element) {
+        element.periodInMSProperty().set(this.durationPicker.durationProperty().get());
+    }
 
-	@Override
-	public Class<PeriodicEventGenerator> getConfiguredActionType() {
-		return PeriodicEventGenerator.class;
-	}
+    @Override
+    public Class<PeriodicEventGenerator> getConfiguredActionType() {
+        return PeriodicEventGenerator.class;
+    }
 
-	@Override
-	public void initUI() {
-		this.durationPicker = new DurationPickerControl();
-		this.durationPicker.setAlignment(Pos.BASELINE_RIGHT);
+    @Override
+    public void initUI() {
+        this.durationPicker = new DurationPickerControl();
+        this.durationPicker.setAlignment(Pos.BASELINE_RIGHT);
         Label labelDurationPicker = new Label(Translation.getText("use.event.periodic.time.interval.field"));
-		labelDurationPicker.setMaxWidth(Double.MAX_VALUE);
-		HBox.setHgrow(labelDurationPicker, Priority.ALWAYS);
-		this.getChildren().addAll(labelDurationPicker, this.durationPicker);
-	}
+        labelDurationPicker.setMaxWidth(Double.MAX_VALUE);
+        HBox.setHgrow(labelDurationPicker, Priority.ALWAYS);
+        this.getChildren().addAll(labelDurationPicker, this.durationPicker);
+    }
 
 }

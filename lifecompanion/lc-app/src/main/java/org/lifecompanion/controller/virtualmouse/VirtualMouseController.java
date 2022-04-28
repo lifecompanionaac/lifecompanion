@@ -308,7 +308,10 @@ public enum VirtualMouseController implements ModeListenerI {
         FXThreadUtils.runOnFXThread(() -> {
             AppModeController.INSTANCE.getUseModeContext().getStage().toFront();
             this.virtualMouseStage.toFront();
-            AppModeController.INSTANCE.getUseModeContext().getStage().requestFocus();
+            // Issue #129 : main stage should be focused back if it's a virtual keyboard
+            if (!AppModeController.INSTANCE.getUseModeContext().getConfiguration().virtualKeyboardProperty().get()) {
+                AppModeController.INSTANCE.getUseModeContext().getStage().requestFocus();
+            }
             this.centerMouseOnStage();
         });
     }
@@ -368,24 +371,25 @@ public enum VirtualMouseController implements ModeListenerI {
     }
 
     private void moveFrameToAvoidMouse() {
+        Stage stage = AppModeController.INSTANCE.getUseModeContext().getStage();
         //Dirty but optimized : other rectangles are not created when not needed
         LOGGER.info("Contains : {},{} = {},{}", this.frameWidth / 2, this.frameHeight / 2, this.mouseX.get(), this.mouseY.get());
         //Top left
         if (new Rectangle2D(0, 0, this.frameWidth / 2, this.frameHeight / 2).contains(this.mouseX.get(), this.mouseY.get())) {
-            StageUtils.moveStageTo(AppModeController.INSTANCE.getEditModeContext().getStage(), FramePosition.BOTTOM_RIGHT);
+            StageUtils.moveStageTo(stage, FramePosition.BOTTOM_RIGHT);
         }
         //Top right
         else if (new Rectangle2D(this.frameWidth / 2, 0, this.frameWidth / 2, this.frameHeight / 2).contains(this.mouseX.get(), this.mouseY.get())) {
-            StageUtils.moveStageTo(AppModeController.INSTANCE.getEditModeContext().getStage(), FramePosition.BOTTOM_LEFT);
+            StageUtils.moveStageTo(stage, FramePosition.BOTTOM_LEFT);
         }
         //Bottom right
         else if (new Rectangle2D(this.frameWidth / 2, this.frameHeight / 2, this.frameWidth / 2, this.frameHeight / 2).contains(this.mouseX.get(),
                 this.mouseY.get())) {
-            StageUtils.moveStageTo(AppModeController.INSTANCE.getEditModeContext().getStage(), FramePosition.TOP_LEFT);
+            StageUtils.moveStageTo(stage, FramePosition.TOP_LEFT);
         }
         //Bottom left
         else if (new Rectangle2D(0, this.frameHeight / 2, this.frameWidth / 2, this.frameHeight / 2).contains(this.mouseX.get(), this.mouseY.get())) {
-            StageUtils.moveStageTo(AppModeController.INSTANCE.getEditModeContext().getStage(), FramePosition.TOP_RIGHT);
+            StageUtils.moveStageTo(stage, FramePosition.TOP_RIGHT);
         }
     }
 

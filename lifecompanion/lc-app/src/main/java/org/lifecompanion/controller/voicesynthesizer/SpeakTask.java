@@ -27,7 +27,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public abstract class SpeakTask implements Runnable {
     private static final Logger LOGGER = LoggerFactory.getLogger(SpeakTask.class);
 
-    private volatile boolean enabled = true;
+    protected volatile boolean enabled = true;
 
     private final CopyOnWriteArrayList<SpeakTask> taskList;
 

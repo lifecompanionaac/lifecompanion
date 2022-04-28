@@ -25,8 +25,8 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.lifecompanion.controller.resource.IconHelper;
-import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.framework.commons.translation.Translation;
+import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.util.javafx.StageUtils;
 
 /**
@@ -66,7 +66,7 @@ public class VirtualMouseStage extends Stage {
         this.setAlwaysOnTop(true);
         this.setMaximized(true);
         this.setTitle(LCConstant.NAME + " - " + Translation.getText("virtual.mouse.stage.title.com"));
-        StageUtils.setFocusableInternalAPI(this, false);
+        this.setOnShown(e1 -> StageUtils.setFocusableInternalAPI(this, false));
         this.centerOnScreen();
         //Scene
         this.setScene(new VirtualMouseScene(new Group()));

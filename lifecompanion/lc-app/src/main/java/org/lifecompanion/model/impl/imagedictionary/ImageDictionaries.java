@@ -213,7 +213,7 @@ public enum ImageDictionaries implements LCStateListener, ModeListenerI {
         List<Pair<ImageDictionaryI, List<List<ImageElementI>>>> result = new ArrayList<>();
         String searchFull = StringUtils.stripToEmpty(rawSearchString).toLowerCase();
         int totalResultCount = 0;
-        if (searchFull.length() > 2) {
+        if (searchFull.length() >= 1) {
             for (ImageDictionary imageDictionary : this.dictionaries) {
                 List<ImageElementI> resultList = imageDictionary.getImages()
                         .parallelStream()

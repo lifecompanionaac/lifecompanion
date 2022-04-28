@@ -29,14 +29,14 @@ import java.util.Locale;
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public class VoiceInfo implements VoiceInfoI {
-	private String id;
-	private String name;
-	private Locale locale;
+	private final String id;
+	private final String name;
+	private final Locale locale;
 
 	/**
 	 * Custom user data, can be use to select the correct voice
 	 */
-	private Object userData;
+	private final Object userData;
 
 	public VoiceInfo(final String id, final String name, final Locale locale, final Object userData) {
 		super();

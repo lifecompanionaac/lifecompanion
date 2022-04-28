@@ -153,6 +153,7 @@
   <text key="use.action.sub.category.sound.name">Son/Musique</text>
   <text key="use.action.sub.category.speak.parameters.name">Paramètres</text>
   <text key="use.action.sub.category.speak.text.name">Prononcer du texte</text>
+  <text key="use.action.sub.category.spell.text.name">Épeler du texte</text>
   <text key="use.action.sub.category.text.specialchar">Caractères spéciaux</text>
   <text key="use.action.sub.category.text.uppercase.name">Majuscules</text>
   <text key="use.action.sub.category.write.text.name">Écrire du texte</text>
@@ -544,6 +545,8 @@
   <text key="action.switch.fullscreen.frame.name">Activer/désactiver le plein écran</text>
   <text key="action.change.stage.size.name">Changer la taille de la fenêtre</text>
   <text key="action.change.stage.size.description">Augmente la taille de la fenêtre de la configuration par le pourcentage spécifié.</text>
+  <text key="action.minimize.stage.name">Minimiser la fenêtre</text>
+  <text key="action.minimize.stage.description">Minimise la fenêtre de la configuration LifeCompanion.</text>
   <!--org.lifecompanion.base.data.useaction.impl.configuration.frame, org.lifecompanion.base.data.action.definition-->
   <text key="action.switch.fullscreen">Activer/Désactiver le plein écran</text>
   <!--org.lifecompanion.base.data.useaction.impl.keylist.current-->
@@ -702,12 +705,16 @@
   <text key="action.switch.voice.synthesizer.activation.name">Activer/désactiver la synthèse vocale</text>
   <!--org.lifecompanion.base.data.useaction.impl.speak.text-->
   <text key="action.speak.all.text.description">Prononce tout le texte actuellement affiché dans
-		l'éditeur avec la synthèse vocale sélectionnée</text>
+		l'éditeur avec la synthèse vocale sélectionnée.</text>
   <text key="action.speak.all.text.name">Prononcer tout le texte</text>
   <text key="action.speak.key.label">Prononcer le texte de la case</text>
   <text key="action.speak.key.label.static.description">Prononce le texte écrit dans la case avec la synthèse
 		vocale actuellement sélectionnée.</text>
+	<text key="action.spell.key.label">Épeler le texte de la case</text>
+	<text key="action.spell.key.label.static.description">Épèle le texte écrit dans la case avec la synthèse
+		vocale actuellement sélectionnée.</text>
   <text key="action.speak.key.label.variable.description">Prononce le texte "{}"</text>
+	<text key="action.spell.key.label.variable.description">Épèle le texte "{}"</text>
   <text key="action.speak.last.sentence.label">Prononcer la phrase courante</text>
   <text key="action.speak.last.sentence.static.description">Permet de prononcer la phrase en cours d'écriture dans
 		l'éditeur.</text>
@@ -717,6 +724,7 @@
 		cours. Les actions suivantes de prononciation ne seront pas impactées</text>
   <text key="action.speak.stop.voice.synthesizer.name">Arrêter temporairement la synthèse vocale</text>
   <text key="action.speak.text.name">Prononcer du texte</text>
+  <text key="action.spell.text.name">Épeler du texte</text>
 	<text key="use.event.on.next.and.end.reached.event.name">Fin de la liste courante atteinte</text>
 	<text key="use.event.on.next.and.end.reached.event.description">Cet événement est généré lorsque la fin de la liste courante est atteinte et que l'utilisateur demande de nouveau à aller à l'élément suivant.</text>
 	<text key="use.event.on.previous.and.start.reached.event.name">Début de la liste courante atteint</text>
@@ -725,6 +733,13 @@
 		vocale
 		actuellement sélectionnée.</text>
   <text key="action.speak.text.variable.description">Prononce le texte "{}"</text>
+	<text key="action.spell.text.static.description">Épèle un texte choisi avec la synthèse
+		vocale
+		actuellement sélectionnée.</text>
+	<text key="action.spell.text.variable.description">Épèle le texte "{}"</text>
+  <text key="action.spell.all.text.description">Épèle tout le texte actuellement affiché dans
+		l'éditeur avec la synthèse vocale sélectionnée.</text>
+  <text key="action.spell.all.text.name">Épeler tout le texte</text>
   <!--org.lifecompanion.base.data.useaction.impl.text.caret-->
   <text key="action.move.caret.backward.description">Déplace le curseur d'un caractère en arrière. Si le
 		curseur est au début du texte, cette action n'a aucun effet.</text>
@@ -885,10 +900,8 @@
   <text key="use.event.on.no.parent.on.back.event.name">Retour quand pas de parent</text>
   <!--org.lifecompanion.base.data.useevent.impl.time.value-->
   <text key="use.event.day.of.week.generator.name">Jour de la semaine</text>
-  <text key="use.event.day.of.week.generator.static.description">Génère un événement après le lancement de la
-		configuration si celle-ci est lancée le jour de la semaine défini.</text>
-  <text key="use.event.day.of.week.generator.variable.description">Génère un événement au lancement de la
-		configuration si celle-ci est lancée le {}</text>
+  <text key="use.event.day.of.week.generator.static.description">Génère un événement lorsque le jour de la semaine défini est atteint.</text>
+  <text key="use.event.day.of.week.generator.variable.description">Génère un événement lorsque l'on est un {}</text>
   <text key="use.event.time.of.day.generator.hour.format">{}</text>
   <text key="use.event.time.of.day.generator.name">Heure de la journée</text>
   <text key="use.event.time.of.day.generator.static.description">Génére un événement lorsqu'une heure définie dans la
@@ -902,6 +915,20 @@
 		lisible.</text>
   <text key="use.variable.time.of.day.displayable.hour.example">10h30</text>
   <text key="use.variable.time.of.day.displayable.hour.name">Heure atteinte</text>
+  <text key="use.event.interval.of.day.generator.name">Intervalle de temps dans la journée</text>
+  <text key="use.event.interval.of.day.generator.static.description">Génére un événement lorsque l'on se situe entre dans un intervalle de temps défini de la journée.</text>
+  <text key="use.event.interval.of.day.generator.variable.description">Génére un événement lorsqu'il est entre {} et {}.</text>
+  <text key="use.event.interval.of.day.start.time.field">Heure de début de l'intervalle</text>
+  <text key="use.event.interval.of.day.end.time.field">Heure de fin de l'intervalle</text>
+  <text key="use.variable.interval.of.day.displayable.start.hour.name">Heure de début</text>
+  <text key="use.variable.interval.of.day.displayable.end.hour.name">Heure de fin</text>
+  <text key="use.variable.interval.of.day.displayable.start.hour.description">L'heure de début de l'intervalle de temps voulu dans l'événement, dans un format
+		lisible.</text>
+  <text key="use.variable.interval.of.day.displayable.end.hour.description">L'heure de fin de l'intervalle de temps voulu dans l'événement, dans un format
+		lisible.</text>
+  <text key="use.variable.interval.of.day.displayable.start.hour.example">10h30</text>
+  <text key="use.variable.interval.of.day.displayable.end.hour.example">11h30</text>
+  <text key="use.event.interval.of.day.generator.hour.format">{}</text>
   <!--org.lifecompanion.base.data.voice-->
   <text key="macos.say.voice.description">Synthèse vocale utilisant les voix de la commande "Say" sur
 		MacOS.\nLes voix MacOS Say ne prennent pas en compte les paramètres "volume", "débit" et "hauteur".</text>
@@ -2349,7 +2376,7 @@
   <!--org.lifecompanion.config.view.pane.voice, org.lifecompanion.config.view.pane.predictor-->
   <text key="voice.synthesizer.system.compatible">Compatible avec {}</text>
   <!--org.lifecompanion.config.view.reusable-->
-  <text key="key.selector.control.no.key">Appuyez sur la touche voulue</text>
+  <text key="key.selector.control.no.key">Cliquer puis appuyer sur la touche du clavier pour sélectionner</text>
   <text key="mouse.button.middle">Bouton milieu (clic molette)</text>
   <text key="mouse.button.none">Aucun</text>
   <text key="mouse.button.primary">Bouton principal (clic gauche)</text>
@@ -2419,6 +2446,8 @@
   <text key="component.select.tree">Selectionner un élément</text>
   <!--org.lifecompanion.config.view.useaction.impl.computera.features-->
   <text key="label.field.run.program.args">Arguments de lancement (optionnels)</text>
+  <text key="label.field.run.program.args.explain">Vous pouvez séparer les différents arguments par des espaces. Si vous souhaitez avoir un argument contenant des espaces, entourez le de guillemets. Par exemple, l'argument : read "Mon fichier", donnera deux arguments : "read" et "Mon fichier"</text>
+
   <text key="label.field.run.program.path">Programme à lancer</text>
   <text key="save.user.text.save.directory.dialog.title">Sélectionner le dossier de sauvegarde</text>
   <text key="save.user.text.save.directory.name">Dossier de sauvegarde des fichiers texte</text>
@@ -2469,6 +2498,7 @@
   <text key="change.voice.selected.voice">Voix à utiliser</text>
   <!--org.lifecompanion.config.view.useaction.impl.speak.text-->
   <text key="use.action.speak.text.to.speak">Texte à prononcer</text>
+  <text key="use.action.spell.text.to.spell">Texte à épeler</text>
   <!--org.lifecompanion.config.view.useaction.impl.speak.text, org.lifecompanion.config.view.keyoption.impl-->
   <text key="quick.communication.enable.space">Espace après</text>
   <text key="quick.communication.enable.speak">Prononcer</text>
@@ -3431,4 +3461,59 @@
   <text key="user.config.save.button">Sauvegarder</text>
   <text key="user.config.tab.information">À Propos</text>
   <text key="virtual.mouse.parameter.button">Paramètres de souris virtuelle</text>
+
+  <text key="keyboard.key.enter">Entrée</text>
+  <text key="keyboard.key.back.space">Retour arrière</text>
+  <text key="keyboard.key.tab">Tabulation</text>
+  <text key="keyboard.key.shift">Maj</text>
+  <text key="keyboard.key.caps">Verr. Maj</text>
+  <text key="keyboard.key.esc">Échap</text>
+  <text key="keyboard.key.space">Barre d'espace</text>
+  <text key="keyboard.key.left">Flèche directionelle gauche</text>
+  <text key="keyboard.key.right">Flèche directionelle droite</text>
+  <text key="keyboard.key.up">Flèche directionelle haut</text>
+  <text key="keyboard.key.down">Flèche directionelle bas</text>
+  <text key="keyboard.key.comma">Virgule</text>
+
+  <text key="keyboard.key.period">Point</text>
+  <text key="keyboard.key.slash">Slash</text>
+  <text key="keyboard.key.colon">Deux-point</text>
+  <text key="keyboard.key.semicolon">Point-virgule</text>
+  <text key="keyboard.key.exclamation.mark">Point d'exclamation</text>
+
+  <text key="keyboard.key.numpad0">Pavé numérique 0</text>
+  <text key="keyboard.key.numpad1">Pavé numérique 1</text>
+  <text key="keyboard.key.numpad2">Pavé numérique 2</text>
+  <text key="keyboard.key.numpad3">Pavé numérique 3</text>
+  <text key="keyboard.key.numpad4">Pavé numérique 4</text>
+  <text key="keyboard.key.numpad5">Pavé numérique 5</text>
+  <text key="keyboard.key.numpad6">Pavé numérique 6</text>
+  <text key="keyboard.key.numpad7">Pavé numérique 7</text>
+  <text key="keyboard.key.numpad8">Pavé numérique 8</text>
+  <text key="keyboard.key.numpad9">Pavé numérique 9</text>
+  <text key="keyboard.key.num.lock">Verr num</text>
+  <text key="keyboard.key.insert">Insert</text>
+	<text key="keyboard.key.subtract">Soustraire (pavé numérique)</text>
+	<text key="keyboard.key.decimal">Décimal (pavé numérique)</text>
+  <text key="keyboard.key.multiply">Multiplier (pavé numérique)</text>
+  <text key="keyboard.key.divide">Diviser (pavé numérique)</text>
+  <text key="keyboard.key.add">Additionner (pavé numérique)</text>
+  <text key="keyboard.key.delete">Suppr</text>
+  <text key="keyboard.key.end">Fin</text>
+  <text key="keyboard.key.home">Début</text>
+  <text key="keyboard.key.printscreen">Impr écran</text>
+  <text key="keyboard.key.asterisk">Astérisque</text>
+  <text key="keyboard.key.right.parenthesis">Parenthèse fermante</text>
+  <text key="keyboard.key.equals">Égal</text>
+  <text key="keyboard.key.page.down">Page bas</text>
+  <text key="keyboard.key.page.up">Page haut</text>
+  <text key="keyboard.key.context.menu">Menu contextuel</text>
+  <text key="keyboard.key.undefined">Touche non détectée</text>
+  <text key="keyboard.key.less">Chevron</text>
+
+  <text key="char.to.speech.special.space">espace</text>
+  <text key="char.to.speech.special.e.circumflex">E accent circonflexe</text>
+  <text key="char.to.speech.special.e.umlaut">E tréma</text>
+  <text key="char.to.speech.special.linebreak">Saut de ligne</text>
+  <text key="char.to.speech.special.tab">Tabulation</text>
 </texts>
