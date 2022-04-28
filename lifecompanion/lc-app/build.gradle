@@ -130,7 +130,7 @@ jlink {
         addExtraModulePath("${project.property('jfx_mac_x64')}")
     }
     options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages',
-               '--add-modules', 'java.base,jdk.localedata,jdk.crypto.cryptoki']
+               '--add-modules', 'java.base,jdk.localedata,jdk.crypto.cryptoki,jdk.crypto.ec']
 // locale data - translations / crypto - email
 }
 
