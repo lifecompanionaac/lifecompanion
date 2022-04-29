@@ -24,7 +24,11 @@ import java.util.List;
 
 import org.controlsfx.glyphfont.FontAwesome;
 
+import org.lifecompanion.controller.editaction.GridStackActions;
+import org.lifecompanion.controller.editmode.ComponentActionController;
+import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
 import org.lifecompanion.model.api.configurationcomponent.GridPartComponentI;
 import org.lifecompanion.model.api.configurationcomponent.StackComponentI;
 import org.lifecompanion.model.api.ui.editmode.ConfigOptionComponentI;
@@ -39,7 +43,7 @@ import org.lifecompanion.model.impl.constant.LCGraphicStyle;
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public class StackButtonOption extends BaseOption<StackComponentI> implements LCViewInitHelper, ConfigOptionComponentI {
-    private Button buttonNextGrid, buttonPreviousGrid;
+    private Button buttonNextGrid, buttonPreviousGrid, buttonAddGrid, buttonCopyCurrentGrid;
 
     public StackButtonOption(final StackComponentI modelP) {
         super(modelP);
@@ -48,7 +52,7 @@ public class StackButtonOption extends BaseOption<StackComponentI> implements LC
 
     @Override
     public List<Node> getOptions() {
-        return Arrays.asList(this.buttonPreviousGrid, this.buttonNextGrid);
+        return Arrays.asList(this.buttonPreviousGrid, this.buttonNextGrid, this.buttonAddGrid, this.buttonCopyCurrentGrid);
     }
 
     @Override
@@ -64,17 +68,21 @@ public class StackButtonOption extends BaseOption<StackComponentI> implements LC
         this.buttonNextGrid = new Button();
         this.buttonNextGrid.disableProperty().bind(this.model.nextPossibleProperty().not());
         ButtonComponentOption.applyButtonBaseStyle(this.buttonNextGrid, model instanceof GridPartComponentI ? LCGraphicStyle.THIRD_DARK : LCGraphicStyle.MAIN_DARK, FontAwesome.Glyph.CHEVRON_RIGHT);
+
+        this.buttonAddGrid = new Button();
+        ButtonComponentOption.applyButtonBaseStyle(this.buttonAddGrid, model instanceof GridPartComponentI ? LCGraphicStyle.THIRD_DARK : LCGraphicStyle.MAIN_DARK, FontAwesome.Glyph.TH_LARGE);
+        this.buttonCopyCurrentGrid = new Button();
+        ButtonComponentOption.applyButtonBaseStyle(this.buttonCopyCurrentGrid, model instanceof GridPartComponentI ? LCGraphicStyle.THIRD_DARK : LCGraphicStyle.MAIN_DARK, FontAwesome.Glyph.COPY);
     }
 
     @SuppressWarnings("deprecation")
     @Override
     public void initListener() {
-        this.buttonNextGrid.setOnAction((ea) -> {
-            this.model.displayNext();
-        });
-        this.buttonPreviousGrid.setOnAction((ea) -> {
-            this.model.displayPrevious();
-        });
+        this.buttonNextGrid.setOnAction(ea -> this.model.displayNext());
+        this.buttonPreviousGrid.setOnAction(ea -> this.model.displayPrevious());
+        this.buttonAddGrid.setOnAction(ea -> ConfigActionController.INSTANCE.executeAction(new GridStackActions.AddGridInStackAction(model, true, true)));
+        this.buttonCopyCurrentGrid.setOnAction(ea ->
+                ConfigActionController.INSTANCE.executeAction(new GridStackActions.AddGridInStackAction(model, ComponentActionController.createComponentCopy(model.displayedComponentProperty().get()), true, true)));
     }
 
     @Override

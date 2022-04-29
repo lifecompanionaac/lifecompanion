@@ -1687,7 +1687,7 @@
   <text key="use.event.main.category.sequence.name">Séquences</text>
   <text key="use.event.on.ua.sequence.finished.name">Fin d'une séquence</text>
   <text key="use.event.on.ua.sequence.finished.description">Cet événement est généré à la fin d'une séquence et permet donc d'ajouter des actions en conséquences, par exemple revenir à la sélection des séquences ou encore prononcer un message de fin.</text>
-  <text key="use.event.main.category.sequence.description">Contient les événements générés par l'interraction avec les fonctions de séquences. Permet par exemple de réagir à la fin d'une séquence.</text>
+  <text key="use.event.main.category.sequence.description">Contient les événements générés par l'interaction avec les fonctions de séquences. Permet par exemple de réagir à la fin d'une séquence.</text>
   <text key="user.action.display.filter.both">Toutes (étapes et sous-étapes)</text>
   <text key="user.action.display.filter.only.sub">Uniquement les sous-étapes</text>
   <text key="user.action.display.filter.only.not.sub">Uniquement les étapes</text>
@@ -1920,7 +1920,7 @@
   <text key="profile.edition.general.default.configuration.title">Modèles de configuration</text>
   <text key="profile.edition.general.default.configuration.link.unselect.all">Tout déselectionner</text>
   <text key="profile.edition.general.default.configuration.link.select.all">Tout selectionner</text>
-  <text key="profile.edition.general.default.configuration.explain">Ces modèles de configuration sont proposés pour vous permettre de démarrer dans LifeCompanion. Ils sont issus de l'expérience clinique des concepteurs de LifeCompanion et des différentes prises en charge. Le vocabulaire des configurations proposées est souvent simple et devra être adapté et complété en fonction de l'usage. N'oubliez pas qu'une configuration peut ensuite être adaptée, autant dans son contenu (texte, actions, images, etc.) que dans son mode d'interraction (pointage direct, défilement, etc.)\nCliquez sur un modèle pour obtenir un aperçu.</text>
+  <text key="profile.edition.general.default.configuration.explain">Ces modèles de configuration sont proposés pour vous permettre de démarrer dans LifeCompanion. Ils sont issus de l'expérience clinique des concepteurs de LifeCompanion et des différentes prises en charge. Le vocabulaire des configurations proposées est souvent simple et devra être adapté et complété en fonction de l'usage. N'oubliez pas qu'une configuration peut ensuite être adaptée, autant dans son contenu (texte, actions, images, etc.) que dans son mode d'interaction (pointage direct, défilement, etc.)\nCliquez sur un modèle pour obtenir un aperçu.</text>
   <text key="profile.edition.general.information.title">Informations</text>
   <text key="profile.edition.view.title">Modification des informations d'un profil</text>
   <text key="profile.edition.view.title.config">Édition du profil utilisateur</text>
@@ -1941,7 +1941,7 @@
   <text key="tooltip.profile.list.remove">Supprime le profil sélectionné</text>
   <text key="tooltip.profile.list.select">Sélectionne ce profil et ouvre la liste des configurations associées</text>
   <!--org.lifecompanion.config.view.pane.selection-->
-  <text key="general.configuration.selection.mode.combobox.label">Type d'interraction/sélection</text>
+  <text key="general.configuration.selection.mode.combobox.label">Type d'interaction/sélection</text>
   <text key="general.configuration.selection.mode.title.filter.actions">Filter les entrées</text>
   <text key="general.configuration.selection.mode.title.filter.actions.field">Déclenchement des actions</text>
   <text key="general.configuration.selection.mode.title.part.input.type">Périphérique d'activation</text>

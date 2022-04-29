@@ -22,6 +22,7 @@
 
 ### Corrections/ajustements
 
+- Ajout de deux boutons sur les piles de case pour rapidement : ajouter une nouvelle ou copier la grille courante
 - Ticket #137 : il est maintenant possible de choisir le mode "Fenêtre en plein écran complet" ainsi que le mode "Fenêtre réduite" (paramètres "Fenêtres et dimensions")
 - Ticket #120 : la couleur actuellement sélectionnée est maintenant montrée dans un sélecteur de couleur
 - Ticket #113 : lors de l'utilisation de "Shift+Tab" ou "Ctrl+Tab", le texte de la case suivante/précédente est maintenant sélectionné complètement par défaut (accélère la saisie)
@@ -40,6 +41,7 @@
 - Ticket #56 : ajout d'un nouvel événement "Intervalle de temps dans la journée", permet d'effectuer une action entre deux heures de la journée
 - Ticket #70 : les raccourcis "CTRL+C" ou "CTRL+V" en mode utilisation permettent de récupérer le texte courant ou de coller un texte copié dans l'éditeur
 - Ajout d'un nouvel événement "Intervalle régulier", permet d'effectuer une action tous les X temps
+- Ticket #115 : correction de quelques fautes
 - Correction d'un problème sur la souris virtuelle (la souris n'évitait pas la fenêtre courante)
 
 ## 1.3.3 - 04/03/2022

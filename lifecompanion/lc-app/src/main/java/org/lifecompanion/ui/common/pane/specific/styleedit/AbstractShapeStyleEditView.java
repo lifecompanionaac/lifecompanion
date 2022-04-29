@@ -55,7 +55,7 @@ public abstract class AbstractShapeStyleEditView<T extends AbstractShapeCompStyl
         this.fieldStrokeColor = new LCColorPicker(LCColorPicker.ColorPickerMode.DARK);
         this.fieldBackgroundColor = new LCColorPicker();
         this.spinnerShapeRadius = FXControlUtils.createIntSpinner(0, 180, 2, 2, 75.0);
-        this.spinnerStrokeSize = FXControlUtils.createIntSpinner(0, 180, 2, 2, 75.0);
+        this.spinnerStrokeSize = FXControlUtils.createIntSpinner(0, 180, 2, 1, 75.0);
 
         this.fieldGrid.add(new Label(Translation.getText("shape.style.background.color")), 0, 0);
         this.fieldGrid.add(this.fieldBackgroundColor, 1, 0);
