@@ -23,6 +23,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
@@ -33,6 +34,8 @@ import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.Glyph;
 import org.lifecompanion.model.api.configurationcomponent.FramePosition;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
+import org.lifecompanion.model.api.configurationcomponent.StageMode;
+import org.lifecompanion.ui.common.pane.specific.cell.StageModeSimpleCell;
 import org.lifecompanion.util.javafx.FXControlUtils;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
@@ -62,12 +65,10 @@ public class UseStageConfigurationStepView extends BorderPane implements General
      * Spinner to set the frame width/height
      */
     private Spinner<Double> spinnerFrameWidth, spinnerFrameHeight;
-    /**
-     * To enable/disable fullscreen
-     */
-    private ToggleSwitch toggleEnableFullScreen;
 
     private ComboBox<FramePosition> comboboxFramePosition;
+
+    private ComboBox<StageMode> comboBoxStageModeOnLaunch;
 
     private Glyph glyphKeep, glyphNotKept;
     private Button buttonKeepRatioFrameSize;
@@ -132,6 +133,7 @@ public class UseStageConfigurationStepView extends BorderPane implements General
         Label labelExplainConfigurationSize = new Label(Translation.getText("general.configuration.stage.configuration.size.explain"));
         labelExplainConfigurationSize.getStyleClass().add("explain-text");
 
+
         glyphKeep = GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.LOCK).size(12).color(LCGraphicStyle.MAIN_DARK);
         glyphNotKept = GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.UNLOCK).size(12).color(LCGraphicStyle.MAIN_DARK);
         buttonKeepRatioFrameSize = FXControlUtils.createGraphicButton(glyphKeep, "general.configuration.stage.size.keep.ratio");
@@ -148,8 +150,23 @@ public class UseStageConfigurationStepView extends BorderPane implements General
         GridPane.setHalignment(spinnerFrameHeight, HPos.RIGHT);
         Label labelStageWidth = new Label(Translation.getText("configuration.frame.width"));
         Label labelStageHeight = new Label(Translation.getText("configuration.frame.height"));
-        this.toggleEnableFullScreen = FXControlUtils.createToggleSwitch("configuration.launch.fullscreen",
-                "tooltip.explain.configuration.full.screen");
+
+        GridPane subGridStageSize = new GridPane();
+        subGridStageSize.setHgap(GeneralConfigurationStepViewI.GRID_H_GAP);
+        subGridStageSize.setVgap(GeneralConfigurationStepViewI.GRID_V_GAP);
+        subGridStageSize.add(buttonKeepRatioFrameSize, 0, 0, 1, 2);
+        subGridStageSize.add(spinnerFrameWidth, 1, 0);
+        subGridStageSize.add(spinnerFrameHeight, 1, 1);
+        subGridStageSize.setAlignment(Pos.CENTER_RIGHT);
+
+        comboBoxStageModeOnLaunch = new ComboBox<>(FXCollections.observableArrayList(StageMode.values()));
+        this.comboBoxStageModeOnLaunch.setCellFactory((lv) -> new StageModeSimpleCell());
+        this.comboBoxStageModeOnLaunch.setButtonCell(new StageModeSimpleCell());
+        this.comboBoxStageModeOnLaunch.setMaxWidth(Double.MAX_VALUE);
+        GridPane.setHgrow(comboBoxStageModeOnLaunch, Priority.ALWAYS);
+        FXControlUtils.createAndAttachTooltip(comboBoxStageModeOnLaunch, "tooltip.explain.configuration.full.screen");
+        Label labelStageMode = new Label(Translation.getText("configuration.launch.fullscreen"));
+
         this.comboboxFramePosition = new ComboBox<>(FXCollections.observableArrayList(FramePosition.values()));
         this.comboboxFramePosition.setCellFactory((lv) -> new FramePositionDetailledCell());
         this.comboboxFramePosition.setButtonCell(new FramePositionSimpleCell());
@@ -183,18 +200,16 @@ public class UseStageConfigurationStepView extends BorderPane implements General
         gridPaneTotal.add(labelHeight, 0, gridRowIndex);
         gridPaneTotal.add(spinnerHeight, 1, gridRowIndex++, 2, 1);
         gridPaneTotal.add(toggleKeepConfigurationRatio, 0, gridRowIndex++, columnCount, 1);
-
         gridPaneTotal.add(labelStageSize, 0, gridRowIndex++, columnCount, 1);
-        gridPaneTotal.add(toggleEnableFullScreen, 0, gridRowIndex++, columnCount, 1);
-        gridPaneTotal.add(buttonKeepRatioFrameSize, 2, gridRowIndex, 1, 2);
+        gridPaneTotal.add(labelStageMode, 0, gridRowIndex);
+        gridPaneTotal.add(comboBoxStageModeOnLaunch, 1, gridRowIndex++);
         gridPaneTotal.add(labelStageWidth, 0, gridRowIndex);
-        gridPaneTotal.add(spinnerFrameWidth, 1, gridRowIndex++);
-        gridPaneTotal.add(labelStageHeight, 0, gridRowIndex);
-        gridPaneTotal.add(spinnerFrameHeight, 1, gridRowIndex++);
+        gridPaneTotal.add(subGridStageSize, 1, gridRowIndex++, 1, 2);
+        gridPaneTotal.add(labelStageHeight, 0, gridRowIndex++);
         gridPaneTotal.add(labelFramePosition, 0, gridRowIndex);
         gridPaneTotal.add(comboboxFramePosition, 1, gridRowIndex++);
         gridPaneTotal.add(labelFOpacity, 0, gridRowIndex, 2, 1);
-        gridPaneTotal.add(sliderFrameOpacity, 1, gridRowIndex++, 2, 1);
+        gridPaneTotal.add(sliderFrameOpacity, 1, gridRowIndex++);
 
         gridPaneTotal.setPadding(new Insets(GeneralConfigurationStepViewI.PADDING));
         setCenter(gridPaneTotal);
@@ -203,8 +218,8 @@ public class UseStageConfigurationStepView extends BorderPane implements General
     @Override
     public void initListener() {
         // When disable fullscreen : default size to automatic size
-        this.toggleEnableFullScreen.selectedProperty().addListener((obs, ov, nv) -> {
-            if (model != null && !nv) {
+        this.comboBoxStageModeOnLaunch.valueProperty().addListener((obs, ov, nv) -> {
+            if (model != null && nv == StageMode.BASE) {
                 setFrameWidthValueWithoutFireListener(model.automaticFrameWidthProperty().get());
                 setFrameHeightValueWithoutFireListener(model.automaticFrameHeightProperty().get());
                 updateFrameSizeRatio();
@@ -263,10 +278,10 @@ public class UseStageConfigurationStepView extends BorderPane implements General
 
     @Override
     public void initBinding() {
-        this.spinnerFrameWidth.disableProperty().bind(this.toggleEnableFullScreen.selectedProperty());
-        this.spinnerFrameHeight.disableProperty().bind(this.toggleEnableFullScreen.selectedProperty());
-        this.comboboxFramePosition.disableProperty().bind(this.toggleEnableFullScreen.selectedProperty());
-        this.buttonKeepRatioFrameSize.disableProperty().bind(this.toggleEnableFullScreen.selectedProperty());
+        this.spinnerFrameWidth.disableProperty().bind(this.comboBoxStageModeOnLaunch.valueProperty().isNotEqualTo(StageMode.BASE));
+        this.spinnerFrameHeight.disableProperty().bind(this.comboBoxStageModeOnLaunch.valueProperty().isNotEqualTo(StageMode.BASE));
+        this.comboboxFramePosition.disableProperty().bind(this.comboBoxStageModeOnLaunch.valueProperty().isNotEqualTo(StageMode.BASE));
+        this.buttonKeepRatioFrameSize.disableProperty().bind(this.comboBoxStageModeOnLaunch.valueProperty().isNotEqualTo(StageMode.BASE));
         this.spinnerHeight.disableProperty().bind(this.toggleEnableAutoSizing.selectedProperty());
         this.spinnerWidth.disableProperty().bind(this.toggleEnableAutoSizing.selectedProperty());
     }
@@ -279,7 +294,7 @@ public class UseStageConfigurationStepView extends BorderPane implements General
         model.keepConfigurationRatioProperty().set(toggleKeepConfigurationRatio.isSelected());
         model.frameWidthProperty().set(spinnerFrameWidth.getValue());
         model.frameHeightProperty().set(spinnerFrameHeight.getValue());
-        model.fullScreenOnLaunchProperty().set(toggleEnableFullScreen.isSelected());
+        model.stageModeOnLaunchProperty().set(comboBoxStageModeOnLaunch.getValue());
         model.framePositionOnLaunchProperty().set(this.comboboxFramePosition.getValue());
         model.widthProperty().set(spinnerWidth.getValue());
         model.heightProperty().set(spinnerHeight.getValue());
@@ -294,7 +309,7 @@ public class UseStageConfigurationStepView extends BorderPane implements General
         this.toggleKeepConfigurationRatio.setSelected(model.keepConfigurationRatioProperty().get());
         setFrameWidthValueWithoutFireListener(model.frameWidthProperty().get());
         setFrameHeightValueWithoutFireListener(model.frameHeightProperty().get());
-        this.toggleEnableFullScreen.setSelected(model.fullScreenOnLaunchProperty().get());
+        this.comboBoxStageModeOnLaunch.getSelectionModel().select(model.stageModeOnLaunchProperty().get());
         this.comboboxFramePosition.getSelectionModel().select(model.framePositionOnLaunchProperty().get());
         this.spinnerWidth.getValueFactory().setValue(model.widthProperty().get());
         this.spinnerHeight.getValueFactory().setValue(model.heightProperty().get());

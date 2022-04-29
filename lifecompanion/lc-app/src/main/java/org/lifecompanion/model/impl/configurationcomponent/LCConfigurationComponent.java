@@ -25,6 +25,8 @@ import javafx.collections.*;
 import javafx.scene.paint.Color;
 import org.jdom2.Element;
 import org.lifecompanion.controller.io.ConfigurationComponentIOHelper;
+import org.lifecompanion.controller.io.XMLHelper;
+import org.lifecompanion.framework.commons.fx.io.XMLUtils;
 import org.lifecompanion.model.api.configurationcomponent.*;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.UserActionSequencesI;
@@ -145,7 +147,8 @@ public class LCConfigurationComponent extends CoreDisplayableComponentBaseImpl i
     private final transient DoubleProperty automaticFrameWidth, computedFrameWidth, automaticFrameHeight, computedFrameHeight;
     private final transient DoubleProperty displayedConfigurationScaleX, displayedConfigurationScaleY;
 
-    private final BooleanProperty fullScreenOnLaunch;
+    @XMLGenericProperty(StageMode.class)
+    private final ObjectProperty<StageMode> stageModeOnLaunch;
 
     private final BooleanProperty virtualKeyboard;
 
@@ -223,7 +226,7 @@ public class LCConfigurationComponent extends CoreDisplayableComponentBaseImpl i
         this.frameHeight = new SimpleDoubleProperty(this, "frameHeight", 0.0);
         this.automaticFrameHeight = new SimpleDoubleProperty(this, "automaticFrameHeight", 0.0);
         this.computedFrameHeight = new SimpleDoubleProperty(this, "computedFrameHeight", 0.0);
-        this.fullScreenOnLaunch = new SimpleBooleanProperty(this, "fullScreenOnLaunch", true);
+        this.stageModeOnLaunch = new SimpleObjectProperty<>(StageMode.MAXIMIZED);
         this.keepConfigurationRatio = new SimpleBooleanProperty(this, "keepConfigurationRatio", true);
         this.backgroundColor = new SimpleObjectProperty<>(this, "backgroundColor", Color.web("#E6E6E6"));
         this.frameOpacity = new SimpleDoubleProperty(this, "frameOpacity", 1.0);
@@ -298,8 +301,8 @@ public class LCConfigurationComponent extends CoreDisplayableComponentBaseImpl i
         });
         this.computedWidth.bind(Bindings.createDoubleBinding(() -> fixedSize.get() ? width.get() : automaticWidth.get(), fixedSize, width, automaticWidth));
         this.computedHeight.bind(Bindings.createDoubleBinding(() -> fixedSize.get() ? height.get() : automaticHeight.get(), fixedSize, height, automaticHeight));
-        this.computedFrameWidth.bind(Bindings.createDoubleBinding(() -> fullScreenOnLaunch.get() ? automaticFrameWidth.get() : frameWidth.get(), fullScreenOnLaunch, automaticFrameWidth, frameWidth));
-        this.computedFrameHeight.bind(Bindings.createDoubleBinding(() -> fullScreenOnLaunch.get() ? automaticFrameHeight.get() : frameHeight.get(), fullScreenOnLaunch, automaticFrameHeight, frameHeight));
+        this.computedFrameWidth.bind(Bindings.createDoubleBinding(() -> stageModeOnLaunch.get() != StageMode.BASE ? automaticFrameWidth.get() : frameWidth.get(), stageModeOnLaunch, automaticFrameWidth, frameWidth));
+        this.computedFrameHeight.bind(Bindings.createDoubleBinding(() -> stageModeOnLaunch.get() != StageMode.BASE ? automaticFrameHeight.get() : frameHeight.get(), stageModeOnLaunch, automaticFrameHeight, frameHeight));
 
         // Default frame automatic width/height is based on configuration size (could be changed later, that's why there is automatic* properties)
         this.automaticFrameWidth.bind(this.computedWidth);
@@ -535,12 +538,9 @@ public class LCConfigurationComponent extends CoreDisplayableComponentBaseImpl i
         return useModeWriterEntries;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public BooleanProperty fullScreenOnLaunchProperty() {
-        return this.fullScreenOnLaunch;
+    public ObjectProperty<StageMode> stageModeOnLaunchProperty() {
+        return stageModeOnLaunch;
     }
 
     /**
@@ -929,6 +929,11 @@ public class LCConfigurationComponent extends CoreDisplayableComponentBaseImpl i
         }
 
         XMLObjectSerializer.deserializeInto(LCConfigurationComponent.class, this, node);
+
+        // If the node doesn't have a stage mode prop, then use the previous value
+        if (node.getAttribute("stageModeOnLaunch") == null) {
+            stageModeOnLaunch.set(XMLUtils.readBool("fullScreenOnLaunch", node) ? StageMode.MAXIMIZED : StageMode.BASE);
+        }
 
         // Styles
         StyleSerialializer.deserializeKeyStyle(this, node, ioContext);

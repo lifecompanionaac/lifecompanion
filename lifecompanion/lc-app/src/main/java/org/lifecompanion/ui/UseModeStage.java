@@ -26,6 +26,7 @@ import org.lifecompanion.controller.editaction.GlobalActions;
 import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.controller.virtualmouse.VirtualMouseController;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
+import org.lifecompanion.model.api.configurationcomponent.StageMode;
 import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
 import org.lifecompanion.model.api.profile.LCProfileI;
 import org.lifecompanion.model.impl.constant.LCConstant;
@@ -54,11 +55,23 @@ public class UseModeStage extends Stage {
             we.consume();
             GlobalActions.HANDLER_CANCEL.handle(null);
         });
-        if (configuration.fullScreenOnLaunchProperty().get()) {
-            this.setMaximized(true);
-        } else {
-            StageUtils.moveStageTo(this, configuration.framePositionOnLaunchProperty().get());
+
+        StageMode mode = configuration.stageModeOnLaunchProperty().get();
+        switch (mode) {
+            case BASE:
+                StageUtils.moveStageTo(this, configuration.framePositionOnLaunchProperty().get());
+                break;
+            case ICONIFIED:
+                this.setIconified(true);
+                break;
+            case MAXIMIZED:
+                this.setMaximized(true);
+                break;
+            case FULLSCREEN:
+                this.setFullScreen(true);
+                break;
         }
+
         this.setOnShown(e1 -> {
             boolean vk = configuration.virtualKeyboardProperty().get();
             if (vk) {
@@ -81,7 +94,6 @@ public class UseModeStage extends Stage {
                 fixStageFocusThread.start();
             }
         });
-        //StageUtils.testOldFocusMethod(this, false);
         this.setOnHidden(e -> {
             this.opacityProperty().unbind();
             useModeScene.unbindAndClean();

@@ -174,10 +174,7 @@ public interface LCConfigurationI extends DisplayableComponentI, VoiceSynthesize
 
     ReadOnlyDoubleProperty automaticFrameHeightProperty();
 
-    /**
-     * @return a property that contains true if this configuration must be launched in fullscreen mode.
-     */
-    BooleanProperty fullScreenOnLaunchProperty();
+    ObjectProperty<StageMode> stageModeOnLaunchProperty();
 
     /**
      * @return a property that contains the frame position to set on launch

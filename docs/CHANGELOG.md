@@ -22,6 +22,7 @@
 
 ### Corrections/ajustements
 
+- Ticket #137 : il est maintenant possible de choisir le mode "Fenêtre en plein écran complet" ainsi que le mode "Fenêtre réduite" (paramètres "Fenêtres et dimensions")
 - Ticket #120 : la couleur actuellement sélectionnée est maintenant montrée dans un sélecteur de couleur
 - Ticket #113 : lors de l'utilisation de "Shift+Tab" ou "Ctrl+Tab", le texte de la case suivante/précédente est maintenant sélectionné complètement par défaut (accélère la saisie)
 - Ticket #110 : le raccourci "Shift+Tab" fait passer à la case précédente lors de l'entrée du texte d'une case

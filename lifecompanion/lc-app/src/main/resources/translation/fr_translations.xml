@@ -3537,4 +3537,9 @@
 
 	<text key="disable.exit.use.mode.header">Impossible de fermer LifeCompanion ({} secondes)</text>
 	<text key="disable.exit.use.mode.message">Vous ne pouvez pas fermer LifeCompanion en mode utilisation. Pour fermer LifeCompanion, passez en mode "Édition" ou désactivez ce paramètre.</text>
+
+    <text key="stage.mode.maximized">Fenêtre au maximum (avec barre de titre)</text>
+    <text key="stage.mode.iconified">Fenêtre réduite (dans la barre des tâches)</text>
+    <text key="stage.mode.fullscreen">Fenêtre en plein écran complet (sans barre de titre)</text>
+    <text key="stage.mode.base">Fenêtre aux dimensions définies ci-dessous</text>
 </texts>
