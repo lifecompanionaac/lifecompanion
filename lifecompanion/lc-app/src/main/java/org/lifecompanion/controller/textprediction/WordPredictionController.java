@@ -48,6 +48,8 @@ public class WordPredictionController extends AbstractPredictionController<WordP
 
     private WordPredictionResultI lastPredictionResult;
 
+    private final Predict4AllWordPredictor predict4AllWordPredictor = new Predict4AllWordPredictor();
+
     protected WordPredictionController() {
         super(WordPredictionKeyOption.class);
         this.initializePredictorListener(PluginController.INSTANCE.getWordPredictors());
@@ -56,7 +58,7 @@ public class WordPredictionController extends AbstractPredictionController<WordP
     @Override
     public void lcStart() {
         super.lcStart();
-        WordPredictionController.INSTANCE.getAvailablePredictor().add(new Predict4AllWordPredictor());
+        WordPredictionController.INSTANCE.getAvailablePredictor().add(predict4AllWordPredictor);
     }
 
     // Class part : "Public API"
@@ -85,7 +87,7 @@ public class WordPredictionController extends AbstractPredictionController<WordP
 
     @Override
     public WordPredictorI getDefaultPredictor() {
-        return getPredictorForId(Predict4AllWordPredictor.ID);
+        return predict4AllWordPredictor;
     }
 
     public WordPredictionResultI getLastPredictionResult() {
