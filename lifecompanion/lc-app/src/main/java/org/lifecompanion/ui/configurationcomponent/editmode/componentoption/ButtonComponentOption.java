@@ -30,6 +30,7 @@ import org.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.controller.editmode.SelectionController;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.model.api.configurationcomponent.DisplayableComponentI;
 import org.lifecompanion.model.api.configurationcomponent.GridPartComponentI;
 import org.lifecompanion.model.api.configurationcomponent.RootGraphicComponentI;
 import org.lifecompanion.model.api.configurationcomponent.SelectableComponentI;
@@ -96,13 +97,8 @@ public class ButtonComponentOption extends BaseOptionRegion<SelectableComponentI
     public void initListener() {
         //Select or unselect
         this.buttonSelect.setOnAction((ea) -> {
-            //Root component
-            if (this.model instanceof RootGraphicComponentI) {
-                SelectionController.INSTANCE.selectRootComponent((RootGraphicComponentI) this.model, false);
-            }
-            //Grid component
-            else if (this.model instanceof GridPartComponentI) {
-                SelectionController.INSTANCE.selectGridPartComponent((GridPartComponentI) this.model, false);
+            if (this.model instanceof DisplayableComponentI) {
+                SelectionController.INSTANCE.selectDisplayableComponent((DisplayableComponentI) model, false);
             } else {
                 ButtonComponentOption.LOGGER
                         .warn("The current selectable model type in select button option doesn't allow selection on SelectionController");

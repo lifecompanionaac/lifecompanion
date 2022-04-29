@@ -70,7 +70,7 @@ public class GridStackActions {
             this.stack.getComponentList().add(this.component);
             this.stack.displayedComponentProperty().set(this.component);
             if (this.select)
-                SelectionController.INSTANCE.selectGridPartComponent(this.component, true);
+                SelectionController.INSTANCE.selectDisplayableComponent(this.component, true);
             if (notify)
                 LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo("notification.grid.added.to.stack"));
         }

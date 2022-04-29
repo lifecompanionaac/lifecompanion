@@ -229,7 +229,7 @@ public class GridPartKeyViewConfig extends GridPartKeyViewBase {
         if (moveGrid != null) {
             GridComponentI targetGrid = moveGrid.targetGridProperty().get();
             if (targetGrid != null) {
-                SelectionController.INSTANCE.selectGridPartComponent(targetGrid, true);
+                SelectionController.INSTANCE.selectDisplayableComponent(targetGrid, true);
             }
         } else if (moveKey != null) {
             GridPartKeyComponentI targetKey = moveKey.targetKeyProperty().get();
@@ -241,7 +241,7 @@ public class GridPartKeyViewConfig extends GridPartKeyViewBase {
             if (targetStack != null) {
                 GridComponentI nextComponent = targetStack.getNextComponent();
                 if (nextComponent != null) {
-                    SelectionController.INSTANCE.selectGridPartComponent(nextComponent, true);
+                    SelectionController.INSTANCE.selectDisplayableComponent(nextComponent, true);
                 }
             }
         } else if (previousPageAction != null) {
@@ -249,7 +249,7 @@ public class GridPartKeyViewConfig extends GridPartKeyViewBase {
             if (targetStack != null) {
                 GridComponentI previousComponent = targetStack.getPreviousComponent();
                 if (previousComponent != null) {
-                    SelectionController.INSTANCE.selectGridPartComponent(previousComponent, true);
+                    SelectionController.INSTANCE.selectDisplayableComponent(previousComponent, true);
                 }
             }
         } else if (nextPageAndLoopInStackAction != null) {
@@ -257,15 +257,15 @@ public class GridPartKeyViewConfig extends GridPartKeyViewBase {
             if (targetStack != null) {
                 GridComponentI nextComponent = targetStack.getNextComponent();
                 if (nextComponent != null) {
-                    SelectionController.INSTANCE.selectGridPartComponent(nextComponent, true);
+                    SelectionController.INSTANCE.selectDisplayableComponent(nextComponent, true);
                 } else if (!targetStack.getComponentList().isEmpty()) {
-                    SelectionController.INSTANCE.selectGridPartComponent(targetStack.getComponentList().get(0), true);
+                    SelectionController.INSTANCE.selectDisplayableComponent(targetStack.getComponentList().get(0), true);
                 }
             }
         } else if (moveToGridAndGoBackAction != null) {
             final GridComponentI targetGrid = moveToGridAndGoBackAction.targetGridProperty().get();
             if (targetGrid != null) {
-                SelectionController.INSTANCE.selectGridPartComponent(targetGrid, true);
+                SelectionController.INSTANCE.selectDisplayableComponent(targetGrid, true);
             }
         }
     }

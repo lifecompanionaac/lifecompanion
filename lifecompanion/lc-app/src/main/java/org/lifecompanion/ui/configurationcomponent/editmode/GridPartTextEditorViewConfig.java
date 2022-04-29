@@ -40,7 +40,7 @@ public class GridPartTextEditorViewConfig extends GridPartTextEditorComponentVie
         super.initListener();
         //Selection
         this.setOnMouseClicked((ea) -> {
-            SelectionController.INSTANCE.selectGridPartComponent(this.model, false);
+            SelectionController.INSTANCE.selectDisplayableComponent(this.model, false);
             this.toFront();
         });
         this.setOnMouseEntered((ea) -> this.model.showPossibleSelectedProperty().set(true));

@@ -154,6 +154,20 @@ public enum SelectionController {
 
     // PUBLIC API
     //========================================================================
+    public void selectDisplayableComponent(DisplayableComponentI displayableComponent, boolean force) {
+        if (displayableComponent != null) {
+            if (displayableComponent instanceof GridPartKeyComponentI) {
+                selectKeyComponent((GridPartKeyComponentI) displayableComponent, force, false, false);
+            } else if (displayableComponent instanceof GridPartComponentI) {
+                selectGridPartComponent((GridPartComponentI) displayableComponent, force);
+            } else if (displayableComponent instanceof RootGraphicComponentI) {
+                selectRootComponent((RootGraphicComponentI) displayableComponent, force);
+            }
+        } else {
+            clearSelection();
+        }
+    }
+
     public void selectKeyComponent(GridPartKeyComponentI key, boolean force, boolean shortcutDown, boolean shiftDown) {
         selectedRootComponent.set(null);
         selectedGridPartComponent.set(null);
@@ -180,40 +194,6 @@ public enum SelectionController {
         selectedRootComponent.set(null);
         selectedGridPartComponent.set(null);
         selectedKeys.setAll(keys);
-    }
-
-    public void selectRootComponent(RootGraphicComponentI rootComponent, boolean force) {
-        if (!force && rootComponent.selectedProperty().get()) {
-            selectedRootComponent.set(null);
-        } else {
-            selectedGridPartComponent.set(null);
-            selectedKeys.clear();
-            selectedRootComponent.set(rootComponent);
-        }
-    }
-
-    public void selectGridPartComponent(GridPartComponentI gridPartComponent, boolean force) {
-        if (!force && gridPartComponent.selectedProperty().get()) {
-            selectedGridPartComponent.set(null);
-        } else {
-            selectedRootComponent.set(null);
-            selectedKeys.clear();
-            selectedGridPartComponent.set(gridPartComponent);
-        }
-    }
-
-    public void selectDisplayableComponent(DisplayableComponentI displayableComponent, boolean force) {
-        if (displayableComponent != null) {
-            if (displayableComponent instanceof GridPartKeyComponentI) {
-                selectKeyComponent((GridPartKeyComponentI) displayableComponent, force, false, false);
-            } else if (displayableComponent instanceof GridPartComponentI) {
-                selectGridPartComponent((GridPartComponentI) displayableComponent, force);
-            } else if (displayableComponent instanceof RootGraphicComponentI) {
-                selectRootComponent((RootGraphicComponentI) displayableComponent, force);
-            }
-        } else {
-            clearSelection();
-        }
     }
 
     public void clearSelection() {
@@ -261,6 +241,27 @@ public enum SelectionController {
             }
         }
     }
+
+    private void selectRootComponent(RootGraphicComponentI rootComponent, boolean force) {
+        if (!force && rootComponent.selectedProperty().get()) {
+            selectedRootComponent.set(null);
+        } else {
+            selectedGridPartComponent.set(null);
+            selectedKeys.clear();
+            selectedRootComponent.set(rootComponent);
+        }
+    }
+
+    private void selectGridPartComponent(GridPartComponentI gridPartComponent, boolean force) {
+        if (!force && gridPartComponent.selectedProperty().get()) {
+            selectedGridPartComponent.set(null);
+        } else {
+            selectedRootComponent.set(null);
+            selectedKeys.clear();
+            selectedGridPartComponent.set(gridPartComponent);
+        }
+    }
+
     //========================================================================
 
 

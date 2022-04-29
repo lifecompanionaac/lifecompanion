@@ -57,7 +57,7 @@ public class GridPartGridViewConfig extends GridPartGridViewBase {
     @Override
     public void initListener() {
         super.initListener();
-        this.buttonSelectGrid.setOnAction(e -> SelectionController.INSTANCE.selectGridPartComponent(this.model, false));
+        this.buttonSelectGrid.setOnAction(e -> SelectionController.INSTANCE.selectDisplayableComponent(this.model, false));
     }
 
     @Override
