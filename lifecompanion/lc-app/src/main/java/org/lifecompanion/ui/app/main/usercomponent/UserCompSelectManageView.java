@@ -93,7 +93,7 @@ public class UserCompSelectManageView extends BorderPane implements LCViewInitHe
         this.userCompListView.getStyleClass().addAll("border-transparent", "background-transparent");
         this.userCompListView.setCellFactory(lv -> new UserCompDetailListCell(this::directSelection));
         this.userCompListView.setFixedCellSize(110);
-        this.userCompListView.setPlaceholder(new Label("TODO - PLACEHOLDER"));
+        this.userCompListView.setPlaceholder(new Label(Translation.getText("user.comp.empty.list")));
         BorderPane.setMargin(this.userCompListView, new Insets(10.0, 0.0, 0.0, 0.0));
 
         //Top

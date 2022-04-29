@@ -19,6 +19,7 @@
 
 package org.lifecompanion.ui.common.control.generic.colorpicker;
 
+import javafx.css.PseudoClass;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Point2D;
@@ -45,9 +46,12 @@ import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.lang.LangUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.util.javafx.ColorUtils;
 import org.lifecompanion.util.javafx.FXControlUtils;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 
@@ -68,8 +72,12 @@ public class LCColorPickerPopup extends Popup implements LCViewInitHelper {
 
     private LCColorCustomColorStage colorCustomColorDialog;
 
+    private final Map<String, Rectangle> baseColorNodes, mostUsedColorNodes;
+
     public LCColorPickerPopup(LCColorPicker.ColorPickerMode mode) {
         this.mode = mode;
+        baseColorNodes = new HashMap<>();
+        mostUsedColorNodes = new HashMap<>();
         initAll();
     }
 
@@ -93,7 +101,7 @@ public class LCColorPickerPopup extends Popup implements LCViewInitHelper {
         tilePaneBaseColors.setPrefColumns(MAIN_COLOR_COUNT);
         for (int j = 0; j < COLOR_VARIANT_COUNT; j++) {
             for (int i = 0; i < MAIN_COLOR_COUNT; i++) {
-                tilePaneBaseColors.getChildren().add(createBaseColor(baseColors[i][j]));
+                tilePaneBaseColors.getChildren().add(createColorRectangle(baseColors[i][j], baseColorNodes));
             }
         }
 
@@ -118,7 +126,7 @@ public class LCColorPickerPopup extends Popup implements LCViewInitHelper {
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.SLIDERS).size(14).color(LCGraphicStyle.MAIN_DARK),
                 null);
 
-        // LATER ?
+        // TODO : LATER ?
         // Pick a color button ?
         // Brighter/darker on a color
 
@@ -132,11 +140,12 @@ public class LCColorPickerPopup extends Popup implements LCViewInitHelper {
 
     private static final double COLOR_SQUARE_SIZE = 16;
 
-    private Rectangle createBaseColor(Color color) {
+    private Rectangle createColorRectangle(Color color, Map<String, Rectangle> colorMap) {
         Rectangle rectangle = new Rectangle(COLOR_SQUARE_SIZE, COLOR_SQUARE_SIZE);
         rectangle.setFill(color);
         rectangle.setOnMouseClicked(me -> colorSelectedAndHide(color));
-        rectangle.getStyleClass().addAll("scale-130-hover", "stroke-hover");
+        rectangle.getStyleClass().addAll("scale-130-hover", "stroke-hover", "stroke-selected", "scale-130-selected");
+        colorMap.put(ColorUtils.toWebColorWithAlpha(color), rectangle);
         return rectangle;
     }
 
@@ -177,6 +186,17 @@ public class LCColorPickerPopup extends Popup implements LCViewInitHelper {
         Window window = scene.getWindow();
         Point2D point2D = lcColorPicker.getButtonPick().localToScene(0, 0);
         this.show(lcColorPicker.getButtonPick(), window.getX() + scene.getX() + point2D.getX() - 8.0, window.getY() + scene.getY() + point2D.getY() + lcColorPicker.getButtonPick().getHeight() - 4.0);
+        updateSelectedForHex(baseColorNodes, previousColor);
+        updateSelectedForHex(mostUsedColorNodes, previousColor);
+    }
+
+    private void updateSelectedForHex(Map<String, Rectangle> baseColorNodes, Color color) {
+        baseColorNodes.values().forEach(n -> n.pseudoClassStateChanged(PseudoClass.getPseudoClass("selected"), false));
+        if (color != null) {
+            String colorHex = ColorUtils.toWebColorWithAlpha(color);
+            Rectangle rectangle = baseColorNodes.get(colorHex);
+            if (rectangle != null) rectangle.pseudoClassStateChanged(PseudoClass.getPseudoClass("selected"), true);
+        }
     }
 
     private void colorSelectedAndHide(Color color) {
@@ -188,33 +208,13 @@ public class LCColorPickerPopup extends Popup implements LCViewInitHelper {
 
     private void updateMostUsedColors() {
         tilePaneUserColors.getChildren().clear();
+        mostUsedColorNodes.clear();
         final List<Color> mostUsedColors = LCColorPicker.getMostUsedColorsList();
         if (LangUtils.isNotEmpty(mostUsedColors)) {
             for (Color color : mostUsedColors.subList(0, Math.min(mostUsedColors.size(), USER_COLOR_ROWS * MAIN_COLOR_COUNT))) {
-                tilePaneUserColors.getChildren().add(createBaseColor(color));
+                tilePaneUserColors.getChildren().add(createColorRectangle(color, this.mostUsedColorNodes));
             }
         }
     }
-
-
-    // TEST : for pick color button feature
-    //    Button buttonPick = new Button("Pick");
-    //            buttonPick.setOnAction(e -> {
-    //        Stage stage = new Stage();
-    //        stage.initStyle(StageStyle.TRANSPARENT);
-    //        Pane wholePaneTransp = new Pane();
-    //        wholePaneTransp.setBackground(new Background(new BackgroundFill(Color.WHITE.deriveColor(0, 1, 1, 0.01), CornerRadii.EMPTY, Insets.EMPTY)));
-    //        wholePaneTransp.setOnMouseClicked(me -> {
-    //            final Robot robot = new Robot();
-    //            final Color pixelColor = robot.getPixelColor(me.getScreenX(), me.getScreenY());
-    //            rectangle.fillProperty().set(pixelColor);
-    //            stage.hide();
-    //        });
-    //        final Scene value = new Scene(wholePaneTransp);
-    //        value.setFill(null);
-    //        stage.setScene(value);
-    //        stage.setFullScreen(true);
-    //        stage.show();
-    //    });
 
 }

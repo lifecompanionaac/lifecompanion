@@ -22,6 +22,7 @@
 
 ### Corrections/ajustements
 
+- Ticket #120 : la couleur actuellement sélectionnée est maintenant montrée dans un sélecteur de couleur
 - Ticket #113 : lors de l'utilisation de "Shift+Tab" ou "Ctrl+Tab", le texte de la case suivante/précédente est maintenant sélectionné complètement par défaut (accélère la saisie)
 - Ticket #110 : le raccourci "Shift+Tab" fait passer à la case précédente lors de l'entrée du texte d'une case
 - Ticket #131 : amélioration de la commande "Lancer un programme" : meilleure gestion des arguments et log des erreurs

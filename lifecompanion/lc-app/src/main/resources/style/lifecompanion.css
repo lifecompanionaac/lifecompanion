@@ -193,6 +193,16 @@
 	-fx-opacity: 1.0;
 }
 
+.stroke-selected:selected {
+   -fx-stroke-width: 1.0;
+   -fx-stroke: dimgray;
+}
+
+.scale-130-selected:selected {
+   -fx-scale-x: 1.3;
+   -fx-scale-y: 1.3;
+}
+
 /*======= PADDING/MARGIN =======*/
 
 .padding-0 {

@@ -160,9 +160,6 @@ public class LCColorPicker extends HBox implements LCViewInitHelper {
     private static final Map<Color, AtomicInteger> userColors = new HashMap<>();
 
     private final ChangeListener<Color> valueChangeListener = (obs, ov, nv) -> {
-        if (ov != null && userColors.containsKey(ov)) {
-            //userColors.get(ov).decrementAndGet();
-        }
         if (nv != null) {
             userColors.computeIfAbsent(nv, k -> new AtomicInteger(0)).incrementAndGet();
         }

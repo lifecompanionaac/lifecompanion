@@ -1532,6 +1532,7 @@
   <text key="general.configuration.info.label.author">Auteur</text>
   <text key="general.configuration.info.label.first.part.start">Démarrer sur la grille</text>
   <text key="general.configuration.info.label.name">Nom</text>
+  <text key="user.comp.empty.list">Aucun modèle pour le type recherché</text>
   <text key="general.configuration.info.label.no.information">Configuration non sauvegardée</text>
   <text key="general.configuration.mouse.config.part.circle.mouse.explain">Permet de configurer la souris virtuelle,
 		qui peut être utilisée grâce aux actions "Actions de souris" de la catégorie "Accès à l'ordinateur"</text>
