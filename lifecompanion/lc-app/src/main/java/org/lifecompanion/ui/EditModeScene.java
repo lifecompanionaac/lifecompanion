@@ -136,16 +136,16 @@ public class EditModeScene extends Scene implements LCViewInitHelper {
                     ComponentActionController.INSTANCE.removeComponent(SelectionController.INSTANCE.selectedDisplayableComponentHelperProperty().get(),
                             SelectionController.INSTANCE.getSelectedKeys());
                 }
+            } else if (KeyActions.KEY_COMBINATION_COPY_STYLE.match(eventP)) {
+                KeyActions.HANDLER_COPY_STYLE.handle(null);
+            } else if (KeyActions.KEY_COMBINATION_PASTE_STYLE.match(eventP)) {
+                KeyActions.HANDLER_PASTE_STYLE.handle(null);
             } else if (OptionActions.KEY_COMBINATION_COPY.match(eventP)) {
                 ComponentActionController.INSTANCE.copyComponent(SelectionController.INSTANCE.selectedDisplayableComponentHelperProperty().get());
             } else if (OptionActions.KEY_COMBINATION_PASTE.match(eventP)) {
                 ComponentActionController.INSTANCE.pasteComponent(AppModeController.INSTANCE.getEditModeContext().configurationProperty().get(),
                         SelectionController.INSTANCE.selectedDisplayableComponentHelperProperty().get(),
                         new ArrayList<>(SelectionController.INSTANCE.getSelectedKeys()));
-            } else if (KeyActions.KEY_COMBINATION_COPY_STYLE.match(eventP)) {
-                KeyActions.HANDLER_COPY_STYLE.handle(null);
-            } else if (KeyActions.KEY_COMBINATION_PASTE_STYLE.match(eventP)) {
-                KeyActions.HANDLER_PASTE_STYLE.handle(null);
             }
         });
         //Change mode on key release, because the event will be caught by the use scene

@@ -36,48 +36,40 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class RunProgramUseAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(RunProgramUseAction.class);
+public class RunCommandUseAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(RunCommandUseAction.class);
 
-    private final StringProperty programPath;
-    private final StringProperty programArgs;
+    private StringProperty commandToRun;
 
-    public RunProgramUseAction() {
+    public RunCommandUseAction() {
         super(UseActionTriggerComponentI.class);
         this.category = DefaultUseActionSubCategories.COMPUTER_FEATURES;
-        this.nameID = "action.run.program.name";
+        this.nameID = "action.run.command.name";
         this.order = 5;
-        this.staticDescriptionID = "action.run.program.description";
-        this.configIconPath = "computeraccess/icon_run_program.png";
+        this.staticDescriptionID = "action.run.command.description";
+        this.configIconPath = "computeraccess/run_command_action.png";
         this.parameterizableAction = true;
-        programArgs = new SimpleStringProperty();
-        programPath = new SimpleStringProperty();
+        commandToRun = new SimpleStringProperty();
         this.variableDescriptionProperty().set(getStaticDescription());
     }
 
-    public StringProperty programPathProperty() {
-        return programPath;
-    }
-
-    public StringProperty programArgsProperty() {
-        return programArgs;
+    public StringProperty commandToRunProperty() {
+        return commandToRun;
     }
 
     @Override
     public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
-        if (StringUtils.isNotBlank(programPath.get())) {
+        if (StringUtils.isNotBlank(commandToRun.get())) {
             try {
-                List<String> cmds = RunCommandUseAction.prepareArgumentList(programArgs.get(), variables);
-                cmds.add(0, programPath.get());
-                File logDir = new File(System.getProperty("java.io.tmpdir") + "/LifeCompanion/logs/run-program-action/" + System.currentTimeMillis());
+                List<String> cmds = prepareArgumentList(commandToRun.get(), variables);
+                File logDir = new File(System.getProperty("java.io.tmpdir") + "/LifeCompanion/logs/run-command-action/" + System.currentTimeMillis());
                 logDir.mkdirs();
-                LOGGER.info("Will try to run process with command : {}", cmds);
+                LOGGER.info("Will try to run command : {}", cmds);
                 new ProcessBuilder()
                         .command(cmds)
                         .redirectOutput(new File(logDir + "/out.txt"))
@@ -85,21 +77,39 @@ public class RunProgramUseAction extends SimpleUseActionImpl<UseActionTriggerCom
                         .start();
                 LOGGER.info("Process {} was launched successfully", cmds);
             } catch (Exception e) {
-                LOGGER.error("Couldn't start process {} with args {}", programPath.get(), programArgs, e);
+                LOGGER.error("Couldn't start process {}",commandToRun.get(), e);
             }
         }
+    }
+
+    static List<String> prepareArgumentList(String rawArgs, Map<String, UseVariableI<?>> variables) {
+        List<String> cmds = new ArrayList<>();
+        if (StringUtils.isNotBlank(rawArgs)) {
+            Pattern regex = Pattern.compile("[^\\s\"']+|\"([^\"]*)\"|'([^']*)'");
+            Matcher regexMatcher = regex.matcher(rawArgs);
+            while (regexMatcher.find()) {
+                if (regexMatcher.group(1) != null) {
+                    cmds.add(UseVariableController.INSTANCE.createText(regexMatcher.group(1), variables));
+                } else if (regexMatcher.group(2) != null) {
+                    cmds.add(UseVariableController.INSTANCE.createText(regexMatcher.group(2), variables));
+                } else {
+                    cmds.add(UseVariableController.INSTANCE.createText(regexMatcher.group(), variables));
+                }
+            }
+        }
+        return cmds;
     }
 
     @Override
     public Element serialize(final IOContextI contextP) {
         Element elem = super.serialize(contextP);
-        XMLObjectSerializer.serializeInto(RunProgramUseAction.class, this, elem);
+        XMLObjectSerializer.serializeInto(RunCommandUseAction.class, this, elem);
         return elem;
     }
 
     @Override
     public void deserialize(final Element nodeP, final IOContextI contextP) throws LCException {
         super.deserialize(nodeP, contextP);
-        XMLObjectSerializer.deserializeInto(RunProgramUseAction.class, this, nodeP);
+        XMLObjectSerializer.deserializeInto(RunCommandUseAction.class, this, nodeP);
     }
 }

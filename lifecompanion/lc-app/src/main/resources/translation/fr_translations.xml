@@ -1704,8 +1704,12 @@
   <text key="general.configuration.view.key.list.field.text.to.write">Écrire à la sélection</text>
   <text key="general.configuration.view.key.list.no.selected">Aucun élément sélectionné</text>
   <text key="general.configuration.view.key.list.part.title.general">Configuration générale</text>
+  <text key="action.run.command.name">Lancer une commande exécutable</text>
+  <text key="action.run.command.description">Permet de lancer une commande et des arguments depuis LifeCompanion. L'action se terminera directement (même si l'exécution de la commande n'est pas terminée). Les erreurs et entrées/sorties sont ignorées.</text>
   <text key="general.configuration.view.key.list.part.title.visual">Apparence de la case</text>
   <text key="general.configuration.view.key.list.selected.key.title">Case : "{}"</text>
+  <text key="label.field.run.command.field.to.run">Commande à lancer</text>
+  <text key="label.field.run.command.explain">Vous pouvez séparer les différents arguments par des espaces. Si vous souhaitez avoir un argument contenant des espaces, entourez le de guillemets. Par exemple, l'argument : read "Mon fichier", donnera deux arguments : "read" et "Mon fichier"</text>
   <text key="general.configuration.view.key.list.selected.keylist.title">Liste : "{}"</text>
   <text key="general.configuration.view.key.list.selected.link.title">Case lien : "{}"</text>
   <text key="general.configuration.view.keylist.empty.node.text">Liste</text>
