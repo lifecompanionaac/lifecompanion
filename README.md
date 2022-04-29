@@ -25,9 +25,10 @@ LifeCompanion is currently available in french only, but we are seeking for part
 ## Changelog
 
 - [LifeCompanion feature changelog (french)](https://lifecompanionaac.org/categories/documentations/lifecompanion-changelog)
-- [LifeCompanion dev updates changelog](docs/CHANGELOG.md)
+- [LifeCompanion dev updates changelog (french)](docs/CHANGELOG.md)
+- [API changelog (english)](docs/DEV-CHANGELOG.md)
 
-# Documentation
+## Documentation
 
 - [Lean to build/run/update LifeCompanion](docs/DEV.md)
 - [Learn to develop plugin to extend LifeCompanion](docs/PLUGINS.md)
