@@ -109,11 +109,6 @@ public class LCConfigurationComponent extends CoreDisplayableComponentBaseImpl i
     private final BooleanProperty useGrid;
 
     /**
-     * If the configuration mode should be secured
-     */
-    private final BooleanProperty securedConfigurationMode;
-
-    /**
      * Voice synthesizer parameter
      */
     private final VoiceSynthesizerParameter voiceSynthesizerParameter;
@@ -133,7 +128,7 @@ public class LCConfigurationComponent extends CoreDisplayableComponentBaseImpl i
     /**
      * Property that contains a reference on this configuration (this object)
      */
-    private final ObjectProperty<LCConfigurationI> thisProperty;
+    protected final ObjectProperty<LCConfigurationI> thisProperty;
 
     /**
      * First part to be scanned in configuration
@@ -141,9 +136,9 @@ public class LCConfigurationComponent extends CoreDisplayableComponentBaseImpl i
     private final ComponentHolder<GridComponentI> firstSelectionPart;
 
     /**
-     * First part ID
+     * First part ID (do not delete : used in to save with serialization)
      */
-    private final StringProperty firstSelectionPartId;
+    protected final StringProperty firstSelectionPartId;
 
     private final DoubleProperty frameWidth, frameHeight;
 
@@ -213,7 +208,6 @@ public class LCConfigurationComponent extends CoreDisplayableComponentBaseImpl i
         this.framePositionOnLaunch = new SimpleObjectProperty<>(this, "framePositionOnLaunch", FramePosition.CENTER);
         this.fixedSize = new SimpleBooleanProperty(this, "fixedSize", false);
         this.virtualKeyboard = new SimpleBooleanProperty(this, "virtualKeyboard", false);
-        this.securedConfigurationMode = new SimpleBooleanProperty(this, "securedConfigurationMode", false);
         this.useGrid = new SimpleBooleanProperty(this, "useGrid", true);
         this.useParentSelectionMode = new SimpleBooleanProperty(this, "useParentSelectionMode", false);
         this.canUseParentSelectionModeConfiguration = new SimpleBooleanProperty(this, "parentSelectionModeEnabled", false);
@@ -627,14 +621,6 @@ public class LCConfigurationComponent extends CoreDisplayableComponentBaseImpl i
     @Override
     public PredictionParameterI getPredictionParameters() {
         return this.predictionParameter;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public BooleanProperty securedConfigurationModeProperty() {
-        return this.securedConfigurationMode;
     }
 
     @Override

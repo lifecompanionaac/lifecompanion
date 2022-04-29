@@ -280,19 +280,6 @@ public enum VoiceSynthesizerController implements LCStateListener, ModeListenerI
                 } else {
                     LOGGER.warn("Could not get valid voice information from selected : {}, voices might not be initialized ?", parameters.getVoiceParameter().selectedVoiceInfoProperty().get());
                 }
-                //Speak with selected synthesizer
-                //                if (StringUtils.isNotBlank(text)) {
-                //                    if (spell) {
-                //                        // FIXME : find a solution to detect if synthesizer has not been stopped
-                //                        for (int i = 0; i < text.length(); i++) {
-                //                            long l = System.currentTimeMillis();
-                //                            currentSynthesizer.speak(Character.toString(text.charAt(i)));
-                //                            System.out.println("Call : " + (System.currentTimeMillis() - l) + " ms");
-                //                        }
-                //                    } else {
-                //                        currentSynthesizer.speak(cleanTextBeforeSpeak(text, parameters));
-                //                    }
-                //                }
                 method.accept(currentSynthesizer);
                 //When speak ends, callback if needed
                 if (speakEndCallback != null) {

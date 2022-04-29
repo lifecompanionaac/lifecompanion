@@ -53,7 +53,6 @@ import org.lifecompanion.util.javafx.FXControlUtils;
 public class GeneralInformationConfigurationStepView extends BorderPane implements GeneralConfigurationStepViewI, LCViewInitHelper {
     private Label labelName, labelAuthor;
     private Button buttonEditConfigurationInformation;
-    private ToggleSwitch toggleSecuredConfigurationMode;
     private ToggleSwitch toggleVirtualKeyboard;
     private ComponentSelectorControl<GridComponentI> firstPartSelector;
     private LCColorPicker pickerBackgroundColor;
@@ -129,11 +128,6 @@ public class GeneralInformationConfigurationStepView extends BorderPane implemen
         Label labelExplainVirtualKeyboard = new Label(Translation.getText("tooltip.explain.use.param.virtual.keyboard"));
         labelExplainVirtualKeyboard.getStyleClass().add("explain-text");
 
-        this.toggleSecuredConfigurationMode = FXControlUtils.createToggleSwitch("configuration.secured.config.mode",
-                "tooltip.explain.use.param.secured.config.mode");
-        Label labelExplainSecuredConfigMode = new Label(Translation.getText("tooltip.explain.use.param.secured.config.mode"));
-        labelExplainSecuredConfigMode.getStyleClass().add("explain-text");
-
         GridPane gridPaneTotal = new GridPane();
         gridPaneTotal.setHgap(GeneralConfigurationStepViewI.GRID_H_GAP);
         gridPaneTotal.setVgap(GeneralConfigurationStepViewI.GRID_V_GAP);
@@ -155,8 +149,6 @@ public class GeneralInformationConfigurationStepView extends BorderPane implemen
         gridPaneTotal.add(labelFirstPart, 0, gridRowIndex);
         gridPaneTotal.add(firstPartSelector, 1, gridRowIndex++);
         gridPaneTotal.add(labelExplainFirstPart, 0, gridRowIndex++, 2, 1);
-        gridPaneTotal.add(toggleSecuredConfigurationMode, 0, gridRowIndex++, 2, 1);
-        gridPaneTotal.add(labelExplainSecuredConfigMode, 0, gridRowIndex++, 2, 1);
         gridPaneTotal.add(toggleVirtualKeyboard, 0, gridRowIndex++, 2, 1);
         gridPaneTotal.add(labelExplainVirtualKeyboard, 0, gridRowIndex++, 2, 1);
 
@@ -190,7 +182,6 @@ public class GeneralInformationConfigurationStepView extends BorderPane implemen
     @Override
     public void saveChanges() {
         model.firstSelectionPartProperty().set(this.firstPartSelector.selectedComponentProperty().get());
-        model.securedConfigurationModeProperty().set(this.toggleSecuredConfigurationMode.isSelected());
         model.virtualKeyboardProperty().set(this.toggleVirtualKeyboard.isSelected());
         model.backgroundColorProperty().set(this.pickerBackgroundColor.getValue());
     }
@@ -199,7 +190,6 @@ public class GeneralInformationConfigurationStepView extends BorderPane implemen
     public void bind(LCConfigurationI model) {
         this.model = model;
         this.firstPartSelector.selectedComponentProperty().set(model.firstSelectionPartProperty().get());
-        this.toggleSecuredConfigurationMode.setSelected(model.securedConfigurationModeProperty().get());
         this.toggleVirtualKeyboard.setSelected(model.virtualKeyboardProperty().get());
         this.pickerBackgroundColor.setValue(model.backgroundColorProperty().get());
         LCConfigurationDescriptionI configurationDescription = AppModeController.INSTANCE.getEditModeContext().configurationDescriptionProperty().get();

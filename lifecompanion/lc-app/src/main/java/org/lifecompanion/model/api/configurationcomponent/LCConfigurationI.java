@@ -120,12 +120,6 @@ public interface LCConfigurationI extends DisplayableComponentI, VoiceSynthesize
     IntegerProperty gridSizeProperty();
 
     /**
-     * @return a property that avoid going back to configuration mode if the user can't enter a simple code.
-     * It's a way to lock the configuration for people that are not allowed to edit a configuration.
-     */
-    BooleanProperty securedConfigurationModeProperty();
-
-    /**
      * Currently selection mode use by this configuration.<br>
      * Should never be changed manually. It's the selection mode controller that will set the needed selection model.
      *

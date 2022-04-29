@@ -85,7 +85,7 @@ public class UserConfigurationView extends BorderPane implements LCViewInitHelpe
         boxMenuLeft.getStyleClass().add("general-config-menu-pane");
 
         //Tabs
-        this.addConfigTab(new StageConfigSubmenu());
+        this.addConfigTab(new UIConfigSubmenu());
         this.addConfigTab(new AboutSubmenu());
         this.addConfigTab(new PluginConfigSubmenu());
         this.addConfigTab(new MiscConfigSubmenu());

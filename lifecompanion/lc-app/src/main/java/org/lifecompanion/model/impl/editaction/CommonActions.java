@@ -34,6 +34,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.systemvk.SystemVirtualKeyboardController;
+import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
 import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
@@ -76,7 +77,7 @@ public class CommonActions {
         public void doAction() {
             LCConfigurationI configuration = AppModeController.INSTANCE.getUseModeContext().configurationProperty().get();
 
-            if (useConfirmFct && configuration.securedConfigurationModeProperty().get()) {
+            if (useConfirmFct && UserConfigurationController.INSTANCE.secureGoToEditModeProperty().get()) {
                 // Issue #180 - Secure dialog should automatically be closed (can be the user error)
                 IntegerProperty timeLeft = new SimpleIntegerProperty(LCConstant.GO_TO_CONFIG_MODE_DELAY);
                 Timeline timeLineAutoHide = new Timeline(new KeyFrame(Duration.seconds(1), (e) -> timeLeft.set(timeLeft.get() - 1)));

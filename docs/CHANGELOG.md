@@ -28,6 +28,7 @@
 - Ticket #130 : la recherche d'image fonctionne maintenant avec tous les mots (même "de", "je", etc.)
 - Ticket #129 : correction d'un rare problème pour les configurations de clavier/souris virtuels
 - Ticket #136 : ajout de la possibilité de désactiver la fermeture de LifeCompanion en mode utilisation
+- Ticket #138 : déplacement du paramètres "Demander un code pour passer en édition" dans les paramètres généraux (devient donc spécifique à la machine et non à la configuration)
 - Ticket #67 : ajout d'une action "Épeler tout le texte" pour épeler le contenu de l'éditeur
 - Ticket #67 : ajout d'une action "Épeler le texte de la case" pour épeler le texte de la case
 - Ticket #67 : ajout d'une action "Épeler du texte" pour épeler du texte (choisi)

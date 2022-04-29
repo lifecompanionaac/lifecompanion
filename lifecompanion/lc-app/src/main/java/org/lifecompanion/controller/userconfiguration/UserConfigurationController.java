@@ -74,7 +74,7 @@ public enum UserConfigurationController {
         this.unsavedChangeInConfigurationThreshold = new SimpleIntegerProperty(80);
         this.autoVirtualKeyboardShow = new SimpleBooleanProperty(true);
         this.enableJPDRetirementEasterEgg = new SimpleBooleanProperty(true);
-        this.disableExitInUseMode = new SimpleBooleanProperty(true);
+        this.disableExitInUseMode = new SimpleBooleanProperty(false);
         this.secureGoToEditMode = new SimpleBooleanProperty(false);
     }
 

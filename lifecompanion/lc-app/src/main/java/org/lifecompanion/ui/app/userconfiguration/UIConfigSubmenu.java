@@ -19,6 +19,7 @@
 package org.lifecompanion.ui.app.userconfiguration;
 
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Spinner;
@@ -38,7 +39,7 @@ import org.lifecompanion.util.javafx.FXControlUtils;
  *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
-public class StageConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, LCViewInitHelper {
+public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, LCViewInitHelper {
     /**
      * Spinner to set the frame width/height
      */
@@ -66,8 +67,10 @@ public class StageConfigSubmenu extends ScrollPane implements UserConfigSubmenuI
     private ToggleSwitch toggleEnableLaunchLCSystemStartup;
     private ToggleSwitch toggleEnableRecordAndSendSessionStats;
     private ToggleSwitch toggleEnableAutoShowVirtualKeyboard;
+    private ToggleSwitch toggleDisabledExitInUseMode;
+    private ToggleSwitch toggleSecureGoToEditModeProperty;
 
-    public StageConfigSubmenu() {
+    public UIConfigSubmenu() {
         this.initAll();
     }
 
@@ -80,6 +83,15 @@ public class StageConfigSubmenu extends ScrollPane implements UserConfigSubmenuI
         toggleEnableLaunchLCSystemStartup = FXControlUtils.createToggleSwitch("user.config.launch.lc.startup", null);
         toggleEnableRecordAndSendSessionStats = FXControlUtils.createToggleSwitch("user.config.enable.session.stats", null);
         toggleEnableAutoShowVirtualKeyboard = FXControlUtils.createToggleSwitch("user.config.auto.show.virtual.keyboard", null);
+
+        // Use mode
+        Label labelUseMode = createTitleLabel("user.config.part.ui.use.mode");
+        toggleDisabledExitInUseMode = FXControlUtils.createToggleSwitch("user.config.disable.exit.in.use.mode", null);
+        Label labelExplainExitUseMode = new Label(Translation.getText("tooltip.explain.disable.exit.use.mode"));
+        labelExplainExitUseMode.getStyleClass().addAll("text-wrap-enabled", "text-font-italic", "text-fill-gray");
+        toggleSecureGoToEditModeProperty = FXControlUtils.createToggleSwitch("configuration.secured.config.mode", null);
+        Label labelExplainSecuredConfigMode = new Label(Translation.getText("tooltip.explain.use.param.secured.config.mode"));
+        labelExplainSecuredConfigMode.getStyleClass().addAll("text-wrap-enabled", "text-font-italic", "text-fill-gray");
 
         //Selection parameter
         this.spinnerStrokeSize = FXControlUtils.createDoubleSpinner(1.0, 20.0, 3.0, 1.0, 110.0);
@@ -126,12 +138,14 @@ public class StageConfigSubmenu extends ScrollPane implements UserConfigSubmenuI
         GridPane.setMargin(this.toggleEnableTipsStartup, new Insets(5.0, 0.0, 5.0, 0.0));
 
         //Add
-        VBox totalBox = new VBox(10.0, labelConfigGeneral, toggleEnableRecordAndSendSessionStats, labelConfigStylePart, gridPaneStyleParam, labelConfigTitle, gridPaneConfiguration,/* labelConfigTips,
-				toggleEnableTipsStartup,*/ labelStagePart, gridPaneStageParam);
-        if (SystemType.current() == SystemType.WINDOWS) {
-            totalBox.getChildren().add(1, toggleEnableAutoShowVirtualKeyboard);
-            totalBox.getChildren().add(1, toggleEnableLaunchLCSystemStartup);
-        }
+        VBox totalBox = new VBox(10.0,
+                labelConfigGeneral, toggleEnableAutoShowVirtualKeyboard, toggleEnableLaunchLCSystemStartup, toggleEnableRecordAndSendSessionStats,
+                labelUseMode, toggleSecureGoToEditModeProperty, labelExplainSecuredConfigMode, toggleDisabledExitInUseMode, labelExplainExitUseMode,
+                labelConfigStylePart, gridPaneStyleParam,
+                labelConfigTitle, gridPaneConfiguration,
+                labelStagePart, gridPaneStageParam
+        );
+        totalBox.setPadding(new Insets(10.0));
         this.setFitToWidth(true);
         this.setContent(totalBox);
     }
@@ -164,6 +178,8 @@ public class StageConfigSubmenu extends ScrollPane implements UserConfigSubmenuI
         this.toggleEnableLaunchLCSystemStartup.setSelected(UserConfigurationController.INSTANCE.launchLCSystemStartupProperty().get());
         this.toggleEnableRecordAndSendSessionStats.setSelected(UserConfigurationController.INSTANCE.recordAndSendSessionStatsProperty().get());
         this.toggleEnableAutoShowVirtualKeyboard.setSelected(UserConfigurationController.INSTANCE.autoVirtualKeyboardShowProperty().get());
+        this.toggleDisabledExitInUseMode.setSelected(UserConfigurationController.INSTANCE.disableExitInUseModeProperty().get());
+        this.toggleSecureGoToEditModeProperty.setSelected(UserConfigurationController.INSTANCE.secureGoToEditModeProperty().get());
     }
 
     @Override
@@ -178,6 +194,19 @@ public class StageConfigSubmenu extends ScrollPane implements UserConfigSubmenuI
         UserConfigurationController.INSTANCE.launchLCSystemStartupProperty().set(toggleEnableLaunchLCSystemStartup.isSelected());
         UserConfigurationController.INSTANCE.recordAndSendSessionStatsProperty().set(toggleEnableRecordAndSendSessionStats.isSelected());
         UserConfigurationController.INSTANCE.autoVirtualKeyboardShowProperty().set(this.toggleEnableAutoShowVirtualKeyboard.isSelected());
+        UserConfigurationController.INSTANCE.disableExitInUseModeProperty().set(this.toggleDisabledExitInUseMode.isSelected());
+        UserConfigurationController.INSTANCE.secureGoToEditModeProperty().set(this.toggleSecureGoToEditModeProperty.isSelected());
+    }
+
+    @Override
+    public void initBinding() {
+        configurationManagedAndVisibleOnWindowsOnly(toggleEnableAutoShowVirtualKeyboard);
+        configurationManagedAndVisibleOnWindowsOnly(toggleEnableLaunchLCSystemStartup);
+    }
+
+    private void configurationManagedAndVisibleOnWindowsOnly(Node node) {
+        node.setManaged(SystemType.current() == SystemType.WINDOWS);
+        node.setVisible(SystemType.current() == SystemType.WINDOWS);
     }
 
     @Override

@@ -1426,7 +1426,9 @@
   <text key="user.config.launch.lc.startup">Lancer LifeCompanion au démarrage du système</text>
   <text key="user.config.part.ui.config">Style de l'interface</text>
   <text key="user.config.part.ui.general">Général</text>
+  <text key="user.config.part.ui.use.mode">Mode utilisation</text>
   <text key="user.config.selection.dash.size">Espacement entre les pointillés de sélection</text>
+  <text key="user.config.disable.exit.in.use.mode">Désactiver la possibilité de quitter LifeCompanion en mode utilisation</text>
   <text key="user.config.selection.stroke.size">Taille du contour de sélection</text>
   <text key="user.config.stage.fullscreen">Lancer en plein écran</text>
   <text key="user.config.stage.height">Hauteur de la fenêtre</text>
@@ -1605,12 +1607,13 @@
 		défilement
 		commencera pour cette grille.</text>
   <text key="tooltip.explain.use.param.secured.config.mode">Si activé, permet d'empêcher l'utilisateur de retourner
-		en mode configuration simplement : un code aléatoire s'affichera et
+		en mode édition simplement : un code aléatoire s'affichera et
 		l'utilisateur devra l'entrer pour
 		pouvoir accéder au mode de
-		configuration.\nPermet d'éviter qu'un utilisateur n'ayant pas accés au
-		mode configuration l'ouvre
+		configuration. Permet d'éviter qu'un utilisateur n'ayant pas accés au
+		mode édition l'ouvre
 		involontairement.</text>
+    <text key="tooltip.explain.disable.exit.use.mode">Si activé, permet d'empêcher l'utilisateur de fermer LifeCompanion lorsque celui-ci est en mode utilisation. Peut être utile lorsqu'on ne veut utiliser un matériel que pour LifeCompanion et ne pas autoriser l'utilisateur a "sortir" dans le système.</text>
   <text key="tooltip.explain.use.param.virtual.keyboard">Si activé, la configuration sera une configuration
 		utilisée pour servir de clavier virtuel.\nCela signifie que le texte
 		entré dans LifeCompanion sera également
@@ -2119,7 +2122,7 @@
 		maintenant placer les composants dans la configuration comme bon vous
 		semble.</text>
   <text key="tooltip.enable.configuration.grid">Active la grille d'aide au placement, cette grille sera
-		visible uniquement en mode configuration. Elle vous permet de mieux
+		visible uniquement en mode édition. Elle vous permet de mieux
 		placer les éléments les uns par rapport
 		aux autres.</text>
   <text key="tooltip.explain.grid.size">Permet de modifier l'espacement de la grille d'aide au
@@ -2828,7 +2831,7 @@
   <text key="config.tips.clone.key.style.title">Cloner les styles de case</text>
   <text key="config.tips.default.configuration.message">Dans LifeCompanion il est possible de choisir de lancer une
 		configuration directement en mode utilisation au lancement.\nCela est très utile si l'utilisateur ne va pas
-		utiliser le mode configuration de LifeCompanion.\n\nIl y a une configuration à lancer
+		utiliser le mode édition de LifeCompanion.\n\nIl y a une configuration à lancer
 		automatiquement par profil,
 		représentée par une étoile. Elle sera lancée automatiquement pour le dernier profil ouvert.</text>
   <text key="config.tips.default.configuration.title">Configuration lancée automatiquement</text>
@@ -2865,7 +2868,7 @@
 		importez des images dans votre galerie, vous pouvez vous placer directement
 		dans le dossier voulu, les images importées y seront ajoutées.</text>
   <text key="config.tips.organize.images.title">Organisez vos images</text>
-  <text key="config.tips.show.grid.config.mode.message">Lorsque vous avez plusieurs grilles en mode configuration, il
+  <text key="config.tips.show.grid.config.mode.message">Lorsque vous avez plusieurs grilles en mode édition, il
 		peut être pratique d'afficher rapidement une autre grille.\n\nSi une case contient une action telle que "Aller
 		dans la grille" ou "Aller dans la case", il suffit d'effectuer un clic sur la case en maintenant la touche
 		"ALT" enfoncée, la grille de destination s'affichera alors.</text>
