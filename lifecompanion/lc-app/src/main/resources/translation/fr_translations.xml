@@ -2464,6 +2464,7 @@
   <text key="label.field.run.program.args.explain">Vous pouvez séparer les différents arguments par des espaces. Si vous souhaitez avoir un argument contenant des espaces, entourez le de guillemets. Par exemple, l'argument : read "Mon fichier", donnera deux arguments : "read" et "Mon fichier"</text>
 
   <text key="label.field.run.program.path">Programme à lancer</text>
+  <text key="label.field.file.to.open.with.default.app">Fichier à ouvrir avec l'application par défaut</text>
   <text key="save.user.text.save.directory.dialog.title">Sélectionner le dossier de sauvegarde</text>
   <text key="save.user.text.save.directory.name">Dossier de sauvegarde des fichiers texte</text>
   <text key="use.action.open.url.default.browser">URL à ouvrir (doit être valide, ex : "http://google.fr")</text>
@@ -3546,4 +3547,6 @@
     <text key="stage.mode.iconified">Fenêtre réduite (dans la barre des tâches)</text>
     <text key="stage.mode.fullscreen">Fenêtre en plein écran complet (sans barre de titre)</text>
     <text key="stage.mode.base">Fenêtre aux dimensions définies ci-dessous</text>
+    <text key="action.open.with.default.app.name">Ouvrir avec l'application par défaut</text>
+    <text key="action.open.with.default.app.description">Permet d'ouvrir un fichier avec l'application par défaut de l'ordinateur. Par exemple en mettant un fichier ".doc", cela ouvrir ce fichier avec le traitement de texte défini par défaut sur l'ordinateur.</text>
 </texts>
