@@ -72,6 +72,7 @@ public class BindingUtils {
     }
 
     // This version is correctly implemented for other actions that simple add/remove
+    // be careful : this doesn't guaranty that removed element is not in the list anymore...
     public static <T> ListChangeListener<T> createListChangeListenerV2(final Consumer<T> forEachAdd, final Consumer<T> forEachRemove) {
         return (c) -> {
             while (c.next()) {
@@ -80,7 +81,7 @@ public class BindingUtils {
                 } else {
                     // Order is important here : removed should be handled before added
                     // this is related to ModifiableObservableListBase.setAll implementation (it does clear() then addAll(...) in the same Change)
-                    LangUtils.consumeEachIn(c.getRemoved(), forEachRemove);
+                    LangUtils.consumeEachIn(c.getRemoved(), forEachRemove);// FIXME : does this should be implemented with testing each removed to check if there are still in the list ?
                     LangUtils.consumeEachIn(c.getAddedSubList(), forEachAdd);
                 }
             }
