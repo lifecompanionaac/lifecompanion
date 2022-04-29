@@ -19,21 +19,31 @@
 
 package org.lifecompanion.controller.editaction;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.stage.FileChooser;
+import javafx.util.Duration;
+import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
+import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
 import org.lifecompanion.model.api.editaction.BaseEditActionI;
+import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.util.javafx.DialogUtils;
 import org.lifecompanion.util.javafx.FXUtils;
+import org.lifecompanion.util.javafx.StageUtils;
 import org.lifecompanion.util.model.LCTask;
 import org.lifecompanion.controller.lifecycle.AppMode;
 import org.lifecompanion.controller.lifecycle.AppModeController;
@@ -51,6 +61,7 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Random;
 
 import static org.lifecompanion.util.javafx.FXUtils.getSourceFromEvent;
 
@@ -77,7 +88,7 @@ public class GlobalActions {
                         source,
                         Translation.getText("go.to.use.mode.save.before.message"),
                         "go.to.use.mode.save.before.button",
-                        () -> AppModeController.INSTANCE.startUseModeAfterEdit() //AppModeController.INSTANCE.modeProperty().set(AppMode.USE)
+                        AppModeController.INSTANCE::startUseModeAfterEdit
                 );
             }
         }
@@ -97,6 +108,22 @@ public class GlobalActions {
 
         @Override
         public void doAction() throws LCException {
+            // If in use mode and exit is disabled, show a warning (and auto close the dialog)
+            if (AppModeController.INSTANCE.isUseMode() && UserConfigurationController.INSTANCE.disableExitInUseModeProperty().get()) {
+                IntegerProperty timeLeft = new SimpleIntegerProperty(LCConstant.WARNING_EXIT_DISABLED_DELAY);
+                Timeline timeLineAutoHide = new Timeline(new KeyFrame(Duration.seconds(1), (e) -> timeLeft.set(timeLeft.get() - 1)));
+                timeLineAutoHide.setCycleCount(LCConstant.WARNING_EXIT_DISABLED_DELAY);
+                Alert alert = DialogUtils
+                        .alertWithSourceAndType(AppModeController.INSTANCE.getUseModeContext().getStage(), Alert.AlertType.WARNING)
+                        .withContentText(Translation.getText("disable.exit.use.mode.message"))
+                        .build();
+                alert.headerTextProperty().bind(TranslationFX.getTextBinding("disable.exit.use.mode.header", timeLeft));
+                timeLineAutoHide.setOnFinished(e -> alert.hide());
+                timeLineAutoHide.play();
+                alert.showAndWait();
+                timeLineAutoHide.stop();
+                return;
+            }
             checkModificationForCurrentConfiguration(
                     this,
                     source,

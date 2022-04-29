@@ -27,6 +27,7 @@
 - Ticket #131 : amélioration de la commande "Lancer un programme" : meilleure gestion des arguments et log des erreurs
 - Ticket #130 : la recherche d'image fonctionne maintenant avec tous les mots (même "de", "je", etc.)
 - Ticket #129 : correction d'un rare problème pour les configurations de clavier/souris virtuels
+- Ticket #136 : ajout de la possibilité de désactiver la fermeture de LifeCompanion en mode utilisation
 - Ticket #67 : ajout d'une action "Épeler tout le texte" pour épeler le contenu de l'éditeur
 - Ticket #67 : ajout d'une action "Épeler le texte de la case" pour épeler le texte de la case
 - Ticket #67 : ajout d'une action "Épeler du texte" pour épeler du texte (choisi)

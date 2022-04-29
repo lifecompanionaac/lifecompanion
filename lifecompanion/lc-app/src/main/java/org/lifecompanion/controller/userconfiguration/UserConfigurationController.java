@@ -43,7 +43,8 @@ public enum UserConfigurationController {
             PROP_LAUNCH_MAXIMIZED = "start-maximized", PROP_SELECTION_STROKE_SIZE = "selection-stroke-size",
             PROP_SELECTION_DASH_SIZE = "selection-dash-size", PROP_TIPS_STARTUP = "show-tips-on-startup",
             PROP_UNSAVED_CHANGE_THRESHOLD = "unsaved-changes-in-config-warning-threshold",
-            PROP_RECORD_SEND_SESSION_STATS = "record-and-send-session-stats", PROP_ENABLE_AUTO_VK_SHOW = "auto-virtual-keyboard-show", PROP_ENABLE_JPD_EASTER_EGG = "enable-jpd-easter-egg";
+            PROP_RECORD_SEND_SESSION_STATS = "record-and-send-session-stats", PROP_ENABLE_AUTO_VK_SHOW = "auto-virtual-keyboard-show", PROP_ENABLE_JPD_EASTER_EGG = "enable-jpd-easter-egg",
+            PROP_DISABLE_EXIT_USE_MODE = "disable-exit-use-mode", PROP_SECURE_GO_EDIT_MODE = "secure-go-edit-mode";
 
 
     //Properties
@@ -57,20 +58,24 @@ public enum UserConfigurationController {
     private final BooleanProperty recordAndSendSessionStats;
     private final BooleanProperty autoVirtualKeyboardShow;
     private final BooleanProperty enableJPDRetirementEasterEgg;
+    private final BooleanProperty disableExitInUseMode;
+    private final BooleanProperty secureGoToEditMode;
 
     UserConfigurationController() {
-        this.userLanguage = new SimpleStringProperty(this, "userLanguage", "fr");
-        this.mainFrameWidth = new SimpleIntegerProperty(this, "mainFrameWidth", 1200);
-        this.mainFrameHeight = new SimpleIntegerProperty(this, "mainFrameHeight", 800);
-        this.launchMaximized = new SimpleBooleanProperty(this, "launchMaximized", true);
-        this.showTipsOnStartup = new SimpleBooleanProperty(this, "showTipsOnStartup", true);
-        this.selectionStrokeSize = new SimpleDoubleProperty(this, "selectionStrokeSize", 3.0);
-        this.selectionDashSize = new SimpleDoubleProperty(this, "selectionDashSize", 5.0);
-        this.launchLCSystemStartup = new SimpleBooleanProperty(this, "launchLCSystemStartup", false);
-        this.recordAndSendSessionStats = new SimpleBooleanProperty(this, "recordAndSendSessionStats", false);
-        this.unsavedChangeInConfigurationThreshold = new SimpleIntegerProperty(this, "unsavedChangeInConfigurationThreshold", 80);
-        this.autoVirtualKeyboardShow = new SimpleBooleanProperty(this, "autoVirtualKeyboardShow", true);
-        this.enableJPDRetirementEasterEgg = new SimpleBooleanProperty(this, "enableJPDRetirementEasterEgg", true);
+        this.userLanguage = new SimpleStringProperty("fr");
+        this.mainFrameWidth = new SimpleIntegerProperty(1200);
+        this.mainFrameHeight = new SimpleIntegerProperty(800);
+        this.launchMaximized = new SimpleBooleanProperty(true);
+        this.showTipsOnStartup = new SimpleBooleanProperty(true);
+        this.selectionStrokeSize = new SimpleDoubleProperty(3.0);
+        this.selectionDashSize = new SimpleDoubleProperty(5.0);
+        this.launchLCSystemStartup = new SimpleBooleanProperty(false);
+        this.recordAndSendSessionStats = new SimpleBooleanProperty(false);
+        this.unsavedChangeInConfigurationThreshold = new SimpleIntegerProperty(80);
+        this.autoVirtualKeyboardShow = new SimpleBooleanProperty(true);
+        this.enableJPDRetirementEasterEgg = new SimpleBooleanProperty(true);
+        this.disableExitInUseMode = new SimpleBooleanProperty(true);
+        this.secureGoToEditMode = new SimpleBooleanProperty(false);
     }
 
     private File getConfigFile() {
@@ -120,6 +125,12 @@ public enum UserConfigurationController {
             if (prop.containsKey(UserConfigurationController.PROP_ENABLE_JPD_EASTER_EGG)) {
                 this.enableJPDRetirementEasterEgg.set(Boolean.parseBoolean(prop.getProperty(PROP_ENABLE_JPD_EASTER_EGG)));
             }
+            if (prop.containsKey(UserConfigurationController.PROP_DISABLE_EXIT_USE_MODE)) {
+                //this.disableExitInUseMode.set(Boolean.parseBoolean(prop.getProperty(PROP_DISABLE_EXIT_USE_MODE)));
+            }
+            if (prop.containsKey(UserConfigurationController.PROP_SECURE_GO_EDIT_MODE)) {
+                //this.secureGoToEditMode.set(Boolean.parseBoolean(prop.getProperty(PROP_SECURE_GO_EDIT_MODE)));
+            }
         } catch (FileNotFoundException e) {
             this.LOGGER.warn("Configuration file {} not found", configFile, e);
         }
@@ -145,6 +156,8 @@ public enum UserConfigurationController {
         prop.setProperty(PROP_UNSAVED_CHANGE_THRESHOLD, "" + this.unsavedChangeInConfigurationThreshold.get());
         prop.setProperty(PROP_ENABLE_AUTO_VK_SHOW, "" + this.autoVirtualKeyboardShow.get());
         prop.setProperty(PROP_ENABLE_JPD_EASTER_EGG, "" + this.enableJPDRetirementEasterEgg.get());
+        prop.setProperty(PROP_SECURE_GO_EDIT_MODE, "" + this.secureGoToEditMode.get());
+        prop.setProperty(PROP_DISABLE_EXIT_USE_MODE, "" + this.disableExitInUseMode.get());
         IOUtils.createParentDirectoryIfNeeded(configFile);
         try (FileOutputStream fos = new FileOutputStream(configFile)) {
             prop.store(fos, LCConstant.NAME + " user configuration file");
@@ -198,5 +211,13 @@ public enum UserConfigurationController {
 
     public BooleanProperty enableJPDRetirementEasterEggProperty() {
         return enableJPDRetirementEasterEgg;
+    }
+
+    public BooleanProperty disableExitInUseModeProperty() {
+        return disableExitInUseMode;
+    }
+
+    public BooleanProperty secureGoToEditModeProperty() {
+        return secureGoToEditMode;
     }
 }

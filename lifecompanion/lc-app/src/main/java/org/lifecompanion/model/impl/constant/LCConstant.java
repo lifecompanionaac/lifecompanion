@@ -140,6 +140,7 @@ public class LCConstant {
 
     public final static int GO_TO_CONFIG_MODE_DELAY = 30;
     public final static int DOUBLE_LAUNCH_DISPLAY_DELAY = 30;
+    public final static int WARNING_EXIT_DISABLED_DELAY = 10;
     // ========================================================================
 
     // EXTERNAL LIB/PROJECTS
