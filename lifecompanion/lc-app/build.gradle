@@ -23,7 +23,7 @@ compileJava {
 }
 
 version = project.property('lifecompanion.app.version')
-mainClassName = 'org.lifecompanion.app/org.lifecompanion.LifeCompanion'
+mainClassName = 'org.lifecompanion.LifeCompanion'
 
 ext {
     devCpArg = System.getenv('org.lifecompanion.dev.cp.arg') != null && !System.getenv('org.lifecompanion.dev.cp.arg').isBlank() ? System.getenv('org.lifecompanion.dev.cp.arg') : '/null'
