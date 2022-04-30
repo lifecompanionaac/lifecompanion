@@ -19,6 +19,7 @@
 	- Meilleure catégorisation et clarification en fonction de l'élément sélectionné
 	- Les modèles sont maintenant filtrés par élément sélectionné
 	- Facilité d'utilisation : par exemple bouton pour ajouter une grille ou copier celle existante
+- Ajout d'une configuration par défaut : souris en défilement
 
 ### Corrections/ajustements
 
@@ -34,6 +35,7 @@
 - Ticket #138 : déplacement du paramètres "Demander un code pour passer en édition" dans les paramètres généraux (devient donc spécifique à la machine et non à la configuration)
 - Ticket #119 : lors du retour du mode configuration au mode édition, les grilles et les listes de cases qui étaient affichées sont maintenant affichées (permet de gagner du temps pour corriger une erreur)
 - Ticket #122 : ajout d'une action "Ouvrir avec l'application par défaut"
+- Ticket #85 : ajout de raccourci clavier sur la vue des listes de cases : supprimer, copier/couper/coller, nouvelle case (CTRL+N), et descendre/monter (ALT+HAUT ou ALT+BAS)
 - Ticket #67 : ajout d'une action "Épeler tout le texte" pour épeler le contenu de l'éditeur
 - Ticket #67 : ajout d'une action "Épeler le texte de la case" pour épeler le texte de la case
 - Ticket #67 : ajout d'une action "Épeler du texte" pour épeler du texte (choisi)

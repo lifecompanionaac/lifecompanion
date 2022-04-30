@@ -32,6 +32,10 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -48,6 +52,7 @@ import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.lang.LangUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.framework.utils.FluentHashMap;
 import org.lifecompanion.framework.utils.Pair;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
 import org.lifecompanion.model.impl.configurationcomponent.dynamickey.KeyListLeaf;
@@ -62,6 +67,7 @@ import org.lifecompanion.util.binding.ListBindingWithMapper;
 import org.lifecompanion.util.javafx.FXControlUtils;
 import org.lifecompanion.util.model.ConfigurationComponentUtils;
 
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -259,6 +265,25 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         buttonClearSearch.setOnAction(e -> clearSearch(true));
         buttonNextFound.setOnAction(e -> {
             showNextSearchResult();
+        });
+
+        List<Pair<KeyCombination, Button>> keyCombination = Arrays.asList(
+                Pair.of(new KeyCodeCombination(KeyCode.DELETE), buttonDelete),
+                Pair.of(new KeyCodeCombination(KeyCode.C, KeyCombination.SHORTCUT_DOWN), buttonCopy),
+                Pair.of(new KeyCodeCombination(KeyCode.X, KeyCombination.SHORTCUT_DOWN), buttonCut),
+                Pair.of(new KeyCodeCombination(KeyCode.V, KeyCombination.SHORTCUT_DOWN), buttonPaste),
+                Pair.of(new KeyCodeCombination(KeyCode.N, KeyCombination.SHORTCUT_DOWN), buttonAddKey),
+                Pair.of(new KeyCodeCombination(KeyCode.UP, KeyCombination.ALT_DOWN), buttonMoveUp),
+                Pair.of(new KeyCodeCombination(KeyCode.DOWN, KeyCombination.ALT_DOWN), buttonMoveDown)
+        );
+        this.addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
+            for (Pair<KeyCombination, Button> handler : keyCombination) {
+                Button button = handler.getRight();
+                if (!button.isDisabled() && handler.getLeft().match(keyEvent)) {
+                    button.getOnAction().handle(null);
+                    break;
+                }
+            }
         });
     }
 
