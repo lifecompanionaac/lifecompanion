@@ -32,8 +32,7 @@ import org.lifecompanion.model.api.style.KeyStyleUserI;
  *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
-public interface StackComponentI
-        extends DisplayableComponentI, TreeDisplayableComponentI, ConfigurationChildComponentI, GridStyleUserI, KeyStyleUserI, UserNamedComponentI {
+public interface StackComponentI extends DisplayableComponentI, TreeDisplayableComponentI, ConfigurationChildComponentI, GridStyleUserI, KeyStyleUserI, UserNamedComponentI {
     /**
      * @return the list of all component inside this component (all stack component)
      */
@@ -54,19 +53,17 @@ public interface StackComponentI
 
     /**
      * Display the next child in stack list
-     *
-     * @deprecated because calling this method in use mode doesn't handle the different selection mode, you should never call directly this method on stack
+     * <strong>Because this method in use mode doesn't handle the different selection mode, you should never call directly this method on stack in use mode</strong>
      */
-    @Deprecated
-    void displayNext();
+    void displayNextForEditMode();
 
     /**
      * Display the previous child in stack list
-     *
-     * @deprecated because calling this method in use mode doesn't handle the different selection mode, you should never call directly this method on stack
+     * <strong>Because this method in use mode doesn't handle the different selection mode, you should never call directly this method on stack in use mode</strong>
      */
-    @Deprecated
-    void displayPrevious();
+    void displayPreviousForEditMode();
+
+    void displayComponentByIdForEditMode(String componentId);
 
     /**
      * @return the component that comes after the currently displayed component, will return null if the next is not possible
@@ -105,12 +102,12 @@ public interface StackComponentI
     DoubleProperty bindableDisplayedHeightProperty();
 
     /**
-     * @return a property that is true when calling {@link #displayPrevious()} will display the previous component (ie action is possible)
+     * @return a property that is true when calling {@link #displayPreviousForEditMode()} will display the previous component (ie action is possible)
      */
     BooleanProperty nextPossibleProperty();
 
     /**
-     * @return a property that is true when calling {@link #displayNext()} will display the next component (ie action is possible)
+     * @return a property that is true when calling {@link #displayNextForEditMode()} will display the next component (ie action is possible)
      */
     BooleanProperty previousPossibleProperty();
 

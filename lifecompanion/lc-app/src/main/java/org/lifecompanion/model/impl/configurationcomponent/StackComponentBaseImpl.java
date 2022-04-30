@@ -26,6 +26,7 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import org.jdom2.Element;
 import org.lifecompanion.controller.io.ConfigurationComponentIOHelper;
+import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.model.api.configurationcomponent.*;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.io.IOContextI;
@@ -50,7 +51,7 @@ public interface StackComponentBaseImpl extends TreeDisplayableComponentI, Stack
      * {@inheritDoc}
      */
     @Override
-    default void displayNext() {
+    default void displayNextForEditMode() {
         if (this.nextPossibleProperty().get()) {
             this.displayedComponentProperty().set(this.getNextComponent());
         }
@@ -60,7 +61,7 @@ public interface StackComponentBaseImpl extends TreeDisplayableComponentI, Stack
      * {@inheritDoc}
      */
     @Override
-    default void displayPrevious() {
+    default void displayPreviousForEditMode() {
         if (this.previousPossibleProperty().get()) {
             this.displayedComponentProperty().set(this.getPreviousComponent());
         }
@@ -229,6 +230,12 @@ public interface StackComponentBaseImpl extends TreeDisplayableComponentI, Stack
                 this.detailNameProperty().bind(newValueP.nameProperty());
             }
         });
+    }
+
+    @Override
+    default void displayComponentByIdForEditMode(String componentId) {
+        ObservableList<GridComponentI> components = getComponentList();
+        components.stream().filter(component -> StringUtils.isEquals(componentId, component.getID())).findFirst().ifPresent(toDisplay -> displayedComponentProperty().set(toDisplay));
     }
 
     // Class part : "Tree part"

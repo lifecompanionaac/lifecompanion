@@ -113,6 +113,7 @@ public enum AppModeController {
             // Load previously edited configuration : just restore as current configuration
             if (previousConfigurationEditMode != null) {
                 editModeContext.switchTo(previousConfigurationEditMode, editModeContext.getPreviousConfigurationDescription());
+                editModeContext.tryToRestoreUseModeStateInEditMode(useModeContext.getUseStateAndClear());
             }
             // There is no previously edited  configuration this happens when
             // - user launch LifeCompanion directly in use mode (default configuration to launch, or command to import/use)
@@ -122,7 +123,11 @@ public enum AppModeController {
                 if (usedConfiguration != null && profile != null) {
                     final LCConfigurationDescriptionI configurationById = profile.getConfigurationById(usedConfiguration.getID());
                     if (configurationById != null) {
-                        ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.OpenConfigurationAction(editModeContext.getStage().getScene().getRoot(), configurationById, false));
+                        ConfigActionController.INSTANCE.executeAction(
+                                new LCConfigurationActions.OpenConfigurationAction(editModeContext.getStage().getScene().getRoot(), configurationById, false, loaded -> {
+                                    if (loaded) editModeContext.tryToRestoreUseModeStateInEditMode(useModeContext.getUseStateAndClear());
+                                })
+                        );
                     }
                 }
             }
@@ -213,6 +218,7 @@ public enum AppModeController {
     private void stopModeIfNeeded(AppMode modeToStop) {
         if (modeToStop == AppMode.USE) {
             final LCConfigurationI configuration = useModeContext.configurationProperty().get();
+            useModeContext.saveStateBeforeStop();
             if (configuration != null) {
                 USE_MODE_LISTENERS.forEach(modeListenerI -> modeListenerI.modeStop(configuration));
                 IOHelper.saveUseInformation(configuration);

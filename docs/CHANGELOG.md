@@ -1,6 +1,6 @@
 # LIFECOMPANION CHANGELOG
 
-## 1.3.4 - XX/XX/2022
+## 1.4.0 - 30/04/2022
 
 ### Fonctionnalités
 
@@ -32,6 +32,7 @@
 - Ticket #129 : correction d'un rare problème pour les configurations de clavier/souris virtuels
 - Ticket #136 : ajout de la possibilité de désactiver la fermeture de LifeCompanion en mode utilisation
 - Ticket #138 : déplacement du paramètres "Demander un code pour passer en édition" dans les paramètres généraux (devient donc spécifique à la machine et non à la configuration)
+- Ticket #119 : lors du retour du mode configuration au mode édition, les grilles et les listes de cases qui étaient affichées sont maintenant affichées (permet de gagner du temps pour corriger une erreur)
 - Ticket #122 : ajout d'une action "Ouvrir avec l'application par défaut"
 - Ticket #67 : ajout d'une action "Épeler tout le texte" pour épeler le contenu de l'éditeur
 - Ticket #67 : ajout d'une action "Épeler le texte de la case" pour épeler le texte de la case

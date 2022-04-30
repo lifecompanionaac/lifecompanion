@@ -21,7 +21,6 @@ package org.lifecompanion.model.impl.configurationcomponent;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.lifecompanion.model.api.configurationcomponent.GridPartComponentI;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -95,7 +94,7 @@ public class StackComponentTest {
         grid2.getGrid().getGridContent().forEach(c -> assertFalse(c.displayedProperty().get()));
         grid1.getGrid().getGridContent().forEach(c -> assertTrue(c.displayedProperty().get()));
 
-        stackComponent.displayNext();
+        stackComponent.displayNextForEditMode();
 
         assertTrue(grid2.displayedProperty().get());
         assertFalse(grid1.displayedProperty().get());

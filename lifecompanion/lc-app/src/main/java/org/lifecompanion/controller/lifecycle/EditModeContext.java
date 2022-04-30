@@ -20,6 +20,10 @@
 package org.lifecompanion.controller.lifecycle;
 
 import javafx.beans.property.*;
+import org.lifecompanion.controller.configurationcomponent.dynamickey.KeyListController;
+import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.model.api.configurationcomponent.DisplayableComponentI;
+import org.lifecompanion.model.api.configurationcomponent.StackComponentI;
 import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.util.LangUtils;
@@ -32,6 +36,8 @@ import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.model.impl.notification.LCNotification;
 import org.lifecompanion.ui.notification.LCNotificationController;
 import org.lifecompanion.framework.commons.translation.Translation;
+
+import java.util.Map;
 
 public class EditModeContext extends AbstractModeContext {
 
@@ -83,6 +89,21 @@ public class EditModeContext extends AbstractModeContext {
         previousConfigurationDescription = null;
     }
     //========================================================================
+
+    void tryToRestoreUseModeStateInEditMode(UseModeContext.UseModeState useModeState) {
+        LCConfigurationI configuration = this.configuration.get();
+        Map<String, String> displayedGrid = useModeState.getDisplayedComponentInStack();
+        displayedGrid.forEach((stackId, displayedComponentId) -> {
+            DisplayableComponentI displayableComponent = configuration.getAllComponent().get(stackId);
+            if (displayableComponent instanceof StackComponentI) {
+                ((StackComponentI) displayableComponent).displayComponentByIdForEditMode(displayedComponentId);
+            }
+        });
+        String nodeId = useModeState.getCurrentKeyListNodeId();
+        if (StringUtils.isNotBlank(nodeId)) {
+            KeyListController.INSTANCE.selectNodeById(nodeId);
+        }
+    }
 
 
     // CONFIGURATION SCALE

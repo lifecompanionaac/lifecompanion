@@ -84,7 +84,7 @@ public class ImageDictionariesCreationScript {
         generateImageDictionary(parlerPicto);
     }
 
-    private static void generateImageDictionary(DicInfo dictionaryInformation) throws FileNotFoundException, UnsupportedEncodingException {
+    public static void generateImageDictionary(DicInfo dictionaryInformation) throws FileNotFoundException, UnsupportedEncodingException {
         File outputDir = new File("D:\\ARASAAC\\OUT\\" + dictionaryInformation.dicId);
         outputDir.mkdirs();
 
@@ -140,7 +140,7 @@ public class ImageDictionariesCreationScript {
                 ImageElement imageElement = new ImageElement();
                 imageElement.id = sha256;
                 imageElement.keywords = FluentHashMap.map(LANGUAGE_CODE,
-                        entry.getValue().stream().map(Pair::getValue).map(s -> s.replaceAll("_\\d+", " ").replace('_', ' ').replace('-', ' ').trim().toLowerCase()).toArray(l -> new String[l]));
+                        entry.getValue().stream().map(Pair::getValue).map(s -> s.replaceAll("_\\d+", " ").replaceAll("\\(\\d+\\)", " ").replace('_', ' ').replace('-', ' ').trim().toLowerCase()).toArray(l -> new String[l]));
                 imageElement.name = imageElement.keywords.get(LANGUAGE_CODE)[0];
                 return imageElement;
             } catch (Exception e) {

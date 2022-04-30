@@ -263,6 +263,10 @@ public enum KeyListController implements ModeListenerI {
     public Map<Pair<GridComponentI, String>, StatusForGridAndCategory> getStatusForGridAndCategoryMap() {
         return statusForGridAndCategoryMap;
     }
+
+    public String getCurrentNodeId() {
+        return currentNode.get() != null ? currentNode.get().getID() : null;
+    }
     //========================================================================
 
 
