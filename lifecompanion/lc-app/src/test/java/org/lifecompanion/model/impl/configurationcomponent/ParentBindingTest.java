@@ -17,22 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.lifecompanion;
+package org.lifecompanion.model.impl.configurationcomponent;
 
 import org.junit.jupiter.api.Test;
 import org.lifecompanion.model.api.configurationcomponent.GridPartComponentI;
-import org.lifecompanion.model.impl.configurationcomponent.GridPartGridComponent;
-import org.lifecompanion.model.impl.configurationcomponent.LCConfigurationComponent;
-import org.lifecompanion.model.impl.configurationcomponent.StackComponent;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+// Should be moved in individual component tests ? > each component type check its parent binding...
+// still better here than nothing...
 public class ParentBindingTest {
 
-    /**
-     * Test if binding for grid children works correctly
-     */
     @Test
     public void testParentBindingGridPart() {
         //Grid 2 x 2

@@ -17,14 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.lifecompanion;
+package org.lifecompanion.model.impl.configurationcomponent;
 
 import junit.framework.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.lifecompanion.model.api.configurationcomponent.GridPartComponentI;
-import org.lifecompanion.model.impl.configurationcomponent.ComponentGrid;
-import org.lifecompanion.model.impl.configurationcomponent.GridPartGridComponent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +44,7 @@ public class ComponentGridTest {
     public void testSimpleRowColumnAdd() {
         this.gridComponent.getGrid().setRow(2);
         this.gridComponent.getGrid().setColumn(4);
+
         //Check count
         assertEquals(2, this.componentGrid.getRow());
         assertEquals(4, this.componentGrid.getColumn());

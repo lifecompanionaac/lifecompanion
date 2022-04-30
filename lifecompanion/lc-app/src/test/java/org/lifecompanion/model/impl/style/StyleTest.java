@@ -1,12 +1,22 @@
-/*******************************************************************************
- * Copyright (C) ForUSoftware
- * All Rights Reserved - 2016-2017
+/*
+ * LifeCompanion AAC and its sub projects
  *
- * Unauthorized copying of this file, via any medium is strictly prohibited
- * Proprietary and confidential
- * Mathieu THEBAUD <math.thebaud@gmail.com>
- ******************************************************************************/
-package org.lifecompanion;
+ * Copyright (C) 2014 to 2019 Mathieu THEBAUD
+ * Copyright (C) 2020 to 2022 CMRRF KERPAPE (Lorient, France) and CoWork'HIT (Lorient, France)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, version 3 of the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package org.lifecompanion.model.impl.style;
 
 import org.jdom2.Element;
 
@@ -27,31 +37,27 @@ public class StyleTest {
         this.defaultShapeStyle.backgroundColorProperty().selected().setValue(StyleTest.DEFAULT_BACKGROUND_COLOR);
     }
 
-//	@Test
-//	public void testBinding() {
-//		ShapeCompStyle stackStyle = new ShapeCompStyle(null);
-//		stackStyle.nameProperty().set("StackStyle");
-//		stackStyle.styleProperty().parent().setValue(this.defaultShapeStyle);
-//		Assert.assertEquals(this.defaultShapeStyle, stackStyle.styleProperty().value().getValue());
-//		Assert.assertEquals(StyleTest.DEFAULT_BACKGROUND_COLOR, stackStyle.backgroundColorProperty().value().getValue());
-//		//Create another child
-//		ShapeCompStyle gridStyle = new ShapeCompStyle(null);
-//		gridStyle.nameProperty().set("GridStyle");
-//		gridStyle.styleProperty().parent().bind(stackStyle.styleProperty().value());
-//		gridStyle.parentComponentStyleProperty().set(stackStyle);
-//		Assert.assertEquals(this.defaultShapeStyle, gridStyle.styleProperty().value().getValue());
-//		Assert.assertEquals(StyleTest.DEFAULT_BACKGROUND_COLOR, gridStyle.backgroundColorProperty().value().getValue());
-//		//Change color on parent
-//		Color selectColor = Color.ANTIQUEWHITE;
-//		stackStyle.backgroundColorProperty().selected().setValue(selectColor);
-//		Assert.assertNotEquals(StyleTest.DEFAULT_BACKGROUND_COLOR, stackStyle.backgroundColorProperty().value().getValue());
-//		Assert.assertEquals(selectColor, stackStyle.backgroundColorProperty().value().getValue());
-//		//Check on children
-//		Assert.assertEquals(selectColor, gridStyle.backgroundColorProperty().parent().getValue());
-//		Assert.assertNotEquals(StyleTest.DEFAULT_BACKGROUND_COLOR, gridStyle.backgroundColorProperty().value().getValue());
-//		Assert.assertEquals(selectColor, gridStyle.backgroundColorProperty().value().getValue());
-//
-//	}
+//    @Test
+//    public void testBinding() {
+//        GridShapeCompStyle stackStyle = new GridShapeCompStyle();
+//        Assert.assertEquals(StyleTest.DEFAULT_BACKGROUND_COLOR, stackStyle.backgroundColorProperty().value().getValue());
+//        //Create another child
+//        ShapeCompStyle gridStyle = new ShapeCompStyle(null);
+//        gridStyle.nameProperty().set("GridStyle");
+//        gridStyle.styleProperty().parent().bind(stackStyle.styleProperty().value());
+//        gridStyle.parentComponentStyleProperty().set(stackStyle);
+//        Assert.assertEquals(this.defaultShapeStyle, gridStyle.styleProperty().value().getValue());
+//        Assert.assertEquals(StyleTest.DEFAULT_BACKGROUND_COLOR, gridStyle.backgroundColorProperty().value().getValue());
+//        //Change color on parent
+//        Color selectColor = Color.ANTIQUEWHITE;
+//        stackStyle.backgroundColorProperty().selected().setValue(selectColor);
+//        Assert.assertNotEquals(StyleTest.DEFAULT_BACKGROUND_COLOR, stackStyle.backgroundColorProperty().value().getValue());
+//        Assert.assertEquals(selectColor, stackStyle.backgroundColorProperty().value().getValue());
+//        //Check on children
+//        Assert.assertEquals(selectColor, gridStyle.backgroundColorProperty().parent().getValue());
+//        Assert.assertNotEquals(StyleTest.DEFAULT_BACKGROUND_COLOR, gridStyle.backgroundColorProperty().value().getValue());
+//        Assert.assertEquals(selectColor, gridStyle.backgroundColorProperty().value().getValue());
+//    }
 //
 //	@Test
 //	public void testParentRestore() {

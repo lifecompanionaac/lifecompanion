@@ -1,1 +1,0 @@
---add-opens=javafx.base/com.sun.javafx.runtime=org.controlsfx.controls
