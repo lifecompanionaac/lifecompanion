@@ -22,7 +22,7 @@ It has been used in various reasearch and innovation projects, and was recently 
 
 LifeCompanion is currently available in french only, but we are seeking for partners to translate it.
 
-[DOWNLOAD AND USE LIFECOMPANION](https://lifecompanionaac.org/categories/documentations/how-to-install)
+### [DOWNLOAD AND USE LIFECOMPANION](https://lifecompanionaac.org/categories/documentations/how-to-install)
 
 ## Changelog
 
