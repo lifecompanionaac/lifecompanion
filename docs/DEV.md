@@ -103,7 +103,7 @@ Development environment installed and tested on Windows 10 and Ubuntu.
 
 1. Install **[PostgreSQL](https://www.postgresql.org/)** and run it
 1. Configure **PostgreSQL** with a dedicated database
-1. Check port and database in **lc-framework-server/build.gradle** (in *applicationDefaultJvmArgs**)
+1. Check port and database in **lc-framework-server/build.gradle** (in *applicationDefaultJvmArgs*)
 1. Run task `gradlew :lc-framework-server:run` in **lc-framework-server**
 1. First run will create tables on database
 1. To insert default data, see [Deploy LifeCompanion server update in production](#user-content-deploy-lifecompanion-server-update-in-production)
