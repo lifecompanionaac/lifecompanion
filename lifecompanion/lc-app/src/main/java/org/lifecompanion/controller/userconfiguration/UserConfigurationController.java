@@ -126,10 +126,10 @@ public enum UserConfigurationController {
                 this.enableJPDRetirementEasterEgg.set(Boolean.parseBoolean(prop.getProperty(PROP_ENABLE_JPD_EASTER_EGG)));
             }
             if (prop.containsKey(UserConfigurationController.PROP_DISABLE_EXIT_USE_MODE)) {
-                //this.disableExitInUseMode.set(Boolean.parseBoolean(prop.getProperty(PROP_DISABLE_EXIT_USE_MODE)));
+                this.disableExitInUseMode.set(Boolean.parseBoolean(prop.getProperty(PROP_DISABLE_EXIT_USE_MODE)));
             }
             if (prop.containsKey(UserConfigurationController.PROP_SECURE_GO_EDIT_MODE)) {
-                //this.secureGoToEditMode.set(Boolean.parseBoolean(prop.getProperty(PROP_SECURE_GO_EDIT_MODE)));
+                this.secureGoToEditMode.set(Boolean.parseBoolean(prop.getProperty(PROP_SECURE_GO_EDIT_MODE)));
             }
         } catch (FileNotFoundException e) {
             this.LOGGER.warn("Configuration file {} not found", configFile, e);
