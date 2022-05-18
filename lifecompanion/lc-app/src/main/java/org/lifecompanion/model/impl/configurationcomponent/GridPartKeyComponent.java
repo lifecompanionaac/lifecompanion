@@ -382,9 +382,10 @@ public class GridPartKeyComponent extends GridPartComponentBaseImpl implements G
         //Image
         this.imageUseComponentPropertyWrapper.deserialize(nodeP, contextP);
         //Action
+        Element actionManagerNodeOld = nodeP.getChild(SimpleUseActionManager.NODE_USE_ACTION_MANAGER_OLD);
         Element actionManagerNode = nodeP.getChild(SimpleUseActionManager.NODE_USE_ACTION_MANAGER);
-        if (actionManagerNode != null) {
-            this.actionManager.deserialize(actionManagerNode, contextP);
+        if (actionManagerNode != null || actionManagerNodeOld != null) {
+            this.actionManager.deserialize(actionManagerNode != null ? actionManagerNode : actionManagerNodeOld, contextP);
         }
         //Option (if it doesn't exist : it's a base key)
         Element keyOptionNode = nodeP.getChild(KeyOptionI.NODE_KEY_OPTION);

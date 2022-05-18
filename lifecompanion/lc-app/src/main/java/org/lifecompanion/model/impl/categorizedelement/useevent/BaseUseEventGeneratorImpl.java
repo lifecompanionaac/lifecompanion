@@ -158,16 +158,19 @@ public abstract class BaseUseEventGeneratorImpl implements UseEventGeneratorI {
     public Element serialize(final IOContextI context) {
         Element element = new Element(BaseUseEventGeneratorImpl.NODE_USE_EVENT_GENERATOR);
         ConfigurationComponentIOHelper.addTypeAlias(this, element, context);
-        //Action manager
-        element.addContent(this.useActionManager.serialize(context));
+        if (this.useActionManager.containsActions()) {
+            element.addContent(this.useActionManager.serialize(context));
+        }
         return element;
     }
 
     @Override
     public void deserialize(final Element node, final IOContextI context) throws LCException {
-        //Action manager
         Element actionManagerNode = node.getChild(SimpleUseActionManager.NODE_USE_ACTION_MANAGER);
-        this.useActionManager.deserialize(actionManagerNode, context);
+        Element actionManagerNodeOld = node.getChild(SimpleUseActionManager.NODE_USE_ACTION_MANAGER_OLD);
+        if (actionManagerNode != null || actionManagerNodeOld != null) {
+            this.useActionManager.deserialize(actionManagerNode != null ? actionManagerNode : actionManagerNodeOld, context);
+        }
     }
     //========================================================================
 

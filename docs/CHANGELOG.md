@@ -8,7 +8,8 @@
 
 ### Corrections/ajustements
 
-- ...
+- Optmisation de la taille de certaines configurations (réduction jusqu'à 20%)
+- Ticket #149 : les nouveaux paramètres de la version 1.4 "Demander un code pour passer en édition" et "Désactiver la possibilité de quitter LifeCompanion" sont maintenant sauvegardés
 
 ## 1.4.0 - 30/04/2022
 

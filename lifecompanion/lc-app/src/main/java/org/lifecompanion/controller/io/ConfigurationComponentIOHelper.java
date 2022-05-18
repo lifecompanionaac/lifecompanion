@@ -26,6 +26,8 @@ import org.lifecompanion.model.api.configurationcomponent.ConfigurationChildComp
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.io.XMLSerializable;
 import org.lifecompanion.model.api.selectionmode.SelectionModeI;
+import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionManager;
+import org.lifecompanion.model.impl.configurationcomponent.GridPartKeyComponent;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.impl.plugin.PluginInfo;
 import org.slf4j.Logger;
@@ -41,6 +43,7 @@ public class ConfigurationComponentIOHelper {
     private static final Logger LOGGER = LoggerFactory.getLogger(ConfigurationComponentIOHelper.class);
 
     public static final String ATB_TYPE = "nodeType";
+    public static final String ATB_TYPE_LIGHT = "ntyp";
     public static final String ATB_PLUGIN_ID = "dependencyPluginId";
 
     /**
@@ -56,6 +59,14 @@ public class ConfigurationComponentIOHelper {
      */
     private static Map<String, Pair<Class<?>, PluginInfo>> typeAlias;
 
+    private static final AtomicBoolean optimizedTypeInitialized = new AtomicBoolean(false);
+
+    /**
+     * Optimized type alias manually set by dev to reduce file sizes and memory footprint.
+     */
+    private static Map<Class<?>, String> optimizedTypeAlias;
+
+
     /**
      * Create the base serialize object from a xml serialized component.<br>
      * This will not call {@link XMLSerializable#deserialize(Element, Object)} on the create object.
@@ -66,7 +77,7 @@ public class ConfigurationComponentIOHelper {
      */
     @SuppressWarnings("unchecked")
     public static Pair<Boolean, XMLSerializable<IOContextI>> create(final Element element, IOContextI ioContext, Supplier<XMLSerializable<IOContextI>> fallbackSupplier) throws LCException {
-        String className = element.getAttributeValue(ATB_TYPE);
+        String className = element.getAttribute(ATB_TYPE_LIGHT) != null ? element.getAttributeValue(ATB_TYPE_LIGHT) : element.getAttributeValue(ATB_TYPE);
         try {
             // Check if the plugin dependency is loaded, if not use fallback when enable
             String pluginDependencyId = element.getAttributeValue(ATB_PLUGIN_ID);
@@ -101,7 +112,7 @@ public class ConfigurationComponentIOHelper {
      * @param node   the node where we must put the base
      */
     public static Element addTypeAlias(final XMLSerializable<?> caller, final Element node, IOContextI ioContext) {
-        node.setAttribute(ATB_TYPE, caller.getClass().getSimpleName());
+        node.setAttribute(ATB_TYPE_LIGHT, getOptimizedTypeAlias().getOrDefault(caller.getClass(), caller.getClass().getSimpleName()));
         Pair<Class<?>, PluginInfo> pluginInfoForType = getTypeAlias().get(caller.getClass().getSimpleName());
         // When the saved element is from a plugin : "flag" the XML element to be dependent on the plugin and add the plugin id to dependencies list
         if (pluginInfoForType != null && pluginInfoForType.getRight() != null) {
@@ -124,13 +135,26 @@ public class ConfigurationComponentIOHelper {
         if (!defaultTypeInitialized.getAndSet(true)) {
             addSerializableTypes(ReflectionHelper.findImplementationsInModules(XMLSerializable.class), null);
             addSerializableTypes(ReflectionHelper.findImplementationsInModules(SelectionModeI.class), null);
+            getOptimizedTypeAlias().forEach((type, name) -> {
+                typeAlias.put(name, Pair.of(type, null));
+            });
         }
+    }
+
+    private static Map<Class<?>, String> getOptimizedTypeAlias() {
+        if (!optimizedTypeInitialized.getAndSet(true)) {
+            optimizedTypeAlias = new HashMap<>(10);
+            optimizedTypeAlias.put(GridPartKeyComponent.class, "GPKC");
+            optimizedTypeAlias.put(SimpleUseActionManager.class, "SUAM");
+        }
+        return optimizedTypeAlias;
     }
 
     private static Map<String, Pair<Class<?>, PluginInfo>> getTypeAlias() {
         initializeTypeMap();
         return typeAlias;
     }
+
 
     public static void addSerializableTypes(List<? extends Class> types, PluginInfo pluginInfo) {
         if (typeAlias == null) {

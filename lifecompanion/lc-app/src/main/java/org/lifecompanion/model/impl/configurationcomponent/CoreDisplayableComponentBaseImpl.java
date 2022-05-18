@@ -302,10 +302,11 @@ public abstract class CoreDisplayableComponentBaseImpl implements DisplayableCom
     // Class part : "XML"
     //========================================================================
     private static final String NODE_COMP = "Component";
+    private static final String NODE_COMP_LIGHT = "Cmp";
 
     @Override
     public Element serialize(final IOContextI contextP) {
-        Element xmlElement = new Element(CoreDisplayableComponentBaseImpl.NODE_COMP);
+        Element xmlElement = new Element(CoreDisplayableComponentBaseImpl.NODE_COMP_LIGHT);
         ConfigurationComponentIOHelper.addTypeAlias(this, xmlElement, contextP);
         XMLObjectSerializer.serializeInto(CoreDisplayableComponentBaseImpl.class, this, xmlElement);
         return xmlElement;

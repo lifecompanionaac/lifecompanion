@@ -189,8 +189,12 @@ public class SimpleUseActionManager implements UseActionManagerI {
 
     // Class part : "XML"
     //========================================================================
-    public static final String NODE_USE_ACTION_MANAGER = "UseActionManager";
-    private static final String NODE_ACTIONS_EVENT = "UseActionsEvent", NODE_ACTIONS = "UseActions", ATB_EVENT_TYPE = "eventType";
+    public static final String NODE_USE_ACTION_MANAGER_OLD = "UseActionManager"; //FIXME
+    public static final String NODE_USE_ACTION_MANAGER = "UAM";
+    private static final String NODE_ACTIONS_EVENT_OLD = "UseActionsEvent";
+    private static final String NODE_ACTIONS_EVENT = "UAE";
+    private static final String NODE_ACTIONS = "Acts";
+    private static final String ATB_EVENT_TYPE = "etyp", ATB_EVENT_TYPE_OLD = "eventType";
 
     @Override
     public Element serialize(final IOContextI contextP) {
@@ -223,11 +227,13 @@ public class SimpleUseActionManager implements UseActionManagerI {
     @Override
     public void deserialize(final Element nodeP, final IOContextI contextP) throws LCException {
         //Get event
-        Element eventNodes = nodeP.getChild(SimpleUseActionManager.NODE_ACTIONS_EVENT);
+        Element actionsEventNodeOld = nodeP.getChild(SimpleUseActionManager.NODE_ACTIONS_EVENT_OLD);
+        Element actionsEventNode = nodeP.getChild(SimpleUseActionManager.NODE_ACTIONS_EVENT);
+        Element eventNodes = actionsEventNode != null ? actionsEventNode : actionsEventNodeOld;
         List<Element> eventNodesChildren = eventNodes.getChildren();
         //Get all possible event type
         for (Element eventNode : eventNodesChildren) {
-            Enum<UseActionEvent> eventType = XMLUtils.readEnum(UseActionEvent.class, SimpleUseActionManager.ATB_EVENT_TYPE, eventNode);
+            Enum<UseActionEvent> eventType = XMLUtils.readEnum(UseActionEvent.class, eventNode.getAttribute(ATB_EVENT_TYPE) != null ? ATB_EVENT_TYPE : ATB_EVENT_TYPE_OLD, eventNode);
             ObservableList<BaseUseActionI<?>> actionList = this.actions.get(eventType);
             //For each event, get all action registered on the event
             List<Element> eventNodeChildren = eventNode.getChildren();
