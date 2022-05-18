@@ -37,7 +37,7 @@ public class StyleSerialializer {
     }
 
     public static void deserializeGridStyle(final GridStyleUserI styleUser, final Element element, final IOContextI context) throws LCException {
-        Element styleNode = element.getChild(ShapeCompStyleI.NODE_SHAPE_STYLE_GRID);
+        Element styleNode = element.getChild(GridCompStyleI.NODE_SHAPE_STYLE_GRID);
         if (styleNode != null) {
             styleUser.getGridShapeStyle().deserialize(styleNode, context);
         }

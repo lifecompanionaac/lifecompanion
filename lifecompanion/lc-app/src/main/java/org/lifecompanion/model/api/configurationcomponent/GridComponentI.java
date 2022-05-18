@@ -32,15 +32,6 @@ import javafx.beans.property.ReadOnlyIntegerProperty;
  */
 public interface GridComponentI
 		extends DisplayableComponentI, GridChildComponentI, SelectableComponentI, GridPartComponentI, SelectionModeUserI, GridStyleUserI {
-	/**
-	 * @return property that represent vertical space between case
-	 */
-	DoubleProperty vGapProperty();
-
-	/**
-	 * @return property that represent horizontal space between case
-	 */
-	DoubleProperty hGapProperty();
 
 	/**
 	 * @return property that represent number of row inside the grid

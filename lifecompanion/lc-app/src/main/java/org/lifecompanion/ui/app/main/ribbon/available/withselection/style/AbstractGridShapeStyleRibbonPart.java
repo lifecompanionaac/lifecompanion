@@ -22,6 +22,7 @@ package org.lifecompanion.ui.app.main.ribbon.available.withselection.style;
 import org.fxmisc.easybind.EasyBind;
 import org.lifecompanion.model.api.style.GridStyleUserI;
 import org.lifecompanion.controller.editmode.SelectionController;
+import org.lifecompanion.ui.common.pane.specific.styleedit.GridStyleEditView;
 import org.lifecompanion.ui.common.pane.specific.styleedit.ShapeStyleEditView;
 import org.lifecompanion.ui.configurationcomponent.editmode.categorizedelement.useevent.available.RibbonBasePart;
 import org.lifecompanion.framework.commons.translation.Translation;
@@ -29,7 +30,7 @@ import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 
 public abstract class AbstractGridShapeStyleRibbonPart extends RibbonBasePart<GridStyleUserI> implements LCViewInitHelper {
 
-    private ShapeStyleEditView shapeStyleEditView;
+    private GridStyleEditView shapeStyleEditView;
 
     public AbstractGridShapeStyleRibbonPart() {
         this.initAll();
@@ -37,7 +38,7 @@ public abstract class AbstractGridShapeStyleRibbonPart extends RibbonBasePart<Gr
 
     @Override
     public void initUI() {
-        this.shapeStyleEditView = new ShapeStyleEditView();
+        this.shapeStyleEditView = new GridStyleEditView();
         this.setContent(this.shapeStyleEditView);
     }
 

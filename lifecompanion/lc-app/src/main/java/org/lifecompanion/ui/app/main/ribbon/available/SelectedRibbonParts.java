@@ -33,7 +33,6 @@ public class SelectedRibbonParts {
             super(//
                     RibbonTabPart.create(ExpandCollapseRibbonPart.class), //
                     RibbonTabPart.create(RowColumnRibbonPart.class), //
-                    RibbonTabPart.create(GridGapRibbonPart.class), //
                     RibbonTabPart.create(GridComponentSelectionModeRibbonPart.class) //
             );
         }

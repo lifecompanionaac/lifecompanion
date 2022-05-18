@@ -44,28 +44,28 @@ public class ConfigurationComponentLayoutUtils {
 
     public static Pair<Double, Double> getLinePosition(final GridComponentI grid, final int lineIndex) {
         Pair<Double, Double> basePos = getConfigurationPosition(grid);
-        double x = basePos.getKey() + grid.hGapProperty().get();
-        double y = basePos.getValue() + grid.caseHeightProperty().get() * lineIndex + (lineIndex + 1) * grid.vGapProperty().get();
+        double x = basePos.getKey() + grid.getGridShapeStyle().hGapProperty().valueAsInt().getValue();
+        double y = basePos.getValue() + grid.caseHeightProperty().get() * lineIndex + (lineIndex + 1) * grid.getGridShapeStyle().vGapProperty().valueAsInt().getValue();
         return new Pair<>(x, y);
     }
 
     public static Pair<Double, Double> getLineSize(final GridComponentI grid, final int lineIndex, final int lineSpan) {
-        double h = grid.caseHeightProperty().get() * lineSpan + (lineSpan - 1) * grid.vGapProperty().get();
+        double h = grid.caseHeightProperty().get() * lineSpan + (lineSpan - 1) * grid.getGridShapeStyle().vGapProperty().valueAsInt().getValue();
         double w = grid.caseWidthProperty().get() * grid.columnCountProperty().get()
-                + (grid.columnCountProperty().get() - 1) * grid.hGapProperty().get();
+                + (grid.columnCountProperty().get() - 1) * grid.getGridShapeStyle().hGapProperty().valueAsInt().getValue();
         return new Pair<>(w, h);
     }
 
     public static Pair<Double, Double> getColumnPosition(final GridComponentI grid, final int columnIndex) {
         Pair<Double, Double> basePos = getConfigurationPosition(grid);
-        double x = basePos.getKey() + grid.caseWidthProperty().get() * columnIndex + (columnIndex + 1) * grid.hGapProperty().get();
-        double y = basePos.getValue() + grid.vGapProperty().get();
+        double x = basePos.getKey() + grid.caseWidthProperty().get() * columnIndex + (columnIndex + 1) * grid.getGridShapeStyle().hGapProperty().valueAsInt().getValue();
+        double y = basePos.getValue() + grid.getGridShapeStyle().vGapProperty().valueAsInt().getValue();
         return new Pair<>(x, y);
     }
 
     public static Pair<Double, Double> getColumnSize(final GridComponentI grid, final int columnIndex, final int columnSpan) {
-        double w = grid.caseWidthProperty().get() * columnSpan + (columnSpan - 1) * grid.hGapProperty().get();
-        double h = grid.caseHeightProperty().get() * grid.rowCountProperty().get() + (grid.rowCountProperty().get() - 1) * grid.vGapProperty().get();
+        double w = grid.caseWidthProperty().get() * columnSpan + (columnSpan - 1) * grid.getGridShapeStyle().hGapProperty().valueAsInt().getValue();
+        double h = grid.caseHeightProperty().get() * grid.rowCountProperty().get() + (grid.rowCountProperty().get() - 1) * grid.getGridShapeStyle().vGapProperty().valueAsInt().getValue();
         return new Pair<>(w, h);
     }
 

@@ -2238,6 +2238,8 @@
   <!--org.lifecompanion.config.view.pane.tabs.selected.part, org.lifecompanion.config.data.action.impl-->
   <text key="grid.hgap">Espacement horizontal</text>
   <text key="grid.vgap">Espacement vertical</text>
+  <text key="field.grid.key.hgap">Espacement horizontal</text>
+  <text key="field.grid.key.vgap">Espace vertical</text>
   <!--org.lifecompanion.config.view.pane.tabs.selected.part.imageusecomp-->
   <text key="image.use.color.replace.threshold.field">Tolérance</text>
   <text key="image.use.color.replacing.field">Couleur de remplacement</text>

@@ -25,12 +25,12 @@ import javafx.collections.ObservableList;
 import org.jdom2.Element;
 import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
 import org.lifecompanion.model.api.configurationcomponent.TreeDisplayableType;
+import org.lifecompanion.model.api.style.GridCompStyleI;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.style.KeyCompStyleI;
-import org.lifecompanion.model.api.style.ShapeCompStyleI;
 import org.lifecompanion.model.api.style.TextCompStyleI;
-import org.lifecompanion.model.impl.style.GridShapeCompStyle;
+import org.lifecompanion.model.impl.style.GridCompStyle;
 import org.lifecompanion.model.impl.style.KeyCompStyle;
 import org.lifecompanion.model.impl.style.KeyTextCompStyle;
 import org.lifecompanion.model.impl.style.StyleSerialializer;
@@ -48,7 +48,7 @@ public class StackComponent extends RootGraphicComponentBaseImpl implements Stac
      */
     protected StackComponentPropertyWrapper stackComponentPropertyWrapper;
 
-    private final ShapeCompStyleI gridShapeStyle;
+    private final GridCompStyleI gridShapeStyle;
     private final KeyCompStyleI keyStyle;
     private final TextCompStyleI keyTextStyle;
 
@@ -57,7 +57,7 @@ public class StackComponent extends RootGraphicComponentBaseImpl implements Stac
      */
     public StackComponent() {
         super();
-        this.gridShapeStyle = new GridShapeCompStyle();
+        this.gridShapeStyle = new GridCompStyle();
         this.keyStyle = new KeyCompStyle();
         this.keyTextStyle = new KeyTextCompStyle();
         this.stackComponentPropertyWrapper = new StackComponentPropertyWrapper(this);
@@ -143,7 +143,7 @@ public class StackComponent extends RootGraphicComponentBaseImpl implements Stac
     }
 
     @Override
-    public ShapeCompStyleI getGridShapeStyle() {
+    public GridCompStyleI getGridShapeStyle() {
         return this.gridShapeStyle;
     }
 

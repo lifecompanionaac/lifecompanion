@@ -20,6 +20,7 @@ package org.lifecompanion.controller.style;
 
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
+import org.lifecompanion.model.api.style.GridCompStyleI;
 import org.lifecompanion.model.api.style.KeyCompStyleI;
 import org.lifecompanion.model.api.style.ShapeCompStyleI;
 import org.lifecompanion.model.api.style.TextCompStyleI;
@@ -34,7 +35,7 @@ public enum StyleController {
 
     private static final String DEFAULT_FONT = "Deja Vu Sans";
 
-    private final ShapeCompStyleI defaultShapeStyleForGrid;
+    private final GridCompStyleI defaultShapeStyleForGrid;
     private final ShapeCompStyleI defaultShapeStyleForTextEditor;
     private final KeyCompStyleI defaultKeyStyle;
     private final TextCompStyleI defaultTextStyleForKey;
@@ -42,12 +43,14 @@ public enum StyleController {
 
 
     StyleController() {
-        this.defaultShapeStyleForGrid = new GridShapeCompStyle() {
+        this.defaultShapeStyleForGrid = new GridCompStyle() {
             {
                 this.backgroundColorProperty().selected().setValue(LCGraphicStyle.LC_VERY_LIGHT_GRAY);
                 this.strokeSizeProperty().selected().setValue(0);
                 this.strokeColorProperty().selected().setValue(Color.TRANSPARENT);
                 this.shapeRadiusProperty().selected().setValue(0);
+                this.vGapProperty().selected().setValue(5);
+                this.hGapProperty().selected().setValue(5);
             }
         };
         this.defaultShapeStyleForTextEditor = new TextDisplayerShapeCompStyle() {
@@ -97,7 +100,7 @@ public enum StyleController {
 
     // Class part : "Default styles"
     //========================================================================
-    public ShapeCompStyleI getDefaultShapeStyleForGrid() {
+    public GridCompStyleI getDefaultShapeStyleForGrid() {
         return this.defaultShapeStyleForGrid;
     }
 

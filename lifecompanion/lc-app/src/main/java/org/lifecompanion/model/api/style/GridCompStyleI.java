@@ -17,13 +17,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.lifecompanion.model.impl.style;
+package org.lifecompanion.model.api.style;
 
-import org.lifecompanion.model.api.style.ShapeCompStyleI;
+/**
+ * Style for grids.
+ *
+ * @author Mathieu THEBAUD <math.thebaud@gmail.com>
+ */
+public interface GridCompStyleI extends AbstractShapeCompStyleI<GridCompStyleI> {
+    String NODE_SHAPE_STYLE_GRID = "GridShapeStyle";
 
-public class GridShapeCompStyle extends AbstractShapeCompStyle<ShapeCompStyleI> implements ShapeCompStyleI {
-    @Override
-    protected String getNodeName() {
-        return NODE_SHAPE_STYLE_GRID;
-    }
+    /**
+     * @return property that represent vertical space between case
+     */
+    IntegerStylePropertyI vGapProperty();
+
+    /**
+     * @return property that represent horizontal space between case
+     */
+    IntegerStylePropertyI hGapProperty();
 }
