@@ -80,7 +80,7 @@ public class GridPartKeyViewBase extends Pane implements ComponentViewI<GridPart
         textStyleUnbind = TextStyleBinder.bindTextStyleBindableComp(this.labelContent, this.model.getKeyTextStyle());
 
         //Position
-        this.labelContent.contentDisplayProperty().bind(this.model.textPositionProperty());
+        this.labelContent.textPositionProperty().bind(this.model.getKeyStyle().textPositionProperty().value());
         //Label content (uppercase, capitalize when needed)
         this.labelContent.textProperty().bind(Bindings.createStringBinding(() -> {
                     String text = this.model.textContentProperty().get();
@@ -154,7 +154,7 @@ public class GridPartKeyViewBase extends Pane implements ComponentViewI<GridPart
         this.labelContent.enableAutoFontSizingProperty().unbind();
         textStyleUnbind.unbind();
 
-        this.labelContent.contentDisplayProperty().unbind();
+        this.labelContent.textPositionProperty().unbind();
         this.labelContent.textProperty().unbind();
 
         //Bind the image

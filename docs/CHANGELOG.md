@@ -4,11 +4,12 @@
 
 ### Fonctionnalités
 
-- ...
+- Le paramètre de l'espace (horizontal et vertical) entre les cases a été deplacé dans le style des grilles
+- Le paramètre de la position du texte dans les cases a été déplacé dans le style des cases
 
 ### Corrections/ajustements
 
-- Le paramètre de l'espace (horizontal et vertical) entre les cases a été deplacé dans le style des grilles
+- Ticket #143 : l'avertissement de double lancement est maintenant affiché 10 secondes (à la place de 30)
 - Optmisation de la taille de certaines configurations (réduction jusqu'à 20%)
 - Ticket #149 : les nouveaux paramètres de la version 1.4 "Demander un code pour passer en édition" et "Désactiver la possibilité de quitter LifeCompanion" sont maintenant sauvegardés
 

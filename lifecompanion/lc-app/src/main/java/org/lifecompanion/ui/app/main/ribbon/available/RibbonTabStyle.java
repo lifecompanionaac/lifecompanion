@@ -54,7 +54,6 @@ public class RibbonTabStyle extends AbstractSelectionChangeRibbonTab {
         componentSelection.put(GridPartStackComponent.class, new StyleGridPartStack());
         componentSelection.put(GridPartTextEditorComponent.class, new StyleGridTextEditorPart());
         componentSelection.put(StackComponent.class, new StyleStackPart());
-        componentSelection.put(GridPartStackComponent.class, new StyleStackPart());
         componentSelection.put(TextEditorComponent.class, new StyleGridTextEditorPart());
         return componentSelection;
     }

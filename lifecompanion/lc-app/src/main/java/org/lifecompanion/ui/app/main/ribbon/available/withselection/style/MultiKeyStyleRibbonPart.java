@@ -19,11 +19,14 @@
 
 package org.lifecompanion.ui.app.main.ribbon.available.withselection.style;
 
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Spinner;
 import javafx.scene.paint.Color;
 import org.controlsfx.control.ToggleSwitch;
 import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
 import org.lifecompanion.model.api.style.KeyCompStyleI;
+import org.lifecompanion.model.api.style.TextPosition;
 import org.lifecompanion.model.impl.style.MultipleStylePropertyHelper;
 import org.lifecompanion.model.impl.style.PropertyChangeListener;
 import org.lifecompanion.controller.editmode.SelectionController;
@@ -45,6 +48,7 @@ public class MultiKeyStyleRibbonPart extends RibbonBasePart<Void> implements LCV
     private final PropertyChangeListener<KeyCompStyleI, Color> strokeColorProperty;
     private final PropertyChangeListener<KeyCompStyleI, Number> shapeRadiusProperty;
     private final PropertyChangeListener<KeyCompStyleI, Number> strokeSizeProperty;
+    private final PropertyChangeListener<KeyCompStyleI, TextPosition> textPositionProperty;
 
 
     public MultiKeyStyleRibbonPart() {
@@ -54,7 +58,8 @@ public class MultiKeyStyleRibbonPart extends RibbonBasePart<Void> implements LCV
                         strokeColorProperty = new PropertyChangeListener<>(KeyCompStyleI::strokeColorProperty),
                         shapeRadiusProperty = new PropertyChangeListener<>(KeyCompStyleI::shapeRadiusProperty),
                         strokeSizeProperty = new PropertyChangeListener<>(KeyCompStyleI::strokeSizeProperty),
-                        autoFontSizeProperty = new PropertyChangeListener<>(KeyCompStyleI::autoFontSizeProperty)
+                        autoFontSizeProperty = new PropertyChangeListener<>(KeyCompStyleI::autoFontSizeProperty),
+                        textPositionProperty = new PropertyChangeListener<>(KeyCompStyleI::textPositionProperty)
                 ));
         this.initAll();
     }
@@ -103,6 +108,13 @@ public class MultiKeyStyleRibbonPart extends RibbonBasePart<Void> implements LCV
                 MultiKeyHelper.createToggleSwitchSetValue(),
                 k -> k.getKeyStyle().autoFontSizeProperty(),
                 this.autoFontSizeProperty);
+        MultiKeyHelper.initStyleConfigActionListener(this.keyStyleView.getComboBoxTextPosition(),
+                this.keyStyleView.getModificationIndicatorTextPosition(),
+                MultiKeyHelper.createComboBoxActionEventSetter(),
+                c -> c.getSelectionModel().getSelectedItem(),
+                MultiKeyHelper.createComboBoxSetValue(),
+                k -> k.getKeyStyle().textPositionProperty(),
+                this.textPositionProperty);
     }
 
 

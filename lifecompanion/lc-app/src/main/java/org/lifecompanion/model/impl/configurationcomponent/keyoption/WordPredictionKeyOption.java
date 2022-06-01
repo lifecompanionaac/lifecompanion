@@ -27,6 +27,7 @@ import javafx.scene.paint.Color;
 import org.jdom2.Element;
 import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
+import org.lifecompanion.model.api.style.TextPosition;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.textprediction.WordPredictionI;
@@ -96,7 +97,9 @@ public class WordPredictionKeyOption extends AbstractKeyOption {
         this.writeWordPredictionAction.attachedToKeyOptionProperty().set(true);
         //Bind space
         this.writeWordPredictionAction.addSpaceProperty().bind(this.addSpace);
-        key.textPositionProperty().set(ContentDisplay.CENTER);
+        if (key.getKeyStyle().textPositionProperty().value().getValue() != TextPosition.CENTER) {
+            key.getKeyStyle().textPositionProperty().selected().setValue(TextPosition.CENTER);
+        }
         if (this.prediction.get() == null) {
             key.textContentProperty().set(Translation.getText("prediction.key.default.text"));
         }

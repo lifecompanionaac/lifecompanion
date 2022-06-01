@@ -19,6 +19,7 @@
 package org.lifecompanion.controller.editaction;
 
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.Property;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.ContentDisplay;
@@ -32,12 +33,9 @@ import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
 import org.lifecompanion.model.api.configurationcomponent.ImageUseComponentI;
 import org.lifecompanion.model.api.configurationcomponent.keyoption.KeyOptionI;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.SimplerKeyContentContainerI;
+import org.lifecompanion.model.api.style.*;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.imagedictionary.ImageElementI;
-import org.lifecompanion.model.api.style.GridStyleUserI;
-import org.lifecompanion.model.api.style.KeyStyleUserI;
-import org.lifecompanion.model.api.style.StyleChangeUndo;
-import org.lifecompanion.model.api.style.TextDisplayerStyleUserI;
 import org.lifecompanion.model.impl.editaction.BasePropertyChangeAction;
 import org.lifecompanion.util.model.PositionSize;
 import org.lifecompanion.model.impl.configurationcomponent.GridPartKeyComponent;
@@ -50,7 +48,9 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -95,56 +95,6 @@ public class KeyActions {
     }
 
     /**
-     * To change the key content display
-     */
-    public static class ChangeTextPositionAction extends BasePropertyChangeAction<ContentDisplay> {
-
-        public ChangeTextPositionAction(final GridPartKeyComponentI keyP, final ContentDisplay display) {
-            super(keyP.textPositionProperty(), display);
-        }
-
-        @Override
-        public String getNameID() {
-            return "action.key.text.position.change";
-        }
-
-    }
-
-    public static class ChangeMultiTextPositionAction implements UndoRedoActionI {
-        private List<ChangeTextPositionAction> actions;
-
-        public ChangeMultiTextPositionAction(final List<GridPartKeyComponentI> keys, final ContentDisplay display) {
-            actions = keys.stream().map(p -> new ChangeTextPositionAction(p, display)).collect(Collectors.toList());
-        }
-
-        @Override
-        public void doAction() throws LCException {
-            for (ChangeTextPositionAction action : actions) {
-                action.doAction();
-            }
-        }
-
-        @Override
-        public void undoAction() throws LCException {
-            for (ChangeTextPositionAction action : actions) {
-                action.undoAction();
-            }
-        }
-
-        @Override
-        public void redoAction() throws LCException {
-            for (ChangeTextPositionAction action : actions) {
-                action.redoAction();
-            }
-        }
-
-        @Override
-        public String getNameID() {
-            return "action.key.text.position.change";
-        }
-    }
-
-    /**
      * To change the image
      */
     public static class ChangeImageAction extends BasePropertyChangeAction<ImageElementI> {
@@ -153,7 +103,7 @@ public class KeyActions {
         private double previousRotate;
         private boolean previousEnableColorReplace;
         private boolean previousPreserveRatio;
-        private ContentDisplay previousContentDisplay;
+        private TextPosition previousContentDisplay;
 
         public ChangeImageAction(final ImageUseComponentI keyP, final ImageElementI wantedImageP) {
             super(keyP.imageVTwoProperty(), wantedImageP);
@@ -176,18 +126,26 @@ public class KeyActions {
             this.imageUseComponent.preserveRatioProperty().set(true);
 
             // Automatic text position : when it's a key and a image is set (and wasn't set before)
-            changeTextPositionIfPossible(SimplerKeyContentContainerI.class, imageUseComponent, SimplerKeyContentContainerI::textPositionProperty);
-            changeTextPositionIfPossible(GridPartKeyComponentI.class, imageUseComponent, GridPartKeyComponentI::textPositionProperty);
+            changeTextPositionIfPossible(GridPartKeyComponentI.class,
+                    k -> k.getKeyStyle().textPositionProperty().value().getValue(),
+                    (k, v) -> k.getKeyStyle().textPositionProperty().selected().setValue(v),
+                    k -> !k.getKeyStyle().textPositionProperty().selected().isBound()
+            );
+            changeTextPositionIfPossible(SimplerKeyContentContainerI.class,
+                    k -> k.textPositionProperty().getValue(),
+                    (k, v) -> k.textPositionProperty().setValue(v),
+                    k -> !k.textPositionProperty().isBound()
+            );
 
             super.doAction();
         }
 
-        private <T extends ImageUseComponentI> void changeTextPositionIfPossible(Class<T> type, Object element, Function<T, ObjectProperty<ContentDisplay>> textPositionPropGetter) {
-            if (type.isAssignableFrom(element.getClass())) {
-                final ObjectProperty<ContentDisplay> textPositionProp = textPositionPropGetter.apply((T) element);
-                if (wantedValue != null && ((ImageUseComponentI) element).imageVTwoProperty().get() == null && textPositionProp.get() == ContentDisplay.CENTER && !textPositionProp.isBound()) {
-                    previousContentDisplay = textPositionProp.get();
-                    textPositionProp.set(ContentDisplay.BOTTOM);
+        private <T extends ImageUseComponentI> void changeTextPositionIfPossible(Class<T> type, Function<T, TextPosition> textPositionGetter, BiConsumer<T, TextPosition> textPositionSetter, Predicate<T> propertyChecker) {
+            if (type.isAssignableFrom(imageUseComponent.getClass())) {
+                TextPosition currentPos = textPositionGetter.apply((T) imageUseComponent);
+                if (wantedValue != null && imageUseComponent.imageVTwoProperty().get() == null && currentPos == TextPosition.CENTER && propertyChecker.test((T) imageUseComponent)) {
+                    previousContentDisplay = currentPos;
+                    textPositionSetter.accept((T) imageUseComponent, TextPosition.BOTTOM);
                 }
             }
         }
@@ -208,8 +166,8 @@ public class KeyActions {
             // Restore text position on key
             if (this.imageUseComponent instanceof GridPartKeyComponentI && previousContentDisplay != null) {
                 GridPartKeyComponentI key = (GridPartKeyComponentI) this.imageUseComponent;
-                if (!key.textPositionProperty().isBound()) {
-                    key.textPositionProperty().set(previousContentDisplay);
+                if (!key.getKeyStyle().textPositionProperty().selected().isBound()) {
+                    key.getKeyStyle().textPositionProperty().selected().setValue(previousContentDisplay);
                 }
             }
         }

@@ -37,10 +37,10 @@ public interface GridPartKeyComponentI extends GridPartComponentI, ImageUseCompo
 	 */
 	StringProperty textContentProperty();
 
-	/**
-	 * @return a property that should indicate how the text is displayed in this key.
-	 */
-	ObjectProperty<ContentDisplay> textPositionProperty();
+//	/**
+//	 * @return a property that should indicate how the text is displayed in this key.
+//	 */
+//	ObjectProperty<ContentDisplay> textPositionProperty();
 
 	/**
 	 * @return the key option for this key.<br>

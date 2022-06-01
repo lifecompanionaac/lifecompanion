@@ -18,12 +18,10 @@
  */
 package org.lifecompanion.controller.style;
 
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
-import org.lifecompanion.model.api.style.GridCompStyleI;
-import org.lifecompanion.model.api.style.KeyCompStyleI;
-import org.lifecompanion.model.api.style.ShapeCompStyleI;
-import org.lifecompanion.model.api.style.TextCompStyleI;
+import org.lifecompanion.model.api.style.*;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.model.impl.style.*;
 import org.slf4j.Logger;
@@ -68,6 +66,7 @@ public enum StyleController {
                 this.strokeColorProperty().selected().setValue(LCGraphicStyle.LC_GRAY);
                 this.shapeRadiusProperty().selected().setValue(0);
                 this.autoFontSizeProperty().selected().setValue(false);
+                this.textPositionProperty().selected().setValue(TextPosition.CENTER);
 
             }
         };

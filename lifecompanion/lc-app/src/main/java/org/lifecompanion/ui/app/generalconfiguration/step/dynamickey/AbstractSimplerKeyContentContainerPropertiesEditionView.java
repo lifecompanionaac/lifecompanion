@@ -20,6 +20,7 @@
 package org.lifecompanion.ui.app.generalconfiguration.step.dynamickey;
 
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -34,9 +35,10 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.controlsfx.control.ToggleSwitch;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.SimplerKeyContentContainerI;
+import org.lifecompanion.model.api.style.TextPosition;
+import org.lifecompanion.ui.common.pane.specific.cell.TextPositionListCell;
 import org.lifecompanion.util.javafx.FXControlUtils;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStepViewI;
-import org.lifecompanion.ui.common.pane.generic.cell.ContentDisplayListCell;
 import org.lifecompanion.ui.common.control.generic.colorpicker.LCColorPicker;
 import org.lifecompanion.ui.common.control.specific.imagedictionary.ImageUseComponentSelectorControl;
 import org.lifecompanion.framework.commons.translation.Translation;
@@ -48,7 +50,7 @@ import java.util.function.Consumer;
 public abstract class AbstractSimplerKeyContentContainerPropertiesEditionView<T extends SimplerKeyContentContainerI> extends ScrollPane implements LCViewInitHelper {
     protected final ObjectProperty<T> selectedNode;
 
-    private ComboBox<ContentDisplay> comboBoxTextPosition;
+    private ComboBox<TextPosition> comboBoxTextPosition;
     protected TextField fieldText;
     private Label labelText;
     private LCColorPicker colorPickerBackgroundColor, colorPickerStrokeColor;
@@ -115,10 +117,12 @@ public abstract class AbstractSimplerKeyContentContainerPropertiesEditionView<T 
         Label labelVisualPart = FXControlUtils.createTitleLabel(Translation.getText("general.configuration.view.key.list.part.title.visual"));
         imageUseComponentSelectorControl = new ImageUseComponentSelectorControl();
 
-        comboBoxTextPosition = new ComboBox<>(FXCollections.observableArrayList(ContentDisplay.CENTER, ContentDisplay.BOTTOM, ContentDisplay.TOP, ContentDisplay.LEFT, ContentDisplay.RIGHT));
-        this.comboBoxTextPosition.setButtonCell(new ContentDisplayListCell(false));
-        this.comboBoxTextPosition.setCellFactory(lv -> new ContentDisplayListCell(true));
+        comboBoxTextPosition = new ComboBox<>(FXCollections.observableArrayList(TextPosition.values()));
+        this.comboBoxTextPosition.setButtonCell(new TextPositionListCell(false));
+        this.comboBoxTextPosition.setCellFactory(lv -> new TextPositionListCell(true));
         comboBoxTextPosition.setMaxWidth(Double.MAX_VALUE);
+
+
         colorPickerBackgroundColor = new LCColorPicker();
         colorPickerBackgroundColor.setMaxWidth(Double.MAX_VALUE);
         GridPane.setHgrow(colorPickerBackgroundColor, Priority.ALWAYS);
@@ -127,22 +131,29 @@ public abstract class AbstractSimplerKeyContentContainerPropertiesEditionView<T 
 
         gridPaneConfiguration.add(labelVisualPart, 0, rowIndex++, columnCount, 1);
 
-        GridPane gridColors = new GridPane();
-        gridColors.setVgap(GeneralConfigurationStepViewI.GRID_V_GAP);
-        gridColors.setHgap(GeneralConfigurationStepViewI.GRID_H_GAP);
-        gridColors.add(new Label(Translation.getText("general.configuration.view.key.list.field.background.color")), 0, 0, 2, 1);
-        gridColors.add(createDeleteColorSwitch(colorPickerBackgroundColor), 0, 1);
-        gridColors.add(colorPickerBackgroundColor, 1, 1);
-        gridColors.add(new Label(Translation.getText("general.configuration.view.key.list.field.stroke.color")), 0, 2, 2, 1);
-        gridColors.add(createDeleteColorSwitch(colorPickerStrokeColor), 0, 3);
-        gridColors.add(colorPickerStrokeColor, 1, 3);
+        GridPane gridStyle = new GridPane();
+        int rowStyle = 0;
+        gridStyle.setVgap(GeneralConfigurationStepViewI.GRID_V_GAP);
+        gridStyle.setHgap(GeneralConfigurationStepViewI.GRID_H_GAP);
 
-        VBox boxImage = new VBox(GeneralConfigurationStepViewI.GRID_V_GAP, imageUseComponentSelectorControl, new Label(Translation.getText("general.configuration.view.key.list.field.text.position")), comboBoxTextPosition);
+        gridStyle.add(new Label(Translation.getText("general.configuration.view.key.list.field.text.position")), 0, rowStyle++, 2, 1);
+        gridStyle.add(createNullValueToggleSwitch(comboBoxTextPosition, comboBoxTextPosition.getSelectionModel().selectedItemProperty(), () -> comboBoxTextPosition.getSelectionModel().clearSelection()), 0, rowStyle);
+        gridStyle.add(comboBoxTextPosition, 1, rowStyle++);
 
-        HBox.setHgrow(gridColors, Priority.SOMETIMES);
+        gridStyle.add(new Label(Translation.getText("general.configuration.view.key.list.field.background.color")), 0, rowStyle++, 2, 1);
+        gridStyle.add(createDeleteColorSwitch(colorPickerBackgroundColor), 0, rowStyle);
+        gridStyle.add(colorPickerBackgroundColor, 1, rowStyle++);
+        gridStyle.add(new Label(Translation.getText("general.configuration.view.key.list.field.stroke.color")), 0, rowStyle++, 2, 1);
+        gridStyle.add(createDeleteColorSwitch(colorPickerStrokeColor), 0, rowStyle);
+        gridStyle.add(colorPickerStrokeColor, 1, rowStyle++);
+
+
+        VBox boxImage = new VBox(GeneralConfigurationStepViewI.GRID_V_GAP, imageUseComponentSelectorControl);
+
+        HBox.setHgrow(gridStyle, Priority.SOMETIMES);
         HBox.setHgrow(boxImage, Priority.SOMETIMES);
-        HBox boxImagesAndColors = new HBox(GeneralConfigurationStepViewI.GRID_H_GAP, boxImage, new Separator(Orientation.VERTICAL), gridColors);
-        gridColors.maxWidthProperty().bind(boxImagesAndColors.widthProperty().divide(2.1));
+        HBox boxImagesAndColors = new HBox(GeneralConfigurationStepViewI.GRID_H_GAP, boxImage, new Separator(Orientation.VERTICAL), gridStyle);
+        gridStyle.maxWidthProperty().bind(boxImagesAndColors.widthProperty().divide(2.1));
         boxImage.maxWidthProperty().bind(boxImagesAndColors.widthProperty().divide(2.1));
 
         gridPaneConfiguration.add(boxImagesAndColors, 0, rowIndex, columnCount, 4);
@@ -194,14 +205,18 @@ public abstract class AbstractSimplerKeyContentContainerPropertiesEditionView<T 
     // HELPER
     //========================================================================
     private Node createDeleteColorSwitch(LCColorPicker colorPickerToBind) {
+        return createNullValueToggleSwitch(colorPickerToBind, colorPickerToBind.valueProperty(), () -> colorPickerToBind.setValue(null));
+    }
+
+    private Node createNullValueToggleSwitch(Node field, ReadOnlyObjectProperty<?> valueProp, Runnable nullSetterValue) {
         ToggleSwitch toggleSwitch = new ToggleSwitch();
-        colorPickerToBind.disableProperty().bind(toggleSwitch.selectedProperty().not());
+        field.disableProperty().bind(toggleSwitch.selectedProperty().not());
         toggleSwitch.selectedProperty().addListener((obs, ov, nv) -> {
             if (!nv) {
-                colorPickerToBind.setValue(null);
+                nullSetterValue.run();
             }
         });
-        colorPickerToBind.valueProperty().addListener((obs, ov, nv) -> {
+        valueProp.addListener((obs, ov, nv) -> {
             if (nv == null) {
                 toggleSwitch.setSelected(false);
             } else {

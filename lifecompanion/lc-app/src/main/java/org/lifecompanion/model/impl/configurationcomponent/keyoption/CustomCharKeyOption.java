@@ -23,6 +23,7 @@ import javafx.beans.property.StringProperty;
 import javafx.scene.control.ContentDisplay;
 import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
+import org.lifecompanion.model.api.style.TextPosition;
 import org.lifecompanion.model.impl.categorizedelement.useaction.available.WriteCharPredictionAction;
 
 /**
@@ -59,7 +60,9 @@ public class CustomCharKeyOption extends AbstractKeyOption {
             key.getActionManager().componentActions().get(UseActionEvent.ACTIVATION).add(this.writeCharPredictionAction);
         }
         this.writeCharPredictionAction.attachedToKeyOptionProperty().set(true);
-        key.textPositionProperty().set(ContentDisplay.CENTER);
+        if (key.getKeyStyle().textPositionProperty().value().getValue() != TextPosition.CENTER) {
+            key.getKeyStyle().textPositionProperty().selected().setValue(TextPosition.CENTER);
+        }
         this.prediction.bindBidirectional(key.textContentProperty());
     }
 

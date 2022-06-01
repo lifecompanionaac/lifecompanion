@@ -23,6 +23,7 @@ import javafx.beans.property.StringProperty;
 import javafx.scene.control.ContentDisplay;
 import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
+import org.lifecompanion.model.api.style.TextPosition;
 import org.lifecompanion.model.impl.categorizedelement.useaction.available.WriteCharPredictionAction;
 import org.lifecompanion.framework.commons.translation.Translation;
 
@@ -59,7 +60,9 @@ public class AutoCharKeyOption extends AbstractKeyOption {
             key.getActionManager().componentActions().get(UseActionEvent.ACTIVATION).add(this.writePredictionAction);
         }
         this.writePredictionAction.attachedToKeyOptionProperty().set(true);
-        key.textPositionProperty().set(ContentDisplay.CENTER);
+        if (key.getKeyStyle().textPositionProperty().value().getValue() != TextPosition.CENTER) {
+            key.getKeyStyle().textPositionProperty().selected().setValue(TextPosition.CENTER);
+        }
         key.textContentProperty().bind(this.prediction);
     }
 
