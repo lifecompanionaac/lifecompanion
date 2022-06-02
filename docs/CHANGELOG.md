@@ -12,6 +12,8 @@
 - Ticket #143 : l'avertissement de double lancement est maintenant affiché 10 secondes (à la place de 30)
 - Optmisation de la taille de certaines configurations (réduction jusqu'à 20%)
 - Ticket #149 : les nouveaux paramètres de la version 1.4 "Demander un code pour passer en édition" et "Désactiver la possibilité de quitter LifeCompanion" sont maintenant sauvegardés
+- Ticker #148 : quand le plein écran est désactivé, la fenêtre ne "déborde" plus
+- Ticket #150 : le clavier virtuel pour la recherche d'image s'affiche maintenant correctement sur tablette
 
 ## 1.4.0 - 30/04/2022
 
