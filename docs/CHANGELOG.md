@@ -1,6 +1,6 @@
 # LIFECOMPANION CHANGELOG
 
-## 1.4.1 - XX/XX/2022
+## 1.4.1 - 02/06/2022
 
 ### Fonctionnalités
 
