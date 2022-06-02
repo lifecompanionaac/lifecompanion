@@ -20,6 +20,7 @@
 package org.lifecompanion.util.javafx;
 
 import com.sun.glass.ui.Window;
+import javafx.collections.ObservableList;
 import javafx.geometry.Rectangle2D;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -120,5 +121,13 @@ public class StageUtils {
         stage.setTitle(LCConstant.NAME);
         stage.setForceIntegerRenderScale(LCGraphicStyle.FORCE_INTEGER_RENDER_SCALE);
         stage.getIcons().add(IconHelper.get(LCConstant.LC_ICON_PATH));
+    }
+
+    public static boolean isStageOutOfScreenBounds(Stage stage) {
+        Rectangle2D stageCenterPoint = new Rectangle2D(stage.getX() + stage.getWidth() / 2, stage.getY() + stage.getHeight() / 2, 1, 1);
+        ObservableList<Screen> screensContainingStage = Screen.getScreensForRectangle(stageCenterPoint);
+        Screen stageScreen = screensContainingStage.isEmpty() ? Screen.getPrimary() : screensContainingStage.get(0);
+        Rectangle2D stageScreenBounds = stageScreen.getBounds();
+        return stage.getWidth() > stageScreenBounds.getWidth() - 1 || stage.getHeight() > stageScreenBounds.getHeight() - 1;
     }
 }
