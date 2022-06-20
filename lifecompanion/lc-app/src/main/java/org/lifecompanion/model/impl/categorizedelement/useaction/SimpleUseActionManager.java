@@ -194,30 +194,33 @@ public class SimpleUseActionManager implements UseActionManagerI {
 
     @Override
     public Element serialize(final IOContextI contextP) {
-        //This action manager
-        Element xmlElement = new Element(SimpleUseActionManager.NODE_USE_ACTION_MANAGER);
-        ConfigurationComponentIOHelper.addTypeAlias(this, xmlElement, contextP);
-        //Create base for each action
-        Element actionsEventNode = new Element(SimpleUseActionManager.NODE_ACTIONS_EVENT);
-        xmlElement.addContent(actionsEventNode);
-        //Add each action of each event type
-        Set<UseActionEvent> keySet = this.actions.keySet();
-        for (UseActionEvent event : keySet) {
-            //Write all action for the event type (if there is actions)
-            if (!this.actions.get(event).isEmpty()) {
-                Element actionsNode = new Element(SimpleUseActionManager.NODE_ACTIONS);
-                XMLUtils.write(event, SimpleUseActionManager.ATB_EVENT_TYPE, actionsNode);
-                actionsEventNode.addContent(actionsNode);
-                ObservableList<BaseUseActionI<?>> eventActions = this.actions.get(event);
-                for (BaseUseActionI<?> baseUseActionI : eventActions) {
-                    //Don't save action related to key options
-                    if (!baseUseActionI.attachedToKeyOptionProperty().get()) {
-                        actionsNode.addContent(baseUseActionI.serialize(contextP));
+        if (this.actions.values().stream().flatMap(Collection::stream).anyMatch(a -> !a.attachedToKeyOptionProperty().get())) {
+            //This action manager
+            Element xmlElement = new Element(SimpleUseActionManager.NODE_USE_ACTION_MANAGER);
+            ConfigurationComponentIOHelper.addTypeAlias(this, xmlElement, contextP);
+            //Create base for each action
+            Element actionsEventNode = new Element(SimpleUseActionManager.NODE_ACTIONS_EVENT);
+            xmlElement.addContent(actionsEventNode);
+            //Add each action of each event type
+            Set<UseActionEvent> keySet = this.actions.keySet();
+            for (UseActionEvent event : keySet) {
+                //Write all action for the event type (if there is actions)
+                if (this.actions.get(event).stream().anyMatch(a -> !a.attachedToKeyOptionProperty().get())) {
+                    Element actionsNode = new Element(SimpleUseActionManager.NODE_ACTIONS);
+                    XMLUtils.write(event, SimpleUseActionManager.ATB_EVENT_TYPE, actionsNode);
+                    actionsEventNode.addContent(actionsNode);
+                    ObservableList<BaseUseActionI<?>> eventActions = this.actions.get(event);
+                    for (BaseUseActionI<?> baseUseActionI : eventActions) {
+                        //Don't save action related to key options
+                        if (!baseUseActionI.attachedToKeyOptionProperty().get()) {
+                            actionsNode.addContent(baseUseActionI.serialize(contextP));
+                        }
                     }
                 }
             }
-        }
-        return xmlElement;
+            return xmlElement;
+        } else
+            return null;
     }
 
     @Override

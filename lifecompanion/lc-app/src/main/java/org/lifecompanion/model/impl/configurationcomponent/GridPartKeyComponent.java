@@ -364,8 +364,9 @@ public class GridPartKeyComponent extends GridPartComponentBaseImpl implements G
         XMLObjectSerializer.serializeInto(GridPartKeyComponent.class, this, content);
         this.imageUseComponentPropertyWrapper.serialize(content, contextP);
         //Action
-        if (this.actionManager.containsActions()) {
-            content.addContent(this.actionManager.serialize(contextP));
+        Element actionManagerElement = this.actionManager.serialize(contextP);
+        if (actionManagerElement != null) {
+            content.addContent(actionManagerElement);
         }
         //Option (save only if it's not a base key)
         if (!(this.keyOption.get() instanceof BasicKeyOption)) {
