@@ -24,6 +24,7 @@ import javafx.event.EventHandler;
 import javafx.scene.image.Image;
 import javafx.util.Pair;
 import org.lifecompanion.controller.appinstallation.InstallationConfigurationController;
+import org.lifecompanion.controller.editmode.LCStateController;
 import org.lifecompanion.controller.io.JsonHelper;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
@@ -53,6 +54,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -212,9 +214,12 @@ public enum ImageDictionaries implements LCStateListener, ModeListenerI {
         long start = System.currentTimeMillis();
         List<Pair<ImageDictionaryI, List<List<ImageElementI>>>> result = new ArrayList<>();
         String searchFull = StringUtils.stripToEmpty(rawSearchString).toLowerCase();
-        int totalResultCount = 0;
+        AtomicInteger totalResultCount = new AtomicInteger(0);
         if (searchFull.length() >= 1) {
-            for (ImageDictionary imageDictionary : this.dictionaries) {
+            // TODO : convert to full stream implementation with map ?
+            this.dictionaries.stream().sorted((d1, d2) ->
+                    Boolean.compare(LCStateController.INSTANCE.getFavoriteImageDictionaries().contains(d2.getName()), LCStateController.INSTANCE.getFavoriteImageDictionaries().contains(d1.getName()))
+            ).forEach(imageDictionary -> {
                 List<ImageElementI> resultList = imageDictionary.getImages()
                         .parallelStream()
                         .map(e -> new Pair<>(e, getSimilarityScore(e.getKeywords(), searchFull)))
@@ -229,9 +234,9 @@ public enum ImageDictionaries implements LCStateListener, ModeListenerI {
                             .collect(Collectors.toList());
                     result.add(new Pair<>(imageDictionary, resultPages));
                     LOGGER.info("Found {} result in {} dictionaries, result is {} pages", resultList.size(), imageDictionary.getName(), resultPages.size());
-                    totalResultCount += resultList.size();
+                    totalResultCount.addAndGet(resultList.size());
                 }
-            }
+            });
         }
         LOGGER.info("Search executed in image dictionaries in {} ms - found {} elements (in {} dictionaries, for \"{}\")", System.currentTimeMillis() - start, totalResultCount, result.size(), rawSearchString);
         return result;
@@ -347,7 +352,7 @@ public enum ImageDictionaries implements LCStateListener, ModeListenerI {
                     if (AppModeController.INSTANCE.getEditModeContext().getConfiguration() == null && AppModeController.INSTANCE.getUseModeContext().getConfiguration() == null) {
                         imageLoaded
                                 .forEach(img ->
-                                      LOGGER.info("\t" + img.getName() + " = " + (img.getLoadingRequest()
+                                        LOGGER.info("\t" + img.getName() + " = " + (img.getLoadingRequest()
                                                 .entrySet()
                                                 .stream()
                                                 .filter(Map.Entry::getValue)

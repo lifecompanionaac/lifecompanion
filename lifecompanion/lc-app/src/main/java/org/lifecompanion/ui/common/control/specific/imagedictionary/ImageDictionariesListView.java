@@ -35,6 +35,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Pair;
 import org.controlsfx.glyphfont.FontAwesome;
+import org.controlsfx.glyphfont.Glyph;
+import org.lifecompanion.controller.editmode.LCStateController;
 import org.lifecompanion.model.api.imagedictionary.ImageDictionaryI;
 import org.lifecompanion.model.api.imagedictionary.ImageElementI;
 import org.lifecompanion.util.DesktopUtils;
@@ -48,6 +50,7 @@ import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.util.javafx.FXControlUtils;
 
 import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.IntSupplier;
 import java.util.stream.Collectors;
@@ -82,6 +85,7 @@ class ImageDictionariesListView extends VBox implements LCViewInitHelper {
                 Label labelDictionary = new Label(dictionary.getName());
                 labelDictionary.getStyleClass().add("image-dictionary-title");
                 labelDictionary.setTextAlignment(TextAlignment.LEFT);
+                labelDictionary.setAlignment(Pos.CENTER_LEFT);
                 labelDictionary.setMaxWidth(Double.MAX_VALUE);
                 if (StringUtils.isNotBlank(dictionary.getDescription()) && StringUtils.isNotBlank(dictionary.getAuthor())) {
                     Tooltip.install(labelDictionary, FXControlUtils.createTooltip(dictionary.getDescription() + "\n\n" + dictionary.getAuthor()));
@@ -93,12 +97,28 @@ class ImageDictionariesListView extends VBox implements LCViewInitHelper {
                 buttonCopyright.setOnAction(e -> DesktopUtils.openUrlInDefaultBrowser(dictionary.getUrl()));
                 buttonCopyright.getStyleClass().add("button-with-bottom-padding-only");
 
+                // Toggle dictionary "favorite" state
+                Glyph iconFavorite = GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.STAR).size(18).color(LCGraphicStyle.THIRD_DARK);
+                Glyph iconNotFavorite = GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.STAR_ALT).size(18).color(LCGraphicStyle.THIRD_DARK);
+                Button buttonFavorite = FXControlUtils.createGraphicButton(
+                        LCStateController.INSTANCE.getFavoriteImageDictionaries().contains(dictionary.getName()) ? iconFavorite : iconNotFavorite, dictionary.getUrl());
+                buttonFavorite.getStyleClass().add("button-with-bottom-padding-only");
+                buttonFavorite.setOnAction(e -> {
+                    if (LCStateController.INSTANCE.getFavoriteImageDictionaries().contains(dictionary.getName())) {
+                        LCStateController.INSTANCE.getFavoriteImageDictionaries().remove(dictionary.getName());
+                        buttonFavorite.setGraphic(iconNotFavorite);
+                    } else {
+                        LCStateController.INSTANCE.getFavoriteImageDictionaries().add(dictionary.getName());
+                        buttonFavorite.setGraphic(iconFavorite);
+                    }
+                });
+
                 // Box title
-                HBox boxTitle = new HBox(5.0, labelDictionary);
+                HBox boxTitle = new HBox(10.0, buttonFavorite, labelDictionary);
                 if (StringUtils.isNotBlank(dictionary.getUrl())) {
                     boxTitle.getChildren().add(buttonCopyright);
                 }
-                boxTitle.setAlignment(Pos.TOP_CENTER);
+                boxTitle.setAlignment(Pos.CENTER);
                 boxTitle.getStyleClass().add("image-dictionary-title-box");
                 HBox.setHgrow(labelDictionary, Priority.ALWAYS);
                 VBox.setMargin(boxTitle, new Insets(10, 0, 0, 0));

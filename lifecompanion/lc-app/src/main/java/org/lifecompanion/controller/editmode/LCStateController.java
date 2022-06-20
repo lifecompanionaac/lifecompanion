@@ -63,10 +63,14 @@ public enum LCStateController implements XMLSerializable<Void>, LCStateListener 
      */
     private final Map<FileChooserType, String> defaultDirectories;
 
-    //TODO : already displayed tips
+    /**
+     * Contains all dictionaries ID to put in first in search results
+     */
+    private final Set<String> favoriteImageDictionaries;
 
     LCStateController() {
         this.defaultDirectories = new HashMap<>();
+        favoriteImageDictionaries = new HashSet<>();
         this.initBinding();
     }
 
@@ -92,6 +96,10 @@ public enum LCStateController implements XMLSerializable<Void>, LCStateListener 
 
     public void setLastSelectedWebcamName(String lastSelectedWebcamName) {
         this.lastSelectedWebcamName = lastSelectedWebcamName;
+    }
+
+    public Set<String> getFavoriteImageDictionaries() {
+        return favoriteImageDictionaries;
     }
     //========================================================================
 
@@ -173,7 +181,7 @@ public enum LCStateController implements XMLSerializable<Void>, LCStateListener 
         }
     }
 
-    private static final String NODE_LC = "LifeCompanion", ATB_DIRECTORY_PATH = "directoryPath", NODE_DEFAULT_DIRECTORIES = "DefaultDirectories", NODE_DEFAULT_DIRECTORY = "DefaultDirectory", ATB_DIR_TYPE = "type", ATB_DIR_PATH = "path";
+    private static final String NODE_LC = "LifeCompanion", ATB_DIRECTORY_PATH = "directoryPath", NODE_DEFAULT_DIRECTORIES = "DefaultDirectories", NODE_DEFAULT_DIRECTORY = "DefaultDirectory", ATB_DIR_TYPE = "type", ATB_DIR_PATH = "path", NODE_IMAGE_DICTIONARIES = "FavoriteImageDictionaries", NODE_IMAGE_DICTIONARY = "FavoriteImageDictionary";
 
     @Override
     public Element serialize(final Void contextP) {
@@ -189,6 +197,16 @@ public enum LCStateController implements XMLSerializable<Void>, LCStateListener 
             XMLUtils.write(fileChooserType, ATB_DIR_TYPE, dirNode);
             XMLUtils.write(path, ATB_DIR_PATH, dirNode);
         });
+
+        // Image dictionaries
+        Element imageDictionaries = new Element(NODE_IMAGE_DICTIONARIES);
+        root.addContent(imageDictionaries);
+        for (String favoriteImageDictionary : this.favoriteImageDictionaries) {
+            Element imageDictionaryNode = new Element(NODE_IMAGE_DICTIONARY);
+            XMLUtils.write(favoriteImageDictionary, "id", imageDictionaryNode);
+            imageDictionaries.addContent(imageDictionaryNode);
+        }
+
         return root;
     }
 
@@ -200,6 +218,17 @@ public enum LCStateController implements XMLSerializable<Void>, LCStateListener 
             final List<Element> defaultDirNodes = defaultDirectoriesNode.getChildren();
             for (Element defaultDirNode : defaultDirNodes) {
                 this.defaultDirectories.put((FileChooserType) XMLUtils.readEnum(FileChooserType.class, ATB_DIR_TYPE, defaultDirNode), XMLUtils.readString(ATB_DIR_PATH, defaultDirNode));
+            }
+        }
+
+        final Element imageDictionaries = root.getChild(LCStateController.NODE_IMAGE_DICTIONARIES);
+        if (imageDictionaries != null) {
+            List<Element> imageDictionariesChildren = imageDictionaries.getChildren();
+            for (Element imageDictionaryChild : imageDictionariesChildren) {
+                String dicID = XMLUtils.readString("id", imageDictionaryChild);
+                if (dicID != null) {
+                    this.favoriteImageDictionaries.add(dicID);
+                }
             }
         }
     }

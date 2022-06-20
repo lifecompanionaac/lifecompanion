@@ -4,7 +4,7 @@
 
 ### Fonctionnalités
 
-- ...
+- Ajout d'une fonctionnalité pour mettre des bibliothèques d'image en "favoris" afin d'avoir leurs résultats en premier à chaque recherche
 
 ### Corrections/ajustements
 
