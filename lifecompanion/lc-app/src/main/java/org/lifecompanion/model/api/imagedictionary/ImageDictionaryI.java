@@ -53,9 +53,14 @@ public interface ImageDictionaryI {
     String getUrl();
 
     /**
-     * @return true if this dictionary is not a software standard dictionary : its content should be saved with configurations
+     * @return true if this dictionary is a user added dictionary : its images should be saved within configurations files
      */
     boolean isCustomDictionary();
+
+    /**
+     * @return true if this dictionary is an optional dictionary : its images should be saved within configurations files
+     */
+    boolean isOptionalDictionary();
     //========================================================================
 
     // CONTENT

@@ -25,7 +25,12 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.PixelFormat;
+import javafx.scene.image.PixelWriter;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.Clipboard;
+import javafx.scene.input.DataFormat;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
@@ -58,6 +63,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 
 public class ImageSelectorSearchView extends BorderPane implements LCViewInitHelper {
@@ -159,7 +165,7 @@ public class ImageSelectorSearchView extends BorderPane implements LCViewInitHel
             Clipboard systemClipboard = Clipboard.getSystemClipboard();
             if (systemClipboard.hasImage() && selectionCallback != null) {
                 try {
-                    File destinationFile = new File(InstallationConfigurationController.INSTANCE.getUserDirectory().getPath() + LCConstant.WEBCAM_CAPTURE_DIR_NAME + DATE_FORMAT_FILENAME.format(new Date()) + ".png");
+                    File destinationFile = new File(InstallationConfigurationController.INSTANCE.getUserDirectory().getPath() + LCConstant.CLIPBOARD_CAPTURE_DIR_NAME + DATE_FORMAT_FILENAME.format(new Date()) + ".png");
                     destinationFile.getParentFile().mkdirs();
                     ImageIO.write(SwingFXUtils.fromFXImage(systemClipboard.getImage(), null), "png", destinationFile);
                     selectionCallback.accept(ImageDictionaries.INSTANCE.getOrAddToUserImagesDictionary(destinationFile));
@@ -168,6 +174,38 @@ public class ImageSelectorSearchView extends BorderPane implements LCViewInitHel
                 }
             }
         });
+    }
+
+    // FIXME : find a correct image correction implementation
+    //  if clipboard contains "Object Descriptor" and image, it indicates that the image is from docs/Paint/etc.
+    //  current problem with this algo : transparency is converted to black...
+    private WritableImage getCorrectImage(Image image) {
+        int width = (int) image.getWidth();
+        int height = (int) image.getHeight();
+        WritableImage writableImage = new WritableImage((int) image.getWidth(), (int) image.getHeight());
+        PixelWriter pixelWriter = writableImage.getPixelWriter();
+        byte[] data = new byte[width * height * 3];
+        int i = 0;
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                int argb = image.getPixelReader().getArgb(x, y);
+                int a = (argb >> 24) & 0xFF;
+                int r = (argb >> 16) & 0xFF;
+                int g = (argb >> 8) & 0xFF;
+                int b = argb & 0xFF;
+//                System.out.println("Alpha : "+a);
+//                data[i++] = (byte) r;
+//                data[i++] = (byte) g;
+//                data[i++] = (byte) b;
+                if (a != 0) System.out.println(" a " + a);
+                pixelWriter.setArgb(x, y, 255 << 24 | r << 16 | g << 8 | b);
+            }
+        }
+//        WritableImage writableImage = new WritableImage((int) image.getWidth(), (int) image.getHeight());
+//        PixelWriter pixelWriter = writableImage.getPixelWriter();
+//        pixelWriter.setPixels(0, 0, (int) image.getWidth(), (int) image.getHeight(),
+//                PixelFormat.getByteRgbInstance(), data, 0, (int) image.getWidth() * 3);
+        return writableImage;
     }
 
     private void fireSearchFor(String search) {

@@ -205,7 +205,7 @@ public class ImageElement implements ImageElementI {
 
     @Override
     public boolean shouldSaveImage() {
-        return this.dictionary.isCustomDictionary();
+        return this.dictionary.isCustomDictionary() || this.dictionary.isOptionalDictionary();
     }
 
     @Override

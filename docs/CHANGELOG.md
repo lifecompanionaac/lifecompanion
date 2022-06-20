@@ -1,6 +1,6 @@
 # LIFECOMPANION CHANGELOG
 
-## 1.X.X - XX/XX/2022
+## 1.4.2 - XX/XX/2022
 
 ### Fonctionnalités
 
@@ -11,6 +11,7 @@
 - Ticket #163 : correction d'un problème avec la souris virtuelle
 - Ticket #162 : optimisation de la taille des configurations sur le disque
 - Ticket #159 : correction de quelques éléments graphiques
+- Ticket #140 : préparation pour l'ajout futur de bibliothèques d'images
 
 ## 1.4.1 - 02/06/2022
 

@@ -165,6 +165,7 @@ public class LCConstant {
     public static final String RESOURCES_DIR_NAME = File.separator + "resources" + File.separator;
     public static final String IMAGE_RESOURCES_DIR_NAME = RESOURCES_DIR_NAME + "images" + File.separator;
     public static final String WEBCAM_CAPTURE_DIR_NAME = RESOURCES_DIR_NAME + "webcam-capture" + File.separator;
+    public static final String CLIPBOARD_CAPTURE_DIR_NAME = RESOURCES_DIR_NAME + "clipboard-capture" + File.separator;
     public static final String IMPORTED_IMAGE_DIR_NAME = RESOURCES_DIR_NAME + "imported-images" + File.separator;
     public static final String DEFAULT_IMAGE_DICTIONARIES = ApplicationConstant.DIR_NAME_APPLICATION_DATA + IMAGE_RESOURCES_DIR_NAME;
     public static final String THUMBNAIL_DIR_NAME = "thumbnails";

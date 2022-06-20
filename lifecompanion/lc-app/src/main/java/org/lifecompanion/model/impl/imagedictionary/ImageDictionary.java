@@ -41,7 +41,8 @@ public class ImageDictionary implements ImageDictionaryI {
     private String imageExtension;
     private String url;
     private boolean customDictionary;
-    private ObservableList<ImageElementI> images;
+    private boolean optionalDictionary;
+    private final ObservableList<ImageElementI> images;
 
     private transient File imageDirectory;
 
@@ -67,6 +68,11 @@ public class ImageDictionary implements ImageDictionaryI {
     @Override
     public boolean isCustomDictionary() {
         return customDictionary;
+    }
+
+    @Override
+    public boolean isOptionalDictionary() {
+        return optionalDictionary;
     }
 
     @Override
