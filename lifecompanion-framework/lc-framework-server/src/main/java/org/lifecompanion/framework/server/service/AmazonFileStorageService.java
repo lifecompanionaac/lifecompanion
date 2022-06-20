@@ -75,6 +75,7 @@ public class AmazonFileStorageService implements FileStorageServiceI {
 
     @Override
     public String getFileIdFromPrefix(String prefix) {
+        LOGGER.info("Request prefix is : {}", prefix);
         ListObjectsRequest listObjects = ListObjectsRequest
                 .builder()
                 .bucket(bucket)
@@ -82,6 +83,7 @@ public class AmazonFileStorageService implements FileStorageServiceI {
                 .build();
         ListObjectsResponse response = s3.listObjects(listObjects);
         List<S3Object> objectsForPrefix = response.contents();
+        LOGGER.info("Found objects : {}", objectsForPrefix);
         if (CollectionUtils.isEmpty(objectsForPrefix)) return null;
         else
             return objectsForPrefix.get(0).key();

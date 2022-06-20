@@ -19,14 +19,20 @@
 
 package org.lifecompanion.framework.server.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
-import java.util.UUID;
 
 public enum ImageResourceAPIService {
     INSTANCE;
 
+    private final Logger LOGGER = LoggerFactory.getLogger(ImageResourceAPIService.class);
+
     public String getImageDownloadUrl(String imageId) throws IOException {
+        LOGGER.info("Request image id : {}", imageId);
         String fileIdFromPrefix = FileStorageService.INSTANCE.getFileIdFromPrefix("public/images/" + imageId);
+        LOGGER.info("Got file from prefix : {}", fileIdFromPrefix);
         if (fileIdFromPrefix != null) {
             return FileStorageService.INSTANCE.generateFileUrl(fileIdFromPrefix);
         }
