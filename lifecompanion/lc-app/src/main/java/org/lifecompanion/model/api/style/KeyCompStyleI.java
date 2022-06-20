@@ -19,6 +19,7 @@
 
 package org.lifecompanion.model.api.style;
 
+import javafx.scene.control.ContentDisplay;
 import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
 
 /**
@@ -33,4 +34,9 @@ public interface KeyCompStyleI extends AbstractShapeCompStyleI<KeyCompStyleI> {
      * @return a property to compute the font size with the key size and the text length.
      */
     StylePropertyI<Boolean> autoFontSizeProperty();
+
+    /**
+     * @return a property that should indicate how the text is displayed in this key.
+     */
+    StylePropertyI<TextPosition> textPositionProperty();
 }

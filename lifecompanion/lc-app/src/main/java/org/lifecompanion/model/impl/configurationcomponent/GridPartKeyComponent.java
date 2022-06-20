@@ -29,12 +29,14 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import org.jdom2.Element;
 import org.lifecompanion.controller.io.ConfigurationComponentIOHelper;
+import org.lifecompanion.framework.commons.fx.io.XMLUtils;
 import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
 import org.lifecompanion.model.api.configurationcomponent.TreeDisplayableComponentI;
 import org.lifecompanion.model.api.configurationcomponent.TreeDisplayableType;
 import org.lifecompanion.model.api.configurationcomponent.keyoption.KeyOptionI;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionManagerI;
+import org.lifecompanion.model.api.style.TextPosition;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.imagedictionary.ImageElementI;
 import org.lifecompanion.model.api.io.IOContextI;
@@ -71,12 +73,6 @@ public class GridPartKeyComponent extends GridPartComponentBaseImpl implements G
     private final ObjectProperty<KeyOptionI> keyOption;
 
     /**
-     * The text position
-     */
-    @XMLGenericProperty(ContentDisplay.class)
-    private final ObjectProperty<ContentDisplay> textPosition;
-
-    /**
      * Wanted image size for loading (binding on layout with configuration scale)
      */
     protected transient final DoubleProperty wantedImageWidth, wantedImageHeight;
@@ -94,7 +90,6 @@ public class GridPartKeyComponent extends GridPartComponentBaseImpl implements G
     public GridPartKeyComponent() {
         super();
         this.textContent = new SimpleStringProperty(this, "textContent");
-        this.textPosition = new SimpleObjectProperty<>(this, "textPosition", ContentDisplay.CENTER);
         this.actionManager = new SimpleUseActionManager(this, UseActionEvent.ACTIVATION, UseActionEvent.OVER);
         this.keyOption = new SimpleObjectProperty<>(this, "keyOption");
         this.wantedImageWidth = new SimpleDoubleProperty(this, "wantedImageWidth");
@@ -172,10 +167,10 @@ public class GridPartKeyComponent extends GridPartComponentBaseImpl implements G
     /**
      * {@inheritDoc}
      */
-    @Override
-    public ObjectProperty<ContentDisplay> textPositionProperty() {
-        return this.textPosition;
-    }
+    //    @Override
+    //    public ObjectProperty<ContentDisplay> textPositionProperty() {
+    //        return this.textPosition;
+    //    }
 
     /**
      * {@inheritDoc}
@@ -380,12 +375,20 @@ public class GridPartKeyComponent extends GridPartComponentBaseImpl implements G
         super.deserialize(nodeP, contextP);
         //Base properties
         XMLObjectSerializer.deserializeInto(GridPartKeyComponent.class, this, nodeP);
+
+        // Backward comp : get the text position from old param
+        Enum<TextPosition> textPosition = XMLUtils.readEnum(TextPosition.class, "textPosition", nodeP);
+        if (textPosition != null) {
+            this.getKeyStyle().textPositionProperty().selected().setValue((TextPosition) textPosition);
+        }
+
         //Image
         this.imageUseComponentPropertyWrapper.deserialize(nodeP, contextP);
         //Action
+        Element actionManagerNodeOld = nodeP.getChild(SimpleUseActionManager.NODE_USE_ACTION_MANAGER_OLD);
         Element actionManagerNode = nodeP.getChild(SimpleUseActionManager.NODE_USE_ACTION_MANAGER);
-        if (actionManagerNode != null) {
-            this.actionManager.deserialize(actionManagerNode, contextP);
+        if (actionManagerNode != null || actionManagerNodeOld != null) {
+            this.actionManager.deserialize(actionManagerNode != null ? actionManagerNode : actionManagerNodeOld, contextP);
         }
         //Option (if it doesn't exist : it's a base key)
         Element keyOptionNode = nodeP.getChild(KeyOptionI.NODE_KEY_OPTION);

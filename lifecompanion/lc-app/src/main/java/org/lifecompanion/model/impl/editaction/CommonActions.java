@@ -118,7 +118,11 @@ public class CommonActions {
         public void doAction() {
             FXThreadUtils.runOnFXThread(() -> {
                 final Stage stage = AppModeController.INSTANCE.getUseModeContext().stageProperty().get();
-                stage.setFullScreen(!stage.isFullScreen());
+                boolean fullScreen = !stage.isFullScreen();
+                stage.setFullScreen(fullScreen);
+                if (!fullScreen && StageUtils.isStageOutOfScreenBounds(stage)) {
+                    stage.setMaximized(true);
+                }
             });
         }
 

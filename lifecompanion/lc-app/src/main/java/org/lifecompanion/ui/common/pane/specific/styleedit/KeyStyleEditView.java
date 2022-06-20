@@ -19,9 +19,15 @@
 package org.lifecompanion.ui.common.pane.specific.styleedit;
 
 import javafx.beans.value.ChangeListener;
+import javafx.collections.FXCollections;
 import javafx.scene.Node;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import org.controlsfx.control.ToggleSwitch;
+import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.model.api.style.KeyCompStyleI;
+import org.lifecompanion.model.api.style.TextPosition;
+import org.lifecompanion.ui.common.pane.specific.cell.TextPositionListCell;
 import org.lifecompanion.util.binding.EditActionUtils;
 import org.lifecompanion.util.javafx.FXControlUtils;
 
@@ -30,6 +36,10 @@ public class KeyStyleEditView extends AbstractShapeStyleEditView<KeyCompStyleI> 
     private Node modificationIndicatorToggleAutoFont;
     private ChangeListener<Boolean> changeListenerAutoFontSize;
 
+    private ComboBox<TextPosition> comboBoxTextPosition;
+    private Node modificationIndicatorTextPosition;
+    private ChangeListener<TextPosition> changeListenerTextPosition;
+
     public KeyStyleEditView(boolean bindOnModel) {
         super(bindOnModel);
     }
@@ -37,9 +47,18 @@ public class KeyStyleEditView extends AbstractShapeStyleEditView<KeyCompStyleI> 
     @Override
     public void initUI() {
         super.initUI();
+
+        comboBoxTextPosition = new ComboBox<>(FXCollections.observableArrayList(TextPosition.values()));
+        this.comboBoxTextPosition.setButtonCell(new TextPositionListCell(false));
+        this.comboBoxTextPosition.setCellFactory(lv -> new TextPositionListCell(true));
+
+        this.fieldGrid.add(new Label(Translation.getText("pane.text.text.location")), 0, 4);
+        this.fieldGrid.add(comboBoxTextPosition, 1, 4);
+        this.fieldGrid.add(modificationIndicatorTextPosition = this.createModifiedIndicator(KeyCompStyleI::textPositionProperty, comboBoxTextPosition), 2, 4);
+
         this.toggleEnableAutoFontSizing = FXControlUtils.createToggleSwitch("key.style.enable.auto.font.size", "key.style.auto.font.size.explain");
-        this.fieldGrid.add(this.toggleEnableAutoFontSizing, 0, 4, 2, 1);
-        this.fieldGrid.add(modificationIndicatorToggleAutoFont = this.createModifiedIndicator(KeyCompStyleI::autoFontSizeProperty, toggleEnableAutoFontSizing), 2, 4);
+        this.fieldGrid.add(this.toggleEnableAutoFontSizing, 0, 5, 2, 1);
+        this.fieldGrid.add(modificationIndicatorToggleAutoFont = this.createModifiedIndicator(KeyCompStyleI::autoFontSizeProperty, toggleEnableAutoFontSizing), 2, 5);
     }
 
     @Override
@@ -48,6 +67,9 @@ public class KeyStyleEditView extends AbstractShapeStyleEditView<KeyCompStyleI> 
         if (bindOnModel) {
             this.changeListenerAutoFontSize = EditActionUtils.createSimpleBinding(this.toggleEnableAutoFontSizing.selectedProperty(), this.model,
                     m -> m.autoFontSizeProperty().value().getValue(), (m, v) -> this.createChangePropAction(m.autoFontSizeProperty(), v));
+            this.changeListenerTextPosition = EditActionUtils.createSelectionModelBinding(this.comboBoxTextPosition.getSelectionModel(),
+                    this.model, model -> model.textPositionProperty().value().getValue(),
+                    (model, fontFamily) -> this.createChangePropAction(model.textPositionProperty(), fontFamily));
         }
     }
 
@@ -58,6 +80,8 @@ public class KeyStyleEditView extends AbstractShapeStyleEditView<KeyCompStyleI> 
         if (bindOnModel) {
             this.toggleEnableAutoFontSizing.setSelected(model.autoFontSizeProperty().value().getValue());
             model.autoFontSizeProperty().value().addListener(this.changeListenerAutoFontSize);
+            this.comboBoxTextPosition.getSelectionModel().select(model.textPositionProperty().value().getValue());
+            model.textPositionProperty().value().addListener(this.changeListenerTextPosition);
         }
     }
 
@@ -66,6 +90,7 @@ public class KeyStyleEditView extends AbstractShapeStyleEditView<KeyCompStyleI> 
         super.unbind(model);
         if (bindOnModel) {
             model.autoFontSizeProperty().value().removeListener(this.changeListenerAutoFontSize);
+            model.textPositionProperty().value().removeListener(this.changeListenerTextPosition);
         }
     }
 
@@ -75,5 +100,13 @@ public class KeyStyleEditView extends AbstractShapeStyleEditView<KeyCompStyleI> 
 
     public Node getModificationIndicatorToggleAutoFont() {
         return modificationIndicatorToggleAutoFont;
+    }
+
+    public ComboBox<TextPosition> getComboBoxTextPosition() {
+        return comboBoxTextPosition;
+    }
+
+    public Node getModificationIndicatorTextPosition() {
+        return modificationIndicatorTextPosition;
     }
 }

@@ -28,6 +28,7 @@ import org.lifecompanion.model.api.configurationcomponent.ImageUseComponentI;
 import org.lifecompanion.model.api.configurationcomponent.TreeIdentifiableComponentI;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.io.XMLSerializable;
+import org.lifecompanion.model.api.style.TextPosition;
 
 /**
  * Represent a simpler component to use when key content should be dynamically updated and UI should be simpler to add it. <br>
@@ -46,7 +47,7 @@ public interface SimplerKeyContentContainerI extends ImageUseComponentI, XMLSeri
      */
     StringProperty textProperty();
 
-    ObjectProperty<ContentDisplay> textPositionProperty();
+    ObjectProperty<TextPosition> textPositionProperty();
 
     ObjectProperty<Color> backgroundColorProperty();
 

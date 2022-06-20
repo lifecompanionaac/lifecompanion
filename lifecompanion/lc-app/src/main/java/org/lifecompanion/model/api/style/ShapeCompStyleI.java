@@ -25,6 +25,5 @@ package org.lifecompanion.model.api.style;
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public interface ShapeCompStyleI extends AbstractShapeCompStyleI<ShapeCompStyleI> {
-    String NODE_SHAPE_STYLE_GRID = "GridShapeStyle";
     String NODE_SHAPE_STYLE_TEXT = "TextDisplayerShapeStyle";
 }

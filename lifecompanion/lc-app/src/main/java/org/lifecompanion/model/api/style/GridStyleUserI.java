@@ -28,5 +28,5 @@ public interface GridStyleUserI {
     /**
      * @return the shape style configuration for this component.
      */
-    ShapeCompStyleI getGridShapeStyle();
+    GridCompStyleI getGridShapeStyle();
 }

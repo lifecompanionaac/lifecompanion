@@ -26,13 +26,10 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
+import org.lifecompanion.ui.common.pane.specific.styleedit.*;
 import org.lifecompanion.util.javafx.FXControlUtils;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStep;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStepViewI;
-import org.lifecompanion.ui.common.pane.specific.styleedit.AbstractStyleEditView;
-import org.lifecompanion.ui.common.pane.specific.styleedit.KeyStyleEditView;
-import org.lifecompanion.ui.common.pane.specific.styleedit.ShapeStyleEditView;
-import org.lifecompanion.ui.common.pane.specific.styleedit.TextStyleEditView;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.utils.Pair;
@@ -91,7 +88,7 @@ public class ConfigurationStyleConfigurationStepView extends BorderPane implemen
         addStyleEditView(boxChildren, "style.ribbon.part.key.text.style.plural", new TextStyleEditView(true), LCConfigurationI::getKeyTextStyle);
 
         // Grid
-        addStyleEditView(boxChildren, "style.ribbon.part.shape.style.plural", new ShapeStyleEditView(), LCConfigurationI::getGridShapeStyle);
+        addStyleEditView(boxChildren, "style.ribbon.part.shape.style.plural", new GridStyleEditView(), LCConfigurationI::getGridShapeStyle);
 
         // Text displayer
         addStyleEditView(boxChildren, "style.ribbon.part.textdisplayer.text.style.plural", new TextStyleEditView(true), LCConfigurationI::getTextDisplayerTextStyle);

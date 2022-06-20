@@ -20,11 +20,7 @@ package org.lifecompanion.ui.app.main.ribbon.available.withselection;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
-import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.ComboBoxBase;
-import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -40,15 +36,9 @@ import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
 import org.lifecompanion.model.api.configurationcomponent.keyoption.KeyOptionI;
 import org.lifecompanion.model.impl.configurationcomponent.GridPartKeyComponent;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.dynamickey.KeyListNodeKeyOption;
-import org.lifecompanion.ui.app.main.ribbon.available.withselection.style.MultiKeyHelper;
 import org.lifecompanion.ui.common.control.generic.LimitedTextArea;
-import org.lifecompanion.ui.common.pane.generic.cell.ContentDisplayListCell;
 import org.lifecompanion.ui.common.util.UndoRedoTextInputWrapper;
 import org.lifecompanion.ui.configurationcomponent.editmode.categorizedelement.useevent.available.RibbonBasePart;
-import org.lifecompanion.util.model.GridPartKeyCollectionPropertyHolder;
-import org.lifecompanion.util.model.GridPartKeyPropertyChangeListener;
-
-import java.util.Arrays;
 
 /**
  * Part to modify the text in the current key.
@@ -67,19 +57,9 @@ public class KeyTextRibbonPart extends RibbonBasePart<GridPartKeyComponent> impl
      */
     private UndoRedoTextInputWrapper fieldKeyTextWrapper;
 
-    /**
-     * Text position selection
-     */
-    private ComboBox<ContentDisplay> comboBoxTextPosition;
-
-    private final GridPartKeyPropertyChangeListener<GridPartKeyComponentI, ContentDisplay, ContentDisplay> textPositionProperty;
-    private final GridPartKeyCollectionPropertyHolder selectedKeyProperties;
     private final BooleanBinding multiKeySelected;
 
     public KeyTextRibbonPart() {
-        selectedKeyProperties = new GridPartKeyCollectionPropertyHolder(SelectionController.INSTANCE.getSelectedKeys(), Arrays.asList(
-                textPositionProperty = new GridPartKeyPropertyChangeListener<>(GridPartKeyComponentI::textPositionProperty)
-        ));
         multiKeySelected = SelectionController.INSTANCE.getListPropertySelectedKeys().sizeProperty().greaterThan(1);
         this.initAll();
     }
@@ -98,14 +78,9 @@ public class KeyTextRibbonPart extends RibbonBasePart<GridPartKeyComponent> impl
         this.fieldKeyText.setPrefColumnCount(14);
         this.fieldKeyTextWrapper = new UndoRedoTextInputWrapper(this.fieldKeyText, ConfigActionController.INSTANCE.undoRedoEnabled());
 
-        comboBoxTextPosition = new ComboBox<>(FXCollections.observableArrayList(ContentDisplay.CENTER, ContentDisplay.BOTTOM, ContentDisplay.TOP, ContentDisplay.LEFT, ContentDisplay.RIGHT));
-        this.comboBoxTextPosition.setButtonCell(new ContentDisplayListCell(true));
-        this.comboBoxTextPosition.setCellFactory(lv -> new ContentDisplayListCell(true));
-        this.comboBoxTextPosition.prefWidthProperty().bind(fieldKeyText.widthProperty());
-
         //Total
         rows.setSpacing(5.0);
-        rows.getChildren().addAll(labelText, this.fieldKeyText, new Label(Translation.getText("pane.text.text.location")), this.comboBoxTextPosition);
+        rows.getChildren().addAll(labelText, this.fieldKeyText);
         this.setContent(rows);
     }
 
@@ -130,14 +105,6 @@ public class KeyTextRibbonPart extends RibbonBasePart<GridPartKeyComponent> impl
                 ef.consume();
             }
         });
-
-        // Text position (multiple key)
-        MultiKeyHelper.initMultiKeyConfigActionListener(this.comboBoxTextPosition,
-                ComboBoxBase::setOnAction,
-                ComboBoxBase::getValue,
-                ComboBoxBase::setValue,
-                KeyActions.ChangeMultiTextPositionAction::new,
-                this.textPositionProperty);
     }
 
     @Override

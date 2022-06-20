@@ -102,6 +102,16 @@ public class XMLUtils {
 		}
 	}
 
+	public static double readDouble(final String name, final Element node) {
+		try {
+			String value = node.getAttributeValue(name);
+			return Double.parseDouble(value);
+		} catch (Exception e) {
+			XMLUtils.LOGGER.warn("The Double with the name \"" + name + "\" can't be read from " + node, e);
+			return 0.0;
+		}
+	}
+
 	public static boolean readBool(final String name, final Element node) {
 		try {
 			String value = node.getAttributeValue(name);

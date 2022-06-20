@@ -34,6 +34,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import org.lifecompanion.model.api.style.TextCompStyleI;
+import org.lifecompanion.model.api.style.TextPosition;
 import org.lifecompanion.model.impl.style.TextStyleBinder;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.util.javafx.FXUtils;
@@ -55,7 +56,7 @@ public class LCLabel extends BorderPane implements TextStyleBinder.TextStyleBind
     private StackPane stackCenter;
     private Label labelText;
     private ObjectProperty<Region> graphic;
-    private ObjectProperty<ContentDisplay> textPosition;
+    private ObjectProperty<TextPosition> textPosition;
     private ObjectProperty<TextCompStyleI> usedTextCompStyle;
     private ObjectProperty<Font> font;
     private BooleanProperty enableAutoFontSizing;
@@ -68,7 +69,7 @@ public class LCLabel extends BorderPane implements TextStyleBinder.TextStyleBind
         this.usedTextCompStyle = new SimpleObjectProperty<>();
         this.enableAutoFontSizing = new SimpleBooleanProperty(false);
         this.font = new SimpleObjectProperty<>(Font.getDefault());
-        this.textPosition = new SimpleObjectProperty<>(ContentDisplay.CENTER);
+        this.textPosition = new SimpleObjectProperty<>(TextPosition.CENTER);
         this.initGraphics();
     }
 
@@ -157,7 +158,7 @@ public class LCLabel extends BorderPane implements TextStyleBinder.TextStyleBind
             this.labelText.toFront();
         });
         //Change the content location
-        this.textPosition.addListener((ChangeListener<ContentDisplay>) (observableP, oldValueP, newValueP) -> {
+        this.textPosition.addListener((observableP, oldValueP, newValueP) -> {
             //Remove previous
             switch (oldValueP) {
                 case TOP:
@@ -267,7 +268,7 @@ public class LCLabel extends BorderPane implements TextStyleBinder.TextStyleBind
 
     // Class part : "Base label properties"
     //========================================================================
-    public ObjectProperty<ContentDisplay> contentDisplayProperty() {
+    public ObjectProperty<TextPosition> textPositionProperty() {
         return this.textPosition;
     }
 

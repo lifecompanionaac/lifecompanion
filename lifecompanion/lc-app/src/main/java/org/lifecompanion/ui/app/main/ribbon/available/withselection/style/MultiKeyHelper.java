@@ -148,6 +148,15 @@ public class MultiKeyHelper {
         };
     }
 
+    public static <T> BiConsumer<ComboBox<T>, EventHandler<ActionEvent>> createComboBoxActionEventSetter() {
+        return new BiConsumer<>() {
+            @Override
+            public void accept(ComboBox<T> comboBox, EventHandler<ActionEvent> actionEventEventHandler) {
+                comboBox.setOnAction(actionEventEventHandler);
+            }
+        };
+    }
+
     public static BiConsumer<Spinner<Integer>, Number> createSpinnerSetValue() {
         return (spinner, value) -> spinner.getValueFactory().setValue(LangUtils.nullToZeroInt(value));
     }
@@ -158,6 +167,10 @@ public class MultiKeyHelper {
 
     public static BiConsumer<CheckBox, Boolean> createCheckboxSetValue() {
         return (checkBox, value) -> checkBox.setSelected(LangUtils.nullToFalse(value));
+    }
+
+    public static <T> BiConsumer<ComboBox<T>, T> createComboBoxSetValue() {
+        return (comboBox, value) -> comboBox.getSelectionModel().select(value);
     }
 
     public static Function<ToggleGroup, TextAlignment> createToggleButtonGroupValueGetter(Map<TextAlignment, ToggleButton> textAlignButtons) {

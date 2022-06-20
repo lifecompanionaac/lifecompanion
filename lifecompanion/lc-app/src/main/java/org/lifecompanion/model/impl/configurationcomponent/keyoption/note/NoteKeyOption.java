@@ -25,6 +25,7 @@ import javafx.scene.paint.Color;
 import org.jdom2.Element;
 import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
+import org.lifecompanion.model.api.style.TextPosition;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.AbstractKeyOption;
@@ -74,7 +75,9 @@ public class NoteKeyOption extends AbstractKeyOption {
         this.saveLoadNoteAction.wantedActivatedColorProperty().bind(wantedActivatedColor);
         this.saveLoadNoteAction.wantedStrokeSizeProperty().bind(wantedStrokeSize);
         key.imageVTwoProperty().bind(this.saveLoadNoteAction.currentImageProperty());
-        key.textPositionProperty().set(ContentDisplay.BOTTOM);
+        if (key.getKeyStyle().textPositionProperty().value().getValue() != TextPosition.BOTTOM) {
+            key.getKeyStyle().textPositionProperty().selected().setValue(TextPosition.BOTTOM);
+        }
         key.textContentProperty().bind(Bindings.createStringBinding(
                 () -> displayMode.get() == NoteKeyDisplayMode.CONTENT_TEXT ? saveLoadNoteAction.savedTextProperty().get() : this.keyCustomText.get(),
                 displayMode, keyCustomText, this.saveLoadNoteAction.savedTextProperty()));

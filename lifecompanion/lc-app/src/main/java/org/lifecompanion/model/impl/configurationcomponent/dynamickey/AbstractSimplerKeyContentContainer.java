@@ -30,6 +30,7 @@ import org.lifecompanion.controller.io.ConfigurationComponentIOHelper;
 import org.lifecompanion.model.api.configurationcomponent.ImageUseComponentI;
 import org.lifecompanion.model.api.configurationcomponent.TreeIdentifiableComponentI;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.SimplerKeyContentContainerI;
+import org.lifecompanion.model.api.style.TextPosition;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.imagedictionary.ImageElementI;
 import org.lifecompanion.model.api.io.IOContextI;
@@ -63,8 +64,8 @@ public abstract class AbstractSimplerKeyContentContainer implements SimplerKeyCo
 
     private final ImageUseComponentPropertyWrapper imageUseComponentPropertyWrapper;
 
-    @XMLGenericProperty(ContentDisplay.class)
-    private final ObjectProperty<ContentDisplay> textPosition;
+    @XMLGenericProperty(TextPosition.class)
+    private final ObjectProperty<TextPosition> textPosition;
 
     protected AbstractSimplerKeyContentContainer() {
         this.generateID();
@@ -75,7 +76,7 @@ public abstract class AbstractSimplerKeyContentContainer implements SimplerKeyCo
         wantedImageHeight = new SimpleDoubleProperty(0.0);
         imageUseComponentDisplayed = new SimpleBooleanProperty(false);
         imageUseComponentPropertyWrapper = new ImageUseComponentPropertyWrapper(this);
-        textPosition = new SimpleObjectProperty<>(ContentDisplay.CENTER);
+        textPosition = new SimpleObjectProperty<>();
     }
 
     // PROPS
@@ -96,7 +97,7 @@ public abstract class AbstractSimplerKeyContentContainer implements SimplerKeyCo
     }
 
     @Override
-    public ObjectProperty<ContentDisplay> textPositionProperty() {
+    public ObjectProperty<TextPosition> textPositionProperty() {
         return textPosition;
     }
 

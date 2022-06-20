@@ -22,6 +22,7 @@ package org.lifecompanion.ui.common.control.specific.imagedictionary;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.stage.StageStyle;
+import org.lifecompanion.controller.systemvk.SystemVirtualKeyboardController;
 import org.lifecompanion.model.api.imagedictionary.ImageElementI;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.imagedictionary.ImageDictionaries;
@@ -58,6 +59,8 @@ public class ImageSelectorDialog extends Dialog<ImageElementI> implements LCView
         this.getDialogPane().setContent(imageSelectorSearchView);
         this.getDialogPane().getStylesheets().addAll(LCConstant.CSS_STYLE_PATH);
         this.setResultConverter(dialogButton -> null);
+
+        SystemVirtualKeyboardController.INSTANCE.registerSceneFromDialog(this);
     }
 
     @Override

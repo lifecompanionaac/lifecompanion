@@ -18,7 +18,9 @@
  */
 package org.lifecompanion.model.impl.style;
 
+import javafx.scene.control.ContentDisplay;
 import org.jdom2.Element;
+import org.lifecompanion.model.api.style.TextPosition;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.style.KeyCompStyleI;
@@ -35,8 +37,13 @@ public class KeyCompStyle extends AbstractShapeCompStyle<KeyCompStyleI> implemen
     @XMLIgnoreNullValue
     private final StylePropertyI<Boolean> autoFontSize;
 
+    @XMLCustomProperty(value = TextPosition.class, converter = StylePropertyConverter.class)
+    @XMLIgnoreNullValue
+    private final StylePropertyI<TextPosition> textPosition;
+
     public KeyCompStyle() {
         this.autoFontSize = new StyleProperty<>();
+        this.textPosition = new StyleProperty<>();
     }
 
     @Override
@@ -45,15 +52,22 @@ public class KeyCompStyle extends AbstractShapeCompStyle<KeyCompStyleI> implemen
     }
 
     @Override
+    public StylePropertyI<TextPosition> textPositionProperty() {
+        return textPosition;
+    }
+
+    @Override
     protected void bindStyle(final KeyCompStyleI style) {
         super.bindStyle(style);
         this.bindP(KeyCompStyleI::autoFontSizeProperty, style);
+        this.bindP(KeyCompStyleI::textPositionProperty, style);
     }
 
     @Override
     protected void unbindStyle() {
         super.unbindStyle();
         this.unbindP(KeyCompStyleI::autoFontSizeProperty, null);
+        this.unbindP(KeyCompStyleI::textPositionProperty, null);
     }
 
     @SuppressWarnings("unchecked")
@@ -62,6 +76,7 @@ public class KeyCompStyle extends AbstractShapeCompStyle<KeyCompStyleI> implemen
         StyleChangeUndoImpl<KeyCompStyleI> undo = (AbstractStyle.StyleChangeUndoImpl<KeyCompStyleI>) super.copyChanges(
                 other, copyIfNull);
         this.copyChange(undo, KeyCompStyleI::autoFontSizeProperty, other, copyIfNull);
+        this.copyChange(undo, KeyCompStyleI::textPositionProperty, other, copyIfNull);
         return undo;
     }
 

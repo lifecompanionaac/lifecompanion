@@ -1,6 +1,6 @@
 # LIFECOMPANION CHANGELOG
 
-## 1.4.1 - XX/XX/2022
+## 1.X.X - XX/XX/2022
 
 ### Fonctionnalités
 
@@ -10,6 +10,21 @@
 
 - Ticket #163 : correction d'un problème avec la souris virtuelle
 - Ticket #162 : optimisation de la taille des configurations sur le disque
+
+## 1.4.1 - 02/06/2022
+
+### Fonctionnalités
+
+- Le paramètre de l'espace (horizontal et vertical) entre les cases a été deplacé dans le style des grilles
+- Le paramètre de la position du texte dans les cases a été déplacé dans le style des cases
+
+### Corrections/ajustements
+
+- Ticket #143 : l'avertissement de double lancement est maintenant affiché 10 secondes (à la place de 30)
+- Optmisation de la taille de certaines configurations (réduction jusqu'à 20%)
+- Ticket #149 : les nouveaux paramètres de la version 1.4 "Demander un code pour passer en édition" et "Désactiver la possibilité de quitter LifeCompanion" sont maintenant sauvegardés
+- Ticker #148 : quand le plein écran est désactivé, la fenêtre ne "déborde" plus
+- Ticket #150 : le clavier virtuel pour la recherche d'image s'affiche maintenant correctement sur tablette
 
 ## 1.4.0 - 30/04/2022
 

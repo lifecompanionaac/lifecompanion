@@ -21,6 +21,7 @@ package org.lifecompanion.model.impl.configurationcomponent;
 import javafx.beans.property.*;
 import javafx.collections.ObservableList;
 import org.jdom2.Element;
+import org.lifecompanion.framework.commons.fx.io.XMLUtils;
 import org.lifecompanion.model.api.configurationcomponent.ComponentGridI;
 import org.lifecompanion.model.api.configurationcomponent.*;
 import org.lifecompanion.model.api.selectionmode.SelectionModeParameterI;
@@ -44,19 +45,14 @@ public class GridPartGridComponent extends GridPartComponentBaseImpl implements 
     private final ComponentGridI grid;
 
     /**
-     * Vertical and horizontal gap properties
-     */
-    private DoubleProperty vGap, hGap;
-
-    /**
      * Number of row count and column count
      */
-    private transient IntegerProperty rowCount, columnCount;
+    private final transient IntegerProperty rowCount, columnCount;
 
     /**
      * The size of each individual case in this grid
      */
-    private transient DoubleProperty caseWidth, caseHeight;
+    private final transient DoubleProperty caseWidth, caseHeight;
 
     /**
      * The selection mode parameters.
@@ -76,36 +72,23 @@ public class GridPartGridComponent extends GridPartComponentBaseImpl implements 
         this.canUseParentSelectionModeConfiguration = new SimpleBooleanProperty(this, "parentSelectionModeEnabled", true);
         this.selectionModeParameter = new SelectionModeParameter();
         this.grid = new ComponentGrid(this);
-        this.initProperties();
+        this.rowCount = new SimpleIntegerProperty(0);
+        this.columnCount = new SimpleIntegerProperty(0);
+        this.caseWidth = new SimpleDoubleProperty();
+        this.caseHeight = new SimpleDoubleProperty();
         this.initBinding();
-    }
-
-    // Class part : "Properties"
-    //========================================================================
-
-    /**
-     * Create all this component properties
-     */
-    private void initProperties() {
-        this.vGap = new SimpleDoubleProperty(this, "vGap", 8);
-        this.hGap = new SimpleDoubleProperty(this, "hGap", 8);
-        this.rowCount = new SimpleIntegerProperty(this, "rowCount", 0);
-        this.columnCount = new SimpleIntegerProperty(this, "columnCount", 0);
-        this.caseWidth = new SimpleDoubleProperty(this, "caseWidth");
-        this.caseHeight = new SimpleDoubleProperty(this, "caseHeight");
     }
 
     /**
      * Init all the properties that must be binded
      */
     private void initBinding() {
-        this.caseWidth.bind(this.layoutWidthProperty().subtract(this.columnCount.add(1).multiply(this.hGap)).divide(this.columnCount));
-        this.caseHeight.bind(this.layoutHeightProperty().subtract(this.rowCount.add(1).multiply(this.vGap)).divide(this.rowCount));
+        this.caseWidth.bind(this.layoutWidthProperty().subtract(this.columnCount.add(1).multiply(this.getGridShapeStyle().hGapProperty().valueAsInt())).divide(this.columnCount));
+        this.caseHeight.bind(this.layoutHeightProperty().subtract(this.rowCount.add(1).multiply(this.getGridShapeStyle().vGapProperty().valueAsInt())).divide(this.rowCount));
         this.rowCount.bind(this.grid.rowProperty());
         this.columnCount.bind(this.grid.columnProperty());
     }
 
-    //========================================================================
 
     // Class part : "Grid properties"
     //========================================================================
@@ -116,22 +99,6 @@ public class GridPartGridComponent extends GridPartComponentBaseImpl implements 
     @Override
     public boolean isLeaf() {
         return false;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public DoubleProperty vGapProperty() {
-        return this.vGap;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public DoubleProperty hGapProperty() {
-        return this.hGap;
     }
 
     /**
@@ -279,6 +246,14 @@ public class GridPartGridComponent extends GridPartComponentBaseImpl implements 
         //Grid
         Element gridElement = nodeP.getChild(ComponentGrid.NODE_GRID);
         this.grid.deserialize(gridElement, contextP);
+
+        // Backward compatibility : get gap if filled (should be explicitly converted to int)
+        if (nodeP.getAttribute("hGap") != null) {
+            this.getGridShapeStyle().hGapProperty().selected().setValue((int) XMLUtils.readDouble("hGap", nodeP));
+        }
+        if (nodeP.getAttribute("vGap") != null) {
+            this.getGridShapeStyle().vGapProperty().selected().setValue((int) XMLUtils.readDouble("vGap", nodeP));
+        }
     }
 
     //========================================================================

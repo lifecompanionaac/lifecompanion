@@ -20,19 +20,19 @@ package org.lifecompanion.model.impl.configurationcomponent;
 
 import javafx.beans.property.*;
 import org.jdom2.Element;
+import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.model.api.configurationcomponent.*;
-import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.io.IOContextI;
+import org.lifecompanion.model.api.style.GridCompStyleI;
 import org.lifecompanion.model.api.style.GridStyleUserI;
 import org.lifecompanion.model.api.style.KeyCompStyleI;
-import org.lifecompanion.model.api.style.ShapeCompStyleI;
 import org.lifecompanion.model.api.style.TextCompStyleI;
 import org.lifecompanion.model.api.ui.configurationcomponent.ViewProviderI;
-import org.lifecompanion.model.impl.style.GridShapeCompStyle;
+import org.lifecompanion.model.impl.exception.LCException;
+import org.lifecompanion.model.impl.style.GridCompStyle;
 import org.lifecompanion.model.impl.style.KeyCompStyle;
 import org.lifecompanion.model.impl.style.KeyTextCompStyle;
 import org.lifecompanion.model.impl.style.StyleSerialializer;
-import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.util.binding.BindingUtils;
 
 import java.util.function.Consumer;
@@ -81,7 +81,7 @@ public abstract class GridPartComponentBaseImpl extends DisplayableComponentBase
      */
     protected ObjectProperty<RootGraphicComponentI> rootParent;
 
-    private final ShapeCompStyleI gridShapeStyle;
+    private final GridCompStyleI gridShapeStyle;
     private final KeyCompStyleI keyStyle;
     private final TextCompStyleI keyTextStyle;
 
@@ -110,7 +110,7 @@ public abstract class GridPartComponentBaseImpl extends DisplayableComponentBase
         this.stackParent = new SimpleObjectProperty<>(this, "stackParent");
         this.rootParent = new SimpleObjectProperty<>(this, "rootParent");
         this.lastStackChild = new SimpleBooleanProperty(this, "lastStackChild");
-        this.gridShapeStyle = new GridShapeCompStyle();
+        this.gridShapeStyle = new GridCompStyle();
         this.keyStyle = new KeyCompStyle();
         this.keyTextStyle = new KeyTextCompStyle();
         //Listener on parent : bind it
@@ -167,7 +167,7 @@ public abstract class GridPartComponentBaseImpl extends DisplayableComponentBase
     }
 
     @Override
-    public ShapeCompStyleI getGridShapeStyle() {
+    public GridCompStyleI getGridShapeStyle() {
         return this.gridShapeStyle;
     }
 
@@ -267,15 +267,15 @@ public abstract class GridPartComponentBaseImpl extends DisplayableComponentBase
             this.rootParent.bind(parent.rootParentProperty());
             this.configurationParent.bind(parent.configurationParentProperty());
             //Bind location
-            this.layoutX.bind(this.gridParent.get().hGapProperty().multiply(this.column.add(1.0))
-                    .add(this.column.multiply(this.gridParent.get().caseWidthProperty())));
-            this.layoutY.bind(this.gridParent.get().vGapProperty().multiply(this.row.add(1.0))
-                    .add(this.row.multiply(this.gridParent.get().caseHeightProperty())));
+            //this.layoutX.bind(this.gridParent.get().hGapProperty().multiply(this.column.add(1.0)).add(this.column.multiply(this.gridParent.get().caseWidthProperty())));
+            this.layoutX.bind(this.gridParent.get().getGridShapeStyle().hGapProperty().valueAsInt().multiply(this.column.add(1.0)).add(this.column.multiply(this.gridParent.get().caseWidthProperty())));
+            //this.layoutY.bind(this.gridParent.get().vGapProperty().multiply(this.row.add(1.0)).add(this.row.multiply(this.gridParent.get().caseHeightProperty())));
+            this.layoutY.bind(this.gridParent.get().getGridShapeStyle().vGapProperty().valueAsInt().multiply(this.row.add(1.0)).add(this.row.multiply(this.gridParent.get().caseHeightProperty())));
             //Bind size
-            this.layoutWidth.bind(this.columnSpan.multiply(this.gridParent.get().caseWidthProperty())
-                    .add(this.columnSpan.add(-1).multiply(this.gridParent.get().hGapProperty())));
-            this.layoutHeight.bind(this.rowSpan.multiply(this.gridParent.get().caseHeightProperty())
-                    .add(this.rowSpan.add(-1).multiply(this.gridParent.get().vGapProperty())));
+            //this.layoutWidth.bind(this.columnSpan.multiply(this.gridParent.get().caseWidthProperty()).add(this.columnSpan.add(-1).multiply(this.gridParent.get().hGapProperty())));
+            this.layoutWidth.bind(this.columnSpan.multiply(this.gridParent.get().caseWidthProperty()).add(this.columnSpan.add(-1).multiply(this.gridParent.get().getGridShapeStyle().hGapProperty().valueAsInt())));
+            //this.layoutHeight.bind(this.rowSpan.multiply(this.gridParent.get().caseHeightProperty()).add(this.rowSpan.add(-1).multiply(this.gridParent.get().vGapProperty())));
+            this.layoutHeight.bind(this.rowSpan.multiply(this.gridParent.get().caseHeightProperty()).add(this.rowSpan.add(-1).multiply(this.gridParent.get().getGridShapeStyle().vGapProperty().valueAsInt())));
             //Bind expand possible
             this.expandRight.bind(this.column.add(this.columnSpan).greaterThanOrEqualTo(this.gridParent.get().columnCountProperty()));
             this.expandLeft.bind(this.column.add(-1).lessThan(0));

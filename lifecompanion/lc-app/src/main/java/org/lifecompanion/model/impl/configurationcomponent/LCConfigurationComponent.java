@@ -25,7 +25,6 @@ import javafx.collections.*;
 import javafx.scene.paint.Color;
 import org.jdom2.Element;
 import org.lifecompanion.controller.io.ConfigurationComponentIOHelper;
-import org.lifecompanion.controller.io.XMLHelper;
 import org.lifecompanion.framework.commons.fx.io.XMLUtils;
 import org.lifecompanion.model.api.configurationcomponent.*;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
@@ -34,6 +33,7 @@ import org.lifecompanion.model.api.categorizedelement.useevent.UseEventManagerI;
 import org.lifecompanion.model.api.selectionmode.DirectSelectionModeI;
 import org.lifecompanion.model.api.selectionmode.SelectionModeI;
 import org.lifecompanion.model.api.selectionmode.SelectionModeParameterI;
+import org.lifecompanion.model.api.style.GridCompStyleI;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.io.XMLSerializable;
@@ -180,7 +180,7 @@ public class LCConfigurationComponent extends CoreDisplayableComponentBaseImpl i
 
     private final Map<String, PluginConfigPropertiesI> pluginsConfigProperties;
 
-    private final ShapeCompStyleI gridShapeStyle;
+    private final GridCompStyleI gridShapeStyle;
     private final KeyCompStyleI keyStyle;
     private final TextCompStyleI keyTextStyle;
     private final ShapeCompStyleI textDisplayerShapeStyle;
@@ -241,7 +241,7 @@ public class LCConfigurationComponent extends CoreDisplayableComponentBaseImpl i
         this.rootKeyListNode = new SimpleObjectProperty<>(new KeyListNode());
         this.userActionSequences = new SimpleObjectProperty<>(new UserActionSequences());
         // Styles : create and bind to default values
-        this.gridShapeStyle = new GridShapeCompStyle();
+        this.gridShapeStyle = new GridCompStyle();
         this.gridShapeStyle.parentComponentStyleProperty().set(StyleController.INSTANCE.getDefaultShapeStyleForGrid());
         this.keyStyle = new KeyCompStyle();
         this.keyStyle.parentComponentStyleProperty().set(StyleController.INSTANCE.getDefaultKeyStyle());
@@ -1021,7 +1021,7 @@ public class LCConfigurationComponent extends CoreDisplayableComponentBaseImpl i
     // STYLES
     //========================================================================
     @Override
-    public ShapeCompStyleI getGridShapeStyle() {
+    public GridCompStyleI getGridShapeStyle() {
         return gridShapeStyle;
     }
 

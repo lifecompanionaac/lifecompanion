@@ -286,32 +286,6 @@ public class GridActions {
         }
     }
 
-    public static class ChangeGridVGapAction extends BasePropertyChangeAction<Number> {
-
-        public ChangeGridVGapAction(final GridComponentI grid, final Number wantedValueP) {
-            super(grid.vGapProperty(), wantedValueP);
-        }
-
-        @Override
-        public String getNameID() {
-            return "action.name.change.grid.vgap";
-        }
-
-    }
-
-    public static class ChangeGridHGapAction extends BasePropertyChangeAction<Number> {
-
-        public ChangeGridHGapAction(final GridComponentI grid, final Number wantedValueP) {
-            super(grid.hGapProperty(), wantedValueP);
-        }
-
-        @Override
-        public String getNameID() {
-            return "action.name.change.grid.hgap";
-        }
-
-    }
-
     public static class SplitGridPartAction extends BaseGridChangeAction {
         private GridPartComponentI toSplit;
 

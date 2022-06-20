@@ -31,8 +31,7 @@ import org.lifecompanion.model.api.categorizedelement.CategorizedElementI;
  *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
-public interface BaseUseActionI<T extends UseActionTriggerComponentI>
-        extends CategorizedElementI<UseActionSubCategoryI>, DuplicableComponentI {
+public interface BaseUseActionI<T extends UseActionTriggerComponentI> extends CategorizedElementI<UseActionSubCategoryI>, DuplicableComponentI {
 
     // Class part : "Configuration"
     //========================================================================
@@ -43,13 +42,13 @@ public interface BaseUseActionI<T extends UseActionTriggerComponentI>
      * The check must be on inheritance and not on strict equals between parent class and this allowed parent class.<br>
      * A null value means that this allow every object to be parent.
      */
-    public Class<T> allowedParent();
+    Class<T> allowedParent();
 
     /**
      * @return a array that contains every trigger that could fire this action.<br>
      * Note that if this action allow a event type, the {@link #eventStarts(UseActionEvent)} or {@link #eventEnds(UseActionEvent)} should act with the allowed event.<br>
      */
-    public UseActionEvent[] allowedActionEvent();
+    UseActionEvent[] allowedActionEvent();
     //========================================================================
 
     // Class part : "Usage"
@@ -74,29 +73,29 @@ public interface BaseUseActionI<T extends UseActionTriggerComponentI>
      *
      * @return true if the action is a moving action.
      */
-    public boolean isMovingAction();
+    boolean isMovingAction();
 
     /**
      * @return should return true if this action doesn't need to receive start and end event and just need a basic behavior.<br>
      * Typically, the {@link SimpleUseActionI} actions subclass will return true to this method.
      */
-    public boolean isSimple();
+    boolean isSimple();
 
     /**
      * @param eventType the event type that started
      */
-    public void eventStarts(UseActionEvent eventType);
+    void eventStarts(UseActionEvent eventType);
 
     /**
      * @param eventType the event type that ended
      */
-    public void eventEnds(UseActionEvent eventType);
+    void eventEnds(UseActionEvent eventType);
 
     /**
      * @return the parent of this command : the action is set on a component so the parent is this component.<br>
      * Each time the action is created and associate to a {@link UseActionTriggerComponentI}, this property must be updated
      */
-    public ObjectProperty<T> parentComponentProperty();
+    ObjectProperty<T> parentComponentProperty();
 
     /**
      * To disable modification/delete on this action if it's attached to a key option.
@@ -104,8 +103,8 @@ public interface BaseUseActionI<T extends UseActionTriggerComponentI>
      * @return true if delete is disabled for this action.<br>
      * This mean that the user will get a error message if he try to remove/modify the action.
      */
-    public BooleanProperty attachedToKeyOptionProperty();
+    BooleanProperty attachedToKeyOptionProperty();
     //========================================================================
 
-    public static final String NODE_ACTION = "UseAction";
+    String NODE_ACTION = "Act";
 }

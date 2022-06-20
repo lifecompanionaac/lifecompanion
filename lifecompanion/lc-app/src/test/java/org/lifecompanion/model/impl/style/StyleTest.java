@@ -18,13 +18,9 @@
  */
 package org.lifecompanion.model.impl.style;
 
-import org.jdom2.Element;
-
 import javafx.scene.paint.Color;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.lifecompanion.model.api.style.ShapeCompStyleI;
-import org.lifecompanion.model.impl.style.GridShapeCompStyle;
 
 public class StyleTest {
 
@@ -33,7 +29,7 @@ public class StyleTest {
 
     @BeforeEach
     public void setUp() {
-        this.defaultShapeStyle = new GridShapeCompStyle();
+        this.defaultShapeStyle = new GridCompStyle();
         this.defaultShapeStyle.backgroundColorProperty().selected().setValue(StyleTest.DEFAULT_BACKGROUND_COLOR);
     }
 

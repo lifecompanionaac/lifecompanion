@@ -158,7 +158,7 @@ public abstract class BaseUseEventGeneratorImpl implements UseEventGeneratorI {
     public Element serialize(final IOContextI context) {
         Element element = new Element(BaseUseEventGeneratorImpl.NODE_USE_EVENT_GENERATOR);
         ConfigurationComponentIOHelper.addTypeAlias(this, element, context);
-        //Action manager
+        // Action manager
         Element useActionManagerElement = this.useActionManager.serialize(context);
         if (useActionManagerElement != null) {
             element.addContent(useActionManagerElement);
@@ -169,8 +169,9 @@ public abstract class BaseUseEventGeneratorImpl implements UseEventGeneratorI {
     @Override
     public void deserialize(final Element node, final IOContextI context) throws LCException {
         Element actionManagerNode = node.getChild(SimpleUseActionManager.NODE_USE_ACTION_MANAGER);
-        if (actionManagerNode != null) {
-            this.useActionManager.deserialize(actionManagerNode, context);
+        Element actionManagerNodeOld = node.getChild(SimpleUseActionManager.NODE_USE_ACTION_MANAGER_OLD);
+        if (actionManagerNode != null || actionManagerNodeOld != null) {
+            this.useActionManager.deserialize(actionManagerNode != null ? actionManagerNode : actionManagerNodeOld, context);
         }
     }
     //========================================================================
