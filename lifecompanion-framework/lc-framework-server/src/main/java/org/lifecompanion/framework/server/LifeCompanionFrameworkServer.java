@@ -94,7 +94,7 @@ public class LifeCompanionFrameworkServer {
             get("/version", (req, res) -> serverVersionF);
             post("/login", PublicUserController.login);
 
-            post("/get-image-url/:imageId", ImageResourceAPIController.getImageDownloadUrl);
+            get("/get-image-url/:imageId", ImageResourceAPIController.getImageDownloadUrl);
 
             get("/installer/:application/:system", ApplicationInstallerController.downloadFromWeb);
             get("/installer/:application/:system/:preview", ApplicationInstallerController.downloadFromWeb);
