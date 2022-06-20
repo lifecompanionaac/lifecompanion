@@ -33,6 +33,19 @@ public class LocalFileStorageService implements FileStorageServiceI {
     }
 
     @Override
+    public String getFileIdFromPrefix(String prefix) {
+        File[] files = new File("./data/").listFiles();
+        if (files != null) {
+            for (File file : files) {
+                if (file.getAbsolutePath().startsWith(prefix)) {
+                    return file.getAbsolutePath();
+                }
+            }
+        }
+        return null;
+    }
+
+    @Override
     public String saveFile(InputStream inputStream, String name, long length) throws IOException {
         File file = new File("./data/" + name);
         file.getParentFile().mkdirs();
@@ -43,7 +56,7 @@ public class LocalFileStorageService implements FileStorageServiceI {
     }
 
     @Override
-    public String generateFileUrl(String id, String fileName) throws IOException {
+    public String generateFileUrl(String id) throws IOException {
         return "http://localhost:1234/public/download-file/" + id;
     }
 

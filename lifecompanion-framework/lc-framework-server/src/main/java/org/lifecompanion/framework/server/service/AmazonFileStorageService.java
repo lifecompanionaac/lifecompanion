@@ -20,6 +20,7 @@
 package org.lifecompanion.framework.server.service;
 
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
+import org.lifecompanion.framework.commons.utils.lang.CollectionUtils;
 import org.lifecompanion.framework.model.server.service.FileStorageServiceI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,9 +29,7 @@ import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
-import software.amazon.awssdk.services.s3.model.GetObjectRequest;
-import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.model.*;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
 import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequest;
@@ -40,6 +39,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.time.Duration;
+import java.util.List;
 
 import static org.lifecompanion.framework.model.server.LifeCompanionFrameworkServerConstant.DEFAULT_OK_RETURN_VALUE;
 
@@ -74,6 +74,20 @@ public class AmazonFileStorageService implements FileStorageServiceI {
     }
 
     @Override
+    public String getFileIdFromPrefix(String prefix) {
+        ListObjectsRequest listObjects = ListObjectsRequest
+                .builder()
+                .bucket(bucket)
+                .prefix(prefix)
+                .build();
+        ListObjectsResponse response = s3.listObjects(listObjects);
+        List<S3Object> objectsForPrefix = response.contents();
+        if (CollectionUtils.isEmpty(objectsForPrefix)) return null;
+        else
+            return objectsForPrefix.get(0).key();
+    }
+
+    @Override
     public String saveFile(InputStream inputStream, String name, long length) throws IOException {
         s3.putObject(
                 PutObjectRequest.builder()
@@ -85,7 +99,7 @@ public class AmazonFileStorageService implements FileStorageServiceI {
     }
 
     @Override
-    public String generateFileUrl(String id, String fileName) throws IOException {
+    public String generateFileUrl(String id) throws IOException {
         final PresignedGetObjectRequest urlGen = presigner.presignGetObject(
                 GetObjectPresignRequest.builder()
                         .signatureDuration(Duration.ofHours(4))

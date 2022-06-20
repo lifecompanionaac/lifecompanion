@@ -112,7 +112,7 @@ public enum ApplicationUpdateService {
 
     public String getApplicationFileDownloadUrl(String fileId) throws IOException {
         ApplicationUpdateFile fileById = ApplicationUpdateDao.INSTANCE.getFileById(fileId);
-        return FileStorageService.INSTANCE.generateFileUrl(fileById.getFileStorageId(), UUID.randomUUID().toString());
+        return FileStorageService.INSTANCE.generateFileUrl(fileById.getFileStorageId());
     }
 
     private UpdateFileProgressType convertToInitialProgressState(FileState fileState) {

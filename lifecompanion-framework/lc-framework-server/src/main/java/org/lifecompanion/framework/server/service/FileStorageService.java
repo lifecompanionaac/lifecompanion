@@ -47,8 +47,13 @@ public enum FileStorageService implements FileStorageServiceI {
     }
 
     @Override
-    public String generateFileUrl(String id, String fileName) throws IOException {
-        return IMPLEMENTATION.generateFileUrl(id, fileName);
+    public String generateFileUrl(String id) throws IOException {
+        return IMPLEMENTATION.generateFileUrl(id);
+    }
+
+    @Override
+    public String getFileIdFromPrefix(String prefix) {
+        return IMPLEMENTATION.getFileIdFromPrefix(prefix);
     }
 
     @Override

@@ -2,7 +2,7 @@
  * LifeCompanion AAC and its sub projects
  *
  * Copyright (C) 2014 to 2019 Mathieu THEBAUD
- * Copyright (C) 2020 to 2021 CMRRF KERPAPE (Lorient, France)
+ * Copyright (C) 2020 to 2022 CMRRF KERPAPE (Lorient, France) and CoWork'HIT (Lorient, France)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,22 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.lifecompanion.framework.model.server.service;
+package org.lifecompanion.framework.server.controller;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import org.lifecompanion.framework.server.service.ImageResourceAPIService;
+import spark.Route;
 
-public interface FileStorageServiceI {
-    String getID();
+public class ImageResourceAPIController {
 
-    String getFileIdFromPrefix(String prefix);
-
-    String saveFile(InputStream inputStream, String name, long length) throws IOException;
-
-    String generateFileUrl(String id) throws IOException;
-
-    String downloadFileTo(String id, OutputStream os) throws IOException;
-
-    void removeFile(String id) throws IOException;
+    public static final Route getImageDownloadUrl = (req, res) -> {
+        String downloadUrl = ImageResourceAPIService.INSTANCE.getImageDownloadUrl(req.params("imageId").trim());
+        if (downloadUrl != null) {
+            return downloadUrl;
+        } else {
+            res.status(404);
+            return "";
+        }
+    };
 }

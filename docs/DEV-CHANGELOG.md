@@ -6,6 +6,11 @@ To be done later...
 
 ## SERVER
 
+### 1.14.10 - 20/06/2022
+
+- New public service "/get-image-url/:imageId" to download an image from its ID
+- Removed incorrect plugin stats
+
 ### 1.14.9 - 04/03/2022
 
 - Restore plugin service
