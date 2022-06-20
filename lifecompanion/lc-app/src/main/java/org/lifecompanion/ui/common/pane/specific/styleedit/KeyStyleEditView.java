@@ -51,6 +51,7 @@ public class KeyStyleEditView extends AbstractShapeStyleEditView<KeyCompStyleI> 
         comboBoxTextPosition = new ComboBox<>(FXCollections.observableArrayList(TextPosition.values()));
         this.comboBoxTextPosition.setButtonCell(new TextPositionListCell(false));
         this.comboBoxTextPosition.setCellFactory(lv -> new TextPositionListCell(true));
+        this.comboBoxTextPosition.setMaxWidth(Double.MAX_VALUE);
 
         this.fieldGrid.add(new Label(Translation.getText("pane.text.text.location")), 0, 4);
         this.fieldGrid.add(comboBoxTextPosition, 1, 4);

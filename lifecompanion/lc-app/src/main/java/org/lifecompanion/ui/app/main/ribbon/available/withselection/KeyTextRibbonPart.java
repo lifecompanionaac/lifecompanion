@@ -68,8 +68,7 @@ public class KeyTextRibbonPart extends RibbonBasePart<GridPartKeyComponent> impl
     public void initUI() {
         //Base
         this.setTitle(Translation.getText("pane.title.text"));
-        VBox rows = new VBox();
-        rows.setAlignment(Pos.TOP_CENTER);
+
         //Text
         Label labelText = new Label(Translation.getText("pane.text.key.text"));
         this.fieldKeyText = new LimitedTextArea();
@@ -79,8 +78,8 @@ public class KeyTextRibbonPart extends RibbonBasePart<GridPartKeyComponent> impl
         this.fieldKeyTextWrapper = new UndoRedoTextInputWrapper(this.fieldKeyText, ConfigActionController.INSTANCE.undoRedoEnabled());
 
         //Total
-        rows.setSpacing(5.0);
-        rows.getChildren().addAll(labelText, this.fieldKeyText);
+        VBox rows = new VBox(5.0, labelText, this.fieldKeyText);
+        rows.setAlignment(Pos.CENTER);
         this.setContent(rows);
     }
 

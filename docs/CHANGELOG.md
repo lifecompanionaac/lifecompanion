@@ -10,6 +10,7 @@
 
 - Ticket #163 : correction d'un problème avec la souris virtuelle
 - Ticket #162 : optimisation de la taille des configurations sur le disque
+- Ticket #159 : correction de quelques éléments graphiques
 
 ## 1.4.1 - 02/06/2022
 

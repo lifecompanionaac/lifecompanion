@@ -377,9 +377,11 @@ public class GridPartKeyComponent extends GridPartComponentBaseImpl implements G
         XMLObjectSerializer.deserializeInto(GridPartKeyComponent.class, this, nodeP);
 
         // Backward comp : get the text position from old param
-        Enum<TextPosition> textPosition = XMLUtils.readEnum(TextPosition.class, "textPosition", nodeP);
-        if (textPosition != null) {
-            this.getKeyStyle().textPositionProperty().selected().setValue((TextPosition) textPosition);
+        if (nodeP.getAttribute("textPosition") != null) {
+            Enum<TextPosition> textPosition = XMLUtils.readEnum(TextPosition.class, "textPosition", nodeP);
+            if (textPosition != null) {
+                this.getKeyStyle().textPositionProperty().selected().setValue((TextPosition) textPosition);
+            }
         }
 
         //Image
