@@ -12,25 +12,60 @@ Terms used in this documentation will be directly linked to LifeCompanion usages
 
 TODO : how to install plugin dev tools
 
-## General introduction
+## LifeCompanion fundamentals
 
-Global LifeCompanion architecture and behavior : TO DO
+### Code organization
+
+LifeCompanion code use **Java 16+ and JavaFX** combined with **Gradle**.
+
+Core LifeCompanion code is located in **lifecompanion/lc-app** directory. Model classes are organized with interface/implementation principle : most of the interfaces are named with "I" at the end, theses interfaces are mainly the names used in documentation. For example : `LCConfigurationI` is the interface describing the configuration model, and `LCConfigurationComponent`.
+
+Interfaces are also mostly used as "contracts" to add features to components : for example every component `RootGraphicComponentI` will implement `MovableComponentI, ResizableComponentI, DisplayableComponentI, SelectableComponentI, ConfigurationChildComponentI` interfaces. These coding principle allow LifeCompanion to be simply extended.
+
+**TODO : link to repo organization**
+
+### General principles
+
+LifeCompanion works with two modes :
+- **EDITION** : mode for professionnals or people that want to edit the software behavior. In this mode, the UI is much more complex to be able to edit every elements.
+- **USE** : mode for final users to use LifeCompanion : text editors are working, speech synthesis to, etc.
+
+![LifeCompanion base classes](res/classes-main-org.png)
+
+LifeCompanion is working in the following way :
+- Any LifeCompanion user creates **profile** (*LCProfile*) that will stores **configurations** (*LCConfigurationDescriptionComponentI* and *LCConfigurationComponent*)
+- In **profile**, **configuration** list is displayed thanks to *LCConfigurationDescriptionComponentI* that store configuration information (author, description, id, etc.)
+- When a user wants to modify or use a **configuration**, this configuration is loaded with *LCConfigurationComponent* : this component stores all LifeCompanion configuration
+- Once a **configuration** is opened : **base elements** (*RootGraphicComponent* implementations) are added to it. Theses components are movable, resizable, etc. to create the user interface. Two main implementation are possible : **grid stacks** (*StackComponent*) and **text editors** (*TextEditorComponent*)
+- In **grid stacks**, user will then add **grids** (*GridComponentI*) : these **grids** are the "pages" possible for this stack. Each grid can have its own layout : a number of row/column and sub elements
+- In **grids**, regarding to row/column counts, a certain number of **keys** (*GridPartKeyComponent*) are available (eg : 5*4 = 20 keys). Each of these **keys** is located in the grid (thanks to row/column variable) and can span to multiple row/column.
+- On **keys**, user will define
+    - the **key type** (*KeyOptionI*) : this allow the key to be automatically filled/used by LifeCompanion in use mode (e.g *WordPredictionKeyOption* are filled automatically on runtime)
+    - the **key actions** (*BaseUseActionI*) : this define what will be the key behavior on selection. Actions are organized by events (**activation** or **over**) and in ordered list : on action fired (by selection or by key "hover"), action are then executed in order (sequentially)
+- In configuration, **events** (*UseEventGeneratorI*) can also be added
+    - they are global "listeners" to configuration events : each listener implements an event detection, and then call **actions** list if fired
+    - example implementation : event generator "keyboard key pressed" is fired on each key pressed on the keyboard : it can be useful to create keyboard shortcut for example
+- In **grids**, keys can be replaced by other implementation (implementing *GridPartComponentI*) : for example, it's possible to replace a key with **sub grid**, **text editor** or **grid stack**. The only difference between their "root" implementation is just that they are not resizable/movable as they location depends on key position/span.
 
 ## What's possible with plugins ?
 
 Plugin are a good way to integrate specific features into LifeCompanion. This table presents the main integrated features.
 
+- [**Use action**](#use-action) *("actions")*
+    - They are the LifeCompanion's core : added to keys (or to global event) they will define the user interaction behavior. They link keys to global behavior.
 - [**Key option**](#key-option) *("type de cases")*
     - Key options are a good way to integrate keys that are modified on runtime by user : their text, image, action are handled by your implementation or you need a specific view for a key (custom JavaFX component).
+- [**Use event**](#use-event) *("événement")*
+    - TODO
+- [**General configuration view**](#general-configuration-view) *("paramètres généraux")*
+    - TODO
+- [**Use variable**](#use-variable) *("variable")*
+    - TODO
 - [**Word prediction**](#word-prediction) *("prédiction de mots")*
     - Word prediction are called on each editor text change (content or caret position). They should return prediction results (ordoned word list)
 - [**Char prediction**](#char-prediction) *("prédiction de caractères")*
     - As the word prediction do, the char prediction should do the exact same thing but for characters : results are then used to fill a dynamic keyboard
-- [**Use action**](#use-action) *("actions")*
-    - They are the LifeCompanion's core : added to keys (or to global event) they will define the user interaction behavior. They link keys to global behavior.
 - [**Voice synthesizer**](#voice-synthesizer) *("synthèse vocale")*
-    - TODO
-- [**Use event**](#use-event) *("événement")*
     - TODO
 
 ## How to
@@ -40,6 +75,18 @@ Plugin are a good way to integrate specific features into LifeCompanion. This ta
 TODO
 
 ### Key option
+
+TODO
+
+### Use event
+
+TODO
+
+### General configuration view
+
+TODO
+
+### Use variable
 
 TODO
 
