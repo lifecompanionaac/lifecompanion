@@ -1,12 +1,20 @@
-# THIS PAGE WILL BE WRITTEN LATER - WIP
+# WIP
 
-# LifeCompanion - plugin dev
+# Extends LifeCompanion with plugins
+
+## Introduction
+
+**Plugins are a good way to extends LifeCompanion features without having to modify its core**. It allows developpers to create individual plugin that can be updated out of the app update process. Before creating a plugin, you should be trained to use LifeCompanion (in both mode : edit and use).
+
+Terms used in this documentation will be directly linked to LifeCompanion usages.
+
+Feel free to fill an issue if you're having trouble with plugin development.
 
 ## Prerequisites
 
-Before developing plugins for LifeCompanion, you must understand how LifeCompanion is working and what are its features.
+Read the developpers documentation : [how to build and run LifeCompanion](TODO)
 
-Terms used in this documentation will be directly linked to LifeCompanion usages.
+Be familiar with Java and JavaFX development.
 
 ## Getting started
 
@@ -28,7 +36,7 @@ Interfaces are also mostly used as "contracts" to add features to components : f
 ### General principles
 
 LifeCompanion works with two modes :
-- **EDITION** : mode for professionnals or people that want to edit the software behavior. In this mode, the UI is much more complex to be able to edit every elements.
+- **EDIT** : mode for professionnals or people that want to edit the software behavior. In this mode, the UI is much more complex to be able to edit every elements.
 - **USE** : mode for final users to use LifeCompanion : text editors are working, speech synthesis to, etc.
 
 ![LifeCompanion base classes](res/classes-main-org.png)
@@ -77,7 +85,7 @@ Plugin are a good way to integrate specific features into LifeCompanion. This ta
 
 ### Use action
 
-Action are the best way to implement specific behavior in LifeCompanion. Most of the action implementation interact with LifeCompanion [existing controllers](#useful-classes) or with custom controllers. For example, an email plugin will interact with its own controller to manage inbox, sent messages, etc.
+Action are the best way to implement specific behavior in LifeCompanion. Most of the action implementation interact with LifeCompanion [existing controllers](#controllers) or with custom controllers. For example, an email plugin will interact with its own controller to manage inbox, sent messages, etc.
 
 ### Key option
 
