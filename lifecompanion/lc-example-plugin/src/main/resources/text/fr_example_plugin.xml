@@ -1,3 +1,12 @@
 <texts>
-	<text key="example">Example</text>
+	<text key="example.plugin.game.step.instruction.write">Écris le mot que tu viens d'entendre</text>
+	<text key="example.plugin.game.step.instruction.copy">Écris le mot que tu viens de voir</text>
+	<text key="example.plugin.game.step.instruction.char.count">Écris combien de lettre a le mot ?</text>
+	<text key="example.plugin.game.step.instruction.backward">Écris le mot à l'envers</text>
+	<text key="example.plugin.game.step.instruction.one.on.two">Écris une lettre sur deux du mot</text>
+	<text key="example.plugin.game.step.instruction.vowel">Écris dans l'ordre uniquement les voyelles</text>
+	<text key="example.plugin.game.step.instruction.consonant">Écris dans l'ordre uniquement les consonnes</text>
+
+
+	<text key="example.plugin.current.word.key.option.name">Mot courant dans le jeux</text>
 </texts>

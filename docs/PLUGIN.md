@@ -36,6 +36,19 @@ Be familiar with Java and JavaFX development.
     1. Add : Before launch > Run Another Configuration with your run configuration that build your plugin (`clean jar`)
 1. You can now use your LifeCompanion run configuration : this will first build your plugin and inject its last version to LifeCompanion !
 
+### Example plugin description
+
+The example plugin try to make use of all the possibilities of the plugin in a real use case : a game to help children to write words. The game is simple but can be used in real life.
+Some specific feature (word prediction, char prediction) are not needed in the game but are also implemented to have an example on them.
+
+Other real life plugin examples are : 
+- **simple email plugin** : plugin that allow the user to read and send email from traditionnal email server
+- **calendar plugin** : plugin to help user to plan their days (with alarms, events and sequences)
+- **ppp plugin** : plugin to trace prediatric pain profil scale for an user
+- **homeassistant plugin** : plugin to interact with a HomeAssistant server
+
+These example can be found in [their dedicated repo (not documented)](LINKTODO)
+
 ## LifeCompanion fundamentals
 
 ### Code organization

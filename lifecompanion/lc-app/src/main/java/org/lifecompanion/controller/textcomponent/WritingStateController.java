@@ -19,9 +19,7 @@
 package org.lifecompanion.controller.textcomponent;
 
 import javafx.application.Platform;
-import javafx.beans.property.ReadOnlyBooleanProperty;
-import javafx.beans.property.ReadOnlyIntegerProperty;
-import javafx.beans.property.ReadOnlyStringProperty;
+import javafx.beans.property.*;
 import javafx.collections.ObservableList;
 import org.lifecompanion.model.api.configurationcomponent.*;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
@@ -58,6 +56,7 @@ public enum WritingStateController implements ModeListenerI, WritingStateControl
     private final List<WritingDeviceI> writingDevices;
     private final WritingStateEntryContainer writingStateEntryContainer;
     private final Set<Consumer<WritingEventI>> writingEventListeners;
+    private final BooleanProperty writingDisabled;
 
 
     /**
@@ -75,6 +74,8 @@ public enum WritingStateController implements ModeListenerI, WritingStateControl
         this.totalTextBuilder = new StringBuilder();
 
         this.writingEventListeners = new HashSet<>(2);
+
+        this.writingDisabled = new SimpleBooleanProperty();
 
         AppModeController.INSTANCE.getEditModeContext().configurationProperty().addListener(inv -> initExampleEntriesIfNeeded());
     }
@@ -130,6 +131,14 @@ public enum WritingStateController implements ModeListenerI, WritingStateControl
     @Override
     public ReadOnlyIntegerProperty caretPosition() {
         return writingStateEntryContainer.caretPosition();
+    }
+
+    /**
+     * @return a property that can be changed in use mode to disable event on writing devices.
+     * This can be useful to block text entry with API.
+     */
+    public BooleanProperty writingDisabledProperty() {
+        return writingDisabled;
     }
     //========================================================================
 
@@ -345,24 +354,26 @@ public enum WritingStateController implements ModeListenerI, WritingStateControl
     }
 
     private void executeEvent(Consumer<WritingDeviceI> exe, WritingEventSource src, WritingEventType type, Map<String, Object> values) {
-        if (!writingEventListeners.isEmpty()) {
-            WritingControllerStateI stateBeforeEvent = getCurrentState();
-            for (WritingDeviceI device : this.writingDevices) {
-                exe.accept(device);
-            }
-            // TODO : performance problem caused by listeners on FX thread ?
-            // Implementation should make operation on event async (e.g. writing the log a file)
-
-            // TODO : this cause the after event result to be incorrect about prediction because prediction is not instant...
-            FXThreadUtils.runOnFXThread(() -> {
-                WritingControllerStateI stateAfterEvent = getCurrentState();
-                for (Consumer<WritingEventI> listener : writingEventListeners) {
-                    listener.accept(new WritingEvent(stateBeforeEvent, stateAfterEvent, src, type, values));
+        if (!writingDisabled.get()) {
+            if (!writingEventListeners.isEmpty()) {
+                WritingControllerStateI stateBeforeEvent = getCurrentState();
+                for (WritingDeviceI device : this.writingDevices) {
+                    exe.accept(device);
                 }
-            });
-        } else {
-            for (WritingDeviceI device : this.writingDevices) {
-                exe.accept(device);
+                // TODO : performance problem caused by listeners on FX thread ?
+                // Implementation should make operation on event async (e.g. writing the log a file)
+
+                // TODO : this cause the after event result to be incorrect about prediction because prediction is not instant...
+                FXThreadUtils.runOnFXThread(() -> {
+                    WritingControllerStateI stateAfterEvent = getCurrentState();
+                    for (Consumer<WritingEventI> listener : writingEventListeners) {
+                        listener.accept(new WritingEvent(stateBeforeEvent, stateAfterEvent, src, type, values));
+                    }
+                });
+            } else {
+                for (WritingDeviceI device : this.writingDevices) {
+                    exe.accept(device);
+                }
             }
         }
     }
@@ -436,6 +447,7 @@ public enum WritingStateController implements ModeListenerI, WritingStateControl
 
     @Override
     public void modeStop(LCConfigurationI configuration) {
+        writingDisabled.set(false);
         this.writingDevices.remove(VirtualKeyboardController.INSTANCE);
         this.updateTotalTextWithCurrentText();
         configuration.getUseModeWriterEntries().clear();

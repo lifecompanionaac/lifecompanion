@@ -6,6 +6,7 @@ import org.lifecompanion.model.api.plugin.PluginConfigPropertiesI;
 import org.lifecompanion.model.api.plugin.PluginI;
 import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
+import org.lifecompanion.plugin.officialexample.spellgame.controller.SpellGameController;
 
 import java.io.File;
 import java.util.List;
@@ -45,12 +46,12 @@ public class ExamplePluginOfficial implements PluginI {
     //========================================================================
     @Override
     public void modeStart(LCConfigurationI configuration) {
-
+        SpellGameController.INSTANCE.modeStart(configuration);
     }
 
     @Override
     public void modeStop(LCConfigurationI configuration) {
-
+        SpellGameController.INSTANCE.modeStop(configuration);
     }
     //========================================================================
 
