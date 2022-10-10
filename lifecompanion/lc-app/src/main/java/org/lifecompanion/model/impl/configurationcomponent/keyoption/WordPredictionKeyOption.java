@@ -79,9 +79,6 @@ public class WordPredictionKeyOption extends AbstractKeyOption {
                 } else {
                     key.getKeyTextStyle().colorProperty().forced().setValue(null);
                 }
-            } else {
-                key.getKeyTextStyle().colorProperty().forced().setValue(null);
-                key.textContentProperty().set(Translation.getText("prediction.key.default.text"));
             }
         });
     }

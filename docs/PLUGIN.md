@@ -12,14 +12,42 @@ Feel free to fill an issue if you're having trouble with plugin development.
 
 ## Prerequisites
 
-Read the developpers documentation : [how to build and run LifeCompanion](TODO)
+Read the developpers documentation : [how to build and run LifeCompanion](BUILD.md)
 
 Be familiar with Java and JavaFX development.
 
 ## Getting started
 
-TODO : how to install plugin dev tools
-TODO : how to run a plugin (cf  `org.lifecompanion.dev.cp.arg=../lc-example-plugin/build/libs/*`)
+### Install plugin dev env.
+
+1. First, clone LifeCompanion official repository and make it build and run locally : [use build documentation](BUILD.md)
+1. Run `gradlew publishToMavenLocal` on **lifecompanion** projects (this will add LifeCompanion API to your local Maven repo)
+1. Copy the **lifecompanion/lc-example-plugin** to your plugin specific folder
+1. To build your plugin : use `gradlew publishToMavenLocal`
+
+### Efficient plugin dev. in IntelliJ
+
+1. Create your LifeCompanion project as described in [build documentation](BUILD.md)
+1. Add your new plugin project as a module in IntelliJ (File > New > Module from existing sources)
+1. Create a run configuration that build your plugin : `gradlew clean jar` (on your plugin project)
+1. Create a run configuration that run LifeCompanion app `gradlew :lc-app:run`
+1. On the LifeCompanion run configuration
+    1. Add on **environment variables** : `org.lifecompanion.dev.cp.arg=../lc-example-plugin/build/libs/*` (this should be adapted to your plugin folder path)
+    1. Add : Before launch > Run Another Configuration with your run configuration that build your plugin (`clean jar`)
+1. You can now use your LifeCompanion run configuration : this will first build your plugin and inject its last version to LifeCompanion !
+
+### Example plugin description
+
+The example plugin try to make use of all the possibilities of the plugin in a real use case : a game to help children to write words. The game is simple but can be used in real life.
+Some specific feature (word prediction, char prediction) are not needed in the game but are also implemented to have an example on them.
+
+Other real life plugin examples are : 
+- **simple email plugin** : plugin that allow the user to read and send email from traditionnal email server
+- **calendar plugin** : plugin to help user to plan their days (with alarms, events and sequences)
+- **ppp plugin** : plugin to trace prediatric pain profil scale for an user
+- **homeassistant plugin** : plugin to interact with a HomeAssistant server
+
+These example can be found in [their dedicated repo (not documented)](LINKTODO)
 
 ## LifeCompanion fundamentals
 
@@ -31,7 +59,7 @@ Core LifeCompanion code is located in **lifecompanion/lc-app** directory. Model 
 
 Interfaces are also mostly used as "contracts" to add features to components : for example every component `RootGraphicComponentI` will implement `MovableComponentI, ResizableComponentI, DisplayableComponentI, SelectableComponentI, ConfigurationChildComponentI` interfaces. These coding principle allow LifeCompanion to be simply extended.
 
-**TODO : link to repo organization**
+You can see the repo organization in [root documentation](README.md)
 
 ### General principles
 
