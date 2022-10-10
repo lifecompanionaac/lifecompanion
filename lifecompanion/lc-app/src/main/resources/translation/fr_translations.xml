@@ -818,9 +818,9 @@
 		de nouveau sur la touche majusucule.</text>
   <text key="action.next.upper.case.name">Prochaine lettre en majuscule</text>
   <!--org.lifecompanion.base.data.useaction.impl.text.write-->
-  <text key="action.simple.write.text.name">Ecrire du texte</text>
-  <text key="action.simple.write.text.static.description">Ecrit un texte personnalisé.</text>
-  <text key="action.simple.write.text.variable.description">Ecrit le texte "{}"</text>
+  <text key="action.simple.write.text.name">Écrire du texte</text>
+  <text key="action.simple.write.text.static.description">Écrit un texte personnalisé.</text>
+  <text key="action.simple.write.text.variable.description">Écrit le texte "{}"</text>
   <text key="action.write.and.speak.text.name">Écrire et prononcer du texte</text>
   <text key="action.write.and.speak.text.static.description">Permet d'écrire un texte dans l'éditeur de texte, et
 		éventuellement de prononcer celui-ci ou un autre texte.</text>
