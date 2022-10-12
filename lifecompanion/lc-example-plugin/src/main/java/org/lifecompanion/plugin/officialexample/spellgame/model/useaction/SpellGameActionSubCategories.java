@@ -1,4 +1,4 @@
-package org.lifecompanion.plugin.officialexample.spellgame.useaction;
+package org.lifecompanion.plugin.officialexample.spellgame.model.useaction;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

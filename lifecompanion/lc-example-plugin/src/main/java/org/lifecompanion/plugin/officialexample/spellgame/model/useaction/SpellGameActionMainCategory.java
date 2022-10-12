@@ -1,4 +1,4 @@
-package org.lifecompanion.plugin.officialexample.spellgame.useaction;
+package org.lifecompanion.plugin.officialexample.spellgame.model.useaction;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -27,7 +27,7 @@ public enum SpellGameActionMainCategory implements UseActionMainCategoryI {
 
     @Override
     public String getConfigIconPath() {
-        return "icon_openhab_category.png";
+        return "filler_icon.png";
     }
 
     @Override

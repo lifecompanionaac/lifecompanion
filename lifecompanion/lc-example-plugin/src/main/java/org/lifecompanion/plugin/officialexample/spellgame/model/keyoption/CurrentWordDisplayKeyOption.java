@@ -17,58 +17,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.lifecompanion.plugin.officialexample.spellgame.keyoption;
+package org.lifecompanion.plugin.officialexample.spellgame.model.keyoption;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.scene.paint.Color;
 import org.jdom2.Element;
-import org.lifecompanion.framework.commons.fx.io.XMLGenericProperty;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.AbstractKeyOption;
-import org.lifecompanion.model.impl.configurationcomponent.keyoption.ProgressDisplayKeyOption;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.util.javafx.FXThreadUtils;
-import org.lifecompanion.util.javafx.FXUtils;
 
 public class CurrentWordDisplayKeyOption extends AbstractKeyOption {
-
-    @XMLGenericProperty(Color.class)
-    private final ObjectProperty<Color> progressColor;
-
-    @XMLGenericProperty(ProgressDisplayKeyOption.ProgressDisplayType.class)
-    private final ObjectProperty<ProgressDisplayKeyOption.ProgressDisplayType> progressDisplayType;
-
-    @XMLGenericProperty(ProgressDisplayKeyOption.ProgressDisplayMode.class)
-    private final ObjectProperty<ProgressDisplayKeyOption.ProgressDisplayMode> progressDisplayMode;
-
-    private final StringProperty currentWord;
 
     public CurrentWordDisplayKeyOption() {
         super();
         this.disableTextContent.set(true);
         this.optionNameId = "example.plugin.current.word.key.option.name";
-        this.iconName = "icon_type_progress_display.png";
-        this.progressDisplayMode = new SimpleObjectProperty<>(ProgressDisplayKeyOption.ProgressDisplayMode.FILL);
-        this.progressDisplayType = new SimpleObjectProperty<>(ProgressDisplayKeyOption.ProgressDisplayType.HORIZONTAL_BAR);
-        this.progressColor = new SimpleObjectProperty<>(Color.rgb(3, 189, 244, 0.5));
-        currentWord = new SimpleStringProperty();
-    }
-
-    public ObjectProperty<Color> progressColorProperty() {
-        return progressColor;
-    }
-
-    public ObjectProperty<ProgressDisplayKeyOption.ProgressDisplayType> progressDisplayTypeProperty() {
-        return progressDisplayType;
-    }
-
-    public ObjectProperty<ProgressDisplayKeyOption.ProgressDisplayMode> progressDisplayModeProperty() {
-        return progressDisplayMode;
+        this.iconName = "filler_icon.png";
     }
 
     @Override

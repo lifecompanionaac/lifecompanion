@@ -20,7 +20,7 @@
 package org.lifecompanion.plugin.officialexample.spellgame.model;
 
 public interface GameStep {
-    String getInstruction();
-
-    boolean checkWord(String word, String cleanInput);
+    boolean isWordDisplayOnStep();
+    String getInstruction(String word);
+    boolean checkWord(String word, String input);
 }

@@ -23,36 +23,46 @@ import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 
 public enum GameStepEnum implements GameStep {
-    WRITE("example.plugin.game.step.instruction.write"),
-    COPY("example.plugin.game.step.instruction.copy"),
-    CHAR_COUNT("game.step.instruction.char.count") {
+    WRITE("example.plugin.game.step.instruction.write", false),
+    COPY("example.plugin.game.step.instruction.copy", true),
+    CHAR_COUNT("example.plugin.game.step.instruction.char.count", true) {
         @Override
-        public boolean checkWord(String word, String cleanInput) {
+        public boolean checkWord(String word, String input) {
             try {
-                return word.length() == Integer.parseInt(cleanInput);
+                return word.length() == Integer.parseInt(input);
             } catch (NumberFormatException e) {
                 return false;
             }
         }
     }
-//    BACKWARD("example.plugin.game.step.instruction.backward"),
-//    ONE_ON_TWO("example.plugin.game.step.instruction.one.on.two"),
-//    VOWEL("example.plugin.game.step.instruction.vowel"),
-//    CONSONANT("example.plugin.game.step.instruction.consonant");
+    //    BACKWARD("example.plugin.game.step.instruction.backward"),
+    //    ONE_ON_TWO("example.plugin.game.step.instruction.one.on.two"),
+    //    VOWEL("example.plugin.game.step.instruction.vowel"),
+    //    CONSONANT("example.plugin.game.step.instruction.consonant");
+    // at least 1 point per step
     ;
     private final String instructionId;
+    private final boolean wordDisplayOnStep;
 
-    GameStepEnum(String instructionId) {
+    GameStepEnum(String instructionId, boolean wordDisplayOnStep) {
         this.instructionId = instructionId;
+        this.wordDisplayOnStep = wordDisplayOnStep;
     }
 
     @Override
-    public String getInstruction() {
-        return Translation.getText(instructionId);
+    public boolean isWordDisplayOnStep() {
+        return wordDisplayOnStep;
     }
 
     @Override
-    public boolean checkWord(String word, String cleanInput) {
-        return StringUtils.isEquals(word, cleanInput);
+    public String getInstruction(String word) {
+        return Translation.getText(instructionId, word);
     }
+
+    @Override
+    public boolean checkWord(String word, String input) {
+        return StringUtils.isEquals(word, input);
+    }
+
+
 }

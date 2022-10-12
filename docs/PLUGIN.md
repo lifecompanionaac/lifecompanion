@@ -115,6 +115,8 @@ Plugin are a good way to integrate specific features into LifeCompanion. This ta
 
 ### Plugin
 
+TODO
+
 ### Use action
 
 Actions are the best way to implement specific behavior in LifeCompanion. Most of the action implementation interact with LifeCompanion [existing controllers](#controllers) or with custom controllers. For example, an email plugin will interact with its own controller to manage inbox, sent messages, etc.
@@ -141,8 +143,20 @@ Generally, you should alway implement your action extending `SimpleUseActionImpl
 
 #### Edit mode information
 
+Actions have multiple information that are used only in edit mode to drive the user adding/editing them.
+These informations should be filled in the action constructor extending `BaseUseActionImpl` (setting the protected attribute to the requested values).
 
+Please refer to each attribute Javadoc to find the expected value in each attribute. (**TODO : CREATE THE JAVADOC**)
 
+Note that `variableDescriptionProperty` can be used in two ways :
+- static way : just set the value to the static version of the description : `this.variableDescriptionProperty().set(this.getStaticDescription());`
+- dynamic way : if your action have parameters (eg te text to write like `WriteTextAction` action), you can bind the variable description to change when the action parameters change : see [Translations](#translations) and `TranslationFX` part.
+
+#### Execution
+
+Action are executed on a specific Thread (not on the FX Thread) so you should be aware that you can't modify the UI directly : see [Threading part about it](#threading).
+
+**Actions added to a key or to an event are executed sequentially** : the first action should ends before executing the second. This means that if your action is blocking the execution thread, the next action could be never executed. However, LifeCompanion allow 4 components to run action in parallel. If possible, it's better that your action don't create any new thread, however if needed, be aware that use mode could end "outside" your new thread : if you need to interact with general controllers after a while, it's better to check if you're still in use mode (with `AppModeController.isUseMode()`)
 
 ### Key option
 
@@ -158,7 +172,50 @@ TODO
 
 ### Use variable
 
-TODO
+Use variable can be used in multiple LifeCompanion components :
+- **Keys** associated with "Information variable" key option : the text content of the key will be changed on runtime (combination of text and variables). It allow for example to display the current time in a key or an user score.
+- **Actions** : any action using text can use variables to combine a input text with a variable input. For this, the action configuration view can use `UseVariableTextArea` field to make the variable insertion easier in UI and `UseVariableController.INSTANCE.createText(...)` to create the text with current variables
+- **Events** : event can generate their own variable that will be added to the global variable context. This allow an event to generate a variable that will be then used by the associated actions. For example, the event `KeyTypedKeyboardEventGenerator` generates a variable containing the pressed key. If an action is associated to it, it can for example speak the pressed key (with `SpeakTextAction`)
+
+Variable can also be used also to communicate between actions : for example the `FlagUseVariable` can be used to cancel an action following in the execution list if needed : by simply adding the variable to execution context on a first action, and then checking for it in a second action.
+
+#### Defining a global variable
+
+To define a global variable, your plugin should implement :
+
+```java
+@Override
+public List<UseVariableDefinitionI> getDefinedVariables() {
+    return Arrays.asList(//
+            new UseVariableDefinition(
+                    SpellGameController.VAR_ID_USER_SCORE,
+                    "example.plugin.use.variable.user.score.name",
+                    "example.plugin.use.variable.user.score.description",
+                    "example.plugin.use.variable.user.score.example"
+            )
+    );
+}
+```
+This is just the definition of use variable making it available in the user UI to add a variable to various elements (text, use info keys, etc.)
+
+#### Update variable value
+
+When use mode is running, the plugin method `generateVariables` will be called every second to get the variable new values. If your variable computing is expensive, you may have to cache its value internaly. Your method should create a new Map containing the generated variables with their definition and their value.
+
+```java
+@Override
+public Map<String, UseVariableI<?>> generateVariables(Map<String, UseVariableDefinitionI> variablesToGenerate) {
+    Map<String, UseVariableI<?>> vars = new HashMap<>();
+    vars.put(SpellGameController.VAR_ID_USER_SCORE,
+            new StringUseVariable(
+                    variablesToGenerate.get(SpellGameController.VAR_ID_USER_SCORE),
+                    String.valueOf(SpellGameController.INSTANCE.getUserScore())
+            ));
+    return vars;
+}
+```
+
+Sometimes it can be usefull to update a variable earlier than the next automatic call to `generateVariables` : for example you want the user score to be updated immediatly after the correct action (instead of waiting ~1 second). For this, you can call `UseVariableController.INSTANCE.requestVariablesUpdate()` and the update will be done as soon as possible (with a supplementary call to `generatedVariables`)
 
 ### Word prediction
 
@@ -173,11 +230,17 @@ TODO
 ### Controllers
 
 - GlobalKeyEventController :
--
+- AppModeController :
 
 ### Utils and helpers
 
+### Threading
+
+Note that action and event are mostly generated out of the JavaFX Thread. This means that if you have to modify UI components, you should explicitly do it on the FXThread (you can use `FXThreadUtils.runOnFXThread()` to do so)
+
 ### Translations
+
+#### Files
 
 Even if LifeCompanion is currently available only in french, plugin can have multiple translation files. This is useful to separate code from string data. The plugin will return the path (jar path) to the language files via :
 
@@ -199,6 +262,8 @@ Each language file is a basic XML containing key/value for translation. It is re
 
 The value for each translation can use `{}` to inject variable on runtime in Translation. It can also use `\n` or `\t` to insert newlines or tabs. Note that newlines or tabs injected without this specific way are not kept in resulting translation.
 
+#### Code API
+
 Translation will then be used later in the code like this :
 
 ```java
@@ -219,6 +284,12 @@ Injected parameters can mix :
 It's recommanded to use `TranslationFX` only when you need changing translation as this relies on binding and change listener consuming more performance than simple translation generated once by `Translation`.
 
 ### Serialization
+
+**TODO, think about**
+
+- Serialization use class name, warning if changed
+- To serialize attribute, implementation of methods is mandatory
+- Backward compatibility should be handled manually
 
 ### App icons
 

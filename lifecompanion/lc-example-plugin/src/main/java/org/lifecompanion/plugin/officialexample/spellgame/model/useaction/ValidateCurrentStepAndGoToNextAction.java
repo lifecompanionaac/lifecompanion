@@ -17,29 +17,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.lifecompanion.plugin.officialexample.spellgame.useaction;
+package org.lifecompanion.plugin.officialexample.spellgame.model.useaction;
 
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
 import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
+import org.lifecompanion.plugin.officialexample.spellgame.controller.SpellGameController;
 
 import java.util.Map;
 
-public class NextStepInGameAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
-    public NextStepInGameAction() {
+public class ValidateCurrentStepAndGoToNextAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
+
+    public ValidateCurrentStepAndGoToNextAction() {
         super(UseActionTriggerComponentI.class);
         this.order = 0;
         this.category = SpellGameActionSubCategories.SPELLGAME;
         this.parameterizableAction = false;
-        this.nameID = "ha.plugin.action.call.service.name";
-        this.staticDescriptionID = "ha.plugin.action.call.service.name";
+        this.nameID = "example.plugin.action.validate.step.and.go.next.in.game.name";
+        this.staticDescriptionID = "example.plugin.action.nextstep.in.game.description";
         this.configIconPath = "filler_icon.png";
         this.variableDescriptionProperty().set(this.getStaticDescription());
     }
 
     @Override
     public void execute(UseActionEvent event, Map<String, UseVariableI<?>> variables) {
-
+        SpellGameController.INSTANCE.validateCurrentStepAndGoToNext();
     }
 }

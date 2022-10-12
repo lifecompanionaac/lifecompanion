@@ -19,14 +19,23 @@
 
 package org.lifecompanion.plugin.officialexample.spellgame.controller;
 
+import javafx.application.Platform;
+import javafx.beans.InvalidationListener;
+import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.textcomponent.WritingStateController;
+import org.lifecompanion.controller.usevariable.UseVariableController;
+import org.lifecompanion.controller.voicesynthesizer.VoiceSynthesizerController;
+import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.framework.utils.LCNamedThreadFactory;
 import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
+import org.lifecompanion.model.api.textcomponent.WritingEventSource;
 import org.lifecompanion.plugin.officialexample.ExamplePluginOfficial;
 import org.lifecompanion.plugin.officialexample.ExamplePluginProperties;
-import org.lifecompanion.plugin.officialexample.spellgame.keyoption.CurrentWordDisplayKeyOption;
+import org.lifecompanion.plugin.officialexample.spellgame.model.keyoption.CurrentWordDisplayKeyOption;
+import org.lifecompanion.plugin.officialexample.spellgame.model.GameStep;
+import org.lifecompanion.plugin.officialexample.spellgame.model.GameStepEnum;
 import org.lifecompanion.util.ThreadUtils;
 import org.lifecompanion.util.model.ConfigurationComponentUtils;
 
@@ -37,18 +46,34 @@ public enum SpellGameController implements ModeListenerI {
 
     private List<String> inputList = Arrays.asList("vélo", "maison", "papa", "maman");
 
+    public static final String
+            VAR_ID_USER_SCORE = "SpellGameUserScore",
+            VAR_ID_WORD_INDEX = "SpellGameWordIndex",
+            VAR_ID_WORD_COUNT = "SpellGameWordCount";
+
     private List<String> currentWordList;
     private int currentWordIndex;
-    private int currentListSize;
+    private int currentStepIndex;
+    private int userScore;
 
     private ExamplePluginProperties currentExamplePluginProperties;
-
     private final List<CurrentWordDisplayKeyOption> wordDisplayKeyOptions;
+    private final InvalidationListener textListener;
 
-    private SpellGameController() {
+    // FIXME : boolean running game...
+
+    SpellGameController() {
         currentWordIndex = -1;
-        currentListSize = -1;
+        currentStepIndex = -1;
         wordDisplayKeyOptions = new ArrayList<>();
+        textListener = inv -> {
+            String text = WritingStateController.INSTANCE.currentTextProperty().get();
+            if (StringUtils.isNotBlank(text) && text.endsWith("\n")) {
+                // This is expected call (and not FXThreadUtils to directly be ran)
+                // > will avoid nested changes as this is called from a change listener and the called method create new changes.
+                Platform.runLater(this::validateCurrentStepAndGoToNext);
+            }
+        };
     }
 
     @Override
@@ -71,34 +96,96 @@ public enum SpellGameController implements ModeListenerI {
 
     @Override
     public void modeStop(LCConfigurationI configuration) {
+        endGame();
         this.currentExamplePluginProperties = null;
         wordDisplayKeyOptions.clear();
     }
 
     public void startGame() {
-        currentWordList = inputList;//FIXME : shuffle
+        if (currentExamplePluginProperties.validateWithEnterProperty().get()) {
+            WritingStateController.INSTANCE.currentTextProperty().addListener(textListener);
+        }
+        userScore = 0;
+        currentWordList = inputList;//FIXME : shuffle and remove empty words
         currentWordIndex = 0;
-        stepStartWithCurrentWord();
+        currentStepIndex = 0;
+        WritingStateController.INSTANCE.removeAll(WritingEventSource.SYSTEM);
+        startCurrentStep();
     }
 
     public void endGame() {
+        // FIXME
+        WritingStateController.INSTANCE.currentTextProperty().removeListener(textListener);
+        System.out.println("== END GAME ==");
+    }
+
+    public void validateCurrentStepAndGoToNext() {
+        // FIXME : check validation relative to current step
+        GameStep step = GameStepEnum.values()[currentStepIndex];
+        String input = WritingStateController.INSTANCE.currentTextProperty().get();
+        WritingStateController.INSTANCE.removeAll(WritingEventSource.SYSTEM);
+
+        // If the user successfully enter the word : set the point and go to next word
+        if (step.checkWord(
+                cleanText(currentWordList.get(currentWordIndex)),
+                cleanText(input)
+        )) {
+            // SoundPlayerController.INSTANCE.playSoundAsync(new File("confirmation_002.wav"), true);
+            endCurrentStepAndGoToNextWord();
+        }
+        // User failed to enter the correct word
+        else {
+            // SoundPlayerController.INSTANCE.playSoundAsync(new File("bong.wav"), true);
+            if (currentStepIndex < GameStepEnum.values().length - 1) {
+                currentStepIndex++;
+                startCurrentStep();
+            } else {
+                endCurrentStepAndGoToNextWord();
+            }
+        }
 
     }
 
-    public void finishStep() {
-        // FIXME : check if not currently writing before finished step
-        currentWordIndex++;
-        stepStartWithCurrentWord();
+    private void endCurrentStepAndGoToNextWord() {
+        userScore += GameStepEnum.values().length - GameStepEnum.values()[currentStepIndex].ordinal();
+        UseVariableController.INSTANCE.requestVariablesUpdate();
+        currentStepIndex = 0;
+        if (currentWordIndex < currentWordList.size() - 1) {
+            currentWordIndex++;
+            startCurrentStep();
+        } else {
+            endGame();
+        }
     }
 
-    private void stepStartWithCurrentWord() {
-        WritingStateController.INSTANCE.writingDisabledProperty().set(true);
+    private void startCurrentStep() {
         String currentWord = currentWordList.get(currentWordIndex);
-        wordDisplayKeyOptions.forEach(currentWordDisplayKeyOption -> currentWordDisplayKeyOption.showWord(currentWord));
-        LCNamedThreadFactory.daemonThreadFactory("SpellGame").newThread(() -> {
-            ThreadUtils.safeSleep(currentExamplePluginProperties.wordDisplayTimeInMsProperty().get());
-            wordDisplayKeyOptions.forEach(CurrentWordDisplayKeyOption::hideWord);
-            WritingStateController.INSTANCE.writingDisabledProperty().set(false);
-        }).start();
+        GameStepEnum step = GameStepEnum.values()[currentStepIndex];
+        VoiceSynthesizerController.INSTANCE.speakAsync(
+                step.getInstruction(currentWord),
+                AppModeController.INSTANCE.getUseModeContext().configurationProperty().get().getVoiceSynthesizerParameter(),
+                null);
+        if (step.isWordDisplayOnStep()) {
+            WritingStateController.INSTANCE.writingDisabledProperty().set(true);
+            wordDisplayKeyOptions.forEach(currentWordDisplayKeyOption -> currentWordDisplayKeyOption.showWord(currentWord));
+            LCNamedThreadFactory.daemonThreadFactory("SpellGame").newThread(() -> {
+                ThreadUtils.safeSleep(currentExamplePluginProperties.wordDisplayTimeInMsProperty().get());
+                wordDisplayKeyOptions.forEach(CurrentWordDisplayKeyOption::hideWord);
+                WritingStateController.INSTANCE.writingDisabledProperty().set(false);
+            }).start();
+        }
     }
+
+    // UTILS
+    //========================================================================
+    private static String cleanText(String text) {
+        return StringUtils.toLowerCase(StringUtils.trimToEmpty(text));
+    }
+
+    public int getUserScore() {
+        return userScore;
+    }
+    //========================================================================
+
+
 }

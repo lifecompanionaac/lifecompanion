@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.lifecompanion.plugin.officialexample.spellgame.useaction;
+package org.lifecompanion.plugin.officialexample.spellgame.model.useaction;
 
 public class StartWordGameAction {
 }

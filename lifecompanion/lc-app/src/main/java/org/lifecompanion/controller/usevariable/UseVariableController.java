@@ -325,12 +325,14 @@ public enum UseVariableController implements ModeListenerI {
     }
     //========================================================================
 
+
+    // Class part : "Information key option"
+    //========================================================================
+
     /**
      * To request a new variable udpate.<br>
      * Variable will be update every second, but you could need to manually update variables.
      */
-    // Class part : "Information key option"
-    //========================================================================
     public void requestVariablesUpdate() {
         FXThreadUtils.runOnFXThread(this::updateInformationKeyOptions);
     }

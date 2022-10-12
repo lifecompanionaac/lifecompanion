@@ -1,17 +1,38 @@
 <texts>
-	<text key="example.plugin.game.step.instruction.write">Écris le mot que tu viens d'entendre</text>
-	<text key="example.plugin.game.step.instruction.copy">Écris le mot que tu viens de voir</text>
-	<text key="example.plugin.game.step.instruction.char.count">Écris combien de lettre a le mot ?</text>
-	<text key="example.plugin.game.step.instruction.backward">Écris le mot à l'envers</text>
-	<text key="example.plugin.game.step.instruction.one.on.two">Écris une lettre sur deux du mot</text>
-	<text key="example.plugin.game.step.instruction.vowel">Écris dans l'ordre uniquement les voyelles</text>
-	<text key="example.plugin.game.step.instruction.consonant">Écris dans l'ordre uniquement les consonnes</text>
+	<!-- STEPS -->
+	<text key="example.plugin.game.step.instruction.write">Écris le mot : "{}"</text>
+	<text key="example.plugin.game.step.instruction.copy">Écris le mot : "{}"</text>
+	<text key="example.plugin.game.step.instruction.char.count">Écris le nombre de lettre dans le mot : "{}"</text>
+	<text key="example.plugin.game.step.instruction.backward">Écris le mot : "{}" à l'envers</text>
+	<text key="example.plugin.game.step.instruction.one.on.two">Écris une lettre sur deux du mot "{}"</text>
+	<text key="example.plugin.game.step.instruction.vowel">Écris dans l'ordre uniquement les voyelles du mot "{}"</text>
+	<text key="example.plugin.game.step.instruction.consonant">Écris dans l'ordre uniquement les consonnes du mot "{}"
+	</text>
 
+	<!-- VARIABLES -->
+	<text key="example.plugin.use.variable.user.score.name">Score de l'utilisateur</text>
+	<text key="example.plugin.use.variable.user.score.description">Contient le score de l'utilisateur pour la partie courante. Si aucun partie n'est lancée, contient 0.</text>
+	<text key="example.plugin.use.variable.user.score.example">5</text>
 
+	<!-- KEY OPTION -->
 	<text key="example.plugin.current.word.key.option.name">Mot courant dans le jeux</text>
 
+	<!-- ACTIONS -->
 	<text key="example.plugin.main.action.category.name">Démonstration</text>
-	<text key="example.plugin.main.action.category.description">Contient toutes les actions développées dans le cadre de l'extension de démonstration.</text>
+	<text key="example.plugin.main.action.category.description">Contient toutes les actions développées dans le cadre de
+		l'extension de démonstration.
+	</text>
 	<text key="example.plugin.sub.action.category.spellgame.name">Jeux "Épelle moi"</text>
 	<text key="example.plugin.sub.action.category.misc.name">Autres</text>
+	<text key="example.plugin.action.validate.step.and.go.next.in.game.name">Valider le mot entré</text>
+	<text key="example.plugin.action.validate.step.and.go.next.in.game.description">Permet de "valider" le mot écrit en
+		cours par
+		l'utilisateur de passer au mot suivant (si l'entrée est correcte) ou à l'étape suivante sinon.
+	</text>
+
+	<!-- UI -->
+	<text key="example.plugin.config.view.general.title">Extension de démonstration</text>
+	<text key="example.plugin.config.general.configuration.title.part">Configuration générale</text>
+	<text key="example.plugin.config.view.field.word.display.second">Temps d'affichage du mot</text>
+
 </texts>
