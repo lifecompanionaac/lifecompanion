@@ -35,8 +35,8 @@ jar {
                 "LifeCompanion-Plugin-Author": "LifeCompanion",
                 "LifeCompanion-Plugin-Version": project.version,
                 "LifeCompanion-Plugin-Build-Date": new Date().getTime(),
-                "LifeCompanion-Plugin-Name": "Extension démo (officiel)",
-                "LifeCompanion-Plugin-Description": "Ceci est une démonstration permettant de montrer ce qu'il est possible de faire avec les extensions dans LifeCompanion",
+                "LifeCompanion-Plugin-Name": "Extension de démonstration",
+                "LifeCompanion-Plugin-Description": "Ceci est une démonstration permettant de montrer ce qu'il est possible de faire avec les extensions dans LifeCompanion.",
                 "LifeCompanion-Min-App-Version": "$lifecompanionAppVersion"
         )
     }

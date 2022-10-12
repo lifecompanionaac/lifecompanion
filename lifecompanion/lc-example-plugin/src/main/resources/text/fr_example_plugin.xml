@@ -9,4 +9,9 @@
 
 
 	<text key="example.plugin.current.word.key.option.name">Mot courant dans le jeux</text>
+
+	<text key="example.plugin.main.action.category.name">Démonstration</text>
+	<text key="example.plugin.main.action.category.description">Contient toutes les actions développées dans le cadre de l'extension de démonstration.</text>
+	<text key="example.plugin.sub.action.category.spellgame.name">Jeux "Épelle moi"</text>
+	<text key="example.plugin.sub.action.category.misc.name">Autres</text>
 </texts>

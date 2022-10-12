@@ -19,5 +19,27 @@
 
 package org.lifecompanion.plugin.officialexample.spellgame.useaction;
 
-public class NextStepInGameAction {
+import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
+import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
+import org.lifecompanion.model.api.usevariable.UseVariableI;
+import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
+
+import java.util.Map;
+
+public class NextStepInGameAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
+    public NextStepInGameAction() {
+        super(UseActionTriggerComponentI.class);
+        this.order = 0;
+        this.category = SpellGameActionSubCategories.SPELLGAME;
+        this.parameterizableAction = false;
+        this.nameID = "ha.plugin.action.call.service.name";
+        this.staticDescriptionID = "ha.plugin.action.call.service.name";
+        this.configIconPath = "filler_icon.png";
+        this.variableDescriptionProperty().set(this.getStaticDescription());
+    }
+
+    @Override
+    public void execute(UseActionEvent event, Map<String, UseVariableI<?>> variables) {
+
+    }
 }
