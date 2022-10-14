@@ -18,12 +18,16 @@ Be familiar with Java and JavaFX development.
 
 ## Getting started
 
-### Install plugin dev env.
+### Install plugin dev env. - TODO CLEAN SOURCE FOLDER TO COPY
 
 1. First, clone LifeCompanion official repository and make it build and run locally : [use build documentation](BUILD.md)
-1. Run `gradlew publishToMavenLocal` on **lifecompanion** projects (this will add LifeCompanion API to your local Maven repo)
+1. Run `gradlew publishToMavenLocal` on **lifecompanion-framework** and **lifecompanion** projects (this will add LifeCompanion API to your local Maven repo)
+1. TODO FROM HERE
 1. Copy the **lifecompanion/lc-example-plugin** to your plugin specific folder
-1. To build your plugin : use `gradlew publishToMavenLocal`
+1. Change the folder name
+1. Change Gralde project name *settings.gradle*
+1. Change the plugin ID in *build.gralde* on key **LifeCompanion-Plugin-Id**
+1. To build your plugin : use `gradlew jar`
 
 ### Efficient plugin dev. in IntelliJ
 
@@ -32,22 +36,18 @@ Be familiar with Java and JavaFX development.
 1. Create a run configuration that build your plugin : `gradlew clean jar` (on your plugin project)
 1. Create a run configuration that run LifeCompanion app `gradlew :lc-app:run`
 1. On the LifeCompanion run configuration
-    1. Add on **environment variables** : `org.lifecompanion.dev.cp.arg=../lc-example-plugin/build/libs/*` (this should be adapted to your plugin folder path)
+    1. Add on **environment variables** : `org.lifecompanion.dev.cp.arg=../../lifecompanion-plugins/lc-spellgame-plugin/build/libs/*` (this should be adapted to your plugin folder path)
     1. Add : Before launch > Run Another Configuration with your run configuration that build your plugin (`clean jar`)
 1. You can now use your LifeCompanion run configuration : this will first build your plugin and inject its last version to LifeCompanion !
 
-### Example plugin description
+### Existing plugins
 
-The example plugin try to make use of all the possibilities of the plugin in a real use case : a game to help children to write words. The game is simple but can be used in real life.
-Some specific feature (word prediction, char prediction) are not needed in the game but are also implemented to have an example on them.
+All the official existing plugins are stored in the **lifecompanion-plugins** folder on the repo (or will be!)
 
-Other real life plugin examples are :
 - **simple email plugin** : plugin that allow the user to read and send email from traditionnal email server
 - **calendar plugin** : plugin to help user to plan their days (with alarms, events and sequences)
 - **ppp plugin** : plugin to trace prediatric pain profil scale for an user
 - **homeassistant plugin** : plugin to interact with a HomeAssistant server
-
-These example can be found in [their dedicated repo (not documented)](LINKTODO)
 
 ## LifeCompanion fundamentals
 
@@ -170,6 +170,8 @@ TODO
 
 TODO
 
+- Think about modifying duplicated instance (don't directly modify/bind on your instance to handle save/cancel buttons)
+
 ### Use variable
 
 Use variable can be used in multiple LifeCompanion components :
@@ -290,6 +292,7 @@ It's recommanded to use `TranslationFX` only when you need changing translation 
 - Serialization use class name, warning if changed
 - To serialize attribute, implementation of methods is mandatory
 - Backward compatibility should be handled manually
+- Empty param public constructor
 
 ### App icons
 
