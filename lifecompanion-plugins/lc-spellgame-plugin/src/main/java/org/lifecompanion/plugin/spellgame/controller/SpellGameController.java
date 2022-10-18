@@ -35,6 +35,7 @@ import org.lifecompanion.plugin.spellgame.SpellGamePlugin;
 import org.lifecompanion.plugin.spellgame.SpellGamePluginProperties;
 import org.lifecompanion.plugin.spellgame.model.GameStep;
 import org.lifecompanion.plugin.spellgame.model.GameStepEnum;
+import org.lifecompanion.plugin.spellgame.model.SpellGameWordList;
 import org.lifecompanion.plugin.spellgame.model.keyoption.CurrentWordDisplayKeyOption;
 import org.lifecompanion.util.ThreadUtils;
 import org.lifecompanion.util.model.ConfigurationComponentUtils;
@@ -85,12 +86,6 @@ public enum SpellGameController implements ModeListenerI {
         Map<GridComponentI, List<CurrentWordDisplayKeyOption>> keys = new HashMap<>();
         ConfigurationComponentUtils.findKeyOptionsByGrid(CurrentWordDisplayKeyOption.class, configuration, keys, null);
         keys.values().stream().flatMap(List::stream).distinct().forEach(wordDisplayKeyOptions::add);
-
-        // FIXME : delete this
-        new Thread(() -> {
-            ThreadUtils.safeSleep(3000);
-            this.startGame();
-        }).start();
     }
 
     @Override
@@ -100,12 +95,13 @@ public enum SpellGameController implements ModeListenerI {
         wordDisplayKeyOptions.clear();
     }
 
-    public void startGame() {
+    public void startGame(String id) {
+        SpellGameWordList currentWordList = currentSpellGamePluginProperties.getWordListById(id);
         if (currentSpellGamePluginProperties.validateWithEnterProperty().get()) {
             WritingStateController.INSTANCE.currentTextProperty().addListener(textListener);
         }
         userScore = 0;
-        currentWordList = inputList;//FIXME : shuffle and remove empty words
+        this.currentWordList = new ArrayList<>(currentWordList.getWords());
         currentWordIndex = 0;
         currentStepIndex = 0;
         WritingStateController.INSTANCE.removeAll(WritingEventSource.SYSTEM);
@@ -115,7 +111,7 @@ public enum SpellGameController implements ModeListenerI {
     public void endGame() {
         // FIXME
         WritingStateController.INSTANCE.currentTextProperty().removeListener(textListener);
-        System.out.println("== END GAME ==");
+        this.currentWordList = null;
     }
 
     public void validateCurrentStepAndGoToNext() {

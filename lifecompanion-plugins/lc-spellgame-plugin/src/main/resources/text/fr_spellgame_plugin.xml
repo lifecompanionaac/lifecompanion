@@ -38,6 +38,10 @@
 		l'utilisateur de passer au mot suivant (si l'entrée est correcte) ou à l'étape suivante sinon.
 	</text>
 
+	<text key="spellgame.plugin.action.start.game.name">Démarrer une partie</text>
+	<text key="spellgame.plugin.action.start.game.static.description">Permet de démarrer une nouvelle partie de "Écris le mot" avec la liste sélectionnée</text>
+	<text key="spellgame.plugin.action.start.game.variable.description">Permet de démarrer une nouvelle partie de "Écris le mot" avec la liste "{}"</text>
+
 	<!-- UI -->
 	<text key="spellgame.plugin.config.view.general.title">Jeu "Ecris le mot"</text>
 	<text key="spellgame.plugin.config.view.wordlist.title">Configurer la liste de mots</text>
@@ -47,5 +51,11 @@
 	<text key="spellgame.plugin.config.button.modify.current.list">Modifier la liste</text>
 	<text key="spellgame.plugin.config.button.delete.current.list">Supprimer la liste</text>
 	<text key="spellgame.plugin.config.field.list.name">Nom de la liste</text>
+	<text key="spellgame.plugin.config.field.add.word">Ajouter un mot</text>
+	<text key="spellgame.plugin.config.field.add.word.prompt">Entrée pour ajouter le mot</text>
+	<text key="spellgame.plugin.config.field.import.list">Importer depuis un fichier texte</text>
+	<text key="spellgame.plugin.config.field.import.list.title">Importer depuis un fichier texte</text>
+	<text key="spellgame.plugin.config.import.list.format">Fichier texte (UTF-8)</text>
+	<text key="spellgame.plugin.config.field.word.list.to.start">Démarrer la partie depuis la liste</text>
 
 </texts>

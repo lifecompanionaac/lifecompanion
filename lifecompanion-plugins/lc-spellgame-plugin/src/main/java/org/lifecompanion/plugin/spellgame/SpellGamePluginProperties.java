@@ -5,6 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.jdom2.Element;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
+import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.impl.exception.LCException;
@@ -62,6 +63,10 @@ public class SpellGamePluginProperties extends AbstractPluginConfigProperties {
                 wordLists.add(spellGameWordList);
             }
         }
+    }
+
+    public SpellGameWordList getWordListById(String id) {
+        return wordLists.stream().filter(w -> StringUtils.isEquals(w.getId(), id)).findFirst().orElse(null);
     }
 
     @Override

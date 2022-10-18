@@ -7,6 +7,7 @@ import javafx.collections.ObservableList;
 import org.jdom2.Element;
 import org.lifecompanion.controller.io.ConfigurationComponentIOHelper;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
+import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.model.api.configurationcomponent.DuplicableComponentI;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.io.XMLSerializable;
@@ -15,10 +16,13 @@ import org.lifecompanion.util.CopyUtils;
 import java.util.Map;
 
 public class SpellGameWordList implements XMLSerializable<IOContextI>, DuplicableComponentI {
+    private String id;
     private final StringProperty name;
     private final ObservableList<String> words;
+    // TODO : add boolean "randomize" list
 
     public SpellGameWordList() {
+        this.id = StringUtils.getNewID();
         name = new SimpleStringProperty();
         words = FXCollections.observableArrayList();
     }
@@ -29,6 +33,10 @@ public class SpellGameWordList implements XMLSerializable<IOContextI>, Duplicabl
 
     public ObservableList<String> getWords() {
         return words;
+    }
+
+    public String getId() {
+        return id;
     }
 
     @Override

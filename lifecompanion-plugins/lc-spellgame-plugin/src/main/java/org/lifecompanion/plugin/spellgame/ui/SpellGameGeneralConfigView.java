@@ -132,6 +132,7 @@ public class SpellGameGeneralConfigView extends BorderPane implements GeneralCon
             SpellGameWordList spellGameWordList = new SpellGameWordList();
             spellGameWordList.nameProperty().set(Translation.getText("spellgame.plugin.default.list.name"));
             this.comboBoxWordList.getItems().add(spellGameWordList);
+            this.comboBoxWordList.getSelectionModel().select(spellGameWordList);
         });
         this.buttonEditCurrentList.setOnAction(e -> {
             SpellGameWordList selectedItem = this.comboBoxWordList.getSelectionModel().getSelectedItem();
