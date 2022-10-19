@@ -115,7 +115,40 @@ Plugin are a good way to integrate specific features into LifeCompanion. This ta
 
 ### Plugin
 
-TODO
+Plugin are loaded by LifeCompanion on startup and their implementation can be used all accross the components.
+
+#### Organization and technical notes
+
+A plugin is composed of a single jar file that is **loaded on classpath**. LifeCompanion plugins don't make any use of Java modules (jigsaw) while LifeCompanion app do. This is made to make it easier to create plugin with their own dependencies.
+
+Plugin projects are built using Gradle like LifeCompanion core. The generated jar file for a plugin contains the plugin general metadata (id, author, version, name, etc) in the jar manifest file. These metadata are used for LifeCompanion to prepare a plugin loading (on next start) and to ensure compatibility and updates.
+
+As plugin are based on LifeCompanion, they are depending of LifeCompanion version. If LifeCompanion is updated with breaking changes, the plugins should be updated. To see the API changes, check [dev changelog documentation](DEV-CHANGELOG.md)
+
+#### Information
+
+#### Properties
+
+Plugin can have properties associated to configuration. These properties are directly saved on configuration if it is detected that the configuration use the plugin (an action, an event, etc).
+
+To implement properties, class has to extends `AbstractPluginConfigProperties` and the plugin implementation should return the property implementation via (see also [Serialization part](#serialization) to understand how properties are stored)
+
+```java
+@Override
+public PluginConfigPropertiesI newPluginConfigProperties(ObjectProperty<LCConfigurationI> parentConfiguration) {
+    return new SpellGamePluginProperties(parentConfiguration);
+}
+```
+
+If you need to use plugin properties, you can request them on a configuration with
+
+```java
+SpellGamePluginProperties pluginConfigProperties = configuration.getPluginConfigProperties(SpellGamePlugin.ID, SpellGamePluginProperties.class);
+```
+
+#### Lifecycle
+
+TODO : LC start/stop - mode start/stop
 
 ### Use action
 
@@ -168,9 +201,19 @@ TODO
 
 ### General configuration view
 
-TODO
+General configuration view are configuration not directly linked to a selected component that allow the configuration of global parameter for the current edited configuration. Generally, the general configuration view is used to modify [plugin properties](#properties)
 
-- Think about modifying duplicated instance (don't directly modify/bind on your instance to handle save/cancel buttons)
+#### Implementing view
+
+To implement a plugin configuration view, you have to implement `GeneralConfigurationStepViewI`. This will help you creating a configuration view for your plugin : see each method javadoc to understand how each element should be implemented.
+
+#### Handling view lifecycle
+
+#### Handling view cancel/save
+
+For the save/cancel button to be working, you should take care of never modifying directly your configuration. You then have two choices :
+- You can move every changes from view to model in `saveChanges()` method : the instance is then modified only when save button is clicked
+- You can duplicate your model and then bind the view to it : this can be easier but requires your model to be easely duplicated. In `saveChanges()`you then just have to replace your old model with the new version. If you need this version, you can check how to implement `DuplicableComponentI` interface in examples.
 
 ### Use variable
 
@@ -191,9 +234,9 @@ public List<UseVariableDefinitionI> getDefinedVariables() {
     return Arrays.asList(//
             new UseVariableDefinition(
                     SpellGameController.VAR_ID_USER_SCORE,
-                    "example.plugin.use.variable.user.score.name",
-                    "example.plugin.use.variable.user.score.description",
-                    "example.plugin.use.variable.user.score.example"
+                    "spellgame.use.variable.user.score.name",
+                    "spellgame.plugin.use.variable.user.score.description",
+                    "spellgame.plugin.use.variable.user.score.example"
             )
     );
 }

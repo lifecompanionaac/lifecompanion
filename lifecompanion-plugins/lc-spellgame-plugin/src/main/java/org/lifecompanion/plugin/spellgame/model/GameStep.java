@@ -23,4 +23,5 @@ public interface GameStep {
     boolean isWordDisplayOnStep();
     String getInstruction(String word);
     boolean checkWord(String word, String input);
+    String getExpectedResult(String word);
 }

@@ -49,7 +49,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class SpellGameWordListConfigView extends BorderPane implements GeneralConfigurationStepViewI, LCViewInitHelper {
+public class SpellGameWordListConfigView extends BorderPane implements GeneralConfigurationStepViewI {
 
     static final String STEP_ID = "SpellGameWordListConfigView";
 

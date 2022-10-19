@@ -21,10 +21,14 @@ package org.lifecompanion.plugin.spellgame.controller;
 
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import org.lifecompanion.controller.lifecycle.AppModeController;
+import org.lifecompanion.controller.resource.ResourceHelper;
 import org.lifecompanion.controller.textcomponent.WritingStateController;
 import org.lifecompanion.controller.usevariable.UseVariableController;
 import org.lifecompanion.controller.voicesynthesizer.VoiceSynthesizerController;
+import org.lifecompanion.framework.commons.utils.io.IOUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.framework.utils.LCNamedThreadFactory;
 import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
@@ -33,17 +37,26 @@ import org.lifecompanion.model.api.lifecycle.ModeListenerI;
 import org.lifecompanion.model.api.textcomponent.WritingEventSource;
 import org.lifecompanion.plugin.spellgame.SpellGamePlugin;
 import org.lifecompanion.plugin.spellgame.SpellGamePluginProperties;
+import org.lifecompanion.plugin.spellgame.controller.task.ExportGameResultTask;
 import org.lifecompanion.plugin.spellgame.model.GameStep;
 import org.lifecompanion.plugin.spellgame.model.GameStepEnum;
+import org.lifecompanion.plugin.spellgame.model.SpellGameStepResult;
 import org.lifecompanion.plugin.spellgame.model.SpellGameWordList;
 import org.lifecompanion.plugin.spellgame.model.keyoption.CurrentWordDisplayKeyOption;
 import org.lifecompanion.util.ThreadUtils;
 import org.lifecompanion.util.model.ConfigurationComponentUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.*;
 
 public enum SpellGameController implements ModeListenerI {
     INSTANCE;
+    private static final Logger LOGGER = LoggerFactory.getLogger(SpellGameController.class);
+
 
     private List<String> inputList = Arrays.asList("vélo", "maison", "papa", "maman");
 
@@ -60,6 +73,9 @@ public enum SpellGameController implements ModeListenerI {
     private SpellGamePluginProperties currentSpellGamePluginProperties;
     private final List<CurrentWordDisplayKeyOption> wordDisplayKeyOptions;
     private final InvalidationListener textListener;
+    private final List<SpellGameStepResult> currentGameAnswers;
+
+    private MediaPlayer playerSuccess, playerError;
 
     // FIXME : boolean running game...
 
@@ -67,6 +83,7 @@ public enum SpellGameController implements ModeListenerI {
         currentWordIndex = -1;
         currentStepIndex = -1;
         wordDisplayKeyOptions = new ArrayList<>();
+        currentGameAnswers = new ArrayList<>();
         textListener = inv -> {
             String text = WritingStateController.INSTANCE.currentTextProperty().get();
             if (StringUtils.isNotBlank(text) && text.endsWith("\n")) {
@@ -93,9 +110,12 @@ public enum SpellGameController implements ModeListenerI {
         endGame();
         this.currentSpellGamePluginProperties = null;
         wordDisplayKeyOptions.clear();
+
     }
 
     public void startGame(String id) {
+        playerSuccess = initPlayer("valid.wav");
+        playerError = initPlayer("error.mp3");
         SpellGameWordList currentWordList = currentSpellGamePluginProperties.getWordListById(id);
         if (currentSpellGamePluginProperties.validateWithEnterProperty().get()) {
             WritingStateController.INSTANCE.currentTextProperty().addListener(textListener);
@@ -104,32 +124,46 @@ public enum SpellGameController implements ModeListenerI {
         this.currentWordList = new ArrayList<>(currentWordList.getWords());
         currentWordIndex = 0;
         currentStepIndex = 0;
+        this.currentGameAnswers.clear();
         WritingStateController.INSTANCE.removeAll(WritingEventSource.SYSTEM);
         startCurrentStep();
     }
 
     public void endGame() {
-        // FIXME
+        this.currentGameAnswers.forEach(System.out::println);
         WritingStateController.INSTANCE.currentTextProperty().removeListener(textListener);
         this.currentWordList = null;
+        if (playerSuccess != null) {
+            playerSuccess.stop();
+            playerSuccess = null;
+        }
+        if (playerError != null) {
+            playerError.stop();
+            playerError = null;
+        }
     }
 
     public void validateCurrentStepAndGoToNext() {
         GameStep step = GameStepEnum.values()[currentStepIndex];
-        String input = WritingStateController.INSTANCE.currentTextProperty().get();
+        String input = cleanText(WritingStateController.INSTANCE.currentTextProperty().get());
+        String word = cleanText(currentWordList.get(currentWordIndex));
         WritingStateController.INSTANCE.removeAll(WritingEventSource.SYSTEM);
+        traceAnswer(step, word, input);
 
         // If the user successfully enter the word : set the point and go to next word
-        if (step.checkWord(
-                cleanText(currentWordList.get(currentWordIndex)),
-                cleanText(input)
-        )) {
-            // SoundPlayerController.INSTANCE.playSoundAsync(new File("confirmation_002.wav"), true);
+        if (step.checkWord(word, input)) {
+            if (currentSpellGamePluginProperties.enableFeedbackSoundProperty().get()) {
+                playerSuccess.stop();
+                playerSuccess.play();
+            }
             endCurrentStepAndGoToNextWord();
         }
         // User failed to enter the correct word
         else {
-            // SoundPlayerController.INSTANCE.playSoundAsync(new File("bong.wav"), true);
+            if (currentSpellGamePluginProperties.enableFeedbackSoundProperty().get()) {
+                playerError.stop();
+                playerError.play();
+            }
             if (currentStepIndex < GameStepEnum.values().length - 1) {
                 currentStepIndex++;
                 startCurrentStep();
@@ -137,7 +171,11 @@ public enum SpellGameController implements ModeListenerI {
                 endCurrentStepAndGoToNextWord();
             }
         }
+    }
 
+
+    private void traceAnswer(GameStep step, String word, String input) {
+        currentGameAnswers.add(new SpellGameStepResult(step, word, input, System.currentTimeMillis() - currentStepStartedAt));
     }
 
     private void endCurrentStepAndGoToNextWord() {
@@ -152,6 +190,8 @@ public enum SpellGameController implements ModeListenerI {
         }
     }
 
+    private long currentStepStartedAt;
+
     private void startCurrentStep() {
         String currentWord = currentWordList.get(currentWordIndex);
         GameStepEnum step = GameStepEnum.values()[currentStepIndex];
@@ -159,6 +199,7 @@ public enum SpellGameController implements ModeListenerI {
                 step.getInstruction(currentWord),
                 AppModeController.INSTANCE.getUseModeContext().configurationProperty().get().getVoiceSynthesizerParameter(),
                 null);
+        currentStepStartedAt = System.currentTimeMillis();
         if (step.isWordDisplayOnStep()) {
             WritingStateController.INSTANCE.writingDisabledProperty().set(true);
             wordDisplayKeyOptions.forEach(currentWordDisplayKeyOption -> currentWordDisplayKeyOption.showWord(currentWord));
@@ -166,6 +207,7 @@ public enum SpellGameController implements ModeListenerI {
                 ThreadUtils.safeSleep(currentSpellGamePluginProperties.wordDisplayTimeInMsProperty().get());
                 wordDisplayKeyOptions.forEach(CurrentWordDisplayKeyOption::hideWord);
                 WritingStateController.INSTANCE.writingDisabledProperty().set(false);
+                currentStepStartedAt = System.currentTimeMillis();
             }).start();
         }
     }
@@ -178,6 +220,24 @@ public enum SpellGameController implements ModeListenerI {
 
     public int getUserScore() {
         return userScore;
+    }
+    //========================================================================
+
+    // SOUND
+    //========================================================================
+    public MediaPlayer initPlayer(String soundName) {
+        File destAlarm = new File(org.lifecompanion.util.IOUtils.getTempDir("sound") + File.separator + soundName);
+        IOUtils.createParentDirectoryIfNeeded(destAlarm);
+        try (FileOutputStream fos = new FileOutputStream(destAlarm)) {
+            try (InputStream is = ResourceHelper.getInputStreamForPath("/sounds/" + soundName)) {
+                IOUtils.copyStream(is, fos);
+                Media media = new Media(destAlarm.toURI().toString());
+                return new MediaPlayer(media);
+            }
+        } catch (Exception e) {
+            LOGGER.error("Problem load sound", e);
+            return null;
+        }
     }
     //========================================================================
 

@@ -49,7 +49,7 @@ import org.lifecompanion.util.javafx.FXControlUtils;
 
 import java.util.stream.Collectors;
 
-public class SpellGameGeneralConfigView extends BorderPane implements GeneralConfigurationStepViewI, LCViewInitHelper {
+public class SpellGameGeneralConfigView extends BorderPane implements GeneralConfigurationStepViewI {
 
     static final String STEP_ID = "SpellGameGeneralConfigView";
 

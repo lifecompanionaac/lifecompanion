@@ -34,6 +34,11 @@ public enum GameStepEnum implements GameStep {
                 return false;
             }
         }
+
+        @Override
+        public String getExpectedResult(String word) {
+            return "" + StringUtils.safeLength(word);
+        }
     }
     //    BACKWARD("spellgame.plugin.game.step.instruction.backward"),
     //    ONE_ON_TWO("spellgame.plugin.game.step.instruction.one.on.two"),
@@ -62,6 +67,11 @@ public enum GameStepEnum implements GameStep {
     @Override
     public boolean checkWord(String word, String input) {
         return StringUtils.isEquals(word, input);
+    }
+
+    @Override
+    public String getExpectedResult(String word) {
+        return word;
     }
 
 

@@ -17,12 +17,14 @@ import java.util.Map;
 public class SpellGamePluginProperties extends AbstractPluginConfigProperties {
     private final IntegerProperty wordDisplayTimeInMs;
     private final BooleanProperty validateWithEnter;
+    private final BooleanProperty enableFeedbackSound;
     private final ObservableList<SpellGameWordList> wordLists;
 
     protected SpellGamePluginProperties(ObjectProperty<LCConfigurationI> parentConfiguration) {
         super(parentConfiguration);
         this.wordDisplayTimeInMs = new SimpleIntegerProperty(2000);
         this.validateWithEnter = new SimpleBooleanProperty(true);
+        this.enableFeedbackSound = new SimpleBooleanProperty(true);
         this.wordLists = FXCollections.observableArrayList();
     }
 
@@ -32,6 +34,10 @@ public class SpellGamePluginProperties extends AbstractPluginConfigProperties {
 
     public BooleanProperty validateWithEnterProperty() {
         return validateWithEnter;
+    }
+
+    public BooleanProperty enableFeedbackSoundProperty() {
+        return enableFeedbackSound;
     }
 
     public ObservableList<SpellGameWordList> getWordLists() {
