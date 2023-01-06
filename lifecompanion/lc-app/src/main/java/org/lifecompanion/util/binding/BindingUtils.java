@@ -71,9 +71,22 @@ public class BindingUtils {
         return changeListener;
     }
 
-    // This version is correctly implemented for other actions that simple add/remove
-    // be careful : this doesn't guaranty that removed element is not in the list anymore...
+
     public static <T> ListChangeListener<T> createListChangeListenerV2(final Consumer<T> forEachAdd, final Consumer<T> forEachRemove) {
+        return createListChangeListenerV2(forEachAdd, forEachRemove, null);
+    }
+
+    /**
+     * This version is correctly implemented for other actions that simple add/remove
+     * be careful : this doesn't guaranty that removed element is not in the list anymore...
+     *
+     * @param forEachAdd
+     * @param forEachRemove
+     * @param onChangeProcessed
+     * @param <T>
+     * @return
+     */
+    public static <T> ListChangeListener<T> createListChangeListenerV2(final Consumer<T> forEachAdd, final Consumer<T> forEachRemove, Runnable onChangeProcessed) {
         return (c) -> {
             while (c.next()) {
                 if (c.wasPermutated() || c.wasUpdated()) {
@@ -85,6 +98,7 @@ public class BindingUtils {
                     LangUtils.consumeEachIn(c.getAddedSubList(), forEachAdd);
                 }
             }
+            if (onChangeProcessed != null) onChangeProcessed.run();
         };
     }
 

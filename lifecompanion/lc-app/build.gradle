@@ -28,7 +28,10 @@ mainClassName = 'org.lifecompanion.LifeCompanion'
 ext {
     devCpArg = System.getenv('org.lifecompanion.dev.cp.arg') != null && !System.getenv('org.lifecompanion.dev.cp.arg').isBlank() ? System.getenv('org.lifecompanion.dev.cp.arg') : '/null'
     sharedJvmArgAppTest = [
-            '-Dglass.win.uiScale=100%', // TODO : test if previous bug with uiScale are still here...
+            // TODO : testing if previous bug are still there
+            // Current status :
+            // - bug with main scene on loading : preview part has a wrong size (bottom bar + center not working)
+            //'-Dglass.win.uiScale=100%',
 
             // Splash screen
             '-splash:data/lifecompanion_splashscreen.png',

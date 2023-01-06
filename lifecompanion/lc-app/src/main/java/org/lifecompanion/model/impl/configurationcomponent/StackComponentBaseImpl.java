@@ -34,6 +34,8 @@ import org.lifecompanion.model.api.io.XMLSerializable;
 import org.lifecompanion.framework.commons.fx.io.XMLUtils;
 import org.lifecompanion.framework.utils.Pair;
 import org.lifecompanion.util.binding.BindingUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -138,9 +140,11 @@ public interface StackComponentBaseImpl extends TreeDisplayableComponentI, Stack
             int indexToReplace = this.getComponentList().indexOf(toReplace);
             this.getComponentList().set(indexToReplace, component);
         } else {
-            throw new IllegalArgumentException("Can't replace a compnoent that is not in the grid");
+            throw new IllegalArgumentException("Can't replace a component that is not in the grid");
         }
     }
+
+    static final Logger LOGGER = LoggerFactory.getLogger(StackComponentBaseImpl.class);
 
     /**
      * {@inheritDoc}
@@ -179,16 +183,10 @@ public interface StackComponentBaseImpl extends TreeDisplayableComponentI, Stack
             c.getGridShapeStyle().parentComponentStyleProperty().set(this.getGridShapeStyle());
             c.getKeyStyle().parentComponentStyleProperty().set(this.getKeyStyle());
             c.getKeyTextStyle().parentComponentStyleProperty().set(this.getKeyTextStyle());
-
-            // Display the first component
-            if (displayed.get() == null) {
-                displayed.set(c);
-            }
         }, c -> {
             if (!components.contains(c)) {
                 if (c == displayed.get()) {
-                    if (!components.isEmpty()) displayed.set(components.get(0));
-                    else displayed.set(null);// FIXME : should never happen ?
+                    displayed.set(null);
                 }
                 c.dispatchRemovedPropertyValue(true);
                 //Unbind size
@@ -203,6 +201,10 @@ public interface StackComponentBaseImpl extends TreeDisplayableComponentI, Stack
                 } else if (StackComponentBaseImpl.this instanceof RootGraphicComponentI) {
                     c.rootParentProperty().set(null);
                 }
+            }
+        }, () -> {
+            if (displayed.get() == null && !components.isEmpty()) {
+                displayed.set(components.get(0));
             }
         }));
         components.addListener((InvalidationListener) inv -> {
