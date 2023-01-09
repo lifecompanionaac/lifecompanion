@@ -22,10 +22,13 @@ package org.lifecompanion.ui.notification;
 import javafx.animation.KeyValue;
 import javafx.beans.value.WritableValue;
 import javafx.stage.Stage;
+import javafx.stage.Window;
+import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.model.api.lifecycle.LCStateListener;
 import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.controller.editaction.AsyncExecutorController;
 import org.lifecompanion.model.impl.notification.LCNotification;
+import org.lifecompanion.util.javafx.StageUtils;
 
 import java.util.LinkedList;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -89,6 +92,11 @@ public enum LCNotificationController implements LCStateListener {
                 NotificationStage notificationStage = new NotificationStage(new NotificationScene(notification));
                 DisplayedNotificationContainer displayedNotificationContainer = new DisplayedNotificationContainer(notificationStage);
                 notificationStage.setOnHidden(e -> displayedNotifications.remove(displayedNotificationContainer));
+
+                notificationStage.setOnShown(e -> {
+                    Window topWindow = StageUtils.getOnTopWindowExcludingNotification();
+                    if (topWindow != null) topWindow.requestFocus();
+                });
 
                 notificationStage.show(displayedNotifications, () -> {
                     handlingQueueItem.set(false);

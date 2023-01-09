@@ -28,9 +28,11 @@ import org.lifecompanion.controller.appinstallation.InstallationController;
 import org.lifecompanion.controller.lifecycle.AppMode;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.resource.IconHelper;
+import org.lifecompanion.framework.utils.Pair;
 import org.lifecompanion.model.api.configurationcomponent.FramePosition;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
+import org.lifecompanion.ui.notification.NotificationStage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -90,6 +92,18 @@ public class StageUtils {
 
     public static Stage getEditOrUseStageVisible() {
         return AppModeController.INSTANCE.modeProperty().get() == AppMode.EDIT || AppModeController.INSTANCE.getUseModeContext().stageProperty().get() == null ? AppModeController.INSTANCE.getEditModeContext().getStage() : AppModeController.INSTANCE.getUseModeContext().stageProperty().get();
+    }
+
+    public static javafx.stage.Window getOnTopWindowExcludingNotification() {
+        return Stage.getWindows().stream().filter(javafx.stage.Window::isShowing).filter(w -> !(w instanceof NotificationStage)).map(w -> {
+            int depth = 0;
+            javafx.stage.Window owner = w;
+            do {
+                depth++;
+                owner = (owner instanceof Stage) ? ((Stage) owner).getOwner() : null;
+            } while (owner != null);
+            return Pair.of(w, depth);
+        }).sorted((p1, p2) -> Integer.compare(p2.getRight(), p1.getRight())).findFirst().map(p -> p.getLeft()).orElse(null);
     }
 
     /**
