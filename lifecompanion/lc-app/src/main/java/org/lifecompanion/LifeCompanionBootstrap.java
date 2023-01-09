@@ -68,6 +68,7 @@ import org.slf4j.LoggerFactory;
 import java.awt.*;
 import java.io.File;
 import java.util.List;
+import java.util.Properties;
 
 import static org.lifecompanion.model.impl.constant.LCConstant.URL_PATH_GET_STARTED;
 
@@ -87,6 +88,12 @@ public class LifeCompanionBootstrap {
     }
 
     public void startLifeCompanion() {
+        String[] props = new String[]{"java.vm.name", "java.vm.vendor", "java.vm.version"};
+        Properties systemProps = System.getProperties();
+        for (Object key : systemProps.keySet()) {
+            LOGGER.info("\t{} = {}", key, systemProps.get(key));
+        }
+
         AppModeController.INSTANCE.initEditModeStage(stage);
         preload();
         loadAndShowStageAndLoadingScene();

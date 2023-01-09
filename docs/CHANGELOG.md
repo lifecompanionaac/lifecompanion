@@ -4,10 +4,12 @@
 
 ### Fonctionnalités
 
-- ...
+- Mise à jour de l'API d'extensions
+- Migration vers Java 18
 
 ### Corrections/ajustements
 
+- Ticket #182 : correction d'une traduction
 - Ticket #185 : correction d'une erreur lors du remplacement d'une grille par une autre en copier/coller
 - Ticket #186 : correction d'un problème qui faisait que le bouton "précedent" ne fonctionnait pas sur les listes de case
 

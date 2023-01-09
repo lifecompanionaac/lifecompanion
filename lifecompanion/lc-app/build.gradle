@@ -2,8 +2,8 @@ import com.github.jk1.license.render.TextReportRenderer
 
 plugins {
     id 'application'
-    id 'org.openjfx.javafxplugin' version '0.0.10'
-    id 'org.beryx.jlink' version '2.23.8'
+    id 'org.openjfx.javafxplugin' version '0.0.13'
+    id 'org.beryx.jlink' version '2.26.0'
     id 'com.github.jk1.dependency-license-report' version '1.17'
     id 'org.lifecompanion.gradle.plugin.env-conf'
     id 'org.lifecompanion.gradle.plugin.download-jdk-jfx'
@@ -11,7 +11,7 @@ plugins {
 }
 
 javafx {
-    version = '16'
+    version = '18'
     modules = ['javafx.controls', 'javafx.swing', 'javafx.media']
 }
 
@@ -31,7 +31,7 @@ ext {
             // TODO : testing if previous bug are still there
             // Current status :
             // - bug with main scene on loading : preview part has a wrong size (bottom bar + center not working)
-            //'-Dglass.win.uiScale=100%',
+            // '-Dglass.win.uiScale=100%',
 
             // Splash screen
             '-splash:data/lifecompanion_splashscreen.png',
@@ -56,6 +56,7 @@ ext {
 
 // Application run in dev only
 application {
+    mainModule = 'org.lifecompanion.app'
     applicationDefaultJvmArgs = sharedJvmArgAppTest + [
             // Plugin
             '-cp', devCpArg,
@@ -95,7 +96,7 @@ dependencies {
     api 'com.sparkjava:spark-core:2.9.3'
 
     // FX Controls
-    api('org.controlsfx:controlsfx:11.0.1') {
+    api('org.controlsfx:controlsfx:11.1.2') {
         exclude group: 'org.openjfx'
     }
     // Binding helper
