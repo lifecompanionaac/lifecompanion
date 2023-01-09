@@ -111,14 +111,20 @@ public enum KeyListController implements ModeListenerI {
     // PUBLIC API
     //========================================================================
     public void selectNode(KeyListNodeI node) {
+        selectNode(node, false);
+    }
+
+    public void selectNode(KeyListNodeI node, boolean skipHistory) {
         if (node != null && !node.isLeafNode()) {
             // Reset the destination node page index to first page
             this.forEach(node, (statusForGridAndCategory, grid, keyOptions, nodeChildren, pageIndex, pageSize, maxPageCount) -> statusForGridAndCategory.pageIndex.set(0));
             currentNode.set(node);
-            if (node == rootKeyListNode) {
-                nodeHistory.clear();
+            if (!skipHistory) {
+                if (node == rootKeyListNode) {
+                    nodeHistory.clear();
+                }
+                nodeHistory.add(node);
             }
-            nodeHistory.add(node);
             updateDisplayedKeys(currentNode.get());
         }
     }
@@ -132,6 +138,8 @@ public enum KeyListController implements ModeListenerI {
             nodeHistory.remove(nodeHistory.size() - 1);
             final KeyListNodeI lastNodeBeforeCurrent = nodeHistory.remove(nodeHistory.size() - 1);
             selectNode(lastNodeBeforeCurrent);
+        } else if (currentNode.get() != null && currentNode.get().parentProperty().get() != null) {
+            selectNode(currentNode.get().parentProperty().get(), true);
         } else {
             goParentKeyNodeNoParentListener.forEach(Runnable::run);
         }

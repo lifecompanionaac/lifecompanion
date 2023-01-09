@@ -1,6 +1,6 @@
 # LIFECOMPANION CHANGELOG
 
-## 1.4.X - XX/XX/2022
+## 1.4.3 - XX/XX/2022
 
 ### Fonctionnalités
 
@@ -8,7 +8,8 @@
 
 ### Corrections/ajustements
 
-- ...
+- Ticket #185 : correction d'une erreur lors du remplacement d'une grille par une autre en copier/coller
+- Ticket #186 : correction d'un problème qui faisait que le bouton "précedent" ne fonctionnait pas sur les listes de case
 
 ## 1.4.2 - 20/06/2022
 
