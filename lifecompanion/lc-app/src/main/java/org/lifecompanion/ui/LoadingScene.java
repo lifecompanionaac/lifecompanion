@@ -79,7 +79,7 @@ public class LoadingScene extends Scene {
         vbox.setAlignment(Pos.CENTER);
     }
 
-    public void stopAndClear() {
+    void stopAndClear() {
         parallelTransition.stop();
     }
 }

@@ -96,9 +96,14 @@ public enum VirtualMouseController implements ModeListenerI {
     private double frameWidth, frameHeight;
 
     /**
-     * Frame scale (got from AWT : used to fixe mouse position)
+     * Frame scale (got from AWT : used to correct mouse position)
      */
     private double frameXScale = 1.0, frameYScale = 1.0;
+
+    /**
+     * Output scale (got from JFX : used to correct mouse position)
+     */
+    private double xOutputScale = 1.0, yOutputScale = 1.0;
 
     /**
      * Property bounds on configuration virtual mouse parameters
@@ -133,9 +138,7 @@ public enum VirtualMouseController implements ModeListenerI {
         this.timeline.setCycleCount(1);
         this.timeline.setAutoReverse(false);
         //Check frame position
-        this.checkFramePosition = (event) -> {
-            checkFramePositionWithMouse();
-        };
+        this.checkFramePosition = event -> checkFramePositionWithMouse();
     }
 
     private void checkFramePositionWithMouse() {
@@ -326,7 +329,7 @@ public enum VirtualMouseController implements ModeListenerI {
     }
 
     private void mouseMoveDirect(double x, double y) {
-        this.robot.mouseMove((int) (x / this.frameXScale), (int) (y / this.frameYScale));
+        this.robot.mouseMove((int) (x * this.xOutputScale / this.frameXScale), (int) (y * this.yOutputScale / this.frameYScale));
     }
 
     private void executeMouseClic(final int mouseButton) {
@@ -413,14 +416,17 @@ public enum VirtualMouseController implements ModeListenerI {
             }
         } else {
             this.checkRobotInit();
-            Rectangle2D primaryScreenBounds = Screen.getPrimary().getBounds();
+            Screen primaryScreen = Screen.getPrimary();
+            Rectangle2D primaryScreenBounds = primaryScreen.getBounds();
             this.frameWidth = primaryScreenBounds.getWidth();
             this.frameHeight = primaryScreenBounds.getHeight();
+            this.xOutputScale = primaryScreen.getOutputScaleX();
+            this.yOutputScale = primaryScreen.getOutputScaleY();
 
             FXThreadUtils.runOnFXThread(() -> {
                 this.virtualMouseStage = VirtualMouseStage.getInstance();
                 this.virtualMouseStage.show();
-                final Rectangle2D screenBounds = Screen.getPrimary().getBounds();
+                final Rectangle2D screenBounds = primaryScreen.getBounds();
                 this.mouseX.set(screenBounds.getWidth() / 2.0);
                 this.mouseY.set(screenBounds.getHeight() / 2.0);
                 this.frameToFrontAndFocus();
@@ -441,7 +447,7 @@ public enum VirtualMouseController implements ModeListenerI {
                     if (defaultTransform != null) {
                         this.frameXScale = defaultTransform.getScaleX();
                         this.frameYScale = defaultTransform.getScaleY();
-                        LOGGER.info("Got screen scaling factor to fix mouse positions: {}x{}", frameXScale, frameYScale);
+                        LOGGER.info("Got AWT screen scaling factor to fix mouse positions: {}x{}", frameXScale, frameYScale);
                     }
                 }
             } catch (Throwable t) {

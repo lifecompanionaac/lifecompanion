@@ -31,7 +31,7 @@ ext {
             // TODO : testing if previous bug are still there
             // Current status :
             // - bug with main scene on loading : preview part has a wrong size (bottom bar + center not working)
-            // '-Dglass.win.uiScale=100%',
+            '-Dglass.win.uiScale=150%',
 
             // Splash screen
             '-splash:data/lifecompanion_splashscreen.png',

@@ -21,7 +21,6 @@ package org.lifecompanion;
 
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Pair;
@@ -54,7 +53,7 @@ import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.ui.EditModeScene;
-import org.lifecompanion.ui.LoadingScene;
+import org.lifecompanion.ui.LoadingStage;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStage;
 import org.lifecompanion.ui.app.profileconfigselect.ProfileConfigSelectionStage;
 import org.lifecompanion.util.DesktopUtils;
@@ -68,7 +67,6 @@ import org.slf4j.LoggerFactory;
 import java.awt.*;
 import java.io.File;
 import java.util.List;
-import java.util.Properties;
 
 import static org.lifecompanion.model.impl.constant.LCConstant.URL_PATH_GET_STARTED;
 
@@ -78,8 +76,7 @@ public class LifeCompanionBootstrap {
     private final long startAt;
     private final Stage stage;
     private final List<String> args;
-
-    private LoadingScene loadingScene;
+    private LoadingStage loadingStage;
 
     public LifeCompanionBootstrap(Stage stage, List<String> args) {
         this.stage = stage;
@@ -88,12 +85,6 @@ public class LifeCompanionBootstrap {
     }
 
     public void startLifeCompanion() {
-        String[] props = new String[]{"java.vm.name", "java.vm.vendor", "java.vm.version"};
-        Properties systemProps = System.getProperties();
-        for (Object key : systemProps.keySet()) {
-            LOGGER.info("\t{} = {}", key, systemProps.get(key));
-        }
-
         AppModeController.INSTANCE.initEditModeStage(stage);
         preload();
         loadAndShowStageAndLoadingScene();
@@ -135,6 +126,8 @@ public class LifeCompanionBootstrap {
             final EditModeScene editModeScene = new EditModeScene(new StackPane());
             editModeScene.initAll();
 
+            ThreadUtils.safeSleep(5000);
+
             ProfileConfigSelectionController.INSTANCE.getStage().getProfileConfigSelectionScene().initAll();
             GeneralConfigurationController.INSTANCE.getStage().getGeneralConfigurationScene().initAll();
 
@@ -153,6 +146,10 @@ public class LifeCompanionBootstrap {
 
     private void handleAfterLoadAction(EditModeScene editModeScene, AfterLoad afterLoad) {
         LOGGER.info("Loading done after {}s / post load action is {}", (System.currentTimeMillis() - startAt) / 1000.0, afterLoad.afterLoadAction);
+        stage.setScene(editModeScene);
+        if (afterLoad.afterLoadAction != AfterLoadAction.LAUNCH_USE) {
+            stage.show();
+        }
 
         if (afterLoad.profile != null) {
             ProfileController.INSTANCE.selectProfile(afterLoad.profile);
@@ -177,8 +174,8 @@ public class LifeCompanionBootstrap {
             ConfigActionController.INSTANCE.executeAction(importOpenConfig);
         }
 
-        loadingScene.stopAndClear();
-        stage.setScene(editModeScene);
+        loadingStage.hide();
+        loadingStage = null;
 
         if (afterLoad.afterLoadAction != AfterLoadAction.LAUNCH_USE) {
             AppModeController.INSTANCE.startEditMode();
@@ -258,10 +255,10 @@ public class LifeCompanionBootstrap {
             we.consume();
             GlobalActions.HANDLER_CANCEL.handle(null);
         });
-        this.stage.setScene(loadingScene = new LoadingScene(new VBox()));
 
-        // Show once scene is set
-        this.stage.show();
+        // Show loading stage
+        loadingStage = new LoadingStage();
+        loadingStage.show();
 
         // Close the splashscreen (AWT splashscreen)
         final SplashScreen splashScreen = SplashScreen.getSplashScreen();
