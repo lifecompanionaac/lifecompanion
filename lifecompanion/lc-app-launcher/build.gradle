@@ -52,7 +52,3 @@ def prepareSHLauncher(String system) {
         into file("$buildDir/launchers/$system")
     }
 }
-
-static String getLauncherPathFromOs(String osName) {
-    return 'WINDOWS'.equalsIgnoreCase(osName) ? 'LifeCompanion.exe' : 'MAC'.equalsIgnoreCase(osName) ? 'MacOS/lifecompanion.sh' : 'launcher/lifecompanion.sh';
-}

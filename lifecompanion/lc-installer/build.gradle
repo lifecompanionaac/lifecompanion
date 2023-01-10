@@ -3,20 +3,24 @@ import org.lifecompanion.build.PublishInstallerTask;
 
 plugins {
     id 'application'
-    id 'org.openjfx.javafxplugin' version '0.0.10'
-    id 'org.beryx.jlink' version '2.23.8'
+    id 'org.openjfx.javafxplugin' version '0.0.13'
+    id 'org.beryx.jlink' version '2.26.0'
     id 'org.lifecompanion.gradle.plugin.env-conf'
     id 'org.lifecompanion.gradle.plugin.download-jdk-jfx'
     id 'org.lifecompanion.gradle.plugin.publish-installer'
 }
 
 javafx {
-    version = '16'
+    version = '18'
     modules = ['javafx.controls']
 }
 
 version = project.property('lifecompanion.installer.version')
-mainClassName = "org.lifecompanion.installer.InstallerApp"
+mainClassName = 'org.lifecompanion.installer.InstallerApp'
+
+application {
+    mainModule = 'org.lifecompanion.installer'
+}
 
 dependencies {
     implementation 'com.github.oshi:oshi-core:4.5.2'
