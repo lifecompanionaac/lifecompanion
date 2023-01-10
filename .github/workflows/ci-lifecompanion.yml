@@ -77,8 +77,6 @@ jobs:
           echo "lifecompanion.app.server.url = $LIFECOMPANION_APP_SERVER_URL" >> env/.env.${{inputs.target_env}}
           echo "lifecompanion.app.server.query.parameters = $LIFECOMPANION_APP_SERVER_QUERY_PARAMETERS" >> env/.env.${{inputs.target_env}}
           echo "lifecompanion.app.server.public_key = $LIFECOMPANION_APP_SERVER_PUBLIC_KEY" >> env/.env.${{inputs.target_env}}
-          echo "lifecompanion.build.resources.s3.access.key = $LIFECOMPANION_AWS_ACCESS_KEY" >> env/.env.${{inputs.target_env}}
-          echo "lifecompanion.build.resources.s3.secret = $LIFECOMPANION_AWS_SECRET" >> env/.env.${{inputs.target_env}}
         shell: bash
         env:
           LIFECOMPANION_FRAMEWORK_SERVER_URL: ${{secrets.framework_server_url}}
@@ -87,6 +85,14 @@ jobs:
           LIFECOMPANION_APP_SERVER_URL: ${{secrets.app_server_url}}
           LIFECOMPANION_APP_SERVER_QUERY_PARAMETERS: ${{secrets.app_server_query_parameters}}
           LIFECOMPANION_APP_SERVER_PUBLIC_KEY: ${{secrets.app_server_public_key}}
+
+      - name: Prepare target env configuration for AWS
+        if: ${{inputs.download_build_resources}}
+        run: |
+          echo "lifecompanion.build.resources.s3.access.key = $LIFECOMPANION_AWS_ACCESS_KEY" >> env/.env.${{inputs.target_env}}
+          echo "lifecompanion.build.resources.s3.secret = $LIFECOMPANION_AWS_SECRET" >> env/.env.${{inputs.target_env}}
+        shell: bash
+        env:
           LIFECOMPANION_AWS_ACCESS_KEY: ${{secrets.aws_access_key}}
           LIFECOMPANION_AWS_SECRET: ${{secrets.aws_secret}}
             

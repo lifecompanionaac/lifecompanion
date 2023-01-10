@@ -12,6 +12,7 @@ jobs:
       target_env: prod
       runs_on: ubuntu-latest
       gradle_command: :lc-app:publishApplication
+      download_build_resources: true
     secrets:
       framework_server_url: ${{ secrets.LIFECOMPANION_FRAMEWORK_SERVER_URL_PROD }}
       framework_server_login: ${{ secrets.LIFECOMPANION_FRAMEWORK_SERVER_LOGIN_PROD }}
