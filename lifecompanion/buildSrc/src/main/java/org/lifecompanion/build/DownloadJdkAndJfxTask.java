@@ -116,23 +116,23 @@ public abstract class DownloadJdkAndJfxTask extends DefaultTask {
     enum DestPlatform {
         WIN_X64(
                 "zip",
-                "https://github.com/AdoptOpenJDK/openjdk16-binaries/releases/download/jdk-16.0.1%2B9/OpenJDK16U-jdk_x64_windows_hotspot_16.0.1_9.zip",
-                "https://gluonhq.com/download/javafx-16-jmods-windows/",
-                "jdk-16.0.1+9",
-                "javafx-jmods-16"
+                "https://github.com/adoptium/temurin18-binaries/releases/download/jdk-18.0.2.1%2B1/OpenJDK18U-jdk_x64_windows_hotspot_18.0.2.1_1.zip",
+                "https://download2.gluonhq.com/openjfx/18.0.2/openjfx-18.0.2_windows-x64_bin-jmods.zip",
+                "jdk-18.0.2.1+1",
+                "javafx-jmods-18.0.2"
         ),
         LINUX_X64(
                 "tar.gz",
-                "https://github.com/AdoptOpenJDK/openjdk16-binaries/releases/download/jdk-16.0.1%2B9/OpenJDK16U-jdk_x64_linux_hotspot_16.0.1_9.tar.gz",
-                "https://gluonhq.com/download/javafx-16-jmods-linux/",
-                "jdk-16.0.1+9",
-                "javafx-jmods-16"
+                "https://github.com/adoptium/temurin18-binaries/releases/download/jdk-18.0.2.1%2B1/OpenJDK18U-jdk_x64_linux_hotspot_18.0.2.1_1.tar.gz",
+                "https://download2.gluonhq.com/openjfx/18.0.2/openjfx-18.0.2_linux-x64_bin-jmods.zip",
+                "jdk-18.0.2.1+1",
+                "javafx-jmods-18.0.2"
         ),
         MAC_X64("tar.gz",
-                "https://github.com/AdoptOpenJDK/openjdk16-binaries/releases/download/jdk-16.0.1%2B9/OpenJDK16U-jdk_x64_mac_hotspot_16.0.1_9.tar.gz",
-                "https://gluonhq.com/download/javafx-16-jmods-mac/",
-                "jdk-16.0.1+9/Contents/Home",
-                "javafx-jmods-16"
+                "https://github.com/adoptium/temurin18-binaries/releases/download/jdk-18.0.2.1%2B1/OpenJDK18U-jdk_x64_mac_hotspot_18.0.2.1_1.tar.gz",
+                "https://download2.gluonhq.com/openjfx/18.0.2/openjfx-18.0.2_osx-x64_bin-jmods.zip",
+                "jdk-18.0.2.1+1/Contents/Home",
+                "javafx-jmods-18.0.2"
         );
 
         private final String jdkUrl, jdkExt, jfxUrl, internalJdkPath, internalJfxPath;

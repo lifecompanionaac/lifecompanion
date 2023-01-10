@@ -2,13 +2,15 @@
 
 # Development
 
-Development environment installed and tested on Windows 10 and Ubuntu.
+Development environment installed and tested on Windows 10/11 and Ubuntu.
+
+Used JDK (in IntelliJ and builds) is [Eclipse Temurin™](https://adoptium.net/temurin/releases/)
 
 ## Build and run projects
 
 ### To use it directly on Gradle (optional)
 
-1. Download **JDK 16** for your platform : [AdoptOpenJDK](https://adoptopenjdk.net/)
+1. Download **JDK 18** for your platform : [Eclipse Temurin™](https://adoptium.net/temurin/releases/)
 1. Configuration Gradle to run with the installed JDK (**~/.gradle/gradle.properties** : add _org.gradle.java.home_)
 1. This can sometimes be useful to configure **JAVA_HOME** env configuration
 
@@ -49,6 +51,13 @@ If you want to build a production version : you may need to import again the sec
 
 1. Install **[AutoHotKey](https://www.autohotkey.com/)** (tested with 1.1.33.10)
 1. Modify or compile your script (you can use LifeCompanion ico)
+
+## Create offline application package
+
+### Configuration
+
+### Run it
+
 
 ## Troubleshooting
 

@@ -28,7 +28,6 @@ import org.lifecompanion.framework.commons.utils.io.IOUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.framework.model.client.UpdateFileProgress;
 import org.lifecompanion.framework.model.server.dto.AddApplicationUpdateStatDto;
-import org.lifecompanion.framework.model.server.update.ApplicationLauncherUpdate;
 import org.lifecompanion.framework.model.server.update.ApplicationPluginUpdate;
 import org.lifecompanion.framework.model.server.update.ApplicationUpdate;
 import org.lifecompanion.framework.model.server.update.TargetType;
@@ -140,7 +139,7 @@ public class AppServerService {
         throw new ApiException("Download failed after " + attemptCount + " attempt");
     }
 
-    public void extractZip(File filePath) throws ApiException, IOException {
+    public static void extractZip(File filePath) throws ApiException, IOException {
         File destPathDirectory = getFileToUnzipDestination(filePath);
         destPathDirectory.mkdirs();
         IOUtils.unzipInto(filePath, destPathDirectory, null);
@@ -148,21 +147,12 @@ public class AppServerService {
         LOGGER.info("File to unzip {} unzipped into {}, then deleted : {}", filePath.getPath(), destPathDirectory, deleted);
     }
 
-    private File getFileToUnzipDestination(File filePath) {
+    private static File getFileToUnzipDestination(File filePath) {
         return new File(filePath.getParentFile().getPath() + File.separator + FileNameUtils.getNameWithoutExtension(filePath));
     }
 
     public boolean downloadAndInstallFileV2(AppServerService appServerService, UpdateFileProgress file, File softwareDataDir, File launcherDir, File softwareResourcesDir, File userDataDir) throws ApiException, IOException {
-        File destPath = null;
-        if (file.getTargetType() == TargetType.SOFTWARE_DATA) {
-            destPath = new File(softwareDataDir.getPath() + File.separator + file.getTargetPath());
-        } else if (file.getTargetType() == TargetType.SOFTWARE_RESOURCES) {
-            destPath = new File(softwareResourcesDir.getPath() + File.separator + file.getTargetPath());
-        } else if (file.getTargetType() == TargetType.USER_DATA) {
-            destPath = new File(userDataDir.getPath() + File.separator + file.getTargetPath());
-        } else if (file.getTargetType() == TargetType.LAUNCHER) {
-            destPath = new File(launcherDir.getPath() + File.separator + file.getTargetPath());
-        }
+        File destPath = getDestPathForFile(file.getTargetType(), file.getTargetPath(), softwareDataDir, launcherDir, softwareResourcesDir, userDataDir);
         LOGGER.debug("Will download update file {} to {}", file, destPath);
         // Check that the file to unzip wasn't already downloaded and extracted
         if (file.isToUnzip()) {
@@ -188,6 +178,20 @@ public class AppServerService {
             appServerService.extractZip(destPath);
         }
         return false;
+    }
+
+    public static File getDestPathForFile(TargetType targetType, String targetPath, File softwareDataDir, File launcherDir, File softwareResourcesDir, File userDataDir) {
+        File destPath = null;
+        if (targetType == TargetType.SOFTWARE_DATA) {
+            destPath = new File(softwareDataDir.getPath() + File.separator + targetPath);
+        } else if (targetType == TargetType.SOFTWARE_RESOURCES) {
+            destPath = new File(softwareResourcesDir.getPath() + File.separator + targetPath);
+        } else if (targetType == TargetType.USER_DATA) {
+            destPath = new File(userDataDir.getPath() + File.separator + targetPath);
+        } else if (targetType == TargetType.LAUNCHER) {
+            destPath = new File(launcherDir.getPath() + File.separator + targetPath);
+        }
+        return destPath;
     }
 
     public static ExecutorService createDefaultExecutorService() {

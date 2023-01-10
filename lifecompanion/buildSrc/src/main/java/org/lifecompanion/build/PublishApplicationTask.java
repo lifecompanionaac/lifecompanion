@@ -22,29 +22,49 @@ package org.lifecompanion.build;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.logging.Logger;
 import org.gradle.api.logging.Logging;
+import org.gradle.api.provider.Property;
+import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.TaskAction;
 import org.lifecompanion.framework.client.http.AppServerClient;
+import org.lifecompanion.framework.client.service.AppServerService;
 import org.lifecompanion.framework.commons.SystemType;
+import org.lifecompanion.framework.commons.configuration.InstallationConfiguration;
 import org.lifecompanion.framework.commons.utils.io.FileNameUtils;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
 import org.lifecompanion.framework.model.server.dto.*;
 import org.lifecompanion.framework.model.server.update.TargetType;
 import org.lifecompanion.framework.model.server.update.UpdateVisibility;
 import org.lifecompanion.framework.utils.FluentHashMap;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
+import software.amazon.awssdk.services.s3.model.ListObjectsRequest;
+import software.amazon.awssdk.services.s3.model.ListObjectsResponse;
+import software.amazon.awssdk.services.s3.model.S3Object;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static org.lifecompanion.framework.commons.ApplicationConstant.DIR_NAME_APPLICATION;
+import static org.lifecompanion.framework.commons.ApplicationConstant.DIR_NAME_APPLICATION_DATA;
+
 public abstract class PublishApplicationTask extends DefaultTask {
+    private final static boolean DEV = true;
+
+    @Input
+    abstract Property<Boolean> getOffline();
+
     private static final Logger LOGGER = Logging.getLogger(PublishApplicationTask.class);
 
     private static final Map<SystemType, String> PATH_TO_BUILD = FluentHashMap
-            .map(SystemType.WINDOWS, "win_x64")
-            .with(SystemType.UNIX, "linux_x64")
-            .with(SystemType.MAC, "mac_x64");
+            .map(SystemType.WINDOWS, "win_x64");
+//            .with(SystemType.UNIX, "linux_x64")
+//            .with(SystemType.MAC, "mac_x64");
 
     private static final Map<SystemType, String> PATH_TO_LAUNCHER = FluentHashMap
             .map(SystemType.WINDOWS, "launchers/WINDOWS/LifeCompanion.exe")
@@ -73,29 +93,34 @@ public abstract class PublishApplicationTask extends DefaultTask {
     void publishApplicationUpdate() throws Exception {
         File buildDir = getProject().getBuildDir();
         String appId = BuildToolUtils.checkAndGetProperty(getProject(), "appId");
-        String buildResourceDir = BuildToolUtils.checkAndGetProperty(getProject(), "lifecompanion.build.resources.directory");
+        // String buildResourceDir = BuildToolUtils.checkAndGetProperty(getProject(), "lifecompanion.build.resources.directory");
+        File tmpBuildResourceDir = new File(System.getProperty("java.io.tmpdir") + File.separator + "lifecompanion-builds-res" + (DEV ? "" : "-" + System.currentTimeMillis()) + File.separator);
         String version = String.valueOf(getProject().getVersion());
         String env = BuildToolUtils.getEnvValueLowerCase(getProject());
         UpdateVisibility visibility = UpdateVisibility.valueOf(BuildToolUtils.checkAndGetProperty(getProject(), "visibility"));
+        boolean offline = getOffline().get();
+
+        downloadBuildResources(tmpBuildResourceDir);
 
         for (SystemType system : PATH_TO_BUILD.keySet()) {
-            LOGGER.lifecycle("publishApplicationUpdate : env = {}, appId = {}, system = {}, version = {}, visibility = {} ", env, appId, system, version, visibility);
+            LOGGER.lifecycle("publishApplicationUpdate : offline = {}, env = {}, appId = {}, system = {}, version = {}, visibility = {} ", offline, env, appId, system, version, visibility);
 
             String serverURL = BuildToolUtils.getServerURL(getProject());
             try (AppServerClient client = new AppServerClient(serverURL)) {
-                BuildToolUtils.loginOnServerOrFail(client, getProject());
+                if (!offline) {
+                    BuildToolUtils.loginOnServerOrFail(client, getProject());
+                }
 
                 Map<String, ApplicationUpdateFileDto> files = new HashMap<>();
                 File softwareDataRoot = new File(buildDir.getPath() + File.separator + "image/lc-app-" + PATH_TO_BUILD.get(system));
-                if (!softwareDataRoot.exists()) throw new IllegalArgumentException("Incorrect build directory : " + softwareDataRoot.getAbsolutePath());
+                if (!softwareDataRoot.exists())
+                    throw new IllegalArgumentException("Incorrect build directory : " + softwareDataRoot.getAbsolutePath());
                 exploreAndHashFiles(softwareDataRoot, TargetType.SOFTWARE_DATA, system, softwareDataRoot, files, TO_UNZIP_PATH, PRESET_STORAGE_IDS);
                 int beforeSize = files.size();
                 LOGGER.lifecycle("Found {} software data files in directory ({})", files.size(), softwareDataRoot);
 
-                File softwareResourcesRoot = new File(buildResourceDir.startsWith(".") ? getProject().getProjectDir() + File.separator + buildResourceDir : buildResourceDir);
-                if (!softwareResourcesRoot.exists()) throw new IllegalArgumentException("Incorrect build resource directory : " + softwareResourcesRoot.getAbsolutePath());
-                exploreAndHashFiles(softwareResourcesRoot, TargetType.SOFTWARE_RESOURCES, system, softwareResourcesRoot, files, TO_UNZIP_PATH, PRESET_STORAGE_IDS);
-                LOGGER.lifecycle("Found {} software resources files in directory ({})", files.size() - beforeSize, softwareResourcesRoot);
+                exploreAndHashFiles(tmpBuildResourceDir, TargetType.SOFTWARE_RESOURCES, system, tmpBuildResourceDir, files, TO_UNZIP_PATH, PRESET_STORAGE_IDS);
+                LOGGER.lifecycle("Found {} software resources files in directory ({})", files.size() - beforeSize, tmpBuildResourceDir);
 
                 File launcherFile = new File(getProject().getRootProject().getProjectDir().getAbsolutePath() + File.separator + "lc-app-launcher" + File.separator + "build" + File.separator + PATH_TO_LAUNCHER.get(system));
                 if (!launcherFile.exists())
@@ -103,31 +128,90 @@ public abstract class PublishApplicationTask extends DefaultTask {
                 addFileTo(TargetType.LAUNCHER, system, launcherFile, LAUNCHER_PATH.get(system), files, TO_UNZIP_PATH, PRESET_STORAGE_IDS);
                 LOGGER.lifecycle("Launcher file got for {} : {}", system, launcherFile.getName());
 
+
                 // Initialize update
-                InitializeApplicationUpdateDto initializeApplicationUpdateDto = new InitializeApplicationUpdateDto(appId, system, null, null, version, files.values());
+                if (!offline) {
+                    InitializeApplicationUpdateDto initializeApplicationUpdateDto = new InitializeApplicationUpdateDto(appId, system, null, null, version, files.values());
 
-                ApplicationUpdateInitializedDto updateInitializedDto = client.post("/api/admin/application-update/initialize-update",
-                        initializeApplicationUpdateDto, ApplicationUpdateInitializedDto.class);
-                LOGGER.lifecycle("Update initialized, server request {} files to be uploaded", updateInitializedDto.getFilesToUpload().size());
+                    ApplicationUpdateInitializedDto updateInitializedDto = client.post("/api/admin/application-update/initialize-update",
+                            initializeApplicationUpdateDto, ApplicationUpdateInitializedDto.class);
+                    LOGGER.lifecycle("Update initialized, server request {} files to be uploaded", updateInitializedDto.getFilesToUpload().size());
 
-                int fIndex = 0;
-                for (ApplicationUpdateFileDto file : updateInitializedDto.getFilesToUpload()) {
-                    LOGGER.lifecycle("{}/{} - Will upload, {} - {}", ++fIndex, updateInitializedDto.getFilesToUpload().size(), file.getTargetPath(), FileNameUtils.getFileSize(file.getFileSize()));
-                    File sourceFile = files.get(file.getTargetPath()).getSourceFile();
-                    if (sourceFile.length() < 100_000_000) {
-                        client.postWithFile("/api/admin/application-update/upload-file",
-                                new UploadUpdateFileDto(sourceFile.getName(), file.getTargetPath(), file.getFileSize(), updateInitializedDto.getApplicationUpdateId(), file.getApplicationUpdateFileIdInDb(), file.getSystem()),
-                                sourceFile);
-                    } else {
-                        LOGGER.warn("File {} not uploaded because too big : {}, should be uploaded manually !", file.getTargetPath(), FileNameUtils.getFileSize(file.getFileSize()));
+                    int fIndex = 0;
+                    for (ApplicationUpdateFileDto file : updateInitializedDto.getFilesToUpload()) {
+                        LOGGER.lifecycle("{}/{} - Will upload, {} - {}", ++fIndex, updateInitializedDto.getFilesToUpload().size(), file.getTargetPath(), FileNameUtils.getFileSize(file.getFileSize()));
+                        File sourceFile = files.get(file.getTargetPath()).getSourceFile();
+                        if (sourceFile.length() < 100_000_000) {
+                            client.postWithFile("/api/admin/application-update/upload-file",
+                                    new UploadUpdateFileDto(sourceFile.getName(), file.getTargetPath(), file.getFileSize(), updateInitializedDto.getApplicationUpdateId(), file.getApplicationUpdateFileIdInDb(), file.getSystem()),
+                                    sourceFile);
+                        } else {
+                            LOGGER.warn("File {} not uploaded because too big : {}, should be uploaded manually !", file.getTargetPath(), FileNameUtils.getFileSize(file.getFileSize()));
+                        }
                     }
-                }
-                LOGGER.lifecycle("Every files uploaded, will now finish update");
+                    LOGGER.lifecycle("Every files uploaded, will now finish update");
 
-                client.post("/api/admin/application-update/finish-update", new FinishApplicationUpdateDto(updateInitializedDto.getApplicationUpdateId(), visibility));
-                LOGGER.lifecycle("Update finished");
+                    client.post("/api/admin/application-update/finish-update", new FinishApplicationUpdateDto(updateInitializedDto.getApplicationUpdateId(), visibility));
+                    LOGGER.lifecycle("Update finished");
+                } else {
+                    File destDir = new File(buildDir.getPath() + File.separator + "offline/" + PATH_TO_BUILD.get(system) + "-" + getProject().getVersion());
+                    File userDir = new File(destDir + File.separator + "user");
+                    File appDir = new File(destDir + File.separator + DIR_NAME_APPLICATION);
+                    File dataDir = new File(destDir + File.separator + DIR_NAME_APPLICATION_DATA);
+                    for (ApplicationUpdateFileDto updateFile : files.values()) {
+                        File targetFile = AppServerService.getDestPathForFile(updateFile.getTargetType(), updateFile.getTargetPath(), appDir, destDir, dataDir, userDir);
+                        IOUtils.copyFiles(updateFile.getSourceFile(), targetFile);
+                        if (updateFile.isToUnzip()) {
+                            AppServerService.extractZip(targetFile);
+                        }
+                    }
+                    InstallationConfiguration installConfig = new InstallationConfiguration("2048m", "./user");
+                    installConfig.save(new File(dataDir + File.separator + "installation.properties"));
+                    LOGGER.lifecycle("Offline application created");
+                }
             }
         }
+    }
+
+    private void downloadBuildResources(File buildResourceDirectory) {
+        LOGGER.lifecycle("Downloading resource files from S3");
+        AwsBasicCredentials awsCreds = AwsBasicCredentials.create(
+                BuildToolUtils.checkAndGetProperty(getProject(), "lifecompanion.build.resources.s3.access.key"),
+                BuildToolUtils.checkAndGetProperty(getProject(), "lifecompanion.build.resources.s3.secret"));
+        Region region = Region.of("eu-west-1");
+        S3Client s3 = S3Client.builder()
+                .credentialsProvider(StaticCredentialsProvider.create(awsCreds))
+                .region(region)
+                .build();
+        String prefix = "prod";
+        String bucket = "resources.builds.lifecompanionaac.org";
+        ListObjectsRequest listObjects = ListObjectsRequest
+                .builder()
+                .bucket(bucket)
+                .prefix(prefix)
+                .build();
+        ListObjectsResponse response = s3.listObjects(listObjects);
+        List<S3Object> destObjects = response.contents();
+        LOGGER.lifecycle("Found {} files to download", destObjects.size());
+        destObjects.parallelStream().filter(d -> d.size() > 0).forEach(destObject -> {
+            String relativePath = IOUtils.getRelativePath(destObject.key(), prefix);
+            File destFile = new File(buildResourceDirectory.getPath() + File.separator + relativePath);
+            if (!DEV || !destFile.exists()) {
+                destFile.getParentFile().mkdirs();
+                try (InputStream result = s3.getObject(
+                        GetObjectRequest.builder()
+                                .bucket(bucket)
+                                .key(destObject.key())
+                                .build()
+                )) {
+                    try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(destFile))) {
+                        IOUtils.copyStream(result, bos);
+                    }
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
     }
 
     private static void exploreAndHashFiles(File root, TargetType targetType, SystemType system, File file, Map<String, ApplicationUpdateFileDto> files, Set<String> toUnzipPathSet, Map<String, String> presetStorageIdsMap)

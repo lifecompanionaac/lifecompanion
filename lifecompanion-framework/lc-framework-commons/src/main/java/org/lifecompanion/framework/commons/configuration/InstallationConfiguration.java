@@ -29,19 +29,24 @@ import java.util.Properties;
 
 public class InstallationConfiguration {
     private final String xmxConfiguration;
-    private final File userDataDirectory;
+    private final String userDataDirectory;
 
     public InstallationConfiguration(String xmxConfiguration, File userDataDirectory) {
+        this(xmxConfiguration, userDataDirectory.getPath());
+    }
+
+    public InstallationConfiguration(String xmxConfiguration, String userDataDirectory) {
         this.xmxConfiguration = xmxConfiguration;
         this.userDataDirectory = userDataDirectory;
     }
+
 
     public String getXmxConfiguration() {
         return xmxConfiguration;
     }
 
     public File getUserDataDirectory() {
-        return userDataDirectory;
+        return new File(userDataDirectory);
     }
 
     public static InstallationConfiguration read(File file) throws IOException {
@@ -58,7 +63,7 @@ public class InstallationConfiguration {
     public void save(File file) throws IOException {
         Properties prop = new Properties();
         prop.setProperty("xmxConfiguration", this.xmxConfiguration);
-        prop.setProperty("userDataDirectory", this.userDataDirectory.getPath());
+        prop.setProperty("userDataDirectory", this.userDataDirectory);
         IOUtils.createParentDirectoryIfNeeded(file);
         try (FileOutputStream fos = new FileOutputStream(file)) {
             prop.store(fos, "Installation configuration");
