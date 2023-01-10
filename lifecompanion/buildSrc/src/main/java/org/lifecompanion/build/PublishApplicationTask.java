@@ -54,7 +54,7 @@ import static org.lifecompanion.framework.commons.ApplicationConstant.DIR_NAME_A
 import static org.lifecompanion.framework.commons.ApplicationConstant.DIR_NAME_APPLICATION_DATA;
 
 public abstract class PublishApplicationTask extends DefaultTask {
-    private final static boolean DEV = true;
+    private final static boolean DEV = false;
 
     @Input
     abstract Property<Boolean> getOffline();
@@ -62,9 +62,9 @@ public abstract class PublishApplicationTask extends DefaultTask {
     private static final Logger LOGGER = Logging.getLogger(PublishApplicationTask.class);
 
     private static final Map<SystemType, String> PATH_TO_BUILD = FluentHashMap
-            .map(SystemType.WINDOWS, "win_x64");
-//            .with(SystemType.UNIX, "linux_x64")
-//            .with(SystemType.MAC, "mac_x64");
+            .map(SystemType.WINDOWS, "win_x64")
+            .with(SystemType.UNIX, "linux_x64")
+            .with(SystemType.MAC, "mac_x64");
 
     private static final Map<SystemType, String> PATH_TO_LAUNCHER = FluentHashMap
             .map(SystemType.WINDOWS, "launchers/WINDOWS/LifeCompanion.exe")
@@ -93,7 +93,6 @@ public abstract class PublishApplicationTask extends DefaultTask {
     void publishApplicationUpdate() throws Exception {
         File buildDir = getProject().getBuildDir();
         String appId = BuildToolUtils.checkAndGetProperty(getProject(), "appId");
-        // String buildResourceDir = BuildToolUtils.checkAndGetProperty(getProject(), "lifecompanion.build.resources.directory");
         File tmpBuildResourceDir = new File(System.getProperty("java.io.tmpdir") + File.separator + "lifecompanion-builds-res" + (DEV ? "" : "-" + System.currentTimeMillis()) + File.separator);
         String version = String.valueOf(getProject().getVersion());
         String env = BuildToolUtils.getEnvValueLowerCase(getProject());

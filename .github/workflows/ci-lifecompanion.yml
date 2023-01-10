@@ -29,9 +29,9 @@ on:
         required: false
       app_server_public_key:
         required: true
-      aws_access_key_id:
+      aws_access_key:
         required: false
-      aws_secret_access_key:
+      aws_secret:
         required: false
 
 # TODO : be able to select branch or tag
@@ -42,7 +42,6 @@ jobs:
     runs-on: ${{inputs.runs_on}}
     env:
       INNOSETUP_DIR: /tmp/innosetup/
-      BUILD_RES_DIR: build-resources
       
     steps:
       - name: Checkout code
@@ -56,18 +55,7 @@ jobs:
       
       - name : Add +X on gralde scripts
         run: chmod +x lifecompanion-framework/gradlew & chmod +x lifecompanion/gradlew
-            
-      - name: Download LifeCompanion build resources
-        if: ${{inputs.download_build_resources}}
-        uses: prewk/s3-cp-action@v2
-        with:
-          aws_access_key_id: ${{ secrets.aws_access_key_id }}
-          aws_secret_access_key: ${{ secrets.aws_secret_access_key }}
-          aws_region: eu-west-1
-          source: 's3://resources.builds.lifecompanionaac.org/prod'
-          dest: './${{env.BUILD_RES_DIR}}'
-          flags: --recursive
-          
+                      
       - name: Download InnoSetup installer
         if: ${{inputs.install_innosetup}}
         uses: carlosperate/download-file-action@v1.0.3
@@ -89,6 +77,8 @@ jobs:
           echo "lifecompanion.app.server.url = $LIFECOMPANION_APP_SERVER_URL" >> env/.env.${{inputs.target_env}}
           echo "lifecompanion.app.server.query.parameters = $LIFECOMPANION_APP_SERVER_QUERY_PARAMETERS" >> env/.env.${{inputs.target_env}}
           echo "lifecompanion.app.server.public_key = $LIFECOMPANION_APP_SERVER_PUBLIC_KEY" >> env/.env.${{inputs.target_env}}
+          echo "lifecompanion.build.resources.s3.access.key = $LIFECOMPANION_AWS_ACCESS_KEY" >> env/.env.${{inputs.target_env}}
+          echo "lifecompanion.build.resources.s3.secret = $LIFECOMPANION_AWS_SECRET" >> env/.env.${{inputs.target_env}}
         shell: bash
         env:
           LIFECOMPANION_FRAMEWORK_SERVER_URL: ${{secrets.framework_server_url}}
@@ -97,6 +87,8 @@ jobs:
           LIFECOMPANION_APP_SERVER_URL: ${{secrets.app_server_url}}
           LIFECOMPANION_APP_SERVER_QUERY_PARAMETERS: ${{secrets.app_server_query_parameters}}
           LIFECOMPANION_APP_SERVER_PUBLIC_KEY: ${{secrets.app_server_public_key}}
+          LIFECOMPANION_AWS_ACCESS_KEY: ${{secrets.aws_access_key}}
+          LIFECOMPANION_AWS_SECRET: ${{secrets.aws_secret}}
             
       - name: Build LifeCompanion framework
         uses: gradle/gradle-build-action@v2
@@ -112,6 +104,5 @@ jobs:
             ${{inputs.gradle_command}}
             -Penv=${{inputs.target_env}}
             -Pinnosetup.path=${{env.INNOSETUP_DIR}}ISCC.exe
-            -Plifecompanion.build.resources.directory=../../${{env.BUILD_RES_DIR}}
             -Pvisibility=PUBLISHED
             --stacktrace

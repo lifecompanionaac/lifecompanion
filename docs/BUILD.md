@@ -54,10 +54,11 @@ If you want to build a production version : you may need to import again the sec
 
 ## Create offline application package
 
-### Configuration
+It is possible possible to create custom local images (offline) to test your image generation before creating offical updates.
 
-### Run it
+Before, configure your local.env to add AWS access/secret properties (cf [update part](UPDATE.md))
 
+Then, run `gradlew prepareOfflineApplication`. This will create in **offline** directory a subdirectory per system with all the needed element to run LifeCompanion on your computer.
 
 ## Troubleshooting
 

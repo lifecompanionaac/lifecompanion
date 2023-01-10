@@ -67,6 +67,8 @@ An .env file contains following properties :
 - **lifecompanion.app.server.query.parameters** : useful to add a query parameter to each app server request (can be
   left empty)
 - **lifecompanion.app.server.public_key** : public key for LifeCompanion website API
+- **lifecompanion.build.resources.s3.access.key** : AWS access key for build resource S3
+- **lifecompanion.build.resources.s3.secret** : AWS secret for build resource S3
 
 ### Env var configuration
 
