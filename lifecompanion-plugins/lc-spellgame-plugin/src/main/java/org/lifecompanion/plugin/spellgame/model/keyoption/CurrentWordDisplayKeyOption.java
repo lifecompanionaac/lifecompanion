@@ -19,13 +19,21 @@
 
 package org.lifecompanion.plugin.spellgame.model.keyoption;
 
+import javafx.animation.Interpolator;
+import javafx.animation.RotateTransition;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.transform.Rotate;
+import javafx.util.Duration;
 import org.jdom2.Element;
+import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.AbstractKeyOption;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.util.javafx.FXThreadUtils;
+
 
 public class CurrentWordDisplayKeyOption extends AbstractKeyOption {
 
@@ -74,5 +82,17 @@ public class CurrentWordDisplayKeyOption extends AbstractKeyOption {
                 key.textContentProperty().set(null);
             }
         });
+    }
+
+    public void successOnWord() {
+        ImageView imageView = new ImageView(IconHelper.get("ok_test.png"));
+        imageView.setFitWidth(50);
+        imageView.setFitHeight(50);
+        RotateTransition rotateTransition = new RotateTransition(Duration.seconds(2), imageView);
+        rotateTransition.setAxis(Rotate.Y_AXIS);
+        rotateTransition.setToAngle(1080);
+        rotateTransition.setInterpolator(Interpolator.EASE_IN);
+        this.keyViewAddedNodeProperty().set(new BorderPane(imageView));
+        rotateTransition.play();
     }
 }

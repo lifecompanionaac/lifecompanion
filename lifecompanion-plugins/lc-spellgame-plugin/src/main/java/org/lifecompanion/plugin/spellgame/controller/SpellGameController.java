@@ -53,6 +53,10 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.*;
 
+/**
+ * Known issues (TODO)
+ * - double/triple+ start
+ */
 public enum SpellGameController implements ModeListenerI {
     INSTANCE;
     private static final Logger LOGGER = LoggerFactory.getLogger(SpellGameController.class);
@@ -110,7 +114,6 @@ public enum SpellGameController implements ModeListenerI {
         endGame();
         this.currentSpellGamePluginProperties = null;
         wordDisplayKeyOptions.clear();
-
     }
 
     public void startGame(String id) {
@@ -153,16 +156,15 @@ public enum SpellGameController implements ModeListenerI {
         // If the user successfully enter the word : set the point and go to next word
         if (step.checkWord(word, input)) {
             if (currentSpellGamePluginProperties.enableFeedbackSoundProperty().get()) {
-                playerSuccess.stop();
-                playerSuccess.play();
+                playFromStart(playerSuccess);
             }
             endCurrentStepAndGoToNextWord();
+            wordDisplayKeyOptions.forEach(CurrentWordDisplayKeyOption::successOnWord);// FIXME : move this test
         }
         // User failed to enter the correct word
         else {
             if (currentSpellGamePluginProperties.enableFeedbackSoundProperty().get()) {
-                playerError.stop();
-                playerError.play();
+                playFromStart(playerError);
             }
             if (currentStepIndex < GameStepEnum.values().length - 1) {
                 currentStepIndex++;
@@ -175,7 +177,7 @@ public enum SpellGameController implements ModeListenerI {
 
 
     private void traceAnswer(GameStep step, String word, String input) {
-        currentGameAnswers.add(new SpellGameStepResult(step, word, input, System.currentTimeMillis() - currentStepStartedAt));
+        currentGameAnswers.add(new SpellGameStepResult(step, word, input, step.getExpectedResult(word), System.currentTimeMillis() - currentStepStartedAt));
     }
 
     private void endCurrentStepAndGoToNextWord() {
@@ -225,6 +227,18 @@ public enum SpellGameController implements ModeListenerI {
 
     // SOUND
     //========================================================================
+    public void playFromStart(MediaPlayer mediaPlayer) {
+        if (mediaPlayer.getStatus() == MediaPlayer.Status.STOPPED || mediaPlayer.getStatus() == MediaPlayer.Status.READY) {
+            mediaPlayer.play();
+        } else {
+            mediaPlayer.setOnStopped(() -> {
+                mediaPlayer.setOnStopped(null);
+                mediaPlayer.play();
+            });
+            mediaPlayer.stop();
+        }
+    }
+
     public MediaPlayer initPlayer(String soundName) {
         File destAlarm = new File(org.lifecompanion.util.IOUtils.getTempDir("sound") + File.separator + soundName);
         IOUtils.createParentDirectoryIfNeeded(destAlarm);

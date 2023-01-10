@@ -18,18 +18,18 @@ Be familiar with Java and JavaFX development.
 
 ## Getting started
 
-### Install plugin dev env. - TODO CLEAN SOURCE FOLDER TO COPY
+### Initialize your plugin project
 
-1. First, clone LifeCompanion official repository and make it build and run locally : [use build documentation](BUILD.md)
+1. First, clone LifeCompanion official repository and make it run locally : [use build documentation](BUILD.md)
 1. Run `gradlew publishToMavenLocal` on **lifecompanion-framework** and **lifecompanion** projects (this will add LifeCompanion API to your local Maven repo)
-1. TODO FROM HERE
+1. **TODO FROM HERE**
 1. Copy the **lifecompanion/lc-example-plugin** to your plugin specific folder
 1. Change the folder name
 1. Change Gralde project name *settings.gradle*
 1. Change the plugin ID in *build.gralde* on key **LifeCompanion-Plugin-Id**
 1. To build your plugin : use `gradlew jar`
 
-### Efficient plugin dev. in IntelliJ
+### Import and use the plugin in IntelliJ
 
 1. Create your LifeCompanion project as described in [build documentation](BUILD.md)
 1. Add your new plugin project as a module in IntelliJ (File > New > Module from existing sources)

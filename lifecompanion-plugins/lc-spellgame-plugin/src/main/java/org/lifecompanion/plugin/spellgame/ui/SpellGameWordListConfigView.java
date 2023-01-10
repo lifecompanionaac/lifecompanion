@@ -40,6 +40,7 @@ import org.lifecompanion.plugin.spellgame.model.SpellGameWordList;
 import org.lifecompanion.plugin.spellgame.ui.cell.SpellGameWordListListCell;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStepViewI;
 import org.lifecompanion.ui.common.control.generic.OrderModifiableListView;
+import org.lifecompanion.util.javafx.DialogUtils;
 import org.lifecompanion.util.javafx.FXControlUtils;
 import org.lifecompanion.util.javafx.FXUtils;
 import spark.utils.StringUtils;

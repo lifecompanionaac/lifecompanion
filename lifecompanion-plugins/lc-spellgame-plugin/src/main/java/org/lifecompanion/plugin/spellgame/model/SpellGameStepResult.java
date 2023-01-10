@@ -1,6 +1,6 @@
 package org.lifecompanion.plugin.spellgame.model;
 
-public record SpellGameStepResult(GameStep step, String word, String input, long timeSpent) {
+public record SpellGameStepResult(GameStep step, String word, String input, String expected, long timeSpent) {
 
     @Override
     public String toString() {
@@ -8,7 +8,8 @@ public record SpellGameStepResult(GameStep step, String word, String input, long
                 "step=" + step +
                 ", word='" + word + '\'' +
                 ", input='" + input + '\'' +
-                ", timeSpent=" + timeSpent / 1000.0 +
+                ", expected='" + expected + '\'' +
+                ", timeSpent=" + timeSpent +
                 '}';
     }
 }

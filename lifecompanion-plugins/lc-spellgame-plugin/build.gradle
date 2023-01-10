@@ -1,10 +1,10 @@
 plugins {
     id 'java-library'
-    id 'org.openjfx.javafxplugin' version '0.0.10'
+    id 'org.openjfx.javafxplugin' version '0.0.13'
 }
 
 javafx {
-    version = '16'
+    version = '18'
     modules = ['javafx.controls', 'javafx.media']
     configuration = 'compileOnly'
 }

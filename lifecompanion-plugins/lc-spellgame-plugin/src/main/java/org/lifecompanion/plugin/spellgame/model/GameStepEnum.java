@@ -39,8 +39,19 @@ public enum GameStepEnum implements GameStep {
         public String getExpectedResult(String word) {
             return "" + StringUtils.safeLength(word);
         }
+    },
+    BACKWARD("spellgame.plugin.game.step.instruction.backward", true) {
+        @Override
+        public boolean checkWord(String word, String input) {
+            return StringUtils.isEquals(StringUtils.reverse(word), input);
+        }
+
+        @Override
+        public String getExpectedResult(String word) {
+            return StringUtils.reverse(word);
+        }
     }
-    //    BACKWARD("spellgame.plugin.game.step.instruction.backward"),
+
     //    ONE_ON_TWO("spellgame.plugin.game.step.instruction.one.on.two"),
     //    VOWEL("spellgame.plugin.game.step.instruction.vowel"),
     //    CONSONANT("spellgame.plugin.game.step.instruction.consonant");

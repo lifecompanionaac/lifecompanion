@@ -1,7 +1,7 @@
 <texts>
 	<!-- STEPS -->
 	<text key="spellgame.plugin.game.step.instruction.write">Écris le mot : "{}"</text>
-	<text key="spellgame.plugin.game.step.instruction.copy">Écris le mot : "{}"</text>
+	<text key="spellgame.plugin.game.step.instruction.copy">Recopie le mot : "{}"</text>
 	<text key="spellgame.plugin.game.step.instruction.char.count">Écris le nombre de lettre dans le mot : "{}"</text>
 	<text key="spellgame.plugin.game.step.instruction.backward">Écris le mot : "{}" à l'envers</text>
 	<text key="spellgame.plugin.game.step.instruction.one.on.two">Écris une lettre sur deux du mot "{}"</text>

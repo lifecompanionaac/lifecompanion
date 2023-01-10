@@ -68,6 +68,10 @@ public class StringUtils {
         return !isBlank(str);
     }
 
+    public static String reverse(final String str) {
+        return str == null ? null : new StringBuilder(str).reverse().toString();
+    }
+
     /**
      * @param date the date to convert to string
      * @return the string that represent the date with hour displayed (dd/MM/yyyy - HH:mm)
@@ -260,6 +264,7 @@ public class StringUtils {
 
     /**
      * Strips accents from a string
+     *
      * @param str the string to clean
      * @return the string with accents replaced by their non accented equivalent
      */

@@ -22,7 +22,7 @@ public class SpellGamePluginProperties extends AbstractPluginConfigProperties {
 
     protected SpellGamePluginProperties(ObjectProperty<LCConfigurationI> parentConfiguration) {
         super(parentConfiguration);
-        this.wordDisplayTimeInMs = new SimpleIntegerProperty(2000);
+        this.wordDisplayTimeInMs = new SimpleIntegerProperty(5000);
         this.validateWithEnter = new SimpleBooleanProperty(true);
         this.enableFeedbackSound = new SimpleBooleanProperty(true);
         this.wordLists = FXCollections.observableArrayList();

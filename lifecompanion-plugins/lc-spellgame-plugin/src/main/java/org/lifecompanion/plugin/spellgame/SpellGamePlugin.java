@@ -67,7 +67,7 @@ public class SpellGamePlugin implements PluginI {
         return Arrays.asList(//
                 new UseVariableDefinition(
                         SpellGameController.VAR_ID_USER_SCORE,
-                        "spellgame.use.variable.user.score.name",
+                        "spellgame.plugin.use.variable.user.score.name",
                         "spellgame.plugin.use.variable.user.score.description",
                         "spellgame.plugin.use.variable.user.score.example"
                 )
