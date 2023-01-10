@@ -103,7 +103,7 @@ public class StageUtils {
                 owner = (owner instanceof Stage) ? ((Stage) owner).getOwner() : null;
             } while (owner != null);
             return Pair.of(w, depth);
-        }).sorted((p1, p2) -> Integer.compare(p2.getRight(), p1.getRight())).findFirst().map(p -> p.getLeft()).orElse(null);
+        }).min((p1, p2) -> Integer.compare(p2.getRight(), p1.getRight())).map(Pair::getLeft).orElse(null);
     }
 
     /**

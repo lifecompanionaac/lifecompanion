@@ -71,6 +71,8 @@ public class GridComponentSelectionModeRibbonPart extends RibbonBasePart<Selecti
     private SelectionModeMainParamView selectionModeMainParamView;
     private SelectionModeSuppParamView selectionModeSuppParamView;
 
+    private ScrollPane scrollPaneMain, scrollPaneSupp;
+
     /**
      * Change listener for parent mode
      */
@@ -85,12 +87,15 @@ public class GridComponentSelectionModeRibbonPart extends RibbonBasePart<Selecti
     public void initUI() {
         selectionModeMainParamView = new SelectionModeMainParamView(e -> {
             selectionModeSuppParamView.setSelectedSelectionMode(selectionModeMainParamView.getSelectedSelectionMode());
-            configStageAnimatedBorderPane.changeCenter(selectionModeSuppParamView);
+            configStageAnimatedBorderPane.changeCenter(scrollPaneSupp);
         });
         selectionModeMainParamView.setPrefWidth(DIALOG_WIDTH - 10.0);
-        selectionModeMainParamView.setPrefHeight(DIALOG_HEIGHT - 60.0);
+        scrollPaneMain = new ScrollPane(selectionModeMainParamView);
+        scrollPaneMain.setFitToWidth(true);
         selectionModeSuppParamView = new SelectionModeSuppParamView();
         selectionModeSuppParamView.setPrefWidth(DIALOG_WIDTH - 10.0);
+        scrollPaneSupp = new ScrollPane(selectionModeSuppParamView);
+        scrollPaneSupp.setFitToWidth(true);
 
         this.buttonOpenSelectionModeConfiguration = FXControlUtils.createTextButtonWithGraphics(Translation.getText("selection.mode.use.configuration.grid.config.button"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.GEAR).sizeFactor(2).color(LCGraphicStyle.MAIN_DARK), "selection.mode.use.configuration.grid.config.button");
@@ -125,7 +130,7 @@ public class GridComponentSelectionModeRibbonPart extends RibbonBasePart<Selecti
 
         // Show dialog with first view
         configStageAnimatedBorderPane.setEnableTransition(false);
-        configStageAnimatedBorderPane.changeCenter(selectionModeMainParamView);
+        configStageAnimatedBorderPane.changeCenter(scrollPaneMain);
         configStageAnimatedBorderPane.setEnableTransition(true);
         Optional<ButtonType> buttonType = configStageDialog.showAndWait();
 
@@ -143,17 +148,20 @@ public class GridComponentSelectionModeRibbonPart extends RibbonBasePart<Selecti
     private void initConfigStage() {
         if (configStageDialog == null) {
             configStageAnimatedBorderPane = new AnimatedBorderPane();
+            configStageAnimatedBorderPane.setPrefHeight(DIALOG_HEIGHT - 20.0);
 
             configStageDialog = DialogUtils.alertWithSourceAndType(buttonOpenSelectionModeConfiguration, null)
                     .withButtonTypes(ButtonType.CANCEL, ButtonType.OK)
                     .withContent(configStageAnimatedBorderPane)
                     .withSize(DIALOG_WIDTH, DIALOG_HEIGHT)
                     .build();
+            configStageDialog.setResizable(true);
+
             configStageDialog.getDialogPane().getStylesheets().addAll(LCConstant.CSS_STYLE_PATH);
             configStageDialog.getDialogPane().getStyleClass().addAll("selection-mode-config-dialog");
 
-            Triple<HBox, Label, Node> header = FXControlUtils.createHeader("Mode de sélection pour la grille", previous -> configStageAnimatedBorderPane.changeCenter(selectionModeMainParamView));
-            header.getRight().visibleProperty().bind(configStageAnimatedBorderPane.centerProperty().isEqualTo(selectionModeSuppParamView));
+            Triple<HBox, Label, Node> header = FXControlUtils.createHeader("grid.specific.selection.mode.title", previous -> configStageAnimatedBorderPane.changeCenter(selectionModeMainParamView));
+            header.getRight().visibleProperty().bind(configStageAnimatedBorderPane.centerProperty().isEqualTo(scrollPaneSupp));
             configStageAnimatedBorderPane.setTop(header.getLeft());
         }
     }
