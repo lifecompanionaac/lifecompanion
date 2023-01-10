@@ -19,7 +19,7 @@ dependencies {
 }
 
 mainClassName = "org.lifecompanion.framework.server.LifeCompanionFrameworkServer"
-version = "1.14.12"
+version = "1.14.13"
 
 ext {
     env = project.hasProperty('env') ? project.property('env') : 'local'
@@ -46,7 +46,7 @@ jar {
 }
 
 heroku {
-    jdkVersion = 16
+    jdkVersion = 18
     appName = (env == 'prod' ? 'lifecompanionaac' : 'lifecompanionaac-dev')
     processTypes(web: 'java -jar lc-framework-server/build/libs/lc-framework-server-' + project.version + '.jar $PORT')
 }

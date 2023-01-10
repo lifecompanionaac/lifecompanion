@@ -15,8 +15,8 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v2
         with:
-          java-version: '16'
-          distribution: 'adopt'
+          java-version: '18'
+          distribution: 'temurin'
       
       - name : Add +X on gralde scripts
         run: chmod +x lifecompanion-framework/gradlew
