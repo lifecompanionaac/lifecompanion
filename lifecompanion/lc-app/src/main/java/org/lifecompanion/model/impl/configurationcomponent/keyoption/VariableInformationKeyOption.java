@@ -44,7 +44,8 @@ public class VariableInformationKeyOption extends AbstractKeyOption {
 
     public VariableInformationKeyOption() {
         super();
-        this.optionNameId = "key.option.name.variable.information";
+        this.optionNameId = "key.option.variable.information.name";
+        this.optionDescriptionId = "key.option.variable.information.description";
         this.iconName = "icon_type_variable_info.png";
         this.disableTextContent.set(true);
         this.wantedDisplayedInformation = new SimpleStringProperty();

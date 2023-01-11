@@ -6,14 +6,16 @@
 
 - Meilleure gestion de **la mise à l'échelle** des systèmes : permet un affichage "plus grand" sur des écrans à haute résolution (ex : tablettes Surface)
 - Mise à jour de l'API d'extensions
-- Migration vers Java 18
+- Mise à jour de la version de Java (18)
 
 ### Corrections/ajustements
 
+- Ticket #69 : ajout d'une description sur chaque type de case
 - Ticket #152 : les notifications ne prennent maintenant plus le focus de la fenêtre principale
 - Ticket #182 : correction d'une traduction
 - Ticket #185 : correction d'une erreur lors du remplacement d'une grille par une autre en copier/coller
 - Ticket #186 : correction d'un problème qui faisait que le bouton "précedent" ne fonctionnait pas sur les listes de case
+- Ticket #177 : ajout d'un scroll dans les paramètres de sélection spécifiques à une grille
 
 ## 1.4.2 - 20/06/2022
 

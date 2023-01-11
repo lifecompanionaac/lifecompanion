@@ -45,6 +45,7 @@ public class KeyListNodeKeyOption extends AbstractSimplerKeyActionContainerKeyOp
     public KeyListNodeKeyOption() {
         super();
         this.optionNameId = "key.option.key.list.category.display.name";
+        this.optionDescriptionId = "key.option.key.list.category.display.description";
         this.iconName = "icon_type_keylist_key.png";
 
         selectKeyNodeAction = new SelectKeyNodeAction();

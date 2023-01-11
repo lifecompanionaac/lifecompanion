@@ -63,7 +63,8 @@ public class WordPredictionKeyOption extends AbstractKeyOption {
 
     public WordPredictionKeyOption() {
         super();
-        this.optionNameId = "key.option.name.word.prediction";
+        this.optionNameId = "key.option.word.prediction.name";
+        this.optionDescriptionId = "key.option.word.prediction.description";
         this.iconName = "icon_type_word_prediction.png";
         this.disableTextContent.set(true);
         this.addSpace = new SimpleBooleanProperty(this, "addSpace", true);

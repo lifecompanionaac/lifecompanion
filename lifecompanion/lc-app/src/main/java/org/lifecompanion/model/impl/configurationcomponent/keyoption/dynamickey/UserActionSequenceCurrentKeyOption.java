@@ -38,6 +38,7 @@ public class UserActionSequenceCurrentKeyOption extends AbstractSimplerKeyConten
     public UserActionSequenceCurrentKeyOption() {
         super();
         this.optionNameId = "key.option.user.action.sequence.current.key.option.name";
+        this.optionDescriptionId = "key.option.user.action.sequence.current.key.option.description";
         this.iconName = "icon_type_user_action_sequence_current_item.png";
     }
 

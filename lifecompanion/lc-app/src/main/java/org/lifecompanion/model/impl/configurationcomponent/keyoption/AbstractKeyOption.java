@@ -39,6 +39,7 @@ public abstract class AbstractKeyOption implements KeyOptionI {
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractKeyOption.class);
 
     protected transient String optionNameId;
+    protected transient String optionDescriptionId;
 
     protected transient String iconName;
 
@@ -154,6 +155,11 @@ public abstract class AbstractKeyOption implements KeyOptionI {
     @Override
     public String getOptionName() {
         return Translation.getText(this.optionNameId);
+    }
+
+    @Override
+    public String getOptionDescription() {
+        return Translation.getText(optionDescriptionId);
     }
 
     @Override

@@ -42,7 +42,8 @@ public class CustomCharKeyOption extends AbstractKeyOption {
 
     public CustomCharKeyOption() {
         super();
-        this.optionNameId = "key.option.name.custom.char";
+        this.optionNameId = "key.option.custom.char.name";
+        this.optionDescriptionId = "key.option.custom.char.description";
         this.iconName = "icon_type_char_prediction.png";
         //the user should be able to use a text longer than 1 char to be able to have its one space char.
         //this.maxTextLength.set(1);

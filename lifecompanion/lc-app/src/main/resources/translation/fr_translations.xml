@@ -59,10 +59,13 @@
   <text key="selection.mode.scanning.mode.manual">Manuel (deux contacteurs)</text>
   <text key="sequence.configuration.item.sub.item">Sous étape (basée sur la dernière étape qui n'était pas une sous étape)</text>
   <text key="sequence.configuration.item.auto.time">Étape avec timer (en s)</text>
-  <text key="key.option.name.progress.display">Timer pour séquences</text>
+  <text key="key.option.progress.display.name">Indicateur de progression</text>
+  <text key="key.option.progress.display.description">Permet d'afficher un indicateur de progression (barre, rond...) utilisable pour les séquences afin de connaître le temps écoulé ou restant.</text>
   <text key="sequence.configuration.item.sub.item.toggle">Sous étape</text>
   <text key="key.option.user.action.sequence.current.key.option.name">Étape en cours</text>
+  <text key="key.option.user.action.sequence.current.key.option.description">Affiche l'étape en cours dans la séquence actuellement sélectionnée.</text>
   <text key="key.option.user.action.sequence.item.key.option.name">Étapes de la séquence en cours</text>
+  <text key="key.option.user.action.sequence.item.key.option.description">Affiche les différentes étapes de la séquence actuellement sélectionnée (mises à jour en fonction de l'avancement).</text>
   <text key="use.action.sub.category.user.action.sequence.sub.general">Général</text>
   <text key="use.action.sub.category.user.action.sequence.sub.current">Séquence en cours</text>
 <text key="use.action.main.category.user.action.sequence.name">Séquences</text>
@@ -196,18 +199,26 @@
   <!--org.lifecompanion.base.data.action.definition-->
   <text key="action.switch.mode">Changer le mode de l'application.</text>
   <!--org.lifecompanion.base.data.component.keyoption-->
-  <text key="key.option.name.auto.char">Caractère prédit automatique</text>
-  <text key="key.option.name.basic">Normal</text>
-  <text key="key.option.name.custom.char">Caractère prédit choisi</text>
-  <text key="key.option.name.quick.communication">Communication rapide</text>
-  <text key="key.option.name.variable.information">Informations variables</text>
-  <text key="key.option.name.word.prediction">Prédiction de mots</text>
+  <text key="key.option.auto.char.name">Caractère prédit automatique</text>
+  <text key="key.option.auto.char.description">Permet d'afficher un caractère prédit en fonction des caractères actuellement entrés dans l'éditeur. Le caractère proposé est libre.</text>
+  <text key="key.option.basic.name">Classique</text>
+  <text key="key.option.basic.description">Pas de caractéristique particulière : totalement paramétrable, son contenu, son style et ses actions sont libres.</text>
+  <text key="key.option.custom.char.name">Caractère prédit choisi</text>
+  <text key="key.option.custom.char.description">Permet de réorganiser les cases du même type en fonction des caractères actuellement entrés dans l'éditeur. Diffère de "Caractère prédit automatique" du fait que les caractères proposés sont parmis les cases du même type et non libres.</text>
+  <text key="key.option.quick.communication.name">Communication rapide</text>
+  <text key="key.option.quick.communication.description">Permet de rapidement créer une case avec un texte écrit ainsi qu'un texte prononcé, le tout paramétrable depuis l'onglet de sélection.</text>
+  <text key="key.option.variable.information.name">Informations variables</text>
+  <text key="key.option.variable.information.description">Permet d'utiliser des variables dans le texte de la case et que la case soit automatiquement mise à jour par LifeCompanion.</text>
+  <text key="key.option.word.prediction.name">Prédiction de mots</text>
+  <text key="key.option.word.prediction.description">Permet d'afficher des prédictions de mots en fonction du texte actuellement entré dans l'éditeur de texte.</text>
   <text key="prediction.auto.char.default.text">(caractère)</text>
   <text key="prediction.key.default.text">(prédiction)</text>
   <!--org.lifecompanion.base.data.component.keyoption.keylist-->
   <text key="key.option.key.list.category.display.name">Liste de case</text>
+  <text key="key.option.key.list.category.display.description">Permet d'afficher le vocabulaire des listes de cases configurées sur cette configuration. Attention, le contenu est uniquement mis à jour par LifeCompanion en fonction de la navigation dans l'arbre de vocabulaire, tout élément configuré sur cette case impacte la case en tant que tel et non son vocabulaire associé.</text>
   <!--org.lifecompanion.base.data.component.keyoption.note-->
-  <text key="key.option.name.note.key">Bloc-notes</text>
+  <text key="key.option.note.key.name">Bloc-notes</text>
+  <text key="key.option.note.key.description">Permet de créer une case de "stockage" du texte entré. À la sélection, cela "ouvre" cette note, à la sélection suivante, cela "ferme" la note et permet ainsi de garder son texte pour plus tard.</text>
   <text key="note.key.display.option.content.text">Texte sauvegardé</text>
   <text key="note.key.display.option.custom.text">Texte personnalisé</text>
   <!--org.lifecompanion.base.data.component.utils-->

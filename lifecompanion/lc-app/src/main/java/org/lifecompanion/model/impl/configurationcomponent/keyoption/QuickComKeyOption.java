@@ -57,7 +57,8 @@ public class QuickComKeyOption extends AbstractKeyOption {
 
 	public QuickComKeyOption() {
 		super();
-		this.optionNameId = "key.option.name.quick.communication";
+		this.optionNameId = "key.option.quick.communication.name";
+		this.optionDescriptionId = "key.option.quick.communication.description";
 		this.iconName = "icon_type_quick_communication.png";
 		this.textToWrite = new SimpleStringProperty("");
 		this.textToSpeak = new SimpleStringProperty("");

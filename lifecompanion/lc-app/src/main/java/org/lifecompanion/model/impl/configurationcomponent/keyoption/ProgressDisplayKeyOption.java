@@ -57,7 +57,8 @@ public class ProgressDisplayKeyOption extends AbstractKeyOption {
 
     public ProgressDisplayKeyOption() {
         super();
-        this.optionNameId = "key.option.name.progress.display";
+        this.optionNameId = "key.option.progress.display.name";
+        this.optionDescriptionId = "key.option.progress.display.description";
         this.iconName = "icon_type_progress_display.png";
         this.progressDisplayMode = new SimpleObjectProperty<>(ProgressDisplayMode.FILL);
         this.progressDisplayType = new SimpleObjectProperty<>(ProgressDisplayType.HORIZONTAL_BAR);

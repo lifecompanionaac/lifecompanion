@@ -43,7 +43,8 @@ public class AutoCharKeyOption extends AbstractKeyOption {
 
     public AutoCharKeyOption() {
         super();
-        this.optionNameId = "key.option.name.auto.char";
+        this.optionNameId = "key.option.auto.char.name";
+        this.optionDescriptionId = "key.option.auto.char.description";
         this.iconName = "icon_type_auto_char.png";
         this.disableTextContent.set(true);
         this.prediction = new SimpleStringProperty(this, "prediction", Translation.getText("prediction.auto.char.default.text"));

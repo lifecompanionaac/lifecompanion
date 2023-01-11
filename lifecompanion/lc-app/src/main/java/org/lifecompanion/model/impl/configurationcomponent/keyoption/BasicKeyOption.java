@@ -24,22 +24,24 @@ import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
 /**
  * Represent a {@link KeyOptionI} that do nothing particular.<br>
  * This option should be the default option on most of the existing keys.
+ *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public class BasicKeyOption extends AbstractKeyOption {
 
-	public BasicKeyOption() {
-		super();
-		this.optionNameId = "key.option.name.basic";
-	}
+    public BasicKeyOption() {
+        super();
+        this.optionNameId = "key.option.basic.name";
+        this.optionDescriptionId = "key.option.basic.description";
+    }
 
-	@Override
-	public void attachToImpl(final GridPartKeyComponentI key) {
-		//Do nothing
-	}
+    @Override
+    public void attachToImpl(final GridPartKeyComponentI key) {
+        //Do nothing
+    }
 
-	@Override
-	public void detachFromImpl(final GridPartKeyComponentI key) {
-		//Do nothing
-	}
+    @Override
+    public void detachFromImpl(final GridPartKeyComponentI key) {
+        //Do nothing
+    }
 }

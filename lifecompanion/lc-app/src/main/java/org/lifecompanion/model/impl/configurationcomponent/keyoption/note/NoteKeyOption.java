@@ -54,7 +54,8 @@ public class NoteKeyOption extends AbstractKeyOption {
 
     public NoteKeyOption() {
         super();
-        this.optionNameId = "key.option.name.note.key";
+        this.optionNameId = "key.option.note.key.name";
+        this.optionDescriptionId = "key.option.note.key.description";
         this.iconName = "icon_type_notekey.png";
         this.wantedActivatedColor = new SimpleObjectProperty<>(Color.RED);
         this.wantedStrokeSize = new SimpleIntegerProperty(3);

@@ -38,6 +38,7 @@ public class UserActionSequenceItemKeyOption extends AbstractSimplerKeyContentCo
     public UserActionSequenceItemKeyOption() {
         super();
         this.optionNameId = "key.option.user.action.sequence.item.key.option.name";
+        this.optionDescriptionId = "key.option.user.action.sequence.item.key.option.description";
         this.iconName = "icon_type_user_action_sequence_items.png";
         this.considerKeyEmpty.set(true);
         this.displayFilter = new SimpleObjectProperty<>(UserActionSequenceDisplayFilter.BOTH);

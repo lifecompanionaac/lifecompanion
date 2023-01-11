@@ -103,6 +103,11 @@ public interface KeyOptionI extends XMLSerializable<IOContextI> {
     String getOptionName();
 
     /**
+     * @return a description for this option to help user choice
+     */
+    String getOptionDescription();
+
+    /**
      * The key option icon will be displayed on the top left corner of a key.
      *
      * @return a icon url for this option.<br>

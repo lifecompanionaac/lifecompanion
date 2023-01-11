@@ -33,6 +33,7 @@ import org.lifecompanion.model.api.configurationcomponent.keyoption.KeyOptionCon
 import org.lifecompanion.model.api.configurationcomponent.keyoption.KeyOptionI;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.AvailableKeyOptionManager;
 import org.lifecompanion.controller.editaction.KeyActions;
+import org.lifecompanion.ui.common.pane.specific.cell.KeyOptionDetailledListCell;
 import org.lifecompanion.util.javafx.FXControlUtils;
 import org.lifecompanion.util.model.GridPartKeyCollectionPropertyHolder;
 import org.lifecompanion.util.model.GridPartKeyPropertyChangeListener;
@@ -92,8 +93,9 @@ public class AbstractKeyOptionRibbonPart extends RibbonBasePart<GridPartKeyCompo
 
         //Key option
         this.comboKeyOptionType = new ComboBox<>(AvailableKeyOptionManager.INSTANCE.getKeyOptions());
-        this.comboKeyOptionType.setCellFactory((lv) -> new KeyOptionListCell());
+        this.comboKeyOptionType.setCellFactory((lv) -> new KeyOptionDetailledListCell());
         this.comboKeyOptionType.setButtonCell(new KeyOptionListCell());
+        this.comboKeyOptionType.setMaxWidth(180);
         FXControlUtils.createAndAttachTooltip(comboKeyOptionType, "tooltip.explain.select.key.option");
         Separator separator = new Separator(Orientation.HORIZONTAL);
         VBox.setMargin(separator, new Insets(5, 0, 5, 0));
