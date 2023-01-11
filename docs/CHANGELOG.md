@@ -6,7 +6,7 @@
 
 - Meilleure gestion de **la mise à l'échelle** des systèmes : permet un affichage "plus grand" sur des écrans à haute résolution (ex : tablettes Surface)
 - Mise à jour de l'API d'extensions
-- Mise à jour de la version de Java (18)
+- Mise à jour de la version de Java (version 18)
 
 ### Corrections/ajustements
 

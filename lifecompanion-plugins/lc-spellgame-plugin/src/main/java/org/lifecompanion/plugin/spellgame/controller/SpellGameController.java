@@ -37,7 +37,6 @@ import org.lifecompanion.model.api.lifecycle.ModeListenerI;
 import org.lifecompanion.model.api.textcomponent.WritingEventSource;
 import org.lifecompanion.plugin.spellgame.SpellGamePlugin;
 import org.lifecompanion.plugin.spellgame.SpellGamePluginProperties;
-import org.lifecompanion.plugin.spellgame.controller.task.ExportGameResultTask;
 import org.lifecompanion.plugin.spellgame.model.GameStep;
 import org.lifecompanion.plugin.spellgame.model.GameStepEnum;
 import org.lifecompanion.plugin.spellgame.model.SpellGameStepResult;
@@ -155,24 +154,34 @@ public enum SpellGameController implements ModeListenerI {
 
         // If the user successfully enter the word : set the point and go to next word
         if (step.checkWord(word, input)) {
-            if (currentSpellGamePluginProperties.enableFeedbackSoundProperty().get()) {
-                playFromStart(playerSuccess);
-            }
+            showSuccessFeedback();
             endCurrentStepAndGoToNextWord();
-            wordDisplayKeyOptions.forEach(CurrentWordDisplayKeyOption::successOnWord);// FIXME : move this test
         }
         // User failed to enter the correct word
         else {
-            if (currentSpellGamePluginProperties.enableFeedbackSoundProperty().get()) {
-                playFromStart(playerError);
-            }
+            showFailFeedback();
             if (currentStepIndex < GameStepEnum.values().length - 1) {
                 currentStepIndex++;
                 startCurrentStep();
             } else {
                 endCurrentStepAndGoToNextWord();
             }
+
         }
+    }
+
+    private void showSuccessFeedback() {
+        if (currentSpellGamePluginProperties.enableFeedbackSoundProperty().get()) {
+            playFromStart(playerSuccess);
+        }
+        wordDisplayKeyOptions.forEach(k -> k.answerDone(true));
+    }
+
+    private void showFailFeedback() {
+        if (currentSpellGamePluginProperties.enableFeedbackSoundProperty().get()) {
+            playFromStart(playerError);
+        }
+        wordDisplayKeyOptions.forEach(k -> k.answerDone(false));
     }
 
 
