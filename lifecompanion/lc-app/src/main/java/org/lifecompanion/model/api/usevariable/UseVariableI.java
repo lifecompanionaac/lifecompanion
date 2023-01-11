@@ -30,16 +30,16 @@ public interface UseVariableI<T> {
 	 * The associated definition
 	 * @return the variable definition, can't be null
 	 */
-	public UseVariableDefinitionI getDefinition();
+	UseVariableDefinitionI getDefinition();
 
 	/**
 	 * @return the real value of this variable
 	 */
-	public T getValue();
+	T getValue();
 
 	/**
 	 * @return the displayable form for this variable's value.<br>
 	 * Basic implementation will call the {@link #toString()} method of {@link #getValue()}
 	 */
-	public String toStringValue();
+	String toStringValue();
 }

@@ -20,7 +20,7 @@ Be familiar with Java and JavaFX development.
 
 ### Initialize your plugin project
 
-1. First, clone LifeCompanion official repository and make it run locally : [use build documentation](BUILD.md)
+1. First, clone LifeCompanion official repository **from the last release tag** `lifecompanion/lc-app/X.X.X-prod` and make it run locally : [use build documentation](BUILD.md)
 1. Run `gradlew publishToMavenLocal` on **lifecompanion-framework** and **lifecompanion** projects (this will add LifeCompanion API to your local Maven repo)
 1. **TODO FROM HERE**
 1. Copy the **lifecompanion/lc-example-plugin** to your plugin specific folder

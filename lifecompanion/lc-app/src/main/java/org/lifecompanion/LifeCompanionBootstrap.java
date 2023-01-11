@@ -126,8 +126,6 @@ public class LifeCompanionBootstrap {
             final EditModeScene editModeScene = new EditModeScene(new StackPane());
             editModeScene.initAll();
 
-            ThreadUtils.safeSleep(5000);
-
             ProfileConfigSelectionController.INSTANCE.getStage().getProfileConfigSelectionScene().initAll();
             GeneralConfigurationController.INSTANCE.getStage().getGeneralConfigurationScene().initAll();
 

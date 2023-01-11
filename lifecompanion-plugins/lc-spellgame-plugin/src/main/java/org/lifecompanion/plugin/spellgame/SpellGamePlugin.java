@@ -6,6 +6,8 @@ import org.lifecompanion.model.api.plugin.PluginConfigPropertiesI;
 import org.lifecompanion.model.api.plugin.PluginI;
 import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
+import org.lifecompanion.model.impl.usevariable.IntegerUseVariable;
+import org.lifecompanion.model.impl.usevariable.LongUseVariable;
 import org.lifecompanion.model.impl.usevariable.StringUseVariable;
 import org.lifecompanion.model.impl.usevariable.UseVariableDefinition;
 import org.lifecompanion.plugin.spellgame.controller.SpellGameController;
@@ -70,6 +72,24 @@ public class SpellGamePlugin implements PluginI {
                         "spellgame.plugin.use.variable.user.score.name",
                         "spellgame.plugin.use.variable.user.score.description",
                         "spellgame.plugin.use.variable.user.score.example"
+                ),
+                new UseVariableDefinition(
+                        SpellGameController.VAR_ID_WORD_INDEX,
+                        "spellgame.plugin.use.variable.word.index.name",
+                        "spellgame.plugin.use.variable.word.index.description",
+                        "spellgame.plugin.use.variable.word.index.example"
+                ),
+                new UseVariableDefinition(
+                        SpellGameController.VAR_ID_WORD_COUNT,
+                        "spellgame.plugin.use.variable.word.count.name",
+                        "spellgame.plugin.use.variable.word.count.description",
+                        "spellgame.plugin.use.variable.word.count.example"
+                ),
+                new UseVariableDefinition(
+                        SpellGameController.VAR_ID_CURRENT_STEP_INSTRUCTION,
+                        "spellgame.plugin.use.variable.current.step.instruction.name",
+                        "spellgame.plugin.use.variable.current.step.instruction.description",
+                        "spellgame.plugin.use.variable.current.step.instruction.example"
                 )
         );
     }
@@ -78,9 +98,24 @@ public class SpellGamePlugin implements PluginI {
     public Map<String, UseVariableI<?>> generateVariables(Map<String, UseVariableDefinitionI> variablesToGenerate) {
         Map<String, UseVariableI<?>> vars = new HashMap<>();
         vars.put(SpellGameController.VAR_ID_USER_SCORE,
-                new StringUseVariable(
+                new IntegerUseVariable(
                         variablesToGenerate.get(SpellGameController.VAR_ID_USER_SCORE),
-                        String.valueOf(SpellGameController.INSTANCE.getUserScore())
+                        SpellGameController.INSTANCE.getUserScore()
+                ));
+        vars.put(SpellGameController.VAR_ID_WORD_INDEX,
+                new IntegerUseVariable(
+                        variablesToGenerate.get(SpellGameController.VAR_ID_WORD_INDEX),
+                        SpellGameController.INSTANCE.getWordIndex()
+                ));
+        vars.put(SpellGameController.VAR_ID_WORD_COUNT,
+                new IntegerUseVariable(
+                        variablesToGenerate.get(SpellGameController.VAR_ID_WORD_COUNT),
+                        SpellGameController.INSTANCE.getWordCount()
+                ));
+        vars.put(SpellGameController.VAR_ID_CURRENT_STEP_INSTRUCTION,
+                new StringUseVariable(
+                        variablesToGenerate.get(SpellGameController.VAR_ID_CURRENT_STEP_INSTRUCTION),
+                        SpellGameController.INSTANCE.getCurrentStepInstruction()
                 ));
         return vars;
     }

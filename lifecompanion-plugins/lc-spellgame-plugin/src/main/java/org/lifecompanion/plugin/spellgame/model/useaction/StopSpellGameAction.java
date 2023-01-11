@@ -27,21 +27,22 @@ import org.lifecompanion.plugin.spellgame.controller.SpellGameController;
 
 import java.util.Map;
 
-public class ValidateCurrentStepAndGoToNextAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
+public class StopSpellGameAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
 
-    public ValidateCurrentStepAndGoToNextAction() {
+    public StopSpellGameAction() {
         super(UseActionTriggerComponentI.class);
         this.order = 0;
         this.category = SpellGameActionSubCategories.CURRENT_GAME;
-        this.parameterizableAction = false;
-        this.nameID = "spellgame.plugin.action.validate.step.and.go.next.in.game.name";
-        this.staticDescriptionID = "spellgame.plugin.action.validate.step.and.go.next.in.game.description";
+        this.nameID = "spellgame.plugin.action.end.game.name";
+        this.staticDescriptionID = "spellgame.plugin.action.end.game.static.description";
         this.configIconPath = "filler_icon.png";
-        this.variableDescriptionProperty().set(this.getStaticDescription());
+        this.parameterizableAction = false;
+        this.variableDescriptionProperty().set(getStaticDescription());
     }
 
     @Override
     public void execute(UseActionEvent event, Map<String, UseVariableI<?>> variables) {
-        SpellGameController.INSTANCE.validateCurrentStepAndGoToNext();
+        SpellGameController.INSTANCE.endGame();
     }
+
 }

@@ -26,7 +26,9 @@ import org.lifecompanion.plugin.spellgame.utils.SpellGameUtils;
 import java.util.Set;
 
 public enum GameStepEnum implements GameStep {
-    WRITE("spellgame.plugin.game.step.instruction.write", false), COPY("spellgame.plugin.game.step.instruction.copy", true), CHAR_COUNT("spellgame.plugin.game.step.instruction.char.count", true) {
+    WRITE("spellgame.plugin.game.step.write", false),
+    COPY("spellgame.plugin.game.step.copy", true),
+    CHAR_COUNT("spellgame.plugin.game.step.char.count", true) {
         @Override
         public boolean checkWord(String word, String input) {
             try {
@@ -40,7 +42,7 @@ public enum GameStepEnum implements GameStep {
         public String getExpectedResult(String word) {
             return "" + StringUtils.safeLength(word);
         }
-    }, BACKWARD("spellgame.plugin.game.step.instruction.backward", true) {
+    }, BACKWARD("spellgame.plugin.game.step.backward", true) {
         @Override
         public boolean checkWord(String word, String input) {
             return StringUtils.isEquals(StringUtils.reverse(word), input);
@@ -50,7 +52,7 @@ public enum GameStepEnum implements GameStep {
         public String getExpectedResult(String word) {
             return StringUtils.reverse(word);
         }
-    }, ONE_ON_TWO("spellgame.plugin.game.step.instruction.one.on.two", true) {
+    }, ONE_ON_TWO("spellgame.plugin.game.step.one.on.two", true) {
         @Override
         public boolean checkWord(String word, String input) {
             return StringUtils.isEquals(SpellGameUtils.oneOnTwoChar(0, word), input) || StringUtils.isEquals(SpellGameUtils.oneOnTwoChar(1, word), input);
@@ -62,7 +64,7 @@ public enum GameStepEnum implements GameStep {
         }
 
 
-    }, VOWEL("spellgame.plugin.game.step.instruction.vowel", true) {
+    }, VOWEL("spellgame.plugin.game.step.vowel", true) {
 
         static final Set<Character> VOWELS = Set.of('a', 'e', 'i', 'o', 'u', 'y');
 
@@ -77,7 +79,7 @@ public enum GameStepEnum implements GameStep {
         }
 
 
-    }, CONSONANT("spellgame.plugin.game.step.instruction.consonant", true) {
+    }, CONSONANT("spellgame.plugin.game.step.consonant", true) {
         static final Set<Character> CONSONANT = Set.of('b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'q', 'r', 's', 't', 'v', 'w', 'x', 'z');
 
         @Override
@@ -90,11 +92,11 @@ public enum GameStepEnum implements GameStep {
             return SpellGameUtils.withOnly(word, CONSONANT);
         }
     };
-    private final String instructionId;
+    private final String translationId;
     private final boolean wordDisplayOnStep;
 
-    GameStepEnum(String instructionId, boolean wordDisplayOnStep) {
-        this.instructionId = instructionId;
+    GameStepEnum(String translationId, boolean wordDisplayOnStep) {
+        this.translationId = translationId;
         this.wordDisplayOnStep = wordDisplayOnStep;
     }
 
@@ -104,8 +106,18 @@ public enum GameStepEnum implements GameStep {
     }
 
     @Override
+    public String getName() {
+        return Translation.getText(translationId + ".name");
+    }
+
+    @Override
     public String getInstruction(String word) {
-        return Translation.getText(instructionId, word);
+        return Translation.getText(translationId + ".instruction.speech", word);
+    }
+
+    @Override
+    public String getGeneralInstruction() {
+        return Translation.getText(translationId + ".instruction.general");
     }
 
     @Override

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="res/bootstrap.min.css" rel="stylesheet" />
+    <title>LifeCompanion - rapport du test "Écris le mot"</title>
+    <style>
+      :root {
+        font-size: 1em;
+      }
+      .page-content {
+        width: 80%;
+        margin: 0 auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-content">
+      <div class="container border my-2">
+        <div class="row text-center my-2">
+          <div class="col">
+            <button
+              type="button"
+              class="btn btn-primary"
+              onClick="window.print()"
+            >
+              IMPRIMER
+            </button>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="container border my-2">
+          <div class="row">
+            <div class="col">
+              <p class="text-end fw-bold text-secondary">Nom de la liste</p>
+            </div>
+            <div class="col">
+              <p class="text-start">{wordListName}</p>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col">
+              <p class="text-end fw-bold text-secondary">Date du test</p>
+            </div>
+            <div class="col">
+              <p class="text-start">{testDate}</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <p class="text-end fw-bold text-secondary">Durée du test</p>
+            </div>
+            <div class="col">
+              <p class="text-start">{testDuration}</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col pt-1">
+              <p class="text-end fw-bold text-secondary">Nom</p>
+            </div>
+            <div class="col">
+              <p class="text-start">
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Mathéo DUPONT"
+                />
+              </p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <p class="text-end fw-bold text-secondary">
+                Nombre de mots (effectués/total)
+              </p>
+            </div>
+            <div class="col">
+              <p class="text-start">{wordListSize}</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <p class="text-end fw-bold text-secondary">Score</p>
+            </div>
+            <div class="col">
+              <p class="text-start">{testScore}</p>
+            </div>
+          </div>
+        </div>
+        <div class="container border my-2">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Mot</th>
+                <th scope="col">Étape</th>
+                <th scope="col">Réponse</th>
+                <th scope="col">Attendu</th>
+                <th scope="col">Temps</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <script src="res/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

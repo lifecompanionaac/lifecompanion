@@ -108,8 +108,9 @@ public class StageUtils {
 
     /**
      * Method that use the internal API to set the stage focusable property.<br>
-     * This is a workaround, this should be changed if a public API to change focus state is exposed.
-     * <strong>This method will fail if called before the stage is shown</strong>
+     * This is a workaround, this should be changed if a public API to change focus state is exposed.<br>
+     * <strong>This method will fail if called before the stage is shown</strong><br>
+     * Could hopefully change if <a href="https://bugs.openjdk.org/browse/JDK-8090742?jql=text%20~%20%22unfocusable%20stage%22%20ORDER%20BY%20created%20DESC%2C%20lastViewed%20DESC">JDK-8090742</a> is done one day...
      *
      * @param stage     the stage to change
      * @param focusable the focusable value

@@ -41,6 +41,7 @@ public class CurrentWordDisplayKeyOption extends AbstractKeyOption {
         super();
         this.disableTextContent.set(true);
         this.optionNameId = "spellgame.plugin.current.word.key.option.name";
+        this.optionDescriptionId = "spellgame.plugin.current.word.key.option.description";
         this.iconName = "filler_icon.png";
     }
 
@@ -85,7 +86,6 @@ public class CurrentWordDisplayKeyOption extends AbstractKeyOption {
     }
 
     public void answerDone(boolean correct) {
-        // FIXME : cache image view
         ImageView imageView = new ImageView(IconHelper.get("answers/" + (correct ? "answer_good.png" : "answer_bad.png")));
         imageView.setPreserveRatio(true);
         ImageViewPane imageViewPane = new ImageViewPane(imageView);

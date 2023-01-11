@@ -2,7 +2,7 @@
  * LifeCompanion AAC and its sub projects
  *
  * Copyright (C) 2014 to 2019 Mathieu THEBAUD
- * Copyright (C) 2020 to 2022 CMRRF KERPAPE (Lorient, France) and CoWork'HIT (Lorient, France)
+ * Copyright (C) 2020 to 2021 CMRRF KERPAPE (Lorient, France)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,18 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.lifecompanion.plugin.spellgame.model;
+package org.lifecompanion.model.impl.usevariable;
 
-public interface GameStep {
-    boolean isWordDisplayOnStep();
+import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
 
-    String getName();
+/**
+ * @author Mathieu THEBAUD <math.thebaud@gmail.com>
+ */
+public class IntegerUseVariable extends AbstractUseVariable<Integer> {
 
-    String getInstruction(String word);
-
-    String getGeneralInstruction();
-
-    boolean checkWord(String word, String input);
-
-    String getExpectedResult(String word);
+	public IntegerUseVariable(final UseVariableDefinitionI definition, final Integer valueP) {
+		super(definition, valueP);
+	}
 }

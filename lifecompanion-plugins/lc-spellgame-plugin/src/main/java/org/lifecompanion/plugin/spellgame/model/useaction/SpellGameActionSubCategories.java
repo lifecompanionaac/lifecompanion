@@ -10,8 +10,8 @@ import org.lifecompanion.model.api.categorizedelement.useaction.UseActionMainCat
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionSubCategoryI;
 
 public enum SpellGameActionSubCategories implements UseActionSubCategoryI {
-    SPELLGAME("spellgame.plugin.sub.action.category.spellgame.name", CategorizedElementColorProvider.nextColor(SpellGameActionMainCategory.INSTANCE)),
-    MISC("spellgame.plugin.sub.action.category.misc.name", CategorizedElementColorProvider.nextColor(SpellGameActionMainCategory.INSTANCE)),
+    CURRENT_GAME("spellgame.plugin.sub.action.category.current.game.name", CategorizedElementColorProvider.nextColor(SpellGameActionMainCategory.INSTANCE)),
+    GENERAL("spellgame.plugin.sub.action.category.general.name", CategorizedElementColorProvider.nextColor(SpellGameActionMainCategory.INSTANCE)),
     ;
 
     private final String nameId;

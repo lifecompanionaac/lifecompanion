@@ -42,7 +42,7 @@ public class StartSpellGameAction extends SimpleUseActionImpl<UseActionTriggerCo
     public StartSpellGameAction() {
         super(UseActionTriggerComponentI.class);
         this.order = 0;
-        this.category = SpellGameActionSubCategories.SPELLGAME;
+        this.category = SpellGameActionSubCategories.GENERAL;
         this.parameterizableAction = true;
         this.nameID = "spellgame.plugin.action.start.game.name";
         this.staticDescriptionID = "spellgame.plugin.action.start.game.static.description";
