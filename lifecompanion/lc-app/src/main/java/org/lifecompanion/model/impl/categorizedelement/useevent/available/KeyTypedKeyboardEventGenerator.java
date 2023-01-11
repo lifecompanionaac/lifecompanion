@@ -70,9 +70,6 @@ public class KeyTypedKeyboardEventGenerator extends BaseUseEventGeneratorImpl {
         return this.keyPressed;
     }
 
-    // Class part : "Mode start/stop"
-    //========================================================================
-
     @Override
     public void modeStart(final LCConfigurationI configuration) {
         // Listener clear on modeStop
@@ -91,10 +88,7 @@ public class KeyTypedKeyboardEventGenerator extends BaseUseEventGeneratorImpl {
     public void modeStop(final LCConfigurationI configuration) {
 
     }
-    //========================================================================
 
-    // Class part : "IO"
-    //========================================================================
     @Override
     public Element serialize(final IOContextI context) {
         final Element element = super.serialize(context);
@@ -107,6 +101,4 @@ public class KeyTypedKeyboardEventGenerator extends BaseUseEventGeneratorImpl {
         super.deserialize(node, context);
         XMLObjectSerializer.deserializeInto(KeyTypedKeyboardEventGenerator.class, this, node);
     }
-    //========================================================================
-
 }

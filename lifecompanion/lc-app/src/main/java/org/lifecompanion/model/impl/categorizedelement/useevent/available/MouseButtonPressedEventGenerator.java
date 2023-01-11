@@ -54,8 +54,6 @@ public class MouseButtonPressedEventGenerator extends BaseUseEventGeneratorImpl 
         return this.wantedButton;
     }
 
-    // Class part : "Mode start/stop"
-    //========================================================================
     @Override
     public void modeStart(final LCConfigurationI configuration) {
         SelectionModeController.INSTANCE.addMouseEventListener((mouseEvent) -> {
@@ -70,10 +68,7 @@ public class MouseButtonPressedEventGenerator extends BaseUseEventGeneratorImpl 
     public void modeStop(final LCConfigurationI configuration) {
 
     }
-    //========================================================================
 
-    // Class part : "IO"
-    //========================================================================
     @Override
     public Element serialize(final IOContextI context) {
         final Element element = super.serialize(context);
@@ -86,6 +81,4 @@ public class MouseButtonPressedEventGenerator extends BaseUseEventGeneratorImpl 
         super.deserialize(node, context);
         XMLObjectSerializer.deserializeInto(MouseButtonPressedEventGenerator.class, this, node);
     }
-    //========================================================================
-
 }

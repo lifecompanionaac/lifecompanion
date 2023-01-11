@@ -67,17 +67,20 @@ public enum SpellGameController implements ModeListenerI {
             VAR_ID_WORD_COUNT = "SpellGameWordCount",
             VAR_ID_CURRENT_STEP_INSTRUCTION = "SpellGameCurrentStepInstruction";
 
+    // Event listeners
+    private final Set<Runnable> gameEndedListeners;
+
+    // Current game
     private SpellGameWordList currentWordList;
     private List<String> words;
     private int currentWordIndex;
     private int currentStepIndex;
     private int userScore;
-
+    private final List<SpellGameStepResult> currentGameAnswers;
 
     private SpellGamePluginProperties currentSpellGamePluginProperties;
     private final List<CurrentWordDisplayKeyOption> wordDisplayKeyOptions;
     private final InvalidationListener textListener;
-    private final List<SpellGameStepResult> currentGameAnswers;
 
     private MediaPlayer playerSuccess, playerError, playerStartTyping;
 
@@ -94,6 +97,7 @@ public enum SpellGameController implements ModeListenerI {
                 Platform.runLater(this::validateCurrentStepAndGoToNext);
             }
         };
+        gameEndedListeners = new HashSet<>();
     }
 
     // PROPS
@@ -110,9 +114,19 @@ public enum SpellGameController implements ModeListenerI {
         return words != null ? words.size() : 0;
     }
 
-
     public String getCurrentStepInstruction() {
         return currentStepIndex >= 0 && currentStepIndex < GameStepEnum.values().length ? GameStepEnum.values()[currentStepIndex].getGeneralInstruction() : "";
+    }
+    //========================================================================
+
+    // LISTENERS
+    //========================================================================
+    public void addGameEndedListener(Runnable listener) {
+        this.gameEndedListeners.add(listener);
+    }
+
+    public void removeGameEndedListener(Runnable listener) {
+        this.gameEndedListeners.remove(listener);
     }
     //========================================================================
 
@@ -139,6 +153,9 @@ public enum SpellGameController implements ModeListenerI {
     }
 
     public void startGame(String id) {
+        if (currentWordList != null) {
+            endGame();
+        }
         currentWordList = currentSpellGamePluginProperties.getWordListById(id);
         if (currentWordList != null) {
             playerSuccess = initPlayer("answer_good.wav", 0.7);
@@ -161,7 +178,7 @@ public enum SpellGameController implements ModeListenerI {
         if (currentWordList != null) {
             WritingStateController.INSTANCE.currentTextProperty().removeListener(textListener);
             if (!CollectionUtils.isEmpty(currentGameAnswers)) {
-                AsyncExecutorController.INSTANCE.addAndExecute(true, false,
+                AsyncExecutorController.INSTANCE.addAndExecute(false, false,
                         new ExportGameResultTask(currentWordList, currentWordIndex, userScore, new ArrayList<>(this.currentGameAnswers))
                 );
             }
@@ -173,6 +190,7 @@ public enum SpellGameController implements ModeListenerI {
             stopPlayerAndThen(playerSuccess, () -> playerSuccess = null);
             stopPlayerAndThen(playerError, () -> playerError = null);
             stopPlayerAndThen(playerStartTyping, () -> playerStartTyping = null);
+            gameEndedListeners.forEach(Runnable::run);
         }
     }
 

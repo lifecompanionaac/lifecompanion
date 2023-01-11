@@ -40,6 +40,9 @@
     <text key="spellgame.plugin.use.variable.current.step.instruction.description">Contient la consigne de l'étape en cours. Cette consigne est générique et ne contient pas le mot en cours.
     </text>
     <text key="spellgame.plugin.use.variable.current.step.instruction.example">Écris une lettre sur deux du mot que tu viens de voir</text>
+    <text key="spellgame.plugin.use.variable.event.answer.given.content.var.name">Réponse de l'utilisateur</text>
+    <text key="spellgame.plugin.use.variable.event.answer.given.content.var.description">Contieent la réponse de l'utilisateur, permet par exemple de la prononcer avec la synthèse vocale.</text>
+    <text key="spellgame.plugin.use.variable.event.answer.given.content.var.example">maizon</text>
 
     <!-- KEY OPTION -->
     <text key="spellgame.plugin.current.word.key.option.name">Mot courant</text>
@@ -58,6 +61,23 @@
     <text key="spellgame.plugin.action.end.game.name">Arrêter la partie en cours</text>
     <text key="spellgame.plugin.action.end.game.description">Si une partie est en cours, arrête celle-ci puis génère le rapport et l'ouvre.</text>
 
+    <!-- EVENTS -->
+    <text key="spellgame.plugin.sub.event.category.general.name">Général</text>
+    <text key="spellgame.plugin.main.event.category.name">Jeu "Écris le mot"</text>
+    <text key="spellgame.plugin.main.event.category.description">Contient tous les événements relatifs au jeu "Écris le mot". Permet de détacter la fin d'une partie, etc.</text>
+    <text key="spellgame.plugin.event.game.end.name">Partie terminée/interrompue</text>
+    <text key="spellgame.plugin.event.game.end.description">Cet événement sera généré lorsqu'une partie en cours est terminée ou interrompue.</text>
+    <text key="spellgame.plugin.event.answer.given.name">Mauvaise réponse entrée</text>
+    <text key="spellgame.plugin.event.answer.given.description">Cet événement se produit à chaque fois que l'utilisateur entre une réponse. La réponse de l'utilisateur est donnée en variable de cet événement.</text>
+    <text key="spellgame.plugin.event.answer.given.variable.description">Cet événement se produit à chaque fois que l'utilisateur entre une réponse qui respecte le critère : "{}"</text>
+
+    <!-- TASK -->
+    <text key="spellgame.plugin.task.generate.report.title">Génération des résultats</text>
+
+    <text key="spellgame.plugin.answer.type.all">Toutes les réponses</text>
+    <text key="spellgame.plugin.answer.type.good">Bonnes réponses uniquement</text>
+    <text key="spellgame.plugin.answer.type.bad">Mauvaises réponses uniquement</text>
+
     <!-- UI -->
     <text key="spellgame.plugin.config.view.general.title">Jeu "Ecris le mot"</text>
     <text key="spellgame.plugin.config.view.wordlist.title">Configurer la liste de mots</text>
@@ -73,5 +93,6 @@
     <text key="spellgame.plugin.config.field.import.list.title">Importer depuis un fichier texte</text>
     <text key="spellgame.plugin.config.import.list.format">Fichier texte (UTF-8)</text>
     <text key="spellgame.plugin.config.field.word.list.to.start">Démarrer la partie depuis la liste</text>
+    <text key="spellgame.plugin.config.field.event.answer.given.answer.filter">Générer l'événement pour les réponses</text>
 
 </texts>

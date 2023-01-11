@@ -26,7 +26,7 @@ public class ExportGameResultTask extends LCTask<Void> {
     private final int endScore;
 
     public ExportGameResultTask(SpellGameWordList wordList, int endIndex, int endScore, List<SpellGameStepResult> answers) {
-        super("");
+        super("spellgame.plugin.task.generate.report.title");
         this.endIndex = endIndex;
         this.endScore = endScore;
         this.wordList = wordList;
