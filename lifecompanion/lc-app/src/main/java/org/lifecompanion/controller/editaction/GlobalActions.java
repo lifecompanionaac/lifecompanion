@@ -25,6 +25,7 @@ import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
@@ -69,7 +70,7 @@ public class GlobalActions {
     public static final EventHandler<ActionEvent> HANDLER_GO_USE_MODE = (ea) -> ConfigActionController.INSTANCE.executeAction(new GoUseModeAction(getSourceFromEvent(ea)));
     public static final KeyCombination KEY_COMBINATION_GO_USE_MODE = new KeyCodeCombination(KeyCode.F5, KeyCombination.SHORTCUT_DOWN);
     public static final KeyCombination KEY_COMBINATION_CANCEL = new KeyCodeCombination(KeyCode.Q, KeyCombination.SHORTCUT_DOWN);
-    public static final EventHandler<ActionEvent> HANDLER_CANCEL = (ea) -> ConfigActionController.INSTANCE.executeAction(new ExitLCAction(getSourceFromEvent(ea)));
+    public static final EventHandler<Event> HANDLER_CANCEL = (ea) -> ConfigActionController.INSTANCE.executeAction(new ExitLCAction(getSourceFromEvent(ea)));
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GlobalActions.class);
 

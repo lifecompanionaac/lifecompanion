@@ -20,12 +20,13 @@ package org.lifecompanion.model.impl.style;
 
 import javafx.scene.paint.Color;
 import org.junit.jupiter.api.BeforeEach;
+import org.lifecompanion.model.api.style.GridCompStyleI;
 import org.lifecompanion.model.api.style.ShapeCompStyleI;
 
 public class StyleTest {
 
     private static final Color DEFAULT_BACKGROUND_COLOR = Color.BEIGE;
-    private ShapeCompStyleI defaultShapeStyle;
+    private GridCompStyleI defaultShapeStyle;
 
     @BeforeEach
     public void setUp() {

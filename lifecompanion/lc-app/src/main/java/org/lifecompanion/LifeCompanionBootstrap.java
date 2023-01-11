@@ -253,7 +253,7 @@ public class LifeCompanionBootstrap {
         this.stage.getIcons().add(IconHelper.get(LCConstant.LC_ICON_PATH));
         this.stage.setOnCloseRequest((we) -> {
             we.consume();
-            GlobalActions.HANDLER_CANCEL.handle(null);
+            GlobalActions.HANDLER_CANCEL.handle(we);
         });
 
         // Show loading stage

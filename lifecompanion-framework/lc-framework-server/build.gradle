@@ -16,16 +16,19 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:4.5.0'
     implementation 'software.amazon.awssdk:s3:2.17.15'
     implementation project(':lc-framework-commons')
+
+
 }
 
-mainClassName = "org.lifecompanion.framework.server.LifeCompanionFrameworkServer"
-version = "1.14.13"
+version = '1.14.13'
 
 ext {
     env = project.hasProperty('env') ? project.property('env') : 'local'
 }
 
 application {
+//    mainModule = 'org.lifecompanion.framework.server'
+    mainClass = 'org.lifecompanion.framework.server.LifeCompanionFrameworkServer'
     applicationDefaultJvmArgs = [
             '-Dorg.lifecompanion.framework.server.dev.database.url=postgres://postgres:postgres@localhost:5432/postgres',
             '-Dorg.lifecompanion.framework.server.dev.port=1234'

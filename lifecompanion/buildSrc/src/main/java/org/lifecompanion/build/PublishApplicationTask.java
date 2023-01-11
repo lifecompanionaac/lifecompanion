@@ -54,7 +54,7 @@ import static org.lifecompanion.framework.commons.ApplicationConstant.DIR_NAME_A
 import static org.lifecompanion.framework.commons.ApplicationConstant.DIR_NAME_APPLICATION_DATA;
 
 public abstract class PublishApplicationTask extends DefaultTask {
-    private final static boolean DEV = false;
+    private final static boolean DEV = true;
 
     @Input
     abstract Property<Boolean> getOffline();

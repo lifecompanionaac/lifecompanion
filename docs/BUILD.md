@@ -69,4 +69,6 @@ Then, run `gradlew prepareOfflineApplication`. This will create in **offline** d
 
 ### Note on Gradle command
 
-Note that in the following document, when we say "run gradle task... in XXX" you should then run the gradle task in the given folder (lifecompanion or lifecompanion-framework) from your command line or IDE. For example, to run LifeCompanion from command line : `cd lifecompanion` then `gradle :lc-app:run`
+Note that in the following document, when we say "run gradle task... in XXX" you should then run the gradle task in the given folder (lifecompanion or lifecompanion-framework) from your command line or IDE. For example, to run LifeCompanion from command line : `cd lifecompanion` then `gradlew :lc-app:run`
+
+Also note than `gradlew` command should be adapted to your system : `gradlew.bat` (Windows) and `gradlew` (Unix/Mac)
