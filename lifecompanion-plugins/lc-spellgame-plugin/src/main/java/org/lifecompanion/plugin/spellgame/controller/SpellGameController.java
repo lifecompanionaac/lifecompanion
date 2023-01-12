@@ -174,6 +174,7 @@ public enum SpellGameController implements ModeListenerI {
         }
     }
 
+
     public void endGame() {
         if (currentWordList != null) {
             WritingStateController.INSTANCE.currentTextProperty().removeListener(textListener);
@@ -225,6 +226,10 @@ public enum SpellGameController implements ModeListenerI {
             }
         }
     }
+
+    public void skipWord() {
+    }
+
 
     private void showSuccessFeedback() {
         if (currentSpellGamePluginProperties.enableFeedbackSoundProperty().get()) {
@@ -317,6 +322,8 @@ public enum SpellGameController implements ModeListenerI {
             return null;
         }
     }
+
+
 
 
     //========================================================================

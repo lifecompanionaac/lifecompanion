@@ -60,12 +60,14 @@
     <text key="spellgame.plugin.action.start.game.variable.description">Permet de démarrer une nouvelle partie de "Écris le mot" avec la liste "{}"</text>
     <text key="spellgame.plugin.action.end.game.name">Arrêter la partie en cours</text>
     <text key="spellgame.plugin.action.end.game.description">Si une partie est en cours, arrête celle-ci puis génère le rapport et l'ouvre.</text>
+    <text key="spellgame.plugin.action.skip.current.word.name">Passer le mot</text>
+    <text key="spellgame.plugin.action.skip.current.word.description">Permet de passer directement au mot suivant si la personne est en difficulté et ne pas devoir faire toutes les étapes.</text>
 
     <!-- EVENTS -->
     <text key="spellgame.plugin.sub.event.category.general.name">Général</text>
     <text key="spellgame.plugin.main.event.category.name">Jeu "Écris le mot"</text>
     <text key="spellgame.plugin.main.event.category.description">Contient tous les événements relatifs au jeu "Écris le mot". Permet de détacter la fin d'une partie, etc.</text>
-    <text key="spellgame.plugin.event.game.end.name">Partie terminée/interrompue</text>
+    <text key="spellgame.plugin.event.game.end.name">Fin de partie</text>
     <text key="spellgame.plugin.event.game.end.description">Cet événement sera généré lorsqu'une partie en cours est terminée ou interrompue.</text>
     <text key="spellgame.plugin.event.answer.given.name">Mauvaise réponse entrée</text>
     <text key="spellgame.plugin.event.answer.given.description">Cet événement se produit à chaque fois que l'utilisateur entre une réponse. La réponse de l'utilisateur est donnée en variable de cet événement.</text>

@@ -13,11 +13,17 @@
         width: 80%;
         margin: 0 auto;
       }
+      @media print {
+        .no-print,
+        .no-print * {
+          display: none !important;
+        }
+      }
     </style>
   </head>
   <body>
     <div class="page-content">
-      <div class="container border my-2">
+      <div class="container border my-2 no-print">
         <div class="row text-center my-2">
           <div class="col">
             <button
@@ -66,7 +72,7 @@
                 <input
                   type="text"
                   class="form-control"
-                  placeholder="Mathéo DUPONT"
+                  placeholder="Mathéo GERMAIN"
                 />
               </p>
             </div>
