@@ -54,8 +54,6 @@ import static org.lifecompanion.framework.commons.ApplicationConstant.DIR_NAME_A
 import static org.lifecompanion.framework.commons.ApplicationConstant.DIR_NAME_APPLICATION_DATA;
 
 public abstract class PublishApplicationTask extends DefaultTask {
-    private final static boolean DEV = false;
-
     @Input
     abstract Property<Boolean> getOffline();
 
@@ -91,15 +89,17 @@ public abstract class PublishApplicationTask extends DefaultTask {
 
     @TaskAction
     void publishApplicationUpdate() throws Exception {
+        boolean persistentDataMode = getProject().hasProperty("lifecompanion.publish.application.persistent.data");
+
         File buildDir = getProject().getBuildDir();
         String appId = BuildToolUtils.checkAndGetProperty(getProject(), "appId");
-        File tmpBuildResourceDir = new File(System.getProperty("java.io.tmpdir") + File.separator + "lifecompanion-builds-res" + (DEV ? "" : "-" + System.currentTimeMillis()) + File.separator);
+        File tmpBuildResourceDir = new File(System.getProperty("java.io.tmpdir") + File.separator + "lifecompanion-builds-res" + (persistentDataMode ? "" : "-" + System.currentTimeMillis()) + File.separator);
         String version = String.valueOf(getProject().getVersion());
         String env = BuildToolUtils.getEnvValueLowerCase(getProject());
         UpdateVisibility visibility = UpdateVisibility.valueOf(BuildToolUtils.checkAndGetProperty(getProject(), "visibility"));
         boolean offline = getOffline().get();
 
-        downloadBuildResources(tmpBuildResourceDir);
+        downloadBuildResources(tmpBuildResourceDir, persistentDataMode);
 
         for (SystemType system : PATH_TO_BUILD.keySet()) {
             LOGGER.lifecycle("publishApplicationUpdate : offline = {}, env = {}, appId = {}, system = {}, version = {}, visibility = {} ", offline, env, appId, system, version, visibility);
@@ -172,7 +172,7 @@ public abstract class PublishApplicationTask extends DefaultTask {
         }
     }
 
-    private void downloadBuildResources(File buildResourceDirectory) {
+    private void downloadBuildResources(File buildResourceDirectory, boolean persistentDataMode) {
         LOGGER.lifecycle("Downloading resource files from S3");
         AwsBasicCredentials awsCreds = AwsBasicCredentials.create(
                 BuildToolUtils.checkAndGetProperty(getProject(), "lifecompanion.build.resources.s3.access.key"),
@@ -195,7 +195,7 @@ public abstract class PublishApplicationTask extends DefaultTask {
         destObjects.parallelStream().filter(d -> d.size() > 0).forEach(destObject -> {
             String relativePath = IOUtils.getRelativePath(destObject.key(), prefix);
             File destFile = new File(buildResourceDirectory.getPath() + File.separator + relativePath);
-            if (!DEV || !destFile.exists()) {
+            if (!persistentDataMode || !destFile.exists()) {
                 destFile.getParentFile().mkdirs();
                 try (InputStream result = s3.getObject(
                         GetObjectRequest.builder()

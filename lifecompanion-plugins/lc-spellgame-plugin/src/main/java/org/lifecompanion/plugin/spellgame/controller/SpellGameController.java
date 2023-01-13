@@ -203,6 +203,7 @@ public enum SpellGameController implements ModeListenerI {
     }
 
     public void validateCurrentStepAndGoToNext() {
+        //FIXME : check if game is running
         GameStep step = GameStepEnum.values()[currentStepIndex];
         String input = cleanText(WritingStateController.INSTANCE.currentTextProperty().get());
         String word = cleanText(words.get(currentWordIndex));
@@ -213,7 +214,7 @@ public enum SpellGameController implements ModeListenerI {
         currentGameAnswers.add(new SpellGameStepResult(step, success ? SpellGameStepResultStatusEnum.SUCCESS : SpellGameStepResultStatusEnum.FAILED, word, input, System.currentTimeMillis() - currentStepStartedAt));
         if (success) {
             showSuccessFeedback();
-            endCurrentStepAndGoToNextWord();
+            endCurrentStepAndGoToNextWord(true);
         }
         // User failed to enter the correct word
         else {
@@ -222,12 +223,16 @@ public enum SpellGameController implements ModeListenerI {
                 currentStepIndex++;
                 startCurrentStep();
             } else {
-                endCurrentStepAndGoToNextWord();
+                endCurrentStepAndGoToNextWord(true);
             }
         }
     }
 
     public void skipWord() {
+        //FIXME : check if game is running
+        String word = cleanText(words.get(currentWordIndex));
+        currentGameAnswers.add(new SpellGameStepResult(GameStepEnum.values()[currentStepIndex], SpellGameStepResultStatusEnum.UNDONE, word, "", System.currentTimeMillis() - currentStepStartedAt));
+        endCurrentStepAndGoToNextWord(false);
     }
 
 
@@ -245,8 +250,8 @@ public enum SpellGameController implements ModeListenerI {
         wordDisplayKeyOptions.forEach(k -> k.answerDone(false));
     }
 
-    private void endCurrentStepAndGoToNextWord() {
-        userScore += GameStepEnum.values().length - GameStepEnum.values()[currentStepIndex].ordinal();
+    private void endCurrentStepAndGoToNextWord(boolean increaseScoreFromCurrentStep) {
+        userScore += increaseScoreFromCurrentStep ? GameStepEnum.values().length - GameStepEnum.values()[currentStepIndex].ordinal() : 1;
         UseVariableController.INSTANCE.requestVariablesUpdate();
         currentStepIndex = 0;
         if (currentWordIndex < words.size() - 1) {
@@ -322,8 +327,6 @@ public enum SpellGameController implements ModeListenerI {
             return null;
         }
     }
-
-
 
 
     //========================================================================

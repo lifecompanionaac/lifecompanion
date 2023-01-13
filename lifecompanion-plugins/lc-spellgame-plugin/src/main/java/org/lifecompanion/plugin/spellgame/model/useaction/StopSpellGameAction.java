@@ -34,7 +34,7 @@ public class StopSpellGameAction extends SimpleUseActionImpl<UseActionTriggerCom
         this.order = 0;
         this.category = SpellGameActionSubCategories.CURRENT_GAME;
         this.nameID = "spellgame.plugin.action.end.game.name";
-        this.staticDescriptionID = "spellgame.plugin.action.end.game.static.description";
+        this.staticDescriptionID = "spellgame.plugin.action.end.game.description";
         this.configIconPath = "filler_icon.png";
         this.parameterizableAction = false;
         this.variableDescriptionProperty().set(getStaticDescription());
