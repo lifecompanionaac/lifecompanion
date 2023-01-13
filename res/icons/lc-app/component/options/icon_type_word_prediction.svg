@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   version="1.1"
+   id="svg11075"
+   width="122.43399"
+   height="39.107777"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs11079" />
+  <sodipodi:namedview
+     id="namedview11077"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0" />
+  <inkscape:clipboard
+     style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.95061049;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000;stop-opacity:1"
+     min="2444.9461,691.44899"
+     max="2567.3801,730.55676"
+     geom-min="2444.9461,691.44899"
+     geom-max="2567.3801,730.55676" />
+  <g
+     id="g11081"
+     transform="translate(-2444.9461,-691.44899)">
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot4168-8-8-1"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+       transform="matrix(0.99378248,0,0,0.90931399,2572.9987,243.0695)"
+       inkscape:export-filename="E:\Documents\Temp\keys-icons\icon_type_word_prediction.png"
+       inkscape:export-xdpi="21.414598"
+       inkscape:export-ydpi="21.414598"><flowRegion
+         id="flowRegion4170-2-1-1"><rect
+           id="rect4172-9-7-2"
+           width="198.88817"
+           height="114.41576"
+           x="-133.84521"
+           y="492.2326" /></flowRegion><flowPara
+         id="flowPara4174-4-9-5"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:64px;font-family:Sans;-inkscape-font-specification:'Sans Bold';fill:#f44336;fill-opacity:1">mot</flowPara></flowRoot>
+  </g>
+</svg>

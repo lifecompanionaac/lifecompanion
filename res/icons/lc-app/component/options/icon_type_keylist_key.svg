@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   version="1.1"
+   id="svg10765"
+   width="88.871841"
+   height="66.561195"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs10769" />
+  <sodipodi:namedview
+     id="namedview10767"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0" />
+  <inkscape:clipboard
+     style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:#f44336;fill-opacity:1;stroke-width:0.17357782;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000;stop-opacity:1"
+     min="2927.4328,678.10701"
+     max="3016.3046,744.6682"
+     geom-min="2927.4328,678.10701"
+     geom-max="3016.3046,744.6682" />
+  <g
+     id="g10771"
+     transform="translate(-2927.4328,-678.10701)">
+    <g
+       id="g4830-1"
+       transform="matrix(0.17357782,0,0,0.17357782,2927.4328,666.95168)"
+       style="fill:#f44336;fill-opacity:1"
+       inkscape:export-filename="E:\Desktop\bitmap2.png"
+       inkscape:export-xdpi="17.280001"
+       inkscape:export-ydpi="17.280001">
+      <path
+         id="path4814-9"
+         d="M 464.883,64.267 H 47.117 C 21.137,64.267 0,85.403 0,111.416 c 0,25.98 21.137,47.117 47.117,47.117 h 417.766 c 25.98,0 47.117,-21.137 47.117,-47.117 0,-26.013 -21.137,-47.149 -47.117,-47.149 z"
+         inkscape:connector-curvature="0"
+         style="fill:#f44336;fill-opacity:1" />
+      <path
+         id="path4816-2"
+         d="M 464.883,208.867 H 47.117 C 21.137,208.867 0,230.003 0,256.016 c 0,25.98 21.137,47.117 47.117,47.117 h 417.766 c 25.98,0 47.117,-21.137 47.117,-47.117 0,-26.013 -21.137,-47.149 -47.117,-47.149 z"
+         inkscape:connector-curvature="0"
+         style="fill:#f44336;fill-opacity:1" />
+      <path
+         id="path4818-3"
+         d="M 464.883,353.467 H 47.117 C 21.137,353.467 0,374.604 0,400.616 c 0,25.98 21.137,47.117 47.117,47.117 h 417.766 c 25.98,0 47.117,-21.137 47.117,-47.117 0,-26.012 -21.137,-47.149 -47.117,-47.149 z"
+         inkscape:connector-curvature="0"
+         style="fill:#f44336;fill-opacity:1" />
+    </g>
+  </g>
+</svg>

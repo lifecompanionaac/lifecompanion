@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   version="1.1"
+   id="svg10879"
+   width="158.76822"
+   height="59.538086"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs10883" />
+  <sodipodi:namedview
+     id="namedview10881"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0" />
+  <inkscape:clipboard
+     style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:#f44336;fill-opacity:1;stroke-width:9.9230141;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000;stop-opacity:1"
+     min="3635.6202,199.27071"
+     max="3794.3884,258.8088"
+     geom-min="3635.6202,199.27071"
+     geom-max="3794.3884,258.8088" />
+  <g
+     id="g10885"
+     transform="translate(-3635.6202,-199.27071)">
+    <g
+       id="g8961"
+       transform="matrix(9.9230141,0,0,9.9230141,3635.6202,149.65564)"
+       style="fill:#f44336;fill-opacity:1"
+       inkscape:export-filename="C:\Users\Mathieu\Dev\LC2\workspace\lifecompanion-k\lifecompanion\lc-app\src\main\resources\icons\component\options\icon_type_progress_display.png"
+       inkscape:export-xdpi="19.35"
+       inkscape:export-ydpi="19.35">
+      <path
+         id="path8947"
+         d="m 0,5 v 6 H 16 V 5 Z m 15,5 H 1 V 6 h 14 z"
+         inkscape:connector-curvature="0"
+         style="fill:#f44336;fill-opacity:1" />
+      <path
+         id="path8949"
+         d="M 2,7 H 9 V 9 H 2 Z"
+         inkscape:connector-curvature="0"
+         style="fill:#f44336;fill-opacity:1" />
+    </g>
+  </g>
+</svg>

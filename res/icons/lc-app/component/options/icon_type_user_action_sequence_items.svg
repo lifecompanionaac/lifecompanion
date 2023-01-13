@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   version="1.1"
+   id="svg11009"
+   width="129"
+   height="35"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs11013" />
+  <sodipodi:namedview
+     id="namedview11011"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0" />
+  <inkscape:clipboard
+     min="3324.4121,354.14893"
+     max="3453.4121,389.14893"
+     geom-min="3324.4121,354.14893"
+     geom-max="3453.4121,389.14893" />
+  <g
+     id="g11015"
+     transform="translate(-3324.4121,-354.14893)">
+    <rect
+       style="opacity:1;vector-effect:none;fill:#f44336;fill-opacity:1;stroke:none;stroke-width:0.120049;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:0.120049, 0.120049;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect8828"
+       width="35"
+       height="35"
+       x="3324.4121"
+       y="354.14893"
+       ry="6.3134522"
+       inkscape:export-filename="C:\Users\Mathieu\Dev\LC2\workspace\lifecompanion-k\lifecompanion\lc-app\src\main\resources\icons\component\options\icon_type_user_action_sequence_items.png"
+       inkscape:export-xdpi="23.809999"
+       inkscape:export-ydpi="23.809999" />
+    <rect
+       style="opacity:1;vector-effect:none;fill:#f44336;fill-opacity:1;stroke:none;stroke-width:0.120049;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:0.120049, 0.120049;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect8828-1"
+       width="35"
+       height="35"
+       x="3371.4121"
+       y="354.14893"
+       ry="6.3134522"
+       inkscape:export-filename="C:\Users\Mathieu\Dev\LC2\workspace\lifecompanion-k\lifecompanion\lc-app\src\main\resources\icons\component\options\icon_type_user_action_sequence_items.png"
+       inkscape:export-xdpi="23.809999"
+       inkscape:export-ydpi="23.809999" />
+    <rect
+       style="opacity:1;vector-effect:none;fill:#f44336;fill-opacity:1;stroke:none;stroke-width:0.120049;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:0.120049, 0.120049;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect8828-6"
+       width="35"
+       height="35"
+       x="3418.4121"
+       y="354.14893"
+       ry="6.3134522"
+       inkscape:export-filename="C:\Users\Mathieu\Dev\LC2\workspace\lifecompanion-k\lifecompanion\lc-app\src\main\resources\icons\component\options\icon_type_user_action_sequence_items.png"
+       inkscape:export-xdpi="23.809999"
+       inkscape:export-ydpi="23.809999" />
+  </g>
+</svg>
