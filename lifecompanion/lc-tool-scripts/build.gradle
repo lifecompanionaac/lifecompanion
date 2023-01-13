@@ -15,7 +15,7 @@ dependencies {
     implementation 'org.jsoup:jsoup:1.14.2'
 }
 
-mainClassName = "scripts.TestMedia"
+mainClassName = "scripts.IconUniqueFileGenerator"
 
 application {
     applicationDefaultJvmArgs = [
