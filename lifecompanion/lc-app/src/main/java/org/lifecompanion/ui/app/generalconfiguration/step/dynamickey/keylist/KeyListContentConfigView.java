@@ -87,7 +87,7 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
     private Button buttonAddKey, buttonAddCategory, buttonAddLinkKey, buttonDelete, buttonMoveUp, buttonMoveDown, buttonCut, buttonCopy, buttonPaste, buttonExportKeys, buttonImportKeys, buttonShowHideProperties;
 
     private TextField textFieldSearchNode;
-    private Button buttonSearch, buttonNextFound, buttonClearSearch;
+    private Button buttonSearch, buttonPreviousFound, buttonNextFound, buttonClearSearch;
     private Label labelFoundNodeInfo;
 
     private HBox selectionPathContainer;
@@ -180,12 +180,13 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         textFieldSearchNode.setPrefColumnCount(30);
         buttonSearch = createSearchBarButton(FontAwesome.Glyph.SEARCH, LCGraphicStyle.MAIN_DARK, "todo", 16);
         buttonNextFound = createSearchBarButton(FontAwesome.Glyph.CHEVRON_RIGHT, LCGraphicStyle.MAIN_DARK, "todo", 18);
+        buttonPreviousFound = createSearchBarButton(FontAwesome.Glyph.CHEVRON_LEFT, LCGraphicStyle.MAIN_DARK, "todo", 18);
         buttonClearSearch = createSearchBarButton(FontAwesome.Glyph.TIMES, LCGraphicStyle.SECOND_DARK, "todo", 18);
         labelFoundNodeInfo = new Label();
         labelFoundNodeInfo.setPrefWidth(40.0);
         labelFoundNodeInfo.getStyleClass().add("text-weight-bold");
 
-        HBox searchBox = new HBox(10.0, textFieldSearchNode, buttonSearch, buttonClearSearch, labelFoundNodeInfo, buttonNextFound);
+        HBox searchBox = new HBox(10.0, textFieldSearchNode, buttonSearch, buttonClearSearch, labelFoundNodeInfo, buttonPreviousFound, buttonNextFound);
         searchBox.setAlignment(Pos.CENTER);
         VBox.setMargin(searchBox, new Insets(10, 0, 0, 0));
 
@@ -263,9 +264,8 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         textFieldSearchNode.setOnAction(buttonSearch.getOnAction());
         textFieldSearchNode.textProperty().addListener((obs, ov, nv) -> clearSearch(false));
         buttonClearSearch.setOnAction(e -> clearSearch(true));
-        buttonNextFound.setOnAction(e -> {
-            showNextSearchResult();
-        });
+        buttonNextFound.setOnAction(e -> showNextSearchResult());
+        buttonPreviousFound.setOnAction(e -> showPreviousSearchResult());
 
         List<Pair<KeyCombination, Button>> keyCombination = Arrays.asList(
                 Pair.of(new KeyCodeCombination(KeyCode.DELETE), buttonDelete),
@@ -360,6 +360,15 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         updateDisplayedResult();
     }
 
+    private void showPreviousSearchResult() {
+        if (foundIndex.get() - 1 >= 0) {
+            foundIndex.set(foundIndex.get() - 1);
+        } else {
+            foundIndex.set(searchResult.get().size() - 1);
+        }
+        updateDisplayedResult();
+    }
+
     private void clearSearch(boolean clearTextField) {
         searchResult.set(null);
         lastSearch = null;
@@ -425,6 +434,8 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         this.buttonClearSearch.disableProperty().bind(searchResult.isNull().and(textFieldSearchNode.textProperty().isEmpty()));
         this.buttonNextFound.visibleProperty().bind(searchResult.isNotNull());
         this.buttonNextFound.managedProperty().bind(buttonNextFound.visibleProperty());
+        this.buttonPreviousFound.visibleProperty().bind(searchResult.isNotNull());
+        this.buttonPreviousFound.managedProperty().bind(buttonNextFound.visibleProperty());
         this.labelFoundNodeInfo.visibleProperty().bind(searchResult.isNotNull());
         this.labelFoundNodeInfo.managedProperty().bind(labelFoundNodeInfo.visibleProperty());
 

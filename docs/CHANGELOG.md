@@ -18,6 +18,7 @@
 - Ticket #177 : ajout d'un scroll dans les paramètres de sélection spécifiques à une grille
 - Ticket #195 : il était parfois impossible d'afficher la barre de progression en mode "Sélection avec temporisation"
 - Ticket #181 : alignement d'éléments sur la vue de configuration des listes de cases
+- Ticket #174 : ajout d'un bouton "Précédent" dans la recherche des listes de cases
 
 ## 1.4.2 - 20/06/2022
 
