@@ -355,8 +355,10 @@ public class SelectionModeSuppParamView extends BaseConfigurationViewBorderPane<
         sliderBackgroundReductionLevel.disableProperty().bind(toggleBackgroundReductionEnabled.selectedProperty().not());
 
         // Progress display
-        this.toggleEnableProgressDrawing.disableProperty().bind(this.comboBoxScanningMode.valueProperty().isNotEqualTo(ScanningMode.AUTO));
-        BooleanBinding progressDisabledBinding = this.toggleEnableProgressDrawing.selectedProperty().not().or(this.comboBoxScanningMode.valueProperty().isNotEqualTo(ScanningMode.AUTO));
+        BooleanBinding progressDisplayDisabled = this.comboBoxScanningMode.valueProperty().isEqualTo(ScanningMode.AUTO)
+                .or(Bindings.createBooleanBinding(() -> selectedMode.get() != null ? selectedMode.get().useAutoClicProperty().get() : false, selectedMode)).not();
+        this.toggleEnableProgressDrawing.disableProperty().bind(progressDisplayDisabled);
+        BooleanBinding progressDisabledBinding = this.toggleEnableProgressDrawing.selectedProperty().not().or(progressDisplayDisabled);
         this.colorPickerProgressColor.disableProperty().bind(progressDisabledBinding);
         this.comboboxDrawProgressMode.disableProperty().bind(progressDisabledBinding);
         this.sliderProgressBarSize.disableProperty().bind(
@@ -374,9 +376,11 @@ public class SelectionModeSuppParamView extends BaseConfigurationViewBorderPane<
         this.toggleStartScanningOnClic.disableProperty().bind(comboBoxScanningMode.valueProperty().isNotEqualTo(ScanningMode.AUTO));
 
         // Keyboard key selection hidden if not selected
-        for (Node n : this.keyboardControlNodes) n.visibleProperty().bind(comboBoxNextScanEventInput.valueProperty().isEqualTo(FireEventInput.KEYBOARD));
+        for (Node n : this.keyboardControlNodes)
+            n.visibleProperty().bind(comboBoxNextScanEventInput.valueProperty().isEqualTo(FireEventInput.KEYBOARD));
         // Mouse button selection hidden if not selected
-        for (Node n : this.mouseNodes) n.visibleProperty().bind(comboBoxNextScanEventInput.valueProperty().isEqualTo(FireEventInput.MOUSE));
+        for (Node n : this.mouseNodes)
+            n.visibleProperty().bind(comboBoxNextScanEventInput.valueProperty().isEqualTo(FireEventInput.MOUSE));
     }
 
 

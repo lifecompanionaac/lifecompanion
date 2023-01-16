@@ -16,6 +16,7 @@
 - Ticket #185 : correction d'une erreur lors du remplacement d'une grille par une autre en copier/coller
 - Ticket #186 : correction d'un problème qui faisait que le bouton "précedent" ne fonctionnait pas sur les listes de case
 - Ticket #177 : ajout d'un scroll dans les paramètres de sélection spécifiques à une grille
+- Ticket #195 : il était parfois impossible d'afficher la barre de progression en mode "Sélection avec temporisation"
 
 ## 1.4.2 - 20/06/2022
 
