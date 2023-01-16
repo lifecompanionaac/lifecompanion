@@ -142,9 +142,12 @@ public abstract class AbstractKeyListNode extends AbstractSimplerKeyActionContai
     @Override
     public String getHumanReadableText() {
         if (StringUtils.isNotBlank(textProperty().get())) return textProperty().get();
-        if (enableWriteProperty().get() && StringUtils.isNotBlank(textToWriteProperty().get())) return textToWriteProperty().get();
-        if (enableSpeakProperty().get() && StringUtils.isNotBlank(textToSpeakProperty().get())) return textToSpeakProperty().get();
-        return Translation.getText("general.configuration.view.keylist.empty.text.in.node");
+        if (enableWriteProperty().get() && StringUtils.isNotBlank(textToWriteProperty().get()))
+            return textToWriteProperty().get();
+        if (enableSpeakProperty().get() && StringUtils.isNotBlank(textToSpeakProperty().get()))
+            return textToSpeakProperty().get();
+        return Translation.getText(levelProperty().get() <= 1 ? "general.configuration.view.keylist.empty.text.in.node.for.root" :
+                "general.configuration.view.keylist.empty.text.in.node");
     }
 
     //========================================================================
