@@ -424,7 +424,9 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         this.buttonSearch.disableProperty().bind(textFieldSearchNode.textProperty().isEmpty());
         this.buttonClearSearch.disableProperty().bind(searchResult.isNull().and(textFieldSearchNode.textProperty().isEmpty()));
         this.buttonNextFound.visibleProperty().bind(searchResult.isNotNull());
+        this.buttonNextFound.managedProperty().bind(buttonNextFound.visibleProperty());
         this.labelFoundNodeInfo.visibleProperty().bind(searchResult.isNotNull());
+        this.labelFoundNodeInfo.managedProperty().bind(labelFoundNodeInfo.visibleProperty());
 
         labelFoundNodeInfo.textProperty().bind(Bindings.createStringBinding(
                 () -> {
