@@ -260,7 +260,7 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
 
         buttonShowHideProperties.setOnAction(e -> toggleProperties());
 
-        buttonSearch.setOnAction(e -> executeSearch());
+        buttonSearch.setOnAction(e -> executeSearch(false));
         textFieldSearchNode.setOnAction(buttonSearch.getOnAction());
         textFieldSearchNode.textProperty().addListener((obs, ov, nv) -> clearSearch(false));
         buttonClearSearch.setOnAction(e -> clearSearch(true));
@@ -294,6 +294,7 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         int previousIndex = parentNode.getChildren().indexOf(selectedNode);
         parentNode.getChildren().remove(selectedNode);
         keyListTreeView.getSelectionModel().clearSelection();
+        executeSearch(true);
         LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo(Translation.getText(notificationTitle, selectedNode.getHumanReadableText()), true, "keylist.action.remove.cancel", () -> {
             if (!parentNode.getChildren().contains(selectedNode)) {
                 if (previousIndex > 0 && previousIndex <= parentNode.getChildren().size()) {
@@ -379,31 +380,32 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
 
     private static final Comparator<Pair<KeyListNodeI, Double>> SCORE_MAP_COMPARATOR = (e1, e2) -> Double.compare(e2.getRight(), e1.getRight());
 
-    private void executeSearch() {
+    private void executeSearch(boolean forceUpdate) {
         final String searchText = this.textFieldSearchNode.getText();
+        if (StringUtils.isNotBlank(searchText)) {
+            if (forceUpdate || StringUtils.isDifferent(searchText, lastSearch)) {
+                lastSearch = searchText;
 
-        if (StringUtils.isDifferent(searchText, lastSearch)) {
-            lastSearch = searchText;
+                foundIndex.set(0);
+                // Create a list with all nodes
+                List<KeyListNodeI> allNodes = new ArrayList<>(100);
+                this.rootKeyListNode.get().traverseTreeToBottom(allNodes::add);
 
-            foundIndex.set(0);
-            // Create a list with all nodes
-            List<KeyListNodeI> allNodes = new ArrayList<>(100);
-            this.rootKeyListNode.get().traverseTreeToBottom(allNodes::add);
-
-            // Search for similarity
-            final List<KeyListNodeI> foundNodes = allNodes
-                    .parallelStream()
-                    .map(node -> Pair.of(node, getSimilarityScore(node, searchText)))
-                    .sorted(SCORE_MAP_COMPARATOR)
-                    .filter(e -> e.getRight() > ConfigurationComponentUtils.SIMILARITY_CONTAINS)
-                    .map(Pair::getLeft)
-                    .collect(Collectors.toList());
-            this.searchResult.set(foundNodes);
-            updateDisplayedResult();
-        } else {
-            showNextSearchResult();
+                // Search for similarity
+                final List<KeyListNodeI> foundNodes = allNodes
+                        .parallelStream()
+                        .map(node -> Pair.of(node, getSimilarityScore(node, searchText)))
+                        .sorted(SCORE_MAP_COMPARATOR)
+                        .filter(e -> e.getRight() > ConfigurationComponentUtils.SIMILARITY_CONTAINS)
+                        .map(Pair::getLeft)
+                        .collect(Collectors.toList());
+                this.searchResult.set(foundNodes);
+                updateDisplayedResult();
+            } else {
+                showNextSearchResult();
+            }
+            textFieldSearchNode.requestFocus();
         }
-        textFieldSearchNode.requestFocus();
     }
 
     private void updateDisplayedResult() {
