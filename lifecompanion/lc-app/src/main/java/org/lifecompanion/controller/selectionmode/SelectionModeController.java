@@ -532,7 +532,7 @@ public enum SelectionModeController implements ModeListenerI {
      * Will check every selection mode in every selection mode user of the configuration.</br>
      * If the selection mode is a part scanning selection mode, and the selection mode user need to have specific parameter, this will automatically change parameters.</br>
      * <strong>Example</strong> : if a grid has only one row, but the selection mode is row/column, then the selection mode for this grid is automatically changed to horizontal scanning.</br>
-     * Issue #136.
+     * Issue #178.
      *
      * @param configuration the configuration to check.
      */

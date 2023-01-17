@@ -29,6 +29,7 @@ import org.lifecompanion.model.api.selectionmode.ScanningMode;
 import org.lifecompanion.model.api.selectionmode.SelectionModeI;
 import org.lifecompanion.model.api.selectionmode.SelectionModeParameterI;
 import org.lifecompanion.ui.selectionmode.AbstractSelectionModeView;
+import org.lifecompanion.util.model.SelectionModeUtils;
 
 /**
  * Abstract implementation that just take care of parameters holding.
@@ -102,19 +103,7 @@ public abstract class AbstractSelectionMode<T extends AbstractSelectionModeView<
         if (!this.parameters.skipEmptyComponentProperty().get()) {
             return false;
         }
-        if (part instanceof GridPartKeyComponentI) {
-            GridPartKeyComponentI key = (GridPartKeyComponentI) part;
-            boolean empty = true;
-            empty &= key.textContentProperty().get() == null || key.textContentProperty().get().isEmpty();
-            empty &= key.imageVTwoProperty().get() == null;
-            empty &= key.getActionManager().countAllActions() <= 0;
-            empty |= key.keyOptionProperty().get().considerKeyEmptyProperty().get();
-            return empty;
-        }
-        if (part instanceof WriterDisplayerI) {
-            return true;
-        }
-        return false;
+        return SelectionModeUtils.isPartConsideredEmptyForScanning(part);
     }
 
     // Class part : "Get/set"

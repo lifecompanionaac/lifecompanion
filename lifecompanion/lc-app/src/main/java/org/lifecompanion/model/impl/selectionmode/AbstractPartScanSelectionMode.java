@@ -18,20 +18,18 @@
  */
 package org.lifecompanion.model.impl.selectionmode;
 
+import org.lifecompanion.framework.commons.utils.lang.CollectionUtils;
 import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
 import org.lifecompanion.model.api.configurationcomponent.GridPartComponentI;
 import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
-import org.lifecompanion.model.impl.configurationcomponent.GridComponentInformation;
+import org.lifecompanion.model.api.selectionmode.ComponentToScanI;
 import org.lifecompanion.model.api.selectionmode.SelectionModeI;
+import org.lifecompanion.model.impl.configurationcomponent.GridComponentInformation;
 import org.lifecompanion.ui.selectionmode.AbstractPartScanSelectionModeView;
-import org.lifecompanion.framework.commons.utils.lang.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 /**
@@ -47,17 +45,17 @@ public abstract class AbstractPartScanSelectionMode<T extends AbstractPartScanSe
     /**
      * All determined part to scan
      */
-    private List<ComponentToScan> components;
+    private List<ComponentToScanI> components;
 
     /**
      * The selected part, if the part is selected, we are currently components inside this part with secondary index.
      */
-    private ComponentToScan selectedComponentToScan;
+    private ComponentToScanI selectedComponentToScan;
 
     /**
      * Current part we are over, even if it is not selected
      */
-    private ComponentToScan currentComponentToScan;
+    private ComponentToScanI currentComponentToScan;
 
     /**
      * The scan part index
@@ -81,7 +79,7 @@ public abstract class AbstractPartScanSelectionMode<T extends AbstractPartScanSe
         //Line selected
         if (this.selectedComponentToScan != null) {
             //Correct column
-            if (this.secondaryIndex < this.selectedComponentToScan.components.size() - 1) {
+            if (this.secondaryIndex < this.selectedComponentToScan.getComponents().size() - 1) {
                 this.currentPart.set(this.selectedComponentToScan.getPartIn(this.currentGrid.get(), ++this.secondaryIndex));
             } else {
                 this.secondaryIndex = 0;
@@ -104,11 +102,11 @@ public abstract class AbstractPartScanSelectionMode<T extends AbstractPartScanSe
 
     @Override
     protected void generateScannedComponents() {
-        this.components = this.generateLineToScan(this.currentGrid.get(), false);
+        this.components = this.generateComponentsToScan(this.currentGrid.get(), false);
         if (CollectionUtils.isEmpty(this.components)) {
             AbstractPartScanSelectionMode.LOGGER.warn("No component to scan found for {}, so the empty check will be bypassed",
                     this.getClass().getSimpleName());
-            this.components = this.generateLineToScan(this.currentGrid.get(), true);
+            this.components = this.generateComponentsToScan(this.currentGrid.get(), true);
         }
     }
 
@@ -119,12 +117,12 @@ public abstract class AbstractPartScanSelectionMode<T extends AbstractPartScanSe
 
     @Override
     public void updateCurrentComponent(final boolean firstPart) {
-        if (this.selectedComponentToScan != null && !this.selectedComponentToScan.components.isEmpty()) {
+        if (this.selectedComponentToScan != null && !this.selectedComponentToScan.getComponents().isEmpty()) {
             this.updateCurrentPart(this.selectedComponentToScan.getPartIn(this.currentGrid.get(), secondaryIndex), firstPart);
             this.view.moveToPart(this.currentPart.get(), this.getProgressTime(firstPart), this.isMoveAnimationEnabled(firstPart));
         } else {
             this.updateCurrentPart(null, firstPart);
-            this.view.moveToPrimaryIndex(this.currentComponentToScan.index, this.currentComponentToScan.span, this.currentGrid.get(),
+            this.view.moveToPrimaryIndex(this.currentComponentToScan.getIndex(), this.currentComponentToScan.getSpan(), this.currentGrid.get(),
                     this.getProgressTime(firstPart), this.isMoveAnimationEnabled(firstPart));
         }
     }
@@ -182,7 +180,7 @@ public abstract class AbstractPartScanSelectionMode<T extends AbstractPartScanSe
             this.timesInSamePart = 0;
             //If the current line contains only one element, select the first element and return true because
             //actions should be executed
-            if (this.selectedComponentToScan.components.size() == 1) {
+            if (this.selectedComponentToScan.getComponents().size() == 1) {
                 AbstractPartScanSelectionMode.LOGGER.info("Selected component to scan is size one");
                 this.secondaryIndex = 0;
                 GridPartComponentI uniqueCompInside = this.selectedComponentToScan.getPartIn(this.currentGrid.get(), secondaryIndex);
@@ -208,16 +206,16 @@ public abstract class AbstractPartScanSelectionMode<T extends AbstractPartScanSe
         //Search for the component in the grid
         boolean found = false;
         for (int i = 0; i < this.components.size() && !found; i++) {
-            ComponentToScan componentsInside = this.components.get(i);
-            for (int j = 0; j < componentsInside.components.size() && !found; j++) {
-                final GridComponentInformation componentInfo = componentsInside.components.get(j);
+            ComponentToScanI componentsInside = this.components.get(i);
+            for (int j = 0; j < componentsInside.getComponents().size() && !found; j++) {
+                final GridComponentInformation componentInfo = componentsInside.getComponents().get(j);
                 if (componentInfo.getRow() == part.rowProperty().get() && componentInfo.getColumn() == part.columnProperty().get()) {
                     found = true;
                     //Select parts to scan
                     this.primaryIndex = i;
                     this.currentComponentToScan = componentsInside;
                     //Select part inside if needed
-                    if (componentsInside.components.size() > 1) {
+                    if (componentsInside.getComponents().size() > 1) {
                         this.selectedComponentToScan = componentsInside;
                         this.currentPart.set(part);
                         this.secondaryIndex = j;
@@ -252,87 +250,5 @@ public abstract class AbstractPartScanSelectionMode<T extends AbstractPartScanSe
      * @param byPassEmptyCheck if the empty check should be bypassed for keys
      * @return the list of all parts.
      */
-    protected abstract List<ComponentToScan> generateLineToScan(final GridComponentI grid, boolean byPassEmptyCheck);
-
-    /**
-     * Useful method to check if a part contains all components
-     *
-     * @param part       the line to check
-     * @param components the components to check
-     * @return true if it contains all elements
-     */
-    protected boolean containsAllComponents(final ComponentToScan part, final List<GridPartComponentI> components) {
-        if (part.components.size() == components.size()) {
-            return part.cachedRawComponents.equals(components);
-        }
-        return false;
-    }
-
-    /**
-     * To generate a list of component to scan from a double list of part.
-     *
-     * @param components       the list of components (raw)
-     * @param byPassEmptyCheck if this parameter is true, the empty check will not be done
-     * @return the list of component to scan, generated with the needed parameters.
-     */
-    protected List<ComponentToScan> generateComponentToScan(final List<List<GridPartComponentI>> components, final boolean byPassEmptyCheck) {
-        HashSet<GridPartComponentI> scannedSet = new HashSet<>();
-        ArrayList<ComponentToScan> groupsToScan = new ArrayList<>();
-        for (int i = 0; i < components.size(); i++) {
-            List<GridPartComponentI> currentPart = components.get(i);
-            ArrayList<GridPartComponentI> rowsComponents = new ArrayList<>();
-            scannedSet.clear();//Unique just on the same line
-            for (int j = 0; j < currentPart.size(); j++) {
-                GridPartComponentI current = currentPart.get(j);
-                if ((byPassEmptyCheck || !this.isPartEmpty(current)) && !scannedSet.contains(current)) {
-                    rowsComponents.add(current);
-                    scannedSet.add(current);
-                }
-            }
-            //Check if previous line contains exactly the same component
-            if (!groupsToScan.isEmpty() && this.containsAllComponents(groupsToScan.get(groupsToScan.size() - 1), rowsComponents)) {
-                ComponentToScan previousColumn = groupsToScan.get(groupsToScan.size() - 1);
-                previousColumn.increaseSpan();
-                //LOGGER.info("Previous row {} contains the same element than row {}", previousLine.index, row);
-            } else if (!rowsComponents.isEmpty()) {
-                groupsToScan.add(new ComponentToScan(i, rowsComponents, 1));
-            }
-        }
-        return groupsToScan;
-    }
-    //========================================================================
-
-    // Class part : "Internal class"
-    //========================================================================
-
-    /**
-     * Class to store the scanning parts.
-     *
-     * @author Mathieu THEBAUD <math.thebaud@gmail.com>
-     */
-    protected static class ComponentToScan {
-        private final int index;
-        private int span;
-        private final List<GridComponentInformation> components;
-        //Shouldn't be used, only useful when generating component to scan
-        private final List<GridPartComponentI> cachedRawComponents;
-
-        public ComponentToScan(final int indexP, final List<GridPartComponentI> components, final int spanP) {
-            this.index = indexP;
-            cachedRawComponents = components;
-            this.components = components.stream().map(GridComponentInformation::create).collect(Collectors.toList());
-            this.span = spanP;
-        }
-
-        public void increaseSpan() {
-            this.span++;
-        }
-
-        public GridPartComponentI getPartIn(GridComponentI grid, int secondaryIndex) {
-            final GridComponentInformation compInfo = components.get(secondaryIndex);
-            return grid.getGrid().getComponent(compInfo.getRow(), compInfo.getColumn());
-        }
-
-    }
-    //========================================================================
+    protected abstract List<ComponentToScanI> generateComponentsToScan(final GridComponentI grid, boolean byPassEmptyCheck);
 }
