@@ -19,31 +19,23 @@
 
 package org.lifecompanion.model.impl.selectionmode;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
-import org.lifecompanion.model.api.configurationcomponent.GridPartComponentI;
-import org.lifecompanion.model.api.configurationcomponent.ComponentGridI;
-import org.lifecompanion.model.impl.configurationcomponent.GridComponentInformation;
 import org.lifecompanion.model.api.selectionmode.ScanningDirection;
+import org.lifecompanion.model.impl.configurationcomponent.GridComponentInformation;
 import org.lifecompanion.ui.selectionmode.DirectKeyScanSelectionModeView;
+import org.lifecompanion.util.model.SelectionModeUtils;
+
+import java.util.List;
 
 public class HorizontalDirectKeyScanSelectionMode extends AbstractDirectKeyScanSelectionMode {
 
-	@Override
-	protected List<GridComponentInformation> generateComponentToScan(final GridComponentI componentGrid, final boolean byPassEmptyCheck) {
-		List<GridComponentInformation> components = new ArrayList<>();
-		ComponentGridI grid = componentGrid.getGrid();
-		List<GridPartComponentI> componentHorizontal = grid.getComponentHorizontal();
-		for (GridPartComponentI gridPartComponentI : componentHorizontal) {
-			this.addGridComponentToList2(components, gridPartComponentI, byPassEmptyCheck);
-		}
-		return components;
-	}
+    @Override
+    protected List<GridComponentInformation> generateComponentToScan(final GridComponentI componentGrid, final boolean byPassEmptyCheck) {
+        return SelectionModeUtils.getDirectHorizontalScanningComponents(componentGrid, byPassEmptyCheck);
+    }
 
-	@Override
-	protected DirectKeyScanSelectionModeView createView() {
-		return new DirectKeyScanSelectionModeView(this, ScanningDirection.HORIZONTAL);
-	}
+    @Override
+    protected DirectKeyScanSelectionModeView createView() {
+        return new DirectKeyScanSelectionModeView(this, ScanningDirection.HORIZONTAL);
+    }
 }

@@ -31,14 +31,17 @@ import org.lifecompanion.controller.io.task.ConfigurationLoadingTask;
 import org.lifecompanion.controller.lifecycle.AppMode;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.profile.ProfileController;
+import org.lifecompanion.framework.commons.utils.lang.CollectionUtils;
 import org.lifecompanion.model.api.configurationcomponent.*;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
 import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
 import org.lifecompanion.model.api.selectionmode.*;
+import org.lifecompanion.model.impl.configurationcomponent.GridComponentInformation;
 import org.lifecompanion.model.impl.selectionmode.*;
 import org.lifecompanion.util.ThreadUtils;
 import org.lifecompanion.util.binding.BindingUtils;
 import org.lifecompanion.util.javafx.FXThreadUtils;
+import org.lifecompanion.util.model.SelectionModeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -539,33 +542,54 @@ public enum SelectionModeController implements ModeListenerI {
     private void checkSelectionConfiguration(final LCConfigurationI configuration) {
         ObservableMap<String, DisplayableComponentI> allComponent = configuration.getAllComponent();
         Set<String> componentIds = allComponent.keySet();
-        Class<? extends SelectionModeI> configSelectionMode = configuration.getSelectionModeParameter().selectionModeTypeProperty().get();
-        boolean rowColumnMode = RowColumnScanSelectionMode.class.isAssignableFrom(configSelectionMode);
-        boolean columnRowMode = ColumnRowScanSelectionMode.class.isAssignableFrom(configSelectionMode);
-        if (rowColumnMode || columnRowMode) {
-            for (String id : componentIds) {
-                final DisplayableComponentI component = configuration.getAllComponent().get(id);
-                if (component instanceof GridComponentI) {
-                    GridComponentI gridComp = (GridComponentI) component;
-                    SelectionModeParameterI gridSelectionParameter = gridComp.getSelectionModeParameter();
-                    if (gridComp.useParentSelectionModeProperty().get()) {
-                        if (gridComp.rowCountProperty().get() == 1 && rowColumnMode) {
-                            gridComp.useParentSelectionModeProperty().set(false);
-                            gridSelectionParameter.copyFrom(configuration.getSelectionModeParameter());
-                            gridSelectionParameter.selectionModeTypeProperty().set(HorizontalDirectKeyScanSelectionMode.class);
-                            LOGGER.info("Selection mode automatically changed for grid {}, set to horizontal scanning",
-                                    gridComp.nameProperty().get());
-                        } else if (gridComp.columnCountProperty().get() == 1 && columnRowMode) {
-                            gridComp.useParentSelectionModeProperty().set(false);
-                            gridSelectionParameter.copyFrom(configuration.getSelectionModeParameter());
-                            gridSelectionParameter.selectionModeTypeProperty().set(VerticalDirectKeyScanSelectionMode.class);
-                            LOGGER.info("Selection mode automatically changed for grid {}, set to vertical scanning", gridComp.nameProperty().get());
-                        }
+        SelectionModeParameterI configurationSelectionModeParameter = configuration.getSelectionModeParameter();
+        for (String id : componentIds) {
+            final DisplayableComponentI component = configuration.getAllComponent().get(id);
+            if (component instanceof GridComponentI) {
+                GridComponentI grid = (GridComponentI) component;
+                SelectionModeParameterI gridParameter = getSelectionModeParameter(grid, configurationSelectionModeParameter);
+                // Row column and only 1 row
+                if (isGridSelectionMode(grid, configurationSelectionModeParameter, RowColumnScanSelectionMode.class) &&
+                        SelectionModeUtils.getRowColumnScanningComponents(grid, !gridParameter.skipEmptyComponentProperty().get()).size() <= 1) {
+                    changeGridSelectionModeTo(grid, gridParameter, HorizontalDirectKeyScanSelectionMode.class);
+                }
+                // Column row and only 1 column
+                if (isGridSelectionMode(grid, configurationSelectionModeParameter, ColumnRowScanSelectionMode.class) &&
+                        SelectionModeUtils.getColumnRowScanningComponents(grid, !gridParameter.skipEmptyComponentProperty().get()).size() <= 1) {
+                    changeGridSelectionModeTo(grid, gridParameter, VerticalDirectKeyScanSelectionMode.class);
+                }
+                // Horizontal and 1 column
+                if (isGridSelectionMode(grid, configurationSelectionModeParameter, HorizontalDirectKeyScanSelectionMode.class)) {
+                    List<GridComponentInformation> components = SelectionModeUtils.getDirectHorizontalScanningComponents(grid, !gridParameter.skipEmptyComponentProperty().get());
+                    if (!SelectionModeUtils.hasTwoDiffColumnIn(components)) {
+                        changeGridSelectionModeTo(grid, gridParameter, VerticalDirectKeyScanSelectionMode.class);
+                    }
+                }
+                // Vertical and 1 row
+                if (isGridSelectionMode(grid, configurationSelectionModeParameter, VerticalDirectKeyScanSelectionMode.class)) {
+                    List<GridComponentInformation> components = SelectionModeUtils.getDirectVerticalScanningComponents(grid, !gridParameter.skipEmptyComponentProperty().get());
+                    if (!SelectionModeUtils.hasTwoDiffRowIn(components)) {
+                        changeGridSelectionModeTo(grid, gridParameter, HorizontalDirectKeyScanSelectionMode.class);
                     }
                 }
             }
         }
+    }
 
+    private void changeGridSelectionModeTo(GridComponentI grid, SelectionModeParameterI previousParameter, Class<? extends SelectionModeI> type) {
+        Class<? extends SelectionModeI> previous = previousParameter.selectionModeTypeProperty().get();
+        grid.useParentSelectionModeProperty().set(false);
+        grid.getSelectionModeParameter().copyFrom(previousParameter);
+        grid.getSelectionModeParameter().selectionModeTypeProperty().set(type);
+        LOGGER.info("Changed grid {} selection mode from {} to {} to optimize scanning", grid.nameProperty().get(), previous.getSimpleName(), type.getSimpleName());
+    }
+
+    private boolean isGridSelectionMode(GridComponentI grid, SelectionModeParameterI configurationSelectionModeParameter, Class<? extends SelectionModeI> type) {
+        return type.isAssignableFrom(getSelectionModeParameter(grid, configurationSelectionModeParameter).selectionModeTypeProperty().get());
+    }
+
+    private SelectionModeParameterI getSelectionModeParameter(GridComponentI grid, SelectionModeParameterI configurationSelectionModeParameter) {
+        return grid.useParentSelectionModeProperty().get() ? configurationSelectionModeParameter : grid.getSelectionModeParameter();
     }
     //========================================================================
 

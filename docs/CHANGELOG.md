@@ -21,6 +21,7 @@
 - Ticket #174 : ajout d'un bouton "Précédent" dans la recherche des listes de cases
 - Ticket #173 : les éléments supprimés sont maintenant supprimés de la recherche dans les listes de cases
 - Ticket #171 : la racine des listes de case est maintenant nommée différemment
+- Ticket #178 : optimisation du défilement (changement automatique pour le bon mode pour les grilles avec uniquement 1 ligne/colonne)
 
 ## 1.4.2 - 20/06/2022
 

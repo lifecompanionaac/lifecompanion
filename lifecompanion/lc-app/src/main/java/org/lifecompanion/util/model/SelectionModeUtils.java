@@ -2,6 +2,7 @@ package org.lifecompanion.util.model;
 
 import org.lifecompanion.model.api.configurationcomponent.*;
 import org.lifecompanion.model.api.selectionmode.ComponentToScanI;
+import org.lifecompanion.model.impl.configurationcomponent.GridComponentInformation;
 import org.lifecompanion.model.impl.selectionmode.ComponentToScan;
 
 import java.util.ArrayList;
@@ -55,6 +56,38 @@ public class SelectionModeUtils {
         return generateComponentToScan(columns, byPassEmptyCheck);
     }
 
+    public static List<GridComponentInformation> getDirectHorizontalScanningComponents(final GridComponentI componentGrid, final boolean byPassEmptyCheck) {
+        List<GridComponentInformation> components = new ArrayList<>();
+        ComponentGridI grid = componentGrid.getGrid();
+        List<GridPartComponentI> componentHorizontal = grid.getComponentHorizontal();
+        for (GridPartComponentI gridPartComponentI : componentHorizontal) {
+            addGridComponentToListIfValidToScan(components, gridPartComponentI, byPassEmptyCheck);
+        }
+        return components;
+    }
+
+    public static List<GridComponentInformation> getDirectVerticalScanningComponents(final GridComponentI componentGrid, final boolean byPassEmptyCheck) {
+        List<GridComponentInformation> components = new ArrayList<>();
+        ComponentGridI grid = componentGrid.getGrid();
+        List<GridPartComponentI> componentVertical = grid.getComponentVertical();
+        for (GridPartComponentI gridPartComponentI : componentVertical) {
+            addGridComponentToListIfValidToScan(components, gridPartComponentI, byPassEmptyCheck);
+        }
+        return components;
+    }
+
+    public static boolean hasTwoDiffColumnIn(List<GridComponentInformation> components){
+        if(components.isEmpty())return false;
+        int firstColumn = components.get(0).getColumn();
+        return components.stream().anyMatch(c -> c.getColumn()!=firstColumn);
+    }
+
+    public static boolean hasTwoDiffRowIn(List<GridComponentInformation> components){
+        if(components.isEmpty())return false;
+        int firstRow = components.get(0).getRow();
+        return components.stream().anyMatch(c -> c.getRow()!=firstRow);
+    }
+
     /**
      * To generate a list of component to scan from a double list of part.
      *
@@ -84,6 +117,19 @@ public class SelectionModeUtils {
             }
         }
         return groupsToScan;
+    }
+
+    /**
+     * Helper method to add a grid component (add only if the component is not in the current list and valid (not empty when needed...))
+     *
+     * @param components       the component list
+     * @param component        the component to add
+     * @param byPassEmptyCheck if this parameter is true, the empty check will not be done
+     */
+    private static void addGridComponentToListIfValidToScan(final List<GridComponentInformation> components, final GridPartComponentI component, final boolean byPassEmptyCheck) {
+        if (byPassEmptyCheck || !isPartConsideredEmptyForScanning(component)) {
+            components.add(GridComponentInformation.create(component));
+        }
     }
 
 }
