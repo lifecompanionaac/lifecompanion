@@ -393,11 +393,6 @@
     -fx-font-family: "monospace";
 }
 
-.correction-rule-title {
-	-fx-font: bold 14.0 "Calibri";
-	-fx-text-fill: rgb(100.0,100.0,100.0);
-}
-
 .box-with-bottom-border {
 	-fx-padding: 0.0 0.0 0.0 0.0;
 	-fx-border-color: transparent transparent lightgray transparent;

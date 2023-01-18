@@ -33,6 +33,7 @@ import org.controlsfx.control.ToggleSwitch;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.Glyph;
 import org.controlsfx.glyphfont.GlyphFontRegistry;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.ui.app.generalconfiguration.step.predict4all.P4AConfigUtils;
 import org.lifecompanion.ui.app.generalconfiguration.step.predict4all.P4ACorrectionConfigurationView;
@@ -83,7 +84,7 @@ public abstract class CorrectionRuleBaseNodeView extends BorderPane implements L
         this.buttonToggleRuleDisplay = FXControlUtils.createGraphicButton(this.glyphForBtn, "tooltip.button.toggle.show.correction.rule");
         this.fieldRuleName = new TextField();
         this.labelRuleName = new Label();
-        this.labelRuleName.getStyleClass().add("correction-rule-title");
+        this.labelRuleName.getStyleClass().addAll("text-font-size-110", "text-weight-bold");
         this.labelRuleName.setMaxWidth(Double.MAX_VALUE);
         this.toggleSwitchEnabled = new ToggleSwitch();
         this.toggleSwitchEnabled.setScaleX(0.8);
@@ -92,12 +93,13 @@ public abstract class CorrectionRuleBaseNodeView extends BorderPane implements L
         this.menuItemRemove = new MenuItem(Translation.getText("predict4all.menu.button.remove.rule"));
         this.menuItemAddCategory = new MenuItem(Translation.getText("predict4all.menu.button.add.category"));
         this.menuItemAddRule = new MenuItem(Translation.getText("predict4all.menu.button.add.rule"));
-        this.buttonMenu = FXControlUtils.createGraphicMenuButton(null, "tooltip.button.toggle.show.correction.rule.menu");
+        this.buttonMenu = FXControlUtils.createGraphicMenuButton(GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.ELLIPSIS_V).size(16).color(LCGraphicStyle.MAIN_DARK), "tooltip.button.toggle.show.correction.rule.menu");
+
         this.buttonMenu.getItems().addAll(this.menuItemAddRule, this.menuItemAddCategory, new SeparatorMenuItem(), this.menuItemRemove);
         HBox.setMargin(this.buttonMenu, new Insets(0.0, 0.0, 0.0, -10.0));
 
         this.boxTop = new HBox(3.0, this.buttonToggleRuleDisplay, this.fieldRuleName, this.labelRuleName, this.toggleSwitchEnabled, this.buttonMenu);
-        this.boxTop.getStyleClass().add("box-with-bottom-border");
+        this.boxTop.getStyleClass().add("border-bottom-lightgrey");
         HBox.setHgrow(this.fieldRuleName, Priority.ALWAYS);
         HBox.setHgrow(this.labelRuleName, Priority.ALWAYS);
         this.boxTop.setAlignment(Pos.CENTER);
