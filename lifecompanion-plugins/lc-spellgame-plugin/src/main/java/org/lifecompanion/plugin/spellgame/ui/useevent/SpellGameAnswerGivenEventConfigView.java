@@ -19,17 +19,24 @@
 
 package org.lifecompanion.plugin.spellgame.ui.useevent;
 
+import javafx.collections.FXCollections;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.model.api.categorizedelement.useevent.UseEventGeneratorConfigurationViewI;
-import org.lifecompanion.model.impl.categorizedelement.useevent.available.MouseButtonPressedEventGenerator;
+import org.lifecompanion.plugin.spellgame.model.AnswerTypeEnum;
 import org.lifecompanion.plugin.spellgame.model.useevent.SpellGameGameAnswerGivenEventGenerator;
-import org.lifecompanion.ui.common.control.generic.MouseButtonSelectorControl;
+import org.lifecompanion.plugin.spellgame.ui.cell.AnswerTypeListCell;
 
-public class SpellGameAnswerGivenEventConfigView extends HBox implements UseEventGeneratorConfigurationViewI<SpellGameGameAnswerGivenEventGenerator> {
+import java.util.Arrays;
+
+public class SpellGameAnswerGivenEventConfigView extends VBox implements UseEventGeneratorConfigurationViewI<SpellGameGameAnswerGivenEventGenerator> {
+
+    private ComboBox<AnswerTypeEnum> comboBoxAnswerFilter;
 
     @Override
     public Region getConfigurationView() {
@@ -46,15 +53,22 @@ public class SpellGameAnswerGivenEventConfigView extends HBox implements UseEven
         this.setSpacing(10.0);
         Label label = new Label(Translation.getText("spellgame.plugin.config.field.event.answer.given.answer.filter"));
         label.setMaxWidth(Double.MAX_VALUE);
-        HBox.setHgrow(label, Priority.ALWAYS);
-        this.getChildren().addAll(label);
-    }
 
-    @Override
-    public void editEnds(final SpellGameGameAnswerGivenEventGenerator element) {
+        comboBoxAnswerFilter = new ComboBox<>(FXCollections.observableList(Arrays.asList(AnswerTypeEnum.values())));
+        comboBoxAnswerFilter.setButtonCell(new AnswerTypeListCell());
+        comboBoxAnswerFilter.setCellFactory(lv -> new AnswerTypeListCell());
+        comboBoxAnswerFilter.setMaxWidth(Double.MAX_VALUE);
+
+        this.getChildren().addAll(label, comboBoxAnswerFilter);
     }
 
     @Override
     public void editStarts(final SpellGameGameAnswerGivenEventGenerator element) {
+        comboBoxAnswerFilter.getSelectionModel().select(element.answerFilterProperty().get());
+    }
+
+    @Override
+    public void editEnds(final SpellGameGameAnswerGivenEventGenerator element) {
+        element.answerFilterProperty().set(comboBoxAnswerFilter.getValue());
     }
 }

@@ -12,7 +12,7 @@ public class SpellGameGameEndedEventGenerator extends BaseUseEventGeneratorImpl 
     public SpellGameGameEndedEventGenerator() {
         super();
         this.parameterizableAction = false;
-        this.order = 0;
+        this.order = 20;
         this.category = SpellGameEventSubCategories.GENERAL;
         this.nameID = "spellgame.plugin.event.game.end.name";
         this.staticDescriptionID = "spellgame.plugin.event.game.end.description";

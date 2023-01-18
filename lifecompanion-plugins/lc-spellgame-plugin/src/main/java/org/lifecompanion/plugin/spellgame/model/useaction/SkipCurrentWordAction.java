@@ -31,7 +31,7 @@ public class SkipCurrentWordAction extends SimpleUseActionImpl<UseActionTriggerC
 
     public SkipCurrentWordAction() {
         super(UseActionTriggerComponentI.class);
-        this.order = 0;
+        this.order = 10;
         this.category = SpellGameActionSubCategories.CURRENT_GAME;
         this.nameID = "spellgame.plugin.action.skip.current.word.name";
         this.staticDescriptionID = "spellgame.plugin.action.skip.current.word.description";

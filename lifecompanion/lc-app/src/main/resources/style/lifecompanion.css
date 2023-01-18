@@ -46,6 +46,10 @@
     -fx-wrap-text: true;
 }
 
+.text-font-size-80 {
+    -fx-font-size: 0.8em;
+}
+
 .text-font-size-90 {
     -fx-font-size: 0.9em;
 }

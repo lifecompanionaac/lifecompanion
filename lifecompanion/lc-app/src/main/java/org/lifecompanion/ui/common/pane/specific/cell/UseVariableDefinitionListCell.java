@@ -27,51 +27,52 @@ import javafx.scene.control.ListCell;
 import javafx.scene.layout.VBox;
 
 public class UseVariableDefinitionListCell extends ListCell<UseVariableDefinitionI> {
-	private final boolean titleOnly;
-	private VBox boxGraphics;
-	private Label labelVariableName, labelVariableDescription, labelExample;
+    private final boolean titleOnly;
+    private VBox boxGraphics;
+    private Label labelVariableName, labelVariableDescription, labelExample;
 
-	public UseVariableDefinitionListCell(boolean titleOnly) {
-		super();
-		this.titleOnly = titleOnly;
-		if (!this.titleOnly) {
-			//Global
-			this.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-			this.getStyleClass().add("use-variable-list-cell");
-			//Labels
-			this.labelVariableName = new Label();
-			this.labelVariableName.getStyleClass().add("use-variable-cell-name");
-			this.labelVariableDescription = new Label();
-			this.labelVariableDescription.getStyleClass().add("use-variable-cell-description");
-			this.labelVariableDescription.setWrapText(true);
-			this.labelVariableDescription.setMaxWidth(UseVariableTextArea.POP_WIDTH - 35.0);
-			this.labelExample = new Label();
-			this.labelExample.getStyleClass().add("use-variable-cell-example");
-			this.boxGraphics = new VBox();
-			this.boxGraphics.getChildren().addAll(this.labelVariableName, this.labelExample, this.labelVariableDescription);
-		}
-	}
+    public UseVariableDefinitionListCell(boolean titleOnly) {
+        super();
+        this.titleOnly = titleOnly;
+        if (!this.titleOnly) {
+            //Global
+            this.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+            this.getStyleClass().add("soft-selection-cell");
+            //Labels
+            this.labelVariableName = new Label();
+            this.labelVariableName.getStyleClass().addAll("text-fill-primary-dark");
+            this.labelVariableDescription = new Label();
+            this.labelVariableDescription.getStyleClass().addAll("text-wrap-enabled", "text-font-size-90", "text-fill-dimgrey");
+            this.labelVariableDescription.setWrapText(true);
+            this.labelVariableDescription.setMaxWidth(UseVariableTextArea.POP_WIDTH - 35.0);
+            this.labelExample = new Label();
+            this.labelExample.getStyleClass().addAll("text-wrap-enabled", "text-font-size-80", "text-fill-dimgrey", "text-font-italic");
+            this.labelExample.setMaxWidth(UseVariableTextArea.POP_WIDTH - 35.0);
+            this.boxGraphics = new VBox();
+            this.boxGraphics.getChildren().addAll(this.labelVariableName, this.labelExample, this.labelVariableDescription);
+        }
+    }
 
-	public UseVariableDefinitionListCell() {
-		this(false);
-	}
+    public UseVariableDefinitionListCell() {
+        this(false);
+    }
 
-	@Override
-	protected void updateItem(final UseVariableDefinitionI item, final boolean empty) {
-		super.updateItem(item, empty);
-		if (item == null || empty) {
-			this.setGraphic(null);
-			this.setText(null);
-		} else {
-			if (this.titleOnly) {
-				this.setText(item.getName() + " (" + item.getId() + ")");
-			} else {
-				this.setGraphic(this.boxGraphics);
-				this.labelVariableName.setText(item.getName());
-				this.labelVariableDescription.setText(item.getDescription());
-				this.labelExample.setText(item.getId() + " - " + item.getExampleValueToString());
-			}
-		}
-	}
+    @Override
+    protected void updateItem(final UseVariableDefinitionI item, final boolean empty) {
+        super.updateItem(item, empty);
+        if (item == null || empty) {
+            this.setGraphic(null);
+            this.setText(null);
+        } else {
+            if (this.titleOnly) {
+                this.setText(item.getName() + " (" + item.getId() + ")");
+            } else {
+                this.setGraphic(this.boxGraphics);
+                this.labelVariableName.setText(item.getName());
+                this.labelVariableDescription.setText(item.getDescription());
+                this.labelExample.setText(item.getId() + " - " + item.getExampleValueToString());
+            }
+        }
+    }
 
 }
