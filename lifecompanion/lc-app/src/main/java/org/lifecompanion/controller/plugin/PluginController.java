@@ -96,9 +96,6 @@ public enum PluginController implements LCStateListener, ModeListenerI {
         this.pluginInfoList = FXCollections.observableArrayList();
     }
 
-    // Class part : "Users"
-    // ========================================================================
-
     public ObservableList<PluginInfo> getPluginInfoList() {
         return pluginInfoList;
     }
@@ -136,7 +133,23 @@ public enum PluginController implements LCStateListener, ModeListenerI {
         }
         return vars;
     }
-    // ========================================================================
+
+    public List<Pair<String, InputStream>> getDefaultConfigurationsFor(String pluginId) {
+        PluginI pluginInstance = this.loadedPlugins.get(pluginId);
+        String[] defaultConfigurationPaths = pluginInstance.getDefaultConfigurations(UserConfigurationController.INSTANCE.userLanguageProperty().get());
+        List<Pair<String, InputStream>> defaultConfigurations = new ArrayList<>();
+        if (defaultConfigurationPaths != null) {
+            for (String defaultConfigurationPath : defaultConfigurationPaths) {
+                InputStream resourceAsStream = pluginInstance.getClass().getResourceAsStream(defaultConfigurationPath);
+                if (resourceAsStream != null) {
+                    defaultConfigurations.add(Pair.of(defaultConfigurationPath, resourceAsStream));
+                } else {
+                    LOGGER.warn("Given default configuration {} from plugin {} is invalid, check the given path", defaultConfigurationPath, pluginId);
+                }
+            }
+        }
+        return defaultConfigurations;
+    }
 
 
     // PLUGIN LOADING

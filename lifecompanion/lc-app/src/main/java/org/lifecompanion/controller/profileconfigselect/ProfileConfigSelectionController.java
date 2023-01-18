@@ -63,7 +63,7 @@ public enum ProfileConfigSelectionController {
     /**
      * List of all available default configuration
      */
-    private List<Pair<LCConfigurationDescriptionI, File>> availableDefaultConfiguration;
+    private List<Pair<String, List<Pair<LCConfigurationDescriptionI, File>>>> availableDefaultConfiguration;
 
     /**
      * Private singleton constructor
@@ -112,7 +112,7 @@ public enum ProfileConfigSelectionController {
         return this.enableViewTransition;
     }
 
-    public void getDefaultConfiguration(Consumer<List<Pair<LCConfigurationDescriptionI, File>>> callback) {
+    public void getDefaultConfiguration(Consumer<List<Pair<String, List<Pair<LCConfigurationDescriptionI, File>>>>> callback) {
         if (availableDefaultConfiguration != null) {
             callback.accept(availableDefaultConfiguration);
         } else {

@@ -35,7 +35,7 @@ public interface PluginI extends ModeListenerI {
     //========================================================================
 
     /**
-     * This should return language files path
+     * Get the language resource path (included in plugin classpath)
      *
      * @param languageCode the language code, to know the file you should return.<br>
      *                     Code is from ISO 639-1 ("fr" for French)
@@ -44,6 +44,17 @@ public interface PluginI extends ModeListenerI {
     String[] getLanguageFiles(String languageCode);
 
     String[] getJavaFXStylesheets();
+
+    /**
+     * Get the default configuration (lcc files) path (included in plugin classpath)
+     *
+     * @param languageCode the language code, to know the file you should return.<br>
+     *                     Code is from ISO 639-1 ("fr" for French)
+     * @return the path array <i>(can return null if you don't have any file)</i>
+     */
+    default String[] getDefaultConfigurations(String languageCode) {
+        return null;
+    }
     //========================================================================
 
 
