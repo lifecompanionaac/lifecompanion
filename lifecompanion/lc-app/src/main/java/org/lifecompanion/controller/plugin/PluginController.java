@@ -282,7 +282,7 @@ public enum PluginController implements LCStateListener, ModeListenerI {
     }
 
     private void startPlugin(PluginInfo pluginInfo, PluginI plugin) {
-        plugin.start(getPluginDataFolder(pluginInfo));
+        plugin.start(getPluginDataFolder(pluginInfo.getPluginId()));
         // Load language
         String[] languageFiles = plugin.getLanguageFiles(UserConfigurationController.INSTANCE.userLanguageProperty().get());
         if (languageFiles != null) {
