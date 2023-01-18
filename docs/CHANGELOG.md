@@ -25,7 +25,7 @@
 - Ticket #166 : correction de l'affichage de bouton pour les règles de correction de la prédiction de mots
 - Ticket #167 : insérer le caractère " avec un clavier virtuel fonctionne maintenant
 - Correction de l'affichage de l'explication dans la section "Événements"
-
+- Ticket #41 : LifeCompanion redémarre en cas d'échec de mise à jour
 
 ## 1.4.2 - 20/06/2022
 

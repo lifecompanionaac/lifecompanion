@@ -304,14 +304,17 @@ public enum InstallationController implements LCStateListener {
     public void launchInstallAppUpdate() {
         this.submitTask(new InstallAppUpdateTask(appServerClient, buildProperties.getAppId(), enablePreviewUpdates,
                         InstallationConfigurationController.INSTANCE.getInstallationConfiguration()),
-                filesCopied -> restart(filesCopied ? ARG_UPDATE_FINISHED : ""));
+                filesCopied -> restart(filesCopied ? ARG_UPDATE_FINISHED : ""), t -> {
+                    LOGGER.warn("Update installation failed, will try to restart LifeCompanion");
+                    restart("");
+                });
     }
 
     public void restart(String arg) {
         Platform.exit();
         try {
             new ProcessBuilder()//
-                    .command(getLauncherPath().getAbsolutePath(), arg)// TO-TEST
+                    .command(getLauncherPath().getAbsolutePath(), arg)//
                     .redirectError(ProcessBuilder.Redirect.DISCARD).redirectOutput(ProcessBuilder.Redirect.DISCARD)
                     .start();
         } catch (Exception e) {
