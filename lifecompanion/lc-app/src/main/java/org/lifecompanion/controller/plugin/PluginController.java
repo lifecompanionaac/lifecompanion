@@ -89,7 +89,7 @@ public enum PluginController implements LCStateListener, ModeListenerI {
     /**
      * Contains loaded plugin instance
      */
-    private final Map<String, PluginI> loadedPlugins; // TODO pair of Plugin and PluginInfo ?
+    private final Map<String, PluginI> loadedPlugins;
 
     PluginController() {
         this.loadedPlugins = new HashMap<>();
@@ -150,7 +150,6 @@ public enum PluginController implements LCStateListener, ModeListenerI {
     private final PluginImplementationLoadingHandler<Class<? extends UseEventGeneratorConfigurationViewI>> useEventGeneratorConfigViews = new PluginImplementationLoadingHandler<>(UseEventGeneratorConfigurationViewI.class);
     private final PluginImplementationLoadingHandler<Class<? extends KeyOptionI>> keyOptions = new PluginImplementationLoadingHandler<>(KeyOptionI.class);
     private final PluginImplementationLoadingHandler<Class<? extends KeyOptionConfigurationViewI>> keyOptionConfigViews = new PluginImplementationLoadingHandler<>(KeyOptionConfigurationViewI.class);
-    //private final PluginImplementationLoadingHandler<Class<? extends PossibleAddComponentI>> possibleAddComponents = new PluginImplementationLoadingHandler<>(PossibleAddComponentI.class); - FIXME : provide a way to add element to "CREATE" tab
     private final PluginImplementationLoadingHandler<Class<? extends GeneralConfigurationStepViewI>> generalConfigurationSteps = new PluginImplementationLoadingHandler<>(GeneralConfigurationStepViewI.class);
     private final PluginImplementationLoadingHandler<UseVariableDefinitionI> useVariableDefinitions = new PluginImplementationLoadingHandler<>(null);
     private final PluginImplementationLoadingHandler<String[]> stylesheets = new PluginImplementationLoadingHandler<>(null);
@@ -283,7 +282,7 @@ public enum PluginController implements LCStateListener, ModeListenerI {
     }
 
     private void startPlugin(PluginInfo pluginInfo, PluginI plugin) {
-        plugin.start(null);//TODO : datafolder
+        plugin.start(getPluginDataFolder(pluginInfo));
         // Load language
         String[] languageFiles = plugin.getLanguageFiles(UserConfigurationController.INSTANCE.userLanguageProperty().get());
         if (languageFiles != null) {
@@ -293,7 +292,6 @@ public enum PluginController implements LCStateListener, ModeListenerI {
                     PluginController.LOGGER.info("Plugin language file {} loaded for {}", languageFilePath, pluginInfo.getPluginName());
                 } catch (Exception e) {
                     PluginController.LOGGER.error("Couldn't load the {} plugin language file {}", pluginInfo.getPluginId(), languageFilePath, e);
-                    //result.getErrorTextIds().add("plugin.error.invalid.lang.file");
                 }
             }
         }
@@ -311,6 +309,12 @@ public enum PluginController implements LCStateListener, ModeListenerI {
             useVariableDefinitions.elementAdded(pluginInfo.getPluginId(), definedVariables);
         }
     }
+
+    private File getPluginDataFolder(String pluginId) {
+        File pluginDataFolder = new File(LCConstant.PATH_PLUGIN_DATA_DIR + File.separator + pluginId + File.separator);
+        pluginDataFolder.mkdirs();
+        return pluginDataFolder;
+    }
     //========================================================================
 
     // PLUGIN ADD/REMOVE
@@ -322,7 +326,8 @@ public enum PluginController implements LCStateListener, ModeListenerI {
 
     public Pair<PluginAddResult, PluginInfo> tryToAddPluginFrom(File pluginFile) throws Exception {
         PluginInfo addedPluginInfo = loadPluginInfo(pluginFile);
-        if (addedPluginInfo == null) LCException.newException().withMessageId("plugin.error.load.info.from.jar").buildAndThrow();
+        if (addedPluginInfo == null)
+            LCException.newException().withMessageId("plugin.error.load.info.from.jar").buildAndThrow();
 
         // Check min app version
         // Note : no plugin minAppVersion means old plugin so it is not compatible with new plugin API
@@ -444,8 +449,8 @@ public enum PluginController implements LCStateListener, ModeListenerI {
 
     @Override
     public void lcExit() {
-        for (PluginI plugin : this.loadedPlugins.values()) {
-            plugin.stop(null);//TODO : datafolder
+        for (Map.Entry<String, PluginI> pluginE : this.loadedPlugins.entrySet()) {
+            pluginE.getValue().stop(getPluginDataFolder(pluginE.getKey()));
         }
     }
 

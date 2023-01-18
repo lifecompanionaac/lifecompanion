@@ -179,9 +179,9 @@ public class LCConstant {
     public static final String PATH_PLUGIN_CP_FILE = ApplicationConstant.DIR_NAME_APPLICATION_DATA + File.separator + "plugins" + File.separator + "plugin-classpath";
     public static final String PATH_PLUGIN_JAR_DIR = PATH_PLUGIN_ROOT_DIR + "jars" + File.separator;
     public static final String PATH_PLUGIN_UPDATE_DIR = PATH_PLUGIN_ROOT_DIR + "updates" + File.separator;
+    public static final String PATH_PLUGIN_DATA_DIR = PATH_PLUGIN_ROOT_DIR + "data" + File.separator;
     public static final String PATH_PLUGIN_NEXT_UPDATE_DIR = PATH_PLUGIN_ROOT_DIR + "next-update" + File.separator;
     public final static String EXT_PATH_LAST_PLUGIN_UPDATE_CHECK = PATH_PLUGIN_UPDATE_DIR + File.separator + "last-update";
-    public static final String PATH_PLUGIN_DATA_DIR_NAME = File.separator + "plugins" + File.separator + "data" + File.separator;
     //========================================================================
 
     // UPDATE
