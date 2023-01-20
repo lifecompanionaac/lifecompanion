@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="32px"
+   height="32px"
+   viewBox="0 0 32 32"
+   version="1.1"
+   id="SVGRoot"
+   inkscape:version="1.1.2 (b8e25be833, 2022-02-05)"
+   sodipodi:docname="stop_spellgame.svg"
+   inkscape:export-filename="./icon.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="8"
+     inkscape:cx="-72.125"
+     inkscape:cy="22.3125"
+     inkscape:document-units="px"
+     inkscape:current-layer="Stop"
+     showgrid="false"
+     inkscape:window-width="3840"
+     inkscape:window-height="2081"
+     inkscape:window-x="-9"
+     inkscape:window-y="-9"
+     inkscape:window-maximized="1"
+     inkscape:grid-bbox="true"
+     inkscape:pagecheckerboard="0" />
+  <defs
+     id="defs6479" />
+  <metadata
+     id="metadata6482">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer1"
+     inkscape:groupmode="layer"
+     inkscape:label="Calque 1">
+    <rect
+       id="Rectangle"
+       fill-rule="nonzero"
+       x="-493.25"
+       y="-368.125"
+       width="32"
+       height="32"
+       style="fill:none;stroke:none;stroke-width:1.33333" />
+    <g
+       id="Stop"
+       style="fill:none;fill-rule:evenodd;stroke:#d2d2d2;stroke-width:1;stroke-opacity:1"
+       transform="matrix(33.333333,0,0,33.333333,-384,-384)">
+      <rect
+         id="Rectangle-2"
+         fill-rule="nonzero"
+         x="0"
+         y="0"
+         width="24"
+         height="24"
+         style="stroke:#d2d2d2;stroke-opacity:1" />
+      <rect
+         id="rect828"
+         stroke="#0c0310"
+         stroke-width="0.137143"
+         stroke-linecap="round"
+         x="11.588572"
+         y="11.588572"
+         width="0.82285714"
+         height="0.82285714"
+         rx="0.034285713"
+         style="stroke:#d2d2d2;stroke-opacity:1" />
+    </g>
+  </g>
+</svg>

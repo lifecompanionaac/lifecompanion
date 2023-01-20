@@ -20,11 +20,13 @@
 package org.lifecompanion.plugin.spellgame.ui;
 
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
+import org.lifecompanion.ui.controlsfx.control.ToggleSwitch;
 import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.controller.editaction.AsyncExecutorController;
 import org.lifecompanion.controller.editmode.FileChooserType;
@@ -60,7 +62,7 @@ public class SpellGameWordListConfigView extends BorderPane implements GeneralCo
     private TextField fieldListName, fieldAddWord;
     private ListView<String> listViewWords;
     private Button buttonAdd, buttonRemove, buttonUp, buttonDown, buttonImportWordList;
-    // shuffle
+    private ToggleSwitch toggleSwitchShuffleWords;
 
     public SpellGameWordListConfigView() {
         initAll();
@@ -99,14 +101,24 @@ public class SpellGameWordListConfigView extends BorderPane implements GeneralCo
     @Override
     public void initUI() {
         fieldListName = new TextField();
-        HBox.setHgrow(fieldListName, Priority.ALWAYS);
-        fieldListName.setMaxWidth(Double.MAX_VALUE);
         Label labelListName = new Label(Translation.getText("spellgame.plugin.config.field.list.name"));
-        HBox.setHgrow(labelListName, Priority.ALWAYS);
+        GridPane.setHgrow(labelListName, Priority.ALWAYS);
         labelListName.setMaxWidth(Double.MAX_VALUE);
-        HBox boxListName = new HBox(5.0, labelListName, fieldListName);
-        boxListName.setAlignment(Pos.CENTER);
-        this.setTop(boxListName);
+
+        toggleSwitchShuffleWords = FXControlUtils.createToggleSwitch("spellgame.plugin.config.view.field.shuffle.words", "spellgame.plugin.config.view.field.shuffle.words.tooltip");
+
+        GridPane gridPaneTop = new GridPane();
+        gridPaneTop.setHgap(GeneralConfigurationStepViewI.GRID_H_GAP);
+        gridPaneTop.setVgap(GeneralConfigurationStepViewI.GRID_V_GAP);
+        int gridRowIndex = 0;
+
+        gridPaneTop.add(labelListName, 0, gridRowIndex);
+        gridPaneTop.add(fieldListName, 1, gridRowIndex++);
+        gridPaneTop.add(toggleSwitchShuffleWords, 0, gridRowIndex++, 2, 1);
+        gridPaneTop.add(new Separator(Orientation.HORIZONTAL), 0, gridRowIndex++, 2, 1);
+
+        BorderPane.setMargin(gridPaneTop, new Insets(0, 0, 5, 0));
+        this.setTop(gridPaneTop);
 
         // Word list
         listViewWords = new ListView<>();
@@ -206,11 +218,13 @@ public class SpellGameWordListConfigView extends BorderPane implements GeneralCo
         editedWordList = (SpellGameWordList) stepArgs[0];
         fieldListName.textProperty().bindBidirectional(editedWordList.nameProperty());
         this.listViewWords.setItems(editedWordList.getWords());
+        toggleSwitchShuffleWords.selectedProperty().bindBidirectional(editedWordList.shuffleWordsProperty());
     }
 
     @Override
     public void afterHide() {
         fieldListName.textProperty().unbindBidirectional(editedWordList.nameProperty());
+        toggleSwitchShuffleWords.selectedProperty().unbindBidirectional(editedWordList.shuffleWordsProperty());
         this.listViewWords.setItems(null);
     }
 

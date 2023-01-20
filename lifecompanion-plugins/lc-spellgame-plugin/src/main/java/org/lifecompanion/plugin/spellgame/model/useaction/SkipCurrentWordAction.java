@@ -35,7 +35,7 @@ public class SkipCurrentWordAction extends SimpleUseActionImpl<UseActionTriggerC
         this.category = SpellGameActionSubCategories.CURRENT_GAME;
         this.nameID = "spellgame.plugin.action.skip.current.word.name";
         this.staticDescriptionID = "spellgame.plugin.action.skip.current.word.description";
-        this.configIconPath = "filler_icon.png";
+        this.configIconPath = "current/skip_answer.png";
         this.parameterizableAction = false;
         this.variableDescriptionProperty().set(getStaticDescription());
     }

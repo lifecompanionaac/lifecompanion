@@ -1,5 +1,7 @@
 package org.lifecompanion.plugin.spellgame.model;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -19,12 +21,13 @@ public class SpellGameWordList implements XMLSerializable<IOContextI>, Duplicabl
     private String id;
     private final StringProperty name;
     private final ObservableList<String> words;
-    // TODO : add boolean "randomize" list
+    private final BooleanProperty shuffleWords;
 
     public SpellGameWordList() {
         this.id = StringUtils.getNewID();
         name = new SimpleStringProperty();
         words = FXCollections.observableArrayList();
+        this.shuffleWords = new SimpleBooleanProperty(false);
     }
 
     public StringProperty nameProperty() {
@@ -33,6 +36,10 @@ public class SpellGameWordList implements XMLSerializable<IOContextI>, Duplicabl
 
     public ObservableList<String> getWords() {
         return words;
+    }
+
+    public BooleanProperty shuffleWordsProperty() {
+        return shuffleWords;
     }
 
     public String getId() {

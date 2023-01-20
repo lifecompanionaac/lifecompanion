@@ -345,9 +345,24 @@ A good pratice to integrate icons in LifeCompanion is to save SVG of your icons 
 
 Original LifeCompanion SVG icons can be found in **res/icons**
 
+Most of the icons are created with the help of [SVGRepo website](https://www.svgrepo.com/)
+
 Here are the LifeCompanion expected icons size :
 
 | TYPE												| SIZE (PX)			|
 |---------------------------------------------------|-------------------|
-|**use actions / use event generator**				|32x32				|
+|**use actions / use event**				|32x32				|
 |**add component icon (in create tab)**				|32x32				|
+|**key options indicator**				|32x32				|
+
+
+### Colors
+
+LifeCompanion try to respect a global graphic theme. Here are the colors used in differents components.
+
+| DESCRIPTION/COMPONENT												| COLOR (WEB)			|
+|---------------------------------------------------|-------------------|
+|**use actions/event main**				|#d2d2d2				|
+|**use actions/event constrast**				|#aeaeae				|
+|**key options indicator**				|#f44336				|
+

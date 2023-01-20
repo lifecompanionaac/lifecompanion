@@ -98,5 +98,11 @@
     <text key="spellgame.plugin.config.import.list.format">Fichier texte (UTF-8)</text>
     <text key="spellgame.plugin.config.field.word.list.to.start">Démarrer la partie depuis la liste</text>
     <text key="spellgame.plugin.config.field.event.answer.given.answer.filter">Générer l'événement pour les réponses</text>
+    <text key="spellgame.plugin.config.view.field.validate.with.enter">Autoriser la validation avec Entrée</text>
+    <text key="spellgame.plugin.config.view.field.validate.with.enter.tooltip">Si activé, permet à l'utilisateur de valider la réponse courante avec la touche Entrée du clavier.</text>
+    <text key="spellgame.plugin.config.view.field.enable.feedback.sound">Activer les retours sonores</text>
+    <text key="spellgame.plugin.config.view.field.enable.feedback.sound.tooltip">Si activé, ajoute un retour sonore à chaque réponse (bonne ou mauvaise)</text>
+    <text key="spellgame.plugin.config.view.field.shuffle.words">Mélanger la liste</text>
+    <text key="spellgame.plugin.config.view.field.shuffle.words.tooltip">Si activé, la liste de mot sera mélangée de manière aléatoire à chaque début de partie</text>
 
 </texts>
