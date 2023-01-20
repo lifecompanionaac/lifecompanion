@@ -1,0 +1,207 @@
+<texts>
+	<!-- Infos -->
+	<text key="email.plugin.info.name">Extension Emails</text>
+	<text key="email.plugin.main.config.view.title">Configuration du compte</text>
+	<text key="email.plugin.tech.config.imap.view.title">Configuration IMAP</text>
+	<text key="email.plugin.tech.config.smtp.view.title">Configuration SMTP</text>
+	<text key="email.plugin.tech.config.proxy.view.title">Configuration Proxy</text>
+	<text key="email.plugin.tech.config.check.view.title">Essai de connection</text>
+	<text key="email.plugin.main.config.view.label.from.name">Nom de l'expéditeur</text>
+	<text key="email.plugin.main.config.view.label.login">Login</text>
+	<text key="email.plugin.main.config.view.label.password">Mot de passe</text>
+	<text key="email.plugin.main.config.view.label.host">Hôte</text>
+	<text key="email.plugin.main.config.view.label.port">Port</text>
+	<text key="email.plugin.main.config.view.label.folder">Dossier IMAP</text>
+	<text key="email.plugin.main.config.view.button.test">Tester la connexion</text>
+	<text key="email.plugin.test.result.yes">Réussi</text>
+	<text key="email.plugin.test.result.no">Échec</text>
+	<text key="email.plugin.test.result.global">IMAP : {}\nSMTP : {}</text>
+
+	<text key="email.plugin.not.connected.label">Erreur : non connecté</text>
+	<text key="email.plugin.general.config.view.title">Emails</text>
+
+	<!-- Config -->
+	<text key="email.plugin.info.description">Permet de recevoir et d'envoyer des emails depuis un
+		compte compatible IMAP/SMTP</text>
+
+	<!-- Key option -->
+	<text key="email.plugin.key.option.email.cell">Case de liste d'email</text>
+	<text key="email.plugin.key.option.email.content">Case de contenu d'email</text>
+	<text key="email.plugin.key.option.email.attachment.cell">Case de liste des pièces jointes</text>
+	<text key="email.plugin.key.option.email.attachment.content">Case de contenu de pièce jointe</text>
+
+	<!-- Misc -->
+	<text key="email.plugin.loading.message.content.label">Chargement du message...</text>
+	<text key="email.plugin.loading.inbox.label">Actualisation...</text>
+
+	<!-- Use variables -->
+	<text key="email.plugin.use.variable.from.selected.name">Expéditeur du mail sélectionné</text>
+	<text key="email.plugin.use.variable.from.selected.description">Contient l'expéditeur du mail actuellement sélectionné
+	</text>
+	<text key="email.plugin.use.variable.from.selected.example">Jean DUPONT &lt;jean.dupont@domaine.com&gt;</text>
+
+	<text key="email.plugin.use.variable.to.selected.name">Destinataire du mail sélectionné</text>
+	<text key="email.plugin.use.variable.to.selected.description">Contient le destinataire du mail actuellement
+		sélectionné</text>
+	<text key="email.plugin.use.variable.to.selected.example">Jean DUPONT &lt;jean.dupont@domaine.com&gt;</text>
+
+	<text key="email.plugin.use.variable.subject.selected.name">Objet du mail sélectionné</text>
+	<text key="email.plugin.use.variable.subject.selected.description">Contient l'objet du mail actuellement sélectionné</text>
+	<text key="email.plugin.use.variable.subject.selected.example">Objet d'exemple</text>
+
+	<text key="email.plugin.use.variable.date.selected.name">Date du mail sélectionné</text>
+	<text key="email.plugin.use.variable.date.selected.description">Contient la date du mail actuellement sélectionné</text>
+	<text key="email.plugin.use.variable.date.selected.example">vendredi 15 juin 2018 à 16:35</text>
+
+	<text key="email.plugin.use.variable.unread.count.name">Nombre de mail non lus</text>
+	<text key="email.plugin.use.variable.unread.count.description">Contient le nombre de mails non lus</text>
+	<text key="email.plugin.use.variable.unread.count.example">4</text>
+
+	<text key="email.plugin.use.variable.displayed.index.name">Index des emails actuellement affichés</text>
+	<text key="email.plugin.use.variable.displayed.index.description">Contient l'emplacement des emails actuellement affichés
+		dans la boîte de reception</text>
+	<text key="email.plugin.use.variable.displayed.index.example">1-5</text>
+
+	<text key="email.plugin.use.variable.total.count.name">Nombre total d'emails</text>
+	<text key="email.plugin.use.variable.total.count.description">Contient le nombre total d'emails dans la boîte de
+		reception</text>
+	<text key="email.plugin.use.variable.total.count.example">18</text>
+
+	<text key="email.plugin.use.variable.write.email.to.name">Destinataire du message en rédaction</text>
+	<text key="email.plugin.use.variable.write.email.to.description">Contient le destinataire du message en cours de
+		rédaction pour être envoyé</text>
+	<text key="email.plugin.use.variable.write.email.to.example">Jean DUPONT &lt;jean.dupont@domaine.com&gt;</text>
+
+	<text key="email.plugin.use.variable.write.email.subject.name">Objet du message en rédaction</text>
+	<text
+		key="email.plugin.use.variable.write.email.subject.description">Contient l'objet du message en cours de rédaction pour être envoyé
+	</text>
+	<text key="email.plugin.use.variable.write.email.subject.example">Re: Objet d'exemple</text>
+
+	<!-- Actions -->
+	<text key="email.plugin.use.action.main.category.name">Emails</text>
+	<text key="email.plugin.use.action.main.category.description">Contient toutes les actions nécessaires pour réaliser
+		une configuration d'accès aux emails.</text>
+	<text key="email.plugin.use.action.category.inbox.name">Boîte de reception</text>
+	<text key="email.plugin.use.action.category.send.name">Envoyer un mail</text>
+	<text key="email.plugin.use.action.category.current.name">Lecture de mail</text>
+
+	<text key="email.plugin.use.action.page.newer.name">Remonter dans la liste</text>
+	<text key="email.plugin.use.action.page.newer.description">Permet de remonter dans la liste des emails de la boîte
+		de réception (vers les messages plus récents)</text>
+	<text key="email.plugin.use.action.page.older.name">Descendre dans la liste</text>
+	<text key="email.plugin.use.action.page.older.description">Permet de descendre dans la liste des emails de la boîte
+		de réception (vers les messages plus anciens)</text>
+
+	<text key="email.plugin.use.action.select.email.name">Sélectionner l'email</text>
+	<text key="email.plugin.use.action.select.email.description">Permet de sélectionner l'email associé à cette case
+		(case de liste d'email)</text>
+
+	<text key="email.plugin.use.action.select.email.attachment.name">Sélectionner la pièce jointe</text>
+	<text
+		key="email.plugin.use.action.select.email.attachment.description">Permet de sélectionner la pièce jointe associée à cette case (case
+		de liste des pièces jointes)</text>
+
+	<text key="email.plugin.use.action.next.email.content.name">Descendre dans l'email</text>
+	<text key="email.plugin.use.action.next.email.content.description">Permet de descendre dans le texte de l'email
+		actuellement sélectionné</text>
+
+	<text key="email.plugin.use.action.previous.email.content.name">Monter dans l'email</text>
+	<text
+		key="email.plugin.use.action.previous.email.content.description">Permet de monter dans le texte de l'email actuellement sélectionné
+	</text>
+
+	<text key="email.plugin.key.option.email.cell.default.text">Objet du mail (15/06/18 - 16:35)\nExpéditeur
+		&lt;email.expéditeur@domaine.com&gt;</text>
+	<text key="email.plugin.key.option.email.content.default.text">Contenu de l'email sous forme de texte.\nCe contenu peut
+		être défilé via les actions "Descendre dans l'email" ou "Monter dans
+		l'email"</text>
+	<text
+		key="email.plugin.key.option.email.attachment.cell.default.text">Nom de la pièce jointe de l'email</text>
+	<text
+		key="email.plugin.key.option.email.attachment.content.default.text">Nom de la pièce jointe affichée</text>
+
+	<text key="email.plugin.use.action.speak.current.email.name">Lire l'email sélectionné</text>
+	<text
+		key="email.plugin.use.action.speak.current.email.description">Permet de faire lire par la synthèse vocale l'email actuellement
+		sélectionné.\nCela lira tout l'email en décrivant les expéditeurs,
+		et
+		permettra de lire tout le
+		contenu sans devoir descendre/monter dans
+		l'email
+	</text>
+	<text key="email.plugin.speak.all.email.intro.text">Email reçu le {} et envoyé par {}. Contenu :</text>
+
+	<text key="email.plugin.use.action.refresh.email.inbox.name">Actualiser les emails</text>
+	<text
+		key="email.plugin.use.action.refresh.email.inbox.description">Actualise la boîte de reception des emails pour mettre à jour avec
+		les derniers emails du serveur.</text>
+
+	<text key="email.plugin.use.action.write.new.email.to.name">Commencer un nouvel email</text>
+	<text key="email.plugin.use.action.write.new.email.to.description">Permet de commencer la rédaction d'un nouvel email à un
+		destinataire précisé en paramètre</text>
+	<text
+		key="email.plugin.use.action.write.new.email.to.variable.description">Commence la rédaction d'un nouveau mail pour {} ({})</text>
+	<text key="email.plugin.use.action.write.new.email.field.name">Nom du destinataire</text>
+	<text key="email.plugin.use.action.write.new.email.field.address">Mail du destinataire</text>
+
+	<text key="email.plugin.use.action.write.reply.email.to.name">Répondre à l'email sélectionné</text>
+	<text
+		key="email.plugin.use.action.write.reply.email.to.description">Permet de commencer la rédaction de l'email actuellement
+		sélectionné</text>
+
+	<text key="email.plugin.use.action.write.set.subject.name">Mettre l'objet du mail en rédaction</text>
+	<text key="email.plugin.use.action.write.set.subject.description">Prend le contenu de l'éditeur de texte et l'utilise
+		comme l'objet de l'email actuellement en redaction, supprime ensuite
+		le texte dans l'éditeur.</text>
+
+	<text key="email.plugin.use.action.write.cancel.writting.name">Annuler la rédaction de l'email</text>
+	<text
+		key="email.plugin.use.action.write.cancel.writting.description">Annuler la rédaction de l'email en cours</text>
+
+	<text key="email.plugin.use.action.write.send.message.name">Envoyer le mail en rédaction</text>
+	<text key="email.plugin.use.action.write.send.message.description">Envoie le mail actuellement en rédaction à son
+		destinataire sélectionné, utilise le contenu de l'éditeur comme le
+		contenu de l'email, et le supprime ensuite.</text>
+
+	<!-- Use event -->
+	<text key="email.plugin.use.event.mail.main.category.name">Emails</text>
+	<text key="email.plugin.use.event.mail.main.category.description">Contient les événements générés par l'utilisation des
+		fonctions d'email.</text>
+	<text key="email.plugin.use.event.category.misc.name">Divers</text>
+	<text key="email.plugin.use.event.category.send.name">Envoi d'emails</text>
+
+	<text key="email.plugin.use.event.mail.success.sent.name">Envoi de mail réussi</text>
+	<text key="email.plugin.use.event.mail.success.sent.description">Événement généré à chaque fois que l'envoi du mail a été
+		réussi</text>
+
+	<text key="email.plugin.use.event.mail.fail.sent.name">Envoi de mail échoué</text>
+	<text key="email.plugin.use.event.mail.fail.sent.description">Événement généré lorsque l'envoi d'un mail n'a pas
+		réussi.</text>
+
+	<text key="email.plugin.use.event.mail.unread.count.updated.name">Nombre de mail non lus mis à jour</text>
+	<text
+		key="email.plugin.use.event.mail.unread.count.updated.description">Événément généré lorsque le nombre d'emails non lus est mis à
+		jour. Il est possible de filter l'événement pour ne réagir que si le
+		nombre atteint une valeur
+		particulière.
+	</text>
+	<text
+		key="email.plugin.use.event.mail.unread.count.updated.variable.description">Événément généré lorsque le nombre d'emails non lus est mis à
+		jour, avec pour condition : "{}"</text>
+	<text key="email.plugin.unread.count.condition.label">Condition de génération de l'événement</text>
+	<text key="email.plugin.unread.count.condition.always">Tout le temps</text>
+	<text key="email.plugin.unread.count.condition.unread.positive">Si il y a des emails non lus</text>
+	<text key="email.plugin.unread.count.condition.unread.none">Si il n'y a aucun email non lu</text>
+
+	<!-- Add comp -->
+	<text key="email.plugin.add.comp.email.key.name">Case de liste d'email</text>
+	<text key="email.plugin.add.comp.email.key.description">Permet d'afficher les emails présents dans la boîte de
+		réception</text>
+
+	<text key="email.plugin.add.comp.attachment.key.name">Case de liste des pièces jointes</text>
+	<text key="email.plugin.add.comp.attachment.key.description">Permet d'afficher les pièces jointes de l'email
+		actuellement sélectionné</text>
+
+
+</texts>

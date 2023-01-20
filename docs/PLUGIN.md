@@ -370,6 +370,8 @@ TODO
 
 ### Utils and helpers
 
+- TODO
+
 ### Threading
 
 Note that action and event are mostly generated out of the JavaFX Thread. This means that if you have to modify UI components, you should explicitly do it on the FXThread (you can use `FXThreadUtils.runOnFXThread()` to do so)
