@@ -361,9 +361,15 @@ Here are the LifeCompanion expected icons size :
 LifeCompanion try to respect a global graphic theme. Here are the colors used in differents components.
 
 | DESCRIPTION/COMPONENT|COLOR (WEB)|
-|-|-|-|
+|-|-|
 |**use actions/event main**     |![#d2d2d2](https://placehold.co/15x15/d2d2d2/d2d2d2.png) `#d2d2d2`|
 |**use actions/event constrast**|![#aeaeae](https://placehold.co/15x15/aeaeae/aeaeae.png) `#aeaeae`|
 |**key options indicator**      |![#f44336](https://placehold.co/15x15/f44336/f44336.png) `#f44336`|
-
+|**Primary color - base**       |![#0395f4](https://placehold.co/15x15/0395f4/0395f4.png) `#0395f4`|
+|**Primary color - dark**       |![#0277bd](https://placehold.co/15x15/0277bd/0277bd.png) `#0277bd`|
+|**Primary color - light**      |![#03bdf4](https://placehold.co/15x15/03bdf4/03bdf4.png) `#03bdf4`|
+|**Second color - base**        |![#f44336](https://placehold.co/15x15/f44336/f44336.png) `#f44336`|
+|**Second color - dark**        |![#c62828](https://placehold.co/15x15/c62828/c62828.png) `#c62828`|
+|**Second color - light**       |![#ef9a9a](https://placehold.co/15x15/ef9a9a/ef9a9a.png) `#ef9a9a`|
+|**Third color - base**         |![#ff9800](https://placehold.co/15x15/ff9800/ff9800.png) `#ff9800`|
 
