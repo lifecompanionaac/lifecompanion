@@ -31,7 +31,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Node;
 import javafx.scene.control.Skin;
 import javafx.scene.control.TextField;
-import org.controlsfx.control.textfield.CustomPasswordField;
 
 /**
  * A base class for people wanting to customize a {@link TextField} to contain nodes
@@ -51,7 +50,6 @@ import org.controlsfx.control.textfield.CustomPasswordField;
  * </center>
  * 
  * @see TextFields
- * @see CustomPasswordField
  */
 public class CustomTextField extends TextField {
 

@@ -31,7 +31,7 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
-import org.controlsfx.control.ToggleSwitch;
+import org.lifecompanion.ui.controlsfx.control.ToggleSwitch;
 import org.lifecompanion.model.api.configurationcomponent.SelectionModeUserI;
 import org.lifecompanion.model.api.selectionmode.FireEventInput;
 import org.lifecompanion.model.api.selectionmode.ProgressDrawMode;

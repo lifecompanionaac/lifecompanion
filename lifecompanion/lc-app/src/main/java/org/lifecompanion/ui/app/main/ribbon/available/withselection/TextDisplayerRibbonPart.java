@@ -19,7 +19,7 @@
 
 package org.lifecompanion.ui.app.main.ribbon.available.withselection;
 
-import org.controlsfx.control.ToggleSwitch;
+import org.lifecompanion.ui.controlsfx.control.ToggleSwitch;
 
 import org.lifecompanion.model.api.configurationcomponent.WriterDisplayerI;
 import org.lifecompanion.framework.commons.translation.Translation;

@@ -28,7 +28,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import org.controlsfx.glyphfont.FontAwesome;
+import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.model.api.configurationcomponent.VoiceSynthesizerUserI;
 import org.lifecompanion.model.api.voicesynthesizer.PronunciationExceptionI;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;

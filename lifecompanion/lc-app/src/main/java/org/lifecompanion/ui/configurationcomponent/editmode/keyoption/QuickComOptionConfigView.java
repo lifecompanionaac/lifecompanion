@@ -19,8 +19,8 @@
 
 package org.lifecompanion.ui.configurationcomponent.editmode.keyoption;
 
-import org.controlsfx.control.ToggleSwitch;
-import org.controlsfx.glyphfont.FontAwesome;
+import org.lifecompanion.ui.controlsfx.control.ToggleSwitch;
+import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.framework.commons.translation.Translation;

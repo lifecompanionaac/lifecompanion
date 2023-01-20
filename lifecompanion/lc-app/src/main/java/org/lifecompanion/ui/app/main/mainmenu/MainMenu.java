@@ -21,7 +21,7 @@ package org.lifecompanion.ui.app.main.mainmenu;
 
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
-import org.controlsfx.glyphfont.FontAwesome;
+import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;

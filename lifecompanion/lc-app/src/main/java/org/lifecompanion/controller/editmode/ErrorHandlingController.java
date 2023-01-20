@@ -22,9 +22,9 @@ package org.lifecompanion.controller.editmode;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
-import org.controlsfx.dialog.ExceptionDialog;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.lifecycle.LCStateListener;
+import org.lifecompanion.ui.common.control.generic.dialog.ExceptionAlert;
 import org.lifecompanion.util.javafx.DialogUtils;
 import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.controller.editaction.AsyncExecutorController;
@@ -99,7 +99,7 @@ public enum ErrorHandlingController implements LCStateListener {
                             .show();
                 } else {
                     // TODO : call apply configuration from DialogUtils (and create custom Exception Dialog)
-                    ExceptionDialog dialog = new ExceptionDialog(cause);
+                    ExceptionAlert dialog = new ExceptionAlert(cause);
                     dialog.initOwner(StageUtils.getEditOrUseStageVisible());
                     dialog.setTitle(Translation.getText("unknown.error.on.fx.thread.title"));
                     dialog.setHeaderText(Translation.getText("unknown.error.on.fx.thread.message"));

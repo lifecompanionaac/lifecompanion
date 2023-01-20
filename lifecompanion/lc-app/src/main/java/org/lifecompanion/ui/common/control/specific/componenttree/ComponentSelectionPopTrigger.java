@@ -19,7 +19,7 @@
 
 package org.lifecompanion.ui.common.control.specific.componenttree;
 
-import org.controlsfx.glyphfont.FontAwesome;
+import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.framework.commons.translation.Translation;

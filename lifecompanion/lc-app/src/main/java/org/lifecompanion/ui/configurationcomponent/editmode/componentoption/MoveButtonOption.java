@@ -22,7 +22,7 @@ package org.lifecompanion.ui.configurationcomponent.editmode.componentoption;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import org.controlsfx.glyphfont.FontAwesome;
+import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.model.api.configurationcomponent.MovableComponentI;
 import org.lifecompanion.model.api.configurationcomponent.ResizableComponentI;
 import org.lifecompanion.model.api.ui.editmode.ConfigOptionComponentI;
