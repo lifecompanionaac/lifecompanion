@@ -411,12 +411,94 @@ It's recommanded to use `TranslationFX` only when you need changing translation 
 
 ### Serialization
 
-**TODO, think about**
+#### Principle
 
-- Serialization use class name, warning if changed
-- To serialize attribute, implementation of methods is mandatory
-- Backward compatibility should be handled manually
-- Empty param public constructor
+When you create new element with plugin API (actions, key options, etc...), most of these elements implements the `XMLSerializable` interface indicating they can be saved with the configuration. Serialization is done with [JDOM library](http://www.jdom.org/) and `XMLObjectSerializer` utils class.
+
+Classes implementing this interface should define two methods :
+
+```java
+@Override
+public Element serialize(final IOContextI contextP) {
+    return XMLObjectSerializer.serializeInto(StartSpellGameAction.class, this, super.serialize(contextP));
+}
+
+@Override
+public void deserialize(final Element nodeP, final IOContextI contextP) throws LCException {
+    super.deserialize(nodeP, contextP);
+    XMLObjectSerializer.deserializeInto(StartSpellGameAction.class, this, nodeP);
+}
+```
+
+#### Basic (de)serialization
+
+`XMLObjectSerializer.serializeInto(...)` and `XMLObjectSerializer.deserializeInto(...)` will try to (de)serialize all the object attribute (that are not static/final/transient) to/from a given JDOM element.
+
+Each attribute is **serialized based on its name**, so be careful changing names! Also, a lot of element implemented by plugin (actions, key options, etc.) are instanciated using reflection, so they **should have a empty parameter default constructor**. Reflection also use the class simple name (`Class.getSimpleName()`) so changing a element type name can also be dangerous.
+
+**Compatible types**
+- primitive types : `int`, `double`, `long`, `float`, `boolean`
+- primitive wrapper : `Integer`, `Double`, `Long`, `Float`, `Boolean`
+- string : `String`
+- JavaFX property wrapper (these can final) : `IntegerProperty`, `DoubleProperty`, `LongProperty`, `FloatProperty`, `BooleanProperty`, `StringProperty`
+- `ObjectProperty` if combined with `@XMLGenericProperty`
+- `javafx.scene.paint.Color`
+- `java.util.Date`
+- `java.io.File`
+- enums : based on `name()` and `Enum.valueOf(...)`, so changing the name can cause problem
+
+#### Advanced (de)serialization
+
+If an element has to (de)serialize children, it should be done manually by calling its children `XMLSerializable` methods.
+
+Generic type in `ObjectProperty` can be serialized using `@XMLGenericProperty`
+
+Custom serialization mechanism can be implemented using `@XMLCustomProperty` and `CustomPropertyConverter`.
+
+#### Backward compatibility
+
+Missing attributes from DOM element will not throw Exception (but will log a message in WARN) so it is not a problem to add new attributes as they will be added to the next serialization.
+
+However, if your attribute name change or your behavior, you should take care of handling the backward compatibility manually in `deserialize(...)`. In the following example, we renamed attribute `enableReplaceColorByTransparent` to `enableReplaceColor` so in the deserialize method we handle manually the mapping.
+
+```java
+if (element.getAttribute("enableReplaceColorByTransparent") != null) {
+    XMLUtils.read(enableReplaceColor, "enableReplaceColorByTransparent", element);
+}
+```
+
+#### Use mode (de)serialization
+
+Most of the (de)serialization mechanism is only used to save modified data in edit mode.
+
+However, it can be interesting to save information that will should be read/write in use mode. It is possible to do it with element implementing `UseInformationSerializableI` (which is the case of most the plugin element). Here is the example of the note key option action implementation :
+
+```java
+@Override
+public void serializeUseInformation(Map<String, Element> elements) {
+    super.serializeUseInformation(elements);
+    GridPartKeyComponentI parentKey = this.parentComponentProperty().get();
+    if (parentKey != null) {
+        Element elementNodeContent = new Element(NODE_NOTE_CONTENT);
+        elementNodeContent.setText(getTextToSerialize());
+        elements.put(parentKey.getID(), elementNodeContent);
+    }
+}
+
+@Override
+public void deserializeUseInformation(Map<String, Element> elements) throws LCException {
+    super.deserializeUseInformation(elements);
+    GridPartKeyComponentI parentKey = this.parentComponentProperty().get();
+    if (parentKey != null) {
+        Element existingNote = elements.get(parentKey.getID());
+        if (existingNote != null) {
+            FXThreadUtils.runOnFXThread(() -> this.savedText.set(existingNote.getText()));
+        }
+    }
+}
+```
+
+Note that use information should be saved with a unique ID that will not change between two run, so using a component ID is most of the time a good idea (or a static ID if the saved information is global).
 
 ### App icons
 
