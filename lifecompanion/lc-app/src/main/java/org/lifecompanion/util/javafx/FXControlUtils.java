@@ -32,7 +32,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
-import org.controlsfx.control.ToggleSwitch;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.Glyph;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
@@ -40,6 +39,7 @@ import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
+import org.lifecompanion.ui.controlsfx.control.ToggleSwitch;
 import org.lifecompanion.util.converter.BoundDoubleConverter;
 import org.lifecompanion.util.converter.BoundIntConverter;
 import org.lifecompanion.util.model.Triple;
@@ -309,7 +309,16 @@ public class FXControlUtils {
         return spinner;
     }
 
-    public static ToggleSwitch createToggleSwitch(String toggleTextId, String tooltipTextId) {
+    public static org.controlsfx.control.ToggleSwitch createToggleSwitch(String toggleTextId, String tooltipTextId) {
+        org.controlsfx.control.ToggleSwitch toggleSwitch = new org.controlsfx.control.ToggleSwitch(Translation.getText(toggleTextId));
+        toggleSwitch.setMaxWidth(Double.MAX_VALUE);//Restore ToggleSwitch sizing before ControlsFX 8.40.13
+        if (tooltipTextId != null) {
+            toggleSwitch.setTooltip(createTooltip(Translation.getText(tooltipTextId)));
+        }
+        return toggleSwitch;
+    }
+
+    public static ToggleSwitch createToggleSwitchV2(String toggleTextId, String tooltipTextId) {
         ToggleSwitch toggleSwitch = new ToggleSwitch(Translation.getText(toggleTextId));
         toggleSwitch.setMaxWidth(Double.MAX_VALUE);//Restore ToggleSwitch sizing before ControlsFX 8.40.13
         if (tooltipTextId != null) {
