@@ -20,9 +20,9 @@
 package org.lifecompanion.plugin.calendar.view.control;
 
 import javafx.beans.value.ChangeListener;
-import org.controlsfx.control.ToggleSwitch;
 import org.lifecompanion.model.api.configurationcomponent.SoundResourceHolderI;
 import org.lifecompanion.ui.common.control.generic.SoundRecordingControl;
+import org.lifecompanion.ui.controlsfx.control.ToggleSwitch;
 
 import java.util.function.Function;
 import java.util.function.Supplier;

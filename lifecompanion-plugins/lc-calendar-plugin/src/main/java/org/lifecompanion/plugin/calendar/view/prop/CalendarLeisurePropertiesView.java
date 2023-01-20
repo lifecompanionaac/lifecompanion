@@ -24,11 +24,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
-import org.controlsfx.control.ToggleSwitch;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.plugin.calendar.model.CalendarLeisure;
 import org.lifecompanion.ui.app.generalconfiguration.step.dynamickey.AbstractSimplerKeyContentContainerPropertiesEditionView;
 import org.lifecompanion.ui.common.control.generic.SoundRecordingControl;
+import org.lifecompanion.ui.controlsfx.control.ToggleSwitch;
 
 import static org.lifecompanion.plugin.calendar.view.control.CalendarViewUtils.addSoundRecordingControlListener;
 

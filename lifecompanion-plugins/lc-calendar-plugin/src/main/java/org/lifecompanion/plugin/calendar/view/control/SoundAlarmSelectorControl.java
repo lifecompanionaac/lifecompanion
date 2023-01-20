@@ -26,13 +26,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
 import javafx.scene.layout.HBox;
-import org.controlsfx.glyphfont.FontAwesome;
-import org.controlsfx.glyphfont.Glyph;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.plugin.calendar.controller.SoundAlarmController;
+import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
+import org.lifecompanion.ui.controlsfx.glyphfont.Glyph;
 import org.lifecompanion.util.javafx.FXControlUtils;
 
 public class SoundAlarmSelectorControl extends HBox implements LCViewInitHelper {

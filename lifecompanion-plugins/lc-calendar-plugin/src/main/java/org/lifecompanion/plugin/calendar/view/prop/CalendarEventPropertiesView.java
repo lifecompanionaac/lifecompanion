@@ -25,7 +25,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
-import org.controlsfx.control.ToggleSwitch;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.plugin.calendar.model.CalendarEvent;
@@ -35,6 +34,7 @@ import org.lifecompanion.ui.common.control.generic.DurationPickerControl;
 import org.lifecompanion.ui.common.control.generic.SoundRecordingControl;
 import org.lifecompanion.ui.common.control.generic.TimePickerControl;
 import org.lifecompanion.ui.common.control.specific.selector.UserActionSequenceSelectorControl;
+import org.lifecompanion.ui.controlsfx.control.ToggleSwitch;
 import org.lifecompanion.util.javafx.FXControlUtils;
 
 import static org.lifecompanion.plugin.calendar.view.control.CalendarViewUtils.addSoundRecordingControlListener;

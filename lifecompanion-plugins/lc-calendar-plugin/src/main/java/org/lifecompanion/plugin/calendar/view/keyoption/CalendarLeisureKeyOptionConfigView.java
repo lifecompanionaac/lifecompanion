@@ -20,11 +20,11 @@
 package org.lifecompanion.plugin.calendar.view.keyoption;
 
 import javafx.beans.value.ChangeListener;
-import org.controlsfx.control.ToggleSwitch;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.model.impl.editaction.BasePropertyChangeAction;
 import org.lifecompanion.plugin.calendar.keyoption.CalendarLeisureKeyOption;
 import org.lifecompanion.ui.configurationcomponent.editmode.keyoption.BaseKeyOptionConfigView;
+import org.lifecompanion.ui.controlsfx.control.ToggleSwitch;
 import org.lifecompanion.util.binding.EditActionUtils;
 
 public class CalendarLeisureKeyOptionConfigView extends BaseKeyOptionConfigView<CalendarLeisureKeyOption> {

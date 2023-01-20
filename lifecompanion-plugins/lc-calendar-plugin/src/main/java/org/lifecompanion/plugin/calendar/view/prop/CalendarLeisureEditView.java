@@ -26,7 +26,6 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import org.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
@@ -36,6 +35,7 @@ import org.lifecompanion.plugin.calendar.model.LCCalendar;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStepViewI;
 import org.lifecompanion.ui.app.generalconfiguration.step.dynamickey.CommonListViewActionContainer;
 import org.lifecompanion.ui.common.pane.specific.cell.DetailledSimplerKeyContentContainerListCell;
+import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.util.javafx.FXControlUtils;
 
 

@@ -1,0 +1,62 @@
+.chart {
+    -fx-padding: 10px 15px 10px 15px;
+}
+
+.axis-label {
+    -fx-font-family: "Calibri", sans-serif;
+    -fx-font-size: 12px;
+}
+
+.background-chart .chart-content {
+    -fx-padding: 25px 0 27px 0;
+}
+
+.records-chart .chart-title {
+    -fx-font-family: "Calibri", sans-serif;
+    -fx-font-size: 12px;
+    -fx-padding: 0 0 10px 0;
+}
+
+.records-chart .chart-content {
+    -fx-padding: 0 55px 0 0;
+}
+
+.records-chart .chart-series-line {
+    -fx-stroke-size: 2px;
+    -fx-effect: null;
+}
+
+.records-chart .chart-content .chart-line-symbol {
+    -fx-background-radius: 0;
+    -fx-background-padding: 0;
+    -fx-background-color: null;
+}
+
+/* Base score */
+.records-chart .default-color0.chart-series-line { -fx-stroke: #004d80; }
+.records-chart .default-color0.chart-line-symbol {
+    -fx-background-insets: null;
+    -fx-background-color: #004d80;
+    -fx-background-radius: 0;
+}
+/* Actions records */
+.records-chart .default-color1.chart-series-line { -fx-stroke: transparent; }
+.records-chart .records-chart-legend .default-color1.chart-line-symbol {
+    -fx-background-color: #F44336, #EF9A9A;
+    -fx-background-radius: 0px;
+}
+/* PPP assessments records */
+.records-chart .default-color2.chart-series-line { -fx-stroke: #0395f4; }
+.records-chart .records-chart-legend .default-color2.chart-line-symbol {
+    -fx-background-color: #0395f4, #03bdf4;
+}
+/* EVS assessments records */
+.records-chart .default-color3.chart-series-line { -fx-stroke: #8BC34A; }
+.records-chart .records-chart-legend .default-color3.chart-line-symbol {
+    -fx-background-color: #8BC34A, #D8FF97;
+}
+/* Auto-EVS assessments records */
+.records-chart .default-color4.chart-series-line { -fx-stroke: #8BC34A; }
+.records-chart .records-chart-legend .default-color4.chart-line-symbol {
+    -fx-background-color: #8BC34A, #D8FF97;
+}
