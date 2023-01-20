@@ -22,20 +22,20 @@ package org.lifecompanion.model.api.lifecycle;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 
 /**
- * To listen for mode starts/stop.<br>
- * The mode can any of the {@link AppMode}.
+ * To listen when use mode ({@link org.lifecompanion.controller.lifecycle.AppMode#USE}) start and ends.<br>
+ * Caller ensure that each {@link #modeStop(LCConfigurationI)} was preceded with a {@link #modeStart(LCConfigurationI)}<br>
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public interface ModeListenerI {
 	/**
-	 * Called when the mode starts (use mode or configuration mode).<br>
+	 * Called when the use mode starts.<br>
 	 * This can be called more than once (but {@link #modeStop(LCConfigurationI)} is called between each call)
 	 * @param configuration the configuration where the mode starts
 	 */
 	void modeStart(LCConfigurationI configuration);
 
 	/**
-	 * Called when the mode stops.<br>
+	 * Called when the use mode stops.<br>
 	 * This can be called more than once (but {@link #modeStart(LCConfigurationI)} is always call before)
 	 * @param configuration the configuration where the mode stops (the same configuration that the {@link #modeStart(LCConfigurationI)} configuration)
 	 */

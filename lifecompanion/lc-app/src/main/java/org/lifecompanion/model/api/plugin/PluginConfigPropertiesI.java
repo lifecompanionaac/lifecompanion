@@ -24,6 +24,12 @@ import org.lifecompanion.model.api.configurationcomponent.UseInformationSerializ
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.io.XMLSerializable;
 
-// TODO ConfigurationChild
+/**
+ * Represents a plugin properties.<br>
+ * These properties will be associated to the configuration, allowing implementation to store configuration with the current configuration.
+ *
+ * @author Mathieu THEBAUD <math.thebaud@gmail.com>
+ * @see {@link org.lifecompanion.model.impl.plugin.AbstractPluginConfigProperties}
+ */
 public interface PluginConfigPropertiesI extends XMLSerializable<IOContextI>, UseInformationSerializableI, ConfigurationChildComponentI {
 }

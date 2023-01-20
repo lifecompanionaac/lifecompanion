@@ -19,6 +19,7 @@
 package org.lifecompanion.model.api.plugin;
 
 import javafx.beans.property.ObjectProperty;
+import javafx.scene.Scene;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
@@ -43,6 +44,12 @@ public interface PluginI extends ModeListenerI {
      */
     String[] getLanguageFiles(String languageCode);
 
+    /**
+     * Get the JavaFX stylesheets for this plugin.<br>
+     * The given style sheets path will be injected to {@link Scene#getStylesheets()} on edit mode scene.
+     *
+     * @return the path array <i>(can return null if you don't have any style)</i>
+     */
     String[] getJavaFXStylesheets();
 
     /**
@@ -62,20 +69,23 @@ public interface PluginI extends ModeListenerI {
     //========================================================================
 
     /**
-     * Called by LifeCompanion on plugin initialize (when plugin is added or LifeCompanion starts).<br>
+     * Called by LifeCompanion on starting.<br>
+     * This is called out of the FX thread while the application is loading, so you can have sync loading in this method.
      * This is called once.
      *
      * @param dataFolder a data folder for this plugin.<br>
-     *                   If this plugin have to write files, it should use this folder.
+     *                   If this plugin have to store its own files, it should use this folder.<br>
+     *                   This folder is shared between all profile and configurations, so it's better to use it for static data.<br>
+     *                   This folder is the same on each start/stop (folder is unique for a plugin ID)
      */
     void start(File dataFolder);
 
     /**
-     * Called by LifeCompanion on plugin stop (when plugin is removed or LifeCompanion stops)<br>
+     * Called by LifeCompanion on stopping.<br>
+     * The method should return as fast as possible, it is called on FX thread.
      * This is called once.
      *
-     * @param dataFolder a data folder for this plugin.<br>
-     *                   If this plugin have to write files, it should use this folder.
+     * @param dataFolder see {@link #start(File)} for details
      */
     void stop(File dataFolder);
     //========================================================================
@@ -104,6 +114,15 @@ public interface PluginI extends ModeListenerI {
 
     // IO
     //========================================================================
+
+    /**
+     * Should initialize this plugin own {@link PluginConfigPropertiesI} implementation.<br>
+     * The implementation will be then store with the {@link LCConfigurationI} if plugin use it detected.
+     * Implementers should extend {@link org.lifecompanion.model.impl.plugin.AbstractPluginConfigProperties} to create their own implementation.
+     *
+     * @param parentConfiguration property containing the configuration associated to the newly created property
+     * @return plugin own properties
+     */
     PluginConfigPropertiesI newPluginConfigProperties(ObjectProperty<LCConfigurationI> parentConfiguration);
     //========================================================================
 }
