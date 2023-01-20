@@ -567,7 +567,6 @@ public enum CalendarController implements ModeListenerI {
             if (eventWithAlarm.enableAtFixedTimeProperty().get()) {
                 final TimeOfDay fixedTime = eventWithAlarm.getFixedTime();
                 if (fixedTime.compareTo(now) > 0) {
-                    //final Date dateForToday = new Date(new Date().getTime() + 10_000);//FIXME : use the real date
                     final Date dateForToday = fixedTime.getDateForToday();
                     LOGGER.info("Will plan an alarm to : {} / {}", fixedTime, dateForToday);
                     alarmTimer.schedule(new TimerTask() {

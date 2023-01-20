@@ -47,6 +47,12 @@ public class PediatricPainProfilePlugin implements PluginI {
         return null;
     }
 
+
+    @Override
+    public String[] getDefaultConfigurations(String languageCode) {
+        return new String[]{"/configurations/" + languageCode + "_example-ppp1.lcc"};
+    }
+
     // START/STOP
     //========================================================================
     @Override

@@ -42,13 +42,13 @@ Be familiar with Java and JavaFX development.
 
 ### Existing plugins
 
-All the official existing plugins are stored in the **lifecompanion-plugins** folder on the repo (or will be!)
+All the official existing plugins are stored in the [**lifecompanion-plugins**](../lifecompanion-plugins/) folder on the repo. You can check their code to understand how plugin can be created.
 
 - [**spell game plugin**](../lifecompanion-plugins/lc-spellgame-plugin/) : plugin that create a game where the user should spell words
-- **simple email plugin** : plugin that allow the user to read and send email from traditionnal email server
-- **calendar plugin** : plugin to help user to plan their days (with alarms, events and sequences)
-- **ppp plugin** : plugin to trace prediatric pain profil scale for an user
-- **homeassistant plugin** : plugin to interact with a HomeAssistant server
+- [**simple email plugin**](../lifecompanion-plugins/lc-email-plugin/) : plugin that allow the user to read and send email from traditionnal email server
+- [**calendar plugin**](../lifecompanion-plugins/lc-calendar-plugin/) : plugin to help user to plan their days (with alarms, events and sequences)
+- [**ppp plugin**](../lifecompanion-plugins/lc-ppp-plugin/) : plugin to trace prediatric pain profil scale for an user
+- [**homeassistant plugin**](../lifecompanion-plugins/lc-homeassistant-plugin/) : plugin to interact with a HomeAssistant server
 
 This documentation is based on **lc-spellgame-plugin** to rely on a working example. This plugin is the reference plugin implementation.
 

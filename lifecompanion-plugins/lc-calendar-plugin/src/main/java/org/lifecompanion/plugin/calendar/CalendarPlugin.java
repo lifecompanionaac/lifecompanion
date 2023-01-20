@@ -49,6 +49,11 @@ public class CalendarPlugin implements PluginI {
         return null;
     }
 
+    @Override
+    public String[] getDefaultConfigurations(String languageCode) {
+        return new String[]{"/configurations/" + languageCode + "_calendar-example1.lcc"};
+    }
+
     // START/STOP
     //========================================================================
     @Override
@@ -63,54 +68,9 @@ public class CalendarPlugin implements PluginI {
         SoundAlarmController.INSTANCE.modeStop(configuration);
     }
 
-    //    public static LCCalendar calendar;
 
     @Override
     public void start(final File dataFolder) {
-        //        calendar = new LCCalendar();
-        //        calendar.initEmptyWeek();
-        //        final CalendarDay today = calendar.getDays().get(2);
-        //        // Create event
-        //        today.getEvents().add(createEvent("Prendre le petit déjeuner", "Je vais chercher mon plateau petit déjeuner"));
-        //        today.getEvents().add(createEvent("Petit déjeuner terminé", "Je ramène mon plateau dans le coin repas", "Bien !"));
-        //
-        //        final CalendarEvent ouvrirLaFenetre = createEvent("Ouvrir la fenêtre", "J’ouvre ma fenêtre");
-        //        ouvrirLaFenetre.enableAutomaticItemProperty().set(true);
-        //        ouvrirLaFenetre.automaticItemTimeMsProperty().set(5_000);
-        //        today.getEvents().add(ouvrirLaFenetre);
-        //
-        //        today.getEvents().add(createEvent("Débrancher les tablettes", "Je débranche mes tablettes"));
-        //        final CalendarEvent eventWithSeq = createEvent("Se préparer", "Je vais faire ma toilette au lavabo", "Tu as fini ta toilette, bien !");
-        //        //eventWithSeq.linkedSequenceIdProperty().set("ee9a7662-0d91-4159-86db-1931200a9e96");
-        //        today.getEvents().add(eventWithSeq);
-        //        final CalendarEvent prendreUnCafe = createEvent("Prendre un café", "Je vais prendre mon café");
-        //        prendreUnCafe.enableAtFixedTimeProperty().set(true);
-        //        prendreUnCafe.getFixedTime().hoursProperty().set(10);
-        //        prendreUnCafe.getFixedTime().minutesProperty().set(45);
-        //        today.getEvents().add(prendreUnCafe);
-        //        today.getEvents().add(createEvent("Activités", "Je vais faire mes activités à l'annexe avec ma tablette"));
-
-        //        today.getEvents().add(createEvent("Aller aux WC", "Je vais aux WC avec ma tablette bleue "));
-        //        today.getEvents().add(createEvent("Se préparer - fenêtre", "Je ferme ma fenêtre"));
-        //        today.getEvents().add(createEvent("Se préparer - habillage", "Je m’habille"));
-    }
-
-    private CalendarEvent createEvent(String name, String textOnStart) {
-        return createEvent(name, textOnStart, null);
-    }
-
-    private CalendarEvent createEvent(String name, String textOnStart, String textOnFinish) {
-        CalendarEvent calendarEvent = new CalendarEvent();
-        calendarEvent.textProperty().set(name);
-        if (StringUtils.isNotBlank(textOnStart)) {
-            calendarEvent.textOnStartProperty().set(textOnStart);
-            calendarEvent.enableTextOnStartProperty().set(true);
-        }
-        if (StringUtils.isNotBlank(textOnFinish)) {
-            calendarEvent.textOnFinishProperty().set(textOnFinish);
-            calendarEvent.enableTextOnFinishProperty().set(true);
-        }
-        return calendarEvent;
     }
 
     @Override
@@ -121,7 +81,6 @@ public class CalendarPlugin implements PluginI {
 
     // VARIABLES
     //========================================================================
-
     @Override
     public List<UseVariableDefinitionI> getDefinedVariables() {
         return null;
@@ -131,7 +90,6 @@ public class CalendarPlugin implements PluginI {
     public Map<String, UseVariableI<?>> generateVariables(final Map<String, UseVariableDefinitionI> variablesToGenerate) {
         return null;
     }
-
     //========================================================================
 
     // IO

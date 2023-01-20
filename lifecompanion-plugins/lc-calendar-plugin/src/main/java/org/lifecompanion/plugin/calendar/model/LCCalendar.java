@@ -108,16 +108,6 @@ public class LCCalendar implements XMLSerializable<IOContextI>, DuplicableCompon
                 days.add(day);
             }
         }
-        // FIXME : delete this dev
-//        CalendarDay calendarDay = days.stream().filter(d -> d.dayOfWeekProperty().get() == DayOfWeek.WEDNESDAY).findAny().orElse(null);
-//        if (calendarDay != null) {
-//            days.forEach(day -> {
-//                if (day.dayOfWeekProperty().get() != DayOfWeek.WEDNESDAY) {
-//                    day.getEvents().clear();
-//                    day.getEvents().addAll(calendarDay.getEvents().stream().map(event -> event.duplicate(true)).collect(Collectors.toList()));
-//                }
-//            });
-//        }
         final Element leisureElement = node.getChild(NODE_LEISURE);
         if (leisureElement != null) {
             for (Element child : leisureElement.getChildren()) {

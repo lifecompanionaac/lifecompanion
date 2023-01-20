@@ -50,6 +50,11 @@ public class EmailPlugin implements PluginI {
         return null;
     }
 
+    @Override
+    public String[] getDefaultConfigurations(String languageCode) {
+        return new String[]{"/configurations/" + languageCode + "_email-example1.lcc"};
+    }
+
     // START/STOP
     //========================================================================
     @Override
