@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="res/bootstrap.min.css" rel="stylesheet">
+    <title>LifeCompanion - calendrier</title>
+    <style>
+        :root {
+           font-size: 10px;
+        }
+        .page-content {
+            width: 600px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+<div class="page-content">
+    <div class="container border my-2">
+        <div class="row text-center my-2">
+            <div class="col">
+                <button type="button" class="btn btn-primary" onClick="window.print()">IMPRIMER</button>
+            </div>
+        </div>
+    </div>
+    <div>
+        {body}
+    </div>
+</div>
+
+<script src="res/bootstrap.bundle.min.js"></script>
+</body>
+</html>
