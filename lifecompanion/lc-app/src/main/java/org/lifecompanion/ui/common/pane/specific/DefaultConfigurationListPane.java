@@ -113,73 +113,87 @@ public class DefaultConfigurationListPane extends VBox implements LCViewInitHelp
     }
 
     public void initDefaultConfigurations() {
+        final int colSpanImg = 2;
         if (this.gridPaneDefaultConfigurations.getChildren().isEmpty()) {
             ProfileConfigSelectionController.INSTANCE.getDefaultConfiguration(defaultConfigurations -> {
                 int rowIndex = 0;
-                for (Pair<LCConfigurationDescriptionI, File> defaultConfiguration : defaultConfigurations) {
-                    LCConfigurationDescriptionI configDescription = defaultConfiguration.getLeft();
+                for (Pair<String, List<Pair<LCConfigurationDescriptionI, File>>> defaultConfigurationList : defaultConfigurations) {
 
-                    // Config image
-                    ImageView imageViewInList = new ImageView();
-                    imageViewInList.setFitWidth(300);
-                    imageViewInList.setFitHeight(200);
-                    imageViewInList.setPreserveRatio(true);
-                    configDescription.requestImageLoad(imageViewInList::setImage);
-                    GridPane.setHalignment(imageViewInList, HPos.RIGHT);
-                    GridPane.setHgrow(imageViewInList, Priority.ALWAYS);
-                    GridPane.setMargin(imageViewInList, new Insets(5.0, 20.0, 5.0, 0.0));
+                    Label labelConfigType = new Label(defaultConfigurationList.getLeft());
+                    labelConfigType.getStyleClass().addAll("text-h3", "text-fill-gray", "text-label-center");
+                    labelConfigType.setMaxWidth(Double.MAX_VALUE);
+                    GridPane.setHgrow(labelConfigType, Priority.ALWAYS);
+                    GridPane.setMargin(labelConfigType, new Insets(rowIndex == 0 ? 5 : 30, 0, 0, 0));
+                    final Separator separatorConfigType = new Separator(Orientation.HORIZONTAL);
+                    GridPane.setMargin(separatorConfigType, new Insets(5.0, 30.0, 5.0, 30.0));
+                    gridPaneDefaultConfigurations.add(labelConfigType, 0, rowIndex++, colSpanImg + 2, 1);
+                    gridPaneDefaultConfigurations.add(separatorConfigType, 0, rowIndex++, colSpanImg + 2, 1);
 
-                    // Config title
-                    Label labelTitle = new Label(configDescription.configurationNameProperty().get());
-                    labelTitle.getStyleClass().addAll("text-fill-primary-dark", "text-h4");
-                    GridPane.setHgrow(labelTitle, Priority.ALWAYS);
+                    for (Pair<LCConfigurationDescriptionI, File> defaultConfiguration : defaultConfigurationList.getRight()) {
+                        LCConfigurationDescriptionI configDescription = defaultConfiguration.getLeft();
 
-                    // Config author and description
-                    Label labelAuthor = new Label(configDescription.configurationAuthorProperty().get());
-                    labelAuthor.getStyleClass().addAll("text-fill-dimgrey", "text-weight-bold");
+                        // Config image
+                        ImageView imageViewInList = new ImageView();
+                        imageViewInList.setFitWidth(300);
+                        imageViewInList.setFitHeight(200);
+                        imageViewInList.setPreserveRatio(true);
+                        configDescription.requestImageLoad(imageViewInList::setImage);
+                        GridPane.setHalignment(imageViewInList, HPos.RIGHT);
+                        GridPane.setHgrow(imageViewInList, Priority.ALWAYS);
+                        GridPane.setMargin(imageViewInList, new Insets(5.0, 20.0, 5.0, 0.0));
 
-                    Label labelDescription = new Label(configDescription.configurationDescriptionProperty().get());
-                    labelDescription.getStyleClass().add("text-fill-gray");
-                    labelDescription.setWrapText(true);
-                    labelDescription.prefWidthProperty().bind(gridPaneDefaultConfigurations.widthProperty().multiply(0.60));
-                    GridPane.setValignment(labelDescription, VPos.TOP);
-                    GridPane.setMargin(labelDescription, new Insets(0, 0, 8.0, 0));
+                        // Config title
+                        Label labelTitle = new Label(configDescription.configurationNameProperty().get());
+                        labelTitle.getStyleClass().addAll("text-fill-primary-dark", "text-h4");
+                        GridPane.setHgrow(labelTitle, Priority.ALWAYS);
 
-                    Node selectionNode;
-                    if (multiSelectMode) {
-                        ToggleSwitch toggleEnableConfiguration = new ToggleSwitch();
-                        toggleEnableConfiguration.setSelected(true);
-                        toggleEnableConfiguration.setTooltip(FXControlUtils.createTooltip(Translation.getText("available.default.configuration.tooltip.toggle.add")));
-                        defaultConfigurationToggles.put(toggleEnableConfiguration, defaultConfiguration);
-                        selectionNode = toggleEnableConfiguration;
-                    } else {
-                        final Button selectConfigButton = FXControlUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CHEVRON_RIGHT).size(30).color(LCGraphicStyle.MAIN_DARK), null);
-                        final EventHandler<Event> eventHandlerSelect = e -> {
-                            if (this.onConfigurationSelected != null) onConfigurationSelected.accept(defaultConfiguration);
-                        };
-                        selectConfigButton.setOnMouseClicked(eventHandlerSelect);
-                        labelTitle.setOnMouseClicked(eventHandlerSelect);
-                        labelDescription.setOnMouseClicked(eventHandlerSelect);
-                        labelAuthor.setOnMouseClicked(eventHandlerSelect);
-                        imageViewInList.setOnMouseClicked(eventHandlerSelect);
-                        GridPane.setValignment(selectConfigButton, VPos.CENTER);
-                        selectionNode = selectConfigButton;
+                        // Config author and description
+                        Label labelAuthor = new Label(configDescription.configurationAuthorProperty().get());
+                        labelAuthor.getStyleClass().addAll("text-fill-dimgrey", "text-weight-bold");
+
+                        Label labelDescription = new Label(configDescription.configurationDescriptionProperty().get());
+                        labelDescription.getStyleClass().add("text-fill-gray");
+                        labelDescription.setWrapText(true);
+                        labelDescription.prefWidthProperty().bind(gridPaneDefaultConfigurations.widthProperty().multiply(0.60));
+                        GridPane.setValignment(labelDescription, VPos.TOP);
+                        GridPane.setMargin(labelDescription, new Insets(0, 0, 8.0, 0));
+
+                        Node selectionNode;
+                        if (multiSelectMode) {
+                            ToggleSwitch toggleEnableConfiguration = new ToggleSwitch();
+                            toggleEnableConfiguration.setSelected(true);
+                            toggleEnableConfiguration.setTooltip(FXControlUtils.createTooltip(Translation.getText("available.default.configuration.tooltip.toggle.add")));
+                            defaultConfigurationToggles.put(toggleEnableConfiguration, defaultConfiguration);
+                            selectionNode = toggleEnableConfiguration;
+                        } else {
+                            final Button selectConfigButton = FXControlUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CHEVRON_RIGHT).size(30).color(LCGraphicStyle.MAIN_DARK), null);
+                            final EventHandler<Event> eventHandlerSelect = e -> {
+                                if (this.onConfigurationSelected != null)
+                                    onConfigurationSelected.accept(defaultConfiguration);
+                            };
+                            selectConfigButton.setOnMouseClicked(eventHandlerSelect);
+                            labelTitle.setOnMouseClicked(eventHandlerSelect);
+                            labelDescription.setOnMouseClicked(eventHandlerSelect);
+                            labelAuthor.setOnMouseClicked(eventHandlerSelect);
+                            imageViewInList.setOnMouseClicked(eventHandlerSelect);
+                            GridPane.setValignment(selectConfigButton, VPos.CENTER);
+                            selectionNode = selectConfigButton;
+                        }
+
+                        GridPane.setMargin(selectionNode, new Insets(10.0));
+                        GridPane.setValignment(selectionNode, VPos.TOP);
+                        gridPaneDefaultConfigurations.add(imageViewInList, 0, rowIndex, colSpanImg, 3);
+                        gridPaneDefaultConfigurations.add(labelTitle, colSpanImg, rowIndex);
+                        gridPaneDefaultConfigurations.add(labelAuthor, colSpanImg, rowIndex + 1);
+                        gridPaneDefaultConfigurations.add(labelDescription, colSpanImg, rowIndex + 2);
+                        gridPaneDefaultConfigurations.add(selectionNode, colSpanImg + 1, rowIndex, 1, 3);
+
+                        final Separator separator = new Separator(Orientation.HORIZONTAL);
+                        GridPane.setMargin(separator, new Insets(5.0, 30.0, 5.0, 30.0));
+                        gridPaneDefaultConfigurations.add(separator, 0, rowIndex + 3, colSpanImg + 2, 1);
+
+                        rowIndex += 5;
                     }
-
-                    GridPane.setMargin(selectionNode, new Insets(10.0));
-                    GridPane.setValignment(selectionNode, VPos.TOP);
-                    int colSpanImg = 2;
-                    gridPaneDefaultConfigurations.add(imageViewInList, 0, rowIndex, colSpanImg, 3);
-                    gridPaneDefaultConfigurations.add(labelTitle, colSpanImg, rowIndex);
-                    gridPaneDefaultConfigurations.add(labelAuthor, colSpanImg, rowIndex + 1);
-                    gridPaneDefaultConfigurations.add(labelDescription, colSpanImg, rowIndex + 2);
-                    gridPaneDefaultConfigurations.add(selectionNode, colSpanImg + 1, rowIndex, 1, 3);
-
-                    final Separator separator = new Separator(Orientation.HORIZONTAL);
-                    GridPane.setMargin(separator, new Insets(5.0, 30.0, 5.0, 30.0));
-                    gridPaneDefaultConfigurations.add(separator, 0, rowIndex + 3, colSpanImg + 2, 1);
-
-                    rowIndex += 5;
                 }
             });
         }

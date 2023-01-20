@@ -24,7 +24,6 @@ import javafx.beans.InvalidationListener;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import org.lifecompanion.controller.editaction.AsyncExecutorController;
-import org.lifecompanion.controller.lifecycle.AppMode;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.resource.ResourceHelper;
 import org.lifecompanion.controller.textcomponent.WritingStateController;
@@ -52,6 +51,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * Known issues (TODO)
@@ -68,7 +68,8 @@ public enum SpellGameController implements ModeListenerI {
             VAR_ID_CURRENT_STEP_INSTRUCTION = "SpellGameCurrentStepInstruction";
 
     // Event listeners
-    private final Set<Runnable> gameEndedListeners;
+    private final Set<Runnable> gameEndedListeners, gameStartedListeners;
+    private final Set<Consumer<SpellGameStepResult>> answerListeners;
 
     // Current game
     private SpellGameWordList currentWordList;
@@ -98,6 +99,8 @@ public enum SpellGameController implements ModeListenerI {
             }
         };
         gameEndedListeners = new HashSet<>();
+        gameStartedListeners = new HashSet<>();
+        answerListeners = new HashSet<>();
     }
 
     // PROPS
@@ -127,6 +130,22 @@ public enum SpellGameController implements ModeListenerI {
 
     public void removeGameEndedListener(Runnable listener) {
         this.gameEndedListeners.remove(listener);
+    }
+
+    public void addGameStartedListener(Runnable listener) {
+        this.gameStartedListeners.add(listener);
+    }
+
+    public void removeGameStartedListener(Runnable listener) {
+        this.gameStartedListeners.remove(listener);
+    }
+
+    public void addAnswerListener(Consumer<SpellGameStepResult> listener) {
+        this.answerListeners.add(listener);
+    }
+
+    public void removeAnswerListener(Consumer<SpellGameStepResult> listener) {
+        this.answerListeners.remove(listener);
     }
     //========================================================================
 
@@ -170,6 +189,7 @@ public enum SpellGameController implements ModeListenerI {
             currentStepIndex = 0;
             this.currentGameAnswers.clear();
             WritingStateController.INSTANCE.removeAll(WritingEventSource.SYSTEM);
+            gameStartedListeners.forEach(Runnable::run);
             startCurrentStep();
         }
     }
@@ -202,6 +222,11 @@ public enum SpellGameController implements ModeListenerI {
         }
     }
 
+    private void addGameAnswer(SpellGameStepResult spellGameStepResult) {
+        currentGameAnswers.add(spellGameStepResult);
+        answerListeners.forEach(c -> c.accept(spellGameStepResult));
+    }
+
     public void validateCurrentStepAndGoToNext() {
         //FIXME : check if game is running
         GameStep step = GameStepEnum.values()[currentStepIndex];
@@ -211,7 +236,7 @@ public enum SpellGameController implements ModeListenerI {
 
         // If the user successfully enter the word : set the point and go to next word
         boolean success = step.checkWord(word, input);
-        currentGameAnswers.add(new SpellGameStepResult(step, success ? SpellGameStepResultStatusEnum.SUCCESS : SpellGameStepResultStatusEnum.FAILED, word, input, System.currentTimeMillis() - currentStepStartedAt));
+        addGameAnswer(new SpellGameStepResult(step, success ? SpellGameStepResultStatusEnum.SUCCESS : SpellGameStepResultStatusEnum.FAILED, word, input, System.currentTimeMillis() - currentStepStartedAt));
         if (success) {
             showSuccessFeedback();
             endCurrentStepAndGoToNextWord(true);
@@ -229,10 +254,11 @@ public enum SpellGameController implements ModeListenerI {
     }
 
     public void skipWord() {
-        //FIXME : check if game is running
-        String word = cleanText(words.get(currentWordIndex));
-        currentGameAnswers.add(new SpellGameStepResult(GameStepEnum.values()[currentStepIndex], SpellGameStepResultStatusEnum.UNDONE, word, "", System.currentTimeMillis() - currentStepStartedAt));
-        endCurrentStepAndGoToNextWord(false);
+        if (currentWordList != null) {
+            String word = cleanText(words.get(currentWordIndex));
+            addGameAnswer(new SpellGameStepResult(GameStepEnum.values()[currentStepIndex], SpellGameStepResultStatusEnum.UNDONE, word, "", System.currentTimeMillis() - currentStepStartedAt));
+            endCurrentStepAndGoToNextWord(false);
+        }
     }
 
 

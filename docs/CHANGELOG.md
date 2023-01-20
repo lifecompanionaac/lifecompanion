@@ -22,6 +22,10 @@
 - Ticket #173 : les éléments supprimés sont maintenant supprimés de la recherche dans les listes de cases
 - Ticket #171 : la racine des listes de case est maintenant nommée différemment
 - Ticket #178 : optimisation du défilement (changement automatique pour le bon mode pour les grilles avec uniquement 1 ligne/colonne)
+- Ticket #166 : correction de l'affichage de bouton pour les règles de correction de la prédiction de mots
+- Ticket #167 : insérer le caractère " avec un clavier virtuel fonctionne maintenant
+- Correction de l'affichage de l'explication dans la section "Événements"
+
 
 ## 1.4.2 - 20/06/2022
 

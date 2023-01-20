@@ -31,7 +31,7 @@ public class StopSpellGameAction extends SimpleUseActionImpl<UseActionTriggerCom
 
     public StopSpellGameAction() {
         super(UseActionTriggerComponentI.class);
-        this.order = 0;
+        this.order = 20;
         this.category = SpellGameActionSubCategories.CURRENT_GAME;
         this.nameID = "spellgame.plugin.action.end.game.name";
         this.staticDescriptionID = "spellgame.plugin.action.end.game.description";

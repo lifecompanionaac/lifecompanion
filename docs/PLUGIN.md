@@ -150,6 +150,8 @@ SpellGamePluginProperties pluginConfigProperties = configuration.getPluginConfig
 
 TODO : LC start/stop - mode start/stop
 
+TODO : note that data folder are the same even after update
+
 ### Use action
 
 Actions are the best way to implement specific behavior in LifeCompanion. Most of the action implementation interact with LifeCompanion [existing controllers](#controllers) or with custom controllers. For example, an email plugin will interact with its own controller to manage inbox, sent messages, etc.

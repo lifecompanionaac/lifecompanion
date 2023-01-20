@@ -20,6 +20,7 @@
 package org.lifecompanion.controller.virtualkeyboard;
 
 import javafx.scene.input.KeyCode;
+import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.slf4j.Logger;
@@ -37,6 +38,7 @@ public class WinAutoHotKeyVirtualKeyboard implements VirtualKeyboardI {
 
     @Override
     public void sendText(String rawText) throws Exception {
+        if (StringUtils.isEquals("\"", rawText)) rawText = "\\\""; // Single quote char should be escaped - Issue #167
         new ProcessBuilder().command(exePath.getAbsolutePath(), "SendRaw", rawText).start().waitFor();
     }
 
@@ -58,7 +60,6 @@ public class WinAutoHotKeyVirtualKeyboard implements VirtualKeyboardI {
             new ProcessBuilder().command(commands).start().waitFor();
         }
     }
-
 
 
     @Override

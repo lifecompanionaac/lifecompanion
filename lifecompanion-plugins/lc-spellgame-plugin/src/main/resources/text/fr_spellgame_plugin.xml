@@ -69,9 +69,11 @@
     <text key="spellgame.plugin.main.event.category.description">Contient tous les événements relatifs au jeu "Écris le mot". Permet de détacter la fin d'une partie, etc.</text>
     <text key="spellgame.plugin.event.game.end.name">Fin de partie</text>
     <text key="spellgame.plugin.event.game.end.description">Cet événement sera généré lorsqu'une partie en cours est terminée ou interrompue.</text>
-    <text key="spellgame.plugin.event.answer.given.name">Mauvaise réponse entrée</text>
+    <text key="spellgame.plugin.event.answer.given.name">Réponse entrée</text>
     <text key="spellgame.plugin.event.answer.given.description">Cet événement se produit à chaque fois que l'utilisateur entre une réponse. La réponse de l'utilisateur est donnée en variable de cet événement.</text>
     <text key="spellgame.plugin.event.answer.given.variable.description">Cet événement se produit à chaque fois que l'utilisateur entre une réponse qui respecte le critère : "{}"</text>
+    <text key="spellgame.plugin.event.game.started.name">Début de partie</text>
+    <text key="spellgame.plugin.event.game.started.description">Cet événement sera généré lorsqu'une partie est démarrée.</text>
 
     <!-- TASK -->
     <text key="spellgame.plugin.task.generate.report.title">Génération des résultats</text>

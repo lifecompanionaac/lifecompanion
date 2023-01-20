@@ -1,6 +1,7 @@
 <texts>
   <!--org.lifecompanion.api.component.definition-->
   <text key="frame.position.bottom">en bas</text>
+  <text key="default.configuration.lifecompanion.list.name">Configurations officielles</text>
   <text key="frame.position.bottom_left">en bas à gauche</text>
   <text key="frame.position.bottom_right">en bas à droite</text>
   <text key="frame.position.center">au centre</text>
@@ -388,6 +389,7 @@
   <text key="configuration.loading.plugin.older.version">L'extension "{}" n'a pas une version suffisante (version
 		actuelle : {}, version
 		requise {})</text>
+    <text key="default.configuration.list.for.plugin">Configuration de l'extension "{}"</text>
   <text key="plugin.error.invalid.lang.file">Problème de chargement des fichiers de langue</text>
   <text key="plugin.info.state.added.text">Cette extension sera chargée au prochain démarrage de l'application, elle
 		pourra ensuite être utilisée</text>

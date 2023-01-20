@@ -139,7 +139,8 @@ public class FXControlUtils {
 
     public static MenuButton createGraphicMenuButton(final Node graphics, final String tooltipTranslationID) {
         MenuButton button = new MenuButton(null, graphics);
-        button.getStyleClass().add("image-base-button");
+        button.getStyleClass().addAll("opacity-80-hover", "opacity-60-pressed");
+        button.setStyle("-fx-background-color: none, none;-fx-border-color: none;");
         createAndAttachTooltip(button, tooltipTranslationID);
         return button;
     }

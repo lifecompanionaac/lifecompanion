@@ -119,11 +119,11 @@ public class CurrentWordDisplayKeyOption extends AbstractKeyOption {
             toPlay = new SequentialTransition(scaleTransition, fadeTransition);
         }
 
-        toPlay.setOnFinished(e -> {
-            this.keyViewAddedNodeProperty().set(null);
-        });
+        toPlay.setOnFinished(e -> this.keyViewAddedNodeProperty().set(null));
 
-        this.keyViewAddedNodeProperty().set(new BorderPane(imageViewPane));
-        toPlay.play();
+        FXThreadUtils.runOnFXThread(() -> {
+            this.keyViewAddedNodeProperty().set(new BorderPane(imageViewPane));
+            toPlay.play();
+        });
     }
 }

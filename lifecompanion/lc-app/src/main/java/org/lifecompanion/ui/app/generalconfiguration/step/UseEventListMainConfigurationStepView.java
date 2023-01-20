@@ -24,6 +24,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
@@ -77,8 +78,9 @@ public class UseEventListMainConfigurationStepView extends BorderPane implements
     public void initUI() {
         // Top Intro
         Label labelExplainEvents = new Label(Translation.getText("general.configuration.view.step.use.event.explain"));
-        labelExplainEvents.getStyleClass().add("explain-text");
+        labelExplainEvents.getStyleClass().addAll("text-wrap-enabled", "text-font-italic", "text-fill-gray");
         labelExplainEvents.setMaxWidth(Double.MAX_VALUE);
+        labelExplainEvents.setMinHeight(90.0);
 
         // first part : IF
         Label labelEvent = FXControlUtils.createTitleLabel(Translation.getText("useevent.part.event.title"));
