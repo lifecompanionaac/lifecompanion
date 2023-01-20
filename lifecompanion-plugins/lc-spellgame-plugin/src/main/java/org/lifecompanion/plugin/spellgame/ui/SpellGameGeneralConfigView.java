@@ -19,6 +19,7 @@
 
 package org.lifecompanion.plugin.spellgame.ui;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -56,6 +57,9 @@ public class SpellGameGeneralConfigView extends BorderPane implements GeneralCon
     private Spinner<Double> spinnerWordDisplayInS;
     private ComboBox<SpellGameWordList> comboBoxWordList;
     private Button buttonEditCurrentList, buttonDeleteCurrentList, buttonAddList;
+
+//    private final BooleanProperty validateWithEnter;
+//    private final BooleanProperty enableFeedbackSound;
 
     public SpellGameGeneralConfigView() {
         initAll();

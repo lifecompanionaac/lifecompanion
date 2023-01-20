@@ -26,6 +26,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import org.controlsfx.glyphfont.FontAwesome;
+import org.lifecompanion.controller.editaction.AsyncExecutorController;
 import org.lifecompanion.controller.editmode.FileChooserType;
 import org.lifecompanion.controller.editmode.LCFileChoosers;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
@@ -36,6 +37,7 @@ import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.plugin.spellgame.SpellGamePlugin;
 import org.lifecompanion.plugin.spellgame.SpellGamePluginProperties;
+import org.lifecompanion.plugin.spellgame.controller.task.ImportWordTask;
 import org.lifecompanion.plugin.spellgame.model.SpellGameWordList;
 import org.lifecompanion.plugin.spellgame.ui.cell.SpellGameWordListListCell;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStepViewI;
@@ -43,6 +45,7 @@ import org.lifecompanion.ui.common.control.generic.OrderModifiableListView;
 import org.lifecompanion.util.javafx.DialogUtils;
 import org.lifecompanion.util.javafx.FXControlUtils;
 import org.lifecompanion.util.javafx.FXUtils;
+import org.lifecompanion.util.model.LCTask;
 import spark.utils.StringUtils;
 
 import java.io.File;
@@ -57,6 +60,7 @@ public class SpellGameWordListConfigView extends BorderPane implements GeneralCo
     private TextField fieldListName, fieldAddWord;
     private ListView<String> listViewWords;
     private Button buttonAdd, buttonRemove, buttonUp, buttonDown, buttonImportWordList;
+    // shuffle
 
     public SpellGameWordListConfigView() {
         initAll();
@@ -162,7 +166,9 @@ public class SpellGameWordListConfigView extends BorderPane implements GeneralCo
                             FileChooserType.OTHER_MISC_EXTERNAL)
                     .showOpenDialog(FXUtils.getSourceWindow(buttonImportWordList));
             if (selectedFileToImport != null) {
-                //TODO : import with async task
+                ImportWordTask importWordTask = new ImportWordTask(selectedFileToImport);
+                importWordTask.setOnSucceeded(event -> this.listViewWords.getItems().addAll(importWordTask.getValue()));
+                AsyncExecutorController.INSTANCE.addAndExecute(true, false, importWordTask);
             }
         });
     }
