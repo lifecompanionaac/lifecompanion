@@ -349,20 +349,21 @@ Most of the icons are created with the help of [SVGRepo website](https://www.svg
 
 Here are the LifeCompanion expected icons size :
 
-| TYPE												| SIZE (PX)			|
-|---------------------------------------------------|-------------------|
-|**use actions / use event**				|32x32				|
-|**add component icon (in create tab)**				|32x32				|
-|**key options indicator**				|32x32				|
+| TYPE|SIZE (PX)|EXAMPLE|
+|-|-|-|
+|**use actions / use event**				    |32x32|![Image use action/event](../lifecompanion/lc-app/src/main/resources/icons/use-actions/categories/show/icon_next_page_stack.png)|
+|**add component icon (in create tab)**	|32x32|![Image add component](../lifecompanion/lc-app/src/main/resources/icons/component/add_grid.png)|
+|**key options indicator**				      |32x32|![Image add component](../lifecompanion/lc-app/src/main/resources/icons/component/options/icon_type_variable_info.png)|
 
 
 ### Colors
 
 LifeCompanion try to respect a global graphic theme. Here are the colors used in differents components.
 
-| DESCRIPTION/COMPONENT												| COLOR (WEB)			|
-|---------------------------------------------------|-------------------|
-|**use actions/event main**				|#d2d2d2				|
-|**use actions/event constrast**				|#aeaeae				|
-|**key options indicator**				|#f44336				|
+| DESCRIPTION/COMPONENT|COLOR (WEB)|
+|-|-|-|
+|**use actions/event main**     |![#d2d2d2](https://placehold.co/15x15/d2d2d2/d2d2d2.png) `#d2d2d2`|
+|**use actions/event constrast**|![#aeaeae](https://placehold.co/15x15/aeaeae/aeaeae.png) `#aeaeae`|
+|**key options indicator**      |![#f44336](https://placehold.co/15x15/f44336/f44336.png) `#f44336`|
+
 
