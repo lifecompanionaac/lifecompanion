@@ -44,7 +44,7 @@ Be familiar with Java and JavaFX development.
 
 All the official existing plugins are stored in the **lifecompanion-plugins** folder on the repo (or will be!)
 
-- **spell game plugin** : plugin that create a game where the user should spell words
+- [**spell game plugin**](../lifecompanion-plugins/lc-spellgame-plugin/) : plugin that create a game where the user should spell words
 - **simple email plugin** : plugin that allow the user to read and send email from traditionnal email server
 - **calendar plugin** : plugin to help user to plan their days (with alarms, events and sequences)
 - **ppp plugin** : plugin to trace prediatric pain profil scale for an user
