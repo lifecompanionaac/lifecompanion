@@ -1,0 +1,44 @@
+plugins {
+    id 'java-library'
+    id 'org.openjfx.javafxplugin' version '0.0.13'
+}
+
+javafx {
+    version = '18'
+    modules = ['javafx.controls']
+    configuration = 'compileOnly'
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    compileOnly "org.lifecompanion:lc-app:$lifecompanionAppVersion"
+}
+
+version = "1.1.1-SNAPSHOT"
+
+jar {
+    duplicatesStrategy DuplicatesStrategy.WARN
+    manifest {
+        attributes(
+                "LifeCompanion-Plugin-Class": "org.lifecompanion.plugin.homeassistant.HomeAssistantPlugin",
+                "LifeCompanion-Plugin-Package-Scanning-Base": "org.lifecompanion.plugin.homeassistant",
+                "LifeCompanion-Plugin-Id": "lc-homeassistant-plugin",
+                "LifeCompanion-Plugin-Author": "CMRRF KERPAPE",
+                "LifeCompanion-Plugin-Version": project.version,
+                "LifeCompanion-Plugin-Build-Date": new Date().getTime(),
+                "LifeCompanion-Plugin-Name": "Extension HomeAssistant",
+                "LifeCompanion-Plugin-Description": "Extension pour connecter LifeCompanion à un serveur HomeAssistant",
+                "LifeCompanion-Min-App-Version": "$lifecompanionAppVersion"
+        )
+    }
+    from {
+        configurations.runtimeClasspath.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+}

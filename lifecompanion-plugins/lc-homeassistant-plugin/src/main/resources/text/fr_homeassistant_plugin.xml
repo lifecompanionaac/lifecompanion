@@ -1,0 +1,33 @@
+<texts>
+	<text key="ha.plugin.main.configuration.view.title">Domotique - Home Assistant</text>
+
+	<text key="ha.plugin.action.call.service.name">Appeler un service domotique</text>
+	<text key="ha.plugin.action.call.service.description">Permet d'appeler un service domotique sur une entité définie
+	</text>
+
+
+	<text key="ha.plugin.main.category.description">Contient les actions/événements liés à Home Assistant</text>
+	<text key="ha.plugin.main.category.name">Home Assistant</text>
+	<text key="ha.plugin.sub.category.all">Tout</text>
+
+	<text key="ha.plugin.check.connection.running">Vérification de la connexion</text>
+	<text key="ha.plugin.check.connection.ok">Connexion réussie : "{}"</text>
+	<text key="ha.plugin.check.connection.nok">Echec de la connexion : "{}"</text>
+
+	<text key="ha.plugin.task.get.entities">Récupération des éléments</text>
+
+	<text key="ha.plugin.field.entity.id">Élément à contrôler</text>
+	<text key="ha.plugin.field.service.id">Commande</text>
+	<text key="ha.plugin.field.filter.state">Filtre</text>
+	<text key="ha.plugin.field.filter.state.explain">Laisser vide pour un événement à chaque changement. Sinon mettre "on", "off", "closed", "open", etc..</text>
+
+
+	<text key="ha.plugin.event.item.state.changed.name">Valeur modifiée</text>
+	<text key="ha.plugin.event.item.state.changed.description">Se produit lorsque la valeur d'une entité change</text>
+
+	<text key="ha.plugin.field.server.url">Adresse de connexion</text>
+	<text key="ha.plugin.field.server.url.prompt">http://IP_ADDRESS:8123/api/</text>
+	<text key="ha.plugin.field.auth.token">Token d'authentification</text>
+	<text key="ha.plugin.field.auth.token.prompt">ABCDEFGH</text>
+	<text key="ha.plugin.button.test.connection">Vérifier la connexion</text>
+</texts>
