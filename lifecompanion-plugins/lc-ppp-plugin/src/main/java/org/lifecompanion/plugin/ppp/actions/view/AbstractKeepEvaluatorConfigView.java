@@ -4,11 +4,11 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import org.controlsfx.control.ToggleSwitch;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionConfigurationViewI;
 import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
 import org.lifecompanion.plugin.ppp.actions.KeepEvaluatorActionI;
+import org.lifecompanion.ui.controlsfx.control.ToggleSwitch;
 
 public abstract class AbstractKeepEvaluatorConfigView<T extends KeepEvaluatorActionI> extends VBox implements UseActionConfigurationViewI<T> {
     private ToggleSwitch keepPrevEvaluatorField;

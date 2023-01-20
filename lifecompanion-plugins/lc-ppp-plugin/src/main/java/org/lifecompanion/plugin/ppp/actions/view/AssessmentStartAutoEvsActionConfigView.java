@@ -22,11 +22,11 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import org.controlsfx.control.ToggleSwitch;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionConfigurationViewI;
 import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
 import org.lifecompanion.plugin.ppp.actions.AssessmentStartAutoEvsAction;
+import org.lifecompanion.ui.controlsfx.control.ToggleSwitch;
 
 public class AssessmentStartAutoEvsActionConfigView extends VBox implements UseActionConfigurationViewI<AssessmentStartAutoEvsAction> {
     private ToggleSwitch askPainLocalizationField;

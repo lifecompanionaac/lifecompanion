@@ -19,10 +19,10 @@
 package org.lifecompanion.plugin.ppp.actions.view;
 
 import javafx.collections.ObservableList;
-import org.controlsfx.control.ToggleSwitch;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
 import org.lifecompanion.plugin.ppp.actions.ActionStartWithEvsAction;
+import org.lifecompanion.ui.controlsfx.control.ToggleSwitch;
 
 public class ActionStartWithEvsActionConfigView extends AbstractKeepEvaluatorConfigView<ActionStartWithEvsAction> {
     private ToggleSwitch askPainLocalizationField;
