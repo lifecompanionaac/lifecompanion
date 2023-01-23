@@ -310,6 +310,8 @@ public void editCancelled(StartSpellGameAction element) {
 }
 ```
 
+As action can handle [use variable](#use-variable), the list of available variable is injected to `editStarts(...)`. You can then use them in a `UseVariableTextArea` for example by calling its `setAvailableUseVariable(...)` method. This is important to do as use action be plugged on keys but also on [use events](#use-event) that can generate their own use variables.
+
 #### Execution
 
 Action are executed on a specific Thread (not on the FX Thread) so you should be aware that you can't modify the UI directly : see [Threading part about it](#threading).
@@ -394,15 +396,60 @@ This will return a map with all the found key options per grid. Be aware that an
 
 ![LifeCompanion use event](res/use_event.png)
 
-TODO principle
+Use event in LifeCompanion allow the user to define actions after a global event is detected. Basically, this allow the user to define behavior that don't depend on key activation (like done with use actions). For example, in LifeCompanion core, event are used to "react" to key pressed, to a specific time reach, to use variable changes, etc.
+
+It can be usefull to implement use event if you want to allow the user to define a global behavior. For example, in spell game, we create events that are fired on game starts/ends. It allows the final user to "react" on them, and for example to display the correct grid on each event.
+
+Note that when you're implementing use events, **you're implementing the event generator**. The event "handling" is then handled by LifeCompanion depending of the use actions defined by users.
+
+#### Implement a use event generator
+
+To implement an use event, you should extends `BaseUseEventGeneratorImpl`. Basically, the use event is implemented only handling `modeStart(...)` and `modeStop(...)` methods that should handled pluging-in the correct hook to then generate events (refer to [lifecycle part](#use-mode-startstop)). As use event also extends `CategorizedElementI` like use action do, same attributes can be found in it to define the icon, name, description, etc.
+
+To generate events, you should call `useEventListener.fireEvent(...)` on the use event generator instance. For example, in spell game, the starts event looks like this :
+```java
+// In constructor or somewhere else
+listener = () -> {
+    if (AppModeController.INSTANCE.isUseMode()) {
+        this.useEventListener.fireEvent(this, null, null);
+    }
+};
+
+ @Override
+public void modeStart(final LCConfigurationI configuration) {
+    SpellGameController.INSTANCE.addGameStartedListener(listener);
+}
+
+@Override
+public void modeStop(final LCConfigurationI configuration) {
+    SpellGameController.INSTANCE.removeGameStartedListener(listener);
+}
+```
+
+By calling `useEventListener.fireEvent(...)`, LifeCompanion will then execute use actions associated by the configuration editor in use event main configuration view.
 
 #### Generating variables
 
-TODO
+Use events can have [use variables](#use-variable) associated when fired. This can be useful as use variable can be then used by the configuration editor in use action associated to the event. For example, in `KeyTypedKeyboardEventGenerator`, an event is fired on each typed key. An use variable containing the key typed is associated with event. Thanks to this, the user can for example associate the `SpeakTextAction` to speak the typed key.
+
+For your event to generate variable, you should first add a `UseVariableDefinitionI` to the `generatedVariables` attribute :
+```java
+// In constructor
+this.answerContentDefinition = new UseVariableDefinition("SpellGameAnswerContent",
+        "spellgame.plugin.use.variable.event.answer.given.content.var.name",
+        "spellgame.plugin.use.variable.event.answer.given.content.var.description",
+        "spellgame.plugin.use.variable.event.answer.given.content.var.example");
+this.generatedVariables.add(this.answerContentDefinition);
+```
+
+Then, on each event generation, you should inject your use variable value (using the same definition) :
+```java
+this.useEventListener.fireEvent(this, List.of(new StringUseVariable(this.answerContentDefinition, answer.input())), null);
+```
 
 #### Configuration view
 
-TODO
+Like use action, use event can be configured. For that you should implements `UseEventGeneratorConfigurationViewI`. Refers to [use action documentation on configuration views](#use-action) to understand how configuration views should be implemented.
 
 ### General configuration view
 
@@ -416,7 +463,48 @@ To implement a plugin configuration view, you have to implement `GeneralConfigur
 
 #### Handling view lifecycle
 
-TODO
+Each view implementation should take care of lifecycle to bind the configuration to the plugin properties. This can be done implementing :
+```java
+@Override
+public void bind(LCConfigurationI model) {
+}
+@Override
+public void unbind(LCConfigurationI model) {
+}
+```
+
+Each view can be added to the menu or accessed from another view. For example, in spell game plugin, the main view `SpellGameGeneralConfigView` is added to the menu so `shouldBeAddedToMainMenu()` return true. However, `SpellGameWordListConfigView` is just called by the main view so `shouldBeAddedToMainMenu()` return false. The link is made using :
+```java
+GeneralConfigurationController.INSTANCE.showStep(SpellGameWordListConfigView.STEP_ID, selectedItem);
+```
+
+If you create sub configuration view, take care about correctly implementing :
+```java
+@Override
+public String getPreviousStep() {
+    return SpellGameGeneralConfigView.STEP_ID;
+}
+@Override
+public String getMenuStepToSelect() {
+    return SpellGameGeneralConfigView.STEP_ID;
+}
+```
+
+If paramters are given to `GeneralConfigurationController.INSTANCE.showStep(...)`, you can access them using (if you have multiple `showStep(...)` calls, you should handle the different cases)
+```java
+@Override
+public void beforeShow(Object[] stepArgs) {
+    editedWordList = (SpellGameWordList) stepArgs[0];
+    fieldListName.textProperty().bindBidirectional(editedWordList.nameProperty());
+}
+```
+If you need the changes to be directly applied to the model, you can implement so the model will be changed on step change and not on "save".
+```java
+@Override
+public void afterHide() {
+    fieldListName.textProperty().unbindBidirectional(editedWordList.nameProperty());
+}
+```
 
 #### Handling view cancel/save
 
@@ -626,7 +714,7 @@ Note that use information should be saved with a unique ID that will not change 
 
 A good pratice to integrate icons in LifeCompanion is to save SVG of your icons and to only integrate the good sized icons into your app resources. Recommanded size are always based on the max. width/height : if your icon ratio is 3/4, for a 32x32 size your icon should be 24*32.
 
-Original LifeCompanion SVG icons can be found in **res/icons**
+Original LifeCompanion SVG icons can be found in [**res/icons**](../res/icons/)
 
 Most of the icons are created with the help of [SVGRepo website](https://www.svgrepo.com/)
 

@@ -41,8 +41,10 @@ public class SpellGameGameAnswerGivenEventGenerator extends BaseUseEventGenerato
         this.configIconPath = "general/answer_given.png";
         this.answerFilter = new SimpleObjectProperty<>(AnswerTypeEnum.ALL);
 
-        this.answerContentDefinition = new UseVariableDefinition("SpellGameAnswerContent", "spellgame.plugin.use.variable.event.answer.given.content.var.name",
-                "spellgame.plugin.use.variable.event.answer.given.content.var.description", "spellgame.plugin.use.variable.event.answer.given.content.var.example");
+        this.answerContentDefinition = new UseVariableDefinition("SpellGameAnswerContent",
+                "spellgame.plugin.use.variable.event.answer.given.content.var.name",
+                "spellgame.plugin.use.variable.event.answer.given.content.var.description",
+                "spellgame.plugin.use.variable.event.answer.given.content.var.example");
         this.generatedVariables.add(this.answerContentDefinition);
 
         this.variableDescriptionProperty().bind(TranslationFX.getTextBinding("spellgame.plugin.event.answer.given.variable.description",
