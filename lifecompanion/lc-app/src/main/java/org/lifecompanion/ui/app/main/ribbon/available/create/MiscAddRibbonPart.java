@@ -22,7 +22,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
-import org.controlsfx.glyphfont.FontAwesome;
+import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.controller.editmode.GeneralConfigurationController;
 import org.lifecompanion.controller.editmode.SelectionController;
 import org.lifecompanion.controller.lifecycle.AppModeController;

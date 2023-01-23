@@ -22,16 +22,17 @@ import org.jdom2.Element;
 import org.lifecompanion.model.impl.exception.LCException;
 
 /**
- * Represent a object that can be serialized with JDOM.
+ * Represent an object that can be serialized with JDOM.
  *
  * @param <T> the type of the context object given when the serialization is done
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public interface XMLSerializable<T> {
     /**
-     * Must return a XML element that represent this object in XML<br>
+     * Must return an XML element that represent this object in XML<br>
      * This step must be totally independent of the parent loading.<br>
-     * <strong>Subclass must take care of calling the {@link #serialize(Object)} method of the parent</strong>
+     * <strong>Implementers must take care of calling the {@link #serialize(Object)} method of the parent</strong><br>
+     * It should also save this element possible children by calling their own {@link #serialize(Object)} method.
      *
      * @param context the context where the object is serialized
      * @return the element that represent this object as XML
@@ -41,7 +42,8 @@ public interface XMLSerializable<T> {
     /**
      * Must load all the properties found in the given node into this object.<br>
      * This step must be totally independent of the parent loading.<br>
-     * <strong>Subclass must take care of calling the {@link #deserialize(Element, Object)} method of the parent</strong>
+     * <strong>Subclass must take care of calling the {@link #deserialize(Element, Object)} method of the parent</strong><br>
+     * It should also load this element possible children by calling their own {@link #deserialize(Element, Object)} method.
      *
      * @param node    the node where the potential element can be found
      * @param context the loading context

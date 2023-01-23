@@ -27,7 +27,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
-import org.controlsfx.glyphfont.FontAwesome;
+import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.model.api.profile.LCProfileI;
 import org.lifecompanion.ui.common.pane.specific.cell.ProfileAdvancedListCell;
 import org.lifecompanion.util.javafx.FXControlUtils;

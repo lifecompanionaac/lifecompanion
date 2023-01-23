@@ -22,7 +22,7 @@ package org.lifecompanion.ui.configurationcomponent.editmode.componentoption;
 import java.util.Arrays;
 import java.util.List;
 
-import org.controlsfx.glyphfont.FontAwesome;
+import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 
 import org.lifecompanion.controller.editaction.GridStackActions;
 import org.lifecompanion.controller.editmode.ComponentActionController;

@@ -27,7 +27,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.StageStyle;
-import org.controlsfx.control.textfield.TextFields;
+import org.lifecompanion.ui.controlsfx.control.textfield.TextFields;
 import org.fxmisc.easybind.EasyBind;
 import org.fxmisc.easybind.Subscription;
 import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;

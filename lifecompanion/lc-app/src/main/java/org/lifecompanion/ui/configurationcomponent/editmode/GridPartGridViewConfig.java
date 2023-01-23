@@ -22,7 +22,7 @@ package org.lifecompanion.ui.configurationcomponent.editmode;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.scene.control.ToggleButton;
-import org.controlsfx.glyphfont.FontAwesome;
+import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.controller.editmode.SelectionController;
 import org.lifecompanion.model.impl.configurationcomponent.GridPartGridComponent;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;

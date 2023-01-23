@@ -48,7 +48,7 @@ public class StartSpellGameAction extends SimpleUseActionImpl<UseActionTriggerCo
         this.staticDescriptionID = "spellgame.plugin.action.start.game.static.description";
         wordListId = new SimpleStringProperty();
         wordListName = new SimpleStringProperty();
-        this.configIconPath = "filler_icon.png";
+        this.configIconPath = "general/start_spellgame.png";
         this.variableDescriptionProperty().bind(TranslationFX.getTextBinding("spellgame.plugin.action.start.game.variable.description", wordListName));
     }
 

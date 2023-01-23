@@ -1,0 +1,383 @@
+<texts>
+	<!-- Variables. -->
+	<text key="ppp.plugin.variables.current_question_text.name">PDP - Texte de la question courante</text>
+	<text key="ppp.plugin.variables.current_question_text.description">Contient le texte de la question courante de
+		l'évaluation PDP ou EVS actuellement lancée.
+	</text>
+	<text key="ppp.plugin.variables.current_question_text.example">Est joyeux</text>
+	<text key="ppp.plugin.variables.current_question_index.name">PDP - Numéro de la question courante</text>
+	<text key="ppp.plugin.variables.current_question_index.description">Contient le numéro de la question courante de
+		l'évaluation PDP ou EVS actuellement lancée.
+	</text>
+	<text key="ppp.plugin.variables.current_question_index.example">3 / 20</text>
+	<text key="ppp.plugin.variables.current_question_index.value">{} / {}</text>
+	<text key="ppp.plugin.variables.latest_ppp_score.name">PDP - Score de la dernière évaluation</text>
+	<text key="ppp.plugin.variables.latest_ppp_score.description">Contient le score obtenu à la dernière évaluation PDP.
+	</text>
+	<text key="ppp.plugin.variables.latest_ppp_score.example">20</text>
+	<text key="ppp.plugin.variables.profile_base_score.name">PDP - Score de base</text>
+	<text key="ppp.plugin.variables.profile_base_score.description">Contient le score de base PDP du profil courant.
+	</text>
+	<text key="ppp.plugin.variables.profile_base_score.example">20</text>
+	<text key="ppp.plugin.variables.profile_base_score_at.name">PDP - Date du score de base</text>
+	<text key="ppp.plugin.variables.profile_base_score_at.description">Contient la date à laquelle le score de base PDP
+		du profil courant a été réalisé.
+	</text>
+	<text key="ppp.plugin.variables.profile_base_score_at.example">01/01/2021</text>
+	<text key="ppp.plugin.variables.profile_name.name">PDP - Nom du profil</text>
+	<text key="ppp.plugin.variables.profile_name.description">Contient le nom du profil courant.
+	</text>
+	<text key="ppp.plugin.variables.profile_name.example">20</text>
+	<text key="ppp.plugin.variables.current_keyboard_input.name">PDP - Sasie demandée</text>
+	<text key="ppp.plugin.variables.current_keyboard_input.description">Contient une demande de saisie textuelle pour
+		une donnée PDP, EVS ou d'action. Il peut s'agir du nom de l'évaluateur, etc.
+	</text>
+	<text key="ppp.plugin.variables.current_keyboard_input.example">Quel est votre nom complet ?</text>
+	<text key="ppp.plugin.variables.current_keyboard_input.value.actions.create">Quelle action souhaitez-vous créer ?
+	</text>
+	<text key="ppp.plugin.variables.current_keyboard_input.value.actions.comment">
+		Souhaitez-vous ajouter un commentaire sur cette action ?
+	</text>
+	<text key="ppp.plugin.variables.current_keyboard_input.value.evaluators.name">
+		Quel est votre nom complet ?
+	</text>
+	<text key="ppp.plugin.variables.current_keyboard_input.value.evaluators.localization">
+		De quelle structure faites vous partie ?
+	</text>
+	<text key="ppp.plugin.variables.current_keyboard_input.value.assessments.comment">
+		Souhaitez-vous ajouter un commentaire sur cette évaluation ?
+	</text>
+
+	<!-- Actions categories. -->
+	<text key="ppp.plugin.actions.categories.main.name">PDP</text>
+	<text key="ppp.plugin.actions.categories.main.description">Contient toutes les actions nécessaires pour réaliser
+		une configuration permettant des évaluations PDP ou EVS.
+	</text>
+	<text key="ppp.plugin.actions.categories.subs.evaluator.name">Évaluateurs</text>
+	<text key="ppp.plugin.actions.categories.subs.assessment.name">Évalutations</text>
+	<text key="ppp.plugin.actions.categories.subs.action.name">Actions</text>
+	<text key="ppp.plugin.actions.categories.subs.various.name">Divers</text>
+
+	<!-- Actions: abstract: keep evaluator action. -->
+	<text key="ppp.plugin.actions.abstract.keep_evaluator.variable_description">{} {}</text>
+	<text key="ppp.plugin.actions.abstract.keep_evaluator.variable_description.new_evaluator">Demande un nouvel
+		évaluateur.
+	</text>
+	<text key="ppp.plugin.actions.abstract.keep_evaluator.variable_description.take_prev_evaluator">Utilise le dernier
+		évaluateur choisi.
+	</text>
+	<text key="ppp.plugin.actions.abstract.keep_evaluator.fields.take_prev_evaluator.label">Ré-utiliser le dernier
+		évaluateur choisi
+	</text>
+	<!-- Actions: abstract: select choice action. -->
+	<text key="ppp.plugin.actions.abstract.select_choice.variable_description">Répond à la question par "{}".</text>
+	<text key="ppp.plugin.actions.abstract.select_choice.fields.choice.label">Choix à répondre</text>
+	<!-- Actions: assessment: start PPP. -->
+	<text key="ppp.plugin.actions.assessment.start.ppp.name">Démarrer une évalutation PDP</text>
+	<text key="ppp.plugin.actions.assessment.start.ppp.description">Démarre une évaluation PDP en amenant sur
+		la grille correspondante.
+	</text>
+	<!-- Actions: assessment: start auto EVS. -->
+	<text key="ppp.plugin.actions.assessment.start.auto_evs.name">Démarrer une auto-évalutation EVS</text>
+	<text key="ppp.plugin.actions.assessment.start.auto_evs.description">Démarre une auto-évaluation EVS en
+		amenant sur la grille correspondante.
+	</text>
+	<text key="ppp.plugin.actions.assessment.start.auto_evs.variable_description">{} {}</text>
+	<text key="ppp.plugin.actions.assessment.start.auto_evs.variable_description.ask">Demande l'emplacement de la
+		douleur.
+	</text>
+	<text key="ppp.plugin.actions.assessment.start.auto_evs.variable_description.do_not_ask">Ne demande pas
+		l'emplacement de la douleur.
+	</text>
+	<text key="ppp.plugin.actions.assessment.start.auto_evs.fields.ask_pain_localization.label">
+		Demander l'emplacement de la douleur
+	</text>
+	<!-- Actions: assessment: stop. -->
+	<text key="ppp.plugin.actions.assessment.stop.name">Arrêter l'évalutation</text>
+	<text key="ppp.plugin.actions.assessment.stop.description">Arrête l'évaluation PDP ou EVS en cours.</text>
+	<!-- Actions: assessment: select choice PPP. -->
+	<text key="ppp.plugin.actions.assessment.select_choice.ppp.name">Répondre à la question PDP</text>
+	<text key="ppp.plugin.actions.assessment.select_choice.ppp.description">Répond à la question d'une évaluation
+		PDP. Si la dernière question est atteinte, met fin à l'évaluation.
+	</text>
+	<!-- Actions: assessment: select choice EVS. -->
+	<text key="ppp.plugin.actions.assessment.select_choice.evs.name">Répondre à la question EVS</text>
+	<text key="ppp.plugin.actions.assessment.select_choice.evs.description">Répond à la question d'une évaluation
+		EVS. Met fin à l'évaluation.
+	</text>
+	<!-- Actions: assessment: select choice auto EVS. -->
+	<text key="ppp.plugin.actions.assessment.select_choice.auto_evs.name">Répondre à la question auto-EVS</text>
+	<text key="ppp.plugin.actions.assessment.select_choice.auto_evs.description">Répond à la question d'une évaluation
+		auto-EVS. Met fin à l'évaluation.
+	</text>
+	<!-- Actions: assessment: select choice auto EVS. -->
+	<text key="ppp.plugin.actions.assessment.previous_question.name">Retour à la question précédente</text>
+	<text key="ppp.plugin.actions.assessment.previous_question.description">Reviens à la question précédente d'une
+		évaluation.
+	</text>
+	<!-- Actions: assessment: select pain localization. -->
+	<text key="ppp.plugin.actions.assessment.select_pain_localization.name">Choisir l'emplacement de la douleur</text>
+	<text key="ppp.plugin.actions.assessment.select_pain_localization.description">
+		Choisit l'emplacement de la douleur fourni et termine l'évaluation.
+	</text>
+	<text key="ppp.plugin.actions.assessment.select_pain_localization.variable_description">
+		Choisit "{}" comme emplacement de la douleur.
+	</text>
+	<text key="ppp.plugin.actions.assessment.select_pain_localization.variable_description.not_given">Non précisé</text>
+	<text key="ppp.plugin.actions.assessment.select_pain_localization.fields.localization.label">
+		Emplacement de la douleur
+	</text>
+	<text key="ppp.plugin.actions.assessment.select_pain_localization.comment">Emplacement : {}</text>
+	<!-- Actions: evaluator: select evaluator for current assessment. -->
+	<text key="ppp.plugin.actions.select_evaluator.name">Choisir l'évaluateur</text>
+	<text key="ppp.plugin.actions.select_evaluator.description">Choisit un évaluateur et dirige vers la saisie pour
+		fournir son nom.
+	</text>
+	<text key="ppp.plugin.actions.select_evaluator.variable_description">Choisit "{}" comme évaluateur.</text>
+	<text key="ppp.plugin.actions.select_evaluator.fields.evaluatorType.label">Évaluateur</text>
+	<!-- Actions: actions: start. -->
+	<text key="ppp.plugin.actions.action.start.name">Démarrer une action sans EVS</text>
+	<text key="ppp.plugin.actions.action.start.description">Démarre une action sans effectuer une évaluation EVS au
+		préalable.
+	</text>
+	<!-- Actions: actions: start with EVS. -->
+	<text key="ppp.plugin.actions.action.start.evs.name">Démarrer une action avec EVS</text>
+	<text key="ppp.plugin.actions.action.start.evs.description">Démarre une action après avoir effectué une évaluation
+		EVS.
+	</text>
+	<text key="ppp.plugin.actions.action.start.evs.variable_description">{} {} {}</text>
+	<text key="ppp.plugin.actions.action.start.evs.variable_description.ask">Demande l'emplacement de la
+		douleur.
+	</text>
+	<text key="ppp.plugin.actions.action.start.evs.variable_description.do_not_ask">Ne demande pas
+		l'emplacement de la douleur.
+	</text>
+	<text key="ppp.plugin.actions.action.start.evs.fields.ask_pain_localization.label">
+		Demander l'emplacement de la douleur
+	</text>
+	<!-- Actions: actions: stop. -->
+	<text key="ppp.plugin.actions.action.stop.name">Arrêter l'action</text>
+	<text key="ppp.plugin.actions.action.stop.description">Arrête l'action en cours.</text>
+	<!-- Actions: actions: create. -->
+	<text key="ppp.plugin.actions.action.create.name">Créer une action</text>
+	<text key="ppp.plugin.actions.action.create.description">Dirige vers la saisie pour créer et sélectionner une
+		nouvelle action. L'action sera ensuite ajoutée à la liste des actions disponibles.
+	</text>
+	<!-- Actions: actions: select. -->
+	<text key="ppp.plugin.actions.action.select.name">Sélectionner une action</text>
+	<text key="ppp.plugin.actions.action.select.description">Sélection l'action fournie.</text>
+	<!-- Actions: actions: page previous. -->
+	<text key="ppp.plugin.actions.action.page.previous.name">Page précédente</text>
+	<text key="ppp.plugin.actions.action.page.previous.description">Modifie la liste des actions en passant à la page
+		précédente.
+	</text>
+	<!-- Actions: actions: page next. -->
+	<text key="ppp.plugin.actions.action.page.next.name">Page suivante</text>
+	<text key="ppp.plugin.actions.action.page.next.description">Modifie la liste des actions en passant à la page
+		suivante.
+	</text>
+	<!-- Actions: various: validate keyboard entry. -->
+	<text key="ppp.plugin.actions.keyboard_validate_entry.name">Valider la saisie</text>
+	<text key="ppp.plugin.actions.keyboard_validate_entry.description">Valide la saisie contenu dans l'éditeur pour une
+		saisie d'évaluateur ou de création d'action.
+	</text>
+	<!-- Actions: various: cancel keyboard entry. -->
+	<text key="ppp.plugin.actions.keyboard_cancel_entry.name">Annuler la saisie</text>
+	<text key="ppp.plugin.actions.keyboard_cancel_entry.description">Annule la saisie et revient à l'étape précédente.
+	</text>
+	<!-- Actions: various: show records stats. -->
+	<text key="ppp.plugin.actions.show_records.name">Ouvrir les statistiques</text>
+	<text key="ppp.plugin.actions.show_records.description">Ouvre les statistiques dans une nouvelle fenêtre.</text>
+
+	<!-- Events categories. -->
+	<text key="ppp.plugin.events.categories.main.name">PDP</text>
+	<text key="ppp.plugin.events.categories.main.description">Contient tous les événements nécessaires pour réaliser
+		une configuration permettant des évaluations PDP ou EVS.
+	</text>
+	<text key="ppp.plugin.events.categories.subs.assessment.name">Évalutations</text>
+	<text key="ppp.plugin.events.categories.subs.action.name">Actions</text>
+
+	<!-- Events: assessment: end. -->
+	<text key="ppp.plugin.events.assessments.end.name">Fin d'une évaluation</text>
+	<text key="ppp.plugin.events.assessments.end.description">Événement généré à chaque fois qu'une évaluation est
+		terminée.
+	</text>
+	<text key="ppp.plugin.events.assessments.end.variable_description">Événement généré à chaque fois qu'une évaluation
+		est terminée et respecte la condition suivante : {}.
+	</text>
+	<text key="ppp.plugin.events.assessments.end.fields.assessment_type">Type d'évaluation</text>
+	<text key="ppp.plugin.events.assessments.end.fields.assessment_type.all">Tous types d'évaluations</text>
+	<text key="ppp.plugin.events.assessments.end.fields.assessment_type.specific">Uniquement {}</text>
+	<text key="ppp.plugin.events.actions.end.name">Fin d'une action</text>
+	<text key="ppp.plugin.events.actions.end.description">Événement généré à chaque fois qu'une évaluation est
+		terminée.
+	</text>
+
+	<!-- Key options: action cell. -->
+	<text key="ppp.plugin.keyoption.action.cell.name">PDP - Sélection d'une action</text>
+	<text key="ppp.plugin.keyoption.action.cell.default_text">Action</text>
+
+	<!-- Views: commons. -->
+	<text key="ppp.plugin.view.commons.files.extension">Fichier de données PDP</text>
+	<text key="ppp.plugin.view.commons.pdf.extension">Fichier PDF</text>
+
+	<!-- Views: config. -->
+	<text key="ppp.plugin.view.config.title">Profil douleur</text>
+	<text key="ppp.plugin.view.config.general.title">Configuration</text>
+	<text key="ppp.plugin.view.config.general.fields.user_id.label">Identifiant de l'utilisateur</text>
+	<text key="ppp.plugin.view.config.general.fields.base_score.label">Score de base</text>
+	<text key="ppp.plugin.view.config.general.fields.base_score_at.label">Date du score de base</text>
+	<text key="ppp.plugin.view.config.general.fields.actions.label">Nettoyer les actions disponibles</text>
+	<text key="ppp.plugin.view.config.actions.title">Actions</text>
+	<text key="ppp.plugin.view.config.actions.add.placeholder">Nouvelle action (Entrée pour valider)</text>
+	<text key="ppp.plugin.view.config.actions.add.name">Ajouter l'action</text>
+	<text key="ppp.plugin.view.config.actions.move_up.name">Remonter l'action</text>
+	<text key="ppp.plugin.view.config.actions.move_down.name">Descendre l'action</text>
+	<text key="ppp.plugin.view.config.actions.remove.name">Supprimer l'action</text>
+	<text key="ppp.plugin.view.config.records.title">Données et statistiques</text>
+	<text key="ppp.plugin.view.config.records.actions.show_records.name">Afficher les statistiques</text>
+	<text key="ppp.plugin.view.config.records.actions.export_records.name">Exporter les données</text>
+	<text key="ppp.plugin.view.config.records.actions.export_records.chooser.title">Exporter les données</text>
+
+	<!-- Views: records. -->
+	<text key="ppp.plugin.view.records.period.data.label.from_config">Données du profil : {}</text>
+	<text key="ppp.plugin.view.records.period.data.label.from_import">Données du profil : {} (à partir de {})</text>
+	<text key="ppp.plugin.view.records.period.data.import.name">Importer</text>
+	<text key="ppp.plugin.view.records.period.data.import.chooser.title">Importer des données</text>
+	<text key="ppp.plugin.view.records.period.data.export.name">Exporter</text>
+	<text key="ppp.plugin.view.records.period.data.export.chooser.title">Exporter les données</text>
+	<text key="ppp.plugin.view.records.period.data.pdf.name">Exporter en PDF</text>
+	<text key="ppp.plugin.view.records.period.data.pdf.chooser.title">Exporter un fichier PDF</text>
+	<text key="ppp.plugin.view.records.period.data.remove.name">Retirer les données importées</text>
+	<text key="ppp.plugin.view.records.period.previous.name">Période précédente</text>
+	<text key="ppp.plugin.view.records.period.next.name">Période suivante</text>
+	<text key="ppp.plugin.view.records.period_type.day.name">Journée</text>
+	<text key="ppp.plugin.view.records.period_type.day.title">{}</text>
+	<text key="ppp.plugin.view.records.period_type.week.name">Semaine</text>
+	<text key="ppp.plugin.view.records.period_type.week.title">Semaine du {} au {}</text>
+	<text key="ppp.plugin.view.records.period_type.month.name">Mois</text>
+	<text key="ppp.plugin.view.records.period_type.month.title">Du {} au {}</text>
+	<text key="ppp.plugin.view.records.details.previous.name">Précédent</text>
+	<text key="ppp.plugin.view.records.details.next.name">Suivant</text>
+	<text key="ppp.plugin.view.records.details.delete.name">Supprimer</text>
+	<text key="ppp.plugin.view.records.details.delete.confirmDialog.header">Supprimer cette donnée</text>
+	<text key="ppp.plugin.view.records.details.delete.confirmDialog.content">Êtes-vous sûr de vouloir supprimer cette
+		donnée ?
+	</text>
+	<text key="ppp.plugin.view.records.details.day_view.name">Afficher la journée</text>
+	<text key="ppp.plugin.view.records.details.no_data.title">Aucune donnée sélectionnée</text>
+	<text key="ppp.plugin.view.records.details.no_data.description">Cliquez sur une donnée pour afficher plus de
+		détails.
+	</text>
+	<text key="ppp.plugin.view.records.details.data.date">Date</text>
+	<text key="ppp.plugin.view.records.details.data.evaluator">Évaluateur</text>
+	<text key="ppp.plugin.view.records.details.data.comment">Commentaire</text>
+	<text key="ppp.plugin.view.records.details.data.auto_assessment">Auto-évaluation</text>
+	<text key="ppp.plugin.view.records.details.actions.single.title">Action</text>
+	<text key="ppp.plugin.view.records.details.actions.multiple.title">Liste des actions</text>
+	<text key="ppp.plugin.view.records.details.actions.single.details">Action</text>
+	<text key="ppp.plugin.view.records.details.actions.multiple.details">{} actions</text>
+	<text key="ppp.plugin.view.records.details.assessments.ppp.single.title">PDP</text>
+	<text key="ppp.plugin.view.records.details.assessments.ppp.multiple.title">Moyenne des PDP</text>
+	<text key="ppp.plugin.view.records.details.assessments.evs.single.title">EVS</text>
+	<text key="ppp.plugin.view.records.details.assessments.evs.multiple.title">Moyenne des EVS</text>
+	<text key="ppp.plugin.view.records.details.assessments.auto_evs.single.title">Auto-EVS</text>
+	<text key="ppp.plugin.view.records.details.assessments.auto_evs.multiple.title">Moyenne des auto-EVS</text>
+	<text key="ppp.plugin.view.records.details.assessments.single.details">Score</text>
+	<text key="ppp.plugin.view.records.details.assessments.multiple.details">Score moyen ({} évaluations)</text>
+	<text key="ppp.plugin.view.records.chart.title">Score et actions sur la période</text>
+	<text key="ppp.plugin.view.records.chart.axes.score.ppp.label">Score PDP</text>
+	<text key="ppp.plugin.view.records.chart.axes.score.evs.label">Score EVS</text>
+	<text key="ppp.plugin.view.records.chart.series.score.name">Score de base</text>
+	<text key="ppp.plugin.view.records.chart.series.actions.name">Actions</text>
+	<text key="ppp.plugin.view.records.chart.series.assessments.ppp.name">Évaluations PDP</text>
+	<text key="ppp.plugin.view.records.chart.series.assessments.evs.name">EVS</text>
+	<text key="ppp.plugin.view.records.chart.series.assessments.auto_evs.name">Auto-EVS</text>
+	<text key="ppp.plugin.view.records.chart.series.groups.hetero.name">Hétéro évaluations</text>
+	<text key="ppp.plugin.view.records.chart.series.groups.auto.name">Auto évaluations</text>
+
+	<!-- Tasks. -->
+	<text key="ppp.plugin.task.data.export.title">PDP - Export des données</text>
+	<text key="ppp.plugin.task.data.import.title">PDP - Import des données</text>
+	<text key="ppp.plugin.task.data.load.title">PDP - Chargement des données</text>
+	<text key="ppp.plugin.task.profile.load.directory.title">PDP - Chargement du profil</text>
+	<text key="ppp.plugin.task.profile.load.config.title">PDP - Chargement du profil</text>
+	<text key="ppp.plugin.task.profile.save.title">PDP - Sauvegarde du profil</text>
+	<text key="ppp.plugin.task.pdf.export.title">PDP - Création d'un PDF</text>
+
+	<!-- Data model: evaluator types. -->
+	<text key="ppp.plugin.model.evaluators.types.text.professional">Professionnel</text>
+	<text key="ppp.plugin.model.evaluators.types.text.family">Famille</text>
+	<text key="ppp.plugin.model.evaluators.types.text.other">Autre</text>
+	<!-- Data model: evaluators. -->
+	<text key="ppp.plugin.model.evaluators.name">{} ({})</text>
+	<text key="ppp.plugin.model.evaluators.name_with_localization">{} - {}</text>
+	<!-- Data model: assessment types. -->
+	<text key="ppp.plugin.model.assessments.types.text.ppp">PDP</text>
+	<text key="ppp.plugin.model.assessments.types.text.evs">EVS</text>
+	<text key="ppp.plugin.model.assessments.types.text.auto_evs">Auto-EVS</text>
+	<!-- Data model: PPP choices. -->
+	<text key="ppp.plugin.model.ppp.choices.text.not_at_all">Pas du tout</text>
+	<text key="ppp.plugin.model.ppp.choices.text.a_little">Un peu</text>
+	<text key="ppp.plugin.model.ppp.choices.text.quite_a_lot">Beaucoup</text>
+	<text key="ppp.plugin.model.ppp.choices.text.a_great_deal">Tout à fait</text>
+	<!-- Data model: PPP questions. -->
+	<text key="ppp.plugin.model.ppp.questions.text.cheerful">Est joyeux</text>
+	<text key="ppp.plugin.model.ppp.questions.text.sociable">Est sociable ou communique</text>
+	<text key="ppp.plugin.model.ppp.questions.text.depressed">Semble en retrait ou déprimé</text>
+	<text key="ppp.plugin.model.ppp.questions.text.cried">Pleure, gémit, grogne, crie ou hurle</text>
+	<text key="ppp.plugin.model.ppp.questions.text.hard_to_console">Est difficile à consoler ou réconforter</text>
+	<text key="ppp.plugin.model.ppp.questions.text.self_harmed">Se mutile (se mord ou se cogne la tête...)</text>
+	<text key="ppp.plugin.model.ppp.questions.text.reluctant">Rechigne à manger/est difficile à nourrir</text>
+	<text key="ppp.plugin.model.ppp.questions.text.disturbed_sleep">A un sommeil perturbé</text>
+	<text key="ppp.plugin.model.ppp.questions.text.grimaced">Grimaces, visage crispé, yeux plissés</text>
+	<text key="ppp.plugin.model.ppp.questions.text.worried">Front plissé, soucils foncés, air inquiet</text>
+	<text key="ppp.plugin.model.ppp.questions.text.frightened">Semble apeuré (yeux grands ouverts)</text>
+	<text key="ppp.plugin.model.ppp.questions.text.ground_teeth">Grince les dents ou fait des mouvements de
+		bouche
+	</text>
+	<text key="ppp.plugin.model.ppp.questions.text.restless">Agité, ne tient pas en place</text>
+	<text key="ppp.plugin.model.ppp.questions.text.tensed">Tendu, raide ou spastique</text>
+	<text key="ppp.plugin.model.ppp.questions.text.flexed_inwards">Se recroqueville ou ramène ses jambes sur son
+		thorax
+	</text>
+	<text key="ppp.plugin.model.ppp.questions.text.tended_to_touch">Cherche à toucher ou frotter une zone
+		particulière
+	</text>
+	<text key="ppp.plugin.model.ppp.questions.text.resisted">S'oppose à la mobilisation</text>
+	<text key="ppp.plugin.model.ppp.questions.text.pulled_away">Se rétracte ou proteste quand on le touche</text>
+	<text key="ppp.plugin.model.ppp.questions.text.twisted">Se tortille, jette sa tête en arrière, se contorsionne
+		ou se cabre
+	</text>
+	<text key="ppp.plugin.model.ppp.questions.text.involuntary_movements">A des mouvements involontaires ou
+		stéréotypés, sursaute, tressaille, convulse
+	</text>
+	<!-- Data model: EVS choices. -->
+	<text key="ppp.plugin.model.evs.questions.text.intensity">Intensité de la douleur</text>
+	<!-- Data model: EVS questions. -->
+	<text key="ppp.plugin.model.evs.choices.text.absent">Douleur absente</text>
+	<text key="ppp.plugin.model.evs.choices.text.low">Douleur faible</text>
+	<text key="ppp.plugin.model.evs.choices.text.moderate">Douleur modérée</text>
+	<text key="ppp.plugin.model.evs.choices.text.intense">Douleur intense</text>
+	<text key="ppp.plugin.model.evs.choices.text.insupportable">Douleur insupportable</text>
+	<!-- Notifications -->
+	<text key="ppp.plugin.record.save.info.notification">Élément sauvegardé</text>
+
+	<!-- PDF export -->
+	<text key="ppp.plugin.pdf.dialog.description">Sélectionnez les dates pour générer le document.</text>
+	<text key="ppp.plugin.pdf.dialog.ranges.currentWeek">Semaine courante</text>
+	<text key="ppp.plugin.pdf.dialog.ranges.lastWeek">Semaine dernière</text>
+	<text key="ppp.plugin.pdf.dialog.ranges.last30Days">30 derniers jours</text>
+	<text key="ppp.plugin.pdf.dialog.from">Du</text>
+	<text key="ppp.plugin.pdf.dialog.to">Au</text>
+	<text key="ppp.plugin.pdf.dialog.error">Merci de sélectionner des dates correctes.</text>
+	<text key="ppp.plugin.pdf.file.title">Suivi PDP du {} au {} pour "{}"</text>
+	<text key="ppp.plugin.pdf.header.title.summary">Résumé du {} au {} pour "{}"</text>
+	<text key="ppp.plugin.pdf.header.title.day">Journée du {} pour "{}"</text>
+	<text key="ppp.plugin.pdf.data.title">Liste des données</text>
+	<text key="ppp.plugin.pdf.data.no_data">Aucune donnée pour cette journée</text>
+	<text key="ppp.plugin.pdf.data.date_and_type">{} [{}]</text>
+	<text key="ppp.plugin.pdf.data.score_and_evaluator">{} par "{}"</text>
+	<text key="ppp.plugin.pdf.footer.title">{} - {}</text>
+	<text key="ppp.plugin.pdf.footer.subtitle">{} - v{} (PDP v{}) - {}</text>
+</texts>

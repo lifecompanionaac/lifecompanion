@@ -20,12 +20,15 @@
 package org.lifecompanion.plugin.spellgame.ui;
 
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
-import org.controlsfx.glyphfont.FontAwesome;
+import org.lifecompanion.ui.controlsfx.control.ToggleSwitch;
+import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
+import org.lifecompanion.controller.editaction.AsyncExecutorController;
 import org.lifecompanion.controller.editmode.FileChooserType;
 import org.lifecompanion.controller.editmode.LCFileChoosers;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
@@ -36,6 +39,7 @@ import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.plugin.spellgame.SpellGamePlugin;
 import org.lifecompanion.plugin.spellgame.SpellGamePluginProperties;
+import org.lifecompanion.plugin.spellgame.controller.task.ImportWordTask;
 import org.lifecompanion.plugin.spellgame.model.SpellGameWordList;
 import org.lifecompanion.plugin.spellgame.ui.cell.SpellGameWordListListCell;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStepViewI;
@@ -43,6 +47,7 @@ import org.lifecompanion.ui.common.control.generic.OrderModifiableListView;
 import org.lifecompanion.util.javafx.DialogUtils;
 import org.lifecompanion.util.javafx.FXControlUtils;
 import org.lifecompanion.util.javafx.FXUtils;
+import org.lifecompanion.util.model.LCTask;
 import spark.utils.StringUtils;
 
 import java.io.File;
@@ -57,6 +62,7 @@ public class SpellGameWordListConfigView extends BorderPane implements GeneralCo
     private TextField fieldListName, fieldAddWord;
     private ListView<String> listViewWords;
     private Button buttonAdd, buttonRemove, buttonUp, buttonDown, buttonImportWordList;
+    private ToggleSwitch toggleSwitchShuffleWords;
 
     public SpellGameWordListConfigView() {
         initAll();
@@ -95,14 +101,24 @@ public class SpellGameWordListConfigView extends BorderPane implements GeneralCo
     @Override
     public void initUI() {
         fieldListName = new TextField();
-        HBox.setHgrow(fieldListName, Priority.ALWAYS);
-        fieldListName.setMaxWidth(Double.MAX_VALUE);
         Label labelListName = new Label(Translation.getText("spellgame.plugin.config.field.list.name"));
-        HBox.setHgrow(labelListName, Priority.ALWAYS);
+        GridPane.setHgrow(labelListName, Priority.ALWAYS);
         labelListName.setMaxWidth(Double.MAX_VALUE);
-        HBox boxListName = new HBox(5.0, labelListName, fieldListName);
-        boxListName.setAlignment(Pos.CENTER);
-        this.setTop(boxListName);
+
+        toggleSwitchShuffleWords = FXControlUtils.createToggleSwitch("spellgame.plugin.config.view.field.shuffle.words", "spellgame.plugin.config.view.field.shuffle.words.tooltip");
+
+        GridPane gridPaneTop = new GridPane();
+        gridPaneTop.setHgap(GeneralConfigurationStepViewI.GRID_H_GAP);
+        gridPaneTop.setVgap(GeneralConfigurationStepViewI.GRID_V_GAP);
+        int gridRowIndex = 0;
+
+        gridPaneTop.add(labelListName, 0, gridRowIndex);
+        gridPaneTop.add(fieldListName, 1, gridRowIndex++);
+        gridPaneTop.add(toggleSwitchShuffleWords, 0, gridRowIndex++, 2, 1);
+        gridPaneTop.add(new Separator(Orientation.HORIZONTAL), 0, gridRowIndex++, 2, 1);
+
+        BorderPane.setMargin(gridPaneTop, new Insets(0, 0, 5, 0));
+        this.setTop(gridPaneTop);
 
         // Word list
         listViewWords = new ListView<>();
@@ -162,7 +178,9 @@ public class SpellGameWordListConfigView extends BorderPane implements GeneralCo
                             FileChooserType.OTHER_MISC_EXTERNAL)
                     .showOpenDialog(FXUtils.getSourceWindow(buttonImportWordList));
             if (selectedFileToImport != null) {
-                //TODO : import with async task
+                ImportWordTask importWordTask = new ImportWordTask(selectedFileToImport);
+                importWordTask.setOnSucceeded(event -> this.listViewWords.getItems().addAll(importWordTask.getValue()));
+                AsyncExecutorController.INSTANCE.addAndExecute(true, false, importWordTask);
             }
         });
     }
@@ -200,11 +218,13 @@ public class SpellGameWordListConfigView extends BorderPane implements GeneralCo
         editedWordList = (SpellGameWordList) stepArgs[0];
         fieldListName.textProperty().bindBidirectional(editedWordList.nameProperty());
         this.listViewWords.setItems(editedWordList.getWords());
+        toggleSwitchShuffleWords.selectedProperty().bindBidirectional(editedWordList.shuffleWordsProperty());
     }
 
     @Override
     public void afterHide() {
         fieldListName.textProperty().unbindBidirectional(editedWordList.nameProperty());
+        toggleSwitchShuffleWords.selectedProperty().unbindBidirectional(editedWordList.shuffleWordsProperty());
         this.listViewWords.setItems(null);
     }
 

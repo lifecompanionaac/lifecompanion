@@ -23,7 +23,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Spinner;
 import javafx.scene.paint.Color;
-import org.controlsfx.control.ToggleSwitch;
+import org.lifecompanion.ui.controlsfx.control.ToggleSwitch;
 import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
 import org.lifecompanion.model.api.style.KeyCompStyleI;
 import org.lifecompanion.model.api.style.TextPosition;

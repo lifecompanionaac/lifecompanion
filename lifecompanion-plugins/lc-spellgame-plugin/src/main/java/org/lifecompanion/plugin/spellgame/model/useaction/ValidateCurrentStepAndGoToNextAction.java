@@ -36,7 +36,7 @@ public class ValidateCurrentStepAndGoToNextAction extends SimpleUseActionImpl<Us
         this.parameterizableAction = false;
         this.nameID = "spellgame.plugin.action.validate.step.and.go.next.in.game.name";
         this.staticDescriptionID = "spellgame.plugin.action.validate.step.and.go.next.in.game.description";
-        this.configIconPath = "filler_icon.png";
+        this.configIconPath = "current/validate_answer.png";
         this.variableDescriptionProperty().set(this.getStaticDescription());
     }
 

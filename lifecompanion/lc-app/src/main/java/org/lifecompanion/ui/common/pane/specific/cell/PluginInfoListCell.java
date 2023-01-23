@@ -24,7 +24,7 @@ import javafx.beans.binding.DoubleBinding;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
-import org.controlsfx.glyphfont.FontAwesome;
+import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.model.impl.plugin.PluginInfo;
 import org.lifecompanion.controller.editaction.PluginActions;

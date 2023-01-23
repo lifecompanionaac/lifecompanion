@@ -30,7 +30,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import org.controlsfx.glyphfont.FontAwesome;
+import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.model.impl.notification.LCNotification;

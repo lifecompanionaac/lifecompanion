@@ -1,0 +1,92 @@
+<texts>
+	<text key="calendar.plugin.main.config.view.title">Emploi du temps</text>
+	<text key="calendar.plugin.leisure.config.view.title">Activités</text>
+	<text key="calendar.plugin.week.config.view.title">Semaine en cours</text>
+
+	<text key="calendar.plugin.key.option.calendar.event.list">Liste d'événements</text>
+	<text key="calendar.plugin.key.option.calendar.event.list.default.text">Texte de l'événement</text>
+	<text key="calendar.plugin.key.option.calendar.leisure.list">Liste d'activités</text>
+	<text key="calendar.plugin.key.option.calendar.leisure.list.default.text">Texte de l'activité</text>
+
+	<text key="calendar.plugin.config.view.main.title.content">Contenu de l'emploi du temps</text>
+	<text key="calendar.plugin.config.view.main.button.current.week">Modifier et compléter la semaine en cours</text>
+	<text key="calendar.plugin.config.view.main.button.leisure">Ajouter, modifier ou supprimer des activités</text>
+	<text key="calendar.plugin.config.view.main.title.config">Paramètres généraux</text>
+	<text key="calendar.plugin.config.view.main.button.print">Imprimer le calendrier</text>
+
+	<text key="calendar.plugin.field.repeat.alarm.interval.duration">Intervalle de répétition des alarmes</text>
+	<text key="calendar.plugin.field.max.repeat.alarm.duration">Durée maximum pour faire sonner les alarmes</text>
+	<text key="calendar.plugin.field.max.repeat.alarm.duration.explain">Une alarme se répètera durant la durée sélectionnée si elle n'est pas désactivée.
+	Elle s'arrêtera ensuite de sonner mais l'événement restera visible et possible à activer.</text>
+
+	<text key="calendar.plugin.field.key.option.leisure.for.main.current.selection">Affiche l'activité sélectionnée</text>
+
+	<text key="calendar.plugin.field.key.option.event.for.running">Affiche l'événement en cours</text>
+	<text key="calendar.plugin.field.key.option.event.for.current">Affiche l'événement de référence</text>
+
+	<text key="calendar.plugin.field.text.on.generic">Dire avec la synthèse</text>
+
+	<text key="calendar.plugin.field.current.day.label.none">Aucun jour sélectionné</text>
+	<text key="calendar.plugin.field.current.day.label.edit">Événements du {}</text>
+
+	<text key="calendar.plugin.button.add.event.on.day">Ajouter un événement</text>
+	<text key="calendar.plugin.button.add.leisure">Ajouter une activité</text>
+
+	<text key="calendar.plugin.day.of.week.monday">Lundi</text>
+	<text key="calendar.plugin.day.of.week.tuesday">Mardi</text>
+	<text key="calendar.plugin.day.of.week.wednesday">Mercredi</text>
+	<text key="calendar.plugin.day.of.week.thursday">Jeudi</text>
+	<text key="calendar.plugin.day.of.week.friday">Vendredi</text>
+	<text key="calendar.plugin.day.of.week.saturday">Samedi</text>
+	<text key="calendar.plugin.day.of.week.sunday">Dimanche</text>
+
+	<text key="calendar.plugin.field.automatic.item">Timer/durée min.</text>
+	<text key="calendar.plugin.field.at.fixed.time">Heure fixe/alarme</text>
+	<text key="calendar.plugin.field.link.sequence">Lier une séquence</text>
+	<text key="calendar.plugin.field.part.at.fixed.time">Étape à heure fixe/avec alarme</text>
+	<text key="calendar.plugin.field.part.on.start">Au démarrage de l'étape</text>
+	<text key="calendar.plugin.field.part.on.end">En fin d'étape</text>
+	<text key="calendar.plugin.field.leisure.selection">Choix d'activité</text>
+	<text key="calendar.plugin.field.leisure.speech.text">Prononciation de l'activité</text>
+	<text key="calendar.plugin.field.leisure.selection">Lier à la grille de choix d'activité</text>
+	<text key="calendar.plugin.autostart.event.when.previous.finished">Démarrer cet événement à la fin du précédent</text>
+	<text key="calendar.plugin.field.part.linked.external">Lier cet événement</text>
+
+	<text key="calendar.plugin.field.sound.alarm">Alarme avec sonnerie</text>
+	<text key="calendar.plugin.field.recorded.sound.on.start">Jouer un son enregistré</text>
+	<text key="calendar.plugin.field.recorded.sound.on.end">Jouer un son enregistré</text>
+	<text key="calendar.plugin.field.recorded.sound.on.leisure.selection">Jouer un son enregistré</text>
+
+	<text key="calendar.plugin.alarm1.name">Reveil - beep rapide</text>
+	<text key="calendar.plugin.alarm2.name">Montre - beep rapide</text>
+	<text key="calendar.plugin.alarm3.name">Cloche légère</text>
+
+	<text key="calendar.plugin.calendar.action.main.category.name">Calendrier</text>
+	<text key="calendar.plugin.calendar.action.main.category.description">Contient toutes les actions liées à l'extension calendrier : afficher et naviguer dans les éléments, en sélectionner, le terminer, etc.</text>
+
+	<text key="calendar.plugin.calendar.action.sub.category.event">Événements</text>
+	<text key="calendar.plugin.calendar.action.sub.category.leisure">Activités</text>
+
+	<text key="calendar.plugin.action.catch.up.calendar.event.name">Rattraper le calendrier</text>
+	<text key="calendar.plugin.action.catch.up.calendar.event.description">Permet grâce à un appui répété (3 fois en moins d'une seconde) de rattraper manuellement l'avancement du calendrier pour accompagner un utilisateur</text>
+
+	<text key="calendar.plugin.action.finish.calendar.event.name">Terminer un événement</text>
+	<text key="calendar.plugin.action.finish.calendar.event.description">Termine l'événement en cours (si cela est possible). Si le prochain événement doit être démarré automatique, il se lance ensuite.</text>
+
+	<text key="calendar.plugin.action.previous.preview.calendar.event.name">Événements précédents</text>
+	<text key="calendar.plugin.action.previous.preview.calendar.event.description">Montre les événements précédents dans la liste d'événements</text>
+
+	<text key="calendar.plugin.action.next.preview.calendar.event.name">Événements suivants</text>
+	<text key="calendar.plugin.action.next.preview.calendar.event.description">Montre les événements suivants dans la liste d'événements</text>
+
+	<text key="calendar.plugin.action.select.current.calendar.event.name">Arrêter l'alarme</text>
+	<text key="calendar.plugin.action.select.current.calendar.event.description">Permet d'arrêter l'alarme sur l'événement en cours si celle-ci est lancée. L'événement démarre alors.</text>
+
+	<text key="calendar.plugin.action.select.calendar.leisure.name">Choisir une activité</text>
+	<text key="calendar.plugin.action.select.calendar.leisure.description">Sélectionne l'activité associée à cette case comme activité courante</text>
+
+	<text key="calendar.plugin.action.update.calendar.to.today.name">Mettre à jour le calendrier</text>
+	<text key="calendar.plugin.action.update.calendar.to.today.description">Met à jour le calendrier pour qu'il affiche le jour courant. Prépare aussi le lancement des alertes à venir pour le jour courant.</text>
+
+	<text key="calendar.export.task.name">Export du calendrier</text>
+</texts>

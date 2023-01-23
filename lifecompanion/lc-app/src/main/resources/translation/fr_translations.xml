@@ -1315,6 +1315,7 @@
   <text key="error.handling.task.failed">Problème inattendu lors de : "{}"</text>
   <text key="exception.dialog.generic.error.header">Une erreur s'est produite</text>
   <text key="notification.error.details.action">Détails</text>
+  <text key="exception.dialog.stacktrace.label">Détail de l'erreur</text>
   <text key="unknown.error.on.fx.thread.message">Une erreur inattendue s'est produite dans
 		LifeCompanion, nous en sommes désolés.\n Merci de relancer LifeCompanion.</text>
   <text key="unknown.error.on.fx.thread.title">Une erreur inattendue s'est produite...</text>

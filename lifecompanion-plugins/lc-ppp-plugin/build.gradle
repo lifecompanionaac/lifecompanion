@@ -1,0 +1,44 @@
+plugins {
+    id 'java-library'
+    id 'org.openjfx.javafxplugin' version '0.0.13'
+}
+
+javafx {
+    version = '18'
+    modules = ['javafx.controls', 'javafx.swing']
+    configuration = 'compileOnly'
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+}
+
+version = "1.3.2"
+
+dependencies {
+    compileOnly "org.lifecompanion:lc-app:$lifecompanionAppVersion"
+}
+
+jar {
+    duplicatesStrategy DuplicatesStrategy.WARN
+    manifest {
+        attributes(
+                "LifeCompanion-Plugin-Class": "org.lifecompanion.plugin.ppp.PediatricPainProfilePlugin",
+                "LifeCompanion-Plugin-Package-Scanning-Base": "org.lifecompanion.plugin.ppp",
+                "LifeCompanion-Plugin-Id": "lc-ppp-plugin",
+                "LifeCompanion-Plugin-Author": "CMRRF KERPAPE",
+                "LifeCompanion-Plugin-Version": project.version,
+                "LifeCompanion-Plugin-Build-Date": new Date().getTime(),
+                "LifeCompanion-Plugin-Name": "Profil Douleur Pédiatrique",
+                "LifeCompanion-Plugin-Description": "Suivi la douleur via la PDP ou l'auto-évaluation via une EVS dans le cadre de Structures 3.0",
+                "LifeCompanion-Min-App-Version": "$lifecompanionAppVersion"
+        )
+    }
+    from {
+        configurations.runtimeClasspath.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+}

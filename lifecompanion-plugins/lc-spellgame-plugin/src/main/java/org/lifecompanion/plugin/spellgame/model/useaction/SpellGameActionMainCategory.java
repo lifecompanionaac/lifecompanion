@@ -27,7 +27,7 @@ public enum SpellGameActionMainCategory implements UseActionMainCategoryI {
 
     @Override
     public String getConfigIconPath() {
-        return "filler_icon.png";
+        return "use-actions/spellgame.png";
     }
 
     @Override

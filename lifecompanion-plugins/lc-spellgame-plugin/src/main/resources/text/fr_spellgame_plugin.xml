@@ -24,6 +24,9 @@
 
     <!-- MODEL -->
     <text key="spellgame.plugin.default.list.name">Nouvelle liste</text>
+    <text key="spellgame.plugin.answer.type.all">Toutes les réponses</text>
+    <text key="spellgame.plugin.answer.type.good">Bonnes réponses uniquement</text>
+    <text key="spellgame.plugin.answer.type.bad">Mauvaises réponses uniquement</text>
 
     <!-- VARIABLES -->
     <text key="spellgame.plugin.use.variable.user.score.name">Score de l'utilisateur</text>
@@ -77,10 +80,7 @@
 
     <!-- TASK -->
     <text key="spellgame.plugin.task.generate.report.title">Génération des résultats</text>
-
-    <text key="spellgame.plugin.answer.type.all">Toutes les réponses</text>
-    <text key="spellgame.plugin.answer.type.good">Bonnes réponses uniquement</text>
-    <text key="spellgame.plugin.answer.type.bad">Mauvaises réponses uniquement</text>
+    <text key="spellgame.plugin.task.import.word.title">Import de mots</text>
 
     <!-- UI -->
     <text key="spellgame.plugin.config.view.general.title">Jeu "Ecris le mot"</text>
@@ -98,5 +98,11 @@
     <text key="spellgame.plugin.config.import.list.format">Fichier texte (UTF-8)</text>
     <text key="spellgame.plugin.config.field.word.list.to.start">Démarrer la partie depuis la liste</text>
     <text key="spellgame.plugin.config.field.event.answer.given.answer.filter">Générer l'événement pour les réponses</text>
+    <text key="spellgame.plugin.config.view.field.validate.with.enter">Autoriser la validation avec Entrée</text>
+    <text key="spellgame.plugin.config.view.field.validate.with.enter.tooltip">Si activé, permet à l'utilisateur de valider la réponse courante avec la touche Entrée du clavier.</text>
+    <text key="spellgame.plugin.config.view.field.enable.feedback.sound">Activer les retours sonores</text>
+    <text key="spellgame.plugin.config.view.field.enable.feedback.sound.tooltip">Si activé, ajoute un retour sonore à chaque réponse (bonne ou mauvaise)</text>
+    <text key="spellgame.plugin.config.view.field.shuffle.words">Mélanger la liste</text>
+    <text key="spellgame.plugin.config.view.field.shuffle.words.tooltip">Si activé, la liste de mot sera mélangée de manière aléatoire à chaque début de partie</text>
 
 </texts>

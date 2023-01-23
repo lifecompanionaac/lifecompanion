@@ -29,7 +29,7 @@ public enum SpellGameEventMainCategory implements UseEventMainCategoryI {
 
     @Override
     public String getConfigIconPath() {
-        return "filler_icon.png";
+        return "use-events/spellgame.png";
     }
 
     @Override

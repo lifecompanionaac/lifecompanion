@@ -16,7 +16,7 @@ public class SpellGameGameEndedEventGenerator extends BaseUseEventGeneratorImpl 
         this.category = SpellGameEventSubCategories.GENERAL;
         this.nameID = "spellgame.plugin.event.game.end.name";
         this.staticDescriptionID = "spellgame.plugin.event.game.end.description";
-        this.configIconPath = "filler_icon.png";
+        this.configIconPath = "general/game_ended.png";
         this.variableDescriptionProperty().set(getStaticDescription());
         listener = () -> {
             if (AppModeController.INSTANCE.isUseMode()) {

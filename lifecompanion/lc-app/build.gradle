@@ -40,17 +40,6 @@ ext {
             '--add-exports=javafx.graphics/com.sun.glass.ui=org.lifecompanion.app',
             '--add-opens=javafx.graphics/javafx.stage=org.lifecompanion.app',
             '--add-opens=javafx.graphics/com.sun.javafx.tk.quantum=org.lifecompanion.app',
-
-            // ControlsFX : open internal sun* API
-            '--add-opens=javafx.base/com.sun.javafx.runtime=org.controlsfx.controls',
-            '--add-opens=javafx.base/com.sun.javafx.collections=org.controlsfx.controls',
-            '--add-opens=javafx.graphics/com.sun.javafx.css=org.controlsfx.controls',
-            '--add-opens=javafx.graphics/com.sun.javafx.scene=org.controlsfx.controls',
-            '--add-opens=javafx.graphics/com.sun.javafx.scene.traversal=org.controlsfx.controls',
-            '--add-opens=javafx.graphics/javafx.scene=org.controlsfx.controls',
-            '--add-opens=javafx.controls/com.sun.javafx.scene.control=org.controlsfx.controls',
-            '--add-opens=javafx.controls/com.sun.javafx.scene.control.behavior=org.controlsfx.controls',
-            '--add-opens=javafx.controls/javafx.scene.control.skin=org.controlsfx.controls'
     ]
 }
 
@@ -95,10 +84,6 @@ dependencies {
     // Used to communication with Windows AutoHotKey server (useful for global keyboard events)
     api 'com.sparkjava:spark-core:2.9.3'
 
-    // FX Controls
-    api('org.controlsfx:controlsfx:11.1.2') {
-        exclude group: 'org.openjfx'
-    }
     // Binding helper
     api 'org.fxmisc.easybind:easybind:1.0.3'
 

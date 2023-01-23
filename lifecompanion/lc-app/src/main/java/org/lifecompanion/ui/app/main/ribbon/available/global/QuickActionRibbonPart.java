@@ -21,7 +21,7 @@ package org.lifecompanion.ui.app.main.ribbon.available.global;
 
 import java.util.ArrayList;
 
-import org.controlsfx.glyphfont.FontAwesome;
+import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.editaction.GlobalActions;
@@ -99,7 +99,8 @@ public class QuickActionRibbonPart extends RibbonBasePart<Void> implements LCVie
 		this.buttonRedo.setOnAction(UndoRedoActions.HANDLER_REDO);
 		//Copy
 		this.buttonCopy.setOnAction((ea) -> {
-			ComponentActionController.INSTANCE.copyComponent(SelectionController.INSTANCE.selectedDisplayableComponentHelperProperty().get());
+			// ComponentActionController.INSTANCE.copyComponent(SelectionController.INSTANCE.selectedDisplayableComponentHelperProperty().get());
+			if(1==1)throw new NullPointerException("Erreur de merde");
 		});
 		this.buttonPaste.setOnAction((ea) -> {
 			ComponentActionController.INSTANCE.pasteComponent(AppModeController.INSTANCE.getEditModeContext().configurationProperty().get(),

@@ -24,7 +24,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
-import org.controlsfx.control.ToggleSwitch;
+import org.lifecompanion.ui.controlsfx.control.ToggleSwitch;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.SimplerKeyActionContainerI;
 import org.lifecompanion.ui.common.control.generic.SoundRecordingControl;
 import org.lifecompanion.framework.commons.translation.Translation;

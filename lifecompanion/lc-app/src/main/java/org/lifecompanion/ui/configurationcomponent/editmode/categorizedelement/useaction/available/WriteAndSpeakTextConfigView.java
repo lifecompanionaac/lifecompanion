@@ -19,7 +19,7 @@
 
 package org.lifecompanion.ui.configurationcomponent.editmode.categorizedelement.useaction.available;
 
-import org.controlsfx.control.ToggleSwitch;
+import org.lifecompanion.ui.controlsfx.control.ToggleSwitch;
 
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;

@@ -31,7 +31,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
-import org.controlsfx.control.ToggleSwitch;
+import org.lifecompanion.ui.controlsfx.control.ToggleSwitch;
 import org.lifecompanion.ui.common.pane.specific.cell.CorrectionCategoryDetailledListCell;
 import org.lifecompanion.ui.common.pane.specific.cell.CorrectionCategoryListCell;
 import org.lifecompanion.ui.app.generalconfiguration.step.predict4all.P4AConfigUtils;

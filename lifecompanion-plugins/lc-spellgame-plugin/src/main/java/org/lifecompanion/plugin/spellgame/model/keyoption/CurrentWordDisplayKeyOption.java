@@ -42,7 +42,7 @@ public class CurrentWordDisplayKeyOption extends AbstractKeyOption {
         this.disableTextContent.set(true);
         this.optionNameId = "spellgame.plugin.current.word.key.option.name";
         this.optionDescriptionId = "spellgame.plugin.current.word.key.option.description";
-        this.iconName = "filler_icon.png";
+        this.iconName = "current_word.png";
     }
 
     @Override

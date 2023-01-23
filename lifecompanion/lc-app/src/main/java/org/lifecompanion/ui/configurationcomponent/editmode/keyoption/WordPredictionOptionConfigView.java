@@ -22,7 +22,7 @@ package org.lifecompanion.ui.configurationcomponent.editmode.keyoption;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
-import org.controlsfx.control.ToggleSwitch;
+import org.lifecompanion.ui.controlsfx.control.ToggleSwitch;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.WordPredictionKeyOption;
 import org.lifecompanion.controller.editaction.KeyOptionActions.ChangeWordPredictionAddSpace;
 import org.lifecompanion.controller.editaction.KeyOptionActions.ChangeWordPredictionCorrectionColor;

@@ -35,7 +35,7 @@ public class SpellGamePlugin implements PluginI {
 
     @Override
     public String[] getDefaultConfigurations(String languageCode) {
-        return new String[]{"/configurations/20230118_Plugin mots.lcc"};
+        return new String[]{"/configurations/" + languageCode + "_spellgame-config1.lcc"};
     }
     //========================================================================
 
@@ -44,12 +44,12 @@ public class SpellGamePlugin implements PluginI {
     //========================================================================
     @Override
     public void start(File dataDirectory) {
-
+        // Plugin global init here
     }
 
     @Override
     public void stop(File dataDirectory) {
-
+        // Plugin global stop here
     }
     //========================================================================
 
@@ -72,7 +72,22 @@ public class SpellGamePlugin implements PluginI {
     @Override
     public List<UseVariableDefinitionI> getDefinedVariables() {
         return Arrays.asList(//
-                new UseVariableDefinition(SpellGameController.VAR_ID_USER_SCORE, "spellgame.plugin.use.variable.user.score.name", "spellgame.plugin.use.variable.user.score.description", "spellgame.plugin.use.variable.user.score.example"), new UseVariableDefinition(SpellGameController.VAR_ID_WORD_INDEX, "spellgame.plugin.use.variable.word.index.name", "spellgame.plugin.use.variable.word.index.description", "spellgame.plugin.use.variable.word.index.example"), new UseVariableDefinition(SpellGameController.VAR_ID_WORD_COUNT, "spellgame.plugin.use.variable.word.count.name", "spellgame.plugin.use.variable.word.count.description", "spellgame.plugin.use.variable.word.count.example"), new UseVariableDefinition(SpellGameController.VAR_ID_CURRENT_STEP_INSTRUCTION, "spellgame.plugin.use.variable.current.step.instruction.name", "spellgame.plugin.use.variable.current.step.instruction.description", "spellgame.plugin.use.variable.current.step.instruction.example"));
+                new UseVariableDefinition(SpellGameController.VAR_ID_USER_SCORE,
+                        "spellgame.plugin.use.variable.user.score.name",
+                        "spellgame.plugin.use.variable.user.score.description",
+                        "spellgame.plugin.use.variable.user.score.example"),
+                new UseVariableDefinition(SpellGameController.VAR_ID_WORD_INDEX,
+                        "spellgame.plugin.use.variable.word.index.name",
+                        "spellgame.plugin.use.variable.word.index.description",
+                        "spellgame.plugin.use.variable.word.index.example"),
+                new UseVariableDefinition(SpellGameController.VAR_ID_WORD_COUNT,
+                        "spellgame.plugin.use.variable.word.count.name",
+                        "spellgame.plugin.use.variable.word.count.description",
+                        "spellgame.plugin.use.variable.word.count.example"),
+                new UseVariableDefinition(SpellGameController.VAR_ID_CURRENT_STEP_INSTRUCTION,
+                        "spellgame.plugin.use.variable.current.step.instruction.name",
+                        "spellgame.plugin.use.variable.current.step.instruction.description",
+                        "spellgame.plugin.use.variable.current.step.instruction.example"));
     }
 
     @Override
@@ -81,7 +96,8 @@ public class SpellGamePlugin implements PluginI {
         vars.put(SpellGameController.VAR_ID_USER_SCORE, new IntegerUseVariable(variablesToGenerate.get(SpellGameController.VAR_ID_USER_SCORE), SpellGameController.INSTANCE.getUserScore()));
         vars.put(SpellGameController.VAR_ID_WORD_INDEX, new IntegerUseVariable(variablesToGenerate.get(SpellGameController.VAR_ID_WORD_INDEX), SpellGameController.INSTANCE.getWordIndex()));
         vars.put(SpellGameController.VAR_ID_WORD_COUNT, new IntegerUseVariable(variablesToGenerate.get(SpellGameController.VAR_ID_WORD_COUNT), SpellGameController.INSTANCE.getWordCount()));
-        vars.put(SpellGameController.VAR_ID_CURRENT_STEP_INSTRUCTION, new StringUseVariable(variablesToGenerate.get(SpellGameController.VAR_ID_CURRENT_STEP_INSTRUCTION), SpellGameController.INSTANCE.getCurrentStepInstruction()));
+        vars.put(SpellGameController.VAR_ID_CURRENT_STEP_INSTRUCTION,
+                new StringUseVariable(variablesToGenerate.get(SpellGameController.VAR_ID_CURRENT_STEP_INSTRUCTION), SpellGameController.INSTANCE.getCurrentStepInstruction()));
         return vars;
     }
     //========================================================================

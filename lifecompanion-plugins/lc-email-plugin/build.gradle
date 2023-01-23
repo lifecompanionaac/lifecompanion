@@ -1,0 +1,51 @@
+plugins {
+    id 'java-library'
+    id 'org.openjfx.javafxplugin' version '0.0.13'
+}
+
+javafx {
+    version = '18'
+    modules = ['javafx.controls']
+    configuration = 'compileOnly'
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    compileOnly "org.lifecompanion:lc-app:$lifecompanionAppVersion"
+    // If you need to add plugin dependencies, add them with "implementation"
+    // Note that you should check that the dependency is not already integrated in LifeCompanion core (if so, use "compileOnly" instead)
+    implementation('org.simplejavamail:simple-java-mail:5.0.6') {
+        exclude group: 'org.slf4j'
+    }
+    implementation 'org.jsoup:jsoup:1.11.3'
+    implementation 'org.apache.commons:commons-lang3:3.8.1'
+}
+
+version = "1.4.2"
+
+jar {
+    duplicatesStrategy DuplicatesStrategy.WARN
+    manifest {
+        attributes(
+                "LifeCompanion-Plugin-Class": "org.lifecompanion.plugin.email.EmailPlugin",
+                "LifeCompanion-Plugin-Package-Scanning-Base": "org.lifecompanion.plugin.email",
+                "LifeCompanion-Plugin-Id": "lc-email-plugin",
+                "LifeCompanion-Plugin-Author": "Mathieu THEBAUD",
+                "LifeCompanion-Plugin-Version": project.version,
+                "LifeCompanion-Plugin-Build-Date": new Date().getTime(),
+                "LifeCompanion-Plugin-Name": "Extension Emails",
+                "LifeCompanion-Plugin-Description": "Permet de recevoir et d'envoyer des emails depuis un compte compatible IMAP/SMTP. L'extension a été testée pour être compatible avec les comptes Google, si leur paramètre de sécurité autorisent la connexion en IMAP/SMTP.",
+                "LifeCompanion-Min-App-Version": "$lifecompanionAppVersion"
+        )
+    }
+    from {
+        configurations.runtimeClasspath.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+}

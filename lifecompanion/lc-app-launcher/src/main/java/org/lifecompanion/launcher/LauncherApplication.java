@@ -97,17 +97,6 @@ public class LauncherApplication {
         cmds.add("--add-opens=javafx.graphics/javafx.stage=org.lifecompanion.app");
         cmds.add("--add-opens=javafx.graphics/com.sun.javafx.tk.quantum=org.lifecompanion.app");
 
-        // ControlsFX : open internal sun* API
-        cmds.add("--add-opens=javafx.base/com.sun.javafx.runtime=org.controlsfx.controls");
-        cmds.add("--add-opens=javafx.base/com.sun.javafx.collections=org.controlsfx.controls");
-        cmds.add("--add-opens=javafx.graphics/com.sun.javafx.css=org.controlsfx.controls");
-        cmds.add("--add-opens=javafx.graphics/com.sun.javafx.scene=org.controlsfx.controls");
-        cmds.add("--add-opens=javafx.graphics/com.sun.javafx.scene.traversal=org.controlsfx.controls");
-        cmds.add("--add-opens=javafx.graphics/javafx.scene=org.controlsfx.controls");
-        cmds.add("--add-opens=javafx.controls/com.sun.javafx.scene.control=org.controlsfx.controls");
-        cmds.add("--add-opens=javafx.controls/com.sun.javafx.scene.control.behavior=org.controlsfx.controls");
-        cmds.add("--add-opens=javafx.controls/javafx.scene.control.skin=org.controlsfx.controls");
-
         // Splash screen
         cmds.add("-splash:data/lifecompanion_splashscreen.png");
 

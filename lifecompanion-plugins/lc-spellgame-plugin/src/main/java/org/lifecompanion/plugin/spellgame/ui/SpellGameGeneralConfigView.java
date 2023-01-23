@@ -32,19 +32,18 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
-import org.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.controller.editmode.GeneralConfigurationController;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.framework.commons.translation.Translation;
-import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.plugin.spellgame.SpellGamePlugin;
 import org.lifecompanion.plugin.spellgame.SpellGamePluginProperties;
 import org.lifecompanion.plugin.spellgame.model.SpellGameWordList;
 import org.lifecompanion.plugin.spellgame.ui.cell.SpellGameWordListListCell;
-import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStep;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStepViewI;
+import org.lifecompanion.ui.controlsfx.control.ToggleSwitch;
+import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.util.javafx.FXControlUtils;
 
 import java.util.stream.Collectors;
@@ -56,6 +55,7 @@ public class SpellGameGeneralConfigView extends BorderPane implements GeneralCon
     private Spinner<Double> spinnerWordDisplayInS;
     private ComboBox<SpellGameWordList> comboBoxWordList;
     private Button buttonEditCurrentList, buttonDeleteCurrentList, buttonAddList;
+    private ToggleSwitch toggleSwitchValidateWithEnter, toggleSwitchEnableFeedbackSound;
 
     public SpellGameGeneralConfigView() {
         initAll();
@@ -99,8 +99,14 @@ public class SpellGameGeneralConfigView extends BorderPane implements GeneralCon
         Label labelWordDisplaySecond = new Label(Translation.getText("spellgame.plugin.config.view.field.word.display.second"));
         GridPane.setHgrow(labelWordDisplaySecond, Priority.ALWAYS);
         labelWordDisplaySecond.setMaxWidth(Double.MAX_VALUE);
+
+        toggleSwitchValidateWithEnter = FXControlUtils.createToggleSwitch("spellgame.plugin.config.view.field.validate.with.enter", "spellgame.plugin.config.view.field.validate.with.enter.tooltip");
+        toggleSwitchEnableFeedbackSound = FXControlUtils.createToggleSwitch("spellgame.plugin.config.view.field.enable.feedback.sound", "spellgame.plugin.config.view.field.enable.feedback.sound.tooltip");
+
         gridPaneConfiguration.add(labelWordDisplaySecond, 0, gridRowIndex);
         gridPaneConfiguration.add(spinnerWordDisplayInS, 1, gridRowIndex++);
+        gridPaneConfiguration.add(toggleSwitchValidateWithEnter, 0, gridRowIndex++, 2, 1);
+        gridPaneConfiguration.add(toggleSwitchEnableFeedbackSound, 0, gridRowIndex++, 2, 1);
 
         gridPaneConfiguration.add(FXControlUtils.createTitleLabel("spellgame.plugin.config.word.list.title.part"), 0, gridRowIndex++, 2, 1);
 
@@ -160,6 +166,8 @@ public class SpellGameGeneralConfigView extends BorderPane implements GeneralCon
     public void saveChanges() {
         SpellGamePluginProperties pluginConfigProperties = configuration.getPluginConfigProperties(SpellGamePlugin.ID, SpellGamePluginProperties.class);
         pluginConfigProperties.wordDisplayTimeInMsProperty().set((int) (spinnerWordDisplayInS.getValue() * 1000.0));
+        pluginConfigProperties.enableFeedbackSoundProperty().set(toggleSwitchEnableFeedbackSound.isSelected());
+        pluginConfigProperties.validateWithEnterProperty().set(toggleSwitchValidateWithEnter.isSelected());
         ObservableList<SpellGameWordList> items = comboBoxWordList.getItems();
         pluginConfigProperties.getWordLists().setAll(items);
     }
@@ -169,6 +177,8 @@ public class SpellGameGeneralConfigView extends BorderPane implements GeneralCon
         this.configuration = model;
         SpellGamePluginProperties pluginConfigProperties = configuration.getPluginConfigProperties(SpellGamePlugin.ID, SpellGamePluginProperties.class);
         spinnerWordDisplayInS.getValueFactory().setValue(pluginConfigProperties.wordDisplayTimeInMsProperty().get() / 1000.0);
+        toggleSwitchEnableFeedbackSound.setSelected(pluginConfigProperties.enableFeedbackSoundProperty().get());
+        toggleSwitchValidateWithEnter.setSelected(pluginConfigProperties.validateWithEnterProperty().get());
         this.comboBoxWordList.setItems(FXCollections.observableArrayList(pluginConfigProperties.getWordLists().stream().map(l -> (SpellGameWordList) l.duplicate(false)).collect(Collectors.toList())));
     }
 

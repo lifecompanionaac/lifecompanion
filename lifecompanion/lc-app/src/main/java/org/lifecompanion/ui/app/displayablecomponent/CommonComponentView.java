@@ -31,7 +31,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import org.controlsfx.glyphfont.FontAwesome;
+import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.controller.editaction.BaseComponentAction;
 import org.lifecompanion.controller.editaction.BaseComponentAction.ChangeComponentNameAction;
 import org.lifecompanion.controller.editaction.UserCompActions.CreateOrUpdateUserComp;

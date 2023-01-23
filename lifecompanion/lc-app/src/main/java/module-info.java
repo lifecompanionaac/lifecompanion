@@ -13,7 +13,6 @@ open module org.lifecompanion.app {
     requires easybind;
     requires okhttp3;
     requires gson;
-    requires org.controlsfx.controls;
     requires io.github.classgraph;
     requires org.predict4all.core;
     requires webcam.capture;

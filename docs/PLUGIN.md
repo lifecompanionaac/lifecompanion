@@ -42,18 +42,19 @@ Be familiar with Java and JavaFX development.
 
 ### Existing plugins
 
-All the official existing plugins are stored in the **lifecompanion-plugins** folder on the repo (or will be!)
+All the official existing plugins are stored in the [**lifecompanion-plugins**](../lifecompanion-plugins/) folder on the repo. You can check their code to understand how plugin can be created.
 
-- **simple email plugin** : plugin that allow the user to read and send email from traditionnal email server
-- **calendar plugin** : plugin to help user to plan their days (with alarms, events and sequences)
-- **ppp plugin** : plugin to trace prediatric pain profil scale for an user
-- **homeassistant plugin** : plugin to interact with a HomeAssistant server
+- [**spell game plugin**](../lifecompanion-plugins/lc-spellgame-plugin/) : plugin that create a game where the user should spell words
+- [**simple email plugin**](../lifecompanion-plugins/lc-email-plugin/) : plugin that allow the user to read and send email from traditionnal email server
+- [**calendar plugin**](../lifecompanion-plugins/lc-calendar-plugin/) : plugin to help user to plan their days (with alarms, events and sequences)
+- [**ppp plugin**](../lifecompanion-plugins/lc-ppp-plugin/) : plugin to trace prediatric pain profil scale for an user
+- [**homeassistant plugin**](../lifecompanion-plugins/lc-homeassistant-plugin/) : plugin to interact with a HomeAssistant server
+
+This documentation is based on **lc-spellgame-plugin** to rely on a working example. This plugin is the reference plugin implementation.
 
 ## LifeCompanion fundamentals
 
 ### Code organization
-
-LifeCompanion code use **Java 16+ and JavaFX** combined with **Gradle**.
 
 Core LifeCompanion code is located in **lifecompanion/lc-app** directory. Model classes are organized with interface/implementation principle : most of the interfaces are named with "I" at the end, theses interfaces are mainly the names used in documentation. For example : `LCConfigurationI` is the interface describing the configuration model, and `LCConfigurationComponent`.
 
@@ -125,7 +126,7 @@ Plugin projects are built using Gradle like LifeCompanion core. The generated ja
 
 As plugin are based on LifeCompanion, they are depending of LifeCompanion version. If LifeCompanion is updated with breaking changes, the plugins should be updated. To see the API changes, check [dev changelog documentation](DEV-CHANGELOG.md)
 
-#### Information
+#### Information - `PluginI`
 
 #### Properties
 
@@ -148,9 +149,97 @@ SpellGamePluginProperties pluginConfigProperties = configuration.getPluginConfig
 
 #### Lifecycle
 
-TODO : LC start/stop - mode start/stop
+Plugin are directly loaded on LifeCompanion start by the launcher, they are injected to LifeCompanion thanks to classpath arg on Java command.
 
-TODO : note that data folder are the same even after update
+Even if you can rely on classic Java mechanism to initialize your plugin, it's better to rely on LifeCompanion lifecycle to ensure your plugin to be correctly initialized.
+
+##### App start/stop
+
+To detect LifeCompanion starting/stopping (global app), you can implement two methods in your plugin.
+
+```java
+@Override
+public void start(File dataDirectory) {
+    // Plugin global init here
+}
+
+@Override
+public void stop(File dataDirectory) {
+    // Plugin global stop here
+}
+```
+
+Start/stop methods will **be called once** on each LifeCompanion run.
+
+The given data directory can be used to store plugin data (it is shared between all profile/configuration). The folder is unique with the plugin ID, so it's kept between every run and between updates.
+
+As the start method is called out of the FX Thread and while app loading message is displayed to user, you can make long running synchronous initialization tasks here.
+
+##### Use mode start/stop
+
+Contrary to app lifecycle, mode lifecycle can occur multiple times on a same app run. They will be called when :
+- **the user go from edit to use mode OR when app is started with a default configuration** : `modeStart`
+- **the user go from use to edit mode OR app is stopped** : `modeStop`
+
+You can rely on these hooks to ensure initialization that should be done regarding the used configuration as it is given to the methods.
+
+The methods will run async (out of the FX Thread) so there is no problem doing long running tasks here.
+
+```java
+@Override
+public void modeStart(LCConfigurationI configuration) {
+    SpellGameController.INSTANCE.modeStart(configuration);
+}
+
+@Override
+public void modeStop(LCConfigurationI configuration) {
+    SpellGameController.INSTANCE.modeStop(configuration);
+}
+```
+
+#### Resource
+
+##### Language file
+
+Even if LifeCompanion is currently available only in french, plugin can have multiple translation files. This is useful to separate code from string data.
+
+The plugin should return the path (jar path) to the language files via :
+
+```java
+@Override
+public String[] getLanguageFiles(final String languageCode) {
+    return new String[]{"/text/" + languageCode + "_spellgame_plugin.xml"};
+}
+```
+The injected `languageCode` parameter is the ISO 639-1 code for language ("fr" for french).
+
+See [Translations](#translations) for more details.
+
+##### JavaFX stylesheets
+
+It's possible to inject custom JavaFX stylesheets to edit mode Scene from the plugin.
+
+```java
+ @Override
+public String[] getJavaFXStylesheets() {
+    return new String[]{"/style/spellgame_plugin.css"};
+}
+```
+
+##### Default configuration
+
+As it can be difficult for a final user to create a configuration from strach using your plugin, it is important to provide default configuration for user to start their own. Your provided configuration will be added to default configuration list available when the user create a new profile or when he wants to create configuration from model.
+
+The configuration will be then duplicated to be added in the profile. AS the current language is injected to the implementation, it is possible to create different configuration for each language.
+
+```java
+@Override
+public String[] getDefaultConfigurations(String languageCode) {
+    return new String[]{"/configurations/" + languageCode + "_spellgame-config1.lcc"};
+}
+```
+
+**As the configuration will be visible by users : ensure it does not contains any private data**
 
 ### Use action
 
@@ -281,6 +370,8 @@ TODO
 
 ### Utils and helpers
 
+- TODO
+
 ### Threading
 
 Note that action and event are mostly generated out of the JavaFX Thread. This means that if you have to modify UI components, you should explicitly do it on the FXThread (you can use `FXThreadUtils.runOnFXThread()` to do so)
@@ -288,16 +379,6 @@ Note that action and event are mostly generated out of the JavaFX Thread. This m
 ### Translations
 
 #### Files
-
-Even if LifeCompanion is currently available only in french, plugin can have multiple translation files. This is useful to separate code from string data. The plugin will return the path (jar path) to the language files via :
-
-```java
-@Override
-public String[] getLanguageFiles(final String languageCode) {
-    return new String[]{"/text/" + languageCode + "_example_plugin.xml"};
-}
-```
-The injected `languageCode` parameter is the ISO 639-1 code for language ("fr" for french).
 
 Each language file is a basic XML containing key/value for translation. It is recommanded to prefix all your keys with your plugin context, this will avoid collision with other translations.
 
@@ -332,12 +413,94 @@ It's recommanded to use `TranslationFX` only when you need changing translation 
 
 ### Serialization
 
-**TODO, think about**
+#### Principle
 
-- Serialization use class name, warning if changed
-- To serialize attribute, implementation of methods is mandatory
-- Backward compatibility should be handled manually
-- Empty param public constructor
+When you create new element with plugin API (actions, key options, etc...), most of these elements implements the `XMLSerializable` interface indicating they can be saved with the configuration. Serialization is done with [JDOM library](http://www.jdom.org/) and `XMLObjectSerializer` utils class.
+
+Classes implementing this interface should define two methods :
+
+```java
+@Override
+public Element serialize(final IOContextI contextP) {
+    return XMLObjectSerializer.serializeInto(StartSpellGameAction.class, this, super.serialize(contextP));
+}
+
+@Override
+public void deserialize(final Element nodeP, final IOContextI contextP) throws LCException {
+    super.deserialize(nodeP, contextP);
+    XMLObjectSerializer.deserializeInto(StartSpellGameAction.class, this, nodeP);
+}
+```
+
+#### Basic (de)serialization
+
+`XMLObjectSerializer.serializeInto(...)` and `XMLObjectSerializer.deserializeInto(...)` will try to (de)serialize all the object attribute (that are not static/final/transient) to/from a given JDOM element.
+
+Each attribute is **serialized based on its name**, so be careful changing names! Also, a lot of element implemented by plugin (actions, key options, etc.) are instanciated using reflection, so they **should have a empty parameter default constructor**. Reflection also use the class simple name (`Class.getSimpleName()`) so changing a element type name can also be dangerous.
+
+**Compatible types**
+- primitive types : `int`, `double`, `long`, `float`, `boolean`
+- primitive wrapper : `Integer`, `Double`, `Long`, `Float`, `Boolean`
+- string : `String`
+- JavaFX property wrapper (these can final) : `IntegerProperty`, `DoubleProperty`, `LongProperty`, `FloatProperty`, `BooleanProperty`, `StringProperty`
+- `ObjectProperty` if combined with `@XMLGenericProperty`
+- `javafx.scene.paint.Color`
+- `java.util.Date`
+- `java.io.File`
+- enums : based on `name()` and `Enum.valueOf(...)`, so changing the name can cause problem
+
+#### Advanced (de)serialization
+
+If an element has to (de)serialize children, it should be done manually by calling its children `XMLSerializable` methods.
+
+Generic type in `ObjectProperty` can be serialized using `@XMLGenericProperty`
+
+Custom serialization mechanism can be implemented using `@XMLCustomProperty` and `CustomPropertyConverter`.
+
+#### Backward compatibility
+
+Missing attributes from DOM element will not throw Exception (but will log a message in WARN) so it is not a problem to add new attributes as they will be added to the next serialization.
+
+However, if your attribute name change or your behavior, you should take care of handling the backward compatibility manually in `deserialize(...)`. In the following example, we renamed attribute `enableReplaceColorByTransparent` to `enableReplaceColor` so in the deserialize method we handle manually the mapping.
+
+```java
+if (element.getAttribute("enableReplaceColorByTransparent") != null) {
+    XMLUtils.read(enableReplaceColor, "enableReplaceColorByTransparent", element);
+}
+```
+
+#### Use mode (de)serialization
+
+Most of the (de)serialization mechanism is only used to save modified data in edit mode.
+
+However, it can be interesting to save information that will should be read/write in use mode. It is possible to do it with element implementing `UseInformationSerializableI` (which is the case of most the plugin element). Here is the example of the note key option action implementation :
+
+```java
+@Override
+public void serializeUseInformation(Map<String, Element> elements) {
+    super.serializeUseInformation(elements);
+    GridPartKeyComponentI parentKey = this.parentComponentProperty().get();
+    if (parentKey != null) {
+        Element elementNodeContent = new Element(NODE_NOTE_CONTENT);
+        elementNodeContent.setText(getTextToSerialize());
+        elements.put(parentKey.getID(), elementNodeContent);
+    }
+}
+
+@Override
+public void deserializeUseInformation(Map<String, Element> elements) throws LCException {
+    super.deserializeUseInformation(elements);
+    GridPartKeyComponentI parentKey = this.parentComponentProperty().get();
+    if (parentKey != null) {
+        Element existingNote = elements.get(parentKey.getID());
+        if (existingNote != null) {
+            FXThreadUtils.runOnFXThread(() -> this.savedText.set(existingNote.getText()));
+        }
+    }
+}
+```
+
+Note that use information should be saved with a unique ID that will not change between two run, so using a component ID is most of the time a good idea (or a static ID if the saved information is global).
 
 ### App icons
 
@@ -345,9 +508,30 @@ A good pratice to integrate icons in LifeCompanion is to save SVG of your icons 
 
 Original LifeCompanion SVG icons can be found in **res/icons**
 
+Most of the icons are created with the help of [SVGRepo website](https://www.svgrepo.com/)
+
 Here are the LifeCompanion expected icons size :
 
-| TYPE												| SIZE (PX)			|
-|---------------------------------------------------|-------------------|
-|**use actions / use event generator**				|32x32				|
-|**add component icon (in create tab)**				|32x32				|
+| TYPE|SIZE (PX)|EXAMPLE|
+|-|-|-|
+|use actions / use event				      |32x32|![Image use action/event](../lifecompanion/lc-app/src/main/resources/icons/use-actions/categories/show/icon_next_page_stack.png)|
+|add component icon (in create tab)	|32x32|![Image add component](../lifecompanion/lc-app/src/main/resources/icons/component/add_grid.png)|
+|key options indicator  				    |32x32|![Image add component](../lifecompanion/lc-app/src/main/resources/icons/component/options/icon_type_variable_info.png)|
+
+
+### Colors
+
+LifeCompanion try to respect a global graphic theme. Here are the colors used in differents components.
+
+| DESCRIPTION/COMPONENT|COLOR|CODE|
+|-|-|-|
+|use actions/event main       |![#d2d2d2](https://placehold.co/15x15/d2d2d2/d2d2d2.png)|`#d2d2d2`|
+|use actions/event constrast  |![#aeaeae](https://placehold.co/15x15/aeaeae/aeaeae.png)|`#aeaeae`|
+|key options indicator        |![#f44336](https://placehold.co/15x15/f44336/f44336.png)|`#f44336`|
+|primary color - base         |![#0395f4](https://placehold.co/15x15/0395f4/0395f4.png)|`#0395f4`|
+|primary color - dark         |![#0277bd](https://placehold.co/15x15/0277bd/0277bd.png)|`#0277bd`|
+|primary color - light        |![#03bdf4](https://placehold.co/15x15/03bdf4/03bdf4.png)|`#03bdf4`|
+|second color - base          |![#f44336](https://placehold.co/15x15/f44336/f44336.png)|`#f44336`|
+|second color - dark          |![#c62828](https://placehold.co/15x15/c62828/c62828.png)|`#c62828`|
+|second color - light         |![#ef9a9a](https://placehold.co/15x15/ef9a9a/ef9a9a.png)|`#ef9a9a`|
+|third color - base           |![#ff9800](https://placehold.co/15x15/ff9800/ff9800.png)|`#ff9800`|

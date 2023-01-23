@@ -33,7 +33,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
-import org.controlsfx.glyphfont.FontAwesome;
+import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.model.api.configurationcomponent.SelectionModeUserI;
 import org.lifecompanion.model.api.selectionmode.FireActionEvent;
 import org.lifecompanion.model.api.selectionmode.FireEventInput;
