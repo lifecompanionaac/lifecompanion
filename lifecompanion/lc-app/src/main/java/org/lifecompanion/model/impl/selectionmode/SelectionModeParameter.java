@@ -104,6 +104,8 @@ public class SelectionModeParameter implements SelectionModeParameterI {
 
     private final DoubleProperty progressViewBarSize;
 
+    private final BooleanProperty hideMouseCursor;
+
     public SelectionModeParameter() {
         this.selectionModeType = new SimpleObjectProperty<>(this, "selectionModeType", DirectActivationSelectionMode.class);
         this.fireActivationEvent = new SimpleObjectProperty<>(this, "fireActionEvent", FireActionEvent.ON_RELEASE);
@@ -132,6 +134,7 @@ public class SelectionModeParameter implements SelectionModeParameterI {
         this.manifyKeyOver = new SimpleBooleanProperty(this, "manifyKeyOver", false);
         this.backgroundReductionEnabled = new SimpleBooleanProperty(this, "backgroundReductionEnabled", false);
         this.backgroundReductionLevel = new SimpleDoubleProperty(this, "backgroundReductionLevel", 0.8);
+        this.hideMouseCursor = new SimpleBooleanProperty(false);
         this.enableDirectSelectionOnMouseOnScanningSelectionMode = new SimpleBooleanProperty(false);
         this.mouseButtonActivation = new SimpleObjectProperty<>(MouseButton.ANY);
         this.mouseButtonNextScan = new SimpleObjectProperty<>(MouseButton.SECONDARY);
@@ -290,6 +293,11 @@ public class SelectionModeParameter implements SelectionModeParameterI {
     }
 
     @Override
+    public BooleanProperty hideMouseCursorProperty() {
+        return hideMouseCursor;
+    }
+
+    @Override
     public void copyFrom(final SelectionModeParameterI parameters) {
         this.selectionModeTypeProperty().set(parameters.selectionModeTypeProperty().get());
         this.fireActivationEventProperty().set(parameters.fireActivationEventProperty().get());
@@ -324,6 +332,7 @@ public class SelectionModeParameter implements SelectionModeParameterI {
         this.enableDirectSelectionOnMouseOnScanningSelectionModeProperty().set(parameters.enableDirectSelectionOnMouseOnScanningSelectionModeProperty().get());
         this.mouseButtonActivationProperty().set(parameters.mouseButtonActivationProperty().get());
         this.mouseButtonNextScanProperty().set(parameters.mouseButtonNextScanProperty().get());
+        this.hideMouseCursorProperty().set(parameters.hideMouseCursorProperty().get());
     }
     //========================================================================
 
@@ -340,7 +349,6 @@ public class SelectionModeParameter implements SelectionModeParameterI {
         return node;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public void deserialize(final Element node, final IOContextI context) throws LCException {
         String selectModeName = XMLUtils.readString(SelectionModeParameter.ATB_SELECT_MODE_TYPE, node);

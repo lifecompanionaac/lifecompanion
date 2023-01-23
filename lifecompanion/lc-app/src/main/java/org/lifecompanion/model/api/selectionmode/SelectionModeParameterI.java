@@ -105,6 +105,8 @@ public interface SelectionModeParameterI extends XMLSerializable<IOContextI> {
     ObjectProperty<MouseButton> mouseButtonActivationProperty();
 
     ObjectProperty<MouseButton> mouseButtonNextScanProperty();
+
+    BooleanProperty hideMouseCursorProperty();
     //========================================================================
 
 

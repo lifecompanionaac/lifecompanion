@@ -102,7 +102,7 @@ public class SelectionModeSuppParamView extends BaseConfigurationViewBorderPane<
     /**
      * To enable/disable properties
      */
-    private ToggleSwitch toggleEnableProgressDrawing, toggleSkipEmptyCells, toggleManifyKeyOver, toggleEnableActivationWithSelection, toggleEnableDirectSelectionOnMouseOnScanningSelectionMode;
+    private ToggleSwitch toggleEnableProgressDrawing, toggleSkipEmptyCells, toggleManifyKeyOver, toggleEnableActivationWithSelection, toggleEnableDirectSelectionOnMouseOnScanningSelectionMode, toggleHideMouseCursor;
 
 
     private List<Node> keyboardControlNodes;
@@ -157,6 +157,7 @@ public class SelectionModeSuppParamView extends BaseConfigurationViewBorderPane<
         this.toggleBackgroundReductionEnabled.setSelected(model.getSelectionModeParameter().backgroundReductionEnabledProperty().get());
         this.sliderBackgroundReductionLevel.setValue(model.getSelectionModeParameter().backgroundReductionLevelProperty().get());
         this.mouseButtonSelectorControl.setValue(model.getSelectionModeParameter().mouseButtonNextScanProperty().get());
+        this.toggleHideMouseCursor.setSelected(model.getSelectionModeParameter().hideMouseCursorProperty().get());
     }
 
     @Override
@@ -187,6 +188,7 @@ public class SelectionModeSuppParamView extends BaseConfigurationViewBorderPane<
         model.get().getSelectionModeParameter().backgroundReductionLevelProperty().set(this.sliderBackgroundReductionLevel.getValue());
         model.get().getSelectionModeParameter().enableDirectSelectionOnMouseOnScanningSelectionModeProperty().set(toggleEnableDirectSelectionOnMouseOnScanningSelectionMode.isSelected());
         model.get().getSelectionModeParameter().mouseButtonNextScanProperty().set(mouseButtonSelectorControl.getValue());
+        model.get().getSelectionModeParameter().hideMouseCursorProperty().set(toggleHideMouseCursor.isSelected());
     }
 
     public void setSelectedSelectionMode(SelectionModeEnum selectionMode) {
@@ -223,7 +225,8 @@ public class SelectionModeSuppParamView extends BaseConfigurationViewBorderPane<
         FXControlUtils.createAndAttachTooltip(comboBoxNextScanEventInput, "tooltip.selection.mode.scanning.manual.input.type");
 
         // Direct mouse selection while scanning mode
-        toggleEnableDirectSelectionOnMouseOnScanningSelectionMode = FXControlUtils.createToggleSwitch("selection.mode.enable.direct.selection.on.mouse.on.scanning.mode", "selection.mode.enable.direct.selection.on.mouse.on.scanning.mode.tooltip");
+        toggleEnableDirectSelectionOnMouseOnScanningSelectionMode = FXControlUtils.createToggleSwitch("selection.mode.enable.direct.selection.on.mouse.on.scanning.mode",
+                "selection.mode.enable.direct.selection.on.mouse.on.scanning.mode.tooltip");
 
         // Keyboard input parameters
         this.keySelectorControlKeyboardNextScanKeyCode = new KeyCodeSelectorControl(null);
@@ -283,6 +286,7 @@ public class SelectionModeSuppParamView extends BaseConfigurationViewBorderPane<
         this.colorPickerSelection = new LCColorPicker();
         colorPickerSelection.setMaxWidth(Double.MAX_VALUE);
         FXControlUtils.createAndAttachTooltip(colorPickerSelection, "tooltip.explain.selection.param.selection.color");
+        this.toggleHideMouseCursor = FXControlUtils.createToggleSwitch("selection.mode.hide.mouse.cursor", "selection.mode.hide.mouse.cursor.tooltip");
         this.toggleManifyKeyOver = FXControlUtils.createToggleSwitch("selection.mode.manify.key.over", "tooltip.explain.selection.param.manify.key");
         this.toggleSkipEmptyCells = FXControlUtils.createToggleSwitch("selection.mode.enable.skip.empty",
                 "tooltip.explain.selection.param.skip.empty");
@@ -450,6 +454,7 @@ public class SelectionModeSuppParamView extends BaseConfigurationViewBorderPane<
             gridPaneConfiguration.add(colorPickerActivation, 1, gridRowIndex++);
             gridPaneConfiguration.add(labelSelectionViewSize, 0, gridRowIndex);
             gridPaneConfiguration.add(sliderSelectionViewSize, 1, gridRowIndex++);
+            gridPaneConfiguration.add(toggleHideMouseCursor, 0, gridRowIndex++, 2, 1);
             gridPaneConfiguration.add(toggleManifyKeyOver, 0, gridRowIndex++, 2, 1);
             gridPaneConfiguration.add(toggleBackgroundReductionEnabled, 0, gridRowIndex++, 2, 1);
             gridPaneConfiguration.add(labelBackgroundReductionLevel, 0, gridRowIndex, 1, 1);

@@ -1976,6 +1976,8 @@
   <text key="selection.mode.input.mouse.button.selector.label">Bouton pour délencher l'activation</text>
   <text key="selection.mode.inputevent.label">Périphérique déclencheur</text>
   <text key="selection.mode.manify.key.over">Agrandir la case au survol</text>
+  <text key="selection.mode.hide.mouse.cursor">Masquer le pointeur de la souris</text>
+  <text key="selection.mode.hide.mouse.cursor.tooltip">Permet de cacher le pointeur de la souris, très utile lors de l'utilisation de certains dispositifs de pointage ou dans des configurations particulières.</text>
   <text key="selection.mode.param.activation.color">Couleur à l'activation</text>
   <text key="selection.mode.param.background.reduction.enabled">Atténuer les éléments pendant le survol</text>
   <text key="selection.mode.param.background.reduction.level">Niveau d'atténuation</text>

@@ -18,6 +18,7 @@
  */
 package org.lifecompanion.ui;
 
+import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -90,6 +91,10 @@ public class UseModeScene extends Scene implements LCViewInitHelper {
         this.buttonFullscreen.setFocusTraversable(false);
 
         this.root.getChildren().addAll(this.buttonGoToConfigMode, buttonFullscreen);
+
+        if (this.configuration.getSelectionModeParameter().hideMouseCursorProperty().get()) {
+            this.setCursor(Cursor.NONE);
+        }
     }
 
     @Override
