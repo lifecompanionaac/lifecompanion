@@ -35,7 +35,7 @@ public class SpellGamePlugin implements PluginI {
 
     @Override
     public String[] getDefaultConfigurations(String languageCode) {
-        return new String[]{"/configurations/" + languageCode + "_spellgame-config1.lcc"};
+        return new String[]{"/configurations/" + languageCode + "_spellgame-example1.lcc"};
     }
     //========================================================================
 
