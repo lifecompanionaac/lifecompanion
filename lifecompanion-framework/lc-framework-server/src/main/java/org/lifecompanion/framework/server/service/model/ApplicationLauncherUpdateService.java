@@ -101,7 +101,6 @@ public enum ApplicationLauncherUpdateService {
 
     public String getLauncherFileDownloadUrl(Request request, String launcherId) throws IOException {
         ApplicationLauncherUpdate launcher = ApplicationLauncherUpdateDao.INSTANCE.getLauncher(launcherId);
-        SoftwareStatService.INSTANCE.pushStat(request, SoftwareStatService.StatEvent.LAUNCHER_UPDATE_DONE, launcher.getVersion(), launcher.getSystem());
         return FileStorageService.INSTANCE.generateFileUrl(launcher.getFileStorageId());
     }
 

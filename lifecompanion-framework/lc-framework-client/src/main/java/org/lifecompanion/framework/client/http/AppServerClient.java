@@ -43,6 +43,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.function.LongConsumer;
 
 public class AppServerClient implements AutoCloseable {
     private static final Logger LOGGER = LoggerFactory.getLogger(AppServerClient.class);
@@ -89,7 +90,9 @@ public class AppServerClient implements AutoCloseable {
     private void initializeClient() {
         defaultClient = initializeClientForExternalCalls()
                 .addInterceptor((chain) -> chain.proceed(StringUtils.isNotBlank(authenticationToken)
-                        ? chain.request().newBuilder().addHeader(LifeCompanionFrameworkServerConstant.AUTHORIZATION_HEADER, LifeCompanionFrameworkServerConstant.AUTHORIZATION_HEADER_VALUE_PREFIX + " " + authenticationToken)
+                        ? chain.request()
+                        .newBuilder()
+                        .addHeader(LifeCompanionFrameworkServerConstant.AUTHORIZATION_HEADER, LifeCompanionFrameworkServerConstant.AUTHORIZATION_HEADER_VALUE_PREFIX + " " + authenticationToken)
                         .build()
                         : chain.request()))
                 .addInterceptor((chain) -> chain.proceed(StringUtils.isNotBlank(installationIdForHeader)
@@ -179,6 +182,10 @@ public class AppServerClient implements AutoCloseable {
     }
 
     public void download(String fullUrl, File destPath) throws ApiException {
+        download(fullUrl, destPath, null);
+    }
+
+    public void download(String fullUrl, File destPath, LongConsumer counter) throws ApiException {
         File parentDir = destPath.getParentFile();
         if (parentDir != null) {
             parentDir.mkdirs();
@@ -186,8 +193,8 @@ public class AppServerClient implements AutoCloseable {
         final String fileStart = "file:";
         if (StringUtils.startWithIgnoreCase(fullUrl, fileStart)) {
             try (FileOutputStream fos = new FileOutputStream(destPath)) {
-                try (FileInputStream fis = new FileInputStream(new File(fullUrl.substring(fileStart.length())))) {
-                    IOUtils.copyStream(fis, fos);
+                try (FileInputStream fis = new FileInputStream(fullUrl.substring(fileStart.length()))) {
+                    IOUtils.copyStreamCounting(fis, fos, counter);
                 }
             } catch (Exception e) {
                 throw new ApiException("Can't download local file", e);
@@ -202,7 +209,7 @@ public class AppServerClient implements AutoCloseable {
                 if (response.isSuccessful()) {
                     try (OutputStream os = new BufferedOutputStream(new FileOutputStream(destPath))) {
                         try (InputStream is = new BufferedInputStream(response.body().byteStream())) {
-                            IOUtils.copyStream(is, os);
+                            IOUtils.copyStreamCounting(is, os, counter);
                         }
                     }
                 } else {

@@ -45,7 +45,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -56,6 +58,7 @@ import java.util.function.Consumer;
 import static org.lifecompanion.framework.commons.ApplicationConstant.*;
 
 public class FullInstallTask extends Task<InstallResult> {
+    private final static long TASK_COUNT = 5;
     private static final Logger LOGGER = LoggerFactory.getLogger(FullInstallTask.class);
     private final InstallerUIConfiguration installerConfiguration;
     private final Consumer<String> logAppender;
@@ -63,7 +66,11 @@ public class FullInstallTask extends Task<InstallResult> {
     private final SystemInstallationI systemInstallation;
     private final ApplicationBuildProperties buildProperties;
 
-    public FullInstallTask(Consumer<String> logAppender, InstallerUIConfiguration installerConfiguration, AppServerClient client, SystemInstallationI systemInstallation, ApplicationBuildProperties buildProperties) {
+    public FullInstallTask(Consumer<String> logAppender,
+                           InstallerUIConfiguration installerConfiguration,
+                           AppServerClient client,
+                           SystemInstallationI systemInstallation,
+                           ApplicationBuildProperties buildProperties) {
         this.installerConfiguration = installerConfiguration;
         this.logAppender = logAppender;
         this.client = client;
@@ -74,6 +81,8 @@ public class FullInstallTask extends Task<InstallResult> {
 
     @Override
     protected InstallResult call() {
+        int progress = 0;
+        updateProgress(progress++, TASK_COUNT);
         // Create installation directories
         updateMessage(Translation.getText("lc.installer.task.installing.progress.general.directories"));
         logAppender.accept(Translation.getText("lc.installer.task.installing.progress.detail.directory", installerConfiguration.getInstallationSoftwareDirectory()));
@@ -88,15 +97,14 @@ public class FullInstallTask extends Task<InstallResult> {
             return InstallResult.INSTALLATION_FAILED_ADMIN_RIGHTS;
         }
 
-        AtomicLong workProgress = new AtomicLong(0);
-        long totalWork = 4;
-
         // Delete update folder (if exits) : useful to repair problems with updates
         final File updateDirectory = new File(this.installerConfiguration.getInstallationSoftwareDirectory().getPath() + File.separator + DIR_NAME_APPLICATION_UPDATE);
         if (updateDirectory.exists()) {
             LOGGER.info("Detected a previous update directory, will clean it");
             IOUtils.deleteDirectoryAndChildren(updateDirectory);
         }
+        updateProgress(progress++, TASK_COUNT);
+
 
         // Download files and launcher
         updateMessage(Translation.getText("lc.installer.task.installing.progress.general.downloading"));
@@ -104,8 +112,12 @@ public class FullInstallTask extends Task<InstallResult> {
         try {
             AppServerService appServerService = new AppServerService(client);
             UpdateFileProgress[] filesToInstall = appServerService.getUpdateDiff(buildProperties.getAppId(), SystemType.current(), "0", false);
-            totalWork += filesToInstall.length;
-            final long totalWorkF = totalWork;
+
+            final long toDownloadBytes = Arrays.stream(filesToInstall)
+                    .filter(f -> f.getStatus() == UpdateFileProgressType.TO_DOWNLOAD)
+                    .mapToLong(f -> f.isToUnzip() ? f.getFileSize() * 2 : f.getFileSize()).sum();
+            updateProgress(0, toDownloadBytes);
+            final AtomicLong downloadedBytes = new AtomicLong();
 
             AtomicBoolean downloading = new AtomicBoolean(true);
 
@@ -120,7 +132,7 @@ public class FullInstallTask extends Task<InstallResult> {
                         }
                         if (downloading.get()) {
                             try {
-                                downloadFileToInstall(appServerService, totalWorkF, workProgress, fileToInstall);
+                                downloadFileToInstall(appServerService, downloadedBytes, toDownloadBytes, fileToInstall);
                             } catch (Exception e) {
                                 LOGGER.error("Download error", e);
                                 downloading.set(false);
@@ -131,11 +143,15 @@ public class FullInstallTask extends Task<InstallResult> {
                 }
             }
             downloadExecutorService.invokeAll(downloadFileCallables);
+
             if (!downloading.get()) {
                 LOGGER.error("Download was cancelled (task or error), task will return failed");
                 return InstallResult.INSTALLATION_FAILED_DOWNLOAD;
             }
-            downloadPluginsToInstall(appServerService, totalWork, workProgress);
+            updateMessage(Translation.getText("lc.installer.task.installing.progress.general.downloading"));
+            updateProgress(progress++, TASK_COUNT);
+            downloadPluginsToInstall(appServerService);
+            updateProgress(progress++, TASK_COUNT);
         } catch (Exception e) {
             LOGGER.error("Error while downloading installation files", e);
             return InstallResult.INSTALLATION_FAILED_DOWNLOAD;
@@ -144,19 +160,20 @@ public class FullInstallTask extends Task<InstallResult> {
         }
 
         try {
-            writeInstallationConfiguration(totalWork, workProgress);
+            writeInstallationConfiguration();
+            updateProgress(progress++, TASK_COUNT);
         } catch (Exception e) {
             LOGGER.error("Couldn't write installation configuration", e);
             return InstallResult.INSTALLATION_FAILED_SYSTEM_SPECIFIC;
         }
         try {
-            executeSystemSpecificTasks(totalWork, workProgress);
+            executeSystemSpecificTasks();
+            updateProgress(progress++, TASK_COUNT);
         } catch (Exception e) {
             LOGGER.error("Couldn't execute system specific task", e);
             return InstallResult.INSTALLATION_FAILED_SYSTEM_SPECIFIC;
         }
         updateMessage(Translation.getText("lc.installer.installation.result.success"));
-        updateProgress(1, 1);
         return InstallResult.INSTALLATION_SUCCESS;
     }
 
@@ -174,36 +191,46 @@ public class FullInstallTask extends Task<InstallResult> {
         }
     }
 
-    private void executeSystemSpecificTasks(long totalWork, AtomicLong workProgress) throws Exception {
+    private void executeSystemSpecificTasks() throws Exception {
         updateMessage(Translation.getText("lc.installer.task.installing.progress.general.system.specific"));
         systemInstallation.runSystemSpecificInstallationTask(installerConfiguration, logAppender);
-        updateProgress(workProgress.incrementAndGet(), totalWork);
     }
 
-    private void writeInstallationConfiguration(long totalWork, AtomicLong workProgress) throws IOException {
+    private void writeInstallationConfiguration() throws IOException {
         updateMessage(Translation.getText("lc.installer.task.installing.progress.general.installation.configuration"));
         SystemInfo systemInfo = new SystemInfo();
         HardwareAbstractionLayer hardware = systemInfo.getHardware();
         String xmxConfiguration = InstallerManager.getBestXmxSize(hardware.getMemory().getTotal());
         InstallationConfiguration installConfig = new InstallationConfiguration(xmxConfiguration, installerConfiguration.getInstallationUserDataDirectory());
         installConfig.save(new File(this.installerConfiguration.getInstallationSoftwareDirectory() + File.separator + DIR_NAME_APPLICATION_DATA + File.separator + "installation.properties"));
-        updateProgress(workProgress.incrementAndGet(), totalWork);
     }
 
-    private void downloadFileToInstall(AppServerService appServerService, long totalWork, AtomicLong workProgress, UpdateFileProgress fileToInstall) throws ApiException, IOException {
+    private static final DecimalFormat DECIMAL_PERCENT = new DecimalFormat("##0.00");
+
+    private void downloadFileToInstall(AppServerService appServerService, AtomicLong downloadedBytes, long toDownloadBytes, UpdateFileProgress fileToInstall) throws ApiException, IOException {
         logAppender.accept(Translation.getText("lc.installer.task.installing.progress.detail.downloading", fileToInstall.getTargetPath(), FileNameUtils.getFileSize(fileToInstall.getFileSize())));
+        long startTime = System.currentTimeMillis();
         appServerService.downloadAndInstallFileV2(
                 appServerService,
                 fileToInstall,
                 new File(this.installerConfiguration.getInstallationSoftwareDirectory().getPath() + File.separator + DIR_NAME_APPLICATION),
                 this.installerConfiguration.getInstallationSoftwareDirectory(),
                 new File(this.installerConfiguration.getInstallationSoftwareDirectory().getPath() + File.separator + DIR_NAME_APPLICATION_DATA),
-                this.installerConfiguration.getInstallationUserDataDirectory()
+                this.installerConfiguration.getInstallationUserDataDirectory(),
+                read -> {
+                    long bCount = downloadedBytes.addAndGet(read);
+                    super.updateMessage(Translation.getText("lc.installer.task.installing.progress.general.downloading.with.progress",
+                            DECIMAL_PERCENT.format(100.0 * (1.0 * bCount / toDownloadBytes))));
+                    updateProgress(bCount, toDownloadBytes);
+                }
         );
-        updateProgress(workProgress.incrementAndGet(), totalWork);
+        logAppender.accept(Translation.getText("lc.installer.task.installing.progress.detail.downloaded.detail",
+                fileToInstall.getTargetPath(),
+                FileNameUtils.getFileSize(fileToInstall.getFileSize()),
+                FileNameUtils.getFileSize((long) (fileToInstall.getFileSize() / ((System.currentTimeMillis() - startTime) / 1000.0)))));
     }
 
-    private void downloadPluginsToInstall(AppServerService appServerService, long totalWork, AtomicLong workProgress) throws ApiException {
+    private void downloadPluginsToInstall(AppServerService appServerService) throws ApiException {
         List<String> pluginIds = installerConfiguration.getPluginToInstallIds();
         File pluginRootDirectory = new File(this.installerConfiguration.getInstallationSoftwareDirectory().getPath() + File.separator + DIR_NAME_APPLICATION_DATA + File.separator + "plugins");
         File pluginJarDirectory = new File(pluginRootDirectory.getPath() + File.separator + "jars");
@@ -219,10 +246,16 @@ public class FullInstallTask extends Task<InstallResult> {
                         File pluginUpdateFile = new File(pluginJarDirectory.getPath() + File.separator + lastPluginUpdate.getFileName());
                         IOUtils.createParentDirectoryIfNeeded(pluginUpdateFile);
                         LOGGER.info("Found the plugin {}, will try to download version {} (file saved to {})", lastPluginUpdate.getId(), lastPluginUpdate.getVersion(), pluginUpdateFile);
-                        appServerService.downloadFileAndCheckIt(() -> appServerService.getPluginUpdateDownloadUrl(lastPluginUpdate.getId()), pluginUpdateFile, lastPluginUpdate.getFileHash(), DOWNLOAD_ATTEMPT_COUNT_BEFORE_FAIL);
+                        appServerService.downloadFileAndCheckIt(() -> appServerService.getPluginUpdateDownloadUrl(lastPluginUpdate.getId()),
+                                pluginUpdateFile,
+                                lastPluginUpdate.getFileHash(),
+                                DOWNLOAD_ATTEMPT_COUNT_BEFORE_FAIL);
                         LOGGER.info("Plugin update downloaded");
                         validPluginsPath.add(DIR_NAME_APPLICATION_DATA + File.separator + "plugins" + File.separator + "jars" + File.separator + pluginUpdateFile.getName());
-                        logAppender.accept(Translation.getText("lc.installer.task.installing.progress.plugin.installation.detail", pluginId, lastPluginUpdate.getVersion(), FileNameUtils.getFileSize(lastPluginUpdate.getFileSize())));
+                        logAppender.accept(Translation.getText("lc.installer.task.installing.progress.plugin.installation.detail",
+                                pluginId,
+                                lastPluginUpdate.getVersion(),
+                                FileNameUtils.getFileSize(lastPluginUpdate.getFileSize())));
                     } else {
                         LOGGER.info("No plugin version found for {}", pluginId);
                         logAppender.accept(Translation.getText("lc.installer.task.installing.progress.plugin.installation.failed", pluginId));

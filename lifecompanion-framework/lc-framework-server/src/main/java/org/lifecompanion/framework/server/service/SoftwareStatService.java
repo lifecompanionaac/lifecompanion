@@ -156,7 +156,7 @@ public enum SoftwareStatService {
     // STAT TYPE
     //========================================================================
     public enum StatEvent {
-        INSTALLER_DOWNLOAD("installer.download"), APP_UPDATE_DONE("app.update.done"), LAUNCHER_UPDATE_DONE("launcher.update.done"), PLUGIN_UPDATE_DONE("plugin.update.done.");
+        APP_UPDATE_DONE("app.update.done");
 
         public final String code;
 

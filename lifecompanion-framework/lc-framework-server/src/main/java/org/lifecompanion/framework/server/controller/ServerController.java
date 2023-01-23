@@ -24,9 +24,7 @@ import spark.Route;
 import static org.lifecompanion.framework.server.service.JsonService.toJson;
 
 public class ServerController {
-    public static final Route wakeup = (request, response) -> {
-        return toJson(null);
-    };
+    public static final Route wakeup = (request, response) -> toJson(null);
 
     public static final Route blankImage = (req, res) -> {
         res.type("image/png");

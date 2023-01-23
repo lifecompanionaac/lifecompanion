@@ -37,9 +37,12 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.cert.Certificate;
 import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.Consumer;
+import java.util.function.LongConsumer;
 
 public class AppServerService {
     private static final Logger LOGGER = LoggerFactory.getLogger(AppServerService.class);
@@ -107,6 +110,10 @@ public class AppServerService {
     // HELPER
     //========================================================================
     public void downloadFileAndCheckIt(UrlSupplier urlGenerator, File filePath, String hash, int attemptCount) throws ApiException {
+        downloadFileAndCheckIt(urlGenerator, filePath, hash, attemptCount, null);
+    }
+
+    public void downloadFileAndCheckIt(UrlSupplier urlGenerator, File filePath, String hash, int attemptCount, LongConsumer consumer) throws ApiException {
         String url = null;
         for (int i = 0; i < attemptCount; i++) {
             Throwable error = null;
@@ -114,9 +121,13 @@ public class AppServerService {
                 long start = System.currentTimeMillis();
                 url = urlGenerator.getUrl();
                 if (url != null) {
-                    this.client.download(url, filePath);
+                    this.client.download(url, filePath, consumer);
                     long diff = System.currentTimeMillis() - start;
-                    LOGGER.info("{} - finished in {} ms for {} / speed = {}/s", filePath.getName(), diff, FileNameUtils.getFileSize(filePath.length()), FileNameUtils.getFileSize((long) (filePath.length() / (diff / 1000.0))));
+                    LOGGER.info("{} - finished in {} ms for {} / speed = {}/s",
+                            filePath.getName(),
+                            diff,
+                            FileNameUtils.getFileSize(filePath.length()),
+                            FileNameUtils.getFileSize((long) (filePath.length() / (diff / 1000.0))));
                     String fileHash = IOUtils.fileSha256HexToString(filePath);
                     if (StringUtils.isEquals(hash, fileHash)) {
                         return;
@@ -139,10 +150,15 @@ public class AppServerService {
         throw new ApiException("Download failed after " + attemptCount + " attempt");
     }
 
+
     public static void extractZip(File filePath) throws ApiException, IOException {
+        extractZip(filePath, null);
+    }
+
+    public static void extractZip(File filePath, LongConsumer counter) throws ApiException, IOException {
         File destPathDirectory = getFileToUnzipDestination(filePath);
         destPathDirectory.mkdirs();
-        IOUtils.unzipInto(filePath, destPathDirectory, null);
+        IOUtils.unzipIntoCounting(filePath, destPathDirectory, null, counter);
         boolean deleted = filePath.delete();
         LOGGER.info("File to unzip {} unzipped into {}, then deleted : {}", filePath.getPath(), destPathDirectory, deleted);
     }
@@ -151,7 +167,22 @@ public class AppServerService {
         return new File(filePath.getParentFile().getPath() + File.separator + FileNameUtils.getNameWithoutExtension(filePath));
     }
 
-    public boolean downloadAndInstallFileV2(AppServerService appServerService, UpdateFileProgress file, File softwareDataDir, File launcherDir, File softwareResourcesDir, File userDataDir) throws ApiException, IOException {
+    public boolean downloadAndInstallFileV2(AppServerService appServerService,
+                                            UpdateFileProgress file,
+                                            File softwareDataDir,
+                                            File launcherDir,
+                                            File softwareResourcesDir,
+                                            File userDataDir) throws IOException, ApiException {
+        return downloadAndInstallFileV2(appServerService, file, softwareDataDir, launcherDir, softwareResourcesDir, userDataDir, null);
+    }
+
+    public boolean downloadAndInstallFileV2(AppServerService appServerService,
+                                            UpdateFileProgress file,
+                                            File softwareDataDir,
+                                            File launcherDir,
+                                            File softwareResourcesDir,
+                                            File userDataDir,
+                                            LongConsumer counter) throws ApiException, IOException {
         File destPath = getDestPathForFile(file.getTargetType(), file.getTargetPath(), softwareDataDir, launcherDir, softwareResourcesDir, userDataDir);
         LOGGER.debug("Will download update file {} to {}", file, destPath);
         // Check that the file to unzip wasn't already downloaded and extracted
@@ -159,12 +190,14 @@ public class AppServerService {
             File fileToUnzipDestination = getFileToUnzipDestination(destPath);
             if (fileToUnzipDestination.exists() && fileToUnzipDestination.listFiles() != null && fileToUnzipDestination.listFiles().length > 0) {
                 LOGGER.info("File {} wasn't downloaded and unzipped because it was already existing and unzipped", destPath);
+                counter.accept(file.getFileSize() * 2);
                 return true;
             }
         }
         // Check that the file to download doesn't already exist and its hash is correct
         if (destPath.exists() && StringUtils.isEquals(IOUtils.fileSha256HexToString(destPath), file.getFileHash())) {
             LOGGER.info("File {} wasn't downloaded because it was already in destination path and its hash was correct", destPath);
+            counter.accept(file.getFileSize());
             return true;
         }
 
@@ -173,9 +206,10 @@ public class AppServerService {
                 () -> appServerService.getApplicationFileDownloadUrl(file.getFileId()),
                 destPath,
                 file.getFileHash(),
-                ApplicationConstant.DOWNLOAD_ATTEMPT_COUNT_BEFORE_FAIL);
+                ApplicationConstant.DOWNLOAD_ATTEMPT_COUNT_BEFORE_FAIL,
+                counter);
         if (file.isToUnzip()) {
-            appServerService.extractZip(destPath);
+            appServerService.extractZip(destPath, counter);
         }
         return false;
     }

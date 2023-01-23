@@ -93,8 +93,6 @@ public enum ApplicationPluginUpdateService {
 
     public String getPluginUpdateDownloadUrl(Request request, String id) throws IOException {
         ApplicationPluginUpdate applicationPluginUpdate = ApplicationPluginUpdateDao.INSTANCE.getApplicationPluginUpdate(id);
-        // FIXME : restore this stats on a specific URL (because download process changed)
-        //  SoftwareStatService.INSTANCE.pushStat(request, SoftwareStatService.StatEvent.PLUGIN_UPDATE_DONE.code + applicationPluginUpdate.getApplicationPluginId(), applicationPluginUpdate.getVersion(), null);
         return FileStorageService.INSTANCE.generateFileUrl(applicationPluginUpdate.getFileStorageId());
     }
 }

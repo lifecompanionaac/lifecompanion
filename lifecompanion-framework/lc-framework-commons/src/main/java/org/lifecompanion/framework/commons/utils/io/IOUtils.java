@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.function.LongConsumer;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -182,7 +183,7 @@ public class IOUtils {
      * @param excludeRegex a regex defined to exclude zip entry, can be null to unzip all
      * @throws IOException if a problem happen in unzip
      */
-    public static void unzipInto(final File zipPath, final File directory, final String excludeRegex) throws IOException {
+    public static void unzipIntoCounting(final File zipPath, final File directory, final String excludeRegex, LongConsumer counter) throws IOException {
         try (ZipInputStream zis = new ZipInputStream(new FileInputStream(zipPath))) {
             ZipEntry nextEntry = zis.getNextEntry();
             while (nextEntry != null) {
@@ -197,9 +198,9 @@ public class IOUtils {
                         filePath.mkdir();
                     } else {
                         //Extract
-                        FileOutputStream fos = new FileOutputStream(filePath);
-                        copyStream(zis, fos);
-                        fos.close();
+                        try (FileOutputStream fos = new FileOutputStream(filePath)) {
+                            copyStreamCounting(zis, fos, counter);
+                        }
                     }
                 }
                 //Next
@@ -207,6 +208,10 @@ public class IOUtils {
                 nextEntry = zis.getNextEntry();
             }
         }
+    }
+
+    public static void unzipInto(final File zipPath, final File directory, final String excludeRegex) throws IOException {
+        unzipIntoCounting(zipPath, directory, excludeRegex, null);
     }
 
     /**
@@ -279,10 +284,23 @@ public class IOUtils {
      * @throws IOException if a problem happen in copy
      */
     public static void copyStream(final InputStream in, final OutputStream os) throws IOException {
+        copyStreamCounting(in, os, null);
+    }
+
+    public static void copyStreamCounting(final InputStream in, final OutputStream os, LongConsumer counter) throws IOException {
         byte[] buffer = new byte[BUFFER_SIZE];
         int len;
+        long counterUpdates = 0, addedSinceLastUpdate = 0;
         while ((len = in.read(buffer)) > -1) {
             os.write(buffer, 0, len);
+            addedSinceLastUpdate += len;
+            if (counter != null && counterUpdates++ % 1000 == 0) {
+                counter.accept(addedSinceLastUpdate);
+                addedSinceLastUpdate = 0;
+            }
+        }
+        if (counter != null) {
+            counter.accept(addedSinceLastUpdate);
         }
     }
 

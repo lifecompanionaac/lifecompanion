@@ -62,7 +62,9 @@
 		d'installation
 	</text>
 	<text key="lc.installer.task.installing.progress.general.downloading">Téléchargement des fichiers</text>
+	<text key="lc.installer.task.installing.progress.general.downloading.with.progress">Téléchargement des fichiers - {}%</text>
 	<text key="lc.installer.task.installing.progress.detail.downloading">{} ({})</text>
+	<text key="lc.installer.task.installing.progress.detail.downloaded.detail">{} téléchargé ({} à {}/s)</text>
 	<text key="lc.installer.task.installing.progress.general.installation.configuration">Sauvegarde de la configuration
 		d'installation
 	</text>

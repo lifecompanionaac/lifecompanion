@@ -57,7 +57,6 @@ public class ApplicationInstallerController {
         final SystemType systemType = SystemType.valueOf(StringUtils.toUpperCase(system));
         ApplicationInstaller lastInstallerFor = ApplicationInstallerService.INSTANCE.getLastInstallerFor(request.params("application"), systemType, Boolean.parseBoolean(LangUtils.getOr(request.params("preview"), "false")));
         if (lastInstallerFor != null) {
-            SoftwareStatService.INSTANCE.pushStat(request, SoftwareStatService.StatEvent.INSTALLER_DOWNLOAD, lastInstallerFor.getVersion(), systemType);
             response.header("Content-disposition", "attachment; filename=" + ApplicationInstallerService.INSTANCE.getApplicationInstallerName(lastInstallerFor, false, pluginIds).replace(";", "%3B"));
             try (OutputStream os = response.raw().getOutputStream()) {
                 FileStorageService.INSTANCE.downloadFileTo(lastInstallerFor.getFileStorageId(), os);

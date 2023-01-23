@@ -26,6 +26,7 @@
 - Ticket #167 : insérer le caractère " avec un clavier virtuel fonctionne maintenant
 - Correction de l'affichage de l'explication dans la section "Événements"
 - Ticket #41 : LifeCompanion redémarre en cas d'échec de mise à jour
+- Ticket #34 : meilleur affichage de l'avancement de l'installation
 
 ## 1.4.2 - 20/06/2022
 

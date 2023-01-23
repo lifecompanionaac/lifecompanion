@@ -27,10 +27,9 @@ ext {
 }
 
 application {
-//    mainModule = 'org.lifecompanion.framework.server'
     mainClass = 'org.lifecompanion.framework.server.LifeCompanionFrameworkServer'
     applicationDefaultJvmArgs = [
-            '-Dorg.lifecompanion.framework.server.dev.database.url=postgres://postgres:postgres@localhost:5432/postgres',
+            '-Dorg.lifecompanion.framework.server.dev.database.url=postgres://postgres:postgres@localhost:5432/lifecompanionaac-framework',
             '-Dorg.lifecompanion.framework.server.dev.port=1234'
     ]
 }
