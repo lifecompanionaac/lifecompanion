@@ -54,8 +54,7 @@ import java.util.*;
 import java.util.function.Consumer;
 
 /**
- * Known issues (TODO)
- * - double/triple+ start
+ *
  */
 public enum SpellGameController implements ModeListenerI {
     INSTANCE;
@@ -239,7 +238,11 @@ public enum SpellGameController implements ModeListenerI {
 
             // If the user successfully enter the word : set the point and go to next word
             boolean success = step.checkWord(word, input);
-            addGameAnswer(new SpellGameStepResult(step, success ? SpellGameStepResultStatusEnum.SUCCESS : SpellGameStepResultStatusEnum.FAILED, word, input, System.currentTimeMillis() - currentStepStartedAt));
+            addGameAnswer(new SpellGameStepResult(step,
+                    success ? SpellGameStepResultStatusEnum.SUCCESS : SpellGameStepResultStatusEnum.FAILED,
+                    word,
+                    input,
+                    System.currentTimeMillis() - currentStepStartedAt));
             if (success) {
                 showSuccessFeedback();
                 endCurrentStepAndGoToNextWord(true);

@@ -276,6 +276,34 @@ Note that `variableDescriptionProperty` can be used in two ways :
 - static way : just set the value to the static version of the description : `this.variableDescriptionProperty().set(this.getStaticDescription());`
 - dynamic way : if your action have parameters (eg te text to write like `WriteTextAction` action), you can bind the variable description to change when the action parameters change : see [Translations](#translations) and `TranslationFX` part.
 
+#### Configuration view
+
+Action can have configuration view if there is a need to configure some properties. For example, `WriteTextAction` can have its text to write configured. To configure it, the action should set its attribute `parameterizableAction` to true. This will cause LifeCompanion to search for a configuration view.
+
+To create an action configuration view, you should extend `UseActionConfigurationViewI` and make sure to return the correct type :
+```java
+@Override
+public Class<StartSpellGameAction> getConfiguredActionType() {
+    return StartSpellGameAction.class;
+}
+```
+
+The implementation should also handle the action instance/UI binding : 
+
+```java
+@Override
+public void editStarts(final StartSpellGameAction element, final ObservableList<UseVariableDefinitionI> possibleVariables) {
+}
+
+@Override
+public void editEnds(final StartSpellGameAction element) {
+}
+
+@Override
+public void editCancelled(StartSpellGameAction element) {
+}
+```
+
 #### Execution
 
 Action are executed on a specific Thread (not on the FX Thread) so you should be aware that you can't modify the UI directly : see [Threading part about it](#threading).
@@ -284,9 +312,85 @@ Action are executed on a specific Thread (not on the FX Thread) so you should be
 
 ### Key option
 
-TODO
+Key option are useful to implement specific/dynamic content on keys. It allows developper to create a key with a dynamic text, image, style, actions and also custom JavaFX node views.
+Most of the time, key options are used by specific controllers that handle updating their content in use mode.
+
+Here are a short list of some example implementations (you can find existing implementation in `org.lifecompanion.model.impl.configurationcomponent.keyoption`)
+- **Quick communication key** (`QuickComKeyOption`) : a key that only define a related action and configuration view to make editing quicker
+- **Word prediction key** (`WordPredictionKeyOption`) : a key that is filled on runtime by word prediction controller, that also have an associated action
+- **Progress display key** (`ProgressDisplayKeyOption`) : a key that display a progress bar or indicator for user sequences
+
+The following documentation will use the `CurrentWordDisplayKeyOption` implementation as reference.
+
+#### Implement a key option
+
+If you want to create a new key option, you have to extends `AbstractKeyOption`, in the key option constructor :
+
+```java
+public CurrentWordDisplayKeyOption() {
+    this.optionNameId = "spellgame.plugin.current.word.key.option.name";
+    this.optionDescriptionId = "spellgame.plugin.current.word.key.option.description";
+    this.iconName = "current_word.png";
+}
+```
+
+Note that key option have specific properties to define default behavior : `disableTextContent`, `disableImage`, `considerKeyEmpty`, `maxTextLength`. These option are mainly useful in edit mode to configure the edit mode UI (by disabling some buttons/fields).
+
+#### Key option and its parent key
+
+Key option instances are always attached to a single key. Note that the key option is attached to the key in both edit and use mode. You can implement hooks to modify the attached/detached key.
+You can find attach/detach example in `WordPredictionKeyOption`.
+
+```java
+@Override
+public void attachToImpl(final GridPartKeyComponentI key) {
+}
+
+@Override
+public void detachFromImpl(final GridPartKeyComponentI key) {
+}
+```
+
+The attached key is available in the key option in `attachedKey` property. You can get this property value to access the attached key instance.
+
+#### Custom view
+
+A key option can be used to define a custom view that will be attached to the key view. The defined view has to be a subclass of `javafx.scene.layout.Region`.
+If you set a Node to the `keyViewAddedNode` property, this will add the given view to the key view (on top of it), binding the given `Region` its `prefWidthProperty()` and `prefHeightProperty()`.
+
+Be careful, as modifiying this property can change the JavaFX graphic tree, you should alway modify it on FX Thread, check [Threading part](#threading).
+
+Good example of custom view can be found in `ProgressDisplayKeyOption`.
+
+Note that for key options contrary to use event/action, a binding is done between model and UI field. To make it work correctly, you should create your binding using `EditActionUtils` and a custom a `UndoRedoActionI` : this will allow your key option property changes to be handled correctly in edit mode UI.
+
+#### Configuration view
+
+Key option can have their own edit mode view that will be added to "Selected" tab in edit mode. These view can be useful to edit the key option configuration. Configuration can be directly available in this configuration view, but implementer is free to implement a simple button to open a global configuration dialog.
+
+To implement a key option configuration view, you should extend `BaseKeyOptionConfigView`, you should especially take care of binding you custom key option properties 
+
+
+#### Using key options in controllers
+
+Most of the time, controllers will need to get one or all the keys/key options in use mode to handle their content. For example, `WordPredictionController` will keep a list of all available word prediction key to update them on text change. To do so, an helper method exists :
+
+```java
+Map<GridComponentI, List<CurrentWordDisplayKeyOption>> keys = new HashMap<>();
+ConfigurationComponentUtils.findKeyOptionsByGrid(CurrentWordDisplayKeyOption.class, configuration, keys, null);
+```
+
+This will return a map with all the found key options per grid. Be aware that an user in edit mode can set your key option to none or to multiple keys, so you have to handle these cases too.
 
 ### Use event
+
+TODO principle
+
+#### Generating variables
+
+TODO
+
+#### Configuration view
 
 TODO
 

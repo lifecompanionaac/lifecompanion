@@ -20,6 +20,8 @@
 package org.lifecompanion.plugin.spellgame.model.keyoption;
 
 import javafx.animation.*;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.transform.Rotate;
@@ -36,6 +38,7 @@ import org.lifecompanion.util.javafx.FXThreadUtils;
 
 
 public class CurrentWordDisplayKeyOption extends AbstractKeyOption {
+    private final BooleanProperty showVisualFeedbackOnAnswer;
 
     public CurrentWordDisplayKeyOption() {
         super();
@@ -43,6 +46,7 @@ public class CurrentWordDisplayKeyOption extends AbstractKeyOption {
         this.optionNameId = "spellgame.plugin.current.word.key.option.name";
         this.optionDescriptionId = "spellgame.plugin.current.word.key.option.description";
         this.iconName = "current_word.png";
+        this.showVisualFeedbackOnAnswer = new SimpleBooleanProperty(true);
     }
 
     @Override
@@ -52,6 +56,10 @@ public class CurrentWordDisplayKeyOption extends AbstractKeyOption {
 
     @Override
     public void detachFromImpl(final GridPartKeyComponentI key) {
+    }
+
+    public BooleanProperty showVisualFeedbackOnAnswerProperty() {
+        return showVisualFeedbackOnAnswer;
     }
 
     @Override
@@ -86,44 +94,46 @@ public class CurrentWordDisplayKeyOption extends AbstractKeyOption {
     }
 
     public void answerDone(boolean correct) {
-        ImageView imageView = new ImageView(IconHelper.get("answers/" + (correct ? "answer_good.png" : "answer_bad.png")));
-        imageView.setPreserveRatio(true);
-        ImageViewPane imageViewPane = new ImageViewPane(imageView);
+        if (showVisualFeedbackOnAnswer.get()) {
+            ImageView imageView = new ImageView(IconHelper.get("answers/" + (correct ? "answer_good.png" : "answer_bad.png")));
+            imageView.setPreserveRatio(true);
+            ImageViewPane imageViewPane = new ImageViewPane(imageView);
 
-        int durationMs = 1000;
+            int durationMs = 1000;
 
-        Transition toPlay;
-        if (correct) {
-            RotateTransition rotateTransition = new RotateTransition(Duration.millis(durationMs), imageView);
-            rotateTransition.setAxis(Rotate.Y_AXIS);
-            rotateTransition.setToAngle(360 * 4);
-            rotateTransition.setInterpolator(Interpolator.EASE_IN);
-            FadeTransition fadeTransition = new FadeTransition(Duration.millis(durationMs), imageView);
-            fadeTransition.setToValue(0.0);
-            fadeTransition.setInterpolator(Interpolator.EASE_IN);
-            ScaleTransition scaleTransition = new ScaleTransition(Duration.millis(durationMs), imageView);
-            scaleTransition.setToX(0.0);
-            scaleTransition.setToY(0.0);
-            scaleTransition.setInterpolator(Interpolator.EASE_IN);
-            toPlay = new ParallelTransition(rotateTransition, fadeTransition, scaleTransition);
-        } else {
-            ScaleTransition scaleTransition = new ScaleTransition(Duration.millis(durationMs / 6), imageView);
-            scaleTransition.setToX(1.3);
-            scaleTransition.setToY(1.3);
-            scaleTransition.setAutoReverse(true);
-            scaleTransition.setCycleCount(6);
+            Transition toPlay;
+            if (correct) {
+                RotateTransition rotateTransition = new RotateTransition(Duration.millis(durationMs), imageView);
+                rotateTransition.setAxis(Rotate.Y_AXIS);
+                rotateTransition.setToAngle(360 * 4);
+                rotateTransition.setInterpolator(Interpolator.EASE_IN);
+                FadeTransition fadeTransition = new FadeTransition(Duration.millis(durationMs), imageView);
+                fadeTransition.setToValue(0.0);
+                fadeTransition.setInterpolator(Interpolator.EASE_IN);
+                ScaleTransition scaleTransition = new ScaleTransition(Duration.millis(durationMs), imageView);
+                scaleTransition.setToX(0.0);
+                scaleTransition.setToY(0.0);
+                scaleTransition.setInterpolator(Interpolator.EASE_IN);
+                toPlay = new ParallelTransition(rotateTransition, fadeTransition, scaleTransition);
+            } else {
+                ScaleTransition scaleTransition = new ScaleTransition(Duration.millis(durationMs / 6), imageView);
+                scaleTransition.setToX(1.3);
+                scaleTransition.setToY(1.3);
+                scaleTransition.setAutoReverse(true);
+                scaleTransition.setCycleCount(6);
 
-            FadeTransition fadeTransition = new FadeTransition(Duration.millis(durationMs / 2), imageView);
-            fadeTransition.setToValue(0.0);
+                FadeTransition fadeTransition = new FadeTransition(Duration.millis(durationMs / 2), imageView);
+                fadeTransition.setToValue(0.0);
 
-            toPlay = new SequentialTransition(scaleTransition, fadeTransition);
+                toPlay = new SequentialTransition(scaleTransition, fadeTransition);
+            }
+
+            toPlay.setOnFinished(e -> this.keyViewAddedNodeProperty().set(null));
+
+            FXThreadUtils.runOnFXThread(() -> {
+                this.keyViewAddedNodeProperty().set(new BorderPane(imageViewPane));
+                toPlay.play();
+            });
         }
-
-        toPlay.setOnFinished(e -> this.keyViewAddedNodeProperty().set(null));
-
-        FXThreadUtils.runOnFXThread(() -> {
-            this.keyViewAddedNodeProperty().set(new BorderPane(imageViewPane));
-            toPlay.play();
-        });
     }
 }

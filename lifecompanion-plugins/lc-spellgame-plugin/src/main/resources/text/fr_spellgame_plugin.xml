@@ -104,5 +104,8 @@
     <text key="spellgame.plugin.config.view.field.enable.feedback.sound.tooltip">Si activé, ajoute un retour sonore à chaque réponse (bonne ou mauvaise)</text>
     <text key="spellgame.plugin.config.view.field.shuffle.words">Mélanger la liste</text>
     <text key="spellgame.plugin.config.view.field.shuffle.words.tooltip">Si activé, la liste de mot sera mélangée de manière aléatoire à chaque début de partie</text>
+    <text key="spellgame.plugin.config.view.field.show.visual.feedback.key">Afficher un retour visuel</text>
+    <text key="spellgame.plugin.config.view.field.show.visual.feedback.key.tooltip">Si activé, la case affiche un retour visuel à chaque réponse de l'utilisateur (positive ou négative)</text>
+    <text key="spellgame.plugin.config.view.field.show.visual.feedback.key.action">Activation/désactivation du retour visuel sur le mot courant</text>
 
 </texts>
