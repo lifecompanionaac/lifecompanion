@@ -228,6 +228,8 @@ public String[] getJavaFXStylesheets() {
 
 ##### Default configuration
 
+![LifeCompanion default configuration](res/default_configuration.png)
+
 As it can be difficult for a final user to create a configuration from strach using your plugin, it is important to provide default configuration for user to start their own. Your provided configuration will be added to default configuration list available when the user create a new profile or when he wants to create configuration from model.
 
 The configuration will be then duplicated to be added in the profile. AS the current language is injected to the implementation, it is possible to create different configuration for each language.
@@ -242,6 +244,8 @@ public String[] getDefaultConfigurations(String languageCode) {
 **As the configuration will be visible by users : ensure it does not contains any private data**
 
 ### Use action
+
+![LifeCompanion use action](res/use_action.png)
 
 Actions are the best way to implement specific behavior in LifeCompanion. Most of the action implementation interact with LifeCompanion [existing controllers](#controllers) or with custom controllers. For example, an email plugin will interact with its own controller to manage inbox, sent messages, etc.
 
@@ -278,6 +282,8 @@ Note that `variableDescriptionProperty` can be used in two ways :
 
 #### Configuration view
 
+![LifeCompanion use action configuration view](res/use_action_config_view.png)
+
 Action can have configuration view if there is a need to configure some properties. For example, `WriteTextAction` can have its text to write configured. To configure it, the action should set its attribute `parameterizableAction` to true. This will cause LifeCompanion to search for a configuration view.
 
 To create an action configuration view, you should extend `UseActionConfigurationViewI` and make sure to return the correct type :
@@ -311,6 +317,8 @@ Action are executed on a specific Thread (not on the FX Thread) so you should be
 **Actions added to a key or to an event are executed sequentially** : the first action should ends before executing the second. This means that if your action is blocking the execution thread, the next action could be never executed. However, LifeCompanion allow 4 components to run action in parallel. If possible, it's better that your action don't create any new thread, however if needed, be aware that use mode could end "outside" your new thread : if you need to interact with general controllers after a while, it's better to check if you're still in use mode (with `AppModeController.isUseMode()`)
 
 ### Key option
+
+![LifeCompanion key option](res/key_option.png)
 
 Key option are useful to implement specific/dynamic content on keys. It allows developper to create a key with a dynamic text, image, style, actions and also custom JavaFX node views.
 Most of the time, key options are used by specific controllers that handle updating their content in use mode.
@@ -384,6 +392,8 @@ This will return a map with all the found key options per grid. Be aware that an
 
 ### Use event
 
+![LifeCompanion use event](res/use_event.png)
+
 TODO principle
 
 #### Generating variables
@@ -396,6 +406,8 @@ TODO
 
 ### General configuration view
 
+![LifeCompanion general configuration view](res/general_config_view.png)
+
 General configuration view are configuration not directly linked to a selected component that allow the configuration of global parameter for the current edited configuration. Generally, the general configuration view is used to modify [plugin properties](#properties)
 
 #### Implementing view
@@ -404,6 +416,8 @@ To implement a plugin configuration view, you have to implement `GeneralConfigur
 
 #### Handling view lifecycle
 
+TODO
+
 #### Handling view cancel/save
 
 For the save/cancel button to be working, you should take care of never modifying directly your configuration. You then have two choices :
@@ -411,6 +425,8 @@ For the save/cancel button to be working, you should take care of never modifyin
 - You can duplicate your model and then bind the view to it : this can be easier but requires your model to be easely duplicated. In `saveChanges()`you then just have to replace your old model with the new version. If you need this version, you can check how to implement `DuplicableComponentI` interface in examples.
 
 ### Use variable
+
+![LifeCompanion general configuration view](res/use_variable.png)
 
 Use variable can be used in multiple LifeCompanion components :
 - **Keys** associated with "Information variable" key option : the text content of the key will be changed on runtime (combination of text and variables). It allow for example to display the current time in a key or an user score.
