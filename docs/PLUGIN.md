@@ -22,12 +22,13 @@ Be familiar with Java and JavaFX development.
 
 1. First, clone LifeCompanion official repository **from the last release tag** `lifecompanion/lc-app/X.X.X-prod` and make it run locally : [use build documentation](BUILD.md)
 1. Run `gradlew publishToMavenLocal` on **lifecompanion-framework** and **lifecompanion** projects (this will add LifeCompanion API to your local Maven repo)
-1. **TODO FROM HERE**
-1. Copy the **lifecompanion/lc-example-plugin** to your plugin specific folder
-1. Change the folder name
-1. Change Gralde project name *settings.gradle*
-1. Change the plugin ID in *build.gralde* on key **LifeCompanion-Plugin-Id**
-1. To build your plugin : use `gradlew jar`
+1. Duplicate the [**lifecompanion-plugins/lc-spellgame-plugin**](../lifecompanion-plugins/lc-spellgame-plugin/) folder to a folder named with your plugin ID - let's call it `lc-example-plugin` for the next steps
+1. Change Gralde project name in *settings.gradle* to `rootProject.name = 'lc-example-plugin'`
+1. Enter plugin metadata in *build.gradle*, especially `"LifeCompanion-Plugin-Id": "lc-example-plugin"`
+1. Check in *gradle.properties* that the LifeCompanion version is the same that the pulled version `lifecompanionAppVersion=1.4.3`
+1. You can then build your plugin jar with `gradlew jar`
+
+Follow the next section to be able to quickly develop your plugin in InteliJ
 
 ### Import and use the plugin in IntelliJ
 
@@ -400,11 +401,11 @@ Use event in LifeCompanion allow the user to define actions after a global event
 
 It can be usefull to implement use event if you want to allow the user to define a global behavior. For example, in spell game, we create events that are fired on game starts/ends. It allows the final user to "react" on them, and for example to display the correct grid on each event.
 
-Note that when you're implementing use events, **you're implementing the event generator**. The event "handling" is then handled by LifeCompanion depending of the use actions defined by users.
+Note that when you're implementing use events, **you're implementing the event generator**. The event "handling" is then done by LifeCompanion depending of the use actions defined by users.
 
 #### Implement a use event generator
 
-To implement an use event, you should extends `BaseUseEventGeneratorImpl`. Basically, the use event is implemented only handling `modeStart(...)` and `modeStop(...)` methods that should handled pluging-in the correct hook to then generate events (refer to [lifecycle part](#use-mode-startstop)). As use event also extends `CategorizedElementI` like use action do, same attributes can be found in it to define the icon, name, description, etc.
+To implement an use event, you should extends `BaseUseEventGeneratorImpl`. Basically, the use event is implemented only handling `modeStart(...)` and `modeStop(...)` methods that should pluging-in the correct hook to then generate events (refer to [lifecycle part](#use-mode-startstop)). As use event also extends `CategorizedElementI` like use action do, same attributes can be found in it to define the icon, name, description, etc.
 
 To generate events, you should call `useEventListener.fireEvent(...)` on the use event generator instance. For example, in spell game, the starts event looks like this :
 ```java
@@ -490,7 +491,7 @@ public String getMenuStepToSelect() {
 }
 ```
 
-If paramters are given to `GeneralConfigurationController.INSTANCE.showStep(...)`, you can access them using (if you have multiple `showStep(...)` calls, you should handle the different cases)
+If parameters are given to `GeneralConfigurationController.INSTANCE.showStep(...)`, you can access them using (if you have multiple `showStep(...)` calls, you should handle the different cases)
 ```java
 @Override
 public void beforeShow(Object[] stepArgs) {
