@@ -1,5 +1,3 @@
-# WIP
-
 # Extends LifeCompanion with plugins
 
 ## Introduction
@@ -9,6 +7,8 @@
 Terms used in this documentation will be directly linked to LifeCompanion usages.
 
 Feel free to fill an issue if you're having trouble with plugin development.
+
+While plugin are easier to implement that modifying LifeCompanion core, feel free to create pull request if the plugin API is limited for your use.
 
 ## Prerequisites
 
@@ -574,7 +574,7 @@ Sometimes it can be usefull to update a variable earlier than the next automatic
 
 ### Word prediction
 
-![LifeCompanion predictors](res/predictors.png.png)
+![LifeCompanion predictors](res/predictors.png)
 
 New word predictor can be implemented extending `WordPredictorI`. Word predictors can have their own configuration view, for this, they should implement `getConfigStepId()` with an existing (General configuration view)[#general_config_view].
 
@@ -586,7 +586,7 @@ New char predictor can be implemented extending `CharPredictorI`. Like the word 
 
 ### Controllers
 
-Most of LifeCompanion controllers are implemented using singleton pattern (using enum implementation). They are located in `org.lifecompanion.controller` package. Controllers are the correct way to interact with LifeCompanion features : selection mode, voice synthesizer, current configuration, text editor, etc. Plugin are encouraged implementing their own controller to manage their global state.
+Most of LifeCompanion controllers are implemented using singleton pattern (using enum implementation). They are located in `org.lifecompanion.controller` package. **Controllers are the correct way to interact with LifeCompanion features : selection mode, voice synthesizer, current configuration, text editor, etc.** Plugin are encouraged implementing their own controllers to manage their global state.
 
 Some controllers can be used in both edit and use mode, while some can't. Check each one documentation to known.
 
