@@ -43,10 +43,6 @@ import java.util.Map;
 public class Predict4AllEvaluationPlugin implements PluginI {
     private static final Logger LOGGER = LoggerFactory.getLogger(Predict4AllEvaluationPlugin.class);
 
-    public static final String PLUGIN_ID = "lc-predict4all-evaluation-plugin";
-
-    public static File DATA_FOLDER;
-
     @Override
     public String[] getLanguageFiles(final String languageCode) {
         return new String[]{"/text/" + languageCode + "_predict4all_plugin.xml"};
@@ -54,9 +50,13 @@ public class Predict4AllEvaluationPlugin implements PluginI {
 
     @Override
     public String[] getJavaFXStylesheets() {
-        return new String[0];
+        return null;
     }
 
+    @Override
+    public String[] getDefaultConfigurations(String languageCode) {
+        return new String[]{"/configurations/" + languageCode + "_predict4all_evaluation-example1.lcc"};
+    }
 
     @Override
     public void modeStart(final LCConfigurationI configuration) {

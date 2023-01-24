@@ -42,7 +42,9 @@ public interface PluginI extends ModeListenerI {
      *                     Code is from ISO 639-1 ("fr" for French)
      * @return the path array <i>(can return null if you don't have any file)</i>
      */
-    String[] getLanguageFiles(String languageCode);
+    default String[] getLanguageFiles(String languageCode) {
+        return null;
+    }
 
     /**
      * Get the JavaFX stylesheets for this plugin.<br>
@@ -50,7 +52,9 @@ public interface PluginI extends ModeListenerI {
      *
      * @return the path array <i>(can return null if you don't have any style)</i>
      */
-    String[] getJavaFXStylesheets();
+    default String[] getJavaFXStylesheets() {
+        return null;
+    }
 
     /**
      * Get the default configuration (lcc files) path (included in plugin classpath)
@@ -99,7 +103,9 @@ public interface PluginI extends ModeListenerI {
      * @return the list of all use variables defined by this plugin.<br>
      * <i>Can return null.</i>
      */
-    List<UseVariableDefinitionI> getDefinedVariables();
+    default List<UseVariableDefinitionI> getDefinedVariables() {
+        return null;
+    }
 
     /**
      * This will be called every second by LifeCompanion to get the value for each variable defined by plugin.<br>
@@ -109,7 +115,9 @@ public interface PluginI extends ModeListenerI {
      * @param variablesToGenerate the map that contains all plugin variables ( id -> variable definition)
      * @return the map with each variable value by id (you should use definition in given map for your use variable)
      */
-    Map<String, UseVariableI<?>> generateVariables(Map<String, UseVariableDefinitionI> variablesToGenerate);
+    default Map<String, UseVariableI<?>> generateVariables(Map<String, UseVariableDefinitionI> variablesToGenerate){
+        return null;
+    }
     //========================================================================
 
     // IO
