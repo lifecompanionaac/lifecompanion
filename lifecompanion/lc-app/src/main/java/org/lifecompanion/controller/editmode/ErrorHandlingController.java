@@ -70,6 +70,12 @@ public enum ErrorHandlingController implements LCStateListener {
 
     // HANDLING ERRORS
     //========================================================================
+
+    /**
+     * Display an error notification that will contain a button allowing the user to see the error detail
+     * @param title the notification title
+     * @param cause the error cause that will be used for details
+     */
     public void showErrorNotificationWithExceptionDetails(final String title, final Throwable cause) {
         LOGGER.info("Error is reported with a notification (title {})", title, cause);
         if (this.displayedErrorNotificationCount < MAX_ERROR_DISPLAY_COUNT) {

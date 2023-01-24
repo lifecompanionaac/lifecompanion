@@ -34,7 +34,7 @@ public interface CharPredictorI extends BasePredictorI {
 	 * @param limit the max number of character we want (can return less than this limit)
 	 * @return the list of predicted character. The first character is the list should be the most probable char for the given character.
 	 */
-	public List<Character> predict(String text, int limit);
+	List<Character> predict(String text, int limit);
 
 	/**
 	 * As the {@link #predict(String, int)} method do, should predict the next character for a given text.<br>
@@ -45,5 +45,5 @@ public interface CharPredictorI extends BasePredictorI {
 	 * @return the list of predicted character. The first character is the list should be the most probable char for the given character. The list should contains only accepted characters.
 	 * @throws UnsupportedOperationException if this predictor doesn't support this prediction method.
 	 */
-	public List<Character> predict(String text, int limit, HashSet<Character> acceptedCharacters) throws UnsupportedOperationException;
+	List<Character> predict(String text, int limit, HashSet<Character> acceptedCharacters) throws UnsupportedOperationException;
 }

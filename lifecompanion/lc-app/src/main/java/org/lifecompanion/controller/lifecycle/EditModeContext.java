@@ -64,7 +64,7 @@ public class EditModeContext extends AbstractModeContext {
     }
 
     @Override
-    public void cleanAfterStop() {
+    protected void cleanAfterStop() {
         previousConfiguration = configuration.get();
         previousConfigurationDescription = configurationDescription.get();
         this.configurationDescription.set(null);

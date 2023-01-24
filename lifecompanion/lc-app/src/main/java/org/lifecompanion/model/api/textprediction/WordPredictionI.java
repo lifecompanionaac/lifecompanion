@@ -21,25 +21,52 @@ package org.lifecompanion.model.api.textprediction;
 
 /**
  * Represent a word prediction to predict the next words for a typed text.<br>
- * 
+ *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public interface WordPredictionI {
-	String getPredictionToDisplay();
 
-	String getTextToWrite();
+    /**
+     * @return the total prediction that should be used to display the word in a result list.<br>
+     * This is can be the same as {@link #getTextToWrite()} but can also be the same.
+     */
+    String getPredictionToDisplay();
 
-	int getNextCharCountToRemove();
+    /**
+     * @return the prediction to write once char before the caret {@link #getPreviousCharCountToRemove()} and char after the caret {@link #getNextCharCountToRemove()} are removed.
+     */
+    String getTextToWrite();
 
-	int getPreviousCharCountToRemove();
+    /**
+     * @return the char count that should be removed before inserting the {@link #getTextToWrite()}.<br>
+     * This can be useful if we detected an error in the original input text
+     */
+    int getNextCharCountToRemove();
 
-	boolean isSpacePossible();
-	
-	double getScore();
-	
-	String getDebugInformations();
-	
-	Object getCustomValue();
-	
-	//TODO : score
+    /**
+     * @return the char count that should be removed before inserting the {@link #getTextToWrite()}.<br>
+     * This can be useful if we detected an error in the original input text
+     */
+    int getPreviousCharCountToRemove();
+
+    /**
+     * @return true if a space is possible after this prediction.<br>
+     * For example, for a prediction result of "j'" in French, the space is not possible after insertion
+     */
+    boolean isSpacePossible();
+
+    /**
+     * @return the prediction score (free for implementer)
+     */
+    double getScore();
+
+    /**
+     * @return free form information for debug purpose
+     */
+    String getDebugInformations();
+
+    /**
+     * @return free custom object value for debug purpose
+     */
+    Object getCustomValue();
 }

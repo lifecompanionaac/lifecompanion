@@ -40,6 +40,14 @@ public abstract class AbstractModeContext {
 
     // PROPS
     //========================================================================
+
+    /**
+     * The configuration for this context. This is filled by the system using {@link AppModeController} methods.<br>
+     * This can change even if the current mode doesn't change (for example, in edit mode, it is possible to switch from current configuration).<br>
+     * This can also be null if the mode is launched but with no current configuration (configuration can be closed)
+     *
+     * @return the read only property containing current configuration
+     */
     public final ReadOnlyObjectProperty<LCConfigurationI> configurationProperty() {
         return configuration;
     }
@@ -48,14 +56,28 @@ public abstract class AbstractModeContext {
         return configuration.get();
     }
 
-    public LCConfigurationDescriptionI getConfigurationDescription() {
-        return configurationDescription.get();
-    }
 
+    /**
+     * The configuration description associated with the current configuration.<br>
+     * This can be null even if the configuration is filled : if the configuration was never saved yet, or in some special cases.
+     *
+     * @return the read only property containing the current configuration description
+     */
     public final ReadOnlyObjectProperty<LCConfigurationDescriptionI> configurationDescriptionProperty() {
         return configurationDescription;
     }
 
+    public LCConfigurationDescriptionI getConfigurationDescription() {
+        return configurationDescription.get();
+    }
+
+    /**
+     * The mode associated stage.<br>
+     * Be aware that this Stage can be "under" another stage.<br>
+     * Depending of the mode, a stage can be created on each launch (in use mode) or recycled on every launch (in edit mode)
+     *
+     * @return the read only property containing the current stage
+     */
     public final ReadOnlyObjectProperty<Stage> stageProperty() {
         return stage;
     }
@@ -72,7 +94,7 @@ public abstract class AbstractModeContext {
 
     // BASE BEHAVIOR
     //========================================================================
-    abstract void cleanAfterStop();
+    protected abstract void cleanAfterStop();
 
     private void initBindings() {
         this.configuration.addListener((obs, ov, nv) -> {

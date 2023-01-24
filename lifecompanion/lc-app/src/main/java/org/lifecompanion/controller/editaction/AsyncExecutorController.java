@@ -70,6 +70,13 @@ public enum AsyncExecutorController implements LCStateListener {
         addAndExecute(blocking, hideFromNotification, wrapperTask);
     }
 
+    /**
+     * Submit a task for an async execution.
+     *
+     * @param blocking             should be true if UI should be blocked while this task is waiting or running
+     * @param hideFromNotification should be true if task should be hidden from running task panel
+     * @param task                 the task to run
+     */
     public void addAndExecute(boolean blocking, boolean hideFromNotification, final Task<?> task) {
         for (TaskAddedForExecutionListener taskAddedForExecutionListener : taskAddedForExecutionListeners) {
             taskAddedForExecutionListener.taskAdded(task, blocking, hideFromNotification);

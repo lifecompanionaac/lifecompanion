@@ -21,17 +21,27 @@ package org.lifecompanion.model.api.textprediction;
 
 /**
  * Represent a word prediction to predict the next words for a typed text.<br>
+ *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public interface WordPredictorI extends BasePredictorI {
 
-	public WordPredictionResultI predict(String textBeforeCharet, String textAfterCharet, int count);
+    /**
+     * Should predict (async) the possible next words for given text.
+     *
+     * @param textBeforeCaret the text before the caret (eg for "ho|me" will be "ho"). This is basically the used text to predict the next words
+     * @param textAfterCaret  the text after the caret (eg for "ho|me" will be "me"). This is mostly used to compute {@link WordPredictionI#getNextCharCountToRemove()}
+     * @param count           the wanted prediction count. The returned result list size can be different than this count (smaller or bigger). Mostly useful for optimization.
+     * @return
+     */
+    WordPredictionResultI predict(String textBeforeCaret, String textAfterCaret, int count);
 
-	/**
-	 * To detect if a new sentence is started
-	 * @param text the raw text
-	 * @return true if a new sentence is started
-	 */
-	public boolean isNewSentenceStarted(String text);
+    /**
+     * To detect if a new sentence is started.
+     *
+     * @param text the raw text
+     * @return true if a new sentence is started
+     */
+    boolean isNewSentenceStarted(String text);
 
 }

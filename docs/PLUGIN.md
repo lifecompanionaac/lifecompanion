@@ -572,18 +572,161 @@ Sometimes it can be usefull to update a variable earlier than the next automatic
 
 ### Word prediction
 
-TODO
+![LifeCompanion predictors](res/predictors.png.png)
+
+New word predictor can be implemented extending `WordPredictorI`. Word predictors can have their own configuration view, for this, they should implement `getConfigStepId()` with an existing (General configuration view)[#general_config_view].
 
 ### Char prediction
 
-TODO
+New char predictor can be implemented extending `CharPredictorI`. Like the word predictor, they extend `BasePredictorI` that respect the same principles. The difference in char predictor is that they can implement two prediction method : one for automatic char prediction and one for "manual" char prediction (check key type for this).
 
 ## General topics
 
 ### Controllers
 
-- GlobalKeyEventController :
-- AppModeController :
+Most of LifeCompanion controllers are implemented using singleton pattern (using enum implementation). They are located in `org.lifecompanion.controller` package. Controllers are the correct way to interact with LifeCompanion features : selection mode, voice synthesizer, current configuration, text editor, etc. Plugin are encouraged implementing their own controller to manage their global state.
+
+Some controllers can be used in both edit and use mode, while some can't. Check each one documentation to known.
+
+#### `AppModeController` : get current mode and configuration - *EDIT, USE*
+
+This controller handle current mode (edit or use) and their context `UseModeContext` and `EditModeContext`. This controller should be mainly use to access current configuration or to test a current mode.
+
+```java
+if(AppModeController.INSTANCE.isUseMode())// test current mode
+// Works with both getEditModeContext() and getUseModeContext()
+AppModeController.INSTANCE.getEditModeContext().getStage();
+AppModeController.INSTANCE.getEditModeContext().getConfiguration();
+AppModeController.INSTANCE.getEditModeContext().getConfigurationDescription();
+```
+
+**IMPORTANT** : even if it is possible to get the current configuration in a running context (eg in use action or use event), it is better to get the current configuration from parent component when possible. For example, in use action, do :
+```java
+UseActionTriggerComponentI parentComponent = this.parentComponentProperty().get();
+LCConfigurationI configuration = parentComponent.configurationParentProperty().get();
+```
+
+#### `ProfileController` : get current profile - *EDIT, USE*
+
+This controller handle the current profile (for both edit and use mode). Note that the profil is mandatory and it filled if your configuration is running.
+```java
+ProfileController.INSTANCE.currentProfileProperty().get();// Get current profile
+```
+
+#### `ResourceHelper` : get classpath resources - *EDIT, USE*
+
+Useful to get classpath resources easely :
+```java
+ResourceHelper.getInputStreamForPath("/app.properties") // will get it from src/main/resources/app.properties
+```
+
+#### `GeneralConfigurationController` :  navigate between general configuration views - *EDIT*
+
+Controller that allow you display or navigate between [general configuration views](#general_config_view).
+```java
+GeneralConfigurationController.INSTANCE.showStep("STEP_ID"); // will navigate to general config view with this ID, show the stage if hidden
+```
+
+#### `AsyncExecutorController` : execute async task in edit mode - *EDIT*
+
+This controller is the correct way to run async tasks in edit mode. It allows you to register this task for task execution panel and to block UI while task is running if needed. It will also handle the task failure displaying an error dialog when needed. The best way to use it is to implement custom `LCTask` like shown bellow but you can also use it providing `Runnable` instance.
+
+```java
+LCTask<String> longRunningTask = new LCTask<>("mytask.translation") {
+    @Override
+    protected String call() throws Exception {
+        // Heavy async computing here
+        return "ok";
+    }
+};
+longRunningTask.setOnSucceeded(e -> {
+    String result = longRunningTask.getValue(); // do something with the result after run
+});
+AsyncExecutorController.INSTANCE.addAndExecute(true, false, longRunningTask);
+```
+
+#### `ConfigActionController` : handle undo/redo action - *EDIT*
+
+Using this controller is useful if you want to trace your edit mode actions and if you want your user to be able to use undo/redo action. This can be done executing `UndoRedoActionI` implementation with the `executeAction(...)` method (or to trace them with `addAction(...)` if they are already executed). Undo, redo will then be called with `undo()` or `redo()` methods.
+
+```java
+// Define the action
+class ChangeProfileNameAction implements UndoRedoActionI {
+    private final String newProfileName;
+    private String oldProfileName;
+    private ChangeProfileNameAction(String newProfileName) {
+        this.newProfileName = newProfileName;
+    }
+    @Override
+    public void doAction() throws LCException {
+        LCProfileI profile = ProfileController.INSTANCE.currentProfileProperty().get();
+        oldProfileName = profile.nameProperty().get();
+        profile.nameProperty().set(newProfileName);
+    }
+    @Override
+    public String getNameID() {
+        return null;
+    }
+    @Override
+    public void undoAction() throws LCException {
+        ProfileController.INSTANCE.currentProfileProperty().get().nameProperty().set(oldProfileName);
+    }
+    @Override
+    public void redoAction() throws LCException {
+        doAction();
+    }
+}
+
+//Elsewhere use it
+ConfigActionController.INSTANCE.executeAction(new ChangeProfileNameAction("toto"));
+```
+
+If your action change a property value, you can also extends `BasePropertyChangeAction` that already implement a base behavior.
+
+#### `ErrorHandlingController` : handle errors - *EDIT*
+
+This controller can be used to display error message to user. It can be used with :
+```java
+ } catch (Throwable t) {
+    // Display an error notification
+    ErrorHandlingController.INSTANCE.showErrorNotificationWithExceptionDetails("User friendly message", t);
+
+    // Directly an Exception Dialog
+    ErrorHandlingController.INSTANCE.showExceptionDialog(t);
+}
+```
+Note that if you want to "user friendly exception" you can use `LCException` and `LCExceptionBuilder` to create exception that will not be displayed "raw" to user.
+
+#### `LCFileChoosers` :  display file/directory choosers - *EDIT*
+
+This allows you to show file or directory chooser to user. You should always give a source node to correctly display the dialog.
+```java
+File selectedFileToImport = LCFileChoosers.getOtherFileChooser(
+                Translation.getText("spellgame.plugin.config.field.import.list.chooser.title"),
+                new FileChooser.ExtensionFilter(Translation.getText("spellgame.plugin.config.import.list.format"), Collections.singletonList("*.txt")),
+                FileChooserType.OTHER_MISC_EXTERNAL)
+        .showOpenDialog(FXUtils.getSourceWindow(buttonImportWordList));
+```
+
+#### `SelectionController` :  manage selection in edit mode - *EDIT*
+
+#### `WritingStateController` : write and manage current text - *USE*
+
+#### `VoiceSynthesizerController` : use text to speech engine - *USE*
+
+#### `SelectionModeController` : manage current selection mode - *USE*
+
+#### `SoundPlayerController` :  play sounds - *USE*
+
+#### `UseModeProgressDisplayerController` : show progress bar - *USE*
+
+This can be useful if your plugin need to use `ProgressDisplayKeyOption` to display a async task in use mode.
+
+#### `GlobalKeyEventController` : listen for key events - *USE*
+
+This can be useful if your plugin need to listen for key events and eventually block them. You can use both `addKeyEventListenerForCurrentUseMode(...)` and `addKeyCodeToBlockForCurrentUseMode(...)` for that.
+Note that element added are cleared on each use mode stop.
+#### `UseVariableController` : get use variable values and convert text - *USE*
 
 ### Utils and helpers
 

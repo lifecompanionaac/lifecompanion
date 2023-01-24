@@ -27,10 +27,18 @@ import java.util.List;
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public interface WordPredictionResultI {
-
+    /**
+     * @return the computing time to get this result
+     */
     long getTime();
 
+    /**
+     * @return the input text (before the caret) that was used to create the prediction result
+     */
     String getInputText();
 
+    /**
+     * @return resulting prediction list
+     */
     List<WordPredictionI> getPredictions();
 }

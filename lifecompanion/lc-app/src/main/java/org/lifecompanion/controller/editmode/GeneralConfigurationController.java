@@ -59,10 +59,24 @@ public enum GeneralConfigurationController {
         return currentStep;
     }
 
+    /**
+     * Will navigate and show to the given step if a step exists for the given ID.<br>
+     * If the general config view stage is already showing, just navigate, else show the stage before.
+     *
+     * @param step the step from {@link GeneralConfigurationStep}, {@link GeneralConfigurationStep#name()} will be used as ID
+     * @param args args for the given step (can be empty)
+     */
     public void showStep(GeneralConfigurationStep step, Object... args) {
         showStep(step.name(), args);
     }
 
+    /**
+     * Will navigate and show to the given step if a step exists for the given ID.<br>
+     * If the general config view stage is already showing, just navigate, else show the stage before.
+     *
+     * @param step the step ID
+     * @param args args for the given step (can be empty)
+     */
     public void showStep(String step, Object... args) {
         if (!this.stage.isShowing()) {
             enableTransition.set(false);
