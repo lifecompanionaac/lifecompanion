@@ -111,11 +111,6 @@ public enum SelectionModeController implements ModeListenerI {
     private WaitingClicListener validClicListener;
 
     /**
-     * Listener to clear pressed keys (needed because if a dialog is shown, current pressed key are not released... > JavaFX bug ?)
-     */
-    private Runnable clearPressedKeyListener;
-
-    /**
      * All the mouse event listener
      */
     private final List<Consumer<MouseEvent>> mouseEventListener;

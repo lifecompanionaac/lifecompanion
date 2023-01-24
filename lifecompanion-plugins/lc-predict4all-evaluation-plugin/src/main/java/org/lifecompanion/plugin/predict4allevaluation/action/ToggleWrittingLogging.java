@@ -64,9 +64,6 @@ public class ToggleWrittingLogging extends SimpleUseActionImpl<UseActionTriggerC
                 }
             });
         }
-        // Bug fix : key not released
-        // FIXME
-        // SelectionModeController.INSTANCE.clearPressedKeys();
     }
 
 }
