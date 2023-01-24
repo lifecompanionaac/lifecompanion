@@ -19,13 +19,19 @@
 package org.lifecompanion.ui.configurationcomponent.editmode;
 
 import javafx.beans.InvalidationListener;
+import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.control.Button;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
+import javafx.scene.paint.Color;
+import javafx.util.Duration;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
+import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.model.api.editaction.BaseEditActionI;
 import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
@@ -37,6 +43,7 @@ import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.imagedictionary.ImageElementI;
 import org.lifecompanion.model.api.ui.editmode.AddTypeEnum;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
+import org.lifecompanion.ui.controlsfx.glyphfont.Glyph;
 import org.lifecompanion.util.IOUtils;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.dynamickey.KeyListNodeKeyOption;
 import org.lifecompanion.model.impl.configurationcomponent.GridPartKeyComponent;
@@ -59,6 +66,7 @@ import org.lifecompanion.controller.editmode.DragController;
 import org.lifecompanion.controller.editmode.SelectionController;
 import org.lifecompanion.ui.configurationcomponent.editmode.componentoption.ButtonComponentOption;
 import org.lifecompanion.ui.configurationcomponent.editmode.componentoption.SelectableOption;
+import org.lifecompanion.util.javafx.FXControlUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,6 +83,7 @@ public class GridPartKeyViewConfig extends GridPartKeyViewBase {
     private final static Logger LOGGER = LoggerFactory.getLogger(GridPartKeyViewConfig.class);
     private ImageView imageViewOptionType;
     private Button buttonSimulateActions;
+    private Glyph warningGlyphNoAction;
 
     @Override
     public void initUI() {
@@ -106,6 +115,15 @@ public class GridPartKeyViewConfig extends GridPartKeyViewBase {
             keyOptionChanged.accept(nv);
         });
         keyOptionChanged.accept(this.model.keyOptionProperty().get());
+
+        warningGlyphNoAction = GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.WARNING).size(12).color(LCGraphicStyle.THIRD_DARK);
+        warningGlyphNoAction.setOpacity(0.8);
+        Tooltip tooltipWarning = FXControlUtils.createTooltip(Translation.getText(
+                "tooltip.warning.no.action.on.key.edit.mode"));
+        tooltipWarning.setShowDelay(Duration.millis(0));
+        Tooltip.install(warningGlyphNoAction, tooltipWarning);
+        warningGlyphNoAction.translateXProperty().bind(widthProperty().subtract(15.0));
+        this.getChildren().add(warningGlyphNoAction);
 
         // Execute move action
         this.buttonSimulateActions = new Button();
@@ -144,6 +162,14 @@ public class GridPartKeyViewConfig extends GridPartKeyViewBase {
         };
         keyOptionChangeListener.changed(null, null, model.keyOptionProperty().get());
         model.keyOptionProperty().addListener(keyOptionChangeListener);
+
+        // FIXME : better criteria (key option ?)
+        warningGlyphNoAction.visibleProperty().bind(
+                Bindings.createBooleanBinding(() -> {
+                            return !model.getActionManager().containsActions();
+                        }, this.model.getActionManager().componentActions().get(UseActionEvent.ACTIVATION),
+                        this.model.getActionManager().componentActions().get(UseActionEvent.OVER))
+        );
     }
 
     @Override
