@@ -64,6 +64,8 @@ Interfaces are also mostly used as "contracts" to add features to components : f
 
 You can see the repo organization in [root documentation](README.md)
 
+**As it is difficult to be exhaustive on all LifeCompanion API features, we strongly encourage developpers to explore the package and the calling hierarchy of each method to fully understand how things work.**
+
 ### General principles
 
 #### Modes
@@ -710,27 +712,110 @@ File selectedFileToImport = LCFileChoosers.getOtherFileChooser(
 
 #### `SelectionController` :  manage selection in edit mode - *EDIT*
 
+This controller allow you to manage selection in edit mode. It can be useful to select a specific component as it will also display it in the edit view.
+```java
+ObservableList<GridPartKeyComponentI> selectedKeys = SelectionController.INSTANCE.getSelectedKeys();
+if (!selectedKeys.isEmpty()) {
+    SelectionController.INSTANCE.selectDisplayableComponent(selectedKeys.get(selectedKeys.size() - 1).gridParentProperty().get(), true);
+}
+```
+
 #### `WritingStateController` : write and manage current text - *USE*
+
+This is the controller to call if you want to write text in the current editor or with the virtual keyboard if the configuration is in a virtual keyboard. It also allows you to get the current written text.
+
+```java
+String totalText = WritingStateController.INSTANCE.currentTextProperty().get();
+WritingStateController.INSTANCE.removeAll(WritingEventSource.SYSTEM);
+WritingStateController.INSTANCE.insertText(WritingEventSource.SYSTEM,"Bonjour");
+```
+
+Note that you should provide on each call a `WritingEventSource` that will be used if logging is enabled.
+
+Note that the behavior can be different depending if `LCConfigurationI.virtualKeyboardProperty()` is enabled or disabled.
 
 #### `VoiceSynthesizerController` : use text to speech engine - *USE*
 
+This controller can be used to use the text to speech capabilities of LifeCompanion. Most of the time, you should use it in a sync way as the use action execution context is already async.
+```java
+VoiceSynthesizerController.INSTANCE.speakSync("This is spoken with a text to speech");
+```
+
+Note that the current parameters for text to speech engine can be found on current configuration with `LCConfigurationI.getVoiceSynthesizerParameter()`
+
 #### `SelectionModeController` : manage current selection mode - *USE*
+
+This controller is useful to manage the selection mode in use mode and also the displayed element. This is the controller to use if you want to display a grid as it will take care of both displaying and changing the selection mode to the given element.
+```java
+GridPartComponentI part = ...;
+SelectionModeController.INSTANCE.goToGridPart(part);
+```
+This controller can also be used to manage the selection state especially with scanning (to pause, restart, etc.). For example, you can pause the scanning with :
+```java
+SelectionModeController.INSTANCE.pauseCurrentScanningUntilNextSelection(restart ->{
+    if(restart)myCustomSelectionMode.restart();
+    else myCustomSelectionMode.resume();
+});
+```
+
+This can also be used to change the running configuration in use mode without going back to edit mode.
+```java
+LCConfigurationDescriptionI configurationDescription = ...;
+SelectionModeController.INSTANCE.changeConfigurationInUseMode(configurationDescription);
+```
 
 #### `SoundPlayerController` :  play sounds - *USE*
 
+This controller can be used to play classic media sounds from LifeCompanion. It is compatible with every playable sounds with JavaFX as it use the media framework.
+```java
+SoundPlayerController.INSTANCE.playSoundSync(new File("mysound.mp3"), false);
+```
+You can use it both async/sync way depending on your needs. Note that if you need quick playing of your sound file, you should manually cache your own `MediaPlayer` as the current implementation create a new player on each call.
+
 #### `UseModeProgressDisplayerController` : show progress bar - *USE*
 
-This can be useful if your plugin need to use `ProgressDisplayKeyOption` to display a async task in use mode.
+This can be useful if your plugin need to use `ProgressDisplayKeyOption` to display a async task in use mode. This will update all the available `ProgressDisplayKeyOption` in the current used configuration.
+
+```java
+ UseModeProgressDisplayerController.INSTANCE.launchTimer(3000,()->{
+    // Will be run after 3 seconds
+});
+```
+If you need to hide the progress, you can call `hideAllProgress()` later.
 
 #### `GlobalKeyEventController` : listen for key events - *USE*
 
 This can be useful if your plugin need to listen for key events and eventually block them. You can use both `addKeyEventListenerForCurrentUseMode(...)` and `addKeyCodeToBlockForCurrentUseMode(...)` for that.
 Note that element added are cleared on each use mode stop.
+
+```java
+GlobalKeyEventController.INSTANCE.addKeyEventListenerForCurrentUseMode(keyEvent -> {
+    if (keyEvent.getEventType() == GlobalKeyEventController.LCKeyEventType.RELEASED && keyEvent.getKeyCode() == KeyCode.ENTER) {
+        // Do something on enter
+    }
+});
+```
+
 #### `UseVariableController` : get use variable values and convert text - *USE*
 
-### Utils and helpers
+This controller is useful to handle [use variables](#use-variable) for example to create texts that combined variable values and raw text :
+```java
+UseVariableController.INSTANCE.createText("Test {MyCustomVar}",varMap);
+```
+This can also be useful to request a variable update if one of your variable has been updated twice in less than one second.
+```java
+UseVariableController.INSTANCE.requestVariablesUpdate();
+```
 
-- TODO
+### Utils
+
+Most of Utils in LifeCompanion are located in `org.lifecompanion.util` package. Utils can contains common utils methods but also LifeCompanion or JavaFX methods.
+
+- `EditActionUtils` : really useful utils to implements your JavaFX controls listeners that will create `UndoRedoActionI`
+- `CopyUtils` : can be used to duplicate any `XMLSerializable` component using [(de)serialization](#serialization) mechanisms. Can be used to quickly implement a `DuplicableComponentI`
+- `ConfigurationComponentUtils` : some methods to find components in a configuration (key option, keys, etc)
+- `FXControlUtils` : quickly create most used FX controls
+- `DialogUtils` :  quickly create any dialogs
 
 ### Threading
 
