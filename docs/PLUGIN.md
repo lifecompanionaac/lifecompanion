@@ -50,14 +50,15 @@ All the official existing plugins are stored in the [**lifecompanion-plugins**](
 - [**calendar plugin**](../lifecompanion-plugins/lc-calendar-plugin/) : plugin to help user to plan their days (with alarms, events and sequences)
 - [**ppp plugin**](../lifecompanion-plugins/lc-ppp-plugin/) : plugin to trace prediatric pain profil scale for an user
 - [**homeassistant plugin**](../lifecompanion-plugins/lc-homeassistant-plugin/) : plugin to interact with a HomeAssistant server
+- [**predict4all evaluation plugin**](../lifecompanion-plugins/lc-predict4all-evaluation-plugin/) : plugin to evaluate word prediction
 
-This documentation is based on **lc-spellgame-plugin** to rely on a working example. This plugin is the reference plugin implementation.
+This documentation is based on [**lc-spellgame-plugin**](../lifecompanion-plugins/lc-spellgame-plugin/) to rely on a working example. This plugin is the reference plugin implementation.
 
 ## LifeCompanion fundamentals
 
 ### Code organization
 
-Core LifeCompanion code is located in **lifecompanion/lc-app** directory. Model classes are organized with interface/implementation principle : most of the interfaces are named with "I" at the end, theses interfaces are mainly the names used in documentation. For example : `LCConfigurationI` is the interface describing the configuration model, and `LCConfigurationComponent`.
+Core LifeCompanion code is located in [**lifecompanion/lc-app**](../lifecompanion/lc-app/) directory. Model classes are organized with interface/implementation principle : most of the interfaces are named with "I" at the end, theses interfaces are mainly the names used in documentation. For example : `LCConfigurationI` is the interface describing the configuration model, and `LCConfigurationComponent`.
 
 Interfaces are also mostly used as "contracts" to add features to components : for example every component `RootGraphicComponentI` will implement `MovableComponentI, ResizableComponentI, DisplayableComponentI, SelectableComponentI, ConfigurationChildComponentI` interfaces. These coding principle allow LifeCompanion to be simply extended.
 
@@ -318,6 +319,13 @@ As action can handle [use variable](#use-variable), the list of available variab
 Action are executed on a specific Thread (not on the FX Thread) so you should be aware that you can't modify the UI directly : see [Threading part about it](#threading).
 
 **Actions added to a key or to an event are executed sequentially** : the first action should ends before executing the second. This means that if your action is blocking the execution thread, the next action could be never executed. However, LifeCompanion allow 4 components to run action in parallel. If possible, it's better that your action don't create any new thread, however if needed, be aware that use mode could end "outside" your new thread : if you need to interact with general controllers after a while, it's better to check if you're still in use mode (with `AppModeController.isUseMode()`)
+
+To implement your action behavior, implement :
+```java
+@Override
+public void execute(final UseActionEvent event, final Map<String, UseVariableI<?>> variables) {
+}
+```
 
 ### Key option
 

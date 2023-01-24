@@ -1,0 +1,46 @@
+plugins {
+    id 'java-library'
+    id 'org.openjfx.javafxplugin' version '0.0.13'
+}
+
+javafx {
+    version = '18'
+    modules = ['javafx.controls', 'javafx.media']
+    configuration = 'compileOnly'
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+}
+
+version = "0.0.1"
+
+dependencies {
+    compileOnly "org.lifecompanion:lc-app:$lifecompanionAppVersion"
+    // implementation 'org.jxls:jxls:2.7.2'
+    implementation 'org.jxls:jxls-poi:2.12.0'
+}
+
+jar {
+    duplicatesStrategy DuplicatesStrategy.WARN
+    manifest {
+        attributes(
+                "LifeCompanion-Plugin-Class": "org.lifecompanion.plugin.predict4allevaluation.Predict4AllEvaluationPlugin",
+                "LifeCompanion-Plugin-Package-Scanning-Base": "org.lifecompanion.plugin.predict4allevaluation",
+                "LifeCompanion-Plugin-Id": "lc-predict4all-evaluation-plugin",
+                "LifeCompanion-Plugin-Author": "LifeCompanionAAC",
+                "LifeCompanion-Plugin-Version": project.version,
+                "LifeCompanion-Plugin-Build-Date": new Date().getTime(),
+                "LifeCompanion-Plugin-Name": "Évaluation Predict4All",
+                "LifeCompanion-Plugin-Description": "Plugin d'évaluation de la prédiction de mots Predict4All",
+                "LifeCompanion-Min-App-Version": "$lifecompanionAppVersion"
+        )
+    }
+    from {
+        configurations.runtimeClasspath.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+}

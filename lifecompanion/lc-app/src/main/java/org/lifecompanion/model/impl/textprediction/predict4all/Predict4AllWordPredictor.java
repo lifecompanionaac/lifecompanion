@@ -152,7 +152,10 @@ public class Predict4AllWordPredictor implements WordPredictorI {
 
     private void loadWordPredictor(String configurationId) throws IOException {
         PredictorModelDto predictorModelDto = Predict4AllWordPredictorHelper.loadData(configurationId);
-        this.wordPredictor = new WordPredictor(predictorModelDto.getPredictionParameter(), predictorModelDto.getWordDictionary(), Predict4AllWordPredictorHelper.loadStaticNGramDictionary(), predictorModelDto.getDynamicNGramDictionary());
+        this.wordPredictor = new WordPredictor(predictorModelDto.getPredictionParameter(),
+                predictorModelDto.getWordDictionary(),
+                Predict4AllWordPredictorHelper.loadStaticNGramDictionary(),
+                predictorModelDto.getDynamicNGramDictionary());
     }
 
 

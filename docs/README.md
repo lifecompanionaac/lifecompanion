@@ -25,7 +25,7 @@ Detailled information available bellow.
     - **lc-tool-scripts** : Java scripts to do various things (create prediction data, generate image dictionaries, some
       test/debug, etc.)
     - **buildSrc** : build scripts to help LifeCompanion builds and update publishing
-- **lifecompanion-plugins** : contains a Gradle project per official plugin (content described in [plugin documentation](PLUGIN.md))
+- **lifecompanion-plugins** : contains one Gradle project per official plugin (content described in [plugin documentation](PLUGIN.md))
 - **env** : contains build env configurations
 - **libs** : external projects and libraries used by LifeCompanion or the framework
     - **win-sapi-voicesynthesizer-gap** : local server allowing voice synthesizer via Windows SAPI (C# project)

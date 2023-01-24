@@ -1,0 +1,408 @@
+<texts>
+	<text key="predict4all.plugin.info.name">PREDICT4ALL</text>
+	<text key="predict4all.plugin.info.description">Intégration de la prédiction de mots du projet
+		PREDICT4ALL.
+	</text>
+	<text key="predict4all.plugin.config.view.title">Configuration</text>
+	<text key="predict4all.predictor.name">Predict4All</text>
+	<text key="predict4all.predictor.description">Test d'intégration de Predict4All</text>
+	<text key="predict4all.config.view.general.title">Général</text>
+	<text key="predict4all.config.view.dictionary.title">Dictionnaire</text>
+	<text key="predict4all.config.view.vocabulary.title">Vocabulaire</text>
+	<text key="predict4all.config.view.training.title">Entraînement</text>
+	<text key="predict4all.config.view.misc.title">Divers</text>
+	<text key="predict4all.config.enable.dynamic.model">Activer le modèle utilisateur dynamique</text>
+	<text key="predict4all.config.enable.semantic.model">Activer le modèle sémantique</text>
+	<text key="predict4all.config.learn.new.words">Apprendre les nouveaux mots automatiquement</text>
+	<text key="predict4all.config.two.word.prediction">Prédire 2 mots à la fois</text>
+	<text key="predict4all.config.count.use">Mot personnel utilisé {} fois</text>
+	<text key="predict4all.config.last.use">Dernière utilisation le {}</text>
+	<text key="predict4all.config.base.dict.word">Mot de base du dictionnaire</text>
+	<text key="predict4all.config.prompt.search.word">Rechercher un mot</text>
+	<text key="predict4all.config.search.word.user.only">Afficher les mots personnels uniquement</text>
+	<text key="predict4all.config.search.word.hide.disabled.words">Masquer les mots désactivés</text>
+	<text key="predict4all.config.prompt.add.user.word">Ajouter un mot personnel (Entrée pour valider)</text>
+	<text key="predict4all.config.force.invalid.word">Ne jamais proposer</text>
+	<text key="predict4all.config.force.invalid.word.tooltip">Si activé, le mot ne sera jamais proposé dans les
+		prédictions affichées à l'utilisateur
+	</text>
+	<text key="predict4all.config.force.valid.word">Considérer valide</text>
+	<text key="predict4all.config.force.valid.word.tooltip">Si activé, le mot pourra être affiché dans les
+		prédictions, peu importe les règles de validation d'un mot.
+	</text>
+	<text key="predict4all.spinner.min.count.display.prediction">Afficher des prédictions
+	</text>
+	<text key="predict4all.config.button.save">Sauvegarder</text>
+	<text key="predict4all.config.button.cancel">Annuler</text>
+	<text key="predict4all.config.confirm.header">Attention...</text>
+	<text key="predict4all.config.confirm.message">Si vous fermez cette fenêtre sans sauvegarder vous
+		perdrez les modifications effectuées.
+	</text>
+	<text key="predict4all.config.button.delete.data">Supprimer les données du profil</text>
+	<text key="predict4all.config.button.import.word.list">Importer une liste de mots à déprioriser/prioriser
+	</text>
+	<text key="predict4all.config.file.chooser.import.words.title">Choisir un fichier de liste de mots</text>
+	<text key="predict4all.config.file.chooser.import.words.extension">.txt - liste de mots (un par ligne)</text>
+	<text key="predict4all.action.import.words">Import de mots à déprioriser/prioriser</text>
+	<text key="predict4all.action.import.words.failed">Problème lors de l'importation des mots, veuillez
+		vérifier le fichier
+	</text>
+	<text key="predict4all.action.imported.success.title">Modifications effectuées</text>
+	<text key="predict4all.action.imported.success.prio.message">{} mot(s) ont été favorisés dans le
+		dictionnaire.
+	</text>
+	<text key="predict4all.action.imported.success.deprio.message">{} mot(s) ont été défavorisés dans le
+		dictionnaire.
+	</text>
+	<text key="predict4all.button.display.user.model">Afficher les données utilisateur</text>
+	<text key="predict4all.button.train.dynamic.model">Entraîner le modèle</text>
+	<text key="predict4all.spinner.min.count.validate">Nombre d'utilisations avant de considérer un mot valide
+	</text>
+	<text key="predict4all.action.delete.user.header">Supprimer les données personnalisées</text>
+	<text key="predict4all.action.delete.user.content">Attention, vous êtes sur le point de supprimer les
+		données utilisateur (dictionnaire, modèle, configuration). Cette
+		action n'est pas réversible.
+	</text>
+	<text key="predict4all.config.correct.accent">Corriger les accents oubliés</text>
+	<text key="predict4all.config.enable.word.correction">Activer la correction en cours de saisie</text>
+	<text key="predict4all.config.view.correction.title">Correction</text>
+	<text key="predict4all.config.enable.distance.word.correction">Activer l'utilisation d'une distance classique</text>
+	<text key="predict4all.config.view.testing.title">Tester</text>
+	<text key="predict4all.config.view.label.prediction.count">Nombre de prédictions à afficher</text>
+	<text key="predict4all.config.enable.debug">Activer le "mode debug"</text>
+	<text key="predict4all.config.testing.timing.memory">Temps de calcul du dernier résultat : {} ms\nMémoire :
+		{}/{} (max : {})
+	</text>
+	<text key="predict4all.config.testing.col.prediction">Prédiction</text>
+	<text key="predict4all.config.testing.col.score">Score</text>
+	<text key="predict4all.config.testing.col.debug">Mode Debug</text>
+	<text key="predict4all.config.testing.chart.title.memory">Mémoire</text>
+	<text key="predict4all.config.testing.chart.title.time">Temps</text>
+	<text key="predict4all.config.empty.debug.column">Pour afficher les informations "debug", activer ce mode
+		dans l'onglet "Général"
+	</text>
+	<text key="predict4all.config.button.send.comment">Envoyer un commentaire</text>
+	<text key="predict4all.comment.dialog.title">Envoyer un commentaire</text>
+	<text key="predict4all.comment.dialog.header">Permet d'envoyer un retour sur la prédiction. Le texte
+		actuellement entré dans le test ainsi que les résultats seront
+		envoyés.
+	</text>
+	<text key="predict4all.comment.dialog.button.send">Envoyer</text>
+	<text key="predict4all.comment.dialog.field.name">Votre nom</text>
+	<text key="predict4all.comment.dialog.field.comment">Votre commentaire</text>
+	<text key="predict4all.comment.dialog.status.title">Envoi du commentaire</text>
+	<text key="predict4all.comment.dialog.status.ok">Le commentaire a été envoyé, merci !</text>
+	<text key="predict4all.comment.dialog.status.nok">Echec de l'envoi du commentaire, merci de réessayer plus
+		tard.
+	</text>
+	<text key="predict4all.comment.dialog.status.sending">Envoi du commentaire</text>
+	<text key="predict4all.comment.dialog.status.sending.message">Envoi de votre commentaire en cours...</text>
+
+	<text key="predict4all.menu.button.remove.rule">Supprimer</text>
+	<text key="predict4all.menu.button.add.category">Ajouter une catégorie</text>
+	<text key="predict4all.menu.button.add.rule">Ajouter une règle</text>
+
+	<text key="predict4all.config.rule.toggle.bidirectionnal">Appliquer la règle dans les deux sens</text>
+
+	<text key="predict4all.config.rule.button.edit">Modifier</text>
+	<text key="predict4all.config.rule.button.edit.finished">Terminer</text>
+
+	<text key="predict4all.config.enable.correction">Activer la correction personnalisée</text>
+	<text key="predict4all.config.correction.max.correction.count">Cumuler les corrections</text>
+	<text
+		key="predict4all.config.correction.max.correction.count.description">Plus la correction est cumulée, plus il sera possible de suggérer
+		des mots éloignés de l'entrée initiale de l'utilisateur.\nAttention,
+		une correction cumulée peut prendre un peu plus de temps à s'afficher.
+	</text>
+	
+	<text key="predict4all.config.filter.vocabulary.percentage">Limiter le dictionnaire (%)</text>
+	<text key="predict4all.config.filter.vocabulary.percentage.explained">Utilisation de {} / {} mot(s) ({}% du dictionnaire de base)</text>
+
+	<text key="predict4all.action.category.main.name">Predict4All</text>
+	<text key="predict4all.action.category.sub.clinical.study">Étude clinique</text>
+
+	<text key="predict4all.spinner.min.count.provide.correction">Inclure des corrections personnalisées
+	</text>
+	<text
+		key="predict4all.spinner.min.count.provide.correction.description">Avant ce nombre de lettres, aucune correction ne sera proposée à
+		l'utilisateur. En mettant 2, cela permet par exemple de ne déclencher
+		l'intégration des corrections dans la prédiction qu'une fois deux
+		lettres entrées. La correction s'appliquera tout de même sur tout le
+		mot.
+	</text>
+
+	<text key="predict4all.config.tick.level.low">Peu</text>
+	<text key="predict4all.config.tick.level.medium">Classique</text>
+	<text key="predict4all.config.tick.level.high">Beaucoup</text>
+
+	<text key="predict4all.config.enter.min.count.always">Tout le temps</text>
+	<text key="predict4all.config.enter.min.count.word.started.more">
+		À partir de {} lettre(s) entrée(s) dans le mot en cours
+	</text>
+
+	<text key="predict4all.config.part.title.correction.param">Configuration générale</text>
+	<text key="predict4all.config.part.title.correction.rules">Règles de correction personnalisées</text>
+
+	<text key="predict4all.config.part.title.words.priorized">Favoriser du vocabulaire</text>
+	<text key="predict4all.config.part.title.words.depriorized">Défavoriser du vocabulaire</text>
+	<text key="predict4all.config.link.source.word.list">Source</text>
+	<text key="predict4all.config.part.title.words.custom">Listes de mots personnalisées</text>
+	<text key="predict4all.config.import.custom.list.button.prio">Importer une liste à favoriser</text>
+	<text key="predict4all.config.import.custom.list.button.deprio">Importer une liste à défavoriser</text>
+	<text key="predict4all.config.import.custom.list.explain">Vous pouvez ici importer un fichier contenant des mots à
+		favoriser ou défavoriser. Votre fichier doit contenir un mot par ligne
+		et être au format ".txt". Les mots inconnus du dictionnaire de la
+		prédiction seront ignorés.
+	</text>
+
+
+	<text key="predict4all.config.part.title.prediction">Prédiction</text>
+	<text key="predict4all.config.part.title.dynamic.model">Modèle utilisateur</text>
+	<text key="predict4all.config.part.title.misc">Autre</text>
+	<text key="predict4all.config.part.title.correction">Correction personnalisée</text>
+
+	<text key="predict4all.config.correction.type.label">Type de règle</text>
+	<text key="predict4all.config.label.add.item">Ajouter une lettre, mot, caractère ...(Entrée)</text>
+
+	<!-- RULES TYPES -->
+	<text key="predict4all.config.rule.type.insert.name">Correction d'omissions</text>
+	<text key="predict4all.config.rule.type.insert.description">Permet de corriger une omission d'une ou plusieurs
+		lettres, ainsi que l'omission d'un espace ou d'une apostrophe.
+	</text>
+	<text key="predict4all.config.rule.type.delete.name">Correction d'ajouts</text>
+	<text key="predict4all.config.rule.type.delete.description">Permet de corriger un ajout d'une ou plusieurs lettres.
+	</text>
+	<text key="predict4all.config.rule.type.confusion.name">Correction des confusions</text>
+	<text key="predict4all.config.rule.type.confusion.description">Permet de définir des substitutions se produisant
+		toujours entre un ensemble d'expressions. Par exemple, il est possible
+		de définir une confusion entre toutes les flexions verbales.
+	</text>
+	<text key="predict4all.config.rule.type.classic.name">Correction des substitutions</text>
+	<text key="predict4all.config.rule.type.classic.description">Permet de corriger les substitutions, en définissant le
+		changement d'une ou plusieurs lettres par une ou plusieurs autres
+		lettres. Une règle de ce type peut également être appliquée dans les
+		deux sens.
+	</text>
+
+	<text key="predict4all.config.tick.rule.leaf.frequency.low">Occasionnel</text>
+	<text key="predict4all.config.tick.rule.leaf.frequency.medium">Classique</text>
+	<text key="predict4all.config.tick.rule.leaf.frequency.high">Fréquent</text>
+
+	<text key="predict4all.config.tick.word.factor.low">Dépriorisé</text>
+	<text key="predict4all.config.tick.word.factor.medium">Inchangé</text>
+	<text key="predict4all.config.tick.word.factor.high">Priorisé</text>
+
+	<!-- WORD LIST -->
+	<text key="predict4all.rule.word.list.1">Mots d'enfants jusqu'à 5 ans (Académie de Rouen,
+		Philippe Boisseaux)
+	</text>
+	<text key="predict4all.rule.word.list.2">1500 mots les plus fréquents du Français (éduscol,
+		Étienne Brunet)
+	</text>
+	<text key="predict4all.rule.word.list.3">1750 mots les plus fréquents du Français (Wiktionnaire,
+		Académie d'Amiens)
+	</text>
+	<text key="predict4all.rule.word.list.4">Mots anciens (Didier Méral)</text>
+
+	<text key="predict4all.training.explain.text">Vous pouvez ici entraîner la prédiction avec un texte
+		personnalisé. Cela aura le même effet que si l'utilisateur saisissait
+		lui même ce texte, par conséquent la prédiction s'adaptera au texte
+		donné.\nAttention : entraîner la prédiction plusieurs fois avec le
+		même texte ou avec des textes contenant des erreurs pourrait fausser
+		les mots proposés.
+	</text>
+
+	<text key="predict4all.training.explain.ngram.count">Taille du modèle utilisateur :\n{}\nPoids approximatif
+		du modèle utilisateur : {}%</text>
+
+	<!-- RULE EDIT -->
+	<text key="predict4all.rule.edit.type.insert.label">Omissions à insérer (lettres, mots...)</text>
+	<text key="predict4all.rule.edit.type.delete.label">Ajouts à supprimer (lettres, mots...)</text>
+	<text key="predict4all.rule.edit.type.confusion.label">Éléments confus (lettres, mots...)</text>
+	<text key="predict4all.rule.edit.type.classic.label1">Erreurs (qui seront remplacées)</text>
+	<text key="predict4all.rule.edit.type.classic.label2">Corrections (qui remplaceront les éléments en
+		erreurs)
+	</text>
+	<text key="predict4all.config.rule.edit.bidir">Autoriser la substitution dans l'autre sens</text>
+	<text key="predict4all.config.correction.cost.frequency">Fréquence de l'erreur</text>
+
+	<text key="predict4all.action.toggle.clinical.study.name">Activer/désactiver l'enregistrement</text>
+	<text key="predict4all.action.toggle.clinical.study.description">Active ou désactive l'enregistrement pour une session
+		d'étude clinique. Cela permettra ensuite d'exploiter les
+		enregistrements de l'étude pour effectuer des statistiques.</text>
+
+	<text key="predict4all.event.clinical.study.log.started.name">Enregistrement de session démarré</text>
+	<text
+		key="predict4all.event.clinical.study.log.started.description">Événement généré lorsque l'enregistrement d'une session d'étude
+		clinique démarre.</text>
+	<text key="predict4all.event.clinical.study.log.stopped.name">Enregistrement de session arrêté</text>
+	<text
+		key="predict4all.event.clinical.study.log.stopped.description">Événement généré lorsque l'enregistrement d'une session d'étude
+		clinique s'arrête.</text>
+
+	<text key="predict4all.clinical.study.var.status.name">État de la session d'étude clinique</text>
+	<text key="predict4all.clinical.study.var.status.description">Affiche si une session d'enregistrement d'étude clinique
+		est en cours ou non</text>
+	<text key="predict4all.clinical.study.var.status.example">En attente | En cours d'enregistrement</text>
+	<text key="predict4all.clinical.study.var.status.value.waiting">En attente</text>
+	<text key="predict4all.clinical.study.var.status.value.logging">En cours d'enregistrement</text>
+
+	<text
+		key="predict4all.config.clinical.study.test.context.without.prediction">Sans prédiction ni correction</text>
+	<text
+		key="predict4all.config.clinical.study.test.context.with.prediction">Avec prédiction uniquement</text>
+	<text
+		key="predict4all.config.clinical.study.test.context.with.prediction.correction">Avec prédiction et correction</text>
+	<text
+		key="predict4all.config.clinical.study.test.context.with.other">Autre...</text>
+
+	<text key="predict4all.config.ui.field.user.id">Identifiant de l'utilisateur</text>
+	<text key="predict4all.config.ui.field.context">Contexte</text>
+	<text key="predict4all.config.ui.field.other.description">Autre</text>
+
+	<text key="predict4all.config.clinical.study.test.title">Predict4All - étude clinique</text>
+	<text key="predict4all.config.clinical.study.test.header">Informations relatives à l'essai en cours</text>
+
+	<text key="predict4all.config.version.check.name">Versions\nLifeCompanion : {} ({})\nExtension Predict4All
+		: {}\nPredict4All : {} ({})</text>
+
+	<!-- RULE TRANSLATE -->
+	<text key="predict4all.rule.default.root.name">Règles de correction</text>
+	<text key="predict4all.rule.translate.rule.disable.rule.direct">RÈGLE DÉSACTIVÉE (directement)</text>
+	<text key="predict4all.rule.translate.rule.disable.rule.parent">RÈGLE DÉSACTIVÉE (par un parent)</text>
+	<text key="predict4all.rule.translate.rule.or.name"> ou </text>
+	<text key="predict4all.rule.translate.rule.and.name"> et </text>
+	<text key="predict4all.rule.translate.rule.simple.replace">Remplacer ({}) par ({})</text>
+	<text key="predict4all.rule.translate.rule.simple.replace.bidir">(et inversement)</text>
+	<text key="predict4all.rule.translate.rule.confusion.set">Considérer identiques ({})</text>
+	<text key="predict4all.rule.translate.rule.insert.element">Insérer ({})</text>
+	<text key="predict4all.rule.translate.rule.delete.element">Supprimer ({})</text>
+
+	<!-- SEPARATOR TRANSLATE -->
+	<text key="predict4all.rule.sep.anywhere">N'importe où</text>
+	<text key="predict4all.rule.sep.translate.space">Espace</text>
+	<text key="predict4all.rule.sep.translate.apostrophe">Apostrophe</text>
+
+	<!-- DEFAULT RULE GENERATION -->
+	<text key="predict4all.default.rule.label">Ajouter des règles préconfigurées</text>
+	<text key="predict4all.default.rule.button.add">Ajouter</text>
+	<text key="predict4all.default.rule.azerty.name">Erreurs de frappe (clavier Azerty)</text>
+	<text key="predict4all.default.rule.azerty.description">Corrige les erreurs de frappe sur le clavier Azerty,
+		permet de gérer la permutation de lettres proches sur le clavier
+	</text>
+	<text key="predict4all.default.rule.azerty.example">zrrivé > arrivé\nke > je</text>
+	<text key="predict4all.default.rule.azerty.rule.node.name">Inversion à distance de {}</text>
+	<text key="predict4all.default.rule.forget.accent.name">Omissions des accents (et cédille)</text>
+	<text key="predict4all.default.rule.forget.accent.description">Corrige les mots dont l'accent ou la cédille a été
+		oublié, permet d'entrer son texte sans accents et ne pas perturber la
+		prédiction</text>
+	<text key="predict4all.default.rule.forget.accent.example">etait > était\nca > ça</text>
+	<text key="predict4all.default.rule.accent.e.char">Accents du "e"</text>
+	<text key="predict4all.default.rule.accent.o.char">Accents du "o"</text>
+	<text key="predict4all.default.rule.accent.a.char">Accents du "a"</text>
+	<text key="predict4all.default.rule.accent.i.char">Accents du "i"</text>
+	<text key="predict4all.default.rule.accent.c.char">"C" cédille</text>
+	<text key="predict4all.default.rule.word.split.name">Découpage des mots (espace ou apostrophe)</text>
+	<text key="predict4all.default.rule.word.split.description">Corrige le fait d'oublier un espace ou une apostrophe
+		entre deux mots. Les deux mots doivent cependant être corrects
+		originalement.</text>
+	<text key="predict4all.default.rule.word.split.example">jeme > je me\njai > j'ai</text>
+	<text key="predict4all.default.rule.space.missing">Omission de l'espace</text>
+	<text key="predict4all.default.rule.apostrophe.missing">Omission de l'apostrophe</text>
+	<text key="predict4all.default.rule.phonem.confusion.name">Transcription des phonèmes</text>
+	<text key="predict4all.default.rule.phonem.confusion.description">Corrige une mauvaise transcription écrite des phonèmes,
+		permet d'écrire en phonétique sans perturber la prédiction.</text>
+	<text key="predict4all.default.rule.phonem.confusion.example">éléfant > éléphant\nmanje > mange</text>
+	<text key="predict4all.default.rule.double.letter.name">Lettres doublées</text>
+	<text key="predict4all.default.rule.double.letter.description">Corrige les erreurs les plus classiques d'oubli ou
+		d'ajout d'une double lettres.</text>
+	<text key="predict4all.default.rule.double.letter.example">coriger > corriger\naddresse > adresse</text>
+	<text key="predict4all.default.rule.missing.letter.name">Lettres omises</text>
+	<text key="predict4all.default.rule.missing.letter.description">Corrige le fait d'oublier une lettre à l'intérieur d'un
+		mot (toutes les lettres de l'alphabet)</text>
+	<text key="predict4all.default.rule.missing.letter.example">éait > était\nmaion > maison</text>
+	<text key="predict4all.default.rule.added.letter.name">Lettres ajoutées</text>
+	<text key="predict4all.default.rule.added.letter.description">Corrige le fait d'ajouter une lettre en trop à
+		l'intérieur d'un mot (toutes les lettres de l'alphabet)</text>
+	<text key="predict4all.default.rule.added.letter.example">éttait > était\nviie > vie</text>
+	<text key="predict4all.default.rule.word.ends.name">Flexions</text>
+	<text key="predict4all.default.rule.word.ends.description">Corriger les flexions verbales/nominales confondues à la
+		fin des mots (typiquement les accords en genre/nombre ainsi que les
+		conjugaison)</text>
+	<text key="predict4all.default.rule.word.ends.example">arrivée > arrivés\npasser > passé</text>
+	<text key="predict4all.default.rule.word.ends.ai.e.sound">Flexions en fin de mot, son "é/ai"</text>
+	<text key="predict4all.default.rule.homophone.name">Homophones</text>
+	<text key="predict4all.default.rule.homophone.description">Corrige les confusions entre les homophones d'une liste
+		finie</text>
+	<text key="predict4all.default.rule.homophone.example">c'est > ces\nport > porc</text>
+	<text key="predict4all.default.rule.mbp.name">M devant M, B, P</text>
+	<text key="predict4all.default.rule.mbp.description">Corrige les erreurs liées à la règle du "m" devant les
+		lettres "m", "b" et "p"</text>
+	<text key="predict4all.default.rule.mbp.example">exenple > exemple\nanbiance > ambiance</text>
+	<text key="predict4all.default.rule.phonem.confusion">Transcription des phonèmes</text>
+	<text key="predict4all.default.rule.visual.confusion.name">Confusions visuelles</text>
+	<text key="predict4all.default.rule.visual.confusion.description">Corrige les principales confusions visuelles entre des
+		lettres ou des ensembles de lettres</text>
+	<text key="predict4all.default.rule.visual.confusion.example">b > d\nou > on</text>
+	<text key="predict4all.default.rule.hearing.confusion.name">Confusions auditives</text>
+	<text key="predict4all.default.rule.hearing.confusion.description">Corrige les principales confusions auditives entre des
+		phonèmes (utilise les transcriptions orthographiques des phonèmes)
+	</text>
+	<text key="predict4all.default.rule.hearing.confusion.example">f > v\np > b</text>
+	<text key="predict4all.default.rule.char.sequences.name">Séquences</text>
+	<text key="predict4all.default.rule.char.sequences.description">Corrige les erreurs de séquencement des lettres dans un
+		mots, particulièrement les suites de consonnes, voyelles, consonnes
+	</text>
+	<text key="predict4all.default.rule.char.sequences.example">ein > ien\nion > oin</text>
+	
+	<text key="predict4all.default.rule.ge.gu.sound.name">Confusion des sons ge/gu</text>
+	<text key="predict4all.default.rule.ge.gu.sound.description">Permet de corriger une mauvaise utilisation du g combiné avec un "e" ou un "u"</text>
+	<text key="predict4all.default.rule.ge.gu.sound.example">mangait > mangeait\ngerre > guerre</text>
+
+	<text key="predict4all.default.rule.visual.confusion.of.value">Confusion de {}</text>
+	<text key="predict4all.default.rule.hearing.confusion.of.value">Confusion de {}</text>
+	<text key="predict4all.default.rule.sequence.of.value">Séquence {}</text>
+
+	<text key="predict4all.default.rule.mbp.m">Devant un "m"</text>
+	<text key="predict4all.default.rule.mbp.b">Devant un "b"</text>
+	<text key="predict4all.default.rule.mbp.p">Devant un "m"</text>
+
+	<text key="predict4all.default.homophone.of">Homophones de "{}"</text>
+
+	<!-- PHONEM -->
+	<text key="predict4all.default.rule.phonem.confusion.an.am.em.en">Voyelle nasale ouverte postérieure arrondie [ã]</text>
+	<text key="predict4all.default.rule.phonem.confusion.in.ain">Voyelle nasale antérieure non arrondie [ɛ]</text>
+	<text key="predict4all.default.rule.phonem.confusion.o">Voyelle mi-ouverte postérieure arrondie [ɔ]</text>
+	<text key="predict4all.default.rule.phonem.confusion.a.ai">Voyelle mi-ouverte antérieure non arrondie [ɛ]</text>
+	<text key="predict4all.default.rule.phonem.confusion.eu.oe">Voyelle mi-ouverte antérieure arrondie [œ]</text>
+	<text key="predict4all.default.rule.phonem.confusion.au.o">Voyelle intermédiaire postérieure arrondie [ō] + Voyelle
+		mi-fermée postérieure arrondie [o]
+	</text>
+	<text key="predict4all.default.rule.phonem.confusion.au.o">Voyelle intermédiaire postérieure arrondie [ō] + Voyelle
+		mi-fermée postérieure arrondie [o]
+	</text>
+	<text key="predict4all.default.rule.phonem.confusion.e.eu">Voyelle intermédiaire antérieure arrondie [œ]</text>
+	<text key="predict4all.default.rule.phonem.confusion.om.on">Voyelle nasale postérieure arrondie [ɔ]</text>
+	<text key="predict4all.default.rule.phonem.confusion.ez.ef">Voyelle mi-fermée antérieure non arrondie [e]</text>
+	<text key="predict4all.default.rule.phonem.confusion.eu.oe">Voyelle mi-fermée antérieure arrondie [ø]</text>
+	<text key="predict4all.default.rule.phonem.confusion.aou">Voyelle fermée postérieure arrondie [u]</text>
+	<text key="predict4all.default.rule.phonem.confusion.i.y">Voyelle fermée antérieure non arrondie [i]</text>
+	<text key="predict4all.default.rule.phonem.confusion.u.ul">Voyelle fermée antérieure arrondie [y]</text>
+	<text key="predict4all.default.rule.phonem.confusion.u.yu">Consonne spirante labio-palatale sonore [ɥ]</text>
+	<text key="predict4all.default.rule.phonem.confusion.il.ill">Consonne spirante palatale sonore [j]</text>
+	<text key="predict4all.default.rule.phonem.confusion.c.ss.s">Consonne fricative alvéolaire sourde [s]</text>
+	<text key="predict4all.default.rule.phonem.confusion.s.z.x">Consonne fricative alvéolaire sonore [z]</text>
+	<text key="predict4all.default.rule.phonem.confusion.ch.sh"> Consonne fricative post-alvéolaire sourde [∫]</text>
+	<text key="predict4all.default.rule.phonem.confusion.j.g"> Consonne fricative post-alvéolaire sonore [ʒ]</text>
+	<text key="predict4all.default.rule.phonem.confusion.f.ph">Consonne fricative labio-dentale sourde [f]</text>
+	<text key="predict4all.default.rule.phonem.confusion.w.v">Consonne fricative labio-dentale sonore [v]</text>
+	<text key="predict4all.default.rule.phonem.confusion.r.rr.rc">Consonne fricative uvulaire voisée [ʁ]</text>
+	<text key="predict4all.default.rule.phonem.confusion.n.nn.mn">Consonne occlusive nasale alvéolaire sonore [n]</text>
+	<text key="predict4all.default.rule.phonem.confusion.n.mm">Consonne occlusive nasale bilabiale sonore [m]</text>
+	<text key="predict4all.default.rule.phonem.confusion.t.tt.th">Consonne occlusive alvéolaire sourde [t]</text>
+	<text key="predict4all.default.rule.phonem.confusion.d.dd">Consonne occlusive alvéolaire sonore [d]</text>
+	<text key="predict4all.default.rule.phonem.confusion.b.p.pp">Consonne occlusive bilabiale sourde [p]</text>
+	<text key="predict4all.default.rule.phonem.confusion.b.bb">Consonne occlusive bilabiale sonore [b]</text>
+	<text key="predict4all.default.rule.phonem.confusion.cc.c.qu.k">Consonne occlusive vélaire sourde [k]</text>
+	<text key="predict4all.default.rule.phonem.confusion.c.g.gg">Consonne occlusive vélaire sonore [g]</text>
+</texts>
