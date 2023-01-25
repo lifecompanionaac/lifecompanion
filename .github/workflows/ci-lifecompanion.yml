@@ -111,6 +111,10 @@ jobs:
           build-root-directory: lifecompanion
           arguments: publishToMavenLocal
 
+      - name : Add +X on plugin gralde scripts
+        if: ${{inputs.plugin_dir_name}}
+        run: chmod +x lifecompanion-plugins/${{inputs.plugin_dir_name}}/gradlew
+
       - name: Execute plugin build command
         if: ${{inputs.plugin_dir_name}}
         uses: gradle/gradle-build-action@v2
