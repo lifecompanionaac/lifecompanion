@@ -1,0 +1,19 @@
+name: ci-lc-spellgame-plugin
+
+on:
+  push:
+    tags:        
+      - 'lifecompanion-plugins/lc-spellgame-plugin/*-prod'
+      
+jobs:
+  call-workflow-passing-data:
+    uses: ./.github/workflows/ci-lifecompanion.yml
+    with:
+      target_env: prod
+      runs_on: ubuntu-latest
+      plugin_dir_name: lc-spellgame-plugin
+      gradle_command: publishPluginJar -PpluginDir=../lifecompanion-plugins/lc-spellgame-plugin
+    secrets:
+      framework_server_url: ${{ secrets.LIFECOMPANION_FRAMEWORK_SERVER_URL_DEV }}
+      framework_server_login: ${{ secrets.LIFECOMPANION_FRAMEWORK_SERVER_LOGIN_DEV }}
+      framework_server_password: ${{ secrets.LIFECOMPANION_FRAMEWORK_SERVER_PASSWORD_DEV }}

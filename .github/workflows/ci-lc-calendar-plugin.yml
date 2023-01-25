@@ -1,0 +1,19 @@
+name: ci-lc-calendar-plugin
+
+on:
+  push:
+    tags:        
+      - 'lifecompanion-plugins/lc-calendar-plugin/*-prod'
+      
+jobs:
+  call-workflow-passing-data:
+    uses: ./.github/workflows/ci-lifecompanion.yml
+    with:
+      target_env: prod
+      runs_on: ubuntu-latest
+      plugin_dir_name: lc-calendar-plugin
+      gradle_command: publishPluginJar -PpluginDir=../lifecompanion-plugins/lc-calendar-plugin
+    secrets:
+      framework_server_url: ${{ secrets.LIFECOMPANION_FRAMEWORK_SERVER_URL_DEV }}
+      framework_server_login: ${{ secrets.LIFECOMPANION_FRAMEWORK_SERVER_LOGIN_DEV }}
+      framework_server_password: ${{ secrets.LIFECOMPANION_FRAMEWORK_SERVER_PASSWORD_DEV }}
