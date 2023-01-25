@@ -61,9 +61,6 @@ public class LauncherApplication {
         // VM proxy configuration
         cmds.add("-Djava.net.useSystemProxies=true");
 
-        // VM ui scale configuration : solve problems > 100% Windows systems (unfocusable stages, images deletion...)
-        cmds.add("-Dglass.win.uiScale=100%");
-
         // Read classpath configuration
         if (!updateDownloadFinished) {
             String classPathArg = null;

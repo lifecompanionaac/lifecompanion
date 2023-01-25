@@ -16,6 +16,8 @@ on:
         type: boolean
       download_build_resources:
         type: boolean
+      plugin_dir_name:
+        type: string
     secrets:
       framework_server_url:
         required: true
@@ -24,11 +26,11 @@ on:
       framework_server_password:
         required: true
       app_server_url:
-        required: true
+        required: false
       app_server_query_parameters:
         required: false
       app_server_public_key:
-        required: true
+        required: false
       aws_access_key:
         required: false
       aws_secret:
@@ -101,6 +103,20 @@ jobs:
         with:
           build-root-directory: lifecompanion-framework
           arguments: publishToMavenLocal
+
+      - name: Build LifeCompanion app
+        if: ${{inputs.plugin_dir_name}}
+        uses: gradle/gradle-build-action@v2
+        with:
+          build-root-directory: lifecompanion
+          arguments: publishToMavenLocal
+
+      - name: Execute plugin build command
+        if: ${{inputs.plugin_dir_name}}
+        uses: gradle/gradle-build-action@v2
+        with:
+          build-root-directory: lifecompanion-plugins/${{inputs.plugin_dir_name}}
+          arguments: clean jar
           
       - name: Call update build and publish command
         uses: gradle/gradle-build-action@v2

@@ -40,22 +40,12 @@ chmod +x $LAUNCH_DIR/lib/jspawnhelper
 $PATH_TO_CMD -Djava.net.useSystemProxies=true\
   $XMX_VALUE \
 	${CLASSPATH_ARG-'-Dnooparg'}\
-	-Dglass.win.uiScale=100%\
-  	--add-reads lifecompanion.merged.module=javafx.base\
-  	--add-reads lifecompanion.merged.module=org.slf4j\
-  	--add-exports=javafx.graphics/com.sun.glass.ui=org.lifecompanion.app\
-  	--add-opens=javafx.graphics/javafx.stage=org.lifecompanion.app\
-  	--add-opens=javafx.graphics/com.sun.javafx.tk.quantum=org.lifecompanion.app\
-  	--add-opens=javafx.base/com.sun.javafx.runtime=org.controlsfx.controls\
-  	--add-opens=javafx.base/com.sun.javafx.collections=org.controlsfx.controls\
-  	--add-opens=javafx.graphics/com.sun.javafx.css=org.controlsfx.controls\
-  	--add-opens=javafx.graphics/com.sun.javafx.scene=org.controlsfx.controls\
-  	--add-opens=javafx.graphics/com.sun.javafx.scene.traversal=org.controlsfx.controls\
-  	--add-opens=javafx.graphics/javafx.scene=org.controlsfx.controls\
-  	--add-opens=javafx.controls/com.sun.javafx.scene.control=org.controlsfx.controls\
-  	--add-opens=javafx.controls/com.sun.javafx.scene.control.behavior=org.controlsfx.controls\
-  	--add-opens=javafx.controls/javafx.scene.control.skin=org.controlsfx.controls\
-  	-splash:data/lifecompanion_splashscreen.png\
-  	-m org.lifecompanion.app/org.lifecompanion.LifeCompanion\
+  --add-reads lifecompanion.merged.module=javafx.base\
+  --add-reads lifecompanion.merged.module=org.slf4j\
+  --add-exports=javafx.graphics/com.sun.glass.ui=org.lifecompanion.app\
+  --add-opens=javafx.graphics/javafx.stage=org.lifecompanion.app\
+  --add-opens=javafx.graphics/com.sun.javafx.tk.quantum=org.lifecompanion.app\
+  -splash:data/lifecompanion_splashscreen.png\
+  -m org.lifecompanion.app/org.lifecompanion.LifeCompanion\
 	${UPDATE_DOWNLOAD_FINISHED_FLAG-''}\
 	"$@" &
