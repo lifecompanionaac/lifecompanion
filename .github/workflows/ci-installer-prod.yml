@@ -7,7 +7,7 @@ on:
 
 jobs:
   call-workflow-passing-data:
-    uses: lifecompanionaac/lifecompanion/.github/workflows/ci-lifecompanion.yml@main
+    uses: ./.github/workflows/ci-lifecompanion.yml
     with:
       target_env: prod
       runs_on: windows-latest
