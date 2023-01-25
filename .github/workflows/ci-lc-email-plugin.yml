@@ -4,6 +4,11 @@ on:
   push:
     tags:        
       - 'lifecompanion-plugins/lc-email-plugin/*-prod'
+  workflow_dispatch:
+    inputs:
+      testName:
+        description: 'test to run it manually'     
+        required: true
 
 jobs:
   call-workflow-passing-data:
