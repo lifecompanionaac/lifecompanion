@@ -8,6 +8,7 @@
 - Mise à jour de l'API d'extensions
 - Mise à jour de la version de Java (version 18)
 - Ajout d'un paramètre dans les modes de sélection : **masquer le pointeur de souris** (très utile pour du headtracking/eyetracking !)
+- Ajout d'un indicateur sur les cases "vides" en mode édition afin de ne pas oublier de mettre des actions
 
 ### Corrections/ajustements
 
@@ -28,6 +29,7 @@
 - Correction de l'affichage de l'explication dans la section "Événements"
 - Ticket #41 : LifeCompanion redémarre en cas d'échec de mise à jour
 - Ticket #34 : meilleur affichage de l'avancement de l'installation
+- Correction d'un problème qui empêchait le changement de couleur de case dans certaines situations
 
 ## 1.4.2 - 20/06/2022
 

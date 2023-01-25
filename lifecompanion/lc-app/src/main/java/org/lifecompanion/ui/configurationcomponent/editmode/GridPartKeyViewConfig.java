@@ -32,6 +32,7 @@ import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.framework.commons.translation.Translation;
+import org.lifecompanion.model.impl.configurationcomponent.keyoption.BasicKeyOption;
 import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.model.api.editaction.BaseEditActionI;
 import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
@@ -163,12 +164,13 @@ public class GridPartKeyViewConfig extends GridPartKeyViewBase {
         keyOptionChangeListener.changed(null, null, model.keyOptionProperty().get());
         model.keyOptionProperty().addListener(keyOptionChangeListener);
 
-        // FIXME : better criteria (key option ?)
         warningGlyphNoAction.visibleProperty().bind(
-                Bindings.createBooleanBinding(() -> {
-                            return !model.getActionManager().containsActions();
-                        }, this.model.getActionManager().componentActions().get(UseActionEvent.ACTIVATION),
-                        this.model.getActionManager().componentActions().get(UseActionEvent.OVER))
+                Bindings.createBooleanBinding(
+                        () -> model.keyOptionProperty().get() instanceof BasicKeyOption && !model.getActionManager().containsActions(),
+                        this.model.getActionManager().componentActions().get(UseActionEvent.ACTIVATION),
+                        this.model.getActionManager().componentActions().get(UseActionEvent.OVER),
+                        this.model.keyOptionProperty()
+                )
         );
     }
 

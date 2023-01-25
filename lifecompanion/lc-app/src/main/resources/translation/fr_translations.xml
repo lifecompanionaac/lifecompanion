@@ -50,7 +50,7 @@
   <text key="notification.grid.replaced.previous.notification">Grille sélectionnée remplacée par la grille collée</text>
   <text key="fire.action.event.onpress">A l'appui</text>
   <text key="fire.action.event.onrelease">Au relachement</text>
-  <text key="tooltip.warning.no.action.on.key.edit.mode">Attention, cette case n'a aucune action ou type de case associée, elle pourra ne pas être utile en mode utilisation...</text>
+  <text key="tooltip.warning.no.action.on.key.edit.mode">Attention, cette case n'a aucune action ou type de case, elle pourrait n'avoir aucune utilité en mode utilisation...</text>
   <text key="config.duplicated.for.import.prefix">[ANCIENNE]</text>
   <text key="user.config.auto.show.virtual.keyboard">Faire apparaître automatiquement le clavier virtuel du système sur tablette</text>
   <text key="fire.event.type.keyboard">Clavier</text>

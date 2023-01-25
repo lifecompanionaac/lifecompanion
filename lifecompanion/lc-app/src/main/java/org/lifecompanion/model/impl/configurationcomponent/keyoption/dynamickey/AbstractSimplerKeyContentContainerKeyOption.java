@@ -33,6 +33,7 @@ import org.lifecompanion.model.api.configurationcomponent.dynamickey.SimplerKeyC
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.AbstractKeyOption;
 import org.lifecompanion.model.impl.exception.LCException;
+import org.lifecompanion.util.binding.BindingUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -177,10 +178,11 @@ public abstract class AbstractSimplerKeyContentContainerKeyOption<T extends Simp
 
     @Override
     public void detachFromImpl(final GridPartKeyComponentI key) {
-        key.imageVTwoProperty().unbind();
-        key.imageVTwoProperty().set(null);
-        key.textContentProperty().unbind();
-        key.textContentProperty().set(null);
+        BindingUtils.unbindAndSetNull(key.imageVTwoProperty());
+        BindingUtils.unbindAndSetNull(key.textContentProperty());
+        BindingUtils.unbindAndSetNull(key.getKeyStyle().backgroundColorProperty().forced());
+        BindingUtils.unbindAndSetNull(key.getKeyStyle().strokeColorProperty().forced());
+        BindingUtils.unbindAndSetNull(key.getKeyStyle().textPositionProperty().forced());
     }
 
     @Override
