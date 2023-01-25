@@ -27,6 +27,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
@@ -53,7 +54,7 @@ public abstract class AbstractSimplerKeyContentContainerPropertiesEditionView<T 
     private ComboBox<TextPosition> comboBoxTextPosition;
     protected TextField fieldText;
     private Label labelText;
-    private LCColorPicker colorPickerBackgroundColor, colorPickerStrokeColor;
+    private LCColorPicker colorPickerBackgroundColor, colorPickerStrokeColor, colorPickerTextColor;
     private ImageUseComponentSelectorControl imageUseComponentSelectorControl;
     private GridPane gridPaneConfiguration;
 
@@ -128,6 +129,8 @@ public abstract class AbstractSimplerKeyContentContainerPropertiesEditionView<T 
         GridPane.setHgrow(colorPickerBackgroundColor, Priority.ALWAYS);
         colorPickerStrokeColor = new LCColorPicker(LCColorPicker.ColorPickerMode.DARK);
         colorPickerStrokeColor.setMaxWidth(Double.MAX_VALUE);
+        colorPickerTextColor = new LCColorPicker();
+        colorPickerStrokeColor.setMaxWidth(Double.MAX_VALUE);
 
         gridPaneConfiguration.add(labelVisualPart, 0, rowIndex++, columnCount, 1);
 
@@ -137,7 +140,9 @@ public abstract class AbstractSimplerKeyContentContainerPropertiesEditionView<T 
         gridStyle.setHgap(GeneralConfigurationStepViewI.GRID_H_GAP);
 
         gridStyle.add(new Label(Translation.getText("general.configuration.view.key.list.field.text.position")), 0, rowStyle++, 2, 1);
-        gridStyle.add(createNullValueToggleSwitch(comboBoxTextPosition, comboBoxTextPosition.getSelectionModel().selectedItemProperty(), () -> comboBoxTextPosition.getSelectionModel().clearSelection()), 0, rowStyle);
+        gridStyle.add(createNullValueToggleSwitch(comboBoxTextPosition,
+                comboBoxTextPosition.getSelectionModel().selectedItemProperty(),
+                () -> comboBoxTextPosition.getSelectionModel().clearSelection()), 0, rowStyle);
         gridStyle.add(comboBoxTextPosition, 1, rowStyle++);
 
         gridStyle.add(new Label(Translation.getText("general.configuration.view.key.list.field.background.color")), 0, rowStyle++, 2, 1);
@@ -146,7 +151,9 @@ public abstract class AbstractSimplerKeyContentContainerPropertiesEditionView<T 
         gridStyle.add(new Label(Translation.getText("general.configuration.view.key.list.field.stroke.color")), 0, rowStyle++, 2, 1);
         gridStyle.add(createDeleteColorSwitch(colorPickerStrokeColor), 0, rowStyle);
         gridStyle.add(colorPickerStrokeColor, 1, rowStyle++);
-
+        gridStyle.add(new Label(Translation.getText("general.configuration.view.key.list.field.text.color")), 0, rowStyle++, 2, 1);
+        gridStyle.add(createDeleteColorSwitch(colorPickerTextColor), 0, rowStyle);
+        gridStyle.add(colorPickerTextColor, 1, rowStyle++);
 
         VBox boxImage = new VBox(GeneralConfigurationStepViewI.GRID_V_GAP, imageUseComponentSelectorControl);
 
@@ -155,6 +162,7 @@ public abstract class AbstractSimplerKeyContentContainerPropertiesEditionView<T 
         HBox boxImagesAndColors = new HBox(GeneralConfigurationStepViewI.GRID_H_GAP, boxImage, new Separator(Orientation.VERTICAL), gridStyle);
         gridStyle.maxWidthProperty().bind(boxImagesAndColors.widthProperty().divide(2.1));
         boxImage.maxWidthProperty().bind(boxImagesAndColors.widthProperty().divide(2.1));
+        boxImagesAndColors.setAlignment(Pos.CENTER);
 
         gridPaneConfiguration.add(boxImagesAndColors, 0, rowIndex, columnCount, 4);
 
@@ -185,6 +193,7 @@ public abstract class AbstractSimplerKeyContentContainerPropertiesEditionView<T 
                     comboBoxTextPosition.valueProperty().unbindBidirectional(ov.textPositionProperty());
                     colorPickerBackgroundColor.valueProperty().unbindBidirectional(ov.backgroundColorProperty());
                     colorPickerStrokeColor.valueProperty().unbindBidirectional(ov.strokeColorProperty());
+                    colorPickerTextColor.valueProperty().unbindBidirectional(ov.textColorProperty());
                 }
                 bindBidirectionalContent(ov, nv);
                 if (nv != null) {
@@ -192,6 +201,7 @@ public abstract class AbstractSimplerKeyContentContainerPropertiesEditionView<T 
                     comboBoxTextPosition.valueProperty().bindBidirectional(nv.textPositionProperty());
                     colorPickerBackgroundColor.valueProperty().bindBidirectional(nv.backgroundColorProperty());
                     colorPickerStrokeColor.valueProperty().bindBidirectional(nv.strokeColorProperty());
+                    colorPickerTextColor.valueProperty().bindBidirectional(nv.textColorProperty());
                     fieldText.requestFocus();
                     this.setVvalue(0.0);
                 }

@@ -60,7 +60,7 @@ public abstract class AbstractSimplerKeyContentContainer implements SimplerKeyCo
 
     @XMLGenericProperty(Color.class)
     @XMLIgnoreNullValue
-    private final ObjectProperty<Color> backgroundColor, strokeColor;
+    private final ObjectProperty<Color> backgroundColor, strokeColor, textColor;
 
     private final ImageUseComponentPropertyWrapper imageUseComponentPropertyWrapper;
 
@@ -72,6 +72,7 @@ public abstract class AbstractSimplerKeyContentContainer implements SimplerKeyCo
         text = new SimpleStringProperty("");
         backgroundColor = new SimpleObjectProperty<>(null);
         strokeColor = new SimpleObjectProperty<>(null);
+        textColor = new SimpleObjectProperty<>(null);
         wantedImageWidth = new SimpleDoubleProperty(0.0);
         wantedImageHeight = new SimpleDoubleProperty(0.0);
         imageUseComponentDisplayed = new SimpleBooleanProperty(false);
@@ -101,6 +102,10 @@ public abstract class AbstractSimplerKeyContentContainer implements SimplerKeyCo
         return textPosition;
     }
 
+    @Override
+    public ObjectProperty<Color> textColorProperty() {
+        return textColor;
+    }
 
     @Override
     public String getID() {

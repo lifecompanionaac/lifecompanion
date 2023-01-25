@@ -27,6 +27,7 @@ import javafx.scene.control.IndexedCell;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
@@ -99,6 +100,7 @@ public class KeyListCellHandler implements LCViewInitHelper {
             thisCell.setGraphic(null);
             BindingUtils.unbindAndSetNull(imageView.imageProperty());
             BindingUtils.unbindAndSetNull(labelText.textProperty());
+            BindingUtils.unbindAndSetNull(labelText.textFillProperty());
             BindingUtils.unbindAndSetNull(rectangleColors.strokeProperty());
             BindingUtils.unbindAndSetNull(rectangleColors.fillProperty());
             glyphPane.getChildren().clear();
@@ -108,7 +110,14 @@ public class KeyListCellHandler implements LCViewInitHelper {
             glyphPane.getChildren().add(item.isLinkNode() ? linkGlyph : item.isLeafNode() ? keyGlyph : listGlyph);
             rectangleColors.strokeProperty().bind(item.strokeColorProperty());
             rectangleColors.fillProperty().bind(item.backgroundColorProperty());
-            labelText.textProperty().bind(Bindings.createStringBinding(item::getHumanReadableText, item.textProperty(), item.enableWriteProperty(), item.textToWriteProperty(), item.enableSpeakProperty(), item.textToSpeakProperty()));
+            labelText.textProperty()
+                    .bind(Bindings.createStringBinding(item::getHumanReadableText,
+                            item.textProperty(),
+                            item.enableWriteProperty(),
+                            item.textToWriteProperty(),
+                            item.enableSpeakProperty(),
+                            item.textToSpeakProperty()));
+            labelText.textFillProperty().bind(Bindings.createObjectBinding(() -> item.textColorProperty().get() != null ? item.textColorProperty().get() : Color.BLACK, item.textColorProperty()));
             thisCell.setGraphic(graphics);
         }
     }

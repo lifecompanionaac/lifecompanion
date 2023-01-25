@@ -26,7 +26,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.SimplerKeyContentContainerI;
+import org.lifecompanion.util.binding.BindingUtils;
 import org.lifecompanion.util.javafx.ColorUtils;
 
 public abstract class AbstractKeyListContentListCell<T extends SimplerKeyContentContainerI> extends ListCell<T> {
@@ -80,18 +82,19 @@ public abstract class AbstractKeyListContentListCell<T extends SimplerKeyContent
         super.updateItem(itemP, emptyP);
         if (itemP == null || emptyP) {
             if (imageView != null) {
-                this.imageView.imageProperty().unbind();
-                this.imageView.imageProperty().set(null);
+                BindingUtils.unbindAndSetNull(this.imageView.imageProperty());
             }
-            this.labelText.textProperty().unbind();
+            BindingUtils.unbindAndSetNull(labelText.textProperty());
+            BindingUtils.unbindAndSetNull(labelText.textFillProperty());
             this.setGraphic(null);
-            this.boxContent.styleProperty().unbind();
-            this.boxContent.setStyle(null);
+            BindingUtils.unbindAndSetNull(boxContent.styleProperty());
         } else {
             if (imageView != null) {
                 this.imageView.imageProperty().bind(itemP.loadedImageProperty());
             }
             this.labelText.textProperty().bind(itemP.textProperty());
+            this.labelText.textFillProperty()
+                    .bind(Bindings.createObjectBinding(() -> itemP.textColorProperty().get() != null ? itemP.textColorProperty().get() : Color.BLACK, itemP.textColorProperty()));
             this.setGraphic(this.boxContent);
             this.boxContent.styleProperty().bind(Bindings.createStringBinding(() -> {
                 StringBuilder styleSb = new StringBuilder();
@@ -99,9 +102,27 @@ public abstract class AbstractKeyListContentListCell<T extends SimplerKeyContent
                     styleSb.append("-fx-background-color:").append(ColorUtils.toCssColor(itemP.backgroundColorProperty().get())).append(";");
                 }
                 if (itemP.strokeColorProperty().get() != null) {
-                    styleSb.append("-fx-border-color:").append(ColorUtils.toCssColor(itemP.strokeColorProperty().get())).append(";")
-                            .append("-fx-border-width: ").append(STROKE_SIZE_TOP_BOTTOM).append(" ").append(STROKE_SIZE_SIDE).append(" ").append(STROKE_SIZE_TOP_BOTTOM).append(" ").append(STROKE_SIZE_SIDE).append(";")
-                            .append("-fx-background-insets: ").append(STROKE_SIZE_TOP_BOTTOM - 1).append(" ").append(STROKE_SIZE_SIDE - 1).append(" ").append(STROKE_SIZE_TOP_BOTTOM - 1).append(" ").append(STROKE_SIZE_SIDE - 1).append(";")
+                    styleSb.append("-fx-border-color:")
+                            .append(ColorUtils.toCssColor(itemP.strokeColorProperty().get()))
+                            .append(";")
+                            .append("-fx-border-width: ")
+                            .append(STROKE_SIZE_TOP_BOTTOM)
+                            .append(" ")
+                            .append(STROKE_SIZE_SIDE)
+                            .append(" ")
+                            .append(STROKE_SIZE_TOP_BOTTOM)
+                            .append(" ")
+                            .append(STROKE_SIZE_SIDE)
+                            .append(";")
+                            .append("-fx-background-insets: ")
+                            .append(STROKE_SIZE_TOP_BOTTOM - 1)
+                            .append(" ")
+                            .append(STROKE_SIZE_SIDE - 1)
+                            .append(" ")
+                            .append(STROKE_SIZE_TOP_BOTTOM - 1)
+                            .append(" ")
+                            .append(STROKE_SIZE_SIDE - 1)
+                            .append(";")
                             .append("-fx-border-style: solid inside;");
                 }
                 return styleSb.toString();

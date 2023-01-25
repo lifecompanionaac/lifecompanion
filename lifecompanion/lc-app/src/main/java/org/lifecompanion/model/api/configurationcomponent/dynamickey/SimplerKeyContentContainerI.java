@@ -41,7 +41,6 @@ public interface SimplerKeyContentContainerI extends ImageUseComponentI, XMLSeri
 
     // CONTENT DISPLAYED
     //========================================================================
-
     /**
      * @return text displayed on the key
      */
@@ -53,6 +52,7 @@ public interface SimplerKeyContentContainerI extends ImageUseComponentI, XMLSeri
 
     ObjectProperty<Color> strokeColorProperty();
 
+    ObjectProperty<Color> textColorProperty();
     //========================================================================
 
     // OTHER

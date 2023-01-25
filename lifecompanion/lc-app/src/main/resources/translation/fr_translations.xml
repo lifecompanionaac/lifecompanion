@@ -1714,6 +1714,7 @@
   <text key="general.configuration.view.key.list.field.space.after">Ajouter un espace après le texte écrit</text>
   <text key="general.configuration.view.key.list.field.speak.over">Prononcer au survol de la case</text>
   <text key="general.configuration.view.key.list.field.stroke.color">Couleur du contour</text>
+  <text key="general.configuration.view.key.list.field.text.color">Couleur du texte</text>
   <text key="general.configuration.view.key.list.field.text">Texte de la case</text>
   <text key="general.configuration.view.key.list.field.text.position">Position du texte</text>
   <text key="general.configuration.view.key.list.field.text.to.speak">Prononcer à la sélection</text>

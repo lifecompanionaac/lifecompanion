@@ -6,6 +6,10 @@ To be done later...
 
 ## SERVER
 
+### 1.14.13 - 25/01/2023
+
+- Removed previous stats services
+
 ### 1.14.12 - 20/06/2022
 
 - New public service "/get-image-url/:imageId" to download an image from its ID

@@ -1,6 +1,6 @@
 # LIFECOMPANION CHANGELOG
 
-## 1.4.3 - XX/XX/2022
+## 1.4.3 - XX/01/2023
 
 ### Fonctionnalités
 
@@ -9,6 +9,7 @@
 - Mise à jour de la version de Java (version 18)
 - Ajout d'un paramètre dans les modes de sélection : **masquer le pointeur de souris** (très utile pour du headtracking/eyetracking !)
 - Ajout d'un indicateur sur les cases "vides" en mode édition afin de ne pas oublier de mettre des actions
+- Ajout du réglage de la couleur du texte pour les listes de cases
 
 ### Corrections/ajustements
 

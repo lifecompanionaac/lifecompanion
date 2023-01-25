@@ -94,6 +94,7 @@ public abstract class AbstractSimplerKeyContentContainerKeyOption<T extends Simp
                 key.getKeyStyle().backgroundColorProperty().forced().setValue(null);
                 key.getKeyStyle().strokeColorProperty().forced().setValue(null);
                 key.getKeyStyle().textPositionProperty().forced().setValue(null);
+                key.getKeyTextStyle().colorProperty().forced().setValue(null);
             } else {
                 // Text content
                 key.textContentProperty().set(simplerKeyContentContainer.textProperty().get());
@@ -112,15 +113,10 @@ public abstract class AbstractSimplerKeyContentContainerKeyOption<T extends Simp
                 key.enableReplaceColorProperty().set(simplerKeyContentContainer.enableReplaceColorProperty().get());
                 // Image display (size and loading)
                 simplerKeyContentContainer.bindImageDisplayProperties(key);
-                key.getKeyStyle().backgroundColorProperty().forced().setValue(
-                        simplerKeyContentContainer.backgroundColorProperty().get() != null ? simplerKeyContentContainer.backgroundColorProperty().get() : null
-                );
-                key.getKeyStyle().strokeColorProperty().forced().setValue(
-                        simplerKeyContentContainer.strokeColorProperty().get() != null ? simplerKeyContentContainer.strokeColorProperty().get() : null
-                );
-                key.getKeyStyle().textPositionProperty().forced().setValue(
-                        simplerKeyContentContainer.textPositionProperty().get() != null ? simplerKeyContentContainer.textPositionProperty().get() : null
-                );
+                key.getKeyStyle().backgroundColorProperty().forced().setValue(simplerKeyContentContainer.backgroundColorProperty().get());
+                key.getKeyStyle().strokeColorProperty().forced().setValue(simplerKeyContentContainer.strokeColorProperty().get());
+                key.getKeyStyle().textPositionProperty().forced().setValue(simplerKeyContentContainer.textPositionProperty().get());
+                key.getKeyTextStyle().colorProperty().forced().setValue(simplerKeyContentContainer.textColorProperty().get());
             }
             updateKeyFor(key, simplerKeyContentContainer, AppModeController.INSTANCE.modeProperty().get());
         } else if (currentSimplerKeyContentContainer.get() != null) {
@@ -183,6 +179,7 @@ public abstract class AbstractSimplerKeyContentContainerKeyOption<T extends Simp
         BindingUtils.unbindAndSetNull(key.getKeyStyle().backgroundColorProperty().forced());
         BindingUtils.unbindAndSetNull(key.getKeyStyle().strokeColorProperty().forced());
         BindingUtils.unbindAndSetNull(key.getKeyStyle().textPositionProperty().forced());
+        BindingUtils.unbindAndSetNull(key.getKeyTextStyle().colorProperty().forced());
     }
 
     @Override
