@@ -164,4 +164,11 @@ application is then promoted to prod on Heroku*
 
 ---
 
+# Solving problems
+
+#### Delete a git tag
+
+1. Delete locally : `git tag --delete lifecompanion/lc-installer/1.5.4-prod`
+1. Delete if pushed : `git push --delete origin lifecompanion/lc-installer/1.5.4-prod`
+
 
