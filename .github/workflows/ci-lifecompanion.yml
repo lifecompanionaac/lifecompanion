@@ -42,9 +42,6 @@ on:
 jobs:
   build:
     runs-on: ${{inputs.runs_on}}
-    env:
-      INNOSETUP_DIR: ./innosetup/
-      
     steps:
       - name: Create runner directory on Windows
         if: ${{ inputs.runs_on == 'windows-latest' }}
@@ -81,7 +78,7 @@ jobs:
     
       - name: Install InnoSetup
         if: ${{inputs.install_innosetup}}
-        run: ./innosetup.exe /portable=1 /SILENT /DIR="${{env.INNOSETUP_DIR}}"
+        run: ./innosetup.exe /portable=1 /SILENT /DIR="\actions-runner\innosetup\"
       
       - name: Prepare target env configuration
         run: |
@@ -141,6 +138,6 @@ jobs:
           arguments: |
             ${{inputs.gradle_command}}
             -Penv=${{inputs.target_env}}
-            -Pinnosetup.path=${{env.INNOSETUP_DIR}}ISCC.exe
+            -Pinnosetup.path=\actions-runner\innosetup\ISCC.exe
             -Pvisibility=PUBLISHED
             --stacktrace
