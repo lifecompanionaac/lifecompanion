@@ -126,7 +126,7 @@ manually in file storage and then linked with `PRESET_STORAGE_IDS` in `PublishAp
 1. Commit and tag repo with **lifecompanion/lc-installer/X.X.X-prod**
 1. Run `gradlew :lc-installer:publishInstaller -Penv=prod` in **lifecompanion**
 
-**Note on Windows security alert** : when publishing new server updates, you should think about reporting the installer as safe for Windows. To do so, go to the report
+**Note on Windows security alert** : when publishing new server updates, you should think about reporting the installer as safe for Windows. To do so, download the new installer with Edge and signal it as trusted site.
 
 ### Deploy LifeCompanion server update in production
 
