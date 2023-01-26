@@ -5,11 +5,11 @@
 ### Fonctionnalités
 
 - Meilleure gestion de **la mise à l'échelle** des systèmes : permet un affichage "plus grand" sur des écrans à haute résolution (ex : tablettes Surface)
-- Mise à jour de l'API d'extensions
-- Mise à jour de la version de Java (version 18)
 - Ajout d'un paramètre dans les modes de sélection : **masquer le pointeur de souris** (très utile pour du headtracking/eyetracking !)
 - Ajout d'un indicateur sur les cases "vides" en mode édition afin de ne pas oublier de mettre des actions
 - Ajout du réglage de la couleur du texte pour les listes de cases
+- Mise à jour de l'API d'extensions
+- Mise à jour de la version de Java (version 18)
 
 ### Corrections/ajustements
 
