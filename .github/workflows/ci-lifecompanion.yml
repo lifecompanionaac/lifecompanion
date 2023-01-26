@@ -139,5 +139,5 @@ jobs:
             ${{inputs.gradle_command}}
             -Penv=${{inputs.target_env}}
             -Pinnosetup.path=\actions-runner\innosetup\ISCC.exe
-            -Pvisibility=PREVIEW
+            -Pvisibility=PUBLISHED
             --stacktrace
