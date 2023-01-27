@@ -58,7 +58,7 @@ public class WindowsRegUtils {
 	 */
 	public static void createFileAssociation(final String extension, final File executableFile, final String softwareName, final String description)
 			throws WindowsRegException {
-		String typeName = softwareName + ".1";
+		String typeName = softwareName + "."+extension;
 		WindowsRegUtils.addRegKey("HKEY_CLASSES_ROOT\\." + extension, null, "REG_SZ", typeName);
 		WindowsRegUtils.addRegKey("HKEY_CLASSES_ROOT\\." + extension, "PerceivedType", "REG_SZ", "Application");
 		WindowsRegUtils.addRegKey("HKEY_CLASSES_ROOT\\" + typeName, null, "REG_SZ", null);

@@ -8,7 +8,8 @@
 
 ### Corrections/ajustements
 
-- ...
+- Ticket #155 : les fichiers de configurations étaient marqués comme fichiers de profil sous Windows
+- Ticket #187 : correction des licences des tiers
 
 ## 1.4.3 - 26/01/2023
 

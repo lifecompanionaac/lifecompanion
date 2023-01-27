@@ -105,6 +105,8 @@ env (e.g. tags)
 
 Creating updates depends on custom Gradle task and plugin, all located in *lifecompanion/buildSrc*
 
+**Note that you should always publish plugin updates before app updates if you create breaking changes in plugin API**
+
 ### Create LifeCompanion update
 
 *When file are too big for direct upload during update (e.g. image zips, file > 100 MB), file should be uploaded
