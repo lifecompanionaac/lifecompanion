@@ -35,7 +35,6 @@ import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 
 /**
- * Action to save current typed text to a file.
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public class PutUserTextInClipboardAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {

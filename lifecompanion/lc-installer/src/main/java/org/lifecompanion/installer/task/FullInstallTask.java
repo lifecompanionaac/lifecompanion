@@ -58,7 +58,7 @@ import java.util.function.Consumer;
 import static org.lifecompanion.framework.commons.ApplicationConstant.*;
 
 public class FullInstallTask extends Task<InstallResult> {
-    private final static long TASK_COUNT = 5;
+    private final static long TASK_COUNT = 6;
     private static final Logger LOGGER = LoggerFactory.getLogger(FullInstallTask.class);
     private final InstallerUIConfiguration installerConfiguration;
     private final Consumer<String> logAppender;
@@ -102,6 +102,15 @@ public class FullInstallTask extends Task<InstallResult> {
         if (updateDirectory.exists()) {
             LOGGER.info("Detected a previous update directory, will clean it");
             IOUtils.deleteDirectoryAndChildren(updateDirectory);
+        }
+        updateProgress(progress++, TASK_COUNT);
+
+        // Delete plugin classpath config (if plugin loading fail, this will fix launch) - Issue #197
+        final File pluginClasspathFile = new File(this.installerConfiguration.getInstallationSoftwareDirectory()
+                .getPath() + File.separator + DIR_NAME_APPLICATION_DATA + File.separator + "plugins" + File.separator + "plugin-classpath");
+        if (pluginClasspathFile.exists()) {
+            LOGGER.info("Detected a plugin classpath file will clean it");
+            IOUtils.deleteDirectoryAndChildren(pluginClasspathFile);
         }
         updateProgress(progress++, TASK_COUNT);
 
