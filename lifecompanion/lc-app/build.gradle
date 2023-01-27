@@ -152,7 +152,7 @@ processResources {
                 'installationPublicKey': project.property('lifecompanion.app.server.public_key')
         )
     }
-    from('/build/reports/dependency-license/') {
+    from('./build/reports/dependency-license/') {
         include 'THIRD-PARTY-NOTICES.txt'
     }
     from('../../') {

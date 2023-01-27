@@ -9,6 +9,12 @@
 [![ci-installer-prod](https://github.com/lifecompanionaac/lifecompanion/actions/workflows/ci-installer-prod.yml/badge.svg)](https://github.com/lifecompanionaac/lifecompanion/actions/workflows/ci-installer-prod.yml)
 [![ci-server](https://github.com/lifecompanionaac/lifecompanion/actions/workflows/ci-server.yml/badge.svg)](https://github.com/lifecompanionaac/lifecompanion/actions/workflows/ci-server.yml)
 
+[![ci-lc-calendar-plugin](https://github.com/lifecompanionaac/lifecompanion/actions/workflows/ci-lc-calendar-plugin.yml/badge.svg)](https://github.com/lifecompanionaac/lifecompanion/actions/workflows/ci-lc-calendar-plugin.yml)
+[![ci-lc-email-plugin](https://github.com/lifecompanionaac/lifecompanion/actions/workflows/ci-lc-email-plugin.yml/badge.svg)](https://github.com/lifecompanionaac/lifecompanion/actions/workflows/ci-lc-email-plugin.yml)
+[![ci-lc-spellgame-plugin](https://github.com/lifecompanionaac/lifecompanion/actions/workflows/ci-lc-spellgame-plugin.yml/badge.svg)](https://github.com/lifecompanionaac/lifecompanion/actions/workflows/ci-lc-spellgame-plugin.yml)
+[![ci-lc-ppp-plugin](https://github.com/lifecompanionaac/lifecompanion/actions/workflows/ci-lc-ppp-plugin.yml/badge.svg)](https://github.com/lifecompanionaac/lifecompanion/actions/workflows/ci-lc-ppp-plugin.yml)
+[![ci-lc-homeassistant-plugin](https://github.com/lifecompanionaac/lifecompanion/actions/workflows/ci-lc-homeassistant-plugin.yml/badge.svg)](https://github.com/lifecompanionaac/lifecompanion/actions/workflows/ci-lc-homeassistant-plugin.yml)
+
 LifeCompanion mono repository containing LifeCompanion app, server, side projects, resources and documentation.
 
 ## About
