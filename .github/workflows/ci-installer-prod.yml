@@ -10,9 +10,8 @@ jobs:
     uses: ./.github/workflows/ci-lifecompanion.yml
     with:
       target_env: prod
-      runs_on: windows-latest
+      runs_on: windows-2022
       gradle_command: :lc-installer:publishInstaller
-      install_innosetup: true
     secrets:
       framework_server_url: ${{ secrets.LIFECOMPANION_FRAMEWORK_SERVER_URL_PROD }}
       framework_server_login: ${{ secrets.LIFECOMPANION_FRAMEWORK_SERVER_LOGIN_PROD }}

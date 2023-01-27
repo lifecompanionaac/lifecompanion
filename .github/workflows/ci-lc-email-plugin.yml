@@ -10,7 +10,7 @@ jobs:
     uses: ./.github/workflows/ci-lifecompanion.yml
     with:
       target_env: prod
-      runs_on: ubuntu-latest
+      runs_on: ubuntu-22.04
       plugin_dir_name: lc-email-plugin
       gradle_command: publishPluginJar -PpluginDir=../lifecompanion-plugins/lc-email-plugin
     secrets:
