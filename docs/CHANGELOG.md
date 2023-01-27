@@ -1,10 +1,16 @@
 # LIFECOMPANION CHANGELOG
 
-## 1.4.X - XX/XX/2023
+## 1.X.X - XX/XX/2023
 
 ### Fonctionnalités
 
 - ...
+
+### Corrections/ajustements
+
+- ...
+
+## 1.4.4 - 27/01/2023
 
 ### Corrections/ajustements
 
