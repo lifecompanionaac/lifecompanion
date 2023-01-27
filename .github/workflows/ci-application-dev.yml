@@ -10,7 +10,7 @@ jobs:
     uses: ./.github/workflows/ci-lifecompanion.yml
     with:
       target_env: dev
-      runs_on: ubuntu-latest
+      runs_on: ubuntu-22.04
       gradle_command: :lc-app:publishApplication
       download_build_resources: true
     secrets:
