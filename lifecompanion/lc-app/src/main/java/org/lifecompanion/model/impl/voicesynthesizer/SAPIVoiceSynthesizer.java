@@ -97,7 +97,7 @@ public class SAPIVoiceSynthesizer extends AbstractVoiceSynthesizer {
                 .build();
 
         // Dev debug : kill/close on launch
-        if (LangUtils.safeParseBoolean(System.getProperty("org.lifecompanion.kill.sapi.on.launch"))) {
+        if (LangUtils.safeParseBoolean(System.getProperty("org.lifecompanion.debug.kill.sapi.on.launch"))) {
             try {
                 disposeRequest(httpClient.newBuilder().connectTimeout(2, TimeUnit.SECONDS).build());
             } catch (Exception e) {

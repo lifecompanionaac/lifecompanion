@@ -25,6 +25,7 @@ import javafx.scene.Node;
 import javafx.scene.layout.Region;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import javafx.stage.Window;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
@@ -64,11 +65,10 @@ public class FXUtils {
         if (source != null) {
             if (source.getScene() != null) {
                 Window window = source.getScene().getWindow();
-                // FIXME : should test if visible and not null and fall back to known windows...
-                return window;
+                return window != null && window.isShowing() ? window : StageUtils.getOnTopWindowExcludingNotification();
             }
         }
-        return null;
+        return StageUtils.getOnTopWindowExcludingNotification();
     }
 
     public static Node getSourceFromEvent(Event event) {

@@ -8,6 +8,7 @@
 
 ### Corrections/ajustements
 
+- Ticket #198 : LifeCompanion pouvait parfois se retrouvé bloqué lors du lancement avec un fichier de config/profil
 - Ticket #155 : les fichiers de configurations étaient marqués comme fichiers de profil sous Windows
 - Ticket #187 : correction des licences des tiers
 

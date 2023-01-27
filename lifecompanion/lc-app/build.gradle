@@ -28,11 +28,6 @@ mainClassName = 'org.lifecompanion.LifeCompanion'
 ext {
     devCpArg = System.getenv('org.lifecompanion.dev.cp.arg') != null && !System.getenv('org.lifecompanion.dev.cp.arg').isBlank() ? System.getenv('org.lifecompanion.dev.cp.arg') : '/null'
     sharedJvmArgAppTest = [
-            // TODO : testing if previous bug are still there
-            // Current status :
-            // - bug with main scene on loading : preview part has a wrong size (bottom bar + center not working)
-            '-Dglass.win.uiScale=150%',
-
             // Splash screen
             '-splash:data/lifecompanion_splashscreen.png',
 
@@ -43,7 +38,7 @@ ext {
     ]
 }
 
-// Application run in dev only
+// Application run (in dev only)
 application {
     mainModule = 'org.lifecompanion.app'
     applicationDefaultJvmArgs = sharedJvmArgAppTest + [
@@ -55,8 +50,8 @@ application {
 
             // LC dev mode
             '-Dorg.lifecompanion.debug.skip.update.check=true',
-            '-Dorg.lifecompanion.load.plugins.from.cp=true',
-            '-Dorg.lifecompanion.kill.sapi.on.launch=true',
+            '-Dorg.lifecompanion.debug.load.plugins.from.cp=true',
+            '-Dorg.lifecompanion.debug.kill.sapi.on.launch=true',
             '-Dorg.lifecompanion.debug.loaded.images=true',
             '-Dorg.lifecompanion.debug.configuration.memory.leak=true'
     ]

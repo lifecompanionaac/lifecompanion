@@ -43,6 +43,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.stage.Window;
 import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.util.LangUtils;
 import org.lifecompanion.model.impl.constant.LCConstant;
@@ -57,6 +58,7 @@ import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.util.javafx.ColorUtils;
 import org.lifecompanion.util.javafx.FXControlUtils;
+import org.lifecompanion.util.javafx.FXUtils;
 import org.lifecompanion.util.javafx.StageUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -191,8 +193,6 @@ public class LCColorCustomColorStage extends Stage implements LCViewInitHelper {
 
         Scene sceneContent = new Scene(totalVbox);
         sceneContent.getStylesheets().addAll(LCConstant.CSS_STYLE_PATH);
-        SystemVirtualKeyboardController.INSTANCE.registerScene(sceneContent);
-        SessionStatsController.INSTANCE.registerScene(sceneContent);
 
         this.setScene(sceneContent);
     }
@@ -204,6 +204,7 @@ public class LCColorCustomColorStage extends Stage implements LCViewInitHelper {
         setCurrentColorTo(previousColorClean);
         this.hueSelectorPane.requestFocus();
         this.show();
+        this.toFront();
     }
 
     private Rectangle createShowSelectionRectangle(double w, double h) {
@@ -278,10 +279,15 @@ public class LCColorCustomColorStage extends Stage implements LCViewInitHelper {
                 LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo("lc.colorpicker.web.color.copied").withMsDuration(LCGraphicStyle.SHORT_NOTIFICATION_DURATION_MS));
             }
         });
-
+        this.setOnShowing(e ->{
+            Scene scene = this.getScene();
+            SystemVirtualKeyboardController.INSTANCE.registerScene(scene);
+            SessionStatsController.INSTANCE.registerScene(scene);
+        });
         this.setOnHidden(e -> {
-            SystemVirtualKeyboardController.INSTANCE.unregisterScene(this.getScene());
-            SessionStatsController.INSTANCE.unregisterScene(this.getScene());
+            Scene scene = this.getScene();
+            SystemVirtualKeyboardController.INSTANCE.unregisterScene(scene);
+            SessionStatsController.INSTANCE.unregisterScene(scene);
             onNextSelection = null;
         });
     }

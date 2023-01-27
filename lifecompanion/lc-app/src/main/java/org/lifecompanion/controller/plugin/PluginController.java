@@ -440,7 +440,7 @@ public enum PluginController implements LCStateListener, ModeListenerI {
                 }
 
                 // This part is for dev only
-                if (org.lifecompanion.util.LangUtils.safeParseBoolean(System.getProperty("org.lifecompanion.load.plugins.from.cp"))) {
+                if (org.lifecompanion.util.LangUtils.safeParseBoolean(System.getProperty("org.lifecompanion.debug.load.plugins.from.cp"))) {
                     List<File> jarFiles = new ClassGraph().getClasspathFiles();
                     for (File jarFile : jarFiles) {
                         if (jarFile.getName().contains("plugin")) {
