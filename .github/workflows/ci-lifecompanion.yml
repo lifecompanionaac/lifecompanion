@@ -12,8 +12,6 @@ on:
       gradle_command:
         required: true
         type: string
-      install_innosetup:
-        type: boolean
       download_build_resources:
         type: boolean
       plugin_dir_name:
@@ -66,20 +64,7 @@ jobs:
       
       - name : Add +X on gralde scripts
         run: chmod +x lifecompanion-framework/gradlew & chmod +x lifecompanion/gradlew
-                      
-      - name: Download InnoSetup installer
-        if: ${{inputs.install_innosetup}}
-        uses: carlosperate/download-file-action@v2.0.0
-        id: download-inno-setup
-        with:
-            file-url: 'https://jrsoftware.org/download.php/is.exe'
-            file-name: 'innosetup.exe'
-            location: '.'
-    
-      - name: Install InnoSetup
-        if: ${{inputs.install_innosetup}}
-        run: ./innosetup.exe /portable=1 /SILENT /DIR="\actions-runner\innosetup\"
-      
+                            
       - name: Prepare target env configuration
         run: |
           echo "lifecompanion.framework.server.url = $LIFECOMPANION_FRAMEWORK_SERVER_URL" >> env/.env.${{inputs.target_env}}
@@ -138,6 +123,6 @@ jobs:
           arguments: |
             ${{inputs.gradle_command}}
             -Penv=${{inputs.target_env}}
-            -Pinnosetup.path=\actions-runner\innosetup\ISCC.exe
+            -Pinnosetup.path=iscc.exe
             -Pvisibility=PUBLISHED
             --stacktrace
