@@ -59,6 +59,6 @@ The example is done with **lc-spellgame-plugin** but should work with any plugin
 
 ## Troubleshooting
 
-[Check general docs troubleshooting first](BUILD.md)
+[Check general docs troubleshooting first](BUILD.md#troubleshooting)
 
 - TODO depending on feedback
