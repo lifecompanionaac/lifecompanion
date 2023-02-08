@@ -52,6 +52,8 @@ If you want to build a production version : you may need to import again the sec
 1. Install **[AutoHotKey](https://www.autohotkey.com/)** (tested with 1.1.33.10)
 1. Modify or compile your script (you can use LifeCompanion ico)
 
+### [Detailed instructions to build/run LifeCompanion](BUILD_DETAIL.md)
+
 ## Create offline application package
 
 It is possible possible to create custom local images (offline) to test your image generation before creating offical updates.

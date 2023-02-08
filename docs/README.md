@@ -6,7 +6,7 @@ To build and run LifeCompanion from source
 
 1. install Java JDK 18
 1. Go to **lifecompanion-framework** and `gradlew publishToMavenLocal`
-1. Go to **lifecompanion** and `gradlew :lc-app run`
+1. Go to **lifecompanion** and `gradlew :lc-app:run`
 
 Detailled information available bellow.
 

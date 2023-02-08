@@ -41,6 +41,8 @@ Follow the next section to be able to quickly develop your plugin in InteliJ
     1. Add : Before launch > Run Another Configuration with your run configuration that build your plugin (`clean jar`)
 1. You can now use your LifeCompanion run configuration : this will first build your plugin and inject its last version to LifeCompanion !
 
+### [Detailed instructions to build/run LifeCompanion](BUILD_DETAIL.md)
+
 ### Existing plugins
 
 All the official existing plugins are stored in the [**lifecompanion-plugins**](../lifecompanion-plugins/) folder on the repo. You can check their code to understand how plugin can be created.
