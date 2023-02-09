@@ -25,40 +25,40 @@ import org.lifecompanion.model.api.configurationcomponent.WriterEntryI;
 import org.lifecompanion.model.api.style.TextCompStyleI;
 
 public interface TextDisplayerWordI {
-	public boolean isPreviousLineSplittedOnThisWord();
+	boolean isPreviousLineSplittedOnThisWord();
 
-	public void setPreviousLineSplittedOnThisWord(boolean previousLineSplitOnThisWord);
+	void setPreviousLineSplittedOnThisWord(boolean previousLineSplitOnThisWord);
 
-	public Character getWordSeparatorChar();
+	Character getWordSeparatorChar();
 
-	public void setWordSeparatorChar(Character c);
+	void setWordSeparatorChar(Character c);
 	//
 
-	public List<TextDisplayerWordPartI> getParts();
+	List<TextDisplayerWordPartI> getParts();
 
-	public int getCaretStart();
+	int getCaretStart();
 
-	public void setCaretStart(int caretStart);
+	void setCaretStart(int caretStart);
 
-	public int getCaretEnd();
+	int getCaretEnd();
 
-	public double getWordSeparatorCharWidth();
+	double getWordSeparatorCharWidth();
 
-	public void setCaretEnd(int caretEnd);
+	void setCaretEnd(int caretEnd);
 
 	/**
-	 * Compute thdth of this word using the given bounds provider.</br>
+	 * Compute the width of this word using the given bounds provider.</br>
 	 * Use the {@link WriterEntryI} of each part as style information, or the default style if needed.</br>
 	 * The given width includes the end stop char when present.
 	 * @param provider bounds provider to compute text size
 	 * @param defaultTextStyle text style to use if entry has not its own style
 	 * @return the width of this word, including end stop char
 	 */
-	public double getWidth(TextBoundsProviderI provider, TextCompStyleI defaultTextStyle);
+	double getWidth(TextBoundsProviderI provider, TextCompStyleI defaultTextStyle);
 
-	public double getWidth();
+	double getWidth();
 
-	public double getHeight();
+	double getHeight();
 
 	void computeSize(TextBoundsProviderI provider, TextCompStyleI defaultTextStyle);
 }

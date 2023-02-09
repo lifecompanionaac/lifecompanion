@@ -10,6 +10,7 @@
 
 - Ticket #156 : la récupération d'images depuis le presse-papier fonctionne maintenant depuis toutes les applications
 - Ticket #201 : le paramètre du défilement "Ignorer les éléments vides" était ignoré en ligne/colonne ou colonne/ligne
+- Ticket #164 : meilleure gestion des actions "haut/bas" du curseur dans les éditeurs de texte
 
 ## 1.4.4 - 27/01/2023
 
