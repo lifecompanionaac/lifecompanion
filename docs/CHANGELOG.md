@@ -8,7 +8,7 @@
 
 ### Corrections/ajustements
 
-- ...
+- Ticket #201 : le paramètre du défilement "Ignorer les éléments vides" était ignoré en ligne/colonne ou colonne/ligne
 
 ## 1.4.4 - 27/01/2023
 
