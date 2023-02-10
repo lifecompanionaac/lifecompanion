@@ -18,7 +18,7 @@ jobs:
           java-version: '18'
           distribution: 'temurin'
       
-      - name : Add +X on gralde scripts
+      - name : Add +X on Gradle scripts
         run: chmod +x lifecompanion-framework/gradlew
             
       - name: Build LifeCompanion framework
