@@ -12,10 +12,13 @@ if [ -f "\$CDS_ARCHIVE_FILE" ]; then
 fi
 <% } %>
 
+echo "sudo apt-get update"
 sudo apt-get update
-sudo apt-get upgrade
+
+echo "sudo apt-get install libttspico-utils"
 sudo apt-get install libttspico-utils
 
-sudo cat /sys/class/dmi/id/board_serial >> device_id.txt
+echo "cat /sys/class/dmi/id/board_serial"
+sudo cat /sys/class/dmi/id/board_serial > /tmp/lifecompanion_device_id.txt
 
 "\$DIR/java" \$CDS_JVM_OPTS ${jvmArgs} -p "\$DIR/../app" -m ${moduleName}/${mainClassName} ${args} "\$@"
