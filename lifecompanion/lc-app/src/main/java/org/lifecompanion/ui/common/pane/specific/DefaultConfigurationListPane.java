@@ -66,7 +66,7 @@ public class DefaultConfigurationListPane extends VBox implements LCViewInitHelp
         Label labelDefaultConfiguration = FXControlUtils.createTitleLabel("profile.edition.general.default.configuration.title");
         Label labelExplain = new Label(Translation.getText("profile.edition.general.default.configuration.explain"));
         labelExplain.setMinHeight(60.0);
-        labelExplain.getStyleClass().add("explain-text");
+        labelExplain.getStyleClass().addAll("text-font-italic", "text-fill-gray", "text-wrap-enabled");
 
         linkUnselectAll = new Hyperlink(Translation.getText("profile.edition.general.default.configuration.link.unselect.all"));
         linkSelectAll = new Hyperlink(Translation.getText("profile.edition.general.default.configuration.link.select.all"));

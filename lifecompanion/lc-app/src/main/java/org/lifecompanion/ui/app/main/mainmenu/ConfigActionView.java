@@ -49,9 +49,7 @@ public class ConfigActionView extends VBox implements LCViewInitHelper {
     public void initUI() {
         //Style
         this.getStyleClass().addAll("main-menu-section");
-        Label labelPartTitle = new Label(Translation.getText("my.configurations.menu.detail.title"));
-        labelPartTitle.getStyleClass().add("menu-part-title");
-        labelPartTitle.setMaxWidth(Double.MAX_VALUE);
+        Label labelPartTitle = FXControlUtils.createTitleLabel("my.configurations.menu.detail.title");
         //Action
         HBox boxButtonL1 = new HBox(10.0);
         VBox.setMargin(boxButtonL1, new Insets(10, 0, 0, 0));

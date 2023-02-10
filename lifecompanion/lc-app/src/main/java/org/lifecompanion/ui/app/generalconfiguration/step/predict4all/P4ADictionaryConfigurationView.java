@@ -172,7 +172,7 @@ public class P4ADictionaryConfigurationView extends ScrollPane implements Genera
 
         // Priorize words
         Label labelExplainPrioDeprio = new Label(Translation.getText("predict4all.config.part.title.priorize.deprio.explain"));
-        labelExplainPrioDeprio.getStyleClass().add("explain-text");
+        labelExplainPrioDeprio.getStyleClass().addAll("text-font-italic", "text-fill-gray", "text-wrap-enabled");
         Label labelPrioPart = new Label(Translation.getText("predict4all.config.part.title.words.priorized"));
         labelPrioPart.setStyle("-fx-font-weight: bold;");
         VBox boxPriorizeVoc = new VBox(5.0, FXControlUtils.createTitleLabel("predict4all.config.part.title.priorize.deprio"), labelExplainPrioDeprio, labelPrioPart);
@@ -186,7 +186,7 @@ public class P4ADictionaryConfigurationView extends ScrollPane implements Genera
         labelCustomListPart.setStyle("-fx-font-weight: bold;");
         boxPriorizeVoc.getChildren().add(labelCustomListPart);
         Label labelExplain = new Label(Translation.getText("predict4all.config.import.custom.list.explain"));
-        labelExplain.getStyleClass().add("explain-text");
+        labelExplain.getStyleClass().addAll("text-font-italic", "text-fill-gray", "text-wrap-enabled");
         this.buttonImportPrio = new Button(Translation.getText("predict4all.config.import.custom.list.button.prio"));
         this.buttonImportPrio.setPrefWidth(200.0);
         this.buttonImportDeprio = new Button(Translation.getText("predict4all.config.import.custom.list.button.deprio"));

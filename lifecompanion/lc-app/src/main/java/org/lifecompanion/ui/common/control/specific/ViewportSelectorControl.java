@@ -101,7 +101,7 @@ public class ViewportSelectorControl extends BaseConfigurationViewBorderPane<Ima
 		//Description
 		this.labelDescription = new Label(Translation.getText("viewport.selector.control.description"));
 		this.labelDescription.setWrapText(true);
-		this.labelDescription.getStyleClass().add("explain-text");
+		this.labelDescription.getStyleClass().addAll("text-font-italic", "text-fill-gray", "text-wrap-enabled");
 		this.setTop(this.labelDescription);
 
 		this.createResize();

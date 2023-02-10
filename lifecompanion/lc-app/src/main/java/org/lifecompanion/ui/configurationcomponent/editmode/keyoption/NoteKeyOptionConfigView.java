@@ -80,7 +80,8 @@ public class NoteKeyOptionConfigView extends BaseKeyOptionConfigView<NoteKeyOpti
                 this.pickerWantedColor, labelWantedStrokeSize, spinnerStrokeSize);
         ScrollPane scrollPane = new ScrollPane(boxContent);
         scrollPane.prefHeightProperty().bind(this.heightProperty());
-        scrollPane.getStyleClass().add("transparent-scroll-pane");
+        scrollPane.getStyleClass().add("scrollpane-transparent-viewport");
+        scrollPane.setFitToWidth(true);
         this.setAlignment(Pos.CENTER);
         this.getChildren().add(scrollPane);
     }

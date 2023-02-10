@@ -147,9 +147,6 @@ public class SelectionModeMainParamView extends BaseConfigurationViewBorderPane<
         this.comboBoxFireEventInput.setCellFactory((lv) -> new FireEventInputListCell());
         this.comboBoxFireEventInput.setButtonCell(new FireEventInputListCell());
         this.comboBoxFireEventInput.setMaxWidth(Double.MAX_VALUE);
-        Label labelInputFireEvent = new Label(Translation.getText("selection.mode.inputevent.label"));
-        labelInputFireEvent.getStyleClass().add("menu-part-title");
-        labelInputFireEvent.setMaxWidth(Double.MAX_VALUE);
         FXControlUtils.createAndAttachTooltip(comboBoxFireEventInput, "tooltip.explain.selection.event.input");
 
         // Keyboard input parameters

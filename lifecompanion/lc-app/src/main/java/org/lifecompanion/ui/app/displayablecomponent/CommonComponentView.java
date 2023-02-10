@@ -110,7 +110,7 @@ public class CommonComponentView extends BorderPane implements LCViewInitHelper 
          */
         Label labelName = new Label(Translation.getText("component.name.custom"));
         labelDefaultName = new Label();
-        labelDefaultName.getStyleClass().add("explain-text");
+        labelDefaultName.getStyleClass().addAll("text-font-italic", "text-fill-gray", "text-wrap-enabled");
 
         this.fieldName = new TextField();
         FXControlUtils.createAndAttachTooltip(fieldName, "tooltip.explain.component.name.custom");

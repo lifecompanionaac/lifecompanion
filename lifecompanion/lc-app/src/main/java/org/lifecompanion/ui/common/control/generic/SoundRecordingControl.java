@@ -126,7 +126,7 @@ public class SoundRecordingControl extends HBox implements LCViewInitHelper {
         //UI
         this.buttonRecordPlayStop = FXControlUtils.createGraphicsToggleButton(Translation.getText("sound.record.start.button"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.MICROPHONE).sizeFactor(1).color(LCGraphicStyle.SECOND_DARK), null);
-        buttonRecordPlayStop.getStyleClass().add("record-sound-toggle");
+        buttonRecordPlayStop.getStyleClass().addAll("stroke-selected","background-selected-lightgrey");
         buttonRecordPlayStop.setContentDisplay(ContentDisplay.LEFT);
         buttonRecordPlayStop.setMinWidth(100.0);
         FXUtils.applyPerformanceConfiguration(buttonRecordPlayStop);

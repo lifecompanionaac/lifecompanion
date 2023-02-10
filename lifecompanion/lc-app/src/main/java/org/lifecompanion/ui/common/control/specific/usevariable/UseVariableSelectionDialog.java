@@ -82,7 +82,7 @@ public class UseVariableSelectionDialog extends Dialog<UseVariableDefinitionI> i
         BorderPane.setMargin(useVariableList, new Insets(5.0, 0, 0, 0));
 
         Label labelExplainVariable = new Label(Translation.getText("use.variable.select.dialog.header.text"));
-        labelExplainVariable.getStyleClass().add("explain-text");
+        labelExplainVariable.getStyleClass().addAll("text-font-italic", "text-fill-gray", "text-wrap-enabled");
         labelExplainVariable.setWrapText(true);
         labelExplainVariable.setMaxWidth(STAGE_WIDTH - 20.0);
 

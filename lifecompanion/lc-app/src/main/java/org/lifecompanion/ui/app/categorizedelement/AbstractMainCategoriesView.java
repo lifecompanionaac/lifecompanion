@@ -61,7 +61,7 @@ public abstract class AbstractMainCategoriesView<T extends MainCategoryI<?>> ext
         tilePaneCategories.setHgap(H_SPACING);
         tilePaneCategories.setAlignment(Pos.CENTER_LEFT);
 
-        this.getStyleClass().add("transparent-border-scroll-pane");
+        this.getStyleClass().addAll("background-transparent","border-transparent");
         this.setContent(this.tilePaneCategories);
         this.setFitToWidth(true);
     }

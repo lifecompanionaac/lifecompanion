@@ -56,12 +56,10 @@ public class CurrentConfigDetailView extends VBox implements LCViewInitHelper {
     public void initUI() {
         //Style
         this.getStyleClass().add("main-menu-section");
-        Label labelPartTitle = new Label(Translation.getText("configuration.menu.detail.title"));
-        labelPartTitle.getStyleClass().add("menu-part-title");
-        labelPartTitle.setMaxWidth(Double.MAX_VALUE);
+        Label labelPartTitle = FXControlUtils.createTitleLabel("configuration.menu.detail.title");
         //Display config infos
         this.labelConfigName = new Label(Translation.getText("configuration.label.no.current"));
-        this.labelConfigName.getStyleClass().add("import-blue-title");
+        this.labelConfigName.getStyleClass().addAll("text-fill-primary-dark", "text-font-size-150", "padding-t10");
         VBox.setMargin(this.labelConfigName, new Insets(0, 0, 0, 8));
         this.labelLastSaveDate = new Label(Translation.getText("configuration.label.no.current"));
         this.labelUnsavedModif = new Label();
@@ -119,6 +117,7 @@ public class CurrentConfigDetailView extends VBox implements LCViewInitHelper {
         this.buttonExport.disableProperty().bind(AppModeController.INSTANCE.getEditModeContext().configurationDescriptionProperty().isNull());
         this.buttonSave.disableProperty().bind(AppModeController.INSTANCE.getEditModeContext().configurationDescriptionProperty().isNull());
         //Bind unsaved modifications
-        this.labelUnsavedModif.textProperty().bind(TranslationFX.getTextBinding("configuration.menu.label.unsaved.modif", AppModeController.INSTANCE.getEditModeContext().configurationUnsavedActionProperty()));
+        this.labelUnsavedModif.textProperty()
+                .bind(TranslationFX.getTextBinding("configuration.menu.label.unsaved.modif", AppModeController.INSTANCE.getEditModeContext().configurationUnsavedActionProperty()));
     }
 }

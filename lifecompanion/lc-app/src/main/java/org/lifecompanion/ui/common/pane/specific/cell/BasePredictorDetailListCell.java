@@ -42,17 +42,17 @@ public class BasePredictorDetailListCell<T extends BasePredictorI> extends ListC
         super();
         //Global
         this.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-        this.getStyleClass().add("voice-synthesizer-list-cell");
+        this.getStyleClass().add("soft-selection-cell");
         //Labels
         this.labelSynthesizerName = new Label();
-        this.labelSynthesizerName.getStyleClass().add("voice-synthesizer-cell-name");
+        this.labelSynthesizerName.getStyleClass().add("text-fill-primary-dark");
         this.labelSynthesizerDescription = new Label();
-        this.labelSynthesizerDescription.getStyleClass().add("voice-synthesizer-cell-description");
+        this.labelSynthesizerDescription.getStyleClass().addAll("text-wrap-enabled", "text-font-size-90", "text-fill-dimgrey");
         this.labelSynthesizerDescription.setMaxWidth(300.0);
         this.labelSystems = new Label();
-        this.labelSystems.getStyleClass().add("voice-synthesizer-cell-systems");
+        this.labelSystems.getStyleClass().addAll("text-wrap-enabled", "text-font-size-80", "text-fill-dimgrey", "text-font-italic");
         this.boxGraphics = new VBox();
-        VBox.setMargin(this.labelSynthesizerDescription, new Insets(5, 2, 3, 2));
+        VBox.setMargin(this.labelSynthesizerDescription, new Insets(3, 2, 3, 2));
         this.boxGraphics.getChildren().addAll(this.labelSynthesizerName, this.labelSynthesizerDescription, this.labelSystems);
     }
 

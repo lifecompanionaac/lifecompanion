@@ -44,7 +44,7 @@ public class MainMenu extends VBox implements LCViewInitHelper {
 	@Override
 	public void initUI() {
 		this.setMaxWidth(MainMenu.MENU_WIDTH);
-		this.getStyleClass().add("main-menu");
+		this.getStyleClass().add("dropshadow-bottom-20");
 		//Children
 		ProfileDetailView profileDetailView = new ProfileDetailView();
 		CurrentConfigDetailView currentConfigDetailView = new CurrentConfigDetailView();

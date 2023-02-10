@@ -46,7 +46,7 @@ public class ImageElementView extends BorderPane implements LCViewInitHelper {
 
     @Override
     public void initUI() {
-        this.getStyleClass().add("image-element-view");
+        this.getStyleClass().addAll("opacity-85-hover","text-font-size-90");
 
         this.labelName = new Label(imageElement.getName());
         this.labelName.prefWidthProperty().bind(this.widthProperty());

@@ -83,7 +83,7 @@ public class ProfileAdvancedListCell extends ListCell<LCProfileI> implements LCV
         //Base content
         this.boxContent = new HBox(10.0);
         this.labelProfileName = new Label();
-        this.labelProfileName.getStyleClass().add("configuration-and-profile-title");
+        this.labelProfileName.getStyleClass().addAll("text-fill-primary-dark", "text-font-size-150", "padding-t5");
         this.labelConfigSize = new Label();
         this.labelConfigSize.setStyle("-fx-text-fill: gray");
         this.iconView = new ProfileIconView();

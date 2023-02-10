@@ -53,6 +53,7 @@ import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.util.binding.BindingUtils;
+import org.lifecompanion.util.javafx.FXControlUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -109,11 +110,9 @@ public class CurrentLifeCompanionStateDetailView extends HBox implements LCViewI
         this.configActionListView = new ListView<>(ConfigActionController.INSTANCE.getActionStringList());
         //Pane with list and title
         this.paneConfigAction = new BorderPane(this.configActionListView);
-        Label labelTitleActions = new Label(Translation.getText("config.action.currently.done"));
-        labelTitleActions.getStyleClass().add("menu-part-title");
+        Label labelTitleActions = FXControlUtils.createTitleLabel("config.action.currently.done");
         BorderPane.setMargin(this.configActionListView, new Insets(10));
         BorderPane.setMargin(labelTitleActions, new Insets(0, 5, 0, 5));
-        labelTitleActions.setMaxWidth(Double.MAX_VALUE);
         this.configActionListView.setPrefWidth(CurrentLifeCompanionStateDetailView.CONFIG_ACTION_LIST_WIDTH);
         this.configActionListView.setPrefHeight(CurrentLifeCompanionStateDetailView.CONFIG_ACTION_LIST_HEIGHT);
         this.paneConfigAction.setTop(labelTitleActions);

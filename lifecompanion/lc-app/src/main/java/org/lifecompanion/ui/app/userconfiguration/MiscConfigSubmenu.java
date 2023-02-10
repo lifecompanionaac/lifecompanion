@@ -45,6 +45,7 @@ import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNode
 import org.lifecompanion.model.impl.configurationcomponent.dynamickey.KeyListLeaf;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.util.DesktopUtils;
+import org.lifecompanion.util.javafx.FXControlUtils;
 import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -88,7 +89,7 @@ public class MiscConfigSubmenu extends VBox implements LCViewInitHelper, UserCon
     @Override
     public void initUI() {
         //Folder
-        Label labelTitleFolder = this.createLabel("misc.config.tab.part.folders");
+        Label labelTitleFolder = FXControlUtils.createTitleLabel("misc.config.tab.part.folders");
         this.buttonOpenRootFolder = this.createButton("button.open.root.folder");
         this.buttonOpenCurrentProfileFolder = this.createButton("button.open.current.profile.folder");
         this.buttonOpenCurrentConfigFolder = this.createButton("button.open.current.config.folder");
@@ -96,7 +97,7 @@ public class MiscConfigSubmenu extends VBox implements LCViewInitHelper, UserCon
         this.buttonDetectKeylistDuplicates = this.createButton("button.detect.keylist.duplicates");
 
         //Logs
-        Label labelTitleLog = this.createLabel("misc.config.tab.part.logs");
+        Label labelTitleLog = FXControlUtils.createTitleLabel("misc.config.tab.part.logs");
         this.buttonOpenLogFile = this.createButton("button.open.log.file");
         this.buttonOpenLogFolder = this.createButton("button.open.log.folder");
         this.buttonPackageLogs = this.createButton("button.package.log.debug");
@@ -105,7 +106,7 @@ public class MiscConfigSubmenu extends VBox implements LCViewInitHelper, UserCon
         labelExplain.getStyleClass().addAll("text-wrap-enabled", "text-weight-bold");
         labelExplain.setTextAlignment(TextAlignment.JUSTIFY);
 
-        Label labelTitleMemory = this.createLabel("misc.config.tab.part.memory");
+        Label labelTitleMemory = FXControlUtils.createTitleLabel("misc.config.tab.part.memory");
         labelMemoryInfo = new Label();
         labelMemoryInfo.setAlignment(Pos.CENTER);
         buttonExecuteGC = createButton("misc.config.tab.memory.button.gc");
@@ -121,13 +122,6 @@ public class MiscConfigSubmenu extends VBox implements LCViewInitHelper, UserCon
         Button button = new Button(Translation.getText(textId));
         button.setPrefWidth(350.0);
         return button;
-    }
-
-    private Label createLabel(final String textId) {
-        Label labelTitleLog = new Label(Translation.getText(textId));
-        labelTitleLog.getStyleClass().add("menu-part-title");
-        labelTitleLog.setMaxWidth(Double.MAX_VALUE);
-        return labelTitleLog;
     }
 
     @Override

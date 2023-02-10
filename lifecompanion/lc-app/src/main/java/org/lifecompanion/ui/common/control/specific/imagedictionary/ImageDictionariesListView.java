@@ -83,7 +83,7 @@ class ImageDictionariesListView extends VBox implements LCViewInitHelper {
 
                 // Dictionary title
                 Label labelDictionary = new Label(dictionary.getName());
-                labelDictionary.getStyleClass().add("image-dictionary-title");
+                labelDictionary.getStyleClass().add("text-font-size-120");
                 labelDictionary.setTextAlignment(TextAlignment.LEFT);
                 labelDictionary.setAlignment(Pos.CENTER_LEFT);
                 labelDictionary.setMaxWidth(Double.MAX_VALUE);
@@ -119,7 +119,7 @@ class ImageDictionariesListView extends VBox implements LCViewInitHelper {
                     boxTitle.getChildren().add(buttonCopyright);
                 }
                 boxTitle.setAlignment(Pos.CENTER);
-                boxTitle.getStyleClass().add("image-dictionary-title-box");
+                boxTitle.getStyleClass().add("border-bottom-gray");
                 HBox.setHgrow(labelDictionary, Priority.ALWAYS);
                 VBox.setMargin(boxTitle, new Insets(10, 0, 0, 0));
 

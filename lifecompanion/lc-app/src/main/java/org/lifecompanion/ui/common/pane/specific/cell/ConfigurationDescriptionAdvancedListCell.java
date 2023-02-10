@@ -77,7 +77,7 @@ public class ConfigurationDescriptionAdvancedListCell extends ListCell<LCConfigu
 
         //Title
         this.labelConfigName = new Label();
-        this.labelConfigName.getStyleClass().add("configuration-and-profile-title");
+        this.labelConfigName.getStyleClass().addAll("text-fill-primary-dark", "text-font-size-150", "padding-t5");
         this.labelConfigName.setMaxWidth(Double.MAX_VALUE);
         GridPane.setHgrow(labelConfigName, Priority.ALWAYS);
 

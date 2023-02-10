@@ -121,12 +121,12 @@ public class GeneralInformationConfigurationStepView extends BorderPane implemen
         firstPartSelector.setAlignment(Pos.CENTER_RIGHT);
         Label labelFirstPart = new Label(Translation.getText("general.configuration.info.label.first.part.start"));
         Label labelExplainFirstPart = new Label(Translation.getText("tooltip.explain.use.param.first.part"));
-        labelExplainFirstPart.getStyleClass().add("explain-text");
+        labelExplainFirstPart.getStyleClass().addAll("text-font-italic", "text-fill-gray", "text-wrap-enabled");
 
         this.toggleVirtualKeyboard = FXControlUtils.createToggleSwitch("configuration.for.virtual.keyboard",
                 "tooltip.explain.use.param.virtual.keyboard");
         Label labelExplainVirtualKeyboard = new Label(Translation.getText("tooltip.explain.use.param.virtual.keyboard"));
-        labelExplainVirtualKeyboard.getStyleClass().add("explain-text");
+        labelExplainVirtualKeyboard.getStyleClass().addAll("text-font-italic", "text-fill-gray", "text-wrap-enabled");
 
         GridPane gridPaneTotal = new GridPane();
         gridPaneTotal.setHgap(GeneralConfigurationStepViewI.GRID_H_GAP);

@@ -75,7 +75,7 @@ public class RibbonTabs extends StackPane implements LCViewInitHelper {
         //Add all
         this.getChildren().addAll(this.tabPane, this.buttonMenu);
 
-        this.getStyleClass().add("dropshadow-bottom");
+        this.getStyleClass().add("dropshadow-bottom-10");
     }
 
     private Tab addTab(final AbstractTabContent tabContent) {

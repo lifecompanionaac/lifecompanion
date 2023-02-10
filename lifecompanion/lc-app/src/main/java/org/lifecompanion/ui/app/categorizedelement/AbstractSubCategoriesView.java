@@ -62,7 +62,7 @@ public abstract class AbstractSubCategoriesView<V extends CategorizedElementI<T>
 		this.boxSubCategories = new VBox();
 		this.boxSubCategories.setAlignment(Pos.TOP_LEFT);
 		//Scroll
-		this.getStyleClass().add("transparent-border-scroll-pane");
+		this.getStyleClass().addAll("background-transparent","border-transparent");
 		this.setContent(this.boxSubCategories);
 		this.setFitToWidth(true);
 	}

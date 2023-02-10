@@ -131,7 +131,7 @@ public class UseStageConfigurationStepView extends BorderPane implements General
         this.toggleKeepConfigurationRatio = FXControlUtils.createToggleSwitch("configuration.keep.ratio.field",
                 "tooltip.explain.configuration.style.keep.ratio");
         Label labelExplainConfigurationSize = new Label(Translation.getText("general.configuration.stage.configuration.size.explain"));
-        labelExplainConfigurationSize.getStyleClass().add("explain-text");
+        labelExplainConfigurationSize.getStyleClass().addAll("text-font-italic", "text-fill-gray", "text-wrap-enabled");
 
 
         glyphKeep = GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.LOCK).size(12).color(LCGraphicStyle.MAIN_DARK);

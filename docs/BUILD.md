@@ -74,3 +74,9 @@ Then, run `gradlew prepareOfflineApplication`. This will create in **offline** d
 Note that in the following document, when we say "run gradle task... in XXX" you should then run the gradle task in the given folder (lifecompanion or lifecompanion-framework) from your command line or IDE. For example, to run LifeCompanion from command line : `cd lifecompanion` then `gradlew :lc-app:run`
 
 Also note than `gradlew` command should be adapted to your system : `gradlew.bat` (Windows) and `gradlew` (Unix/Mac)
+
+### Cannot run JLink on Unix
+
+If you get the following error on Unix trying to create JLink build : `Error: java.io.IOException: Cannot run program "objcopy": error=2, No such file or directory`
+
+You should install the following tool on the system : `sudo apt install binutils`

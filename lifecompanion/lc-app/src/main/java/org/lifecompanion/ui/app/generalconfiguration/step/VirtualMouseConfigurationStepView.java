@@ -84,7 +84,7 @@ public class VirtualMouseConfigurationStepView extends BorderPane implements Gen
         Label labelMousePartTitle = FXControlUtils.createTitleLabel(Translation.getText("general.configuration.mouse.config.part.circle.mouse.title"));
         GridPane.setHgrow(labelMousePartTitle, Priority.ALWAYS);
         Label labelMousePartExplain = new Label(Translation.getText("general.configuration.mouse.config.part.circle.mouse.explain"));
-        labelMousePartExplain.getStyleClass().add("explain-text");
+        labelMousePartExplain.getStyleClass().addAll("text-font-italic", "text-fill-gray", "text-wrap-enabled");
         labelMousePartExplain.setMaxWidth(Double.MAX_VALUE);
 
         this.pickerMouseColor = new LCColorPicker();

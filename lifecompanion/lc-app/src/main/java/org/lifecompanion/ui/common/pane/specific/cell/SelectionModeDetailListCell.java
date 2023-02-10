@@ -31,58 +31,60 @@ import org.lifecompanion.model.impl.selectionmode.SelectionModeEnum;
 
 /**
  * List cell to display a style mode with its detail.
+ *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public class SelectionModeDetailListCell extends ListCell<SelectionModeEnum> {
-	private static final double ROW_WIDTH = 500.0, ROW_HEIGHT = 95.0;
+    private static final double ROW_WIDTH = 500.0, ROW_HEIGHT = 95.0;
 
-	private VBox boxLabels;
-	private BorderPane paneGraphics;
-	private ImageView imageView;
-	private Label labelModeName, labelModeDescription;
+    private VBox boxLabels;
+    private BorderPane paneGraphics;
+    private ImageView imageView;
+    private Label labelModeName, labelModeDescription;
 
-	public SelectionModeDetailListCell() {
-		super();
+    public SelectionModeDetailListCell() {
+        super();
 
-		this.paneGraphics = new BorderPane();
-		// Global
-		this.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-		this.getStyleClass().add("selection-mode-list-cell");
-		// Labels
-		this.labelModeName = new Label();
-		this.labelModeName.getStyleClass().add("selection-mode-cell-name");
-		this.labelModeDescription = new Label();
-		this.labelModeDescription.getStyleClass().add("selection-mode-cell-description");
-		this.labelModeDescription.setWrapText(true);
-		// Image
-		this.imageView = new ImageView();
-		this.imageView.setFitWidth(64);
-		this.imageView.setPreserveRatio(true);
-		BorderPane.setMargin(this.imageView, new Insets(5));
+        this.paneGraphics = new BorderPane();
+        // Global
+        this.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+        this.getStyleClass().add("soft-selection-cell");
+        // Labels
+        this.labelModeName = new Label();
+        this.labelModeName.getStyleClass().addAll("text-fill-primary-dark");
+        this.labelModeDescription = new Label();
+        this.labelModeDescription.getStyleClass().addAll("text-wrap-enabled", "text-font-size-90", "text-fill-dimgrey");
+        this.labelModeDescription.setWrapText(true);
+        // Image
+        this.imageView = new ImageView();
+        this.imageView.setFitWidth(64);
+        this.imageView.setPreserveRatio(true);
+        BorderPane.setMargin(this.imageView, new Insets(5));
 
-		// Add all
-		this.boxLabels = new VBox();
-		VBox.setMargin(this.labelModeDescription, new Insets(1.0, 0.0, 0.0, 0.0));
-		this.paneGraphics = new BorderPane();
-		BorderPane.setAlignment(this.imageView, Pos.CENTER);
-		this.boxLabels.getChildren().addAll(this.labelModeName, this.labelModeDescription);
-		this.paneGraphics.setCenter(this.boxLabels);
-		this.paneGraphics.setLeft(this.imageView);
+        // Add all
+        this.boxLabels = new VBox();
+        VBox.setMargin(this.labelModeDescription, new Insets(1.0, 0.0, 0.0, 0.0));
+        this.paneGraphics = new BorderPane();
+        BorderPane.setAlignment(this.imageView, Pos.CENTER);
+        BorderPane.setMargin(this.imageView, new Insets(0, 10.0, 0, 0));
+        this.boxLabels.getChildren().addAll(this.labelModeName, this.labelModeDescription);
+        this.paneGraphics.setCenter(this.boxLabels);
+        this.paneGraphics.setLeft(this.imageView);
 
-		// Configuration
-		this.setPrefWidth(ROW_WIDTH);
-		this.setPrefHeight(ROW_HEIGHT);
-		this.setGraphic(this.paneGraphics);
-	}
+        // Configuration
+        this.setPrefWidth(ROW_WIDTH);
+        this.setPrefHeight(ROW_HEIGHT);
+        this.setGraphic(this.paneGraphics);
+    }
 
-	@Override
-	protected void updateItem(final SelectionModeEnum item, final boolean empty) {
-		super.updateItem(item, empty);
-		if (item != null && !empty) {
-			this.labelModeDescription.setText(item.getDescription());
-			this.labelModeName.setText(item.getName());
-			this.imageView.setImage(IconHelper.get(SelectionModeEnum.ICON_URL_SELECTION_MODE + item.getLogoUrl()));
-		}
-	}
+    @Override
+    protected void updateItem(final SelectionModeEnum item, final boolean empty) {
+        super.updateItem(item, empty);
+        if (item != null && !empty) {
+            this.labelModeDescription.setText(item.getDescription());
+            this.labelModeName.setText(item.getName());
+            this.imageView.setImage(IconHelper.get(SelectionModeEnum.ICON_URL_SELECTION_MODE + item.getLogoUrl()));
+        }
+    }
 
 }

@@ -78,7 +78,7 @@ public class ConfigurationStyleConfigurationStepView extends BorderPane implemen
     @Override
     public void initUI() {
         Label labelGeneralExplain = new Label(Translation.getText("general.configuration.styles.general.explain"));
-        labelGeneralExplain.getStyleClass().add("explain-text");
+        labelGeneralExplain.getStyleClass().addAll("text-font-italic", "text-fill-gray", "text-wrap-enabled");
 
         VBox boxChildren = new VBox(GeneralConfigurationStepViewI.GRID_V_GAP, labelGeneralExplain);
         boxChildren.setPadding(new Insets(GeneralConfigurationStepViewI.PADDING));

@@ -116,7 +116,7 @@ public class ConfigurationEditionView extends BorderPane implements ProfileConfi
 
         toggleSwitchLaunchInUseMode = FXControlUtils.createToggleSwitch("configuration.selection.default.configuration.toggle", "configuration.selection.default.configuration.toggle.explain");
         Label labelExplainLaunchInUseMode = new Label(Translation.getText("configuration.selection.default.configuration.toggle.explain"));
-        labelExplainLaunchInUseMode.getStyleClass().add("explain-text");
+        labelExplainLaunchInUseMode.getStyleClass().addAll("text-font-italic", "text-fill-gray", "text-wrap-enabled");
         labelExplainLaunchInUseMode.setWrapText(true);
 
         buttonValidate = FXControlUtils.createLeftTextButton(Translation.getText("profile.config.view.button.ok"),

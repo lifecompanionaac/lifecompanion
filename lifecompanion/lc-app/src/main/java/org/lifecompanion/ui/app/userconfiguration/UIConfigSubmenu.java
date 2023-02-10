@@ -79,13 +79,13 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
     @Override
     public void initUI() {
         int row = 0;
-        Label labelConfigGeneral = createTitleLabel("user.config.part.ui.general");
+        Label labelConfigGeneral = FXControlUtils.createTitleLabel("user.config.part.ui.general");
         toggleEnableLaunchLCSystemStartup = FXControlUtils.createToggleSwitch("user.config.launch.lc.startup", null);
         toggleEnableRecordAndSendSessionStats = FXControlUtils.createToggleSwitch("user.config.enable.session.stats", null);
         toggleEnableAutoShowVirtualKeyboard = FXControlUtils.createToggleSwitch("user.config.auto.show.virtual.keyboard", null);
 
         // Use mode
-        Label labelUseMode = createTitleLabel("user.config.part.ui.use.mode");
+        Label labelUseMode = FXControlUtils.createTitleLabel("user.config.part.ui.use.mode");
         toggleDisabledExitInUseMode = FXControlUtils.createToggleSwitch("user.config.disable.exit.in.use.mode", null);
         Label labelExplainExitUseMode = new Label(Translation.getText("tooltip.explain.disable.exit.use.mode"));
         labelExplainExitUseMode.getStyleClass().addAll("text-wrap-enabled", "text-font-italic", "text-fill-gray");
@@ -104,7 +104,7 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
         gridPaneStyleParam.add(this.spinnerStrokeSize, 1, row++);
         gridPaneStyleParam.add(labelDashSize, 0, row);
         gridPaneStyleParam.add(this.spinnerDashSize, 1, row++);
-        Label labelConfigStylePart = createTitleLabel("user.config.part.ui.config");
+        Label labelConfigStylePart = FXControlUtils.createTitleLabel("user.config.part.ui.config");
 
         //Frame parameter
         this.spinnerFrameWidth = FXControlUtils.createIntSpinner(10, Integer.MAX_VALUE, 50, 100, 110);
@@ -120,10 +120,10 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
         gridPaneStageParam.add(this.spinnerFrameWidth, 1, row++);
         gridPaneStageParam.add(labelHeight, 0, row);
         gridPaneStageParam.add(this.spinnerFrameHeight, 1, row++);
-        Label labelStagePart = createTitleLabel("user.config.stage.title");
+        Label labelStagePart = FXControlUtils.createTitleLabel("user.config.stage.title");
 
         //Unsaved modification
-        Label labelConfigTitle = createTitleLabel("user.config.configuration.title");
+        Label labelConfigTitle = FXControlUtils.createTitleLabel("user.config.configuration.title");
         this.spinnerUnsavedModification = FXControlUtils.createIntSpinner(1, 5000, 5, 10, 110.0);
         Label labelUnsavedThreshold = new Label(Translation.getText("user.config.unsaved.modification.threshold"));
         GridPane.setHgrow(labelUnsavedThreshold, Priority.ALWAYS);
@@ -132,7 +132,7 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
         gridPaneConfiguration.add(this.spinnerUnsavedModification, 1, row++);
 
         //Tips
-        Label labelConfigTips = createTitleLabel("user.config.tips.title");
+        Label labelConfigTips = FXControlUtils.createTitleLabel("user.config.tips.title");
         toggleEnableTipsStartup = FXControlUtils.createToggleSwitch("user.config.tips.show.startup", null);
         GridPane.setHgrow(toggleEnableTipsStartup, Priority.ALWAYS);
         GridPane.setMargin(this.toggleEnableTipsStartup, new Insets(5.0, 0.0, 5.0, 0.0));
@@ -150,13 +150,6 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
         this.setContent(totalBox);
     }
     //========================================================================
-
-    private Label createTitleLabel(String id) {
-        Label labelConfigStylePart = new Label(Translation.getText(id));
-        labelConfigStylePart.getStyleClass().add("menu-part-title");
-        labelConfigStylePart.setMaxWidth(Double.MAX_VALUE);
-        return labelConfigStylePart;
-    }
 
     private GridPane createConfigPane() {
         GridPane gridPaneStageParam = new GridPane();

@@ -64,7 +64,7 @@ public class ProfileDetailView extends HBox implements LCViewInitHelper {
         this.getStyleClass().addAll("main-menu-section", "main-menu-section-top");
         //Children
         this.labelProfileName = new Label();
-        this.labelProfileName.getStyleClass().add("import-blue-title");
+        this.labelProfileName.getStyleClass().addAll("text-fill-primary-dark", "text-font-size-150", "padding-t10");
         this.linkManagerProfiles = new Hyperlink(Translation.getText("profile.menu.link.manage.profiles"));
         linkManagerProfiles.setTooltip(FXControlUtils.createTooltip(Translation.getText("tooltip.explain.manage.profiles")));
         this.linkLifeCompanionPreferences = new Hyperlink(Translation.getText("profile.menu.link.lifecompanion.preferences"));

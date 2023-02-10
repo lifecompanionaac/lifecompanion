@@ -82,7 +82,7 @@ public abstract class AbstractStyleEditView<T extends StyleI<?>> extends BaseCon
     protected Node createModifiedIndicator(final Function<T, StylePropertyI<?>> propertyGetter, final BooleanProperty disableProperty, final boolean bindManaged) {
         Text textModified = new Text("*");
         textModified.setFill(LCGraphicStyle.MAIN_DARK);
-        textModified.getStyleClass().add("modified-text-indicator");
+        textModified.getStyleClass().addAll("text-font-size-180", "text-weight-bold", "padding-0");
         if (bindManaged) {
             textModified.managedProperty().bind(textModified.visibleProperty());
         }

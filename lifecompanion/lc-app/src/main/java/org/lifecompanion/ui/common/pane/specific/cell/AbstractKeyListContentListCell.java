@@ -45,7 +45,7 @@ public abstract class AbstractKeyListContentListCell<T extends SimplerKeyContent
         this.boxContent = new BorderPane();
         this.labelText = new Label();
         this.labelText.setMaxWidth(getCellWidth() - 10.0);
-        labelText.getStyleClass().addAll("center-label", "key-list-item-title");
+        labelText.getStyleClass().addAll("text-label-center", "text-h4");
 
         //Images view
         if (enabledImage) {

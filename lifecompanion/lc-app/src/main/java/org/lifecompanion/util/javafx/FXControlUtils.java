@@ -118,7 +118,7 @@ public class FXControlUtils {
 
     public static Label createTitleLabel(String titleId) {
         Label label = new Label(Translation.getText(titleId));
-        label.getStyleClass().addAll("text-font-size-110", "border-bottom-gray", "text-fill-dimgrey");
+        label.getStyleClass().addAll("text-font-size-110", "border-bottom-lightgrey", "text-fill-dimgrey","padding-t5");
         label.setTextAlignment(TextAlignment.LEFT);
         label.setMaxWidth(Double.MAX_VALUE);
         return label;
