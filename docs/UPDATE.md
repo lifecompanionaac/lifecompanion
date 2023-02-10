@@ -133,7 +133,7 @@ manually in file storage and then linked with `PRESET_STORAGE_IDS` in `PublishAp
 ### Create LifeCompanion plugin update
 
 1. Check ...
-1. Commit and tag repo with **lifecompanion-plugin/PLUGIN-ID/X.X.X-prod**
+1. Commit and tag repo with **lifecompanion-plugins/PLUGIN-ID/X.X.X-prod**
 1. Run `gradlew :lc-installer:publishPluginJar -PpluginDir -Penv=prod` in **lifecompanion** (after plugin jar build)
 
 ### Deploy LifeCompanion server update in production
