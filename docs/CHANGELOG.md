@@ -1,6 +1,6 @@
 # LIFECOMPANION CHANGELOG
 
-## 1.X.X - XX/XX/2023
+## 1.4.5 - XX/XX/2023
 
 ### Fonctionnalités
 
