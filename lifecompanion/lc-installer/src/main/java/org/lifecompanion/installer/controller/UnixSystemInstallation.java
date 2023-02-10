@@ -43,6 +43,15 @@ public class UnixSystemInstallation extends DefaultSystemInstallation {
 
     @Override
     public void runSystemSpecificInstallationTask(InstallerUIConfiguration configuration, Consumer<String> logAppender) throws Exception {
+        // Copy the device ID
+        try {
+            IOUtils.copyFiles(
+                    new File("/tmp/lifecompanion_device_id.txt"),
+                    new File(configuration.getInstallationSoftwareDirectory().getAbsolutePath() + File.separator + "data" + File.separator + "device_id.txt"));
+        } catch (Exception e) {
+            LOGGER.error("Couldn't copy device id file to data file", e);
+        }
+
         // Add the logo to launcher directory
         try (FileOutputStream fos = new FileOutputStream(configuration.getInstallationSoftwareDirectory().getPath() + File.separator + "launcher" + File.separator + "lifecompanion.png")) {
             try (InputStream is = UnixSystemInstallation.class.getResourceAsStream("/lifecompanion_icon_64px.png")) {
