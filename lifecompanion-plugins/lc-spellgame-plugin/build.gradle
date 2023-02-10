@@ -15,7 +15,7 @@ repositories {
     maven { url 'https://jitpack.io' }
 }
 
-version = "0.0.1"
+version = "1.0.0"
 
 dependencies {
     compileOnly "org.lifecompanion:lc-app:$lifecompanionAppVersion"
