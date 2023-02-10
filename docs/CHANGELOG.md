@@ -4,7 +4,7 @@
 
 ### Fonctionnalités
 
-- ...
+- Ajout d'une fonction **d'autocomplétion sur la création de clavier** : à l'entrée d'une suite de certains caractère, un remplissage automatique est proposé afin de gagner du temps
 
 ### Corrections/ajustements
 

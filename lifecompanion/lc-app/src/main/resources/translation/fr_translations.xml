@@ -28,6 +28,12 @@
 	<text key="button.type.cancel.import.config">Annuler\nl'import</text>
 	<text key="button.detect.keylist.duplicates">Détecter/corriger les doublons dans les listes de cases</text>
 	<text key="action.import.existing.configuration.header">Cette configuration existe déjà dans le profil "{}"</text>
+	<text key="autocomplete.keyboard.suggest.tooltip">Clavier "{}" detecté</text>
+	<text key="autocomplete.keyboard.suggest.button.complete">AUTO REMPLIR</text>
+	<text key="autocomplete.keyboard.azerty.name">Azerty</text>
+	<text key="autocomplete.keyboard.abc.name">Alphabétique</text>
+	<text key="autocomplete.keyboard.numbers0.name">0-9</text>
+	<text key="autocomplete.keyboard.numbers1.name">1-9</text>
 	<text key="action.import.existing.configuration.message">Configuration dans le profil\n"{}", modifée le {} par "{}"\n\nConfiguration importée\n"{}", modifiée le {} par "{}"
 	\n\nQue souhaitez vous faire ?</text>
   <!--org.lifecompanion.api.definition.selection-->
@@ -1058,6 +1064,8 @@
   <text key="action.inverse.keys.name">Inverser deux cases</text>
   <text key="action.key.change.option">Changer le type de case</text>
   <text key="action.key.change.text">Modification du texte de la case</text>
+  <text key="action.key.autocomplete.keyboard">Auto complétion du clavier</text>
+  <text key="autocomplete.keyboard.quick.words.name">Communication rapide</text>
   <text key="action.key.image.change">Modification de l'image de la case</text>
   <text key="action.key.image.change.color.replace.threshold">Changer la tolérance du remplacement de couleur</text>
   <text key="action.key.image.change.preserve.ratio">Changer la conservation du ratio de l'image</text>
@@ -3571,4 +3579,14 @@
     <text key="stage.mode.base">Fenêtre aux dimensions définies ci-dessous</text>
     <text key="action.open.with.default.app.name">Ouvrir avec l'application par défaut</text>
     <text key="action.open.with.default.app.description">Permet d'ouvrir un fichier avec l'application par défaut de l'ordinateur. Par exemple en mettant un fichier ".doc", cela ouvrir ce fichier avec le traitement de texte défini par défaut sur l'ordinateur.</text>
+
+    <text key="keyboard.quick.word.hello">Bonjour</text>
+    <text key="keyboard.quick.word.goodbye">Aurevoir</text>
+    <text key="keyboard.quick.word.please">S'il vous plaît</text>
+    <text key="keyboard.quick.word.thanks">Merci</text>
+    <text key="keyboard.quick.word.yes">Oui</text>
+    <text key="keyboard.quick.word.no">Non</text>
+    <text key="keyboard.quick.word.dontknow">Je ne sais pas</text>
+    <text key="autocomplete.keyboard.accents0.name">Accents</text>
+    <text key="autocomplete.keyboard.special0.name">Caractères spéciaux</text>
 </texts>

@@ -75,7 +75,8 @@ public class KeyActions {
         ConfigActionController.INSTANCE.executeAction(
                 new ChangeStyleOnComponents(
                         ComponentActionController.INSTANCE.styleCopySourceProperty().get(),
-                        SelectionController.INSTANCE.getSelectedKeys().isEmpty() ? Arrays.asList(SelectionController.INSTANCE.selectedDisplayableComponentHelperProperty().get()) : new ArrayList<>(SelectionController.INSTANCE.getSelectedKeys())
+                        SelectionController.INSTANCE.getSelectedKeys().isEmpty() ? Arrays.asList(SelectionController.INSTANCE.selectedDisplayableComponentHelperProperty().get()) : new ArrayList<>(
+                                SelectionController.INSTANCE.getSelectedKeys())
                 ));
     };
 
@@ -84,8 +85,12 @@ public class KeyActions {
      */
     public static class SetTextAction extends BasePropertyChangeAction<String> {
 
-        public SetTextAction(final GridPartKeyComponent keyP, final String oldValueP, final String newValueP) {
+        public SetTextAction(final GridPartKeyComponentI keyP, final String oldValueP, final String newValueP) {
             super(keyP.textContentProperty(), oldValueP, newValueP);
+        }
+
+        public SetTextAction(final GridPartKeyComponentI keyP, final String newValueP) {
+            super(keyP.textContentProperty(), newValueP);
         }
 
         @Override
@@ -140,7 +145,10 @@ public class KeyActions {
             super.doAction();
         }
 
-        private <T extends ImageUseComponentI> void changeTextPositionIfPossible(Class<T> type, Function<T, TextPosition> textPositionGetter, BiConsumer<T, TextPosition> textPositionSetter, Predicate<T> propertyChecker) {
+        private <T extends ImageUseComponentI> void changeTextPositionIfPossible(Class<T> type,
+                                                                                 Function<T, TextPosition> textPositionGetter,
+                                                                                 BiConsumer<T, TextPosition> textPositionSetter,
+                                                                                 Predicate<T> propertyChecker) {
             if (type.isAssignableFrom(imageUseComponent.getClass())) {
                 TextPosition currentPos = textPositionGetter.apply((T) imageUseComponent);
                 if (wantedValue != null && imageUseComponent.imageVTwoProperty().get() == null && currentPos == TextPosition.CENTER && propertyChecker.test((T) imageUseComponent)) {
@@ -331,49 +339,18 @@ public class KeyActions {
 
     }
 
-    /**
-     * TODO : check SetKeyOptionsAction and merge/use
-     */
-    public static class ChangeMultiKeyOptionAction implements UndoRedoActionI {
+    public static class ChangeMultiKeyOptionAction extends UndoRedoActions.MultiActionWrapperAction {
         private static final Logger LOGGER = LoggerFactory.getLogger(ChangeMultiKeyOptionAction.class);
 
-        private final List<ChangeKeyOptionAction> actions;
-
         public ChangeMultiKeyOptionAction(final List<GridPartKeyComponentI> keys, final Class<? extends KeyOptionI> wantedValueP) {
-            actions = keys.stream().map(p -> {
+            super("action.key.change.option", keys.stream().map(p -> {
                 try {
                     return new ChangeKeyOptionAction(p, wantedValueP.getConstructor().newInstance());
                 } catch (Exception e) {
                     LOGGER.error("Couldn't create key option from {}", wantedValueP, e);
                 }
                 return null;
-            }).collect(Collectors.toList());
-        }
-
-        @Override
-        public void doAction() throws LCException {
-            for (ChangeKeyOptionAction action : actions) {
-                action.doAction();
-            }
-        }
-
-        @Override
-        public void undoAction() throws LCException {
-            for (ChangeKeyOptionAction action : actions) {
-                action.undoAction();
-            }
-        }
-
-        @Override
-        public void redoAction() throws LCException {
-            for (ChangeKeyOptionAction action : actions) {
-                action.redoAction();
-            }
-        }
-
-        @Override
-        public String getNameID() {
-            return "action.key.change.option";
+            }).collect(Collectors.toList()));
         }
     }
 
