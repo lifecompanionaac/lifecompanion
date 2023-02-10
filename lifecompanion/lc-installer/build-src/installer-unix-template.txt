@@ -1,0 +1,21 @@
+#!/bin/sh
+SCRIPT_NAME=\$(basename "\$0")
+APP_NAME=\${SCRIPT_NAME%.sh}
+
+DIR="\${0%/*}"
+
+<% if ( System.properties['BADASS_CDS_ARCHIVE_FILE_LINUX'] ) { %>
+CDS_ARCHIVE_FILE="<%= System.properties['BADASS_CDS_ARCHIVE_FILE_LINUX'] %>"
+CDS_JVM_OPTS="-XX:ArchiveClassesAtExit=\$CDS_ARCHIVE_FILE"
+if [ -f "\$CDS_ARCHIVE_FILE" ]; then
+    CDS_JVM_OPTS="-XX:SharedArchiveFile=\$CDS_ARCHIVE_FILE"
+fi
+<% } %>
+
+sudo apt-get update
+sudo apt-get upgrade
+sudo apt-get install libttspico-utils
+
+sudo cat /sys/class/dmi/id/board_serial >> device_id.txt
+
+"\$DIR/java" \$CDS_JVM_OPTS ${jvmArgs} -p "\$DIR/../app" -m ${moduleName}/${mainClassName} ${args} "\$@"

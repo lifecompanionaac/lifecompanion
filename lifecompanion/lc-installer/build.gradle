@@ -54,6 +54,8 @@ jlink {
     launcher {
         name = 'lifecompanion-installer'
         args = ['-Djava.net.useSystemProxies=true']
+        // source adapted from https://github.com/beryx/badass-jlink-plugin/blob/master/src/main/resources/unixScriptTemplate.txt
+        unixScriptTemplate = file('build-src/installer-unix-template.txt')
     }
 }
 
@@ -66,7 +68,7 @@ processResources {
                 'buildDate': new Date().getTime(),
                 'updateServerUrl': project.property('lifecompanion.framework.server.url'),
                 'appServerUrl': project.property('lifecompanion.app.server.url'),
-                'appServerQueryParameters' : project.property('lifecompanion.app.server.query.parameters'),
+                'appServerQueryParameters': project.property('lifecompanion.app.server.query.parameters'),
                 'installationPublicKey': project.property('lifecompanion.app.server.public_key')
         )
     }
@@ -75,21 +77,21 @@ processResources {
     }
 }
 
-task publishWindowsInstaller(type : PublishInstallerTask) {
+task publishWindowsInstaller(type: PublishInstallerTask) {
     dependsOn 'createInnoSetupPackage'
-    file =  "installer/LifeCompanion-setup-${project.version}.exe"
+    file = "installer/LifeCompanion-setup-${project.version}.exe"
     system = 'WINDOWS'
 }
 
-task publishUnixInstaller(type : PublishInstallerTask) {
+task publishUnixInstaller(type: PublishInstallerTask) {
     dependsOn 'jlinkZip'
-    file =  'image-linux_x64.zip'
+    file = 'image-linux_x64.zip'
     system = 'UNIX'
 }
 
-task publishMacInstaller(type : PublishInstallerTask) {
+task publishMacInstaller(type: PublishInstallerTask) {
     dependsOn 'jlinkZip'
-    file =  'image-mac_x64.zip'
+    file = 'image-mac_x64.zip'
     system = 'MAC'
 }
 
