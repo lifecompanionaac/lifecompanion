@@ -49,7 +49,7 @@ public class ConfigurationComponentUtils {
     public static final double SIMILARITY_EXACT_TERM_MATCH = 5.0;
     public static final double SIMILARITY_CONTAINS = 1.0;
 
-    private static final Comparator<GridPartComponentI> POSITION_IN_GRID_PARENT_INCLUDING_PARENT_COMPARATOR = (g1, g2) -> {
+    public static final Comparator<GridPartComponentI> POSITION_IN_GRID_PARENT_INCLUDING_PARENT_COMPARATOR = (g1, g2) -> {
         final Pair<Integer, Integer> g1rc = computeRowColumnIndexWithParentIncludedFor(g1);
         final Pair<Integer, Integer> g2rc = computeRowColumnIndexWithParentIncludedFor(g2);
         if (g1rc.getKey() < g2rc.getKey()) {
@@ -240,5 +240,37 @@ public class ConfigurationComponentUtils {
                 }
             }
         }
+    }
+
+    public static GridPartComponentI getNextComponentInGrid(GridPartComponentI comp, boolean loop) {
+        GridComponentI gridParent = comp.gridParentProperty().get();
+        if (gridParent != null) {
+            int nextColumn = comp.columnProperty().get() + comp.columnSpanProperty().get();
+            int nextRow = comp.rowProperty().get() + 1;
+            if (nextColumn < gridParent.columnCountProperty().get()) {
+                return gridParent.getGrid().getComponent(comp.rowProperty().get(), nextColumn);
+            } else if (nextRow < gridParent.rowCountProperty().get()) {
+                return gridParent.getGrid().getComponent(nextRow, 0);
+            } else if (loop) {
+                return gridParent.getGrid().getComponent(0, 0);
+            }
+        }
+        return null;
+    }
+
+    public static GridPartComponentI getPreviousComponent(GridPartComponentI comp, boolean loop) {
+        GridComponentI gridParent = comp.gridParentProperty().get();
+        if (gridParent != null) {
+            int previousColumn = comp.columnProperty().get() - comp.columnSpanProperty().get();
+            int previousRow = comp.rowProperty().get() - 1;
+            if (previousColumn >= 0) {
+                return gridParent.getGrid().getComponent(comp.rowProperty().get(), previousColumn);
+            } else if (previousRow >= 0) {
+                return gridParent.getGrid().getComponent(previousRow, gridParent.getGrid().getColumn() - 1);
+            } else if (loop) {
+                return gridParent.getGrid().getComponent(gridParent.getGrid().getRow() - 1, gridParent.getGrid().getColumn() - 1);
+            }
+        }
+        return null;
     }
 }

@@ -24,12 +24,15 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import org.lifecompanion.model.api.editaction.BaseEditActionI;
+import org.lifecompanion.model.api.editaction.UndoRedoActionI;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.model.impl.notification.LCNotification;
 import org.lifecompanion.ui.notification.LCNotificationController;
 import org.lifecompanion.framework.commons.translation.Translation;
+
+import java.util.List;
 
 /**
  * Class that hold all the edit menu actions.
@@ -88,5 +91,39 @@ public class UndoRedoActions {
         }
     }
 
+    public static class MultiActionWrapperAction implements UndoRedoActionI {
+        private final String nameId;
+        private final List<UndoRedoActionI> actions;
 
+        public MultiActionWrapperAction(String nameId, List<UndoRedoActionI> actions) {
+            this.nameId = nameId;
+            this.actions = actions;
+        }
+
+        @Override
+        public void doAction() throws LCException {
+            for (UndoRedoActionI action : actions) {
+                action.doAction();
+            }
+        }
+
+        @Override
+        public void undoAction() throws LCException {
+            for (int i = actions.size() - 1; i >= 0; i--) {
+                actions.get(i).undoAction();
+            }
+        }
+
+        @Override
+        public void redoAction() throws LCException {
+            for (UndoRedoActionI action : actions) {
+                action.redoAction();
+            }
+        }
+
+        @Override
+        public String getNameID() {
+            return nameId;
+        }
+    }
 }

@@ -434,18 +434,17 @@ public class WritingStateEntryContainer implements WritingStateControllerI {
 
     @Override
     public void moveCaretUp(WritingEventSource src) {
-        moveCaretOnLine(1);
+        moveCaretOnLine(src, -1);
     }
 
     @Override
     public void moveCaretDown(WritingEventSource src) {
-        moveCaretOnLine(-1);
+        moveCaretOnLine(src, 1);
     }
 
 
     // TODO : move to parent interface
     public void moveCaretToPosition(WritingEventSource src, WriterDisplayerI displayer, double xInEditor, double yInEditor) {
-        //TODO
         List<TextDisplayerLineI> lines = displayer.getLastCachedLines();
         if (lines != null) {
             double y = 0.0;
@@ -713,24 +712,32 @@ public class WritingStateEntryContainer implements WritingStateControllerI {
         return textLength;
     }
 
-    private void moveCaretOnLine(int direction) {
+    private void moveCaretOnLine(WritingEventSource src, int direction) {
         if (this.currentDisplayer != null) {
             List<TextDisplayerLineI> lines = currentDisplayer.getLastCachedLines();
             if (lines != null) {
                 int caret = this.caretPosition().get();
-                TextDisplayerLineI previous = null;
-                for (int i = direction > 0 ? 0 : lines.size() - 1; i < lines.size() && i >= 0; i += direction > 0 ? 1 : -1) {
-                    TextDisplayerLineI line = lines.get(i);
-                    if (previous != null) {
-                        double caretXPos = line.getCaretXFromPosition(caret, TextDisplayerLineHelper.BOUNDS_PROVIDER, currentDisplayer.getTextDisplayerTextStyle());
-                        if (caretXPos >= 0.0) {
-                            int nCaret = previous.getCaretPositionFromX(caretXPos, TextDisplayerLineHelper.BOUNDS_PROVIDER, currentDisplayer.getTextDisplayerTextStyle());
-                            if (nCaret >= 0) {
-                                caretPosition.set(Math.min(nCaret, this.currentTextProperty().get().length()));
-                            }
+                // Search the line where the caret is
+                int currentLineIndex = -1;
+                for (int i = 0; i < lines.size(); i++) {
+                    if (lines.get(i).isCaretOnLine(caret)) {
+                        currentLineIndex = i;
+                    }
+                }
+                // Move it to the new line (or start/end when reached)
+                if (currentLineIndex >= 0) {
+                    int newLineIndex = currentLineIndex + direction;
+                    if (newLineIndex >= lines.size()) {
+                        moveCaretToEnd(src);
+                    } else if (newLineIndex < 0) {
+                        moveCaretToStart(src);
+                    } else {
+                        double previousXPos = lines.get(currentLineIndex).getCaretXFromPosition(caret, TextDisplayerLineHelper.BOUNDS_PROVIDER, currentDisplayer.getTextDisplayerTextStyle());
+                        int nCaret = lines.get(newLineIndex).getCaretPositionFromX(previousXPos, TextDisplayerLineHelper.BOUNDS_PROVIDER, currentDisplayer.getTextDisplayerTextStyle());
+                        if (nCaret >= 0) {
+                            caretPosition.set(Math.min(nCaret, this.currentTextProperty().get().length()));
                         }
                     }
-                    previous = line;
                 }
             }
         }

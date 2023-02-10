@@ -102,7 +102,7 @@ public abstract class AbstractPartScanSelectionMode<T extends AbstractPartScanSe
 
     @Override
     protected void generateScannedComponents() {
-        this.components = this.generateComponentsToScan(this.currentGrid.get(), false);
+        this.components = this.generateComponentsToScan(this.currentGrid.get(), !this.parameters.skipEmptyComponentProperty().get());
         if (CollectionUtils.isEmpty(this.components)) {
             AbstractPartScanSelectionMode.LOGGER.warn("No component to scan found for {}, so the empty check will be bypassed",
                     this.getClass().getSimpleName());

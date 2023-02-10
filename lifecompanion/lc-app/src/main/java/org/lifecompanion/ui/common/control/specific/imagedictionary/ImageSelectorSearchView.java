@@ -19,24 +19,15 @@
 
 package org.lifecompanion.ui.common.control.specific.imagedictionary;
 
-import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.image.PixelFormat;
-import javafx.scene.image.PixelWriter;
-import javafx.scene.image.WritableImage;
-import javafx.scene.input.Clipboard;
-import javafx.scene.input.DataFormat;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.util.Pair;
-import org.lifecompanion.ui.controlsfx.control.textfield.TextFields;
-import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.controller.appinstallation.InstallationConfigurationController;
 import org.lifecompanion.controller.editmode.FileChooserType;
 import org.lifecompanion.controller.editmode.LCFileChoosers;
@@ -49,6 +40,8 @@ import org.lifecompanion.model.api.imagedictionary.ImageElementI;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.model.impl.imagedictionary.ImageDictionaries;
+import org.lifecompanion.ui.controlsfx.control.textfield.TextFields;
+import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.util.IOUtils;
 import org.lifecompanion.util.ThreadUtils;
 import org.lifecompanion.util.javafx.FXControlUtils;
@@ -58,12 +51,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
 import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 import java.util.function.Consumer;
 
 public class ImageSelectorSearchView extends BorderPane implements LCViewInitHelper {
@@ -162,50 +156,21 @@ public class ImageSelectorSearchView extends BorderPane implements LCViewInitHel
             }
         });
         this.buttonImportFromClipboard.setOnAction(e -> {
-            Clipboard systemClipboard = Clipboard.getSystemClipboard();
-            if (systemClipboard.hasImage() && selectionCallback != null) {
+            // Use AWT clipboard instead of JavaFX clipboard due to issue #156
+            // more info https://stackoverflow.com/questions/54995198/how-do-i-correctly-get-an-image-from-the-clipboard-in-javafx-what-is-the-differ
+            final Transferable contents = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(null);
+            if (selectionCallback != null && contents != null && contents.isDataFlavorSupported(DataFlavor.imageFlavor)) {
                 try {
-                    File destinationFile = new File(InstallationConfigurationController.INSTANCE.getUserDirectory().getPath() + LCConstant.CLIPBOARD_CAPTURE_DIR_NAME + DATE_FORMAT_FILENAME.format(new Date()) + ".png");
+                    File destinationFile = new File(InstallationConfigurationController.INSTANCE.getUserDirectory()
+                            .getPath() + LCConstant.CLIPBOARD_CAPTURE_DIR_NAME + DATE_FORMAT_FILENAME.format(new Date()) + ".png");
                     destinationFile.getParentFile().mkdirs();
-                    ImageIO.write(SwingFXUtils.fromFXImage(systemClipboard.getImage(), null), "png", destinationFile);
+                    ImageIO.write((java.awt.image.BufferedImage) contents.getTransferData(DataFlavor.imageFlavor), "png", destinationFile);
                     selectionCallback.accept(ImageDictionaries.INSTANCE.getOrAddToUserImagesDictionary(destinationFile));
-                } catch (IOException ex) {
+                } catch (Exception ex) {
                     LOGGER.warn("Couldn't write image from clipboard to temp image to import", ex);
                 }
             }
         });
-    }
-
-    // FIXME : find a correct image correction implementation
-    //  if clipboard contains "Object Descriptor" and image, it indicates that the image is from docs/Paint/etc.
-    //  current problem with this algo : transparency is converted to black...
-    private WritableImage getCorrectImage(Image image) {
-        int width = (int) image.getWidth();
-        int height = (int) image.getHeight();
-        WritableImage writableImage = new WritableImage((int) image.getWidth(), (int) image.getHeight());
-        PixelWriter pixelWriter = writableImage.getPixelWriter();
-        byte[] data = new byte[width * height * 3];
-        int i = 0;
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                int argb = image.getPixelReader().getArgb(x, y);
-                int a = (argb >> 24) & 0xFF;
-                int r = (argb >> 16) & 0xFF;
-                int g = (argb >> 8) & 0xFF;
-                int b = argb & 0xFF;
-//                System.out.println("Alpha : "+a);
-//                data[i++] = (byte) r;
-//                data[i++] = (byte) g;
-//                data[i++] = (byte) b;
-                if (a != 0) System.out.println(" a " + a);
-                pixelWriter.setArgb(x, y, 255 << 24 | r << 16 | g << 8 | b);
-            }
-        }
-//        WritableImage writableImage = new WritableImage((int) image.getWidth(), (int) image.getHeight());
-//        PixelWriter pixelWriter = writableImage.getPixelWriter();
-//        pixelWriter.setPixels(0, 0, (int) image.getWidth(), (int) image.getHeight(),
-//                PixelFormat.getByteRgbInstance(), data, 0, (int) image.getWidth() * 3);
-        return writableImage;
     }
 
     private void fireSearchFor(String search) {

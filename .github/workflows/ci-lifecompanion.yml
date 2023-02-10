@@ -62,7 +62,7 @@ jobs:
           java-version: '18'
           distribution: 'temurin'
       
-      - name : Add +X on gralde scripts
+      - name : Add +X on Gradle scripts
         run: chmod +x lifecompanion-framework/gradlew & chmod +x lifecompanion/gradlew
                             
       - name: Prepare target env configuration
@@ -105,7 +105,7 @@ jobs:
           build-root-directory: lifecompanion
           arguments: publishToMavenLocal
 
-      - name : Add +X on plugin gralde scripts
+      - name : Add +X on plugin Gradle scripts
         if: ${{inputs.plugin_dir_name}}
         run: chmod +x lifecompanion-plugins/${{inputs.plugin_dir_name}}/gradlew
 

@@ -91,6 +91,16 @@ public class TextDisplayerLine implements TextDisplayerLineI {
     }
 
     @Override
+    public boolean isCaretOnLine(int caretPosition) {
+        for (TextDisplayerWordI word : this.words) {
+            if (caretPosition >= word.getCaretStart() && caretPosition <= word.getCaretEnd()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
     public double getCaretXFromPosition(int caretPosition, TextBoundsProviderI provider, TextCompStyleI defaultTextStyle) {
         if (!this.words.isEmpty()) {
             double xTotal = 0;
@@ -142,8 +152,18 @@ public class TextDisplayerLine implements TextDisplayerLineI {
                 }
                 xTotal += word.getWidth();
             }
-            return words.get(words.size() - 1).getCaretEnd() - 1;
+            return words.get(words.size() - 1).getCaretEnd();
         }
         return -1;
+    }
+
+    @Override
+    public String toString() {
+        return "TextDisplayerLine{" +
+                "width=" + width +
+                ", textHeight=" + textHeight +
+                ", words=" + words +
+                ", imageOnLine=" + imageOnLine +
+                '}';
     }
 }

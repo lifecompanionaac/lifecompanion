@@ -28,6 +28,7 @@ import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.model.api.configurationcomponent.*;
 import org.lifecompanion.util.ThreadUtils;
 import org.lifecompanion.util.binding.BindingUtils;
+import org.lifecompanion.util.model.ConfigurationComponentUtils;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -95,7 +96,9 @@ public enum SelectionController {
             } else return null;
         }, selectedGridPartComponent, selectedKeys, selectedRootComponent));
         selectedKeyHelper.bind(Bindings.createObjectBinding(() -> selectedKeys.isEmpty() ? null : selectedKeys.get(selectedKeys.size() - 1), selectedKeys));
-        selectedGridPartOrKeyHelper.bind(Bindings.createObjectBinding(() -> selectedKeyHelper.get() != null ? selectedKeyHelper.get() : selectedGridPartComponent.get(), selectedKeyHelper, selectedGridPartComponent));
+        selectedGridPartOrKeyHelper.bind(Bindings.createObjectBinding(() -> selectedKeyHelper.get() != null ? selectedKeyHelper.get() : selectedGridPartComponent.get(),
+                selectedKeyHelper,
+                selectedGridPartComponent));
 
         // These are the real values : when updated, should handle component state
         selectedKeys.addListener(BindingUtils.createListChangeListenerV2(this::handleSelectedComponent, this::handleUnselectedComponent));
@@ -203,42 +206,20 @@ public enum SelectionController {
     }
 
     public void selectNextKeyInCurrentGrid() {
-        GridPartComponentI selectedKey = this.selectedKeyHelper.get();
+        GridPartKeyComponentI selectedKey = this.selectedKeyHelper.get();
         if (selectedKey != null) {
-            GridComponentI gridParent = selectedKey.gridParentProperty().get();
-            if (gridParent != null) {
-                GridPartComponentI toSelect;
-                int nextColumn = selectedKey.columnProperty().get() + selectedKey.columnSpanProperty().get();
-                int nextRow = selectedKey.rowProperty().get() + 1;
-                if (nextColumn < gridParent.columnCountProperty().get()) {
-                    toSelect = gridParent.getGrid().getComponent(selectedKey.rowProperty().get(), nextColumn);
-                } else if (nextRow < gridParent.rowCountProperty().get()) {
-                    toSelect = gridParent.getGrid().getComponent(nextRow, 0);
-                } else {
-                    toSelect = gridParent.getGrid().getComponent(0, 0);
-                }
+            GridPartComponentI toSelect = ConfigurationComponentUtils.getNextComponentInGrid(selectedKey, true);
+            if (toSelect != null)
                 this.selectDisplayableComponent(toSelect, true);
-            }
         }
     }
 
     public void selectPreviousKeyInCurrentGrid() {
-        GridPartComponentI selectedKey = this.selectedKeyHelper.get();
+        GridPartKeyComponentI selectedKey = this.selectedKeyHelper.get();
         if (selectedKey != null) {
-            GridComponentI gridParent = selectedKey.gridParentProperty().get();
-            if (gridParent != null) {
-                GridPartComponentI toSelect;
-                int previousColumn = selectedKey.columnProperty().get() - selectedKey.columnSpanProperty().get();
-                int previousRow = selectedKey.rowProperty().get() - 1;
-                if (previousColumn >= 0) {
-                    toSelect = gridParent.getGrid().getComponent(selectedKey.rowProperty().get(), previousColumn);
-                } else if (previousRow >= 0) {
-                    toSelect = gridParent.getGrid().getComponent(previousRow, gridParent.getGrid().getColumn() - 1);
-                } else {
-                    toSelect = gridParent.getGrid().getComponent(gridParent.getGrid().getRow() - 1, gridParent.getGrid().getColumn() - 1);
-                }
+            GridPartComponentI toSelect = ConfigurationComponentUtils.getPreviousComponent(selectedKey, true);
+            if (toSelect != null)
                 this.selectDisplayableComponent(toSelect, true);
-            }
         }
     }
 

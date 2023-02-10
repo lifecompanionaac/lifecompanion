@@ -26,22 +26,24 @@ import org.lifecompanion.model.api.style.TextCompStyleI;
 
 public interface TextDisplayerLineI {
 
-	public List<TextDisplayerWordI> getWords();
+	List<TextDisplayerWordI> getWords();
 
-	public double getWidth();
+	double getWidth();
 
-	public double getTextHeight();
+	double getTextHeight();
 
-	public double getImageHeight(WriterDisplayerI textDisplayerComponent);
+	double getImageHeight(WriterDisplayerI textDisplayerComponent);
 
 	void computeSize(TextBoundsProviderI provider, TextCompStyleI defaultTextStyle);
 
-	public void setImageOnLine(boolean imageOnLineP);
+	void setImageOnLine(boolean imageOnLineP);
 
-	public boolean isImageOnLine();
+	boolean isImageOnLine();
 
-	public double getCaretXFromPosition(int caretPosition, TextBoundsProviderI provider, TextCompStyleI defaultTextStyle);
+	boolean isCaretOnLine(int caretPosition);
 
-	public int getCaretPositionFromX(double caretX, TextBoundsProviderI provider, TextCompStyleI defaultTextStyle);
+	double getCaretXFromPosition(int caretPosition, TextBoundsProviderI provider, TextCompStyleI defaultTextStyle);
+
+	int getCaretPositionFromX(double caretX, TextBoundsProviderI provider, TextCompStyleI defaultTextStyle);
 
 }

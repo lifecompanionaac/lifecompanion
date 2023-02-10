@@ -29,8 +29,8 @@ import java.util.concurrent.*;
 public class ThreadUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(ThreadUtils.class);
 
-    private static ConcurrentHashMap<String, Future<?>> runningCalls;
-    private static ExecutorService executorService;
+    private static ConcurrentHashMap<String, Future<?>> runningDebounceCalls;
+    private static ExecutorService debounceExecutorService;
 
     /**
      * Will run the given task without any executor.
@@ -38,7 +38,6 @@ public class ThreadUtils {
      * @param task the task to be run
      * @throws Exception if the task execution produce a exception
      */
-
     public static <T> T executeInCurrentThread(final Task<T> task) throws Exception {
         task.run();
         try {
@@ -58,13 +57,13 @@ public class ThreadUtils {
     }
 
     public static void debounce(long ms, String callId, Runnable call) {
-        if (executorService == null) {
-            runningCalls = new ConcurrentHashMap<>(5);
-            executorService = Executors.newSingleThreadExecutor(LCNamedThreadFactory.daemonThreadFactory("Debounce-Feature"));
+        if (debounceExecutorService == null) {
+            runningDebounceCalls = new ConcurrentHashMap<>(5);
+            debounceExecutorService = Executors.newSingleThreadExecutor(LCNamedThreadFactory.daemonThreadFactory("Debounce-Feature"));
         }
-        Future<?> previousCall = runningCalls.get(callId);
+        Future<?> previousCall = runningDebounceCalls.get(callId);
         if (previousCall != null) previousCall.cancel(true);
-        runningCalls.put(callId, executorService.submit(() -> {
+        runningDebounceCalls.put(callId, debounceExecutorService.submit(() -> {
             Thread.sleep(ms);
             try {
                 call.run();
@@ -80,5 +79,14 @@ public class ThreadUtils {
         for (int i = 1; i < stackTrace.length && i < 50; i++) {
             System.err.println(stackTrace[i]);
         }
+    }
+
+    public static void runAfter(long delay, Runnable runnable) {
+        Thread delayThread = new Thread(() -> {
+            safeSleep(delay);
+            runnable.run();
+        });
+        delayThread.setDaemon(true);
+        delayThread.start();
     }
 }
