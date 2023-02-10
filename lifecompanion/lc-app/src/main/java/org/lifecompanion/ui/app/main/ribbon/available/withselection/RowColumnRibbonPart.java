@@ -64,6 +64,7 @@ public class RowColumnRibbonPart extends RibbonBasePart<GridComponentI> implemen
 	public void initUI() {
 		this.setTitle(Translation.getText("pane.title.rowcolumn.count"));
 		TilePane rows = new TilePane();
+		rows.setAlignment(Pos.CENTER);
 		rows.setPrefColumns(1);
 		this.spinnerRow = FXControlUtils.createIntSpinner(1, 150, 2, 1, 75.0);
 		FXControlUtils.createAndAttachTooltip(spinnerRow, "tooltip.explain.grid.row.spinner");

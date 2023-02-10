@@ -19,6 +19,7 @@
 
 package org.lifecompanion.ui.app.main.ribbon.available.withselection;
 
+import javafx.geometry.Pos;
 import org.lifecompanion.ui.controlsfx.control.ToggleSwitch;
 
 import org.lifecompanion.model.api.configurationcomponent.WriterDisplayerI;
@@ -62,6 +63,7 @@ public class TextDisplayerRibbonPart extends RibbonBasePart<WriterDisplayerI> im
 		GridPane gridPane = new GridPane();
 		gridPane.setHgap(10.0);
 		gridPane.setVgap(3.0);
+		gridPane.setAlignment(Pos.CENTER);
 		//Line spacing
 		Label labelLineSpacing = new Label(Translation.getText("text.displayer.line.spacing"));
 		this.spinnerLineSpacing = FXControlUtils.createDoubleSpinner(0, 200, 2, 2, 75);

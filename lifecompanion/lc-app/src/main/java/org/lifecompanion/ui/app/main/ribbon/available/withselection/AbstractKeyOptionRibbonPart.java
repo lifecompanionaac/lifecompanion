@@ -27,6 +27,7 @@ import javafx.scene.control.ComboBoxBase;
 import javafx.scene.control.Separator;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
 import org.lifecompanion.model.api.configurationcomponent.keyoption.KeyOptionConfigurationViewI;
@@ -163,7 +164,9 @@ public class AbstractKeyOptionRibbonPart extends RibbonBasePart<GridPartKeyCompo
             if (configurationView != null) {
                 this.displayedOptionConfiguration = configurationView;
                 this.displayedOptionConfiguration.optionProperty().set(this.model.get().keyOptionProperty().get());
-                this.paneOptionConfigurationView.setCenter(configurationView.getConfigurationView());
+                Region node = configurationView.getConfigurationView();
+                BorderPane.setAlignment(node,Pos.CENTER);
+                this.paneOptionConfigurationView.setCenter(node);
                 this.paneOptionConfigurationView.setVisible(true);
             } else {
                 this.hideOptionConfigurationView();

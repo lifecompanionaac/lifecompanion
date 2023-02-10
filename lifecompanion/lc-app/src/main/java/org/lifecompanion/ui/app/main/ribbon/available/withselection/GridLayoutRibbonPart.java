@@ -20,6 +20,7 @@ package org.lifecompanion.ui.app.main.ribbon.available.withselection;
 
 import java.util.function.BiFunction;
 
+import javafx.geometry.Pos;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.model.api.editaction.BaseEditActionI;
@@ -70,6 +71,7 @@ public class GridLayoutRibbonPart extends RibbonBasePart<DisplayableComponentI> 
 
 		GridPane gridPane = new GridPane();
 		gridPane.setHgap(5);
+		gridPane.setAlignment(Pos.CENTER);
 		Label labelAdd = new Label(Translation.getText("grid.add.rows.columns"));
 		GridPane.setHalignment(labelAdd, HPos.CENTER);
 		gridPane.add(labelAdd, 0, 0, 2, 1);

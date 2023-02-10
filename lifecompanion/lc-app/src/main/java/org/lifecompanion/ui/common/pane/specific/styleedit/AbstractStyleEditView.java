@@ -20,6 +20,7 @@ package org.lifecompanion.ui.common.pane.specific.styleedit;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
@@ -66,6 +67,7 @@ public abstract class AbstractStyleEditView<T extends StyleI<?>> extends BaseCon
         this.fieldGrid = new GridPane();
         this.fieldGrid.setVgap(3.0);
         this.fieldGrid.setHgap(5.0);
+        this.fieldGrid.setAlignment(Pos.CENTER);
         this.setCenter(fieldGrid);
     }
 

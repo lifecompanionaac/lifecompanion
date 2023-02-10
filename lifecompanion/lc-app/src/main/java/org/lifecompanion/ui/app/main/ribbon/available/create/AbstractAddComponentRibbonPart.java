@@ -14,6 +14,7 @@ import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.controller.editmode.SelectionController;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.resource.IconHelper;
+import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.model.api.configurationcomponent.DisplayableComponentI;
@@ -37,7 +38,7 @@ public abstract class AbstractAddComponentRibbonPart extends RibbonBasePart<Void
     public void initUI() {
         FlowPane content = new FlowPane();
         content.setAlignment(Pos.CENTER);
-        content.setPrefWrapLength(wrapWidth);
+        content.setPrefWrapLength(SystemType.current() == SystemType.UNIX ? wrapWidth * 1.25 : wrapWidth);
 
         ObservableList<AddComponentI> addComponents = AddComponentProvider.INSTANCE.getAvailable().get(category);
         for (AddComponentI addComponent : addComponents) {
