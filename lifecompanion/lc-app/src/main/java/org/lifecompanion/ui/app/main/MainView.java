@@ -138,7 +138,8 @@ public class MainView extends StackPane implements LCViewInitHelper {
         Circle buttonShape = new Circle(1.0);// Radius is ignored when != 0
         button.setShape(buttonShape);
         button.setCenterShape(true);
-        button.getStyleClass().addAll("quick-action-button-base", primary ? "quick-action-button-primary" : "quick-action-button-secondary");
+        button.getStyleClass().addAll("opacity-90", "hidden-disabled");
+        button.setStyle("-fx-background-color: " + (primary ? "-fx-main-dark" : "-fx-second-dark"));
         button.setPrefSize(12.0, 12.0);
         return button;
     }

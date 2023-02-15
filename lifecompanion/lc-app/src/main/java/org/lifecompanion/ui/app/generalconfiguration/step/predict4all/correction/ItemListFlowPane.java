@@ -26,6 +26,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.ui.controlsfx.glyphfont.GlyphFontRegistry;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
@@ -49,8 +50,8 @@ public class ItemListFlowPane extends FlowPane implements LCViewInitHelper {
         this.setAlignment(Pos.CENTER_LEFT);
 
         this.buttonAdd = FXControlUtils.createGraphicButton(
-                GlyphFontRegistry.font("FontAwesome").create(FontAwesome.Glyph.PLUS_CIRCLE).size(18).color(LCGraphicStyle.MAIN_DARK), "tooltip.button.add.element.item.flow");
-        this.buttonAdd.getStyleClass().add("item-flow-pane-add-button");
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.PLUS_CIRCLE).size(18).color(LCGraphicStyle.MAIN_DARK), "tooltip.button.add.element.item.flow");
+        this.buttonAdd.getStyleClass().add("padding-2");
 
         this.getChildren().add(this.buttonAdd);
     }
@@ -112,20 +113,21 @@ public class ItemListFlowPane extends FlowPane implements LCViewInitHelper {
         public void initUI() {
             this.label = new Label();
             this.label.setMaxWidth(Double.MAX_VALUE);
-            this.label.getStyleClass().add("item-list-flow-pane-label");
+            this.label.getStyleClass().add("text-font-size-90");
             HBox.setHgrow(this.label, Priority.ALWAYS);
 
             this.editLabel = new TextField();
-            this.editLabel.getStyleClass().add("item-list-flow-pane-field");
+            this.editLabel.getStyleClass().addAll("text-font-size-90", "background-f0f0f0", "border-transparent", "padding-0");
+            this.editLabel.setPrefColumnCount(8);
 
             this.buttonRemove = FXControlUtils.createGraphicButton(
-                    GlyphFontRegistry.font("FontAwesome").create(FontAwesome.Glyph.TIMES_CIRCLE).size(12).color(LCGraphicStyle.LC_GRAY), null);
-            this.buttonRemove.getStyleClass().add("small-button");
+                    GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.TIMES_CIRCLE).size(12).color(LCGraphicStyle.LC_GRAY), null);
+            this.buttonRemove.getStyleClass().add("padding-0");
 
             this.setAlignment(Pos.CENTER);
             this.setSpacing(5.0);
             this.getChildren().addAll(this.label, this.editLabel, this.buttonRemove);
-            this.getStyleClass().add("item-list-flow-pane-rec");
+            this.getStyleClass().addAll( "background-f0f0f0", "border-gray", "border-radius-5", "border-width-1", "padding-y2-x4");
         }
 
         public String getValue() {

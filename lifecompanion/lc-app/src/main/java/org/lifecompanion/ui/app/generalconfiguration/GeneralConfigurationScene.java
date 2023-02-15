@@ -92,9 +92,7 @@ public class GeneralConfigurationScene extends Scene implements LCViewInitHelper
         boxMenuLeft = new VBox();
         boxMenuLeft.setPrefWidth(200.0);
         boxMenuLeft.setAlignment(Pos.TOP_LEFT);
-        boxMenuLeft.getStyleClass().add("general-config-menu-pane");
-
-        // TODO : border top on first ? + remove border left on header
+        boxMenuLeft.getStyleClass().addAll("background-primary-dark", "border-right-lightgrey", "border-width-1-right");
 
         // Init step implementations
         addStepImplementation(new GeneralInformationConfigurationStepView());
@@ -151,7 +149,7 @@ public class GeneralConfigurationScene extends Scene implements LCViewInitHelper
             // Create menu button
             Label button = new Label(Translation.getText(stepView.getTitleId()));
             button.setMaxWidth(Double.MAX_VALUE);
-            button.getStyleClass().add("general-config-menu-button");
+            button.getStyleClass().addAll("text-fill-white", "text-font-size-120", "padding-t10-rbl5", "border-bottom-lightgrey", "opacity-85-hover");
             stepButtons.put(stepView.getStep(), button);
 
             // Listener on button to show step
@@ -237,7 +235,8 @@ public class GeneralConfigurationScene extends Scene implements LCViewInitHelper
         if (currentView != null) {
             Label stepButton = stepButtons.get(currentView.getMenuStepToSelect());
             if (stepButton != null) {
-                stepButton.getStyleClass().remove("general-config-menu-button-selected");
+                stepButton.getStyleClass().addAll("text-fill-white");
+                stepButton.getStyleClass().removeAll("border-top-lightgrey", "background-f4f4f4");
             }
             currentView.afterHide();
             currentView = null;
@@ -250,7 +249,8 @@ public class GeneralConfigurationScene extends Scene implements LCViewInitHelper
             this.nodePreviousIndicator.setVisible(currentView.getPreviousStep() != null);
             Label stepButton = stepButtons.get(currentView.getMenuStepToSelect());
             if (stepButton != null) {
-                stepButton.getStyleClass().add("general-config-menu-button-selected");
+                stepButton.getStyleClass().removeAll("text-fill-white");
+                stepButton.getStyleClass().addAll("border-top-lightgrey", "background-f4f4f4");
             }
             this.viewContentBorderPane.changeCenter(currentView.getViewNode());
         }

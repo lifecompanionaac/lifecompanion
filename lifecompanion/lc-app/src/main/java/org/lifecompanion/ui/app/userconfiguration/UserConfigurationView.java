@@ -62,7 +62,6 @@ public class UserConfigurationView extends BorderPane implements LCViewInitHelpe
     private VBox boxMenuLeft;
     private Button buttonOk, buttonCancel;
     private Label labelTitle;
-    private Node nodePreviousIndicator;
     private final Map<UserConfigSubmenuI, Label> stepButtons;
 
     public UserConfigurationView(final Stage parentStage) {
@@ -82,7 +81,7 @@ public class UserConfigurationView extends BorderPane implements LCViewInitHelpe
         boxMenuLeft = new VBox();
         boxMenuLeft.setPrefWidth(200.0);
         boxMenuLeft.setAlignment(Pos.TOP_LEFT);
-        boxMenuLeft.getStyleClass().add("general-config-menu-pane");
+        boxMenuLeft.getStyleClass().addAll("background-primary-dark", "border-right-lightgrey", "border-width-1-right");
 
         //Tabs
         this.addConfigTab(new UIConfigSubmenu());
@@ -91,9 +90,8 @@ public class UserConfigurationView extends BorderPane implements LCViewInitHelpe
         this.addConfigTab(new MiscConfigSubmenu());
 
         // Center top : title and previous button
-        Triple<HBox, Label, Node> header = FXControlUtils.createHeader("", e -> this.parentStage.hide());
+        Triple<HBox, Label, Node> header = FXControlUtils.createHeader("", null);
         labelTitle = header.getMiddle();
-        nodePreviousIndicator = header.getRight();
         boxMenuLeft.setPadding(new Insets(50.0, 0.0, 0.0, 0.0));
 
         // Center main : step view display
@@ -126,7 +124,7 @@ public class UserConfigurationView extends BorderPane implements LCViewInitHelpe
             // Create menu button
             Label button = new Label(Translation.getText(configTab.getTabTitleId()));
             button.setMaxWidth(Double.MAX_VALUE);
-            button.getStyleClass().add("general-config-menu-button");
+            button.getStyleClass().addAll("text-fill-white", "text-font-size-120", "padding-t10-rbl5", "border-bottom-lightgrey", "opacity-85-hover");
 
             stepButtons.put(configTab, button);
 
@@ -143,7 +141,8 @@ public class UserConfigurationView extends BorderPane implements LCViewInitHelpe
         if (currentView != null) {
             Label stepButton = stepButtons.get(currentView);
             if (stepButton != null) {
-                stepButton.getStyleClass().remove("general-config-menu-button-selected");
+                stepButton.getStyleClass().addAll("text-fill-white");
+                stepButton.getStyleClass().removeAll("border-top-lightgrey", "background-f4f4f4");
             }
             currentView = null;
         }
@@ -151,10 +150,10 @@ public class UserConfigurationView extends BorderPane implements LCViewInitHelpe
         if (tab != null) {
             currentView = tab;
             this.labelTitle.setText(Translation.getText(tab.getTabTitleId()));
-            this.nodePreviousIndicator.setVisible(true);
             Label stepButton = stepButtons.get(tab);
             if (stepButton != null) {
-                stepButton.getStyleClass().add("general-config-menu-button-selected");
+                stepButton.getStyleClass().removeAll("text-fill-white");
+                stepButton.getStyleClass().addAll("border-top-lightgrey", "background-f4f4f4");
             }
             this.viewContentBorderPane.changeCenter(tab.getView());
         }

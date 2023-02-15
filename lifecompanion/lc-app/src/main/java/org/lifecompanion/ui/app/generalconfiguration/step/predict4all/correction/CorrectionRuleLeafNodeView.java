@@ -94,7 +94,7 @@ public class CorrectionRuleLeafNodeView extends CorrectionRuleBaseNodeView {
         totalNode.setAlignment(Pos.CENTER_LEFT);
         totalNode.getChildren().forEach(n -> n.managedProperty().bind(n.visibleProperty()));
         this.setRuleCenter(totalNode);
-        totalNode.getStyleClass().add("correction-rule-leaf");
+        totalNode.getStyleClass().addAll("border-right-bottom-left-lightgrey", "border-width-1-right-bottom-left", "border-radius-3-br-bl", "padding-t8-x10-b2");
     }
 
     private void initBindingLeaf() {

@@ -55,12 +55,12 @@ public class PluginConfigSubmenu extends BorderPane implements LCViewInitHelper,
         VBox boxCenter = new VBox(10.0, labelPluginList, listViewPlugins);
 
         buttonAddPlugin = FXControlUtils.createRightTextButton(Translation.getText("general.configuration.view.step.plugin.add.button"),
-                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.PLUS_CIRCLE).size(22).color(LCGraphicStyle.MAIN_DARK), "TODO");
-        buttonAddPlugin.getStyleClass().add("button-icon-text-bigger");
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.PLUS_CIRCLE).size(22).color(LCGraphicStyle.MAIN_DARK), null);
+        buttonAddPlugin.getStyleClass().add("text-font-size-110");
 
         buttonAddPluginFromWeb = FXControlUtils.createRightTextButton(Translation.getText("general.configuration.view.step.plugin.add.from.repo.button"),
-                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.PLUS_CIRCLE).size(22).color(LCGraphicStyle.MAIN_DARK), "TODO");
-        buttonAddPluginFromWeb.getStyleClass().add("button-icon-text-bigger");
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.PLUS_CIRCLE).size(22).color(LCGraphicStyle.MAIN_DARK), null);
+        buttonAddPluginFromWeb.getStyleClass().add("text-font-size-110");
 
         VBox boxButtons = new VBox(10.0, buttonAddPlugin, buttonAddPluginFromWeb);
         boxButtons.setAlignment(Pos.CENTER);

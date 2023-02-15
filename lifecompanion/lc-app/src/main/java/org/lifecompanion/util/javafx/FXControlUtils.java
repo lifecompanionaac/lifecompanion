@@ -118,7 +118,7 @@ public class FXControlUtils {
 
     public static Label createTitleLabel(String titleId) {
         Label label = new Label(Translation.getText(titleId));
-        label.getStyleClass().addAll("text-font-size-110", "border-bottom-lightgrey", "text-fill-dimgrey","padding-t5");
+        label.getStyleClass().addAll("text-font-size-110", "border-bottom-lightgrey", "text-fill-dimgrey", "padding-t5");
         label.setTextAlignment(TextAlignment.LEFT);
         label.setMaxWidth(Double.MAX_VALUE);
         return label;
@@ -126,28 +126,31 @@ public class FXControlUtils {
 
     public static Button createGraphicButton(final Node graphics, final String tooltipTranslationID) {
         Button button = new Button(null, graphics);
-        button.getStyleClass().add("image-base-button");
+        button.getStyleClass().addAll("background-none", "opacity-100", "opacity-80-hover", "opacity-60-pressed", "round-lightgrey-border-selected", "content-display-graphic-only");
+        //button.getStyleClass().addAll("opacity-100", "background-none", "opacity-80-hover", "opacity-60-pressed", "round-lightgrey-border-selected", "content-display-graphic-only");
+        //button.getStyleClass().addAll("image-base-button");
         createAndAttachTooltip(button, tooltipTranslationID);
         return button;
     }
 
     public static Button createGraphicMaterialButton(final Node graphics, final String tooltipTranslationID) {
         Button button = createGraphicButton(graphics, tooltipTranslationID);
-        button.getStyleClass().add("material-button-base");
+        button.getStyleClass().add("dropshadow-bottom-9");
+        button.setStyle("-fx-background-color: white;");
         return button;
     }
 
     public static MenuButton createGraphicMenuButton(final Node graphics, final String tooltipTranslationID) {
         MenuButton button = new MenuButton(null, graphics);
         button.getStyleClass().addAll("opacity-80-hover", "opacity-60-pressed");
-        button.setStyle("-fx-background-color: none, none;-fx-border-color: none;");
+        button.setStyle("-fx-background-color: none, none;-fx-border-color: none;");// Needed here, or it will not be a priority for CSS
         createAndAttachTooltip(button, tooltipTranslationID);
         return button;
     }
 
     public static Button createTextButtonWithGraphics(final String label, final Node graphics, final String tooltipTranslationID) {
         Button button = new Button(label, graphics);
-        button.getStyleClass().add("text-base-button");
+        button.getStyleClass().addAll("background-none", "opacity-80-hover", "opacity-60-pressed", "round-lightgrey-border-selected");
         button.setContentDisplay(ContentDisplay.TOP);
         createAndAttachTooltip(button, tooltipTranslationID);
         return button;
@@ -200,7 +203,7 @@ public class FXControlUtils {
 
     public static ToggleButton createGraphicsToggleButton(final String label, final Node graphics, final String tooltipTranslationID) {
         ToggleButton button = new ToggleButton(label, graphics);
-        button.getStyleClass().add("text-base-button");
+        button.getStyleClass().addAll("background-none", "opacity-80-hover", "opacity-60-pressed", "round-lightgrey-border-select");
         button.setContentDisplay(ContentDisplay.TOP);
         createAndAttachTooltip(button, tooltipTranslationID);
         return button;

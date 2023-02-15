@@ -93,7 +93,8 @@ public class ConfigurationSelectionView extends BorderPane implements ProfileCon
     //========================================================================
     @Override
     public void initUI() {
-        Triple<HBox, Label, Node> header = FXControlUtils.createHeader("configuration.selection.view.title", e -> ProfileConfigSelectionController.INSTANCE.setProfileStep(ProfileConfigStep.PROFILE_LIST, null, null));
+        Triple<HBox, Label, Node> header = FXControlUtils.createHeader("configuration.selection.view.title",
+                e -> ProfileConfigSelectionController.INSTANCE.setProfileStep(ProfileConfigStep.PROFILE_LIST, null, null));
         this.setTop(header.getLeft());
 
         //Search filter
@@ -102,10 +103,10 @@ public class ConfigurationSelectionView extends BorderPane implements ProfileCon
 
         // Current profile information
         this.labelProfileName = new Label();
-        this.labelProfileName.getStyleClass().add("current-profile-in-config-list");
+        this.labelProfileName.getStyleClass().addAll("text-font-size-120", "text-fill-primary-dark", "text-weight-bold");
         buttonChangeProfile = FXControlUtils.createRightTextButton(Translation.getText("configuration.list.profile.change.action"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.REFRESH).size(14).color(LCGraphicStyle.MAIN_PRIMARY), null);
-        buttonChangeProfile.getStyleClass().add("button-in-current-profil-config-list");
+        buttonChangeProfile.getStyleClass().addAll("padding-b5", "text-font-size-90");
         this.profileIconView = new ProfileIconView();
         this.profileIconView.setIconSizeFactor(0.6);
         GridPane gridPaneCurrentProfile = new GridPane();
@@ -127,7 +128,7 @@ public class ConfigurationSelectionView extends BorderPane implements ProfileCon
 
         buttonAddConfiguration = FXControlUtils.createRightTextButton(Translation.getText("configuration.selection.add.configuration.button"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.PLUS_CIRCLE).size(22).color(LCGraphicStyle.MAIN_PRIMARY), "configuration.selection.add.configuration.button.tooltip");
-        buttonAddConfiguration.getStyleClass().add("button-icon-text-bigger");
+        buttonAddConfiguration.getStyleClass().add("text-font-size-120");
         HBox bottomButtons = new HBox(10.0, buttonAddConfiguration);
         bottomButtons.setAlignment(Pos.CENTER);
         BorderPane.setMargin(bottomButtons, new Insets(0, 10.0, 10.0, 10.0));

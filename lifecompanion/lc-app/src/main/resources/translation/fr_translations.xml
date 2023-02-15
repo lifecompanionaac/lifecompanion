@@ -1782,6 +1782,7 @@
   <text key="predict4all.config.force.invalid.word.tooltip">Si activé, le mot ne sera jamais proposé dans les
 		prédictions affichées à l'utilisateur</text>
   <text key="predict4all.config.force.valid.word">Considérer valide</text>
+  <text key="predict4all.config.prio.deprio">Déprioriser/Prioriser</text>
   <text key="predict4all.config.force.valid.word.tooltip">Si activé, le mot pourra être affiché dans les
 		prédictions, peu importe les règles de validation d'un mot.</text>
   <text key="predict4all.config.import.custom.list.button.deprio">Importer une liste à défavoriser</text>

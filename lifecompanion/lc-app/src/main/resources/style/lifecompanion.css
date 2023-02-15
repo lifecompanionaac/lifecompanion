@@ -1,12 +1,12 @@
-/*========= COMMON CLASSES =========*/
-/*
- * Here : WIP CSS REWORK
- * GOAL : convert "feature oriented" css classes to "specification oriented" css classes.
- * The idea is to have a CSS more looking like "Bootstrap" : add several classes to a same object and to have specific classes only on specific features.
- * The goal is also to use em vs px font.
- *
- * This is separated from old css started with dev (main_css.css)
- */
+/*========= COLORS =========*/
+ * {
+    -fx-main-primary:#0395f4;
+    -fx-main-light:#03bdf4;
+    -fx-main-dark:#0277BD;
+ 	-fx-second-primary:#F44336;
+    -fx-second-light:#EF9A9A;
+    -fx-second-dark:#C62828;
+ }
 
 /*======= TEXT =======*/
 
@@ -105,6 +105,14 @@
 	-fx-opacity: 0.3;
 }
 
+.opacity-90 {
+	-fx-opacity: 0.9;
+}
+
+.opacity-100 {
+	-fx-opacity: 1.0;
+}
+
 /*======= BACKGROUND =======*/
 
 .base-background-with-gray-border-1 {
@@ -117,8 +125,28 @@
     -fx-background-color: -fx-main-dark;
 }
 
+.background-secondary-dark {
+    -fx-background-color: -fx-second-dark;
+}
+
+.background-lightgrey {
+    -fx-background-color: lightgrey;
+}
+
+.background-f4f4f4 {
+    -fx-background-color: #f4f4f4;
+}
+
+.background-f0f0f0 {
+    -fx-background-color: #f0f0f0 #f0f0f0 #f0f0f0;
+}
+
 .background-transparent {
     -fx-background-color: transparent;
+}
+
+.background-none {
+    -fx-background-color: none;
 }
 
 /*======= EFFECT =======*/
@@ -131,6 +159,11 @@
     -fx-effect: dropshadow( gaussian , rgba(0.0,0.0,0.0,0.7) , 20.0,0.0,1.0,1.0 );
 }
 
+.dropshadow-bottom-9 {
+	-fx-effect: dropshadow( three-pass-box , rgba(0.0,0.0,0.0,0.6) , 9.0, 0.0 , 0.0 , 1.0 );
+}
+
+
 /*======= BORDERS =======*/
 
 .border-bottom-gray {
@@ -141,28 +174,64 @@
     -fx-border-color: gray transparent transparent transparent;
 }
 
+.border-gray {
+    -fx-border-color: gray;
+}
+
 .border-transparent {
     -fx-border-color: transparent;
 }
 
+.border-top-lightgrey {
+    -fx-border-color: lightgrey transparent transparent transparent;
+}
+
 .border-bottom-lightgrey {
-    -fx-border-color: transparent transparent lightgrey  transparent;
+    -fx-border-color: transparent transparent lightgrey transparent;
+}
+
+.border-right-bottom-left-lightgrey {
+    -fx-border-color: transparent lightgrey lightgrey lightgrey;
+}
+
+.border-right-lightgrey {
+    -fx-border-color: transparent lightgrey transparent transparent;
 }
 
 .border-lightgrey {
     -fx-border-color: lightgray;
 }
 
+.border-width-1 {
+    -fx-border-width: 1.0;
+}
+
 .border-width-1-top-right-bottom {
     -fx-border-width: 1.0 1.0 1.0 0.0;
+}
+
+.border-width-1-right-bottom-left {
+    -fx-border-width: 0.0 1.0 1.0 1.0;
 }
 
 .border-width-1-top-bottom {
     -fx-border-width: 1.0 0.0 1.0 0.0;
 }
 
+.border-width-1-right {
+    -fx-border-width: 0.0 0.0 1.0 0.0;
+}
+
+.border-radius-5 {
+    -fx-border-radius: 5.0;
+}
+
 .border-radius-3-tp-br {
  	-fx-border-radius: 0.0 3.0 3.0 0.0;
+}
+
+.border-radius-3-br-bl {
+ 	-fx-border-radius: 0.0 0.0 3.0 3.0;
 }
 
 /*======= HOVER =======*/
@@ -222,6 +291,10 @@
 	-fx-opacity: 0.4;
 }
 
+.hidden-disabled:disabled {
+    visibility: hidden;
+}
+
 /*======= SELECTED =======*/
 
 .opacity-100-selected:selected {
@@ -234,7 +307,7 @@
 }
 
 .background-selected-lightgrey:selected {
-    -fx-background-color: lightgray;
+    -fx-background-color: lightgrey;
 }
 
 .scale-130-selected:selected {
@@ -242,10 +315,20 @@
    -fx-scale-y: 1.3;
 }
 
+.round-lightgrey-border-selected:selected {
+	-fx-border-color: lightgrey;
+	-fx-border-width: 1.5;
+	-fx-border-radius: 3.0;
+}
+
 /*======= PADDING/MARGIN =======*/
 
 .padding-0 {
-    -fx-padding: 0;
+    -fx-padding: 0.0;
+}
+
+.padding-2 {
+    -fx-padding: 2.0;
 }
 
 .padding-3_5 {
@@ -256,8 +339,32 @@
     -fx-padding: 10.0 0.0 0.0 0.0;
 }
 
+.padding-y2-x4 {
+    -fx-padding: 2.0 4.0 2.0 4.0;
+}
+
 .padding-t5 {
     -fx-padding: 10.0 0.0 0.0 0.0;
+}
+
+.padding-b5 {
+    -fx-padding: 0.0 0.0 5.0 0.0;
+}
+
+.margin-5 {
+    -fx-margin: 5.0;
+}
+
+.padding-t8-x10-b2 {
+    -fx-padding: 8.0 10.0 2.0 10.0;
+}
+
+.padding-t10-rbl5 {
+    -fx-padding: 10.0 5.0 5.0 5.0;
+}
+
+.content-padding-0 .content {
+   -fx-padding: 0.0;
 }
 
 /*======= CONTENT DISPLAY =======*/

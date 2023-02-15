@@ -95,14 +95,14 @@ class ImageDictionariesListView extends VBox implements LCViewInitHelper {
                 Button buttonCopyright = FXControlUtils.createGraphicButton(
                         GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.COPYRIGHT).size(12).color(LCGraphicStyle.LC_BLACK), dictionary.getUrl());
                 buttonCopyright.setOnAction(e -> DesktopUtils.openUrlInDefaultBrowser(dictionary.getUrl()));
-                buttonCopyright.getStyleClass().add("button-with-bottom-padding-only");
+                buttonCopyright.getStyleClass().add("padding-b5");
 
                 // Toggle dictionary "favorite" state
                 Glyph iconFavorite = GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.STAR).size(18).color(LCGraphicStyle.THIRD_DARK);
                 Glyph iconNotFavorite = GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.STAR_ALT).size(18).color(LCGraphicStyle.THIRD_DARK);
                 Button buttonFavorite = FXControlUtils.createGraphicButton(
                         LCStateController.INSTANCE.getFavoriteImageDictionaries().contains(dictionary.getName()) ? iconFavorite : iconNotFavorite, dictionary.getUrl());
-                buttonFavorite.getStyleClass().add("button-with-bottom-padding-only");
+                buttonFavorite.getStyleClass().add("padding-b5");
                 buttonFavorite.setOnAction(e -> {
                     if (LCStateController.INSTANCE.getFavoriteImageDictionaries().contains(dictionary.getName())) {
                         LCStateController.INSTANCE.getFavoriteImageDictionaries().remove(dictionary.getName());

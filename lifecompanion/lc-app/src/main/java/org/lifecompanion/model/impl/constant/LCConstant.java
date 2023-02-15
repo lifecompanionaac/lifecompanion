@@ -75,7 +75,7 @@ public class LCConstant {
     // Class part : "CSS Style"
     // ========================================================================
     public final static String[] CSS_USE_MODE = {"style/lifecompanion_use-mode.css"};
-    public final static String[] CSS_STYLE_PATH = {"style/main_css.css", "style/lifecompanion.css", "style/custom_modena.css", CSS_USE_MODE[0]};
+    public final static String[] CSS_STYLE_PATH = {"style/lifecompanion.css", "style/custom_modena.css", CSS_USE_MODE[0]};
     public final static String[] CSS_NOTIFICATION_STYLE_PATH = {"style/lifecompanion_notification.css"};
     // ========================================================================
 

@@ -158,7 +158,7 @@ public class GridComponentSelectionModeRibbonPart extends RibbonBasePart<Selecti
             configStageDialog.setResizable(true);
 
             configStageDialog.getDialogPane().getStylesheets().addAll(LCConstant.CSS_STYLE_PATH);
-            configStageDialog.getDialogPane().getStyleClass().addAll("selection-mode-config-dialog");
+            configStageDialog.getDialogPane().getStyleClass().addAll("content-padding-0");
 
             Triple<HBox, Label, Node> header = FXControlUtils.createHeader("grid.specific.selection.mode.title", previous -> configStageAnimatedBorderPane.changeCenter(selectionModeMainParamView));
             header.getRight().visibleProperty().bind(configStageAnimatedBorderPane.centerProperty().isEqualTo(scrollPaneSupp));

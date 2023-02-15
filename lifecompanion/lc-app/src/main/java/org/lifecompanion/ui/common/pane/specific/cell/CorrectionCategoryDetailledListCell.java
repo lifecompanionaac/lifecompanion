@@ -36,11 +36,11 @@ public class CorrectionCategoryDetailledListCell extends ListCell<CorrectionCate
     public CorrectionCategoryDetailledListCell() {
         super();
         this.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-        this.getStyleClass().add("rule-category-list-cell");
+        this.getStyleClass().add("soft-selection-cell");
         this.labelModeName = new Label();
-        this.labelModeName.getStyleClass().add("rule-category-cell-name");
+        this.labelModeName.getStyleClass().add("text-fill-primary-dark");
         this.labelModeDescription = new Label();
-        this.labelModeDescription.getStyleClass().add("rule-category-cell-description");
+        this.labelModeDescription.getStyleClass().addAll("text-wrap-enabled", "text-font-size-90", "text-fill-dimgrey");
         this.labelModeDescription.setWrapText(true);
         this.boxLabels = new VBox(this.labelModeName, this.labelModeDescription);
         this.setPrefWidth(CorrectionCategoryDetailledListCell.ROW_WIDTH);

@@ -80,3 +80,11 @@ Also note than `gradlew` command should be adapted to your system : `gradlew.bat
 If you get the following error on Unix trying to create JLink build : `Error: java.io.IOException: Cannot run program "objcopy": error=2, No such file or directory`
 
 You should install the following tool on the system : `sudo apt install binutils`
+
+### App run, but can't create any configuration or profile
+
+You should check the `userDataDirectory` line in **lifecompanion/lc-app/data/installation.properties**. As this file is a classic Java property file, you should respect the [property file format](https://en.wikipedia.org/wiki/.properties#:~:text=properties%20is%20a%20file%20extension,known%20as%20Property%20Resource%20Bundles.)
+
+This means that some char should be escaped, for example to define an absolute path on Windows, you line should be like : 
+`userDataDirectory=E:\\temp\\lifecompanion-dev-user-data`
+

@@ -96,7 +96,7 @@ public class P4ATestingConfigurationView extends VBox implements GeneralConfigur
         this.tablePredictions.setSortPolicy(tv -> false);
 
         TableColumn<WordPredictionI, String> colWord = new TableColumn<>(Translation.getText("predict4all.config.testing.col.prediction"));
-        colWord.getStyleClass().add("col-predicted-word");
+        colWord.getStyleClass().add("text-weight-bold");
         colWord.setCellValueFactory((f) -> new SimpleStringProperty(f.getValue().getPredictionToDisplay()));
         colWord.prefWidthProperty().bind(this.tablePredictions.widthProperty().multiply(0.8));
         this.tablePredictions.getColumns().add(colWord);
@@ -105,7 +105,6 @@ public class P4ATestingConfigurationView extends VBox implements GeneralConfigur
         colScore.setCellValueFactory((f) -> new SimpleStringProperty(P4ATestingConfigurationView.SCORE_FORMAT.format(100.0 * f.getValue().getScore())));
         colScore.prefWidthProperty().bind(this.tablePredictions.widthProperty().multiply(0.2));
         this.tablePredictions.getColumns().add(colScore);
-        this.tablePredictions.getStyleClass().add("table-view-p4a");
 
         this.setSpacing(5.0);
         this.setAlignment(Pos.CENTER);

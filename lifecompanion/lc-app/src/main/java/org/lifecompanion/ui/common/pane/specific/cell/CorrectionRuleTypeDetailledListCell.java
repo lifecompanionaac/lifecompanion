@@ -36,14 +36,14 @@ public class CorrectionRuleTypeDetailledListCell extends ListCell<CorrectionRule
     public CorrectionRuleTypeDetailledListCell() {
         super();
         this.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-        this.getStyleClass().add("rule-category-list-cell");
+        this.getStyleClass().add("soft-selection-cell");
         this.labelRuleName = new Label();
-        this.labelRuleName.getStyleClass().add("rule-category-cell-name");
+        this.labelRuleName.getStyleClass().add("text-fill-primary-dark");
         this.labelRuleDescription = new Label();
-        this.labelRuleDescription.getStyleClass().add("rule-category-cell-description");
+        this.labelRuleDescription.getStyleClass().addAll("text-wrap-enabled", "text-font-size-90", "text-fill-dimgrey");
         this.labelRuleDescription.setWrapText(true);
         this.labelRuleExample = new Label();
-        this.labelRuleExample.getStyleClass().add("rule-category-cell-example");
+        this.labelRuleExample.getStyleClass().addAll("text-wrap-enabled", "text-font-size-80", "text-fill-dimgrey", "text-font-italic");
         this.labelRuleExample.setWrapText(true);
         this.boxLabels = new VBox(this.labelRuleName, this.labelRuleDescription, this.labelRuleExample);
         this.setPrefWidth(CorrectionRuleTypeDetailledListCell.ROW_WIDTH);

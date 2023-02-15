@@ -28,6 +28,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.ui.controlsfx.control.ToggleSwitch;
 import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.ui.controlsfx.glyphfont.GlyphFontRegistry;
@@ -80,7 +81,7 @@ public class WordDetailPane extends VBox implements LCViewInitHelper {
         this.sliderFactor.setShowTickMarks(true);
         this.sliderFactor.setLabelFormatter(WordDetailPane.STR_CONVERTER_FACTOR);
         this.buttonResetSlider = FXControlUtils.createGraphicButton(
-                GlyphFontRegistry.font("FontAwesome").create(FontAwesome.Glyph.UNDO).size(12).color(LCGraphicStyle.SECOND_DARK), "todo");
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.UNDO).size(12).color(LCGraphicStyle.SECOND_DARK), "todo");
         this.buttonResetSlider.setPadding(new Insets(0.0, 0.0, 3.0, 0.0));
 
         HBox.setHgrow(this.sliderFactor, Priority.ALWAYS);
@@ -96,7 +97,7 @@ public class WordDetailPane extends VBox implements LCViewInitHelper {
         // Add all
         this.setPadding(new Insets(5.0));
         this.setSpacing(5.0);
-        this.getChildren().addAll(this.labelWord, new Separator(Orientation.HORIZONTAL), new Label("Déprioriser/Prioriser"), boxSlider,
+        this.getChildren().addAll(this.labelWord, new Separator(Orientation.HORIZONTAL), new Label(Translation.getText("predict4all.config.prio.deprio")), boxSlider,
                 this.toggleForceInvalid, this.toggleForceValid, new Separator(Orientation.HORIZONTAL), this.labelGeneralInfo, this.labelUpdateDate);
         this.updateNodeVisibility();
     }

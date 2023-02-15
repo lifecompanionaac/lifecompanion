@@ -126,7 +126,7 @@ public class CalendarWeekPropertiesView extends BorderPane implements LCViewInit
 
     private ButtonBase createDayButton(DayOfWeek dayOfWeek) {
         final ToggleButton dayToggle = new ToggleButton(Translation.getText(dayOfWeek.getTranslationId()));
-        dayToggle.getStyleClass().add("text-base-button");
+        dayToggle.getStyleClass().addAll("background-none", "opacity-80-hover", "opacity-60-pressed", "round-lightgrey-border-select");
         toggleGroupDays.getToggles().add(dayToggle);
         dayToggle.setUserData(dayOfWeek);
         return dayToggle;

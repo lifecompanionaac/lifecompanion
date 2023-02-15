@@ -49,15 +49,15 @@ public class PluginInfoListCell extends ListCell<PluginInfo> {
         this.getStyleClass().add("list-cell-selection-disabled");
         //Labels
         this.labelName = new Label();
-        this.labelName.getStyleClass().add("plugin-info-list-cell-name");
+        this.labelName.getStyleClass().addAll("text-fill-primary-dark", "text-font-size-120");
         GridPane.setHgrow(labelName, Priority.ALWAYS);
         labelName.setMaxWidth(Double.MAX_VALUE);
 
         this.labelAuthor = new Label();
-        this.labelAuthor.getStyleClass().add("plugin-info-list-cell-author");
+        this.labelAuthor.getStyleClass().addAll("text-fill-dimgrey","text-font-size-110");
 
         this.labelDescription = new Label();
-        this.labelDescription.getStyleClass().add("plugin-info-list-cell-description");
+        this.labelDescription.getStyleClass().addAll("text-fill-dimgrey","text-font-size-110");
         this.labelDescription.setWrapText(true);
         this.labelDescription.prefWidthProperty().bind(prefSizeForWrapText);
 

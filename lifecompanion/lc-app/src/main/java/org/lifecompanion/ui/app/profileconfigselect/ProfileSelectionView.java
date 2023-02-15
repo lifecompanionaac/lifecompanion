@@ -57,11 +57,6 @@ public class ProfileSelectionView extends BorderPane implements LCViewInitHelper
     private ListView<LCProfileI> profileListView;
 
     /**
-     * Button to add,remove,edit a profile
-     */
-    private Button buttonAdd, buttonRemove, buttonEdit, buttonExport, buttonImport;
-
-    /**
      * Button to add a profile (show add choice : from cloud, local file, from starch...)
      */
     private Button buttonAddProfile;
@@ -86,36 +81,10 @@ public class ProfileSelectionView extends BorderPane implements LCViewInitHelper
         this.profileListView.setCellFactory((listView) -> new ProfileAdvancedListCell(this::profileSelected));
         this.profileListView.setSelectionModel(new DisableSelectionSelectionModel<>());
 
-        //Create buttons
-        this.buttonAdd = FXControlUtils.createGraphicMaterialButton(
-                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.PLUS_CIRCLE).size(40).color(LCGraphicStyle.SECOND_PRIMARY),
-                "tooltip.profile.list.add");
-        this.buttonRemove = FXControlUtils.createGraphicButton(
-                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.TRASH).size(20).color(LCGraphicStyle.SECOND_DARK), "tooltip.profile.list.remove");
-        this.buttonEdit = FXControlUtils.createGraphicButton(GlyphFontHelper.FONT_MATERIAL.create('\uE254').size(22).color(LCGraphicStyle.MAIN_DARK),
-                "tooltip.profile.list.edit");
-        this.buttonImport = FXControlUtils.createGraphicButton(
-                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.DOWNLOAD).size(20).color(LCGraphicStyle.MAIN_PRIMARY),
-                "tooltip.profile.list.import");
-        this.buttonExport = FXControlUtils.createGraphicButton(
-                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.UPLOAD).size(20).color(LCGraphicStyle.MAIN_DARK), "tooltip.profile.list.export");
-        //Place and style add
-        StackPane.setAlignment(this.buttonAdd, Pos.TOP_LEFT);
-        StackPane.setMargin(this.buttonAdd, new Insets(-30, 10, 5, -7));
-        this.buttonAdd.getStyleClass().add("material-button-round-add");
         //Place and style others buttons
-        StackPane.setAlignment(this.buttonEdit, Pos.TOP_RIGHT);
-        StackPane.setAlignment(this.buttonRemove, Pos.TOP_RIGHT);
-        StackPane.setAlignment(this.buttonImport, Pos.TOP_RIGHT);
-        StackPane.setAlignment(this.buttonExport, Pos.TOP_RIGHT);
-        StackPane.setMargin(this.buttonEdit, new Insets(-7, 90, 0, 0));
-        StackPane.setMargin(this.buttonRemove, new Insets(-7, 60, 0, 0));
-        StackPane.setMargin(this.buttonExport, new Insets(-7, 30, 0, 0));
-        StackPane.setMargin(this.buttonImport, new Insets(-6, 0, 0, 0));
-
         buttonAddProfile = FXControlUtils.createRightTextButton(Translation.getText("profile.selection.add.profile.button"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.PLUS_CIRCLE).size(22).color(LCGraphicStyle.MAIN_PRIMARY), "profile.selection.add.profile.button.tooltip");
-        buttonAddProfile.getStyleClass().add("button-icon-text-bigger");
+        buttonAddProfile.getStyleClass().add("text-font-size-120");
         HBox bottomButtons = new HBox(10.0, buttonAddProfile);
         BorderPane.setMargin(bottomButtons, new Insets(0, 10.0, 10.0, 10.0));
         bottomButtons.setAlignment(Pos.CENTER);
@@ -129,36 +98,11 @@ public class ProfileSelectionView extends BorderPane implements LCViewInitHelper
     @Override
     public void initListener() {
         this.buttonAddProfile.setOnAction((ea) -> ProfileConfigSelectionController.INSTANCE.setProfileStep(ProfileConfigStep.PROFILE_ADD, ProfileConfigStep.PROFILE_LIST, null));
-        //On remove, delete selected
-        this.buttonRemove.setOnAction((ea) -> {
-            LCProfileI selectedItem = this.profileListView.getSelectionModel().getSelectedItem();
-            if (selectedItem != null) {
-                LCProfileActions.RemoveProfileAction removeAction = new RemoveProfileAction(buttonRemove, selectedItem);
-                ConfigActionController.INSTANCE.executeAction(removeAction);
-            }
-        });
-        //On edit, try to edit selected
-        this.buttonEdit.setOnAction((ea) -> {
-            LCProfileI selectedItem = this.profileListView.getSelectionModel().getSelectedItem();
-            if (selectedItem != null) {
-                ProfileConfigSelectionController.INSTANCE.setProfileStep(ProfileConfigStep.PROFILE_EDIT, ProfileConfigSelectionController.INSTANCE.currentStepProperty().get(), selectedItem);
-            }
-        });
-        // Export
-        this.buttonExport.setOnAction((ea) -> {
-            LCProfileI selectedItem = this.profileListView.getSelectionModel().getSelectedItem();
-            if (selectedItem != null) {
-                ConfigActionController.INSTANCE.executeAction(new ProfileExportAction(buttonExport, selectedItem));
-            }
-        });
     }
 
     @Override
     public void initBinding() {
         this.profileListView.setItems(ProfileController.INSTANCE.getProfiles());
-        this.buttonRemove.disableProperty().bind(this.profileListView.getSelectionModel().selectedItemProperty().isNull());
-        this.buttonEdit.disableProperty().bind(this.profileListView.getSelectionModel().selectedItemProperty().isNull());
-        this.buttonExport.disableProperty().bind(this.profileListView.getSelectionModel().selectedItemProperty().isNull());
     }
 
     //========================================================================

@@ -137,7 +137,7 @@ public class UseStageConfigurationStepView extends BorderPane implements General
         glyphKeep = GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.LOCK).size(12).color(LCGraphicStyle.MAIN_DARK);
         glyphNotKept = GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.UNLOCK).size(12).color(LCGraphicStyle.MAIN_DARK);
         buttonKeepRatioFrameSize = FXControlUtils.createGraphicButton(glyphKeep, "general.configuration.stage.size.keep.ratio");
-        buttonKeepRatioFrameSize.getStyleClass().add("button-without-padding");
+        buttonKeepRatioFrameSize.getStyleClass().add("padding-0");
         buttonKeepRatioFrameSize.setMinWidth(20.0);
 
         Label labelStageSize = FXControlUtils.createTitleLabel(Translation.getText("general.configuration.stage.stage.size.title"));

@@ -80,7 +80,7 @@ public abstract class CorrectionRuleBaseNodeView extends BorderPane implements L
     //========================================================================
     @Override
     public void initUI() {
-        this.glyphForBtn = GlyphFontRegistry.font("FontAwesome").create(FontAwesome.Glyph.CHEVRON_RIGHT).size(16).color(LCGraphicStyle.MAIN_DARK);
+        this.glyphForBtn = GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CHEVRON_RIGHT).size(16).color(LCGraphicStyle.MAIN_DARK);
         this.buttonToggleRuleDisplay = FXControlUtils.createGraphicButton(this.glyphForBtn, "tooltip.button.toggle.show.correction.rule");
         this.fieldRuleName = new TextField();
         this.labelRuleName = new Label();

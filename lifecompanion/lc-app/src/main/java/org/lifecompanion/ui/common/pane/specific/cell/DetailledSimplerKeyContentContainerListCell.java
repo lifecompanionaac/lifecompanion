@@ -92,7 +92,7 @@ public class DetailledSimplerKeyContentContainerListCell<T extends SimplerKeyCon
     private Button createButton(FontAwesome.Glyph trash, Color color, String tooltip) {
         final Button button = FXControlUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(trash)
                 .size(BUTTON_SIZE).color(color), tooltip);
-        button.getStyleClass().addAll("button-without-padding");
+        button.getStyleClass().addAll("padding-0");
         return button;
     }
 

@@ -39,6 +39,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.ui.controlsfx.control.ToggleSwitch;
 import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.ui.controlsfx.glyphfont.GlyphFontRegistry;
@@ -162,9 +163,9 @@ public class P4ADictionaryConfigurationView extends ScrollPane implements Genera
         // Bottom : add custom word
         this.fieldAddedWord = new TextField();
         this.fieldAddedWord.setPromptText(Translation.getText("predict4all.config.prompt.add.user.word"));
-        this.buttonAddWord = FXControlUtils.createGraphicButton(GlyphFontRegistry.font("FontAwesome").create(FontAwesome.Glyph.PLUS_CIRCLE).size(16).color(LCGraphicStyle.MAIN_PRIMARY),
+        this.buttonAddWord = FXControlUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.PLUS_CIRCLE).size(16).color(LCGraphicStyle.MAIN_PRIMARY),
                 "predict4all.config.prompt.add.user.word");
-        this.buttonAddWord.getStyleClass().add("small-button");
+        this.buttonAddWord.getStyleClass().add("padding-0");
         this.buttonAddWord.setPadding(new Insets(0.0, 0.0, 1.0, 0.0));
         HBox.setHgrow(this.fieldAddedWord, Priority.ALWAYS);
         HBox boxAddWordToDic = new HBox(5.0, this.fieldAddedWord, this.buttonAddWord);
