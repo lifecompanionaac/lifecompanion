@@ -44,8 +44,9 @@ Used JDK (in IntelliJ and builds) is [Eclipse Temurin™](https://adoptium.net/t
 1. Install **[Visual Studio](https://visualstudio.microsoft.com/fr/)**
 1. Open project in Visual Studio
 
-If you want to build a custom version : you can disable security certificate.
-If you want to build a production version : you may need to import again the security certificate (password is in LifeCompanion KeePass)
+If you want to build a custom version : you can disable security certificate (Solution properties > Signature > Uncheck all)
+
+If you want to build a production version : you may need to import again the security certificate (Solution properties > Signature > Strong encryption key > Change with **lifecompanion-sapi-gap.pfx**, the certificat password is in LifeCompanion KeePass).
 
 ### How to build/run Win Input GAP
 
@@ -64,12 +65,12 @@ Then, run `gradlew prepareOfflineApplication`. This will create in **offline** d
 
 ## Troubleshooting
 
-### Bad encoding on Windows dev env
+### Problem with accented char in code (CharacterToSpeechTranslation ...) : bad encoding on Windows dev env
 
 1. For IntelliJ, in **idea64.exe.vmoptions** file, add two lines : `-Dfile.encoding=UTF-8` and `-Dconsole.encoding=UTF-8`
 1. For Gralde, in **HOME/.gradle/gradle.properties**, add one line : `org.gradle.jvmargs=-Dfile.encoding=UTF-8 -Dconsole.encoding=UTF-8`
 
-### Note on Gradle command
+### Cannot run Gradle commands
 
 Note that in the following document, when we say "run gradle task... in XXX" you should then run the gradle task in the given folder (lifecompanion or lifecompanion-framework) from your command line or IDE. For example, to run LifeCompanion from command line : `cd lifecompanion` then `gradlew :lc-app:run`
 
@@ -81,7 +82,7 @@ If you get the following error on Unix trying to create JLink build : `Error: ja
 
 You should install the following tool on the system : `sudo apt install binutils`
 
-### App run, but can't create any configuration or profile
+### LifeCompanion app run, but can't create any configuration or profile
 
 You should check the `userDataDirectory` line in **lifecompanion/lc-app/data/installation.properties**. As this file is a classic Java property file, you should respect the [property file format](https://en.wikipedia.org/wiki/.properties#:~:text=properties%20is%20a%20file%20extension,known%20as%20Property%20Resource%20Bundles.)
 

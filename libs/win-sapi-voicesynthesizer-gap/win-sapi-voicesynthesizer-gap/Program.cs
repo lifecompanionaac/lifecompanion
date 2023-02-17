@@ -92,6 +92,7 @@ namespace LifeCompanion_VoiceSynthesizer
         private HttpListenerContext context;
         private SpeechSynthesizer speechSynthesizer;
         private LifeCompanionVoiceSynthesizer lifeCompanionVoiceSynthesizer;
+        private String wav;
 
         public SpeechWorker(LifeCompanionVoiceSynthesizer lifeCompanionVoiceSynthesizer, HttpListenerContext context, SpeechSynthesizer speechSynthesizer)
         {
@@ -114,6 +115,14 @@ namespace LifeCompanion_VoiceSynthesizer
             if (!String.IsNullOrEmpty(context.Request.QueryString["voice"]))
             {
                 this.speechSynthesizer.SelectVoice(context.Request.QueryString["voice"]);
+            }
+            if (!String.IsNullOrEmpty(context.Request.QueryString["wav"]))
+            {
+                this.wav = context.Request.QueryString["wav"];
+            }
+            else
+            {
+                this.wav = null;
             }
         }
 
@@ -151,7 +160,17 @@ namespace LifeCompanion_VoiceSynthesizer
                                 {
                                     try
                                     {
-                                        this.speechSynthesizer.Speak(contentToRead);
+                                        string wavPath = System.IO.Path.GetTempPath() + Guid.NewGuid().ToString() + ".wav";
+                                        if (!String.IsNullOrEmpty(this.wav))
+                                        {
+                                            this.speechSynthesizer.SetOutputToWaveFile(wavPath);
+                                            sw.Write(wavPath);
+                                        }
+                                        else
+                                        {
+                                            this.speechSynthesizer.SetOutputToDefaultAudioDevice();
+                                        }
+                                       this.speechSynthesizer.Speak(contentToRead);
                                     }
                                     catch (OperationCanceledException)
                                     {

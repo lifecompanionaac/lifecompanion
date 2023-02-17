@@ -270,6 +270,7 @@ public enum VoiceSynthesizerController implements LCStateListener, ModeListenerI
                 if (currentSynthesizer == null) {
                     currentSynthesizer = checkInitialize(systemDefaultSynthesizers.get(SystemType.current()));
                 }
+                long start = System.currentTimeMillis();
                 //Set parameters
                 currentSynthesizer.setVolume(parameters.volumeProperty().get());
                 currentSynthesizer.setRate(parameters.rateProperty().get());
@@ -281,6 +282,7 @@ public enum VoiceSynthesizerController implements LCStateListener, ModeListenerI
                     LOGGER.warn("Could not get valid voice information from selected : {}, voices might not be initialized ?", parameters.getVoiceParameter().selectedVoiceInfoProperty().get());
                 }
                 method.accept(currentSynthesizer);
+                LOGGER.info("Took {} ms to call speech", System.currentTimeMillis() - start);
                 //When speak ends, callback if needed
                 if (speakEndCallback != null) {
                     speakEndCallback.run();

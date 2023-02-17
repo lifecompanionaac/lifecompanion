@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("CMRRF KERPAPE")]
 [assembly: AssemblyProduct("win-sapi-voicesynthesizer-gap")]
-[assembly: AssemblyCopyright("© 2021 Mathieu THEBAUD")]
+[assembly: AssemblyCopyright("© 2023 Mathieu THEBAUD")]
 [assembly: AssemblyTrademark("LifeCompanionAAC")]
 [assembly: AssemblyCulture("")]
 
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // Vous pouvez spécifier toutes les valeurs ou indiquer les numéros de build et de révision par défaut 
 // en utilisant '*', comme indiqué ci-dessous :
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.1.0.0")]
-[assembly: AssemblyFileVersion("1.1.0.0")]
+[assembly: AssemblyVersion("1.2.0.0")]
+[assembly: AssemblyFileVersion("1.2.0.0")]

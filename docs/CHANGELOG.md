@@ -12,6 +12,7 @@
 - Ticket #201 : le paramètre du défilement "Ignorer les éléments vides" était ignoré en ligne/colonne ou colonne/ligne
 - Ticket #164 : meilleure gestion des actions "haut/bas" du curseur dans les éditeurs de texte
 - Ticket #199 : correction de certains alignements/tailles, en particulier sur Linux
+- Ticket #208 : ajout d'une icône sur les paramètres de synthèse vocale
 - Uniformisation de certains styles d'élément dans l'application
 
 ## 1.4.4 - 27/01/2023

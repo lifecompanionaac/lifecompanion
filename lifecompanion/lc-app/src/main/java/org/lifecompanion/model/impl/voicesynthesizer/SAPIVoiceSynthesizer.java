@@ -20,10 +20,15 @@ package org.lifecompanion.model.impl.voicesynthesizer;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import javafx.scene.media.AudioEqualizer;
+import javafx.scene.media.EqualizerBand;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import okhttp3.*;
 import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
+import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.model.api.voicesynthesizer.VoiceInfoI;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.util.LangUtils;
@@ -31,9 +36,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -184,27 +192,105 @@ public class SAPIVoiceSynthesizer extends AbstractVoiceSynthesizer {
     public void speak(final String text) {
         RequestBody body = RequestBody.create(text, MEDIA_TYPE);
         Request request = new Request.Builder().url(//
-                HttpUrl.parse(URL + "speak").newBuilder()//
-                        .addQueryParameter("volume", "" + volume)//
-                        .addQueryParameter("rate", "" + rate)//
-                        .addQueryParameter("voice", "" + voice)//
-                        .build())
+                        HttpUrl.parse(URL + "speak").newBuilder()//
+                                .addQueryParameter("volume", "" + volume)//
+                                .addQueryParameter("rate", "" + rate)//
+                                .addQueryParameter("voice", "" + voice)//
+                                .addQueryParameter("wav", "true")//
+                                .build())
                 .post(body).build();
         try (Response response = httpClient.newCall(request).execute()) {
-        } catch (IOException e) {
+            if (response.isSuccessful()) {
+                String wavFilePath = response.body().string();
+                if (StringUtils.isNotBlank(wavFilePath)) {
+                    File wavFile = new File(wavFilePath);
+                    if (wavFile.exists()) {
+                        LOGGER.info("Input {}", wavFile);
+                        wavFile = trimSilences(wavFile);
+                        MediaPlayer mediaPlayer = new MediaPlayer(new Media(wavFile.toURI().toURL().toString()));
+                        playSync(mediaPlayer);
+                    }
+                } else {
+                    LOGGER.info("Didn't get any wav file path from SAPI server");
+                }
+            }
+        } catch (Exception e) {
             LOGGER.error("Couldn't speak with SAPI voice", e);
         }
+    }
+
+    private void playSync(MediaPlayer mediaPlayer) {
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
+        //Unlock on end/error
+        final Runnable releaseCDL = countDownLatch::countDown;
+        mediaPlayer.setOnEndOfMedia(releaseCDL);
+        mediaPlayer.setOnStopped(releaseCDL);
+        mediaPlayer.setOnHalted(releaseCDL);
+        mediaPlayer.setOnError(() -> {
+            this.LOGGER.warn("Error for sound", mediaPlayer.getError());
+            releaseCDL.run();
+        });
+        //Start and lock
+        mediaPlayer.play();
+        try {
+            countDownLatch.await();
+        } catch (Exception e) {
+            this.LOGGER.warn("Can't wait for player to finish", e);
+        }
+    }
+
+    public File trimSilences(File wavFile) throws IOException {
+        long start = System.currentTimeMillis();
+        int WAV_FILEFORMAT_DATA_START = 44;
+        File modifiedWavFile = new File("test.wav");// File.createTempFile("lifecompanion-wav-sapi-clean", ".wav");
+        try (BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(wavFile))) {
+            byte[] data = bufferedInputStream.readAllBytes();
+            byte[] wavFFData = Arrays.copyOfRange(data, 0, WAV_FILEFORMAT_DATA_START);
+            short[] dataAsShort = new short[(data.length - wavFFData.length) / 2];
+            short maxVal = 0;
+            // Find max to compute threshold (and convert values)
+            for (int i = WAV_FILEFORMAT_DATA_START; i < data.length; i += 2) {
+                short val = (short) (((data[i + 1] & 0xff) << 8) + (data[i] & 0xff));
+                dataAsShort[(i - WAV_FILEFORMAT_DATA_START) / 2] = val;
+                maxVal = (short) Math.max(Math.abs(val), maxVal);
+            }
+            short threshold = (short) (0.1 * maxVal);
+            // Find start index
+            int startI = 0, endI = 0;
+            for (int i = 0; i < dataAsShort.length; i++) {
+                if (Math.abs(dataAsShort[i]) > threshold) {
+                    startI = i;
+                    break;
+                }
+            }
+            // Find end index
+            for (int i = dataAsShort.length - 1; i >= 0; i--) {
+                if (Math.abs(dataAsShort[i]) > threshold) {
+                    endI = i;
+                    break;
+                }
+            }
+            // Write output wav file
+            try (DataOutputStream bos = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(modifiedWavFile)))) {
+                bos.write(wavFFData);
+                for (int i = startI; i < endI; i++) {
+                    bos.writeShort(Short.reverseBytes(dataAsShort[i]));
+                }
+            }
+        }
+        LOGGER.info("Took {} ms to remove silences from file", System.currentTimeMillis() - start);
+        return modifiedWavFile;
     }
 
     @Override
     public void speakSsml(final String ssml) {
         RequestBody body = RequestBody.create(ssml, MEDIA_TYPE);
         Request request = new Request.Builder().url(//
-                HttpUrl.parse(URL + "speak-ssml").newBuilder()//
-                        .addQueryParameter("volume", "" + volume)//
-                        .addQueryParameter("rate", "" + rate)//
-                        .addQueryParameter("voice", "" + voice)//
-                        .build())
+                        HttpUrl.parse(URL + "speak-ssml").newBuilder()//
+                                .addQueryParameter("volume", "" + volume)//
+                                .addQueryParameter("rate", "" + rate)//
+                                .addQueryParameter("voice", "" + voice)//
+                                .build())
                 .post(body).build();
         try (Response response = httpClient.newCall(request).execute()) {
         } catch (IOException e) {

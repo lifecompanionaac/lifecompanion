@@ -108,7 +108,7 @@ public class VoiceSynthesizerMainConfigurationStepView extends BorderPane implem
 
         this.choiceBoxVoice = new ChoiceBox<>();
         this.choiceBoxVoice.setMaxWidth(Double.MAX_VALUE);
-        GridPane.setHgrow(choiceBoxVoice,Priority.ALWAYS);
+        GridPane.setHgrow(choiceBoxVoice, Priority.ALWAYS);
         this.choiceBoxVoice.setConverter(new VoiceInfoStringConverter());
         FXControlUtils.createAndAttachTooltip(choiceBoxVoice, "tooltip.explain.voice.synthesizer.voice.select");
 
@@ -122,7 +122,8 @@ public class VoiceSynthesizerMainConfigurationStepView extends BorderPane implem
         HBox boxExample = new HBox(5, this.fieldExample, this.buttonPlayExample);
         boxExample.setAlignment(Pos.CENTER);
 
-        this.buttonOpenPrononciationException = FXControlUtils.createSimpleTextButton(Translation.getText("voice.synthesizer.configure.pron.exceptions"), null);
+        this.buttonOpenPrononciationException = FXControlUtils.createRightTextButton(Translation.getText("voice.synthesizer.configure.pron.exceptions"),
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.GEAR).size(20).color(LCGraphicStyle.MAIN_DARK), null);
         GridPane.setHalignment(buttonOpenPrononciationException, HPos.CENTER);
 
         //Parameters
