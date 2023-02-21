@@ -26,6 +26,7 @@ import org.lifecompanion.model.impl.constant.LCConstant;
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
+import java.util.UUID;
 
 public class IOUtils {
     public static void silentClose(Closeable closaeable) {
@@ -55,5 +56,11 @@ public class IOUtils {
 
     public static File getTempDir(String name) {
         return new File(System.getProperty("java.io.tmpdir") + File.separator + "LifeCompanion" + File.separator + "tmp" + File.separator + name + "-" + System.currentTimeMillis() + File.separator);
+    }
+
+    public static File getTempFile(String dirName, String suffix) {
+        File file = new File(System.getProperty("java.io.tmpdir") + File.separator + "LifeCompanion" + File.separator + "tmp" + File.separator + dirName + File.separator + UUID.randomUUID() + suffix);
+        file.getParentFile().mkdirs();
+        return file;
     }
 }

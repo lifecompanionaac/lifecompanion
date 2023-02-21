@@ -42,6 +42,7 @@ import org.lifecompanion.model.impl.voicesynthesizer.CharacterToSpeechTranslatio
 import org.lifecompanion.model.impl.voicesynthesizer.SAPIVoiceSynthesizer;
 import org.lifecompanion.model.impl.voicesynthesizer.SayCommandVoiceSynthesizer;
 import org.lifecompanion.model.impl.voicesynthesizer.VoiceSynthesizerInfoImpl;
+import org.lifecompanion.util.ThreadUtils;
 import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,9 +68,14 @@ import java.util.regex.Pattern;
 public enum VoiceSynthesizerController implements LCStateListener, ModeListenerI {
     INSTANCE;
 
-    public final static long DEFAULT_SPELL_PAUSE = 200;
-
     private final Logger LOGGER = LoggerFactory.getLogger(VoiceSynthesizerController.class);
+
+    public final static long DEFAULT_SPELL_PAUSE = 200;
+    
+    /**
+     * Bellow this char count : silences around are removed, above, they are kept.
+     */
+    private static final int TRIM_SILENCE_THRESHOLD = 60;
 
     /**
      * Thread pool to speak text in background
@@ -158,7 +164,7 @@ public enum VoiceSynthesizerController implements LCStateListener, ModeListenerI
 
     public void speakSync(final String text, final Runnable speakEndCallback) {
         final VoiceSynthesizerParameterI parameters = AppModeController.INSTANCE.getUseModeContext().configurationProperty().get().getVoiceSynthesizerParameter();
-        this.executeMethodSyncWithUseModeParameter(v -> v.speak(cleanTextBeforeSpeak(text, parameters)), speakEndCallback);
+        this.executeMethodSyncWithUseModeParameter(v -> v.speak(cleanTextBeforeSpeak(text, parameters), StringUtils.safeLength(text) < TRIM_SILENCE_THRESHOLD), speakEndCallback);
     }
 
     public void speakSync(final String text) {
@@ -188,12 +194,13 @@ public enum VoiceSynthesizerController implements LCStateListener, ModeListenerI
             }
             this.executeMethodSyncWithUseModeParameter(v -> {
                 try {
-                    v.speakSsml(XMLHelper.toXmlString(speak));
+                    v.speakSsml(XMLHelper.toXmlString(speak), StringUtils.safeLength(text) < TRIM_SILENCE_THRESHOLD);
                 } catch (UnavailableFeatureException e) {
                     // Fallback method : call speak char by char
                     for (int i = 0; i < text.length(); i++) {
                         char c = text.charAt(i);
-                        v.speak(CharacterToSpeechTranslation.isManuallyTranslated(c) ? CharacterToSpeechTranslation.getTranslatedName(c) : String.valueOf(c));
+                        v.speak(CharacterToSpeechTranslation.isManuallyTranslated(c) ? CharacterToSpeechTranslation.getTranslatedName(c) : String.valueOf(c), true);
+                        ThreadUtils.safeSleep(pauseBetweenCharacters);
                     }
                 }
             }, null);
@@ -209,7 +216,7 @@ public enum VoiceSynthesizerController implements LCStateListener, ModeListenerI
      */
     public void speakAsync(final String text, final VoiceSynthesizerParameterI parameters, final Runnable speakEndCallback) {
         if (!this.disableVoiceSynthesizer.get() && StringUtils.isNotBlank(text)) {
-            this.submitExecutorTask(v -> v.speak(cleanTextBeforeSpeak(text, parameters)), parameters, speakEndCallback);
+            this.submitExecutorTask(v -> v.speak(cleanTextBeforeSpeak(text, parameters), StringUtils.safeLength(text) < TRIM_SILENCE_THRESHOLD), parameters, speakEndCallback);
         } else {
             if (speakEndCallback != null) {
                 speakEndCallback.run();
@@ -403,13 +410,6 @@ public enum VoiceSynthesizerController implements LCStateListener, ModeListenerI
             this.LOGGER.info("Voice synthesizer {} is not compatible with the current system {}, it will not be added in available synthesizer",
                     synthesizer.getId(), SystemType.current());
         }
-    }
-
-    public void removeVoiceSynthesizer(final VoiceSynthesizerI synthesizer) {
-        //Dispose
-        this.disposeVoiceSynthesizer(synthesizer);
-        //Remove from list
-        this.voiceSynthesizers.remove(synthesizer);
     }
 
     /**

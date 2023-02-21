@@ -28,8 +28,8 @@ import java.util.Locale;
  * Represent a voice synthesizer.<br>
  * This is the responsibility of the synthesizer to be as optimized as possible.<br>
  * For example, the {@link #setVoice(VoiceInfoI)} can be called many times with the same voice, and the synthesizer should change the voice only if needed.<br>
- * It is also very important that the {@link #speak(String)} works <strong>synchronously</strong>.<br>
- * Synthesizer can cache the parameters set if they need to be used only when {@link #speak(String)} is called.
+ * It is also very important that the {@link #speak(String, boolean)} works <strong>synchronously</strong>.<br>
+ * Synthesizer can cache the parameters set if they need to be used only when {@link #speak(String, boolean)} is called.
  *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
@@ -79,24 +79,26 @@ public interface VoiceSynthesizerI {
      * Should speak the given text in a synchronized manner.<br>
      * <strong>This method should be sync : return only when the speech ended.</strong>
      *
-     * @param text the text to speak, can contains special char.<br>
-     *             The synthesizer should clean it if needed.
+     * @param text         the text to speak, can contain special char.<br>
+     *                     The synthesizer should clean it if needed.
+     * @param trimSilences trimSilences if the silences should be trimmed around the speech
      */
-    void speak(String text);
+    void speak(String text, boolean trimSilences);
 
     /**
      * Should try to speak the given SSML input.
      * <strong>This method should be sync : return only when the speech ended.</strong>
      *
-     * @param ssml the ssml to speak
+     * @param ssml         the ssml to speak
+     * @param trimSilences if the silences should be trimmed around the speech
      */
-    void speakSsml(String ssml) throws UnavailableFeatureException;
+    void speakSsml(String ssml, boolean trimSilences) throws UnavailableFeatureException;
 
     /**
-     * Should try to current call to {@link #speak(String)}<br>
-     * This will be called from a different Thread than the one that called {@link #speak(String)}, it can be used to cancel the current speech.<br>
+     * Should try to stop current call to {@link #speak(String, boolean)}<br>
+     * This will be called from a different Thread than the one that called {@link #speak(String, boolean)}, it can be used to cancel the current speech.<br>
      * Note that after this call, the synthesizer should be able to get subsequent calls.<br>
-     * Also note that this can be called even if the last {@link #speak(String)} has ended, the synthesizer is responsible to ignore the call.
+     * Also note that this can be called even if the last {@link #speak(String, boolean)} has ended, the synthesizer is responsible to ignore the call.
      */
     void stopCurrentSpeak();
 

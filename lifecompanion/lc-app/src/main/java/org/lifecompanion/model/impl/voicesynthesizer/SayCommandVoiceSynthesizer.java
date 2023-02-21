@@ -74,7 +74,7 @@ public class SayCommandVoiceSynthesizer extends AbstractVoiceSynthesizer {
         return new ProcessBuilder(commandAndArgs);
     }
 
-    // Class part : "Method implementation"
+    // IMPLEMENTATION
     //========================================================================
     @Override
     public String getName() {
@@ -115,7 +115,7 @@ public class SayCommandVoiceSynthesizer extends AbstractVoiceSynthesizer {
     }
 
     @Override
-    public void speak(final String text) {
+    public void speak(final String text, boolean trimSilences) {
         final ProcessBuilder processBuilder = this.prepareSayCommand(this.voice, text);
 
         try {
@@ -131,7 +131,7 @@ public class SayCommandVoiceSynthesizer extends AbstractVoiceSynthesizer {
     }
 
     @Override
-    public void speakSsml(String ssml) throws UnavailableFeatureException {
+    public void speakSsml(String ssml, boolean trimSilences) throws UnavailableFeatureException {
         throw new UnavailableFeatureException();
     }
 

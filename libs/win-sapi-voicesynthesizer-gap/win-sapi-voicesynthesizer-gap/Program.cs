@@ -126,11 +126,27 @@ namespace LifeCompanion_VoiceSynthesizer
             }
         }
 
+        private void configureOutputWavOrAudioDevice(StreamWriter sw)
+        {
+            if (!String.IsNullOrEmpty(this.wav))
+            {
+                string parentFolder = Path.GetTempPath() + "\\LifeCompanion\\wav\\";
+                Directory.CreateDirectory(parentFolder);
+                string wavPath = parentFolder + Guid.NewGuid().ToString() + ".wav";
+                this.speechSynthesizer.SetOutputToWaveFile(wavPath);
+                sw.Write(wavPath);
+            }
+            else
+            {
+                this.speechSynthesizer.SetOutputToDefaultAudioDevice();
+            }
+        }
+
         public void work()
         {
             try
             {
-                using (System.IO.StreamWriter sw = new System.IO.StreamWriter(context.Response.OutputStream))
+                using (StreamWriter sw = new System.IO.StreamWriter(context.Response.OutputStream))
                 {
                     string urlPath = context.Request.Url.AbsolutePath.Substring(1);
                     switch (urlPath)
@@ -160,17 +176,8 @@ namespace LifeCompanion_VoiceSynthesizer
                                 {
                                     try
                                     {
-                                        string wavPath = System.IO.Path.GetTempPath() + Guid.NewGuid().ToString() + ".wav";
-                                        if (!String.IsNullOrEmpty(this.wav))
-                                        {
-                                            this.speechSynthesizer.SetOutputToWaveFile(wavPath);
-                                            sw.Write(wavPath);
-                                        }
-                                        else
-                                        {
-                                            this.speechSynthesizer.SetOutputToDefaultAudioDevice();
-                                        }
-                                       this.speechSynthesizer.Speak(contentToRead);
+                                        configureOutputWavOrAudioDevice(sw);
+                                        this.speechSynthesizer.Speak(contentToRead);
                                     }
                                     catch (OperationCanceledException)
                                     {
@@ -189,6 +196,7 @@ namespace LifeCompanion_VoiceSynthesizer
                                 {
                                     try
                                     {
+                                        configureOutputWavOrAudioDevice(sw);
                                         this.speechSynthesizer.SpeakSsml(contentToRead);
                                     }
                                     catch (OperationCanceledException e)

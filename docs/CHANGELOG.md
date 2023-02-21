@@ -1,10 +1,11 @@
 # LIFECOMPANION CHANGELOG
 
-## 1.4.5 - XX/XX/2023
+## 1.4.5 - 21/02/2023
 
 ### Fonctionnalités
 
 - Ajout d'une fonction **d'autocomplétion sur la création de clavier** : à l'entrée d'une suite de certains caractère, un remplissage automatique est proposé afin de gagner du temps
+- La synthèse vocale est **bien plus "rapide"** en particulier sur les mots courts ou lettres uniques. Cela ajoute une sensation de réactivité générale, en particulier sur du retour sonore au survol.
 
 ### Corrections/ajustements
 
@@ -13,6 +14,7 @@
 - Ticket #164 : meilleure gestion des actions "haut/bas" du curseur dans les éditeurs de texte
 - Ticket #199 : correction de certains alignements/tailles, en particulier sur Linux
 - Ticket #208 : ajout d'une icône sur les paramètres de synthèse vocale
+- Ticket #209 : correction du bouton "Copier" sur l'onglet Accueil
 - Uniformisation de certains styles d'élément dans l'application
 
 ## 1.4.4 - 27/01/2023

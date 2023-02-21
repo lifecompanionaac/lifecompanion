@@ -107,7 +107,19 @@ Creating updates depends on custom Gradle task and plugin, all located in *lifec
 
 **Note that you should always publish plugin updates before app updates if you create breaking changes in plugin API**
 
+### Update LifeCompanion data files
+
+This step is meant to be done before creating update. This is useful to update LifeCompanion file located in **data** sub directory.
+
+1. Connect to [AWS Console](https://aws.amazon.com/fr/console/)
+1. Login is in LifeCompanion KP
+1. Go to "Services > S3"
+1. Find the **resources.builds.lifecompanionaac.org** bucket in **prod** directory
+1. Update/upload your files here
+
 ### Create LifeCompanion update
+
+Creating LifeCompanion update will depend on [updating data](#update-lifecompanion-data-files) if needed.
 
 *When file are too big for direct upload during update (e.g. image zips, file > 100 MB), file should be uploaded
 manually in file storage and then linked with `PRESET_STORAGE_IDS` in `PublishApplicationTask`*

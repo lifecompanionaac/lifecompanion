@@ -49,6 +49,7 @@ application {
             '-Dcom.sun.management.jmxremote.port=9999', '-Dcom.sun.management.jmxremote.authenticate=false', '-Dcom.sun.management.jmxremote.ssl=false', // debug only
 
             // LC dev mode
+            '-Dorg.lifecompanion.debug.dev.env=true',
             '-Dorg.lifecompanion.debug.skip.update.check=true',
             '-Dorg.lifecompanion.debug.load.plugins.from.cp=true',
             '-Dorg.lifecompanion.debug.kill.sapi.on.launch=true',

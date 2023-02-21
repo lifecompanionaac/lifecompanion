@@ -20,8 +20,6 @@ package org.lifecompanion.model.impl.voicesynthesizer;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import javafx.scene.media.AudioEqualizer;
-import javafx.scene.media.EqualizerBand;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import okhttp3.*;
@@ -36,7 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.lang.reflect.Array;
+import java.net.MalformedURLException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -78,6 +76,11 @@ public class SAPIVoiceSynthesizer extends AbstractVoiceSynthesizer {
      * Selected voice id
      */
     private String voice;
+
+    /**
+     * Current media player (if a wav file is playing)
+     */
+    private MediaPlayer currentMediaPlayer;
 
     // Class part : "Initialization/dispose"
     //========================================================================
@@ -148,7 +151,7 @@ public class SAPIVoiceSynthesizer extends AbstractVoiceSynthesizer {
     //========================================================================
 
 
-    // Class part : "Method implementation"
+    // IMPLEMENTATION
     //========================================================================
     @Override
     public String getName() {
@@ -189,112 +192,39 @@ public class SAPIVoiceSynthesizer extends AbstractVoiceSynthesizer {
     }
 
     @Override
-    public void speak(final String text) {
+    public void speak(final String text, boolean trimSilences) {
         RequestBody body = RequestBody.create(text, MEDIA_TYPE);
         Request request = new Request.Builder().url(//
                         HttpUrl.parse(URL + "speak").newBuilder()//
                                 .addQueryParameter("volume", "" + volume)//
                                 .addQueryParameter("rate", "" + rate)//
                                 .addQueryParameter("voice", "" + voice)//
-                                .addQueryParameter("wav", "true")//
+                                .addQueryParameter("wav", trimSilences ? "true" : null)//
                                 .build())
                 .post(body).build();
         try (Response response = httpClient.newCall(request).execute()) {
-            if (response.isSuccessful()) {
-                String wavFilePath = response.body().string();
-                if (StringUtils.isNotBlank(wavFilePath)) {
-                    File wavFile = new File(wavFilePath);
-                    if (wavFile.exists()) {
-                        LOGGER.info("Input {}", wavFile);
-                        wavFile = trimSilences(wavFile);
-                        MediaPlayer mediaPlayer = new MediaPlayer(new Media(wavFile.toURI().toURL().toString()));
-                        playSync(mediaPlayer);
-                    }
-                } else {
-                    LOGGER.info("Didn't get any wav file path from SAPI server");
-                }
-            }
+            if (trimSilences) playResultingFileSyncRemovingSilence(response);
         } catch (Exception e) {
             LOGGER.error("Couldn't speak with SAPI voice", e);
         }
     }
 
-    private void playSync(MediaPlayer mediaPlayer) {
-        final CountDownLatch countDownLatch = new CountDownLatch(1);
-        //Unlock on end/error
-        final Runnable releaseCDL = countDownLatch::countDown;
-        mediaPlayer.setOnEndOfMedia(releaseCDL);
-        mediaPlayer.setOnStopped(releaseCDL);
-        mediaPlayer.setOnHalted(releaseCDL);
-        mediaPlayer.setOnError(() -> {
-            this.LOGGER.warn("Error for sound", mediaPlayer.getError());
-            releaseCDL.run();
-        });
-        //Start and lock
-        mediaPlayer.play();
-        try {
-            countDownLatch.await();
-        } catch (Exception e) {
-            this.LOGGER.warn("Can't wait for player to finish", e);
-        }
-    }
-
-    public File trimSilences(File wavFile) throws IOException {
-        long start = System.currentTimeMillis();
-        int WAV_FILEFORMAT_DATA_START = 44;
-        File modifiedWavFile = new File("test.wav");// File.createTempFile("lifecompanion-wav-sapi-clean", ".wav");
-        try (BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(wavFile))) {
-            byte[] data = bufferedInputStream.readAllBytes();
-            byte[] wavFFData = Arrays.copyOfRange(data, 0, WAV_FILEFORMAT_DATA_START);
-            short[] dataAsShort = new short[(data.length - wavFFData.length) / 2];
-            short maxVal = 0;
-            // Find max to compute threshold (and convert values)
-            for (int i = WAV_FILEFORMAT_DATA_START; i < data.length; i += 2) {
-                short val = (short) (((data[i + 1] & 0xff) << 8) + (data[i] & 0xff));
-                dataAsShort[(i - WAV_FILEFORMAT_DATA_START) / 2] = val;
-                maxVal = (short) Math.max(Math.abs(val), maxVal);
-            }
-            short threshold = (short) (0.1 * maxVal);
-            // Find start index
-            int startI = 0, endI = 0;
-            for (int i = 0; i < dataAsShort.length; i++) {
-                if (Math.abs(dataAsShort[i]) > threshold) {
-                    startI = i;
-                    break;
-                }
-            }
-            // Find end index
-            for (int i = dataAsShort.length - 1; i >= 0; i--) {
-                if (Math.abs(dataAsShort[i]) > threshold) {
-                    endI = i;
-                    break;
-                }
-            }
-            // Write output wav file
-            try (DataOutputStream bos = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(modifiedWavFile)))) {
-                bos.write(wavFFData);
-                for (int i = startI; i < endI; i++) {
-                    bos.writeShort(Short.reverseBytes(dataAsShort[i]));
-                }
-            }
-        }
-        LOGGER.info("Took {} ms to remove silences from file", System.currentTimeMillis() - start);
-        return modifiedWavFile;
-    }
 
     @Override
-    public void speakSsml(final String ssml) {
+    public void speakSsml(final String ssml, boolean trimSilences) {
         RequestBody body = RequestBody.create(ssml, MEDIA_TYPE);
         Request request = new Request.Builder().url(//
                         HttpUrl.parse(URL + "speak-ssml").newBuilder()//
                                 .addQueryParameter("volume", "" + volume)//
                                 .addQueryParameter("rate", "" + rate)//
                                 .addQueryParameter("voice", "" + voice)//
+                                .addQueryParameter("wav", trimSilences ? "true" : null)//
                                 .build())
                 .post(body).build();
         try (Response response = httpClient.newCall(request).execute()) {
-        } catch (IOException e) {
-            LOGGER.error("Couldn't speak with SAPI voice", e);
+            if (trimSilences) playResultingFileSyncRemovingSilence(response);
+        } catch (Exception e) {
+            LOGGER.error("Couldn't speak ssml with SAPI voice", e);
         }
     }
 
@@ -306,6 +236,12 @@ public class SAPIVoiceSynthesizer extends AbstractVoiceSynthesizer {
             } catch (IOException e) {
                 LOGGER.error("stopCurrentSpeak call didn't work", e);
             }
+        }
+        if (this.currentMediaPlayer != null) {
+            MediaPlayer oldMediaPlayer = this.currentMediaPlayer;
+            oldMediaPlayer.stop();
+            oldMediaPlayer.dispose();
+            this.currentMediaPlayer = null;
         }
     }
 
@@ -351,4 +287,88 @@ public class SAPIVoiceSynthesizer extends AbstractVoiceSynthesizer {
         String gender;
     }
 
+    // PLAYING WAV FILES
+    //========================================================================
+    private void playResultingFileSyncRemovingSilence(Response response) throws Exception {
+        if (response.isSuccessful()) {
+            String wavFilePath = response.body().string();
+            if (StringUtils.isNotBlank(wavFilePath)) {
+                File wavFile = new File(wavFilePath);
+                if (wavFile.exists()) {
+                    playWavFileSync(trimSilences(wavFile));
+                } else {
+                    throw new IOException("Given wav file \"" + wavFilePath + "\" doesn't exist");
+                }
+            } else {
+                throw new IOException("Didn't get any valid wav file from SAPI server");
+            }
+        }
+    }
+
+    private void playWavFileSync(File wavFile) throws Exception {
+        this.currentMediaPlayer = new MediaPlayer(new Media(wavFile.toURI().toURL().toString()));
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
+        //Unlock on end/error
+        final Runnable releaseCDL = countDownLatch::countDown;
+        currentMediaPlayer.setOnEndOfMedia(releaseCDL);
+        currentMediaPlayer.setOnStopped(releaseCDL);
+        currentMediaPlayer.setOnHalted(releaseCDL);
+        currentMediaPlayer.setOnError(() -> {
+            this.LOGGER.error("Error for sound", currentMediaPlayer.getError());
+            releaseCDL.run();
+        });
+        //Start and lock
+        currentMediaPlayer.play();
+        try {
+            countDownLatch.await();
+        } catch (Exception e) {
+            this.LOGGER.error("Can't wait for player to finish", e);
+        } finally {
+            currentMediaPlayer = null;
+        }
+    }
+
+    public File trimSilences(File wavFile) throws IOException {
+        long start = System.currentTimeMillis();
+        int WAV_FILEFORMAT_DATA_START = 44;
+        File modifiedWavFile = org.lifecompanion.util.IOUtils.getTempFile("silence-trimmed-wav", ".wav");
+        try (BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(wavFile))) {
+            byte[] data = bufferedInputStream.readAllBytes();
+            byte[] wavFFData = Arrays.copyOfRange(data, 0, WAV_FILEFORMAT_DATA_START);
+            short[] dataAsShort = new short[(data.length - wavFFData.length) / 2];
+            short maxVal = 0;
+            // Find max to compute threshold (and convert values)
+            for (int i = WAV_FILEFORMAT_DATA_START; i < data.length; i += 2) {
+                short val = (short) (((data[i + 1] & 0xff) << 8) + (data[i] & 0xff));
+                dataAsShort[(i - WAV_FILEFORMAT_DATA_START) / 2] = val;
+                maxVal = (short) Math.max(Math.abs(val), maxVal);
+            }
+            short threshold = (short) (0.1 * maxVal);
+            // Find start index
+            int startI = 0, endI = 0;
+            for (int i = 0; i < dataAsShort.length; i++) {
+                if (Math.abs(dataAsShort[i]) > threshold) {
+                    startI = i;
+                    break;
+                }
+            }
+            // Find end index
+            for (int i = dataAsShort.length - 1; i >= 0; i--) {
+                if (Math.abs(dataAsShort[i]) > threshold) {
+                    endI = i;
+                    break;
+                }
+            }
+            // Write output wav file
+            try (DataOutputStream bos = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(modifiedWavFile)))) {
+                bos.write(wavFFData);
+                for (int i = startI; i < endI; i++) {
+                    bos.writeShort(Short.reverseBytes(dataAsShort[i]));
+                }
+            }
+        }
+        LOGGER.debug("Took {} ms to remove silences from file", System.currentTimeMillis() - start);
+        return modifiedWavFile;
+    }
+    //========================================================================
 }
