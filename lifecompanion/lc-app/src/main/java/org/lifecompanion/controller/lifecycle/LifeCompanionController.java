@@ -19,6 +19,7 @@
 
 package org.lifecompanion.controller.lifecycle;
 
+import org.lifecompanion.controller.training.TrainingController;
 import org.lifecompanion.model.api.lifecycle.LCStateListener;
 import org.lifecompanion.controller.editaction.AsyncExecutorController;
 import org.lifecompanion.controller.categorizedelement.useaction.UseActionController;
@@ -68,7 +69,9 @@ public enum LifeCompanionController {
             PluginController.INSTANCE,
             UserCompController.INSTANCE,
             LCNotificationController.INSTANCE,
-            ErrorHandlingController.INSTANCE
+            ErrorHandlingController.INSTANCE,
+
+            TrainingController.INSTANCE,
     };
 
     public void lcStart() {

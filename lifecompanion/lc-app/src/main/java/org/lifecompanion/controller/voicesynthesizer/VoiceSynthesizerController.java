@@ -71,7 +71,7 @@ public enum VoiceSynthesizerController implements LCStateListener, ModeListenerI
     private final Logger LOGGER = LoggerFactory.getLogger(VoiceSynthesizerController.class);
 
     public final static long DEFAULT_SPELL_PAUSE = 200;
-    
+
     /**
      * Bellow this char count : silences around are removed, above, they are kept.
      */

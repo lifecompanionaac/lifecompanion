@@ -18,6 +18,8 @@
  */
 package org.lifecompanion.controller.editmode;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import org.jdom2.Element;
 import org.lifecompanion.model.api.profile.LCProfileI;
 import org.lifecompanion.model.impl.exception.LCException;
@@ -68,9 +70,18 @@ public enum LCStateController implements XMLSerializable<Void>, LCStateListener 
      */
     private final Set<String> favoriteImageDictionaries;
 
+    /**
+     * If the training dialog should never be shown again
+     */
+    private final BooleanProperty hideTrainingDialog;
+
+    private long lastTrainingDialogShow;
+
     LCStateController() {
         this.defaultDirectories = new HashMap<>();
         favoriteImageDictionaries = new HashSet<>();
+        this.hideTrainingDialog = new SimpleBooleanProperty(false);
+        this.lastTrainingDialogShow = 0;
         this.initBinding();
     }
 
@@ -103,6 +114,21 @@ public enum LCStateController implements XMLSerializable<Void>, LCStateListener 
     }
     //========================================================================
 
+    // TRAINING DIALOG
+    //========================================================================
+    public BooleanProperty hideTrainingDialogProperty() {
+        return hideTrainingDialog;
+    }
+
+    public long getLastTrainingDialogShow() {
+        return lastTrainingDialogShow;
+    }
+
+    public void setLastTrainingDialogShow(long lastTrainingDialogShow) {
+        this.lastTrainingDialogShow = lastTrainingDialogShow;
+    }
+    //========================================================================
+
     // Default DIR
     //========================================================================
     private static final long ONE_GB = 1073741824L;
@@ -130,7 +156,10 @@ public enum LCStateController implements XMLSerializable<Void>, LCStateListener 
         // Try to find it as external device (if export type) or take the user home
         final File[] roots = File.listRoots();
         return fileChooserType.isUseExternalDevice() && roots != null ?
-                Arrays.stream(roots).filter(f -> f.getTotalSpace() > MIN_EXTERNAL_DEVICE_SIZE && f.getTotalSpace() < MAX_EXTERNAL_DEVICE_SIZE).min(Comparator.comparingLong(File::getTotalSpace)).orElse(DEFAULT_FOLDER)
+                Arrays.stream(roots)
+                        .filter(f -> f.getTotalSpace() > MIN_EXTERNAL_DEVICE_SIZE && f.getTotalSpace() < MAX_EXTERNAL_DEVICE_SIZE)
+                        .min(Comparator.comparingLong(File::getTotalSpace))
+                        .orElse(DEFAULT_FOLDER)
                 : DEFAULT_FOLDER;
     }
     //========================================================================

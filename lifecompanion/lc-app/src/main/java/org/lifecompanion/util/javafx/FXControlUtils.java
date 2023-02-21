@@ -127,8 +127,6 @@ public class FXControlUtils {
     public static Button createGraphicButton(final Node graphics, final String tooltipTranslationID) {
         Button button = new Button(null, graphics);
         button.getStyleClass().addAll("background-none", "opacity-100", "opacity-80-hover", "opacity-60-pressed", "round-lightgrey-border-selected", "content-display-graphic-only");
-        //button.getStyleClass().addAll("opacity-100", "background-none", "opacity-80-hover", "opacity-60-pressed", "round-lightgrey-border-selected", "content-display-graphic-only");
-        //button.getStyleClass().addAll("image-base-button");
         createAndAttachTooltip(button, tooltipTranslationID);
         return button;
     }
@@ -171,6 +169,14 @@ public class FXControlUtils {
         Button btn = createLeftTextButton(label, graphics, tooltipTranslationID);
         btn.setPrefWidth(width);
         return btn;
+    }
+
+    public static Button createTextButtonWithBackground(final String label) {
+        Button button = new Button(label);
+        button.setContentDisplay(ContentDisplay.CENTER);
+        button.getStyleClass().addAll("text-weight-bold","text-font-size-120", "text-fill-white", "background-primary-dark", "opacity-80-hover", "opacity-60-pressed");
+        button.setContentDisplay(ContentDisplay.TOP);
+        return button;
     }
 
     public static Button createLeftTextButton(final String label, final Node graphics, final String tooltipTranslationID) {

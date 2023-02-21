@@ -5,7 +5,7 @@
 ### Fonctionnalités
 
 - Ajout d'une fonction **d'autocomplétion sur la création de clavier** : à l'entrée d'une suite de certains caractère, un remplissage automatique est proposé afin de gagner du temps
-- La synthèse vocale est **bien plus "rapide"** en particulier sur les mots courts ou lettres uniques. Cela ajoute une sensation de réactivité générale, en particulier sur du retour sonore au survol.
+- La synthèse vocale est **bien plus "rapide"** en particulier sur les mots courts ou lettres uniques. Cela ajoute une sensation de réactivité générale, en particulier sur du retour sonore au survol
 
 ### Corrections/ajustements
 
@@ -16,6 +16,7 @@
 - Ticket #208 : ajout d'une icône sur les paramètres de synthèse vocale
 - Ticket #209 : correction du bouton "Copier" sur l'onglet Accueil
 - Uniformisation de certains styles d'élément dans l'application
+- Ajout d'une fenêtre d'information sur les [formations LifeCompanion](https://lifecompanionaac.org/pages/trainings)
 
 ## 1.4.4 - 27/01/2023
 

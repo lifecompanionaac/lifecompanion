@@ -3590,4 +3590,11 @@
     <text key="keyboard.quick.word.dontknow">Je ne sais pas</text>
     <text key="autocomplete.keyboard.accents0.name">Accents</text>
     <text key="autocomplete.keyboard.special0.name">Caractères spéciaux</text>
+    <text key="training.information.stage.title">Avez-vous pensé à vous former ?</text>
+    <text key="training.information.stage.introduction.text">Nous proposons des formations à destinations des personnes qui utilisent et configurent LifeCompanion (professionnels orthophonistes, ergothérapeutes, éducateurs, aidants, etc.)</text>
+    <text key="training.information.stage.diff.types">Différents formats sont proposés :\n  - Formation vidéo en ligne (autonome) [200€/personne]\n  - Formation collective en présentiel [400€/personne]\n  - Formation sur mesure sur site [sur devis]</text>
+    <text key="training.information.stage.eco.model">LifeCompanion étant gratuit, les formations font partie intégrante du modèle économique afin d'assurer sa maintenance et sa pérennité, se former c'est donc aussi supporter le futur de LifeCompanion !</text>
+    <text key="training.information.checkbox.dont.show.again">Ne plus afficher</text>
+    <text key="training.information.button.close">Fermer</text>
+    <text key="training.information.button.train">Se former</text>
 </texts>

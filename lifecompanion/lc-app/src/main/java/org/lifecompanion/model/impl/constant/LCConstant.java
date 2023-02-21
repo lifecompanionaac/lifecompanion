@@ -141,6 +141,9 @@ public class LCConstant {
     public final static int GO_TO_CONFIG_MODE_DELAY = 30;
     public final static int DOUBLE_LAUNCH_DISPLAY_DELAY = 10;
     public final static int WARNING_EXIT_DISABLED_DELAY = 10;
+
+    public final static long TRAINING_DIALOG_SHOW_INTERVAL = 1000 * 60 * 60 * 24 * 20; // 20 DAYS
+    public final static long TRAINING_DIALOG_SHOW_DELAY = 20_000; // 20 SECONDS
     // ========================================================================
 
     // EXTERNAL LIB/PROJECTS
@@ -158,6 +161,7 @@ public class LCConstant {
     public final static String NAME = "LifeCompanion";
     public final static String URL_PATH_CHANGELOG = "/categories/documentations/lifecompanion-changelog";
     public final static String URL_PATH_GET_STARTED = "/categories/documentations/get-started-guide";
+    public final static String URL_TRAININGS = "/formations";
     //========================================================================
 
     // IMAGE DICTIONARIES
