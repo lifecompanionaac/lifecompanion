@@ -8,7 +8,7 @@
 
 ### Corrections/ajustements
 
-- ...
+- Ticket #211 : amélioration de la qualité de la synthèse vocale
 
 ## 1.4.5 - 21/02/2023
 

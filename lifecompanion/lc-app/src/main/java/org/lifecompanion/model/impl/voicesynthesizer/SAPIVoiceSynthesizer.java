@@ -48,7 +48,7 @@ import java.util.concurrent.TimeUnit;
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public class SAPIVoiceSynthesizer extends AbstractVoiceSynthesizer {
-    private final Logger LOGGER = LoggerFactory.getLogger(SAPIVoiceSynthesizer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SAPIVoiceSynthesizer.class);
 
     private static final MediaType MEDIA_TYPE = MediaType.get("application/text; charset=utf-8");
     private static final int PORT = 8646;
@@ -175,14 +175,14 @@ public class SAPIVoiceSynthesizer extends AbstractVoiceSynthesizer {
                 voices.add(new VoiceInfo(voiceInfoDto.name, voiceInfoDto.name, Locale.forLanguageTag(voiceInfoDto.language), voiceInfoDto.gender));
             }
         }
-        this.LOGGER.info("SAPI voice synthesizer 2 initialized");
+        LOGGER.info("SAPI voice synthesizer 2 initialized");
     }
 
     @Override
     public void dispose() throws Exception {
         disposeRequest(httpClient);
         this.killProcess();
-        this.LOGGER.info("SAPI voice synthesizer 2 disposed");
+        LOGGER.info("SAPI voice synthesizer 2 disposed");
     }
 
     private void disposeRequest(OkHttpClient client) throws Exception {
@@ -328,7 +328,7 @@ public class SAPIVoiceSynthesizer extends AbstractVoiceSynthesizer {
         }
     }
 
-    public File trimSilences(File wavFile) throws IOException {
+    public static File trimSilences(File wavFile) throws IOException {
         long start = System.currentTimeMillis();
         int WAV_FILEFORMAT_DATA_START = 44;
         File modifiedWavFile = org.lifecompanion.util.IOUtils.getTempFile("silence-trimmed-wav", ".wav");
@@ -343,7 +343,7 @@ public class SAPIVoiceSynthesizer extends AbstractVoiceSynthesizer {
                 dataAsShort[(i - WAV_FILEFORMAT_DATA_START) / 2] = val;
                 maxVal = (short) Math.max(Math.abs(val), maxVal);
             }
-            short threshold = (short) (0.1 * maxVal);
+            short threshold = (short) (0.02 * maxVal);
             // Find start index
             int startI = 0, endI = 0;
             for (int i = 0; i < dataAsShort.length; i++) {
