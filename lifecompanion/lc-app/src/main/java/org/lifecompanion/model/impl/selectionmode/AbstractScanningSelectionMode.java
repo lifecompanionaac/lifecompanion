@@ -74,13 +74,13 @@ public abstract class AbstractScanningSelectionMode<T extends AbstractSelectionM
     /**
      * Boolean true if we are currently executing action (on over) on the current part (useful to skip play if action are still executing)
      */
-    protected boolean executingActionOnCurrentPart = false;
+    protected boolean executingActionOnCurrentPart;
 
     /**
      * Boolean true if we are currently paused executing action (on activation) on the current part (useful to skip play if action are still executing)</br>
      * Issue #192
      */
-    protected boolean pauseToExecuteSimpleActions = false;
+    protected boolean pauseToExecuteSimpleActions;
 
     /**
      * Number of times in the same part/grid (to stop or quit the scanning)
@@ -90,13 +90,13 @@ public abstract class AbstractScanningSelectionMode<T extends AbstractSelectionM
     /**
      * Indicates if the mode is disposed
      */
-    protected boolean disposed = false;
+    protected boolean disposed;
 
     /**
      * When this boolean is true, the next selection will restart the scanning in the current part.<br>
      * This is use to pause the scanning.
      */
-    private boolean restartScanningOnNextAction = false;
+    private boolean restartScanningOnNextAction;
 
     /**
      * To flag that the current scanning has action on press on last {@link #selectionPress(boolean)} : this is useful to avoid playing again the scanning selection if the scanning is paused for simple action
@@ -112,6 +112,8 @@ public abstract class AbstractScanningSelectionMode<T extends AbstractSelectionM
      * Indicate if the pause was done for mouse press
      */
     private boolean pauseForMousePress;
+
+    private boolean pauseForUntilNextSelection;
 
     protected AbstractScanningSelectionMode() {
         this.scanningTimeLine = new Timeline();
@@ -306,6 +308,7 @@ public abstract class AbstractScanningSelectionMode<T extends AbstractSelectionM
         } else {
             this.restart();
         }
+        this.pauseForUntilNextSelection = false;
         this.nextSelectionListener = null;
     }
 
@@ -433,8 +436,12 @@ public abstract class AbstractScanningSelectionMode<T extends AbstractSelectionM
         Runnable actionAfter = firstScan ? this::restartTimeLine : this::play;
         Consumer<ActionExecutionResultI> actionAfterRunnable = (result) -> {
             this.executingActionOnCurrentPart = false;
-            //The scanner should be restarted only if the selection didn't start
-            if (!this.pauseForMousePress) {
+            /*
+             The scanner should be restarted only if
+             - the selection didn't start (it's not paused by a mouse press)
+             - it is not paused until next action
+             */
+            if (!this.pauseForMousePress && !this.pauseForUntilNextSelection) {
                 actionAfter.run();
             }
         };
@@ -528,6 +535,7 @@ public abstract class AbstractScanningSelectionMode<T extends AbstractSelectionM
             this.scanningTimeLine.stop();
             this.playingProperty.set(false);
             this.restartScanningOnNextAction = true;
+            this.pauseForUntilNextSelection = true;
         }
     }
     //========================================================================

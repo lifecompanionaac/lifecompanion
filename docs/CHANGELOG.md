@@ -9,6 +9,7 @@
 ### Corrections/ajustements
 
 - Ticket #211 : amélioration de la qualité de la synthèse vocale
+- Correction d'un problème sur lors de la mise en pause du défilement
 
 ## 1.4.5 - 21/02/2023
 

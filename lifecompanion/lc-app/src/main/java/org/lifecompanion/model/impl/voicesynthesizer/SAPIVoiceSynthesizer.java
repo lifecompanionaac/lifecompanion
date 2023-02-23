@@ -53,6 +53,7 @@ public class SAPIVoiceSynthesizer extends AbstractVoiceSynthesizer {
     private static final MediaType MEDIA_TYPE = MediaType.get("application/text; charset=utf-8");
     private static final int PORT = 8646;
     private static final String URL = "http://localhost:" + PORT + "/";
+    private static final double TRIM_SILENCES_THRESHOLD = 0.02;
 
     /**
      * C# application process
@@ -343,7 +344,8 @@ public class SAPIVoiceSynthesizer extends AbstractVoiceSynthesizer {
                 dataAsShort[(i - WAV_FILEFORMAT_DATA_START) / 2] = val;
                 maxVal = (short) Math.max(Math.abs(val), maxVal);
             }
-            short threshold = (short) (0.02 * maxVal);
+
+            short threshold = (short) (TRIM_SILENCES_THRESHOLD * maxVal);
             // Find start index
             int startI = 0, endI = 0;
             for (int i = 0; i < dataAsShort.length; i++) {
