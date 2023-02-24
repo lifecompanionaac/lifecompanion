@@ -162,6 +162,7 @@
   <text key="use.action.sub.category.script.name">Script et combinaison d'actions</text>
   <text key="use.action.sub.category.selection.keys.name">Cases</text>
   <text key="use.action.sub.category.selection.scanning.mode.name">Défilement</text>
+  <text key="use.action.sub.category.selection.mode.general.name">Général</text>
   <text key="use.action.sub.category.sound.name">Son/Musique</text>
   <text key="use.action.sub.category.speak.parameters.name">Paramètres</text>
   <text key="use.action.sub.category.speak.text.name">Prononcer du texte</text>
@@ -839,6 +840,8 @@
 		de nouveau sur la touche majusucule.</text>
   <text key="action.next.upper.case.name">Prochaine lettre en majuscule</text>
   <!--org.lifecompanion.base.data.useaction.impl.text.write-->
+    <text key="action.simple.change.selection.mode.name">Changer de mode de sélection</text>
+    <text key="action.simple.change.selection.mode.description">Permet de changer dynamiquement de mode de sélection. Par exemple pour passer d'un mode de sélection direct à un mode en défilement ou l'inverse.</text>
   <text key="action.simple.write.text.name">Écrire du texte</text>
   <text key="action.simple.write.text.static.description">Écrit un texte personnalisé.</text>
   <text key="action.simple.write.text.variable.description">Écrit le texte "{}"</text>
@@ -3597,4 +3600,5 @@
     <text key="training.information.checkbox.dont.show.again">Ne plus afficher</text>
     <text key="training.information.button.close">Fermer</text>
     <text key="training.information.button.train">Se former</text>
+    <text key="use.action.change.selection.mode.to">Mode de sélection à utiliser</text>
 </texts>

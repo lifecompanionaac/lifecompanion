@@ -106,6 +106,8 @@ public class SelectionModeParameter implements SelectionModeParameterI {
 
     private final BooleanProperty hideMouseCursor;
 
+    private final transient BooleanProperty selectionModeParameterAreSystemDefined;
+
     public SelectionModeParameter() {
         this.selectionModeType = new SimpleObjectProperty<>(this, "selectionModeType", DirectActivationSelectionMode.class);
         this.fireActivationEvent = new SimpleObjectProperty<>(this, "fireActionEvent", FireActionEvent.ON_RELEASE);
@@ -136,6 +138,7 @@ public class SelectionModeParameter implements SelectionModeParameterI {
         this.backgroundReductionLevel = new SimpleDoubleProperty(this, "backgroundReductionLevel", 0.8);
         this.hideMouseCursor = new SimpleBooleanProperty(false);
         this.enableDirectSelectionOnMouseOnScanningSelectionMode = new SimpleBooleanProperty(false);
+        this.selectionModeParameterAreSystemDefined = new SimpleBooleanProperty(false);
         this.mouseButtonActivation = new SimpleObjectProperty<>(MouseButton.ANY);
         this.mouseButtonNextScan = new SimpleObjectProperty<>(MouseButton.SECONDARY);
     }
@@ -333,6 +336,11 @@ public class SelectionModeParameter implements SelectionModeParameterI {
         this.mouseButtonActivationProperty().set(parameters.mouseButtonActivationProperty().get());
         this.mouseButtonNextScanProperty().set(parameters.mouseButtonNextScanProperty().get());
         this.hideMouseCursorProperty().set(parameters.hideMouseCursorProperty().get());
+    }
+
+    @Override
+    public BooleanProperty selectionModeParameterAreSystemDefinedProperty() {
+        return selectionModeParameterAreSystemDefined;
     }
     //========================================================================
 

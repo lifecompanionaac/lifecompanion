@@ -442,6 +442,33 @@ public enum SelectionModeController implements ModeListenerI {
 
     // Class part : "Mode start/stop"
     //========================================================================
+    public void changeUseModeSelectionModeTo(Class<? extends SelectionModeI> selectionModeType) {
+        LCConfigurationI currentConfiguration = configuration;// store as mode stop will set it to null
+        if (currentConfiguration.getSelectionModeParameter().selectionModeTypeProperty().get() != selectionModeType) {
+            FXThreadUtils.runOnFXThread(() -> {
+                // Stop current mode
+                SelectionModeController.INSTANCE.modeStop(currentConfiguration);
+
+                // Restore each grid selection mode to default
+                ObservableMap<String, DisplayableComponentI> allComponent = currentConfiguration.getAllComponent();
+                Set<String> componentIds = allComponent.keySet();
+                for (String id : componentIds) {
+                    final DisplayableComponentI component = currentConfiguration.getAllComponent().get(id);
+                    if (component instanceof GridComponentI) {
+                        GridComponentI gridComponent = (GridComponentI) component;
+                        if (!gridComponent.useParentSelectionModeProperty().get() && gridComponent.getSelectionModeParameter().selectionModeParameterAreSystemDefinedProperty().get()) {
+                            gridComponent.useParentSelectionModeProperty().set(true);
+                        }
+                    }
+                }
+
+                // Change and restart
+                currentConfiguration.getSelectionModeParameter().selectionModeTypeProperty().set(selectionModeType);
+                SelectionModeController.INSTANCE.modeStart(currentConfiguration);
+            });
+        }
+    }
+
     private LCConfigurationI configuration;
 
     @Override
@@ -587,6 +614,7 @@ public enum SelectionModeController implements ModeListenerI {
     private void changeGridSelectionModeTo(GridComponentI grid, SelectionModeParameterI previousParameter, Class<? extends SelectionModeI> type) {
         Class<? extends SelectionModeI> previous = previousParameter.selectionModeTypeProperty().get();
         grid.useParentSelectionModeProperty().set(false);
+        grid.getSelectionModeParameter().selectionModeParameterAreSystemDefinedProperty().set(true);
         grid.getSelectionModeParameter().copyFrom(previousParameter);
         grid.getSelectionModeParameter().selectionModeTypeProperty().set(type);
         LOGGER.info("Changed grid {} selection mode from {} to {} to optimize scanning", grid.nameProperty().get(), previous.getSimpleName(), type.getSimpleName());

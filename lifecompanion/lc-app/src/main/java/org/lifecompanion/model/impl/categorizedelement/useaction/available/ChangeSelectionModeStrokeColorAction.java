@@ -45,7 +45,7 @@ public class ChangeSelectionModeStrokeColorAction extends SimpleUseActionImpl<Us
 	public ChangeSelectionModeStrokeColorAction() {
 		super(UseActionTriggerComponentI.class);
 		this.order = 3;
-		this.category = DefaultUseActionSubCategories.CHANGE;
+		this.category = DefaultUseActionSubCategories.SELECTION_MODE_GENERAL;
 		this.nameID = "action.change.selection.mode.stroke.color.name";
 		this.staticDescriptionID = "action.change.selection.mode.stroke.color.static.description";
 		this.configIconPath = "configuration/icon_change_selection_mode_color.png";

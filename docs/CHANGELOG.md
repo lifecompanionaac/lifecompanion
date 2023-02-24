@@ -4,7 +4,7 @@
 
 ### Fonctionnalités
 
-- ...
+- Ajout d'une action "Changer de mode de sélection" afin de pouvoir passer d'un mode direct/défilement durant le mode utilisation
 
 ### Corrections/ajustements
 

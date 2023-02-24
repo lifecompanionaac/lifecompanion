@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   version="1.1"
+   id="svg22920"
+   width="32"
+   height="32"
+   sodipodi:docname="icon_change_selection_mode.svg"
+   inkscape:version="1.1.2 (b8e25be833, 2022-02-05)"
+   inkscape:export-filename="E:\dev-lifecompanion\workspace\lifecompanion\res\icons\lc-app\use-actions\categories\selection\icon_change_selection_mode.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs22924" />
+  <sodipodi:namedview
+     id="namedview22922"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     showgrid="false"
+     width="32px"
+     inkscape:zoom="8.2237836"
+     inkscape:cx="31.858815"
+     inkscape:cy="53.077759"
+     inkscape:window-width="3840"
+     inkscape:window-height="2081"
+     inkscape:window-x="-9"
+     inkscape:window-y="-9"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg22920" />
+  <inkscape:clipboard
+     style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:#d2d2d2;fill-opacity:1;stroke-width:0.24207239;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000;stop-opacity:1"
+     min="4606.3906,544.96871"
+     max="4712.5478,651.12423"
+     geom-min="4606.3906,544.96871"
+     geom-max="4712.5478,651.12423" />
+  <g
+     id="g6980-3"
+     transform="matrix(0.08338806,0,0,0.08430282,-6.2444e-7,-0.17551928)"
+     style="fill:#d2d2d2;fill-opacity:1"
+     inkscape:export-filename="E:\Documents\Temp\icon_change_configuration.png"
+     inkscape:export-xdpi="18.49"
+     inkscape:export-ydpi="18.49">
+    <g
+       id="g6938-8"
+       style="fill:#d2d2d2;fill-opacity:1">
+      <path
+         id="path6940-78"
+         d="M 354.86,88.952 C 342.885,70.368 327.715,54.245 310.154,41.221 L 349.106,2.082 H 235.742 v 113.91 l 52.964,-53.219 c 40.142,28.131 65.042,74.724 65.042,124.571 0,83.744 -68.13,151.874 -151.874,151.874 v 30 c 100.286,0 181.874,-81.588 181.874,-181.874 0,-35.039 -9.989,-69.062 -28.888,-98.392 z"
+         inkscape:connector-curvature="0"
+         style="fill:#d2d2d2;fill-opacity:1" />
+      <path
+         id="path6942-3"
+         d="m 0,196.405 c 0,35.038 9.989,69.061 28.888,98.391 11.975,18.584 27.145,34.707 44.706,47.731 L 34.642,381.666 H 148.007 V 267.756 L 95.043,320.975 C 54.9,292.844 30,246.252 30,196.405 30,112.661 98.13,44.531 181.874,44.531 v -30 C 81.588,14.531 0,96.12 0,196.405 Z"
+         inkscape:connector-curvature="0"
+         style="fill:#d2d2d2;fill-opacity:1" />
+    </g>
+    <g
+       id="g6944-9"
+       style="fill:#d2d2d2;fill-opacity:1" />
+    <g
+       id="g6946-2"
+       style="fill:#d2d2d2;fill-opacity:1" />
+    <g
+       id="g6948-7"
+       style="fill:#d2d2d2;fill-opacity:1" />
+    <g
+       id="g6950-3"
+       style="fill:#d2d2d2;fill-opacity:1" />
+    <g
+       id="g6952-6"
+       style="fill:#d2d2d2;fill-opacity:1" />
+    <g
+       id="g6954-56"
+       style="fill:#d2d2d2;fill-opacity:1" />
+    <g
+       id="g6956-9"
+       style="fill:#d2d2d2;fill-opacity:1" />
+    <g
+       id="g6958-22"
+       style="fill:#d2d2d2;fill-opacity:1" />
+    <g
+       id="g6960-11"
+       style="fill:#d2d2d2;fill-opacity:1" />
+    <g
+       id="g6962-5"
+       style="fill:#d2d2d2;fill-opacity:1" />
+    <g
+       id="g6964-4"
+       style="fill:#d2d2d2;fill-opacity:1" />
+    <g
+       id="g6966-64"
+       style="fill:#d2d2d2;fill-opacity:1" />
+    <g
+       id="g6968-2"
+       style="fill:#d2d2d2;fill-opacity:1" />
+    <g
+       id="g6970-0"
+       style="fill:#d2d2d2;fill-opacity:1" />
+    <g
+       id="g6972-5"
+       style="fill:#d2d2d2;fill-opacity:1" />
+  </g>
+</svg>

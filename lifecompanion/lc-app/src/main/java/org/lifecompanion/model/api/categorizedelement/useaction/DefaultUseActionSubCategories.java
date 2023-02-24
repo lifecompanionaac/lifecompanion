@@ -71,6 +71,8 @@ public enum DefaultUseActionSubCategories implements UseActionSubCategoryI {
 
 
     //Selection
+    SELECTION_MODE_GENERAL("use.action.sub.category.selection.mode.general.name", DefaultUseActionMainCategories.SELECTION,
+            CategorizedElementColorProvider.nextColor(DefaultUseActionMainCategories.SELECTION)), //
     SCANNING_MODE("use.action.sub.category.selection.scanning.mode.name", DefaultUseActionMainCategories.SELECTION,
             CategorizedElementColorProvider.nextColor(DefaultUseActionMainCategories.SELECTION)), //
     KEYS("use.action.sub.category.selection.keys.name", DefaultUseActionMainCategories.SELECTION,

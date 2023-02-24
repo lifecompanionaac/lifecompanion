@@ -211,6 +211,12 @@ public interface SelectionModeParameterI extends XMLSerializable<IOContextI> {
      * @param parameters the parameters to copy (shouldn't be null)
      */
     void copyFrom(SelectionModeParameterI parameters);
+
+    /**
+     * @return true if this selection mode parameters are not the result of user configuration but a LifeCompanion change.<br>
+     * This can be true if for example, the grid selection mode parameter are automatically changed by LifeCompanion to optimize selection.
+     */
+    BooleanProperty selectionModeParameterAreSystemDefinedProperty();
     //========================================================================
 
 }
