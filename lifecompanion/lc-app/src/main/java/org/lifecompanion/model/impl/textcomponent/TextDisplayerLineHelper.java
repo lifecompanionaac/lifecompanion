@@ -25,7 +25,7 @@ import org.lifecompanion.model.api.configurationcomponent.WriterDisplayerI;
 import org.lifecompanion.model.api.configurationcomponent.WriterEntryI;
 import org.lifecompanion.model.api.style.TextCompStyleI;
 import org.lifecompanion.model.api.textcomponent.*;
-import org.lifecompanion.ui.configurationcomponent.base.TextDisplayer3;
+import org.lifecompanion.ui.configurationcomponent.base.TextDisplayer;
 import org.lifecompanion.util.LangUtils;
 import org.lifecompanion.util.javafx.FXUtils;
 import org.predict4all.nlp.Separator;
@@ -35,7 +35,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * This utils class is useful to generate lines for {@link TextDisplayer3}
+ * This utils class is useful to generate lines for {@link TextDisplayer}
  * Generating lines is a complex operation because line contains multiple entries, and word span over this multiple entries, so it's hard to find a good word wrap.
  *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>

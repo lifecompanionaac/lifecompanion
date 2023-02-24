@@ -19,22 +19,24 @@
 package org.lifecompanion.model.impl.categorizedelement.useaction.available;
 
 import javafx.print.*;
-import javafx.scene.Node;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
+import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.model.api.configurationcomponent.WriterDisplayerI;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
+import org.lifecompanion.model.api.textcomponent.TextDisplayerLineI;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
-import org.lifecompanion.model.api.style.TextCompStyleI;
 import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseActionSubCategories;
 import org.lifecompanion.controller.textcomponent.WritingStateController;
 import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
-import org.lifecompanion.framework.commons.utils.lang.StringUtils;
-import org.lifecompanion.util.LangUtils;
+import org.lifecompanion.model.impl.notification.LCNotification;
+import org.lifecompanion.model.impl.textcomponent.TextDisplayerLineHelper;
+import org.lifecompanion.ui.configurationcomponent.base.TextDisplayer;
+import org.lifecompanion.ui.notification.LCNotificationController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -79,48 +81,65 @@ public class PrintToDefaultPrinterAction extends SimpleUseActionImpl<UseActionTr
                     PrinterJob printerJob = PrinterJob.createPrinterJob(defaultPrinter);
                     printerJob.getJobSettings().setJobName("LifeCompanion");
                     if (printerJob != null) {
-                        // Dirty fix : always print only one page, but with the current text flow we can't compute the real wrapped height
-                        Node toPrint = this.getNodeToPrint(pageLayout.getPrintableWidth());
-                        if (toPrint != null) {
-                            boolean success = printerJob.printPage(toPrint);
+                        WriterDisplayerI writer = WritingStateController.INSTANCE.getReferencedTextEditor();
+                        if (writer != null) {
+                            // Initialize a text displayer
+                            TextDisplayer textDisplayer = TextDisplayer.toPrint(writer, pageLayout.getPrintableWidth());
+                            List<TextDisplayerLineI> lines = TextDisplayerLineHelper.generateLines(WritingStateController.INSTANCE,
+                                    writer,
+                                    writer.getTextDisplayerTextStyle(),
+                                    pageLayout.getPrintableWidth());
+
+                            // Compute page count
+                            List<List<TextDisplayerLineI>> linesPerPage = new ArrayList<>();
+                            List<TextDisplayerLineI> currentPage = createPageAndAddIt(linesPerPage);
+                            for (TextDisplayerLineI line : lines) {
+                                double currentPageHeight = currentPage.stream().mapToDouble(l -> getLineHeight(writer, l)).sum();
+                                double lineHeight = getLineHeight(writer, line);
+                                if (currentPageHeight + lineHeight > pageLayout.getPrintableHeight()) {
+                                    currentPage = createPageAndAddIt(linesPerPage);
+                                }
+                                currentPage.add(line);
+                            }
+
+                            // Try to print each page
+                            for (List<TextDisplayerLineI> lineForPage : linesPerPage) {
+                                textDisplayer.manualRepaint(lineForPage);
+                                boolean success = printerJob.printPage(textDisplayer);
+                                LOGGER.info("Page printed successfully : {}", success);
+                            }
                             boolean endJob = printerJob.endJob();
-                            PrintToDefaultPrinterAction.LOGGER.info("Printing job end : success {}, finished {}", success, endJob);
-                            if (!success) {
+                            LOGGER.info("Printer job ended successfully : {}", endJob);
+                            if (!endJob) {
                                 lastPrint = 0;
                             }
+                            LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo("print.use.action.finished"));
+                        } else {
+                            throw new NullPointerException("No printer job");
                         }
-                        // TODO : find a way to notify user that printing started
                     }
                 }
             } catch (Throwable e) {
                 PrintToDefaultPrinterAction.LOGGER.error("Error while trying to print", e);
+                LCNotificationController.INSTANCE.showNotification(LCNotification.createError("print.use.action.failed"));
                 lastPrint = 0;
             }
         } else {
+            LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo(Translation.getText("print.use.action.should.wait",
+                    (DELAY_BETWEEN_TWO_PRINT_ACTION - (System.currentTimeMillis() - lastPrint)) / 1000)));
             LOGGER.warn("Last print was execute {} ms ago, didn't launch a new print", (System.currentTimeMillis() - lastPrint));
         }
     }
-    // ========================================================================
 
-    // Class part : "Utils"
-    // ========================================================================
-    private Node getNodeToPrint(final double width) {
-        WriterDisplayerI writer = WritingStateController.INSTANCE.getReferencedTextEditor();
-        if (writer != null) {
-            final String text = WritingStateController.INSTANCE.currentTextProperty().get();
-            Text textEntry = new Text(
-                    LangUtils.isTrue(writer.getTextDisplayerTextStyle().upperCaseProperty().value().getValue()) ? StringUtils.toUpperCase(text) : text);
-            TextCompStyleI textStyle = writer.getTextDisplayerTextStyle();
-            textEntry.setFont(textStyle.fontProperty().get());
-            textEntry.setFill(textStyle.colorProperty().value().getValue());
+    private static List<TextDisplayerLineI> createPageAndAddIt(List<List<TextDisplayerLineI>> linesPerPage) {
+        List<TextDisplayerLineI> currentPage = new ArrayList<>();
+        linesPerPage.add(currentPage);
+        return currentPage;
+    }
 
-            TextFlow textFlow = new TextFlow(textEntry);
-            textFlow.setLineSpacing(writer.lineSpacingProperty().get());
-            textFlow.setPrefWidth(width);
-
-            return textFlow;
-        }
-        return null;
+    private static double getLineHeight(WriterDisplayerI writer, TextDisplayerLineI line) {
+        return line.getTextHeight() + line.getImageHeight(writer) + writer.lineSpacingProperty().get();
     }
     // ========================================================================
+
 }

@@ -19,6 +19,7 @@
 
 package org.lifecompanion.ui.configurationcomponent.base;
 
+import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.geometry.Rectangle2D;
@@ -45,7 +46,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class TextDisplayer3 extends Pane implements LCViewInitHelper {
+public class TextDisplayer extends Pane implements LCViewInitHelper {
     private final WriterDisplayerI textDisplayer;
 
     private final DoubleBinding maxWidthProperty;
@@ -60,19 +61,33 @@ public class TextDisplayer3 extends Pane implements LCViewInitHelper {
 
     private final Set<ImageElementI> currentImagesInEditor;
 
-    public TextDisplayer3(final WriterDisplayerI textDisplayer, DoubleBinding doubleBinding, ReadOnlyDoubleProperty height,
-                          TextDisplayerBaseImplView<?> parentView) {
+    private boolean toPrint;
+
+    public static TextDisplayer toDisplay(final WriterDisplayerI textDisplayer, DoubleBinding maxWidthProperty, ReadOnlyDoubleProperty height,
+                                          TextDisplayerBaseImplView<?> parentView) {
+        return new TextDisplayer(textDisplayer, maxWidthProperty, height, parentView, false);
+    }
+
+    public static TextDisplayer toPrint(final WriterDisplayerI textDisplayer, double pageWidth) {
+        return new TextDisplayer(textDisplayer, Bindings.createDoubleBinding(() -> pageWidth), null, null, true);
+    }
+
+    private TextDisplayer(final WriterDisplayerI textDisplayer, DoubleBinding maxWidthProperty, ReadOnlyDoubleProperty height,
+                          TextDisplayerBaseImplView<?> parentView, boolean toPrint) {
         this.textDisplayer = textDisplayer;
-        this.maxWidthProperty = doubleBinding;
+        this.maxWidthProperty = maxWidthProperty;
         this.height = height;
         this.parentView = parentView;
         previousChildren = new ArrayList<>();
         currentImagesInEditor = new HashSet<>();
+        this.toPrint = toPrint;
         this.initAll();
     }
 
     public void unbindComponentAndChildren() {
-        cachedLineListenerData.unbind();
+        if (cachedLineListenerData != null) {
+            cachedLineListenerData.unbind();
+        }
         this.currentImagesInEditor.forEach(imageElement -> imageElement.requestImageUnload(textDisplayer.getID()));
         currentImagesInEditor.clear();
     }
@@ -86,10 +101,12 @@ public class TextDisplayer3 extends Pane implements LCViewInitHelper {
 
     @Override
     public void initBinding() {
-        cachedLineListenerData = this.textDisplayer.addCachedLinesUpdateListener(
-                lines -> FXThreadUtils.runOnFXThread(() -> this.repaint(lines)),
-                maxWidthProperty
-        );
+        if (!toPrint) {
+            cachedLineListenerData = this.textDisplayer.addCachedLinesUpdateListener(
+                    lines -> FXThreadUtils.runOnFXThread(() -> this.repaint(lines)),
+                    maxWidthProperty
+            );
+        }
     }
 
     @Override
@@ -99,6 +116,11 @@ public class TextDisplayer3 extends Pane implements LCViewInitHelper {
                 WritingStateController.INSTANCE.moveCaretToPosition(WritingEventSource.USER_PHYSICAL_INPUT, this.textDisplayer, me.getX(), me.getY());
             }
         });
+    }
+
+    public void manualRepaint(List<TextDisplayerLineI> lines) {
+        if (!toPrint) throw new IllegalStateException("Can't manually repaint a text displayer not dedicated to print.");
+        repaint(lines);
     }
 
 
@@ -138,7 +160,9 @@ public class TextDisplayer3 extends Pane implements LCViewInitHelper {
                 for (TextDisplayerWordPartI part : parts) {
                     if (textDisplayer.enableImageProperty().get() && part.isImageStart() && part.getEntry().imageProperty().get() != null) {
                         ImageElementI imageForPart = part.getEntry().imageProperty().get();
-                        imageForPart.requestImageLoad(textDisplayer.getID(), part.getImageWidth(), part.getHeight(), true, true);
+                        if(!toPrint) {
+                            imageForPart.requestImageLoad(textDisplayer.getID(), part.getImageWidth(), part.getHeight(), true, true);
+                        }
                         Image loadedImage = imageForPart.loadedImageProperty().get();
                         newImagesInEditor.add(imageForPart);
                         if (loadedImage != null) {
@@ -159,17 +183,19 @@ public class TextDisplayer3 extends Pane implements LCViewInitHelper {
                     previousChildren.add(textNode);
 
                     // If caret is located in the word
-                    if (caretPosition >= part.getCaretStart() && caretPosition <= part.getCaretEnd()) {
-                        double caretX = part.getCaretPosition(caretPosition, TextDisplayerLineHelper.BOUNDS_PROVIDER, textStyle) + xInWord;
-                        caretLineIndex = displayCaret(textStyle, caretX, caretLine, lineImageHeight + y, l, line);
-                        caretDisplayed = true;
+                    if (!toPrint) {
+                        if (caretPosition >= part.getCaretStart() && caretPosition <= part.getCaretEnd()) {
+                            double caretX = part.getCaretPosition(caretPosition, TextDisplayerLineHelper.BOUNDS_PROVIDER, textStyle) + xInWord;
+                            caretLineIndex = displayCaret(textStyle, caretX, caretLine, lineImageHeight + y, l, line);
+                            caretDisplayed = true;
+                        }
                     }
 
                     xInWord += part.getWidth();
                 }
 
                 // Caret is not located in any of the word part, but is located at the end of the word (after separator)
-                if (word.getCaretEnd() == caretPosition && !caretDisplayed) {
+                if (!toPrint && word.getCaretEnd() == caretPosition && !caretDisplayed) {
                     caretLineIndex = displayCaret(textStyle, x + word.getWidth(), caretLine, lineImageHeight + y, l, line);
                     caretDisplayed = true;
                 }
@@ -192,17 +218,21 @@ public class TextDisplayer3 extends Pane implements LCViewInitHelper {
         this.setPrefHeight(y);
 
         // Update scroll relative to the caret
-        this.parentView.updateCaretScroll(getCaretPercent(lines, caretLineIndex, caretLine, y));
+        if (!toPrint) {
+            this.parentView.updateCaretScroll(getCaretPercent(lines, caretLineIndex, caretLine, y));
+        }
 
         // Update image loading request
-        this.currentImagesInEditor.removeIf(imageElement -> {
-            if (!newImagesInEditor.contains(imageElement)) {
-                imageElement.requestImageUnload(textDisplayer.getID());
-                return true;
-            }
-            return false;
-        });
-        currentImagesInEditor.addAll(newImagesInEditor);
+        if(!toPrint) {
+            this.currentImagesInEditor.removeIf(imageElement -> {
+                if (!newImagesInEditor.contains(imageElement)) {
+                    imageElement.requestImageUnload(textDisplayer.getID());
+                    return true;
+                }
+                return false;
+            });
+            currentImagesInEditor.addAll(newImagesInEditor);
+        }
     }
 
     private int displayCaret(TextCompStyleI textStyle, double caretX, javafx.scene.shape.Line caretLine, double y, int l, TextDisplayerLineI line) {

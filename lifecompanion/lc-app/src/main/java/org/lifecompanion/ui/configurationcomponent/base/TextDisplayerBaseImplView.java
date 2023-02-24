@@ -56,7 +56,7 @@ public abstract class TextDisplayerBaseImplView<T extends WriterDisplayerI> exte
     /**
      * Text displayer
      */
-    private TextDisplayer3 textDisplayer;
+    private TextDisplayer textDisplayer;
 
     private final AtomicReference<Double> wantedScrollPercent;
 
@@ -80,7 +80,7 @@ public abstract class TextDisplayerBaseImplView<T extends WriterDisplayerI> exte
     @Override
     public void initUI() {
         this.scrollText = new ScrollPane();
-        textDisplayer = new TextDisplayer3(model, widthProperty().subtract(22.0), heightProperty(), this);
+        textDisplayer = TextDisplayer.toDisplay(model, widthProperty().subtract(22.0), heightProperty(), this);
         this.scrollText.setContent(textDisplayer);
         this.scrollText.prefHeightProperty().bind(this.heightProperty());
         this.scrollText.setFitToWidth(true);
