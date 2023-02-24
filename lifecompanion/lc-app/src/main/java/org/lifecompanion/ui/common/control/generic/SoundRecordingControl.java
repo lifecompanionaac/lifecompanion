@@ -30,6 +30,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.util.Duration;
 import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
+import org.lifecompanion.util.IOUtils;
 import org.lifecompanion.util.StringUtils;
 import org.lifecompanion.util.javafx.FXControlUtils;
 import org.lifecompanion.util.javafx.FXThreadUtils;
@@ -126,7 +127,7 @@ public class SoundRecordingControl extends HBox implements LCViewInitHelper {
         //UI
         this.buttonRecordPlayStop = FXControlUtils.createGraphicsToggleButton(Translation.getText("sound.record.start.button"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.MICROPHONE).sizeFactor(1).color(LCGraphicStyle.SECOND_DARK), null);
-        buttonRecordPlayStop.getStyleClass().addAll("stroke-selected","background-selected-lightgrey");
+        buttonRecordPlayStop.getStyleClass().addAll("stroke-selected", "background-selected-lightgrey");
         buttonRecordPlayStop.setContentDisplay(ContentDisplay.LEFT);
         buttonRecordPlayStop.setMinWidth(100.0);
         FXUtils.applyPerformanceConfiguration(buttonRecordPlayStop);
@@ -265,7 +266,7 @@ public class SoundRecordingControl extends HBox implements LCViewInitHelper {
                 }, 0, 1000);
 
                 // Recording the audio in a temp file
-                File tempFile = File.createTempFile("lifecompanion-sound-record", ".wav");
+                File tempFile = IOUtils.getTempFile("lifecompanion-sound-record", ".wav");
                 AudioInputStream ais = new AudioInputStream(line);
                 LOGGER.info("Will try to save audio to {}", tempFile);
                 int written = AudioSystem.write(ais, AudioFileFormat.Type.WAVE, tempFile);
@@ -279,7 +280,7 @@ public class SoundRecordingControl extends HBox implements LCViewInitHelper {
                 }
             } catch (Exception e) {
                 LOGGER.error("Error while recording sound", e);
-                FXThreadUtils.runOnFXThread(() -> ErrorHandlingController.INSTANCE.showErrorNotificationWithExceptionDetails( Translation.getText("record.sound.action.error.message"),  e));
+                FXThreadUtils.runOnFXThread(() -> ErrorHandlingController.INSTANCE.showErrorNotificationWithExceptionDetails(Translation.getText("record.sound.action.error.message"), e));
             } finally {
                 this.timer.cancel();
                 FXThreadUtils.runOnFXThread(() -> {
