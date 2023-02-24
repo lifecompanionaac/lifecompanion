@@ -28,14 +28,18 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
+import org.lifecompanion.framework.utils.FluentHashMap;
 import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.util.javafx.FXControlUtils;
+
+import java.util.Map;
 
 /**
  * View to display a list and to provide a way to change item order, add/remove item in the list.
@@ -120,6 +124,24 @@ public class OrderModifiableListView<T> extends BorderPane implements LCViewInit
                 .or(this.listChildren.getSelectionModel().selectedIndexProperty().isEqualTo(0)));
         this.buttonDown.disableProperty().bind(this.listChildren.getSelectionModel().selectedItemProperty().isNull().or(this.listChildren
                 .getSelectionModel().selectedIndexProperty().isEqualTo(this.listProperty.sizeProperty().subtract(1))));
+    }
+
+    @Override
+    public void initListener() {
+        Map<KeyCode, Button> shortcut = FluentHashMap
+                .map(KeyCode.DELETE, buttonRemove)
+                .with(KeyCode.LEFT, buttonUp)
+                .with(KeyCode.RIGHT, buttonDown)
+                .with(KeyCode.ENTER, buttonModify)
+                .with(KeyCode.N, buttonAdd);
+        this.listChildren.setOnKeyPressed(k -> {
+            KeyCode code = k.getCode();
+            Button button = shortcut.get(code);
+            if (button != null) {
+                button.fire();
+                k.consume();
+            }
+        });
     }
 
     // Class part : "Needed getter and setter"

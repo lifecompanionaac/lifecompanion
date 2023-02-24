@@ -5,6 +5,12 @@
 ### Fonctionnalités
 
 - Ajout d'une action "Changer de mode de sélection" afin de pouvoir passer d'un mode direct/défilement durant le mode utilisation
+- Ajout de raccourcis clavier sur les listes d'actions, d'événements, de grilles :
+  - Suppr. : supprime l'élément sélectionné
+  - Entrée : modifie l'élément sélectionné
+  - Flèche droite : décale l'élément sélectionné vers le bas
+  - Flèche gauche : décale l'élément sélectionné vers le haut
+  - N : créer un nouvel élément
 
 ### Corrections/ajustements
 
