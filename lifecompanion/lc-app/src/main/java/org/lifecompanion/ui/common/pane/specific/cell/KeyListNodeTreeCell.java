@@ -22,11 +22,13 @@ package org.lifecompanion.ui.common.pane.specific.cell;
 import javafx.scene.control.TreeCell;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
 
+import java.util.function.Consumer;
+
 public class KeyListNodeTreeCell extends TreeCell<KeyListNodeI> {
     private final KeyListCellHandler keyListCellHandler;
 
-    public KeyListNodeTreeCell() {
-        keyListCellHandler = new KeyListCellHandler(this);
+    public KeyListNodeTreeCell(Consumer<String> followUpLinkCallback) {
+        keyListCellHandler = new KeyListCellHandler(this, followUpLinkCallback);
     }
 
     @Override

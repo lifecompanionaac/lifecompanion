@@ -41,6 +41,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import org.lifecompanion.controller.configurationcomponent.dynamickey.KeyListController;
 import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.fxmisc.easybind.EasyBind;
 import org.fxmisc.easybind.monadic.MonadicBinding;
@@ -160,18 +161,22 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         gridButtons.add(buttonMoveDown, 1, rowIndex++);
 
         keyListTreeView = new TreeView<>();
-        keyListTreeView.setCellFactory(tv -> new KeyListNodeTreeCell());
+        keyListTreeView.setCellFactory(tv -> new KeyListNodeTreeCell(this::selectAndScrollToId));
         keyListTreeView.setShowRoot(false);
         keyListTreeView.setMaxHeight(TREE_VIEW_HEIGHT);
         keyListTreeView.setMinHeight(TREE_VIEW_HEIGHT);
         keyListTreeView.setFixedCellSize(KeyListCellHandler.CELL_HEIGHT + 5);
         HBox.setHgrow(keyListTreeView, Priority.ALWAYS);
 
-        this.buttonExportKeys = FXControlUtils.createLeftTextButton(Translation.getText("general.configuration.view.key.list.button.export.keys"), GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.UPLOAD).size(14).color(LCGraphicStyle.MAIN_DARK), null);
+        this.buttonExportKeys = FXControlUtils.createLeftTextButton(Translation.getText("general.configuration.view.key.list.button.export.keys"),
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.UPLOAD).size(14).color(LCGraphicStyle.MAIN_DARK),
+                null);
         this.buttonExportKeys.setMaxWidth(Double.MAX_VALUE);
         this.buttonExportKeys.setAlignment(Pos.CENTER);
 
-        this.buttonImportKeys = FXControlUtils.createLeftTextButton(Translation.getText("general.configuration.view.key.list.button.import.keys"), GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.DOWNLOAD).size(14).color(LCGraphicStyle.MAIN_DARK), null);
+        this.buttonImportKeys = FXControlUtils.createLeftTextButton(Translation.getText("general.configuration.view.key.list.button.import.keys"),
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.DOWNLOAD).size(14).color(LCGraphicStyle.MAIN_DARK),
+                null);
         this.buttonImportKeys.setMaxWidth(Double.MAX_VALUE);
         this.buttonImportKeys.setAlignment(Pos.CENTER);
 
@@ -197,7 +202,9 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         boxTreeAndCommands.setAlignment(Pos.CENTER);
         VBox.setVgrow(boxTreeAndCommands, Priority.ALWAYS);
 
-        buttonShowHideProperties = FXControlUtils.createLeftTextButton(Translation.getText("keylist.config.hide.key.properties"), GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.EYE_SLASH).size(18).color(LCGraphicStyle.MAIN_DARK), "TODO");
+        buttonShowHideProperties = FXControlUtils.createLeftTextButton(Translation.getText("keylist.config.hide.key.properties"),
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.EYE_SLASH).size(18).color(LCGraphicStyle.MAIN_DARK),
+                "TODO");
         buttonShowHideProperties.setAlignment(Pos.CENTER_RIGHT);
 
         keyListNodePropertiesEditionView = new KeyListNodePropertiesEditionView();
@@ -295,16 +302,19 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         parentNode.getChildren().remove(selectedNode);
         keyListTreeView.getSelectionModel().clearSelection();
         executeSearch(true);
-        LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo(Translation.getText(notificationTitle, selectedNode.getHumanReadableText()), true, "keylist.action.remove.cancel", () -> {
-            if (!parentNode.getChildren().contains(selectedNode)) {
-                if (previousIndex > 0 && previousIndex <= parentNode.getChildren().size()) {
-                    parentNode.getChildren().add(previousIndex, selectedNode);
-                } else {
-                    parentNode.getChildren().add(0, selectedNode);
-                }
-                selectAndScrollTo(selectedNode);
-            }
-        }));
+        LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo(Translation.getText(notificationTitle, selectedNode.getHumanReadableText()),
+                true,
+                "keylist.action.remove.cancel",
+                () -> {
+                    if (!parentNode.getChildren().contains(selectedNode)) {
+                        if (previousIndex > 0 && previousIndex <= parentNode.getChildren().size()) {
+                            parentNode.getChildren().add(previousIndex, selectedNode);
+                        } else {
+                            parentNode.getChildren().add(0, selectedNode);
+                        }
+                        selectAndScrollTo(selectedNode);
+                    }
+                }));
     }
 
     private EventHandler<ActionEvent> createMoveNodeListener(final int indexMove) {
@@ -541,6 +551,15 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
             if (LangUtils.isNotEmpty(toAdd)) {
                 selectAndScrollTo(toAdd.get(0));
                 LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo("notification.keylist.node.added").withMsDuration(LCGraphicStyle.SHORT_NOTIFICATION_DURATION_MS));
+            }
+        }
+    }
+
+    public void selectAndScrollToId(String itemId) {
+        if (itemId != null && this.rootKeyListNode.get() != null) {
+            final KeyListNodeI foundNode = KeyListController.findNodeByIdInSubtree(this.rootKeyListNode.get(), itemId);
+            if (foundNode != null) {
+                selectAndScrollTo(foundNode);
             }
         }
     }

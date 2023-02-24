@@ -11,6 +11,7 @@
   - Flèche droite : décale l'élément sélectionné vers le bas
   - Flèche gauche : décale l'élément sélectionné vers le haut
   - N : créer un nouvel élément
+- Ajout d'un bouton pour "suivre" les liens dans les listes de cases
 
 ### Corrections/ajustements
 

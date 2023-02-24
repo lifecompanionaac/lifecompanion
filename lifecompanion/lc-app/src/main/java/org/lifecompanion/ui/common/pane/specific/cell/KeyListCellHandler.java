@@ -20,15 +20,19 @@
 package org.lifecompanion.ui.common.pane.specific.cell;
 
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.IndexedCell;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import org.lifecompanion.framework.commons.translation.Translation;
+import org.lifecompanion.ui.configurationcomponent.editmode.componentoption.ButtonComponentOption;
 import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
 import org.lifecompanion.controller.resource.IconHelper;
@@ -36,6 +40,9 @@ import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.util.binding.BindingUtils;
+import org.lifecompanion.util.javafx.FXControlUtils;
+
+import java.util.function.Consumer;
 
 public class KeyListCellHandler implements LCViewInitHelper {
     public final static double CELL_HEIGHT = 25;
@@ -48,8 +55,16 @@ public class KeyListCellHandler implements LCViewInitHelper {
     private HBox glyphPane;
     private Label labelText;
     private Rectangle rectangleColors;
+    private Button buttonFollowUpLink;
+    private final Consumer<String> followUpLinkCallback;
+
 
     protected KeyListCellHandler(IndexedCell<? extends KeyListNodeI> thisCell) {
+        this(thisCell, null);
+    }
+
+    protected KeyListCellHandler(IndexedCell<? extends KeyListNodeI> thisCell, Consumer<String> followUpLinkCallback) {
+        this.followUpLinkCallback = followUpLinkCallback;
         this.thisCell = thisCell;
         thisCell.getStyleClass().add("keylist-tree-cell");
         initAll();
@@ -76,7 +91,12 @@ public class KeyListCellHandler implements LCViewInitHelper {
         rectangleColors = new Rectangle(CELL_HEIGHT / 2.0, CELL_HEIGHT / 2.0);
         rectangleColors.setStrokeWidth(2.0);
 
-        graphics = new HBox(10, glyphPane, labelText, imageView, rectangleColors);
+        this.buttonFollowUpLink = FXControlUtils.createGraphicButton(
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.SHARE).size(14).color(
+                        LCGraphicStyle.MAIN_DARK),
+                null);
+
+        graphics = new HBox(10, glyphPane, labelText, imageView, rectangleColors, buttonFollowUpLink);
         graphics.setPadding(new Insets(0, 0, 0, 2));
         graphics.setAlignment(Pos.CENTER_LEFT);
 
@@ -93,23 +113,43 @@ public class KeyListCellHandler implements LCViewInitHelper {
             if (nv != null)
                 nv.addExternalLoadingRequest(nodeIdForImageLoading);
         });
+        this.buttonFollowUpLink.setOnAction(e -> {
+            KeyListNodeI item = thisCell.getItem();
+            if (item != null && item.isLinkNode()) {
+                followUpLinkCallback.accept(item.linkedNodeIdProperty().get());
+            }
+        });
+    }
+
+    @Override
+    public void initBinding() {
+        this.buttonFollowUpLink.managedProperty().bind(buttonFollowUpLink.visibleProperty());
+        this.imageView.managedProperty().bind(imageView.visibleProperty());
+        this.rectangleColors.managedProperty().bind(rectangleColors.visibleProperty());
     }
 
     void cellUpdateItem(KeyListNodeI item, boolean empty) {
         if (item == null || empty) {
             thisCell.setGraphic(null);
             BindingUtils.unbindAndSetNull(imageView.imageProperty());
+            BindingUtils.unbindAndSet(imageView.visibleProperty(),false);
             BindingUtils.unbindAndSetNull(labelText.textProperty());
             BindingUtils.unbindAndSetNull(labelText.textFillProperty());
             BindingUtils.unbindAndSetNull(rectangleColors.strokeProperty());
             BindingUtils.unbindAndSetNull(rectangleColors.fillProperty());
+            BindingUtils.unbindAndSet(rectangleColors.visibleProperty(),false);
+            BindingUtils.unbindAndSet(buttonFollowUpLink.visibleProperty(), false);
+            this.buttonFollowUpLink.setVisible(false);
             glyphPane.getChildren().clear();
         } else {
             glyphPane.getChildren().clear();
             imageView.imageProperty().bind(item.loadedImageProperty());
+            imageView.visibleProperty().bind(item.loadedImageProperty().isNotNull());
             glyphPane.getChildren().add(item.isLinkNode() ? linkGlyph : item.isLeafNode() ? keyGlyph : listGlyph);
+            buttonFollowUpLink.visibleProperty().bind(item.linkedNodeIdProperty().isNotEmpty().and(new SimpleBooleanProperty(followUpLinkCallback != null && item.isLinkNode())));
             rectangleColors.strokeProperty().bind(item.strokeColorProperty());
             rectangleColors.fillProperty().bind(item.backgroundColorProperty());
+            rectangleColors.visibleProperty().bind(item.strokeColorProperty().isNotNull().or(item.backgroundColorProperty().isNotNull()));
             labelText.textProperty()
                     .bind(Bindings.createStringBinding(item::getHumanReadableText,
                             item.textProperty(),
