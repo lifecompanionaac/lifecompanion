@@ -14,6 +14,7 @@
 
 ### Corrections/ajustements
 
+- Ticket #172 : lorsque la configuration des listes de case est ouverte, le niveau courant est automatiquement sélectionné
 - Ticket #211 : amélioration de la qualité de la synthèse vocale
 - Correction d'un problème sur lors de la mise en pause du défilement
 - Optimisation du défilement pour certains cas (ligne/colonne ou colonne/ligne particuliers)
