@@ -47,6 +47,8 @@ import org.lifecompanion.model.impl.usevariable.UseVariableDefinition;
 import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import oshi.SystemInfo;
+import oshi.hardware.PowerSource;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -165,6 +167,10 @@ public enum UseVariableController implements ModeListenerI {
                 "use.variable.current.char.in.editor.description", "use.variable.current.char.in.editor.example"));
         this.addDef(new UseVariableDefinition("CurrentTextInClipboard", "use.variable.current.text.in.clipboard.name",
                 "use.variable.current.text.in.clipboard.description", "use.variable.current.text.in.clipboard.example"));
+        this.addDef(new UseVariableDefinition("BatteryLevel", "use.variable.battery.level.percent.name",
+                "use.variable.battery.level.percent.description", "use.variable.battery.level.percent.example"));
+        this.addDef(new UseVariableDefinition("BatteryTimeRemaining", "use.variable.battery.time.remaining.name",
+                "use.variable.battery.time.remaining.description", "use.variable.battery.time.remaining.example"));
         //Init plugin
         PluginController.INSTANCE.getUseVariableDefinitions().registerListenerAndDrainCache(this::addDef);
     }
@@ -220,6 +226,28 @@ public enum UseVariableController implements ModeListenerI {
         UseVariableDefinitionI currentTextInClipboard = this.getPossibleDefinitions().get("CurrentTextInClipboard");
         vars.put(currentTextInClipboard.getId(), new StringUseVariable(currentTextInClipboard, getClipboardContent()));
 
+        // Battery level + remaining time
+        double batteryLevel = 0.0;
+        double batteryRemainingTime = 0.0;
+        try {
+            SystemInfo si = new SystemInfo();
+            List<PowerSource> powerSources = si.getHardware().getPowerSources();
+            if (!CollectionUtils.isEmpty(powerSources)) {
+                PowerSource powerSource = powerSources.get(0);
+                batteryLevel = powerSource.getRemainingCapacityPercent();
+                batteryRemainingTime = powerSource.getTimeRemainingEstimated();
+
+            }
+        } catch (Throwable t) {
+            LOGGER.warn("Couldn't get power source information", t);
+        }
+        UseVariableDefinitionI batteryLevelDef = getPossibleDefinitions().get("BatteryLevel");
+        vars.put(batteryLevelDef.getId(), new StringUseVariable(batteryLevelDef, "" + (int) (batteryLevel * 100.0) + "%"));
+
+        UseVariableDefinitionI batteryTimeRemainingDef = getPossibleDefinitions().get("BatteryTimeRemaining");
+        vars.put(batteryTimeRemainingDef.getId(), new StringUseVariable(batteryTimeRemainingDef, org.lifecompanion.util.StringUtils.durationToString((int) batteryRemainingTime)));
+
+
         //Current over part
         GridPartComponentI currentOverPart = SelectionModeController.INSTANCE.currentOverPartProperty().get();
         String currentOverPartName = "";
@@ -234,6 +262,7 @@ public enum UseVariableController implements ModeListenerI {
         UseVariableDefinitionI currentOverGridNameDef = this.getPossibleDefinitions().get("CurrentOverPartGridParentName");
         vars.put(currentOverPartNameDef.getId(), new StringUseVariable(currentOverPartNameDef, currentOverPartName));
         vars.put(currentOverGridNameDef.getId(), new StringUseVariable(currentOverGridNameDef, currentOverGridName));
+
         //Generate plugin variable and merge
         Map<String, UseVariableI<?>> pluginVariables = PluginController.INSTANCE.generatePluginsUseVariable();
         vars.putAll(pluginVariables);
@@ -313,7 +342,8 @@ public enum UseVariableController implements ModeListenerI {
         final Set<String> keys = variables.keySet();
         for (String key : keys) {
             final UseVariableI<?> variable = variables.get(key);
-            text = getPatternFor(key).matcher(text).replaceAll(Matcher.quoteReplacement(variableValueTransformer != null ? variableValueTransformer.apply(variable.toStringValue()) : variable.toStringValue()));
+            text = getPatternFor(key).matcher(text)
+                    .replaceAll(Matcher.quoteReplacement(variableValueTransformer != null ? variableValueTransformer.apply(variable.toStringValue()) : variable.toStringValue()));
         }
         //TODO : if the user use a variable not in the map, should we replace it with a blank string ?
         return text;
@@ -321,7 +351,8 @@ public enum UseVariableController implements ModeListenerI {
 
 
     private Pattern getPatternFor(String key) {
-        return patternCache.computeIfAbsent(key, k -> Pattern.compile("\\" + UseVariableController.VARIABLE_OPEN_CHAR + key + "\\" + UseVariableController.VARIABLE_CLOSE_CHAR, Pattern.CASE_INSENSITIVE));
+        return patternCache.computeIfAbsent(key,
+                k -> Pattern.compile("\\" + UseVariableController.VARIABLE_OPEN_CHAR + key + "\\" + UseVariableController.VARIABLE_CLOSE_CHAR, Pattern.CASE_INSENSITIVE));
     }
     //========================================================================
 

@@ -15,6 +15,8 @@
 - **Amélioration de la fonction Imprimer** en mode utilisation
   - Intègre maintenant les pictogrammes de l'éditeur courant
   - Si le texte est trop long, s'imprime sur plusieurs pages
+- Ajout d'une nouvelle variable : **batterie restante** (en pourcentage)
+- Ajout d'une nouvelle variable : **temps restant de la batterie**
 
 ### Corrections/ajustements
 

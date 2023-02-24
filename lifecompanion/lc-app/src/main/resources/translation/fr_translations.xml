@@ -250,6 +250,12 @@
   <text key="text.editor.example.line1.second">avec image</text>
   <text key="text.editor.example.line2">\nsur plusieurs lignes pour savoir comment le texte
 		s'affiche...</text>
+    <text key="use.variable.battery.level.percent.name">Batterie restante (en pourcentage)</text>
+    <text key="use.variable.battery.level.percent.description">Contient le pourcentage de batterie restante actuellement. N'est valable que pour les machines avec une batterie.</text>
+    <text key="use.variable.battery.level.percent.example">77%</text>
+    <text key="use.variable.battery.time.remaining.name">Temps restant de la batterie</text>
+    <text key="use.variable.battery.time.remaining.description">Contient le temps restant de la batterie estimé par le système. N'est valable que pour les machines avec une batterie.</text>
+    <text key="use.variable.battery.time.remaining.example">01:35:50</text>
   <text key="use.variable.current.char.in.editor.description">Le dernier caractère dans l'éditeur de texte</text>
   <text key="use.variable.current.char.in.editor.example">"i" pour "Il est à Pari"</text>
   <text key="use.variable.current.char.in.editor.name">Dernier caractère</text>

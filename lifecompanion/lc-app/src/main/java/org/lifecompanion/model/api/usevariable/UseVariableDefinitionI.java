@@ -31,20 +31,20 @@ public interface UseVariableDefinitionI {
 	 * The user uses this ID when he wants to use a variable (e.g. "Today is {VariableId}")
 	 * @return The variable unique id.
 	 */
-	public String getId();
+	String getId();
 
 	/**
 	 * @return a name for this variable
 	 */
-	public String getName();
+	String getName();
 
 	/**
 	 * @return a description for this variable
 	 */
-	public String getDescription();
+	String getDescription();
 
 	/**
 	 * @return a example value for this variable, that should represent how the variable will look like
 	 */
-	public String getExampleValueToString();
+	String getExampleValueToString();
 }
