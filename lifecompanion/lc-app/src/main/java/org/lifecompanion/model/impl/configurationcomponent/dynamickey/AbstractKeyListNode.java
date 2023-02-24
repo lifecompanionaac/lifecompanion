@@ -24,8 +24,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.jdom2.Element;
 import org.lifecompanion.controller.io.ConfigurationComponentIOHelper;
+import org.lifecompanion.framework.commons.fx.io.XMLGenericProperty;
 import org.lifecompanion.model.api.configurationcomponent.TreeIdentifiableComponentI;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
+import org.lifecompanion.model.api.configurationcomponent.dynamickey.LinkType;
+import org.lifecompanion.model.api.selectionmode.ProgressDrawMode;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.io.XMLSerializable;
@@ -51,9 +54,16 @@ public abstract class AbstractKeyListNode extends AbstractSimplerKeyActionContai
 
     @XMLIgnoreNullValue
     private final StringProperty linkedNodeId;
+
+    @XMLIgnoreNullValue
+    private final StringProperty linkedGridId;
+
     private final transient IntegerProperty level;
     private final ObservableList<KeyListNodeI> children;
     private final ObjectProperty<KeyListNodeI> parent;
+
+    @XMLGenericProperty(LinkType.class)
+    private final ObjectProperty<LinkType> linkType;
 
     protected AbstractKeyListNode(boolean leaf, boolean link) {
         super();
@@ -63,6 +73,8 @@ public abstract class AbstractKeyListNode extends AbstractSimplerKeyActionContai
         this.children = leaf ? null : FXCollections.observableArrayList();
         this.level = new SimpleIntegerProperty(1);
         this.linkedNodeId = new SimpleStringProperty();
+        this.linkedGridId = new SimpleStringProperty();
+        this.linkType = new SimpleObjectProperty<>(LinkType.KEYLIST);
         if (this.children != null) {
             this.children.addListener(BindingUtils.createListChangeListenerV2(
                     added -> ((AbstractKeyListNode) added).parent.set(this),
@@ -120,6 +132,11 @@ public abstract class AbstractKeyListNode extends AbstractSimplerKeyActionContai
     }
 
     @Override
+    public ObjectProperty<LinkType> linkTypeProperty() {
+        return linkType;
+    }
+
+    @Override
     public ObservableList<KeyListNodeI> getChildren() {
         return children;
     }
@@ -137,6 +154,11 @@ public abstract class AbstractKeyListNode extends AbstractSimplerKeyActionContai
     @Override
     public StringProperty linkedNodeIdProperty() {
         return linkedNodeId;
+    }
+
+    @Override
+    public StringProperty linkedGridIdProperty() {
+        return linkedGridId;
     }
 
     @Override

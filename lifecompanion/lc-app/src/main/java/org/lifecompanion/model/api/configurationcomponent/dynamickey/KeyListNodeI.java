@@ -19,6 +19,7 @@
 
 package org.lifecompanion.model.api.configurationcomponent.dynamickey;
 
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.StringProperty;
@@ -34,7 +35,11 @@ import java.util.function.Consumer;
  */
 // TODO : UseActionTriggerComponentI to be able to add custom action on keys
 public interface KeyListNodeI extends SimplerKeyActionContainerI {
+    ObjectProperty<LinkType> linkTypeProperty();
+
     StringProperty linkedNodeIdProperty();
+
+    StringProperty linkedGridIdProperty();
 
     /**
      * @return true if this node represent a leaf (then is {@link #getChildren()} can return null)

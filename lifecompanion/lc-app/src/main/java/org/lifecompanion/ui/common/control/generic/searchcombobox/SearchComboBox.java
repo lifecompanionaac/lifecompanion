@@ -71,6 +71,10 @@ public class SearchComboBox<T> extends HBox implements LCViewInitHelper {
         this.items = items;
     }
 
+    public ObservableList<T> getItems() {
+        return items;
+    }
+
     public T getValue() {
         return value.get();
     }
@@ -143,10 +147,6 @@ public class SearchComboBox<T> extends HBox implements LCViewInitHelper {
 
     Callback<ListView<T>, ListCell<T>> getCellFactory() {
         return cellFactory;
-    }
-
-    ObservableList<T> getItems() {
-        return items;
     }
     //========================================================================
 }

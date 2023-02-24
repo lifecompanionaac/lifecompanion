@@ -273,4 +273,14 @@ public class ConfigurationComponentUtils {
         }
         return null;
     }
+
+    public static <T> T findById(LCConfigurationI configuration, String id, Class<? extends T> componentType) {
+        return (T) configuration.getAllComponent()
+                .values()
+                .stream()
+                .filter(c -> componentType.isAssignableFrom(c.getClass()))
+                .filter(c -> StringUtils.isEquals(c.getID(), id))
+                .findAny()
+                .orElse(null);
+    }
 }

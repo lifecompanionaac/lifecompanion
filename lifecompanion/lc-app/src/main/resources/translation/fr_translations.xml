@@ -1727,6 +1727,8 @@
   <text key="user.action.sequence.item.display.filter.field">Mode d'affichage</text>
   <text key="general.configuration.view.key.list.field.background.color">Couleur de la case</text>
   <text key="general.configuration.view.key.list.field.linked.node">Lien vers une autre liste</text>
+  <text key="general.configuration.view.key.list.field.linked.grid">Lien vers une grille</text>
+  <text key="general.configuration.view.key.list.field.link.type">Lien vers autre liste ou grille ?</text>
   <text key="general.configuration.view.key.list.field.play.recorded.sound">Utiliser un son enregistré</text>
   <text key="general.configuration.view.key.list.field.space.after">Ajouter un espace après le texte écrit</text>
   <text key="general.configuration.view.key.list.field.speak.over">Prononcer au survol de la case</text>

@@ -39,7 +39,9 @@ import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * A control to select a component.
@@ -97,6 +99,18 @@ public class ComponentSelectorControl<T extends DisplayableComponentI> extends V
      */
     public ObjectProperty<T> selectedComponentProperty() {
         return this.searchComboBox.valueProperty();
+    }
+
+    public void selectById(String id) {
+        if (id != null) {
+            ObservableList<T> searchComboBoxItems = searchComboBox.getItems();
+            if (searchComboBoxItems != null) {
+                List<T> items = new ArrayList<>(searchComboBoxItems);
+                items.stream().filter(c -> StringUtils.isEquals(id, c.getID())).findAny().ifPresent(selectedComponentProperty()::set);
+            }
+        } else {
+            clearSelection();
+        }
     }
 
     @Override
