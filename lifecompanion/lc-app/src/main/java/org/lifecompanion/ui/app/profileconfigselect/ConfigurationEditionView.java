@@ -219,6 +219,8 @@ public class ConfigurationEditionView extends BorderPane implements ProfileConfi
                 ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.SetDefaultEditAction(this.editedConfiguration.get(), toggleSwitchLaunchInUseMode.isSelected()));
             }
         });
+        fieldName.setOnAction(e -> buttonValidate.fire());
+        fieldAuthor.setOnAction(e -> buttonValidate.fire());
     }
 
     //========================================================================

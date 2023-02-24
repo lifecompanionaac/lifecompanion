@@ -168,8 +168,8 @@ public class ProfileEditionView extends BorderPane implements LCViewInitHelper, 
     @Override
     public void initListener() {
         buttonValidate.setOnAction(e -> closeCurrentEdit(false, false));
+        fieldName.setOnAction(e -> buttonValidate.fire());
     }
-
 
     @Override
     public void initBinding() {
