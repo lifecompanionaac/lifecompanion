@@ -3601,4 +3601,5 @@
     <text key="training.information.button.close">Fermer</text>
     <text key="training.information.button.train">Se former</text>
     <text key="use.action.change.selection.mode.to">Mode de sélection à utiliser</text>
+    <text key="user.config.enable.profile.configuration.auto.backup">Créer des sauvegardes de secours à la suppression/l'import des configurations/profils</text>
 </texts>

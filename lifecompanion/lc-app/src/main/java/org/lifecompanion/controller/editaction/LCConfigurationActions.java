@@ -38,6 +38,7 @@ import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.profile.ProfileController;
 import org.lifecompanion.controller.profileconfigselect.ProfileConfigSelectionController;
 import org.lifecompanion.controller.profileconfigselect.ProfileConfigStep;
+import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
@@ -238,7 +239,9 @@ public class LCConfigurationActions {
         @Override
         public void doAction() throws LCException {
             final LCProfileI profile = ProfileController.INSTANCE.currentProfileProperty().get();
-            final ConfigurationDuplicateTask configurationDuplicateTask = IOHelper.createConfigurationDuplicateTaskFromDefaultConfigurationDir(defaultConfiguration.getLeft(), defaultConfiguration.getRight(), profile);
+            final ConfigurationDuplicateTask configurationDuplicateTask = IOHelper.createConfigurationDuplicateTaskFromDefaultConfigurationDir(defaultConfiguration.getLeft(),
+                    defaultConfiguration.getRight(),
+                    profile);
             configurationDuplicateTask.setOnSucceeded(e -> {
                 // Add to profile and then open
                 LCConfigurationDescriptionI duplicated = configurationDuplicateTask.getValue();
@@ -568,22 +571,27 @@ public class LCConfigurationActions {
                 configurationDescription = currentProfile.getConfigurationById(currentConfiguration.getID());
             }
 
-            GlobalActions.checkModificationForCurrentConfiguration(currentConfiguration == null || StringUtils.isEquals(configurationDescription.getConfigurationId(), currentConfiguration.getID()), this, source, Translation.getText("export.config.action.confirm.message"), "export.config.action.confirm.button", () -> {
-                FileChooser configChooser = LCFileChoosers.getChooserConfiguration(FileChooserType.CONFIG_EXPORT);
-                // Issue #139 : default name for configuration
-                configChooser.setInitialFileName(IOHelper.DATE_FORMAT_FILENAME_WITHOUT_TIME.format(new Date()) + "_"
-                        + org.lifecompanion.util.IOUtils.getValidFileName(configurationDescription.configurationNameProperty().get()));
-                File configExportFile = configChooser.showSaveDialog(FXUtils.getSourceWindow(source));
-                if (configExportFile != null) {
-                    LCStateController.INSTANCE.updateDefaultDirectory(FileChooserType.CONFIG_EXPORT, configExportFile.getParentFile());
-                    ConfigurationExportTask exportConfigTask = IOHelper.createConfigurationExportTask(configurationDescription, currentProfile,
-                            configExportFile);
-                    //Execute
-                    AsyncExecutorController.INSTANCE.addAndExecute(true, false, exportConfigTask);
-                } else {
-                    LCConfigurationActions.LOGGER.info("Configuration will no be exported because user cancelled the save dialog");
-                }
-            });
+            GlobalActions.checkModificationForCurrentConfiguration(currentConfiguration == null || StringUtils.isEquals(configurationDescription.getConfigurationId(), currentConfiguration.getID()),
+                    this,
+                    source,
+                    Translation.getText("export.config.action.confirm.message"),
+                    "export.config.action.confirm.button",
+                    () -> {
+                        FileChooser configChooser = LCFileChoosers.getChooserConfiguration(FileChooserType.CONFIG_EXPORT);
+                        // Issue #139 : default name for configuration
+                        configChooser.setInitialFileName(IOHelper.DATE_FORMAT_FILENAME_WITHOUT_TIME.format(new Date()) + "_"
+                                + org.lifecompanion.util.IOUtils.getValidFileName(configurationDescription.configurationNameProperty().get()));
+                        File configExportFile = configChooser.showSaveDialog(FXUtils.getSourceWindow(source));
+                        if (configExportFile != null) {
+                            LCStateController.INSTANCE.updateDefaultDirectory(FileChooserType.CONFIG_EXPORT, configExportFile.getParentFile());
+                            ConfigurationExportTask exportConfigTask = IOHelper.createConfigurationExportTask(configurationDescription, currentProfile,
+                                    configExportFile);
+                            //Execute
+                            AsyncExecutorController.INSTANCE.addAndExecute(true, false, exportConfigTask);
+                        } else {
+                            LCConfigurationActions.LOGGER.info("Configuration will no be exported because user cancelled the save dialog");
+                        }
+                    });
         }
 
         @Override
@@ -606,7 +614,9 @@ public class LCConfigurationActions {
             LCConfigurationDescriptionI currentConfigurationDescription = AppModeController.INSTANCE.getEditModeContext().configurationDescriptionProperty().get();
 
             FileChooser configChooser = LCFileChoosers.getOtherFileChooser(Translation.getText("pdf.export.chooser.dialog.title"), new FileChooser.ExtensionFilter("PDF", "*.pdf"), EXPORT_PDF);
-            configChooser.setInitialFileName(Translation.getText("pdf.export.default.file.name", IOHelper.DATE_FORMAT_FILENAME_WITHOUT_TIME.format(new Date()), org.lifecompanion.util.IOUtils.getValidFileName(currentConfigurationDescription.configurationNameProperty().get())));
+            configChooser.setInitialFileName(Translation.getText("pdf.export.default.file.name",
+                    IOHelper.DATE_FORMAT_FILENAME_WITHOUT_TIME.format(new Date()),
+                    org.lifecompanion.util.IOUtils.getValidFileName(currentConfigurationDescription.configurationNameProperty().get())));
 
             File pdfFile = configChooser.showSaveDialog(FXUtils.getSourceWindow(source));
             if (pdfFile != null) {
@@ -826,15 +836,22 @@ public class LCConfigurationActions {
      * Backup the removed configuration to a hidden directory, then remove the configuration and directory and configuration from the list.
      */
     private static void backupThenDeleteConfigurationDirectory(LCConfigurationDescriptionI configurationDescription, LCProfileI profile, boolean deleteConfigurationDirectory, Runnable postAction) {
-        ConfigurationBackupAndThenTask backupConfigurationTask = IOHelper.createConfigurationBackupTask(configurationDescription, profile, IOHelper.getBackupConfigurationDestinationPath(configurationDescription), deleteConfigurationDirectory ? () -> {
-            final File configDir = new File(IOHelper.getConfigurationDirectoryPath(profile.getID(), configurationDescription.getConfigurationId()));
-            // Now try to delete configuration directory (may fail sometimes if resources are not cleared, that's why we also delete directories on startup)
-            IOUtils.deleteDirectoryAndChildren(configDir);
-        } : null);
-        backupConfigurationTask.setOnSucceeded(e -> {
+        if (UserConfigurationController.INSTANCE.autoConfigurationProfileBackupProperty().get()) {
+            ConfigurationBackupAndThenTask backupConfigurationTask = IOHelper.createConfigurationBackupTask(configurationDescription,
+                    profile,
+                    IOHelper.getBackupConfigurationDestinationPath(configurationDescription),
+                    deleteConfigurationDirectory ? () -> {
+                        final File configDir = new File(IOHelper.getConfigurationDirectoryPath(profile.getID(), configurationDescription.getConfigurationId()));
+                        // Now try to delete configuration directory (may fail sometimes if resources are not cleared, that's why we also delete directories on startup)
+                        IOUtils.deleteDirectoryAndChildren(configDir);
+                    } : null);
+            backupConfigurationTask.setOnSucceeded(e -> {
+                if (postAction != null) postAction.run();
+            });
+            AsyncExecutorController.INSTANCE.addAndExecute(true, false, backupConfigurationTask);
+        } else {
             if (postAction != null) postAction.run();
-        });
-        AsyncExecutorController.INSTANCE.addAndExecute(true, false, backupConfigurationTask);
+        }
     }
     //========================================================================
 }

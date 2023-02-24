@@ -69,6 +69,7 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
     private ToggleSwitch toggleEnableAutoShowVirtualKeyboard;
     private ToggleSwitch toggleDisabledExitInUseMode;
     private ToggleSwitch toggleSecureGoToEditModeProperty;
+    private ToggleSwitch toggleAutoConfigurationProfileBackup;
 
     public UIConfigSubmenu() {
         this.initAll();
@@ -131,6 +132,8 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
         gridPaneConfiguration.add(labelUnsavedThreshold, 0, row);
         gridPaneConfiguration.add(this.spinnerUnsavedModification, 1, row++);
 
+        toggleAutoConfigurationProfileBackup = FXControlUtils.createToggleSwitch("user.config.enable.profile.configuration.auto.backup",null);
+
         //Tips
         Label labelConfigTips = FXControlUtils.createTitleLabel("user.config.tips.title");
         toggleEnableTipsStartup = FXControlUtils.createToggleSwitch("user.config.tips.show.startup", null);
@@ -143,6 +146,7 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
                 labelUseMode, toggleSecureGoToEditModeProperty, labelExplainSecuredConfigMode, toggleDisabledExitInUseMode, labelExplainExitUseMode,
                 labelConfigStylePart, gridPaneStyleParam,
                 labelConfigTitle, gridPaneConfiguration,
+                toggleAutoConfigurationProfileBackup,
                 labelStagePart, gridPaneStageParam
         );
         totalBox.setPadding(new Insets(10.0));
@@ -173,6 +177,7 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
         this.toggleEnableAutoShowVirtualKeyboard.setSelected(UserConfigurationController.INSTANCE.autoVirtualKeyboardShowProperty().get());
         this.toggleDisabledExitInUseMode.setSelected(UserConfigurationController.INSTANCE.disableExitInUseModeProperty().get());
         this.toggleSecureGoToEditModeProperty.setSelected(UserConfigurationController.INSTANCE.secureGoToEditModeProperty().get());
+        this.toggleAutoConfigurationProfileBackup.setSelected(UserConfigurationController.INSTANCE.autoConfigurationProfileBackupProperty().get());
     }
 
     @Override
@@ -189,6 +194,7 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
         UserConfigurationController.INSTANCE.autoVirtualKeyboardShowProperty().set(this.toggleEnableAutoShowVirtualKeyboard.isSelected());
         UserConfigurationController.INSTANCE.disableExitInUseModeProperty().set(this.toggleDisabledExitInUseMode.isSelected());
         UserConfigurationController.INSTANCE.secureGoToEditModeProperty().set(this.toggleSecureGoToEditModeProperty.isSelected());
+        UserConfigurationController.INSTANCE.autoConfigurationProfileBackupProperty().set(this.toggleAutoConfigurationProfileBackup.isSelected());
     }
 
     @Override

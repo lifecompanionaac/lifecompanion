@@ -44,7 +44,7 @@ public enum UserConfigurationController {
             PROP_SELECTION_DASH_SIZE = "selection-dash-size", PROP_TIPS_STARTUP = "show-tips-on-startup",
             PROP_UNSAVED_CHANGE_THRESHOLD = "unsaved-changes-in-config-warning-threshold",
             PROP_RECORD_SEND_SESSION_STATS = "record-and-send-session-stats", PROP_ENABLE_AUTO_VK_SHOW = "auto-virtual-keyboard-show", PROP_ENABLE_JPD_EASTER_EGG = "enable-jpd-easter-egg",
-            PROP_DISABLE_EXIT_USE_MODE = "disable-exit-use-mode", PROP_SECURE_GO_EDIT_MODE = "secure-go-edit-mode";
+            PROP_DISABLE_EXIT_USE_MODE = "disable-exit-use-mode", PROP_SECURE_GO_EDIT_MODE = "secure-go-edit-mode", PROP_AUTO_CONFIG_PROFILE_BACKUP = "auto-config-profile-backup";
 
 
     //Properties
@@ -60,6 +60,7 @@ public enum UserConfigurationController {
     private final BooleanProperty enableJPDRetirementEasterEgg;
     private final BooleanProperty disableExitInUseMode;
     private final BooleanProperty secureGoToEditMode;
+    private final BooleanProperty autoConfigurationProfileBackup;
 
     UserConfigurationController() {
         this.userLanguage = new SimpleStringProperty("fr");
@@ -76,6 +77,7 @@ public enum UserConfigurationController {
         this.enableJPDRetirementEasterEgg = new SimpleBooleanProperty(true);
         this.disableExitInUseMode = new SimpleBooleanProperty(false);
         this.secureGoToEditMode = new SimpleBooleanProperty(false);
+        this.autoConfigurationProfileBackup = new SimpleBooleanProperty(true);
     }
 
     private File getConfigFile() {
@@ -131,6 +133,9 @@ public enum UserConfigurationController {
             if (prop.containsKey(UserConfigurationController.PROP_SECURE_GO_EDIT_MODE)) {
                 this.secureGoToEditMode.set(Boolean.parseBoolean(prop.getProperty(PROP_SECURE_GO_EDIT_MODE)));
             }
+            if (prop.containsKey(UserConfigurationController.PROP_AUTO_CONFIG_PROFILE_BACKUP)) {
+                this.autoConfigurationProfileBackup.set(Boolean.parseBoolean(prop.getProperty(PROP_AUTO_CONFIG_PROFILE_BACKUP)));
+            }
         } catch (FileNotFoundException e) {
             this.LOGGER.warn("Configuration file {} not found", configFile, e);
         }
@@ -158,6 +163,7 @@ public enum UserConfigurationController {
         prop.setProperty(PROP_ENABLE_JPD_EASTER_EGG, "" + this.enableJPDRetirementEasterEgg.get());
         prop.setProperty(PROP_SECURE_GO_EDIT_MODE, "" + this.secureGoToEditMode.get());
         prop.setProperty(PROP_DISABLE_EXIT_USE_MODE, "" + this.disableExitInUseMode.get());
+        prop.setProperty(PROP_AUTO_CONFIG_PROFILE_BACKUP, "" + this.autoConfigurationProfileBackup.get());
         IOUtils.createParentDirectoryIfNeeded(configFile);
         try (FileOutputStream fos = new FileOutputStream(configFile)) {
             prop.store(fos, LCConstant.NAME + " user configuration file");
@@ -219,5 +225,9 @@ public enum UserConfigurationController {
 
     public BooleanProperty secureGoToEditModeProperty() {
         return secureGoToEditMode;
+    }
+
+    public BooleanProperty autoConfigurationProfileBackupProperty() {
+        return autoConfigurationProfileBackup;
     }
 }

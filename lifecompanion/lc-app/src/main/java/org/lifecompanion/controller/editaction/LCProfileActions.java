@@ -31,6 +31,7 @@ import org.lifecompanion.controller.io.task.*;
 import org.lifecompanion.controller.profile.ProfileController;
 import org.lifecompanion.controller.profileconfigselect.ProfileConfigSelectionController;
 import org.lifecompanion.controller.profileconfigselect.ProfileConfigStep;
+import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
 import org.lifecompanion.framework.commons.utils.lang.LangUtils;
@@ -166,7 +167,9 @@ public class LCProfileActions {
             if (ProfileController.INSTANCE.currentProfileProperty().get() == this.profileToRemove) {
                 if (DialogUtils
                         .alertWithSourceAndType(source, AlertType.CONFIRMATION)
-                        .withContentText(Translation.getText("action.remove.profile.confirm.current.profile", this.profileToRemove.nameProperty().get(), this.profileToRemove.configurationCountProperty().get()))
+                        .withContentText(Translation.getText("action.remove.profile.confirm.current.profile",
+                                this.profileToRemove.nameProperty().get(),
+                                this.profileToRemove.configurationCountProperty().get()))
                         .withHeaderText(Translation.getText("action.remove.profile.confirm.header"))
                         .showAndWait() == ButtonType.OK) {
                     this.executeProfileRemove();
@@ -178,7 +181,9 @@ public class LCProfileActions {
                 //Ask for confirm
                 if (DialogUtils
                         .alertWithSourceAndType(source, AlertType.CONFIRMATION)
-                        .withContentText(Translation.getText("action.remove.profile.confirm.message", this.profileToRemove.nameProperty().get(), this.profileToRemove.configurationCountProperty().get()))
+                        .withContentText(Translation.getText("action.remove.profile.confirm.message",
+                                this.profileToRemove.nameProperty().get(),
+                                this.profileToRemove.configurationCountProperty().get()))
                         .withHeaderText(Translation.getText("action.remove.profile.confirm.header"))
                         .showAndWait() == ButtonType.OK) {
                     this.executeProfileRemove();
@@ -219,32 +224,37 @@ public class LCProfileActions {
 
             if (profileToSelect != currentProfile) {
                 //Check if we can change profile
-                GlobalActions.checkModificationForCurrentConfiguration(currentProfile != null, this, source, Translation.getText("select.profile.action.confirm.message"), "select.profile.action.confirm.button", () -> {
-                    // First, select the profile
-                    ProfileController.INSTANCE.selectProfile(profileToSelect);
+                GlobalActions.checkModificationForCurrentConfiguration(currentProfile != null,
+                        this,
+                        source,
+                        Translation.getText("select.profile.action.confirm.message"),
+                        "select.profile.action.confirm.button",
+                        () -> {
+                            // First, select the profile
+                            ProfileController.INSTANCE.selectProfile(profileToSelect);
 
-                    // Once full profile is loaded : notify, create new config, set current profile
-                    Runnable afterFullLoading = () -> {
-                        LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo(Translation.getText("action.select.profile.notif.title", profileToSelect.nameProperty())));
-                    };
+                            // Once full profile is loaded : notify, create new config, set current profile
+                            Runnable afterFullLoading = () -> {
+                                LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo(Translation.getText("action.select.profile.notif.title", profileToSelect.nameProperty())));
+                            };
 
-                    // Once previous profile is changed : fully load the profile
-                    Runnable afterPreviousProfileHandled = () -> {
-                        ProfileFullLoadingTask loadFullProfileTask = IOHelper.createLoadFullProfileTask(profileToSelect, true);
-                        loadFullProfileTask.setOnSucceeded(event -> afterFullLoading.run());
-                        AsyncExecutorController.INSTANCE.addAndExecute(true, false, loadFullProfileTask);
-                    };
+                            // Once previous profile is changed : fully load the profile
+                            Runnable afterPreviousProfileHandled = () -> {
+                                ProfileFullLoadingTask loadFullProfileTask = IOHelper.createLoadFullProfileTask(profileToSelect, true);
+                                loadFullProfileTask.setOnSucceeded(event -> afterFullLoading.run());
+                                AsyncExecutorController.INSTANCE.addAndExecute(true, false, loadFullProfileTask);
+                            };
 
-                    // Save previous profile if needed before loading the new one
-                    if (currentProfile != null) {
-                        // Save previous profile
-                        ProfileSavingTask previousProfileSaveTask = IOHelper.createSaveProfileTask(currentProfile);
-                        previousProfileSaveTask.setOnSucceeded(e -> afterPreviousProfileHandled.run());
-                        AsyncExecutorController.INSTANCE.addAndExecute(true, false, previousProfileSaveTask);
-                    } else {
-                        afterPreviousProfileHandled.run();
-                    }
-                });
+                            // Save previous profile if needed before loading the new one
+                            if (currentProfile != null) {
+                                // Save previous profile
+                                ProfileSavingTask previousProfileSaveTask = IOHelper.createSaveProfileTask(currentProfile);
+                                previousProfileSaveTask.setOnSucceeded(e -> afterPreviousProfileHandled.run());
+                                AsyncExecutorController.INSTANCE.addAndExecute(true, false, previousProfileSaveTask);
+                            } else {
+                                afterPreviousProfileHandled.run();
+                            }
+                        });
             }
         }
 
@@ -398,15 +408,19 @@ public class LCProfileActions {
      * Profile are moved to avoid a complete delete : delete a profile is very dangerous and a user could want to restore its profile.
      */
     private static void backupThenDeleteProfileDirectory(LCProfileI profile, boolean deleteDirectories, Runnable postAction) {
-        ProfileBackupAndThenTask backupProfileTask = IOHelper.createProfileBackupTask(profile, IOHelper.getBackupProfileDestinationPath(profile), deleteDirectories ? () -> {
-            File profileDirectory = new File(IOHelper.getProfileDirectoryPath(profile.getID()));
-            // Now try to delete configuration directory (may fail sometimes if resources are not cleared, that's why we also delete directories on startup)
-            IOUtils.deleteDirectoryAndChildren(profileDirectory);
-        } : null);
-        backupProfileTask.setOnSucceeded(e -> {
+        if (UserConfigurationController.INSTANCE.autoConfigurationProfileBackupProperty().get()) {
+            ProfileBackupAndThenTask backupProfileTask = IOHelper.createProfileBackupTask(profile, IOHelper.getBackupProfileDestinationPath(profile), deleteDirectories ? () -> {
+                File profileDirectory = new File(IOHelper.getProfileDirectoryPath(profile.getID()));
+                // Now try to delete configuration directory (may fail sometimes if resources are not cleared, that's why we also delete directories on startup)
+                IOUtils.deleteDirectoryAndChildren(profileDirectory);
+            } : null);
+            backupProfileTask.setOnSucceeded(e -> {
+                if (postAction != null) postAction.run();
+            });
+            AsyncExecutorController.INSTANCE.addAndExecute(true, false, backupProfileTask);
+        } else {
             if (postAction != null) postAction.run();
-        });
-        AsyncExecutorController.INSTANCE.addAndExecute(true, false, backupProfileTask);
+        }
     }
     //========================================================================
 }
