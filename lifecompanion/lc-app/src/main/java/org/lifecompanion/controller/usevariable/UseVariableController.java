@@ -234,9 +234,10 @@ public enum UseVariableController implements ModeListenerI {
             List<PowerSource> powerSources = si.getHardware().getPowerSources();
             if (!CollectionUtils.isEmpty(powerSources)) {
                 PowerSource powerSource = powerSources.get(0);
-                batteryLevel = powerSource.getRemainingCapacityPercent();
-                batteryRemainingTime = powerSource.getTimeRemainingEstimated();
-
+                double remainingCapacityPercent = powerSource.getRemainingCapacityPercent();
+                batteryLevel = remainingCapacityPercent != 1.0 ? remainingCapacityPercent : (1.0 * powerSource.getCurrentCapacity()) / powerSource.getMaxCapacity();
+                double timeRemainingEstimated = powerSource.getTimeRemainingEstimated();
+                batteryRemainingTime = timeRemainingEstimated >= 0 ? timeRemainingEstimated : powerSource.getTimeRemainingInstant();
             }
         } catch (Throwable t) {
             LOGGER.warn("Couldn't get power source information", t);
