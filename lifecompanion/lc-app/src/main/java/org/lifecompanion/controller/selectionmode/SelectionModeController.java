@@ -202,7 +202,8 @@ public enum SelectionModeController implements ModeListenerI {
                 return !parameters.enableDirectSelectionOnMouseOnScanningSelectionModeProperty().get();
             }
             // Check that we fire next scan on mouse with the right button filter
-            if (parameters.nextScanEventInputProperty().get() == FireEventInput.MOUSE && parameters.mouseButtonNextScanProperty().get().checkEvent(mouseEvent) && parameters.scanningModeProperty().get() == ScanningMode.MANUAL) {
+            if (parameters.nextScanEventInputProperty().get() == FireEventInput.MOUSE && parameters.mouseButtonNextScanProperty().get().checkEvent(mouseEvent) && parameters.scanningModeProperty()
+                    .get() == ScanningMode.MANUAL) {
                 if (mouseEvent.getEventType() == MouseEvent.MOUSE_PRESSED) {
                     scanningSelection.nextScanSelectionPress();
                 } else if (mouseEvent.getEventType() == MouseEvent.MOUSE_RELEASED) {
@@ -548,10 +549,22 @@ public enum SelectionModeController implements ModeListenerI {
                         SelectionModeUtils.getRowColumnScanningComponents(grid, !gridParameter.skipEmptyComponentProperty().get()).size() <= 1) {
                     changeGridSelectionModeTo(grid, gridParameter, HorizontalDirectKeyScanSelectionMode.class);
                 }
+                // Row column and only 1 component per row
+                if (isGridSelectionMode(grid,
+                        configurationSelectionModeParameter,
+                        RowColumnScanSelectionMode.class) && SelectionModeUtils.containsOnlyOneComponentPerPart(SelectionModeUtils.getRowColumnScanningComponents(grid,
+                        !gridParameter.skipEmptyComponentProperty().get()))) {
+                    changeGridSelectionModeTo(grid, gridParameter, VerticalDirectKeyScanSelectionMode.class);
+                }
                 // Column row and only 1 column
                 if (isGridSelectionMode(grid, configurationSelectionModeParameter, ColumnRowScanSelectionMode.class) &&
                         SelectionModeUtils.getColumnRowScanningComponents(grid, !gridParameter.skipEmptyComponentProperty().get()).size() <= 1) {
                     changeGridSelectionModeTo(grid, gridParameter, VerticalDirectKeyScanSelectionMode.class);
+                }
+                // Column row and only 1 component per column
+                if (isGridSelectionMode(grid, configurationSelectionModeParameter, ColumnRowScanSelectionMode.class) &&
+                        SelectionModeUtils.containsOnlyOneComponentPerPart(SelectionModeUtils.getColumnRowScanningComponents(grid, !gridParameter.skipEmptyComponentProperty().get()))) {
+                    changeGridSelectionModeTo(grid, gridParameter, HorizontalDirectKeyScanSelectionMode.class);
                 }
                 // Horizontal and 1 column
                 if (isGridSelectionMode(grid, configurationSelectionModeParameter, HorizontalDirectKeyScanSelectionMode.class)) {
@@ -671,7 +684,8 @@ public enum SelectionModeController implements ModeListenerI {
         }
 
         // Enable supp mode when needed : only if enable and the current mode is a scanning mode
-        if (parameters.enableDirectSelectionOnMouseOnScanningSelectionModeProperty().get() && configuration.directSelectionOnMouseOnScanningSelectionModeProperty().get() == null && newSelectionMode instanceof ScanningSelectionModeI) {
+        if (parameters.enableDirectSelectionOnMouseOnScanningSelectionModeProperty().get() && configuration.directSelectionOnMouseOnScanningSelectionModeProperty()
+                .get() == null && newSelectionMode instanceof ScanningSelectionModeI) {
             DirectActivationSelectionMode directActivationSelectionMode = new DirectActivationSelectionMode();
             // Create new parameters for this specific mode
             SelectionModeParameter parameterForDirectSelectionMode = new SelectionModeParameter();

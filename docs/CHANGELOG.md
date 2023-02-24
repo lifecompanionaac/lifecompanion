@@ -10,6 +10,8 @@
 
 - Ticket #211 : amélioration de la qualité de la synthèse vocale
 - Correction d'un problème sur lors de la mise en pause du défilement
+- Optimisation du défilement pour certains cas (ligne/colonne ou colonne/ligne particuliers)
+- Les premières cases étaient "survolées" en défilement même lorsque celui-ci n'étais pas démarré automatiquement
 
 ## 1.4.5 - 21/02/2023
 

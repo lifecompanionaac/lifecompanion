@@ -402,7 +402,7 @@ public abstract class AbstractScanningSelectionMode<T extends AbstractSelectionM
     }
 
     /**
-     * This will restart the scanning time line with the initial delay
+     * This will restart the scanning timeline with the initial delay
      */
     private void restartTimeLine() {
         if (!this.executingActionOnCurrentPart && !this.pauseToExecuteSimpleActions && !this.disposed) {
@@ -447,7 +447,8 @@ public abstract class AbstractScanningSelectionMode<T extends AbstractSelectionM
         };
         boolean executeActionOver = false;
         //Start over event
-        if (newPart != null && this.currentPart.get() instanceof UseActionTriggerComponentI) {
+        boolean skipActionOver = firstScan && !restartScanningOnNextAction && parameters.startScanningOnClicProperty().get();
+        if (newPart != null && this.currentPart.get() instanceof UseActionTriggerComponentI && !skipActionOver) {
             UseActionTriggerComponentI keyPart = (UseActionTriggerComponentI) this.currentPart.get();
             UseActionController.INSTANCE.startEventOn(keyPart, UseActionEvent.OVER, null);
             //Execute simple action

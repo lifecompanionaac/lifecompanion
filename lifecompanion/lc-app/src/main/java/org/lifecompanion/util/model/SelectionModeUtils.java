@@ -1,5 +1,6 @@
 package org.lifecompanion.util.model;
 
+import org.lifecompanion.framework.commons.utils.lang.CollectionUtils;
 import org.lifecompanion.model.api.configurationcomponent.*;
 import org.lifecompanion.model.api.selectionmode.ComponentToScanI;
 import org.lifecompanion.model.impl.configurationcomponent.GridComponentInformation;
@@ -43,6 +44,15 @@ public class SelectionModeUtils {
         return generateComponentToScan(rows, byPassEmptyCheck);
     }
 
+    public static boolean containsOnlyOneComponentPerPart(List<ComponentToScanI> componentsToScan) {
+        for (ComponentToScanI componentToScan : componentsToScan) {
+            if (componentToScan.getComponents().size() > 1) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public static List<ComponentToScanI> getColumnRowScanningComponents(final GridComponentI grid, boolean byPassEmptyCheck) {
         List<List<GridPartComponentI>> columns = new ArrayList<>();
         ComponentGridI compGrid = grid.getGrid();
@@ -76,16 +86,16 @@ public class SelectionModeUtils {
         return components;
     }
 
-    public static boolean hasTwoDiffColumnIn(List<GridComponentInformation> components){
-        if(components.isEmpty())return false;
+    public static boolean hasTwoDiffColumnIn(List<GridComponentInformation> components) {
+        if (components.isEmpty()) return false;
         int firstColumn = components.get(0).getColumn();
-        return components.stream().anyMatch(c -> c.getColumn()!=firstColumn);
+        return components.stream().anyMatch(c -> c.getColumn() != firstColumn);
     }
 
-    public static boolean hasTwoDiffRowIn(List<GridComponentInformation> components){
-        if(components.isEmpty())return false;
+    public static boolean hasTwoDiffRowIn(List<GridComponentInformation> components) {
+        if (components.isEmpty()) return false;
         int firstRow = components.get(0).getRow();
-        return components.stream().anyMatch(c -> c.getRow()!=firstRow);
+        return components.stream().anyMatch(c -> c.getRow() != firstRow);
     }
 
     /**
