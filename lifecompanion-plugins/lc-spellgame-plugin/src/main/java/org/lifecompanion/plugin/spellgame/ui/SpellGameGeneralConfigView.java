@@ -21,6 +21,7 @@ package org.lifecompanion.plugin.spellgame.ui;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -54,7 +55,7 @@ public class SpellGameGeneralConfigView extends BorderPane implements GeneralCon
 
     private Spinner<Double> spinnerWordDisplayInS;
     private ComboBox<SpellGameWordList> comboBoxWordList;
-    private Button buttonEditCurrentList, buttonDeleteCurrentList, buttonAddList;
+    private Button buttonEditCurrentList, buttonDeleteCurrentList, buttonAddList, buttonShowResults;
     private ToggleSwitch toggleSwitchValidateWithEnter, toggleSwitchEnableFeedbackSound;
 
     public SpellGameGeneralConfigView() {
@@ -101,7 +102,8 @@ public class SpellGameGeneralConfigView extends BorderPane implements GeneralCon
         labelWordDisplaySecond.setMaxWidth(Double.MAX_VALUE);
 
         toggleSwitchValidateWithEnter = FXControlUtils.createToggleSwitch("spellgame.plugin.config.view.field.validate.with.enter", "spellgame.plugin.config.view.field.validate.with.enter.tooltip");
-        toggleSwitchEnableFeedbackSound = FXControlUtils.createToggleSwitch("spellgame.plugin.config.view.field.enable.feedback.sound", "spellgame.plugin.config.view.field.enable.feedback.sound.tooltip");
+        toggleSwitchEnableFeedbackSound = FXControlUtils.createToggleSwitch("spellgame.plugin.config.view.field.enable.feedback.sound",
+                "spellgame.plugin.config.view.field.enable.feedback.sound.tooltip");
 
         gridPaneConfiguration.add(labelWordDisplaySecond, 0, gridRowIndex);
         gridPaneConfiguration.add(spinnerWordDisplayInS, 1, gridRowIndex++);
@@ -116,8 +118,12 @@ public class SpellGameGeneralConfigView extends BorderPane implements GeneralCon
         HBox.setHgrow(comboBoxWordList, Priority.ALWAYS);
         comboBoxWordList.setMaxWidth(Double.MAX_VALUE);
 
-        buttonEditCurrentList = FXControlUtils.createLeftTextButton(Translation.getText("spellgame.plugin.config.button.modify.current.list"), GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.GEAR).size(16).color(LCGraphicStyle.MAIN_DARK), null);
-        buttonDeleteCurrentList = FXControlUtils.createLeftTextButton(Translation.getText("spellgame.plugin.config.button.delete.current.list"), GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.TRASH).size(16).color(LCGraphicStyle.SECOND_DARK), null);
+        buttonEditCurrentList = FXControlUtils.createLeftTextButton(Translation.getText("spellgame.plugin.config.button.modify.current.list"),
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.GEAR).size(16).color(LCGraphicStyle.MAIN_DARK),
+                null);
+        buttonDeleteCurrentList = FXControlUtils.createLeftTextButton(Translation.getText("spellgame.plugin.config.button.delete.current.list"),
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.TRASH).size(16).color(LCGraphicStyle.SECOND_DARK),
+                null);
         buttonAddList = FXControlUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.PLUS_CIRCLE).size(16).color(LCGraphicStyle.MAIN_DARK), null);
 
         final HBox hboxListAndAddButton = new HBox(5.0, comboBoxWordList, buttonAddList);
@@ -127,6 +133,13 @@ public class SpellGameGeneralConfigView extends BorderPane implements GeneralCon
         final HBox hboxActionCurrentList = new HBox(5.0, buttonEditCurrentList, buttonDeleteCurrentList);
         hboxActionCurrentList.setAlignment(Pos.CENTER);
         gridPaneConfiguration.add(hboxActionCurrentList, 0, gridRowIndex++, 2, 1);
+
+        gridPaneConfiguration.add(FXControlUtils.createTitleLabel("spellgame.plugin.config.word.list.history.part"), 0, gridRowIndex++, 2, 1);
+        buttonShowResults = FXControlUtils.createLeftTextButton(Translation.getText("spellgame.plugin.config.button.show.results"),
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.BARS).size(16).color(LCGraphicStyle.MAIN_DARK),
+                null);
+        gridPaneConfiguration.add(buttonShowResults, 0, gridRowIndex++, 2, 1);
+        GridPane.setHalignment(buttonShowResults, HPos.CENTER);
 
         gridPaneConfiguration.setPadding(new Insets(GeneralConfigurationStepViewI.PADDING));
         this.setCenter(gridPaneConfiguration);
@@ -152,6 +165,7 @@ public class SpellGameGeneralConfigView extends BorderPane implements GeneralCon
                 this.comboBoxWordList.getItems().remove(selectedItem);
             }
         });
+        buttonShowResults.setOnAction(e -> GeneralConfigurationController.INSTANCE.showStep(SpellGameResultConfigView.STEP_ID));
     }
 
     @Override

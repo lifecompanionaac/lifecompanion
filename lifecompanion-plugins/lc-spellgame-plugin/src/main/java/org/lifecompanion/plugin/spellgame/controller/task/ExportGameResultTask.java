@@ -1,79 +1,80 @@
 package org.lifecompanion.plugin.spellgame.controller.task;
 
+import org.lifecompanion.controller.io.IOHelper;
+import org.lifecompanion.controller.io.JsonHelper;
+import org.lifecompanion.controller.profile.ProfileController;
 import org.lifecompanion.controller.resource.ResourceHelper;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.framework.utils.FluentHashMap;
+import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.plugin.spellgame.model.GameStepEnum;
+import org.lifecompanion.plugin.spellgame.model.SpellGameResult;
 import org.lifecompanion.plugin.spellgame.model.SpellGameStepResult;
 import org.lifecompanion.plugin.spellgame.model.SpellGameWordList;
+import org.lifecompanion.util.DesktopUtils;
 import org.lifecompanion.util.model.LCTask;
 
 import java.awt.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 
-public class ExportGameResultTask extends LCTask<Void> {
-    private final SpellGameWordList wordList;
-    private final List<SpellGameStepResult> answers;
-    private final File destinationDirectory;
-    private final int endIndex;
-    private final int endScore;
+import static org.lifecompanion.plugin.spellgame.model.SpellGameConstant.INFORMATION_FILE_NAME;
+import static org.lifecompanion.plugin.spellgame.model.SpellGameConstant.RESULT_HTML_FILE_NAME;
 
-    public ExportGameResultTask(SpellGameWordList wordList, int endIndex, int endScore, List<SpellGameStepResult> answers) {
+public class ExportGameResultTask extends LCTask<Void> {
+    private final File destinationDirectory;
+    private final SpellGameResult spellGameResult;
+
+    public ExportGameResultTask(File destinationDirectory, SpellGameResult spellGameResult) {
         super("spellgame.plugin.task.generate.report.title");
-        this.endIndex = endIndex;
-        this.endScore = endScore;
-        this.wordList = wordList;
-        this.answers = answers;
-        this.destinationDirectory = org.lifecompanion.util.IOUtils.getTempDir("lifecompanion-spellgame-report");
-        this.destinationDirectory.mkdirs();
+        this.spellGameResult = spellGameResult;
+        this.destinationDirectory = destinationDirectory;
     }
 
     @Override
     protected Void call() throws Exception {
-        this.answers.forEach(System.out::println);
-
         prepareResource("bootstrap.bundle.min.js");
         prepareResource("bootstrap.min.css");
 
         final String reportTemplate = IOUtils.readStreamLines(ResourceHelper.getInputStreamForPath("/report/report.html"), "UTF-8");
         final String rowTemplate = IOUtils.readStreamLines(ResourceHelper.getInputStreamForPath("/report/report_row.html"), "UTF-8");
 
-
         StringBuilder rows = new StringBuilder();
-        for (int i = 0; i < answers.size(); i++) {
-            SpellGameStepResult answer = answers.get(i);
-            rows.append(replace(rowTemplate, FluentHashMap
-                            .map("cssClass", answer.status().getCssClass())
+        for (int i = 0; i < spellGameResult.getAnswers().size(); i++) {
+            SpellGameStepResult answer = spellGameResult.getAnswers().get(i);
+            rows.append(replace(rowTemplate,
+                    FluentHashMap.map("cssClass", answer.status().getCssClass())
                             .with("rowIndex", "" + (i + 1))
                             .with("word", answer.word())
                             .with("stepName", answer.step().getName())
                             .with("answer", answer.input())
                             .with("expected", answer.step().getExpectedResult(answer.word()))
-                            .with("time", answer.timeSpent() / 1000.0 + "s")
-                    )
-            );
+                            .with("time", answer.timeSpent() / 1000.0 + "s")));
         }
 
-        String resultHtml = replace(reportTemplate, FluentHashMap
-                .map("wordListName", wordList.nameProperty().get())
-                .with("wordListSize", (endIndex + 1) + " / " + wordList.getWords().size())
-                .with("testDate", StringUtils.dateToStringDateWithHour(new Date()))
-                .with("testDuration", org.lifecompanion.util.StringUtils.durationToString((int) (answers.stream().mapToLong(SpellGameStepResult::timeSpent).sum() / 1000.0)))
-                .with("testScore", endScore + " / " + (endIndex + 1) * GameStepEnum.values().length)
-                .with("rows", rows.toString())
-        );
+        String resultHtml = replace(reportTemplate,
+                FluentHashMap.map("wordListName", spellGameResult.getListName())
+                        .with("wordListSize", spellGameResult.getDoneCount() + " / " + spellGameResult.getListSize())
+                        .with("testDate", StringUtils.dateToStringDateWithHour(new Date()))
+                        .with("testDuration", org.lifecompanion.util.StringUtils.durationToString((int) (spellGameResult.getDuration() / 1000.0)))
+                        .with("testScore", spellGameResult.getScore() + " / " + spellGameResult.getDoneCount() * GameStepEnum.values().length)
+                        .with("rows", rows.toString()));
 
+        try (PrintWriter pw = new PrintWriter(destinationDirectory.getAbsolutePath() + File.separator + INFORMATION_FILE_NAME, StandardCharsets.UTF_8)) {
+            JsonHelper.GSON.toJson(spellGameResult, pw);
+        }
 
-        final File destHtmlFile = new File(destinationDirectory.getAbsolutePath() + File.separator + "index.html");
+        final File destHtmlFile = new File(destinationDirectory.getAbsolutePath() + File.separator + RESULT_HTML_FILE_NAME);
         IOUtils.writeToFile(destHtmlFile, resultHtml, "UTF-8");
-        Desktop.getDesktop().open(destHtmlFile);
+        DesktopUtils.openUrlInDefaultBrowser(destHtmlFile.toURI().toURL().toString());
 
         return null;
     }
@@ -83,10 +84,6 @@ public class ExportGameResultTask extends LCTask<Void> {
         try (final FileOutputStream fos = new FileOutputStream(destinationDirectory.getAbsolutePath() + "/res/" + fileName)) {
             IOUtils.copyStream(ResourceHelper.getInputStreamForPath("/report/res/" + fileName), fos);
         }
-    }
-
-    private String replace(String src, String varKey, String varValue) {
-        return replace(src, FluentHashMap.map(varKey, varValue));
     }
 
     private static final String EMPTY_TEXT = "<span class=\"fst-italic text-secondary\">(vide)</span>";

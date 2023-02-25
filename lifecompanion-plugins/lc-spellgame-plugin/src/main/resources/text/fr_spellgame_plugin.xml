@@ -81,9 +81,11 @@
     <!-- TASK -->
     <text key="spellgame.plugin.task.generate.report.title">Génération des résultats</text>
     <text key="spellgame.plugin.task.import.word.title">Import de mots</text>
+    <text key="spellgame.plugin.task.get.game.result.for.configuration">Chargement des résultats</text>
 
     <!-- UI -->
     <text key="spellgame.plugin.config.view.general.title">Jeu "Ecris le mot"</text>
+    <text key="spellgame.plugin.config.view.history.title">Historique des résultats</text>
     <text key="spellgame.plugin.config.view.wordlist.title">Configurer la liste de mots</text>
     <text key="spellgame.plugin.config.general.configuration.title.part">Configuration générale</text>
     <text key="spellgame.plugin.config.view.field.word.display.second">Temps d'affichage du mot</text>
@@ -107,5 +109,10 @@
     <text key="spellgame.plugin.config.view.field.show.visual.feedback.key">Afficher un retour visuel</text>
     <text key="spellgame.plugin.config.view.field.show.visual.feedback.key.tooltip">Si activé, la case affiche un retour visuel à chaque réponse de l'utilisateur (positive ou négative)</text>
     <text key="spellgame.plugin.config.view.field.show.visual.feedback.key.action">Activation/désactivation du retour visuel sur le mot courant</text>
+    <text key="spellgame.plugin.config.game.result.cell.action.open">OUVRIR</text>
+    <text key="spellgame.plugin.config.game.confirm.remove.text">Êtes vous sûr de vouloir supprimer ce/ces résultat(s) ? Cette action est irréversible.</text>
+    <text key="spellgame.plugin.config.word.list.history.part">Historique des résultats</text>
+    <text key="spellgame.plugin.config.button.show.results">Voir tous les résultats</text>
+    <text key="spellgame.plugin.config.button.remove.all">Supprimer tout</text>
 
 </texts>

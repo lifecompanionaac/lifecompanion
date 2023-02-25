@@ -38,7 +38,6 @@ public class PluginInfoListCell extends ListCell<PluginInfo> {
     private Label labelName, labelAuthor, labelDescription;
     private Label labelState;
     private Button buttonRemove;
-    // TODO : config view ?
 
     public PluginInfoListCell(ListView<PluginInfo> listView) {
         super();

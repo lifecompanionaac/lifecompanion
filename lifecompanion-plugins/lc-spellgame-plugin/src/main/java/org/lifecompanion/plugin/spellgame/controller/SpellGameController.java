@@ -24,7 +24,9 @@ import javafx.beans.InvalidationListener;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import org.lifecompanion.controller.editaction.AsyncExecutorController;
+import org.lifecompanion.controller.io.IOHelper;
 import org.lifecompanion.controller.lifecycle.AppModeController;
+import org.lifecompanion.controller.profile.ProfileController;
 import org.lifecompanion.controller.resource.ResourceHelper;
 import org.lifecompanion.controller.textcomponent.WritingStateController;
 import org.lifecompanion.controller.usevariable.UseVariableController;
@@ -83,8 +85,7 @@ public enum SpellGameController implements ModeListenerI {
     private final InvalidationListener textListener;
 
     private MediaPlayer playerSuccess, playerError, playerStartTyping;
-
-    // FIXME : boolean running game...
+    private LCConfigurationI configuration;
 
     SpellGameController() {
         wordDisplayKeyOptions = new ArrayList<>();
@@ -154,6 +155,7 @@ public enum SpellGameController implements ModeListenerI {
 
     @Override
     public void modeStart(LCConfigurationI configuration) {
+        this.configuration = configuration;
         // Get plugin properties for current configuration
         currentSpellGamePluginProperties = configuration.getPluginConfigProperties(SpellGamePlugin.ID, SpellGamePluginProperties.class);
 
@@ -168,6 +170,7 @@ public enum SpellGameController implements ModeListenerI {
         endGame();
         this.currentSpellGamePluginProperties = null;
         wordDisplayKeyOptions.clear();
+        this.configuration = null;
     }
 
     public void startGame(String id) {
@@ -201,8 +204,21 @@ public enum SpellGameController implements ModeListenerI {
         if (isGameRunning()) {
             WritingStateController.INSTANCE.currentTextProperty().removeListener(textListener);
             if (!CollectionUtils.isEmpty(currentGameAnswers)) {
+                Date now = new Date();
+                File destinationDirectory = new File(getResultBasePath(configuration) + File.separator + IOHelper.DATE_FORMAT_FILENAME_WITH_TIME_SECOND.format(now));
+
+                ArrayList<SpellGameStepResult> answers = new ArrayList<>(this.currentGameAnswers);
+                SpellGameResult spellGameResult = new SpellGameResult(
+                        currentWordList.nameProperty().get(),
+                        currentWordList.getWords().size(),
+                        now,
+                        answers.stream().mapToLong(SpellGameStepResult::timeSpent).sum(),
+                        userScore,
+                        currentWordIndex + 1,
+                        answers
+                );
                 AsyncExecutorController.INSTANCE.addAndExecute(false, false,
-                        new ExportGameResultTask(currentWordList, currentWordIndex, userScore, new ArrayList<>(this.currentGameAnswers))
+                        new ExportGameResultTask(destinationDirectory, spellGameResult)
                 );
             }
             this.currentWordIndex = 0;
@@ -322,6 +338,16 @@ public enum SpellGameController implements ModeListenerI {
             }).start();
         }
     }
+
+    // IO
+    //========================================================================
+    public static File getResultBasePath(LCConfigurationI configuration) {
+        return new File(IOHelper.getConfigurationDirectoryPath(
+                ProfileController.INSTANCE.currentProfileProperty().get().getID(), configuration.getID())
+                + "plugins" + File.separator
+                + SpellGamePlugin.ID + File.separator + "results");
+    }
+    //========================================================================
 
     // UTILS
     //========================================================================
