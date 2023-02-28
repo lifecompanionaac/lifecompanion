@@ -89,3 +89,8 @@ You should check the `userDataDirectory` line in **lifecompanion/lc-app/data/ins
 This means that some char should be escaped, for example to define an absolute path on Windows, you line should be like : 
 `userDataDirectory=E:\\temp\\lifecompanion-dev-user-data`
 
+### Voice synthesizer not working on Unix systems
+
+To run on Unix, the [PicoTTS](https://github.com/naggety/picotts) voice synthesizer should be installed (it is installed by the LifeCompanion Unix installer).
+
+To install, run the following command in terminal : `sudo apt-get install libttspico-utils`

@@ -4,7 +4,7 @@
 
 ### Fonctionnalités
 
-- Ajout de la possibilité de faire **des liens de liste de cases vers les grilles**
+- Ajout de la **possibilité de faire des liens de liste de cases vers les grilles**
 	- Permet depuis la liste de case d'aller vers une grille
 	- Depuis une grille, l'action "Sélectionner une liste choisie" permet de faire l'inverse
 - Ajout d'une action "Changer de mode de sélection" afin de pouvoir passer d'un mode direct/défilement durant le mode utilisation
@@ -15,6 +15,7 @@
   - Flèche gauche : décale l'élément sélectionné vers le haut
   - N : créer un nouvel élément
 - Ajout d'un bouton pour "suivre" les liens dans les listes de cases
+- Ajout de la **synthèse vocale sous Unix** ([PicoTTS](https://github.com/naggety/picotts))
 - **Amélioration de la fonction Imprimer** en mode utilisation
   - Intègre maintenant les pictogrammes de l'éditeur courant
   - Si le texte est trop long, s'imprime sur plusieurs pages
