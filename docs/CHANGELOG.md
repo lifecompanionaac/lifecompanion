@@ -33,6 +33,7 @@
 - Ticket #26 : ajout de la possibilité de désactiver la création de profils/configurations de secours à la suppression/l'import
 - Ticket #212 : si l'installeur est lancé alors que LifeCompanion est déjà lancé, l'installation est bloquée
 - Ticket #54 : si LifeCompanion est lancé une nouvelle fois avec une configuration à importer, alors l'import se déclenche dans l'application déjà ouverte
+- Les traces d'éxécution sont conservées plus longtemps
 
 ## 1.4.5 - 21/02/2023
 

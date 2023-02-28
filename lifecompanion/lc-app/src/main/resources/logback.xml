@@ -11,8 +11,8 @@
 		<file>${java.io.tmpdir}/LifeCompanion/logs/application.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 			<fileNamePattern>${java.io.tmpdir}/LifeCompanion/logs/application.%d{yyyy-MM-dd}.log</fileNamePattern>
-			<maxHistory>30</maxHistory>
-			<totalSizeCap>10MB</totalSizeCap>
+			<maxHistory>60</maxHistory>
+			<totalSizeCap>100MB</totalSizeCap>
 		</rollingPolicy>
 		<encoder>
 			<charset>UTF-8</charset>
