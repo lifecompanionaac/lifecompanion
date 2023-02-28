@@ -3617,4 +3617,6 @@
     <text key="keylist.linktype.type.keylist.description">Permet de faire un lien vers une autre liste de cases. Cela est utile pour ne pas dupliquer des listes et ainsi gagner du temps en édition.</text>
     <text key="keylist.linktype.type.grid.name">Vers une autre grille</text>
     <text key="keylist.linktype.type.grid.description">Permet de faire un lien vers une autre grille. Cela est utile pour passer des listes de case aux grilles spécifiques.</text>
+    <text key="picotts.voice.synthesizer.name">Unix PicoTTS</text>
+    <text key="picotts.voice.synthesizer.description">Synthèse vocale utilisant la commande "pico2wave" sur les systèmes Unix (testé sur Ubuntu)</text>
 </texts>

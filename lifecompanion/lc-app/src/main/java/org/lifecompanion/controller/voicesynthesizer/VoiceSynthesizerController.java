@@ -38,10 +38,7 @@ import org.lifecompanion.model.api.lifecycle.LCStateListener;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
 import org.lifecompanion.model.api.voicesynthesizer.*;
 import org.lifecompanion.model.impl.exception.UnavailableFeatureException;
-import org.lifecompanion.model.impl.voicesynthesizer.CharacterToSpeechTranslation;
-import org.lifecompanion.model.impl.voicesynthesizer.SAPIVoiceSynthesizer;
-import org.lifecompanion.model.impl.voicesynthesizer.SayCommandVoiceSynthesizer;
-import org.lifecompanion.model.impl.voicesynthesizer.VoiceSynthesizerInfoImpl;
+import org.lifecompanion.model.impl.voicesynthesizer.*;
 import org.lifecompanion.util.ThreadUtils;
 import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.slf4j.Logger;
@@ -436,6 +433,9 @@ public enum VoiceSynthesizerController implements LCStateListener, ModeListenerI
         SayCommandVoiceSynthesizer sayCommandVoiceSynthesizer = new SayCommandVoiceSynthesizer();
         registrerVoiceSynthesizer(sayCommandVoiceSynthesizer);
         setDefaultVoiceSynthesizer(SystemType.MAC, sayCommandVoiceSynthesizer);
+        PicoTTSVoiceSynthesizer picoTTSVoiceSynthesizer = new PicoTTSVoiceSynthesizer();
+        registrerVoiceSynthesizer(picoTTSVoiceSynthesizer);
+        setDefaultVoiceSynthesizer(SystemType.UNIX, picoTTSVoiceSynthesizer);
     }
 
     @Override
