@@ -75,8 +75,6 @@ public class CommonActions {
 
         @Override
         public void doAction() {
-            LCConfigurationI configuration = AppModeController.INSTANCE.getUseModeContext().configurationProperty().get();
-
             if (useConfirmFct && UserConfigurationController.INSTANCE.secureGoToEditModeProperty().get()) {
                 // Issue #180 - Secure dialog should automatically be closed (can be the user error)
                 IntegerProperty timeLeft = new SimpleIntegerProperty(LCConstant.GO_TO_CONFIG_MODE_DELAY);

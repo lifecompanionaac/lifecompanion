@@ -21,6 +21,7 @@
   - Si le texte est trop long, s'imprime sur plusieurs pages
 - Ajout d'une nouvelle variable : **batterie restante** (en pourcentage)
 - Ajout d'une nouvelle variable : **temps restant de la batterie**
+- Ajout d'une action : Passer en mode "Édition"
 
 ### Corrections/ajustements
 

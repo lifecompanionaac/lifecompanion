@@ -3619,4 +3619,6 @@
     <text key="keylist.linktype.type.grid.description">Permet de faire un lien vers une autre grille. Cela est utile pour passer des listes de case aux grilles spécifiques.</text>
     <text key="picotts.voice.synthesizer.name">Unix PicoTTS</text>
     <text key="picotts.voice.synthesizer.description">Synthèse vocale utilisant la commande "pico2wave" sur les systèmes Unix (testé sur Ubuntu)</text>
+    <text key="action.switch.to.edit.mode.name">Passer en mode "Édition"</text>
+    <text key="action.switch.to.edit.mode.description">Permet de basculer du mode "Utilisation" au mode "Édition" directement depuis une action. Cette action sera réalisée sans demander de code de confirmation si celui-ci est activé.</text>
 </texts>
