@@ -26,12 +26,19 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import org.lifecompanion.LifeCompanion;
+import org.lifecompanion.framework.commons.fx.doublelaunch.DoubleLaunchListener;
 import org.lifecompanion.util.javafx.DialogUtils;
 import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.util.javafx.StageUtils;
 import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
 import org.lifecompanion.framework.commons.translation.Translation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.rmi.RemoteException;
+import java.util.Arrays;
 
 /**
  * Implementation for {@link DoubleLaunchListener}
@@ -39,27 +46,38 @@ import org.lifecompanion.framework.commons.translation.Translation;
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public class DoubleLaunchListenerImpl implements DoubleLaunchListener {
+    private final static Logger LOGGER = LoggerFactory.getLogger(LifeCompanion.class);
+
 
     @Override
-    public void doubleRunDetected() {
-        FXThreadUtils.runOnFXThread(() -> {
-            //Show main frame
-            Stage stage = StageUtils.getEditOrUseStageVisible();
-            stage.setIconified(false);
-            stage.show();
-            stage.requestFocus();
+    public void launched(boolean notify, String[] args) throws RemoteException {
+        if (notify) {
+            FXThreadUtils.runOnFXThread(() -> {
+                // TODO : handle "args"
+                LOGGER.info("Double launch will be notified, args is param is = {}", Arrays.toString(args));
 
-            // Time left before hiding the dialog (to avoid block)
-            IntegerProperty timeLeft = new SimpleIntegerProperty(LCConstant.DOUBLE_LAUNCH_DISPLAY_DELAY);
-            Timeline timeLineAutoHide = new Timeline(new KeyFrame(Duration.seconds(1), (e) -> timeLeft.set(timeLeft.get() - 1)));
-            timeLineAutoHide.setCycleCount(LCConstant.DOUBLE_LAUNCH_DISPLAY_DELAY);
+                //Show main frame
+                Stage stage = StageUtils.getEditOrUseStageVisible();
+                stage.setIconified(false);
+                stage.show();
+                stage.requestFocus();
 
-            //When a double run is detected, show a dialog to user
-            final Alert dialog = DialogUtils.alertWithSourceAndType(StageUtils.getOnTopWindowExcludingNotification(), AlertType.ERROR).withContentText(Translation.getText("double.run.detected.message")).build();
-            dialog.headerTextProperty().bind(TranslationFX.getTextBinding("double.run.detected.header", timeLeft));
-            timeLineAutoHide.setOnFinished(e -> dialog.hide());
-            timeLineAutoHide.play();
-            dialog.show();
-        });
+                // Time left before hiding the dialog (to avoid block)
+                IntegerProperty timeLeft = new SimpleIntegerProperty(LCConstant.DOUBLE_LAUNCH_DISPLAY_DELAY);
+                Timeline timeLineAutoHide = new Timeline(new KeyFrame(Duration.seconds(1), (e) -> timeLeft.set(timeLeft.get() - 1)));
+                timeLineAutoHide.setCycleCount(LCConstant.DOUBLE_LAUNCH_DISPLAY_DELAY);
+
+                //When a double run is detected, show a dialog to user
+                final Alert dialog = DialogUtils.alertWithSourceAndType(StageUtils.getOnTopWindowExcludingNotification(), AlertType.ERROR)
+                        .withContentText(Translation.getText("double.run.detected.message"))
+                        .build();
+                dialog.headerTextProperty().bind(TranslationFX.getTextBinding("double.run.detected.header", timeLeft));
+                timeLineAutoHide.setOnFinished(e -> dialog.hide());
+                timeLineAutoHide.play();
+                dialog.show();
+            });
+        } else {
+            LOGGER.info("Double launch detected but not notified to user");
+        }
     }
 }

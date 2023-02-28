@@ -22,10 +22,10 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 import org.lifecompanion.controller.appinstallation.InstallationController;
-import org.lifecompanion.controller.doublelaunch.DoubleLaunchController;
 import org.lifecompanion.controller.doublelaunch.DoubleLaunchListenerImpl;
 import org.lifecompanion.controller.editmode.ErrorHandlingController;
 import org.lifecompanion.controller.lifecycle.LifeCompanionController;
+import org.lifecompanion.framework.commons.fx.doublelaunch.DoubleLaunchController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.slf4j.Logger;
@@ -67,13 +67,17 @@ public class LifeCompanion extends Application {
     public static void main(final String[] args) {
         LOGGER.info("Logs are saved to {}", new File(System.getProperty("java.io.tmpdir") + "/LifeCompanion/logs/application.log").getAbsolutePath());
         argsCollection = args != null ? new ArrayList<>(Arrays.asList(args)) : new ArrayList<>();
-        boolean doubleRun = DoubleLaunchController.INSTANCE.checkDoubleRun(new DoubleLaunchListenerImpl());
+        boolean doubleRun = DoubleLaunchController.INSTANCE.startAndDetect(new DoubleLaunchListenerImpl(), true, args);
         if (!doubleRun) {
             // Verify update args (to be able to avoid app startup when updateDownloadFinished)
             InstallationController.INSTANCE.handleLaunchArgs(argsCollection);
             //Start
             Instant startDate = Instant.now();
-            LifeCompanion.LOGGER.info("{} version {} (build {}) launching with args\n\t{}", LCConstant.NAME, InstallationController.INSTANCE.getBuildProperties().getVersionLabel(), InstallationController.INSTANCE.getBuildProperties().getBuildDate(), args);
+            LifeCompanion.LOGGER.info("{} version {} (build {}) launching with args\n\t{}",
+                    LCConstant.NAME,
+                    InstallationController.INSTANCE.getBuildProperties().getVersionLabel(),
+                    InstallationController.INSTANCE.getBuildProperties().getBuildDate(),
+                    args);
             Application.launch(args);
             //Inform
             Instant endDate = Instant.now();
@@ -89,7 +93,7 @@ public class LifeCompanion extends Application {
     public void stop() throws Exception {
         LifeCompanion.LOGGER.info("Will launch the exit task...");
         LifeCompanionController.INSTANCE.lcExit();
-        DoubleLaunchController.INSTANCE.stopRmiServer();
+        DoubleLaunchController.INSTANCE.stop();
         LifeCompanion.LOGGER.info("Every exit task are done, LifeCompanion will close...");
     }
 }

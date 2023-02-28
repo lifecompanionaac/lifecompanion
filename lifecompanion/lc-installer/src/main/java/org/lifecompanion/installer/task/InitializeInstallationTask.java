@@ -20,14 +20,17 @@
 package org.lifecompanion.installer.task;
 
 import javafx.concurrent.Task;
+import javafx.util.Pair;
 import org.lifecompanion.framework.client.http.AppServerClient;
 import org.lifecompanion.framework.client.service.AppServerService;
+import org.lifecompanion.framework.commons.fx.doublelaunch.DoubleLaunchController;
+import org.lifecompanion.framework.commons.fx.doublelaunch.NoopDoubleLaunchListener;
 import org.lifecompanion.installer.controller.InstallerManager;
 import org.lifecompanion.installer.ui.InstallerUIConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class InitializeInstallationTask extends Task<Boolean> {
+public class InitializeInstallationTask extends Task<InitializeResult> {
     private static final Logger LOGGER = LoggerFactory.getLogger(InitializeInstallationTask.class);
     private final InstallerUIConfiguration configuration;
     private final AppServerClient client;
@@ -39,7 +42,7 @@ public class InitializeInstallationTask extends Task<Boolean> {
     }
 
     @Override
-    protected Boolean call() throws Exception {
+    protected InitializeResult call() throws Exception {
         // Get installation directories
         configuration.setInstallationUserDataDirectory(InstallerManager.INSTANCE.getSpecificOrDefault().getDefaultDataDirectory("LifeCompanion"));
         configuration.setInstallationSoftwareDirectory(InstallerManager.INSTANCE.getSpecificOrDefault().getDefaultSoftwareDirectory("LifeCompanion"));
@@ -58,10 +61,11 @@ public class InitializeInstallationTask extends Task<Boolean> {
             //Ignore
         }
 
-        return connectedToInternet;
-    }
+        // Double launch
+        boolean doubleStart = DoubleLaunchController.INSTANCE.startAndDetect(new NoopDoubleLaunchListener(), false, null);
 
-    static int count = 0;
+        return new InitializeResult(connectedToInternet, !doubleStart);
+    }
 
     @Override
     protected void succeeded() {

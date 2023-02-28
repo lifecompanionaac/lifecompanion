@@ -18,10 +18,11 @@
 	<text key="file.chooser.directory">Sélectionner un dossier</text>
 	<text key="lc.installer.step.config.file.selector.data.dir">Dossier utilisateur</text>
 	<text key="lc.installer.step.config.file.selector.soft.dir">Dossier d'installation</text>
-	<text key="lc.installer.step.init.button.retry.connection">Réessayer la connexion au réseau</text>
+	<text key="lc.installer.step.init.button.retry.connection">Réessayer</text>
 	<text key="lc.installer.step.init.label.connection.failed">Il semble que vous n'êtes pas connecté à internet, merci
 		de vous connecter et de réessayer pour pouvoir installer LifeCompanion.
 	</text>
+	<text key="lc.installer.step.init.label.double.launch">LifeCompanion est déjà lancé. Vous devez le fermer pour pouvoir poursuivre puis réessayer.</text>
 	<text key="lc.installer.checking.internet.connection">Vérification de la connexion internet...</text>
 	<text key="lc.installer.step.config.explain.text">Sélectionnez les paramètres d'installation de
 		LifeCompanion, ou laissez ceux par défaut (conseillé).

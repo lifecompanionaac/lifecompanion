@@ -33,6 +33,7 @@ import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.utils.LCNamedThreadFactory;
 import org.lifecompanion.installer.controller.InstallerManager;
 import org.lifecompanion.installer.task.InitializeInstallationTask;
+import org.lifecompanion.installer.task.InitializeResult;
 import org.lifecompanion.installer.ui.model.InstallerStep;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,8 +45,8 @@ public class InitialStep extends VBox implements InstallerStep {
     private static final Logger LOGGER = LoggerFactory.getLogger(InitialStep.class);
 
     private final BooleanProperty nextButtonEnabled;
-    private Button buttonRetryConnection;
-    private Label labelExplainConnectionFailed;
+    private Button buttonRetry;
+    private Label labelExplainConnectionFailed, labelExplainDoubleLaunch;
     private Label labelCheckingInternetConnection;
     private Hyperlink hyperlinkWebsite;
 
@@ -69,23 +70,33 @@ public class InitialStep extends VBox implements InstallerStep {
         Label labelExplainText = new Label(Translation.getText("lc.installer.step.init.label.explain.text"));
         labelExplainText.setWrapText(true);
         labelExplainText.setTextAlignment(TextAlignment.JUSTIFY);
+
         labelExplainConnectionFailed = new Label(Translation.getText("lc.installer.step.init.label.connection.failed"));
         labelExplainConnectionFailed.setWrapText(true);
-        buttonRetryConnection = new Button(Translation.getText("lc.installer.step.init.button.retry.connection"));
-        buttonRetryConnection.setVisible(false);
         labelExplainConnectionFailed.setVisible(false);
+        labelExplainConnectionFailed.getStyleClass().add("error-label");
+
+        labelExplainDoubleLaunch = new Label(Translation.getText("lc.installer.step.init.label.double.launch"));
+        labelExplainDoubleLaunch.setWrapText(true);
+        labelExplainDoubleLaunch.setVisible(false);
+        labelExplainDoubleLaunch.getStyleClass().add("error-label");
+
+        buttonRetry = new Button(Translation.getText("lc.installer.step.init.button.retry.connection"));
+        buttonRetry.setVisible(false);
+
         labelCheckingInternetConnection = new Label(Translation.getText("lc.installer.checking.internet.connection"));
         labelCheckingInternetConnection.setVisible(false);
         labelCheckingInternetConnection.getStyleClass().add("label-i-text");
 
         hyperlinkWebsite = new Hyperlink("https://lifecompanionaac.org");
 
-        this.getChildren().addAll(labelExplainTitle, labelExplainText, hyperlinkWebsite, labelExplainConnectionFailed, labelCheckingInternetConnection, buttonRetryConnection);
+        this.getChildren()
+                .addAll(labelExplainTitle, labelExplainText, hyperlinkWebsite, labelExplainConnectionFailed, labelExplainDoubleLaunch, labelCheckingInternetConnection, buttonRetry);
     }
 
     @Override
     public void initListener() {
-        this.buttonRetryConnection.setOnAction(e -> launchInitTask());
+        this.buttonRetry.setOnAction(e -> launchInitTask());
         this.hyperlinkWebsite.setOnAction(e -> {
             Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
             if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
@@ -99,6 +110,14 @@ public class InitialStep extends VBox implements InstallerStep {
             }
         });
     }
+
+    @Override
+    public void initBinding() {
+        labelExplainDoubleLaunch.managedProperty().bind(labelExplainDoubleLaunch.visibleProperty());
+        labelExplainConnectionFailed.managedProperty().bind(labelExplainConnectionFailed.visibleProperty());
+        labelCheckingInternetConnection.managedProperty().bind(labelCheckingInternetConnection.visibleProperty());
+    }
+
     //========================================================================
 
     // MODEL
@@ -110,19 +129,25 @@ public class InitialStep extends VBox implements InstallerStep {
 
     private void launchInitTask() {
         nextButtonEnabled.set(false);
-        buttonRetryConnection.setDisable(true);
+        buttonRetry.setDisable(true);
         labelCheckingInternetConnection.setVisible(true);
         InitializeInstallationTask initTask = new InitializeInstallationTask(InstallerManager.INSTANCE.getConfiguration(), InstallerManager.INSTANCE.getClient());
         initTask.setOnSucceeded(t -> {
+            InitializeResult initializeResult = initTask.getValue();
             labelCheckingInternetConnection.setVisible(false);
-            if (initTask.getValue()) {
+            if (initializeResult.isConnectedToInternet() && initializeResult.isNoDoubleLaunch()) {
                 nextButtonEnabled.set(true);
                 labelExplainConnectionFailed.setVisible(false);
-                buttonRetryConnection.setVisible(false);
+                labelExplainDoubleLaunch.setVisible(false);
+                buttonRetry.setVisible(false);
             } else {
-                labelExplainConnectionFailed.setVisible(true);
-                buttonRetryConnection.setVisible(true);
-                buttonRetryConnection.setDisable(false);
+                if (!initializeResult.isNoDoubleLaunch()) {
+                    labelExplainDoubleLaunch.setVisible(true);
+                } else if (initializeResult.isConnectedToInternet()) {
+                    labelExplainConnectionFailed.setVisible(true);
+                }
+                buttonRetry.setVisible(true);
+                buttonRetry.setDisable(false);
             }
         });
         InstallerManager.INSTANCE.submitTask(initTask);

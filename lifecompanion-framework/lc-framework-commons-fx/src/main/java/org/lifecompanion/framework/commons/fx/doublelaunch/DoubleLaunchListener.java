@@ -16,22 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package org.lifecompanion.framework.commons.fx.doublelaunch;
 
-package org.lifecompanion.installer.ui.model;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
 
-import javafx.beans.property.ReadOnlyBooleanProperty;
-import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
-
-import javafx.scene.Node;
-
-public interface InstallerStep extends LCViewInitHelper {
-    Node getContent();
-
-    void stepDisplayed();
-
-    void stepHidden();
-
-    ReadOnlyBooleanProperty previousButtonAvailable();
-
-    ReadOnlyBooleanProperty nextButtonAvailable();
+/**
+ * Interface that can be called on RMI to fire a double launch event.
+ *
+ * @author Mathieu THEBAUD <math.thebaud@gmail.com>
+ */
+public interface DoubleLaunchListener extends Remote {
+    void launched(boolean notify, String[] args) throws RemoteException;
 }

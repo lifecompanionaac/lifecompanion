@@ -22,6 +22,8 @@ package org.lifecompanion.installer;
 import javafx.application.Application;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import org.lifecompanion.framework.commons.fx.doublelaunch.DoubleLaunchController;
+import org.lifecompanion.framework.commons.fx.doublelaunch.NoopDoubleLaunchListener;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.installer.controller.InstallerManager;
 import org.lifecompanion.installer.ui.InstallerScene;
@@ -61,6 +63,7 @@ public class InstallerApp extends Application {
     @Override
     public void stop() throws Exception {
         InstallerManager.INSTANCE.stop();
+        DoubleLaunchController.INSTANCE.stop();
         LOGGER.info("Installer stopped");
     }
 

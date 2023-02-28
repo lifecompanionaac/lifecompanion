@@ -30,6 +30,8 @@ Used JDK (in IntelliJ and builds) is [Eclipse Temurin™](https://adoptium.net/t
 1. In **installation.properties** change **userDataDirectory** to your a wanted path (e.g. _MyDocumens/LifeCompanion-Dev_)
 1. Run task `gradlew :lc-app:run` in **lifecompanion**
 
+If you need to pass argument to your instance, you can do it with `gradlew :lc-app:run --args="a configuration.lcc"`
+
 ### How to build/run LifeCompanion update server
 
 1. Install **[PostgreSQL](https://www.postgresql.org/)** and run it

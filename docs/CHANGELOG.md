@@ -31,6 +31,7 @@
 - Les premières cases étaient "survolées" en défilement même lorsque celui-ci n'étais pas démarré automatiquement
 - Ticket #213 : lors de l'édition des informations d'un profil/d'une configuration, l'appui sur Entrée valide les modifications
 - Ticket #26 : ajout de la possibilité de désactiver la création de profils/configurations de secours à la suppression/l'import
+- Ticket #212 : si l'installeur est lancé alors que LifeCompanion est déjà lancé, l'installation est bloquée
 
 ## 1.4.5 - 21/02/2023
 
