@@ -184,8 +184,6 @@ public class GeneralConfigurationScene extends Scene implements LCViewInitHelper
     public void initBinding() {
         GeneralConfigurationController.INSTANCE.currentStepProperty().addListener((obs, ov, nv) -> showStep(nv));
         GeneralConfigurationController.INSTANCE.enableTransitionProperty().addListener((obs, ov, nv) -> viewContentBorderPane.setEnableTransition(nv));
-        // TODO : bind on configuration change !
-
         PluginController.INSTANCE.getGeneralConfigurationSteps().registerListenerAndDrainCache(generalConfigViewType -> {
             try {
                 this.addStepImplementation(generalConfigViewType.getConstructor().newInstance());
@@ -195,8 +193,6 @@ public class GeneralConfigurationScene extends Scene implements LCViewInitHelper
         });
     }
 
-    // TODO : it might be possible to add another security to limit implementation effort
-    // a timer that activate this alert is the stage stay shown for more than 3 min ?
     public boolean shouldCancelBeConfirmed() {
         for (GeneralConfigurationStepViewI view : this.views.values()) {
             if (view.shouldCancelBeConfirmed()) return true;

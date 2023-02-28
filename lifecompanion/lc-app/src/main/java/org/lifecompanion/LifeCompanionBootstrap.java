@@ -197,7 +197,7 @@ public class LifeCompanionBootstrap {
         ProfileController.INSTANCE.getProfiles().setAll(profiles);// it is ok to set profile outside FXThread because there is no UI displayed at this time
 
         // Check if profile to import
-        final File profileFile = getFirstLifeCompanionFile(LCConstant.PROFILE_FILE_EXTENSION);
+        final File profileFile = IOHelper.getFirstProfileFile(args);
         if (profileFile != null) return new AfterLoad(AfterLoadAction.IMPORT_PROFILE, null, null, null, profileFile);
 
         // Check profile to select
@@ -208,7 +208,7 @@ public class LifeCompanionBootstrap {
                 profileToSelect = ThreadUtils.executeInCurrentThread(IOHelper.createLoadFullProfileTask(profileToSelect, false));
 
                 // Check if a configuration is imported
-                File configurationFile = this.getFirstLifeCompanionFile(LCConstant.CONFIG_FILE_EXTENSION);
+                File configurationFile = IOHelper.getFirstConfigurationFile(args);
                 if (configurationFile != null) {
                     return new AfterLoad(AfterLoadAction.IMPORT_CONFIG, null, null, profileToSelect, configurationFile);
                 }
@@ -308,24 +308,6 @@ public class LifeCompanionBootstrap {
             }
         }
         return LCStateController.INSTANCE.getLastSelectedProfileID();
-    }
-
-    private File getFirstLifeCompanionFile(String extensionToSearch) {
-        if (!CollectionUtils.isEmpty(args) && !args.contains(LCConstant.ARG_IMPORT_LAUNCH_CONFIG)) {
-            for (String arg : args) {
-                String ext = FileNameUtils.getExtension(arg);
-                if (extensionToSearch.equalsIgnoreCase(ext)) {
-                    try {
-                        File path = new File(arg);
-                        IOHelper.getFileID(path);// to check if the file is an profile or configuration
-                        return path;
-                    } catch (LCException e) {
-                        //Will return null
-                    }
-                }
-            }
-        }
-        return null;
     }
     //========================================================================
 

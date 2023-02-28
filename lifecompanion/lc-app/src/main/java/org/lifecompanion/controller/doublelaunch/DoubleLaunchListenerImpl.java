@@ -20,6 +20,7 @@ package org.lifecompanion.controller.doublelaunch;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.control.Alert;
@@ -27,6 +28,11 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.lifecompanion.LifeCompanion;
+import org.lifecompanion.controller.editaction.LCConfigurationActions;
+import org.lifecompanion.controller.editaction.LCProfileActions;
+import org.lifecompanion.controller.editmode.ConfigActionController;
+import org.lifecompanion.controller.io.IOHelper;
+import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.framework.commons.fx.doublelaunch.DoubleLaunchListener;
 import org.lifecompanion.util.javafx.DialogUtils;
 import org.lifecompanion.util.javafx.FXThreadUtils;
@@ -37,7 +43,9 @@ import org.lifecompanion.framework.commons.translation.Translation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
@@ -53,7 +61,6 @@ public class DoubleLaunchListenerImpl implements DoubleLaunchListener {
     public void launched(boolean notify, String[] args) throws RemoteException {
         if (notify) {
             FXThreadUtils.runOnFXThread(() -> {
-                // TODO : handle "args"
                 LOGGER.info("Double launch will be notified, args is param is = {}", Arrays.toString(args));
 
                 //Show main frame
@@ -72,8 +79,27 @@ public class DoubleLaunchListenerImpl implements DoubleLaunchListener {
                         .withContentText(Translation.getText("double.run.detected.message"))
                         .build();
                 dialog.headerTextProperty().bind(TranslationFX.getTextBinding("double.run.detected.header", timeLeft));
-                timeLineAutoHide.setOnFinished(e -> dialog.hide());
+                timeLineAutoHide.setOnFinished(e -> {
+                    if (dialog.isShowing()) {
+                        dialog.hide();
+                    }
+                });
                 timeLineAutoHide.play();
+
+                // On dialog hidden, execute the action
+                dialog.setOnHidden(e -> {
+                    if (args != null && AppModeController.INSTANCE.isEditMode()) {
+                        Platform.runLater(() -> { // Should be explicitly delayed as this can be called on an Animation
+                            ArrayList<String> argCollection = new ArrayList<>(Arrays.asList(args));
+                            File configurationFile = IOHelper.getFirstConfigurationFile(argCollection);
+                            if (configurationFile != null) {
+                                LCConfigurationActions.ImportOpenEditAction importOpenConfig = new LCConfigurationActions.ImportOpenEditAction(configurationFile);
+                                ConfigActionController.INSTANCE.executeAction(importOpenConfig);
+                            }
+                        });
+                    }
+                });
+
                 dialog.show();
             });
         } else {

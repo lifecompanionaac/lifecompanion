@@ -21,7 +21,9 @@ package org.lifecompanion.controller.io;
 import org.lifecompanion.controller.appinstallation.InstallationConfigurationController;
 import org.lifecompanion.controller.io.task.*;
 import org.lifecompanion.controller.profile.ProfileController;
+import org.lifecompanion.framework.commons.utils.io.FileNameUtils;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
+import org.lifecompanion.framework.commons.utils.lang.CollectionUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
@@ -37,6 +39,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -84,11 +87,13 @@ public class IOHelper {
     }
 
     public static File getBackupProfileDestinationPath(final LCProfileI profile) {
-        return new File(getProfileRoot().getPath() + File.separator + LCConstant.BACKUP_DIR + File.separator + LCConstant.PROFILE_DIRECTORY + File.separator + profile.getID() + File.separator + DATE_FORMAT_FILENAME_WITH_TIME_SECOND.format(new Date()) + "_" + org.lifecompanion.util.IOUtils.getValidFileName(profile.nameProperty().get()) + "." + LCConstant.PROFILE_FILE_EXTENSION);
+        return new File(getProfileRoot().getPath() + File.separator + LCConstant.BACKUP_DIR + File.separator + LCConstant.PROFILE_DIRECTORY + File.separator + profile.getID() + File.separator + DATE_FORMAT_FILENAME_WITH_TIME_SECOND.format(
+                new Date()) + "_" + org.lifecompanion.util.IOUtils.getValidFileName(profile.nameProperty().get()) + "." + LCConstant.PROFILE_FILE_EXTENSION);
     }
 
     public static File getBackupConfigurationDestinationPath(final LCConfigurationDescriptionI configurationDescription) {
-        return new File(getProfileRoot().getPath() + File.separator + LCConstant.BACKUP_DIR + File.separator + LCConstant.CONFIGURATION_DIRECTORY + File.separator + configurationDescription.getConfigurationId() + File.separator + DATE_FORMAT_FILENAME_WITH_TIME_SECOND.format(new Date()) + "_" + org.lifecompanion.util.IOUtils.getValidFileName(configurationDescription.configurationNameProperty().get()) + "." + LCConstant.CONFIG_FILE_EXTENSION);
+        return new File(getProfileRoot().getPath() + File.separator + LCConstant.BACKUP_DIR + File.separator + LCConstant.CONFIGURATION_DIRECTORY + File.separator + configurationDescription.getConfigurationId() + File.separator + DATE_FORMAT_FILENAME_WITH_TIME_SECOND.format(
+                new Date()) + "_" + org.lifecompanion.util.IOUtils.getValidFileName(configurationDescription.configurationNameProperty().get()) + "." + LCConstant.CONFIG_FILE_EXTENSION);
     }
     //========================================================================
 
@@ -210,7 +215,10 @@ public class IOHelper {
         return new ConfigurationExportTask(configurationDescription, configurationDirectory, exportFile);
     }
 
-    public static ConfigurationBackupAndThenTask createConfigurationBackupTask(final LCConfigurationDescriptionI configurationDescription, final LCProfileI profile, final File exportFile, Runnable postBackupAction) {
+    public static ConfigurationBackupAndThenTask createConfigurationBackupTask(final LCConfigurationDescriptionI configurationDescription,
+                                                                               final LCProfileI profile,
+                                                                               final File exportFile,
+                                                                               Runnable postBackupAction) {
         File configurationDirectory = new File(getConfigurationDirectoryPath(profile.getID(), configurationDescription.getConfigurationId()));
         return new ConfigurationBackupAndThenTask(configurationDescription, configurationDirectory, exportFile, postBackupAction);
     }
@@ -302,11 +310,38 @@ public class IOHelper {
         if (currentProfile != null) {
             directory = getConfigurationPath(currentProfile.getID(), configuration.getID());
         } else {
-            directory = new File(InstallationConfigurationController.INSTANCE.getUserDirectory().getPath() + File.separator + LCConstant.CONFIGURATION_USE_INFO_DEFAULT_DIRECTORY + File.separator + configuration.getID());
+            directory = new File(InstallationConfigurationController.INSTANCE.getUserDirectory()
+                    .getPath() + File.separator + LCConstant.CONFIGURATION_USE_INFO_DEFAULT_DIRECTORY + File.separator + configuration.getID());
             LOGGER.warn("There is no current profile, so use information will be saved/loaded into the default location : {}",
                     directory);
         }
         return directory;
     }
     //========================================================================
+
+    public static File getFirstConfigurationFile(Collection<String> args) {
+        return getFirstValidConfigurationOrProfile(args, LCConstant.CONFIG_FILE_EXTENSION);
+    }
+
+    public static File getFirstProfileFile(Collection<String> args) {
+        return getFirstValidConfigurationOrProfile(args, LCConstant.PROFILE_FILE_EXTENSION);
+    }
+
+    public static File getFirstValidConfigurationOrProfile(Collection<String> args, String extensionToSearch) {
+        if (!CollectionUtils.isEmpty(args) && !args.contains(LCConstant.ARG_IMPORT_LAUNCH_CONFIG)) {
+            for (String arg : args) {
+                String ext = FileNameUtils.getExtension(arg);
+                if (extensionToSearch.equalsIgnoreCase(ext)) {
+                    try {
+                        File path = new File(arg);
+                        IOHelper.getFileID(path);// to check if the file is an profile or configuration
+                        return path;
+                    } catch (LCException e) {
+                        //Will return null
+                    }
+                }
+            }
+        }
+        return null;
+    }
 }
