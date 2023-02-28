@@ -31,6 +31,7 @@ import org.lifecompanion.framework.commons.ApplicationConstant;
 import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.util.model.LCTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +39,7 @@ import org.slf4j.LoggerFactory;
 import javax.crypto.Cipher;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyFactory;
@@ -154,8 +156,14 @@ public class GetInstallationIdTask extends LCTask<InstallationController.Install
         if (current == SystemType.WINDOWS) {
             return readCmdResult(Arrays.asList("wmic", "csproduct", "get", "UUID")).split("\n")[2];
         } else if (current == SystemType.UNIX) {
-            // FIXME : need to be root to execute...
-            return readCmdResult(Arrays.asList("cat", "/sys/class/dmi/id/product_uuid"));
+            // Don't use readCmdResult(Arrays.asList("cat", "/sys/class/dmi/id/product_uuid")) as product uuid is not given if not root
+            // instead, read the command result that was stored in device_id when installed
+            File deviceIdFile = new File(LCConstant.EXT_PATH_DATA + File.separator + "device_id.txt");
+            if (deviceIdFile.exists()) {
+                return StringUtils.trimToEmpty(IOUtils.readFileLines(deviceIdFile, StandardCharsets.UTF_8.name()));
+            } else {
+                throw new FileNotFoundException("The device_id.txt was not found on this UNIX installation");
+            }
         } else if (current == SystemType.MAC) {
             final String hardwareUUIDLine = Arrays
                     .stream(readCmdResult(Arrays.asList("system_profiler", "SPHardwareDataType"))
