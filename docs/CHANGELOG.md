@@ -4,8 +4,11 @@
 
 ### Fonctionnalités
 
+- Ajout de la possibilité de faire **des liens de liste de cases vers les grilles**
+	- Permet depuis la liste de case d'aller vers une grille
+	- Depuis une grille, l'action "Sélectionner une liste choisie" permet de faire l'inverse
 - Ajout d'une action "Changer de mode de sélection" afin de pouvoir passer d'un mode direct/défilement durant le mode utilisation
-- Ajout de raccourcis clavier sur les listes d'actions, d'événements, de grilles :
+- Ajout de raccourcis clavier sur les listes d'actions, d'événements et de grilles :
   - Suppr. : supprime l'élément sélectionné
   - Entrée : modifie l'élément sélectionné
   - Flèche droite : décale l'élément sélectionné vers le bas

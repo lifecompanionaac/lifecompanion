@@ -31,6 +31,7 @@ import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
 import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
+import org.lifecompanion.model.api.configurationcomponent.dynamickey.LinkType;
 import org.lifecompanion.model.api.configurationcomponent.keyoption.KeyOptionI;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
 import org.lifecompanion.model.impl.categorizedelement.useaction.available.*;
@@ -406,12 +407,12 @@ public enum KeyListController implements ModeListenerI {
             if (keyOption instanceof KeyListNodeKeyOption) {
                 KeyListNodeKeyOption keyListNodeKeyOption = (KeyListNodeKeyOption) keyOption;
                 KeyListNodeI node = keyListNodeKeyOption.currentSimplerKeyContentContainerProperty().get();
-                if (StringUtils.isBlank(node.linkedNodeIdProperty().get()) && StringUtils.isBlank(node.linkedGridIdProperty().get())) {
+                if (!node.isLinkNode()) {
                     selectNode(node);
                 } else {
-                    if (StringUtils.isNotBlank(node.linkedNodeIdProperty().get())) {
+                    if (node.linkTypeProperty().get() == LinkType.KEYLIST && StringUtils.isNotBlank(node.linkedNodeIdProperty().get())) {
                         selectNodeById(node.linkedNodeIdProperty().get());
-                    } else if (StringUtils.isNotBlank(node.linkedGridIdProperty().get())) {
+                    } else if (node.linkTypeProperty().get() == LinkType.GRID && StringUtils.isNotBlank(node.linkedGridIdProperty().get())) {
                         if (AppModeController.INSTANCE.isUseMode()) {
                             GridComponentI targetGrid = ConfigurationComponentUtils.findById(AppModeController.INSTANCE.getUseModeContext().getConfiguration(),
                                     node.linkedGridIdProperty().get(),

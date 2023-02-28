@@ -28,6 +28,7 @@ import javafx.collections.FXCollections;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
@@ -35,6 +36,8 @@ import org.lifecompanion.model.api.configurationcomponent.dynamickey.LinkType;
 import org.lifecompanion.ui.app.generalconfiguration.step.dynamickey.AbstractSimplerKeyActionContainerPropertiesEditionView;
 import org.lifecompanion.ui.common.control.specific.selector.ComponentSelectorControl;
 import org.lifecompanion.ui.common.control.specific.selector.KeyListSelectorControl;
+import org.lifecompanion.ui.common.pane.specific.cell.LinkTypeDetailListCell;
+import org.lifecompanion.ui.common.pane.specific.cell.LinkTypeSimpleListCell;
 import org.lifecompanion.util.binding.BindingUtils;
 
 public class KeyListNodePropertiesEditionView extends AbstractSimplerKeyActionContainerPropertiesEditionView<KeyListNodeI> {
@@ -64,7 +67,11 @@ public class KeyListNodePropertiesEditionView extends AbstractSimplerKeyActionCo
         rowIndex = super.addFieldsAfterTextInGeneralPart(gridPaneConfiguration, rowIndex, columnCount);
 
         comboBoxLinkType = new ComboBox<>(FXCollections.observableArrayList(LinkType.values()));
-        // TODO : cell type
+        comboBoxLinkType.setButtonCell(new LinkTypeSimpleListCell());
+        comboBoxLinkType.setCellFactory(lv -> new LinkTypeDetailListCell());
+        this.comboBoxLinkType.setMaxWidth(Double.MAX_VALUE);
+        GridPane.setHgrow(comboBoxLinkType, Priority.ALWAYS);
+
         final Label labelLinkType = new Label(Translation.getText("general.configuration.view.key.list.field.link.type"));
         gridPaneConfiguration.add(labelLinkType, 0, rowIndex);
         gridPaneConfiguration.add(comboBoxLinkType, 1, rowIndex++, 2, 1);
@@ -74,7 +81,7 @@ public class KeyListNodePropertiesEditionView extends AbstractSimplerKeyActionCo
         linkedNodeSelector = new KeyListSelectorControl(null);
         final Label labelLinkedNode = new Label(Translation.getText("general.configuration.view.key.list.field.linked.node"));
         gridPaneConfiguration.add(labelLinkedNode, 0, rowIndex);
-        gridPaneConfiguration.add(linkedNodeSelector, 1, rowIndex++, 2, 1);
+        gridPaneConfiguration.add(linkedNodeSelector, 1, rowIndex, 2, 1);
         labelLinkedNode.visibleProperty().bind(linkedNodeSelector.visibleProperty());
         labelLinkedNode.managedProperty().bind(linkedNodeSelector.managedProperty());
 
@@ -92,7 +99,6 @@ public class KeyListNodePropertiesEditionView extends AbstractSimplerKeyActionCo
     @Override
     public void initBinding() {
         super.initBinding();
-
         comboBoxLinkType.visibleProperty().bind(this.selectedNode.isNotNull().and(selectedNodeIsLinkProperty()));
         comboBoxLinkType.managedProperty().bind(comboBoxLinkType.visibleProperty());
 
@@ -101,10 +107,6 @@ public class KeyListNodePropertiesEditionView extends AbstractSimplerKeyActionCo
 
         gridSelector.visibleProperty().bind(this.selectedNode.isNotNull().and(selectedNodeIsLinkProperty()).and(selectedNodeLinkType().isEqualTo(LinkType.GRID)));
         gridSelector.managedProperty().bind(gridSelector.visibleProperty());
-
-        selectedNodeIsLinkProperty().addListener((obs, ov, nv) -> {
-            System.out.println("Change to " + nv);
-        });
     }
 
     @Override
