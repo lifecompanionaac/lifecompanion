@@ -187,7 +187,7 @@ public class GeneralConfigurationScene extends Scene implements LCViewInitHelper
         PluginController.INSTANCE.getGeneralConfigurationSteps().registerListenerAndDrainCache(generalConfigViewType -> {
             try {
                 this.addStepImplementation(generalConfigViewType.getConstructor().newInstance());
-            } catch (Exception e) {
+            } catch (Throwable e) {
                 LOGGER.error("Couldn't create step implementation from type {}", generalConfigViewType, e);
             }
         });

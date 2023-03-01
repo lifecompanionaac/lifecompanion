@@ -30,8 +30,6 @@ import javafx.scene.control.ButtonType;
 import org.lifecompanion.framework.client.http.AppServerClient;
 import org.lifecompanion.framework.client.props.ApplicationBuildProperties;
 import org.lifecompanion.framework.commons.SystemType;
-import org.lifecompanion.framework.commons.fx.doublelaunch.DoubleLaunchController;
-import org.lifecompanion.framework.commons.fx.doublelaunch.NoopDoubleLaunchListener;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.io.FileNameUtils;
 import org.lifecompanion.framework.commons.utils.lang.CollectionUtils;

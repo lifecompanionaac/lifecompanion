@@ -25,7 +25,7 @@ import org.lifecompanion.controller.appinstallation.InstallationController;
 import org.lifecompanion.controller.doublelaunch.DoubleLaunchListenerImpl;
 import org.lifecompanion.controller.editmode.ErrorHandlingController;
 import org.lifecompanion.controller.lifecycle.LifeCompanionController;
-import org.lifecompanion.framework.commons.fx.doublelaunch.DoubleLaunchController;
+import org.lifecompanion.framework.commons.doublelaunch.DoubleLaunchController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.slf4j.Logger;
