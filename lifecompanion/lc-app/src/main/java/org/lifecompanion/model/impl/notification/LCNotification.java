@@ -118,7 +118,14 @@ public class LCNotification {
     }
 
     public static LCNotification createInfo(String titleId, boolean automaticClose, String actionNameId, Runnable action) {
-        return new LCNotification(null, Translation.getText(titleId), LCNotificationType.INFO, LCGraphicStyle.MEDIUM_NOTIFICATION_DURATION_MS, automaticClose, false, Translation.getText(actionNameId), action);
+        return new LCNotification(null,
+                Translation.getText(titleId),
+                LCNotificationType.INFO,
+                LCGraphicStyle.MEDIUM_NOTIFICATION_DURATION_MS,
+                automaticClose,
+                false,
+                Translation.getText(actionNameId),
+                action);
     }
 
     public static LCNotification createWarning(String titleId) {
@@ -126,14 +133,21 @@ public class LCNotification {
     }
 
     public static LCNotification createWarning(String titleId, String actionNameId, Runnable action) {
-        return new LCNotification(null, Translation.getText(titleId), LCNotificationType.WARNING, LCGraphicStyle.MEDIUM_NOTIFICATION_DURATION_MS, true, false, Translation.getText(actionNameId), action);
+        return new LCNotification(null,
+                Translation.getText(titleId),
+                LCNotificationType.WARNING,
+                LCGraphicStyle.MEDIUM_NOTIFICATION_DURATION_MS,
+                true,
+                false,
+                Translation.getText(actionNameId),
+                action);
     }
 
     public static LCNotification createError(String title, String actionNameId, Runnable action) {
-        return new LCNotification(null, title, LCNotificationType.ERROR, LCGraphicStyle.MEDIUM_NOTIFICATION_DURATION_MS, false, false, Translation.getText(actionNameId), action);
+        return new LCNotification(null, Translation.getText(title), LCNotificationType.ERROR, LCGraphicStyle.MEDIUM_NOTIFICATION_DURATION_MS, false, false, Translation.getText(actionNameId), action);
     }
 
     public static LCNotification createError(String title) {
-        return new LCNotification(null, title, LCNotificationType.ERROR, LCGraphicStyle.MEDIUM_NOTIFICATION_DURATION_MS, false, false);
+        return new LCNotification(null, Translation.getText(title), LCNotificationType.ERROR, LCGraphicStyle.MEDIUM_NOTIFICATION_DURATION_MS, false, false);
     }
 }

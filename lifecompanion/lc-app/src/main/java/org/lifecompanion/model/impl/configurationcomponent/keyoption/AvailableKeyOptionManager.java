@@ -78,11 +78,10 @@ public enum AvailableKeyOptionManager {
                         new ProgressDisplayKeyOption(),
                         new VariableInformationKeyOption())
         );
-        Consumer<Class<? extends KeyOptionI>> addConsumer = this::addKeyOptionType;
-        PluginController.INSTANCE.getKeyOptions().registerListenerAndDrainCache(addConsumer);
+        PluginController.INSTANCE.getKeyOptions().registerListenerAndDrainCache(this::addKeyOptionType);
     }
 
-    private void addKeyOptionType(final Class<? extends KeyOptionI> possibleKeyOption) {
+    private void addKeyOptionType(final Class<? extends KeyOptionI> possibleKeyOption) throws Throwable {
         String className = possibleKeyOption.getName();
         try {
             KeyOptionI newInstance = possibleKeyOption.getConstructor().newInstance();
@@ -90,6 +89,7 @@ public enum AvailableKeyOptionManager {
             this.keyOptions.add(newInstance);
         } catch (Throwable e) {
             LOGGER.warn("A found keyoption ({}) couldn't be created", className, e);
+            throw e;
         }
     }
     //========================================================================

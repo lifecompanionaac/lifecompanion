@@ -55,14 +55,14 @@ public enum KeyOptionViewProvider {
     private void initializeConfigurations() {
         List<Class<? extends KeyOptionConfigurationViewI>> implementedActions = ReflectionHelper.findImplementationsInModules(KeyOptionConfigurationViewI.class);
         for (Class<? extends KeyOptionConfigurationViewI> configViewSubType : implementedActions) {
-            this.addConfigurationViewType(configViewSubType);
+            this.addConfigurationViewType(configViewSubType, false);
         }
         //Plugin
-        PluginController.INSTANCE.getKeyOptionConfigViews().registerListenerAndDrainCache(this::addConfigurationViewType);
+        PluginController.INSTANCE.getKeyOptionConfigViews().registerListenerAndDrainCache(added -> addConfigurationViewType(added, true));
     }
 
     @SuppressWarnings("rawtypes")
-    private void addConfigurationViewType(final Class<? extends KeyOptionConfigurationViewI> configViewSubType) {
+    private void addConfigurationViewType(final Class<? extends KeyOptionConfigurationViewI> configViewSubType, boolean throwErrors) {
         String className = configViewSubType.getName();
         try {
             this.LOGGER.debug("Found a subtype of key option configuration view : {}", className);
@@ -72,6 +72,9 @@ public enum KeyOptionViewProvider {
             this.LOGGER.debug("Associate the key option configuration view {} to {}", className, keyOptionType);
         } catch (Exception e) {
             this.LOGGER.warn("A found key option configuration ({}) couldn't be created", className, e);
+            if (throwErrors) {
+                throw new RuntimeException(e);
+            }
         }
     }
     //========================================================================

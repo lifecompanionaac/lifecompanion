@@ -47,7 +47,7 @@ public enum UseActionConfigurationViewProvider {
     UseActionConfigurationViewProvider() {
         this.viewTypes = new HashMap<>();
         this.initializeConfigurations();
-        PluginController.INSTANCE.getUseActionConfigViews().registerListenerAndDrainCache(this::addConfigurationViewClass);
+        PluginController.INSTANCE.getUseActionConfigViews().registerListenerAndDrainCache(added -> addConfigurationViewClass(added,true));
     }
 
     // Class part : "Init"
@@ -56,12 +56,12 @@ public enum UseActionConfigurationViewProvider {
     private void initializeConfigurations() {
         List<Class<? extends UseActionConfigurationViewI>> implementations = ReflectionHelper.findImplementationsInModules(UseActionConfigurationViewI.class);
         for (Class<? extends UseActionConfigurationViewI> element : implementations) {
-            this.addConfigurationViewClass(element);
+            this.addConfigurationViewClass(element, false);
         }
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    private void addConfigurationViewClass(final Class<? extends UseActionConfigurationViewI> configViewSubType) {
+    private void addConfigurationViewClass(final Class<? extends UseActionConfigurationViewI> configViewSubType, boolean throwErrors) {
         if (!Modifier.isAbstract(configViewSubType.getModifiers())) {
             String className = configViewSubType.getName();
             try {
@@ -72,6 +72,9 @@ public enum UseActionConfigurationViewProvider {
                 this.LOGGER.debug("Associate the configuration view {} to {}", className, actionType);
             } catch (Exception e) {
                 this.LOGGER.warn("A found use action configuration ({}) couldn't be created", className, e);
+                if (throwErrors) {
+                    throw new RuntimeException(e);
+                }
             }
         } else {
             this.LOGGER.warn("Found a configuration view type {} but it's an abstract class", configViewSubType);

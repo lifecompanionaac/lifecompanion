@@ -72,7 +72,7 @@ public enum AvailableUseActionController {
      */
     private void initActionListListener() {
         this.availableAction.addListener(BindingUtils.createListChangeListener(this::addAction, null));
-        PluginController.INSTANCE.getUseActions().registerListenerAndDrainCache(this::addActionType);
+        PluginController.INSTANCE.getUseActions().registerListenerAndDrainCache(added -> addActionType(added,true));
     }
 
     /**
@@ -102,17 +102,20 @@ public enum AvailableUseActionController {
     private void createActions() {
         List<Class<? extends BaseUseActionI>> implementedActions = ReflectionHelper.findImplementationsInModules(BaseUseActionI.class);
         for (Class<? extends BaseUseActionI> possibleAction : implementedActions) {
-            this.addActionType(possibleAction);
+            this.addActionType(possibleAction,false);
         }
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    private void addActionType(final Class<? extends BaseUseActionI> possibleAction) {
+    private void addActionType(final Class<? extends BaseUseActionI> possibleAction, boolean throwErrors) {
         String className = possibleAction.getName();
         try {
             this.availableAction.add(possibleAction.getConstructor().newInstance());
         } catch (Exception e) {
             this.LOGGER.warn("A found use action ({}) couldn't be created", className, e);
+            if (throwErrors) {
+                throw new RuntimeException(e);
+            }
         }
     }
     //========================================================================

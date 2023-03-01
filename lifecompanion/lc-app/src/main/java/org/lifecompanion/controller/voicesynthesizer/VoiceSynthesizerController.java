@@ -134,6 +134,7 @@ public enum VoiceSynthesizerController implements LCStateListener, ModeListenerI
                 pluginIdsForSynthesizerId.put(synthesizer.getId(), pluginId);
             } catch (Exception e) {
                 LOGGER.error("Can't create voice synthesizer {} from plugin", voiceSynthType, e);
+                throw e;
             }
         });
     }

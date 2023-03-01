@@ -50,14 +50,14 @@ public enum UseEventConfigurationViewProvider {
     private void initializeConfigurations() {
         List<Class<? extends UseEventGeneratorConfigurationViewI>> implementations = ReflectionHelper.findImplementationsInModules(UseEventGeneratorConfigurationViewI.class);
         for (Class<? extends UseEventGeneratorConfigurationViewI> element : implementations) {
-            this.addConfigurationViewClass(element);
+            this.addConfigurationViewClass(element,false);
         }
         //Added by plugin manager
-        PluginController.INSTANCE.getUseEventGeneratorConfigViews().registerListenerAndDrainCache(this::addConfigurationViewClass);
+        PluginController.INSTANCE.getUseEventGeneratorConfigViews().registerListenerAndDrainCache(added -> addConfigurationViewClass(added,true));
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    private void addConfigurationViewClass(final Class<? extends UseEventGeneratorConfigurationViewI> configViewSubType) {
+    private void addConfigurationViewClass(final Class<? extends UseEventGeneratorConfigurationViewI> configViewSubType,boolean throwErrors) {
         String className = configViewSubType.getName();
         try {
             this.LOGGER.info("Found a subtype of use action configuration view : {}", className);
@@ -67,6 +67,9 @@ public enum UseEventConfigurationViewProvider {
             this.LOGGER.info("Associate the configuration view {} to {}", className, actionType);
         } catch (Exception e) {
             this.LOGGER.warn("A found use action configuration ({}) couldn't be created", className, e);
+            if (throwErrors) {
+                throw new RuntimeException(e);
+            }
         }
     }
     //========================================================================

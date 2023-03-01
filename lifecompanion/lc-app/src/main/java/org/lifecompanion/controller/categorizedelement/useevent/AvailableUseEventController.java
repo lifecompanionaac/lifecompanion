@@ -114,19 +114,22 @@ public enum AvailableUseEventController {
     private void createUseEvents() {
         List<Class<? extends UseEventGeneratorI>> implementedActions = ReflectionHelper.findImplementationsInModules(UseEventGeneratorI.class);
         for (Class<? extends UseEventGeneratorI> possibleEvent : implementedActions) {
-            this.addEventType(possibleEvent);
+            this.addEventType(possibleEvent,false);
         }
         //Added by plugin manager
-        PluginController.INSTANCE.getUseEventGenerators().registerListenerAndDrainCache(this::addEventType);
+        PluginController.INSTANCE.getUseEventGenerators().registerListenerAndDrainCache(added -> this.addEventType(added,true));
     }
 
-    private void addEventType(final Class<? extends UseEventGeneratorI> possibleEvent) {
+    private void addEventType(final Class<? extends UseEventGeneratorI> possibleEvent,boolean throwErrors) {
         String className = possibleEvent.getName();
         try {
             this.LOGGER.debug("Found a subtype of UseEventGeneratorI : {}", className);
             this.availableEventGenerator.add(possibleEvent.getConstructor().newInstance());
         } catch (Exception e) {
             this.LOGGER.warn("A found use event ({}) couldn't be created", className, e);
+            if (throwErrors) {
+                throw new RuntimeException(e);
+            }
         }
     }
     //========================================================================

@@ -46,6 +46,7 @@ import org.lifecompanion.model.api.plugin.PluginI;
 import org.lifecompanion.model.api.textprediction.CharPredictorI;
 import org.lifecompanion.model.api.textprediction.WordPredictorI;
 import org.lifecompanion.model.api.voicesynthesizer.VoiceSynthesizerI;
+import org.lifecompanion.model.impl.notification.LCNotification;
 import org.lifecompanion.model.impl.plugin.PluginInfo;
 import org.lifecompanion.model.impl.plugin.PluginInfoState;
 import org.lifecompanion.model.impl.constant.LCConstant;
@@ -59,6 +60,8 @@ import org.lifecompanion.framework.commons.utils.lang.CollectionUtils;
 import org.lifecompanion.framework.commons.utils.lang.LangUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.framework.utils.Pair;
+import org.lifecompanion.ui.notification.LCNotificationController;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -154,18 +157,24 @@ public enum PluginController implements LCStateListener, ModeListenerI {
 
     // PLUGIN LOADING
     //========================================================================
-    private final PluginImplementationLoadingHandler<Class<? extends BaseUseActionI>> useActions = new PluginImplementationLoadingHandler<>(BaseUseActionI.class);
-    private final PluginImplementationLoadingHandler<Class<? extends UseActionConfigurationViewI>> useActionConfigViews = new PluginImplementationLoadingHandler<>(UseActionConfigurationViewI.class);
-    private final PluginImplementationLoadingHandler<Class<? extends CharPredictorI>> charPredictors = new PluginImplementationLoadingHandler<>(CharPredictorI.class);
-    private final PluginImplementationLoadingHandler<Class<? extends WordPredictorI>> wordPredictors = new PluginImplementationLoadingHandler<>(WordPredictorI.class);
-    private final PluginImplementationLoadingHandler<Class<? extends VoiceSynthesizerI>> voiceSynthesizers = new PluginImplementationLoadingHandler<>(VoiceSynthesizerI.class);
-    private final PluginImplementationLoadingHandler<Class<? extends UseEventGeneratorI>> useEventGenerators = new PluginImplementationLoadingHandler<>(UseEventGeneratorI.class);
-    private final PluginImplementationLoadingHandler<Class<? extends UseEventGeneratorConfigurationViewI>> useEventGeneratorConfigViews = new PluginImplementationLoadingHandler<>(UseEventGeneratorConfigurationViewI.class);
-    private final PluginImplementationLoadingHandler<Class<? extends KeyOptionI>> keyOptions = new PluginImplementationLoadingHandler<>(KeyOptionI.class);
-    private final PluginImplementationLoadingHandler<Class<? extends KeyOptionConfigurationViewI>> keyOptionConfigViews = new PluginImplementationLoadingHandler<>(KeyOptionConfigurationViewI.class);
-    private final PluginImplementationLoadingHandler<Class<? extends GeneralConfigurationStepViewI>> generalConfigurationSteps = new PluginImplementationLoadingHandler<>(GeneralConfigurationStepViewI.class);
-    private final PluginImplementationLoadingHandler<UseVariableDefinitionI> useVariableDefinitions = new PluginImplementationLoadingHandler<>(null);
-    private final PluginImplementationLoadingHandler<String[]> stylesheets = new PluginImplementationLoadingHandler<>(null);
+    private final PluginImplementationLoadingHandler<Class<? extends BaseUseActionI>> useActions = new PluginImplementationLoadingHandler<>(BaseUseActionI.class, this::handlePluginError);
+    private final PluginImplementationLoadingHandler<Class<? extends UseActionConfigurationViewI>> useActionConfigViews = new PluginImplementationLoadingHandler<>(UseActionConfigurationViewI.class,
+            this::handlePluginError);
+    private final PluginImplementationLoadingHandler<Class<? extends CharPredictorI>> charPredictors = new PluginImplementationLoadingHandler<>(CharPredictorI.class, this::handlePluginError);
+    private final PluginImplementationLoadingHandler<Class<? extends WordPredictorI>> wordPredictors = new PluginImplementationLoadingHandler<>(WordPredictorI.class, this::handlePluginError);
+    private final PluginImplementationLoadingHandler<Class<? extends VoiceSynthesizerI>> voiceSynthesizers = new PluginImplementationLoadingHandler<>(VoiceSynthesizerI.class, this::handlePluginError);
+    private final PluginImplementationLoadingHandler<Class<? extends UseEventGeneratorI>> useEventGenerators = new PluginImplementationLoadingHandler<>(UseEventGeneratorI.class,
+            this::handlePluginError);
+    private final PluginImplementationLoadingHandler<Class<? extends UseEventGeneratorConfigurationViewI>> useEventGeneratorConfigViews = new PluginImplementationLoadingHandler<>(
+            UseEventGeneratorConfigurationViewI.class,
+            this::handlePluginError);
+    private final PluginImplementationLoadingHandler<Class<? extends KeyOptionI>> keyOptions = new PluginImplementationLoadingHandler<>(KeyOptionI.class, this::handlePluginError);
+    private final PluginImplementationLoadingHandler<Class<? extends KeyOptionConfigurationViewI>> keyOptionConfigViews = new PluginImplementationLoadingHandler<>(KeyOptionConfigurationViewI.class,
+            this::handlePluginError);
+    private final PluginImplementationLoadingHandler<Class<? extends GeneralConfigurationStepViewI>> generalConfigurationSteps = new PluginImplementationLoadingHandler<>(GeneralConfigurationStepViewI.class,
+            this::handlePluginError);
+    private final PluginImplementationLoadingHandler<UseVariableDefinitionI> useVariableDefinitions = new PluginImplementationLoadingHandler<>(null, this::handlePluginError);
+    private final PluginImplementationLoadingHandler<String[]> stylesheets = new PluginImplementationLoadingHandler<>(null, this::handlePluginError);
 
     public PluginImplementationLoadingHandler<Class<? extends BaseUseActionI>> getUseActions() {
         return useActions;
@@ -328,6 +337,21 @@ public enum PluginController implements LCStateListener, ModeListenerI {
         pluginDataFolder.mkdirs();
         return pluginDataFolder;
     }
+
+    private void handlePluginError(String pluginId, Throwable throwable) {
+        LOGGER.error("Detected error for plugin \"{}\", it will be deleted", pluginId, throwable);
+        List<PluginInfo> pluginInfo = getPluginById(pluginId);
+        if (!CollectionUtils.isEmpty(pluginInfo)) {
+            FXThreadUtils.runOnFXThread(() -> {
+                for (PluginInfo info : pluginInfo) {
+                    removePlugin(info);
+                }
+            });
+            LCNotificationController.INSTANCE.showNotification(LCNotification.createError(Translation.getText("plugin.error.startup.notification.will.be.deleted", pluginId),
+                    "plugin.error.startup.notification.will.be.deleted.button",
+                    () -> InstallationController.INSTANCE.restart("")));
+        }
+    }
     //========================================================================
 
     // PLUGIN ADD/REMOVE
@@ -344,8 +368,12 @@ public enum PluginController implements LCStateListener, ModeListenerI {
 
         // Check min app version
         // Note : no plugin minAppVersion means old plugin so it is not compatible with new plugin API
-        if (addedPluginInfo.getPluginMinAppVersion() == null || VersionUtils.compare(InstallationController.INSTANCE.getBuildProperties().getVersionLabel(), addedPluginInfo.getPluginMinAppVersion()) < 0) {
-            LCException.newException().withMessage(addedPluginInfo.getPluginMinAppVersion() != null ? "plugin.error.min.app.version.with.number" : "plugin.error.min.app.version.without.number", addedPluginInfo.getPluginMinAppVersion()).buildAndThrow();
+        if (addedPluginInfo.getPluginMinAppVersion() == null || VersionUtils.compare(InstallationController.INSTANCE.getBuildProperties().getVersionLabel(),
+                addedPluginInfo.getPluginMinAppVersion()) < 0) {
+            LCException.newException()
+                    .withMessage(addedPluginInfo.getPluginMinAppVersion() != null ? "plugin.error.min.app.version.with.number" : "plugin.error.min.app.version.without.number",
+                            addedPluginInfo.getPluginMinAppVersion())
+                    .buildAndThrow();
         }
 
         // TODO : handle removed then added plugin
@@ -512,7 +540,10 @@ public enum PluginController implements LCStateListener, ModeListenerI {
 
         // Save dependencies
         Element pluginDependenciesElement = new Element(PluginController.NODE_PLUGIN_DEPENDENCIES);
-        usedPluginIds.stream().flatMap(id -> getPluginById(id, pi -> pi.stateProperty().get() == PluginInfoState.LOADED).stream()).map(pi -> pi.serialize(context)).forEach(pluginDependenciesElement::addContent);
+        usedPluginIds.stream()
+                .flatMap(id -> getPluginById(id, pi -> pi.stateProperty().get() == PluginInfoState.LOADED).stream())
+                .map(pi -> pi.serialize(context))
+                .forEach(pluginDependenciesElement::addContent);
 
         // Save information
         Element pluginInformations = new Element(PluginController.NODE_PLUGIN_CUSTOM_INFORMATIONS);

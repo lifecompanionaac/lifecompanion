@@ -25,35 +25,45 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class PluginImplementationLoadingHandler<T> {
     private final T type;
     private final List<Pair<String, T>> cachedElements;
-    private BiConsumer<String, T> addListener;
+    private final BiConsumer<String, Throwable> errorHandler;
+    private PluginElementAddedWithIdListener<T> addListener;
 
-    PluginImplementationLoadingHandler(T type) {
+    PluginImplementationLoadingHandler(T type, BiConsumer<String, Throwable> errorHandler) {
         this.type = type;
-        cachedElements = new ArrayList<>();
+        this.cachedElements = new ArrayList<>();
+        this.errorHandler = errorHandler;
     }
 
-    public void registerListenerAndDrainCache(Consumer<T> addListener) {
-        this.registerListenerAndDrainCache((pluginId, element) -> addListener.accept(element));
+    public void registerListenerAndDrainCache(PluginElementAddedListener<T> addListener) {
+        this.registerListenerAndDrainCache((pluginId, element) -> addListener.elementAdded(element));
     }
 
-    public void registerListenerAndDrainCache(BiConsumer<String, T> addListener) {
+    public void registerListenerAndDrainCache(PluginElementAddedWithIdListener<T> addListener) {
         if (this.addListener != null) throw new IllegalStateException("Can't register an add listener twice");
         this.addListener = addListener;
         for (Pair<String, T> cachedElement : cachedElements) {
-            addListener.accept(cachedElement.getLeft(), cachedElement.getRight());
+            handleListener(addListener, cachedElement.getLeft(), cachedElement.getRight());
         }
         cachedElements.clear();
+    }
+
+    private void handleListener(PluginElementAddedWithIdListener<T> listener, String pluginId, T element) {
+        try {
+            listener.elementAdded(pluginId, element);
+        } catch (Throwable t) {
+            this.errorHandler.accept(pluginId, t);
+        }
     }
 
     void elementAdded(String pluginId, Collection<T> elements) {
         for (T element : elements) {
             if (addListener != null) {
-                addListener.accept(pluginId, element);
+                handleListener(addListener, pluginId, element);
             } else {
                 cachedElements.add(Pair.of(pluginId, element));
             }

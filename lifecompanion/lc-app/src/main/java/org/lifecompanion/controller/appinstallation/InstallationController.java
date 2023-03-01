@@ -290,7 +290,11 @@ public enum InstallationController implements LCStateListener {
     }
 
     public DownloadAllPluginUpdateTask createDownloadAllPlugin(boolean manualRequest, String appVersion) {
-        List<String> pluginIds = PluginController.INSTANCE.getPluginInfoList().stream().filter(p -> p.stateProperty().get() != PluginInfoState.REMOVED).map(PluginInfo::getPluginId).collect(Collectors.toList());
+        List<String> pluginIds = PluginController.INSTANCE.getPluginInfoList()
+                .stream()
+                .filter(p -> p.stateProperty().get() != PluginInfoState.REMOVED)
+                .map(PluginInfo::getPluginId)
+                .collect(Collectors.toList());
         return new DownloadAllPluginUpdateTask(appServerClient, buildProperties.getAppId(), enablePreviewUpdates, manualRequest, pluginIds, appVersion);
     }
 
@@ -314,7 +318,7 @@ public enum InstallationController implements LCStateListener {
         Platform.exit();
         try {
             new ProcessBuilder()//
-                    .command(getLauncherPath().getAbsolutePath(), arg)//
+                    .command(getLauncherPath().getAbsolutePath(), arg != null ? arg : "")//
                     .redirectError(ProcessBuilder.Redirect.DISCARD).redirectOutput(ProcessBuilder.Redirect.DISCARD)
                     .start();
         } catch (Exception e) {
@@ -393,8 +397,10 @@ public enum InstallationController implements LCStateListener {
     private void showUpdateDownloadFinishedNotification() {
         FXThreadUtils.runOnFXThread(() -> {
             if (AppModeController.INSTANCE.isEditMode()) {
-                LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo("notification.info.update.download.finished.title", false,
-                        "notification.info.update.download.finish.restart.button", () -> ConfigActionController.INSTANCE.executeAction(new GlobalActions.RestartAction(AppModeController.INSTANCE.getEditModeContext().getStage().getScene().getRoot())))
+                LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo("notification.info.update.download.finished.title",
+                        false,
+                        "notification.info.update.download.finish.restart.button",
+                        () -> ConfigActionController.INSTANCE.executeAction(new GlobalActions.RestartAction(AppModeController.INSTANCE.getEditModeContext().getStage().getScene().getRoot())))
                 );
             }
         });
@@ -403,7 +409,8 @@ public enum InstallationController implements LCStateListener {
     private void showUpdateInstallationDoneNotification() {
         FXThreadUtils.runOnFXThread(() -> {
             if (AppModeController.INSTANCE.isEditMode()) {
-                LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo(Translation.getText("notification.info.update.done.title", InstallationController.INSTANCE.getBuildProperties().getVersionLabel()), false));
+                LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo(Translation.getText("notification.info.update.done.title",
+                        InstallationController.INSTANCE.getBuildProperties().getVersionLabel()), false));
                 DesktopUtils.openUrlInDefaultBrowser(InstallationController.INSTANCE.getBuildProperties().getAppServerUrl() + URL_PATH_CHANGELOG);
             }
         });
@@ -412,7 +419,9 @@ public enum InstallationController implements LCStateListener {
     private void showPluginUpdateNotification(PluginInfo pluginInfo) {
         FXThreadUtils.runOnFXThread(() -> {
             if (AppModeController.INSTANCE.isEditMode()) {
-                LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo(Translation.getText("notification.info.plugin.update.done.title", pluginInfo.getPluginName(), pluginInfo.getPluginVersion()), true));
+                LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo(Translation.getText("notification.info.plugin.update.done.title",
+                        pluginInfo.getPluginName(),
+                        pluginInfo.getPluginVersion()), true));
             }
         });
     }

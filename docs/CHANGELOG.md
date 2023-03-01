@@ -35,6 +35,7 @@
 - Ticket #212 : si l'installeur est lancé alors que LifeCompanion est déjà lancé, l'installation est bloquée
 - Ticket #54 : si LifeCompanion est lancé une nouvelle fois avec une configuration à importer, alors l'import se déclenche dans l'application déjà ouverte
 - Les traces d'éxécution sont conservées plus longtemps
+- Ticket #215 : meilleure gestion des erreurs dans les extensions
 
 ## 1.4.5 - 21/02/2023
 

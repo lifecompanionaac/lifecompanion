@@ -189,6 +189,7 @@ public class GeneralConfigurationScene extends Scene implements LCViewInitHelper
                 this.addStepImplementation(generalConfigViewType.getConstructor().newInstance());
             } catch (Throwable e) {
                 LOGGER.error("Couldn't create step implementation from type {}", generalConfigViewType, e);
+                throw e;
             }
         });
     }

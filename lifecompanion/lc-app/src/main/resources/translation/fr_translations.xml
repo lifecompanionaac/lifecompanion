@@ -3621,4 +3621,6 @@
     <text key="picotts.voice.synthesizer.description">Synthèse vocale utilisant la commande "pico2wave" sur les systèmes Unix (testé sur Ubuntu)</text>
     <text key="action.switch.to.edit.mode.name">Passer en mode "Édition"</text>
     <text key="action.switch.to.edit.mode.description">Permet de basculer du mode "Utilisation" au mode "Édition" directement depuis une action. Cette action sera réalisée sans demander de code de confirmation si celui-ci est activé.</text>
+    <text key="plugin.error.startup.notification.will.be.deleted">Erreur au chargement de l'extension "{}"</text>
+    <text key="plugin.error.startup.notification.will.be.deleted.button">Redémarrer</text>
 </texts>

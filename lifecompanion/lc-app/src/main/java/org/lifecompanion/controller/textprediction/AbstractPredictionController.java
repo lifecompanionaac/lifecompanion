@@ -138,6 +138,7 @@ public abstract class AbstractPredictionController<T extends BasePredictorI, K, 
                         predictorFromPluginIds.put(predictorInstance.getId(), pluginId);
                     } catch (Exception e) {
                         LOGGER.error("Impossible to create the plugin predictor from {}", predictorType, e);
+                        throw e;
                     }
                 }
         );
