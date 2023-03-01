@@ -5,9 +5,11 @@ open module org.lifecompanion.framework.commons {
     requires java.xml;
     requires org.apache.commons.io;
     requires org.apache.commons.codec;
+    requires java.rmi;
 
     exports org.lifecompanion.framework.utils;
     exports org.lifecompanion.framework.commons;
+    exports org.lifecompanion.framework.commons.doublelaunch;
     exports org.lifecompanion.framework.commons.translation;
     exports org.lifecompanion.framework.commons.ui;
     exports org.lifecompanion.framework.commons.utils.app;

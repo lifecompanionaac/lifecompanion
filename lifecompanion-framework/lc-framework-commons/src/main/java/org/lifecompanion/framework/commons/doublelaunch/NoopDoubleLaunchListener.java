@@ -2,7 +2,7 @@
  * LifeCompanion AAC and its sub projects
  *
  * Copyright (C) 2014 to 2019 Mathieu THEBAUD
- * Copyright (C) 2020 to 2021 CMRRF KERPAPE (Lorient, France)
+ * Copyright (C) 2020 to 2023 CMRRF KERPAPE (Lorient, France) and CoWork'HIT (Lorient, France)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,16 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.lifecompanion.framework.commons.fx.doublelaunch;
 
-import java.rmi.Remote;
+package org.lifecompanion.framework.commons.doublelaunch;
+
 import java.rmi.RemoteException;
 
-/**
- * Interface that can be called on RMI to fire a double launch event.
- *
- * @author Mathieu THEBAUD <math.thebaud@gmail.com>
- */
-public interface DoubleLaunchListener extends Remote {
-    void launched(boolean notify, String[] args) throws RemoteException;
+public class NoopDoubleLaunchListener implements DoubleLaunchListener {
+    @Override
+    public void launched(boolean notify, String[] args) throws RemoteException {
+
+    }
 }

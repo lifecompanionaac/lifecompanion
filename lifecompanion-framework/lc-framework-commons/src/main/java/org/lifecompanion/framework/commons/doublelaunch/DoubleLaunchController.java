@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.lifecompanion.framework.commons.fx.doublelaunch;
+package org.lifecompanion.framework.commons.doublelaunch;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,7 +58,7 @@ public enum DoubleLaunchController {
                 DoubleLaunchController.LOGGER.warn(
                         "Couldn't create RMI server because a RMI server already exist on this port : {}, will check if a existing instance is running",
                         e.getCause().getMessage());
-                doubleRun = this.checkExistingRunningInstance(notify, args);
+                doubleRun = this.isLifeCompanionRunning(notify, args);
             } else {
                 DoubleLaunchController.LOGGER.error("Couldn't create RMI server", e);
             }
@@ -98,7 +98,7 @@ public enum DoubleLaunchController {
         System.exit(-1);
     }
 
-    private boolean checkExistingRunningInstance(boolean notify, String[] args) {
+    public boolean isLifeCompanionRunning(boolean notify, String[] args) {
         boolean existingInstance = false;
         try {
             //Try to get existing instance and fire a message to it
