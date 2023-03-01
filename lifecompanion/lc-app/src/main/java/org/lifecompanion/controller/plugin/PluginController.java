@@ -345,6 +345,7 @@ public enum PluginController implements LCStateListener, ModeListenerI {
             FXThreadUtils.runOnFXThread(() -> {
                 for (PluginInfo info : pluginInfo) {
                     removePlugin(info);
+                    info.stateProperty().set(PluginInfoState.ERROR);
                 }
             });
             LCNotificationController.INSTANCE.showNotification(LCNotification.createError(Translation.getText("plugin.error.startup.notification.will.be.deleted", pluginId),
