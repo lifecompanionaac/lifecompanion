@@ -8,7 +8,7 @@
 
 ### Corrections/ajustements
 
-- ...
+- La souris ne se plaçait parfois pas au centre de la fenêtre au démarrage d'une configuration (sur les écrans avec une mise à l'échelle)
 
 ## 1.4.6 - 01/03/2023
 
