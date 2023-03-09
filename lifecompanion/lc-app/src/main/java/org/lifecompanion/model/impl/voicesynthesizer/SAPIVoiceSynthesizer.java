@@ -27,6 +27,7 @@ import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.framework.utils.Pair;
 import org.lifecompanion.model.api.voicesynthesizer.VoiceInfoI;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.util.LangUtils;
@@ -52,6 +53,7 @@ public class SAPIVoiceSynthesizer extends AbstractVoiceSynthesizer {
     private static final MediaType MEDIA_TYPE = MediaType.get("application/text; charset=utf-8");
     private static final int PORT = 8646;
     private static final String URL = "http://localhost:" + PORT + "/";
+    private static final long STOP_TIMEOUT = 500;
 
 
     /**
@@ -77,10 +79,9 @@ public class SAPIVoiceSynthesizer extends AbstractVoiceSynthesizer {
      */
     private String voice;
 
-    /**
-     * Current media player (if a wav file is playing)
-     */
-    private MediaPlayer currentMediaPlayer;
+    private Pair<CountDownLatch, MediaPlayer> currentPlayer;
+
+    private long lastStopRequest;
 
     // Class part : "Initialization/dispose"
     //========================================================================
@@ -202,6 +203,7 @@ public class SAPIVoiceSynthesizer extends AbstractVoiceSynthesizer {
                                 .addQueryParameter("wav", trimSilences ? "true" : null)//
                                 .build())
                 .post(body).build();
+        long start = System.currentTimeMillis();
         try (Response response = httpClient.newCall(request).execute()) {
             if (trimSilences) playResultingFileSyncRemovingSilence(response);
         } catch (Exception e) {
@@ -237,12 +239,16 @@ public class SAPIVoiceSynthesizer extends AbstractVoiceSynthesizer {
                 LOGGER.error("stopCurrentSpeak call didn't work", e);
             }
         }
-        if (this.currentMediaPlayer != null) {
-            MediaPlayer oldMediaPlayer = this.currentMediaPlayer;
-            oldMediaPlayer.stop();
-            oldMediaPlayer.dispose();
-            this.currentMediaPlayer = null;
+        if (this.currentPlayer != null) {
+            CountDownLatch countDownLatch = currentPlayer.getLeft();
+            MediaPlayer mediaPlayer = this.currentPlayer.getRight();
+            mediaPlayer.stop();
+            mediaPlayer.dispose();
+            // release the CDL : better twice than risk blocking > rare issue make the media player directly disposed without firing listener that release the CDL
+            countDownLatch.countDown();
+            this.currentPlayer = null;
         }
+        lastStopRequest = System.currentTimeMillis();
     }
 
     @Override
@@ -290,7 +296,7 @@ public class SAPIVoiceSynthesizer extends AbstractVoiceSynthesizer {
     // PLAYING WAV FILES
     //========================================================================
     private void playResultingFileSyncRemovingSilence(Response response) throws Exception {
-        if (response.isSuccessful()) {
+        if (response.isSuccessful() && speakNotStopped()) {
             String wavFilePath = response.body().string();
             if (StringUtils.isNotBlank(wavFilePath)) {
                 File wavFile = new File(wavFilePath);
@@ -306,26 +312,33 @@ public class SAPIVoiceSynthesizer extends AbstractVoiceSynthesizer {
     }
 
     private void playWavFileSync(File wavFile) throws Exception {
-        this.currentMediaPlayer = new MediaPlayer(new Media(wavFile.toURI().toURL().toString()));
-        final CountDownLatch countDownLatch = new CountDownLatch(1);
-        //Unlock on end/error
-        final Runnable releaseCDL = countDownLatch::countDown;
-        currentMediaPlayer.setOnEndOfMedia(releaseCDL);
-        currentMediaPlayer.setOnStopped(releaseCDL);
-        currentMediaPlayer.setOnHalted(releaseCDL);
-        currentMediaPlayer.setOnError(() -> {
-            this.LOGGER.error("Error for sound", currentMediaPlayer.getError());
-            releaseCDL.run();
-        });
-        //Start and lock
-        currentMediaPlayer.play();
-        try {
-            countDownLatch.await();
-        } catch (Exception e) {
-            this.LOGGER.error("Can't wait for player to finish", e);
-        } finally {
-            currentMediaPlayer = null;
+        if (speakNotStopped()) {
+            final MediaPlayer mediaPlayer = new MediaPlayer(new Media(wavFile.toURI().toURL().toString()));
+            final CountDownLatch countDownLatch = new CountDownLatch(1);
+            //Unlock on end/error
+            final Runnable releaseCDL = countDownLatch::countDown;
+            mediaPlayer.setOnEndOfMedia(releaseCDL);
+            mediaPlayer.setOnStopped(releaseCDL);
+            mediaPlayer.setOnHalted(releaseCDL);
+            mediaPlayer.setOnError(() -> {
+                this.LOGGER.error("Error for sound", mediaPlayer.getError());
+                releaseCDL.run();
+            });
+            //Start and lock
+            currentPlayer = Pair.of(countDownLatch, mediaPlayer);
+            mediaPlayer.play();
+            try {
+                countDownLatch.await();
+            } catch (Exception e) {
+                this.LOGGER.error("Can't wait for player to finish", e);
+            } finally {
+                currentPlayer = null;
+            }
         }
+    }
+
+    private boolean speakNotStopped() {
+        return (System.currentTimeMillis() - lastStopRequest) > STOP_TIMEOUT;
     }
     //========================================================================
 }
