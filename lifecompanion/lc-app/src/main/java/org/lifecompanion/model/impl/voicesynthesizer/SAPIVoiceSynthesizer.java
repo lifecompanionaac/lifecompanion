@@ -20,18 +20,16 @@ package org.lifecompanion.model.impl.voicesynthesizer;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import okhttp3.*;
 import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
-import org.lifecompanion.framework.utils.Pair;
 import org.lifecompanion.model.api.voicesynthesizer.VoiceInfoI;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.util.LangUtils;
 import org.lifecompanion.util.SoundUtils;
+import org.lifecompanion.util.javafx.SyncMediaPlayer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +37,6 @@ import java.io.*;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -79,9 +76,13 @@ public class SAPIVoiceSynthesizer extends AbstractVoiceSynthesizer {
      */
     private String voice;
 
-    private Pair<CountDownLatch, MediaPlayer> currentPlayer;
+    private final SyncMediaPlayer syncMediaPlayer;
 
     private long lastStopRequest;
+
+    public SAPIVoiceSynthesizer() {
+        this.syncMediaPlayer = new SyncMediaPlayer();
+    }
 
     // Class part : "Initialization/dispose"
     //========================================================================
@@ -239,15 +240,7 @@ public class SAPIVoiceSynthesizer extends AbstractVoiceSynthesizer {
                 LOGGER.error("stopCurrentSpeak call didn't work", e);
             }
         }
-        if (this.currentPlayer != null) {
-            CountDownLatch countDownLatch = currentPlayer.getLeft();
-            MediaPlayer mediaPlayer = this.currentPlayer.getRight();
-            mediaPlayer.stop();
-            mediaPlayer.dispose();
-            // release the CDL : better twice than risk blocking > rare issue make the media player directly disposed without firing listener that release the CDL
-            countDownLatch.countDown();
-            this.currentPlayer = null;
-        }
+        syncMediaPlayer.stopAllPlaying();
         lastStopRequest = System.currentTimeMillis();
     }
 
@@ -313,27 +306,7 @@ public class SAPIVoiceSynthesizer extends AbstractVoiceSynthesizer {
 
     private void playWavFileSync(File wavFile) throws Exception {
         if (speakNotStopped()) {
-            final MediaPlayer mediaPlayer = new MediaPlayer(new Media(wavFile.toURI().toURL().toString()));
-            final CountDownLatch countDownLatch = new CountDownLatch(1);
-            //Unlock on end/error
-            final Runnable releaseCDL = countDownLatch::countDown;
-            mediaPlayer.setOnEndOfMedia(releaseCDL);
-            mediaPlayer.setOnStopped(releaseCDL);
-            mediaPlayer.setOnHalted(releaseCDL);
-            mediaPlayer.setOnError(() -> {
-                this.LOGGER.error("Error for sound", mediaPlayer.getError());
-                releaseCDL.run();
-            });
-            //Start and lock
-            currentPlayer = Pair.of(countDownLatch, mediaPlayer);
-            mediaPlayer.play();
-            try {
-                countDownLatch.await();
-            } catch (Exception e) {
-                this.LOGGER.error("Can't wait for player to finish", e);
-            } finally {
-                currentPlayer = null;
-            }
+            syncMediaPlayer.playSync(wavFile);
         }
     }
 

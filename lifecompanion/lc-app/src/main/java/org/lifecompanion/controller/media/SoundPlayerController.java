@@ -22,17 +22,14 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.media.AudioEqualizer;
 import javafx.scene.media.EqualizerBand;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
 import org.lifecompanion.util.javafx.FXThreadUtils;
+import org.lifecompanion.util.javafx.SyncMediaPlayer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.CountDownLatch;
 
 
 /**
@@ -58,37 +55,27 @@ public enum SoundPlayerController implements ModeListenerI {
     /**
      * All current media player
      */
-    private final CopyOnWriteArrayList<MediaPlayer> currentMediaPlayer;
+    private final SyncMediaPlayer syncMediaPlayer;
 
     SoundPlayerController() {
         this.disableSoundPlayer = new SimpleBooleanProperty(false);
-        this.currentMediaPlayer = new CopyOnWriteArrayList<>();
+        this.syncMediaPlayer = new SyncMediaPlayer();
+
+        // this.currentMediaPlayer = new CopyOnWriteArrayList<>();
     }
 
     // Class part : "Public API"
     //========================================================================
     public void playSoundSync(final File filePath, boolean maxGain) {
         if (!this.disableSoundPlayer.get()) {
-            if (this.specificSoundPlayer != null) {
-                this.specificSoundPlayer.playSoundSync(filePath, maxGain);
-            } else {
-                this.playSoundImpl(filePath, true, maxGain);
-            }
+            this.playSoundImpl(filePath, true, maxGain);
         }
     }
 
     public void playSoundAsync(final File filePath, boolean maxGain) {
         if (!this.disableSoundPlayer.get()) {
-            if (this.specificSoundPlayer != null) {
-                this.specificSoundPlayer.playSoundSync(filePath, maxGain);
-            } else {
-                this.playSoundImpl(filePath, false, maxGain);
-            }
+            this.playSoundImpl(filePath, false, maxGain);
         }
-    }
-
-    public void setSpecificSoundPlayer(final SoundPlayerI specificSoundPlayer) {
-        this.specificSoundPlayer = specificSoundPlayer;
     }
 
     public BooleanProperty disableSoundPlayerProperty() {
@@ -108,42 +95,16 @@ public enum SoundPlayerController implements ModeListenerI {
     // Class part : "Private"
     //========================================================================
     private void playSoundImpl(final File filePath, boolean sync, boolean maxGain) {
-        final CountDownLatch countDownLatch = sync ? new CountDownLatch(1) : null;
-        Media media = new Media(filePath.toURI().toString());
-        MediaPlayer player = new MediaPlayer(media);
-        this.currentMediaPlayer.add(player);
-
-        if (maxGain) {
-            final AudioEqualizer audioEqualizer = player.getAudioEqualizer();
-            audioEqualizer.getBands().forEach(band -> band.setGain(EqualizerBand.MAX_GAIN));
-            audioEqualizer.setEnabled(true);
-        }
-
-        //Unlock on end/error
-        final Runnable removeAndReleaseCDL = () -> removeAndReleaseCountDownLatch(countDownLatch, player);
-        player.setOnEndOfMedia(removeAndReleaseCDL);
-        player.setOnStopped(removeAndReleaseCDL);
-        player.setOnHalted(removeAndReleaseCDL);
-        player.setOnError(() -> {
-            this.LOGGER.warn("Error for sound {}", filePath, player.getError());
-            removeAndReleaseCountDownLatch(countDownLatch, player);
-        });
-
-        //Start and lock
-        player.play();
-        if (countDownLatch != null) {
-            try {
-                countDownLatch.await();
-            } catch (Exception e) {
-                this.LOGGER.warn("Can't wait for player to finish", e);
-            }
-        }
-    }
-
-    private void removeAndReleaseCountDownLatch(CountDownLatch countDownLatch, MediaPlayer player) {
-        this.currentMediaPlayer.remove(player);
-        if (countDownLatch != null) {
-            countDownLatch.countDown();
+        try {
+            syncMediaPlayer.play(filePath, mediaPlayer -> {
+                if (maxGain) {
+                    final AudioEqualizer audioEqualizer = mediaPlayer.getAudioEqualizer();
+                    audioEqualizer.getBands().forEach(band -> band.setGain(EqualizerBand.MAX_GAIN));
+                    audioEqualizer.setEnabled(true);
+                }
+            }, sync);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
     //========================================================================
@@ -156,16 +117,15 @@ public enum SoundPlayerController implements ModeListenerI {
 
     @Override
     public void modeStop(final LCConfigurationI configuration) {
+        //When use mode stop, enable back the voice
+        if (this.disableSoundPlayer.get()) {
+            this.disableSoundPlayer.set(false);
+        }
         this.stopEveryPlayer();
     }
 
     public void stopEveryPlayer() {
-        //Stop every players
-        for (MediaPlayer mediaPlayer : this.currentMediaPlayer) {
-            mediaPlayer.stop();
-            mediaPlayer.dispose();
-        }
-        this.currentMediaPlayer.clear();
+        syncMediaPlayer.stopAllPlaying();
     }
     //========================================================================
 
