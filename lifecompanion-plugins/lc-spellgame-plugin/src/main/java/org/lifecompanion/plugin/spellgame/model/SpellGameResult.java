@@ -10,11 +10,13 @@ public class SpellGameResult {
     private long duration;
     private int score;
     private int doneCount;
+    private boolean ignoreAccents;
     private transient List<SpellGameStepResult> answers;
 
-    public SpellGameResult(String listName, int listSize, Date createAt, long duration, int score, int doneCount, List<SpellGameStepResult> answers) {
+    public SpellGameResult(String listName, int listSize,boolean ignoreAccents, Date createAt, long duration, int score, int doneCount, List<SpellGameStepResult> answers) {
         this.listName = listName;
         this.listSize = listSize;
+        this.ignoreAccents = ignoreAccents;
         this.createAt = createAt;
         this.duration = duration;
         this.score = score;
@@ -78,6 +80,14 @@ public class SpellGameResult {
         this.answers = answers;
     }
 
+    public boolean isIgnoreAccents() {
+        return ignoreAccents;
+    }
+
+    public void setIgnoreAccents(boolean ignoreAccents) {
+        this.ignoreAccents = ignoreAccents;
+    }
+
     @Override
     public String toString() {
         return "SpellGameResult{" +
@@ -87,6 +97,7 @@ public class SpellGameResult {
                 ", duration=" + duration +
                 ", score=" + score +
                 ", doneCount=" + doneCount +
+                ", ignoreAccents=" + ignoreAccents +
                 ", answers=" + answers +
                 '}';
     }

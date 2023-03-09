@@ -83,7 +83,7 @@ public enum SpellGameController implements ModeListenerI {
     private final List<SpellGameStepResult> currentGameAnswers;
 
     private int currentWordScore;
-    private GameStepV2 currentStep;
+    private GameStep currentStep;
 
     private SpellGamePluginProperties currentSpellGamePluginProperties;
     private final List<CurrentWordDisplayKeyOption> wordDisplayKeyOptions;
@@ -184,9 +184,9 @@ public enum SpellGameController implements ModeListenerI {
         }
         currentWordList = currentSpellGamePluginProperties.getWordListById(id);
         if (currentWordList != null) {
-            playerSuccess = initPlayer("answer_good.wav", 0.7);
-            playerError = initPlayer("answer_bad.mp3", 0.6);
-            playerStartTyping = initPlayer("start_typing.wav", 0.5);
+            playerSuccess = initPlayer("answer_good.wav", currentSpellGamePluginProperties.feedbacksVolumeProperty().get());
+            playerError = initPlayer("answer_bad.mp3", currentSpellGamePluginProperties.feedbacksVolumeProperty().get());
+            playerStartTyping = initPlayer("start_typing.wav", currentSpellGamePluginProperties.feedbacksVolumeProperty().get() * 0.75);
             if (currentSpellGamePluginProperties.validateWithEnterProperty().get()) {
                 WritingStateController.INSTANCE.currentTextProperty().addListener(textListener);
             }
@@ -196,7 +196,7 @@ public enum SpellGameController implements ModeListenerI {
                 Collections.shuffle(words);
             }
             currentWordIndex = 0;
-            currentStep = GameStepV2Enum.values()[0];
+            currentStep = GameStepEnum.values()[0];
             this.currentWordScore = WORD_MAX_SCORE;
             this.currentGameAnswers.clear();
             WritingStateController.INSTANCE.removeAll(WritingEventSource.SYSTEM);
@@ -217,6 +217,7 @@ public enum SpellGameController implements ModeListenerI {
                 SpellGameResult spellGameResult = new SpellGameResult(
                         currentWordList.nameProperty().get(),
                         currentWordList.getWords().size(),
+                        currentSpellGamePluginProperties.ignoreAccentsProperty().get(),
                         now,
                         answers.stream().mapToLong(SpellGameStepResult::timeSpent).sum(),
                         userScore,
@@ -259,7 +260,7 @@ public enum SpellGameController implements ModeListenerI {
             WritingStateController.INSTANCE.removeAll(WritingEventSource.SYSTEM);
 
             // If the user successfully enter the word : set the point and go to next word
-            boolean success = currentStep.checkWord(currentSpellGamePluginProperties, word, input);
+            boolean success = currentStep.checkWord(currentSpellGamePluginProperties, removeAccentIfNeeded(word), removeAccentIfNeeded(input));
             addGameAnswer(new SpellGameStepResult(currentStep,
                     success ? SpellGameStepResultStatusEnum.SUCCESS : SpellGameStepResultStatusEnum.FAILED,
                     word,
@@ -267,7 +268,7 @@ public enum SpellGameController implements ModeListenerI {
                     System.currentTimeMillis() - currentStepStartedAt));
             if (success) {
                 showSuccessFeedback();
-                GameStepV2 stepOnSuccess = currentStep.getStepOnSuccess();
+                GameStep stepOnSuccess = currentStep.getStepOnSuccess();
                 if (stepOnSuccess != null) {
                     currentStep = stepOnSuccess;
                     startCurrentStep();
@@ -283,6 +284,10 @@ public enum SpellGameController implements ModeListenerI {
                 startCurrentStep();
             }
         }
+    }
+
+    private String removeAccentIfNeeded(String word) {
+        return currentSpellGamePluginProperties.ignoreAccentsProperty().get() ? StringUtils.stripAccents(word) : word;
     }
 
     public void skipWord() {
@@ -312,7 +317,7 @@ public enum SpellGameController implements ModeListenerI {
         this.userScore += skipped ? WORD_MIN_SCORE : currentWordScore;
         this.currentWordScore = WORD_MAX_SCORE;
         UseVariableController.INSTANCE.requestVariablesUpdate();
-        currentStep = GameStepV2Enum.values()[0];
+        currentStep = GameStepEnum.values()[0];
         if (currentWordIndex < words.size() - 1) {
             currentWordIndex++;
             startCurrentStep();
@@ -325,7 +330,7 @@ public enum SpellGameController implements ModeListenerI {
 
     private void startCurrentStep() {
         String currentWord = words.get(currentWordIndex);
-        GameStepV2 step = currentStep;
+        GameStep step = currentStep;
         StepDisplayMode displayMode = step.getDisplayMode();
 
         // Speak instruction and then inform the user that it's possible to type

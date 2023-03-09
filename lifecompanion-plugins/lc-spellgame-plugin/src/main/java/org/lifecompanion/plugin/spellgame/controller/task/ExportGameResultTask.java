@@ -1,29 +1,23 @@
 package org.lifecompanion.plugin.spellgame.controller.task;
 
-import org.lifecompanion.controller.io.IOHelper;
 import org.lifecompanion.controller.io.JsonHelper;
-import org.lifecompanion.controller.profile.ProfileController;
 import org.lifecompanion.controller.resource.ResourceHelper;
+import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.framework.utils.FluentHashMap;
-import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.plugin.spellgame.controller.SpellGameController;
-import org.lifecompanion.plugin.spellgame.model.GameStepEnum;
 import org.lifecompanion.plugin.spellgame.model.SpellGameResult;
 import org.lifecompanion.plugin.spellgame.model.SpellGameStepResult;
-import org.lifecompanion.plugin.spellgame.model.SpellGameWordList;
 import org.lifecompanion.util.DesktopUtils;
 import org.lifecompanion.util.model.LCTask;
 
-import java.awt.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 
@@ -64,6 +58,7 @@ public class ExportGameResultTask extends LCTask<Void> {
         String resultHtml = replace(reportTemplate,
                 FluentHashMap.map("wordListName", spellGameResult.getListName())
                         .with("wordListSize", spellGameResult.getDoneCount() + " / " + spellGameResult.getListSize())
+                        .with("ignoreAccents", Translation.getText(spellGameResult.isIgnoreAccents() ? "spellgame.plugin.report.field.ignore.accent.true" : "spellgame.plugin.report.field.ignore.accent.false"))
                         .with("testDate", StringUtils.dateToStringDateWithHour(new Date()))
                         .with("testDuration", org.lifecompanion.util.StringUtils.durationToString((int) (spellGameResult.getDuration() / 1000.0)))
                         .with("testScore", spellGameResult.getScore() + " / " + spellGameResult.getDoneCount() * SpellGameController.WORD_MAX_SCORE)

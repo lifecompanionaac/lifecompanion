@@ -11,12 +11,11 @@ import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
-import org.lifecompanion.plugin.spellgame.model.GameStepEnum;
+import org.lifecompanion.plugin.spellgame.controller.SpellGameController;
 import org.lifecompanion.plugin.spellgame.model.SpellGameResult;
 import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.util.DesktopUtils;
 import org.lifecompanion.util.binding.BindingUtils;
-import org.lifecompanion.util.javafx.AbstractAlertBuilder;
 import org.lifecompanion.util.javafx.DialogUtils;
 import org.lifecompanion.util.javafx.FXControlUtils;
 
@@ -98,7 +97,7 @@ public class SpellGameResultListCell extends ListCell<Pair<SpellGameResult, File
         } else {
             SpellGameResult result = item.getKey();
             this.setGraphic(this.gridPaneGraphics);
-            this.labelName.setText(result.getListName() + " - " + result.getScore() + " / " + result.getDoneCount() * GameStepEnum.values().length);
+            this.labelName.setText(result.getListName() + " - " + result.getScore() + " / " + result.getDoneCount() * SpellGameController.WORD_MAX_SCORE);
             this.labelDate.setText(StringUtils.dateToStringDateWithHour(result.getCreateAt()));
         }
     }

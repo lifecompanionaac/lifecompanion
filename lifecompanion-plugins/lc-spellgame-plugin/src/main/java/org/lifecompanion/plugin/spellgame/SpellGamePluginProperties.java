@@ -18,6 +18,8 @@ public class SpellGamePluginProperties extends AbstractPluginConfigProperties {
     private final IntegerProperty wordDisplayTimeInMs;
     private final BooleanProperty validateWithEnter;
     private final BooleanProperty enableFeedbackSound;
+    private final DoubleProperty feedbacksVolume;
+    private final BooleanProperty ignoreAccents;
     private final ObservableList<SpellGameWordList> wordLists;
 
     protected SpellGamePluginProperties(ObjectProperty<LCConfigurationI> parentConfiguration) {
@@ -26,6 +28,8 @@ public class SpellGamePluginProperties extends AbstractPluginConfigProperties {
         this.validateWithEnter = new SimpleBooleanProperty(true);
         this.enableFeedbackSound = new SimpleBooleanProperty(true);
         this.wordLists = FXCollections.observableArrayList();
+        this.ignoreAccents = new SimpleBooleanProperty(false);
+        this.feedbacksVolume = new SimpleDoubleProperty(0.5);
     }
 
     public IntegerProperty wordDisplayTimeInMsProperty() {
@@ -42,6 +46,14 @@ public class SpellGamePluginProperties extends AbstractPluginConfigProperties {
 
     public ObservableList<SpellGameWordList> getWordLists() {
         return wordLists;
+    }
+
+    public DoubleProperty feedbacksVolumeProperty() {
+        return feedbacksVolume;
+    }
+
+    public BooleanProperty ignoreAccentsProperty() {
+        return ignoreAccents;
     }
 
     private static final String NODE_WORDLISTS = "SpellGameWordLists";
