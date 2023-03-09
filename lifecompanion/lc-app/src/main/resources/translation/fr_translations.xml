@@ -496,6 +496,9 @@
 		date.</text>
   <text key="default.user.text.directory.name">LifeCompanion-Textes</text>
   <!--org.lifecompanion.base.data.useaction.impl.computera.keyboard-->
+    <text key="action.simulate.keyboard.key.toggle.action.name">Maintenir/relâcher une touche</text>
+    <text key="action.simulate.keyboard.key.toggle.action.description.static">Permet de simuler le fait de maintenir ou de relâcher une touche du clavier. Cela peut par exemple servir à maintenir une touche fonction (Ctrl, Shift, Alt, etc.). Le premier appui déclenche le maintient de la touche, et le second la relâche. Cette action n'entraîne pas la répétition des caractères lorsqu'elle est utilisée avec des touches qui ne sont pas des touches fonction.</text>
+    <text key="action.simulate.keyboard.key.toggle.action.description.variable">Simule le maintien ou le relâchement de la touche "{}" du clavier.</text>
   <text key="action.simulate.keyboard.key.press.action.description">Simule l'appui d'une ou plusieurs touches du
 		clavier. Les touches seront appuyées puis relachées dans l'ordre.\nAttention pour que cette action fonctionne,
 		il faut
@@ -2512,6 +2515,7 @@
   <text key="use.action.open.url.default.browser">URL à ouvrir (doit être valide, ex : "http://google.fr")</text>
   <!--org.lifecompanion.config.view.useaction.impl.computera.keyboard-->
   <text key="use.action.simulate.key.press.label">Touche dont l'appui sera simulé</text>
+  <text key="use.action.simulate.key.toggle.label">Touche qui sera maintenue ou relâchée</text>
   <text key="use.action.simulate.key.press.second.label">Seconde touche (non obligatoire)</text>
   <text key="use.action.simulate.key.press.third.label">Troisième touche (non obligatoire)</text>
   <!--org.lifecompanion.config.view.useaction.impl.computera.mouseaction-->

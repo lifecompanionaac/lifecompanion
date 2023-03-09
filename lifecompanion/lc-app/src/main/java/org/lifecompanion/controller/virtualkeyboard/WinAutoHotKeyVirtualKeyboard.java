@@ -61,6 +61,16 @@ public class WinAutoHotKeyVirtualKeyboard implements VirtualKeyboardI {
         }
     }
 
+    @Override
+    public void keyDown(KeyCode keyCode) throws Exception {
+        new ProcessBuilder().command(exePath.getAbsolutePath(), "SendUnique", Win32ToFxKeyCodeConverter.javaFXKeyCodeToAutoHotKey(keyCode, "down")).start().waitFor();
+    }
+
+    @Override
+    public void keyUp(KeyCode keyCode) throws Exception {
+        new ProcessBuilder().command(exePath.getAbsolutePath(), "SendUnique", Win32ToFxKeyCodeConverter.javaFXKeyCodeToAutoHotKey(keyCode, "up")).start().waitFor();
+    }
+
 
     @Override
     public void modeStart(LCConfigurationI configuration) {

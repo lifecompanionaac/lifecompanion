@@ -22,6 +22,8 @@ package org.lifecompanion.controller.virtualkeyboard;
 import javafx.scene.input.KeyCode;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
 
+import java.security.Key;
+
 public interface VirtualKeyboardI extends ModeListenerI {
 
     /**
@@ -49,4 +51,20 @@ public interface VirtualKeyboardI extends ModeListenerI {
      * @throws Exception if can't send the text
      */
     void multiKeyPressThenRelease(final KeyCode... keyCodes) throws Exception;
+
+    /**
+     * Should try to set the given key down (ex Shift or Ctrl).<br>
+     * The key should not be released by the implementation, it will be the caller responsibility to release keys with {@link #keyUp(KeyCode)} later.
+     * @param keyCode the key to set down
+     * @throws Exception if can't key down
+     */
+    void keyDown(final KeyCode keyCode) throws Exception;
+
+    /**
+     * Should try to set the given key up (ex Shift or Ctrl).<br>
+     * This can be called after a {@link #keyDown(KeyCode)} but also without
+     * @param keyCode the key to set up
+     * @throws Exception if can't key up
+     */
+    void keyUp(final KeyCode keyCode) throws Exception;
 }

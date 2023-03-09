@@ -18,14 +18,13 @@
  */
 package org.lifecompanion.model.impl.voicesynthesizer;
 
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.model.api.voicesynthesizer.VoiceInfoI;
 import org.lifecompanion.model.impl.exception.UnavailableFeatureException;
 import org.lifecompanion.util.IOUtils;
 import org.lifecompanion.util.SoundUtils;
+import org.lifecompanion.util.javafx.SyncMediaPlayer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +33,6 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.CountDownLatch;
 
 /**
  * Class use to create text to speech with Ubuntu "pico2wave" command.
@@ -45,9 +43,13 @@ public class PicoTTSVoiceSynthesizer extends AbstractVoiceSynthesizer {
     private final Logger LOGGER = LoggerFactory.getLogger(PicoTTSVoiceSynthesizer.class);
     private String voice;
     private Process picoTTSRunningProcess;
-    private MediaPlayer currentMediaPlayer;
+    private final SyncMediaPlayer syncMediaPlayer;
 
     private double volume = 100;
+
+    public PicoTTSVoiceSynthesizer() {
+        this.syncMediaPlayer = new SyncMediaPlayer();
+    }
 
     // IMPLEMENTATION
     //========================================================================
@@ -99,27 +101,9 @@ public class PicoTTSVoiceSynthesizer extends AbstractVoiceSynthesizer {
     }
 
     private void playWavFileSync(File wavFile) throws Exception {
-        this.currentMediaPlayer = new MediaPlayer(new Media(wavFile.toURI().toURL().toString()));
-        this.currentMediaPlayer.setVolume(this.volume / 100.0);
-        final CountDownLatch countDownLatch = new CountDownLatch(1);
-        //Unlock on end/error
-        final Runnable releaseCDL = countDownLatch::countDown;
-        currentMediaPlayer.setOnEndOfMedia(releaseCDL);
-        currentMediaPlayer.setOnStopped(releaseCDL);
-        currentMediaPlayer.setOnHalted(releaseCDL);
-        currentMediaPlayer.setOnError(() -> {
-            this.LOGGER.error("Error for sound", currentMediaPlayer.getError());
-            releaseCDL.run();
-        });
-        //Start and lock
-        currentMediaPlayer.play();
-        try {
-            countDownLatch.await();
-        } catch (Exception e) {
-            this.LOGGER.error("Can't wait for player to finish", e);
-        } finally {
-            currentMediaPlayer = null;
-        }
+        this.syncMediaPlayer.play(wavFile, mediaPlayer -> {
+            mediaPlayer.setVolume(this.volume / 100.0);
+        }, true);
     }
 
     @Override
@@ -133,12 +117,7 @@ public class PicoTTSVoiceSynthesizer extends AbstractVoiceSynthesizer {
             this.picoTTSRunningProcess.destroy();
             this.picoTTSRunningProcess = null;
         }
-        if (this.currentMediaPlayer != null) {
-            MediaPlayer oldMediaPlayer = this.currentMediaPlayer;
-            oldMediaPlayer.stop();
-            oldMediaPlayer.dispose();
-            this.currentMediaPlayer = null;
-        }
+        this.syncMediaPlayer.stopAllPlaying();
     }
 
     @Override

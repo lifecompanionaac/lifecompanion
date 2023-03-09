@@ -30,6 +30,10 @@ import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Virtual keyboard manager.<br>
  * This is to simulate keyboard typing and key press.
@@ -61,6 +65,12 @@ public enum VirtualKeyboardController implements WritingDeviceI, ModeListenerI {
     public static final int AFTER_TYPE_DELAY = 30;
 
     private VirtualKeyboardI virtualKeyboardImplementation;
+
+    private final Set<KeyCode> currentlyPressedKeys;
+
+    VirtualKeyboardController() {
+        currentlyPressedKeys = Collections.synchronizedSet(new HashSet<>());
+    }
 
     // LINK WITH VKB
     //========================================================================
@@ -259,6 +269,39 @@ public enum VirtualKeyboardController implements WritingDeviceI, ModeListenerI {
             }
         }
     }
+
+    public boolean toggleKeyPressRelease(final KeyCode keyCode) {
+        if (keyCode != null) {
+            if (this.currentlyPressedKeys.contains(keyCode)) {
+                keyRelease(keyCode);
+                return true;
+            } else {
+                keyPress(keyCode);
+                return false;
+            }
+        }
+        return false;
+    }
+
+    public void keyPress(final KeyCode keyCode) {
+        try {
+            LOGGER.info("keyPress({})",keyCode);
+            currentlyPressedKeys.add(keyCode);
+            virtualKeyboardImplementation.keyDown(keyCode);
+        } catch (Exception e) {
+            LOGGER.error("keyPress({}) failed on {}", keyCode, virtualKeyboardImplementation.getClass().getSimpleName(), e);
+        }
+    }
+
+    public void keyRelease(final KeyCode keyCode) {
+        try {
+            LOGGER.info("keyRelease({})",keyCode);
+            currentlyPressedKeys.remove(keyCode);
+            virtualKeyboardImplementation.keyUp(keyCode);
+        } catch (Exception e) {
+            LOGGER.error("keyRelease({}) failed on {}", keyCode, virtualKeyboardImplementation.getClass().getSimpleName(), e);
+        }
+    }
     //========================================================================
 
     // MODE
@@ -273,27 +316,13 @@ public enum VirtualKeyboardController implements WritingDeviceI, ModeListenerI {
     @Override
     public void modeStop(final LCConfigurationI configuration) {
         if (virtualKeyboardImplementation != null) {
+            LOGGER.info("Virtual keyboard will release keys on stop : {}", currentlyPressedKeys);
+            currentlyPressedKeys.forEach(this::keyRelease);
+            currentlyPressedKeys.clear();
+
             virtualKeyboardImplementation.modeStop(configuration);
             virtualKeyboardImplementation = null;
         }
     }
     //========================================================================
-
-
-    //========================================================================
-
-
-    // BACKWARD COMP
-    //========================================================================
-
-    /**
-     * @deprecated Used in calendar plugin, will be removed later
-     */
-    @Deprecated
-    public void keyPressAndReleaseJavaFxKeyEvent(final KeyCode... keyCodes) {
-        keyPressThenRelease(keyCodes);
-    }
-    //========================================================================
-
-
 }

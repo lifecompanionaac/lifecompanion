@@ -20,8 +20,6 @@ package org.lifecompanion.model.impl.voicesynthesizer;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import okhttp3.*;
 import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.framework.commons.translation.Translation;
@@ -31,6 +29,7 @@ import org.lifecompanion.model.api.voicesynthesizer.VoiceInfoI;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.util.LangUtils;
 import org.lifecompanion.util.SoundUtils;
+import org.lifecompanion.util.javafx.SyncMediaPlayer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +37,6 @@ import java.io.*;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -52,6 +50,7 @@ public class SAPIVoiceSynthesizer extends AbstractVoiceSynthesizer {
     private static final MediaType MEDIA_TYPE = MediaType.get("application/text; charset=utf-8");
     private static final int PORT = 8646;
     private static final String URL = "http://localhost:" + PORT + "/";
+    private static final long STOP_TIMEOUT = 500;
 
 
     /**
@@ -77,10 +76,11 @@ public class SAPIVoiceSynthesizer extends AbstractVoiceSynthesizer {
      */
     private String voice;
 
-    /**
-     * Current media player (if a wav file is playing)
-     */
-    private MediaPlayer currentMediaPlayer;
+    private final SyncMediaPlayer syncMediaPlayer;
+
+    public SAPIVoiceSynthesizer() {
+        this.syncMediaPlayer = new SyncMediaPlayer();
+    }
 
     // Class part : "Initialization/dispose"
     //========================================================================
@@ -237,12 +237,7 @@ public class SAPIVoiceSynthesizer extends AbstractVoiceSynthesizer {
                 LOGGER.error("stopCurrentSpeak call didn't work", e);
             }
         }
-        if (this.currentMediaPlayer != null) {
-            MediaPlayer oldMediaPlayer = this.currentMediaPlayer;
-            oldMediaPlayer.stop();
-            oldMediaPlayer.dispose();
-            this.currentMediaPlayer = null;
-        }
+        syncMediaPlayer.stopAllPlaying();
     }
 
     @Override
@@ -306,26 +301,7 @@ public class SAPIVoiceSynthesizer extends AbstractVoiceSynthesizer {
     }
 
     private void playWavFileSync(File wavFile) throws Exception {
-        this.currentMediaPlayer = new MediaPlayer(new Media(wavFile.toURI().toURL().toString()));
-        final CountDownLatch countDownLatch = new CountDownLatch(1);
-        //Unlock on end/error
-        final Runnable releaseCDL = countDownLatch::countDown;
-        currentMediaPlayer.setOnEndOfMedia(releaseCDL);
-        currentMediaPlayer.setOnStopped(releaseCDL);
-        currentMediaPlayer.setOnHalted(releaseCDL);
-        currentMediaPlayer.setOnError(() -> {
-            this.LOGGER.error("Error for sound", currentMediaPlayer.getError());
-            releaseCDL.run();
-        });
-        //Start and lock
-        currentMediaPlayer.play();
-        try {
-            countDownLatch.await();
-        } catch (Exception e) {
-            this.LOGGER.error("Can't wait for player to finish", e);
-        } finally {
-            currentMediaPlayer = null;
-        }
+        syncMediaPlayer.playSync(wavFile);
     }
     //========================================================================
 }

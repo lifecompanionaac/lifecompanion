@@ -178,23 +178,11 @@ public abstract class AbstractPartScanSelectionMode<T extends AbstractPartScanSe
             this.selectedComponentToScan = this.components.get(this.primaryIndex);
             this.secondaryIndex = 0;
             this.timesInSamePart = 0;
-            //If the current line contains only one element, select the first element and return true because
-            //actions should be executed
-            if (this.selectedComponentToScan.getComponents().size() == 1) {
-                AbstractPartScanSelectionMode.LOGGER.info("Selected component to scan is size one");
-                this.secondaryIndex = 0;
-                GridPartComponentI uniqueCompInside = this.selectedComponentToScan.getPartIn(this.currentGrid.get(), secondaryIndex);
-                this.currentPart.set(uniqueCompInside);
-                // Issue : #136, view was not correctly updated when there was only one part in row/column scanning
-                this.view.moveToPart(this.currentPart.get(), this.getProgressTime(true), this.isMoveAnimationEnabled(true));
-                //If the next component is a action trigger component, we should deselect the line on next play call, because
-                // it will fire action and it should never select a line with just one component
-                this.deselectAndUpdateCurrentPartOnNextPlay = uniqueCompInside instanceof GridPartKeyComponentI;
-                return true;
-            } else {
-                //This select the first part of the current line, so scanning time should restart
-                this.updateCurrentComponent(true);
-            }
+
+            // Reversed behavior here : even if there is only one component, we will expect the user to select it
+            // this is done to stay consistent with the selection mode and to allow user to have actions on over
+            // this have the following consequence : the user should select twice the if there is only one part while it could select just once before
+            this.updateCurrentComponent(true);
         }
         return false;
     }
