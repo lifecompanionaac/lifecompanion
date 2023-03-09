@@ -8,6 +8,7 @@ import org.lifecompanion.framework.commons.utils.io.IOUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.framework.utils.FluentHashMap;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
+import org.lifecompanion.plugin.spellgame.controller.SpellGameController;
 import org.lifecompanion.plugin.spellgame.model.GameStepEnum;
 import org.lifecompanion.plugin.spellgame.model.SpellGameResult;
 import org.lifecompanion.plugin.spellgame.model.SpellGameStepResult;
@@ -65,7 +66,7 @@ public class ExportGameResultTask extends LCTask<Void> {
                         .with("wordListSize", spellGameResult.getDoneCount() + " / " + spellGameResult.getListSize())
                         .with("testDate", StringUtils.dateToStringDateWithHour(new Date()))
                         .with("testDuration", org.lifecompanion.util.StringUtils.durationToString((int) (spellGameResult.getDuration() / 1000.0)))
-                        .with("testScore", spellGameResult.getScore() + " / " + spellGameResult.getDoneCount() * GameStepEnum.values().length)
+                        .with("testScore", spellGameResult.getScore() + " / " + spellGameResult.getDoneCount() * SpellGameController.WORD_MAX_SCORE)
                         .with("rows", rows.toString()));
 
         try (PrintWriter pw = new PrintWriter(destinationDirectory.getAbsolutePath() + File.separator + INFORMATION_FILE_NAME, StandardCharsets.UTF_8)) {
