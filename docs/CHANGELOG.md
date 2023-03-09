@@ -8,9 +8,11 @@
 
 ### Corrections/ajustements
 
+- Correction du fonctionnement pour certaines combinaisons de touches en clavier virtuels (ex : Shift + Fin)
 - Changement du comportement défilement ligne/colonne ou colonne/ligne lorsqu'il n'y a qu'une case dans la ligne ou colonne : une seconde sélection est maintenant nécessaire, cela est fait pour avoir un comportement cohérent indépendamment de l'affichage
 - La souris ne se plaçait parfois pas au centre de la fenêtre au démarrage d'une configuration (sur les écrans avec une mise à l'échelle)
 - Correction d'un problème qui pouvait parfois bloquer la synthèse vocale
+- Ticket #216 : Les caractères accentués n'étaient pas correctement pris en compte lors de l'utilisation de la prédiction hors de LifeCompanion avec un clavier physique
 
 ## 1.4.6 - 01/03/2023
 

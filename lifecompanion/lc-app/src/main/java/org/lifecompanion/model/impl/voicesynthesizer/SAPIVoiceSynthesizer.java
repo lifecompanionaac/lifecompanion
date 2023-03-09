@@ -78,8 +78,6 @@ public class SAPIVoiceSynthesizer extends AbstractVoiceSynthesizer {
 
     private final SyncMediaPlayer syncMediaPlayer;
 
-    private long lastStopRequest;
-
     public SAPIVoiceSynthesizer() {
         this.syncMediaPlayer = new SyncMediaPlayer();
     }
@@ -204,7 +202,6 @@ public class SAPIVoiceSynthesizer extends AbstractVoiceSynthesizer {
                                 .addQueryParameter("wav", trimSilences ? "true" : null)//
                                 .build())
                 .post(body).build();
-        long start = System.currentTimeMillis();
         try (Response response = httpClient.newCall(request).execute()) {
             if (trimSilences) playResultingFileSyncRemovingSilence(response);
         } catch (Exception e) {
@@ -241,7 +238,6 @@ public class SAPIVoiceSynthesizer extends AbstractVoiceSynthesizer {
             }
         }
         syncMediaPlayer.stopAllPlaying();
-        lastStopRequest = System.currentTimeMillis();
     }
 
     @Override
@@ -289,7 +285,7 @@ public class SAPIVoiceSynthesizer extends AbstractVoiceSynthesizer {
     // PLAYING WAV FILES
     //========================================================================
     private void playResultingFileSyncRemovingSilence(Response response) throws Exception {
-        if (response.isSuccessful() && speakNotStopped()) {
+        if (response.isSuccessful()) {
             String wavFilePath = response.body().string();
             if (StringUtils.isNotBlank(wavFilePath)) {
                 File wavFile = new File(wavFilePath);
@@ -305,13 +301,7 @@ public class SAPIVoiceSynthesizer extends AbstractVoiceSynthesizer {
     }
 
     private void playWavFileSync(File wavFile) throws Exception {
-        if (speakNotStopped()) {
-            syncMediaPlayer.playSync(wavFile);
-        }
-    }
-
-    private boolean speakNotStopped() {
-        return (System.currentTimeMillis() - lastStopRequest) > STOP_TIMEOUT;
+        syncMediaPlayer.playSync(wavFile);
     }
     //========================================================================
 }

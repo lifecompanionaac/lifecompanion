@@ -33,6 +33,7 @@ import java.util.Map;
 public class Win32ToFxKeyCodeConverter {
     public static final Map<Integer, KeyCode> WIN32_TO_JAVAFX = new HashMap<>(200);
     public static final Map<KeyCode, Integer> JAVAFX_TO_WIN32 = new HashMap<>(200);
+    public static final Map<KeyCode, String> JAVAFX_TO_AUTOHOTKEY_MANUAL = new HashMap<>(20);
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Win32ToFxKeyCodeConverter.class);
 
@@ -132,14 +133,32 @@ public class Win32ToFxKeyCodeConverter {
                 LOGGER.error("JAVAFX TO WIN32 MAPPING ISSUE, duplicated JavaFX key code {} : previous {}, new {}", keyCode, JAVAFX_TO_WIN32.get(keyCode), win32Code);
             JAVAFX_TO_WIN32.put(keyCode, win32Code);
         });
+
+        JAVAFX_TO_AUTOHOTKEY_MANUAL.put(KeyCode.END, "End");
+        JAVAFX_TO_AUTOHOTKEY_MANUAL.put(KeyCode.HOME, "Home");
+        JAVAFX_TO_AUTOHOTKEY_MANUAL.put(KeyCode.DOWN, "Down");
+        JAVAFX_TO_AUTOHOTKEY_MANUAL.put(KeyCode.UP, "Up");
+        JAVAFX_TO_AUTOHOTKEY_MANUAL.put(KeyCode.RIGHT, "Right");
+        JAVAFX_TO_AUTOHOTKEY_MANUAL.put(KeyCode.LEFT, "Left");
+        JAVAFX_TO_AUTOHOTKEY_MANUAL.put(KeyCode.PAGE_UP, "PgUp");
+        JAVAFX_TO_AUTOHOTKEY_MANUAL.put(KeyCode.PAGE_DOWN, "PgDn");
+        JAVAFX_TO_AUTOHOTKEY_MANUAL.put(KeyCode.DELETE, "Delete");
+        JAVAFX_TO_AUTOHOTKEY_MANUAL.put(KeyCode.INSERT, "Insert");
     }
 
     public static String javaFXKeyCodeToAutoHotKey(KeyCode keyCode, String modifier) {
-        Integer valueInWin32 = Win32ToFxKeyCodeConverter.JAVAFX_TO_WIN32.get(keyCode);
-        if (valueInWin32 == null) {
-            LOGGER.warn("Didn't find a Win32 equivalent for key {} will use raw JavaFX code", keyCode);
-            valueInWin32 = keyCode.getCode();
+        String base;
+        String stringKeyCode = JAVAFX_TO_AUTOHOTKEY_MANUAL.get(keyCode);
+        if (stringKeyCode != null) {
+            base = "{" + stringKeyCode;
+        } else {
+            Integer valueInWin32 = Win32ToFxKeyCodeConverter.JAVAFX_TO_WIN32.get(keyCode);
+            if (valueInWin32 == null) {
+                LOGGER.warn("Didn't find a Win32 equivalent for key {} will use raw JavaFX code", keyCode);
+                valueInWin32 = keyCode.getCode();
+            }
+            base = "{vk" + Integer.toString(valueInWin32, 16);
         }
-        return "{vk" + Integer.toString(valueInWin32, 16) + (modifier != null ? " " + modifier : "") + "}";
+        return base + (modifier != null ? " " + modifier : "") + "}";
     }
 }

@@ -79,7 +79,7 @@ public enum WinAutoHotKeyKeyboardReceiverController implements ModeListenerI {
             if (specialAction != null) {
                 specialAction.run();
             } else if (firstChar > 32 && firstChar != 127) {
-                WritingStateController.INSTANCE.insertText(WritingEventSource.EXTERNAL_USER_INPUT, new String(charAsString.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8));
+                WritingStateController.INSTANCE.insertText(WritingEventSource.EXTERNAL_USER_INPUT, charAsString);
             } else {
                 LOGGER.info("Wasn't able to write char : {}", charAsString);
             }
