@@ -62,6 +62,9 @@ public enum SpellGameController implements ModeListenerI {
     INSTANCE;
     private static final Logger LOGGER = LoggerFactory.getLogger(SpellGameController.class);
 
+    public final static int WORD_MAX_SCORE = 10;
+    private final static int ERROR_POINT_SUBTRACT = 2, WORD_MIN_SCORE = 1;
+
     public static final String
             VAR_ID_USER_SCORE = "SpellGameUserScore",
             VAR_ID_WORD_INDEX = "SpellGameWordIndex",
@@ -76,9 +79,11 @@ public enum SpellGameController implements ModeListenerI {
     private SpellGameWordList currentWordList;
     private List<String> words;
     private int currentWordIndex;
-    private int currentStepIndex;
     private int userScore;
     private final List<SpellGameStepResult> currentGameAnswers;
+
+    private int currentWordScore;
+    private GameStep currentStep;
 
     private SpellGamePluginProperties currentSpellGamePluginProperties;
     private final List<CurrentWordDisplayKeyOption> wordDisplayKeyOptions;
@@ -118,7 +123,7 @@ public enum SpellGameController implements ModeListenerI {
     }
 
     public String getCurrentStepInstruction() {
-        return currentStepIndex >= 0 && currentStepIndex < GameStepEnum.values().length ? GameStepEnum.values()[currentStepIndex].getGeneralInstruction() : "";
+        return currentStep != null ? currentStep.getGeneralInstruction() : "";
     }
     //========================================================================
 
@@ -179,9 +184,9 @@ public enum SpellGameController implements ModeListenerI {
         }
         currentWordList = currentSpellGamePluginProperties.getWordListById(id);
         if (currentWordList != null) {
-            playerSuccess = initPlayer("answer_good.wav", 0.7);
-            playerError = initPlayer("answer_bad.mp3", 0.6);
-            playerStartTyping = initPlayer("start_typing.wav", 0.5);
+            playerSuccess = initPlayer("answer_good.wav", currentSpellGamePluginProperties.feedbacksVolumeProperty().get());
+            playerError = initPlayer("answer_bad.mp3", currentSpellGamePluginProperties.feedbacksVolumeProperty().get());
+            playerStartTyping = initPlayer("start_typing.wav", currentSpellGamePluginProperties.feedbacksVolumeProperty().get() * 0.75);
             if (currentSpellGamePluginProperties.validateWithEnterProperty().get()) {
                 WritingStateController.INSTANCE.currentTextProperty().addListener(textListener);
             }
@@ -191,7 +196,8 @@ public enum SpellGameController implements ModeListenerI {
                 Collections.shuffle(words);
             }
             currentWordIndex = 0;
-            currentStepIndex = 0;
+            currentStep = GameStepEnum.values()[0];
+            this.currentWordScore = WORD_MAX_SCORE;
             this.currentGameAnswers.clear();
             WritingStateController.INSTANCE.removeAll(WritingEventSource.SYSTEM);
             gameStartedListeners.forEach(Runnable::run);
@@ -211,6 +217,7 @@ public enum SpellGameController implements ModeListenerI {
                 SpellGameResult spellGameResult = new SpellGameResult(
                         currentWordList.nameProperty().get(),
                         currentWordList.getWords().size(),
+                        currentSpellGamePluginProperties.ignoreAccentsProperty().get(),
                         now,
                         answers.stream().mapToLong(SpellGameStepResult::timeSpent).sum(),
                         userScore,
@@ -222,7 +229,7 @@ public enum SpellGameController implements ModeListenerI {
                 );
             }
             this.currentWordIndex = 0;
-            this.currentStepIndex = 0;
+            this.currentStep = null;
             this.words = null;
             this.userScore = 0;
             currentWordList = null;
@@ -247,40 +254,47 @@ public enum SpellGameController implements ModeListenerI {
 
     public void validateCurrentStepAndGoToNext() {
         if (isGameRunning()) {
-            GameStep step = GameStepEnum.values()[currentStepIndex];
+            // GameStep step = GameStepEnum.values()[currentStepIndex];
             String input = cleanText(WritingStateController.INSTANCE.currentTextProperty().get());
             String word = cleanText(words.get(currentWordIndex));
             WritingStateController.INSTANCE.removeAll(WritingEventSource.SYSTEM);
 
             // If the user successfully enter the word : set the point and go to next word
-            boolean success = step.checkWord(word, input);
-            addGameAnswer(new SpellGameStepResult(step,
+            boolean success = currentStep.checkWord(currentSpellGamePluginProperties, removeAccentIfNeeded(word), removeAccentIfNeeded(input));
+            addGameAnswer(new SpellGameStepResult(currentStep,
                     success ? SpellGameStepResultStatusEnum.SUCCESS : SpellGameStepResultStatusEnum.FAILED,
                     word,
                     input,
                     System.currentTimeMillis() - currentStepStartedAt));
             if (success) {
                 showSuccessFeedback();
-                endCurrentStepAndGoToNextWord(true);
+                GameStep stepOnSuccess = currentStep.getStepOnSuccess();
+                if (stepOnSuccess != null) {
+                    currentStep = stepOnSuccess;
+                    startCurrentStep();
+                } else {
+                    endCurrentStepAndGoToNextWord(false);
+                }
             }
             // User failed to enter the correct word
             else {
                 showFailFeedback();
-                if (currentStepIndex < GameStepEnum.values().length - 1) {
-                    currentStepIndex++;
-                    startCurrentStep();
-                } else {
-                    endCurrentStepAndGoToNextWord(true);
-                }
+                currentStep = currentStep.getStepOnFail();
+                this.currentWordScore = Math.max(WORD_MIN_SCORE, this.currentWordScore - ERROR_POINT_SUBTRACT);
+                startCurrentStep();
             }
         }
+    }
+
+    private String removeAccentIfNeeded(String word) {
+        return currentSpellGamePluginProperties.ignoreAccentsProperty().get() ? StringUtils.stripAccents(word) : word;
     }
 
     public void skipWord() {
         if (isGameRunning()) {
             String word = cleanText(words.get(currentWordIndex));
-            addGameAnswer(new SpellGameStepResult(GameStepEnum.values()[currentStepIndex], SpellGameStepResultStatusEnum.UNDONE, word, "", System.currentTimeMillis() - currentStepStartedAt));
-            endCurrentStepAndGoToNextWord(false);
+            addGameAnswer(new SpellGameStepResult(currentStep, SpellGameStepResultStatusEnum.UNDONE, word, "", System.currentTimeMillis() - currentStepStartedAt));
+            endCurrentStepAndGoToNextWord(true);
         }
     }
 
@@ -299,10 +313,11 @@ public enum SpellGameController implements ModeListenerI {
         wordDisplayKeyOptions.forEach(k -> k.answerDone(false));
     }
 
-    private void endCurrentStepAndGoToNextWord(boolean increaseScoreFromCurrentStep) {
-        userScore += increaseScoreFromCurrentStep ? GameStepEnum.values().length - GameStepEnum.values()[currentStepIndex].ordinal() : 1;
+    private void endCurrentStepAndGoToNextWord(boolean skipped) {
+        this.userScore += skipped ? WORD_MIN_SCORE : currentWordScore;
+        this.currentWordScore = WORD_MAX_SCORE;
         UseVariableController.INSTANCE.requestVariablesUpdate();
-        currentStepIndex = 0;
+        currentStep = GameStepEnum.values()[0];
         if (currentWordIndex < words.size() - 1) {
             currentWordIndex++;
             startCurrentStep();
@@ -315,17 +330,26 @@ public enum SpellGameController implements ModeListenerI {
 
     private void startCurrentStep() {
         String currentWord = words.get(currentWordIndex);
-        GameStepEnum step = GameStepEnum.values()[currentStepIndex];
+        GameStep step = currentStep;
+        StepDisplayMode displayMode = step.getDisplayMode();
+
+        // Speak instruction and then inform the user that it's possible to type
         VoiceSynthesizerController.INSTANCE.speakAsync(
                 step.getInstruction(currentWord),
                 AppModeController.INSTANCE.getUseModeContext().configurationProperty().get().getVoiceSynthesizerParameter(),
                 () -> {
-                    if (isGameRunning() && !step.isWordDisplayOnStep()) playFromStart(playerStartTyping);
+                    if (isGameRunning() && displayMode != StepDisplayMode.TIMER) playFromStart(playerStartTyping);
                 });
         currentStepStartedAt = System.currentTimeMillis();
-        if (step.isWordDisplayOnStep()) {
-            WritingStateController.INSTANCE.writingDisabledProperty().set(true);
+
+
+        // Show word when needed
+        if (displayMode == StepDisplayMode.SHOWN || displayMode == StepDisplayMode.TIMER) {
             wordDisplayKeyOptions.forEach(currentWordDisplayKeyOption -> currentWordDisplayKeyOption.showWord(currentWord));
+        }
+        // If the step is a timer step, we should block user input word is hidden
+        if (displayMode == StepDisplayMode.TIMER) {
+            WritingStateController.INSTANCE.writingDisabledProperty().set(true);
             LCNamedThreadFactory.daemonThreadFactory("SpellGame").newThread(() -> {
                 ThreadUtils.safeSleep(currentSpellGamePluginProperties.wordDisplayTimeInMsProperty().get());
                 // As this is async, we should ensure that we are still in use mode at the end of the sleep

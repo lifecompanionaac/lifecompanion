@@ -3,24 +3,26 @@
     <text key="spellgame.plugin.game.step.write.name">Écrire</text>
     <text key="spellgame.plugin.game.step.write.instruction.speech">Écris le mot : "{}"</text>
     <text key="spellgame.plugin.game.step.write.instruction.general">Écris le mot que tu viens d'entendre</text>
+
     <text key="spellgame.plugin.game.step.copy.name">Copier</text>
     <text key="spellgame.plugin.game.step.copy.instruction.speech">Recopie le mot : "{}"</text>
     <text key="spellgame.plugin.game.step.copy.instruction.general">Recopie le mot que tu viens de voir</text>
+
+    <text key="spellgame.plugin.game.step.copy.timer.name">Copier</text>
+    <text key="spellgame.plugin.game.step.copy.timer.instruction.speech">Recopie le mot : "{}"</text>
+    <text key="spellgame.plugin.game.step.copy.timer.instruction.general">Recopie le mot que tu viens de voir</text>
+
     <text key="spellgame.plugin.game.step.char.count.name">Nombre de lettres</text>
     <text key="spellgame.plugin.game.step.char.count.instruction.speech">Écris le nombre de lettre dans le mot : "{}"</text>
     <text key="spellgame.plugin.game.step.char.count.instruction.general">Écris le nombre de lettre dans le mot que tu viens de voir</text>
-    <text key="spellgame.plugin.game.step.backward.name">Copier à l'envers</text>
-    <text key="spellgame.plugin.game.step.backward.instruction.speech">Écris le mot : "{}" à l'envers</text>
-    <text key="spellgame.plugin.game.step.backward.instruction.general">Écris le mot que tu viens de voir à l'envers</text>
-    <text key="spellgame.plugin.game.step.one.on.two.name">Une lettre sur deux</text>
-    <text key="spellgame.plugin.game.step.one.on.two.instruction.speech">Écris une lettre sur deux du mot "{}"</text>
-    <text key="spellgame.plugin.game.step.one.on.two.instruction.general">Écris une lettre sur deux du mot que tu viens de voir</text>
-    <text key="spellgame.plugin.game.step.vowel.name">Voyelles uniquement</text>
-    <text key="spellgame.plugin.game.step.vowel.instruction.speech">Écris dans l'ordre uniquement les voyelles du mot "{}"</text>
-    <text key="spellgame.plugin.game.step.vowel.instruction.general">Écris dans l'ordre uniquement les voyelles du mot que tu viens de voir</text>
-    <text key="spellgame.plugin.game.step.consonant.name">Consonnes uniquement</text>
-    <text key="spellgame.plugin.game.step.consonant.instruction.speech">Écris dans l'ordre uniquement les consonnes du mot "{}"</text>
-    <text key="spellgame.plugin.game.step.consonant.instruction.general">Écris dans l'ordre uniquement les consonnes du mot que tu viens de voir</text>
+
+    <text key="spellgame.plugin.game.step.vowel.count.name">Nombre de voyelles</text>
+    <text key="spellgame.plugin.game.step.vowel.count.instruction.speech">Écris le nombre de voyelles du mot "{}"</text>
+    <text key="spellgame.plugin.game.step.vowel.count.instruction.general">Écris le nombre de voyelles du mot que tu viens de voir</text>
+
+    <text key="spellgame.plugin.game.step.consonant.count.name">Nombre de consonnes</text>
+    <text key="spellgame.plugin.game.step.consonant.count.instruction.speech">Écris le nombre de consonnes du mot "{}"</text>
+    <text key="spellgame.plugin.game.step.consonant.count.instruction.general">Écris le nombre de consonnes du mot que tu viens de voir</text>
 
     <!-- MODEL -->
     <text key="spellgame.plugin.default.list.name">Nouvelle liste</text>
@@ -78,6 +80,10 @@
     <text key="spellgame.plugin.event.game.started.name">Début de partie</text>
     <text key="spellgame.plugin.event.game.started.description">Cet événement sera généré lorsqu'une partie est démarrée.</text>
 
+    <!-- REPORT -->
+    <text key="spellgame.plugin.report.field.ignore.accent.true">Activé</text>
+    <text key="spellgame.plugin.report.field.ignore.accent.false">Désactivé</text>
+
     <!-- TASK -->
     <text key="spellgame.plugin.task.generate.report.title">Génération des résultats</text>
     <text key="spellgame.plugin.task.import.word.title">Import de mots</text>
@@ -102,7 +108,10 @@
     <text key="spellgame.plugin.config.field.event.answer.given.answer.filter">Générer l'événement pour les réponses</text>
     <text key="spellgame.plugin.config.view.field.validate.with.enter">Autoriser la validation avec Entrée</text>
     <text key="spellgame.plugin.config.view.field.validate.with.enter.tooltip">Si activé, permet à l'utilisateur de valider la réponse courante avec la touche Entrée du clavier.</text>
+    <text key="spellgame.plugin.config.view.field.ignore.accents">Ignorer les accents</text>
+    <text key="spellgame.plugin.config.view.field.ignore.accents.tooltip">Si activé, l'oubli d'accents ne sera pas compté comme une erreur</text>
     <text key="spellgame.plugin.config.view.field.enable.feedback.sound">Activer les retours sonores</text>
+    <text key="spellgame.plugin.config.field.slider.volume">Volume des retours sonores</text>
     <text key="spellgame.plugin.config.view.field.enable.feedback.sound.tooltip">Si activé, ajoute un retour sonore à chaque réponse (bonne ou mauvaise)</text>
     <text key="spellgame.plugin.config.view.field.shuffle.words">Mélanger la liste</text>
     <text key="spellgame.plugin.config.view.field.shuffle.words.tooltip">Si activé, la liste de mot sera mélangée de manière aléatoire à chaque début de partie</text>
@@ -114,5 +123,6 @@
     <text key="spellgame.plugin.config.word.list.history.part">Historique des résultats</text>
     <text key="spellgame.plugin.config.button.show.results">Voir tous les résultats</text>
     <text key="spellgame.plugin.config.button.remove.all">Supprimer tout</text>
+
 
 </texts>
