@@ -4,7 +4,7 @@
 
 ### Fonctionnalités
 
-- ...
+- Ajout d'une action **Maintenir/relâcher une touche** pour les claviers visuels : permet par exemple de maintenir la touche CTRL, SHIFT, ALT, enfoncée
 
 ### Corrections/ajustements
 

@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   version="1.1"
+   id="svg15132"
+   width="32"
+   height="32"
+   sodipodi:docname="icon_keyboard_key_toggle.svg"
+   inkscape:version="1.1.2 (b8e25be833, 2022-02-05)"
+   inkscape:export-filename="E:\dev-lifecompanion\workspace\lifecompanion\res\icons\lc-app\use-actions\categories\computeraccess\icon_keyboard_key_toggle.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs15136" />
+  <sodipodi:namedview
+     id="namedview15134"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     showgrid="false"
+     width="32px"
+     inkscape:zoom="7.1308176"
+     inkscape:cx="34.77862"
+     inkscape:cy="61.213177"
+     inkscape:window-width="2400"
+     inkscape:window-height="1271"
+     inkscape:window-x="4791"
+     inkscape:window-y="1336"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg15132" />
+  <inkscape:clipboard
+     style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:#d2d2d2;fill-opacity:1;stroke-width:0.25000275;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000;stop-opacity:1"
+     min="4765.2254,2109.6338"
+     max="4883.7517,2232.0601"
+     geom-min="4765.2254,2109.6338"
+     geom-max="4883.7517,2232.0601" />
+  <g
+     id="g1202"
+     transform="matrix(0.26138165,0,0,0.26138165,0.50969397,-2.4869176e-7)">
+    <g
+       id="g15138"
+       transform="translate(-4765.2254,-2109.6338)">
+      <g
+         id="g7337"
+         transform="matrix(0.25000275,0,0,0.25000275,4763.2754,2109.6338)"
+         style="fill:#d2d2d2;fill-opacity:1"
+         inkscape:export-filename="E:\Documents\Temp\icon_keyboard_key.png"
+         inkscape:export-xdpi="25.092653"
+         inkscape:export-ydpi="25.092653">
+        <g
+           id="g7281"
+           style="fill:#d2d2d2;fill-opacity:1">
+          <path
+             id="path7279"
+             d="M 454.9,189.1 H 294.4 v -13.3 c 0,-12.5 -10.2,-22.7 -22.7,-22.7 h -10 V 120 c 0,-28 -22.8,-50.9 -50.9,-50.9 h -55 c -9.4,0 -17,-7.6 -17,-17 V 0 h -33.9 v 52.2 c 0,28.1 22.8,50.9 50.9,50.9 h 55 c 9.4,0 17,7.6 17,17 v 33.1 h -10 c -12.5,0 -22.7,10.2 -22.7,22.7 v 13.3 H 34.7 c -14.9,0 -26.9,12 -26.9,26.9 v 246.7 c 0,14.9 12,26.9 26.9,26.9 H 455 c 14.9,0 26.9,-12 26.9,-26.9 V 216 c -0.1,-14.9 -12.1,-26.9 -27,-26.9 z m -150.8,56.5 c 0,-3.7 3,-6.7 6.7,-6.7 h 27.4 c 3.7,0 6.7,3 6.7,6.7 v 27 c 0,3.7 -3,6.7 -6.7,6.7 h -27.4 c -3.7,0 -6.7,-3 -6.7,-6.7 z m 0.8,79.9 v 27 c 0,3.7 -3,6.7 -6.7,6.7 h -27.4 c -3.7,0 -6.7,-3 -6.7,-6.7 v -27 c 0,-3.7 3,-6.7 6.7,-6.7 h 27.4 c 3.7,0 6.7,3 6.7,6.7 z m -80.4,-79.9 c 0,-3.7 3,-6.7 6.7,-6.7 h 27.4 c 3.7,0 6.7,3 6.7,6.7 v 27 c 0,3.7 -3,6.7 -6.7,6.7 h -27.4 c -3.7,0 -6.7,-3 -6.7,-6.7 z M 191,318.8 h 27.4 c 3.7,0 6.7,3 6.7,6.7 v 27 c 0,3.7 -3,6.7 -6.7,6.7 H 191 c -3.7,0 -6.7,-3 -6.7,-6.7 v -27 c 0,-3.7 3,-6.7 6.7,-6.7 z m -46.3,-73.2 c 0,-3.7 3,-6.7 6.7,-6.7 h 27.4 c 3.7,0 6.7,3 6.7,6.7 v 27 c 0,3.7 -3,6.7 -6.7,6.7 h -27.4 c -3.7,0 -6.7,-3 -6.7,-6.7 z m -80.1,0 c 0,-3.7 3,-6.7 6.7,-6.7 h 27.4 c 3.7,0 6.7,3 6.7,6.7 v 27 c 0,3.7 -3,6.7 -6.7,6.7 H 71.3 c -3.7,0 -6.7,-3 -6.7,-6.7 z m 40.8,187.5 c 0,3.7 -3,6.7 -6.7,6.7 H 71.3 c -3.7,0 -6.7,-3 -6.7,-6.7 v -27 c 0,-3.7 3,-6.7 6.7,-6.7 h 27.4 c 3.7,0 6.7,3 6.7,6.7 z m 32.9,-73.9 h -27.4 c -3.7,0 -6.7,-3 -6.7,-6.7 v -27 c 0,-3.7 3,-6.7 6.7,-6.7 h 27.4 c 3.7,0 6.7,3 6.7,6.7 v 27 c 0,3.7 -3,6.7 -6.7,6.7 z m 206.6,73.9 c 0,3.7 -3,6.7 -6.7,6.7 h -8.3 -19.1 -52.3 -27.4 -79.8 c -3.7,0 -6.7,-3 -6.7,-6.7 v -27 c 0,-3.7 3,-6.7 6.7,-6.7 h 79.8 27.4 52.3 19.1 8.3 c 3.7,0 6.7,3 6.7,6.7 z m 33,-73.9 h -27.4 c -3.7,0 -6.7,-3 -6.7,-6.7 v -27 c 0,-3.7 3,-6.7 6.7,-6.7 h 27.4 c 3.7,0 6.7,3 6.7,6.7 v 27 c -0.1,3.7 -3,6.7 -6.7,6.7 z m 47.1,73.9 c 0,3.7 -3,6.7 -6.7,6.7 h -27.4 c -3.7,0 -6.7,-3 -6.7,-6.7 v -27 c 0,-3.7 3,-6.7 6.7,-6.7 h 27.4 c 3.7,0 6.7,3 6.7,6.7 z m 0,-160.5 c 0,3.7 -3,6.7 -6.7,6.7 h -27.4 c -3.7,0 -6.7,-3 -6.7,-6.7 v -27 c 0,-3.7 3,-6.7 6.7,-6.7 h 27.4 c 3.7,0 6.7,3 6.7,6.7 z"
+             inkscape:connector-curvature="0"
+             style="fill:#d2d2d2;fill-opacity:1" />
+        </g>
+        <g
+           id="g7283"
+           style="fill:#d2d2d2;fill-opacity:1" />
+        <g
+           id="g7285"
+           style="fill:#d2d2d2;fill-opacity:1" />
+        <g
+           id="g7287"
+           style="fill:#d2d2d2;fill-opacity:1" />
+        <g
+           id="g7289"
+           style="fill:#d2d2d2;fill-opacity:1" />
+        <g
+           id="g7291"
+           style="fill:#d2d2d2;fill-opacity:1" />
+        <g
+           id="g7293"
+           style="fill:#d2d2d2;fill-opacity:1" />
+        <g
+           id="g7295"
+           style="fill:#d2d2d2;fill-opacity:1" />
+        <g
+           id="g7297"
+           style="fill:#d2d2d2;fill-opacity:1" />
+        <g
+           id="g7299"
+           style="fill:#d2d2d2;fill-opacity:1" />
+        <g
+           id="g7301"
+           style="fill:#d2d2d2;fill-opacity:1" />
+        <g
+           id="g7303"
+           style="fill:#d2d2d2;fill-opacity:1" />
+        <g
+           id="g7305"
+           style="fill:#d2d2d2;fill-opacity:1" />
+        <g
+           id="g7307"
+           style="fill:#d2d2d2;fill-opacity:1" />
+        <g
+           id="g7309"
+           style="fill:#d2d2d2;fill-opacity:1" />
+        <g
+           id="g7311"
+           style="fill:#d2d2d2;fill-opacity:1" />
+      </g>
+    </g>
+    <g
+       id="g1140"
+       transform="translate(1.5693381)">
+      <g
+         id="g5379-6-0"
+         transform="matrix(0,-0.14130918,-0.14130918,0,61.705691,105.31917)"
+         style="fill:#aeaeae;fill-opacity:1"
+         inkscape:export-filename="E:\Documents\Temp\icon_arrow_n.png"
+         inkscape:export-xdpi="5.6250052"
+         inkscape:export-ydpi="5.6250052">
+        <g
+           id="g5336-4-0"
+           style="fill:#aeaeae;fill-opacity:1">
+          <g
+             id="g5338-7-6"
+             style="fill:#aeaeae;fill-opacity:1">
+            <g
+               id="Layer_5_55_-2-8"
+               style="fill:#aeaeae;fill-opacity:1">
+              <path
+                 id="path5341-1-7"
+                 d="M 397,190.734 228.738,73.444 c -6.599,-5.632 -11.996,-3.147 -11.996,5.528 v 49.068 c 0,8.672 -7.099,15.77 -15.77,15.77 L 96.796,143.966 H 15.69 v 0.125 C 7.051,144.139 0.002,151.214 0,159.857 l 0.002,82.789 c 0,8.673 7.095,15.771 15.765,15.771 l 183.426,-0.275 h 1.834 c 8.647,0.028 15.717,7.107 15.717,15.765 v 49.067 c 0,8.675 5.397,11.163 11.993,5.535 L 397.002,211.215 c 6.596,-5.636 6.596,-14.848 -0.002,-20.481 z"
+                 inkscape:connector-curvature="0"
+                 style="fill:#aeaeae;fill-opacity:1" />
+            </g>
+          </g>
+        </g>
+        <g
+           id="g5343-2-2"
+           style="fill:#aeaeae;fill-opacity:1" />
+        <g
+           id="g5345-9-4"
+           style="fill:#aeaeae;fill-opacity:1" />
+        <g
+           id="g5347-8-1"
+           style="fill:#aeaeae;fill-opacity:1" />
+        <g
+           id="g5349-7-7"
+           style="fill:#aeaeae;fill-opacity:1" />
+        <g
+           id="g5351-4-8"
+           style="fill:#aeaeae;fill-opacity:1" />
+        <g
+           id="g5353-3-3"
+           style="fill:#aeaeae;fill-opacity:1" />
+        <g
+           id="g5355-5-2"
+           style="fill:#aeaeae;fill-opacity:1" />
+        <g
+           id="g5357-1-7"
+           style="fill:#aeaeae;fill-opacity:1" />
+        <g
+           id="g5359-2-4"
+           style="fill:#aeaeae;fill-opacity:1" />
+        <g
+           id="g5361-6-9"
+           style="fill:#aeaeae;fill-opacity:1" />
+        <g
+           id="g5363-5-4"
+           style="fill:#aeaeae;fill-opacity:1" />
+        <g
+           id="g5365-0-5"
+           style="fill:#aeaeae;fill-opacity:1" />
+        <g
+           id="g5367-0-8"
+           style="fill:#aeaeae;fill-opacity:1" />
+        <g
+           id="g5369-1-4"
+           style="fill:#aeaeae;fill-opacity:1" />
+        <g
+           id="g5371-1-9"
+           style="fill:#aeaeae;fill-opacity:1" />
+      </g>
+      <g
+         id="g5379-6-0-8"
+         transform="matrix(0,0.14130918,-0.14130918,0,110.48105,48.520127)"
+         style="fill:#aeaeae;fill-opacity:1"
+         inkscape:export-filename="E:\Documents\Temp\icon_arrow_n.png"
+         inkscape:export-xdpi="5.6250052"
+         inkscape:export-ydpi="5.6250052">
+        <g
+           id="g5336-4-0-2"
+           style="fill:#aeaeae;fill-opacity:1">
+          <g
+             id="g5338-7-6-1"
+             style="fill:#aeaeae;fill-opacity:1">
+            <g
+               id="Layer_5_55_-2-8-1"
+               style="fill:#aeaeae;fill-opacity:1">
+              <path
+                 id="path5341-1-7-9"
+                 d="M 397,190.734 228.738,73.444 c -6.599,-5.632 -11.996,-3.147 -11.996,5.528 v 49.068 c 0,8.672 -7.099,15.77 -15.77,15.77 L 96.796,143.966 H 15.69 v 0.125 C 7.051,144.139 0.002,151.214 0,159.857 l 0.002,82.789 c 0,8.673 7.095,15.771 15.765,15.771 l 183.426,-0.275 h 1.834 c 8.647,0.028 15.717,7.107 15.717,15.765 v 49.067 c 0,8.675 5.397,11.163 11.993,5.535 L 397.002,211.215 c 6.596,-5.636 6.596,-14.848 -0.002,-20.481 z"
+                 inkscape:connector-curvature="0"
+                 style="fill:#aeaeae;fill-opacity:1" />
+            </g>
+          </g>
+        </g>
+        <g
+           id="g5343-2-2-3"
+           style="fill:#aeaeae;fill-opacity:1" />
+        <g
+           id="g5345-9-4-1"
+           style="fill:#aeaeae;fill-opacity:1" />
+        <g
+           id="g5347-8-1-6"
+           style="fill:#aeaeae;fill-opacity:1" />
+        <g
+           id="g5349-7-7-9"
+           style="fill:#aeaeae;fill-opacity:1" />
+        <g
+           id="g5351-4-8-0"
+           style="fill:#aeaeae;fill-opacity:1" />
+        <g
+           id="g5353-3-3-1"
+           style="fill:#aeaeae;fill-opacity:1" />
+        <g
+           id="g5355-5-2-6"
+           style="fill:#aeaeae;fill-opacity:1" />
+        <g
+           id="g5357-1-7-2"
+           style="fill:#aeaeae;fill-opacity:1" />
+        <g
+           id="g5359-2-4-0"
+           style="fill:#aeaeae;fill-opacity:1" />
+        <g
+           id="g5361-6-9-6"
+           style="fill:#aeaeae;fill-opacity:1" />
+        <g
+           id="g5363-5-4-2"
+           style="fill:#aeaeae;fill-opacity:1" />
+        <g
+           id="g5365-0-5-0"
+           style="fill:#aeaeae;fill-opacity:1" />
+        <g
+           id="g5367-0-8-3"
+           style="fill:#aeaeae;fill-opacity:1" />
+        <g
+           id="g5369-1-4-5"
+           style="fill:#aeaeae;fill-opacity:1" />
+        <g
+           id="g5371-1-9-1"
+           style="fill:#aeaeae;fill-opacity:1" />
+      </g>
+    </g>
+  </g>
+</svg>

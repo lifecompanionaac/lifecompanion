@@ -77,13 +77,25 @@ public class RobotVirtualKeyboard implements VirtualKeyboardI {
     }
 
     @Override
-    public void keyTyped(KeyCode keyCode) throws Exception {
+    public void keyTyped(KeyCode keyCode) {
         this.awtKeyPressThenRelease(this.convertJavaFXToAwt(keyCode));
     }
 
     @Override
-    public void multiKeyPressThenRelease(KeyCode... keyCodes) throws Exception {
+    public void multiKeyPressThenRelease(KeyCode... keyCodes) {
         this.awtKeyPressThenRelease(Arrays.stream(keyCodes).mapToInt(this::convertJavaFXToAwt).filter(i -> i >= 0).toArray());
+    }
+
+    @Override
+    public void keyDown(KeyCode keyCode) {
+        this.robot.waitForIdle();
+        this.awtKeyPress(this.convertJavaFXToAwt(keyCode));
+    }
+
+    @Override
+    public void keyUp(KeyCode keyCode) {
+        this.robot.waitForIdle();
+        this.awtKeyRelease(this.convertJavaFXToAwt(keyCode));
     }
     //========================================================================
 

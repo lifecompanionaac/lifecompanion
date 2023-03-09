@@ -144,6 +144,7 @@ public class Win32ToFxKeyCodeConverter {
         JAVAFX_TO_AUTOHOTKEY_MANUAL.put(KeyCode.PAGE_DOWN, "PgDn");
         JAVAFX_TO_AUTOHOTKEY_MANUAL.put(KeyCode.DELETE, "Delete");
         JAVAFX_TO_AUTOHOTKEY_MANUAL.put(KeyCode.INSERT, "Insert");
+        JAVAFX_TO_AUTOHOTKEY_MANUAL.put(KeyCode.WINDOWS, "LWin");
     }
 
     public static String javaFXKeyCodeToAutoHotKey(KeyCode keyCode, String modifier) {
