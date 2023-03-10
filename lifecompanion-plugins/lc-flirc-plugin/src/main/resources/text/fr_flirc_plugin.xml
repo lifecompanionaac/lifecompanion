@@ -1,0 +1,41 @@
+<texts>
+    <!-- STEPS -->
+    <text key="flirc.plugin.ir.learning.step.waiting.for.device.name">En attente de la clé FLIRC</text>
+    <text key="flirc.plugin.ir.learning.step.waiting.for.device.description">Vous devez brancher la clé FLIRC à votre ordinateur ou tablette. Celle-ci sera automatiquement détectée. Si celle-ci est déjà branchée et qu'elle n'est pas détectée, vous pouvez la débrancher puis la brancher de nouveau.</text>
+
+    <text key="flirc.plugin.ir.learning.step.prepare.first.learning.name">Préparation de l'enregistrement</text>
+    <text key="flirc.plugin.ir.learning.step.prepare.first.learning.description">Prenez votre télécommande et tenez vous prêt à appuyer sur la touche que vous souhaitez enregistrer. Dès que vous êtes prêt, appuyez sur le bouton ci-dessous.</text>
+    <text key="flirc.plugin.ir.learning.step.prepare.first.learning.button">Démarrer l'enregistrement</text>
+
+    <text key="flirc.plugin.ir.learning.step.learning.code.name">Appuyez sur la touche de votre télécommande ({}/{})</text>
+    <text key="flirc.plugin.ir.learning.step.learning.code.description">Dirigez la télécommande vers la clé FLIRC et appuyez puis relâcher la touche de la télécommande que vous souhaitez enregistrer. Vous devrez répéter l'opération trois fois, l'étape en cours est indiquée ci-dessus.</text>
+
+    <!-- ACTION -->
+    <text key="flirc.plugin.use.action.main.category.name">FLIRC</text>
+    <text key="flirc.plugin.use.action.main.category.description">Contient les actions relatives aux commandes infrarouges qui peuvent être envoyées par la clé FLIRC. Permet de se servir de LifeCompanion comme une télécommande universelle.</text>
+    <text key="flirc.plugin.use.action.send.ir.name">Envoyer un signal infrarouge</text>
+    <text key="flirc.plugin.use.action.send.ir.description">Permet d'apprendre un bouton d'une télécommande infrarouge puis ensuite de l'envoyer en mode utilisation. Cela permet de programmer des cases permettant de contrôler un appareil infrarouge (TV, chaîne HIFI, etc.)</text>
+
+
+    <!-- TASK -->
+    <text key="flirc.plugin.ir.learning.task.title">Apprentissage d'un code infrarouge</text>
+
+    <!-- UI -->
+    <text key="flirc.plugin.ui.button.cancel.learning">ANNULER</text>
+    <text key="flirc.plugin.ui.button.learn.remote.code">Apprendre un bouton de télécommande</text>
+    <text key="flirc.plugin.ui.button.test.code">Tester</text>
+    <text key="flirc.plugin.ui.label.explain.record">Cette action permet d'enregistrer un bouton d'une télécommande infrarouge pour l'envoyer ensuite. Il faut donc enregistrer le code avec la télécommande d'origine en appuyant sur celle-ci.</text>
+    <text key="flirc.plugin.ui.info.button.recorded">Bouton enregistré</text>
+    <text key="flirc.plugin.ui.info.button.not.recorded">Aucun bouton enregistré</text>
+    <text key="flirc.plugin.ui.error.code.not.recorded">Impossible d'enregistrer le bouton</text>
+
+    <!-- ALERT -->
+    <text key="flirc.plugin.ui.alert.warning.similarity.header">L'apprentissage est de faible qualité</text>
+    <text key="flirc.plugin.ui.alert.warning.similarity.message">Les boutons que vous avez appuyés ne se ressemblent pas bien ({}%). Il est conseillé de recommencer l'apprentissage. Néanmoins, pour certaines télécommandes, cela pourrait fonctionner quand même.</text>
+
+    <!-- ERRORS -->
+    <text key="flirc.plugin.error.unknown.return.code">Une erreur inconnue s'est produite avec la clé FLIRC</text>
+    <text key="flirc.plugin.error.cant.start.flirc.process">Impossible de se connecter à l'application FLIRC</text>
+    <text key="flirc.plugin.error.communication.error">Problème lors de la communication avec l'application FLIRC</text>
+    <text key="flirc.plugin.error.disconnected.device">La clé FLIRC a été déconnectée</text>
+</texts>

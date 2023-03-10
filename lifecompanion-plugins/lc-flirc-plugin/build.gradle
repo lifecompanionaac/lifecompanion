@@ -1,0 +1,48 @@
+plugins {
+    id 'java-library'
+    id 'org.openjfx.javafxplugin' version '0.0.13'
+}
+
+javafx {
+    version = '18'
+    modules = ['javafx.controls', 'javafx.media', 'javafx.swing']
+    configuration = 'compileOnly'
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+}
+
+version = "1.0.0"
+
+dependencies {
+    compileOnly "org.lifecompanion:lc-app:$lifecompanionAppVersion"
+    // If you need to add plugin dependencies, add them with "implementation"
+    // Note that you should check that the dependency is not already integrated in LifeCompanion core (if so, use "compileOnly" instead)
+}
+
+// Enter your plugin meta data
+// When changing ID : think also about changing it everywhere in your code
+jar {
+    duplicatesStrategy DuplicatesStrategy.WARN
+    manifest {
+        attributes(
+                "LifeCompanion-Plugin-Class": "org.lifecompanion.plugin.flirc.FlircPlugin",
+                "LifeCompanion-Plugin-Package-Scanning-Base": "org.lifecompanion.plugin.flirc",
+                "LifeCompanion-Plugin-Id": "lc-flirc-plugin",
+                "LifeCompanion-Plugin-Author": "CoWork'HIT",
+                "LifeCompanion-Plugin-Version": project.version,
+                "LifeCompanion-Plugin-Build-Date": new Date().getTime(),
+                "LifeCompanion-Plugin-Name": "Télécommande (avec FLIRC)",
+                "LifeCompanion-Plugin-Description": "Permet de créer une télécommande universelle à l'aide de la clé FLIRC",
+                "LifeCompanion-Min-App-Version": "1.0.0"// FIXME restore to "$lifecompanionAppVersion"
+        )
+    }
+    from {
+        configurations.runtimeClasspath.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+}
