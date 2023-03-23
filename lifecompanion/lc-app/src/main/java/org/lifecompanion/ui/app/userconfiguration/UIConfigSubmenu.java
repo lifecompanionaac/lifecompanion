@@ -19,7 +19,9 @@
 package org.lifecompanion.ui.app.userconfiguration;
 
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Spinner;
@@ -27,12 +29,24 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import org.lifecompanion.controller.editaction.AsyncExecutorController;
+import org.lifecompanion.controller.io.task.CleanupTempFileTask;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
+import org.lifecompanion.framework.commons.utils.io.FileNameUtils;
+import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.model.impl.constant.LCGraphicStyle;
+import org.lifecompanion.model.impl.notification.LCNotification;
 import org.lifecompanion.ui.controlsfx.control.ToggleSwitch;
 import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
 import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
+import org.lifecompanion.ui.notification.LCNotificationController;
+import org.lifecompanion.util.IOUtils;
 import org.lifecompanion.util.javafx.FXControlUtils;
+
+import java.io.File;
 
 /**
  * Stage configuration
@@ -70,6 +84,8 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
     private ToggleSwitch toggleDisabledExitInUseMode;
     private ToggleSwitch toggleSecureGoToEditModeProperty;
     private ToggleSwitch toggleAutoConfigurationProfileBackup;
+
+    private Button buttonCleanupFiles;
 
     public UIConfigSubmenu() {
         this.initAll();
@@ -123,6 +139,13 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
         gridPaneStageParam.add(this.spinnerFrameHeight, 1, row++);
         Label labelStagePart = FXControlUtils.createTitleLabel("user.config.stage.title");
 
+        Label labelConfigFiles = FXControlUtils.createTitleLabel("user.config.part.file.config");
+        buttonCleanupFiles = FXControlUtils.createLeftTextButton(Translation.getText("button.cleanup.temp.file"),
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.TRASH_ALT).size(16).color(LCGraphicStyle.MAIN_DARK), "button.cleanup.temp.file.tooltip");
+        buttonCleanupFiles.setMaxWidth(Double.MAX_VALUE);
+        buttonCleanupFiles.setAlignment(Pos.CENTER);
+        toggleAutoConfigurationProfileBackup = FXControlUtils.createToggleSwitch("user.config.enable.profile.configuration.auto.backup", null);
+
         //Unsaved modification
         Label labelConfigTitle = FXControlUtils.createTitleLabel("user.config.configuration.title");
         this.spinnerUnsavedModification = FXControlUtils.createIntSpinner(1, 5000, 5, 10, 110.0);
@@ -131,8 +154,6 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
         GridPane gridPaneConfiguration = createConfigPane();
         gridPaneConfiguration.add(labelUnsavedThreshold, 0, row);
         gridPaneConfiguration.add(this.spinnerUnsavedModification, 1, row++);
-
-        toggleAutoConfigurationProfileBackup = FXControlUtils.createToggleSwitch("user.config.enable.profile.configuration.auto.backup",null);
 
         //Tips
         Label labelConfigTips = FXControlUtils.createTitleLabel("user.config.tips.title");
@@ -146,7 +167,9 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
                 labelUseMode, toggleSecureGoToEditModeProperty, labelExplainSecuredConfigMode, toggleDisabledExitInUseMode, labelExplainExitUseMode,
                 labelConfigStylePart, gridPaneStyleParam,
                 labelConfigTitle, gridPaneConfiguration,
+                labelConfigFiles,
                 toggleAutoConfigurationProfileBackup,
+                buttonCleanupFiles,
                 labelStagePart, gridPaneStageParam
         );
         totalBox.setPadding(new Insets(10.0));
@@ -206,6 +229,16 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
     private void configurationManagedAndVisibleOnWindowsOnly(Node node) {
         node.setManaged(SystemType.current() == SystemType.WINDOWS);
         node.setVisible(SystemType.current() == SystemType.WINDOWS);
+    }
+
+    @Override
+    public void initListener() {
+        buttonCleanupFiles.setOnAction(e -> {
+            CleanupTempFileTask cleanupTempFileTask = new CleanupTempFileTask();
+            cleanupTempFileTask.setOnSucceeded(et -> LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo(Translation.getText("notification.cleanup.file.success",
+                    FileNameUtils.getFileSize(cleanupTempFileTask.getValue())))));
+            AsyncExecutorController.INSTANCE.addAndExecute(true, false, cleanupTempFileTask);
+        });
     }
 
     @Override

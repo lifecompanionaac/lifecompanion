@@ -4,7 +4,7 @@
 
 ### Fonctionnalités
 
-- ...
+- Ajout d'un bouton pour nettoyer les fichiers temporaires dans "Préférences & Infos" : permet de libérer de l'espace disque
 
 ### Corrections/ajustements
 

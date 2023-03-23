@@ -377,6 +377,11 @@
 		devez mettre à jour LifeCompanion afin de pouvoir importer celle-ci.</text>
   <text key="profile.export.title">Export du profil</text>
   <text key="task.check.plugin.usage.title">Vérification des extensions utilisées</text>
+  <text key="task.cleanup.temp.file">Nettoyage des fichiers temporaires</text>
+  <text key="button.cleanup.temp.file">Nettoyer des fichiers temporaires</text>
+  <text key="user.config.part.file.config">Fichiers et espace</text>
+  <text key="notification.cleanup.file.success">{} libéré(s) par le nettoyage</text>
+  <text key="button.cleanup.temp.file.tooltip">Permet de supprimer tous les fichiers temporaires utilisés par LifeCompanion afin de récupérer de l'espace disque.</text>
   <text key="task.export.keylist.title">Export des listes de cases</text>
   <text key="task.import.keylist.title">Import des listes de cases</text>
   <text key="task.load.available.default.configuration.list">Chargement des modèles de configuration</text>
