@@ -19,51 +19,52 @@
 
 package org.lifecompanion.ui.configurationcomponent.editmode.categorizedelement.useaction.available;
 
-import org.lifecompanion.framework.commons.translation.Translation;
-import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
-import org.lifecompanion.model.api.categorizedelement.useaction.UseActionConfigurationViewI;
-import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
-import org.lifecompanion.model.impl.categorizedelement.useaction.available.MoveToGridAction;
-import org.lifecompanion.ui.common.control.specific.selector.ComponentSelectorControl;
 import javafx.collections.ObservableList;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import org.lifecompanion.framework.commons.translation.Translation;
+import org.lifecompanion.model.api.categorizedelement.useaction.UseActionConfigurationViewI;
+import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
+import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
+import org.lifecompanion.model.impl.categorizedelement.useaction.available.MoveToGridAction;
+import org.lifecompanion.ui.common.control.specific.selector.ComponentSelectorControl;
 
 public class MoveToGridConfigView extends VBox implements UseActionConfigurationViewI<MoveToGridAction> {
-	private ComponentSelectorControl<GridComponentI> componentSelector;
+    private ComponentSelectorControl<GridComponentI> componentSelector;
 
-	public MoveToGridConfigView() {}
+    public MoveToGridConfigView() {
+    }
 
-	@Override
-	public Region getConfigurationView() {
-		return this;
-	}
+    @Override
+    public Region getConfigurationView() {
+        return this;
+    }
 
-	@Override
-	public void editStarts(final MoveToGridAction actionP, final ObservableList<UseVariableDefinitionI> possibleVariables) {
-		this.componentSelector.selectedComponentProperty().set(actionP.targetGridProperty().get());
-	}
+    @Override
+    public void editStarts(final MoveToGridAction actionP, final ObservableList<UseVariableDefinitionI> possibleVariables) {
+        this.componentSelector.selectedComponentProperty().set(actionP.targetGridProperty().get());
+    }
 
-	@Override
-	public void editEnds(final MoveToGridAction actionP) {
-		actionP.targetGridProperty().set(this.componentSelector.selectedComponentProperty().get());
-		this.componentSelector.clearSelection();
-	}
+    @Override
+    public void editEnds(final MoveToGridAction actionP) {
+        actionP.targetGridIdProperty().set(this.componentSelector.getSelectedComponentID());
+        this.componentSelector.clearSelection();
+    }
 
-	@Override
-	public void editCancelled(final MoveToGridAction element) {
-		this.componentSelector.clearSelection();
-	}
+    @Override
+    public void editCancelled(final MoveToGridAction element) {
+        this.componentSelector.clearSelection();
+    }
 
-	@Override
-	public Class<MoveToGridAction> getConfiguredActionType() {
-		return MoveToGridAction.class;
-	}
+    @Override
+    public Class<MoveToGridAction> getConfiguredActionType() {
+        return MoveToGridAction.class;
+    }
 
-	@Override
-	public void initUI() {
-		this.setSpacing(4.0);
-		this.componentSelector = new ComponentSelectorControl<>(GridComponentI.class, Translation.getText("use.action.go.to.grid.grid.to.display"));
-		this.getChildren().add(this.componentSelector);
-	}
+    @Override
+    public void initUI() {
+        this.setSpacing(4.0);
+        this.componentSelector = new ComponentSelectorControl<>(GridComponentI.class, Translation.getText("use.action.go.to.grid.grid.to.display"));
+        this.getChildren().add(this.componentSelector);
+    }
 }

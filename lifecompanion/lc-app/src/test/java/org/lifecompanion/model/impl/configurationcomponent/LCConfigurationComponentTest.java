@@ -36,11 +36,12 @@ public class LCConfigurationComponentTest {
     void testAddChild() {
         StackComponent stackComponent = new StackComponent();
         this.configurationComponent.getChildren().add(stackComponent);
+        this.configurationComponent.dispatchDisplayedProperty(true);
 
         assertTrue(configurationComponent.getAllComponent().containsKey(stackComponent.getID()));
         assertEquals(stackComponent, configurationComponent.getAllComponent().get(stackComponent.getID()));
         assertEquals(configurationComponent, stackComponent.configurationParentProperty().get());
         assertFalse(stackComponent.removedProperty().get());
-        // assertTrue(stackComponent.displayedProperty().get()); // FIXME
+        assertTrue(stackComponent.displayedProperty().get());
     }
 }

@@ -135,7 +135,9 @@ public interface LCConfigurationI extends DisplayableComponentI, VoiceSynthesize
     /**
      * @return the first component that should be selected/scanned by the current configuration when the user switch to use mode.
      */
-    ObjectProperty<GridComponentI> firstSelectionPartProperty();
+    ReadOnlyObjectProperty<GridComponentI> firstSelectionPartProperty();
+
+    StringProperty firstSelectionPartIdProperty();
 
     /**
      * To add a callback to the current configuration to known when a component is added or removed.<br>

@@ -38,7 +38,9 @@ import javafx.beans.property.StringProperty;
  *
  * @param <T> the holded component type
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
+ * @deprecated you should now use {@link ComponentHolderById} - this component is kept just for backward compatibilities as plugin could use it
  */
+@Deprecated
 public class ComponentHolder<T extends DisplayableComponentI> {
     private final static Logger LOGGER = LoggerFactory.getLogger(ComponentHolder.class);
     private String removedId;
@@ -52,6 +54,7 @@ public class ComponentHolder<T extends DisplayableComponentI> {
      * @param configChildProp the configuration child that may change to the current component, where listener will be added.
      */
     @SuppressWarnings("unchecked")
+    @Deprecated
     public ComponentHolder(final StringProperty idP, final ObjectProperty<? extends ConfigurationChildComponentI> configChildProp) {
         this.id = idP;
         this.component = new SimpleObjectProperty<>();
@@ -107,6 +110,7 @@ public class ComponentHolder<T extends DisplayableComponentI> {
      *
      * @return the property that holds the current value
      */
+    @Deprecated
     public ObjectProperty<T> componentProperty() {
         return this.component;
     }
@@ -117,6 +121,7 @@ public class ComponentHolder<T extends DisplayableComponentI> {
      *
      * @param changes the id changes
      */
+    @Deprecated
     public void idsChanged(final Map<String, String> changes) {
         if (this.id.get() != null) {
             String idAfterChange = changes.get(this.id.get());

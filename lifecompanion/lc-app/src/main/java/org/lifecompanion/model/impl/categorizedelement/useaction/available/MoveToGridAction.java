@@ -20,6 +20,7 @@
 package org.lifecompanion.model.impl.categorizedelement.useaction.available;
 
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.fxmisc.easybind.EasyBind;
@@ -28,6 +29,7 @@ import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
+import org.lifecompanion.model.impl.configurationcomponent.ComponentHolderById;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseActionSubCategories;
@@ -46,9 +48,9 @@ import java.util.Map;
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public class MoveToGridAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
-
+    @SuppressWarnings("FieldCanBeLocal")
     private StringProperty targetGridId;
-    private ComponentHolder<GridComponentI> targetGrid;
+    private ComponentHolderById<GridComponentI> targetGrid;
 
     public MoveToGridAction() {
         super(UseActionTriggerComponentI.class);
@@ -59,14 +61,18 @@ public class MoveToGridAction extends SimpleUseActionImpl<UseActionTriggerCompon
         this.staticDescriptionID = "go.to.grid.static.description";
         this.configIconPath = "show/icon_move_to_grid.png";
         this.targetGridId = new SimpleStringProperty();
-        this.targetGrid = new ComponentHolder<>(this.targetGridId, this.parentComponentProperty());
+        this.targetGrid = new ComponentHolderById<>(this.targetGridId, this.parentComponentProperty());
         this.variableDescriptionProperty().bind(TranslationFX.getTextBinding("go.to.grid.variable.description",
                 EasyBind.select(this.targetGridProperty()).selectObject(GridComponentI::nameProperty).orElse(Translation.getText("grid.none.selected"))));
 
     }
 
-    public ObjectProperty<GridComponentI> targetGridProperty() {
+    public ReadOnlyObjectProperty<GridComponentI> targetGridProperty() {
         return this.targetGrid.componentProperty();
+    }
+
+    public StringProperty targetGridIdProperty(){
+        return this.targetGrid.componentIdProperty();
     }
 
     @Override

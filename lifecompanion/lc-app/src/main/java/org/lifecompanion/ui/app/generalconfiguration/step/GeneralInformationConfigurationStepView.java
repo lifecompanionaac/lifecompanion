@@ -181,7 +181,7 @@ public class GeneralInformationConfigurationStepView extends BorderPane implemen
 
     @Override
     public void saveChanges() {
-        model.firstSelectionPartProperty().set(this.firstPartSelector.selectedComponentProperty().get());
+        model.firstSelectionPartIdProperty().set(this.firstPartSelector.getSelectedComponentID());
         model.virtualKeyboardProperty().set(this.toggleVirtualKeyboard.isSelected());
         model.backgroundColorProperty().set(this.pickerBackgroundColor.getValue());
     }
