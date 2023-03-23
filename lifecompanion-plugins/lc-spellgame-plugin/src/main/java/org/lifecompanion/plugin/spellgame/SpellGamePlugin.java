@@ -84,6 +84,10 @@ public class SpellGamePlugin implements PluginI {
                         "spellgame.plugin.use.variable.word.count.name",
                         "spellgame.plugin.use.variable.word.count.description",
                         "spellgame.plugin.use.variable.word.count.example"),
+                new UseVariableDefinition(SpellGameController.VAR_ID_CURRENT_STEP_INSTRUCTION_WITH_WORD,
+                        "spellgame.plugin.use.variable.current.step.instruction.with.word.name",
+                        "spellgame.plugin.use.variable.current.step.instruction.with.word.description",
+                        "spellgame.plugin.use.variable.current.step.instruction.with.word.example"),
                 new UseVariableDefinition(SpellGameController.VAR_ID_CURRENT_STEP_INSTRUCTION,
                         "spellgame.plugin.use.variable.current.step.instruction.name",
                         "spellgame.plugin.use.variable.current.step.instruction.description",
@@ -98,6 +102,8 @@ public class SpellGamePlugin implements PluginI {
         vars.put(SpellGameController.VAR_ID_WORD_COUNT, new IntegerUseVariable(variablesToGenerate.get(SpellGameController.VAR_ID_WORD_COUNT), SpellGameController.INSTANCE.getWordCount()));
         vars.put(SpellGameController.VAR_ID_CURRENT_STEP_INSTRUCTION,
                 new StringUseVariable(variablesToGenerate.get(SpellGameController.VAR_ID_CURRENT_STEP_INSTRUCTION), SpellGameController.INSTANCE.getCurrentStepInstruction()));
+        vars.put(SpellGameController.VAR_ID_CURRENT_STEP_INSTRUCTION_WITH_WORD,
+                new StringUseVariable(variablesToGenerate.get(SpellGameController.VAR_ID_CURRENT_STEP_INSTRUCTION), SpellGameController.INSTANCE.getCurrentStepInstructionWithWord()));
         return vars;
     }
     //========================================================================

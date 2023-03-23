@@ -41,12 +41,17 @@
     <text key="spellgame.plugin.use.variable.word.count.description">Contient le nombre de mots dans la liste courante : permet à l'utilisateur de connaître le nombre de mots total à entrer (utile à combiner avec "Position du mot courant"
     </text>
     <text key="spellgame.plugin.use.variable.word.count.example">10</text>
-    <text key="spellgame.plugin.use.variable.current.step.instruction.name">Consigne de l'étape en cours</text>
+    <text key="spellgame.plugin.use.variable.current.step.instruction.with.word.name">Consigne de l'étape en cours (avec mot)</text>
+    <text key="spellgame.plugin.use.variable.current.step.instruction.with.word.description">Contient la consigne de l'étape en cours. Cette consigne contient pas le mot en cours et permet par exemple de l'écouter de nouveau
+    </text>
+    <text key="spellgame.plugin.use.variable.current.step.instruction.with.word.example">Recopie le mot : "maison"</text>
+
+    <text key="spellgame.plugin.use.variable.current.step.instruction.name">Consigne de l'étape en cours (sans mot)</text>
     <text key="spellgame.plugin.use.variable.current.step.instruction.description">Contient la consigne de l'étape en cours. Cette consigne est générique et ne contient pas le mot en cours.
     </text>
-    <text key="spellgame.plugin.use.variable.current.step.instruction.example">Écris une lettre sur deux du mot que tu viens de voir</text>
+    <text key="spellgame.plugin.use.variable.current.step.instruction.example">Recopie le mot que tu viens de voir</text>
     <text key="spellgame.plugin.use.variable.event.answer.given.content.var.name">Réponse de l'utilisateur</text>
-    <text key="spellgame.plugin.use.variable.event.answer.given.content.var.description">Contieent la réponse de l'utilisateur, permet par exemple de la prononcer avec la synthèse vocale.</text>
+    <text key="spellgame.plugin.use.variable.event.answer.given.content.var.description">Contient la réponse de l'utilisateur, permet par exemple de la prononcer avec la synthèse vocale.</text>
     <text key="spellgame.plugin.use.variable.event.answer.given.content.var.example">maizon</text>
 
     <!-- KEY OPTION -->

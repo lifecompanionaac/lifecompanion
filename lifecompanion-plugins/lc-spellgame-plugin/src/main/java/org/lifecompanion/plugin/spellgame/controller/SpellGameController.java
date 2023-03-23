@@ -69,6 +69,7 @@ public enum SpellGameController implements ModeListenerI {
             VAR_ID_USER_SCORE = "SpellGameUserScore",
             VAR_ID_WORD_INDEX = "SpellGameWordIndex",
             VAR_ID_WORD_COUNT = "SpellGameWordCount",
+            VAR_ID_CURRENT_STEP_INSTRUCTION_WITH_WORD = "SpellGameCurrentStepInstructionWithWord",
             VAR_ID_CURRENT_STEP_INSTRUCTION = "SpellGameCurrentStepInstruction";
 
     // Event listeners
@@ -124,6 +125,13 @@ public enum SpellGameController implements ModeListenerI {
 
     public String getCurrentStepInstruction() {
         return currentStep != null ? currentStep.getGeneralInstruction() : "";
+    }
+
+    public String getCurrentStepInstructionWithWord() {
+        if (currentStep != null && words != null && currentWordIndex >= 0 && currentWordIndex < words.size()) {
+            String currentWord = words.get(currentWordIndex);
+            return currentStep.getInstruction(currentWord);
+        } else return "";
     }
     //========================================================================
 
