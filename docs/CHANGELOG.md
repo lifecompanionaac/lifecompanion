@@ -9,6 +9,7 @@
 ### Corrections/ajustements
 
 - Ticket #220 : meilleur comportement de la sélection en ligne/colonne ou colonne/ligne pour certains cas particuliers
+- Ticket #223 : correction d'un rare problème lors de la sélection de grilles
 
 ## 1.4.7 - 09/03/2023
 
