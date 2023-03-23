@@ -8,6 +8,7 @@
 
 ### Corrections/ajustements
 
+- Correction d'un problème qui pouvait parfois entraîner une synthèse vocale "ralentie" sous Windows
 - Ticket #217 : correction d'un problème qui pouvait parfois "désactiver" certains liens après "Annuler/Refaire"
 - Ticket #220 : meilleur comportement de la sélection en ligne/colonne ou colonne/ligne pour certains cas particuliers
 - Ticket #223 : correction d'un rare problème lors de la sélection de grilles
