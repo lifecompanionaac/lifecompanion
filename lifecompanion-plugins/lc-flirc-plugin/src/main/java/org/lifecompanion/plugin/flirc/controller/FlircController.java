@@ -1,57 +1,74 @@
 package org.lifecompanion.plugin.flirc.controller;
 
+import org.lifecompanion.controller.resource.ResourceHelper;
+import org.lifecompanion.framework.commons.SystemType;
+import org.lifecompanion.framework.commons.utils.io.IOUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.framework.utils.FluentHashMap;
+import org.lifecompanion.framework.utils.Pair;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public enum FlircController {
     INSTANCE;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FlircController.class);
 
-
-    // FIXME: integrate EXE into plugin files
-
     private final Object callSynchronizeLock = new Object();
 
-    private static final String EXE_PATH = System.getProperty("java.io.tmpdir") + "/flirc_util.exe";
+    private static final Map<SystemType, Pair<String, String>> FLIRC_UTIL = FluentHashMap.map(SystemType.WINDOWS,
+            Pair.of("flirc_util.exe", "145ae3b3d42d03f8643b49f6d4a8ef2d4381a212c109ea6932250614046cee29"));
+
+    private String getFlircPath() throws LCException {
+        Pair<String, String> utilInfo = FLIRC_UTIL.get(SystemType.current());
+        if (utilInfo != null) {
+            File destFile = new File(System.getProperty("java.io.tmpdir") + File.separator + "LifeCompanion" + File.separator + "lc-flirc-plugin" + File.separator + utilInfo.getLeft());
+            try {
+                String existingHash = IOUtils.fileSha256HexToString(destFile);
+                if (!StringUtils.isEquals(existingHash, utilInfo.getRight())) {
+                    throw new IOException("Destination file hash doesn't match expected hash : value = " + existingHash + " vs expected = " + utilInfo.getRight());
+                }
+            } catch (IOException e) {
+                LOGGER.warn("Could not check existing flirc_util file, will copy source file to destination", e);
+                destFile.getParentFile().mkdirs();
+                try (InputStream is = ResourceHelper.getInputStreamForPath("/flirc_util/flirc_util.exe")) {
+                    try (FileOutputStream fos = new FileOutputStream(destFile)) {
+                        IOUtils.copyStream(is, fos);
+                    }
+                } catch (IOException e2) {
+                    throw LCException.newException().withMessage("flirc.plugin.error.cant.copy.flirc.application").withCause(e2).build();
+                }
+            }
+            return destFile.getPath();
+
+        } else {
+            throw LCException.newException().withMessage("flirc.plugin.error.not.available.system").build();
+        }
+    }
 
     public void waitForDevice() throws LCException {
-        waitFor(true, new ProcessBuilder().command(EXE_PATH, "wait")
-                .redirectError(ProcessBuilder.Redirect.DISCARD)
-                .redirectOutput(ProcessBuilder.Redirect.DISCARD)
-        );
+        waitFor(true, new ProcessBuilder().command(getFlircPath(), "wait").redirectError(ProcessBuilder.Redirect.DISCARD).redirectOutput(ProcessBuilder.Redirect.DISCARD));
     }
 
 
     public void clearLogsAndDisableRecording() throws LCException {
-        waitFor(false, new ProcessBuilder()
-                .command(EXE_PATH, "device_log")
-                .redirectError(ProcessBuilder.Redirect.DISCARD)
-                .redirectOutput(ProcessBuilder.Redirect.DISCARD)
-        );
+        waitFor(false, new ProcessBuilder().command(getFlircPath(), "device_log").redirectError(ProcessBuilder.Redirect.DISCARD).redirectOutput(ProcessBuilder.Redirect.DISCARD));
     }
 
     public void clearLogsAndEnableRecording() throws LCException {
-        analyzeOutputAndFail(
-                waitFor(true, new ProcessBuilder().command(EXE_PATH, "device_log", "-i"))
-        );
+        analyzeOutputAndFail(waitFor(true, new ProcessBuilder().command(getFlircPath(), "device_log", "-i")));
     }
 
 
     public List<String> getRecordedCodes() throws Exception {
-        List<String> lines = analyzeOutputAndFail(waitFor(true, new ProcessBuilder()
-                .command(EXE_PATH, "device_log", "-i")
-        ));
+        List<String> lines = analyzeOutputAndFail(waitFor(true, new ProcessBuilder().command(getFlircPath(), "device_log", "-i")));
         // Keep only data lines
         List<String> dataAsString = new ArrayList<>();
         for (int i = 0; i < lines.size(); i++) {
@@ -64,10 +81,7 @@ public enum FlircController {
     }
 
     public void sendIr(String pattern) throws Exception {
-        analyzeOutputAndFail(waitFor(true, new ProcessBuilder().command(
-                EXE_PATH, "sendir"
-                , "--pattern=" + pattern)
-        ));
+        analyzeOutputAndFail(waitFor(true, new ProcessBuilder().command(getFlircPath(), "sendir", "--pattern=" + pattern)));
     }
 
     private Process waitFor(boolean failForNonZero, ProcessBuilder processBuilder) throws LCException {
@@ -83,6 +97,10 @@ public enum FlircController {
 
                 } catch (InterruptedException e) {
                     LOGGER.warn("Could not wait for process to finish", e);
+                    if (process.isAlive()) {
+                        LOGGER.info("Process is still alive, try to destroy it...");
+                        process.destroy();
+                    }
                 }
                 return process;
             } catch (IOException e) {

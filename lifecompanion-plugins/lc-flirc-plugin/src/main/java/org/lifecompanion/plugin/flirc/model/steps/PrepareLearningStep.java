@@ -8,7 +8,7 @@ import java.util.List;
 public class PrepareLearningStep extends AbstractIRLearningStep {
 
     public PrepareLearningStep() {
-        super("flirc.plugin.ir.learning.step.prepare.first.learning", "waiting_step.jpg");
+        super("flirc.plugin.ir.learning.step.prepare.first.learning", "prepare_learning.png");
     }
 
     @Override

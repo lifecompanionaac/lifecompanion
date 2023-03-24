@@ -129,6 +129,8 @@ public class IRRecorderField extends VBox implements LCViewInitHelper {
                                         .withContentText(Translation.getText("flirc.plugin.ui.alert.warning.similarity.message", PERCENT_DECIMAL_FORMAT.format(100.0 * bestMatchingCode.getLeft())))
                                         .withButtonTypes(ButtonType.OK)
                                         .showAndWait();
+                            }else {
+                                LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo("flirc.plugin.notification.success.learning.code"));
                             }
                             this.value.set(patternToCompare.get(0));
                         } else {

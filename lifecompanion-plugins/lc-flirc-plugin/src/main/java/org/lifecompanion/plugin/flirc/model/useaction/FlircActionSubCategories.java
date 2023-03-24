@@ -10,7 +10,7 @@ import org.lifecompanion.model.api.categorizedelement.useaction.UseActionMainCat
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionSubCategoryI;
 
 public enum FlircActionSubCategories implements UseActionSubCategoryI {
-    GENERAL("todo", CategorizedElementColorProvider.nextColor(FlircActionMainCategory.INSTANCE)),
+    GENERAL("flirc.plugin.use.action.sub.category.general.name", CategorizedElementColorProvider.nextColor(FlircActionMainCategory.INSTANCE)),
     ;
 
     private final String nameId;

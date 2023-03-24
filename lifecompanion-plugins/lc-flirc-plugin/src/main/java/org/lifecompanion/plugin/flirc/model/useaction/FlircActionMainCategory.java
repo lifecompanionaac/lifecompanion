@@ -27,12 +27,12 @@ public enum FlircActionMainCategory implements UseActionMainCategoryI {
 
     @Override
     public String getConfigIconPath() {
-        return "filler_icon_32px.png";
+        return "use-actions/icon_flirc.png";
     }
 
     @Override
     public Color getColor() {
-        return CategorizedElementColorProvider.nextColor(ID);
+        return Color.web("#ba502f");
     }
 
     @Override

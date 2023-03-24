@@ -46,7 +46,7 @@ public class SendIRAction extends SimpleUseActionImpl<UseActionTriggerComponentI
         this.category = FlircActionSubCategories.GENERAL;
         this.nameID = "flirc.plugin.use.action.send.ir.name";
         this.staticDescriptionID = "flirc.plugin.use.action.send.ir.description";
-        this.configIconPath = "filler_icon_32px.png";
+        this.configIconPath = "flirc/icon_send_ir_code.png";
         this.parameterizableAction = true;
         this.pattern = new SimpleStringProperty();
         this.variableDescriptionProperty().set(getStaticDescription());

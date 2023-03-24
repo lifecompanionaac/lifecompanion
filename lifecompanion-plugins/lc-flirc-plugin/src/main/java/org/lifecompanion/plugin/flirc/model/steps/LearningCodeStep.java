@@ -12,7 +12,7 @@ public class LearningCodeStep extends AbstractIRLearningStep {
     private final int index, count;
 
     public LearningCodeStep(int index, int count) {
-        super("flirc.plugin.ir.learning.step.learning.code", "waiting_step.jpg");
+        super("flirc.plugin.ir.learning.step.learning.code", "learning_code.png");
         this.count = count;
         this.index = index;
     }

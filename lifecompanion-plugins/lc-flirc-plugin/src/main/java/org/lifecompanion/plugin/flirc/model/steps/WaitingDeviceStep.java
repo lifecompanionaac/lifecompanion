@@ -7,7 +7,7 @@ import java.util.List;
 public class WaitingDeviceStep extends AbstractIRLearningStep {
 
     public WaitingDeviceStep() {
-        super("flirc.plugin.ir.learning.step.waiting.for.device", "waiting_step.jpg");
+        super("flirc.plugin.ir.learning.step.waiting.for.device", "waiting_device.png");
     }
 
     @Override

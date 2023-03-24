@@ -8,11 +8,12 @@
     <text key="flirc.plugin.ir.learning.step.prepare.first.learning.button">Démarrer l'enregistrement</text>
 
     <text key="flirc.plugin.ir.learning.step.learning.code.name">Appuyez sur la touche de votre télécommande ({}/{})</text>
-    <text key="flirc.plugin.ir.learning.step.learning.code.description">Dirigez la télécommande vers la clé FLIRC et appuyez puis relâcher la touche de la télécommande que vous souhaitez enregistrer. Vous devrez répéter l'opération trois fois, l'étape en cours est indiquée ci-dessus.</text>
+    <text key="flirc.plugin.ir.learning.step.learning.code.description">Dirigez la télécommande vers la clé FLIRC et APPUYEZ PUIS RELÂCHEZ IMMÉDIATEMENT la touche de la télécommande que vous souhaitez enregistrer. Vous devrez répéter l'opération trois fois, l'étape en cours est indiquée ci-dessus.</text>
 
     <!-- ACTION -->
     <text key="flirc.plugin.use.action.main.category.name">FLIRC</text>
     <text key="flirc.plugin.use.action.main.category.description">Contient les actions relatives aux commandes infrarouges qui peuvent être envoyées par la clé FLIRC. Permet de se servir de LifeCompanion comme une télécommande universelle.</text>
+    <text key="flirc.plugin.use.action.sub.category.general.name">Envoyer un code</text>
     <text key="flirc.plugin.use.action.send.ir.name">Envoyer un signal infrarouge</text>
     <text key="flirc.plugin.use.action.send.ir.description">Permet d'apprendre un bouton d'une télécommande infrarouge puis ensuite de l'envoyer en mode utilisation. Cela permet de programmer des cases permettant de contrôler un appareil infrarouge (TV, chaîne HIFI, etc.)</text>
 
@@ -31,11 +32,16 @@
 
     <!-- ALERT -->
     <text key="flirc.plugin.ui.alert.warning.similarity.header">L'apprentissage est de faible qualité</text>
-    <text key="flirc.plugin.ui.alert.warning.similarity.message">Les boutons que vous avez appuyés ne se ressemblent pas bien ({}%). Il est conseillé de recommencer l'apprentissage. Néanmoins, pour certaines télécommandes, cela pourrait fonctionner quand même.</text>
+    <text key="flirc.plugin.ui.alert.warning.similarity.message">Les boutons de la télécommande sur lesquels vous venez d'appuyer ne se ressemblent pas bien ({}%). Il est conseillé de recommencer l'apprentissage. Néanmoins, pour certaines télécommandes, cela pourrait fonctionner quand même.</text>
+
+    <!-- NOTIFICATIONS -->
+    <text key="flirc.plugin.notification.success.learning.code">Code de la télécommande appris avec succès</text>
 
     <!-- ERRORS -->
     <text key="flirc.plugin.error.unknown.return.code">Une erreur inconnue s'est produite avec la clé FLIRC</text>
     <text key="flirc.plugin.error.cant.start.flirc.process">Impossible de se connecter à l'application FLIRC</text>
     <text key="flirc.plugin.error.communication.error">Problème lors de la communication avec l'application FLIRC</text>
     <text key="flirc.plugin.error.disconnected.device">La clé FLIRC a été déconnectée</text>
+    <text key="flirc.plugin.error.not.available.system">L'application FLIRC n'est pas disponible pour votre système</text>
+    <text key="flirc.plugin.error.cant.copy.flirc.application">Impossible d'installer l'application FLIRC sur votre système</text>
 </texts>
