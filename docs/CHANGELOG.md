@@ -13,6 +13,7 @@
 - Ticket #220 : meilleur comportement de la sélection en ligne/colonne ou colonne/ligne pour certains cas particuliers
 - Ticket #223 : correction d'un rare problème lors de la sélection de grilles
 - Correction de quelques textes
+- Dans "Paramètres Généraux", une confirmation est maintenant demandée à l'annulation en cas de changements effectués non enregistrés
 
 ## 1.4.7 - 09/03/2023
 

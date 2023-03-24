@@ -19,6 +19,7 @@
 
 package org.lifecompanion.ui.app.generalconfiguration.step;
 
+import javafx.beans.InvalidationListener;
 import javafx.beans.binding.BooleanBinding;
 import javafx.collections.FXCollections;
 import javafx.geometry.HPos;
@@ -61,6 +62,7 @@ public class VoiceSynthesizerMainConfigurationStepView extends BorderPane implem
     private Slider sliderRate;
     private Slider sliderPitch;
     private Button buttonOpenPrononciationException;
+    private boolean dirty;
 
     public VoiceSynthesizerMainConfigurationStepView() {
         initAll();
@@ -194,7 +196,14 @@ public class VoiceSynthesizerMainConfigurationStepView extends BorderPane implem
         this.choiceBoxVoice.disableProperty().bind(noEngineBinding);
         this.buttonPlayExample.disableProperty().bind(noEngineBinding);
         this.buttonOpenPrononciationException.disableProperty().bind(noEngineBinding);
+        InvalidationListener invalidationListener = inv -> dirty = true;
+        comboboxVoiceEngine.valueProperty().addListener(invalidationListener);
+        choiceBoxVoice.valueProperty().addListener(invalidationListener);
+        sliderPitch.valueProperty().addListener(invalidationListener);
+        sliderRate.valueProperty().addListener(invalidationListener);
+        sliderVolume.valueProperty().addListener(invalidationListener);
     }
+
     //========================================================================
 
 
@@ -221,6 +230,12 @@ public class VoiceSynthesizerMainConfigurationStepView extends BorderPane implem
         this.sliderPitch.adjustValue(model.getVoiceSynthesizerParameter().pitchProperty().get());
         this.sliderVolume.adjustValue(model.getVoiceSynthesizerParameter().volumeProperty().get());
         this.sliderRate.adjustValue(model.getVoiceSynthesizerParameter().rateProperty().get());
+        this.dirty = false;
+    }
+
+    @Override
+    public boolean shouldCancelBeConfirmed() {
+        return dirty;
     }
 
     @Override
