@@ -87,13 +87,17 @@ public class IOHelper {
     }
 
     public static File getBackupProfileDestinationPath(final LCProfileI profile) {
-        return new File(getProfileRoot().getPath() + File.separator + LCConstant.BACKUP_DIR + File.separator + LCConstant.PROFILE_DIRECTORY + File.separator + profile.getID() + File.separator + DATE_FORMAT_FILENAME_WITH_TIME_SECOND.format(
+        return new File(getBackupRootDirectory() + LCConstant.PROFILE_DIRECTORY + File.separator + profile.getID() + File.separator + DATE_FORMAT_FILENAME_WITH_TIME_SECOND.format(
                 new Date()) + "_" + org.lifecompanion.util.IOUtils.getValidFileName(profile.nameProperty().get()) + "." + LCConstant.PROFILE_FILE_EXTENSION);
     }
 
     public static File getBackupConfigurationDestinationPath(final LCConfigurationDescriptionI configurationDescription) {
-        return new File(getProfileRoot().getPath() + File.separator + LCConstant.BACKUP_DIR + File.separator + LCConstant.CONFIGURATION_DIRECTORY + File.separator + configurationDescription.getConfigurationId() + File.separator + DATE_FORMAT_FILENAME_WITH_TIME_SECOND.format(
+        return new File( getBackupRootDirectory()+ LCConstant.CONFIGURATION_DIRECTORY + File.separator + configurationDescription.getConfigurationId() + File.separator + DATE_FORMAT_FILENAME_WITH_TIME_SECOND.format(
                 new Date()) + "_" + org.lifecompanion.util.IOUtils.getValidFileName(configurationDescription.configurationNameProperty().get()) + "." + LCConstant.CONFIG_FILE_EXTENSION);
+    }
+
+    public static String getBackupRootDirectory(){
+        return getProfileRoot().getPath() + File.separator + LCConstant.BACKUP_DIR + File.separator;
     }
     //========================================================================
 

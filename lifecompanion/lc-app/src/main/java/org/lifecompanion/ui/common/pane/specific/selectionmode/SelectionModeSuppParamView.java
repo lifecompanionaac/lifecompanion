@@ -19,6 +19,7 @@
 
 package org.lifecompanion.ui.common.pane.specific.selectionmode;
 
+import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.ObjectProperty;
@@ -125,6 +126,7 @@ public class SelectionModeSuppParamView extends BaseConfigurationViewBorderPane<
     private final ObjectProperty<SelectionModeEnum> selectedMode;
 
     private GridPane gridPaneConfiguration;
+    private boolean dirty;
 
 
     public SelectionModeSuppParamView() {
@@ -158,6 +160,7 @@ public class SelectionModeSuppParamView extends BaseConfigurationViewBorderPane<
         this.sliderBackgroundReductionLevel.setValue(model.getSelectionModeParameter().backgroundReductionLevelProperty().get());
         this.mouseButtonSelectorControl.setValue(model.getSelectionModeParameter().mouseButtonNextScanProperty().get());
         this.toggleHideMouseCursor.setSelected(model.getSelectionModeParameter().hideMouseCursorProperty().get());
+        dirty = false;
     }
 
     @Override
@@ -385,6 +388,30 @@ public class SelectionModeSuppParamView extends BaseConfigurationViewBorderPane<
         // Mouse button selection hidden if not selected
         for (Node n : this.mouseNodes)
             n.visibleProperty().bind(comboBoxNextScanEventInput.valueProperty().isEqualTo(FireEventInput.MOUSE));
+
+        InvalidationListener invalidationListener = e -> dirty = true;
+        this.comboBoxNextScanEventInput.valueProperty().addListener(invalidationListener);
+        this.comboboxDrawProgressMode.valueProperty().addListener(invalidationListener);
+        this.comboBoxScanningMode.valueProperty().addListener(invalidationListener);
+        this.spinnerAutoActivation.valueProperty().addListener(invalidationListener);
+        this.spinnerAutoOver.valueProperty().addListener(invalidationListener);
+        this.spinnerFirstPause.valueProperty().addListener(invalidationListener);
+        this.spinnerMaxScan.valueProperty().addListener(invalidationListener);
+        this.spinnerScanPause.valueProperty().addListener(invalidationListener);
+        this.sliderProgressBarSize.valueProperty().addListener(invalidationListener);
+        this.sliderBackgroundReductionLevel.valueProperty().addListener(invalidationListener);
+        this.sliderSelectionViewSize.valueProperty().addListener(invalidationListener);
+        this.colorPickerSelection.valueProperty().addListener(invalidationListener);
+        this.colorPickerActivation.valueProperty().addListener(invalidationListener);
+        this.colorPickerProgressColor.valueProperty().addListener(invalidationListener);
+        this.toggleBackgroundReductionEnabled.selectedProperty().addListener(invalidationListener);
+        this.toggleEnableDirectSelectionOnMouseOnScanningSelectionMode.selectedProperty().addListener(invalidationListener);
+        this.toggleHideMouseCursor.selectedProperty().addListener(invalidationListener);
+        this.toggleManifyKeyOver.selectedProperty().addListener(invalidationListener);
+        this.toggleSkipEmptyCells.selectedProperty().addListener(invalidationListener);
+        this.toggleStartScanningOnClic.selectedProperty().addListener(invalidationListener);
+        this.mouseButtonSelectorControl.valueProperty().addListener(invalidationListener);
+        this.keySelectorControlKeyboardNextScanKeyCode.valueProperty().addListener(invalidationListener);
     }
 
 
@@ -477,5 +504,13 @@ public class SelectionModeSuppParamView extends BaseConfigurationViewBorderPane<
 
     public ObjectProperty<SelectionModeUserI> modelProperty() {
         return model;
+    }
+
+    public void resetDirty() {
+        dirty = false;
+    }
+
+    public boolean isDirty() {
+        return dirty;
     }
 }

@@ -54,7 +54,7 @@ public class SimulateKeyOverConfigView extends VBox implements UseActionConfigur
 
     @Override
     public void editEnds(final SimulateKeyOverAction element) {
-        element.targetKeyProperty().set(this.componentSelector.selectedComponentProperty().get());
+        element.targetKeyIdProperty().set(this.componentSelector.getSelectedComponentID());
         this.componentSelector.clearSelection();
     }
 

@@ -101,6 +101,11 @@ public class ComponentSelectorControl<T extends DisplayableComponentI> extends V
         return this.searchComboBox.valueProperty();
     }
 
+    public String getSelectedComponentID() {
+        T selected = this.searchComboBox.valueProperty().get();
+        return selected != null ? selected.getID() : null;
+    }
+
     public void selectById(String id) {
         if (id != null) {
             ObservableList<T> searchComboBoxItems = searchComboBox.getItems();

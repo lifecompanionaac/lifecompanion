@@ -18,25 +18,25 @@
  */
 package org.lifecompanion.model.impl.categorizedelement.useaction.available;
 
-import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.fxmisc.easybind.EasyBind;
 import org.jdom2.Element;
-import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
-import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
-import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
-import org.lifecompanion.model.api.usevariable.UseVariableI;
-import org.lifecompanion.model.impl.exception.LCException;
-import org.lifecompanion.model.api.io.IOContextI;
-import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseActionSubCategories;
-import org.lifecompanion.model.impl.configurationcomponent.ComponentHolder;
-import org.lifecompanion.controller.selectionmode.SelectionModeController;
 import org.lifecompanion.controller.categorizedelement.useaction.UseActionController;
-import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
+import org.lifecompanion.controller.selectionmode.SelectionModeController;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
 import org.lifecompanion.framework.commons.translation.Translation;
+import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseActionSubCategories;
+import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
+import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
+import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
+import org.lifecompanion.model.api.io.IOContextI;
+import org.lifecompanion.model.api.usevariable.UseVariableI;
+import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
+import org.lifecompanion.model.impl.configurationcomponent.ComponentHolderById;
+import org.lifecompanion.model.impl.exception.LCException;
 
 import java.util.Map;
 
@@ -47,9 +47,9 @@ import java.util.Map;
  */
 public class MoveToGridAndGoBackAction extends SimpleUseActionImpl<GridPartKeyComponentI> {
     public static final String CANCEL_GO_BACK_KEY = "CANCEL_GO_BACK_ACTION";
-
-    private StringProperty targetGridId;
-    private ComponentHolder<GridComponentI> targetGrid;
+    @SuppressWarnings("FieldCanBeLocal")
+    private final StringProperty targetGridId;
+    private final ComponentHolderById<GridComponentI> targetGrid;
 
     public MoveToGridAndGoBackAction() {
         super(GridPartKeyComponentI.class);
@@ -60,14 +60,18 @@ public class MoveToGridAndGoBackAction extends SimpleUseActionImpl<GridPartKeyCo
         this.staticDescriptionID = "go.to.grid.go.back.next.static.description";
         this.configIconPath = "show/icon_go_back_after_action.png";
         this.targetGridId = new SimpleStringProperty();
-        this.targetGrid = new ComponentHolder<>(this.targetGridId, this.parentComponentProperty());
+        this.targetGrid = new ComponentHolderById<>(this.targetGridId, this.parentComponentProperty());
         this.variableDescriptionProperty().bind(TranslationFX.getTextBinding("go.to.grid.go.back.next.variable.description",
                 EasyBind.select(this.targetGridProperty()).selectObject(GridComponentI::nameProperty).orElse(Translation.getText("grid.none.selected"))));
 
     }
 
-    public ObjectProperty<GridComponentI> targetGridProperty() {
+    public ReadOnlyObjectProperty<GridComponentI> targetGridProperty() {
         return this.targetGrid.componentProperty();
+    }
+
+    public StringProperty targetGridIdProperty(){
+        return this.targetGrid.componentIdProperty();
     }
 
     @Override

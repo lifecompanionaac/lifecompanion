@@ -71,7 +71,7 @@ public class ChangeKeyImageConfigView extends VBox implements UseActionConfigura
 
     @Override
     public void editEnds(final ChangeKeyImageAction element) {
-        element.targetKeyProperty().set(this.componentSelector.selectedComponentProperty().get());
+        element.targetKeyIdProperty().set(this.componentSelector.getSelectedComponentID());
         element.wantedImageProperty().set(this.imageSelectorControl.selectedImageProperty().get());
     }
 }

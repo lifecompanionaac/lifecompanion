@@ -24,30 +24,30 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.input.KeyCode;
 import org.jdom2.Element;
-import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
-import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
-import org.lifecompanion.model.api.usevariable.UseVariableI;
-import org.lifecompanion.model.impl.exception.LCException;
-import org.lifecompanion.model.api.io.IOContextI;
-import org.lifecompanion.model.api.categorizedelement.useevent.DefaultUseEventSubCategories;
 import org.lifecompanion.controller.configurationcomponent.GlobalKeyEventController;
-import org.lifecompanion.model.impl.categorizedelement.useevent.BaseUseEventGeneratorImpl;
-import org.lifecompanion.model.impl.usevariable.StringUseVariable;
-import org.lifecompanion.model.impl.usevariable.UseVariableDefinition;
 import org.lifecompanion.framework.commons.fx.io.XMLGenericProperty;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
 import org.lifecompanion.framework.commons.translation.Translation;
+import org.lifecompanion.model.api.categorizedelement.useevent.DefaultUseEventSubCategories;
+import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
+import org.lifecompanion.model.api.io.IOContextI;
+import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
+import org.lifecompanion.model.api.usevariable.UseVariableI;
+import org.lifecompanion.model.impl.categorizedelement.useevent.BaseUseEventGeneratorImpl;
+import org.lifecompanion.model.impl.exception.LCException;
+import org.lifecompanion.model.impl.usevariable.StringUseVariable;
+import org.lifecompanion.model.impl.usevariable.UseVariableDefinition;
+import org.lifecompanion.util.javafx.FXKeyCodeTranslatorUtils;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class KeyTypedKeyboardEventGenerator extends BaseUseEventGeneratorImpl {
 
-    private UseVariableDefinitionI keyNameDefinition;
+    private final UseVariableDefinitionI keyNameDefinition;
 
     @XMLGenericProperty(KeyCode.class)
-    private ObjectProperty<KeyCode> keyPressed;
+    private final ObjectProperty<KeyCode> keyPressed;
 
     public KeyTypedKeyboardEventGenerator() {
         super();
@@ -63,7 +63,8 @@ public class KeyTypedKeyboardEventGenerator extends BaseUseEventGeneratorImpl {
         this.generatedVariables.add(this.keyNameDefinition);
         this.variableDescriptionProperty()
                 .bind(TranslationFX.getTextBinding("use.event.keyboard.key.typed.variable.description",
-                        Bindings.createStringBinding(() -> this.keyPressed.get() != null ? this.keyPressed.get().getName() : Translation.getText("no.keyboard.key.selected"), this.keyPressed)));
+                        Bindings.createStringBinding(() -> FXKeyCodeTranslatorUtils.getTranslatedKeyCodeName(this.keyPressed.get(), "no.keyboard.key.selected"),
+                                this.keyPressed)));
     }
 
     public ObjectProperty<KeyCode> keyPressedProperty() {
@@ -75,7 +76,7 @@ public class KeyTypedKeyboardEventGenerator extends BaseUseEventGeneratorImpl {
         // Listener clear on modeStop
         GlobalKeyEventController.INSTANCE.addKeyEventListenerForCurrentUseMode((keyEvent) -> {
             if (keyEvent.getEventType() == GlobalKeyEventController.LCKeyEventType.PRESSED && (this.keyPressed.get() == null || keyEvent.getKeyCode() == this.keyPressed.get())) {
-                List<UseVariableI<?>> variables = Arrays.asList(new StringUseVariable(this.keyNameDefinition, keyEvent.getKeyCode().getName()));
+                List<UseVariableI<?>> variables = List.of(new StringUseVariable(this.keyNameDefinition, keyEvent.getKeyCode().getName()));
                 this.useEventListener.fireEvent(this, variables, null);
             }
         });

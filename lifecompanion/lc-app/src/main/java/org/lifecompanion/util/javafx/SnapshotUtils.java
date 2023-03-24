@@ -29,6 +29,8 @@ import javafx.scene.transform.Scale;
 import org.lifecompanion.model.impl.constant.LCConstant;
 
 public class SnapshotUtils {
+    private static final double MAX_SCALE_RATIO = 5.0;
+
     public static Image executeSnapshot(final Node node, double wantedWidth, double wantedHeight, boolean canScaleUp, double minScale) {
         Bounds nodeBounds = node.getBoundsInParent();
         SnapshotParameters snapParams = null;
@@ -38,7 +40,7 @@ public class SnapshotUtils {
             wantedHeight = wantedHeight <= 0 ? nodeBounds.getHeight() : wantedHeight;
             // Compute scale to keep ratio
             double originalRatio = nodeBounds.getWidth() / nodeBounds.getHeight();
-            double scale = Math.max(minScale, wantedWidth / wantedHeight > originalRatio ? wantedHeight / wantedWidth : wantedWidth / wantedHeight);
+            double scale = Math.min(MAX_SCALE_RATIO, Math.max(minScale, wantedWidth / wantedHeight > originalRatio ? wantedHeight / wantedWidth : wantedWidth / wantedHeight));
             // Only scale down if wanted (keep lowest memory footprint)
             if (scale < 1 || canScaleUp) {
                 snapParams = new SnapshotParameters();

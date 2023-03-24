@@ -19,6 +19,7 @@
 package org.lifecompanion.model.impl.categorizedelement.useaction.available;
 
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.fxmisc.easybind.EasyBind;
@@ -27,6 +28,7 @@ import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
+import org.lifecompanion.model.impl.configurationcomponent.ComponentHolderById;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseActionSubCategories;
@@ -42,8 +44,9 @@ import java.util.Map;
 
 public class ChangeKeyTextAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
 
+    @SuppressWarnings("FieldCanBeLocal")
     private StringProperty targetKeyId;
-    private ComponentHolder<GridPartKeyComponentI> targetKey;
+    private ComponentHolderById<GridPartKeyComponentI> targetKey;
     private StringProperty wantedKeyText;
 
     public ChangeKeyTextAction() {
@@ -55,14 +58,18 @@ public class ChangeKeyTextAction extends SimpleUseActionImpl<UseActionTriggerCom
         this.configIconPath = "configuration/icon_change_key_text.png";
         this.targetKeyId = new SimpleStringProperty();
         this.wantedKeyText = new SimpleStringProperty();
-        this.targetKey = new ComponentHolder<>(this.targetKeyId, this.parentComponentProperty());
+        this.targetKey = new ComponentHolderById<>(this.targetKeyId, this.parentComponentProperty());
         this.variableDescriptionProperty()
                 .bind(TranslationFX.getTextBinding("action.change.key.text.variable.description", EasyBind.select(this.targetKeyProperty())
                         .selectObject(GridPartKeyComponentI::nameProperty).orElse(Translation.getText("key.none.selected")), this.wantedKeyText));
     }
 
-    public ObjectProperty<GridPartKeyComponentI> targetKeyProperty() {
+    public ReadOnlyObjectProperty<GridPartKeyComponentI> targetKeyProperty() {
         return this.targetKey.componentProperty();
+    }
+
+    public StringProperty targetKeyIdProperty() {
+        return this.targetKey.componentIdProperty();
     }
 
     public StringProperty wantedKeyTextProperty() {

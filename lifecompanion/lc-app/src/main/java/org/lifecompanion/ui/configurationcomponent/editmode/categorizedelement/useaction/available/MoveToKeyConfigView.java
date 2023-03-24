@@ -47,7 +47,7 @@ public class MoveToKeyConfigView extends VBox implements UseActionConfigurationV
 
     @Override
     public void editEnds(final MoveToKeyAction actionP) {
-        actionP.targetKeyProperty().set(this.componentSelector.selectedComponentProperty().get());
+        actionP.targetKeyIdProperty().set(this.componentSelector.getSelectedComponentID());
         this.componentSelector.clearSelection();
     }
 

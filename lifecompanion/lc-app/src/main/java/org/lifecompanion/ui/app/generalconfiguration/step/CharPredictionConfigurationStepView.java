@@ -37,6 +37,7 @@ import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 public class CharPredictionConfigurationStepView extends BorderPane implements GeneralConfigurationStepViewI, LCViewInitHelper {
     private LCConfigurationI model;
     private TextField fieldCharPrediction;
+    private boolean dirty;
 
     public CharPredictionConfigurationStepView() {
         initAll();
@@ -73,8 +74,6 @@ public class CharPredictionConfigurationStepView extends BorderPane implements G
     }
 
 
-    // UI
-    //========================================================================
     @Override
     public void initUI() {
         //Grid layout
@@ -98,7 +97,11 @@ public class CharPredictionConfigurationStepView extends BorderPane implements G
         this.setPadding(new Insets(GeneralConfigurationStepViewI.PADDING));
         this.setCenter(gridPaneTotal);
     }
-    //========================================================================
+
+    @Override
+    public void initBinding() {
+        this.fieldCharPrediction.textProperty().addListener(inv -> dirty = true);
+    }
 
     @Override
     public void saveChanges() {
@@ -109,6 +112,12 @@ public class CharPredictionConfigurationStepView extends BorderPane implements G
     public void bind(LCConfigurationI model) {
         this.model = model;
         this.fieldCharPrediction.setText(model.getPredictionParameters().charPredictionSpaceCharProperty().get());
+        this.dirty = false;
+    }
+
+    @Override
+    public boolean shouldCancelBeConfirmed() {
+        return dirty;
     }
 
     @Override

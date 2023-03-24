@@ -54,7 +54,7 @@ public class SimulateKeyActivationConfigView extends VBox implements UseActionCo
 
 	@Override
 	public void editEnds(final SimulateKeyActivationAction element) {
-		element.targetKeyProperty().set(this.componentSelector.selectedComponentProperty().get());
+		element.targetKeyIdProperty().set(this.componentSelector.getSelectedComponentID());
 		this.componentSelector.clearSelection();
 	}
 

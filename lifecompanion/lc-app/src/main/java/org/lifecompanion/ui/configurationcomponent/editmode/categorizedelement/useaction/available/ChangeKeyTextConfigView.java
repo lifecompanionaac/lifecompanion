@@ -69,7 +69,7 @@ public class ChangeKeyTextConfigView extends VBox implements UseActionConfigurat
 
 	@Override
 	public void editEnds(final ChangeKeyTextAction element) {
-		element.targetKeyProperty().set(this.componentSelector.selectedComponentProperty().get());
+		element.targetKeyIdProperty().set(this.componentSelector.getSelectedComponentID());
 		element.wantedKeyTextProperty().set(this.useVariableTextArea.getText());
 		this.componentSelector.clearSelection();
 	}

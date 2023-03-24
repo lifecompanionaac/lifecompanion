@@ -46,7 +46,7 @@ public class PreviousPageInStackConfigView extends VBox implements UseActionConf
 
 	@Override
 	public void editEnds(final PreviousPageInStackAction actionP) {
-		actionP.changedPageParentStackProperty().set(this.componentSelector.selectedComponentProperty().get());
+		actionP.changedPageParentStackIdProperty().set(this.componentSelector.getSelectedComponentID());
 		this.componentSelector.clearSelection();
 	}
 

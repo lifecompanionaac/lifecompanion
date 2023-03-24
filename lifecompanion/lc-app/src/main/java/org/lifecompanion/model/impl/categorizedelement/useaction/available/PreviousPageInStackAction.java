@@ -20,6 +20,7 @@ package org.lifecompanion.model.impl.categorizedelement.useaction.available;
 
 import java.util.Map;
 
+import javafx.beans.property.ReadOnlyObjectProperty;
 import org.fxmisc.easybind.EasyBind;
 import org.jdom2.Element;
 
@@ -32,6 +33,7 @@ import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
 import org.lifecompanion.controller.selectionmode.SelectionModeController;
+import org.lifecompanion.model.impl.configurationcomponent.ComponentHolderById;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
@@ -46,9 +48,9 @@ import javafx.beans.property.StringProperty;
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public class PreviousPageInStackAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
-
-    private StringProperty changedPageParentStackId;
-    private ComponentHolder<StackComponentI> changedPageParentStack;
+    @SuppressWarnings("FieldCanBeLocal")
+    private final StringProperty changedPageParentStackId;
+    private final ComponentHolderById<StackComponentI> changedPageParentStack;
 
     public PreviousPageInStackAction() {
         super(UseActionTriggerComponentI.class);
@@ -58,15 +60,19 @@ public class PreviousPageInStackAction extends SimpleUseActionImpl<UseActionTrig
         this.staticDescriptionID = "previous.page.in.stack.static.description";
         this.configIconPath = "show/icon_previous_page_stack.png";
         this.changedPageParentStackId = new SimpleStringProperty();
-        this.changedPageParentStack = new ComponentHolder<>(this.changedPageParentStackId, this.parentComponentProperty());
+        this.changedPageParentStack = new ComponentHolderById<>(this.changedPageParentStackId, this.parentComponentProperty());
         this.variableDescriptionProperty()
                 .bind(TranslationFX.getTextBinding("previous.page.in.stack.variable.description", EasyBind.select(this.changedPageParentStackProperty())
                         .selectObject(StackComponentI::nameProperty).orElse(Translation.getText("stack.none.selected"))));
 
     }
 
-    public ObjectProperty<StackComponentI> changedPageParentStackProperty() {
+    public ReadOnlyObjectProperty<StackComponentI> changedPageParentStackProperty() {
         return this.changedPageParentStack.componentProperty();
+    }
+
+    public StringProperty changedPageParentStackIdProperty() {
+        return this.changedPageParentStack.componentIdProperty();
     }
 
     @Override

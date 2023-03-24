@@ -210,6 +210,7 @@ namespace LifeCompanion_VoiceSynthesizer
                             this.speechSynthesizer.SpeakAsyncCancelAll();
                             this.speechSynthesizer.Dispose();
                             lifeCompanionVoiceSynthesizer.running = false;
+                            lifeCompanionVoiceSynthesizer.Stop();
                             break;
                         default:
                             sw.Write("{\"error\" : \"Bad URL\"}");

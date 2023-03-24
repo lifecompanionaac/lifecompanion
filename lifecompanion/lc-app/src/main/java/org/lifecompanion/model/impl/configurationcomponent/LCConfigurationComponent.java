@@ -135,11 +135,12 @@ public class LCConfigurationComponent extends CoreDisplayableComponentBaseImpl i
     /**
      * First part to be scanned in configuration
      */
-    private final ComponentHolder<GridComponentI> firstSelectionPart;
+    private final ComponentHolderById<GridComponentI> firstSelectionPart;
 
     /**
      * First part ID (do not delete : used in to save with serialization)
      */
+    @SuppressWarnings("FieldCanBeLocal")
     protected final StringProperty firstSelectionPartId;
 
     private final DoubleProperty frameWidth, frameHeight;
@@ -256,7 +257,7 @@ public class LCConfigurationComponent extends CoreDisplayableComponentBaseImpl i
         //Useful to be able to create configuration copy via XML serialization
         //Done after every initialization, because the configuration is added to "All components"
         this.configurationParent.set(this);
-        this.firstSelectionPart = new ComponentHolder<>(this.firstSelectionPartId, this.thisProperty);
+        this.firstSelectionPart = new ComponentHolderById<>(this.firstSelectionPartId, this.thisProperty);
         this.pluginsConfigProperties = PluginController.INSTANCE.getPluginConfigurationPropertiesMap(thisProperty);
 
         ConfigurationMemoryLeakChecker.registerConfiguration(this);
@@ -301,8 +302,14 @@ public class LCConfigurationComponent extends CoreDisplayableComponentBaseImpl i
         });
         this.computedWidth.bind(Bindings.createDoubleBinding(() -> fixedSize.get() ? width.get() : automaticWidth.get(), fixedSize, width, automaticWidth));
         this.computedHeight.bind(Bindings.createDoubleBinding(() -> fixedSize.get() ? height.get() : automaticHeight.get(), fixedSize, height, automaticHeight));
-        this.computedFrameWidth.bind(Bindings.createDoubleBinding(() -> stageModeOnLaunch.get() != StageMode.BASE ? automaticFrameWidth.get() : frameWidth.get(), stageModeOnLaunch, automaticFrameWidth, frameWidth));
-        this.computedFrameHeight.bind(Bindings.createDoubleBinding(() -> stageModeOnLaunch.get() != StageMode.BASE ? automaticFrameHeight.get() : frameHeight.get(), stageModeOnLaunch, automaticFrameHeight, frameHeight));
+        this.computedFrameWidth.bind(Bindings.createDoubleBinding(() -> stageModeOnLaunch.get() != StageMode.BASE ? automaticFrameWidth.get() : frameWidth.get(),
+                stageModeOnLaunch,
+                automaticFrameWidth,
+                frameWidth));
+        this.computedFrameHeight.bind(Bindings.createDoubleBinding(() -> stageModeOnLaunch.get() != StageMode.BASE ? automaticFrameHeight.get() : frameHeight.get(),
+                stageModeOnLaunch,
+                automaticFrameHeight,
+                frameHeight));
 
         // Default frame automatic width/height is based on configuration size (could be changed later, that's why there is automatic* properties)
         this.automaticFrameWidth.bind(this.computedWidth);
@@ -493,8 +500,16 @@ public class LCConfigurationComponent extends CoreDisplayableComponentBaseImpl i
      * {@inheritDoc}
      */
     @Override
-    public ObjectProperty<GridComponentI> firstSelectionPartProperty() {
+    public ReadOnlyObjectProperty<GridComponentI> firstSelectionPartProperty() {
         return this.firstSelectionPart.componentProperty();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public StringProperty firstSelectionPartIdProperty() {
+        return this.firstSelectionPart.componentIdProperty();
     }
 
     /**

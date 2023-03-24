@@ -84,7 +84,7 @@ public class ChangeKeyBackgroundColorActionConfigView extends VBox implements Us
 
     @Override
     public void editEnds(final ChangeKeyBackgroundColorAction element) {
-        element.targetKeyProperty().set(this.componentSelector.selectedComponentProperty().get());
+        element.targetKeyIdProperty().set(this.componentSelector.getSelectedComponentID());
         element.wantedColorProperty().set(this.pickerWantedColor.getValue());
         element.restoreParentColorProperty().set(this.toggleSwitchRestoreParentStyle.isSelected());
         componentSelector.clearSelection();

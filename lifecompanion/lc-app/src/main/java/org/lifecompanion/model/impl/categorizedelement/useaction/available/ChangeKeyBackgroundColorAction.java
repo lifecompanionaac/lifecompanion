@@ -18,32 +18,32 @@
  */
 package org.lifecompanion.model.impl.categorizedelement.useaction.available;
 
-import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.scene.paint.Color;
 import org.fxmisc.easybind.EasyBind;
 import org.jdom2.Element;
-import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
-import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
-import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
-import org.lifecompanion.model.api.usevariable.UseVariableI;
-import org.lifecompanion.model.impl.exception.LCException;
-import org.lifecompanion.model.api.io.IOContextI;
-import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseActionSubCategories;
-import org.lifecompanion.model.impl.configurationcomponent.ComponentHolder;
-import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
 import org.lifecompanion.framework.commons.fx.io.XMLGenericProperty;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
 import org.lifecompanion.framework.commons.translation.Translation;
+import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseActionSubCategories;
+import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
+import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
+import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
+import org.lifecompanion.model.api.io.IOContextI;
+import org.lifecompanion.model.api.usevariable.UseVariableI;
+import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
+import org.lifecompanion.model.impl.configurationcomponent.ComponentHolderById;
+import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.util.javafx.FXThreadUtils;
 
 import java.util.Map;
 
 public class ChangeKeyBackgroundColorAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
 
+    @SuppressWarnings("FieldCanBeLocal")
     private final StringProperty targetKeyId;
-    private final ComponentHolder<GridPartKeyComponentI> targetKey;
+    private final ComponentHolderById<GridPartKeyComponentI> targetKey;
 
     @XMLGenericProperty(Color.class)
     private final ObjectProperty<Color> wantedColor;
@@ -58,15 +58,19 @@ public class ChangeKeyBackgroundColorAction extends SimpleUseActionImpl<UseActio
         this.staticDescriptionID = "action.change.key.background.color.description";
         this.configIconPath = "configuration/icon_change_key_style.png";
         this.targetKeyId = new SimpleStringProperty();
-        this.targetKey = new ComponentHolder<>(this.targetKeyId, this.parentComponentProperty());
+        this.targetKey = new ComponentHolderById<>(this.targetKeyId, this.parentComponentProperty());
         this.wantedColor = new SimpleObjectProperty<>(Color.RED);
         this.restoreParentColor = new SimpleBooleanProperty(false);
         this.variableDescriptionProperty().bind(TranslationFX.getTextBinding("action.change.key.background.color.variable.description", EasyBind
                 .select(this.targetKeyProperty()).selectObject(GridPartKeyComponentI::nameProperty).orElse(Translation.getText("key.none.selected"))));
     }
 
-    public ObjectProperty<GridPartKeyComponentI> targetKeyProperty() {
+    public ReadOnlyObjectProperty<GridPartKeyComponentI> targetKeyProperty() {
         return this.targetKey.componentProperty();
+    }
+
+    public StringProperty targetKeyIdProperty() {
+        return this.targetKey.componentIdProperty();
     }
 
     public ObjectProperty<Color> wantedColorProperty() {
