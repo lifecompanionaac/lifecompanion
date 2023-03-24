@@ -1,14 +1,19 @@
 # LIFECOMPANION CHANGELOG
 
-## 1.4.8 - XX/XX/2023
+## 1.4.8 - 24/03/2023
 
 ### Fonctionnalités
 
-- ...
+- Ajout d'un bouton pour nettoyer les fichiers temporaires dans "Préférences & Infos" : permet de libérer de l'espace disque
 
 ### Corrections/ajustements
 
-- ...
+- Correction d'un problème qui pouvait parfois entraîner une synthèse vocale "ralentie" sous Windows
+- Ticket #217 : correction d'un problème qui pouvait parfois "désactiver" certains liens après "Annuler/Refaire"
+- Ticket #220 : meilleur comportement de la sélection en ligne/colonne ou colonne/ligne pour certains cas particuliers
+- Ticket #223 : correction d'un rare problème lors de la sélection de grilles
+- Correction de quelques textes
+- Dans "Paramètres Généraux", une confirmation est maintenant demandée à l'annulation en cas de changements effectués non enregistrés
 
 ## 1.4.7 - 09/03/2023
 

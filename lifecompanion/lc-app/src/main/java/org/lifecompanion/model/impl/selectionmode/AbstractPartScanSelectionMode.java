@@ -19,6 +19,8 @@
 package org.lifecompanion.model.impl.selectionmode;
 
 import org.lifecompanion.framework.commons.utils.lang.CollectionUtils;
+import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
+import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
 import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
 import org.lifecompanion.model.api.configurationcomponent.GridPartComponentI;
 import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
@@ -179,10 +181,33 @@ public abstract class AbstractPartScanSelectionMode<T extends AbstractPartScanSe
             this.secondaryIndex = 0;
             this.timesInSamePart = 0;
 
-            // Reversed behavior here : even if there is only one component, we will expect the user to select it
-            // this is done to stay consistent with the selection mode and to allow user to have actions on over
-            // this have the following consequence : the user should select twice the if there is only one part while it could select just once before
-            this.updateCurrentComponent(true);
+
+            // If the current line contains only one element :
+            // - if it doesn't contain OVER actions : will return true as the actions should be directly executed
+            // - if it contains OVER actions, even if there is only one component, stick to the classic behavior
+            if (this.selectedComponentToScan.getComponents().size() == 1 && !hasOverActions(this.selectedComponentToScan.getPartIn(this.currentGrid.get(), 0))) {
+                this.secondaryIndex = 0;
+                GridPartComponentI uniqueCompInside = this.selectedComponentToScan.getPartIn(this.currentGrid.get(), secondaryIndex);
+                this.currentPart.set(uniqueCompInside);
+                // Issue : #136, view was not correctly updated when there was only one part in row/column scanning
+                this.view.moveToPart(this.currentPart.get(), this.getProgressTime(true), this.isMoveAnimationEnabled(true));
+                //If the next component is a action trigger component, we should deselect the line on next play call, because
+                // it will fire action and it should never select a line with just one component
+                this.deselectAndUpdateCurrentPartOnNextPlay = uniqueCompInside instanceof GridPartKeyComponentI;
+                return true;
+            } else {
+                //This select the first part of the current line, so scanning time should restart
+                this.updateCurrentComponent(true);
+            }
+        }
+        return false;
+    }
+
+    private boolean hasOverActions(GridPartComponentI component) {
+        if (component instanceof UseActionTriggerComponentI) {
+            UseActionTriggerComponentI useActionTriggerComponent = (UseActionTriggerComponentI) component;
+            return useActionTriggerComponent.getActionManager().hasSimpleAction(UseActionEvent.OVER) || useActionTriggerComponent.getActionManager()
+                    .hasComplexAction(UseActionEvent.OVER);
         }
         return false;
     }

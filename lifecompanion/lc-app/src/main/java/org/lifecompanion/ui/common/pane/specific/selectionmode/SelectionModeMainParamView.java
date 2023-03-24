@@ -19,6 +19,7 @@
 
 package org.lifecompanion.ui.common.pane.specific.selectionmode;
 
+import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
@@ -91,6 +92,8 @@ public class SelectionModeMainParamView extends BaseConfigurationViewBorderPane<
      */
     private Button buttonShowSelectionModeConfiguration;
 
+    private boolean dirty;
+
     private final EventHandler<ActionEvent> selectionModeConfigurationHandler;
     private GridPane gridPaneConfiguration;
 
@@ -109,6 +112,7 @@ public class SelectionModeMainParamView extends BaseConfigurationViewBorderPane<
         this.spinnerTimeToFireAction.getValueFactory().setValue(model.getSelectionModeParameter().timeToFireActionProperty().get() / 1000.0);
         this.spinnerTimeBeforeRepeat.getValueFactory().setValue(model.getSelectionModeParameter().timeBeforeRepeatProperty().get() / 1000.0);
         this.mouseButtonSelectorControl.valueProperty().set(model.getSelectionModeParameter().mouseButtonActivationProperty().get());
+        dirty = false;
     }
 
     @Override
@@ -244,5 +248,19 @@ public class SelectionModeMainParamView extends BaseConfigurationViewBorderPane<
         for (Node mouseNode : mouseNodes) mouseNode.visibleProperty().bind(comboBoxFireEventInput.valueProperty().isEqualTo(FireEventInput.MOUSE));
         this.spinnerTimeToFireAction.disableProperty().bind(Bindings.createBooleanBinding(
                 () -> comboBoxFireActionEvent.getValue() == null || !comboBoxFireActionEvent.getValue().isEnableTimeToFireAction(), comboBoxFireActionEvent.valueProperty()));
+
+        InvalidationListener invalidationListener = e -> dirty = true;
+        comboboxSelectionMode.valueProperty().addListener(invalidationListener);
+        comboBoxFireEventInput.valueProperty().addListener(invalidationListener);
+        mouseButtonSelectorControl.valueProperty().addListener(invalidationListener);
+        inputEventKeySelector.valueProperty().addListener(invalidationListener);
+        comboBoxFireActionEvent.valueProperty().addListener(invalidationListener);
+        spinnerTimeToFireAction.valueProperty().addListener(invalidationListener);
+        spinnerTimeBeforeRepeat.valueProperty().addListener(invalidationListener);
+    }
+
+
+    public boolean isDirty() {
+        return dirty;
     }
 }

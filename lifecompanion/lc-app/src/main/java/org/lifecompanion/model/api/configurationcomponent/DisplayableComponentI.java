@@ -68,10 +68,8 @@ public interface DisplayableComponentI extends XMLSerializable<IOContextI>, Tree
     void showToFront(ViewProviderI viewProvider, boolean useCache);
 
     /**
-     * @return a property that indicate if this component is currently displayed in stack (or in configuration view), this is useful for stack child that doesn't know the direct stack child of their stack parent.<br>
+     * @return a property that indicate if this component is currently displayed (or in configuration view), this is useful for stack child that doesn't know the direct stack child of their stack parent.<br>
      * A basic use case of this property could be for a stack child, to know if it is currently displayed.<br>
-     * The default value of this property will always be true, the value should be false only if the component is not displayed because of the configuration logic.<br>
-     * Changing this property doesn't have any effect.
      */
     ReadOnlyBooleanProperty displayedProperty();
 

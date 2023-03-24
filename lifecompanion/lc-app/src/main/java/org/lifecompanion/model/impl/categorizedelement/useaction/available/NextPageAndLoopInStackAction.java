@@ -20,6 +20,7 @@
 package org.lifecompanion.model.impl.categorizedelement.useaction.available;
 
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.fxmisc.easybind.EasyBind;
@@ -28,6 +29,7 @@ import org.lifecompanion.model.api.configurationcomponent.StackComponentI;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
+import org.lifecompanion.model.impl.configurationcomponent.ComponentHolderById;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseActionSubCategories;
@@ -42,63 +44,69 @@ import java.util.Map;
 
 /**
  * Action to go to the next page in a selected stack and loop if we are on the last page.
+ *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public class NextPageAndLoopInStackAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
 
-	private final StringProperty changedPageParentStackId;
-	private final ComponentHolder<StackComponentI> changedPageParentStack;
+    @SuppressWarnings("FieldCanBeLocal")
+    private final StringProperty changedPageParentStackId;
+    private final ComponentHolderById<StackComponentI> changedPageParentStack;
 
-	public NextPageAndLoopInStackAction() {
-		super(UseActionTriggerComponentI.class);
-		this.category = DefaultUseActionSubCategories.CHANGE_PAGE;
-		this.order = 10;
-		this.nameID = "next.page.and.loop.in.stack.name";
-		this.staticDescriptionID = "next.page.and.loop.in.stack.static.description";
-		this.configIconPath = "show/icon_next_and_loop_page_stack.png";
-		this.changedPageParentStackId = new SimpleStringProperty();
-		this.changedPageParentStack = new ComponentHolder<>(this.changedPageParentStackId, this.parentComponentProperty());
-		this.variableDescriptionProperty().bind(
-				TranslationFX.getTextBinding("next.page.and.loop.in.stack.variable.description", EasyBind.select(this.changedPageParentStackProperty())
-						.selectObject(StackComponentI::nameProperty).orElse(Translation.getText("stack.none.selected"))));
+    public NextPageAndLoopInStackAction() {
+        super(UseActionTriggerComponentI.class);
+        this.category = DefaultUseActionSubCategories.CHANGE_PAGE;
+        this.order = 10;
+        this.nameID = "next.page.and.loop.in.stack.name";
+        this.staticDescriptionID = "next.page.and.loop.in.stack.static.description";
+        this.configIconPath = "show/icon_next_and_loop_page_stack.png";
+        this.changedPageParentStackId = new SimpleStringProperty();
+        this.changedPageParentStack = new ComponentHolderById<>(this.changedPageParentStackId, this.parentComponentProperty());
+        this.variableDescriptionProperty().bind(
+                TranslationFX.getTextBinding("next.page.and.loop.in.stack.variable.description", EasyBind.select(this.changedPageParentStackProperty())
+                        .selectObject(StackComponentI::nameProperty).orElse(Translation.getText("stack.none.selected"))));
 
-	}
+    }
 
-	public ObjectProperty<StackComponentI> changedPageParentStackProperty() {
-		return this.changedPageParentStack.componentProperty();
-	}
+    public ReadOnlyObjectProperty<StackComponentI> changedPageParentStackProperty() {
+        return this.changedPageParentStack.componentProperty();
+    }
 
-	@Override
-	public void idsChanged(final Map<String, String> changes) {
-		super.idsChanged(changes);
-		this.changedPageParentStack.idsChanged(changes);
-	}
+    public StringProperty changedPageParentStackIdProperty() {
+        return this.changedPageParentStack.componentIdProperty();
+    }
 
-	@Override
-	public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
-		StackComponentI stack = this.changedPageParentStackProperty().get();
-		if (stack != null) {
-			if (stack.nextPossibleProperty().get()) {
-				SelectionModeController.INSTANCE.goToGridPart(stack.getNextComponent());
-			} else {
-				SelectionModeController.INSTANCE.goToGridPart(stack.getComponentList().get(0));
-			}
-		}
-	}
+    @Override
+    public void idsChanged(final Map<String, String> changes) {
+        super.idsChanged(changes);
+        this.changedPageParentStack.idsChanged(changes);
+    }
 
-	// Class part : "XML"
-	//========================================================================
-	@Override
-	public Element serialize(final IOContextI contextP) {
-		Element elem = super.serialize(contextP);
-		XMLObjectSerializer.serializeInto(NextPageAndLoopInStackAction.class, this, elem);
-		return elem;
-	}
+    @Override
+    public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
+        StackComponentI stack = this.changedPageParentStackProperty().get();
+        if (stack != null) {
+            if (stack.nextPossibleProperty().get()) {
+                SelectionModeController.INSTANCE.goToGridPart(stack.getNextComponent());
+            } else {
+                SelectionModeController.INSTANCE.goToGridPart(stack.getComponentList().get(0));
+            }
+        }
+    }
 
-	@Override
-	public void deserialize(final Element nodeP, final IOContextI contextP) throws LCException {
-		super.deserialize(nodeP, contextP);
-		XMLObjectSerializer.deserializeInto(NextPageAndLoopInStackAction.class, this, nodeP);
-	}
-	//========================================================================
+    // Class part : "XML"
+    //========================================================================
+    @Override
+    public Element serialize(final IOContextI contextP) {
+        Element elem = super.serialize(contextP);
+        XMLObjectSerializer.serializeInto(NextPageAndLoopInStackAction.class, this, elem);
+        return elem;
+    }
+
+    @Override
+    public void deserialize(final Element nodeP, final IOContextI contextP) throws LCException {
+        super.deserialize(nodeP, contextP);
+        XMLObjectSerializer.deserializeInto(NextPageAndLoopInStackAction.class, this, nodeP);
+    }
+    //========================================================================
 }

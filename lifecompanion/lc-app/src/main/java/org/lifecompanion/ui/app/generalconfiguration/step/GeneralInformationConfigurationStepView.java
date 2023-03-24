@@ -19,6 +19,7 @@
 
 package org.lifecompanion.ui.app.generalconfiguration.step;
 
+import javafx.beans.InvalidationListener;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -58,6 +59,7 @@ public class GeneralInformationConfigurationStepView extends BorderPane implemen
     private LCColorPicker pickerBackgroundColor;
 
     private LCConfigurationI model;
+    private boolean dirty;
 
     public GeneralInformationConfigurationStepView() {
         initAll();
@@ -176,12 +178,20 @@ public class GeneralInformationConfigurationStepView extends BorderPane implemen
             }
         });
     }
+
+    @Override
+    public void initBinding() {
+        InvalidationListener invalidationListener = inv -> dirty = true;
+        pickerBackgroundColor.valueProperty().addListener(invalidationListener);
+        firstPartSelector.selectedComponentProperty().addListener(invalidationListener);
+        toggleVirtualKeyboard.selectedProperty().addListener(invalidationListener);
+    }
     //========================================================================
 
 
     @Override
     public void saveChanges() {
-        model.firstSelectionPartProperty().set(this.firstPartSelector.selectedComponentProperty().get());
+        model.firstSelectionPartIdProperty().set(this.firstPartSelector.getSelectedComponentID());
         model.virtualKeyboardProperty().set(this.toggleVirtualKeyboard.isSelected());
         model.backgroundColorProperty().set(this.pickerBackgroundColor.getValue());
     }
@@ -202,6 +212,13 @@ public class GeneralInformationConfigurationStepView extends BorderPane implemen
             this.labelAuthor.setText(Translation.getText("general.configuration.info.label.no.information"));
             this.buttonEditConfigurationInformation.setDisable(true);
         }
+        this.dirty = false;
+    }
+
+
+    @Override
+    public boolean shouldCancelBeConfirmed() {
+        return dirty;
     }
 
     @Override

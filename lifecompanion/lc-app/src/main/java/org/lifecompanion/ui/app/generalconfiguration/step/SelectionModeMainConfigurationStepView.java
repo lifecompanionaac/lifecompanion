@@ -99,4 +99,9 @@ public class SelectionModeMainConfigurationStepView extends BorderPane implement
     public SelectionModeMainParamView getSelectionModeMainParamView() {
         return selectionModeMainParamView;
     }
+
+    @Override
+    public boolean shouldCancelBeConfirmed() {
+        return selectionModeMainParamView.isDirty();
+    }
 }

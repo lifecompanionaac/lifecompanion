@@ -29,6 +29,7 @@ import org.lifecompanion.model.api.voicesynthesizer.VoiceInfoI;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.util.LangUtils;
 import org.lifecompanion.util.SoundUtils;
+import org.lifecompanion.util.ThreadUtils;
 import org.lifecompanion.util.javafx.SyncMediaPlayer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,11 +91,10 @@ public class SAPIVoiceSynthesizer extends AbstractVoiceSynthesizer {
      *
      * @throws Exception if init doesn't work
      */
-    private void initProcess() throws Exception {
+    private void initProcess(boolean retryAfterClose) throws Exception {
         if (!this.voiceSynthesizerAppPath.exists()) {
             throw new FileNotFoundException("Executable SAPI application executable not found");
         }
-        //Kill previous : is it necessary ?
         try {
             this.killProcess();
         } catch (Exception e) {
@@ -107,15 +107,6 @@ public class SAPIVoiceSynthesizer extends AbstractVoiceSynthesizer {
                 .readTimeout(0, TimeUnit.SECONDS)
                 .build();
 
-        // Dev debug : kill/close on launch
-        if (LangUtils.safeParseBoolean(System.getProperty("org.lifecompanion.debug.kill.sapi.on.launch"))) {
-            try {
-                disposeRequest(httpClient.newBuilder().connectTimeout(2, TimeUnit.SECONDS).build());
-            } catch (Exception e) {
-                // Ignored
-            }
-        }
-
         this.voice = null;
         this.volume = 100;
         this.rate = 0;
@@ -126,13 +117,27 @@ public class SAPIVoiceSynthesizer extends AbstractVoiceSynthesizer {
                 .command(this.voiceSynthesizerAppPath.getAbsolutePath(), "" + PORT)
                 .redirectError(voiceSynthesizerErrLog)
                 .start();
+
         // Wait for init (two line in output process)
-        BufferedReader reader = new BufferedReader(new InputStreamReader(this.synthesizerProcess.getInputStream()));
-        final String l1 = reader.readLine();
-        LOGGER.info("First line from SAPI after init : {}", l1);
-        final String l2 = reader.readLine();
-        LOGGER.info("Second line from SAPI after init : {}", l2);
-        LOGGER.info("SAPI synthesizer process initialized (exe {} on port {})", this.voiceSynthesizerAppPath, PORT);
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(this.synthesizerProcess.getInputStream()))) {
+            final String l1 = reader.readLine();
+            LOGGER.info("First line from SAPI after init : {}", l1);
+            final String l2 = reader.readLine();
+            LOGGER.info("Second line from SAPI after init : {}", l2);
+            LOGGER.info("SAPI synthesizer process initialized (exe {} on port {})", this.voiceSynthesizerAppPath, PORT);
+            if (!synthesizerProcess.isAlive()) {
+                LOGGER.warn("Synthesizer process is not alive after init, this can indicate that a synthesizer was already running, will try close it to be able to run again");
+                disposeRequest(httpClient.newBuilder().connectTimeout(STOP_TIMEOUT, TimeUnit.MILLISECONDS).build());
+                // Retry
+                if (retryAfterClose) {
+                    LOGGER.info("Will now retry after closing the existing synthesizer");
+                    ThreadUtils.safeSleep(250);
+                    initProcess(false);
+                } else {
+                    LOGGER.info("Will not retry after closing the existing synthesizer");
+                }
+            }
+        }
     }
 
     /**
@@ -165,7 +170,7 @@ public class SAPIVoiceSynthesizer extends AbstractVoiceSynthesizer {
 
     @Override
     public void initialize() throws Exception {
-        this.initProcess();
+        this.initProcess(true);
         //Read voices
         voices.clear();
         Request request = new Request.Builder().url(URL + "get-voices").get().build();
@@ -185,9 +190,12 @@ public class SAPIVoiceSynthesizer extends AbstractVoiceSynthesizer {
         LOGGER.info("SAPI voice synthesizer 2 disposed");
     }
 
-    private void disposeRequest(OkHttpClient client) throws Exception {
+    private void disposeRequest(OkHttpClient client) {
         Request request = new Request.Builder().url(URL + "dispose").get().build();
         try (Response ignored = client.newCall(request).execute()) {
+            // Ignored
+        } catch (Throwable ignored) {
+            // Ignored
         }
     }
 

@@ -46,7 +46,7 @@ public class MoveToGridAndGoBackConfigView extends VBox implements UseActionConf
 
 	@Override
 	public void editEnds(final MoveToGridAndGoBackAction actionP) {
-		actionP.targetGridProperty().set(this.componentSelector.selectedComponentProperty().get());
+		actionP.targetGridIdProperty().set(this.componentSelector.getSelectedComponentID());
 		this.componentSelector.clearSelection();
 	}
 

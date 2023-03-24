@@ -100,5 +100,10 @@ public class SelectionModeSuppConfigurationStepView extends BorderPane implement
         selectionModeSuppParamView.modelProperty().set(null);
     }
 
+    @Override
+    public boolean shouldCancelBeConfirmed() {
+        return selectionModeSuppParamView.isDirty();
+    }
+
 
 }

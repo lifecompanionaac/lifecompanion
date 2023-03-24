@@ -47,7 +47,7 @@ public class NextPageAndLoopInStackConfigView extends VBox implements UseActionC
 
     @Override
     public void editEnds(final NextPageAndLoopInStackAction actionP) {
-        actionP.changedPageParentStackProperty().set(this.componentSelector.selectedComponentProperty().get());
+        actionP.changedPageParentStackIdProperty().set(this.componentSelector.getSelectedComponentID());
         this.componentSelector.clearSelection();
     }
 

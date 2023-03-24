@@ -18,35 +18,32 @@
  */
 package org.lifecompanion.model.impl.categorizedelement.useaction.available;
 
-import java.util.Map;
-
+import javafx.beans.property.*;
 import org.fxmisc.easybind.EasyBind;
 import org.jdom2.Element;
-
-import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
-import org.lifecompanion.model.api.imagedictionary.ImageElementI;
-import org.lifecompanion.model.impl.configurationcomponent.ImageUseComponentPropertyWrapper;
-import org.lifecompanion.model.impl.configurationcomponent.ComponentHolder;
+import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
 import org.lifecompanion.framework.commons.translation.Translation;
-import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
+import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseActionSubCategories;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
-import org.lifecompanion.model.api.usevariable.UseVariableI;
-import org.lifecompanion.model.impl.exception.LCException;
+import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
+import org.lifecompanion.model.api.imagedictionary.ImageElementI;
 import org.lifecompanion.model.api.io.IOContextI;
+import org.lifecompanion.model.api.usevariable.UseVariableI;
 import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
-import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseActionSubCategories;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import org.lifecompanion.model.impl.configurationcomponent.ComponentHolderById;
+import org.lifecompanion.model.impl.configurationcomponent.ImageUseComponentPropertyWrapper;
+import org.lifecompanion.model.impl.exception.LCException;
+
+import java.util.Map;
 
 public class ChangeKeyImageAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
 
-    private StringProperty targetKeyId;
-    private ComponentHolder<GridPartKeyComponentI> targetKey;
-    private ObjectProperty<ImageElementI> wantedImage;
+    @SuppressWarnings("FieldCanBeLocal")
+    private final StringProperty targetKeyId;
+    private final ComponentHolderById<GridPartKeyComponentI> targetKey;
+    private final ObjectProperty<ImageElementI> wantedImage;
 
     public ChangeKeyImageAction() {
         super(UseActionTriggerComponentI.class);
@@ -57,13 +54,17 @@ public class ChangeKeyImageAction extends SimpleUseActionImpl<UseActionTriggerCo
         this.configIconPath = "configuration/icon_change_key_image.png";
         this.targetKeyId = new SimpleStringProperty();
         this.wantedImage = new SimpleObjectProperty<>();
-        this.targetKey = new ComponentHolder<>(this.targetKeyId, this.parentComponentProperty());
+        this.targetKey = new ComponentHolderById<>(this.targetKeyId, this.parentComponentProperty());
         this.variableDescriptionProperty().bind(TranslationFX.getTextBinding("action.change.key.image.variable.description", EasyBind
                 .select(this.targetKeyProperty()).selectObject(GridPartKeyComponentI::nameProperty).orElse(Translation.getText("key.none.selected"))));
     }
 
-    public ObjectProperty<GridPartKeyComponentI> targetKeyProperty() {
+    public ReadOnlyObjectProperty<GridPartKeyComponentI> targetKeyProperty() {
         return this.targetKey.componentProperty();
+    }
+
+    public StringProperty targetKeyIdProperty() {
+        return this.targetKey.componentIdProperty();
     }
 
     public ObjectProperty<ImageElementI> wantedImageProperty() {

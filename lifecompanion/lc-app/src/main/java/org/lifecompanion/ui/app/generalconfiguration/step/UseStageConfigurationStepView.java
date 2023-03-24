@@ -19,6 +19,7 @@
 
 package org.lifecompanion.ui.app.generalconfiguration.step;
 
+import javafx.beans.InvalidationListener;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.geometry.HPos;
@@ -80,6 +81,8 @@ public class UseStageConfigurationStepView extends BorderPane implements General
     private ChangeListener<? super Double> changeListenerSpinnerStageWidth;
 
     private LCConfigurationI model;
+
+    private boolean dirty;
 
     public UseStageConfigurationStepView() {
         initAll();
@@ -284,6 +287,17 @@ public class UseStageConfigurationStepView extends BorderPane implements General
         this.buttonKeepRatioFrameSize.disableProperty().bind(this.comboBoxStageModeOnLaunch.valueProperty().isNotEqualTo(StageMode.BASE));
         this.spinnerHeight.disableProperty().bind(this.toggleEnableAutoSizing.selectedProperty());
         this.spinnerWidth.disableProperty().bind(this.toggleEnableAutoSizing.selectedProperty());
+
+        InvalidationListener invalidationListener = inv -> dirty = true;
+        sliderFrameOpacity.valueProperty().addListener(invalidationListener);
+        toggleKeepConfigurationRatio.selectedProperty().addListener(invalidationListener);
+        spinnerFrameWidth.valueProperty().addListener(invalidationListener);
+        spinnerFrameHeight.valueProperty().addListener(invalidationListener);
+        comboBoxStageModeOnLaunch.valueProperty().addListener(invalidationListener);
+        comboboxFramePosition.valueProperty().addListener(invalidationListener);
+        spinnerWidth.valueProperty().addListener(invalidationListener);
+        spinnerHeight.valueProperty().addListener(invalidationListener);
+        toggleEnableAutoSizing.selectedProperty().addListener(invalidationListener);
     }
     //========================================================================
 
@@ -316,10 +330,16 @@ public class UseStageConfigurationStepView extends BorderPane implements General
         this.toggleEnableAutoSizing.setSelected(!model.fixedSizeProperty().get());
         this.buttonKeepRatioFrameSize.setGraphic(glyphKeep);
         updateFrameSizeRatio();
+        dirty = false;
     }
 
     @Override
     public void unbind(LCConfigurationI model) {
         this.model = null;
+    }
+
+    @Override
+    public boolean shouldCancelBeConfirmed() {
+        return dirty;
     }
 }

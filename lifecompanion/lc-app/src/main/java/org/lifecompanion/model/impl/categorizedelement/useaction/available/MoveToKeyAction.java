@@ -20,6 +20,7 @@
 package org.lifecompanion.model.impl.categorizedelement.useaction.available;
 
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.fxmisc.easybind.EasyBind;
@@ -28,6 +29,7 @@ import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
+import org.lifecompanion.model.impl.configurationcomponent.ComponentHolderById;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseActionSubCategories;
@@ -46,8 +48,9 @@ import java.util.Map;
  */
 public class MoveToKeyAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
 
+	@SuppressWarnings("FieldCanBeLocal")
 	private StringProperty targetKeyId;
-	private ComponentHolder<GridPartKeyComponentI> targetKey;
+	private ComponentHolderById<GridPartKeyComponentI> targetKey;
 
 	public MoveToKeyAction() {
 		super(UseActionTriggerComponentI.class);
@@ -58,14 +61,18 @@ public class MoveToKeyAction extends SimpleUseActionImpl<UseActionTriggerCompone
 		this.staticDescriptionID = "go.to.key.static.description";
 		this.configIconPath = "show/icon_move_to_key.png";
 		this.targetKeyId = new SimpleStringProperty();
-		this.targetKey = new ComponentHolder<>(this.targetKeyId, this.parentComponentProperty());
+		this.targetKey = new ComponentHolderById<>(this.targetKeyId, this.parentComponentProperty());
 		this.variableDescriptionProperty().bind(TranslationFX.getTextBinding("go.to.key.variable.description", EasyBind.select(this.targetKeyProperty())
 				.selectObject(GridPartKeyComponentI::nameProperty).orElse(Translation.getText("key.none.selected"))));
 
 	}
 
-	public ObjectProperty<GridPartKeyComponentI> targetKeyProperty() {
+	public ReadOnlyObjectProperty<GridPartKeyComponentI> targetKeyProperty() {
 		return this.targetKey.componentProperty();
+	}
+
+	public StringProperty targetKeyIdProperty() {
+		return this.targetKey.componentIdProperty();
 	}
 
 	@Override

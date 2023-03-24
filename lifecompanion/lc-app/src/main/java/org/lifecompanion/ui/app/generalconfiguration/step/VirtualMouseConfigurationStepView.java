@@ -19,6 +19,7 @@
 
 package org.lifecompanion.ui.app.generalconfiguration.step;
 
+import javafx.beans.InvalidationListener;
 import javafx.collections.FXCollections;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -45,6 +46,7 @@ public class VirtualMouseConfigurationStepView extends BorderPane implements Gen
     private ComboBox<VirtualMouseDrawing> comboboxVirtualMouseDrawing;
 
     private LCConfigurationI model;
+    private boolean dirty;
 
     public VirtualMouseConfigurationStepView() {
         initAll();
@@ -138,6 +140,16 @@ public class VirtualMouseConfigurationStepView extends BorderPane implements Gen
         setCenter(gridPaneTotal);
     }
 
+    @Override
+    public void initBinding() {
+        InvalidationListener invalidationListener = inv -> dirty = true;
+        pickerMouseColor.valueProperty().addListener(invalidationListener);
+        pickerMouseStrokeColor.valueProperty().addListener(invalidationListener);
+        sliderMouseSize.valueProperty().addListener(invalidationListener);
+        sliderMouseSpeed.valueProperty().addListener(invalidationListener);
+        comboboxVirtualMouseDrawing.valueProperty().addListener(invalidationListener);
+    }
+
     //========================================================================
     @Override
     public void saveChanges() {
@@ -156,10 +168,16 @@ public class VirtualMouseConfigurationStepView extends BorderPane implements Gen
         this.sliderMouseSize.adjustValue(model.getVirtualMouseParameters().mouseSizeProperty().get());
         this.sliderMouseSpeed.adjustValue(model.getVirtualMouseParameters().mouseSpeedProperty().get());
         this.comboboxVirtualMouseDrawing.getSelectionModel().select(model.getVirtualMouseParameters().mouseDrawingProperty().get());
+        this.dirty = false;
     }
 
     @Override
     public void unbind(LCConfigurationI model) {
         this.model = null;
+    }
+
+    @Override
+    public boolean shouldCancelBeConfirmed() {
+        return dirty;
     }
 }

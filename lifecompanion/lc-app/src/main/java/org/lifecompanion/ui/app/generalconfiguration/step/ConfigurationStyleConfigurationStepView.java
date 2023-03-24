@@ -121,4 +121,7 @@ public class ConfigurationStyleConfigurationStepView extends BorderPane implemen
     public void unbind(LCConfigurationI model) {
         styleEditViews.forEach(p -> p.getLeft().modelProperty().set(null));
     }
+
+    // No implementation needed : sub views are bound
+    // shouldCancelBeConfirmed()
 }
