@@ -23,28 +23,36 @@ package org.lifecompanion.model.api.usevariable;
  * Represent a possible variable given to use action after on execution.<br>
  * The variable can come from a event that generate it, or from the software, that also generate it.<br>
  * The definition is mostly used as configuration purpose to suggest variables to the user.
+ *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public interface UseVariableDefinitionI {
-	/**
-	 * Unique ID for this variable.<br>
-	 * The user uses this ID when he wants to use a variable (e.g. "Today is {VariableId}")
-	 * @return The variable unique id.
-	 */
-	String getId();
+    /**
+     * Unique ID for this variable.<br>
+     * The user uses this ID when he wants to use a variable (e.g. "Today is {VariableId}")
+     *
+     * @return The variable unique id.
+     */
+    String getId();
 
-	/**
-	 * @return a name for this variable
-	 */
-	String getName();
+    /**
+     * @return a name for this variable
+     */
+    String getName();
 
-	/**
-	 * @return a description for this variable
-	 */
-	String getDescription();
+    /**
+     * @return a description for this variable
+     */
+    String getDescription();
 
-	/**
-	 * @return a example value for this variable, that should represent how the variable will look like
-	 */
-	String getExampleValueToString();
+    /**
+     * @return a example value for this variable, that should represent how the variable will look like
+     */
+    String getExampleValueToString();
+
+    /**
+     * @return the cached value lifetime in millisecond. A low value can impact performance so be careful.<br>
+     * Note that this will still update rate of the variable user (eg {@link org.lifecompanion.controller.usevariable.UseVariableController} which is never less than 1 second)
+     */
+    long getCacheLifetime();
 }

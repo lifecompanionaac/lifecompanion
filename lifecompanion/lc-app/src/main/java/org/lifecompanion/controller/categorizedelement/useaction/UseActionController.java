@@ -289,7 +289,7 @@ public enum UseActionController implements LCStateListener, ModeListenerI {
             variables = new HashMap<>();
         }
         //Merge with the software variables
-        final Map<String, UseVariableI<?>> lcVariables = UseVariableController.INSTANCE.generateVariables();
+        final Map<String, UseVariableI<?>> lcVariables = UseVariableController.INSTANCE.generateVariables(false);
         final Set<String> keys = lcVariables.keySet();
         for (String key : keys) {
             variables.put(key, lcVariables.get(key));

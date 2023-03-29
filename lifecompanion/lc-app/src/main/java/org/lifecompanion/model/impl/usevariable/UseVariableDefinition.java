@@ -23,45 +23,60 @@ package org.lifecompanion.model.impl.usevariable;
 import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
 import org.lifecompanion.framework.commons.translation.Translation;
 
+import static org.lifecompanion.model.impl.constant.LCConstant.DEFAULT_USE_VARIABLE_LIFETIME;
+
 /**
  * Implementation for {@link UseVariableDefinitionI}
+ *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public class UseVariableDefinition implements UseVariableDefinitionI {
-	private String id;
-	private String nameId;
-	private String descriptionId;
-	private String exampleValueId;
+    private final String id;
+    private final String nameId;
+    private final String descriptionId;
+    private final String exampleValueId;
+    private final long cacheLifetime;
 
-	public UseVariableDefinition(final String id, final String nameId, final String descriptionId, final String exampleValueId) {
-		this.id = id;
-		this.nameId = nameId;
-		this.descriptionId = descriptionId;
-		this.exampleValueId = exampleValueId;
-	}
+    public UseVariableDefinition(final String id, final String nameId, final String descriptionId, final String exampleValueId, long cacheLifetime) {
+        this.id = id;
+        this.nameId = nameId;
+        this.descriptionId = descriptionId;
+        this.exampleValueId = exampleValueId;
+        this.cacheLifetime = cacheLifetime;
+    }
 
-	public UseVariableDefinition(final String id) {
-		this(id, null, null, null);
-	}
 
-	@Override
-	public String getId() {
-		return this.id;
-	}
+    public UseVariableDefinition(final String id, final String nameId, final String descriptionId, final String exampleValueId) {
+        this(id, nameId, descriptionId, exampleValueId, DEFAULT_USE_VARIABLE_LIFETIME);
+    }
 
-	@Override
-	public String getName() {
-		return Translation.getText(this.nameId);
-	}
+    public UseVariableDefinition(final String id) {
+        this(id, null, null, null);
+    }
 
-	@Override
-	public String getDescription() {
-		return Translation.getText(this.descriptionId);
-	}
+    @Override
+    public String getId() {
+        return this.id;
+    }
 
-	@Override
-	public String getExampleValueToString() {
-		return Translation.getText(this.exampleValueId);
-	}
+    @Override
+    public String getName() {
+        return Translation.getText(this.nameId);
+    }
+
+    @Override
+    public String getDescription() {
+        return Translation.getText(this.descriptionId);
+    }
+
+    @Override
+    public String getExampleValueToString() {
+        return Translation.getText(this.exampleValueId);
+    }
+
+    @Override
+    public long getCacheLifetime() {
+        return cacheLifetime;
+    }
 
 }

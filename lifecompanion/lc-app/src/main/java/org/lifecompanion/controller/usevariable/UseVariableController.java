@@ -33,6 +33,7 @@ import org.lifecompanion.controller.selectionmode.SelectionModeController;
 import org.lifecompanion.controller.textcomponent.WritingStateController;
 import org.lifecompanion.framework.commons.utils.lang.CollectionUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.framework.utils.Pair;
 import org.lifecompanion.model.api.categorizedelement.useevent.UseEventGeneratorI;
 import org.lifecompanion.model.api.configurationcomponent.DisplayableComponentI;
 import org.lifecompanion.model.api.configurationcomponent.GridPartComponentI;
@@ -57,6 +58,7 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -83,22 +85,42 @@ public enum UseVariableController implements ModeListenerI {
 
     private final List<VariableInformationKeyOption> variablesInformationKeyOptions;
 
-    private final InvalidationListener requestInformationKeyUpdateListener;
-
     private final List<Consumer<Map<String, UseVariableI<?>>>> variableUpdateListeners;
 
     private final Map<String, Pattern> patternCache;
 
     private final Timeline keyUpdateTimeLine;
 
+    private final Map<String, Pair<Long, UseVariableI<?>>> cachedVariableValues;
+
+    private InvalidationListener listenerCurrentOverPart, listenerCurrentText, listenerCurrentWord, listenerCurrentChar, listenerLastCompleteWord;
+
     UseVariableController() {
         this.variablesInformationKeyOptions = new ArrayList<>();
         this.variableUpdateListeners = new ArrayList<>();
-        this.requestInformationKeyUpdateListener = (inv) -> this.requestVariablesUpdate();
+        this.cachedVariableValues = new HashMap<>();
         this.keyUpdateTimeLine = new Timeline(new KeyFrame(Duration.millis(UseVariableController.MILLIS_TIME_UPDATE_INFO_KEY),
-                event -> UseVariableController.this.updateInformationKeyOptions()));
+                event -> UseVariableController.this.updateInformationKeyOptions(true)));
         this.keyUpdateTimeLine.setCycleCount(Animation.INDEFINITE);
         this.patternCache = new HashMap<>();
+        initListeners();
+    }
+
+    private void initListeners() {
+        this.listenerCurrentOverPart = createListener("CurrentOverPartName", "CurrentOverPartGridParentName");
+        this.listenerCurrentText = createListener("CurrentTextInEditor");
+        this.listenerCurrentWord = createListener("CurrentWordInEditor");
+        this.listenerCurrentChar = createListener("CurrentCharInEditor");
+        this.listenerLastCompleteWord = createListener("LastCompleteWordInEditor");
+    }
+
+    private InvalidationListener createListener(String... ids) {
+        return inv -> {
+            for (String id : ids) {
+                clearFromCache(id);
+            }
+            requestVariablesUpdate(true);
+        };
     }
 
     /**
@@ -150,7 +172,7 @@ public enum UseVariableController implements ModeListenerI {
         this.addDef(new UseVariableDefinition("CurrentDate", "use.variable.current.date.name", "use.variable.current.date.description",
                 "use.variable.current.date.example"));
         this.addDef(new UseVariableDefinition("CurrentTime", "use.variable.current.time.name", "use.variable.current.time.description",
-                "use.variable.current.time.example"));
+                "use.variable.current.time.example", 500));
         this.addDef(new UseVariableDefinition("CurrentTimeWithoutSeconds", "use.variable.current.time.without.seconds.name",
                 "use.variable.current.time.without.seconds.description", "use.variable.current.time.without.seconds.example"));
         this.addDef(new UseVariableDefinition("CurrentDayOfWeek", "use.variable.current.day.of.week.name",
@@ -166,11 +188,11 @@ public enum UseVariableController implements ModeListenerI {
         this.addDef(new UseVariableDefinition("CurrentCharInEditor", "use.variable.current.char.in.editor.name",
                 "use.variable.current.char.in.editor.description", "use.variable.current.char.in.editor.example"));
         this.addDef(new UseVariableDefinition("CurrentTextInClipboard", "use.variable.current.text.in.clipboard.name",
-                "use.variable.current.text.in.clipboard.description", "use.variable.current.text.in.clipboard.example"));
+                "use.variable.current.text.in.clipboard.description", "use.variable.current.text.in.clipboard.example", 1000));
         this.addDef(new UseVariableDefinition("BatteryLevel", "use.variable.battery.level.percent.name",
-                "use.variable.battery.level.percent.description", "use.variable.battery.level.percent.example"));
+                "use.variable.battery.level.percent.description", "use.variable.battery.level.percent.example", 20_000));
         this.addDef(new UseVariableDefinition("BatteryTimeRemaining", "use.variable.battery.time.remaining.name",
-                "use.variable.battery.time.remaining.description", "use.variable.battery.time.remaining.example"));
+                "use.variable.battery.time.remaining.description", "use.variable.battery.time.remaining.example", 20_000));
         //Init plugin
         PluginController.INSTANCE.getUseVariableDefinitions().registerListenerAndDrainCache(this::addDef);
     }
@@ -186,91 +208,99 @@ public enum UseVariableController implements ModeListenerI {
      * This should be called directly only if you really need.<br>
      * If you want to update the variable, you should better call {@link #requestVariablesUpdate()}
      *
+     * @param useCachedValue if the cached values for variables should be used
      * @return the generated variables.
      */
     // Class part : "Variable generation"
     //========================================================================
-    public Map<String, UseVariableI<?>> generateVariables() {
+    private void putToVarMap(boolean useCachedValue, String id, Map<String, UseVariableI<?>> vars, Supplier<String> varSupplier) {
+        UseVariableDefinitionI varDef = this.getPossibleDefinitions().get(id);
+        if (useCachedValue) {
+            Pair<Long, UseVariableI<?>> cached = cachedVariableValues.get(id);
+            if (cached != null && System.currentTimeMillis() - cached.getLeft() <= varDef.getCacheLifetime()) {
+                vars.put(varDef.getId(), cached.getRight());
+                return;
+            }
+        }
+        StringUseVariable value = new StringUseVariable(varDef, varSupplier.get());
+        cachedVariableValues.put(id, Pair.of(System.currentTimeMillis(), value));
+        vars.put(varDef.getId(), value);
+    }
+
+    private void clearFromCache(String id) {
+        cachedVariableValues.remove(id);
+    }
+
+    public Map<String, UseVariableI<?>> generateVariables(boolean useCachedValue) {
+        long start = System.currentTimeMillis();
         //TODO : generate only used variables
         Map<String, UseVariableI<?>> vars = new HashMap<>();
         Date currentDate = new Date();
         //Current date
-        UseVariableDefinitionI currentDateDef = this.getPossibleDefinitions().get("CurrentDate");
-        vars.put(currentDateDef.getId(), new StringUseVariable(currentDateDef, StringUtils.dateToStringWithoutHour(currentDate)));
-        //Current time
-        UseVariableDefinitionI currentTimeDef = this.getPossibleDefinitions().get("CurrentTime");
-        vars.put(currentTimeDef.getId(), new StringUseVariable(currentTimeDef, StringUtils.dateToStringDateWithOnlyHoursMinuteSecond(currentDate)));
-        //Current time - TODO : move to StringUtils
-        UseVariableDefinitionI currentTimeWithoutSecondsDef = this.getPossibleDefinitions().get("CurrentTimeWithoutSeconds");
-        vars.put(currentTimeWithoutSecondsDef.getId(), new StringUseVariable(currentTimeWithoutSecondsDef, DATE_ONLY_HOURS_MIN.format(currentDate)));
-        //Current day of week
-        UseVariableDefinitionI currentDayOfWeekDef = this.getPossibleDefinitions().get("CurrentDayOfWeek");
-        vars.put(currentDayOfWeekDef.getId(),
-                new StringUseVariable(currentTimeDef, LocalDate.now().getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.getDefault())));
-        //Current text in editor
-        UseVariableDefinitionI currentTextInEditor = this.getPossibleDefinitions().get("CurrentTextInEditor");
-        vars.put(currentTextInEditor.getId(),
-                new StringUseVariable(currentTextInEditor, WritingStateController.INSTANCE.currentTextProperty().get()));
-        // Last word
-        UseVariableDefinitionI currentWordInEditor = this.getPossibleDefinitions().get("CurrentWordInEditor");
-        vars.put(currentWordInEditor.getId(), new StringUseVariable(currentWordInEditor, WritingStateController.INSTANCE.currentWordProperty().get()));
-        // Last word
-        UseVariableDefinitionI lastCompleteWordInEditor = this.getPossibleDefinitions().get("LastCompleteWordInEditor");
-        vars.put(lastCompleteWordInEditor.getId(),
-                new StringUseVariable(lastCompleteWordInEditor, WritingStateController.INSTANCE.lastCompleteWordProperty().get()));
-        // Last char
-        UseVariableDefinitionI currentCharInEditor = this.getPossibleDefinitions().get("CurrentCharInEditor");
-        vars.put(currentCharInEditor.getId(), new StringUseVariable(currentCharInEditor, WritingStateController.INSTANCE.currentCharProperty().get()));
-
-        // Current text in clipboard (JavaFX)
-        UseVariableDefinitionI currentTextInClipboard = this.getPossibleDefinitions().get("CurrentTextInClipboard");
-        vars.put(currentTextInClipboard.getId(), new StringUseVariable(currentTextInClipboard, getClipboardContent()));
-
-        // Battery level + remaining time
-        double batteryLevel = 0.0;
-        double batteryRemainingTime = 0.0;
-        try {
-            SystemInfo si = new SystemInfo();
-            List<PowerSource> powerSources = si.getHardware().getPowerSources();
-            if (!CollectionUtils.isEmpty(powerSources)) {
-                PowerSource powerSource = powerSources.get(0);
-                double remainingCapacityPercent = powerSource.getRemainingCapacityPercent();
-                batteryLevel = remainingCapacityPercent != 1.0 ? remainingCapacityPercent : (1.0 * powerSource.getCurrentCapacity()) / powerSource.getMaxCapacity();
-                double timeRemainingEstimated = powerSource.getTimeRemainingEstimated();
-                batteryRemainingTime = timeRemainingEstimated >= 0 ? timeRemainingEstimated : powerSource.getTimeRemainingInstant();
+        putToVarMap(useCachedValue, "CurrentDate", vars, () -> StringUtils.dateToStringWithoutHour(currentDate));
+        putToVarMap(useCachedValue, "CurrentTime", vars, () -> StringUtils.dateToStringDateWithOnlyHoursMinuteSecond(currentDate));
+        putToVarMap(useCachedValue, "CurrentTimeWithoutSeconds", vars, () -> DATE_ONLY_HOURS_MIN.format(currentDate));
+        putToVarMap(useCachedValue, "CurrentDayOfWeek", vars, () -> LocalDate.now().getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.getDefault()));
+        putToVarMap(useCachedValue, "CurrentTextInEditor", vars, () -> WritingStateController.INSTANCE.currentTextProperty().get());
+        putToVarMap(useCachedValue, "CurrentWordInEditor", vars, () -> WritingStateController.INSTANCE.currentWordProperty().get());
+        putToVarMap(useCachedValue, "LastCompleteWordInEditor", vars, () -> WritingStateController.INSTANCE.lastCompleteWordProperty().get());
+        putToVarMap(useCachedValue, "CurrentCharInEditor", vars, () -> WritingStateController.INSTANCE.currentCharProperty().get());
+        putToVarMap(useCachedValue, "CurrentTextInClipboard", vars, this::getClipboardContent);
+        putToVarMap(useCachedValue, "BatteryLevel", vars, () -> {
+            try {
+                SystemInfo si = new SystemInfo();
+                List<PowerSource> powerSources = si.getHardware().getPowerSources();
+                if (!CollectionUtils.isEmpty(powerSources)) {
+                    PowerSource powerSource = powerSources.get(0);
+                    double remainingCapacityPercent = powerSource.getRemainingCapacityPercent();
+                    double batteryLevel = remainingCapacityPercent != 1.0 ? remainingCapacityPercent : (1.0 * powerSource.getCurrentCapacity()) / powerSource.getMaxCapacity();
+                    return "" + (int) (batteryLevel * 100.0) + "%";
+                }
+            } catch (Throwable t) {
+                LOGGER.warn("Couldn't get power source information", t);
             }
-        } catch (Throwable t) {
-            LOGGER.warn("Couldn't get power source information", t);
-        }
-        UseVariableDefinitionI batteryLevelDef = getPossibleDefinitions().get("BatteryLevel");
-        vars.put(batteryLevelDef.getId(), new StringUseVariable(batteryLevelDef, "" + (int) (batteryLevel * 100.0) + "%"));
-
-        UseVariableDefinitionI batteryTimeRemainingDef = getPossibleDefinitions().get("BatteryTimeRemaining");
-        vars.put(batteryTimeRemainingDef.getId(), new StringUseVariable(batteryTimeRemainingDef, org.lifecompanion.util.StringUtils.durationToString((int) batteryRemainingTime)));
-
-
-        //Current over part
-        GridPartComponentI currentOverPart = SelectionModeController.INSTANCE.currentOverPartProperty().get();
-        String currentOverPartName = "";
-        String currentOverGridName = "";
-        if (currentOverPart != null) {
-            currentOverPartName = currentOverPart.nameProperty().get();
-            if (currentOverPart.gridParentProperty().get() != null) {
-                currentOverGridName = currentOverPart.gridParentProperty().get().nameProperty().get();
+            return "?";
+        });
+        putToVarMap(useCachedValue, "BatteryTimeRemaining", vars, () -> {
+            try {
+                SystemInfo si = new SystemInfo();
+                List<PowerSource> powerSources = si.getHardware().getPowerSources();
+                if (!CollectionUtils.isEmpty(powerSources)) {
+                    PowerSource powerSource = powerSources.get(0);
+                    double timeRemainingEstimated = powerSource.getTimeRemainingEstimated();
+                    double batteryRemainingTime = timeRemainingEstimated >= 0 ? timeRemainingEstimated : powerSource.getTimeRemainingInstant();
+                    return org.lifecompanion.util.StringUtils.durationToString((int) batteryRemainingTime);
+                }
+            } catch (Throwable t) {
+                LOGGER.warn("Couldn't get power source information", t);
             }
-        }
-        UseVariableDefinitionI currentOverPartNameDef = this.getPossibleDefinitions().get("CurrentOverPartName");
-        UseVariableDefinitionI currentOverGridNameDef = this.getPossibleDefinitions().get("CurrentOverPartGridParentName");
-        vars.put(currentOverPartNameDef.getId(), new StringUseVariable(currentOverPartNameDef, currentOverPartName));
-        vars.put(currentOverGridNameDef.getId(), new StringUseVariable(currentOverGridNameDef, currentOverGridName));
+            return "?";
+        });
+        putToVarMap(useCachedValue, "CurrentOverPartName", vars, () -> {
+            GridPartComponentI currentOverPart = SelectionModeController.INSTANCE.currentOverPartProperty().get();
+            return currentOverPart != null ? currentOverPart.nameProperty().get() : "";
+        });
+        putToVarMap(useCachedValue, "CurrentOverPartGridParentName", vars, () -> {
+            GridPartComponentI currentOverPart = SelectionModeController.INSTANCE.currentOverPartProperty().get();
+            if (currentOverPart != null) {
+                if (currentOverPart.gridParentProperty().get() != null) {
+                    return currentOverPart.gridParentProperty().get().nameProperty().get();
+                }
+            }
+            return "";
+        });
 
         //Generate plugin variable and merge
+        // FIXME : generate individual variables depending on use the cache or not
         Map<String, UseVariableI<?>> pluginVariables = PluginController.INSTANCE.generatePluginsUseVariable();
         vars.putAll(pluginVariables);
+
         //Call listener
         for (Consumer<Map<String, UseVariableI<?>>> listener : this.variableUpdateListeners) {
             listener.accept(vars);
         }
+
+        LOGGER.info("Took {} ms to generate use variable", System.currentTimeMillis() - start);
         return vars;
     }
 
@@ -327,15 +357,23 @@ public enum UseVariableController implements ModeListenerI {
      */
     // Class part : "Variables replacement"
     //========================================================================
+    public String createText(boolean useCachedValue, String text, final Map<String, UseVariableI<?>> variables) {
+        return createText(useCachedValue, text, variables, null);
+    }
+
     public String createText(String text, final Map<String, UseVariableI<?>> variables) {
-        return createText(text, variables, null);
+        return createText(false, text, variables, null);
     }
 
     public String createText(String text, final Map<String, UseVariableI<?>> variables, Function<String, String> variableValueTransformer) {
+        return createText(false, text, variables, variableValueTransformer);
+    }
+
+    public String createText(boolean useCachedValue, String text, final Map<String, UseVariableI<?>> variables, Function<String, String> variableValueTransformer) {
         if (text == null || text.isEmpty()) {
             return text;
         }
-        Map<String, UseVariableI<?>> updatedVariables = generateVariables();
+        Map<String, UseVariableI<?>> updatedVariables = generateVariables(useCachedValue);
         if (variables != null) {
             variables.putAll(updatedVariables);
         }
@@ -362,17 +400,26 @@ public enum UseVariableController implements ModeListenerI {
     //========================================================================
 
     /**
-     * To request a new variable udpate.<br>
-     * Variable will be update every second, but you could need to manually update variables.
+     * Equivalent to {@link #requestVariablesUpdate(boolean)} with useCachedValue to false
      */
     public void requestVariablesUpdate() {
-        FXThreadUtils.runOnFXThread(this::updateInformationKeyOptions);
+        this.requestVariablesUpdate(false);
     }
 
-    private void updateInformationKeyOptions() {
+    /**
+     * To request a new variable update.<br>
+     * Variable will be updated every second, but you could need to manually update variables.
+     *
+     * @param useCachedValue true if the variable cached values should be used
+     */
+    public void requestVariablesUpdate(boolean useCachedValue) {
+        FXThreadUtils.runOnFXThread(() -> this.updateInformationKeyOptions(useCachedValue));
+    }
+
+    private void updateInformationKeyOptions(boolean useCachedValue) {
         if (!CollectionUtils.isEmpty(this.variablesInformationKeyOptions) || !CollectionUtils.isEmpty(this.variableUpdateListeners)) {
             long start = System.currentTimeMillis();
-            Map<String, UseVariableI<?>> variables = this.generateVariables();
+            Map<String, UseVariableI<?>> variables = this.generateVariables(useCachedValue);
             for (VariableInformationKeyOption infoKeyOption : this.variablesInformationKeyOptions) {
                 infoKeyOption.updateKeyInformations(variables);
             }
@@ -419,21 +466,23 @@ public enum UseVariableController implements ModeListenerI {
         this.keyUpdateTimeLine.stop();
         this.variablesInformationKeyOptions.clear();
         removeVariableUpdateListener();
+        this.cachedVariableValues.clear();
     }
 
     private void registerVariableUpdateListener() {
-        //Need immediate update when current part change
-        SelectionModeController.INSTANCE.currentOverPartProperty().addListener(this.requestInformationKeyUpdateListener);
-        WritingStateController.INSTANCE.currentWordProperty().addListener(this.requestInformationKeyUpdateListener);
-        WritingStateController.INSTANCE.currentCharProperty().addListener(this.requestInformationKeyUpdateListener);
-        WritingStateController.INSTANCE.lastCompleteWordProperty().addListener(this.requestInformationKeyUpdateListener);
+        SelectionModeController.INSTANCE.currentOverPartProperty().addListener(this.listenerCurrentOverPart);
+        WritingStateController.INSTANCE.currentWordProperty().addListener(this.listenerCurrentWord);
+        WritingStateController.INSTANCE.currentCharProperty().addListener(this.listenerCurrentChar);
+        WritingStateController.INSTANCE.lastCompleteWordProperty().addListener(this.listenerLastCompleteWord);
+        WritingStateController.INSTANCE.currentTextProperty().addListener(this.listenerCurrentText);
     }
 
     private void removeVariableUpdateListener() {
-        SelectionModeController.INSTANCE.currentOverPartProperty().removeListener(this.requestInformationKeyUpdateListener);
-        WritingStateController.INSTANCE.currentWordProperty().removeListener(this.requestInformationKeyUpdateListener);
-        WritingStateController.INSTANCE.currentCharProperty().removeListener(this.requestInformationKeyUpdateListener);
-        WritingStateController.INSTANCE.lastCompleteWordProperty().removeListener(this.requestInformationKeyUpdateListener);
+        SelectionModeController.INSTANCE.currentOverPartProperty().removeListener(this.listenerCurrentOverPart);
+        WritingStateController.INSTANCE.currentWordProperty().removeListener(this.listenerCurrentWord);
+        WritingStateController.INSTANCE.currentCharProperty().removeListener(this.listenerCurrentChar);
+        WritingStateController.INSTANCE.lastCompleteWordProperty().removeListener(this.listenerLastCompleteWord);
+        WritingStateController.INSTANCE.currentTextProperty().removeListener(this.listenerCurrentText);
     }
     //========================================================================
 

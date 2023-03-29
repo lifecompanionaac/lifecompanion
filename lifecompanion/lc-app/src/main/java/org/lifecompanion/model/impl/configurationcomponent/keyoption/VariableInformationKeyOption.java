@@ -81,7 +81,7 @@ public class VariableInformationKeyOption extends AbstractKeyOption {
     public void updateKeyInformations(final Map<String, UseVariableI<?>> variables) {
         GridPartKeyComponentI key = this.attachedKey.get();
         key.textContentProperty().unbind();
-        key.textContentProperty().set(UseVariableController.INSTANCE.createText(this.wantedDisplayedInformation.get(), variables));
+        key.textContentProperty().set(UseVariableController.INSTANCE.createText(true, this.wantedDisplayedInformation.get(), variables));
     }
 
 }

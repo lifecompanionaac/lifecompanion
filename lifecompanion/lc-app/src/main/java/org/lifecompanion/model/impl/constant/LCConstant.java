@@ -51,7 +51,6 @@ public class LCConstant {
 
     public static final String ARG_LAUNCH_CONFIG = "-directLaunchOn";
     public static final String ARG_IMPORT_LAUNCH_CONFIG = "-directImportAndLaunch";
-
     // ========================================================================
 
     // Class part : "Files constant"
@@ -90,6 +89,11 @@ public class LCConstant {
     //========================================================================
     public final static String CONFIG_FILE_NAME = "configuration.cfg";
     //========================================================================
+
+    // USE VARIABLE
+    // ========================================================================
+    public final static long DEFAULT_USE_VARIABLE_LIFETIME = 5000;
+    // ========================================================================
 
     // CONFIGURATION LOAD/SAVE
     // ========================================================================
