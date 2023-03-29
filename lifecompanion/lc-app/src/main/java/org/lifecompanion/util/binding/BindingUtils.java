@@ -29,6 +29,7 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
 import org.lifecompanion.util.LangUtils;
+import org.lifecompanion.util.model.CountingMap;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -49,7 +50,15 @@ public class BindingUtils {
         };
     }
 
-    // Should be checked and replaced with V2 implementation
+    /**
+     * Helper to create a list change listener.
+     *
+     * @param forEachAdd    called on each added element
+     * @param forEachRemove called on each removed element
+     * @param <T>           list type
+     * @return the listener
+     * @deprecated see {@link #createListChangeListenerV2(Consumer, Consumer)} instead
+     */
     @Deprecated
     public static <T> ListChangeListener<T> createListChangeListener(final Consumer<T> forEachAdd, final Consumer<T> forEachRemove) {
         ListChangeListener<T> changeListener = (change) -> {
@@ -71,20 +80,60 @@ public class BindingUtils {
         return changeListener;
     }
 
+    /**
+     * Helper to create a list change listener, but that will take the element counts into account.<br>
+     * This means that if the element is added twice, only one call to onAdd will be made. Following the same principle, onRemove will be called only the element is not in the list anymore.<br>
+     * <br> Note that even if the list is given to this method, listener should be added later with {@link ObservableList#addListener(ListChangeListener)}
+     *
+     * @param list     the list where binding will be added
+     * @param onAdd    called on each unique add (element was not in the list before)
+     * @param onRemove called on each unique remove (element is not in the list anymore)
+     * @param <T>      the list type
+     * @return the change listener
+     */
+    public static <T> ListChangeListener<? super T> createUniqueAddOrRemoveListener(ObservableList<T> list, Consumer<T> onAdd, Consumer<T> onRemove) {
+        CountingMap<T> counts = new CountingMap<>();
+        counts.setCountsFrom(list);
+        return c -> {
+            CountingMap<T> countsBeforeChange = counts.clone();
+            while (c.next()) {
+                if (c.wasPermutated() || c.wasUpdated()) {
+                    // Don't do anything
+                } else {
+                    LangUtils.consumeEachIn(c.getRemoved(), counts::decrement);
+                    LangUtils.consumeEachIn(c.getAddedSubList(), counts::increment);
+                }
+            }
+            countsBeforeChange.forEach((e, v) -> {
+                if (counts.getCount(e) == 0) {
+                    onRemove.accept(e);
+                }
+            });
+            counts.forEach((e, v) -> {
+                if (countsBeforeChange.getCount(e) == 0) {
+                    onAdd.accept(e);
+                }
+            });
+        };
+    }
 
+    /**
+     * See {@link #createListChangeListenerV2(Consumer, Consumer, Runnable)}
+     */
     public static <T> ListChangeListener<T> createListChangeListenerV2(final Consumer<T> forEachAdd, final Consumer<T> forEachRemove) {
         return createListChangeListenerV2(forEachAdd, forEachRemove, null);
     }
 
     /**
-     * This version is correctly implemented for other actions that simple add/remove
-     * be careful : this doesn't guaranty that removed element is not in the list anymore...
+     * Helper to create list change listener.<br>
+     * Note that this will create exact change listener : if an element is added/removed twice in the list, the changes will be propagated.<br>
+     * If you just need to detect if an element is contained in the list no matter its contains count, you should use {@link #createUniqueAddOrRemoveListener(ObservableList, Consumer, Consumer)}
      *
-     * @param forEachAdd
-     * @param forEachRemove
-     * @param onChangeProcessed
-     * @param <T>
-     * @return
+     * @param forEachAdd        called on each element added
+     * @param forEachRemove     called on each element remove
+     * @param onChangeProcessed called once every change are processed
+     * @param <T>               list type
+     * @return the listener
      */
     public static <T> ListChangeListener<T> createListChangeListenerV2(final Consumer<T> forEachAdd, final Consumer<T> forEachRemove, Runnable onChangeProcessed) {
         return (c) -> {
@@ -93,8 +142,7 @@ public class BindingUtils {
                     // Don't do anything
                 } else {
                     // Order is important here : removed should be handled before added
-                    // this is related to ModifiableObservableListBase.setAll implementation (it does clear() then addAll(...) in the same Change)
-                    LangUtils.consumeEachIn(c.getRemoved(), forEachRemove);// FIXME : does this should be implemented with testing each removed to check if there are still in the list ?
+                    LangUtils.consumeEachIn(c.getRemoved(), forEachRemove);
                     LangUtils.consumeEachIn(c.getAddedSubList(), forEachAdd);
                 }
             }
