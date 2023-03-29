@@ -227,7 +227,7 @@ public enum UseVariableController implements ModeListenerI {
         StringUseVariable value = new StringUseVariable(varDef, varSupplier.get());
         cachedVariableValues.put(id, Pair.of(System.currentTimeMillis(), value));
         vars.put(varDef.getId(), value);
-        LOGGER.info("\t {} computed in {} ms", id, System.currentTimeMillis() - start);
+        // LOGGER.info("\t {} computed in {} ms", id, System.currentTimeMillis() - start);
     }
 
     private void clearFromCache(String id) {
