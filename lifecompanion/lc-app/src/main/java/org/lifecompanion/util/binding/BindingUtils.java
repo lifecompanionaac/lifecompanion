@@ -91,7 +91,7 @@ public class BindingUtils {
      * @param <T>      the list type
      * @return the change listener
      */
-    public static <T> ListChangeListener<? super T> createUniqueAddOrRemoveListener(ObservableList<T> list, Consumer<T> onAdd, Consumer<T> onRemove) {
+    public static <T> ListChangeListener<T> createUniqueAddOrRemoveListener(ObservableList<T> list, Consumer<T> onAdd, Consumer<T> onRemove) {
         CountingMap<T> counts = new CountingMap<>();
         counts.setCountsFrom(list);
         return c -> {
