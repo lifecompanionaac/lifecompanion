@@ -8,7 +8,7 @@
 
 ### Corrections/ajustements
 
-- ...
+- Ticket #224 : correction de certains problèmes avec les actions "Aller à"
 
 ## 1.4.8 - 24/03/2023
 
