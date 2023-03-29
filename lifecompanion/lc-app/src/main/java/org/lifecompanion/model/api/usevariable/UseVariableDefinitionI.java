@@ -55,4 +55,10 @@ public interface UseVariableDefinitionI {
      * Note that this will still update rate of the variable user (eg {@link org.lifecompanion.controller.usevariable.UseVariableController} which is never less than 1 second)
      */
     long getCacheLifetime();
+
+    /**
+     * @return true if for this variable, the cache should be used even if the user ask for a non cached variable.<br>
+     * This can be useful for variable that are expensive to compute.
+     */
+    boolean isCacheForced();
 }

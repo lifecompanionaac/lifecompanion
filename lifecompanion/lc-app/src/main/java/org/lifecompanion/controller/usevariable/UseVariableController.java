@@ -45,6 +45,7 @@ import org.lifecompanion.model.api.usevariable.UseVariableI;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.VariableInformationKeyOption;
 import org.lifecompanion.model.impl.usevariable.StringUseVariable;
 import org.lifecompanion.model.impl.usevariable.UseVariableDefinition;
+import org.lifecompanion.util.ThreadUtils;
 import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -190,9 +191,9 @@ public enum UseVariableController implements ModeListenerI {
         this.addDef(new UseVariableDefinition("CurrentTextInClipboard", "use.variable.current.text.in.clipboard.name",
                 "use.variable.current.text.in.clipboard.description", "use.variable.current.text.in.clipboard.example", 1000));
         this.addDef(new UseVariableDefinition("BatteryLevel", "use.variable.battery.level.percent.name",
-                "use.variable.battery.level.percent.description", "use.variable.battery.level.percent.example", 20_000));
+                "use.variable.battery.level.percent.description", "use.variable.battery.level.percent.example", 30_000, true));
         this.addDef(new UseVariableDefinition("BatteryTimeRemaining", "use.variable.battery.time.remaining.name",
-                "use.variable.battery.time.remaining.description", "use.variable.battery.time.remaining.example", 20_000));
+                "use.variable.battery.time.remaining.description", "use.variable.battery.time.remaining.example", 30_000, true));
         //Init plugin
         PluginController.INSTANCE.getUseVariableDefinitions().registerListenerAndDrainCache(this::addDef);
     }
@@ -215,16 +216,18 @@ public enum UseVariableController implements ModeListenerI {
     //========================================================================
     private void putToVarMap(boolean useCachedValue, String id, Map<String, UseVariableI<?>> vars, Supplier<String> varSupplier) {
         UseVariableDefinitionI varDef = this.getPossibleDefinitions().get(id);
-        if (useCachedValue) {
+        if (useCachedValue || varDef.isCacheForced()) {
             Pair<Long, UseVariableI<?>> cached = cachedVariableValues.get(id);
             if (cached != null && System.currentTimeMillis() - cached.getLeft() <= varDef.getCacheLifetime()) {
                 vars.put(varDef.getId(), cached.getRight());
                 return;
             }
         }
+        long start = System.currentTimeMillis();
         StringUseVariable value = new StringUseVariable(varDef, varSupplier.get());
         cachedVariableValues.put(id, Pair.of(System.currentTimeMillis(), value));
         vars.put(varDef.getId(), value);
+        LOGGER.info("\t {} computed in {} ms", id, System.currentTimeMillis() - start);
     }
 
     private void clearFromCache(String id) {
@@ -300,7 +303,8 @@ public enum UseVariableController implements ModeListenerI {
             listener.accept(vars);
         }
 
-        LOGGER.info("Took {} ms to generate use variable", System.currentTimeMillis() - start);
+        LOGGER.info("Took {} ms to generate use variable (cache {})", System.currentTimeMillis() - start, useCachedValue);
+        // ThreadUtils.printCurrentThreadStackTraceOnOut();
         return vars;
     }
 

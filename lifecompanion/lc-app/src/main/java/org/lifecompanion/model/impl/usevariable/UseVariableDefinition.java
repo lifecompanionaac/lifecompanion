@@ -36,18 +36,24 @@ public class UseVariableDefinition implements UseVariableDefinitionI {
     private final String descriptionId;
     private final String exampleValueId;
     private final long cacheLifetime;
+    private final boolean cacheForced;
 
-    public UseVariableDefinition(final String id, final String nameId, final String descriptionId, final String exampleValueId, long cacheLifetime) {
+    public UseVariableDefinition(final String id, final String nameId, final String descriptionId, final String exampleValueId, long cacheLifetime, boolean cacheForced) {
         this.id = id;
         this.nameId = nameId;
         this.descriptionId = descriptionId;
         this.exampleValueId = exampleValueId;
         this.cacheLifetime = cacheLifetime;
+        this.cacheForced = cacheForced;
     }
 
 
     public UseVariableDefinition(final String id, final String nameId, final String descriptionId, final String exampleValueId) {
-        this(id, nameId, descriptionId, exampleValueId, DEFAULT_USE_VARIABLE_LIFETIME);
+        this(id, nameId, descriptionId, exampleValueId, DEFAULT_USE_VARIABLE_LIFETIME, false);
+    }
+
+    public UseVariableDefinition(final String id, final String nameId, final String descriptionId, final String exampleValueId, long cacheLifetime) {
+        this(id, nameId, descriptionId, exampleValueId, cacheLifetime, false);
     }
 
     public UseVariableDefinition(final String id) {
@@ -77,6 +83,11 @@ public class UseVariableDefinition implements UseVariableDefinitionI {
     @Override
     public long getCacheLifetime() {
         return cacheLifetime;
+    }
+
+    @Override
+    public boolean isCacheForced() {
+        return cacheForced;
     }
 
 }

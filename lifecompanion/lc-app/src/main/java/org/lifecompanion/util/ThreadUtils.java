@@ -24,6 +24,7 @@ import org.lifecompanion.framework.utils.LCNamedThreadFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.PrintStream;
 import java.util.concurrent.*;
 
 public class ThreadUtils {
@@ -75,11 +76,20 @@ public class ThreadUtils {
     }
 
     public static void printCurrentThreadStackTraceOnErr() {
+        printCurrentThreadStackTraceOn(System.err);
+    }
+
+    public static void printCurrentThreadStackTraceOnOut() {
+        printCurrentThreadStackTraceOn(System.out);
+    }
+
+    public static void printCurrentThreadStackTraceOn(PrintStream pw) {
         StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-        for (int i = 1; i < stackTrace.length && i < 50; i++) {
-            System.err.println(stackTrace[i]);
+        for (int i = 2; i < stackTrace.length && i < 50; i++) {
+            pw.println("\t" + stackTrace[i]);
         }
     }
+
 
     public static void runAfter(long delay, Runnable runnable) {
         Thread delayThread = new Thread(() -> {
