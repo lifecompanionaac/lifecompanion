@@ -37,7 +37,7 @@ public class MultipleStylePropertyHelper<K, T extends StyleI<?>> {
         this.styleGetter = styleGetter;
         this.propertyChangeListeners = properties;
         this.elements.forEach(this::elementAdded);
-        this.elements.addListener(BindingUtils.createListChangeListener(this::elementAdded, this::elementRemoved));
+        this.elements.addListener(BindingUtils.createListChangeListenerV2(this::elementAdded, this::elementRemoved));
     }
 
     // ABSTRACT

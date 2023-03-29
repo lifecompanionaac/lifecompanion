@@ -62,7 +62,7 @@ public abstract class AbstractCategorizedItemsView<T extends CategorizedElementI
             this.getChildren().add(cellView);
         }
         //On list change
-        this.items.addListener(BindingUtils.createListChangeListener((added) -> {
+        this.items.addListener(BindingUtils.createListChangeListenerV2((added) -> {
             //Get view
             AbstractCategorizedItemView<T> addedView;
             if (this.itemsView.containsKey(added)) {

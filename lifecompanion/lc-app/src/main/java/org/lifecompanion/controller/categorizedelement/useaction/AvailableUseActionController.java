@@ -71,7 +71,7 @@ public enum AvailableUseActionController {
      * Create action listener on list
      */
     private void initActionListListener() {
-        this.availableAction.addListener(BindingUtils.createListChangeListener(this::addAction, null));
+        this.availableAction.addListener(BindingUtils.createListChangeListenerV2(this::addAction, null));
         PluginController.INSTANCE.getUseActions().registerListenerAndDrainCache(added -> addActionType(added,true));
     }
 

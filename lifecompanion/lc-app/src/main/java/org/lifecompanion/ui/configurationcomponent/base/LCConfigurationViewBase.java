@@ -92,11 +92,10 @@ public class LCConfigurationViewBase extends Pane implements LCViewInitHelper, C
     @Override
     public void initBinding() {
         //Binding on children, remove or add component when changes happens
-        this.model.getChildren().addListener(childrenChangeListener = BindingUtils.createListChangeListener((added) -> {
-            paneForRootComponents.getChildren().add(added.getDisplay(viewProvider, useCache).getView());
-        }, (removed) -> {
-            paneForRootComponents.getChildren().remove(removed.getDisplay(viewProvider, useCache).getView());
-        }));
+        this.model.getChildren()
+                .addListener(childrenChangeListener = BindingUtils.createUniqueAddOrRemoveListener(this.model.getChildren(),
+                        added -> paneForRootComponents.getChildren().add(added.getDisplay(viewProvider, useCache).getView()),
+                        removed -> paneForRootComponents.getChildren().remove(removed.getDisplay(viewProvider, useCache).getView())));
     }
 
     @Override

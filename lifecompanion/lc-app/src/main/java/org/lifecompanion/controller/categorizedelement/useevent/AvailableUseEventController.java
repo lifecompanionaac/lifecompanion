@@ -71,7 +71,7 @@ public enum AvailableUseEventController {
      * Create action listener on list
      */
     private void initActionListListener() {
-        this.availableEventGenerator.addListener(BindingUtils.createListChangeListener(this::addUseEvent, this::removeUseEvent));
+        this.availableEventGenerator.addListener(BindingUtils.createListChangeListenerV2(this::addUseEvent, null));
     }
 
     /**
@@ -88,20 +88,6 @@ public enum AvailableUseEventController {
         }
         //Add the event to its subcategory
         subCategory.getContent().add(useEventGenerator);
-    }
-
-    private void removeUseEvent(final UseEventGeneratorI useEventGenerator) {
-        //Remove from sub category list
-        useEventGenerator.getCategory().getContent().remove(useEventGenerator);
-        //Remove sub category if empty
-        UseEventMainCategoryI mainCategory = useEventGenerator.getCategory().getMainCategory();
-        if (CollectionUtils.isEmpty(useEventGenerator.getCategory().getContent())) {
-            mainCategory.getSubCategories().remove(useEventGenerator.getCategory());
-        }
-        //Remove main category if empty
-        if (CollectionUtils.isEmpty(mainCategory.getSubCategories())) {
-            this.mainCategories.remove(mainCategory);
-        }
     }
     //========================================================================
 

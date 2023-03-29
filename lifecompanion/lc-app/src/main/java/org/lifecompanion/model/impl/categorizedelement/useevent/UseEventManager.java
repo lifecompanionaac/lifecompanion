@@ -50,12 +50,12 @@ public class UseEventManager implements UseEventManagerI {
     public UseEventManager(final UseEventGeneratorHolderI parentP) {
         this.parent = parentP;
         this.eventGenerators = FXCollections.observableArrayList();
-        this.eventGenerators.addListener(BindingUtils.createListChangeListener((add) -> {
-            add.configurationParentProperty().bind(parentP.configurationParentProperty());
-        }, (removed) -> {
-            removed.configurationParentProperty().unbind();
-            removed.configurationParentProperty().set(null);
-        }));
+        this.eventGenerators.addListener(BindingUtils.createUniqueAddOrRemoveListener(this.eventGenerators,
+                add -> add.configurationParentProperty().bind(parentP.configurationParentProperty()),
+                removed -> {
+                    removed.configurationParentProperty().unbind();
+                    removed.configurationParentProperty().set(null);
+                }));
     }
 
     // Class part : "Public API"
