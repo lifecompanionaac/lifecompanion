@@ -227,6 +227,7 @@ public class LCConfigurationDescription implements LCConfigurationDescriptionI {
             try {
                 ImageIO.write(buffImage, "png", imageFile);
                 configurationImageToSave = null;
+                this.imagePath = imageFile.getAbsolutePath();
                 LCConfigurationDescription.LOGGER.info("Configuration description preview saved to {}", imageFile);
             } catch (IOException e) {
                 LCConfigurationDescription.LOGGER.warn("Couldn't save the configuration preview image", e);

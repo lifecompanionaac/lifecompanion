@@ -167,6 +167,7 @@ public class ConfigurationDescriptionAdvancedListCell extends ListCell<LCConfigu
             this.labelConfigAuthor.textProperty().unbind();
             this.setGraphic(null);
         } else {
+            this.configurationImage.setImage(null);
             itemP.requestImageLoad(image -> {
                 if (itemP == getItem()) {
                     this.configurationImage.setImage(image);

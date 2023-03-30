@@ -7,6 +7,7 @@
 - Optimisation importante des performances
 - Ticket #224 : correction de certains problèmes avec les actions "Aller à"
 - Ajout d'une fonction d'installation automatique des extensions
+- Correction de l'image des configurations dans la liste (lors d'une création)
 
 ## 1.4.8 - 24/03/2023
 
