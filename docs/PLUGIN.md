@@ -553,26 +553,31 @@ public List<UseVariableDefinitionI> getDefinedVariables() {
     );
 }
 ```
-This is just the definition of use variable making it available in the user UI to add a variable to various elements (text, use info keys, etc.)
+This is just the definition of use variable making it available in the user UI to add a variable to various elements (text, use info keys, etc.).
+
+You can adjust your variable definition to tune how your variable should be update : for that, use other `UseVariableDefinition` constructor that will allow you to set values for `getCacheLifetime()` and `isCacheForced()`.
 
 #### Update variable value
 
-When use mode is running, the plugin method `generateVariables` will be called every second to get the variable new values. If your variable computing is expensive, you may have to cache its value internaly. Your method should create a new Map containing the generated variables with their definition and their value.
+When use mode is running, the plugin method `getSupplierForUseVariable` will be called on variable updates (and the result can be cached internally by LifeCompanion). Note that the variable value will not be then generated on each call depending on the active variable value cache in LifeCompanion.
 
 ```java
 @Override
-public Map<String, UseVariableI<?>> generateVariables(Map<String, UseVariableDefinitionI> variablesToGenerate) {
-    Map<String, UseVariableI<?>> vars = new HashMap<>();
-    vars.put(SpellGameController.VAR_ID_USER_SCORE,
-            new StringUseVariable(
-                    variablesToGenerate.get(SpellGameController.VAR_ID_USER_SCORE),
-                    String.valueOf(SpellGameController.INSTANCE.getUserScore())
-            ));
-    return vars;
+public Function<UseVariableDefinitionI, UseVariableI<?>> getSupplierForUseVariable(String id) {
+    return switch (id) {
+        case SpellGameController.VAR_ID_USER_SCORE -> def -> new IntegerUseVariable(def, SpellGameController.INSTANCE.getUserScore());
+        case SpellGameController.VAR_ID_WORD_INDEX -> def -> new IntegerUseVariable(def, SpellGameController.INSTANCE.getWordIndex());
+        case SpellGameController.VAR_ID_WORD_COUNT -> def -> new IntegerUseVariable(def, SpellGameController.INSTANCE.getWordCount());
+        case SpellGameController.VAR_ID_CURRENT_STEP_INSTRUCTION -> def -> new StringUseVariable(def, SpellGameController.INSTANCE.getCurrentStepInstruction());
+        case SpellGameController.VAR_ID_CURRENT_STEP_INSTRUCTION_WITH_WORD -> def -> new StringUseVariable(def, SpellGameController.INSTANCE.getCurrentStepInstructionWithWord());
+        default -> null;
+    };
 }
 ```
 
-Sometimes it can be usefull to update a variable earlier than the next automatic call to `generateVariables` : for example you want the user score to be updated immediatly after the correct action (instead of waiting ~1 second). For this, you can call `UseVariableController.INSTANCE.requestVariablesUpdate()` and the update will be done as soon as possible (with a supplementary call to `generatedVariables`)
+Sometimes it can be usefull to update a variable earlier than the next automatic update : for example you want the user score to be updated immediatly after the correct action (instead of waiting ~1 second). For this, you can call `UseVariableController.INSTANCE.requestVariablesUpdate()` and the update will be done as soon as possible. Note that this method will try to generate the variable without getting their values from the cache, but if your variable definition return `true` to `isCacheForced()` you may also need to call `UseVariableController.INSTANCE.clearFromCache(...)`.
+
+Previous plugin may use `generateVariables` method to generate their variable values, but for newer implementation, you should stick to `getSupplierForUseVariable`.
 
 ### Word prediction
 

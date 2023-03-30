@@ -45,6 +45,7 @@ import org.lifecompanion.model.api.usevariable.UseVariableI;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.VariableInformationKeyOption;
 import org.lifecompanion.model.impl.usevariable.StringUseVariable;
 import org.lifecompanion.model.impl.usevariable.UseVariableDefinition;
+import org.lifecompanion.util.ThreadUtils;
 import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -230,7 +231,12 @@ public enum UseVariableController implements ModeListenerI {
         }
     }
 
-    private void clearFromCache(String id) {
+    /**
+     * Remove the variable cached value for the given variable ID
+     *
+     * @param id the use variable ID
+     */
+    public void clearFromCache(String id) {
         cachedVariableValues.remove(id);
     }
 
@@ -316,8 +322,7 @@ public enum UseVariableController implements ModeListenerI {
             listener.accept(vars);
         }
 
-        LOGGER.info("Took {} ms to generate use variable (cache {})", System.currentTimeMillis() - start, useCachedValue);
-        // ThreadUtils.printCurrentThreadStackTraceOnOut();
+        LOGGER.debug("Took {} ms to generate use variable (cache {})", System.currentTimeMillis() - start, useCachedValue);
         return vars;
     }
 
