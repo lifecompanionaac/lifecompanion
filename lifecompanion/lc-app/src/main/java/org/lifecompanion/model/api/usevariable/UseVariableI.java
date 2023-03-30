@@ -39,7 +39,7 @@ public interface UseVariableI<T> {
 
 	/**
 	 * @return the displayable form for this variable's value.<br>
-	 * Basic implementation will call the {@link #toString()} method of {@link #getValue()}
+	 * Basic implementation will call the {@link Object#toString()} method of {@link #getValue()}
 	 */
 	String toStringValue();
 }

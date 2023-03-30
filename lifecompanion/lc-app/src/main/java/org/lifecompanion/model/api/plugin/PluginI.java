@@ -29,6 +29,8 @@ import org.lifecompanion.controller.usevariable.UseVariableController;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 public interface PluginI extends ModeListenerI {
 
@@ -108,14 +110,31 @@ public interface PluginI extends ModeListenerI {
     }
 
     /**
+     * Should return the use variable supplier for the given variable ID.<br>
+     * Note that the given ID will always be a part of the ID returned by the variables from {@link #getDefinedVariables()}.<br>
+     * This will allow LifeCompanion to cache variable values.<br>
+     * Note that this method should be used instead of {@link #generateVariables(Map)}<br>
+     * If your variable generation can be time-consuming, you should think about setting appropriated values to {@link UseVariableDefinitionI#getCacheLifetime()} and {@link UseVariableDefinitionI#isCacheForced()}
+     *
+     * @param id the variable ID (never null)
+     * @return the supplier that will generate the variable value
+     */
+    default Function<UseVariableDefinitionI, UseVariableI<?>> getSupplierForUseVariable(String id) {
+        return null;
+    }
+
+    /**
+     * <strong>This method is deprecated and kept only for backward compatibilities reasons, you should use {@link #getSupplierForUseVariable(String)} instead.</strong><br>
      * This will be called every second by LifeCompanion to get the value for each variable defined by plugin.<br>
      * Note that this will not be called only if {@link #getDefinedVariables()} return variables.<br>
      * This can also be called if a manual variable update is needed (by calling {@link UseVariableController#requestVariablesUpdate()} ()} )
      *
      * @param variablesToGenerate the map that contains all plugin variables ( id -> variable definition)
      * @return the map with each variable value by id (you should use definition in given map for your use variable)
+     * @deprecated
      */
-    default Map<String, UseVariableI<?>> generateVariables(Map<String, UseVariableDefinitionI> variablesToGenerate){
+    @Deprecated
+    default Map<String, UseVariableI<?>> generateVariables(Map<String, UseVariableDefinitionI> variablesToGenerate) {
         return null;
     }
     //========================================================================

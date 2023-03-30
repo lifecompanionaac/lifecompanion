@@ -45,7 +45,6 @@ import org.lifecompanion.model.api.usevariable.UseVariableI;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.VariableInformationKeyOption;
 import org.lifecompanion.model.impl.usevariable.StringUseVariable;
 import org.lifecompanion.model.impl.usevariable.UseVariableDefinition;
-import org.lifecompanion.util.ThreadUtils;
 import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -204,6 +203,37 @@ public enum UseVariableController implements ModeListenerI {
     }
     //========================================================================
 
+
+    // Class part : "Variable generation"
+    //========================================================================
+    private void putToVarMap(boolean useCachedValue, String id, Map<String, UseVariableI<?>> vars, Supplier<String> stringVarSupplier) {
+        putToVarMap(useCachedValue, id, vars, def -> new StringUseVariable(def, stringVarSupplier.get()));
+    }
+
+    private void putToVarMap(boolean useCachedValue, String id, Map<String, UseVariableI<?>> vars, Function<UseVariableDefinitionI, UseVariableI<?>> varSupplier) {
+        UseVariableDefinitionI varDef = this.getPossibleDefinitions().get(id);
+        if (varDef != null && varSupplier != null) {
+            if (useCachedValue || varDef.isCacheForced()) {
+                Pair<Long, UseVariableI<?>> cached = cachedVariableValues.get(id);
+                if (cached != null && System.currentTimeMillis() - cached.getLeft() <= varDef.getCacheLifetime()) {
+                    vars.put(varDef.getId(), cached.getRight());
+                    return;
+                }
+            }
+            long start = System.currentTimeMillis();
+            UseVariableI<?> value = varSupplier.apply(varDef);
+            cachedVariableValues.put(id, Pair.of(System.currentTimeMillis(), value));
+            vars.put(varDef.getId(), value);
+            LOGGER.debug("\t{} computed in {} ms", id, System.currentTimeMillis() - start);
+        } else {
+            LOGGER.warn("Didn't find any use variable definition or supplier for variable {}", id);
+        }
+    }
+
+    private void clearFromCache(String id) {
+        cachedVariableValues.remove(id);
+    }
+
     /**
      * To generate use variable.<br>
      * This should be called directly only if you really need.<br>
@@ -212,28 +242,6 @@ public enum UseVariableController implements ModeListenerI {
      * @param useCachedValue if the cached values for variables should be used
      * @return the generated variables.
      */
-    // Class part : "Variable generation"
-    //========================================================================
-    private void putToVarMap(boolean useCachedValue, String id, Map<String, UseVariableI<?>> vars, Supplier<String> varSupplier) {
-        UseVariableDefinitionI varDef = this.getPossibleDefinitions().get(id);
-        if (useCachedValue || varDef.isCacheForced()) {
-            Pair<Long, UseVariableI<?>> cached = cachedVariableValues.get(id);
-            if (cached != null && System.currentTimeMillis() - cached.getLeft() <= varDef.getCacheLifetime()) {
-                vars.put(varDef.getId(), cached.getRight());
-                return;
-            }
-        }
-        long start = System.currentTimeMillis();
-        StringUseVariable value = new StringUseVariable(varDef, varSupplier.get());
-        cachedVariableValues.put(id, Pair.of(System.currentTimeMillis(), value));
-        vars.put(varDef.getId(), value);
-        // LOGGER.info("\t {} computed in {} ms", id, System.currentTimeMillis() - start);
-    }
-
-    private void clearFromCache(String id) {
-        cachedVariableValues.remove(id);
-    }
-
     public Map<String, UseVariableI<?>> generateVariables(boolean useCachedValue) {
         long start = System.currentTimeMillis();
         //TODO : generate only used variables
@@ -293,10 +301,15 @@ public enum UseVariableController implements ModeListenerI {
             return "";
         });
 
-        //Generate plugin variable and merge
-        // FIXME : generate individual variables depending on use the cache or not
-        Map<String, UseVariableI<?>> pluginVariables = PluginController.INSTANCE.generatePluginsUseVariable();
-        vars.putAll(pluginVariables);
+        // BACKWARD COMPATIBILITY : generate plugin variable and merge
+        Map<String, UseVariableI<?>> oldPluginVars = PluginController.INSTANCE.generatePluginsUseVariableBackwardCompatibility();
+        vars.putAll(oldPluginVars);
+
+        // Plugin variable : new unique var generation method
+        List<Pair<String, Function<UseVariableDefinitionI, UseVariableI<?>>>> pluginVars = PluginController.INSTANCE.generatePluginUseVariable();
+        for (Pair<String, Function<UseVariableDefinitionI, UseVariableI<?>>> pluginVar : pluginVars) {
+            putToVarMap(useCachedValue, pluginVar.getLeft(), vars, pluginVar.getRight());
+        }
 
         //Call listener
         for (Consumer<Map<String, UseVariableI<?>>> listener : this.variableUpdateListeners) {

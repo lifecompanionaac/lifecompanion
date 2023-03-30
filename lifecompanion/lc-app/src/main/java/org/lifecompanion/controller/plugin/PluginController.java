@@ -71,6 +71,7 @@ import java.io.PrintWriter;
 import java.lang.reflect.Constructor;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -115,9 +116,29 @@ public enum PluginController implements LCStateListener, ModeListenerI {
         return loadedPlugins.containsKey(pluginDependencyId);
     }
 
-    public Map<String, UseVariableI<?>> generatePluginsUseVariable() {
+    public List<Pair<String, Function<UseVariableDefinitionI, UseVariableI<?>>>> generatePluginUseVariable() {
+        // TODO : should be cached in use mode ?
+        List<Pair<String, Function<UseVariableDefinitionI, UseVariableI<?>>>> vars = new ArrayList<>();
+        for (PluginI plugin : this.loadedPlugins.values()) {
+            try {
+                List<UseVariableDefinitionI> defVar = plugin.getDefinedVariables();
+                if (!CollectionUtils.isEmpty(defVar)) {
+                    Map<String, UseVariableDefinitionI> varForPlugin = defVar.stream()
+                            .collect(Collectors.toMap(UseVariableDefinitionI::getId, v -> v));
+                    for (Map.Entry<String, UseVariableDefinitionI> idAndDef : varForPlugin.entrySet()) {
+                        vars.add(Pair.of(idAndDef.getKey(), plugin.getSupplierForUseVariable(idAndDef.getKey())));
+                    }
+                }
+            } catch (Throwable t) {
+                PluginController.LOGGER.warn("Couldn't generate plugin use variable for plugin {}", plugin.getClass(), t);
+            }
+        }
+        return vars;
+    }
+
+    @SuppressWarnings("deprecation")
+    public Map<String, UseVariableI<?>> generatePluginsUseVariableBackwardCompatibility() {
         Map<String, UseVariableI<?>> vars = new HashMap<>();
-        // TODO : variable map should be cached when running in use mode
         // For each plugin, generate the variables
         for (PluginI plugin : this.loadedPlugins.values()) {
             try {
