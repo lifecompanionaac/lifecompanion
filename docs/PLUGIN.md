@@ -575,9 +575,9 @@ public Function<UseVariableDefinitionI, UseVariableI<?>> getSupplierForUseVariab
 }
 ```
 
-Sometimes it can be usefull to update a variable earlier than the next automatic update : for example you want the user score to be updated immediatly after the correct action (instead of waiting ~1 second). For this, you can call `UseVariableController.INSTANCE.requestVariablesUpdate()` and the update will be done as soon as possible. Note that this method will try to generate the variable without getting their values from the cache, but if your variable definition return `true` to `isCacheForced()` you may also need to call `UseVariableController.INSTANCE.clearFromCache(...)`.
+Sometimes it can be usefull to update a variable earlier than the next automatic update : for example you want the user score to be updated immediatly after the correct action (instead of waiting ~1 second). For this, you can call `UseVariableController.INSTANCE.requestVariablesUpdate()` and the update will be done as soon as possible. Note that this method will try to generate the variables without getting their values from the cache, but if your variable definition return `true` to `isCacheForced()` you may also need to call `UseVariableController.INSTANCE.clearFromCache(...)` before requesting an update.
 
-Previous plugin may use `generateVariables` method to generate their variable values, but for newer implementation, you should stick to `getSupplierForUseVariable`.
+*Some plugins may use `generateVariables` method to generate their variable values, but for newer implementation, you should stick to `getSupplierForUseVariable`.*
 
 ### Word prediction
 

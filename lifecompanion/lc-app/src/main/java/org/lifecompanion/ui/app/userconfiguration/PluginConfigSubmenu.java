@@ -98,4 +98,8 @@ public class PluginConfigSubmenu extends BorderPane implements LCViewInitHelper,
     public Region getView() {
         return this;
     }
+
+    public void launchDownloadForPlugin(String pluginId) {
+        ConfigActionController.INSTANCE.executeAction(new PluginActions.AddPluginFromWeb(buttonAddPluginFromWeb, pluginId));
+    }
 }

@@ -47,6 +47,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * View to display and set {@link UserConfigurationController}
@@ -158,6 +159,13 @@ public class UserConfigurationView extends BorderPane implements LCViewInitHelpe
             this.viewContentBorderPane.changeCenter(tab.getView());
         }
     }
+
+    public <T extends UserConfigSubmenuI> void showTab(Class<T> tabType, Consumer<T> ifFound) {
+        userConfigTabs.stream().filter(tab -> tabType.isAssignableFrom(tab.getClass())).findAny().ifPresentOrElse(tab -> {
+            showTab(tab);
+            ifFound.accept((T) tab);
+        }, () -> LOGGER.warn("Could not find any tab of type {}", tabType));
+    }
     //========================================================================
 
     @Override
@@ -176,11 +184,18 @@ public class UserConfigurationView extends BorderPane implements LCViewInitHelpe
     // Class part : "Update"
     //========================================================================
     public void showView() {
+        showView(null);
+    }
+
+    public void showView(Runnable callback) {
         //Loading param task
         LoadUserConfigTask loadTask = new LoadUserConfigTask();
         loadTask.setOnSucceeded(event -> {
             this.userConfigTabs.forEach(UserConfigSubmenuI::updateFields);
             this.parentStage.show();
+            if (callback != null) {
+                callback.run();
+            }
         });
         AsyncExecutorController.INSTANCE.addAndExecute(false, false, loadTask);
     }

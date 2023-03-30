@@ -1,15 +1,12 @@
 # LIFECOMPANION CHANGELOG
 
-## 1.4.9 - XX/XX/2023
-
-### Fonctionnalités
-
-- ...
+## 1.4.9 - 30/03/2023
 
 ### Corrections/ajustements
 
-- Optimisation des performances avec les cases d'information variable
+- Optimisation importante des performances
 - Ticket #224 : correction de certains problèmes avec les actions "Aller à"
+- Ajout d'une fonction d'installation automatique des extensions
 
 ## 1.4.8 - 24/03/2023
 

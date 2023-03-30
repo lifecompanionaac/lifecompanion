@@ -19,9 +19,16 @@
 package org.lifecompanion.controller.userconfiguration;
 
 import javafx.beans.property.*;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import org.lifecompanion.controller.lifecycle.AppModeController;
+import org.lifecompanion.controller.metrics.SessionStatsController;
+import org.lifecompanion.controller.systemvk.SystemVirtualKeyboardController;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.controller.appinstallation.InstallationConfigurationController;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
+import org.lifecompanion.ui.app.userconfiguration.UserConfigStage;
+import org.lifecompanion.ui.app.userconfiguration.UserConfigurationView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,6 +69,8 @@ public enum UserConfigurationController {
     private final BooleanProperty secureGoToEditMode;
     private final BooleanProperty autoConfigurationProfileBackup;
 
+    private UserConfigurationView userConfigurationView;
+
     UserConfigurationController() {
         this.userLanguage = new SimpleStringProperty("fr");
         this.mainFrameWidth = new SimpleIntegerProperty(1200);
@@ -82,6 +91,19 @@ public enum UserConfigurationController {
 
     private File getConfigFile() {
         return new File(InstallationConfigurationController.INSTANCE.getUserDirectory().getPath() + File.separator + LCConstant.CONFIG_FILE_NAME);
+    }
+
+    public UserConfigurationView getUserConfigurationView() {
+        if (this.userConfigurationView == null) {
+            Stage userConfigStage = new UserConfigStage(AppModeController.INSTANCE.getEditModeContext().getStage());
+            userConfigStage.centerOnScreen();
+            this.userConfigurationView = new UserConfigurationView(userConfigStage);
+            Scene settingScene = new Scene(this.userConfigurationView);
+            SystemVirtualKeyboardController.INSTANCE.registerScene(settingScene);
+            SessionStatsController.INSTANCE.registerScene(settingScene);
+            userConfigStage.setScene(settingScene);
+        }
+        return userConfigurationView;
     }
 
     /**

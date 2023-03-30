@@ -27,6 +27,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.fxmisc.easybind.EasyBind;
+import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
 import org.lifecompanion.model.api.profile.LCProfileI;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.profile.ProfileController;
@@ -52,7 +53,6 @@ public class ProfileDetailView extends HBox implements LCViewInitHelper {
     private Hyperlink linkLifeCompanionPreferences;
     private Hyperlink linkShowConfigTips;
     private ProfileIconView profileIconView;
-    private UserConfigurationView userConfigurationView;
 
     public ProfileDetailView() {
         this.initAll();
@@ -87,23 +87,7 @@ public class ProfileDetailView extends HBox implements LCViewInitHelper {
         this.linkManagerProfiles.setOnAction((ea) -> {
             ProfileConfigSelectionController.INSTANCE.setProfileStep(ProfileConfigStep.PROFILE_LIST, null, null);
         });
-        this.linkLifeCompanionPreferences.setOnAction((ea) -> {
-            this.initUserConfigurationView();
-            this.userConfigurationView.showView();
-        });
-    }
-
-    private void initUserConfigurationView() {
-        //Init if needed
-        if (this.userConfigurationView == null) {
-            Stage userConfigStage = new UserConfigStage(AppModeController.INSTANCE.getEditModeContext().getStage());
-            userConfigStage.centerOnScreen();
-            this.userConfigurationView = new UserConfigurationView(userConfigStage);
-            Scene settingScene = new Scene(this.userConfigurationView);
-            SystemVirtualKeyboardController.INSTANCE.registerScene(settingScene);
-            SessionStatsController.INSTANCE.registerScene(settingScene);
-            userConfigStage.setScene(settingScene);
-        }
+        this.linkLifeCompanionPreferences.setOnAction((ea) -> UserConfigurationController.INSTANCE.getUserConfigurationView().showView());
     }
 
     @Override

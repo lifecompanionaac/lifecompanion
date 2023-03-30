@@ -615,10 +615,10 @@ public enum PluginController implements LCStateListener, ModeListenerI {
     }
 
     // FIXME user dependencies
-    public String checkPluginDependencies(final Element xmlRoot) throws LCException {
+    public Pair<String, Set<String>> checkPluginDependencies(final Element xmlRoot) throws LCException {
         Element pluginsElement = xmlRoot.getChild(PluginController.NODE_PLUGINS);
         if (pluginsElement != null) {
-
+            Set<String> ids = new HashSet<>();
             StringBuilder warningMessage = new StringBuilder();
 
             Element pluginDependenciesElement = pluginsElement.getChild(PluginController.NODE_PLUGIN_DEPENDENCIES);
@@ -628,12 +628,14 @@ public enum PluginController implements LCStateListener, ModeListenerI {
                 PluginInfo loadedPluginInfo = getPluginById(usedPluginInfo.getPluginId(), pi -> pi.stateProperty().get() == PluginInfoState.LOADED).stream().findFirst().orElseGet(() -> null);
                 if (loadedPluginInfo == null) {
                     warningMessage.append("\n - ").append(Translation.getText("configuration.loading.plugin.not.loaded", usedPluginInfo.getPluginName(), usedPluginInfo.getPluginVersion()));
+                    ids.add(usedPluginInfo.getPluginId());
                 } else if (VersionUtils.compare(loadedPluginInfo.getPluginVersion(), usedPluginInfo.getPluginVersion()) < 0) {
                     warningMessage.append("\n - ").append(Translation.getText("configuration.loading.plugin.older.version", loadedPluginInfo.getPluginName(), loadedPluginInfo.getPluginVersion(),
                             usedPluginInfo.getPluginVersion()));
+                    ids.add(usedPluginInfo.getPluginId());
                 }
             }
-            return warningMessage.length() > 0 ? warningMessage.toString() : null;
+            return warningMessage.length() > 0 ? Pair.of(warningMessage.toString(), ids) : null;
         }
         return null;
     }

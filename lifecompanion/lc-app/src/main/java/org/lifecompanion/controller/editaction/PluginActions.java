@@ -21,6 +21,7 @@ package org.lifecompanion.controller.editaction;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
+import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
 import org.lifecompanion.model.api.editaction.BaseEditActionI;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.controller.devmode.DevModeController;
@@ -34,10 +35,11 @@ import org.lifecompanion.controller.editmode.FileChooserType;
 import org.lifecompanion.controller.editmode.LCStateController;
 import org.lifecompanion.model.impl.notification.LCNotification;
 import org.lifecompanion.controller.editmode.LCFileChoosers;
+import org.lifecompanion.ui.app.userconfiguration.PluginConfigSubmenu;
+import org.lifecompanion.ui.app.userconfiguration.UserConfigurationView;
 import org.lifecompanion.ui.notification.LCNotificationController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
-import org.lifecompanion.framework.model.server.update.ApplicationPluginUpdate;
 import org.lifecompanion.framework.utils.Pair;
 import org.lifecompanion.util.javafx.DialogUtils;
 import org.lifecompanion.util.javafx.FXUtils;
@@ -46,6 +48,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Class that keep actions relative to plugins.
@@ -73,14 +76,26 @@ public class PluginActions {
         try {
             Pair<PluginController.PluginAddResult, PluginInfo> loadResult = PluginController.INSTANCE.tryToAddPluginFrom(pluginFile);
             PluginInfo addedPluginInfo = loadResult.getRight();
-            DialogUtils
+            boolean suggestRestart = loadResult.getLeft() == PluginController.PluginAddResult.ADDED_TO_NEXT_RESTART;
+            ButtonType typeRestartOrOk = new ButtonType(Translation.getText(suggestRestart ? "button.type.restart.now" : "button.type.ok"), ButtonBar.ButtonData.YES);
+            ButtonType typeLater = new ButtonType(Translation.getText("button.type.restart.later"), ButtonBar.ButtonData.CANCEL_CLOSE);
+            ButtonType[] buttonTypes = suggestRestart ? new ButtonType[]{typeRestartOrOk, typeLater} : new ButtonType[]{typeRestartOrOk};
+            ButtonType result = DialogUtils
                     .alertWithSourceAndType(source, Alert.AlertType.INFORMATION)
                     .withHeaderText(Translation.getText("plugin.loading.header.text.info"))
                     .withContentText(
-                            loadResult.getLeft() == PluginController.PluginAddResult.ADDED_TO_NEXT_RESTART ? Translation.getText("plugin.load.success.base.message", addedPluginInfo.getPluginName(), addedPluginInfo.getPluginVersion()) :
-                                    loadResult.getLeft() == PluginController.PluginAddResult.NOT_ADDED_ALREADY_SAME_OR_NEWER ? Translation.getText("plugin.load.success.base.not.loaded.update", addedPluginInfo.getPluginName(), addedPluginInfo.getPluginVersion()) : null
+                            loadResult.getLeft() == PluginController.PluginAddResult.ADDED_TO_NEXT_RESTART ? Translation.getText("plugin.load.success.base.message",
+                                    addedPluginInfo.getPluginName(),
+                                    addedPluginInfo.getPluginVersion()) :
+                                    loadResult.getLeft() == PluginController.PluginAddResult.NOT_ADDED_ALREADY_SAME_OR_NEWER ? Translation.getText("plugin.load.success.base.not.loaded.update",
+                                            addedPluginInfo.getPluginName(),
+                                            addedPluginInfo.getPluginVersion()) : null
                     )
-                    .show();
+                    .withButtonTypes(buttonTypes)
+                    .showAndWait();
+            if (suggestRestart && result == typeRestartOrOk) {
+                InstallationController.INSTANCE.restart(null);
+            }
         } catch (Throwable t) {
             PluginActions.LOGGER.error("Error while loading plugin {}", pluginFile, t);
             ErrorHandlingController.INSTANCE.showErrorNotificationWithExceptionDetails(Translation.getText("plugin.error.unknown.error", pluginFile.getName()), t);
@@ -115,21 +130,31 @@ public class PluginActions {
 
 
     public static class AddPluginFromWeb implements BaseEditActionI {
-
+        private final String presetPluginId;
         private final Node source;
 
         public AddPluginFromWeb(final Node source) {
+            this(source, null);
+        }
+
+        public AddPluginFromWeb(final Node source, String presetPluginId) {
             this.source = source;
+            this.presetPluginId = presetPluginId;
         }
 
         @Override
         public void doAction() throws LCException {
             showAddPluginWarningDialog(source);
-            final String pluginId = DialogUtils
-                    .textInputDialogWithSource(source)
-                    .withHeaderText(Translation.getText("plugin.installation.dialog.selection.header"))
-                    .withContentText(Translation.getText("plugin.installation.dialog.selection.message"))
-                    .showAndWait();
+            String pluginId;
+            if (presetPluginId == null) {
+                pluginId = DialogUtils
+                        .textInputDialogWithSource(source)
+                        .withHeaderText(Translation.getText("plugin.installation.dialog.selection.header"))
+                        .withContentText(Translation.getText("plugin.installation.dialog.selection.message"))
+                        .showAndWait();
+            } else {
+                pluginId = presetPluginId;
+            }
             if (StringUtils.isNotBlank(pluginId)) {
                 DownloadPluginTask pluginDownloadTask = InstallationController.INSTANCE.createPluginDownloadTask(StringUtils.stripToEmpty(pluginId));
                 pluginDownloadTask.setOnSucceeded(result -> {
@@ -183,23 +208,28 @@ public class PluginActions {
         CheckElementPluginTask checkElementPluginTask = new CheckElementPluginTask(xmlFile);
         checkElementPluginTask.setOnSucceeded(event -> {
             try {
-                String errorMessage = checkElementPluginTask.get();
-                if (errorMessage != null) {
+                Pair<String, Set<String>> loadedPluginIdsAndMessages = checkElementPluginTask.get();
+                if (loadedPluginIdsAndMessages != null) {
                     ButtonType typeCancel = new ButtonType(Translation.getText("button.type.cancel"), ButtonBar.ButtonData.CANCEL_CLOSE);
-                    ButtonType typeContinueAnyway = new ButtonType(Translation.getText("button.type.continue.anyway"), ButtonBar.ButtonData.YES);
+                    ButtonType typeContinueAnyway = new ButtonType(Translation.getText("button.type.continue.anyway"), ButtonBar.ButtonData.NO);
+                    ButtonType typeTryInstall = new ButtonType(Translation.getText("button.type.try.install"), ButtonBar.ButtonData.YES);
                     ButtonType result = DialogUtils.alertWithSourceAndType(source, Alert.AlertType.WARNING)
                             .withHeaderText(Translation.getText("configuration.warning.plugin.message.header"))
-                            .withContentText(Translation.getText("configuration.warning.plugin.message") + errorMessage)
-                            .withButtonTypes(typeCancel, typeContinueAnyway)
+                            .withContentText(Translation.getText("configuration.warning.plugin.message") + loadedPluginIdsAndMessages.getLeft())
+                            .withButtonTypes(typeCancel, typeContinueAnyway, typeTryInstall)
                             .showAndWait();
-                    if (result != typeContinueAnyway) {
+                    if (result == typeTryInstall) {
+                        String pluginId = loadedPluginIdsAndMessages.getRight().isEmpty() ? "unknown" : loadedPluginIdsAndMessages.getRight().iterator().next();
+                        UserConfigurationView userConfigurationView = UserConfigurationController.INSTANCE.getUserConfigurationView();
+                        userConfigurationView.showView(() -> userConfigurationView.showTab(PluginConfigSubmenu.class, pluginConfigSubmenu -> pluginConfigSubmenu.launchDownloadForPlugin(pluginId)));
+                        return;
+                    } else if (result != typeContinueAnyway) {
                         return;
                     }
                 }
             } catch (Exception e) {
                 LOGGER.warn("Couldn't check plugin dependencies", e);
             }
-            // Exit point : if dialog is display and user cancel
             dependencyOk.run();
         });
         checkElementPluginTask.setOnFailed(e -> {
