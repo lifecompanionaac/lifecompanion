@@ -94,7 +94,7 @@ public enum FlircController {
     }
 
     public String getSettings() throws Exception {
-        return analyzeOutputAndFail(waitFor(true, new ProcessBuilder().command(getFlircPath(), "settings"))).stream().collect(Collectors.joining("\n"));
+        return analyzeOutputAndFail(waitFor(true, new ProcessBuilder().command(getFlircPath(), "settings"))).stream().filter(StringUtils::isNotBlank).collect(Collectors.joining("\n"));
     }
 
     private Process waitFor(boolean failForNonZero, ProcessBuilder processBuilder) throws LCException {
