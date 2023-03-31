@@ -16,6 +16,8 @@
     <text key="flirc.plugin.use.action.sub.category.general.name">Envoyer un code</text>
     <text key="flirc.plugin.use.action.send.ir.name">Envoyer un signal infrarouge</text>
     <text key="flirc.plugin.use.action.send.ir.description">Permet d'apprendre un bouton d'une télécommande infrarouge puis ensuite de l'envoyer en mode utilisation. Cela permet de programmer des cases permettant de contrôler un appareil infrarouge (TV, chaîne HIFI, etc.)</text>
+    <text key="flirc.plugin.use.action.send.repeat.ir.name">Envoyer un signal infrarouge et répéter</text>
+    <text key="flirc.plugin.use.action.send.repeat.ir.description">Permet d'apprendre un bouton d'une télécommande infrarouge puis ensuite de l'envoyer en mode utilisation. Cela permet de programmer des cases permettant de contrôler un appareil infrarouge (TV, chaîne HIFI, etc.). Le code est envoyé en continu tant que la touche est appuyée, cela peut être utile pour des boutons volume par exemple.</text>
 
 
     <!-- TASK -->

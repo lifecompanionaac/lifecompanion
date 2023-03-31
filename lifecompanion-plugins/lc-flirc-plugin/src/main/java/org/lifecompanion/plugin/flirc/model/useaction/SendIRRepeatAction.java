@@ -19,13 +19,14 @@
 
 package org.lifecompanion.plugin.flirc.model.useaction;
 
-import javafx.beans.property.*;
+import javafx.beans.property.ObjectProperty;
 import org.jdom2.Element;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
+import org.lifecompanion.model.impl.categorizedelement.useaction.RepeatActionBaseImpl;
 import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.plugin.flirc.controller.FlircController;
@@ -35,17 +36,17 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
-public class SendIRAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SendIRAction.class);
+public class SendIRRepeatAction extends RepeatActionBaseImpl<UseActionTriggerComponentI> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SendIRRepeatAction.class);
 
     private SendIRActionWrapper sendIRActionWrapper;
 
-    public SendIRAction() {
+    public SendIRRepeatAction() {
         super(UseActionTriggerComponentI.class);
         this.order = 10;
         this.category = FlircActionSubCategories.GENERAL;
-        this.nameID = "flirc.plugin.use.action.send.ir.name";
-        this.staticDescriptionID = "flirc.plugin.use.action.send.ir.description";
+        this.nameID = "flirc.plugin.use.action.send.repeat.ir.name";
+        this.staticDescriptionID = "flirc.plugin.use.action.send.repeat.ir.description";
         this.configIconPath = "flirc/icon_send_ir_code.png";
         this.parameterizableAction = true;
         this.sendIRActionWrapper = new SendIRActionWrapper();
@@ -56,8 +57,24 @@ public class SendIRAction extends SimpleUseActionImpl<UseActionTriggerComponentI
         return sendIRActionWrapper.irCodeProperty();
     }
 
+    public Element serialize(IOContextI context) {
+        Element element = XMLObjectSerializer.serializeInto(SendIRRepeatAction.class, this, super.serialize(context));
+        sendIRActionWrapper.serializeImpl(element, context);
+        return element;
+    }
+
+    public void deserialize(Element node, IOContextI context) throws LCException {
+        super.deserialize(node, context);
+        XMLObjectSerializer.deserializeInto(SendIRRepeatAction.class, this, node);
+        sendIRActionWrapper.deserializeImpl(node, context);
+    }
+
     @Override
-    public void execute(UseActionEvent event, Map<String, UseVariableI<?>> variables) {
+    protected void executeFirstBeforeRepeat(UseActionEvent useActionEvent) {
+    }
+
+    @Override
+    protected void executeOnRepeat(UseActionEvent useActionEvent) {
         try {
             IRCode irCode = sendIRActionWrapper.irCodeProperty().get();
             if (irCode != null) {
@@ -69,15 +86,17 @@ public class SendIRAction extends SimpleUseActionImpl<UseActionTriggerComponentI
         }
     }
 
-    public Element serialize(IOContextI context) {
-        Element element = XMLObjectSerializer.serializeInto(SendIRAction.class, this, super.serialize(context));
-        sendIRActionWrapper.serializeImpl(element, context);
-        return element;
+    @Override
+    protected void repeatEnded(UseActionEvent useActionEvent) {
     }
 
-    public void deserialize(Element node, IOContextI context) throws LCException {
-        super.deserialize(node, context);
-        XMLObjectSerializer.deserializeInto(SendIRAction.class, this, node);
-        sendIRActionWrapper.deserializeImpl(node, context);
+    @Override
+    protected long getDelayBeforeRepeatStartMillis() {
+        return 0;
+    }
+
+    @Override
+    protected long getDelayBetweenEachRepeatMillis() {
+        return 0;
     }
 }
