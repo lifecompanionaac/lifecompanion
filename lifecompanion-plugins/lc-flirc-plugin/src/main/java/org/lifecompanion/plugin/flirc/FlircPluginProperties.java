@@ -1,6 +1,6 @@
 package org.lifecompanion.plugin.flirc;
 
-import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.*;
 import org.jdom2.Element;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
@@ -12,16 +12,20 @@ import java.util.Map;
 
 public class FlircPluginProperties extends AbstractPluginConfigProperties {
 
+    private final BooleanProperty enableDebugCharts;
+
     protected FlircPluginProperties(ObjectProperty<LCConfigurationI> parentConfiguration) {
         super(parentConfiguration);
+        this.enableDebugCharts = new SimpleBooleanProperty(false);
     }
 
+    public BooleanProperty enableDebugChartsProperty() {
+        return enableDebugCharts;
+    }
 
     @Override
     public Element serialize(final IOContextI context) {
-        Element element = new Element("FlircPluginProperties");
-        XMLObjectSerializer.serializeInto(FlircPluginProperties.class, this, element);
-        return element;
+        return XMLObjectSerializer.serializeInto(FlircPluginProperties.class, this, new Element("FlircPluginProperties"));
     }
 
     @Override

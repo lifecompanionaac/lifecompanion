@@ -7,14 +7,17 @@ import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.framework.utils.FluentHashMap;
 import org.lifecompanion.framework.utils.Pair;
 import org.lifecompanion.model.impl.exception.LCException;
+import org.lifecompanion.plugin.flirc.model.IRCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public enum FlircController {
     INSTANCE;
@@ -80,8 +83,18 @@ public enum FlircController {
         return dataAsString;
     }
 
-    public void sendIr(String pattern) throws Exception {
-        analyzeOutputAndFail(waitFor(true, new ProcessBuilder().command(getFlircPath(), "sendir", "--pattern=" + pattern)));
+    public void sendIr(IRCode irCode) throws Exception {
+        LOGGER.info("Sending ... {}", irCode);
+        List<String> cmds = new ArrayList<>(List.of(getFlircPath(), "sendir", "--pattern=" + irCode.getPattern()));
+        int repeat = irCode.getSendCount() - 1;
+        if (repeat > 0) {
+            cmds.add("--repeat=" + repeat);
+        }
+        analyzeOutputAndFail(waitFor(true, new ProcessBuilder().command(cmds)));
+    }
+
+    public String getSettings() throws Exception {
+        return analyzeOutputAndFail(waitFor(true, new ProcessBuilder().command(getFlircPath(), "settings"))).stream().collect(Collectors.joining("\n"));
     }
 
     private Process waitFor(boolean failForNonZero, ProcessBuilder processBuilder) throws LCException {

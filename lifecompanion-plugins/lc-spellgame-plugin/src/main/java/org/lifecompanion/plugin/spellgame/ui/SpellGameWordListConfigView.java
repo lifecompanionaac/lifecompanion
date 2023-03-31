@@ -231,4 +231,10 @@ public class SpellGameWordListConfigView extends BorderPane implements GeneralCo
     @Override
     public void saveChanges() {
     }
+
+    @Override
+    public boolean shouldCancelBeConfirmed() {
+        // FIXME : implement correctly
+        return GeneralConfigurationStepViewI.super.shouldCancelBeConfirmed();
+    }
 }

@@ -8,8 +8,12 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import org.lifecompanion.controller.io.IOHelper;
+import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.framework.utils.Pair;
+import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
+import org.lifecompanion.plugin.flirc.FlircPlugin;
+import org.lifecompanion.plugin.flirc.FlircPluginProperties;
 import org.lifecompanion.util.DesktopUtils;
 import org.lifecompanion.util.IOUtils;
 import org.slf4j.Logger;
@@ -55,7 +59,8 @@ public class FlircUtils {
     }
 
     public static void debugComparisons(List<Pair<Double, Pair<String, String>>> comparisons) {
-        if (StringUtils.isNotBlank(System.getProperty("org.lifecompanion.debug.dev.env"))) {
+        LCConfigurationI configuration = AppModeController.INSTANCE.getEditModeContext().getConfiguration();
+        if (configuration != null && configuration.getPluginConfigProperties(FlircPlugin.ID, FlircPluginProperties.class).enableDebugChartsProperty().get()) {
             try {
                 File destDir = new File(IOUtils.getTempDir("ir-debug") + File.separator + IOHelper.DATE_FORMAT_FILENAME_WITH_TIME_SECOND.format(new Date()));
                 destDir.mkdirs();

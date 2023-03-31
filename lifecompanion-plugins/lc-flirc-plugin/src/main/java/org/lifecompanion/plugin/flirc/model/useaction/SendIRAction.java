@@ -19,8 +19,7 @@
 
 package org.lifecompanion.plugin.flirc.model.useaction;
 
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import org.jdom2.Element;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
@@ -30,6 +29,7 @@ import org.lifecompanion.model.api.usevariable.UseVariableI;
 import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.plugin.flirc.controller.FlircController;
+import org.lifecompanion.plugin.flirc.model.IRCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +38,7 @@ import java.util.Map;
 public class SendIRAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
     private static final Logger LOGGER = LoggerFactory.getLogger(SendIRAction.class);
 
-    private StringProperty pattern;
+    private final ObjectProperty<IRCode> irCode;
 
     public SendIRAction() {
         super(UseActionTriggerComponentI.class);
@@ -48,30 +48,46 @@ public class SendIRAction extends SimpleUseActionImpl<UseActionTriggerComponentI
         this.staticDescriptionID = "flirc.plugin.use.action.send.ir.description";
         this.configIconPath = "flirc/icon_send_ir_code.png";
         this.parameterizableAction = true;
-        this.pattern = new SimpleStringProperty();
+        this.irCode = new SimpleObjectProperty<>();
         this.variableDescriptionProperty().set(getStaticDescription());
     }
 
-    public StringProperty patternProperty() {
-        return pattern;
+    public ObjectProperty<IRCode> irCodeProperty() {
+        return irCode;
     }
 
     @Override
     public void execute(UseActionEvent event, Map<String, UseVariableI<?>> variables) {
         try {
-            LOGGER.info("Will send IR pattern {}", pattern.get());
-            FlircController.INSTANCE.sendIr(pattern.get());
+            if (irCode.get() != null) {
+                FlircController.INSTANCE.sendIr(irCode.get());
+            }
+            // FIXME : error handling...
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
+    private static final String NODE_IR_CODE = "IRCode";
+
     public Element serialize(IOContextI context) {
-        return XMLObjectSerializer.serializeInto(SendIRAction.class, this, super.serialize(context));
+        Element element = XMLObjectSerializer.serializeInto(SendIRAction.class, this, super.serialize(context));
+        if (irCode.get() != null) {
+            Element irCodeContainer = new Element(NODE_IR_CODE);
+            element.addContent(irCodeContainer);
+            irCodeContainer.addContent(irCode.get().serialize(context));
+        }
+        return element;
     }
 
     public void deserialize(Element node, IOContextI context) throws LCException {
         super.deserialize(node, context);
         XMLObjectSerializer.deserializeInto(SendIRAction.class, this, node);
+        Element irCodeContainer = node.getChild(NODE_IR_CODE);
+        if (irCodeContainer != null && !irCodeContainer.getChildren().isEmpty()) {
+            IRCode irCodeVal = new IRCode();
+            irCodeVal.deserialize(irCodeContainer.getChildren().get(0), context);
+            this.irCode.set(irCodeVal);
+        }
     }
 }

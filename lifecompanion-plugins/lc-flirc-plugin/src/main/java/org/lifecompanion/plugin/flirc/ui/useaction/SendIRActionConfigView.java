@@ -20,8 +20,8 @@
 package org.lifecompanion.plugin.flirc.ui.useaction;
 
 import javafx.collections.ObservableList;
-import javafx.scene.layout.VBox;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionConfigurationViewI;
 import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
 import org.lifecompanion.plugin.flirc.model.useaction.SendIRAction;
@@ -48,11 +48,11 @@ public class SendIRActionConfigView extends VBox implements UseActionConfigurati
 
     @Override
     public void editStarts(final SendIRAction action, final ObservableList<UseVariableDefinitionI> possibleVariables) {
-        irRecorderField.valueProperty().set(action.patternProperty().get());
+        irRecorderField.valueProperty().set(action.irCodeProperty().get());
     }
 
     @Override
     public void editEnds(final SendIRAction action) {
-        action.patternProperty().set(irRecorderField.valueProperty().get());
+        action.irCodeProperty().set(irRecorderField.valueProperty().get());
     }
 }

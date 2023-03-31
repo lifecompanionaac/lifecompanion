@@ -22,13 +22,21 @@
     <text key="flirc.plugin.ir.learning.task.title">Apprentissage d'un code infrarouge</text>
 
     <!-- UI -->
+    <text key="flirc.plugin.ui.general.config.view.title">FLIRC</text>
+    <text key="flirc.plugin.ui.part.title.general.information">Informations générales</text>
+    <text key="flirc.plugin.ui.field.enable.debug.charts.toggle">Activer les graphiques de debug de l'apprentissage</text>
+    <text key="flirc.plugin.ui.field.enable.debug.charts.toggle.tooltip">Permet de visualiser le résultat des codes IR appris. Permet d'obtenir des informations supplémentaire si un code ne fonctionne pas.</text>
     <text key="flirc.plugin.ui.button.cancel.learning">ANNULER</text>
     <text key="flirc.plugin.ui.button.learn.remote.code">Apprendre un bouton de télécommande</text>
     <text key="flirc.plugin.ui.button.test.code">Tester</text>
     <text key="flirc.plugin.ui.label.explain.record">Cette action permet d'enregistrer un bouton d'une télécommande infrarouge pour l'envoyer ensuite. Il faut donc enregistrer le code avec la télécommande d'origine en appuyant sur celle-ci.</text>
+    <text key="flirc.plugin.ui.label.explain.repeat">Vous pouvez choisir de répéter un bouton afin d'envoyer plusieurs fois le même signal. Cela peut être utile sur certaines touches (volume par exemple)</text>
     <text key="flirc.plugin.ui.info.button.recorded">Bouton enregistré</text>
     <text key="flirc.plugin.ui.info.button.not.recorded">Aucun bouton enregistré</text>
     <text key="flirc.plugin.ui.error.code.not.recorded">Impossible d'enregistrer le bouton</text>
+    <text key="flirc.plugin.ui.label.repeat.count">Répéter le code (X fois)</text>
+    <text key="flirc.plugin.ui.button.get.information">Récupérer les informations de la clé</text>
+    <text key="flirc.plugin.ui.label.no.information">Aucune information</text>
 
     <!-- ALERT -->
     <text key="flirc.plugin.ui.alert.warning.similarity.header">L'apprentissage est de faible qualité</text>
@@ -38,6 +46,7 @@
     <text key="flirc.plugin.notification.success.learning.code">Code de la télécommande appris avec succès</text>
 
     <!-- ERRORS -->
+    <text key="flirc.plugin.error.sending.code">Problème lors de l'envoi du code</text>
     <text key="flirc.plugin.error.unknown.return.code">Une erreur inconnue s'est produite avec la clé FLIRC</text>
     <text key="flirc.plugin.error.cant.start.flirc.process">Impossible de se connecter à l'application FLIRC</text>
     <text key="flirc.plugin.error.communication.error">Problème lors de la communication avec l'application FLIRC</text>

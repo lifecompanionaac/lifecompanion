@@ -1,13 +1,19 @@
 package org.lifecompanion.plugin.flirc.ui.control;
 
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import org.lifecompanion.controller.editaction.AsyncExecutorController;
+import org.lifecompanion.controller.editmode.ErrorHandlingController;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
@@ -17,7 +23,9 @@ import org.lifecompanion.framework.utils.Pair;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.model.impl.notification.LCNotification;
 import org.lifecompanion.plugin.flirc.controller.FlircController;
+import org.lifecompanion.plugin.flirc.model.IRCode;
 import org.lifecompanion.plugin.flirc.utils.FlircUtils;
+import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStepViewI;
 import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.ui.notification.LCNotificationController;
 import org.lifecompanion.util.javafx.DialogUtils;
@@ -38,27 +46,26 @@ public class IRRecorderField extends VBox implements LCViewInitHelper {
 
     public static final DecimalFormat PERCENT_DECIMAL_FORMAT = new DecimalFormat("##0.00");
 
+    private Spinner<Integer> spinnerSendCount;
     private Button buttonLearnCode;
     private Button buttonTestCode;
     private Label labelStatus;
 
-    private final StringProperty value;
+    private final ObjectProperty<IRCode> value;
 
     public IRRecorderField() {
-        this.value = new SimpleStringProperty();
+        this.value = new SimpleObjectProperty<>();
         this.initAll();
     }
 
-    public StringProperty valueProperty() {
+    public ObjectProperty<IRCode> valueProperty() {
         return value;
     }
 
     @Override
     public void initUI() {
-        Label labelExplain = new Label(Translation.getText("flirc.plugin.ui.label.explain.record"));
-        labelExplain.getStyleClass().addAll("text-wrap-enabled", "text-fill-dimgrey");
-
-        //UI
+        Label labelExplainLearn = new Label(Translation.getText("flirc.plugin.ui.label.explain.record"));
+        labelExplainLearn.getStyleClass().addAll("text-wrap-enabled", "text-fill-dimgrey");
         this.buttonLearnCode = FXControlUtils.createLeftTextButton(Translation.getText("flirc.plugin.ui.button.learn.remote.code"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CIRCLE).sizeFactor(1).color(LCGraphicStyle.SECOND_DARK), null);
 
@@ -68,18 +75,39 @@ public class IRRecorderField extends VBox implements LCViewInitHelper {
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.PLAY).sizeFactor(1).color(LCGraphicStyle.MAIN_PRIMARY),
                 null);
 
+        Label labelExplainRepeat = new Label(Translation.getText("flirc.plugin.ui.label.explain.repeat"));
+        labelExplainRepeat.getStyleClass().addAll("text-wrap-enabled", "text-fill-dimgrey");
+        Label labelRepeat = new Label(Translation.getText("flirc.plugin.ui.label.repeat.count"));
+        spinnerSendCount = FXControlUtils.createIntSpinner(1, 20, 1, 1, GeneralConfigurationStepViewI.FIELD_WIDTH);
+        HBox boxRepeat = new HBox(5.0, labelRepeat, spinnerSendCount);
+        labelRepeat.setMaxWidth(Double.MAX_VALUE);
+        HBox.setHgrow(labelRepeat, Priority.ALWAYS);
+        boxRepeat.setPadding(new Insets(0, 5, 0, 5));
+
         //Total
         HBox recordBox = new HBox(5.0, this.buttonLearnCode, new Separator(Orientation.VERTICAL), labelStatus, new Separator(Orientation.VERTICAL), buttonTestCode);
         recordBox.setAlignment(Pos.CENTER);
         this.setSpacing(10.0);
-        this.getChildren().addAll(labelExplain, recordBox);
+        this.getChildren().addAll(labelExplainLearn, recordBox, labelExplainRepeat, boxRepeat);
     }
 
     @Override
     public void initBinding() {
-        buttonTestCode.disableProperty().bind(Bindings.createBooleanBinding(() -> !StringUtils.isNotBlank(value.get()), value));
+        this.value.addListener((obs, ov, nv) -> {
+            if (nv != null) {
+                spinnerSendCount.getValueFactory().setValue(nv.getSendCount());
+            } else {
+                spinnerSendCount.getValueFactory().setValue(1);
+            }
+        });
+        this.spinnerSendCount.valueProperty().addListener((obs, ov, nv) -> {
+            if (nv != null && value.get() != null) {
+                value.get().setSendCount(nv);
+            }
+        });
+        buttonTestCode.disableProperty().bind(value.isNull());
         this.labelStatus.textProperty()
-                .bind(Bindings.createStringBinding(() -> Translation.getText(StringUtils.isNotBlank(value.get()) ? "flirc.plugin.ui.info.button.recorded" : "flirc.plugin.ui.info.button.not.recorded"),
+                .bind(Bindings.createStringBinding(() -> Translation.getText(value.get() != null ? "flirc.plugin.ui.info.button.recorded" : "flirc.plugin.ui.info.button.not.recorded"),
                         value));
     }
 
@@ -87,14 +115,14 @@ public class IRRecorderField extends VBox implements LCViewInitHelper {
     @Override
     public void initListener() {
         this.buttonTestCode.setOnAction(e -> {
-            try {
-                // FIXME thread
-                FlircController.INSTANCE.sendIr(value.get());
-            } catch (Exception ex) {
-                throw new RuntimeException(ex);
-            }
+            AsyncExecutorController.INSTANCE.addAndExecute(false, true, () -> {
+                try {
+                    FlircController.INSTANCE.sendIr(value.get());
+                } catch (Throwable t) {
+                    ErrorHandlingController.INSTANCE.showErrorNotificationWithExceptionDetails(Translation.getText("flirc.plugin.error.sending.code"), t);
+                }
+            });
         });
-
         this.buttonLearnCode.setOnAction(e -> {
             IRLearningDialog irLearningDialog = new IRLearningDialog();
             irLearningDialog.initOwner(FXUtils.getSourceWindow(buttonLearnCode));
@@ -129,10 +157,10 @@ public class IRRecorderField extends VBox implements LCViewInitHelper {
                                         .withContentText(Translation.getText("flirc.plugin.ui.alert.warning.similarity.message", PERCENT_DECIMAL_FORMAT.format(100.0 * bestMatchingCode.getLeft())))
                                         .withButtonTypes(ButtonType.OK)
                                         .showAndWait();
-                            }else {
+                            } else {
                                 LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo("flirc.plugin.notification.success.learning.code"));
                             }
-                            this.value.set(patternToCompare.get(0));
+                            this.value.set(new IRCode(patternToCompare.get(0), spinnerSendCount.getValue()));
                         } else {
                             informNoValidCodeDetected();
                         }

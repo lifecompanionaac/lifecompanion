@@ -60,8 +60,7 @@ public class SpellGamePluginProperties extends AbstractPluginConfigProperties {
 
     @Override
     public Element serialize(final IOContextI context) {
-        Element element = new Element("SpellGamePluginProperties");
-        XMLObjectSerializer.serializeInto(SpellGamePluginProperties.class, this, element);
+        Element element = XMLObjectSerializer.serializeInto(SpellGamePluginProperties.class, this, new Element("SpellGamePluginProperties"));
         Element wordListsElement = new Element(NODE_WORDLISTS);
         for (SpellGameWordList wordList : wordLists) {
             wordListsElement.addContent(wordList.serialize(context));

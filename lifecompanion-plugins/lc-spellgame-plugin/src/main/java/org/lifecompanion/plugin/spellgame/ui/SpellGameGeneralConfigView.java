@@ -214,4 +214,10 @@ public class SpellGameGeneralConfigView extends BorderPane implements GeneralCon
         this.configuration = null;
         this.comboBoxWordList.setItems(null);
     }
+
+    @Override
+    public boolean shouldCancelBeConfirmed() {
+        // FIXME : implement correctly
+        return GeneralConfigurationStepViewI.super.shouldCancelBeConfirmed();
+    }
 }
