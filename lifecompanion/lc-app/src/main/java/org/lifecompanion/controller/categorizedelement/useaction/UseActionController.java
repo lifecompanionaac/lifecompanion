@@ -229,7 +229,8 @@ public enum UseActionController implements LCStateListener, ModeListenerI {
     private void executeSimpleActionsInternal(final UseActionTriggerComponentI useActionTriggerComponent, List<BaseUseActionI<?>> actions, final UseActionEvent event, final Map<String, UseVariableI<?>> variables, final Consumer<ActionExecutionResultI> callback, final boolean inNewThread) {
         if (!this.pauseActionLaunch) {
             List<Consumer<ActionExecutionResultI>> nextActionListener = this.getAndCleanNextSimpleActionListeners(event);
-            final Map<String, UseVariableI<?>> finalVariables = this.checkAndMergeVariables(variables);
+            // Optimization here : don't generate variables if not needed (= no action)
+            final Map<String, UseVariableI<?>> finalVariables = CollectionUtils.isEmpty(actions)? new HashMap<>(): this.checkAndMergeVariables(variables);
             Runnable actionExecutable = () -> {
                 ActionExecutionResultI result = new ActionExecutionResult(true);
                 try {
@@ -289,7 +290,7 @@ public enum UseActionController implements LCStateListener, ModeListenerI {
             variables = new HashMap<>();
         }
         //Merge with the software variables
-        final Map<String, UseVariableI<?>> lcVariables = UseVariableController.INSTANCE.generateVariables();
+        final Map<String, UseVariableI<?>> lcVariables = UseVariableController.INSTANCE.generateVariables(true);
         final Set<String> keys = lcVariables.keySet();
         for (String key : keys) {
             variables.put(key, lcVariables.get(key));

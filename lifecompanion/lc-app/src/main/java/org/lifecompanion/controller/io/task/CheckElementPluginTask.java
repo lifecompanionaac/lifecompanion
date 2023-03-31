@@ -20,10 +20,12 @@
 package org.lifecompanion.controller.io.task;
 
 import org.lifecompanion.controller.io.XMLHelper;
+import org.lifecompanion.framework.utils.Pair;
 import org.lifecompanion.util.model.LCTask;
 import org.lifecompanion.controller.plugin.PluginController;
 
 import java.io.File;
+import java.util.Set;
 
 
 /**
@@ -31,7 +33,7 @@ import java.io.File;
  *
  * @author Mathieu THEBAUD
  */
-public class CheckElementPluginTask extends LCTask<String> {
+public class CheckElementPluginTask extends LCTask<Pair<String, Set<String>>> {
     private final File xmlFile;
 
     public CheckElementPluginTask(final File xmlFile) {
@@ -40,7 +42,7 @@ public class CheckElementPluginTask extends LCTask<String> {
     }
 
     @Override
-    protected String call() throws Exception {
+    protected Pair<String, Set<String>> call() throws Exception {
         return PluginController.INSTANCE.checkPluginDependencies(XMLHelper.readXml(xmlFile));
     }
 }

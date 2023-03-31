@@ -154,7 +154,7 @@ public class GlobalActions {
                     source,
                     Translation.getText("restart.action.confirm.message"),
                     "restart.action.button.name",
-                    () -> InstallationController.INSTANCE.restart("")
+                    () -> InstallationController.INSTANCE.restart(null)
             );
         }
 

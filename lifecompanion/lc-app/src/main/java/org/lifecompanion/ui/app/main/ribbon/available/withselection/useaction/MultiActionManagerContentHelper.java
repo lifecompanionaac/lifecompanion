@@ -42,9 +42,9 @@ public class MultiActionManagerContentHelper {
         this.sourceList = sourceList;
         this.eventType = eventType;
         resultList = FXCollections.observableArrayList();
-        actionListSubListener = BindingUtils.createListChangeListener(this::actionAdded, this::actionRemoved);
+        actionListSubListener = BindingUtils.createListChangeListenerV2(this::actionAdded, this::actionRemoved);
         this.sourceList.forEach(this::elementAdded);
-        sourceListListChangeListener = BindingUtils.createListChangeListener(this::elementAdded, this::elementRemoved);
+        sourceListListChangeListener = BindingUtils.createListChangeListenerV2(this::elementAdded, this::elementRemoved);
         this.sourceList.addListener(sourceListListChangeListener);
     }
 

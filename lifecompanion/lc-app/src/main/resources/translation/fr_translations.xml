@@ -1223,7 +1223,11 @@
   <text key="alert.message.invalid.action.parent.message">Impossible d'ajouter l'action "{}" car elle est incompatible
 		avec l'élément sur lequel vous essayez de l'ajouter.</text>
   <text key="button.type.cancel">Annuler</text>
-  <text key="button.type.continue.anyway">Continuer quand même</text>
+    <text key="button.type.restart.now">Redémarrer maintenant</text>
+    <text key="button.type.restart.later">Redémarrer plus tard</text>
+    <text key="button.type.ok">OK</text>
+  <text key="button.type.continue.anyway">Continuer sans installer</text>
+  <text key="button.type.try.install">Essayer d'installer</text>
   <text key="button.type.duplicate">Dupliquer</text>
   <text key="button.type.justexit">Quitter</text>
   <text key="button.type.justexport">Exporter uniquement</text>
@@ -1274,7 +1278,7 @@
 	<text key="config.duplicate.question.select.profile">Sélectionner le profil à dupliquer</text>
 	<text key="profile.duplicate.task.title">Duplication d'un profil</text>
   <text key="configuration.warning.plugin.message">Attention, des extensions nécessaires au bon fonctionnement de
-		cette configuration ne sont pas chargées. Si vous choisissez de continuer, vous pourrez utiliser la
+		cette configuration ne sont pas chargées. Vous pouvez essayer de les installer (connexion internet nécessaire) ou continuer sans : vous pourrez utiliser la
 		configuration mais celle-ci pourrait ne pas être chargée correctement.</text>
   <text key="configuration.warning.plugin.message.header">Extension non chargée</text>
   <text key="delete.key.style.changes.action">Supprimer le style sur plusieurs cases</text>

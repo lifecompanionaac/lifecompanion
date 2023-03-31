@@ -67,17 +67,13 @@ public class SimpleUseActionManager implements UseActionManagerI {
     public SimpleUseActionManager(final UseActionTriggerComponentI realParentP, final UseActionEvent... allowedEvent) {
         this.actions = new HashMap<>();
         this.realParent = realParentP;
-        //Create listener : set the real parent to added action, remove it from removed
-        ListChangeListener<BaseUseActionI> actionListener = BindingUtils.createListChangeListener((added) -> {
-            added.parentComponentProperty().set(this.realParent);
-        }, (removed) -> {
-            removed.parentComponentProperty().set(null);
-        });
         //Add a list for each possible component
         for (UseActionEvent event : allowedEvent) {
-            ObservableList<BaseUseActionI<?>> actionList = FXCollections.observableArrayList();
-            actionList.addListener(actionListener);
-            this.actions.put(event, actionList);
+            ObservableList<BaseUseActionI<UseActionTriggerComponentI>> actionList = FXCollections.observableArrayList();
+            actionList.addListener(BindingUtils.createUniqueAddOrRemoveListener(actionList,
+                    added -> added.parentComponentProperty().set(this.realParent),
+                    removed -> removed.parentComponentProperty().set(null)));
+            this.actions.put(event, (ObservableList) actionList);
         }
     }
 

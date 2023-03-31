@@ -1,28 +1,28 @@
 <texts>
     <!-- STEPS -->
     <text key="spellgame.plugin.game.step.write.name">Écrire</text>
-    <text key="spellgame.plugin.game.step.write.instruction.speech">Écris le mot : "{}"</text>
-    <text key="spellgame.plugin.game.step.write.instruction.general">Écris le mot que tu viens d'entendre</text>
+    <text key="spellgame.plugin.game.step.write.instruction.speech">Écris le mot "{}"</text>
+    <text key="spellgame.plugin.game.step.write.instruction.general">Écris le mot</text>
 
     <text key="spellgame.plugin.game.step.copy.name">Copier</text>
-    <text key="spellgame.plugin.game.step.copy.instruction.speech">Recopie le mot : "{}"</text>
-    <text key="spellgame.plugin.game.step.copy.instruction.general">Recopie le mot que tu viens de voir</text>
+    <text key="spellgame.plugin.game.step.copy.instruction.speech">Recopie le mot "{}"</text>
+    <text key="spellgame.plugin.game.step.copy.instruction.general">Recopie le mot</text>
 
-    <text key="spellgame.plugin.game.step.copy.timer.name">Copier</text>
-    <text key="spellgame.plugin.game.step.copy.timer.instruction.speech">Recopie le mot : "{}"</text>
-    <text key="spellgame.plugin.game.step.copy.timer.instruction.general">Recopie le mot que tu viens de voir</text>
+    <text key="spellgame.plugin.game.step.copy.timer.name">Copier (sans le mot)</text>
+    <text key="spellgame.plugin.game.step.copy.timer.instruction.speech">Recopie le mot "{}"</text>
+    <text key="spellgame.plugin.game.step.copy.timer.instruction.general">Recopie le mot</text>
 
     <text key="spellgame.plugin.game.step.char.count.name">Nombre de lettres</text>
-    <text key="spellgame.plugin.game.step.char.count.instruction.speech">Écris le nombre de lettre dans le mot : "{}"</text>
-    <text key="spellgame.plugin.game.step.char.count.instruction.general">Écris le nombre de lettre dans le mot que tu viens de voir</text>
+    <text key="spellgame.plugin.game.step.char.count.instruction.speech">Écris le nombre de lettre du mot "{}"</text>
+    <text key="spellgame.plugin.game.step.char.count.instruction.general">Écris le nombre de lettre du mot</text>
 
     <text key="spellgame.plugin.game.step.vowel.count.name">Nombre de voyelles</text>
     <text key="spellgame.plugin.game.step.vowel.count.instruction.speech">Écris le nombre de voyelles du mot "{}"</text>
-    <text key="spellgame.plugin.game.step.vowel.count.instruction.general">Écris le nombre de voyelles du mot que tu viens de voir</text>
+    <text key="spellgame.plugin.game.step.vowel.count.instruction.general">Écris le nombre de voyelles du mot</text>
 
     <text key="spellgame.plugin.game.step.consonant.count.name">Nombre de consonnes</text>
     <text key="spellgame.plugin.game.step.consonant.count.instruction.speech">Écris le nombre de consonnes du mot "{}"</text>
-    <text key="spellgame.plugin.game.step.consonant.count.instruction.general">Écris le nombre de consonnes du mot que tu viens de voir</text>
+    <text key="spellgame.plugin.game.step.consonant.count.instruction.general">Écris le nombre de consonnes du mot</text>
 
     <!-- MODEL -->
     <text key="spellgame.plugin.default.list.name">Nouvelle liste</text>

@@ -148,7 +148,6 @@ public class UserCompSelectManageView extends BorderPane implements LCViewInitHe
     }
 
     public void bindAndFilterOn(Class<? extends DisplayableComponentI> type, Consumer<UserCompDescriptionI> directSelectionCallback) {
-        System.out.println("Bind and filter on " + type);
         this.directSelectionCallback = directSelectionCallback;
         fieldSearchFilter.clear();
         this.type = type;

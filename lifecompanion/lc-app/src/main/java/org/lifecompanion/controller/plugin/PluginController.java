@@ -71,6 +71,7 @@ import java.io.PrintWriter;
 import java.lang.reflect.Constructor;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -115,9 +116,29 @@ public enum PluginController implements LCStateListener, ModeListenerI {
         return loadedPlugins.containsKey(pluginDependencyId);
     }
 
-    public Map<String, UseVariableI<?>> generatePluginsUseVariable() {
+    public List<Pair<String, Function<UseVariableDefinitionI, UseVariableI<?>>>> generatePluginUseVariable() {
+        // TODO : should be cached in use mode ?
+        List<Pair<String, Function<UseVariableDefinitionI, UseVariableI<?>>>> vars = new ArrayList<>();
+        for (PluginI plugin : this.loadedPlugins.values()) {
+            try {
+                List<UseVariableDefinitionI> defVar = plugin.getDefinedVariables();
+                if (!CollectionUtils.isEmpty(defVar)) {
+                    Map<String, UseVariableDefinitionI> varForPlugin = defVar.stream()
+                            .collect(Collectors.toMap(UseVariableDefinitionI::getId, v -> v));
+                    for (Map.Entry<String, UseVariableDefinitionI> idAndDef : varForPlugin.entrySet()) {
+                        vars.add(Pair.of(idAndDef.getKey(), plugin.getSupplierForUseVariable(idAndDef.getKey())));
+                    }
+                }
+            } catch (Throwable t) {
+                PluginController.LOGGER.warn("Couldn't generate plugin use variable for plugin {}", plugin.getClass(), t);
+            }
+        }
+        return vars;
+    }
+
+    @SuppressWarnings("deprecation")
+    public Map<String, UseVariableI<?>> generatePluginsUseVariableBackwardCompatibility() {
         Map<String, UseVariableI<?>> vars = new HashMap<>();
-        // TODO : variable map should be cached when running in use mode
         // For each plugin, generate the variables
         for (PluginI plugin : this.loadedPlugins.values()) {
             try {
@@ -594,10 +615,10 @@ public enum PluginController implements LCStateListener, ModeListenerI {
     }
 
     // FIXME user dependencies
-    public String checkPluginDependencies(final Element xmlRoot) throws LCException {
+    public Pair<String, Set<String>> checkPluginDependencies(final Element xmlRoot) throws LCException {
         Element pluginsElement = xmlRoot.getChild(PluginController.NODE_PLUGINS);
         if (pluginsElement != null) {
-
+            Set<String> ids = new HashSet<>();
             StringBuilder warningMessage = new StringBuilder();
 
             Element pluginDependenciesElement = pluginsElement.getChild(PluginController.NODE_PLUGIN_DEPENDENCIES);
@@ -607,12 +628,14 @@ public enum PluginController implements LCStateListener, ModeListenerI {
                 PluginInfo loadedPluginInfo = getPluginById(usedPluginInfo.getPluginId(), pi -> pi.stateProperty().get() == PluginInfoState.LOADED).stream().findFirst().orElseGet(() -> null);
                 if (loadedPluginInfo == null) {
                     warningMessage.append("\n - ").append(Translation.getText("configuration.loading.plugin.not.loaded", usedPluginInfo.getPluginName(), usedPluginInfo.getPluginVersion()));
+                    ids.add(usedPluginInfo.getPluginId());
                 } else if (VersionUtils.compare(loadedPluginInfo.getPluginVersion(), usedPluginInfo.getPluginVersion()) < 0) {
                     warningMessage.append("\n - ").append(Translation.getText("configuration.loading.plugin.older.version", loadedPluginInfo.getPluginName(), loadedPluginInfo.getPluginVersion(),
                             usedPluginInfo.getPluginVersion()));
+                    ids.add(usedPluginInfo.getPluginId());
                 }
             }
-            return warningMessage.length() > 0 ? warningMessage.toString() : null;
+            return warningMessage.length() > 0 ? Pair.of(warningMessage.toString(), ids) : null;
         }
         return null;
     }

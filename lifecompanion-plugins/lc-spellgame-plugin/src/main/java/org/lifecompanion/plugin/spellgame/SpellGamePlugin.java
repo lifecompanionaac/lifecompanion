@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 public class SpellGamePlugin implements PluginI {
     public static final String ID = "lc-spellgame-plugin";
@@ -95,16 +96,15 @@ public class SpellGamePlugin implements PluginI {
     }
 
     @Override
-    public Map<String, UseVariableI<?>> generateVariables(Map<String, UseVariableDefinitionI> variablesToGenerate) {
-        Map<String, UseVariableI<?>> vars = new HashMap<>();
-        vars.put(SpellGameController.VAR_ID_USER_SCORE, new IntegerUseVariable(variablesToGenerate.get(SpellGameController.VAR_ID_USER_SCORE), SpellGameController.INSTANCE.getUserScore()));
-        vars.put(SpellGameController.VAR_ID_WORD_INDEX, new IntegerUseVariable(variablesToGenerate.get(SpellGameController.VAR_ID_WORD_INDEX), SpellGameController.INSTANCE.getWordIndex()));
-        vars.put(SpellGameController.VAR_ID_WORD_COUNT, new IntegerUseVariable(variablesToGenerate.get(SpellGameController.VAR_ID_WORD_COUNT), SpellGameController.INSTANCE.getWordCount()));
-        vars.put(SpellGameController.VAR_ID_CURRENT_STEP_INSTRUCTION,
-                new StringUseVariable(variablesToGenerate.get(SpellGameController.VAR_ID_CURRENT_STEP_INSTRUCTION), SpellGameController.INSTANCE.getCurrentStepInstruction()));
-        vars.put(SpellGameController.VAR_ID_CURRENT_STEP_INSTRUCTION_WITH_WORD,
-                new StringUseVariable(variablesToGenerate.get(SpellGameController.VAR_ID_CURRENT_STEP_INSTRUCTION), SpellGameController.INSTANCE.getCurrentStepInstructionWithWord()));
-        return vars;
+    public Function<UseVariableDefinitionI, UseVariableI<?>> getSupplierForUseVariable(String id) {
+        return switch (id) {
+            case SpellGameController.VAR_ID_USER_SCORE -> def -> new IntegerUseVariable(def, SpellGameController.INSTANCE.getUserScore());
+            case SpellGameController.VAR_ID_WORD_INDEX -> def -> new IntegerUseVariable(def, SpellGameController.INSTANCE.getWordIndex());
+            case SpellGameController.VAR_ID_WORD_COUNT -> def -> new IntegerUseVariable(def, SpellGameController.INSTANCE.getWordCount());
+            case SpellGameController.VAR_ID_CURRENT_STEP_INSTRUCTION -> def -> new StringUseVariable(def, SpellGameController.INSTANCE.getCurrentStepInstruction());
+            case SpellGameController.VAR_ID_CURRENT_STEP_INSTRUCTION_WITH_WORD -> def -> new StringUseVariable(def, SpellGameController.INSTANCE.getCurrentStepInstructionWithWord());
+            default -> null;
+        };
     }
     //========================================================================
 

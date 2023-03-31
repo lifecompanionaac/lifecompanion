@@ -47,6 +47,7 @@ import org.lifecompanion.model.impl.configurationcomponent.dynamickey.UserAction
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.style.StyleController;
+import org.lifecompanion.util.binding.BindingUtils;
 import org.lifecompanion.util.debug.ConfigurationMemoryLeakChecker;
 import org.lifecompanion.model.impl.selectionmode.SelectionModeParameter;
 import org.lifecompanion.controller.plugin.PluginController;
@@ -267,27 +268,14 @@ public class LCConfigurationComponent extends CoreDisplayableComponentBaseImpl i
      * Create the needed listener for this configuration.
      */
     private void initListener() {
-        this.children.addListener((ListChangeListener<RootGraphicComponentI>) change -> {
-            while (change.next()) {
-                //On add
-                if (change.wasAdded()) {
-                    List<? extends RootGraphicComponentI> added = change.getAddedSubList();
-                    for (RootGraphicComponentI add : added) {
-                        add.configurationParentProperty().set(LCConfigurationComponent.this);
-                        this.addRootComponent(add);
-                    }
-                }
-                //On remove
-                if (change.wasRemoved()) {
-                    List<? extends RootGraphicComponentI> removed = change.getRemoved();
-                    for (RootGraphicComponentI rm : removed) {
-                        rm.configurationParentProperty().set(null);
-                        rm.dispatchRemovedPropertyValue(true);
-                        this.removeRootComponent(rm);
-                    }
-                }
-            }
-        });
+        children.addListener(BindingUtils.createUniqueAddOrRemoveListener(children, add -> {
+            add.configurationParentProperty().set(LCConfigurationComponent.this);
+            this.addRootComponent(add);
+        }, removed -> {
+            removed.configurationParentProperty().set(null);
+            removed.dispatchRemovedPropertyValue(true);
+            this.removeRootComponent(removed);
+        }));
         /*
          * On each added component, add a listener on deleted property.
          * A deleted property set to true will remove the component from the map.

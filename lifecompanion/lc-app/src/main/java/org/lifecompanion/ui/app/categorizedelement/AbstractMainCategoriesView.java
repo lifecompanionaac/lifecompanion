@@ -79,7 +79,7 @@ public abstract class AbstractMainCategoriesView<T extends MainCategoryI<?>> ext
             tilePaneCategories.getChildren().add(this.createCell(action));
         }
         //On list change
-        this.getMainCategories().addListener(BindingUtils.createListChangeListener((added) -> {
+        this.getMainCategories().addListener(BindingUtils.createListChangeListenerV2((added) -> {
             //Get view
             AbstractMainCategoryItemView<T> addedView;
             if (this.views.containsKey(added)) {
