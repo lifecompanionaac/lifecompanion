@@ -44,6 +44,7 @@
 
     <!-- NOTIFICATIONS -->
     <text key="flirc.plugin.notification.success.learning.code">Code de la télécommande appris avec succès</text>
+    <text key="flirc.plugin.notification.press.and.release.button">Appuyez puis relâchez le bouton de la télécommande</text>
 
     <!-- ERRORS -->
     <text key="flirc.plugin.error.sending.code">Problème lors de l'envoi du code</text>

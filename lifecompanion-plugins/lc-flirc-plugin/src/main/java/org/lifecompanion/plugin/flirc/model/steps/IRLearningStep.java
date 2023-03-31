@@ -14,4 +14,6 @@ public interface IRLearningStep {
     String getManualStepButtonName();
 
     boolean isManualStep();
+
+    String getNotificationOnShown();
 }

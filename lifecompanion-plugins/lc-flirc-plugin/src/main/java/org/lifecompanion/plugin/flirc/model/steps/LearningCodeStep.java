@@ -50,6 +50,11 @@ public class LearningCodeStep extends AbstractIRLearningStep {
     public boolean generateCodes() {
         return true;
     }
+
+    @Override
+    public String getNotificationOnShown() {
+        return Translation.getText("flirc.plugin.notification.press.and.release.button");
+    }
 }
 
 

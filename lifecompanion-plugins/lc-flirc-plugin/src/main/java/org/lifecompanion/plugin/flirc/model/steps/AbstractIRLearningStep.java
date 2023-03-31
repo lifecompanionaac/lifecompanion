@@ -41,4 +41,9 @@ public abstract class AbstractIRLearningStep implements IRLearningStep {
     public boolean generateCodes() {
         return false;
     }
+
+    @Override
+    public String getNotificationOnShown() {
+        return null;
+    }
 }

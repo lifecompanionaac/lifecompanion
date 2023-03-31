@@ -19,9 +19,11 @@ import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.lang.CollectionUtils;
 import org.lifecompanion.framework.utils.LCNamedThreadFactory;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
+import org.lifecompanion.model.impl.notification.LCNotification;
 import org.lifecompanion.plugin.flirc.model.IRLearningDialogResult;
 import org.lifecompanion.plugin.flirc.model.steps.*;
 import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
+import org.lifecompanion.ui.notification.LCNotificationController;
 import org.lifecompanion.util.javafx.FXControlUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -131,6 +133,12 @@ public class IRLearningDialog extends Dialog<IRLearningDialogResult> implements 
             buttonManualStep.setText(step.getManualStepButtonName());
             if (!manualStep) {
                 runStepTask(step);
+            }
+            String notificationOnShown = step.getNotificationOnShown();
+            if (notificationOnShown != null) {
+                LCNotification notification = LCNotification.createInfo(notificationOnShown);
+                notification.setMsDuration(2500);
+                LCNotificationController.INSTANCE.showNotification(notification);
             }
         });
     }
