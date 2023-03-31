@@ -45,7 +45,7 @@
     <text key="flirc.plugin.ui.alert.warning.similarity.message">Les boutons de la télécommande sur lesquels vous venez d'appuyer ne se ressemblent pas bien ({}%). Il est conseillé de recommencer l'apprentissage. Néanmoins, pour certaines télécommandes, cela pourrait fonctionner quand même.</text>
 
     <!-- NOTIFICATIONS -->
-    <text key="flirc.plugin.notification.success.learning.code">Code de la télécommande appris avec succès</text>
+    <text key="flirc.plugin.notification.success.learning.code">Code de la télécommande appris</text>
     <text key="flirc.plugin.notification.press.and.release.button">Appuyez puis relâchez le bouton de la télécommande</text>
 
     <!-- ERRORS -->
