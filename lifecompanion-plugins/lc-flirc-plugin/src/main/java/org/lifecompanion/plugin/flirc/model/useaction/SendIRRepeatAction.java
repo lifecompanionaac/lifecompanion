@@ -47,7 +47,7 @@ public class SendIRRepeatAction extends RepeatActionBaseImpl<UseActionTriggerCom
         this.category = FlircActionSubCategories.GENERAL;
         this.nameID = "flirc.plugin.use.action.send.repeat.ir.name";
         this.staticDescriptionID = "flirc.plugin.use.action.send.repeat.ir.description";
-        this.configIconPath = "flirc/icon_send_ir_code.png";
+        this.configIconPath = "flirc/icon_repeat_send_ir_code.png";
         this.parameterizableAction = true;
         this.sendIRActionWrapper = new SendIRActionWrapper();
         this.variableDescriptionProperty().set(getStaticDescription());

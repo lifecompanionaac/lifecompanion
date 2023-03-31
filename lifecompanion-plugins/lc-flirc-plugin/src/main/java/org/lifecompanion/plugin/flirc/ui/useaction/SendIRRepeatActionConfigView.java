@@ -43,7 +43,7 @@ public class SendIRRepeatActionConfigView extends VBox implements UseActionConfi
 
     @Override
     public void initUI() {
-        irRecorderField = new IRRecorderField();
+        irRecorderField = new IRRecorderField(false);
         this.getChildren().add(irRecorderField);
     }
 

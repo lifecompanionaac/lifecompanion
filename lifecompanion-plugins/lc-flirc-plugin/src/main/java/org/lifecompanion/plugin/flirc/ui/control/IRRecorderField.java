@@ -53,8 +53,11 @@ public class IRRecorderField extends VBox implements LCViewInitHelper {
 
     private final ObjectProperty<IRCode> value;
 
-    public IRRecorderField() {
+    private final boolean enableRepeatField;
+
+    public IRRecorderField(boolean enableRepeatField) {
         this.value = new SimpleObjectProperty<>();
+        this.enableRepeatField = enableRepeatField;
         this.initAll();
     }
 
@@ -88,7 +91,10 @@ public class IRRecorderField extends VBox implements LCViewInitHelper {
         HBox recordBox = new HBox(5.0, this.buttonLearnCode, new Separator(Orientation.VERTICAL), labelStatus, new Separator(Orientation.VERTICAL), buttonTestCode);
         recordBox.setAlignment(Pos.CENTER);
         this.setSpacing(10.0);
-        this.getChildren().addAll(labelExplainLearn, recordBox, labelExplainRepeat, boxRepeat);
+        this.getChildren().addAll(labelExplainLearn, recordBox, labelExplainRepeat);
+        if (enableRepeatField) {
+            this.getChildren().add(boxRepeat);
+        }
     }
 
     @Override
