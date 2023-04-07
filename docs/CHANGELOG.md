@@ -8,7 +8,7 @@
 
 ### Corrections/ajustements
 
-- ...
+- Ticket #229 : les majuscules n'étaient parfois pas retransmises correctement en clavier virtuel
 
 ## 1.4.9 - 30/03/2023
 

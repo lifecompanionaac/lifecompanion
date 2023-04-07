@@ -235,7 +235,6 @@ public enum VirtualKeyboardController implements WritingDeviceI, ModeListenerI {
     private void sendText(String text) {
         if (WritingStateController.INSTANCE.capitalizeNextProperty().get()) {
             text = StringUtils.capitalize(text);
-            WritingStateController.INSTANCE.switchCapitalizeNext(WritingEventSource.SYSTEM);
         }
         if (WritingStateController.INSTANCE.upperCaseProperty().get()) {
             text = StringUtils.toUpperCase(text);

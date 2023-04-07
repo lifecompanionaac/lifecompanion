@@ -18,7 +18,6 @@
  */
 package org.lifecompanion.controller.textcomponent;
 
-import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.collections.ObservableList;
 import org.lifecompanion.model.api.configurationcomponent.*;
@@ -58,7 +57,6 @@ public enum WritingStateController implements ModeListenerI, WritingStateControl
     private final Set<Consumer<WritingEventI>> writingEventListeners;
     private final BooleanProperty writingDisabled;
 
-
     /**
      * Contains the whole text.
      */
@@ -83,6 +81,10 @@ public enum WritingStateController implements ModeListenerI, WritingStateControl
 
     // PROPERTIES
     //========================================================================
+    private void disableCapitalizeNext() {
+        this.writingStateEntryContainer.disableCapitalizeNext();
+    }
+
     @Override
     public ReadOnlyBooleanProperty upperCaseProperty() {
         return this.writingStateEntryContainer.upperCaseProperty();
@@ -196,17 +198,17 @@ public enum WritingStateController implements ModeListenerI, WritingStateControl
     //========================================================================
     @Override
     public void newLine(WritingEventSource src) {
-        this.executeEvent(d -> d.newLine(src), src, WritingEventType.INSERTION_SIMPLE, FluentHashMap.mapStrObj("text", "\n"));
+        this.executeEvent(d -> d.newLine(src), src, WritingEventType.INSERTION_SIMPLE, FluentHashMap.mapStrObj("text", "\n"), this::disableCapitalizeNext);
     }
 
     @Override
     public void tab(WritingEventSource src) {
-        this.executeEvent(d -> d.tab(src), src, WritingEventType.INSERTION_SIMPLE, FluentHashMap.mapStrObj("text", "\t"));
+        this.executeEvent(d -> d.tab(src), src, WritingEventType.INSERTION_SIMPLE, FluentHashMap.mapStrObj("text", "\t"), this::disableCapitalizeNext);
     }
 
     @Override
     public void space(WritingEventSource src) {
-        this.executeEvent(d -> d.space(src), src, WritingEventType.INSERTION_SIMPLE, FluentHashMap.mapStrObj("text", " "));
+        this.executeEvent(d -> d.space(src), src, WritingEventType.INSERTION_SIMPLE, FluentHashMap.mapStrObj("text", " "), this::disableCapitalizeNext);
     }
 
     @Override
@@ -295,12 +297,16 @@ public enum WritingStateController implements ModeListenerI, WritingStateControl
 
     @Override
     public void insert(WritingEventSource src, final WriterEntryI entryP, final WriteSpecialChar specialChar) {
-        this.executeEvent(d -> d.insert(src, entryP, specialChar), src, WritingEventType.INSERTION_SIMPLE, FluentHashMap.mapStrObj("text", entryP.entryTextProperty().get()));
+        this.executeEvent(d -> d.insert(src, entryP, specialChar),
+                src,
+                WritingEventType.INSERTION_SIMPLE,
+                FluentHashMap.mapStrObj("text", entryP.entryTextProperty().get()),
+                this::disableCapitalizeNext);
     }
 
     @Override
     public void insertText(WritingEventSource src, String text) {
-        this.executeEvent(d -> d.insertText(src, text), src, WritingEventType.INSERTION_SIMPLE, FluentHashMap.mapStrObj("text", text));
+        this.executeEvent(d -> d.insertText(src, text), src, WritingEventType.INSERTION_SIMPLE, FluentHashMap.mapStrObj("text", text), this::disableCapitalizeNext);
     }
 
     @Override
@@ -354,12 +360,14 @@ public enum WritingStateController implements ModeListenerI, WritingStateControl
     }
 
     private void executeEvent(Consumer<WritingDeviceI> exe, WritingEventSource src, WritingEventType type, Map<String, Object> values) {
+        executeEvent(exe, src, type, values, null);
+    }
+
+    private void executeEvent(Consumer<WritingDeviceI> exe, WritingEventSource src, WritingEventType type, Map<String, Object> values, Runnable postExeAction) {
         if (!writingDisabled.get()) {
             if (!writingEventListeners.isEmpty()) {
                 WritingControllerStateI stateBeforeEvent = getCurrentState();
-                for (WritingDeviceI device : this.writingDevices) {
-                    exe.accept(device);
-                }
+                runOnWritingDeviceAndDoPostAction(exe, postExeAction);
                 // TODO : performance problem caused by listeners on FX thread ?
                 // Implementation should make operation on event async (e.g. writing the log a file)
 
@@ -371,11 +379,19 @@ public enum WritingStateController implements ModeListenerI, WritingStateControl
                     }
                 });
             } else {
-                for (WritingDeviceI device : this.writingDevices) {
-                    exe.accept(device);
-                }
+                runOnWritingDeviceAndDoPostAction(exe, postExeAction);
             }
         }
+    }
+
+    private void runOnWritingDeviceAndDoPostAction(Consumer<WritingDeviceI> exe, Runnable postExeAction) {
+        for (WritingDeviceI device : this.writingDevices) {
+            exe.accept(device);
+        }
+        if (postExeAction != null) {
+            postExeAction.run();
+        }
+        FXThreadUtils.runOnFXThread(() -> this.writingStateEntryContainer.evaluateAutoUpperCase());
     }
 
     private WritingControllerStateI getCurrentState() {
