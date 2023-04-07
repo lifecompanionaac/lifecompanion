@@ -4,7 +4,7 @@
 
 ### Fonctionnalités
 
-- ...
+- Ajout d'une nouvelle action : appui sur la molette de souris
 
 ### Corrections/ajustements
 

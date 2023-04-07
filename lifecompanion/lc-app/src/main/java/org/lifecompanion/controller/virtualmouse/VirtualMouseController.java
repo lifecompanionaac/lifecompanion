@@ -296,6 +296,11 @@ public enum VirtualMouseController implements ModeListenerI {
         });
     }
 
+    public void pressMouseMiddleClicWithoutNoVirtualPosition() {
+        checkRobotInit();
+        this.executeMouseClic(MouseEvent.BUTTON2);
+    }
+
     public void executeMouseWheelDown(final int amount) {
         this.checkRobotInit();
         this.executeMouseWheel(amount);
@@ -312,7 +317,7 @@ public enum VirtualMouseController implements ModeListenerI {
             Stage useStage = AppModeController.INSTANCE.getUseModeContext().getStage();
             if (useStage != null) useStage.toFront();
             this.virtualMouseStage.toFront();
-            // Issue #129 : main stage should be focused back if it's a virtual keyboard
+            // Issue #129 : main stage should not be focused back if it's a virtual keyboard
             if (!AppModeController.INSTANCE.getUseModeContext().getConfiguration().virtualKeyboardProperty().get() && useStage != null) {
                 useStage.requestFocus();
             }
