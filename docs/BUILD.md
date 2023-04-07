@@ -26,8 +26,6 @@ Used JDK (in IntelliJ and builds) is [Eclipse Temurin™](https://adoptium.net/t
 
 1. Build and publish **lifecompanion-framework** libs : run task `gradlew publishToMavenLocal` in **lifecompanion-framework**
 1. Copy **data** folder from an official LifeCompanion installation in **lifecompanion/lc-app/data** - (you can copy it from S3 resource bucket, if you have access to it)
-1. Copy **installation.properties** from **res/default-data** to **lifecompanion/lc-app/data**
-1. In **installation.properties** change **userDataDirectory** to your a wanted path (e.g. _MyDocumens/LifeCompanion-Dev_)
 1. Run task `gradlew :lc-app:run` in **lifecompanion**
 
 If you need to pass argument to your instance, you can do it with `gradlew :lc-app:run --args="a configuration.lcc"`

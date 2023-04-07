@@ -26,9 +26,6 @@
     1. Select "Import module from external model" and "Gradle", then click "Create"
 1. Before running LifeCompanion, prepare
     1. Add data : `cp -r ~/LifeCompanion/data/ ~/dev/workspace/lifecompanion/lifecompanion/lc-app/data`
-    1. Set configuration : `cp ~/dev/workspace/lifecompanion/res/default-data/installation.properties ~/dev/workspace/lifecompanion/lifecompanion/lc-app/data/installation.properties`
-    1. Edit the configuration `gedit ~/dev/workspace/lifecompanion/lifecompanion/lc-app/data/installation.properties`
-    1. Set the line with **userDataDirectory** to `userDataDirectory=data/user-data`
 1. In IntelliJ
     1. In Gralde part
     1. Run LifeCompanion with **lifecompanion > lc-app > application > run**
