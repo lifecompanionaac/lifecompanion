@@ -18,6 +18,7 @@
  */
 package org.lifecompanion.controller.textprediction;
 
+import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.plugin.PluginController;
 import org.lifecompanion.controller.textcomponent.WritingStateController;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
@@ -69,7 +70,7 @@ public class WordPredictionController extends AbstractPredictionController<WordP
      */
     public boolean isSentenceStarted() {
         String text = WritingStateController.INSTANCE.textBeforeCaretProperty().get();
-        return StringUtils.isBlank(text) || this.currentPredictor.isNewSentenceStarted(text);
+        return !AppModeController.INSTANCE.isEditMode() && currentPredictor != null && (StringUtils.isBlank(text) || this.currentPredictor.isNewSentenceStarted(text));
     }
     //========================================================================
 
