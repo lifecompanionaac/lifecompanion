@@ -21,6 +21,8 @@ package org.lifecompanion.controller.io.task;
 
 import javafx.scene.paint.Color;
 import javafx.util.Pair;
+import org.lifecompanion.controller.editaction.LCConfigurationActions;
+import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
 import org.lifecompanion.model.api.profile.LCProfileI;
 import org.lifecompanion.model.api.imagedictionary.ImageDictionaryI;
@@ -88,9 +90,12 @@ public class GenerateRandomConfigurationTask extends LCTask<Void> {
         ConfigurationSavingTask configurationSavingTask = new ConfigurationSavingTask(tempSave, configuration, fakeProfile);
         ThreadUtils.executeInCurrentThread(configurationSavingTask);
 
-        File destConfig = new File("E:\\Desktop\\DEBUG_CONFIGURATION.lcc");
+        File destConfig = IOUtils.getTempFile("random-configuration", ".lcc");
         ConfigurationExportTask configurationExportTask = new ConfigurationExportTask(desc, tempSave, destConfig);
         ThreadUtils.executeInCurrentThread(configurationExportTask);
+
+        LCConfigurationActions.ImportOpenEditAction importOpenConfig = new LCConfigurationActions.ImportOpenEditAction(destConfig);
+        ConfigActionController.INSTANCE.executeAction(importOpenConfig);
 
         return null;
     }

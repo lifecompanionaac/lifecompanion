@@ -3639,4 +3639,7 @@
     <text key="action.switch.to.edit.mode.description">Permet de basculer du mode "Utilisation" au mode "Édition" directement depuis une action. Cette action sera réalisée sans demander de code de confirmation si celui-ci est activé.</text>
     <text key="plugin.error.startup.notification.will.be.deleted">Erreur au chargement de l'extension "{}"</text>
     <text key="plugin.error.startup.notification.will.be.deleted.button">Redémarrer</text>
+    <text key="task.generate.random.configuration.title">Génération d'une configuration "aléatoire"</text>
+    <text key="misc.config.tab.part.dev">Fonctions en test (développeurs)</text>
+    <text key="button.testing.random.configuration">Configuration aléatoire</text>
 </texts>
