@@ -36,6 +36,7 @@ import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.controller.editmode.ErrorHandlingController;
 import org.lifecompanion.controller.io.IOHelper;
 import org.lifecompanion.controller.io.task.GenerateRandomConfigurationTask;
+import org.lifecompanion.controller.io.task.GenerateTechDemoConfigurationTask;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.profile.ProfileController;
 import org.lifecompanion.framework.commons.translation.Translation;
@@ -77,7 +78,7 @@ public class MiscConfigSubmenu extends ScrollPane implements LCViewInitHelper, U
     /**
      * Button to open folders
      */
-    private Button buttonOpenRootFolder, buttonOpenCurrentProfileFolder, buttonOpenCurrentConfigFolder, buttonExecuteGC, buttonOpenConfigCleanXml, buttonDetectKeylistDuplicates, buttonGenerateRandomConfiguration;
+    private Button buttonOpenRootFolder, buttonOpenCurrentProfileFolder, buttonOpenCurrentConfigFolder, buttonExecuteGC, buttonOpenConfigCleanXml, buttonDetectKeylistDuplicates, buttonGenerateTechDemoConfiguration, buttonGenerateRandomConfiguration;
 
     private Label labelMemoryInfo;
 
@@ -98,7 +99,7 @@ public class MiscConfigSubmenu extends ScrollPane implements LCViewInitHelper, U
         this.buttonOpenCurrentProfileFolder = this.createButton("button.open.current.profile.folder");
         this.buttonOpenCurrentConfigFolder = this.createButton("button.open.current.config.folder");
         this.buttonOpenConfigCleanXml = this.createButton("button.open.current.config.clean.xml.folder");
-        this.buttonDetectKeylistDuplicates = this.createButton("button.detect.keylist.duplicates");
+
 
         //Logs
         Label labelTitleLog = FXControlUtils.createTitleLabel("misc.config.tab.part.logs");
@@ -115,12 +116,6 @@ public class MiscConfigSubmenu extends ScrollPane implements LCViewInitHelper, U
         labelMemoryInfo.setAlignment(Pos.CENTER);
         buttonExecuteGC = createButton("misc.config.tab.memory.button.gc");
 
-        Label labelTitleTesting = FXControlUtils.createTitleLabel("misc.config.tab.part.dev");
-        buttonGenerateRandomConfiguration = this.createButton("button.testing.random.configuration");
-
-        // Developers : to test your feature, create and add your nodes here and make sure "org.lifecompanion.debug.dev.env" property is enabled
-        List<Node> testingNodes = List.of(labelTitleTesting, buttonGenerateRandomConfiguration);
-
         //Add
         VBox boxChildren = new VBox(10, labelExplain,
                 labelTitleFolder,
@@ -128,7 +123,6 @@ public class MiscConfigSubmenu extends ScrollPane implements LCViewInitHelper, U
                 this.buttonOpenCurrentProfileFolder,
                 this.buttonOpenCurrentConfigFolder,
                 buttonOpenConfigCleanXml,
-                buttonDetectKeylistDuplicates,
                 labelTitleLog,
                 buttonOpenLogFile,
                 buttonOpenLogFolder,
@@ -141,8 +135,14 @@ public class MiscConfigSubmenu extends ScrollPane implements LCViewInitHelper, U
         this.setContent(boxChildren);
         this.setFitToWidth(true);
 
+        Label labelTitleTesting = FXControlUtils.createTitleLabel("misc.config.tab.part.dev");
+        buttonGenerateTechDemoConfiguration = this.createButton("button.generate.tech.demo.configuration");
+        buttonGenerateRandomConfiguration = this.createButton("button.testing.random.configuration");
+        this.buttonDetectKeylistDuplicates = this.createButton("button.detect.keylist.duplicates");
+
+        // Developers : to test your feature, create and add your nodes here and make sure "org.lifecompanion.debug.dev.env" property is enabled
         if (StringUtils.isNotBlank(System.getProperty("org.lifecompanion.debug.dev.env"))) {
-            boxChildren.getChildren().addAll(testingNodes);
+            boxChildren.getChildren().addAll(labelTitleTesting, buttonGenerateTechDemoConfiguration, buttonDetectKeylistDuplicates, buttonGenerateRandomConfiguration);
         }
     }
 
@@ -177,6 +177,9 @@ public class MiscConfigSubmenu extends ScrollPane implements LCViewInitHelper, U
         });
         this.buttonGenerateRandomConfiguration.setOnAction(e -> {
             AsyncExecutorController.INSTANCE.addAndExecute(true, false, new GenerateRandomConfigurationTask());
+        });
+        this.buttonGenerateTechDemoConfiguration.setOnAction(e -> {
+            AsyncExecutorController.INSTANCE.addAndExecute(true, false, new GenerateTechDemoConfigurationTask());
         });
     }
 

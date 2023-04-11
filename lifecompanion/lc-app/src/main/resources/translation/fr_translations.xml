@@ -3642,4 +3642,6 @@
     <text key="task.generate.random.configuration.title">Génération d'une configuration "aléatoire"</text>
     <text key="misc.config.tab.part.dev">Fonctions en test (développeurs)</text>
     <text key="button.testing.random.configuration">Configuration aléatoire</text>
+    <text key="button.generate.tech.demo.configuration">Configuration démo technique</text>
+    <text key="task.generate.tech.demo.configuration.title">Génération de la configuration de démo technique</text>
 </texts>
