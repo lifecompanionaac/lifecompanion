@@ -15,7 +15,7 @@ repositories {
     maven { url 'https://jitpack.io' }
 }
 
-version = "1.0.0"
+version = "1.0.1"
 
 dependencies {
     compileOnly "org.lifecompanion:lc-app:$lifecompanionAppVersion"
@@ -33,7 +33,7 @@ jar {
                 "LifeCompanion-Plugin-Build-Date": new Date().getTime(),
                 "LifeCompanion-Plugin-Name": "Télécommande (avec FLIRC)",
                 "LifeCompanion-Plugin-Description": "Permet de créer une télécommande universelle à l'aide de la clé FLIRC",
-                "LifeCompanion-Min-App-Version": "1.0.0"// FIXME restore to "$lifecompanionAppVersion"
+                "LifeCompanion-Min-App-Version": "$lifecompanionAppVersion"
         )
     }
     from {
