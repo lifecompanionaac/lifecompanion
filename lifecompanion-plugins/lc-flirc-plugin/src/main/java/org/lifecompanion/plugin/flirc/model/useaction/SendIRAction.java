@@ -63,9 +63,8 @@ public class SendIRAction extends SimpleUseActionImpl<UseActionTriggerComponentI
             if (irCode != null) {
                 FlircController.INSTANCE.sendIr(irCode);
             }
-            // FIXME : error handling...
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        } catch (Throwable t) {
+            LOGGER.error("Could not send IR code", t);
         }
     }
 

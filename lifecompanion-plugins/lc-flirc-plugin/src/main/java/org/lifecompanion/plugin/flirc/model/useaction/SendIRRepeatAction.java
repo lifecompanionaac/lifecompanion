@@ -39,7 +39,7 @@ import java.util.Map;
 public class SendIRRepeatAction extends RepeatActionBaseImpl<UseActionTriggerComponentI> {
     private static final Logger LOGGER = LoggerFactory.getLogger(SendIRRepeatAction.class);
 
-    private SendIRActionWrapper sendIRActionWrapper;
+    private final SendIRActionWrapper sendIRActionWrapper;
 
     public SendIRRepeatAction() {
         super(UseActionTriggerComponentI.class);
@@ -80,9 +80,8 @@ public class SendIRRepeatAction extends RepeatActionBaseImpl<UseActionTriggerCom
             if (irCode != null) {
                 FlircController.INSTANCE.sendIr(irCode);
             }
-            // FIXME : error handling...
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        } catch (Throwable t) {
+            LOGGER.error("Could not send IR code", t);
         }
     }
 
