@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -86,9 +85,8 @@ public enum FlircController {
     public void sendIr(IRCode irCode) throws Exception {
         LOGGER.info("Sending ... {}", irCode);
         List<String> cmds = new ArrayList<>(List.of(getFlircPath(), "sendir", "--pattern=" + irCode.getPattern()));
-        int repeat = irCode.getSendCount() - 1;
-        if (repeat > 0) {
-            cmds.add("--repeat=" + repeat);
+        if (irCode.isLongPress()) {
+            cmds.add("--repeat=" + irCode.getComputedSendCount());
         }
         analyzeOutputAndFail(waitFor(true, new ProcessBuilder().command(cmds)));
     }

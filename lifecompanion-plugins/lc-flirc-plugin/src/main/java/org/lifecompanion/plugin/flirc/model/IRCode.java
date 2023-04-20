@@ -7,27 +7,42 @@ import org.lifecompanion.model.api.io.XMLSerializable;
 import org.lifecompanion.model.impl.exception.LCException;
 
 public class IRCode implements XMLSerializable<IOContextI> {
+    private static final double LONG_PRESS_FACTOR = 20.0; // 0.1 = 2 / 0.5 = 10 / 1 = 20
     private String pattern;
-    private int sendCount;
+    private boolean longPress;
+    private double longPressThreshold = 0.5;
 
     public IRCode() {
     }
 
-    public IRCode(String pattern, int sendCount) {
+    public IRCode(String pattern, boolean longPress, double longPressThreshold) {
         this.pattern = pattern;
-        this.sendCount = sendCount;
+        this.longPress = longPress;
+        this.longPressThreshold = longPressThreshold;
     }
 
     public String getPattern() {
         return pattern;
     }
 
-    public int getSendCount() {
-        return sendCount;
+    public int getComputedSendCount() {
+        return (int) Math.max(2.0, longPressThreshold * LONG_PRESS_FACTOR);
     }
 
-    public void setSendCount(int sendCount) {
-        this.sendCount = sendCount;
+    public boolean isLongPress() {
+        return longPress;
+    }
+
+    public double getLongPressThreshold() {
+        return longPressThreshold;
+    }
+
+    public void setLongPress(boolean longPress) {
+        this.longPress = longPress;
+    }
+
+    public void setLongPressThreshold(double longPressThreshold) {
+        this.longPressThreshold = longPressThreshold;
     }
 
     @Override
@@ -44,7 +59,8 @@ public class IRCode implements XMLSerializable<IOContextI> {
     public String toString() {
         return "IRCode{" +
                 "pattern='" + pattern + '\'' +
-                ", sendCount=" + sendCount +
+                ", longPress=" + longPress +
+                ", longPressThreshold=" + longPressThreshold +
                 '}';
     }
 }

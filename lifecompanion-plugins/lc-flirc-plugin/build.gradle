@@ -19,12 +19,8 @@ version = "1.0.0"
 
 dependencies {
     compileOnly "org.lifecompanion:lc-app:$lifecompanionAppVersion"
-    // If you need to add plugin dependencies, add them with "implementation"
-    // Note that you should check that the dependency is not already integrated in LifeCompanion core (if so, use "compileOnly" instead)
 }
 
-// Enter your plugin meta data
-// When changing ID : think also about changing it everywhere in your code
 jar {
     duplicatesStrategy DuplicatesStrategy.WARN
     manifest {

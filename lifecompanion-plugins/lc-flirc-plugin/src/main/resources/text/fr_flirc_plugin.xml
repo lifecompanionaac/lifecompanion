@@ -30,15 +30,18 @@
     <text key="flirc.plugin.ui.field.enable.debug.charts.toggle.tooltip">Permet de visualiser le résultat des codes IR appris. Permet d'obtenir des informations supplémentaire si un code ne fonctionne pas.</text>
     <text key="flirc.plugin.ui.button.cancel.learning">ANNULER</text>
     <text key="flirc.plugin.ui.button.learn.remote.code">Apprendre un bouton de télécommande</text>
-    <text key="flirc.plugin.ui.button.test.code">Tester</text>
     <text key="flirc.plugin.ui.label.explain.record">Cette action permet d'enregistrer un bouton d'une télécommande infrarouge pour l'envoyer ensuite. Il faut donc enregistrer le code avec la télécommande d'origine en appuyant sur celle-ci.</text>
-    <text key="flirc.plugin.ui.label.explain.repeat">Vous pouvez choisir de répéter un bouton afin d'envoyer plusieurs fois le même signal. Cela peut être utile sur certaines touches (volume par exemple)</text>
+    <text key="flirc.plugin.ui.button.test.code">Tester le code enregistré</text>
     <text key="flirc.plugin.ui.info.button.recorded">Bouton enregistré</text>
     <text key="flirc.plugin.ui.info.button.not.recorded">Aucun bouton enregistré</text>
     <text key="flirc.plugin.ui.error.code.not.recorded">Impossible d'enregistrer le bouton</text>
     <text key="flirc.plugin.ui.label.repeat.count">Répéter le code (X fois)</text>
     <text key="flirc.plugin.ui.button.get.information">Récupérer les informations de la clé</text>
     <text key="flirc.plugin.ui.label.no.information">Aucune information</text>
+    <text key="flirc.plugin.ui.toggle.switch.long.press">Reproduire un appui long</text>
+    <text key="flirc.plugin.ui.toggle.switch.long.press.threshold">Si activé, permet de simuler un bouton appuyé longtemps (réglage de la durée ci-dessous)</text>
+    <text key="flirc.plugin.ui.long.press.slider.label.short">Court</text>
+    <text key="flirc.plugin.ui.long.press.slider.label.long">Long</text>
 
     <!-- ALERT -->
     <text key="flirc.plugin.ui.alert.warning.similarity.header">L'apprentissage est de faible qualité</text>
@@ -47,6 +50,7 @@
     <!-- NOTIFICATIONS -->
     <text key="flirc.plugin.notification.success.learning.code">Code de la télécommande appris</text>
     <text key="flirc.plugin.notification.press.and.release.button">Appuyez puis relâchez le bouton de la télécommande</text>
+    <text key="flirc.plugin.code.sent.notification">Code infrarouge envoyé</text>
 
     <!-- ERRORS -->
     <text key="flirc.plugin.error.sending.code">Problème lors de l'envoi du code</text>

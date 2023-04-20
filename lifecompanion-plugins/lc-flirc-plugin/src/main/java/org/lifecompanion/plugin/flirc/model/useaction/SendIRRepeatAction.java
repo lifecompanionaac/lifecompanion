@@ -78,7 +78,6 @@ public class SendIRRepeatAction extends RepeatActionBaseImpl<UseActionTriggerCom
         try {
             IRCode irCode = sendIRActionWrapper.irCodeProperty().get();
             if (irCode != null) {
-                irCode.setSendCount(5);
                 FlircController.INSTANCE.sendIr(irCode);
             }
             // FIXME : error handling...

@@ -12,6 +12,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.util.StringConverter;
 import org.lifecompanion.controller.editaction.AsyncExecutorController;
 import org.lifecompanion.controller.editmode.ErrorHandlingController;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
@@ -26,6 +27,7 @@ import org.lifecompanion.plugin.flirc.controller.FlircController;
 import org.lifecompanion.plugin.flirc.model.IRCode;
 import org.lifecompanion.plugin.flirc.utils.FlircUtils;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStepViewI;
+import org.lifecompanion.ui.controlsfx.control.ToggleSwitch;
 import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.ui.notification.LCNotificationController;
 import org.lifecompanion.util.javafx.DialogUtils;
@@ -46,18 +48,16 @@ public class IRRecorderField extends VBox implements LCViewInitHelper {
 
     public static final DecimalFormat PERCENT_DECIMAL_FORMAT = new DecimalFormat("##0.00");
 
-    private Spinner<Integer> spinnerSendCount;
+    private ToggleSwitch toggleLongPress;
+    private Slider sliderLongPressThreshold;
     private Button buttonLearnCode;
     private Button buttonTestCode;
     private Label labelStatus;
 
     private final ObjectProperty<IRCode> value;
 
-    private final boolean enableRepeatField;
-
-    public IRRecorderField(boolean enableRepeatField) {
+    public IRRecorderField() {
         this.value = new SimpleObjectProperty<>();
-        this.enableRepeatField = enableRepeatField;
         this.initAll();
     }
 
@@ -68,53 +68,75 @@ public class IRRecorderField extends VBox implements LCViewInitHelper {
     @Override
     public void initUI() {
         Label labelExplainLearn = new Label(Translation.getText("flirc.plugin.ui.label.explain.record"));
+
         labelExplainLearn.getStyleClass().addAll("text-wrap-enabled", "text-fill-dimgrey");
         this.buttonLearnCode = FXControlUtils.createLeftTextButton(Translation.getText("flirc.plugin.ui.button.learn.remote.code"),
-                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CIRCLE).sizeFactor(1).color(LCGraphicStyle.SECOND_DARK), null);
-
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CIRCLE).sizeFactor(1).color(LCGraphicStyle.SECOND_DARK),
+                null);
         this.labelStatus = new Label();
 
+        this.toggleLongPress = FXControlUtils.createToggleSwitch("flirc.plugin.ui.toggle.switch.long.press", null);
+        VBox.setMargin(toggleLongPress, new Insets(12.0, 0, 0, 0));
+        this.sliderLongPressThreshold = FXControlUtils.createBaseSlider(0.0, 1.0, 0.5);
+        this.sliderLongPressThreshold.setMajorTickUnit(0.1);
+        this.sliderLongPressThreshold.setShowTickLabels(true);
+        this.sliderLongPressThreshold.setLabelFormatter(new StringConverter<>() {
+            @Override
+            public String toString(Double d) {
+                if (d == 0.0) return Translation.getText("flirc.plugin.ui.long.press.slider.label.short");
+                if (d == 1.0) return Translation.getText("flirc.plugin.ui.long.press.slider.label.long");
+                return null;
+            }
+
+            @Override
+            public Double fromString(String string) {
+                return null;
+            }
+        });
+        VBox.setMargin(sliderLongPressThreshold, new Insets(0.0, 5.0, 0.0, 5.0));
         buttonTestCode = FXControlUtils.createLeftTextButton(Translation.getText("flirc.plugin.ui.button.test.code"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.PLAY).sizeFactor(1).color(LCGraphicStyle.MAIN_PRIMARY),
                 null);
+        VBox.setMargin(buttonTestCode, new Insets(12.0, 0, 0, 0));
 
-        Label labelExplainRepeat = new Label(Translation.getText("flirc.plugin.ui.label.explain.repeat"));
-        labelExplainRepeat.getStyleClass().addAll("text-wrap-enabled", "text-fill-dimgrey");
-        Label labelRepeat = new Label(Translation.getText("flirc.plugin.ui.label.repeat.count"));
-        spinnerSendCount = FXControlUtils.createIntSpinner(1, 20, 1, 1, GeneralConfigurationStepViewI.FIELD_WIDTH);
-        HBox boxRepeat = new HBox(5.0, labelRepeat, spinnerSendCount);
-        labelRepeat.setMaxWidth(Double.MAX_VALUE);
-        HBox.setHgrow(labelRepeat, Priority.ALWAYS);
-        boxRepeat.setPadding(new Insets(0, 5, 0, 5));
+        Label labelPressThreshold = new Label(Translation.getText("flirc.plugin.ui.toggle.switch.long.press.threshold"));
+        labelPressThreshold.getStyleClass().
 
-        //Total
-        HBox recordBox = new HBox(5.0, this.buttonLearnCode, new Separator(Orientation.VERTICAL), labelStatus, new Separator(Orientation.VERTICAL), buttonTestCode);
+                addAll("text-wrap-enabled", "text-fill-dimgrey");
+
+        HBox recordBox = new HBox(5.0, this.buttonLearnCode, new Separator(Orientation.VERTICAL), labelStatus);
         recordBox.setAlignment(Pos.CENTER);
-        this.setSpacing(10.0);
-        this.getChildren().addAll(labelExplainLearn, recordBox, labelExplainRepeat);
-        if (enableRepeatField) {
-            this.getChildren().add(boxRepeat);
-        }
+        this.setSpacing(8.0);
+        this.setAlignment(Pos.TOP_CENTER);
+        this.getChildren().addAll(labelExplainLearn, recordBox, toggleLongPress, labelPressThreshold, sliderLongPressThreshold, buttonTestCode);
+
     }
 
     @Override
     public void initBinding() {
         this.value.addListener((obs, ov, nv) -> {
             if (nv != null) {
-                spinnerSendCount.getValueFactory().setValue(nv.getSendCount());
+                toggleLongPress.setSelected(nv.isLongPress());
+                sliderLongPressThreshold.setValue(nv.getLongPressThreshold());
             } else {
-                spinnerSendCount.getValueFactory().setValue(1);
+                toggleLongPress.setSelected(false);
+                sliderLongPressThreshold.setValue(0.5);
             }
         });
-        this.spinnerSendCount.valueProperty().addListener((obs, ov, nv) -> {
+        this.sliderLongPressThreshold.valueProperty().addListener((obs, ov, nv) -> {
             if (nv != null && value.get() != null) {
-                value.get().setSendCount(nv);
+                value.get().setLongPressThreshold(nv.doubleValue());
+            }
+        });
+        this.toggleLongPress.selectedProperty().addListener((obs, ov, nv) -> {
+            if (nv != null && value.get() != null) {
+                value.get().setLongPress(nv);
             }
         });
         buttonTestCode.disableProperty().bind(value.isNull());
+        sliderLongPressThreshold.disableProperty().bind(toggleLongPress.selectedProperty().not());
         this.labelStatus.textProperty()
-                .bind(Bindings.createStringBinding(() -> Translation.getText(value.get() != null ? "flirc.plugin.ui.info.button.recorded" : "flirc.plugin.ui.info.button.not.recorded"),
-                        value));
+                .bind(Bindings.createStringBinding(() -> Translation.getText(value.get() != null ? "flirc.plugin.ui.info.button.recorded" : "flirc.plugin.ui.info.button.not.recorded"), value));
     }
 
 
@@ -124,6 +146,7 @@ public class IRRecorderField extends VBox implements LCViewInitHelper {
             AsyncExecutorController.INSTANCE.addAndExecute(false, true, () -> {
                 try {
                     FlircController.INSTANCE.sendIr(value.get());
+                    LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo("flirc.plugin.code.sent.notification"));
                 } catch (Throwable t) {
                     ErrorHandlingController.INSTANCE.showErrorNotificationWithExceptionDetails(Translation.getText("flirc.plugin.error.sending.code"), t);
                 }
@@ -157,8 +180,7 @@ public class IRRecorderField extends VBox implements LCViewInitHelper {
                         Pair<Double, Pair<String, String>> bestMatchingCode = comparisons.stream().max(Comparator.comparingDouble(Pair::getLeft)).orElse(null);
                         if (bestMatchingCode != null) {
                             if (bestMatchingCode.getLeft() < SIMILARITY_THRESHOLD) {
-                                DialogUtils
-                                        .alertWithSourceAndType(buttonLearnCode, Alert.AlertType.WARNING)
+                                DialogUtils.alertWithSourceAndType(buttonLearnCode, Alert.AlertType.WARNING)
                                         .withHeaderText(Translation.getText("flirc.plugin.ui.alert.warning.similarity.header"))
                                         .withContentText(Translation.getText("flirc.plugin.ui.alert.warning.similarity.message", PERCENT_DECIMAL_FORMAT.format(100.0 * bestMatchingCode.getLeft())))
                                         .withButtonTypes(ButtonType.OK)
@@ -166,7 +188,7 @@ public class IRRecorderField extends VBox implements LCViewInitHelper {
                             } else {
                                 LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo("flirc.plugin.notification.success.learning.code"));
                             }
-                            this.value.set(new IRCode(patternToCompare.get(0), spinnerSendCount.getValue()));
+                            this.value.set(new IRCode(patternToCompare.get(0), toggleLongPress.isSelected(), sliderLongPressThreshold.getValue()));
                         } else {
                             informNoValidCodeDetected();
                         }
