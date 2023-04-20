@@ -24,6 +24,8 @@ import org.lifecompanion.util.ThreadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 
 /**
  * This action represent the action that are executed while the event is executing.<br>
@@ -34,7 +36,7 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class RepeatActionBaseImpl<T extends UseActionTriggerComponentI> extends BaseUseActionImpl<T> {
     private final static Logger LOGGER = LoggerFactory.getLogger(RepeatActionBaseImpl.class);
-
+    private final AtomicInteger threadNum = new AtomicInteger(0);
     /**
      * Indicate if this action is repeating
      */
@@ -57,12 +59,12 @@ public abstract class RepeatActionBaseImpl<T extends UseActionTriggerComponentI>
         //Repeat after a while
         ThreadUtils.safeSleep(this.getDelayBeforeRepeatStartMillis());
         if (this.repeatEvent) {
-            this.repeatThread = new Thread(() -> {
+            this.repeatThread = new Thread(null, () -> {
                 while (this.repeatEvent) {
                     this.executeOnRepeat(eventType);
                     ThreadUtils.safeSleep(this.getDelayBetweenEachRepeatMillis());
                 }
-            });
+            }, "RepeatAction-Thread-" + threadNum.incrementAndGet());
             this.repeatThread.setDaemon(true);
             this.repeatThread.start();
         }
