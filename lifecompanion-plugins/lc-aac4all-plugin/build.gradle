@@ -1,0 +1,49 @@
+plugins {
+    id 'java-library'
+    id 'org.openjfx.javafxplugin' version '0.0.13'
+}
+
+javafx {
+    version = '18'
+    modules = ['javafx.controls', 'javafx.media', 'javafx.swing']
+    configuration = 'compileOnly'
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+}
+
+version = "1.0.0"
+
+dependencies {
+    compileOnly "org.lifecompanion:lc-app:$lifecompanionAppVersion"
+    implementation 'com.github.GazePlay:TobiiStreamEngineForJava:5.0'
+    // If you need to add plugin dependencies, add them with "implementation"
+    // Note that you should check that the dependency is not already integrated in LifeCompanion core (if so, use "compileOnly" instead)
+}
+
+// Enter your plugin meta data
+// When changing ID : think also about changing it everywhere in your code
+jar {
+    duplicatesStrategy DuplicatesStrategy.WARN
+    manifest {
+        attributes(
+                "LifeCompanion-Plugin-Class": "org.aac4all.lifecompanion.plugin.Aac4AllPlugin",
+                "LifeCompanion-Plugin-Package-Scanning-Base": "org.aac4all.lifecompanion.plugin",
+                "LifeCompanion-Plugin-Id": "lc-aac4all-plugin",
+                "LifeCompanion-Plugin-Author": "LifeCompanion AAC",
+                "LifeCompanion-Plugin-Version": project.version,
+                "LifeCompanion-Plugin-Build-Date": new Date().getTime(),
+                "LifeCompanion-Plugin-Name": "AAC4ALL",
+                "LifeCompanion-Plugin-Description": "TODO",
+                "LifeCompanion-Min-App-Version": "$lifecompanionAppVersion"
+        )
+    }
+    from {
+        configurations.runtimeClasspath.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+}

@@ -1,0 +1,133 @@
+<texts>
+    <!-- STEPS -->
+    <text key="spellgame.plugin.game.step.write.name">Écrire</text>
+    <text key="spellgame.plugin.game.step.write.instruction.speech">Écris le mot "{}"</text>
+    <text key="spellgame.plugin.game.step.write.instruction.general">Écris le mot</text>
+
+    <text key="spellgame.plugin.game.step.copy.name">Copier</text>
+    <text key="spellgame.plugin.game.step.copy.instruction.speech">Recopie le mot "{}"</text>
+    <text key="spellgame.plugin.game.step.copy.instruction.general">Recopie le mot</text>
+
+    <text key="spellgame.plugin.game.step.copy.timer.name">Copier (sans le mot)</text>
+    <text key="spellgame.plugin.game.step.copy.timer.instruction.speech">Recopie le mot "{}"</text>
+    <text key="spellgame.plugin.game.step.copy.timer.instruction.general">Recopie le mot</text>
+
+    <text key="spellgame.plugin.game.step.char.count.name">Nombre de lettres</text>
+    <text key="spellgame.plugin.game.step.char.count.instruction.speech">Écris le nombre de lettre du mot "{}"</text>
+    <text key="spellgame.plugin.game.step.char.count.instruction.general">Écris le nombre de lettre du mot</text>
+
+    <text key="spellgame.plugin.game.step.vowel.count.name">Nombre de voyelles</text>
+    <text key="spellgame.plugin.game.step.vowel.count.instruction.speech">Écris le nombre de voyelles du mot "{}"</text>
+    <text key="spellgame.plugin.game.step.vowel.count.instruction.general">Écris le nombre de voyelles du mot</text>
+
+    <text key="spellgame.plugin.game.step.consonant.count.name">Nombre de consonnes</text>
+    <text key="spellgame.plugin.game.step.consonant.count.instruction.speech">Écris le nombre de consonnes du mot "{}"</text>
+    <text key="spellgame.plugin.game.step.consonant.count.instruction.general">Écris le nombre de consonnes du mot</text>
+
+    <!-- MODEL -->
+    <text key="spellgame.plugin.default.list.name">Nouvelle liste</text>
+    <text key="spellgame.plugin.answer.type.all">Toutes les réponses</text>
+    <text key="spellgame.plugin.answer.type.good">Bonnes réponses uniquement</text>
+    <text key="spellgame.plugin.answer.type.bad">Mauvaises réponses uniquement</text>
+
+    <!-- VARIABLES -->
+    <text key="spellgame.plugin.use.variable.user.score.name">Score de l'utilisateur</text>
+    <text key="spellgame.plugin.use.variable.user.score.description">Contient le score de l'utilisateur pour la partie courante. Si aucun partie n'est lancée, contient 0.</text>
+    <text key="spellgame.plugin.use.variable.user.score.example">5</text>
+    <text key="spellgame.plugin.use.variable.word.index.name">Position du mot courant</text>
+    <text key="spellgame.plugin.use.variable.word.index.description">Contient la position du mot actuel dans la liste courante : permet à l'utilisateur de savoir si il est plutôt en début ou en fin d'exercice</text>
+    <text key="spellgame.plugin.use.variable.word.index.example">1</text>
+    <text key="spellgame.plugin.use.variable.word.count.name">Nombre de mots</text>
+    <text key="spellgame.plugin.use.variable.word.count.description">Contient le nombre de mots dans la liste courante : permet à l'utilisateur de connaître le nombre de mots total à entrer (utile à combiner avec "Position du mot courant"
+    </text>
+    <text key="spellgame.plugin.use.variable.word.count.example">10</text>
+    <text key="spellgame.plugin.use.variable.current.step.instruction.with.word.name">Consigne de l'étape en cours (avec mot)</text>
+    <text key="spellgame.plugin.use.variable.current.step.instruction.with.word.description">Contient la consigne de l'étape en cours. Cette consigne contient pas le mot en cours et permet par exemple de l'écouter de nouveau
+    </text>
+    <text key="spellgame.plugin.use.variable.current.step.instruction.with.word.example">Recopie le mot : "maison"</text>
+
+    <text key="spellgame.plugin.use.variable.current.step.instruction.name">Consigne de l'étape en cours (sans mot)</text>
+    <text key="spellgame.plugin.use.variable.current.step.instruction.description">Contient la consigne de l'étape en cours. Cette consigne est générique et ne contient pas le mot en cours.
+    </text>
+    <text key="spellgame.plugin.use.variable.current.step.instruction.example">Recopie le mot que tu viens de voir</text>
+    <text key="spellgame.plugin.use.variable.event.answer.given.content.var.name">Réponse de l'utilisateur</text>
+    <text key="spellgame.plugin.use.variable.event.answer.given.content.var.description">Contient la réponse de l'utilisateur, permet par exemple de la prononcer avec la synthèse vocale.</text>
+    <text key="spellgame.plugin.use.variable.event.answer.given.content.var.example">maizon</text>
+
+    <!-- KEY OPTION -->
+    <text key="spellgame.plugin.current.word.key.option.name">Mot courant</text>
+    <text key="spellgame.plugin.current.word.key.option.description">Affiche le mot courant à écrire (quand cela est nécessaire). Permet également l'affichage d'un retour visuel lors de la saisie d'une réponse.</text>
+
+    <!-- ACTIONS -->
+    <text key="spellgame.plugin.main.action.category.name">Jeu "Écris le mot"</text>
+    <text key="spellgame.plugin.main.action.category.description">Contient toutes les actions nécessaire à l'interaction avec le jeu "Écris le mot" (démarrer une partie, valider le mot en cours, etc.)</text>
+    <text key="spellgame.plugin.sub.action.category.current.game.name">Partie en cours</text>
+    <text key="spellgame.plugin.sub.action.category.general.name">Général</text>
+    <text key="spellgame.plugin.action.validate.step.and.go.next.in.game.name">Valider le mot entré</text>
+    <text key="spellgame.plugin.action.validate.step.and.go.next.in.game.description">Permet de "valider" le mot écrit en cours par l'utilisateur de passer au mot suivant (si l'entrée est correcte) ou à l'étape suivante sinon.</text>
+    <text key="spellgame.plugin.action.start.game.name">Démarrer une partie</text>
+    <text key="spellgame.plugin.action.start.game.static.description">Permet de démarrer une nouvelle partie de "Écris le mot" avec la liste sélectionnée</text>
+    <text key="spellgame.plugin.action.start.game.variable.description">Permet de démarrer une nouvelle partie de "Écris le mot" avec la liste "{}"</text>
+    <text key="spellgame.plugin.action.end.game.name">Arrêter la partie en cours</text>
+    <text key="spellgame.plugin.action.end.game.description">Si une partie est en cours, arrête celle-ci puis génère le rapport et l'ouvre.</text>
+    <text key="spellgame.plugin.action.skip.current.word.name">Passer le mot</text>
+    <text key="spellgame.plugin.action.skip.current.word.description">Permet de passer directement au mot suivant si la personne est en difficulté et ne pas devoir faire toutes les étapes.</text>
+
+    <!-- EVENTS -->
+    <text key="spellgame.plugin.sub.event.category.general.name">Général</text>
+    <text key="spellgame.plugin.main.event.category.name">Jeu "Écris le mot"</text>
+    <text key="spellgame.plugin.main.event.category.description">Contient tous les événements relatifs au jeu "Écris le mot". Permet de détacter la fin d'une partie, etc.</text>
+    <text key="spellgame.plugin.event.game.end.name">Fin de partie</text>
+    <text key="spellgame.plugin.event.game.end.description">Cet événement sera généré lorsqu'une partie en cours est terminée ou interrompue.</text>
+    <text key="spellgame.plugin.event.answer.given.name">Réponse entrée</text>
+    <text key="spellgame.plugin.event.answer.given.description">Cet événement se produit à chaque fois que l'utilisateur entre une réponse. La réponse de l'utilisateur est donnée en variable de cet événement.</text>
+    <text key="spellgame.plugin.event.answer.given.variable.description">Cet événement se produit à chaque fois que l'utilisateur entre une réponse qui respecte le critère : "{}"</text>
+    <text key="spellgame.plugin.event.game.started.name">Début de partie</text>
+    <text key="spellgame.plugin.event.game.started.description">Cet événement sera généré lorsqu'une partie est démarrée.</text>
+
+    <!-- REPORT -->
+    <text key="spellgame.plugin.report.field.ignore.accent.true">Activé</text>
+    <text key="spellgame.plugin.report.field.ignore.accent.false">Désactivé</text>
+
+    <!-- TASK -->
+    <text key="spellgame.plugin.task.generate.report.title">Génération des résultats</text>
+    <text key="spellgame.plugin.task.import.word.title">Import de mots</text>
+    <text key="spellgame.plugin.task.get.game.result.for.configuration">Chargement des résultats</text>
+
+    <!-- UI -->
+    <text key="spellgame.plugin.config.view.general.title">Jeu "Ecris le mot"</text>
+    <text key="spellgame.plugin.config.view.history.title">Historique des résultats</text>
+    <text key="spellgame.plugin.config.view.wordlist.title">Configurer la liste de mots</text>
+    <text key="spellgame.plugin.config.general.configuration.title.part">Configuration générale</text>
+    <text key="spellgame.plugin.config.view.field.word.display.second">Temps d'affichage du mot</text>
+    <text key="spellgame.plugin.config.word.list.title.part">Liste de mots</text>
+    <text key="spellgame.plugin.config.button.modify.current.list">Modifier la liste</text>
+    <text key="spellgame.plugin.config.button.delete.current.list">Supprimer la liste</text>
+    <text key="spellgame.plugin.config.field.list.name">Nom de la liste</text>
+    <text key="spellgame.plugin.config.field.add.word">Ajouter un mot</text>
+    <text key="spellgame.plugin.config.field.add.word.prompt">Entrée pour ajouter le mot</text>
+    <text key="spellgame.plugin.config.field.import.list">Importer depuis un fichier texte</text>
+    <text key="spellgame.plugin.config.field.import.list.title">Importer depuis un fichier texte</text>
+    <text key="spellgame.plugin.config.import.list.format">Fichier texte (UTF-8)</text>
+    <text key="spellgame.plugin.config.field.word.list.to.start">Démarrer la partie depuis la liste</text>
+    <text key="spellgame.plugin.config.field.event.answer.given.answer.filter">Générer l'événement pour les réponses</text>
+    <text key="spellgame.plugin.config.view.field.validate.with.enter">Autoriser la validation avec Entrée</text>
+    <text key="spellgame.plugin.config.view.field.validate.with.enter.tooltip">Si activé, permet à l'utilisateur de valider la réponse courante avec la touche Entrée du clavier.</text>
+    <text key="spellgame.plugin.config.view.field.ignore.accents">Ignorer les accents</text>
+    <text key="spellgame.plugin.config.view.field.ignore.accents.tooltip">Si activé, l'oubli d'accents ne sera pas compté comme une erreur</text>
+    <text key="spellgame.plugin.config.view.field.enable.feedback.sound">Activer les retours sonores</text>
+    <text key="spellgame.plugin.config.field.slider.volume">Volume des retours sonores</text>
+    <text key="spellgame.plugin.config.view.field.enable.feedback.sound.tooltip">Si activé, ajoute un retour sonore à chaque réponse (bonne ou mauvaise)</text>
+    <text key="spellgame.plugin.config.view.field.shuffle.words">Mélanger la liste</text>
+    <text key="spellgame.plugin.config.view.field.shuffle.words.tooltip">Si activé, la liste de mot sera mélangée de manière aléatoire à chaque début de partie</text>
+    <text key="spellgame.plugin.config.view.field.show.visual.feedback.key">Afficher un retour visuel</text>
+    <text key="spellgame.plugin.config.view.field.show.visual.feedback.key.tooltip">Si activé, la case affiche un retour visuel à chaque réponse de l'utilisateur (positive ou négative)</text>
+    <text key="spellgame.plugin.config.view.field.show.visual.feedback.key.action">Activation/désactivation du retour visuel sur le mot courant</text>
+    <text key="spellgame.plugin.config.game.result.cell.action.open">OUVRIR</text>
+    <text key="spellgame.plugin.config.game.confirm.remove.text">Êtes vous sûr de vouloir supprimer ce/ces résultat(s) ? Cette action est irréversible.</text>
+    <text key="spellgame.plugin.config.word.list.history.part">Historique des résultats</text>
+    <text key="spellgame.plugin.config.button.show.results">Voir tous les résultats</text>
+    <text key="spellgame.plugin.config.button.remove.all">Supprimer tout</text>
+
+
+</texts>
