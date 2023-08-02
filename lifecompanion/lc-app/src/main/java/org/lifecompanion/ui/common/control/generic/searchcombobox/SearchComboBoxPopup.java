@@ -121,7 +121,9 @@ public class SearchComboBoxPopup<T> extends Popup implements LCViewInitHelper {
         Scene scene = searchComboBox.getScene();
         Window window = scene.getWindow();
         Point2D point2D = searchComboBox.getButtonOpenPopup().localToScene(0, 0);
-        this.show(searchComboBox.getButtonOpenPopup(), window.getX() + scene.getX() + point2D.getX() - 8.0, window.getY() + scene.getY() + point2D.getY() + searchComboBox.getButtonOpenPopup().getHeight() - 4.0);
+        this.show(searchComboBox.getButtonOpenPopup(),
+                window.getX() + scene.getX() + point2D.getX() - 8.0,
+                window.getY() + scene.getY() + point2D.getY() + searchComboBox.getButtonOpenPopup().getHeight() - 4.0);
         //this.fieldSearch.requestFocus();
         setItems(searchComboBox.getItems());
     }
@@ -132,7 +134,7 @@ public class SearchComboBoxPopup<T> extends Popup implements LCViewInitHelper {
     private void searchUpdated() {
         // TODO : loading indicator ?
         String text = fieldSearch.getText();
-        ThreadUtils.debounce(300, "search-combobox-popup", () -> {
+        ThreadUtils.debounce(300, "search-combobox-popup" + hashCode(), () -> {
             if (LangUtils.isNotEmpty(sourceItems)) {
                 ArrayList<T> copy = new ArrayList<>(sourceItems);
                 final Predicate<T> builtPredicate = this.searchComboBox.getPredicateBuilder().apply(text);
