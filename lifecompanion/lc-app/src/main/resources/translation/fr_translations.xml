@@ -146,8 +146,9 @@
   <text key="use.action.sub.category.change.page.name">Changer de page</text>
   <text key="use.action.sub.category.computer.access.computer.features.name">Fonctions de l'ordinateur</text>
   <text key="use.action.sub.category.computer.access.keyboard.name">Clavier</text>
-  <text key="use.action.sub.category.computer.access.mouse.actions.name">Action de souris</text>
-  <text key="use.action.sub.category.computer.access.mouse.move.name">Déplacement de souris</text>
+  <text key="use.action.sub.category.computer.access.mouse.actions.name">Action de souris virtuelle</text>
+  <text key="use.action.sub.category.computer.access.mouse.direct.actions.name">Action de souris (direct)</text>
+  <text key="use.action.sub.category.computer.access.mouse.move.name">Déplacement de souris virtuelle</text>
   <text key="use.action.sub.category.configuration.change.name">Changer des éléments</text>
   <text key="use.action.sub.category.configuration.frame.name">Fenêtre</text>
   <text key="use.action.sub.category.delete.text.name">Supprimer du texte</text>
@@ -520,6 +521,8 @@
   <text key="action.simulate.keyboard.key.until.release.action.name">Simuler l'appui de touche(s) jusqu'au
 		relâchement</text>
   <!--org.lifecompanion.base.data.useaction.impl.computera.mouseaction-->
+    <text key="action.clic.mouse.scroll.name">Appui sur la molette</text>
+    <text key="action.clic.mouse.scroll.static.description">Simule l'appui sur la molette de la souris. Cette action ne se produit pas en fonction de la souris virtuelle</text>
   <text key="action.clic.mouse.double.name">Double clic</text>
   <text key="action.clic.mouse.double.static.description">Simuler un double clic de souris à la position du curseur</text>
   <text key="action.clic.mouse.left.name">Clic droit</text>
@@ -3636,4 +3639,9 @@
     <text key="action.switch.to.edit.mode.description">Permet de basculer du mode "Utilisation" au mode "Édition" directement depuis une action. Cette action sera réalisée sans demander de code de confirmation si celui-ci est activé.</text>
     <text key="plugin.error.startup.notification.will.be.deleted">Erreur au chargement de l'extension "{}"</text>
     <text key="plugin.error.startup.notification.will.be.deleted.button">Redémarrer</text>
+    <text key="task.generate.random.configuration.title">Génération d'une configuration "aléatoire"</text>
+    <text key="misc.config.tab.part.dev">Fonctions en test (développeurs)</text>
+    <text key="button.testing.random.configuration">Configuration aléatoire</text>
+    <text key="button.generate.tech.demo.configuration">Configuration démo technique</text>
+    <text key="task.generate.tech.demo.configuration.title">Génération de la configuration de démo technique</text>
 </texts>

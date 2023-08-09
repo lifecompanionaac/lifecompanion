@@ -22,6 +22,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
@@ -29,16 +30,20 @@ import org.jdom2.Document;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
+import org.lifecompanion.controller.editaction.AsyncExecutorController;
 import org.lifecompanion.controller.editaction.GlobalActions;
 import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.controller.editmode.ErrorHandlingController;
 import org.lifecompanion.controller.io.IOHelper;
+import org.lifecompanion.controller.io.task.GenerateRandomConfigurationTask;
+import org.lifecompanion.controller.io.task.GenerateTechDemoConfigurationTask;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.profile.ProfileController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.io.FileNameUtils;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
+import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.model.api.configurationcomponent.IdentifiableComponentI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
@@ -62,7 +67,7 @@ import java.util.stream.Collectors;
  *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
-public class MiscConfigSubmenu extends VBox implements LCViewInitHelper, UserConfigSubmenuI {
+public class MiscConfigSubmenu extends ScrollPane implements LCViewInitHelper, UserConfigSubmenuI {
     private final static Logger LOGGER = LoggerFactory.getLogger(MiscConfigSubmenu.class);
 
     /**
@@ -73,7 +78,7 @@ public class MiscConfigSubmenu extends VBox implements LCViewInitHelper, UserCon
     /**
      * Button to open folders
      */
-    private Button buttonOpenRootFolder, buttonOpenCurrentProfileFolder, buttonOpenCurrentConfigFolder, buttonExecuteGC, buttonOpenConfigCleanXml, buttonDetectKeylistDuplicates;
+    private Button buttonOpenRootFolder, buttonOpenCurrentProfileFolder, buttonOpenCurrentConfigFolder, buttonExecuteGC, buttonOpenConfigCleanXml, buttonDetectKeylistDuplicates, buttonGenerateTechDemoConfiguration, buttonGenerateRandomConfiguration;
 
     private Label labelMemoryInfo;
 
@@ -94,7 +99,7 @@ public class MiscConfigSubmenu extends VBox implements LCViewInitHelper, UserCon
         this.buttonOpenCurrentProfileFolder = this.createButton("button.open.current.profile.folder");
         this.buttonOpenCurrentConfigFolder = this.createButton("button.open.current.config.folder");
         this.buttonOpenConfigCleanXml = this.createButton("button.open.current.config.clean.xml.folder");
-        this.buttonDetectKeylistDuplicates = this.createButton("button.detect.keylist.duplicates");
+
 
         //Logs
         Label labelTitleLog = FXControlUtils.createTitleLabel("misc.config.tab.part.logs");
@@ -112,10 +117,33 @@ public class MiscConfigSubmenu extends VBox implements LCViewInitHelper, UserCon
         buttonExecuteGC = createButton("misc.config.tab.memory.button.gc");
 
         //Add
-        this.setAlignment(Pos.TOP_CENTER);
-        this.setSpacing(10.0);
-        this.getChildren().addAll(labelExplain, labelTitleFolder, this.buttonOpenRootFolder, this.buttonOpenCurrentProfileFolder,
-                this.buttonOpenCurrentConfigFolder, buttonOpenConfigCleanXml, buttonDetectKeylistDuplicates, labelTitleLog, buttonOpenLogFile, buttonOpenLogFolder, this.buttonPackageLogs, labelTitleMemory, labelMemoryInfo, buttonExecuteGC);
+        VBox boxChildren = new VBox(10, labelExplain,
+                labelTitleFolder,
+                this.buttonOpenRootFolder,
+                this.buttonOpenCurrentProfileFolder,
+                this.buttonOpenCurrentConfigFolder,
+                buttonOpenConfigCleanXml,
+                labelTitleLog,
+                buttonOpenLogFile,
+                buttonOpenLogFolder,
+                this.buttonPackageLogs,
+                labelTitleMemory,
+                labelMemoryInfo,
+                buttonExecuteGC
+        );
+        boxChildren.setAlignment(Pos.TOP_CENTER);
+        this.setContent(boxChildren);
+        this.setFitToWidth(true);
+
+        Label labelTitleTesting = FXControlUtils.createTitleLabel("misc.config.tab.part.dev");
+        buttonGenerateTechDemoConfiguration = this.createButton("button.generate.tech.demo.configuration");
+        buttonGenerateRandomConfiguration = this.createButton("button.testing.random.configuration");
+        this.buttonDetectKeylistDuplicates = this.createButton("button.detect.keylist.duplicates");
+
+        // Developers : to test your feature, create and add your nodes here and make sure "org.lifecompanion.debug.dev.env" property is enabled
+        if (StringUtils.isNotBlank(System.getProperty("org.lifecompanion.debug.dev.env"))) {
+            boxChildren.getChildren().addAll(labelTitleTesting, buttonGenerateTechDemoConfiguration, buttonDetectKeylistDuplicates, buttonGenerateRandomConfiguration);
+        }
     }
 
     private Button createButton(final String textId) {
@@ -135,7 +163,8 @@ public class MiscConfigSubmenu extends VBox implements LCViewInitHelper, UserCon
         this.buttonOpenCurrentConfigFolder.setOnAction(
                 e -> this.openFileOrFolder(buttonOpenCurrentConfigFolder, IOHelper.getConfigurationDirectoryPath(ProfileController.INSTANCE.currentProfileProperty().get().getID(),
                         AppModeController.INSTANCE.getEditModeContext().configurationProperty().get().getID())));
-        this.buttonOpenLogFile.setOnAction(e -> this.openFileOrFolder(buttonOpenLogFile, System.getProperty("java.io.tmpdir") + File.separator + "LifeCompanion" + File.separator + "logs" + File.separator + "application.log"));
+        this.buttonOpenLogFile.setOnAction(e -> this.openFileOrFolder(buttonOpenLogFile,
+                System.getProperty("java.io.tmpdir") + File.separator + "LifeCompanion" + File.separator + "logs" + File.separator + "application.log"));
         this.buttonOpenConfigCleanXml.setOnAction(e -> {
             File configurationDirectory = new File(IOHelper.getConfigurationDirectoryPath(ProfileController.INSTANCE.currentProfileProperty().get().getID(),
                     AppModeController.INSTANCE.getEditModeContext().configurationProperty().get().getID()));
@@ -145,6 +174,12 @@ public class MiscConfigSubmenu extends VBox implements LCViewInitHelper, UserCon
         });
         this.buttonDetectKeylistDuplicates.setOnAction(e -> {
             this.detectAndFixKeylistDuplicates();
+        });
+        this.buttonGenerateRandomConfiguration.setOnAction(e -> {
+            AsyncExecutorController.INSTANCE.addAndExecute(true, false, new GenerateRandomConfigurationTask());
+        });
+        this.buttonGenerateTechDemoConfiguration.setOnAction(e -> {
+            AsyncExecutorController.INSTANCE.addAndExecute(true, false, new GenerateTechDemoConfigurationTask());
         });
     }
 

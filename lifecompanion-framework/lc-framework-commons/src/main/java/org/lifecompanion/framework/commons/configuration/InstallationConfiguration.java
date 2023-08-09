@@ -20,6 +20,7 @@
 package org.lifecompanion.framework.commons.configuration;
 
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
+import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -46,7 +47,7 @@ public class InstallationConfiguration {
     }
 
     public File getUserDataDirectory() {
-        return new File(userDataDirectory);
+        return new File(StringUtils.trimToEmpty(userDataDirectory).replace("~", System.getProperty("user.home")));
     }
 
     public static InstallationConfiguration read(File file) throws IOException {
