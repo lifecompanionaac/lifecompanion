@@ -54,7 +54,7 @@ public enum SystemType {
 	static {
 		String osName = System.getProperty("os.name");
 		String vendorUrl = System.getProperty("java.vendor.url");
-		SystemType.LOGGER.info("Will try to detect system with following properties : \n\tOS name : {}\n\tVendor URL : {}", osName, vendorUrl);
+		SystemType.LOGGER.info("Will try to detect system with following properties : OS name : {} | Vendor URL : {}", osName, vendorUrl);
 		if (osName != null) {
 			if (StringUtils.containsIgnoreCase(osName, "win")) {
 				SystemType.current = SystemType.WINDOWS;

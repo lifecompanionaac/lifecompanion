@@ -2,7 +2,7 @@
  * LifeCompanion AAC and its sub projects
  *
  * Copyright (C) 2014 to 2019 Mathieu THEBAUD
- * Copyright (C) 2020 to 2021 CMRRF KERPAPE (Lorient, France)
+ * Copyright (C) 2020 to 2024 CMRRF KERPAPE (Lorient, France)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,6 +25,7 @@ import org.lifecompanion.controller.appinstallation.InstallationController;
 import org.lifecompanion.controller.doublelaunch.DoubleLaunchListenerImpl;
 import org.lifecompanion.controller.editmode.ErrorHandlingController;
 import org.lifecompanion.controller.lifecycle.LifeCompanionController;
+import org.lifecompanion.controller.useapi.UseApiController;
 import org.lifecompanion.framework.commons.doublelaunch.DoubleLaunchController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.model.impl.constant.LCConstant;
@@ -78,6 +79,9 @@ public class LifeCompanion extends Application {
                     InstallationController.INSTANCE.getBuildProperties().getVersionLabel(),
                     InstallationController.INSTANCE.getBuildProperties().getBuildDate(),
                     args);
+            // Check the launch args (after update)
+            UseApiController.INSTANCE.initArgs(argsCollection);
+            // Run the FX app
             Application.launch(args);
             //Inform
             Instant endDate = Instant.now();
