@@ -25,7 +25,7 @@ import org.lifecompanion.controller.appinstallation.InstallationController;
 import org.lifecompanion.controller.doublelaunch.DoubleLaunchListenerImpl;
 import org.lifecompanion.controller.editmode.ErrorHandlingController;
 import org.lifecompanion.controller.lifecycle.LifeCompanionController;
-import org.lifecompanion.controller.useapi.UseApiController;
+import org.lifecompanion.controller.useapi.CommandLineArgumentController;
 import org.lifecompanion.framework.commons.doublelaunch.DoubleLaunchController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.model.impl.constant.LCConstant;
@@ -80,7 +80,7 @@ public class LifeCompanion extends Application {
                     InstallationController.INSTANCE.getBuildProperties().getBuildDate(),
                     args);
             // Check the launch args (after update)
-            UseApiController.INSTANCE.initArgs(argsCollection);
+            CommandLineArgumentController.INSTANCE.initArgs(argsCollection);
             // Run the FX app
             Application.launch(args);
             //Inform

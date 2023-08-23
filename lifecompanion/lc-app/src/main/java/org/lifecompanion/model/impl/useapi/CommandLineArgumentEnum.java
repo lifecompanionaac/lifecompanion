@@ -18,11 +18,12 @@
  */
 package org.lifecompanion.model.impl.useapi;
 
-import org.lifecompanion.model.api.useapi.UseApiArgI;
+import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.model.api.useapi.CommandLineArgumentI;
 
 import java.util.stream.Stream;
 
-public enum UseApiArgEnum implements UseApiArgI {
+public enum CommandLineArgumentEnum implements CommandLineArgumentI {
     DIRECT_LAUNCH_CONFIGURATION("directLaunchOn",
             "profileId configurationId",
             "Try to launch LifeCompanion directly in use mode on a given profile and configuration combination. Profile and configuration should have already been loaded in LifeCompanion on a previous launch.",
@@ -33,17 +34,22 @@ public enum UseApiArgEnum implements UseApiArgI {
             "configurationFilePath",
             "Try to import a configuration file and launch it directly in use mode. The given configuration will not be added to profile. This can be useful to run LifeCompanion as a \"configuration reader only\"",
             "C:\\lifecompanion\\my-configuration.lcc",
-            1);
+            1),
+    DISABLE_SWITCH_TO_EDIT_MODE("disableSwitchToEditMode",
+            null,
+            "Disable the switch to edit mode when the use mode is launched. This will hide the edit mode button and disable keyboard shortcuts or any action that could cause a switch to edit mode. Note that this doesn't disable the edit mode itself : on the first launch, LifeCompanion can be used in edit mode.",
+            null,
+            0);
 
-    private final String name, argType, markdownDescription, argExample;
-    private final int expectedArgCount;
+    private final String name, parameters, description, parametersExample;
+    private final int expectedParameterCount;
 
-    UseApiArgEnum(String name, String argType, String markdownDescription, String argExample, int expectedArgCount) {
+    CommandLineArgumentEnum(String name, String parameters, String description, String parametersExample, int expectedParameterCount) {
         this.name = name;
-        this.argType = argType;
-        this.markdownDescription = markdownDescription;
-        this.argExample = argExample;
-        this.expectedArgCount = expectedArgCount;
+        this.parameters = parameters;
+        this.description = description;
+        this.parametersExample = parametersExample;
+        this.expectedParameterCount = expectedParameterCount;
     }
 
     @Override
@@ -52,34 +58,34 @@ public enum UseApiArgEnum implements UseApiArgI {
     }
 
     @Override
-    public String getArgType() {
-        return argType;
+    public String getParameters() {
+        return parameters;
     }
 
     @Override
-    public String getMarkdownDescription() {
-        return markdownDescription;
+    public String getDescription() {
+        return description;
     }
 
     @Override
-    public String getArgExample() {
-        return argExample;
+    public String getParametersExample() {
+        return parametersExample;
     }
 
     @Override
-    public int getExpectedArgCount() {
-        return expectedArgCount;
+    public int getExpectedParameterCount() {
+        return expectedParameterCount;
     }
 
     @Override
     public String getMarkdownDocumentation() {
-        return "|`-" + getName() + " " + getArgType() + "`|`" + getArgExample() + "`|" + getMarkdownDescription() + "|\n";
+        return "|`-" + getName() + (StringUtils.isNotBlank(getParameters()) ? (" " + getParameters()) : "") + "`|" + (StringUtils.isNotBlank(getParametersExample()) ? ("`" + getParametersExample() + "`") : "*`NONE`*") + "|" + getDescription() + "|\n";
     }
 
     public static String getAllMarkdownDocumentation() {
         StringBuilder all = new StringBuilder();
         all.append("|Argument|Parameters|Description|\n|-|-|-|\n");
-        Stream.of(values()).map(UseApiArgEnum::getMarkdownDocumentation).forEach(all::append);
+        Stream.of(values()).map(CommandLineArgumentEnum::getMarkdownDocumentation).forEach(all::append);
         return all.toString();
     }
 }

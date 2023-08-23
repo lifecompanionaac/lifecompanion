@@ -34,6 +34,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.systemvk.SystemVirtualKeyboardController;
+import org.lifecompanion.controller.useapi.CommandLineArgumentController;
 import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
 import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
 import org.lifecompanion.framework.commons.translation.Translation;
@@ -41,6 +42,7 @@ import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.editaction.BaseEditActionI;
 import org.lifecompanion.model.impl.constant.LCConstant;
+import org.lifecompanion.model.impl.useapi.CommandLineArgumentEnum;
 import org.lifecompanion.util.javafx.DialogUtils;
 import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.util.javafx.StageUtils;
@@ -75,33 +77,35 @@ public class CommonActions {
 
         @Override
         public void doAction() {
-            if (useConfirmFct && UserConfigurationController.INSTANCE.secureGoToEditModeProperty().get()) {
-                // Issue #180 - Secure dialog should automatically be closed (can be the user error)
-                IntegerProperty timeLeft = new SimpleIntegerProperty(LCConstant.GO_TO_CONFIG_MODE_DELAY);
-                Timeline timeLineAutoHide = new Timeline(new KeyFrame(Duration.seconds(1), (e) -> timeLeft.set(timeLeft.get() - 1)));
-                timeLineAutoHide.setCycleCount(LCConstant.GO_TO_CONFIG_MODE_DELAY);
-                //Generate a 1000 - 9999 code
-                Random random = new Random();
-                String number = "" + (random.nextInt(8999) + 1000);
-                final TextInputDialog dialog = DialogUtils
-                        .textInputDialogWithSource(StageUtils.getEditOrUseStageVisible())
-                        .withContentText(Translation.getText("action.confirm.go.config.message", number))
-                        .build();
-                dialog.headerTextProperty().bind(TranslationFX.getTextBinding("action.confirm.go.config.header", timeLeft));
-                timeLineAutoHide.setOnFinished(e -> dialog.hide());
-                timeLineAutoHide.play();
-                SystemVirtualKeyboardController.INSTANCE.showIfEnabled();
-                Optional<String> enteredString = dialog.showAndWait();
-                timeLineAutoHide.stop();
-                //Check code
-                if (enteredString.isEmpty() || StringUtils.isDifferent(enteredString.get(), number)) {
-                    if (enteredString.isPresent()) {
-                        DialogUtils.alertWithSourceAndType(source, Alert.AlertType.ERROR).withContentText(Translation.getText("action.confirm.go.config.error")).show();
+            if (!CommandLineArgumentController.INSTANCE.isPresent(CommandLineArgumentEnum.DISABLE_SWITCH_TO_EDIT_MODE)) {
+                if (useConfirmFct && UserConfigurationController.INSTANCE.secureGoToEditModeProperty().get()) {
+                    // Issue #180 - Secure dialog should automatically be closed (can be the user error)
+                    IntegerProperty timeLeft = new SimpleIntegerProperty(LCConstant.GO_TO_CONFIG_MODE_DELAY);
+                    Timeline timeLineAutoHide = new Timeline(new KeyFrame(Duration.seconds(1), (e) -> timeLeft.set(timeLeft.get() - 1)));
+                    timeLineAutoHide.setCycleCount(LCConstant.GO_TO_CONFIG_MODE_DELAY);
+                    //Generate a 1000 - 9999 code
+                    Random random = new Random();
+                    String number = "" + (random.nextInt(8999) + 1000);
+                    final TextInputDialog dialog = DialogUtils
+                            .textInputDialogWithSource(StageUtils.getEditOrUseStageVisible())
+                            .withContentText(Translation.getText("action.confirm.go.config.message", number))
+                            .build();
+                    dialog.headerTextProperty().bind(TranslationFX.getTextBinding("action.confirm.go.config.header", timeLeft));
+                    timeLineAutoHide.setOnFinished(e -> dialog.hide());
+                    timeLineAutoHide.play();
+                    SystemVirtualKeyboardController.INSTANCE.showIfEnabled();
+                    Optional<String> enteredString = dialog.showAndWait();
+                    timeLineAutoHide.stop();
+                    //Check code
+                    if (enteredString.isEmpty() || StringUtils.isDifferent(enteredString.get(), number)) {
+                        if (enteredString.isPresent()) {
+                            DialogUtils.alertWithSourceAndType(source, Alert.AlertType.ERROR).withContentText(Translation.getText("action.confirm.go.config.error")).show();
+                        }
+                        return;
                     }
-                    return;
                 }
+                AppModeController.INSTANCE.startEditMode();
             }
-            AppModeController.INSTANCE.startEditMode();
         }
 
         @Override

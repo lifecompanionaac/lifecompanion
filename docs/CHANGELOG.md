@@ -5,6 +5,7 @@
 ### Fonctionnalités
 
 - Ajout d'une nouvelle action : appui sur la molette de souris
+- Ajout d'une nouvelle fonctionnalité : [les arguments de lancement de LifeCompanion](../docs/USER_API.md), peuvent être utiles pour configurer LifeCompanion de manière particulière.
 
 ### Corrections/ajustements
 

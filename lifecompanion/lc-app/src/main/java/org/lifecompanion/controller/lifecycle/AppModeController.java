@@ -104,6 +104,7 @@ public enum AppModeController {
 
 
     public void startEditMode() {
+        // Note : DON'T check for CommandLineArgumentEnum.DISABLE_SWITCH_TO_EDIT_MODE here : if done, LifeCompanion could be blocked on startup. Instead, check for callers.
         FXThreadUtils.runOnFXThread(() -> {
             final LCConfigurationI usedConfiguration = useModeContext.getConfiguration();
             mode.set(AppMode.EDIT);

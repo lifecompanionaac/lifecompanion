@@ -19,8 +19,8 @@
 package org.lifecompanion.controller.useapi;
 
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
-import org.lifecompanion.model.impl.constant.LCConstant;
-import org.lifecompanion.model.impl.useapi.UseApiArgEnum;
+import org.lifecompanion.model.impl.useapi.CommandLineArgumentEnum;
+import org.lifecompanion.util.LangUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,31 +29,31 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public enum UseApiController {
+public enum CommandLineArgumentController {
     INSTANCE;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(UseApiController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CommandLineArgumentController.class);
 
-    private Map<UseApiArgEnum, List<String>> args;
+    private Map<CommandLineArgumentEnum, List<String>> args;
 
-    UseApiController() {
+    CommandLineArgumentController() {
     }
 
     public void initArgs(List<String> argsCollection) {
-        if (args != null) throw new IllegalStateException("Can't init args twice");
+        if (args != null) throw new IllegalStateException("Can't init command line args twice");
         args = new HashMap<>();
 
         // Detect and analyze
-        for (UseApiArgEnum useApiArg : UseApiArgEnum.values()) {
+        for (CommandLineArgumentEnum useApiArg : CommandLineArgumentEnum.values()) {
             final int indexOfArg = argsCollection.indexOf("-" + useApiArg.getName());
             if (indexOfArg >= 0) {
                 // Remove arg
                 argsCollection.remove(indexOfArg);
                 // Try to get args if possible
-                if (useApiArg.getExpectedArgCount() > 0) {
-                    if (indexOfArg + (useApiArg.getExpectedArgCount() - 1) < argsCollection.size()) {
+                if (useApiArg.getExpectedParameterCount() > 0) {
+                    if (indexOfArg + (useApiArg.getExpectedParameterCount() - 1) < argsCollection.size()) {
                         List<String> paramForCurrent = new ArrayList<>();
-                        for (int i = indexOfArg; i < useApiArg.getExpectedArgCount(); i++) {
+                        for (int i = indexOfArg; i < useApiArg.getExpectedParameterCount(); i++) {
                             paramForCurrent.add(argsCollection.remove(indexOfArg));
                         }
                         if (args.containsKey(useApiArg)) {
@@ -66,7 +66,7 @@ public enum UseApiController {
                             args.put(useApiArg, paramForCurrent);
                         }
                     } else {
-                        LOGGER.error("Invalid arg {} detected, expected {} parameters but didn't find them", useApiArg.getName(), useApiArg.getExpectedArgCount());
+                        LOGGER.error("Invalid arg {} detected, expected {} parameters but didn't find them", useApiArg.getName(), useApiArg.getExpectedParameterCount());
                     }
                 } else {
                     LOGGER.info("Valid arg {} detected (no parameter)", useApiArg.getName());
@@ -79,13 +79,17 @@ public enum UseApiController {
         argsCollection.stream().filter(s -> StringUtils.startWithIgnoreCase(s, "-")).forEach(arg -> {
             LOGGER.warn("Invalid arg {} detected, it doesn't match any of the available args, check the docs !", arg);
         });
+
+        if (LangUtils.safeParseBoolean(System.getProperty("org.lifecompanion.debug.dev.env"))) {
+            System.out.println(CommandLineArgumentEnum.getAllMarkdownDocumentation());
+        }
     }
 
-    public boolean isPresent(UseApiArgEnum arg) {
+    public boolean isPresent(CommandLineArgumentEnum arg) {
         return args.containsKey(arg);
     }
 
-    public List<String> getFollowingArgs(UseApiArgEnum arg) {
+    public List<String> getFollowingArgs(CommandLineArgumentEnum arg) {
         return args.get(arg);
     }
 }

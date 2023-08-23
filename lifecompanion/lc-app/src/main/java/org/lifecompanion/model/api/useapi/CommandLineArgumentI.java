@@ -18,16 +18,16 @@
  */
 package org.lifecompanion.model.api.useapi;
 
-public interface UseApiArgI {
+public interface CommandLineArgumentI {
     String getName();
 
-    String getArgType();
+    String getParameters();
 
-    String getMarkdownDescription();
+    String getDescription();
 
-    String getArgExample();
+    String getParametersExample();
 
-    int getExpectedArgCount();
+    int getExpectedParameterCount();
 
     String getMarkdownDocumentation();
 }

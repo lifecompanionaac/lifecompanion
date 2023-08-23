@@ -20,11 +20,13 @@ package org.lifecompanion.model.impl.categorizedelement.useaction.available;
 
 import javafx.application.Platform;
 import org.lifecompanion.controller.lifecycle.AppModeController;
+import org.lifecompanion.controller.useapi.CommandLineArgumentController;
 import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseActionSubCategories;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
 import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
+import org.lifecompanion.model.impl.useapi.CommandLineArgumentEnum;
 
 import java.util.Map;
 
@@ -33,19 +35,21 @@ import java.util.Map;
  */
 public class SwitchToEditModeAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
 
-	public SwitchToEditModeAction() {
-		super(UseActionTriggerComponentI.class);
-		this.order = 0;
-		this.category = DefaultUseActionSubCategories.APPLICATION;
-		this.nameID = "action.switch.to.edit.mode.name";
-		this.staticDescriptionID = "action.switch.to.edit.mode.description";
-		this.configIconPath = "miscellaneous/icon_switch_to_edit_mode.png";
-		this.parameterizableAction = false;
-		this.variableDescriptionProperty().set(getStaticDescription());
-	}
+    public SwitchToEditModeAction() {
+        super(UseActionTriggerComponentI.class);
+        this.order = 0;
+        this.category = DefaultUseActionSubCategories.APPLICATION;
+        this.nameID = "action.switch.to.edit.mode.name";
+        this.staticDescriptionID = "action.switch.to.edit.mode.description";
+        this.configIconPath = "miscellaneous/icon_switch_to_edit_mode.png";
+        this.parameterizableAction = false;
+        this.variableDescriptionProperty().set(getStaticDescription());
+    }
 
-	@Override
-	public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
-		AppModeController.INSTANCE.startEditMode();
-	}
+    @Override
+    public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
+        if (!CommandLineArgumentController.INSTANCE.isPresent(CommandLineArgumentEnum.DISABLE_SWITCH_TO_EDIT_MODE)) {
+            AppModeController.INSTANCE.startEditMode();
+        }
+    }
 }
