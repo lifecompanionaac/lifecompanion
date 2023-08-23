@@ -53,6 +53,7 @@ All the official existing plugins are stored in the [**lifecompanion-plugins**](
 - [**ppp plugin**](../lifecompanion-plugins/lc-ppp-plugin/) : plugin to trace prediatric pain profil scale for an user
 - [**homeassistant plugin**](../lifecompanion-plugins/lc-homeassistant-plugin/) : plugin to interact with a HomeAssistant server
 - [**predict4all evaluation plugin**](../lifecompanion-plugins/lc-predict4all-evaluation-plugin/) : plugin to evaluate word prediction
+- [**IR remote plugin**](../lifecompanion-plugins/lc-flirc-plugin/) : plugin to use LifeCompanion as an IR remote with [FLIRC](https://flirc.tv/products/flirc-usb-receiver?variant=43513067569384)
 
 This documentation is based on [**lc-spellgame-plugin**](../lifecompanion-plugins/lc-spellgame-plugin/) to rely on a working example. This plugin is the reference plugin implementation.
 

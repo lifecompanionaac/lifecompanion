@@ -1,7 +1,5 @@
 # Building/running LifeCompanion
 
-# Development
-
 Development environment installed and tested on Windows 10/11 and Ubuntu.
 
 Used JDK (in IntelliJ and builds) is [Eclipse Temurin™](https://adoptium.net/temurin/releases/)
@@ -61,7 +59,7 @@ It is possible possible to create custom local images (offline) to test your ima
 
 Before, configure your local.env to add AWS access/secret properties (cf [update part](UPDATE.md))
 
-Then, run `gradlew prepareOfflineApplication`. This will create in **offline** directory a subdirectory per system with all the needed element to run LifeCompanion on your computer. When running this task, you can add `lifecompanion.publish.application.persistent.data` Gradle property to avoid downloading fresh data on each build (run it `gradlew prepareOfflineApplication -Plifecompanion.publish.application.persistent.data`)
+Then, run `gradlew prepareOfflineApplication`. This will create in **offline** directory a subdirectory per system with all the needed element to run LifeCompanion on your computer. When running this task, you can add `lifecompanion.publish.application.persistent.data` Gradle property to avoid downloading fresh data from S3 on each build (run it `gradlew prepareOfflineApplication -Plifecompanion.publish.application.persistent.data`)
 
 ## Troubleshooting
 

@@ -2,13 +2,9 @@
 
 ## TL;DR
 
-To build and run LifeCompanion from source
+LifeCompanion app and components are built using Gralde and Java+JavaFX 18.
 
-1. install Java JDK 18
-1. Go to **lifecompanion-framework** and `gradlew publishToMavenLocal`
-1. Go to **lifecompanion** and `gradlew :lc-app:run`
-
-Detailled information available bellow.
+To build and run LifeCompanion, you should be familiar with these technologies.
 
 ## Structure
 
@@ -50,7 +46,7 @@ welcome to contribute !**
 
 - [Building/running LifeCompanion](BUILD.md)
 - [Publishing updates (official devs)](UPDATE.md)
-- [Writing LifeCompanion plugins](PLUGIN.md)
+- [Extending LifeCompanion with plugins](PLUGIN.md)
 
 ## Others
 

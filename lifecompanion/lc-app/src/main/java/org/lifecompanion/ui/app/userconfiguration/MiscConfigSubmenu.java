@@ -50,6 +50,7 @@ import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNode
 import org.lifecompanion.model.impl.configurationcomponent.dynamickey.KeyListLeaf;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.util.DesktopUtils;
+import org.lifecompanion.util.LangUtils;
 import org.lifecompanion.util.javafx.FXControlUtils;
 import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.slf4j.Logger;
@@ -141,7 +142,7 @@ public class MiscConfigSubmenu extends ScrollPane implements LCViewInitHelper, U
         this.buttonDetectKeylistDuplicates = this.createButton("button.detect.keylist.duplicates");
 
         // Developers : to test your feature, create and add your nodes here and make sure "org.lifecompanion.debug.dev.env" property is enabled
-        if (StringUtils.isNotBlank(System.getProperty("org.lifecompanion.debug.dev.env"))) {
+        if (LangUtils.safeParseBoolean(System.getProperty("org.lifecompanion.debug.dev.env"))) {
             boxChildren.getChildren().addAll(labelTitleTesting, buttonGenerateTechDemoConfiguration, buttonDetectKeylistDuplicates, buttonGenerateRandomConfiguration);
         }
     }
