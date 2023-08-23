@@ -37,7 +37,7 @@ public class ApplicationConstant {
     public final static String ARG_UPDATE_DOWNLOAD_FINISHED = "-updateDownloadFinished";
     public final static String ARG_UPDATE_FINISHED = "-updateFinished";
     public final static String ARG_ENABLE_PREVIEW_UPDATES = "-enablePreviewUpdates";
-    public final static String ARG_DEV = "-dev";
+    public final static String ARG_DEV = "-dev";// FIXME : use it for dev mode ?
 
     public final static String UPDATE_STATE_FILENAME = "state.json";
     public final static String UPDATE_DOWNLOAD_FINISHED_FLAG_FILE = "updated.flag";

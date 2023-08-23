@@ -18,15 +18,14 @@
  */
 package org.lifecompanion.model.impl.categorizedelement.useaction.available;
 
-import javafx.application.Platform;
 import org.lifecompanion.controller.lifecycle.AppModeController;
-import org.lifecompanion.controller.useapi.CommandLineArgumentController;
+import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
 import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseActionSubCategories;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
 import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
-import org.lifecompanion.model.impl.useapi.CommandLineArgumentEnum;
+import org.lifecompanion.model.impl.useapi.GlobalRuntimeConfiguration;
 
 import java.util.Map;
 
@@ -48,7 +47,7 @@ public class SwitchToEditModeAction extends SimpleUseActionImpl<UseActionTrigger
 
     @Override
     public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
-        if (!CommandLineArgumentController.INSTANCE.isPresent(CommandLineArgumentEnum.DISABLE_SWITCH_TO_EDIT_MODE)) {
+        if (!GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DISABLE_SWITCH_TO_EDIT_MODE)) {
             AppModeController.INSTANCE.startEditMode();
         }
     }

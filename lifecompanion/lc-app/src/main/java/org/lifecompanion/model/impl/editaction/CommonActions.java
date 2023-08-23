@@ -34,15 +34,14 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.systemvk.SystemVirtualKeyboardController;
-import org.lifecompanion.controller.useapi.CommandLineArgumentController;
+import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
 import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
 import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
-import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.editaction.BaseEditActionI;
 import org.lifecompanion.model.impl.constant.LCConstant;
-import org.lifecompanion.model.impl.useapi.CommandLineArgumentEnum;
+import org.lifecompanion.model.impl.useapi.GlobalRuntimeConfiguration;
 import org.lifecompanion.util.javafx.DialogUtils;
 import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.util.javafx.StageUtils;
@@ -77,7 +76,7 @@ public class CommonActions {
 
         @Override
         public void doAction() {
-            if (!CommandLineArgumentController.INSTANCE.isPresent(CommandLineArgumentEnum.DISABLE_SWITCH_TO_EDIT_MODE)) {
+            if (!GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DISABLE_SWITCH_TO_EDIT_MODE)) {
                 if (useConfirmFct && UserConfigurationController.INSTANCE.secureGoToEditModeProperty().get()) {
                     // Issue #180 - Secure dialog should automatically be closed (can be the user error)
                     IntegerProperty timeLeft = new SimpleIntegerProperty(LCConstant.GO_TO_CONFIG_MODE_DELAY);

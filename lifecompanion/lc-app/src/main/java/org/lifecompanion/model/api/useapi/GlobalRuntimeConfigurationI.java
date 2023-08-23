@@ -18,8 +18,10 @@
  */
 package org.lifecompanion.model.api.useapi;
 
-public interface CommandLineArgumentI {
+public interface GlobalRuntimeConfigurationI {
     String getName();
+
+    GlobalRuntimeConfigurationType getType();
 
     String getParameters();
 

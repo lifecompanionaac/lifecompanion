@@ -27,6 +27,7 @@ import org.lifecompanion.controller.appinstallation.InstallationConfigurationCon
 import org.lifecompanion.controller.editmode.LCStateController;
 import org.lifecompanion.controller.io.JsonHelper;
 import org.lifecompanion.controller.lifecycle.AppModeController;
+import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
 import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.io.FileNameUtils;
@@ -41,6 +42,7 @@ import org.lifecompanion.model.api.imagedictionary.ImageElementI;
 import org.lifecompanion.model.api.lifecycle.LCStateListener;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
 import org.lifecompanion.model.impl.constant.LCConstant;
+import org.lifecompanion.model.impl.useapi.GlobalRuntimeConfiguration;
 import org.lifecompanion.util.ThreadUtils;
 import org.lifecompanion.util.javafx.ImageUtils;
 import org.lifecompanion.util.model.ConfigurationComponentUtils;
@@ -343,7 +345,7 @@ public enum ImageDictionaries implements LCStateListener, ModeListenerI {
     }
 
     private void startImageLoadingDebug() {
-        if (org.lifecompanion.util.LangUtils.safeParseBoolean(System.getProperty("org.lifecompanion.debug.loaded.images"))) {
+        if (GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.PROP_DEBUG_LOADED_IMAGE)) {
             LOGGER.info("Loaded images debug enabled");
             LCNamedThreadFactory.daemonThreadFactory("ImageLoadingDebug").newThread(() -> {
                 while (true) {

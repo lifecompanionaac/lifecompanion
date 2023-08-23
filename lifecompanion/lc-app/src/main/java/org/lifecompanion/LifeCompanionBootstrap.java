@@ -41,7 +41,7 @@ import org.lifecompanion.controller.profileconfigselect.ProfileConfigStep;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.controller.translation.TranslationLoader;
-import org.lifecompanion.controller.useapi.CommandLineArgumentController;
+import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
 import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.framework.utils.LCNamedThreadFactory;
@@ -50,7 +50,7 @@ import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
 import org.lifecompanion.model.api.profile.LCProfileI;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
-import org.lifecompanion.model.impl.useapi.CommandLineArgumentEnum;
+import org.lifecompanion.model.impl.useapi.GlobalRuntimeConfiguration;
 import org.lifecompanion.ui.EditModeScene;
 import org.lifecompanion.ui.LoadingStage;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStage;
@@ -270,8 +270,8 @@ public class LifeCompanionBootstrap {
     //========================================================================
     private Pair<LCConfigurationDescriptionI, LCConfigurationI> getConfigurationToLaunchFor(LCProfileI profile) throws Exception {
         // Configuration to load from arg (already in profile)
-        if (CommandLineArgumentController.INSTANCE.isPresent(CommandLineArgumentEnum.DIRECT_LAUNCH_CONFIGURATION)) {
-            final String configIdToSearch = CommandLineArgumentController.INSTANCE.getFollowingArgs(CommandLineArgumentEnum.DIRECT_LAUNCH_CONFIGURATION).get(1);
+        if (GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DIRECT_LAUNCH_CONFIGURATION)) {
+            final String configIdToSearch = GlobalRuntimeConfigurationController.INSTANCE.getParameters(GlobalRuntimeConfiguration.DIRECT_LAUNCH_CONFIGURATION).get(1);
             final LCConfigurationDescriptionI configurationFromId = profile.getConfiguration()
                     .stream()
                     .filter(configDesc -> StringUtils.isEquals(configIdToSearch, configDesc.getConfigurationId()))
@@ -282,8 +282,8 @@ public class LifeCompanionBootstrap {
             }
         }
         // Configuration to load (not in profile, should import then open)
-        if (CommandLineArgumentController.INSTANCE.isPresent(CommandLineArgumentEnum.DIRECT_IMPORT_AND_LAUNCH_CONFIGURATION)) {
-            final String configFilePath = CommandLineArgumentController.INSTANCE.getFollowingArgs(CommandLineArgumentEnum.DIRECT_IMPORT_AND_LAUNCH_CONFIGURATION).get(0);
+        if (GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DIRECT_IMPORT_AND_LAUNCH_CONFIGURATION)) {
+            final String configFilePath = GlobalRuntimeConfigurationController.INSTANCE.getParameter(GlobalRuntimeConfiguration.DIRECT_IMPORT_AND_LAUNCH_CONFIGURATION);
             final ConfigurationImportTask customConfigurationImport = IOHelper.createCustomConfigurationImport(IOUtils.getTempDir("import-and-launch"), new File(configFilePath), true);
             return ThreadUtils.executeInCurrentThread(customConfigurationImport);
         }
@@ -297,8 +297,8 @@ public class LifeCompanionBootstrap {
     }
 
     private String getProfileIDToSelect() {
-        if (CommandLineArgumentController.INSTANCE.isPresent(CommandLineArgumentEnum.DIRECT_LAUNCH_CONFIGURATION)) {
-            return CommandLineArgumentController.INSTANCE.getFollowingArgs(CommandLineArgumentEnum.DIRECT_LAUNCH_CONFIGURATION).get(0);
+        if (GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DIRECT_LAUNCH_CONFIGURATION)) {
+            return GlobalRuntimeConfigurationController.INSTANCE.getParameters(GlobalRuntimeConfiguration.DIRECT_LAUNCH_CONFIGURATION).get(0);
         }
         return LCStateController.INSTANCE.getLastSelectedProfileID();
     }

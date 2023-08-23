@@ -21,7 +21,7 @@ package org.lifecompanion.controller.io;
 import org.lifecompanion.controller.appinstallation.InstallationConfigurationController;
 import org.lifecompanion.controller.io.task.*;
 import org.lifecompanion.controller.profile.ProfileController;
-import org.lifecompanion.controller.useapi.CommandLineArgumentController;
+import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
 import org.lifecompanion.framework.commons.utils.io.FileNameUtils;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
 import org.lifecompanion.framework.commons.utils.lang.CollectionUtils;
@@ -33,7 +33,7 @@ import org.lifecompanion.model.api.profile.LCProfileI;
 import org.lifecompanion.model.api.profile.UserCompDescriptionI;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.exception.LCException;
-import org.lifecompanion.model.impl.useapi.CommandLineArgumentEnum;
+import org.lifecompanion.model.impl.useapi.GlobalRuntimeConfiguration;
 import org.lifecompanion.util.ThreadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -334,7 +334,7 @@ public class IOHelper {
     }
 
     public static File getFirstValidConfigurationOrProfile(Collection<String> args, String extensionToSearch) {
-        if (!CollectionUtils.isEmpty(args) && !CommandLineArgumentController.INSTANCE.isPresent(CommandLineArgumentEnum.DIRECT_IMPORT_AND_LAUNCH_CONFIGURATION)) {
+        if (!CollectionUtils.isEmpty(args) && !GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DIRECT_IMPORT_AND_LAUNCH_CONFIGURATION)) {
             for (String arg : args) {
                 String ext = FileNameUtils.getExtension(arg);
                 if (extensionToSearch.equalsIgnoreCase(ext)) {

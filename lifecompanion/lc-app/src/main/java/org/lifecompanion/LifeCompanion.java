@@ -25,7 +25,7 @@ import org.lifecompanion.controller.appinstallation.InstallationController;
 import org.lifecompanion.controller.doublelaunch.DoubleLaunchListenerImpl;
 import org.lifecompanion.controller.editmode.ErrorHandlingController;
 import org.lifecompanion.controller.lifecycle.LifeCompanionController;
-import org.lifecompanion.controller.useapi.CommandLineArgumentController;
+import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
 import org.lifecompanion.framework.commons.doublelaunch.DoubleLaunchController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.model.impl.constant.LCConstant;
@@ -70,8 +70,6 @@ public class LifeCompanion extends Application {
         argsCollection = args != null ? new ArrayList<>(Arrays.asList(args)) : new ArrayList<>();
         boolean doubleRun = DoubleLaunchController.INSTANCE.startAndDetect(new DoubleLaunchListenerImpl(), true, args);
         if (!doubleRun) {
-            // Verify update args (to be able to avoid app startup when updateDownloadFinished)
-            InstallationController.INSTANCE.handleLaunchArgs(argsCollection);
             //Start
             Instant startDate = Instant.now();
             LifeCompanion.LOGGER.info("{} version {} (build {}) launching with args\n\t{}",
@@ -79,8 +77,8 @@ public class LifeCompanion extends Application {
                     InstallationController.INSTANCE.getBuildProperties().getVersionLabel(),
                     InstallationController.INSTANCE.getBuildProperties().getBuildDate(),
                     args);
-            // Check the launch args (after update)
-            CommandLineArgumentController.INSTANCE.initArgs(argsCollection);
+            // Detect global runtime configurations
+            GlobalRuntimeConfigurationController.INSTANCE.init(argsCollection);
             // Run the FX app
             Application.launch(args);
             //Inform

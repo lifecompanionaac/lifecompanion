@@ -39,6 +39,7 @@ import org.lifecompanion.controller.io.task.GenerateRandomConfigurationTask;
 import org.lifecompanion.controller.io.task.GenerateTechDemoConfigurationTask;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.profile.ProfileController;
+import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.io.FileNameUtils;
@@ -49,6 +50,7 @@ import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
 import org.lifecompanion.model.impl.configurationcomponent.dynamickey.KeyListLeaf;
 import org.lifecompanion.model.impl.exception.LCException;
+import org.lifecompanion.model.impl.useapi.GlobalRuntimeConfiguration;
 import org.lifecompanion.util.DesktopUtils;
 import org.lifecompanion.util.LangUtils;
 import org.lifecompanion.util.javafx.FXControlUtils;
@@ -79,7 +81,8 @@ public class MiscConfigSubmenu extends ScrollPane implements LCViewInitHelper, U
     /**
      * Button to open folders
      */
-    private Button buttonOpenRootFolder, buttonOpenCurrentProfileFolder, buttonOpenCurrentConfigFolder, buttonExecuteGC, buttonOpenConfigCleanXml, buttonDetectKeylistDuplicates, buttonGenerateTechDemoConfiguration, buttonGenerateRandomConfiguration;
+    private Button buttonOpenRootFolder, buttonOpenCurrentProfileFolder, buttonOpenCurrentConfigFolder, buttonExecuteGC, buttonOpenConfigCleanXml, buttonDetectKeylistDuplicates,
+            buttonGenerateTechDemoConfiguration, buttonGenerateRandomConfiguration;
 
     private Label labelMemoryInfo;
 
@@ -109,7 +112,8 @@ public class MiscConfigSubmenu extends ScrollPane implements LCViewInitHelper, U
         this.buttonPackageLogs = this.createButton("button.package.log.debug");
 
         Label labelExplain = new Label(Translation.getText("misc.submenu.explain.text"));
-        labelExplain.getStyleClass().addAll("text-wrap-enabled", "text-weight-bold");
+        labelExplain.getStyleClass()
+                .addAll("text-wrap-enabled", "text-weight-bold");
         labelExplain.setTextAlignment(TextAlignment.JUSTIFY);
 
         Label labelTitleMemory = FXControlUtils.createTitleLabel("misc.config.tab.part.memory");
@@ -118,7 +122,8 @@ public class MiscConfigSubmenu extends ScrollPane implements LCViewInitHelper, U
         buttonExecuteGC = createButton("misc.config.tab.memory.button.gc");
 
         //Add
-        VBox boxChildren = new VBox(10, labelExplain,
+        VBox boxChildren = new VBox(10,
+                labelExplain,
                 labelTitleFolder,
                 this.buttonOpenRootFolder,
                 this.buttonOpenCurrentProfileFolder,
@@ -142,8 +147,9 @@ public class MiscConfigSubmenu extends ScrollPane implements LCViewInitHelper, U
         this.buttonDetectKeylistDuplicates = this.createButton("button.detect.keylist.duplicates");
 
         // Developers : to test your feature, create and add your nodes here and make sure "org.lifecompanion.debug.dev.env" property is enabled
-        if (LangUtils.safeParseBoolean(System.getProperty("org.lifecompanion.debug.dev.env"))) {
-            boxChildren.getChildren().addAll(labelTitleTesting, buttonGenerateTechDemoConfiguration, buttonDetectKeylistDuplicates, buttonGenerateRandomConfiguration);
+        if (GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.PROP_DEV_MODE)) {
+            boxChildren.getChildren()
+                    .addAll(labelTitleTesting, buttonGenerateTechDemoConfiguration, buttonDetectKeylistDuplicates, buttonGenerateRandomConfiguration);
         }
     }
 
@@ -158,17 +164,37 @@ public class MiscConfigSubmenu extends ScrollPane implements LCViewInitHelper, U
         this.buttonPackageLogs.setOnAction(e -> ConfigActionController.INSTANCE.executeAction(new GlobalActions.PackageLogAction(buttonPackageLogs)));
         this.buttonOpenRootFolder.setOnAction(e -> this.openFileOrFolder(buttonOpenRootFolder, "."));
         this.buttonOpenLogFolder.setOnAction(e -> this.openFileOrFolder(buttonOpenLogFolder, System.getProperty("java.io.tmpdir") + File.separator + "LifeCompanion" + File.separator + "logs"));
-        this.buttonExecuteGC.setOnAction(e -> Runtime.getRuntime().gc());
-        this.buttonOpenCurrentProfileFolder.setOnAction(
-                e -> this.openFileOrFolder(buttonOpenCurrentProfileFolder, IOHelper.getProfileDirectoryPath(ProfileController.INSTANCE.currentProfileProperty().get().getID())));
-        this.buttonOpenCurrentConfigFolder.setOnAction(
-                e -> this.openFileOrFolder(buttonOpenCurrentConfigFolder, IOHelper.getConfigurationDirectoryPath(ProfileController.INSTANCE.currentProfileProperty().get().getID(),
-                        AppModeController.INSTANCE.getEditModeContext().configurationProperty().get().getID())));
+        this.buttonExecuteGC.setOnAction(e -> Runtime.getRuntime()
+                .gc());
+        this.buttonOpenCurrentProfileFolder.setOnAction(e -> this.openFileOrFolder(
+                buttonOpenCurrentProfileFolder,
+                IOHelper.getProfileDirectoryPath(ProfileController.INSTANCE.currentProfileProperty()
+                        .get()
+                        .getID())
+        ));
+        this.buttonOpenCurrentConfigFolder.setOnAction(e -> this.openFileOrFolder(buttonOpenCurrentConfigFolder,
+                IOHelper.getConfigurationDirectoryPath(ProfileController.INSTANCE.currentProfileProperty()
+                                .get()
+                                .getID(),
+                        AppModeController.INSTANCE.getEditModeContext()
+                                .configurationProperty()
+                                .get()
+                                .getID()
+                )
+        ));
         this.buttonOpenLogFile.setOnAction(e -> this.openFileOrFolder(buttonOpenLogFile,
-                System.getProperty("java.io.tmpdir") + File.separator + "LifeCompanion" + File.separator + "logs" + File.separator + "application.log"));
+                System.getProperty("java.io.tmpdir") + File.separator + "LifeCompanion" + File.separator + "logs" + File.separator +
+                        "application.log"
+        ));
         this.buttonOpenConfigCleanXml.setOnAction(e -> {
-            File configurationDirectory = new File(IOHelper.getConfigurationDirectoryPath(ProfileController.INSTANCE.currentProfileProperty().get().getID(),
-                    AppModeController.INSTANCE.getEditModeContext().configurationProperty().get().getID()));
+            File configurationDirectory = new File(IOHelper.getConfigurationDirectoryPath(ProfileController.INSTANCE.currentProfileProperty()
+                            .get()
+                            .getID(),
+                    AppModeController.INSTANCE.getEditModeContext()
+                            .configurationProperty()
+                            .get()
+                            .getID()
+            ));
             final File destDirTempConfig = org.lifecompanion.util.IOUtils.getTempDir("configuration-debug-dir");
             exploreAndFormatXmlFiles(configurationDirectory, destDirTempConfig, configurationDirectory);
             openFileOrFolder(buttonOpenConfigCleanXml, destDirTempConfig.getPath());
@@ -185,8 +211,7 @@ public class MiscConfigSubmenu extends ScrollPane implements LCViewInitHelper, U
     }
 
 
-    private static final Format PRETTY_XML_FORMAT = Format
-            .getPrettyFormat()
+    private static final Format PRETTY_XML_FORMAT = Format.getPrettyFormat()
             .setEncoding(StandardCharsets.UTF_8.name());
 
     private void exploreAndFormatXmlFiles(File root, File destRoot, File file) {
@@ -197,7 +222,8 @@ public class MiscConfigSubmenu extends ScrollPane implements LCViewInitHelper, U
                 try (BufferedReader is = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8))) {
                     Document doc = saxBuilder.build(is);
                     XMLOutputter xmlOutputter = new XMLOutputter(PRETTY_XML_FORMAT);
-                    destFile.getParentFile().mkdirs();
+                    destFile.getParentFile()
+                            .mkdirs();
                     try (OutputStream os = new FileOutputStream(destFile)) {
                         xmlOutputter.output(doc.getRootElement(), os);
                     }
@@ -218,31 +244,38 @@ public class MiscConfigSubmenu extends ScrollPane implements LCViewInitHelper, U
     private void openFileOrFolder(Node source, final String path) {
         File file = new File(path);
         if (!DesktopUtils.openFile(file)) {
-            ErrorHandlingController.INSTANCE.showErrorNotificationWithExceptionDetails(
-                    Translation.getText("open.folder.lc.error.title"),
-                    LCException.newException().withMessage("open.folder.lc.error.directory.not.found",
-                                    file.getAbsolutePath())
+            ErrorHandlingController.INSTANCE.showErrorNotificationWithExceptionDetails(Translation.getText("open.folder.lc.error.title"),
+                    LCException.newException()
+                            .withMessage("open.folder.lc.error.directory.not.found", file.getAbsolutePath())
                             .build()
             );
         }
     }
 
     private void detectAndFixKeylistDuplicates() {
-        final LCConfigurationI configuration = AppModeController.INSTANCE.getEditModeContext().getConfiguration();
+        final LCConfigurationI configuration = AppModeController.INSTANCE.getEditModeContext()
+                .getConfiguration();
         if (configuration != null) {
-            final KeyListNodeI keyListNodes = configuration.rootKeyListNodeProperty().get();
+            final KeyListNodeI keyListNodes = configuration.rootKeyListNodeProperty()
+                    .get();
             HashMap<String, List<KeyListNodeI>> nodesById = new HashMap<>();
-            keyListNodes.traverseTreeToBottom(node -> nodesById.computeIfAbsent(node.getID(), k -> new ArrayList<>()).add(node));
+            keyListNodes.traverseTreeToBottom(node -> nodesById.computeIfAbsent(node.getID(), k -> new ArrayList<>())
+                    .add(node));
             nodesById.forEach((id, nodes) -> {
                 if (nodes.size() > 1) {
-                    if (nodes.stream().allMatch(n -> n instanceof KeyListLeaf)) {
+                    if (nodes.stream()
+                            .allMatch(n -> n instanceof KeyListLeaf)) {
                         nodes.forEach(IdentifiableComponentI::generateID);
                         LOGGER.info("Solved duplicates for {}", id);
                     } else {
-                        LOGGER.info("Should check/fix this key list node for ID {}\n\tDuplicates are : {}", id,
+                        LOGGER.info("Should check/fix this key list node for ID {}\n\tDuplicates are : {}",
+                                id,
                                 nodes.stream()
-                                        .map(n -> "[" + n.getClass().getSimpleName() + "] - " + n.textProperty().get())
-                                        .collect(Collectors.joining(", ")));
+                                        .map(n -> "[" + n.getClass()
+                                                .getSimpleName() + "] - " + n.textProperty()
+                                                .get())
+                                        .collect(Collectors.joining(", "))
+                        );
                     }
                 }
             });
@@ -262,7 +295,10 @@ public class MiscConfigSubmenu extends ScrollPane implements LCViewInitHelper, U
                 long freeMemory = runtime.freeMemory();
                 long totalMemory = runtime.totalMemory();
                 FXThreadUtils.runOnFXThread(() -> labelMemoryInfo.setText(Translation.getText("misc.config.tab.memory.info",
-                        FileNameUtils.getFileSize(totalMemory - freeMemory), FileNameUtils.getFileSize(totalMemory), FileNameUtils.getFileSize(maxMemory))));
+                        FileNameUtils.getFileSize(totalMemory - freeMemory),
+                        FileNameUtils.getFileSize(totalMemory),
+                        FileNameUtils.getFileSize(maxMemory)
+                )));
             }
         }, 500, 1000);
     }

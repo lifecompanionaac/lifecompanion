@@ -25,7 +25,7 @@ import javafx.scene.control.Button;
 import javafx.scene.input.*;
 import org.lifecompanion.controller.metrics.SessionStatsController;
 import org.lifecompanion.controller.textcomponent.WritingStateController;
-import org.lifecompanion.controller.useapi.CommandLineArgumentController;
+import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
@@ -33,7 +33,7 @@ import org.lifecompanion.model.api.textcomponent.WritingEventSource;
 import org.lifecompanion.model.impl.configurationcomponent.WriterEntry;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.editaction.CommonActions;
-import org.lifecompanion.model.impl.useapi.CommandLineArgumentEnum;
+import org.lifecompanion.model.impl.useapi.GlobalRuntimeConfiguration;
 import org.lifecompanion.ui.configurationcomponent.usemode.UseModeConfigurationDisplayer;
 import org.lifecompanion.util.javafx.FXControlUtils;
 
@@ -92,7 +92,7 @@ public class UseModeScene extends Scene implements LCViewInitHelper {
         this.buttonFullscreen.setLayoutY(-10.0);
         this.buttonFullscreen.setFocusTraversable(false);
 
-        if (!CommandLineArgumentController.INSTANCE.isPresent(CommandLineArgumentEnum.DISABLE_SWITCH_TO_EDIT_MODE)) {
+        if (!GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DISABLE_SWITCH_TO_EDIT_MODE)) {
             this.root.getChildren().addAll(this.buttonGoToConfigMode);
         }
         this.root.getChildren().addAll(buttonFullscreen);
@@ -112,7 +112,7 @@ public class UseModeScene extends Scene implements LCViewInitHelper {
         //Keyboard shortcut
         this.addEventHandler(KeyEvent.KEY_RELEASED, eventP -> {
             if (CommonActions.KEY_COMBINATION_GO_CONFIG_MODE.match(eventP)) {
-                if (!CommandLineArgumentController.INSTANCE.isPresent(CommandLineArgumentEnum.DISABLE_SWITCH_TO_EDIT_MODE)) {
+                if (!GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DISABLE_SWITCH_TO_EDIT_MODE)) {
                     CommonActions.HANDLER_GO_CONFIG_MODE_SKIP_CHECK.handle(null);
                     eventP.consume();
                 }
