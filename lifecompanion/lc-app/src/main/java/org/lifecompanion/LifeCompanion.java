@@ -26,6 +26,7 @@ import org.lifecompanion.controller.doublelaunch.DoubleLaunchListenerImpl;
 import org.lifecompanion.controller.editmode.ErrorHandlingController;
 import org.lifecompanion.controller.lifecycle.LifeCompanionController;
 import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
+import org.lifecompanion.controller.useapi.LifeCompanionControlServerController;
 import org.lifecompanion.framework.commons.doublelaunch.DoubleLaunchController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.model.impl.constant.LCConstant;
@@ -79,6 +80,8 @@ public class LifeCompanion extends Application {
                     args);
             // Detect global runtime configurations
             GlobalRuntimeConfigurationController.INSTANCE.init(argsCollection);
+            // Run the service server (if needed)
+            LifeCompanionControlServerController.INSTANCE.start();
             // Run the FX app
             Application.launch(args);
             //Inform
@@ -96,6 +99,7 @@ public class LifeCompanion extends Application {
         LifeCompanion.LOGGER.info("Will launch the exit task...");
         LifeCompanionController.INSTANCE.lcExit();
         DoubleLaunchController.INSTANCE.stop();
+        LifeCompanionControlServerController.INSTANCE.stop();
         LifeCompanion.LOGGER.info("Every exit task are done, LifeCompanion will close...");
     }
 }

@@ -20,6 +20,7 @@
 package org.lifecompanion.controller.lifecycle;
 
 import org.lifecompanion.controller.training.TrainingController;
+import org.lifecompanion.controller.useapi.LifeCompanionControlServerController;
 import org.lifecompanion.model.api.lifecycle.LCStateListener;
 import org.lifecompanion.controller.editaction.AsyncExecutorController;
 import org.lifecompanion.controller.categorizedelement.useaction.UseActionController;

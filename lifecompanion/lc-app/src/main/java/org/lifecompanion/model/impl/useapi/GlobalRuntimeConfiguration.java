@@ -113,13 +113,13 @@ public enum GlobalRuntimeConfiguration implements GlobalRuntimeConfigurationI {
     ),
 
     // Api server configuration
-    ENABLE_API_SERVER(
-            "enableApiServer",
+    ENABLE_CONTROL_SERVER(
+            "enableControlServer",
             GlobalRuntimeConfigurationType.COMMAND_LINE,
-            "Will enable the API server to control LifeCompanion while running. To get details on control feature, check the \"LifeCompanion control API\" part of documentation." +
-                    "API server will run on its default port (8646) if enable expect if the port is specific with its own parameter."
+            "Will enable the API server to control LifeCompanion while running. To get details on control feature, check the \"LifeCompanion control server API\" part of documentation." +
+                    "API server will run on its default port (8648) if enable expect if the port is specific with its own parameter."
     ),
-    API_SERVER_PORT("apiServerPort",
+    CONTROL_SERVER_PORT("controlServerPort",
             GlobalRuntimeConfigurationType.COMMAND_LINE,
             "port",
             "The port for the API server to run. Will be ignored if the API server is not enabled (check the parameter above to enable it). If not specified, server will run on its default port.",
@@ -161,7 +161,8 @@ public enum GlobalRuntimeConfiguration implements GlobalRuntimeConfigurationI {
     PROP_DISABLE_UPDATES(
             "org.lifecompanion.disable.updates",
             GlobalRuntimeConfigurationType.JAVA_PROPERTY,
-            "Will skip update checking on each LifeCompanion run (for app and plugins)"
+            "Will disable all the update checking process (for both app and plugins). " +
+                    "Will not try to reach the update server at all."
     ),
 
     PROP_LOAD_PLUGIN_FROM_CP(

@@ -59,8 +59,69 @@ String val2 = GlobalRuntimeConfigurationController.INSTANCE.getParameters(Global
 String firstVal = GlobalRuntimeConfigurationController.INSTANCE.getParameter(GlobalRuntimeConfiguration.DIRECT_LAUNCH_CONFIGURATION);
 ```
 
-## LifeCompanion control API
+## LifeCompanion control server API
 
-LifeCompanion control API server allow you to control LifeCompanion while runing by calling specific HTTP services on localhost (or from a distant if port are opened). If not specified, the LifeCompanion control server is running on port 8646, but you can specify this with `-apiServerPort 8080` command line argument.
+LifeCompanion control API server allow you to control LifeCompanion while runing by calling specific HTTP services on localhost (or from a distant if port are opened). If not specified, the LifeCompanion control server is running on port 8648, but you can specify this with `-controlServerPort 8080` command line argument.
 
-**Note that server will be running only if LifeCompanion is launched using `-enableApiServer` argument.**
+**Note that server will be running only if LifeCompanion is launched using `-enableControlServer` argument.**
+
+### Errors
+
+TODO
+
+### /alive
+
+**Description** : Check if LifeCompanion is alive, will return a status DTO containing information about the running instance.
+
+**Url structure** : `/api/v1/alive`
+
+**Method** : `GET`
+
+**Parameters** :
+```
+NONE
+```
+
+
+**Returns** : 
+```json
+{
+  "status": "STARTING"
+}
+```
+
+```json
+{
+  "status": "IN_USE_MODE"
+}
+```
+
+```json
+{
+  "status": "STOPPING"
+}
+```
+
+
+
+### /window/minimize
+
+**Description** : Minimize the current use mode window to hide it from user
+
+**Url structure** : `/api/v1/window/minimize`
+
+**Method** : `POST`
+
+**Parameters** :
+```
+NONE
+```
+
+
+**Returns** : 
+```json
+{
+  "done": true,
+  "message": "OK"
+}
+```
