@@ -81,7 +81,7 @@ public class LifeCompanion extends Application {
             // Detect global runtime configurations
             GlobalRuntimeConfigurationController.INSTANCE.init(argsCollection);
             // Run the service server (if needed)
-            LifeCompanionControlServerController.INSTANCE.start();
+            LifeCompanionControlServerController.INSTANCE.startControlServer();
             // Run the FX app
             Application.launch(args);
             //Inform
@@ -96,10 +96,11 @@ public class LifeCompanion extends Application {
 
     @Override
     public void stop() throws Exception {
+        LifeCompanionControlServerController.INSTANCE.setAppStopping(true);
         LifeCompanion.LOGGER.info("Will launch the exit task...");
         LifeCompanionController.INSTANCE.lcExit();
         DoubleLaunchController.INSTANCE.stop();
-        LifeCompanionControlServerController.INSTANCE.stop();
+        LifeCompanionControlServerController.INSTANCE.stopControlServer();
         LifeCompanion.LOGGER.info("Every exit task are done, LifeCompanion will close...");
     }
 }

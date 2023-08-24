@@ -111,6 +111,11 @@ public enum GlobalRuntimeConfiguration implements GlobalRuntimeConfigurationI {
             "0.8",
             1
     ),
+    FORCE_WINDOW_NOT_ALWAYS_TOP(
+            "forceWindowNotAlwaysTop",
+            GlobalRuntimeConfigurationType.COMMAND_LINE,
+            "Will force the use mode window to not always be on top of the other window. This change the default LifeCompanion behavior that set the use mode window always on top."
+    ),
 
     // Api server configuration
     ENABLE_CONTROL_SERVER(

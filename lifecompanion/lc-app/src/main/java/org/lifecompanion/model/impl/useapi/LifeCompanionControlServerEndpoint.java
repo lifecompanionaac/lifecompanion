@@ -13,17 +13,57 @@ import java.util.stream.Collectors;
 
 public enum LifeCompanionControlServerEndpoint implements LifeCompanionControlServerEndpointI {
     ALIVE(
-            "alive",
+            "status",
             EndpointHttpMethod.GET,
-            "Check if LifeCompanion is alive, will return a status DTO containing information about the running instance.",
+            "To get the LifeCompanion current status, will return containing information about the running instance (can be `STARTING`,`IN_USE_MODE`,`IN_EDIT_MODE` or `STOPPING`)",
             null,
             List.of(new AliveDto(AliveDto.Status.STARTING), new AliveDto(AliveDto.Status.IN_USE_MODE), new AliveDto(AliveDto.Status.STOPPING))
     ),
-    MINIMIZE_WINDOW("window/minimize", EndpointHttpMethod.POST,
+    // Window
+    MINIMIZE_WINDOW("window/minimize",
+            EndpointHttpMethod.POST,
             "Minimize the current use mode window to hide it from user",
             null,
             List.of(ActionConfirmationDto.ok())
-    );
+    ),
+    SHOW_WINDOW("window/show",
+            EndpointHttpMethod.POST,
+            "Show the current window on top of the others and try to focus it",
+            null,
+            List.of(ActionConfirmationDto.ok())
+    ),
+    // TODO : size, location ?
+
+    // Voice synthesizer
+    STOP_VOICE_SYNTHESIZER("voice/stop",
+            EndpointHttpMethod.POST,
+            "Stop the current speaking voice synthesizer and empty the voice synthesizer queue to clear the waiting speech. Later calls to voice synthesizer will work as usual.",
+            null,
+            List.of(ActionConfirmationDto.ok())
+    ),
+    // Selection mode
+    STOP_SELECTION_MODE("selection/stop",
+            EndpointHttpMethod.POST,
+            "Stop the current selection mode (if applicable). Can be useful if the current selection mode is a scanning mode. Scanning will be able to be played again will the `selection/play` endpoint",
+            null,
+            List.of(ActionConfirmationDto.ok())
+    ),
+    PLAY_SELECTION_MODE("selection/play",
+            EndpointHttpMethod.POST,
+            "Play the current selection mode (if applicable). Useful if `selection/stop` endpoint has been called. Will not have any effect if the selection mode is already playing.",
+            null,
+            List.of(ActionConfirmationDto.ok())
+    ),
+    // Media
+    STOP_MEDIA("media/stop",
+            EndpointHttpMethod.POST,
+            "Stop any playing media (sound, video, etc.) and empty the media players queue to be sure that no media will be played without a new play request.",
+            null,
+            List.of(ActionConfirmationDto.ok())
+    ),
+    // TODO : configuration synchronization, backoffice secrets refresh, etc ?
+
+    ;
 
     public final static String URL_PREFIX = "/api/v1/";
 

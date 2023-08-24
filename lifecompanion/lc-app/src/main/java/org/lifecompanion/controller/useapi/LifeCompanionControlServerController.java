@@ -24,9 +24,10 @@ public enum LifeCompanionControlServerController implements ResponseTransformer 
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LifeCompanionControlServerController.class);
 
-    boolean started = false;
+    private boolean started = false;
+    private boolean appStopping = false;
 
-    public void start() {
+    public void startControlServer() {
         if (GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.ENABLE_CONTROL_SERVER)) {
             int port = 8648;
             if (GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.CONTROL_SERVER_PORT)) {
@@ -51,7 +52,15 @@ public enum LifeCompanionControlServerController implements ResponseTransformer 
 
             // Services
             path(URL_PREFIX, () -> {
-                get(ALIVE.getUrl(), (req, res) -> new AliveDto(AliveDto.Status.IN_USE_MODE));// TODO : better implementation for alive
+                // General
+                get(ALIVE.getUrl(), (req, res) -> {
+                    AppMode appMode = AppModeController.INSTANCE.modeProperty().get();
+                    if (appStopping) return new AliveDto(AliveDto.Status.STOPPING);
+                    else if (appMode == null) return new AliveDto(AliveDto.Status.STARTING);
+                    else if (appMode == AppMode.EDIT) return new AliveDto(AliveDto.Status.IN_EDIT_MODE);
+                    else return new AliveDto(AliveDto.Status.IN_USE_MODE);
+                });
+                // Window
                 post(MINIMIZE_WINDOW.getUrl(), (req, res) -> {
                     if (AppModeController.INSTANCE.isUseMode()) {
                         Stage stage = AppModeController.INSTANCE.getUseModeContext().getStage();
@@ -75,10 +84,14 @@ public enum LifeCompanionControlServerController implements ResponseTransformer 
         }
     }
 
-    public void stop() {
+    public void stopControlServer() {
         if (started) {
             Spark.stop();
         }
+    }
+
+    public void setAppStopping(boolean appStopping) {
+        this.appStopping = appStopping;
     }
 
     @Override

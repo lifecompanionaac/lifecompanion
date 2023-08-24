@@ -19,8 +19,9 @@ LifeCompanion can be launched using command line arguments to configure some of 
 |`-forceWindowSize width height`|`1200 800`|Will force the use mode window to be as the specified size (in pixel). The given size will respect the screen scaling. The user will then not be able to resize the use mode window.|
 |`-forceWindowLocation x y`|`0 0`|Will force the use mode window to be at a specific location on the screen (in pixel, from top left corner). The given location will respect the screen scaling.|
 |`-forceWindowOpacity opacity`|`0.8`|Will force the use mode window to keep a specific opacity regardless the configuration set on it for its opacity. Opacity should range between 0.0 (transparent) to 1.0 (opaque).|
-|`-enableApiServer`|*`NONE`*|Will enable the API server to control LifeCompanion while running. To get details on control feature, check the "LifeCompanion control API" part of documentation.API server will run on its default port (8646) if enable expect if the port is specific with its own parameter.|
-|`-apiServerPort port`|`8080`|The port for the API server to run. Will be ignored if the API server is not enabled (check the parameter above to enable it). If not specified, server will run on its default port.|
+|`-forceWindowNotAlwaysTop`|*`NONE`*|Will force the use mode window to not always be on top of the other window. This change the default LifeCompanion behavior that set the use mode window always on top.|
+|`-enableControlServer`|*`NONE`*|Will enable the API server to control LifeCompanion while running. To get details on control feature, check the "LifeCompanion control server API" part of documentation.API server will run on its default port (8648) if enable expect if the port is specific with its own parameter.|
+|`-controlServerPort port`|`8080`|The port for the API server to run. Will be ignored if the API server is not enabled (check the parameter above to enable it). If not specified, server will run on its default port.|
 |`-updateDownloadFinished`|*`NONE`*|Inform LifeCompanion that the update download was finished on last LifeCompanion use. When launched with the arg, LifeCompanion will try to install the newly downloaded update and restart itself.|
 |`-updateFinished`|*`NONE`*|Inform LifeCompanion that the update installation was done on the previous launch. Typically, this arg is added on LifeCompanion restart after update installation.|
 |`-enablePreviewUpdates`|*`NONE`*|Enable LifeCompanion preview updates. This can be useful to test update before their production version to be ready.|
@@ -33,7 +34,7 @@ You can check [lc-app/build.gradle](../lifecompanion/lc-app/build.gradle) for an
 |Configuration|Param. example|Description|
 |-|-|-|
 |`-Dorg.lifecompanion.dev.mode`|*`NONE`*|A general configuration that can be used to check if we are running LifeCompanion in a dev context.This can be useful to add currently developed feature with this check, this will secure for an unfinished feature to be pushed in production.|
-|`-Dorg.lifecompanion.disable.updates`|*`NONE`*|Will skip update checking on each LifeCompanion run (for app and plugins)|
+|`-Dorg.lifecompanion.disable.updates`|*`NONE`*|Will disable all the update checking process (for both app and plugins). Will not try to reach the update server at all.|
 |`-Dorg.lifecompanion.load.plugins.from.cp`|*`NONE`*|When enabled, will try to load plugins from classpath instead of the classpath configuration file. This is useful to make the plugin dev easier.|
 |`-Dorg.lifecompanion.debug.loaded.images`|*`NONE`*|When enabled, a checking Thread is launched in background to display the loaded image count. This can be useful to detect memory leaks on images. See [`ImageDictionaries#startImageLoadingDebug()`](../lifecompanion/lc-app/src/main/java/org/lifecompanion/model/impl/imagedictionary/ImageDictionaries.java) for details|
 |`-Dorg.lifecompanion.debug.loaded.configuration`|*`NONE`*|When enabled, a checking Thread is launched in background to display the loaded configuration count. This can be useful to detect memory leaks on configuration (for example, if a configuration is not released on configuration changed). See [`ConfigurationMemoryLeakChecker`](../lifecompanion/lc-app/src/main/java/org/lifecompanion/util/debug/ConfigurationMemoryLeakChecker.java) for details|
@@ -69,11 +70,11 @@ LifeCompanion control API server allow you to control LifeCompanion while runing
 
 TODO
 
-### /alive
+### /status
 
-**Description** : Check if LifeCompanion is alive, will return a status DTO containing information about the running instance.
+**Description** : To get the LifeCompanion current status, will return containing information about the running instance (can be `STARTING`,`IN_USE_MODE`,`IN_EDIT_MODE` or `STOPPING`)
 
-**Url structure** : `/api/v1/alive`
+**Url structure** : `/api/v1/status`
 
 **Method** : `GET`
 
@@ -109,6 +110,126 @@ NONE
 **Description** : Minimize the current use mode window to hide it from user
 
 **Url structure** : `/api/v1/window/minimize`
+
+**Method** : `POST`
+
+**Parameters** :
+```
+NONE
+```
+
+
+**Returns** : 
+```json
+{
+  "done": true,
+  "message": "OK"
+}
+```
+
+
+
+### /window/show
+
+**Description** : Show the current window on top of the others and try to focus it
+
+**Url structure** : `/api/v1/window/show`
+
+**Method** : `POST`
+
+**Parameters** :
+```
+NONE
+```
+
+
+**Returns** : 
+```json
+{
+  "done": true,
+  "message": "OK"
+}
+```
+
+
+
+### /voice/stop
+
+**Description** : Stop the current speaking voice synthesizer and empty the voice synthesizer queue to clear the waiting speech. Later calls to voice synthesizer will work as usual.
+
+**Url structure** : `/api/v1/voice/stop`
+
+**Method** : `POST`
+
+**Parameters** :
+```
+NONE
+```
+
+
+**Returns** : 
+```json
+{
+  "done": true,
+  "message": "OK"
+}
+```
+
+
+
+### /selection/stop
+
+**Description** : Stop the current selection mode (if applicable). Can be useful if the current selection mode is a scanning mode. Scanning will be able to be played again will the `selection/play` endpoint
+
+**Url structure** : `/api/v1/selection/stop`
+
+**Method** : `POST`
+
+**Parameters** :
+```
+NONE
+```
+
+
+**Returns** : 
+```json
+{
+  "done": true,
+  "message": "OK"
+}
+```
+
+
+
+### /selection/play
+
+**Description** : Play the current selection mode (if applicable). Useful if `selection/stop` endpoint has been called. Will not have any effect if the selection mode is already playing.
+
+**Url structure** : `/api/v1/selection/play`
+
+**Method** : `POST`
+
+**Parameters** :
+```
+NONE
+```
+
+
+**Returns** : 
+```json
+{
+  "done": true,
+  "message": "OK"
+}
+```
+
+
+
+### /media/stop
+
+**Description** : Stop any playing media (sound, video, etc.) and empty the media players queue to be sure that no media will be played without a new play request.
+
+**Url structure** : `/api/v1/media/stop`
 
 **Method** : `POST`
 
