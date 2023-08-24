@@ -57,9 +57,28 @@ If you want to build a production version : you may need to import again the sec
 
 It is possible possible to create custom local images (offline) to test your image generation before creating offical updates.
 
-Before, configure your local.env to add AWS access/secret properties (cf [update part](UPDATE.md))
+Before, configure your local.env to add AWS access/secret properties (cf [update part](UPDATE.md)). If you want your installation to be as close as possible as the production env, don't forget to also set the correct URL/keys to your env file !
 
 Then, run `gradlew prepareOfflineApplication`. This will create in **offline** directory a subdirectory per system with all the needed element to run LifeCompanion on your computer. When running this task, you can add `lifecompanion.publish.application.persistent.data` Gradle property to avoid downloading fresh data from S3 on each build (run it `gradlew prepareOfflineApplication -Plifecompanion.publish.application.persistent.data`)
+
+## Create offline debian package
+
+It is possible to create custom local images packaged as *.deb* on Linux if needed.
+
+This task is depends on the **prepareOfflineApplication** task, so read the documentation above to apply the requirements (env file).
+
+Then, run `gradlew createDeb`. This will create in **debian** directory a *.deb* that can be used to install LifeCompanion on a Linux system and make it available in command line (with `lifecompanion`).
+
+To install it, run (replace with the correct filename)
+
+```shell
+sudo apt install ./lifecompanion_1.5.0_x64.deb
+```
+
+The debian package will install LifeCompanion in :
+- `/usr/local/bin/lifecompanion` : make the `lifecompanion` command available
+- `/usr/share/lifecompanion/` : contains usual `application` and `data` directories
+- `~/Documents/LifeCompanion/` : contains user data
 
 ## Troubleshooting
 
