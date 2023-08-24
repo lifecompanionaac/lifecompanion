@@ -171,8 +171,10 @@ public class LifeCompanionBootstrap {
             ConfigActionController.INSTANCE.executeAction(importOpenConfig);
         }
 
-        loadingStage.hide();
-        loadingStage = null;
+        if (loadingStage != null) {
+            loadingStage.hide();
+            loadingStage = null;
+        }
 
         if (afterLoad.afterLoadAction != AfterLoadAction.LAUNCH_USE) {
             AppModeController.INSTANCE.startEditMode();
@@ -254,8 +256,10 @@ public class LifeCompanionBootstrap {
         });
 
         // Show loading stage
-        loadingStage = new LoadingStage();
-        loadingStage.show();
+        if (!GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DISABLE_LOADING_WINDOW)) {
+            loadingStage = new LoadingStage();
+            loadingStage.show();
+        }
 
         // Close the splashscreen (AWT splashscreen)
         final SplashScreen splashScreen = SplashScreen.getSplashScreen();

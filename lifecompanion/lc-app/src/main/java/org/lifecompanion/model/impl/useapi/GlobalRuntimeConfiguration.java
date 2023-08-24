@@ -83,6 +83,11 @@ public enum GlobalRuntimeConfiguration implements GlobalRuntimeConfigurationI {
             GlobalRuntimeConfigurationType.COMMAND_LINE,
             "Disable the ability for an user to exit LifeCompanion from use mode by itself. LifeCompanion will still be able to be closed by external events."
     ),
+    DISABLE_LOADING_WINDOW(
+            "disableLoadingWindow",
+            GlobalRuntimeConfigurationType.COMMAND_LINE,
+            "Don't show any loading window on LifeCompanion startup. Even if this parameter is enabled, the first splashscreen on launch will still be displayed"
+    ),
 
     // Window configuration
     DISABLE_WINDOW_FULLSCREEN(
@@ -126,6 +131,11 @@ public enum GlobalRuntimeConfiguration implements GlobalRuntimeConfigurationI {
             GlobalRuntimeConfigurationType.COMMAND_LINE,
             "Will force the use mode window to not always be on top of the other window. This change the default LifeCompanion behavior that set the use mode window always on top."
     ),
+    FORCE_WINDOW_MINIMIZED(
+            "forceWindowMinimized",
+            GlobalRuntimeConfigurationType.COMMAND_LINE,
+            "Will start use mode with the LifeCompanion window iconified. Useful if you don't want the LifeCompanion window to pop on start."
+    ),
 
     // Api server configuration
     ENABLE_CONTROL_SERVER(
@@ -159,12 +169,8 @@ public enum GlobalRuntimeConfiguration implements GlobalRuntimeConfigurationI {
             "Enable LifeCompanion preview updates. This can be useful to test update before their production version to be ready."
     ),
 
-    // TODO : skip loading stage ?
-
     // TODO : server side configuration synchronization
-
     // TODO : image repository from backoffice
-
 
     // Dev env
     PROP_DEV_MODE(

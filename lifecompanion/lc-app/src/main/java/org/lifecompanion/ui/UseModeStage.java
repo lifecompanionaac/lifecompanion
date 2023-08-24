@@ -146,6 +146,10 @@ public class UseModeStage extends Stage {
             }
         }
 
+        if (GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.FORCE_WINDOW_MINIMIZED)) {
+            this.setIconified(true);
+        }
+
         this.setOnShown(e1 -> {
             boolean isVirtualKeyboard = configuration.virtualKeyboardProperty().get() && !GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DISABLE_VIRTUAL_KEYBOARD);
             if (configuration.virtualKeyboardProperty().get() && GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DISABLE_VIRTUAL_KEYBOARD)) {
