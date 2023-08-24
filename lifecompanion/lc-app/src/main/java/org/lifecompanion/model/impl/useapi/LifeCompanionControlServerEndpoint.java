@@ -5,7 +5,7 @@ import org.lifecompanion.framework.commons.utils.lang.CollectionUtils;
 import org.lifecompanion.model.api.useapi.EndpointHttpMethod;
 import org.lifecompanion.model.api.useapi.LifeCompanionControlServerEndpointI;
 import org.lifecompanion.model.impl.useapi.dto.ActionConfirmationDto;
-import org.lifecompanion.model.impl.useapi.dto.AliveDto;
+import org.lifecompanion.model.impl.useapi.dto.AppStatusDto;
 
 import java.util.Arrays;
 import java.util.List;
@@ -17,7 +17,7 @@ public enum LifeCompanionControlServerEndpoint implements LifeCompanionControlSe
             EndpointHttpMethod.GET,
             "To get the LifeCompanion current status, will return containing information about the running instance (can be `STARTING`,`IN_USE_MODE`,`IN_EDIT_MODE` or `STOPPING`)",
             null,
-            List.of(new AliveDto(AliveDto.Status.STARTING), new AliveDto(AliveDto.Status.IN_USE_MODE), new AliveDto(AliveDto.Status.STOPPING))
+            List.of(new AppStatusDto(AppStatusDto.Status.STARTING), new AppStatusDto(AppStatusDto.Status.IN_USE_MODE), new AppStatusDto(AppStatusDto.Status.STOPPING))
     ),
     // Window
     WINDOW_MINIMIZE("window/minimize",

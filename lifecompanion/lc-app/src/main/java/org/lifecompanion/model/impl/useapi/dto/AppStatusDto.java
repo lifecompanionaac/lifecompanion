@@ -1,9 +1,11 @@
 package org.lifecompanion.model.impl.useapi.dto;
 
-public class AliveDto {
+public class AppStatusDto {
     private Status status;
 
-    public AliveDto(Status status) {
+    // Todo : current configuration, current profile, session duration ?
+
+    public AppStatusDto(Status status) {
         this.status = status;
     }
 
