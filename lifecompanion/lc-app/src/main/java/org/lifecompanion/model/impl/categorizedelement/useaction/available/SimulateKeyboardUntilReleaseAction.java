@@ -91,23 +91,23 @@ public class SimulateKeyboardUntilReleaseAction extends RepeatActionBaseImpl<Use
     @Override
     protected void executeFirstBeforeRepeat(final UseActionEvent eventType) {
         this.keyCodes = this.createKeyCodeList();
-        if (!GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DISABLE_VIRTUAL_KEYBOARD) && !GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DISABLED_EXTERNAL_ACTIONS)) {
+        if (!GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DISABLE_VIRTUAL_KEYBOARD) && !GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DISABLE_EXTERNAL_ACTIONS)) {
             if (this.keyCodes.length > 0) {
                 VirtualKeyboardController.INSTANCE.keyPressThenRelease(this.keyCodes);
             }
         } else {
-            LOGGER.info("Ignored {} action because {} or {} is enabled", this.getClass().getSimpleName(), GlobalRuntimeConfiguration.DISABLE_VIRTUAL_KEYBOARD, GlobalRuntimeConfiguration.DISABLED_EXTERNAL_ACTIONS);
+            LOGGER.info("Ignored {} action because {} or {} is enabled", this.getClass().getSimpleName(), GlobalRuntimeConfiguration.DISABLE_VIRTUAL_KEYBOARD, GlobalRuntimeConfiguration.DISABLE_EXTERNAL_ACTIONS);
         }
     }
 
     @Override
     protected void executeOnRepeat(final UseActionEvent eventType) {
-        if (!GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DISABLE_VIRTUAL_KEYBOARD) && !GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DISABLED_EXTERNAL_ACTIONS)) {
+        if (!GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DISABLE_VIRTUAL_KEYBOARD) && !GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DISABLE_EXTERNAL_ACTIONS)) {
             if (this.keyCodes.length > 0) {
                 VirtualKeyboardController.INSTANCE.keyPressThenRelease(this.keyCodes);
             }
         } else {
-            LOGGER.info("Ignored {} action because {} or {} is enabled", this.getClass().getSimpleName(), GlobalRuntimeConfiguration.DISABLE_VIRTUAL_KEYBOARD, GlobalRuntimeConfiguration.DISABLED_EXTERNAL_ACTIONS);
+            LOGGER.info("Ignored {} action because {} or {} is enabled", this.getClass().getSimpleName(), GlobalRuntimeConfiguration.DISABLE_VIRTUAL_KEYBOARD, GlobalRuntimeConfiguration.DISABLE_EXTERNAL_ACTIONS);
         }
     }
 

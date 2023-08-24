@@ -86,14 +86,14 @@ public class SimulateKeyboardKeyPressedAction extends SimpleUseActionImpl<UseAct
 
     @Override
     public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
-        if (!GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DISABLE_VIRTUAL_KEYBOARD) && !GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DISABLED_EXTERNAL_ACTIONS)) {
+        if (!GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DISABLE_VIRTUAL_KEYBOARD) && !GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DISABLE_EXTERNAL_ACTIONS)) {
             KeyCode[] keyCodes = this.createKeyCodeList();
             //Execute
             if (keyCodes.length > 0) {
                 VirtualKeyboardController.INSTANCE.keyPressThenRelease(keyCodes);
             }
         } else {
-            LOGGER.info("Ignored {} action because {} or {} is enabled", this.getClass().getSimpleName(), GlobalRuntimeConfiguration.DISABLE_VIRTUAL_KEYBOARD, GlobalRuntimeConfiguration.DISABLED_EXTERNAL_ACTIONS);
+            LOGGER.info("Ignored {} action because {} or {} is enabled", this.getClass().getSimpleName(), GlobalRuntimeConfiguration.DISABLE_VIRTUAL_KEYBOARD, GlobalRuntimeConfiguration.DISABLE_EXTERNAL_ACTIONS);
         }
     }
 

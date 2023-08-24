@@ -74,7 +74,7 @@ public class SimulateKeyboardKeyToggleAction extends SimpleUseActionImpl<UseActi
 
     @Override
     public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
-        if (!GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DISABLE_VIRTUAL_KEYBOARD) && !GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DISABLED_EXTERNAL_ACTIONS)) {
+        if (!GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DISABLE_VIRTUAL_KEYBOARD) && !GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DISABLE_EXTERNAL_ACTIONS)) {
             KeyCode keyCode = keyToToggle.get();
             if (keyCode != null) {
                 boolean released = VirtualKeyboardController.INSTANCE.toggleKeyPressRelease(keyCode);
@@ -96,7 +96,7 @@ public class SimulateKeyboardKeyToggleAction extends SimpleUseActionImpl<UseActi
                 }
             }
         } else {
-            LOGGER.info("Ignored {} action because {} or {} is enabled", this.getClass().getSimpleName(), GlobalRuntimeConfiguration.DISABLE_VIRTUAL_KEYBOARD, GlobalRuntimeConfiguration.DISABLED_EXTERNAL_ACTIONS);
+            LOGGER.info("Ignored {} action because {} or {} is enabled", this.getClass().getSimpleName(), GlobalRuntimeConfiguration.DISABLE_VIRTUAL_KEYBOARD, GlobalRuntimeConfiguration.DISABLE_EXTERNAL_ACTIONS);
         }
     }
 

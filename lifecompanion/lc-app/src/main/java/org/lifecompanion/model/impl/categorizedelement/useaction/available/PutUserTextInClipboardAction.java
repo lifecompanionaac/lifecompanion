@@ -21,6 +21,8 @@ package org.lifecompanion.model.impl.categorizedelement.useaction.available;
 import java.util.Map;
 
 import org.lifecompanion.controller.textcomponent.WritingStateController;
+import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
+import org.lifecompanion.model.impl.useapi.GlobalRuntimeConfiguration;
 import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,32 +40,36 @@ import javafx.scene.input.ClipboardContent;
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public class PutUserTextInClipboardAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
-	private static final Logger LOGGER = LoggerFactory.getLogger(PutUserTextInClipboardAction.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PutUserTextInClipboardAction.class);
 
-	public PutUserTextInClipboardAction() {
-		super(UseActionTriggerComponentI.class);
-		this.category = DefaultUseActionSubCategories.COMPUTER_FEATURES;
-		this.nameID = "action.put.user.text.to.clipboard.name";
-		this.order = -5;
-		this.staticDescriptionID = "action.put.user.text.to.clipboard.static.description";
-		this.configIconPath = "computeraccess/icon_put_editor_to_clipboard.png";
-		this.parameterizableAction = false;
-		this.variableDescriptionProperty().set(this.getStaticDescription());
-	}
+    public PutUserTextInClipboardAction() {
+        super(UseActionTriggerComponentI.class);
+        this.category = DefaultUseActionSubCategories.COMPUTER_FEATURES;
+        this.nameID = "action.put.user.text.to.clipboard.name";
+        this.order = -5;
+        this.staticDescriptionID = "action.put.user.text.to.clipboard.static.description";
+        this.configIconPath = "computeraccess/icon_put_editor_to_clipboard.png";
+        this.parameterizableAction = false;
+        this.variableDescriptionProperty().set(this.getStaticDescription());
+    }
 
-	// Class part : "Execute"
-	// ========================================================================
-	@Override
-	public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
-		try {
-			String currentText = WritingStateController.INSTANCE.currentTextProperty().get();
-			final ClipboardContent content = new ClipboardContent();
-			content.putString(currentText);
-			FXThreadUtils.runOnFXThread(() -> Clipboard.getSystemClipboard().setContent(content));
-		} catch (Throwable t) {
-			LOGGER.warn("Couldn't copy user text top clipboard", t);
-		}
-	}
-	// ========================================================================
+    // Class part : "Execute"
+    // ========================================================================
+    @Override
+    public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
+        if (!GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DISABLE_EXTERNAL_ACTIONS)) {
+            try {
+                String currentText = WritingStateController.INSTANCE.currentTextProperty().get();
+                final ClipboardContent content = new ClipboardContent();
+                content.putString(currentText);
+                FXThreadUtils.runOnFXThread(() -> Clipboard.getSystemClipboard().setContent(content));
+            } catch (Throwable t) {
+                LOGGER.warn("Couldn't copy user text top clipboard", t);
+            }
+        } else {
+            LOGGER.info("Ignored {} action because {} is enabled", this.getClass().getSimpleName(), GlobalRuntimeConfiguration.DISABLE_EXTERNAL_ACTIONS);
+        }
+    }
+    // ========================================================================
 
 }

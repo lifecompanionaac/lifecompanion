@@ -73,7 +73,7 @@ public enum GlobalRuntimeConfiguration implements GlobalRuntimeConfigurationI {
             "Disable every virtual mouse mechanism, " +
                     "if enabled, will ignore any actions that could enable/show the virtual mouse."
     ),
-    DISABLED_EXTERNAL_ACTIONS(
+    DISABLE_EXTERNAL_ACTIONS(
             "disableExternalActions",
             GlobalRuntimeConfigurationType.COMMAND_LINE,
             "Disable any actions that could interact with the system : printing, opening web pages, opening files, running commands, etc."
