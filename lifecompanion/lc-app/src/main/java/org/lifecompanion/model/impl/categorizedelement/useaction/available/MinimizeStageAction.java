@@ -20,6 +20,7 @@ package org.lifecompanion.model.impl.categorizedelement.useaction.available;
 
 import java.util.Map;
 
+import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
@@ -27,17 +28,23 @@ import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseAction
 import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseActionSubCategories;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import javafx.stage.Stage;
+import org.lifecompanion.model.impl.useapi.GlobalRuntimeConfiguration;
 import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.jdom2.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Action to minimize the configuration window.
+ *
  * @author Paul BREUIL <tykapl.breuil@gmail.com>
  */
 public class MinimizeStageAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MinimizeStageAction.class);
+
 
     public MinimizeStageAction() {
         super(UseActionTriggerComponentI.class);
@@ -54,10 +61,14 @@ public class MinimizeStageAction extends SimpleUseActionImpl<UseActionTriggerCom
     //========================================================================
     @Override
     public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
-        FXThreadUtils.runOnFXThread(() -> {
-            final Stage stage = AppModeController.INSTANCE.getUseModeContext().getStage();
-            stage.setIconified(true);
-        });
+        if (!GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.FORCE_WINDOW_SIZE) && !GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.FORCE_WINDOW_LOCATION)) {
+            FXThreadUtils.runOnFXThread(() -> {
+                final Stage stage = AppModeController.INSTANCE.getUseModeContext().getStage();
+                stage.setIconified(true);
+            });
+        } else {
+            LOGGER.info("MinimizeStageAction action ignored because {} or {} are enabled", GlobalRuntimeConfiguration.FORCE_WINDOW_SIZE, GlobalRuntimeConfiguration.FORCE_WINDOW_LOCATION);
+        }
     }
     //========================================================================
 

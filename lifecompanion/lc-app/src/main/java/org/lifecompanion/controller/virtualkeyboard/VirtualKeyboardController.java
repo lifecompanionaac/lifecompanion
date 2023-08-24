@@ -20,6 +20,7 @@
 package org.lifecompanion.controller.virtualkeyboard;
 
 import javafx.scene.input.KeyCode;
+import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
 import org.lifecompanion.model.api.configurationcomponent.*;
 import org.lifecompanion.model.api.textcomponent.WritingEventSource;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
@@ -27,6 +28,7 @@ import org.lifecompanion.model.api.textprediction.WordPredictionI;
 import org.lifecompanion.controller.textcomponent.WritingStateController;
 import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.model.impl.useapi.GlobalRuntimeConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -284,7 +286,7 @@ public enum VirtualKeyboardController implements WritingDeviceI, ModeListenerI {
 
     public void keyPress(final KeyCode keyCode) {
         try {
-            LOGGER.info("keyPress({})",keyCode);
+            LOGGER.info("keyPress({})", keyCode);
             currentlyPressedKeys.add(keyCode);
             virtualKeyboardImplementation.keyDown(keyCode);
         } catch (Exception e) {
@@ -294,7 +296,7 @@ public enum VirtualKeyboardController implements WritingDeviceI, ModeListenerI {
 
     public void keyRelease(final KeyCode keyCode) {
         try {
-            LOGGER.info("keyRelease({})",keyCode);
+            LOGGER.info("keyRelease({})", keyCode);
             currentlyPressedKeys.remove(keyCode);
             virtualKeyboardImplementation.keyUp(keyCode);
         } catch (Exception e) {
@@ -308,8 +310,12 @@ public enum VirtualKeyboardController implements WritingDeviceI, ModeListenerI {
 
     @Override
     public void modeStart(final LCConfigurationI configuration) {
-        virtualKeyboardImplementation = SystemType.current() == SystemType.WINDOWS ? new WinAutoHotKeyVirtualKeyboard() : new RobotVirtualKeyboard();
-        virtualKeyboardImplementation.modeStart(configuration);
+        if (!GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DISABLE_VIRTUAL_KEYBOARD)) {
+            virtualKeyboardImplementation = SystemType.current() == SystemType.WINDOWS ? new WinAutoHotKeyVirtualKeyboard() : new RobotVirtualKeyboard();
+            virtualKeyboardImplementation.modeStart(configuration);
+        } else {
+            LOGGER.info("Didn't start VirtualKeyboardI implementation as {} is enabled", GlobalRuntimeConfiguration.DISABLE_VIRTUAL_KEYBOARD);
+        }
     }
 
     @Override

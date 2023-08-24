@@ -44,16 +44,13 @@ public enum GlobalRuntimeConfigurationController {
             throw new IllegalStateException("Can't init global runtime configuration twice");
         }
         globalRuntimeConfigurations = new HashMap<>();
-
         detectJavaProperties();
-
         detectCommandLine(argsCollection);
 
         if (isPresent(GlobalRuntimeConfiguration.PROP_DEV_MODE)) {
             for (GlobalRuntimeConfigurationType type : GlobalRuntimeConfigurationType.values()) {
                 LOGGER.info("{} documentation\n{}", type, GlobalRuntimeConfiguration.getMarkdownDocumentation(type));
             }
-
         }
     }
 
@@ -77,6 +74,8 @@ public enum GlobalRuntimeConfigurationController {
     }
 
     private void detectCommandLine(List<String> argsCollection) {
+        // TODO : ignore case on detected args
+
         // Command line arguments
         LOGGER.info("Initialize command line arguments");
         for (GlobalRuntimeConfiguration globalRuntimeConfiguration : GlobalRuntimeConfiguration.getAll(GlobalRuntimeConfigurationType.COMMAND_LINE)) {
@@ -88,7 +87,7 @@ public enum GlobalRuntimeConfigurationController {
                 if (globalRuntimeConfiguration.getExpectedParameterCount() > 0) {
                     if (indexOfArg + (globalRuntimeConfiguration.getExpectedParameterCount() - 1) < argsCollection.size()) {
                         List<String> paramForCurrent = new ArrayList<>();
-                        for (int i = indexOfArg; i < globalRuntimeConfiguration.getExpectedParameterCount(); i++) {
+                        for (int i = 0; i < globalRuntimeConfiguration.getExpectedParameterCount(); i++) {
                             paramForCurrent.add(argsCollection.remove(indexOfArg));
                         }
                         if (this.globalRuntimeConfigurations.containsKey(globalRuntimeConfiguration)) {

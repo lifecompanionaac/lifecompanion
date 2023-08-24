@@ -26,6 +26,8 @@ import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTrigger
 import org.lifecompanion.model.api.usevariable.UseVariableI;
 import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
 import org.lifecompanion.model.impl.useapi.GlobalRuntimeConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
@@ -33,6 +35,8 @@ import java.util.Map;
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public class SwitchToEditModeAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SwitchToEditModeAction.class);
+
 
     public SwitchToEditModeAction() {
         super(UseActionTriggerComponentI.class);
@@ -49,6 +53,8 @@ public class SwitchToEditModeAction extends SimpleUseActionImpl<UseActionTrigger
     public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
         if (!GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DISABLE_SWITCH_TO_EDIT_MODE)) {
             AppModeController.INSTANCE.startEditMode();
+        } else {
+            LOGGER.info("Switch to edit mode request ignore because {} is enabled", GlobalRuntimeConfiguration.DISABLE_SWITCH_TO_EDIT_MODE);
         }
     }
 }

@@ -5,6 +5,7 @@ import org.lifecompanion.model.impl.useapi.GlobalRuntimeConfiguration;
 import org.lifecompanion.model.impl.useapi.LifeCompanionControlServerEndpoint;
 import org.lifecompanion.model.impl.useapi.LifeCompanionControlServerException;
 import org.lifecompanion.model.impl.useapi.dto.ErrorDto;
+import org.lifecompanion.util.LangUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spark.ResponseTransformer;
@@ -18,6 +19,8 @@ public enum LifeCompanionControlServerController implements ResponseTransformer 
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LifeCompanionControlServerController.class);
 
+    public static final String DOC_URL = "https://github.com/lifecompanionaac/lifecompanion/blob/develop/docs/USER_API.md#lifecompanion-control-server-api";
+
     private boolean started = false;
     private boolean appStopping = false;
 
@@ -25,8 +28,16 @@ public enum LifeCompanionControlServerController implements ResponseTransformer 
         if (GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.ENABLE_CONTROL_SERVER)) {
             int port = 8648;
             if (GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.CONTROL_SERVER_PORT)) {
-                // TODO : implementation to
+                String portStr = GlobalRuntimeConfigurationController.INSTANCE.getParameter(GlobalRuntimeConfiguration.CONTROL_SERVER_PORT);
+                Integer portParam = LangUtils.safeParseInt(portStr);
+                if (portParam != null) {
+                    port = portParam;
+                } else {
+                    LOGGER.warn("Control server port from {} ignored because cannot be parsed from {}", GlobalRuntimeConfiguration.CONTROL_SERVER_PORT, portStr);
+                }
             }
+            LOGGER.info("Control server will be running on http://localhost:{}", port);
+            LOGGER.info("Check control server documentation on {}", DOC_URL);
             // Configuration
             port(port);
             defaultResponseTransformer(this);
@@ -45,6 +56,10 @@ public enum LifeCompanionControlServerController implements ResponseTransformer 
             });
 
             // Services
+            get("/", (req, res) -> {
+                res.redirect(DOC_URL);
+                return DOC_URL;
+            });
             path(URL_PREFIX, () -> {
                 GeneralRoutes.init();
                 WindowRoutes.init();

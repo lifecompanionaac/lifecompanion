@@ -73,6 +73,16 @@ public enum GlobalRuntimeConfiguration implements GlobalRuntimeConfigurationI {
             "Disable every virtual mouse mechanism, " +
                     "if enabled, will ignore any actions that could enable/show the virtual mouse."
     ),
+    DISABLED_EXTERNAL_ACTIONS(
+            "disableExternalActions",
+            GlobalRuntimeConfigurationType.COMMAND_LINE,
+            "Disable any actions that could interact with the system : printing, opening web pages, opening files, running commands, etc."
+    ),
+    DISABLE_EXIT(
+            "disableExit",
+            GlobalRuntimeConfigurationType.COMMAND_LINE,
+            "Disable the ability for an user to exit LifeCompanion from use mode by itself. LifeCompanion will still be able to be closed by external events."
+    ),
 
     // Window configuration
     DISABLE_WINDOW_FULLSCREEN(
@@ -111,8 +121,8 @@ public enum GlobalRuntimeConfiguration implements GlobalRuntimeConfigurationI {
             "0.8",
             1
     ),
-    FORCE_WINDOW_NOT_ALWAYS_TOP(
-            "forceWindowNotAlwaysTop",
+    DISABLE_WINDOW_ALWAYS_ON_TOP(
+            "disableWindowAlwaysOnTop",
             GlobalRuntimeConfigurationType.COMMAND_LINE,
             "Will force the use mode window to not always be on top of the other window. This change the default LifeCompanion behavior that set the use mode window always on top."
     ),
@@ -149,6 +159,7 @@ public enum GlobalRuntimeConfiguration implements GlobalRuntimeConfigurationI {
             "Enable LifeCompanion preview updates. This can be useful to test update before their production version to be ready."
     ),
 
+    // TODO : skip loading stage ?
 
     // TODO : server side configuration synchronization
 
@@ -234,6 +245,11 @@ public enum GlobalRuntimeConfiguration implements GlobalRuntimeConfigurationI {
     @Override
     public int getExpectedParameterCount() {
         return expectedParameterCount;
+    }
+
+    @Override
+    public String toString() {
+        return getType().getPrefix() + getName();
     }
 
     @Override

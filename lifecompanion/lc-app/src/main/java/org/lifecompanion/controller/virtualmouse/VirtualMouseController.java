@@ -33,10 +33,12 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.lifecompanion.controller.lifecycle.AppModeController;
+import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
 import org.lifecompanion.model.api.configurationcomponent.FramePosition;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.configurationcomponent.VirtualMouseDrawing;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
+import org.lifecompanion.model.impl.useapi.GlobalRuntimeConfiguration;
 import org.lifecompanion.ui.virtualmouse.VirtualMouseStage;
 import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.util.javafx.RobotProvider;
@@ -178,67 +180,83 @@ public enum VirtualMouseController implements ModeListenerI {
     // Class part : "Moving API"
     //========================================================================
     public void startMovingMouseTop() {
-        this.checkInitFrameAndRobot(() -> {
-            this.addKeyFrame(this.mouseY.get(), 0.0, this.mouseY);
-            this.startMoving();
-        });
+        if (checkIfVirtualMouseEnabled()) {
+            this.checkInitFrameAndRobot(() -> {
+                this.addKeyFrame(this.mouseY.get(), 0.0, this.mouseY);
+                this.startMoving();
+            });
+        }
     }
 
     public void startMovingMouseBottom() {
-        this.checkInitFrameAndRobot(() -> {
-            this.addKeyFrame(this.frameHeight - this.mouseY.get(), this.frameHeight, this.mouseY);
-            this.startMoving();
-        });
+        if (checkIfVirtualMouseEnabled()) {
+            this.checkInitFrameAndRobot(() -> {
+                this.addKeyFrame(this.frameHeight - this.mouseY.get(), this.frameHeight, this.mouseY);
+                this.startMoving();
+            });
+        }
     }
 
     public void startMovingMouseRight() {
-        this.checkInitFrameAndRobot(() -> {
-            this.addKeyFrame(this.frameWidth - this.mouseX.get(), this.frameWidth, this.mouseX);
-            this.startMoving();
-        });
+        if (checkIfVirtualMouseEnabled()) {
+            this.checkInitFrameAndRobot(() -> {
+                this.addKeyFrame(this.frameWidth - this.mouseX.get(), this.frameWidth, this.mouseX);
+                this.startMoving();
+            });
+        }
     }
 
     public void startMovingMouseLeft() {
-        this.checkInitFrameAndRobot(() -> {
-            this.addKeyFrame(this.mouseX.get(), 0.0, this.mouseX);
-            this.startMoving();
-        });
+        if (checkIfVirtualMouseEnabled()) {
+            this.checkInitFrameAndRobot(() -> {
+                this.addKeyFrame(this.mouseX.get(), 0.0, this.mouseX);
+                this.startMoving();
+            });
+        }
     }
 
     public void startMovingMouseTopLeft() {
-        this.checkInitFrameAndRobot(() -> {
-            double diff = Math.max(this.mouseX.get(), this.mouseY.get());
-            this.addKeyFrame(diff, 0.0, this.mouseX);
-            this.addKeyFrame(diff, 0.0, this.mouseY);
-            this.startMoving();
-        });
+        if (checkIfVirtualMouseEnabled()) {
+            this.checkInitFrameAndRobot(() -> {
+                double diff = Math.max(this.mouseX.get(), this.mouseY.get());
+                this.addKeyFrame(diff, 0.0, this.mouseX);
+                this.addKeyFrame(diff, 0.0, this.mouseY);
+                this.startMoving();
+            });
+        }
     }
 
     public void startMovingMouseTopRight() {
-        this.checkInitFrameAndRobot(() -> {
-            double diff = Math.max(this.frameWidth - this.mouseX.get(), this.mouseY.get());
-            this.addKeyFrame(diff, this.frameWidth, this.mouseX);
-            this.addKeyFrame(diff, 0.0, this.mouseY);
-            this.startMoving();
-        });
+        if (checkIfVirtualMouseEnabled()) {
+            this.checkInitFrameAndRobot(() -> {
+                double diff = Math.max(this.frameWidth - this.mouseX.get(), this.mouseY.get());
+                this.addKeyFrame(diff, this.frameWidth, this.mouseX);
+                this.addKeyFrame(diff, 0.0, this.mouseY);
+                this.startMoving();
+            });
+        }
     }
 
     public void startMovingMouseBottomRight() {
-        this.checkInitFrameAndRobot(() -> {
-            double diff = Math.max(this.frameWidth - this.mouseX.get(), this.frameHeight - this.mouseY.get());
-            this.addKeyFrame(diff, this.frameWidth, this.mouseX);
-            this.addKeyFrame(diff, this.frameHeight, this.mouseY);
-            this.startMoving();
-        });
+        if (checkIfVirtualMouseEnabled()) {
+            this.checkInitFrameAndRobot(() -> {
+                double diff = Math.max(this.frameWidth - this.mouseX.get(), this.frameHeight - this.mouseY.get());
+                this.addKeyFrame(diff, this.frameWidth, this.mouseX);
+                this.addKeyFrame(diff, this.frameHeight, this.mouseY);
+                this.startMoving();
+            });
+        }
     }
 
     public void startMovingMouseBottomLeft() {
-        this.checkInitFrameAndRobot(() -> {
-            double diff = Math.max(this.mouseX.get(), this.frameHeight - this.mouseY.get());
-            this.addKeyFrame(diff, 0.0, this.mouseX);
-            this.addKeyFrame(diff, this.frameHeight, this.mouseY);
-            this.startMoving();
-        });
+        if (checkIfVirtualMouseEnabled()) {
+            this.checkInitFrameAndRobot(() -> {
+                double diff = Math.max(this.mouseX.get(), this.frameHeight - this.mouseY.get());
+                this.addKeyFrame(diff, 0.0, this.mouseX);
+                this.addKeyFrame(diff, this.frameHeight, this.mouseY);
+                this.startMoving();
+            });
+        }
     }
 
     public void hideMouseFrame() {
@@ -272,43 +290,63 @@ public enum VirtualMouseController implements ModeListenerI {
     // Class part : "Clic API"
     //========================================================================
     public void executePrimaryMouseClic() {
-        this.checkInitFrameAndRobot(() -> {
-            this.moveMouseToWithDelay(this.mouseX.get(), this.mouseY.get());
-            this.executeMouseClic(MouseEvent.BUTTON1);
-            this.frameToFrontAndFocus();
-        });
+        if (checkIfVirtualMouseEnabled()) {
+            this.checkInitFrameAndRobot(() -> {
+                this.moveMouseToWithDelay(this.mouseX.get(), this.mouseY.get());
+                this.executeMouseClic(MouseEvent.BUTTON1);
+                this.frameToFrontAndFocus();
+            });
+        }
     }
 
     public void executeDoubleMouseClic() {
-        this.checkInitFrameAndRobot(() -> {
-            this.moveMouseToWithDelay(this.mouseX.get(), this.mouseY.get());
-            this.executeMouseClic(MouseEvent.BUTTON1);
-            this.executeMouseClic(MouseEvent.BUTTON1);
-            this.frameToFrontAndFocus();
-        });
+        if (checkIfVirtualMouseEnabled()) {
+            this.checkInitFrameAndRobot(() -> {
+                this.moveMouseToWithDelay(this.mouseX.get(), this.mouseY.get());
+                this.executeMouseClic(MouseEvent.BUTTON1);
+                this.executeMouseClic(MouseEvent.BUTTON1);
+                this.frameToFrontAndFocus();
+            });
+        }
     }
 
     public void executeSecondaryMouseClic() {
-        this.checkInitFrameAndRobot(() -> {
-            this.moveMouseToWithDelay(this.mouseX.get(), this.mouseY.get());
-            this.executeMouseClic(MouseEvent.BUTTON3);
-            this.frameToFrontAndFocus();
-        });
+        if (checkIfVirtualMouseEnabled()) {
+            this.checkInitFrameAndRobot(() -> {
+                this.moveMouseToWithDelay(this.mouseX.get(), this.mouseY.get());
+                this.executeMouseClic(MouseEvent.BUTTON3);
+                this.frameToFrontAndFocus();
+            });
+        }
     }
 
     public void pressMouseMiddleClicWithoutNoVirtualPosition() {
-        checkRobotInit();
-        this.executeMouseClic(MouseEvent.BUTTON2);
+        if (checkIfVirtualMouseEnabled()) {
+            checkRobotInit();
+            this.executeMouseClic(MouseEvent.BUTTON2);
+        }
+    }
+
+    private static boolean checkIfVirtualMouseEnabled() {
+        boolean enabled = !GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DISABLE_VIRTUAL_MOUSE);
+        if (!enabled) {
+            LOGGER.info("Ignored virtual mouse action because {} is enabled", GlobalRuntimeConfiguration.DISABLE_VIRTUAL_MOUSE);
+        }
+        return enabled;
     }
 
     public void executeMouseWheelDown(final int amount) {
-        this.checkRobotInit();
-        this.executeMouseWheel(amount);
+        if (checkIfVirtualMouseEnabled()) {
+            this.checkRobotInit();
+            this.executeMouseWheel(amount);
+        }
     }
 
     public void executeMouseWheelUp(final int amount) {
-        this.checkRobotInit();
-        this.executeMouseWheel(-amount);
+        if (checkIfVirtualMouseEnabled()) {
+            this.checkRobotInit();
+            this.executeMouseWheel(-amount);
+        }
     }
 
     private void frameToFrontAndFocus() {

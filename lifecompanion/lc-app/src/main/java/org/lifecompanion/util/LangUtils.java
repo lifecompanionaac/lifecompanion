@@ -76,6 +76,22 @@ public class LangUtils {
         return Boolean.parseBoolean(StringUtils.stripToEmpty(str));
     }
 
+    public static Integer safeParseInt(String str) {
+        try {
+            return Integer.parseInt(StringUtils.stripToEmpty(str));
+        } catch (NumberFormatException nfe) {
+            return null;
+        }
+    }
+
+    public static Double safeParseDouble(String str) {
+        try {
+            return Double.parseDouble(StringUtils.stripToEmpty(str));
+        } catch (NumberFormatException nfe) {
+            return null;
+        }
+    }
+
     public static boolean isEgalsTo(final int toTest, final int value, final int threshold) {
         return toTest >= value - threshold && toTest <= value + threshold;
     }

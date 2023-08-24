@@ -95,7 +95,9 @@ public class UseModeScene extends Scene implements LCViewInitHelper {
         if (!GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DISABLE_SWITCH_TO_EDIT_MODE)) {
             this.root.getChildren().addAll(this.buttonGoToConfigMode);
         }
-        this.root.getChildren().addAll(buttonFullscreen);
+        if (!GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DISABLE_WINDOW_FULLSCREEN)) {
+            this.root.getChildren().addAll(buttonFullscreen);
+        }
 
         if (this.configuration.getSelectionModeParameter().hideMouseCursorProperty().get()) {
             this.setCursor(Cursor.NONE);
@@ -118,8 +120,10 @@ public class UseModeScene extends Scene implements LCViewInitHelper {
                 }
             }
             if (CommonActions.KEY_COMBINATION_SWITCH_FULLSCREEN.match(eventP)) {
-                CommonActions.HANDLER_SWITCH_FULLSCREEN.handle(null);
-                eventP.consume();
+                if (!GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DISABLE_WINDOW_FULLSCREEN)) {
+                    CommonActions.HANDLER_SWITCH_FULLSCREEN.handle(null);
+                    eventP.consume();
+                }
             }
             if (KEY_COMBINATION_COPY.match(eventP) && !configuration.virtualKeyboardProperty().get()) {
                 copyFromCurrentTextEditor();

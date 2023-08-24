@@ -14,12 +14,14 @@ LifeCompanion can be launched using command line arguments to configure some of 
 |`-disableUpdates`|*`NONE`*|Will disable all the update checking process (for both app and plugins). Will not try to reach the update server at all.|
 |`-disableVirtualKeyboard`|*`NONE`*|Disable every virtual keyboard mechanism, if enabled, will consider any configuration as a classic configuration even if the virtual keyboard parameter is enabled on it.|
 |`-disableVirtualMouse`|*`NONE`*|Disable every virtual mouse mechanism, if enabled, will ignore any actions that could enable/show the virtual mouse.|
+|`-disableExternalActions`|*`NONE`*|Disable any actions that could interact with the system : printing, opening web pages, opening files, running commands, etc.|
+|`-disableExit`|*`NONE`*|Disable the ability for an user to exit LifeCompanion from use mode by itself. LifeCompanion will still be able to be closed by external events.|
 |`-disableFullscreen`|*`NONE`*|Disable the user ability to switch from decorated/fullscreen mode on the use mode window. Will disable the fullscreen button, but also the keyboard shortcut|
 |`-forceWindowUndecorated`|*`NONE`*|Will force the use mode window to be "undecorated" as stated in [JavaFX documentation](https://openjfx.io/javadoc/18/javafx.graphics/javafx/stage/Stage.html) on stage style. |
 |`-forceWindowSize width height`|`1200 800`|Will force the use mode window to be as the specified size (in pixel). The given size will respect the screen scaling. The user will then not be able to resize the use mode window.|
 |`-forceWindowLocation x y`|`0 0`|Will force the use mode window to be at a specific location on the screen (in pixel, from top left corner). The given location will respect the screen scaling.|
 |`-forceWindowOpacity opacity`|`0.8`|Will force the use mode window to keep a specific opacity regardless the configuration set on it for its opacity. Opacity should range between 0.0 (transparent) to 1.0 (opaque).|
-|`-forceWindowNotAlwaysTop`|*`NONE`*|Will force the use mode window to not always be on top of the other window. This change the default LifeCompanion behavior that set the use mode window always on top.|
+|`-disableWindowAlwaysOnTop`|*`NONE`*|Will force the use mode window to not always be on top of the other window. This change the default LifeCompanion behavior that set the use mode window always on top.|
 |`-enableControlServer`|*`NONE`*|Will enable the API server to control LifeCompanion while running. To get details on control feature, check the "LifeCompanion control server API" part of documentation.API server will run on its default port (8648) if enable expect if the port is specific with its own parameter.|
 |`-controlServerPort port`|`8080`|The port for the API server to run. Will be ignored if the API server is not enabled (check the parameter above to enable it). If not specified, server will run on its default port.|
 |`-updateDownloadFinished`|*`NONE`*|Inform LifeCompanion that the update download was finished on last LifeCompanion use. When launched with the arg, LifeCompanion will try to install the newly downloaded update and restart itself.|

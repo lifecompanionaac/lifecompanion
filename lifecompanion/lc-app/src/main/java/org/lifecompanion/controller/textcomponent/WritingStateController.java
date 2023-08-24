@@ -20,6 +20,7 @@ package org.lifecompanion.controller.textcomponent;
 
 import javafx.beans.property.*;
 import javafx.collections.ObservableList;
+import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
 import org.lifecompanion.model.api.configurationcomponent.*;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
 import org.lifecompanion.model.api.textcomponent.*;
@@ -35,6 +36,7 @@ import org.lifecompanion.model.impl.imagedictionary.StaticImageElement;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.framework.utils.FluentHashMap;
+import org.lifecompanion.model.impl.useapi.GlobalRuntimeConfiguration;
 import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -457,7 +459,11 @@ public enum WritingStateController implements ModeListenerI, WritingStateControl
         this.writingStateEntryContainer.setWriterEntries(configuration.getUseModeWriterEntries());
 
         if (configuration.virtualKeyboardProperty().get()) {
-            this.writingDevices.add(VirtualKeyboardController.INSTANCE);
+            if (!GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DISABLE_VIRTUAL_KEYBOARD)) {
+                this.writingDevices.add(VirtualKeyboardController.INSTANCE);
+            } else {
+                LOGGER.info("Didn't add VirtualKeyboardController to writing device as {} is enabled", GlobalRuntimeConfiguration.DISABLE_VIRTUAL_KEYBOARD);
+            }
         }
     }
 
