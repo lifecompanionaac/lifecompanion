@@ -20,6 +20,7 @@
 package org.lifecompanion.build;
 
 import org.gradle.api.DefaultTask;
+import org.gradle.api.Project;
 import org.gradle.api.logging.Logger;
 import org.gradle.api.logging.Logging;
 import org.gradle.api.provider.Property;
@@ -153,7 +154,7 @@ public abstract class PublishApplicationTask extends DefaultTask {
                     client.post("/api/admin/application-update/finish-update", new FinishApplicationUpdateDto(updateInitializedDto.getApplicationUpdateId(), visibility));
                     LOGGER.lifecycle("Update finished");
                 } else {
-                    File destDir = new File(buildDir.getPath() + File.separator + "offline/" + PATH_TO_BUILD.get(system) + "-" + getProject().getVersion());
+                    File destDir = getOfflineDirFor(getProject(), system);
                     File userDir = new File(destDir + File.separator + "user");
                     File appDir = new File(destDir + File.separator + DIR_NAME_APPLICATION);
                     File dataDir = new File(destDir + File.separator + DIR_NAME_APPLICATION_DATA);
@@ -170,6 +171,10 @@ public abstract class PublishApplicationTask extends DefaultTask {
                 }
             }
         }
+    }
+
+    static File getOfflineDirFor(Project project, SystemType system) {
+        return new File(project.getBuildDir().getPath() + File.separator + "offline/" + PATH_TO_BUILD.get(system) + "-" + project.getVersion());
     }
 
     private void downloadBuildResources(File buildResourceDirectory, boolean persistentDataMode) {

@@ -8,6 +8,7 @@ plugins {
     id 'org.lifecompanion.gradle.plugin.env-conf'
     id 'org.lifecompanion.gradle.plugin.download-jdk-jfx'
     id 'org.lifecompanion.gradle.plugin.publish-application'
+    id 'org.lifecompanion.gradle.plugin.create-deb'
 }
 
 javafx {

@@ -4,6 +4,7 @@
 # The script is auto-generated and might be replaced in updates
 # NEVER EDIT THIS SCRIPT or your changes could be lost
 
+# Go to software directory (with application and data folder)
 cd ${0%/*}/..
 
 # Create data directory
@@ -36,7 +37,7 @@ chmod +x $PATH_TO_CMD
 # Fix for process spawn on Unix/Mac
 chmod +x $LAUNCH_DIR/lib/jspawnhelper
 
-# launch VM with params
+# Launch VM with params
 $PATH_TO_CMD -Djava.net.useSystemProxies=true\
   $XMX_VALUE \
 	${CLASSPATH_ARG-'-Dnooparg'}\
