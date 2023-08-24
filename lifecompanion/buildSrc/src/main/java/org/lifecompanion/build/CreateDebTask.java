@@ -66,7 +66,7 @@ public abstract class CreateDebTask extends DefaultTask {
         IOUtils.copyDirectory(new File(offlineDirFor + File.separator + DIR_NAME_APPLICATION_DATA), destAppDataDir);
 
         // Custom install configuration
-        InstallationConfiguration installConfig = new InstallationConfiguration("2048m", "~/LifeCompanion");
+        InstallationConfiguration installConfig = new InstallationConfiguration("2048m", "~/Documents/LifeCompanion");
         installConfig.save(new File(destAppDataDir + File.separator + "installation.properties"));
 
         // Create deb control file
