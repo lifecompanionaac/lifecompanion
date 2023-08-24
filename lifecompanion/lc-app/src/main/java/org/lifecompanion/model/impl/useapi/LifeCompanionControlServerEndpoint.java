@@ -133,7 +133,7 @@ public enum LifeCompanionControlServerEndpoint implements LifeCompanionControlSe
     public static String getAllMarkdownDocumentation() {
         StringBuilder content = new StringBuilder();
         for (LifeCompanionControlServerEndpoint endpoint : LifeCompanionControlServerEndpoint.values()) {
-            content.append("**[").append(endpoint.getUrl()).append("]").append("(#").append(endpoint.getUrl().replace("/", "")).append(")**").append("\n");
+            content.append("- **[").append(endpoint.getUrl()).append("]").append("(#").append(endpoint.getUrl().replace("/", "")).append(")**").append("\n");
         }
         content.append("\n");
         content.append(Arrays.stream(LifeCompanionControlServerEndpoint.values()).map(LifeCompanionControlServerEndpoint::getMarkdownDocumentation).collect(Collectors.joining("\n")));

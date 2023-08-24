@@ -66,7 +66,7 @@ LifeCompanion control API server allow you to control LifeCompanion while runing
 
 **Note that server will be running only if LifeCompanion is launched using `-enableControlServer` argument.**
 
-Once the server is running, you can directly call service with any HTTP client that can reach the URL. On a local network. For example with CURL :
+Once the server is running, you can directly call service with any HTTP client that can reach the host :
 
 ```sh
 curl localhost:8648/api/v1/app/status
@@ -87,8 +87,7 @@ Control server will always try to create a JSON response to your request. When a
 ```json
 {
 "errorId": "error.unknown",
-"errorMessage": "IllegalStateException :\nThis operation is permitted on the event thread only; currentThread \u003d
-qtp528202587-284"
+"errorMessage": "IllegalStateException :\nThis operation is permitted on the event thread only;"
 }
 ```
 
@@ -112,13 +111,13 @@ Returns from server can depend on the sent request, but a lot of request will re
 
 ### Available services
 
-**[app/status](#appstatus)**
-**[window/minimize](#windowminimize)**
-**[window/show](#windowshow)**
-**[voice/stop](#voicestop)**
-**[selection/stop](#selectionstop)**
-**[selection/play](#selectionplay)**
-**[media/stop](#mediastop)**
+- **[app/status](#appstatus)**
+- **[window/minimize](#windowminimize)**
+- **[window/show](#windowshow)**
+- **[voice/stop](#voicestop)**
+- **[selection/stop](#selectionstop)**
+- **[selection/play](#selectionplay)**
+- **[media/stop](#mediastop)**
 
 ### /app/status
 
