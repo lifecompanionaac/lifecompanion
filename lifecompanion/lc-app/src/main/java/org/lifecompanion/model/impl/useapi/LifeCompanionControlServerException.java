@@ -25,6 +25,6 @@ public class LifeCompanionControlServerException extends RuntimeException {
     }
 
     public static ErrorDto toDto(Throwable throwable) {
-        return new ErrorDto("error.unkown", throwable.getMessage());
+        return new ErrorDto("error.unknown", throwable.getClass().getSimpleName() + " :\n" + throwable.getMessage());
     }
 }

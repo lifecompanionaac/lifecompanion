@@ -66,15 +66,65 @@ LifeCompanion control API server allow you to control LifeCompanion while runing
 
 **Note that server will be running only if LifeCompanion is launched using `-enableControlServer` argument.**
 
+Once the server is running, you can directly call service with any HTTP client that can reach the URL. On a local network. For example with CURL :
+
+```sh
+curl localhost:8648/api/v1/app/status
+curl -X POST localhost:8648/api/v1/window/minimize
+```
+
 ### Errors
 
-TODO
+Control server will always try to create a JSON response to your request. When an error happen, you can get the following result depending on the error.
 
-### /status
+```json
+{
+    "errorId": "error.not.found",
+    "errorMessage": "Requested URL not found, check the docs !"
+}
+```
+
+```json
+{
+"errorId": "error.unknown",
+"errorMessage": "IllegalStateException :\nThis operation is permitted on the event thread only; currentThread \u003d
+qtp528202587-284"
+}
+```
+
+### Returns
+
+Returns from server can depend on the sent request, but a lot of request will return an "action result". The result will indicate if the action was done and add a message to explain why the action wasn't done. This should be used for dev. purpose only as the messages returned could change over the time.
+
+```json
+{
+    "done": false,
+    "message": "Not in use mode"
+}
+```
+
+```json
+{
+    "done": true,
+    "message": "OK"
+}
+```
+
+### Available services
+
+**[app/status](#appstatus)**
+**[window/minimize](#windowminimize)**
+**[window/show](#windowshow)**
+**[voice/stop](#voicestop)**
+**[selection/stop](#selectionstop)**
+**[selection/play](#selectionplay)**
+**[media/stop](#mediastop)**
+
+### /app/status
 
 **Description** : To get the LifeCompanion current status, will return containing information about the running instance (can be `STARTING`,`IN_USE_MODE`,`IN_EDIT_MODE` or `STOPPING`)
 
-**Url structure** : `/api/v1/status`
+**Url structure** : `/api/v1/app/status`
 
 **Method** : `GET`
 
@@ -83,28 +133,22 @@ TODO
 NONE
 ```
 
-
 **Returns** : 
 ```json
 {
   "status": "STARTING"
 }
 ```
-
 ```json
 {
   "status": "IN_USE_MODE"
 }
 ```
-
 ```json
 {
   "status": "STOPPING"
 }
 ```
-
-
-
 ### /window/minimize
 
 **Description** : Minimize the current use mode window to hide it from user
@@ -118,7 +162,6 @@ NONE
 NONE
 ```
 
-
 **Returns** : 
 ```json
 {
@@ -126,9 +169,6 @@ NONE
   "message": "OK"
 }
 ```
-
-
-
 ### /window/show
 
 **Description** : Show the current window on top of the others and try to focus it
@@ -142,7 +182,6 @@ NONE
 NONE
 ```
 
-
 **Returns** : 
 ```json
 {
@@ -150,9 +189,6 @@ NONE
   "message": "OK"
 }
 ```
-
-
-
 ### /voice/stop
 
 **Description** : Stop the current speaking voice synthesizer and empty the voice synthesizer queue to clear the waiting speech. Later calls to voice synthesizer will work as usual.
@@ -166,7 +202,6 @@ NONE
 NONE
 ```
 
-
 **Returns** : 
 ```json
 {
@@ -174,9 +209,6 @@ NONE
   "message": "OK"
 }
 ```
-
-
-
 ### /selection/stop
 
 **Description** : Stop the current selection mode (if applicable). Can be useful if the current selection mode is a scanning mode. Scanning will be able to be played again will the `selection/play` endpoint
@@ -190,7 +222,6 @@ NONE
 NONE
 ```
 
-
 **Returns** : 
 ```json
 {
@@ -198,9 +229,6 @@ NONE
   "message": "OK"
 }
 ```
-
-
-
 ### /selection/play
 
 **Description** : Play the current selection mode (if applicable). Useful if `selection/stop` endpoint has been called. Will not have any effect if the selection mode is already playing.
@@ -214,7 +242,6 @@ NONE
 NONE
 ```
 
-
 **Returns** : 
 ```json
 {
@@ -222,9 +249,6 @@ NONE
   "message": "OK"
 }
 ```
-
-
-
 ### /media/stop
 
 **Description** : Stop any playing media (sound, video, etc.) and empty the media players queue to be sure that no media will be played without a new play request.
@@ -237,7 +261,6 @@ NONE
 ```
 NONE
 ```
-
 
 **Returns** : 
 ```json
