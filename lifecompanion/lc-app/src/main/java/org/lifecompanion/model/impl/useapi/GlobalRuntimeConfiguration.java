@@ -138,6 +138,7 @@ public enum GlobalRuntimeConfiguration implements GlobalRuntimeConfigurationI {
     ),
 
     // Api server configuration
+    // TODO : add a token auth configuration if wanted
     ENABLE_CONTROL_SERVER(
             "enableControlServer",
             GlobalRuntimeConfigurationType.COMMAND_LINE,
@@ -150,6 +151,14 @@ public enum GlobalRuntimeConfiguration implements GlobalRuntimeConfigurationI {
             "The port for the API server to run. Will be ignored if the API server is not enabled (check the parameter above to enable it). If not specified, server will run on its default port.",
             "8080",
             1
+    ),
+    CONTROL_SERVER_AUTH_TOKEN("controlServerAuthToken",
+            GlobalRuntimeConfigurationType.COMMAND_LINE,
+            "token",
+            "If you want your control server to be secured with a `Authorization: Bearer <token>` header on each request. If enable, any request without the same matching token will be rejected with 401 code",
+            "AbCdEf123456",
+            1,
+            true
     ),
 
     // Updates,
@@ -208,15 +217,21 @@ public enum GlobalRuntimeConfiguration implements GlobalRuntimeConfigurationI {
 
     private final String name, parameters, description, parametersExample;
     private final int expectedParameterCount;
+    private final boolean securedParameters;
     private final GlobalRuntimeConfigurationType type;
 
-    GlobalRuntimeConfiguration(String name, GlobalRuntimeConfigurationType type, String parameters, String description, String parametersExample, int expectedParameterCount) {
+    GlobalRuntimeConfiguration(String name, GlobalRuntimeConfigurationType type, String parameters, String description, String parametersExample, int expectedParameterCount, boolean securedParameters) {
         this.name = name;
         this.type = type;
         this.parameters = parameters;
         this.description = description;
         this.parametersExample = parametersExample;
         this.expectedParameterCount = expectedParameterCount;
+        this.securedParameters = securedParameters;
+    }
+
+    GlobalRuntimeConfiguration(String name, GlobalRuntimeConfigurationType type, String parameters, String description, String parametersExample, int expectedParameterCount) {
+        this(name, type, parameters, description, parametersExample, expectedParameterCount, false);
     }
 
     GlobalRuntimeConfiguration(String name, GlobalRuntimeConfigurationType type, String description) {
@@ -256,6 +271,11 @@ public enum GlobalRuntimeConfiguration implements GlobalRuntimeConfigurationI {
     @Override
     public String toString() {
         return getType().getPrefix() + getName();
+    }
+
+    @Override
+    public boolean isSecuredParameters() {
+        return securedParameters;
     }
 
     @Override

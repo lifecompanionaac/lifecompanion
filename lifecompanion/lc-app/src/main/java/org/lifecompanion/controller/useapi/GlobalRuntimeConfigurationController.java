@@ -64,7 +64,7 @@ public enum GlobalRuntimeConfigurationController {
                     LOGGER.info("Valid property {} detected (no parameter)", globalRuntimeConfiguration.getName());
                     this.globalRuntimeConfigurations.put(globalRuntimeConfiguration, List.of());
                 } else if (StringUtils.isNotBlank(propValue)) {
-                    LOGGER.info("Valid property {} detected (parameter : {})", globalRuntimeConfiguration.getName(), propValue);
+                    LOGGER.info("Valid property {} detected (parameter : {})", globalRuntimeConfiguration.getName(), globalRuntimeConfiguration.isSecuredParameters() ? "*****" : propValue);
                     this.globalRuntimeConfigurations.put(globalRuntimeConfiguration, List.of(propValue));
                 } else {
                     LOGGER.error("Invalid property {} detected, found it with not parameters !", globalRuntimeConfiguration.getName());
@@ -93,11 +93,11 @@ public enum GlobalRuntimeConfigurationController {
                         if (this.globalRuntimeConfigurations.containsKey(globalRuntimeConfiguration)) {
                             LOGGER.error("Invalid arg {} detected, found it with parameters {} but it was already in the arg list (with parameters {})",
                                     globalRuntimeConfiguration.getName(),
-                                    paramForCurrent,
-                                    this.globalRuntimeConfigurations.get(globalRuntimeConfiguration)
+                                    globalRuntimeConfiguration.isSecuredParameters() ? "*****" : paramForCurrent,
+                                    globalRuntimeConfiguration.isSecuredParameters() ? "*****" : this.globalRuntimeConfigurations.get(globalRuntimeConfiguration)
                             );
                         } else {
-                            LOGGER.info("Valid arg {} detected (parameter : {})", globalRuntimeConfiguration.getName(), paramForCurrent);
+                            LOGGER.info("Valid arg {} detected (parameter : {})", globalRuntimeConfiguration.getName(), globalRuntimeConfiguration.isSecuredParameters() ? "*****" : paramForCurrent);
                             this.globalRuntimeConfigurations.put(globalRuntimeConfiguration, paramForCurrent);
                         }
                     } else {

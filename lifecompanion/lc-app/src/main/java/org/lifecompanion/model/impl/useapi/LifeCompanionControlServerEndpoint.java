@@ -6,6 +6,7 @@ import org.lifecompanion.model.api.useapi.EndpointHttpMethod;
 import org.lifecompanion.model.api.useapi.LifeCompanionControlServerEndpointI;
 import org.lifecompanion.model.impl.useapi.dto.ActionConfirmationDto;
 import org.lifecompanion.model.impl.useapi.dto.AppStatusDto;
+import org.lifecompanion.model.impl.useapi.dto.WindowBoundsDto;
 
 import java.util.Arrays;
 import java.util.List;
@@ -32,7 +33,12 @@ public enum LifeCompanionControlServerEndpoint implements LifeCompanionControlSe
             null,
             List.of(ActionConfirmationDto.ok())
     ),
-    // TODO : size, location ?
+    WINDOW_BOUNDS("window/bounds",
+            EndpointHttpMethod.POST,
+            "Change the window bounds to the wanted bounds (in pixel). Bounds contains the window location top left corner (x,y) from screen top left corner and size (width,height). Will not check that the given bounds respect screen bounds.",
+            List.of(new WindowBoundsDto(0, 124, 1366, 644)),
+            List.of(ActionConfirmationDto.ok())
+    ),
 
     // Voice synthesizer
     VOICE_STOP("voice/stop",
@@ -42,15 +48,16 @@ public enum LifeCompanionControlServerEndpoint implements LifeCompanionControlSe
             List.of(ActionConfirmationDto.ok())
     ),
     // Selection mode
+    // TODO : change selection mode type and configuration ?
     SELECTION_STOP("selection/stop",
             EndpointHttpMethod.POST,
-            "Stop the current selection mode (if applicable). Can be useful if the current selection mode is a scanning mode. Scanning will be able to be played again will the `selection/play` endpoint",
+            "Stop the current selection mode (if applicable). Will disable any user interaction with LifeCompanion UI no matter the current selection mode type (scanning, direct, etc.). To restore a working selection mode, `selection/start` should be called.",
             null,
             List.of(ActionConfirmationDto.ok())
     ),
-    SELECTION_PLAY("selection/play",
+    SELECTION_START("selection/start",
             EndpointHttpMethod.POST,
-            "Play the current selection mode (if applicable). Useful if `selection/stop` endpoint has been called. Will not have any effect if the selection mode is already playing.",
+            "Start the selection mode for the current used configuration. Will restore user interaction with LifeCompanion UI. Calling this service once while the selection mode is already started will have no effect.",
             null,
             List.of(ActionConfirmationDto.ok())
     ),

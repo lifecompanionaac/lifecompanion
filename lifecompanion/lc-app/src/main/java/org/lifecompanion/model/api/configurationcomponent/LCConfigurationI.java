@@ -123,7 +123,7 @@ public interface LCConfigurationI extends DisplayableComponentI, VoiceSynthesize
      * Currently selection mode use by this configuration.<br>
      * Should never be changed manually. It's the selection mode controller that will set the needed selection model.
      *
-     * @return the property that contains the currently use selection mode.<br>
+     * @return the property that contains the currently used selection mode.<br>
      * This can change while configuration is used, if a grid have a different selection mode than the previous selected grid.
      */
     ObjectProperty<SelectionModeI> selectionModeProperty();

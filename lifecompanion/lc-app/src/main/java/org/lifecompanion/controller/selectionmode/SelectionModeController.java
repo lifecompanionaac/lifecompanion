@@ -31,7 +31,6 @@ import org.lifecompanion.controller.io.task.ConfigurationLoadingTask;
 import org.lifecompanion.controller.lifecycle.AppMode;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.profile.ProfileController;
-import org.lifecompanion.framework.commons.utils.lang.CollectionUtils;
 import org.lifecompanion.model.api.configurationcomponent.*;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
 import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
@@ -940,6 +939,42 @@ public enum SelectionModeController implements ModeListenerI {
             this.scanningHistory.add(part);
             this.currentHistoryIndex = this.scanningHistory.size() - 1;
         }
+    }
+    //========================================================================
+
+    // PLAY/STOP
+    //========================================================================
+
+    /**
+     * Will totally stop the current selection mode calling {@link #modeStop(LCConfigurationI)}.<br>
+     * No selection will work until the selection mode is started again with {@link #startSelectionMode()}.<br>
+     * <strong>Note that you should carefully use this method in really specific use cases!</strong>
+     *
+     * @return true if the selection mode could have been stopped
+     */
+    public boolean stopSelectionMode() {
+        if (configuration != null) {
+            // Stop for current configuration
+            this.modeStop(configuration);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Will start the selection mode from scratch for current use mode configuration.<br>
+     * If a selection is already started, will not do anything and return false.
+     * <strong>Note that you should carefully use this method in really specific use cases!</strong>
+     *
+     * @return true if the selection mode could have been started
+     */
+    public boolean startSelectionMode() {
+        // Restore with currently used configuration (if not started yet)
+        if (configuration == null) {
+            this.modeStart(AppModeController.INSTANCE.getUseModeContext().getConfiguration());
+            return true;
+        }
+        return false;
     }
     //========================================================================
 

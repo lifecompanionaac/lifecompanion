@@ -25,6 +25,8 @@ public interface GlobalRuntimeConfigurationI {
 
     String getParameters();
 
+    boolean isSecuredParameters();
+
     String getDescription();
 
     String getParametersExample();

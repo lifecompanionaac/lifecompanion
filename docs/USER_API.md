@@ -26,6 +26,7 @@ LifeCompanion can be launched using command line arguments to configure some of 
 |`-forceWindowMinimized`|*`NONE`*|Will start use mode with the LifeCompanion window iconified. Useful if you don't want the LifeCompanion window to pop on start.|
 |`-enableControlServer`|*`NONE`*|Will enable the API server to control LifeCompanion while running. To get details on control feature, check the "LifeCompanion control server API" part of documentation.API server will run on its default port (8648) if enable expect if the port is specific with its own parameter.|
 |`-controlServerPort port`|`8080`|The port for the API server to run. Will be ignored if the API server is not enabled (check the parameter above to enable it). If not specified, server will run on its default port.|
+|`-controlServerAuthToken token`|`AbCdEf123456`|If you want your control server to be secured with a `Authorization: Bearer <token>` header on each request. If enable, any request without the same matching token will be rejected with 401 code|
 |`-updateDownloadFinished`|*`NONE`*|Inform LifeCompanion that the update download was finished on last LifeCompanion use. When launched with the arg, LifeCompanion will try to install the newly downloaded update and restart itself.|
 |`-updateFinished`|*`NONE`*|Inform LifeCompanion that the update installation was done on the previous launch. Typically, this arg is added on LifeCompanion restart after update installation.|
 |`-enablePreviewUpdates`|*`NONE`*|Enable LifeCompanion preview updates. This can be useful to test update before their production version to be ready.|
@@ -118,9 +119,10 @@ Returns from server can depend on the sent request, but a lot of request will re
 - **[app/status](#appstatus)**
 - **[window/minimize](#windowminimize)**
 - **[window/show](#windowshow)**
+- **[window/bounds](#windowbounds)**
 - **[voice/stop](#voicestop)**
 - **[selection/stop](#selectionstop)**
-- **[selection/play](#selectionplay)**
+- **[selection/start](#selectionstart)**
 - **[media/stop](#mediastop)**
 
 ### /app/status
@@ -192,6 +194,31 @@ NONE
   "message": "OK"
 }
 ```
+### /window/bounds
+
+**Description** : Change the window bounds to the wanted bounds (in pixel). Bounds contains the window location top left corner (x,y) from screen top left corner and size (width,height). Will not check that the given bounds respect screen bounds.
+
+**Url structure** : `/api/v1/window/bounds`
+
+**Method** : `POST`
+
+**Parameters** :
+```json
+{
+  "x": 0,
+  "y": 124,
+  "width": 1366,
+  "height": 644
+}
+```
+
+**Returns** : 
+```json
+{
+  "done": true,
+  "message": "OK"
+}
+```
 ### /voice/stop
 
 **Description** : Stop the current speaking voice synthesizer and empty the voice synthesizer queue to clear the waiting speech. Later calls to voice synthesizer will work as usual.
@@ -214,7 +241,7 @@ NONE
 ```
 ### /selection/stop
 
-**Description** : Stop the current selection mode (if applicable). Can be useful if the current selection mode is a scanning mode. Scanning will be able to be played again will the `selection/play` endpoint
+**Description** : Stop the current selection mode (if applicable). Will disable any user interaction with LifeCompanion UI no matter the current selection mode type (scanning, direct, etc.). To restore a working selection mode, `selection/start` should be called.
 
 **Url structure** : `/api/v1/selection/stop`
 
@@ -232,11 +259,11 @@ NONE
   "message": "OK"
 }
 ```
-### /selection/play
+### /selection/start
 
-**Description** : Play the current selection mode (if applicable). Useful if `selection/stop` endpoint has been called. Will not have any effect if the selection mode is already playing.
+**Description** : Start the selection mode for the current used configuration. Will restore user interaction with LifeCompanion UI. Calling this service once while the selection mode is already started will have no effect.
 
-**Url structure** : `/api/v1/selection/play`
+**Url structure** : `/api/v1/selection/start`
 
 **Method** : `POST`
 
