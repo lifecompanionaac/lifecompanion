@@ -2,6 +2,7 @@ package org.lifecompanion.controller.useapi;
 
 import javafx.stage.Stage;
 import org.lifecompanion.controller.lifecycle.AppModeController;
+import org.lifecompanion.controller.virtualmouse.VirtualMouseController;
 import org.lifecompanion.model.impl.useapi.dto.ActionConfirmationDto;
 import org.lifecompanion.model.impl.useapi.dto.WindowBoundsDto;
 import org.lifecompanion.util.javafx.FXThreadUtils;
@@ -16,7 +17,11 @@ import static spark.Spark.post;
 public class WindowRoutes {
     static void init() {
         post(WINDOW_MINIMIZE.getUrl(), (req, res) -> executeOnUseStage(stage -> stage.setIconified(true)));
-        post(WINDOW_SHOW.getUrl(), (req, res) -> executeOnUseStage(stage -> stage.setIconified(false)));
+        post(WINDOW_SHOW.getUrl(), (req, res) -> executeOnUseStage(stage -> {
+            stage.setIconified(false);
+            stage.requestFocus();
+            VirtualMouseController.INSTANCE.centerMouseOnStage();
+        }));
         post(WINDOW_BOUNDS.getUrl(), (req, res) -> {
             WindowBoundsDto bounds = fromJson(WindowBoundsDto.class, req);
             return executeOnUseStage(stage -> {

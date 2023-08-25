@@ -155,7 +155,7 @@ public enum GlobalRuntimeConfiguration implements GlobalRuntimeConfigurationI {
     CONTROL_SERVER_AUTH_TOKEN("controlServerAuthToken",
             GlobalRuntimeConfigurationType.COMMAND_LINE,
             "token",
-            "If you want your control server to be secured with a `Authorization: Bearer <token>` header on each request. If enable, any request without the same matching token will be rejected with 401 code",
+            "If you want your control server to be secured with a `Authorization: Bearer <token>` header on each request. If enabled, any request without the same matching token will be rejected with 401 code",
             "AbCdEf123456",
             1,
             true

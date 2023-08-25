@@ -409,7 +409,7 @@ public enum VirtualMouseController implements ModeListenerI {
 
     public void centerMouseOnStage() {
         this.checkRobotInit();
-        Stage stage = AppModeController.INSTANCE.getUseModeContext().stageProperty().get();
+        Stage stage = AppModeController.INSTANCE.getUseModeContext().getStage();
         if (robot != null && stage != null) {
             double x = stage.getX() + stage.getWidth() / 2.0;
             double y = stage.getY() + stage.getHeight() / 2.0;

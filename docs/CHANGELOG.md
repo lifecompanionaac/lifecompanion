@@ -5,7 +5,8 @@
 ### Fonctionnalités
 
 - Ajout d'une nouvelle action : appui sur la molette de souris
-- Ajout d'une nouvelle fonctionnalité : [les arguments de lancement de LifeCompanion](../docs/USER_API.md), peuvent être utiles pour configurer LifeCompanion de manière particulière.
+- Ajout d'une nouvelle fonctionnalité : [les arguments de lancement de LifeCompanion](../docs/USER_API.md#lifecompanion-command-line-arguments), peuvent être utiles pour configurer LifeCompanion de manière particulière
+- Ajout d'une nouvelle fonctionnalité : le [serveur de contrôle de LifeCompanion](../docs/USER_API.md#lifecompanion-control-server-api) afin de pouvoir contrôler LifeCompanion depuis d'autres applications
 
 ### Corrections/ajustements
 
