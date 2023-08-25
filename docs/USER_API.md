@@ -78,6 +78,8 @@ curl localhost:8648/api/v1/app/status
 curl -X POST localhost:8648/api/v1/window/minimize
 ```
 
+If you enabled control server authentication with `controlServerAuthToken <token>`-, you should also the header `Authorization: Bearer <token>` to your requests.
+
 ### Errors
 
 Control server will always try to create a JSON response to your request. When an error happen, you can get the following result depending on the error.

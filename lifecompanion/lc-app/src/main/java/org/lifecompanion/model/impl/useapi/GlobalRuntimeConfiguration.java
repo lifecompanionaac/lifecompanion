@@ -88,6 +88,7 @@ public enum GlobalRuntimeConfiguration implements GlobalRuntimeConfigurationI {
             GlobalRuntimeConfigurationType.COMMAND_LINE,
             "Don't show any loading window on LifeCompanion startup. Even if this parameter is enabled, the first splashscreen on launch will still be displayed"
     ),
+    // TODO : don't launch use mode on launch
 
     // Window configuration
     DISABLE_WINDOW_FULLSCREEN(
