@@ -18,9 +18,9 @@ public class WindowRoutes {
     static void init() {
         post(WINDOW_MINIMIZE.getUrl(), (req, res) -> executeOnUseStage(stage -> stage.setIconified(true)));
         post(WINDOW_SHOW.getUrl(), (req, res) -> executeOnUseStage(stage -> {
-            // TODO : is it really working on Ubuntu ? (stage is not showing over others ?)
             stage.setIconified(false);
             stage.requestFocus();
+            stage.toFront();
             VirtualMouseController.INSTANCE.centerMouseOnStage();
         }));
         post(WINDOW_BOUNDS.getUrl(), (req, res) -> {
