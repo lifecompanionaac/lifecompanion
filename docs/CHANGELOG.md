@@ -8,6 +8,7 @@
 - Ajout d'une nouvelle fonctionnalité : [les arguments de lancement de LifeCompanion](../docs/USER_API.md#lifecompanion-command-line-arguments), peuvent être utiles pour configurer LifeCompanion de manière particulière
 - Ajout d'une nouvelle fonctionnalité : le [serveur de contrôle de LifeCompanion](../docs/USER_API.md#lifecompanion-control-server-api) afin de pouvoir contrôler LifeCompanion depuis d'autres applications
 - Ticket #245 : le code pour repasser en mode édition a été remplacé par une simple addition
+- Ticket #243 : dans les actions "écrire et prononcer", "prononcer" est maintenant activé par défaut
 
 ### Corrections/ajustements
 

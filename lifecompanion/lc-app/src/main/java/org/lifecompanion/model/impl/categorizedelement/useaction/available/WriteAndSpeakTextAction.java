@@ -61,7 +61,7 @@ public class WriteAndSpeakTextAction extends SimpleUseActionImpl<UseActionTrigge
         this.parameterizableAction = true;
         this.textToWrite = new SimpleStringProperty("");
         this.textToSpeak = new SimpleStringProperty("");
-        this.enableSpeak = new SimpleBooleanProperty();
+        this.enableSpeak = new SimpleBooleanProperty(true);
         this.addSpace = new SimpleBooleanProperty(true);
         this.nameID = "action.write.and.speak.text.name";
         this.staticDescriptionID = "action.write.and.speak.text.static.description";
