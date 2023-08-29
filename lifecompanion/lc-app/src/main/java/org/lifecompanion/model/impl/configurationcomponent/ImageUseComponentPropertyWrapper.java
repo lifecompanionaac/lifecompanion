@@ -150,20 +150,20 @@ public class ImageUseComponentPropertyWrapper {
 
     public ImageUseComponentPropertyWrapper(final ImageUseComponentI imageUseComponentP) {
         this.imageUseComponent = imageUseComponentP;
-        this.preserveRatio = new SimpleBooleanProperty(this, "preserveRatio", true);
-        this.loadedImage = new SimpleObjectProperty<>(this, "loadedImage");
-        this.imageVTwo = new SimpleObjectProperty<>(this, "imageVTwo");
-        this.useViewPort = new SimpleBooleanProperty(this, "useViewPort");
-        this.enableReplaceColor = new SimpleBooleanProperty(this, "enableReplaceColor");
-        this.colorToReplace = new SimpleObjectProperty<>(this, "colorToReplace", Color.WHITE);
-        this.replacingColor = new SimpleObjectProperty<>(this, "replacingColorProperty", Color.TRANSPARENT);
-        this.viewport = new SimpleObjectProperty<>(this, "viewport");
-        this.replaceColorThreshold = new SimpleIntegerProperty(this, "replaceColorThreshold", LCConstant.DEFAULT_COLOR_REPLACE_THRESHOLD);
-        this.viewportXPercent = new SimpleDoubleProperty(this, "viewportXPercent", 0.0);
-        this.viewportYPercent = new SimpleDoubleProperty(this, "viewportYPercent", 0.0);
-        this.viewportWidthPercent = new SimpleDoubleProperty(this, "viewportWidthPercent", 0.0);
-        this.viewportHeightPercent = new SimpleDoubleProperty(this, "viewportHeightPercent", 0.0);
-        this.rotate = new SimpleDoubleProperty(this, "rotate", 0.0);
+        this.preserveRatio = new SimpleBooleanProperty(true);
+        this.loadedImage = new SimpleObjectProperty<>();
+        this.imageVTwo = new SimpleObjectProperty<>();
+        this.useViewPort = new SimpleBooleanProperty();
+        this.enableReplaceColor = new SimpleBooleanProperty();
+        this.colorToReplace = new SimpleObjectProperty<>(Color.WHITE);
+        this.replacingColor = new SimpleObjectProperty<>(Color.TRANSPARENT);
+        this.viewport = new SimpleObjectProperty<>();
+        this.replaceColorThreshold = new SimpleIntegerProperty(LCConstant.DEFAULT_COLOR_REPLACE_THRESHOLD);
+        this.viewportXPercent = new SimpleDoubleProperty(0.0);
+        this.viewportYPercent = new SimpleDoubleProperty(0.0);
+        this.viewportWidthPercent = new SimpleDoubleProperty(0.0);
+        this.viewportHeightPercent = new SimpleDoubleProperty(0.0);
+        this.rotate = new SimpleDoubleProperty(0.0);
         this.previousWidthUpdate = new AtomicInteger();
         this.previousHeightUpdate = new AtomicInteger();
         this.externalLoadingRequest = new HashSet<>();

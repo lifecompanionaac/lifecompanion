@@ -14,6 +14,7 @@
 - Ticket #229 : les majuscules n'étaient parfois pas retransmises correctement en clavier virtuel
 - Ticket #243 : dans les actions "écrire et prononcer", "prononcer" est maintenant activé par défaut
 - Ticket #255 : ajustement des valeurs maximales pour les arrondis
+- Ticket #247 : ajustement de la valeur par défaut du remplacement des couleurs
 
 ## 1.4.9 - 30/03/2023
 
