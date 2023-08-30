@@ -78,7 +78,7 @@ curl localhost:8648/api/v1/app/status
 curl -X POST localhost:8648/api/v1/window/minimize
 ```
 
-If you enabled control server authentication with `controlServerAuthToken <token>`-, you should also the header `Authorization: Bearer <token>` to your requests.
+If you enabled control server authentication with `-controlServerAuthToken <token>`, you should also the header `Authorization: Bearer <token>` to your requests.
 
 ### Errors
 
