@@ -23,13 +23,11 @@ import org.lifecompanion.controller.editmode.FileChooserType;
 import org.lifecompanion.controller.editmode.LCFileChoosers;
 import org.lifecompanion.controller.io.IOHelper;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
-import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
-import org.lifecompanion.model.impl.useapi.GlobalRuntimeConfiguration;
 import org.lifecompanion.plugin.ppp.model.JsonRecordI;
 import org.lifecompanion.plugin.ppp.model.UserProfile;
 import org.lifecompanion.plugin.ppp.services.FilesService;
@@ -231,10 +229,8 @@ public class RecordsView extends BorderPane implements LCViewInitHelper {
         this.detailsDescription.add(
                 new Label(Translation.getText("ppp.plugin.view.records.details.no_data.description")), 0, 0);
 
-        if (GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.PROP_DEV_MODE)) {
-            buttonGenerateRandomData = new Button("RANDOM DATA");
-            periodLayout.getChildren().add(buttonGenerateRandomData);
-        }
+        // buttonGenerateRandomData = new Button("RANDOM DATA");
+        // periodLayout.getChildren().add(buttonGenerateRandomData);
 
         this.detailsDayViewBtn = FXControlUtils.createRightTextButton(
                 Translation.getText("ppp.plugin.view.records.details.day_view.name"),
@@ -535,6 +531,10 @@ public class RecordsView extends BorderPane implements LCViewInitHelper {
             });
             AsyncExecutorController.INSTANCE.addAndExecute(true, true, task);
         }
+    }
+
+    public boolean isPeriodEmpty() {
+        return period.get() != null ? period.get().isEmpty() : true;
     }
 
     private void handleDetailsChangeUsing(Function<ChartData, ChartData> resolver) {

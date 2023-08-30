@@ -369,6 +369,7 @@
 	<text key="ppp.plugin.pdf.dialog.ranges.currentWeek">Semaine courante</text>
 	<text key="ppp.plugin.pdf.dialog.ranges.lastWeek">Semaine dernière</text>
 	<text key="ppp.plugin.pdf.dialog.ranges.last30Days">30 derniers jours</text>
+	<text key="ppp.plugin.pdf.dialog.ranges.withMonth">{} {}</text>
 	<text key="ppp.plugin.pdf.dialog.from">Du</text>
 	<text key="ppp.plugin.pdf.dialog.to">Au</text>
 	<text key="ppp.plugin.pdf.dialog.error">Merci de sélectionner des dates correctes.</text>

@@ -3,11 +3,9 @@ package org.lifecompanion.plugin.ppp.services;
 import javafx.scene.Scene;
 import org.lifecompanion.controller.metrics.SessionStatsController;
 import org.lifecompanion.controller.systemvk.SystemVirtualKeyboardController;
-import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
 import org.lifecompanion.framework.utils.FluentHashMap;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.impl.notification.LCNotification;
-import org.lifecompanion.model.impl.useapi.GlobalRuntimeConfiguration;
 import org.lifecompanion.plugin.ppp.model.ActionRecord;
 import org.lifecompanion.plugin.ppp.model.AssessmentRecord;
 import org.lifecompanion.plugin.ppp.model.AssessmentType;
@@ -37,9 +35,6 @@ public enum RecordsService {
                 SystemVirtualKeyboardController.INSTANCE.unregisterScene(scene);
                 SessionStatsController.INSTANCE.unregisterScene(scene);
             });
-            if (!GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.PROP_DEV_MODE)) {
-                stage.setMaximized(true);
-            }
             stage.show();
         });
     }

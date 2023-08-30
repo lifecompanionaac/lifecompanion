@@ -1,5 +1,6 @@
 package org.lifecompanion.plugin.ppp.view.records.periods;
 
+import org.lifecompanion.framework.commons.utils.lang.CollectionUtils;
 import org.lifecompanion.plugin.ppp.model.ActionRecord;
 import org.lifecompanion.plugin.ppp.model.AssessmentRecord;
 
@@ -59,4 +60,9 @@ public class Period {
     public void setAutoEvsAssessments(List<AssessmentRecord> autoEvsAssessments) {
         this.autoEvsAssessments = autoEvsAssessments;
     }
+
+    public boolean isEmpty() {
+        return CollectionUtils.isEmpty(actions) && CollectionUtils.isEmpty(pppAssessments) && CollectionUtils.isEmpty(evsAssessments);
+    }
+
 }
