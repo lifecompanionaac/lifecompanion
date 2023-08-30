@@ -35,7 +35,9 @@ import static org.lifecompanion.framework.commons.ApplicationConstant.DIR_NAME_A
 
 public abstract class CreateDebTask extends DefaultTask {
     private static final String CMD_PATH = "/usr/local/bin/lifecompanion";
-    private static final String APP_DIR_PATH = "/usr/share/lifecompanion/";
+    private static final String APP_DIR_PATH = "/mnt/root2/lifecompanion/";
+
+    // TODO : where to store profile and configuration ?
 
     private static final Logger LOGGER = Logging.getLogger(CreateDebTask.class);
 

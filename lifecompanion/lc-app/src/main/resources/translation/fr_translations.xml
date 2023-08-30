@@ -1355,7 +1355,7 @@
   <!--org.lifecompanion.config.data.mode-->
   <text key="action.confirm.go.config.error">Le code entré est incorrect.</text>
   <text key="action.confirm.go.config.header">Passer en édition\n({} secondes restantes...)</text>
-  <text key="action.confirm.go.config.message">Pour passer en mode édition,\nmerci d'entrer le code suivant : {}</text>
+  <text key="action.confirm.go.config.message">Pour passer en mode édition,\nmerci d'entrer le résultat de l'opération suivante : {} + {} = ?</text>
   <text key="notification.info.plugin.update.done.title">Extension "{}" mise à jour vers la version {}</text>
   <text key="notification.info.update.done.title">Mise à jour vers la version {} effectuée</text>
   <text key="notification.info.update.download.finish.restart.button">Redémarrer</text>

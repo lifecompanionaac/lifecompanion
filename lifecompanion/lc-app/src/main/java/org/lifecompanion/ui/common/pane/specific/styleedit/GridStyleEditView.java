@@ -44,10 +44,10 @@ public class GridStyleEditView extends AbstractShapeStyleEditView<GridCompStyleI
     public void initUI() {
         super.initUI();
 
-        this.spinnerHGap = FXControlUtils.createIntSpinner(1, 150, 2, 1, 75.0);
+        this.spinnerHGap = FXControlUtils.createIntSpinner(1, 150, 2, 1, 95.0);
         FXControlUtils.createAndAttachTooltip(spinnerHGap, "tooltip.explain.grid.hgap.spinner");
         GridPane.setHalignment(this.spinnerHGap, HPos.RIGHT);
-        this.spinnerVGap = FXControlUtils.createIntSpinner(1, 150, 2, 1, 75.0);
+        this.spinnerVGap = FXControlUtils.createIntSpinner(1, 150, 2, 1, 95.0);
         FXControlUtils.createAndAttachTooltip(spinnerVGap, "tooltip.explain.grid.vgap.spinner");
         GridPane.setHalignment(this.spinnerVGap, HPos.RIGHT);
 

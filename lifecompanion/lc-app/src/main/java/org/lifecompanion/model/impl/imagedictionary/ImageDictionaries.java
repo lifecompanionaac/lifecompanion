@@ -217,29 +217,27 @@ public enum ImageDictionaries implements LCStateListener, ModeListenerI {
         List<Pair<ImageDictionaryI, List<List<ImageElementI>>>> result = new ArrayList<>();
         String searchFull = StringUtils.stripToEmpty(rawSearchString).toLowerCase();
         AtomicInteger totalResultCount = new AtomicInteger(0);
-        if (searchFull.length() >= 1) {
-            // TODO : convert to full stream implementation with map ?
-            this.dictionaries.stream().sorted((d1, d2) ->
-                    Boolean.compare(LCStateController.INSTANCE.getFavoriteImageDictionaries().contains(d2.getName()), LCStateController.INSTANCE.getFavoriteImageDictionaries().contains(d1.getName()))
-            ).forEach(imageDictionary -> {
-                List<ImageElementI> resultList = imageDictionary.getImages()
-                        .parallelStream()
-                        .map(e -> new Pair<>(e, getSimilarityScore(e.getKeywords(), searchFull)))
-                        .sorted(SCORE_MAP_COMPARATOR)
-                        .filter(e -> e.getValue() > ConfigurationComponentUtils.SIMILARITY_CONTAINS)
-                        .map(Pair::getKey)
+        // TODO : convert to full stream implementation with map ?
+        this.dictionaries.stream().sorted((d1, d2) ->
+                Boolean.compare(LCStateController.INSTANCE.getFavoriteImageDictionaries().contains(d2.getName()), LCStateController.INSTANCE.getFavoriteImageDictionaries().contains(d1.getName()))
+        ).forEach(imageDictionary -> {
+            List<ImageElementI> resultList = imageDictionary.getImages()
+                    .parallelStream()
+                    .map(e -> new Pair<>(e, searchFull.isEmpty() ? Double.MAX_VALUE : getSimilarityScore(e.getKeywords(), searchFull)))
+                    .sorted(SCORE_MAP_COMPARATOR)
+                    .filter(e -> e.getValue() > ConfigurationComponentUtils.SIMILARITY_CONTAINS)
+                    .map(Pair::getKey)
+                    .collect(Collectors.toList());
+            if (LangUtils.isNotEmpty(resultList)) {
+                final List<List<ImageElementI>> resultPages = IntStream.range(0, resultList.size())
+                        .filter(i -> i % SEARCH_PAGE_SIZE == 0)
+                        .mapToObj(i -> resultList.subList(i, Math.min(i + SEARCH_PAGE_SIZE, resultList.size())))
                         .collect(Collectors.toList());
-                if (LangUtils.isNotEmpty(resultList)) {
-                    final List<List<ImageElementI>> resultPages = IntStream.range(0, resultList.size())
-                            .filter(i -> i % SEARCH_PAGE_SIZE == 0)
-                            .mapToObj(i -> resultList.subList(i, Math.min(i + SEARCH_PAGE_SIZE, resultList.size())))
-                            .collect(Collectors.toList());
-                    result.add(new Pair<>(imageDictionary, resultPages));
-                    LOGGER.info("Found {} result in {} dictionaries, result is {} pages", resultList.size(), imageDictionary.getName(), resultPages.size());
-                    totalResultCount.addAndGet(resultList.size());
-                }
-            });
-        }
+                result.add(new Pair<>(imageDictionary, resultPages));
+                LOGGER.info("Found {} result in {} dictionaries, result is {} pages", resultList.size(), imageDictionary.getName(), resultPages.size());
+                totalResultCount.addAndGet(resultList.size());
+            }
+        });
         LOGGER.info("Search executed in image dictionaries in {} ms - found {} elements (in {} dictionaries, for \"{}\")", System.currentTimeMillis() - start, totalResultCount, result.size(), rawSearchString);
         return result;
     }

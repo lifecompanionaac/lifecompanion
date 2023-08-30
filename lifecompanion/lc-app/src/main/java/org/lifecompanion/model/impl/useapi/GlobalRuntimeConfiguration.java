@@ -88,7 +88,11 @@ public enum GlobalRuntimeConfiguration implements GlobalRuntimeConfigurationI {
             GlobalRuntimeConfigurationType.COMMAND_LINE,
             "Don't show any loading window on LifeCompanion startup. Even if this parameter is enabled, the first splashscreen on launch will still be displayed"
     ),
-    // TODO : don't launch use mode on launch
+    DISABLE_SELECTION_AUTOSTART(
+            "disableSelectionAutostart",
+            GlobalRuntimeConfigurationType.COMMAND_LINE,
+            "If enabled, the selection mode will not automatically start on each started configuration. It will be able to be activated only when the control server is enabled and `selection/start` is called."
+    ),
 
     // Window configuration
     DISABLE_WINDOW_FULLSCREEN(
@@ -139,7 +143,6 @@ public enum GlobalRuntimeConfiguration implements GlobalRuntimeConfigurationI {
     ),
 
     // Api server configuration
-    // TODO : add a token auth configuration if wanted
     ENABLE_CONTROL_SERVER(
             "enableControlServer",
             GlobalRuntimeConfigurationType.COMMAND_LINE,
@@ -179,6 +182,7 @@ public enum GlobalRuntimeConfiguration implements GlobalRuntimeConfigurationI {
             "Enable LifeCompanion preview updates. This can be useful to test update before their production version to be ready."
     ),
 
+    // TODO : add a token auth configuration if wanted
     // TODO : server side configuration synchronization
     // TODO : image repository from backoffice
 
@@ -221,7 +225,13 @@ public enum GlobalRuntimeConfiguration implements GlobalRuntimeConfigurationI {
     private final boolean securedParameters;
     private final GlobalRuntimeConfigurationType type;
 
-    GlobalRuntimeConfiguration(String name, GlobalRuntimeConfigurationType type, String parameters, String description, String parametersExample, int expectedParameterCount, boolean securedParameters) {
+    GlobalRuntimeConfiguration(String name,
+                               GlobalRuntimeConfigurationType type,
+                               String parameters,
+                               String description,
+                               String parametersExample,
+                               int expectedParameterCount,
+                               boolean securedParameters) {
         this.name = name;
         this.type = type;
         this.parameters = parameters;

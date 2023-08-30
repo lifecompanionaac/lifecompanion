@@ -31,12 +31,15 @@ import org.lifecompanion.controller.io.task.ConfigurationLoadingTask;
 import org.lifecompanion.controller.lifecycle.AppMode;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.profile.ProfileController;
+import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
 import org.lifecompanion.model.api.configurationcomponent.*;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
 import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
 import org.lifecompanion.model.api.selectionmode.*;
 import org.lifecompanion.model.impl.configurationcomponent.GridComponentInformation;
 import org.lifecompanion.model.impl.selectionmode.*;
+import org.lifecompanion.model.impl.useapi.GlobalRuntimeConfiguration;
+import org.lifecompanion.model.impl.useapi.LifeCompanionControlServerEndpoint;
 import org.lifecompanion.util.ThreadUtils;
 import org.lifecompanion.util.binding.BindingUtils;
 import org.lifecompanion.util.javafx.FXThreadUtils;
@@ -446,7 +449,7 @@ public enum SelectionModeController implements ModeListenerI {
         if (currentConfiguration.getSelectionModeParameter().selectionModeTypeProperty().get() != selectionModeType) {
             FXThreadUtils.runOnFXThread(() -> {
                 // Stop current mode
-                SelectionModeController.INSTANCE.modeStop(currentConfiguration);
+                this.modeStop(currentConfiguration);
 
                 // Restore each grid selection mode to default
                 ObservableMap<String, DisplayableComponentI> allComponent = currentConfiguration.getAllComponent();
@@ -463,7 +466,7 @@ public enum SelectionModeController implements ModeListenerI {
 
                 // Change and restart
                 currentConfiguration.getSelectionModeParameter().selectionModeTypeProperty().set(selectionModeType);
-                SelectionModeController.INSTANCE.modeStart(currentConfiguration);
+                this._modeStart(currentConfiguration);
             });
         }
     }
@@ -472,6 +475,15 @@ public enum SelectionModeController implements ModeListenerI {
 
     @Override
     public void modeStart(final LCConfigurationI configuration) {
+        if (!GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DISABLE_SELECTION_AUTOSTART)) {
+            _modeStart(configuration);
+        } else {
+            LOGGER.warn("Selection mode didn't start as {} is enabled. To be started, the control server should be enabled and {} be called", GlobalRuntimeConfiguration.DISABLE_SELECTION_AUTOSTART,
+                    LifeCompanionControlServerEndpoint.SELECTION_START);
+        }
+    }
+
+    private void _modeStart(LCConfigurationI configuration) {
         this.configuration = configuration;
         checkSelectionConfiguration(configuration);
         this.timer = new Timer(true);
@@ -531,26 +543,28 @@ public enum SelectionModeController implements ModeListenerI {
 
     @Override
     public void modeStop(final LCConfigurationI configuration) {
-        //Cancel clic listener
-        this.timer.cancel();
-        this.waitingTimerTask.clear();
-        this.clicTimeListeners.clear();
-        this.mouseEventListener.clear();
-        //Dispose mode and reinit variables
-        this.disposeCurrentMode();
-        configuration.selectionModeProperty().set(null);
-        this.currentOverPart.set(null);
-        this.scanningHistory.clear();
-        this.selectionModes.clear();
-        this.currentPressComponents.clear();
-        this.currentHistoryIndex = -1;
-        this.playingProperty.unbind();
-        final DirectSelectionModeI directSelectionModeI = configuration.directSelectionOnMouseOnScanningSelectionModeProperty().get();
-        if (directSelectionModeI != null) {
-            directSelectionModeI.dispose();
-            configuration.directSelectionOnMouseOnScanningSelectionModeProperty().set(null);
+        if (this.configuration != null) {
+            //Cancel clic listener
+            this.timer.cancel();
+            this.waitingTimerTask.clear();
+            this.clicTimeListeners.clear();
+            this.mouseEventListener.clear();
+            //Dispose mode and reinit variables
+            this.disposeCurrentMode();
+            configuration.selectionModeProperty().set(null);
+            this.currentOverPart.set(null);
+            this.scanningHistory.clear();
+            this.selectionModes.clear();
+            this.currentPressComponents.clear();
+            this.currentHistoryIndex = -1;
+            this.playingProperty.unbind();
+            final DirectSelectionModeI directSelectionModeI = configuration.directSelectionOnMouseOnScanningSelectionModeProperty().get();
+            if (directSelectionModeI != null) {
+                directSelectionModeI.dispose();
+                configuration.directSelectionOnMouseOnScanningSelectionModeProperty().set(null);
+            }
+            this.configuration = null;
         }
-        this.configuration = null;
     }
 
     /**
@@ -971,7 +985,7 @@ public enum SelectionModeController implements ModeListenerI {
     public boolean startSelectionMode() {
         // Restore with currently used configuration (if not started yet)
         if (configuration == null) {
-            this.modeStart(AppModeController.INSTANCE.getUseModeContext().getConfiguration());
+            this._modeStart(AppModeController.INSTANCE.getUseModeContext().getConfiguration());
             return true;
         }
         return false;

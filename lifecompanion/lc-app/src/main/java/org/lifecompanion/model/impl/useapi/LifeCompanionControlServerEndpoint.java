@@ -113,6 +113,11 @@ public enum LifeCompanionControlServerEndpoint implements LifeCompanionControlSe
     }
 
     @Override
+    public String toString() {
+        return getUrl();
+    }
+
+    @Override
     public String getMarkdownDocumentation() {
         StringBuilder content = new StringBuilder("### /").append(getUrl());
         content.append("\n\n**Description** : ").append(getDescription());

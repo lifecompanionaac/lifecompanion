@@ -82,12 +82,13 @@ public class CommonActions {
                     IntegerProperty timeLeft = new SimpleIntegerProperty(LCConstant.GO_TO_CONFIG_MODE_DELAY);
                     Timeline timeLineAutoHide = new Timeline(new KeyFrame(Duration.seconds(1), (e) -> timeLeft.set(timeLeft.get() - 1)));
                     timeLineAutoHide.setCycleCount(LCConstant.GO_TO_CONFIG_MODE_DELAY);
-                    //Generate a 1000 - 9999 code
+                    //Generate a simple addition
                     Random random = new Random();
-                    String number = "" + (random.nextInt(8999) + 1000);
+                    int n1 = random.nextInt(20) + 1;
+                    int n2 = random.nextInt(20) + 1;
                     final TextInputDialog dialog = DialogUtils
                             .textInputDialogWithSource(StageUtils.getEditOrUseStageVisible())
-                            .withContentText(Translation.getText("action.confirm.go.config.message", number))
+                            .withContentText(Translation.getText("action.confirm.go.config.message", n1, n2))
                             .build();
                     dialog.headerTextProperty().bind(TranslationFX.getTextBinding("action.confirm.go.config.header", timeLeft));
                     timeLineAutoHide.setOnFinished(e -> dialog.hide());
@@ -96,7 +97,7 @@ public class CommonActions {
                     Optional<String> enteredString = dialog.showAndWait();
                     timeLineAutoHide.stop();
                     //Check code
-                    if (enteredString.isEmpty() || StringUtils.isDifferent(enteredString.get(), number)) {
+                    if (enteredString.isEmpty() || StringUtils.isDifferent(enteredString.get(), String.valueOf(n1 + n2))) {
                         if (enteredString.isPresent()) {
                             DialogUtils.alertWithSourceAndType(source, Alert.AlertType.ERROR).withContentText(Translation.getText("action.confirm.go.config.error")).show();
                         }
