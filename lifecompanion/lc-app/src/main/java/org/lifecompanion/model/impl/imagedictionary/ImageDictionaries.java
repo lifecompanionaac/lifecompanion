@@ -68,6 +68,7 @@ public enum ImageDictionaries implements LCStateListener, ModeListenerI {
 
     public static final int THUMBNAIL_WIDTH = 100, THUMBNAIL_HEIGHT = 100;
     public static final int SEARCH_PAGE_SIZE = 12;
+    public static final int ALL_PAGE_SIZE = 18;
 
     /**
      * Available dictionaries
@@ -137,7 +138,8 @@ public enum ImageDictionaries implements LCStateListener, ModeListenerI {
             final ImageElementI previousImage = allImages.get(id);
 
             // Check for imported images (will be used only for custom dictionaries)
-            final File copiedImageTargetForCustomDir = new File(InstallationConfigurationController.INSTANCE.getUserDirectory().getPath() + LCConstant.IMPORTED_IMAGE_DIR_NAME + File.separator + id + "." + FileNameUtils.getExtension(imagePath));
+            final File copiedImageTargetForCustomDir = new File(InstallationConfigurationController.INSTANCE.getUserDirectory()
+                    .getPath() + LCConstant.IMPORTED_IMAGE_DIR_NAME + File.separator + id + "." + FileNameUtils.getExtension(imagePath));
 
             // Add or replace with newer element if previous don't exist / is not present anymore / wasn't already copied
             if (previousImage == null || !previousImage.isImageFileExist() || (dictionary.isCustomDictionary() && !copiedImageTargetForCustomDir.exists())) {
@@ -147,7 +149,10 @@ public enum ImageDictionaries implements LCStateListener, ModeListenerI {
                     imagePath = copiedImageTargetForCustomDir;
                 }
                 // Create the updated/new image
-                ImageElement newerImage = new ImageElement(id, originalFilenameWithoutExtension, FluentHashMap.map(UserConfigurationController.INSTANCE.userLanguageProperty().get(), new String[]{originalFilenameWithoutExtension}), imagePath);
+                ImageElement newerImage = new ImageElement(id,
+                        originalFilenameWithoutExtension,
+                        FluentHashMap.map(UserConfigurationController.INSTANCE.userLanguageProperty().get(), new String[]{originalFilenameWithoutExtension}),
+                        imagePath);
                 newerImage.setDictionary(dictionary);
                 allImages.put(id, newerImage);
                 // If previous image existed (and don't exist anymore)
@@ -211,11 +216,13 @@ public enum ImageDictionaries implements LCStateListener, ModeListenerI {
     // SEARCH
     //========================================================================
     private static final Comparator<Pair<ImageElementI, Double>> SCORE_MAP_COMPARATOR = (e1, e2) -> Double.compare(e2.getValue(), e1.getValue());
+    private static final Comparator<Pair<ImageElementI, Double>> ALPHABETICAL_MAP_COMPARATOR = Comparator.comparing(e -> StringUtils.trimToEmpty(e.getKey().getName()));
 
     public List<Pair<ImageDictionaryI, List<List<ImageElementI>>>> searchImage(String rawSearchString) {
         long start = System.currentTimeMillis();
         List<Pair<ImageDictionaryI, List<List<ImageElementI>>>> result = new ArrayList<>();
         String searchFull = StringUtils.stripToEmpty(rawSearchString).toLowerCase();
+        boolean displayAll = searchFull.isEmpty();
         AtomicInteger totalResultCount = new AtomicInteger(0);
         // TODO : convert to full stream implementation with map ?
         this.dictionaries.stream().sorted((d1, d2) ->
@@ -223,22 +230,27 @@ public enum ImageDictionaries implements LCStateListener, ModeListenerI {
         ).forEach(imageDictionary -> {
             List<ImageElementI> resultList = imageDictionary.getImages()
                     .parallelStream()
-                    .map(e -> new Pair<>(e, searchFull.isEmpty() ? Double.MAX_VALUE : getSimilarityScore(e.getKeywords(), searchFull)))
-                    .sorted(SCORE_MAP_COMPARATOR)
-                    .filter(e -> e.getValue() > ConfigurationComponentUtils.SIMILARITY_CONTAINS)
+                    .map(e -> new Pair<>(e, displayAll ? 0.0 : getSimilarityScore(e.getKeywords(), searchFull)))
+                    .sorted(displayAll ? ALPHABETICAL_MAP_COMPARATOR : SCORE_MAP_COMPARATOR)
+                    .filter(e -> displayAll || e.getValue() > ConfigurationComponentUtils.SIMILARITY_CONTAINS)
                     .map(Pair::getKey)
                     .collect(Collectors.toList());
             if (LangUtils.isNotEmpty(resultList)) {
+                int pageSize = displayAll ? ALL_PAGE_SIZE : SEARCH_PAGE_SIZE;
                 final List<List<ImageElementI>> resultPages = IntStream.range(0, resultList.size())
-                        .filter(i -> i % SEARCH_PAGE_SIZE == 0)
-                        .mapToObj(i -> resultList.subList(i, Math.min(i + SEARCH_PAGE_SIZE, resultList.size())))
+                        .filter(i -> i % pageSize == 0)
+                        .mapToObj(i -> resultList.subList(i, Math.min(i + pageSize, resultList.size())))
                         .collect(Collectors.toList());
                 result.add(new Pair<>(imageDictionary, resultPages));
                 LOGGER.info("Found {} result in {} dictionaries, result is {} pages", resultList.size(), imageDictionary.getName(), resultPages.size());
                 totalResultCount.addAndGet(resultList.size());
             }
         });
-        LOGGER.info("Search executed in image dictionaries in {} ms - found {} elements (in {} dictionaries, for \"{}\")", System.currentTimeMillis() - start, totalResultCount, result.size(), rawSearchString);
+        LOGGER.info("Search executed in image dictionaries in {} ms - found {} elements (in {} dictionaries, for \"{}\")",
+                System.currentTimeMillis() - start,
+                totalResultCount,
+                result.size(),
+                rawSearchString);
         return result;
     }
 
@@ -299,14 +311,16 @@ public enum ImageDictionaries implements LCStateListener, ModeListenerI {
                 }
             }
         }
-        userImagesDictionary = this.loadImageDictionary(new File(InstallationConfigurationController.INSTANCE.getUserDirectory().getPath() + LCConstant.IMAGE_RESOURCES_DIR_NAME + LCConstant.DICTIONARY_NAME_USER_IMAGES));
+        userImagesDictionary = this.loadImageDictionary(new File(InstallationConfigurationController.INSTANCE.getUserDirectory()
+                .getPath() + LCConstant.IMAGE_RESOURCES_DIR_NAME + LCConstant.DICTIONARY_NAME_USER_IMAGES));
         if (userImagesDictionary == null) {
             userImagesDictionary = new ImageDictionary();
             this.userImagesDictionary.setName(Translation.getText("image.dictionary.default.custom.dic"));
             this.userImagesDictionary.setCustomDictionary(true);
             this.dictionaries.add(userImagesDictionary);
         }
-        configurationImageDictionary = this.loadImageDictionary(new File(InstallationConfigurationController.INSTANCE.getUserDirectory().getPath() + LCConstant.IMAGE_RESOURCES_DIR_NAME + LCConstant.DICTIONARY_NAME_CONFIGURATION_IMAGES));
+        configurationImageDictionary = this.loadImageDictionary(new File(InstallationConfigurationController.INSTANCE.getUserDirectory()
+                .getPath() + LCConstant.IMAGE_RESOURCES_DIR_NAME + LCConstant.DICTIONARY_NAME_CONFIGURATION_IMAGES));
         if (configurationImageDictionary == null) {
             configurationImageDictionary = new ImageDictionary();
             this.configurationImageDictionary.setName(Translation.getText("image.dictionary.default.imported.dic"));
@@ -347,7 +361,10 @@ public enum ImageDictionaries implements LCStateListener, ModeListenerI {
             LOGGER.info("Loaded images debug enabled");
             LCNamedThreadFactory.daemonThreadFactory("ImageLoadingDebug").newThread(() -> {
                 while (true) {
-                    Set<ImageElement> imageLoaded = new ArrayList<>(this.allImages.values()).stream().map(img -> (ImageElement) img).filter(img -> img.loadedImageProperty().get() != null).collect(Collectors.toSet());
+                    Set<ImageElement> imageLoaded = new ArrayList<>(this.allImages.values()).stream()
+                            .map(img -> (ImageElement) img)
+                            .filter(img -> img.loadedImageProperty().get() != null)
+                            .collect(Collectors.toSet());
                     LOGGER.info("Loaded image count : {}", imageLoaded.size());
                     if (AppModeController.INSTANCE.getEditModeContext().getConfiguration() == null && AppModeController.INSTANCE.getUseModeContext().getConfiguration() == null) {
                         imageLoaded
