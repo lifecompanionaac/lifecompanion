@@ -23,14 +23,17 @@ import org.lifecompanion.controller.editmode.FileChooserType;
 import org.lifecompanion.controller.editmode.LCFileChoosers;
 import org.lifecompanion.controller.io.IOHelper;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
+import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
+import org.lifecompanion.model.impl.useapi.GlobalRuntimeConfiguration;
 import org.lifecompanion.plugin.ppp.model.JsonRecordI;
 import org.lifecompanion.plugin.ppp.model.UserProfile;
 import org.lifecompanion.plugin.ppp.services.FilesService;
+import org.lifecompanion.plugin.ppp.services.RandomDataService;
 import org.lifecompanion.plugin.ppp.services.RecordsService;
 import org.lifecompanion.plugin.ppp.tasks.*;
 import org.lifecompanion.plugin.ppp.view.commons.FormatterListCell;
@@ -85,7 +88,9 @@ public class RecordsView extends BorderPane implements LCViewInitHelper {
     private GridPane detailsDescription;
     private Button detailsDayViewBtn;
     private Button detailedRecordDeleteBtn;
+    private Button detailedRecordChangeDateBtn;
     private JsonRecordI detailedRecord;
+    private Button buttonGenerateRandomData;
 
     private final Consumer<RecordsView> onLoadCallback;
 
@@ -206,6 +211,10 @@ public class RecordsView extends BorderPane implements LCViewInitHelper {
                 Translation.getText("ppp.plugin.view.records.details.delete.name"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.TRASH_ALT).size(20).color(
                         LCGraphicStyle.SECOND_DARK), null);
+        this.detailedRecordChangeDateBtn = FXControlUtils.createRightTextButton(
+                Translation.getText("ppp.plugin.view.records.details.change.date"),
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CALENDAR_ALT).size(20).color(
+                        LCGraphicStyle.MAIN_DARK), null);
         this.detailsTitle = new Label();
         this.detailsTitle.setMaxHeight(Double.MAX_VALUE);
         this.detailsTitle.setMaxWidth(Double.MAX_VALUE);
@@ -222,6 +231,11 @@ public class RecordsView extends BorderPane implements LCViewInitHelper {
         this.detailsDescription.add(
                 new Label(Translation.getText("ppp.plugin.view.records.details.no_data.description")), 0, 0);
 
+        if (GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.PROP_DEV_MODE)) {
+            buttonGenerateRandomData = new Button("RANDOM DATA");
+            periodLayout.getChildren().add(buttonGenerateRandomData);
+        }
+
         this.detailsDayViewBtn = FXControlUtils.createRightTextButton(
                 Translation.getText("ppp.plugin.view.records.details.day_view.name"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.SHARE).size(16).color(
@@ -229,6 +243,7 @@ public class RecordsView extends BorderPane implements LCViewInitHelper {
                 null);
         GridPane.setHalignment(this.detailsDayViewBtn, HPos.CENTER);
         GridPane.setHalignment(this.detailedRecordDeleteBtn, HPos.CENTER);
+        GridPane.setHalignment(this.detailedRecordChangeDateBtn, HPos.CENTER);
 
         VBox detailsLayout = new VBox(10, detailsTitleLayout, this.detailsDescription);
         detailsLayout.setFillWidth(true);
@@ -303,6 +318,7 @@ public class RecordsView extends BorderPane implements LCViewInitHelper {
 
         this.detailsDayViewBtn.disableProperty().bind(this.loading);
         this.detailedRecordDeleteBtn.disableProperty().bind(this.loading.or(this.zipFile.isNotNull()));
+        this.detailedRecordChangeDateBtn.disableProperty().bind(this.loading.or(this.zipFile.isNotNull()));
     }
 
     @Override
@@ -396,6 +412,15 @@ public class RecordsView extends BorderPane implements LCViewInitHelper {
                 this.handleDataDirectoryChange();
             }
         });
+        detailedRecordChangeDateBtn.setOnAction(e -> {
+            new DatePickerDialog(detailedRecord.getRecordedAt()).showAndWait().ifPresent(nRecordedAt -> {
+                // Delete old and save the new one (as the file name is the recorded at date)
+                RecordsService.INSTANCE.delete(this.config, this.detailedRecord);
+                this.detailedRecord.setRecordedAt(nRecordedAt);
+                RecordsService.INSTANCE.save(this.config, this.detailedRecord);
+                this.handleDataDirectoryChange();
+            });
+        });
 
         this.chart.selectedDataProperty().addListener((obs, ov, nv) -> {
             this.detailsDescription.getChildren().clear();
@@ -429,7 +454,8 @@ public class RecordsView extends BorderPane implements LCViewInitHelper {
             this.createDetailsValue(nv.getDetailsValue(), 2);
             this.createDetailsName(Translation.getText("ppp.plugin.view.records.details.data.comment"), 3);
             this.createDetailsValue(this.detailedRecord.getComment() == null ? "-" : this.detailedRecord.getComment(), 3);
-            this.detailsDescription.add(this.detailedRecordDeleteBtn, 0, 4, 2, 1);
+            this.detailsDescription.add(this.detailedRecordChangeDateBtn, 0, 4, 2, 1);
+            this.detailsDescription.add(this.detailedRecordDeleteBtn, 0, 5, 2, 1);
         });
 
         this.seriesGroup.addListener((obs, ov, nv) -> {
@@ -438,6 +464,13 @@ public class RecordsView extends BorderPane implements LCViewInitHelper {
                 this.setAxisVisibility((NumberAxis) this.backgroundChart.getYAxis(), nv.isRightAxisVisible());
             }
         });
+
+        if (buttonGenerateRandomData != null) {
+            this.buttonGenerateRandomData.setOnAction(e -> {
+                RandomDataService.generateRandomDataFor(config, this.profile.get());
+                handleDataDirectoryChange();
+            });
+        }
     }
 
     private void setAxisVisibility(NumberAxis axis, boolean visible) {

@@ -30,6 +30,7 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 public class PediatricPainProfilePlugin implements PluginI {
     public static final String PLUGIN_ID = "lc-ppp-plugin";
@@ -113,8 +114,8 @@ public class PediatricPainProfilePlugin implements PluginI {
     }
 
     @Override
-    public Map<String, UseVariableI<?>> generateVariables(final Map<String, UseVariableDefinitionI> variablesToGenerate) {
-        return PediatricPainProfilePluginService.INSTANCE.generateVariables(variablesToGenerate);
+    public Function<UseVariableDefinitionI, UseVariableI<?>> getSupplierForUseVariable(String id) {
+        return PediatricPainProfilePluginService.INSTANCE.getSupplierForUseVariable(id);
     }
 
     @Override

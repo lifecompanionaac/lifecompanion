@@ -31,6 +31,11 @@ public abstract class AbstractRecord implements JsonRecordI {
     }
 
     @Override
+    public void setRecordedAt(ZonedDateTime recordedAt) {
+        this.recordedAt = recordedAt;
+    }
+
+    @Override
     public Evaluator getEvaluator() {
         return this.evaluator;
     }

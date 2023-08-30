@@ -260,6 +260,7 @@
 	<text key="ppp.plugin.view.records.details.previous.name">Précédent</text>
 	<text key="ppp.plugin.view.records.details.next.name">Suivant</text>
 	<text key="ppp.plugin.view.records.details.delete.name">Supprimer</text>
+	<text key="ppp.plugin.view.records.details.change.date">Changer la date</text>
 	<text key="ppp.plugin.view.records.details.delete.confirmDialog.header">Supprimer cette donnée</text>
 	<text key="ppp.plugin.view.records.details.delete.confirmDialog.content">Êtes-vous sûr de vouloir supprimer cette
 		donnée ?
@@ -380,4 +381,11 @@
 	<text key="ppp.plugin.pdf.data.score_and_evaluator">{} par "{}"</text>
 	<text key="ppp.plugin.pdf.footer.title">{} - {}</text>
 	<text key="ppp.plugin.pdf.footer.subtitle">{} - v{} (PDP v{}) - {}</text>
+
+
+	<!-- Date time picker -->
+	<text key="ppp.plugin.view.date.time.picker.dialog.header">Sélectionner une date et heure</text>
+	<text key="ppp.plugin.view.date.time.picker.date.value">Date</text>
+	<text key="ppp.plugin.view.date.time.picker.time.value">Heure</text>
+	<text key="ppp.plugin.view.date.time.picker.error">Merci de sélectionner une date/heure correcte</text>
 </texts>

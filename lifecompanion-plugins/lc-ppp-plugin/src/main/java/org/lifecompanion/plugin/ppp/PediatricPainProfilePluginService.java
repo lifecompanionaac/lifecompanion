@@ -13,6 +13,7 @@ import org.lifecompanion.plugin.ppp.view.records.periods.DateFormats;
 
 import java.time.LocalDate;
 import java.util.Map;
+import java.util.function.Function;
 
 public enum PediatricPainProfilePluginService implements ModeListenerI {
     INSTANCE;
@@ -60,22 +61,17 @@ public enum PediatricPainProfilePluginService implements ModeListenerI {
 
     // Class part : "Use variables"
     //========================================================================
-    public Map<String, UseVariableI<?>> generateVariables(final Map<String, UseVariableDefinitionI> variablesToGenerate) {
-        return Map.of(
-                VAR_CURRENT_QUESTION_TEXT, new StringUseVariable(variablesToGenerate.get(VAR_CURRENT_QUESTION_TEXT),
-                        this.generateCurrentQuestionText()),
-                VAR_CURRENT_QUESTION_INDEX, new StringUseVariable(variablesToGenerate.get(VAR_CURRENT_QUESTION_INDEX),
-                        this.generateCurrentQuestionIndex()),
-                VAR_LATEST_PPP_SCORE, new StringUseVariable(variablesToGenerate.get(VAR_LATEST_PPP_SCORE),
-                        this.generateLatestPPPScore()),
-                VAR_PROFILE_BASE_SCORE, new StringUseVariable(variablesToGenerate.get(VAR_PROFILE_BASE_SCORE),
-                        this.generateProfileBaseScore()),
-                VAR_PROFILE_BASE_SCORE_AT, new StringUseVariable(variablesToGenerate.get(VAR_PROFILE_BASE_SCORE_AT),
-                        this.generateProfileBaseScoreAt()),
-                VAR_PROFILE_NAME, new StringUseVariable(variablesToGenerate.get(VAR_PROFILE_NAME),
-                        this.generateProfileName()),
-                VAR_CURRENT_KEYBOARD_INPUT, new StringUseVariable(variablesToGenerate.get(VAR_CURRENT_KEYBOARD_INPUT),
-                        this.generateCurrentKeyboardInput()));
+    public Function<UseVariableDefinitionI, UseVariableI<?>> getSupplierForUseVariable(String id) {
+        return switch (id) {
+            case VAR_CURRENT_QUESTION_TEXT -> def -> new StringUseVariable(def, this.generateCurrentQuestionText());
+            case VAR_CURRENT_QUESTION_INDEX -> def -> new StringUseVariable(def, generateCurrentQuestionIndex());
+            case VAR_LATEST_PPP_SCORE -> def -> new StringUseVariable(def, generateLatestPPPScore());
+            case VAR_PROFILE_BASE_SCORE -> def -> new StringUseVariable(def, generateProfileBaseScore());
+            case VAR_PROFILE_BASE_SCORE_AT -> def -> new StringUseVariable(def, generateProfileBaseScoreAt());
+            case VAR_PROFILE_NAME -> def -> new StringUseVariable(def, generateProfileName());
+            case VAR_CURRENT_KEYBOARD_INPUT -> def -> new StringUseVariable(def, generateCurrentKeyboardInput());
+            default -> null;
+        };
     }
 
     private String generateCurrentQuestionText() {

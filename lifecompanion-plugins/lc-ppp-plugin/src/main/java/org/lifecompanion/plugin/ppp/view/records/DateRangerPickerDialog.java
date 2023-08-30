@@ -107,9 +107,6 @@ public class DateRangerPickerDialog extends Dialog<Pair<LocalDate, LocalDate>> i
     }
 
     private boolean validateDates() {
-        System.out.println(datePickerFrom.getValue());
-        System.out.println(datePickerTo.getValue());
-        System.out.println(datePickerTo.getValue().isBefore(datePickerFrom.getValue()));
         if (datePickerFrom.getValue() == null || datePickerTo.getValue() == null || datePickerTo.getValue().isBefore(datePickerFrom.getValue())) {
             labelErrorMessage.setVisible(true);
             return false;
