@@ -49,7 +49,7 @@ import java.util.stream.Stream;
 public class PdfExportTask extends LCTask<Void> {
     public static final Logger LOGGER = LoggerFactory.getLogger(PdfExportTask.class);
 
-    private static final float HEADER_SIZE = 65f, FOOTER_SIZE = 30f, IMAGE_Y_OFFSET = 10f,IMAGE_X_OFFSET = 20f, HEADER_FONT_SIZE = 16, FOOTER_FONT_SIZE = 9, TEXT_LEFT_OFFSET = 50, DATA_LINE_HEIGHT = 16f, FOOTER_LINE_HEIGHT = 12f, LOGO_HEIGHT = 25f, LINE_SIZE = 1f, COLOR_DATA = 0.95f, COLOR_GRAY = 0.4f;
+    private static final float HEADER_SIZE = 65f, FOOTER_SIZE = 30f, IMAGE_Y_OFFSET = 10f, IMAGE_X_OFFSET = 20f, HEADER_FONT_SIZE = 16, FOOTER_FONT_SIZE = 9, TEXT_LEFT_OFFSET = 50, DATA_LINE_HEIGHT = 16f, FOOTER_LINE_HEIGHT = 12f, LOGO_HEIGHT = 25f, LINE_SIZE = 1f, COLOR_DATA = 0.95f, COLOR_GRAY = 0.4f;
     private static final PDFont HEADER_FONT = PDType1Font.HELVETICA_BOLD;
     private static final PDFont FOOTER_FONT = PDType1Font.HELVETICA;
 
@@ -183,7 +183,7 @@ public class PdfExportTask extends LCTask<Void> {
                             pageContentStream.setFont(FOOTER_FONT, FOOTER_FONT_SIZE);
                             pageContentStream.newLineAtOffset(TEXT_LEFT_OFFSET + 75f, rowY + DATA_LINE_HEIGHT / 2.5f);
                             pageContentStream.showText(Translation.getText("ppp.plugin.pdf.data.score_and_evaluator",
-                                    chartData.getDetailsValue(), chartData.detailedRecord().getEvaluator().getName()));
+                                    cleanText(chartData.getDetailsValue()), cleanText(chartData.detailedRecord().getEvaluator().getName())));
                             pageContentStream.endText();
 
                             for (String commentLine : commentLines) {
@@ -213,6 +213,10 @@ public class PdfExportTask extends LCTask<Void> {
         }
 
         return null;
+    }
+
+    private static String cleanText(String txt) {
+        return StringUtils.trimToEmpty(txt).replace("\n", " | ");
     }
 
     private void createPage(String title, boolean landscape, PageConsumer pageConsumer) throws Exception {
