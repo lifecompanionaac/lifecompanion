@@ -7,6 +7,7 @@
 - Ajout d'une nouvelle action : appui sur la molette de souris
 - Ajout d'une nouvelle fonctionnalité : [les arguments de lancement de LifeCompanion](../docs/USER_API.md#lifecompanion-command-line-arguments), peuvent être utiles pour configurer LifeCompanion de manière particulière
 - Ajout d'une nouvelle fonctionnalité : le [serveur de contrôle de LifeCompanion](../docs/USER_API.md#lifecompanion-control-server-api) afin de pouvoir contrôler LifeCompanion depuis d'autres applications
+- Les icônes des fichiers de LifeCompanion (lcc, lcp) sont maintenant différentes des icônes de LifeCompanion afin de ne plus les confondre.
 
 ### Corrections/ajustements
 
@@ -15,6 +16,7 @@
 - Ticket #243 : dans les actions "écrire et prononcer", "prononcer" est maintenant activé par défaut
 - Ticket #255 : ajustement des valeurs maximales pour les arrondis
 - Ticket #247 : ajustement de la valeur par défaut du remplacement des couleurs
+- Ticket #252 : correction du test de la connexion internet à l'installation qui pouvait parfois ne pas fonctionner
 
 ## 1.4.9 - 30/03/2023
 

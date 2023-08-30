@@ -28,6 +28,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.*;
@@ -65,11 +67,20 @@ public class WindowsSystemInstallation extends DefaultSystemInstallation {
 
     @Override
     public void runSystemSpecificInstallationTask(InstallerUIConfiguration configuration, Consumer<String> logAppender) throws Exception {
+        // Copy ico for file association
+        File iconFile = new File(configuration.getInstallationSoftwareDirectory().getPath() + File.separator + "icons" + File.separator + "lifecompanion_file.ico");
+        IOUtils.createParentDirectoryIfNeeded(iconFile);
+        try (FileOutputStream fos = new FileOutputStream(iconFile)) {
+            try (InputStream is = MacSystemInstallation.class.getResourceAsStream("/lifecompanion_file.ico")) {
+                IOUtils.copyStream(is, fos);
+            }
+        }
+
         // File association
         logAppender.accept(Translation.getText("lc.installer.task.installing.progress.detail.file.association"));
         File launcherPath = new File(configuration.getInstallationSoftwareDirectory() + File.separator + "LifeCompanion.exe");
-        WindowsRegUtils.createFileAssociation("lcc", launcherPath, "LifeCompanion", Translation.getText("lc.installer.file.association.config"));
-        WindowsRegUtils.createFileAssociation("lcp", launcherPath, "LifeCompanion", Translation.getText("lc.installer.file.association.profile"));
+        WindowsRegUtils.createFileAssociation("lcc", launcherPath, iconFile, "LifeCompanion", Translation.getText("lc.installer.file.association.config"));
+        WindowsRegUtils.createFileAssociation("lcp", launcherPath, iconFile, "LifeCompanion", Translation.getText("lc.installer.file.association.profile"));
         LOGGER.info("Windows file associations created");
 
         // Create link on user desktop

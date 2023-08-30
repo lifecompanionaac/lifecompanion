@@ -51,7 +51,7 @@ public class AppServerClient implements AutoCloseable {
     private static final MediaType MEDIA_TYPE_JSON = MediaType.parse("application/json; charset=utf-8");
     private static final MediaType MEDIA_APPLICATION_OCTET_STREAM = MediaType.parse("application/octet-stream");
 
-    public static final String[] CONNECT_TEST_URL = {"http://google.com", "http://facebook.com"};
+    public static final String[] CONNECT_TEST_URL = {"https://google.com"};
 
     /**
      * Contains the current authentication token returned from server after login
