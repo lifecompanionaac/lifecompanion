@@ -19,46 +19,42 @@
 
 package org.lifecompanion.model.impl.categorizedelement.useaction.available;
 
-import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
-import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
-import org.lifecompanion.model.api.usevariable.UseVariableI;
-import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseActionSubCategories;
-import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
-import org.lifecompanion.controller.voicesynthesizer.VoiceSynthesizerController;
 import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
+import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseActionSubCategories;
+import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
+import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
+import org.lifecompanion.model.api.usevariable.UseVariableI;
+import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
 
 import java.util.Map;
 
-public class SpeakLabelAction extends SimpleUseActionImpl<GridPartKeyComponentI> {
+// Abstract class just to have the action in both categories (text and sound)
+public abstract class AbstractWriteAndSpeakLabelAction extends SimpleUseActionImpl<GridPartKeyComponentI> {
 
-    public SpeakLabelAction() {
+    public AbstractWriteAndSpeakLabelAction() {
         super(GridPartKeyComponentI.class);
-        this.category = DefaultUseActionSubCategories.SPEAK_TEXT;
-        this.nameID = "action.speak.key.label";
-        this.staticDescriptionID = "action.speak.key.label.static.description";
-        this.configIconPath = "sound/icon_speak_key_text.png";
+        this.category = getCategoryToSet();
+        this.order = 0;
         this.parameterizableAction = false;
-        this.order = 1;
+        this.nameID = "action.write.and.speak.label.name";
+        this.staticDescriptionID = "action.write.and.speak.label.description";
+        this.configIconPath = "sound/icon_write_speak_label.png";
         this.parentComponentProperty().addListener((obs, ov, nv) -> {
             this.variableDescriptionProperty().unbind();
             if (nv != null) {
-                this.variableDescriptionProperty()
-                        .bind(TranslationFX.getTextBinding("action.speak.key.label.variable.description", nv.textContentProperty()));
+                this.variableDescriptionProperty().bind(TranslationFX.getTextBinding("action.write.and.speak.label.description.variable", nv.textContentProperty()));
             }
         });
     }
 
-    // Class part : "Execute"
-    //========================================================================
+    abstract DefaultUseActionSubCategories getCategoryToSet();
+
+
     @Override
     public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
-        executeSpeakLabelFor(this.parentComponentProperty().get());
+        GridPartKeyComponentI parentKey = this.parentComponentProperty().get();
+        WriteLabelAction.executeWriteLabelFor(parentKey);
+        SpeakLabelAction.executeSpeakLabelFor(parentKey);
     }
 
-    static void executeSpeakLabelFor(GridPartKeyComponentI key) {
-        if (key != null) {
-            VoiceSynthesizerController.INSTANCE.speakSync(key.textContentProperty().get());
-        }
-    }
-    //========================================================================
 }

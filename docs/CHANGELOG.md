@@ -4,10 +4,11 @@
 
 ### Fonctionnalités
 
-- Ajout d'une nouvelle action : appui sur la molette de souris
 - Ajout d'une nouvelle fonctionnalité : [les arguments de lancement de LifeCompanion](../docs/USER_API.md#lifecompanion-command-line-arguments), peuvent être utiles pour configurer LifeCompanion de manière particulière
 - Ajout d'une nouvelle fonctionnalité : le [serveur de contrôle de LifeCompanion](../docs/USER_API.md#lifecompanion-control-server-api) afin de pouvoir contrôler LifeCompanion depuis d'autres applications
 - Les icônes des fichiers de LifeCompanion (lcc, lcp) sont maintenant différentes des icônes de LifeCompanion afin de ne plus les confondre.
+- Ajout d'une nouvelle action : écrire et prononcer le texte de la case
+- Ajout d'une nouvelle action : appui sur la molette de souris
 
 ### Corrections/ajustements
 

@@ -863,6 +863,9 @@
   <text key="action.simple.write.text.static.description">Écrit un texte personnalisé.</text>
   <text key="action.simple.write.text.variable.description">Écrit le texte "{}"</text>
   <text key="action.write.and.speak.text.name">Écrire et prononcer du texte</text>
+  <text key="action.write.and.speak.label.name">Écrire et prononcer le texte de la case</text>
+  <text key="action.write.and.speak.label.description">Permet d'écrire le texte la case qui lance l'action dans l'éditeur, puis de le prononcer</text>
+  <text key="action.write.and.speak.label.description.variable">Écrit puis prononce le texte de la case "{}"</text>
   <text key="action.write.and.speak.text.static.description">Permet d'écrire un texte dans l'éditeur de texte, et
 		éventuellement de prononcer celui-ci ou un autre texte.</text>
   <text key="action.write.and.speak.text.variable.description.both">Écrit le texte "{}" dans l'éditeur de texte puis

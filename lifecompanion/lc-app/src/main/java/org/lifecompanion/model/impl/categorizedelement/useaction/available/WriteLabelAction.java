@@ -33,45 +33,49 @@ import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseAction
 
 /**
  * Action to write the label of the parent key.
+ *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public class WriteLabelAction extends SimpleUseActionImpl<GridPartKeyComponentI> {
 
-	public WriteLabelAction() {
-		super(GridPartKeyComponentI.class);
-		this.category = DefaultUseActionSubCategories.WRITE_TEXT;
-		this.nameID = "action.write.label.name";
-		this.order = 2;
-		this.staticDescriptionID = "action.write.label.static.description";
-		this.configIconPath = "text/icon_write_label.png";
-		this.parameterizableAction = false;
-		this.parentComponentProperty().addListener((obs, ov, nv) -> {
-			this.variableDescriptionProperty().unbind();
-			if (nv != null) {
-				this.variableDescriptionProperty().bind(TranslationFX.getTextBinding("action.write.label.variable.description", nv.textContentProperty()));
-			}
-		});
-	}
+    public WriteLabelAction() {
+        super(GridPartKeyComponentI.class);
+        this.category = DefaultUseActionSubCategories.WRITE_TEXT;
+        this.nameID = "action.write.label.name";
+        this.order = 2;
+        this.staticDescriptionID = "action.write.label.static.description";
+        this.configIconPath = "text/icon_write_label.png";
+        this.parameterizableAction = false;
+        this.parentComponentProperty().addListener((obs, ov, nv) -> {
+            this.variableDescriptionProperty().unbind();
+            if (nv != null) {
+                this.variableDescriptionProperty().bind(TranslationFX.getTextBinding("action.write.label.variable.description", nv.textContentProperty()));
+            }
+        });
+    }
 
-	// Class part : "Execute"
-	//========================================================================
-	@Override
-	public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
-		GridPartKeyComponentI currentKey = this.parentComponentProperty().get();
-		if (currentKey != null) {
-			String toWrite = currentKey.textContentProperty().get();
-			//If entry doesn't have any image and contains only one char, just append
-			if (toWrite != null && toWrite.length() == 1 && currentKey.imageVTwoProperty().get() == null) {
-				WritingStateController.INSTANCE.insertText(WritingEventSource.USER_ACTIONS, toWrite);
-			} else {
-				//Create entry and add image
-				WriterEntry entry = new WriterEntry(toWrite, true);
-				if (currentKey.imageVTwoProperty().get() != null) {
-					entry.imageProperty().set(currentKey.imageVTwoProperty().get());
-				}
-				WritingStateController.INSTANCE.insert(WritingEventSource.USER_ACTIONS, entry);
-			}
-		}
-	}
-	//========================================================================
+    // Class part : "Execute"
+    //========================================================================
+    @Override
+    public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
+        executeWriteLabelFor(this.parentComponentProperty().get());
+    }
+
+    static void executeWriteLabelFor(GridPartKeyComponentI key) {
+        if (key != null) {
+            String toWrite = key.textContentProperty().get();
+            //If entry doesn't have any image and contains only one char, just append
+            if (toWrite != null && toWrite.length() == 1 && key.imageVTwoProperty().get() == null) {
+                WritingStateController.INSTANCE.insertText(WritingEventSource.USER_ACTIONS, toWrite);
+            } else {
+                //Create entry and add image
+                WriterEntry entry = new WriterEntry(toWrite, true);
+                if (key.imageVTwoProperty().get() != null) {
+                    entry.imageProperty().set(key.imageVTwoProperty().get());
+                }
+                WritingStateController.INSTANCE.insert(WritingEventSource.USER_ACTIONS, entry);
+            }
+        }
+    }
+    //========================================================================
 }
