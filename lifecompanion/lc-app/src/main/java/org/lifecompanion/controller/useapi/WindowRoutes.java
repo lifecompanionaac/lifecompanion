@@ -19,6 +19,12 @@ public class WindowRoutes {
         post(WINDOW_MINIMIZE.getUrl(), (req, res) -> executeOnUseStage(stage -> stage.setIconified(true)));
         post(WINDOW_SHOW.getUrl(), (req, res) -> executeOnUseStage(stage -> {
             stage.setIconified(false);
+            // Setting the position + size is needed on some platform... (later than first call, that's why we directly call Plateform.runLater)
+            stage.setX(stage.getX() * 1.00001);
+            stage.setY(stage.getY() * 1.00001);
+            stage.setWidth(stage.getWidth() * 1.00001);
+            stage.setHeight(stage.getHeight() * 1.00001);
+            // Request focus and show to front with mouse
             stage.requestFocus();
             stage.toFront();
             VirtualMouseController.INSTANCE.centerMouseOnStage();

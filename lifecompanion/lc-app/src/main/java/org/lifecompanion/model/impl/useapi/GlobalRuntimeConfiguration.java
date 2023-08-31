@@ -93,6 +93,7 @@ public enum GlobalRuntimeConfiguration implements GlobalRuntimeConfigurationI {
             GlobalRuntimeConfigurationType.COMMAND_LINE,
             "If enabled, the selection mode will not automatically start on each started configuration. It will be able to be activated only when the control server is enabled and `selection/start` is called."
     ),
+    // TODO : force sound to 100% on voice, sound, etc.
 
     // Window configuration
     DISABLE_WINDOW_FULLSCREEN(

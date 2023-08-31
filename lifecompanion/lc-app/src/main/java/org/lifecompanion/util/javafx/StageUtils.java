@@ -139,10 +139,14 @@ public class StageUtils {
     }
 
     public static boolean isStageOutOfScreenBounds(Stage stage) {
-        Rectangle2D stageCenterPoint = new Rectangle2D(stage.getX() + stage.getWidth() / 2, stage.getY() + stage.getHeight() / 2, 1, 1);
-        ObservableList<Screen> screensContainingStage = Screen.getScreensForRectangle(stageCenterPoint);
-        Screen stageScreen = screensContainingStage.isEmpty() ? Screen.getPrimary() : screensContainingStage.get(0);
+        Screen stageScreen = getStageScreen(stage);
         Rectangle2D stageScreenBounds = stageScreen.getBounds();
         return stage.getWidth() > stageScreenBounds.getWidth() - 1 || stage.getHeight() > stageScreenBounds.getHeight() - 1;
+    }
+
+    public static Screen getStageScreen(Stage stage) {
+        Rectangle2D stageCenterPoint = new Rectangle2D(stage.getX() + stage.getWidth() / 2, stage.getY() + stage.getHeight() / 2, 1, 1);
+        ObservableList<Screen> screensContainingStage = Screen.getScreensForRectangle(stageCenterPoint);
+        return screensContainingStage.isEmpty() ? Screen.getPrimary() : screensContainingStage.get(0);
     }
 }

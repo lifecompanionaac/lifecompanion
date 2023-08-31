@@ -158,21 +158,23 @@ public class UseModeStage extends Stage {
             if (isVirtualKeyboard) {
                 StageUtils.setFocusableInternalAPI(this, false);
             }
-            VirtualMouseController.INSTANCE.centerMouseOnStage();
-            if (!isVirtualKeyboard) {
-                useModeScene.requestFocus();
-            } else {
-                // Issue #129
-                // Showing a stage steal the focus and this is a problem for virtual keyboard stages.
-                // To avoid this the stage should be iconified and shown again (dirty but no better solution found currently)
-                Thread fixStageFocusThread = new Thread(() -> {
-                    ThreadUtils.safeSleep(200);
-                    FXThreadUtils.runOnFXThread(() -> this.setIconified(true));
-                    ThreadUtils.safeSleep(200);
-                    FXThreadUtils.runOnFXThread(() -> this.setIconified(false));
-                }, "Fix stage focus thread");
-                fixStageFocusThread.setDaemon(true);
-                fixStageFocusThread.start();
+            if(!GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.FORCE_WINDOW_MINIMIZED)) {
+                VirtualMouseController.INSTANCE.centerMouseOnStage();
+                if (!isVirtualKeyboard) {
+                    useModeScene.requestFocus();
+                } else {
+                    // Issue #129
+                    // Showing a stage steal the focus and this is a problem for virtual keyboard stages.
+                    // To avoid this the stage should be iconified and shown again (dirty but no better solution found currently)
+                    Thread fixStageFocusThread = new Thread(() -> {
+                        ThreadUtils.safeSleep(200);
+                        FXThreadUtils.runOnFXThread(() -> this.setIconified(true));
+                        ThreadUtils.safeSleep(200);
+                        FXThreadUtils.runOnFXThread(() -> this.setIconified(false));
+                    }, "Fix stage focus thread");
+                    fixStageFocusThread.setDaemon(true);
+                    fixStageFocusThread.start();
+                }
             }
         });
         this.setOnHidden(e -> {

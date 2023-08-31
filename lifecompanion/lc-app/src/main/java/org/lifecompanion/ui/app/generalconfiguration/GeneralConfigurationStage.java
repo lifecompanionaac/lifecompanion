@@ -24,6 +24,7 @@ import javafx.stage.*;
 import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
+import org.lifecompanion.util.javafx.StageUtils;
 
 public class GeneralConfigurationStage extends Stage {
     private final GeneralConfigurationScene generalConfigurationScene;
@@ -46,6 +47,13 @@ public class GeneralConfigurationStage extends Stage {
         this.setOnCloseRequest(we -> {
             generalConfigurationScene.cancelSelected(generalConfigurationScene.getRoot());
             we.consume();
+        });
+        // Undecorated and maximized ignore the task bar height, which can cause layout problems
+        this.maximizedProperty().addListener((obs, ov, nv) -> {
+            if (nv) {
+                Screen stageScreen = StageUtils.getStageScreen(this);
+                this.setHeight(stageScreen.getVisualBounds().getHeight());
+            }
         });
     }
 
