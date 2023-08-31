@@ -228,7 +228,7 @@ public class LCConfigurationComponent extends CoreDisplayableComponentBaseImpl i
         this.frameHeight = new SimpleDoubleProperty(this, "frameHeight", 0.0);
         this.automaticFrameHeight = new SimpleDoubleProperty(this, "automaticFrameHeight", 0.0);
         this.computedFrameHeight = new SimpleDoubleProperty(this, "computedFrameHeight", 0.0);
-        this.stageModeOnLaunch = new SimpleObjectProperty<>(StageMode.MAXIMIZED);
+        this.stageModeOnLaunch = new SimpleObjectProperty<>(StageMode.FULLSCREEN);
         this.keepConfigurationRatio = new SimpleBooleanProperty(this, "keepConfigurationRatio", true);
         this.backgroundColor = new SimpleObjectProperty<>(this, "backgroundColor", Color.web("#E6E6E6"));
         this.frameOpacity = new SimpleDoubleProperty(this, "frameOpacity", 1.0);

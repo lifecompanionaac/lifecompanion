@@ -19,6 +19,7 @@
 - Ticket #255 : ajustement des valeurs maximales pour les arrondis
 - Ticket #247 : ajustement de la valeur par défaut du remplacement des couleurs
 - Ticket #252 : correction du test de la connexion internet à l'installation qui pouvait parfois ne pas fonctionner
+- Ticket #237 : les configurations sont maintenant en plein écran par défaut
 
 ## 1.4.9 - 30/03/2023
 
