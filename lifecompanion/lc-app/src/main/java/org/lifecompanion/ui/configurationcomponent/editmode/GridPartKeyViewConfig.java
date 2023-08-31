@@ -246,7 +246,9 @@ public class GridPartKeyViewConfig extends GridPartKeyViewBase {
      */
     private void executeActionSimulations() {
         if (KeyListController.INSTANCE.isKeySimulatedAsKeyListActions(model)) {
-            KeyListController.INSTANCE.simulateKeyListKeyActions(model);
+            if(KeyListController.INSTANCE.simulateKeyListKeyActions(model)){
+                return;
+            }
         }
         MoveToGridAction moveGrid = this.model.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION, MoveToGridAction.class);
         MoveToKeyAction moveKey = this.model.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION, MoveToKeyAction.class);

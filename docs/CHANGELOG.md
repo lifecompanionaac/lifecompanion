@@ -9,6 +9,7 @@
 - Les icônes des fichiers de LifeCompanion (lcc, lcp) sont maintenant différentes des icônes de LifeCompanion afin de ne plus les confondre.
 - Ajout d'une nouvelle action : écrire et prononcer le texte de la case
 - Ajout d'une nouvelle action : appui sur la molette de souris
+- Ajout d'une nouvelle action : remonter au niveau supérieur ou exécuter les actions suivantes ; permet de simplifier les configurations utilisant des listes de case et des grilles simultanément
 
 ### Corrections/ajustements
 

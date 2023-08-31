@@ -19,18 +19,18 @@
 package org.lifecompanion.controller.categorizedelement.useaction;
 
 import javafx.collections.ObservableList;
-import org.lifecompanion.controller.usevariable.UseVariableController;
-import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
-import org.lifecompanion.model.api.categorizedelement.useevent.UseEventListenerI;
-import org.lifecompanion.model.api.usevariable.UseVariableI;
-import org.lifecompanion.model.api.lifecycle.LCStateListener;
-import org.lifecompanion.model.api.lifecycle.ModeListenerI;
-import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.lifecycle.AppMode;
-import org.lifecompanion.model.impl.categorizedelement.useaction.ActionExecutionResult;
+import org.lifecompanion.controller.lifecycle.AppModeController;
+import org.lifecompanion.controller.usevariable.UseVariableController;
 import org.lifecompanion.framework.commons.utils.lang.CollectionUtils;
 import org.lifecompanion.framework.utils.LCNamedThreadFactory;
 import org.lifecompanion.model.api.categorizedelement.useaction.*;
+import org.lifecompanion.model.api.categorizedelement.useevent.UseEventListenerI;
+import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
+import org.lifecompanion.model.api.lifecycle.LCStateListener;
+import org.lifecompanion.model.api.lifecycle.ModeListenerI;
+import org.lifecompanion.model.api.usevariable.UseVariableI;
+import org.lifecompanion.model.impl.categorizedelement.useaction.ActionExecutionResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,6 +49,8 @@ import java.util.function.Consumer;
 public enum UseActionController implements LCStateListener, ModeListenerI {
     INSTANCE;
     private final Logger LOGGER = LoggerFactory.getLogger(UseActionController.class);
+
+    public static final String FLAG_INTERRUPT_EXECUTION = "FLAG_INTERRUPT_EXECUTION";
 
     private static final int ACTION_THREAD_POOL_SIZE = 4;
 
@@ -230,7 +232,7 @@ public enum UseActionController implements LCStateListener, ModeListenerI {
         if (!this.pauseActionLaunch) {
             List<Consumer<ActionExecutionResultI>> nextActionListener = this.getAndCleanNextSimpleActionListeners(event);
             // Optimization here : don't generate variables if not needed (= no action)
-            final Map<String, UseVariableI<?>> finalVariables = CollectionUtils.isEmpty(actions)? new HashMap<>(): this.checkAndMergeVariables(variables);
+            final Map<String, UseVariableI<?>> finalVariables = CollectionUtils.isEmpty(actions) ? new HashMap<>() : this.checkAndMergeVariables(variables);
             Runnable actionExecutable = () -> {
                 ActionExecutionResultI result = new ActionExecutionResult(true);
                 try {
@@ -271,8 +273,13 @@ public enum UseActionController implements LCStateListener, ModeListenerI {
                 if (AppModeController.INSTANCE.modeProperty().get() == AppMode.USE) {
                     try {
                         simpleAction.execute(eventType, variables);
-                        movingAction |= simpleAction.isMovingAction();
-                        count++;
+                        if (variables.containsKey(FLAG_INTERRUPT_EXECUTION)) {
+                            LOGGER.info("Use action execution was interrupted as variable contains the {} variable", FLAG_INTERRUPT_EXECUTION);
+                            break;
+                        } else {
+                            movingAction |= simpleAction.isMovingAction();
+                            count++;
+                        }
                     } catch (Throwable t) {
                         LOGGER.error("Use action simple execution failed for action {}", simpleAction.getClass().getSimpleName(), t);
                     }
