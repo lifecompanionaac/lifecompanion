@@ -13,6 +13,7 @@
 
 ### Corrections/ajustements
 
+- La fenêtre de configuration s'adapte maintenant à la taille des petits écrans
 - Ticket #230 : il est maintenant possible d'explorer toutes les images des banques de pictogramme
 - Ticket #245 : le code pour repasser en mode édition a été remplacé par une simple addition
 - Ticket #229 : les majuscules n'étaient parfois pas retransmises correctement en clavier virtuel
