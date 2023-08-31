@@ -35,18 +35,18 @@ import static java.util.stream.Collectors.toList;
  */
 public class ListBindingWithMapper {
 
-    public static <E, F> void mapContent(ObservableList<F> mapped, ObservableList<? extends E> source,
-                                         Function<? super E, ? extends F> mapper) {
-        map(mapped, source, mapper);
+    public static <E, F> Runnable mapContent(ObservableList<F> mapped, ObservableList<? extends E> source,
+                                             Function<? super E, ? extends F> mapper) {
+        return map(mapped, source, mapper);
     }
 
-    private static <E, F> Object map(ObservableList<F> mapped, ObservableList<? extends E> source,
-                                     Function<? super E, ? extends F> mapper) {
+    private static <E, F> Runnable map(ObservableList<F> mapped, ObservableList<? extends E> source,
+                                       Function<? super E, ? extends F> mapper) {
         final ListContentMapping<E, F> contentMapping = new ListContentMapping<E, F>(mapped, mapper);
         mapped.setAll(source.stream().map(mapper).collect(toList()));
         source.removeListener(contentMapping);
         source.addListener(contentMapping);
-        return contentMapping;
+        return () -> source.removeListener(contentMapping);
     }
 
     private static class ListContentMapping<E, F> implements ListChangeListener<E>, WeakListener {
@@ -54,7 +54,7 @@ public class ListBindingWithMapper {
         private final Function<? super E, ? extends F> mapper;
 
         public ListContentMapping(List<F> mapped, Function<? super E, ? extends F> mapper) {
-            this.mappedRef = new WeakReference<List<F>>(mapped);
+            this.mappedRef = new WeakReference<>(mapped);
             this.mapper = mapper;
         }
 

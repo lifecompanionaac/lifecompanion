@@ -36,15 +36,11 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import org.lifecompanion.controller.configurationcomponent.dynamickey.KeyListController;
-import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.fxmisc.easybind.EasyBind;
 import org.fxmisc.easybind.monadic.MonadicBinding;
+import org.lifecompanion.controller.configurationcomponent.dynamickey.KeyListController;
 import org.lifecompanion.controller.editaction.KeyListActions;
 import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
@@ -53,7 +49,6 @@ import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.lang.LangUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
-import org.lifecompanion.framework.utils.FluentHashMap;
 import org.lifecompanion.framework.utils.Pair;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
 import org.lifecompanion.model.impl.configurationcomponent.dynamickey.KeyListLeaf;
@@ -61,14 +56,16 @@ import org.lifecompanion.model.impl.configurationcomponent.dynamickey.KeyListLin
 import org.lifecompanion.model.impl.configurationcomponent.dynamickey.KeyListNode;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.model.impl.notification.LCNotification;
+import org.lifecompanion.ui.common.control.generic.FlowPaneListView;
 import org.lifecompanion.ui.common.pane.specific.cell.KeyListCellHandler;
+import org.lifecompanion.ui.common.pane.specific.cell.KeyListFlowPaneCell;
 import org.lifecompanion.ui.common.pane.specific.cell.KeyListNodeTreeCell;
+import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.ui.notification.LCNotificationController;
 import org.lifecompanion.util.binding.ListBindingWithMapper;
 import org.lifecompanion.util.javafx.FXControlUtils;
 import org.lifecompanion.util.model.ConfigurationComponentUtils;
 
-import java.lang.reflect.Array;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -84,7 +81,6 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
     private final ObjectProperty<KeyListNodeI> cutOrCopiedNode;
     private final Map<KeyListNodeI, KeyListNodeTreeItem> keyListTreeItems;
 
-
     private Button buttonAddKey, buttonAddCategory, buttonAddLinkKey, buttonDelete, buttonMoveUp, buttonMoveDown, buttonCut, buttonCopy, buttonPaste, buttonExportKeys, buttonImportKeys, buttonShowHideProperties;
 
     private TextField textFieldSearchNode;
@@ -95,9 +91,13 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
     private KeyListNodePropertiesEditionView keyListNodePropertiesEditionView;
 
     private TreeView<KeyListNodeI> keyListTreeView;
+    private FlowPaneListView<KeyListNodeI> currentListContentView;
+    private ScrollPane scrollPanePaneCurrentListContentView;
 
     private final BooleanProperty propertiesShowing;
 
+    // Mandatory to avoid garbage collection
+    private ObjectBinding<KeyListNodeI> currentSelectedNodeAndNotLeaf;
 
     public KeyListContentConfigView() {
         this.rootKeyListNode = new SimpleObjectProperty<>();
@@ -163,10 +163,23 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         keyListTreeView = new TreeView<>();
         keyListTreeView.setCellFactory(tv -> new KeyListNodeTreeCell(this::selectAndScrollToId));
         keyListTreeView.setShowRoot(false);
-        keyListTreeView.setMaxHeight(TREE_VIEW_HEIGHT);
-        keyListTreeView.setMinHeight(TREE_VIEW_HEIGHT);
+        keyListTreeView.setMaxHeight(Double.MAX_VALUE);
         keyListTreeView.setFixedCellSize(KeyListCellHandler.CELL_HEIGHT + 5);
-        HBox.setHgrow(keyListTreeView, Priority.ALWAYS);
+        HBox.setHgrow(keyListTreeView, Priority.SOMETIMES);
+
+        currentListContentView = new FlowPaneListView<>(KeyListFlowPaneCell::new);
+        currentListContentView.setHgap(10.0);
+        currentListContentView.setVgap(10.0);
+        currentListContentView.setAlignment(Pos.CENTER);
+        scrollPanePaneCurrentListContentView = new ScrollPane(currentListContentView);
+        scrollPanePaneCurrentListContentView.setFitToWidth(true);
+        scrollPanePaneCurrentListContentView.setMaxHeight(Double.MAX_VALUE);
+        // TODO : style for background and border
+        scrollPanePaneCurrentListContentView.setBorder(new Border(new BorderStroke(Color.LIGHTGRAY, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+        scrollPanePaneCurrentListContentView.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, new Insets(0))));
+
+        currentListContentView.prefWrapLengthProperty().bind(scrollPanePaneCurrentListContentView.widthProperty().subtract(10.0));
+        HBox.setHgrow(scrollPanePaneCurrentListContentView, Priority.ALWAYS);
 
         this.buttonExportKeys = FXControlUtils.createLeftTextButton(Translation.getText("general.configuration.view.key.list.button.export.keys"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.UPLOAD).size(14).color(LCGraphicStyle.MAIN_DARK),
@@ -198,7 +211,7 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         HBox boxExportImportsButtons = new HBox(10.0, buttonImportKeys, buttonExportKeys);
         boxExportImportsButtons.setAlignment(Pos.CENTER);
 
-        HBox boxTreeAndCommands = new HBox(5.0, keyListTreeView, gridButtons);
+        HBox boxTreeAndCommands = new HBox(5.0, keyListTreeView, scrollPanePaneCurrentListContentView, gridButtons);
         boxTreeAndCommands.setAlignment(Pos.CENTER);
         VBox.setVgrow(boxTreeAndCommands, Priority.ALWAYS);
 
@@ -209,6 +222,8 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
 
         keyListNodePropertiesEditionView = new KeyListNodePropertiesEditionView();
         VBox.setMargin(keyListNodePropertiesEditionView, new Insets(2, 0, 0, 0));
+        keyListNodePropertiesEditionView.setPrefHeight(350.0);
+        keyListNodePropertiesEditionView.setMinHeight(250.0);
 
         // Total
         this.setSpacing(2.0);
@@ -346,7 +361,6 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
     private void hideProperties() {
         keyListNodePropertiesEditionView.setVisible(false);
         keyListNodePropertiesEditionView.setManaged(false);
-        keyListTreeView.setMaxHeight(Double.MAX_VALUE);
         buttonShowHideProperties.setText(Translation.getText("keylist.config.show.key.properties"));
         this.propertiesShowing.set(false);
     }
@@ -354,7 +368,6 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
     private void showProperties() {
         keyListNodePropertiesEditionView.setVisible(true);
         keyListNodePropertiesEditionView.setManaged(true);
-        keyListTreeView.setMaxHeight(TREE_VIEW_HEIGHT);
         buttonShowHideProperties.setText(Translation.getText("keylist.config.hide.key.properties"));
         this.propertiesShowing.set(true);
     }
@@ -491,6 +504,9 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         this.buttonMoveUp.disableProperty().bind(currentSelectionAndNotRoot.isNull());
         this.buttonMoveDown.disableProperty().bind(currentSelectionAndNotRoot.isNull());
         this.buttonDelete.disableProperty().bind(currentSelectionAndNotRoot.isNull());
+
+        currentSelectedNodeAndNotLeaf = Bindings.createObjectBinding(() -> currentSelectedNode.get() != null && (currentSelectedNode.get().isLeafNode() || currentSelectedNode.get().isLinkNode()) ? null : currentSelectedNode.get(), currentSelectedNode);
+        currentSelectedNodeAndNotLeaf.addListener((obs, ov, nv) -> currentListContentView.bindItems(nv != null ? nv.getChildren() : null));
     }
     //========================================================================
 

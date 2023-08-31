@@ -141,6 +141,10 @@
     -fx-background-color: #f0f0f0 #f0f0f0 #f0f0f0;
 }
 
+.background-white {
+    -fx-background-color: white;
+}
+
 .background-transparent {
     -fx-background-color: transparent;
 }
