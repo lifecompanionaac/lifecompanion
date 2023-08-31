@@ -42,12 +42,12 @@ public interface KeyListNodeI extends SimplerKeyActionContainerI {
     StringProperty linkedGridIdProperty();
 
     /**
-     * @return true if this node represent a leaf (then is {@link #getChildren()} can return null)
+     * @return true if this node represent a leaf (then {@link #getChildren()} can return null)
      */
     boolean isLeafNode();
 
     /**
-     * @return true if this node represent a link (then is {@link #getChildren()} can return null)
+     * @return true if this node represent a link (then {@link #getChildren()} can return null)
      */
     boolean isLinkNode();
 

@@ -20,7 +20,6 @@
 package org.lifecompanion.ui.app.generalconfiguration.step.dynamickey.keylist;
 
 import javafx.beans.binding.Bindings;
-import javafx.beans.binding.ObjectBinding;
 import javafx.beans.property.*;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -36,10 +35,11 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import org.fxmisc.easybind.EasyBind;
-import org.fxmisc.easybind.monadic.MonadicBinding;
 import org.lifecompanion.controller.configurationcomponent.dynamickey.KeyListController;
 import org.lifecompanion.controller.editaction.KeyListActions;
 import org.lifecompanion.controller.editmode.ConfigActionController;
@@ -47,7 +47,6 @@ import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
-import org.lifecompanion.framework.commons.utils.lang.LangUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.framework.utils.Pair;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
@@ -56,13 +55,8 @@ import org.lifecompanion.model.impl.configurationcomponent.dynamickey.KeyListLin
 import org.lifecompanion.model.impl.configurationcomponent.dynamickey.KeyListNode;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.model.impl.notification.LCNotification;
-import org.lifecompanion.ui.common.control.generic.FlowPaneListView;
-import org.lifecompanion.ui.common.pane.specific.cell.KeyListCellHandler;
-import org.lifecompanion.ui.common.pane.specific.cell.KeyListFlowPaneCell;
-import org.lifecompanion.ui.common.pane.specific.cell.KeyListNodeTreeCell;
 import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.ui.notification.LCNotificationController;
-import org.lifecompanion.util.binding.ListBindingWithMapper;
 import org.lifecompanion.util.javafx.FXControlUtils;
 import org.lifecompanion.util.model.ConfigurationComponentUtils;
 
@@ -73,13 +67,13 @@ import java.util.stream.Collectors;
 
 public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
     private static final double TREE_VIEW_HEIGHT = 200.0;
-    private final ObjectProperty<KeyListNodeI> rootKeyListNode;
+    private final ObjectProperty<KeyListNodeI> root;
     private final ObjectProperty<List<KeyListNodeI>> searchResult;
     private final IntegerProperty foundIndex;
     private String lastSearch;
     private boolean dirty;
     private final ObjectProperty<KeyListNodeI> cutOrCopiedNode;
-    private final Map<KeyListNodeI, KeyListNodeTreeItem> keyListTreeItems;
+    // private final Map<KeyListNodeI, KeyListNodeTreeItem> keyListTreeItems;
 
     private Button buttonAddKey, buttonAddCategory, buttonAddLinkKey, buttonDelete, buttonMoveUp, buttonMoveDown, buttonCut, buttonCopy, buttonPaste, buttonExportKeys, buttonImportKeys, buttonShowHideProperties;
 
@@ -90,27 +84,36 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
     private HBox selectionPathContainer;
     private KeyListNodePropertiesEditionView keyListNodePropertiesEditionView;
 
-    private TreeView<KeyListNodeI> keyListTreeView;
-    private FlowPaneListView<KeyListNodeI> currentListContentView;
-    private ScrollPane scrollPanePaneCurrentListContentView;
+    private KeyListTreeView keyListTreeView;
+    private KeyListContentPane keyListContentPane;
 
     private final BooleanProperty propertiesShowing;
 
-    // Mandatory to avoid garbage collection
-    private ObjectBinding<KeyListNodeI> currentSelectedNodeAndNotLeaf;
+    private final ObjectProperty<KeyListNodeI> selected;
+    private final ObjectProperty<KeyListNodeI> currentList;
 
     public KeyListContentConfigView() {
-        this.rootKeyListNode = new SimpleObjectProperty<>();
+        this.root = new SimpleObjectProperty<>();
+        this.selected = new SimpleObjectProperty<>();
+        this.currentList = new SimpleObjectProperty<>();
         this.cutOrCopiedNode = new SimpleObjectProperty<>();
-        this.keyListTreeItems = new HashMap<>();
         this.propertiesShowing = new SimpleBooleanProperty(true);
         searchResult = new SimpleObjectProperty<>();
         foundIndex = new SimpleIntegerProperty();
         initAll();
     }
 
-    public ObjectProperty<KeyListNodeI> rootKeyListNodeProperty() {
-        return rootKeyListNode;
+
+    public ReadOnlyObjectProperty<KeyListNodeI> selectedProperty() {
+        return selected;
+    }
+
+    public ReadOnlyObjectProperty<KeyListNodeI> currentListProperty() {
+        return currentList;
+    }
+
+    public ObjectProperty<KeyListNodeI> rootProperty() {
+        return root;
     }
 
     /**
@@ -160,26 +163,14 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         gridButtons.add(buttonMoveUp, 0, rowIndex);
         gridButtons.add(buttonMoveDown, 1, rowIndex++);
 
-        keyListTreeView = new TreeView<>();
-        keyListTreeView.setCellFactory(tv -> new KeyListNodeTreeCell(this::selectAndScrollToId));
-        keyListTreeView.setShowRoot(false);
+        keyListTreeView = new KeyListTreeView(this);
         keyListTreeView.setMaxHeight(Double.MAX_VALUE);
-        keyListTreeView.setFixedCellSize(KeyListCellHandler.CELL_HEIGHT + 5);
         HBox.setHgrow(keyListTreeView, Priority.SOMETIMES);
 
-        currentListContentView = new FlowPaneListView<>(KeyListFlowPaneCell::new);
-        currentListContentView.setHgap(10.0);
-        currentListContentView.setVgap(10.0);
-        currentListContentView.setAlignment(Pos.CENTER);
-        scrollPanePaneCurrentListContentView = new ScrollPane(currentListContentView);
-        scrollPanePaneCurrentListContentView.setFitToWidth(true);
-        scrollPanePaneCurrentListContentView.setMaxHeight(Double.MAX_VALUE);
-        // TODO : style for background and border
-        scrollPanePaneCurrentListContentView.setBorder(new Border(new BorderStroke(Color.LIGHTGRAY, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-        scrollPanePaneCurrentListContentView.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, new Insets(0))));
-
-        currentListContentView.prefWrapLengthProperty().bind(scrollPanePaneCurrentListContentView.widthProperty().subtract(10.0));
-        HBox.setHgrow(scrollPanePaneCurrentListContentView, Priority.ALWAYS);
+        keyListContentPane = new KeyListContentPane(this);
+        keyListContentPane.setMaxWidth(Double.MAX_VALUE);
+        keyListContentPane.setMaxHeight(Double.MAX_VALUE);
+        HBox.setHgrow(keyListContentPane, Priority.ALWAYS);
 
         this.buttonExportKeys = FXControlUtils.createLeftTextButton(Translation.getText("general.configuration.view.key.list.button.export.keys"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.UPLOAD).size(14).color(LCGraphicStyle.MAIN_DARK),
@@ -211,7 +202,7 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         HBox boxExportImportsButtons = new HBox(10.0, buttonImportKeys, buttonExportKeys);
         boxExportImportsButtons.setAlignment(Pos.CENTER);
 
-        HBox boxTreeAndCommands = new HBox(5.0, keyListTreeView, scrollPanePaneCurrentListContentView, gridButtons);
+        HBox boxTreeAndCommands = new HBox(5.0, keyListTreeView, keyListContentPane, gridButtons);
         boxTreeAndCommands.setAlignment(Pos.CENTER);
         VBox.setVgrow(boxTreeAndCommands, Priority.ALWAYS);
 
@@ -276,7 +267,7 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
             }
         });
         this.buttonExportKeys.setOnAction(e ->
-                ConfigActionController.INSTANCE.executeAction(new KeyListActions.ExportKeyListsAction(buttonExportKeys, this.rootKeyListNode.get())));
+                ConfigActionController.INSTANCE.executeAction(new KeyListActions.ExportKeyListsAction(buttonExportKeys, this.root.get())));
         this.buttonImportKeys.setOnAction(e ->
                 ConfigActionController.INSTANCE.executeAction(new KeyListActions.ImportKeyListsAction(buttonImportKeys, this::addNodeToSelectedDestination)));
 
@@ -315,7 +306,9 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         final KeyListNodeI parentNode = selectedNode.parentProperty().get();
         int previousIndex = parentNode.getChildren().indexOf(selectedNode);
         parentNode.getChildren().remove(selectedNode);
-        keyListTreeView.getSelectionModel().clearSelection();
+
+        // keyListTreeView.getSelectionModel().clearSelection();
+
         executeSearch(true);
         LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo(Translation.getText(notificationTitle, selectedNode.getHumanReadableText()),
                 true,
@@ -412,7 +405,7 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
                 foundIndex.set(0);
                 // Create a list with all nodes
                 List<KeyListNodeI> allNodes = new ArrayList<>(100);
-                this.rootKeyListNode.get().traverseTreeToBottom(allNodes::add);
+                this.root.get().traverseTreeToBottom(allNodes::add);
 
                 // Search for similarity
                 final List<KeyListNodeI> foundNodes = allNodes
@@ -471,42 +464,82 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
                 },
                 searchResult, foundIndex)
         );
-        this.rootKeyListNode.addListener((obs, ov, nv) -> {
-            keyListTreeItems.clear();
+
+//        selected.addListener((obs, ov, nv) -> {
+//            if (nv != null && currentList.get() != nv.parentProperty().get()) {
+//                currentList.set(nv.parentProperty().get());
+//            }
+//        });
+//        currentList.addListener((obs, ov, nv) -> {
+//            selected.set(null);
+//        });
+
+        this.root.addListener((obs, ov, nv) -> {
             clearSearch(true);
             updatePathForSelection(null);
-            this.keyListTreeView.getSelectionModel().clearSelection();
             cutOrCopiedNode.set(null);
             this.dirty = false;
-            if (nv != null) {
-                this.keyListTreeView.setRoot(new KeyListNodeTreeItem(nv));
-            } else {
-                this.keyListTreeView.setRoot(null);
-            }
+
+            selected.set(null);
+            currentList.set(nv);
+
+//            keyListTreeView.nodeProperty().set(nv);
+//            this.keyListContentPane.nodeProperty().set(nv);
         });
 
         // Bind on current selection value (but not root item)
         // this was necessary because it seems impossible to clear selection on tree view (to disabled selection on parent item)
-        final MonadicBinding<KeyListNodeI> currentSelectedNode = EasyBind
-                .select(keyListTreeView.getSelectionModel().selectedItemProperty())
-                .selectObject(TreeItem::valueProperty)
-                .orElse((KeyListNodeI) null);
-        final ObjectBinding<KeyListNodeI> currentSelectionAndNotRoot = Bindings.createObjectBinding(() ->
-                        currentSelectedNode.get() != rootKeyListNode.get() ? currentSelectedNode.get() : null
-                , currentSelectedNode, rootKeyListNode);
+//        final MonadicBinding<KeyListNodeI> currentSelectedNode = EasyBind
+//                .select(keyListTreeView.getSelectionModel().selectedItemProperty())
+//                .selectObject(TreeItem::valueProperty)
+//                .orElse((KeyListNodeI) null);
+//        final ObjectBinding<KeyListNodeI> currentSelectionAndNotRoot = Bindings.createObjectBinding(() ->
+//                        currentSelectedNode.get() != rootKeyListNode.get() ? currentSelectedNode.get() : null
+//                , currentSelectedNode, rootKeyListNode);
 
-        currentSelectionAndNotRoot.addListener((obs, ov, nv) -> updatePathForSelection(nv));
-        this.keyListNodePropertiesEditionView.selectedNodeProperty().bind(currentSelectionAndNotRoot);
+//        currentSelectionAndNotRoot.addListener((obs, ov, nv) -> updatePathForSelection(nv));
+
+        this.keyListNodePropertiesEditionView.selectedNodeProperty().bind(selected);
+//        keyListContentPane.selectedProperty().addListener((obs, ov, nv) -> {
+//            keyListTreeView.selectAndScrollTo(nv);
+//        });
+//        keyListTreeView.setSelectionListener(selected -> {
+//            keyListContentPane.select(selected);
+//        });
+
+//        keyListContentPane.selectedProperty().addListener((obs, ov, nv) -> {
+//            selectAndScrollTo(nv);
+//        });
+
+        // TODO : cross selection listeners between tree and list
 
         this.buttonPaste.disableProperty().bind(this.cutOrCopiedNode.isNull());
-        this.buttonCopy.disableProperty().bind(currentSelectionAndNotRoot.isNull());
-        this.buttonCut.disableProperty().bind(currentSelectionAndNotRoot.isNull());
-        this.buttonMoveUp.disableProperty().bind(currentSelectionAndNotRoot.isNull());
-        this.buttonMoveDown.disableProperty().bind(currentSelectionAndNotRoot.isNull());
-        this.buttonDelete.disableProperty().bind(currentSelectionAndNotRoot.isNull());
+        this.buttonCopy.disableProperty().bind(selected.isNull());
+        this.buttonCut.disableProperty().bind(selected.isNull());
+        this.buttonMoveUp.disableProperty().bind(selected.isNull());
+        this.buttonMoveDown.disableProperty().bind(selected.isNull());
+        this.buttonDelete.disableProperty().bind(selected.isNull());
 
-        currentSelectedNodeAndNotLeaf = Bindings.createObjectBinding(() -> currentSelectedNode.get() != null && (currentSelectedNode.get().isLeafNode() || currentSelectedNode.get().isLinkNode()) ? null : currentSelectedNode.get(), currentSelectedNode);
-        currentSelectedNodeAndNotLeaf.addListener((obs, ov, nv) -> currentListContentView.bindItems(nv != null ? nv.getChildren() : null));
+//        currentListContentView.setSelectionListener(this::selectAndScrollTo);
+//        currentListContentView.setDoubleSelectionListener(doubleSelected -> {
+//            // TODO : go into the directory
+//        });
+
+        // TODO : just show the parent folder if not current one
+//        currentSelectedNodeAndNotLeaf = Bindings.createObjectBinding(() -> currentSelectedNode.get() != null && (currentSelectedNode.get().isLeafNode() || currentSelectedNode.get().isLinkNode()) ? null : currentSelectedNode.get(), currentSelectedNode);
+//        currentSelectedNodeAndNotLeaf.addListener((obs, ov, nv) -> currentListContentView.bindItems(nv != null ? nv.getChildren() : null));
+
+//        currentSelectedNode.addListener((obs, ov, nv) -> {
+//            if (nv != null) {
+//                if (nv.isLinkNode() || nv.isLeafNode()) {
+//                    currentListContentView.setItems(nv.parentProperty().get().getChildren());
+//                } else {
+//                    currentListContentView.setItems(nv.getChildren());
+//                }
+//            } else {
+//                currentListContentView.setItems(null);
+//            }
+//        });
     }
     //========================================================================
 
@@ -529,9 +562,9 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
     }
 
     private void createAndAddLinkForNode(KeyListNodeI nodeForLink) {
-        if (nodeForLink != rootKeyListNode.get()) {
+        if (nodeForLink != root.get()) {
             final Hyperlink hyperlink = new Hyperlink((nodeForLink.getHumanReadableText()));
-            if (nodeForLink != rootKeyListNode.get()) {
+            if (nodeForLink != root.get()) {
                 hyperlink.setOnAction(e -> {
                     selectAndScrollTo(nodeForLink);
                 });
@@ -550,30 +583,30 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
 
     private void addNodeToSelectedDestination(List<KeyListNodeI> toAdd) {
         this.dirty = true;
-        if (keyListTreeView.getRoot() != null) {
-            final TreeItem<KeyListNodeI> selectedItem = this.keyListTreeView.getSelectionModel().getSelectedItem();
-            if (selectedItem != null && selectedItem.getValue() != null && selectedItem.getValue() != rootKeyListNode.get()) {
-                final KeyListNodeI selectedNode = selectedItem.getValue();
-                if (selectedNode.isLeafNode() || !selectedNode.getChildren().isEmpty()) {
-                    final KeyListNodeI parentNode = selectedNode.parentProperty().get();
-                    final int i = parentNode.getChildren().indexOf(selectedNode);
-                    parentNode.getChildren().addAll(i + 1, toAdd);
-                } else {
-                    selectedNode.getChildren().addAll(0, toAdd);
-                }
-            } else {
-                keyListTreeView.getRoot().getValue().getChildren().addAll(toAdd);
-            }
-            if (LangUtils.isNotEmpty(toAdd)) {
-                selectAndScrollTo(toAdd.get(0));
-                LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo("notification.keylist.node.added").withMsDuration(LCGraphicStyle.SHORT_NOTIFICATION_DURATION_MS));
-            }
-        }
+//        if (keyListTreeView.getRoot() != null) {
+//            final TreeItem<KeyListNodeI> selectedItem = this.keyListTreeView.getSelectionModel().getSelectedItem();
+//            if (selectedItem != null && selectedItem.getValue() != null && selectedItem.getValue() != rootKeyListNode.get()) {
+//                final KeyListNodeI selectedNode = selectedItem.getValue();
+//                if (selectedNode.isLeafNode() || !selectedNode.getChildren().isEmpty()) {
+//                    final KeyListNodeI parentNode = selectedNode.parentProperty().get();
+//                    final int i = parentNode.getChildren().indexOf(selectedNode);
+//                    parentNode.getChildren().addAll(i + 1, toAdd);
+//                } else {
+//                    selectedNode.getChildren().addAll(0, toAdd);
+//                }
+//            } else {
+//                keyListTreeView.getRoot().getValue().getChildren().addAll(toAdd);
+//            }
+//            if (LangUtils.isNotEmpty(toAdd)) {
+//                selectAndScrollTo(toAdd.get(0));
+//                LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo("notification.keylist.node.added").withMsDuration(LCGraphicStyle.SHORT_NOTIFICATION_DURATION_MS));
+//            }
+//        }
     }
 
     public void selectAndScrollToId(String itemId) {
-        if (itemId != null && this.rootKeyListNode.get() != null) {
-            final KeyListNodeI foundNode = KeyListController.findNodeByIdInSubtree(this.rootKeyListNode.get(), itemId);
+        if (itemId != null && this.root.get() != null) {
+            final KeyListNodeI foundNode = KeyListController.findNodeByIdInSubtree(this.root.get(), itemId);
             if (foundNode != null) {
                 selectAndScrollTo(foundNode);
             }
@@ -581,39 +614,36 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
     }
 
     public void selectAndScrollTo(KeyListNodeI item) {
-        final KeyListNodeTreeItem keyListNodeTreeItem = this.keyListTreeItems.get(item);
-        if (keyListNodeTreeItem != null) {
-            keyListTreeView.getSelectionModel().select(keyListNodeTreeItem);
-
-            // Scroll to selection
-            final int selectedIndex = this.keyListTreeView.getSelectionModel().getSelectedIndex();
-            int indexToSelect = selectedIndex;
-            // try to go back 3 index behind (better for UX)
-            while (indexToSelect-- > 0 && selectedIndex - indexToSelect < 2) ;
-            this.keyListTreeView.scrollTo(indexToSelect);
-        }
+//        final KeyListNodeTreeItem keyListNodeTreeItem = this.keyListTreeItems.get(item);
+//        if (keyListNodeTreeItem != null) {
+//            keyListTreeView.getSelectionModel().select(keyListNodeTreeItem);
+//
+//            // Scroll to selection
+//            final int selectedIndex = this.keyListTreeView.getSelectionModel().getSelectedIndex();
+//            int indexToSelect = selectedIndex;
+//            // try to go back 3 index behind (better for UX)
+//            while (indexToSelect-- > 0 && selectedIndex - indexToSelect < 2) ;
+//            this.keyListTreeView.scrollTo(indexToSelect);
+//        }
     }
 
     private void ifSelectedItemNotNull(Consumer<KeyListNodeI> action) {
-        final TreeItem<KeyListNodeI> selectedItem = this.keyListTreeView.getSelectionModel().getSelectedItem();
-        if (selectedItem != null && selectedItem.getValue() != null && selectedItem.getValue() != rootKeyListNode.get()) {
-            action.accept(selectedItem.getValue());
+//        final TreeItem<KeyListNodeI> selectedItem = this.keyListTreeView.getSelectionModel().getSelectedItem();
+//        if (selectedItem != null && selectedItem.getValue() != null && selectedItem.getValue() != rootKeyListNode.get()) {
+//            action.accept(selectedItem.getValue());
+//        }
+    }
+
+    public void v2Select(KeyListNodeI item) {
+        if (item != null && currentList.get() != item.parentProperty().get()) {
+            currentList.set(item.parentProperty().get());
         }
+        selected.set(item);
+    }
+
+    public void v2OpenListFromList(KeyListNodeI item) {
+        currentList.set(item);
+        // TODO : clear selection ?
     }
     //========================================================================
-
-    // TREE ITEM
-    //========================================================================
-    private class KeyListNodeTreeItem extends TreeItem<KeyListNodeI> {
-        public KeyListNodeTreeItem(KeyListNodeI value) {
-            super(value);
-            keyListTreeItems.put(value, this);
-            if (!value.isLeafNode()) {
-                ListBindingWithMapper.mapContent(getChildren(), value.getChildren(), KeyListNodeTreeItem::new);
-            }
-            this.expandedProperty().addListener((obs, ov, nv) -> selectAndScrollTo(value));
-        }
-    }
-    //========================================================================
-
 }
