@@ -183,7 +183,7 @@
 }
 
 .drop-shadow-1 {
-    -fx-effect: dropshadow(three-pass-box, lightgrey, 12, 0, 2, 6);
+    -fx-effect: dropshadow(three-pass-box, dimgray, 6, 0, 4, 4);
 }
 
 

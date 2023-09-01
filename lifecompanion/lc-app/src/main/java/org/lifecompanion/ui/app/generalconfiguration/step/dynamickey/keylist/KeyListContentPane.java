@@ -9,12 +9,14 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.controller.resource.IconHelper;
+import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.lang.LangUtils;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
@@ -69,13 +71,17 @@ public class KeyListContentPane extends StackPane implements LCViewInitHelper {
         StackPane.setAlignment(buttonParentNode, Pos.TOP_LEFT);
         StackPane.setMargin(buttonParentNode, new Insets(3.0));
 
-        buttonShowAddChoices = createFloatingButton("background-primary-dark", "Ajouter", GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.PLUS).size(16).color(Color.WHITE));
+        buttonShowAddChoices = createFloatingButton("background-primary-dark",
+                "keylist.content.pane.button.add",
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.PLUS).size(16).color(Color.WHITE));
         StackPane.setAlignment(buttonShowAddChoices, Pos.BOTTOM_RIGHT);
         StackPane.setMargin(buttonShowAddChoices, new Insets(0.0, 18.0, 4.0, 0.0));
 
-        this.buttonAddCategory = createFloatingButton("background-primary-dark-light", "Une liste", GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.FOLDER).size(16).color(Color.GRAY));
-        this.buttonAddKey = createFloatingButton("background-primary-dark-light", "Une case", new ImageView(IconHelper.get("keylist/icon_type_leaf.png")));
-        this.buttonAddLinkKey = createFloatingButton("background-primary-dark-light", "Un lien", GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.LINK).size(16).color(Color.GRAY));
+        this.buttonAddCategory = createFloatingButton("background-primary-dark-light",
+                "keylist.content.pane.button.add.list",
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.FOLDER).size(16).color(Color.GRAY));
+        this.buttonAddKey = createFloatingButton("background-primary-dark-light", "keylist.content.pane.button.add.key", new ImageView(IconHelper.get("keylist/icon_type_leaf.png")));
+        this.buttonAddLinkKey = createFloatingButton("background-primary-dark-light", "keylist.content.pane.button.add.link", GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.LINK).size(16).color(Color.GRAY));
         boxAddButtons = new VBox(4.0);
         List.of(buttonAddLinkKey, buttonAddCategory, buttonAddKey).forEach(button -> {
             button.getStyleClass().remove("text-fill-white");
@@ -90,11 +96,10 @@ public class KeyListContentPane extends StackPane implements LCViewInitHelper {
         this.getChildren().addAll(scrollPane, buttonParentNode, buttonShowAddChoices, boxAddButtons);
 
         scrollPane.getStyleClass().addAll("scrollpane-white-viewport", "background-white");
-        //this.getStyleClass().addAll("border-lightgrey");
     }
 
     private Button createFloatingButton(String background, String text, Node graphics) {
-        Button button = FXControlUtils.createLeftTextButton(text, graphics, null);
+        Button button = FXControlUtils.createLeftTextButton(text != null ? Translation.getText(text) : null, graphics, null);
         button.getStyleClass().remove("background-none");
         button.getStyleClass().addAll(background, "text-fill-white", "drop-shadow-1", "background-radius-10", "border-transparent");
         return button;
@@ -108,6 +113,13 @@ public class KeyListContentPane extends StackPane implements LCViewInitHelper {
         this.buttonAddLinkKey.setOnAction(createAddNodeListener(KeyListLinkLeaf::new));
         this.buttonAddCategory.setOnAction(createAddNodeListener(KeyListNode::new));
         this.setOnMouseClicked(e -> hideAddChoices());
+
+        buttonParentNode.setOnDragOver(ea -> {
+            if (keyListContentConfigView.draggedProperty().get() != null) {
+                ea.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+            }
+        });
+        buttonParentNode.setOnDragDropped(ea -> keyListContentConfigView.dragDroppedOn(keyListContentConfigView.currentListProperty().get().parentProperty().get()));
     }
 
 

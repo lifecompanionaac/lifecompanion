@@ -15,6 +15,12 @@
   <text key="general.config.scene.cancel.warning.header">Configuration modifiée</text>
   <text key="general.config.scene.cancel.warning.message">Vous avez des modifications sur la configuration qui ne sont pas enregistrées. En fermant cette fenêtre, ces changements seront perdus.</text>
   <text key="virtual.mouse.drawing.target">Cible</text>
+  <text key="tooltip.keylist.drag.drop.swap.keys">Inverser "{}" et "{}"</text>
+  <text key="tooltip.keylist.drag.drop.move.to">Déplacer "{}" dans "{}"</text>
+  <text key="keylist.content.pane.button.add">Ajouter</text>
+  <text key="keylist.content.pane.button.add.list">Une liste</text>
+  <text key="keylist.content.pane.button.add.key">Une case</text>
+  <text key="keylist.content.pane.button.add.link">Un lien</text>
   <text key="task.title.config.description.load">Chargement de la configuration</text>
   <text key="sequence.configuration.view.field.text.to.speak">Prononcer au début de l'étape</text>
   <!--org.lifecompanion.api.component.definition.useaction-->

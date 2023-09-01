@@ -12,9 +12,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.OverrunStyle;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.TransferMode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -139,21 +136,7 @@ public class KeyListContentPaneCell extends StackPane implements LCViewInitHelpe
                 keyListContentConfigView.selectById(item.linkedNodeIdProperty().get());
             }
         });
-        this.setOnDragDetected((ea) -> {
-            if (this.item.get() != null) {
-                Dragboard dragboard = this.startDragAndDrop(TransferMode.ANY);
-                ClipboardContent content = new ClipboardContent();
-                content.putImage(this.snapshot(null, null));
-                dragboard.setContent(content);
-                keyListContentConfigView.draggedProperty().set(this.item.get());
-            }
-        });
-        this.setOnDragOver((ea) -> {
-            if (keyListContentConfigView.draggedProperty().get() != null && keyListContentConfigView.draggedProperty().get() != this.item.get()) {
-                ea.acceptTransferModes(TransferMode.COPY_OR_MOVE);
-            }
-        });
-        this.setOnDragDropped((ea) -> keyListContentConfigView.dragDroppedOn(KeyListContentConfigView.DestType.CELL,item.get()));
+        KeyListContentConfigView.installDragNDropOn(keyListContentConfigView, this, n -> n.item.get());
     }
 
     @Override

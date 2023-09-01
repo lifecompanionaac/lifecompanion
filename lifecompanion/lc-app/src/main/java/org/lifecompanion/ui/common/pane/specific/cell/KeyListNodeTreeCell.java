@@ -19,6 +19,7 @@
 
 package org.lifecompanion.ui.common.pane.specific.cell;
 
+import javafx.scene.control.Cell;
 import javafx.scene.control.TreeCell;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
 import org.lifecompanion.ui.app.generalconfiguration.step.dynamickey.keylist.KeyListContentConfigView;
@@ -36,6 +37,7 @@ public class KeyListNodeTreeCell extends TreeCell<KeyListNodeI> {
                 }
             }
         });
+        KeyListContentConfigView.installDragNDropOn(keyListContentConfigView, this, Cell::getItem);
     }
 
     @Override

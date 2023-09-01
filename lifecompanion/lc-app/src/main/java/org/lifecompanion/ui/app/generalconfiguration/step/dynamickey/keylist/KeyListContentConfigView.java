@@ -23,23 +23,17 @@ import javafx.beans.property.*;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.HPos;
-import javafx.geometry.Insets;
-import javafx.geometry.Orientation;
-import javafx.geometry.Pos;
+import javafx.geometry.*;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Separator;
 import javafx.scene.control.SplitPane;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyCombination;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.Tooltip;
+import javafx.scene.input.*;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.stage.Window;
 import org.lifecompanion.controller.configurationcomponent.dynamickey.KeyListController;
 import org.lifecompanion.controller.editaction.KeyListActions;
 import org.lifecompanion.controller.editmode.ConfigActionController;
@@ -57,7 +51,9 @@ import org.lifecompanion.util.javafx.FXControlUtils;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
     private final ObjectProperty<KeyListNodeI> root;
@@ -361,6 +357,7 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         selected.set(null);
     }
 
+
     public void openList(KeyListNodeI item) {
         currentList.set(item);
         selected.set(null);
@@ -380,19 +377,69 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         return dragged;
     }
 
-    public void dragDroppedOn(DestType destType, KeyListNodeI destNode) {
+    public void dragDroppedOn(KeyListNodeI destNode) {
         if (dragged.get() != null && destNode != null && dragged.get() != destNode) {
-
-            // TODO : handle various case !
-            ObservableList<KeyListNodeI> children = destNode.parentProperty().get().getChildren();
-            int destIndex = children.indexOf(destNode);
-            int srcIndex = children.indexOf(dragged.get());
-            Collections.swap(children, destIndex, srcIndex);
+            if (!destNode.isLeafNode()) {
+                removeAndGetIndex(dragged.get());
+                destNode.getChildren().add(dragged.get());
+            } else {
+                Pair<List<KeyListNodeI>, Integer> draggedData = removeAndGetIndex(dragged.get());
+                Pair<List<KeyListNodeI>, Integer> destData = removeAndGetIndex(destNode);
+                destData.getLeft().add(destData.getRight(), dragged.get());
+                draggedData.getLeft().add(draggedData.getRight(), destNode);
+            }
+            dragged.set(null);
         }
     }
 
-    enum DestType {
-        TREE, CELL;
+    private Pair<List<KeyListNodeI>, Integer> removeAndGetIndex(KeyListNodeI node) {
+        KeyListNodeI parent = node.parentProperty().get();
+        int index = parent.getChildren().indexOf(node);
+        parent.getChildren().remove(index);
+        return Pair.of(parent.getChildren(), index);
+    }
+
+    public static <T extends Region> void installDragNDropOn(KeyListContentConfigView keyListContentConfigView, T node, Function<T, KeyListNodeI> itemGetter) {
+        AtomicReference<Tooltip> tooltipForNode = new AtomicReference<>();
+        node.setOnDragDetected(ea -> {
+            KeyListNodeI item = itemGetter.apply(node);
+            if (item != null) {
+                Dragboard dragboard = node.startDragAndDrop(TransferMode.ANY);
+                ClipboardContent content = new ClipboardContent();
+                content.putImage(node.snapshot(null, null));
+                dragboard.setContent(content);
+                keyListContentConfigView.draggedProperty().set(item);
+            }
+        });
+        node.setOnDragEntered(ea -> {
+            KeyListNodeI destItem = itemGetter.apply(node);
+            KeyListNodeI draggedItem = keyListContentConfigView.draggedProperty().get();
+            if (draggedItem != null && draggedItem != destItem) {
+                // Show information tooltip
+                String message = Translation.getText(destItem.isLeafNode() ? "tooltip.keylist.drag.drop.swap.keys" : "tooltip.keylist.drag.drop.move.to",
+                        draggedItem.getHumanReadableText(),
+                        destItem.getHumanReadableText());
+                Tooltip tooltip = new Tooltip(message);
+                tooltipForNode.set(tooltip);
+
+                // Show tooltip
+                Scene scene = node.getScene();
+                Window window = scene.getWindow();
+                Point2D point2D = node.localToScene(0, 0);
+                tooltip.show(node, window.getX() + scene.getX() + point2D.getX(), window.getY() + scene.getY() + point2D.getY() + node.getHeight() + 5.0);
+            }
+        });
+        node.setOnDragOver(ea -> {
+            KeyListNodeI destItem = itemGetter.apply(node);
+            if (keyListContentConfigView.draggedProperty().get() != null && keyListContentConfigView.draggedProperty().get() != destItem) {
+                ea.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+            }
+        });
+        node.setOnDragExited(ea -> {
+            Tooltip tooltip = tooltipForNode.get();
+            if (tooltip != null) tooltip.hide();
+        });
+        node.setOnDragDropped(ea -> keyListContentConfigView.dragDroppedOn(itemGetter.apply(node)));
     }
     //========================================================================
 }
