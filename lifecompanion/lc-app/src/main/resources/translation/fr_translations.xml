@@ -1433,6 +1433,9 @@
   <text key="action.view.cancel">Annuler</text>
   <text key="action.view.save">Enregistrer</text>
   <text key="title.main.categories">Catégories</text>
+  <text key="stack.button.tooltip.add.grid">Ajoute une nouvelle grille (vide) dans la pile de grille</text>
+  <text key="stack.button.tooltip.duplicate.grid">Duplique la grille actuellement affichée et l'ajoute dans la pile de grille</text>
+  <text key="stack.button.tooltip.add.from.model">Ajoute une nouvelle grille à partir d'un modèle dans la pile de grille</text>
   <text key="tooltip.add.action.empty">Affiche la liste pour pouvoir ajouter une action à
 		l'élément courant</text>
   <text key="use.action.search.no.result">Aucun résultat</text>

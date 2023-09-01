@@ -202,7 +202,7 @@ public class AddComponents {
     }
 
     public static class AddUserModelGridInStack extends AbstractAddUserComponent {
-        AddUserModelGridInStack() {
+        public AddUserModelGridInStack() {
             super("add.user.model.name", AddComponentCategoryEnum.GRID, StackComponentI.class, GridComponentI.class);
         }
 

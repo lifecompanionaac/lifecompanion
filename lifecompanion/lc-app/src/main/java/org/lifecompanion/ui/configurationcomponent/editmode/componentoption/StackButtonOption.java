@@ -19,22 +19,24 @@
 
 package org.lifecompanion.ui.configurationcomponent.editmode.componentoption;
 
-import java.util.Arrays;
-import java.util.List;
-
-import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
-
+import javafx.geometry.Orientation;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
 import org.lifecompanion.controller.editaction.GridStackActions;
 import org.lifecompanion.controller.editmode.ComponentActionController;
 import org.lifecompanion.controller.editmode.ConfigActionController;
+import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.model.api.configurationcomponent.GridPartComponentI;
 import org.lifecompanion.model.api.configurationcomponent.StackComponentI;
 import org.lifecompanion.model.api.ui.editmode.ConfigOptionComponentI;
-import javafx.geometry.Orientation;
-import javafx.scene.Node;
-import javafx.scene.control.Button;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
+import org.lifecompanion.model.impl.ui.editmode.AddComponents;
+import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
+import org.lifecompanion.util.javafx.FXControlUtils;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Button on stack to be able to switch between displayed element.
@@ -42,7 +44,7 @@ import org.lifecompanion.model.impl.constant.LCGraphicStyle;
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public class StackButtonOption extends BaseOption<StackComponentI> implements LCViewInitHelper, ConfigOptionComponentI {
-    private Button buttonNextGrid, buttonPreviousGrid, buttonAddGrid, buttonCopyCurrentGrid;
+    private Button buttonNextGrid, buttonPreviousGrid, buttonAddGrid, buttonCopyCurrentGrid, buttonAddFromModel;
 
     public StackButtonOption(final StackComponentI modelP) {
         super(modelP);
@@ -51,7 +53,7 @@ public class StackButtonOption extends BaseOption<StackComponentI> implements LC
 
     @Override
     public List<Node> getOptions() {
-        return Arrays.asList(this.buttonPreviousGrid, this.buttonNextGrid, this.buttonAddGrid, this.buttonCopyCurrentGrid);
+        return Arrays.asList(this.buttonPreviousGrid, this.buttonNextGrid, this.buttonAddGrid, this.buttonCopyCurrentGrid, this.buttonAddFromModel);
     }
 
     @Override
@@ -70,8 +72,14 @@ public class StackButtonOption extends BaseOption<StackComponentI> implements LC
 
         this.buttonAddGrid = new Button();
         ButtonComponentOption.applyButtonBaseStyle(this.buttonAddGrid, model instanceof GridPartComponentI ? LCGraphicStyle.THIRD_DARK : LCGraphicStyle.MAIN_DARK, FontAwesome.Glyph.TH_LARGE);
+        this.buttonAddGrid.setTooltip(FXControlUtils.createTooltip(Translation.getText("stack.button.tooltip.add.grid")));
         this.buttonCopyCurrentGrid = new Button();
         ButtonComponentOption.applyButtonBaseStyle(this.buttonCopyCurrentGrid, model instanceof GridPartComponentI ? LCGraphicStyle.THIRD_DARK : LCGraphicStyle.MAIN_DARK, FontAwesome.Glyph.COPY);
+        this.buttonCopyCurrentGrid.setTooltip(FXControlUtils.createTooltip(Translation.getText("stack.button.tooltip.duplicate.grid")));
+
+        this.buttonAddFromModel = new Button();
+        ButtonComponentOption.applyButtonBaseStyle(this.buttonAddFromModel, model instanceof GridPartComponentI ? LCGraphicStyle.THIRD_DARK : LCGraphicStyle.MAIN_DARK, FontAwesome.Glyph.USER_PLUS);
+        this.buttonAddFromModel.setTooltip(FXControlUtils.createTooltip(Translation.getText("stack.button.tooltip.add.from.model")));
     }
 
     @SuppressWarnings("deprecation")
@@ -81,7 +89,11 @@ public class StackButtonOption extends BaseOption<StackComponentI> implements LC
         this.buttonPreviousGrid.setOnAction(ea -> this.model.displayPreviousForEditMode());
         this.buttonAddGrid.setOnAction(ea -> ConfigActionController.INSTANCE.executeAction(new GridStackActions.AddGridInStackAction(model, true, true)));
         this.buttonCopyCurrentGrid.setOnAction(ea ->
-                ConfigActionController.INSTANCE.executeAction(new GridStackActions.AddGridInStackAction(model, ComponentActionController.createComponentCopy(model.displayedComponentProperty().get()), true, true)));
+                ConfigActionController.INSTANCE.executeAction(new GridStackActions.AddGridInStackAction(model,
+                        ComponentActionController.createComponentCopy(model.displayedComponentProperty().get()),
+                        true,
+                        true)));
+        this.buttonAddFromModel.setOnAction(ea -> ConfigActionController.INSTANCE.executeAction(new AddComponents.AddUserModelGridInStack().createAddAction()));
     }
 
     @Override

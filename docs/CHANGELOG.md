@@ -25,6 +25,8 @@
 - Ticket #237 : les configurations sont maintenant en plein écran par défaut
 - Ticket #254 : dans les listes de case, lorsqu'une image est sélectionnée, la position du texte se règle automatiquement
 - Ticket #249 : le bouton pour créer un modèle personnalisé a été supprimé de la vue de l'élément actuel. Elle est maintenant uniquement disponible dans l'onglet "Créer"
+- Ticket #248 : ajout d'une action rapide sur les piles de grille pour ajouter à partir d'un modèle
+- Ticket #246 : ajout de description au survol pour les actions rapides des piles de grille
 
 ## 1.4.9 - 30/03/2023
 
