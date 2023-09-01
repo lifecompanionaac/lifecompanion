@@ -20,24 +20,21 @@ package org.lifecompanion.ui.app.main.ribbon.available.create;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
-import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
-import org.lifecompanion.controller.editmode.GeneralConfigurationController;
+import org.lifecompanion.controller.editaction.UserCompActions;
+import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.controller.editmode.SelectionController;
-import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.model.api.configurationcomponent.DisplayableComponentI;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
-import org.lifecompanion.ui.app.displayablecomponent.CommonComponentStage;
-import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStep;
 import org.lifecompanion.ui.configurationcomponent.editmode.categorizedelement.useevent.available.RibbonBasePart;
+import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.util.javafx.FXControlUtils;
 
-/**
- * @author Mathieu THEBAUD
- */
 public class MiscAddRibbonPart extends RibbonBasePart<Void> implements LCViewInitHelper {
     private Button buttonSaveAsModel;
 
@@ -54,7 +51,11 @@ public class MiscAddRibbonPart extends RibbonBasePart<Void> implements LCViewIni
         buttonSaveAsModel.setPrefWidth(100.0);
         buttonSaveAsModel.setTextAlignment(TextAlignment.CENTER);
 
-        VBox boxContent = new VBox(buttonSaveAsModel);
+        Label labelExplain = new Label(Translation.getText("tooltip.menu.select.save.component"));
+        labelExplain.getStyleClass().addAll("text-label-center", "text-font-size-90", "text-font-italic", "text-wrap-enabled", "text-fill-dimgrey");
+        labelExplain.setPrefWidth(220);
+
+        VBox boxContent = new VBox(3.0, buttonSaveAsModel, labelExplain);
         boxContent.setAlignment(Pos.CENTER);
 
         this.setTitle(Translation.getText("ribbon.part.misc.add"));
@@ -63,7 +64,12 @@ public class MiscAddRibbonPart extends RibbonBasePart<Void> implements LCViewIni
 
     @Override
     public void initListener() {
-        this.buttonSaveAsModel.setOnAction(e -> CommonComponentStage.getInstance().show());
+        this.buttonSaveAsModel.setOnAction(e -> {
+            DisplayableComponentI currentComponent = SelectionController.INSTANCE.selectedDisplayableComponentHelperProperty().get();
+            if (currentComponent != null) {
+                ConfigActionController.INSTANCE.executeAction(new UserCompActions.CreateOrUpdateUserComp(currentComponent));
+            }
+        });
     }
 
     @Override

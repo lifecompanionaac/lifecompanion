@@ -1425,11 +1425,9 @@
 		élément.\nSi aucun nom n'est choisi alors le nom est determiné
 		automatiquement (texte de la case, numéro de grille,
 		etc.).\nSi vous
-		entrez un nom, alors cet élément utilisera toujours ce nom peut
+		entrez un nom, alors cet élément utilisera toujours ce nom peu
 		importe son contenu.</text>
-  <text key="tooltip.menu.select.save.component">Défini l'élément sélectionné comme modèle dans la liste
-		des modèles du profil. Un modèle permet d'utiliser un même élément
-		dans différentes configurations.</text>
+  <text key="tooltip.menu.select.save.component">Ajouter l'élément comme un modèle disponible dans les modèles personnalisés du profil afin d'être utilisé sur cette configuration ou d'autres configurations du profil.</text>
   <!--org.lifecompanion.config.view.pane.categorized-->
   <text key="action.view.add">Ajouter</text>
   <text key="action.view.cancel">Annuler</text>
