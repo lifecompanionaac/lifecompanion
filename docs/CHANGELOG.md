@@ -5,16 +5,17 @@
 ### Fonctionnalités
 
 - Mise à jour de l'interface des listes de case, bien plus simple et plus rapide pour ajouter du vocabulaire !
-- Ajout d'une nouvelle fonctionnalité : [les arguments de lancement de LifeCompanion](../docs/USER_API.md#lifecompanion-command-line-arguments), peuvent être utiles pour configurer LifeCompanion de manière particulière
-- Ajout d'une nouvelle fonctionnalité : le [serveur de contrôle de LifeCompanion](../docs/USER_API.md#lifecompanion-control-server-api) afin de pouvoir contrôler LifeCompanion depuis d'autres applications
 - Les icônes des fichiers de LifeCompanion (lcc, lcp) sont maintenant différentes des icônes de LifeCompanion afin de ne plus les confondre.
 - Ajout d'une nouvelle action : écrire et prononcer le texte de la case
 - Ajout d'une nouvelle action : appui sur la molette de souris
 - Ajout d'une nouvelle action : remonter au niveau supérieur ou exécuter les actions suivantes ; permet de simplifier les configurations utilisant des listes de case et des grilles simultanément
+- Ajout d'une nouvelle fonctionnalité : [les arguments de lancement de LifeCompanion](../docs/USER_API.md#lifecompanion-command-line-arguments), peuvent être utiles pour configurer LifeCompanion de manière particulière
+- Ajout d'une nouvelle fonctionnalité : le [serveur de contrôle de LifeCompanion](../docs/USER_API.md#lifecompanion-control-server-api) afin de pouvoir contrôler LifeCompanion depuis d'autres applications
 
 ### Corrections/ajustements
 
 - La fenêtre de configuration s'adapte maintenant à la taille des petits écrans
+- Ticket #253 : quand une couleur de fond est sélectionnée, la couleur de contour associée est automatiquement sélectionnée (si possible)
 - Ticket #230 : il est maintenant possible d'explorer toutes les images des banques de pictogramme
 - Ticket #245 : le code pour repasser en mode édition a été remplacé par une simple addition
 - Ticket #229 : les majuscules n'étaient parfois pas retransmises correctement en clavier virtuel
