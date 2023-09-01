@@ -89,7 +89,7 @@ public class KeyListContentPane extends StackPane implements LCViewInitHelper {
         this.getChildren().addAll(scrollPane, buttonParentNode, buttonShowAddChoices, boxAddButtons);
 
         scrollPane.getStyleClass().addAll("scrollpane-white-viewport", "background-white");
-        this.getStyleClass().addAll("border-lightgrey");
+        //this.getStyleClass().addAll("border-lightgrey");
     }
 
     private Button createFloatingButton(String background, String text, Node graphics) {

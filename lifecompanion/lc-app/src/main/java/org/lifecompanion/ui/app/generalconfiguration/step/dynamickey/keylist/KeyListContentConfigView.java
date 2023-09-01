@@ -30,6 +30,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Separator;
+import javafx.scene.control.SplitPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
@@ -156,7 +157,10 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         HBox boxExportImportsButtons = new HBox(10.0, buttonImportKeys, buttonExportKeys);
         boxExportImportsButtons.setAlignment(Pos.CENTER);
 
-        HBox boxTreeAndCommands = new HBox(5.0, keyListTreeView, keyListContentPane, boxActionButtons);
+        SplitPane splitPane = new SplitPane(keyListTreeView, keyListContentPane);
+        splitPane.setDividerPositions(0.3);
+        HBox.setHgrow(splitPane, Priority.ALWAYS);
+        HBox boxTreeAndCommands = new HBox(5.0, splitPane, boxActionButtons);
         boxTreeAndCommands.setAlignment(Pos.CENTER);
         VBox.setVgrow(boxTreeAndCommands, Priority.ALWAYS);
 

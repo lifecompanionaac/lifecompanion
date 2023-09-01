@@ -54,7 +54,6 @@ public class KeyListSelectionSearchView extends HBox implements LCViewInitHelper
         buttonPreviousFound = createSearchBarButton(FontAwesome.Glyph.CHEVRON_LEFT, LCGraphicStyle.MAIN_DARK, null, 18);
         buttonClearSearch = createSearchBarButton(FontAwesome.Glyph.TIMES, LCGraphicStyle.SECOND_DARK, null, 18);
         labelFoundNodeInfo = new Label();
-        labelFoundNodeInfo.setPrefWidth(40.0);
         labelFoundNodeInfo.getStyleClass().add("text-weight-bold");
 
         setSpacing(10.0);

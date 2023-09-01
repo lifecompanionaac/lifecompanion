@@ -4,6 +4,7 @@
 
 ### Fonctionnalités
 
+- Mise à jour de l'interface des listes de case, bien plus simple et plus rapide pour ajouter du vocabulaire !
 - Ajout d'une nouvelle fonctionnalité : [les arguments de lancement de LifeCompanion](../docs/USER_API.md#lifecompanion-command-line-arguments), peuvent être utiles pour configurer LifeCompanion de manière particulière
 - Ajout d'une nouvelle fonctionnalité : le [serveur de contrôle de LifeCompanion](../docs/USER_API.md#lifecompanion-control-server-api) afin de pouvoir contrôler LifeCompanion depuis d'autres applications
 - Les icônes des fichiers de LifeCompanion (lcc, lcp) sont maintenant différentes des icônes de LifeCompanion afin de ne plus les confondre.
@@ -22,6 +23,7 @@
 - Ticket #247 : ajustement de la valeur par défaut du remplacement des couleurs
 - Ticket #252 : correction du test de la connexion internet à l'installation qui pouvait parfois ne pas fonctionner
 - Ticket #237 : les configurations sont maintenant en plein écran par défaut
+- Ticket #254 : dans les listes de case, lorsqu'une image est sélectionnée, la position du texte se règle automatiquement
 
 ## 1.4.9 - 30/03/2023
 
