@@ -22,16 +22,16 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
-import org.lifecompanion.model.api.configurationcomponent.*;
-import org.lifecompanion.model.api.editaction.UndoRedoActionI;
-import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.editaction.GridStackActions;
 import org.lifecompanion.controller.editaction.OptionActions.PasteComponentAction;
 import org.lifecompanion.controller.editaction.RemoveActions.RemoveGridPartAction;
 import org.lifecompanion.controller.editaction.RemoveActions.RemoveMultipleKeyAction;
 import org.lifecompanion.controller.editaction.RemoveActions.RemoveRootComponentAction;
+import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.model.api.configurationcomponent.*;
+import org.lifecompanion.model.api.editaction.UndoRedoActionI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -151,7 +151,12 @@ public enum ComponentActionController {
             GridComponentI gridComp = (GridComponentI) component;
             StackComponentI stackParent = gridComp.stackParentProperty().get();
             if (stackParent != null && stackParent.isDirectStackChild(gridComp)) {
-                action = new GridStackActions.RemoveGridInStackAction(stackParent, gridComp);
+                // when the grid is the last one in a root stack, delete the stack
+                if (stackParent instanceof RootGraphicComponentI && stackParent.getComponentList().size() == 1) {
+                    action = new RemoveRootComponentAction((RootGraphicComponentI) stackParent);
+                } else {
+                    action = new GridStackActions.RemoveGridInStackAction(stackParent, gridComp);
+                }
             }
         }
         //Grid part removed (not else if because GridPartComponentI can also be a GridComponentI)

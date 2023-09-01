@@ -29,6 +29,7 @@
 - Ticket #246 : ajout de description au survol pour les actions rapides des piles de grille
 - Ticket #251 : les configurations peuvent maintenant avoir une adresse de site internet associée
 - Ticket #239 : ajout d'une action pour dupliquer la configuration depuis ses informations
+- Ticket #240 : la suppression de la dernière grille d'une pile de grilles supprime maintenant la pile
 
 ## 1.4.9 - 30/03/2023
 
