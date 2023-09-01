@@ -74,6 +74,8 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
     private final ObjectProperty<KeyListNodeI> selected;
     private final ObjectProperty<KeyListNodeI> currentList;
 
+    private final ObjectProperty<KeyListNodeI> dragged;
+
     private KeyListContentPane keyListContentPane;
     private KeyListSelectionSearchView searchView;
 
@@ -83,6 +85,7 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         this.currentList = new SimpleObjectProperty<>();
         this.cutOrCopiedNode = new SimpleObjectProperty<>();
         this.propertiesShowing = new SimpleBooleanProperty(true);
+        this.dragged = new SimpleObjectProperty<>();
         initAll();
     }
 
@@ -321,6 +324,7 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
             cutOrCopiedNode.set(null);
             this.dirty = false;
             selected.set(null);
+            dragged.set(null);
             currentList.set(nv);
         });
         this.keyListNodePropertiesEditionView.selectedNodeProperty().bind(selected);
@@ -367,6 +371,28 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         if (nodeV != null && nodeV.parentProperty().get() != null) {
             currentList.set(nodeV.parentProperty().get());
         }
+    }
+    //========================================================================
+
+    // DRAG N DROP
+    //========================================================================
+    public ObjectProperty<KeyListNodeI> draggedProperty() {
+        return dragged;
+    }
+
+    public void dragDroppedOn(DestType destType, KeyListNodeI destNode) {
+        if (dragged.get() != null && destNode != null && dragged.get() != destNode) {
+
+            // TODO : handle various case !
+            ObservableList<KeyListNodeI> children = destNode.parentProperty().get().getChildren();
+            int destIndex = children.indexOf(destNode);
+            int srcIndex = children.indexOf(dragged.get());
+            Collections.swap(children, destIndex, srcIndex);
+        }
+    }
+
+    enum DestType {
+        TREE, CELL;
     }
     //========================================================================
 }

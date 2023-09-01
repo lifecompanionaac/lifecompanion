@@ -12,6 +12,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.OverrunStyle;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -43,9 +46,11 @@ public class KeyListContentPaneCell extends StackPane implements LCViewInitHelpe
     private final String nodeIdForImageLoading;
 
     private Button buttonFollowUpLink;
+    private final KeyListContentConfigView keyListContentConfigView;
     private final KeyListContentPane keyListContentPane;
 
-    public KeyListContentPaneCell(KeyListContentPane keyListContentPane) {
+    public KeyListContentPaneCell(KeyListContentPane keyListContentPane, final KeyListContentConfigView keyListContentConfigView) {
+        this.keyListContentConfigView = keyListContentConfigView;
         this.keyListContentPane = keyListContentPane;
         selected = new SimpleBooleanProperty();
         this.item = new SimpleObjectProperty<>();
@@ -110,17 +115,45 @@ public class KeyListContentPaneCell extends StackPane implements LCViewInitHelpe
     public void initListener() {
         this.setOnMouseClicked(e -> {
             if (e.getClickCount() >= 2) {
-                keyListContentPane.doubleSelect(item.get());
+                if (!item.get().isLeafNode()) {
+                    keyListContentConfigView.openList(item.get());
+                } else if (item.get().isLinkNode()) {
+                    keyListContentConfigView.selectById(item.get().linkedNodeIdProperty().get());
+                }
             } else {
-                keyListContentPane.select(item.get());
+                try {
+                    this.keyListContentPane.setTempDisableScrollTo(true);
+                    if (keyListContentConfigView.selectedProperty().get() == item.get()) {
+                        keyListContentConfigView.clearSelection();
+                    } else {
+                        keyListContentConfigView.select(item.get());
+                    }
+                } finally {
+                    this.keyListContentPane.setTempDisableScrollTo(false);
+                }
             }
         });
         this.buttonFollowUpLink.setOnAction(e -> {
             KeyListNodeI item = this.item.get();
             if (item != null && item.isLinkNode()) {
-                keyListContentPane.selectById(item.linkedNodeIdProperty().get());
+                keyListContentConfigView.selectById(item.linkedNodeIdProperty().get());
             }
         });
+        this.setOnDragDetected((ea) -> {
+            if (this.item.get() != null) {
+                Dragboard dragboard = this.startDragAndDrop(TransferMode.ANY);
+                ClipboardContent content = new ClipboardContent();
+                content.putImage(this.snapshot(null, null));
+                dragboard.setContent(content);
+                keyListContentConfigView.draggedProperty().set(this.item.get());
+            }
+        });
+        this.setOnDragOver((ea) -> {
+            if (keyListContentConfigView.draggedProperty().get() != null && keyListContentConfigView.draggedProperty().get() != this.item.get()) {
+                ea.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+            }
+        });
+        this.setOnDragDropped((ea) -> keyListContentConfigView.dragDroppedOn(KeyListContentConfigView.DestType.CELL,item.get()));
     }
 
     @Override

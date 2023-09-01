@@ -24,7 +24,7 @@ public class KeyListTreeView extends TreeView<KeyListNodeI> implements LCViewIni
 
     @Override
     public void initUI() {
-        this.setCellFactory(tv -> new KeyListNodeTreeCell(keyListContentConfigView::openList, keyListContentConfigView::selectById));
+        this.setCellFactory(tv -> new KeyListNodeTreeCell(keyListContentConfigView));
         this.setShowRoot(false);
         this.setMaxHeight(Double.MAX_VALUE);
         this.setFixedCellSize(KeyListCellHandler.CELL_HEIGHT + 5);

@@ -157,7 +157,7 @@ public class KeyListContentPane extends StackPane implements LCViewInitHelper {
             // Bind new content
             if (nv != null) {
                 previousContentViewUnbind = ListBindingWithMapper.mapContent(flowPane.getChildren(), nv.getChildren(), item -> {
-                    KeyListContentPaneCell cell = new KeyListContentPaneCell(this);
+                    KeyListContentPaneCell cell = new KeyListContentPaneCell(this, this.keyListContentConfigView);
                     cell.itemProperty().set(item);
                     if (item == keyListContentConfigView.selectedProperty().get())
                         cell.selectedProperty().set(true);
@@ -174,33 +174,9 @@ public class KeyListContentPane extends StackPane implements LCViewInitHelper {
                        .map(node -> (KeyListContentPaneCell) node);
     }
 
-    // INTERNAL SELECTION
-    //========================================================================
-    void select(KeyListNodeI item) {
-        try {
-            tempDisableScrollTo = true;
-            if (keyListContentConfigView.selectedProperty().get() == item) {
-                keyListContentConfigView.clearSelection();
-            } else {
-                keyListContentConfigView.select(item);
-            }
-        } finally {
-            tempDisableScrollTo = false;
-        }
+    void setTempDisableScrollTo(boolean tempDisableScrollTo) {
+        this.tempDisableScrollTo = tempDisableScrollTo;
     }
-
-    void doubleSelect(KeyListNodeI item) {
-        if (!item.isLeafNode()) {
-            keyListContentConfigView.openList(item);
-        } else if (item.isLinkNode()) {
-            keyListContentConfigView.selectById(item.linkedNodeIdProperty().get());
-        }
-    }
-
-    public void selectById(String nodeId) {
-        keyListContentConfigView.selectById(nodeId);
-    }
-    //========================================================================
 
     // ADD NODES
     //========================================================================
