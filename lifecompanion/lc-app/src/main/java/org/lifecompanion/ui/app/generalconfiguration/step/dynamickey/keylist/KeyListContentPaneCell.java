@@ -26,8 +26,6 @@ import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.util.binding.BindingUtils;
 import org.lifecompanion.util.javafx.FXControlUtils;
 
-import java.util.function.Consumer;
-
 public class KeyListContentPaneCell extends StackPane implements LCViewInitHelper {
     private static final double CELL_WIDTH = 75, CELL_HEIGHT = 75;
     private static final double LABEL_HEIGHT = 15.0, SPACE = 3.0;
@@ -45,16 +43,13 @@ public class KeyListContentPaneCell extends StackPane implements LCViewInitHelpe
     private final String nodeIdForImageLoading;
 
     private Button buttonFollowUpLink;
-    private final Consumer<String> followUpLinkCallback;
-
     private final KeyListContentPane keyListContentPane;
 
-    public KeyListContentPaneCell(KeyListContentPane keyListContentPane, Consumer<String> followUpLinkCallback) {
+    public KeyListContentPaneCell(KeyListContentPane keyListContentPane) {
         this.keyListContentPane = keyListContentPane;
         selected = new SimpleBooleanProperty();
         this.item = new SimpleObjectProperty<>();
         nodeIdForImageLoading = "KeyListFlowPaneCell" + this.hashCode();
-        this.followUpLinkCallback = followUpLinkCallback;
         initAll();
     }
 
@@ -123,7 +118,7 @@ public class KeyListContentPaneCell extends StackPane implements LCViewInitHelpe
         this.buttonFollowUpLink.setOnAction(e -> {
             KeyListNodeI item = this.item.get();
             if (item != null && item.isLinkNode()) {
-                followUpLinkCallback.accept(item.linkedNodeIdProperty().get());
+                keyListContentPane.selectById(item.linkedNodeIdProperty().get());
             }
         });
     }
@@ -152,7 +147,7 @@ public class KeyListContentPaneCell extends StackPane implements LCViewInitHelpe
                         selected, nv.strokeColorProperty()));
                 rectangleColors.fillProperty().bind(nv.backgroundColorProperty());
                 rectangleColors.visibleProperty().bind(selected.or(nv.strokeColorProperty().isNotNull().or(nv.backgroundColorProperty().isNotNull())));
-                buttonFollowUpLink.visibleProperty().bind(item.get().linkedNodeIdProperty().isNotEmpty().and(new SimpleBooleanProperty(followUpLinkCallback != null && item.get().isLinkNode())));
+                buttonFollowUpLink.visibleProperty().bind(item.get().linkedNodeIdProperty().isNotEmpty().and(new SimpleBooleanProperty(item.get().isLinkNode())));
                 labelText.textProperty()
                          .bind(Bindings.createStringBinding(nv::getHumanReadableText,
                                  nv.textProperty(),

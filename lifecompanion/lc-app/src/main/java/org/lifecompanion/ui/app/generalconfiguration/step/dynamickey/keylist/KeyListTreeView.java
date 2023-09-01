@@ -24,7 +24,7 @@ public class KeyListTreeView extends TreeView<KeyListNodeI> implements LCViewIni
 
     @Override
     public void initUI() {
-        this.setCellFactory(tv -> new KeyListNodeTreeCell(keyListContentConfigView::selectById));
+        this.setCellFactory(tv -> new KeyListNodeTreeCell(keyListContentConfigView::openList, keyListContentConfigView::selectById));
         this.setShowRoot(false);
         this.setMaxHeight(Double.MAX_VALUE);
         this.setFixedCellSize(KeyListCellHandler.CELL_HEIGHT + 5);
@@ -34,7 +34,10 @@ public class KeyListTreeView extends TreeView<KeyListNodeI> implements LCViewIni
     public void initListener() {
         this.getSelectionModel()
             .selectedItemProperty()
-            .addListener((obs, ov, nv) -> keyListContentConfigView.select(nv != null && nv.getValue() != keyListContentConfigView.rootProperty().get() ? nv.getValue() : null));
+            .addListener((obs, ov, nv) -> {
+                // Select (excluding the root)
+                keyListContentConfigView.select(nv != null && nv.getValue() != keyListContentConfigView.rootProperty().get() ? nv.getValue() : null);
+            });
     }
 
     @Override
@@ -81,8 +84,6 @@ public class KeyListTreeView extends TreeView<KeyListNodeI> implements LCViewIni
                 ListBindingWithMapper.mapContent(getChildren(), value.getChildren(), KeyListNodeTreeItem::new);
             }
         }
-
-
     }
     //========================================================================
 }

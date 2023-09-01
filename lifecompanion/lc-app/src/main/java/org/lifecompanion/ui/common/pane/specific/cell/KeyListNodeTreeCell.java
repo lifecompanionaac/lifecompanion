@@ -27,8 +27,16 @@ import java.util.function.Consumer;
 public class KeyListNodeTreeCell extends TreeCell<KeyListNodeI> {
     private final KeyListCellHandler keyListCellHandler;
 
-    public KeyListNodeTreeCell(Consumer<String> followUpLinkCallback) {
+    public KeyListNodeTreeCell(Consumer<KeyListNodeI> doubleSelectionCallback, Consumer<String> followUpLinkCallback) {
         keyListCellHandler = new KeyListCellHandler(this, followUpLinkCallback);
+        this.setOnMouseClicked(e -> {
+            KeyListNodeI val = getItem();
+            if (e.getClickCount() > 1 && val != null) {
+                if (!val.isLeafNode()) {
+                    doubleSelectionCallback.accept(val);
+                }
+            }
+        });
     }
 
     @Override

@@ -1,5 +1,6 @@
 package org.lifecompanion.ui.app.generalconfiguration.step.dynamickey.keylist;
 
+import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -112,6 +113,12 @@ public class KeyListContentPane extends StackPane implements LCViewInitHelper {
 
     @Override
     public void initBinding() {
+        buttonParentNode.visibleProperty()
+                        .bind(Bindings.createBooleanBinding(() -> keyListContentConfigView.currentListProperty().get() != null && keyListContentConfigView.currentListProperty()
+                                                                                                                                                          .get()
+                                                                                                                                                          .parentProperty()
+                                                                                                                                                          .get() != null,
+                                keyListContentConfigView.currentListProperty()));
         flowPane.getChildren().addListener(BindingUtils.createListChangeListenerV2(added -> {
         }, removed -> {
             if (removed instanceof KeyListContentPaneCell) {
@@ -150,7 +157,7 @@ public class KeyListContentPane extends StackPane implements LCViewInitHelper {
             // Bind new content
             if (nv != null) {
                 previousContentViewUnbind = ListBindingWithMapper.mapContent(flowPane.getChildren(), nv.getChildren(), item -> {
-                    KeyListContentPaneCell cell = new KeyListContentPaneCell(this, keyListContentConfigView::selectById);
+                    KeyListContentPaneCell cell = new KeyListContentPaneCell(this);
                     cell.itemProperty().set(item);
                     if (item == keyListContentConfigView.selectedProperty().get())
                         cell.selectedProperty().set(true);
@@ -188,6 +195,10 @@ public class KeyListContentPane extends StackPane implements LCViewInitHelper {
         } else if (item.isLinkNode()) {
             keyListContentConfigView.selectById(item.linkedNodeIdProperty().get());
         }
+    }
+
+    public void selectById(String nodeId) {
+        keyListContentConfigView.selectById(nodeId);
     }
     //========================================================================
 
