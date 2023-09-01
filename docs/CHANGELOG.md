@@ -27,6 +27,7 @@
 - Ticket #249 : le bouton pour créer un modèle personnalisé a été supprimé de la vue de l'élément actuel. Elle est maintenant uniquement disponible dans l'onglet "Créer"
 - Ticket #248 : ajout d'une action rapide sur les piles de grille pour ajouter à partir d'un modèle
 - Ticket #246 : ajout de description au survol pour les actions rapides des piles de grille
+- Ticket #251 : les configurations peuvent maintenant avoir une adresse de site internet associée
 
 ## 1.4.9 - 30/03/2023
 

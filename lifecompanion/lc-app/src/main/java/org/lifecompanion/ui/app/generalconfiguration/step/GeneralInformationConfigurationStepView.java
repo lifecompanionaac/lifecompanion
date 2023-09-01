@@ -24,15 +24,11 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import org.lifecompanion.ui.controlsfx.control.ToggleSwitch;
-import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.controller.editaction.LCConfigurationActions;
 import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.controller.lifecycle.AppModeController;
@@ -49,10 +45,14 @@ import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStep;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStepViewI;
 import org.lifecompanion.ui.common.control.generic.colorpicker.LCColorPicker;
 import org.lifecompanion.ui.common.control.specific.selector.ComponentSelectorControl;
+import org.lifecompanion.ui.controlsfx.control.ToggleSwitch;
+import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
+import org.lifecompanion.util.DesktopUtils;
 import org.lifecompanion.util.javafx.FXControlUtils;
 
 public class GeneralInformationConfigurationStepView extends BorderPane implements GeneralConfigurationStepViewI, LCViewInitHelper {
     private Label labelName, labelAuthor;
+    private Hyperlink linkWebsiteUrl;
     private Button buttonEditConfigurationInformation;
     private ToggleSwitch toggleVirtualKeyboard;
     private ComponentSelectorControl<GridComponentI> firstPartSelector;
@@ -96,18 +96,15 @@ public class GeneralInformationConfigurationStepView extends BorderPane implemen
     //========================================================================
     @Override
     public void initUI() {
-        labelAuthor = new Label();
-        labelAuthor.setStyle("-fx-font-weight: bold;");
-        labelName = new Label();
-        labelName.setStyle("-fx-font-weight: bold;");
-        labelName.setMaxWidth(Double.MAX_VALUE);
-        GridPane.setHgrow(labelName, Priority.ALWAYS);
-        labelName.setAlignment(Pos.CENTER_RIGHT);
-        labelAuthor.setAlignment(Pos.CENTER_RIGHT);
-        labelAuthor.setMaxWidth(Double.MAX_VALUE);
+        labelAuthor = createInfoLabel();
+        labelName = createInfoLabel();
+        linkWebsiteUrl = new Hyperlink();
+        linkWebsiteUrl.setAlignment(Pos.CENTER_RIGHT);
+        GridPane.setHalignment(linkWebsiteUrl,HPos.RIGHT);
         Label labelNameField = new Label(Translation.getText("general.configuration.info.label.name"));
         labelNameField.setMinWidth(GeneralConfigurationStepViewI.LEFT_COLUMN_MIN_WIDTH);
         Label labelAuthorField = new Label(Translation.getText("general.configuration.info.label.author"));
+        Label labelWebsiteField = new Label(Translation.getText("configuration.description.websiteurl"));
         Label labelGeneralInfo = FXControlUtils.createTitleLabel(Translation.getText("general.configuration.info.info.description.title"));
         buttonEditConfigurationInformation = FXControlUtils.createSimpleTextButton(Translation.getText("general.configuration.info.button.edit.information"), null);
         GridPane.setHalignment(buttonEditConfigurationInformation, HPos.CENTER);
@@ -140,6 +137,8 @@ public class GeneralInformationConfigurationStepView extends BorderPane implemen
         gridPaneTotal.add(labelName, 1, gridRowIndex++);
         gridPaneTotal.add(labelAuthorField, 0, gridRowIndex);
         gridPaneTotal.add(labelAuthor, 1, gridRowIndex++);
+        gridPaneTotal.add(labelWebsiteField, 0, gridRowIndex);
+        gridPaneTotal.add(linkWebsiteUrl, 1, gridRowIndex++);
         gridPaneTotal.add(buttonEditConfigurationInformation, 0, gridRowIndex++, 2, 1);
 
         gridPaneTotal.add(labelPartDisplay, 0, gridRowIndex++, 2, 1);
@@ -169,12 +168,30 @@ public class GeneralInformationConfigurationStepView extends BorderPane implemen
         setCenter(scrollPane);
     }
 
+    private Label createInfoLabel() {
+        return addInfoStyle(new Label());
+    }
+
+    private static <T extends Labeled> T addInfoStyle(T label) {
+        label.getStyleClass().add("text-weight-bold");
+        label.setAlignment(Pos.CENTER_RIGHT);
+        label.setMaxWidth(Double.MAX_VALUE);
+        GridPane.setHgrow(label, Priority.ALWAYS);
+        return label;
+    }
+
     @Override
     public void initListener() {
         buttonEditConfigurationInformation.setOnAction(e -> {
             LCConfigurationDescriptionI configuration = AppModeController.INSTANCE.getEditModeContext().configurationDescriptionProperty().get();
             if (configuration != null) {
                 ProfileConfigSelectionController.INSTANCE.setConfigStep(ProfileConfigStep.CONFIGURATION_EDIT, null, configuration);
+            }
+        });
+        linkWebsiteUrl.setOnAction(e -> {
+            LCConfigurationDescriptionI configuration = AppModeController.INSTANCE.getEditModeContext().configurationDescriptionProperty().get();
+            if (configuration != null) {
+                DesktopUtils.openUrlInDefaultBrowser(configuration.configurationWebsiteUrlProperty().get());
             }
         });
     }
@@ -206,10 +223,12 @@ public class GeneralInformationConfigurationStepView extends BorderPane implemen
         if (configurationDescription != null) {
             this.labelName.textProperty().bind(configurationDescription.configurationNameProperty());
             this.labelAuthor.textProperty().bind(configurationDescription.configurationAuthorProperty());
+            this.linkWebsiteUrl.textProperty().bind(configurationDescription.configurationWebsiteUrlProperty());
             this.buttonEditConfigurationInformation.setDisable(false);
         } else {
             this.labelName.setText(Translation.getText("general.configuration.info.label.no.information"));
             this.labelAuthor.setText(Translation.getText("general.configuration.info.label.no.information"));
+            this.linkWebsiteUrl.setText(Translation.getText("general.configuration.info.label.no.information"));
             this.buttonEditConfigurationInformation.setDisable(true);
         }
         this.dirty = false;
@@ -226,6 +245,7 @@ public class GeneralInformationConfigurationStepView extends BorderPane implemen
         this.model = null;
         this.labelName.textProperty().unbind();
         this.labelAuthor.textProperty().unbind();
+        this.linkWebsiteUrl.textProperty().unbind();
         this.firstPartSelector.clearSelection();
     }
 }

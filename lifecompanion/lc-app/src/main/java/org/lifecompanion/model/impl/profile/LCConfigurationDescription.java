@@ -83,6 +83,8 @@ public class LCConfigurationDescription implements LCConfigurationDescriptionI {
      */
     private final StringProperty configurationDescription;
 
+    private final StringProperty configurationWebsiteUrl;
+
     /**
      * The configuration loaded related to this configuration description
      */
@@ -115,6 +117,7 @@ public class LCConfigurationDescription implements LCConfigurationDescriptionI {
         this.configurationName = new SimpleStringProperty();
         this.configurationDescription = new SimpleStringProperty();
         this.configurationAuthor = new SimpleStringProperty();
+        this.configurationWebsiteUrl = new SimpleStringProperty();
         this.loadedConfiguration = new SimpleObjectProperty<>();
         this.lastDate = new SimpleObjectProperty<>(new Date());
         this.launchInUseMode = new SimpleBooleanProperty(false);
@@ -157,6 +160,11 @@ public class LCConfigurationDescription implements LCConfigurationDescriptionI {
                 callback.accept(null);
             }
         }
+    }
+
+    @Override
+    public StringProperty configurationWebsiteUrlProperty() {
+        return configurationWebsiteUrl;
     }
 
     @Override

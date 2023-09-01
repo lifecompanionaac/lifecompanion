@@ -23,16 +23,12 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
-import javafx.scene.control.Button;
-import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
-import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.controller.profileconfigselect.ProfileConfigSelectionController;
 import org.lifecompanion.controller.profileconfigselect.ProfileConfigStep;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
@@ -41,6 +37,8 @@ import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
+import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
+import org.lifecompanion.util.DesktopUtils;
 import org.lifecompanion.util.javafx.FXControlUtils;
 
 import java.util.function.Consumer;
@@ -59,6 +57,7 @@ public class ConfigurationDescriptionAdvancedListCell extends ListCell<LCConfigu
     private Label labelConfigName;
     private Label labelConfigDescription;
     private Label labelConfigAuthor;
+    private Hyperlink linkConfigWebsiteUrl;
     private Label labelConfigDate;
     private GridPane gridPaneContent;
     private Button buttonSelect, buttonEdit;
@@ -86,6 +85,9 @@ public class ConfigurationDescriptionAdvancedListCell extends ListCell<LCConfigu
         this.labelConfigAuthor.setStyle("-fx-text-fill: gray");
         GridPane.setHgrow(labelConfigAuthor, Priority.ALWAYS);
 
+        this.linkConfigWebsiteUrl = new Hyperlink();
+        this.linkConfigWebsiteUrl.setStyle("-fx-text-fill: gray");
+
         labelConfigDescription = new Label();
         labelConfigDescription.setWrapText(true);
         labelConfigDescription.setMaxWidth(450.0);
@@ -103,8 +105,10 @@ public class ConfigurationDescriptionAdvancedListCell extends ListCell<LCConfigu
         gridPaneConfigInfo.add(labelConfigDescription, 0, 0, 2, 1);
         gridPaneConfigInfo.add(new Label(Translation.getText("configuration.description.cell.author.field")), 0, 1);
         gridPaneConfigInfo.add(labelConfigAuthor, 1, 1);
-        gridPaneConfigInfo.add(new Label(Translation.getText("configuration.description.cell.date.field")), 0, 2);
-        gridPaneConfigInfo.add(labelConfigDate, 1, 2);
+        gridPaneConfigInfo.add(new Label(Translation.getText("configuration.description.cell.website.field")), 0, 2);
+        gridPaneConfigInfo.add(linkConfigWebsiteUrl, 1, 2);
+        gridPaneConfigInfo.add(new Label(Translation.getText("configuration.description.cell.date.field")), 0, 3);
+        gridPaneConfigInfo.add(labelConfigDate, 1, 3);
         GridPane.setHgrow(gridPaneConfigInfo, Priority.ALWAYS);
 
 
@@ -154,6 +158,11 @@ public class ConfigurationDescriptionAdvancedListCell extends ListCell<LCConfigu
                 ProfileConfigSelectionController.INSTANCE.setConfigStep(ProfileConfigStep.CONFIGURATION_EDIT, ProfileConfigStep.CONFIGURATION_LIST, this.getItem());
             }
         });
+        this.linkConfigWebsiteUrl.setOnAction(e -> {
+            if (this.getItem() != null) {
+                DesktopUtils.openUrlInDefaultBrowser(this.getItem().configurationWebsiteUrlProperty().get());
+            }
+        });
     }
 
     @Override
@@ -165,6 +174,7 @@ public class ConfigurationDescriptionAdvancedListCell extends ListCell<LCConfigu
             this.labelConfigDescription.textProperty().unbind();
             this.labelConfigDate.textProperty().unbind();
             this.labelConfigAuthor.textProperty().unbind();
+            this.linkConfigWebsiteUrl.textProperty().unbind();
             this.setGraphic(null);
         } else {
             this.configurationImage.setImage(null);
@@ -185,6 +195,7 @@ public class ConfigurationDescriptionAdvancedListCell extends ListCell<LCConfigu
                     Bindings.createStringBinding(() -> StringUtils.dateToStringDateWithHour(itemP.configurationLastDateProperty().get())
                             , itemP.configurationLastDateProperty()));
             this.labelConfigAuthor.textProperty().bind(itemP.configurationAuthorProperty());
+            this.linkConfigWebsiteUrl.textProperty().bind(itemP.configurationWebsiteUrlProperty());
             this.setGraphic(this.gridPaneContent);
         }
     }

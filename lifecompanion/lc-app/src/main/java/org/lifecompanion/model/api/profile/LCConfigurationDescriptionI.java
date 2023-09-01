@@ -37,19 +37,10 @@ import java.util.function.Consumer;
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public interface LCConfigurationDescriptionI extends XMLSerializable<File> {
-//    /**
-//     * @return a image property that contains a configuration image.<br>
-//     */
-//    ObjectProperty<Image> configurationImageProperty();
-
     void setConfigurationImageToSave(Image image);
 
     Image getConfigurationImageToSave();
 
-    /**
-     * To request the {@link #configurationImageProperty()} to be loaded.<br>
-     * May take a while before the image is loaded (async)
-     */
     void requestImageLoad(Consumer<Image> callback);
 
     /**
@@ -61,6 +52,11 @@ public interface LCConfigurationDescriptionI extends XMLSerializable<File> {
      * @return the name of configuration author (default name will be set to the profile name)
      */
     StringProperty configurationAuthorProperty();
+
+    /**
+     * @return the website URL for this configuration.
+     */
+    StringProperty configurationWebsiteUrlProperty();
 
     /**
      * @return the configuration description

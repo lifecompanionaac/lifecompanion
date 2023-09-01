@@ -1525,7 +1525,9 @@
   <text key="changelog.entry.profile.user.system">par {} (sur {} - {})</text>
   <text key="config.add.view.title">Ajouter une configuration</text>
   <text key="configuration.description.author">Auteur</text>
+  <text key="configuration.description.websiteurl">Site internet</text>
   <text key="configuration.description.cell.author.field">Auteur</text>
+  <text key="configuration.description.cell.website.field">Site internet</text>
   <text key="configuration.description.cell.date.field">Dernière modification</text>
   <text key="configuration.description.description">Description</text>
   <text key="configuration.description.name">Nom de la configuration</text>
