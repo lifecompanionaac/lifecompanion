@@ -3001,6 +3001,9 @@
 		"lcc" et permet ainsi de l'importer dans LifeCompanion sur une autre machine.</text>
   <text key="configuration.selection.export.configuration.button.title">Exporter la configuration</text>
   <text key="configuration.selection.print.grids.pdf.configuration.button.description">Permet d'exporter toutes les grilles de la configuration dans un fichier PDF pour par exemple les imprimer.</text>
+  <text key="configuration.selection.duplicate.configuration.button.title">Dupliquer la configuration</text>
+  <text key="configuration.selection.duplicate.configuration.button.description">Permet de dupliquer cette configuration et ainsi faire des modifications sur une nouvelle version sans modifier la version actuelle. La configuration dupliquée sera ajoutée dans les configurations du profil.</text>
+  <text key="configuration.selection.print.grids.pdf.configuration.button.description">Permet d'exporter toutes les grilles de la configuration dans un fichier PDF pour par exemple les imprimer.</text>
   <text key="configuration.selection.print.grids.pdf.configuration.button.title">Exporter les grilles en PDF</text>
   <text key="configuration.selection.remove.configuration.button.description">Supprime la configuration du profil
 		utilisateur actuel.</text>

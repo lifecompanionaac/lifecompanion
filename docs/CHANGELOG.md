@@ -28,6 +28,7 @@
 - Ticket #248 : ajout d'une action rapide sur les piles de grille pour ajouter à partir d'un modèle
 - Ticket #246 : ajout de description au survol pour les actions rapides des piles de grille
 - Ticket #251 : les configurations peuvent maintenant avoir une adresse de site internet associée
+- Ticket #239 : ajout d'une action pour dupliquer la configuration depuis ses informations
 
 ## 1.4.9 - 30/03/2023
 

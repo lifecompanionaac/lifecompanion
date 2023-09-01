@@ -81,7 +81,7 @@ public class ConfigurationEditionView extends BorderPane implements ProfileConfi
 
     private Button buttonValidate;
 
-    private Node nodeExportAction, nodeRemoveAction, nodeDesktopShortcut;
+    private Node nodeExportAction, nodeRemoveAction, nodeDuplicateAction, nodeDesktopShortcut;
 
     /**
      * Display changelog entries list
@@ -149,12 +149,16 @@ public class ConfigurationEditionView extends BorderPane implements ProfileConfi
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.UPLOAD).size(30).color(LCGraphicStyle.MAIN_DARK),
                 () -> ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.EditConfigurationAction(this.editedConfiguration.get(),
                         configDescription -> ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.ExportEditAction(nodeExportAction, configDescription)))));
+        this.nodeDuplicateAction = FXControlUtils.createActionTableEntry("configuration.selection.duplicate.configuration.button",
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.COPY).size(30).color(LCGraphicStyle.MAIN_DARK),
+                () -> ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.EditConfigurationAction(this.editedConfiguration.get(),
+                        configDescription -> ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.DuplicateEditAction(nodeDuplicateAction, configDescription)))));
         this.nodeRemoveAction = FXControlUtils.createActionTableEntry("configuration.selection.remove.configuration.button",
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.TRASH).size(30).color(LCGraphicStyle.SECOND_DARK),
                 () -> ConfigActionController.INSTANCE
                         .executeAction(new LCConfigurationActions.RemoveConfigurationAction(nodeRemoveAction, ProfileController.INSTANCE.currentProfileProperty().get(), this.editedConfiguration.get(),
                                 removedConfig -> ProfileConfigSelectionController.INSTANCE.setConfigStep(ProfileConfigStep.CONFIGURATION_LIST, null, null))));
-        VBox boxActionButtons = new VBox(5.0, nodeExportAction, nodeRemoveAction);
+        VBox boxActionButtons = new VBox(2.0, nodeExportAction, nodeDuplicateAction, nodeRemoveAction);
         if (SystemType.current() == SystemType.WINDOWS) {
             this.nodeDesktopShortcut = FXControlUtils.createActionTableEntry("configuration.selection.create.desktop.link.button",
                     GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.EXTERNAL_LINK).size(30).color(LCGraphicStyle.MAIN_DARK),
