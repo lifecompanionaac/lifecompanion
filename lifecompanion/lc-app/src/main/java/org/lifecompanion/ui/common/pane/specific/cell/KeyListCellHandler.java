@@ -45,7 +45,7 @@ import org.lifecompanion.util.javafx.FXControlUtils;
 import java.util.function.Consumer;
 
 public class KeyListCellHandler implements LCViewInitHelper {
-    public final static double CELL_HEIGHT = 25;
+    public final static double CELL_HEIGHT = 23;
 
     private final IndexedCell<? extends KeyListNodeI> thisCell;
 
@@ -81,7 +81,7 @@ public class KeyListCellHandler implements LCViewInitHelper {
         glyphPane.setAlignment(Pos.CENTER);
 
         labelText = new Label();
-        labelText.getStyleClass().addAll("text-font-size-120");
+        // labelText.getStyleClass().addAll("text-font-size-120");
 
         imageView = new ImageView();
         imageView.setFitHeight(CELL_HEIGHT);
@@ -96,8 +96,8 @@ public class KeyListCellHandler implements LCViewInitHelper {
                         LCGraphicStyle.MAIN_DARK),
                 null);
 
-        graphics = new HBox(10, glyphPane, labelText, imageView, rectangleColors, buttonFollowUpLink);
-        graphics.setPadding(new Insets(0, 0, 0, 2));
+        graphics = new HBox(6, glyphPane, labelText, imageView, rectangleColors, buttonFollowUpLink);
+        graphics.setPadding(new Insets(0, 0, 0, 0));
         graphics.setAlignment(Pos.CENTER_LEFT);
 
         thisCell.setAlignment(Pos.CENTER_LEFT);
@@ -139,7 +139,6 @@ public class KeyListCellHandler implements LCViewInitHelper {
             BindingUtils.unbindAndSetNull(rectangleColors.fillProperty());
             BindingUtils.unbindAndSet(rectangleColors.visibleProperty(),false);
             BindingUtils.unbindAndSet(buttonFollowUpLink.visibleProperty(), false);
-            this.buttonFollowUpLink.setVisible(false);
             glyphPane.getChildren().clear();
         } else {
             glyphPane.getChildren().clear();

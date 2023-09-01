@@ -8,6 +8,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.OverrunStyle;
 import javafx.scene.image.ImageView;
@@ -23,11 +24,14 @@ import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNode
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.util.binding.BindingUtils;
+import org.lifecompanion.util.javafx.FXControlUtils;
+
+import java.util.function.Consumer;
 
 public class KeyListContentPaneCell extends StackPane implements LCViewInitHelper {
-    private static final double CELL_WIDTH = 100.0, CELL_HEIGHT = 100;
-    private static final double LABEL_HEIGHT = 20.0, SPACE = 3.0;
-    private static final double STROKE_WIDTH = 4.0;
+    private static final double CELL_WIDTH = 75, CELL_HEIGHT = 75;
+    private static final double LABEL_HEIGHT = 15.0, SPACE = 3.0;
+    private static final double STROKE_WIDTH = 3.0;
     private final BooleanProperty selected;
     private final ObjectProperty<KeyListNodeI> item;
 
@@ -40,13 +44,17 @@ public class KeyListContentPaneCell extends StackPane implements LCViewInitHelpe
 
     private final String nodeIdForImageLoading;
 
+    private Button buttonFollowUpLink;
+    private final Consumer<String> followUpLinkCallback;
+
     private final KeyListContentPane keyListContentPane;
 
-    public KeyListContentPaneCell(KeyListContentPane keyListContentPane) {
+    public KeyListContentPaneCell(KeyListContentPane keyListContentPane, Consumer<String> followUpLinkCallback) {
         this.keyListContentPane = keyListContentPane;
         selected = new SimpleBooleanProperty();
         this.item = new SimpleObjectProperty<>();
         nodeIdForImageLoading = "KeyListFlowPaneCell" + this.hashCode();
+        this.followUpLinkCallback = followUpLinkCallback;
         initAll();
     }
 
@@ -69,8 +77,12 @@ public class KeyListContentPaneCell extends StackPane implements LCViewInitHelpe
         linkGlyph = GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.LINK).size(14).color(LCGraphicStyle.LC_GRAY);
         glyphPane = new HBox();
 
+        this.buttonFollowUpLink = FXControlUtils.createGraphicButton(
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.SHARE).size(14).color(
+                        LCGraphicStyle.MAIN_DARK),
+                null);
+
         labelText = new Label();
-        labelText.getStyleClass().addAll("text-font-size-120");
         labelText.setPrefHeight(LABEL_HEIGHT);
         labelText.setMaxWidth(CELL_WIDTH);
         labelText.setTextOverrun(OverrunStyle.ELLIPSIS);
@@ -88,9 +100,10 @@ public class KeyListContentPaneCell extends StackPane implements LCViewInitHelpe
         rectangleColors.setStrokeWidth(STROKE_WIDTH);
         rectangleColors.setStroke(Color.TRANSPARENT);
 
-        StackPane stackPaneContent = new StackPane(rectangleColors, imageView, glyphPane, labelText);
+        StackPane stackPaneContent = new StackPane(rectangleColors, imageView, glyphPane, labelText, buttonFollowUpLink);
         stackPaneContent.setAlignment(Pos.CENTER);
         StackPane.setAlignment(imageView, Pos.TOP_CENTER);
+        StackPane.setAlignment(buttonFollowUpLink, Pos.TOP_RIGHT);
         StackPane.setMargin(imageView, new Insets(0, 0, LABEL_HEIGHT + SPACE, 0));
         StackPane.setAlignment(glyphPane, Pos.TOP_LEFT);
         StackPane.setAlignment(labelText, Pos.BOTTOM_CENTER);
@@ -102,9 +115,15 @@ public class KeyListContentPaneCell extends StackPane implements LCViewInitHelpe
     public void initListener() {
         this.setOnMouseClicked(e -> {
             if (e.getClickCount() >= 2) {
-                keyListContentPane.openList(item.get());
+                keyListContentPane.doubleSelect(item.get());
             } else {
                 keyListContentPane.select(item.get());
+            }
+        });
+        this.buttonFollowUpLink.setOnAction(e -> {
+            KeyListNodeI item = this.item.get();
+            if (item != null && item.isLinkNode()) {
+                followUpLinkCallback.accept(item.linkedNodeIdProperty().get());
             }
         });
     }
@@ -120,6 +139,7 @@ public class KeyListContentPaneCell extends StackPane implements LCViewInitHelpe
                 BindingUtils.unbindAndSetNull(rectangleColors.strokeProperty());
                 BindingUtils.unbindAndSetNull(rectangleColors.fillProperty());
                 BindingUtils.unbindAndSet(rectangleColors.visibleProperty(), false);
+                BindingUtils.unbindAndSet(buttonFollowUpLink.visibleProperty(), false);
                 glyphPane.getChildren().clear();
                 ov.removeExternalLoadingRequest(nodeIdForImageLoading);
             }
@@ -128,17 +148,18 @@ public class KeyListContentPaneCell extends StackPane implements LCViewInitHelpe
                 imageView.imageProperty().bind(nv.loadedImageProperty());
                 imageView.visibleProperty().bind(nv.loadedImageProperty().isNotNull());
                 glyphPane.getChildren().add(nv.isLinkNode() ? linkGlyph : nv.isLeafNode() ? keyGlyph : listGlyph);
-                rectangleColors.strokeProperty().bind(Bindings.createObjectBinding(() -> selected.get() ? Color.BLUE : nv.strokeColorProperty().get(),
+                rectangleColors.strokeProperty().bind(Bindings.createObjectBinding(() -> selected.get() ? LCGraphicStyle.SECOND_DARK : nv.strokeColorProperty().get(),
                         selected, nv.strokeColorProperty()));
                 rectangleColors.fillProperty().bind(nv.backgroundColorProperty());
                 rectangleColors.visibleProperty().bind(selected.or(nv.strokeColorProperty().isNotNull().or(nv.backgroundColorProperty().isNotNull())));
+                buttonFollowUpLink.visibleProperty().bind(item.get().linkedNodeIdProperty().isNotEmpty().and(new SimpleBooleanProperty(followUpLinkCallback != null && item.get().isLinkNode())));
                 labelText.textProperty()
-                        .bind(Bindings.createStringBinding(nv::getHumanReadableText,
-                                nv.textProperty(),
-                                nv.enableWriteProperty(),
-                                nv.textToWriteProperty(),
-                                nv.enableSpeakProperty(),
-                                nv.textToSpeakProperty()));
+                         .bind(Bindings.createStringBinding(nv::getHumanReadableText,
+                                 nv.textProperty(),
+                                 nv.enableWriteProperty(),
+                                 nv.textToWriteProperty(),
+                                 nv.enableSpeakProperty(),
+                                 nv.textToSpeakProperty()));
                 labelText.textFillProperty().bind(Bindings.createObjectBinding(() -> nv.textColorProperty().get() != null ? nv.textColorProperty().get() : Color.BLACK, nv.textColorProperty()));
                 nv.addExternalLoadingRequest(nodeIdForImageLoading);
             }

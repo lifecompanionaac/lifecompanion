@@ -132,7 +132,7 @@ public class GeneralConfigurationScene extends Scene implements LCViewInitHelper
         buttonBox.setAlignment(Pos.CENTER_RIGHT);
         buttonBox.setMinHeight(20.0);
         buttonBox.setPrefHeight(20.0);
-        BorderPane.setMargin(buttonBox, new Insets(10.0, 10, 30, 10));
+        BorderPane.setMargin(buttonBox, new Insets(10.0));
 
         // Center : put it together
         BorderPane borderPaneCenter = new BorderPane();
@@ -162,9 +162,9 @@ public class GeneralConfigurationScene extends Scene implements LCViewInitHelper
             // Order buttons from their preferred relative order
             boxMenuLeft.getChildren().clear();
             views.values().stream()
-                    .filter(v -> v.shouldBeAddedToMainMenu())
-                    .sorted(Comparator.comparingInt(GeneralConfigurationStepViewI::getStepMenuOrder))
-                    .forEach(configStep -> boxMenuLeft.getChildren().add(stepButtons.get(configStep.getStep())));
+                 .filter(v -> v.shouldBeAddedToMainMenu())
+                 .sorted(Comparator.comparingInt(GeneralConfigurationStepViewI::getStepMenuOrder))
+                 .forEach(configStep -> boxMenuLeft.getChildren().add(stepButtons.get(configStep.getStep())));
         }
     }
 

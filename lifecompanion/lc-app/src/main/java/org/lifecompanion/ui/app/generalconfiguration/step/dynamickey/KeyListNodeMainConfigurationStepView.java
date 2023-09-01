@@ -105,7 +105,7 @@ public class KeyListNodeMainConfigurationStepView extends BorderPane implements 
         if (nodeId != null) {
             final KeyListNodeI nodeToEditInCurrentTree = KeyListController.findNodeByIdInSubtree(editedRoot, nodeId);
             if (nodeToEditInCurrentTree != null) {
-                keyListContentConfigView.selectAndScrollTo(nodeToEditInCurrentTree);
+                keyListContentConfigView.select(nodeToEditInCurrentTree);
             }
         }
     }

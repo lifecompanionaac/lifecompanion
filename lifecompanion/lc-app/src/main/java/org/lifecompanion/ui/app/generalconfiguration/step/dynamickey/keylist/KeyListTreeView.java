@@ -24,7 +24,7 @@ public class KeyListTreeView extends TreeView<KeyListNodeI> implements LCViewIni
 
     @Override
     public void initUI() {
-        this.setCellFactory(tv -> new KeyListNodeTreeCell(this::selectAndScrollToId));
+        this.setCellFactory(tv -> new KeyListNodeTreeCell(keyListContentConfigView::selectById));
         this.setShowRoot(false);
         this.setMaxHeight(Double.MAX_VALUE);
         this.setFixedCellSize(KeyListCellHandler.CELL_HEIGHT + 5);
@@ -32,7 +32,9 @@ public class KeyListTreeView extends TreeView<KeyListNodeI> implements LCViewIni
 
     @Override
     public void initListener() {
-        this.getSelectionModel().selectedItemProperty().addListener((obs, ov, nv) -> keyListContentConfigView.v2Select(nv != null ? nv.getValue() : null));
+        this.getSelectionModel()
+            .selectedItemProperty()
+            .addListener((obs, ov, nv) -> keyListContentConfigView.select(nv != null && nv.getValue() != keyListContentConfigView.rootProperty().get() ? nv.getValue() : null));
     }
 
     @Override
@@ -47,57 +49,30 @@ public class KeyListTreeView extends TreeView<KeyListNodeI> implements LCViewIni
         });
         keyListContentConfigView.selectedProperty().addListener((obs, ov, nv) -> {
             if (nv != null) {
-                System.out.println("Selected changed callback " + nv);
                 final KeyListNodeTreeItem keyListNodeTreeItem = this.treeItems.get(nv);
                 if (keyListNodeTreeItem != null && this.getSelectionModel().getSelectedItem() != keyListNodeTreeItem) {
                     this.getSelectionModel().select(keyListNodeTreeItem);
-                    this.scrollTo(this.getSelectionModel().getSelectedIndex());
+                    final int selectedIndex = this.getSelectionModel().getSelectedIndex();
+                    int indexToSelect = this.getSelectionModel().getSelectedIndex();
+                    while (indexToSelect-- > 0 && selectedIndex - indexToSelect < 2) ;
+                    this.scrollTo(indexToSelect);
                 }
-
-                // Scroll to selection
-//            final int selectedIndex = this.getSelectionModel().getSelectedIndex();
-//            int indexToSelect = selectedIndex;
-//
-//            // TODO : enable/disable depending of selection source
-//            // try to go back 3 index behind (better for UX)
-//            while (indexToSelect-- > 0 && selectedIndex - indexToSelect < 2) ;
-//            this.scrollTo(indexToSelect);
             } else {
                 this.getSelectionModel().clearSelection();
             }
         });
+        keyListContentConfigView.currentListProperty().addListener((obs, ov, nv) -> {
+            if (nv != null) {
+                final KeyListNodeTreeItem keyListNodeTreeItem = this.treeItems.get(nv);
+                if (keyListNodeTreeItem != null) {
+                    keyListNodeTreeItem.setExpanded(true);
+                }
+            }
+        });
     }
-
-    // SELECTION
-    //========================================================================
-    public void selectAndScrollToId(String itemId) {
-//        if (itemId != null && this.node.get() != null) {
-//            final KeyListNodeI foundNode = KeyListController.findNodeByIdInSubtree(this.node.get(), itemId);
-//            if (foundNode != null) {
-//                selectAndScrollTo(foundNode);
-//            }
-//        }
-    }
-
-    public void selectAndScrollTo(KeyListNodeI item) {
-//        final KeyListNodeTreeItem keyListNodeTreeItem = this.treeItems.get(item);
-//        if (keyListNodeTreeItem != null) {
-//            this.getSelectionModel().select(keyListNodeTreeItem);
-//
-//            // Scroll to selection
-//            final int selectedIndex = this.getSelectionModel().getSelectedIndex();
-//            int indexToSelect = selectedIndex;
-//
-//            // TODO : enable/disable depending of selection source
-//            // try to go back 3 index behind (better for UX)
-//            while (indexToSelect-- > 0 && selectedIndex - indexToSelect < 2) ;
-//            this.scrollTo(indexToSelect);
-//        }
-    }
-//========================================================================
 
     // TREE ITEM
-//========================================================================
+    //========================================================================
     private class KeyListNodeTreeItem extends TreeItem<KeyListNodeI> {
         public KeyListNodeTreeItem(KeyListNodeI value) {
             super(value);
@@ -105,8 +80,9 @@ public class KeyListTreeView extends TreeView<KeyListNodeI> implements LCViewIni
             if (!value.isLeafNode()) {
                 ListBindingWithMapper.mapContent(getChildren(), value.getChildren(), KeyListNodeTreeItem::new);
             }
-            this.expandedProperty().addListener((obs, ov, nv) -> selectAndScrollTo(value));
         }
+
+
     }
-//========================================================================
+    //========================================================================
 }
