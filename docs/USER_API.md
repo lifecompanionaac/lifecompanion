@@ -18,6 +18,7 @@ LifeCompanion can be launched using command line arguments to configure some of 
 |`-disableExit`|*`NONE`*|Disable the ability for an user to exit LifeCompanion from use mode by itself. LifeCompanion will still be able to be closed by external events.|
 |`-disableLoadingWindow`|*`NONE`*|Don't show any loading window on LifeCompanion startup. Even if this parameter is enabled, the first splashscreen on launch will still be displayed|
 |`-disableSelectionAutostart`|*`NONE`*|If enabled, the selection mode will not automatically start on each started configuration. It will be able to be activated only when the control server is enabled and `selection/start` is called.|
+|`-forceVolumeLevel level`|`0.5`|Will force the sound on speech synthesizer, medias, etc to be at a certain level (range 0.0 to 1.0).|
 |`-disableFullscreen`|*`NONE`*|Disable the user ability to switch from decorated/fullscreen mode on the use mode window. Will disable the fullscreen button, but also the keyboard shortcut|
 |`-forceWindowUndecorated`|*`NONE`*|Will force the use mode window to be "undecorated" as stated in [JavaFX documentation](https://openjfx.io/javadoc/18/javafx.graphics/javafx/stage/Stage.html) on stage style. |
 |`-forceWindowSize width height`|`1200 800`|Will force the use mode window to be as the specified size (in pixel). The given size will respect the screen scaling. The user will then not be able to resize the use mode window.|
@@ -31,6 +32,7 @@ LifeCompanion can be launched using command line arguments to configure some of 
 |`-updateDownloadFinished`|*`NONE`*|Inform LifeCompanion that the update download was finished on last LifeCompanion use. When launched with the arg, LifeCompanion will try to install the newly downloaded update and restart itself.|
 |`-updateFinished`|*`NONE`*|Inform LifeCompanion that the update installation was done on the previous launch. Typically, this arg is added on LifeCompanion restart after update installation.|
 |`-enablePreviewUpdates`|*`NONE`*|Enable LifeCompanion preview updates. This can be useful to test update before their production version to be ready.|
+
 
 ## LifeCompanion JVM properties
 
