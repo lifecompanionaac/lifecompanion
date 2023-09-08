@@ -29,7 +29,7 @@ import org.lifecompanion.model.impl.usevariable.UseVariableDefinition;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
+import java.util.function.Function;
 
 public class PediatricPainProfilePlugin implements PluginI {
     public static final String PLUGIN_ID = "lc-ppp-plugin";
@@ -84,37 +84,37 @@ public class PediatricPainProfilePlugin implements PluginI {
                 new UseVariableDefinition(PediatricPainProfilePluginService.VAR_CURRENT_QUESTION_TEXT,
                         "ppp.plugin.variables.current_question_text.name",
                         "ppp.plugin.variables.current_question_text.description",
-                        "ppp.plugin.variables.current_question_text.example"),
+                        "ppp.plugin.variables.current_question_text.example", 500),
                 new UseVariableDefinition(PediatricPainProfilePluginService.VAR_CURRENT_QUESTION_INDEX,
                         "ppp.plugin.variables.current_question_index.name",
                         "ppp.plugin.variables.current_question_index.description",
-                        "ppp.plugin.variables.current_question_index.example"),
+                        "ppp.plugin.variables.current_question_index.example", 500),
                 new UseVariableDefinition(PediatricPainProfilePluginService.VAR_LATEST_PPP_SCORE,
                         "ppp.plugin.variables.latest_ppp_score.name",
                         "ppp.plugin.variables.latest_ppp_score.description",
-                        "ppp.plugin.variables.latest_ppp_score.example"),
+                        "ppp.plugin.variables.latest_ppp_score.example", 500),
                 new UseVariableDefinition(PediatricPainProfilePluginService.VAR_PROFILE_BASE_SCORE,
                         "ppp.plugin.variables.profile_base_score.name",
                         "ppp.plugin.variables.profile_base_score.description",
-                        "ppp.plugin.variables.profile_base_score.example"),
+                        "ppp.plugin.variables.profile_base_score.example", 500),
                 new UseVariableDefinition(PediatricPainProfilePluginService.VAR_PROFILE_BASE_SCORE_AT,
                         "ppp.plugin.variables.profile_base_score_at.name",
                         "ppp.plugin.variables.profile_base_score_at.description",
-                        "ppp.plugin.variables.profile_base_score_at.example"),
+                        "ppp.plugin.variables.profile_base_score_at.example", 500),
                 new UseVariableDefinition(PediatricPainProfilePluginService.VAR_PROFILE_NAME,
                         "ppp.plugin.variables.profile_name.name",
                         "ppp.plugin.variables.profile_name.description",
-                        "ppp.plugin.variables.profile_name.example"),
+                        "ppp.plugin.variables.profile_name.example", 500),
                 new UseVariableDefinition(PediatricPainProfilePluginService.VAR_CURRENT_KEYBOARD_INPUT,
                         "ppp.plugin.variables.current_keyboard_input.name",
                         "ppp.plugin.variables.current_keyboard_input.description",
-                        "ppp.plugin.variables.current_keyboard_input.example")
+                        "ppp.plugin.variables.current_keyboard_input.example", 500)
         );
     }
 
     @Override
-    public Map<String, UseVariableI<?>> generateVariables(final Map<String, UseVariableDefinitionI> variablesToGenerate) {
-        return PediatricPainProfilePluginService.INSTANCE.generateVariables(variablesToGenerate);
+    public Function<UseVariableDefinitionI, UseVariableI<?>> getSupplierForUseVariable(String id) {
+        return PediatricPainProfilePluginService.INSTANCE.getSupplierForUseVariable(id);
     }
 
     @Override

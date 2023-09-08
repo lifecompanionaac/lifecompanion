@@ -20,31 +20,41 @@ package org.lifecompanion.model.impl.categorizedelement.useaction.available;
 
 import java.util.Map;
 
+import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
 import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
 import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseActionSubCategories;
 import javafx.application.Platform;
+import org.lifecompanion.model.impl.useapi.GlobalRuntimeConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public class ExitApplicationAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExitApplicationAction.class);
 
-	public ExitApplicationAction() {
-		super(UseActionTriggerComponentI.class);
-		this.order = 0;
-		this.category = DefaultUseActionSubCategories.APPLICATION;
-		this.nameID = "action.exit.application.name";
-		this.staticDescriptionID = "action.exit.application.description";
-		this.configIconPath = "miscellaneous/icon_exit_application_action.png";
-		this.parameterizableAction = false;
-		this.variableDescriptionProperty().set(getStaticDescription());
-	}
 
-	@Override
-	public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
-		Platform.exit();
-	}
+    public ExitApplicationAction() {
+        super(UseActionTriggerComponentI.class);
+        this.order = 0;
+        this.category = DefaultUseActionSubCategories.APPLICATION;
+        this.nameID = "action.exit.application.name";
+        this.staticDescriptionID = "action.exit.application.description";
+        this.configIconPath = "miscellaneous/icon_exit_application_action.png";
+        this.parameterizableAction = false;
+        this.variableDescriptionProperty().set(getStaticDescription());
+    }
+
+    @Override
+    public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
+        if (!GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DISABLE_EXIT)) {
+            Platform.exit();
+        } else {
+            LOGGER.info("Exit request ignore because {} is enabled", GlobalRuntimeConfiguration.DISABLE_EXIT);
+        }
+    }
 }

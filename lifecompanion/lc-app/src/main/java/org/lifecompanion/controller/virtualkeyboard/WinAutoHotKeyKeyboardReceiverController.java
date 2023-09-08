@@ -20,6 +20,7 @@
 package org.lifecompanion.controller.virtualkeyboard;
 
 import javafx.scene.input.KeyCode;
+import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.textcomponent.WritingEventSource;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
@@ -28,6 +29,7 @@ import org.lifecompanion.controller.configurationcomponent.GlobalKeyEventControl
 import org.lifecompanion.controller.textcomponent.WritingStateController;
 import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.model.impl.useapi.GlobalRuntimeConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spark.Route;
@@ -190,12 +192,16 @@ public enum WinAutoHotKeyKeyboardReceiverController implements ModeListenerI {
     @Override
     public void modeStart(LCConfigurationI configuration) {
         if (SystemType.current() == SystemType.WINDOWS && configuration.virtualKeyboardProperty().get()) {
-            startListenerServer();
-            final Set<KeyCode> blockedKeyCodes = GlobalKeyEventController.INSTANCE.getBlockedKeyCodes();
-            LOGGER.info("Detected {} keys to block in external input hook", blockedKeyCodes.size());
-            String injectedKeys = blockedKeyCodes.stream().map(k -> Win32ToFxKeyCodeConverter.javaFXKeyCodeToAutoHotKey(k, null)).collect(Collectors.joining());
-            LOGGER.info("Injected AHK keys : {}", injectedKeys);
-            startAhkHook(injectedKeys);
+            if (!GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DISABLE_VIRTUAL_KEYBOARD)) {
+                startListenerServer();
+                final Set<KeyCode> blockedKeyCodes = GlobalKeyEventController.INSTANCE.getBlockedKeyCodes();
+                LOGGER.info("Detected {} keys to block in external input hook", blockedKeyCodes.size());
+                String injectedKeys = blockedKeyCodes.stream().map(k -> Win32ToFxKeyCodeConverter.javaFXKeyCodeToAutoHotKey(k, null)).collect(Collectors.joining());
+                LOGGER.info("Injected AHK keys : {}", injectedKeys);
+                startAhkHook(injectedKeys);
+            } else {
+                LOGGER.info("Ignored starting win auto hot keyboard receiver as {} is enabled", GlobalRuntimeConfiguration.DISABLE_VIRTUAL_KEYBOARD);
+            }
         }
     }
 

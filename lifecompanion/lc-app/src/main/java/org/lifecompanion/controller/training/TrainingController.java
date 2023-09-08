@@ -25,7 +25,7 @@ public enum TrainingController implements LCStateListener {
                     ThreadUtils.runAfter(TRAINING_DIALOG_SHOW_DELAY, () -> {
                         if (AppModeController.INSTANCE.isEditMode() && !shown && shouldTrainingInformationBeDisplayed()) {
                             shown = true;
-                            FXThreadUtils.runOnFXThread(() -> new TrainingInformationStage(StageUtils.getOnTopWindowExcludingNotification()).show());
+                            FXThreadUtils.runOnFXThread(() -> StageUtils.centerOnOwnerOrOnCurrentStageAndShow(new TrainingInformationStage(StageUtils.getOnTopWindowExcludingNotification())));
                         }
                     });
                 }
@@ -35,7 +35,7 @@ public enum TrainingController implements LCStateListener {
 
     private static boolean shouldTrainingInformationBeDisplayed() {
         return !LCStateController.INSTANCE.hideTrainingDialogProperty()
-                .get() && System.currentTimeMillis() - LCStateController.INSTANCE.getLastTrainingDialogShow() >= LCConstant.TRAINING_DIALOG_SHOW_INTERVAL;
+                                          .get() && System.currentTimeMillis() - LCStateController.INSTANCE.getLastTrainingDialogShow() >= LCConstant.TRAINING_DIALOG_SHOW_INTERVAL;
     }
 
     @Override

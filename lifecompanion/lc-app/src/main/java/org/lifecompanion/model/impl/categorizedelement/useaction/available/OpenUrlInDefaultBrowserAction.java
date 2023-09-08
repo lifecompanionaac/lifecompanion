@@ -21,6 +21,7 @@ package org.lifecompanion.model.impl.categorizedelement.useaction.available;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.jdom2.Element;
+import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
@@ -32,6 +33,7 @@ import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseAction
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.model.impl.useapi.GlobalRuntimeConfiguration;
 import org.lifecompanion.util.DesktopUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,12 +70,16 @@ public class OpenUrlInDefaultBrowserAction extends SimpleUseActionImpl<UseAction
     // ========================================================================
     @Override
     public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
-        if (StringUtils.isNotBlank(url.get())) {
-            try {
-                DesktopUtils.openUrlInDefaultBrowser(UseVariableController.INSTANCE.createText(this.url.get(), variables, varValue -> URLEncoder.encode(varValue, StandardCharsets.UTF_8)));
-            } catch (Exception e) {
-                LOGGER.warn("Couldn't not open URL in default browser / url is {}", url.get(), e);
+        if (!GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DISABLE_EXTERNAL_ACTIONS)) {
+            if (StringUtils.isNotBlank(url.get())) {
+                try {
+                    DesktopUtils.openUrlInDefaultBrowser(UseVariableController.INSTANCE.createText(this.url.get(), variables, varValue -> URLEncoder.encode(varValue, StandardCharsets.UTF_8)));
+                } catch (Exception e) {
+                    LOGGER.warn("Couldn't not open URL in default browser / url is {}", url.get(), e);
+                }
             }
+        } else {
+            LOGGER.info("Ignored {} action because {} is enabled", this.getClass().getSimpleName(), GlobalRuntimeConfiguration.DISABLE_EXTERNAL_ACTIONS);
         }
     }
     // ========================================================================

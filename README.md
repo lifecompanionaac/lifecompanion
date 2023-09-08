@@ -30,6 +30,8 @@ LifeCompanion is currently available in french only, but we are seeking for part
 
 ### [DOWNLOAD AND USE LIFECOMPANION](https://lifecompanionaac.org/categories/documentations/how-to-install)
 
+If needed, LifeCompanion can be configured and controlled on runtime with the [LifeCompanion user APIs](docs/USER_API.md)
+
 ## Changelog
 
 - [LifeCompanion feature changelog (french)](https://lifecompanionaac.org/categories/documentations/lifecompanion-changelog)

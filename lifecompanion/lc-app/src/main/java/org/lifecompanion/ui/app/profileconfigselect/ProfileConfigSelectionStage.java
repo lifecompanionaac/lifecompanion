@@ -24,6 +24,7 @@ import javafx.stage.StageStyle;
 import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
+import org.lifecompanion.util.javafx.StageUtils;
 
 /**
  * Stage to display profile selection/creation, element selection and other scene...
@@ -51,6 +52,7 @@ public class ProfileConfigSelectionStage extends Stage {
                 we.consume();
             }
         });
+        StageUtils.fixMaximizedVisualBounds(this);
     }
 
     public ProfileConfigSelectionScene getProfileConfigSelectionScene() {

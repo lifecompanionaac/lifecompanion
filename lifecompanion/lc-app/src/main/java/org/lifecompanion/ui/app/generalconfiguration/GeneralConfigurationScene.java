@@ -30,26 +30,26 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
-import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
-import org.lifecompanion.ui.app.generalconfiguration.step.*;
-import org.lifecompanion.ui.app.generalconfiguration.step.predict4all.*;
-import org.lifecompanion.util.javafx.DialogUtils;
-import org.lifecompanion.util.javafx.FXControlUtils;
-import org.lifecompanion.util.model.Triple;
-import org.lifecompanion.model.impl.constant.LCConstant;
-import org.lifecompanion.model.impl.constant.LCGraphicStyle;
+import org.lifecompanion.controller.editmode.GeneralConfigurationController;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.metrics.SessionStatsController;
 import org.lifecompanion.controller.plugin.PluginController;
-import org.lifecompanion.ui.common.pane.generic.AnimatedBorderPane;
-import org.lifecompanion.controller.editmode.GeneralConfigurationController;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.controller.systemvk.SystemVirtualKeyboardController;
-import org.lifecompanion.ui.app.generalconfiguration.step.dynamickey.KeyListNodeMainConfigurationStepView;
-import org.lifecompanion.ui.app.generalconfiguration.step.dynamickey.UserActionSequenceMainConfigurationStepView;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
+import org.lifecompanion.model.impl.constant.LCConstant;
+import org.lifecompanion.model.impl.constant.LCGraphicStyle;
+import org.lifecompanion.ui.app.generalconfiguration.step.*;
+import org.lifecompanion.ui.app.generalconfiguration.step.dynamickey.KeyListNodeMainConfigurationStepView;
+import org.lifecompanion.ui.app.generalconfiguration.step.dynamickey.UserActionSequenceMainConfigurationStepView;
+import org.lifecompanion.ui.app.generalconfiguration.step.predict4all.*;
+import org.lifecompanion.ui.common.pane.generic.AnimatedBorderPane;
+import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
+import org.lifecompanion.util.javafx.DialogUtils;
+import org.lifecompanion.util.javafx.FXControlUtils;
+import org.lifecompanion.util.model.Triple;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -130,6 +130,8 @@ public class GeneralConfigurationScene extends Scene implements LCViewInitHelper
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.TIMES).size(16).color(LCGraphicStyle.SECOND_DARK), null);
         HBox buttonBox = new HBox(buttonCancel, buttonOk);
         buttonBox.setAlignment(Pos.CENTER_RIGHT);
+        buttonBox.setMinHeight(20.0);
+        buttonBox.setPrefHeight(20.0);
         BorderPane.setMargin(buttonBox, new Insets(10.0));
 
         // Center : put it together
@@ -160,9 +162,9 @@ public class GeneralConfigurationScene extends Scene implements LCViewInitHelper
             // Order buttons from their preferred relative order
             boxMenuLeft.getChildren().clear();
             views.values().stream()
-                    .filter(v -> v.shouldBeAddedToMainMenu())
-                    .sorted(Comparator.comparingInt(GeneralConfigurationStepViewI::getStepMenuOrder))
-                    .forEach(configStep -> boxMenuLeft.getChildren().add(stepButtons.get(configStep.getStep())));
+                 .filter(v -> v.shouldBeAddedToMainMenu())
+                 .sorted(Comparator.comparingInt(GeneralConfigurationStepViewI::getStepMenuOrder))
+                 .forEach(configStep -> boxMenuLeft.getChildren().add(stepButtons.get(configStep.getStep())));
         }
     }
 

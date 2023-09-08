@@ -86,7 +86,6 @@ public class WritingStateEntryContainer implements WritingStateControllerI {
         this.capitalizeNext = new SimpleBooleanProperty();
 
         changeListenerTextBeforeCaret = (obs, ov, nv) -> {
-            evaluateAutoUpperCase();
             evaluateWriterProperties(nv);
         };
         initEntriesBindings();
@@ -166,7 +165,7 @@ public class WritingStateEntryContainer implements WritingStateControllerI {
         this.currentChar.set(nv != null && nv.length() > 0 ? "" + nv.charAt(nv.length() - 1) : "");
     }
 
-    private void evaluateAutoUpperCase() {
+    void evaluateAutoUpperCase() {
         if (WordPredictionController.INSTANCE.isSentenceStarted()) {
             nextCapitalizedAutoEnabled = true;
             this.enableCapitalizeNext();
@@ -174,6 +173,7 @@ public class WritingStateEntryContainer implements WritingStateControllerI {
             this.disableCapitalizeNext();
         }
     }
+
     //========================================================================
 
     // PROPERTIES
@@ -370,19 +370,16 @@ public class WritingStateEntryContainer implements WritingStateControllerI {
     //========================================================================
     @Override
     public void newLine(WritingEventSource src) {
-        this.disableCapitalizeNext();
         this.insert(src, new WriterEntry("\n", false), WriteSpecialChar.ENTER);
     }
 
     @Override
     public void tab(WritingEventSource src) {
-        this.disableCapitalizeNext();
         this.insert(src, new WriterEntry("\t", false), WriteSpecialChar.TAB);
     }
 
     @Override
     public void space(WritingEventSource src) {
-        this.disableCapitalizeNext();
         this.insert(src, new WriterEntry(" ", false), WriteSpecialChar.SPACE);
     }
 
@@ -524,7 +521,6 @@ public class WritingStateEntryContainer implements WritingStateControllerI {
     public void insert(WritingEventSource src, final WriterEntryI entryP, final WriteSpecialChar specialChar) {
         if (this.capitalizeNext.get()) {
             entryP.capitalize();
-            this.disableCapitalizeNext();
         }
         if (this.upperCase.get()) {
             entryP.toUpperCase();
@@ -563,7 +559,6 @@ public class WritingStateEntryContainer implements WritingStateControllerI {
     public void insertText(WritingEventSource src, String text) {
         if (this.capitalizeNext.get()) {
             text = StringUtils.capitalize(text);
-            this.disableCapitalizeNext();
         }
         if (this.upperCase.get()) {
             text = StringUtils.toUpperCase(text);
@@ -675,7 +670,7 @@ public class WritingStateEntryContainer implements WritingStateControllerI {
         FXThreadUtils.runOnFXThread(() -> this.upperCase.set(false));
     }
 
-    private void disableCapitalizeNext() {
+    void disableCapitalizeNext() {
         FXThreadUtils.runOnFXThread(() -> {
             this.nextCapitalizedAutoEnabled = false;
             this.capitalizeNext.set(false);

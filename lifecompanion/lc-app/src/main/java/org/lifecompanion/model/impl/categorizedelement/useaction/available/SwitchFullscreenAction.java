@@ -20,17 +20,23 @@
 package org.lifecompanion.model.impl.categorizedelement.useaction.available;
 
 import javafx.stage.Stage;
+import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
 import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseActionSubCategories;
+import org.lifecompanion.model.impl.useapi.GlobalRuntimeConfiguration;
 import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.Map;
 
 public class SwitchFullscreenAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SwitchFullscreenAction.class);
 
     public SwitchFullscreenAction() {
         super(UseActionTriggerComponentI.class);
@@ -45,9 +51,15 @@ public class SwitchFullscreenAction extends SimpleUseActionImpl<UseActionTrigger
 
     @Override
     public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
-        FXThreadUtils.runOnFXThread(() -> {
-            final Stage stage = AppModeController.INSTANCE.getUseModeContext().stageProperty().get();
-            stage.setMaximized(!stage.isMaximized());
-        });
+        List<GlobalRuntimeConfiguration> shouldBeNotActivated = List.of(GlobalRuntimeConfiguration.FORCE_WINDOW_LOCATION, GlobalRuntimeConfiguration.FORCE_WINDOW_SIZE, GlobalRuntimeConfiguration.DISABLE_WINDOW_FULLSCREEN);
+        if (shouldBeNotActivated.stream().anyMatch(GlobalRuntimeConfigurationController.INSTANCE::isPresent)) {
+            LOGGER.info("SwitchFullscreenAction action ignored because one of the following configuration {} is enabled", shouldBeNotActivated);
+        } else {
+            FXThreadUtils.runOnFXThread(() -> {
+                final Stage stage = AppModeController.INSTANCE.getUseModeContext().stageProperty().get();
+                stage.setMaximized(!stage.isMaximized());
+            });
+        }
+
     }
 }

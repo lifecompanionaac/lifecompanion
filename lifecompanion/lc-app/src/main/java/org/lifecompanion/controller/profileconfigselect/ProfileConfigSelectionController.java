@@ -32,6 +32,7 @@ import org.lifecompanion.ui.app.profileconfigselect.ProfileConfigSelectionStage;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.utils.Pair;
 import org.lifecompanion.util.javafx.DialogUtils;
+import org.lifecompanion.util.javafx.StageUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -167,7 +168,7 @@ public enum ProfileConfigSelectionController {
         }
         this.currentStep.set(step);
         if (!this.stage.isShowing()) {
-            this.stage.show();
+            StageUtils.centerOnOwnerOrOnCurrentStageAndShow(this.stage);
             this.enableViewTransition.set(true);
         }
     }

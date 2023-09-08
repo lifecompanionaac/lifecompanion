@@ -21,6 +21,7 @@ package org.lifecompanion.model.impl.categorizedelement.useaction.available;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.jdom2.Element;
+import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
 import org.lifecompanion.controller.usevariable.UseVariableController;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
@@ -31,6 +32,7 @@ import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
 import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
 import org.lifecompanion.model.impl.exception.LCException;
+import org.lifecompanion.model.impl.useapi.GlobalRuntimeConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,21 +66,25 @@ public class RunCommandUseAction extends SimpleUseActionImpl<UseActionTriggerCom
 
     @Override
     public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
-        if (StringUtils.isNotBlank(commandToRun.get())) {
-            try {
-                List<String> cmds = prepareArgumentList(commandToRun.get(), variables);
-                File logDir = new File(System.getProperty("java.io.tmpdir") + "/LifeCompanion/logs/run-command-action/" + System.currentTimeMillis());
-                logDir.mkdirs();
-                LOGGER.info("Will try to run command : {}", cmds);
-                new ProcessBuilder()
-                        .command(cmds)
-                        .redirectOutput(new File(logDir + "/out.txt"))
-                        .redirectError(new File(logDir + "/err.txt"))
-                        .start();
-                LOGGER.info("Process {} was launched successfully", cmds);
-            } catch (Exception e) {
-                LOGGER.error("Couldn't start process {}",commandToRun.get(), e);
+        if (!GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DISABLE_EXTERNAL_ACTIONS)) {
+            if (StringUtils.isNotBlank(commandToRun.get())) {
+                try {
+                    List<String> cmds = prepareArgumentList(commandToRun.get(), variables);
+                    File logDir = new File(System.getProperty("java.io.tmpdir") + "/LifeCompanion/logs/run-command-action/" + System.currentTimeMillis());
+                    logDir.mkdirs();
+                    LOGGER.info("Will try to run command : {}", cmds);
+                    new ProcessBuilder()
+                            .command(cmds)
+                            .redirectOutput(new File(logDir + "/out.txt"))
+                            .redirectError(new File(logDir + "/err.txt"))
+                            .start();
+                    LOGGER.info("Process {} was launched successfully", cmds);
+                } catch (Exception e) {
+                    LOGGER.error("Couldn't start process {}", commandToRun.get(), e);
+                }
             }
+        } else {
+            LOGGER.info("Ignored {} action because {} is enabled", this.getClass().getSimpleName(), GlobalRuntimeConfiguration.DISABLE_EXTERNAL_ACTIONS);
         }
     }
 

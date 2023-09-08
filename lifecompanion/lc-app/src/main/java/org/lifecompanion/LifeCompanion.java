@@ -2,7 +2,7 @@
  * LifeCompanion AAC and its sub projects
  *
  * Copyright (C) 2014 to 2019 Mathieu THEBAUD
- * Copyright (C) 2020 to 2021 CMRRF KERPAPE (Lorient, France)
+ * Copyright (C) 2020 to 2024 CMRRF KERPAPE (Lorient, France)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,6 +25,8 @@ import org.lifecompanion.controller.appinstallation.InstallationController;
 import org.lifecompanion.controller.doublelaunch.DoubleLaunchListenerImpl;
 import org.lifecompanion.controller.editmode.ErrorHandlingController;
 import org.lifecompanion.controller.lifecycle.LifeCompanionController;
+import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
+import org.lifecompanion.controller.useapi.LifeCompanionControlServerController;
 import org.lifecompanion.framework.commons.doublelaunch.DoubleLaunchController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.model.impl.constant.LCConstant;
@@ -69,8 +71,6 @@ public class LifeCompanion extends Application {
         argsCollection = args != null ? new ArrayList<>(Arrays.asList(args)) : new ArrayList<>();
         boolean doubleRun = DoubleLaunchController.INSTANCE.startAndDetect(new DoubleLaunchListenerImpl(), true, args);
         if (!doubleRun) {
-            // Verify update args (to be able to avoid app startup when updateDownloadFinished)
-            InstallationController.INSTANCE.handleLaunchArgs(argsCollection);
             //Start
             Instant startDate = Instant.now();
             LifeCompanion.LOGGER.info("{} version {} (build {}) launching with args\n\t{}",
@@ -78,6 +78,11 @@ public class LifeCompanion extends Application {
                     InstallationController.INSTANCE.getBuildProperties().getVersionLabel(),
                     InstallationController.INSTANCE.getBuildProperties().getBuildDate(),
                     args);
+            // Detect global runtime configurations
+            GlobalRuntimeConfigurationController.INSTANCE.init(argsCollection);
+            // Run the service server (if needed)
+            LifeCompanionControlServerController.INSTANCE.startControlServer();
+            // Run the FX app
             Application.launch(args);
             //Inform
             Instant endDate = Instant.now();
@@ -91,9 +96,11 @@ public class LifeCompanion extends Application {
 
     @Override
     public void stop() throws Exception {
+        LifeCompanionControlServerController.INSTANCE.setAppStopping(true);
         LifeCompanion.LOGGER.info("Will launch the exit task...");
         LifeCompanionController.INSTANCE.lcExit();
         DoubleLaunchController.INSTANCE.stop();
+        LifeCompanionControlServerController.INSTANCE.stopControlServer();
         LifeCompanion.LOGGER.info("Every exit task are done, LifeCompanion will close...");
     }
 }

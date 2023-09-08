@@ -52,9 +52,12 @@ public class SpeakLabelAction extends SimpleUseActionImpl<GridPartKeyComponentI>
     //========================================================================
     @Override
     public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
-        GridPartKeyComponentI parentKey = this.parentComponentProperty().get();
-        if (parentKey != null) {
-            VoiceSynthesizerController.INSTANCE.speakSync(parentKey.textContentProperty().get());
+        executeSpeakLabelFor(this.parentComponentProperty().get());
+    }
+
+    static void executeSpeakLabelFor(GridPartKeyComponentI key) {
+        if (key != null) {
+            VoiceSynthesizerController.INSTANCE.speakSync(key.textContentProperty().get());
         }
     }
     //========================================================================

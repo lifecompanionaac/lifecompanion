@@ -31,6 +31,7 @@ import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.metrics.SessionStatsController;
 import org.lifecompanion.controller.editmode.SelectionController;
 import org.lifecompanion.controller.systemvk.SystemVirtualKeyboardController;
+import org.lifecompanion.util.javafx.StageUtils;
 
 public class CommonComponentStage extends Stage {
     private static CommonComponentStage instance;
@@ -59,6 +60,7 @@ public class CommonComponentStage extends Stage {
         this.setOnShown(e -> commonComponentView.show(SelectionController.INSTANCE.selectedDisplayableComponentHelperProperty().get()));
         this.setOnHiding(e -> commonComponentView.hide());
         this.getIcons().add(IconHelper.get(LCConstant.LC_ICON_PATH));
+        StageUtils.fixMaximizedVisualBounds(this);
     }
 
     public static CommonComponentStage getInstance() {

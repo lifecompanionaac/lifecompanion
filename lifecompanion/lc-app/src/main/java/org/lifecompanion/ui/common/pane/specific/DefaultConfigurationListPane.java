@@ -29,15 +29,17 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import org.lifecompanion.ui.controlsfx.control.ToggleSwitch;
-import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.controller.profileconfigselect.ProfileConfigSelectionController;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.framework.utils.Pair;
 import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
+import org.lifecompanion.ui.controlsfx.control.ToggleSwitch;
+import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
+import org.lifecompanion.util.DesktopUtils;
 import org.lifecompanion.util.javafx.FXControlUtils;
 
 import java.io.File;
@@ -151,6 +153,9 @@ public class DefaultConfigurationListPane extends VBox implements LCViewInitHelp
                         Label labelAuthor = new Label(configDescription.configurationAuthorProperty().get());
                         labelAuthor.getStyleClass().addAll("text-fill-dimgrey", "text-weight-bold");
 
+                        Hyperlink linkWebsite = new Hyperlink(configDescription.configurationWebsiteUrlProperty().get());
+                        GridPane.setMargin(linkWebsite, new Insets(0, 0, 4, 0));
+
                         Label labelDescription = new Label(configDescription.configurationDescriptionProperty().get());
                         labelDescription.getStyleClass().add("text-fill-gray");
                         labelDescription.setWrapText(true);
@@ -166,7 +171,9 @@ public class DefaultConfigurationListPane extends VBox implements LCViewInitHelp
                             defaultConfigurationToggles.put(toggleEnableConfiguration, defaultConfiguration);
                             selectionNode = toggleEnableConfiguration;
                         } else {
-                            final Button selectConfigButton = FXControlUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CHEVRON_RIGHT).size(30).color(LCGraphicStyle.MAIN_DARK), null);
+                            final Button selectConfigButton = FXControlUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CHEVRON_RIGHT)
+                                                                                                                             .size(30)
+                                                                                                                             .color(LCGraphicStyle.MAIN_DARK), null);
                             final EventHandler<Event> eventHandlerSelect = e -> {
                                 if (this.onConfigurationSelected != null)
                                     onConfigurationSelected.accept(defaultConfiguration);
@@ -180,17 +187,26 @@ public class DefaultConfigurationListPane extends VBox implements LCViewInitHelp
                             selectionNode = selectConfigButton;
                         }
 
+                        linkWebsite.setOnAction(e -> {
+                            DesktopUtils.openUrlInDefaultBrowser(configDescription.configurationWebsiteUrlProperty().get());
+                        });
+
+                        boolean website = StringUtils.isNotBlank(configDescription.configurationWebsiteUrlProperty().get());
+
                         GridPane.setMargin(selectionNode, new Insets(10.0));
                         GridPane.setValignment(selectionNode, VPos.TOP);
-                        gridPaneDefaultConfigurations.add(imageViewInList, 0, rowIndex, colSpanImg, 3);
+                        gridPaneDefaultConfigurations.add(imageViewInList, 0, rowIndex, colSpanImg, website ? 4 : 3);
                         gridPaneDefaultConfigurations.add(labelTitle, colSpanImg, rowIndex);
                         gridPaneDefaultConfigurations.add(labelAuthor, colSpanImg, rowIndex + 1);
-                        gridPaneDefaultConfigurations.add(labelDescription, colSpanImg, rowIndex + 2);
-                        gridPaneDefaultConfigurations.add(selectionNode, colSpanImg + 1, rowIndex, 1, 3);
+                        if (website) {
+                            gridPaneDefaultConfigurations.add(linkWebsite, colSpanImg, rowIndex + 2);
+                        }
+                        gridPaneDefaultConfigurations.add(labelDescription, colSpanImg, rowIndex + (website ? 3 : 2));
+                        gridPaneDefaultConfigurations.add(selectionNode, colSpanImg + 1, rowIndex, 1, website ? 4 : 3);
 
                         final Separator separator = new Separator(Orientation.HORIZONTAL);
                         GridPane.setMargin(separator, new Insets(5.0, 30.0, 5.0, 30.0));
-                        gridPaneDefaultConfigurations.add(separator, 0, rowIndex + 3, colSpanImg + 2, 1);
+                        gridPaneDefaultConfigurations.add(separator, 0, rowIndex + (website ? 4 : 3), colSpanImg + 2, 1);
 
                         rowIndex += 5;
                     }

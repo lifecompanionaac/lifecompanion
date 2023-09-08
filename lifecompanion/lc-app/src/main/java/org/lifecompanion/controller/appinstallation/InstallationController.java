@@ -28,6 +28,7 @@ import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.plugin.PluginController;
 import org.lifecompanion.controller.resource.ResourceHelper;
+import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
 import org.lifecompanion.framework.client.http.AppServerClient;
 import org.lifecompanion.framework.client.props.ApplicationBuildProperties;
 import org.lifecompanion.framework.client.service.AppServerService;
@@ -36,7 +37,6 @@ import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.app.VersionUtils;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
-import org.lifecompanion.framework.model.server.update.ApplicationPluginUpdate;
 import org.lifecompanion.framework.utils.FluentHashMap;
 import org.lifecompanion.framework.utils.LCNamedThreadFactory;
 import org.lifecompanion.framework.utils.Pair;
@@ -45,10 +45,9 @@ import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.notification.LCNotification;
 import org.lifecompanion.model.impl.plugin.PluginInfo;
 import org.lifecompanion.model.impl.plugin.PluginInfoState;
+import org.lifecompanion.model.impl.useapi.GlobalRuntimeConfiguration;
 import org.lifecompanion.ui.notification.LCNotificationController;
 import org.lifecompanion.util.DesktopUtils;
-import org.lifecompanion.util.LangUtils;
-import org.lifecompanion.util.ThreadUtils;
 import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -89,10 +88,10 @@ public enum InstallationController implements LCStateListener {
 
     private final ApplicationBuildProperties buildProperties;
 
-    private boolean updateDownloadFinished;
-    private boolean updateFinished;
-    private boolean enablePreviewUpdates;
-    private boolean skipUpdates;
+    //    private boolean updateDownloadFinished;
+    //    private boolean updateFinished;
+    //    private boolean enablePreviewUpdates;
+    //    private boolean skipUpdates;
 
     private final StringProperty updateTaskMessage;
     private final BooleanProperty updateTaskRunning;
@@ -139,38 +138,38 @@ public enum InstallationController implements LCStateListener {
     private <T> void submitTask(Task<T> task, Consumer<T> successCallback, Consumer<Throwable> errorCallback) {
         task.setOnSucceeded(e -> successCallback.accept(task.getValue()));
         task.setOnFailed(e -> {
-            Throwable t = e.getSource().getException();
-            LOGGER.error("Error in task {}", task.getClass().getSimpleName(), t);
+            Throwable t = e.getSource()
+                    .getException();
+            LOGGER.error("Error in task {}",
+                    task.getClass()
+                            .getSimpleName(),
+                    t
+            );
             if (errorCallback != null) {
                 errorCallback.accept(t);
             }
         });
         // Work because single thread executor
-        task.runningProperty().addListener((obs, ov, nv) -> {
-            if (nv) {
-                updateTaskMessage.bind(task.messageProperty());
-                updateTaskProgress.bind(task.progressProperty());
-                updateTaskRunning.bind(task.runningProperty());
-            }
-        });
+        task.runningProperty()
+                .addListener((obs, ov, nv) -> {
+                    if (nv) {
+                        updateTaskMessage.bind(task.messageProperty());
+                        updateTaskProgress.bind(task.progressProperty());
+                        updateTaskRunning.bind(task.runningProperty());
+                    }
+                });
         this.executorService.submit(task);
     }
 
     // Updates from args (launched before lcStart > should block UI if updateDownloadFinished)
     //========================================================================
-    public void handleLaunchArgs(Collection<String> args) {
-        this.updateDownloadFinished = args.removeIf(ARG_UPDATE_DOWNLOAD_FINISHED::equals);
-        this.updateFinished = args.removeIf(ARG_UPDATE_FINISHED::equals);
-        this.enablePreviewUpdates = args.removeIf(ARG_ENABLE_PREVIEW_UPDATES::equals);
-        this.skipUpdates = LangUtils.safeParseBoolean(System.getProperty("org.lifecompanion.debug.skip.update.check"));
-    }
-
     public boolean isUpdateDownloadFinished() {
-        return updateDownloadFinished;
+        return GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.UPDATE_DOWNLOAD_FINISHED);
     }
 
-    public boolean isSkipUpdates() {
-        return skipUpdates;
+    public boolean isDisableUpdates() {
+        return GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DISABLE_UPDATES) ||
+                GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.PROP_DISABLE_UPDATES);
     }
 
     public ApplicationBuildProperties getBuildProperties() {
@@ -273,7 +272,7 @@ public enum InstallationController implements LCStateListener {
     }
 
     public void launchPluginUpdateCheckTask(boolean manualRequest) {
-        if (!skipUpdates) {
+        if (!isDisableUpdates()) {
             this.submitTask(createDownloadAllPlugin(manualRequest, buildProperties.getVersionLabel()), pluginFiles -> {
                 for (File pluginFile : pluginFiles) {
                     try {
@@ -292,26 +291,40 @@ public enum InstallationController implements LCStateListener {
     public DownloadAllPluginUpdateTask createDownloadAllPlugin(boolean manualRequest, String appVersion) {
         List<String> pluginIds = PluginController.INSTANCE.getPluginInfoList()
                 .stream()
-                .filter(p -> p.stateProperty().get() != PluginInfoState.REMOVED)
+                .filter(p -> p.stateProperty()
+                        .get() != PluginInfoState.REMOVED)
                 .map(PluginInfo::getPluginId)
                 .collect(Collectors.toList());
-        return new DownloadAllPluginUpdateTask(appServerClient, buildProperties.getAppId(), enablePreviewUpdates, manualRequest, pluginIds, appVersion);
+        return new DownloadAllPluginUpdateTask(appServerClient,
+                buildProperties.getAppId(),
+                GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.ENABLE_PREVIEW_UPDATES),
+                manualRequest,
+                pluginIds,
+                appVersion
+        );
     }
 
     public DownloadPluginTask createPluginDownloadTask(String pluginId) {
-        return new DownloadPluginTask(appServerClient, buildProperties.getAppId(), enablePreviewUpdates, false, pluginId);
+        return new DownloadPluginTask(appServerClient,
+                buildProperties.getAppId(),
+                GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.ENABLE_PREVIEW_UPDATES),
+                false,
+                pluginId
+        );
     }
     //========================================================================
 
     // TASK
     //========================================================================
     public void launchInstallAppUpdate() {
-        this.submitTask(new InstallAppUpdateTask(appServerClient, buildProperties.getAppId(), enablePreviewUpdates,
-                        InstallationConfigurationController.INSTANCE.getInstallationConfiguration()),
-                filesCopied -> restart(filesCopied ? ARG_UPDATE_FINISHED : ""), t -> {
-                    LOGGER.warn("Update installation failed, will try to restart LifeCompanion");
-                    restart("");
-                });
+        this.submitTask(new InstallAppUpdateTask(appServerClient,
+                buildProperties.getAppId(),
+                GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.ENABLE_PREVIEW_UPDATES),
+                InstallationConfigurationController.INSTANCE.getInstallationConfiguration()
+        ), filesCopied -> restart(filesCopied ? ARG_UPDATE_FINISHED : ""), t -> {
+            LOGGER.warn("Update installation failed, will try to restart LifeCompanion");
+            restart("");
+        });
     }
 
     public void restart(String arg) {
@@ -319,15 +332,15 @@ public enum InstallationController implements LCStateListener {
         try {
             new ProcessBuilder()//
                     .command(getLauncherPath().getAbsolutePath(), arg != null ? arg : "")//
-                    .redirectError(ProcessBuilder.Redirect.DISCARD).redirectOutput(ProcessBuilder.Redirect.DISCARD)
+                    .redirectError(ProcessBuilder.Redirect.DISCARD)
+                    .redirectOutput(ProcessBuilder.Redirect.DISCARD)
                     .start();
         } catch (Exception e) {
             LOGGER.error("Couldn't restart LifeCompanion", e);
         }
     }
 
-    private static final Map<SystemType, String> LAUNCHER_PATH = FluentHashMap
-            .map(SystemType.WINDOWS, "LifeCompanion.exe")
+    private static final Map<SystemType, String> LAUNCHER_PATH = FluentHashMap.map(SystemType.WINDOWS, "LifeCompanion.exe")
             .with(SystemType.MAC, "MacOS/lifecompanion.sh")
             .with(SystemType.UNIX, "launcher/lifecompanion.sh");
 
@@ -360,28 +373,47 @@ public enum InstallationController implements LCStateListener {
         if (manualRequest) {
             clearLastUpdateCheckDate();
         }
-        if (!skipUpdates) {
-            if (updateFinished) {
-                this.submitTask(new DeleteUpdateTempFileTask(appServerClient, buildProperties.getAppId(), enablePreviewUpdates, !manualRequest), updateDirDeleted -> {
-                    if (updateDirDeleted) {
-                        updateFinished = false;
-                        showUpdateInstallationDoneNotification();
-                    }
-                });
-            } else {
-                if (!updateDownloadFinished) {
-                    this.submitTask(new CheckUpdateTask(appServerClient, buildProperties.getAppId(), enablePreviewUpdates, !manualRequest), updateProgress -> {
-                        if (updateProgress != null) {
-                            LOGGER.info("Update progress detected, LifeCompanion will be updating... (background task)");
-                            this.submitTask(new DownloadUpdateTask(appServerClient, buildProperties.getAppId(), enablePreviewUpdates, !manualRequest, updateProgress), downloadFinished -> {
-                                if (downloadFinished) {
-                                    showUpdateDownloadFinishedNotification();
-                                }
-                            });
-                        } else {
-                            LOGGER.info("No update found");
+        if (!isDisableUpdates()) {
+            if (GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.UPDATE_FINISHED)) {
+                this.submitTask(
+                        new DeleteUpdateTempFileTask(appServerClient,
+                                buildProperties.getAppId(),
+                                GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.ENABLE_PREVIEW_UPDATES),
+                                !manualRequest
+                        ),
+                        updateDirDeleted -> {
+                            if (updateDirDeleted) {
+                                GlobalRuntimeConfigurationController.INSTANCE.removeConfiguration(GlobalRuntimeConfiguration.UPDATE_FINISHED);
+                                showUpdateInstallationDoneNotification();
+                            }
                         }
-                    });
+                );
+            } else {
+                if (!GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.UPDATE_DOWNLOAD_FINISHED)) {
+                    this.submitTask(
+                            new CheckUpdateTask(appServerClient,
+                                    buildProperties.getAppId(),
+                                    GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.ENABLE_PREVIEW_UPDATES),
+                                    !manualRequest
+                            ),
+                            updateProgress -> {
+                                if (updateProgress != null) {
+                                    LOGGER.info("Update progress detected, LifeCompanion will be updating... (background task)");
+                                    this.submitTask(new DownloadUpdateTask(appServerClient,
+                                            buildProperties.getAppId(),
+                                            GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.ENABLE_PREVIEW_UPDATES),
+                                            !manualRequest,
+                                            updateProgress
+                                    ), downloadFinished -> {
+                                        if (downloadFinished) {
+                                            showUpdateDownloadFinishedNotification();
+                                        }
+                                    });
+                                } else {
+                                    LOGGER.info("No update found");
+                                }
+                            }
+                    );
                     // Launch only if manual > on automatic this is fired by PluginController after plugin load
                     if (manualRequest) {
                         launchPluginUpdateCheckTask(true);
@@ -400,8 +432,11 @@ public enum InstallationController implements LCStateListener {
                 LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo("notification.info.update.download.finished.title",
                         false,
                         "notification.info.update.download.finish.restart.button",
-                        () -> ConfigActionController.INSTANCE.executeAction(new GlobalActions.RestartAction(AppModeController.INSTANCE.getEditModeContext().getStage().getScene().getRoot())))
-                );
+                        () -> ConfigActionController.INSTANCE.executeAction(new GlobalActions.RestartAction(AppModeController.INSTANCE.getEditModeContext()
+                                .getStage()
+                                .getScene()
+                                .getRoot()))
+                ));
             }
         });
     }
@@ -410,8 +445,11 @@ public enum InstallationController implements LCStateListener {
         FXThreadUtils.runOnFXThread(() -> {
             if (AppModeController.INSTANCE.isEditMode()) {
                 LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo(Translation.getText("notification.info.update.done.title",
-                        InstallationController.INSTANCE.getBuildProperties().getVersionLabel()), false));
-                DesktopUtils.openUrlInDefaultBrowser(InstallationController.INSTANCE.getBuildProperties().getAppServerUrl() + URL_PATH_CHANGELOG);
+                        InstallationController.INSTANCE.getBuildProperties()
+                                .getVersionLabel()
+                ), false));
+                DesktopUtils.openUrlInDefaultBrowser(InstallationController.INSTANCE.getBuildProperties()
+                        .getAppServerUrl() + URL_PATH_CHANGELOG);
             }
         });
     }
@@ -421,7 +459,8 @@ public enum InstallationController implements LCStateListener {
             if (AppModeController.INSTANCE.isEditMode()) {
                 LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo(Translation.getText("notification.info.plugin.update.done.title",
                         pluginInfo.getPluginName(),
-                        pluginInfo.getPluginVersion()), true));
+                        pluginInfo.getPluginVersion()
+                ), true));
             }
         });
     }
@@ -449,10 +488,7 @@ public enum InstallationController implements LCStateListener {
 
         @Override
         public String toString() {
-            return "InstallationRegistrationInformation{" +
-                    "deviceId='" + deviceId + '\'' +
-                    ", installationId='" + installationId + '\'' +
-                    '}';
+            return "InstallationRegistrationInformation{" + "deviceId='" + deviceId + '\'' + ", installationId='" + installationId + '\'' + '}';
         }
     }
     //========================================================================

@@ -26,6 +26,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import org.jdom2.Element;
+import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
 import org.lifecompanion.controller.virtualkeyboard.VirtualKeyboardController;
 import org.lifecompanion.framework.commons.fx.io.XMLGenericProperty;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
@@ -39,11 +40,15 @@ import org.lifecompanion.model.api.style.KeyCompStyleI;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
 import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
 import org.lifecompanion.model.impl.exception.LCException;
+import org.lifecompanion.model.impl.useapi.GlobalRuntimeConfiguration;
 import org.lifecompanion.util.javafx.FXKeyCodeTranslatorUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
 public class SimulateKeyboardKeyToggleAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SimulateKeyboardKeyToggleAction.class);
 
     @XMLGenericProperty(KeyCode.class)
     private ObjectProperty<KeyCode> keyToToggle;
@@ -69,25 +74,29 @@ public class SimulateKeyboardKeyToggleAction extends SimpleUseActionImpl<UseActi
 
     @Override
     public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
-        KeyCode keyCode = keyToToggle.get();
-        if (keyCode != null) {
-            boolean released = VirtualKeyboardController.INSTANCE.toggleKeyPressRelease(keyCode);
-            UseActionTriggerComponentI parentComp = this.parentComponentProperty().get();
-            if (parentComp instanceof GridPartKeyComponentI) {
-                KeyCompStyleI keyStyle = ((GridPartKeyComponentI) parentComp).getKeyStyle();
-                Property<Color> forcedBackgroundColor = keyStyle.backgroundColorProperty().forced();
-                if (!forcedBackgroundColor.isBound()) {
-                    if (released) {
-                        forcedBackgroundColor.setValue(previousBackgroundColor);
-                    } else {
-                        previousBackgroundColor = forcedBackgroundColor.getValue();
-                        Color baseColor = keyStyle.backgroundColorProperty().value().getValue();
-                        if (baseColor != null) {
-                            forcedBackgroundColor.setValue(baseColor.brighter());
+        if (!GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DISABLE_VIRTUAL_KEYBOARD) && !GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DISABLE_EXTERNAL_ACTIONS)) {
+            KeyCode keyCode = keyToToggle.get();
+            if (keyCode != null) {
+                boolean released = VirtualKeyboardController.INSTANCE.toggleKeyPressRelease(keyCode);
+                UseActionTriggerComponentI parentComp = this.parentComponentProperty().get();
+                if (parentComp instanceof GridPartKeyComponentI) {
+                    KeyCompStyleI keyStyle = ((GridPartKeyComponentI) parentComp).getKeyStyle();
+                    Property<Color> forcedBackgroundColor = keyStyle.backgroundColorProperty().forced();
+                    if (!forcedBackgroundColor.isBound()) {
+                        if (released) {
+                            forcedBackgroundColor.setValue(previousBackgroundColor);
+                        } else {
+                            previousBackgroundColor = forcedBackgroundColor.getValue();
+                            Color baseColor = keyStyle.backgroundColorProperty().value().getValue();
+                            if (baseColor != null) {
+                                forcedBackgroundColor.setValue(baseColor.brighter());
+                            }
                         }
                     }
                 }
             }
+        } else {
+            LOGGER.info("Ignored {} action because {} or {} is enabled", this.getClass().getSimpleName(), GlobalRuntimeConfiguration.DISABLE_VIRTUAL_KEYBOARD, GlobalRuntimeConfiguration.DISABLE_EXTERNAL_ACTIONS);
         }
     }
 

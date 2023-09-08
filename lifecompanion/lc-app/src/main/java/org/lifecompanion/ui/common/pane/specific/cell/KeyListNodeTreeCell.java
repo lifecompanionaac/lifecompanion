@@ -19,16 +19,25 @@
 
 package org.lifecompanion.ui.common.pane.specific.cell;
 
+import javafx.scene.control.Cell;
 import javafx.scene.control.TreeCell;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
-
-import java.util.function.Consumer;
+import org.lifecompanion.ui.app.generalconfiguration.step.dynamickey.keylist.KeyListContentConfigView;
 
 public class KeyListNodeTreeCell extends TreeCell<KeyListNodeI> {
     private final KeyListCellHandler keyListCellHandler;
 
-    public KeyListNodeTreeCell(Consumer<String> followUpLinkCallback) {
-        keyListCellHandler = new KeyListCellHandler(this, followUpLinkCallback);
+    public KeyListNodeTreeCell(KeyListContentConfigView keyListContentConfigView) {
+        keyListCellHandler = new KeyListCellHandler(this, keyListContentConfigView::selectById);
+        this.setOnMouseClicked(e -> {
+            KeyListNodeI val = getItem();
+            if (e.getClickCount() > 1 && val != null) {
+                if (!val.isLeafNode()) {
+                    keyListContentConfigView.openList(val);
+                }
+            }
+        });
+        KeyListContentConfigView.installDragNDropOn(keyListContentConfigView, this, Cell::getItem);
     }
 
     @Override

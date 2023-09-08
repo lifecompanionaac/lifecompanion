@@ -7,6 +7,8 @@ public interface JsonRecordI {
 
     String getRecordsDirectory();
 
+    void setRecordedAt(ZonedDateTime recordedAt);
+
     Evaluator getEvaluator();
 
     ZonedDateTime getRecordedAt();

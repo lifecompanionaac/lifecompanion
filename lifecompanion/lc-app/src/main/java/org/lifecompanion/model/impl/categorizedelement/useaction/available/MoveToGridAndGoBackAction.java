@@ -61,8 +61,7 @@ public class MoveToGridAndGoBackAction extends SimpleUseActionImpl<GridPartKeyCo
         this.configIconPath = "show/icon_go_back_after_action.png";
         this.targetGridId = new SimpleStringProperty();
         this.targetGrid = new ComponentHolderById<>(this.targetGridId, this.parentComponentProperty());
-        this.variableDescriptionProperty().bind(TranslationFX.getTextBinding("go.to.grid.go.back.next.variable.description",
-                EasyBind.select(this.targetGridProperty()).selectObject(GridComponentI::nameProperty).orElse(Translation.getText("grid.none.selected"))));
+        this.variableDescriptionProperty().bind(TranslationFX.getTextBinding("go.to.grid.go.back.next.variable.description",targetGrid.componentNameOrInfoProperty()));
 
     }
 

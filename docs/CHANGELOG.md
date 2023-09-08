@@ -1,5 +1,41 @@
 # LIFECOMPANION CHANGELOG
 
+## 1.5.0 - 08/09/2023
+
+### Fonctionnalités
+
+- Mise à jour de **l'interface des listes de case, bien plus simple et plus rapide** pour ajouter du vocabulaire !
+- Les icônes des fichiers de LifeCompanion (lcc, lcp) sont maintenant différentes des icônes de LifeCompanion afin de ne plus les confondre.
+- Ajout d'une nouvelle action : écrire et prononcer le texte de la case
+- Ajout d'une nouvelle action : appui sur la molette de souris
+- Ajout d'une nouvelle action : remonter au niveau supérieur ou exécuter les actions suivantes ; permet de simplifier les configurations utilisant des listes de case et des grilles simultanément
+- Ajout d'une nouvelle fonctionnalité : [les arguments de lancement de LifeCompanion](../docs/USER_API.md#lifecompanion-command-line-arguments), peuvent être utiles pour configurer LifeCompanion de manière particulière
+- Ajout d'une nouvelle fonctionnalité : le [serveur de contrôle de LifeCompanion](../docs/USER_API.md#lifecompanion-control-server-api) afin de pouvoir contrôler LifeCompanion depuis d'autres applications
+- Meilleure gestion lors de la présence de plusieurs écrans
+
+### Corrections/ajustements
+
+- La fenêtre de configuration s'adapte maintenant à la taille des petits écrans
+- Ticket #253 : quand une couleur de fond est sélectionnée, la couleur de contour associée est automatiquement sélectionnée (si possible)
+- Ticket #230 : il est maintenant possible d'explorer toutes les images des banques de pictogramme
+- Ticket #245 : le code pour repasser en mode édition a été remplacé par une simple addition
+- Ticket #229 : les majuscules n'étaient parfois pas retransmises correctement en clavier virtuel
+- Ticket #243 : dans les actions "écrire et prononcer", "prononcer" est maintenant activé par défaut
+- Ticket #255 : ajustement des valeurs maximales pour les arrondis
+- Ticket #247 : ajustement de la valeur par défaut du remplacement des couleurs
+- Ticket #252 : correction du test de la connexion internet à l'installation qui pouvait parfois ne pas fonctionner
+- Ticket #237 : les configurations sont maintenant en plein écran par défaut
+- Ticket #254 : dans les listes de case, lorsqu'une image est sélectionnée, la position du texte se règle automatiquement
+- Ticket #249 : le bouton pour créer un modèle personnalisé a été supprimé de la vue de l'élément actuel. Elle est maintenant uniquement disponible dans l'onglet "Créer"
+- Ticket #248 : ajout d'une action rapide sur les piles de grille pour ajouter à partir d'un modèle
+- Ticket #246 : ajout de description au survol pour les actions rapides des piles de grille
+- Ticket #251 : les configurations peuvent maintenant avoir une adresse de site internet associée
+- Ticket #239 : ajout d'une action pour dupliquer la configuration depuis ses informations
+- Ticket #240 : la suppression de la dernière grille d'une pile de grilles supprime maintenant la pile
+- Ticket #258 : un message est maintenant affiché dans les événements lorsqu'il n'y en a pas de sélectionné
+- Ticket #232 : il est maintenant possible de copier une image d'une case vers son ordinateur (dans un traitement de texte, un dossier, etc.)
+- Ticket #250 : si un lien était fait sur un élément maintenant supprimé, un message d'avertissement s'affiche dans la description de l'action
+
 ## 1.4.9 - 30/03/2023
 
 ### Corrections/ajustements

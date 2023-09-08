@@ -30,11 +30,14 @@ import javafx.stage.StageStyle;
 import javafx.util.Pair;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.plugin.ppp.view.commons.FormatterListCell;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.format.TextStyle;
+import java.util.Locale;
 
 public class DateRangerPickerDialog extends Dialog<Pair<LocalDate, LocalDate>> implements LCViewInitHelper {
     private ComboBox<QuickRange> comboBoxRanges;
@@ -60,9 +63,11 @@ public class DateRangerPickerDialog extends Dialog<Pair<LocalDate, LocalDate>> i
 
         LocalDate startOfPreviousWeek = LocalDate.now().with(DayOfWeek.MONDAY).minusDays(7);
         QuickRange currentWeek = new QuickRange(Translation.getText("ppp.plugin.pdf.dialog.ranges.currentWeek"), new Pair<>(startOfPreviousWeek.plusDays(7), LocalDate.now().plusDays(1)));
-        QuickRange lastWeek = new QuickRange(Translation.getText("ppp.plugin.pdf.dialog.ranges.lastWeek"), new Pair<>(startOfPreviousWeek, startOfPreviousWeek.plusDays(7)));
-        QuickRange last30Days = new QuickRange(Translation.getText("ppp.plugin.pdf.dialog.ranges.last30Days"), new Pair<>(LocalDate.now().minusDays(30), LocalDate.now().plusDays(1)));
-        ObservableList<QuickRange> ranges = FXCollections.observableArrayList(currentWeek, lastWeek, last30Days);
+        ObservableList<QuickRange> ranges = FXCollections.observableArrayList(
+                currentWeek
+        );
+        createRanges(ranges);
+
         gridPane.add(this.comboBoxRanges = new ComboBox<>(ranges), 0, rowIndex++, 2, 1);
         this.comboBoxRanges.setButtonCell(new FormatterListCell<>(QuickRange::getName));
         this.comboBoxRanges.setCellFactory((lv) -> new FormatterListCell<>(QuickRange::getName));
@@ -90,6 +95,24 @@ public class DateRangerPickerDialog extends Dialog<Pair<LocalDate, LocalDate>> i
         this.setResultConverter(dialogButton -> dialogButton == ButtonType.OK ? new Pair<>(datePickerFrom.getValue(), datePickerTo.getValue()) : null);
     }
 
+    private void createRanges(ObservableList<QuickRange> ranges) {
+        LocalDate startOfPreviousWeek = LocalDate.now().with(DayOfWeek.MONDAY).minusDays(7);
+        ranges.addAll(
+                new QuickRange(Translation.getText("ppp.plugin.pdf.dialog.ranges.lastWeek"), new Pair<>(startOfPreviousWeek, startOfPreviousWeek.plusDays(7))),
+                new QuickRange(Translation.getText("ppp.plugin.pdf.dialog.ranges.last30Days"), new Pair<>(LocalDate.now().minusDays(30), LocalDate.now().plusDays(1)))
+        );
+        // All previous month in year
+        LocalDate previousMonth = LocalDate.now().minusMonths(1);
+        for (int i = 0; i < 12; i++) {
+            ranges.add(
+                    new QuickRange(Translation.getText("ppp.plugin.pdf.dialog.ranges.withMonth", StringUtils.capitalize(previousMonth.getMonth().getDisplayName(TextStyle.FULL, Locale.getDefault())), previousMonth.getYear()),
+                            new Pair<>(previousMonth.withDayOfMonth(1), previousMonth.withDayOfMonth(previousMonth.lengthOfMonth()))
+                    )
+            );
+            previousMonth = previousMonth.minusMonths(1);
+        }
+    }
+
     @Override
     public void initListener() {
         this.initDatePickerTextFieldListener(this.datePickerFrom);
@@ -107,9 +130,6 @@ public class DateRangerPickerDialog extends Dialog<Pair<LocalDate, LocalDate>> i
     }
 
     private boolean validateDates() {
-        System.out.println(datePickerFrom.getValue());
-        System.out.println(datePickerTo.getValue());
-        System.out.println(datePickerTo.getValue().isBefore(datePickerFrom.getValue()));
         if (datePickerFrom.getValue() == null || datePickerTo.getValue() == null || datePickerTo.getValue().isBefore(datePickerFrom.getValue())) {
             labelErrorMessage.setVisible(true);
             return false;

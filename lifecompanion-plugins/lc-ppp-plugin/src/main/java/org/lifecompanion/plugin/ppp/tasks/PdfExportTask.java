@@ -11,6 +11,7 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
+import org.apache.pdfbox.util.Matrix;
 import org.lifecompanion.controller.appinstallation.InstallationController;
 import org.lifecompanion.controller.plugin.PluginController;
 import org.lifecompanion.controller.resource.IconHelper;
@@ -40,15 +41,15 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class PdfExportTask extends LCTask<Void> {
     public static final Logger LOGGER = LoggerFactory.getLogger(PdfExportTask.class);
 
-    private static final float HEADER_SIZE = 65f, FOOTER_SIZE = 30f, IMAGE_Y_OFFSET = 10f, HEADER_FONT_SIZE = 16, FOOTER_FONT_SIZE = 9, TEXT_LEFT_OFFSET = 50, DATA_LINE_HEIGHT = 16f, FOOTER_LINE_HEIGHT = 12f, LOGO_HEIGHT = 25f, LINE_SIZE = 1f, COLOR_DATA = 0.95f, COLOR_GRAY = 0.4f;
+    private static final float HEADER_SIZE = 65f, FOOTER_SIZE = 30f, IMAGE_Y_OFFSET = 10f, IMAGE_X_OFFSET = 20f, HEADER_FONT_SIZE = 16, FOOTER_FONT_SIZE = 9, TEXT_LEFT_OFFSET = 50, DATA_LINE_HEIGHT = 16f, FOOTER_LINE_HEIGHT = 12f, LOGO_HEIGHT = 25f, LINE_SIZE = 1f, COLOR_DATA = 0.95f, COLOR_GRAY = 0.4f;
     private static final PDFont HEADER_FONT = PDType1Font.HELVETICA_BOLD;
     private static final PDFont FOOTER_FONT = PDType1Font.HELVETICA;
 
@@ -105,14 +106,14 @@ public class PdfExportTask extends LCTask<Void> {
             summaryResult.build();
 
             this.createPage(Translation.getText("ppp.plugin.pdf.header.title.summary",
-                    summaryResult.getFrom().format(DateFormats.SHORT_DATE), summaryResult.getTo().format(DateFormats.SHORT_DATE), profileName),
+                            summaryResult.getFrom().format(DateFormats.SHORT_DATE), summaryResult.getTo().format(DateFormats.SHORT_DATE), profileName), true,
                     (pageContentStream, pageWidth, pageHeight) -> {
                         // CHART IMAGE
                         PDImageXObject pdImage = PDImageXObject.createFromFile(summaryResult.getChartImage().getAbsolutePath(), doc);
-                        float imageWidth = pageWidth - TEXT_LEFT_OFFSET * 2f;
+                        float imageWidth = pageWidth - IMAGE_X_OFFSET * 2f;
                         float imageHeight = imageWidth / 2f;
                         float imageY = pageHeight - HEADER_SIZE - imageHeight - IMAGE_Y_OFFSET;
-                        pageContentStream.drawImage(pdImage, TEXT_LEFT_OFFSET, imageY, imageWidth, imageHeight);
+                        pageContentStream.drawImage(pdImage, IMAGE_X_OFFSET, imageY, imageWidth, imageHeight);
                     });
 
             this.updateProgress(progress++, totalProgress);
@@ -120,81 +121,84 @@ public class PdfExportTask extends LCTask<Void> {
             for (int daysToAdd = 0; daysToAdd < daysNumber; daysToAdd++) {
                 DayExportResult dayResult = new DayExportResult(this.config, this.dataDirectory,
                         this.tempImagesDirectory, this.start.plusDays(daysToAdd));
-                dayResult.build();
+                boolean emptyDay = dayResult.build();
 
-                this.createPage(Translation.getText("ppp.plugin.pdf.header.title.day",
-                        dayResult.getDay().format(DateFormats.SHORT_DATE), profileName), (pageContentStream, pageWidth, pageHeight) -> {
-                    // CHART IMAGE
-                    PDImageXObject pdImage = PDImageXObject.createFromFile(dayResult.getChartImage().getAbsolutePath(), doc);
-                    float imageWidth = pageWidth - TEXT_LEFT_OFFSET * 2f;
-                    float imageHeight = imageWidth / 2f;
-                    float imageY = pageHeight - HEADER_SIZE - imageHeight - IMAGE_Y_OFFSET;
-                    pageContentStream.drawImage(pdImage, TEXT_LEFT_OFFSET, imageY, imageWidth, imageHeight);
+                if (!emptyDay) {
+                    this.createPage(Translation.getText("ppp.plugin.pdf.header.title.day",
+                            dayResult.getDay().format(DateFormats.SHORT_DATE), profileName), false, (pageContentStream, pageWidth, pageHeight) -> {
+                        // CHART IMAGE
+                        PDImageXObject pdImage = PDImageXObject.createFromFile(dayResult.getChartImage().getAbsolutePath(), doc);
+                        float imageWidth = pageWidth - TEXT_LEFT_OFFSET * 2f;
+                        float imageHeight = imageWidth / 2f;
+                        float imageY = pageHeight - HEADER_SIZE - imageHeight - IMAGE_Y_OFFSET;
+                        pageContentStream.drawImage(pdImage, TEXT_LEFT_OFFSET, imageY, imageWidth, imageHeight);
 
-                    // DETAILS.
-                    pageContentStream.beginText();
-                    pageContentStream.setFont(PDType1Font.HELVETICA_BOLD, 11);
-                    pageContentStream.newLineAtOffset(TEXT_LEFT_OFFSET, imageY - IMAGE_Y_OFFSET * 2f);
-                    pageContentStream.showText(Translation.getText("ppp.plugin.pdf.data.title"));
-                    pageContentStream.endText();
-
-                    List<ChartData> allChartData = Stream.concat(dayResult.getChart().getActionsData().stream(),
-                            Stream.concat(dayResult.getChart().getPppAssessmentsData().stream(), dayResult.getChart().getEvsAssessmentsData().stream()))
-                            .sorted(Comparator.comparing(c -> c.detailedRecord().getRecordedAt()))
-                            .collect(Collectors.toList());
-
-                    float rowY = imageY - IMAGE_Y_OFFSET * 5f;
-
-                    if (allChartData.isEmpty()) {
+                        // DETAILS.
                         pageContentStream.beginText();
-                        pageContentStream.setFont(FOOTER_FONT, FOOTER_FONT_SIZE);
-                        pageContentStream.newLineAtOffset(TEXT_LEFT_OFFSET, rowY + DATA_LINE_HEIGHT / 2.5f);
-                        pageContentStream.showText(Translation.getText("ppp.plugin.pdf.data.no_data"));
-                        pageContentStream.endText();
-                    }
-
-                    for (int index = 0; index < allChartData.size(); index++) {
-                        ChartData chartData = allChartData.get(index);
-
-                        String comment = chartData.detailedRecord().getComment();
-                        if (index % 2 == 0) {
-                            float backgroundHeight = (comment == null ? 1f : 2f) * DATA_LINE_HEIGHT;
-                            float backgroundY = comment == null ? rowY : rowY - DATA_LINE_HEIGHT;
-
-                            pageContentStream.setNonStrokingColor(COLOR_DATA, COLOR_DATA, COLOR_DATA);
-                            pageContentStream.addRect(TEXT_LEFT_OFFSET, backgroundY, pageWidth - TEXT_LEFT_OFFSET * 2f, backgroundHeight);
-                            pageContentStream.fill();
-                            pageContentStream.setNonStrokingColor(COLOR_GRAY, COLOR_GRAY, COLOR_GRAY);
-                        }
-
-                        pageContentStream.beginText();
-                        pageContentStream.setFont(HEADER_FONT, FOOTER_FONT_SIZE);
-                        pageContentStream.newLineAtOffset(TEXT_LEFT_OFFSET + 5f, rowY + DATA_LINE_HEIGHT / 2.5f);
-                        pageContentStream.showText(Translation.getText("ppp.plugin.pdf.data.date_and_type",
-                                DateFormats.TIME.format(chartData.detailedRecord().getRecordedAt()),
-                                chartData.getTitle()));
+                        pageContentStream.setFont(PDType1Font.HELVETICA_BOLD, 11);
+                        pageContentStream.newLineAtOffset(TEXT_LEFT_OFFSET, imageY - IMAGE_Y_OFFSET * 2f);
+                        pageContentStream.showText(Translation.getText("ppp.plugin.pdf.data.title"));
                         pageContentStream.endText();
 
-                        pageContentStream.beginText();
-                        pageContentStream.setFont(FOOTER_FONT, FOOTER_FONT_SIZE);
-                        pageContentStream.newLineAtOffset(TEXT_LEFT_OFFSET + 75f, rowY + DATA_LINE_HEIGHT / 2.5f);
-                        pageContentStream.showText(Translation.getText("ppp.plugin.pdf.data.score_and_evaluator",
-                                chartData.getDetailsValue(), chartData.detailedRecord().getEvaluator().getName()));
-                        pageContentStream.endText();
+                        List<ChartData> allChartData = Stream.concat(dayResult.getChart().getActionsData().stream(),
+                                        Stream.concat(dayResult.getChart().getPppAssessmentsData().stream(), dayResult.getChart().getEvsAssessmentsData().stream()))
+                                .sorted(Comparator.comparing(c -> c.detailedRecord().getRecordedAt()))
+                                .toList();
 
-                        if (comment != null) {
-                            rowY -= DATA_LINE_HEIGHT;
+                        float rowY = imageY - IMAGE_Y_OFFSET * 5f;
 
+                        if (allChartData.isEmpty()) {
                             pageContentStream.beginText();
-                            pageContentStream.setFont(PDType1Font.HELVETICA_OBLIQUE, FOOTER_FONT_SIZE);
-                            pageContentStream.newLineAtOffset(TEXT_LEFT_OFFSET + 75f, rowY + DATA_LINE_HEIGHT / 2.5f);
-                            pageContentStream.showText(chartData.detailedRecord().getComment().replace("\n", ". "));
+                            pageContentStream.setFont(FOOTER_FONT, FOOTER_FONT_SIZE);
+                            pageContentStream.newLineAtOffset(TEXT_LEFT_OFFSET, rowY + DATA_LINE_HEIGHT / 2.5f);
+                            pageContentStream.showText(Translation.getText("ppp.plugin.pdf.data.no_data"));
                             pageContentStream.endText();
                         }
 
-                        rowY -= DATA_LINE_HEIGHT;
-                    }
-                });
+                        for (int index = 0; index < allChartData.size(); index++) {
+                            ChartData chartData = allChartData.get(index);
+
+                            String comment = chartData.detailedRecord().getComment();
+                            String[] commentLines = StringUtils.isNotBlank(comment) ? comment.split("\n") : new String[0];
+
+                            if (index % 2 == 0) {
+                                float backgroundHeight = (1f + commentLines.length) * DATA_LINE_HEIGHT;
+                                float backgroundY = rowY - backgroundHeight + DATA_LINE_HEIGHT;
+
+                                pageContentStream.setNonStrokingColor(COLOR_DATA, COLOR_DATA, COLOR_DATA);
+                                pageContentStream.addRect(TEXT_LEFT_OFFSET, backgroundY, pageWidth - TEXT_LEFT_OFFSET * 2f, backgroundHeight);
+                                pageContentStream.fill();
+                                pageContentStream.setNonStrokingColor(COLOR_GRAY, COLOR_GRAY, COLOR_GRAY);
+                            }
+
+                            pageContentStream.beginText();
+                            pageContentStream.setFont(HEADER_FONT, FOOTER_FONT_SIZE);
+                            pageContentStream.newLineAtOffset(TEXT_LEFT_OFFSET + 5f, rowY + DATA_LINE_HEIGHT / 2.5f);
+                            pageContentStream.showText(Translation.getText("ppp.plugin.pdf.data.date_and_type",
+                                    DateFormats.TIME.format(chartData.detailedRecord().getRecordedAt()),
+                                    chartData.getTitle()));
+                            pageContentStream.endText();
+
+                            pageContentStream.beginText();
+                            pageContentStream.setFont(FOOTER_FONT, FOOTER_FONT_SIZE);
+                            pageContentStream.newLineAtOffset(TEXT_LEFT_OFFSET + 75f, rowY + DATA_LINE_HEIGHT / 2.5f);
+                            pageContentStream.showText(Translation.getText("ppp.plugin.pdf.data.score_and_evaluator",
+                                    cleanText(chartData.getDetailsValue()), cleanText(chartData.detailedRecord().getEvaluator().getName())));
+                            pageContentStream.endText();
+
+                            for (String commentLine : commentLines) {
+                                rowY -= DATA_LINE_HEIGHT;
+                                pageContentStream.beginText();
+                                pageContentStream.setFont(PDType1Font.HELVETICA_OBLIQUE, FOOTER_FONT_SIZE);
+                                pageContentStream.newLineAtOffset(TEXT_LEFT_OFFSET + 75f, rowY + DATA_LINE_HEIGHT / 2.5f);
+                                pageContentStream.showText(commentLine);
+                                pageContentStream.endText();
+                            }
+
+                            rowY -= DATA_LINE_HEIGHT;
+                        }
+                    });
+                }
 
                 this.updateProgress(progress++, totalProgress);
             }
@@ -211,16 +215,26 @@ public class PdfExportTask extends LCTask<Void> {
         return null;
     }
 
-    private void createPage(String title, PageConsumer pageConsumer) throws Exception {
+    private static String cleanText(String txt) {
+        return StringUtils.trimToEmpty(txt).replace("\n", " | ");
+    }
+
+    private void createPage(String title, boolean landscape, PageConsumer pageConsumer) throws Exception {
         PDPage gridPage = new PDPage(PDRectangle.A4);
+        if (landscape) {
+            gridPage.setRotation(90);
+        }
         this.doc.addPage(gridPage);
 
         PDRectangle pageSize = gridPage.getMediaBox();
 
-        float pageWidth = pageSize.getWidth();
-        float pageHeight = pageSize.getHeight();
+        float pageWidth = landscape ? pageSize.getHeight() : pageSize.getWidth();
+        float pageHeight = landscape ? pageSize.getWidth() : pageSize.getHeight();
 
         try (PDPageContentStream pageContentStream = new PDPageContentStream(this.doc, gridPage)) {
+            if (landscape) {
+                pageContentStream.transform(new Matrix(0, 1, -1, 0, pageSize.getWidth(), 0));
+            }
             pageContentStream.setNonStrokingColor(COLOR_GRAY, COLOR_GRAY, COLOR_GRAY);
 
             // HEADER
@@ -274,17 +288,18 @@ public class PdfExportTask extends LCTask<Void> {
 
         abstract protected void buildView(Consumer<RecordsView> viewConsumer);
 
-        public void build() {
+        public boolean build() {
             AtomicReference<RecordsChart> chartRef = new AtomicReference<>();
             AtomicReference<Image> imageRef = new AtomicReference<>();
             Semaphore semaphore = new Semaphore(0);
+            AtomicBoolean emptyResult = new AtomicBoolean();
 
             this.buildView((view) -> {
                 try {
+                    emptyResult.set(view.isPeriodEmpty());
                     StackPane chartPane = view.createChartPaneForSnapshot();
                     chartPane.setStyle("-fx-background-color: #F4F4F4");
                     FXUtils.setFixedSize(chartPane, 800, 400);
-
                     chartRef.set(view.getChart());
                     imageRef.set(SnapshotUtils.takeNodeSnapshot(chartPane, 800, 400, true, 0.8));
                 } finally {
@@ -308,6 +323,8 @@ public class PdfExportTask extends LCTask<Void> {
             } catch (Exception e) {
                 LOGGER.error("Exception when saving snapshot to {}", this.chartImage, e);
             }
+
+            return emptyResult.get();
         }
 
         public RecordsChart getChart() {

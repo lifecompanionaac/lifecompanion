@@ -21,6 +21,7 @@ package org.lifecompanion.controller.io;
 import org.lifecompanion.controller.appinstallation.InstallationConfigurationController;
 import org.lifecompanion.controller.io.task.*;
 import org.lifecompanion.controller.profile.ProfileController;
+import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
 import org.lifecompanion.framework.commons.utils.io.FileNameUtils;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
 import org.lifecompanion.framework.commons.utils.lang.CollectionUtils;
@@ -32,6 +33,7 @@ import org.lifecompanion.model.api.profile.LCProfileI;
 import org.lifecompanion.model.api.profile.UserCompDescriptionI;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.exception.LCException;
+import org.lifecompanion.model.impl.useapi.GlobalRuntimeConfiguration;
 import org.lifecompanion.util.ThreadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -92,11 +94,11 @@ public class IOHelper {
     }
 
     public static File getBackupConfigurationDestinationPath(final LCConfigurationDescriptionI configurationDescription) {
-        return new File( getBackupRootDirectory()+ LCConstant.CONFIGURATION_DIRECTORY + File.separator + configurationDescription.getConfigurationId() + File.separator + DATE_FORMAT_FILENAME_WITH_TIME_SECOND.format(
+        return new File(getBackupRootDirectory() + LCConstant.CONFIGURATION_DIRECTORY + File.separator + configurationDescription.getConfigurationId() + File.separator + DATE_FORMAT_FILENAME_WITH_TIME_SECOND.format(
                 new Date()) + "_" + org.lifecompanion.util.IOUtils.getValidFileName(configurationDescription.configurationNameProperty().get()) + "." + LCConstant.CONFIG_FILE_EXTENSION);
     }
 
-    public static String getBackupRootDirectory(){
+    public static String getBackupRootDirectory() {
         return getProfileRoot().getPath() + File.separator + LCConstant.BACKUP_DIR + File.separator;
     }
     //========================================================================
@@ -332,7 +334,7 @@ public class IOHelper {
     }
 
     public static File getFirstValidConfigurationOrProfile(Collection<String> args, String extensionToSearch) {
-        if (!CollectionUtils.isEmpty(args) && !args.contains(LCConstant.ARG_IMPORT_LAUNCH_CONFIG)) {
+        if (!CollectionUtils.isEmpty(args) && !GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DIRECT_IMPORT_AND_LAUNCH_CONFIGURATION)) {
             for (String arg : args) {
                 String ext = FileNameUtils.getExtension(arg);
                 if (extensionToSearch.equalsIgnoreCase(ext)) {

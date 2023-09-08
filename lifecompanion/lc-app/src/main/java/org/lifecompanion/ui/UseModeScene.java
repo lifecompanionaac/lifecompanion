@@ -25,6 +25,7 @@ import javafx.scene.control.Button;
 import javafx.scene.input.*;
 import org.lifecompanion.controller.metrics.SessionStatsController;
 import org.lifecompanion.controller.textcomponent.WritingStateController;
+import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
@@ -32,6 +33,7 @@ import org.lifecompanion.model.api.textcomponent.WritingEventSource;
 import org.lifecompanion.model.impl.configurationcomponent.WriterEntry;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.editaction.CommonActions;
+import org.lifecompanion.model.impl.useapi.GlobalRuntimeConfiguration;
 import org.lifecompanion.ui.configurationcomponent.usemode.UseModeConfigurationDisplayer;
 import org.lifecompanion.util.javafx.FXControlUtils;
 
@@ -90,7 +92,12 @@ public class UseModeScene extends Scene implements LCViewInitHelper {
         this.buttonFullscreen.setLayoutY(-10.0);
         this.buttonFullscreen.setFocusTraversable(false);
 
-        this.root.getChildren().addAll(this.buttonGoToConfigMode, buttonFullscreen);
+        if (!GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DISABLE_SWITCH_TO_EDIT_MODE)) {
+            this.root.getChildren().addAll(this.buttonGoToConfigMode);
+        }
+        if (!GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DISABLE_WINDOW_FULLSCREEN)) {
+            this.root.getChildren().addAll(buttonFullscreen);
+        }
 
         if (this.configuration.getSelectionModeParameter().hideMouseCursorProperty().get()) {
             this.setCursor(Cursor.NONE);
@@ -107,12 +114,16 @@ public class UseModeScene extends Scene implements LCViewInitHelper {
         //Keyboard shortcut
         this.addEventHandler(KeyEvent.KEY_RELEASED, eventP -> {
             if (CommonActions.KEY_COMBINATION_GO_CONFIG_MODE.match(eventP)) {
-                CommonActions.HANDLER_GO_CONFIG_MODE_SKIP_CHECK.handle(null);
-                eventP.consume();
+                if (!GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DISABLE_SWITCH_TO_EDIT_MODE)) {
+                    CommonActions.HANDLER_GO_CONFIG_MODE_SKIP_CHECK.handle(null);
+                    eventP.consume();
+                }
             }
             if (CommonActions.KEY_COMBINATION_SWITCH_FULLSCREEN.match(eventP)) {
-                CommonActions.HANDLER_SWITCH_FULLSCREEN.handle(null);
-                eventP.consume();
+                if (!GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DISABLE_WINDOW_FULLSCREEN)) {
+                    CommonActions.HANDLER_SWITCH_FULLSCREEN.handle(null);
+                    eventP.consume();
+                }
             }
             if (KEY_COMBINATION_COPY.match(eventP) && !configuration.virtualKeyboardProperty().get()) {
                 copyFromCurrentTextEditor();

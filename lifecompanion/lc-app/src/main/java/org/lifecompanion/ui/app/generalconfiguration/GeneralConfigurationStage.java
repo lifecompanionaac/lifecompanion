@@ -19,13 +19,12 @@
 
 package org.lifecompanion.ui.app.generalconfiguration;
 
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import javafx.stage.Window;
+import javafx.geometry.Rectangle2D;
+import javafx.stage.*;
 import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
+import org.lifecompanion.util.javafx.StageUtils;
 
 public class GeneralConfigurationStage extends Stage {
     private final GeneralConfigurationScene generalConfigurationScene;
@@ -36,8 +35,9 @@ public class GeneralConfigurationStage extends Stage {
         this.initModality(Modality.APPLICATION_MODAL);
         this.initStyle(StageStyle.UTILITY);
         this.initOwner(owner);
-        this.setWidth(LCGraphicStyle.DEFAULT_TOOL_STAGE_WIDTH);
-        this.setHeight(LCGraphicStyle.DEFAULT_TOOL_STAGE_HEIGHT);
+        Rectangle2D screenBounds = StageUtils.getDestinationScreen().getBounds();
+        this.setWidth(Math.min(screenBounds.getWidth(), LCGraphicStyle.DEFAULT_TOOL_STAGE_WIDTH));
+        this.setHeight(Math.min(screenBounds.getHeight(), LCGraphicStyle.DEFAULT_TOOL_STAGE_HEIGHT));
         this.setResizable(LCGraphicStyle.TOOL_STAGE_RESIZABLE);
         this.setForceIntegerRenderScale(LCGraphicStyle.FORCE_INTEGER_RENDER_SCALE);
         this.setScene(generalConfigurationScene);
@@ -48,6 +48,7 @@ public class GeneralConfigurationStage extends Stage {
             generalConfigurationScene.cancelSelected(generalConfigurationScene.getRoot());
             we.consume();
         });
+        StageUtils.fixMaximizedVisualBounds(this);
     }
 
     public GeneralConfigurationScene getGeneralConfigurationScene() {

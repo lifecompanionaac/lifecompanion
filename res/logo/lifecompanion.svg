@@ -2,75 +2,63 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:xlink="http://www.w3.org/1999/xlink"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="210mm"
    height="297mm"
    viewBox="0 0 210 297"
    version="1.1"
    id="svg8"
-   inkscape:version="0.92.3 (2405546, 2018-03-11)"
+   inkscape:version="1.2.2 (732a01da63, 2022-12-09)"
    sodipodi:docname="lifecompanion.svg"
    inkscape:export-filename="D:\LifeCompanion-dev\repos\lifecompanion\res\lifecompanion-logo\export\background-blue.png"
    inkscape:export-xdpi="10.56"
-   inkscape:export-ydpi="10.56">
-  <defs
-     id="defs2">
-    <linearGradient
+   inkscape:export-ydpi="10.56"
+   xml:space="preserve"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/"><defs
+     id="defs2"><linearGradient
+       id="linearGradient2500"
+       inkscape:swatch="solid"><stop
+         style="stop-color:#000000;stop-opacity:1;"
+         offset="0"
+         id="stop2498" /></linearGradient><linearGradient
        inkscape:collect="always"
-       id="linearGradient1208">
-      <stop
+       id="linearGradient1208"><stop
          style="stop-color:#ffffff;stop-opacity:1;"
          offset="0"
-         id="stop1204" />
-      <stop
+         id="stop1204" /><stop
          style="stop-color:#ffffff;stop-opacity:0;"
          offset="1"
-         id="stop1206" />
-    </linearGradient>
-    <linearGradient
+         id="stop1206" /></linearGradient><linearGradient
        id="white_transp"
-       inkscape:collect="always">
-      <stop
+       inkscape:collect="always"><stop
          id="stop1058"
          offset="0"
-         style="stop-color:#ffffff;stop-opacity:0.83495146" />
-      <stop
+         style="stop-color:#ffffff;stop-opacity:0.83495146" /><stop
          id="stop1060"
          offset="1"
-         style="stop-color:#fefefe;stop-opacity:0" />
-    </linearGradient>
-    <linearGradient
+         style="stop-color:#fefefe;stop-opacity:0" /></linearGradient><linearGradient
        inkscape:collect="always"
-       id="linearGradient1186">
-      <stop
+       id="linearGradient1186"><stop
          style="stop-color:#ffae2d;stop-opacity:1"
          offset="0"
-         id="stop1182" />
-      <stop
+         id="stop1182" /><stop
          style="stop-color:#f2a000;stop-opacity:1"
          offset="1"
-         id="stop1184" />
-    </linearGradient>
-    <linearGradient
+         id="stop1184" /></linearGradient><linearGradient
        inkscape:collect="always"
-       id="linearGradient1162">
-      <stop
+       id="linearGradient1162"><stop
          style="stop-color:#000000;stop-opacity:0.23529412"
          offset="0"
-         id="stop1158" />
-      <stop
+         id="stop1158" /><stop
          style="stop-color:#000000;stop-opacity:0;"
          offset="1"
-         id="stop1160" />
-    </linearGradient>
-    <linearGradient
+         id="stop1160" /></linearGradient><linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient1186"
        id="linearGradient1280"
@@ -79,8 +67,7 @@
        x2="272.92493"
        y2="440.06946"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="translate(-939.05483,-372.89138)" />
-    <linearGradient
+       gradientTransform="translate(-939.05483,-372.89138)" /><linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient1162"
        id="linearGradient1293"
@@ -89,8 +76,7 @@
        x2="1049"
        y2="1783.0197"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(0.26458333,0,0,0.26458333,-955.459,-371.03929)" />
-    <linearGradient
+       gradientTransform="matrix(0.26458333,0,0,0.26458333,-955.459,-371.03929)" /><linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient1162"
        id="linearGradient1311"
@@ -99,8 +85,7 @@
        x2="1060.5859"
        y2="1643.8262"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(0.26458333,0,0,0.26458333,-955.459,-371.03929)" />
-    <linearGradient
+       gradientTransform="matrix(0.26458333,0,0,0.26458333,-955.459,-371.03929)" /><linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient1162"
        id="linearGradient1311-7"
@@ -109,8 +94,7 @@
        x2="1060.5859"
        y2="1643.8262"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(0.26458333,0,0,0.26458333,-104.30936,246.97726)" />
-    <linearGradient
+       gradientTransform="matrix(0.26458333,0,0,0.26458333,-104.30936,246.97726)" /><linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient1162"
        id="linearGradient1293-5"
@@ -119,8 +103,7 @@
        x2="1049"
        y2="1783.0197"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(0.26458333,0,0,0.26458333,-104.30936,246.97726)" />
-    <linearGradient
+       gradientTransform="matrix(0.26458333,0,0,0.26458333,-104.30936,246.97726)" /><linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient1186"
        id="linearGradient1280-8"
@@ -129,8 +112,7 @@
        x2="272.92493"
        y2="440.06946"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="translate(-87.905187,245.12518)" />
-    <linearGradient
+       gradientTransform="translate(-87.905187,245.12518)" /><linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient1186"
        id="linearGradient1070"
@@ -139,8 +121,7 @@
        x1="255.61299"
        y1="425.45062"
        x2="272.92493"
-       y2="440.06946" />
-    <linearGradient
+       y2="440.06946" /><linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient1162"
        id="linearGradient1072"
@@ -149,8 +130,7 @@
        x1="914"
        y1="1654.0197"
        x2="1049"
-       y2="1783.0197" />
-    <linearGradient
+       y2="1783.0197" /><linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient1162"
        id="linearGradient1074"
@@ -159,8 +139,7 @@
        x1="911.48828"
        y1="1498.3262"
        x2="1060.5859"
-       y2="1643.8262" />
-    <linearGradient
+       y2="1643.8262" /><linearGradient
        inkscape:collect="always"
        xlink:href="#white_transp"
        id="linearGradient1064"
@@ -169,21 +148,17 @@
        y1="1349.2412"
        x2="-148.17422"
        y2="937.59155"
-       gradientTransform="translate(-20.95393,49.391407)" />
-    <filter
+       gradientTransform="translate(-20.95393,49.391407)" /><filter
        inkscape:collect="always"
        style="color-interpolation-filters:sRGB"
        id="filter1355"
        x="-0.17056158"
        width="1.3411232"
        y="-0.29444033"
-       height="1.5888807">
-      <feGaussianBlur
+       height="1.5888807"><feGaussianBlur
          inkscape:collect="always"
          stdDeviation="52.338836"
-         id="feGaussianBlur1357" />
-    </filter>
-    <linearGradient
+         id="feGaussianBlur1357" /></filter><linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient1208"
        id="linearGradient1210"
@@ -192,49 +167,65 @@
        x2="-2129.8174"
        y2="1408.7133"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(1,0,0,1.429293,3297.7665,-2060.7125)" />
-  </defs>
-  <sodipodi:namedview
+       gradientTransform="matrix(1,0,0,1.429293,3297.7665,-2060.7125)" /><linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient1186"
+       id="linearGradient420"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-1438.5201,26.698608)"
+       x1="255.61299"
+       y1="425.45062"
+       x2="272.92493"
+       y2="440.06946" /><linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient1162"
+       id="linearGradient422"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.26458333,0,0,0.26458333,-1454.9242,28.550698)"
+       x1="914"
+       y1="1654.0197"
+       x2="1049"
+       y2="1783.0197" /><linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient1162"
+       id="linearGradient424"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.26458333,0,0,0.26458333,-1454.9242,28.550698)"
+       x1="911.48828"
+       y1="1498.3262"
+       x2="1060.5859"
+       y2="1643.8262" /></defs><sodipodi:namedview
      id="base"
      pagecolor="#ffffff"
      bordercolor="#666666"
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.062500003"
-     inkscape:cx="-1298.007"
-     inkscape:cy="-434.4469"
+     inkscape:zoom="0.70710681"
+     inkscape:cx="-4024.8516"
+     inkscape:cy="1698.4704"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
      inkscape:window-width="1920"
-     inkscape:window-height="1017"
-     inkscape:window-x="-8"
+     inkscape:window-height="1009"
+     inkscape:window-x="1912"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
      showguides="false"
      inkscape:guide-bbox="true"
      inkscape:snap-intersection-paths="false"
      inkscape:snap-object-midpoints="false"
-     inkscape:pagecheckerboard="0" />
-  <metadata
-     id="metadata5">
-    <rdf:RDF>
-      <cc:Work
-         rdf:about="">
-        <dc:format>image/svg+xml</dc:format>
-        <dc:type
-           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
-      </cc:Work>
-    </rdf:RDF>
-  </metadata>
-  <g
+     inkscape:pagecheckerboard="0"
+     inkscape:showpageshadow="2"
+     inkscape:deskcolor="#d1d1d1" /><metadata
+     id="metadata5"><rdf:RDF><cc:Work
+         rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title /></cc:Work></rdf:RDF></metadata><g
      inkscape:label="Calque 1"
      inkscape:groupmode="layer"
      id="layer1"
-     style="display:inline">
-    <image
+     style="display:inline"><image
        width="157.98993"
        height="147.56259"
        preserveAspectRatio="none"
@@ -244,8 +235,8 @@
        y="-22.353424"
        inkscape:export-filename="D:\LifeCompanion-dev\repos\lifecompanion\res\lifecompanion-logo\export\lifecompanion_copyright_400.png"
        inkscape:export-xdpi="30.34"
-       inkscape:export-ydpi="30.34" />
-    <circle
+       inkscape:export-ydpi="30.34"
+       style="fill:#494949;fill-opacity:1" /><circle
        style="display:inline;opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:7.65219641;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
        id="circle1230"
        cx="-705.09961"
@@ -253,54 +244,47 @@
        r="38.249958"
        inkscape:export-xdpi="339.98999"
        inkscape:export-ydpi="339.98999"
-       inkscape:export-filename="E:\Desktop\icons\lifecompanion_icon_1024px.png" />
-    <path
+       inkscape:export-filename="E:\Desktop\icons\lifecompanion_icon_1024px.png" /><path
        style="display:inline;opacity:1;fill:#c62828;fill-opacity:1;stroke:none;stroke-width:7.65219641;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
        d="m -705.09951,14.325218 a 38.249959,38.249959 0 0 0 -8.7979,1.07188 v 13.26575 h 3.6e-4 v 23.70562 c 1.1e-4,1.28945 1.04558,2.33457 2.33501,2.33464 h 12.96287 a 27.785896,24.666429 0 0 1 26.71874,-17.92265 27.785896,24.666429 0 0 1 1.58782,0.0498 38.249959,38.249959 0 0 0 -34.8069,-22.50504 z"
        id="path1237"
        inkscape:connector-curvature="0"
        inkscape:export-xdpi="339.98999"
        inkscape:export-ydpi="339.98999"
-       inkscape:export-filename="E:\Desktop\icons\lifecompanion_icon_1024px.png" />
-    <path
+       inkscape:export-filename="E:\Desktop\icons\lifecompanion_icon_1024px.png" /><path
        style="display:inline;opacity:1;fill:#0277bd;fill-opacity:1;stroke:none;stroke-width:7.65219641;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
        d="m -727.44131,21.586928 a 38.249959,38.249959 0 0 0 -15.90834,30.98807 38.249959,38.249959 0 0 0 38.25014,38.250153 38.249959,38.249959 0 0 0 21.84439,-6.906123 27.785896,24.666429 0 0 1 -15.41095,-16.02106 h -17.56598 -8.5252 -0.34941 c -1.28944,-9e-5 -2.33453,-1.04522 -2.33465,-2.33465 z"
        id="path1235"
        inkscape:connector-curvature="0"
        inkscape:export-xdpi="339.98999"
        inkscape:export-ydpi="339.98999"
-       inkscape:export-filename="E:\Desktop\icons\lifecompanion_icon_1024px.png" />
-    <path
+       inkscape:export-filename="E:\Desktop\icons\lifecompanion_icon_1024px.png" /><path
        style="display:inline;opacity:1;fill:url(#linearGradient1280);fill-opacity:1;stroke:none;stroke-width:7.65219641;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
        d="m -671.88043,49.399738 a 13.570525,12.046992 0 0 0 -13.57044,12.04733 13.570525,12.046992 0 0 0 12.36913,11.99353 38.249959,38.249959 0 0 0 6.232,-20.8656 38.249959,38.249959 0 0 0 -0.0825,-2.33319 13.570525,12.046992 0 0 0 -4.94817,-0.84207 z"
        id="circle883-5-6"
        inkscape:connector-curvature="0"
        inkscape:export-xdpi="339.98999"
        inkscape:export-ydpi="339.98999"
-       inkscape:export-filename="E:\Desktop\icons\lifecompanion_icon_1024px.png" />
-    <path
+       inkscape:export-filename="E:\Desktop\icons\lifecompanion_icon_1024px.png" /><path
        style="opacity:1;vector-effect:none;fill:url(#linearGradient1293);fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        d="m -726.8616,67.099328 -0.005,0.005 0.10387,0.10385 c -0.0346,-0.0348 -0.0664,-0.0721 -0.0987,-0.10904 z m 0.10956,0.11991 23.50915,23.509163 a 38.249957,38.249957 0 0 0 19.98792,-6.809433 27.785896,24.666429 0 0 1 -15.41093,-16.02123 h -17.56637 -8.52506 -0.34934 c -0.64196,-6e-5 -1.22334,-0.25921 -1.64537,-0.6785 z"
        id="rect1282"
        inkscape:connector-curvature="0"
        inkscape:export-xdpi="339.98999"
        inkscape:export-ydpi="339.98999"
-       inkscape:export-filename="E:\Desktop\icons\lifecompanion_icon_1024px.png" />
-    <path
+       inkscape:export-filename="E:\Desktop\icons\lifecompanion_icon_1024px.png" /><path
        style="opacity:1;vector-effect:none;fill:url(#linearGradient1311);fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        d="m -713.89753,15.397078 v 13.26583 h 5.1e-4 v 23.70553 c 1.2e-4,1.28948 1.04532,2.33469 2.33475,2.33477 h 12.96303 a 27.785896,24.666429 0 0 1 10.6567,-13.35114 z"
        id="rect1295"
        inkscape:connector-curvature="0"
        inkscape:export-xdpi="339.98999"
        inkscape:export-ydpi="339.98999"
-       inkscape:export-filename="E:\Desktop\icons\lifecompanion_icon_1024px.png" />
-    <g
+       inkscape:export-filename="E:\Desktop\icons\lifecompanion_icon_1024px.png" /><g
        id="g939"
        transform="matrix(0.833987,0,0,0.833987,-825.64483,-354.80017)"
        inkscape:export-filename="E:\Desktop\icons\lifecompanion_icon_128px.png"
        inkscape:export-xdpi="50.959999"
-       inkscape:export-ydpi="50.959999">
-      <circle
+       inkscape:export-ydpi="50.959999"><circle
          inkscape:export-filename="E:\Desktop\icons\lifecompanion_icon_1024px.png"
          inkscape:export-ydpi="339.98999"
          inkscape:export-xdpi="339.98999"
@@ -308,49 +292,42 @@
          cy="670.59161"
          cx="146.05006"
          id="circle1230-6"
-         style="display:inline;opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:7.65219641;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke" />
-      <path
+         style="display:inline;opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:7.65219641;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke" /><path
          inkscape:export-filename="E:\Desktop\icons\lifecompanion_icon_1024px.png"
          inkscape:export-ydpi="339.98999"
          inkscape:export-xdpi="339.98999"
          inkscape:connector-curvature="0"
          id="path1237-3"
          d="m 146.05013,632.34176 a 38.249961,38.249961 0 0 0 -8.7979,1.07188 v 13.26575 h 2.6e-4 v 23.70562 c 1.2e-4,1.28945 1.04558,2.33457 2.33502,2.33464 h 12.96286 a 27.785896,24.666429 0 0 1 26.71884,-17.92265 27.785896,24.666429 0 0 1 1.58782,0.0498 38.249961,38.249961 0 0 0 -34.8069,-22.50504 z"
-         style="display:inline;opacity:1;fill:#c62828;fill-opacity:1;stroke:none;stroke-width:7.65219641;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke" />
-      <path
+         style="display:inline;opacity:1;fill:#c62828;fill-opacity:1;stroke:none;stroke-width:7.65219641;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke" /><path
          inkscape:export-filename="E:\Desktop\icons\lifecompanion_icon_1024px.png"
          inkscape:export-ydpi="339.98999"
          inkscape:export-xdpi="339.98999"
          inkscape:connector-curvature="0"
          id="path1235-0"
          d="m 123.70833,639.60347 a 38.249961,38.249961 0 0 0 -15.90834,30.98807 38.249961,38.249961 0 0 0 38.25014,38.25015 38.249961,38.249961 0 0 0 21.84439,-6.90612 27.785896,24.666429 0 0 1 -15.41095,-16.02106 h -17.56598 -8.5252 -0.34941 c -1.28944,-9e-5 -2.33453,-1.04522 -2.33465,-2.33465 z"
-         style="display:inline;opacity:1;fill:#0277bd;fill-opacity:1;stroke:none;stroke-width:7.65219641;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke" />
-      <path
+         style="display:inline;opacity:1;fill:#0277bd;fill-opacity:1;stroke:none;stroke-width:7.65219641;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke" /><path
          inkscape:export-filename="E:\Desktop\icons\lifecompanion_icon_1024px.png"
          inkscape:export-ydpi="339.98999"
          inkscape:export-xdpi="339.98999"
          inkscape:connector-curvature="0"
          id="circle883-5-6-5"
          d="m 179.26921,667.41628 a 13.570525,12.046992 0 0 0 -13.57044,12.04733 13.570525,12.046992 0 0 0 12.36913,11.99353 38.249961,38.249961 0 0 0 6.232,-20.8656 38.249961,38.249961 0 0 0 -0.0825,-2.33319 13.570525,12.046992 0 0 0 -4.94817,-0.84207 z"
-         style="display:inline;opacity:1;fill:url(#linearGradient1280-8);fill-opacity:1;stroke:none;stroke-width:7.65219641;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke" />
-      <path
+         style="display:inline;opacity:1;fill:url(#linearGradient1280-8);fill-opacity:1;stroke:none;stroke-width:7.65219641;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke" /><path
          inkscape:export-filename="E:\Desktop\icons\lifecompanion_icon_1024px.png"
          inkscape:export-ydpi="339.98999"
          inkscape:export-xdpi="339.98999"
          inkscape:connector-curvature="0"
          id="rect1282-8"
          d="m 124.28804,685.11587 -0.005,0.005 0.10387,0.10385 c -0.0346,-0.0348 -0.0664,-0.0721 -0.0987,-0.10904 z m 0.10956,0.11991 23.50915,23.50916 a 38.249958,38.249958 0 0 0 19.98792,-6.80943 27.785896,24.666429 0 0 1 -15.41093,-16.02123 h -17.56637 -8.52506 -0.34934 c -0.64196,-6e-5 -1.22334,-0.25921 -1.64537,-0.6785 z"
-         style="display:inline;opacity:1;vector-effect:none;fill:url(#linearGradient1293-5);fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
-      <path
+         style="display:inline;opacity:1;vector-effect:none;fill:url(#linearGradient1293-5);fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" /><path
          inkscape:export-filename="E:\Desktop\icons\lifecompanion_icon_1024px.png"
          inkscape:export-ydpi="339.98999"
          inkscape:export-xdpi="339.98999"
          inkscape:connector-curvature="0"
          id="rect1295-8"
          d="m 137.25211,633.41362 v 13.26583 h 5.3e-4 v 23.70553 c 1.2e-4,1.28948 1.04532,2.33469 2.33475,2.33477 h 12.96303 a 27.785896,24.666429 0 0 1 10.6567,-13.35114 z"
-         style="display:inline;opacity:1;vector-effect:none;fill:url(#linearGradient1311-7);fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
-    </g>
-    <flowRoot
+         style="display:inline;opacity:1;vector-effect:none;fill:url(#linearGradient1311-7);fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" /></g><flowRoot
        xml:space="preserve"
        id="flowRoot5971"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:25px;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -372,13 +349,12 @@
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:192px;line-height:165.4px;font-family:'Segoe UI';-inkscape-font-specification:'Segoe UI Bold';letter-spacing:-5px;fill:#0277bd;fill-opacity:1"
          id="flowPara7117"><flowSpan
    style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:213.333px;line-height:165.4px;font-family:'Segoe UI';-inkscape-font-specification:'Segoe UI Bold';letter-spacing:-5px;fill:#c62828;fill-opacity:1"
-   id="flowSpan7119">C</flowSpan>ompanion</flowPara></flowRoot>    <g
+   id="flowSpan7119">C</flowSpan>ompanion</flowPara></flowRoot><g
        id="g884"
        transform="translate(-810.46811,26.852939)"
        inkscape:export-filename="D:\LifeCompanion-dev\repos\lifecompanion\res\lifecompanion-logo\export\lifecompanion_copyright_400.png"
        inkscape:export-xdpi="30.34"
-       inkscape:export-ydpi="30.34">
-      <flowRoot
+       inkscape:export-ydpi="30.34"><flowRoot
          inkscape:export-ydpi="12.85"
          inkscape:export-xdpi="12.85"
          inkscape:export-filename="C:\Users\Mathieu\Desktop\lifecompanion_copyright_200.png"
@@ -405,40 +381,33 @@
            id="flowPara868"
            style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:64px;font-family:'Segoe UI';-inkscape-font-specification:'Segoe UI Light';text-align:end;text-anchor:end;fill:#4d4d4d">by</flowPara><flowPara
            id="flowPara871"
-           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:96px;font-family:'Segoe UI';-inkscape-font-specification:'Segoe UI Bold';text-align:end;text-anchor:end;fill:#4d4d4d" /></flowRoot>      <g
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:96px;font-family:'Segoe UI';-inkscape-font-specification:'Segoe UI Bold';text-align:end;text-anchor:end;fill:#4d4d4d" /></flowRoot><g
          inkscape:export-ydpi="12.85"
          inkscape:export-xdpi="12.85"
          inkscape:export-filename="C:\Users\Mathieu\Desktop\lifecompanion_copyright_200.png"
          style="fill:#4d4d4d;fill-opacity:1"
          transform="matrix(0.01831157,0,0,0.01421497,393.15045,-45.904693)"
-         id="g882">
-        <path
+         id="g882"><path
            style="fill:#4d4d4d;fill-opacity:1;stroke:#000000;stroke-miterlimit:10"
            inkscape:connector-curvature="0"
            class="st0"
            d="m 1215.2,1208.2 c 140.9,30.3 213.7,396.6 236.2,505.7 73.2,354.8 217.5,960.1 566.4,1318.4 -150.1,105 -387.4,72.4 -568.8,-108.6 73.3,195.4 -150.1,437.9 -233.8,488.6 -83.8,-50.7 -307.1,-293.2 -233.8,-488.6 -181.5,181 -418.8,213.5 -568.8,108.6 349,-358.3 493.3,-963.6 566.4,-1318.4 22.5,-109 95.2,-475.3 236.2,-505.7 z"
-           id="path861" />
-        <path
+           id="path861" /><path
            style="fill:#4d4d4d;fill-opacity:1;stroke:#000000;stroke-miterlimit:10"
            inkscape:connector-curvature="0"
            class="st0"
            d="m 1215.2,883.4 c 0,0 528.5,-186.5 0,-823.4 -528.5,636.9 0,823.4 0,823.4 z"
-           id="path863" />
-        <path
+           id="path863" /><path
            style="fill:#4d4d4d;fill-opacity:1;stroke:#000000;stroke-miterlimit:10"
            inkscape:connector-curvature="0"
            class="st0"
            d="m 1433.6,1161.2 c 0,0 335.6,448.9 785.9,-245.4 -765.4,-314.7 -785.9,245.4 -785.9,245.4 z"
-           id="path865" />
-        <path
+           id="path865" /><path
            style="fill:#4d4d4d;fill-opacity:1;stroke:#000000;stroke-miterlimit:10"
            inkscape:connector-curvature="0"
            class="st0"
            d="m 996.7,1161.2 c 0,0 -335.6,448.9 -785.9,-245.4 765.4,-314.7 785.9,245.4 785.9,245.4 z"
-           id="path867" />
-      </g>
-    </g>
-    <rect
+           id="path867" /></g></g><rect
        style="opacity:1;fill:#4d4d4d;fill-opacity:1;stroke:none;stroke-width:4.94869184;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
        id="rect896"
        width="2.2982478"
@@ -447,8 +416,7 @@
        y="-22.04801"
        inkscape:export-filename="D:\LifeCompanion-dev\repos\lifecompanion\res\lifecompanion-logo\export\lifecompanion_copyright_400.png"
        inkscape:export-xdpi="30.34"
-       inkscape:export-ydpi="30.34" />
-    <rect
+       inkscape:export-ydpi="30.34" /><rect
        style="opacity:1;vector-effect:none;fill:#ffffff;fill-opacity:0.98058256;stroke:#656565;stroke-width:0.72718298;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0.93851133"
        id="rect899"
        width="900.88025"
@@ -457,21 +425,18 @@
        y="-620.35699"
        inkscape:export-filename="D:\LifeCompanion-dev\repos\lifecompanion\res\lifecompanion-logo\export\lifecompanion_splashscreen.png"
        inkscape:export-xdpi="16.9"
-       inkscape:export-ydpi="16.9" />
-    <g
+       inkscape:export-ydpi="16.9" /><g
        id="g1090"
        transform="translate(21.463723,-112.18333)"
        inkscape:export-filename="C:\Users\Mathieu\Dev\LC2\workspace\lifecompanion-k\resources\lifecompanion-logo\export\lifecompanion_splashscreen.png"
        inkscape:export-xdpi="16.9"
-       inkscape:export-ydpi="16.9">
-      <g
+       inkscape:export-ydpi="16.9"><g
          inkscape:export-ydpi="50.959999"
          inkscape:export-xdpi="50.959999"
          inkscape:export-filename="E:\Desktop\icons\lifecompanion_icon_128px.png"
          transform="matrix(1.9405279,0,0,1.9405279,-700.56175,-1680.0428)"
          id="g939-6"
-         style="display:inline">
-        <circle
+         style="display:inline"><circle
            style="display:inline;opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:7.65219641;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
            id="circle1230-6-5"
            cx="146.05006"
@@ -479,49 +444,42 @@
            r="38.249958"
            inkscape:export-xdpi="339.98999"
            inkscape:export-ydpi="339.98999"
-           inkscape:export-filename="E:\Desktop\icons\lifecompanion_icon_1024px.png" />
-        <path
+           inkscape:export-filename="E:\Desktop\icons\lifecompanion_icon_1024px.png" /><path
            style="display:inline;opacity:1;fill:#c62828;fill-opacity:1;stroke:none;stroke-width:7.65219641;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
            d="m 146.05013,632.34176 a 38.249961,38.249961 0 0 0 -8.7979,1.07188 v 13.26575 h 2.6e-4 v 23.70562 c 1.2e-4,1.28945 1.04558,2.33457 2.33502,2.33464 h 12.96286 a 27.785896,24.666429 0 0 1 26.71884,-17.92265 27.785896,24.666429 0 0 1 1.58782,0.0498 38.249961,38.249961 0 0 0 -34.8069,-22.50504 z"
            id="path1237-3-8"
            inkscape:connector-curvature="0"
            inkscape:export-xdpi="339.98999"
            inkscape:export-ydpi="339.98999"
-           inkscape:export-filename="E:\Desktop\icons\lifecompanion_icon_1024px.png" />
-        <path
+           inkscape:export-filename="E:\Desktop\icons\lifecompanion_icon_1024px.png" /><path
            style="display:inline;opacity:1;fill:#0277bd;fill-opacity:1;stroke:none;stroke-width:7.65219641;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
            d="m 123.70833,639.60347 a 38.249961,38.249961 0 0 0 -15.90834,30.98807 38.249961,38.249961 0 0 0 38.25014,38.25015 38.249961,38.249961 0 0 0 21.84439,-6.90612 27.785896,24.666429 0 0 1 -15.41095,-16.02106 h -17.56598 -8.5252 -0.34941 c -1.28944,-9e-5 -2.33453,-1.04522 -2.33465,-2.33465 z"
            id="path1235-0-6"
            inkscape:connector-curvature="0"
            inkscape:export-xdpi="339.98999"
            inkscape:export-ydpi="339.98999"
-           inkscape:export-filename="E:\Desktop\icons\lifecompanion_icon_1024px.png" />
-        <path
+           inkscape:export-filename="E:\Desktop\icons\lifecompanion_icon_1024px.png" /><path
            style="display:inline;opacity:1;fill:url(#linearGradient1070);fill-opacity:1;stroke:none;stroke-width:7.65219641;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
            d="m 179.26921,667.41628 a 13.570525,12.046992 0 0 0 -13.57044,12.04733 13.570525,12.046992 0 0 0 12.36913,11.99353 38.249961,38.249961 0 0 0 6.232,-20.8656 38.249961,38.249961 0 0 0 -0.0825,-2.33319 13.570525,12.046992 0 0 0 -4.94817,-0.84207 z"
            id="circle883-5-6-5-6"
            inkscape:connector-curvature="0"
            inkscape:export-xdpi="339.98999"
            inkscape:export-ydpi="339.98999"
-           inkscape:export-filename="E:\Desktop\icons\lifecompanion_icon_1024px.png" />
-        <path
+           inkscape:export-filename="E:\Desktop\icons\lifecompanion_icon_1024px.png" /><path
            style="display:inline;opacity:1;vector-effect:none;fill:url(#linearGradient1072);fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
            d="m 124.28804,685.11587 -0.005,0.005 0.10387,0.10385 c -0.0346,-0.0348 -0.0664,-0.0721 -0.0987,-0.10904 z m 0.10956,0.11991 23.50915,23.50916 a 38.249958,38.249958 0 0 0 19.98792,-6.80943 27.785896,24.666429 0 0 1 -15.41093,-16.02123 h -17.56637 -8.52506 -0.34934 c -0.64196,-6e-5 -1.22334,-0.25921 -1.64537,-0.6785 z"
            id="rect1282-8-4"
            inkscape:connector-curvature="0"
            inkscape:export-xdpi="339.98999"
            inkscape:export-ydpi="339.98999"
-           inkscape:export-filename="E:\Desktop\icons\lifecompanion_icon_1024px.png" />
-        <path
+           inkscape:export-filename="E:\Desktop\icons\lifecompanion_icon_1024px.png" /><path
            style="display:inline;opacity:1;vector-effect:none;fill:url(#linearGradient1074);fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
            d="m 137.25211,633.41362 v 13.26583 h 5.3e-4 v 23.70553 c 1.2e-4,1.28948 1.04532,2.33469 2.33475,2.33477 h 12.96303 a 27.785896,24.666429 0 0 1 10.6567,-13.35114 z"
            id="rect1295-8-4"
            inkscape:connector-curvature="0"
            inkscape:export-xdpi="339.98999"
            inkscape:export-ydpi="339.98999"
-           inkscape:export-filename="E:\Desktop\icons\lifecompanion_icon_1024px.png" />
-      </g>
-      <flowRoot
+           inkscape:export-filename="E:\Desktop\icons\lifecompanion_icon_1024px.png" /></g><flowRoot
          inkscape:export-filename="E:\Desktop\icons\lifecompanion_title_only_icon_600px.png"
          inkscape:export-ydpi="43.490002"
          inkscape:export-xdpi="43.490002"
@@ -543,8 +501,7 @@
            id="flowPara7117-5"
            style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:192px;line-height:165.4px;font-family:'Segoe UI';-inkscape-font-specification:'Segoe UI Bold';letter-spacing:-5px;fill:#0277bd;fill-opacity:1"><flowSpan
    id="flowSpan7119-2"
-   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:213.333px;line-height:165.4px;font-family:'Segoe UI';-inkscape-font-specification:'Segoe UI Bold';letter-spacing:-5px;fill:#c62828;fill-opacity:1">C</flowSpan>ompanion</flowPara></flowRoot>    </g>
-    <rect
+   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:213.333px;line-height:165.4px;font-family:'Segoe UI';-inkscape-font-specification:'Segoe UI Bold';letter-spacing:-5px;fill:#c62828;fill-opacity:1">C</flowSpan>ompanion</flowPara></flowRoot></g><rect
        style="opacity:1;vector-effect:none;fill:url(#linearGradient1064);fill-opacity:1;stroke:none;stroke-width:0.05291667;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:0.05291667, 0.05291667;stroke-dashoffset:0;stroke-opacity:1;filter:url(#filter1355)"
        id="rect1038"
        width="736.46838"
@@ -554,8 +511,7 @@
        ry="2.3623507"
        inkscape:transform-center-x="243.07794"
        inkscape:transform-center-y="52.053706"
-       transform="rotate(-5.5182342,-279.92815,1118.5336)" />
-    <rect
+       transform="rotate(-5.5182342,-279.92815,1118.5336)" /><rect
        style="opacity:1;vector-effect:none;fill:url(#linearGradient1210);fill-opacity:1;stroke:none;stroke-width:0.05669301;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:0.05669301, 0.05669301;stroke-dashoffset:0;stroke-opacity:1"
        id="rect1202"
        width="1613.8628"
@@ -565,19 +521,16 @@
        ry="2.869293"
        inkscape:transform-center-x="5.9868373"
        inkscape:transform-center-y="211.78447"
-       transform="scale(1,-1)" />
-    <rect
+       transform="scale(1,-1)" /><rect
        style="opacity:1;vector-effect:none;fill:#ffffff;fill-opacity:0;stroke:none;stroke-width:0.05291667;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:0.05291667, 0.05291667;stroke-dashoffset:0;stroke-opacity:1"
        id="rect1200"
        width="1613.8628"
        height="311.26575"
        x="378.77313"
        y="163.4128"
-       ry="2.3623507" />
-    <g
+       ry="2.3623507" /><g
        id="g1811"
-       transform="translate(-192.46471,73.542361)">
-      <image
+       transform="translate(-192.46471,73.542361)"><image
          width="157.98993"
          height="147.56259"
          preserveAspectRatio="none"
@@ -585,15 +538,13 @@
          id="image1084-2"
          x="129.1951"
          y="-424.75964"
-         style="display:inline" />
-      <g
+         style="display:inline" /><g
          id="g884-3"
          transform="translate(-444.19325,-375.55327)"
          inkscape:export-filename="C:\Users\Mathieu\Dev\LC2\workspace\lifecompanion-k\resources\lifecompanion-logo\export\lifecompanion_copyright_300.png"
          inkscape:export-xdpi="22.75"
          inkscape:export-ydpi="22.75"
-         style="display:inline">
-        <flowRoot
+         style="display:inline"><flowRoot
            inkscape:export-ydpi="12.85"
            inkscape:export-xdpi="12.85"
            inkscape:export-filename="C:\Users\Mathieu\Desktop\lifecompanion_copyright_200.png"
@@ -620,40 +571,33 @@
              id="flowPara868-4"
              style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:64px;font-family:'Segoe UI';-inkscape-font-specification:'Segoe UI Light';text-align:end;text-anchor:end;fill:#4d4d4d">by</flowPara><flowPara
              id="flowPara871-7"
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:96px;font-family:'Segoe UI';-inkscape-font-specification:'Segoe UI Bold';text-align:end;text-anchor:end;fill:#4d4d4d" /></flowRoot>        <g
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:96px;font-family:'Segoe UI';-inkscape-font-specification:'Segoe UI Bold';text-align:end;text-anchor:end;fill:#4d4d4d" /></flowRoot><g
            inkscape:export-ydpi="12.85"
            inkscape:export-xdpi="12.85"
            inkscape:export-filename="C:\Users\Mathieu\Desktop\lifecompanion_copyright_200.png"
            style="fill:#4d4d4d;fill-opacity:1"
            transform="matrix(0.01831157,0,0,0.01421497,393.15045,-45.904693)"
-           id="g882-5">
-          <path
+           id="g882-5"><path
              style="fill:#4d4d4d;fill-opacity:1;stroke:#000000;stroke-miterlimit:10"
              inkscape:connector-curvature="0"
              class="st0"
              d="m 1215.2,1208.2 c 140.9,30.3 213.7,396.6 236.2,505.7 73.2,354.8 217.5,960.1 566.4,1318.4 -150.1,105 -387.4,72.4 -568.8,-108.6 73.3,195.4 -150.1,437.9 -233.8,488.6 -83.8,-50.7 -307.1,-293.2 -233.8,-488.6 -181.5,181 -418.8,213.5 -568.8,108.6 349,-358.3 493.3,-963.6 566.4,-1318.4 22.5,-109 95.2,-475.3 236.2,-505.7 z"
-             id="path861-7" />
-          <path
+             id="path861-7" /><path
              style="fill:#4d4d4d;fill-opacity:1;stroke:#000000;stroke-miterlimit:10"
              inkscape:connector-curvature="0"
              class="st0"
              d="m 1215.2,883.4 c 0,0 528.5,-186.5 0,-823.4 -528.5,636.9 0,823.4 0,823.4 z"
-             id="path863-4" />
-          <path
+             id="path863-4" /><path
              style="fill:#4d4d4d;fill-opacity:1;stroke:#000000;stroke-miterlimit:10"
              inkscape:connector-curvature="0"
              class="st0"
              d="m 1433.6,1161.2 c 0,0 335.6,448.9 785.9,-245.4 -765.4,-314.7 -785.9,245.4 -785.9,245.4 z"
-             id="path865-4" />
-          <path
+             id="path865-4" /><path
              style="fill:#4d4d4d;fill-opacity:1;stroke:#000000;stroke-miterlimit:10"
              inkscape:connector-curvature="0"
              class="st0"
              d="m 996.7,1161.2 c 0,0 -335.6,448.9 -785.9,-245.4 765.4,-314.7 785.9,245.4 785.9,245.4 z"
-             id="path867-5" />
-        </g>
-      </g>
-      <rect
+             id="path867-5" /></g></g><rect
          style="display:inline;fill:#4d4d4d;fill-opacity:1;stroke:none;stroke-width:4.94869;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
          id="rect896-9"
          width="2.2982478"
@@ -662,57 +606,114 @@
          y="-424.45422"
          inkscape:export-filename="C:\Users\Mathieu\Dev\LC2\workspace\lifecompanion-k\resources\lifecompanion-logo\export\lifecompanion_copyright_300.png"
          inkscape:export-xdpi="22.75"
-         inkscape:export-ydpi="22.75" />
-    </g>
-    <circle
+         inkscape:export-ydpi="22.75" /></g><circle
        style="opacity:1;vector-effect:none;fill:#0277bd;fill-opacity:1;stroke:none;stroke-width:0.42898202;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:0.42898203, 0.42898203;stroke-dashoffset:0;stroke-opacity:1"
        id="path812"
        cx="-326.01178"
        cy="738.21216"
        r="69.960464"
        inkscape:export-xdpi="756.17999"
-       inkscape:export-ydpi="756.17999" />
-    <path
+       inkscape:export-ydpi="756.17999" /><path
        d="m -331.06711,707.90546 h 15.16601 l 16.63206,-16.68263 a 5.0553411,5.0553411 0 0 1 7.17857,0 l 13.0428,13.09331 a 5.0553411,5.0553411 0 0 1 0,7.12804 l -11.57676,11.6273 h -40.44268 v 10.11067 a 5.0553411,5.0553411 0 0 1 -5.05539,5.05534 5.0553411,5.0553411 0 0 1 -5.05532,-5.05534 v -15.16601 a 10.110682,10.110682 0 0 1 10.11071,-10.11068 m -30.33206,25.27669 v 20.22135 l -11.57674,11.57677 a 5.0553411,5.0553411 0 0 0 0,7.12805 l 13.04279,13.0933 a 5.0553411,5.0553411 0 0 0 7.17861,0 l 21.6874,-21.68736 h 20.22136 a 5.0553411,5.0553411 0 0 0 5.05532,-5.05534 v -5.05542 h 5.05536 a 5.0553411,5.0553411 0 0 0 5.0553,-5.05525 v -5.05542 h 5.05534 a 5.0553411,5.0553411 0 0 0 5.05537,-5.05534 v -5.05534 h -35.38741 v 5.05534 a 10.110682,10.110682 0 0 1 -10.11064,10.11076 h -10.11071 a 10.110682,10.110682 0 0 1 -10.11069,-10.11076 v -15.16601 z"
        id="path2"
        style="fill:#ffffff;stroke-width:5.05534124"
        inkscape:connector-curvature="0"
        inkscape:export-xdpi="756.17999"
-       inkscape:export-ydpi="756.17999" />
-    <circle
+       inkscape:export-ydpi="756.17999" /><circle
        style="opacity:1;vector-effect:none;fill:#c62828;fill-opacity:1;stroke:none;stroke-width:0.42898202;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:0.42898203, 0.42898203;stroke-dashoffset:0;stroke-opacity:1"
        id="path812-3"
        cx="-136.29355"
        cy="740.14233"
        r="69.960464"
        inkscape:export-xdpi="756.17999"
-       inkscape:export-ydpi="756.17999" />
-    <circle
+       inkscape:export-ydpi="756.17999" /><circle
        style="opacity:1;vector-effect:none;fill:#ff9800;fill-opacity:1;stroke:none;stroke-width:0.42898202;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:0.42898203, 0.42898203;stroke-dashoffset:0;stroke-opacity:1"
        id="path812-3-0"
        cx="83.544899"
        cy="743.31396"
        r="69.960464"
        inkscape:export-xdpi="756.17999"
-       inkscape:export-ydpi="756.17999" />
-    <path
+       inkscape:export-ydpi="756.17999" /><path
        style="fill:#ffffff;stroke-width:4.84341669"
        id="path2-2"
        d="m 112.12105,769.4198 c -1.25929,-3.87473 -4.89185,-6.7324 -9.20249,-6.7324 h -4.84342 v -14.53019 a 4.8434171,4.8434171 0 0 0 -4.84342,-4.84347 h -29.0605 v -9.6868 h 9.68683 a 4.8434171,4.8434171 0 0 0 4.84342,-4.84339 v -9.68688 h 9.68684 a 9.6868341,9.6868341 0 0 0 9.68683,-9.68679 v -1.98582 c 14.19121,5.71524 24.21708,19.6158 24.21708,35.88968 0,10.0743 -3.87473,19.22836 -10.17117,26.10606 m -33.41958,12.30225 c -19.1315,-2.37325 -33.90392,-18.64713 -33.90392,-38.40831 0,-3.00289 0.38743,-5.90896 1.01712,-8.66972 l 23.19997,23.19999 v 4.84339 a 9.6868341,9.6868341 0 0 0 9.68683,9.68688 m 4.84342,-77.49467 a 48.434171,48.434171 0 0 0 -48.43417,48.43413 48.434171,48.434171 0 0 0 48.43417,48.43421 48.434171,48.434171 0 0 0 48.43417,-48.43421 48.434171,48.434171 0 0 0 -48.43417,-48.43413 z"
        inkscape:connector-curvature="0"
        inkscape:export-xdpi="756.17999"
-       inkscape:export-ydpi="756.17999" />
-    <path
+       inkscape:export-ydpi="756.17999" /><path
        style="fill:#ffffff;stroke-width:4.643466"
        inkscape:export-ydpi="756.17999"
        inkscape:export-xdpi="756.17999"
        id="path2-5"
        d="m -147.58,698.35104 a 18.573863,18.573863 0 0 0 -18.57386,18.57383 18.573863,18.573863 0 0 0 18.57386,18.57391 18.573863,18.573863 0 0 0 18.57386,-18.57391 18.573863,18.573863 0 0 0 -18.57386,-18.57383 m 32.50426,37.14774 c -0.60369,0 -1.11442,0.41818 -1.20731,0.97509 l -0.88225,6.12936 c -1.39303,0.60368 -2.73963,1.34665 -3.94694,2.18246 l -5.75789,-2.32175 c -0.51077,0 -1.11444,0 -1.43949,0.60368 l -4.64346,8.03317 c -0.27857,0.51094 -0.18574,1.11446 0.27858,1.48595 l 4.92208,3.80761 c -0.0927,0.78918 -0.13929,1.53232 -0.13929,2.32175 0,0.78918 0.0464,1.53232 0.13929,2.32175 l -4.92207,3.80761 c -0.41794,0.37181 -0.55722,0.97509 -0.27857,1.48586 l 4.64346,8.03325 c 0.27857,0.60369 0.88226,0.60369 1.43949,0.60369 l 5.75789,-2.32175 c 1.2073,0.8358 2.50747,1.62523 3.94694,2.18246 l 0.88225,6.12936 c 0.0927,0.55731 0.55723,0.97509 1.2073,0.97509 h 9.28694 c 0.51077,0 1.02156,-0.41819 1.11444,-0.97509 l 0.88225,-6.12936 c 1.39304,-0.60369 2.64677,-1.34666 3.9005,-2.18246 l 5.71147,2.32175 c 0.60369,0 1.2073,0 1.53235,-0.60369 l 4.64346,-8.03325 c 0.27858,-0.51093 0.13929,-1.11438 -0.27857,-1.48586 l -4.96853,-3.80761 c 0.0927,-0.78919 0.18574,-1.5324 0.18574,-2.32175 0,-0.78919 -0.0464,-1.5324 -0.18574,-2.32175 l 4.92208,-3.80761 c 0.41794,-0.37181 0.55723,-0.97517 0.27865,-1.48595 l -4.64354,-8.03317 c -0.27858,-0.60368 -0.88225,-0.60368 -1.48591,-0.60368 l -5.71147,2.32175 c -1.25374,-0.83581 -2.50747,-1.62523 -3.94693,-2.18246 l -0.88226,-6.12936 c -0.0464,-0.55732 -0.55723,-0.97509 -1.06801,-0.97509 h -9.28693 m -32.50426,9.28691 c -20.52412,0 -37.14772,8.31182 -37.14772,18.57382 v 9.287 h 44.94874 a 32.50426,32.50426 0 0 1 -3.15757,-13.93041 32.50426,32.50426 0 0 1 2.97184,-13.51247 c -2.46104,-0.27906 -5.01494,-0.41819 -7.61529,-0.41819 m 37.14774,6.96517 c 3.85407,0 6.96519,3.11118 6.96519,6.96524 0,3.85407 -3.11112,6.96517 -6.96519,6.96517 -3.90053,0 -6.96521,-3.1111 -6.96521,-6.96517 0,-3.85406 3.11112,-6.96524 6.96521,-6.96524 z"
-       inkscape:connector-curvature="0" />
-  </g>
-  <style
+       inkscape:connector-curvature="0" /><g
+       id="g11436"><g
+         style="fill:none;stroke:#4d4d4d;stroke-opacity:1"
+         id="g10783"
+         transform="matrix(8.8194444,0,0,8.8194444,-1135.1684,316.32948)"
+         inkscape:export-filename="..\..\..\..\..\Downloads\lifecompanion_icon_1024px.png"
+         inkscape:export-xdpi="60.099998"
+         inkscape:export-ydpi="60.099998"><path
+           d="m -4.8958603,8.0345907 h -2.7005061 c -0.6301744,0 -0.9452674,0 -1.1859613,0.1226423 -0.211725,0.107874 -0.3838598,0.2800087 -0.4917337,0.4917341 -0.1226423,0.2406938 -0.1226423,0.5557867 -0.1226423,1.185961 v 6.5262239 c 0,0.630174 0,0.945289 0.1226423,1.185972 0.1078739,0.211708 0.2800087,0.383865 0.4917337,0.491717 0.2406939,0.122648 0.5557869,0.122648 1.1859613,0.122648 h 4.2758013 c 0.6301743,0 0.9452897,0 1.1859723,-0.122648 0.2117084,-0.107852 0.3838656,-0.280009 0.4917171,-0.491717 0.122648,-0.240683 0.122648,-0.555798 0.122648,-1.185972 V 11.410223 M -4.8958603,8.0345907 -1.5202277,11.410223 M -4.8958603,8.0345907 v 2.4754643 c 0,0.315087 0,0.472634 0.061324,0.59298 0.053954,0.10586 0.1399762,0.191927 0.2458586,0.24587 0.1203413,0.06132 0.2778708,0.06132 0.5929861,0.06132 h 2.475464"
+           stroke="#000000"
+           stroke-width="1.12521"
+           stroke-linecap="round"
+           stroke-linejoin="round"
+           id="path10774"
+           sodipodi:nodetypes="csssssscssccsccccssssc"
+           style="stroke:#4d4d4d;stroke-opacity:1" /></g><circle
+         style="display:inline;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:7.6522;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
+         id="circle1230-1"
+         cx="-1204.5648"
+         cy="452.16504"
+         r="38.249958"
+         inkscape:export-xdpi="339.98999"
+         inkscape:export-ydpi="339.98999"
+         inkscape:export-filename="E:\Desktop\icons\lifecompanion_icon_1024px.png" /><path
+         style="display:inline;fill:#c62828;fill-opacity:1;stroke:none;stroke-width:7.6522;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
+         d="m -1204.5647,413.91521 a 38.249959,38.249959 0 0 0 -8.7979,1.07188 v 13.26575 h 3e-4 v 23.70562 c 10e-5,1.28945 1.0456,2.33457 2.335,2.33464 h 12.9629 a 27.785896,24.666429 0 0 1 26.7187,-17.92265 27.785896,24.666429 0 0 1 1.5879,0.0498 38.249959,38.249959 0 0 0 -34.8069,-22.50504 z"
+         id="path1237-9"
+         inkscape:connector-curvature="0"
+         inkscape:export-xdpi="339.98999"
+         inkscape:export-ydpi="339.98999"
+         inkscape:export-filename="E:\Desktop\icons\lifecompanion_icon_1024px.png" /><path
+         style="display:inline;fill:#0277bd;fill-opacity:1;stroke:none;stroke-width:7.6522;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
+         d="m -1226.9065,421.17692 a 38.249959,38.249959 0 0 0 -15.9084,30.98807 38.249959,38.249959 0 0 0 38.2502,38.25015 38.249959,38.249959 0 0 0 21.8443,-6.90612 27.785896,24.666429 0 0 1 -15.4109,-16.02106 h -17.566 -8.5252 -0.3494 c -1.2894,-9e-5 -2.3345,-1.04522 -2.3346,-2.33465 z"
+         id="path1235-7"
+         inkscape:connector-curvature="0"
+         inkscape:export-xdpi="339.98999"
+         inkscape:export-ydpi="339.98999"
+         inkscape:export-filename="E:\Desktop\icons\lifecompanion_icon_1024px.png" /><path
+         style="display:inline;fill:url(#linearGradient420);fill-opacity:1;stroke:none;stroke-width:7.6522;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
+         d="m -1171.3457,448.98973 a 13.570525,12.046992 0 0 0 -13.5704,12.04733 13.570525,12.046992 0 0 0 12.3691,11.99353 38.249959,38.249959 0 0 0 6.232,-20.8656 38.249959,38.249959 0 0 0 -0.083,-2.33319 13.570525,12.046992 0 0 0 -4.9481,-0.84207 z"
+         id="circle883-5-6-3"
+         inkscape:connector-curvature="0"
+         inkscape:export-xdpi="339.98999"
+         inkscape:export-ydpi="339.98999"
+         inkscape:export-filename="E:\Desktop\icons\lifecompanion_icon_1024px.png" /><path
+         style="display:inline;vector-effect:none;fill:url(#linearGradient422);fill-opacity:1;stroke:none;stroke-width:0.3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         d="m -1226.3268,466.68932 v 0.005 l 0.1038,0.10385 c -0.035,-0.0348 -0.066,-0.0721 -0.099,-0.10904 z m 0.1095,0.11991 23.5092,23.50916 a 38.249957,38.249957 0 0 0 19.9879,-6.80943 27.785896,24.666429 0 0 1 -15.4109,-16.02123 h -17.5664 -8.5251 -0.3493 c -0.642,-6e-5 -1.2233,-0.25921 -1.6454,-0.6785 z"
+         id="rect1282-4"
+         inkscape:connector-curvature="0"
+         inkscape:export-xdpi="339.98999"
+         inkscape:export-ydpi="339.98999"
+         inkscape:export-filename="E:\Desktop\icons\lifecompanion_icon_1024px.png" /><path
+         style="display:inline;vector-effect:none;fill:url(#linearGradient424);fill-opacity:1;stroke:none;stroke-width:0.3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         d="m -1213.3628,414.98707 v 13.26583 h 5e-4 v 23.70553 c 2e-4,1.28948 1.0454,2.33469 2.3348,2.33477 h 12.963 a 27.785896,24.666429 0 0 1 10.6567,-13.35114 z"
+         id="rect1295-3"
+         inkscape:connector-curvature="0"
+         inkscape:export-xdpi="339.98999"
+         inkscape:export-ydpi="339.98999"
+         inkscape:export-filename="E:\Desktop\icons\lifecompanion_icon_1024px.png" /></g><rect
+       style="fill:#ffffff;fill-opacity:0;fill-rule:nonzero;stroke:none;stroke-width:5.74113;stroke-dasharray:none;stroke-opacity:1"
+       id="rect11374"
+       width="109.89722"
+       height="109.89722"
+       x="-1248.1573"
+       y="381.36731"
+       inkscape:export-filename="..\..\..\..\..\Downloads\rect11374.png"
+       inkscape:export-xdpi="118.33594"
+       inkscape:export-ydpi="118.33594" /></g><style
      id="style859"
      type="text/css">
 	.st0{stroke:#000000;stroke-miterlimit:10;}
-</style>
-</svg>
+</style></svg>

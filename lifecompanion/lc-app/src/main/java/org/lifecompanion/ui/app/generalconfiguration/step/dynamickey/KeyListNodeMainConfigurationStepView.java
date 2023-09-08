@@ -89,14 +89,14 @@ public class KeyListNodeMainConfigurationStepView extends BorderPane implements 
     public void bind(LCConfigurationI model) {
         this.model = model;
         editedRoot = (KeyListNodeI) model.rootKeyListNodeProperty().get().duplicate(false);
-        this.keyListContentConfigView.rootKeyListNodeProperty().set(editedRoot);
+        this.keyListContentConfigView.rootProperty().set(editedRoot);
     }
 
     @Override
     public void unbind(LCConfigurationI model) {
         this.model = null;
         this.editedRoot = null;
-        keyListContentConfigView.rootKeyListNodeProperty().set(null);
+        keyListContentConfigView.rootProperty().set(null);
     }
 
     @Override
@@ -105,7 +105,7 @@ public class KeyListNodeMainConfigurationStepView extends BorderPane implements 
         if (nodeId != null) {
             final KeyListNodeI nodeToEditInCurrentTree = KeyListController.findNodeByIdInSubtree(editedRoot, nodeId);
             if (nodeToEditInCurrentTree != null) {
-                keyListContentConfigView.selectAndScrollTo(nodeToEditInCurrentTree);
+                keyListContentConfigView.select(nodeToEditInCurrentTree);
             }
         }
     }

@@ -47,7 +47,7 @@ public class LCConstant {
     public static final double SETTINGS_STAGE_WIDTH = 700.0, SETTINGS_STAGE_HEIGHT = 500.0;
     public static final double TIPS_STAGE_WIDTH = 1100.0, TIPS_STAGE_HEIGHT = 700.0;
     public static final double DEV_STAGE_WIDTH = 1200.0, DEV_STAGE_HEIGHT = 250.0;
-    public static final int DEFAULT_COLOR_REPLACE_THRESHOLD = 10;
+    public static final int DEFAULT_COLOR_REPLACE_THRESHOLD = 100;
 
     public static final String ARG_LAUNCH_CONFIG = "-directLaunchOn";
     public static final String ARG_IMPORT_LAUNCH_CONFIG = "-directImportAndLaunch";

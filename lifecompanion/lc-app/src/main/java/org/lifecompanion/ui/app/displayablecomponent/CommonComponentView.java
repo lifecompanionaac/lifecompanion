@@ -19,11 +19,9 @@
 package org.lifecompanion.ui.app.displayablecomponent;
 
 import javafx.geometry.Insets;
-import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -31,7 +29,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.controller.editaction.BaseComponentAction;
 import org.lifecompanion.controller.editaction.BaseComponentAction.ChangeComponentNameAction;
 import org.lifecompanion.controller.editaction.UserCompActions.CreateOrUpdateUserComp;
@@ -42,9 +39,9 @@ import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.model.api.configurationcomponent.DisplayableComponentI;
-import org.lifecompanion.model.api.profile.UserCompDescriptionI;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.ui.common.util.UndoRedoTextInputWrapper;
+import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.util.javafx.FXControlUtils;
 import org.lifecompanion.util.javafx.FXUtils;
 import org.slf4j.Logger;
@@ -86,11 +83,6 @@ public class CommonComponentView extends BorderPane implements LCViewInitHelper 
     private Label labelDefaultName;
 
     /**
-     * Button to create a {@link UserCompDescriptionI}
-     */
-    private Button buttonSaveComponent;
-
-    /**
      * Container for name field
      */
     private UndoRedoTextInputWrapper fieldNameWrapper;
@@ -105,9 +97,6 @@ public class CommonComponentView extends BorderPane implements LCViewInitHelper 
         VBox totalBox = new VBox(6.0);
         totalBox.setAlignment(Pos.CENTER);
         //Name
-        /**
-         * Label use to display informations, or name
-         */
         Label labelName = new Label(Translation.getText("component.name.custom"));
         labelDefaultName = new Label();
         labelDefaultName.getStyleClass().addAll("text-font-italic", "text-fill-gray", "text-wrap-enabled");
@@ -128,14 +117,8 @@ public class CommonComponentView extends BorderPane implements LCViewInitHelper 
         this.imageViewComponent.setPreserveRatio(true);
         this.imageViewComponent.setSmooth(true);
 
-        //Button to save component
-        this.buttonSaveComponent = FXControlUtils.createLeftTextButton(Translation.getText("menu.select.save.component"),
-                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.SAVE).size(18).color(LCGraphicStyle.MAIN_DARK),
-                "tooltip.menu.select.save.component");
-        Separator sep = new Separator(Orientation.HORIZONTAL);
-
         // View content
-        totalBox.getChildren().addAll(this.imageViewComponent, labelDefaultName, labelName, boxFieldName, sep, this.buttonSaveComponent);
+        totalBox.getChildren().addAll(this.imageViewComponent, labelDefaultName, labelName, boxFieldName);
 
         // Button ok (hide stage)
         buttonOk = FXControlUtils.createLeftTextButton(Translation.getText("image.use.button.ok"),
@@ -159,7 +142,6 @@ public class CommonComponentView extends BorderPane implements LCViewInitHelper 
                 ConfigActionController.INSTANCE.addAction(textAction);
             }
         });
-        this.buttonSaveComponent.setOnAction(ea -> ConfigActionController.INSTANCE.executeAction(new CreateOrUpdateUserComp(currentComponent)));
         this.fieldNameWrapper.getTextControl().setOnKeyReleased(e -> {
             if (e.getCode() == KeyCode.ENTER) {
                 buttonOk.fire();

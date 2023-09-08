@@ -29,6 +29,7 @@ import org.jdom2.Text;
 import org.lifecompanion.controller.io.XMLHelper;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.plugin.PluginController;
+import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
 import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
 import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
@@ -38,7 +39,9 @@ import org.lifecompanion.model.api.lifecycle.LCStateListener;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
 import org.lifecompanion.model.api.voicesynthesizer.*;
 import org.lifecompanion.model.impl.exception.UnavailableFeatureException;
+import org.lifecompanion.model.impl.useapi.GlobalRuntimeConfiguration;
 import org.lifecompanion.model.impl.voicesynthesizer.*;
+import org.lifecompanion.util.LangUtils;
 import org.lifecompanion.util.ThreadUtils;
 import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.slf4j.Logger;
@@ -277,7 +280,7 @@ public enum VoiceSynthesizerController implements LCStateListener, ModeListenerI
                 }
                 long start = System.currentTimeMillis();
                 //Set parameters
-                currentSynthesizer.setVolume(parameters.volumeProperty().get());
+                currentSynthesizer.setVolume(getVolume());
                 currentSynthesizer.setRate(parameters.rateProperty().get());
                 currentSynthesizer.setPitch(parameters.pitchProperty().get());
                 final VoiceInfoI voiceInfo = checkVoiceInfo(currentSynthesizer, parameters.getVoiceParameter().selectedVoiceInfoProperty().get());
@@ -292,6 +295,18 @@ public enum VoiceSynthesizerController implements LCStateListener, ModeListenerI
                 if (speakEndCallback != null) {
                     speakEndCallback.run();
                 }
+            }
+
+            private int getVolume() {
+                if (GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.FORCE_SOUND_VOLUME)) {
+                    String volumeStr = GlobalRuntimeConfigurationController.INSTANCE.getParameter(GlobalRuntimeConfiguration.FORCE_SOUND_VOLUME);
+                    Double forceVolume = LangUtils.safeParseDouble(volumeStr);
+                    if (forceVolume != null) {
+                        LOGGER.info("Speech synthesizer forced to {} because {} is enabled", forceVolume, GlobalRuntimeConfiguration.FORCE_SOUND_VOLUME);
+                        return (int) Math.max(0, Math.min(100, forceVolume * 100.0));
+                    }
+                }
+                return parameters.volumeProperty().get();
             }
         };
         return this.voiceSpeakExecutor.submit(speakTask);

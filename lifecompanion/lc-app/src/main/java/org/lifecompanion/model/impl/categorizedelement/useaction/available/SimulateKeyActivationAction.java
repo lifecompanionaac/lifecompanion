@@ -59,8 +59,7 @@ public class SimulateKeyActivationAction extends SimpleUseActionImpl<UseActionTr
         this.parameterizableAction = true;
         this.targetKeyId = new SimpleStringProperty();
         this.targetKey = new ComponentHolderById<>(this.targetKeyId, this.parentComponentProperty());
-        this.variableDescriptionProperty().bind(TranslationFX.getTextBinding("action.simulate.key.activation.variable.description", EasyBind
-                .select(this.targetKeyProperty()).selectObject(GridPartKeyComponentI::nameProperty).orElse(Translation.getText("key.none.selected"))));
+        this.variableDescriptionProperty().bind(TranslationFX.getTextBinding("action.simulate.key.activation.variable.description", targetKey.componentNameOrInfoProperty()));
     }
 
     public ReadOnlyObjectProperty<GridPartKeyComponentI> targetKeyProperty() {

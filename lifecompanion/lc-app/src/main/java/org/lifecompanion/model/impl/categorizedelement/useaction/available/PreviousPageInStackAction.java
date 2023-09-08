@@ -18,29 +18,24 @@
  */
 package org.lifecompanion.model.impl.categorizedelement.useaction.available;
 
-import java.util.Map;
-
 import javafx.beans.property.ReadOnlyObjectProperty;
-import org.fxmisc.easybind.EasyBind;
-import org.jdom2.Element;
-
-import org.lifecompanion.model.api.configurationcomponent.StackComponentI;
-import org.lifecompanion.model.impl.configurationcomponent.ComponentHolder;
-import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
-import org.lifecompanion.framework.commons.translation.Translation;
-import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
-import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
-import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
-import org.lifecompanion.model.api.usevariable.UseVariableI;
-import org.lifecompanion.controller.selectionmode.SelectionModeController;
-import org.lifecompanion.model.impl.configurationcomponent.ComponentHolderById;
-import org.lifecompanion.model.impl.exception.LCException;
-import org.lifecompanion.model.api.io.IOContextI;
-import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
-import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseActionSubCategories;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import org.jdom2.Element;
+import org.lifecompanion.controller.selectionmode.SelectionModeController;
+import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
+import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
+import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseActionSubCategories;
+import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
+import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
+import org.lifecompanion.model.api.configurationcomponent.StackComponentI;
+import org.lifecompanion.model.api.io.IOContextI;
+import org.lifecompanion.model.api.usevariable.UseVariableI;
+import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
+import org.lifecompanion.model.impl.configurationcomponent.ComponentHolderById;
+import org.lifecompanion.model.impl.exception.LCException;
+
+import java.util.Map;
 
 /**
  * Action to go to the previous page in a selected stack
@@ -62,8 +57,7 @@ public class PreviousPageInStackAction extends SimpleUseActionImpl<UseActionTrig
         this.changedPageParentStackId = new SimpleStringProperty();
         this.changedPageParentStack = new ComponentHolderById<>(this.changedPageParentStackId, this.parentComponentProperty());
         this.variableDescriptionProperty()
-                .bind(TranslationFX.getTextBinding("previous.page.in.stack.variable.description", EasyBind.select(this.changedPageParentStackProperty())
-                        .selectObject(StackComponentI::nameProperty).orElse(Translation.getText("stack.none.selected"))));
+            .bind(TranslationFX.getTextBinding("previous.page.in.stack.variable.description", changedPageParentStack.componentNameOrInfoProperty()));
 
     }
 

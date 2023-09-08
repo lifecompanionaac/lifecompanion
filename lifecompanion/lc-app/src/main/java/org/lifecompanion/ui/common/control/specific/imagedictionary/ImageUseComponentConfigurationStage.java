@@ -50,6 +50,7 @@ public class ImageUseComponentConfigurationStage extends Stage {
             }
         });
         this.setOnHidden(e -> imageUseComponentConfigurationView.modelProperty().set(null));
+        StageUtils.fixMaximizedVisualBounds(this);
     }
 
     public static ImageUseComponentConfigurationStage getInstance() {
@@ -61,6 +62,6 @@ public class ImageUseComponentConfigurationStage extends Stage {
 
     public void prepareAndShow(ImageUseComponentI imageUseComponent) {
         imageUseComponentConfigurationView.modelProperty().set(imageUseComponent);
-        this.show();
+        StageUtils.centerOnOwnerOrOnCurrentStageAndShow(this);
     }
 }

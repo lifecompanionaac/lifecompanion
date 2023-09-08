@@ -24,6 +24,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.input.KeyCode;
 import org.jdom2.Element;
+import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
 import org.lifecompanion.controller.virtualkeyboard.VirtualKeyboardController;
 import org.lifecompanion.framework.commons.fx.io.XMLGenericProperty;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
@@ -35,13 +36,18 @@ import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
 import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
 import org.lifecompanion.model.impl.exception.LCException;
+import org.lifecompanion.model.impl.useapi.GlobalRuntimeConfiguration;
 import org.lifecompanion.util.javafx.FXKeyCodeTranslatorUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class SimulateKeyboardKeyPressedAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SimulateKeyboardKeyPressedAction.class);
+
 
     @XMLGenericProperty(KeyCode.class)
     private ObjectProperty<KeyCode> keyPressed1, keyPressed2, keyPressed3;
@@ -80,10 +86,14 @@ public class SimulateKeyboardKeyPressedAction extends SimpleUseActionImpl<UseAct
 
     @Override
     public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
-        KeyCode[] keyCodes = this.createKeyCodeList();
-        //Execute
-        if (keyCodes.length > 0) {
-            VirtualKeyboardController.INSTANCE.keyPressThenRelease(keyCodes);
+        if (!GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DISABLE_VIRTUAL_KEYBOARD) && !GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DISABLE_EXTERNAL_ACTIONS)) {
+            KeyCode[] keyCodes = this.createKeyCodeList();
+            //Execute
+            if (keyCodes.length > 0) {
+                VirtualKeyboardController.INSTANCE.keyPressThenRelease(keyCodes);
+            }
+        } else {
+            LOGGER.info("Ignored {} action because {} or {} is enabled", this.getClass().getSimpleName(), GlobalRuntimeConfiguration.DISABLE_VIRTUAL_KEYBOARD, GlobalRuntimeConfiguration.DISABLE_EXTERNAL_ACTIONS);
         }
     }
 

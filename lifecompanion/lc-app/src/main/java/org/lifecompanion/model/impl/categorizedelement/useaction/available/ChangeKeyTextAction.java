@@ -60,8 +60,7 @@ public class ChangeKeyTextAction extends SimpleUseActionImpl<UseActionTriggerCom
         this.wantedKeyText = new SimpleStringProperty();
         this.targetKey = new ComponentHolderById<>(this.targetKeyId, this.parentComponentProperty());
         this.variableDescriptionProperty()
-                .bind(TranslationFX.getTextBinding("action.change.key.text.variable.description", EasyBind.select(this.targetKeyProperty())
-                        .selectObject(GridPartKeyComponentI::nameProperty).orElse(Translation.getText("key.none.selected")), this.wantedKeyText));
+                .bind(TranslationFX.getTextBinding("action.change.key.text.variable.description", targetKey, this.wantedKeyText));
     }
 
     public ReadOnlyObjectProperty<GridPartKeyComponentI> targetKeyProperty() {

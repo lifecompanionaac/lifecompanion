@@ -18,30 +18,26 @@
  */
 package org.lifecompanion.controller.editaction;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.Property;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.control.ContentDisplay;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.paint.Color;
-import org.lifecompanion.model.api.editaction.UndoRedoActionI;
-import org.lifecompanion.model.api.configurationcomponent.DisplayableComponentI;
-import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
-import org.lifecompanion.model.api.configurationcomponent.ImageUseComponentI;
-import org.lifecompanion.model.api.configurationcomponent.keyoption.KeyOptionI;
-import org.lifecompanion.model.api.configurationcomponent.dynamickey.SimplerKeyContentContainerI;
-import org.lifecompanion.model.api.style.*;
-import org.lifecompanion.model.impl.exception.LCException;
-import org.lifecompanion.model.api.imagedictionary.ImageElementI;
-import org.lifecompanion.model.impl.editaction.BasePropertyChangeAction;
-import org.lifecompanion.util.model.PositionSize;
-import org.lifecompanion.model.impl.configurationcomponent.GridPartKeyComponent;
 import org.lifecompanion.controller.editmode.ComponentActionController;
 import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.controller.editmode.SelectionController;
+import org.lifecompanion.model.api.configurationcomponent.DisplayableComponentI;
+import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
+import org.lifecompanion.model.api.configurationcomponent.ImageUseComponentI;
+import org.lifecompanion.model.api.configurationcomponent.dynamickey.SimplerKeyContentContainerI;
+import org.lifecompanion.model.api.configurationcomponent.keyoption.KeyOptionI;
+import org.lifecompanion.model.api.editaction.UndoRedoActionI;
+import org.lifecompanion.model.api.imagedictionary.ImageElementI;
+import org.lifecompanion.model.api.style.*;
+import org.lifecompanion.model.impl.editaction.BasePropertyChangeAction;
+import org.lifecompanion.model.impl.exception.LCException;
+import org.lifecompanion.util.model.PositionSize;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -108,7 +104,7 @@ public class KeyActions {
         private double previousRotate;
         private boolean previousEnableColorReplace;
         private boolean previousPreserveRatio;
-        private TextPosition previousContentDisplay;
+        private Runnable textPositionUndo;
 
         public ChangeImageAction(final ImageUseComponentI keyP, final ImageElementI wantedImageP) {
             super(keyP.imageVTwoProperty(), wantedImageP);
@@ -151,8 +147,13 @@ public class KeyActions {
                                                                                  Predicate<T> propertyChecker) {
             if (type.isAssignableFrom(imageUseComponent.getClass())) {
                 TextPosition currentPos = textPositionGetter.apply((T) imageUseComponent);
-                if (wantedValue != null && imageUseComponent.imageVTwoProperty().get() == null && currentPos == TextPosition.CENTER && propertyChecker.test((T) imageUseComponent)) {
-                    previousContentDisplay = currentPos;
+                if (wantedValue != null && imageUseComponent.imageVTwoProperty()
+                                                            .get() == null && (currentPos == null || currentPos == TextPosition.CENTER) && propertyChecker.test((T) imageUseComponent)) {
+                    textPositionUndo = () -> {
+                        if (propertyChecker.test((T) imageUseComponent)) {
+                            textPositionSetter.accept((T) imageUseComponent, currentPos);
+                        }
+                    };
                     textPositionSetter.accept((T) imageUseComponent, TextPosition.BOTTOM);
                 }
             }
@@ -172,11 +173,9 @@ public class KeyActions {
             this.imageUseComponent.preserveRatioProperty().set(previousPreserveRatio);
 
             // Restore text position on key
-            if (this.imageUseComponent instanceof GridPartKeyComponentI && previousContentDisplay != null) {
-                GridPartKeyComponentI key = (GridPartKeyComponentI) this.imageUseComponent;
-                if (!key.getKeyStyle().textPositionProperty().selected().isBound()) {
-                    key.getKeyStyle().textPositionProperty().selected().setValue(previousContentDisplay);
-                }
+            if (this.textPositionUndo != null) {
+                textPositionUndo.run();
+                textPositionUndo = null;
             }
         }
 

@@ -8,6 +8,7 @@ plugins {
     id 'org.lifecompanion.gradle.plugin.env-conf'
     id 'org.lifecompanion.gradle.plugin.download-jdk-jfx'
     id 'org.lifecompanion.gradle.plugin.publish-application'
+    id 'org.lifecompanion.gradle.plugin.create-deb'
 }
 
 javafx {
@@ -49,11 +50,11 @@ application {
             '-Dcom.sun.management.jmxremote.port=9999', '-Dcom.sun.management.jmxremote.authenticate=false', '-Dcom.sun.management.jmxremote.ssl=false', // debug only
 
             // LC dev mode
-            '-Dorg.lifecompanion.debug.dev.env=true',
-            '-Dorg.lifecompanion.debug.skip.update.check=true',
-            '-Dorg.lifecompanion.debug.load.plugins.from.cp=true',
-            '-Dorg.lifecompanion.debug.loaded.images=true',
-            '-Dorg.lifecompanion.debug.configuration.memory.leak=true'
+            '-Dorg.lifecompanion.dev.mode',
+            '-Dorg.lifecompanion.disable.updates',
+            '-Dorg.lifecompanion.load.plugins.from.cp',
+            '-Dorg.lifecompanion.debug.loaded.images',
+            '-Dorg.lifecompanion.debug.loaded.configuration'
     ]
 }
 
@@ -97,9 +98,12 @@ dependencies {
     }
 
     // Get system information (battery level, etc.)
-    implementation ('com.github.oshi:oshi-core-java11:6.4.0'){
+    api ('com.github.oshi:oshi-core-java11:6.4.0'){
         exclude group: 'org.slf4j'
     }
+
+    // User api control server
+    api 'com.sparkjava:spark-core:2.9.2'
 
     // Tests
     testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.8.2'

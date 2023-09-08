@@ -26,6 +26,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.jdom2.Element;
 import org.lifecompanion.controller.io.ConfigurationComponentIOHelper;
+import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
 import org.lifecompanion.model.api.configurationcomponent.ConfigurationChildComponentI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.configurationcomponent.keyoption.KeyOptionConfigurationViewI;
@@ -52,6 +53,7 @@ import org.lifecompanion.model.impl.plugin.PluginInfoState;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
 import org.lifecompanion.controller.appinstallation.InstallationController;
+import org.lifecompanion.model.impl.useapi.GlobalRuntimeConfiguration;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStepViewI;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.app.VersionUtils;
@@ -490,7 +492,7 @@ public enum PluginController implements LCStateListener, ModeListenerI {
                 }
 
                 // This part is for dev only
-                if (org.lifecompanion.util.LangUtils.safeParseBoolean(System.getProperty("org.lifecompanion.debug.load.plugins.from.cp"))) {
+                if (GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.PROP_LOAD_PLUGIN_FROM_CP)) {
                     List<File> jarFiles = new ClassGraph().getClasspathFiles();
                     for (File jarFile : jarFiles) {
                         if (jarFile.getName().contains("plugin")) {

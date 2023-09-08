@@ -19,6 +19,7 @@
 package org.lifecompanion.model.impl.categorizedelement.useaction.available;
 
 import javafx.print.*;
+import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.model.api.configurationcomponent.WriterDisplayerI;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
@@ -30,6 +31,7 @@ import org.lifecompanion.controller.textcomponent.WritingStateController;
 import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
 import org.lifecompanion.model.impl.notification.LCNotification;
 import org.lifecompanion.model.impl.textcomponent.TextDisplayerLineHelper;
+import org.lifecompanion.model.impl.useapi.GlobalRuntimeConfiguration;
 import org.lifecompanion.ui.configurationcomponent.base.TextDisplayer;
 import org.lifecompanion.ui.notification.LCNotificationController;
 import org.slf4j.Logger;
@@ -70,64 +72,68 @@ public class PrintToDefaultPrinterAction extends SimpleUseActionImpl<UseActionTr
     // ========================================================================
     @Override
     public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
-        if (System.currentTimeMillis() - lastPrint >= DELAY_BETWEEN_TWO_PRINT_ACTION) {
-            this.lastPrint = System.currentTimeMillis();
-            try {
-                // Get default printer
-                Printer defaultPrinter = Printer.getDefaultPrinter();
-                if (defaultPrinter != null) {
-                    // Create layout
-                    PageLayout pageLayout = defaultPrinter.createPageLayout(Paper.A4, PageOrientation.PORTRAIT, Printer.MarginType.DEFAULT);
-                    PrinterJob printerJob = PrinterJob.createPrinterJob(defaultPrinter);
-                    printerJob.getJobSettings().setJobName("LifeCompanion");
-                    if (printerJob != null) {
-                        WriterDisplayerI writer = WritingStateController.INSTANCE.getReferencedTextEditor();
-                        if (writer != null) {
-                            // Initialize a text displayer
-                            TextDisplayer textDisplayer = TextDisplayer.toPrint(writer, pageLayout.getPrintableWidth());
-                            List<TextDisplayerLineI> lines = TextDisplayerLineHelper.generateLines(WritingStateController.INSTANCE,
-                                    writer,
-                                    writer.getTextDisplayerTextStyle(),
-                                    pageLayout.getPrintableWidth());
+        if (!GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DISABLE_EXTERNAL_ACTIONS)) {
+            if (System.currentTimeMillis() - lastPrint >= DELAY_BETWEEN_TWO_PRINT_ACTION) {
+                this.lastPrint = System.currentTimeMillis();
+                try {
+                    // Get default printer
+                    Printer defaultPrinter = Printer.getDefaultPrinter();
+                    if (defaultPrinter != null) {
+                        // Create layout
+                        PageLayout pageLayout = defaultPrinter.createPageLayout(Paper.A4, PageOrientation.PORTRAIT, Printer.MarginType.DEFAULT);
+                        PrinterJob printerJob = PrinterJob.createPrinterJob(defaultPrinter);
+                        printerJob.getJobSettings().setJobName("LifeCompanion");
+                        if (printerJob != null) {
+                            WriterDisplayerI writer = WritingStateController.INSTANCE.getReferencedTextEditor();
+                            if (writer != null) {
+                                // Initialize a text displayer
+                                TextDisplayer textDisplayer = TextDisplayer.toPrint(writer, pageLayout.getPrintableWidth());
+                                List<TextDisplayerLineI> lines = TextDisplayerLineHelper.generateLines(WritingStateController.INSTANCE,
+                                        writer,
+                                        writer.getTextDisplayerTextStyle(),
+                                        pageLayout.getPrintableWidth());
 
-                            // Compute page count
-                            List<List<TextDisplayerLineI>> linesPerPage = new ArrayList<>();
-                            List<TextDisplayerLineI> currentPage = createPageAndAddIt(linesPerPage);
-                            for (TextDisplayerLineI line : lines) {
-                                double currentPageHeight = currentPage.stream().mapToDouble(l -> getLineHeight(writer, l)).sum();
-                                double lineHeight = getLineHeight(writer, line);
-                                if (currentPageHeight + lineHeight > pageLayout.getPrintableHeight()) {
-                                    currentPage = createPageAndAddIt(linesPerPage);
+                                // Compute page count
+                                List<List<TextDisplayerLineI>> linesPerPage = new ArrayList<>();
+                                List<TextDisplayerLineI> currentPage = createPageAndAddIt(linesPerPage);
+                                for (TextDisplayerLineI line : lines) {
+                                    double currentPageHeight = currentPage.stream().mapToDouble(l -> getLineHeight(writer, l)).sum();
+                                    double lineHeight = getLineHeight(writer, line);
+                                    if (currentPageHeight + lineHeight > pageLayout.getPrintableHeight()) {
+                                        currentPage = createPageAndAddIt(linesPerPage);
+                                    }
+                                    currentPage.add(line);
                                 }
-                                currentPage.add(line);
-                            }
 
-                            // Try to print each page
-                            for (List<TextDisplayerLineI> lineForPage : linesPerPage) {
-                                textDisplayer.manualRepaint(lineForPage);
-                                boolean success = printerJob.printPage(textDisplayer);
-                                LOGGER.info("Page printed successfully : {}", success);
+                                // Try to print each page
+                                for (List<TextDisplayerLineI> lineForPage : linesPerPage) {
+                                    textDisplayer.manualRepaint(lineForPage);
+                                    boolean success = printerJob.printPage(textDisplayer);
+                                    LOGGER.info("Page printed successfully : {}", success);
+                                }
+                                boolean endJob = printerJob.endJob();
+                                LOGGER.info("Printer job ended successfully : {}", endJob);
+                                if (!endJob) {
+                                    lastPrint = 0;
+                                }
+                                LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo("print.use.action.finished"));
+                            } else {
+                                throw new NullPointerException("No printer job");
                             }
-                            boolean endJob = printerJob.endJob();
-                            LOGGER.info("Printer job ended successfully : {}", endJob);
-                            if (!endJob) {
-                                lastPrint = 0;
-                            }
-                            LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo("print.use.action.finished"));
-                        } else {
-                            throw new NullPointerException("No printer job");
                         }
                     }
+                } catch (Throwable e) {
+                    PrintToDefaultPrinterAction.LOGGER.error("Error while trying to print", e);
+                    LCNotificationController.INSTANCE.showNotification(LCNotification.createError("print.use.action.failed"));
+                    lastPrint = 0;
                 }
-            } catch (Throwable e) {
-                PrintToDefaultPrinterAction.LOGGER.error("Error while trying to print", e);
-                LCNotificationController.INSTANCE.showNotification(LCNotification.createError("print.use.action.failed"));
-                lastPrint = 0;
+            } else {
+                LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo(Translation.getText("print.use.action.should.wait",
+                        (DELAY_BETWEEN_TWO_PRINT_ACTION - (System.currentTimeMillis() - lastPrint)) / 1000)));
+                LOGGER.warn("Last print was execute {} ms ago, didn't launch a new print", (System.currentTimeMillis() - lastPrint));
             }
         } else {
-            LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo(Translation.getText("print.use.action.should.wait",
-                    (DELAY_BETWEEN_TWO_PRINT_ACTION - (System.currentTimeMillis() - lastPrint)) / 1000)));
-            LOGGER.warn("Last print was execute {} ms ago, didn't launch a new print", (System.currentTimeMillis() - lastPrint));
+            LOGGER.info("Ignored {} action because {} is enabled", this.getClass().getSimpleName(), GlobalRuntimeConfiguration.DISABLE_EXTERNAL_ACTIONS);
         }
     }
 

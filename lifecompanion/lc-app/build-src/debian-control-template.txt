@@ -1,0 +1,6 @@
+Package: lifecompanion
+Version: ${appVersion}
+Maintainer: CMRRF Kerpape
+Architecture: all
+Depends: libttspico-utils (>= 1.0)
+Description: LifeCompanion AAC software

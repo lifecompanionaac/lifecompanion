@@ -99,7 +99,7 @@ public class TextStyleEditView extends AbstractStyleEditView<TextCompStyleI> imp
         this.boxItalic = new CheckBox(Translation.getText("text.style.font.italic"));
         this.boxUnderline = new CheckBox(Translation.getText("text.style.font.underline"));
         this.boxUpperCase = new CheckBox(Translation.getText("text.style.font.uppercase"));
-        this.spinnerSize = FXControlUtils.createIntSpinner(1, 250, 12, 2, 75.0);
+        this.spinnerSize = FXControlUtils.createIntSpinner(1, 250, 12, 2, 95.0);
         this.comboboxFontFamilly = new ComboBox<>(FXCollections.observableList(Font.getFamilies()));
         this.comboboxFontFamilly.setCellFactory(lv -> new FontListCell());
         this.comboboxFontFamilly.setButtonCell(new FontListCell());

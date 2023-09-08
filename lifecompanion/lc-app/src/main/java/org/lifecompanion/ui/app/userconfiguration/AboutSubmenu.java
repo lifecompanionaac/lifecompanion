@@ -45,6 +45,7 @@ import org.lifecompanion.util.DesktopUtils;
 import org.lifecompanion.util.javafx.DialogUtils;
 import org.lifecompanion.util.javafx.FXControlUtils;
 import org.lifecompanion.util.javafx.FXUtils;
+import org.lifecompanion.util.javafx.StageUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -141,8 +142,8 @@ public class AboutSubmenu extends VBox implements LCViewInitHelper, UserConfigSu
                         .show();
             }
         });
-        this.buttonLicense.setOnAction(e -> new LicenseShowStage(FXUtils.getSourceWindow(buttonLicense), "LICENSE").show());
-        this.buttonThirdPartyLicenses.setOnAction(e -> new LicenseShowStage(FXUtils.getSourceWindow(buttonThirdPartyLicenses), "custom-THIRD-PARTY-NOTICES.txt", "THIRD-PARTY-NOTICES.txt").show());
+        this.buttonLicense.setOnAction(e -> StageUtils.centerOnOwnerOrOnCurrentStageAndShow(new LicenseShowStage(FXUtils.getSourceWindow(buttonLicense), "LICENSE")));
+        this.buttonThirdPartyLicenses.setOnAction(e -> StageUtils.centerOnOwnerOrOnCurrentStageAndShow(new LicenseShowStage(FXUtils.getSourceWindow(buttonThirdPartyLicenses), "custom-THIRD-PARTY-NOTICES.txt", "THIRD-PARTY-NOTICES.txt")));
         buttonDeviceId.setOnAction(e -> setContentInfoWith(InstallationController.InstallationRegistrationInformation::getDeviceId));
         buttonInstallationId.setOnAction(e -> setContentInfoWith(InstallationController.InstallationRegistrationInformation::getInstallationId));
         buttonCheckUpdate.setOnAction(e -> InstallationController.INSTANCE.launchUpdateCheckProcess(true));

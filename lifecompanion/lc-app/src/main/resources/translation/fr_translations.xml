@@ -15,6 +15,12 @@
   <text key="general.config.scene.cancel.warning.header">Configuration modifiée</text>
   <text key="general.config.scene.cancel.warning.message">Vous avez des modifications sur la configuration qui ne sont pas enregistrées. En fermant cette fenêtre, ces changements seront perdus.</text>
   <text key="virtual.mouse.drawing.target">Cible</text>
+  <text key="tooltip.keylist.drag.drop.swap.keys">Inverser "{}" et "{}"</text>
+  <text key="tooltip.keylist.drag.drop.move.to">Déplacer "{}" dans "{}"</text>
+  <text key="keylist.content.pane.button.add">Ajouter</text>
+  <text key="keylist.content.pane.button.add.list">Une liste</text>
+  <text key="keylist.content.pane.button.add.key">Une case</text>
+  <text key="keylist.content.pane.button.add.link">Un lien</text>
   <text key="task.title.config.description.load">Chargement de la configuration</text>
   <text key="sequence.configuration.view.field.text.to.speak">Prononcer au début de l'étape</text>
   <!--org.lifecompanion.api.component.definition.useaction-->
@@ -36,6 +42,10 @@
 	<text key="autocomplete.keyboard.numbers1.name">1-9</text>
 	<text key="action.import.existing.configuration.message">Configuration dans le profil\n"{}", modifée le {} par "{}"\n\nConfiguration importée\n"{}", modifiée le {} par "{}"
 	\n\nQue souhaitez vous faire ?</text>
+    <text key="go.parent.list.current.or.execute.next.action.name">Remonter au niveau supérieur ou exécuter les actions suivantes</text>
+    <text key="parent.level.or.execute.spinner">Niveau "minimum" possible</text>
+    <text key="parent.level.or.execute.spinner.explain">Cette action va permettre de remonter jusqu'au niveau défini au dessus (niveau 0 = racine des listes de case) ou sinon d'exécuter les actions suivantes de la case si le niveau n'est pas encore atteint. Cela permet par exemple d'intégrer sur une même case une action pour remonter dans la liste de case ou pour faire autre chose lorsque que le niveau voulu est déjà atteint.</text>
+    <text key="go.parent.list.current.or.execute.next.action.description">Permet dans la liste courante, de remonter au niveau au dessus (liste avant), afin de revenir en arrière jusqu'à un certain niveau défini. Tant qu'il est possible de remonter, les actions à suivre ne sont pas exécutées. Si le niveau voulu est atteint, les actions suivantes de la case sont exécutées.</text>
   <!--org.lifecompanion.api.definition.selection-->
   <text key="notification.grid.added.to.stack">Grille ajoutée dans la pile de grille</text>
   <text key="no.configuration.placeholder.message1">Pas de configuration ouverte</text>
@@ -146,8 +156,9 @@
   <text key="use.action.sub.category.change.page.name">Changer de page</text>
   <text key="use.action.sub.category.computer.access.computer.features.name">Fonctions de l'ordinateur</text>
   <text key="use.action.sub.category.computer.access.keyboard.name">Clavier</text>
-  <text key="use.action.sub.category.computer.access.mouse.actions.name">Action de souris</text>
-  <text key="use.action.sub.category.computer.access.mouse.move.name">Déplacement de souris</text>
+  <text key="use.action.sub.category.computer.access.mouse.actions.name">Action de souris virtuelle</text>
+  <text key="use.action.sub.category.computer.access.mouse.direct.actions.name">Action de souris (direct)</text>
+  <text key="use.action.sub.category.computer.access.mouse.move.name">Déplacement de souris virtuelle</text>
   <text key="use.action.sub.category.configuration.change.name">Changer des éléments</text>
   <text key="use.action.sub.category.configuration.frame.name">Fenêtre</text>
   <text key="use.action.sub.category.delete.text.name">Supprimer du texte</text>
@@ -520,6 +531,8 @@
   <text key="action.simulate.keyboard.key.until.release.action.name">Simuler l'appui de touche(s) jusqu'au
 		relâchement</text>
   <!--org.lifecompanion.base.data.useaction.impl.computera.mouseaction-->
+    <text key="action.clic.mouse.scroll.name">Appui sur la molette</text>
+    <text key="action.clic.mouse.scroll.static.description">Simule l'appui sur la molette de la souris. Cette action ne se produit pas en fonction de la souris virtuelle</text>
   <text key="action.clic.mouse.double.name">Double clic</text>
   <text key="action.clic.mouse.double.static.description">Simuler un double clic de souris à la position du curseur</text>
   <text key="action.clic.mouse.left.name">Clic droit</text>
@@ -710,6 +723,8 @@
   <text key="go.to.parent.grid.name">Aller dans la grille parent</text>
   <!--org.lifecompanion.base.data.useaction.impl.show.movetoc, org.lifecompanion.base.data.useaction.impl.show.moveto-->
   <text key="grid.none.selected">Aucune grille sélectionnée</text>
+  <text key="component.holder.null.value">Aucun élément sélectionné</text>
+  <text key="component.holder.incorrect.value">Élément supprimé !</text>
   <!--org.lifecompanion.base.data.useaction.impl.show.pages-->
   <text key="next.page.and.loop.in.stack.name">Grille suivante et recommencer</text>
   <text key="next.page.and.loop.in.stack.static.description">Permet d'aller à la grille suivante dans une pile de
@@ -828,6 +843,7 @@
 		"Suppr" sur un
 		clavier</text>
   <text key="action.delete.next.char.name">Supprimer le caractère suivant</text>
+  <text key="general.configuration.view.step.use.event.no.event.placeholder">Sélectionner un événement pour pouvoir lui ajouter des actions.</text>
   <!--org.lifecompanion.base.data.useaction.impl.text.prediction-->
   <text key="action.write.char.prediction.description">Écrire le caractère prédit renseigné dans la case.\nSi
 		aucun caractère n'est prédit, cette action n'aura aucun effet.</text>
@@ -860,6 +876,9 @@
   <text key="action.simple.write.text.static.description">Écrit un texte personnalisé.</text>
   <text key="action.simple.write.text.variable.description">Écrit le texte "{}"</text>
   <text key="action.write.and.speak.text.name">Écrire et prononcer du texte</text>
+  <text key="action.write.and.speak.label.name">Écrire et prononcer le texte de la case</text>
+  <text key="action.write.and.speak.label.description">Permet d'écrire le texte la case qui lance l'action dans l'éditeur, puis de le prononcer</text>
+  <text key="action.write.and.speak.label.description.variable">Écrit puis prononce le texte de la case "{}"</text>
   <text key="action.write.and.speak.text.static.description">Permet d'écrire un texte dans l'éditeur de texte, et
 		éventuellement de prononcer celui-ci ou un autre texte.</text>
   <text key="action.write.and.speak.text.variable.description.both">Écrit le texte "{}" dans l'éditeur de texte puis
@@ -1352,7 +1371,7 @@
   <!--org.lifecompanion.config.data.mode-->
   <text key="action.confirm.go.config.error">Le code entré est incorrect.</text>
   <text key="action.confirm.go.config.header">Passer en édition\n({} secondes restantes...)</text>
-  <text key="action.confirm.go.config.message">Pour passer en mode édition,\nmerci d'entrer le code suivant : {}</text>
+  <text key="action.confirm.go.config.message">Pour passer en mode édition,\nmerci d'entrer le résultat de l'opération suivante : {} + {} = ?</text>
   <text key="notification.info.plugin.update.done.title">Extension "{}" mise à jour vers la version {}</text>
   <text key="notification.info.update.done.title">Mise à jour vers la version {} effectuée</text>
   <text key="notification.info.update.download.finish.restart.button">Redémarrer</text>
@@ -1409,16 +1428,17 @@
 		élément.\nSi aucun nom n'est choisi alors le nom est determiné
 		automatiquement (texte de la case, numéro de grille,
 		etc.).\nSi vous
-		entrez un nom, alors cet élément utilisera toujours ce nom peut
+		entrez un nom, alors cet élément utilisera toujours ce nom peu
 		importe son contenu.</text>
-  <text key="tooltip.menu.select.save.component">Défini l'élément sélectionné comme modèle dans la liste
-		des modèles du profil. Un modèle permet d'utiliser un même élément
-		dans différentes configurations.</text>
+  <text key="tooltip.menu.select.save.component">Ajouter l'élément comme un modèle disponible dans les modèles personnalisés du profil afin d'être utilisé sur cette configuration ou d'autres configurations du profil.</text>
   <!--org.lifecompanion.config.view.pane.categorized-->
   <text key="action.view.add">Ajouter</text>
   <text key="action.view.cancel">Annuler</text>
   <text key="action.view.save">Enregistrer</text>
   <text key="title.main.categories">Catégories</text>
+  <text key="stack.button.tooltip.add.grid">Ajoute une nouvelle grille (vide) dans la pile de grille</text>
+  <text key="stack.button.tooltip.duplicate.grid">Duplique la grille actuellement affichée et l'ajoute dans la pile de grille</text>
+  <text key="stack.button.tooltip.add.from.model">Ajoute une nouvelle grille à partir d'un modèle dans la pile de grille</text>
   <text key="tooltip.add.action.empty">Affiche la liste pour pouvoir ajouter une action à
 		l'élément courant</text>
   <text key="use.action.search.no.result">Aucun résultat</text>
@@ -1508,7 +1528,9 @@
   <text key="changelog.entry.profile.user.system">par {} (sur {} - {})</text>
   <text key="config.add.view.title">Ajouter une configuration</text>
   <text key="configuration.description.author">Auteur</text>
+  <text key="configuration.description.websiteurl">Site internet</text>
   <text key="configuration.description.cell.author.field">Auteur</text>
+  <text key="configuration.description.cell.website.field">Site internet</text>
   <text key="configuration.description.cell.date.field">Dernière modification</text>
   <text key="configuration.description.description">Description</text>
   <text key="configuration.description.name">Nom de la configuration</text>
@@ -2982,6 +3004,9 @@
 		"lcc" et permet ainsi de l'importer dans LifeCompanion sur une autre machine.</text>
   <text key="configuration.selection.export.configuration.button.title">Exporter la configuration</text>
   <text key="configuration.selection.print.grids.pdf.configuration.button.description">Permet d'exporter toutes les grilles de la configuration dans un fichier PDF pour par exemple les imprimer.</text>
+  <text key="configuration.selection.duplicate.configuration.button.title">Dupliquer la configuration</text>
+  <text key="configuration.selection.duplicate.configuration.button.description">Permet de dupliquer cette configuration et ainsi faire des modifications sur une nouvelle version sans modifier la version actuelle. La configuration dupliquée sera ajoutée dans les configurations du profil.</text>
+  <text key="configuration.selection.print.grids.pdf.configuration.button.description">Permet d'exporter toutes les grilles de la configuration dans un fichier PDF pour par exemple les imprimer.</text>
   <text key="configuration.selection.print.grids.pdf.configuration.button.title">Exporter les grilles en PDF</text>
   <text key="configuration.selection.remove.configuration.button.description">Supprime la configuration du profil
 		utilisateur actuel.</text>
@@ -3636,4 +3661,9 @@
     <text key="action.switch.to.edit.mode.description">Permet de basculer du mode "Utilisation" au mode "Édition" directement depuis une action. Cette action sera réalisée sans demander de code de confirmation si celui-ci est activé.</text>
     <text key="plugin.error.startup.notification.will.be.deleted">Erreur au chargement de l'extension "{}"</text>
     <text key="plugin.error.startup.notification.will.be.deleted.button">Redémarrer</text>
+    <text key="task.generate.random.configuration.title">Génération d'une configuration "aléatoire"</text>
+    <text key="misc.config.tab.part.dev">Fonctions en test (développeurs)</text>
+    <text key="button.testing.random.configuration">Configuration aléatoire</text>
+    <text key="button.generate.tech.demo.configuration">Configuration démo technique</text>
+    <text key="task.generate.tech.demo.configuration.title">Génération de la configuration de démo technique</text>
 </texts>

@@ -26,11 +26,12 @@ import javafx.scene.control.Spinner;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.paint.Color;
-import org.lifecompanion.model.api.style.AbstractShapeCompStyleI;
-import org.lifecompanion.util.binding.EditActionUtils;
-import org.lifecompanion.ui.common.control.generic.colorpicker.LCColorPicker;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.model.api.style.AbstractShapeCompStyleI;
+import org.lifecompanion.ui.common.control.generic.colorpicker.LCColorPicker;
+import org.lifecompanion.ui.common.control.generic.colorpicker.MaterialColors;
+import org.lifecompanion.util.binding.EditActionUtils;
 import org.lifecompanion.util.javafx.FXControlUtils;
 
 public abstract class AbstractShapeStyleEditView<T extends AbstractShapeCompStyleI<T>> extends AbstractStyleEditView<T> implements LCViewInitHelper {
@@ -54,8 +55,8 @@ public abstract class AbstractShapeStyleEditView<T extends AbstractShapeCompStyl
         //Create fields
         this.fieldStrokeColor = new LCColorPicker(LCColorPicker.ColorPickerMode.DARK);
         this.fieldBackgroundColor = new LCColorPicker();
-        this.spinnerShapeRadius = FXControlUtils.createIntSpinner(0, 180, 2, 2, 75.0);
-        this.spinnerStrokeSize = FXControlUtils.createIntSpinner(0, 180, 2, 1, 75.0);
+        this.spinnerShapeRadius = FXControlUtils.createIntSpinner(0, 300, 2, 2, 95.0);
+        this.spinnerStrokeSize = FXControlUtils.createIntSpinner(0, 180, 2, 1, 95.0);
 
         this.fieldGrid.add(new Label(Translation.getText("shape.style.background.color")), 0, 0);
         this.fieldGrid.add(this.fieldBackgroundColor, 1, 0);
@@ -95,6 +96,15 @@ public abstract class AbstractShapeStyleEditView<T extends AbstractShapeCompStyl
             this.changeListenerStrokeSize = EditActionUtils.createIntegerSpinnerBinding(this.spinnerStrokeSize, this.model,
                     g -> g.strokeSizeProperty().value(), (m, nv) -> this.createChangePropAction(m.strokeSizeProperty(), nv));
         }
+
+        // Set the stroke color if the previous color on background changed was already the darker or if there was no color for stroke
+        this.fieldBackgroundColor.setOnUserSelection((old, selected) -> {
+            if (selected != null) {
+                if (!this.modificationIndicatorFieldStrokeColor.isVisible() || (old != null && MaterialColors.darker(old).equals(this.fieldStrokeColor.getValue()))) {
+                    fieldStrokeColor.setValue(MaterialColors.darker(selected));
+                }
+            }
+        });
     }
 
     @Override

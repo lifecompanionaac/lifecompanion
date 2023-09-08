@@ -1,7 +1,5 @@
 # Building/running LifeCompanion
 
-# Development
-
 Development environment installed and tested on Windows 10/11 and Ubuntu.
 
 Used JDK (in IntelliJ and builds) is [Eclipse Temurin™](https://adoptium.net/temurin/releases/)
@@ -26,8 +24,6 @@ Used JDK (in IntelliJ and builds) is [Eclipse Temurin™](https://adoptium.net/t
 
 1. Build and publish **lifecompanion-framework** libs : run task `gradlew publishToMavenLocal` in **lifecompanion-framework**
 1. Copy **data** folder from an official LifeCompanion installation in **lifecompanion/lc-app/data** - (you can copy it from S3 resource bucket, if you have access to it)
-1. Copy **installation.properties** from **res/default-data** to **lifecompanion/lc-app/data**
-1. In **installation.properties** change **userDataDirectory** to your a wanted path (e.g. _MyDocumens/LifeCompanion-Dev_)
 1. Run task `gradlew :lc-app:run` in **lifecompanion**
 
 If you need to pass argument to your instance, you can do it with `gradlew :lc-app:run --args="a configuration.lcc"`
@@ -61,9 +57,28 @@ If you want to build a production version : you may need to import again the sec
 
 It is possible possible to create custom local images (offline) to test your image generation before creating offical updates.
 
-Before, configure your local.env to add AWS access/secret properties (cf [update part](UPDATE.md))
+Before, configure your local.env to add AWS access/secret properties (cf [update part](UPDATE.md)). If you want your installation to be as close as possible as the production env, don't forget to also set the correct URL/keys to your env file !
 
-Then, run `gradlew prepareOfflineApplication`. This will create in **offline** directory a subdirectory per system with all the needed element to run LifeCompanion on your computer. When running this task, you can add `lifecompanion.publish.application.persistent.data` Gradle property to avoid downloading fresh data on each build (run it `gradlew prepareOfflineApplication -Plifecompanion.publish.application.persistent.data`)
+Then, run `gradlew prepareOfflineApplication`. This will create in **offline** directory a subdirectory per system with all the needed element to run LifeCompanion on your computer. When running this task, you can add `lifecompanion.publish.application.persistent.data` Gradle property to avoid downloading fresh data from S3 on each build (run it `gradlew prepareOfflineApplication -Plifecompanion.publish.application.persistent.data`)
+
+## Create offline debian package
+
+It is possible to create custom local images packaged as *.deb* on Linux if needed.
+
+This task is depends on the **prepareOfflineApplication** task, so read the documentation above to apply the requirements (env file).
+
+Then, run `gradlew createDeb`. This will create in **debian** directory a *.deb* that can be used to install LifeCompanion on a Linux system and make it available in command line (with `lifecompanion`).
+
+To install it, run (replace with the correct filename)
+
+```shell
+sudo apt install ./lifecompanion_1.5.0_x64.deb
+```
+
+The debian package will install LifeCompanion in :
+- `/usr/local/bin/lifecompanion` : make the `lifecompanion` command available
+- `/usr/share/lifecompanion/` : contains usual `application` and `data` directories
+- `~/Documents/LifeCompanion/` : contains user data
 
 ## Troubleshooting
 

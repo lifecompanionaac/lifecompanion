@@ -39,6 +39,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 public class LCColorPicker extends HBox implements LCViewInitHelper {
@@ -50,6 +51,7 @@ public class LCColorPicker extends HBox implements LCViewInitHelper {
     private final ColorPickerMode mode;
 
     private static Map<ColorPickerMode, LCColorPickerPopup> colorPickerPopups;
+    private BiConsumer<Color, Color> onUserSelection;
 
     public LCColorPicker() {
         this(ColorPickerMode.BASE);
@@ -97,6 +99,10 @@ public class LCColorPicker extends HBox implements LCViewInitHelper {
         return onActionProperty().get();
     }
 
+    public final void setOnUserSelection(BiConsumer<Color, Color> onUserSelection) {
+        this.onUserSelection = onUserSelection;
+    }
+
     MenuButton getButtonPick() {
         return buttonPick;
     }
@@ -133,7 +139,11 @@ public class LCColorPicker extends HBox implements LCViewInitHelper {
                 showingPopup = null;
             } else {
                 showingPopup = getColorPickerPopup();
-                showingPopup.showOnPicker(this, value::set);
+                showingPopup.showOnPicker(this, val -> {
+                    Color previousVal = value.get();
+                    value.set(val);
+                    if (onUserSelection != null) onUserSelection.accept(previousVal, val);
+                });
             }
         });
         this.value.addListener((obs, ov, nv) -> {

@@ -19,6 +19,7 @@
 
 package org.lifecompanion.util;
 
+import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.framework.utils.LCNamedThreadFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import java.awt.*;
 import java.io.File;
 import java.net.URI;
+import java.util.Set;
 
 /**
  * Implementation note : all Destkop calls are delegated to a daemon Thread.<br>
@@ -34,14 +36,21 @@ import java.net.URI;
 public class DesktopUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(DesktopUtils.class);
 
+    private static final Set<String> URI_SCHEMES = Set.of("http", "https", "ftp", "file");
+
     public static boolean openUrlInDefaultBrowser(String url) {
         Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
         if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
+            final String validatedUri;
+            if (URI_SCHEMES.stream().filter(scheme -> StringUtils.startWithIgnoreCase(url, scheme + "://")).findAny().isEmpty()) {
+                LOGGER.warn("The given url to open \"{}\" didn't have any valid {} scheme, will automatically add it", url, URI_SCHEMES);
+                validatedUri = "https://" + url;
+            } else validatedUri = url;
             LCNamedThreadFactory.daemonThreadFactory("DesktopUtils").newThread(() -> {
                 try {
-                    desktop.browse(new URI(url));
+                    desktop.browse(new URI(validatedUri));
                 } catch (Exception e) {
-                    LOGGER.warn("Couldn't open default browser to {}", url, e);
+                    LOGGER.warn("Couldn't open default browser to {}", validatedUri, e);
                 }
             }).start();
             return true;

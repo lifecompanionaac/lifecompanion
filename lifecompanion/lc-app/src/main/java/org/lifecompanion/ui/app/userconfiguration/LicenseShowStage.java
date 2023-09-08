@@ -34,6 +34,7 @@ import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.resource.ResourceHelper;
 import org.lifecompanion.framework.commons.translation.Translation;
+import org.lifecompanion.util.javafx.StageUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,6 +56,7 @@ public class LicenseShowStage extends Stage {
         this.setResizable(false);
         this.setForceIntegerRenderScale(LCGraphicStyle.FORCE_INTEGER_RENDER_SCALE);
         this.getIcons().add(IconHelper.get(LCConstant.LC_ICON_PATH));
+        StageUtils.fixMaximizedVisualBounds(this);
 
         // Loading licenses
         StringBuilder content = new StringBuilder();

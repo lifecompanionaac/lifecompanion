@@ -18,7 +18,10 @@
  */
 package org.lifecompanion.controller.configurationcomponent.dynamickey;
 
-import javafx.beans.property.*;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import org.lifecompanion.controller.editmode.SelectionController;
 import org.lifecompanion.controller.lifecycle.AppMode;
@@ -132,15 +135,19 @@ public enum KeyListController implements ModeListenerI {
         selectNode(rootKeyListNode);
     }
 
-    public void goParentKeyNode() {
+    public int goParentKeyNode() {
         if (nodeHistory.size() >= 2) {
             nodeHistory.remove(nodeHistory.size() - 1);
             final KeyListNodeI lastNodeBeforeCurrent = nodeHistory.remove(nodeHistory.size() - 1);
             selectNode(lastNodeBeforeCurrent);
+            return lastNodeBeforeCurrent.levelProperty().get();
         } else if (currentNode.get() != null && currentNode.get().parentProperty().get() != null) {
-            selectNode(currentNode.get().parentProperty().get(), true);
+            KeyListNodeI parentNode = currentNode.get().parentProperty().get();
+            selectNode(parentNode, true);
+            return parentNode.levelProperty().get();
         } else {
             goParentKeyNodeNoParentListener.forEach(Runnable::run);
+            return -1;
         }
     }
 
@@ -334,7 +341,7 @@ public enum KeyListController implements ModeListenerI {
 
     // CONFIG MODE SIMULATION
     //========================================================================
-    public void simulateKeyListKeyActions(GridPartKeyComponentI key) {
+    public boolean simulateKeyListKeyActions(GridPartKeyComponentI key) {
         if (isKeylistKeyOptionWithValidSelectAction(key)) {
             selectKeyNodeAction(key);
         } else {
@@ -344,6 +351,7 @@ public enum KeyListController implements ModeListenerI {
             PreviousInCurrentKeyListNoLoopAction previousInCurrentKeyListNoLoopAction = key.getActionManager()
                     .getFirstActionOfType(UseActionEvent.ACTIVATION, PreviousInCurrentKeyListNoLoopAction.class);
             GoParentCurrentKeyNodeAction goParentCurrentKeyNodeAction = key.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION, GoParentCurrentKeyNodeAction.class);
+            GoParentOrExecuteNextCurrentKeyNodeAction goParentOrExecuteNextCurrentKeyNodeAction = key.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION, GoParentOrExecuteNextCurrentKeyNodeAction.class);
             GoRootKeyNodeAction goRootKeyNodeAction = key.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION, GoRootKeyNodeAction.class);
             NextKeysOnSpecificLevelAction nextKeysOnSpecificLevelAction = key.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION, NextKeysOnSpecificLevelAction.class);
             PreviousKeysOnSpecificLevelAction previousKeysOnSpecificLevelAction = key.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION, PreviousKeysOnSpecificLevelAction.class);
@@ -358,6 +366,10 @@ public enum KeyListController implements ModeListenerI {
                 previousInCurrentWithoutLoop();
             } else if (goParentCurrentKeyNodeAction != null) {
                 goParentKeyNode();
+            } else if (goParentOrExecuteNextCurrentKeyNodeAction != null) {
+                int parentLevel = goParentOrExecuteNextCurrentKeyNodeAction.parentLevelProperty().get();
+                int destLevel = goParentKeyNode();
+                if (destLevel > parentLevel) return true;
             } else if (goRootKeyNodeAction != null) {
                 goRootNode();
             } else if (nextKeysOnSpecificLevelAction != null) {
@@ -370,6 +382,7 @@ public enum KeyListController implements ModeListenerI {
                 }
             }
         }
+        return false;
     }
 
 
@@ -380,6 +393,7 @@ public enum KeyListController implements ModeListenerI {
                 || key.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION, PreviousInCurrentKeyListAction.class) != null
                 || key.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION, PreviousInCurrentKeyListNoLoopAction.class) != null
                 || key.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION, GoParentCurrentKeyNodeAction.class) != null
+                || key.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION, GoParentOrExecuteNextCurrentKeyNodeAction.class) != null
                 || key.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION, GoRootKeyNodeAction.class) != null
                 || key.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION, NextKeysOnSpecificLevelAction.class) != null
                 || key.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION, PreviousKeysOnSpecificLevelAction.class) != null

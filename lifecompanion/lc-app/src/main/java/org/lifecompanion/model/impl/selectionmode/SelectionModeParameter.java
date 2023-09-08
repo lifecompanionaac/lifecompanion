@@ -113,7 +113,7 @@ public class SelectionModeParameter implements SelectionModeParameterI {
         this.fireActivationEvent = new SimpleObjectProperty<>(this, "fireActionEvent", FireActionEvent.ON_RELEASE);
         this.fireEventInput = new SimpleObjectProperty<>(this, "fireEventInput", FireEventInput.MOUSE);
         this.nextScanEventInput = new SimpleObjectProperty<>(this, "nextScanEventInput", FireEventInput.KEYBOARD);
-        this.selectionViewColor = new SimpleObjectProperty<>(this, "selectionViewColor", Color.DARKBLUE);
+        this.selectionViewColor = new SimpleObjectProperty<>(this, "selectionViewColor", Color.web("#1565C0"));
         this.keyboardFireKey = new SimpleObjectProperty<>(this, "keyboardFireKey", KeyCode.ENTER);
         this.keyboardNextScanKey = new SimpleObjectProperty<>(this, "keyboardNextScanKey", KeyCode.SPACE);
         this.autoOverTime = new SimpleIntegerProperty(this, "autoOverTime", 1000);
@@ -129,7 +129,7 @@ public class SelectionModeParameter implements SelectionModeParameterI {
         this.selectionViewSize = new SimpleDoubleProperty(this, "selectionViewSize", 5.0);
         this.progressViewBarSize = new SimpleDoubleProperty(this, "progressViewBarSize", 5.0);
         this.startScanningOnClic = new SimpleBooleanProperty(this, "startScanningOnClic", false);
-        this.selectionActivationViewColor = new SimpleObjectProperty<>(this, "selectionActivationViewColor", LCGraphicStyle.SECOND_DARK);
+        this.selectionActivationViewColor = new SimpleObjectProperty<>(this, "selectionActivationViewColor", Color.web("#C62828"));
         this.skipEmptyComponent = new SimpleBooleanProperty(this, "skipEmptyComponent", true);
         this.progressDrawMode = new SimpleObjectProperty<>(this, "progressDrawMode", ProgressDrawMode.PROGRESS_BAR);
         this.scanningMode = new SimpleObjectProperty<>(this, "scanningMode", ScanningMode.AUTO);

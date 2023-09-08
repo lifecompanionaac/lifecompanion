@@ -1,8 +1,6 @@
 package org.lifecompanion.plugin.ppp.services;
 
 import javafx.scene.Scene;
-import org.lifecompanion.controller.lifecycle.AppMode;
-import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.metrics.SessionStatsController;
 import org.lifecompanion.controller.systemvk.SystemVirtualKeyboardController;
 import org.lifecompanion.framework.utils.FluentHashMap;
@@ -37,14 +35,19 @@ public enum RecordsService {
                 SystemVirtualKeyboardController.INSTANCE.unregisterScene(scene);
                 SessionStatsController.INSTANCE.unregisterScene(scene);
             });
-            stage.setMaximized(true);
             stage.show();
         });
     }
 
     public void save(LCConfigurationI config, JsonRecordI record) {
+        this.save(config, record, true);
+    }
+
+    public void save(LCConfigurationI config, JsonRecordI record, boolean showNotification) {
         FilesService.INSTANCE.jsonSave(record, this.computeRecordPath(config, record));
-        LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo("ppp.plugin.record.save.info.notification"));
+        if (showNotification) {
+            LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo("ppp.plugin.record.save.info.notification"));
+        }
     }
 
     public void delete(LCConfigurationI config, JsonRecordI record) {

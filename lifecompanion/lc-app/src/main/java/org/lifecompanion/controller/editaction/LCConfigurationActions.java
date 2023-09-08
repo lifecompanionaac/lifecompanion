@@ -62,7 +62,6 @@ import org.lifecompanion.util.javafx.FXUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.*;
 import java.io.File;
 import java.util.Date;
 import java.util.function.Consumer;
@@ -363,35 +362,47 @@ public class LCConfigurationActions {
     public static class DuplicateEditAction implements BaseEditActionI {
         private final Node source;
 
-        public DuplicateEditAction(Node source) {
+        private LCConfigurationDescriptionI configurationToDuplicate;
+
+        public DuplicateEditAction(Node source, LCConfigurationDescriptionI configurationToDuplicate) {
+            this.configurationToDuplicate = configurationToDuplicate;
             this.source = source;
+        }
+
+        public DuplicateEditAction(Node source) {
+            this(source, null);
         }
 
         @Override
         public void doAction() throws LCException {
-            ConfigurationSelectorControl configurationSelectorControl = new ConfigurationSelectorControl(Translation.getText("config.duplicate.field.config"));
-            configurationSelectorControl.setPrefWidth(400.0);
-            ButtonType typeCancel = new ButtonType(Translation.getText("button.type.cancel"), ButtonBar.ButtonData.CANCEL_CLOSE);
-            ButtonType typeDuplicate = new ButtonType(Translation.getText("button.type.duplicate"), ButtonBar.ButtonData.YES);
-            if (DialogUtils
-                    .alertWithSourceAndType(source, Alert.AlertType.NONE)
-                    .withHeaderText(Translation.getText("config.duplicate.question.select.config"))
-                    .withContent(configurationSelectorControl).withButtonTypes(typeCancel, typeDuplicate)
-                    .showAndWait() == typeDuplicate) {
-                LCConfigurationDescriptionI selectedConfigurationDescription = configurationSelectorControl.valueProperty().get();
-                if (selectedConfigurationDescription != null) {
-                    // Duplicate selected configuration on profile
-                    LCProfileI currentProfile = ProfileController.INSTANCE.currentProfileProperty().get();
-                    ConfigurationDuplicateTask duplicateTask = IOHelper.createConfigurationDuplicateTaskFromCurrentProfile(selectedConfigurationDescription, currentProfile);
-                    duplicateTask.setOnSucceeded(e -> {
-                        // Add duplicated
-                        LCConfigurationDescriptionI duplicate = duplicateTask.getValue();
-                        currentProfile.getConfiguration().add(0, duplicate);
-                        // Show edit step
-                        ProfileConfigSelectionController.INSTANCE.setConfigStep(ProfileConfigStep.CONFIGURATION_EDIT, ProfileConfigStep.CONFIGURATION_LIST, duplicate);
-                    });
-                    AsyncExecutorController.INSTANCE.addAndExecute(true, false, duplicateTask);
+            if (this.configurationToDuplicate == null) {
+                ConfigurationSelectorControl configurationSelectorControl = new ConfigurationSelectorControl(Translation.getText("config.duplicate.field.config"));
+                configurationSelectorControl.setPrefWidth(400.0);
+                ButtonType typeCancel = new ButtonType(Translation.getText("button.type.cancel"), ButtonBar.ButtonData.CANCEL_CLOSE);
+                ButtonType typeDuplicate = new ButtonType(Translation.getText("button.type.duplicate"), ButtonBar.ButtonData.YES);
+                if (DialogUtils
+                        .alertWithSourceAndType(source, Alert.AlertType.NONE)
+                        .withHeaderText(Translation.getText("config.duplicate.question.select.config"))
+                        .withContent(configurationSelectorControl).withButtonTypes(typeCancel, typeDuplicate)
+                        .showAndWait() == typeDuplicate) {
+                    this.configurationToDuplicate = configurationSelectorControl.valueProperty().get();
                 }
+            }
+            if (this.configurationToDuplicate != null) {
+                // Duplicate selected configuration on profile
+                LCProfileI currentProfile = ProfileController.INSTANCE.currentProfileProperty().get();
+                ConfigurationDuplicateTask duplicateTask = IOHelper.createConfigurationDuplicateTaskFromCurrentProfile(configurationToDuplicate, currentProfile);
+                duplicateTask.setOnSucceeded(e -> {
+                    // Add duplicated
+                    LCConfigurationDescriptionI duplicate = duplicateTask.getValue();
+                    currentProfile.getConfiguration().add(0, duplicate);
+                    // Show edit step or configuration list
+                    boolean alreadyOnEdit = ProfileConfigSelectionController.INSTANCE.currentStepProperty().get() == ProfileConfigStep.CONFIGURATION_EDIT;
+                    ProfileConfigSelectionController.INSTANCE.setConfigStep(alreadyOnEdit ? ProfileConfigStep.CONFIGURATION_LIST : ProfileConfigStep.CONFIGURATION_EDIT,
+                            alreadyOnEdit ? null : ProfileConfigStep.CONFIGURATION_LIST,
+                            duplicate);
+                });
+                AsyncExecutorController.INSTANCE.addAndExecute(true, false, duplicateTask);
             }
         }
 
@@ -523,18 +534,18 @@ public class LCConfigurationActions {
 
         private String getLastModificationAuthorIn(LCConfigurationDescriptionI configurationDescription) {
             return configurationDescription.getChangelogEntries()
-                    .stream()
-                    .min((e1, e2) -> e2.getWhen().compareTo(e1.getWhen()))
-                    .map(entry -> entry.getProfileName() + " (" + entry.getSystemUserName() + ")")
-                    .orElse("?");
+                                           .stream()
+                                           .min((e1, e2) -> e2.getWhen().compareTo(e1.getWhen()))
+                                           .map(entry -> entry.getProfileName() + " (" + entry.getSystemUserName() + ")")
+                                           .orElse("?");
         }
 
         private String getLastModificationDateIn(LCConfigurationDescriptionI configurationDescription) {
             return configurationDescription.getChangelogEntries()
-                    .stream()
-                    .min((e1, e2) -> e2.getWhen().compareTo(e1.getWhen()))
-                    .map(entry -> StringUtils.dateToStringDateWithHour(entry.getWhen()))
-                    .orElse(StringUtils.dateToStringDateWithHour(configurationDescription.configurationLastDateProperty().get()));
+                                           .stream()
+                                           .min((e1, e2) -> e2.getWhen().compareTo(e1.getWhen()))
+                                           .map(entry -> StringUtils.dateToStringDateWithHour(entry.getWhen()))
+                                           .orElse(StringUtils.dateToStringDateWithHour(configurationDescription.configurationLastDateProperty().get()));
         }
 
         @Override
@@ -773,9 +784,9 @@ public class LCConfigurationActions {
             if (this.askAndNotify) {
                 //Ask confirm
                 if (DialogUtils.alertWithSourceAndType(source, AlertType.CONFIRMATION)
-                        .withContentText(Translation.getText("action.remove.config.confirm.message", this.configDescription.configurationNameProperty().get()))
-                        .withHeaderText(Translation.getText("action.remove.config.confirm.header"))
-                        .showAndWait() != ButtonType.OK) {
+                               .withContentText(Translation.getText("action.remove.config.confirm.message", this.configDescription.configurationNameProperty().get()))
+                               .withHeaderText(Translation.getText("action.remove.config.confirm.header"))
+                               .showAndWait() != ButtonType.OK) {
                     return;
                 }
             }
@@ -820,6 +831,7 @@ public class LCConfigurationActions {
         public String getNameID() {
             return "action.remove.config.name";
         }
+
     }
 
     private static LCConfigurationDescriptionI createConfigurationForCurrentProfile() {

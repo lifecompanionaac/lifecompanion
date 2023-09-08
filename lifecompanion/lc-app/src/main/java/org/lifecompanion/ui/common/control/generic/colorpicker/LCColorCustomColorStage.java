@@ -43,22 +43,20 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.stage.Window;
-import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
-import org.lifecompanion.util.LangUtils;
-import org.lifecompanion.model.impl.constant.LCConstant;
-import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.metrics.SessionStatsController;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
-import org.lifecompanion.model.impl.notification.LCNotification;
 import org.lifecompanion.controller.systemvk.SystemVirtualKeyboardController;
-import org.lifecompanion.ui.notification.LCNotificationController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.model.impl.constant.LCConstant;
+import org.lifecompanion.model.impl.constant.LCGraphicStyle;
+import org.lifecompanion.model.impl.notification.LCNotification;
+import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
+import org.lifecompanion.ui.notification.LCNotificationController;
+import org.lifecompanion.util.LangUtils;
 import org.lifecompanion.util.javafx.ColorUtils;
 import org.lifecompanion.util.javafx.FXControlUtils;
-import org.lifecompanion.util.javafx.FXUtils;
 import org.lifecompanion.util.javafx.StageUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -203,7 +201,7 @@ public class LCColorCustomColorStage extends Stage implements LCViewInitHelper {
         previousColorRectangle.setFill(previousColorClean);
         setCurrentColorTo(previousColorClean);
         this.hueSelectorPane.requestFocus();
-        this.show();
+        StageUtils.centerOnOwnerOrOnCurrentStageAndShow(this);
         this.toFront();
     }
 
@@ -279,7 +277,7 @@ public class LCColorCustomColorStage extends Stage implements LCViewInitHelper {
                 LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo("lc.colorpicker.web.color.copied").withMsDuration(LCGraphicStyle.SHORT_NOTIFICATION_DURATION_MS));
             }
         });
-        this.setOnShowing(e ->{
+        this.setOnShowing(e -> {
             Scene scene = this.getScene();
             SystemVirtualKeyboardController.INSTANCE.registerScene(scene);
             SessionStatsController.INSTANCE.registerScene(scene);

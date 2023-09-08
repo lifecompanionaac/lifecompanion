@@ -21,12 +21,12 @@ package org.lifecompanion.controller.userconfiguration;
 import javafx.beans.property.*;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.lifecompanion.controller.appinstallation.InstallationConfigurationController;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.metrics.SessionStatsController;
 import org.lifecompanion.controller.systemvk.SystemVirtualKeyboardController;
-import org.lifecompanion.model.impl.constant.LCConstant;
-import org.lifecompanion.controller.appinstallation.InstallationConfigurationController;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
+import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.ui.app.userconfiguration.UserConfigStage;
 import org.lifecompanion.ui.app.userconfiguration.UserConfigurationView;
 import org.slf4j.Logger;
@@ -50,6 +50,7 @@ public enum UserConfigurationController {
             PROP_LAUNCH_MAXIMIZED = "start-maximized", PROP_SELECTION_STROKE_SIZE = "selection-stroke-size",
             PROP_SELECTION_DASH_SIZE = "selection-dash-size", PROP_TIPS_STARTUP = "show-tips-on-startup",
             PROP_UNSAVED_CHANGE_THRESHOLD = "unsaved-changes-in-config-warning-threshold",
+            PROP_SCREEN_INDEX = "screen-index",
             PROP_RECORD_SEND_SESSION_STATS = "record-and-send-session-stats", PROP_ENABLE_AUTO_VK_SHOW = "auto-virtual-keyboard-show", PROP_ENABLE_JPD_EASTER_EGG = "enable-jpd-easter-egg",
             PROP_DISABLE_EXIT_USE_MODE = "disable-exit-use-mode", PROP_SECURE_GO_EDIT_MODE = "secure-go-edit-mode", PROP_AUTO_CONFIG_PROFILE_BACKUP = "auto-config-profile-backup";
 
@@ -68,10 +69,11 @@ public enum UserConfigurationController {
     private final BooleanProperty disableExitInUseMode;
     private final BooleanProperty secureGoToEditMode;
     private final BooleanProperty autoConfigurationProfileBackup;
-
+    private IntegerProperty screenIndex;
     private UserConfigurationView userConfigurationView;
 
     UserConfigurationController() {
+        this.screenIndex = new SimpleIntegerProperty(0);
         this.userLanguage = new SimpleStringProperty("fr");
         this.mainFrameWidth = new SimpleIntegerProperty(1200);
         this.mainFrameHeight = new SimpleIntegerProperty(800);
@@ -96,7 +98,6 @@ public enum UserConfigurationController {
     public UserConfigurationView getUserConfigurationView() {
         if (this.userConfigurationView == null) {
             Stage userConfigStage = new UserConfigStage(AppModeController.INSTANCE.getEditModeContext().getStage());
-            userConfigStage.centerOnScreen();
             this.userConfigurationView = new UserConfigurationView(userConfigStage);
             Scene settingScene = new Scene(this.userConfigurationView);
             SystemVirtualKeyboardController.INSTANCE.registerScene(settingScene);
@@ -124,6 +125,9 @@ public enum UserConfigurationController {
             }
             if (prop.containsKey(UserConfigurationController.PROP_FRAME_HEIGHT)) {
                 this.mainFrameHeight.set(Integer.parseInt(prop.getProperty(UserConfigurationController.PROP_FRAME_HEIGHT)));
+            }
+            if (prop.containsKey(UserConfigurationController.PROP_SCREEN_INDEX)) {
+                this.screenIndex.set(Integer.parseInt(prop.getProperty(UserConfigurationController.PROP_SCREEN_INDEX)));
             }
             if (prop.containsKey(UserConfigurationController.PROP_LAUNCH_MAXIMIZED)) {
                 this.launchMaximized.set(Boolean.parseBoolean(prop.getProperty(UserConfigurationController.PROP_LAUNCH_MAXIMIZED)));
@@ -175,6 +179,7 @@ public enum UserConfigurationController {
         prop.setProperty(UserConfigurationController.PROP_LANGUAGE, "" + this.userLanguage.get());
         prop.setProperty(UserConfigurationController.PROP_FRAME_WIDTH, "" + this.mainFrameWidth.get());
         prop.setProperty(UserConfigurationController.PROP_FRAME_HEIGHT, "" + this.mainFrameHeight.get());
+        prop.setProperty(UserConfigurationController.PROP_SCREEN_INDEX, "" + this.screenIndex.get());
         prop.setProperty(UserConfigurationController.PROP_LAUNCH_MAXIMIZED, "" + this.launchMaximized.get());
         prop.setProperty(UserConfigurationController.PROP_RECORD_SEND_SESSION_STATS, "" + this.recordAndSendSessionStats.get());
         prop.setProperty(UserConfigurationController.PROP_TIPS_STARTUP, "" + this.showTipsOnStartup.get());
@@ -203,6 +208,10 @@ public enum UserConfigurationController {
 
     public IntegerProperty mainFrameHeightProperty() {
         return this.mainFrameHeight;
+    }
+
+    public IntegerProperty screenIndexProperty() {
+        return screenIndex;
     }
 
     public BooleanProperty launchMaximizedProperty() {

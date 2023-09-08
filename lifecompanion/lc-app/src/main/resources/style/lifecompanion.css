@@ -129,6 +129,18 @@
     -fx-background-color: -fx-second-dark;
 }
 
+.background-primary-light {
+    -fx-background-color: -fx-main-light;
+}
+
+.background-third {
+    -fx-background-color: #FF9800;
+}
+
+.background-primary-dark-light {
+    -fx-background-color: #DAF3FF;
+}
+
 .background-lightgrey {
     -fx-background-color: lightgrey;
 }
@@ -141,12 +153,19 @@
     -fx-background-color: #f0f0f0 #f0f0f0 #f0f0f0;
 }
 
+.background-white {
+    -fx-background-color: white;
+}
+
 .background-transparent {
     -fx-background-color: transparent;
 }
 
 .background-none {
     -fx-background-color: none;
+}
+.background-radius-10 {
+    -fx-background-radius: 10.0;
 }
 
 /*======= EFFECT =======*/
@@ -161,6 +180,10 @@
 
 .dropshadow-bottom-9 {
 	-fx-effect: dropshadow( three-pass-box , rgba(0.0,0.0,0.0,0.6) , 9.0, 0.0 , 0.0 , 1.0 );
+}
+
+.drop-shadow-1 {
+    -fx-effect: dropshadow(three-pass-box, dimgray, 6, 0, 4, 4);
 }
 
 
@@ -279,6 +302,7 @@
     -fx-effect: dropshadow( gaussian , rgba(0.0,0.0,0.0,0.7) , 20.0,0.0,1.0,1.0 );
 }
 
+
 /*======= PRESSED =======*/
 
 .opacity-60-pressed:pressed {
@@ -393,6 +417,11 @@
 .scrollpane-transparent-viewport > .viewport {
    -fx-background-color: transparent;
 }
+
+.scrollpane-white-viewport > .viewport {
+   -fx-background-color: white;
+}
+
 
 .background-image-transparent {
     -fx-background-image: url(/icons/transparent-background.png);

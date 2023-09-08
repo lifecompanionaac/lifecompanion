@@ -20,11 +20,10 @@
 package org.lifecompanion.model.impl.configurationcomponent;
 
 import javafx.beans.InvalidationListener;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
+import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.model.api.configurationcomponent.ConfigurationChildComponentI;
 import org.lifecompanion.model.api.configurationcomponent.DisplayableComponentI;
@@ -48,6 +47,10 @@ public class ComponentHolderById<T extends DisplayableComponentI> {
     private final ObjectProperty<T> component;
     private final ObjectProperty<? extends ConfigurationChildComponentI> configChildProperty;
 
+    private final StringProperty componentName;
+    private final StringProperty componentInfo;
+    private final StringProperty componentNameOrInfo;
+
     /**
      * Create a new component holder.<br>
      *
@@ -58,6 +61,9 @@ public class ComponentHolderById<T extends DisplayableComponentI> {
         this.componentId = idP;
         this.component = new SimpleObjectProperty<>();
         this.configChildProperty = configChildProp;
+        this.componentName = new SimpleStringProperty();
+        this.componentInfo = new SimpleStringProperty();
+        this.componentNameOrInfo = new SimpleStringProperty();
 
         InvalidationListener updateComponentInvalidationListener = i -> this.updateComponent();
         this.componentId.addListener(updateComponentInvalidationListener);
@@ -74,7 +80,8 @@ public class ComponentHolderById<T extends DisplayableComponentI> {
         ChangeListener<ConfigurationChildComponentI> configChildChangeListener = (obs, ov, nv) -> {
             if (ov != null) {
                 ov.configurationParentProperty().removeListener(configChangeListener);
-            }           if (nv != null) {
+            }
+            if (nv != null) {
                 LCConfigurationI configurationParentValue = nv.configurationParentProperty().get();
                 if (configurationParentValue != null) {
                     configChangeListener.changed(nv.configurationParentProperty(), null, configurationParentValue);
@@ -88,8 +95,22 @@ public class ComponentHolderById<T extends DisplayableComponentI> {
             configChildChangeListener.changed(configChildProp, null, configurationChildComponent);
         }
         configChildProperty.addListener(configChildChangeListener);
+
+        this.component.addListener((obs, ov, nv) -> {
+            componentName.unbind();
+            if (nv != null) {
+                componentName.bind(nv.nameProperty());
+            }
+        });
+        this.componentNameOrInfo.bind(Bindings.createStringBinding(() -> {
+            if (component.get() != null) return componentName.get();
+            else return componentInfo.get();
+        }, component, componentName, componentInfo));
     }
 
+    public StringProperty componentNameOrInfoProperty() {
+        return componentNameOrInfo;
+    }
 
     @SuppressWarnings("unchecked")
     private void updateComponent() {
@@ -100,11 +121,13 @@ public class ComponentHolderById<T extends DisplayableComponentI> {
                 if (configuration != null) {
                     DisplayableComponentI comp = configuration.getAllComponent().get(componentId.get());
                     this.component.set((T) comp);
+                    if (comp == null) componentInfo.set(Translation.getText("component.holder.incorrect.value"));
                     return;
                 }
             }
         }
         this.component.set(null);
+        componentInfo.set(Translation.getText("component.holder.null.value"));
     }
 
     /**

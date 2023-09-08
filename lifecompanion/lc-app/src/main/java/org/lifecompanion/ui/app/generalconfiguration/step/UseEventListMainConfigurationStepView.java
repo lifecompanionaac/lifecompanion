@@ -23,10 +23,8 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.text.TextAlignment;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.util.javafx.FXControlUtils;
@@ -42,6 +40,7 @@ public class UseEventListMainConfigurationStepView extends BorderPane implements
 
     private UseActionListManageView useActionListManageView;
     private UseEventListManageView useEventListManageView;
+    private Label labelNoUseActionSelectedPlaceholder;
 
     public UseEventListMainConfigurationStepView() {
         initAll();
@@ -92,7 +91,14 @@ public class UseEventListMainConfigurationStepView extends BorderPane implements
         this.useActionListManageView = new UseActionListManageView(UseActionEvent.EVENT, true, this.useEventListManageView.selectedItemProperty());
         this.useActionListManageView.setElementListViewPrefSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
 
-        VBox boxTotal = new VBox(10.0, labelExplainEvents, labelEvent, useEventListManageView, labelAction, useActionListManageView);
+        labelNoUseActionSelectedPlaceholder = new Label(Translation.getText("general.configuration.view.step.use.event.no.event.placeholder"));
+        labelNoUseActionSelectedPlaceholder.setMaxWidth(Double.MAX_VALUE);
+        labelNoUseActionSelectedPlaceholder.setTextAlignment(TextAlignment.CENTER);
+        labelNoUseActionSelectedPlaceholder.setAlignment(Pos.CENTER);
+
+        StackPane stackUseAction = new StackPane(useActionListManageView, labelNoUseActionSelectedPlaceholder);
+
+        VBox boxTotal = new VBox(10.0, labelExplainEvents, labelEvent, useEventListManageView, labelAction, stackUseAction);
         boxTotal.setMaxHeight(Double.MAX_VALUE);
         boxTotal.setAlignment(Pos.CENTER);
 
@@ -105,6 +111,7 @@ public class UseEventListMainConfigurationStepView extends BorderPane implements
     public void initBinding() {
         this.useActionListManageView.modelProperty().bind(this.useEventListManageView.selectedItemProperty());
         this.useActionListManageView.visibleProperty().bind(this.useEventListManageView.selectedItemProperty().isNotNull());
+        this.labelNoUseActionSelectedPlaceholder.visibleProperty().bind(this.useEventListManageView.selectedItemProperty().isNull());
     }
     //========================================================================
 
