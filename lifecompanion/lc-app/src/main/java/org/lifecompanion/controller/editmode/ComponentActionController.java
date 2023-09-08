@@ -22,6 +22,8 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import org.lifecompanion.controller.editaction.GridStackActions;
 import org.lifecompanion.controller.editaction.OptionActions.PasteComponentAction;
 import org.lifecompanion.controller.editaction.RemoveActions.RemoveGridPartAction;
@@ -32,9 +34,11 @@ import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.model.api.configurationcomponent.*;
 import org.lifecompanion.model.api.editaction.UndoRedoActionI;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -90,6 +94,17 @@ public enum ComponentActionController {
      */
     public void copyComponent(final ConfigurationChildComponentI component) {
         this.copiedComponent.set(component);
+        if (component instanceof ImageUseComponentI) {
+            ImageUseComponentI imageUseComponent = (ImageUseComponentI) component;
+            if (imageUseComponent.imageVTwoProperty().get() != null) {
+                final ClipboardContent content = new ClipboardContent();
+                File imagePath = imageUseComponent.imageVTwoProperty().get().getRealFilePath();
+                if (imagePath.exists()) {
+                    content.putFiles(List.of(imagePath));
+                    FXThreadUtils.runOnFXThread(() -> Clipboard.getSystemClipboard().setContent(content));
+                }
+            }
+        }
     }
 
     /**

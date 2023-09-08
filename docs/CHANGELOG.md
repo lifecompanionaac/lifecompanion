@@ -4,7 +4,7 @@
 
 ### Fonctionnalités
 
-- Mise à jour de l'interface des listes de case, bien plus simple et plus rapide pour ajouter du vocabulaire !
+- Mise à jour de **l'interface des listes de case, bien plus simple et plus rapide** pour ajouter du vocabulaire !
 - Les icônes des fichiers de LifeCompanion (lcc, lcp) sont maintenant différentes des icônes de LifeCompanion afin de ne plus les confondre.
 - Ajout d'une nouvelle action : écrire et prononcer le texte de la case
 - Ajout d'une nouvelle action : appui sur la molette de souris
@@ -32,6 +32,7 @@
 - Ticket #239 : ajout d'une action pour dupliquer la configuration depuis ses informations
 - Ticket #240 : la suppression de la dernière grille d'une pile de grilles supprime maintenant la pile
 - Ticket #258 : un message est maintenant affiché dans les événements lorsqu'il n'y en a pas de sélectionné
+- Ticket #232 : il est maintenant possible de copier une image d'une case vers son ordinateur (dans un traitement de texte, un dossier, etc.)
 
 ## 1.4.9 - 30/03/2023
 
