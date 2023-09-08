@@ -841,6 +841,7 @@
 		"Suppr" sur un
 		clavier</text>
   <text key="action.delete.next.char.name">Supprimer le caractère suivant</text>
+  <text key="general.configuration.view.step.use.event.no.event.placeholder">Sélectionner un événement pour pouvoir lui ajouter des actions.</text>
   <!--org.lifecompanion.base.data.useaction.impl.text.prediction-->
   <text key="action.write.char.prediction.description">Écrire le caractère prédit renseigné dans la case.\nSi
 		aucun caractère n'est prédit, cette action n'aura aucun effet.</text>
