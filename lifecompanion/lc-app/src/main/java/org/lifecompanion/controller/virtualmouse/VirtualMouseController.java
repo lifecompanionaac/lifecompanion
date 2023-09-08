@@ -34,6 +34,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
+import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
 import org.lifecompanion.model.api.configurationcomponent.FramePosition;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.configurationcomponent.VirtualMouseDrawing;
@@ -408,12 +409,15 @@ public enum VirtualMouseController implements ModeListenerI {
 
 
     public void centerMouseOnStage() {
-        this.checkRobotInit();
-        Stage stage = AppModeController.INSTANCE.getUseModeContext().getStage();
-        if (robot != null && stage != null) {
-            double x = stage.getX() + stage.getWidth() / 2.0;
-            double y = stage.getY() + stage.getHeight() / 2.0;
-            this.moveMouseToWithDelay(x, y);
+        // Ignore when using multiple screen as AWT Robot doesn't work well on multiple screens
+        if (UserConfigurationController.INSTANCE.screenIndexProperty().get() == 0) {
+            this.checkRobotInit();
+            Stage stage = AppModeController.INSTANCE.getUseModeContext().getStage();
+            if (robot != null && stage != null) {
+                double x = stage.getX() + stage.getWidth() / 2.0;
+                double y = stage.getY() + stage.getHeight() / 2.0;
+                this.moveMouseToWithDelay(x, y);
+            }
         }
     }
 

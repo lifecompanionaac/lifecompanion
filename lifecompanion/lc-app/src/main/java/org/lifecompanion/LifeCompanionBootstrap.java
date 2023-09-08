@@ -248,7 +248,7 @@ public class LifeCompanionBootstrap {
         this.stage.setHeight(UserConfigurationController.INSTANCE.mainFrameHeightProperty().get());
         this.stage.setMaximized(UserConfigurationController.INSTANCE.launchMaximizedProperty().get());
         this.stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
-        this.stage.centerOnScreen();
+        StageUtils.centerOnScreen(StageUtils.getDestinationScreen(), this.stage);
         this.stage.getIcons().add(IconHelper.get(LCConstant.LC_ICON_PATH));
         this.stage.setOnCloseRequest((we) -> {
             we.consume();
@@ -277,10 +277,10 @@ public class LifeCompanionBootstrap {
         if (GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DIRECT_LAUNCH_CONFIGURATION)) {
             final String configIdToSearch = GlobalRuntimeConfigurationController.INSTANCE.getParameters(GlobalRuntimeConfiguration.DIRECT_LAUNCH_CONFIGURATION).get(1);
             final LCConfigurationDescriptionI configurationFromId = profile.getConfiguration()
-                    .stream()
-                    .filter(configDesc -> StringUtils.isEquals(configIdToSearch, configDesc.getConfigurationId()))
-                    .findAny()
-                    .orElse(null);
+                                                                           .stream()
+                                                                           .filter(configDesc -> StringUtils.isEquals(configIdToSearch, configDesc.getConfigurationId()))
+                                                                           .findAny()
+                                                                           .orElse(null);
             if (configurationFromId != null) {
                 return loadConfigurationFromProfile(profile, configurationFromId);
             }

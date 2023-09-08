@@ -33,6 +33,7 @@ import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.util.javafx.FXControlUtils;
+import org.lifecompanion.util.javafx.StageUtils;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -124,13 +125,15 @@ public class Image2SelectorControl extends BorderPane implements LCViewInitHelpe
         });
         //Select image
         this.buttonSelectImage.setOnAction((ea) -> {
+            ImageSelectorDialog imageSelectorDialog = ImageSelectorDialog.getInstance();
             if (defaultSearchTextSupplier != null) {
-                ImageSelectorDialog.getInstance().getImageSelectorSearchView().setSearchTextAndFireSearch(defaultSearchTextSupplier.get());
+                imageSelectorDialog.getImageSelectorSearchView().setSearchTextAndFireSearch(defaultSearchTextSupplier.get());
             }
-            Optional<ImageElementI> img = ImageSelectorDialog.getInstance().showAndWait();
+            StageUtils.centerOnOwnerOrOnCurrentStage(imageSelectorDialog);
+            Optional<ImageElementI> img = imageSelectorDialog.showAndWait();
             if (img.isPresent()) {
                 selectedImage.set(img.get());
-                ImageSelectorDialog.getInstance().getImageSelectorSearchView().clearResult();
+                imageSelectorDialog.getImageSelectorSearchView().clearResult();
             }
         });
         this.selectedImage.addListener((obs, ov, nv) -> {

@@ -29,6 +29,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.util.javafx.FXControlUtils;
+import org.lifecompanion.util.javafx.StageUtils;
 import org.lifecompanion.util.model.Triple;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
@@ -192,7 +193,7 @@ public class UserConfigurationView extends BorderPane implements LCViewInitHelpe
         LoadUserConfigTask loadTask = new LoadUserConfigTask();
         loadTask.setOnSucceeded(event -> {
             this.userConfigTabs.forEach(UserConfigSubmenuI::updateFields);
-            this.parentStage.show();
+            StageUtils.centerOnOwnerOrOnCurrentStageAndShow(this.parentStage);
             if (callback != null) {
                 callback.run();
             }

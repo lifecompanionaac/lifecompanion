@@ -60,6 +60,9 @@ public class ImageSelectorDialog extends Dialog<ImageElementI> implements LCView
         this.getDialogPane().getStylesheets().addAll(LCConstant.CSS_STYLE_PATH);
         this.setResultConverter(dialogButton -> null);
 
+        this.setWidth(IMAGE_DIALOGS_WIDTH);
+        this.setHeight(IMAGE_DIALOGS_HEIGHT);
+
         SystemVirtualKeyboardController.INSTANCE.registerSceneFromDialog(this);
     }
 

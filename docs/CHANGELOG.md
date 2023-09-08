@@ -11,6 +11,7 @@
 - Ajout d'une nouvelle action : remonter au niveau supérieur ou exécuter les actions suivantes ; permet de simplifier les configurations utilisant des listes de case et des grilles simultanément
 - Ajout d'une nouvelle fonctionnalité : [les arguments de lancement de LifeCompanion](../docs/USER_API.md#lifecompanion-command-line-arguments), peuvent être utiles pour configurer LifeCompanion de manière particulière
 - Ajout d'une nouvelle fonctionnalité : le [serveur de contrôle de LifeCompanion](../docs/USER_API.md#lifecompanion-control-server-api) afin de pouvoir contrôler LifeCompanion depuis d'autres applications
+- Meilleure gestion lors de la présence de plusieurs écrans
 
 ### Corrections/ajustements
 

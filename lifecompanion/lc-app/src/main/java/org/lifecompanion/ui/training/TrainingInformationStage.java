@@ -9,6 +9,7 @@ import org.lifecompanion.controller.editmode.LCStateController;
 import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
+import org.lifecompanion.util.javafx.StageUtils;
 
 public class TrainingInformationStage extends Stage {
 
@@ -30,5 +31,6 @@ public class TrainingInformationStage extends Stage {
             LCStateController.INSTANCE.setLastTrainingDialogShow(System.currentTimeMillis());
             LCStateController.INSTANCE.hideTrainingDialogProperty().set(trainingInformationPane.getCheckboxNeverShowAgain().isSelected());
         });
+        StageUtils.fixMaximizedVisualBounds(this);
     }
 }

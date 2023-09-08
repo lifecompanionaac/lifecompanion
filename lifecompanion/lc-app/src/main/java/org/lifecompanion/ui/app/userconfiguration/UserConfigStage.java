@@ -36,5 +36,6 @@ public class UserConfigStage extends Stage {
         this.setWidth(LCGraphicStyle.DEFAULT_TOOL_STAGE_WIDTH);
         this.setHeight(LCGraphicStyle.DEFAULT_TOOL_STAGE_HEIGHT);
         this.setResizable(LCGraphicStyle.TOOL_STAGE_RESIZABLE);
+        StageUtils.fixMaximizedVisualBounds(this);
     }
 }

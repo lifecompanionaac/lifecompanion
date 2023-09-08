@@ -25,6 +25,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStep;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStage;
+import org.lifecompanion.util.javafx.StageUtils;
 
 public enum GeneralConfigurationController {
     INSTANCE;
@@ -80,7 +81,7 @@ public enum GeneralConfigurationController {
     public void showStep(String step, Object... args) {
         if (!this.stage.isShowing()) {
             enableTransition.set(false);
-            this.stage.show();
+            StageUtils.centerOnOwnerOrOnCurrentStageAndShow(this.stage);
         }
         this.stepArgs = args;
         this.currentStep.set(step);

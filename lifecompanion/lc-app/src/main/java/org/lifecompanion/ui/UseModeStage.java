@@ -20,6 +20,7 @@
 package org.lifecompanion.ui;
 
 import javafx.scene.input.KeyCombination;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.lifecompanion.controller.editaction.GlobalActions;
@@ -112,6 +113,10 @@ public class UseModeStage extends Stage {
 
         // Stage location
         if (!sizeForced && !GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.FORCE_WINDOW_LOCATION) && !GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DISABLE_WINDOW_FULLSCREEN)) {
+            // First, center on destination screen, then apply configuration
+            Screen destinationScreen = StageUtils.getDestinationScreen();
+            StageUtils.centerOnScreen(destinationScreen,this);
+
             StageMode mode = configuration.stageModeOnLaunchProperty().get();
             switch (mode) {
                 case BASE:

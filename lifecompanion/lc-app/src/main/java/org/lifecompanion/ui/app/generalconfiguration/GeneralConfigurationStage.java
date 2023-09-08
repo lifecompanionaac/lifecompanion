@@ -35,7 +35,7 @@ public class GeneralConfigurationStage extends Stage {
         this.initModality(Modality.APPLICATION_MODAL);
         this.initStyle(StageStyle.UTILITY);
         this.initOwner(owner);
-        Rectangle2D screenBounds = Screen.getPrimary().getBounds();
+        Rectangle2D screenBounds = StageUtils.getDestinationScreen().getBounds();
         this.setWidth(Math.min(screenBounds.getWidth(), LCGraphicStyle.DEFAULT_TOOL_STAGE_WIDTH));
         this.setHeight(Math.min(screenBounds.getHeight(), LCGraphicStyle.DEFAULT_TOOL_STAGE_HEIGHT));
         this.setResizable(LCGraphicStyle.TOOL_STAGE_RESIZABLE);
@@ -48,13 +48,7 @@ public class GeneralConfigurationStage extends Stage {
             generalConfigurationScene.cancelSelected(generalConfigurationScene.getRoot());
             we.consume();
         });
-        // Undecorated and maximized ignore the task bar height, which can cause layout problems
-        this.maximizedProperty().addListener((obs, ov, nv) -> {
-            if (nv) {
-                Screen stageScreen = StageUtils.getStageScreen(this);
-                this.setHeight(stageScreen.getVisualBounds().getHeight());
-            }
-        });
+        StageUtils.fixMaximizedVisualBounds(this);
     }
 
     public GeneralConfigurationScene getGeneralConfigurationScene() {

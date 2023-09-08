@@ -189,7 +189,6 @@ public enum GlobalRuntimeConfiguration implements GlobalRuntimeConfigurationI {
             "Enable LifeCompanion preview updates. This can be useful to test update before their production version to be ready."
     ),
 
-    // TODO : add a token auth configuration if wanted
     // TODO : server side configuration synchronization
     // TODO : image repository from backoffice
 

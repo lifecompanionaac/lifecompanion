@@ -27,6 +27,7 @@ import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.util.javafx.FXUtils;
+import org.lifecompanion.util.javafx.StageUtils;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -55,6 +56,7 @@ public class CategorizedContentStage extends Stage {
         this.setScene(categorizedContentScene);
         this.getIcons().add(IconHelper.get(LCConstant.LC_ICON_PATH));
         this.setOnHidden(e -> onHiddenListeners.forEach(Runnable::run));
+        StageUtils.fixMaximizedVisualBounds(this);
     }
 
     public static CategorizedContentStage getInstance() {
@@ -74,6 +76,6 @@ public class CategorizedContentStage extends Stage {
             this.initOwner(FXUtils.getSourceWindow(source));
         }
         this.getCategorizedContentScene().setContentNode(content);
-        this.show();
+        StageUtils.centerOnOwnerOrOnCurrentStageAndShow(this);
     }
 }

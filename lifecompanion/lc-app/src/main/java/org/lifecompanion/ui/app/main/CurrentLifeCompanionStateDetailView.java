@@ -54,6 +54,7 @@ import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.util.binding.BindingUtils;
 import org.lifecompanion.util.javafx.FXControlUtils;
+import org.lifecompanion.util.javafx.StageUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -150,7 +151,7 @@ public class CurrentLifeCompanionStateDetailView extends HBox implements LCViewI
         });
         EventHandler<? super MouseEvent> showCurrentComponentPart = me -> {
             if (SelectionController.INSTANCE.selectedDisplayableComponentHelperProperty().get() != null) {
-                CommonComponentStage.getInstance().show();
+                StageUtils.centerOnOwnerOrOnCurrentStageAndShow(CommonComponentStage.getInstance());
             }
         };
         this.labelCurrentComponentName.setOnMouseClicked(showCurrentComponentPart);

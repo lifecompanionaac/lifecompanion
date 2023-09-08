@@ -24,6 +24,7 @@ import org.lifecompanion.model.api.configurationcomponent.TreeDisplayableCompone
 import javafx.scene.control.TreeCell;
 import org.lifecompanion.ui.app.displayablecomponent.CommonComponentStage;
 import org.lifecompanion.ui.common.control.specific.componenttree.ComponentSelectionTree;
+import org.lifecompanion.util.javafx.StageUtils;
 
 import java.util.Map;
 
@@ -41,7 +42,7 @@ public class SelectionItemTreeCell extends TreeCell<TreeDisplayableComponentI> {
             if (me.getClickCount() >= 2) {
                 TreeItem<TreeDisplayableComponentI> treeItem = this.getTreeItem();
                 if (!treeItem.isExpanded()) {
-                    CommonComponentStage.getInstance().show();
+                    StageUtils.centerOnOwnerOrOnCurrentStageAndShow(CommonComponentStage.getInstance());
                 }
             }
         });
