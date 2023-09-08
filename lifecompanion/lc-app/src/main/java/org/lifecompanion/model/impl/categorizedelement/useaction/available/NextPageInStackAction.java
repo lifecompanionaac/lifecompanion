@@ -63,8 +63,7 @@ public class NextPageInStackAction extends SimpleUseActionImpl<UseActionTriggerC
         this.changedPageParentStackId = new SimpleStringProperty();
         this.changedPageParentStack = new ComponentHolderById<>(this.changedPageParentStackId, this.parentComponentProperty());
         this.variableDescriptionProperty()
-                .bind(TranslationFX.getTextBinding("next.page.in.stack.variable.description", EasyBind.select(this.changedPageParentStackProperty())
-                        .selectObject(StackComponentI::nameProperty).orElse(Translation.getText("stack.none.selected"))));
+                .bind(TranslationFX.getTextBinding("next.page.in.stack.variable.description", changedPageParentStack.componentNameOrInfoProperty()));
 
     }
 

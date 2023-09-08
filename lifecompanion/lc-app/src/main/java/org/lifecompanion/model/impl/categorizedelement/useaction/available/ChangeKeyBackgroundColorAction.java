@@ -20,12 +20,10 @@ package org.lifecompanion.model.impl.categorizedelement.useaction.available;
 
 import javafx.beans.property.*;
 import javafx.scene.paint.Color;
-import org.fxmisc.easybind.EasyBind;
 import org.jdom2.Element;
 import org.lifecompanion.framework.commons.fx.io.XMLGenericProperty;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
-import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseActionSubCategories;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
@@ -61,8 +59,7 @@ public class ChangeKeyBackgroundColorAction extends SimpleUseActionImpl<UseActio
         this.targetKey = new ComponentHolderById<>(this.targetKeyId, this.parentComponentProperty());
         this.wantedColor = new SimpleObjectProperty<>(Color.RED);
         this.restoreParentColor = new SimpleBooleanProperty(false);
-        this.variableDescriptionProperty().bind(TranslationFX.getTextBinding("action.change.key.background.color.variable.description", EasyBind
-                .select(this.targetKeyProperty()).selectObject(GridPartKeyComponentI::nameProperty).orElse(Translation.getText("key.none.selected"))));
+        this.variableDescriptionProperty().bind(TranslationFX.getTextBinding("action.change.key.background.color.variable.description", targetKey.componentNameOrInfoProperty()));
     }
 
     public ReadOnlyObjectProperty<GridPartKeyComponentI> targetKeyProperty() {

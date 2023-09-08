@@ -62,8 +62,7 @@ public class MoveToGridAction extends SimpleUseActionImpl<UseActionTriggerCompon
         this.configIconPath = "show/icon_move_to_grid.png";
         this.targetGridId = new SimpleStringProperty();
         this.targetGrid = new ComponentHolderById<>(this.targetGridId, this.parentComponentProperty());
-        this.variableDescriptionProperty().bind(TranslationFX.getTextBinding("go.to.grid.variable.description",
-                EasyBind.select(this.targetGridProperty()).selectObject(GridComponentI::nameProperty).orElse(Translation.getText("grid.none.selected"))));
+        this.variableDescriptionProperty().bind(TranslationFX.getTextBinding("go.to.grid.variable.description",targetGrid.componentNameOrInfoProperty()));
 
     }
 

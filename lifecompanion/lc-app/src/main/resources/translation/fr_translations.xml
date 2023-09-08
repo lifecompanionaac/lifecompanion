@@ -723,6 +723,8 @@
   <text key="go.to.parent.grid.name">Aller dans la grille parent</text>
   <!--org.lifecompanion.base.data.useaction.impl.show.movetoc, org.lifecompanion.base.data.useaction.impl.show.moveto-->
   <text key="grid.none.selected">Aucune grille sélectionnée</text>
+  <text key="component.holder.null.value">Aucun élément sélectionné</text>
+  <text key="component.holder.incorrect.value">Élément supprimé !</text>
   <!--org.lifecompanion.base.data.useaction.impl.show.pages-->
   <text key="next.page.and.loop.in.stack.name">Grille suivante et recommencer</text>
   <text key="next.page.and.loop.in.stack.static.description">Permet d'aller à la grille suivante dans une pile de

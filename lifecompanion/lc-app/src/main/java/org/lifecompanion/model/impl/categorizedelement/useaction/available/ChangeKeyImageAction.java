@@ -55,8 +55,7 @@ public class ChangeKeyImageAction extends SimpleUseActionImpl<UseActionTriggerCo
         this.targetKeyId = new SimpleStringProperty();
         this.wantedImage = new SimpleObjectProperty<>();
         this.targetKey = new ComponentHolderById<>(this.targetKeyId, this.parentComponentProperty());
-        this.variableDescriptionProperty().bind(TranslationFX.getTextBinding("action.change.key.image.variable.description", EasyBind
-                .select(this.targetKeyProperty()).selectObject(GridPartKeyComponentI::nameProperty).orElse(Translation.getText("key.none.selected"))));
+        this.variableDescriptionProperty().bind(TranslationFX.getTextBinding("action.change.key.image.variable.description",targetKey.componentNameOrInfoProperty()));
     }
 
     public ReadOnlyObjectProperty<GridPartKeyComponentI> targetKeyProperty() {

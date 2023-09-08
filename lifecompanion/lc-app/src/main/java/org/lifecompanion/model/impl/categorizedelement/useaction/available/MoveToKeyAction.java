@@ -62,8 +62,7 @@ public class MoveToKeyAction extends SimpleUseActionImpl<UseActionTriggerCompone
 		this.configIconPath = "show/icon_move_to_key.png";
 		this.targetKeyId = new SimpleStringProperty();
 		this.targetKey = new ComponentHolderById<>(this.targetKeyId, this.parentComponentProperty());
-		this.variableDescriptionProperty().bind(TranslationFX.getTextBinding("go.to.key.variable.description", EasyBind.select(this.targetKeyProperty())
-				.selectObject(GridPartKeyComponentI::nameProperty).orElse(Translation.getText("key.none.selected"))));
+		this.variableDescriptionProperty().bind(TranslationFX.getTextBinding("go.to.key.variable.description", targetKey.componentNameOrInfoProperty()));
 
 	}
 

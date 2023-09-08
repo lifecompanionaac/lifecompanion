@@ -34,6 +34,7 @@
 - Ticket #240 : la suppression de la dernière grille d'une pile de grilles supprime maintenant la pile
 - Ticket #258 : un message est maintenant affiché dans les événements lorsqu'il n'y en a pas de sélectionné
 - Ticket #232 : il est maintenant possible de copier une image d'une case vers son ordinateur (dans un traitement de texte, un dossier, etc.)
+- Ticket #250 : si un lien était fait sur un élément maintenant supprimé, un message d'avertissement s'affiche dans la description de l'action
 
 ## 1.4.9 - 30/03/2023
 
