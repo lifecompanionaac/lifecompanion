@@ -8,7 +8,7 @@
 
 ### Corrections/ajustements
 
-- ...
+- Ticket #263 : amélioration de la qualité de l'export en PDF
 
 ## 1.5.0 - 08/09/2023
 
