@@ -7,6 +7,7 @@ import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.plugin.ppp.PediatricPainProfilePlugin;
+import org.lifecompanion.plugin.ppp.model.UserProfile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -99,6 +100,10 @@ public enum FilesService {
                 ProfileController.INSTANCE.currentProfileProperty().get().getID(), config.getID())
                 + "plugins" + File.separator
                 + PediatricPainProfilePlugin.PLUGIN_ID + File.separator;
+    }
+
+    public String getUserDataDirectory(LCConfigurationI config, UserProfile userProfile) {
+        return getPluginDirectoryPath(config) + File.separator + "users" + File.separator + userProfile.getUserId();
     }
 
     public void exportData(LCConfigurationI config, File destinationZipFile) throws IOException {

@@ -8,11 +8,11 @@ import org.lifecompanion.model.api.usevariable.UseVariableI;
 import org.lifecompanion.model.impl.usevariable.StringUseVariable;
 import org.lifecompanion.plugin.ppp.model.AssessmentRecord;
 import org.lifecompanion.plugin.ppp.model.Question;
+import org.lifecompanion.plugin.ppp.model.UserProfile;
 import org.lifecompanion.plugin.ppp.services.*;
 import org.lifecompanion.plugin.ppp.view.records.periods.DateFormats;
 
 import java.time.LocalDate;
-import java.util.Map;
 import java.util.function.Function;
 
 public enum PediatricPainProfilePluginService implements ModeListenerI {
@@ -33,7 +33,7 @@ public enum PediatricPainProfilePluginService implements ModeListenerI {
             NavigationService.INSTANCE,
             EvaluatorService.INSTANCE,
             AssessmentService.INSTANCE,
-            ProfileService.INSTANCE,
+            UserDatabaseService.INSTANCE,
             ActionService.INSTANCE
     };
 
@@ -103,17 +103,19 @@ public enum PediatricPainProfilePluginService implements ModeListenerI {
     }
 
     private String generateProfileBaseScore() {
-        return Integer.toString(ProfileService.INSTANCE.getCurrentProfile().getBaseScore());
+        UserProfile selectedProfile = UserDatabaseService.INSTANCE.getSelectedProfile();
+        return selectedProfile != null ? Integer.toString(selectedProfile.getBaseScore()) : "?";
     }
 
     private String generateProfileBaseScoreAt() {
-        LocalDate date = ProfileService.INSTANCE.getCurrentProfile().getBaseScoreAt();
-
+        UserProfile selectedProfile = UserDatabaseService.INSTANCE.getSelectedProfile();
+        LocalDate date = selectedProfile != null ? selectedProfile.getBaseScoreAt() : null;
         return date == null ? "" : date.format(DateFormats.SHORT_DATE);
     }
 
     private String generateProfileName() {
-        return ProfileService.INSTANCE.getCurrentProfile().getUserId();
+        UserProfile selectedProfile = UserDatabaseService.INSTANCE.getSelectedProfile();
+        return selectedProfile != null ? selectedProfile.getUserName() : "";
     }
 
     private String generateCurrentKeyboardInput() {

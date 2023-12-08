@@ -21,17 +21,12 @@ package org.lifecompanion.plugin.ppp.view.config;
 
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
-import javafx.concurrent.Task;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import javafx.stage.FileChooser;
-import org.lifecompanion.controller.editaction.AsyncExecutorController;
-import org.lifecompanion.controller.editmode.LCFileChoosers;
-import org.lifecompanion.controller.io.IOHelper;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
@@ -40,32 +35,22 @@ import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.plugin.ppp.model.Action;
 import org.lifecompanion.plugin.ppp.model.UserProfile;
-import org.lifecompanion.plugin.ppp.services.FilesService;
-import org.lifecompanion.plugin.ppp.services.RecordsService;
-import org.lifecompanion.plugin.ppp.tasks.ExportDataTask;
-import org.lifecompanion.plugin.ppp.tasks.LoadConfigProfileTask;
-import org.lifecompanion.plugin.ppp.tasks.SaveProfileTask;
 import org.lifecompanion.plugin.ppp.view.commons.FormatterListCell;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStepViewI;
 import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
-import org.lifecompanion.util.IOUtils;
 import org.lifecompanion.util.javafx.FXControlUtils;
-import org.lifecompanion.util.javafx.FXUtils;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
-
-import static org.lifecompanion.controller.editmode.FileChooserType.OTHER_MISC_EXTERNAL;
 
 
-public class GeneralConfigView extends BorderPane implements GeneralConfigurationStepViewI, LCViewInitHelper {
-    public static final String STEP_NAME = "PPPPluginGeneralConfigView";
+public class UserProfileGeneralConfigView extends BorderPane implements GeneralConfigurationStepViewI, LCViewInitHelper {
+    public static final String STEP_NAME = "UserProfileGeneralConfigView";
 
-    private TextField fieldUserId;
+    private TextField fieldUserId, fieldUserName;
     private Spinner<Integer> fieldBaseScore;
     private DatePicker fieldBaseScoreAt;
+
     private ListView<Action> actionsListView;
     private TextField actionsAddTextField;
     private Button actionsAddBtn;
@@ -75,21 +60,20 @@ public class GeneralConfigView extends BorderPane implements GeneralConfiguratio
     private Button showRecordsBtn;
     private Button exportRecordsBtn;
 
-    private LCConfigurationI editedConfiguration;
     private UserProfile editedProfile;
 
-    public GeneralConfigView() {
+    public UserProfileGeneralConfigView() {
         initAll();
     }
 
     @Override
     public boolean shouldBeAddedToMainMenu() {
-        return true;
+        return false;
     }
 
     @Override
     public String getTitleId() {
-        return "ppp.plugin.view.config.title";
+        return "user";
     }
 
     @Override
@@ -99,7 +83,7 @@ public class GeneralConfigView extends BorderPane implements GeneralConfiguratio
 
     @Override
     public String getPreviousStep() {
-        return null;
+        return UserGroupGeneralConfigView.STEP_NAME;
     }
 
     @Override
@@ -109,9 +93,17 @@ public class GeneralConfigView extends BorderPane implements GeneralConfiguratio
 
     @Override
     public void initUI() {
+        Label labelUserName = new Label(Translation.getText("ppp.plugin.view.config.general.fields.user_name.label"));
+        labelUserName.setMinWidth(GeneralConfigurationStepViewI.LEFT_COLUMN_MIN_WIDTH);
+        this.fieldUserName = new TextField();
+        GridPane.setHgrow(this.fieldUserName, Priority.ALWAYS);
+        this.fieldUserName.setMaxWidth(Double.MAX_VALUE);
+        GridPane.setHalignment(this.fieldUserName, HPos.RIGHT);
+
         Label labelUserId = new Label(Translation.getText("ppp.plugin.view.config.general.fields.user_id.label"));
         labelUserId.setMinWidth(GeneralConfigurationStepViewI.LEFT_COLUMN_MIN_WIDTH);
         this.fieldUserId = new TextField();
+        this.fieldUserId.setEditable(false);
         GridPane.setHgrow(this.fieldUserId, Priority.ALWAYS);
         this.fieldUserId.setMaxWidth(Double.MAX_VALUE);
         GridPane.setHalignment(this.fieldUserId, HPos.RIGHT);
@@ -127,13 +119,16 @@ public class GeneralConfigView extends BorderPane implements GeneralConfiguratio
         GridPane configLayout = new GridPane();
         configLayout.setHgap(GeneralConfigurationStepViewI.GRID_H_GAP);
         configLayout.setVgap(GeneralConfigurationStepViewI.GRID_V_GAP);
-        configLayout.add(labelUserId, 0, 0);
-        configLayout.add(this.fieldUserId, 1, 0);
-        configLayout.add(labelBaseScore, 0, 1);
-        configLayout.add(this.fieldBaseScore, 1, 1);
-        configLayout.add(labelBaseScoreAt, 0, 2);
-        configLayout.add(this.fieldBaseScoreAt, 1, 2);
+        configLayout.add(labelUserName, 0, 0);
+        configLayout.add(this.fieldUserName, 1, 0);
+        configLayout.add(labelUserId, 0, 1);
+        configLayout.add(this.fieldUserId, 1, 1);
+        configLayout.add(labelBaseScore, 0, 2);
+        configLayout.add(this.fieldBaseScore, 1, 2);
+        configLayout.add(labelBaseScoreAt, 0, 3);
+        configLayout.add(this.fieldBaseScoreAt, 1, 3);
 
+        // Action
         this.actionsListView = new ListView<>();
         this.actionsListView.setMaxHeight(150);
         this.actionsListView.setCellFactory((lv) -> new FormatterListCell<>(Action::getName));
@@ -165,32 +160,12 @@ public class GeneralConfigView extends BorderPane implements GeneralConfiguratio
         actionsLayout.setRight(actionsButtons);
         actionsLayout.setBottom(actionsAdd);
 
-        this.showRecordsBtn = FXControlUtils.createRightTextButton(
-                Translation.getText("ppp.plugin.view.config.records.actions.show_records.name"),
-                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.LINE_CHART).size(20).color(LCGraphicStyle.MAIN_DARK),
-                null);
-        GridPane.setHgrow(this.showRecordsBtn, Priority.ALWAYS);
-        GridPane.setHalignment(this.showRecordsBtn, HPos.CENTER);
-        this.exportRecordsBtn = FXControlUtils.createRightTextButton(
-                Translation.getText("ppp.plugin.view.config.records.actions.export_records.name"),
-                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.UPLOAD).size(20).color(LCGraphicStyle.MAIN_DARK),
-                null);
-        GridPane.setHgrow(this.exportRecordsBtn, Priority.ALWAYS);
-        GridPane.setHalignment(this.exportRecordsBtn, HPos.CENTER);
-
-        GridPane recordsButtons = new GridPane();
-        recordsButtons.setHgap(GeneralConfigurationStepViewI.GRID_H_GAP);
-        recordsButtons.setVgap(GeneralConfigurationStepViewI.GRID_V_GAP);
-        recordsButtons.add(this.showRecordsBtn, 0, 0);
-        recordsButtons.add(this.exportRecordsBtn, 1, 0);
 
         VBox vboxTotal = new VBox(5.0,
                 FXControlUtils.createTitleLabel(Translation.getText("ppp.plugin.view.config.general.title")),
                 configLayout,
                 FXControlUtils.createTitleLabel(Translation.getText("ppp.plugin.view.config.actions.title")),
-                actionsLayout,
-                FXControlUtils.createTitleLabel(Translation.getText("ppp.plugin.view.config.records.title")),
-                recordsButtons
+                actionsLayout
         );
         vboxTotal.setPadding(new Insets(5.0));
         this.setPadding(new Insets(GeneralConfigurationStepViewI.PADDING));
@@ -217,6 +192,13 @@ public class GeneralConfigView extends BorderPane implements GeneralConfiguratio
 
     @Override
     public void initListener() {
+        this.fieldBaseScoreAt.getEditor().textProperty().addListener((obs, ov, nv) -> {
+            try {
+                this.fieldBaseScoreAt.setValue(this.fieldBaseScoreAt.getConverter().fromString(nv));
+            } catch (Exception exception) {
+                // Ignore parsing exception.
+            }
+        });
         this.actionsMoveUpBtn.setOnAction(event -> {
             int selectedIndex = this.actionsListView.selectionModelProperty().get().selectedIndexProperty().get();
 
@@ -247,48 +229,29 @@ public class GeneralConfigView extends BorderPane implements GeneralConfiguratio
         this.actionsAddTextField.setOnAction(e -> addActionToList.run());
         this.actionsAddBtn.setOnAction(e -> addActionToList.run());
 
-        this.showRecordsBtn.setOnAction(
-                event -> RecordsService.INSTANCE.showRecordStage(this.editedConfiguration));
-        this.exportRecordsBtn.setOnAction(event -> {
-            FileChooser fileChooser = LCFileChoosers.getOtherFileChooser(
-                    Translation.getText("ppp.plugin.view.config.records.actions.export_records.chooser.title"),
-                    FilesService.DATA_EXTENSION_FILTER, OTHER_MISC_EXTERNAL);
-            fileChooser.setInitialFileName(IOHelper.DATE_FORMAT_FILENAME_WITHOUT_TIME.format(new Date()) + "-"
-                    + IOUtils.getValidFileName(this.editedProfile.getUserId()) + "-ppp");
-
-            File destinationZipFile = fileChooser.showSaveDialog(FXUtils.getSourceWindow(this));
-            if (destinationZipFile != null) {
-                Task<Void> task = new ExportDataTask(this.editedConfiguration, destinationZipFile);
-                AsyncExecutorController.INSTANCE.addAndExecute(true, false, task);
-            }
-        });
-
-        this.fieldBaseScoreAt.getEditor().textProperty().addListener((obs, ov, nv) -> {
-            try {
-                this.fieldBaseScoreAt.setValue(this.fieldBaseScoreAt.getConverter().fromString(nv));
-            } catch (Exception exception) {
-                // Ignore parsing exception.
-            }
-        });
     }
 
     @Override
     public void beforeShow(Object[] stepArgs) {
+        this.editedProfile = (UserProfile) stepArgs[0];
+        this.fieldUserId.setText(this.editedProfile.getUserId());
+        this.fieldUserName.setText(this.editedProfile.getUserName());
+        this.fieldBaseScore.getValueFactory().setValue(this.editedProfile.getBaseScore());
+        this.fieldBaseScoreAt.setValue(this.editedProfile.getBaseScoreAt());
+        this.actionsListView.setItems(FXCollections.observableArrayList(this.editedProfile.getActions()));
     }
 
     @Override
     public void afterHide() {
+        this.editedProfile.setUserId(this.fieldUserId.getText());
+        this.editedProfile.setUserName(this.fieldUserName.getText());
+        this.editedProfile.setBaseScore(this.fieldBaseScore.getValue());
+        this.editedProfile.setBaseScoreAt(this.fieldBaseScoreAt.getValue());
+        this.editedProfile.setActions(new ArrayList<>(this.actionsListView.getItems()));
     }
 
     @Override
     public void saveChanges() {
-        this.editedProfile.setUserId(this.fieldUserId.getText());
-        this.editedProfile.setBaseScore(this.fieldBaseScore.getValue());
-        this.editedProfile.setBaseScoreAt(this.fieldBaseScoreAt.getValue());
-        this.editedProfile.setActions(new ArrayList<>(this.actionsListView.getItems()));
-
-        AsyncExecutorController.INSTANCE.addAndExecute(true, false,
-                new SaveProfileTask(this.editedConfiguration, this.editedProfile));
     }
 
     @Override
@@ -297,25 +260,11 @@ public class GeneralConfigView extends BorderPane implements GeneralConfiguratio
 
     @Override
     public void bind(LCConfigurationI config) {
-        this.editedConfiguration = config;
-        LoadConfigProfileTask task = new LoadConfigProfileTask(this.editedConfiguration);
-        task.setOnSucceeded(e -> {
-            this.editedProfile = task.getValue();
-
-            this.fieldUserId.textProperty().set(this.editedProfile.getUserId());
-            this.fieldBaseScore.getValueFactory().setValue(this.editedProfile.getBaseScore());
-            this.fieldBaseScoreAt.setValue(this.editedProfile.getBaseScoreAt());
-            this.actionsListView.setItems(FXCollections.observableArrayList(this.editedProfile.getActions()));
-        });
-
-        AsyncExecutorController.INSTANCE.addAndExecute(true, false, task);
     }
 
     @Override
     public void unbind(LCConfigurationI config) {
-        this.editedConfiguration = null;
-        this.editedProfile = null;
-
         this.actionsListView.setItems(null);
+        // TODO : clear data
     }
 }

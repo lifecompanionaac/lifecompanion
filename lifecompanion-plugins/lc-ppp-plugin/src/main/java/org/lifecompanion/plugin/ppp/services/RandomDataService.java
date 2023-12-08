@@ -41,7 +41,7 @@ public class RandomDataService {
                             .withHour(random.nextInt(8, 23))
                             .withMinute(random.nextInt(0, 60))
             );
-            RecordsService.INSTANCE.save(configuration, record, false);
+            RecordsService.INSTANCE.save(configuration, profile, record, false);
         }
     }
 }

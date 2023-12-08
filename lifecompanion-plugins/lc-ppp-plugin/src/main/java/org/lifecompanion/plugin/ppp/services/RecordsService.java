@@ -6,10 +6,7 @@ import org.lifecompanion.controller.systemvk.SystemVirtualKeyboardController;
 import org.lifecompanion.framework.utils.FluentHashMap;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.impl.notification.LCNotification;
-import org.lifecompanion.plugin.ppp.model.ActionRecord;
-import org.lifecompanion.plugin.ppp.model.AssessmentRecord;
-import org.lifecompanion.plugin.ppp.model.AssessmentType;
-import org.lifecompanion.plugin.ppp.model.JsonRecordI;
+import org.lifecompanion.plugin.ppp.model.*;
 import org.lifecompanion.plugin.ppp.view.records.RecordsStage;
 import org.lifecompanion.plugin.ppp.view.records.RecordsView;
 import org.lifecompanion.ui.notification.LCNotificationController;
@@ -23,10 +20,10 @@ import java.util.List;
 public enum RecordsService {
     INSTANCE;
 
-    public void showRecordStage(LCConfigurationI config) {
+    public void showRecordStage(LCConfigurationI config, UserProfile userProfile) {
         FXThreadUtils.runOnFXThread(() -> {
             RecordsStage stage = new RecordsStage(StageUtils.getEditOrUseStageVisible());
-            final Scene scene = new Scene(new RecordsView(config));
+            final Scene scene = new Scene(new RecordsView(config, userProfile));
             SystemVirtualKeyboardController.INSTANCE.registerScene(scene);
             SessionStatsController.INSTANCE.registerScene(scene);
             stage.setScene(scene);
@@ -39,19 +36,19 @@ public enum RecordsService {
         });
     }
 
-    public void save(LCConfigurationI config, JsonRecordI record) {
-        this.save(config, record, true);
+    public void save(LCConfigurationI config, UserProfile userProfile, JsonRecordI record) {
+        this.save(config, userProfile, record, true);
     }
 
-    public void save(LCConfigurationI config, JsonRecordI record, boolean showNotification) {
-        FilesService.INSTANCE.jsonSave(record, this.computeRecordPath(config, record));
+    public void save(LCConfigurationI config, UserProfile userProfile, JsonRecordI record, boolean showNotification) {
+        FilesService.INSTANCE.jsonSave(record, this.computeRecordPath(config, userProfile, record));
         if (showNotification) {
             LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo("ppp.plugin.record.save.info.notification"));
         }
     }
 
-    public void delete(LCConfigurationI config, JsonRecordI record) {
-        FilesService.INSTANCE.jsonDelete(this.computeRecordPath(config, record));
+    public void delete(LCConfigurationI config, UserProfile userProfile, JsonRecordI record) {
+        FilesService.INSTANCE.jsonDelete(this.computeRecordPath(config, userProfile, record));
         if (record instanceof AssessmentRecord) {
             SessionStatsController.INSTANCE.pushEvent("ppp.assessment.deleted",
                     FluentHashMap.mapStrObj("id", record.getId())
@@ -59,8 +56,8 @@ public enum RecordsService {
         }
     }
 
-    private String computeRecordPath(LCConfigurationI config, JsonRecordI record) {
-        return FilesService.INSTANCE.getPluginDirectoryPath(config) + record.getRecordsDirectory() + File.separator
+    private String computeRecordPath(LCConfigurationI config, UserProfile userProfile, JsonRecordI record) {
+        return FilesService.INSTANCE.getUserDataDirectory(config, userProfile) + File.separator + record.getRecordsDirectory() + File.separator
                 + record.getRecordedAt().toEpochSecond() + ".json";
     }
 

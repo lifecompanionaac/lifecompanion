@@ -224,7 +224,8 @@
 	<!-- Views: config. -->
 	<text key="ppp.plugin.view.config.title">Profil douleur</text>
 	<text key="ppp.plugin.view.config.general.title">Configuration</text>
-	<text key="ppp.plugin.view.config.general.fields.user_id.label">Identifiant de l'utilisateur</text>
+	<text key="ppp.plugin.view.config.general.fields.user_id.label">Identifiant du bénéficiaire</text>
+	<text key="ppp.plugin.view.config.general.fields.user_name.label">Nom du bénéficiaire</text>
 	<text key="ppp.plugin.view.config.general.fields.base_score.label">Score de base</text>
 	<text key="ppp.plugin.view.config.general.fields.base_score_at.label">Date du score de base</text>
 	<text key="ppp.plugin.view.config.general.fields.actions.label">Nettoyer les actions disponibles</text>
@@ -389,4 +390,12 @@
 	<text key="ppp.plugin.view.date.time.picker.date.value">Date</text>
 	<text key="ppp.plugin.view.date.time.picker.time.value">Heure</text>
 	<text key="ppp.plugin.view.date.time.picker.error">Merci de sélectionner une date/heure correcte</text>
+
+	<!-- New UI -->
+	<text key="ppp.plugin.view.config.group.detail.title">Information du groupe</text>
+	<text key="ppp.plugin.view.config.group.name.field">Nom</text>
+	<text key="ppp.plugin.view.config.group.id.field">Identifiant unique</text>
+	<text key="ppp.plugin.view.config.group.users.title">Bénéficiaires du groupe</text>
+	<text key="ppp.plugin.view.config.default.group.name">Groupe</text>
+	<text key="ppp.plugin.view.config.default.user.name">Bénéficiaire</text>
 </texts>
