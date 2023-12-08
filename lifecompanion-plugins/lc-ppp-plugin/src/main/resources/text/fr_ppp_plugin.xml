@@ -398,4 +398,9 @@
 	<text key="ppp.plugin.view.config.group.users.title">Bénéficiaires du groupe</text>
 	<text key="ppp.plugin.view.config.default.group.name">Groupe</text>
 	<text key="ppp.plugin.view.config.default.user.name">Bénéficiaire</text>
+	<text key="ppp.plugin.task.sync.databases.title">Synchronisation des données</text>
+	<text key="ppp.plugin.task.sync.databases.checking">Vérification des bénéficiaires</text>
+	<text key="ppp.plugin.task.sync.check.changes">Détection des changements</text>
+	<text key="ppp.plugin.task.sync.sync.changes">Synchronisation des données</text>
+	<text key="ppp.plugin.task.sync.cant.find.database.key">Impossible de détecter la clé USB de synchronisation, assurez vous que celle-ci est bien branchée.</text>
 </texts>

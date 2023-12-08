@@ -5,6 +5,8 @@ import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.lifecompanion.controller.editaction.AsyncExecutorController;
+import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
@@ -14,6 +16,7 @@ import org.lifecompanion.plugin.ppp.model.Action;
 import org.lifecompanion.plugin.ppp.model.UserDatabase;
 import org.lifecompanion.plugin.ppp.model.UserGroup;
 import org.lifecompanion.plugin.ppp.model.UserProfile;
+import org.lifecompanion.plugin.ppp.tasks.SyncDatabasesTask;
 import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.util.model.ConfigurationComponentUtils;
 
@@ -27,6 +30,7 @@ import java.util.function.BiConsumer;
 public enum UserDatabaseService implements ModeListenerI {
     INSTANCE;
 
+    private LCConfigurationI configuration;
     private UserDatabase currentUserDatabase;
     private final List<UserGroupCellKeyOption> groupKeyOptions;
     private final List<UserProfileCellKeyOption> userKeyOptions;
@@ -54,6 +58,7 @@ public enum UserDatabaseService implements ModeListenerI {
 
     @Override
     public void modeStart(LCConfigurationI configuration) {
+        this.configuration = configuration;
         // Find cells
         Map<GridComponentI, List<UserGroupCellKeyOption>> groupKeysMap = new HashMap<>();
         ConfigurationComponentUtils.findKeyOptionsByGrid(UserGroupCellKeyOption.class, configuration, groupKeysMap, null);
@@ -62,8 +67,11 @@ public enum UserDatabaseService implements ModeListenerI {
         ConfigurationComponentUtils.findKeyOptionsByGrid(UserProfileCellKeyOption.class, configuration, userKeysMap, null);
         userKeysMap.values().stream().flatMap(List::stream).distinct().forEach(userKeyOptions::add);
 
-        currentUserDatabase = loadDatabase(configuration);
+        loadCurrentUserDatabase();
+    }
 
+    private void loadCurrentUserDatabase() {
+        currentUserDatabase = loadDatabase(configuration);
         this.updateGroupList();
     }
 
@@ -74,6 +82,7 @@ public enum UserDatabaseService implements ModeListenerI {
         groupKeyOptions.clear();
         userKeyOptions.clear();
         currentUserDatabase = null;
+        this.configuration = null;
     }
 
     public void selectGroup(UserGroup userGroup) {
@@ -123,7 +132,7 @@ public enum UserDatabaseService implements ModeListenerI {
         return this.loadDatabase(FilesService.INSTANCE.getPluginDirectoryPath(config));
     }
 
-    private String getDatabaseFilePath(String dataDirectory) {
+    public String getDatabaseFilePath(String dataDirectory) {
         return dataDirectory + File.separator + "users.json";
     }
 
@@ -134,5 +143,15 @@ public enum UserDatabaseService implements ModeListenerI {
             userProfile.setActions(new ArrayList<>(actions));
             saveDatabase(config, this.currentUserDatabase);
         }
+    }
+
+    public void syncDatabases() {
+        SyncDatabasesTask task = new SyncDatabasesTask(FilesService.INSTANCE.getPluginDirectoryPath(AppModeController.INSTANCE.getUseModeContext().getConfiguration()));
+        task.setOnSucceeded(e -> {
+            if (task.getValue()) {
+                loadCurrentUserDatabase();
+            }
+        });
+        AsyncExecutorController.INSTANCE.addAndExecute(true, false, task);
     }
 }
