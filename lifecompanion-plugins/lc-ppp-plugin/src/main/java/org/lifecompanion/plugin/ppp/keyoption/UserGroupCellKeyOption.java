@@ -12,13 +12,14 @@ import org.lifecompanion.plugin.ppp.model.Action;
 import org.lifecompanion.plugin.ppp.model.UserGroup;
 
 public class UserGroupCellKeyOption extends AbstractKeyOption {
-    private SimpleObjectProperty<UserGroup> group;
+    private final SimpleObjectProperty<UserGroup> group;
 
     private UserGroupSelectAction selectAction;
 
     public UserGroupCellKeyOption() {
         super();
-        this.optionNameId = "group_cell";
+        this.optionNameId = "ppp.plugin.keyoption.user.group.name";
+        this.optionDescriptionId = "ppp.plugin.keyoption.user.group.description";
         this.disableTextContent.set(true);
         this.disableImage.set(true);
         this.considerKeyEmpty.set(false);
@@ -32,7 +33,7 @@ public class UserGroupCellKeyOption extends AbstractKeyOption {
 
     @Override
     public String getIconUrl() {
-        return "keyoptions/icon_action_cell.png";
+        return "keyoptions/users.png";
     }
 
     @Override
@@ -43,8 +44,7 @@ public class UserGroupCellKeyOption extends AbstractKeyOption {
             key.getActionManager().componentActions().get(UseActionEvent.ACTIVATION).add(0,this.selectAction);
         }
         this.selectAction.attachedToKeyOptionProperty().set(true);
-        // FIXME : translation
-        key.textContentProperty().set(AppModeController.INSTANCE.isUseMode() ? null : Translation.getText("todo"));
+        key.textContentProperty().set(AppModeController.INSTANCE.isUseMode() ? null : Translation.getText("ppp.plugin.keyoption.user.group.filler"));
     }
 
     @Override

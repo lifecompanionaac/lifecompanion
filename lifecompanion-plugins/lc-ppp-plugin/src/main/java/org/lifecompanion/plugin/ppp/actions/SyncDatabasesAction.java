@@ -14,8 +14,8 @@ import java.util.Map;
 public class SyncDatabasesAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
     public SyncDatabasesAction() {
         super(UseActionTriggerComponentI.class);
-        this.nameID = "sync_database";
-        this.staticDescriptionID = "ppp.plugin.actions.show_records.description";
+        this.nameID = "ppp.plugin.actions.sync.database.name";
+        this.staticDescriptionID = "ppp.plugin.actions.sync.database.description";
         this.category = PPPActionSubCategories.VARIOUS;
         this.order = 20;
         this.parameterizableAction = false;
@@ -24,7 +24,7 @@ public class SyncDatabasesAction extends SimpleUseActionImpl<UseActionTriggerCom
 
     @Override
     public String getConfigIconPath() {
-        return "actions/icon_show_records.png";
+        return "actions/sync_database.png";
     }
 
     @Override

@@ -89,7 +89,7 @@ public class UserDatabaseGeneralConfigView extends BorderPane implements General
         groupListView.getButtonModify().setVisible(true);
 
         VBox vboxTotal = new VBox(5.0,
-                FXControlUtils.createTitleLabel(Translation.getText("ppp.plugin.view.config.group.title")),
+                FXControlUtils.createTitleLabel(Translation.getText("ppp.plugin.view.config.groups.title")),
                 groupListView
         );
         vboxTotal.setPadding(new Insets(5.0));

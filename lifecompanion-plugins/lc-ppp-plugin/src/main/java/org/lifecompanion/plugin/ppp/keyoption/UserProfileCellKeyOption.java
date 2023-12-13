@@ -10,12 +10,13 @@ import org.lifecompanion.plugin.ppp.actions.UserProfileSelectAction;
 import org.lifecompanion.plugin.ppp.model.UserProfile;
 
 public class UserProfileCellKeyOption extends AbstractKeyOption {
-    private SimpleObjectProperty<UserProfile> user;
+    private final SimpleObjectProperty<UserProfile> user;
     private UserProfileSelectAction selectAction;
 
     public UserProfileCellKeyOption() {
         super();
-        this.optionNameId = "userprofile_cell";
+        this.optionNameId = "ppp.plugin.keyoption.user.profile.name";
+        this.optionDescriptionId = "ppp.plugin.keyoption.user.profile.description";
         this.disableTextContent.set(true);
         this.disableImage.set(true);
         this.considerKeyEmpty.set(false);
@@ -29,7 +30,7 @@ public class UserProfileCellKeyOption extends AbstractKeyOption {
 
     @Override
     public String getIconUrl() {
-        return "keyoptions/icon_action_cell.png";
+        return "keyoptions/users.png";
     }
 
     @Override
@@ -40,7 +41,7 @@ public class UserProfileCellKeyOption extends AbstractKeyOption {
             key.getActionManager().componentActions().get(UseActionEvent.ACTIVATION).add(0, this.selectAction);
         }
         this.selectAction.attachedToKeyOptionProperty().set(true);
-        key.textContentProperty().set(AppModeController.INSTANCE.isUseMode() ? null : Translation.getText("todo"));
+        key.textContentProperty().set(AppModeController.INSTANCE.isUseMode() ? null : Translation.getText("ppp.plugin.keyoption.user.profile.filler"));
     }
 
     @Override

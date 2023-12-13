@@ -17,6 +17,7 @@ public class ActionCellKeyOption extends AbstractKeyOption {
     public ActionCellKeyOption() {
         super();
         this.optionNameId = "ppp.plugin.keyoption.action.cell.name";
+        this.optionDescriptionId = "ppp.plugin.keyoption.action.cell.description";
         this.disableTextContent.set(true);
         this.disableImage.set(true);
         this.considerKeyEmpty.set(false);

@@ -73,7 +73,7 @@ public class UserProfileGeneralConfigView extends BorderPane implements GeneralC
 
     @Override
     public String getTitleId() {
-        return "user";
+        return "ppp.plugin.view.config.user.title";
     }
 
     @Override

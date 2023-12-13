@@ -28,9 +28,9 @@ import java.util.Map;
 public class UserGroupSelectAction extends SimpleUseActionImpl<GridPartKeyComponentI> {
     public UserGroupSelectAction() {
         super(GridPartKeyComponentI.class);
-        this.nameID = "todo";
-        this.staticDescriptionID = "todo";
-        this.category = PPPActionSubCategories.VARIOUS;
+        this.nameID = "ppp.plugin.actions.user.group.select.name";
+        this.staticDescriptionID = "ppp.plugin.actions.user.group.select.description";
+        this.category = PPPActionSubCategories.USER_GROUPS;
         this.order = 40;
         this.parameterizableAction = false;
         this.variableDescriptionProperty().set(this.getStaticDescription());
@@ -38,7 +38,7 @@ public class UserGroupSelectAction extends SimpleUseActionImpl<GridPartKeyCompon
 
     @Override
     public String getConfigIconPath() {
-        return "actions/icon_action_select.png";
+        return "actions/select_user_group.png";
     }
 
     @Override

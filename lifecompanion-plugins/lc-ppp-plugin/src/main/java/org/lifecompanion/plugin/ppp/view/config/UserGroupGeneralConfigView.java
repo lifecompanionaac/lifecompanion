@@ -66,7 +66,7 @@ public class UserGroupGeneralConfigView extends BorderPane implements GeneralCon
 
     @Override
     public String getTitleId() {
-        return "user group";
+        return "ppp.plugin.view.config.group.title";
     }
 
     @Override

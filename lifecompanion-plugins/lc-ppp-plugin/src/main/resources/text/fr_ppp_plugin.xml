@@ -215,6 +215,7 @@
 
 	<!-- Key options: action cell. -->
 	<text key="ppp.plugin.keyoption.action.cell.name">PDP - Sélection d'une action</text>
+	<text key="ppp.plugin.keyoption.action.cell.description">Permet de sélectionner une action</text>
 	<text key="ppp.plugin.keyoption.action.cell.default_text">Action</text>
 
 	<!-- Views: commons. -->
@@ -392,6 +393,9 @@
 	<text key="ppp.plugin.view.date.time.picker.error">Merci de sélectionner une date/heure correcte</text>
 
 	<!-- New UI -->
+	<text key="ppp.plugin.view.config.groups.title">Groupes de bénéficiaires</text>
+	<text key="ppp.plugin.view.config.group.title">Groupe de bénéficiaires</text>
+	<text key="ppp.plugin.view.config.user.title">Bénéficiare</text>
 	<text key="ppp.plugin.view.config.group.detail.title">Information du groupe</text>
 	<text key="ppp.plugin.view.config.group.name.field">Nom</text>
 	<text key="ppp.plugin.view.config.group.id.field">Identifiant unique</text>
@@ -403,4 +407,19 @@
 	<text key="ppp.plugin.task.sync.check.changes">Détection des changements</text>
 	<text key="ppp.plugin.task.sync.sync.changes">Synchronisation des données</text>
 	<text key="ppp.plugin.task.sync.cant.find.database.key">Impossible de détecter la clé USB de synchronisation, assurez vous que celle-ci est bien branchée.</text>
+
+	<text key="ppp.plugin.actions.categories.subs.groups.name">Groupes &amp; bénéficiaires</text>
+	<text key="ppp.plugin.actions.user.group.select.name">Sélectionner le groupe</text>
+	<text key="ppp.plugin.actions.user.group.select.description">Sélectionne le groupe de bénéficiaires actuellement affiché dans la case</text>
+	<text key="ppp.plugin.actions.user.profile.select.name">Sélectionner le bénéficiaire</text>
+	<text key="ppp.plugin.actions.user.profile.select.description">Sélectionne le bénéficiaire actuellement affiché dans la case</text>
+	<text key="ppp.plugin.actions.sync.database.name">Synchroniser les données</text>
+	<text key="ppp.plugin.actions.sync.database.description">Synchroniser les données avec le support externe dédié. Pour être considéré comme support externe, celui-ci doit avec un dossier "ppp-sync-database".</text>
+
+	<text key="ppp.plugin.keyoption.user.group.name">Groupe de bénéficiaires</text>
+	<text key="ppp.plugin.keyoption.user.group.filler">(groupe)</text>
+	<text key="ppp.plugin.keyoption.user.profile.filler">(bénéficiaire)</text>
+	<text key="ppp.plugin.keyoption.user.group.description">Permet d'afficher et de sélectionner un groupe de bénéficiaire</text>
+	<text key="ppp.plugin.keyoption.user.profile.name">Bénéficiaires</text>
+	<text key="ppp.plugin.keyoption.user.profile.description">Permet d'afficher et de sélectionner un bénéficiaire</text>
 </texts>
