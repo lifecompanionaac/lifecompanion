@@ -58,6 +58,9 @@ public class LCConstant {
     public final static String EXT_PATH_DATA_TIPS_IMAGES = ApplicationConstant.DIR_NAME_APPLICATION_DATA + File.separator + "tips-medias" + File.separator;
     public final static String EXT_PATH_FUS_CHAR_PREDICTOR = ApplicationConstant.DIR_NAME_APPLICATION_DATA + File.separator + "fus-char-predictor" + File.separator;
     public final static String EXT_PATH_DEFAULT_CONFIGURATIONS = ApplicationConstant.DIR_NAME_APPLICATION_DATA + File.separator + "default-configurations" + File.separator;
+    public final static String EXT_PATH_DEFAULT_CONFIGURATIONS_CACHE_ROOT = ApplicationConstant.DIR_NAME_APPLICATION_DATA + File.separator + "default-configurations-cache" + File.separator;
+    public final static String EXT_PATH_DEFAULT_CONFIGURATIONS_CACHE_SOURCE = EXT_PATH_DEFAULT_CONFIGURATIONS_CACHE_ROOT + File.separator + "files";
+    public final static String EXT_PATH_DEFAULT_CONFIGURATIONS_CACHE_EXTRACTED = EXT_PATH_DEFAULT_CONFIGURATIONS_CACHE_ROOT + File.separator + "extracted";
     public final static String EXT_PATH_DEFAULT_CONFIGURATIONS_EXTRACTED = EXT_PATH_DEFAULT_CONFIGURATIONS + "extracted" + File.separator;
     public final static String EXT_PATH_LC_STATE_FILENAME = "lifecompanion.xml";
     public final static String EXT_PATH_LAST_UPDATE_CHECK = ApplicationConstant.DIR_NAME_APPLICATION_DATA + File.separator + "last-update";

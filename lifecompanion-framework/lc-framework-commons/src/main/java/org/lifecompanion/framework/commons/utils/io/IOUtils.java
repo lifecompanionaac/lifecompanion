@@ -387,6 +387,16 @@ public class IOUtils {
         }
     }
 
+    public static String fileMd5HexToString(File path) throws IOException {
+        try (InputStream fis = new BufferedInputStream(new FileInputStream(path))) {
+            return DigestUtils.md5Hex(fis);
+        }
+    }
+
+    public static String stringMd5HexToString(String str) throws IOException {
+        return DigestUtils.md5Hex(str);
+    }
+
     public static void createParentDirectoryIfNeeded(File path) {
         if (path != null) {
             File parentFile = path.getParentFile();
