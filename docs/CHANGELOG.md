@@ -9,6 +9,7 @@
 ### Corrections/ajustements
 
 - Ticket #263 : amélioration de la qualité de l'export en PDF
+- Ticket #266 : correction de l'affichage de l'alignement de texte sélectionné
 
 ## 1.5.0 - 08/09/2023
 

@@ -209,7 +209,7 @@ public class FXControlUtils {
 
     public static ToggleButton createGraphicsToggleButton(final String label, final Node graphics, final String tooltipTranslationID) {
         ToggleButton button = new ToggleButton(label, graphics);
-        button.getStyleClass().addAll("background-none", "opacity-80-hover", "opacity-60-pressed", "round-lightgrey-border-select");
+        button.getStyleClass().addAll("background-none", "opacity-80-hover", "opacity-60-pressed", "round-lightgrey-border-selected");
         button.setContentDisplay(ContentDisplay.TOP);
         createAndAttachTooltip(button, tooltipTranslationID);
         return button;
