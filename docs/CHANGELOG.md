@@ -8,6 +8,7 @@
 
 ### Corrections/ajustements
 
+- Ticket #273 : l'image des listes de cases est maintenant toujours intégrée dans l'éditeur de texte
 - Ticket #263 : amélioration de la qualité de l'export en PDF
 - Ticket #266 : correction de l'affichage de l'alignement de texte sélectionné
 - Ticket #271 : correction d'une erreur lors d'une vitesse de défilement très rapide
