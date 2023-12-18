@@ -411,10 +411,12 @@ public class AbstractSelectionModeView<T extends DrawSelectionModeI> extends Gro
                 }
             }
             KeyValue keyValue = new KeyValue(changingProperty, endValue, Interpolator.EASE_BOTH);
-            this.keyFrameProgress = new KeyFrame(Duration.millis(progressTime - AbstractSelectionModeView.TIME
-                    - AbstractSelectionModeView.EXTRA_TIME_END_PROGRESS - AbstractSelectionModeView.EXTRA_TIME_BEFORE_PROGRESS),
-                    keyValue);
-            this.timeLineProgress.getKeyFrames().add(this.keyFrameProgress);
+            long progressValue = progressTime - AbstractSelectionModeView.TIME
+                    - AbstractSelectionModeView.EXTRA_TIME_END_PROGRESS - AbstractSelectionModeView.EXTRA_TIME_BEFORE_PROGRESS;
+            if (progressValue > 0) {
+                this.keyFrameProgress = new KeyFrame(Duration.millis(progressValue), keyValue);
+                this.timeLineProgress.getKeyFrames().add(this.keyFrameProgress);
+            }
             this.timeLineProgress.setDelay(Duration.millis(AbstractSelectionModeView.EXTRA_TIME_BEFORE_PROGRESS));
             this.timeLineProgress.play();
         }
