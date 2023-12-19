@@ -52,6 +52,7 @@ import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.impl.notification.LCNotification;
 import org.lifecompanion.model.impl.profile.LCConfigurationDescription;
+import org.lifecompanion.ui.app.profileconfigselect.DuplicateConfigAlertContent;
 import org.lifecompanion.ui.common.control.specific.selector.ConfigurationSelectorControl;
 import org.lifecompanion.ui.notification.LCNotificationController;
 import org.lifecompanion.util.DesktopUtils;
@@ -469,14 +470,8 @@ public class LCConfigurationActions {
                     final Alert dlg = DialogUtils
                             .alertWithSourceAndType(source, AlertType.WARNING)
                             .withHeaderText(Translation.getText("action.import.existing.configuration.header", currentProfile.nameProperty().get()))
-                            .withContentText(Translation.getText("action.import.existing.configuration.message",
-                                    previousConfigDescription.configurationNameProperty().get(),
-                                    getLastModificationDateIn(previousConfigDescription),
-                                    getLastModificationAuthorIn(previousConfigDescription),
-                                    importedConfigurationDescription.configurationNameProperty().get(),
-                                    getLastModificationDateIn(importedConfigurationDescription),
-                                    getLastModificationAuthorIn(importedConfigurationDescription)
-                            )).withButtonTypes(typeReplacePrevious, typeKeepBoth, typeCancel)
+                            .withContent(new DuplicateConfigAlertContent(currentProfile, previousConfigDescription, importedConfigurationDescription))
+                            .withButtonTypes(typeReplacePrevious, typeKeepBoth, typeCancel)
                             .build();
                     dlg.getDialogPane().lookupButton(typeKeepBoth).setDisable(true);
                     dlg.getDialogPane().lookupButton(typeReplacePrevious).setDisable(true);
@@ -530,22 +525,6 @@ public class LCConfigurationActions {
             } else {
                 LCConfigurationActions.LOGGER.info("Configuration will not be imported because user cancelled open dialog");
             }
-        }
-
-        private String getLastModificationAuthorIn(LCConfigurationDescriptionI configurationDescription) {
-            return configurationDescription.getChangelogEntries()
-                                           .stream()
-                                           .min((e1, e2) -> e2.getWhen().compareTo(e1.getWhen()))
-                                           .map(entry -> entry.getProfileName() + " (" + entry.getSystemUserName() + ")")
-                                           .orElse("?");
-        }
-
-        private String getLastModificationDateIn(LCConfigurationDescriptionI configurationDescription) {
-            return configurationDescription.getChangelogEntries()
-                                           .stream()
-                                           .min((e1, e2) -> e2.getWhen().compareTo(e1.getWhen()))
-                                           .map(entry -> StringUtils.dateToStringDateWithHour(entry.getWhen()))
-                                           .orElse(StringUtils.dateToStringDateWithHour(configurationDescription.configurationLastDateProperty().get()));
         }
 
         @Override
@@ -784,9 +763,9 @@ public class LCConfigurationActions {
             if (this.askAndNotify) {
                 //Ask confirm
                 if (DialogUtils.alertWithSourceAndType(source, AlertType.CONFIRMATION)
-                               .withContentText(Translation.getText("action.remove.config.confirm.message", this.configDescription.configurationNameProperty().get()))
-                               .withHeaderText(Translation.getText("action.remove.config.confirm.header"))
-                               .showAndWait() != ButtonType.OK) {
+                        .withContentText(Translation.getText("action.remove.config.confirm.message", this.configDescription.configurationNameProperty().get()))
+                        .withHeaderText(Translation.getText("action.remove.config.confirm.header"))
+                        .showAndWait() != ButtonType.OK) {
                     return;
                 }
             }

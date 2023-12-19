@@ -29,7 +29,7 @@
   <text key="use.action.event.type.event.fired">au déclenchement de l'événement</text>
   <text key="use.action.event.type.over">au survol</text>
 	<text key="user.action.sequence.default.text.value">Nouvelle séquence</text>
-	<text key="button.type.replace.previous">Écraser l'ancienne configuration\net remplacer par celle importée</text>
+	<text key="button.type.replace.previous">Écraser la configuration dans le profil\net remplacer par celle importée</text>
 	<text key="button.type.keep.both">Conserver les deux\nconfigurations</text>
 	<text key="button.type.cancel.import.config">Annuler\nl'import</text>
 	<text key="button.detect.keylist.duplicates">Détecter/corriger les doublons dans les listes de cases</text>
@@ -42,6 +42,12 @@
 	<text key="autocomplete.keyboard.numbers1.name">1-9</text>
 	<text key="action.import.existing.configuration.message">Configuration dans le profil\n"{}", modifée le {} par "{}"\n\nConfiguration importée\n"{}", modifiée le {} par "{}"
 	\n\nQue souhaitez vous faire ?</text>
+    <text key="action.import.existing.configuration.title.imported">Configuration importée</text>
+    <text key="action.import.existing.configuration.title.current">Configuration dans le profil</text>
+    <text key="action.import.existing.configuration.last.modification.description">Nom : "{}"\nDernière modification le {} par {}</text>
+    <text key="action.import.existing.configuration.status.newer">La plus récente</text>
+    <text key="action.import.existing.configuration.status.older">La plus ancienne</text>
+    <text key="action.import.existing.configuration.status.equals">Identique</text>
     <text key="go.parent.list.current.or.execute.next.action.name">Remonter au niveau supérieur ou exécuter les actions suivantes</text>
     <text key="parent.level.or.execute.spinner">Niveau "minimum" possible</text>
     <text key="parent.level.or.execute.spinner.explain">Cette action va permettre de remonter jusqu'au niveau défini au dessus (niveau 0 = racine des listes de case) ou sinon d'exécuter les actions suivantes de la case si le niveau n'est pas encore atteint. Cela permet par exemple d'intégrer sur une même case une action pour remonter dans la liste de case ou pour faire autre chose lorsque que le niveau voulu est déjà atteint.</text>
