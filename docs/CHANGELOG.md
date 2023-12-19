@@ -8,6 +8,7 @@
 
 ### Corrections/ajustements
 
+- Ticket #267 : la configuration d'une image (rotation, recadrage, etc) est maintenant utilisée dans le champs de sélection
 - Ticket #279 : le message pour écraser une configuration par celle importée est maintenant plus explicite
 - Ticket #273 : l'image des listes de cases est maintenant toujours intégrée dans l'éditeur de texte
 - Ticket #263 : amélioration de la qualité de l'export en PDF

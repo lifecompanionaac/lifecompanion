@@ -25,6 +25,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import org.lifecompanion.model.api.configurationcomponent.ImageUseComponentI;
 import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.fxmisc.easybind.EasyBind;
 import org.lifecompanion.model.api.imagedictionary.ImageElementI;
@@ -34,6 +35,7 @@ import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.util.javafx.FXControlUtils;
 import org.lifecompanion.util.javafx.StageUtils;
+import org.lifecompanion.util.model.ConfigurationComponentUtils;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -111,7 +113,7 @@ public class Image2SelectorControl extends BorderPane implements LCViewInitHelpe
 
     @Override
     public void initBinding() {
-        this.imageViewSelected.imageProperty().bind(EasyBind.select(this.selectedImage).selectObject(ImageElementI::loadedImageProperty));
+        bindImageViewToCurrentSelection();
         //Disable remove when there is no image
         this.buttonRemoveImage.disableProperty().bind(this.disableImageSelection.or(this.imageViewSelected.imageProperty().isNull()));
         this.buttonSelectImage.disableProperty().bind(this.disableImageSelection);
@@ -147,6 +149,19 @@ public class Image2SelectorControl extends BorderPane implements LCViewInitHelpe
                 tooltipImageKeywords.setText(null);
             }
         });
+        this.imageUseComponent.addListener((obs, ov, nv) -> {
+            if (ov != null) {
+                ConfigurationComponentUtils.unbindImageViewFromImageUseComponent(this.imageViewSelected);
+                bindImageViewToCurrentSelection();
+            }
+            if (nv != null) {
+                ConfigurationComponentUtils.bindImageViewWithImageUseComponent(this.imageViewSelected, nv);
+            }
+        });
+    }
+
+    private void bindImageViewToCurrentSelection() {
+        this.imageViewSelected.imageProperty().bind(EasyBind.select(this.selectedImage).selectObject(ImageElementI::loadedImageProperty));
     }
 
     //========================================================================l
@@ -155,12 +170,10 @@ public class Image2SelectorControl extends BorderPane implements LCViewInitHelpe
         return this.selectedImage;
     }
 
-    public DoubleProperty imageRotateProperty() {
-        return this.imageViewSelected.rotateProperty();
-    }
+    private final ObjectProperty<ImageUseComponentI> imageUseComponent = new SimpleObjectProperty<>();
 
-    public BooleanProperty imagePreserveRatioPropertyProperty() {
-        return this.imageViewSelected.preserveRatioProperty();
+    public ObjectProperty<ImageUseComponentI> imageUseComponentProperty() {
+        return this.imageUseComponent;
     }
 
     public BooleanProperty disableImageSelectionProperty() {

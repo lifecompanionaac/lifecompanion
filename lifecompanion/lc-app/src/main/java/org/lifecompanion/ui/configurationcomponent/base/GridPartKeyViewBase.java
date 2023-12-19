@@ -19,7 +19,6 @@
 package org.lifecompanion.ui.configurationcomponent.base;
 
 import javafx.beans.binding.Bindings;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
@@ -28,7 +27,6 @@ import org.lifecompanion.model.api.style.KeyCompStyleI;
 import org.lifecompanion.model.api.ui.configurationcomponent.ComponentViewI;
 import org.lifecompanion.model.api.ui.configurationcomponent.ViewProviderI;
 import org.lifecompanion.util.LangUtils;
-import org.lifecompanion.util.binding.BindingUtils;
 import org.lifecompanion.util.binding.Unbindable;
 import org.lifecompanion.model.impl.configurationcomponent.GridPartKeyComponent;
 import org.lifecompanion.controller.textcomponent.WritingStateController;
@@ -38,7 +36,7 @@ import org.lifecompanion.ui.common.pane.generic.ImageViewPane;
 import org.lifecompanion.ui.common.pane.generic.LCLabel;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
-import org.lifecompanion.util.javafx.ImageUtils;
+import org.lifecompanion.util.model.ConfigurationComponentUtils;
 
 /**
  * Base displayer for a Key component
@@ -102,17 +100,8 @@ public class GridPartKeyViewBase extends Pane implements ComponentViewI<GridPart
         //Bind the image
         keyImageView = new ImageView();
         keyImageView.setSmooth(true);
-        keyImageView.preserveRatioProperty().bind(this.model.preserveRatioProperty());
-        keyImageView.rotateProperty().bind(this.model.rotateProperty());
-        keyImageView.viewportProperty().bind(this.model.viewportProperty());
+        ConfigurationComponentUtils.bindImageViewWithImageUseComponent(this.keyImageView, this.model);
         ImageViewPane keyImageViewWrapper = new ImageViewPane(keyImageView);
-        keyImageView.imageProperty().bind(Bindings.createObjectBinding(() -> {
-                    Image img = this.model.loadedImageProperty().get();
-                    return img == null || !this.model.enableReplaceColorProperty().get() ? img
-                            : ImageUtils.replaceColorInImage(img, this.model.colorToReplaceProperty().get(), this.model.replacingColorProperty().get(),
-                            this.model.replaceColorThresholdProperty().get());
-                }, this.model.loadedImageProperty(), this.model.enableReplaceColorProperty(), this.model.colorToReplaceProperty(),
-                this.model.replacingColorProperty(), this.model.replaceColorThresholdProperty()));
         this.labelContent.graphicProperty().set(keyImageViewWrapper);
 
         //Bind style
@@ -158,10 +147,7 @@ public class GridPartKeyViewBase extends Pane implements ComponentViewI<GridPart
         this.labelContent.textProperty().unbind();
 
         //Bind the image
-        keyImageView.preserveRatioProperty().unbind();
-        keyImageView.rotateProperty().unbind();
-        keyImageView.viewportProperty().unbind();
-        BindingUtils.unbindAndSetNull(keyImageView.imageProperty());
+        ConfigurationComponentUtils.unbindImageViewFromImageUseComponent(keyImageView);
 
         //Bind style
         shapeStyleUnbind.unbind();

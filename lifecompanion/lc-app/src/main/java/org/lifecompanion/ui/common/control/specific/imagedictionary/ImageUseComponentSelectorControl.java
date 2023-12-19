@@ -132,12 +132,14 @@ public class ImageUseComponentSelectorControl extends BaseConfigurationViewBorde
             this.disableImageSelection.set(false);
         }
         this.imageSelectorControl.selectedImageProperty().set(model.imageVTwoProperty().get());
+        this.imageSelectorControl.imageUseComponentProperty().set(model);
         model.imageVTwoProperty().addListener(this.changeListenerImage);
     }
 
     @Override
     public void unbind(final ImageUseComponentI model) {
         this.disableImageSelection.unbind();
+        this.imageSelectorControl.imageUseComponentProperty().set(null);
         model.imageVTwoProperty().removeListener(this.changeListenerImage);
     }
 
