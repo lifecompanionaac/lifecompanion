@@ -35,6 +35,7 @@ import org.lifecompanion.model.api.configurationcomponent.GridPartComponentI;
 import org.lifecompanion.model.api.configurationcomponent.RootGraphicComponentI;
 import org.lifecompanion.model.api.configurationcomponent.SelectableComponentI;
 import org.lifecompanion.model.api.ui.editmode.ConfigOptionComponentI;
+import org.lifecompanion.ui.controlsfx.glyphfont.Glyph;
 import org.lifecompanion.util.javafx.ColorUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -211,14 +212,20 @@ public class ButtonComponentOption extends BaseOptionRegion<SelectableComponentI
      * @param glyph
      */
     public static void applyButtonBaseStyle(final ButtonBase button, Color backgroundColor, final Enum<?> glyph) {
-        button.setGraphic(GlyphFontHelper.FONT_AWESOME.create(glyph).sizeFactor(1).color(Color.WHITE));
-        button.setShape(new Circle(16.0));
+        applyButtonBaseStyle(button, backgroundColor, glyph, 14, 14, 24);
+    }
+
+    public static void applyButtonBaseStyle(final ButtonBase button, Color backgroundColor, final Enum<?> glyph, double iconSize, double circleSize, double prefSize) {
+        button.setGraphic(GlyphFontHelper.FONT_AWESOME.create(glyph)
+                .size(iconSize)
+                .color(Color.WHITE));
+        button.setShape(new Circle(circleSize));
         //FIX : set a space for text allow the icon to be correctly displayed
         button.setText(" ");
         button.getStyleClass().addAll("content-display-center", "opacity-60-pressed", "opacity-80-hover", "opacity-40-disabled", "opacity-100-selected");
         button.setStyle("-fx-background-color:" + ColorUtils.toCssColor(backgroundColor));
         //FIX : when adding a group to root, if the pref size is not set, the button is not visible ?
-        button.setPrefSize(24.0, 24.0);
+        button.setPrefSize(prefSize, prefSize);
         button.setMaxWidth(Double.MAX_VALUE);
         button.setMaxHeight(Double.MAX_VALUE);
     }

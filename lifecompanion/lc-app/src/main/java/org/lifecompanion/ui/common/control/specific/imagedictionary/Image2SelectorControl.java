@@ -77,10 +77,13 @@ public class Image2SelectorControl extends BorderPane implements LCViewInitHelpe
 
     private final String nodeIdForImageLoading;
 
+    private final ObjectProperty<ImageUseComponentI> imageUseComponent;
+
     public Image2SelectorControl() {
         this.nodeIdForImageLoading = "Image2SelectorControl" + this.hashCode();
         this.disableImageSelection = new SimpleBooleanProperty(false);
         this.selectedImage = new SimpleObjectProperty<>();
+        this.imageUseComponent = new SimpleObjectProperty<>();
         this.initAll();
     }
 
@@ -169,8 +172,6 @@ public class Image2SelectorControl extends BorderPane implements LCViewInitHelpe
     public ObjectProperty<ImageElementI> selectedImageProperty() {
         return this.selectedImage;
     }
-
-    private final ObjectProperty<ImageUseComponentI> imageUseComponent = new SimpleObjectProperty<>();
 
     public ObjectProperty<ImageUseComponentI> imageUseComponentProperty() {
         return this.imageUseComponent;

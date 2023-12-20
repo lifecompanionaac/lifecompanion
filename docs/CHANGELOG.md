@@ -8,6 +8,9 @@
 
 ### Corrections/ajustements
 
+- Ajustement sur les interfaces de liste de cases
+- Ticket #260 : ajout du bouton "rouge" dans l'interface de configuration des listes de cases (comme dans la partie "édition")
+- Ticket #282 : la configuration des listes de cases affiche maintenant le même nombre de cases que dans la configuration
 - Ticket #267 : la configuration d'une image (rotation, recadrage, etc) est maintenant utilisée dans le champs de sélection
 - Ticket #279 : le message pour écraser une configuration par celle importée est maintenant plus explicite
 - Ticket #273 : l'image des listes de cases est maintenant toujours intégrée dans l'éditeur de texte

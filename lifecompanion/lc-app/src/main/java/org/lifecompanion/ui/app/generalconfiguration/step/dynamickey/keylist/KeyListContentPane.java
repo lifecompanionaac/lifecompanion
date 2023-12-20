@@ -4,16 +4,18 @@ import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import org.lifecompanion.controller.configurationcomponent.dynamickey.KeyListController;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.framework.commons.translation.Translation;
@@ -44,7 +46,7 @@ public class KeyListContentPane extends StackPane implements LCViewInitHelper {
     private Button buttonParentNode, buttonShowAddChoices;
     private Button buttonAddKey, buttonAddCategory, buttonAddLinkKey;
     private VBox boxAddButtons;
-    private FlowPane flowPane;
+    private TilePane tilePane;
     private ScrollPane scrollPane;
 
     public KeyListContentPane(KeyListContentConfigView keyListContentConfigView) {
@@ -58,14 +60,11 @@ public class KeyListContentPane extends StackPane implements LCViewInitHelper {
 
     @Override
     public void initUI() {
-        flowPane = new FlowPane(10, 10);
-        flowPane.setAlignment(Pos.CENTER);
+        tilePane = new TilePane(Orientation.HORIZONTAL, 10, 10);
+        tilePane.setAlignment(Pos.TOP_LEFT);
 
-        scrollPane = new ScrollPane(flowPane);
-        scrollPane.setFitToWidth(true);
+        scrollPane = new ScrollPane(tilePane);
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
-
-        flowPane.prefWrapLengthProperty().bind(scrollPane.widthProperty().subtract(10.0));
 
         buttonParentNode = createFloatingButton("background-third", null, GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.REPLY).size(14).color(Color.WHITE));
         StackPane.setAlignment(buttonParentNode, Pos.TOP_LEFT);
@@ -81,7 +80,9 @@ public class KeyListContentPane extends StackPane implements LCViewInitHelper {
                 "keylist.content.pane.button.add.list",
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.FOLDER).size(16).color(Color.GRAY));
         this.buttonAddKey = createFloatingButton("background-primary-dark-light", "keylist.content.pane.button.add.key", new ImageView(IconHelper.get("keylist/icon_type_leaf.png")));
-        this.buttonAddLinkKey = createFloatingButton("background-primary-dark-light", "keylist.content.pane.button.add.link", GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.LINK).size(16).color(Color.GRAY));
+        this.buttonAddLinkKey = createFloatingButton("background-primary-dark-light",
+                "keylist.content.pane.button.add.link",
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.LINK).size(16).color(Color.GRAY));
         boxAddButtons = new VBox(4.0);
         List.of(buttonAddLinkKey, buttonAddCategory, buttonAddKey).forEach(button -> {
             button.getStyleClass().remove("text-fill-white");
@@ -126,12 +127,12 @@ public class KeyListContentPane extends StackPane implements LCViewInitHelper {
     @Override
     public void initBinding() {
         buttonParentNode.visibleProperty()
-                        .bind(Bindings.createBooleanBinding(() -> keyListContentConfigView.currentListProperty().get() != null && keyListContentConfigView.currentListProperty()
-                                                                                                                                                          .get()
-                                                                                                                                                          .parentProperty()
-                                                                                                                                                          .get() != null,
-                                keyListContentConfigView.currentListProperty()));
-        flowPane.getChildren().addListener(BindingUtils.createListChangeListenerV2(added -> {
+                .bind(Bindings.createBooleanBinding(() -> keyListContentConfigView.currentListProperty().get() != null && keyListContentConfigView.currentListProperty()
+                                .get()
+                                .parentProperty()
+                                .get() != null,
+                        keyListContentConfigView.currentListProperty()));
+        tilePane.getChildren().addListener(BindingUtils.createListChangeListenerV2(added -> {
         }, removed -> {
             if (removed instanceof KeyListContentPaneCell) {
                 ((KeyListContentPaneCell) removed).itemProperty().set(null);
@@ -165,10 +166,10 @@ public class KeyListContentPane extends StackPane implements LCViewInitHelper {
                 previousContentViewUnbind.run();
                 previousContentViewUnbind = null;
             }
-            flowPane.getChildren().clear();
+            tilePane.getChildren().clear();
             // Bind new content
             if (nv != null) {
-                previousContentViewUnbind = ListBindingWithMapper.mapContent(flowPane.getChildren(), nv.getChildren(), item -> {
+                previousContentViewUnbind = ListBindingWithMapper.mapContent(tilePane.getChildren(), nv.getChildren(), item -> {
                     KeyListContentPaneCell cell = new KeyListContentPaneCell(this, this.keyListContentConfigView);
                     cell.itemProperty().set(item);
                     if (item == keyListContentConfigView.selectedProperty().get())
@@ -177,13 +178,14 @@ public class KeyListContentPane extends StackPane implements LCViewInitHelper {
                 });
             }
         });
+        tilePane.prefColumnsProperty().bind(KeyListController.INSTANCE.columnCountEstimationProperty());
     }
 
     private Stream<KeyListContentPaneCell> getChildrenPaneCellStream() {
-        return flowPane.getChildren()
-                       .stream()
-                       .filter(node -> node instanceof KeyListContentPaneCell)
-                       .map(node -> (KeyListContentPaneCell) node);
+        return tilePane.getChildren()
+                .stream()
+                .filter(node -> node instanceof KeyListContentPaneCell)
+                .map(node -> (KeyListContentPaneCell) node);
     }
 
     void setTempDisableScrollTo(boolean tempDisableScrollTo) {

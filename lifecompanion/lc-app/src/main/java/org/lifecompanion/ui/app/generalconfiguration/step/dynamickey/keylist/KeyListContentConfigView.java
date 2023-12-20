@@ -344,11 +344,11 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         selected.set(item);
     }
 
-    public void selectById(String itemId) {
+    public void openById(String itemId) {
         if (itemId != null && root.get() != null) {
             final KeyListNodeI foundNode = KeyListController.findNodeByIdInSubtree(root.get(), itemId);
             if (foundNode != null) {
-                select(foundNode);
+                openList(foundNode);
             }
         }
     }
@@ -360,13 +360,14 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
 
     public void openList(KeyListNodeI item) {
         currentList.set(item);
-        selected.set(null);
+        clearSelection();
     }
 
     public void goToParent() {
         KeyListNodeI nodeV = currentList.get();
         if (nodeV != null && nodeV.parentProperty().get() != null) {
             currentList.set(nodeV.parentProperty().get());
+            clearSelection();
         }
     }
     //========================================================================
