@@ -49,6 +49,8 @@ public class KeyTypedKeyboardEventGenerator extends BaseUseEventGeneratorImpl {
     @XMLGenericProperty(KeyCode.class)
     private final ObjectProperty<KeyCode> keyPressed;
 
+    // TODO : boolean : block the event or not ?
+
     public KeyTypedKeyboardEventGenerator() {
         super();
         this.parameterizableAction = true;

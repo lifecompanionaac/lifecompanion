@@ -54,7 +54,7 @@ public enum GlobalKeyEventController implements ModeListenerI {
     // CALLED BY EVENT GENERATOR
     //========================================================================
     public boolean javaFxEventFired(final KeyEvent keyEvent) {
-        return dispatchEvent(new LCKeyEvent(keyEvent.getCode(), LCKeyEventType.convert(keyEvent.getEventType())));
+        return dispatchEvent(LCKeyEvent.from(keyEvent));
     }
 
     public boolean genericLcEventFired(final LCKeyEvent keyEvent) {
@@ -83,6 +83,10 @@ public enum GlobalKeyEventController implements ModeListenerI {
         this.keyEventListener.add(listener);
     }
 
+    public void removeKeyEventListenerForCurrentUseMode(final Consumer<LCKeyEvent> listener) {
+        this.keyEventListener.remove(listener);
+    }
+
     /**
      * Add a keycode to block for the current use mode.<br>
      * If this keycode is detected as a global event (no matter the associated event : released, pressed, etc.),
@@ -93,6 +97,10 @@ public enum GlobalKeyEventController implements ModeListenerI {
      */
     public void addKeyCodeToBlockForCurrentUseMode(KeyCode keyCode) {
         this.blockedKeyCodes.add(keyCode);
+    }
+
+    public void removeKeyCodeToBlockForCurrentUseMode(KeyCode keyCode) {
+        this.blockedKeyCodes.remove(keyCode);
     }
 
     public Set<KeyCode> getBlockedKeyCodes() {
@@ -129,6 +137,18 @@ public enum GlobalKeyEventController implements ModeListenerI {
 
         public LCKeyEventType getEventType() {
             return eventType;
+        }
+
+        public static LCKeyEvent from(final KeyEvent keyEvent) {
+            return new LCKeyEvent(keyEvent.getCode(), LCKeyEventType.convert(keyEvent.getEventType()));
+        }
+
+        @Override
+        public String toString() {
+            return "LCKeyEvent{" +
+                    "keyCode=" + keyCode +
+                    ", eventType=" + eventType +
+                    '}';
         }
     }
 

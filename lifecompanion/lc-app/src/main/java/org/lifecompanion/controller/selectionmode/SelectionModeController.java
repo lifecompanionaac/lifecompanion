@@ -22,10 +22,12 @@ import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import org.lifecompanion.controller.categorizedelement.useaction.UseActionController;
+import org.lifecompanion.controller.configurationcomponent.GlobalKeyEventController;
 import org.lifecompanion.controller.io.IOHelper;
 import org.lifecompanion.controller.io.task.ConfigurationLoadingTask;
 import org.lifecompanion.controller.lifecycle.AppMode;
@@ -49,6 +51,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -71,6 +74,8 @@ public enum SelectionModeController implements ModeListenerI {
      * In use mode, we only add element inside it, never remove, as it {@link #currentHistoryIndex} just have to be increased
      */
     private final List<GridPartComponentI> scanningHistory;
+
+    private final Consumer<GlobalKeyEventController.LCKeyEvent> keyEventListener;
 
     /**
      * The index in the history list
@@ -141,6 +146,7 @@ public enum SelectionModeController implements ModeListenerI {
         this.clicTimeListeners = new ArrayList<>();
         this.mouseEventListener = new ArrayList<>();
         this.currentPressComponents = new HashSet<>();
+        this.keyEventListener = this::globalKeyboardEvent;
         this.changeListenerGrid = (obs, ov, nv) -> {
             if (nv != null) {
                 this.gridChanged(nv);
@@ -217,16 +223,16 @@ public enum SelectionModeController implements ModeListenerI {
         return false;
     }
 
-    public boolean globalKeyboardEvent(final KeyEvent keyEvent) {
+    public boolean globalKeyboardEvent(final GlobalKeyEventController.LCKeyEvent keyEvent) {
         SelectionModeI selectionMode = this.getSelectionModeConfiguration();
         //Consume every event when the current selection mode is scanning
         if (this.isValidSelectionModeKeyboardEvent(keyEvent)) {
             if (selectionMode instanceof ScanningSelectionModeI) {
                 ScanningSelectionModeI scanningSelection = (ScanningSelectionModeI) selectionMode;
-                if (keyEvent.getEventType() == KeyEvent.KEY_PRESSED) {
+                if (keyEvent.getEventType() == GlobalKeyEventController.LCKeyEventType.PRESSED) {
                     this.pressStarted();
                     scanningSelection.selectionPress(false);
-                } else if (keyEvent.getEventType() == KeyEvent.KEY_RELEASED) {
+                } else if (keyEvent.getEventType() == GlobalKeyEventController.LCKeyEventType.RELEASED) {
                     boolean skipAction = this.pressReleased();
                     scanningSelection.selectionRelease(skipAction);
                 }
@@ -234,14 +240,14 @@ public enum SelectionModeController implements ModeListenerI {
                 DirectSelectionModeI directSelectionMode = (DirectSelectionModeI) selectionMode;
                 // On key press, fire selection press on current part
                 if (this.currentOverPart.get() != null && this.currentOverPart.get() instanceof GridPartKeyComponentI
-                        && keyEvent.getEventType() == KeyEvent.KEY_PRESSED) {
+                        && keyEvent.getEventType() == GlobalKeyEventController.LCKeyEventType.PRESSED) {
                     this.pressStarted();
                     GridPartKeyComponentI key = (GridPartKeyComponentI) this.currentOverPart.get();
                     directSelectionMode.selectionPress(key);
                     this.currentPressComponents.add(key);
                 }
                 // On key release, fire selection release on all previous press components
-                else if (keyEvent.getEventType() == KeyEvent.KEY_RELEASED && !this.currentPressComponents.isEmpty()) {
+                else if (keyEvent.getEventType() == GlobalKeyEventController.LCKeyEventType.RELEASED && !this.currentPressComponents.isEmpty()) {
                     boolean skipAction = this.pressReleased();
                     for (GridPartKeyComponentI key : this.currentPressComponents) {
                         directSelectionMode.selectionRelease(key, skipAction);
@@ -252,9 +258,9 @@ public enum SelectionModeController implements ModeListenerI {
             return true;
         } else if (this.isValidNextScanSelectionModeKeyboardEvent(keyEvent) && selectionMode instanceof ScanningSelectionModeI) {
             ScanningSelectionModeI scanningSelection = (ScanningSelectionModeI) selectionMode;
-            if (keyEvent.getEventType() == KeyEvent.KEY_PRESSED) {
+            if (keyEvent.getEventType() == GlobalKeyEventController.LCKeyEventType.PRESSED) {
                 scanningSelection.nextScanSelectionPress();
-            } else if (keyEvent.getEventType() == KeyEvent.KEY_RELEASED) {
+            } else if (keyEvent.getEventType() == GlobalKeyEventController.LCKeyEventType.RELEASED) {
                 scanningSelection.nextScanSelectionRelease();
             }
             return true;
@@ -263,26 +269,34 @@ public enum SelectionModeController implements ModeListenerI {
         }
     }
 
-    public boolean isValidSelectionModeKeyboardEvent(final KeyEvent keyEvent) {
+    private boolean isValidSelectionModeKeyboardEvent(final GlobalKeyEventController.LCKeyEvent keyEvent) {
+        return keyEvent.getKeyCode() == getSelectionKeyCodeIfEnabled();
+    }
+
+    private boolean isValidNextScanSelectionModeKeyboardEvent(final GlobalKeyEventController.LCKeyEvent keyEvent) {
+        return keyEvent.getKeyCode() == getNextScanKeyCodeIfEnabled();
+    }
+
+    private KeyCode getSelectionKeyCodeIfEnabled() {
         SelectionModeI selectionMode = this.getSelectionModeConfiguration();
         SelectionModeParameterI parameters = this.getSelectionModeParameter();
         //The current mode use keyboard, and the key is the fire event key
-        return parameters != null
+        return (parameters != null
                 && (!(selectionMode instanceof AutoDirectSelectionModeI)
                 || selectionMode.getParameters().enableActivationWithSelectionProperty().get())
-                && parameters.fireEventInputProperty().get() == FireEventInput.KEYBOARD
-                && keyEvent.getCode() == parameters.keyboardFireKeyProperty().get();
+                && parameters.fireEventInputProperty().get() == FireEventInput.KEYBOARD) ?
+                parameters.keyboardFireKeyProperty().get() : null;
     }
 
-    public boolean isValidNextScanSelectionModeKeyboardEvent(final KeyEvent keyEvent) {
+    private KeyCode getNextScanKeyCodeIfEnabled() {
         SelectionModeParameterI parameters = this.getSelectionModeParameter();
         SelectionModeI selectionMode = this.getSelectionModeConfiguration();
         //The current mode use keyboard, and the key is the fire next scan
-        return parameters != null
+        return (parameters != null
                 && parameters.scanningModeProperty().get() == ScanningMode.MANUAL
                 && selectionMode instanceof ScanningSelectionModeI
-                && parameters.nextScanEventInputProperty().get() == FireEventInput.KEYBOARD
-                && keyEvent.getCode() == parameters.keyboardNextScanKeyProperty().get();
+                && parameters.nextScanEventInputProperty().get() == FireEventInput.KEYBOARD) ?
+                parameters.keyboardNextScanKeyProperty().get() : null;
     }
 
     /**
@@ -489,6 +503,7 @@ public enum SelectionModeController implements ModeListenerI {
         this.timer = new Timer(true);
         this.playingProperty.set(false);
         configuration.hideMainSelectionModeViewProperty().set(false);
+
         //Get the first grid where scanning will start
         GridPartComponentI firstPart = this.getFirstComponentSelection(configuration);
         this.LOGGER.info("First element of selection mode is {}", firstPart);
@@ -496,6 +511,19 @@ public enum SelectionModeController implements ModeListenerI {
             this.setCurrentMode(configuration.getSelectionModeParameter(), configuration, () -> {
                 //Start scanning in the first part
                 this.goToGridPart(firstPart);
+
+                // Key listeners when needed (key is used to enable/next scan)
+                KeyCode selectionKeyCode = getSelectionKeyCodeIfEnabled();
+                if (selectionKeyCode != null) {
+                    GlobalKeyEventController.INSTANCE.addKeyCodeToBlockForCurrentUseMode(selectionKeyCode);
+                }
+                KeyCode nextScanKeyCode = getNextScanKeyCodeIfEnabled();
+                if (nextScanKeyCode != null) {
+                    GlobalKeyEventController.INSTANCE.addKeyCodeToBlockForCurrentUseMode(nextScanKeyCode);
+                }
+                if (selectionKeyCode != null || nextScanKeyCode != null) {
+                    GlobalKeyEventController.INSTANCE.addKeyEventListenerForCurrentUseMode(this.keyEventListener);
+                }
             });
         }
     }
@@ -544,6 +572,20 @@ public enum SelectionModeController implements ModeListenerI {
     @Override
     public void modeStop(final LCConfigurationI configuration) {
         if (this.configuration != null) {
+            // Remove listener
+            KeyCode selectionKeyCode = getSelectionKeyCodeIfEnabled();
+            if (selectionKeyCode != null) {
+                GlobalKeyEventController.INSTANCE.removeKeyCodeToBlockForCurrentUseMode(selectionKeyCode);
+            }
+            KeyCode nextScanKeyCode = getNextScanKeyCodeIfEnabled();
+            if (nextScanKeyCode != null) {
+                GlobalKeyEventController.INSTANCE.removeKeyCodeToBlockForCurrentUseMode(nextScanKeyCode);
+            }
+            if (selectionKeyCode != null || nextScanKeyCode != null) {
+                System.out.println("Removing key listener");
+                GlobalKeyEventController.INSTANCE.removeKeyEventListenerForCurrentUseMode(this.keyEventListener);
+            }
+
             //Cancel clic listener
             this.timer.cancel();
             this.waitingTimerTask.clear();

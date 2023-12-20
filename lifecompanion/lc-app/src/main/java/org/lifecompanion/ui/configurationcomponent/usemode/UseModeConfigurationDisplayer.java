@@ -59,6 +59,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -146,23 +147,14 @@ public class UseModeConfigurationDisplayer extends Group implements LCViewInitHe
     public void initListener() {
         // Register filter for selection mode controller event
         this.addEventFilter(KeyEvent.ANY, (event) -> {
-            // Keyboard event without filter except no repeat
-            if (event.getEventType() != KeyEvent.KEY_PRESSED || !this.pressedKey.contains(event.getCode())) {
-                GlobalKeyEventController.INSTANCE.javaFxEventFired(event);
-            }
-            // Filter the next key event on key press (happens before key typed)
-            if (KeyEvent.KEY_PRESSED == event.getEventType() && !this.pressedKey.contains(event.getCode())
-                    && (SelectionModeController.INSTANCE.isValidSelectionModeKeyboardEvent(event) || SelectionModeController.INSTANCE.isValidNextScanSelectionModeKeyboardEvent(event))) {
-                this.cancelNextKeyTypedEvent = true;
-            } else if (KeyEvent.KEY_PRESSED == event.getEventType() && !this.pressedKey.contains(event.getCode())) {
-                this.cancelNextKeyTypedEvent = false;
-            }
-            // Try to execute the keyevent
-            if ((event.getEventType() != KeyEvent.KEY_PRESSED || !this.pressedKey.contains(event.getCode()))
-                    && SelectionModeController.INSTANCE.globalKeyboardEvent(event)) {
-                event.consume();
-            } else {
-                if (KeyEvent.KEY_PRESSED == event.getEventType()) {
+            if (KeyEvent.KEY_PRESSED == event.getEventType()) {
+                // Check for blocked keys
+                if (GlobalKeyEventController.INSTANCE.getBlockedKeyCodes().contains(event.getCode())) {
+                    this.cancelNextKeyTypedEvent = true;
+                    event.consume();
+                }
+                // or consume special events
+                else {
                     if (event.getCode() == KeyCode.DELETE) {
                         WritingStateController.INSTANCE.removeNextChar(WritingEventSource.USER_PHYSICAL_INPUT);
                     } else if (event.getCode() == KeyCode.BACK_SPACE) {
@@ -186,6 +178,10 @@ public class UseModeConfigurationDisplayer extends Group implements LCViewInitHe
                     }
                 }
             }
+            // Keyboard event to global listener (just once per event)
+            if (event.getEventType() != KeyEvent.KEY_PRESSED || !this.pressedKey.contains(event.getCode())) {
+                GlobalKeyEventController.INSTANCE.javaFxEventFired(event);
+            }
             // At the end of processing, add the processed event to avoid process it more that once
             if (KeyEvent.KEY_PRESSED == event.getEventType()) {
                 this.pressedKey.add(event.getCode());
@@ -204,6 +200,8 @@ public class UseModeConfigurationDisplayer extends Group implements LCViewInitHe
                         WritingStateController.INSTANCE.insertText(WritingEventSource.USER_PHYSICAL_INPUT, text);
                     }
                 }
+            } else {
+                this.cancelNextKeyTypedEvent = false;
             }
         });
 
@@ -216,7 +214,7 @@ public class UseModeConfigurationDisplayer extends Group implements LCViewInitHe
                 event.consume();
             }
         };
-        // Registrer filter on mouse event
+        // Register filter on mouse event
         element.addEventFilter(MouseEvent.MOUSE_RELEASED, mouseEventFilter);
         element.addEventFilter(MouseEvent.MOUSE_ENTERED, mouseEventFilter);
         element.addEventFilter(MouseEvent.MOUSE_EXITED, mouseEventFilter);
