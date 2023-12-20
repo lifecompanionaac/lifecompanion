@@ -1,5 +1,6 @@
 package org.lifecompanion.ui.app.generalconfiguration.step.dynamickey.keylist;
 
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -145,19 +146,22 @@ public class KeyListContentPane extends StackPane implements LCViewInitHelper {
                         .forEach(cell -> cell.selectedProperty().set(false));
             }
             if (nv != null) {
-                getChildrenPaneCellStream()
-                        .filter(cell -> cell.itemProperty().get() == nv)
-                        .peek(cell -> cell.selectedProperty().set(true))
-                        .findAny()
-                        .ifPresent(cell -> {
-                            if (!tempDisableScrollTo) {
-                                double h = scrollPane.getContent().getBoundsInLocal().getHeight();
-                                double y = (cell.getBoundsInParent().getMaxY() +
-                                        cell.getBoundsInParent().getMinY()) / 2.0;
-                                double v = scrollPane.getViewportBounds().getHeight();
-                                scrollPane.setVvalue(scrollPane.getVmax() * ((y - 0.5 * v) / (h - v)));
-                            }
-                        });
+                // Platform.runLater ensure that the layout is done before computing cell position
+                Platform.runLater(()-> {
+                    getChildrenPaneCellStream()
+                            .filter(cell -> cell.itemProperty().get() == nv)
+                            .peek(cell -> cell.selectedProperty().set(true))
+                            .findAny()
+                            .ifPresent(cell -> {
+                                if (!tempDisableScrollTo) {
+                                    double h = scrollPane.getContent().getBoundsInLocal().getHeight();
+                                    double y = (cell.getBoundsInParent().getMaxY() +
+                                            cell.getBoundsInParent().getMinY()) / 2.0;
+                                    double v = scrollPane.getViewportBounds().getHeight();
+                                    scrollPane.setVvalue(scrollPane.getVmax() * ((y - 0.5 * v) / (h - v)));
+                                }
+                            });
+                });
             }
         });
         keyListContentConfigView.currentListProperty().addListener((obs, ov, nv) -> {
