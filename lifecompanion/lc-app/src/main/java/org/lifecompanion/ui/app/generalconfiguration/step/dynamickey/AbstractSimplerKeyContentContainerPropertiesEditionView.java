@@ -191,9 +191,13 @@ public abstract class AbstractSimplerKeyContentContainerPropertiesEditionView<T 
                     fieldText.textProperty().unbindBidirectional(ov.textProperty());
                     fieldText.setText(null);
                     comboBoxTextPosition.valueProperty().unbindBidirectional(ov.textPositionProperty());
+                    comboBoxTextPosition.setValue(null);
                     colorPickerBackgroundColor.valueProperty().unbindBidirectional(ov.backgroundColorProperty());
+                    colorPickerBackgroundColor.setValue(null);
                     colorPickerStrokeColor.valueProperty().unbindBidirectional(ov.strokeColorProperty());
+                    colorPickerStrokeColor.setValue(null);
                     colorPickerTextColor.valueProperty().unbindBidirectional(ov.textColorProperty());
+                    colorPickerTextColor.setValue(null);
                 }
                 bindBidirectionalContent(ov, nv);
                 if (nv != null) {

@@ -149,13 +149,21 @@ public abstract class AbstractSimplerKeyActionContainerPropertiesEditionView<T e
     protected void unbindBidirectionalContent(T ov, T nv) {
         if (ov != null) {
             fieldTextToWrite.textProperty().unbindBidirectional(ov.textToWriteProperty());
+            fieldTextToWrite.setText(null);
             fieldTextToSpeak.textProperty().unbindBidirectional(ov.textToSpeakProperty());
+            fieldTextToSpeak.setText(null);
             fieldTextSpeakOver.textProperty().unbindBidirectional(ov.textSpeakOnOverProperty());
+            fieldTextSpeakOver.setText(null);
             toggleSwitchEnableWrite.selectedProperty().unbindBidirectional(ov.enableWriteProperty());
+            toggleSwitchEnableWrite.setSelected(false);
             toggleSwitchEnableSpeak.selectedProperty().unbindBidirectional(ov.enableSpeakProperty());
+            toggleSwitchEnableSpeak.setSelected(false);
             toggleSwitchSpaceAfter.selectedProperty().unbindBidirectional(ov.enableSpaceAfterWriteProperty());
+            toggleSwitchSpaceAfter.setSelected(false);
             toggleSwitchSpeakOver.selectedProperty().unbindBidirectional(ov.enableSpeakOnOverProperty());
+            toggleSwitchSpeakOver.setSelected(false);
             toggleEnablePlayRecordedSound.selectedProperty().unbindBidirectional(ov.enablePlayRecordedSoundProperty());
+            toggleEnablePlayRecordedSound.setSelected(false);
             if (nv == null) {
                 soundRecordingControl.setFileAndDuration(null, -1);
             }
