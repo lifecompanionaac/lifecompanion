@@ -54,6 +54,7 @@ import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.ui.easteregg.JPDRetirementView;
 import org.lifecompanion.util.binding.BindingUtils;
 import org.lifecompanion.util.javafx.FXThreadUtils;
+import org.lifecompanion.util.javafx.KeyCodeUtils;
 import org.lifecompanion.util.model.ConfigurationComponentUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -150,8 +151,10 @@ public class UseModeConfigurationDisplayer extends Group implements LCViewInitHe
             if (KeyEvent.KEY_PRESSED == event.getEventType()) {
                 // Check for blocked keys
                 if (GlobalKeyEventController.INSTANCE.getBlockedKeyCodes().contains(event.getCode())) {
-                    this.cancelNextKeyTypedEvent = true;
                     event.consume();
+                    if (KeyCodeUtils.isTextGeneratingKeyCode(event.getCode())) {
+                        this.cancelNextKeyTypedEvent = true;
+                    }
                 }
                 // or consume special events
                 else {

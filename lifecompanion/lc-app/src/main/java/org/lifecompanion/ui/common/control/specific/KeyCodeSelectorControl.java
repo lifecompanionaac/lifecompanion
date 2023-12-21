@@ -33,7 +33,7 @@ import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.util.javafx.FXControlUtils;
-import org.lifecompanion.util.javafx.FXKeyCodeTranslatorUtils;
+import org.lifecompanion.util.javafx.KeyCodeUtils;
 
 /**
  * Component to select a file from current file system.
@@ -96,7 +96,7 @@ public class KeyCodeSelectorControl extends VBox implements LCViewInitHelper {
     @Override
     public void initBinding() {
         this.buttonRemoveKey.disableProperty().bind(this.value.isNull());
-        this.value.addListener((obs, ov, nv) -> this.fieldKeyName.setText(FXKeyCodeTranslatorUtils.getTranslatedKeyCodeName(nv, null)));
+        this.value.addListener((obs, ov, nv) -> this.fieldKeyName.setText(KeyCodeUtils.getTranslatedKeyCodeName(nv, null)));
     }
     //========================================================================
 

@@ -37,7 +37,7 @@ import org.lifecompanion.model.api.usevariable.UseVariableI;
 import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.impl.useapi.GlobalRuntimeConfiguration;
-import org.lifecompanion.util.javafx.FXKeyCodeTranslatorUtils;
+import org.lifecompanion.util.javafx.KeyCodeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,7 +69,7 @@ public class SimulateKeyboardKeyPressedAction extends SimpleUseActionImpl<UseAct
 
 
     private String getKeyText(final ObjectProperty<KeyCode> keyProp, final boolean comma) {
-        return (comma ? ", " : "") + FXKeyCodeTranslatorUtils.getTranslatedKeyCodeName(keyProp.get(), "no.keyboard.key.selected");
+        return (comma ? ", " : "") + KeyCodeUtils.getTranslatedKeyCodeName(keyProp.get(), "no.keyboard.key.selected");
     }
 
     public ObjectProperty<KeyCode> keyPressed1Property() {

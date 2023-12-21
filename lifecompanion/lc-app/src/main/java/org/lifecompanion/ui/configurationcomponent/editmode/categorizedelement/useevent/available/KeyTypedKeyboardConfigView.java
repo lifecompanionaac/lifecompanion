@@ -26,37 +26,45 @@ import org.lifecompanion.ui.common.control.specific.KeyCodeSelectorControl;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import org.lifecompanion.ui.controlsfx.control.ToggleSwitch;
 
 public class KeyTypedKeyboardConfigView extends VBox implements UseEventGeneratorConfigurationViewI<KeyTypedKeyboardEventGenerator> {
 
-	private KeyCodeSelectorControl keyCodeSelectorControl;
+    private KeyCodeSelectorControl keyCodeSelectorControl;
+    private ToggleSwitch toggleBlockKey;
 
-	@Override
-	public Region getConfigurationView() {
-		return this;
-	}
+    @Override
+    public Region getConfigurationView() {
+        return this;
+    }
 
-	@Override
-	public Class<KeyTypedKeyboardEventGenerator> getConfiguredActionType() {
-		return KeyTypedKeyboardEventGenerator.class;
-	}
+    @Override
+    public Class<KeyTypedKeyboardEventGenerator> getConfiguredActionType() {
+        return KeyTypedKeyboardEventGenerator.class;
+    }
 
-	@Override
-	public void initUI() {
-		this.keyCodeSelectorControl = new KeyCodeSelectorControl(Translation.getText("use.event.key.pressed.select.key.label"));
-		Label labelExplain = new Label(Translation.getText("use.event.key.pressed.select.no.key.explain"));
-		labelExplain.setWrapText(true);
-		this.getChildren().addAll(this.keyCodeSelectorControl, labelExplain);
-	}
+    @Override
+    public void initUI() {
+        this.keyCodeSelectorControl = new KeyCodeSelectorControl(Translation.getText("use.event.key.pressed.select.key.label"));
+        Label labelKeyExplain = new Label(Translation.getText("use.event.key.pressed.select.no.key.explain"));
+        labelKeyExplain.getStyleClass().addAll("text-font-italic", "text-fill-gray", "text-wrap-enabled");
+        this.toggleBlockKey = new ToggleSwitch(Translation.getText("use.event.key.pressed.block.key.label"));
+        Label labelBlockExplain = new Label(Translation.getText("use.event.key.pressed.block.key.explain"));
+        labelBlockExplain.getStyleClass().addAll("text-font-italic", "text-fill-gray", "text-wrap-enabled");
+        this.setSpacing(5.0);
+        this.getChildren().addAll(this.keyCodeSelectorControl, labelKeyExplain, this.toggleBlockKey, labelBlockExplain);
+    }
 
-	@Override
-	public void editEnds(final KeyTypedKeyboardEventGenerator element) {
-		element.keyPressedProperty().set(this.keyCodeSelectorControl.valueProperty().get());
-	}
+    @Override
+    public void editEnds(final KeyTypedKeyboardEventGenerator element) {
+        element.keyPressedProperty().set(this.keyCodeSelectorControl.valueProperty().get());
+        element.blockKeyProperty().set(this.toggleBlockKey.isSelected());
+    }
 
-	@Override
-	public void editStarts(final KeyTypedKeyboardEventGenerator element) {
-		this.keyCodeSelectorControl.valueProperty().set(element.keyPressedProperty().get());
-	}
+    @Override
+    public void editStarts(final KeyTypedKeyboardEventGenerator element) {
+        this.keyCodeSelectorControl.valueProperty().set(element.keyPressedProperty().get());
+        this.toggleBlockKey.setSelected(element.blockKeyProperty().get());
+    }
 
 }

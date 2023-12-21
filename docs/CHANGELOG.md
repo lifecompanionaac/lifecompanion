@@ -4,10 +4,12 @@
 
 ### Fonctionnalités
 
-- ...
+- Il est maintenant **possible d'utiliser une touche de clavier pour activer le défilement**, même en défilement (sur Windows uniquement)
 
 ### Corrections/ajustements
 
+- Sur l'événement "Touche appuyée" il est maintenant possible de choisir si la touche appuyée est bloquée ou non
+- Traductions des noms des touches du clavier
 - Ajustement sur les interfaces de liste de cases
 - Ticket #260 : ajout du bouton "rouge" dans l'interface de configuration des listes de cases (comme dans la partie "édition")
 - Ticket #282 : la configuration des listes de cases affiche maintenant le même nombre de cases que dans la configuration

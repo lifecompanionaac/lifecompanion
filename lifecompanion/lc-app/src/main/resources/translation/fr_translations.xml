@@ -2621,6 +2621,8 @@
 		déclenché peu importe le bouton de la souris appuyé.</text>
   <!--org.lifecompanion.config.view.useevent.impl.control.key-->
   <text key="use.event.key.pressed.select.key.label">Filtrer si la touche appuyée est</text>
+  <text key="use.event.key.pressed.block.key.label">Bloquer la touche lorsqu'elle est appuyée</text>
+  <text key="use.event.key.pressed.block.key.explain">Si la touche est bloquée, alors celle-ci n'aura pas son comportement habituel. On peut par exemple bloquer la touche "Entrée" si on ne souhaite plus avoir de saut de ligne à son appui.</text>
   <text key="use.event.key.pressed.select.no.key.explain">Si aucune touche n'est sélectionnée en filtre, alors
 		toutes les touches appuyées déclencheront un événement.</text>
   <!--org.lifecompanion.config.view.useevent.impl.time.value-->

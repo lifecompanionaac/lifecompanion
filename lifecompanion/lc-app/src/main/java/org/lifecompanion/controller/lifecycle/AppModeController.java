@@ -137,7 +137,8 @@ public enum AppModeController {
     }
 
     public void startUseModeAfterEdit() {
-        FXThreadUtils.runOnFXThread(() -> startUseModeForConfiguration((LCConfigurationI) editModeContext.getConfiguration().duplicate(false), editModeContext.configurationDescriptionProperty().get()));
+        FXThreadUtils.runOnFXThread(() -> startUseModeForConfiguration((LCConfigurationI) editModeContext.getConfiguration().duplicate(false),
+                editModeContext.configurationDescriptionProperty().get()));
     }
 
     public void startUseModeForConfiguration(LCConfigurationI configuration, LCConfigurationDescriptionI configurationDescription) {
@@ -186,8 +187,8 @@ public enum AppModeController {
             NoteKeyController.INSTANCE, //
             ImageDictionaries.INSTANCE,//
             GlobalKeyEventController.INSTANCE,//
-            WinAutoHotKeyKeyboardReceiverController.INSTANCE, //
-            SelectionModeController.INSTANCE//Selection in last, because it will start scanning
+            SelectionModeController.INSTANCE,// Selection in last, because it will start scanning
+            WinAutoHotKeyKeyboardReceiverController.INSTANCE // Need the "blocked keys" from other modes
     );
 
     private void launchUseMode(boolean notifyChange) {

@@ -46,6 +46,8 @@ public enum GlobalKeyEventController implements ModeListenerI {
 
     private final Set<KeyCode> blockedKeyCodes;
 
+    private boolean listenToAllKeysActivated;
+
     GlobalKeyEventController() {
         this.keyEventListener = new HashSet<>();
         this.blockedKeyCodes = new HashSet<>();
@@ -107,6 +109,14 @@ public enum GlobalKeyEventController implements ModeListenerI {
         return blockedKeyCodes;
     }
 
+    public void activateListenToAllKeys() {
+        this.listenToAllKeysActivated = true;
+    }
+
+    public boolean isListenToAllKeysActivated() {
+        return listenToAllKeysActivated;
+    }
+
     // START/STOP
     //========================================================================
     @Override
@@ -117,6 +127,7 @@ public enum GlobalKeyEventController implements ModeListenerI {
     public void modeStop(LCConfigurationI configuration) {
         this.keyEventListener.clear();
         this.blockedKeyCodes.clear();
+        this.listenToAllKeysActivated = false;
     }
     //========================================================================
 

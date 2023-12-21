@@ -270,7 +270,8 @@ public enum SelectionModeController implements ModeListenerI {
     }
 
     private boolean isValidSelectionModeKeyboardEvent(final GlobalKeyEventController.LCKeyEvent keyEvent) {
-        return keyEvent.getKeyCode() == getSelectionKeyCodeIfEnabled();
+        SelectionModeI selectionModeConfiguration = this.getSelectionModeConfiguration();
+        return selectionModeConfiguration != null && keyEvent.getKeyCode() == getSelectionKeyCodeIfEnabled();
     }
 
     private boolean isValidNextScanSelectionModeKeyboardEvent(final GlobalKeyEventController.LCKeyEvent keyEvent) {
@@ -278,25 +279,31 @@ public enum SelectionModeController implements ModeListenerI {
     }
 
     private KeyCode getSelectionKeyCodeIfEnabled() {
-        SelectionModeI selectionMode = this.getSelectionModeConfiguration();
-        SelectionModeParameterI parameters = this.getSelectionModeParameter();
-        //The current mode use keyboard, and the key is the fire event key
-        return (parameters != null
-                && (!(selectionMode instanceof AutoDirectSelectionModeI)
-                || selectionMode.getParameters().enableActivationWithSelectionProperty().get())
-                && parameters.fireEventInputProperty().get() == FireEventInput.KEYBOARD) ?
-                parameters.keyboardFireKeyProperty().get() : null;
+        if (configuration != null) {
+            Class<? extends SelectionModeI> selectionModeType = configuration.getSelectionModeParameter().selectionModeTypeProperty().get();
+            SelectionModeParameterI parameters = configuration.getSelectionModeParameter();
+            //The current mode use keyboard, and the key is the fire event key
+            return (parameters != null
+                    && (!(AutoDirectSelectionModeI.class.isAssignableFrom(selectionModeType))
+                    || parameters.enableActivationWithSelectionProperty().get())
+                    && parameters.fireEventInputProperty().get() == FireEventInput.KEYBOARD) ?
+                    parameters.keyboardFireKeyProperty().get() : null;
+        }
+        return null;
     }
 
     private KeyCode getNextScanKeyCodeIfEnabled() {
-        SelectionModeParameterI parameters = this.getSelectionModeParameter();
-        SelectionModeI selectionMode = this.getSelectionModeConfiguration();
-        //The current mode use keyboard, and the key is the fire next scan
-        return (parameters != null
-                && parameters.scanningModeProperty().get() == ScanningMode.MANUAL
-                && selectionMode instanceof ScanningSelectionModeI
-                && parameters.nextScanEventInputProperty().get() == FireEventInput.KEYBOARD) ?
-                parameters.keyboardNextScanKeyProperty().get() : null;
+        if (configuration != null) {
+            Class<? extends SelectionModeI> selectionModeType = configuration.getSelectionModeParameter().selectionModeTypeProperty().get();
+            SelectionModeParameterI parameters = configuration.getSelectionModeParameter();
+            //The current mode use keyboard, and the key is the fire next scan
+            return (parameters != null
+                    && parameters.scanningModeProperty().get() == ScanningMode.MANUAL
+                    && ScanningSelectionModeI.class.isAssignableFrom(selectionModeType)
+                    && parameters.nextScanEventInputProperty().get() == FireEventInput.KEYBOARD) ?
+                    parameters.keyboardNextScanKeyProperty().get() : null;
+        }
+        return null;
     }
 
     /**
@@ -504,6 +511,19 @@ public enum SelectionModeController implements ModeListenerI {
         this.playingProperty.set(false);
         configuration.hideMainSelectionModeViewProperty().set(false);
 
+        // Key listeners when needed (key is used to enable/next scan)
+        KeyCode selectionKeyCode = getSelectionKeyCodeIfEnabled();
+        if (selectionKeyCode != null) {
+            GlobalKeyEventController.INSTANCE.addKeyCodeToBlockForCurrentUseMode(selectionKeyCode);
+        }
+        KeyCode nextScanKeyCode = getNextScanKeyCodeIfEnabled();
+        if (nextScanKeyCode != null) {
+            GlobalKeyEventController.INSTANCE.addKeyCodeToBlockForCurrentUseMode(nextScanKeyCode);
+        }
+        if (selectionKeyCode != null || nextScanKeyCode != null) {
+            GlobalKeyEventController.INSTANCE.addKeyEventListenerForCurrentUseMode(this.keyEventListener);
+        }
+
         //Get the first grid where scanning will start
         GridPartComponentI firstPart = this.getFirstComponentSelection(configuration);
         this.LOGGER.info("First element of selection mode is {}", firstPart);
@@ -511,19 +531,6 @@ public enum SelectionModeController implements ModeListenerI {
             this.setCurrentMode(configuration.getSelectionModeParameter(), configuration, () -> {
                 //Start scanning in the first part
                 this.goToGridPart(firstPart);
-
-                // Key listeners when needed (key is used to enable/next scan)
-                KeyCode selectionKeyCode = getSelectionKeyCodeIfEnabled();
-                if (selectionKeyCode != null) {
-                    GlobalKeyEventController.INSTANCE.addKeyCodeToBlockForCurrentUseMode(selectionKeyCode);
-                }
-                KeyCode nextScanKeyCode = getNextScanKeyCodeIfEnabled();
-                if (nextScanKeyCode != null) {
-                    GlobalKeyEventController.INSTANCE.addKeyCodeToBlockForCurrentUseMode(nextScanKeyCode);
-                }
-                if (selectionKeyCode != null || nextScanKeyCode != null) {
-                    GlobalKeyEventController.INSTANCE.addKeyEventListenerForCurrentUseMode(this.keyEventListener);
-                }
             });
         }
     }
@@ -582,7 +589,6 @@ public enum SelectionModeController implements ModeListenerI {
                 GlobalKeyEventController.INSTANCE.removeKeyCodeToBlockForCurrentUseMode(nextScanKeyCode);
             }
             if (selectionKeyCode != null || nextScanKeyCode != null) {
-                System.out.println("Removing key listener");
                 GlobalKeyEventController.INSTANCE.removeKeyEventListenerForCurrentUseMode(this.keyEventListener);
             }
 

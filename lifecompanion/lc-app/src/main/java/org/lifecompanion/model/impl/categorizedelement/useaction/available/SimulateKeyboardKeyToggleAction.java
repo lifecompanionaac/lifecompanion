@@ -41,7 +41,7 @@ import org.lifecompanion.model.api.usevariable.UseVariableI;
 import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.impl.useapi.GlobalRuntimeConfiguration;
-import org.lifecompanion.util.javafx.FXKeyCodeTranslatorUtils;
+import org.lifecompanion.util.javafx.KeyCodeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,7 +63,7 @@ public class SimulateKeyboardKeyToggleAction extends SimpleUseActionImpl<UseActi
         this.configIconPath = "computeraccess/icon_keyboard_key_toggle.png";
         this.variableDescriptionProperty()
                 .bind(TranslationFX.getTextBinding("action.simulate.keyboard.key.toggle.action.description.variable",
-                        Bindings.createStringBinding(() -> FXKeyCodeTranslatorUtils.getTranslatedKeyCodeName(keyToToggle.get(), "no.keyboard.key.selected"), keyToToggle)));
+                        Bindings.createStringBinding(() -> KeyCodeUtils.getTranslatedKeyCodeName(keyToToggle.get(), "no.keyboard.key.selected"), keyToToggle)));
     }
 
     public ObjectProperty<KeyCode> keyToToggleProperty() {
