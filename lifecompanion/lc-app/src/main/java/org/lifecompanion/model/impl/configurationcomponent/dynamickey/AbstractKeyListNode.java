@@ -27,6 +27,7 @@ import org.lifecompanion.controller.io.ConfigurationComponentIOHelper;
 import org.lifecompanion.framework.commons.fx.io.XMLGenericProperty;
 import org.lifecompanion.framework.commons.fx.io.XMLIgnoreNullValue;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
+import org.lifecompanion.framework.commons.fx.io.XMLUtils;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.framework.utils.Pair;
@@ -61,6 +62,7 @@ public abstract class AbstractKeyListNode extends AbstractSimplerKeyActionContai
     private final ObservableList<KeyListNodeI> children;
     private final ObjectProperty<KeyListNodeI> parent;
 
+    @XMLIgnoreNullValue
     @XMLGenericProperty(LinkType.class)
     private final ObjectProperty<LinkType> linkType;
 
@@ -186,6 +188,11 @@ public abstract class AbstractKeyListNode extends AbstractSimplerKeyActionContai
     public Element serialize(IOContextI context) {
         final Element node = super.serialize(context);
         XMLObjectSerializer.serializeInto(AbstractKeyListNode.class, this, node);
+
+        // Optimization, save link type only when needed
+        if (!isLinkNode()) {
+            node.removeAttribute("linkType");
+        }
         if (!leaf) {
             for (KeyListNodeI child : children) {
                 node.addContent(child.serialize(context));

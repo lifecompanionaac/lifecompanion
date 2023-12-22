@@ -112,6 +112,11 @@ public abstract class AbstractSimplerKeyContentContainer implements SimplerKeyCo
         return id;
     }
 
+    @Deprecated
+    public void setId(String id) {
+        this.id = id;
+    }
+
     @Override
     public String generateID() {
         id = StringUtils.getNewID();

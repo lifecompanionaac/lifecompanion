@@ -81,7 +81,6 @@ public class KeyTypedKeyboardEventGenerator extends BaseUseEventGeneratorImpl {
 
     @Override
     public void modeStart(final LCConfigurationI configuration) {
-        // Listener clear on modeStop
         GlobalKeyEventController.INSTANCE.addKeyEventListenerForCurrentUseMode((keyEvent) -> {
             if (keyEvent.getEventType() == GlobalKeyEventController.LCKeyEventType.PRESSED && (this.keyPressed.get() == null || keyEvent.getKeyCode() == this.keyPressed.get())) {
                 List<UseVariableI<?>> variables = List.of(new StringUseVariable(this.keyNameDefinition, KeyCodeUtils.getTranslatedKeyCodeName(keyEvent.getKeyCode(), "keyboard.key.undefined")));
@@ -104,7 +103,7 @@ public class KeyTypedKeyboardEventGenerator extends BaseUseEventGeneratorImpl {
 
     @Override
     public void modeStop(final LCConfigurationI configuration) {
-
+        // Listener clear on modeStop
     }
 
     @Override

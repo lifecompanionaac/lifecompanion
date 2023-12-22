@@ -37,20 +37,23 @@ import javafx.stage.Window;
 import org.lifecompanion.controller.configurationcomponent.dynamickey.KeyListController;
 import org.lifecompanion.controller.editaction.KeyListActions;
 import org.lifecompanion.controller.editmode.ConfigActionController;
+import org.lifecompanion.controller.io.ConfigurationComponentIOHelper;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.framework.utils.Pair;
+import org.lifecompanion.model.api.configurationcomponent.DuplicableComponentI;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
+import org.lifecompanion.model.impl.configurationcomponent.dynamickey.KeyListNode;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.model.impl.notification.LCNotification;
 import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.ui.notification.LCNotificationController;
+import org.lifecompanion.util.CopyUtils;
 import org.lifecompanion.util.javafx.FXControlUtils;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -247,26 +250,48 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         // Important to get the name before remove (as the level will be incorrect after)
         String keyName = selectedNode.getHumanReadableText();
 
+        // Search for node link pointing to this (and that are not deleted)
+        Map<String, KeyListNodeI> deletedNodes = new HashMap<>();
+        selectedNode.traverseTreeToBottom(node -> deletedNodes.put(node.getID(), node));
+        Map<String, List<String>> linksToFix = new HashMap<>();
+        KeyListNodeI rootV = root.get();
+        rootV.traverseTreeToBottom(node -> {
+            if (!deletedNodes.containsKey(node.getID()) && node.isLinkNode()) {
+                if (node.linkedNodeIdProperty().get() != null) {
+                    if (deletedNodes.containsKey(node.linkedNodeIdProperty().get())) {
+                        linksToFix.computeIfAbsent(node.linkedNodeIdProperty().get(), k -> new ArrayList<>()).add(node.getID());
+                    }
+                }
+            }
+        });
+
+        // Find broken links : the first link will be replaced with the content
+        linksToFix.forEach((deletedNodeId, pointingNodes) -> {
+            KeyListNodeI deletedNode = KeyListController.findNodeByIdInSubtree(root.get(), deletedNodeId);
+            KeyListNodeI linkToReplace = KeyListController.findNodeByIdInSubtree(root.get(), pointingNodes.get(0));
+
+            // Transform link to node (using copy with type change : from KeyListLinkLeaf to KeyListNode)
+            KeyListNode linkTransformedToCategory = (KeyListNode) CopyUtils.createDeepCopyViaXMLSerialization(linkToReplace, false, (element, context) -> {
+                ConfigurationComponentIOHelper.addTypeAlias(KeyListNode.class, element, context);
+            });
+            linkTransformedToCategory.setId(deletedNodeId);
+            // Add the content to the transformed node
+            linkTransformedToCategory.getChildren().addAll(deletedNode.getChildren());
+
+            // Replace the link with the node
+            ObservableList<KeyListNodeI> parentChildren = linkToReplace.parentProperty().get().getChildren();
+            int indexOf = parentChildren.indexOf(linkToReplace);
+            parentChildren.set(indexOf, linkTransformedToCategory);
+        });
+
+        // Delete the selected node
         final KeyListNodeI parentNode = selectedNode.parentProperty().get();
-        int previousIndex = parentNode.getChildren().indexOf(selectedNode);
         parentNode.getChildren().remove(selectedNode);
 
         clearSelection();
         searchView.executeSearch(true);
 
-        LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo(Translation.getText(notificationTitle, keyName),
-                true,
-                "keylist.action.remove.cancel",
-                () -> {
-                    if (!parentNode.getChildren().contains(selectedNode)) {
-                        if (previousIndex > 0 && previousIndex <= parentNode.getChildren().size()) {
-                            parentNode.getChildren().add(previousIndex, selectedNode);
-                        } else {
-                            parentNode.getChildren().add(0, selectedNode);
-                        }
-                        select(selectedNode);
-                    }
-                }));
+        LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo(Translation.getText(notificationTitle, keyName), true));
     }
 
     private EventHandler<ActionEvent> createMoveNodeListener(final int indexMove) {

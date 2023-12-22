@@ -112,8 +112,12 @@ public class ConfigurationComponentIOHelper {
      * @param node   the node where we must put the base
      */
     public static Element addTypeAlias(final XMLSerializable<?> caller, final Element node, IOContextI ioContext) {
-        node.setAttribute(ATB_TYPE_LIGHT, getOptimizedTypeAlias().getOrDefault(caller.getClass(), caller.getClass().getSimpleName()));
-        Pair<Class<?>, PluginInfo> pluginInfoForType = getTypeAlias().get(caller.getClass().getSimpleName());
+        return addTypeAlias(caller.getClass(), node, ioContext);
+    }
+
+    public static Element addTypeAlias(final Class<?> callerType, final Element node, IOContextI ioContext) {
+        node.setAttribute(ATB_TYPE_LIGHT, getOptimizedTypeAlias().getOrDefault(callerType, callerType.getSimpleName()));
+        Pair<Class<?>, PluginInfo> pluginInfoForType = getTypeAlias().get(callerType.getSimpleName());
         // When the saved element is from a plugin : "flag" the XML element to be dependent on the plugin and add the plugin id to dependencies list
         if (pluginInfoForType != null && pluginInfoForType.getRight() != null) {
             node.setAttribute(ATB_PLUGIN_ID, pluginInfoForType.getRight().getPluginId());
