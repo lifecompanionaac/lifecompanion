@@ -3674,4 +3674,7 @@
     <text key="button.testing.random.configuration">Configuration aléatoire</text>
     <text key="button.generate.tech.demo.configuration">Configuration démo technique</text>
     <text key="task.generate.tech.demo.configuration.title">Génération de la configuration de démo technique</text>
+    <text key="field.grid.component.selector.add.grid.button">Nouvelle grille</text>
+    <text key="field.grid.component.selector.add.grid.name.header">Nom de la nouvelle grille ?</text>
+    <text key="field.grid.component.selector.add.grid.name.text">Nommez la grille ajoutée pour la retrouver facilement plus tard.</text>
 </texts>

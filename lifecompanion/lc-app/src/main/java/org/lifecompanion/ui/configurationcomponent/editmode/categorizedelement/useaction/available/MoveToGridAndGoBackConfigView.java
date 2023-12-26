@@ -28,42 +28,44 @@ import org.lifecompanion.ui.common.control.specific.selector.ComponentSelectorCo
 import javafx.collections.ObservableList;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import org.lifecompanion.ui.common.control.specific.selector.GridComponentSelectorControl;
 
 public class MoveToGridAndGoBackConfigView extends VBox implements UseActionConfigurationViewI<MoveToGridAndGoBackAction> {
-	private ComponentSelectorControl<GridComponentI> componentSelector;
+    private ComponentSelectorControl<GridComponentI> componentSelector;
 
-	public MoveToGridAndGoBackConfigView() {}
+    public MoveToGridAndGoBackConfigView() {
+    }
 
-	@Override
-	public Region getConfigurationView() {
-		return this;
-	}
+    @Override
+    public Region getConfigurationView() {
+        return this;
+    }
 
-	@Override
-	public void editStarts(final MoveToGridAndGoBackAction actionP, final ObservableList<UseVariableDefinitionI> possibleVariables) {
-		this.componentSelector.selectedComponentProperty().set(actionP.targetGridProperty().get());
-	}
+    @Override
+    public void editStarts(final MoveToGridAndGoBackAction actionP, final ObservableList<UseVariableDefinitionI> possibleVariables) {
+        this.componentSelector.selectedComponentProperty().set(actionP.targetGridProperty().get());
+    }
 
-	@Override
-	public void editEnds(final MoveToGridAndGoBackAction actionP) {
-		actionP.targetGridIdProperty().set(this.componentSelector.getSelectedComponentID());
-		this.componentSelector.clearSelection();
-	}
+    @Override
+    public void editEnds(final MoveToGridAndGoBackAction actionP) {
+        actionP.targetGridIdProperty().set(this.componentSelector.getSelectedComponentID());
+        this.componentSelector.clearSelection();
+    }
 
-	@Override
-	public void editCancelled(final MoveToGridAndGoBackAction element) {
-		this.componentSelector.clearSelection();
-	}
+    @Override
+    public void editCancelled(final MoveToGridAndGoBackAction element) {
+        this.componentSelector.clearSelection();
+    }
 
-	@Override
-	public Class<MoveToGridAndGoBackAction> getConfiguredActionType() {
-		return MoveToGridAndGoBackAction.class;
-	}
+    @Override
+    public Class<MoveToGridAndGoBackAction> getConfiguredActionType() {
+        return MoveToGridAndGoBackAction.class;
+    }
 
-	@Override
-	public void initUI() {
-		this.setSpacing(4.0);
-		this.componentSelector = new ComponentSelectorControl<>(GridComponentI.class, Translation.getText("use.action.go.to.grid.grid.to.display"));
-		this.getChildren().add(this.componentSelector);
-	}
+    @Override
+    public void initUI() {
+        this.setSpacing(4.0);
+        this.componentSelector = new GridComponentSelectorControl(Translation.getText("use.action.go.to.grid.grid.to.display"), true);
+        this.getChildren().add(this.componentSelector);
+    }
 }

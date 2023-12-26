@@ -5,6 +5,7 @@
 ### Fonctionnalités
 
 - Il est maintenant **possible d'utiliser une touche de clavier pour activer le défilement**, même en défilement (sur Windows uniquement)
+- Il est maintenant possible de **créer une nouvelle grille directement depuis l'action "Aller dans la grille"**
 
 ### Corrections/ajustements
 
