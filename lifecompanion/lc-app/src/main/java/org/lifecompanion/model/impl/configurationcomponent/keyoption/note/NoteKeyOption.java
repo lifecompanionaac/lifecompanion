@@ -20,18 +20,17 @@ package org.lifecompanion.model.impl.configurationcomponent.keyoption.note;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
-import javafx.scene.control.ContentDisplay;
 import javafx.scene.paint.Color;
 import org.jdom2.Element;
-import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
-import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
-import org.lifecompanion.model.api.style.TextPosition;
-import org.lifecompanion.model.impl.exception.LCException;
-import org.lifecompanion.model.api.io.IOContextI;
-import org.lifecompanion.model.impl.configurationcomponent.keyoption.AbstractKeyOption;
-import org.lifecompanion.model.impl.categorizedelement.useaction.available.OpenCloseNoteKeyAction;
 import org.lifecompanion.framework.commons.fx.io.XMLGenericProperty;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
+import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
+import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
+import org.lifecompanion.model.api.io.IOContextI;
+import org.lifecompanion.model.api.style.TextPosition;
+import org.lifecompanion.model.impl.categorizedelement.useaction.available.OpenCloseNoteKeyAction;
+import org.lifecompanion.model.impl.configurationcomponent.keyoption.AbstractKeyOption;
+import org.lifecompanion.model.impl.exception.LCException;
 
 /**
  * Key option to save/load a user text in use mode.
@@ -106,6 +105,7 @@ public class NoteKeyOption extends AbstractKeyOption {
 
     @Override
     public void detachFromImpl(final GridPartKeyComponentI key) {
+        key.getActionManager().componentActions().get(UseActionEvent.ACTIVATION).remove(this.saveLoadNoteAction);
         key.imageVTwoProperty().unbind();
         key.imageVTwoProperty().set(null);
         key.textContentProperty().unbind();
