@@ -27,6 +27,7 @@ import org.lifecompanion.framework.utils.LCNamedThreadFactory;
 import org.lifecompanion.model.api.categorizedelement.useaction.*;
 import org.lifecompanion.model.api.categorizedelement.useevent.UseEventListenerI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
+import org.lifecompanion.model.api.configurationcomponent.VideoUseComponentI;
 import org.lifecompanion.model.api.lifecycle.LCStateListener;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
@@ -236,6 +237,9 @@ public enum UseActionController implements LCStateListener, ModeListenerI {
             Runnable actionExecutable = () -> {
                 ActionExecutionResultI result = new ActionExecutionResult(true);
                 try {
+                    if(useActionTriggerComponent instanceof VideoUseComponentI ){
+                        ((VideoUseComponentI) useActionTriggerComponent).useActionEventExecuted(event);
+                    }
                     result = executeActions(event, actions, finalVariables);
                 } catch (Throwable t) {
                     this.LOGGER.error("Error on simple use action execution", t);

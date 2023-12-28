@@ -33,7 +33,6 @@ import org.lifecompanion.controller.editmode.LCStateController;
 import org.lifecompanion.controller.media.VideoPlayerController;
 import org.lifecompanion.model.api.configurationcomponent.ImageUseComponentI;
 import org.lifecompanion.model.api.configurationcomponent.VideoElementI;
-import org.lifecompanion.model.impl.imagedictionary.ImageDictionaries;
 import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.fxmisc.easybind.EasyBind;
 import org.lifecompanion.model.api.imagedictionary.ImageElementI;
@@ -48,7 +47,6 @@ import org.lifecompanion.util.javafx.StageUtils;
 import org.lifecompanion.util.model.ConfigurationComponentUtils;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -116,7 +114,7 @@ public class Image2SelectorControl extends BorderPane implements LCViewInitHelpe
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.PICTURE_ALT).size(20.0).color(LCGraphicStyle.MAIN_PRIMARY),
                 "tooltip.select.image.button");
         this.buttonSelectVideo = FXControlUtils.createTextButtonWithGraphics(Translation.getText("select.video.component"),
-                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.PLAY_CIRCLE_ALT).size(20.0).color(LCGraphicStyle.MAIN_PRIMARY),
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.FILE_MOVIE_ALT).size(20.0).color(LCGraphicStyle.MAIN_PRIMARY),
                 null);
         HBox boxSelectButtons = new HBox(2.0, buttonSelectImage, buttonSelectVideo);
 
@@ -171,7 +169,7 @@ public class Image2SelectorControl extends BorderPane implements LCViewInitHelpe
                 LCStateController.INSTANCE.updateDefaultDirectory(FileChooserType.SELECT_VIDEOS, chosenFile.getParentFile());
             }
             if (chosenFile != null && IOUtils.isSupportedVideo(chosenFile)) {
-                selectedVideo.set(VideoPlayerController.INSTANCE.getOrAddVideo(chosenFile));
+                selectedVideo.set(VideoPlayerController.INSTANCE.createVideoElement(chosenFile));
             }
         });
         this.selectedImage.addListener((obs, ov, nv) -> {
@@ -200,7 +198,8 @@ public class Image2SelectorControl extends BorderPane implements LCViewInitHelpe
         this.imageViewSelected.imageProperty().bind(EasyBind.select(this.selectedImage).selectObject(ImageElementI::loadedImageProperty));
     }
 
-    //========================================================================l
+    //========================================================================
+
     //========================================================================
     public ObjectProperty<ImageElementI> selectedImageProperty() {
         return this.selectedImage;

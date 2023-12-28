@@ -27,6 +27,7 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import org.jdom2.Element;
 import org.lifecompanion.controller.io.ConfigurationComponentIOHelper;
+import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.configurationcomponent.ImageUseComponentI;
 import org.lifecompanion.model.api.configurationcomponent.TreeIdentifiableComponentI;
 import org.lifecompanion.model.api.configurationcomponent.VideoElementI;
@@ -89,6 +90,16 @@ public abstract class AbstractSimplerKeyContentContainer implements SimplerKeyCo
     @Override
     public ObservableBooleanValue videoUseComponentDisplayedProperty() {
         return null;
+    }
+
+    @Override
+    public ReadOnlyBooleanProperty videoShouldBeDisplayedProperty() {
+        return null;
+    }
+
+    @Override
+    public void useActionEventExecuted(UseActionEvent event) {
+
     }
 
     // PROPS

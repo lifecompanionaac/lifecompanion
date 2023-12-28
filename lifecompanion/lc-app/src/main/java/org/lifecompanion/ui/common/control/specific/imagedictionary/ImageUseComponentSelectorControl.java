@@ -26,26 +26,25 @@ import javafx.beans.value.ChangeListener;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
-import org.lifecompanion.model.api.configurationcomponent.VideoElementI;
-import org.lifecompanion.model.api.configurationcomponent.VideoUseComponentI;
-import org.lifecompanion.model.impl.configurationcomponent.VideoElement;
-import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.fxmisc.easybind.EasyBind;
-import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
-import org.lifecompanion.model.api.configurationcomponent.ImageUseComponentI;
-import org.lifecompanion.model.api.configurationcomponent.keyoption.KeyOptionI;
-import org.lifecompanion.model.api.configurationcomponent.dynamickey.SimplerKeyContentContainerI;
-import org.lifecompanion.model.api.imagedictionary.ImageElementI;
-import org.lifecompanion.model.impl.constant.LCGraphicStyle;
-import org.lifecompanion.ui.common.pane.generic.BaseConfigurationViewBorderPane;
 import org.lifecompanion.controller.editaction.KeyActions;
-import org.lifecompanion.util.binding.EditActionUtils;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
+import org.lifecompanion.model.api.configurationcomponent.ImageUseComponentI;
+import org.lifecompanion.model.api.configurationcomponent.VideoElementI;
+import org.lifecompanion.model.api.configurationcomponent.VideoUseComponentI;
+import org.lifecompanion.model.api.configurationcomponent.dynamickey.SimplerKeyContentContainerI;
+import org.lifecompanion.model.api.configurationcomponent.keyoption.KeyOptionI;
+import org.lifecompanion.model.api.imagedictionary.ImageElementI;
+import org.lifecompanion.model.impl.constant.LCGraphicStyle;
+import org.lifecompanion.ui.common.pane.generic.BaseConfigurationViewBorderPane;
+import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
+import org.lifecompanion.util.binding.EditActionUtils;
 import org.lifecompanion.util.javafx.FXControlUtils;
 
-public class ImageUseComponentSelectorControl extends BaseConfigurationViewBorderPane<ImageUseComponentI> implements LCViewInitHelper {
+public class ImageUseComponentSelectorControl extends BaseConfigurationViewBorderPane<VideoUseComponentI> implements LCViewInitHelper {
 
     /**
      * Button show parameters
@@ -116,7 +115,7 @@ public class ImageUseComponentSelectorControl extends BaseConfigurationViewBorde
 
     // BINDING
     //========================================================================
-    public ObjectProperty<ImageUseComponentI> modelProperty() {
+    public ObjectProperty<VideoUseComponentI> modelProperty() {
         return this.model;
     }
 
@@ -130,7 +129,7 @@ public class ImageUseComponentSelectorControl extends BaseConfigurationViewBorde
 
 
     @Override
-    public void bind(final ImageUseComponentI model) {
+    public void bind(final VideoUseComponentI model) {
         //Disable image selection
         if (model instanceof GridPartKeyComponentI) {
             GridPartKeyComponentI key = (GridPartKeyComponentI) model;
@@ -145,7 +144,7 @@ public class ImageUseComponentSelectorControl extends BaseConfigurationViewBorde
     }
 
     @Override
-    public void unbind(final ImageUseComponentI model) {
+    public void unbind(final VideoUseComponentI model) {
         this.disableImageSelection.unbind();
         this.imageSelectorControl.imageUseComponentProperty().set(null);
         model.imageVTwoProperty().removeListener(this.changeListenerImage);

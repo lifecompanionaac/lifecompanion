@@ -34,14 +34,13 @@ import org.lifecompanion.model.api.configurationcomponent.VideoElementI;
 import org.lifecompanion.model.api.style.KeyCompStyleI;
 import org.lifecompanion.model.api.ui.configurationcomponent.ComponentViewI;
 import org.lifecompanion.model.api.ui.configurationcomponent.ViewProviderI;
+import org.lifecompanion.ui.common.pane.generic.*;
 import org.lifecompanion.util.LangUtils;
 import org.lifecompanion.util.binding.Unbindable;
 import org.lifecompanion.model.impl.configurationcomponent.GridPartKeyComponent;
 import org.lifecompanion.controller.textcomponent.WritingStateController;
 import org.lifecompanion.model.impl.style.ShapeStyleBinder;
 import org.lifecompanion.model.impl.style.TextStyleBinder;
-import org.lifecompanion.ui.common.pane.generic.ImageViewPane;
-import org.lifecompanion.ui.common.pane.generic.LCLabel;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.util.model.ConfigurationComponentUtils;
@@ -112,14 +111,11 @@ public class GridPartKeyViewBase extends Pane implements ComponentViewI<GridPart
         keyImageView = new ImageView();
         keyImageView.setSmooth(true);
         ConfigurationComponentUtils.bindImageViewWithImageUseComponent(this.keyImageView, this.model);
-        ImageViewPane keyImageViewWrapper = new ImageViewPane(keyImageView);
-        this.labelContent.graphicProperty().set(keyImageViewWrapper);
+        FittedViewPane imageViewPane = new FittedViewPane(new ImageViewFittedView(keyImageView));
 
         // Video display
         MediaView mediaView = new MediaView();
-        Pane mediaViewPane = new Pane(mediaView);
-        mediaView.fitWidthProperty().bind(mediaViewPane.widthProperty());
-        mediaView.fitHeightProperty().bind(mediaViewPane.heightProperty());
+        FittedViewPane mediaViewPane = new FittedViewPane(new MediaViewFittedView(mediaView));
 
         // Video
         ChangeListener<VideoElementI> videoElementChangeListener = (obs, ov, nv) -> {
@@ -134,13 +130,15 @@ public class GridPartKeyViewBase extends Pane implements ComponentViewI<GridPart
                 Media media = new Media(nv.getPath().toURI().toString());
                 media.setOnError(() -> {
                     final MediaException mediaException = media.getError();
-                    throw new RuntimeException(mediaException);
+                    System.out.println(mediaException.getType() + " : " + mediaException.getMessage());
+                    // throw new RuntimeException(mediaException);
                 });
                 MediaPlayer player = new MediaPlayer(media);
                 mediaView.setMediaPlayer(player);
                 player.setOnError(() -> {
                     final MediaException mediaException = player.getError();
-                    throw new RuntimeException(mediaException);
+                    System.out.println(mediaException.getType() + " : " + mediaException.getMessage());
+                    //throw new RuntimeException(mediaException);
                 });
                 player.setAutoPlay(true);
                 player.setMute(true);
@@ -153,7 +151,10 @@ public class GridPartKeyViewBase extends Pane implements ComponentViewI<GridPart
 
         // Bind label content depending on selected graphics
         this.labelContent.graphicProperty()
-                .bind(Bindings.createObjectBinding(() -> this.model.videoProperty().get() != null ? mediaViewPane : keyImageViewWrapper, this.model.imageVTwoProperty(), this.model.videoProperty()));
+                .bind(Bindings.createObjectBinding(() -> this.model.videoProperty().get() != null && this.model.videoShouldBeDisplayedProperty().get() ? mediaViewPane : imageViewPane,
+                        this.model.imageVTwoProperty(),
+                        this.model.videoProperty(),
+                        this.model.videoShouldBeDisplayedProperty()));
 
         //Bind style
         shapeStyleUnbind = ShapeStyleBinder.bindNode(this, keyStyle);

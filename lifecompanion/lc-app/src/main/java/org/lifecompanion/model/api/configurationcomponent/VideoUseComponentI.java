@@ -21,20 +21,20 @@ package org.lifecompanion.model.api.configurationcomponent;
 
 import javafx.beans.property.*;
 import javafx.beans.value.ObservableBooleanValue;
-import javafx.geometry.Rectangle2D;
-import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
-import org.lifecompanion.model.api.imagedictionary.ImageElementI;
-
-import java.io.File;
+import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 
 /**
  * Represent a component that can use a video.<br>
+ * A component using a video should always be a component that can also use an image.
  *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
-public interface VideoUseComponentI extends IdentifiableComponentI {
+public interface VideoUseComponentI extends ImageUseComponentI, IdentifiableComponentI {
     ObjectProperty<VideoElementI> videoProperty();
 
+    ReadOnlyBooleanProperty videoShouldBeDisplayedProperty();
+
     ObservableBooleanValue videoUseComponentDisplayedProperty();
+
+    void useActionEventExecuted(final UseActionEvent event);
 }

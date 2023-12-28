@@ -18,6 +18,9 @@
  */
 package org.lifecompanion.model.impl.configurationcomponent;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import org.lifecompanion.model.api.configurationcomponent.VideoElementI;
 
 import java.io.File;
@@ -27,11 +30,17 @@ import java.io.File;
  */
 public class VideoElement implements VideoElementI {
     private final String id;
-    private File path;
+    private final File path;
+    private final ObjectProperty<File> thumbnailPath;
 
     public VideoElement(String id, File path) {
         this.id = id;
         this.path = path;
+        this.thumbnailPath = new SimpleObjectProperty<>();
+    }
+
+    public void updateThumbnailPath(File thumbnailPath) {
+        this.thumbnailPath.set(thumbnailPath);
     }
 
     @Override
@@ -42,5 +51,10 @@ public class VideoElement implements VideoElementI {
     @Override
     public File getPath() {
         return path;
+    }
+
+    @Override
+    public ReadOnlyObjectProperty<File> thumbnailPathProperty() {
+        return thumbnailPath;
     }
 }

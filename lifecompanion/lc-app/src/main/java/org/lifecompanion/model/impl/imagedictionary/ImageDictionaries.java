@@ -86,6 +86,11 @@ public enum ImageDictionaries implements LCStateListener, ModeListenerI {
     private ImageDictionary configurationImageDictionary;
 
     /**
+     * A temp dictionary which is not saved or displayed in research and just used to create temp image from files
+     */
+    private final ImageDictionary hiddenImageDictionary;
+
+    /**
      * Contains every images
      */
     private final Map<String, ImageElementI> allImages;
@@ -117,6 +122,8 @@ public enum ImageDictionaries implements LCStateListener, ModeListenerI {
         this.loadingService = Executors.newSingleThreadExecutor();
         this.thumbnailService = Executors.newSingleThreadExecutor();
         this.runningLoadingTasks = new ConcurrentHashMap<>();
+        this.hiddenImageDictionary = new ImageDictionary();
+        this.hiddenImageDictionary.setCustomDictionary(true);
     }
 
     // ADD/GET IMAGE
@@ -127,6 +134,10 @@ public enum ImageDictionaries implements LCStateListener, ModeListenerI {
 
     public ImageElementI getOrAddToConfigurationImageDictionary(File imagePath) {
         return getOrAdd(imagePath, configurationImageDictionary);
+    }
+
+    public ImageElementI getOrAddToHiddenImageDictionary(File imagePath) {
+        return getOrAdd(imagePath, hiddenImageDictionary);
     }
 
     private ImageElementI getOrAdd(File imagePath, ImageDictionaryI dictionary) {

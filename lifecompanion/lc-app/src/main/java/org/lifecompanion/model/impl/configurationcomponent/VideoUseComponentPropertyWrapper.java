@@ -18,16 +18,22 @@
  */
 package org.lifecompanion.model.impl.configurationcomponent;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ObservableBooleanValue;
+import javafx.beans.property.*;
+import javafx.beans.value.ChangeListener;
 import org.jdom2.Element;
+import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
+import org.lifecompanion.framework.commons.fx.io.XMLUtils;
+import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.configurationcomponent.VideoElementI;
 import org.lifecompanion.model.api.configurationcomponent.VideoUseComponentI;
-import org.lifecompanion.model.api.imagedictionary.ImageElementI;
 import org.lifecompanion.model.api.io.IOContextI;
+import org.lifecompanion.model.impl.imagedictionary.ImageDictionaries;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
 
 /**
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
@@ -40,83 +46,76 @@ public class VideoUseComponentPropertyWrapper {
     private final VideoUseComponentI videoUseComponent;
 
     private final ObjectProperty<VideoElementI> video;
+    private final BooleanProperty videoShouldBeDisplayed;
 
     public VideoUseComponentPropertyWrapper(final VideoUseComponentI videoUseComponent) {
         this.videoUseComponent = videoUseComponent;
+        this.videoShouldBeDisplayed = new SimpleBooleanProperty(false);
         video = new SimpleObjectProperty<>();
+        ChangeListener<File> thumbnailPathListener = (obs, ov, nv) -> {
+            if (!videoUseComponent.imageVTwoProperty().isBound()) {
+                if (nv != null) {
+                    videoUseComponent.imageVTwoProperty().set(ImageDictionaries.INSTANCE.getOrAddToHiddenImageDictionary(nv));
+                } else {
+                    videoUseComponent.imageVTwoProperty().set(null);
+                }
+            } else {
+                // FIXME : handling already bound
+                System.err.println("IMAGE IS ALREADY BOUND !");
+            }
+        };
+        video.addListener((obs, ov, nv) -> {
+            if (ov != null) ov.thumbnailPathProperty().removeListener(thumbnailPathListener);
+            if (nv != null) {
+                thumbnailPathListener.changed(null, null, nv.thumbnailPathProperty().get());
+                nv.thumbnailPathProperty().addListener(thumbnailPathListener);
+            }
+        });
+    }
+
+    public void useActionEventExecuted(final UseActionEvent event) {
+        if (event == UseActionEvent.ACTIVATION) {
+            FXThreadUtils.runOnFXThread(() -> this.videoShouldBeDisplayed.set(true));
+        }
     }
 
     public ObjectProperty<VideoElementI> videoProperty() {
         return this.video;
     }
 
+    public ReadOnlyBooleanProperty videoShouldBeDisplayedProperty() {
+        return this.videoShouldBeDisplayed;
+    }
 
-    private static final String ATB_IMAGE_ID = "imageId", ATB_IMAGE_NAME = "imageName";
-    private static final String ATB_IMAGE_ID2 = "imageId2";
+
+    private static final String ATB_VIDEO_ID = "videoId";
 
     public void serialize(final Element element, final IOContextI contextP) {
-        //        // Image information are saved only if a image is selected (saving space!)
-        //        if (this.imageVTwo.get() != null) {
-        //            XMLObjectSerializer.serializeInto(VideoUseComponentPropertyWrapper.class, this, element);
-        //
-        //            // Some parameter are also saved if needed
-        //            if (!useViewPort.get()) {
-        //                element.removeAttribute("viewportXPercent");
-        //                element.removeAttribute("viewportYPercent");
-        //                element.removeAttribute("viewportWidthPercent");
-        //                element.removeAttribute("viewportHeightPercent");
-        //            }
-        //            if (!enableReplaceColor.get()) {
-        //                element.removeAttribute("colorToReplace");
-        //                element.removeAttribute("replacingColor");
-        //                element.removeAttribute("replaceColorThreshold");
-        //            }
-        //
-        //            //Image saving : just set the id and delegate to root action the "real" saving
-        //            serializeImageUse(this.imageVTwo.get(), element, contextP);
-        //        }
+        if (this.videoProperty().get() != null) {
+            XMLObjectSerializer.serializeInto(VideoUseComponentPropertyWrapper.class, this, element);
+            serializeVideoUse(this.videoProperty().get(), element, contextP);
+        }
     }
 
     public void deserialize(final Element element, final IOContextI contextP) {
-        //        // Check there is an ID
-        //        if (element.getAttribute(ATB_IMAGE_ID2) != null || element.getAttribute(ATB_IMAGE_ID) != null) {
-        //            XMLObjectSerializer.deserializeInto(VideoUseComponentPropertyWrapper.class, this, element);
-        //            // backward compatibility - enableReplaceColorByTransparent > enableReplaceColor
-        //            if (element.getAttribute("enableReplaceColorByTransparent") != null) {
-        //                XMLUtils.read(enableReplaceColor, "enableReplaceColorByTransparent", element);
-        //            }
-        //            //Image loading from gallery
-        //            this.imageVTwo.set(deserializeImageUseV2(element, contextP));
-        //        }
+        if (element.getAttribute(ATB_VIDEO_ID) != null) {
+            XMLObjectSerializer.deserializeInto(VideoUseComponentPropertyWrapper.class, this, element);
+            this.video.set(deserializeVideoUse(element, contextP));
+        }
     }
 
-    public static void serializeVideoUse(ImageElementI image, final Element element, final IOContextI contextP) {
-        //        contextP.getImagesToSaveV2().add(image);
-        //        if (image.shouldSaveImageId()) {
-        //            XMLUtils.write(image.getId(), VideoUseComponentPropertyWrapper.ATB_IMAGE_ID2, element);
-        //            XMLUtils.write(image.getName(), VideoUseComponentPropertyWrapper.ATB_IMAGE_NAME, element);
-        //        } else {
-        //            XMLUtils.write("null", VideoUseComponentPropertyWrapper.ATB_IMAGE_ID2, element);
-        //        }
+    public static void serializeVideoUse(VideoElementI video, final Element element, final IOContextI contextP) {
+        contextP.getVideos().put(video.getId(), video);
+        XMLUtils.write(video.getId(), VideoUseComponentPropertyWrapper.ATB_VIDEO_ID, element);
     }
 
     public static VideoElementI deserializeVideoUse(final Element element, IOContextI contextP) {
-        //        String imageId;
-        //        // Backward compatibly : replace old IDS
-        //        String oldImageId = XMLUtils.readString(VideoUseComponentPropertyWrapper.ATB_IMAGE_ID, element);
-        //        if (StringUtils.isNotBlank(oldImageId)) {
-        //            imageId = contextP.getBackwardImageCompatibilityIdsMap().get(oldImageId);
-        //        } else {
-        //            imageId = XMLUtils.readString(VideoUseComponentPropertyWrapper.ATB_IMAGE_ID2, element);
-        //        }
-        //        // Image was loaded by the task before going into this part (see AbstractLoadUtilsTask)
-        //        ImageElementI imageElement = ImageDictionaries.INSTANCE.getById(imageId);
-        //        String imageName = XMLUtils.readString(VideoUseComponentPropertyWrapper.ATB_IMAGE_NAME, element);
-        //        if (StringUtils.isNotBlank(imageName) && imageElement != null && (imageElement.getDictionary() == null || imageElement.getDictionary().isCustomDictionary())) {
-        //            imageElement.updateNameAndKeywords(imageName, UserConfigurationController.INSTANCE.userLanguageProperty().get(), new String[]{imageName});
-        //        }
-        //        return imageElement;
-        return null;
+        String videoId = XMLUtils.readString(VideoUseComponentPropertyWrapper.ATB_VIDEO_ID, element);
+        if (StringUtils.isNotBlank(videoId)) {
+            return contextP.getVideos().get(videoId);
+        } else {
+            return null;
+        }
     }
 
 

@@ -18,7 +18,9 @@
  */
 package org.lifecompanion.model.api.io;
 
+import org.lifecompanion.model.api.configurationcomponent.VideoElementI;
 import org.lifecompanion.model.api.imagedictionary.ImageElementI;
+import org.slf4j.Marker;
 
 import java.io.File;
 import java.io.IOException;
@@ -61,6 +63,8 @@ public interface IOContextI {
     // Class part : "Resources"
     //========================================================================
     List<ImageElementI> getImagesToSaveV2();
+
+    Map<String,VideoElementI> getVideos();
 
     /**
      * To add a resource that should be saved by LifeCompanion<br>

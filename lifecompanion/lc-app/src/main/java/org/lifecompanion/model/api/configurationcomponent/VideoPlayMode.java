@@ -19,20 +19,7 @@
 
 package org.lifecompanion.model.api.configurationcomponent;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyObjectProperty;
-
-import java.io.File;
-import java.util.function.Consumer;
-
-/**
- * @author Mathieu THEBAUD <math.thebaud@gmail.com>
- */
-public interface VideoElementI {
-    String getId();
-
-    File getPath();
-
-    ReadOnlyObjectProperty<File> thumbnailPathProperty();
-
+public enum VideoPlayMode {
+    CONTINUOUS,
+    ON_ACTIVATION;
 }

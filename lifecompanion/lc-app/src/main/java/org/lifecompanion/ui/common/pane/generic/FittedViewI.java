@@ -2,7 +2,7 @@
  * LifeCompanion AAC and its sub projects
  *
  * Copyright (C) 2014 to 2019 Mathieu THEBAUD
- * Copyright (C) 2020 to 2021 CMRRF KERPAPE (Lorient, France)
+ * Copyright (C) 2020 to 2023 CMRRF KERPAPE (Lorient, France) and CoWork'HIT (Lorient, France)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,22 +17,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.lifecompanion.model.api.configurationcomponent;
+package org.lifecompanion.ui.common.pane.generic;
 
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.Node;
 
-import java.io.File;
-import java.util.function.Consumer;
+public interface FittedViewI {
+    DoubleProperty rotateProperty();
 
-/**
- * @author Mathieu THEBAUD <math.thebaud@gmail.com>
- */
-public interface VideoElementI {
-    String getId();
+    ObjectProperty<Rectangle2D> viewportProperty();
 
-    File getPath();
+    void setFitWidth(double value);
 
-    ReadOnlyObjectProperty<File> thumbnailPathProperty();
+    void setFitHeight(double value);
 
+    Node getNode();
 }

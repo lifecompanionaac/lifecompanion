@@ -18,6 +18,7 @@
  */
 package org.lifecompanion.model.impl.io;
 
+import org.lifecompanion.model.api.configurationcomponent.VideoElementI;
 import org.lifecompanion.model.api.imagedictionary.ImageElementI;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.io.IOResourceI;
@@ -43,6 +44,8 @@ public class IOContext implements IOContextI {
      */
     private final Map<String, IOResourceI> resources;
 
+    private final Map<String, VideoElementI> videos;
+
     private final Map<String, String> backwardImageCompatibilityIdsMap;
 
     /**
@@ -58,6 +61,7 @@ public class IOContext implements IOContextI {
         this.resources = new HashMap<>();
         backwardImageCompatibilityIdsMap = new HashMap<>();
         this.pluginIdDependencies = new HashSet<>();
+        this.videos = new HashMap<>();
         this.directory = directoryP;
     }
 
@@ -66,6 +70,11 @@ public class IOContext implements IOContextI {
     @Override
     public List<ImageElementI> getImagesToSaveV2() {
         return imagesV2;
+    }
+
+    @Override
+    public Map<String, VideoElementI> getVideos() {
+        return videos;
     }
 
     @Override

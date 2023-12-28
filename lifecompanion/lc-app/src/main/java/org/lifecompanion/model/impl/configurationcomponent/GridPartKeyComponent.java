@@ -174,17 +174,19 @@ public class GridPartKeyComponent extends GridPartComponentBaseImpl implements G
     }
 
     @Override
+    public ReadOnlyBooleanProperty videoShouldBeDisplayedProperty() {
+        return this.videoUseComponentPropertyWrapper.videoShouldBeDisplayedProperty();
+    }
+
+    @Override
+    public void useActionEventExecuted(final UseActionEvent event) {
+        this.videoUseComponentPropertyWrapper.useActionEventExecuted(event);
+    }
+
+    @Override
     public ObservableBooleanValue videoUseComponentDisplayedProperty() {
         return this.imageUseComponentDisplayedProperty();
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    //    @Override
-    //    public ObjectProperty<ContentDisplay> textPositionProperty() {
-    //        return this.textPosition;
-    //    }
 
     /**
      * {@inheritDoc}
@@ -372,7 +374,7 @@ public class GridPartKeyComponent extends GridPartComponentBaseImpl implements G
         //Base properties
         XMLObjectSerializer.serializeInto(GridPartKeyComponent.class, this, content);
         this.imageUseComponentPropertyWrapper.serialize(content, contextP);
-        this.videoUseComponentPropertyWrapper.serialize(content,contextP);
+        this.videoUseComponentPropertyWrapper.serialize(content, contextP);
         //Action
         Element actionManagerElement = this.actionManager.serialize(contextP);
         if (actionManagerElement != null) {
@@ -401,7 +403,7 @@ public class GridPartKeyComponent extends GridPartComponentBaseImpl implements G
 
         //Image
         this.imageUseComponentPropertyWrapper.deserialize(nodeP, contextP);
-        this.videoUseComponentPropertyWrapper.deserialize(nodeP,contextP);
+        this.videoUseComponentPropertyWrapper.deserialize(nodeP, contextP);
         //Action
         Element actionManagerNodeOld = nodeP.getChild(SimpleUseActionManager.NODE_USE_ACTION_MANAGER_OLD);
         Element actionManagerNode = nodeP.getChild(SimpleUseActionManager.NODE_USE_ACTION_MANAGER);
