@@ -29,6 +29,7 @@ import org.jdom2.Element;
 import org.lifecompanion.controller.io.ConfigurationComponentIOHelper;
 import org.lifecompanion.model.api.configurationcomponent.ImageUseComponentI;
 import org.lifecompanion.model.api.configurationcomponent.TreeIdentifiableComponentI;
+import org.lifecompanion.model.api.configurationcomponent.VideoElementI;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.SimplerKeyContentContainerI;
 import org.lifecompanion.model.api.style.TextPosition;
 import org.lifecompanion.model.impl.exception.LCException;
@@ -78,6 +79,16 @@ public abstract class AbstractSimplerKeyContentContainer implements SimplerKeyCo
         imageUseComponentDisplayed = new SimpleBooleanProperty(false);
         imageUseComponentPropertyWrapper = new ImageUseComponentPropertyWrapper(this);
         textPosition = new SimpleObjectProperty<>();
+    }
+
+    @Override
+    public ObjectProperty<VideoElementI> videoProperty() {
+        return null;
+    }
+
+    @Override
+    public ObservableBooleanValue videoUseComponentDisplayedProperty() {
+        return null;
     }
 
     // PROPS

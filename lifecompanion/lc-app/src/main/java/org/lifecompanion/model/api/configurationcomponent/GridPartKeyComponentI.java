@@ -30,7 +30,7 @@ import javafx.scene.control.ContentDisplay;
  * This component can contains image, text, and use actions on it.
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
-public interface GridPartKeyComponentI extends GridPartComponentI, ImageUseComponentI, UseActionTriggerComponentI {
+public interface GridPartKeyComponentI extends GridPartComponentI, ImageUseComponentI, VideoUseComponentI, UseActionTriggerComponentI {
 
 	/**
 	 * @return a property that contains this key text content

@@ -18,6 +18,7 @@
  */
 package org.lifecompanion.controller.editaction;
 
+import javafx.beans.value.WritableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
@@ -27,9 +28,7 @@ import javafx.scene.paint.Color;
 import org.lifecompanion.controller.editmode.ComponentActionController;
 import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.controller.editmode.SelectionController;
-import org.lifecompanion.model.api.configurationcomponent.DisplayableComponentI;
-import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
-import org.lifecompanion.model.api.configurationcomponent.ImageUseComponentI;
+import org.lifecompanion.model.api.configurationcomponent.*;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.SimplerKeyContentContainerI;
 import org.lifecompanion.model.api.configurationcomponent.keyoption.KeyOptionI;
 import org.lifecompanion.model.api.editaction.UndoRedoActionI;
@@ -184,6 +183,18 @@ public class KeyActions {
             return "action.key.image.change";
         }
 
+    }
+
+    public static class ChangeVideoAction extends BasePropertyChangeAction<VideoElementI> {
+
+        public ChangeVideoAction(final VideoUseComponentI videoUseComponent, VideoElementI wantedValueP) {
+            super(videoUseComponent.videoProperty(), wantedValueP);
+        }
+
+        @Override
+        public String getNameID() {
+            return null;
+        }
     }
 
     /**

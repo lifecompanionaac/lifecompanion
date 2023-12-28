@@ -33,7 +33,7 @@ import org.lifecompanion.model.api.imagedictionary.ImageElementI;
  *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
-public interface ImageUseComponentI extends IdentifiableComponentI {
+public interface ImageUseComponentI extends IdentifiableComponentI, VideoUseComponentI {
     /**
      * @return the property that contains the image used by this component
      */

@@ -24,8 +24,16 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
+import org.lifecompanion.controller.editmode.FileChooserType;
+import org.lifecompanion.controller.editmode.LCFileChoosers;
+import org.lifecompanion.controller.editmode.LCStateController;
+import org.lifecompanion.controller.media.VideoPlayerController;
 import org.lifecompanion.model.api.configurationcomponent.ImageUseComponentI;
+import org.lifecompanion.model.api.configurationcomponent.VideoElementI;
+import org.lifecompanion.model.impl.imagedictionary.ImageDictionaries;
 import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.fxmisc.easybind.EasyBind;
 import org.lifecompanion.model.api.imagedictionary.ImageElementI;
@@ -33,10 +41,14 @@ import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.util.IOUtils;
 import org.lifecompanion.util.javafx.FXControlUtils;
+import org.lifecompanion.util.javafx.FXUtils;
 import org.lifecompanion.util.javafx.StageUtils;
 import org.lifecompanion.util.model.ConfigurationComponentUtils;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -56,7 +68,7 @@ public class Image2SelectorControl extends BorderPane implements LCViewInitHelpe
     /**
      * Button to select or remove image
      */
-    private Button buttonRemoveImage, buttonSelectImage;
+    private Button buttonRemoveImage, buttonSelectImage, buttonSelectVideo;
 
     private Tooltip tooltipImageKeywords;
 
@@ -64,6 +76,11 @@ public class Image2SelectorControl extends BorderPane implements LCViewInitHelpe
      * Property that contains the selected image
      */
     private final ObjectProperty<ImageElementI> selectedImage;
+
+    /**
+     * Property that contains the selected video
+     */
+    private final ObjectProperty<VideoElementI> selectedVideo;
 
     /**
      * Property to disable image selection
@@ -83,6 +100,7 @@ public class Image2SelectorControl extends BorderPane implements LCViewInitHelpe
         this.nodeIdForImageLoading = "Image2SelectorControl" + this.hashCode();
         this.disableImageSelection = new SimpleBooleanProperty(false);
         this.selectedImage = new SimpleObjectProperty<>();
+        this.selectedVideo = new SimpleObjectProperty<>();
         this.imageUseComponent = new SimpleObjectProperty<>();
         this.initAll();
     }
@@ -97,6 +115,10 @@ public class Image2SelectorControl extends BorderPane implements LCViewInitHelpe
         this.buttonSelectImage = FXControlUtils.createTextButtonWithGraphics(Translation.getText("select.image.component"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.PICTURE_ALT).size(20.0).color(LCGraphicStyle.MAIN_PRIMARY),
                 "tooltip.select.image.button");
+        this.buttonSelectVideo = FXControlUtils.createTextButtonWithGraphics(Translation.getText("select.video.component"),
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.PLAY_CIRCLE_ALT).size(20.0).color(LCGraphicStyle.MAIN_PRIMARY),
+                null);
+        HBox boxSelectButtons = new HBox(2.0, buttonSelectImage, buttonSelectVideo);
 
         //Image
         this.imageViewSelected = new ImageView();
@@ -108,7 +130,7 @@ public class Image2SelectorControl extends BorderPane implements LCViewInitHelpe
         Tooltip.install(imageViewSelected, tooltipImageKeywords);
 
         //Add
-        VBox boxButton = new VBox(this.buttonSelectImage, this.buttonRemoveImage);
+        VBox boxButton = new VBox(boxSelectButtons, this.buttonRemoveImage);
         boxButton.setAlignment(Pos.CENTER);
         this.setCenter(this.imageViewSelected);
         this.setRight(boxButton);
@@ -141,6 +163,17 @@ public class Image2SelectorControl extends BorderPane implements LCViewInitHelpe
                 imageSelectorDialog.getImageSelectorSearchView().clearResult();
             }
         });
+        this.buttonSelectVideo.setOnAction(e -> {
+
+            FileChooser fileChooserVideo = LCFileChoosers.getChooserVideo(FileChooserType.SELECT_VIDEOS);
+            File chosenFile = fileChooserVideo.showOpenDialog(FXUtils.getSourceWindow(buttonSelectVideo));
+            if (chosenFile != null) {
+                LCStateController.INSTANCE.updateDefaultDirectory(FileChooserType.SELECT_VIDEOS, chosenFile.getParentFile());
+            }
+            if (chosenFile != null && IOUtils.isSupportedVideo(chosenFile)) {
+                selectedVideo.set(VideoPlayerController.INSTANCE.getOrAddVideo(chosenFile));
+            }
+        });
         this.selectedImage.addListener((obs, ov, nv) -> {
             if (ov != null) {
                 ov.requestImageUnload(this.nodeIdForImageLoading);
@@ -171,6 +204,10 @@ public class Image2SelectorControl extends BorderPane implements LCViewInitHelpe
     //========================================================================
     public ObjectProperty<ImageElementI> selectedImageProperty() {
         return this.selectedImage;
+    }
+
+    public ObjectProperty<VideoElementI> selectedVideoProperty() {
+        return selectedVideo;
     }
 
     public ObjectProperty<ImageUseComponentI> imageUseComponentProperty() {

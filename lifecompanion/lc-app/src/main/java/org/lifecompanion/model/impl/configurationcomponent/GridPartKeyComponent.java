@@ -33,6 +33,7 @@ import org.lifecompanion.framework.commons.fx.io.XMLUtils;
 import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
 import org.lifecompanion.model.api.configurationcomponent.TreeDisplayableComponentI;
 import org.lifecompanion.model.api.configurationcomponent.TreeDisplayableType;
+import org.lifecompanion.model.api.configurationcomponent.VideoElementI;
 import org.lifecompanion.model.api.configurationcomponent.keyoption.KeyOptionI;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionManagerI;
@@ -87,6 +88,8 @@ public class GridPartKeyComponent extends GridPartComponentBaseImpl implements G
      */
     private final ImageUseComponentPropertyWrapper imageUseComponentPropertyWrapper;
 
+    private final VideoUseComponentPropertyWrapper videoUseComponentPropertyWrapper;
+
     public GridPartKeyComponent() {
         super();
         this.textContent = new SimpleStringProperty(this, "textContent");
@@ -95,6 +98,7 @@ public class GridPartKeyComponent extends GridPartComponentBaseImpl implements G
         this.wantedImageWidth = new SimpleDoubleProperty(this, "wantedImageWidth");
         this.wantedImageHeight = new SimpleDoubleProperty(this, "wantedImageHeight");
         this.imageUseComponentPropertyWrapper = new ImageUseComponentPropertyWrapper(this);
+        this.videoUseComponentPropertyWrapper = new VideoUseComponentPropertyWrapper(this);
         // Binding wanted image size
         this.configurationParent.addListener((obs, ov, nv) -> {
             if (nv != null) {
@@ -162,6 +166,16 @@ public class GridPartKeyComponent extends GridPartComponentBaseImpl implements G
     @Override
     public StringProperty textContentProperty() {
         return this.textContent;
+    }
+
+    @Override
+    public ObjectProperty<VideoElementI> videoProperty() {
+        return this.videoUseComponentPropertyWrapper.videoProperty();
+    }
+
+    @Override
+    public ObservableBooleanValue videoUseComponentDisplayedProperty() {
+        return this.imageUseComponentDisplayedProperty();
     }
 
     /**
@@ -358,6 +372,7 @@ public class GridPartKeyComponent extends GridPartComponentBaseImpl implements G
         //Base properties
         XMLObjectSerializer.serializeInto(GridPartKeyComponent.class, this, content);
         this.imageUseComponentPropertyWrapper.serialize(content, contextP);
+        this.videoUseComponentPropertyWrapper.serialize(content,contextP);
         //Action
         Element actionManagerElement = this.actionManager.serialize(contextP);
         if (actionManagerElement != null) {
@@ -386,6 +401,7 @@ public class GridPartKeyComponent extends GridPartComponentBaseImpl implements G
 
         //Image
         this.imageUseComponentPropertyWrapper.deserialize(nodeP, contextP);
+        this.videoUseComponentPropertyWrapper.deserialize(nodeP,contextP);
         //Action
         Element actionManagerNodeOld = nodeP.getChild(SimpleUseActionManager.NODE_USE_ACTION_MANAGER_OLD);
         Element actionManagerNode = nodeP.getChild(SimpleUseActionManager.NODE_USE_ACTION_MANAGER);

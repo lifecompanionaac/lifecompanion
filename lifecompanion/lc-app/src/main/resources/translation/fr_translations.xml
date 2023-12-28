@@ -2535,7 +2535,8 @@
 		Vérifiez les branchements ou le fait que celle-ci ne soit pas ouverte dans une autre application.</text>
   <text key="image.webcam.capture.webcam.informations">{} - {}x{} - {} FPS</text>
   <text key="remove.image.component">Supprimer</text>
-  <text key="select.image.component">Sélectionner</text>
+  <text key="select.image.component">Image</text>
+  <text key="select.video.component">Vidéo</text>
   <text key="tooltip.remove.image.button">Supprime l'image sélectionnée pour cet élément</text>
   <text key="tooltip.select.image.button">Ouvre la galerie pour sélectionner une image pour cet
 		élément</text>

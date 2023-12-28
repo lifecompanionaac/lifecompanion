@@ -19,10 +19,18 @@
 package org.lifecompanion.ui.configurationcomponent.base;
 
 import javafx.beans.binding.Bindings;
+import javafx.beans.value.ChangeListener;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaException;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 import javafx.scene.shape.Rectangle;
+import org.lifecompanion.model.api.configurationcomponent.VideoElementI;
 import org.lifecompanion.model.api.style.KeyCompStyleI;
 import org.lifecompanion.model.api.ui.configurationcomponent.ComponentViewI;
 import org.lifecompanion.model.api.ui.configurationcomponent.ViewProviderI;
@@ -37,6 +45,9 @@ import org.lifecompanion.ui.common.pane.generic.LCLabel;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.util.model.ConfigurationComponentUtils;
+
+import java.io.File;
+import java.util.Random;
 
 /**
  * Base displayer for a Key component
@@ -97,12 +108,52 @@ public class GridPartKeyViewBase extends Pane implements ComponentViewI<GridPart
                 }, this.model.textContentProperty(), WritingStateController.INSTANCE.capitalizeNextProperty(), WritingStateController.INSTANCE.upperCaseProperty(),
                 this.model.getKeyTextStyle().upperCaseProperty().value()));
 
-        //Bind the image
+        // Image display
         keyImageView = new ImageView();
         keyImageView.setSmooth(true);
         ConfigurationComponentUtils.bindImageViewWithImageUseComponent(this.keyImageView, this.model);
         ImageViewPane keyImageViewWrapper = new ImageViewPane(keyImageView);
         this.labelContent.graphicProperty().set(keyImageViewWrapper);
+
+        // Video display
+        MediaView mediaView = new MediaView();
+        Pane mediaViewPane = new Pane(mediaView);
+        mediaView.fitWidthProperty().bind(mediaViewPane.widthProperty());
+        mediaView.fitHeightProperty().bind(mediaViewPane.heightProperty());
+
+        // Video
+        ChangeListener<VideoElementI> videoElementChangeListener = (obs, ov, nv) -> {
+            // Kill current player
+            MediaPlayer previousPlayer = mediaView.getMediaPlayer();
+            if (previousPlayer != null) {
+                previousPlayer.dispose();
+            }
+
+            // Load new media
+            if (nv != null) {
+                Media media = new Media(nv.getPath().toURI().toString());
+                media.setOnError(() -> {
+                    final MediaException mediaException = media.getError();
+                    throw new RuntimeException(mediaException);
+                });
+                MediaPlayer player = new MediaPlayer(media);
+                mediaView.setMediaPlayer(player);
+                player.setOnError(() -> {
+                    final MediaException mediaException = player.getError();
+                    throw new RuntimeException(mediaException);
+                });
+                player.setAutoPlay(true);
+                player.setMute(true);
+                player.setCycleCount(MediaPlayer.INDEFINITE);
+                player.play();
+            }
+        };
+        videoElementChangeListener.changed(null, null, model.videoProperty().get());
+        this.model.videoProperty().addListener(videoElementChangeListener);
+
+        // Bind label content depending on selected graphics
+        this.labelContent.graphicProperty()
+                .bind(Bindings.createObjectBinding(() -> this.model.videoProperty().get() != null ? mediaViewPane : keyImageViewWrapper, this.model.imageVTwoProperty(), this.model.videoProperty()));
 
         //Bind style
         shapeStyleUnbind = ShapeStyleBinder.bindNode(this, keyStyle);
@@ -141,7 +192,7 @@ public class GridPartKeyViewBase extends Pane implements ComponentViewI<GridPart
         this.labelContent.prefWidthProperty().unbind();
         this.labelContent.prefHeightProperty().unbind();
         this.labelContent.enableAutoFontSizingProperty().unbind();
-        textStyleUnbind.unbind();
+        this.textStyleUnbind.unbind();
 
         this.labelContent.textPositionProperty().unbind();
         this.labelContent.textProperty().unbind();

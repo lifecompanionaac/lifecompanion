@@ -127,6 +127,7 @@ public class LCConstant {
     // Class part : "Images extension"
     // ========================================================================
     public static final String[] IMAGE_EXTENSIONS = {"png", "gif", "jpg", "jpeg"};
+    public static final String[] VIDEO_EXTENSIONS = {"mp4"};
     // ========================================================================
 
     // Class part : "Base UI"

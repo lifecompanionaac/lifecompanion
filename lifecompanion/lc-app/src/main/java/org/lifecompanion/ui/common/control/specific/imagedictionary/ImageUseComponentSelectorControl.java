@@ -26,6 +26,9 @@ import javafx.beans.value.ChangeListener;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
+import org.lifecompanion.model.api.configurationcomponent.VideoElementI;
+import org.lifecompanion.model.api.configurationcomponent.VideoUseComponentI;
+import org.lifecompanion.model.impl.configurationcomponent.VideoElement;
 import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.fxmisc.easybind.EasyBind;
 import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
@@ -53,6 +56,8 @@ public class ImageUseComponentSelectorControl extends BaseConfigurationViewBorde
      * Change listener for the image
      */
     private ChangeListener<ImageElementI> changeListenerImage;
+
+    private ChangeListener<VideoElementI> changeListenerVideo;
 
     /**
      * Image selector control
@@ -119,6 +124,8 @@ public class ImageUseComponentSelectorControl extends BaseConfigurationViewBorde
     public void initBinding() {
         this.changeListenerImage = EditActionUtils.createSimpleBinding(this.imageSelectorControl.selectedImageProperty(), this.model,
                 m -> m.imageVTwoProperty().get(), KeyActions.ChangeImageAction::new);
+        this.changeListenerVideo = EditActionUtils.createSimpleBinding(this.imageSelectorControl.selectedVideoProperty(), this.model,
+                m -> m.videoProperty().get(), KeyActions.ChangeVideoAction::new);
     }
 
 
@@ -132,6 +139,7 @@ public class ImageUseComponentSelectorControl extends BaseConfigurationViewBorde
             this.disableImageSelection.set(false);
         }
         this.imageSelectorControl.selectedImageProperty().set(model.imageVTwoProperty().get());
+        this.imageSelectorControl.selectedVideoProperty().set(model.videoProperty().get());
         this.imageSelectorControl.imageUseComponentProperty().set(model);
         model.imageVTwoProperty().addListener(this.changeListenerImage);
     }
@@ -147,6 +155,6 @@ public class ImageUseComponentSelectorControl extends BaseConfigurationViewBorde
     protected void clearFieldsAfterUnbind() {
         this.imageSelectorControl.selectedImageProperty().set(null);
     }
-//========================================================================
+    //========================================================================
 
 }
