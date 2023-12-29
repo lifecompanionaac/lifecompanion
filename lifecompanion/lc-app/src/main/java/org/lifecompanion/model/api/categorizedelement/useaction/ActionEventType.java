@@ -20,5 +20,5 @@
 package org.lifecompanion.model.api.categorizedelement.useaction;
 
 public enum ActionEventType {
-    SIMPLE, START, END;
+    SIMPLE, START, END, COMPLEX;
 }

@@ -48,10 +48,10 @@ public class VideoUseComponentPropertyWrapper {
 
     private final ObjectProperty<VideoElementI> video;
 
-    @XMLGenericProperty(VideoPlayMode.class)
+    //@XMLGenericProperty(VideoPlayMode.class)
     private final ObjectProperty<VideoPlayMode> videoPlayMode;
 
-    @XMLGenericProperty(VideoDisplayMode.class)
+    //@XMLGenericProperty(VideoDisplayMode.class)
     private final ObjectProperty<VideoDisplayMode> videoDisplayMode;
 
     @XMLIgnoreDefaultBooleanValue(true)
@@ -61,8 +61,8 @@ public class VideoUseComponentPropertyWrapper {
         this.videoUseComponent = videoUseComponent;
         this.video = new SimpleObjectProperty<>();
         this.muteVideo = new SimpleBooleanProperty(true);
-        this.videoPlayMode = new SimpleObjectProperty<>(VideoPlayMode.CONTINUOUS);
-        this.videoDisplayMode = new SimpleObjectProperty<>(VideoDisplayMode.IN_KEY);
+        this.videoPlayMode = new SimpleObjectProperty<>(VideoPlayMode.WHILE_OVER);
+        this.videoDisplayMode = new SimpleObjectProperty<>(VideoDisplayMode.FULLSCREEN);
     }
 
     public ObjectProperty<VideoElementI> videoProperty() {

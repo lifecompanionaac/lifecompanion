@@ -23,10 +23,7 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import org.jdom2.Element;
 import org.lifecompanion.controller.io.ConfigurationComponentIOHelper;
-import org.lifecompanion.model.api.categorizedelement.useaction.BaseUseActionI;
-import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
-import org.lifecompanion.model.api.categorizedelement.useaction.UseActionManagerI;
-import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
+import org.lifecompanion.model.api.categorizedelement.useaction.*;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.io.XMLSerializable;
@@ -123,6 +120,7 @@ public class SimpleUseActionManager implements UseActionManagerI {
     //========================================================================
     @Override
     public boolean hasSimpleAction(final UseActionEvent eventType) {
+        if (this.realParent.hasEventHandlingFor(ActionEventType.SIMPLE, eventType)) return true;
         ObservableList<BaseUseActionI<?>> eventActions = this.actions.get(eventType);
         if (eventActions != null) {
             for (BaseUseActionI<?> action : eventActions) {
@@ -136,6 +134,7 @@ public class SimpleUseActionManager implements UseActionManagerI {
 
     @Override
     public boolean hasComplexAction(final UseActionEvent eventType) {
+        if (this.realParent.hasEventHandlingFor(ActionEventType.COMPLEX, eventType)) return true;
         ObservableList<BaseUseActionI<?>> eventActions = this.actions.get(eventType);
         if (eventActions != null) {
             for (BaseUseActionI<?> action : eventActions) {

@@ -41,6 +41,8 @@ public interface UseActionTriggerComponentI extends XMLSerializable<IOContextI>,
 
     void eventFired(ActionEventType type, UseActionEvent event);
 
+    boolean hasEventHandlingFor(ActionEventType type, UseActionEvent event);
+
     void addEventFiredListener(final BiConsumer<ActionEventType, UseActionEvent> eventListener);
 
     void removeEventFiredListener(final BiConsumer<ActionEventType, UseActionEvent> eventListener);

@@ -26,9 +26,9 @@ import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
 import javafx.scene.media.MediaPlayer;
-import org.lifecompanion.controller.lifecycle.AppMode;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.media.AutoRetryVideoPlayerView;
+import org.lifecompanion.controller.media.VideoPlayerStage;
 import org.lifecompanion.model.api.categorizedelement.useaction.ActionEventType;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.configurationcomponent.VideoDisplayMode;
@@ -39,6 +39,8 @@ import org.lifecompanion.controller.selectionmode.SelectionModeController;
 import org.lifecompanion.ui.common.pane.generic.FittedViewPane;
 import org.lifecompanion.ui.common.pane.generic.MediaViewFittedView;
 import org.lifecompanion.ui.configurationcomponent.base.GridPartKeyViewBase;
+import org.lifecompanion.util.javafx.FXThreadUtils;
+import org.lifecompanion.util.javafx.StageUtils;
 
 import java.util.function.BiConsumer;
 
@@ -114,12 +116,7 @@ public class GridPartKeyViewUse extends GridPartKeyViewBase {
                     model.videoDisplayModeProperty()
                             .get() == VideoDisplayMode.IN_KEY) {
                 VideoElementI videoElement = model.videoProperty().get();
-                mediaView.setVideoFile(videoElement.getPath(), player -> {
-                    VideoPlayMode videoPlayMode = model.videoPlayModeProperty().get();
-                    player.setAutoPlay(videoPlayMode.isAutoplay());
-                    player.setMute(true);// FIXME
-                    player.setCycleCount(videoPlayMode.getCycleCount());
-                });
+                mediaView.setVideoFile(videoElement.getPath(), model::configureVideoPlayer);
             } else {
                 mediaView.disposePlayer();
             }
@@ -147,7 +144,10 @@ public class GridPartKeyViewUse extends GridPartKeyViewBase {
                     }
                 } else if (model.videoDisplayModeProperty().get() == VideoDisplayMode.FULLSCREEN) {
                     if (type == ActionEventType.SIMPLE && event == UseActionEvent.ACTIVATION) {
-                        // TODO : show in fullscreen in a dedicated stage
+                        FXThreadUtils.runOnFXThread(() -> {
+                            VideoPlayerStage videoPlayerStage = new VideoPlayerStage(this.model);
+                            StageUtils.centerOnOwnerOrOnCurrentStageAndShow(videoPlayerStage);
+                        });
                     }
                 }
             }

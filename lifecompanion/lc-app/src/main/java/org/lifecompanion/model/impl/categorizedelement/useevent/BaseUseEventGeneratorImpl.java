@@ -75,6 +75,11 @@ public abstract class BaseUseEventGeneratorImpl implements UseEventGeneratorI {
     }
 
     @Override
+    public boolean hasEventHandlingFor(ActionEventType type, UseActionEvent event) {
+        return false;
+    }
+
+    @Override
     public void addEventFiredListener(BiConsumer<ActionEventType, UseActionEvent> eventListener) {
         this.eventFiredListeners.add(eventListener);
     }

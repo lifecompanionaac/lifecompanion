@@ -25,6 +25,7 @@ public class SelectionModeUtils {
             GridPartKeyComponentI key = (GridPartKeyComponentI) gridPartComponent;
             boolean empty = key.textContentProperty().get() == null || key.textContentProperty().get().isEmpty();
             empty &= key.imageVTwoProperty().get() == null;
+            empty &= key.videoProperty().get() == null;
             empty &= key.getActionManager().countAllActions() <= 0;
             empty |= key.keyOptionProperty().get().considerKeyEmptyProperty().get();
             return empty;

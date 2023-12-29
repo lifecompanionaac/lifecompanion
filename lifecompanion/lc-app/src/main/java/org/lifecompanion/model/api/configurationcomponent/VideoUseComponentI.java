@@ -20,9 +20,7 @@
 package org.lifecompanion.model.api.configurationcomponent;
 
 import javafx.beans.property.*;
-import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
-
-import java.util.function.Consumer;
+import javafx.scene.media.MediaPlayer;
 
 /**
  * Represent a component that can use a video.<br>
@@ -38,4 +36,12 @@ public interface VideoUseComponentI extends ImageUseComponentI, IdentifiableComp
     ObjectProperty<VideoPlayMode> videoPlayModeProperty();
 
     BooleanProperty muteVideoProperty();
+
+    default void configureVideoPlayer(MediaPlayer mediaPlayer) {
+        VideoPlayMode videoPlayMode = this.videoPlayModeProperty().get();
+        VideoDisplayMode videoDisplayMode = this.videoDisplayModeProperty().get();
+        mediaPlayer.setAutoPlay(videoDisplayMode == VideoDisplayMode.FULLSCREEN || videoPlayMode.isAutoplay());
+        mediaPlayer.setCycleCount(videoDisplayMode == VideoDisplayMode.FULLSCREEN ? MediaPlayer.INDEFINITE : videoPlayMode.getCycleCount());
+        mediaPlayer.setMute(muteVideoProperty().get());
+    }
 }
