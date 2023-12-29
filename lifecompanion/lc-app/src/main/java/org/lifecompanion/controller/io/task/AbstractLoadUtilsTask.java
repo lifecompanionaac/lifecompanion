@@ -29,6 +29,7 @@ import org.lifecompanion.model.api.configurationcomponent.dynamickey.UserActionS
 import org.lifecompanion.model.api.imagedictionary.ImageElementI;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.io.XMLSerializable;
+import org.lifecompanion.model.impl.configurationcomponent.VideoElement;
 import org.lifecompanion.util.ThreadUtils;
 import org.lifecompanion.util.model.LCTask;
 import org.lifecompanion.model.impl.profile.LCConfigurationDescription;
@@ -118,7 +119,7 @@ public abstract class AbstractLoadUtilsTask<T> extends LCTask<T> {
             for (File videoFile : videoFiles) {
                 if (videoFile.isFile()) {
                     String videoId = FileNameUtils.getNameWithoutExtension(videoFile);
-                    ioContext.getVideos().put(videoId, VideoPlayerController.INSTANCE.createVideoElement(videoFile));
+                    ioContext.getVideos().put(videoId, new VideoElement(videoId, videoFile));
                 }
             }
         }

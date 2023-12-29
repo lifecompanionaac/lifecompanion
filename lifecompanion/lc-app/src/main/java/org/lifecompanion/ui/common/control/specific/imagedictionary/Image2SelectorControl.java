@@ -33,6 +33,7 @@ import org.lifecompanion.controller.editmode.LCStateController;
 import org.lifecompanion.controller.media.VideoPlayerController;
 import org.lifecompanion.model.api.configurationcomponent.ImageUseComponentI;
 import org.lifecompanion.model.api.configurationcomponent.VideoElementI;
+import org.lifecompanion.model.impl.notification.LCNotification;
 import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.fxmisc.easybind.EasyBind;
 import org.lifecompanion.model.api.imagedictionary.ImageElementI;
@@ -40,6 +41,7 @@ import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.ui.notification.LCNotificationController;
 import org.lifecompanion.util.IOUtils;
 import org.lifecompanion.util.javafx.FXControlUtils;
 import org.lifecompanion.util.javafx.FXUtils;
@@ -147,6 +149,7 @@ public class Image2SelectorControl extends BorderPane implements LCViewInitHelpe
         //Remove image
         this.buttonRemoveImage.setOnAction((ae) -> {
             this.selectedImage.set(null);
+            this.selectedVideo.set(null);
         });
         //Select image
         this.buttonSelectImage.setOnAction((ea) -> {
@@ -158,18 +161,27 @@ public class Image2SelectorControl extends BorderPane implements LCViewInitHelpe
             Optional<ImageElementI> img = imageSelectorDialog.showAndWait();
             if (img.isPresent()) {
                 selectedImage.set(img.get());
+                selectedVideo.set(null);
                 imageSelectorDialog.getImageSelectorSearchView().clearResult();
             }
         });
         this.buttonSelectVideo.setOnAction(e -> {
-
             FileChooser fileChooserVideo = LCFileChoosers.getChooserVideo(FileChooserType.SELECT_VIDEOS);
             File chosenFile = fileChooserVideo.showOpenDialog(FXUtils.getSourceWindow(buttonSelectVideo));
             if (chosenFile != null) {
                 LCStateController.INSTANCE.updateDefaultDirectory(FileChooserType.SELECT_VIDEOS, chosenFile.getParentFile());
             }
             if (chosenFile != null && IOUtils.isSupportedVideo(chosenFile)) {
-                selectedVideo.set(VideoPlayerController.INSTANCE.createVideoElement(chosenFile));
+                VideoPlayerController.INSTANCE.createVideoElement(chosenFile, result -> {
+                    if (result.getVideoElement() != null) {
+                        selectedVideo.set(result.getVideoElement());
+                        selectedImage.set(result.getThumbnail());
+                    } else {
+                        // FIXME : notification
+                        LCNotificationController.INSTANCE.showNotification(LCNotification.createError("VIDEO ERROR"));
+                        System.err.println(result.getError().getClass().getSimpleName() + " : " + result.getError().getMessage());
+                    }
+                });
             }
         });
         this.selectedImage.addListener((obs, ov, nv) -> {

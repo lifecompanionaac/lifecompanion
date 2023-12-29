@@ -21,5 +21,6 @@ package org.lifecompanion.model.api.configurationcomponent;
 
 public enum VideoPlayMode {
     CONTINUOUS,
-    ON_ACTIVATION;
+    ON_ACTIVATION,
+    ON_OVER;
 }

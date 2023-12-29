@@ -174,18 +174,13 @@ public class GridPartKeyComponent extends GridPartComponentBaseImpl implements G
     }
 
     @Override
-    public ReadOnlyBooleanProperty videoShouldBeDisplayedProperty() {
+    public ReadOnlyBooleanProperty displayVideoInsteadOfThumbnail() {
         return this.videoUseComponentPropertyWrapper.videoShouldBeDisplayedProperty();
     }
 
     @Override
     public void useActionEventExecuted(final UseActionEvent event) {
         this.videoUseComponentPropertyWrapper.useActionEventExecuted(event);
-    }
-
-    @Override
-    public ObservableBooleanValue videoUseComponentDisplayedProperty() {
-        return this.imageUseComponentDisplayedProperty();
     }
 
     /**

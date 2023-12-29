@@ -129,20 +129,19 @@ public enum ImageDictionaries implements LCStateListener, ModeListenerI {
     // ADD/GET IMAGE
     //========================================================================
     public ImageElementI getOrAddToUserImagesDictionary(File imagePath) {
-        return getOrAdd(imagePath, userImagesDictionary);
+        return getOrAdd(imagePath, userImagesDictionary, null);
     }
 
     public ImageElementI getOrAddToConfigurationImageDictionary(File imagePath) {
-        return getOrAdd(imagePath, configurationImageDictionary);
+        return getOrAdd(imagePath, configurationImageDictionary, null);
     }
 
-    public ImageElementI getOrAddToHiddenImageDictionary(File imagePath) {
-        return getOrAdd(imagePath, hiddenImageDictionary);
+    public ImageElementI getOrAddForVideoThumbnail(File imagePath, String name) {
+        return getOrAdd(imagePath, hiddenImageDictionary, name);
     }
 
-    private ImageElementI getOrAdd(File imagePath, ImageDictionaryI dictionary) {
+    private ImageElementI getOrAdd(File imagePath, ImageDictionaryI dictionary, String forceName) {
         try {
-            final String originalFilenameWithoutExtension = FileNameUtils.getNameWithoutExtension(imagePath);
 
             // Hash image to find its ID
             final String id = IOUtils.fileSha256HexToString(imagePath);
@@ -160,9 +159,10 @@ public enum ImageDictionaries implements LCStateListener, ModeListenerI {
                     imagePath = copiedImageTargetForCustomDir;
                 }
                 // Create the updated/new image
+                final String imageName = forceName != null ? forceName : FileNameUtils.getNameWithoutExtension(imagePath);
                 ImageElement newerImage = new ImageElement(id,
-                        originalFilenameWithoutExtension,
-                        FluentHashMap.map(UserConfigurationController.INSTANCE.userLanguageProperty().get(), new String[]{originalFilenameWithoutExtension}),
+                        imageName,
+                        FluentHashMap.map(UserConfigurationController.INSTANCE.userLanguageProperty().get(), new String[]{imageName}),
                         imagePath);
                 newerImage.setDictionary(dictionary);
                 allImages.put(id, newerImage);

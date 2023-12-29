@@ -33,6 +33,7 @@ import org.lifecompanion.model.api.configurationcomponent.TreeIdentifiableCompon
 import org.lifecompanion.model.api.configurationcomponent.VideoElementI;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.SimplerKeyContentContainerI;
 import org.lifecompanion.model.api.style.TextPosition;
+import org.lifecompanion.model.impl.configurationcomponent.VideoUseComponentPropertyWrapper;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.imagedictionary.ImageElementI;
 import org.lifecompanion.model.api.io.IOContextI;
@@ -65,6 +66,7 @@ public abstract class AbstractSimplerKeyContentContainer implements SimplerKeyCo
     private final ObjectProperty<Color> backgroundColor, strokeColor, textColor;
 
     private final ImageUseComponentPropertyWrapper imageUseComponentPropertyWrapper;
+    private final VideoUseComponentPropertyWrapper videoUseComponentPropertyWrapper;
 
     @XMLGenericProperty(TextPosition.class)
     private final ObjectProperty<TextPosition> textPosition;
@@ -79,27 +81,23 @@ public abstract class AbstractSimplerKeyContentContainer implements SimplerKeyCo
         wantedImageHeight = new SimpleDoubleProperty(0.0);
         imageUseComponentDisplayed = new SimpleBooleanProperty(false);
         imageUseComponentPropertyWrapper = new ImageUseComponentPropertyWrapper(this);
+        videoUseComponentPropertyWrapper = new VideoUseComponentPropertyWrapper(this);
         textPosition = new SimpleObjectProperty<>();
     }
 
     @Override
     public ObjectProperty<VideoElementI> videoProperty() {
-        return null;
+        return this.videoUseComponentPropertyWrapper.videoProperty();
     }
 
     @Override
-    public ObservableBooleanValue videoUseComponentDisplayedProperty() {
-        return null;
-    }
-
-    @Override
-    public ReadOnlyBooleanProperty videoShouldBeDisplayedProperty() {
-        return null;
+    public ReadOnlyBooleanProperty displayVideoInsteadOfThumbnail() {
+        return this.videoUseComponentPropertyWrapper.videoShouldBeDisplayedProperty();
     }
 
     @Override
     public void useActionEventExecuted(UseActionEvent event) {
-
+        this.videoUseComponentPropertyWrapper.useActionEventExecuted(event);
     }
 
     // PROPS
@@ -293,6 +291,7 @@ public abstract class AbstractSimplerKeyContentContainer implements SimplerKeyCo
         ConfigurationComponentIOHelper.addTypeAlias(this, node, context);
         XMLObjectSerializer.serializeInto(AbstractSimplerKeyContentContainer.class, this, node);
         this.imageUseComponentPropertyWrapper.serialize(node, context);
+        this.videoUseComponentPropertyWrapper.serialize(node, context);
         return node;
     }
 
@@ -300,6 +299,7 @@ public abstract class AbstractSimplerKeyContentContainer implements SimplerKeyCo
     public void deserialize(Element node, IOContextI context) throws LCException {
         XMLObjectSerializer.deserializeInto(AbstractSimplerKeyContentContainer.class, this, node);
         this.imageUseComponentPropertyWrapper.deserialize(node, context);
+        this.videoUseComponentPropertyWrapper.deserialize(node, context);
     }
     //========================================================================
 }

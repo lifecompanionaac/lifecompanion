@@ -46,35 +46,18 @@ public class VideoUseComponentPropertyWrapper {
     private final VideoUseComponentI videoUseComponent;
 
     private final ObjectProperty<VideoElementI> video;
-    private final BooleanProperty videoShouldBeDisplayed;
+
+    private transient final BooleanProperty videoShouldBeDisplayed;
 
     public VideoUseComponentPropertyWrapper(final VideoUseComponentI videoUseComponent) {
         this.videoUseComponent = videoUseComponent;
-        this.videoShouldBeDisplayed = new SimpleBooleanProperty(false);
-        video = new SimpleObjectProperty<>();
-        ChangeListener<File> thumbnailPathListener = (obs, ov, nv) -> {
-            if (!videoUseComponent.imageVTwoProperty().isBound()) {
-                if (nv != null) {
-                    videoUseComponent.imageVTwoProperty().set(ImageDictionaries.INSTANCE.getOrAddToHiddenImageDictionary(nv));
-                } else {
-                    videoUseComponent.imageVTwoProperty().set(null);
-                }
-            } else {
-                // FIXME : handling already bound
-                System.err.println("IMAGE IS ALREADY BOUND !");
-            }
-        };
-        video.addListener((obs, ov, nv) -> {
-            if (ov != null) ov.thumbnailPathProperty().removeListener(thumbnailPathListener);
-            if (nv != null) {
-                thumbnailPathListener.changed(null, null, nv.thumbnailPathProperty().get());
-                nv.thumbnailPathProperty().addListener(thumbnailPathListener);
-            }
-        });
+        this.videoShouldBeDisplayed = new SimpleBooleanProperty(false);// FIXME : false
+        this.video = new SimpleObjectProperty<>();
     }
 
     public void useActionEventExecuted(final UseActionEvent event) {
         if (event == UseActionEvent.ACTIVATION) {
+            // TODO : test if video
             FXThreadUtils.runOnFXThread(() -> this.videoShouldBeDisplayed.set(true));
         }
     }

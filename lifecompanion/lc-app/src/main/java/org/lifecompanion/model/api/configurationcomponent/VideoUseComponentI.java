@@ -20,7 +20,6 @@
 package org.lifecompanion.model.api.configurationcomponent;
 
 import javafx.beans.property.*;
-import javafx.beans.value.ObservableBooleanValue;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 
 /**
@@ -32,9 +31,7 @@ import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 public interface VideoUseComponentI extends ImageUseComponentI, IdentifiableComponentI {
     ObjectProperty<VideoElementI> videoProperty();
 
-    ReadOnlyBooleanProperty videoShouldBeDisplayedProperty();
-
-    ObservableBooleanValue videoUseComponentDisplayedProperty();
+    ReadOnlyBooleanProperty displayVideoInsteadOfThumbnail();
 
     void useActionEventExecuted(final UseActionEvent event);
 }

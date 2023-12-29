@@ -90,6 +90,8 @@ public abstract class AbstractSimplerKeyContentContainerKeyOption<T extends Simp
                 key.rotateProperty().set(0.0);
                 key.useViewPortProperty().set(false);
                 key.enableReplaceColorProperty().set(false);
+                // Video content
+                key.videoProperty().set(null);
                 // Style
                 key.getKeyStyle().backgroundColorProperty().forced().setValue(null);
                 key.getKeyStyle().strokeColorProperty().forced().setValue(null);
@@ -111,6 +113,8 @@ public abstract class AbstractSimplerKeyContentContainerKeyOption<T extends Simp
                 key.replacingColorProperty().set(simplerKeyContentContainer.replacingColorProperty().get());
                 key.colorToReplaceProperty().set(simplerKeyContentContainer.colorToReplaceProperty().get());
                 key.enableReplaceColorProperty().set(simplerKeyContentContainer.enableReplaceColorProperty().get());
+                // Video content
+                key.videoProperty().set(simplerKeyContentContainer.videoProperty().get());
                 // Image display (size and loading)
                 simplerKeyContentContainer.bindImageDisplayProperties(key);
                 key.getKeyStyle().backgroundColorProperty().forced().setValue(simplerKeyContentContainer.backgroundColorProperty().get());

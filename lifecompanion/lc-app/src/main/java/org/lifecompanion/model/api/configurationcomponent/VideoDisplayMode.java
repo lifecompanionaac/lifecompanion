@@ -19,11 +19,6 @@
 
 package org.lifecompanion.model.api.configurationcomponent;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyBooleanProperty;
-import javafx.beans.value.ObservableBooleanValue;
-import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
-
 public enum VideoDisplayMode {
     IN_KEY,
     FULLSCREEN;

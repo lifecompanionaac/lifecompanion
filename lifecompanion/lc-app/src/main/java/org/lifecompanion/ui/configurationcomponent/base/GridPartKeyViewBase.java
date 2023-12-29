@@ -18,18 +18,15 @@
  */
 package org.lifecompanion.ui.configurationcomponent.base;
 
+import javafx.beans.InvalidationListener;
+import javafx.beans.WeakInvalidationListener;
 import javafx.beans.binding.Bindings;
-import javafx.beans.value.ChangeListener;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaException;
 import javafx.scene.media.MediaPlayer;
-import javafx.scene.media.MediaView;
 import javafx.scene.shape.Rectangle;
+import org.lifecompanion.controller.media.AutoRetryVideoPlayerView;
 import org.lifecompanion.model.api.configurationcomponent.VideoElementI;
 import org.lifecompanion.model.api.style.KeyCompStyleI;
 import org.lifecompanion.model.api.ui.configurationcomponent.ComponentViewI;
@@ -45,9 +42,6 @@ import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.util.model.ConfigurationComponentUtils;
 
-import java.io.File;
-import java.util.Random;
-
 /**
  * Base displayer for a Key component
  *
@@ -59,6 +53,8 @@ public class GridPartKeyViewBase extends Pane implements ComponentViewI<GridPart
     protected ImageView keyImageView;
 
     private Unbindable shapeStyleUnbind, shapeStyleClipUnbind, textStyleUnbind;
+
+    private InvalidationListener videoLoadingListener;
 
     public GridPartKeyViewBase() {
     }
@@ -114,47 +110,36 @@ public class GridPartKeyViewBase extends Pane implements ComponentViewI<GridPart
         FittedViewPane imageViewPane = new FittedViewPane(new ImageViewFittedView(keyImageView));
 
         // Video display
-        MediaView mediaView = new MediaView();
+        AutoRetryVideoPlayerView mediaView = new AutoRetryVideoPlayerView();
         FittedViewPane mediaViewPane = new FittedViewPane(new MediaViewFittedView(mediaView));
 
-        // Video
-        ChangeListener<VideoElementI> videoElementChangeListener = (obs, ov, nv) -> {
-            // Kill current player
-            MediaPlayer previousPlayer = mediaView.getMediaPlayer();
-            if (previousPlayer != null) {
-                previousPlayer.dispose();
-            }
-
-            // Load new media
-            if (nv != null) {
-                Media media = new Media(nv.getPath().toURI().toString());
-                media.setOnError(() -> {
-                    final MediaException mediaException = media.getError();
-                    System.out.println(mediaException.getType() + " : " + mediaException.getMessage());
-                    // throw new RuntimeException(mediaException);
+        this.videoLoadingListener = inv -> {
+            if (model.displayVideoInsteadOfThumbnail().get() && model.imageUseComponentDisplayedProperty().get() && model.videoProperty().get() != null) {
+                System.out.println("Will request video loading");
+                VideoElementI videoElement = model.videoProperty().get();
+                mediaView.setVideoFile(videoElement.getPath(), player -> {
+                    // FIXME : configuration
+                    player.setAutoPlay(true);
+                    player.setMute(true);
+                    player.setCycleCount(MediaPlayer.INDEFINITE);
                 });
-                MediaPlayer player = new MediaPlayer(media);
-                mediaView.setMediaPlayer(player);
-                player.setOnError(() -> {
-                    final MediaException mediaException = player.getError();
-                    System.out.println(mediaException.getType() + " : " + mediaException.getMessage());
-                    //throw new RuntimeException(mediaException);
-                });
-                player.setAutoPlay(true);
-                player.setMute(true);
-                player.setCycleCount(MediaPlayer.INDEFINITE);
-                player.play();
+            } else {
+                mediaView.disposePlayer();
             }
         };
-        videoElementChangeListener.changed(null, null, model.videoProperty().get());
-        this.model.videoProperty().addListener(videoElementChangeListener);
+        this.model.imageUseComponentDisplayedProperty().addListener(videoLoadingListener);
+        this.model.videoProperty().addListener(videoLoadingListener);
+        this.model.displayVideoInsteadOfThumbnail().addListener(videoLoadingListener);
 
         // Bind label content depending on selected graphics
         this.labelContent.graphicProperty()
-                .bind(Bindings.createObjectBinding(() -> this.model.videoProperty().get() != null && this.model.videoShouldBeDisplayedProperty().get() ? mediaViewPane : imageViewPane,
+                .bind(Bindings.createObjectBinding(() ->
+                        {
+                            System.out.println("Display video : " + this.model.displayVideoInsteadOfThumbnail().get());
+                            return this.model.displayVideoInsteadOfThumbnail().get() ? mediaViewPane : imageViewPane;
+                        },
                         this.model.imageVTwoProperty(),
-                        this.model.videoProperty(),
-                        this.model.videoShouldBeDisplayedProperty()));
+                        this.model.displayVideoInsteadOfThumbnail()));
 
         //Bind style
         shapeStyleUnbind = ShapeStyleBinder.bindNode(this, keyStyle);
@@ -200,6 +185,9 @@ public class GridPartKeyViewBase extends Pane implements ComponentViewI<GridPart
 
         //Bind the image
         ConfigurationComponentUtils.unbindImageViewFromImageUseComponent(keyImageView);
+
+        this.model.imageUseComponentDisplayedProperty().removeListener(videoLoadingListener);
+        this.model.videoProperty().removeListener(videoLoadingListener);
 
         //Bind style
         shapeStyleUnbind.unbind();

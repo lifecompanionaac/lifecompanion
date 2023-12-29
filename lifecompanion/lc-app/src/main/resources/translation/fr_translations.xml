@@ -3678,4 +3678,5 @@
     <text key="field.grid.component.selector.add.grid.button">Nouvelle grille</text>
     <text key="field.grid.component.selector.add.grid.name.header">Nom de la nouvelle grille ?</text>
     <text key="field.grid.component.selector.add.grid.name.text">Nommez la grille ajoutée pour la retrouver facilement plus tard.</text>
+    <text key="video.analyze.message">Analyse de la vidéo</text>
 </texts>
