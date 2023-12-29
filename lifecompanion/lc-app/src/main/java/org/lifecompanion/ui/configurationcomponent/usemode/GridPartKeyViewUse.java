@@ -116,7 +116,7 @@ public class GridPartKeyViewUse extends GridPartKeyViewBase {
                     model.videoDisplayModeProperty()
                             .get() == VideoDisplayMode.IN_KEY) {
                 VideoElementI videoElement = model.videoProperty().get();
-                mediaView.setVideoFile(videoElement.getPath(), model::configureVideoPlayer);
+                mediaView.setVideoFile(videoElement.getPath(), player -> model.configureVideoPlayer(player, mediaView));
             } else {
                 mediaView.disposePlayer();
             }

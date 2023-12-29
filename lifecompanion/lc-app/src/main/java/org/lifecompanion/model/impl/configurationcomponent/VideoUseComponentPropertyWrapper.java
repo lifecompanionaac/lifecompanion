@@ -61,8 +61,8 @@ public class VideoUseComponentPropertyWrapper {
         this.videoUseComponent = videoUseComponent;
         this.video = new SimpleObjectProperty<>();
         this.muteVideo = new SimpleBooleanProperty(true);
-        this.videoPlayMode = new SimpleObjectProperty<>(VideoPlayMode.WHILE_OVER);
-        this.videoDisplayMode = new SimpleObjectProperty<>(VideoDisplayMode.FULLSCREEN);
+        this.videoPlayMode = new SimpleObjectProperty<>(VideoPlayMode.ON_ACTIVATION);
+        this.videoDisplayMode = new SimpleObjectProperty<>(VideoDisplayMode.IN_KEY);
     }
 
     public ObjectProperty<VideoElementI> videoProperty() {

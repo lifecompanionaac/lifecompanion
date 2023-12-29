@@ -57,11 +57,12 @@ public abstract class AbstractSavingUtilsTask<T> extends LCTask<T> {
     }
 
     protected void saveXmlSerializable(final XMLSerializable<IOContextI> element, final File directory, final String xmlName) throws Exception {
+        File file = new File(directory.getPath() + File.separator + xmlName);
+        IOUtils.createParentDirectoryIfNeeded(file);
         //Save the XML
         IOContext context = new IOContext(directory);
         LOGGER.info("XML tree created from the element.");
         this.updateProgress(1, 6);
-        File file = new File(directory.getPath() + File.separator + xmlName);
         XMLHelper.saveXMLSerializable(file, element, context);
         this.updateProgress(2, 6);
         LOGGER.info("XML saved to {}", file);

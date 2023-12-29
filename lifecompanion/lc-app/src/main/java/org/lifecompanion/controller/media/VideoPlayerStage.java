@@ -61,15 +61,11 @@ public class VideoPlayerStage extends Stage {
         this.setScene(this.createScene());
 
         this.setOnHiding(e -> autoRetryVideoPlayerView.disposePlayer());
-        this.setOnShowing(e -> SelectionModeController.INSTANCE.pauseCurrentScanningUntilNextSelection(() -> {
-            FXThreadUtils.runOnFXThread(this::hide);
-            return false;
-        }));
 
         // Init playing
         autoRetryVideoPlayerView.setVideoFile(videoUseComponent.videoProperty().get().getPath(), player -> {
             player.setOnEndOfMedia(this::hide);
-            videoUseComponent.configureVideoPlayer(player);
+            videoUseComponent.configureVideoPlayer(player, autoRetryVideoPlayerView);
         });
     }
 

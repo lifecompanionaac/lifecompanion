@@ -116,7 +116,7 @@ public class Image2SelectorControl extends BorderPane implements LCViewInitHelpe
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.PICTURE_ALT).size(20.0).color(LCGraphicStyle.MAIN_PRIMARY),
                 "tooltip.select.image.button");
         this.buttonSelectVideo = FXControlUtils.createTextButtonWithGraphics(Translation.getText("select.video.component"),
-                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.FILE_MOVIE_ALT).size(20.0).color(LCGraphicStyle.MAIN_PRIMARY),
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.FILM).size(20.0).color(LCGraphicStyle.MAIN_PRIMARY),
                 null);
         HBox boxSelectButtons = new HBox(2.0, buttonSelectImage, buttonSelectVideo);
 

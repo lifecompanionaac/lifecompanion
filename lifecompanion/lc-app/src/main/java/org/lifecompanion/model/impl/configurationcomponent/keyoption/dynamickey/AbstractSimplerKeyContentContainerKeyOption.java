@@ -115,6 +115,9 @@ public abstract class AbstractSimplerKeyContentContainerKeyOption<T extends Simp
                 key.enableReplaceColorProperty().set(simplerKeyContentContainer.enableReplaceColorProperty().get());
                 // Video content
                 key.videoProperty().set(simplerKeyContentContainer.videoProperty().get());
+                key.videoDisplayModeProperty().set(simplerKeyContentContainer.videoDisplayModeProperty().get());
+                key.videoPlayModeProperty().set(simplerKeyContentContainer.videoPlayModeProperty().get());
+                key.muteVideoProperty().set(simplerKeyContentContainer.muteVideoProperty().get());
                 // Image display (size and loading)
                 simplerKeyContentContainer.bindImageDisplayProperties(key);
                 key.getKeyStyle().backgroundColorProperty().forced().setValue(simplerKeyContentContainer.backgroundColorProperty().get());
@@ -179,6 +182,7 @@ public abstract class AbstractSimplerKeyContentContainerKeyOption<T extends Simp
     @Override
     public void detachFromImpl(final GridPartKeyComponentI key) {
         BindingUtils.unbindAndSetNull(key.imageVTwoProperty());
+        BindingUtils.unbindAndSetNull(key.videoProperty());
         BindingUtils.unbindAndSetNull(key.textContentProperty());
         BindingUtils.unbindAndSetNull(key.getKeyStyle().backgroundColorProperty().forced());
         BindingUtils.unbindAndSetNull(key.getKeyStyle().strokeColorProperty().forced());

@@ -200,13 +200,15 @@ public class GridPartKeyComponent extends GridPartComponentBaseImpl implements G
 
     @Override
     public boolean hasEventHandlingFor(ActionEventType type, UseActionEvent event) {
-        VideoDisplayMode videoDisplayMode = videoDisplayModeProperty().get();
-        VideoPlayMode videoPlayMode = videoPlayModeProperty().get();
-        if (type == ActionEventType.SIMPLE) {
-            return videoDisplayMode == VideoDisplayMode.FULLSCREEN || videoPlayMode == VideoPlayMode.ON_ACTIVATION;
-        }
-        if (type == ActionEventType.COMPLEX) {
-            return videoDisplayMode == VideoDisplayMode.IN_KEY && videoPlayMode == VideoPlayMode.WHILE_OVER;
+        if (videoProperty().get() != null) {
+            VideoDisplayMode videoDisplayMode = videoDisplayModeProperty().get();
+            VideoPlayMode videoPlayMode = videoPlayModeProperty().get();
+            if (type == ActionEventType.SIMPLE) {
+                return videoDisplayMode == VideoDisplayMode.FULLSCREEN || videoPlayMode == VideoPlayMode.ON_ACTIVATION;
+            }
+            if (type == ActionEventType.COMPLEX) {
+                return videoDisplayMode == VideoDisplayMode.IN_KEY && videoPlayMode == VideoPlayMode.WHILE_OVER;
+            }
         }
         return false;
     }
