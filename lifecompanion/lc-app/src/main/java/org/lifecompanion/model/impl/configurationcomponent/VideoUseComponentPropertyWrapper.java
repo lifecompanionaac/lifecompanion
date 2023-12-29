@@ -19,21 +19,22 @@
 package org.lifecompanion.model.impl.configurationcomponent;
 
 import javafx.beans.property.*;
-import javafx.beans.value.ChangeListener;
 import org.jdom2.Element;
-import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
-import org.lifecompanion.framework.commons.fx.io.XMLUtils;
+import org.lifecompanion.framework.commons.fx.io.*;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
+import org.lifecompanion.model.api.configurationcomponent.VideoDisplayMode;
 import org.lifecompanion.model.api.configurationcomponent.VideoElementI;
+import org.lifecompanion.model.api.configurationcomponent.VideoPlayMode;
 import org.lifecompanion.model.api.configurationcomponent.VideoUseComponentI;
 import org.lifecompanion.model.api.io.IOContextI;
-import org.lifecompanion.model.impl.imagedictionary.ImageDictionaries;
 import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.function.Consumer;
 
 /**
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
@@ -47,29 +48,39 @@ public class VideoUseComponentPropertyWrapper {
 
     private final ObjectProperty<VideoElementI> video;
 
-    private transient final BooleanProperty videoShouldBeDisplayed;
+    @XMLGenericProperty(VideoPlayMode.class)
+    private final ObjectProperty<VideoPlayMode> videoPlayMode;
+
+    @XMLGenericProperty(VideoDisplayMode.class)
+    private final ObjectProperty<VideoDisplayMode> videoDisplayMode;
+
+    @XMLIgnoreDefaultBooleanValue(true)
+    private final BooleanProperty muteVideo;
 
     public VideoUseComponentPropertyWrapper(final VideoUseComponentI videoUseComponent) {
         this.videoUseComponent = videoUseComponent;
-        this.videoShouldBeDisplayed = new SimpleBooleanProperty(false);// FIXME : false
         this.video = new SimpleObjectProperty<>();
-    }
-
-    public void useActionEventExecuted(final UseActionEvent event) {
-        if (event == UseActionEvent.ACTIVATION) {
-            // TODO : test if video
-            FXThreadUtils.runOnFXThread(() -> this.videoShouldBeDisplayed.set(true));
-        }
+        this.muteVideo = new SimpleBooleanProperty(true);
+        this.videoPlayMode = new SimpleObjectProperty<>(VideoPlayMode.CONTINUOUS);
+        this.videoDisplayMode = new SimpleObjectProperty<>(VideoDisplayMode.IN_KEY);
     }
 
     public ObjectProperty<VideoElementI> videoProperty() {
         return this.video;
     }
 
-    public ReadOnlyBooleanProperty videoShouldBeDisplayedProperty() {
-        return this.videoShouldBeDisplayed;
+
+    public ObjectProperty<VideoDisplayMode> videoDisplayModeProperty() {
+        return this.videoDisplayMode;
     }
 
+    public ObjectProperty<VideoPlayMode> videoPlayModeProperty() {
+        return this.videoPlayMode;
+    }
+
+    public BooleanProperty muteVideoProperty() {
+        return muteVideo;
+    }
 
     private static final String ATB_VIDEO_ID = "videoId";
 

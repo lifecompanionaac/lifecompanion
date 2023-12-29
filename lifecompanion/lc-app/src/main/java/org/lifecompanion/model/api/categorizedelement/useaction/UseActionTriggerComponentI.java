@@ -23,6 +23,9 @@ import org.lifecompanion.model.api.configurationcomponent.ConfigurationChildComp
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.io.XMLSerializable;
 
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+
 /**
  * This represents a component that could trigger the use action execution.<br>
  * Basically a key can trigger action when a user select it, or when a scan selection mode is over.<br>
@@ -35,4 +38,10 @@ public interface UseActionTriggerComponentI extends XMLSerializable<IOContextI>,
      * @return the action manager for this component
      */
     UseActionManagerI getActionManager();
+
+    void eventFired(ActionEventType type, UseActionEvent event);
+
+    void addEventFiredListener(final BiConsumer<ActionEventType, UseActionEvent> eventListener);
+
+    void removeEventFiredListener(final BiConsumer<ActionEventType, UseActionEvent> eventListener);
 }

@@ -24,16 +24,13 @@ import javafx.beans.property.*;
 import javafx.beans.value.ObservableBooleanValue;
 import javafx.collections.ObservableList;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.control.ContentDisplay;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import org.jdom2.Element;
 import org.lifecompanion.controller.io.ConfigurationComponentIOHelper;
 import org.lifecompanion.framework.commons.fx.io.XMLUtils;
-import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
-import org.lifecompanion.model.api.configurationcomponent.TreeDisplayableComponentI;
-import org.lifecompanion.model.api.configurationcomponent.TreeDisplayableType;
-import org.lifecompanion.model.api.configurationcomponent.VideoElementI;
+import org.lifecompanion.model.api.categorizedelement.useaction.ActionEventType;
+import org.lifecompanion.model.api.configurationcomponent.*;
 import org.lifecompanion.model.api.configurationcomponent.keyoption.KeyOptionI;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionManagerI;
@@ -48,12 +45,14 @@ import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseAction
 import org.lifecompanion.model.impl.categorizedelement.useaction.available.WriteCharPredictionAction;
 import org.lifecompanion.model.impl.categorizedelement.useaction.available.WriteWordPredictionAction;
 import org.lifecompanion.model.impl.categorizedelement.useaction.available.WriteLabelAction;
-import org.lifecompanion.framework.commons.fx.io.XMLGenericProperty;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.framework.utils.Pair;
 
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 /**
@@ -90,6 +89,8 @@ public class GridPartKeyComponent extends GridPartComponentBaseImpl implements G
 
     private final VideoUseComponentPropertyWrapper videoUseComponentPropertyWrapper;
 
+    private final Set<BiConsumer<ActionEventType, UseActionEvent>> eventFiredListeners;
+
     public GridPartKeyComponent() {
         super();
         this.textContent = new SimpleStringProperty(this, "textContent");
@@ -99,6 +100,7 @@ public class GridPartKeyComponent extends GridPartComponentBaseImpl implements G
         this.wantedImageHeight = new SimpleDoubleProperty(this, "wantedImageHeight");
         this.imageUseComponentPropertyWrapper = new ImageUseComponentPropertyWrapper(this);
         this.videoUseComponentPropertyWrapper = new VideoUseComponentPropertyWrapper(this);
+        this.eventFiredListeners = new HashSet<>(2);
         // Binding wanted image size
         this.configurationParent.addListener((obs, ov, nv) -> {
             if (nv != null) {
@@ -174,13 +176,36 @@ public class GridPartKeyComponent extends GridPartComponentBaseImpl implements G
     }
 
     @Override
-    public ReadOnlyBooleanProperty displayVideoInsteadOfThumbnail() {
-        return this.videoUseComponentPropertyWrapper.videoShouldBeDisplayedProperty();
+    public ObjectProperty<VideoDisplayMode> videoDisplayModeProperty() {
+        return videoUseComponentPropertyWrapper.videoDisplayModeProperty();
     }
 
     @Override
-    public void useActionEventExecuted(final UseActionEvent event) {
-        this.videoUseComponentPropertyWrapper.useActionEventExecuted(event);
+    public ObjectProperty<VideoPlayMode> videoPlayModeProperty() {
+        return videoUseComponentPropertyWrapper.videoPlayModeProperty();
+    }
+
+    @Override
+    public BooleanProperty muteVideoProperty() {
+        return videoUseComponentPropertyWrapper.muteVideoProperty();
+    }
+
+
+    @Override
+    public void eventFired(ActionEventType type, UseActionEvent event) {
+        for (BiConsumer<ActionEventType, UseActionEvent> eventFiredListener : eventFiredListeners) {
+            eventFiredListener.accept(type, event);
+        }
+    }
+
+    @Override
+    public void addEventFiredListener(BiConsumer<ActionEventType, UseActionEvent> eventListener) {
+        this.eventFiredListeners.add(eventListener);
+    }
+
+    @Override
+    public void removeEventFiredListener(BiConsumer<ActionEventType, UseActionEvent> eventListener) {
+        this.eventFiredListeners.remove(eventListener);
     }
 
     /**

@@ -19,8 +19,26 @@
 
 package org.lifecompanion.model.api.configurationcomponent;
 
+import javafx.scene.media.MediaPlayer;
+
 public enum VideoPlayMode {
-    CONTINUOUS,
-    ON_ACTIVATION,
-    ON_OVER;
+    CONTINUOUS(true, MediaPlayer.INDEFINITE),
+    ON_ACTIVATION(false, 1),
+    WHILE_OVER(false, MediaPlayer.INDEFINITE);
+
+    private final boolean autoplay;
+    private final int cycleCount;
+
+    VideoPlayMode(boolean autoplay, int cycleCount) {
+        this.autoplay = autoplay;
+        this.cycleCount = cycleCount;
+    }
+
+    public boolean isAutoplay() {
+        return autoplay;
+    }
+
+    public int getCycleCount() {
+        return cycleCount;
+    }
 }

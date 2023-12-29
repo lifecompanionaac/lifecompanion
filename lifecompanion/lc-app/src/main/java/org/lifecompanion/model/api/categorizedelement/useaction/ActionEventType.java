@@ -17,25 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.lifecompanion.model.api.configurationcomponent;
+package org.lifecompanion.model.api.categorizedelement.useaction;
 
-import javafx.beans.property.*;
-import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
-
-import java.util.function.Consumer;
-
-/**
- * Represent a component that can use a video.<br>
- * A component using a video should always be a component that can also use an image.
- *
- * @author Mathieu THEBAUD <math.thebaud@gmail.com>
- */
-public interface VideoUseComponentI extends ImageUseComponentI, IdentifiableComponentI {
-    ObjectProperty<VideoElementI> videoProperty();
-
-    ObjectProperty<VideoDisplayMode> videoDisplayModeProperty();
-
-    ObjectProperty<VideoPlayMode> videoPlayModeProperty();
-
-    BooleanProperty muteVideoProperty();
+public enum ActionEventType {
+    SIMPLE, START, END;
 }

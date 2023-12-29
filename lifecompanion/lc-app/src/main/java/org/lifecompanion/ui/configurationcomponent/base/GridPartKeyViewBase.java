@@ -21,13 +21,20 @@ package org.lifecompanion.ui.configurationcomponent.base;
 import javafx.beans.InvalidationListener;
 import javafx.beans.WeakInvalidationListener;
 import javafx.beans.binding.Bindings;
+import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.shape.Rectangle;
 import org.lifecompanion.controller.media.AutoRetryVideoPlayerView;
+import org.lifecompanion.model.api.categorizedelement.useaction.ActionEventType;
+import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
+import org.lifecompanion.model.api.configurationcomponent.VideoDisplayMode;
 import org.lifecompanion.model.api.configurationcomponent.VideoElementI;
+import org.lifecompanion.model.api.configurationcomponent.VideoPlayMode;
 import org.lifecompanion.model.api.style.KeyCompStyleI;
 import org.lifecompanion.model.api.ui.configurationcomponent.ComponentViewI;
 import org.lifecompanion.model.api.ui.configurationcomponent.ViewProviderI;
@@ -53,8 +60,8 @@ public class GridPartKeyViewBase extends Pane implements ComponentViewI<GridPart
     protected ImageView keyImageView;
 
     private Unbindable shapeStyleUnbind, shapeStyleClipUnbind, textStyleUnbind;
+    protected FittedViewPane imageViewPane;
 
-    private InvalidationListener videoLoadingListener;
 
     public GridPartKeyViewBase() {
     }
@@ -107,39 +114,9 @@ public class GridPartKeyViewBase extends Pane implements ComponentViewI<GridPart
         keyImageView = new ImageView();
         keyImageView.setSmooth(true);
         ConfigurationComponentUtils.bindImageViewWithImageUseComponent(this.keyImageView, this.model);
-        FittedViewPane imageViewPane = new FittedViewPane(new ImageViewFittedView(keyImageView));
+        this.imageViewPane = new FittedViewPane(new ImageViewFittedView(keyImageView));
 
-        // Video display
-        AutoRetryVideoPlayerView mediaView = new AutoRetryVideoPlayerView();
-        FittedViewPane mediaViewPane = new FittedViewPane(new MediaViewFittedView(mediaView));
-
-        this.videoLoadingListener = inv -> {
-            if (model.displayVideoInsteadOfThumbnail().get() && model.imageUseComponentDisplayedProperty().get() && model.videoProperty().get() != null) {
-                System.out.println("Will request video loading");
-                VideoElementI videoElement = model.videoProperty().get();
-                mediaView.setVideoFile(videoElement.getPath(), player -> {
-                    // FIXME : configuration
-                    player.setAutoPlay(true);
-                    player.setMute(true);
-                    player.setCycleCount(MediaPlayer.INDEFINITE);
-                });
-            } else {
-                mediaView.disposePlayer();
-            }
-        };
-        this.model.imageUseComponentDisplayedProperty().addListener(videoLoadingListener);
-        this.model.videoProperty().addListener(videoLoadingListener);
-        this.model.displayVideoInsteadOfThumbnail().addListener(videoLoadingListener);
-
-        // Bind label content depending on selected graphics
-        this.labelContent.graphicProperty()
-                .bind(Bindings.createObjectBinding(() ->
-                        {
-                            System.out.println("Display video : " + this.model.displayVideoInsteadOfThumbnail().get());
-                            return this.model.displayVideoInsteadOfThumbnail().get() ? mediaViewPane : imageViewPane;
-                        },
-                        this.model.imageVTwoProperty(),
-                        this.model.displayVideoInsteadOfThumbnail()));
+        this.labelContent.graphicProperty().set(imageViewPane);
 
         //Bind style
         shapeStyleUnbind = ShapeStyleBinder.bindNode(this, keyStyle);
@@ -185,9 +162,6 @@ public class GridPartKeyViewBase extends Pane implements ComponentViewI<GridPart
 
         //Bind the image
         ConfigurationComponentUtils.unbindImageViewFromImageUseComponent(keyImageView);
-
-        this.model.imageUseComponentDisplayedProperty().removeListener(videoLoadingListener);
-        this.model.videoProperty().removeListener(videoLoadingListener);
 
         //Bind style
         shapeStyleUnbind.unbind();

@@ -22,15 +22,12 @@ package org.lifecompanion.model.impl.configurationcomponent.dynamickey;
 import javafx.beans.property.*;
 import javafx.beans.value.ObservableBooleanValue;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.control.ContentDisplay;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import org.jdom2.Element;
 import org.lifecompanion.controller.io.ConfigurationComponentIOHelper;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
-import org.lifecompanion.model.api.configurationcomponent.ImageUseComponentI;
-import org.lifecompanion.model.api.configurationcomponent.TreeIdentifiableComponentI;
-import org.lifecompanion.model.api.configurationcomponent.VideoElementI;
+import org.lifecompanion.model.api.configurationcomponent.*;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.SimplerKeyContentContainerI;
 import org.lifecompanion.model.api.style.TextPosition;
 import org.lifecompanion.model.impl.configurationcomponent.VideoUseComponentPropertyWrapper;
@@ -48,6 +45,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public abstract class AbstractSimplerKeyContentContainer implements SimplerKeyContentContainerI {
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractSimplerKeyContentContainer.class);
@@ -91,13 +89,18 @@ public abstract class AbstractSimplerKeyContentContainer implements SimplerKeyCo
     }
 
     @Override
-    public ReadOnlyBooleanProperty displayVideoInsteadOfThumbnail() {
-        return this.videoUseComponentPropertyWrapper.videoShouldBeDisplayedProperty();
+    public ObjectProperty<VideoDisplayMode> videoDisplayModeProperty() {
+        return videoUseComponentPropertyWrapper.videoDisplayModeProperty();
     }
 
     @Override
-    public void useActionEventExecuted(UseActionEvent event) {
-        this.videoUseComponentPropertyWrapper.useActionEventExecuted(event);
+    public ObjectProperty<VideoPlayMode> videoPlayModeProperty() {
+        return videoUseComponentPropertyWrapper.videoPlayModeProperty();
+    }
+
+    @Override
+    public BooleanProperty muteVideoProperty() {
+        return videoUseComponentPropertyWrapper.muteVideoProperty();
     }
 
     // PROPS

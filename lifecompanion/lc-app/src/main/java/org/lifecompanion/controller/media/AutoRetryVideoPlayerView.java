@@ -24,6 +24,7 @@ import javafx.scene.media.MediaException;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.util.ThreadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,8 +50,8 @@ public class AutoRetryVideoPlayerView extends MediaView {
     }
 
     private void initPlayer(String id, File videoFile, Consumer<MediaPlayer> playerConfig) {
+        LOGGER.info("initPlayer({})", id);
         if (StringUtils.isEquals(id, currentId)) {
-            LOGGER.info("initPlayer()");
             this.disposePlayer();
             Media media = new Media(videoFile.toURI().toString());
             media.setOnError(() -> handleError(id, videoFile, playerConfig, media.getError()));
@@ -62,11 +63,10 @@ public class AutoRetryVideoPlayerView extends MediaView {
     }
 
     private void handleError(String id, File videoFile, Consumer<MediaPlayer> playerConfig, MediaException mediaException) {
-        LOGGER.warn("Error in video player : {}, {}", mediaException.getType(), mediaException.getMessage());
         if (tryCount++ < RETRY_COUNT) {
             this.initPlayer(id, videoFile, playerConfig);
         } else {
-            LOGGER.info("Too many failures, will not retry playing and report the errors");
+            LOGGER.info("Too many failures in MediaPlayer, will not retry playing and report the errors");
             if (this.errorHandler != null) {
                 this.errorHandler.accept(mediaException);
             }
@@ -74,10 +74,13 @@ public class AutoRetryVideoPlayerView extends MediaView {
     }
 
     public void disposePlayer() {
+        this.executeOnPlayer(MediaPlayer::dispose);
+    }
+
+    public void executeOnPlayer(Consumer<MediaPlayer> call) {
         MediaPlayer mediaPlayer = this.getMediaPlayer();
         if (mediaPlayer != null) {
-            LOGGER.info("disposePlayer()");
-            mediaPlayer.dispose();
+            call.accept(mediaPlayer);
         }
     }
 

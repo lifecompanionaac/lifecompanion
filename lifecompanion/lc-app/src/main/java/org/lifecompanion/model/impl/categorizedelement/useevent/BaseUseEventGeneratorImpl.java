@@ -23,6 +23,7 @@ import org.jdom2.Element;
 import org.lifecompanion.controller.io.ConfigurationComponentIOHelper;
 import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.framework.commons.translation.Translation;
+import org.lifecompanion.model.api.categorizedelement.useaction.ActionEventType;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionManagerI;
 import org.lifecompanion.model.api.categorizedelement.useevent.UseEventGeneratorI;
@@ -36,9 +37,8 @@ import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseAction
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.exception.LCException;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.function.BiConsumer;
 
 /**
  * Base implementation for {@link UseEventGeneratorI}
@@ -56,14 +56,32 @@ public abstract class BaseUseEventGeneratorImpl implements UseEventGeneratorI {
     protected List<UseVariableDefinitionI> generatedVariables;
     private final UseActionManagerI useActionManager;
     private final ObjectProperty<LCConfigurationI> configurationParent;
-
     protected UseEventListenerI useEventListener;
+    private final Set<BiConsumer<ActionEventType, UseActionEvent>> eventFiredListeners;
 
     protected BaseUseEventGeneratorImpl() {
         this.variableDescription = new SimpleStringProperty(this, "variableDescription");
         this.useActionManager = new SimpleUseActionManager(this, UseActionEvent.EVENT);
         this.generatedVariables = new ArrayList<>(3);
         this.configurationParent = new SimpleObjectProperty<>();
+        this.eventFiredListeners = new HashSet<>(2);
+    }
+
+    @Override
+    public void eventFired(ActionEventType type, UseActionEvent event) {
+        for (BiConsumer<ActionEventType, UseActionEvent> eventFiredListener : eventFiredListeners) {
+            eventFiredListener.accept(type, event);
+        }
+    }
+
+    @Override
+    public void addEventFiredListener(BiConsumer<ActionEventType, UseActionEvent> eventListener) {
+        this.eventFiredListeners.add(eventListener);
+    }
+
+    @Override
+    public void removeEventFiredListener(BiConsumer<ActionEventType, UseActionEvent> eventListener) {
+        this.eventFiredListeners.remove(eventListener);
     }
 
     @Override
