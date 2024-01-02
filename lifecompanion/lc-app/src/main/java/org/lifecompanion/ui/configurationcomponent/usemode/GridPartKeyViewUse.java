@@ -159,9 +159,10 @@ public class GridPartKeyViewUse extends GridPartKeyViewBase {
 
         // Bind label content depending on selected graphics
         this.labelContent.graphicProperty()
-                .bind(Bindings.createObjectBinding(() -> AppModeController.INSTANCE.isUseMode() && this.model.videoDisplayModeProperty()
-                                .get() == VideoDisplayMode.IN_KEY ? mediaViewPane : imageViewPane,
-                        this.model.videoDisplayModeProperty(), AppModeController.INSTANCE.modeProperty()));
+                .bind(Bindings.createObjectBinding(() ->
+                                AppModeController.INSTANCE.isUseMode() && this.model.videoDisplayModeProperty().get() == VideoDisplayMode.IN_KEY && this.model.videoProperty().get() != null
+                                        ? mediaViewPane : imageViewPane,
+                        this.model.videoDisplayModeProperty(), this.model.videoProperty(), AppModeController.INSTANCE.modeProperty()));
     }
 
     @Override
