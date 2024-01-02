@@ -55,6 +55,7 @@ public class ChangeKeyImageConfigView extends VBox implements UseActionConfigura
                 Translation.getText("use.action.change.key.text.target.key"));
         //Image
         this.imageSelectorControl = new Image2SelectorControl();
+        this.imageSelectorControl.hideVideoSelectionProperty().set(true);
         Label labelExplain = new Label(Translation.getText("use.action.change.key.image.wanted.image.explain"));
         labelExplain.setWrapText(true);
         labelExplain.getStyleClass().addAll("text-font-italic", "text-fill-gray", "text-wrap-enabled");

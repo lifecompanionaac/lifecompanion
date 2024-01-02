@@ -35,6 +35,7 @@ import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseAction
 import org.lifecompanion.model.impl.configurationcomponent.ComponentHolderById;
 import org.lifecompanion.model.impl.configurationcomponent.ImageUseComponentPropertyWrapper;
 import org.lifecompanion.model.impl.exception.LCException;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 
 import java.util.Map;
 
@@ -55,7 +56,7 @@ public class ChangeKeyImageAction extends SimpleUseActionImpl<UseActionTriggerCo
         this.targetKeyId = new SimpleStringProperty();
         this.wantedImage = new SimpleObjectProperty<>();
         this.targetKey = new ComponentHolderById<>(this.targetKeyId, this.parentComponentProperty());
-        this.variableDescriptionProperty().bind(TranslationFX.getTextBinding("action.change.key.image.variable.description",targetKey.componentNameOrInfoProperty()));
+        this.variableDescriptionProperty().bind(TranslationFX.getTextBinding("action.change.key.image.variable.description", targetKey.componentNameOrInfoProperty()));
     }
 
     public ReadOnlyObjectProperty<GridPartKeyComponentI> targetKeyProperty() {
@@ -74,7 +75,10 @@ public class ChangeKeyImageAction extends SimpleUseActionImpl<UseActionTriggerCo
     public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
         GridPartKeyComponentI wantedKeyChanged = this.targetKey.componentProperty().get();
         if (wantedKeyChanged != null) {
-            wantedKeyChanged.imageVTwoProperty().set(this.wantedImage.get());
+            FXThreadUtils.runOnFXThread(() -> {
+                wantedKeyChanged.videoProperty().set(null);
+                wantedKeyChanged.imageVTwoProperty().set(this.wantedImage.get());
+            });
         }
     }
 

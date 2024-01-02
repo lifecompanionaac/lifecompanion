@@ -73,7 +73,7 @@ public class IOUtils {
      */
     public static void zipInto(final Map<String, InputStream> inputs, final File zipPath, final String comment) throws IOException {
         IOUtils.createParentDirectoryIfNeeded(zipPath);
-        try (ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(zipPath))) {
+        try (ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(zipPath)))) {
             zos.setComment(comment);
             Set<String> paths = inputs.keySet();
             for (String path : paths) {

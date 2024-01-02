@@ -98,12 +98,15 @@ public class Image2SelectorControl extends BorderPane implements LCViewInitHelpe
 
     private final ObjectProperty<ImageUseComponentI> imageUseComponent;
 
+    private final BooleanProperty hideVideoSelection;
+
     public Image2SelectorControl() {
         this.nodeIdForImageLoading = "Image2SelectorControl" + this.hashCode();
         this.disableImageSelection = new SimpleBooleanProperty(false);
         this.selectedImage = new SimpleObjectProperty<>();
         this.selectedVideo = new SimpleObjectProperty<>();
         this.imageUseComponent = new SimpleObjectProperty<>();
+        this.hideVideoSelection = new SimpleBooleanProperty(false);
         this.initAll();
     }
 
@@ -121,6 +124,7 @@ public class Image2SelectorControl extends BorderPane implements LCViewInitHelpe
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.FILM).size(20.0).color(LCGraphicStyle.MAIN_PRIMARY),
                 null);
         HBox boxSelectButtons = new HBox(2.0, buttonSelectImage, buttonSelectVideo);
+        boxSelectButtons.setAlignment(Pos.CENTER);
 
         //Image
         this.imageViewSelected = new ImageView();
@@ -144,6 +148,13 @@ public class Image2SelectorControl extends BorderPane implements LCViewInitHelpe
         //Disable remove when there is no image
         this.buttonRemoveImage.disableProperty().bind(this.disableImageSelection.or(this.imageViewSelected.imageProperty().isNull()));
         this.buttonSelectImage.disableProperty().bind(this.disableImageSelection);
+
+        this.buttonSelectVideo.managedProperty().bind(buttonSelectVideo.visibleProperty());
+        buttonSelectVideo.visibleProperty().bind(hideVideoSelection.not());
+    }
+
+    public BooleanProperty hideVideoSelectionProperty() {
+        return hideVideoSelection;
     }
 
     @Override
@@ -156,9 +167,7 @@ public class Image2SelectorControl extends BorderPane implements LCViewInitHelpe
         //Select image
         this.buttonSelectImage.setOnAction((ea) -> {
             ImageSelectorDialog imageSelectorDialog = ImageSelectorDialog.getInstance();
-            if (defaultSearchTextSupplier != null) {
-                imageSelectorDialog.getImageSelectorSearchView().setSearchTextAndFireSearch(defaultSearchTextSupplier.get());
-            }
+            imageSelectorDialog.getImageSelectorSearchView().setSearchTextAndFireSearch(defaultSearchTextSupplier != null ? defaultSearchTextSupplier.get() : null);
             StageUtils.centerOnOwnerOrOnCurrentStage(imageSelectorDialog);
             Optional<ImageElementI> img = imageSelectorDialog.showAndWait();
             if (img.isPresent()) {
