@@ -83,7 +83,7 @@ public class UserConfigurationView extends BorderPane implements LCViewInitHelpe
         boxMenuLeft = new VBox();
         boxMenuLeft.setPrefWidth(200.0);
         boxMenuLeft.setAlignment(Pos.TOP_LEFT);
-        boxMenuLeft.getStyleClass().addAll("background-primary-dark", "border-right-lightgrey", "border-width-1-right");
+        boxMenuLeft.getStyleClass().addAll("background-primary-dark", "border-width-0");
 
         //Tabs
         this.addConfigTab(new UIConfigSubmenu());

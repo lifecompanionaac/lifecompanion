@@ -304,7 +304,7 @@ public class ConfigurationComponentUtils {
 
     public static void unbindImageViewFromImageUseComponent(ImageView imageView) {
         BindingUtils.unbindAndSetNull(imageView.imageProperty());
-        BindingUtils.unbindAndSet(imageView.preserveRatioProperty(), false);
+        BindingUtils.unbindAndSet(imageView.preserveRatioProperty(), true);
         BindingUtils.unbindAndSet(imageView.rotateProperty(), 0.0);
         BindingUtils.unbindAndSetNull(imageView.viewportProperty());
     }

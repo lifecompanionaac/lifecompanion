@@ -229,6 +229,10 @@
     -fx-border-width: 1.0;
 }
 
+.border-width-0 {
+    -fx-border-width: 0.0 0.0 0.0 0.0;
+}
+
 .border-width-1-top-right-bottom {
     -fx-border-width: 1.0 1.0 1.0 0.0;
 }
@@ -241,7 +245,15 @@
     -fx-border-width: 1.0 0.0 1.0 0.0;
 }
 
+.border-width-1-left {
+    -fx-border-width: 0.0 0.0 0.0 1.0;
+}
+
 .border-width-1-right {
+    -fx-border-width: 0.0 1.0 0.0 0.0;
+}
+
+.border-width-1-bottom {
     -fx-border-width: 0.0 0.0 1.0 0.0;
 }
 

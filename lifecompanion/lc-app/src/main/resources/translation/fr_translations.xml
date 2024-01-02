@@ -2324,9 +2324,9 @@
   <text key="image.use.color.replace.threshold.field">Tolérance</text>
   <text key="image.use.color.replacing.field">Couleur de remplacement</text>
   <text key="image.use.color.to.replace.field">Couleur à remplacer</text>
-  <text key="image.use.enable.color.replace">Activer le remplacement de couleur</text>
+  <text key="image.use.enable.color.replace">Activer</text>
   <text key="image.use.preserve.ratio">Conserver les proportions</text>
-  <text key="image.use.use.viewport">Recadrer l'image</text>
+  <text key="image.use.use.viewport">Activer</text>
   <text key="image.use.rotation.label.current">Rotation de l'image : {} degrés</text>
   <text key="rotate.image.left">Tourner à gauche</text>
   <text key="rotate.image.right">Tourner à droite</text>
@@ -3679,4 +3679,9 @@
     <text key="field.grid.component.selector.add.grid.name.header">Nom de la nouvelle grille ?</text>
     <text key="field.grid.component.selector.add.grid.name.text">Nommez la grille ajoutée pour la retrouver facilement plus tard.</text>
     <text key="video.analyze.message">Analyse de la vidéo</text>
+    <text key="image.use.config.part.ratio.rotate.title">Rotation et ratio</text>
+    <text key="image.use.config.part.preview.title">Aperçu</text>
+    <text key="image.use.config.part.color.replace.title">Changement de couleur</text>
+    <text key="image.use.config.part.viewport.title">Recadrer</text>
+    <text key="image.configure.viewport">Configurer</text>
 </texts>

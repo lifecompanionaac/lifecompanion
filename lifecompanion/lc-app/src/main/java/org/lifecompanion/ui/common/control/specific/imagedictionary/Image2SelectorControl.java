@@ -58,7 +58,7 @@ import java.util.function.Supplier;
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public class Image2SelectorControl extends BorderPane implements LCViewInitHelper {
-    private static final double IMAGE_WIDTH = 180, IMAGE_HEIGHT = 100;
+    private static final double IMAGE_WIDTH = 100, IMAGE_HEIGHT = 100;
 
     /**
      * Image use in key

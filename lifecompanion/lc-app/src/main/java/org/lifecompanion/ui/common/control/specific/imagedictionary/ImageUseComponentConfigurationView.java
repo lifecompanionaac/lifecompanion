@@ -25,10 +25,8 @@ import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Separator;
-import javafx.scene.control.Slider;
+import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import org.lifecompanion.ui.controlsfx.control.ToggleSwitch;
@@ -49,6 +47,7 @@ import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.util.javafx.FXControlUtils;
 import org.lifecompanion.util.javafx.FXUtils;
+import org.lifecompanion.util.model.ConfigurationComponentUtils;
 
 public class ImageUseComponentConfigurationView extends BaseConfigurationViewBorderPane<ImageUseComponentI> implements LCViewInitHelper {
     /**
@@ -57,14 +56,11 @@ public class ImageUseComponentConfigurationView extends BaseConfigurationViewBor
     private Button buttonRotateLeft, buttonRotateRight;
 
     /**
-     * Label to display current rotation
-     */
-    private Label labelRotation;
-
-    /**
      * Button to hide the stage
      */
     private Button buttonOk;
+
+    private Button buttonConfigureViewport;
 
     /**
      * Toggle to enable/disable preserve ratio
@@ -117,9 +113,11 @@ public class ImageUseComponentConfigurationView extends BaseConfigurationViewBor
     private ChangeListener<Boolean> changeListenerUseViewport;
 
     /**
-     * Viewport control
+     * Viewport configuration
      */
-    private ViewportSelectorControl viewportSelectorControl;
+    private ViewportSelectorStage viewportSelectorStage;
+
+    private ImageView imageViewPreview;
 
     public ImageUseComponentConfigurationView() {
         initAll();
@@ -127,7 +125,15 @@ public class ImageUseComponentConfigurationView extends BaseConfigurationViewBor
 
     @Override
     public void initUI() {
+        // Preview
+        this.imageViewPreview = new ImageView();
+        this.imageViewPreview.setFitHeight(300);
+        this.imageViewPreview.setFitWidth(300);
+        BorderPane imageViewContainer = new BorderPane(imageViewPreview);
+        imageViewContainer.getStyleClass().addAll("border-lightgrey", "border-width-1-right");
+
         //Create buttons
+        Label labelTitleRatioRotate = FXControlUtils.createTitleLabel(Translation.getText("image.use.config.part.ratio.rotate.title"));
         this.togglePreserveRatio = FXControlUtils.createToggleSwitch("image.use.preserve.ratio", "tooltip.explain.image.preserve.ratio");
         //Advanced parameters
         this.buttonRotateLeft = FXControlUtils.createTextButtonWithGraphics(Translation.getText("rotate.image.left"),
@@ -136,15 +142,11 @@ public class ImageUseComponentConfigurationView extends BaseConfigurationViewBor
         this.buttonRotateRight = FXControlUtils.createTextButtonWithGraphics(Translation.getText("rotate.image.right"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.ROTATE_RIGHT).size(20.0).color(LCGraphicStyle.SECOND_DARK),
                 "tooltip.rotate.image.right");
-        this.labelRotation = new Label();
         HBox rotateButtonBox = new HBox(this.buttonRotateLeft, this.buttonRotateRight);
         rotateButtonBox.setAlignment(Pos.CENTER);
 
-        VBox paneParameters = new VBox(5.0, this.togglePreserveRatio, rotateButtonBox, labelRotation);
-        paneParameters.setAlignment(Pos.CENTER);
-        paneParameters.setPadding(new Insets(10.0));
-
         //Color replacement
+        Label labelTitleColorReplace = FXControlUtils.createTitleLabel(Translation.getText("image.use.config.part.color.replace.title"));
         this.toggleEnableReplaceColor = FXControlUtils.createToggleSwitch("image.use.enable.color.replace",
                 "tooltip.explain.image.enable.color.replace");
         this.pickerColorToReplace = new LCColorPicker();
@@ -155,6 +157,7 @@ public class ImageUseComponentConfigurationView extends BaseConfigurationViewBor
         FXControlUtils.createAndAttachTooltip(sliderReplaceThreshold, "tooltip.explain.image.color.replace.threshold");
         this.sliderReplaceThreshold.setMajorTickUnit(20);
         this.paneColorSelection = new GridPane();
+        this.paneColorSelection.setVgap(10.0);
         Label labelColorToReplace = new Label(Translation.getText("image.use.color.to.replace.field"));
         this.paneColorSelection.add(labelColorToReplace, 0, 0);
         this.paneColorSelection.add(this.pickerColorToReplace, 1, 0);
@@ -164,16 +167,15 @@ public class ImageUseComponentConfigurationView extends BaseConfigurationViewBor
         this.paneColorSelection.add(this.sliderReplaceThreshold, 1, 2);
         this.paneColorSelection.setVgap(3.0);
         GridPane.setHgrow(labelColorToReplace, Priority.ALWAYS);
-        Separator sepColor = new Separator(Orientation.HORIZONTAL);
-        sepColor.visibleProperty().bind(this.toggleEnableReplaceColor.visibleProperty());
-        sepColor.managedProperty().bind(sepColor.visibleProperty());
-        paneParameters.getChildren().addAll(sepColor, this.toggleEnableReplaceColor, this.paneColorSelection);
 
         //Viewport selector
+        Label labelTitleViewport = FXControlUtils.createTitleLabel(Translation.getText("image.use.config.part.viewport.title"));
         this.toggleUseViewport = FXControlUtils.createToggleSwitch("image.use.use.viewport", "tooltip.explain.image.use.viewport");
-        this.viewportSelectorControl = new ViewportSelectorControl();
-        this.viewportSelectorControl.setPrefHeight(250);
-        paneParameters.getChildren().addAll(new Separator(Orientation.HORIZONTAL), this.toggleUseViewport, this.viewportSelectorControl);
+        buttonConfigureViewport = FXControlUtils.createLeftTextButton(Translation.getText("image.configure.viewport"),
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.GEARS).size(16).color(LCGraphicStyle.MAIN_DARK), null);
+        HBox boxConfigureViewPort = new HBox(buttonConfigureViewport);
+        boxConfigureViewPort.setAlignment(Pos.CENTER);
+        this.viewportSelectorStage = new ViewportSelectorStage();
 
         // Button ok
         buttonOk = FXControlUtils.createLeftTextButton(Translation.getText("image.use.button.ok"),
@@ -182,7 +184,28 @@ public class ImageUseComponentConfigurationView extends BaseConfigurationViewBor
         buttonBox.setAlignment(Pos.CENTER_RIGHT);
         BorderPane.setMargin(buttonBox, new Insets(0.0, 0.0, 5.0, 0.0));
 
-        this.setCenter(paneParameters);
+
+        // Total
+        VBox paneParameters = new VBox(5.0,
+                labelTitleRatioRotate,
+                togglePreserveRatio,
+                rotateButtonBox,
+                labelTitleColorReplace,
+                this.toggleEnableReplaceColor,
+                this.paneColorSelection,
+                labelTitleViewport,
+                toggleUseViewport,
+                boxConfigureViewPort
+        );
+        paneParameters.setAlignment(Pos.CENTER_LEFT);
+        paneParameters.setPadding(new Insets(5.0));
+
+        ScrollPane scrollPaneParameters = new ScrollPane(paneParameters);
+        scrollPaneParameters.setFitToWidth(true);
+        scrollPaneParameters.setMinWidth(340.0);
+
+        this.setCenter(imageViewContainer);
+        this.setRight(scrollPaneParameters);
         this.setBottom(buttonBox);
     }
 
@@ -190,9 +213,6 @@ public class ImageUseComponentConfigurationView extends BaseConfigurationViewBor
     public void initListener() {
         //Disable remove when there is no image
         this.paneColorSelection.disableProperty().bind(this.toggleEnableReplaceColor.selectedProperty().not());
-        //View port visible only when needed
-        MonadicBinding<Boolean> bindUseViewport = EasyBind.select(this.model).selectObject(ImageUseComponentI::useViewPortProperty).orElse(false);
-        this.viewportSelectorControl.disableProperty().bind(Bindings.createBooleanBinding(() -> !bindUseViewport.get(), bindUseViewport));//MonadicBinding can't be used as BooleanBinding...
         //Actions
         this.buttonRotateLeft.setOnAction(ev -> {
             ImageUseComponentI imageUseComp = this.model.get();
@@ -202,12 +222,18 @@ public class ImageUseComponentConfigurationView extends BaseConfigurationViewBor
             ImageUseComponentI imageUseComp = this.model.get();
             ConfigActionController.INSTANCE.executeAction(new KeyActions.ChangeImageRotateAction(imageUseComp, imageUseComp.rotateProperty().get() + 90.0));
         });
+        this.buttonConfigureViewport.disableProperty().bind(toggleUseViewport.selectedProperty().not());
         this.buttonOk.setOnAction(ev -> FXUtils.getSourceWindow(this).hide());
+        this.toggleUseViewport.selectedProperty().addListener((obs, ov, nv) -> {
+            if (nv && !binding) {
+                buttonConfigureViewport.fire();
+            }
+        });
+        this.buttonConfigureViewport.setOnAction(e -> this.viewportSelectorStage.prepareAndShow(this.model.get()));
     }
 
     @Override
     public void initBinding() {
-        this.viewportSelectorControl.modelProperty().bind(this.model);
         this.changeListenerPreserveRatio = EditActionUtils.createSimpleBinding(this.togglePreserveRatio.selectedProperty(), this.model,
                 m -> m.preserveRatioProperty().get(), KeyActions.ChangePreserveRatioAction::new);
         this.changeListenerEnableColorReplace = EditActionUtils.createSimpleBinding(this.toggleEnableReplaceColor.selectedProperty(), this.model,
@@ -220,11 +246,14 @@ public class ImageUseComponentConfigurationView extends BaseConfigurationViewBor
                 m -> m.replacingColorProperty().get(), KeyActions.ChangeReplacingColorAction::new);
         this.changeListenerReplaceThreshold = EditActionUtils.createSliderBindingWithScale(0, this.sliderReplaceThreshold, this.model,
                 ImageUseComponentI::replaceColorThresholdProperty, (model, nv) -> new KeyActions.ChangeReplaceColorThresholdAction(model, nv.intValue()));
-        this.labelRotation.textProperty().bind(TranslationFX.getTextBinding("image.use.rotation.label.current", EasyBind.select(model).selectObject(ImageUseComponentI::rotateProperty).orElse(0.0)));
     }
+
+    private boolean binding = false;
 
     @Override
     public void bind(ImageUseComponentI model) {
+        binding = true;
+        ConfigurationComponentUtils.bindImageViewWithImageUseComponent(this.imageViewPreview, model);
         model.enableReplaceColorProperty().addListener(this.changeListenerEnableColorReplace);
         model.colorToReplaceProperty().addListener(this.changeListenerColorToReplace);
         model.replacingColorProperty().addListener(this.changeListenerReplacingColor);
@@ -237,10 +266,12 @@ public class ImageUseComponentConfigurationView extends BaseConfigurationViewBor
         this.pickerColorToReplace.setValue(model.colorToReplaceProperty().get());
         this.pickerReplacingColor.setValue(model.replacingColorProperty().get());
         this.sliderReplaceThreshold.setValue(model.replaceColorThresholdProperty().get());
+        binding = false;
     }
 
     @Override
     public void unbind(ImageUseComponentI model) {
+        ConfigurationComponentUtils.unbindImageViewFromImageUseComponent(this.imageViewPreview);
         model.preserveRatioProperty().removeListener(this.changeListenerPreserveRatio);
         model.useViewPortProperty().removeListener(this.changeListenerUseViewport);
         model.enableReplaceColorProperty().removeListener(this.changeListenerEnableColorReplace);
