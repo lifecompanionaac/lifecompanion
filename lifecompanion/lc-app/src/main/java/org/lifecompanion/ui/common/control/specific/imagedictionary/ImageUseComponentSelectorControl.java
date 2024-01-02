@@ -141,6 +141,7 @@ public class ImageUseComponentSelectorControl extends BaseConfigurationViewBorde
         this.imageSelectorControl.selectedVideoProperty().set(model.videoProperty().get());
         this.imageSelectorControl.imageUseComponentProperty().set(model);
         model.imageVTwoProperty().addListener(this.changeListenerImage);
+        model.videoProperty().addListener(this.changeListenerVideo);
     }
 
     @Override
@@ -148,11 +149,13 @@ public class ImageUseComponentSelectorControl extends BaseConfigurationViewBorde
         this.disableImageSelection.unbind();
         this.imageSelectorControl.imageUseComponentProperty().set(null);
         model.imageVTwoProperty().removeListener(this.changeListenerImage);
+        model.videoProperty().removeListener(this.changeListenerVideo);
     }
 
     @Override
     protected void clearFieldsAfterUnbind() {
         this.imageSelectorControl.selectedImageProperty().set(null);
+        this.imageSelectorControl.selectedVideoProperty().set(null);
     }
     //========================================================================
 

@@ -21,6 +21,7 @@
 - Ticket #263 : amélioration de la qualité de l'export en PDF
 - Ticket #266 : correction de l'affichage de l'alignement de texte sélectionné
 - Ticket #271 : correction d'une erreur lors d'une vitesse de défilement très rapide
+- Ticket #268 : quand une image est enlevée d'une case, le texte est automatiquement remis au centre
 - L'action d'une case bloc note n'était pas supprimée lorsqu'on la passait en case "classique"
 
 ## 1.5.0 - 08/09/2023

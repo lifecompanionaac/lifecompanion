@@ -43,6 +43,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -103,7 +104,7 @@ public class KeyActions {
         private double previousRotate;
         private boolean previousEnableColorReplace;
         private boolean previousPreserveRatio;
-        private Runnable textPositionUndo;
+        private Runnable textPositionUndoKey, textPositionUndoKeyContent;
 
         public ChangeImageAction(final ImageUseComponentI keyP, final ImageElementI wantedImageP) {
             super(keyP.imageVTwoProperty(), wantedImageP);
@@ -126,36 +127,26 @@ public class KeyActions {
             this.imageUseComponent.preserveRatioProperty().set(true);
 
             // Automatic text position : when it's a key and a image is set (and wasn't set before)
-            changeTextPositionIfPossible(GridPartKeyComponentI.class,
+            textPositionUndoKey = changeTextPositionIfPossible(
+                    imageUseComponent,
+                    GridPartKeyComponentI.class,
+                    wantedValue,
+                    k -> k.imageVTwoProperty().get(),
                     k -> k.getKeyStyle().textPositionProperty().value().getValue(),
                     (k, v) -> k.getKeyStyle().textPositionProperty().selected().setValue(v),
                     k -> !k.getKeyStyle().textPositionProperty().selected().isBound()
             );
-            changeTextPositionIfPossible(SimplerKeyContentContainerI.class,
+            textPositionUndoKeyContent = changeTextPositionIfPossible(
+                    imageUseComponent,
+                    SimplerKeyContentContainerI.class,
+                    wantedValue,
+                    k -> k.imageVTwoProperty().get(),
                     k -> k.textPositionProperty().getValue(),
                     (k, v) -> k.textPositionProperty().setValue(v),
                     k -> !k.textPositionProperty().isBound()
             );
 
             super.doAction();
-        }
-
-        private <T extends ImageUseComponentI> void changeTextPositionIfPossible(Class<T> type,
-                                                                                 Function<T, TextPosition> textPositionGetter,
-                                                                                 BiConsumer<T, TextPosition> textPositionSetter,
-                                                                                 Predicate<T> propertyChecker) {
-            if (type.isAssignableFrom(imageUseComponent.getClass())) {
-                TextPosition currentPos = textPositionGetter.apply((T) imageUseComponent);
-                if (wantedValue != null && imageUseComponent.imageVTwoProperty()
-                                                            .get() == null && (currentPos == null || currentPos == TextPosition.CENTER) && propertyChecker.test((T) imageUseComponent)) {
-                    textPositionUndo = () -> {
-                        if (propertyChecker.test((T) imageUseComponent)) {
-                            textPositionSetter.accept((T) imageUseComponent, currentPos);
-                        }
-                    };
-                    textPositionSetter.accept((T) imageUseComponent, TextPosition.BOTTOM);
-                }
-            }
         }
 
         @Override
@@ -172,10 +163,8 @@ public class KeyActions {
             this.imageUseComponent.preserveRatioProperty().set(previousPreserveRatio);
 
             // Restore text position on key
-            if (this.textPositionUndo != null) {
-                textPositionUndo.run();
-                textPositionUndo = null;
-            }
+            runIfNotNull(textPositionUndoKey);
+            runIfNotNull(textPositionUndoKeyContent);
         }
 
         @Override
@@ -186,15 +175,86 @@ public class KeyActions {
     }
 
     public static class ChangeVideoAction extends BasePropertyChangeAction<VideoElementI> {
+        private Runnable textPositionUndoKey, textPositionUndoKeyContent;
+        private final VideoUseComponentI videoUseComponent;
 
         public ChangeVideoAction(final VideoUseComponentI videoUseComponent, VideoElementI wantedValueP) {
             super(videoUseComponent.videoProperty(), wantedValueP);
+            this.videoUseComponent = videoUseComponent;
+        }
+
+        @Override
+        public void doAction() throws LCException {
+            textPositionUndoKey = changeTextPositionIfPossible(
+                    videoUseComponent,
+                    GridPartKeyComponentI.class,
+                    wantedValue,
+                    k -> k.videoProperty().get(),
+                    k -> k.getKeyStyle().textPositionProperty().value().getValue(),
+                    (k, v) -> k.getKeyStyle().textPositionProperty().selected().setValue(v),
+                    k -> !k.getKeyStyle().textPositionProperty().selected().isBound()
+            );
+            textPositionUndoKeyContent = changeTextPositionIfPossible(
+                    videoUseComponent,
+                    SimplerKeyContentContainerI.class,
+                    wantedValue,
+                    k -> k.videoProperty().get(),
+                    k -> k.textPositionProperty().getValue(),
+                    (k, v) -> k.textPositionProperty().setValue(v),
+                    k -> !k.textPositionProperty().isBound()
+            );
+            super.doAction();
+        }
+
+        @Override
+        public void undoAction() throws LCException {
+            super.undoAction();
+            runIfNotNull(textPositionUndoKey);
+            runIfNotNull(textPositionUndoKeyContent);
         }
 
         @Override
         public String getNameID() {
             return null;
         }
+    }
+
+    private static void runIfNotNull(Runnable runnable) {
+        if (runnable != null) {
+            runnable.run();
+        }
+    }
+
+    private static <T extends ImageUseComponentI> Runnable changeTextPositionIfPossible(Object component, Class<T> type,
+                                                                                        Object wantedValue,
+                                                                                        Function<T, ?> previousValueGetter,
+                                                                                        Function<T, TextPosition> textPositionGetter,
+                                                                                        BiConsumer<T, TextPosition> textPositionSetter,
+                                                                                        Predicate<T> propertyChecker) {
+        if (type.isAssignableFrom(component.getClass())) {
+            TextPosition currentPos = textPositionGetter.apply((T) component);
+            // Set to bottom when setting a new value
+            if (wantedValue != null && previousValueGetter.apply((T) component) == null && (currentPos == null || currentPos == TextPosition.CENTER) && propertyChecker.test((T) component)) {
+                Runnable textPositionUndo = () -> {
+                    if (propertyChecker.test((T) component)) {
+                        textPositionSetter.accept((T) component, currentPos);
+                    }
+                };
+                textPositionSetter.accept((T) component, TextPosition.BOTTOM);
+                return textPositionUndo;
+            }
+            // Set to center when deleting a previous value
+            if (wantedValue == null && previousValueGetter.apply((T) component) != null && (currentPos == null || currentPos != TextPosition.CENTER) && propertyChecker.test((T) component)) {
+                Runnable textPositionUndo = () -> {
+                    if (propertyChecker.test((T) component)) {
+                        textPositionSetter.accept((T) component, currentPos);
+                    }
+                };
+                textPositionSetter.accept((T) component, TextPosition.CENTER);
+                return textPositionUndo;
+            }
+        }
+        return null;
     }
 
     public static class ChangeVideoDisplayMode extends BasePropertyChangeAction<VideoDisplayMode> {
