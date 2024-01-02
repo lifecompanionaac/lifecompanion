@@ -8,9 +8,10 @@
 	- Possibilité d'utiliser les vidéos à la place des images, donc sur les cases et les listes de cases
 	- Les vidéos peuvent être lues dans la case ou en plein écran
 	- La lecture est possible automatiquement (en continu), à l'activation ou au survol de la case
-- Il est maintenant **possible d'utiliser une touche de clavier pour activer le défilement**, même en mode clavier virtuel (sur Windows uniquement)
-- Il est maintenant possible de **créer une nouvelle grille directement depuis l'action "Aller dans la grille"**
-- La **copie de plusieurs case en même temps** est maintenant possible
+- Il est possible d'**utiliser une touche de clavier pour activer le défilement**, même en mode clavier virtuel (sur Windows uniquement)
+- Il est possible de **créer une nouvelle grille directement depuis l'action "Aller dans la grille"**
+- Il est possible de **copier plusieurs cases en même temps**
+- Ajout d'un paramètre "Sélectionner automatiquement les images des cases" (dans Préférences & Infos) : permet que les images soient automatiquement sélectionnées lorsqu'un texte est entré sur une case, fait gagner du temps !
 
 ### Corrections/ajustements
 

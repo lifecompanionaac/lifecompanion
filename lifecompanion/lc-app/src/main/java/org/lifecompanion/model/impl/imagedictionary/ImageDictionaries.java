@@ -229,21 +229,22 @@ public enum ImageDictionaries implements LCStateListener, ModeListenerI {
     private static final Comparator<Pair<ImageElementI, Double>> SCORE_MAP_COMPARATOR = (e1, e2) -> Double.compare(e2.getValue(), e1.getValue());
     private static final Comparator<Pair<ImageElementI, Double>> ALPHABETICAL_MAP_COMPARATOR = Comparator.comparing(e -> StringUtils.trimToEmpty(e.getKey().getName()));
 
-    public List<Pair<ImageDictionaryI, List<List<ImageElementI>>>> searchImage(String rawSearchString) {
+    public List<Pair<ImageDictionaryI, List<List<ImageElementI>>>> searchImage(String rawSearchString, boolean displayAll, double minScore) {
         long start = System.currentTimeMillis();
         List<Pair<ImageDictionaryI, List<List<ImageElementI>>>> result = new ArrayList<>();
         String searchFull = StringUtils.stripToEmpty(rawSearchString).toLowerCase();
-        boolean displayAll = searchFull.isEmpty();
         AtomicInteger totalResultCount = new AtomicInteger(0);
         // TODO : convert to full stream implementation with map ?
-        this.dictionaries.stream().sorted((d1, d2) ->
+        this.dictionaries
+                .stream()
+                .sorted((d1, d2) ->
                 Boolean.compare(LCStateController.INSTANCE.getFavoriteImageDictionaries().contains(d2.getName()), LCStateController.INSTANCE.getFavoriteImageDictionaries().contains(d1.getName()))
         ).forEach(imageDictionary -> {
             List<ImageElementI> resultList = imageDictionary.getImages()
                     .parallelStream()
                     .map(e -> new Pair<>(e, displayAll ? 0.0 : getSimilarityScore(e.getKeywords(), searchFull)))
                     .sorted(displayAll ? ALPHABETICAL_MAP_COMPARATOR : SCORE_MAP_COMPARATOR)
-                    .filter(e -> displayAll || e.getValue() > ConfigurationComponentUtils.SIMILARITY_CONTAINS)
+                    .filter(e -> displayAll || e.getValue() > minScore)
                     .map(Pair::getKey)
                     .collect(Collectors.toList());
             if (LangUtils.isNotEmpty(resultList)) {
@@ -263,6 +264,10 @@ public enum ImageDictionaries implements LCStateListener, ModeListenerI {
                 result.size(),
                 rawSearchString);
         return result;
+    }
+
+    public List<Pair<ImageDictionaryI, List<List<ImageElementI>>>> searchImage(String rawSearchString) {
+       return searchImage(rawSearchString,StringUtils.isBlank(rawSearchString),ConfigurationComponentUtils.SIMILARITY_CONTAINS);
     }
 
     public double getSimilarityScore(String[] keywords, String searchFull) {

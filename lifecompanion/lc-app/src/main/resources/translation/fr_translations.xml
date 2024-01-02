@@ -3706,4 +3706,6 @@
     <text key="video.file.error.exception.header">La vidéo ne peut pas être utilisée</text>
     <text key="video.thumbnail.name">Aperçu de la vidéo {}</text>
     <text key="video.file.error.exception.message">Le fichier vidéo sélectionné ne semble pas pouvoir être utilisé. Cela peut être du à un format de fichier vidéo incompatible avec LifeCompanion. LifeCompanion est compatible avec les fichiers vidéo "MP4" (format le plus courant de fichier vidéo).</text>
+    <text key="auto.select.key.image.config">Sélectionner automatiquement les images des cases</text>
+    <text key="auto.select.key.image.config.description">Quand activé, lorsque le texte d'une case est entré, cela permet de rechercher et de sélectionner automatiquement une image pour cette case si celle-ci ne possède pas encore d'image. L'image peut ensuite être changée en la cherchant manuellement.</text>
 </texts>

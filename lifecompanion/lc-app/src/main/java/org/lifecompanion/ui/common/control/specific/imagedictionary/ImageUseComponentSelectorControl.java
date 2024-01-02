@@ -122,7 +122,7 @@ public class ImageUseComponentSelectorControl extends BaseConfigurationViewBorde
     @Override
     public void initBinding() {
         this.changeListenerImage = EditActionUtils.createSimpleBinding(this.imageSelectorControl.selectedImageProperty(), this.model,
-                m -> m.imageVTwoProperty().get(), KeyActions.ChangeImageAction::new);
+                m -> m.imageVTwoProperty().get(), (comp, image) -> new KeyActions.ChangeImageAction(comp, image, false));
         this.changeListenerVideo = EditActionUtils.createSimpleBinding(this.imageSelectorControl.selectedVideoProperty(), this.model,
                 m -> m.videoProperty().get(), KeyActions.ChangeVideoAction::new);
     }

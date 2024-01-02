@@ -83,26 +83,6 @@ public abstract class AbstractSimplerKeyContentContainer implements SimplerKeyCo
         textPosition = new SimpleObjectProperty<>();
     }
 
-    @Override
-    public ObjectProperty<VideoElementI> videoProperty() {
-        return this.videoUseComponentPropertyWrapper.videoProperty();
-    }
-
-    @Override
-    public ObjectProperty<VideoDisplayMode> videoDisplayModeProperty() {
-        return videoUseComponentPropertyWrapper.videoDisplayModeProperty();
-    }
-
-    @Override
-    public ObjectProperty<VideoPlayMode> videoPlayModeProperty() {
-        return videoUseComponentPropertyWrapper.videoPlayModeProperty();
-    }
-
-    @Override
-    public BooleanProperty muteVideoProperty() {
-        return videoUseComponentPropertyWrapper.muteVideoProperty();
-    }
-
     // PROPS
     //========================================================================
     @Override
@@ -281,7 +261,30 @@ public abstract class AbstractSimplerKeyContentContainer implements SimplerKeyCo
         return wantedImageHeight;
     }
 
+    @Override
+    public ObjectProperty<VideoElementI> videoProperty() {
+        return this.videoUseComponentPropertyWrapper.videoProperty();
+    }
 
+    @Override
+    public ObjectProperty<VideoDisplayMode> videoDisplayModeProperty() {
+        return videoUseComponentPropertyWrapper.videoDisplayModeProperty();
+    }
+
+    @Override
+    public ObjectProperty<VideoPlayMode> videoPlayModeProperty() {
+        return videoUseComponentPropertyWrapper.videoPlayModeProperty();
+    }
+
+    @Override
+    public BooleanProperty muteVideoProperty() {
+        return videoUseComponentPropertyWrapper.muteVideoProperty();
+    }
+
+    @Override
+    public BooleanProperty imageAutomaticallySelectedProperty() {
+        return this.imageUseComponentPropertyWrapper.imageAutomaticallySelectedProperty();
+    }
     //========================================================================
 
     // IO

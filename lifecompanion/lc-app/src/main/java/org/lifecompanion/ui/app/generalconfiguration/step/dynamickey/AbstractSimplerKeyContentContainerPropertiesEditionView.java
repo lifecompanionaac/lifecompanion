@@ -34,6 +34,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import org.lifecompanion.controller.editaction.KeyActions;
 import org.lifecompanion.ui.controlsfx.control.ToggleSwitch;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.SimplerKeyContentContainerI;
 import org.lifecompanion.model.api.style.TextPosition;
@@ -177,6 +178,7 @@ public abstract class AbstractSimplerKeyContentContainerPropertiesEditionView<T 
     @Override
     public void initListener() {
         fieldText.setOnAction(actionEventTextFieldOnAction);
+        KeyActions.installImageAutoSelect(fieldText, selectedNode::get);
     }
 
     @Override

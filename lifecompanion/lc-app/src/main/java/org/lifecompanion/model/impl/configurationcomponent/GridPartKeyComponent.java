@@ -162,6 +162,11 @@ public class GridPartKeyComponent extends GridPartComponentBaseImpl implements G
         return imageUseComponentDisplayed;
     }
 
+    @Override
+    public BooleanProperty imageAutomaticallySelectedProperty() {
+        return this.imageUseComponentPropertyWrapper.imageAutomaticallySelectedProperty();
+    }
+
     /**
      * {@inheritDoc}
      */

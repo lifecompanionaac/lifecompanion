@@ -21,21 +21,30 @@ package org.lifecompanion.controller.editaction;
 import javafx.beans.value.WritableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.control.TextInputControl;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.paint.Color;
+import javafx.util.Pair;
 import org.lifecompanion.controller.editmode.ComponentActionController;
 import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.controller.editmode.SelectionController;
+import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
+import org.lifecompanion.framework.commons.utils.lang.CollectionUtils;
 import org.lifecompanion.model.api.configurationcomponent.*;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.SimplerKeyContentContainerI;
 import org.lifecompanion.model.api.configurationcomponent.keyoption.KeyOptionI;
 import org.lifecompanion.model.api.editaction.UndoRedoActionI;
+import org.lifecompanion.model.api.imagedictionary.ImageDictionaryI;
 import org.lifecompanion.model.api.imagedictionary.ImageElementI;
 import org.lifecompanion.model.api.style.*;
 import org.lifecompanion.model.impl.editaction.BasePropertyChangeAction;
 import org.lifecompanion.model.impl.exception.LCException;
+import org.lifecompanion.model.impl.imagedictionary.ImageDictionaries;
+import org.lifecompanion.util.ThreadUtils;
+import org.lifecompanion.util.javafx.FXThreadUtils;
+import org.lifecompanion.util.model.ConfigurationComponentUtils;
 import org.lifecompanion.util.model.PositionSize;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,6 +56,7 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -105,10 +115,12 @@ public class KeyActions {
         private boolean previousEnableColorReplace;
         private boolean previousPreserveRatio;
         private Runnable textPositionUndoKey, textPositionUndoKeyContent;
+        private boolean autoSelected, previousAutoSelected;
 
-        public ChangeImageAction(final ImageUseComponentI keyP, final ImageElementI wantedImageP) {
+        public ChangeImageAction(final ImageUseComponentI keyP, final ImageElementI wantedImageP, boolean autoSelected) {
             super(keyP.imageVTwoProperty(), wantedImageP);
             this.imageUseComponent = keyP;
+            this.autoSelected = autoSelected;
         }
 
         @Override
@@ -121,6 +133,8 @@ public class KeyActions {
             previousRotate = this.imageUseComponent.rotateProperty().get();
             previousEnableColorReplace = this.imageUseComponent.enableReplaceColorProperty().get();
             previousPreserveRatio = this.imageUseComponent.preserveRatioProperty().get();
+            previousAutoSelected = this.imageUseComponent.imageAutomaticallySelectedProperty().get();
+
             // Set default
             this.imageUseComponent.rotateProperty().set(0.0);
             this.imageUseComponent.enableReplaceColorProperty().set(false);
@@ -146,6 +160,8 @@ public class KeyActions {
                     k -> !k.textPositionProperty().isBound()
             );
 
+            this.imageUseComponent.imageAutomaticallySelectedProperty().set(autoSelected);
+
             super.doAction();
         }
 
@@ -161,6 +177,7 @@ public class KeyActions {
             this.imageUseComponent.rotateProperty().set(previousRotate);
             this.imageUseComponent.enableReplaceColorProperty().set(previousEnableColorReplace);
             this.imageUseComponent.preserveRatioProperty().set(previousPreserveRatio);
+            this.imageUseComponent.imageAutomaticallySelectedProperty().set(previousAutoSelected);
 
             // Restore text position on key
             runIfNotNull(textPositionUndoKey);
@@ -172,6 +189,34 @@ public class KeyActions {
             return "action.key.image.change";
         }
 
+    }
+
+    public static void installImageAutoSelect(TextInputControl textField, Supplier<ImageUseComponentI> modelGetter) {
+        textField.setOnKeyTyped(event -> {
+            String keyText = textField.getText();
+            ImageUseComponentI imageUseComponent = modelGetter.get();
+            if (UserConfigurationController.INSTANCE.autoSelectImagesProperty().get() && imageUseComponent != null && (imageUseComponent.imageVTwoProperty()
+                    .get() == null || imageUseComponent.imageAutomaticallySelectedProperty().get())) {
+                ThreadUtils.debounce(600, "auto-image-select", () -> {
+                    List<Pair<ImageDictionaryI, List<List<ImageElementI>>>> searchResult = ImageDictionaries.INSTANCE.searchImage(keyText,
+                            false,
+                            ConfigurationComponentUtils.SIMILARITY_START_WITH);
+                    if (!searchResult.isEmpty()) {
+                        Pair<ImageDictionaryI, List<List<ImageElementI>>> firstDictResult = searchResult.get(0);
+                        if (!CollectionUtils.isEmpty(firstDictResult.getValue())) {
+                            List<ImageElementI> firstImages = firstDictResult.getValue().get(0);
+                            if (!CollectionUtils.isEmpty(firstImages)) {
+                                ImageElementI imageElementI = firstImages.get(0);
+                                if (modelGetter.get() == imageUseComponent && (imageUseComponent.imageVTwoProperty().get() == null || imageUseComponent.imageAutomaticallySelectedProperty().get())) {
+                                    KeyActions.ChangeImageAction changeImageAction = new KeyActions.ChangeImageAction(imageUseComponent, imageElementI, true);
+                                    FXThreadUtils.runOnFXThread(() -> ConfigActionController.INSTANCE.executeAction(changeImageAction));
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        });
     }
 
     public static class ChangeVideoAction extends BasePropertyChangeAction<VideoElementI> {

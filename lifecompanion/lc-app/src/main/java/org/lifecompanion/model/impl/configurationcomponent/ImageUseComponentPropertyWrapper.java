@@ -148,6 +148,8 @@ public class ImageUseComponentPropertyWrapper {
 
     private final InvalidationListener invalidationListenerForAppMode;
 
+    private final transient BooleanProperty imageAutomaticallySelected;
+
     public ImageUseComponentPropertyWrapper(final ImageUseComponentI imageUseComponentP) {
         this.imageUseComponent = imageUseComponentP;
         this.preserveRatio = new SimpleBooleanProperty(true);
@@ -163,6 +165,7 @@ public class ImageUseComponentPropertyWrapper {
         this.viewportYPercent = new SimpleDoubleProperty(0.0);
         this.viewportWidthPercent = new SimpleDoubleProperty(0.0);
         this.viewportHeightPercent = new SimpleDoubleProperty(0.0);
+        this.imageAutomaticallySelected = new SimpleBooleanProperty(false);
         this.rotate = new SimpleDoubleProperty(0.0);
         this.previousWidthUpdate = new AtomicInteger();
         this.previousHeightUpdate = new AtomicInteger();
@@ -230,11 +233,13 @@ public class ImageUseComponentPropertyWrapper {
 
     // FIXME : config value
     private double getWantedImageWidthValue() {
-        return LOADING_SCALE_FACTOR * (AppModeController.INSTANCE.isUseMode() || this.imageUseComponent.wantedImageWidthProperty().get() > 0 ? this.imageUseComponent.wantedImageWidthProperty().get() : 100.0);
+        return LOADING_SCALE_FACTOR * (AppModeController.INSTANCE.isUseMode() || this.imageUseComponent.wantedImageWidthProperty().get() > 0 ? this.imageUseComponent.wantedImageWidthProperty()
+                .get() : 100.0);
     }
 
     private double getWantedImageHeightValue() {
-        return LOADING_SCALE_FACTOR * (AppModeController.INSTANCE.isUseMode() || this.imageUseComponent.wantedImageHeightProperty().get() > 0 ? this.imageUseComponent.wantedImageHeightProperty().get() : 100.0);
+        return LOADING_SCALE_FACTOR * (AppModeController.INSTANCE.isUseMode() || this.imageUseComponent.wantedImageHeightProperty().get() > 0 ? this.imageUseComponent.wantedImageHeightProperty()
+                .get() : 100.0);
     }
 
 
@@ -350,6 +355,10 @@ public class ImageUseComponentPropertyWrapper {
 
     public IntegerProperty replaceColorThresholdProperty() {
         return this.replaceColorThreshold;
+    }
+
+    public BooleanProperty imageAutomaticallySelectedProperty() {
+        return imageAutomaticallySelected;
     }
     //========================================================================
 

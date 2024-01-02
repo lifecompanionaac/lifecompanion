@@ -120,6 +120,11 @@ public interface ImageUseComponentI extends IdentifiableComponentI {
      */
     ObservableBooleanValue imageUseComponentDisplayedProperty();
 
+    /**
+     * @return a runtime property that indicates if this element image was selected automatically, can be useful to know if the previous auto selected image can be replaced
+     */
+    BooleanProperty imageAutomaticallySelectedProperty();
+
     void addExternalLoadingRequest(String id);
 
     void removeExternalLoadingRequest(String id);

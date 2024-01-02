@@ -52,7 +52,8 @@ public enum UserConfigurationController {
             PROP_UNSAVED_CHANGE_THRESHOLD = "unsaved-changes-in-config-warning-threshold",
             PROP_SCREEN_INDEX = "screen-index",
             PROP_RECORD_SEND_SESSION_STATS = "record-and-send-session-stats", PROP_ENABLE_AUTO_VK_SHOW = "auto-virtual-keyboard-show", PROP_ENABLE_JPD_EASTER_EGG = "enable-jpd-easter-egg",
-            PROP_DISABLE_EXIT_USE_MODE = "disable-exit-use-mode", PROP_SECURE_GO_EDIT_MODE = "secure-go-edit-mode", PROP_AUTO_CONFIG_PROFILE_BACKUP = "auto-config-profile-backup";
+            PROP_DISABLE_EXIT_USE_MODE = "disable-exit-use-mode", PROP_SECURE_GO_EDIT_MODE = "secure-go-edit-mode", PROP_AUTO_CONFIG_PROFILE_BACKUP = "auto-config-profile-backup",
+            PROP_AUTO_SELECT_IMAGES = "auto-select-images";
 
 
     //Properties
@@ -69,6 +70,7 @@ public enum UserConfigurationController {
     private final BooleanProperty disableExitInUseMode;
     private final BooleanProperty secureGoToEditMode;
     private final BooleanProperty autoConfigurationProfileBackup;
+    private final BooleanProperty autoSelectImages;
     private IntegerProperty screenIndex;
     private UserConfigurationView userConfigurationView;
 
@@ -88,6 +90,7 @@ public enum UserConfigurationController {
         this.enableJPDRetirementEasterEgg = new SimpleBooleanProperty(true);
         this.disableExitInUseMode = new SimpleBooleanProperty(false);
         this.secureGoToEditMode = new SimpleBooleanProperty(false);
+        this.autoSelectImages = new SimpleBooleanProperty(false);
         this.autoConfigurationProfileBackup = new SimpleBooleanProperty(true);
     }
 
@@ -162,6 +165,9 @@ public enum UserConfigurationController {
             if (prop.containsKey(UserConfigurationController.PROP_AUTO_CONFIG_PROFILE_BACKUP)) {
                 this.autoConfigurationProfileBackup.set(Boolean.parseBoolean(prop.getProperty(PROP_AUTO_CONFIG_PROFILE_BACKUP)));
             }
+            if (prop.containsKey(UserConfigurationController.PROP_AUTO_SELECT_IMAGES)) {
+                this.autoSelectImages.set(Boolean.parseBoolean(prop.getProperty(PROP_AUTO_SELECT_IMAGES)));
+            }
         } catch (FileNotFoundException e) {
             this.LOGGER.warn("Configuration file {} not found", configFile, e);
         }
@@ -191,6 +197,7 @@ public enum UserConfigurationController {
         prop.setProperty(PROP_SECURE_GO_EDIT_MODE, "" + this.secureGoToEditMode.get());
         prop.setProperty(PROP_DISABLE_EXIT_USE_MODE, "" + this.disableExitInUseMode.get());
         prop.setProperty(PROP_AUTO_CONFIG_PROFILE_BACKUP, "" + this.autoConfigurationProfileBackup.get());
+        prop.setProperty(PROP_AUTO_SELECT_IMAGES, "" + this.autoSelectImages.get());
         IOUtils.createParentDirectoryIfNeeded(configFile);
         try (FileOutputStream fos = new FileOutputStream(configFile)) {
             prop.store(fos, LCConstant.NAME + " user configuration file");
@@ -260,5 +267,9 @@ public enum UserConfigurationController {
 
     public BooleanProperty autoConfigurationProfileBackupProperty() {
         return autoConfigurationProfileBackup;
+    }
+
+    public BooleanProperty autoSelectImagesProperty() {
+        return autoSelectImages;
     }
 }
