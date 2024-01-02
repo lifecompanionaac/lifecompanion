@@ -34,6 +34,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.framework.commons.translation.Translation;
+import org.lifecompanion.framework.commons.utils.io.FileNameUtils;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
 import org.lifecompanion.model.impl.configurationcomponent.VideoElement;
 import org.lifecompanion.model.impl.constant.LCConstant;
@@ -91,27 +92,26 @@ public class VideoAnalyzerStage extends Stage {
 
         // Init playing
         autoRetryVideoPlayerView.setVideoFile(videoElement.getPath(), player -> {
-            player.setOnPlaying(() -> {
-                ThreadUtils.runAfter(200, () -> {
-                    FXThreadUtils.runOnFXThread(() -> {
-                        try {
-                            videoAnalyzed.set(true);
-                            BufferedImage buffImage = SwingFXUtils.fromFXImage(SnapshotUtils.takeNodeSnapshot(autoRetryVideoPlayerView,
-                                    VideoPlayerController.THUMBNAIL_WIDTH,
-                                    VideoPlayerController.THUMBNAIL_HEIGHT), null);
-                            IOUtils.createParentDirectoryIfNeeded(thumbnailPath);
-                            ImageIO.write(buffImage, "png", thumbnailPath);
-                            // TODO : thumbnail name
-                            callback.accept(new VideoPlayerController.CreateVideoResult(videoElement, ImageDictionaries.INSTANCE.getOrAddForVideoThumbnail(thumbnailPath, "Vidéo")));
-                        } catch (Exception e) {
-                            LOGGER.error("Can't save video thumbnail", e);
-                            callback.accept(new VideoPlayerController.CreateVideoResult(e));
-                        } finally {
-                            hideIfShowing();
-                        }
-                    });
+            player.setOnPlaying(() -> ThreadUtils.runAfter(500, () -> {
+                FXThreadUtils.runOnFXThread(() -> {
+                    try {
+                        videoAnalyzed.set(true);
+                        BufferedImage buffImage = SwingFXUtils.fromFXImage(SnapshotUtils.takeNodeSnapshot(autoRetryVideoPlayerView,
+                                VideoPlayerController.THUMBNAIL_WIDTH,
+                                VideoPlayerController.THUMBNAIL_HEIGHT), null);
+                        IOUtils.createParentDirectoryIfNeeded(thumbnailPath);
+                        ImageIO.write(buffImage, "png", thumbnailPath);
+                        callback.accept(new VideoPlayerController.CreateVideoResult(videoElement,
+                                ImageDictionaries.INSTANCE.getOrAddForVideoThumbnail(thumbnailPath,
+                                        videoElement.getThumbnailName())));
+                    } catch (Exception e) {
+                        LOGGER.error("Can't save video thumbnail", e);
+                        callback.accept(new VideoPlayerController.CreateVideoResult(e));
+                    } finally {
+                        hideIfShowing();
+                    }
                 });
-            });
+            }));
             player.setMute(true);
             player.setCycleCount(MediaPlayer.INDEFINITE);
             player.setAutoPlay(true);

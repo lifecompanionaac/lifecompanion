@@ -131,10 +131,12 @@ public class GridPartKeyViewUse extends GridPartKeyViewBase {
             if (model.videoProperty().get() != null) {
                 if (model.videoDisplayModeProperty().get() == VideoDisplayMode.IN_KEY) {
                     VideoPlayMode playMode = model.videoPlayModeProperty().get();
-                    // Simple activation : play, pause, restart...
+                    // Simple activation : always play from start
                     if (playMode == VideoPlayMode.ON_ACTIVATION && type == ActionEventType.SIMPLE && event == UseActionEvent.ACTIVATION) {
-                        // TODO : play or restart or pause ?
-                        mediaView.executeOnPlayer(MediaPlayer::play);
+                        mediaView.executeOnPlayer(m -> {
+                            m.stop();
+                            m.play();
+                        });
                     } else if (playMode == VideoPlayMode.WHILE_OVER && event == UseActionEvent.OVER) {
                         if (type == ActionEventType.START) {
                             mediaView.executeOnPlayer(MediaPlayer::play);

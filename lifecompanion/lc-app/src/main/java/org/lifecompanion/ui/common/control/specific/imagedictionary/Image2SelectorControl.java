@@ -18,7 +18,10 @@
  */
 package org.lifecompanion.ui.common.control.specific.imagedictionary;
 
-import javafx.beans.property.*;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tooltip;
@@ -27,21 +30,20 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import org.fxmisc.easybind.EasyBind;
+import org.lifecompanion.controller.editmode.ErrorHandlingController;
 import org.lifecompanion.controller.editmode.FileChooserType;
 import org.lifecompanion.controller.editmode.LCFileChoosers;
 import org.lifecompanion.controller.editmode.LCStateController;
 import org.lifecompanion.controller.media.VideoPlayerController;
-import org.lifecompanion.model.api.configurationcomponent.ImageUseComponentI;
-import org.lifecompanion.model.api.configurationcomponent.VideoElementI;
-import org.lifecompanion.model.impl.notification.LCNotification;
-import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
-import org.fxmisc.easybind.EasyBind;
-import org.lifecompanion.model.api.imagedictionary.ImageElementI;
-import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
-import org.lifecompanion.ui.notification.LCNotificationController;
+import org.lifecompanion.model.api.configurationcomponent.ImageUseComponentI;
+import org.lifecompanion.model.api.configurationcomponent.VideoElementI;
+import org.lifecompanion.model.api.imagedictionary.ImageElementI;
+import org.lifecompanion.model.impl.constant.LCGraphicStyle;
+import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.util.IOUtils;
 import org.lifecompanion.util.javafx.FXControlUtils;
 import org.lifecompanion.util.javafx.FXUtils;
@@ -177,9 +179,7 @@ public class Image2SelectorControl extends BorderPane implements LCViewInitHelpe
                         selectedVideo.set(result.getVideoElement());
                         selectedImage.set(result.getThumbnail());
                     } else {
-                        // FIXME : notification
-                        LCNotificationController.INSTANCE.showNotification(LCNotification.createError("VIDEO ERROR"));
-                        System.err.println(result.getError().getClass().getSimpleName() + " : " + result.getError().getMessage());
+                        ErrorHandlingController.INSTANCE.showErrorNotificationWithExceptionDetails("video.incorrect.file.error", result.getConvertedError());
                     }
                 });
             }

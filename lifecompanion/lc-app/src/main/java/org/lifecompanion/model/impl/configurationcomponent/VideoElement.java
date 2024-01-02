@@ -18,6 +18,8 @@
  */
 package org.lifecompanion.model.impl.configurationcomponent;
 
+import org.lifecompanion.framework.commons.translation.Translation;
+import org.lifecompanion.framework.commons.utils.io.FileNameUtils;
 import org.lifecompanion.model.api.configurationcomponent.VideoElementI;
 
 import java.io.File;
@@ -43,5 +45,9 @@ public class VideoElement implements VideoElementI {
     @Override
     public File getPath() {
         return path;
+    }
+
+    public String getThumbnailName() {
+        return Translation.getText("video.thumbnail.name", FileNameUtils.getNameWithoutExtension(getPath()));
     }
 }

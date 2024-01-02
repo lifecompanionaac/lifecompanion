@@ -19,12 +19,15 @@
 
 package org.lifecompanion.controller.media;
 
+import javafx.scene.media.MediaException;
 import org.lifecompanion.controller.appinstallation.InstallationConfigurationController;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
 import org.lifecompanion.model.api.configurationcomponent.VideoElementI;
 import org.lifecompanion.model.api.imagedictionary.ImageElementI;
 import org.lifecompanion.model.impl.configurationcomponent.VideoElement;
 import org.lifecompanion.model.impl.constant.LCConstant;
+import org.lifecompanion.model.impl.exception.LCException;
+import org.lifecompanion.model.impl.imagedictionary.ImageDictionaries;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +40,7 @@ public enum VideoPlayerController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(VideoPlayerController.class);
 
-    public static final long MAX_THUMBNAIL_GENERATION_DELAY = 3000;
+    public static final long MAX_THUMBNAIL_GENERATION_DELAY = 5000;
     public static final int THUMBNAIL_WIDTH = 600, THUMBNAIL_HEIGHT = 400;
 
     VideoPlayerController() {
@@ -45,15 +48,19 @@ public enum VideoPlayerController {
 
     public void createVideoElement(File videoPath, Consumer<CreateVideoResult> callback) {
         try {
-            // TODO : optimize hash for big files
+            // TODO : optimize hash for big files ?
             final String id = IOUtils.fileSha256HexToString(videoPath);
             VideoElement videoElement = new VideoElement(id, videoPath);
             File thumbnailPath = getThumbnailPath(videoElement);
 
-            // TODO : check if already exist before analyze
-            VideoAnalyzerStage videoAnalyzerStage = new VideoAnalyzerStage(thumbnailPath, videoElement, callback);
-            videoAnalyzerStage.show();
-
+            if (!thumbnailPath.exists()) {
+                VideoAnalyzerStage videoAnalyzerStage = new VideoAnalyzerStage(thumbnailPath, videoElement, callback);
+                videoAnalyzerStage.show();
+            } else {
+                callback.accept(new VideoPlayerController.CreateVideoResult(videoElement,
+                        ImageDictionaries.INSTANCE.getOrAddForVideoThumbnail(thumbnailPath,
+                                videoElement.getThumbnailName())));
+            }
         } catch (Exception e) {
             LOGGER.error("Can't create the video from {}", videoPath, e);
             callback.accept(new CreateVideoResult(e));
@@ -67,18 +74,17 @@ public enum VideoPlayerController {
 
     public static class CreateVideoResult {
         private final VideoElementI videoElement;
-        private final Throwable error;
+        private final Throwable rawError;
         private final ImageElementI thumbnail;
 
-        private CreateVideoResult(VideoElementI videoElement, ImageElementI thumbnail, Throwable error) {
+        private CreateVideoResult(VideoElementI videoElement, ImageElementI thumbnail, Throwable rawError) {
             this.videoElement = videoElement;
-            this.error = error;
+            this.rawError = rawError;
             this.thumbnail = thumbnail;
         }
 
         public CreateVideoResult(Throwable error) {
             this(null, null, error);
-
         }
 
         public CreateVideoResult(VideoElementI videoElement, ImageElementI thumbnail) {
@@ -89,12 +95,18 @@ public enum VideoPlayerController {
             return videoElement;
         }
 
-        public Throwable getError() {
-            return error;
+        public Throwable getRawError() {
+            return rawError;
+        }
+
+        public Throwable getConvertedError() {
+            if (rawError instanceof MediaException) {
+                return LCException.newException().withCause(rawError).withHeaderId("video.file.error.exception.header").withMessageId("video.file.error.exception.message").build();
+            }
+            return rawError;
         }
 
         public ImageElementI getThumbnail() {
-
             return thumbnail;
         }
     }

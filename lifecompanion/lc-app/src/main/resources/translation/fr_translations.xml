@@ -3697,7 +3697,13 @@
     <text key="video.play.mode.continuous.title">En continu</text>
     <text key="video.play.mode.continuous.description">La vidéo est lue en boucle dans la case sans nécessiter aucune action de l'utilisateur</text>
     <text key="video.play.mode.on.activation.title">À l'activation</text>
-    <text key="video.play.mode.on.activation.description">La vidéo est lue du début à l'activation de la case. Si la vidéo est déjà en cours de lecture, cela l'arrête et permettra de la lire de nouveau à la prochaine activation.</text>
+    <text key="video.play.mode.on.activation.description">La vidéo est lue du début à chaque activation de la case. Si la vidéo est déjà en cours de lecture, cela la redémarre.</text>
     <text key="video.play.mode.while.over.title">Lors du survol</text>
     <text key="video.play.mode.while.over.description">La vidéo est lue lors du survol : la lecture se fait au passage du curseur ou du défilement puis s'arrête ensuite</text>
+    <text key="video.incorrect.file.error">Impossible d'utiliser la vidéo</text>
+    <text key="file.chooser.video.title">Sélection de vidéos</text>
+    <text key="file.chooser.video.description">Fichiers vidéo</text>
+    <text key="video.file.error.exception.header">La vidéo ne peut pas être utilisée</text>
+    <text key="video.thumbnail.name">Aperçu de la vidéo {}</text>
+    <text key="video.file.error.exception.message">Le fichier vidéo sélectionné ne semble pas pouvoir être utilisé. Cela peut être du à un format de fichier vidéo incompatible avec LifeCompanion. LifeCompanion est compatible avec les fichiers vidéo "MP4" (format le plus courant de fichier vidéo).</text>
 </texts>
