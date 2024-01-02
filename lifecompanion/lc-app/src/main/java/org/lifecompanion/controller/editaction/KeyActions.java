@@ -197,6 +197,42 @@ public class KeyActions {
         }
     }
 
+    public static class ChangeVideoDisplayMode extends BasePropertyChangeAction<VideoDisplayMode> {
+
+        public ChangeVideoDisplayMode(final VideoUseComponentI videoUseComponent, VideoDisplayMode wantedValueP) {
+            super(videoUseComponent.videoDisplayModeProperty(), wantedValueP);
+        }
+
+        @Override
+        public String getNameID() {
+            return null;
+        }
+    }
+
+    public static class ChangeVideoPlayMode extends BasePropertyChangeAction<VideoPlayMode> {
+
+        public ChangeVideoPlayMode(final VideoUseComponentI videoUseComponent, VideoPlayMode wantedValueP) {
+            super(videoUseComponent.videoPlayModeProperty(), wantedValueP);
+        }
+
+        @Override
+        public String getNameID() {
+            return null;
+        }
+    }
+
+    public static class ChangeVideoMute extends BasePropertyChangeAction<Boolean> {
+
+        public ChangeVideoMute(final VideoUseComponentI videoUseComponent, Boolean wantedValueP) {
+            super(videoUseComponent.muteVideoProperty(), wantedValueP);
+        }
+
+        @Override
+        public String getNameID() {
+            return null;
+        }
+    }
+
     /**
      * To change the image rotate
      */

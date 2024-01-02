@@ -48,10 +48,10 @@ public class VideoUseComponentPropertyWrapper {
 
     private final ObjectProperty<VideoElementI> video;
 
-    //@XMLGenericProperty(VideoPlayMode.class)
+    @XMLGenericProperty(VideoPlayMode.class)
     private final ObjectProperty<VideoPlayMode> videoPlayMode;
 
-    //@XMLGenericProperty(VideoDisplayMode.class)
+    @XMLGenericProperty(VideoDisplayMode.class)
     private final ObjectProperty<VideoDisplayMode> videoDisplayMode;
 
     @XMLIgnoreDefaultBooleanValue(true)

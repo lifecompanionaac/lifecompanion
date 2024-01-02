@@ -26,6 +26,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.lifecompanion.model.api.configurationcomponent.ImageUseComponentI;
+import org.lifecompanion.model.api.configurationcomponent.VideoUseComponentI;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.util.javafx.StageUtils;
 
@@ -60,7 +61,7 @@ public class ImageUseComponentConfigurationStage extends Stage {
         return instance;
     }
 
-    public void prepareAndShow(ImageUseComponentI imageUseComponent) {
+    public void prepareAndShow(VideoUseComponentI imageUseComponent) {
         imageUseComponentConfigurationView.modelProperty().set(imageUseComponent);
         StageUtils.centerOnOwnerOrOnCurrentStageAndShow(this);
     }

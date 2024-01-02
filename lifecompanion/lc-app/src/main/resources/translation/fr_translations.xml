@@ -2232,7 +2232,7 @@
   <!--org.lifecompanion.config.view.pane.tabs.selected.part-->
   <text key="button.collapse.title">Réduire l'espace</text>
   <text key="button.expand.title">Augmenter l'espace</text>
-  <text key="image.component.ribbon.title">Image</text>
+  <text key="image.component.ribbon.title">Image/Vidéo</text>
   <text key="image.use.show.advanced.parameters">Paramètres supplémentaires</text>
   <text key="pane.column.count">Colonnes</text>
   <text key="pane.row.count">Lignes</text>
@@ -3684,4 +3684,20 @@
     <text key="image.use.config.part.color.replace.title">Changement de couleur</text>
     <text key="image.use.config.part.viewport.title">Recadrer</text>
     <text key="image.configure.viewport">Configurer</text>
+    <text key="image.use.config.view.title.for.image">Configuration de l'image</text>
+    <text key="image.use.config.view.title.for.video">Configuration de la vidéo</text>
+    <text key="image.use.video.mute.toggle">Désactiver le son</text>
+    <text key="image.use.video.display.mode">Affichage</text>
+    <text key="image.use.video.play.mode">Mode de lecture</text>
+    <text key="image.use.config.part.video.title">Vidéo</text>
+    <text key="video.display.mode.in.key.title">Dans la case</text>
+    <text key="video.display.mode.in.key.description">La vidéo sera lue et affichée directement dans la case. Le mode de lecture permettra de choisir quand déclencher la lecture de celle-ci.</text>
+    <text key="video.display.mode.fullscreen.title">En plein écran</text>
+    <text key="video.display.mode.fullscreen.description">À la sélection de la case, la vidéo sera lue en plein écran. Le plein écran sera automatiquement fermé à la fin de la vidéo ou à tout appui sur la souris ou le clavier.</text>
+    <text key="video.play.mode.continuous.title">En continu</text>
+    <text key="video.play.mode.continuous.description">La vidéo est lue en boucle dans la case sans nécessiter aucune action de l'utilisateur</text>
+    <text key="video.play.mode.on.activation.title">À l'activation</text>
+    <text key="video.play.mode.on.activation.description">La vidéo est lue du début à l'activation de la case. Si la vidéo est déjà en cours de lecture, cela l'arrête et permettra de la lire de nouveau à la prochaine activation.</text>
+    <text key="video.play.mode.while.over.title">Lors du survol</text>
+    <text key="video.play.mode.while.over.description">La vidéo est lue lors du survol : la lecture se fait au passage du curseur ou du défilement puis s'arrête ensuite</text>
 </texts>

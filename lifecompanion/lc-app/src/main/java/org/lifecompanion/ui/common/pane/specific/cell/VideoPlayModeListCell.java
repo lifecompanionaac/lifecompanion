@@ -17,27 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.lifecompanion.model.api.configurationcomponent;
+package org.lifecompanion.ui.common.pane.specific.cell;
 
-import org.lifecompanion.framework.commons.translation.Translation;
+import org.lifecompanion.model.api.configurationcomponent.VideoDisplayMode;
+import org.lifecompanion.model.api.configurationcomponent.VideoPlayMode;
 
-public enum VideoDisplayMode {
-    IN_KEY("video.display.mode.in.key.title", "video.display.mode.in.key.description"),
-    FULLSCREEN("video.display.mode.fullscreen.title", "video.display.mode.fullscreen.description");
+public class VideoPlayModeListCell extends TitleAndDescriptionListCell<VideoPlayMode> {
 
-    private final String title;
-    private final String description;
-
-    VideoDisplayMode(String title, String description) {
-        this.title = title;
-        this.description = description;
-    }
-
-    public String getTitle() {
-        return Translation.getText(title);
-    }
-
-    public String getDescription() {
-        return Translation.getText(description);
+    public VideoPlayModeListCell() {
+        super(VideoPlayMode::getTitle, VideoPlayMode::getDescription);
     }
 }
