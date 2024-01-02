@@ -73,7 +73,10 @@ public class AddComponents {
     private static abstract class AbstractAddUserComponent extends AbstractAddComponent {
         private final Class<? extends DisplayableComponentI> userCompFilter;
 
-        public AbstractAddUserComponent(String nameID, AddComponentCategoryEnum category, Class<? extends DisplayableComponentI> selectionFilter, Class<? extends DisplayableComponentI> userCompFilter) {
+        public AbstractAddUserComponent(String nameID,
+                                        AddComponentCategoryEnum category,
+                                        Class<? extends DisplayableComponentI> selectionFilter,
+                                        Class<? extends DisplayableComponentI> userCompFilter) {
             super("component/add_user_model.png", nameID, "component.user.model.description", category, selectionFilter);
             this.userCompFilter = userCompFilter;
         }
@@ -196,7 +199,7 @@ public class AddComponents {
         public UndoRedoActionI createAddAction() {
             StackComponentI displayableComponent = (StackComponentI) SelectionController.INSTANCE.selectedDisplayableComponentHelperProperty().get();
             GridComponentI displayed = displayableComponent.displayedComponentProperty().get();
-            GridComponentI toAdd = ComponentActionController.createComponentCopy(displayed);
+            GridComponentI toAdd = ComponentActionController.createComponentCopy(displayed, true);
             return new GridStackActions.AddGridInStackAction(displayableComponent, toAdd, true, true);
         }
     }

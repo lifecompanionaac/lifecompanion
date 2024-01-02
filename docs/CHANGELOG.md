@@ -1,11 +1,16 @@
 # LIFECOMPANION CHANGELOG
 
-## 1.5.X - XX/XX/2023
+## 1.6.0 - XX/XX/2023
 
 ### Fonctionnalités
 
-- Il est maintenant **possible d'utiliser une touche de clavier pour activer le défilement**, même en défilement (sur Windows uniquement)
+- **Ajout des vidéos !**
+	- Possibilité d'utiliser les vidéos à la place des images, donc sur les cases et les listes de cases
+	- Les vidéos peuvent être lues dans la case ou en plein écran
+	- La lecture est possible automatiquement (en continu), à l'activation ou au survol de la case
+- Il est maintenant **possible d'utiliser une touche de clavier pour activer le défilement**, même en mode clavier virtuel (sur Windows uniquement)
 - Il est maintenant possible de **créer une nouvelle grille directement depuis l'action "Aller dans la grille"**
+- La **copie de plusieurs case en même temps** est maintenant possible
 
 ### Corrections/ajustements
 
@@ -22,7 +27,7 @@
 - Ticket #266 : correction de l'affichage de l'alignement de texte sélectionné
 - Ticket #271 : correction d'une erreur lors d'une vitesse de défilement très rapide
 - Ticket #268 : quand une image est enlevée d'une case, le texte est automatiquement remis au centre
-- L'action d'une case bloc note n'était pas supprimée lorsqu'on la passait en case "classique"
+- L'action d'une case bloc note n'était pas supprimée lorsqu'elle repassait en case "classique"
 
 ## 1.5.0 - 08/09/2023
 
