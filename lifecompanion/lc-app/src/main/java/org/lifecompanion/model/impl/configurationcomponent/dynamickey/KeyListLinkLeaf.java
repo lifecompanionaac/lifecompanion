@@ -19,10 +19,13 @@
 
 package org.lifecompanion.model.impl.configurationcomponent.dynamickey;
 
+import org.lifecompanion.model.api.style.ShapeStyle;
+
 public class KeyListLinkLeaf extends KeyListLeaf {
     public KeyListLinkLeaf() {
         super(true);
         this.enableSpeakProperty().set(false);
         this.enableWriteProperty().set(false);
+        this.shapeStyleProperty().set(ShapeStyle.TP_ANGLE_CUT);
     }
 }

@@ -3713,4 +3713,5 @@
     <text key="key.shape.tp.angle.cut">Angle haut/droite</text>
     <text key="key.shape.bl.angle.round">Angle bas/gauche</text>
     <text key="general.configuration.view.key.list.field.shape.style">Forme de la case</text>
+    <text key="button.set.keylist.node.shape">Mettre des formes pour les listes de case</text>
 </texts>
