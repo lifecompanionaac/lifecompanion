@@ -21,10 +21,14 @@ public enum ShapeStyle {
             }),//
     BL_ANGLE_ROUND("key.shape.bl.angle.round",
             true,
-            (width, height, radius) -> "m 0 0 h " + width +
-                    " v " + height +
-                    " h -" + (width - radius) + " a " + radius + " " + radius + " 0 0 1 -" + radius + " -" + radius +
-                    " v -" + (height - radius) + " z");//
+            (width, height, radius) -> {
+                int cut = Math.max(6, radius);
+                return "m 0 0 h " + width +
+                        " v " + height +
+                        " h -" + (width - cut) + " a " + cut + " " + cut + " 0 0 1 -" + cut + " -" + cut +
+                        " v -" + (height - cut) + " z";
+            });//
+
 
     private final String nameId;
     private final boolean useForShape;

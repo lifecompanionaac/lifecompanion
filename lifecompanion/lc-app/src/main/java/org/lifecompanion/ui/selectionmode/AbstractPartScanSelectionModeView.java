@@ -27,6 +27,7 @@ import javafx.util.Duration;
 import javafx.util.Pair;
 import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
 import org.lifecompanion.model.api.selectionmode.ScanningDirection;
+import org.lifecompanion.model.api.style.ShapeStyle;
 import org.lifecompanion.util.LangUtils;
 import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.model.impl.selectionmode.AbstractPartScanSelectionMode;
@@ -68,7 +69,7 @@ public abstract class AbstractPartScanSelectionModeView extends AbstractSelectio
         Pair<Double, Double> size = this.getSize(primaryIndex, span, grid);
         //Launch
         this.updateMoveAnimation(enableAnimation, null, pos, size,
-                LangUtils.nullToZeroDouble(grid.getGridShapeStyle().shapeRadiusProperty().value().getValue()), this.lineTranslateTransition,
+                LangUtils.nullToZeroDouble(grid.getGridShapeStyle().shapeRadiusProperty().value().getValue()), ShapeStyle.CLASSIC, this.lineTranslateTransition,
                 this.lineStrokeRectangle, this.lineProgressRectangle, this.lineProgressRectangleVisible, () -> this.startLineProgressTransition(pos, size, progressTime));
     }
 
