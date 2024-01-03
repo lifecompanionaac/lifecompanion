@@ -24,6 +24,7 @@ import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.stage.Stage;
 import org.lifecompanion.controller.categorizedelement.useaction.UseActionController;
+import org.lifecompanion.controller.configurationcomponent.ConfigListController;
 import org.lifecompanion.controller.configurationcomponent.GlobalKeyEventController;
 import org.lifecompanion.controller.configurationcomponent.NoteKeyController;
 import org.lifecompanion.controller.configurationcomponent.UseModeProgressDisplayerController;
@@ -180,6 +181,7 @@ public enum AppModeController {
             UseActionController.INSTANCE, //
             UseVariableController.INSTANCE, //
             KeyListController.INSTANCE, //
+            ConfigListController.INSTANCE,//
             UserActionSequenceController.INSTANCE, //
             UseModeProgressDisplayerController.INSTANCE, //
             SoundPlayerController.INSTANCE, //

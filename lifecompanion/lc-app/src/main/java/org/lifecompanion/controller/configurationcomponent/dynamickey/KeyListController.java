@@ -326,9 +326,6 @@ public enum KeyListController implements ModeListenerI {
         });
 
         // Find row and column count (try to find the best matching count, but can be inaccurate)
-        keyOptionsPerGrid.forEach((grid, keyOptions) -> {
-
-        });
         int columnCountEst = 0;
         for (GridComponentI gridComponent : keyOptionsPerGrid.keySet()) {
             List<ComponentToScanI> rowColumnScanningComponents = SelectionModeUtils.getRowColumnScanningComponents(gridComponent,

@@ -71,7 +71,7 @@ public class KeyStyleEditView extends AbstractShapeStyleEditView<KeyCompStyleI> 
 
         this.fieldGrid.add(new Label(Translation.getText("pane.text.text.location")), 0, 5);
         this.fieldGrid.add(comboBoxTextPosition, 1, 5);
-        this.fieldGrid.add(modificationIndicatorTextPosition = this.createModifiedIndicator(KeyCompStyleI::textPositionProperty, comboBoxTextPosition), 2, 4);
+        this.fieldGrid.add(modificationIndicatorTextPosition = this.createModifiedIndicator(KeyCompStyleI::textPositionProperty, comboBoxTextPosition), 2, 5);
 
         this.toggleEnableAutoFontSizing = FXControlUtils.createToggleSwitch("key.style.enable.auto.font.size", "key.style.auto.font.size.explain");
         this.fieldGrid.add(this.toggleEnableAutoFontSizing, 0, 6, 2, 1);

@@ -112,7 +112,7 @@ public enum ComponentActionController {
             if (imageUseComponent.imageVTwoProperty().get() != null) {
                 final ClipboardContent content = new ClipboardContent();
                 File imagePath = imageUseComponent.imageVTwoProperty().get().getRealFilePath();
-                if (imagePath.exists()) {
+                if (imagePath != null && imagePath.exists()) {
                     content.putFiles(List.of(imagePath));
                     FXThreadUtils.runOnFXThread(() -> Clipboard.getSystemClipboard().setContent(content));
                 }

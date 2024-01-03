@@ -8,11 +8,14 @@
 	- Possibilité d'utiliser les vidéos à la place des images, donc sur les cases et les listes de cases
 	- Les vidéos peuvent être lues dans la case ou en plein écran
 	- La lecture est possible automatiquement (en continu), à l'activation ou au survol de la case
-- Il est possible d'**utiliser une touche de clavier pour activer le défilement**, même en mode clavier virtuel (sur Windows uniquement)
-- Il est possible de **créer une nouvelle grille directement depuis l'action "Aller dans la grille"**
-- Il est possible de **copier plusieurs cases en même temps**
-- Ajout d'un paramètre "Sélectionner automatiquement les images des cases" (dans Préférences & Infos) : permet que les images soient automatiquement sélectionnées lorsqu'un texte est entré sur une case, fait gagner du temps !
 - Ajout du **style de forme pour les cases**
+- Ajout d'un type de case **liste des configurations** : permet d'afficher la liste des configurations du profil et ainsi basculer entre chacune en mode utilisation !
+- Les configurations par défaut sont maintenant issues du [**répertoire officiel de configurations de LifeCompanion**](https://lifecompanionaac.org/configuration-list) !
+- Il est maintenant possible d'**utiliser une touche de clavier pour activer le défilement**, même en mode clavier virtuel (sur Windows uniquement)
+- Il est maintenant possible de **créer une nouvelle grille directement depuis l'action "Aller dans la grille"**
+- Il est maintenant possible de **copier plusieurs cases en même temps**
+- Ajout d'un paramètre "Sélectionner automatiquement les images des cases" (dans Préférences & Infos) : permet que les images soient automatiquement sélectionnées lorsqu'un texte est entré sur une case, fait gagner du temps !
+
 
 ### Corrections/ajustements
 
@@ -29,6 +32,7 @@
 - Ticket #266 : correction de l'affichage de l'alignement de texte sélectionné
 - Ticket #271 : correction d'une erreur lors d'une vitesse de défilement très rapide
 - Ticket #268 : quand une image est enlevée d'une case, le texte est automatiquement remis au centre
+- Ajout d'une nouvelle variable : nom du profil actuel
 - L'action d'une case bloc note n'était pas supprimée lorsqu'elle repassait en case "classique"
 
 ## 1.5.0 - 08/09/2023

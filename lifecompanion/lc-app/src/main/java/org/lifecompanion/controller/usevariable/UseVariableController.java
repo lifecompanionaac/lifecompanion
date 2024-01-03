@@ -29,6 +29,7 @@ import javafx.collections.ObservableMap;
 import javafx.scene.input.Clipboard;
 import javafx.util.Duration;
 import org.lifecompanion.controller.plugin.PluginController;
+import org.lifecompanion.controller.profile.ProfileController;
 import org.lifecompanion.controller.selectionmode.SelectionModeController;
 import org.lifecompanion.controller.textcomponent.WritingStateController;
 import org.lifecompanion.framework.commons.utils.lang.CollectionUtils;
@@ -40,6 +41,7 @@ import org.lifecompanion.model.api.configurationcomponent.GridPartComponentI;
 import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
+import org.lifecompanion.model.api.profile.LCProfileI;
 import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.VariableInformationKeyOption;
@@ -194,6 +196,8 @@ public enum UseVariableController implements ModeListenerI {
                 "use.variable.battery.level.percent.description", "use.variable.battery.level.percent.example", 30_000, true));
         this.addDef(new UseVariableDefinition("BatteryTimeRemaining", "use.variable.battery.time.remaining.name",
                 "use.variable.battery.time.remaining.description", "use.variable.battery.time.remaining.example", 30_000, true));
+        this.addDef(new UseVariableDefinition("CurrentProfile", "use.variable.current.profile.name", "use.variable.current.profile.description",
+                "use.variable.current.profile.example"));
         //Init plugin
         PluginController.INSTANCE.getUseVariableDefinitions().registerListenerAndDrainCache(this::addDef);
     }
@@ -253,8 +257,12 @@ public enum UseVariableController implements ModeListenerI {
         //TODO : generate only used variables
         Map<String, UseVariableI<?>> vars = new HashMap<>();
         Date currentDate = new Date();
-        //Current date
+        // Simple vars
         putToVarMap(useCachedValue, "CurrentDate", vars, () -> StringUtils.dateToStringWithoutHour(currentDate));
+        putToVarMap(useCachedValue, "CurrentProfile", vars, () -> {
+            LCProfileI profile = ProfileController.INSTANCE.currentProfileProperty().get();
+            return profile != null ? profile.nameProperty().get() : "";
+        });
         putToVarMap(useCachedValue, "CurrentTime", vars, () -> StringUtils.dateToStringDateWithOnlyHoursMinuteSecond(currentDate));
         putToVarMap(useCachedValue, "CurrentTimeWithoutSeconds", vars, () -> DATE_ONLY_HOURS_MIN.format(currentDate));
         putToVarMap(useCachedValue, "CurrentDayOfWeek", vars, () -> LocalDate.now().getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.getDefault()));

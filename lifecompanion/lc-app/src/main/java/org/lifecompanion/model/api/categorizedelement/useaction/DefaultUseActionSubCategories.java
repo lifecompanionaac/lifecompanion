@@ -90,7 +90,9 @@ public enum DefaultUseActionSubCategories implements UseActionSubCategoryI {
     CHANGE("use.action.sub.category.configuration.change.name", DefaultUseActionMainCategories.CONFIGURATION,
             CategorizedElementColorProvider.nextColor(DefaultUseActionMainCategories.CONFIGURATION)), //
     FRAME("use.action.sub.category.configuration.frame.name", DefaultUseActionMainCategories.CONFIGURATION,
-            CategorizedElementColorProvider.nextColor(DefaultUseActionMainCategories.CONFIGURATION)), //
+            CategorizedElementColorProvider.nextColor(DefaultUseActionMainCategories.CONFIGURATION)),//
+    CONFIG_LIST("use.action.sub.category.configuration.config.list.name", DefaultUseActionMainCategories.CONFIGURATION,
+            CategorizedElementColorProvider.nextColor(DefaultUseActionMainCategories.CONFIGURATION)),//
 
     //Computer access
     COMPUTER_FEATURES("use.action.sub.category.computer.access.computer.features.name", DefaultUseActionMainCategories.COMPUTER_ACCESS,
