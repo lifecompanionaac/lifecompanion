@@ -313,6 +313,7 @@ public class SelectionModeSuppParamView extends BaseConfigurationViewBorderPane<
         this.comboboxDrawProgressMode.setButtonCell(new ProgressDrawModeSimpleListCell());
         this.comboboxDrawProgressMode.setCellFactory((lv) -> new ProgressDrawModeSimpleListCell());
         comboboxDrawProgressMode.setMaxWidth(Double.MAX_VALUE);
+        comboboxDrawProgressMode.setPrefWidth(150.0);
         FXControlUtils.createAndAttachTooltip(comboboxDrawProgressMode, "tooltip.explain.selection.param.progress.draw.mode");
         labelDrawProgressMode = new Label(Translation.getText("selection.mode.draw.progress.mode"));
         labelProgressColor = new Label(Translation.getText("selection.mode.param.progress.color"));
