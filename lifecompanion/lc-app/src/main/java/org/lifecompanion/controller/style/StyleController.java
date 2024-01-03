@@ -67,6 +67,7 @@ public enum StyleController {
                 this.shapeRadiusProperty().selected().setValue(0);
                 this.autoFontSizeProperty().selected().setValue(false);
                 this.textPositionProperty().selected().setValue(TextPosition.CENTER);
+                this.shapeStyleProperty().selected().setValue(ShapeStyle.CLASSIC);
 
             }
         };

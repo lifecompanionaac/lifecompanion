@@ -19,7 +19,6 @@
 
 package org.lifecompanion.model.api.style;
 
-import javafx.scene.control.ContentDisplay;
 import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
 
 /**
@@ -39,4 +38,9 @@ public interface KeyCompStyleI extends AbstractShapeCompStyleI<KeyCompStyleI> {
      * @return a property that should indicate how the text is displayed in this key.
      */
     StylePropertyI<TextPosition> textPositionProperty();
+
+    /**
+     * @return a property that give the svg shape style for this key
+     */
+    StylePropertyI<ShapeStyle> shapeStyleProperty();
 }

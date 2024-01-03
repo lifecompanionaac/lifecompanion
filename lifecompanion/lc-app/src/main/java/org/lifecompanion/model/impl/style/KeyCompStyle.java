@@ -18,17 +18,13 @@
  */
 package org.lifecompanion.model.impl.style;
 
-import javafx.scene.control.ContentDisplay;
 import org.jdom2.Element;
-import org.lifecompanion.model.api.style.TextPosition;
-import org.lifecompanion.model.impl.exception.LCException;
-import org.lifecompanion.model.api.io.IOContextI;
-import org.lifecompanion.model.api.style.KeyCompStyleI;
-import org.lifecompanion.model.api.style.StyleChangeUndo;
-import org.lifecompanion.model.api.style.StylePropertyI;
 import org.lifecompanion.framework.commons.fx.io.XMLCustomProperty;
 import org.lifecompanion.framework.commons.fx.io.XMLIgnoreNullValue;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
+import org.lifecompanion.model.api.io.IOContextI;
+import org.lifecompanion.model.api.style.*;
+import org.lifecompanion.model.impl.exception.LCException;
 
 
 public class KeyCompStyle extends AbstractShapeCompStyle<KeyCompStyleI> implements KeyCompStyleI {
@@ -41,9 +37,15 @@ public class KeyCompStyle extends AbstractShapeCompStyle<KeyCompStyleI> implemen
     @XMLIgnoreNullValue
     private final StylePropertyI<TextPosition> textPosition;
 
+    @XMLCustomProperty(value = ShapeStyle.class, converter = StylePropertyConverter.class)
+    @XMLIgnoreNullValue
+    private final StylePropertyI<ShapeStyle> shapeStyle;
+
     public KeyCompStyle() {
         this.autoFontSize = new StyleProperty<>();
         this.textPosition = new StyleProperty<>();
+        this.shapeStyle = new StyleProperty<>();
+        this.shapeStyle.value().addListener(updateCssStyleListener);
     }
 
     @Override
@@ -57,10 +59,27 @@ public class KeyCompStyle extends AbstractShapeCompStyle<KeyCompStyleI> implemen
     }
 
     @Override
+    public StylePropertyI<ShapeStyle> shapeStyleProperty() {
+        return shapeStyle;
+    }
+
+    @Override
+    protected void appendCssStyle(StringBuilder cssStyle) {
+        ShapeStyle selectedShapeStyle = this.shapeStyle.value().getValue();
+        if (selectedShapeStyle != null) {
+            String svg = selectedShapeStyle.getCustomSvg();
+            if (svg != null) {
+                cssStyle.append("-fx-shape: \"").append(svg).append("\";");
+            }
+        }
+    }
+
+    @Override
     protected void bindStyle(final KeyCompStyleI style) {
         super.bindStyle(style);
         this.bindP(KeyCompStyleI::autoFontSizeProperty, style);
         this.bindP(KeyCompStyleI::textPositionProperty, style);
+        this.bindP(KeyCompStyleI::shapeStyleProperty, style);
     }
 
     @Override
@@ -68,6 +87,7 @@ public class KeyCompStyle extends AbstractShapeCompStyle<KeyCompStyleI> implemen
         super.unbindStyle();
         this.unbindP(KeyCompStyleI::autoFontSizeProperty, null);
         this.unbindP(KeyCompStyleI::textPositionProperty, null);
+        this.unbindP(KeyCompStyleI::shapeStyleProperty, null);
     }
 
     @SuppressWarnings("unchecked")
@@ -77,6 +97,7 @@ public class KeyCompStyle extends AbstractShapeCompStyle<KeyCompStyleI> implemen
                 other, copyIfNull);
         this.copyChange(undo, KeyCompStyleI::autoFontSizeProperty, other, copyIfNull);
         this.copyChange(undo, KeyCompStyleI::textPositionProperty, other, copyIfNull);
+        this.copyChange(undo, KeyCompStyleI::shapeStyleProperty, other, copyIfNull);
         return undo;
     }
 

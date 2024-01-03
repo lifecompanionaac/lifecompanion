@@ -19,22 +19,21 @@
 
 package org.lifecompanion.ui.app.main.ribbon.available.withselection.style;
 
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Spinner;
 import javafx.scene.paint.Color;
-import org.lifecompanion.ui.controlsfx.control.ToggleSwitch;
+import org.lifecompanion.controller.editmode.SelectionController;
+import org.lifecompanion.framework.commons.translation.Translation;
+import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
 import org.lifecompanion.model.api.style.KeyCompStyleI;
+import org.lifecompanion.model.api.style.ShapeStyle;
 import org.lifecompanion.model.api.style.TextPosition;
 import org.lifecompanion.model.impl.style.MultipleStylePropertyHelper;
 import org.lifecompanion.model.impl.style.PropertyChangeListener;
-import org.lifecompanion.controller.editmode.SelectionController;
-import org.lifecompanion.ui.common.pane.specific.styleedit.KeyStyleEditView;
 import org.lifecompanion.ui.common.control.generic.colorpicker.LCColorPicker;
+import org.lifecompanion.ui.common.pane.specific.styleedit.KeyStyleEditView;
 import org.lifecompanion.ui.configurationcomponent.editmode.categorizedelement.useevent.available.RibbonBasePart;
-import org.lifecompanion.framework.commons.translation.Translation;
-import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.ui.controlsfx.control.ToggleSwitch;
 
 import java.util.Arrays;
 
@@ -42,13 +41,14 @@ public class MultiKeyStyleRibbonPart extends RibbonBasePart<Void> implements LCV
 
     private KeyStyleEditView keyStyleView;
 
-    private final MultipleStylePropertyHelper<GridPartKeyComponentI, KeyCompStyleI> multipleStylePropertyHelper;
+    final MultipleStylePropertyHelper<GridPartKeyComponentI, KeyCompStyleI> multipleStylePropertyHelper;
     private final PropertyChangeListener<KeyCompStyleI, Color> backgroundColorProperty;
     private final PropertyChangeListener<KeyCompStyleI, Boolean> autoFontSizeProperty;
     private final PropertyChangeListener<KeyCompStyleI, Color> strokeColorProperty;
     private final PropertyChangeListener<KeyCompStyleI, Number> shapeRadiusProperty;
     private final PropertyChangeListener<KeyCompStyleI, Number> strokeSizeProperty;
     private final PropertyChangeListener<KeyCompStyleI, TextPosition> textPositionProperty;
+    private final PropertyChangeListener<KeyCompStyleI, ShapeStyle> shapeStyleProperty;
 
 
     public MultiKeyStyleRibbonPart() {
@@ -59,7 +59,8 @@ public class MultiKeyStyleRibbonPart extends RibbonBasePart<Void> implements LCV
                         shapeRadiusProperty = new PropertyChangeListener<>(KeyCompStyleI::shapeRadiusProperty),
                         strokeSizeProperty = new PropertyChangeListener<>(KeyCompStyleI::strokeSizeProperty),
                         autoFontSizeProperty = new PropertyChangeListener<>(KeyCompStyleI::autoFontSizeProperty),
-                        textPositionProperty = new PropertyChangeListener<>(KeyCompStyleI::textPositionProperty)
+                        textPositionProperty = new PropertyChangeListener<>(KeyCompStyleI::textPositionProperty),
+                        shapeStyleProperty = new PropertyChangeListener<>(KeyCompStyleI::shapeStyleProperty)
                 ));
         this.initAll();
     }
@@ -115,6 +116,13 @@ public class MultiKeyStyleRibbonPart extends RibbonBasePart<Void> implements LCV
                 MultiKeyHelper.createComboBoxSetValue(),
                 k -> k.getKeyStyle().textPositionProperty(),
                 this.textPositionProperty);
+        MultiKeyHelper.initStyleConfigActionListener(this.keyStyleView.getComboBoxShapeStyle(),
+                this.keyStyleView.getModificationIndicatorShapeStyle(),
+                MultiKeyHelper.createComboBoxActionEventSetter(),
+                c -> c.getSelectionModel().getSelectedItem(),
+                MultiKeyHelper.createComboBoxSetValue(),
+                k -> k.getKeyStyle().shapeStyleProperty(),
+                this.shapeStyleProperty);
     }
 
 
