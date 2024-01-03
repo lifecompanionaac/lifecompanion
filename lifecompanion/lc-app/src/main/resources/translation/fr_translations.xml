@@ -3712,4 +3712,5 @@
     <text key="key.shape.classic">Rectangle classique</text>
     <text key="key.shape.tp.angle.cut">Angle haut/droite</text>
     <text key="key.shape.bl.angle.round">Angle bas/gauche</text>
+    <text key="general.configuration.view.key.list.field.shape.style">Forme de la case</text>
 </texts>

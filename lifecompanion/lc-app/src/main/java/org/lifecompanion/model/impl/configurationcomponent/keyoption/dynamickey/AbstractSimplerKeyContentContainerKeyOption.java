@@ -96,6 +96,7 @@ public abstract class AbstractSimplerKeyContentContainerKeyOption<T extends Simp
                 key.getKeyStyle().backgroundColorProperty().forced().setValue(null);
                 key.getKeyStyle().strokeColorProperty().forced().setValue(null);
                 key.getKeyStyle().textPositionProperty().forced().setValue(null);
+                key.getKeyStyle().shapeStyleProperty().forced().setValue(null);
                 key.getKeyTextStyle().colorProperty().forced().setValue(null);
             } else {
                 // Text content
@@ -123,6 +124,7 @@ public abstract class AbstractSimplerKeyContentContainerKeyOption<T extends Simp
                 key.getKeyStyle().backgroundColorProperty().forced().setValue(simplerKeyContentContainer.backgroundColorProperty().get());
                 key.getKeyStyle().strokeColorProperty().forced().setValue(simplerKeyContentContainer.strokeColorProperty().get());
                 key.getKeyStyle().textPositionProperty().forced().setValue(simplerKeyContentContainer.textPositionProperty().get());
+                key.getKeyStyle().shapeStyleProperty().forced().setValue(simplerKeyContentContainer.shapeStyleProperty().get());
                 key.getKeyTextStyle().colorProperty().forced().setValue(simplerKeyContentContainer.textColorProperty().get());
             }
             updateKeyFor(key, simplerKeyContentContainer, AppModeController.INSTANCE.modeProperty().get());

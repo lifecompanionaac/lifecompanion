@@ -3,32 +3,52 @@ package org.lifecompanion.model.api.style;
 import org.lifecompanion.framework.commons.translation.Translation;
 
 public enum ShapeStyle {
-    CLASSIC("key.shape.classic", null, "M 34.393246,89.207481 H 182.71412 V 191.67068 H 34.393246 Z"),
-    TP_ANGLE_CUT("key.shape.tp.angle.cut", "M 39.519508,83.345627 H 166.43792 l 9.62655,7.599905 V 181.38441 H 39.519508 Z"),
+    CLASSIC("key.shape.classic",
+            false,
+            (width, height, radius) -> "m 0 0 h " + width + " a " + radius + " " + radius + " 0 0 1 " + radius + " " + radius +
+                    " v " + height + " a " + radius + "," + radius + " 0 0 1 -" + radius + " " + radius +
+                    " h -" + width + " a " + radius + "," + radius + " 0 0 1 -" + radius + " -" + radius +
+                    " v -" + height + " a " + radius + "," + radius + " 0 0 1 " + radius + " -" + radius + " z"),//
+    TP_ANGLE_CUT(
+            "key.shape.tp.angle.cut",
+            true,
+            (width, height, radius) -> {
+                int cut = Math.max(8, radius);
+                return "m 0 0 h " + (width - cut) + " l " + cut + " " + cut +
+                        " v " + (height - cut) + " a " + radius + " " + radius + " 0 0 1 -" + radius + " " + radius +
+                        " h -" + width + " a " + radius + " " + radius + " 0 0 1 -" + radius + " -" + radius +
+                        " v -" + (height - radius) + " a " + radius + " " + radius + " 0 0 1 " + radius + " -" + radius + " z";
+            }),//
     BL_ANGLE_ROUND("key.shape.bl.angle.round",
-            "m 49.343033,91.866421 c 0,0 -0.401999,46.436939 0,66.136549 0.116313,5.69982 8.019763,10.20394 13.72077,10.21049 37.256467,0.0428 114.911417,0 114.911417,0 V 91.866421 Z");
+            true,
+            (width, height, radius) -> "m 0 0 h " + width +
+                    " v " + height +
+                    " h -" + (width - radius) + " a " + radius + " " + radius + " 0 0 1 -" + radius + " -" + radius +
+                    " v -" + (height - radius) + " z");//
 
-    private final String nameId, svg, cellSvg;
+    private final String nameId;
+    private final boolean useForShape;
+    private final DynamicSvgPath dynamicSvgPath;
 
-    ShapeStyle(String nameId, String svg) {
-        this(nameId, svg, svg);
-    }
-
-    ShapeStyle(String nameId, String svg, String cellSvg) {
+    ShapeStyle(String nameId, boolean useForShape, DynamicSvgPath dynamicSvgPath) {
         this.nameId = nameId;
-        this.svg = svg;
-        this.cellSvg = cellSvg;
+        this.useForShape = useForShape;
+        this.dynamicSvgPath = dynamicSvgPath;
     }
 
     public String getName() {
         return Translation.getText(nameId);
     }
 
-    public String getCustomSvg() {
-        return svg;
+    public String getSvgPathFor(int angle) {
+        return useForShape ? dynamicSvgPath.draw(100, 65, angle) : null;
     }
 
     public String getCellSvg() {
-        return cellSvg;
+        return dynamicSvgPath.draw(100, 65, 6);
+    }
+
+    interface DynamicSvgPath {
+        String draw(int width, int height, int radius);
     }
 }

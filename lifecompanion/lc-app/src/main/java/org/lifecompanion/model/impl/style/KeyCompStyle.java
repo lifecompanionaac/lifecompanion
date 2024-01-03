@@ -25,6 +25,7 @@ import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.style.*;
 import org.lifecompanion.model.impl.exception.LCException;
+import org.lifecompanion.util.LangUtils;
 
 
 public class KeyCompStyle extends AbstractShapeCompStyle<KeyCompStyleI> implements KeyCompStyleI {
@@ -67,7 +68,7 @@ public class KeyCompStyle extends AbstractShapeCompStyle<KeyCompStyleI> implemen
     protected void appendCssStyle(StringBuilder cssStyle) {
         ShapeStyle selectedShapeStyle = this.shapeStyle.value().getValue();
         if (selectedShapeStyle != null) {
-            String svg = selectedShapeStyle.getCustomSvg();
+            String svg = selectedShapeStyle.getSvgPathFor(LangUtils.nullToZeroInt(this.shapeRadiusProperty().value().getValue()));
             if (svg != null) {
                 cssStyle.append("-fx-shape: \"").append(svg).append("\";");
             }

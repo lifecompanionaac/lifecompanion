@@ -29,6 +29,7 @@ import org.lifecompanion.model.api.configurationcomponent.TreeIdentifiableCompon
 import org.lifecompanion.model.api.configurationcomponent.VideoUseComponentI;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.io.XMLSerializable;
+import org.lifecompanion.model.api.style.ShapeStyle;
 import org.lifecompanion.model.api.style.TextPosition;
 
 /**
@@ -48,6 +49,8 @@ public interface SimplerKeyContentContainerI extends VideoUseComponentI, XMLSeri
     StringProperty textProperty();
 
     ObjectProperty<TextPosition> textPositionProperty();
+
+    ObjectProperty<ShapeStyle> shapeStyleProperty();
 
     ObjectProperty<Color> backgroundColorProperty();
 

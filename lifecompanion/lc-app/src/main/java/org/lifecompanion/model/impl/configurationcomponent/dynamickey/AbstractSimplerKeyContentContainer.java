@@ -29,6 +29,7 @@ import org.lifecompanion.controller.io.ConfigurationComponentIOHelper;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.configurationcomponent.*;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.SimplerKeyContentContainerI;
+import org.lifecompanion.model.api.style.ShapeStyle;
 import org.lifecompanion.model.api.style.TextPosition;
 import org.lifecompanion.model.impl.configurationcomponent.VideoUseComponentPropertyWrapper;
 import org.lifecompanion.model.impl.exception.LCException;
@@ -67,7 +68,12 @@ public abstract class AbstractSimplerKeyContentContainer implements SimplerKeyCo
     private final VideoUseComponentPropertyWrapper videoUseComponentPropertyWrapper;
 
     @XMLGenericProperty(TextPosition.class)
+    @XMLIgnoreNullValue
     private final ObjectProperty<TextPosition> textPosition;
+
+    @XMLGenericProperty(ShapeStyle.class)
+    @XMLIgnoreNullValue
+    private final ObjectProperty<ShapeStyle> shapeStyle;
 
     protected AbstractSimplerKeyContentContainer() {
         this.generateID();
@@ -81,6 +87,7 @@ public abstract class AbstractSimplerKeyContentContainer implements SimplerKeyCo
         imageUseComponentPropertyWrapper = new ImageUseComponentPropertyWrapper(this);
         videoUseComponentPropertyWrapper = new VideoUseComponentPropertyWrapper(this);
         textPosition = new SimpleObjectProperty<>();
+        shapeStyle = new SimpleObjectProperty<>();
     }
 
     // PROPS
@@ -103,6 +110,11 @@ public abstract class AbstractSimplerKeyContentContainer implements SimplerKeyCo
     @Override
     public ObjectProperty<TextPosition> textPositionProperty() {
         return textPosition;
+    }
+
+    @Override
+    public ObjectProperty<ShapeStyle> shapeStyleProperty() {
+        return shapeStyle;
     }
 
     @Override

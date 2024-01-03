@@ -12,6 +12,7 @@
 - Il est possible de **créer une nouvelle grille directement depuis l'action "Aller dans la grille"**
 - Il est possible de **copier plusieurs cases en même temps**
 - Ajout d'un paramètre "Sélectionner automatiquement les images des cases" (dans Préférences & Infos) : permet que les images soient automatiquement sélectionnées lorsqu'un texte est entré sur une case, fait gagner du temps !
+- Ajout du **style de forme pour les cases**
 
 ### Corrections/ajustements
 
