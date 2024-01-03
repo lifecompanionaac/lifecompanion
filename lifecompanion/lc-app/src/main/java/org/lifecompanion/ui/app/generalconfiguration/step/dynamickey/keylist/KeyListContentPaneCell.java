@@ -87,8 +87,8 @@ public class KeyListContentPaneCell extends StackPane implements LCViewInitHelpe
         labelText.setTextAlignment(TextAlignment.CENTER);
 
         imageView = new ImageView();
-        imageView.setFitHeight(CELL_HEIGHT - LABEL_HEIGHT - SPACE);
-        imageView.setFitWidth(CELL_WIDTH);
+        imageView.setFitHeight(CELL_HEIGHT - LABEL_HEIGHT - SPACE - STROKE_WIDTH);
+        imageView.setFitWidth(CELL_WIDTH - STROKE_WIDTH * 2.0);
         imageView.setPreserveRatio(true);
         imageView.setSmooth(true);
 
@@ -101,7 +101,7 @@ public class KeyListContentPaneCell extends StackPane implements LCViewInitHelpe
         stackPaneContent.setAlignment(Pos.CENTER);
         StackPane.setAlignment(imageView, Pos.TOP_CENTER);
         StackPane.setAlignment(buttonOpenOrFollowLink, Pos.TOP_RIGHT);
-        StackPane.setMargin(imageView, new Insets(0, 0, LABEL_HEIGHT + SPACE, 0));
+        StackPane.setMargin(imageView, new Insets(STROKE_WIDTH, STROKE_WIDTH, LABEL_HEIGHT + SPACE, STROKE_WIDTH));
         StackPane.setAlignment(glyphPane, Pos.TOP_LEFT);
         StackPane.setAlignment(labelText, Pos.BOTTOM_CENTER);
         this.getChildren().add(stackPaneContent);
