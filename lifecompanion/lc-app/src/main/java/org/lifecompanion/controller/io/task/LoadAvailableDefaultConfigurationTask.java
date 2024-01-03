@@ -26,6 +26,7 @@ import okhttp3.Response;
 import org.lifecompanion.controller.io.IOHelper;
 import org.lifecompanion.controller.io.JsonHelper;
 import org.lifecompanion.controller.plugin.PluginController;
+import org.lifecompanion.controller.resource.ResourceHelper;
 import org.lifecompanion.framework.client.http.AppServerClient;
 import org.lifecompanion.framework.client.props.ApplicationBuildProperties;
 import org.lifecompanion.framework.commons.translation.Translation;
@@ -137,9 +138,17 @@ public class LoadAvailableDefaultConfigurationTask extends LCTask<List<Pair<Stri
             LOGGER.warn("Could not update default configuration list, will use only cached configuration", e);
         }
 
+        // Load config list configuration
+        List<Pair<LCConfigurationDescriptionI, File>> forLifeCompanion = new ArrayList<>();
+        File configListFile = org.lifecompanion.util.IOUtils.getTempFile("configuration", "lcc");
+        try (InputStream is = ResourceHelper.getInputStreamForPath("/configurations/profile_config_list.lcc");) {
+            try (FileOutputStream fos = new FileOutputStream(configListFile)) {
+                IOUtils.copyStream(is, fos);
+                loadAndAddConfigurationTo(forLifeCompanion, configListFile);
+            }
+        }
 
         // Load configurations included in LifeCompanion (fallback if platform request fails)
-        List<Pair<LCConfigurationDescriptionI, File>> forLifeCompanion = new ArrayList<>();
         File configurationRootDirectory = new File(LCConstant.EXT_PATH_DEFAULT_CONFIGURATIONS_CACHE_SOURCE);
         File[] configurationFiles = configurationRootDirectory.listFiles();
         if (configurationFiles != null) {
