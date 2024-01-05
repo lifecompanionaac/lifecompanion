@@ -41,9 +41,7 @@ import org.lifecompanion.controller.io.ConfigurationComponentIOHelper;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
-import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.framework.utils.Pair;
-import org.lifecompanion.model.api.configurationcomponent.DuplicableComponentI;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
 import org.lifecompanion.model.impl.configurationcomponent.dynamickey.KeyListNode;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
@@ -244,7 +242,6 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         this.keyListNodePropertiesEditionView.setAddRequestListener(() -> keyListContentPane.getButtonAddKey().fire());
     }
 
-
     private void removeNode(KeyListNodeI selectedNode, String notificationTitle) {
         markDirty();
         // Important to get the name before remove (as the level will be incorrect after)
@@ -363,7 +360,7 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
     // NAVIGATION
     //========================================================================
     public void select(KeyListNodeI item) {
-        if (item != null && item.parentProperty().get() != null && currentList.get() != item.parentProperty().get()) {
+        if (!handlingDragDroppedOn && item != null && item.parentProperty().get() != null && currentList.get() != item.parentProperty().get()) {
             currentList.set(item.parentProperty().get());
         }
         selected.set(item);
@@ -403,25 +400,36 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         return dragged;
     }
 
+    private boolean handlingDragDroppedOn;
+
     public void dragDroppedOn(KeyListNodeI destNode) {
-        if (dragged.get() != null && destNode != null && dragged.get() != destNode) {
-            if (!destNode.isLeafNode()) {
-                removeAndGetIndex(dragged.get());
-                destNode.getChildren().add(dragged.get());
-            } else {
-                Pair<List<KeyListNodeI>, Integer> draggedData = removeAndGetIndex(dragged.get());
-                Pair<List<KeyListNodeI>, Integer> destData = removeAndGetIndex(destNode);
-                destData.getLeft().add(destData.getRight(), dragged.get());
-                draggedData.getLeft().add(draggedData.getRight(), destNode);
+        try {
+            handlingDragDroppedOn = true;
+            if (dragged.get() != null && destNode != null && dragged.get() != destNode) {
+                KeyListNodeI draggedVal = dragged.get();
+                if (!destNode.isLeafNode()) {
+                    if (!draggedVal.containsChild(destNode)) {
+                        removeAndGetIndex(draggedVal);
+                        destNode.getChildren().add(draggedVal);
+                    }
+                } else {
+                    Pair<List<KeyListNodeI>, Integer> draggedData = removeAndGetIndex(draggedVal);
+                    Pair<List<KeyListNodeI>, Integer> destData = removeAndGetIndex(destNode);
+                    destData.getLeft().add(destData.getRight(), draggedVal);
+                    draggedData.getLeft().add(draggedData.getRight(), destNode);
+                }
+                dragged.set(null);
             }
-            dragged.set(null);
+        } finally {
+            handlingDragDroppedOn = false;
         }
     }
 
     private Pair<List<KeyListNodeI>, Integer> removeAndGetIndex(KeyListNodeI node) {
         KeyListNodeI parent = node.parentProperty().get();
         int index = parent.getChildren().indexOf(node);
-        parent.getChildren().remove(index);
+        ObservableList<KeyListNodeI> children = parent.getChildren();
+        children.remove(index);
         return Pair.of(parent.getChildren(), index);
     }
 
@@ -440,7 +448,7 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         node.setOnDragEntered(ea -> {
             KeyListNodeI destItem = itemGetter.apply(node);
             KeyListNodeI draggedItem = keyListContentConfigView.draggedProperty().get();
-            if (draggedItem != null && draggedItem != destItem) {
+            if (draggedItem != null && destItem != null && draggedItem != destItem) {
                 // Show information tooltip
                 String message = Translation.getText(destItem.isLeafNode() ? "tooltip.keylist.drag.drop.swap.keys" : "tooltip.keylist.drag.drop.move.to",
                         draggedItem.getHumanReadableText(),

@@ -50,7 +50,6 @@ public class UserGroupSelectAction extends SimpleUseActionImpl<GridPartKeyCompon
                 if (userGroup != null) {
                     UserDatabaseService.INSTANCE.selectGroup(userGroup);
                 } else {
-                    System.out.println("Null user group !");
                     variables.put(UseActionController.FLAG_INTERRUPT_EXECUTION, new FlagUseVariable(new UseVariableDefinition(UseActionController.FLAG_INTERRUPT_EXECUTION)));
                 }
             }

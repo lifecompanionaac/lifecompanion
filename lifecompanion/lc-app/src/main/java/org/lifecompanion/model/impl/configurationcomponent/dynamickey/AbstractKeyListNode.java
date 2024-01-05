@@ -27,7 +27,6 @@ import org.lifecompanion.controller.io.ConfigurationComponentIOHelper;
 import org.lifecompanion.framework.commons.fx.io.XMLGenericProperty;
 import org.lifecompanion.framework.commons.fx.io.XMLIgnoreNullValue;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
-import org.lifecompanion.framework.commons.fx.io.XMLUtils;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.framework.utils.Pair;
@@ -235,5 +234,29 @@ public abstract class AbstractKeyListNode extends AbstractSimplerKeyActionContai
         }
         return sb;
     }
+
+    @Override
+    public boolean containsChild(KeyListNodeI node) {
+        if (this == node) return true;
+        else if (children != null) {
+            for (KeyListNodeI child : children) {
+                if (child.containsChild(node)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     //========================================================================
+
+
+    @Override
+    public String toString() {
+        return "Node{" +
+                "text=" + textProperty().get() +
+                ", link=" + link +
+                ", leaf=" + leaf +
+                '}';
+    }
 }

@@ -19,6 +19,7 @@
 
 ### Corrections/ajustements
 
+- Correction de quelques problèmes sur les listes de cases
 - Lorsqu'on supprime une liste dans les listes de case, les liens vers les listes supprimées sont automatiquement corrigés
 - Sur l'événement "Touche appuyée" il est maintenant possible de choisir si la touche appuyée est bloquée ou non
 - Traductions des noms des touches du clavier

@@ -147,7 +147,7 @@ public class KeyListContentPane extends StackPane implements LCViewInitHelper {
             }
             if (nv != null) {
                 // Platform.runLater ensure that the layout is done before computing cell position
-                Platform.runLater(()-> {
+                Platform.runLater(() -> {
                     getChildrenPaneCellStream()
                             .filter(cell -> cell.itemProperty().get() == nv)
                             .peek(cell -> cell.selectedProperty().set(true))
