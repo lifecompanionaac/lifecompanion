@@ -238,26 +238,27 @@ public enum ImageDictionaries implements LCStateListener, ModeListenerI {
         this.dictionaries
                 .stream()
                 .sorted((d1, d2) ->
-                Boolean.compare(LCStateController.INSTANCE.getFavoriteImageDictionaries().contains(d2.getName()), LCStateController.INSTANCE.getFavoriteImageDictionaries().contains(d1.getName()))
-        ).forEach(imageDictionary -> {
-            List<ImageElementI> resultList = imageDictionary.getImages()
-                    .parallelStream()
-                    .map(e -> new Pair<>(e, displayAll ? 0.0 : getSimilarityScore(e.getKeywords(), searchFull)))
-                    .sorted(displayAll ? ALPHABETICAL_MAP_COMPARATOR : SCORE_MAP_COMPARATOR)
-                    .filter(e -> displayAll || e.getValue() > minScore)
-                    .map(Pair::getKey)
-                    .collect(Collectors.toList());
-            if (LangUtils.isNotEmpty(resultList)) {
-                int pageSize = displayAll ? ALL_PAGE_SIZE : SEARCH_PAGE_SIZE;
-                final List<List<ImageElementI>> resultPages = IntStream.range(0, resultList.size())
-                        .filter(i -> i % pageSize == 0)
-                        .mapToObj(i -> resultList.subList(i, Math.min(i + pageSize, resultList.size())))
-                        .collect(Collectors.toList());
-                result.add(new Pair<>(imageDictionary, resultPages));
-                LOGGER.info("Found {} result in {} dictionaries, result is {} pages", resultList.size(), imageDictionary.getName(), resultPages.size());
-                totalResultCount.addAndGet(resultList.size());
-            }
-        });
+                        Boolean.compare(LCStateController.INSTANCE.getFavoriteImageDictionaries().contains(d2.getName()),
+                                LCStateController.INSTANCE.getFavoriteImageDictionaries().contains(d1.getName()))
+                ).forEach(imageDictionary -> {
+                    List<ImageElementI> resultList = imageDictionary.getImages()
+                            .parallelStream()
+                            .map(e -> new Pair<>(e, displayAll ? 0.0 : getSimilarityScore(e.getKeywords(), searchFull)))
+                            .sorted(displayAll ? ALPHABETICAL_MAP_COMPARATOR : SCORE_MAP_COMPARATOR)
+                            .filter(e -> displayAll || e.getValue() >= minScore)
+                            .map(Pair::getKey)
+                            .collect(Collectors.toList());
+                    if (LangUtils.isNotEmpty(resultList)) {
+                        int pageSize = displayAll ? ALL_PAGE_SIZE : SEARCH_PAGE_SIZE;
+                        final List<List<ImageElementI>> resultPages = IntStream.range(0, resultList.size())
+                                .filter(i -> i % pageSize == 0)
+                                .mapToObj(i -> resultList.subList(i, Math.min(i + pageSize, resultList.size())))
+                                .collect(Collectors.toList());
+                        result.add(new Pair<>(imageDictionary, resultPages));
+                        LOGGER.info("Found {} result in {} dictionaries, result is {} pages", resultList.size(), imageDictionary.getName(), resultPages.size());
+                        totalResultCount.addAndGet(resultList.size());
+                    }
+                });
         LOGGER.info("Search executed in image dictionaries in {} ms - found {} elements (in {} dictionaries, for \"{}\")",
                 System.currentTimeMillis() - start,
                 totalResultCount,
@@ -267,7 +268,7 @@ public enum ImageDictionaries implements LCStateListener, ModeListenerI {
     }
 
     public List<Pair<ImageDictionaryI, List<List<ImageElementI>>>> searchImage(String rawSearchString) {
-       return searchImage(rawSearchString,StringUtils.isBlank(rawSearchString),ConfigurationComponentUtils.SIMILARITY_CONTAINS);
+        return searchImage(rawSearchString, StringUtils.isBlank(rawSearchString), ConfigurationComponentUtils.SIMILARITY_CONTAINS / 2.0);
     }
 
     public double getSimilarityScore(String[] keywords, String searchFull) {
