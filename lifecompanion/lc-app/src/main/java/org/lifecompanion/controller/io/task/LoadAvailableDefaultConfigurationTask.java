@@ -67,8 +67,7 @@ public class LoadAvailableDefaultConfigurationTask extends LCTask<List<Pair<Stri
         OkHttpClient okHttpClient = AppServerClient.initializeClientForExternalCalls().build();
         LOGGER.info("Will try to get default configuration list from app server {}", applicationBuildProperties.getAppServerUrl());
         Request request = new Request.Builder()
-                // FIXME : &filter[lcDefaultConfig]=0
-                .url(applicationBuildProperties.getAppServerUrl() + "/api/v1/repository-items?page[number]=1&page[size]=100&include=attachments.file&filter[isPublished]=1&sort=-publishedAt")
+                .url(applicationBuildProperties.getAppServerUrl() + "/api/v1/repository-items?page[number]=1&page[size]=100&include=attachments.file&filter[lcDefaultConfig]=1&filter[isPublished]=1&sort=-publishedAt")
                 .addHeader("Content-Type", "application/vnd.api+json")
                 .addHeader("Accept", "application/vnd.api+json")
                 .build();
@@ -96,12 +95,11 @@ public class LoadAvailableDefaultConfigurationTask extends LCTask<List<Pair<Stri
                             // Old file should be deleted
                             DefaultConfigToDownload configToDownload = configFromRepo.get(existingConfigId);
                             if (configToDownload == null) {
-                                LOGGER.info("Delete previous default configuration file {}", existingConfigurationFile);
-                                existingConfigurationFile.delete();
+                                boolean deleted = existingConfigurationFile.delete();
+                                LOGGER.info("Delete previous default configuration file {} : {}", existingConfigurationFile, deleted);
                             }
                             // Existing file, will compare hash to know if the file should be downloaded
                             else {
-                                // FIXME : waiting for hash update
                                 String existingFileHash = IOUtils.fileMd5HexToString(existingConfigurationFile);
                                 if (StringUtils.isEquals(existingFileHash, configToDownload.hashMd5)) {
                                     LOGGER.info("Previous default configuration {} is already up to date, will not be downloaded", existingConfigurationFile);
@@ -138,17 +136,8 @@ public class LoadAvailableDefaultConfigurationTask extends LCTask<List<Pair<Stri
             LOGGER.warn("Could not update default configuration list, will use only cached configuration", e);
         }
 
-        // Load config list configuration
-        List<Pair<LCConfigurationDescriptionI, File>> forLifeCompanion = new ArrayList<>();
-        File configListFile = org.lifecompanion.util.IOUtils.getTempFile("configuration", "lcc");
-        try (InputStream is = ResourceHelper.getInputStreamForPath("/configurations/profile_config_list.lcc");) {
-            try (FileOutputStream fos = new FileOutputStream(configListFile)) {
-                IOUtils.copyStream(is, fos);
-                loadAndAddConfigurationTo(forLifeCompanion, configListFile);
-            }
-        }
-
         // Load configurations included in LifeCompanion (fallback if platform request fails)
+        List<Pair<LCConfigurationDescriptionI, File>> forLifeCompanion = new ArrayList<>();
         File configurationRootDirectory = new File(LCConstant.EXT_PATH_DEFAULT_CONFIGURATIONS_CACHE_SOURCE);
         File[] configurationFiles = configurationRootDirectory.listFiles();
         if (configurationFiles != null) {
