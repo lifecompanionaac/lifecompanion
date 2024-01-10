@@ -21,14 +21,19 @@ package org.lifecompanion.ui.configurationcomponent.usemode;
 
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.media.MediaPlayer;
+import org.fxmisc.easybind.EasyBind;
+import org.fxmisc.easybind.monadic.MonadicBinding;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.media.AutoRetryVideoPlayerView;
 import org.lifecompanion.controller.media.VideoPlayerStage;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.model.api.categorizedelement.useaction.ActionEventType;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.configurationcomponent.VideoDisplayMode;
@@ -36,9 +41,13 @@ import org.lifecompanion.model.api.configurationcomponent.VideoElementI;
 import org.lifecompanion.model.api.configurationcomponent.VideoPlayMode;
 import org.lifecompanion.model.api.configurationcomponent.keyoption.KeyOptionI;
 import org.lifecompanion.controller.selectionmode.SelectionModeController;
+import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.ui.common.pane.generic.FittedViewPane;
 import org.lifecompanion.ui.common.pane.generic.MediaViewFittedView;
 import org.lifecompanion.ui.configurationcomponent.base.GridPartKeyViewBase;
+import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
+import org.lifecompanion.ui.controlsfx.glyphfont.Glyph;
+import org.lifecompanion.util.LangUtils;
 import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.util.javafx.StageUtils;
 
@@ -51,7 +60,8 @@ public class GridPartKeyViewUse extends GridPartKeyViewBase {
 
     private InvalidationListener videoLoadingListener;
     private BiConsumer<ActionEventType, UseActionEvent> eventListener;
-    private FittedViewPane mediaViewPane;
+    private StackPane mediaViewPane;
+    private Glyph playableVideoIcon;
     private AutoRetryVideoPlayerView mediaView;
 
     public GridPartKeyViewUse() {
@@ -87,7 +97,10 @@ public class GridPartKeyViewUse extends GridPartKeyViewBase {
     public void initUI() {
         super.initUI();
         mediaView = new AutoRetryVideoPlayerView();
-        mediaViewPane = new FittedViewPane(new MediaViewFittedView(mediaView));
+        FittedViewPane fittedViewMediaView = new FittedViewPane(new MediaViewFittedView(mediaView));
+        playableVideoIcon = GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.PLAY_CIRCLE_ALT).size(34).color(LCGraphicStyle.LC_VERY_LIGHT_GRAY);
+        playableVideoIcon.setOpacity(0.8);
+        mediaViewPane = new StackPane(fittedViewMediaView, playableVideoIcon);
     }
 
     @Override
@@ -154,7 +167,18 @@ public class GridPartKeyViewUse extends GridPartKeyViewBase {
                 }
             }
         };
+        MonadicBinding<Number> playerRate = EasyBind.select(mediaView.mediaPlayerProperty()).selectObject(MediaPlayer::currentRateProperty);
         this.model.addEventFiredListener(eventListener);
+        playableVideoIcon.visibleProperty().bind(Bindings.createBooleanBinding(() -> {
+            if (model.videoDisplayModeProperty().get() != VideoDisplayMode.FULLSCREEN) {
+                if (model.videoPlayModeProperty().get() == VideoPlayMode.CONTINUOUS) {
+                    return false;
+                } else {
+                    return LangUtils.nullToZeroDouble(playerRate.get()) == 0.0;
+                }
+            }
+            return true;
+        }, model.videoDisplayModeProperty(), model.videoPlayModeProperty(), playerRate));
 
 
         // Bind label content depending on selected graphics
@@ -172,6 +196,8 @@ public class GridPartKeyViewUse extends GridPartKeyViewBase {
         keyOptionChanged.changed(model.keyOptionProperty(), prevValue, null);
 
         this.labelContent.graphicProperty().unbind();
+
+        this.playableVideoIcon.visibleProperty().unbind();
 
         this.model.imageUseComponentDisplayedProperty().removeListener(videoLoadingListener);
         this.model.videoProperty().removeListener(videoLoadingListener);
