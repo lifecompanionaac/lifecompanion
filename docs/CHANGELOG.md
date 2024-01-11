@@ -25,6 +25,8 @@
 - Sur l'événement "Touche appuyée" il est maintenant possible de choisir si la touche appuyée est bloquée ou non
 - Traductions des noms des touches du clavier
 - Ajustement sur les interfaces de liste de cases
+- Ajout d'une nouvelle variable : nom du profil actuel
+- L'action d'une case bloc note n'était pas supprimée lorsqu'elle repassait en case "classique"
 - Ticket #260 : ajout du bouton "rouge" dans l'interface de configuration des listes de cases (comme dans la partie "édition")
 - Ticket #282 : la configuration des listes de cases affiche maintenant le même nombre de cases que dans la configuration
 - Ticket #267 : la configuration d'une image (rotation, recadrage, etc) est maintenant utilisée dans le champs de sélection
@@ -34,8 +36,7 @@
 - Ticket #266 : correction de l'affichage de l'alignement de texte sélectionné
 - Ticket #271 : correction d'une erreur lors d'une vitesse de défilement très rapide
 - Ticket #268 : quand une image est enlevée d'une case, le texte est automatiquement remis au centre
-- Ajout d'une nouvelle variable : nom du profil actuel
-- L'action d'une case bloc note n'était pas supprimée lorsqu'elle repassait en case "classique"
+- Ticket #290 : Correction d'un rare problème avec la prise de photo par la webcam
 
 ## 1.5.0 - 08/09/2023
 
