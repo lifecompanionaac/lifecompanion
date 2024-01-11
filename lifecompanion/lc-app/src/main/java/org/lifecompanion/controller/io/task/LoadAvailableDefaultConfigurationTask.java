@@ -23,13 +23,14 @@ import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.lifecompanion.controller.appinstallation.InstallationController;
 import org.lifecompanion.controller.io.IOHelper;
 import org.lifecompanion.controller.io.JsonHelper;
 import org.lifecompanion.controller.plugin.PluginController;
-import org.lifecompanion.controller.resource.ResourceHelper;
 import org.lifecompanion.framework.client.http.AppServerClient;
 import org.lifecompanion.framework.client.props.ApplicationBuildProperties;
 import org.lifecompanion.framework.commons.translation.Translation;
+import org.lifecompanion.framework.commons.utils.app.VersionUtils;
 import org.lifecompanion.framework.commons.utils.io.FileNameUtils;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
@@ -44,11 +45,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class LoadAvailableDefaultConfigurationTask extends LCTask<List<Pair<String, List<Pair<LCConfigurationDescriptionI, File>>>>> {
     private static final Logger LOGGER = LoggerFactory.getLogger(LoadAvailableDefaultConfigurationTask.class);
@@ -63,24 +63,44 @@ public class LoadAvailableDefaultConfigurationTask extends LCTask<List<Pair<Stri
     @Override
     protected List<Pair<String, List<Pair<LCConfigurationDescriptionI, File>>>> call() throws Exception {
         List<Pair<String, List<Pair<LCConfigurationDescriptionI, File>>>> configurations = new ArrayList<>();
-
+        String currentVersion = InstallationController.INSTANCE.getBuildProperties().getVersionLabel();
         OkHttpClient okHttpClient = AppServerClient.initializeClientForExternalCalls().build();
         LOGGER.info("Will try to get default configuration list from app server {}", applicationBuildProperties.getAppServerUrl());
-        Request request = new Request.Builder()
-                .url(applicationBuildProperties.getAppServerUrl() + "/api/v1/repository-items?page[number]=1&page[size]=100&include=attachments.file&filter[lcDefaultConfig]=1&filter[isPublished]=1&sort=-publishedAt")
+        Request request = new Request.Builder().url(applicationBuildProperties.getAppServerUrl() + "/api/v1/repository-items?page[number]=1&page[size]=100&include=attachments.file&filter[lcDefaultConfig]=1&filter[isPublished]=1&sort=-publishedAt")
                 .addHeader("Content-Type", "application/vnd.api+json")
                 .addHeader("Accept", "application/vnd.api+json")
                 .build();
         try (Response response = okHttpClient.newCall(request).execute()) {
             if (response.isSuccessful()) {
                 AppServerRepositoryResult appServerRepositoryResult = JsonHelper.GSON.fromJson(response.body().string(), AppServerRepositoryResult.class);
+
+                Map<String, DefaultConfigToDownload> configFromRepo = new HashMap<>();
+                // For each item : find the attachments > file / attachment >
+                for (AppServerItemData appServerItem : appServerRepositoryResult.data) {
+                    appServerItem.relationships.attachments.data.stream()
+                            .flatMap(appServerItemAttachment -> appServerRepositoryResult.included.stream()
+                                    .filter(r -> StringUtils.isEquals(r.type, "repository-attachments"))
+                                    .filter(r -> StringUtils.isEquals(r.id, appServerItemAttachment.id))
+                                    .map(r -> r.relationships.file.data.id)
+                                    .distinct()
+                                    .flatMap(fileId -> appServerRepositoryResult.included
+                                            .stream()
+                                            .filter(r -> StringUtils.isEquals(r.id, fileId))
+                                            .filter(r -> StringUtils.isEquals(r.type, "files"))
+
+                                    )
+                                    .filter(file -> file.attributes.metadata.containsKey("configurationId")))
+                            .filter(file -> VersionUtils.compare(currentVersion, String.valueOf(file.attributes.metadata.get("version"))) >= 0)
+                            .min((file1, file2) ->
+                                    VersionUtils.compare(
+                                            String.valueOf(file2.attributes.metadata.get("version")),
+                                            String.valueOf(file1.attributes.metadata.get("version"))
+                                    ))
+                            .map(file -> new DefaultConfigToDownload((String) file.attributes.metadata.get("configurationId"), file.attributes.url, file.attributes.hash))
+                            .ifPresent(c -> configFromRepo.put(c.id, c));
+                }
+
                 // Get only configuration file
-                Map<String, DefaultConfigToDownload> configFromRepo = appServerRepositoryResult.included.stream()
-                        .filter(r -> StringUtils.isEquals(r.type, "files"))
-                        .filter(file ->
-                                file.attributes.metadata.containsKey("configurationId"))
-                        .map(file -> new DefaultConfigToDownload((String) file.attributes.metadata.get("configurationId"), file.attributes.url, file.attributes.hash))
-                        .collect(Collectors.toMap(c -> c.id, c -> c));
                 LOGGER.info("Got {} default configurations from server", configFromRepo.size());
 
                 if (!configFromRepo.isEmpty()) {
@@ -115,10 +135,7 @@ public class LoadAvailableDefaultConfigurationTask extends LCTask<List<Pair<Stri
                     for (Map.Entry<String, DefaultConfigToDownload> configToDownload : configFromRepo.entrySet()) {
                         LOGGER.info("Will try to download {} configuration from {}", configToDownload.getKey(), configToDownload.getValue().url);
                         File destConfigFile = new File(destDir.getPath() + File.separator + configToDownload.getKey() + ".lcc");
-                        Call call = okHttpClient.newCall(new Request.Builder()
-                                .url(configToDownload.getValue().url)
-                                .addHeader("Connection", "close")
-                                .build());
+                        Call call = okHttpClient.newCall(new Request.Builder().url(configToDownload.getValue().url).addHeader("Connection", "close").build());
                         try (Response downloadResponse = call.execute()) {
                             if (downloadResponse.isSuccessful()) {
                                 try (OutputStream os = new BufferedOutputStream(new FileOutputStream(destConfigFile))) {
@@ -177,11 +194,11 @@ public class LoadAvailableDefaultConfigurationTask extends LCTask<List<Pair<Stri
         return configurations;
     }
 
-    private static void loadAndAddConfigurationTo
-            (List<Pair<LCConfigurationDescriptionI, File>> forLifeCompanion, File configurationFile) {
+    private static void loadAndAddConfigurationTo(List<Pair<LCConfigurationDescriptionI, File>> forLifeCompanion, File configurationFile) {
         try {
             final ConfigurationImportTask customConfigurationImport = IOHelper.createCustomConfigurationImport(new File(LCConstant.EXT_PATH_DEFAULT_CONFIGURATIONS_CACHE_EXTRACTED),
-                    configurationFile, false);
+                    configurationFile,
+                    false);
             final javafx.util.Pair<LCConfigurationDescriptionI, LCConfigurationI> importValue = ThreadUtils.executeInCurrentThread(customConfigurationImport);
             forLifeCompanion.add(Pair.of(importValue.getKey(), customConfigurationImport.getImportDirectory()));
         } catch (Exception e) {
@@ -191,17 +208,61 @@ public class LoadAvailableDefaultConfigurationTask extends LCTask<List<Pair<Stri
 
     private static class AppServerRepositoryResult {
         private List<AppServerIncludedRelation> included;
+        private List<AppServerItemData> data;
     }
 
     private static class AppServerIncludedRelation {
+        private String id;
         private String type;
         private AppServerFileAttributes attributes;
+        private AppServerIncludedRelationRelationships relationships;
+
+
+        @Override
+        public String toString() {
+            return "AppServerIncludedRelation{" + "id='" + id + '\'' + ", type='" + type + '\'' + ", attributes=" + attributes + '}';
+        }
+    }
+
+    private static class AppServerIncludedRelationRelationships {
+        private AppServerIncludedRelationRelationshipsFile file;
+    }
+
+    private static class AppServerIncludedRelationRelationshipsFile {
+        private AppServerIncludedRelationRelationshipsFileData data;
+    }
+
+    private static class AppServerIncludedRelationRelationshipsFileData {
+        private String type;
+        private String id;
+    }
+
+    private static class AppServerItemData {
+        private String id;
+        private AppServerItemRelationships relationships;
+    }
+
+    private static class AppServerItemRelationships {
+        private AppServerItemAttachments attachments;
+    }
+
+    private static class AppServerItemAttachments {
+        private List<AppServerItemAttachment> data;
+    }
+
+    private static class AppServerItemAttachment {
+        private String type, id;
     }
 
     private static class AppServerFileAttributes {
         private String url;
         private String hash;
         private Map<String, Object> metadata;
+
+        @Override
+        public String toString() {
+            return "AppServerFileAttributes{" + "url='" + url + '\'' + ", hash='" + hash + '\'' + ", metadata=" + metadata + '}';
+        }
     }
 
     private static class DefaultConfigToDownload {
@@ -215,4 +276,6 @@ public class LoadAvailableDefaultConfigurationTask extends LCTask<List<Pair<Stri
             this.hashMd5 = hashMd5;
         }
     }
+
+
 }
