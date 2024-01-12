@@ -216,12 +216,6 @@ public class LoadAvailableDefaultConfigurationTask extends LCTask<List<Pair<Stri
         private String type;
         private AppServerFileAttributes attributes;
         private AppServerIncludedRelationRelationships relationships;
-
-
-        @Override
-        public String toString() {
-            return "AppServerIncludedRelation{" + "id='" + id + '\'' + ", type='" + type + '\'' + ", attributes=" + attributes + '}';
-        }
     }
 
     private static class AppServerIncludedRelationRelationships {
@@ -258,11 +252,6 @@ public class LoadAvailableDefaultConfigurationTask extends LCTask<List<Pair<Stri
         private String url;
         private String hash;
         private Map<String, Object> metadata;
-
-        @Override
-        public String toString() {
-            return "AppServerFileAttributes{" + "url='" + url + '\'' + ", hash='" + hash + '\'' + ", metadata=" + metadata + '}';
-        }
     }
 
     private static class DefaultConfigToDownload {

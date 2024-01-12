@@ -36,7 +36,8 @@
 - Ticket #266 : correction de l'affichage de l'alignement de texte sélectionné
 - Ticket #271 : correction d'une erreur lors d'une vitesse de défilement très rapide
 - Ticket #268 : quand une image est enlevée d'une case, le texte est automatiquement remis au centre
-- Ticket #290 : Correction d'un rare problème avec la prise de photo par la webcam
+- Ticket #290 : correction d'un rare problème avec la prise de photo par la webcam
+- Ticket #291 : correction d'un rare problème avec les éditeurs de texte qui pouvaient ne plus fonctionner
 
 ## 1.5.0 - 08/09/2023
 

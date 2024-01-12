@@ -529,7 +529,6 @@ public class WritingStateEntryContainer implements WritingStateControllerI {
         WriterEntryI entryAtCaret = this.getEntryAtCaretPosition(caret);
         // Simple insert
         if (entryAtCaret == null) {
-            // TODO check text entry text null
             this.entries.add(this.getCaretEntryIndex(caret), entryP);
             this.caretPosition.set(caret + entryP.entryTextProperty().get().length());
         }
