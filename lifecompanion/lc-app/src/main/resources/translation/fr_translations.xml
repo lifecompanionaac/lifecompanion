@@ -1594,7 +1594,7 @@
   <text key="configuration.frame.width">Largeur</text>
   <text key="configuration.keep.ratio.field">Conserver les proportions</text>
   <text key="configuration.launch.fullscreen">Plein écran</text>
-  <text key="configuration.secured.config.mode">Demander un code pour passer en édition</text>
+  <text key="configuration.secured.config.mode">Demander une opération simple pour passer en édition</text>
   <text key="general.configuration.char.predictor.general.configuration.part">Configuration générale</text>
   <text key="general.configuration.char.predictor.step.title">Prédiction de caractères</text>
   <text key="general.configuration.info.button.edit.information">Éditer les informations</text>
@@ -1681,10 +1681,10 @@
 		défilement
 		commencera pour cette grille.</text>
   <text key="tooltip.explain.use.param.secured.config.mode">Si activé, permet d'empêcher l'utilisateur de retourner
-		en mode édition simplement : un code aléatoire s'affichera et
-		l'utilisateur devra l'entrer pour
-		pouvoir accéder au mode de
-		configuration. Permet d'éviter qu'un utilisateur n'ayant pas accés au
+		en mode édition simplement : un opération mathématique aléatoire simple s'affichera et
+		l'utilisateur devra entrer le résultat pour
+		pouvoir accéder au mode
+		édition. Permet d'éviter qu'un utilisateur n'ayant pas accès au
 		mode édition l'ouvre
 		involontairement.</text>
     <text key="tooltip.explain.disable.exit.use.mode">Si activé, permet d'empêcher l'utilisateur de fermer LifeCompanion lorsque celui-ci est en mode utilisation. Peut être utile lorsqu'on ne veut utiliser un matériel que pour LifeCompanion et ne pas autoriser l'utilisateur a "sortir" dans le système.</text>
