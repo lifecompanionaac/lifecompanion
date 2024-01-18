@@ -55,6 +55,8 @@ import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.util.model.ConfigurationComponentUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -137,16 +139,30 @@ public class KeyTextRibbonPart extends RibbonBasePart<GridPartKeyComponent> impl
                 AutoCompleteKeyboardEnum autoCompleteKeyboard = AutoCompleteKeyboardEnum.getMatchingPattern(previousKey, key);
                 if (autoCompleteKeyboard != null) {
                     List<GridPartKeyComponentI> nextEmptyKeys = new ArrayList<>();
-                    GridPartComponentI comp = key;
-                    do {
-                        comp = ConfigurationComponentUtils.getNextComponentInGrid(comp, false);
-                        if (comp instanceof GridPartKeyComponentI) {
-                            GridPartKeyComponentI keyToAdd = (GridPartKeyComponentI) comp;
-                            if (isKeyEmptyForAutoComplete(keyToAdd)) {
-                                nextEmptyKeys.add(keyToAdd);
+                    HashSet<GridPartComponentI> explored = new HashSet<>(List.of(key));
+                    GridComponentI parentGrid = key.gridParentProperty().get();
+                    // Finish the started row
+                    for (int column = key.columnProperty().get(); column < parentGrid.columnCountProperty().get(); column++) {
+                        GridPartComponentI component = parentGrid.getGrid().getComponent(key.rowProperty().get(), column);
+                        if (!explored.contains(component)) {
+                            explored.add(component);
+                            if (component instanceof GridPartKeyComponentI && isKeyEmptyForAutoComplete(component)) {
+                                nextEmptyKeys.add((GridPartKeyComponentI) component);
                             }
                         }
-                    } while (comp != null);
+                    }
+                    // Explore the next rows and columns
+                    for (int row = key.rowProperty().get() + 1; row < parentGrid.rowCountProperty().get(); row++) {
+                        for (int column = 0; column < parentGrid.columnCountProperty().get(); column++) {
+                            GridPartComponentI component = parentGrid.getGrid().getComponent(row, column);
+                            if (!explored.contains(component)) {
+                                explored.add(component);
+                                if (component instanceof GridPartKeyComponentI && isKeyEmptyForAutoComplete(component)) {
+                                    nextEmptyKeys.add((GridPartKeyComponentI) component);
+                                }
+                            }
+                        }
+                    }
                     if (!nextEmptyKeys.isEmpty()) {
                         AutoCompleteKeyboardTooltip autoCompleteKeyboardTooltip = new AutoCompleteKeyboardTooltip(autoCompleteKeyboard, nextEmptyKeys, previousKey, key);
                         autoCompleteKeyboardTooltip.showOn(fieldKeyText);

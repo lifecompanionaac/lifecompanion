@@ -39,6 +39,7 @@
 - Ticket #290 : correction d'un rare problème avec la prise de photo par la webcam
 - Ticket #291 : correction d'un rare problème avec les éditeurs de texte qui pouvaient ne plus fonctionner
 - Ticket #292 : correction d'un texte explicatif sur le code pour passer en édition
+- Ticket #295 : correction d'un problème de détection de clavier dans certains cas
 
 ## 1.5.0 - 08/09/2023
 
