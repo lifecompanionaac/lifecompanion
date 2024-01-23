@@ -282,6 +282,18 @@
   <text key="use.variable.current.day.of.week.description">Contient le jour de la semaine dans un format lisible.</text>
   <text key="use.variable.current.day.of.week.example">lundi</text>
   <text key="use.variable.current.day.of.week.name">Jour de la semaine</text>
+    <text key="use.variable.current.number.of.day.description">Contient le numéro du jour courant.</text>
+    <text key="use.variable.current.number.of.day.example">22</text>
+    <text key="use.variable.current.number.of.day.name">Numéro du jour</text>
+    <text key="use.variable.current.month.of.year.description">Contient le mois courant dans un format lisible.</text>
+    <text key="use.variable.current.month.of.year.example">janvier</text>
+    <text key="use.variable.current.month.of.year.name">Mois de l'année</text>
+    <text key="use.variable.current.number.of.month.description">Contient le numéro du mois courant.</text>
+    <text key="use.variable.current.number.of.month.example">01</text>
+    <text key="use.variable.current.number.of.month.name">Numéro du mois</text>
+    <text key="use.variable.current.year.description">Contient l'année courante dans un format lisible.</text>
+    <text key="use.variable.current.year.example">2024</text>
+    <text key="use.variable.current.year.name">Année</text>
   <text key="use.variable.current.over.part.description">Nom de l'élément actuellement survolé (par la souris en
 		sélection direct, ou en cours de défilement pour les autres modes)</text>
   <text key="use.variable.current.over.part.example">Case (2,6)</text>
@@ -664,6 +676,11 @@
 		texte actuellement dans l'éditeur.</text>
   <text key="action.save.note.name">Ouvrir/Fermer le bloc-notes</text>
   <!--org.lifecompanion.base.data.useaction.impl.miscellaneous.script-->
+
+    <text key="action.timer.name">Minuteur</text>
+  <text key="action.timer.static.description">Décompte à partir d'une durée choisie.</text>
+  <text key="action.timer.variable.description">Minuteur de {} secondes</text>
+
   <text key="action.pause.name">Temporisation</text>
   <text key="action.pause.static.description">Permet d'effectuer une temporisation d'une durée choisie entre deux
 		actions. Cela permet d'attendre un certains temps avant d'executer une action.</text>
@@ -2583,6 +2600,7 @@
   <text key="play.sound.open.file.dialog.title">Sélectionnez le fichier à jouer</text>
   <!--org.lifecompanion.config.view.useaction.impl.miscellaneous.script-->
   <text key="use.action.pause.time">Temps de temporisation (en secondes)</text>
+    <text key="use.action.timer.time">Temps du minuteur</text>
   <!--org.lifecompanion.config.view.useaction.impl.selection.key-->
   <text key="use.action.simulate.key.event.target.key">Case à simuler</text>
   <!--org.lifecompanion.config.view.useaction.impl.show.moveto-->
