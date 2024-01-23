@@ -180,6 +180,14 @@ public enum UseVariableController implements ModeListenerI {
                 "use.variable.current.time.without.seconds.description", "use.variable.current.time.without.seconds.example"));
         this.addDef(new UseVariableDefinition("CurrentDayOfWeek", "use.variable.current.day.of.week.name",
                 "use.variable.current.day.of.week.description", "use.variable.current.day.of.week.example"));
+        this.addDef(new UseVariableDefinition("CurrentNumberOfDay", "use.variable.current.number.of.day.name",
+                "use.variable.current.number.of.day.description", "use.variable.current.number.of.day.example"));
+        this.addDef(new UseVariableDefinition("CurrentMonthOfYear", "use.variable.current.month.of.year.name",
+                "use.variable.current.month.of.year.description", "use.variable.current.month.of.year.example"));
+        this.addDef(new UseVariableDefinition("CurrentNumberOfMonth", "use.variable.current.number.of.month.name",
+                "use.variable.current.number.of.month.description", "use.variable.current.number.of.month.example"));
+        this.addDef(new UseVariableDefinition("CurrentYear", "use.variable.current.year.name", "use.variable.current.year.description",
+                "use.variable.current.year.example"));
         this.addDef(new UseVariableDefinition("CurrentOverPartName", "use.variable.current.over.part.name",
                 "use.variable.current.over.part.description", "use.variable.current.over.part.example"));
         this.addDef(new UseVariableDefinition("CurrentOverPartGridParentName", "use.variable.current.over.part.grid.parent.name",
@@ -266,6 +274,12 @@ public enum UseVariableController implements ModeListenerI {
         putToVarMap(useCachedValue, "CurrentTime", vars, () -> StringUtils.dateToStringDateWithOnlyHoursMinuteSecond(currentDate));
         putToVarMap(useCachedValue, "CurrentTimeWithoutSeconds", vars, () -> DATE_ONLY_HOURS_MIN.format(currentDate));
         putToVarMap(useCachedValue, "CurrentDayOfWeek", vars, () -> LocalDate.now().getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.getDefault()));
+
+        putToVarMap(useCachedValue, "CurrentNumberOfDay", vars, () -> new SimpleDateFormat("dd").format(currentDate));
+        putToVarMap(useCachedValue, "CurrentMonthOfYear", vars, () -> new SimpleDateFormat("MMMM", new Locale("fr")).format(currentDate));
+        putToVarMap(useCachedValue, "CurrentNumberOfMonth", vars, () -> new SimpleDateFormat("MM").format(currentDate));
+        putToVarMap(useCachedValue, "CurrentYear", vars, () -> new SimpleDateFormat("yyyy").format(currentDate));
+
         putToVarMap(useCachedValue, "CurrentTextInEditor", vars, () -> WritingStateController.INSTANCE.currentTextProperty().get());
         putToVarMap(useCachedValue, "CurrentWordInEditor", vars, () -> WritingStateController.INSTANCE.currentWordProperty().get());
         putToVarMap(useCachedValue, "LastCompleteWordInEditor", vars, () -> WritingStateController.INSTANCE.lastCompleteWordProperty().get());
