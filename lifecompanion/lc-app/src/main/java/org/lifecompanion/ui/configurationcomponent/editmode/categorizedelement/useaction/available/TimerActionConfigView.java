@@ -19,6 +19,7 @@
 package org.lifecompanion.ui.configurationcomponent.editmode.categorizedelement.useaction.available;
 
 import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Region;
@@ -45,9 +46,24 @@ public class TimerActionConfigView extends VBox implements UseActionConfiguratio
 
     @Override
     public void initUI() {
+
+        Label label1 = new Label(Translation.getText("use.action.timer.time"));
+        label1.setAlignment(Pos.CENTER_LEFT);
+        this.getChildren().add(label1);
+        VBox.setMargin(label1, new Insets(5, 0, 10, 0));
+
         durationPickerAutomaticItemTimeMs = new DurationPickerControl();
         durationPickerAutomaticItemTimeMs.setAlignment(Pos.CENTER_LEFT);
         this.getChildren().add(durationPickerAutomaticItemTimeMs);
+
+        Label label2 = new Label(Translation.getText("Action exécuter à la fin du minuteur"));
+        label2.setAlignment(Pos.CENTER_LEFT);
+        this.getChildren().add(label2);
+        VBox.setMargin(label2, new Insets(10, 0, 10, 0));
+
+
+
+
     }
 
     @Override

@@ -18,15 +18,17 @@
  */
 package org.lifecompanion.controller.configurationcomponent;
 
-import javafx.application.Platform;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
+import org.lifecompanion.model.impl.categorizedelement.useaction.available.StartTimerAction;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
@@ -34,33 +36,31 @@ import java.util.ArrayList;
 public enum UseTimerController implements ModeListenerI {
     INSTANCE;
     private final static Logger LOGGER = LoggerFactory.getLogger(UseTimerController.class);
-    private final DoubleProperty progressProperty = new SimpleDoubleProperty();
     private final UseModeProgressDisplayerController progressController = UseModeProgressDisplayerController.INSTANCE;
-    private long endTime;
+    private final Set<ModeListenerI> listeners = new HashSet<>();
+
 
     public void startTimer(int time){
         LOGGER.info("startTimer");
-        Platform.runLater(() -> progressController.hideAllProgress());
-        this.endTime = System.currentTimeMillis();
-
-        long startTime = System.currentTimeMillis();
-        long durationInMillis = time;
-        this.endTime = startTime + durationInMillis;
-        progressController.launchTimer(durationInMillis, () -> {});
-
-        while (System.currentTimeMillis() < endTime) {
-            double progress = (System.currentTimeMillis() - startTime) / (double) durationInMillis;
-            progressProperty.set(progress);
-        }
-
-        progressProperty.set(1.0);
-        Platform.runLater(() -> progressController.hideAllProgress());
+        FXThreadUtils.runOnFXThreadAndWaitFor(() -> progressController.hideAllProgress());
+        UseTimerController.INSTANCE.addListener(this);
+        progressController.launchTimer(time, () -> {
+            stopTimer();
+        });
     }
 
     public void stopTimer(){
         LOGGER.info("stopTimer");
-        Platform.runLater(() -> progressController.hideAllProgress());
-        this.endTime = System.currentTimeMillis();
+        FXThreadUtils.runOnFXThreadAndWaitFor(() -> progressController.hideAllProgress());
+        UseTimerController.INSTANCE.removeListener(this);
+    }
+
+    public void addListener(ModeListenerI listener) {
+        listeners.add(listener);
+    }
+
+    public void removeListener(ModeListenerI listener) {
+        listeners.remove(listener);
     }
 
     // START/STOP
@@ -73,6 +73,7 @@ public enum UseTimerController implements ModeListenerI {
     @Override
     public void modeStop(LCConfigurationI configuration) {
         LOGGER .info("modeStop");
+        listeners.clear();
     }
     //========================================================================
 }
