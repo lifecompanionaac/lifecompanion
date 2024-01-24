@@ -21,6 +21,7 @@ package org.lifecompanion.controller.io.task;
 import org.jdom2.Element;
 import org.lifecompanion.controller.io.IOHelper;
 import org.lifecompanion.controller.io.XMLHelper;
+import org.lifecompanion.controller.media.VideoPlayerController;
 import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
@@ -28,6 +29,7 @@ import org.lifecompanion.model.api.configurationcomponent.dynamickey.UserActionS
 import org.lifecompanion.model.api.imagedictionary.ImageElementI;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.io.XMLSerializable;
+import org.lifecompanion.model.impl.configurationcomponent.VideoElement;
 import org.lifecompanion.util.ThreadUtils;
 import org.lifecompanion.util.model.LCTask;
 import org.lifecompanion.model.impl.profile.LCConfigurationDescription;
@@ -97,6 +99,7 @@ public abstract class AbstractLoadUtilsTask<T> extends LCTask<T> {
                 this.loadImage(imagePath, ioContext);
             }
         }
+        this.loadVideos(directory, ioContext);
         this.updateProgress(1, 3);
         this.loadResources(directory, ioContext);
         AbstractLoadUtilsTask.LOGGER.info("Loaded {} resources", ioContext.getIOResource().size());
@@ -107,6 +110,19 @@ public abstract class AbstractLoadUtilsTask<T> extends LCTask<T> {
         XMLHelper.loadXMLSerializable(new File(directory.getPath() + File.separator + xmlName), element, ioContext);
         LOGGER.info("Loading took {} ms", (System.currentTimeMillis() - start));
         this.updateProgress(3, 3);
+    }
+
+    private void loadVideos(File directory, IOContext ioContext) {
+        File videoDirectory = new File(directory.getPath() + File.separator + LCConstant.CONFIGURATION_VIDEO_DIRECTORY + File.separator);
+        File[] videoFiles = videoDirectory.listFiles();
+        if (videoFiles != null) {
+            for (File videoFile : videoFiles) {
+                if (videoFile.isFile()) {
+                    String videoId = FileNameUtils.getNameWithoutExtension(videoFile);
+                    ioContext.getVideos().put(videoId, new VideoElement(videoId, videoFile));
+                }
+            }
+        }
     }
 
     /**

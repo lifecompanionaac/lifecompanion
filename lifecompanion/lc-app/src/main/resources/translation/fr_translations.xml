@@ -29,7 +29,7 @@
   <text key="use.action.event.type.event.fired">au déclenchement de l'événement</text>
   <text key="use.action.event.type.over">au survol</text>
 	<text key="user.action.sequence.default.text.value">Nouvelle séquence</text>
-	<text key="button.type.replace.previous">Écraser l'ancienne configuration\net remplacer par celle importée</text>
+	<text key="button.type.replace.previous">Écraser la configuration dans le profil\net remplacer par celle importée</text>
 	<text key="button.type.keep.both">Conserver les deux\nconfigurations</text>
 	<text key="button.type.cancel.import.config">Annuler\nl'import</text>
 	<text key="button.detect.keylist.duplicates">Détecter/corriger les doublons dans les listes de cases</text>
@@ -42,6 +42,12 @@
 	<text key="autocomplete.keyboard.numbers1.name">1-9</text>
 	<text key="action.import.existing.configuration.message">Configuration dans le profil\n"{}", modifée le {} par "{}"\n\nConfiguration importée\n"{}", modifiée le {} par "{}"
 	\n\nQue souhaitez vous faire ?</text>
+    <text key="action.import.existing.configuration.title.imported">Configuration importée</text>
+    <text key="action.import.existing.configuration.title.current">Configuration dans le profil</text>
+    <text key="action.import.existing.configuration.last.modification.description">Nom : "{}"\nDernière modification le {} par {}</text>
+    <text key="action.import.existing.configuration.status.newer">La plus récente</text>
+    <text key="action.import.existing.configuration.status.older">La plus ancienne</text>
+    <text key="action.import.existing.configuration.status.equals">Identique</text>
     <text key="go.parent.list.current.or.execute.next.action.name">Remonter au niveau supérieur ou exécuter les actions suivantes</text>
     <text key="parent.level.or.execute.spinner">Niveau "minimum" possible</text>
     <text key="parent.level.or.execute.spinner.explain">Cette action va permettre de remonter jusqu'au niveau défini au dessus (niveau 0 = racine des listes de case) ou sinon d'exécuter les actions suivantes de la case si le niveau n'est pas encore atteint. Cela permet par exemple d'intégrer sur une même case une action pour remonter dans la liste de case ou pour faire autre chose lorsque que le niveau voulu est déjà atteint.</text>
@@ -276,6 +282,18 @@
   <text key="use.variable.current.day.of.week.description">Contient le jour de la semaine dans un format lisible.</text>
   <text key="use.variable.current.day.of.week.example">lundi</text>
   <text key="use.variable.current.day.of.week.name">Jour de la semaine</text>
+    <text key="use.variable.current.number.of.day.description">Contient le numéro du jour du mois courant.</text>
+    <text key="use.variable.current.number.of.day.example">22</text>
+    <text key="use.variable.current.day.of.month.name">Numéro du jour du mois</text>
+    <text key="use.variable.current.month.of.year.description">Contient le mois courant dans un format lisible.</text>
+    <text key="use.variable.current.month.of.year.example">janvier</text>
+    <text key="use.variable.current.month.of.year.name">Mois de l'année</text>
+    <text key="use.variable.current.number.of.month.description">Contient le numéro du mois courant.</text>
+    <text key="use.variable.current.number.of.month.example">01</text>
+    <text key="use.variable.current.number.of.month.name">Numéro du mois</text>
+    <text key="use.variable.current.year.description">Contient l'année courante dans un format lisible.</text>
+    <text key="use.variable.current.year.example">2024</text>
+    <text key="use.variable.current.year.name">Année</text>
   <text key="use.variable.current.over.part.description">Nom de l'élément actuellement survolé (par la souris en
 		sélection direct, ou en cours de défilement pour les autres modes)</text>
   <text key="use.variable.current.over.part.example">Case (2,6)</text>
@@ -658,6 +676,7 @@
 		texte actuellement dans l'éditeur.</text>
   <text key="action.save.note.name">Ouvrir/Fermer le bloc-notes</text>
   <!--org.lifecompanion.base.data.useaction.impl.miscellaneous.script-->
+
   <text key="action.pause.name">Temporisation</text>
   <text key="action.pause.static.description">Permet d'effectuer une temporisation d'une durée choisie entre deux
 		actions. Cela permet d'attendre un certains temps avant d'executer une action.</text>
@@ -1588,7 +1607,7 @@
   <text key="configuration.frame.width">Largeur</text>
   <text key="configuration.keep.ratio.field">Conserver les proportions</text>
   <text key="configuration.launch.fullscreen">Plein écran</text>
-  <text key="configuration.secured.config.mode">Demander un code pour passer en édition</text>
+  <text key="configuration.secured.config.mode">Demander une opération simple pour passer en édition</text>
   <text key="general.configuration.char.predictor.general.configuration.part">Configuration générale</text>
   <text key="general.configuration.char.predictor.step.title">Prédiction de caractères</text>
   <text key="general.configuration.info.button.edit.information">Éditer les informations</text>
@@ -1675,10 +1694,10 @@
 		défilement
 		commencera pour cette grille.</text>
   <text key="tooltip.explain.use.param.secured.config.mode">Si activé, permet d'empêcher l'utilisateur de retourner
-		en mode édition simplement : un code aléatoire s'affichera et
-		l'utilisateur devra l'entrer pour
-		pouvoir accéder au mode de
-		configuration. Permet d'éviter qu'un utilisateur n'ayant pas accés au
+		en mode édition simplement : un opération mathématique aléatoire simple s'affichera et
+		l'utilisateur devra entrer le résultat pour
+		pouvoir accéder au mode
+		édition. Permet d'éviter qu'un utilisateur n'ayant pas accès au
 		mode édition l'ouvre
 		involontairement.</text>
     <text key="tooltip.explain.disable.exit.use.mode">Si activé, permet d'empêcher l'utilisateur de fermer LifeCompanion lorsque celui-ci est en mode utilisation. Peut être utile lorsqu'on ne veut utiliser un matériel que pour LifeCompanion et ne pas autoriser l'utilisateur a "sortir" dans le système.</text>
@@ -1996,9 +2015,10 @@
   <text key="profile.edition.general.default.configuration.title">Modèles de configuration</text>
   <text key="profile.edition.general.default.configuration.link.unselect.all">Tout déselectionner</text>
   <text key="profile.edition.general.default.configuration.link.select.all">Tout selectionner</text>
-  <text key="profile.edition.general.default.configuration.explain">Ces modèles de configuration sont proposés pour vous permettre de démarrer dans LifeCompanion. Ils sont issus de l'expérience clinique des concepteurs de LifeCompanion et des différentes prises en charge. Le vocabulaire des configurations proposées est souvent simple et devra être adapté et complété en fonction de l'usage. N'oubliez pas qu'une configuration peut ensuite être adaptée, autant dans son contenu (texte, actions, images, etc.) que dans son mode d'interaction (pointage direct, défilement, etc.)\nCliquez sur un modèle pour obtenir un aperçu.</text>
+  <text key="profile.edition.general.default.configuration.explain">Ces modèles de configuration sont proposés pour vous permettre de démarrer dans LifeCompanion. Ils sont issus de l'expérience clinique des concepteurs de LifeCompanion et des différentes prises en charge. Le vocabulaire des configurations proposées est souvent simple et devra être adapté et complété en fonction de l'usage. N'oubliez pas qu'une configuration peut ensuite être adaptée, autant dans son contenu (texte, actions, images, etc.) que dans son mode d'interaction (pointage direct, défilement, etc.).\nVous pouvez retrouver plus de configurations sur le répertoire des configurations de la plateforme LifeCompanion.</text>
   <text key="profile.edition.general.information.title">Informations</text>
   <text key="profile.edition.view.title">Modification des informations d'un profil</text>
+    <text key="profile.edition.configuration.repository.link">Plus de configuration sur le répertoire de la plateforme LifeCompanion</text>
   <text key="profile.edition.view.title.config">Édition du profil utilisateur</text>
   <text key="profile.label.color">Couleur du profil</text>
   <text key="profile.label.name">Nom du profil</text>
@@ -2226,7 +2246,7 @@
   <!--org.lifecompanion.config.view.pane.tabs.selected.part-->
   <text key="button.collapse.title">Réduire l'espace</text>
   <text key="button.expand.title">Augmenter l'espace</text>
-  <text key="image.component.ribbon.title">Image</text>
+  <text key="image.component.ribbon.title">Image/Vidéo</text>
   <text key="image.use.show.advanced.parameters">Paramètres supplémentaires</text>
   <text key="pane.column.count">Colonnes</text>
   <text key="pane.row.count">Lignes</text>
@@ -2318,9 +2338,9 @@
   <text key="image.use.color.replace.threshold.field">Tolérance</text>
   <text key="image.use.color.replacing.field">Couleur de remplacement</text>
   <text key="image.use.color.to.replace.field">Couleur à remplacer</text>
-  <text key="image.use.enable.color.replace">Activer le remplacement de couleur</text>
+  <text key="image.use.enable.color.replace">Activer</text>
   <text key="image.use.preserve.ratio">Conserver les proportions</text>
-  <text key="image.use.use.viewport">Recadrer l'image</text>
+  <text key="image.use.use.viewport">Activer</text>
   <text key="image.use.rotation.label.current">Rotation de l'image : {} degrés</text>
   <text key="rotate.image.left">Tourner à gauche</text>
   <text key="rotate.image.right">Tourner à droite</text>
@@ -2529,7 +2549,8 @@
 		Vérifiez les branchements ou le fait que celle-ci ne soit pas ouverte dans une autre application.</text>
   <text key="image.webcam.capture.webcam.informations">{} - {}x{} - {} FPS</text>
   <text key="remove.image.component">Supprimer</text>
-  <text key="select.image.component">Sélectionner</text>
+  <text key="select.image.component">Image</text>
+  <text key="select.video.component">Vidéo</text>
   <text key="tooltip.remove.image.button">Supprime l'image sélectionnée pour cet élément</text>
   <text key="tooltip.select.image.button">Ouvre la galerie pour sélectionner une image pour cet
 		élément</text>
@@ -2615,6 +2636,8 @@
 		déclenché peu importe le bouton de la souris appuyé.</text>
   <!--org.lifecompanion.config.view.useevent.impl.control.key-->
   <text key="use.event.key.pressed.select.key.label">Filtrer si la touche appuyée est</text>
+  <text key="use.event.key.pressed.block.key.label">Bloquer la touche lorsqu'elle est appuyée</text>
+  <text key="use.event.key.pressed.block.key.explain">Si la touche est bloquée, alors celle-ci n'aura pas son comportement habituel. On peut par exemple bloquer la touche "Entrée" si on ne souhaite plus avoir de saut de ligne à son appui.</text>
   <text key="use.event.key.pressed.select.no.key.explain">Si aucune touche n'est sélectionnée en filtre, alors
 		toutes les touches appuyées déclencheront un événement.</text>
   <!--org.lifecompanion.config.view.useevent.impl.time.value-->
@@ -3666,4 +3689,54 @@
     <text key="button.testing.random.configuration">Configuration aléatoire</text>
     <text key="button.generate.tech.demo.configuration">Configuration démo technique</text>
     <text key="task.generate.tech.demo.configuration.title">Génération de la configuration de démo technique</text>
+    <text key="field.grid.component.selector.add.grid.button">Nouvelle grille</text>
+    <text key="field.grid.component.selector.add.grid.name.header">Nom de la nouvelle grille ?</text>
+    <text key="field.grid.component.selector.add.grid.name.text">Nommez la grille ajoutée pour la retrouver facilement plus tard.</text>
+    <text key="video.analyze.message">Analyse de la vidéo</text>
+    <text key="image.use.config.part.ratio.rotate.title">Rotation et ratio</text>
+    <text key="image.use.config.part.preview.title">Aperçu</text>
+    <text key="image.use.config.part.color.replace.title">Changement de couleur</text>
+    <text key="image.use.config.part.viewport.title">Recadrer</text>
+    <text key="image.configure.viewport">Configurer</text>
+    <text key="image.use.config.view.title.for.image">Configuration de l'image</text>
+    <text key="image.use.config.view.title.for.video">Configuration de la vidéo</text>
+    <text key="image.use.video.mute.toggle">Désactiver le son</text>
+    <text key="image.use.video.display.mode">Affichage</text>
+    <text key="image.use.video.play.mode">Mode de lecture</text>
+    <text key="image.use.config.part.video.title">Vidéo</text>
+    <text key="video.display.mode.in.key.title">Dans la case</text>
+    <text key="video.display.mode.in.key.description">La vidéo sera lue et affichée directement dans la case. Le mode de lecture permettra de choisir quand déclencher la lecture de celle-ci.</text>
+    <text key="video.display.mode.fullscreen.title">En plein écran</text>
+    <text key="video.display.mode.fullscreen.description">À la sélection de la case, la vidéo sera lue en plein écran. Le plein écran sera automatiquement fermé à la fin de la vidéo ou à tout appui sur la souris ou le clavier.</text>
+    <text key="video.play.mode.continuous.title">En continu</text>
+    <text key="video.play.mode.continuous.description">La vidéo est lue en boucle dans la case sans nécessiter aucune action de l'utilisateur</text>
+    <text key="video.play.mode.on.activation.title">À l'activation</text>
+    <text key="video.play.mode.on.activation.description">La vidéo est lue du début à chaque activation de la case. Si la vidéo est déjà en cours de lecture, cela la redémarre.</text>
+    <text key="video.play.mode.while.over.title">Lors du survol</text>
+    <text key="video.play.mode.while.over.description">La vidéo est lue lors du survol : la lecture se fait au passage du curseur ou du défilement puis s'arrête ensuite</text>
+    <text key="video.incorrect.file.error">Impossible d'utiliser la vidéo</text>
+    <text key="file.chooser.video.title">Sélection de vidéos</text>
+    <text key="file.chooser.video.description">Fichiers vidéo</text>
+    <text key="video.file.error.exception.header">La vidéo ne peut pas être utilisée</text>
+    <text key="video.thumbnail.name">Aperçu de la vidéo {}</text>
+    <text key="video.file.error.exception.message">Le fichier vidéo sélectionné ne semble pas pouvoir être utilisé. Cela peut être du à un format de fichier vidéo incompatible avec LifeCompanion. LifeCompanion est compatible avec les fichiers vidéo "MP4" (format le plus courant de fichier vidéo).</text>
+    <text key="auto.select.key.image.config">Sélectionner automatiquement les images des cases</text>
+    <text key="auto.select.key.image.config.description">Quand activé, lorsque le texte d'une case est entré, cela permet de rechercher et de sélectionner automatiquement une image pour cette case si celle-ci ne possède pas encore d'image. L'image peut ensuite être changée en la cherchant manuellement.</text>
+    <text key="key.style.shape.style">Forme</text>
+    <text key="key.shape.classic">Rectangle classique</text>
+    <text key="key.shape.tp.angle.cut">Angle haut/droite</text>
+    <text key="key.shape.bl.angle.round">Angle bas/gauche</text>
+    <text key="general.configuration.view.key.list.field.shape.style">Forme de la case</text>
+    <text key="button.set.keylist.node.shape">Mettre des formes pour les listes de case</text>
+    <text key="use.action.sub.category.configuration.config.list.name">Liste des configurations</text>
+    <text key="action.next.config.in.configlist.name">Page suivante</text>
+    <text key="action.next.config.in.configlist.description">Passe à la page suivante dans la liste des configurations du profil</text>
+    <text key="action.previous.config.in.configlist.name">Page précédente</text>
+    <text key="action.previous.config.in.configlist.description">Passe à la page précédente dans la liste des configurations du profil</text>
+    <text key="config.list.key.default.text">Nom d'une configuration</text>
+    <text key="key.option.config.list.name">Liste des configurations du profil</text>
+    <text key="key.option.config.list.description">Permet d'afficher dynamiquement les configurations disponibles dans le profil afin de pouvoir passer de l'une à l'autre.</text>
+    <text key="use.variable.current.profile.name">Nom du profil courant</text>
+    <text key="use.variable.current.profile.description">Contient le nom du profil LifeCompanion actuellement utilisé</text>
+    <text key="use.variable.current.profile.example">Mathieu</text>
 </texts>

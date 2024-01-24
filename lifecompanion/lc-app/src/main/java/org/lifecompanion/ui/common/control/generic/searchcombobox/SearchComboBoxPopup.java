@@ -24,30 +24,46 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Popup;
 import javafx.stage.Window;
+import org.lifecompanion.controller.editaction.GridStackActions;
+import org.lifecompanion.controller.editmode.ConfigActionController;
+import org.lifecompanion.controller.lifecycle.AppModeController;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
+import org.lifecompanion.model.api.configurationcomponent.DisplayableComponentI;
+import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
+import org.lifecompanion.model.api.configurationcomponent.StackComponentI;
+import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.ui.controlsfx.control.textfield.TextFields;
 import org.lifecompanion.controller.systemvk.SystemVirtualKeyboardController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.lang.LangUtils;
 import org.lifecompanion.model.impl.constant.LCConstant;
+import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.util.ThreadUtils;
+import org.lifecompanion.util.javafx.FXControlUtils;
 import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.util.javafx.FXUtils;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class SearchComboBoxPopup<T> extends Popup implements LCViewInitHelper {
+    private Button buttonAddElement;
     private TextField fieldSearch;
     private ListView<T> listView;
 
@@ -173,6 +189,21 @@ public class SearchComboBoxPopup<T> extends Popup implements LCViewInitHelper {
 
     public void setFixedCellSize(double size) {
         listView.setFixedCellSize(size);
+    }
+
+    public void enableAddButton(String addButtonText, Function<Node, T> addButtonHandler) {
+        if (this.buttonAddElement == null) {
+            this.buttonAddElement = FXControlUtils.createRightTextButton(Translation.getText(addButtonText),
+                    GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.PLUS_CIRCLE).size(18).color(LCGraphicStyle.MAIN_PRIMARY), null);
+            this.buttonAddElement.setOnAction(e -> {
+                T added = addButtonHandler.apply(this.searchComboBox);
+                if (added != null) {
+                    searchComboBox.itemSelected(added);
+                    this.hide();
+                }
+            });
+            this.content.getChildren().add(this.buttonAddElement);
+        }
     }
     //========================================================================
 }

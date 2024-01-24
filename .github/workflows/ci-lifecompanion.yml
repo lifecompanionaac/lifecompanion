@@ -93,14 +93,14 @@ jobs:
           LIFECOMPANION_AWS_SECRET: ${{secrets.aws_secret}}
             
       - name: Build LifeCompanion framework
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@v2.4.2
         with:
           build-root-directory: lifecompanion-framework
           arguments: publishToMavenLocal
 
       - name: Build LifeCompanion app
         if: ${{inputs.plugin_dir_name}}
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@v2.4.2
         with:
           build-root-directory: lifecompanion
           arguments: publishToMavenLocal
@@ -111,13 +111,13 @@ jobs:
 
       - name: Execute plugin build command
         if: ${{inputs.plugin_dir_name}}
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@v2.4.2
         with:
           build-root-directory: lifecompanion-plugins/${{inputs.plugin_dir_name}}
           arguments: clean jar
           
       - name: Call update build and publish command
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@v2.4.2
         with:
           build-root-directory: lifecompanion
           arguments: |

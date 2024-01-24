@@ -73,7 +73,7 @@ public class IOUtils {
      */
     public static void zipInto(final Map<String, InputStream> inputs, final File zipPath, final String comment) throws IOException {
         IOUtils.createParentDirectoryIfNeeded(zipPath);
-        try (ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(zipPath))) {
+        try (ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(zipPath)))) {
             zos.setComment(comment);
             Set<String> paths = inputs.keySet();
             for (String path : paths) {
@@ -385,6 +385,16 @@ public class IOUtils {
         try (InputStream fis = new BufferedInputStream(new FileInputStream(path))) {
             return DigestUtils.sha256Hex(fis);
         }
+    }
+
+    public static String fileMd5HexToString(File path) throws IOException {
+        try (InputStream fis = new BufferedInputStream(new FileInputStream(path))) {
+            return DigestUtils.md5Hex(fis);
+        }
+    }
+
+    public static String stringMd5HexToString(String str) throws IOException {
+        return DigestUtils.md5Hex(str);
     }
 
     public static void createParentDirectoryIfNeeded(File path) {

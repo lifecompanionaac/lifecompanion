@@ -86,6 +86,11 @@ public enum ImageDictionaries implements LCStateListener, ModeListenerI {
     private ImageDictionary configurationImageDictionary;
 
     /**
+     * A temp dictionary which is not saved or displayed in research and just used to create temp image from files
+     */
+    private final ImageDictionary hiddenImageDictionary;
+
+    /**
      * Contains every images
      */
     private final Map<String, ImageElementI> allImages;
@@ -117,21 +122,26 @@ public enum ImageDictionaries implements LCStateListener, ModeListenerI {
         this.loadingService = Executors.newSingleThreadExecutor();
         this.thumbnailService = Executors.newSingleThreadExecutor();
         this.runningLoadingTasks = new ConcurrentHashMap<>();
+        this.hiddenImageDictionary = new ImageDictionary();
+        this.hiddenImageDictionary.setCustomDictionary(true);
     }
 
     // ADD/GET IMAGE
     //========================================================================
     public ImageElementI getOrAddToUserImagesDictionary(File imagePath) {
-        return getOrAdd(imagePath, userImagesDictionary);
+        return getOrAdd(imagePath, userImagesDictionary, null);
     }
 
     public ImageElementI getOrAddToConfigurationImageDictionary(File imagePath) {
-        return getOrAdd(imagePath, configurationImageDictionary);
+        return getOrAdd(imagePath, configurationImageDictionary, null);
     }
 
-    private ImageElementI getOrAdd(File imagePath, ImageDictionaryI dictionary) {
+    public ImageElementI getOrAddForVideoThumbnail(File imagePath, String name) {
+        return getOrAdd(imagePath, hiddenImageDictionary, name);
+    }
+
+    private ImageElementI getOrAdd(File imagePath, ImageDictionaryI dictionary, String forceName) {
         try {
-            final String originalFilenameWithoutExtension = FileNameUtils.getNameWithoutExtension(imagePath);
 
             // Hash image to find its ID
             final String id = IOUtils.fileSha256HexToString(imagePath);
@@ -149,9 +159,10 @@ public enum ImageDictionaries implements LCStateListener, ModeListenerI {
                     imagePath = copiedImageTargetForCustomDir;
                 }
                 // Create the updated/new image
+                final String imageName = forceName != null ? forceName : FileNameUtils.getNameWithoutExtension(imagePath);
                 ImageElement newerImage = new ImageElement(id,
-                        originalFilenameWithoutExtension,
-                        FluentHashMap.map(UserConfigurationController.INSTANCE.userLanguageProperty().get(), new String[]{originalFilenameWithoutExtension}),
+                        imageName,
+                        FluentHashMap.map(UserConfigurationController.INSTANCE.userLanguageProperty().get(), new String[]{imageName}),
                         imagePath);
                 newerImage.setDictionary(dictionary);
                 allImages.put(id, newerImage);
@@ -218,40 +229,46 @@ public enum ImageDictionaries implements LCStateListener, ModeListenerI {
     private static final Comparator<Pair<ImageElementI, Double>> SCORE_MAP_COMPARATOR = (e1, e2) -> Double.compare(e2.getValue(), e1.getValue());
     private static final Comparator<Pair<ImageElementI, Double>> ALPHABETICAL_MAP_COMPARATOR = Comparator.comparing(e -> StringUtils.trimToEmpty(e.getKey().getName()));
 
-    public List<Pair<ImageDictionaryI, List<List<ImageElementI>>>> searchImage(String rawSearchString) {
+    public List<Pair<ImageDictionaryI, List<List<ImageElementI>>>> searchImage(String rawSearchString, boolean displayAll, double minScore) {
         long start = System.currentTimeMillis();
         List<Pair<ImageDictionaryI, List<List<ImageElementI>>>> result = new ArrayList<>();
         String searchFull = StringUtils.stripToEmpty(rawSearchString).toLowerCase();
-        boolean displayAll = searchFull.isEmpty();
         AtomicInteger totalResultCount = new AtomicInteger(0);
         // TODO : convert to full stream implementation with map ?
-        this.dictionaries.stream().sorted((d1, d2) ->
-                Boolean.compare(LCStateController.INSTANCE.getFavoriteImageDictionaries().contains(d2.getName()), LCStateController.INSTANCE.getFavoriteImageDictionaries().contains(d1.getName()))
-        ).forEach(imageDictionary -> {
-            List<ImageElementI> resultList = imageDictionary.getImages()
-                    .parallelStream()
-                    .map(e -> new Pair<>(e, displayAll ? 0.0 : getSimilarityScore(e.getKeywords(), searchFull)))
-                    .sorted(displayAll ? ALPHABETICAL_MAP_COMPARATOR : SCORE_MAP_COMPARATOR)
-                    .filter(e -> displayAll || e.getValue() > ConfigurationComponentUtils.SIMILARITY_CONTAINS)
-                    .map(Pair::getKey)
-                    .collect(Collectors.toList());
-            if (LangUtils.isNotEmpty(resultList)) {
-                int pageSize = displayAll ? ALL_PAGE_SIZE : SEARCH_PAGE_SIZE;
-                final List<List<ImageElementI>> resultPages = IntStream.range(0, resultList.size())
-                        .filter(i -> i % pageSize == 0)
-                        .mapToObj(i -> resultList.subList(i, Math.min(i + pageSize, resultList.size())))
-                        .collect(Collectors.toList());
-                result.add(new Pair<>(imageDictionary, resultPages));
-                LOGGER.info("Found {} result in {} dictionaries, result is {} pages", resultList.size(), imageDictionary.getName(), resultPages.size());
-                totalResultCount.addAndGet(resultList.size());
-            }
-        });
+        this.dictionaries
+                .stream()
+                .sorted((d1, d2) ->
+                        Boolean.compare(LCStateController.INSTANCE.getFavoriteImageDictionaries().contains(d2.getName()),
+                                LCStateController.INSTANCE.getFavoriteImageDictionaries().contains(d1.getName()))
+                ).forEach(imageDictionary -> {
+                    List<ImageElementI> resultList = imageDictionary.getImages()
+                            .parallelStream()
+                            .map(e -> new Pair<>(e, displayAll ? 0.0 : getSimilarityScore(e.getKeywords(), searchFull)))
+                            .sorted(displayAll ? ALPHABETICAL_MAP_COMPARATOR : SCORE_MAP_COMPARATOR)
+                            .filter(e -> displayAll || e.getValue() >= minScore)
+                            .map(Pair::getKey)
+                            .collect(Collectors.toList());
+                    if (LangUtils.isNotEmpty(resultList)) {
+                        int pageSize = displayAll ? ALL_PAGE_SIZE : SEARCH_PAGE_SIZE;
+                        final List<List<ImageElementI>> resultPages = IntStream.range(0, resultList.size())
+                                .filter(i -> i % pageSize == 0)
+                                .mapToObj(i -> resultList.subList(i, Math.min(i + pageSize, resultList.size())))
+                                .collect(Collectors.toList());
+                        result.add(new Pair<>(imageDictionary, resultPages));
+                        LOGGER.info("Found {} result in {} dictionaries, result is {} pages", resultList.size(), imageDictionary.getName(), resultPages.size());
+                        totalResultCount.addAndGet(resultList.size());
+                    }
+                });
         LOGGER.info("Search executed in image dictionaries in {} ms - found {} elements (in {} dictionaries, for \"{}\")",
                 System.currentTimeMillis() - start,
                 totalResultCount,
                 result.size(),
                 rawSearchString);
         return result;
+    }
+
+    public List<Pair<ImageDictionaryI, List<List<ImageElementI>>>> searchImage(String rawSearchString) {
+        return searchImage(rawSearchString, StringUtils.isBlank(rawSearchString), ConfigurationComponentUtils.SIMILARITY_CONTAINS / 2.0);
     }
 
     public double getSimilarityScore(String[] keywords, String searchFull) {

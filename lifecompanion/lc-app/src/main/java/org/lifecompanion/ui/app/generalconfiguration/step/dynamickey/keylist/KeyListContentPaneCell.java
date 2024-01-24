@@ -22,9 +22,9 @@ import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
+import org.lifecompanion.ui.configurationcomponent.editmode.componentoption.ButtonComponentOption;
 import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.util.binding.BindingUtils;
-import org.lifecompanion.util.javafx.FXControlUtils;
 
 public class KeyListContentPaneCell extends StackPane implements LCViewInitHelper {
     private static final double CELL_WIDTH = 75, CELL_HEIGHT = 75;
@@ -42,7 +42,7 @@ public class KeyListContentPaneCell extends StackPane implements LCViewInitHelpe
 
     private final String nodeIdForImageLoading;
 
-    private Button buttonFollowUpLink;
+    private Button buttonOpenOrFollowLink;
     private final KeyListContentConfigView keyListContentConfigView;
     private final KeyListContentPane keyListContentPane;
 
@@ -74,10 +74,10 @@ public class KeyListContentPaneCell extends StackPane implements LCViewInitHelpe
         linkGlyph = GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.LINK).size(14).color(LCGraphicStyle.LC_GRAY);
         glyphPane = new HBox();
 
-        this.buttonFollowUpLink = FXControlUtils.createGraphicButton(
-                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.SHARE).size(14).color(
-                        LCGraphicStyle.MAIN_DARK),
-                null);
+        this.buttonOpenOrFollowLink = new Button();
+        ButtonComponentOption.applyButtonBaseStyle(this.buttonOpenOrFollowLink, LCGraphicStyle.SECOND_DARK, FontAwesome.Glyph.SHARE, 10, 8, 18);
+        this.buttonOpenOrFollowLink.getStyleClass().addAll("padding-0");
+        this.buttonOpenOrFollowLink.setMaxSize(USE_COMPUTED_SIZE, USE_COMPUTED_SIZE);
 
         labelText = new Label();
         labelText.setPrefHeight(LABEL_HEIGHT);
@@ -87,8 +87,8 @@ public class KeyListContentPaneCell extends StackPane implements LCViewInitHelpe
         labelText.setTextAlignment(TextAlignment.CENTER);
 
         imageView = new ImageView();
-        imageView.setFitHeight(CELL_HEIGHT - LABEL_HEIGHT - SPACE);
-        imageView.setFitWidth(CELL_WIDTH);
+        imageView.setFitHeight(CELL_HEIGHT - LABEL_HEIGHT - SPACE - STROKE_WIDTH);
+        imageView.setFitWidth(CELL_WIDTH - STROKE_WIDTH * 2.0);
         imageView.setPreserveRatio(true);
         imageView.setSmooth(true);
 
@@ -97,11 +97,11 @@ public class KeyListContentPaneCell extends StackPane implements LCViewInitHelpe
         rectangleColors.setStrokeWidth(STROKE_WIDTH);
         rectangleColors.setStroke(Color.TRANSPARENT);
 
-        StackPane stackPaneContent = new StackPane(rectangleColors, imageView, glyphPane, labelText, buttonFollowUpLink);
+        StackPane stackPaneContent = new StackPane(rectangleColors, imageView, glyphPane, labelText, buttonOpenOrFollowLink);
         stackPaneContent.setAlignment(Pos.CENTER);
         StackPane.setAlignment(imageView, Pos.TOP_CENTER);
-        StackPane.setAlignment(buttonFollowUpLink, Pos.TOP_RIGHT);
-        StackPane.setMargin(imageView, new Insets(0, 0, LABEL_HEIGHT + SPACE, 0));
+        StackPane.setAlignment(buttonOpenOrFollowLink, Pos.TOP_RIGHT);
+        StackPane.setMargin(imageView, new Insets(STROKE_WIDTH, STROKE_WIDTH, LABEL_HEIGHT + SPACE, STROKE_WIDTH));
         StackPane.setAlignment(glyphPane, Pos.TOP_LEFT);
         StackPane.setAlignment(labelText, Pos.BOTTOM_CENTER);
         this.getChildren().add(stackPaneContent);
@@ -112,10 +112,11 @@ public class KeyListContentPaneCell extends StackPane implements LCViewInitHelpe
     public void initListener() {
         this.setOnMouseClicked(e -> {
             if (e.getClickCount() >= 2) {
-                if (!item.get().isLeafNode()) {
-                    keyListContentConfigView.openList(item.get());
-                } else if (item.get().isLinkNode()) {
-                    keyListContentConfigView.selectById(item.get().linkedNodeIdProperty().get());
+                KeyListNodeI item = this.item.get();
+                if (!item.isLeafNode()) {
+                    keyListContentConfigView.openList(item);
+                } else if (item.isLinkNode()) {
+                    keyListContentConfigView.openById(item.linkedNodeIdProperty().get());
                 }
             } else {
                 try {
@@ -130,10 +131,14 @@ public class KeyListContentPaneCell extends StackPane implements LCViewInitHelpe
                 }
             }
         });
-        this.buttonFollowUpLink.setOnAction(e -> {
+        this.buttonOpenOrFollowLink.setOnAction(e -> {
             KeyListNodeI item = this.item.get();
-            if (item != null && item.isLinkNode()) {
-                keyListContentConfigView.selectById(item.linkedNodeIdProperty().get());
+            if (item != null) {
+                if (item.isLinkNode()) {
+                    keyListContentConfigView.openById(item.linkedNodeIdProperty().get());
+                } else if (!item.isLeafNode()) {
+                    keyListContentConfigView.openList(item);
+                }
             }
         });
         KeyListContentConfigView.installDragNDropOn(keyListContentConfigView, this, n -> n.item.get());
@@ -150,7 +155,7 @@ public class KeyListContentPaneCell extends StackPane implements LCViewInitHelpe
                 BindingUtils.unbindAndSetNull(rectangleColors.strokeProperty());
                 BindingUtils.unbindAndSetNull(rectangleColors.fillProperty());
                 BindingUtils.unbindAndSet(rectangleColors.visibleProperty(), false);
-                BindingUtils.unbindAndSet(buttonFollowUpLink.visibleProperty(), false);
+                BindingUtils.unbindAndSet(buttonOpenOrFollowLink.visibleProperty(), false);
                 glyphPane.getChildren().clear();
                 ov.removeExternalLoadingRequest(nodeIdForImageLoading);
             }
@@ -163,14 +168,16 @@ public class KeyListContentPaneCell extends StackPane implements LCViewInitHelpe
                         selected, nv.strokeColorProperty()));
                 rectangleColors.fillProperty().bind(nv.backgroundColorProperty());
                 rectangleColors.visibleProperty().bind(selected.or(nv.strokeColorProperty().isNotNull().or(nv.backgroundColorProperty().isNotNull())));
-                buttonFollowUpLink.visibleProperty().bind(item.get().linkedNodeIdProperty().isNotEmpty().and(new SimpleBooleanProperty(item.get().isLinkNode())));
+                KeyListNodeI itemV = item.get();
+                buttonOpenOrFollowLink.visibleProperty()
+                        .bind(new SimpleBooleanProperty(itemV.isLeafNode()).not().or(itemV.linkedNodeIdProperty().isNotEmpty().and(new SimpleBooleanProperty(itemV.isLinkNode()))));
                 labelText.textProperty()
-                         .bind(Bindings.createStringBinding(nv::getHumanReadableText,
-                                 nv.textProperty(),
-                                 nv.enableWriteProperty(),
-                                 nv.textToWriteProperty(),
-                                 nv.enableSpeakProperty(),
-                                 nv.textToSpeakProperty()));
+                        .bind(Bindings.createStringBinding(nv::getHumanReadableText,
+                                nv.textProperty(),
+                                nv.enableWriteProperty(),
+                                nv.textToWriteProperty(),
+                                nv.enableSpeakProperty(),
+                                nv.textToSpeakProperty()));
                 labelText.textFillProperty().bind(Bindings.createObjectBinding(() -> nv.textColorProperty().get() != null ? nv.textColorProperty().get() : Color.BLACK, nv.textColorProperty()));
                 nv.addExternalLoadingRequest(nodeIdForImageLoading);
             }

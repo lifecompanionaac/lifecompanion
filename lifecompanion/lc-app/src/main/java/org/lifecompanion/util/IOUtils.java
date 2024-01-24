@@ -46,8 +46,19 @@ public class IOUtils {
     }
 
     public static boolean isSupportedImage(final File imgFile) {
+        String ext = FileNameUtils.getExtension(imgFile);
         for (int i = 0; i < LCConstant.IMAGE_EXTENSIONS.length; i++) {
-            if (StringUtils.endsWithIgnoreCase(FileNameUtils.getExtension(imgFile), LCConstant.IMAGE_EXTENSIONS[i])) {
+            if (StringUtils.endsWithIgnoreCase(ext, LCConstant.IMAGE_EXTENSIONS[i])) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isSupportedVideo(final File imgFile) {
+        String ext = FileNameUtils.getExtension(imgFile);
+        for (int i = 0; i < LCConstant.VIDEO_EXTENSIONS.length; i++) {
+            if (StringUtils.endsWithIgnoreCase(ext, LCConstant.VIDEO_EXTENSIONS[i])) {
                 return true;
             }
         }

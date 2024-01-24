@@ -23,11 +23,13 @@ import org.lifecompanion.controller.editmode.FileChooserType;
 import org.lifecompanion.controller.editmode.LCFileChoosers;
 import org.lifecompanion.controller.io.IOHelper;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
+import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
+import org.lifecompanion.model.impl.useapi.GlobalRuntimeConfiguration;
 import org.lifecompanion.plugin.ppp.model.JsonRecordI;
 import org.lifecompanion.plugin.ppp.model.UserProfile;
 import org.lifecompanion.plugin.ppp.services.FilesService;
@@ -54,27 +56,21 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import static org.lifecompanion.controller.editmode.FileChooserType.OTHER_MISC_EXTERNAL;
-
 public class RecordsView extends BorderPane implements LCViewInitHelper {
     private final LCConfigurationI config;
+    private final UserProfile userProfile;
+    private final File userDataDirectory;
 
     private final BooleanProperty loading;
-    private final ObjectProperty<UserProfile> profile;
     private final ObjectProperty<PeriodType> periodType;
     private final ObjectProperty<SeriesGroup> seriesGroup;
     private final ObjectProperty<Period> period;
-    private final ObjectProperty<File> zipFile;
-    private final ObjectProperty<File> dataDirectory;
 
     private RecordsChart chart;
     private LineChart<Number, Number> backgroundChart;
 
     private Label dataLabel;
-    private Button btnImport;
-    private Button btnExport;
     private Button btnPdf;
-    private Button btnRemoveImported;
     private ComboBox<PeriodType> comboPeriodTypes;
     private ComboBox<SeriesGroup> comboSeriesGroup;
     private Button btnPrevPeriod;
@@ -94,40 +90,39 @@ public class RecordsView extends BorderPane implements LCViewInitHelper {
 
     private final boolean hideTaskFromNotifications;
 
-    public RecordsView(LCConfigurationI config) {
-        this(config, null, PeriodType.DAY, PeriodType.DAY.getDefaultPeriod(), false, null);
-
-        this.handleZipFileChange();
+    public RecordsView(LCConfigurationI config, UserProfile userProfile) {
+        this(config, userProfile, PeriodType.DAY, PeriodType.DAY.getDefaultPeriod(), false, null);
     }
 
-    public RecordsView(LCConfigurationI config, File dataDirectory, LocalDate day, Consumer<RecordsView> onLoadCallback) {
-        this(config, dataDirectory, PeriodType.DAY, PeriodType.DAY.getPeriodForEnd(day.plusDays(1).atStartOfDay(ZoneId.systemDefault())), true, onLoadCallback);
-
-        this.handleDataDirectoryChange();
+    public RecordsView(LCConfigurationI config, UserProfile userProfile, LocalDate day, Consumer<RecordsView> onLoadCallback) {
+        this(config, userProfile, PeriodType.DAY, PeriodType.DAY.getPeriodForEnd(day.plusDays(1).atStartOfDay(ZoneId.systemDefault())), true, onLoadCallback);
     }
 
-    public RecordsView(LCConfigurationI config, File dataDirectory, LocalDate from, LocalDate to, Consumer<RecordsView> onLoadCallback) {
-        this(config, dataDirectory, PeriodType.MONTH, new Period(from.atStartOfDay(ZoneId.systemDefault()), to.atStartOfDay(ZoneId.systemDefault())), true, onLoadCallback);
-
-        this.handleDataDirectoryChange();
+    public RecordsView(LCConfigurationI config, UserProfile userProfile, LocalDate from, LocalDate to, Consumer<RecordsView> onLoadCallback) {
+        this(config, userProfile, PeriodType.MONTH, new Period(from.atStartOfDay(ZoneId.systemDefault()), to.atStartOfDay(ZoneId.systemDefault())), true, onLoadCallback);
     }
 
-    private RecordsView(LCConfigurationI config, File dataDirectory, PeriodType periodType, Period period, boolean hideTaskFromNotifications, Consumer<RecordsView> onLoadCallback) {
+    private RecordsView(LCConfigurationI config,
+                        UserProfile userProfile,
+                        PeriodType periodType,
+                        Period period,
+                        boolean hideTaskFromNotifications,
+                        Consumer<RecordsView> onLoadCallback) {
         this.config = config;
+        this.userProfile = userProfile;
+        this.userDataDirectory = new File(FilesService.INSTANCE.getUserDataDirectory(config, userProfile));
         this.hideTaskFromNotifications = hideTaskFromNotifications;
         this.loading = new SimpleBooleanProperty(true);
-        this.profile = new SimpleObjectProperty<>();
         this.periodType = new SimpleObjectProperty<>(periodType);
         this.seriesGroup = new SimpleObjectProperty<>(SeriesGroup.HETERO);
         this.period = new SimpleObjectProperty<>(period);
-        //this.period = new SimpleObjectProperty<>(PeriodType.DAY.getPeriodForEnd(day.plusDays(1).atStartOfDay(ZoneId.systemDefault())));
-        this.zipFile = new SimpleObjectProperty<>();
-        this.dataDirectory = new SimpleObjectProperty<>(dataDirectory);
         this.onLoadCallback = onLoadCallback;
 
         this.getStylesheets().addAll(LCConstant.CSS_STYLE_PATH);
         this.getStylesheets().add(this.getClass().getResource("/styles/ppp_plugin_chart.css").toExternalForm());
         this.initAll();
+
+        this.handleProfileOrPeriodChange();
     }
 
     public StackPane createChartPaneForSnapshot() {
@@ -146,7 +141,7 @@ public class RecordsView extends BorderPane implements LCViewInitHelper {
     public void initUI() {
         this.chart = new RecordsChart();
 
-        this.dataLabel = new Label();
+        this.dataLabel = new Label(Translation.getText("ppp.plugin.view.records.period.data.label.from_config", userProfile.getUserName()));
         this.dataLabel.setMaxHeight(Double.MAX_VALUE);
         this.dataLabel.setMaxWidth(Double.MAX_VALUE);
         this.dataLabel.getStyleClass().add("text-weight-bold");
@@ -154,20 +149,8 @@ public class RecordsView extends BorderPane implements LCViewInitHelper {
                 Translation.getText("ppp.plugin.view.records.period.data.pdf.name"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.FILE).size(20).color(LCGraphicStyle.MAIN_DARK),
                 null);
-        this.btnImport = FXControlUtils.createRightTextButton(
-                Translation.getText("ppp.plugin.view.records.period.data.import.name"),
-                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.DOWNLOAD).size(20).color(LCGraphicStyle.MAIN_DARK),
-                null);
-        this.btnExport = FXControlUtils.createRightTextButton(
-                Translation.getText("ppp.plugin.view.records.period.data.export.name"),
-                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.UPLOAD).size(20).color(LCGraphicStyle.MAIN_DARK),
-                null);
-        this.btnRemoveImported = FXControlUtils.createRightTextButton(
-                Translation.getText("ppp.plugin.view.records.period.data.remove.name"),
-                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CLOSE).size(20).color(
-                        LCGraphicStyle.SECOND_PRIMARY), null);
 
-        HBox periodDataLayout = new HBox(5.0, this.dataLabel, this.btnImport, this.btnExport, this.btnRemoveImported, this.btnPdf);
+        HBox periodDataLayout = new HBox(5.0, this.dataLabel, this.btnPdf);
         HBox.setHgrow(this.dataLabel, Priority.ALWAYS);
         periodDataLayout.getStyleClass().add("border-bottom-gray");
 
@@ -229,8 +212,10 @@ public class RecordsView extends BorderPane implements LCViewInitHelper {
         this.detailsDescription.add(
                 new Label(Translation.getText("ppp.plugin.view.records.details.no_data.description")), 0, 0);
 
-        // buttonGenerateRandomData = new Button("RANDOM DATA");
-        // periodLayout.getChildren().add(buttonGenerateRandomData);
+        if (GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.PROP_DEV_MODE)) {
+            buttonGenerateRandomData = new Button("Generate random data");
+            periodDataLayout.getChildren().add( buttonGenerateRandomData);
+        }
 
         this.detailsDayViewBtn = FXControlUtils.createRightTextButton(
                 Translation.getText("ppp.plugin.view.records.details.day_view.name"),
@@ -264,28 +249,8 @@ public class RecordsView extends BorderPane implements LCViewInitHelper {
 
     @Override
     public void initBinding() {
-        this.dataLabel.textProperty().bind(Bindings.createStringBinding(() -> {
-            if (this.profile.get() == null) {
-                return "";
-            }
 
-            return this.zipFile.get() == null
-                    ? Translation.getText("ppp.plugin.view.records.period.data.label.from_config",
-                    this.profile.get().getUserId())
-                    : Translation.getText("ppp.plugin.view.records.period.data.label.from_import",
-                    this.profile.get().getUserId(), this.zipFile.get().getName());
-        }, this.profile));
-
-        this.btnImport.disableProperty().bind(this.loading);
-        this.btnImport.visibleProperty().bind(this.zipFile.isNull());
-        this.btnImport.managedProperty().bind(this.zipFile.isNull());
-        this.btnExport.disableProperty().bind(this.loading);
-        this.btnExport.visibleProperty().bind(this.zipFile.isNull());
-        this.btnExport.managedProperty().bind(this.zipFile.isNull());
         this.btnPdf.disableProperty().bind(this.loading);
-        this.btnRemoveImported.disableProperty().bind(this.loading);
-        this.btnRemoveImported.visibleProperty().bind(this.zipFile.isNotNull());
-        this.btnRemoveImported.managedProperty().bind(this.zipFile.isNotNull());
         this.btnPrevPeriod.disableProperty().bind(this.loading);
         this.btnNextPeriod.disableProperty().bind(this.loading);
 
@@ -313,35 +278,12 @@ public class RecordsView extends BorderPane implements LCViewInitHelper {
         }, this.chart.selectedDataProperty()));
 
         this.detailsDayViewBtn.disableProperty().bind(this.loading);
-        this.detailedRecordDeleteBtn.disableProperty().bind(this.loading.or(this.zipFile.isNotNull()));
-        this.detailedRecordChangeDateBtn.disableProperty().bind(this.loading.or(this.zipFile.isNotNull()));
+        this.detailedRecordDeleteBtn.disableProperty().bind(this.loading);
+        this.detailedRecordChangeDateBtn.disableProperty().bind(this.loading);
     }
 
     @Override
     public void initListener() {
-        this.btnImport.setOnAction(e -> {
-            FileChooser fileChooser = LCFileChoosers.getOtherFileChooser(
-                    Translation.getText("ppp.plugin.view.records.period.data.import.chooser.title"),
-                    FilesService.DATA_EXTENSION_FILTER, OTHER_MISC_EXTERNAL);
-
-            File dataZipFile = fileChooser.showOpenDialog(FXUtils.getSourceWindow(btnImport));
-            if (dataZipFile != null) {
-                this.zipFile.set(dataZipFile);
-            }
-        });
-        this.btnExport.setOnAction(event -> {
-            FileChooser fileChooser = LCFileChoosers.getOtherFileChooser(
-                    Translation.getText("ppp.plugin.view.records.period.data.export.chooser.title"),
-                    FilesService.DATA_EXTENSION_FILTER, OTHER_MISC_EXTERNAL);
-            fileChooser.setInitialFileName(IOHelper.DATE_FORMAT_FILENAME_WITHOUT_TIME.format(new Date()) + "-"
-                    + IOUtils.getValidFileName(this.profile.get().getUserId()) + "-ppp");
-
-            File destinationZipFile = fileChooser.showSaveDialog(FXUtils.getSourceWindow(btnExport));
-            if (destinationZipFile != null) {
-                Task<Void> task = new ExportDataTask(this.config, destinationZipFile);
-                AsyncExecutorController.INSTANCE.addAndExecute(true, false, task);
-            }
-        });
         this.btnPdf.setOnAction(event -> {
             // Contains (from,to)
             final DateRangerPickerDialog dateRangerPickerDialog = new DateRangerPickerDialog();
@@ -353,17 +295,16 @@ public class RecordsView extends BorderPane implements LCViewInitHelper {
                         FilesService.PDF_EXTENSION_FILTER, FileChooserType.EXPORT_PDF);
 
                 fileChooser.setInitialFileName(IOHelper.DATE_FORMAT_FILENAME_WITHOUT_TIME.format(new Date()) + "-"
-                        + IOUtils.getValidFileName(this.profile.get().getUserId()) + "-ppp");
+                        + IOUtils.getValidFileName(this.userProfile.getUserName()) + "-ppp");
 
                 File destinationFile = fileChooser.showSaveDialog(FXUtils.getSourceWindow(btnPdf));
                 if (destinationFile != null) {
-                    Task<Void> task = new PdfExportTask(this.config, this.dataDirectory.get(), destinationFile,
+                    Task<Void> task = new PdfExportTask(this.config, this.userProfile, destinationFile,
                             dateRange.get().getKey(), dateRange.get().getValue());
                     AsyncExecutorController.INSTANCE.addAndExecute(true, false, task);
                 }
             }
         });
-        this.btnRemoveImported.setOnAction(e -> this.zipFile.set(null));
         this.btnPrevPeriod.setOnAction(e -> this.period.set(this.periodType.get().getPrevious(this.period.get())));
         this.btnNextPeriod.setOnAction(e -> this.period.set(this.periodType.get().getNext(this.period.get())));
         this.comboPeriodTypes.getSelectionModel().selectedItemProperty().addListener((obs, ov, nv) -> {
@@ -373,10 +314,6 @@ public class RecordsView extends BorderPane implements LCViewInitHelper {
             }
         });
 
-        this.zipFile.addListener((obs, ov, nv) -> this.handleZipFileChange());
-        this.dataDirectory.addListener((obs, ov, nv) -> this.handleDataDirectoryChange());
-
-        this.profile.addListener((obs, ov, nv) -> this.handleProfileOrPeriodChange());
         this.period.addListener((obs, ov, nv) -> this.handleProfileOrPeriodChange());
         this.seriesGroup.addListener((obs, ov, nv) -> this.handleProfileOrPeriodChange());
 
@@ -403,18 +340,19 @@ public class RecordsView extends BorderPane implements LCViewInitHelper {
                     .withHeaderText(Translation.getText("ppp.plugin.view.records.details.delete.confirmDialog.header"))
                     .showAndWait() == ButtonType.OK
             ) {
-                RecordsService.INSTANCE.delete(this.config, this.detailedRecord);
-                // Trigger chart reload.
-                this.handleDataDirectoryChange();
+                RecordsService.INSTANCE.delete(this.config, this.userProfile, this.detailedRecord);
+                this.handleProfileOrPeriodChange();
             }
         });
         detailedRecordChangeDateBtn.setOnAction(e -> {
-            new DatePickerDialog(detailedRecord.getRecordedAt()).showAndWait().ifPresent(nRecordedAt -> {
+            DatePickerDialog datePickerDialog = new DatePickerDialog(detailedRecord.getRecordedAt());
+            datePickerDialog.initOwner(this.getScene().getWindow());
+            datePickerDialog.showAndWait().ifPresent(nRecordedAt -> {
                 // Delete old and save the new one (as the file name is the recorded at date)
-                RecordsService.INSTANCE.delete(this.config, this.detailedRecord);
+                RecordsService.INSTANCE.delete(this.config, this.userProfile, this.detailedRecord);
                 this.detailedRecord.setRecordedAt(nRecordedAt);
-                RecordsService.INSTANCE.save(this.config, this.detailedRecord);
-                this.handleDataDirectoryChange();
+                RecordsService.INSTANCE.save(this.config, this.userProfile, this.detailedRecord);
+                this.handleProfileOrPeriodChange();
             });
         });
 
@@ -463,8 +401,8 @@ public class RecordsView extends BorderPane implements LCViewInitHelper {
 
         if (buttonGenerateRandomData != null) {
             this.buttonGenerateRandomData.setOnAction(e -> {
-                RandomDataService.generateRandomDataFor(config, this.profile.get());
-                handleDataDirectoryChange();
+                RandomDataService.generateRandomDataFor(config, this.userProfile);
+                handleProfileOrPeriodChange();
             });
         }
     }
@@ -489,42 +427,16 @@ public class RecordsView extends BorderPane implements LCViewInitHelper {
         this.detailsDescription.add(valueLabel, 1, rowIndex);
     }
 
-    private void handleZipFileChange() {
-        this.loading.set(true);
-
-        File zipFile = this.zipFile.get();
-        if (zipFile != null) {
-            ImportDataTask task = new ImportDataTask(zipFile);
-            task.setOnSucceeded(e -> this.dataDirectory.set(task.getValue()));
-
-            AsyncExecutorController.INSTANCE.addAndExecute(true, hideTaskFromNotifications, task);
-        } else {
-            this.dataDirectory.set(new File(FilesService.INSTANCE.getPluginDirectoryPath(this.config)));
-        }
-    }
-
-    private void handleDataDirectoryChange() {
-        this.loading.set(true);
-
-        LoadDirProfileTask task = new LoadDirProfileTask(this.dataDirectory.get());
-        task.setOnSucceeded(e -> this.profile.set(task.getValue()));
-
-        AsyncExecutorController.INSTANCE.addAndExecute(true, hideTaskFromNotifications, task);
-    }
 
     private void handleProfileOrPeriodChange() {
         this.loading.set(true);
 
-        UserProfile profile = this.profile.get();
         Period period = this.period.get();
-        File dataDirectory = this.dataDirectory.get();
-        if (profile != null && periodType != null && period != null && dataDirectory != null) {
-            LoadDataForPeriodTask task = new LoadDataForPeriodTask(this.dataDirectory.get(), period);
+        if (periodType != null && period != null) {
+            LoadDataForPeriodTask task = new LoadDataForPeriodTask(userDataDirectory, period);
             task.setOnSucceeded(e -> {
-                this.chart.apply(profile, this.periodType.get(), period, this.seriesGroup.get());
-
+                this.chart.apply(userProfile, this.periodType.get(), period, this.seriesGroup.get());
                 this.loading.set(false);
-
                 if (this.onLoadCallback != null) {
                     this.onLoadCallback.accept(this);
                 }

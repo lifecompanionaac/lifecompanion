@@ -27,6 +27,7 @@ import org.lifecompanion.framework.utils.LCNamedThreadFactory;
 import org.lifecompanion.model.api.categorizedelement.useaction.*;
 import org.lifecompanion.model.api.categorizedelement.useevent.UseEventListenerI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
+import org.lifecompanion.model.api.configurationcomponent.VideoUseComponentI;
 import org.lifecompanion.model.api.lifecycle.LCStateListener;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
@@ -153,6 +154,7 @@ public enum UseActionController implements LCStateListener, ModeListenerI {
         if (!this.pauseActionLaunch) {
             this.threadPool.submit(() -> {
                 try {
+                    element.eventFired(ActionEventType.START,event);
                     for (BaseUseActionI<?> action : getActionListCopy(element, event)) {
                         if (!action.isSimple()) {
                             action.eventStarts(event);
@@ -175,6 +177,7 @@ public enum UseActionController implements LCStateListener, ModeListenerI {
     public void endEventOn(final UseActionTriggerComponentI element, final UseActionEvent event, final Map<String, UseVariableI<?>> variables) {
         final Runnable executedEndEvent = () -> {
             try {
+                element.eventFired(ActionEventType.END,event);
                 for (BaseUseActionI<?> action : getActionListCopy(element, event)) {
                     if (!action.isSimple()) {
                         action.eventEnds(event);
@@ -236,6 +239,7 @@ public enum UseActionController implements LCStateListener, ModeListenerI {
             Runnable actionExecutable = () -> {
                 ActionExecutionResultI result = new ActionExecutionResult(true);
                 try {
+                    useActionTriggerComponent.eventFired(ActionEventType.SIMPLE,event);
                     result = executeActions(event, actions, finalVariables);
                 } catch (Throwable t) {
                     this.LOGGER.error("Error on simple use action execution", t);

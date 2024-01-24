@@ -37,6 +37,7 @@ import javafx.util.Pair;
 import org.lifecompanion.model.api.configurationcomponent.*;
 import org.lifecompanion.model.api.selectionmode.ProgressDrawMode;
 import org.lifecompanion.model.api.selectionmode.ScanningDirection;
+import org.lifecompanion.model.api.style.ShapeStyle;
 import org.lifecompanion.model.api.style.StylePropertyI;
 import org.lifecompanion.model.api.ui.configurationcomponent.ViewProviderI;
 import org.lifecompanion.util.LangUtils;
@@ -225,10 +226,11 @@ public class AbstractSelectionModeView<T extends DrawSelectionModeI> extends Gro
         Pair<Double, Double> pos = ConfigurationComponentLayoutUtils.getConfigurationPosition(keyP);
         StylePropertyI<Number> radiusProp = keyP instanceof GridPartKeyComponentI ? keyP.getKeyStyle().shapeRadiusProperty()
                 : keyP.getGridShapeStyle().shapeRadiusProperty();
+        ShapeStyle shapeStyle = keyP instanceof GridPartKeyComponentI ? keyP.getKeyStyle().shapeStyleProperty().value().getValue() : ShapeStyle.CLASSIC;
         //Launch
         this.updateMoveAnimation(enableAnimation, ViewProviderI.getOrCreateViewComponentFor(keyP, AppMode.USE).getView(), pos,
                 new Pair<>(keyP.layoutWidthProperty().get(), keyP.layoutHeightProperty().get()),
-                LangUtils.nullToZeroDouble(radiusProp.value().getValue()), this.partTranslateTransition, this.keyStrokeRectangle,
+                LangUtils.nullToZeroDouble(radiusProp.value().getValue()), shapeStyle, this.partTranslateTransition, this.keyStrokeRectangle,
                 this.keyProgressRectangle, this.keyProgressRectangleVisible, () -> {
                     this.startProgressTransition(pos, progressTime, keyP);
                 });
@@ -274,7 +276,7 @@ public class AbstractSelectionModeView<T extends DrawSelectionModeI> extends Gro
     private List<Node> previousViews;
 
     protected void updateMoveAnimation(final boolean enableAnimation, final Node view, final Pair<Double, Double> position,
-                                       final Pair<Double, Double> size, final double shapeRadius, final TranslateTransition translateAnimation, final Rectangle strokeRectangle,
+                                       final Pair<Double, Double> size, final double shapeRadius, ShapeStyle shapeStyle, final TranslateTransition translateAnimation, final Rectangle strokeRectangle,
                                        final Rectangle progressRectangle, final BooleanProperty progressVisibleProperty, final Runnable translateAnimationCallback) {
         progressVisibleProperty.set(false);
 
@@ -296,7 +298,7 @@ public class AbstractSelectionModeView<T extends DrawSelectionModeI> extends Gro
             translateAnimation.setToY(position.getValue());
 
             //Create size and stroke animation
-            KeyFrame keyFrame = this.getSizeTransition(strokeRectangle, size.getKey(), size.getValue(), shapeRadius, strokeSize);
+            KeyFrame keyFrame = this.getSizeTransition(strokeRectangle, size.getKey(), size.getValue(), shapeRadius, strokeSize, shapeStyle);
             this.timeLineSize.getKeyFrames().clear();
             this.timeLineSize.getKeyFrames().add(keyFrame);
 
@@ -306,7 +308,7 @@ public class AbstractSelectionModeView<T extends DrawSelectionModeI> extends Gro
             strokeRectangle.setTranslateY(position.getValue());
             strokeRectangle.setWidth(size.getKey());
             strokeRectangle.setHeight(size.getValue());
-            double arcValue = ConfigurationComponentLayoutUtils.computeArcAndStroke(shapeRadius, size.getKey(), size.getValue(), strokeSize);
+            double arcValue = ConfigurationComponentLayoutUtils.computeArcAndStroke(shapeRadius, size.getKey(), size.getValue(), strokeSize, shapeStyle);
             strokeRectangle.setArcWidth(arcValue);
             strokeRectangle.setArcHeight(arcValue);
             strokeRectangle.setStrokeWidth(strokeSize);
@@ -411,20 +413,22 @@ public class AbstractSelectionModeView<T extends DrawSelectionModeI> extends Gro
                 }
             }
             KeyValue keyValue = new KeyValue(changingProperty, endValue, Interpolator.EASE_BOTH);
-            this.keyFrameProgress = new KeyFrame(Duration.millis(progressTime - AbstractSelectionModeView.TIME
-                    - AbstractSelectionModeView.EXTRA_TIME_END_PROGRESS - AbstractSelectionModeView.EXTRA_TIME_BEFORE_PROGRESS),
-                    keyValue);
-            this.timeLineProgress.getKeyFrames().add(this.keyFrameProgress);
+            long progressValue = progressTime - AbstractSelectionModeView.TIME
+                    - AbstractSelectionModeView.EXTRA_TIME_END_PROGRESS - AbstractSelectionModeView.EXTRA_TIME_BEFORE_PROGRESS;
+            if (progressValue > 0) {
+                this.keyFrameProgress = new KeyFrame(Duration.millis(progressValue), keyValue);
+                this.timeLineProgress.getKeyFrames().add(this.keyFrameProgress);
+            }
             this.timeLineProgress.setDelay(Duration.millis(AbstractSelectionModeView.EXTRA_TIME_BEFORE_PROGRESS));
             this.timeLineProgress.play();
         }
     }
 
     protected KeyFrame getSizeTransition(final Rectangle rectangle, final double width, final double height, final double round,
-                                         final double stroke) {
+                                         final double stroke, ShapeStyle shapeStyle) {
         final KeyValue kvW = new KeyValue(rectangle.widthProperty(), width, Interpolator.EASE_BOTH);
         final KeyValue kvH = new KeyValue(rectangle.heightProperty(), height, Interpolator.EASE_BOTH);
-        double arcValue = ConfigurationComponentLayoutUtils.computeArcAndStroke(round, width, height, stroke);
+        double arcValue = ConfigurationComponentLayoutUtils.computeArcAndStroke(round, width, height, stroke, shapeStyle);
         final KeyValue kvRW = new KeyValue(rectangle.arcWidthProperty(), arcValue, Interpolator.EASE_BOTH);
         final KeyValue kvRH = new KeyValue(rectangle.arcHeightProperty(), arcValue, Interpolator.EASE_BOTH);
         final KeyValue kvStr = new KeyValue(rectangle.strokeWidthProperty(), stroke, Interpolator.EASE_BOTH);

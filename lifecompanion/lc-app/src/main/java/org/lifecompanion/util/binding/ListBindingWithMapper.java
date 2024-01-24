@@ -44,7 +44,6 @@ public class ListBindingWithMapper {
                                        Function<? super E, ? extends F> mapper) {
         final ListContentMapping<E, F> contentMapping = new ListContentMapping<E, F>(mapped, mapper);
         mapped.setAll(source.stream().map(mapper).collect(toList()));
-        source.removeListener(contentMapping);
         source.addListener(contentMapping);
         return () -> source.removeListener(contentMapping);
     }
@@ -85,31 +84,6 @@ public class ListBindingWithMapper {
         @Override
         public boolean wasGarbageCollected() {
             return mappedRef.get() == null;
-        }
-
-        @Override
-        public int hashCode() {
-            final List<F> list = mappedRef.get();
-            return (list == null) ? 0 : list.hashCode();
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (this == obj) {
-                return true;
-            }
-
-            final List<F> mapped1 = mappedRef.get();
-            if (mapped1 == null) {
-                return false;
-            }
-
-            if (obj instanceof ListContentMapping) {
-                final ListContentMapping<?, ?> other = (ListContentMapping<?, ?>) obj;
-                final List<?> mapped2 = other.mappedRef.get();
-                return mapped1 == mapped2;
-            }
-            return false;
         }
     }
 }

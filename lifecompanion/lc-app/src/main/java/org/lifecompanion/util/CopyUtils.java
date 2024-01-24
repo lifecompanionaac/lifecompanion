@@ -32,6 +32,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
@@ -59,11 +61,26 @@ public class CopyUtils {
      */
     public static <T extends DuplicableComponentI & XMLSerializable<IOContextI>> DuplicableComponentI createDeepCopyViaXMLSerialization(
             final T source, final boolean changeID) {
-        //Copy, but ID mustn't be the same
+        return createDeepCopyViaXMLSerialization(source, changeID, null);
+    }
+
+    /**
+     * Create a deep copy of a given component.<br>
+     * The copy use the XML serialization to copy the component.
+     *
+     * @param source   the component that should be copied
+     * @param changeID if the copied component should have a different ID than the source
+     * @return the cloned component, or null if the copy fails
+     */
+    public static <T extends DuplicableComponentI & XMLSerializable<IOContextI>> DuplicableComponentI createDeepCopyViaXMLSerialization(
+            final T source, final boolean changeID, BiConsumer<Element, IOContextI> serializeTransformer) {
         IOContext context = new IOContext(IOUtils.getTempDir("componentcopy"));
         context.setFallbackOnDefaultInstanceOnFail(false);
         //Serialize element to copy
         Element serialized = source.serialize(context);
+        if (serializeTransformer != null) {
+            serializeTransformer.accept(serialized, context);
+        }
         try {
             //Load serialized version
             Pair<Boolean, XMLSerializable<IOContextI>> duplicatedResult = ConfigurationComponentIOHelper.create(serialized, context, null);

@@ -29,6 +29,7 @@ import javafx.collections.ObservableMap;
 import javafx.scene.input.Clipboard;
 import javafx.util.Duration;
 import org.lifecompanion.controller.plugin.PluginController;
+import org.lifecompanion.controller.profile.ProfileController;
 import org.lifecompanion.controller.selectionmode.SelectionModeController;
 import org.lifecompanion.controller.textcomponent.WritingStateController;
 import org.lifecompanion.framework.commons.utils.lang.CollectionUtils;
@@ -40,12 +41,12 @@ import org.lifecompanion.model.api.configurationcomponent.GridPartComponentI;
 import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
+import org.lifecompanion.model.api.profile.LCProfileI;
 import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.VariableInformationKeyOption;
 import org.lifecompanion.model.impl.usevariable.StringUseVariable;
 import org.lifecompanion.model.impl.usevariable.UseVariableDefinition;
-import org.lifecompanion.util.ThreadUtils;
 import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -168,6 +169,7 @@ public enum UseVariableController implements ModeListenerI {
     private void initDefinitions() {
         this.possibleDefinitions = new HashMap<>();
         this.possibleDefinitionList = FXCollections.observableArrayList();
+        long cache4HoursInMs = 4 * 60 * 60 * 1000;
         this.addDef(new UseVariableDefinition("CurrentTextInEditor", "use.variable.current.text.in.editor.name",
                 "use.variable.current.text.in.editor.description", "use.variable.current.text.in.editor.example"));
         this.addDef(new UseVariableDefinition("CurrentDate", "use.variable.current.date.name", "use.variable.current.date.description",
@@ -177,7 +179,15 @@ public enum UseVariableController implements ModeListenerI {
         this.addDef(new UseVariableDefinition("CurrentTimeWithoutSeconds", "use.variable.current.time.without.seconds.name",
                 "use.variable.current.time.without.seconds.description", "use.variable.current.time.without.seconds.example"));
         this.addDef(new UseVariableDefinition("CurrentDayOfWeek", "use.variable.current.day.of.week.name",
-                "use.variable.current.day.of.week.description", "use.variable.current.day.of.week.example"));
+                "use.variable.current.day.of.week.description", "use.variable.current.day.of.week.example", cache4HoursInMs));
+        this.addDef(new UseVariableDefinition("CurrentDayOfMonth", "use.variable.current.day.of.month.name",
+                "use.variable.current.number.of.day.description", "use.variable.current.number.of.day.example", cache4HoursInMs));
+        this.addDef(new UseVariableDefinition("CurrentMonthOfYear", "use.variable.current.month.of.year.name",
+                "use.variable.current.month.of.year.description", "use.variable.current.month.of.year.example", cache4HoursInMs));
+        this.addDef(new UseVariableDefinition("CurrentNumberOfMonth", "use.variable.current.number.of.month.name",
+                "use.variable.current.number.of.month.description", "use.variable.current.number.of.month.example", cache4HoursInMs));
+        this.addDef(new UseVariableDefinition("CurrentYear", "use.variable.current.year.name", "use.variable.current.year.description",
+                "use.variable.current.year.example", cache4HoursInMs));
         this.addDef(new UseVariableDefinition("CurrentOverPartName", "use.variable.current.over.part.name",
                 "use.variable.current.over.part.description", "use.variable.current.over.part.example"));
         this.addDef(new UseVariableDefinition("CurrentOverPartGridParentName", "use.variable.current.over.part.grid.parent.name",
@@ -194,6 +204,8 @@ public enum UseVariableController implements ModeListenerI {
                 "use.variable.battery.level.percent.description", "use.variable.battery.level.percent.example", 30_000, true));
         this.addDef(new UseVariableDefinition("BatteryTimeRemaining", "use.variable.battery.time.remaining.name",
                 "use.variable.battery.time.remaining.description", "use.variable.battery.time.remaining.example", 30_000, true));
+        this.addDef(new UseVariableDefinition("CurrentProfile", "use.variable.current.profile.name", "use.variable.current.profile.description",
+                "use.variable.current.profile.example"));
         //Init plugin
         PluginController.INSTANCE.getUseVariableDefinitions().registerListenerAndDrainCache(this::addDef);
     }
@@ -253,11 +265,19 @@ public enum UseVariableController implements ModeListenerI {
         //TODO : generate only used variables
         Map<String, UseVariableI<?>> vars = new HashMap<>();
         Date currentDate = new Date();
-        //Current date
+        // Simple vars
         putToVarMap(useCachedValue, "CurrentDate", vars, () -> StringUtils.dateToStringWithoutHour(currentDate));
+        putToVarMap(useCachedValue, "CurrentProfile", vars, () -> {
+            LCProfileI profile = ProfileController.INSTANCE.currentProfileProperty().get();
+            return profile != null ? profile.nameProperty().get() : "";
+        });
         putToVarMap(useCachedValue, "CurrentTime", vars, () -> StringUtils.dateToStringDateWithOnlyHoursMinuteSecond(currentDate));
         putToVarMap(useCachedValue, "CurrentTimeWithoutSeconds", vars, () -> DATE_ONLY_HOURS_MIN.format(currentDate));
         putToVarMap(useCachedValue, "CurrentDayOfWeek", vars, () -> LocalDate.now().getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.getDefault()));
+        putToVarMap(useCachedValue, "CurrentDayOfMonth", vars, () -> LocalDate.now().getDayOfMonth() + "");
+        putToVarMap(useCachedValue, "CurrentMonthOfYear", vars, () -> LocalDate.now().getMonth().getDisplayName(TextStyle.FULL, Locale.getDefault()));
+        putToVarMap(useCachedValue, "CurrentNumberOfMonth", vars, () -> LocalDate.now().getMonthValue() + "");
+        putToVarMap(useCachedValue, "CurrentYear", vars, () -> LocalDate.now().getYear() + "");
         putToVarMap(useCachedValue, "CurrentTextInEditor", vars, () -> WritingStateController.INSTANCE.currentTextProperty().get());
         putToVarMap(useCachedValue, "CurrentWordInEditor", vars, () -> WritingStateController.INSTANCE.currentWordProperty().get());
         putToVarMap(useCachedValue, "LastCompleteWordInEditor", vars, () -> WritingStateController.INSTANCE.lastCompleteWordProperty().get());

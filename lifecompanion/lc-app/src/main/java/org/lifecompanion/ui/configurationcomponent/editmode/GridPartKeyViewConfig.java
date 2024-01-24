@@ -213,7 +213,7 @@ public class GridPartKeyViewConfig extends GridPartKeyViewBase {
                     try {
                         if (this.model.keyOptionProperty().get() == null || !this.model.keyOptionProperty().get().disableImageProperty().get()) {
                             ImageElementI imageElement = ImageDictionaries.INSTANCE.getOrAddToUserImagesDictionary(firstValidImage.get());
-                            ConfigActionController.INSTANCE.executeAction(new ChangeImageAction(this.model, imageElement));
+                            ConfigActionController.INSTANCE.executeAction(new ChangeImageAction(this.model, imageElement, false));
                         }
                     } catch (Exception e) {
                         LOGGER.warn("Couldn't add dragged image to gallery", e);
@@ -246,7 +246,7 @@ public class GridPartKeyViewConfig extends GridPartKeyViewBase {
      */
     private void executeActionSimulations() {
         if (KeyListController.INSTANCE.isKeySimulatedAsKeyListActions(model)) {
-            if(KeyListController.INSTANCE.simulateKeyListKeyActions(model)){
+            if (KeyListController.INSTANCE.simulateKeyListKeyActions(model)) {
                 return;
             }
         }

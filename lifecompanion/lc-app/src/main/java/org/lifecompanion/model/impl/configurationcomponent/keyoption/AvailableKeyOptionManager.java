@@ -71,12 +71,14 @@ public enum AvailableKeyOptionManager {
                         new WordPredictionKeyOption(),
                         new AutoCharKeyOption(),
                         new KeyListNodeKeyOption(),
-                        new CustomCharKeyOption(),
+                        new VariableInformationKeyOption(),
                         new NoteKeyOption(),
                         new UserActionSequenceItemKeyOption(),
                         new UserActionSequenceCurrentKeyOption(),
+                        new ConfigListKeyOption(),
                         new ProgressDisplayKeyOption(),
-                        new VariableInformationKeyOption())
+                        new CustomCharKeyOption()
+                        )
         );
         PluginController.INSTANCE.getKeyOptions().registerListenerAndDrainCache(this::addKeyOptionType);
     }

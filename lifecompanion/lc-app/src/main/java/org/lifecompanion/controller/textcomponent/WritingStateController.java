@@ -260,12 +260,16 @@ public enum WritingStateController implements ModeListenerI, WritingStateControl
 
     @Override
     public void insertWordPrediction(WritingEventSource src, String toInsert, WordPredictionI originalPrediction) {
-        this.executeEvent(d -> d.insertText(src, toInsert), src, WritingEventType.INSERTION_WORD_PREDICTION, FluentHashMap.mapStrObj("text", toInsert).with("prediction", originalPrediction));
+        if (toInsert != null) {
+            this.executeEvent(d -> d.insertText(src, toInsert), src, WritingEventType.INSERTION_WORD_PREDICTION, FluentHashMap.mapStrObj("text", toInsert).with("prediction", originalPrediction));
+        }
     }
 
     @Override
     public void insertCharPrediction(WritingEventSource src, String toInsert) {
-        this.executeEvent(d -> d.insertText(src, toInsert), src, WritingEventType.INSERTION_CHAR_PREDICTION, FluentHashMap.mapStrObj("text", toInsert).with("prediction", toInsert));
+        if (toInsert != null) {
+            this.executeEvent(d -> d.insertText(src, toInsert), src, WritingEventType.INSERTION_CHAR_PREDICTION, FluentHashMap.mapStrObj("text", toInsert).with("prediction", toInsert));
+        }
     }
 
     @Override
@@ -299,16 +303,20 @@ public enum WritingStateController implements ModeListenerI, WritingStateControl
 
     @Override
     public void insert(WritingEventSource src, final WriterEntryI entryP, final WriteSpecialChar specialChar) {
-        this.executeEvent(d -> d.insert(src, entryP, specialChar),
-                src,
-                WritingEventType.INSERTION_SIMPLE,
-                FluentHashMap.mapStrObj("text", entryP.entryTextProperty().get()),
-                this::disableCapitalizeNext);
+        if ((entryP != null && entryP.isValid()) || specialChar != null) {
+            this.executeEvent(d -> d.insert(src, entryP, specialChar),
+                    src,
+                    WritingEventType.INSERTION_SIMPLE,
+                    FluentHashMap.mapStrObj("text", entryP.entryTextProperty().get()),
+                    this::disableCapitalizeNext);
+        }
     }
 
     @Override
     public void insertText(WritingEventSource src, String text) {
-        this.executeEvent(d -> d.insertText(src, text), src, WritingEventType.INSERTION_SIMPLE, FluentHashMap.mapStrObj("text", text), this::disableCapitalizeNext);
+        if (text != null) {
+            this.executeEvent(d -> d.insertText(src, text), src, WritingEventType.INSERTION_SIMPLE, FluentHashMap.mapStrObj("text", text), this::disableCapitalizeNext);
+        }
     }
 
     @Override

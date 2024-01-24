@@ -55,7 +55,7 @@ public abstract class AbstractSimplerKeyActionContainerKeyOption<T extends Simpl
                 if (simplerKeyContentContainerV.enableWriteProperty().get()) {
                     WriteTextAction writeTextAction = new WriteTextAction();
                     writeTextAction.attachedToKeyOptionProperty().set(true);
-                    writeTextAction.enableAddImageWithTextIfPossibleProperty().set(true);
+                    writeTextAction.imageToWriteProperty().setValue(simplerKeyContentContainerV.imageVTwoProperty().get());
                     writeTextAction.textToWriteProperty().set(simplerKeyContentContainerV.textToWriteProperty().get() + (simplerKeyContentContainerV.enableSpaceAfterWriteProperty().get() ? " " : ""));
                     actionsToAddFor.add(writeTextAction);
                     actionsOnActivation.add(writeTextAction);

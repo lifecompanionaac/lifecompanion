@@ -58,6 +58,10 @@ public class GridStackActions {
             this.notify = notify;
         }
 
+        public GridComponentI getComponent() {
+            return component;
+        }
+
         @Override
         public void doAction() throws LCException {
             if (this.component == null) {
@@ -68,6 +72,7 @@ public class GridStackActions {
             }
             this.component.dispatchRemovedPropertyValue(false);
             this.stack.getComponentList().add(this.component);
+            // TODO : should displayed be updated ?
             this.stack.displayedComponentProperty().set(this.component);
             if (this.select)
                 SelectionController.INSTANCE.selectDisplayableComponent(this.component, true);

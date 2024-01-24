@@ -180,7 +180,8 @@ public class WebcamCaptureDialog extends Dialog<File> implements LCViewInitHelpe
                 final Image imageToSave = takenImagePreview.getImage();
                 if (imageToSave != null) {
                     try {
-                        File destinationFile = new File(InstallationConfigurationController.INSTANCE.getUserDirectory().getPath() + LCConstant.WEBCAM_CAPTURE_DIR_NAME + DATE_FORMAT_FILENAME.format(new Date()) + ".png");
+                        File destinationFile = new File(InstallationConfigurationController.INSTANCE.getUserDirectory()
+                                .getPath() + LCConstant.WEBCAM_CAPTURE_DIR_NAME + DATE_FORMAT_FILENAME.format(new Date()) + ".png");
                         destinationFile.getParentFile().mkdirs();
                         ImageIO.write(SwingFXUtils.fromFXImage(imageToSave, null), "png", destinationFile);
                         resultFile = destinationFile;
@@ -256,7 +257,9 @@ public class WebcamCaptureDialog extends Dialog<File> implements LCViewInitHelpe
                             LCStateController.INSTANCE.setLastSelectedWebcamName(currentWebcam.getName());
 
                             // Find and set higher resolution
-                            final Dimension higherWebcamDimension = Arrays.stream(currentWebcam.getViewSizes()).min((d1, d2) -> Double.compare(d2.width * d2.height, d1.width * d1.height)).orElse(currentWebcam.getViewSize());
+                            final Dimension higherWebcamDimension = Arrays.stream(currentWebcam.getViewSizes())
+                                    .min((d1, d2) -> Double.compare(d2.width * d2.height, d1.width * d1.height))
+                                    .orElse(currentWebcam.getViewSize());
                             LOGGER.info("Will try to open camera {} with resolution {}", currentWebcam.getName(), higherWebcamDimension);
                             currentWebcam.setViewSize(higherWebcamDimension);
 
@@ -272,7 +275,11 @@ public class WebcamCaptureDialog extends Dialog<File> implements LCViewInitHelpe
                             FXThreadUtils.runOnFXThread(() -> {
                                 imageViewWebcamPreview.setImage(fxImage);
                                 final Dimension viewSize = currentWebcam.getViewSize();
-                                labelWebcamInformations.setText(Translation.getText("image.webcam.capture.webcam.informations", currentWebcam.getName(), viewSize.width, viewSize.height, (int) currentWebcam.getFPS()));
+                                labelWebcamInformations.setText(Translation.getText("image.webcam.capture.webcam.informations",
+                                        currentWebcam.getName(),
+                                        viewSize.width,
+                                        viewSize.height,
+                                        (int) currentWebcam.getFPS()));
                             });
                         }
                         Thread.sleep(UPDATE_DELAY);
@@ -294,8 +301,14 @@ public class WebcamCaptureDialog extends Dialog<File> implements LCViewInitHelpe
 
         private void closeCurrentWebcamIfNeeded() {
             if (currentWebcam != null && currentWebcam.isOpen()) {
-                LOGGER.info("Webcam {} closed", currentWebcam);
-                currentWebcam.close();
+                try {
+                    LOGGER.info("Webcam {} closing...", currentWebcam);
+                    currentWebcam.close();
+                    LOGGER.info("Webcam {} closed", currentWebcam);
+                } catch (NullPointerException npe) {
+                    // Library can throw NPE on closing when opening fails (even if isOpen() return true)
+                    LOGGER.warn("Closing webcam {} didn't work, ignored the NPE", currentWebcam);
+                }
             }
         }
 

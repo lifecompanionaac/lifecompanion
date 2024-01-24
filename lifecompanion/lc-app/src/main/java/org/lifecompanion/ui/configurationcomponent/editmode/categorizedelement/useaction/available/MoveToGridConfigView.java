@@ -28,6 +28,7 @@ import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
 import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
 import org.lifecompanion.model.impl.categorizedelement.useaction.available.MoveToGridAction;
 import org.lifecompanion.ui.common.control.specific.selector.ComponentSelectorControl;
+import org.lifecompanion.ui.common.control.specific.selector.GridComponentSelectorControl;
 
 public class MoveToGridConfigView extends VBox implements UseActionConfigurationViewI<MoveToGridAction> {
     private ComponentSelectorControl<GridComponentI> componentSelector;
@@ -64,7 +65,7 @@ public class MoveToGridConfigView extends VBox implements UseActionConfiguration
     @Override
     public void initUI() {
         this.setSpacing(4.0);
-        this.componentSelector = new ComponentSelectorControl<>(GridComponentI.class, Translation.getText("use.action.go.to.grid.grid.to.display"));
+        this.componentSelector = new GridComponentSelectorControl(Translation.getText("use.action.go.to.grid.grid.to.display"), true);
         this.getChildren().add(this.componentSelector);
     }
 }

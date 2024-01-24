@@ -7,6 +7,7 @@ import org.lifecompanion.model.api.usevariable.UseVariableI;
 import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
 import org.lifecompanion.plugin.ppp.actions.categories.PPPActionSubCategories;
 import org.lifecompanion.plugin.ppp.services.RecordsService;
+import org.lifecompanion.plugin.ppp.services.UserDatabaseService;
 
 import java.util.Map;
 
@@ -28,6 +29,6 @@ public class ShowRecordsAction extends SimpleUseActionImpl<UseActionTriggerCompo
 
     @Override
     public void execute(final UseActionEvent event, final Map<String, UseVariableI<?>> variables) {
-        RecordsService.INSTANCE.showRecordStage(AppModeController.INSTANCE.getUseModeContext().getConfiguration());
+        RecordsService.INSTANCE.showRecordStage(AppModeController.INSTANCE.getUseModeContext().getConfiguration(), UserDatabaseService.INSTANCE.getSelectedProfile());
     }
 }

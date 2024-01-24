@@ -39,6 +39,7 @@ public enum FileChooserType {
     PRIORIZED_WORD(false),
 
     SELECT_IMAGES(false),
+    SELECT_VIDEOS(false),
     SELECT_SOUND(false),
 
     SAVE_USER_TEXT(false),

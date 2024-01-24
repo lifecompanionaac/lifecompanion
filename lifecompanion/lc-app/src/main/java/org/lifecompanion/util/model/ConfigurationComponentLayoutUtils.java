@@ -24,6 +24,7 @@ import javafx.util.Pair;
 import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
 import org.lifecompanion.model.api.configurationcomponent.GridPartComponentI;
 import org.lifecompanion.model.api.configurationcomponent.RootGraphicComponentI;
+import org.lifecompanion.model.api.style.ShapeStyle;
 
 public class ConfigurationComponentLayoutUtils {
 
@@ -72,12 +73,13 @@ public class ConfigurationComponentLayoutUtils {
     public static void computeArcAndStrokeFor(final Rectangle rectangle, final double wantedArc, final double width, final double height,
                                               final double strokeSize) {
         rectangle.setStrokeWidth(strokeSize);
-        double arcSize = computeArcAndStroke(wantedArc, width, height, strokeSize);
+        // Not used anymore, but keep the code
+        double arcSize = 0.0;//computeArcAndStroke(wantedArc, width, height, strokeSize);
         rectangle.setArcWidth(arcSize);
         rectangle.setArcHeight(arcSize);
     }
 
-    public static double computeArcAndStroke(final double wantedArc, final double width, final double height, final double strokeSize) {
-        return Math.min(Math.min(height / 2.0, width / 2.0), wantedArc) * 2.0;
+    public static double computeArcAndStroke(final double wantedArc, final double width, final double height, final double strokeSize, ShapeStyle shapeStyle) {
+        return shapeStyle != ShapeStyle.CLASSIC ? 0.0 : Math.min(Math.min(height / 2.0, width / 2.0), wantedArc) * 2.0;
     }
 }

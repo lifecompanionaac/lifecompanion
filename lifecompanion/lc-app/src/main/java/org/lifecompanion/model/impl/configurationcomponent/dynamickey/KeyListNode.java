@@ -19,10 +19,13 @@
 
 package org.lifecompanion.model.impl.configurationcomponent.dynamickey;
 
+import org.lifecompanion.model.api.style.ShapeStyle;
+
 public class KeyListNode extends AbstractKeyListNode {
     public KeyListNode() {
         super(false, false);
         this.enableSpeakProperty().set(false);
         this.enableWriteProperty().set(false);
+        this.shapeStyleProperty().set(ShapeStyle.TP_ANGLE_CUT);
     }
 }

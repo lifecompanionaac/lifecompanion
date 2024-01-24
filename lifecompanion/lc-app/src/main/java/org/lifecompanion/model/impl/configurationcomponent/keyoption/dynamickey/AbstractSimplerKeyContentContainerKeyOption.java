@@ -90,10 +90,13 @@ public abstract class AbstractSimplerKeyContentContainerKeyOption<T extends Simp
                 key.rotateProperty().set(0.0);
                 key.useViewPortProperty().set(false);
                 key.enableReplaceColorProperty().set(false);
+                // Video content
+                key.videoProperty().set(null);
                 // Style
                 key.getKeyStyle().backgroundColorProperty().forced().setValue(null);
                 key.getKeyStyle().strokeColorProperty().forced().setValue(null);
                 key.getKeyStyle().textPositionProperty().forced().setValue(null);
+                key.getKeyStyle().shapeStyleProperty().forced().setValue(null);
                 key.getKeyTextStyle().colorProperty().forced().setValue(null);
             } else {
                 // Text content
@@ -111,11 +114,17 @@ public abstract class AbstractSimplerKeyContentContainerKeyOption<T extends Simp
                 key.replacingColorProperty().set(simplerKeyContentContainer.replacingColorProperty().get());
                 key.colorToReplaceProperty().set(simplerKeyContentContainer.colorToReplaceProperty().get());
                 key.enableReplaceColorProperty().set(simplerKeyContentContainer.enableReplaceColorProperty().get());
+                // Video content
+                key.videoProperty().set(simplerKeyContentContainer.videoProperty().get());
+                key.videoDisplayModeProperty().set(simplerKeyContentContainer.videoDisplayModeProperty().get());
+                key.videoPlayModeProperty().set(simplerKeyContentContainer.videoPlayModeProperty().get());
+                key.muteVideoProperty().set(simplerKeyContentContainer.muteVideoProperty().get());
                 // Image display (size and loading)
                 simplerKeyContentContainer.bindImageDisplayProperties(key);
                 key.getKeyStyle().backgroundColorProperty().forced().setValue(simplerKeyContentContainer.backgroundColorProperty().get());
                 key.getKeyStyle().strokeColorProperty().forced().setValue(simplerKeyContentContainer.strokeColorProperty().get());
                 key.getKeyStyle().textPositionProperty().forced().setValue(simplerKeyContentContainer.textPositionProperty().get());
+                key.getKeyStyle().shapeStyleProperty().forced().setValue(simplerKeyContentContainer.shapeStyleProperty().get());
                 key.getKeyTextStyle().colorProperty().forced().setValue(simplerKeyContentContainer.textColorProperty().get());
             }
             updateKeyFor(key, simplerKeyContentContainer, AppModeController.INSTANCE.modeProperty().get());
@@ -175,6 +184,7 @@ public abstract class AbstractSimplerKeyContentContainerKeyOption<T extends Simp
     @Override
     public void detachFromImpl(final GridPartKeyComponentI key) {
         BindingUtils.unbindAndSetNull(key.imageVTwoProperty());
+        BindingUtils.unbindAndSetNull(key.videoProperty());
         BindingUtils.unbindAndSetNull(key.textContentProperty());
         BindingUtils.unbindAndSetNull(key.getKeyStyle().backgroundColorProperty().forced());
         BindingUtils.unbindAndSetNull(key.getKeyStyle().strokeColorProperty().forced());

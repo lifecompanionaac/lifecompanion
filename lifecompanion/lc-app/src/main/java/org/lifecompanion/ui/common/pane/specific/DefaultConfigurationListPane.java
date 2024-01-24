@@ -29,6 +29,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import org.lifecompanion.controller.appinstallation.InstallationController;
 import org.lifecompanion.controller.profileconfigselect.ProfileConfigSelectionController;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.framework.commons.translation.Translation;
@@ -40,6 +41,7 @@ import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.ui.controlsfx.control.ToggleSwitch;
 import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.util.DesktopUtils;
+import org.lifecompanion.util.javafx.DialogUtils;
 import org.lifecompanion.util.javafx.FXControlUtils;
 
 import java.io.File;
@@ -54,7 +56,7 @@ public class DefaultConfigurationListPane extends VBox implements LCViewInitHelp
     private GridPane gridPaneDefaultConfigurations;
     private final boolean multiSelectMode;
     private Consumer<Pair<LCConfigurationDescriptionI, File>> onConfigurationSelected;
-    private Hyperlink linkSelectAll, linkUnselectAll;
+    private Hyperlink linkSelectAll, linkUnselectAll, linkConfigRepository;
 
     public DefaultConfigurationListPane(boolean multiSelectMode) {
         defaultConfigurationToggles = new HashMap<>();
@@ -67,8 +69,12 @@ public class DefaultConfigurationListPane extends VBox implements LCViewInitHelp
         // Default configuration to add on profile
         Label labelDefaultConfiguration = FXControlUtils.createTitleLabel("profile.edition.general.default.configuration.title");
         Label labelExplain = new Label(Translation.getText("profile.edition.general.default.configuration.explain"));
-        labelExplain.setMinHeight(60.0);
+        labelExplain.setMinHeight(75.0);
         labelExplain.getStyleClass().addAll("text-font-italic", "text-fill-gray", "text-wrap-enabled");
+        linkConfigRepository = new Hyperlink(Translation.getText("profile.edition.configuration.repository.link"));
+        linkConfigRepository.getStyleClass().addAll("text-weight-bold");
+        linkConfigRepository.setFocusTraversable(false);
+        VBox.setMargin(linkConfigRepository, new Insets(0, 0, 10, 0));
 
         linkUnselectAll = new Hyperlink(Translation.getText("profile.edition.general.default.configuration.link.unselect.all"));
         linkSelectAll = new Hyperlink(Translation.getText("profile.edition.general.default.configuration.link.select.all"));
@@ -82,13 +88,23 @@ public class DefaultConfigurationListPane extends VBox implements LCViewInitHelp
         scrollPaneDefaultConfigurations.setFitToWidth(true);
         VBox.setVgrow(scrollPaneDefaultConfigurations, Priority.ALWAYS);
         this.setSpacing(8.0);
-        this.getChildren().addAll(labelDefaultConfiguration, labelExplain, boxLinks, new Separator(Orientation.HORIZONTAL), scrollPaneDefaultConfigurations);
+        this.getChildren().addAll(labelDefaultConfiguration, labelExplain, linkConfigRepository, boxLinks, new Separator(Orientation.HORIZONTAL), scrollPaneDefaultConfigurations);
     }
 
     @Override
     public void initListener() {
         linkSelectAll.setOnAction(e -> setOnAllToggleSwitches(true));
         linkUnselectAll.setOnAction(e -> setOnAllToggleSwitches(false));
+        this.linkConfigRepository.setOnAction(a -> {
+            String url = InstallationController.INSTANCE.getBuildProperties().getAppServerUrl() + "/repository";
+            boolean openOk = DesktopUtils.openUrlInDefaultBrowser(url);
+            if (!openOk) {
+                DialogUtils.alertWithSourceAndType(this.linkConfigRepository, Alert.AlertType.ERROR)
+                        .withContentText(Translation.getText("action.cant.open.browser.message", url))
+                        .withHeaderText(Translation.getText("action.cant.open.browser.header"))
+                        .show();
+            }
+        });
     }
 
     private void setOnAllToggleSwitches(boolean selected) {
@@ -172,8 +188,8 @@ public class DefaultConfigurationListPane extends VBox implements LCViewInitHelp
                             selectionNode = toggleEnableConfiguration;
                         } else {
                             final Button selectConfigButton = FXControlUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CHEVRON_RIGHT)
-                                                                                                                             .size(30)
-                                                                                                                             .color(LCGraphicStyle.MAIN_DARK), null);
+                                    .size(30)
+                                    .color(LCGraphicStyle.MAIN_DARK), null);
                             final EventHandler<Event> eventHandlerSelect = e -> {
                                 if (this.onConfigurationSelected != null)
                                     onConfigurationSelected.accept(defaultConfiguration);

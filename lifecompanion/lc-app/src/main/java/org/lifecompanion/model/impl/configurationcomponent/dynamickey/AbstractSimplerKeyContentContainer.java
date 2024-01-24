@@ -22,15 +22,16 @@ package org.lifecompanion.model.impl.configurationcomponent.dynamickey;
 import javafx.beans.property.*;
 import javafx.beans.value.ObservableBooleanValue;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.control.ContentDisplay;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import org.jdom2.Element;
 import org.lifecompanion.controller.io.ConfigurationComponentIOHelper;
-import org.lifecompanion.model.api.configurationcomponent.ImageUseComponentI;
-import org.lifecompanion.model.api.configurationcomponent.TreeIdentifiableComponentI;
+import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
+import org.lifecompanion.model.api.configurationcomponent.*;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.SimplerKeyContentContainerI;
+import org.lifecompanion.model.api.style.ShapeStyle;
 import org.lifecompanion.model.api.style.TextPosition;
+import org.lifecompanion.model.impl.configurationcomponent.VideoUseComponentPropertyWrapper;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.imagedictionary.ImageElementI;
 import org.lifecompanion.model.api.io.IOContextI;
@@ -45,6 +46,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public abstract class AbstractSimplerKeyContentContainer implements SimplerKeyContentContainerI {
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractSimplerKeyContentContainer.class);
@@ -63,9 +65,15 @@ public abstract class AbstractSimplerKeyContentContainer implements SimplerKeyCo
     private final ObjectProperty<Color> backgroundColor, strokeColor, textColor;
 
     private final ImageUseComponentPropertyWrapper imageUseComponentPropertyWrapper;
+    private final VideoUseComponentPropertyWrapper videoUseComponentPropertyWrapper;
 
     @XMLGenericProperty(TextPosition.class)
+    @XMLIgnoreNullValue
     private final ObjectProperty<TextPosition> textPosition;
+
+    @XMLGenericProperty(ShapeStyle.class)
+    @XMLIgnoreNullValue
+    private final ObjectProperty<ShapeStyle> shapeStyle;
 
     protected AbstractSimplerKeyContentContainer() {
         this.generateID();
@@ -77,7 +85,9 @@ public abstract class AbstractSimplerKeyContentContainer implements SimplerKeyCo
         wantedImageHeight = new SimpleDoubleProperty(0.0);
         imageUseComponentDisplayed = new SimpleBooleanProperty(false);
         imageUseComponentPropertyWrapper = new ImageUseComponentPropertyWrapper(this);
+        videoUseComponentPropertyWrapper = new VideoUseComponentPropertyWrapper(this);
         textPosition = new SimpleObjectProperty<>();
+        shapeStyle = new SimpleObjectProperty<>();
     }
 
     // PROPS
@@ -103,6 +113,11 @@ public abstract class AbstractSimplerKeyContentContainer implements SimplerKeyCo
     }
 
     @Override
+    public ObjectProperty<ShapeStyle> shapeStyleProperty() {
+        return shapeStyle;
+    }
+
+    @Override
     public ObjectProperty<Color> textColorProperty() {
         return textColor;
     }
@@ -110,6 +125,11 @@ public abstract class AbstractSimplerKeyContentContainer implements SimplerKeyCo
     @Override
     public String getID() {
         return id;
+    }
+
+    @Deprecated
+    public void setId(String id) {
+        this.id = id;
     }
 
     @Override
@@ -253,7 +273,30 @@ public abstract class AbstractSimplerKeyContentContainer implements SimplerKeyCo
         return wantedImageHeight;
     }
 
+    @Override
+    public ObjectProperty<VideoElementI> videoProperty() {
+        return this.videoUseComponentPropertyWrapper.videoProperty();
+    }
 
+    @Override
+    public ObjectProperty<VideoDisplayMode> videoDisplayModeProperty() {
+        return videoUseComponentPropertyWrapper.videoDisplayModeProperty();
+    }
+
+    @Override
+    public ObjectProperty<VideoPlayMode> videoPlayModeProperty() {
+        return videoUseComponentPropertyWrapper.videoPlayModeProperty();
+    }
+
+    @Override
+    public BooleanProperty muteVideoProperty() {
+        return videoUseComponentPropertyWrapper.muteVideoProperty();
+    }
+
+    @Override
+    public BooleanProperty imageAutomaticallySelectedProperty() {
+        return this.imageUseComponentPropertyWrapper.imageAutomaticallySelectedProperty();
+    }
     //========================================================================
 
     // IO
@@ -266,6 +309,7 @@ public abstract class AbstractSimplerKeyContentContainer implements SimplerKeyCo
         ConfigurationComponentIOHelper.addTypeAlias(this, node, context);
         XMLObjectSerializer.serializeInto(AbstractSimplerKeyContentContainer.class, this, node);
         this.imageUseComponentPropertyWrapper.serialize(node, context);
+        this.videoUseComponentPropertyWrapper.serialize(node, context);
         return node;
     }
 
@@ -273,6 +317,7 @@ public abstract class AbstractSimplerKeyContentContainer implements SimplerKeyCo
     public void deserialize(Element node, IOContextI context) throws LCException {
         XMLObjectSerializer.deserializeInto(AbstractSimplerKeyContentContainer.class, this, node);
         this.imageUseComponentPropertyWrapper.deserialize(node, context);
+        this.videoUseComponentPropertyWrapper.deserialize(node, context);
     }
     //========================================================================
 }

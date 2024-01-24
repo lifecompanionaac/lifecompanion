@@ -16,6 +16,8 @@ public enum PPPActionSubCategories implements UseActionSubCategoryI {
             CategorizedElementColorProvider.nextColor(PPPActionMainCategory.INSTANCE)),
     ACTION("ppp.plugin.actions.categories.subs.action.name",
             CategorizedElementColorProvider.nextColor(PPPActionMainCategory.INSTANCE)),
+    USER_GROUPS("ppp.plugin.actions.categories.subs.groups.name",
+            CategorizedElementColorProvider.nextColor(PPPActionMainCategory.INSTANCE)),
     VARIOUS("ppp.plugin.actions.categories.subs.various.name",
             CategorizedElementColorProvider.nextColor(PPPActionMainCategory.INSTANCE));
 

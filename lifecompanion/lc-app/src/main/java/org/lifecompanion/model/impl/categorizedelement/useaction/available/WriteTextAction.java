@@ -19,25 +19,25 @@
 
 package org.lifecompanion.model.impl.categorizedelement.useaction.available;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.Property;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.jdom2.Element;
-import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
-import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
-import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
-import org.lifecompanion.model.api.usevariable.UseVariableI;
-import org.lifecompanion.model.api.textcomponent.WritingEventSource;
-import org.lifecompanion.model.impl.exception.LCException;
-import org.lifecompanion.model.api.io.IOContextI;
-import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseActionSubCategories;
-import org.lifecompanion.model.impl.configurationcomponent.WriterEntry;
-import org.lifecompanion.controller.usevariable.UseVariableController;
 import org.lifecompanion.controller.textcomponent.WritingStateController;
-import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
+import org.lifecompanion.controller.usevariable.UseVariableController;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
+import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseActionSubCategories;
+import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
+import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
+import org.lifecompanion.model.api.imagedictionary.ImageElementI;
+import org.lifecompanion.model.api.io.IOContextI;
+import org.lifecompanion.model.api.textcomponent.WritingEventSource;
+import org.lifecompanion.model.api.usevariable.UseVariableI;
+import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
+import org.lifecompanion.model.impl.configurationcomponent.WriterEntry;
+import org.lifecompanion.model.impl.exception.LCException;
 
 import java.util.Map;
 
@@ -48,7 +48,7 @@ import java.util.Map;
  */
 public class WriteTextAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
     private final StringProperty textToWrite;
-    private final transient BooleanProperty enableAddImageWithTextIfPossible;
+    private final SimpleObjectProperty<ImageElementI> imageToWrite;
 
     //TODO : add text style configuration
 
@@ -57,7 +57,7 @@ public class WriteTextAction extends SimpleUseActionImpl<UseActionTriggerCompone
         this.category = DefaultUseActionSubCategories.WRITE_TEXT;
         this.order = 1;
         this.textToWrite = new SimpleStringProperty("");
-        this.enableAddImageWithTextIfPossible = new SimpleBooleanProperty(false);
+        this.imageToWrite = new SimpleObjectProperty<>();
         this.nameID = "action.simple.write.text.name";
         this.staticDescriptionID = "action.simple.write.text.static.description";
         this.configIconPath = "text/icon_write_text.png";
@@ -68,8 +68,9 @@ public class WriteTextAction extends SimpleUseActionImpl<UseActionTriggerCompone
         return this.textToWrite;
     }
 
-    public BooleanProperty enableAddImageWithTextIfPossibleProperty() {
-        return this.enableAddImageWithTextIfPossible;
+
+    public Property<ImageElementI> imageToWriteProperty() {
+        return this.imageToWrite;
     }
 
     // Class part : "Execute"
@@ -82,11 +83,8 @@ public class WriteTextAction extends SimpleUseActionImpl<UseActionTriggerCompone
                 WritingStateController.INSTANCE.insertText(WritingEventSource.USER_ACTIONS, toWrite);
             } else {
                 final WriterEntry entryP = new WriterEntry(toWrite, true);
-                if (this.enableAddImageWithTextIfPossible.get() && this.parentComponentProperty().get() instanceof GridPartKeyComponentI) {
-                    GridPartKeyComponentI currentKey = (GridPartKeyComponentI) this.parentComponentProperty().get();
-                    if (currentKey != null && currentKey.imageVTwoProperty().get() != null) {
-                        entryP.imageProperty().set(currentKey.imageVTwoProperty().get());
-                    }
+                if (this.imageToWrite.get() != null) {
+                    entryP.imageProperty().set(imageToWrite.get());
                 }
                 WritingStateController.INSTANCE.insert(WritingEventSource.USER_ACTIONS, entryP);
             }

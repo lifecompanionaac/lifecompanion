@@ -63,4 +63,6 @@ public interface WriterEntryI extends XMLSerializable<Void> {
      * Set this entry {@link #entryTextProperty()} to upper case
      */
     void toUpperCase();
+
+    boolean isValid();
 }

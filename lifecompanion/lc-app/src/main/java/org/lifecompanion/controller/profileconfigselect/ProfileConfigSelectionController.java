@@ -23,6 +23,7 @@ import javafx.beans.property.*;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import org.lifecompanion.controller.appinstallation.InstallationController;
 import org.lifecompanion.controller.profile.ProfileController;
 import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
 import org.lifecompanion.model.api.profile.LCProfileI;
@@ -117,7 +118,8 @@ public enum ProfileConfigSelectionController {
         if (availableDefaultConfiguration != null) {
             callback.accept(availableDefaultConfiguration);
         } else {
-            LoadAvailableDefaultConfigurationTask loadAvailableDefaultConfigurationTask = new LoadAvailableDefaultConfigurationTask();
+            LoadAvailableDefaultConfigurationTask loadAvailableDefaultConfigurationTask = new LoadAvailableDefaultConfigurationTask(InstallationController.INSTANCE.getBuildProperties());
+
             loadAvailableDefaultConfigurationTask.setOnSucceeded(e -> {
                 availableDefaultConfiguration = loadAvailableDefaultConfigurationTask.getValue();
                 callback.accept(availableDefaultConfiguration);

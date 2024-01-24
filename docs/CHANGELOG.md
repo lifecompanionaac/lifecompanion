@@ -1,5 +1,46 @@
 # LIFECOMPANION CHANGELOG
 
+## 1.6.0 - 24/01/2024
+
+### Fonctionnalités
+
+- **Ajout des vidéos !**
+	- Possibilité d'utiliser les vidéos à la place des images, donc sur les cases et les listes de cases
+	- Les vidéos peuvent être lues dans la case ou en plein écran
+	- La lecture est possible automatiquement (en continu), à l'activation ou au survol de la case
+- Ajout du **style de forme pour les cases**
+- Ajout d'un type de case **liste des configurations** : permet d'afficher la liste des configurations du profil et ainsi basculer entre chacune en mode utilisation !
+- Les configurations par défaut sont maintenant issues du [**répertoire officiel de configurations de LifeCompanion**](https://lifecompanionaac.org/configuration-list) !
+- Il est maintenant possible d'**utiliser une touche de clavier pour activer le défilement**, même en mode clavier virtuel (sur Windows uniquement)
+- Il est maintenant possible de **créer une nouvelle grille directement depuis l'action "Aller dans la grille"**
+- Il est maintenant possible de **copier plusieurs cases en même temps**
+- Ajout d'un paramètre "Sélectionner automatiquement les images des cases" (dans Préférences & Infos) : permet que les images soient automatiquement sélectionnées lorsqu'un texte est entré sur une case, fait gagner du temps !
+
+### Corrections/ajustements
+
+- Amélioration de la recherche des images
+- Correction de quelques problèmes sur les listes de cases
+- Lorsqu'on supprime une liste dans les listes de case, les liens vers les listes supprimées sont automatiquement corrigés
+- Sur l'événement "Touche appuyée" il est maintenant possible de choisir si la touche appuyée est bloquée ou non
+- Traductions des noms des touches du clavier
+- Ajustement sur les interfaces de liste de cases
+- Ajout d'une nouvelle variable : nom du profil actuel
+- L'action d'une case bloc note n'était pas supprimée lorsqu'elle repassait en case "classique"
+- Ajout de nouvelles variables : numéro du jour du mois, mois de l'année, numéro du mois et année
+- Ticket #260 : ajout du bouton "rouge" dans l'interface de configuration des listes de cases (comme dans la partie "édition")
+- Ticket #282 : la configuration des listes de cases affiche maintenant le même nombre de cases que dans la configuration
+- Ticket #267 : la configuration d'une image (rotation, recadrage, etc) est maintenant utilisée dans le champs de sélection
+- Ticket #279 : le message pour écraser une configuration par celle importée est maintenant plus explicite
+- Ticket #273 : l'image des listes de cases est maintenant toujours intégrée dans l'éditeur de texte
+- Ticket #263 : amélioration de la qualité de l'export en PDF
+- Ticket #266 : correction de l'affichage de l'alignement de texte sélectionné
+- Ticket #271 : correction d'une erreur lors d'une vitesse de défilement était trop rapide
+- Ticket #268 : quand une image est enlevée d'une case, le texte est automatiquement remis au centre
+- Ticket #290 : correction d'un rare problème avec la prise de photo par la webcam
+- Ticket #291 : correction d'un rare problème avec les éditeurs de texte qui pouvaient ne plus fonctionner
+- Ticket #292 : correction d'un texte explicatif sur le code pour passer en édition
+- Ticket #295 : correction d'un problème de détection de clavier dans certains cas
+
 ## 1.5.0 - 08/09/2023
 
 ### Fonctionnalités

@@ -112,7 +112,7 @@ public enum AssessmentService implements ModeListenerI {
     }
 
     private void saveAssessment(AssessmentRecord assessment) {
-        RecordsService.INSTANCE.save(this.useConfiguration, assessment);
+        RecordsService.INSTANCE.save(this.useConfiguration, UserDatabaseService.INSTANCE.getSelectedProfile(), assessment);
         SessionStatsController.INSTANCE.pushEvent("ppp.assessment.done", FluentHashMap
                 .mapStrObj("id", assessment.getId())
                 .with("startedAt", SessionStatsController.DATE_FORMAT_FOR_DATA_MAP.format(Date.from(assessment.getRecordedAt().toInstant())))

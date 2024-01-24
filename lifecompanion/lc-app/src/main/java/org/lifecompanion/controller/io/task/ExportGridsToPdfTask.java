@@ -36,23 +36,23 @@ import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.apache.pdfbox.util.Matrix;
+import org.lifecompanion.controller.appinstallation.InstallationController;
+import org.lifecompanion.controller.configurationcomponent.dynamickey.KeyListController;
+import org.lifecompanion.controller.resource.IconHelper;
+import org.lifecompanion.framework.commons.translation.Translation;
+import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
-import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
-import org.lifecompanion.model.api.profile.LCProfileI;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
+import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
+import org.lifecompanion.model.api.profile.LCProfileI;
 import org.lifecompanion.model.api.ui.configurationcomponent.ComponentViewI;
+import org.lifecompanion.model.impl.constant.LCConstant;
+import org.lifecompanion.model.impl.ui.configurationcomponent.UseViewProvider;
 import org.lifecompanion.util.IOUtils;
 import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.util.model.ImageDictionaryUtils;
 import org.lifecompanion.util.model.LCTask;
-import org.lifecompanion.controller.resource.IconHelper;
-import org.lifecompanion.model.impl.constant.LCConstant;
-import org.lifecompanion.controller.configurationcomponent.dynamickey.KeyListController;
-import org.lifecompanion.controller.appinstallation.InstallationController;
-import org.lifecompanion.framework.commons.translation.Translation;
-import org.lifecompanion.framework.commons.utils.lang.StringUtils;
-import org.lifecompanion.model.impl.ui.configurationcomponent.UseViewProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -103,11 +103,13 @@ public class ExportGridsToPdfTask extends LCTask<Void> {
     protected Void call() throws Exception {
         // Find all grid by stacks in configuration
         final Map<String, List<GridComponentI>> gridByStack = configuration.getAllComponent()
-                .values()
-                .stream()
-                .filter(comp -> comp instanceof GridComponentI)
-                .map(comp -> (GridComponentI) comp)
-                .collect(Collectors.groupingBy(g -> g.stackParentProperty().get() != null ? g.stackParentProperty().get().getID() : NO_STACK_ID));
+                                                                           .values()
+                                                                           .stream()
+                                                                           .filter(comp -> comp instanceof GridComponentI)
+                                                                           .map(comp -> (GridComponentI) comp)
+                                                                           .collect(Collectors.groupingBy(g -> g.stackParentProperty().get() != null ? g.stackParentProperty()
+                                                                                                                                                        .get()
+                                                                                                                                                        .getID() : NO_STACK_ID));
 
         // Sort each grid by its order in stack and make a final lit
         List<GridComponentI> gridsToSnap = new ArrayList<>();
@@ -141,7 +143,7 @@ public class ExportGridsToPdfTask extends LCTask<Void> {
         });
 
         // Determine max printing dimensions
-        maxImageSize = PDRectangle.A4.getHeight() - IMAGE_OFFSET * 2.0;
+        maxImageSize = PDRectangle.A4.getHeight() * 2 - IMAGE_OFFSET * 2.0;
 
         totalWork = gridPrintTasks.stream().mapToInt(pt -> pt.pageCount).sum();
         updateProgress(0, totalWork);
@@ -220,7 +222,9 @@ public class ExportGridsToPdfTask extends LCTask<Void> {
                     pageContentStream.newLineAtOffset(TEXT_LEFT_OFFSET, FOOTER_SIZE - FOOTER_LINE_HEIGHT);
                     pageContentStream.showText(profileName + " - " + configName + " - " + StringUtils.dateToStringDateWithHour(exportDate));
                     pageContentStream.newLineAtOffset(0, -FOOTER_LINE_HEIGHT);
-                    pageContentStream.showText(LCConstant.NAME + " v" + InstallationController.INSTANCE.getBuildProperties().getVersionLabel() + " - " + InstallationController.INSTANCE.getBuildProperties().getAppServerUrl());
+                    pageContentStream.showText(LCConstant.NAME + " v" + InstallationController.INSTANCE.getBuildProperties()
+                                                                                                       .getVersionLabel() + " - " + InstallationController.INSTANCE.getBuildProperties()
+                                                                                                                                                                   .getAppServerUrl());
                     pageContentStream.endText();
                     pageContentStream.drawImage(logoImage, pageWidthF - logoDrawWidth - TEXT_LEFT_OFFSET, FOOTER_SIZE / 2f - LOGO_HEIGHT / 2f, logoDrawWidth, LOGO_HEIGHT);
                 }
@@ -287,8 +291,10 @@ public class ExportGridsToPdfTask extends LCTask<Void> {
     }
 
     private ImageExportResult printGrid(GridPrintTask printTask, int taskIndex, int pageIndex) {
-        String gridName = printTask.gridToSnap.nameProperty().get() + (printTask.nodeToSelect != null ? (" - " + printTask.nodeToSelect.textProperty().get() + " (" + (pageIndex + 1) + "/" + printTask.pageCount + ")") : "");
-        final String fileName = IOUtils.getValidFileName(taskIndex + "_" + printTask.gridToSnap.nameProperty().get() + "_" + (printTask.nodeToSelect != null ? (printTask.nodeToSelect.textProperty().get() + "_" + pageIndex) : ""));
+        String gridName = printTask.gridToSnap.nameProperty().get() + (printTask.nodeToSelect != null ? (" - " + printTask.nodeToSelect.textProperty()
+                                                                                                                                       .get() + " (" + (pageIndex + 1) + "/" + printTask.pageCount + ")") : "");
+        final String fileName = IOUtils.getValidFileName(taskIndex + "_" + printTask.gridToSnap.nameProperty().get() + "_" + (printTask.nodeToSelect != null ? (printTask.nodeToSelect.textProperty()
+                                                                                                                                                                                      .get() + "_" + pageIndex) : ""));
         File imageFile = new File(exportedImageDir + File.separator + fileName + ".png");
         AtomicBoolean landscape = new AtomicBoolean();
         final Image image = FXThreadUtils.runOnFXThreadAndWaitFor(() -> {

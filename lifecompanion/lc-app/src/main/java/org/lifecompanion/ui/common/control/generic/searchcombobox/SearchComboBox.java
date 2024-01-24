@@ -23,6 +23,7 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -39,6 +40,7 @@ import org.lifecompanion.util.javafx.FXControlUtils;
 import java.util.Comparator;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 public class SearchComboBox<T> extends HBox implements LCViewInitHelper {
     private final ObjectProperty<T> value;
@@ -58,7 +60,10 @@ public class SearchComboBox<T> extends HBox implements LCViewInitHelper {
         this(cellFactory, predicateBuilder, toStringFunction, null);
     }
 
-    public SearchComboBox(Callback<ListView<T>, ListCell<T>> cellFactory, Function<String, Predicate<T>> predicateBuilder, Function<T, String> toStringFunction, Function<String, Comparator<T>> comparatorBuilder) {
+    public SearchComboBox(Callback<ListView<T>, ListCell<T>> cellFactory,
+                          Function<String, Predicate<T>> predicateBuilder,
+                          Function<T, String> toStringFunction,
+                          Function<String, Comparator<T>> comparatorBuilder) {
         this.cellFactory = cellFactory;
         this.predicateBuilder = predicateBuilder;
         this.toStringFunction = toStringFunction;
@@ -83,7 +88,7 @@ public class SearchComboBox<T> extends HBox implements LCViewInitHelper {
         return value;
     }
 
-    public void setFixedCellSize(double size){
+    public void setFixedCellSize(double size) {
         this.searchComboBoxPopup.setFixedCellSize(size);
     }
 
@@ -96,7 +101,8 @@ public class SearchComboBox<T> extends HBox implements LCViewInitHelper {
         HBox.setHgrow(buttonOpenPopup, Priority.ALWAYS);
         this.buttonOpenPopup.setMaxWidth(Double.MAX_VALUE);
 
-        buttonClearValue = FXControlUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.TRASH).size(14).color(LCGraphicStyle.SECOND_DARK), "tooltip.search.combobox.button.clear");
+        buttonClearValue = FXControlUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.TRASH).size(14).color(LCGraphicStyle.SECOND_DARK),
+                "tooltip.search.combobox.button.clear");
 
         this.setSpacing(5.0);
         this.getChildren().addAll(buttonOpenPopup, buttonClearValue);
@@ -147,6 +153,10 @@ public class SearchComboBox<T> extends HBox implements LCViewInitHelper {
 
     Callback<ListView<T>, ListCell<T>> getCellFactory() {
         return cellFactory;
+    }
+
+    public void enableAddButton(String addButtonText, Function<Node, T> addButtonHandler) {
+        searchComboBoxPopup.enableAddButton(addButtonText, addButtonHandler);
     }
     //========================================================================
 }

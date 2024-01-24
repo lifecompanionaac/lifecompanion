@@ -64,16 +64,18 @@ public class WriteLabelAction extends SimpleUseActionImpl<GridPartKeyComponentI>
     static void executeWriteLabelFor(GridPartKeyComponentI key) {
         if (key != null) {
             String toWrite = key.textContentProperty().get();
-            //If entry doesn't have any image and contains only one char, just append
-            if (toWrite != null && toWrite.length() == 1 && key.imageVTwoProperty().get() == null) {
-                WritingStateController.INSTANCE.insertText(WritingEventSource.USER_ACTIONS, toWrite);
-            } else {
-                //Create entry and add image
-                WriterEntry entry = new WriterEntry(toWrite, true);
-                if (key.imageVTwoProperty().get() != null) {
-                    entry.imageProperty().set(key.imageVTwoProperty().get());
+            if (toWrite != null) {
+                //If entry doesn't have any image and contains only one char, just append
+                if (toWrite.length() == 1 && key.imageVTwoProperty().get() == null) {
+                    WritingStateController.INSTANCE.insertText(WritingEventSource.USER_ACTIONS, toWrite);
+                } else {
+                    //Create entry and add image
+                    WriterEntry entry = new WriterEntry(toWrite, true);
+                    if (key.imageVTwoProperty().get() != null) {
+                        entry.imageProperty().set(key.imageVTwoProperty().get());
+                    }
+                    WritingStateController.INSTANCE.insert(WritingEventSource.USER_ACTIONS, entry);
                 }
-                WritingStateController.INSTANCE.insert(WritingEventSource.USER_ACTIONS, entry);
             }
         }
     }

@@ -79,6 +79,11 @@ public class WriterEntry implements WriterEntryI {
     }
 
     @Override
+    public boolean isValid() {
+        return entryText.get() != null;
+    }
+
+    @Override
     public ObjectProperty<Color> fontColorProperty() {
         return fontColor;
     }

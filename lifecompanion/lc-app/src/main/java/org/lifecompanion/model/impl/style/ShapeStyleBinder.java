@@ -30,6 +30,9 @@ import javafx.scene.layout.Region;
 import javafx.scene.shape.Rectangle;
 import org.fxmisc.easybind.EasyBind;
 import org.lifecompanion.model.api.style.AbstractShapeCompStyleI;
+import org.lifecompanion.model.api.style.KeyCompStyleI;
+import org.lifecompanion.model.api.style.ShapeStyle;
+import org.lifecompanion.model.api.style.StylePropertyI;
 import org.lifecompanion.util.binding.Unbindable;
 
 /**
@@ -58,7 +61,7 @@ public class ShapeStyleBinder {
 
     public static <T extends AbstractShapeCompStyleI<?>> Unbindable bindArcSizeComp(final Rectangle rect, final T style, final ReadOnlyDoubleProperty width,
                                                                                     final ReadOnlyDoubleProperty height, final ObservableNumberValue strokeProperty, final int strokeCoef) {
-        NumberBinding arcSizeBinding;
+        final NumberBinding arcSizeBinding;
         //Because round border stop increase if radius>height/width (divide per 2.0 because rectangle use diameter and not radius)
         if (strokeCoef < 0) {
             arcSizeBinding = Bindings.min(Bindings.min(height.divide(2.0), width.divide(2.0)), style.shapeRadiusProperty().valueAsInt())
@@ -67,8 +70,17 @@ public class ShapeStyleBinder {
             arcSizeBinding = Bindings.min(Bindings.min(height.divide(2.0), width.divide(2.0)), style.shapeRadiusProperty().valueAsInt())
                     .add(strokeProperty).multiply(2.0);
         }
-        rect.arcWidthProperty().bind(arcSizeBinding);
-        rect.arcHeightProperty().bind(arcSizeBinding);
+        final NumberBinding arcSizeToBind;
+        if (style instanceof KeyCompStyleI) {
+            StylePropertyI<ShapeStyle> shapeStyleStylePropertyI = ((KeyCompStyleI) style).shapeStyleProperty();
+            arcSizeToBind = Bindings.createDoubleBinding(() ->
+                            shapeStyleStylePropertyI.value().getValue() != ShapeStyle.CLASSIC ? 0.0 : arcSizeBinding.doubleValue(),
+                    arcSizeBinding, shapeStyleStylePropertyI.value());
+        } else {
+            arcSizeToBind = arcSizeBinding;
+        }
+        rect.arcWidthProperty().bind(arcSizeToBind);
+        rect.arcHeightProperty().bind(arcSizeToBind);
         return () -> {
             rect.arcWidthProperty().unbind();
             rect.arcHeightProperty().unbind();

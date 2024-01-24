@@ -78,7 +78,7 @@ public abstract class AbstractRibbonTabContent extends AbstractTabContent implem
         for (RibbonTabPart item : this.items) {
             this.addPart(item);
         }
-        this.setMinHeight(200.0);
+        this.setMinHeight(250.0);
     }
 
     protected void addPart(final RibbonTabPart item) {

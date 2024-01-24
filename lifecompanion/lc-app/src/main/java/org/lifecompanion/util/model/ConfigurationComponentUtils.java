@@ -19,10 +19,13 @@
 
 package org.lifecompanion.util.model;
 
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ObservableMap;
 import javafx.scene.Node;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.util.Pair;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
@@ -34,6 +37,8 @@ import org.lifecompanion.model.api.ui.configurationcomponent.ComponentViewI;
 import org.lifecompanion.model.impl.categorizedelement.useaction.available.WriteAndSpeakTextAction;
 import org.lifecompanion.model.impl.configurationcomponent.GridPartKeyComponent;
 import org.lifecompanion.util.LangUtils;
+import org.lifecompanion.util.binding.BindingUtils;
+import org.lifecompanion.util.javafx.ImageUtils;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -283,4 +288,25 @@ public class ConfigurationComponentUtils {
                 .findAny()
                 .orElse(null);
     }
+
+    public static void bindImageViewWithImageUseComponent(ImageView imageView, ImageUseComponentI imageUseComponent) {
+        imageView.preserveRatioProperty().bind(imageUseComponent.preserveRatioProperty());
+        imageView.rotateProperty().bind(imageUseComponent.rotateProperty());
+        imageView.viewportProperty().bind(imageUseComponent.viewportProperty());
+        imageView.imageProperty().bind(Bindings.createObjectBinding(() -> {
+                    Image img = imageUseComponent.loadedImageProperty().get();
+                    return img == null || !imageUseComponent.enableReplaceColorProperty().get() ? img
+                            : ImageUtils.replaceColorInImage(img, imageUseComponent.colorToReplaceProperty().get(), imageUseComponent.replacingColorProperty().get(),
+                            imageUseComponent.replaceColorThresholdProperty().get());
+                }, imageUseComponent.loadedImageProperty(), imageUseComponent.enableReplaceColorProperty(), imageUseComponent.colorToReplaceProperty(),
+                imageUseComponent.replacingColorProperty(), imageUseComponent.replaceColorThresholdProperty()));
+    }
+
+    public static void unbindImageViewFromImageUseComponent(ImageView imageView) {
+        BindingUtils.unbindAndSetNull(imageView.imageProperty());
+        BindingUtils.unbindAndSet(imageView.preserveRatioProperty(), true);
+        BindingUtils.unbindAndSet(imageView.rotateProperty(), 0.0);
+        BindingUtils.unbindAndSetNull(imageView.viewportProperty());
+    }
+
 }

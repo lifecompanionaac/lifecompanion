@@ -90,7 +90,7 @@ public class StackButtonOption extends BaseOption<StackComponentI> implements LC
         this.buttonAddGrid.setOnAction(ea -> ConfigActionController.INSTANCE.executeAction(new GridStackActions.AddGridInStackAction(model, true, true)));
         this.buttonCopyCurrentGrid.setOnAction(ea ->
                 ConfigActionController.INSTANCE.executeAction(new GridStackActions.AddGridInStackAction(model,
-                        ComponentActionController.createComponentCopy(model.displayedComponentProperty().get()),
+                        ComponentActionController.createComponentCopy(model.displayedComponentProperty().get(), true),
                         true,
                         true)));
         this.buttonAddFromModel.setOnAction(ea -> ConfigActionController.INSTANCE.executeAction(new AddComponents.AddUserModelGridInStack().createAddAction()));

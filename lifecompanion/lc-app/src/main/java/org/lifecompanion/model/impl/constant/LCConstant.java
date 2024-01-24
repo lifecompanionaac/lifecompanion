@@ -57,8 +57,9 @@ public class LCConstant {
     // ========================================================================
     public final static String EXT_PATH_DATA_TIPS_IMAGES = ApplicationConstant.DIR_NAME_APPLICATION_DATA + File.separator + "tips-medias" + File.separator;
     public final static String EXT_PATH_FUS_CHAR_PREDICTOR = ApplicationConstant.DIR_NAME_APPLICATION_DATA + File.separator + "fus-char-predictor" + File.separator;
-    public final static String EXT_PATH_DEFAULT_CONFIGURATIONS = ApplicationConstant.DIR_NAME_APPLICATION_DATA + File.separator + "default-configurations" + File.separator;
-    public final static String EXT_PATH_DEFAULT_CONFIGURATIONS_EXTRACTED = EXT_PATH_DEFAULT_CONFIGURATIONS + "extracted" + File.separator;
+    public final static String EXT_PATH_DEFAULT_CONFIGURATIONS_CACHE_ROOT = ApplicationConstant.DIR_NAME_APPLICATION_DATA + File.separator + "default-configurations-cache" + File.separator;
+    public final static String EXT_PATH_DEFAULT_CONFIGURATIONS_CACHE_SOURCE = EXT_PATH_DEFAULT_CONFIGURATIONS_CACHE_ROOT + File.separator + "files";
+    public final static String EXT_PATH_DEFAULT_CONFIGURATIONS_CACHE_EXTRACTED = EXT_PATH_DEFAULT_CONFIGURATIONS_CACHE_ROOT + File.separator + "extracted";
     public final static String EXT_PATH_LC_STATE_FILENAME = "lifecompanion.xml";
     public final static String EXT_PATH_LAST_UPDATE_CHECK = ApplicationConstant.DIR_NAME_APPLICATION_DATA + File.separator + "last-update";
     // ========================================================================
@@ -102,6 +103,7 @@ public class LCConstant {
     public final static String USER_COMP_DIRECTORY = "user-components";
     public final static String CONFIGURATION_RESOURCE_DIRECTORY = "resources";
     public final static String CONFIGURATION_IMAGE_DIRECTORY = "images";
+    public final static String CONFIGURATION_VIDEO_DIRECTORY = "videos";
     public final static String CONFIGURATION_KEYLIST_DIRECTORY = "keylist";
     public final static String CONFIGURATION_SEQUENCE_DIRECTORY = "sequence";
 
@@ -124,6 +126,7 @@ public class LCConstant {
     // Class part : "Images extension"
     // ========================================================================
     public static final String[] IMAGE_EXTENSIONS = {"png", "gif", "jpg", "jpeg"};
+    public static final String[] VIDEO_EXTENSIONS = {"mp4"};
     // ========================================================================
 
     // Class part : "Base UI"
@@ -177,6 +180,7 @@ public class LCConstant {
     public static final String IMPORTED_IMAGE_DIR_NAME = RESOURCES_DIR_NAME + "imported-images" + File.separator;
     public static final String DEFAULT_IMAGE_DICTIONARIES = ApplicationConstant.DIR_NAME_APPLICATION_DATA + IMAGE_RESOURCES_DIR_NAME;
     public static final String THUMBNAIL_DIR_NAME = "thumbnails";
+    public static final String VIDEO_THUMBNAIL_DIR_NAME = "videos-thumbnails";
     public static final String DICTIONARY_NAME_USER_IMAGES = "user-images.json";
     public static final String DICTIONARY_NAME_CONFIGURATION_IMAGES = "configuration-images.json";
     //========================================================================

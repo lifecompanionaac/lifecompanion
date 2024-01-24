@@ -98,7 +98,8 @@ public class QuickActionRibbonPart extends RibbonBasePart<Void> implements LCVie
 		this.buttonUndo.setOnAction(UndoRedoActions.HANDLER_UNDO);
 		this.buttonRedo.setOnAction(UndoRedoActions.HANDLER_REDO);
 		//Copy
-		this.buttonCopy.setOnAction((ea) -> ComponentActionController.INSTANCE.copyComponent(SelectionController.INSTANCE.selectedDisplayableComponentHelperProperty().get()));
+		this.buttonCopy.setOnAction((ea) -> ComponentActionController.INSTANCE.copyComponent(SelectionController.INSTANCE.selectedDisplayableComponentHelperProperty().get(),
+				SelectionController.INSTANCE.getSelectedKeys()));
 		this.buttonPaste.setOnAction((ea) -> {
 			ComponentActionController.INSTANCE.pasteComponent(AppModeController.INSTANCE.getEditModeContext().configurationProperty().get(),
 					SelectionController.INSTANCE.selectedDisplayableComponentHelperProperty().get(),

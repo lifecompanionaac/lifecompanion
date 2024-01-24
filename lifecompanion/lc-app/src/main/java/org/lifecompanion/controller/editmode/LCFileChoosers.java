@@ -80,6 +80,19 @@ public class LCFileChoosers {
         return imageFileChooser;
     }
 
+    private static FileChooser getOrInitVideoFileChooser() {
+        if (imageFileChooser == null) {
+            LCFileChoosers.imageFileChooser = new FileChooser();
+            LCFileChoosers.imageFileChooser.setTitle(Translation.getText("file.chooser.video.title"));
+            String[] exts = new String[LCConstant.VIDEO_EXTENSIONS.length];
+            for (int i = 0; i < exts.length; i++) {
+                exts[i] = "*." + LCConstant.VIDEO_EXTENSIONS[i];
+            }
+            LCFileChoosers.imageFileChooser.getExtensionFilters().add(new ExtensionFilter(Translation.getText("file.chooser.video.description"), exts));
+        }
+        return imageFileChooser;
+    }
+
     private static DirectoryChooser getOrInitDirectoryChooser() {
         if (directoryChooser == null) {
             LCFileChoosers.directoryChooser = new DirectoryChooser();
@@ -106,6 +119,10 @@ public class LCFileChoosers {
 
     public static FileChooser getChooserImage(final FileChooserType fileChooserType) {
         return initializeDirectory(LCFileChoosers.getOrInitImageFileChooser(), fileChooserType);
+    }
+
+    public static FileChooser getChooserVideo(final FileChooserType fileChooserType) {
+        return initializeDirectory(LCFileChoosers.getOrInitVideoFileChooser(), fileChooserType);
     }
 
     public static FileChooser getOtherFileChooser(final String title, final ExtensionFilter extensionFilter, final FileChooserType fileChooserType) {

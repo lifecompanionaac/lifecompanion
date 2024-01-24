@@ -34,6 +34,10 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import org.lifecompanion.controller.editaction.KeyActions;
+import org.lifecompanion.model.api.style.ShapeStyle;
+import org.lifecompanion.ui.common.pane.specific.cell.ShapeStyleListCell;
+import org.lifecompanion.ui.common.pane.specific.cell.SimpleTextListCell;
 import org.lifecompanion.ui.controlsfx.control.ToggleSwitch;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.SimplerKeyContentContainerI;
 import org.lifecompanion.model.api.style.TextPosition;
@@ -52,6 +56,7 @@ public abstract class AbstractSimplerKeyContentContainerPropertiesEditionView<T 
     protected final ObjectProperty<T> selectedNode;
 
     private ComboBox<TextPosition> comboBoxTextPosition;
+    private ComboBox<ShapeStyle> comboBoxShapeStyle;
     protected TextField fieldText;
     private Label labelText;
     private LCColorPicker colorPickerBackgroundColor, colorPickerStrokeColor, colorPickerTextColor;
@@ -123,6 +128,11 @@ public abstract class AbstractSimplerKeyContentContainerPropertiesEditionView<T 
         this.comboBoxTextPosition.setCellFactory(lv -> new TextPositionListCell(true));
         comboBoxTextPosition.setMaxWidth(Double.MAX_VALUE);
 
+        comboBoxShapeStyle = new ComboBox<>(FXCollections.observableArrayList(ShapeStyle.values()));
+        this.comboBoxShapeStyle.setButtonCell(new SimpleTextListCell<>(ShapeStyle::getName));
+        this.comboBoxShapeStyle.setCellFactory(lv -> new ShapeStyleListCell());
+        this.comboBoxShapeStyle.setMaxWidth(Double.MAX_VALUE);
+
 
         colorPickerBackgroundColor = new LCColorPicker();
         colorPickerBackgroundColor.setMaxWidth(Double.MAX_VALUE);
@@ -155,6 +165,12 @@ public abstract class AbstractSimplerKeyContentContainerPropertiesEditionView<T 
         gridStyle.add(createDeleteColorSwitch(colorPickerTextColor), 0, rowStyle);
         gridStyle.add(colorPickerTextColor, 1, rowStyle++);
 
+        gridStyle.add(new Label(Translation.getText("general.configuration.view.key.list.field.shape.style")), 0, rowStyle++, 2, 1);
+        gridStyle.add(createNullValueToggleSwitch(comboBoxShapeStyle,
+                comboBoxShapeStyle.getSelectionModel().selectedItemProperty(),
+                () -> comboBoxShapeStyle.getSelectionModel().clearSelection()), 0, rowStyle);
+        gridStyle.add(comboBoxShapeStyle, 1, rowStyle++);
+
         VBox boxImage = new VBox(GeneralConfigurationStepViewI.GRID_V_GAP, imageUseComponentSelectorControl);
 
         HBox.setHgrow(gridStyle, Priority.SOMETIMES);
@@ -177,6 +193,7 @@ public abstract class AbstractSimplerKeyContentContainerPropertiesEditionView<T 
     @Override
     public void initListener() {
         fieldText.setOnAction(actionEventTextFieldOnAction);
+        KeyActions.installImageAutoSelect(fieldText, selectedNode::get);
     }
 
     @Override
@@ -191,14 +208,21 @@ public abstract class AbstractSimplerKeyContentContainerPropertiesEditionView<T 
                     fieldText.textProperty().unbindBidirectional(ov.textProperty());
                     fieldText.setText(null);
                     comboBoxTextPosition.valueProperty().unbindBidirectional(ov.textPositionProperty());
+                    comboBoxTextPosition.setValue(null);
+                    comboBoxShapeStyle.valueProperty().unbindBidirectional(ov.shapeStyleProperty());
+                    comboBoxShapeStyle.setValue(null);
                     colorPickerBackgroundColor.valueProperty().unbindBidirectional(ov.backgroundColorProperty());
+                    colorPickerBackgroundColor.setValue(null);
                     colorPickerStrokeColor.valueProperty().unbindBidirectional(ov.strokeColorProperty());
+                    colorPickerStrokeColor.setValue(null);
                     colorPickerTextColor.valueProperty().unbindBidirectional(ov.textColorProperty());
+                    colorPickerTextColor.setValue(null);
                 }
                 bindBidirectionalContent(ov, nv);
                 if (nv != null) {
                     fieldText.textProperty().bindBidirectional(nv.textProperty());
                     comboBoxTextPosition.valueProperty().bindBidirectional(nv.textPositionProperty());
+                    comboBoxShapeStyle.valueProperty().bindBidirectional(nv.shapeStyleProperty());
                     colorPickerBackgroundColor.valueProperty().bindBidirectional(nv.backgroundColorProperty());
                     colorPickerStrokeColor.valueProperty().bindBidirectional(nv.strokeColorProperty());
                     colorPickerTextColor.valueProperty().bindBidirectional(nv.textColorProperty());

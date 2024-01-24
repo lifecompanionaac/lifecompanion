@@ -28,7 +28,7 @@ public class KeyListNodeTreeCell extends TreeCell<KeyListNodeI> {
     private final KeyListCellHandler keyListCellHandler;
 
     public KeyListNodeTreeCell(KeyListContentConfigView keyListContentConfigView) {
-        keyListCellHandler = new KeyListCellHandler(this, keyListContentConfigView::selectById);
+        keyListCellHandler = new KeyListCellHandler(this, keyListContentConfigView::openById);
         this.setOnMouseClicked(e -> {
             KeyListNodeI val = getItem();
             if (e.getClickCount() > 1 && val != null) {

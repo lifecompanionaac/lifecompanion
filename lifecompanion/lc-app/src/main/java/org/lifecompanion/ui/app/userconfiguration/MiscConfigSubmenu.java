@@ -48,6 +48,7 @@ import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.model.api.configurationcomponent.IdentifiableComponentI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
+import org.lifecompanion.model.api.style.ShapeStyle;
 import org.lifecompanion.model.impl.configurationcomponent.dynamickey.KeyListLeaf;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.impl.useapi.GlobalRuntimeConfiguration;
@@ -81,7 +82,7 @@ public class MiscConfigSubmenu extends ScrollPane implements LCViewInitHelper, U
     /**
      * Button to open folders
      */
-    private Button buttonOpenRootFolder, buttonOpenCurrentProfileFolder, buttonOpenCurrentConfigFolder, buttonExecuteGC, buttonOpenConfigCleanXml, buttonDetectKeylistDuplicates,
+    private Button buttonOpenRootFolder, buttonOpenCurrentProfileFolder, buttonOpenCurrentConfigFolder, buttonExecuteGC, buttonOpenConfigCleanXml, buttonDetectKeylistDuplicates, buttonSetKeylistNodesShape,
             buttonGenerateTechDemoConfiguration, buttonGenerateRandomConfiguration;
 
     private Label labelMemoryInfo;
@@ -145,11 +146,12 @@ public class MiscConfigSubmenu extends ScrollPane implements LCViewInitHelper, U
         buttonGenerateTechDemoConfiguration = this.createButton("button.generate.tech.demo.configuration");
         buttonGenerateRandomConfiguration = this.createButton("button.testing.random.configuration");
         this.buttonDetectKeylistDuplicates = this.createButton("button.detect.keylist.duplicates");
+        this.buttonSetKeylistNodesShape = this.createButton("button.set.keylist.node.shape");
 
         // Developers : to test your feature, create and add your nodes here and make sure "org.lifecompanion.debug.dev.env" property is enabled
         if (GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.PROP_DEV_MODE)) {
             boxChildren.getChildren()
-                    .addAll(labelTitleTesting, buttonGenerateTechDemoConfiguration, buttonDetectKeylistDuplicates, buttonGenerateRandomConfiguration);
+                    .addAll(labelTitleTesting, buttonGenerateTechDemoConfiguration, buttonDetectKeylistDuplicates, buttonGenerateRandomConfiguration, buttonSetKeylistNodesShape);
         }
     }
 
@@ -208,6 +210,22 @@ public class MiscConfigSubmenu extends ScrollPane implements LCViewInitHelper, U
         this.buttonGenerateTechDemoConfiguration.setOnAction(e -> {
             AsyncExecutorController.INSTANCE.addAndExecute(true, false, new GenerateTechDemoConfigurationTask());
         });
+        this.buttonSetKeylistNodesShape.setOnAction(e -> {
+            setKeylistShapes();
+        });
+    }
+
+    private void setKeylistShapes() {
+        final LCConfigurationI configuration = AppModeController.INSTANCE.getEditModeContext()
+                .getConfiguration();
+        if (configuration != null) {
+            final KeyListNodeI keyListNodes = configuration.rootKeyListNodeProperty().get();
+            keyListNodes.traverseTreeToBottom(n -> {
+                if (n.isLinkNode() || !n.isLeafNode()) {
+                    n.shapeStyleProperty().set(ShapeStyle.TP_ANGLE_CUT);
+                }
+            });
+        }
     }
 
 

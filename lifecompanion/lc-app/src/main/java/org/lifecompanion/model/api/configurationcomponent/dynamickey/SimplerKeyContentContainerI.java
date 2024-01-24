@@ -26,8 +26,10 @@ import javafx.scene.paint.Color;
 import org.lifecompanion.model.api.configurationcomponent.DuplicableComponentI;
 import org.lifecompanion.model.api.configurationcomponent.ImageUseComponentI;
 import org.lifecompanion.model.api.configurationcomponent.TreeIdentifiableComponentI;
+import org.lifecompanion.model.api.configurationcomponent.VideoUseComponentI;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.io.XMLSerializable;
+import org.lifecompanion.model.api.style.ShapeStyle;
 import org.lifecompanion.model.api.style.TextPosition;
 
 /**
@@ -37,7 +39,7 @@ import org.lifecompanion.model.api.style.TextPosition;
  *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
-public interface SimplerKeyContentContainerI extends ImageUseComponentI, XMLSerializable<IOContextI>, DuplicableComponentI, TreeIdentifiableComponentI {
+public interface SimplerKeyContentContainerI extends VideoUseComponentI, XMLSerializable<IOContextI>, DuplicableComponentI, TreeIdentifiableComponentI {
 
     // CONTENT DISPLAYED
     //========================================================================
@@ -47,6 +49,8 @@ public interface SimplerKeyContentContainerI extends ImageUseComponentI, XMLSeri
     StringProperty textProperty();
 
     ObjectProperty<TextPosition> textPositionProperty();
+
+    ObjectProperty<ShapeStyle> shapeStyleProperty();
 
     ObjectProperty<Color> backgroundColorProperty();
 

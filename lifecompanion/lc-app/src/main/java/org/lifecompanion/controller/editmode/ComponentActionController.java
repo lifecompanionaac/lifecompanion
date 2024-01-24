@@ -40,7 +40,10 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * The controller to manage the copy/paste actions.
@@ -57,6 +60,11 @@ public enum ComponentActionController {
     private final ObjectProperty<ConfigurationChildComponentI> copiedComponent;
 
     /**
+     * The current copied keys
+     */
+    private final Set<GridPartKeyComponentI> copiedKeys;
+
+    /**
      * Source for style copy on keys
      */
     private final ObjectProperty<DisplayableComponentI> styleCopySource;
@@ -64,9 +72,10 @@ public enum ComponentActionController {
     /**
      * Private singleton constructor
      */
-    private ComponentActionController() {
+    ComponentActionController() {
         this.copiedComponent = new SimpleObjectProperty<>();
-        this.styleCopySource = new SimpleObjectProperty<>(this, "styleCopySource");
+        this.styleCopySource = new SimpleObjectProperty<>();
+        this.copiedKeys = new HashSet<>();
         AppModeController.INSTANCE.getEditModeContext().configurationProperty().addListener((obs, ov, nv) -> {
             this.clearCopiedComponent();
             this.styleCopySource.set(null);
@@ -92,14 +101,18 @@ public enum ComponentActionController {
      *
      * @param component the component to be copied
      */
-    public void copyComponent(final ConfigurationChildComponentI component) {
+    public void copyComponent(final ConfigurationChildComponentI component, List<GridPartKeyComponentI> selectedKeys) {
         this.copiedComponent.set(component);
+        this.copiedKeys.clear();
+        this.copiedKeys.addAll(selectedKeys);
+
+        // Copy the component image into system clipboard (when possible)
         if (component instanceof ImageUseComponentI) {
             ImageUseComponentI imageUseComponent = (ImageUseComponentI) component;
             if (imageUseComponent.imageVTwoProperty().get() != null) {
                 final ClipboardContent content = new ClipboardContent();
                 File imagePath = imageUseComponent.imageVTwoProperty().get().getRealFilePath();
-                if (imagePath.exists()) {
+                if (imagePath != null && imagePath.exists()) {
                     content.putFiles(List.of(imagePath));
                     FXThreadUtils.runOnFXThread(() -> Clipboard.getSystemClipboard().setContent(content));
                 }
@@ -120,17 +133,22 @@ public enum ComponentActionController {
         ConfigurationChildComponentI copied = this.copiedComponent.get();
         if (copied != null) {
             this.LOGGER.info("Will try to copy the element {} to {}", copied.getID(), keys);
-            ConfigurationChildComponentI cloned = createComponentCopy(copied);
-            PasteComponentAction pasteAction = new PasteComponentAction(targetConfiguration, cloned, target, keys);
+            ConfigurationChildComponentI cloned = createComponentCopy(copied, true);
+            Set<GridPartKeyComponentI> clonedKeys = createKeysCopy(copiedKeys);
+            PasteComponentAction pasteAction = new PasteComponentAction(targetConfiguration, cloned, clonedKeys, target, keys);
             ConfigActionController.INSTANCE.executeAction(pasteAction);
         }
     }
 
-    public static <T extends DuplicableComponentI> T createComponentCopy(T component) {
+    private Set<GridPartKeyComponentI> createKeysCopy(Set<GridPartKeyComponentI> copiedKeys) {
+        return copiedKeys.stream().map(k -> createComponentCopy(k, false)).collect(Collectors.toSet());
+    }
+
+    public static <T extends DuplicableComponentI> T createComponentCopy(T component, boolean addCopyPrefix) {
         T cloned = (T) component.duplicate(true);
         if (cloned instanceof UserNamedComponentI) {
             UserNamedComponentI userNamedComp = (UserNamedComponentI) cloned;
-            if (!StringUtils.isBlank(userNamedComp.userNameProperty().get())) {
+            if (addCopyPrefix && !StringUtils.isBlank(userNamedComp.userNameProperty().get())) {
                 userNamedComp.userNameProperty().set(Translation.getText("action.paste.component.comp.renamed.copy.of") + " " + userNamedComp.userNameProperty().get());
             }
         }
@@ -142,6 +160,7 @@ public enum ComponentActionController {
      */
     public void clearCopiedComponent() {
         this.copiedComponent.set(null);
+        this.copiedKeys.clear();
     }
     //========================================================================
 

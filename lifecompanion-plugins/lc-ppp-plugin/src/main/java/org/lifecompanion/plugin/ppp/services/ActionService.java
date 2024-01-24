@@ -10,10 +10,7 @@ import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
 import org.lifecompanion.plugin.ppp.keyoption.ActionCellKeyOption;
-import org.lifecompanion.plugin.ppp.model.Action;
-import org.lifecompanion.plugin.ppp.model.ActionRecord;
-import org.lifecompanion.plugin.ppp.model.Evaluator;
-import org.lifecompanion.plugin.ppp.model.UserProfile;
+import org.lifecompanion.plugin.ppp.model.*;
 import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.util.model.ConfigurationComponentUtils;
 
@@ -37,6 +34,7 @@ public enum ActionService implements ModeListenerI {
 
     private final ListChangeListener<Action> actionsListener;
     private final ChangeListener<Number> currentPageListener;
+    private final ChangeListener<UserProfile> profileChangeListener;
 
     ActionService() {
         this.actions = FXCollections.observableArrayList();
@@ -46,15 +44,15 @@ public enum ActionService implements ModeListenerI {
 
         this.actionStopCallbacks = new HashSet<>();
 
-        this.actionsListener = change -> {
-            this.updateDisplayedKeyOptions();
-
-            UserProfile profile = ProfileService.INSTANCE.getCurrentProfile();
-            profile.setActions(new ArrayList<>(this.actions));
-
-            ProfileService.INSTANCE.saveProfile(this.config, profile);
-        };
+        this.actionsListener = change -> this.updateDisplayedKeyOptions();
         this.currentPageListener = (obs, ov, nv) -> this.updateDisplayedKeyOptions();
+        this.profileChangeListener = (obs, ov, nv) -> {
+            if (nv != null) {
+                this.actions.setAll(nv.getActions());
+            } else {
+                this.actions.clear();
+            }
+        };
     }
 
     @Override
@@ -74,7 +72,7 @@ public enum ActionService implements ModeListenerI {
             this.currentPage.addListener(this.currentPageListener);
         }
 
-        this.actions.setAll(ProfileService.INSTANCE.getCurrentProfile().getActions());
+        UserDatabaseService.INSTANCE.selectedProfileProperty().addListener(profileChangeListener);
     }
 
     @Override
@@ -86,6 +84,8 @@ public enum ActionService implements ModeListenerI {
         this.currentPage.removeListener(this.currentPageListener);
 
         this.keyOptions.clear();
+
+        UserDatabaseService.INSTANCE.selectedProfileProperty().removeListener(profileChangeListener);
     }
 
     public ObservableList<Action> getActions() {
@@ -118,7 +118,7 @@ public enum ActionService implements ModeListenerI {
         KeyboardInputService.INSTANCE.startInput(comment -> {
             action.setComment(comment);
 
-            RecordsService.INSTANCE.save(this.config, action);
+            RecordsService.INSTANCE.save(this.config, UserDatabaseService.INSTANCE.getSelectedProfile(), action);
 
             Consumer<ActionRecord> stopCallback = this.internalActionStopCallback;
             if (stopCallback != null) {
@@ -143,6 +143,7 @@ public enum ActionService implements ModeListenerI {
             if (actionName != null) {
                 Action action = new Action(actionName);
                 this.actions.add(action);
+                UserDatabaseService.INSTANCE.updateActionsForCurrentProfile(config, this.actions);
                 this.selectAction(action);
             } else {
                 this.moveToActionGrid();

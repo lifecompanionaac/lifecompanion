@@ -18,10 +18,7 @@
  */
 package org.lifecompanion.controller.configurationcomponent.dynamickey;
 
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 import javafx.collections.ObservableList;
 import org.lifecompanion.controller.editmode.SelectionController;
 import org.lifecompanion.controller.lifecycle.AppMode;
@@ -37,10 +34,12 @@ import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNode
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.LinkType;
 import org.lifecompanion.model.api.configurationcomponent.keyoption.KeyOptionI;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
+import org.lifecompanion.model.api.selectionmode.ComponentToScanI;
 import org.lifecompanion.model.impl.categorizedelement.useaction.available.*;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.dynamickey.KeyListNodeKeyOption;
 import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.util.model.ConfigurationComponentUtils;
+import org.lifecompanion.util.model.SelectionModeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,6 +68,8 @@ public enum KeyListController implements ModeListenerI {
     private final Set<Runnable> nextWithoutLoopEndReachedListener;
     private final Set<Runnable> previousWithoutLoopStartReachedListener;
 
+    private final IntegerProperty columnCountEstimation;
+
 
     KeyListController() {
         currentNode = new SimpleObjectProperty<>();
@@ -77,6 +78,7 @@ public enum KeyListController implements ModeListenerI {
         goParentKeyNodeNoParentListener = new HashSet<>();
         nextWithoutLoopEndReachedListener = new HashSet<>();
         previousWithoutLoopStartReachedListener = new HashSet<>();
+        columnCountEstimation = new SimpleIntegerProperty(5);
         nodeHistory = new ArrayList<>();
 
         // In config mode : refresh from scratch on every changes in config (but try to restore state)
@@ -112,6 +114,10 @@ public enum KeyListController implements ModeListenerI {
 
     // PUBLIC API
     //========================================================================
+    public ReadOnlyIntegerProperty columnCountEstimationProperty() {
+        return columnCountEstimation;
+    }
+
     public void selectNode(KeyListNodeI node) {
         selectNode(node, false);
     }
@@ -319,6 +325,20 @@ public enum KeyListController implements ModeListenerI {
             }
         });
 
+        // Find row and column count (try to find the best matching count, but can be inaccurate)
+        int columnCountEst = 0;
+        for (GridComponentI gridComponent : keyOptionsPerGrid.keySet()) {
+            List<ComponentToScanI> rowColumnScanningComponents = SelectionModeUtils.getRowColumnScanningComponents(gridComponent,
+                    true,
+                    comp -> comp instanceof GridPartKeyComponentI && ((GridPartKeyComponentI) comp).keyOptionProperty().get() instanceof KeyListNodeKeyOption);
+            OptionalInt max = rowColumnScanningComponents.stream().mapToInt(c -> c.getComponents().size()).max();
+            if (max.isPresent()) {
+                columnCountEst = Math.max(max.getAsInt(), columnCountEst);
+            }
+        }
+        int columnCountEstF = columnCountEst;
+        FXThreadUtils.runOnFXThread(() -> columnCountEstimation.set(Math.min(columnCountEstF, 4)));
+
         // TODO : should never leave blank keys ? (sublevel...)
         KeyListNodeI nodeToSetAsCurrent = previouslySelectedNodeIdToRestore != null ? findNodeByIdInSubtree(rootKeyListNode, previouslySelectedNodeIdToRestore) : null;
         selectNode(nodeToSetAsCurrent != null ? nodeToSetAsCurrent : rootKeyListNode);
@@ -351,7 +371,8 @@ public enum KeyListController implements ModeListenerI {
             PreviousInCurrentKeyListNoLoopAction previousInCurrentKeyListNoLoopAction = key.getActionManager()
                     .getFirstActionOfType(UseActionEvent.ACTIVATION, PreviousInCurrentKeyListNoLoopAction.class);
             GoParentCurrentKeyNodeAction goParentCurrentKeyNodeAction = key.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION, GoParentCurrentKeyNodeAction.class);
-            GoParentOrExecuteNextCurrentKeyNodeAction goParentOrExecuteNextCurrentKeyNodeAction = key.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION, GoParentOrExecuteNextCurrentKeyNodeAction.class);
+            GoParentOrExecuteNextCurrentKeyNodeAction goParentOrExecuteNextCurrentKeyNodeAction = key.getActionManager()
+                    .getFirstActionOfType(UseActionEvent.ACTIVATION, GoParentOrExecuteNextCurrentKeyNodeAction.class);
             GoRootKeyNodeAction goRootKeyNodeAction = key.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION, GoRootKeyNodeAction.class);
             NextKeysOnSpecificLevelAction nextKeysOnSpecificLevelAction = key.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION, NextKeysOnSpecificLevelAction.class);
             PreviousKeysOnSpecificLevelAction previousKeysOnSpecificLevelAction = key.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION, PreviousKeysOnSpecificLevelAction.class);

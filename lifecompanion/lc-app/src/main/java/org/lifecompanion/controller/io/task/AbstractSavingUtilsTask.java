@@ -20,6 +20,7 @@ package org.lifecompanion.controller.io.task;
 
 import org.jdom2.Element;
 import org.lifecompanion.controller.io.XMLHelper;
+import org.lifecompanion.model.api.configurationcomponent.VideoElementI;
 import org.lifecompanion.model.api.imagedictionary.ImageElementI;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.io.IOResourceI;
@@ -56,20 +57,31 @@ public abstract class AbstractSavingUtilsTask<T> extends LCTask<T> {
     }
 
     protected void saveXmlSerializable(final XMLSerializable<IOContextI> element, final File directory, final String xmlName) throws Exception {
-        //Prestart
+        File file = new File(directory.getPath() + File.separator + xmlName);
+        IOUtils.createParentDirectoryIfNeeded(file);
+        //Save the XML
+        IOContext context = new IOContext(directory);
+        LOGGER.info("XML tree created from the element.");
+        this.updateProgress(1, 6);
+        XMLHelper.saveXMLSerializable(file, element, context);
+        this.updateProgress(2, 6);
+        LOGGER.info("XML saved to {}", file);
+
+        this.saveImages(directory, context);
+        this.saveVideos(directory, context);
+
+        //Resources
+        Map<String, IOResourceI> resources = context.getIOResource();
+        this.saveResources(directory, resources);
+        this.updateProgress(5, 6);
+    }
+
+    private void saveImages(final File directory, IOContext context) {
+        //Images saving
         File imageDirectory = new File(directory.getPath() + File.separator + LCConstant.CONFIGURATION_IMAGE_DIRECTORY + File.separator);
         if (!imageDirectory.exists()) {
             imageDirectory.mkdirs();
         }
-        //Save the XML
-        IOContext context = new IOContext(directory);
-        LOGGER.info("XML tree created from the element.");
-        this.updateProgress(1, 5);
-        File file = new File(directory.getPath() + File.separator + xmlName);
-        XMLHelper.saveXMLSerializable(file, element, context);
-        this.updateProgress(2, 5);
-        LOGGER.info("XML saved to {}", file);
-        //Images saving
         List<ImageElementI> images = context.getImagesToSaveV2();
         LOGGER.info("Will save {} images for the element", images.size());
         long start = System.currentTimeMillis();
@@ -81,28 +93,14 @@ public abstract class AbstractSavingUtilsTask<T> extends LCTask<T> {
             }
         }
         //Clean images
-        int deletedImages = this.cleanImages(imageDirectory, imageIds);
+        int deletedImages = this.cleanUnknownFiles(imageDirectory, imageIds);
         LOGGER.info("{} images saved and {} images deleted in {} ms", images.size(), deletedImages,
                 System.currentTimeMillis() - start);
-        this.updateProgress(3, 5);
-        //Resources
-        Map<String, IOResourceI> resources = context.getIOResource();
-        LOGGER.info("Will save {} resources for the element", resources.size());
-        start = System.currentTimeMillis();
-        this.saveResources(directory, resources);
-        LOGGER.info("{} resources saved in {} ms", resources.size(), System.currentTimeMillis() - start);
-        this.updateProgress(4, 5);
+        this.updateProgress(3, 6);
     }
 
-    /**
-     * To clean the images in the configuration directory that are not used by the configuration.<br>
-     * This also remove images from gallery if they were loaded from the configuration resources.
-     *
-     * @param imageDirectory the directory that contains configuration images
-     * @param imageIds       all the configuration image ids
-     * @return the delete image count
-     */
-    private int cleanImages(final File imageDirectory, final HashSet<String> imageIds) {
+
+    private int cleanUnknownFiles(final File imageDirectory, final Set<String> imageIds) {
         int count = 0;
         File[] images = imageDirectory.listFiles();
         if (images != null) {
@@ -147,12 +145,47 @@ public abstract class AbstractSavingUtilsTask<T> extends LCTask<T> {
 
     }
 
+    private void saveVideos(final File directory, IOContext context) {
+        File videoDirectory = new File(directory.getPath() + File.separator + LCConstant.CONFIGURATION_VIDEO_DIRECTORY + File.separator);
+        if (!videoDirectory.exists()) {
+            videoDirectory.mkdirs();
+        }
+        LOGGER.info("Will save {} videos for the element", context.getVideos().size());
+        long start = System.currentTimeMillis();
+        for (VideoElementI video : context.getVideos().values()) {
+            this.saveVideo(videoDirectory, context, video);
+        }
+        //Clean images
+        int deletedVideos = this.cleanUnknownFiles(videoDirectory, context.getVideos().keySet());
+        LOGGER.info("{} video saved and {} videos deleted in {} ms", context.getVideos().size(), deletedVideos,
+                System.currentTimeMillis() - start);
+        this.updateProgress(4, 6);
+    }
+
+    private void saveVideo(File videoDirectory, IOContext context, VideoElementI video) {
+        // FIXME : extension
+        File imageFile = new File(videoDirectory.getPath() + File.separator + video.getId() + ".mp4");//+ video.getExtension());
+        if (!imageFile.exists()) {
+            try {
+                try (FileOutputStream fos = new FileOutputStream(imageFile)) {
+                    try (FileInputStream fis = new FileInputStream(video.getPath())) {
+                        IOUtils.copyStream(fis, fos);
+                    }
+                }
+            } catch (Exception e) {
+                LOGGER.warn("The given image {} was not save!", video.getId(), e);
+            }
+        }
+    }
+
     /**
      * Save all the resource associated to the configuration
      *
      * @throws IOException if the resource XML can't be saved
      */
     private void saveResources(final File directory, final Map<String, IOResourceI> resources) throws IOException {
+        LOGGER.info("Will save {} resources for the element", resources.size());
+        long start = System.currentTimeMillis();
         Element root = new Element(IOResourceI.NODE_RESOURCES);
         File resourceDirectory = new File(directory.getPath() + File.separator + LCConstant.CONFIGURATION_RESOURCE_DIRECTORY + File.separator);
         if (!resourceDirectory.exists()) {
@@ -192,6 +225,8 @@ public abstract class AbstractSavingUtilsTask<T> extends LCTask<T> {
         }
         //Save the resource XML
         XMLHelper.writeXml(new File(resourceDirectory.getPath() + File.separator + LCConstant.CONFIGURATION_RESOURCE_XML), root);
+
+        LOGGER.info("{} resources saved in {} ms", resources.size(), System.currentTimeMillis() - start);
     }
 
 }

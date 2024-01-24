@@ -20,6 +20,7 @@ package org.lifecompanion.ui.app.main.ribbon.available.withselection;
 
 import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
 import org.lifecompanion.model.api.configurationcomponent.ImageUseComponentI;
+import org.lifecompanion.model.api.configurationcomponent.VideoUseComponentI;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.dynamickey.KeyListNodeKeyOption;
 import org.lifecompanion.controller.editmode.SelectionController;
 import org.lifecompanion.ui.common.control.specific.imagedictionary.ImageUseComponentSelectorControl;
@@ -32,7 +33,7 @@ import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
  *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
-public class ImageUseComponentRibbonPart extends RibbonBasePart<ImageUseComponentI> implements LCViewInitHelper {
+public class ImageUseComponentRibbonPart extends RibbonBasePart<VideoUseComponentI> implements LCViewInitHelper {
     private ImageUseComponentSelectorControl imageUseComponentSelectorControl;
 
     public ImageUseComponentRibbonPart() {
@@ -55,8 +56,8 @@ public class ImageUseComponentRibbonPart extends RibbonBasePart<ImageUseComponen
     @Override
     public void initBinding() {
         SelectionController.INSTANCE.selectedGridPartOrKeyHelperProperty().addListener((o, oldV, newV) -> {
-            if (newV instanceof ImageUseComponentI) {
-                this.model.set((ImageUseComponentI) newV);
+            if (newV instanceof VideoUseComponentI) {
+                this.model.set((VideoUseComponentI) newV);
             } else {
                 this.model.set(null);
             }
@@ -66,11 +67,11 @@ public class ImageUseComponentRibbonPart extends RibbonBasePart<ImageUseComponen
     }
 
     @Override
-    public void bind(ImageUseComponentI model) {
+    public void bind(VideoUseComponentI model) {
     }
 
     @Override
-    public void unbind(ImageUseComponentI model) {
+    public void unbind(VideoUseComponentI model) {
     }
     //========================================================================
 

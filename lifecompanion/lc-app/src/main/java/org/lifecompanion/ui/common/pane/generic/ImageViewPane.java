@@ -31,6 +31,7 @@ import javafx.scene.layout.Region;
  * Class to wrap a image view into a region to allow its image view to be resizable.
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
+@Deprecated
 public class ImageViewPane extends Region {
 
 	private final ObjectProperty<ImageView> imageView = new SimpleObjectProperty<>();

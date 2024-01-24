@@ -18,12 +18,17 @@
  */
 package org.lifecompanion.ui.common.control.specific.selector;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.VBox;
@@ -42,6 +47,8 @@ import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * A control to select a component.
@@ -75,6 +82,9 @@ public class ComponentSelectorControl<T extends DisplayableComponentI> extends V
      */
     private SearchComboBox<T> searchComboBox;
 
+    private String addButtonText;
+    private Function<Node, T> addButtonHandler;
+
     /**
      * Create the component selector control
      *
@@ -82,14 +92,20 @@ public class ComponentSelectorControl<T extends DisplayableComponentI> extends V
      *                      This type can be a super type, class will be done on inheritance
      * @param labelText     the text to set in the label, can be null
      */
-    public ComponentSelectorControl(final Class<T> selectionType, final String labelText) {
+    public ComponentSelectorControl(final Class<T> selectionType, final String labelText, String addButtonText, Function<Node, T> addButtonHandler) {
         this.selectionType = selectionType;
         this.labelText = labelText;
+        this.addButtonText = addButtonText;
+        this.addButtonHandler = addButtonHandler;
         this.initAll();
     }
 
+    public ComponentSelectorControl(final Class<T> selectionType, final String labelText) {
+        this(selectionType, labelText, null, null);
+    }
+
     public ComponentSelectorControl(final Class<T> selectionType) {
-        this(selectionType, null);
+        this(selectionType, null, null, null);
     }
 
     /**
@@ -131,6 +147,9 @@ public class ComponentSelectorControl<T extends DisplayableComponentI> extends V
                         ConfigurationComponentUtils.getSimilarityScoreFor(searchText, c2),
                         ConfigurationComponentUtils.getSimilarityScoreFor(searchText, c1))
         );
+        if (this.addButtonText != null && this.addButtonHandler != null) {
+            this.searchComboBox.enableAddButton(addButtonText, addButtonHandler);
+        }
         this.setSpacing(5.0);
         if (label != null) {
             this.getChildren().add(label);
@@ -172,5 +191,9 @@ public class ComponentSelectorControl<T extends DisplayableComponentI> extends V
 
     public void clearSelection() {
         this.selectedComponentProperty().set(null);
+    }
+
+    public SearchComboBox<T> getSearchComboBox() {
+        return searchComboBox;
     }
 }

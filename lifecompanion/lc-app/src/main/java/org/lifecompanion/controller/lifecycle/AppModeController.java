@@ -24,6 +24,7 @@ import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.stage.Stage;
 import org.lifecompanion.controller.categorizedelement.useaction.UseActionController;
+import org.lifecompanion.controller.configurationcomponent.ConfigListController;
 import org.lifecompanion.controller.configurationcomponent.GlobalKeyEventController;
 import org.lifecompanion.controller.configurationcomponent.NoteKeyController;
 import org.lifecompanion.controller.configurationcomponent.UseModeProgressDisplayerController;
@@ -137,7 +138,8 @@ public enum AppModeController {
     }
 
     public void startUseModeAfterEdit() {
-        FXThreadUtils.runOnFXThread(() -> startUseModeForConfiguration((LCConfigurationI) editModeContext.getConfiguration().duplicate(false), editModeContext.configurationDescriptionProperty().get()));
+        FXThreadUtils.runOnFXThread(() -> startUseModeForConfiguration((LCConfigurationI) editModeContext.getConfiguration().duplicate(false),
+                editModeContext.configurationDescriptionProperty().get()));
     }
 
     public void startUseModeForConfiguration(LCConfigurationI configuration, LCConfigurationDescriptionI configurationDescription) {
@@ -179,6 +181,7 @@ public enum AppModeController {
             UseActionController.INSTANCE, //
             UseVariableController.INSTANCE, //
             KeyListController.INSTANCE, //
+            ConfigListController.INSTANCE,//
             UserActionSequenceController.INSTANCE, //
             UseModeProgressDisplayerController.INSTANCE, //
             SoundPlayerController.INSTANCE, //
@@ -186,8 +189,8 @@ public enum AppModeController {
             NoteKeyController.INSTANCE, //
             ImageDictionaries.INSTANCE,//
             GlobalKeyEventController.INSTANCE,//
-            WinAutoHotKeyKeyboardReceiverController.INSTANCE, //
-            SelectionModeController.INSTANCE//Selection in last, because it will start scanning
+            SelectionModeController.INSTANCE,// Selection in last, because it will start scanning
+            WinAutoHotKeyKeyboardReceiverController.INSTANCE // Need the "blocked keys" from other modes
     );
 
     private void launchUseMode(boolean notifyChange) {

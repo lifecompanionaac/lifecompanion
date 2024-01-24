@@ -9,6 +9,7 @@ import org.lifecompanion.model.impl.selectionmode.ComponentToScan;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.function.Predicate;
 
 public class SelectionModeUtils {
     /**
@@ -24,6 +25,7 @@ public class SelectionModeUtils {
             GridPartKeyComponentI key = (GridPartKeyComponentI) gridPartComponent;
             boolean empty = key.textContentProperty().get() == null || key.textContentProperty().get().isEmpty();
             empty &= key.imageVTwoProperty().get() == null;
+            empty &= key.videoProperty().get() == null;
             empty &= key.getActionManager().countAllActions() <= 0;
             empty |= key.keyOptionProperty().get().considerKeyEmptyProperty().get();
             return empty;
@@ -32,13 +34,20 @@ public class SelectionModeUtils {
     }
 
     public static List<ComponentToScanI> getRowColumnScanningComponents(final GridComponentI grid, boolean byPassEmptyCheck) {
+        return getRowColumnScanningComponents(grid, byPassEmptyCheck, null);
+    }
+
+    public static List<ComponentToScanI> getRowColumnScanningComponents(final GridComponentI grid, boolean byPassEmptyCheck, Predicate<GridPartComponentI> componentCheck) {
         List<List<GridPartComponentI>> rows = new ArrayList<>();
         ComponentGridI compGrid = grid.getGrid();
         for (int row = 0; row < compGrid.getRow(); row++) {
             ArrayList<GridPartComponentI> rowComponents = new ArrayList<>();
             rows.add(rowComponents);
             for (int column = 0; column < compGrid.getColumn(); column++) {
-                rowComponents.add(compGrid.getComponent(row, column));
+                GridPartComponentI component = compGrid.getComponent(row, column);
+                if (componentCheck == null || componentCheck.test(component)) {
+                    rowComponents.add(component);
+                }
             }
         }
         return generateComponentToScan(rows, byPassEmptyCheck);

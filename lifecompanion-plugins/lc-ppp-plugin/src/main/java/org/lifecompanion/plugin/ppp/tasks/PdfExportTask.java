@@ -22,7 +22,6 @@ import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.plugin.PluginInfo;
 import org.lifecompanion.plugin.ppp.PediatricPainProfilePlugin;
 import org.lifecompanion.plugin.ppp.model.UserProfile;
-import org.lifecompanion.plugin.ppp.services.ProfileService;
 import org.lifecompanion.plugin.ppp.view.records.RecordsChart;
 import org.lifecompanion.plugin.ppp.view.records.RecordsView;
 import org.lifecompanion.plugin.ppp.view.records.data.ChartData;
@@ -54,7 +53,7 @@ public class PdfExportTask extends LCTask<Void> {
     private static final PDFont FOOTER_FONT = PDType1Font.HELVETICA;
 
     private final LCConfigurationI config;
-    private final File dataDirectory;
+    private final UserProfile userProfile;
     private final File destinationFile;
     private final LocalDate start;
     private final LocalDate end;
@@ -66,10 +65,10 @@ public class PdfExportTask extends LCTask<Void> {
     private PDImageXObject logoImage;
     private float logoDrawWidth;
 
-    public PdfExportTask(final LCConfigurationI config, final File dataDirectory, final File destinationFile, LocalDate start, LocalDate end) {
+    public PdfExportTask(final LCConfigurationI config, final UserProfile userProfile, final File destinationFile, LocalDate start, LocalDate end) {
         super("ppp.plugin.task.pdf.export.title");
         this.config = config;
-        this.dataDirectory = dataDirectory;
+        this.userProfile = userProfile;
         this.destinationFile = destinationFile;
         this.start = start;
         this.end = end;
@@ -86,8 +85,7 @@ public class PdfExportTask extends LCTask<Void> {
 
         this.updateProgress(progress, totalProgress);
 
-        UserProfile userProfile = ProfileService.INSTANCE.loadProfile(this.dataDirectory.getAbsolutePath());
-        this.profileName = userProfile.getUserId();
+        this.profileName = userProfile.getUserName();
         this.exportDate = new Date();
 
         // Temp save LC logo
@@ -101,7 +99,7 @@ public class PdfExportTask extends LCTask<Void> {
             this.doc = doc;
             this.logoImage = PDImageXObject.createFromFile(logoFile.getAbsolutePath(), doc);
 
-            SummaryExportResult summaryResult = new SummaryExportResult(this.config, this.dataDirectory,
+            SummaryExportResult summaryResult = new SummaryExportResult(this.config, this.userProfile,
                     this.tempImagesDirectory, this.start, this.start.plusDays(daysNumber));
             summaryResult.build();
 
@@ -119,8 +117,7 @@ public class PdfExportTask extends LCTask<Void> {
             this.updateProgress(progress++, totalProgress);
 
             for (int daysToAdd = 0; daysToAdd < daysNumber; daysToAdd++) {
-                DayExportResult dayResult = new DayExportResult(this.config, this.dataDirectory,
-                        this.tempImagesDirectory, this.start.plusDays(daysToAdd));
+                DayExportResult dayResult = new DayExportResult(this.config, this.userProfile, this.tempImagesDirectory, this.start.plusDays(daysToAdd));
                 boolean emptyDay = dayResult.build();
 
                 if (!emptyDay) {
@@ -274,15 +271,15 @@ public class PdfExportTask extends LCTask<Void> {
 
     private static abstract class ExportResult {
         protected final LCConfigurationI config;
-        protected final File dataDirectory;
+        protected final UserProfile userProfile;
         protected final File tempDirectory;
 
         private RecordsChart chart;
         private File chartImage;
 
-        public ExportResult(LCConfigurationI config, File dataDirectory, File tempDirectory) {
+        public ExportResult(LCConfigurationI config, UserProfile userProfile, File tempDirectory) {
             this.config = config;
-            this.dataDirectory = dataDirectory;
+            this.userProfile = userProfile;
             this.tempDirectory = tempDirectory;
         }
 
@@ -339,15 +336,15 @@ public class PdfExportTask extends LCTask<Void> {
     private static class DayExportResult extends ExportResult {
         private final LocalDate day;
 
-        public DayExportResult(LCConfigurationI config, File dataDirectory, File tempDirectory, LocalDate day) {
-            super(config, dataDirectory, tempDirectory);
+        public DayExportResult(LCConfigurationI config, UserProfile userProfile, File tempDirectory, LocalDate day) {
+            super(config, userProfile, tempDirectory);
 
             this.day = day;
         }
 
         @Override
         protected void buildView(Consumer<RecordsView> viewConsumer) {
-            new RecordsView(this.config, this.dataDirectory, this.day, viewConsumer);
+            new RecordsView(this.config, this.userProfile, this.day, viewConsumer);
         }
 
         public LocalDate getDay() {
@@ -359,8 +356,8 @@ public class PdfExportTask extends LCTask<Void> {
         private final LocalDate from;
         private final LocalDate to;
 
-        public SummaryExportResult(LCConfigurationI config, File dataDirectory, File tempDirectory, LocalDate from, LocalDate to) {
-            super(config, dataDirectory, tempDirectory);
+        public SummaryExportResult(LCConfigurationI config, UserProfile userProfile, File tempDirectory, LocalDate from, LocalDate to) {
+            super(config, userProfile, tempDirectory);
 
             this.from = from;
             this.to = to;
@@ -368,7 +365,7 @@ public class PdfExportTask extends LCTask<Void> {
 
         @Override
         protected void buildView(Consumer<RecordsView> viewConsumer) {
-            new RecordsView(this.config, this.dataDirectory, this.from, this.to, viewConsumer);
+            new RecordsView(this.config, this.userProfile, this.from, this.to, viewConsumer);
         }
 
         public LocalDate getFrom() {

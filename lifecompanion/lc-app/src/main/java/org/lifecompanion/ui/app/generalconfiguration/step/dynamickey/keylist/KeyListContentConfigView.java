@@ -37,20 +37,21 @@ import javafx.stage.Window;
 import org.lifecompanion.controller.configurationcomponent.dynamickey.KeyListController;
 import org.lifecompanion.controller.editaction.KeyListActions;
 import org.lifecompanion.controller.editmode.ConfigActionController;
+import org.lifecompanion.controller.io.ConfigurationComponentIOHelper;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.utils.Pair;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
+import org.lifecompanion.model.impl.configurationcomponent.dynamickey.KeyListNode;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.model.impl.notification.LCNotification;
 import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.ui.notification.LCNotificationController;
+import org.lifecompanion.util.CopyUtils;
 import org.lifecompanion.util.javafx.FXControlUtils;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -241,32 +242,53 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         this.keyListNodePropertiesEditionView.setAddRequestListener(() -> keyListContentPane.getButtonAddKey().fire());
     }
 
-
     private void removeNode(KeyListNodeI selectedNode, String notificationTitle) {
         markDirty();
         // Important to get the name before remove (as the level will be incorrect after)
         String keyName = selectedNode.getHumanReadableText();
 
+        // Search for node link pointing to this (and that are not deleted)
+        Map<String, KeyListNodeI> deletedNodes = new HashMap<>();
+        selectedNode.traverseTreeToBottom(node -> deletedNodes.put(node.getID(), node));
+        Map<String, List<String>> linksToFix = new HashMap<>();
+        KeyListNodeI rootV = root.get();
+        rootV.traverseTreeToBottom(node -> {
+            if (!deletedNodes.containsKey(node.getID()) && node.isLinkNode()) {
+                if (node.linkedNodeIdProperty().get() != null) {
+                    if (deletedNodes.containsKey(node.linkedNodeIdProperty().get())) {
+                        linksToFix.computeIfAbsent(node.linkedNodeIdProperty().get(), k -> new ArrayList<>()).add(node.getID());
+                    }
+                }
+            }
+        });
+
+        // Find broken links : the first link will be replaced with the content
+        linksToFix.forEach((deletedNodeId, pointingNodes) -> {
+            KeyListNodeI deletedNode = KeyListController.findNodeByIdInSubtree(root.get(), deletedNodeId);
+            KeyListNodeI linkToReplace = KeyListController.findNodeByIdInSubtree(root.get(), pointingNodes.get(0));
+
+            // Transform link to node (using copy with type change : from KeyListLinkLeaf to KeyListNode)
+            KeyListNode linkTransformedToCategory = (KeyListNode) CopyUtils.createDeepCopyViaXMLSerialization(linkToReplace, false, (element, context) -> {
+                ConfigurationComponentIOHelper.addTypeAlias(KeyListNode.class, element, context);
+            });
+            linkTransformedToCategory.setId(deletedNodeId);
+            // Add the content to the transformed node
+            linkTransformedToCategory.getChildren().addAll(deletedNode.getChildren());
+
+            // Replace the link with the node
+            ObservableList<KeyListNodeI> parentChildren = linkToReplace.parentProperty().get().getChildren();
+            int indexOf = parentChildren.indexOf(linkToReplace);
+            parentChildren.set(indexOf, linkTransformedToCategory);
+        });
+
+        // Delete the selected node
         final KeyListNodeI parentNode = selectedNode.parentProperty().get();
-        int previousIndex = parentNode.getChildren().indexOf(selectedNode);
         parentNode.getChildren().remove(selectedNode);
 
         clearSelection();
         searchView.executeSearch(true);
 
-        LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo(Translation.getText(notificationTitle, keyName),
-                true,
-                "keylist.action.remove.cancel",
-                () -> {
-                    if (!parentNode.getChildren().contains(selectedNode)) {
-                        if (previousIndex > 0 && previousIndex <= parentNode.getChildren().size()) {
-                            parentNode.getChildren().add(previousIndex, selectedNode);
-                        } else {
-                            parentNode.getChildren().add(0, selectedNode);
-                        }
-                        select(selectedNode);
-                    }
-                }));
+        LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo(Translation.getText(notificationTitle, keyName), true));
     }
 
     private EventHandler<ActionEvent> createMoveNodeListener(final int indexMove) {
@@ -338,17 +360,17 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
     // NAVIGATION
     //========================================================================
     public void select(KeyListNodeI item) {
-        if (item != null && item.parentProperty().get() != null && currentList.get() != item.parentProperty().get()) {
+        if (!handlingDragDroppedOn && item != null && item.parentProperty().get() != null && currentList.get() != item.parentProperty().get()) {
             currentList.set(item.parentProperty().get());
         }
         selected.set(item);
     }
 
-    public void selectById(String itemId) {
+    public void openById(String itemId) {
         if (itemId != null && root.get() != null) {
             final KeyListNodeI foundNode = KeyListController.findNodeByIdInSubtree(root.get(), itemId);
             if (foundNode != null) {
-                select(foundNode);
+                openList(foundNode);
             }
         }
     }
@@ -360,13 +382,14 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
 
     public void openList(KeyListNodeI item) {
         currentList.set(item);
-        selected.set(null);
+        clearSelection();
     }
 
     public void goToParent() {
         KeyListNodeI nodeV = currentList.get();
         if (nodeV != null && nodeV.parentProperty().get() != null) {
             currentList.set(nodeV.parentProperty().get());
+            clearSelection();
         }
     }
     //========================================================================
@@ -377,25 +400,36 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         return dragged;
     }
 
+    private boolean handlingDragDroppedOn;
+
     public void dragDroppedOn(KeyListNodeI destNode) {
-        if (dragged.get() != null && destNode != null && dragged.get() != destNode) {
-            if (!destNode.isLeafNode()) {
-                removeAndGetIndex(dragged.get());
-                destNode.getChildren().add(dragged.get());
-            } else {
-                Pair<List<KeyListNodeI>, Integer> draggedData = removeAndGetIndex(dragged.get());
-                Pair<List<KeyListNodeI>, Integer> destData = removeAndGetIndex(destNode);
-                destData.getLeft().add(destData.getRight(), dragged.get());
-                draggedData.getLeft().add(draggedData.getRight(), destNode);
+        try {
+            handlingDragDroppedOn = true;
+            if (dragged.get() != null && destNode != null && dragged.get() != destNode) {
+                KeyListNodeI draggedVal = dragged.get();
+                if (!destNode.isLeafNode()) {
+                    if (!draggedVal.containsChild(destNode)) {
+                        removeAndGetIndex(draggedVal);
+                        destNode.getChildren().add(draggedVal);
+                    }
+                } else {
+                    Pair<List<KeyListNodeI>, Integer> draggedData = removeAndGetIndex(draggedVal);
+                    Pair<List<KeyListNodeI>, Integer> destData = removeAndGetIndex(destNode);
+                    destData.getLeft().add(destData.getRight(), draggedVal);
+                    draggedData.getLeft().add(draggedData.getRight(), destNode);
+                }
+                dragged.set(null);
             }
-            dragged.set(null);
+        } finally {
+            handlingDragDroppedOn = false;
         }
     }
 
     private Pair<List<KeyListNodeI>, Integer> removeAndGetIndex(KeyListNodeI node) {
         KeyListNodeI parent = node.parentProperty().get();
         int index = parent.getChildren().indexOf(node);
-        parent.getChildren().remove(index);
+        ObservableList<KeyListNodeI> children = parent.getChildren();
+        children.remove(index);
         return Pair.of(parent.getChildren(), index);
     }
 
@@ -414,7 +448,7 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         node.setOnDragEntered(ea -> {
             KeyListNodeI destItem = itemGetter.apply(node);
             KeyListNodeI draggedItem = keyListContentConfigView.draggedProperty().get();
-            if (draggedItem != null && draggedItem != destItem) {
+            if (draggedItem != null && destItem != null && draggedItem != destItem) {
                 // Show information tooltip
                 String message = Translation.getText(destItem.isLeafNode() ? "tooltip.keylist.drag.drop.swap.keys" : "tooltip.keylist.drag.drop.move.to",
                         draggedItem.getHumanReadableText(),

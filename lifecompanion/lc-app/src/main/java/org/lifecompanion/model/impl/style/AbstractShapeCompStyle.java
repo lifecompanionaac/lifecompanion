@@ -24,15 +24,15 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.paint.Color;
 import org.jdom2.Element;
-import org.lifecompanion.model.impl.exception.LCException;
-import org.lifecompanion.model.api.io.IOContextI;
-import org.lifecompanion.model.api.style.AbstractShapeCompStyleI;
-import org.lifecompanion.model.api.style.StyleChangeUndo;
-import org.lifecompanion.model.api.style.IntegerStylePropertyI;
-import org.lifecompanion.model.api.style.StylePropertyI;
 import org.lifecompanion.framework.commons.fx.io.XMLCustomProperty;
 import org.lifecompanion.framework.commons.fx.io.XMLIgnoreNullValue;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
+import org.lifecompanion.model.api.io.IOContextI;
+import org.lifecompanion.model.api.style.AbstractShapeCompStyleI;
+import org.lifecompanion.model.api.style.IntegerStylePropertyI;
+import org.lifecompanion.model.api.style.StyleChangeUndo;
+import org.lifecompanion.model.api.style.StylePropertyI;
+import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.util.LangUtils;
 import org.lifecompanion.util.javafx.ColorUtils;
 
@@ -53,7 +53,7 @@ public abstract class AbstractShapeCompStyle<T extends AbstractShapeCompStyleI<?
     @XMLIgnoreNullValue
     private final IntegerStylePropertyI strokeSize;
 
-    private transient StringProperty cssStyle;
+    private final transient StringProperty cssStyle;
 
     public AbstractShapeCompStyle() {
         this.strokeColor = new StyleProperty<>();
@@ -64,28 +64,32 @@ public abstract class AbstractShapeCompStyle<T extends AbstractShapeCompStyleI<?
         this.createBindings();
     }
 
+    protected InvalidationListener updateCssStyleListener;
+
     private void createBindings() {
-        InvalidationListener updateCssStyleListener = (obs) -> {
-            this.updateCssStyle();
-        };
+        updateCssStyleListener = (obs) -> this.updateCssStyle();
         this.backgroundColor.value().addListener(updateCssStyleListener);
         this.strokeColor.value().addListener(updateCssStyleListener);
         this.strokeSize.value().addListener(updateCssStyleListener);
         this.shapeRadius.value().addListener(updateCssStyleListener);
     }
 
+    protected void appendCssStyle(StringBuilder cssStyle) {
+    }
+
     private void updateCssStyle() {
         Integer shapeRadiusV = LangUtils.nullToZeroInt(this.shapeRadius.value().getValue());
         Integer strokeSizeV = LangUtils.nullToZeroInt(this.strokeSize.value().getValue());
-        this.cssStyle.set(new StringBuilder(255)//
+        StringBuilder cssStyle = new StringBuilder(255)//
                 .append("-fx-background-color:").append(ColorUtils.toCssColor(this.backgroundColor.value().getValue())).append(";") //
                 .append("-fx-border-color:").append(ColorUtils.toCssColor(this.strokeColor.value().getValue())).append(";")//
                 .append("-fx-border-width:").append(strokeSizeV).append("px;")//
                 .append("-fx-border-radius:").append(shapeRadiusV).append("px;")//
                 .append("-fx-background-radius:").append(Math.max(shapeRadiusV - strokeSizeV, 0)).append("px;")//
                 .append("-fx-background-insets: ").append(strokeSizeV - 1.0).append("px;")//
-                .append("-fx-border-style: solid inside;")//
-                .toString());
+                .append("-fx-border-style: solid inside;");//
+        appendCssStyle(cssStyle);
+        this.cssStyle.set(cssStyle.toString());
     }
 
     @Override

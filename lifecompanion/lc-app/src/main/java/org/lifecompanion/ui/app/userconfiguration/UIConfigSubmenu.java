@@ -74,6 +74,8 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
      */
     private ToggleSwitch toggleEnableFullScreen;
 
+    private ToggleSwitch toggleAutoSelectImages;
+
     /**
      * To enable/disable tips on startup
      */
@@ -95,7 +97,6 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
     //========================================================================
     @Override
     public void initUI() {
-        int row = 0;
         Label labelConfigGeneral = FXControlUtils.createTitleLabel("user.config.part.ui.general");
         toggleEnableLaunchLCSystemStartup = FXControlUtils.createToggleSwitch("user.config.launch.lc.startup", null);
         toggleEnableRecordAndSendSessionStats = FXControlUtils.createToggleSwitch("user.config.enable.session.stats", null);
@@ -117,10 +118,11 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
         Label labelDashSize = new Label(Translation.getText("user.config.selection.dash.size"));
         this.spinnerDashSize = FXControlUtils.createDoubleSpinner(1.0, 20.0, 3.0, 1.0, 110.0);
         GridPane gridPaneStyleParam = createConfigPane();
-        gridPaneStyleParam.add(labelStrokeSize, 0, row);
-        gridPaneStyleParam.add(this.spinnerStrokeSize, 1, row++);
-        gridPaneStyleParam.add(labelDashSize, 0, row);
-        gridPaneStyleParam.add(this.spinnerDashSize, 1, row++);
+        int rowStyle = 0;
+        gridPaneStyleParam.add(labelStrokeSize, 0, rowStyle);
+        gridPaneStyleParam.add(this.spinnerStrokeSize, 1, rowStyle++);
+        gridPaneStyleParam.add(labelDashSize, 0, rowStyle);
+        gridPaneStyleParam.add(this.spinnerDashSize, 1, rowStyle++);
         Label labelConfigStylePart = FXControlUtils.createTitleLabel("user.config.part.ui.config");
 
         //Frame parameter
@@ -132,11 +134,12 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
         this.toggleEnableFullScreen = FXControlUtils.createToggleSwitch("user.config.stage.fullscreen", null);
         GridPane.setMargin(this.toggleEnableFullScreen, new Insets(5.0, 0.0, 5.0, 0.0));
         GridPane gridPaneStageParam = createConfigPane();
-        gridPaneStageParam.add(this.toggleEnableFullScreen, 0, row++, 2, 1);
-        gridPaneStageParam.add(labelWidth, 0, row);
-        gridPaneStageParam.add(this.spinnerFrameWidth, 1, row++);
-        gridPaneStageParam.add(labelHeight, 0, row);
-        gridPaneStageParam.add(this.spinnerFrameHeight, 1, row++);
+        int rowStage = 0;
+        gridPaneStageParam.add(this.toggleEnableFullScreen, 0, rowStage++, 2, 1);
+        gridPaneStageParam.add(labelWidth, 0, rowStage);
+        gridPaneStageParam.add(this.spinnerFrameWidth, 1, rowStage++);
+        gridPaneStageParam.add(labelHeight, 0, rowStage);
+        gridPaneStageParam.add(this.spinnerFrameHeight, 1, rowStage++);
         Label labelStagePart = FXControlUtils.createTitleLabel("user.config.stage.title");
 
         Label labelConfigFiles = FXControlUtils.createTitleLabel("user.config.part.file.config");
@@ -150,10 +153,16 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
         Label labelConfigTitle = FXControlUtils.createTitleLabel("user.config.configuration.title");
         this.spinnerUnsavedModification = FXControlUtils.createIntSpinner(1, 5000, 5, 10, 110.0);
         Label labelUnsavedThreshold = new Label(Translation.getText("user.config.unsaved.modification.threshold"));
+        toggleAutoSelectImages = FXControlUtils.createToggleSwitch("auto.select.key.image.config", null);
+        Label labelExplainAutoSelectImages = new Label(Translation.getText("auto.select.key.image.config.description"));
+        labelExplainAutoSelectImages.getStyleClass().addAll("text-wrap-enabled", "text-font-italic", "text-fill-gray");
         GridPane.setHgrow(labelUnsavedThreshold, Priority.ALWAYS);
         GridPane gridPaneConfiguration = createConfigPane();
-        gridPaneConfiguration.add(labelUnsavedThreshold, 0, row);
-        gridPaneConfiguration.add(this.spinnerUnsavedModification, 1, row++);
+        int rowConfig = 0;
+        gridPaneConfiguration.add(labelUnsavedThreshold, 0, rowConfig);
+        gridPaneConfiguration.add(this.spinnerUnsavedModification, 1, rowConfig++);
+        gridPaneConfiguration.add(toggleAutoSelectImages, 0, rowConfig++, 2, 1);
+        gridPaneConfiguration.add(labelExplainAutoSelectImages, 0, rowConfig++, 2, 1);
 
         //Tips
         Label labelConfigTips = FXControlUtils.createTitleLabel("user.config.tips.title");
@@ -201,6 +210,7 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
         this.toggleDisabledExitInUseMode.setSelected(UserConfigurationController.INSTANCE.disableExitInUseModeProperty().get());
         this.toggleSecureGoToEditModeProperty.setSelected(UserConfigurationController.INSTANCE.secureGoToEditModeProperty().get());
         this.toggleAutoConfigurationProfileBackup.setSelected(UserConfigurationController.INSTANCE.autoConfigurationProfileBackupProperty().get());
+        this.toggleAutoSelectImages.setSelected(UserConfigurationController.INSTANCE.autoSelectImagesProperty().get());
     }
 
     @Override
@@ -218,6 +228,7 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
         UserConfigurationController.INSTANCE.disableExitInUseModeProperty().set(this.toggleDisabledExitInUseMode.isSelected());
         UserConfigurationController.INSTANCE.secureGoToEditModeProperty().set(this.toggleSecureGoToEditModeProperty.isSelected());
         UserConfigurationController.INSTANCE.autoConfigurationProfileBackupProperty().set(this.toggleAutoConfigurationProfileBackup.isSelected());
+        UserConfigurationController.INSTANCE.autoSelectImagesProperty().set(this.toggleAutoSelectImages.isSelected());
     }
 
     @Override

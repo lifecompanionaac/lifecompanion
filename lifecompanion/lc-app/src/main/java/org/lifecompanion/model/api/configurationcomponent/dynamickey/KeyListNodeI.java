@@ -60,4 +60,6 @@ public interface KeyListNodeI extends SimplerKeyActionContainerI {
     void traverseTreeToBottom(Consumer<KeyListNodeI> nodeConsumer);
 
     String getHumanReadableText();
+
+    boolean containsChild(KeyListNodeI node);
 }
