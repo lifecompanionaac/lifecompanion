@@ -20,14 +20,10 @@ package org.lifecompanion.controller.configurationcomponent;
 
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
-import org.lifecompanion.model.impl.categorizedelement.useaction.available.StartTimerAction;
 import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
