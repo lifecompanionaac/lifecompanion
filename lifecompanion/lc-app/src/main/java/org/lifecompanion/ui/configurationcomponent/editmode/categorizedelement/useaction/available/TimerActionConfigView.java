@@ -18,28 +18,18 @@
  */
 package org.lifecompanion.ui.configurationcomponent.editmode.categorizedelement.useaction.available;
 
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.geometry.HPos;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.SpinnerValueFactory;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionConfigurationViewI;
 import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
-import org.lifecompanion.model.impl.categorizedelement.useaction.available.TimerAction;
-import org.lifecompanion.ui.common.control.generic.DurationPickerControl;
-import org.lifecompanion.ui.controlsfx.control.ToggleSwitch;
-import org.lifecompanion.util.javafx.FXControlUtils;
+import org.lifecompanion.model.impl.categorizedelement.useaction.available.StartTimerAction;
 import org.lifecompanion.ui.common.control.generic.DurationPickerControl;
 
-public class TimerActionConfigView extends VBox implements UseActionConfigurationViewI<TimerAction> {
+public class TimerActionConfigView extends VBox implements UseActionConfigurationViewI<StartTimerAction> {
 
     private DurationPickerControl durationPickerAutomaticItemTimeMs;
 
@@ -49,27 +39,25 @@ public class TimerActionConfigView extends VBox implements UseActionConfiguratio
     }
 
     @Override
-    public Class<TimerAction> getConfiguredActionType() {
-        return TimerAction.class;
+    public Class<StartTimerAction> getConfiguredActionType() {
+        return StartTimerAction.class;
     }
 
     @Override
     public void initUI() {
-        Label labelTimeToReach = new Label(Translation.getText("use.action.timer.time"));
-
         durationPickerAutomaticItemTimeMs = new DurationPickerControl();
         durationPickerAutomaticItemTimeMs.setAlignment(Pos.CENTER_LEFT);
         this.getChildren().add(durationPickerAutomaticItemTimeMs);
     }
 
     @Override
-    public void editEnds(final TimerAction element) {
-        // element.timerProperty().set(durationPickerAutomaticItemTimeMs.durationProperty.get());
+    public void editEnds(final StartTimerAction element) {
+       element.timerProperty().set(durationPickerAutomaticItemTimeMs.durationProperty().get());
     }
 
     @Override
-    public void editStarts(final TimerAction element, final ObservableList<UseVariableDefinitionI> possibleVariables) {
-        // durationPickerAutomaticItemTimeMs.durationProperty().set(element.timerProperty().get());
-        // durationPickerAutomaticItemTimeMs.tryToPickBestUnit();
+    public void editStarts(final StartTimerAction element, final ObservableList<UseVariableDefinitionI> possibleVariables) {
+        durationPickerAutomaticItemTimeMs.durationProperty().set(element.timerProperty().get());
+        durationPickerAutomaticItemTimeMs.tryToPickBestUnit();
     }
 }

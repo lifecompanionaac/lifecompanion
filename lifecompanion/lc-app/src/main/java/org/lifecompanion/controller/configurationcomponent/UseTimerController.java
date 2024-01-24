@@ -18,25 +18,15 @@
  */
 package org.lifecompanion.controller.configurationcomponent;
 
-import javafx.concurrent.Task;
-import org.lifecompanion.framework.commons.utils.lang.CollectionUtils;
-import org.lifecompanion.framework.utils.LCNamedThreadFactory;
-import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
+import javafx.application.Platform;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
-import org.lifecompanion.model.impl.configurationcomponent.keyoption.ProgressDisplayKeyOption;
-import org.lifecompanion.util.javafx.FXThreadUtils;
-import org.lifecompanion.util.model.ConfigurationComponentUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
 
 /**
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
@@ -44,6 +34,34 @@ import java.util.stream.Collectors;
 public enum UseTimerController implements ModeListenerI {
     INSTANCE;
     private final static Logger LOGGER = LoggerFactory.getLogger(UseTimerController.class);
+    private final DoubleProperty progressProperty = new SimpleDoubleProperty();
+    private final UseModeProgressDisplayerController progressController = UseModeProgressDisplayerController.INSTANCE;
+    private long endTime;
+
+    public void startTimer(int time){
+        LOGGER.info("startTimer");
+        Platform.runLater(() -> progressController.hideAllProgress());
+        this.endTime = System.currentTimeMillis();
+
+        long startTime = System.currentTimeMillis();
+        long durationInMillis = time;
+        this.endTime = startTime + durationInMillis;
+        progressController.launchTimer(durationInMillis, () -> {});
+
+        while (System.currentTimeMillis() < endTime) {
+            double progress = (System.currentTimeMillis() - startTime) / (double) durationInMillis;
+            progressProperty.set(progress);
+        }
+
+        progressProperty.set(1.0);
+        Platform.runLater(() -> progressController.hideAllProgress());
+    }
+
+    public void stopTimer(){
+        LOGGER.info("stopTimer");
+        Platform.runLater(() -> progressController.hideAllProgress());
+        this.endTime = System.currentTimeMillis();
+    }
 
     // START/STOP
     //========================================================================

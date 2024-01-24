@@ -18,14 +18,10 @@
  */
 package org.lifecompanion.model.impl.categorizedelement.useaction.available;
 
-import javafx.application.Platform;
-import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import org.jdom2.Element;
-import org.lifecompanion.controller.lifecycle.AppMode;
-import org.lifecompanion.controller.lifecycle.AppModeController;
+import org.lifecompanion.controller.configurationcomponent.UseTimerController;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
 import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseActionSubCategories;
@@ -35,47 +31,32 @@ import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
 import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
 import org.lifecompanion.model.impl.exception.LCException;
-import org.lifecompanion.util.ThreadUtils;
 import org.lifecompanion.util.binding.BindingUtils;
-import org.lifecompanion.controller.configurationcomponent.UseModeProgressDisplayerController;
 
 import java.util.Map;
 
 /**
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
-public class TimerAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
+public class StartTimerAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
     private final IntegerProperty time;
-    private final DoubleProperty progressProperty = new SimpleDoubleProperty();
-    private final UseModeProgressDisplayerController progressController = UseModeProgressDisplayerController.INSTANCE;
 
-    public TimerAction() {
+    public StartTimerAction() {
         super(UseActionTriggerComponentI.class);
         this.order = 0;
         this.category = DefaultUseActionSubCategories.SCRIPT;
         this.time = new SimpleIntegerProperty(1000);
-        this.nameID = "action.timer.name";
-        this.staticDescriptionID = "action.timer.static.description";
+        this.nameID = "action.start.timer.name";
+        this.staticDescriptionID = "action.start.timer.static.description";
         this.configIconPath = "miscellaneous/icon_pause_action.png";
         this.parameterizableAction = true;
         this.variableDescriptionProperty()
-                .bind(TranslationFX.getTextBinding("action.timer.variable.description", BindingUtils.createDivide1000Binding(this.time)));
+                .bind(TranslationFX.getTextBinding("action.start.timer.variable.description", BindingUtils.createDivide1000Binding(this.time)));
     }
 
     @Override
     public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
-        long startTime = System.currentTimeMillis();
-        long durationInMillis = this.time.get();
-        long endTime = startTime + durationInMillis;
-        progressController.launchTimer(durationInMillis, () -> {});
-
-        while (System.currentTimeMillis() < endTime) {
-            double progress = (System.currentTimeMillis() - startTime) / (double) durationInMillis;
-            progressProperty.set(progress);
-        }
-
-        progressProperty.set(1.0);
-        Platform.runLater(() -> progressController.hideAllProgress());
+        UseTimerController.INSTANCE.startTimer(this.time.get());
     }
 
     public IntegerProperty timerProperty() {
@@ -87,14 +68,14 @@ public class TimerAction extends SimpleUseActionImpl<UseActionTriggerComponentI>
     @Override
     public Element serialize(final IOContextI contextP) {
         Element elem = super.serialize(contextP);
-        XMLObjectSerializer.serializeInto(TimerAction.class, this, elem);
+        XMLObjectSerializer.serializeInto(StartTimerAction.class, this, elem);
         return elem;
     }
 
     @Override
     public void deserialize(final Element nodeP, final IOContextI contextP) throws LCException {
         super.deserialize(nodeP, contextP);
-        XMLObjectSerializer.deserializeInto(TimerAction.class, this, nodeP);
+        XMLObjectSerializer.deserializeInto(StartTimerAction.class, this, nodeP);
     }
     // ========================================================================
 

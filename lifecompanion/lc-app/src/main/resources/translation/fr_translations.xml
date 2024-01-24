@@ -677,9 +677,12 @@
   <text key="action.save.note.name">Ouvrir/Fermer le bloc-notes</text>
   <!--org.lifecompanion.base.data.useaction.impl.miscellaneous.script-->
 
-    <text key="action.timer.name">Minuteur</text>
-  <text key="action.timer.static.description">Décompte à partir d'une durée choisie.</text>
-  <text key="action.timer.variable.description">Minuteur de {} secondes</text>
+    <text key="action.start.timer.name">Démarre le minuteur</text>
+  <text key="action.start.timer.static.description">Décompte à partir d'une durée choisie.</text>
+  <text key="action.start.timer.variable.description">Minuteur de {} secondes</text>
+        <text key="action.stop.timer.name">Arrête le minuteur</text>
+  <text key="action.stop.timer.static.description">Arrête le minuteur en cours .</text>
+  <text key="action.stop.timer.variable.description">Arrête le minuteur en cours</text>
 
   <text key="action.pause.name">Temporisation</text>
   <text key="action.pause.static.description">Permet d'effectuer une temporisation d'une durée choisie entre deux
