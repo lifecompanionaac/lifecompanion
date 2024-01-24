@@ -47,7 +47,6 @@ import org.lifecompanion.model.api.usevariable.UseVariableI;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.VariableInformationKeyOption;
 import org.lifecompanion.model.impl.usevariable.StringUseVariable;
 import org.lifecompanion.model.impl.usevariable.UseVariableDefinition;
-import org.lifecompanion.util.ThreadUtils;
 import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,7 +55,6 @@ import oshi.hardware.PowerSource;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-
 import java.time.format.TextStyle;
 import java.util.*;
 import java.util.function.Consumer;
@@ -171,6 +169,7 @@ public enum UseVariableController implements ModeListenerI {
     private void initDefinitions() {
         this.possibleDefinitions = new HashMap<>();
         this.possibleDefinitionList = FXCollections.observableArrayList();
+        long cache4HoursInMs = 4 * 60 * 60 * 1000;
         this.addDef(new UseVariableDefinition("CurrentTextInEditor", "use.variable.current.text.in.editor.name",
                 "use.variable.current.text.in.editor.description", "use.variable.current.text.in.editor.example"));
         this.addDef(new UseVariableDefinition("CurrentDate", "use.variable.current.date.name", "use.variable.current.date.description",
@@ -180,15 +179,15 @@ public enum UseVariableController implements ModeListenerI {
         this.addDef(new UseVariableDefinition("CurrentTimeWithoutSeconds", "use.variable.current.time.without.seconds.name",
                 "use.variable.current.time.without.seconds.description", "use.variable.current.time.without.seconds.example"));
         this.addDef(new UseVariableDefinition("CurrentDayOfWeek", "use.variable.current.day.of.week.name",
-                "use.variable.current.day.of.week.description", "use.variable.current.day.of.week.example"));
+                "use.variable.current.day.of.week.description", "use.variable.current.day.of.week.example", cache4HoursInMs));
         this.addDef(new UseVariableDefinition("CurrentDayOfMonth", "use.variable.current.day.of.month.name",
-                "use.variable.current.number.of.day.description", "use.variable.current.number.of.day.example"));
+                "use.variable.current.number.of.day.description", "use.variable.current.number.of.day.example", cache4HoursInMs));
         this.addDef(new UseVariableDefinition("CurrentMonthOfYear", "use.variable.current.month.of.year.name",
-                "use.variable.current.month.of.year.description", "use.variable.current.month.of.year.example"));
-        this.addDef(new UseVariableDefinition("CurrentDayOfMonthCurrentNumberOfMonth", "use.variable.current.number.of.month.name",
-                "use.variable.current.number.of.month.description", "use.variable.current.number.of.month.example"));
+                "use.variable.current.month.of.year.description", "use.variable.current.month.of.year.example", cache4HoursInMs));
+        this.addDef(new UseVariableDefinition("CurrentNumberOfMonth", "use.variable.current.number.of.month.name",
+                "use.variable.current.number.of.month.description", "use.variable.current.number.of.month.example", cache4HoursInMs));
         this.addDef(new UseVariableDefinition("CurrentYear", "use.variable.current.year.name", "use.variable.current.year.description",
-                "use.variable.current.year.example"));
+                "use.variable.current.year.example", cache4HoursInMs));
         this.addDef(new UseVariableDefinition("CurrentOverPartName", "use.variable.current.over.part.name",
                 "use.variable.current.over.part.description", "use.variable.current.over.part.example"));
         this.addDef(new UseVariableDefinition("CurrentOverPartGridParentName", "use.variable.current.over.part.grid.parent.name",
