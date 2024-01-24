@@ -1,5 +1,15 @@
 # LIFECOMPANION CHANGELOG
 
+## 1.6.1 - XX/XX/2024
+
+### Fonctionnalités
+
+- ...
+
+### Corrections/ajustements
+
+- ...
+
 ## 1.6.0 - 24/01/2024
 
 ### Fonctionnalités
@@ -10,7 +20,7 @@
 	- La lecture est possible automatiquement (en continu), à l'activation ou au survol de la case
 - Ajout du **style de forme pour les cases**
 - Ajout d'un type de case **liste des configurations** : permet d'afficher la liste des configurations du profil et ainsi basculer entre chacune en mode utilisation !
-- Les configurations par défaut sont maintenant issues du [**répertoire officiel de configurations de LifeCompanion**](https://lifecompanionaac.org/configuration-list) !
+- Les configurations par défaut sont maintenant issues du [**répertoire officiel de configurations de LifeCompanion**](https://lifecompanionaac.org/repository) !
 - Il est maintenant possible d'**utiliser une touche de clavier pour activer le défilement**, même en mode clavier virtuel (sur Windows uniquement)
 - Il est maintenant possible de **créer une nouvelle grille directement depuis l'action "Aller dans la grille"**
 - Il est maintenant possible de **copier plusieurs cases en même temps**
