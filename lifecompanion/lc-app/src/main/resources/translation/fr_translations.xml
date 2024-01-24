@@ -2002,9 +2002,10 @@
   <text key="profile.edition.general.default.configuration.title">Modèles de configuration</text>
   <text key="profile.edition.general.default.configuration.link.unselect.all">Tout déselectionner</text>
   <text key="profile.edition.general.default.configuration.link.select.all">Tout selectionner</text>
-  <text key="profile.edition.general.default.configuration.explain">Ces modèles de configuration sont proposés pour vous permettre de démarrer dans LifeCompanion. Ils sont issus de l'expérience clinique des concepteurs de LifeCompanion et des différentes prises en charge. Le vocabulaire des configurations proposées est souvent simple et devra être adapté et complété en fonction de l'usage. N'oubliez pas qu'une configuration peut ensuite être adaptée, autant dans son contenu (texte, actions, images, etc.) que dans son mode d'interaction (pointage direct, défilement, etc.)\nCliquez sur un modèle pour obtenir un aperçu.</text>
+  <text key="profile.edition.general.default.configuration.explain">Ces modèles de configuration sont proposés pour vous permettre de démarrer dans LifeCompanion. Ils sont issus de l'expérience clinique des concepteurs de LifeCompanion et des différentes prises en charge. Le vocabulaire des configurations proposées est souvent simple et devra être adapté et complété en fonction de l'usage. N'oubliez pas qu'une configuration peut ensuite être adaptée, autant dans son contenu (texte, actions, images, etc.) que dans son mode d'interaction (pointage direct, défilement, etc.).\nVous pouvez retrouver plus de configurations sur le répertoire des configurations de la plateforme LifeCompanion.</text>
   <text key="profile.edition.general.information.title">Informations</text>
   <text key="profile.edition.view.title">Modification des informations d'un profil</text>
+    <text key="profile.edition.configuration.repository.link">Plus de configuration sur le répertoire de la plateforme LifeCompanion</text>
   <text key="profile.edition.view.title.config">Édition du profil utilisateur</text>
   <text key="profile.label.color">Couleur du profil</text>
   <text key="profile.label.name">Nom du profil</text>
