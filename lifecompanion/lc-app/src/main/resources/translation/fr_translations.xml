@@ -284,7 +284,7 @@
   <text key="use.variable.current.day.of.week.name">Jour de la semaine</text>
     <text key="use.variable.current.number.of.day.description">Contient le numéro du jour courant.</text>
     <text key="use.variable.current.number.of.day.example">22</text>
-    <text key="use.variable.current.number.of.day.name">Numéro du jour</text>
+    <text key="use.variable.current.day.of.month.name">Numéro du jour</text>
     <text key="use.variable.current.month.of.year.description">Contient le mois courant dans un format lisible.</text>
     <text key="use.variable.current.month.of.year.example">janvier</text>
     <text key="use.variable.current.month.of.year.name">Mois de l'année</text>

@@ -56,7 +56,7 @@ import oshi.hardware.PowerSource;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+
 import java.time.format.TextStyle;
 import java.util.*;
 import java.util.function.Consumer;
@@ -181,11 +181,11 @@ public enum UseVariableController implements ModeListenerI {
                 "use.variable.current.time.without.seconds.description", "use.variable.current.time.without.seconds.example"));
         this.addDef(new UseVariableDefinition("CurrentDayOfWeek", "use.variable.current.day.of.week.name",
                 "use.variable.current.day.of.week.description", "use.variable.current.day.of.week.example"));
-        this.addDef(new UseVariableDefinition("CurrentNumberOfDay", "use.variable.current.number.of.day.name",
+        this.addDef(new UseVariableDefinition("CurrentDayOfMonth", "use.variable.current.day.of.month.name",
                 "use.variable.current.number.of.day.description", "use.variable.current.number.of.day.example"));
         this.addDef(new UseVariableDefinition("CurrentMonthOfYear", "use.variable.current.month.of.year.name",
                 "use.variable.current.month.of.year.description", "use.variable.current.month.of.year.example"));
-        this.addDef(new UseVariableDefinition("CurrentNumberOfMonth", "use.variable.current.number.of.month.name",
+        this.addDef(new UseVariableDefinition("CurrentDayOfMonthCurrentNumberOfMonth", "use.variable.current.number.of.month.name",
                 "use.variable.current.number.of.month.description", "use.variable.current.number.of.month.example"));
         this.addDef(new UseVariableDefinition("CurrentYear", "use.variable.current.year.name", "use.variable.current.year.description",
                 "use.variable.current.year.example"));
@@ -275,7 +275,7 @@ public enum UseVariableController implements ModeListenerI {
         putToVarMap(useCachedValue, "CurrentTime", vars, () -> StringUtils.dateToStringDateWithOnlyHoursMinuteSecond(currentDate));
         putToVarMap(useCachedValue, "CurrentTimeWithoutSeconds", vars, () -> DATE_ONLY_HOURS_MIN.format(currentDate));
         putToVarMap(useCachedValue, "CurrentDayOfWeek", vars, () -> LocalDate.now().getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.getDefault()));
-        putToVarMap(useCachedValue, "CurrentNumberOfDay", vars, () -> LocalDate.now().getDayOfMonth() + "");
+        putToVarMap(useCachedValue, "CurrentDayOfMonth", vars, () -> LocalDate.now().getDayOfMonth() + "");
         putToVarMap(useCachedValue, "CurrentMonthOfYear", vars, () -> LocalDate.now().getMonth().getDisplayName(TextStyle.FULL, Locale.getDefault()));
         putToVarMap(useCachedValue, "CurrentNumberOfMonth", vars, () -> LocalDate.now().getMonthValue() + "");
         putToVarMap(useCachedValue, "CurrentYear", vars, () -> LocalDate.now().getYear() + "");
