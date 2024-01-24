@@ -56,6 +56,7 @@ import oshi.hardware.PowerSource;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.*;
 import java.util.function.Consumer;
@@ -274,12 +275,10 @@ public enum UseVariableController implements ModeListenerI {
         putToVarMap(useCachedValue, "CurrentTime", vars, () -> StringUtils.dateToStringDateWithOnlyHoursMinuteSecond(currentDate));
         putToVarMap(useCachedValue, "CurrentTimeWithoutSeconds", vars, () -> DATE_ONLY_HOURS_MIN.format(currentDate));
         putToVarMap(useCachedValue, "CurrentDayOfWeek", vars, () -> LocalDate.now().getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.getDefault()));
-
-        putToVarMap(useCachedValue, "CurrentNumberOfDay", vars, () -> new SimpleDateFormat("dd").format(currentDate));
-        putToVarMap(useCachedValue, "CurrentMonthOfYear", vars, () -> new SimpleDateFormat("MMMM", new Locale("fr")).format(currentDate));
-        putToVarMap(useCachedValue, "CurrentNumberOfMonth", vars, () -> new SimpleDateFormat("MM").format(currentDate));
-        putToVarMap(useCachedValue, "CurrentYear", vars, () -> new SimpleDateFormat("yyyy").format(currentDate));
-
+        putToVarMap(useCachedValue, "CurrentNumberOfDay", vars, () -> LocalDate.now().getDayOfMonth() + "");
+        putToVarMap(useCachedValue, "CurrentMonthOfYear", vars, () -> LocalDate.now().getMonth().getDisplayName(TextStyle.FULL, Locale.getDefault()));
+        putToVarMap(useCachedValue, "CurrentNumberOfMonth", vars, () -> LocalDate.now().getMonthValue() + "");
+        putToVarMap(useCachedValue, "CurrentYear", vars, () -> LocalDate.now().getYear() + "");
         putToVarMap(useCachedValue, "CurrentTextInEditor", vars, () -> WritingStateController.INSTANCE.currentTextProperty().get());
         putToVarMap(useCachedValue, "CurrentWordInEditor", vars, () -> WritingStateController.INSTANCE.currentWordProperty().get());
         putToVarMap(useCachedValue, "LastCompleteWordInEditor", vars, () -> WritingStateController.INSTANCE.lastCompleteWordProperty().get());
