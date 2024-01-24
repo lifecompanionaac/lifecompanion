@@ -26,6 +26,7 @@
 - Ajustement sur les interfaces de liste de cases
 - Ajout d'une nouvelle variable : nom du profil actuel
 - L'action d'une case bloc note n'était pas supprimée lorsqu'elle repassait en case "classique"
+- Ajout de nouvelles variables : numéro du jour du mois, mois de l'année, numéro du mois et année
 - Ticket #260 : ajout du bouton "rouge" dans l'interface de configuration des listes de cases (comme dans la partie "édition")
 - Ticket #282 : la configuration des listes de cases affiche maintenant le même nombre de cases que dans la configuration
 - Ticket #267 : la configuration d'une image (rotation, recadrage, etc) est maintenant utilisée dans le champs de sélection
