@@ -53,12 +53,9 @@ public enum UserActionSequenceController implements ModeListenerI {
     private final ObjectProperty<UserActionSequenceI> currentSequence;
     private final ObjectProperty<UserActionSequenceItemI> currentItem;
     private final AtomicInteger tempDisableNextAndPrevious;
-
     private LCConfigurationI currentConfiguration;
-
     private final Map<GridComponentI, List<UserActionSequenceCurrentKeyOption>> currentItemKeyOptions;
     private final Map<GridComponentI, List<UserActionSequenceItemKeyOption>> currentSequenceItemKeyOptions;
-
     private final Set<Consumer<String>> onSequenceFinishedListeners;
 
     // TODO : add use variable with current sequence name

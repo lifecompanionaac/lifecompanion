@@ -27,10 +27,10 @@ import javafx.scene.layout.VBox;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionConfigurationViewI;
 import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
-import org.lifecompanion.model.impl.categorizedelement.useaction.available.StartTimerAction;
+import org.lifecompanion.model.impl.categorizedelement.useaction.available.TimerStartAction;
 import org.lifecompanion.ui.common.control.generic.DurationPickerControl;
 
-public class TimerActionConfigView extends VBox implements UseActionConfigurationViewI<StartTimerAction> {
+public class TimerActionConfigView extends VBox implements UseActionConfigurationViewI<TimerStartAction> {
 
     private DurationPickerControl durationPickerAutomaticItemTimeMs;
 
@@ -40,8 +40,8 @@ public class TimerActionConfigView extends VBox implements UseActionConfiguratio
     }
 
     @Override
-    public Class<StartTimerAction> getConfiguredActionType() {
-        return StartTimerAction.class;
+    public Class<TimerStartAction> getConfiguredActionType() {
+        return TimerStartAction.class;
     }
 
     @Override
@@ -55,24 +55,15 @@ public class TimerActionConfigView extends VBox implements UseActionConfiguratio
         durationPickerAutomaticItemTimeMs = new DurationPickerControl();
         durationPickerAutomaticItemTimeMs.setAlignment(Pos.CENTER_LEFT);
         this.getChildren().add(durationPickerAutomaticItemTimeMs);
-
-        Label label2 = new Label(Translation.getText("Action exécuter à la fin du minuteur"));
-        label2.setAlignment(Pos.CENTER_LEFT);
-        this.getChildren().add(label2);
-        VBox.setMargin(label2, new Insets(10, 0, 10, 0));
-
-
-
-
     }
 
     @Override
-    public void editEnds(final StartTimerAction element) {
+    public void editEnds(final TimerStartAction element) {
        element.timerProperty().set(durationPickerAutomaticItemTimeMs.durationProperty().get());
     }
 
     @Override
-    public void editStarts(final StartTimerAction element, final ObservableList<UseVariableDefinitionI> possibleVariables) {
+    public void editStarts(final TimerStartAction element, final ObservableList<UseVariableDefinitionI> possibleVariables) {
         durationPickerAutomaticItemTimeMs.durationProperty().set(element.timerProperty().get());
         durationPickerAutomaticItemTimeMs.tryToPickBestUnit();
     }

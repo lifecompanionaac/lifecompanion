@@ -36,15 +36,15 @@ import java.util.Map;
 /**
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
-public class StopTimerAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
+public class TimerStopAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
 
-    public StopTimerAction() {
+    public TimerStopAction() {
         super(UseActionTriggerComponentI.class);
         this.order = 0;
-        this.category = DefaultUseActionSubCategories.SCRIPT;
+        this.category = DefaultUseActionSubCategories.TIMER;
         this.nameID = "action.stop.timer.name";
         this.staticDescriptionID = "action.stop.timer.static.description";
-        this.configIconPath = "miscellaneous/icon_pause_action.png";
+        this.configIconPath = "miscellaneous/icon_timer_stop_action.png";
         this.parameterizableAction = false;
         this.variableDescriptionProperty()
                 .bind(TranslationFX.getTextBinding("action.stop.timer.variable.description"));
@@ -60,14 +60,14 @@ public class StopTimerAction extends SimpleUseActionImpl<UseActionTriggerCompone
     @Override
     public Element serialize(final IOContextI contextP) {
         Element elem = super.serialize(contextP);
-        XMLObjectSerializer.serializeInto(StopTimerAction.class, this, elem);
+        XMLObjectSerializer.serializeInto(TimerStopAction.class, this, elem);
         return elem;
     }
 
     @Override
     public void deserialize(final Element nodeP, final IOContextI contextP) throws LCException {
         super.deserialize(nodeP, contextP);
-        XMLObjectSerializer.deserializeInto(StopTimerAction.class, this, nodeP);
+        XMLObjectSerializer.deserializeInto(TimerStopAction.class, this, nodeP);
     }
     // ========================================================================
 

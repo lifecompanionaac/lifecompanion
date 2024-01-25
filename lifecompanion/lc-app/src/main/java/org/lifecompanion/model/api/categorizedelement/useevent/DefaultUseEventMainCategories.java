@@ -40,6 +40,8 @@ public enum DefaultUseEventMainCategories implements UseEventMainCategoryI {
 			CategorizedElementColorProvider.nextColor(DefaultUseActionMainCategories.class)), //
 	UA_SEQUENCE("use.event.main.category.sequence.name", "use.event.main.category.sequence.description", "icon_user_action_sequence.png",
 			CategorizedElementColorProvider.nextColor(DefaultUseActionMainCategories.class)), //
+	MISCELLANEOUS("use.event.main.category.divers.name", "use.event.main.category.divers.description", "icon_miscellaneous.png",
+			CategorizedElementColorProvider.nextColor(DefaultUseActionMainCategories.class)), //
 	;
 	//========================================================================
 

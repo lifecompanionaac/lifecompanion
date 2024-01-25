@@ -32,44 +32,43 @@ import java.util.Set;
 public enum UseTimerController implements ModeListenerI {
     INSTANCE;
     private final static Logger LOGGER = LoggerFactory.getLogger(UseTimerController.class);
-    private final UseModeProgressDisplayerController progressController = UseModeProgressDisplayerController.INSTANCE;
-    private final Set<ModeListenerI> listeners = new HashSet<>();
+    private final UseModeProgressDisplayerController progressController;
+    private final Set<Runnable> onTimerFinishedListeners;
 
+    UseTimerController () {
+        progressController = UseModeProgressDisplayerController.INSTANCE;
+        this.onTimerFinishedListeners = new HashSet<>();
+    }
+
+    public Set<Runnable> getOnTimerFinishedListeners() {
+        return onTimerFinishedListeners;
+    }
 
     public void startTimer(int time){
         LOGGER.info("startTimer");
-        FXThreadUtils.runOnFXThreadAndWaitFor(() -> progressController.hideAllProgress());
-        UseTimerController.INSTANCE.addListener(this);
-        progressController.launchTimer(time, () -> {
-            stopTimer();
-        });
+        FXThreadUtils.runOnFXThread(() -> progressController.launchTimer(time, () -> {
+            for (Runnable onTimerFinishedListener : onTimerFinishedListeners) {
+                onTimerFinishedListener.run();
+            }
+        }));
     }
 
     public void stopTimer(){
         LOGGER.info("stopTimer");
         FXThreadUtils.runOnFXThreadAndWaitFor(() -> progressController.hideAllProgress());
-        UseTimerController.INSTANCE.removeListener(this);
-    }
-
-    public void addListener(ModeListenerI listener) {
-        listeners.add(listener);
-    }
-
-    public void removeListener(ModeListenerI listener) {
-        listeners.remove(listener);
     }
 
     // START/STOP
     //========================================================================
     @Override
     public void modeStart(LCConfigurationI configuration) {
-        LOGGER .info("modeStart");
+        LOGGER.info("modeStart");
     }
 
     @Override
     public void modeStop(LCConfigurationI configuration) {
-        LOGGER .info("modeStop");
-        listeners.clear();
+        LOGGER.info("modeStop");
+        onTimerFinishedListeners.clear();
     }
     //========================================================================
 }

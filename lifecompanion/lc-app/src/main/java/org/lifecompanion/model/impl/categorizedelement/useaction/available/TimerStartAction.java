@@ -38,17 +38,17 @@ import java.util.Map;
 /**
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
-public class StartTimerAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
+public class TimerStartAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
     private final IntegerProperty time;
 
-    public StartTimerAction() {
+    public TimerStartAction() {
         super(UseActionTriggerComponentI.class);
         this.order = 0;
-        this.category = DefaultUseActionSubCategories.SCRIPT;
+        this.category = DefaultUseActionSubCategories.TIMER;
         this.time = new SimpleIntegerProperty(1000);
         this.nameID = "action.start.timer.name";
         this.staticDescriptionID = "action.start.timer.static.description";
-        this.configIconPath = "miscellaneous/icon_pause_action.png";
+        this.configIconPath = "miscellaneous/icon_timer_start_action.png";
         this.parameterizableAction = true;
         this.variableDescriptionProperty()
                 .bind(TranslationFX.getTextBinding("action.start.timer.variable.description", BindingUtils.createDivide1000Binding(this.time)));
@@ -68,14 +68,14 @@ public class StartTimerAction extends SimpleUseActionImpl<UseActionTriggerCompon
     @Override
     public Element serialize(final IOContextI contextP) {
         Element elem = super.serialize(contextP);
-        XMLObjectSerializer.serializeInto(StartTimerAction.class, this, elem);
+        XMLObjectSerializer.serializeInto(TimerStartAction.class, this, elem);
         return elem;
     }
 
     @Override
     public void deserialize(final Element nodeP, final IOContextI contextP) throws LCException {
         super.deserialize(nodeP, contextP);
-        XMLObjectSerializer.deserializeInto(StartTimerAction.class, this, nodeP);
+        XMLObjectSerializer.deserializeInto(TimerStartAction.class, this, nodeP);
     }
     // ========================================================================
 
