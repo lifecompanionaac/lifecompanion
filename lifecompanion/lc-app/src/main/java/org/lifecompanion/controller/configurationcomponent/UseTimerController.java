@@ -34,7 +34,7 @@ public enum UseTimerController implements ModeListenerI {
     private final static Logger LOGGER = LoggerFactory.getLogger(UseTimerController.class);
     private final UseModeProgressDisplayerController progressController;
     private final Set<Runnable> onTimerFinishedListeners;
-
+    private boolean isTimerRunning;
     UseTimerController () {
         progressController = UseModeProgressDisplayerController.INSTANCE;
         this.onTimerFinishedListeners = new HashSet<>();
@@ -46,15 +46,19 @@ public enum UseTimerController implements ModeListenerI {
 
     public void startTimer(int time){
         LOGGER.info("startTimer");
+        isTimerRunning = true;
         FXThreadUtils.runOnFXThread(() -> progressController.launchTimer(time, () -> {
-            for (Runnable onTimerFinishedListener : onTimerFinishedListeners) {
-                onTimerFinishedListener.run();
+            if (isTimerRunning) {
+                for (Runnable onTimerFinishedListener : onTimerFinishedListeners) {
+                    onTimerFinishedListener.run();
+                }
             }
         }));
     }
 
     public void stopTimer(){
         LOGGER.info("stopTimer");
+        isTimerRunning = false;
         FXThreadUtils.runOnFXThreadAndWaitFor(() -> progressController.hideAllProgress());
     }
 
