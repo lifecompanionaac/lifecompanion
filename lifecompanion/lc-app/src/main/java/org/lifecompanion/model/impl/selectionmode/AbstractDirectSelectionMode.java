@@ -40,185 +40,189 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
 public abstract class AbstractDirectSelectionMode<T extends AbstractSelectionModeView<?>> extends AbstractSelectionMode<T>
-		implements DrawSelectionModeI, DirectSelectionModeI {
-	/**
-	 * Executor to add over timers
-	 */
-	protected ScheduledExecutorService scheduledExecutor;
+        implements DrawSelectionModeI, DirectSelectionModeI {
+    /**
+     * Executor to add over timers
+     */
+    protected ScheduledExecutorService scheduledExecutor;
 
-	/**
-	 * The scheduled task that will execute its over actions.
-	 */
-	private ScheduledFuture<Void> currentScheduledOver;
+    /**
+     * The scheduled task that will execute its over actions.
+     */
+    private ScheduledFuture<Void> currentScheduledOver;
 
-	/**
-	 * Boolean to ignore the next selection enter in a key : this is useful to avoid directly starting over selection again, especially when the user move from a component to another.
-	 */
-	protected boolean ignoreNextSelectionEnter;
+    /**
+     * Boolean to ignore the next selection enter in a key : this is useful to avoid directly starting over selection again, especially when the user move from a component to another.
+     */
+    protected boolean ignoreNextSelectionEnter;
 
-	protected ObjectProperty<GridPartKeyComponentI> currentKey;
-	protected Supplier<Boolean> nextSelectionListener;
+    protected ObjectProperty<GridPartKeyComponentI> currentKey;
+    protected Supplier<Boolean> nextSelectionListener;
 
-	private final boolean directSelection;
+    private final boolean directSelection;
 
-	protected AbstractDirectSelectionMode(boolean directSelection) {
-		this.currentKey = new SimpleObjectProperty<>();
-		this.directSelection = directSelection;
-	}
+    protected AbstractDirectSelectionMode(boolean directSelection) {
+        this.currentKey = new SimpleObjectProperty<>();
+        this.directSelection = directSelection;
+    }
 
-	// Class part : "Default behavior for enter/exit : show view"
-	//========================================================================
-	@Override
-	public void selectionEnter(final GridPartKeyComponentI key) {
-		//Bug #31 : doesn't show on empty key
-		if (!this.isPartEmpty(key)) {
-			this.currentKey.set(key);
-			this.view.moveToPart(key, this.parameters.autoActivationTimeProperty().get(), false);
-			if (!this.ignoreNextSelectionEnter) {
-				this.currentScheduledOver = this.scheduledExecutor.schedule(new StartOverTask(key), this.parameters.autoOverTimeProperty().get(),
-						TimeUnit.MILLISECONDS);
-			}
-		}
-	}
+    // Class part : "Default behavior for enter/exit : show view"
+    //========================================================================
+    @Override
+    public void selectionEnter(final GridPartKeyComponentI key) {
+        //Bug #31 : doesn't show on empty key
+        if (!this.isPartEmpty(key)) {
+            this.currentKey.set(key);
+            this.view.moveToPart(key, this.parameters.autoActivationTimeProperty().get(), false);
+            if (!this.ignoreNextSelectionEnter) {
+                this.currentScheduledOver = this.scheduledExecutor.schedule(new StartOverTask(key), this.parameters.autoOverTimeProperty().get(),
+                        TimeUnit.MILLISECONDS);
+            }
+        }
+    }
 
-	@Override
-	public void selectionExit(final GridPartKeyComponentI key) {
-		if (this.currentKey.get() == key) {
-			this.setDefaultColors();
-			this.currentKey.set(null);
-			this.view.moveNullPart();
-		}
-		if (this.currentScheduledOver != null) {
-			if (!this.currentScheduledOver.isDone()) {
-				this.currentScheduledOver.cancel(false);
-				this.currentScheduledOver = null;
-			} else {
-				UseActionController.INSTANCE.endEventOn(key, UseActionEvent.OVER, null);
-			}
-			//Fire the current next listener if present
-			if (this.nextSelectionListener != null) {
-				this.nextSelectionListener.get();
-				this.nextSelectionListener = null;
-			}
-		}
-	}
+    @Override
+    public void selectionExit(final GridPartKeyComponentI key) {
+        if (this.currentKey.get() == key) {
+            this.setDefaultColors();
+            this.currentKey.set(null);
+            this.view.moveNullPart();
+        }
+        if (this.currentScheduledOver != null) {
+            if (!this.currentScheduledOver.isDone()) {
+                this.currentScheduledOver.cancel(false);
+                this.currentScheduledOver = null;
+            } else {
+                UseActionController.INSTANCE.endEventOn(key, UseActionEvent.OVER, null);
+            }
+            //Fire the current next listener if present
+            this.executeNextSelectionListener();
+        }
+    }
 
-	@Override
-	public void selectionMovedOver(GridPartKeyComponentI key) {
-		if (this.ignoreNextSelectionEnter) {
-			this.ignoreNextSelectionEnter = false;
-			this.selectionEnter(key);
-		}
-	}
-	//========================================================================
+    @Override
+    public void selectionMovedOver(GridPartKeyComponentI key) {
+        if (this.ignoreNextSelectionEnter) {
+            this.ignoreNextSelectionEnter = false;
+            this.selectionEnter(key);
+        }
+    }
+    //========================================================================
 
-	// Class part : "Default behavior for selection : activation if enabled"
-	//========================================================================
-	@Override
-	public void selectionPress(final GridPartKeyComponentI keyP) {
-		if (this.directSelection || this.parameters.enableActivationWithSelectionProperty().get()) {
-			this.selectionStarted();
-			this.strokeColor.set(this.parameters.selectionActivationViewColorProperty().get());
-			this.validSelectionPressStarted();
-			if (this.parameters.fireActivationEventProperty().get() == FireActionEvent.ON_PRESS && this.isTimeBeforeRepeatCorrect()) {
-				this.activationDone();
-				if (this.nextSelectionListener != null) {
-					this.nextSelectionListener.get();
-					this.nextSelectionListener = null;
-				} else {
-					UseActionController.INSTANCE.executeSimpleOn(keyP, UseActionEvent.ACTIVATION, null, this::handleActivationResult);
-				}
-			}
-			UseActionController.INSTANCE.startEventOn(keyP, UseActionEvent.ACTIVATION, null);
-		}
-	}
+    // Class part : "Default behavior for selection : activation if enabled"
+    //========================================================================
+    @Override
+    public void selectionPress(final GridPartKeyComponentI keyP) {
+        if (this.directSelection || this.parameters.enableActivationWithSelectionProperty().get()) {
+            this.selectionStarted();
+            this.strokeColor.set(this.parameters.selectionActivationViewColorProperty().get());
+            this.validSelectionPressStarted();
+            if (this.parameters.fireActivationEventProperty().get() == FireActionEvent.ON_PRESS && this.isTimeBeforeRepeatCorrect()) {
+                this.activationDone();
+                if (!executeNextSelectionListener()) {
+                    UseActionController.INSTANCE.executeSimpleOn(keyP, UseActionEvent.ACTIVATION, null, this::handleActivationResult);
+                }
+            }
+            UseActionController.INSTANCE.startEventOn(keyP, UseActionEvent.ACTIVATION, null);
+        }
+    }
 
-	@Override
-	public void selectionRelease(final GridPartKeyComponentI keyP, final boolean skipAction) {
-		if (this.directSelection || this.parameters.enableActivationWithSelectionProperty().get()) {
-			this.setDefaultColors();
-			if (!skipAction) {
-				if (this.parameters.fireActivationEventProperty().get() == FireActionEvent.ON_RELEASE && this.isTimeToActivationCorrect()
-						&& this.isTimeBeforeRepeatCorrect()) {
-					this.activationDone();
-					if (this.nextSelectionListener != null) {
-						this.nextSelectionListener.get();
-						this.nextSelectionListener = null;
-					} else {
-						UseActionController.INSTANCE.executeSimpleOn(keyP, UseActionEvent.ACTIVATION, null, this::handleActivationResult);
-					}
-				}
-			}
-			//End on action should never be skipped because action are always started (selectionPress(...) always starts complex activation)
-			UseActionController.INSTANCE.endEventOn(keyP, UseActionEvent.ACTIVATION, null);
-		}
-	}
+    @Override
+    public void selectionRelease(final GridPartKeyComponentI keyP, final boolean skipAction) {
+        if (this.directSelection || this.parameters.enableActivationWithSelectionProperty().get()) {
+            this.setDefaultColors();
+            if (!skipAction) {
+                if (this.parameters.fireActivationEventProperty().get() == FireActionEvent.ON_RELEASE && this.isTimeToActivationCorrect()
+                        && this.isTimeBeforeRepeatCorrect()) {
+                    this.activationDone();
+                    if (!executeNextSelectionListener()) {
+                        UseActionController.INSTANCE.executeSimpleOn(keyP, UseActionEvent.ACTIVATION, null, this::handleActivationResult);
+                    }
+                }
+            }
+            //End on action should never be skipped because action are always started (selectionPress(...) always starts complex activation)
+            UseActionController.INSTANCE.endEventOn(keyP, UseActionEvent.ACTIVATION, null);
+        }
+    }
 
-	/**
-	 * Called when a valid selection press is started on this key.<br>
-	 * This is usefull for subclass if they need to know if the activation will be done by selection.
-	 */
-	protected void validSelectionPressStarted() {}
+    private boolean executeNextSelectionListener() {
+        Supplier<Boolean> savedListener = this.nextSelectionListener;
+        if (savedListener != null) {
+            this.nextSelectionListener = null;
+            savedListener.get();
+            return true;
+        } else return false;
+    }
 
-	/**
-	 * Called when actions are executed and ended.<br>
-	 * Subclass can use it to implement specific behavior.
-	 * @param result action result (not null)
-	 */
-	protected void handleActivationResult(ActionExecutionResultI result) {}
-	//========================================================================
+    /**
+     * Called when a valid selection press is started on this key.<br>
+     * This is usefull for subclass if they need to know if the activation will be done by selection.
+     */
+    protected void validSelectionPressStarted() {
+    }
 
-	@Override
-	public void setNextSelectionListener(final Supplier<Boolean> nextSelectionListener) {
-		this.nextSelectionListener = nextSelectionListener;
-	}
+    /**
+     * Called when actions are executed and ended.<br>
+     * Subclass can use it to implement specific behavior.
+     *
+     * @param result action result (not null)
+     */
+    protected void handleActivationResult(ActionExecutionResultI result) {
+    }
+    //========================================================================
 
-	@Override
-	public void dispose() {
-		this.view.dispose();
-		this.scheduledExecutor.shutdownNow();
-	}
+    @Override
+    public void setNextSelectionListener(final Supplier<Boolean> nextSelectionListener) {
+        this.nextSelectionListener = nextSelectionListener;
+    }
 
-	@Override
-	public void init(SelectionModeI previousSelectionMode) {
-		super.init(previousSelectionMode);
-		this.scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
-	}
+    @Override
+    public void dispose() {
+        this.view.dispose();
+        this.scheduledExecutor.shutdownNow();
+    }
 
-	@Override
-	public void parameterChanged(final SelectionModeParameterI parameters) {}
+    @Override
+    public void init(SelectionModeI previousSelectionMode) {
+        super.init(previousSelectionMode);
+        this.scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
+    }
 
-	// Class part : "Use progress mode"
-	//========================================================================
-	@Override
-	public BooleanBinding currentPartNotNullProperty() {
-		return this.currentKey.isNotNull();
-	}
-	//========================================================================
+    @Override
+    public void parameterChanged(final SelectionModeParameterI parameters) {
+    }
 
-	// Class part : "Activation delay"
-	//========================================================================
-	protected static abstract class AbstractSafeScheduledTask implements Callable<Void> {
-		protected GridPartKeyComponentI key;
+    // Class part : "Use progress mode"
+    //========================================================================
+    @Override
+    public BooleanBinding currentPartNotNullProperty() {
+        return this.currentKey.isNotNull();
+    }
+    //========================================================================
 
-		protected AbstractSafeScheduledTask(final GridPartKeyComponentI key) {
-			this.key = key;
-		}
-	}
+    // Class part : "Activation delay"
+    //========================================================================
+    protected static abstract class AbstractSafeScheduledTask implements Callable<Void> {
+        protected GridPartKeyComponentI key;
 
-	private static class StartOverTask extends AbstractSafeScheduledTask {
-		StartOverTask(final GridPartKeyComponentI key) {
-			super(key);
-		}
+        protected AbstractSafeScheduledTask(final GridPartKeyComponentI key) {
+            this.key = key;
+        }
+    }
 
-		@Override
-		public Void call() throws Exception {
-			//Execute and just start over event after timer, but event will ends when mouse leave the key
-			UseActionController.INSTANCE.executeSimpleOn(this.key, UseActionEvent.OVER, null, null);
-			UseActionController.INSTANCE.startEventOn(this.key, UseActionEvent.OVER, null);
-			return null;
-		}
-	}
-	//========================================================================
+    private static class StartOverTask extends AbstractSafeScheduledTask {
+        StartOverTask(final GridPartKeyComponentI key) {
+            super(key);
+        }
+
+        @Override
+        public Void call() throws Exception {
+            //Execute and just start over event after timer, but event will ends when mouse leave the key
+            UseActionController.INSTANCE.executeSimpleOn(this.key, UseActionEvent.OVER, null, null);
+            UseActionController.INSTANCE.startEventOn(this.key, UseActionEvent.OVER, null);
+            return null;
+        }
+    }
+    //========================================================================
 
 }

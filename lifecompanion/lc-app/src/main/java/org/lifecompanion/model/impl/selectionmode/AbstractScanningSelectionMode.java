@@ -302,14 +302,15 @@ public abstract class AbstractScanningSelectionMode<T extends AbstractSelectionM
     }
 
     private void restartOrPlay() {
-        if (this.nextSelectionListener != null && !this.nextSelectionListener.get()) {
+        Supplier<Boolean> savedNextSelectionListener = this.nextSelectionListener;
+        this.nextSelectionListener = null;
+        if (savedNextSelectionListener != null && !savedNextSelectionListener.get()) {
             this.restartScanningOnNextAction = false;
             this.play();
         } else {
             this.restart();
         }
         this.pauseForUntilNextSelection = false;
-        this.nextSelectionListener = null;
     }
 
     @Override

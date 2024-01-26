@@ -47,6 +47,7 @@ import org.lifecompanion.controller.textprediction.WordPredictionController;
 import org.lifecompanion.controller.usevariable.UseVariableController;
 import org.lifecompanion.controller.virtualkeyboard.VirtualKeyboardController;
 import org.lifecompanion.controller.virtualkeyboard.WinAutoHotKeyKeyboardReceiverController;
+import org.lifecompanion.controller.virtualmouse.ScanningMouseController;
 import org.lifecompanion.controller.virtualmouse.VirtualMouseController;
 import org.lifecompanion.controller.voicesynthesizer.VoiceSynthesizerController;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
@@ -175,6 +176,7 @@ public enum AppModeController {
             WordPredictionController.INSTANCE, //
             VirtualKeyboardController.INSTANCE, //
             VirtualMouseController.INSTANCE, //
+            ScanningMouseController.INSTANCE, //
             WritingStateController.INSTANCE, //
             CustomCharPredictionController.INSTANCE, //
             AutoCharPredictionController.INSTANCE, //
