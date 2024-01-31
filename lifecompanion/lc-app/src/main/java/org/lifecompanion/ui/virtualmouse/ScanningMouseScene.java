@@ -24,6 +24,7 @@ import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import org.lifecompanion.controller.selectionmode.SelectionModeController;
+import org.lifecompanion.controller.virtualmouse.ScanningMouseController;
 import org.lifecompanion.controller.virtualmouse.VirtualMouseController;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.model.api.configurationcomponent.VirtualMouseDrawing;
@@ -45,6 +46,8 @@ public class ScanningMouseScene extends Scene implements LCViewInitHelper {
      * Root for this scene
      */
     private final Group root;
+    Line lineX;
+    Line lineY;
 
     public ScanningMouseScene(final Group root) {
         super(root);
@@ -57,15 +60,31 @@ public class ScanningMouseScene extends Scene implements LCViewInitHelper {
     @Override
     public void initUI() {
         this.setFill(Color.TRANSPARENT);
-        Line line = new Line(50, 0, 50, 0);
-        line.endYProperty().bind(heightProperty());
-        line.setStrokeWidth(5.0);
-        line.setStroke(Color.RED);
-        this.root.getChildren().add(line);
+        lineX = new Line(0, 0, 0, 0);
+        lineX.endYProperty().bind(heightProperty());
+        lineX.setStrokeWidth(5.0);
+        lineX.setStroke(Color.RED);
+
+        lineY = new Line(0, 0, 0, 0);
+        lineY.endXProperty().bind(widthProperty());
+        lineY.setStrokeWidth(5.0);
+        lineY.setStroke(Color.RED);
+
+        this.root.getChildren().add(lineX);
+        this.root.getChildren().add(lineY);
+
     }
 
     @Override
     public void initBinding() {
+        ScanningMouseController.INSTANCE.mouseXProperty().addListener((obs, ov, nv) -> {
+            lineX.setStartX(nv.doubleValue());
+            lineX.setEndX(nv.doubleValue());
+        });
+        ScanningMouseController.INSTANCE.mouseYProperty().addListener((obs, ov, nv) -> {
+            lineY.setStartY(nv.doubleValue());
+            lineY.setEndY(nv.doubleValue());
+        });
     }
 
     @Override
@@ -73,15 +92,18 @@ public class ScanningMouseScene extends Scene implements LCViewInitHelper {
     }
 
     public void startMouseClic(BiConsumer<Double, Double> callback) {
+        LOGGER.info("First clic !");
+        ScanningMouseController.INSTANCE.startMovingMouseForX();
+
         SelectionModeController.INSTANCE.pauseCurrentScanningUntilNextSelection(() -> {
-            LOGGER.info("First clic !");
+            LOGGER.info("Second clic !");
+            ScanningMouseController.INSTANCE.stopMovingMouse();
+            ScanningMouseController.INSTANCE.startMovingMouseForY();
+
             SelectionModeController.INSTANCE.pauseCurrentScanningUntilNextSelection(() -> {
-                LOGGER.info("Second clic !");
-                SelectionModeController.INSTANCE.pauseCurrentScanningUntilNextSelection(() -> {
-                    LOGGER.info("Third clic !");
-                    callback.accept(56.6, 845.5);
-                    return true;
-                });
+                LOGGER.info("Third clic !");
+                ScanningMouseController.INSTANCE.stopMovingMouse();
+                callback.accept(lineX.getStartX(), lineY.getStartY());
                 return true;
             });
             return true;
