@@ -15,6 +15,7 @@
   <text key="general.config.scene.cancel.warning.header">Configuration modifiée</text>
   <text key="general.config.scene.cancel.warning.message">Vous avez des modifications sur la configuration qui ne sont pas enregistrées. En fermant cette fenêtre, ces changements seront perdus.</text>
   <text key="virtual.mouse.drawing.target">Cible</text>
+  <text key="virtual.mouse.drawing.cursor.strip">Bande-curseur</text>
   <text key="tooltip.keylist.drag.drop.swap.keys">Inverser "{}" et "{}"</text>
   <text key="tooltip.keylist.drag.drop.move.to">Déplacer "{}" dans "{}"</text>
   <text key="keylist.content.pane.button.add">Ajouter</text>
@@ -163,6 +164,7 @@
   <text key="use.action.sub.category.computer.access.computer.features.name">Fonctions de l'ordinateur</text>
   <text key="use.action.sub.category.computer.access.keyboard.name">Clavier</text>
   <text key="use.action.sub.category.computer.access.mouse.actions.name">Action de souris virtuelle</text>
+  <text key="use.action.sub.category.computer.access.cursor.strip.actions.name">Action de la bande-curseur</text>
   <text key="use.action.sub.category.computer.access.mouse.direct.actions.name">Action de souris (direct)</text>
   <text key="use.action.sub.category.computer.access.mouse.move.name">Déplacement de souris virtuelle</text>
   <text key="use.action.sub.category.configuration.change.name">Changer des éléments</text>
@@ -205,6 +207,7 @@
   <text key="use.event.sub.category.periodic.name">Périodique</text>
   <text key="use.event.sub.category.keylist.moves.name">Navigation</text>
   <text key="use.event.sub.category.keys.name">Clavier</text>
+  <text key="use.event.sub.category.scanning.name">Bande-curseur</text>
   <text key="use.event.sub.category.status.name">Status</text>
   <text key="use.event.sub.category.variable.name">Variables</text>
   <!--org.lifecompanion.app.instance-->
@@ -563,6 +566,14 @@
   <text key="action.mouse.scroll.up.description">Reproduit l'action de la molette de souris vers le haut (pour monter
 		dans un élément défilable)</text>
   <text key="action.mouse.scroll.up.name">Molette vers le haut</text>
+
+    <text key="action.cursor.strip.validate.mouse.clic.name">Validation d'une bande du curseur</text>
+    <text key="action.cursor.strip.validate.mouse.clic.description">Permet de déclencher le défilement de la bande-curseur, d'arrêter la première et deuxième ligne.</text>
+    <text key="action.cursor.strip.start.mouse.clic.name">Activation de la bande-curseur</text>
+    <text key="action.cursor.strip.start.mouse.clic.description">Permet d'activer la bande-curseur.</text>
+    <text key="action.cursor.strip.stop.mouse.clic.name">Désactivation de la bande-curseur</text>
+    <text key="action.cursor.strip.stop.mouse.clic.description">Permet de désacctiver la bande-curseur.</text>
+
   <!--org.lifecompanion.base.data.useaction.impl.computera.mousemove-->
   <text key="action.move.mouse.down.name">Déplacer vers le bas</text>
   <text key="action.move.mouse.down.static.description">Permet de déplacer le curseur de la souris virtuelle vers le
@@ -1771,10 +1782,18 @@
   <text key="progress.display.mode.empty">Vider</text>
   <text key="use.event.sub.category.sequence.general.name">Général</text>
   <text key="use.event.main.category.sequence.name">Séquences</text>
-  <text key="use.event.on.ua.sequence.finished.name">Fin d'une séquence</text>
+    <text key="use.event.on.ua.sequence.finished.name">Fin d'une séquence</text>
   <text key="use.event.on.ua.sequence.finished.description">Cet événement est généré à la fin d'une séquence et permet donc d'ajouter des actions en conséquences, par exemple revenir à la sélection des séquences ou encore prononcer un message de fin.</text>
-  <text key="use.event.main.category.sequence.description">Contient les événements générés par l'interaction avec les fonctions de séquences. Permet par exemple de réagir à la fin d'une séquence.</text>
-  <text key="user.action.display.filter.both">Toutes (étapes et sous-étapes)</text>
+    <text key="use.event.main.category.sequence.description">Contient les événements générés par l'interaction avec les fonctions de séquences. Permet par exemple de réagir à la fin d'une séquence.</text>
+
+    <text key="use.event.main.category.scanning.name">Bande-curseur</text>
+    <text key="use.event.on.ua.scanning.finished.name">Fin d'une bande-curseur</text>
+    <text key="use.event.on.ua.scanning.finished.description">Cet événement est généré à la fin d'une bande-curseur et permet donc d'ajouter des actions en conséquences, par exemple faire une action de la souris ou encore changer de grille</text>
+    <text key="use.event.main.category.scanning.description">Contient les événements générés par l'interaction avec les fonctions de bande-curseur. Permet par exemple de réagir à la fin d'une bande-curseur.</text>
+
+
+
+    <text key="user.action.display.filter.both">Toutes (étapes et sous-étapes)</text>
   <text key="user.action.display.filter.only.sub">Uniquement les sous-étapes</text>
   <text key="user.action.display.filter.only.not.sub">Uniquement les étapes</text>
   <text key="user.action.sequence.item.display.filter.field">Mode d'affichage</text>

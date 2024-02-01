@@ -28,14 +28,14 @@ import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseAction
 
 import java.util.Map;
 
-public class ScanningMouseStartClicAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
+public class ScanningMouseValidateClicAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
 
-    public ScanningMouseStartClicAction() {
+    public ScanningMouseValidateClicAction() {
         super(UseActionTriggerComponentI.class);
         this.category = DefaultUseActionSubCategories.CURSOR_STRIP;
-        this.nameID = "action.cursor.strip.start.mouse.clic.name";
+        this.nameID = "action.cursor.strip.validate.mouse.clic.name";
         this.order = 1000;
-        this.staticDescriptionID = "action.cursor.strip.start.mouse.clic.description";
+        this.staticDescriptionID = "action.cursor.strip.validate.mouse.clic.description";
         this.configIconPath = "computeraccess/cursor_strip.png";
         this.parameterizableAction = false;
         this.variableDescriptionProperty().set(this.getStaticDescription());
@@ -43,6 +43,6 @@ public class ScanningMouseStartClicAction extends SimpleUseActionImpl<UseActionT
 
     @Override
     public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
-        ScanningMouseController.INSTANCE.startMouseClic();
+        ScanningMouseController.INSTANCE.validateMouseClic();
     }
 }

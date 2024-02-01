@@ -69,10 +69,6 @@ public class ScanningMouseScene extends Scene implements LCViewInitHelper {
         lineY.endXProperty().bind(widthProperty());
         lineY.setStrokeWidth(5.0);
         lineY.setStroke(Color.RED);
-
-        this.root.getChildren().add(lineX);
-        this.root.getChildren().add(lineY);
-
     }
 
     @Override
@@ -91,7 +87,29 @@ public class ScanningMouseScene extends Scene implements LCViewInitHelper {
     public void initListener() {
     }
 
-    public void startMouseClic(BiConsumer<Double, Double> callback) {
+    public void startCursorStripClic(){
+        if (!this.root.getChildren().contains(lineX)) {
+            this.root.getChildren().add(lineX);
+        }
+        if (!this.root.getChildren().contains(lineY)) {
+            this.root.getChildren().add(lineY);
+        }
+    }
+
+    public void stopCursorStripClic(){
+        if (this.root.getChildren().contains(lineX)) {
+            this.root.getChildren().remove(lineX);
+        }
+        if (this.root.getChildren().contains(lineY)) {
+            this.root.getChildren().remove(lineY);
+        }
+    }
+
+
+    public void validateCursorStripClic(BiConsumer<Double, Double> callback) {
+        if (!this.root.getChildren().contains(lineX)) {
+            startCursorStripClic();
+        }
         LOGGER.info("First clic !");
         ScanningMouseController.INSTANCE.startMovingMouseForX();
 
@@ -104,6 +122,7 @@ public class ScanningMouseScene extends Scene implements LCViewInitHelper {
                 LOGGER.info("Third clic !");
                 ScanningMouseController.INSTANCE.stopMovingMouse();
                 callback.accept(lineX.getStartX(), lineY.getStartY());
+
                 return true;
             });
             return true;

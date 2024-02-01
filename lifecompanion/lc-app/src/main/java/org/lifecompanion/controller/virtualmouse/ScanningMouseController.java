@@ -27,22 +27,28 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Rectangle2D;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.lifecompanion.controller.lifecycle.AppModeController;
+import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
+import org.lifecompanion.model.api.configurationcomponent.FramePosition;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
 import org.lifecompanion.ui.virtualmouse.ScanningMouseStage;
 import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.util.javafx.RobotProvider;
+import org.lifecompanion.util.javafx.StageUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.lifecompanion.controller.configurationcomponent.ConfigListController;
-
 import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.util.HashSet;
+import java.util.Set;
 
 public enum ScanningMouseController implements ModeListenerI {
     INSTANCE;
@@ -94,6 +100,8 @@ public enum ScanningMouseController implements ModeListenerI {
     private final DoubleProperty timePerPixelSpeed;
 
     private boolean nextPage = true;
+    
+    private final Set<Runnable> onScanningFinishedListeners;
 
 
     ScanningMouseController() {
@@ -103,10 +111,12 @@ public enum ScanningMouseController implements ModeListenerI {
         this.timeline = new Timeline();
         this.timeline.setCycleCount(1);
         this.timeline.setAutoReverse(false);
+        this.onScanningFinishedListeners = new HashSet<>();
     }
 
+
     public ReadOnlyDoubleProperty mouseXProperty() {
-return this.mouseX;
+        return this.mouseX;
     }
 
     public ReadOnlyDoubleProperty mouseYProperty() {
@@ -188,9 +198,7 @@ return this.mouseX;
     private void checkInitFrameAndRobot(final Runnable callback) {
         if (this.scanningMouseStage != null) {
             if (this.scanningMouseStage.isShowing()) {
-                FXThreadUtils.runOnFXThread(() -> {
-                    callback.run();
-                });
+                FXThreadUtils.runOnFXThread(callback::run);
             } else {
                 FXThreadUtils.runOnFXThread(() -> {
                     this.scanningMouseStage.show();
@@ -211,24 +219,47 @@ return this.mouseX;
         }
     }
 
-    public void startMouseClic() {
+    public void validateMouseClic() {
         this.checkInitFrameAndRobot(() -> {
-            this.scanningMouseStage.getScanningMouseScene().startMouseClic((x, y) -> {
+            this.scanningMouseStage.getScanningMouseScene().validateCursorStripClic((x, y) -> {
                 LOGGER.info("Want to clic at : {}x{}", x, y);
                 this.mouseX.set(0);
                 this.mouseY.set(0);
                 this.mouseMoveDirect(x, y);
-                if ( nextPage ) {
-                    ConfigListController.INSTANCE.nextPage();
+                for (Runnable onTimerFinishedListener : onScanningFinishedListeners) {
+                    onTimerFinishedListener.run();
                 }
             });
         });
     }
 
+    public void startMouseClic() {
+        this.checkInitFrameAndRobot(() -> {
+            this.scanningMouseStage.getScanningMouseScene().startCursorStripClic();
+        });
+    }
+
+    public void stopMouseClic() {
+        this.checkInitFrameAndRobot(() -> {
+            this.scanningMouseStage.getScanningMouseScene().stopCursorStripClic();
+        });
+    }
 
     private void checkRobotInit() {
         if (this.robot == null) {
             this.robot = RobotProvider.getInstance();
+            try {
+                GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+                if (ge != null) {
+                    final AffineTransform defaultTransform = ge.getDefaultScreenDevice().getDefaultConfiguration().getDefaultTransform();
+                    if (defaultTransform != null) {
+                        this.frameXScale = defaultTransform.getScaleX();
+                        this.frameYScale = defaultTransform.getScaleY();
+                    }
+                }
+            } catch (Throwable t) {
+                LOGGER.warn("Couldn't get default screen scaling factor", t);
+            }
             Screen primaryScreen = Screen.getPrimary();
             Rectangle2D primaryScreenBounds = primaryScreen.getBounds();
             this.frameWidth = primaryScreenBounds.getWidth();
@@ -239,6 +270,10 @@ return this.mouseX;
         }
     }
     //========================================================================
+
+    public Set<Runnable> getOnScanningFinishedListeners() {
+        return onScanningFinishedListeners;
+    }
 
     // Class part : "Mode listener"
     //========================================================================
@@ -253,6 +288,7 @@ return this.mouseX;
     public void modeStop(final LCConfigurationI configuration) {
         this.timePerPixelSpeed.unbind();
         this.hideMouseFrame();
+        onScanningFinishedListeners.clear();
     }
     //========================================================================
 }
