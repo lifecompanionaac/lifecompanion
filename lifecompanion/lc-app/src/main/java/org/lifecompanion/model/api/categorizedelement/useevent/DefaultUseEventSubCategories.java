@@ -50,6 +50,10 @@ public enum DefaultUseEventSubCategories implements UseEventSubCategoryI {
 	//CONTROL
 	CLIC("use.event.sub.category.clic.name", DefaultUseEventMainCategories.CONTROL, CategorizedElementColorProvider.nextColor(DefaultUseEventMainCategories.CONTROL)), //
 	KEYS("use.event.sub.category.keys.name", DefaultUseEventMainCategories.CONTROL, CategorizedElementColorProvider.nextColor(DefaultUseEventMainCategories.CONTROL)),//
+
+	//DIVERS
+	MISCELLANEOUS("use.event.sub.category.timer.name", DefaultUseEventMainCategories.MISCELLANEOUS,
+			CategorizedElementColorProvider.nextColor(DefaultUseEventMainCategories.MISCELLANEOUS)), //
 	;
 	//========================================================================
 
