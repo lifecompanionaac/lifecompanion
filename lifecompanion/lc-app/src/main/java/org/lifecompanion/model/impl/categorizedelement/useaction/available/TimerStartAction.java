@@ -36,31 +36,31 @@ import org.lifecompanion.util.binding.BindingUtils;
 import java.util.Map;
 
 /**
- * @author Mathieu THEBAUD <math.thebaud@gmail.com>
+ * @author Oscar PAVOINE
  */
 public class TimerStartAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
-    private final IntegerProperty time;
+    private final IntegerProperty durationInMs;
 
     public TimerStartAction() {
         super(UseActionTriggerComponentI.class);
         this.order = 0;
         this.category = DefaultUseActionSubCategories.TIMER;
-        this.time = new SimpleIntegerProperty(1000);
+        this.durationInMs = new SimpleIntegerProperty(60_000);
         this.nameID = "action.start.timer.name";
         this.staticDescriptionID = "action.start.timer.static.description";
         this.configIconPath = "miscellaneous/icon_timer_start_action.png";
         this.parameterizableAction = true;
         this.variableDescriptionProperty()
-                .bind(TranslationFX.getTextBinding("action.start.timer.variable.description", BindingUtils.createDivide1000Binding(this.time)));
+                .bind(TranslationFX.getTextBinding("action.start.timer.variable.description", BindingUtils.createDivide1000Binding(this.durationInMs)));
     }
 
     @Override
     public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
-        UseTimerController.INSTANCE.startTimer(this.time.get());
+        UseTimerController.INSTANCE.startTimer(this.durationInMs.get());
     }
 
-    public IntegerProperty timerProperty() {
-        return this.time;
+    public IntegerProperty durationInMsProperty() {
+        return this.durationInMs;
     }
 
     // Class part : "IO"

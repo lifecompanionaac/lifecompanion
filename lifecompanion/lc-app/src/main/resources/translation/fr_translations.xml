@@ -678,10 +678,10 @@
 		texte actuellement dans l'éditeur.</text>
   <text key="action.save.note.name">Ouvrir/Fermer le bloc-notes</text>
   <!--org.lifecompanion.base.data.useaction.impl.miscellaneous.script-->
-    <text key="action.start.timer.name">Démarre et redémarre le minuteur</text>
-  <text key="action.start.timer.static.description">Décompte à partir d'une durée choisie.</text>
+    <text key="action.start.timer.name">Démarrer ou redémarrer le minuteur</text>
+  <text key="action.start.timer.static.description">Décompte à partir d'une durée choisie et met à jour les barres de progressions affichées.</text>
   <text key="action.start.timer.variable.description">Minuteur de {} secondes</text>
-    <text key="action.stop.timer.name">Arrête le minuteur</text>
+    <text key="action.stop.timer.name">Arrêter le minuteur</text>
   <text key="action.stop.timer.static.description">Arrête le minuteur en cours.</text>
   <text key="action.stop.timer.variable.description">Arrête le minuteur en cours</text>
   <text key="action.pause.name">Temporisation</text>
@@ -1782,10 +1782,10 @@
   <text key="use.event.on.ua.sequence.finished.description">Cet événement est généré à la fin d'une séquence et permet donc d'ajouter des actions en conséquences, par exemple revenir à la sélection des séquences ou encore prononcer un message de fin.</text>
   <text key="use.event.main.category.sequence.description">Contient les événements générés par l'interaction avec les fonctions de séquences. Permet par exemple de réagir à la fin d'une séquence.</text>
 
-    <text key="use.event.main.category.divers.name">Divers</text>
+    <text key="use.event.main.category.misc.name">Divers</text>
     <text key="use.event.on.ua.timer.finished.name">Fin d'un minuteur</text>
     <text key="use.event.on.ua.timer.finished.description">Cet événement est généré à la fin d'un minuteur et permet donc d'ajouter des actions en conséquences, par exemple émettre un son ou encore afficher un message.</text>
-    <text key="use.event.main.category.divers.description">Contient les événements générés par l'interaction avec les fonctions de LifeCompanion. Permet par exemple de réagir à la fin d'un minuteur.</text>
+    <text key="use.event.main.category.misc.description">Contient les événements générés par l'interaction avec les fonctions de LifeCompanion. Permet par exemple de réagir à la fin d'un minuteur.</text>
 
     <text key="user.action.display.filter.both">Toutes (étapes et sous-étapes)</text>
   <text key="user.action.display.filter.only.sub">Uniquement les sous-étapes</text>

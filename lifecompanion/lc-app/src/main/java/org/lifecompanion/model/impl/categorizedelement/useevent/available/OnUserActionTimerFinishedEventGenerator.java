@@ -24,6 +24,9 @@ import org.lifecompanion.model.api.categorizedelement.useevent.DefaultUseEventSu
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.impl.categorizedelement.useevent.BaseUseEventGeneratorImpl;
 
+/**
+ * @author Oscar PAVOINE
+ */
 public class OnUserActionTimerFinishedEventGenerator extends BaseUseEventGeneratorImpl {
 
     public OnUserActionTimerFinishedEventGenerator() {
@@ -33,7 +36,7 @@ public class OnUserActionTimerFinishedEventGenerator extends BaseUseEventGenerat
         this.category = DefaultUseEventSubCategories.MISCELLANEOUS;
         this.nameID = "use.event.on.ua.timer.finished.name";
         this.staticDescriptionID = "use.event.on.ua.timer.finished.description";
-        this.configIconPath = "timer/icon_on_timer_finished.png";
+        this.configIconPath = "miscellaneous/icon_on_timer_finished.png";
         this.variableDescriptionProperty().set(this.getStaticDescription());
     }
 

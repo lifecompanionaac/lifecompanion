@@ -59,12 +59,12 @@ public class TimerActionConfigView extends VBox implements UseActionConfiguratio
 
     @Override
     public void editEnds(final TimerStartAction element) {
-       element.timerProperty().set(durationPickerAutomaticItemTimeMs.durationProperty().get());
+       element.durationInMsProperty().set(durationPickerAutomaticItemTimeMs.durationProperty().get());
     }
 
     @Override
     public void editStarts(final TimerStartAction element, final ObservableList<UseVariableDefinitionI> possibleVariables) {
-        durationPickerAutomaticItemTimeMs.durationProperty().set(element.timerProperty().get());
+        durationPickerAutomaticItemTimeMs.durationProperty().set(element.durationInMsProperty().get());
         durationPickerAutomaticItemTimeMs.tryToPickBestUnit();
     }
 }

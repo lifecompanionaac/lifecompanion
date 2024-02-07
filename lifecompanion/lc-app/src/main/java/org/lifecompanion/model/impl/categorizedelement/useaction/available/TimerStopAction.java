@@ -34,7 +34,7 @@ import org.lifecompanion.model.impl.exception.LCException;
 import java.util.Map;
 
 /**
- * @author Mathieu THEBAUD <math.thebaud@gmail.com>
+ *  @author Oscar PAVOINE
  */
 public class TimerStopAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
 

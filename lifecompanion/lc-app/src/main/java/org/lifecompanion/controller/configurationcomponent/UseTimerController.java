@@ -21,21 +21,20 @@ package org.lifecompanion.controller.configurationcomponent;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
 import org.lifecompanion.util.javafx.FXThreadUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import java.util.HashSet;
 import java.util.Set;
 
 /**
- * @author Mathieu THEBAUD <math.thebaud@gmail.com>
+ * @author Oscar PAVOINE
  */
 public enum UseTimerController implements ModeListenerI {
     INSTANCE;
-    private final static Logger LOGGER = LoggerFactory.getLogger(UseTimerController.class);
     private final UseModeProgressDisplayerController progressController;
     private final Set<Runnable> onTimerFinishedListeners;
     private boolean isTimerRunning;
-    UseTimerController () {
+
+    UseTimerController() {
         progressController = UseModeProgressDisplayerController.INSTANCE;
         this.onTimerFinishedListeners = new HashSet<>();
     }
@@ -44,10 +43,9 @@ public enum UseTimerController implements ModeListenerI {
         return onTimerFinishedListeners;
     }
 
-    public void startTimer(int time){
-        LOGGER.info("startTimer");
+    public void startTimer(int timeInMs) {
         isTimerRunning = true;
-        FXThreadUtils.runOnFXThread(() -> progressController.launchTimer(time, () -> {
+        FXThreadUtils.runOnFXThread(() -> progressController.launchTimer(timeInMs, () -> {
             if (isTimerRunning) {
                 for (Runnable onTimerFinishedListener : onTimerFinishedListeners) {
                     onTimerFinishedListener.run();
@@ -56,22 +54,19 @@ public enum UseTimerController implements ModeListenerI {
         }));
     }
 
-    public void stopTimer(){
-        LOGGER.info("stopTimer");
+    public void stopTimer() {
         isTimerRunning = false;
-        FXThreadUtils.runOnFXThreadAndWaitFor(() -> progressController.hideAllProgress());
+        FXThreadUtils.runOnFXThread(progressController::hideAllProgress);
     }
 
     // START/STOP
     //========================================================================
     @Override
     public void modeStart(LCConfigurationI configuration) {
-        LOGGER.info("modeStart");
     }
 
     @Override
     public void modeStop(LCConfigurationI configuration) {
-        LOGGER.info("modeStop");
         onTimerFinishedListeners.clear();
     }
     //========================================================================
