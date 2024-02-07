@@ -6,6 +6,7 @@ import org.lifecompanion.model.api.useapi.EndpointHttpMethod;
 import org.lifecompanion.model.api.useapi.LifeCompanionControlServerEndpointI;
 import org.lifecompanion.model.impl.useapi.dto.ActionConfirmationDto;
 import org.lifecompanion.model.impl.useapi.dto.AppStatusDto;
+import org.lifecompanion.model.impl.useapi.dto.SetDeviceLocalIdDto;
 import org.lifecompanion.model.impl.useapi.dto.WindowBoundsDto;
 
 import java.util.Arrays;
@@ -68,6 +69,14 @@ public enum LifeCompanionControlServerEndpoint implements LifeCompanionControlSe
             null,
             List.of(ActionConfirmationDto.ok())
     ),
+    // HUB
+    HUB_REFRESH_DEVICE_LOCAL_ID("hub/device_local_id",
+            EndpointHttpMethod.POST,
+            "Set the local device ID to be used to sync the used configuration with default configuration for this device set on LifeCompanion Hub",
+            List.of(new SetDeviceLocalIdDto("foobar123")),
+            List.of(ActionConfirmationDto.ok())
+    )
+
     // TODO : configuration synchronization, backoffice secrets refresh, etc ?
 
     ;

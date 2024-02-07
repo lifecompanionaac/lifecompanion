@@ -82,7 +82,9 @@ public abstract class AbstractLoadUtilsTask<T> extends LCTask<T> {
         config.userActionSequencesProperty().set(sequences);
 
         AbstractLoadUtilsTask.LOGGER.info("Configuration successfully loaded from {}", directory);
-        configurationDescription.loadedConfigurationProperty().set(config);
+        if (configurationDescription != null) {
+            configurationDescription.loadedConfigurationProperty().set(config);
+        }
         return config;
     }
 

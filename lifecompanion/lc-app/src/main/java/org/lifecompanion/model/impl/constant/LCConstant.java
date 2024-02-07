@@ -99,6 +99,7 @@ public class LCConstant {
     // CONFIGURATION LOAD/SAVE
     // ========================================================================
     public final static String PROFILE_DIRECTORY = "profiles";
+    public final static String SYNC_CONFIGURATIONS = "sync-configurations";
     public final static String CONFIGURATION_DIRECTORY = "configurations";
     public final static String USER_COMP_DIRECTORY = "user-components";
     public final static String CONFIGURATION_RESOURCE_DIRECTORY = "resources";

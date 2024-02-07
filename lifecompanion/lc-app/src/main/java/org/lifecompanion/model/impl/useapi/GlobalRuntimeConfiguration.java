@@ -189,6 +189,25 @@ public enum GlobalRuntimeConfiguration implements GlobalRuntimeConfigurationI {
             "Enable LifeCompanion preview updates. This can be useful to test update before their production version to be ready."
     ),
 
+    // Hub
+    HUB_URL(
+            "hubUrl",
+            GlobalRuntimeConfigurationType.COMMAND_LINE,
+            "url",
+            "The hub URL for syncing features. When not specified, the default LifeCompanion hub will be used.",
+            "https://hub.lifecompanionaac.org",
+            1
+    ),
+    HUB_AUTH_TOKEN(
+            "hubAuthToken",
+            GlobalRuntimeConfigurationType.COMMAND_LINE,
+            "token",
+            "The auth token to be used when connecting to the LifeCompanion hub. Will overwrite any token that could be used while using the app (even if the user connects manually).",
+            "AbCdEf123456",
+            1,
+            true
+    ),
+
     // TODO : server side configuration synchronization
     // TODO : image repository from backoffice
 
