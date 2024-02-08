@@ -21,17 +21,33 @@ package org.lifecompanion.model.api.configurationcomponent;
 
 import org.lifecompanion.framework.commons.translation.Translation;
 
+import java.util.function.Function;
+
 /**
  * Represent the different way of drawing the virtual mouse.
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public enum VirtualMouseDrawing {
-	SIMPLE_CIRCLE("virtual.mouse.drawing.simple.circle"), TARGET("virtual.mouse.drawing.target");
+	SIMPLE_CIRCLE("virtual.mouse.drawing.simple.circle",w->w/2.0,h->h/2.0),
+	TARGET("virtual.mouse.drawing.target",w->w/2.0,h->h/2.0),
+	CURSOR_STRIP("virtual.mouse.drawing.cursor.strip",w->0.0,h->0.0);
 
 	private String text;
 
-	VirtualMouseDrawing(final String textP) {
+	private final Function<Double,Double> initialX, initialY;
+
+	VirtualMouseDrawing(final String textP,Function<Double,Double> initialX,Function<Double,Double>  initialY) {
 		this.text = textP;
+		this.initialX = initialX;
+		this.initialY = initialY;
+	}
+
+	public double getInitialX(double screenWidth){
+		return initialX.apply(screenWidth);
+	}
+
+	public double getInitialY(double screenHeight){
+		return initialY.apply(screenHeight);
 	}
 
 	public String getText() {
