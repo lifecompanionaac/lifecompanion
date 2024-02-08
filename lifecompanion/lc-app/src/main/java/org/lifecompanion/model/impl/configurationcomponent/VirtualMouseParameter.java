@@ -48,15 +48,20 @@ public class VirtualMouseParameter implements VirtualMouseParameterI {
     @XMLGenericProperty(VirtualMouseDrawing.class)
     private final ObjectProperty<VirtualMouseDrawing> mouseDrawing;
 
+    @XMLGenericProperty(Boolean.class)
+    private final ObjectProperty<Boolean> mouseAccuracy;
     private final IntegerProperty mouseSize;
     private final IntegerProperty mouseSpeed;
+    private IntegerProperty mouseMaxLoop;
 
     public VirtualMouseParameter() {
         this.mouseColor = new SimpleObjectProperty<>(Color.CADETBLUE);
         this.mouseStrokeColor = new SimpleObjectProperty<>(LCGraphicStyle.LC_BLACK);
         this.mouseDrawing = new SimpleObjectProperty<>(VirtualMouseDrawing.SIMPLE_CIRCLE);
+        this.mouseAccuracy = new SimpleObjectProperty<>(false);
         this.mouseSize = new SimpleIntegerProperty(10);//4 -> 20 : 10 = ratio 1.0
         this.mouseSpeed = new SimpleIntegerProperty(5);// 1 -> 10 : 5 = average speed
+        this.mouseMaxLoop = new SimpleIntegerProperty(3);
     }
 
     // Class part : "Properties"
@@ -84,6 +89,15 @@ public class VirtualMouseParameter implements VirtualMouseParameterI {
     @Override
     public IntegerProperty mouseSpeedProperty() {
         return this.mouseSpeed;
+    }
+    @Override
+    public ObjectProperty<Boolean> mouseAccuracyProperty() {
+        return this.mouseAccuracy;
+    }
+
+    @Override
+    public IntegerProperty mouseMaxLoopProperty() {
+        return this.mouseMaxLoop;
     }
     //========================================================================
 
