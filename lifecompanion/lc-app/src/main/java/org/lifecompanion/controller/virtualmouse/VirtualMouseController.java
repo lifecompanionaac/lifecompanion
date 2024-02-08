@@ -524,6 +524,7 @@ public enum VirtualMouseController implements ModeListenerI {
 
     @Override
     public void modeStop(final LCConfigurationI configuration) {
+        stopMovingMouse();
         this.sizeScale.unbind();
         this.timePerPixelSpeed.unbind();
         this.color.unbind();
