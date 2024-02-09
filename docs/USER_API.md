@@ -32,6 +32,10 @@ LifeCompanion can be launched using command line arguments to configure some of 
 |`-updateDownloadFinished`|*`NONE`*|Inform LifeCompanion that the update download was finished on last LifeCompanion use. When launched with the arg, LifeCompanion will try to install the newly downloaded update and restart itself.|
 |`-updateFinished`|*`NONE`*|Inform LifeCompanion that the update installation was done on the previous launch. Typically, this arg is added on LifeCompanion restart after update installation.|
 |`-enablePreviewUpdates`|*`NONE`*|Enable LifeCompanion preview updates. This can be useful to test update before their production version to be ready.|
+|`-hubUrl url`|`https://hub.lifecompanionaac.org`|The hub URL for syncing features. When not specified, the default LifeCompanion hub will be used.|
+|`-hubAuthToken token`|`AbCdEf123456`|The auth token to be used when connecting to the LifeCompanion hub. Will overwrite any token that could be used while using the app (even if the user connects manually).|
+|`-deviceSyncMode`|*`NONE`*|Enable the "device synchronization mode" : will launch directly LifeCompanion in use mode and will try to sync the current used configuration with the device default configuration from LifeCompanion HUB. This should be used only the HUB is connected and the device ID is injected.|
+|`-deviceLocalId deviceLocalId`|`foobar123`|Set the device local ID to be used by the `deviceSyncMode` when enabled. Allow launching LifeCompanion with a device local ID already set.|
 
 
 ## LifeCompanion JVM properties
@@ -128,7 +132,10 @@ Returns from server can depend on the sent request, but a lot of request will re
 - **[voice/stop](#voicestop)**
 - **[selection/stop](#selectionstop)**
 - **[selection/start](#selectionstart)**
+- **[selection/simulate/press](#selectionsimulatepress)**
+- **[selection/simulate/release](#selectionsimulaterelease)**
 - **[media/stop](#mediastop)**
+- **[hub/update/device-local-id](#hubupdatedevice-local-id)**
 
 ### /app/status
 
@@ -146,17 +153,20 @@ NONE
 **Returns** : 
 ```json
 {
-  "status": "STARTING"
+  "status": "STARTING",
+  "selectionModeStatus": "PAUSED"
 }
 ```
 ```json
 {
-  "status": "IN_USE_MODE"
+  "status": "IN_USE_MODE",
+  "selectionModeStatus": "PLAYING"
 }
 ```
 ```json
 {
-  "status": "STOPPING"
+  "status": "STOPPING",
+  "selectionModeStatus": "PAUSED"
 }
 ```
 ### /window/minimize
@@ -284,6 +294,58 @@ NONE
   "message": "OK"
 }
 ```
+### /selection/simulate/press
+
+**Description** : Simulate the selection press if the current selection mode is a scanning selection. The caller is responsible for later calling `selection/simulate/release`. Calling this service on a direct selection mode will have no effect.
+
+**Url structure** : `/api/v1/selection/simulate/press`
+
+**Method** : `POST`
+
+**Parameters** :
+```
+NONE
+```
+
+**Returns** : 
+```json
+{
+  "done": true,
+  "message": "OK"
+}
+```
+```json
+{
+  "done": false,
+  "message": "Current selection mode is not a scanning selection mode"
+}
+```
+### /selection/simulate/release
+
+**Description** : Simulate the selection release if the current selection mode is a scanning selection. Should be called only after calling `selection/simulate/press`. Calling this service on a direct selection mode will have no effect.
+
+**Url structure** : `/api/v1/selection/simulate/release`
+
+**Method** : `POST`
+
+**Parameters** :
+```
+NONE
+```
+
+**Returns** : 
+```json
+{
+  "done": true,
+  "message": "OK"
+}
+```
+```json
+{
+  "done": false,
+  "message": "Current selection mode is not a scanning selection mode"
+}
+```
 ### /media/stop
 
 **Description** : Stop any playing media (sound, video, etc.) and empty the media players queue to be sure that no media will be played without a new play request.
@@ -295,6 +357,28 @@ NONE
 **Parameters** :
 ```
 NONE
+```
+
+**Returns** : 
+```json
+{
+  "done": true,
+  "message": "OK"
+}
+```
+### /hub/update/device-local-id
+
+**Description** : Request the local device ID update to be used to sync the used configuration with default configuration for this device set on LifeCompanion Hub. Note that this should be combined with the `deviceSyncMode` parameter. The method will always immediately returns even if the change can be later considered by the app (config synchronization is async).
+
+**Url structure** : `/api/v1/hub/update/device-local-id`
+
+**Method** : `POST`
+
+**Parameters** :
+```json
+{
+  "deviceLocalId": "foobar123"
+}
 ```
 
 **Returns** : 
