@@ -19,119 +19,127 @@
 
 package org.lifecompanion.controller.hub;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import org.lifecompanion.controller.editaction.AsyncExecutorController;
-import org.lifecompanion.controller.io.task.SyncConfigFromHubTask;
+import org.lifecompanion.controller.io.IOHelper;
+import org.lifecompanion.controller.io.task.AbstractLoadUtilsTask;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
-import org.lifecompanion.framework.client.http.AppServerClient;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.framework.utils.LCNamedThreadFactory;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.lifecycle.LCStateListener;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
 import org.lifecompanion.model.impl.useapi.GlobalRuntimeConfiguration;
-import org.lifecompanion.util.ThreadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Supplier;
 
 public enum HubController implements ModeListenerI, LCStateListener {
     INSTANCE;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HubController.class);
 
-    /**
-     * The current LifeCompanion hub access token
-     */
-    private String hubApiToken;
-
-    /**
-     * LifeCompanion hub url
-     */
-    private String hubUrl;
-
     private String currentRunningConfigurationId, currentDeviceId;
+    private ExecutorService autoSyncService;
 
+    private AtomicReference<Supplier<String>> requestDeviceIdChange;
+
+    private final Object waitLock;
 
     HubController() {
-    }
-
-    public OkHttpClient getHttpClient() {
-        return AppServerClient.initializeClientForExternalCalls()
-                .addInterceptor((chain) -> {
-                    Request request = chain.request();
-                    if (StringUtils.isNotBlank(hubApiToken)) {
-                        request = request.newBuilder().addHeader("Authorization", "Bearer " + this.hubApiToken).build();
-                    }
-                    return chain.proceed(request.newBuilder().addHeader("Content-Type", "application/vnd.api+json")
-                            .addHeader("Accept", "application/vnd.api+json").build());
-                }).build();
-    }
-
-    public String getHubUrl() {
-        return StringUtils.endsWithIgnoreCase(hubUrl, "/") ? StringUtils.safeSubstring(hubUrl, 0, hubUrl.length()) : hubUrl;
-    }
-
-    public boolean isDifferentDeviceOrConfiguration(String deviceId, String configurationId) {
-        return StringUtils.isDifferent(currentDeviceId, deviceId) || StringUtils.isDifferent(currentRunningConfigurationId, configurationId);
+        waitLock = new Object();
+        requestDeviceIdChange = new AtomicReference<>();
     }
 
     @Override
     public void lcStart() {
-        // Get the token if available
-        if (GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.HUB_URL)) {
-            this.hubUrl = GlobalRuntimeConfigurationController.INSTANCE.getParameter(GlobalRuntimeConfiguration.HUB_URL);
-            LOGGER.info("LifeCompanion hub url is set with the {} parameter ({})", GlobalRuntimeConfiguration.HUB_URL.getName(), this.hubUrl);
-        }
-        if (GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.HUB_AUTH_TOKEN)) {
-            this.hubApiToken = GlobalRuntimeConfigurationController.INSTANCE.getParameter(GlobalRuntimeConfiguration.HUB_AUTH_TOKEN);
-            LOGGER.info("LifeCompanion hub auth token is set with the {} parameter and will be not change", GlobalRuntimeConfiguration.HUB_AUTH_TOKEN.getName());
+        if (GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DEVICE_SYNC_MODE)) {
+            LOGGER.info("{} detected, will launch background config sync thread", GlobalRuntimeConfiguration.DEVICE_SYNC_MODE.getName());
+            this.autoSyncService = Executors.newSingleThreadExecutor(LCNamedThreadFactory.daemonThreadFactory("HubController-config-sync"));
+            this.autoSyncService.submit(() -> {
+                while (true) {
+                    if (AppModeController.INSTANCE.isUseMode()) {
+                        // Detect for changes (including null values)
+                        Supplier<String> requestDeviceIdChangeVal = requestDeviceIdChange.getAndSet(null);
+                        if (requestDeviceIdChangeVal != null) {
+                            refreshDeviceLocalId(requestDeviceIdChangeVal.get());
+                        } else {
+                            refreshDeviceLocalId(currentDeviceId);
+                        }
+                        // Wait (allows to be notified when a change should be immediately done)
+                        synchronized (waitLock) {
+                            waitLock.wait(5_000);
+                        }
+                    }
+                }
+            });
         }
     }
 
     @Override
     public void lcExit() {
+        if (this.autoSyncService != null) {
+            this.autoSyncService.shutdownNow();
+        }
     }
-
 
     @Override
     public void modeStart(LCConfigurationI configuration) {
+        currentDeviceId = "user_1";//FIXME
         this.currentRunningConfigurationId = configuration.getID();
-        // FIXME : TO REMOVE
-        Thread testThread = new Thread(() -> {
-            while (true) {
-                if (!refreshing) {
-                    refreshDeviceLocalId("user_1");
-                    ThreadUtils.safeSleep(5_000);
-                }
-            }
-        });
-        testThread.setDaemon(true);
-        testThread.start();
     }
 
     @Override
     public void modeStop(LCConfigurationI configuration) {
     }
 
-    private boolean refreshing;
+    public void requestRefreshDeviceLocalId(String deviceLocalId) {
+        synchronized (waitLock) {
+            requestDeviceIdChange.set(() -> deviceLocalId);
+            waitLock.notify();
+        }
+    }
 
-    public void refreshDeviceLocalId(String deviceLocalId) {
-        refreshing = true;
-        SyncConfigFromHubTask syncConfigFromHubTask = new SyncConfigFromHubTask(deviceLocalId);
-        syncConfigFromHubTask.setOnSucceeded(e -> {
-            this.currentDeviceId = deviceLocalId;
-            LCConfigurationI value = syncConfigFromHubTask.getValue();
-            if (value != null) {
-                AppModeController.INSTANCE.switchUseModeConfiguration(value, null);
+    private void refreshDeviceLocalId(String deviceLocalId) {
+        boolean deviceIdChanged = StringUtils.isDifferent(currentDeviceId, deviceLocalId);
+        this.currentDeviceId = deviceLocalId;
+        if (StringUtils.isNotBlank(deviceLocalId)) {
+            LOGGER.info("Starting config sync for device {}", deviceLocalId);
+            try {
+                HubData.HubConfigurationIds configurationsIds = HubService.INSTANCE.getConfigurationIdsForDevice(deviceLocalId);
+                if (configurationsIds != null) {
+                    // Get/create the configuration directory to synchronize files
+                    File configurationDirectory = IOHelper.getConfigurationHubSyncDirectoryPath(deviceLocalId, configurationsIds.configurationId);
+                    configurationDirectory.mkdirs();
+                    LOGGER.info("Will try to synchronize configuration for device {}, config ID {}, config HUB ID {} into {}",
+                            deviceLocalId,
+                            configurationsIds.configurationId,
+                            configurationsIds.configurationHubId,
+                            configurationDirectory);
+
+                    // Synchronize the files locally
+                    boolean changeDetected = HubService.INSTANCE.synchronizeConfigurationFilesIn(configurationDirectory, configurationsIds);
+                    LOGGER.info("Configuration files synced, change detected : {}", changeDetected);
+
+                    // When changes are detected (or if the device/config changed), load and change the config
+                    if (changeDetected || deviceIdChanged || StringUtils.isDifferent(currentRunningConfigurationId, configurationsIds.configurationId)) {
+                        LCConfigurationI loadedConfiguration = AbstractLoadUtilsTask.loadConfiguration(configurationDirectory, null, null);
+                        AppModeController.INSTANCE.switchUseModeConfiguration(loadedConfiguration, null);
+                    } else {
+                        LOGGER.info("Ignored configuration sync as no change were detected");
+                    }
+                } else {
+                    LOGGER.warn("Didn't find any hub configuration for device local ID {}", deviceLocalId);
+                }
+            } catch (Throwable t) {
+                LOGGER.error("Could not sync configuration from HUB for device local ID {}", deviceLocalId, t);
             }
-            refreshing = false;
-        });
-        syncConfigFromHubTask.setOnFailed(e -> {
-            refreshing = false;
-        });
-        AsyncExecutorController.INSTANCE.addAndExecute(false, true, syncConfigFromHubTask);
+        } else {
+            LOGGER.warn("Incorrect given device local id {}", deviceLocalId);
+        }
     }
 }

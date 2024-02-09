@@ -25,6 +25,7 @@ import org.lifecompanion.controller.editaction.AsyncExecutorController;
 import org.lifecompanion.controller.editmode.ErrorHandlingController;
 import org.lifecompanion.controller.editmode.LCStateController;
 import org.lifecompanion.controller.hub.HubController;
+import org.lifecompanion.controller.hub.HubService;
 import org.lifecompanion.controller.metrics.SessionStatsController;
 import org.lifecompanion.controller.plugin.PluginController;
 import org.lifecompanion.controller.profile.UserCompController;
@@ -73,6 +74,7 @@ public enum LifeCompanionController {
             ErrorHandlingController.INSTANCE,
 
             HubController.INSTANCE,
+            HubService.INSTANCE,
 
             TrainingController.INSTANCE,
     };

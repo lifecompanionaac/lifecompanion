@@ -207,8 +207,12 @@ public enum GlobalRuntimeConfiguration implements GlobalRuntimeConfigurationI {
             1,
             true
     ),
+    DEVICE_SYNC_MODE(
+            "deviceSyncMode",
+            GlobalRuntimeConfigurationType.COMMAND_LINE,
+            "Enable the \"device synchronization mode\" : will launch directly LifeCompanion in use mode and will try to sync the current used configuration with the device default configuration from LifeCompanion HUB. This should be used only the HUB is connected and the device HUB is injected."
+    ),
 
-    // TODO : server side configuration synchronization
     // TODO : image repository from backoffice
 
     // Dev env

@@ -13,7 +13,7 @@ public class HubRoutes {
     static void init() {
         post(HUB_REFRESH_DEVICE_LOCAL_ID.getUrl(), (req, res) -> checkUseMode(() -> {
             SetDeviceLocalIdDto deviceLocalIdDto = fromJson(SetDeviceLocalIdDto.class, req);
-            HubController.INSTANCE.refreshDeviceLocalId(deviceLocalIdDto.getLocalId());
+            HubController.INSTANCE.requestRefreshDeviceLocalId(deviceLocalIdDto.getLocalId());
             return ActionConfirmationDto.ok();
         }));
     }
