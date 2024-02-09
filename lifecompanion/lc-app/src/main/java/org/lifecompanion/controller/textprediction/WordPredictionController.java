@@ -32,8 +32,10 @@ import org.lifecompanion.model.impl.textprediction.WordPrediction;
 import org.lifecompanion.model.impl.textprediction.predict4all.Predict4AllWordPredictor;
 import org.lifecompanion.util.javafx.FXThreadUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Controller for word prediction.
@@ -96,12 +98,32 @@ public class WordPredictionController extends AbstractPredictionController<WordP
     //========================================================================
 
     @Override
-    protected List<WordPredictionI> predict(String textBeforeCaret, String textAfterCaret, int count) {
+    protected List<WordPredictionI> predict(String textBeforeCaret, String textAfterCaret, int count) {// ajouter une condition d'activation du seuil ou non en fonction du toggle.
         synchronized (this.currentPredictor) {
             this.lastPredictionResult = this.currentPredictor.predict(textBeforeCaret, textAfterCaret, count);
-            return lastPredictionResult.getPredictions();
+
+            Double score = 0.0;//pour recupérer le max
+            for (WordPredictionI w : lastPredictionResult.getPredictions()) {
+                Double score_= w.getScore();
+                if (score_>score){
+                    score=score_;}
+            }
+            Double finalScore = score*10/100; // permet de définir de seuil de proba mini pour que la prédiction soit affichée.
+
+            List<WordPredictionI> predictions = lastPredictionResult.getPredictions();
+            ArrayList<WordPredictionI> final_predictions = new ArrayList<>();
+            for(WordPredictionI pred : predictions){
+               if(pred.getScore()>= finalScore){
+                   final_predictions.add(pred); // ajoute que les prédictions dont le score est suffisant (10% du plus élevé) pour être dans la liste finale
+               }
+            }
+            return final_predictions;//lastPredictionResult.getPredictions();// (List<WordPredictionI>) lastPredictionResult.getPredictions().stream().filter(wordPredictionI ->wordPredictionI.getScore()>= 0.10);
         }
     }
+
+
+
+
 
     @Override
     protected void dispatchPredictionResult(List<WordPredictionI> result, boolean waitingDispatch) {
