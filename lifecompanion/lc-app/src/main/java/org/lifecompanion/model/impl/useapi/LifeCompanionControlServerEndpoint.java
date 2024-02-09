@@ -19,7 +19,9 @@ public enum LifeCompanionControlServerEndpoint implements LifeCompanionControlSe
             EndpointHttpMethod.GET,
             "To get the LifeCompanion current status, will return containing information about the running instance (can be `STARTING`,`IN_USE_MODE`,`IN_EDIT_MODE` or `STOPPING`)",
             null,
-            List.of(new AppStatusDto(AppStatusDto.Status.STARTING), new AppStatusDto(AppStatusDto.Status.IN_USE_MODE), new AppStatusDto(AppStatusDto.Status.STOPPING))
+            List.of(new AppStatusDto(AppStatusDto.Status.STARTING, AppStatusDto.SelectionModeStatus.PAUSED),
+                    new AppStatusDto(AppStatusDto.Status.IN_USE_MODE, AppStatusDto.SelectionModeStatus.PLAYING),
+                    new AppStatusDto(AppStatusDto.Status.STOPPING, AppStatusDto.SelectionModeStatus.PAUSED))
     ),
     // Window
     WINDOW_MINIMIZE("window/minimize",
@@ -61,6 +63,18 @@ public enum LifeCompanionControlServerEndpoint implements LifeCompanionControlSe
             "Start the selection mode for the current used configuration. Will restore user interaction with LifeCompanion UI. Calling this service once while the selection mode is already started will have no effect.",
             null,
             List.of(ActionConfirmationDto.ok())
+    ),
+    SELECTION_SIMULATE_PRESS("selection/simulate/press",
+            EndpointHttpMethod.POST,
+            "Simulate the selection press if the current selection mode is a scanning selection. The caller is responsible for later calling `selection/simulate/release`. Calling this service on a direct selection mode will have no effect.",
+            null,
+            List.of(ActionConfirmationDto.ok(), ActionConfirmationDto.nok("Current selection mode is not a scanning selection mode"))
+    ),
+    SELECTION_SIMULATE_RELEASE("selection/simulate/release",
+            EndpointHttpMethod.POST,
+            "Simulate the selection release if the current selection mode is a scanning selection. Should be called only after calling `selection/simulate/press`. Calling this service on a direct selection mode will have no effect.",
+            null,
+            List.of(ActionConfirmationDto.ok(), ActionConfirmationDto.nok("Current selection mode is not a scanning selection mode"))
     ),
     // Media
     MEDIA_STOP("media/stop",
