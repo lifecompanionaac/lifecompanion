@@ -56,7 +56,7 @@ public class Predict4AllRootEntryConfigurationView extends VBox implements Gener
 
     private static final ObservableList<Integer> COUNT_FIRE_PRED_CORR = FXCollections.observableArrayList(0, 1, 2, 3, 4);
 
-    private ToggleSwitch toggleDynamicModelEnabled, toggleAddNewWord, toggleSeuil;
+    private ToggleSwitch toggleDynamicModelEnabled, toggleAddNewWord, toggleEnableMinWordPredictionScoreThreshold;
     private Spinner<Integer> spinnerMinUseCountToValidateNewWord;
     private ToggleSwitch toggleEnableCorrection;
     private Label labelMinCountToAddNewWords;
@@ -79,7 +79,7 @@ public class Predict4AllRootEntryConfigurationView extends VBox implements Gener
     @Override
     public void initUI() {
         // General configuration
-        this.toggleSeuil= new ToggleSwitch(Translation.getText("predict4all.config.seuil"));
+        this.toggleEnableMinWordPredictionScoreThreshold = new ToggleSwitch(Translation.getText("predict4all.config.enable.min.word.prediction.score.threshold"));
         this.toggleDynamicModelEnabled = new ToggleSwitch(Translation.getText("predict4all.config.enable.dynamic.model"));
         this.toggleAddNewWord = new ToggleSwitch(Translation.getText("predict4all.config.learn.new.words"));
         this.spinnerMinUseCountToValidateNewWord = FXControlUtils.createIntSpinner(1, 100, 4, 1, 150.0);
@@ -106,7 +106,7 @@ public class Predict4AllRootEntryConfigurationView extends VBox implements Gener
         buttonTrainingConfig.setAlignment(Pos.CENTER);
         buttonTrainingConfig.setMaxWidth(Double.MAX_VALUE);
 
-        this.toggleSeuil.setMaxWidth(Double.MAX_VALUE);
+        this.toggleEnableMinWordPredictionScoreThreshold.setMaxWidth(Double.MAX_VALUE);
         this.toggleDynamicModelEnabled.setMaxWidth(Double.MAX_VALUE);
         this.toggleAddNewWord.setMaxWidth(Double.MAX_VALUE);
 
@@ -135,10 +135,21 @@ public class Predict4AllRootEntryConfigurationView extends VBox implements Gener
         this.setPadding(new Insets(GeneralConfigurationStepViewI.PADDING));
         this.setSpacing(8.0);
         this.getChildren().addAll(
-                FXControlUtils.createTitleLabel("predict4all.config.part.title.prediction"), boxSpinnerMinCountPred, buttonDictionaryConfig,
-                FXControlUtils.createTitleLabel("predict4all.config.part.title.dynamic.model"), this.toggleSeuil, this.toggleDynamicModelEnabled, this.toggleAddNewWord, boxSpinnerCountValidateWords, buttonTrainingConfig,
-                FXControlUtils.createTitleLabel("predict4all.config.part.title.correction"), this.toggleEnableCorrection, boxSpinnerMinCountCorr, buttonCorrectionConfig,
-                new Separator(Orientation.HORIZONTAL), this.buttonTestingConfig
+                FXControlUtils.createTitleLabel("predict4all.config.part.title.prediction"),
+                boxSpinnerMinCountPred,
+                this.toggleEnableMinWordPredictionScoreThreshold,
+                buttonDictionaryConfig,
+                FXControlUtils.createTitleLabel("predict4all.config.part.title.dynamic.model"),
+                this.toggleDynamicModelEnabled,
+                this.toggleAddNewWord,
+                boxSpinnerCountValidateWords,
+                buttonTrainingConfig,
+                FXControlUtils.createTitleLabel("predict4all.config.part.title.correction"),
+                this.toggleEnableCorrection,
+                boxSpinnerMinCountCorr,
+                buttonCorrectionConfig,
+                new Separator(Orientation.HORIZONTAL),
+                this.buttonTestingConfig
         );
     }
 
@@ -212,7 +223,7 @@ public class Predict4AllRootEntryConfigurationView extends VBox implements Gener
         try {
             this.predictorModelDto = Predict4AllWordPredictorHelper.loadData(model.getID());
             // Update configuration
-            //this.toggleSeuil.setSelected(this.predictorModelDto.getPredictionParameter().isSeuil());
+            this.toggleEnableMinWordPredictionScoreThreshold.setSelected(currentConfiguration.getPredictionParameters().enableMinWordPredictionScoreThresholdProperty().get());
             this.toggleAddNewWord.setSelected(this.predictorModelDto.getPredictionParameter().isAddNewWordsEnabled());
             this.toggleDynamicModelEnabled.setSelected(this.predictorModelDto.getPredictionParameter().isDynamicModelEnabled());
             this.spinnerMinUseCountToValidateNewWord.getValueFactory().setValue(this.predictorModelDto.getPredictionParameter().getMinUseCountToValidateNewWord());
@@ -234,7 +245,7 @@ public class Predict4AllRootEntryConfigurationView extends VBox implements Gener
     public void afterHide() {
         if (this.predictorModelDto != null) {
             //
-            //this.predictorModelDto.getPredictionParameter().setSeuil(this.toggleSeuil.isSelected());
+            this.currentConfiguration.getPredictionParameters().enableMinWordPredictionScoreThresholdProperty().set(this.toggleEnableMinWordPredictionScoreThreshold.isSelected());
             this.predictorModelDto.getPredictionParameter().setAddNewWordsEnabled(this.toggleAddNewWord.isSelected());
             this.predictorModelDto.getPredictionParameter().setDynamicModelEnabled(this.toggleDynamicModelEnabled.isSelected());
             this.predictorModelDto.getPredictionParameter().setMinUseCountToValidateNewWord(this.spinnerMinUseCountToValidateNewWord.getValue());

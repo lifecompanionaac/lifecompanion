@@ -18,6 +18,8 @@
  */
 package org.lifecompanion.model.impl.configurationcomponent;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.jdom2.Element;
@@ -32,11 +34,13 @@ public class PredictionParameter implements PredictionParameterI {
     private StringProperty selectedWordPredictorId;
     private StringProperty selectedCharPredictorId;
     private StringProperty charPredictionSpaceChar;
+    private BooleanProperty enableMinWordPredictionScoreThreshold;
 
     public PredictionParameter() {
         this.selectedCharPredictorId = new SimpleStringProperty(this, "selectedCharPredictorId", AutoCharPredictionController.INSTANCE.getDefaultPredictor().getId());
         this.selectedWordPredictorId = new SimpleStringProperty(this, "selectedWordPredictorId", WordPredictionController.INSTANCE.getDefaultPredictor().getId());
         this.charPredictionSpaceChar = new SimpleStringProperty(this, "charPredictionSpaceChar", "_");
+        this.enableMinWordPredictionScoreThreshold = new SimpleBooleanProperty(this, "enableMinWordPredictionScoreThreshold",false);
     }
 
     @Override
@@ -52,6 +56,11 @@ public class PredictionParameter implements PredictionParameterI {
     @Override
     public StringProperty charPredictionSpaceCharProperty() {
         return this.charPredictionSpaceChar;
+    }
+
+    @Override
+    public BooleanProperty enableMinWordPredictionScoreThresholdProperty() {
+        return enableMinWordPredictionScoreThreshold;
     }
 
     // Class part : "IO"

@@ -19,6 +19,7 @@
 
 package org.lifecompanion.model.api.configurationcomponent;
 
+import javafx.beans.property.BooleanProperty;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.io.XMLSerializable;
 import org.lifecompanion.model.api.textprediction.BasePredictorI;
@@ -44,4 +45,9 @@ public interface PredictionParameterI extends XMLSerializable<IOContextI> {
 	 * @return the string that represent the space in char prediction (can be "_" but can also be longer that 1 char, e.g. "SPACE")
 	 */
 	public StringProperty charPredictionSpaceCharProperty();
+
+	/**
+	 * @return to enable the min word prediction score threshold (if enabled, only predictions with a score above the threshold will be displayed)
+	 */
+	BooleanProperty enableMinWordPredictionScoreThresholdProperty();
 }
