@@ -96,10 +96,7 @@ public abstract class AbstractDirectSelectionMode<T extends AbstractSelectionMod
 				UseActionController.INSTANCE.endEventOn(key, UseActionEvent.OVER, null);
 			}
 			//Fire the current next listener if present
-			if (this.nextSelectionListener != null) {
-				this.nextSelectionListener.get();
-				this.nextSelectionListener = null;
-			}
+			this.executeNextSelectionListener();
 		}
 	}
 
@@ -122,10 +119,7 @@ public abstract class AbstractDirectSelectionMode<T extends AbstractSelectionMod
 			this.validSelectionPressStarted();
 			if (this.parameters.fireActivationEventProperty().get() == FireActionEvent.ON_PRESS && this.isTimeBeforeRepeatCorrect()) {
 				this.activationDone();
-				if (this.nextSelectionListener != null) {
-					this.nextSelectionListener.get();
-					this.nextSelectionListener = null;
-				} else {
+				if (!executeNextSelectionListener()) {
 					UseActionController.INSTANCE.executeSimpleOn(keyP, UseActionEvent.ACTIVATION, null, this::handleActivationResult);
 				}
 			}
@@ -141,10 +135,7 @@ public abstract class AbstractDirectSelectionMode<T extends AbstractSelectionMod
 				if (this.parameters.fireActivationEventProperty().get() == FireActionEvent.ON_RELEASE && this.isTimeToActivationCorrect()
 						&& this.isTimeBeforeRepeatCorrect()) {
 					this.activationDone();
-					if (this.nextSelectionListener != null) {
-						this.nextSelectionListener.get();
-						this.nextSelectionListener = null;
-					} else {
+					if (!executeNextSelectionListener()) {
 						UseActionController.INSTANCE.executeSimpleOn(keyP, UseActionEvent.ACTIVATION, null, this::handleActivationResult);
 					}
 				}
@@ -154,18 +145,30 @@ public abstract class AbstractDirectSelectionMode<T extends AbstractSelectionMod
 		}
 	}
 
+	private boolean executeNextSelectionListener() {
+		Supplier<Boolean> savedListener = this.nextSelectionListener;
+		if (savedListener != null) {
+			this.nextSelectionListener = null;
+			savedListener.get();
+			return true;
+		} else return false;
+	}
+
 	/**
 	 * Called when a valid selection press is started on this key.<br>
 	 * This is usefull for subclass if they need to know if the activation will be done by selection.
 	 */
-	protected void validSelectionPressStarted() {}
+	protected void validSelectionPressStarted() {
+	}
 
 	/**
 	 * Called when actions are executed and ended.<br>
 	 * Subclass can use it to implement specific behavior.
+	 *
 	 * @param result action result (not null)
 	 */
-	protected void handleActivationResult(ActionExecutionResultI result) {}
+	protected void handleActivationResult(ActionExecutionResultI result) {
+	}
 	//========================================================================
 
 	@Override
@@ -186,7 +189,8 @@ public abstract class AbstractDirectSelectionMode<T extends AbstractSelectionMod
 	}
 
 	@Override
-	public void parameterChanged(final SelectionModeParameterI parameters) {}
+	public void parameterChanged(final SelectionModeParameterI parameters) {
+	}
 
 	// Class part : "Use progress mode"
 	//========================================================================
