@@ -179,6 +179,7 @@
   <text key="use.action.sub.category.notepad.name">Bloc note</text>
   <text key="use.action.sub.category.prediction.name">Prédiction</text>
   <text key="use.action.sub.category.script.name">Script et combinaison d'actions</text>
+  <text key="use.action.sub.category.timer.name">Minuteur</text>
   <text key="use.action.sub.category.selection.keys.name">Cases</text>
   <text key="use.action.sub.category.selection.scanning.mode.name">Défilement</text>
   <text key="use.action.sub.category.selection.mode.general.name">Général</text>
@@ -210,6 +211,7 @@
   <text key="use.event.sub.category.scanning.name">Bande-curseur</text>
   <text key="use.event.sub.category.status.name">Status</text>
   <text key="use.event.sub.category.variable.name">Variables</text>
+  <text key="use.event.sub.category.timer.name">Minuteur</text>
   <!--org.lifecompanion.app.instance-->
   <text key="double.run.detected.header">LifeCompanion était déjà lancé\nCe dialogue sera automatiquement masqué dans {} secondes</text>
   <text key="double.run.detected.message">Vous venez d'essayer de lancer LifeCompanion alors que
@@ -687,7 +689,12 @@
 		texte actuellement dans l'éditeur.</text>
   <text key="action.save.note.name">Ouvrir/Fermer le bloc-notes</text>
   <!--org.lifecompanion.base.data.useaction.impl.miscellaneous.script-->
-
+    <text key="action.start.timer.name">Démarrer ou redémarrer le minuteur</text>
+  <text key="action.start.timer.static.description">Décompte à partir d'une durée choisie et met à jour les barres de progressions affichées.</text>
+  <text key="action.start.timer.variable.description">Minuteur de {} secondes</text>
+    <text key="action.stop.timer.name">Arrêter le minuteur</text>
+  <text key="action.stop.timer.static.description">Arrête le minuteur en cours.</text>
+  <text key="action.stop.timer.variable.description">Arrête le minuteur en cours</text>
   <text key="action.pause.name">Temporisation</text>
   <text key="action.pause.static.description">Permet d'effectuer une temporisation d'une durée choisie entre deux
 		actions. Cela permet d'attendre un certains temps avant d'executer une action.</text>
@@ -1792,6 +1799,12 @@
     <text key="use.event.main.category.scanning.description">Contient les événements générés par l'interaction avec les fonctions de bande-curseur. Permet par exemple de réagir à la fin d'une bande-curseur.</text>
 
 
+  <text key="use.event.main.category.sequence.description">Contient les événements générés par l'interaction avec les fonctions de séquences. Permet par exemple de réagir à la fin d'une séquence.</text>
+
+    <text key="use.event.main.category.misc.name">Divers</text>
+    <text key="use.event.on.ua.timer.finished.name">Fin d'un minuteur</text>
+    <text key="use.event.on.ua.timer.finished.description">Cet événement est généré à la fin d'un minuteur et permet donc d'ajouter des actions en conséquences, par exemple émettre un son ou encore afficher un message.</text>
+    <text key="use.event.main.category.misc.description">Contient les événements générés par l'interaction avec les fonctions de LifeCompanion. Permet par exemple de réagir à la fin d'un minuteur.</text>
 
     <text key="user.action.display.filter.both">Toutes (étapes et sous-étapes)</text>
   <text key="user.action.display.filter.only.sub">Uniquement les sous-étapes</text>

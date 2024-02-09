@@ -24,10 +24,7 @@ import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.stage.Stage;
 import org.lifecompanion.controller.categorizedelement.useaction.UseActionController;
-import org.lifecompanion.controller.configurationcomponent.ConfigListController;
-import org.lifecompanion.controller.configurationcomponent.GlobalKeyEventController;
-import org.lifecompanion.controller.configurationcomponent.NoteKeyController;
-import org.lifecompanion.controller.configurationcomponent.UseModeProgressDisplayerController;
+import org.lifecompanion.controller.configurationcomponent.*;
 import org.lifecompanion.controller.configurationcomponent.dynamickey.KeyListController;
 import org.lifecompanion.controller.configurationcomponent.dynamickey.UserActionSequenceController;
 import org.lifecompanion.controller.easteregg.JPDRetirementController;
@@ -191,6 +188,7 @@ public enum AppModeController {
             NoteKeyController.INSTANCE, //
             ImageDictionaries.INSTANCE,//
             GlobalKeyEventController.INSTANCE,//
+            UseTimerController.INSTANCE,//
             SelectionModeController.INSTANCE,// Selection in last, because it will start scanning
             WinAutoHotKeyKeyboardReceiverController.INSTANCE // Need the "blocked keys" from other modes
     );

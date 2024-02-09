@@ -53,6 +53,9 @@ public enum DefaultUseEventSubCategories implements UseEventSubCategoryI {
 
 	//SCANNING
 	END_CURSOR_STRIP("use.event.sub.category.scanning.name", DefaultUseEventMainCategories.CURSOR_STRIP, CategorizedElementColorProvider.nextColor(DefaultUseEventMainCategories.CURSOR_STRIP)),//
+	//DIVERS
+	MISCELLANEOUS("use.event.sub.category.timer.name", DefaultUseEventMainCategories.MISCELLANEOUS,
+			CategorizedElementColorProvider.nextColor(DefaultUseEventMainCategories.MISCELLANEOUS)), //
 	;
 	//========================================================================
 

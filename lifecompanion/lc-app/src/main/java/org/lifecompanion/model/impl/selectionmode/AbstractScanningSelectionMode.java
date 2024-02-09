@@ -302,15 +302,23 @@ public abstract class AbstractScanningSelectionMode<T extends AbstractSelectionM
     }
 
     private void restartOrPlay() {
+        // Reset data
         Supplier<Boolean> savedNextSelectionListener = this.nextSelectionListener;
         this.nextSelectionListener = null;
-        if (savedNextSelectionListener != null && !savedNextSelectionListener.get()) {
-            this.restartScanningOnNextAction = false;
-            this.play();
-        } else {
-            this.restart();
-        }
         this.pauseForUntilNextSelection = false;
+        // When a listener is present, call it
+        boolean restart = savedNextSelectionListener == null || savedNextSelectionListener.get();
+        // Calling the listener may add another listener, we should then reconsider the value for "pauseForUntilNextSelection"
+        if (!pauseForUntilNextSelection) {
+            if (restart) {
+                this.restart();
+            } else {
+                this.restartScanningOnNextAction = false;
+                this.play();
+            }
+        } else {
+            LOGGER.info("Ignored restartOrPlay() as a new pause until next selection was requested when calling nextSelectionListener");
+        }
     }
 
     @Override
