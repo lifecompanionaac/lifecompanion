@@ -34,11 +34,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class SendIRAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
     private static final Logger LOGGER = LoggerFactory.getLogger(SendIRAction.class);
 
     private SendIRActionWrapper sendIRActionWrapper;
+
+    private final transient AtomicBoolean sending;
 
     public SendIRAction() {
         super(UseActionTriggerComponentI.class);
@@ -49,6 +52,7 @@ public class SendIRAction extends SimpleUseActionImpl<UseActionTriggerComponentI
         this.configIconPath = "flirc/icon_send_ir_code.png";
         this.parameterizableAction = true;
         this.sendIRActionWrapper = new SendIRActionWrapper();
+        this.sending = new AtomicBoolean(false);
         this.variableDescriptionProperty().set(getStaticDescription());
     }
 
@@ -58,14 +62,17 @@ public class SendIRAction extends SimpleUseActionImpl<UseActionTriggerComponentI
 
     @Override
     public void execute(UseActionEvent event, Map<String, UseVariableI<?>> variables) {
-        try {
-            IRCode irCode = sendIRActionWrapper.irCodeProperty().get();
-            if (irCode != null) {
-                FlircController.INSTANCE.sendIr(irCode);
+        if (!sending.getAndSet(true)) {
+            try {
+                IRCode irCode = sendIRActionWrapper.irCodeProperty().get();
+                if (irCode != null) {
+                    FlircController.INSTANCE.sendIr(irCode);
+                }
+            } catch (Throwable t) {
+                LOGGER.error("Could not send IR code", t);
+            } finally {
+                sending.set(false);
             }
-            // FIXME : error handling...
-        } catch (Exception e) {
-            throw new RuntimeException(e);
         }
     }
 

@@ -42,6 +42,7 @@
     <text key="flirc.plugin.ui.toggle.switch.long.press.threshold">Si activé, permet de simuler un bouton appuyé longtemps (réglage de la durée ci-dessous)</text>
     <text key="flirc.plugin.ui.long.press.slider.label.short">Court</text>
     <text key="flirc.plugin.ui.long.press.slider.label.long">Long</text>
+    <text key="flirc.plugin.ui.hardware.info">Permet de se servir de LifeCompanion comme une télécommande universelle en programmant des codes infrarouge sur des cases (par des actions). Compatible avec la clé FLIRC USB (2ème génération).</text>
 
     <!-- ALERT -->
     <text key="flirc.plugin.ui.alert.warning.similarity.header">L'apprentissage est de faible qualité</text>

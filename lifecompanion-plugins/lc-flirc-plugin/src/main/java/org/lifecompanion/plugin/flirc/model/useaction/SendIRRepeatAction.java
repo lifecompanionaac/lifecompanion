@@ -35,11 +35,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class SendIRRepeatAction extends RepeatActionBaseImpl<UseActionTriggerComponentI> {
     private static final Logger LOGGER = LoggerFactory.getLogger(SendIRRepeatAction.class);
 
-    private SendIRActionWrapper sendIRActionWrapper;
+    private final SendIRActionWrapper sendIRActionWrapper;
+
+    private final transient AtomicBoolean sending;
 
     public SendIRRepeatAction() {
         super(UseActionTriggerComponentI.class);
@@ -49,6 +52,7 @@ public class SendIRRepeatAction extends RepeatActionBaseImpl<UseActionTriggerCom
         this.staticDescriptionID = "flirc.plugin.use.action.send.repeat.ir.description";
         this.configIconPath = "flirc/icon_repeat_send_ir_code.png";
         this.parameterizableAction = true;
+        this.sending = new AtomicBoolean(false);
         this.sendIRActionWrapper = new SendIRActionWrapper();
         this.variableDescriptionProperty().set(getStaticDescription());
     }
@@ -75,14 +79,17 @@ public class SendIRRepeatAction extends RepeatActionBaseImpl<UseActionTriggerCom
 
     @Override
     protected void executeOnRepeat(UseActionEvent useActionEvent) {
-        try {
-            IRCode irCode = sendIRActionWrapper.irCodeProperty().get();
-            if (irCode != null) {
-                FlircController.INSTANCE.sendIr(irCode);
+        if (!sending.getAndSet(true)) {
+            try {
+                IRCode irCode = sendIRActionWrapper.irCodeProperty().get();
+                if (irCode != null) {
+                    FlircController.INSTANCE.sendIr(irCode);
+                }
+            } catch (Throwable t) {
+                LOGGER.error("Could not send IR code", t);
+            } finally {
+                sending.set(false);
             }
-            // FIXME : error handling...
-        } catch (Exception e) {
-            throw new RuntimeException(e);
         }
     }
 

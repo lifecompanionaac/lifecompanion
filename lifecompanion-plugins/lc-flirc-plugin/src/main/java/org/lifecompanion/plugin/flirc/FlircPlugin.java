@@ -27,8 +27,8 @@ public class FlircPlugin implements PluginI {
     }
 
     @Override
-    public String[] getDefaultConfigurations(String languageCode) {
-        return null;
+    public String[] getDefaultConfigurations(String languageCode){
+        return new String[]{"/configurations/" + languageCode + "_example-flirc-plugin-1.lcc"};
     }
     //========================================================================
 

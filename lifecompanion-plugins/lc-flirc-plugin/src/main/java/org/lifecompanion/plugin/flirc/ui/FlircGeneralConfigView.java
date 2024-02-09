@@ -90,9 +90,15 @@ public class FlircGeneralConfigView extends BorderPane implements GeneralConfigu
     public void initUI() {
         Label labelGeneralInfo = FXControlUtils.createTitleLabel(Translation.getText("flirc.plugin.ui.part.title.general.information"));
         toggleSwitchEnableDebugCharts = FXControlUtils.createToggleSwitch("flirc.plugin.ui.field.enable.debug.charts.toggle", "flirc.plugin.ui.field.enable.debug.charts.toggle.tooltip");
+
+        Label labelHardwareModel = new Label(Translation.getText("flirc.plugin.ui.hardware.info"));
+        labelHardwareModel.getStyleClass().add("text-wrap-enabled");
+
         buttonGetKeyInfo = FXControlUtils.createLeftTextButton(Translation.getText("flirc.plugin.ui.button.get.information"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.REFRESH).size(12).color(LCGraphicStyle.MAIN_PRIMARY),
                 null);
+
+
         GridPane.setHalignment(buttonGetKeyInfo, HPos.CENTER);
 
         labelInformation = new Label(Translation.getText("flirc.plugin.ui.label.no.information"));
@@ -118,6 +124,8 @@ public class FlircGeneralConfigView extends BorderPane implements GeneralConfigu
         int gridRowIndex = 0;
         gridPaneTotal.add(filler, 0, 0);
         gridPaneTotal.add(labelGeneralInfo, 0, gridRowIndex++, 2, 1);
+        gridPaneTotal.add(labelHardwareModel, 0, gridRowIndex, 2, 2);
+        gridRowIndex += 2;
         gridPaneTotal.add(toggleSwitchEnableDebugCharts, 0, gridRowIndex++, 2, 1);
         gridPaneTotal.add(buttonGetKeyInfo, 0, gridRowIndex++, 2, 1);
         gridPaneTotal.add(progressIndicatorLoadingInformation, 0, gridRowIndex, 2, 4);
