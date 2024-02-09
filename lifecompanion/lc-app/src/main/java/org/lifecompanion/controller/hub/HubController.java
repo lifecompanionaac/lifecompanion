@@ -59,6 +59,9 @@ public enum HubController implements ModeListenerI, LCStateListener {
     @Override
     public void lcStart() {
         if (GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DEVICE_SYNC_MODE)) {
+            if (GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DEVICE_LOCAL_ID)) {
+                this.currentDeviceId = GlobalRuntimeConfigurationController.INSTANCE.getParameter(GlobalRuntimeConfiguration.DEVICE_LOCAL_ID);
+            }
             LOGGER.info("{} detected, will launch background config sync thread", GlobalRuntimeConfiguration.DEVICE_SYNC_MODE.getName());
             this.autoSyncService = Executors.newSingleThreadExecutor(LCNamedThreadFactory.daemonThreadFactory("HubController-config-sync"));
             this.autoSyncService.submit(() -> {
@@ -99,6 +102,7 @@ public enum HubController implements ModeListenerI, LCStateListener {
 
     public void requestRefreshDeviceLocalId(String deviceLocalId) {
         synchronized (waitLock) {
+            LOGGER.info("Request a local device ID change to {}", deviceLocalId);
             requestDeviceIdChange.set(() -> deviceLocalId);
             waitLock.notify();
         }

@@ -210,7 +210,15 @@ public enum GlobalRuntimeConfiguration implements GlobalRuntimeConfigurationI {
     DEVICE_SYNC_MODE(
             "deviceSyncMode",
             GlobalRuntimeConfigurationType.COMMAND_LINE,
-            "Enable the \"device synchronization mode\" : will launch directly LifeCompanion in use mode and will try to sync the current used configuration with the device default configuration from LifeCompanion HUB. This should be used only the HUB is connected and the device HUB is injected."
+            "Enable the \"device synchronization mode\" : will launch directly LifeCompanion in use mode and will try to sync the current used configuration with the device default configuration from LifeCompanion HUB. This should be used only the HUB is connected and the device ID is injected."
+    ),
+    DEVICE_LOCAL_ID(
+            "deviceLocalId",
+            GlobalRuntimeConfigurationType.COMMAND_LINE,
+            "deviceLocalId",
+            "Set the device local ID to be used by the `deviceSyncMode` when enabled. Allow launching LifeCompanion with a device local ID already set.",
+            "foobar123",
+            1
     ),
 
     // TODO : image repository from backoffice

@@ -42,7 +42,7 @@ public enum HubService implements LCStateListener {
     INSTANCE;
 
     private final static int MAX_ATTEMPT_COUNT = 3;
-    private final static long PAUSE_BETWEEN_DOWNLOAD = 1000;//FIXME : delete
+    private final static long PAUSE_BETWEEN_DOWNLOAD = 0;//FIXME : delete
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HubService.class);
 
@@ -143,9 +143,12 @@ public enum HubService implements LCStateListener {
                     if (updateFiles.getAddedCount() + updateFiles.getModifiedCount() > 0) {
                         File tempDir = org.lifecompanion.util.IOUtils.getTempDir("config-sync-" + configurationIds.configurationHubId);
                         LOGGER.info("Temp download directory to sync configuration {} : {}", configurationIds.configurationHubId, tempDir);
+                        long start = System.currentTimeMillis();
                         downloadFilesFrom(configurationIds.configurationHubId, tempDir, updateFiles.added);
                         downloadFilesFrom(configurationIds.configurationHubId, tempDir, updateFiles.modified);
-                        LOGGER.info("Successfully downloaded every sync file, will now update local files");
+                        LOGGER.info("Successfully downloaded every sync {} files in {}s, will now update local files",
+                                updateFiles.getAddedCount() + updateFiles.getModifiedCount(),
+                                (System.currentTimeMillis() - start) / 1000.0);
                         copyToFinalDest(tempDir, configurationDirectory, updateFiles.added);
                         copyToFinalDest(tempDir, configurationDirectory, updateFiles.modified);
                     }

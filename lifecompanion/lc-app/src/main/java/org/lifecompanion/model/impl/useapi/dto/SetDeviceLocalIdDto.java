@@ -20,17 +20,17 @@
 package org.lifecompanion.model.impl.useapi.dto;
 
 public class SetDeviceLocalIdDto {
-    private String localId;
+    private String deviceLocalId;
 
-    public SetDeviceLocalIdDto(String localId) {
-        this.localId = localId;
+    public SetDeviceLocalIdDto(String deviceLocalId) {
+        this.deviceLocalId = deviceLocalId;
     }
 
-    public String getLocalId() {
-        return localId;
+    public String getDeviceLocalId() {
+        return deviceLocalId;
     }
 
-    public void setLocalId(String localId) {
-        this.localId = localId;
+    public void setDeviceLocalId(String deviceLocalId) {
+        this.deviceLocalId = deviceLocalId;
     }
 }
