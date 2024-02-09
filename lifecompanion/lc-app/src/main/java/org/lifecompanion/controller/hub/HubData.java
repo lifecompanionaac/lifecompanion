@@ -19,16 +19,19 @@
 
 package org.lifecompanion.controller.hub;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
 
 public class HubData {
-    static class HubConfigurationIds {
-        String configurationId,configurationHubId ;
+    static class HubConfigInfo {
+        String configurationId, configurationHubId;
+        ZonedDateTime updatedAt;
 
-        public HubConfigurationIds(String configurationId, String configurationHubId) {
+        public HubConfigInfo(String configurationId, String configurationHubId, ZonedDateTime updatedAt) {
             this.configurationId = configurationId;
             this.configurationHubId = configurationHubId;
+            this.updatedAt = updatedAt;
         }
     }
 
@@ -83,5 +86,6 @@ public class HubData {
 
     static class LcConfigAttributes {
         String localId;
+        ZonedDateTime updatedAt;
     }
 }

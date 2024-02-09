@@ -41,13 +41,14 @@ import java.util.function.Supplier;
 public enum HubController implements ModeListenerI, LCStateListener {
     INSTANCE;
 
+    private static final long CONFIG_CHECK_INTERVAL = 10_000;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(HubController.class);
 
     private String currentRunningConfigurationId, currentDeviceId;
     private ExecutorService autoSyncService;
 
-    private AtomicReference<Supplier<String>> requestDeviceIdChange;
-
+    private final AtomicReference<Supplier<String>> requestDeviceIdChange;
     private final Object waitLock;
 
     HubController() {
@@ -72,7 +73,7 @@ public enum HubController implements ModeListenerI, LCStateListener {
                         }
                         // Wait (allows to be notified when a change should be immediately done)
                         synchronized (waitLock) {
-                            waitLock.wait(5_000);
+                            waitLock.wait(CONFIG_CHECK_INTERVAL);
                         }
                     }
                 }
@@ -89,7 +90,6 @@ public enum HubController implements ModeListenerI, LCStateListener {
 
     @Override
     public void modeStart(LCConfigurationI configuration) {
-        currentDeviceId = "user_1";//FIXME
         this.currentRunningConfigurationId = configuration.getID();
     }
 
@@ -110,23 +110,34 @@ public enum HubController implements ModeListenerI, LCStateListener {
         if (StringUtils.isNotBlank(deviceLocalId)) {
             LOGGER.info("Starting config sync for device {}", deviceLocalId);
             try {
-                HubData.HubConfigurationIds configurationsIds = HubService.INSTANCE.getConfigurationIdsForDevice(deviceLocalId);
-                if (configurationsIds != null) {
+                HubData.HubConfigInfo configInfo = HubService.INSTANCE.getHubConfigInfoForDeviceLocalId(deviceLocalId);
+                if (configInfo != null) {
                     // Get/create the configuration directory to synchronize files
-                    File configurationDirectory = IOHelper.getConfigurationHubSyncDirectoryPath(deviceLocalId, configurationsIds.configurationId);
+                    File configurationDirectory = IOHelper.getConfigurationHubSyncDirectoryPath(deviceLocalId, configInfo.configurationId);
                     configurationDirectory.mkdirs();
                     LOGGER.info("Will try to synchronize configuration for device {}, config ID {}, config HUB ID {} into {}",
                             deviceLocalId,
-                            configurationsIds.configurationId,
-                            configurationsIds.configurationHubId,
+                            configInfo.configurationId,
+                            configInfo.configurationHubId,
                             configurationDirectory);
 
+
+                    // Check if there is an info file
+                    File configInfoFile = IOHelper.getConfigurationHubSyncInfoPath(deviceLocalId, configInfo.configurationId);
+                    HubConfigLocalData hubConfigLocalData = HubService.INSTANCE.getHubConfigLocalData(configInfoFile);
+
                     // Synchronize the files locally
-                    boolean changeDetected = HubService.INSTANCE.synchronizeConfigurationFilesIn(configurationDirectory, configurationsIds);
-                    LOGGER.info("Configuration files synced, change detected : {}", changeDetected);
+                    boolean changeDetected = false;
+                    if (HubService.INSTANCE.isFileSyncShouldBeDone(hubConfigLocalData, configInfo)) {
+                        changeDetected = HubService.INSTANCE.synchronizeConfigurationFilesIn(configurationDirectory, configInfo);
+                        LOGGER.info("Configuration files synced, file change detected : {}", changeDetected);
+                        HubService.INSTANCE.saveHubConfigLocalData(configInfoFile, new HubConfigLocalData(configInfo.updatedAt));
+                    } else {
+                        LOGGER.info("Ignored file sync as the local update date and distant update date are the same");
+                    }
 
                     // When changes are detected (or if the device/config changed), load and change the config
-                    if (changeDetected || deviceIdChanged || StringUtils.isDifferent(currentRunningConfigurationId, configurationsIds.configurationId)) {
+                    if (changeDetected || deviceIdChanged || StringUtils.isDifferent(currentRunningConfigurationId, configInfo.configurationId)) {
                         LCConfigurationI loadedConfiguration = AbstractLoadUtilsTask.loadConfiguration(configurationDirectory, null, null);
                         AppModeController.INSTANCE.switchUseModeConfiguration(loadedConfiguration, null);
                     } else {
@@ -139,6 +150,7 @@ public enum HubController implements ModeListenerI, LCStateListener {
                 LOGGER.error("Could not sync configuration from HUB for device local ID {}", deviceLocalId, t);
             }
         } else {
+            // TODO : should show an empty configuration
             LOGGER.warn("Incorrect given device local id {}", deviceLocalId);
         }
     }

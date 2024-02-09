@@ -34,6 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,6 +42,7 @@ public enum HubService implements LCStateListener {
     INSTANCE;
 
     private final static int MAX_ATTEMPT_COUNT = 3;
+    private final static long PAUSE_BETWEEN_DOWNLOAD = 1000;//FIXME : delete
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HubService.class);
 
@@ -106,20 +108,20 @@ public enum HubService implements LCStateListener {
 
     // SERVICES
     //========================================================================
-    public HubData.HubConfigurationIds getConfigurationIdsForDevice(String deviceLocalId) throws Exception {
+    public HubData.HubConfigInfo getHubConfigInfoForDeviceLocalId(String deviceLocalId) throws Exception {
         try (Response responseDeviceConfig = getHubClient().newCall(new Request.Builder().url(getHubUrl() + "/api/v1/lc-devices?include=config&filter[localId]=" + deviceLocalId).build()).execute()) {
             if (checkResponse(responseDeviceConfig)) {
                 HubData.GetDeviceConfigResult getDeviceConfigResult = JsonHelper.GSON.fromJson(responseDeviceConfig.body().string(), HubData.GetDeviceConfigResult.class);
                 if (!CollectionUtils.isEmpty(getDeviceConfigResult.included)) {
-                    // TODO : should use and cache update date when config is the same than current to avoid hash computing...
-                    return new HubData.HubConfigurationIds(getDeviceConfigResult.included.get(0).attributes.localId, getDeviceConfigResult.included.get(0).id);
+                    HubData.LcConfig config = getDeviceConfigResult.included.get(0);
+                    return new HubData.HubConfigInfo(config.attributes.localId, config.id, config.attributes.updatedAt);
                 }
             }
         }
         return null;
     }
 
-    public boolean synchronizeConfigurationFilesIn(File configurationDirectory, HubData.HubConfigurationIds configurationIds) throws Exception {
+    public boolean synchronizeConfigurationFilesIn(File configurationDirectory, HubData.HubConfigInfo configurationIds) throws Exception {
         // Create local file hashes
         Map<String, String> hashes = new HashMap<>();
         exploreAndHashFiles(configurationDirectory, configurationDirectory, hashes);
@@ -161,6 +163,31 @@ public enum HubService implements LCStateListener {
         return false;
     }
 
+    public HubConfigLocalData getHubConfigLocalData(File configInfoFile) {
+        if (configInfoFile.exists()) {
+            try {
+                return JsonHelper.GSON.fromJson(IOUtils.readFileLines(configInfoFile, StandardCharsets.UTF_8.name()), HubConfigLocalData.class);
+            } catch (Exception e) {
+                LOGGER.info("Could not read hub config local data", e);
+            }
+        }
+        return null;
+    }
+
+    public void saveHubConfigLocalData(File configInfoFile, HubConfigLocalData hubConfigLocalData) {
+        try (PrintWriter pw = new PrintWriter(configInfoFile, StandardCharsets.UTF_8)) {
+            JsonHelper.GSON.toJson(hubConfigLocalData, pw);
+        } catch (Exception e) {
+            LOGGER.info("Could not write hub config local data", e);
+        }
+    }
+
+    public boolean isFileSyncShouldBeDone(HubConfigLocalData hubConfigLocalData, HubData.HubConfigInfo configurationsIds) {
+        if (hubConfigLocalData == null) return true;
+        else {
+            return configurationsIds.updatedAt.isAfter(hubConfigLocalData.getUpdatedAt());
+        }
+    }
     //========================================================================
 
     // INTERNAL
@@ -211,8 +238,9 @@ public enum HubService implements LCStateListener {
                     return null;
                 }
             }, updatedFileData.hash, new File(tempDir + File.separator + relativePath));
-            // FIXME delete
-            Thread.sleep(1000);
+            if (PAUSE_BETWEEN_DOWNLOAD > 0) {
+                Thread.sleep(PAUSE_BETWEEN_DOWNLOAD);
+            }
         }
     }
 
@@ -263,6 +291,7 @@ public enum HubService implements LCStateListener {
             }
         }
     }
+
 
     //========================================================================
 
