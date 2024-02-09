@@ -42,7 +42,7 @@ public enum HubService implements LCStateListener {
     INSTANCE;
 
     private final static int MAX_ATTEMPT_COUNT = 3;
-    private final static long PAUSE_BETWEEN_DOWNLOAD = 0;//FIXME : delete
+    private final static long PAUSE_BETWEEN_DOWNLOAD = 0;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HubService.class);
 

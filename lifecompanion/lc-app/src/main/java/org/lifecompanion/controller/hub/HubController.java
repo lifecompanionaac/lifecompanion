@@ -142,6 +142,7 @@ public enum HubController implements ModeListenerI, LCStateListener {
 
                     // When changes are detected (or if the device/config changed), load and change the config
                     if (changeDetected || deviceIdChanged || StringUtils.isDifferent(currentRunningConfigurationId, configInfo.configurationId)) {
+                        this.currentRunningConfigurationId = configInfo.configurationId;
                         LCConfigurationI loadedConfiguration = AbstractLoadUtilsTask.loadConfiguration(configurationDirectory, null, null);
                         AppModeController.INSTANCE.switchUseModeConfiguration(loadedConfiguration, null);
                     } else {
@@ -154,7 +155,7 @@ public enum HubController implements ModeListenerI, LCStateListener {
                 LOGGER.error("Could not sync configuration from HUB for device local ID {}", deviceLocalId, t);
             }
         } else {
-            // TODO : should show an empty configuration
+            // TODO : should show an empty configuration ?
             LOGGER.warn("Incorrect given device local id {}", deviceLocalId);
         }
     }
