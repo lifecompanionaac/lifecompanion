@@ -33,6 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.time.ZonedDateTime;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicReference;
@@ -142,21 +143,41 @@ public enum HubController implements ModeListenerI, LCStateListener {
 
                     // When changes are detected (or if the device/config changed), load and change the config
                     if (changeDetected || deviceIdChanged || StringUtils.isDifferent(currentRunningConfigurationId, configInfo.configurationId)) {
-                        this.currentRunningConfigurationId = configInfo.configurationId;
-                        LCConfigurationI loadedConfiguration = AbstractLoadUtilsTask.loadConfiguration(configurationDirectory, null, null);
-                        AppModeController.INSTANCE.switchUseModeConfiguration(loadedConfiguration, null);
+                        loadAndChangeConfigTo(configInfo.configurationId, configurationDirectory);
+                        HubService.INSTANCE.saveDeviceLocalData(deviceLocalId, new HubDeviceLocalData(configInfo.configurationId, ZonedDateTime.now()));
                     } else {
                         LOGGER.info("Ignored configuration sync as no change were detected");
                     }
                 } else {
                     LOGGER.warn("Didn't find any hub configuration for device local ID {}", deviceLocalId);
+                    tryToLoadLastConfigurationFor(deviceLocalId);
                 }
             } catch (Throwable t) {
-                LOGGER.error("Could not sync configuration from HUB for device local ID {}", deviceLocalId, t);
+                LOGGER.error("Could not sync configuration from HUB for device local ID {}, will try to load the previously loaded configuration for device ID", deviceLocalId, t);
+                tryToLoadLastConfigurationFor(deviceLocalId);
             }
         } else {
-            // TODO : should show an empty configuration ?
+            // TODO : should load an empty config ? is blank device means "clean"
             LOGGER.warn("Incorrect given device local id {}", deviceLocalId);
+        }
+    }
+
+    private void loadAndChangeConfigTo(String configId, File configurationDirectory) throws Exception {
+        this.currentRunningConfigurationId = configId;
+        LCConfigurationI loadedConfiguration = AbstractLoadUtilsTask.loadConfiguration(configurationDirectory, null, null);
+        AppModeController.INSTANCE.switchUseModeConfiguration(loadedConfiguration, null);
+    }
+
+    private void tryToLoadLastConfigurationFor(String deviceLocalId) {
+        LOGGER.info("Will try to load the last local configuration for {}", deviceLocalId);
+        try {
+            HubDeviceLocalData deviceLocalData = HubService.INSTANCE.getDeviceLocalData(deviceLocalId);
+            if (deviceLocalData != null && StringUtils.isNotBlank(deviceLocalData.getConfigurationId())) {
+                File configurationDirectory = IOHelper.getConfigurationHubSyncDirectoryPath(deviceLocalId, deviceLocalData.getConfigurationId());
+                loadAndChangeConfigTo(deviceLocalData.getConfigurationId(), configurationDirectory);
+            }
+        } catch (Throwable t) {
+            LOGGER.warn("Could not load last local configuration for {}", deviceLocalId, t);
         }
     }
 }

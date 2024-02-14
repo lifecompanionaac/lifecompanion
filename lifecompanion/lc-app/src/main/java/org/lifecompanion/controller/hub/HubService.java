@@ -20,6 +20,7 @@
 package org.lifecompanion.controller.hub;
 
 import okhttp3.*;
+import org.lifecompanion.controller.io.IOHelper;
 import org.lifecompanion.controller.io.JsonHelper;
 import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
 import org.lifecompanion.framework.client.http.AppServerClient;
@@ -121,6 +122,7 @@ public enum HubService implements LCStateListener {
         return null;
     }
 
+
     public boolean synchronizeConfigurationFilesIn(File configurationDirectory, HubData.HubConfigInfo configurationIds) throws Exception {
         // Create local file hashes
         Map<String, String> hashes = new HashMap<>();
@@ -164,6 +166,27 @@ public enum HubService implements LCStateListener {
             }
         }
         return false;
+    }
+
+    public HubDeviceLocalData getDeviceLocalData(String deviceLocalId) {
+        File deviceLocalDataPath = IOHelper.getDeviceLocalDataPath(deviceLocalId);
+        if (deviceLocalDataPath.exists()) {
+            try {
+                return JsonHelper.GSON.fromJson(IOUtils.readFileLines(deviceLocalDataPath, StandardCharsets.UTF_8.name()), HubDeviceLocalData.class);
+            } catch (Exception e) {
+                LOGGER.info("Could not read hub device local data", e);
+            }
+        }
+        return null;
+    }
+
+    public void saveDeviceLocalData(String deviceLocalId, HubDeviceLocalData hubDeviceLocalData) {
+        File deviceLocalDataPath = IOHelper.getDeviceLocalDataPath(deviceLocalId);
+        try (PrintWriter pw = new PrintWriter(deviceLocalDataPath, StandardCharsets.UTF_8)) {
+            JsonHelper.GSON.toJson(hubDeviceLocalData, pw);
+        } catch (Exception e) {
+            LOGGER.info("Could not write hub device local data", e);
+        }
     }
 
     public HubConfigLocalData getHubConfigLocalData(File configInfoFile) {
