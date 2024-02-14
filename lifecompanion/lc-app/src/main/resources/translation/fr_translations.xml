@@ -15,6 +15,7 @@
   <text key="general.config.scene.cancel.warning.header">Configuration modifiée</text>
   <text key="general.config.scene.cancel.warning.message">Vous avez des modifications sur la configuration qui ne sont pas enregistrées. En fermant cette fenêtre, ces changements seront perdus.</text>
   <text key="virtual.mouse.drawing.target">Cible</text>
+  <text key="virtual.mouse.drawing.pointing">Souris directionnelle</text>
   <text key="virtual.mouse.drawing.cursor.strip">Bande-curseur</text>
   <text key="tooltip.keylist.drag.drop.swap.keys">Inverser "{}" et "{}"</text>
   <text key="tooltip.keylist.drag.drop.move.to">Déplacer "{}" dans "{}"</text>
@@ -569,12 +570,8 @@
 		dans un élément défilable)</text>
   <text key="action.mouse.scroll.up.name">Molette vers le haut</text>
 
-    <text key="action.cursor.strip.validate.mouse.clic.name">Validation d'une bande du curseur</text>
-    <text key="action.cursor.strip.validate.mouse.clic.description">Permet de déclencher le défilement de la bande-curseur, d'arrêter la première et deuxième ligne.</text>
-    <text key="action.cursor.strip.start.mouse.clic.name">Activation de la bande-curseur</text>
-    <text key="action.cursor.strip.start.mouse.clic.description">Permet d'activer la bande-curseur.</text>
-    <text key="action.cursor.strip.stop.mouse.clic.name">Désactivation de la bande-curseur</text>
-    <text key="action.cursor.strip.stop.mouse.clic.description">Permet de désacctiver la bande-curseur.</text>
+    <text key="action.cursor.strip.validate.mouse.clic.name">Clic gauche de la bande-curseur</text>
+    <text key="action.cursor.strip.validate.mouse.clic.description">Permet de déclencher le défilement de la bande-curseur, de l'arrêter et de faire un clic gauche au croisement des deux lignes.</text>
 
   <!--org.lifecompanion.base.data.useaction.impl.computera.mousemove-->
   <text key="action.move.mouse.down.name">Déplacer vers le bas</text>
@@ -1382,6 +1379,8 @@
   <text key="virtual.mouse.stroke.color">Couleur du contour du curseur virtuel</text>
   <text key="virtual.mouse.size">Taille du curseur virtuel</text>
   <text key="virtual.mouse.speed">Vitesse de déplacement</text>
+  <text key="virtual.mouse.accuracy">Mode précision de la bande-curseur</text>
+  <text key="virtual.mouse.loop.max">Boucle maximale de la bande-curseur</text>
   <!--org.lifecompanion.config.data.component.profile-->
   <text key="profile.alert.no.selected.header">Aucun profil sélectionné</text>
   <text key="profile.alert.no.selected.message">Vous devez créer ou sélectionner un profil pour pouvoir utiliser LifeCompanion.\nVoulez vous quitter l'application ?</text>
@@ -1639,8 +1638,10 @@
   <text key="user.comp.empty.list">Aucun modèle pour le type recherché</text>
   <text key="general.configuration.info.label.no.information">Configuration non sauvegardée</text>
   <text key="general.configuration.mouse.config.part.circle.mouse.explain">Permet de configurer la souris virtuelle,
-		qui peut être utilisée grâce aux actions "Actions de souris" de la catégorie "Accès à l'ordinateur"</text>
-  <text key="general.configuration.mouse.config.part.circle.mouse.title">Configuration de la souris "flèches"</text>
+		qui peut être utilisée grâce aux actions "Actions de souris" et "Action de la bande-curseur" de la catégorie "Accès à l'ordinateur"</text>
+  <text key="general.configuration.mouse.config.part.circle.mouse.title">Configuration générale de la souris virtuelle</text>
+  <text key="general.configuration.mouse.config.part.arrow.mouse.title">Configuration de la souris "directionnelle"</text>
+  <text key="general.configuration.mouse.config.part.cursor.strip.mouse.title">Configuration de la bande-curseur</text>
   <text key="general.configuration.predictors.button.configure.char.prediction">Configurer la prédiction de
 		caractères</text>
   <text key="general.configuration.predictors.button.configure.word.prediction">Configurer la prédiction de mots</text>
@@ -1728,8 +1729,11 @@
 		détecter d'appui de touches de clavier.</text>
   <text key="tooltip.explain.use.param.virtual.mouse.color">La couleur du curseur de la souris virtuelle.</text>
   <text key="tooltip.explain.use.param.virtual.mouse.stroke.color">La couleur du contour du curseur de la souris virtuelle.</text>
-  <text key="tooltip.explain.use.param.virtual.mouse.draw">Permet de changer le dessin du curseur de la souris
+  <text key="tooltip.explain.use.param.virtual.mouse.type">Permet de choisir le type de souris virtuelle.</text>
+    <text key="tooltip.explain.use.param.virtual.mouse.type">Permet de changer le type de souris virtuelle.</text>
+    <text key="tooltip.explain.use.param.virtual.mouse.draw">Permet de changer le dessin du curseur de la souris
 		virtuelle.</text>
+    <text key="tooltip.explain.use.param.virtual.mouse.loop.max">Permet de limiter le nombre de fois que la ligne fait une aller/retour avant de s'arrêter.</text>
   <text key="tooltip.explain.use.param.virtual.mouse.size">La taille de la souris virtuelle affichée (plus la
 		valeur est élevée, plus le curseur virtuel sera grand)</text>
   <text key="tooltip.explain.use.param.virtual.mouse.speed">La vitesse de déplacement de la souris virtuelle (plus
@@ -1747,7 +1751,8 @@
   <text key="tooltip.voice.play.example">Prononce la phrase avec les paramètres sélectionnés</text>
   <text key="useevent.part.action.title">Actions au déclenchement de l'événement sélectionné</text>
   <text key="useevent.part.event.title">Événements déclencheur</text>
-  <text key="virtual.mouse.drawing.label">Type de curseur virtuel</text>
+  <text key="virtual.mouse.type.label">Type de curseur virtuel</text>
+  <text key="virtual.mouse.drawing.label">Dessin du curseur virtuel</text>
   <text key="voice.synthesizer.configure.pron.exceptions">Modifier la prononciation de la synthèse</text>
   <text key="voice.synthesizer.engine">Moteur</text>
   <text key="voice.synthesizer.pitch">Hauteur</text>
@@ -1792,12 +1797,6 @@
     <text key="use.event.on.ua.sequence.finished.name">Fin d'une séquence</text>
   <text key="use.event.on.ua.sequence.finished.description">Cet événement est généré à la fin d'une séquence et permet donc d'ajouter des actions en conséquences, par exemple revenir à la sélection des séquences ou encore prononcer un message de fin.</text>
     <text key="use.event.main.category.sequence.description">Contient les événements générés par l'interaction avec les fonctions de séquences. Permet par exemple de réagir à la fin d'une séquence.</text>
-
-    <text key="use.event.main.category.scanning.name">Bande-curseur</text>
-    <text key="use.event.on.ua.scanning.finished.name">Fin d'une bande-curseur</text>
-    <text key="use.event.on.ua.scanning.finished.description">Cet événement est généré à la fin d'une bande-curseur et permet donc d'ajouter des actions en conséquences, par exemple faire une action de la souris ou encore changer de grille</text>
-    <text key="use.event.main.category.scanning.description">Contient les événements générés par l'interaction avec les fonctions de bande-curseur. Permet par exemple de réagir à la fin d'une bande-curseur.</text>
-
 
   <text key="use.event.main.category.sequence.description">Contient les événements générés par l'interaction avec les fonctions de séquences. Permet par exemple de réagir à la fin d'une séquence.</text>
 

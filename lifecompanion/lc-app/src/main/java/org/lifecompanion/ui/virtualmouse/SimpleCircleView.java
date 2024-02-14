@@ -24,12 +24,12 @@ import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.StrokeType;
-import org.lifecompanion.controller.virtualmouse.VirtualMouseController;
+import org.lifecompanion.controller.virtualmouse.PointingMouseController;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class SimpleCircleView extends Group implements VirtualMouseDrawingI {
+public class SimpleCircleView extends Group implements PointingMouseDrawingI {
 
     private final static double BASE_CIRCLE_RADIUS = 40.0, BASE_CIRCLE_STROKE = 10.0, BASE_EXT_INT_STROKE = 4.0;
 
@@ -60,7 +60,7 @@ public class SimpleCircleView extends Group implements VirtualMouseDrawingI {
     }
 
     @Override
-    public void bind(final VirtualMouseController mouseController) {
+    public void bind(final PointingMouseController mouseController) {
         this.layoutXProperty().bind(mouseController.mouseXProperty());
         this.layoutYProperty().bind(mouseController.mouseYProperty());
 

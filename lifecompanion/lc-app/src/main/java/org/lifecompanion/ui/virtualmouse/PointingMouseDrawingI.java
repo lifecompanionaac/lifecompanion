@@ -20,12 +20,12 @@
 package org.lifecompanion.ui.virtualmouse;
 
 import javafx.scene.Node;
-import org.lifecompanion.controller.virtualmouse.VirtualMouseController;
+import org.lifecompanion.controller.virtualmouse.PointingMouseController;
 
-public interface VirtualMouseDrawingI {
+public interface PointingMouseDrawingI {
 	Node getView();
 
-	void bind(VirtualMouseController mouseController);
+	void bind(PointingMouseController mouseController);
 
 	void unbind();
 }

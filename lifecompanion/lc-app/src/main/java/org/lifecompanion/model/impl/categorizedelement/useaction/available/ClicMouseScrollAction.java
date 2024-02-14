@@ -19,7 +19,7 @@
 
 package org.lifecompanion.model.impl.categorizedelement.useaction.available;
 
-import org.lifecompanion.controller.virtualmouse.VirtualMouseController;
+import org.lifecompanion.controller.virtualmouse.PointingMouseController;
 import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseActionSubCategories;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
@@ -46,6 +46,6 @@ public class ClicMouseScrollAction extends SimpleUseActionImpl<UseActionTriggerC
 
     @Override
     public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
-        VirtualMouseController.INSTANCE.pressMouseMiddleClicWithoutNoVirtualPosition();
+        PointingMouseController.INSTANCE.pressMouseMiddleClicWithoutNoVirtualPosition();
     }
 }

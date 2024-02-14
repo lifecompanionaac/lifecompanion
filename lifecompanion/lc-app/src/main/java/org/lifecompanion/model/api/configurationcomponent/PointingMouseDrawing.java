@@ -27,15 +27,16 @@ import java.util.function.Function;
  * Represent the different way of drawing the virtual mouse.
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
-public enum VirtualMouseDrawing {
-	POINTING("virtual.mouse.drawing.pointing",w->w/2.0,h->h/2.0),
-	CURSOR_STRIP("virtual.mouse.drawing.cursor.strip",w->0.0,h->0.0);
+public enum PointingMouseDrawing {
+		SIMPLE_CIRCLE("virtual.mouse.drawing.simple.circle",w->w/2.0,h->h/2.0),
+		TARGET("virtual.mouse.drawing.target",w->w/2.0,h->h/2.0);
+
 
 	private String text;
 
 	private final Function<Double,Double> initialX, initialY;
 
-	VirtualMouseDrawing(final String textP,Function<Double,Double> initialX,Function<Double,Double>  initialY) {
+	PointingMouseDrawing(final String textP, Function<Double,Double> initialX, Function<Double,Double>  initialY) {
 		this.text = textP;
 		this.initialX = initialX;
 		this.initialY = initialY;

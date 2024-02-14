@@ -24,6 +24,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.paint.Color;
 import org.jdom2.Element;
+import org.lifecompanion.model.api.configurationcomponent.PointingMouseDrawing;
 import org.lifecompanion.model.api.configurationcomponent.VirtualMouseDrawing;
 import org.lifecompanion.model.api.configurationcomponent.VirtualMouseParameterI;
 import org.lifecompanion.model.impl.exception.LCException;
@@ -46,17 +47,27 @@ public class VirtualMouseParameter implements VirtualMouseParameterI {
     private final ObjectProperty<Color> mouseStrokeColor;
 
     @XMLGenericProperty(VirtualMouseDrawing.class)
-    private final ObjectProperty<VirtualMouseDrawing> mouseDrawing;
+    private final ObjectProperty<VirtualMouseDrawing> mainMouseDrawing;
+
+    @XMLGenericProperty(PointingMouseDrawing.class)
+    private final ObjectProperty<PointingMouseDrawing> secondaryMouseDrawing;
+
+    @XMLGenericProperty(Boolean.class)
+    private final ObjectProperty<Boolean> mouseAccuracy;
 
     private final IntegerProperty mouseSize;
     private final IntegerProperty mouseSpeed;
+    private final IntegerProperty mouseMaxLoop;
 
     public VirtualMouseParameter() {
         this.mouseColor = new SimpleObjectProperty<>(Color.CADETBLUE);
         this.mouseStrokeColor = new SimpleObjectProperty<>(LCGraphicStyle.LC_BLACK);
-        this.mouseDrawing = new SimpleObjectProperty<>(VirtualMouseDrawing.SIMPLE_CIRCLE);
-        this.mouseSize = new SimpleIntegerProperty(10);//4 -> 20 : 10 = ratio 1.0
-        this.mouseSpeed = new SimpleIntegerProperty(5);// 1 -> 10 : 5 = average speed
+        this.mainMouseDrawing = new SimpleObjectProperty<>(VirtualMouseDrawing.POINTING);
+        this.secondaryMouseDrawing = new SimpleObjectProperty<>(PointingMouseDrawing.SIMPLE_CIRCLE);
+        this.mouseAccuracy = new SimpleObjectProperty<>(false);
+        this.mouseSize = new SimpleIntegerProperty(10);
+        this.mouseSpeed = new SimpleIntegerProperty(5);
+        this.mouseMaxLoop = new SimpleIntegerProperty(3);
     }
 
     // Class part : "Properties"
@@ -72,8 +83,13 @@ public class VirtualMouseParameter implements VirtualMouseParameterI {
     }
 
     @Override
-    public ObjectProperty<VirtualMouseDrawing> mouseDrawingProperty() {
-        return this.mouseDrawing;
+    public ObjectProperty<VirtualMouseDrawing> mainMouseDrawingProperty() {
+        return this.mainMouseDrawing;
+    }
+
+    @Override
+    public ObjectProperty<PointingMouseDrawing> secondaryMouseDrawingProperty() {
+        return this.secondaryMouseDrawing;
     }
 
     @Override
@@ -84,6 +100,15 @@ public class VirtualMouseParameter implements VirtualMouseParameterI {
     @Override
     public IntegerProperty mouseSpeedProperty() {
         return this.mouseSpeed;
+    }
+    @Override
+    public ObjectProperty<Boolean> mouseAccuracyProperty() {
+        return this.mouseAccuracy;
+    }
+
+    @Override
+    public IntegerProperty mouseMaxLoopProperty() {
+        return this.mouseMaxLoop;
     }
     //========================================================================
 

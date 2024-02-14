@@ -22,8 +22,8 @@ package org.lifecompanion.ui.virtualmouse;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.lifecompanion.controller.virtualmouse.VirtualMouseController;
-import org.lifecompanion.model.api.configurationcomponent.VirtualMouseDrawing;
+import org.lifecompanion.controller.virtualmouse.PointingMouseController;
+import org.lifecompanion.model.api.configurationcomponent.PointingMouseDrawing;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,8 +36,8 @@ import javafx.scene.paint.Color;
  * Scene to display the virtual mouse components.
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
-public class VirtualMouseScene extends Scene implements LCViewInitHelper {
-	private final static Logger LOGGER = LoggerFactory.getLogger(VirtualMouseScene.class);
+public class PointingMouseScene extends Scene implements LCViewInitHelper {
+	private final static Logger LOGGER = LoggerFactory.getLogger(PointingMouseScene.class);
 	/**
 	 * Root for this scene
 	 */
@@ -46,9 +46,9 @@ public class VirtualMouseScene extends Scene implements LCViewInitHelper {
 	/**
 	 * All possible drawing
 	 */
-	private final Map<VirtualMouseDrawing, VirtualMouseDrawingI> possiblesDrawing;
+	private final Map<PointingMouseDrawing, PointingMouseDrawingI> possiblesDrawing;
 
-	public VirtualMouseScene(final Group root) {
+	public PointingMouseScene(final Group root) {
 		super(root);
 		this.root = root;
 		this.possiblesDrawing = new HashMap<>();
@@ -60,16 +60,16 @@ public class VirtualMouseScene extends Scene implements LCViewInitHelper {
 	@Override
 	public void initUI() {
 		this.setFill(Color.TRANSPARENT);
-		this.possiblesDrawing.put(VirtualMouseDrawing.SIMPLE_CIRCLE, new SimpleCircleView());
-		this.possiblesDrawing.put(VirtualMouseDrawing.TARGET, new TargetView());
+		this.possiblesDrawing.put(PointingMouseDrawing.SIMPLE_CIRCLE, new SimpleCircleView());
+		this.possiblesDrawing.put(PointingMouseDrawing.TARGET, new TargetView());
 	}
 
 	@Override
 	public void initBinding() {
-		VirtualMouseController mouseController = VirtualMouseController.INSTANCE;
+		PointingMouseController mouseController = PointingMouseController.INSTANCE;
 		mouseController.mouseDrawingProperty().addListener((obs, ov, nv) -> {
 			if (ov != null) {
-				VirtualMouseDrawingI previousDrawing = this.possiblesDrawing.get(ov);
+				PointingMouseDrawingI previousDrawing = this.possiblesDrawing.get(ov);
 				if (previousDrawing != null) {
 					previousDrawing.unbind();
 					this.root.getChildren().remove(previousDrawing.getView());
@@ -80,14 +80,14 @@ public class VirtualMouseScene extends Scene implements LCViewInitHelper {
 		this.setNewMouseDrawing(mouseController, mouseController.mouseDrawingProperty().get());
 	}
 
-	private void setNewMouseDrawing(final VirtualMouseController mouseController, final VirtualMouseDrawing nv) {
+	private void setNewMouseDrawing(final PointingMouseController mouseController, final PointingMouseDrawing nv) {
 		if (nv != null) {
-			VirtualMouseDrawingI newDrawing = this.possiblesDrawing.get(nv);
+			PointingMouseDrawingI newDrawing = this.possiblesDrawing.get(nv);
 			if (newDrawing != null) {
 				newDrawing.bind(mouseController);
 				this.root.getChildren().add(newDrawing.getView());
 			} else {
-				VirtualMouseScene.LOGGER.warn("Didn't find any view instance for {}", nv);
+				PointingMouseScene.LOGGER.warn("Didn't find any view instance for {}", nv);
 			}
 		}
 	}

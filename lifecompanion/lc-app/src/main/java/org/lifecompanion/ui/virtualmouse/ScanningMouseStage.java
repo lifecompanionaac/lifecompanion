@@ -20,7 +20,7 @@
 package org.lifecompanion.ui.virtualmouse;
 
 import javafx.geometry.Rectangle2D;
-import javafx.scene.Group;
+import javafx.scene.layout.Pane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -55,8 +55,6 @@ public class ScanningMouseStage extends Stage {
 
     // Class part : "Stage"
     //========================================================================
-    private ScanningMouseScene scanningMouseScene;
-
     @SuppressWarnings("deprecation")
     private ScanningMouseStage() {
         //Stage parameters
@@ -72,14 +70,8 @@ public class ScanningMouseStage extends Stage {
         this.setOnShown(e1 -> StageUtils.setFocusableInternalAPI(this, false));
         this.centerOnScreen();
         //Scene
-        this.scanningMouseScene = new ScanningMouseScene(new Group());
-        this.setScene(scanningMouseScene);
+        this.setScene(new ScanningMouseScene(new Pane()));
     }
-
-    public ScanningMouseScene getScanningMouseScene() {
-        return scanningMouseScene;
-    }
-
     //========================================================================
 
 }
