@@ -26,6 +26,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
+import javafx.stage.FileChooser;
 import org.jdom2.Document;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
@@ -34,9 +35,12 @@ import org.lifecompanion.controller.editaction.AsyncExecutorController;
 import org.lifecompanion.controller.editaction.GlobalActions;
 import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.controller.editmode.ErrorHandlingController;
+import org.lifecompanion.controller.editmode.FileChooserType;
+import org.lifecompanion.controller.editmode.LCFileChoosers;
 import org.lifecompanion.controller.io.IOHelper;
 import org.lifecompanion.controller.io.task.GenerateRandomConfigurationTask;
 import org.lifecompanion.controller.io.task.GenerateTechDemoConfigurationTask;
+import org.lifecompanion.controller.io.task.ImportKeylistFromJsonTask;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.profile.ProfileController;
 import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
@@ -44,7 +48,6 @@ import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.io.FileNameUtils;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
-import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.model.api.configurationcomponent.IdentifiableComponentI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
@@ -53,16 +56,14 @@ import org.lifecompanion.model.impl.configurationcomponent.dynamickey.KeyListLea
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.impl.useapi.GlobalRuntimeConfiguration;
 import org.lifecompanion.util.DesktopUtils;
-import org.lifecompanion.util.LangUtils;
 import org.lifecompanion.util.javafx.FXControlUtils;
 import org.lifecompanion.util.javafx.FXThreadUtils;
+import org.lifecompanion.util.javafx.FXUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -83,7 +84,7 @@ public class MiscConfigSubmenu extends ScrollPane implements LCViewInitHelper, U
      * Button to open folders
      */
     private Button buttonOpenRootFolder, buttonOpenCurrentProfileFolder, buttonOpenCurrentConfigFolder, buttonExecuteGC, buttonOpenConfigCleanXml, buttonDetectKeylistDuplicates, buttonSetKeylistNodesShape,
-            buttonGenerateTechDemoConfiguration, buttonGenerateRandomConfiguration;
+            buttonGenerateTechDemoConfiguration, buttonGenerateRandomConfiguration, buttonImportJsonFile;
 
     private Label labelMemoryInfo;
 
@@ -147,11 +148,12 @@ public class MiscConfigSubmenu extends ScrollPane implements LCViewInitHelper, U
         buttonGenerateRandomConfiguration = this.createButton("button.testing.random.configuration");
         this.buttonDetectKeylistDuplicates = this.createButton("button.detect.keylist.duplicates");
         this.buttonSetKeylistNodesShape = this.createButton("button.set.keylist.node.shape");
+        this.buttonImportJsonFile = this.createButton("button.import.json.file.keylist");
 
         // Developers : to test your feature, create and add your nodes here and make sure "org.lifecompanion.debug.dev.env" property is enabled
         if (GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.PROP_DEV_MODE)) {
             boxChildren.getChildren()
-                    .addAll(labelTitleTesting, buttonGenerateTechDemoConfiguration, buttonDetectKeylistDuplicates, buttonGenerateRandomConfiguration, buttonSetKeylistNodesShape);
+                    .addAll(labelTitleTesting, buttonGenerateTechDemoConfiguration, buttonDetectKeylistDuplicates, buttonGenerateRandomConfiguration, buttonSetKeylistNodesShape, buttonImportJsonFile);
         }
     }
 
@@ -212,6 +214,26 @@ public class MiscConfigSubmenu extends ScrollPane implements LCViewInitHelper, U
         });
         this.buttonSetKeylistNodesShape.setOnAction(e -> {
             setKeylistShapes();
+        });
+        this.buttonImportJsonFile.setOnAction(e -> {
+            File jsonFile = LCFileChoosers.getOtherFileChooser(Translation.getText("keylist.json.selector.title"),
+                    new FileChooser.ExtensionFilter("JSON", List.of("*.json")),
+                    FileChooserType.OTHER_MISC_NO_EXTERNAL).showOpenDialog(FXUtils.getSourceWindow(buttonImportJsonFile));
+            if (jsonFile != null) {
+                ImportKeylistFromJsonTask task = new ImportKeylistFromJsonTask(jsonFile);
+                task.setOnSucceeded(event -> {
+                    List<KeyListNodeI> value = task.getValue();
+                    final LCConfigurationI configuration = AppModeController.INSTANCE.getEditModeContext()
+                            .getConfiguration();
+                    if (configuration != null) {
+                        final KeyListNodeI keyListNodes = configuration.rootKeyListNodeProperty().get();
+                        keyListNodes.getChildren().clear();
+                        keyListNodes.getChildren().addAll(value);
+                    }
+                });
+                AsyncExecutorController.INSTANCE.addAndExecute(true, false, task);
+            }
+
         });
     }
 

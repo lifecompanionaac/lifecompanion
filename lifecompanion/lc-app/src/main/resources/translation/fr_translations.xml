@@ -3752,4 +3752,8 @@
     <text key="use.variable.current.profile.name">Nom du profil courant</text>
     <text key="use.variable.current.profile.description">Contient le nom du profil LifeCompanion actuellement utilisé</text>
     <text key="use.variable.current.profile.example">Mathieu</text>
+    <text key="button.import.json.file.keylist">Importer une liste de case en json</text>
+    <text key="task.import.keylist.from.json.title">Importer une liste de case en json</text>
+    <text key="task.import.keylist.from.json.title">Importer une liste de case en json</text>
+    <text key="keylist.json.selector.title">Importer une liste de case en json</text>
 </texts>
