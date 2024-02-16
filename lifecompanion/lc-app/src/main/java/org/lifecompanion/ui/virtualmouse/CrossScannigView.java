@@ -18,8 +18,8 @@ public class CrossScannigView extends Pane implements ScanningMouseDrawingI {
     public List<Line> lines;
     private final Double windowsWidth;
     private final Double windowsHeight;
-    private static Line left;
-    private static Line right;
+    private final Line left;
+    private final Line right;
     private final Line top;
     private final Line bottom;
     private final Line  accuracyLeft;

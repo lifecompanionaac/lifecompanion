@@ -52,13 +52,15 @@ import java.awt.event.MouseEvent;
 public enum ScanningMouseController implements ModeListenerI {
     INSTANCE;
 
+    // TODO : all double values used should be defined as constant and explained (ex 75.0)
+
     private static final Logger LOGGER = LoggerFactory.getLogger(ScanningMouseController.class);
 
     private static final double TIME_PER_PIXEL = 25.0;
 
     private static final int NUMBER_OF_FRAME_CHECK = 10;
 
-    private static final Interpolator MOVING_INTERPOLATOR = Interpolator.EASE_IN;
+    private static final Interpolator MOVING_INTERPOLATOR = Interpolator.EASE_IN; // TODO to discuss : linear ?
 
     /**
      * Timeline to animate mouse movement
@@ -95,11 +97,12 @@ public enum ScanningMouseController implements ModeListenerI {
     /**
      * Type of mouse drawing
      */
-    private final ObjectProperty<VirtualMouseType> typeMouseDrawing;
+    private final ObjectProperty<VirtualMouseType> mouseType;
 
     /**
      * Visibility of the mouse accuracy
      */
+    // TODO : change to BooleanProperty
     private final ObjectProperty<Boolean> visibilityMouseX;
     private final ObjectProperty<Boolean> visibilityMouseY;
     private final ObjectProperty<Boolean> visibilityMouseXAccuracy;
@@ -116,7 +119,7 @@ public enum ScanningMouseController implements ModeListenerI {
 
     private boolean lineAccuracy = false;
 
-    private int nbLoop = 0;
+    private int currentLoopCount = 0;
 
     ScanningMouseController() {
         this.timeline = new Timeline();
@@ -130,7 +133,7 @@ public enum ScanningMouseController implements ModeListenerI {
         this.timePerPixelSpeed = new SimpleDoubleProperty();
         this.color = new SimpleObjectProperty<>();
         this.strokeColor = new SimpleObjectProperty<>();
-        this.typeMouseDrawing = new SimpleObjectProperty<>();
+        this.mouseType = new SimpleObjectProperty<>();
         this.visibilityMouseX = new SimpleObjectProperty<>(false);
         this.visibilityMouseY = new SimpleObjectProperty<>(false);
         this.visibilityMouseXAccuracy = new SimpleObjectProperty<>(false);
@@ -178,8 +181,8 @@ public enum ScanningMouseController implements ModeListenerI {
         return this.strokeColor;
     }
 
-    public ReadOnlyObjectProperty<VirtualMouseType> mouseDrawingProperty() {
-        return this.typeMouseDrawing;
+    public ReadOnlyObjectProperty<VirtualMouseType> mouseTypeProperty() {
+        return this.mouseType;
     }
 
     public ReadOnlyObjectProperty<Boolean> visibilityMouseXProperty() {
@@ -210,29 +213,29 @@ public enum ScanningMouseController implements ModeListenerI {
                 this.visibilityMouseXAccuracy.set(true);
                 this.visibilityMouseYAccuracy.set(true);
                 this.lineAccuracy = false;
-                this.nbLoop = 0;
+                this.currentLoopCount = 0;
                 startMovingLineRight();
                 SelectionModeController.INSTANCE.pauseCurrentScanningUntilNextSelection(() -> {
                     stopMovingMouse();
                     this.mouseXAccuracy.set(this.mouseXAccuracy.get() - sizeScaleProperty().get() * 5 * 0.9);
                     this.lineAccuracy = true;
-                    this.nbLoop = 0;
+                    this.currentLoopCount = 0;
                     startMovingLineRight();
                     SelectionModeController.INSTANCE.pauseCurrentScanningUntilNextSelection(() -> {
                         stopMovingMouse();
                         this.visibilityMouseXAccuracy.set(false);
                         this.lineAccuracy = false;
-                        this.nbLoop = 0;
+                        this.currentLoopCount = 0;
                         startMovingLineBottom();
                         SelectionModeController.INSTANCE.pauseCurrentScanningUntilNextSelection(() -> {
                             stopMovingMouse();
                             this.mouseYAccuracy.set(this.mouseY.get() - sizeScaleProperty().get() * 5 * 0.9);
                             this.lineAccuracy = true;
-                            this.nbLoop = 0;
+                            this.currentLoopCount = 0;
                             startMovingLineBottom();
                             SelectionModeController.INSTANCE.pauseCurrentScanningUntilNextSelection(() -> {
                                 stopMovingMouse();
-                                this.nbLoop = 0;
+                                this.currentLoopCount = 0;
                                 action.run();
                                 setUpCursorStripView();
                                 this.lineAccuracy = false;
@@ -246,14 +249,14 @@ public enum ScanningMouseController implements ModeListenerI {
                 });
             } else {
                 startMovingLineRight();
-                this.nbLoop = 0;
+                this.currentLoopCount = 0;
                 SelectionModeController.INSTANCE.pauseCurrentScanningUntilNextSelection(() -> {
                     stopMovingMouse();
-                    this.nbLoop = 0;
+                    this.currentLoopCount = 0;
                     startMovingLineBottom();
                     SelectionModeController.INSTANCE.pauseCurrentScanningUntilNextSelection(() -> {
                         stopMovingMouse();
-                        this.nbLoop = 0;
+                        this.currentLoopCount = 0;
                         action.run();
                         setUpCursorStripView();
                         return false;
@@ -268,8 +271,8 @@ public enum ScanningMouseController implements ModeListenerI {
 
     private void startMovingLineRight() {
         this.checkInitFrame(() -> {
-            if (this.nbLoop < this.maxLoop.get()) {
-                this.nbLoop++;
+            if (this.currentLoopCount < this.maxLoop.get()) {
+                this.currentLoopCount++;
                 double targetX;
                 double margin = 75 - sizeScaleProperty().get() * 5;
 
@@ -307,8 +310,8 @@ public enum ScanningMouseController implements ModeListenerI {
 
     private void startMovingLineBottom() {
         this.checkInitFrame(() -> {
-            if (this.nbLoop < this.maxLoop.get()) {
-                this.nbLoop++;
+            if (this.currentLoopCount < this.maxLoop.get()) {
+                this.currentLoopCount++;
                 double targetY;
                 double margin = 75 - sizeScaleProperty().get() * 5;
 
@@ -354,7 +357,7 @@ public enum ScanningMouseController implements ModeListenerI {
         this.mouseY.set(0);
         this.mouseXAccuracy.set(0);
         this.mouseYAccuracy.set(0);
-        this.nbLoop = 0;
+        this.currentLoopCount = 0;
         VirtualMouseController.INSTANCE.centerMouseOnStage();
     }
 
@@ -391,7 +394,7 @@ public enum ScanningMouseController implements ModeListenerI {
             movingCursorStrip(() -> {
                 VirtualMouseController.INSTANCE.moveMouseToWithDelay(this.mouseX.get(), this.mouseY.get());
                 VirtualMouseController.INSTANCE.executeMouseClic(MouseEvent.BUTTON1);
-                VirtualMouseController.INSTANCE.executeMouseClic(MouseEvent.BUTTON1);
+                VirtualMouseController.INSTANCE.executeMouseClic(MouseEvent.BUTTON1);// why twice ?
                 this.frameToFrontAndFocus();
             });
         }
@@ -447,8 +450,8 @@ public enum ScanningMouseController implements ModeListenerI {
                 this.crossScanningMouseStage = CrossScanningMouseStage.getInstance();
                 this.crossScanningMouseStage.show();
                 final Rectangle2D screenBounds = primaryScreen.getBounds();
-                this.mouseX.set(screenBounds.getWidth() / 2.0);
-                this.mouseY.set(screenBounds.getHeight() / 2.0);
+                this.mouseX.set(screenBounds.getWidth());
+                this.mouseY.set(screenBounds.getHeight());
                 this.frameToFrontAndFocus();
                 this.checkFramePositionWithMouse();
                 callback.run();
@@ -474,7 +477,7 @@ public enum ScanningMouseController implements ModeListenerI {
                 configuration.getVirtualMouseParameters().mouseSpeedProperty()));
         this.color.bind(configuration.getVirtualMouseParameters().mouseColorProperty());
         this.strokeColor.bind(configuration.getVirtualMouseParameters().mouseStrokeColorProperty());
-        this.typeMouseDrawing.bind(configuration.getVirtualMouseParameters().virtualMouseTypeProperty());
+        this.mouseType.bind(configuration.getVirtualMouseParameters().virtualMouseTypeProperty());
         this.mouseAccuracy.bind(configuration.getVirtualMouseParameters().mouseAccuracyProperty());
         this.maxLoop.bind(configuration.getVirtualMouseParameters().mouseMaxLoopProperty());
         Screen primaryScreen = Screen.getPrimary();
@@ -491,7 +494,7 @@ public enum ScanningMouseController implements ModeListenerI {
         this.timePerPixelSpeed.unbind();
         this.color.unbind();
         this.strokeColor.unbind();
-        this.typeMouseDrawing.unbind();
+        this.mouseType.unbind();
         this.mouseAccuracy.unbind();
         this.maxLoop.unbind();
         this.hideMouseFrame();

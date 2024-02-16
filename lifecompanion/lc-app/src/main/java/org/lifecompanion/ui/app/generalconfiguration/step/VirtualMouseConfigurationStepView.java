@@ -20,6 +20,7 @@
 package org.lifecompanion.ui.app.generalconfiguration.step;
 
 import javafx.beans.InvalidationListener;
+import javafx.beans.binding.BooleanBinding;
 import javafx.collections.FXCollections;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -174,22 +175,29 @@ public class VirtualMouseConfigurationStepView extends BorderPane implements Gen
         gridPaneTotal.setPadding(new Insets(GeneralConfigurationStepViewI.PADDING));
         setCenter(gridPaneTotal);
 
+        // TODO : move all to initBinding() and do the following
+        BooleanBinding crossScanningSelected = comboboxVirtualMouseType.getSelectionModel().selectedItemProperty().isEqualTo(VirtualMouseType.CROSS_SCANNING);
+        toggleSwitchMouseAccuracy.disableProperty().bind(crossScanningSelected);
+        // TODO : etc
+        BooleanBinding directionalSelected = comboboxVirtualMouseType.getSelectionModel().selectedItemProperty().isEqualTo(VirtualMouseType.DIRECTIONAL);
+        pickerMouseStrokeColor.disableProperty().bind(directionalSelected);
+        // TODO : etc
         comboboxVirtualMouseType.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
             if (newValue == VirtualMouseType.CROSS_SCANNING) {
-                toggleSwitchMouseAccuracy.setDisable(false);
+                //toggleSwitchMouseAccuracy.setDisable(false);
                 labelMouseAccuracy.setDisable(false);
                 spinnerMouseMaxLoop.setDisable(false);
                 labelMouseLoopMax.setDisable(false);
-                pickerMouseStrokeColor.setDisable(true);
+                //pickerMouseStrokeColor.setDisable(true);
                 labelMouseStrokeColor.setDisable(true);
                 labelMouseDrawing.setDisable(true);
                 comboboxDirectionalMouseDrawing.setDisable(true);
             } else {
-                toggleSwitchMouseAccuracy.setDisable(true);
+                //toggleSwitchMouseAccuracy.setDisable(true);
                 labelMouseAccuracy.setDisable(true);
                 spinnerMouseMaxLoop.setDisable(true);
                 labelMouseLoopMax.setDisable(true);
-                pickerMouseStrokeColor.setDisable(false);
+                //pickerMouseStrokeColor.setDisable(false);
                 labelMouseStrokeColor.setDisable(false);
                 labelMouseDrawing.setDisable(false);
                 comboboxDirectionalMouseDrawing.setDisable(false);

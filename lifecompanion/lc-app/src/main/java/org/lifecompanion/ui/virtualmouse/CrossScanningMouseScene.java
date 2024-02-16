@@ -61,13 +61,14 @@ public class CrossScanningMouseScene extends Scene implements LCViewInitHelper {
     @Override
     public void initUI() {
         this.setFill(Color.TRANSPARENT);
+        // TODO : to discuss, only one drawing for cross scanning, we don't need binding
         this.possiblesDrawing.put(VirtualMouseType.CROSS_SCANNING, new CrossScannigView());
     }
 
     @Override
     public void initBinding() {
         ScanningMouseController mouseController = ScanningMouseController.INSTANCE;
-            mouseController.mouseDrawingProperty().addListener((obs, ov, nv) -> {
+            mouseController.mouseTypeProperty().addListener((obs, ov, nv) -> {
                 if (ov != null) {
                     ScanningMouseDrawingI previousDrawing = this.possiblesDrawing.get(ov);
                     if (previousDrawing != null) {
@@ -77,7 +78,7 @@ public class CrossScanningMouseScene extends Scene implements LCViewInitHelper {
                 }
                 this.setNewMouseDrawing(mouseController, nv);
             });
-            this.setNewMouseDrawing(mouseController, mouseController.mouseDrawingProperty().get());
+            this.setNewMouseDrawing(mouseController, mouseController.mouseTypeProperty().get());
     }
 
     private void setNewMouseDrawing(final ScanningMouseController mouseController, final VirtualMouseType nv) {
