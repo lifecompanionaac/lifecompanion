@@ -36,11 +36,11 @@ import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.selectionmode.SelectionModeController;
 import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
-import org.lifecompanion.model.api.configurationcomponent.PointingMouseDrawing;
-import org.lifecompanion.model.api.configurationcomponent.VirtualMouseDrawing;
+import org.lifecompanion.model.api.configurationcomponent.DirectionalMouseDrawing;
+import org.lifecompanion.model.api.configurationcomponent.VirtualMouseType;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
 import org.lifecompanion.model.impl.useapi.GlobalRuntimeConfiguration;
-import org.lifecompanion.ui.virtualmouse.PointingMouseStage;
+import org.lifecompanion.ui.virtualmouse.DirectionalMouseStage;
 import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,10 +52,10 @@ import java.awt.event.MouseEvent;
  *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
-public enum PointingMouseController implements ModeListenerI {
+public enum DirectionalMouseController implements ModeListenerI {
     INSTANCE;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(PointingMouseController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DirectionalMouseController.class);
 
     private static final double TIME_PER_PIXEL = 25.0;
 
@@ -66,14 +66,14 @@ public enum PointingMouseController implements ModeListenerI {
     /**
      * Stage to show the virtual mouse
      */
-    private PointingMouseStage pointingMouseStage;
+    private DirectionalMouseStage directionalMouseStage;
     private LCConfigurationI configuration;
 
     /**
      * Timeline to animate mouse movement
      */
     private final Timeline timeline;
-    
+
     /**
      * Mouse position
      */
@@ -99,20 +99,20 @@ public enum PointingMouseController implements ModeListenerI {
     /**
      * Type of mouse drawing
      */
-    private final ObjectProperty<VirtualMouseDrawing> typeMouseDrawing;
+    private final ObjectProperty<VirtualMouseType> typeMouseDrawing;
 
 
     /**
      * Mouse drawing
      */
-    private final ObjectProperty<PointingMouseDrawing> mouseDrawing;
+    private final ObjectProperty<DirectionalMouseDrawing> mouseDrawing;
 
     /**
      * To check if the mouse position is not on the main frame
      */
     private final EventHandler<ActionEvent> checkFramePosition;
 
-    PointingMouseController() {
+    DirectionalMouseController() {
         this.mouseX = new SimpleDoubleProperty();
         this.mouseY = new SimpleDoubleProperty();
         this.sizeScale = new SimpleDoubleProperty();
@@ -157,7 +157,7 @@ public enum PointingMouseController implements ModeListenerI {
         return this.strokeColor;
     }
 
-    public ReadOnlyObjectProperty<PointingMouseDrawing> mouseDrawingProperty() {
+    public ReadOnlyObjectProperty<DirectionalMouseDrawing> mouseDrawingProperty() {
         return this.mouseDrawing;
     }
     //========================================================================
@@ -165,7 +165,6 @@ public enum PointingMouseController implements ModeListenerI {
     // Class part : "Moving API"
     //========================================================================
     public void startMovingMouseTop() {
-        System.out.println(isCurrentCursor());
         if (isCurrentCursor() && checkIfVirtualMouseEnabled()) {
             this.checkInitFrame(() -> {
                 this.addKeyFrame(this.mouseY.get(), 0.0, this.mouseY);
@@ -246,15 +245,15 @@ public enum PointingMouseController implements ModeListenerI {
     }
 
     public void hideMouseFrame() {
-        if (this.pointingMouseStage != null) {
-            FXThreadUtils.runOnFXThread(() -> this.pointingMouseStage.hide());
+        if (this.directionalMouseStage != null) {
+            FXThreadUtils.runOnFXThread(() -> this.directionalMouseStage.hide());
         }
     }
 
     private void startMoving() {
         this.timeline.playFromStart();
         SelectionModeController.INSTANCE.pauseCurrentScanningUntilNextSelection(() -> {
-            PointingMouseController.INSTANCE.stopMovingMouse();
+            DirectionalMouseController.INSTANCE.stopMovingMouse();
             return false;
         });
     }
@@ -262,10 +261,10 @@ public enum PointingMouseController implements ModeListenerI {
     private void addKeyFrame(final double diff, final double wantedValue, final DoubleProperty property) {
         long totalTime = (long) (diff * this.timePerPixelSpeed.get());
         KeyFrame keyFrameMoveMouse = new KeyFrame(Duration.millis(totalTime),
-                new KeyValue(property, wantedValue, PointingMouseController.MOVING_INTERPOLATOR));
+                new KeyValue(property, wantedValue, DirectionalMouseController.MOVING_INTERPOLATOR));
         //Check X times during the animation
-        long verificationTime = totalTime / PointingMouseController.NUMBER_OF_FRAME_CHECK;
-        for (int i = 0; i < PointingMouseController.NUMBER_OF_FRAME_CHECK; i++) {
+        long verificationTime = totalTime / DirectionalMouseController.NUMBER_OF_FRAME_CHECK;
+        for (int i = 0; i < DirectionalMouseController.NUMBER_OF_FRAME_CHECK; i++) {
             this.timeline.getKeyFrames().add(new KeyFrame(Duration.millis(i * verificationTime), this.checkFramePosition));
         }
         this.timeline.getKeyFrames().add(keyFrameMoveMouse);
@@ -275,16 +274,17 @@ public enum PointingMouseController implements ModeListenerI {
         this.timeline.stop();
         this.timeline.getKeyFrames().clear();
     }
+
     //========================================================================
     // Class part : "Clic API"
     //========================================================================
     public void executePrimaryMouseClic() {
-        if ( isCurrentCursor() ) {
+        if (isCurrentCursor()) {
             this.checkInitFrame(() -> {
-            VirtualMouseController.INSTANCE.moveMouseToWithDelay(this.mouseX.get(), this.mouseY.get());
-            VirtualMouseController.INSTANCE.executeMouseClic(MouseEvent.BUTTON1);
-            this.frameToFrontAndFocus();
-        });
+                VirtualMouseController.INSTANCE.moveMouseToWithDelay(this.mouseX.get(), this.mouseY.get());
+                VirtualMouseController.INSTANCE.executeMouseClic(MouseEvent.BUTTON1);
+                this.frameToFrontAndFocus();
+            });
         }
 
     }
@@ -329,7 +329,7 @@ public enum PointingMouseController implements ModeListenerI {
         FXThreadUtils.runOnFXThread(() -> {
             Stage useStage = AppModeController.INSTANCE.getUseModeContext().getStage();
             if (useStage != null) useStage.toFront();
-            this.pointingMouseStage.toFront();
+            this.directionalMouseStage.toFront();
             // Issue #129 : main stage should not be focused back if it's a virtual keyboard
             if (!AppModeController.INSTANCE.getUseModeContext().getConfiguration().virtualKeyboardProperty().get() && useStage != null) {
                 useStage.requestFocus();
@@ -346,12 +346,12 @@ public enum PointingMouseController implements ModeListenerI {
      * Initialize mouse stage.
      */
     private void checkInitFrame(final Runnable callback) {
-        if (this.pointingMouseStage != null) {
-            if (this.pointingMouseStage.isShowing()) {
+        if (this.directionalMouseStage != null) {
+            if (this.directionalMouseStage.isShowing()) {
                 callback.run();
             } else {
                 FXThreadUtils.runOnFXThread(() -> {
-                    this.pointingMouseStage.show();
+                    this.directionalMouseStage.show();
                     this.frameToFrontAndFocus();
                     callback.run();
                 });
@@ -359,21 +359,23 @@ public enum PointingMouseController implements ModeListenerI {
         } else {
             FXThreadUtils.runOnFXThread(() -> {
                 Screen primaryScreen = Screen.getPrimary();
-                this.pointingMouseStage = PointingMouseStage.getInstance();
-                this.pointingMouseStage.show();
+                this.directionalMouseStage = DirectionalMouseStage.getInstance();
+                this.directionalMouseStage.show();
                 final Rectangle2D screenBounds = primaryScreen.getBounds();
-                this.mouseX.set(mouseDrawingProperty().get().getInitialX(screenBounds.getWidth()));
-                this.mouseY.set(mouseDrawingProperty().get().getInitialY(screenBounds.getHeight()));
+                this.mouseX.set(screenBounds.getWidth() / 2.0);
+                this.mouseY.set(screenBounds.getHeight() / 2.0);
                 this.frameToFrontAndFocus();
                 this.checkFramePositionWithMouse();
                 callback.run();
             });
         }
     }
+
     //========================================================================
     private boolean isCurrentCursor() {
-        return this.configuration.getVirtualMouseParameters().mainMouseDrawingProperty().get() == VirtualMouseDrawing.POINTING;
+        return this.configuration.getVirtualMouseParameters().virtualMouseTypeProperty().get() == VirtualMouseType.DIRECTIONAL;
     }
+
     // Class part : "Mode listener"
     //========================================================================
     @Override
@@ -385,12 +387,12 @@ public enum PointingMouseController implements ModeListenerI {
         this.frameHeight = primaryScreenBounds.getHeight();
         this.sizeScale.bind(configuration.getVirtualMouseParameters().mouseSizeProperty().divide(10.0));
         this.timePerPixelSpeed.bind(Bindings.createDoubleBinding(
-                () -> 1.0 / configuration.getVirtualMouseParameters().mouseSpeedProperty().get() * PointingMouseController.TIME_PER_PIXEL,
+                () -> 1.0 / configuration.getVirtualMouseParameters().mouseSpeedProperty().get() * DirectionalMouseController.TIME_PER_PIXEL,
                 configuration.getVirtualMouseParameters().mouseSpeedProperty()));
         this.color.bind(configuration.getVirtualMouseParameters().mouseColorProperty());
         this.strokeColor.bind(configuration.getVirtualMouseParameters().mouseStrokeColorProperty());
-        this.typeMouseDrawing.bind(configuration.getVirtualMouseParameters().mainMouseDrawingProperty());
-        this.mouseDrawing.bind(configuration.getVirtualMouseParameters().secondaryMouseDrawingProperty());
+        this.typeMouseDrawing.bind(configuration.getVirtualMouseParameters().virtualMouseTypeProperty());
+        this.mouseDrawing.bind(configuration.getVirtualMouseParameters().directionalMouseDrawingProperty());
     }
 
     @Override

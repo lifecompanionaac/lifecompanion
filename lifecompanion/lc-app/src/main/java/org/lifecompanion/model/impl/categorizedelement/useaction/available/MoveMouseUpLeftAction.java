@@ -24,7 +24,7 @@ import java.util.Map;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
-import org.lifecompanion.controller.virtualmouse.PointingMouseController;
+import org.lifecompanion.controller.virtualmouse.DirectionalMouseController;
 import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
 import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseActionSubCategories;
 
@@ -49,7 +49,7 @@ public class MoveMouseUpLeftAction extends SimpleUseActionImpl<UseActionTriggerC
 	//========================================================================
 	@Override
 	public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
-		PointingMouseController.INSTANCE.startMovingMouseTopLeft();
+		DirectionalMouseController.INSTANCE.startMovingMouseTopLeft();
 	}
 	//========================================================================
 }

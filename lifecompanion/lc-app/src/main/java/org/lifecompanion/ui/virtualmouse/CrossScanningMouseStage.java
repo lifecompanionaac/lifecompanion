@@ -34,29 +34,29 @@ import org.lifecompanion.util.javafx.StageUtils;
  *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
-public class ScanningMouseStage extends Stage {
+public class CrossScanningMouseStage extends Stage {
 
     // Class part : "Singleton"
     //========================================================================
-    private static ScanningMouseStage instance;
+    private static CrossScanningMouseStage instance;
 
     /**
      * <strong>Should be called on the JavaFX Thread !</strong>
      *
      * @return the virtual mouse stage
      */
-    public static ScanningMouseStage getInstance() {
-        if (ScanningMouseStage.instance == null) {
-            ScanningMouseStage.instance = new ScanningMouseStage();
+    public static CrossScanningMouseStage getInstance() {
+        if (CrossScanningMouseStage.instance == null) {
+            CrossScanningMouseStage.instance = new CrossScanningMouseStage();
         }
-        return ScanningMouseStage.instance;
+        return CrossScanningMouseStage.instance;
     }
     //========================================================================
 
     // Class part : "Stage"
     //========================================================================
     @SuppressWarnings("deprecation")
-    private ScanningMouseStage() {
+    private CrossScanningMouseStage() {
         //Stage parameters
         this.initStyle(StageStyle.TRANSPARENT);
         // FIXME : which stage?
@@ -70,7 +70,7 @@ public class ScanningMouseStage extends Stage {
         this.setOnShown(e1 -> StageUtils.setFocusableInternalAPI(this, false));
         this.centerOnScreen();
         //Scene
-        this.setScene(new ScanningMouseScene(new Pane()));
+        this.setScene(new CrossScanningMouseScene(new Pane()));
     }
     //========================================================================
 

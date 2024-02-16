@@ -24,7 +24,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import org.lifecompanion.controller.virtualmouse.ScanningMouseController;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
-import org.lifecompanion.model.api.configurationcomponent.VirtualMouseDrawing;
+import org.lifecompanion.model.api.configurationcomponent.VirtualMouseType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,8 +36,8 @@ import java.util.Map;
  *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
-public class ScanningMouseScene extends Scene implements LCViewInitHelper {
-    private final static Logger LOGGER = LoggerFactory.getLogger(ScanningMouseScene.class);
+public class CrossScanningMouseScene extends Scene implements LCViewInitHelper {
+    private final static Logger LOGGER = LoggerFactory.getLogger(CrossScanningMouseScene.class);
     /**
      * Root for this scene
      */
@@ -46,9 +46,9 @@ public class ScanningMouseScene extends Scene implements LCViewInitHelper {
     /**
 	 * All possible drawing
 	 */
-	private final Map<VirtualMouseDrawing, ScanningMouseDrawingI> possiblesDrawing;
+	private final Map<VirtualMouseType, ScanningMouseDrawingI> possiblesDrawing;
 
-    public ScanningMouseScene(final Pane root) {
+    public CrossScanningMouseScene(final Pane root) {
         super(root);
         this.root = root;
         this.possiblesDrawing = new HashMap<>();
@@ -61,7 +61,7 @@ public class ScanningMouseScene extends Scene implements LCViewInitHelper {
     @Override
     public void initUI() {
         this.setFill(Color.TRANSPARENT);
-        this.possiblesDrawing.put(VirtualMouseDrawing.CURSOR_STRIP, new CursorStripView());
+        this.possiblesDrawing.put(VirtualMouseType.CROSS_SCANNING, new CrossScannigView());
     }
 
     @Override
@@ -80,7 +80,7 @@ public class ScanningMouseScene extends Scene implements LCViewInitHelper {
             this.setNewMouseDrawing(mouseController, mouseController.mouseDrawingProperty().get());
     }
 
-    private void setNewMouseDrawing(final ScanningMouseController mouseController, final VirtualMouseDrawing nv) {
+    private void setNewMouseDrawing(final ScanningMouseController mouseController, final VirtualMouseType nv) {
         if (nv != null) {
             ScanningMouseDrawingI newDrawing = this.possiblesDrawing.get(nv);
             if (newDrawing != null) {

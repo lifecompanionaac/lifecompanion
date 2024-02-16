@@ -1,6 +1,5 @@
 package org.lifecompanion.ui.virtualmouse;
 
-import javafx.beans.property.DoubleProperty;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
@@ -12,7 +11,7 @@ import org.lifecompanion.controller.virtualmouse.ScanningMouseController;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CursorStripView extends Pane implements ScanningMouseDrawingI {
+public class CrossScannigView extends Pane implements ScanningMouseDrawingI {
 
     private final static double RECTANGLE_STROKE = 5.0;
 
@@ -28,7 +27,7 @@ public class CursorStripView extends Pane implements ScanningMouseDrawingI {
     private final Line accuracyTop;
     private final Line accuracyBottom;
 
-    public CursorStripView() {
+    public CrossScannigView() {
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getBounds();
         this.windowsWidth = primaryScreenBounds.getWidth();
         this.windowsHeight = primaryScreenBounds.getHeight();

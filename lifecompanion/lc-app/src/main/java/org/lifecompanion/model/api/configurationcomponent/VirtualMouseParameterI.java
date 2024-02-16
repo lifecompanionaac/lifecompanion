@@ -43,12 +43,12 @@ public interface VirtualMouseParameterI extends XMLSerializable<IOContextI> {
 	/**
 	 * @return the type of drawing we want for the mouse
 	 */
-	ObjectProperty<VirtualMouseDrawing> mainMouseDrawingProperty();
+	ObjectProperty<VirtualMouseType> virtualMouseTypeProperty();
 
 	/**
 	 * @return the type of drawing we want for the mouse
 	 */
-	ObjectProperty<PointingMouseDrawing> secondaryMouseDrawingProperty();
+	ObjectProperty<DirectionalMouseDrawing> directionalMouseDrawingProperty();
 
 	/**
 	 * @return the size of virtual mouse drawing

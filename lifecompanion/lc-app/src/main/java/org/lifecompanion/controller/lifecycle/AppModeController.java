@@ -27,7 +27,6 @@ import org.lifecompanion.controller.categorizedelement.useaction.UseActionContro
 import org.lifecompanion.controller.configurationcomponent.*;
 import org.lifecompanion.controller.configurationcomponent.dynamickey.KeyListController;
 import org.lifecompanion.controller.configurationcomponent.dynamickey.UserActionSequenceController;
-import org.lifecompanion.controller.easteregg.JPDRetirementController;
 import org.lifecompanion.controller.editaction.AsyncExecutorController;
 import org.lifecompanion.controller.editaction.LCConfigurationActions;
 import org.lifecompanion.controller.editmode.ConfigActionController;
@@ -44,7 +43,7 @@ import org.lifecompanion.controller.textprediction.WordPredictionController;
 import org.lifecompanion.controller.usevariable.UseVariableController;
 import org.lifecompanion.controller.virtualkeyboard.VirtualKeyboardController;
 import org.lifecompanion.controller.virtualkeyboard.WinAutoHotKeyKeyboardReceiverController;
-import org.lifecompanion.controller.virtualmouse.PointingMouseController;
+import org.lifecompanion.controller.virtualmouse.DirectionalMouseController;
 import org.lifecompanion.controller.virtualmouse.ScanningMouseController;
 import org.lifecompanion.controller.voicesynthesizer.VoiceSynthesizerController;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
@@ -173,7 +172,7 @@ public enum AppModeController {
             WordPredictionController.INSTANCE, //
             VirtualKeyboardController.INSTANCE, //
             ScanningMouseController.INSTANCE, //
-            PointingMouseController.INSTANCE, //
+            DirectionalMouseController.INSTANCE, //
             WritingStateController.INSTANCE, //
             CustomCharPredictionController.INSTANCE, //
             AutoCharPredictionController.INSTANCE, //

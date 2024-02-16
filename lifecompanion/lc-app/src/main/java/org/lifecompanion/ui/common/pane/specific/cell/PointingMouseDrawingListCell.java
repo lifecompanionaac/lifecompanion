@@ -23,9 +23,9 @@ import javafx.scene.control.ListCell;
 import javafx.scene.image.ImageView;
 import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
-import org.lifecompanion.model.api.configurationcomponent.PointingMouseDrawing;
+import org.lifecompanion.model.api.configurationcomponent.DirectionalMouseDrawing;
 
-public class PointingMouseDrawingListCell extends ListCell<PointingMouseDrawing> {
+public class PointingMouseDrawingListCell extends ListCell<DirectionalMouseDrawing> {
 	private ImageView imageView;
 
 	public PointingMouseDrawingListCell() {
@@ -34,7 +34,7 @@ public class PointingMouseDrawingListCell extends ListCell<PointingMouseDrawing>
 	}
 
 	@Override
-	protected void updateItem(final PointingMouseDrawing item, final boolean empty) {
+	protected void updateItem(final DirectionalMouseDrawing item, final boolean empty) {
 		super.updateItem(item, empty);
 		if (item == null || empty) {
 			this.setText(null);

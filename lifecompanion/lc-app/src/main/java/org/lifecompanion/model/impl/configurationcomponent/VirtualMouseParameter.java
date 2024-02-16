@@ -24,8 +24,8 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.paint.Color;
 import org.jdom2.Element;
-import org.lifecompanion.model.api.configurationcomponent.PointingMouseDrawing;
-import org.lifecompanion.model.api.configurationcomponent.VirtualMouseDrawing;
+import org.lifecompanion.model.api.configurationcomponent.DirectionalMouseDrawing;
+import org.lifecompanion.model.api.configurationcomponent.VirtualMouseType;
 import org.lifecompanion.model.api.configurationcomponent.VirtualMouseParameterI;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.io.IOContextI;
@@ -46,11 +46,11 @@ public class VirtualMouseParameter implements VirtualMouseParameterI {
     @XMLGenericProperty(Color.class)
     private final ObjectProperty<Color> mouseStrokeColor;
 
-    @XMLGenericProperty(VirtualMouseDrawing.class)
-    private final ObjectProperty<VirtualMouseDrawing> mainMouseDrawing;
+    @XMLGenericProperty(VirtualMouseType.class)
+    private final ObjectProperty<VirtualMouseType> virtualMouseType;
 
-    @XMLGenericProperty(PointingMouseDrawing.class)
-    private final ObjectProperty<PointingMouseDrawing> secondaryMouseDrawing;
+    @XMLGenericProperty(DirectionalMouseDrawing.class)
+    private final ObjectProperty<DirectionalMouseDrawing> directionalMouseDrawing;
 
     @XMLGenericProperty(Boolean.class)
     private final ObjectProperty<Boolean> mouseAccuracy;
@@ -62,8 +62,8 @@ public class VirtualMouseParameter implements VirtualMouseParameterI {
     public VirtualMouseParameter() {
         this.mouseColor = new SimpleObjectProperty<>(Color.CADETBLUE);
         this.mouseStrokeColor = new SimpleObjectProperty<>(LCGraphicStyle.LC_BLACK);
-        this.mainMouseDrawing = new SimpleObjectProperty<>(VirtualMouseDrawing.POINTING);
-        this.secondaryMouseDrawing = new SimpleObjectProperty<>(PointingMouseDrawing.SIMPLE_CIRCLE);
+        this.virtualMouseType = new SimpleObjectProperty<>(VirtualMouseType.DIRECTIONAL);
+        this.directionalMouseDrawing = new SimpleObjectProperty<>(DirectionalMouseDrawing.SIMPLE_CIRCLE);
         this.mouseAccuracy = new SimpleObjectProperty<>(false);
         this.mouseSize = new SimpleIntegerProperty(10);
         this.mouseSpeed = new SimpleIntegerProperty(5);
@@ -83,13 +83,13 @@ public class VirtualMouseParameter implements VirtualMouseParameterI {
     }
 
     @Override
-    public ObjectProperty<VirtualMouseDrawing> mainMouseDrawingProperty() {
-        return this.mainMouseDrawing;
+    public ObjectProperty<VirtualMouseType> virtualMouseTypeProperty() {
+        return this.virtualMouseType;
     }
 
     @Override
-    public ObjectProperty<PointingMouseDrawing> secondaryMouseDrawingProperty() {
-        return this.secondaryMouseDrawing;
+    public ObjectProperty<DirectionalMouseDrawing> directionalMouseDrawingProperty() {
+        return this.directionalMouseDrawing;
     }
 
     @Override

@@ -25,13 +25,13 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.shape.Rectangle;
-import org.lifecompanion.controller.virtualmouse.PointingMouseController;
+import org.lifecompanion.controller.virtualmouse.DirectionalMouseController;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class TargetView extends Group implements PointingMouseDrawingI {
+public class TargetView extends Group implements DirectionalMouseDrawingI {
 
     private final static double RECTANGLE_WIDTH = 24, RECTANGLE_HEIGHT = 10, RECTANGLE_STROKE = 4.0;
 
@@ -83,7 +83,7 @@ public class TargetView extends Group implements PointingMouseDrawingI {
     }
 
     @Override
-    public void bind(final PointingMouseController mouseController) {
+    public void bind(final DirectionalMouseController mouseController) {
         this.layoutXProperty().bind(mouseController.mouseXProperty());
         this.layoutYProperty().bind(mouseController.mouseYProperty());
         //Size on scale

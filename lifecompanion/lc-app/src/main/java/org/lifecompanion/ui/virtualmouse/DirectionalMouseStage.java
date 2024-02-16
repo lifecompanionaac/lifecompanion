@@ -34,29 +34,29 @@ import org.lifecompanion.util.javafx.StageUtils;
  *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
-public class PointingMouseStage extends Stage {
+public class DirectionalMouseStage extends Stage {
 
     // Class part : "Singleton"
     //========================================================================
-    private static PointingMouseStage instance;
+    private static DirectionalMouseStage instance;
 
     /**
      * <strong>Should be called on the JavaFX Thread !</strong>
      *
      * @return the virtual mouse stage
      */
-    public static PointingMouseStage getInstance() {
-        if (PointingMouseStage.instance == null) {
-            PointingMouseStage.instance = new PointingMouseStage();
+    public static DirectionalMouseStage getInstance() {
+        if (DirectionalMouseStage.instance == null) {
+            DirectionalMouseStage.instance = new DirectionalMouseStage();
         }
-        return PointingMouseStage.instance;
+        return DirectionalMouseStage.instance;
     }
     //========================================================================
 
     // Class part : "Stage"
     //========================================================================
     @SuppressWarnings("deprecation")
-    private PointingMouseStage() {
+    private DirectionalMouseStage() {
         //Stage parameters
         this.initStyle(StageStyle.TRANSPARENT);
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getBounds();
@@ -69,7 +69,7 @@ public class PointingMouseStage extends Stage {
         this.setOnShown(e1 -> StageUtils.setFocusableInternalAPI(this, false));
         this.centerOnScreen();
         //Scene
-        this.setScene(new PointingMouseScene(new Group()));
+        this.setScene(new DirectionalMouseScene(new Group()));
     }
     //========================================================================
 

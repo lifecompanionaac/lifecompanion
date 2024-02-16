@@ -21,40 +21,26 @@ package org.lifecompanion.model.api.configurationcomponent;
 
 import org.lifecompanion.framework.commons.translation.Translation;
 
-import java.util.function.Function;
-
 /**
  * Represent the different way of drawing the virtual mouse.
+ *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
-public enum PointingMouseDrawing {
-		SIMPLE_CIRCLE("virtual.mouse.drawing.simple.circle",w->w/2.0,h->h/2.0),
-		TARGET("virtual.mouse.drawing.target",w->w/2.0,h->h/2.0);
+public enum VirtualMouseType {
+    DIRECTIONAL("virtual.mouse.type.directional"),
+    CROSS_SCANNING("virtual.mouse.type.cross.scanning");
 
+    private String text;
 
-	private String text;
+    VirtualMouseType(final String textP) {
+        this.text = textP;
+    }
 
-	private final Function<Double,Double> initialX, initialY;
+    public String getText() {
+        return Translation.getText(this.text);
+    }
 
-	PointingMouseDrawing(final String textP, Function<Double,Double> initialX, Function<Double,Double>  initialY) {
-		this.text = textP;
-		this.initialX = initialX;
-		this.initialY = initialY;
-	}
-
-	public double getInitialX(double screenWidth){
-		return initialX.apply(screenWidth);
-	}
-
-	public double getInitialY(double screenHeight){
-		return initialY.apply(screenHeight);
-	}
-
-	public String getText() {
-		return Translation.getText(this.text);
-	}
-
-	public String getImagePath() {
-		return "mouse-drawing/" + this.name().toLowerCase() + ".png";
-	}
+    public String getImagePath() {
+        return "mouse-type/" + this.name().toLowerCase() + ".png";
+    }
 }

@@ -20,12 +20,12 @@
 package org.lifecompanion.ui.common.pane.specific.cell;
 
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
-import org.lifecompanion.model.api.configurationcomponent.VirtualMouseDrawing;
+import org.lifecompanion.model.api.configurationcomponent.VirtualMouseType;
 import org.lifecompanion.controller.resource.IconHelper;
 import javafx.scene.control.ListCell;
 import javafx.scene.image.ImageView;
 
-public class VirtualMouseDrawingListCell extends ListCell<VirtualMouseDrawing> {
+public class VirtualMouseDrawingListCell extends ListCell<VirtualMouseType> {
 	private ImageView imageView;
 
 	public VirtualMouseDrawingListCell() {
@@ -34,7 +34,7 @@ public class VirtualMouseDrawingListCell extends ListCell<VirtualMouseDrawing> {
 	}
 
 	@Override
-	protected void updateItem(final VirtualMouseDrawing item, final boolean empty) {
+	protected void updateItem(final VirtualMouseType item, final boolean empty) {
 		super.updateItem(item, empty);
 		if (item == null || empty) {
 			this.setText(null);
