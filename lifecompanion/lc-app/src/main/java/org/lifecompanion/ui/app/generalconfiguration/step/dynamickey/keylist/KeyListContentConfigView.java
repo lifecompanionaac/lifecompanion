@@ -43,20 +43,28 @@ import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.utils.Pair;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
+import org.lifecompanion.model.api.imagedictionary.ImageElementI;
 import org.lifecompanion.model.impl.configurationcomponent.dynamickey.KeyListNode;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
+import org.lifecompanion.model.impl.imagedictionary.ImageDictionaries;
 import org.lifecompanion.model.impl.notification.LCNotification;
 import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.ui.notification.LCNotificationController;
 import org.lifecompanion.util.CopyUtils;
+import org.lifecompanion.util.IOUtils;
 import org.lifecompanion.util.javafx.FXControlUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
+    private final static Logger LOGGER = LoggerFactory.getLogger(KeyListContentConfigView.class);
+
     private final ObjectProperty<KeyListNodeI> root;
 
     private boolean dirty;
@@ -400,7 +408,7 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         return dragged;
     }
 
-    private boolean handlingDragDroppedOn;
+    private static boolean handlingDragDroppedOn;
 
     public void dragDroppedOn(KeyListNodeI destNode) {
         try {
@@ -421,6 +429,21 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
                 dragged.set(null);
             }
         } finally {
+            handlingDragDroppedOn = false;
+        }
+    }
+
+    private static <T extends Region> void dragDroppedNewImage(T node, Function<T, KeyListNodeI> itemGetter, DragEvent ea) {
+        try {
+            handlingDragDroppedOn = true;
+            Optional<File> firstValidImage = ea.getDragboard().getFiles().stream().filter(IOUtils::isSupportedImage).findFirst();
+            if (firstValidImage.isPresent()) {
+               ImageElementI imageElement = ImageDictionaries.INSTANCE.getOrAddToUserImagesDictionary(firstValidImage.get());
+               itemGetter.apply(node).imageVTwoProperty().set(imageElement);
+            }
+        } catch (Exception e) {
+            LOGGER.warn("Couldn't add dragged image to gallery", e);
+        }  finally {
             handlingDragDroppedOn = false;
         }
     }
@@ -465,7 +488,7 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         });
         node.setOnDragOver(ea -> {
             KeyListNodeI destItem = itemGetter.apply(node);
-            if (keyListContentConfigView.draggedProperty().get() != null && keyListContentConfigView.draggedProperty().get() != destItem) {
+            if (keyListContentConfigView.draggedProperty().get() != null && keyListContentConfigView.draggedProperty().get() != destItem || ea.getDragboard().getFiles().stream().allMatch(IOUtils::isSupportedImage)) {
                 ea.acceptTransferModes(TransferMode.COPY_OR_MOVE);
             }
         });
@@ -473,7 +496,14 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
             Tooltip tooltip = tooltipForNode.get();
             if (tooltip != null) tooltip.hide();
         });
-        node.setOnDragDropped(ea -> keyListContentConfigView.dragDroppedOn(itemGetter.apply(node)));
+        node.setOnDragDropped(ea -> {
+            KeyListNodeI destItem = itemGetter.apply(node);
+            if (keyListContentConfigView.draggedProperty().get() != null && keyListContentConfigView.draggedProperty().get() != destItem) {
+                keyListContentConfigView.dragDroppedOn(itemGetter.apply(node));
+            } else if (ea.getDragboard().getFiles().stream().allMatch(IOUtils::isSupportedImage)) {
+                dragDroppedNewImage(node, itemGetter, ea);
+            }
+        });
     }
     //========================================================================
 }
