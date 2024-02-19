@@ -19,10 +19,12 @@
 
 package org.lifecompanion.ui;
 
+import javafx.animation.PauseTransition;
 import javafx.scene.input.KeyCombination;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Duration;
 import org.lifecompanion.controller.editaction.GlobalActions;
 import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
@@ -97,6 +99,23 @@ public class UseModeStage extends Stage {
             }
         }
         this.setOpacity(stageOpacity);
+        if (configuration.changeFrameOpacityEnabledProperty().get()) {
+            double finalStageOpacity = stageOpacity;
+
+            PauseTransition pauseTransition = new PauseTransition(Duration.millis(configuration.latencyFrameOpacityValueProperty().get()));
+
+            this.getScene().setOnMouseEntered(event -> {
+                pauseTransition.setOnFinished(null);
+                pauseTransition.setOnFinished(e -> this.setOpacity(finalStageOpacity));
+                pauseTransition.play();
+            });
+
+            this.getScene().setOnMouseExited(event -> {
+                pauseTransition.setOnFinished(null);
+                pauseTransition.setOnFinished(e -> this.setOpacity(configuration.changeFrameOpacityValueProperty().get()));
+                pauseTransition.play();
+            });
+        }
 
         this.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
         this.getIcons().add(IconHelper.get(LCConstant.LC_ICON_PATH));

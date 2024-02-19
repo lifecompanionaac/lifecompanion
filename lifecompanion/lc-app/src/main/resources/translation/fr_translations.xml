@@ -177,6 +177,7 @@
   <text key="use.action.sub.category.notepad.name">Bloc note</text>
   <text key="use.action.sub.category.prediction.name">Prédiction</text>
   <text key="use.action.sub.category.script.name">Script et combinaison d'actions</text>
+  <text key="use.action.sub.category.timer.name">Minuteur</text>
   <text key="use.action.sub.category.selection.keys.name">Cases</text>
   <text key="use.action.sub.category.selection.scanning.mode.name">Défilement</text>
   <text key="use.action.sub.category.selection.mode.general.name">Général</text>
@@ -207,6 +208,7 @@
   <text key="use.event.sub.category.keys.name">Clavier</text>
   <text key="use.event.sub.category.status.name">Status</text>
   <text key="use.event.sub.category.variable.name">Variables</text>
+  <text key="use.event.sub.category.timer.name">Minuteur</text>
   <!--org.lifecompanion.app.instance-->
   <text key="double.run.detected.header">LifeCompanion était déjà lancé\nCe dialogue sera automatiquement masqué dans {} secondes</text>
   <text key="double.run.detected.message">Vous venez d'essayer de lancer LifeCompanion alors que
@@ -676,7 +678,12 @@
 		texte actuellement dans l'éditeur.</text>
   <text key="action.save.note.name">Ouvrir/Fermer le bloc-notes</text>
   <!--org.lifecompanion.base.data.useaction.impl.miscellaneous.script-->
-
+    <text key="action.start.timer.name">Démarrer ou redémarrer le minuteur</text>
+  <text key="action.start.timer.static.description">Décompte à partir d'une durée choisie et met à jour les barres de progressions affichées.</text>
+  <text key="action.start.timer.variable.description">Minuteur de {} secondes</text>
+    <text key="action.stop.timer.name">Arrêter le minuteur</text>
+  <text key="action.stop.timer.static.description">Arrête le minuteur en cours.</text>
+  <text key="action.stop.timer.variable.description">Arrête le minuteur en cours</text>
   <text key="action.pause.name">Temporisation</text>
   <text key="action.pause.static.description">Permet d'effectuer une temporisation d'une durée choisie entre deux
 		actions. Cela permet d'attendre un certains temps avant d'executer une action.</text>
@@ -1604,8 +1611,13 @@
   <text key="configuration.for.virtual.keyboard">Clavier virtuel</text>
   <text key="configuration.frame.height">Hauteur</text>
   <text key="configuration.frame.opacity">Opacité de la fenêtre</text>
+  <text key="configuration.frame.opacity.value">Opacité de la fenêtre</text>
+  <text key="configuration.change.frame.opacity">Opacité de la fenêtre quand la souris la quitte</text>
+    <text key="configuration.latency.frame.opacity">Latence du changement d'opacité \n(en millisecondes)</text>
   <text key="configuration.frame.width">Largeur</text>
   <text key="configuration.keep.ratio.field">Conserver les proportions</text>
+  <text key="configuration.change.frame.opacity">Changement automatique de l'opacité de la fenêtre</text>
+  <text key="tooltip.explain.configuration.change.frame.opacity">Si activé, lorsque la souris quitte l'application l'opacité change.</text>
   <text key="configuration.launch.fullscreen">Plein écran</text>
   <text key="configuration.secured.config.mode">Demander une opération simple pour passer en édition</text>
   <text key="general.configuration.char.predictor.general.configuration.part">Configuration générale</text>
@@ -1635,6 +1647,7 @@
 		configuration, il est possible de la régler manuellement.</text>
   <text key="general.configuration.stage.configuration.size.title">Dimensions de la configuration</text>
   <text key="general.configuration.stage.stage.size.title">Fenêtre en mode utilisation</text>
+  <text key="general.configuration.stage.opacity.latency">Changement automatique de la fenêtre en mode utilisateur</text>
   <text key="general.configuration.styles.general.explain">Cette partie permet de gérer les styles généraux utilisés
 		dans la configuration. Une modification ici changera tous les éléments de la configuration qui n'ont pas de style particulier.</text>
   <text key="general.configuration.styles.grid.styles">Styles de forme</text>
@@ -1688,6 +1701,13 @@
 		transparente, afin de voir les élements derrière la fenêtre,
 		très utile
 		en mode "clavier virtuel".</text>
+    <text key="tooltip.explain.configuration.style.change.opacity">Défini l'opacité de la fenêtre en mode
+		utilisation lorsque la souris sort de la fenêtre.\nDiminuer la valeur permet d'obtenir une fenêtre
+		transparente, afin de voir les élements derrière la fenêtre,
+		très utile
+		en mode "clavier virtuel".</text>
+    <text key="tooltip.explain.configuration.style.latency.opacity">Défini la latence du changement d'opacité de la fenêtre en mode
+		utilisation lorsque la souris entre et sort de la fenêtre.\nDiminuer la valeur permet d'obtenir le changement plus rapidement.</text>
   <text key="tooltip.explain.use.param.first.part">Permet de définir la grille de départ de la
 		configuration.\nCette grille sera affichée au démarrage du mode
 		utilisation. Si la sélection est en défilement, le
@@ -1774,7 +1794,13 @@
   <text key="use.event.on.ua.sequence.finished.name">Fin d'une séquence</text>
   <text key="use.event.on.ua.sequence.finished.description">Cet événement est généré à la fin d'une séquence et permet donc d'ajouter des actions en conséquences, par exemple revenir à la sélection des séquences ou encore prononcer un message de fin.</text>
   <text key="use.event.main.category.sequence.description">Contient les événements générés par l'interaction avec les fonctions de séquences. Permet par exemple de réagir à la fin d'une séquence.</text>
-  <text key="user.action.display.filter.both">Toutes (étapes et sous-étapes)</text>
+
+    <text key="use.event.main.category.misc.name">Divers</text>
+    <text key="use.event.on.ua.timer.finished.name">Fin d'un minuteur</text>
+    <text key="use.event.on.ua.timer.finished.description">Cet événement est généré à la fin d'un minuteur et permet donc d'ajouter des actions en conséquences, par exemple émettre un son ou encore afficher un message.</text>
+    <text key="use.event.main.category.misc.description">Contient les événements générés par l'interaction avec les fonctions de LifeCompanion. Permet par exemple de réagir à la fin d'un minuteur.</text>
+
+    <text key="user.action.display.filter.both">Toutes (étapes et sous-étapes)</text>
   <text key="user.action.display.filter.only.sub">Uniquement les sous-étapes</text>
   <text key="user.action.display.filter.only.not.sub">Uniquement les étapes</text>
   <text key="user.action.sequence.item.display.filter.field">Mode d'affichage</text>
