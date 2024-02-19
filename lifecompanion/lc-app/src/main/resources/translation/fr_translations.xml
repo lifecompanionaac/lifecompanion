@@ -1797,7 +1797,8 @@
   <text key="predict4all.config.enable.correction">Activer la correction personnalisée</text>
   <text key="predict4all.config.enable.dynamic.model">Activer le modèle utilisateur dynamique</text>
 
-    <text key="predict4all.config.enable.min.word.prediction.score.threshold">Activer le seuil</text>
+  <text key="predict4all.config.enable.min.word.prediction.score.threshold">Activer le seuil</text>
+  <text key="predict4all.config.slider.min.word.prediction.score.threshold">Conserve les mots les plus pertinents</text>
 
   <text key="predict4all.config.file.chooser.import.words.extension">.txt - liste de mots (un par ligne)</text>
   <text key="predict4all.config.file.chooser.import.words.title">Choisir un fichier de liste de mots</text>

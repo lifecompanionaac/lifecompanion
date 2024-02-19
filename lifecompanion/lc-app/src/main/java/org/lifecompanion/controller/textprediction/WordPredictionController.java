@@ -99,7 +99,7 @@ public class WordPredictionController extends AbstractPredictionController<WordP
     //========================================================================
 
     @Override
-    protected List<WordPredictionI> predict(String textBeforeCaret, String textAfterCaret, int count) {// ajouter une condition d'activation du seuil ou non en fonction du toggle.
+    protected List<WordPredictionI> predict(String textBeforeCaret, String textAfterCaret, int count) {
         synchronized (this.currentPredictor) {
             this.lastPredictionResult = this.currentPredictor.predict(textBeforeCaret, textAfterCaret, count);
             if (this.parameter.enableMinWordPredictionScoreThresholdProperty().get()) {
@@ -108,8 +108,7 @@ public class WordPredictionController extends AbstractPredictionController<WordP
                         .mapToDouble(WordPredictionI::getScore)
                         .max().orElse(0.0);
 
-                double scoreThreshold = maxScore * 10.0 / 100.0; // permet de définir de seuil de proba mini pour que la prédiction soit affichée.
-
+                double scoreThreshold = maxScore * (double) this.parameter.minWordPredictionScoreThresholdProperty().get(); // defined the threshold min score to display a prediction
                 return lastPredictionResult.getPredictions()
                         .stream()
                         .filter(pred -> pred.getScore() >= scoreThreshold)
