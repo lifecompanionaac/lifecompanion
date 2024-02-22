@@ -623,6 +623,39 @@ public class LCConfigurationActions {
         }
     }
 
+    public static class ExportEditActionsToPdfAction implements BaseEditActionI {
+        private final Node source;
+
+        public ExportEditActionsToPdfAction(Node source) {
+            this.source = source;
+        }
+
+        @Override
+        public void doAction() throws LCException {
+            LCProfileI currentProfile = ProfileController.INSTANCE.currentProfileProperty().get();
+            LCConfigurationI currentConfiguration = AppModeController.INSTANCE.getEditModeContext().configurationProperty().get();
+            LCConfigurationDescriptionI currentConfigurationDescription = AppModeController.INSTANCE.getEditModeContext().configurationDescriptionProperty().get();
+
+            FileChooser configChooser = LCFileChoosers.getOtherFileChooser(Translation.getText("pdf.export.chooser.dialog.title"), new FileChooser.ExtensionFilter("PDF", "*.pdf"), EXPORT_PDF);
+            configChooser.setInitialFileName(Translation.getText("pdf.export.default.file.name",
+                    IOHelper.DATE_FORMAT_FILENAME_WITHOUT_TIME.format(new Date()),
+                    org.lifecompanion.util.IOUtils.getValidFileName(currentConfigurationDescription.configurationNameProperty().get())));
+
+            File pdfFile = configChooser.showSaveDialog(FXUtils.getSourceWindow(source));
+            if (pdfFile != null) {
+                LCStateController.INSTANCE.updateDefaultDirectory(EXPORT_PDF, pdfFile.getParentFile());
+                ExportActionsToPdfTask exportGridsToPdfTask = new ExportActionsToPdfTask(currentConfiguration, pdfFile, currentProfile, currentConfigurationDescription);
+                exportGridsToPdfTask.setOnSucceeded(ev -> DesktopUtils.openFile(pdfFile));
+                AsyncExecutorController.INSTANCE.addAndExecute(true, false, exportGridsToPdfTask);
+            }
+        }
+
+        @Override
+        public String getNameID() {
+            return "config.action.export.grids.pdf";
+        }
+    }
+
     public static class ManageConfigurationDialogAction implements BaseEditActionI {
 
         @Override
