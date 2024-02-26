@@ -35,6 +35,7 @@ import org.lifecompanion.controller.appinstallation.InstallationController;
 import org.lifecompanion.controller.categorizedelement.useaction.AvailableUseActionController;
 import org.lifecompanion.controller.categorizedelement.useevent.AvailableUseEventController;
 import org.lifecompanion.controller.resource.IconHelper;
+import org.lifecompanion.controller.usevariable.UseVariableController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.model.api.categorizedelement.useaction.BaseUseActionI;
@@ -46,6 +47,7 @@ import org.lifecompanion.model.api.categorizedelement.useevent.UseEventSubCatego
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
 import org.lifecompanion.model.api.profile.LCProfileI;
+import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.util.IOUtils;
 import org.lifecompanion.util.model.LCTask;
@@ -68,6 +70,7 @@ public class ExportActionsToPdfTask extends LCTask<Void> {
     private static final PDFont SUB_FONT = PDType1Font.HELVETICA_BOLD_OBLIQUE;
     private static final PDFont BODY_TITEL_FONT = PDType1Font.HELVETICA_BOLD;
     private static final PDFont BODY_FONT = PDType1Font.HELVETICA;
+    private static final PDFont BODY_DESCRIPTION_FONT = PDType1Font.HELVETICA_OBLIQUE;
     private static final PDFont FOOTER_FONT = PDType1Font.HELVETICA;
 
 
@@ -109,6 +112,7 @@ public class ExportActionsToPdfTask extends LCTask<Void> {
         // List that contains every action main category and sort
         ObservableList<UseActionMainCategoryI> mainCategoriesAction  = AvailableUseActionController.INSTANCE.getMainCategories();
         ObservableList<UseEventMainCategoryI> mainCategoriesEvent  = AvailableUseEventController.INSTANCE.getMainCategories();
+        ObservableList<UseVariableDefinitionI> variables = UseVariableController.INSTANCE.getPossibleVariables();
         int numberOfMainCategoriesAction = mainCategoriesAction.size();
         int numberOfSubCategoriesAction = 0;
         int numberOfActions = 0;
@@ -127,6 +131,9 @@ public class ExportActionsToPdfTask extends LCTask<Void> {
                 ObservableList<UseEventGeneratorI> events = subCategory.getContent();
                 numberOfActions += events.size();
             }
+        }
+        for (UseVariableDefinitionI var : variables) {
+            numberOfActions++;
         }
         totalWork = (numberOfMainCategoriesAction + numberOfSubCategoriesAction + numberOfActions)/10;
         updateProgress(0, totalWork);
@@ -207,7 +214,7 @@ public class ExportActionsToPdfTask extends LCTask<Void> {
                                 tx += wordWidth + spaceWidth;
                             }
                             size = ACTION_COLOR_SIZE + size;
-                            if (this.currentYPosition - size < FOOTER_SIZE) {
+                            if (this.currentYPosition - size <= FOOTER_SIZE) {
                                 setPageContentStream();
                             }
 
@@ -313,7 +320,7 @@ public class ExportActionsToPdfTask extends LCTask<Void> {
                                 tx += wordWidth + spaceWidth;
                             }
                             size = ACTION_COLOR_SIZE + size;
-                            if (this.currentYPosition - size < FOOTER_SIZE) {
+                            if (this.currentYPosition - size <= FOOTER_SIZE) {
                                 setPageContentStream();
                             }
 
@@ -344,7 +351,6 @@ public class ExportActionsToPdfTask extends LCTask<Void> {
                                 tx += wordWidth + spaceWidth;
                                 ty = 0;
                             }
-
                             currentYPosition -= 10;
                         }
                     }
@@ -352,6 +358,86 @@ public class ExportActionsToPdfTask extends LCTask<Void> {
                     addFooter();
                     updateProgress(progress.incrementAndGet(), totalWork);
                 }
+            }
+            setGridPage();
+            PDRectangle pageSize = gridPage.getMediaBox();
+            float pageWidth = pageSize.getWidth();
+
+            float pageWidthF = pageSize.getHeight();
+            float pageHeightF = pageSize.getWidth();
+            try (PDPageContentStream page = new PDPageContentStream(doc, gridPage)) {
+
+                this.pageContentStream = page;
+                this.pageContentStream.transform(new Matrix(0, 1, -1, 0, pageWidth, 0));
+                this.currentYPosition = pageHeightF - TOP_MARGIN;
+
+                //TITLE
+                nextLine(LATERAL_MARIN, MAIN_T_FONT_SIZE + TOP_MARGIN, "Variable", HEADER_FONT, MAIN_T_FONT_SIZE);
+
+                // MAIN DESCRIPTION
+                String description = Translation.getText("use.variable.select.dialog.header.text");
+                String[] words = description.split("\\s+");
+                float tx = LATERAL_MARIN;
+                float ty = MAIN_D_FONT_SIZE * 1.5f;
+                float spaceWidth = HEADER_DESCRIPTION_FONT.getStringWidth(" ") / 1000 * MAIN_D_FONT_SIZE;
+                for (String word : words) {
+                    float wordWidth = HEADER_DESCRIPTION_FONT.getStringWidth(word) / 1000 * MAIN_D_FONT_SIZE;
+                    if (tx + wordWidth > pageWidthF - LATERAL_MARIN * 2) {
+                        tx = LATERAL_MARIN;
+                        ty = MAIN_D_FONT_SIZE * 1.5f;
+                    }
+                    nextLine(tx, ty, word, HEADER_DESCRIPTION_FONT, MAIN_D_FONT_SIZE);
+                    tx += wordWidth + spaceWidth;
+                    ty = 0;
+                }
+                currentYPosition -= 10;
+                for (UseVariableDefinitionI var : variables) {
+                    float size =  BODY_FONT_SIZE *1.5f + 10;
+
+                    words = var.getDescription().split("\\s+");
+                    tx = LATERAL_MARIN;
+                    spaceWidth = BODY_FONT.getStringWidth(" ") / 1000 * BODY_FONT_SIZE;
+                    for (String word : words) {
+                        float wordWidth = BODY_FONT.getStringWidth(word) / 1000 * BODY_FONT_SIZE;
+                        if (tx + wordWidth > pageWidthF - LATERAL_MARIN) {
+                            tx = LATERAL_MARIN;
+                            size += BODY_FONT_SIZE * 1.5f;
+                        }
+                        tx += wordWidth + spaceWidth;
+                    }
+
+                    if (this.currentYPosition - size <= FOOTER_SIZE) {
+                       setPageContentStream();
+                    }
+
+                    // VARIABLE NAME
+                    nextLine(LATERAL_MARIN, BODY_FONT_SIZE, var.getName(), BODY_TITEL_FONT, BODY_FONT_SIZE);
+
+                    // VARIABLE DESCRIPTION
+                    words = var.getDescription().split("\\s+");
+                    tx = LATERAL_MARIN;
+                    ty = BODY_FONT_SIZE * 1.5f;
+                    spaceWidth = BODY_FONT.getStringWidth(" ") / 1000 * BODY_FONT_SIZE;
+                    for (String word : words) {
+                        float wordWidth = BODY_FONT.getStringWidth(word) / 1000 * BODY_FONT_SIZE;
+                        if (tx + wordWidth > pageWidthF - LATERAL_MARIN) {
+                            tx = LATERAL_MARIN;
+                            ty = BODY_FONT_SIZE * 1.5f;
+                        }
+                        nextLine(tx, ty, word, BODY_FONT, BODY_FONT_SIZE);
+                        tx += wordWidth + spaceWidth;
+                        ty = 0;
+                    }
+
+                    // VARIABLE EXAMPLE
+                    nextLine(LATERAL_MARIN, BODY_FONT_SIZE * 1.5f, "Example : "+var.getExampleValueToString(), BODY_DESCRIPTION_FONT, BODY_FONT_SIZE);
+
+                    currentYPosition -= 10;
+                    }
+
+                // FOOTER
+                addFooter();
+                updateProgress(progress.incrementAndGet(), totalWork);
             }
             PDDocumentInformation pdi = doc.getDocumentInformation();
             pdi.setAuthor(LCConstant.NAME);
