@@ -644,7 +644,7 @@ public class LCConfigurationActions {
             File pdfFile = configChooser.showSaveDialog(FXUtils.getSourceWindow(source));
             if (pdfFile != null) {
                 LCStateController.INSTANCE.updateDefaultDirectory(EXPORT_PDF, pdfFile.getParentFile());
-                ExportActionsToPdfTask exportGridsToPdfTask = new ExportActionsToPdfTask(currentConfiguration, pdfFile, currentProfile, currentConfigurationDescription);
+                ExportActionsToPdfTask exportGridsToPdfTask = new ExportActionsToPdfTask(pdfFile);
                 exportGridsToPdfTask.setOnSucceeded(ev -> DesktopUtils.openFile(pdfFile));
                 AsyncExecutorController.INSTANCE.addAndExecute(true, false, exportGridsToPdfTask);
             }

@@ -44,9 +44,6 @@ import org.lifecompanion.model.api.categorizedelement.useaction.UseActionSubCate
 import org.lifecompanion.model.api.categorizedelement.useevent.UseEventGeneratorI;
 import org.lifecompanion.model.api.categorizedelement.useevent.UseEventMainCategoryI;
 import org.lifecompanion.model.api.categorizedelement.useevent.UseEventSubCategoryI;
-import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
-import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
-import org.lifecompanion.model.api.profile.LCProfileI;
 import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.util.IOUtils;
@@ -64,52 +61,41 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class ExportActionsToPdfTask extends LCTask<Void> {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExportActionsToPdfTask.class);
 
-    private static final float HEADER_SIZE = 35f, FOOTER_SIZE = 30f,  MAIN_COLOR_SIZE = 32 * 2, ACTION_COLOR_SIZE = 32, HEADER_FONT_SIZE = 16, MAIN_T_FONT_SIZE = 40, MAIN_D_FONT_SIZE =20,SUB_FONT_SIZE = 16, BODY_TITEL_FONT_SIZE = 12, BODY_FONT_SIZE = 12, FOOTER_FONT_SIZE = 9, TEXT_LEFT_OFFSET = 50, FOOTER_LINE_HEIGHT = 12f, LOGO_HEIGHT = 25f, LINE_SIZE = 1f, COLOR_GRAY = 0.4f, LATERAL_MARIN = 45, TOP_MARGIN = 20;
-    private static final PDFont HEADER_FONT = PDType1Font.HELVETICA_BOLD;
-    private static final PDFont HEADER_DESCRIPTION_FONT = PDType1Font.HELVETICA_OBLIQUE;
-    private static final PDFont SUB_FONT = PDType1Font.HELVETICA_BOLD_OBLIQUE;
-    private static final PDFont BODY_TITEL_FONT = PDType1Font.HELVETICA_BOLD;
-    private static final PDFont BODY_FONT = PDType1Font.HELVETICA;
-    private static final PDFont BODY_DESCRIPTION_FONT = PDType1Font.HELVETICA_OBLIQUE;
+    private static final float MAIN_TITLE_FONT_SIZE = 40, MAIN_DESCRIPTION_FONT_SIZE =20, SUB_TITLE_FONT_SIZE = 16, BODY_TITLE_FONT_SIZE = 12, BODY_DESCRIPTION_FONT_SIZE = 12, BODY_EXEMPLE_FONT_SIZE = 12, FOOTER_FONT_SIZE = 9, TEXT_LEFT_OFFSET = 50, FOOTER_LINE_HEIGHT = 12f, LOGO_HEIGHT = 25f, LINE_SIZE = 1f, MAIN_TITLE_OFFSET = 5, HEADER_MARGIN = 30f, LATERAL_MARIN = 45f, FOOTER_MARGIN = 30f, spaceBetweenBody = 20, MAIN_ICON_COLOR_SIZE = 64, ACTION_ICON_COLOR_SIZE = 32;
+    private static final PDFont MAIN_TITLE_FONT = PDType1Font.HELVETICA_BOLD;
+    private static final PDFont MAIN_DESCRIPTION_FONT = PDType1Font.HELVETICA_OBLIQUE;
+    private static final PDFont SUB_TITLE_FONT = PDType1Font.HELVETICA_BOLD_OBLIQUE;
+    private static final PDFont BODY_TITLE_FONT = PDType1Font.HELVETICA_BOLD;
+    private static final PDFont BODY_DESCRIPTION_FONT = PDType1Font.HELVETICA;
+    private static final PDFont BODY_EXEMPLE_FONT = PDType1Font.HELVETICA_OBLIQUE;
     private static final PDFont FOOTER_FONT = PDType1Font.HELVETICA;
-
-
-    private static final String EXPORT_IMAGE_LOADING_KEY = "export-to-pdf";
-    private static final long MAX_IMAGE_LOADING_TIME = 10_000;
-    private static final String NO_STACK_ID = "nostack";
-    private static final int MAIN_TITLE_OFFSET = 5;
 
     private final File exportedImageDir;
     private final AtomicInteger progress;
     private final File destPdf;
-    private final LCProfileI profile;
-    private final LCConfigurationDescriptionI configurationDescription;
-    private final LCConfigurationI configuration;
 
     private int totalWork;
 
-    private static float currentYPosition;
-
-    private String currentDirectory;
-    private PDDocument doc;
-    private static PDPage gridPage;
+    private PDDocument pdfDoc;
+    private PDPage pdfPage;
     private PDPageContentStream pageContentStream;
+    private float pageWidthF, pageHeightF;
+    private float currentYPosition;
+    private final String imageDirectory;
+    private float spaceWidth;
 
-    public ExportActionsToPdfTask(LCConfigurationI configuration, File destPdf, LCProfileI profile, LCConfigurationDescriptionI configurationDescription) {
+    public ExportActionsToPdfTask(File destPdf) {
         super("task.export.actions.pdf.name");
-        this.configuration = configuration;
-        this.profile = profile;
-        this.configurationDescription = configurationDescription;
         this.exportedImageDir = IOUtils.getTempDir("export-images-for-config");
         this.exportedImageDir.mkdirs();
         this.destPdf = destPdf;
         this.progress = new AtomicInteger(0);
-        this.currentDirectory = new File( "").getAbsolutePath()+ "\\src\\main\\resources\\icons\\";
+        this.imageDirectory = new File( "").getAbsolutePath()+ "\\src\\main\\resources\\icons\\";
     }
 
     @Override
     protected Void call() throws Exception {
-        // List that contains every action main category and sort
+        // Lists containing all actions, events and variables
         ObservableList<UseActionMainCategoryI> mainCategoriesAction  = AvailableUseActionController.INSTANCE.getMainCategories();
         ObservableList<UseEventMainCategoryI> mainCategoriesEvent  = AvailableUseEventController.INSTANCE.getMainCategories();
         ObservableList<UseVariableDefinitionI> variables = UseVariableController.INSTANCE.getPossibleVariables();
@@ -132,120 +118,52 @@ public class ExportActionsToPdfTask extends LCTask<Void> {
                 numberOfActions += events.size();
             }
         }
-        for (UseVariableDefinitionI var : variables) {
-            numberOfActions++;
-        }
+        numberOfActions += variables.size();
         totalWork = (numberOfMainCategoriesAction + numberOfSubCategoriesAction + numberOfActions)/10;
         updateProgress(0, totalWork);
 
-        // TODO : default names
-        final String profileName = profile != null ? profile.nameProperty().get() : "PROFILE?";
-        final String configName = configurationDescription != null ? configurationDescription.configurationNameProperty().get() : "CONFIGURATION?";
-        final Date exportDate = new Date();
-
         // Try to save a PDF
         try (PDDocument pdf = new PDDocument()) {
-            doc = pdf;
+            pdfDoc = pdf;
             updateProgress(progress.get(), totalWork);
+
             for (UseActionMainCategoryI mainCategory : mainCategoriesAction) {
                 setGridPage();
-                PDRectangle pageSize = gridPage.getMediaBox();
-                float pageWidth = pageSize.getWidth();
-
-                float pageWidthF = pageSize.getHeight();
-                float pageHeightF =pageSize.getWidth();
-
-                try (PDPageContentStream page = new PDPageContentStream(doc, gridPage)) {
+                try (PDPageContentStream page = new PDPageContentStream(pdfDoc, pdfPage)) {
                     this.pageContentStream = page;
-                    this.pageContentStream.transform(new Matrix(0, 1, -1, 0, pageWidth, 0));
-                    this.currentYPosition = pageHeightF - TOP_MARGIN;
+                    setPageContentStream();
 
                     // MAIN ICON
-                    Color backgroundColor = mainCategory.getColor();
-                    PDImageXObject pdImage = PDImageXObject.createFromFile(this.currentDirectory + mainCategory.getConfigIconPath().replace("/", "\\"), doc);
-                    int imageWidth = pdImage.getWidth() > 32 ? 32*2: pdImage.getWidth()*2;
-                    int imageHeight = pdImage.getHeight() > 32 ? 32*2 : pdImage.getHeight()*2;
-                    this.pageContentStream.setNonStrokingColor((float) backgroundColor.getRed(), (float) backgroundColor.getGreen(), (float) backgroundColor.getBlue());
-                    this.pageContentStream.addRect(LATERAL_MARIN, this.currentYPosition-MAIN_COLOR_SIZE, MAIN_COLOR_SIZE,  MAIN_COLOR_SIZE);
-                    this.pageContentStream.fill();
-                    this.pageContentStream.drawImage(pdImage, LATERAL_MARIN+(MAIN_COLOR_SIZE -  imageWidth) / 2, this.currentYPosition-MAIN_COLOR_SIZE+(MAIN_COLOR_SIZE - imageHeight) / 2, imageWidth,  imageHeight);
-                    this.pageContentStream.setNonStrokingColor(0, 0, 0);
+                    addIcon(mainCategory.getConfigIconPath(), mainCategory.getColor(), true);
 
                     // MAIN TITLE
-                    nextLine(LATERAL_MARIN+MAIN_COLOR_SIZE+MAIN_TITLE_OFFSET, MAIN_T_FONT_SIZE+TOP_MARGIN, "Action - "+mainCategory.getName(), HEADER_FONT, MAIN_T_FONT_SIZE);
+                    addText(("Action - "+mainCategory.getName()).split("\\s+"), MAIN_TITLE_FONT, MAIN_TITLE_FONT_SIZE, LATERAL_MARIN+MAIN_ICON_COLOR_SIZE+MAIN_TITLE_OFFSET, HEADER_MARGIN+MAIN_ICON_COLOR_SIZE-MAIN_TITLE_FONT_SIZE);
 
                     // MAIN DESCRIPTION
-                    String[] words = mainCategory.getStaticDescription().split("\\s+");
-                    float tx = LATERAL_MARIN;
-                    float ty = MAIN_D_FONT_SIZE * 1.5f;
-                    float spaceWidth = HEADER_DESCRIPTION_FONT.getStringWidth(" ") / 1000 * MAIN_D_FONT_SIZE;
-                    for (String word : words) {
-                        float wordWidth = HEADER_DESCRIPTION_FONT.getStringWidth(word) / 1000 * MAIN_D_FONT_SIZE;
-                        if (tx + wordWidth > pageWidthF - LATERAL_MARIN * 2) {
-                            tx = LATERAL_MARIN;
-                            ty = MAIN_D_FONT_SIZE * 1.5f;
-                        }
-                        nextLine(tx, ty, word, HEADER_DESCRIPTION_FONT, MAIN_D_FONT_SIZE);
-                        tx += wordWidth + spaceWidth;
-                        ty = 0;
-                    }
+                    addText(mainCategory.getStaticDescription().split("\\s+"), MAIN_DESCRIPTION_FONT, MAIN_DESCRIPTION_FONT_SIZE, LATERAL_MARIN, MAIN_DESCRIPTION_FONT_SIZE * 1.5f);
 
                     //SUB TITLE
                     ObservableList<UseActionSubCategoryI> subCategories = mainCategory.getSubCategories();
                     for (UseActionSubCategoryI subCategory : subCategories) {
-                        float textWidth = SUB_FONT.getStringWidth(subCategory.getName()) / 1000 * SUB_FONT_SIZE;
-                        float centeredTextPositionX = (pageWidthF - textWidth) / 2;
-                        nextLine(centeredTextPositionX, MAIN_D_FONT_SIZE*1.5f, subCategory.getName(), SUB_FONT, SUB_FONT_SIZE);
+                        addText(subCategory.getName().split("\\s+"), SUB_TITLE_FONT, SUB_TITLE_FONT_SIZE, (pageWidthF - SUB_TITLE_FONT.getStringWidth(subCategory.getName()) / 1000 * SUB_TITLE_FONT_SIZE) / 2, MAIN_DESCRIPTION_FONT_SIZE * 1.5f);
 
                         ObservableList<BaseUseActionI<?>> actions = subCategory.getContent();
                         for (BaseUseActionI<?> action : actions) {
                             // ACTIONS SIZE
-                            PDImageXObject actionImage = PDImageXObject.createFromFile(this.currentDirectory + action.getConfigIconPath().replace("/", "\\"), doc);
-                            words = action.getStaticDescription().split("\\s+");
-                            float size = BODY_FONT_SIZE * 1.5f+10;
-                            tx = LATERAL_MARIN;
-                            spaceWidth = BODY_FONT.getStringWidth(" ") / 1000 * BODY_FONT_SIZE;
-                            for (String word : words) {
-                                float wordWidth = BODY_FONT.getStringWidth(word) / 1000 * BODY_FONT_SIZE;
-                                if (tx + wordWidth > pageWidthF - LATERAL_MARIN) {
-                                    tx = LATERAL_MARIN;
-                                    size += BODY_FONT_SIZE * 1.5f;
-                                }
-                                tx += wordWidth + spaceWidth;
-                            }
-                            size = ACTION_COLOR_SIZE + size;
-                            if (this.currentYPosition - size <= FOOTER_SIZE) {
-                                setPageContentStream();
-                            }
+                            PDImageXObject actionImage = PDImageXObject.createFromFile(this.imageDirectory + action.getConfigIconPath().replace("/", "\\"), pdfDoc);
+                            String[] words = action.getStaticDescription().split("\\s+");
+                            checkAvailableSpace(actionImage.getHeight(), words);
 
                             // ACTIONS ICON
-                            backgroundColor = action.getCategory().getColor();
-                            imageWidth = actionImage.getWidth() > 32 ?  32 : actionImage.getWidth();
-                            imageHeight = actionImage.getHeight() > 32 ? 32 : actionImage.getHeight();
-                            this.pageContentStream.setNonStrokingColor((float) backgroundColor.getRed(), (float) backgroundColor.getGreen(), (float) backgroundColor.getBlue());
-                            this.pageContentStream.addRect(LATERAL_MARIN, this.currentYPosition - ACTION_COLOR_SIZE, ACTION_COLOR_SIZE, ACTION_COLOR_SIZE);
-                            this.pageContentStream.fill();
-                            this.pageContentStream.drawImage(actionImage, LATERAL_MARIN+(ACTION_COLOR_SIZE-imageWidth)/2, this.currentYPosition-ACTION_COLOR_SIZE+(ACTION_COLOR_SIZE-imageHeight)/2, imageWidth, imageHeight);
-                            this.pageContentStream.setNonStrokingColor(0, 0, 0);
+                            addIcon(action.getConfigIconPath(), action.getCategory().getColor(), false);
 
                             // ACTIONS TITLE
-                            nextLine(LATERAL_MARIN+ACTION_COLOR_SIZE+MAIN_TITLE_OFFSET, ACTION_COLOR_SIZE, action.getName(), BODY_TITEL_FONT, BODY_FONT_SIZE);
+                            addText(action.getName().split("\\s+"), BODY_TITLE_FONT, BODY_TITLE_FONT_SIZE, LATERAL_MARIN+ACTION_ICON_COLOR_SIZE+MAIN_TITLE_OFFSET, ACTION_ICON_COLOR_SIZE);
 
                             // ACTIONS DESCRIPTION
-                            tx = LATERAL_MARIN;
-                            ty = BODY_FONT_SIZE * 1.5f;
-                            spaceWidth = BODY_FONT.getStringWidth(" ") / 1000 * BODY_FONT_SIZE;
-                            for (String word : words) {
-                                float wordWidth = BODY_FONT.getStringWidth(word) / 1000 * BODY_FONT_SIZE;
-                                if (tx + wordWidth > pageWidthF - LATERAL_MARIN) {
-                                    tx = LATERAL_MARIN;
-                                    ty = BODY_FONT_SIZE * 1.5f;
-                                }
-                                nextLine(tx, ty, word, BODY_FONT, BODY_FONT_SIZE);
-                                tx += wordWidth + spaceWidth;
-                                ty = 0;
-                            }
-                            currentYPosition -= 10;
+                            addText(words, BODY_DESCRIPTION_FONT, BODY_DESCRIPTION_FONT_SIZE, LATERAL_MARIN, BODY_DESCRIPTION_FONT_SIZE * 1.5f);
+
+                            currentYPosition -= spaceBetweenBody;
                         }
                     }
 
@@ -256,102 +174,40 @@ public class ExportActionsToPdfTask extends LCTask<Void> {
             }
             for (UseEventMainCategoryI mainCategory : mainCategoriesEvent) {
                 setGridPage();
-                PDRectangle pageSize = gridPage.getMediaBox();
-                float pageWidth = pageSize.getWidth();
-
-                float pageWidthF = pageSize.getHeight();
-                float pageHeightF = pageSize.getWidth();
-
-                try (PDPageContentStream page = new PDPageContentStream(doc, gridPage)) {
+                try (PDPageContentStream page = new PDPageContentStream(pdfDoc, pdfPage)) {
                     this.pageContentStream = page;
-                    this.pageContentStream.transform(new Matrix(0, 1, -1, 0, pageWidth, 0));
-                    this.currentYPosition = pageHeightF - TOP_MARGIN;
+                    setPageContentStream();
 
                     // MAIN ICON
-                    Color backgroundColor = mainCategory.getColor();
-                    PDImageXObject pdImage = PDImageXObject.createFromFile(this.currentDirectory + mainCategory.getConfigIconPath().replace("/", "\\"), doc);
-                    int imageWidth = pdImage.getWidth() > 32 ? 32 * 2 : pdImage.getWidth() * 2;
-                    int imageHeight = pdImage.getHeight() > 32 ? 32 * 2 : pdImage.getHeight() * 2;
-                    this.pageContentStream.setNonStrokingColor((float) backgroundColor.getRed(), (float) backgroundColor.getGreen(), (float) backgroundColor.getBlue());
-                    this.pageContentStream.addRect(LATERAL_MARIN, this.currentYPosition - MAIN_COLOR_SIZE, MAIN_COLOR_SIZE, MAIN_COLOR_SIZE);
-                    this.pageContentStream.fill();
-                    this.pageContentStream.drawImage(pdImage, LATERAL_MARIN + (MAIN_COLOR_SIZE - imageWidth) / 2, this.currentYPosition - MAIN_COLOR_SIZE + (MAIN_COLOR_SIZE - imageHeight) / 2, imageWidth, imageHeight);
-                    this.pageContentStream.setNonStrokingColor(0, 0, 0);
+                    addIcon(mainCategory.getConfigIconPath(), mainCategory.getColor(), true);
 
                     // MAIN TITLE
-                    nextLine(LATERAL_MARIN + MAIN_COLOR_SIZE + MAIN_TITLE_OFFSET, MAIN_T_FONT_SIZE + TOP_MARGIN, "Event - " + mainCategory.getName(), HEADER_FONT, MAIN_T_FONT_SIZE);
+                    addText(("Event - " + mainCategory.getName()).split("\\s+"), MAIN_TITLE_FONT, MAIN_TITLE_FONT_SIZE, LATERAL_MARIN+MAIN_ICON_COLOR_SIZE+MAIN_TITLE_OFFSET, HEADER_MARGIN+MAIN_ICON_COLOR_SIZE-MAIN_TITLE_FONT_SIZE);
 
                     // MAIN DESCRIPTION
-                    String[] words = mainCategory.getStaticDescription().split("\\s+");
-                    float tx = LATERAL_MARIN;
-                    float ty = MAIN_D_FONT_SIZE * 1.5f;
-                    float spaceWidth = HEADER_DESCRIPTION_FONT.getStringWidth(" ") / 1000 * MAIN_D_FONT_SIZE;
-                    for (String word : words) {
-                        float wordWidth = HEADER_DESCRIPTION_FONT.getStringWidth(word) / 1000 * MAIN_D_FONT_SIZE;
-                        if (tx + wordWidth > pageWidthF - LATERAL_MARIN * 2) {
-                            tx = LATERAL_MARIN;
-                            ty = MAIN_D_FONT_SIZE * 1.5f;
-                        }
-                        nextLine(tx, ty, word, HEADER_DESCRIPTION_FONT, MAIN_D_FONT_SIZE);
-                        tx += wordWidth + spaceWidth;
-                        ty = 0;
-                    }
+                    addText(mainCategory.getStaticDescription().split("\\s+"), MAIN_DESCRIPTION_FONT, MAIN_DESCRIPTION_FONT_SIZE, LATERAL_MARIN, MAIN_DESCRIPTION_FONT_SIZE * 1.5f);
 
                     //SUB TITLE
                     ObservableList<UseEventSubCategoryI> subCategories = mainCategory.getSubCategories();
                     for (UseEventSubCategoryI subCategory : subCategories) {
-                        float textWidth = SUB_FONT.getStringWidth(subCategory.getName()) / 1000 * SUB_FONT_SIZE;
-                        float centeredTextPositionX = (pageWidthF - textWidth) / 2;
-                        nextLine(centeredTextPositionX, MAIN_D_FONT_SIZE * 1.5f, subCategory.getName(), SUB_FONT, SUB_FONT_SIZE);
+                        addText(new String[]{subCategory.getName()}, SUB_TITLE_FONT, SUB_TITLE_FONT_SIZE, (pageWidthF - SUB_TITLE_FONT.getStringWidth(subCategory.getName()) / 1000 * SUB_TITLE_FONT_SIZE) / 2, MAIN_DESCRIPTION_FONT_SIZE * 1.5f);
+
                         ObservableList<UseEventGeneratorI> events = subCategory.getContent();
                         for (UseEventGeneratorI event : events) {
                             // ACTIONS SIZE
-                            PDImageXObject actionImage = PDImageXObject.createFromFile(this.currentDirectory + event.getConfigIconPath().replace("/", "\\"), doc);
-                            words = event.getStaticDescription().split("\\s+");
-                            float size = BODY_FONT_SIZE * 1.5f + 10;
-                            tx = LATERAL_MARIN;
-                            spaceWidth = BODY_FONT.getStringWidth(" ") / 1000 * BODY_FONT_SIZE;
-                            for (String word : words) {
-                                float wordWidth = BODY_FONT.getStringWidth(word) / 1000 * BODY_FONT_SIZE;
-                                if (tx + wordWidth > pageWidthF - LATERAL_MARIN) {
-                                    tx = LATERAL_MARIN;
-                                    size += BODY_FONT_SIZE * 1.5f;
-                                }
-                                tx += wordWidth + spaceWidth;
-                            }
-                            size = ACTION_COLOR_SIZE + size;
-                            if (this.currentYPosition - size <= FOOTER_SIZE) {
-                                setPageContentStream();
-                            }
+                            PDImageXObject actionImage = PDImageXObject.createFromFile(this.imageDirectory + event.getConfigIconPath().replace("/", "\\"), pdfDoc);
+                            String[] words = event.getStaticDescription().split("\\s+");
+                            checkAvailableSpace(actionImage.getHeight(), words);
 
                             // ACTIONS ICON
-                            backgroundColor = event.getCategory().getColor();
-                            imageWidth = actionImage.getWidth() > 32 ? 32 : actionImage.getWidth();
-                            imageHeight = actionImage.getHeight() > 32 ? 32 : actionImage.getHeight();
-                            this.pageContentStream.setNonStrokingColor((float) backgroundColor.getRed(), (float) backgroundColor.getGreen(), (float) backgroundColor.getBlue());
-                            this.pageContentStream.addRect(LATERAL_MARIN, this.currentYPosition - ACTION_COLOR_SIZE, ACTION_COLOR_SIZE, ACTION_COLOR_SIZE);
-                            this.pageContentStream.fill();
-                            this.pageContentStream.drawImage(actionImage, LATERAL_MARIN + (ACTION_COLOR_SIZE - imageWidth) / 2, this.currentYPosition - ACTION_COLOR_SIZE + (ACTION_COLOR_SIZE - imageHeight) / 2, imageWidth, imageHeight);
-                            this.pageContentStream.setNonStrokingColor(0, 0, 0);
+                            addIcon(event.getConfigIconPath(), event.getCategory().getColor(), false);
 
                             // ACTIONS TITLE
-                            nextLine(LATERAL_MARIN + ACTION_COLOR_SIZE + MAIN_TITLE_OFFSET, ACTION_COLOR_SIZE, event.getName(), BODY_TITEL_FONT, BODY_FONT_SIZE);
+                            addText(new String[]{event.getName()}, BODY_TITLE_FONT, BODY_TITLE_FONT_SIZE, LATERAL_MARIN + ACTION_ICON_COLOR_SIZE + MAIN_TITLE_OFFSET, ACTION_ICON_COLOR_SIZE);
 
                             // ACTIONS DESCRIPTION
-                            tx = LATERAL_MARIN;
-                            ty = BODY_FONT_SIZE * 1.5f;
-                            spaceWidth = BODY_FONT.getStringWidth(" ") / 1000 * BODY_FONT_SIZE;
-                            for (String word : words) {
-                                float wordWidth = BODY_FONT.getStringWidth(word) / 1000 * BODY_FONT_SIZE;
-                                if (tx + wordWidth > pageWidthF - LATERAL_MARIN) {
-                                    tx = LATERAL_MARIN;
-                                    ty = BODY_FONT_SIZE * 1.5f;
-                                }
-                                nextLine(tx, ty, word, BODY_FONT, BODY_FONT_SIZE);
-                                tx += wordWidth + spaceWidth;
-                                ty = 0;
-                            }
-                            currentYPosition -= 10;
+                            addText(words, BODY_DESCRIPTION_FONT, BODY_DESCRIPTION_FONT_SIZE, LATERAL_MARIN, BODY_DESCRIPTION_FONT_SIZE * 1.5f);
+                            currentYPosition -= spaceBetweenBody;
                         }
                     }
                     // FOOTER
@@ -360,96 +216,51 @@ public class ExportActionsToPdfTask extends LCTask<Void> {
                 }
             }
             setGridPage();
-            PDRectangle pageSize = gridPage.getMediaBox();
-            float pageWidth = pageSize.getWidth();
-
-            float pageWidthF = pageSize.getHeight();
-            float pageHeightF = pageSize.getWidth();
-            try (PDPageContentStream page = new PDPageContentStream(doc, gridPage)) {
-
+            try (PDPageContentStream page = new PDPageContentStream(pdfDoc, pdfPage)) {
                 this.pageContentStream = page;
-                this.pageContentStream.transform(new Matrix(0, 1, -1, 0, pageWidth, 0));
-                this.currentYPosition = pageHeightF - TOP_MARGIN;
+                setPageContentStream();
 
                 //TITLE
-                nextLine(LATERAL_MARIN, MAIN_T_FONT_SIZE + TOP_MARGIN, "Variable", HEADER_FONT, MAIN_T_FONT_SIZE);
+                addText(new String[]{"Variable"}, MAIN_TITLE_FONT, MAIN_TITLE_FONT_SIZE, LATERAL_MARIN, HEADER_MARGIN);
 
                 // MAIN DESCRIPTION
-                String description = Translation.getText("use.variable.select.dialog.header.text");
-                String[] words = description.split("\\s+");
-                float tx = LATERAL_MARIN;
-                float ty = MAIN_D_FONT_SIZE * 1.5f;
-                float spaceWidth = HEADER_DESCRIPTION_FONT.getStringWidth(" ") / 1000 * MAIN_D_FONT_SIZE;
-                for (String word : words) {
-                    float wordWidth = HEADER_DESCRIPTION_FONT.getStringWidth(word) / 1000 * MAIN_D_FONT_SIZE;
-                    if (tx + wordWidth > pageWidthF - LATERAL_MARIN * 2) {
-                        tx = LATERAL_MARIN;
-                        ty = MAIN_D_FONT_SIZE * 1.5f;
-                    }
-                    nextLine(tx, ty, word, HEADER_DESCRIPTION_FONT, MAIN_D_FONT_SIZE);
-                    tx += wordWidth + spaceWidth;
-                    ty = 0;
-                }
-                currentYPosition -= 10;
+                addText(Translation.getText("use.variable.select.dialog.header.text").split("\\s+"), MAIN_DESCRIPTION_FONT, MAIN_DESCRIPTION_FONT_SIZE, LATERAL_MARIN, MAIN_DESCRIPTION_FONT_SIZE * 1.5f);
+
+                currentYPosition -= spaceBetweenBody;
                 for (UseVariableDefinitionI var : variables) {
-                    float size =  BODY_FONT_SIZE *1.5f + 10;
+                    String[] words = var.getDescription().split("\\s+");
 
-                    words = var.getDescription().split("\\s+");
-                    tx = LATERAL_MARIN;
-                    spaceWidth = BODY_FONT.getStringWidth(" ") / 1000 * BODY_FONT_SIZE;
-                    for (String word : words) {
-                        float wordWidth = BODY_FONT.getStringWidth(word) / 1000 * BODY_FONT_SIZE;
-                        if (tx + wordWidth > pageWidthF - LATERAL_MARIN) {
-                            tx = LATERAL_MARIN;
-                            size += BODY_FONT_SIZE * 1.5f;
-                        }
-                        tx += wordWidth + spaceWidth;
-                    }
-
-                    if (this.currentYPosition - size <= FOOTER_SIZE) {
-                       setPageContentStream();
-                    }
+                    // VARIABLE SIZE
+                    checkAvailableSpace((int) (BODY_DESCRIPTION_FONT_SIZE * 1.5f), words);
 
                     // VARIABLE NAME
-                    nextLine(LATERAL_MARIN, BODY_FONT_SIZE, var.getName(), BODY_TITEL_FONT, BODY_FONT_SIZE);
+                    addText(new String[]{"Type : "+var.getName()}, BODY_TITLE_FONT, BODY_TITLE_FONT_SIZE, LATERAL_MARIN, BODY_TITLE_FONT_SIZE * 1.5f);
 
                     // VARIABLE DESCRIPTION
-                    words = var.getDescription().split("\\s+");
-                    tx = LATERAL_MARIN;
-                    ty = BODY_FONT_SIZE * 1.5f;
-                    spaceWidth = BODY_FONT.getStringWidth(" ") / 1000 * BODY_FONT_SIZE;
-                    for (String word : words) {
-                        float wordWidth = BODY_FONT.getStringWidth(word) / 1000 * BODY_FONT_SIZE;
-                        if (tx + wordWidth > pageWidthF - LATERAL_MARIN) {
-                            tx = LATERAL_MARIN;
-                            ty = BODY_FONT_SIZE * 1.5f;
-                        }
-                        nextLine(tx, ty, word, BODY_FONT, BODY_FONT_SIZE);
-                        tx += wordWidth + spaceWidth;
-                        ty = 0;
-                    }
+                    addText(words, BODY_DESCRIPTION_FONT, BODY_DESCRIPTION_FONT_SIZE, LATERAL_MARIN, BODY_DESCRIPTION_FONT_SIZE * 1.5f);
 
                     // VARIABLE EXAMPLE
-                    nextLine(LATERAL_MARIN, BODY_FONT_SIZE * 1.5f, "Example : "+var.getExampleValueToString(), BODY_DESCRIPTION_FONT, BODY_FONT_SIZE);
+                    addText(new String[]{"Example : "+var.getExampleValueToString()}, BODY_EXEMPLE_FONT, BODY_EXEMPLE_FONT_SIZE, LATERAL_MARIN, BODY_EXEMPLE_FONT_SIZE * 1.5f);
 
-                    currentYPosition -= 10;
-                    }
+                    currentYPosition -= spaceBetweenBody;
+                }
 
                 // FOOTER
                 addFooter();
                 updateProgress(progress.incrementAndGet(), totalWork);
             }
-            PDDocumentInformation pdi = doc.getDocumentInformation();
+            PDDocumentInformation pdi = pdfDoc.getDocumentInformation();
             pdi.setAuthor(LCConstant.NAME);
-            pdi.setTitle(Translation.getText("pdf.export.file.title", profileName, configName));
+            pdi.setTitle(Translation.getText("pdf.export.file.title"));
             pdi.setCreator(LCConstant.NAME);
-            doc.save(destPdf);
+            pdfDoc.save(destPdf);
         }
         return null;
     }
 
     private void nextLine(float tx, float ty, String text, PDFont font, float fontSize) throws IOException {
-        if (this.currentYPosition - fontSize < FOOTER_SIZE) {
+        if (this.currentYPosition - fontSize < FOOTER_MARGIN) {
+            setGridPage();
             setPageContentStream();
         } else {
             this.currentYPosition -= ty;
@@ -466,25 +277,85 @@ public class ExportActionsToPdfTask extends LCTask<Void> {
     }
 
     private void setGridPage() {
-        gridPage = new PDPage(PDRectangle.A4);
-        doc.addPage(gridPage);
-        gridPage.setRotation(90);
+        pdfPage = new PDPage(PDRectangle.A4);
+        pdfDoc.addPage(pdfPage);
+        pdfPage.setRotation(90);
+        PDRectangle pageSize = pdfPage.getMediaBox();
+        pageWidthF = pageSize.getHeight();
+        pageHeightF =pageSize.getWidth();
     }
 
     private void setPageContentStream() throws IOException {
-        addFooter();
-        setGridPage();
-        this.pageContentStream = new PDPageContentStream(doc, gridPage);
-        this.pageContentStream.transform(new Matrix(0, 1, -1, 0, gridPage.getMediaBox().getWidth(), 0));
-        this.currentYPosition = gridPage.getMediaBox().getWidth() - TOP_MARGIN;
+        if (this.pageContentStream != null) {
+            addFooter();
+        }
+        this.pageContentStream = new PDPageContentStream(pdfDoc, pdfPage);
+        this.pageContentStream.transform(new Matrix(0, 1, -1, 0, pdfPage.getMediaBox().getWidth(), 0));
+        this.currentYPosition = pdfPage.getMediaBox().getWidth() - HEADER_MARGIN;
+    }
+
+    private void addIcon(String iconPath, Color backgroundColor, boolean mainIcon) {
+        try {
+            PDImageXObject pdImage = PDImageXObject.createFromFile(this.imageDirectory + iconPath.replace("/", "\\"), pdfDoc);
+            int multiplicator = mainIcon ? 2 : 1;
+            float size = mainIcon ? (int) MAIN_ICON_COLOR_SIZE : (int) ACTION_ICON_COLOR_SIZE;
+            float imageWidth = pdImage.getWidth()*multiplicator > size ? size : pdImage.getWidth() * multiplicator;
+            float imageHeight = pdImage.getHeight()*multiplicator > size ? size : pdImage.getHeight() * multiplicator;
+
+            this.pageContentStream.setNonStrokingColor((float) backgroundColor.getRed(), (float) backgroundColor.getGreen(), (float) backgroundColor.getBlue());
+            this.pageContentStream.addRect(LATERAL_MARIN, this.currentYPosition - size, size, size);
+            this.pageContentStream.fill();
+            this.pageContentStream.drawImage(pdImage, LATERAL_MARIN + (size - imageWidth) / 2, this.currentYPosition - size + (size - imageHeight) / 2, imageWidth, imageHeight);
+            this.pageContentStream.setNonStrokingColor(0f, 0f, 0f);
+        } catch (IOException e) {
+            LOGGER.error("Error while adding icon to PDF", e);
+        }
+    }
+
+    private void addText(String[] words, PDFont font, float fontSize, float startX, float startY) throws IOException {
+        float tx = startX;
+        float ty = startY;
+        setSpaceWidth(font, fontSize);
+        for (String word : words) {
+            float wordWidth = font.getStringWidth(word) / 1000 * fontSize;
+            if (tx + wordWidth > pageWidthF - LATERAL_MARIN) {
+                tx = startX;
+                ty = fontSize * 1.5f;
+            }
+            nextLine(tx, ty, word, font, fontSize);
+            tx += wordWidth + this.spaceWidth;
+            ty = 0;
+        }
+    }
+
+    private void checkAvailableSpace(int para1, String[] para2) throws IOException {
+        float size = para1 + BODY_DESCRIPTION_FONT_SIZE * 1.5f , tx = LATERAL_MARIN;
+        setSpaceWidth(BODY_DESCRIPTION_FONT, BODY_DESCRIPTION_FONT_SIZE);
+        for (String word : para2) {
+            float wordWidth = BODY_DESCRIPTION_FONT.getStringWidth(word) / 1000 * BODY_DESCRIPTION_FONT_SIZE;
+            if (tx + wordWidth > pageWidthF - LATERAL_MARIN) {
+                tx = LATERAL_MARIN;
+                size += BODY_DESCRIPTION_FONT_SIZE * 1.5f;
+            }
+            tx += wordWidth + this.spaceWidth;
+        }
+        size = ACTION_ICON_COLOR_SIZE + size;
+        if (this.currentYPosition - size <= FOOTER_MARGIN) {
+            setGridPage();
+            setPageContentStream();
+        }
+    }
+
+    private void setSpaceWidth(PDFont font, float fontSize) throws IOException {
+        this.spaceWidth = font.getStringWidth(" ") / 1000 * fontSize;
     }
 
     private void addFooter() throws IOException {
         // FOOTER
-        this.pageContentStream.addRect(0, FOOTER_SIZE, gridPage.getMediaBox().getHeight(), LINE_SIZE);
+        this.pageContentStream.addRect(0, FOOTER_MARGIN, pdfPage.getMediaBox().getHeight(), LINE_SIZE);
         this.pageContentStream.fill();
         this.pageContentStream.beginText();
-        this.pageContentStream.newLineAtOffset(TEXT_LEFT_OFFSET, FOOTER_SIZE - FOOTER_LINE_HEIGHT);
+        this.pageContentStream.newLineAtOffset(TEXT_LEFT_OFFSET, FOOTER_MARGIN - FOOTER_LINE_HEIGHT);
         this.pageContentStream.setFont(FOOTER_FONT, FOOTER_FONT_SIZE);
         this.pageContentStream.showText(StringUtils.dateToStringDateWithHour(new Date()));
         this.pageContentStream.newLineAtOffset(0, -FOOTER_LINE_HEIGHT);
@@ -496,8 +367,8 @@ public class ExportActionsToPdfTask extends LCTask<Void> {
         BufferedImage logoBuffImage = SwingFXUtils.fromFXImage(IconHelper.get(LCConstant.LC_BIG_ICON_PATH), null);
         ImageIO.write(logoBuffImage, "png", logoFile);
         float logoDrawWidth = LOGO_HEIGHT / logoBuffImage.getHeight() * logoBuffImage.getWidth();
-        PDImageXObject logoImage = PDImageXObject.createFromFile(logoFile.getAbsolutePath(), doc);
-        this.pageContentStream.drawImage(logoImage, gridPage.getMediaBox().getHeight() - logoDrawWidth - TEXT_LEFT_OFFSET, FOOTER_SIZE / 2f - LOGO_HEIGHT / 2f, logoDrawWidth, LOGO_HEIGHT);
+        PDImageXObject logoImage = PDImageXObject.createFromFile(logoFile.getAbsolutePath(), pdfDoc);
+        this.pageContentStream.drawImage(logoImage, pdfPage.getMediaBox().getHeight() - logoDrawWidth - TEXT_LEFT_OFFSET, FOOTER_MARGIN / 2f - LOGO_HEIGHT / 2f, logoDrawWidth, LOGO_HEIGHT);
         this.pageContentStream.close();
     }
 }
