@@ -85,7 +85,7 @@ public class ExportActionsToPdfTask extends LCTask<Void> {
     private float spaceWidth;
 
     public ExportActionsToPdfTask(File destPdf) {
-        super("task.export.actions.pdf.name");
+        super("task.export.lists.pdf.name");
         this.exportedImageDir = IOUtils.getTempDir("export-images-for-config");
         this.exportedImageDir.mkdirs();
         this.destPdf = destPdf;
@@ -234,7 +234,7 @@ public class ExportActionsToPdfTask extends LCTask<Void> {
                     checkAvailableSpace((int) (BODY_DESCRIPTION_FONT_SIZE * 1.5f), words);
 
                     // VARIABLE NAME
-                    addText(new String[]{"Type : "+var.getName()}, BODY_TITLE_FONT, BODY_TITLE_FONT_SIZE, LATERAL_MARIN, BODY_TITLE_FONT_SIZE * 1.5f);
+                    addText(new String[]{var.getName()}, BODY_TITLE_FONT, BODY_TITLE_FONT_SIZE, LATERAL_MARIN, BODY_TITLE_FONT_SIZE * 1.5f);
 
                     // VARIABLE DESCRIPTION
                     addText(words, BODY_DESCRIPTION_FONT, BODY_DESCRIPTION_FONT_SIZE, LATERAL_MARIN, BODY_DESCRIPTION_FONT_SIZE * 1.5f);
@@ -251,7 +251,7 @@ public class ExportActionsToPdfTask extends LCTask<Void> {
             }
             PDDocumentInformation pdi = pdfDoc.getDocumentInformation();
             pdi.setAuthor(LCConstant.NAME);
-            pdi.setTitle(Translation.getText("pdf.export.file.title"));
+            pdi.setTitle(Translation.getText("pdf.export.lists.file.title"));
             pdi.setCreator(LCConstant.NAME);
             pdfDoc.save(destPdf);
         }
@@ -267,13 +267,9 @@ public class ExportActionsToPdfTask extends LCTask<Void> {
         }
         this.pageContentStream.beginText();
         this.pageContentStream.newLineAtOffset(tx, this.currentYPosition);
-        writeLine(text, font, fontSize);
-        this.pageContentStream.endText();
-    }
-
-    private void writeLine(String text, PDFont font, float fontSize) throws IOException {
         this.pageContentStream.setFont(font, fontSize);
         this.pageContentStream.showText(text);
+        this.pageContentStream.endText();
     }
 
     private void setGridPage() {

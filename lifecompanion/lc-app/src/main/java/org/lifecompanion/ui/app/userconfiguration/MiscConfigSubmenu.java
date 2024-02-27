@@ -23,6 +23,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
@@ -32,6 +33,7 @@ import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 import org.lifecompanion.controller.editaction.AsyncExecutorController;
 import org.lifecompanion.controller.editaction.GlobalActions;
+import org.lifecompanion.controller.editaction.LCConfigurationActions;
 import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.controller.editmode.ErrorHandlingController;
 import org.lifecompanion.controller.io.IOHelper;
@@ -44,7 +46,6 @@ import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.io.FileNameUtils;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
-import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.model.api.configurationcomponent.IdentifiableComponentI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
@@ -53,16 +54,13 @@ import org.lifecompanion.model.impl.configurationcomponent.dynamickey.KeyListLea
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.impl.useapi.GlobalRuntimeConfiguration;
 import org.lifecompanion.util.DesktopUtils;
-import org.lifecompanion.util.LangUtils;
 import org.lifecompanion.util.javafx.FXControlUtils;
 import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -122,6 +120,14 @@ public class MiscConfigSubmenu extends ScrollPane implements LCViewInitHelper, U
         labelMemoryInfo.setAlignment(Pos.CENTER);
         buttonExecuteGC = createButton("misc.config.tab.memory.button.gc");
 
+        //PDF
+        Label labelTitlePdf = FXControlUtils.createTitleLabel("misc.config.tab.part.pdf");
+        Button buttonGeneratePdf = createButton("button.generate.lists.pdf");
+        buttonGeneratePdf.setOnAction(e -> {
+            GridPane gridPaneTotal = new GridPane();
+            ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.ExportEditActionsToPdfAction(gridPaneTotal));
+        });
+
         //Add
         VBox boxChildren = new VBox(10,
                 labelExplain,
@@ -134,6 +140,8 @@ public class MiscConfigSubmenu extends ScrollPane implements LCViewInitHelper, U
                 buttonOpenLogFile,
                 buttonOpenLogFolder,
                 this.buttonPackageLogs,
+                labelTitlePdf,
+                buttonGeneratePdf,
                 labelTitleMemory,
                 labelMemoryInfo,
                 buttonExecuteGC

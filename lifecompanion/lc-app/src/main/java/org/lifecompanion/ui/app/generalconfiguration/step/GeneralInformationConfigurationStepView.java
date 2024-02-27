@@ -159,14 +159,7 @@ public class GeneralInformationConfigurationStepView extends BorderPane implemen
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.FILE_PDF_ALT).size(30).color(LCGraphicStyle.SECOND_DARK),
                 () -> ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.ExportEditGridsToPdfAction(gridPaneTotal)));
         VBox boxActions = new VBox(GeneralConfigurationStepViewI.GRID_V_GAP, labelPartActions, pdfActionNode);
-
-        final Node pdfActionNode2 = FXControlUtils.createActionTableEntry("configuration.selection.print.grids.pdf.configuration.button",
-                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.FILE_PDF_ALT).size(30).color(LCGraphicStyle.SECOND_DARK),
-                () -> ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.ExportEditActionsToPdfAction(gridPaneTotal)));
-        VBox boxActions2 = new VBox(GeneralConfigurationStepViewI.GRID_V_GAP, pdfActionNode2);
-
-        //gridPaneTotal.add(boxActions, 0, gridRowIndex, 2, 2);
-        gridPaneTotal.add(boxActions2, 0, gridRowIndex, 2, 2);
+        gridPaneTotal.add(boxActions, 0, gridRowIndex, 2, 2);
 
         gridPaneTotal.setPadding(new Insets(GeneralConfigurationStepViewI.PADDING));
         ScrollPane scrollPane = new ScrollPane(gridPaneTotal);

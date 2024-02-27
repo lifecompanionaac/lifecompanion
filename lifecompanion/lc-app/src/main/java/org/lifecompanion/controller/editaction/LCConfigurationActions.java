@@ -632,15 +632,9 @@ public class LCConfigurationActions {
 
         @Override
         public void doAction() throws LCException {
-            LCProfileI currentProfile = ProfileController.INSTANCE.currentProfileProperty().get();
-            LCConfigurationI currentConfiguration = AppModeController.INSTANCE.getEditModeContext().configurationProperty().get();
-            LCConfigurationDescriptionI currentConfigurationDescription = AppModeController.INSTANCE.getEditModeContext().configurationDescriptionProperty().get();
-
-            FileChooser configChooser = LCFileChoosers.getOtherFileChooser(Translation.getText("pdf.export.chooser.dialog.title"), new FileChooser.ExtensionFilter("PDF", "*.pdf"), EXPORT_PDF);
-            configChooser.setInitialFileName(Translation.getText("pdf.export.default.file.name",
-                    IOHelper.DATE_FORMAT_FILENAME_WITHOUT_TIME.format(new Date()),
-                    org.lifecompanion.util.IOUtils.getValidFileName(currentConfigurationDescription.configurationNameProperty().get())));
-
+            FileChooser configChooser = LCFileChoosers.getOtherFileChooser(Translation.getText("pdf.export.chooser.dialog.title.lists"), new FileChooser.ExtensionFilter("PDF", "*.pdf"), EXPORT_PDF);
+            configChooser.setInitialFileName(Translation.getText("pdf.export.lists.file.name",
+                    IOHelper.DATE_FORMAT_FILENAME_WITHOUT_TIME.format(new Date())));
             File pdfFile = configChooser.showSaveDialog(FXUtils.getSourceWindow(source));
             if (pdfFile != null) {
                 LCStateController.INSTANCE.updateDefaultDirectory(EXPORT_PDF, pdfFile.getParentFile());
@@ -652,7 +646,7 @@ public class LCConfigurationActions {
 
         @Override
         public String getNameID() {
-            return "config.action.export.grids.pdf";
+            return "config.action.export.lists.pdf";
         }
     }
 
