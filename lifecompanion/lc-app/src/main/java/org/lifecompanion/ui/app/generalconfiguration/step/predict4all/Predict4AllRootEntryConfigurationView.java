@@ -270,7 +270,7 @@ public class Predict4AllRootEntryConfigurationView extends VBox implements Gener
         if (this.predictorModelDto != null) {
             //
             this.currentConfiguration.getPredictionParameters().enableMinWordPredictionScoreThresholdProperty().set(this.toggleEnableMinWordPredictionScoreThreshold.isSelected());
-            this.currentConfiguration.getPredictionParameters().minWordPredictionScoreThresholdProperty().set((float)this.sliderMinWordPredictionScoreThreshold.getValue());
+            this.currentConfiguration.getPredictionParameters().minWordPredictionScoreThresholdProperty().set(this.sliderMinWordPredictionScoreThreshold.getValue());
             this.predictorModelDto.getPredictionParameter().setAddNewWordsEnabled(this.toggleAddNewWord.isSelected());
             this.predictorModelDto.getPredictionParameter().setDynamicModelEnabled(this.toggleDynamicModelEnabled.isSelected());
             this.predictorModelDto.getPredictionParameter().setMinUseCountToValidateNewWord(this.spinnerMinUseCountToValidateNewWord.getValue());

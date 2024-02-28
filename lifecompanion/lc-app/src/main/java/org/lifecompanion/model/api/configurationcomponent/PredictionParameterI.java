@@ -20,6 +20,7 @@
 package org.lifecompanion.model.api.configurationcomponent;
 
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.FloatProperty;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.io.XMLSerializable;
@@ -55,5 +56,5 @@ public interface PredictionParameterI extends XMLSerializable<IOContextI> {
 	/**
 	 * @return
 	 */
-	FloatProperty minWordPredictionScoreThresholdProperty();
+	DoubleProperty minWordPredictionScoreThresholdProperty();
 }

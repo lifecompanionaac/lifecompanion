@@ -108,7 +108,7 @@ public class WordPredictionController extends AbstractPredictionController<WordP
                         .mapToDouble(WordPredictionI::getScore)
                         .max().orElse(0.0);
 
-                double scoreThreshold = maxScore * (double) this.parameter.minWordPredictionScoreThresholdProperty().get(); // defined the threshold min score to display a prediction
+                double scoreThreshold = maxScore * this.parameter.minWordPredictionScoreThresholdProperty().get(); // defined the threshold min score to display a prediction
                 return lastPredictionResult.getPredictions()
                         .stream()
                         .filter(pred -> pred.getScore() >= scoreThreshold)
