@@ -11,23 +11,15 @@ import org.lifecompanion.controller.virtualmouse.ScanningMouseController;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CrossScannigView extends Pane implements ScanningMouseDrawingI {
+public class CrossScanningView extends Pane implements ScanningMouseDrawingI {
 
-    private final static double RECTANGLE_STROKE = 5.0;
+    private final static double DEFAULT_LINE_SIZE = 5.0, PADDING = 10.0, INTERNAL_GAP_LINE = 75.0;
 
     public List<Line> lines;
-    private final Double windowsWidth;
-    private final Double windowsHeight;
-    private final Line left;
-    private final Line right;
-    private final Line top;
-    private final Line bottom;
-    private final Line  accuracyLeft;
-    private final Line accuracyRight;
-    private final Line accuracyTop;
-    private final Line accuracyBottom;
+    private final Double windowsWidth, windowsHeight;
+    private final Line left, right, top, bottom, accuracyLeft, accuracyRight, accuracyTop, accuracyBottom;
 
-    public CrossScannigView() {
+    public CrossScanningView() {
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getBounds();
         this.windowsWidth = primaryScreenBounds.getWidth();
         this.windowsHeight = primaryScreenBounds.getHeight();
@@ -53,29 +45,29 @@ public class CrossScannigView extends Pane implements ScanningMouseDrawingI {
         this.lines.forEach((ln) -> {
             ln.fillProperty().bind(mouseController.colorProperty());
             ln.strokeProperty().bind(mouseController.colorProperty());
-            ln.strokeWidthProperty().bind(mouseController.sizeScaleProperty().multiply(RECTANGLE_STROKE));
+            ln.strokeWidthProperty().bind(mouseController.sizeScaleProperty().multiply(DEFAULT_LINE_SIZE));
             ln.setStrokeLineCap(StrokeLineCap.BUTT);
         });
 
         top.startXProperty().bind(mouseController.mouseXProperty());
         top.endXProperty().bind(mouseController.mouseXProperty());
-        top.endYProperty().bind(mouseController.mouseYProperty().add(-10.0));
+        top.endYProperty().bind(mouseController.mouseYProperty().add(-PADDING));
         top.visibleProperty().bind(mouseController.visibilityMouseYProperty());
 
         left.startYProperty().bind(mouseController.mouseYProperty());
         left.endYProperty().bind(mouseController.mouseYProperty());
-        left.endXProperty().bind(mouseController.mouseXProperty().add(-10.0));
+        left.endXProperty().bind(mouseController.mouseXProperty().add(-PADDING));
         left.visibleProperty().bind(mouseController.visibilityMouseXProperty());
 
         bottom.startXProperty().bind(mouseController.mouseXProperty());
         bottom.endXProperty().bind(mouseController.mouseXProperty());
-        bottom.startYProperty().bind(mouseController.mouseYProperty().add(10));
+        bottom.startYProperty().bind(mouseController.mouseYProperty().add(PADDING));
         bottom.setEndY(this.windowsHeight);
         bottom.visibleProperty().bind(mouseController.visibilityMouseYProperty());
 
         right.startYProperty().bind(mouseController.mouseYProperty());
         right.endYProperty().bind(mouseController.mouseYProperty());
-        right.startXProperty().bind(mouseController.mouseXProperty().add(10));
+        right.startXProperty().bind(mouseController.mouseXProperty().add(PADDING));
         right.setEndX(this.windowsWidth);
         right.visibleProperty().bind(mouseController.visibilityMouseXProperty());
 
@@ -84,8 +76,8 @@ public class CrossScannigView extends Pane implements ScanningMouseDrawingI {
         accuracyLeft.setEndY(this.windowsHeight);
         accuracyLeft.visibleProperty().bind(mouseController.visibilityMouseXAccuracyProperty());
 
-        accuracyRight.startXProperty().bind(mouseController.mouseXAccuracyProperty().add(ScanningMouseController.INSTANCE.sizeScaleProperty().multiply(RECTANGLE_STROKE*1.9).add(75)));
-        accuracyRight.endXProperty().bind(mouseController.mouseXAccuracyProperty().add(ScanningMouseController.INSTANCE.sizeScaleProperty().multiply(RECTANGLE_STROKE*1.9).add(75)));
+        accuracyRight.startXProperty().bind(mouseController.mouseXAccuracyProperty().add(mouseController.sizeScaleProperty().multiply(DEFAULT_LINE_SIZE+DEFAULT_LINE_SIZE)).add(INTERNAL_GAP_LINE));
+        accuracyRight.endXProperty().bind(mouseController.mouseXAccuracyProperty().add(mouseController.sizeScaleProperty().multiply(DEFAULT_LINE_SIZE+DEFAULT_LINE_SIZE)).add(INTERNAL_GAP_LINE));
         accuracyRight.setEndY(this.windowsHeight);
         accuracyRight.visibleProperty().bind(mouseController.visibilityMouseXAccuracyProperty());
 
@@ -94,8 +86,8 @@ public class CrossScannigView extends Pane implements ScanningMouseDrawingI {
         accuracyTop.setEndX(this.windowsWidth);
         accuracyTop.visibleProperty().bind(mouseController.visibilityMouseYAccuracyProperty());
 
-        accuracyBottom.startYProperty().bind(mouseController.mouseYAccuracyProperty().add(ScanningMouseController.INSTANCE.sizeScaleProperty().multiply(RECTANGLE_STROKE*1.9).add(75)));
-        accuracyBottom.endYProperty().bind(mouseController.mouseYAccuracyProperty().add(ScanningMouseController.INSTANCE.sizeScaleProperty().multiply(RECTANGLE_STROKE*1.9).add(75)));
+        accuracyBottom.startYProperty().bind(mouseController.mouseYAccuracyProperty().add(mouseController.sizeScaleProperty().multiply(DEFAULT_LINE_SIZE+DEFAULT_LINE_SIZE)).add(INTERNAL_GAP_LINE));
+        accuracyBottom.endYProperty().bind(mouseController.mouseYAccuracyProperty().add(mouseController.sizeScaleProperty().multiply(DEFAULT_LINE_SIZE+DEFAULT_LINE_SIZE)).add(INTERNAL_GAP_LINE));
         accuracyBottom.setEndX(this.windowsWidth);
         accuracyBottom.visibleProperty().bind(mouseController.visibilityMouseYAccuracyProperty());
     }
