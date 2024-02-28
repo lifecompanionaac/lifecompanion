@@ -62,7 +62,7 @@ public class CrossScanningMouseScene extends Scene implements LCViewInitHelper {
     public void initUI() {
         this.setFill(Color.TRANSPARENT);
         // TODO : to discuss, only one drawing for cross scanning, we don't need binding
-        this.possiblesDrawing.put(VirtualMouseType.CROSS_SCANNING, new CrossScannigView());
+        this.possiblesDrawing.put(VirtualMouseType.CROSS_SCANNING, new CrossScanningView());
     }
 
     @Override

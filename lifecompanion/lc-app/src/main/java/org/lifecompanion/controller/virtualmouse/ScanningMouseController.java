@@ -52,15 +52,15 @@ import java.awt.event.MouseEvent;
 public enum ScanningMouseController implements ModeListenerI {
     INSTANCE;
 
-    // TODO : all double values used should be defined as constant and explained (ex 75.0)
-
     private static final Logger LOGGER = LoggerFactory.getLogger(ScanningMouseController.class);
 
     private static final double TIME_PER_PIXEL = 25.0;
+    private static final double DEFAULT_LINE_SIZE = 5.0;
+    private static final double INTERNAL_GAP_LINE = 75;
 
     private static final int NUMBER_OF_FRAME_CHECK = 10;
 
-    private static final Interpolator MOVING_INTERPOLATOR = Interpolator.EASE_IN; // TODO to discuss : linear ?
+    private static final Interpolator MOVING_INTERPOLATOR = Interpolator.LINEAR;
 
     /**
      * Timeline to animate mouse movement
@@ -75,19 +75,16 @@ public enum ScanningMouseController implements ModeListenerI {
     /**
      * Mouse position
      */
-    private final DoubleProperty mouseX;
-    private final DoubleProperty mouseY;
-    private final DoubleProperty mouseXAccuracy;
-    private final DoubleProperty mouseYAccuracy;
+    private final DoubleProperty mouseX, mouseY, mouseXAccuracy, mouseYAccuracy;
 
     /**
      * Width/height of the frame (max bounds)
      */
     private double frameWidth, frameHeight;
 
-    private final DoubleProperty sizeScale;
+    private double sizeLine;
 
-    private final DoubleProperty timePerPixelSpeed;
+    private final DoubleProperty sizeScale, timePerPixelSpeed;
 
     /**
      * View color
@@ -102,12 +99,8 @@ public enum ScanningMouseController implements ModeListenerI {
     /**
      * Visibility of the mouse accuracy
      */
-    // TODO : change to BooleanProperty
-    private final ObjectProperty<Boolean> visibilityMouseX;
-    private final ObjectProperty<Boolean> visibilityMouseY;
-    private final ObjectProperty<Boolean> visibilityMouseXAccuracy;
-    private final ObjectProperty<Boolean> visibilityMouseYAccuracy;
-    private final ObjectProperty<Boolean> mouseAccuracy;
+    private final BooleanProperty visibilityMouseX, visibilityMouseY, visibilityMouseXAccuracy, visibilityMouseYAccuracy, mouseAccuracy;
+
     private final IntegerProperty maxLoop;
 
     /**
@@ -134,11 +127,11 @@ public enum ScanningMouseController implements ModeListenerI {
         this.color = new SimpleObjectProperty<>();
         this.strokeColor = new SimpleObjectProperty<>();
         this.mouseType = new SimpleObjectProperty<>();
-        this.visibilityMouseX = new SimpleObjectProperty<>(false);
-        this.visibilityMouseY = new SimpleObjectProperty<>(false);
-        this.visibilityMouseXAccuracy = new SimpleObjectProperty<>(false);
-        this.visibilityMouseYAccuracy = new SimpleObjectProperty<>(false);
-        this.mouseAccuracy = new SimpleObjectProperty<>();
+        this.visibilityMouseX = new SimpleBooleanProperty(false);
+        this.visibilityMouseY = new SimpleBooleanProperty(false);
+        this.visibilityMouseXAccuracy = new SimpleBooleanProperty(false);
+        this.visibilityMouseYAccuracy = new SimpleBooleanProperty(false);
+        this.mouseAccuracy = new SimpleBooleanProperty();
         this.maxLoop = new SimpleIntegerProperty();
         //Check frame position
         this.checkFramePosition = event -> checkFramePositionWithMouse();
@@ -185,19 +178,19 @@ public enum ScanningMouseController implements ModeListenerI {
         return this.mouseType;
     }
 
-    public ReadOnlyObjectProperty<Boolean> visibilityMouseXProperty() {
+    public BooleanProperty visibilityMouseXProperty() {
         return this.visibilityMouseX;
     }
 
-    public ReadOnlyObjectProperty<Boolean> visibilityMouseYProperty() {
+    public BooleanProperty visibilityMouseYProperty() {
         return this.visibilityMouseY;
     }
 
-    public ReadOnlyObjectProperty<Boolean> visibilityMouseXAccuracyProperty() {
+    public BooleanProperty visibilityMouseXAccuracyProperty() {
         return this.visibilityMouseXAccuracy;
     }
 
-    public ReadOnlyObjectProperty<Boolean> visibilityMouseYAccuracyProperty() {
+    public BooleanProperty visibilityMouseYAccuracyProperty() {
         return this.visibilityMouseYAccuracy;
     }
 
@@ -217,7 +210,8 @@ public enum ScanningMouseController implements ModeListenerI {
                 startMovingLineRight();
                 SelectionModeController.INSTANCE.pauseCurrentScanningUntilNextSelection(() -> {
                     stopMovingMouse();
-                    this.mouseXAccuracy.set(this.mouseXAccuracy.get() - sizeScaleProperty().get() * 5 * 0.9);
+                    System.out.println("oscar : " + sizeLine);
+                    this.mouseXAccuracy.set(this.mouseXAccuracy.get() - sizeLine);
                     this.lineAccuracy = true;
                     this.currentLoopCount = 0;
                     startMovingLineRight();
@@ -229,7 +223,7 @@ public enum ScanningMouseController implements ModeListenerI {
                         startMovingLineBottom();
                         SelectionModeController.INSTANCE.pauseCurrentScanningUntilNextSelection(() -> {
                             stopMovingMouse();
-                            this.mouseYAccuracy.set(this.mouseY.get() - sizeScaleProperty().get() * 5 * 0.9);
+                            this.mouseYAccuracy.set(this.mouseY.get() - sizeLine);
                             this.lineAccuracy = true;
                             this.currentLoopCount = 0;
                             startMovingLineBottom();
@@ -271,17 +265,16 @@ public enum ScanningMouseController implements ModeListenerI {
 
     private void startMovingLineRight() {
         this.checkInitFrame(() -> {
-            if (this.currentLoopCount < this.maxLoop.get()) {
+            if (this.currentLoopCount <= this.maxLoop.get()) {
                 this.currentLoopCount++;
                 double targetX;
-                double margin = 75 - sizeScaleProperty().get() * 5;
 
                 if (this.mouseAccuracy.get()) {
                     if (this.lineAccuracy) {
-                        targetX = this.mouseX.get() + 75;
+                        targetX = this.mouseX.get() + INTERNAL_GAP_LINE;
                     } else {
-                        this.addKeyFrame(this.frameWidth, this.frameWidth - margin, this.mouseXAccuracy);
-                        targetX = this.frameWidth - margin;
+                        this.addKeyFrame(this.frameWidth, this.frameWidth - INTERNAL_GAP_LINE - this.sizeLine, this.mouseXAccuracy);
+                        targetX = this.frameWidth - INTERNAL_GAP_LINE - this.sizeLine;
                     }
                 } else {
                     targetX = this.frameWidth;
@@ -297,7 +290,7 @@ public enum ScanningMouseController implements ModeListenerI {
 
     private void startMovingLineLeft() {
         this.checkInitFrame(() -> {
-            double targetX = this.lineAccuracy ? this.mouseX.get() - 75 : 0.0;
+            double targetX = this.lineAccuracy ? this.mouseX.get() - INTERNAL_GAP_LINE : 0.0;
             this.addKeyFrame(this.frameWidth, targetX, this.mouseX);
 
             if (this.mouseAccuracy.get() && !this.lineAccuracy) {
@@ -310,17 +303,16 @@ public enum ScanningMouseController implements ModeListenerI {
 
     private void startMovingLineBottom() {
         this.checkInitFrame(() -> {
-            if (this.currentLoopCount < this.maxLoop.get()) {
+            if (this.currentLoopCount <= this.maxLoop.get()) {
                 this.currentLoopCount++;
                 double targetY;
-                double margin = 75 - sizeScaleProperty().get() * 5;
 
                 if (this.mouseAccuracy.get()) {
                     if (this.lineAccuracy) {
-                        targetY = this.mouseY.get() + 75;
+                        targetY = this.mouseY.get() + INTERNAL_GAP_LINE;
                     } else {
-                        this.addKeyFrame(this.frameHeight, this.frameHeight - margin, this.mouseYAccuracy);
-                        targetY = this.frameHeight - margin;
+                        this.addKeyFrame(this.frameHeight, this.frameHeight - INTERNAL_GAP_LINE - this.sizeLine, this.mouseYAccuracy);
+                        targetY = this.frameHeight - INTERNAL_GAP_LINE - this.sizeLine;
                     }
                 } else {
                     targetY = this.frameHeight;
@@ -336,7 +328,7 @@ public enum ScanningMouseController implements ModeListenerI {
 
     private void startMovingLineTop() {
         this.checkInitFrame(() -> {
-            double targetY = this.lineAccuracy ? this.mouseY.get() - 75 : 0.0;
+            double targetY = this.lineAccuracy ? this.mouseY.get() - INTERNAL_GAP_LINE : 0.0;
             this.addKeyFrame(this.frameHeight, targetY, this.mouseY);
 
             if (this.mouseAccuracy.get() && !this.lineAccuracy) {
@@ -347,8 +339,10 @@ public enum ScanningMouseController implements ModeListenerI {
     }
 
     private void setUpCursorStripView() {
-        SelectionModeController.INSTANCE.restartCurrentScanning();
         ScanningMouseController.INSTANCE.stopMovingMouse();
+        SelectionModeController.INSTANCE.pauseCurrentScanningUntilNextSelection(null);
+        VirtualMouseController.INSTANCE.centerMouseOnStage();
+        SelectionModeController.INSTANCE.restartCurrentScanning();
         this.visibilityMouseX.set(false);
         this.visibilityMouseY.set(false);
         this.visibilityMouseXAccuracy.set(false);
@@ -358,7 +352,6 @@ public enum ScanningMouseController implements ModeListenerI {
         this.mouseXAccuracy.set(0);
         this.mouseYAccuracy.set(0);
         this.currentLoopCount = 0;
-        VirtualMouseController.INSTANCE.centerMouseOnStage();
     }
 
     private void addKeyFrame(final double diff, final double wantedValue, final DoubleProperty property) {
@@ -394,7 +387,6 @@ public enum ScanningMouseController implements ModeListenerI {
             movingCursorStrip(() -> {
                 VirtualMouseController.INSTANCE.moveMouseToWithDelay(this.mouseX.get(), this.mouseY.get());
                 VirtualMouseController.INSTANCE.executeMouseClic(MouseEvent.BUTTON1);
-                VirtualMouseController.INSTANCE.executeMouseClic(MouseEvent.BUTTON1);// why twice ?
                 this.frameToFrontAndFocus();
             });
         }
@@ -446,12 +438,8 @@ public enum ScanningMouseController implements ModeListenerI {
             }
         } else {
             FXThreadUtils.runOnFXThread(() -> {
-                Screen primaryScreen = Screen.getPrimary();
                 this.crossScanningMouseStage = CrossScanningMouseStage.getInstance();
                 this.crossScanningMouseStage.show();
-                final Rectangle2D screenBounds = primaryScreen.getBounds();
-                this.mouseX.set(screenBounds.getWidth());
-                this.mouseY.set(screenBounds.getHeight());
                 this.frameToFrontAndFocus();
                 this.checkFramePositionWithMouse();
                 callback.run();
@@ -484,6 +472,7 @@ public enum ScanningMouseController implements ModeListenerI {
         Rectangle2D primaryScreenBounds = primaryScreen.getBounds();
         this.frameWidth = primaryScreenBounds.getWidth();
         this.frameHeight = primaryScreenBounds.getHeight();
+         this.sizeLine = sizeScaleProperty().get() * DEFAULT_LINE_SIZE;
         setUpCursorStripView();
     }
 
