@@ -21,6 +21,7 @@ package org.lifecompanion.ui;
 
 import javafx.animation.PauseTransition;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -102,16 +103,16 @@ public class UseModeStage extends Stage {
         if (configuration.changeFrameOpacityEnabledProperty().get()) {
             double finalStageOpacity = stageOpacity;
 
-            PauseTransition pauseTransition = new PauseTransition(Duration.millis(configuration.latencyFrameOpacityValueProperty().get()));
+            PauseTransition pauseTransition = new PauseTransition(Duration.seconds(configuration.latencyFrameOpacityValueProperty().get()));
 
-            this.getScene().setOnMouseEntered(event -> {
-                pauseTransition.setOnFinished(null);
+            useModeScene.addEventFilter(MouseEvent.MOUSE_ENTERED,event -> {
+                pauseTransition.pause();
                 pauseTransition.setOnFinished(e -> this.setOpacity(finalStageOpacity));
                 pauseTransition.play();
             });
 
-            this.getScene().setOnMouseExited(event -> {
-                pauseTransition.setOnFinished(null);
+            useModeScene.addEventFilter(MouseEvent.MOUSE_EXITED, event -> {
+                pauseTransition.pause();
                 pauseTransition.setOnFinished(e -> this.setOpacity(configuration.changeFrameOpacityValueProperty().get()));
                 pauseTransition.play();
             });

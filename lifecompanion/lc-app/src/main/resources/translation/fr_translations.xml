@@ -1613,7 +1613,7 @@
   <text key="configuration.frame.opacity">Opacité de la fenêtre</text>
   <text key="configuration.frame.opacity.value">Opacité de la fenêtre</text>
   <text key="configuration.change.frame.opacity">Opacité de la fenêtre quand la souris la quitte</text>
-    <text key="configuration.latency.frame.opacity">Latence du changement d'opacité \n(en millisecondes)</text>
+    <text key="configuration.latency.frame.opacity">Latence du changement d'opacité (s)</text>
   <text key="configuration.frame.width">Largeur</text>
   <text key="configuration.keep.ratio.field">Conserver les proportions</text>
   <text key="configuration.change.frame.opacity">Changement automatique de l'opacité de la fenêtre</text>

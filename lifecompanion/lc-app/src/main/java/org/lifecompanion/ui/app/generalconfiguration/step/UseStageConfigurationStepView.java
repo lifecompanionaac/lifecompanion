@@ -58,7 +58,7 @@ public class UseStageConfigurationStepView extends BorderPane implements General
     /**
      * Spinner to set the width/height
      */
-    private Spinner<Double> spinnerWidth, spinnerHeight;
+    private Spinner<Double> spinnerWidth, spinnerHeight, spinnerLatencyFrameOpacity;
 
     private ToggleSwitch toggleKeepConfigurationRatio;
 
@@ -78,7 +78,6 @@ public class UseStageConfigurationStepView extends BorderPane implements General
 
     private ToggleSwitch toggleChangeFrameOpacity;
     private Slider sliderChangeFrameOpacity;
-    private Slider sliderLatencyFrameOpacity;
 
     private double stageWidthHeightRatio;
     private ChangeListener<? super Double> changeListenerSpinnerStageHeight;
@@ -207,14 +206,10 @@ public class UseStageConfigurationStepView extends BorderPane implements General
         FXControlUtils.createAndAttachTooltip(sliderChangeFrameOpacity, "tooltip.explain.configuration.style.change.opacity");
         Label labelSliSecondFOpacity = new Label(Translation.getText("configuration.frame.opacity.value"));
 
-        this.sliderLatencyFrameOpacity = FXControlUtils.createBaseSlider(0, 5000, 500);
-        this.sliderLatencyFrameOpacity.setShowTickLabels(true);
-        this.sliderLatencyFrameOpacity.setMajorTickUnit(500);
-        this.sliderLatencyFrameOpacity.setMinorTickCount(0);
-        GridPane.setHgrow(sliderLatencyFrameOpacity, Priority.ALWAYS);
-        sliderLatencyFrameOpacity.setMaxWidth(Double.MAX_VALUE);
-        FXControlUtils.createAndAttachTooltip(sliderLatencyFrameOpacity, "tooltip.explain.configuration.style.latency.opacity");
-        Label lanelLatencyChangeOpacity = new Label(Translation.getText("configuration.latency.frame.opacity"));
+        Label labelLatencyFrameOpacity = new Label(Translation.getText("configuration.latency.frame.opacity"));
+        this.spinnerLatencyFrameOpacity = FXControlUtils.createDoubleSpinner(0.0, 120.0, 0.0, 0.1, 150);
+        FXControlUtils.createAndAttachTooltip(spinnerLatencyFrameOpacity, "tooltip.explain.configuration.style.latency.opacity");
+        GridPane.setHalignment(spinnerLatencyFrameOpacity, HPos.RIGHT);
 
         GridPane gridPaneTotal = new GridPane();
         gridPaneTotal.setHgap(GeneralConfigurationStepViewI.GRID_H_GAP);
@@ -243,9 +238,9 @@ public class UseStageConfigurationStepView extends BorderPane implements General
         gridPaneTotal.add(labelTSecondFrameOpacity, 0, gridRowIndex++, columnCount, 1);
         gridPaneTotal.add(toggleChangeFrameOpacity, 0, gridRowIndex++, columnCount, 1);
         gridPaneTotal.add(labelSliSecondFOpacity, 0, gridRowIndex, 2, 1);
-        gridPaneTotal.add(sliderChangeFrameOpacity, 1, gridRowIndex++);
-        gridPaneTotal.add(lanelLatencyChangeOpacity, 0, gridRowIndex, 2, 1);
-        gridPaneTotal.add(sliderLatencyFrameOpacity, 1, gridRowIndex);
+        gridPaneTotal.add(sliderChangeFrameOpacity, 1, gridRowIndex++, 2, 1);
+        gridPaneTotal.add(labelLatencyFrameOpacity, 0, gridRowIndex);
+        gridPaneTotal.add(spinnerLatencyFrameOpacity, 1, gridRowIndex, 2, 1);
 
         gridPaneTotal.setPadding(new Insets(GeneralConfigurationStepViewI.PADDING));
         setCenter(gridPaneTotal);
@@ -288,10 +283,8 @@ public class UseStageConfigurationStepView extends BorderPane implements General
         spinnerFrameWidth.valueProperty().addListener(changeListenerSpinnerStageWidth);
         spinnerFrameHeight.valueProperty().addListener(changeListenerSpinnerStageHeight);
 
-        toggleChangeFrameOpacity.selectedProperty().addListener((obs, old, newValue) -> {
-            sliderChangeFrameOpacity.setDisable(!newValue);
-            sliderLatencyFrameOpacity.setDisable(!newValue);
-        });
+        sliderChangeFrameOpacity.disableProperty().bind(toggleChangeFrameOpacity.selectedProperty().not());
+        spinnerLatencyFrameOpacity.disableProperty().bind(toggleChangeFrameOpacity.selectedProperty().not());
     }
 
     private void setFrameWidthValueWithoutFireListener(double value) {
@@ -338,7 +331,7 @@ public class UseStageConfigurationStepView extends BorderPane implements General
         toggleEnableAutoSizing.selectedProperty().addListener(invalidationListener);
         toggleChangeFrameOpacity.selectedProperty().addListener(invalidationListener);
         sliderChangeFrameOpacity.valueProperty().addListener(invalidationListener);
-        sliderLatencyFrameOpacity.valueProperty().addListener(invalidationListener);
+        spinnerLatencyFrameOpacity.valueProperty().addListener(invalidationListener);
     }
     //========================================================================
 
@@ -356,7 +349,7 @@ public class UseStageConfigurationStepView extends BorderPane implements General
         model.fixedSizeProperty().set(!toggleEnableAutoSizing.isSelected());
         model.changeFrameOpacityEnabledProperty().set(toggleChangeFrameOpacity.isSelected());
         model.changeFrameOpacityValueProperty().set(sliderChangeFrameOpacity.getValue());
-        model.latencyFrameOpacityValueProperty().set(sliderLatencyFrameOpacity.getValue());
+        model.latencyFrameOpacityValueProperty().set(spinnerLatencyFrameOpacity.getValue());
     }
 
     @Override
@@ -375,7 +368,7 @@ public class UseStageConfigurationStepView extends BorderPane implements General
         this.buttonKeepRatioFrameSize.setGraphic(glyphKeep);
         this.toggleChangeFrameOpacity.setSelected(model.changeFrameOpacityEnabledProperty().get());
         this.sliderChangeFrameOpacity.setValue(model.changeFrameOpacityValueProperty().get());
-        this.sliderLatencyFrameOpacity.setValue(model.latencyFrameOpacityValueProperty().get());
+        this.spinnerLatencyFrameOpacity.getValueFactory().setValue(model.latencyFrameOpacityValueProperty().get());
         updateFrameSizeRatio();
         dirty = false;
     }
