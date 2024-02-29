@@ -200,6 +200,11 @@ public enum VirtualKeyboardController implements WritingDeviceI, ModeListenerI {
     }
 
     @Override
+    public void restoreState() {
+
+    }
+
+    @Override
     public boolean isExternalWritingDevice() {
         return true;
     }

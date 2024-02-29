@@ -66,7 +66,9 @@ public class WriteWordPredictionAction extends SimpleUseActionImpl<GridPartKeyCo
                 WordPredictionKeyOption predOption = (WordPredictionKeyOption) parentKey.keyOptionProperty().get();
                 WordPredictionI prediction = predOption.predictionProperty().get();
                 if (prediction != null) {
-                    // Delete the text after caret if needed
+                    WritingStateController.INSTANCE.saveState();
+                    WritingStateController.INSTANCE.disableAutoSavedStateClean();
+                    // //Delete the text after caret if needed
                     int charToDelete = prediction.getNextCharCountToRemove();
                     if (charToDelete > 0) {
                         WritingStateController.INSTANCE.removeNextChars(WritingEventSource.SYSTEM, charToDelete);
@@ -78,9 +80,13 @@ public class WriteWordPredictionAction extends SimpleUseActionImpl<GridPartKeyCo
                     // Write just the needed text
                     WritingStateController.INSTANCE.insertWordPrediction(WritingEventSource.USER_ACTIONS,
                             prediction.getTextToWrite() + (addSpace.get() && prediction.isSpacePossible() ? " " : ""), prediction);
+                    WritingStateController.INSTANCE.enableAutoSavedStateClean();
                 }
             }
         }
     }
+
+
+
     // ========================================================================
 }

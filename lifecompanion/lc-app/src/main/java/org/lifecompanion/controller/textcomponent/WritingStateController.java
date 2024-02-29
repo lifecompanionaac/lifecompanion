@@ -59,6 +59,7 @@ public enum WritingStateController implements ModeListenerI, WritingStateControl
     private final BooleanProperty writingDisabled;
 
 
+
     /**
      * Contains the whole text.
      */
@@ -191,7 +192,6 @@ public enum WritingStateController implements ModeListenerI, WritingStateControl
         return writingStateEntryContainer.getCaretEntryIndex(caretPosition);
     }
     //========================================================================
-
     // BASICS ACTIONS
     //========================================================================
     @Override
@@ -252,6 +252,23 @@ public enum WritingStateController implements ModeListenerI, WritingStateControl
     @Override
     public void switchCapitalizeNext(WritingEventSource src) {
         this.writingStateEntryContainer.switchCapitalizeNext(src);
+    }
+
+    @Override
+    public void enableAutoSavedStateClean() {
+        this.writingStateEntryContainer.enableAutoSavedStateClean();
+    }
+    @Override
+    public void disableAutoSavedStateClean() {
+        this.writingStateEntryContainer.disableAutoSavedStateClean();
+    }
+    @Override
+    public void restoreState() {
+        this.writingStateEntryContainer.restoreState();
+    }
+    @Override
+    public void saveState() {
+        this.writingStateEntryContainer.saveState();
     }
 
     @Override
@@ -317,7 +334,6 @@ public enum WritingStateController implements ModeListenerI, WritingStateControl
         }
     }
 
-
     @Override
     public void removeLastWord(WritingEventSource src) {
         final int lastWordAndStopCharCount = writingStateEntryContainer.getLastWordAndStopCharCount();
@@ -328,6 +344,13 @@ public enum WritingStateController implements ModeListenerI, WritingStateControl
                 d.removeLastWord(src);
             }
         }, src, WritingEventType.DELETION, FluentHashMap.mapStrObj("type", DeletionTypes.LAST_WORD));
+    }
+    public void removeLastWordPrediction(WritingEventSource src) {
+        if(writingStateEntryContainer.containsSavedState()){
+         this.executeEvent(d -> {
+             d.restoreState();
+             }, src, WritingEventType.DELETION, FluentHashMap.mapStrObj("type", DeletionTypes.LAST_WORD));
+        }
     }
 
     @Override

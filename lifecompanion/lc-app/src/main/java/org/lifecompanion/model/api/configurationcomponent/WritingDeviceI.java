@@ -136,4 +136,6 @@ public interface WritingDeviceI {
      * To insert a tab in this writer
      */
     void tab(WritingEventSource src);
+
+    void restoreState();
 }
