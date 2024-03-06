@@ -58,7 +58,7 @@ public class UseStageConfigurationStepView extends BorderPane implements General
     /**
      * Spinner to set the width/height
      */
-    private Spinner<Double> spinnerWidth, spinnerHeight;
+    private Spinner<Double> spinnerWidth, spinnerHeight, spinnerAutoChangeFrameOpacityDelay;
 
     private ToggleSwitch toggleKeepConfigurationRatio;
 
@@ -75,6 +75,9 @@ public class UseStageConfigurationStepView extends BorderPane implements General
     private Button buttonKeepRatioFrameSize;
 
     private Slider sliderFrameOpacity;
+
+    private ToggleSwitch toggleAutoChangeFrameOpacityOnMouseExited;
+    private Slider sliderFrameOpacityOnMouseExited;
 
     private double stageWidthHeightRatio;
     private ChangeListener<? super Double> changeListenerSpinnerStageHeight;
@@ -178,7 +181,7 @@ public class UseStageConfigurationStepView extends BorderPane implements General
         FXControlUtils.createAndAttachTooltip(comboboxFramePosition, "tooltip.explain.configuration.frame.position");
         Label labelFramePosition = new Label(Translation.getText("frame.position.on.launch"));
 
-        this.sliderFrameOpacity = FXControlUtils.createBaseSlider(0.0, 1.0, 1.0);
+        this.sliderFrameOpacity = FXControlUtils.createBaseSlider(0.1, 1.0, 1.0);
         this.sliderFrameOpacity.setShowTickLabels(false);
         this.sliderFrameOpacity.setMajorTickUnit(0.1);
         this.sliderFrameOpacity.setMinorTickCount(0);
@@ -188,6 +191,27 @@ public class UseStageConfigurationStepView extends BorderPane implements General
         this.toggleKeepConfigurationRatio = FXControlUtils.createToggleSwitch("configuration.keep.ratio.field",
                 "tooltip.explain.configuration.style.keep.ratio");
         Label labelFOpacity = new Label(Translation.getText("configuration.frame.opacity"));
+
+        Label labelChangeOpacityOnExitTitle = FXControlUtils.createTitleLabel(Translation.getText("general.configuration.change.opacity.exit.title"));
+        Label labelChangeOpacityOnExit = new Label(Translation.getText("general.configuration.change.opacity.exit.explain"));
+        labelChangeOpacityOnExit.getStyleClass().addAll("text-font-italic", "text-fill-gray", "text-wrap-enabled");
+
+        this.toggleAutoChangeFrameOpacityOnMouseExited = FXControlUtils.createToggleSwitch("configuration.change.frame.opacity",
+                "tooltip.explain.configuration.style.change.opacity");
+
+        this.sliderFrameOpacityOnMouseExited = FXControlUtils.createBaseSlider(0.1, 1.0, 1.0);
+        this.sliderFrameOpacityOnMouseExited.setShowTickLabels(false);
+        this.sliderFrameOpacityOnMouseExited.setMajorTickUnit(0.1);
+        this.sliderFrameOpacityOnMouseExited.setMinorTickCount(0);
+        GridPane.setHgrow(sliderFrameOpacityOnMouseExited, Priority.ALWAYS);
+        sliderFrameOpacityOnMouseExited.setMaxWidth(Double.MAX_VALUE);
+        FXControlUtils.createAndAttachTooltip(sliderFrameOpacityOnMouseExited, "tooltip.explain.configuration.style.change.opacity");
+        Label labelOpacityOnExit = new Label(Translation.getText("configuration.opacity.on.exit.value"));
+
+        Label labelFrameOpacityDelay = new Label(Translation.getText("configuration.latency.frame.opacity"));
+        this.spinnerAutoChangeFrameOpacityDelay = FXControlUtils.createDoubleSpinner(0.0, 120.0, 0.0, 0.1, 150);
+        FXControlUtils.createAndAttachTooltip(spinnerAutoChangeFrameOpacityDelay, "tooltip.explain.configuration.style.latency.opacity");
+        GridPane.setHalignment(spinnerAutoChangeFrameOpacityDelay, HPos.RIGHT);
 
         GridPane gridPaneTotal = new GridPane();
         gridPaneTotal.setHgap(GeneralConfigurationStepViewI.GRID_H_GAP);
@@ -213,9 +237,18 @@ public class UseStageConfigurationStepView extends BorderPane implements General
         gridPaneTotal.add(comboboxFramePosition, 1, gridRowIndex++);
         gridPaneTotal.add(labelFOpacity, 0, gridRowIndex, 2, 1);
         gridPaneTotal.add(sliderFrameOpacity, 1, gridRowIndex++);
+        gridPaneTotal.add(labelChangeOpacityOnExitTitle, 0, gridRowIndex++, columnCount, 1);
+        gridPaneTotal.add(labelChangeOpacityOnExit, 0, gridRowIndex++, columnCount, 1);
+        gridPaneTotal.add(toggleAutoChangeFrameOpacityOnMouseExited, 0, gridRowIndex++, columnCount, 1);
+        gridPaneTotal.add(labelOpacityOnExit, 0, gridRowIndex, 2, 1);
+        gridPaneTotal.add(sliderFrameOpacityOnMouseExited, 1, gridRowIndex++, 2, 1);
+        gridPaneTotal.add(labelFrameOpacityDelay, 0, gridRowIndex);
+        gridPaneTotal.add(spinnerAutoChangeFrameOpacityDelay, 1, gridRowIndex, 2, 1);
 
         gridPaneTotal.setPadding(new Insets(GeneralConfigurationStepViewI.PADDING));
-        setCenter(gridPaneTotal);
+        ScrollPane scrollPane = new ScrollPane(gridPaneTotal);
+        scrollPane.setFitToWidth(true);
+        setCenter(scrollPane);
     }
 
     @Override
@@ -254,6 +287,9 @@ public class UseStageConfigurationStepView extends BorderPane implements General
         };
         spinnerFrameWidth.valueProperty().addListener(changeListenerSpinnerStageWidth);
         spinnerFrameHeight.valueProperty().addListener(changeListenerSpinnerStageHeight);
+
+        sliderFrameOpacityOnMouseExited.disableProperty().bind(toggleAutoChangeFrameOpacityOnMouseExited.selectedProperty().not());
+        spinnerAutoChangeFrameOpacityDelay.disableProperty().bind(toggleAutoChangeFrameOpacityOnMouseExited.selectedProperty().not());
     }
 
     private void setFrameWidthValueWithoutFireListener(double value) {
@@ -298,6 +334,9 @@ public class UseStageConfigurationStepView extends BorderPane implements General
         spinnerWidth.valueProperty().addListener(invalidationListener);
         spinnerHeight.valueProperty().addListener(invalidationListener);
         toggleEnableAutoSizing.selectedProperty().addListener(invalidationListener);
+        toggleAutoChangeFrameOpacityOnMouseExited.selectedProperty().addListener(invalidationListener);
+        sliderFrameOpacityOnMouseExited.valueProperty().addListener(invalidationListener);
+        spinnerAutoChangeFrameOpacityDelay.valueProperty().addListener(invalidationListener);
     }
     //========================================================================
 
@@ -313,6 +352,9 @@ public class UseStageConfigurationStepView extends BorderPane implements General
         model.widthProperty().set(spinnerWidth.getValue());
         model.heightProperty().set(spinnerHeight.getValue());
         model.fixedSizeProperty().set(!toggleEnableAutoSizing.isSelected());
+        model.autoChangeFrameOpacityOnMouseExitedProperty().set(toggleAutoChangeFrameOpacityOnMouseExited.isSelected());
+        model.frameOpacityOnMouseExitedProperty().set(sliderFrameOpacityOnMouseExited.getValue());
+        model.autoChangeFrameOpacityDelayProperty().set((int) (spinnerAutoChangeFrameOpacityDelay.getValue() * 1000.0));
     }
 
     @Override
@@ -329,6 +371,9 @@ public class UseStageConfigurationStepView extends BorderPane implements General
         this.spinnerHeight.getValueFactory().setValue(model.heightProperty().get());
         this.toggleEnableAutoSizing.setSelected(!model.fixedSizeProperty().get());
         this.buttonKeepRatioFrameSize.setGraphic(glyphKeep);
+        this.toggleAutoChangeFrameOpacityOnMouseExited.setSelected(model.autoChangeFrameOpacityOnMouseExitedProperty().get());
+        this.sliderFrameOpacityOnMouseExited.setValue(model.frameOpacityOnMouseExitedProperty().get());
+        this.spinnerAutoChangeFrameOpacityDelay.getValueFactory().setValue(model.autoChangeFrameOpacityDelayProperty().get() / 1000.0);
         updateFrameSizeRatio();
         dirty = false;
     }

@@ -108,6 +108,27 @@ public interface LCConfigurationI extends DisplayableComponentI, VoiceSynthesize
     BooleanProperty fixedSizeProperty();
 
     /**
+     * If this configuration is noted as a window opacity configuration, this means that each time the mouse leaves the window, the opacity changes.
+     *
+     * @return true if the configuration is use as a opacity window
+     */
+    BooleanProperty autoChangeFrameOpacityOnMouseExitedProperty();
+
+    /**
+     * if the window opacity is enabled, this property will contain the value of the opacity.
+     *
+     * @return the window opacity value
+     */
+    DoubleProperty frameOpacityOnMouseExitedProperty();
+
+    /**
+     * if the window opacity is enabled, this property will contain the value of the latency for the opacity change.
+     *
+     * @return the window opacity latency value
+     */
+    IntegerProperty autoChangeFrameOpacityDelayProperty();
+
+    /**
      * @return a property that can be enable/disable to use a grid when placing the component of this configuration.<br>
      * A grid will allow only location and size relative to its size ( {@link #gridSizeProperty()} )
      */

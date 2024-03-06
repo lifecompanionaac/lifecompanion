@@ -19,10 +19,13 @@
 
 package org.lifecompanion.ui;
 
+import javafx.animation.PauseTransition;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Duration;
 import org.lifecompanion.controller.editaction.GlobalActions;
 import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
@@ -97,6 +100,25 @@ public class UseModeStage extends Stage {
             }
         }
         this.setOpacity(stageOpacity);
+        if (!GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.FORCE_WINDOW_OPACITY)) {
+            if (configuration.autoChangeFrameOpacityOnMouseExitedProperty().get()) {
+                double finalStageOpacity = stageOpacity;
+
+                PauseTransition pauseTransition = new PauseTransition(Duration.millis(configuration.autoChangeFrameOpacityDelayProperty().get()));
+
+                useModeScene.addEventFilter(MouseEvent.MOUSE_ENTERED, event -> {
+                    pauseTransition.stop();
+                    pauseTransition.setOnFinished(e -> this.setOpacity(finalStageOpacity));
+                    pauseTransition.play();
+                });
+
+                useModeScene.addEventFilter(MouseEvent.MOUSE_EXITED, event -> {
+                    pauseTransition.stop();
+                    pauseTransition.setOnFinished(e -> this.setOpacity(configuration.frameOpacityOnMouseExitedProperty().get()));
+                    pauseTransition.play();
+                });
+            }
+        }
 
         this.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
         this.getIcons().add(IconHelper.get(LCConstant.LC_ICON_PATH));
@@ -112,10 +134,11 @@ public class UseModeStage extends Stage {
         });
 
         // Stage location
-        if (!sizeForced && !GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.FORCE_WINDOW_LOCATION) && !GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DISABLE_WINDOW_FULLSCREEN)) {
+        if (!sizeForced && !GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.FORCE_WINDOW_LOCATION) && !GlobalRuntimeConfigurationController.INSTANCE.isPresent(
+                GlobalRuntimeConfiguration.DISABLE_WINDOW_FULLSCREEN)) {
             // First, center on destination screen, then apply configuration
             Screen destinationScreen = StageUtils.getDestinationScreen();
-            StageUtils.centerOnScreen(destinationScreen,this);
+            StageUtils.centerOnScreen(destinationScreen, this);
 
             StageMode mode = configuration.stageModeOnLaunchProperty().get();
             switch (mode) {
@@ -138,7 +161,10 @@ public class UseModeStage extends Stage {
                 Integer forcedX = LangUtils.safeParseInt(parameters.get(0));
                 Integer forcedY = LangUtils.safeParseInt(parameters.get(1));
                 if (forcedX != null && forcedY != null) {
-                    LOGGER.info("{} is enabled with parameter {}, the stage mode configuration {} is then ignored", GlobalRuntimeConfiguration.FORCE_WINDOW_LOCATION, parameters, configuration.stageModeOnLaunchProperty().get());
+                    LOGGER.info("{} is enabled with parameter {}, the stage mode configuration {} is then ignored",
+                            GlobalRuntimeConfiguration.FORCE_WINDOW_LOCATION,
+                            parameters,
+                            configuration.stageModeOnLaunchProperty().get());
                     this.setX(forcedX);
                     this.setY(forcedY);
                 } else {
@@ -146,7 +172,10 @@ public class UseModeStage extends Stage {
                     StageUtils.moveStageTo(this, FramePosition.CENTER);
                 }
             } else {
-                LOGGER.info("Because {} or {} is enabled, will move the stage to screen center and ignore configuration {}", GlobalRuntimeConfiguration.FORCE_WINDOW_SIZE, GlobalRuntimeConfiguration.DISABLE_WINDOW_FULLSCREEN, configuration.stageModeOnLaunchProperty().get());
+                LOGGER.info("Because {} or {} is enabled, will move the stage to screen center and ignore configuration {}",
+                        GlobalRuntimeConfiguration.FORCE_WINDOW_SIZE,
+                        GlobalRuntimeConfiguration.DISABLE_WINDOW_FULLSCREEN,
+                        configuration.stageModeOnLaunchProperty().get());
                 StageUtils.moveStageTo(this, FramePosition.CENTER);
             }
         }
@@ -163,7 +192,7 @@ public class UseModeStage extends Stage {
             if (isVirtualKeyboard) {
                 StageUtils.setFocusableInternalAPI(this, false);
             }
-            if(!GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.FORCE_WINDOW_MINIMIZED)) {
+            if (!GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.FORCE_WINDOW_MINIMIZED)) {
                 VirtualMouseController.INSTANCE.centerMouseOnStage();
                 if (!isVirtualKeyboard) {
                     useModeScene.requestFocus();
