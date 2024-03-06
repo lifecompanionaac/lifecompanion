@@ -59,10 +59,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class ExportActionsToPdfTask extends LCTask<Void> {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExportActionsToPdfTask.class);
 
-    private static final float MAIN_TITLE_FONT_SIZE = 20, MAIN_DESCRIPTION_FONT_SIZE =15, SUB_TITLE_FONT_SIZE = 10, BODY_TITLE_FONT_SIZE = 12, BODY_DESCRIPTION_FONT_SIZE = 12, BODY_EXEMPLE_FONT_SIZE = 12, BODY_ID_FONT_SIZE = 12, FOOTER_FONT_SIZE = 9,
-            RIGHT_OFFSET_FROM_TEXT = 50, OFFSET_IMAGE_TO_TEXT = 10, HEADER_MARGIN = 15f, LATERAL_MARIN = 35f, FOOTER_MARGIN = 30f, SPACE_BETWEEN_BODY = 20,
-             MAIN_ICON_SIZE = 48, ACTION_ICON_SIZE = 32,
-            MAIN_CERCLE_DIAMETER = 67.5f, ACTION_CERCLE_DIAMETER = 44, KAPPA= 0.552284749831f,
+    private static final float MAIN_TITLE_FONT_SIZE = 15, MAIN_DESCRIPTION_FONT_SIZE =12, SUB_TITLE_FONT_SIZE = 10, BODY_TITLE_FONT_SIZE = 12, BODY_DESCRIPTION_FONT_SIZE = 12, BODY_EXEMPLE_FONT_SIZE = 12, BODY_ID_FONT_SIZE = 12, FOOTER_FONT_SIZE = 9,
+            RIGHT_OFFSET_FROM_TEXT = 50, OFFSET_IMAGE_TO_TEXT = 8, HEADER_MARGIN = 15f, LATERAL_MARIN = 35f, FOOTER_MARGIN = 30f, SPACE_BETWEEN_BODY = 20,
+             ICON_SIZE = 32, RECTANGLE_SIZE = 40, CERCLE_DIAMETER = 44, KAPPA= 0.552284749831f,
             FOOTER_LINE_HEIGHT = 12f, LOGO_HEIGHT = 25f, LINE_SIZE = 1f,
             COLOR_GRAY = 0.4f, COLOR_BLACK = 0f;
     private static final PDFont MAIN_TITLE_FONT = PDType1Font.HELVETICA_BOLD;
@@ -116,20 +115,19 @@ public class ExportActionsToPdfTask extends LCTask<Void> {
             pdfDoc = pdf;
             updateProgress(progress.get(), totalWork);
             initLcLogo();
-            currentTypeCategory = "Actions - ";
+            currentTypeCategory = "Catégorie Actions : ";
             newCategories(mainCategoriesAction, currentTypeCategory);
-            currentTypeCategory = "Événements - ";
+            currentTypeCategory = "Catégorie  Événements : ";
             newCategories(mainCategoriesEvent, currentTypeCategory);
-            currentTypeCategory = "Variables - ";
+            currentTypeCategory = "Catégorie Variables";
             initPageLayout();
             try (PDPageContentStream page = new PDPageContentStream(pdfDoc, pdfPage)) {
                 this.pageContentStream = page;
                 initContentStream();
 
-                String[][] texts = {new String [] {"Variables"}, Translation.getText("use.variable.select.dialog.header.text").split("\\s+")};
+                String[][] texts = {new String [] {currentTypeCategory}, Translation.getText("use.variable.select.dialog.header.text").split("\\s+")};
                 newSection(texts, null, null, true);
 
-                currentYPosition -= SPACE_BETWEEN_BODY;
                 for (UseVariableDefinitionI var : variables) {
                     texts = new String[][] {var.getName().split("\\s+"), var.getDescription().split("\\s+"), ("Example : "+var.getExampleValueToString()).split("\\s+"), ("ID : {"+var.getId()+"}").split("\\s+")};
                     newSection(texts, null, null, false);
@@ -181,7 +179,8 @@ public class ExportActionsToPdfTask extends LCTask<Void> {
         float size = BODY_TITLE_FONT_SIZE * 1.5f;
         PDFont font = main ? MAIN_TITLE_FONT : BODY_TITLE_FONT;
         float fontSize = main ? MAIN_TITLE_FONT_SIZE : BODY_TITLE_FONT_SIZE;
-        float startX = img ? LATERAL_MARIN+ACTION_CERCLE_DIAMETER+OFFSET_IMAGE_TO_TEXT : LATERAL_MARIN;
+        float colorSize = main ? RECTANGLE_SIZE : CERCLE_DIAMETER;
+        float startX = img ? LATERAL_MARIN+colorSize+OFFSET_IMAGE_TO_TEXT : LATERAL_MARIN;
         float tx = startX;
         initSpaceWidth(font, fontSize);
         for (String[] text : texts) {
@@ -193,6 +192,8 @@ public class ExportActionsToPdfTask extends LCTask<Void> {
                 }
                 tx += wordWidth + this.spaceWidth;
             }
+            tx = startX;
+            size += BODY_TITLE_FONT_SIZE * 1.5f;
         }
         if (this.currentYPosition - size <= FOOTER_MARGIN) {
             initPageLayout();
@@ -220,7 +221,7 @@ public class ExportActionsToPdfTask extends LCTask<Void> {
             float wordWidth = font.getStringWidth(word) / 1000 * fontSize;
             if (tx + wordWidth > pageWidthF - LATERAL_MARIN) {
                 tx = startX;
-                ty = fontSize * 1.5f;
+                ty =  fontSize* 1.5f;
             }
             if (this.currentYPosition - fontSize < FOOTER_MARGIN) {
                 initPageLayout();
@@ -251,7 +252,7 @@ public class ExportActionsToPdfTask extends LCTask<Void> {
                 // MAIN
                 String[][] texts = {(titleType + mainCategory.getName()).split("\\s+"), mainCategory.getStaticDescription().split("\\s+")};
                 newSection(texts, mainCategory.getConfigIconPath(), mainCategory.getColor(), true);
-                if ( currentYPosition > pageHeightF - HEADER_MARGIN - MAIN_CERCLE_DIAMETER) currentYPosition = pageHeightF - HEADER_MARGIN - MAIN_CERCLE_DIAMETER;
+                if ( currentYPosition > pageHeightF - HEADER_MARGIN - RECTANGLE_SIZE) currentYPosition = pageHeightF - HEADER_MARGIN - RECTANGLE_SIZE;
                 //SUB
                 ObservableList<? extends SubCategoryI> subCategories = mainCategory.getSubCategories();
                 for (SubCategoryI subCategory : subCategories) {
@@ -286,7 +287,7 @@ public class ExportActionsToPdfTask extends LCTask<Void> {
     private void newTitle(String[] word, boolean main, boolean boolImg) throws IOException {
         PDFont font = main ? MAIN_TITLE_FONT : BODY_TITLE_FONT;
         float fontSize = main ? MAIN_TITLE_FONT_SIZE : BODY_TITLE_FONT_SIZE;
-        float startX = boolImg ? LATERAL_MARIN+ACTION_CERCLE_DIAMETER+OFFSET_IMAGE_TO_TEXT : LATERAL_MARIN;
+        float startX = boolImg ? LATERAL_MARIN+CERCLE_DIAMETER+OFFSET_IMAGE_TO_TEXT : LATERAL_MARIN;
         float startY = main ? HEADER_MARGIN : fontSize ;
         insertText(word, font, fontSize, startX, startY);
     }
@@ -294,7 +295,7 @@ public class ExportActionsToPdfTask extends LCTask<Void> {
     private void newSubTitle(String[] word) throws IOException {
         this.pageContentStream.setNonStrokingColor(COLOR_GRAY, COLOR_GRAY, COLOR_GRAY);
          insertText(word, SUB_TITLE_FONT, SUB_TITLE_FONT_SIZE, LATERAL_MARIN, SUB_TITLE_FONT_SIZE * 1.5f);
-        currentYPosition -= SUB_TITLE_FONT_SIZE *0.5f;
+         currentYPosition -= SUB_TITLE_FONT_SIZE *0.5f;
         this.pageContentStream.addRect(LATERAL_MARIN, currentYPosition, pageWidthF-LATERAL_MARIN-LATERAL_MARIN, LINE_SIZE);
         this.pageContentStream.fill();
         this.pageContentStream.setNonStrokingColor(COLOR_BLACK, COLOR_BLACK, COLOR_BLACK);
@@ -303,7 +304,7 @@ public class ExportActionsToPdfTask extends LCTask<Void> {
 
     private void newDescription(String[] word, boolean main, boolean boolImg) throws IOException {
         PDFont font = main ? MAIN_DESCRIPTION_FONT : BODY_DESCRIPTION_FONT;
-        float startX = boolImg ? LATERAL_MARIN+ACTION_CERCLE_DIAMETER+OFFSET_IMAGE_TO_TEXT : LATERAL_MARIN;
+        float startX = boolImg ? LATERAL_MARIN+CERCLE_DIAMETER+OFFSET_IMAGE_TO_TEXT : LATERAL_MARIN;
         float fontSize = main ? MAIN_DESCRIPTION_FONT_SIZE : BODY_DESCRIPTION_FONT_SIZE;
         insertText(word, font, fontSize, startX, fontSize * 1.5f);
     }
@@ -323,31 +324,34 @@ public class ExportActionsToPdfTask extends LCTask<Void> {
 
             PDImageXObject pdImage = PDImageXObject.createFromFile(iconFile.getAbsolutePath(), pdfDoc);
 
-            int multiplier = mainIcon ? 2 : 1;
-            float imgSize = mainIcon ? (int) MAIN_ICON_SIZE : (int) ACTION_ICON_SIZE;
-            float cercleRadius = mainIcon ? MAIN_CERCLE_DIAMETER : ACTION_CERCLE_DIAMETER;
-            float imageWidth = pdImage.getWidth() * multiplier > imgSize ? imgSize : pdImage.getWidth() * multiplier;
-            float imageHeight = pdImage.getHeight() * multiplier > imgSize ? imgSize : pdImage.getHeight() * multiplier;
-            float startX = mainIcon ? LATERAL_MARIN + (cercleRadius / 2 - imageWidth) / 2 : LATERAL_MARIN + (cercleRadius - imageWidth) / 2;
+            float imageWidth = pdImage.getWidth() > ICON_SIZE ? ICON_SIZE : pdImage.getWidth();
+            float imageHeight = pdImage.getHeight() > ICON_SIZE ? ICON_SIZE : pdImage.getHeight();
+
+            float startX = mainIcon ? LATERAL_MARIN + (RECTANGLE_SIZE - imageWidth) / 2 : LATERAL_MARIN + (CERCLE_DIAMETER - imageWidth) / 2;
+            float startY = mainIcon ? this.currentYPosition - RECTANGLE_SIZE + (RECTANGLE_SIZE -  imageHeight)/2 : this.currentYPosition - CERCLE_DIAMETER + (CERCLE_DIAMETER - imageHeight)/2;
 
             this.pageContentStream.setNonStrokingColor((float) backgroundColor.getRed(), (float) backgroundColor.getGreen(), (float) backgroundColor.getBlue());
-            drawCircle(mainIcon);
+            if (mainIcon) drawRect();
+            else drawCircle();
             this.pageContentStream.fill();
-            this.pageContentStream.drawImage(pdImage, startX, this.currentYPosition - cercleRadius + (cercleRadius - imageHeight) / 2, imageWidth, imageHeight);
+            this.pageContentStream.drawImage(pdImage, startX, startY, imageWidth, imageHeight);
             this.pageContentStream.setNonStrokingColor(0f, 0f, 0f);
         } catch (IOException e) {
             LOGGER.error("Error while adding icon to PDF", e);
         }
     }
 
+    private void drawRect() throws IOException {
+        this.pageContentStream.addRect(LATERAL_MARIN, this.currentYPosition - RECTANGLE_SIZE, RECTANGLE_SIZE, RECTANGLE_SIZE);
+    }
+
     /**
     * The circle is created using cubic Bézier curves to approximate the shape of a circle.
     * Four curve segments are used to form a complete circle by connecting four control points.
     */
-    public void drawCircle(boolean main) throws IOException {
-        float radius = main ? MAIN_CERCLE_DIAMETER/2 : ACTION_CERCLE_DIAMETER/2;
-
-        float centerX = main ? LATERAL_MARIN + radius/2 : LATERAL_MARIN + radius;
+    public void drawCircle() throws IOException {
+        float radius = CERCLE_DIAMETER/2;
+        float centerX = LATERAL_MARIN + radius;
         float centerY = this.currentYPosition - radius;
 
         float controlDistance = KAPPA * radius;
