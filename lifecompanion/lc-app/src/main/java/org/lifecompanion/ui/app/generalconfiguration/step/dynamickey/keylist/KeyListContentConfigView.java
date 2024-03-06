@@ -368,7 +368,7 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
     // NAVIGATION
     //========================================================================
     public void select(KeyListNodeI item) {
-        if (!handlingDragDroppedOn && item != null && item.parentProperty().get() != null && currentList.get() != item.parentProperty().get()) {
+        if (item != null && item.parentProperty().get() != null && currentList.get() != item.parentProperty().get()) {
             currentList.set(item.parentProperty().get());
         }
         selected.set(item);
@@ -408,44 +408,26 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         return dragged;
     }
 
-    private static boolean handlingDragDroppedOn;
-
     public void dragDroppedOn(KeyListNodeI destNode) {
-        try {
-            handlingDragDroppedOn = true;
-            if (dragged.get() != null && destNode != null && dragged.get() != destNode) {
-                KeyListNodeI draggedVal = dragged.get();
-                if (!destNode.isLeafNode()) {
-                    if (!draggedVal.containsChild(destNode)) {
-                        removeAndGetIndex(draggedVal);
-                        destNode.getChildren().add(draggedVal);
-                    }
-                } else {
-                    Pair<List<KeyListNodeI>, Integer> draggedData = removeAndGetIndex(draggedVal);
-                    Pair<List<KeyListNodeI>, Integer> destData = removeAndGetIndex(destNode);
-                    destData.getLeft().add(destData.getRight(), draggedVal);
-                    draggedData.getLeft().add(draggedData.getRight(), destNode);
+        if (dragged.get() != null && destNode != null && dragged.get() != destNode) {
+            KeyListNodeI draggedVal = dragged.get();
+            if (!destNode.isLeafNode()) {
+                if (!draggedVal.containsChild(destNode)) {
+                    removeAndGetIndex(draggedVal);
+                    destNode.getChildren().add(draggedVal);
                 }
-                dragged.set(null);
+            } else {
+                Pair<List<KeyListNodeI>, Integer> draggedData = removeAndGetIndex(draggedVal);
+                Pair<List<KeyListNodeI>, Integer> destData = removeAndGetIndex(destNode);
+                destData.getLeft().add(destData.getRight(), draggedVal);
+                draggedData.getLeft().add(draggedData.getRight(), destNode);
             }
-        } finally {
-            handlingDragDroppedOn = false;
+            dragged.set(null);
         }
     }
 
-    private static <T extends Region> void dragDroppedNewImage(T node, Function<T, KeyListNodeI> itemGetter, DragEvent ea) {
-        try {
-            handlingDragDroppedOn = true;
-            Optional<File> firstValidImage = ea.getDragboard().getFiles().stream().filter(IOUtils::isSupportedImage).findFirst();
-            if (firstValidImage.isPresent()) {
-               ImageElementI imageElement = ImageDictionaries.INSTANCE.getOrAddToUserImagesDictionary(firstValidImage.get());
-               itemGetter.apply(node).imageVTwoProperty().set(imageElement);
-            }
-        } catch (Exception e) {
-            LOGGER.warn("Couldn't add dragged image to gallery", e);
-        }  finally {
-            handlingDragDroppedOn = false;
-        }
+    private static boolean isValidImageDragged(DragEvent ea) {
+        return ea.getDragboard().getFiles().stream().anyMatch(IOUtils::isSupportedImage);
     }
 
     private Pair<List<KeyListNodeI>, Integer> removeAndGetIndex(KeyListNodeI node) {
@@ -488,7 +470,7 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         });
         node.setOnDragOver(ea -> {
             KeyListNodeI destItem = itemGetter.apply(node);
-            if (keyListContentConfigView.draggedProperty().get() != null && keyListContentConfigView.draggedProperty().get() != destItem || ea.getDragboard().getFiles().stream().allMatch(IOUtils::isSupportedImage)) {
+            if ((keyListContentConfigView.draggedProperty().get() != null && keyListContentConfigView.draggedProperty().get() != destItem) || isValidImageDragged(ea)) {
                 ea.acceptTransferModes(TransferMode.COPY_OR_MOVE);
             }
         });
@@ -500,8 +482,15 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
             KeyListNodeI destItem = itemGetter.apply(node);
             if (keyListContentConfigView.draggedProperty().get() != null && keyListContentConfigView.draggedProperty().get() != destItem) {
                 keyListContentConfigView.dragDroppedOn(itemGetter.apply(node));
-            } else if (ea.getDragboard().getFiles().stream().allMatch(IOUtils::isSupportedImage)) {
-                dragDroppedNewImage(node, itemGetter, ea);
+            } else if (isValidImageDragged(ea)) {
+                try {
+                    ea.getDragboard().getFiles().stream().filter(IOUtils::isSupportedImage).findFirst().ifPresent(imageFile -> {
+                        ImageElementI imageElement = ImageDictionaries.INSTANCE.getOrAddToUserImagesDictionary(imageFile);
+                        itemGetter.apply(node).imageVTwoProperty().set(imageElement);
+                    });
+                } catch (Exception e) {
+                    LOGGER.warn("Couldn't add dragged image to gallery", e);
+                }
             }
         });
     }

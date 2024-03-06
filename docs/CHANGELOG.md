@@ -4,11 +4,13 @@
 
 ### Fonctionnalités
 
-- Ajout d'actions "Démarrer/arrêter le minuteur" afin de pouvoir utiliser les cases de type "Indicateur de progression"
+- *(Oscar)* Ajout d'actions "Démarrer/arrêter le minuteur" afin de pouvoir utiliser les cases de type "Indicateur de progression"
 
 ### Corrections/ajustements
 
 - Correction d'un rare problème avec la souris virtuelle
+- *(Oscar)* Ticket #270 : ajout de la possibilité de glisser des images de l'ordinateur dans les listes de cases
+- 
 
 ## 1.6.0 - 24/01/2024
 
