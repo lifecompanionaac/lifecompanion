@@ -23,6 +23,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
@@ -33,6 +34,7 @@ import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 import org.lifecompanion.controller.editaction.AsyncExecutorController;
 import org.lifecompanion.controller.editaction.GlobalActions;
+import org.lifecompanion.controller.editaction.LCConfigurationActions;
 import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.controller.editmode.ErrorHandlingController;
 import org.lifecompanion.controller.editmode.FileChooserType;
@@ -84,7 +86,7 @@ public class MiscConfigSubmenu extends ScrollPane implements LCViewInitHelper, U
      * Button to open folders
      */
     private Button buttonOpenRootFolder, buttonOpenCurrentProfileFolder, buttonOpenCurrentConfigFolder, buttonExecuteGC, buttonOpenConfigCleanXml, buttonDetectKeylistDuplicates, buttonSetKeylistNodesShape,
-            buttonGenerateTechDemoConfiguration, buttonGenerateRandomConfiguration, buttonImportJsonFile;
+            buttonGenerateTechDemoConfiguration, buttonGenerateRandomConfiguration,buttonImportJsonFile, buttonGeneratePdf;
 
     private Label labelMemoryInfo;
 
@@ -123,6 +125,10 @@ public class MiscConfigSubmenu extends ScrollPane implements LCViewInitHelper, U
         labelMemoryInfo.setAlignment(Pos.CENTER);
         buttonExecuteGC = createButton("misc.config.tab.memory.button.gc");
 
+        //PDF
+        Label labelTitlePdf = FXControlUtils.createTitleLabel("misc.config.tab.part.pdf");
+        buttonGeneratePdf = createButton("button.generate.lists.pdf");
+
         //Add
         VBox boxChildren = new VBox(10,
                 labelExplain,
@@ -135,6 +141,8 @@ public class MiscConfigSubmenu extends ScrollPane implements LCViewInitHelper, U
                 buttonOpenLogFile,
                 buttonOpenLogFolder,
                 this.buttonPackageLogs,
+                labelTitlePdf,
+                buttonGeneratePdf,
                 labelTitleMemory,
                 labelMemoryInfo,
                 buttonExecuteGC
@@ -233,7 +241,9 @@ public class MiscConfigSubmenu extends ScrollPane implements LCViewInitHelper, U
                 });
                 AsyncExecutorController.INSTANCE.addAndExecute(true, false, task);
             }
-
+        });
+        this.buttonGeneratePdf.setOnAction(e -> {
+            ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.ExportEditActionsToPdfAction(buttonGeneratePdf));
         });
     }
 

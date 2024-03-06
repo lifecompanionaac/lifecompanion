@@ -1323,6 +1323,7 @@
 
 
   <text key="config.action.export.grids.pdf">Exporter les grilles en PDF</text>
+  <text key="config.action.export.lists.pdf">Exporter les listes en PDF</text>
   <text key="config.duplicate.field.config">Configuration</text>
   <text key="config.duplicate.field.profile">Profil</text>
   <text key="config.duplicate.question.select.config">Sélectionner la configuration à dupliquer</text>
@@ -1352,6 +1353,8 @@
   <text key="paste.key.style.action">Cloner le style d'une case sur d'autres cases</text>
   <text key="pdf.export.chooser.dialog.title">Exporter les grilles en PDF</text>
   <text key="pdf.export.default.file.name">{}-{}-Grilles-LifeCompanion</text>
+  <text key="pdf.export.chooser.dialog.title.lists">Exporter les listes en PDF</text>
+  <text key="pdf.export.lists.file.name">{}-Actions-Évènements-Variables de LifeCompanion</text>
   <text key="plugin.error.unknown.error">Erreur inconnue au chargement de l'extension {}</text>
   <text key="plugin.installation.dialog.selection.header">Installer une extension</text>
   <text key="plugin.installation.dialog.selection.message">Entrez l'identifiant de l'extension à installer</text>
@@ -1382,7 +1385,15 @@
   <text key="profile.alert.no.selected.message">Vous devez créer ou sélectionner un profil pour pouvoir utiliser LifeCompanion.\nVoulez vous quitter l'application ?</text>
   <!--org.lifecompanion.config.data.component.task-->
   <text key="pdf.export.file.title">Export des grilles - {} - {}</text>
+  <text key="pdf.export.lists.file.title">Export des listes - action - événement - variable</text>
   <text key="task.export.grids.pdf.name">Export des grilles en PDF</text>
+  <text key="task.export.lists.pdf.name">Export des listes en PDF</text>
+  <text key="export.lists.pdf.name.action.category">Catégorie d'actions : </text>
+  <text key="export.lists.pdf.name.event.category">Catégorie d'événements : </text>
+  <text key="export.lists.pdf.name.variable.category">Liste des variables</text>
+  <text key="export.lists.pdf.example">Exemple : </text>
+  <text key="export.lists.pdf.id">ID : </text>
+
   <!--org.lifecompanion.config.data.config.task-->
   <text key="task.title.load.user.config">Chargement des préférences</text>
   <text key="task.title.save.user.config">Sauvegarde des préférences</text>
@@ -1509,6 +1520,8 @@
   <text key="misc.config.tab.part.folders">Dossiers de LifeCompanion</text>
   <text key="misc.config.tab.part.logs">Logs</text>
   <text key="button.open.log.file">Ouvrir les logs courant</text>
+  <text key="misc.config.tab.part.pdf">PDF</text>
+  <text key="button.generate.lists.pdf">Listes des actions, événements et informations variables</text>
 	<text key="misc.config.tab.part.memory">Mémoire</text>
 	<text key="misc.config.tab.memory.info">Mémoire utilisé par la JVM : {}/{}\nMémoire maximum disponnible : {}</text>
 	<text key="misc.config.tab.memory.button.gc">Executer le GC</text>
