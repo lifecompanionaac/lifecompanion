@@ -96,9 +96,10 @@ public class Predict4AllRootEntryConfigurationView extends VBox implements Gener
 
         this.labelMinWordPredictionScoreThreshold = new Label(Translation.getText("predict4all.config.slider.min.word.prediction.score.threshold"));
 
-        HBox boxSliderMinWordPredictionScoreThreshold = new HBox(10.0, labelMinWordPredictionScoreThreshold, this.sliderMinWordPredictionScoreThreshold);
+        HBox boxSliderMinWordPredictionScoreThreshold = new HBox(8.0, labelMinWordPredictionScoreThreshold, this.sliderMinWordPredictionScoreThreshold);
         labelMinWordPredictionScoreThreshold.setMaxWidth(Double.MAX_VALUE);
         HBox.setHgrow(labelMinWordPredictionScoreThreshold, Priority.ALWAYS);
+        VBox.setMargin(boxSliderMinWordPredictionScoreThreshold,new Insets(4.0,0,0,0));
 
 
         this.toggleDynamicModelEnabled = new ToggleSwitch(Translation.getText("predict4all.config.enable.dynamic.model"));
@@ -269,7 +270,6 @@ public class Predict4AllRootEntryConfigurationView extends VBox implements Gener
     @Override
     public void afterHide() {
         if (this.predictorModelDto != null) {
-            //
             this.currentConfiguration.getPredictionParameters().enableMinWordPredictionScoreThresholdProperty().set(this.toggleEnableMinWordPredictionScoreThreshold.isSelected());
             this.currentConfiguration.getPredictionParameters().minWordPredictionScoreThresholdProperty().set(this.sliderMinWordPredictionScoreThreshold.getValue());
             this.predictorModelDto.getPredictionParameter().setAddNewWordsEnabled(this.toggleAddNewWord.isSelected());

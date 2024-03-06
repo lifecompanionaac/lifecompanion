@@ -37,7 +37,7 @@ public class DeleteLastWordPredictionAction extends SimpleUseActionImpl<UseActio
 		this.nameID = "action.delete.last.word.prediction.name";
 		this.staticDescriptionID = "action.delete.last.word.prediction.description";
 		this.variableDescriptionProperty().set(this.getStaticDescription());
-		this.configIconPath = "text/icon_delete_last_entry.png";
+		this.configIconPath = "text/icon_delete_last_prediction.png";
 		this.parameterizableAction = false;
 		this.order = 1;
 	}

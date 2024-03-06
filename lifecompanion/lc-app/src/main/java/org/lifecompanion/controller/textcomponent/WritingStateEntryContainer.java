@@ -643,6 +643,7 @@ public class WritingStateEntryContainer implements WritingStateControllerI {
     @Override
     public void removeLastWordPrediction(WritingEventSource src) {
         restoreState();
+        this.savedState = null;
     }
 
     int getLastWordAndStopCharCount() {
@@ -724,9 +725,9 @@ public class WritingStateEntryContainer implements WritingStateControllerI {
 
     @Override
     public void removeAll(WritingEventSource src) {
-        cleanSavedState();
         this.entries.clear();
         this.caretPosition.set(0);
+        this.savedState = null;
     }
 
     private void enableUpperCase() {
