@@ -4,13 +4,13 @@
 
 ### Fonctionnalités
 
-- *(Oscar)* Ajout d'actions "Démarrer/arrêter le minuteur" afin de pouvoir utiliser les cases de type "Indicateur de progression"
+- *(Oscar P.)* Ajout d'actions "Démarrer/arrêter le minuteur" afin de pouvoir utiliser les cases de type "Indicateur de progression"
+- *(Oscar P.)* Ajout de la fonction de** changement dynamique de l'opacité** en mode utilisation : permet de modifier l'opacité de fenêtre lorsque la souris sort de LifeCompanion
 
 ### Corrections/ajustements
 
 - Correction d'un rare problème avec la souris virtuelle
-- *(Oscar)* Ticket #270 : ajout de la possibilité de glisser des images de l'ordinateur dans les listes de cases
-- 
+- *(Oscar P.)* Ticket #270 : ajout de la possibilité de glisser des images de l'ordinateur dans les listes de cases
 
 ## 1.6.0 - 24/01/2024
 
