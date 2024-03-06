@@ -6,6 +6,8 @@
 
 - *(Oscar P.)* Ajout d'actions "Démarrer/arrêter le minuteur" afin de pouvoir utiliser les cases de type "Indicateur de progression"
 - *(Oscar P.)* Ajout de la fonction de** changement dynamique de l'opacité** en mode utilisation : permet de modifier l'opacité de fenêtre lorsque la souris sort de LifeCompanion
+- *(Lisa H)* Ajout d'une fonction de "seuil de pertinence" sur la prédiction de mots pour ne conserver que les mots les plus pertinents dans la prédiction
+- *(Lisa H)* Ajout de l'action "Supprimer la dernière prédiction de mots"
 
 ### Corrections/ajustements
 
