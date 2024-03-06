@@ -26,9 +26,12 @@ import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.util.StringConverter;
+import org.lifecompanion.model.api.configurationcomponent.PredictionParameterI;
 import org.lifecompanion.ui.controlsfx.control.ToggleSwitch;
 import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
@@ -56,10 +59,11 @@ public class Predict4AllRootEntryConfigurationView extends VBox implements Gener
 
     private static final ObservableList<Integer> COUNT_FIRE_PRED_CORR = FXCollections.observableArrayList(0, 1, 2, 3, 4);
 
-    private ToggleSwitch toggleDynamicModelEnabled, toggleAddNewWord;
+    private ToggleSwitch toggleDynamicModelEnabled, toggleAddNewWord, toggleEnableMinWordPredictionScoreThreshold;
     private Spinner<Integer> spinnerMinUseCountToValidateNewWord;
     private ToggleSwitch toggleEnableCorrection;
-    private Label labelMinCountToAddNewWords;
+    private Slider sliderMinWordPredictionScoreThreshold;
+    private Label labelMinCountToAddNewWords, labelMinWordPredictionScoreThreshold;
     private ComboBox<Integer> comboboxMinCountPrediction, comboboxMinCountCorrection;
     private Button buttonDictionaryConfig, buttonCorrectionConfig, buttonTrainingConfig, buttonTestingConfig;
 
@@ -79,6 +83,25 @@ public class Predict4AllRootEntryConfigurationView extends VBox implements Gener
     @Override
     public void initUI() {
         // General configuration
+        this.toggleEnableMinWordPredictionScoreThreshold = new ToggleSwitch(Translation.getText("predict4all.config.enable.min.word.prediction.score.threshold"));
+
+        this.sliderMinWordPredictionScoreThreshold = FXControlUtils.createBaseSlider(0.0, PredictionParameterI.MAX_MIN_WORD_SCORE_THRESHOLD, PredictionParameterI.DEFAULT_MIN_WORD_SCORE_THRESHOLD);
+        this.sliderMinWordPredictionScoreThreshold.setShowTickLabels(true);
+        this.sliderMinWordPredictionScoreThreshold.setShowTickMarks(true);
+        this.sliderMinWordPredictionScoreThreshold.setMajorTickUnit(0.10);
+        this.sliderMinWordPredictionScoreThreshold.setMinorTickCount(5);
+        this.sliderMinWordPredictionScoreThreshold.setLabelFormatter(Predict4AllRootEntryConfigurationView.STR_CONVERTER_THRESHOLD);
+        GridPane.setHgrow(sliderMinWordPredictionScoreThreshold, Priority.ALWAYS);
+        sliderMinWordPredictionScoreThreshold.setMaxWidth(Double.MAX_VALUE);
+
+        this.labelMinWordPredictionScoreThreshold = new Label(Translation.getText("predict4all.config.slider.min.word.prediction.score.threshold"));
+
+        HBox boxSliderMinWordPredictionScoreThreshold = new HBox(8.0, labelMinWordPredictionScoreThreshold, this.sliderMinWordPredictionScoreThreshold);
+        labelMinWordPredictionScoreThreshold.setMaxWidth(Double.MAX_VALUE);
+        HBox.setHgrow(labelMinWordPredictionScoreThreshold, Priority.ALWAYS);
+        VBox.setMargin(boxSliderMinWordPredictionScoreThreshold,new Insets(4.0,0,0,0));
+
+
         this.toggleDynamicModelEnabled = new ToggleSwitch(Translation.getText("predict4all.config.enable.dynamic.model"));
         this.toggleAddNewWord = new ToggleSwitch(Translation.getText("predict4all.config.learn.new.words"));
         this.spinnerMinUseCountToValidateNewWord = FXControlUtils.createIntSpinner(1, 100, 4, 1, 150.0);
@@ -105,6 +128,7 @@ public class Predict4AllRootEntryConfigurationView extends VBox implements Gener
         buttonTrainingConfig.setAlignment(Pos.CENTER);
         buttonTrainingConfig.setMaxWidth(Double.MAX_VALUE);
 
+        this.toggleEnableMinWordPredictionScoreThreshold.setMaxWidth(Double.MAX_VALUE);
         this.toggleDynamicModelEnabled.setMaxWidth(Double.MAX_VALUE);
         this.toggleAddNewWord.setMaxWidth(Double.MAX_VALUE);
 
@@ -133,15 +157,29 @@ public class Predict4AllRootEntryConfigurationView extends VBox implements Gener
         this.setPadding(new Insets(GeneralConfigurationStepViewI.PADDING));
         this.setSpacing(8.0);
         this.getChildren().addAll(
-                FXControlUtils.createTitleLabel("predict4all.config.part.title.prediction"), boxSpinnerMinCountPred, buttonDictionaryConfig,
-                FXControlUtils.createTitleLabel("predict4all.config.part.title.dynamic.model"), this.toggleDynamicModelEnabled, this.toggleAddNewWord, boxSpinnerCountValidateWords, buttonTrainingConfig,
-                FXControlUtils.createTitleLabel("predict4all.config.part.title.correction"), this.toggleEnableCorrection, boxSpinnerMinCountCorr, buttonCorrectionConfig,
-                new Separator(Orientation.HORIZONTAL), this.buttonTestingConfig
+                FXControlUtils.createTitleLabel("predict4all.config.part.title.prediction"),
+                boxSpinnerMinCountPred,
+                this.toggleEnableMinWordPredictionScoreThreshold,
+                boxSliderMinWordPredictionScoreThreshold,
+                buttonDictionaryConfig,
+                FXControlUtils.createTitleLabel("predict4all.config.part.title.dynamic.model"),
+                this.toggleDynamicModelEnabled,
+                this.toggleAddNewWord,
+                boxSpinnerCountValidateWords,
+                buttonTrainingConfig,
+                FXControlUtils.createTitleLabel("predict4all.config.part.title.correction"),
+                this.toggleEnableCorrection,
+                boxSpinnerMinCountCorr,
+                buttonCorrectionConfig,
+                new Separator(Orientation.HORIZONTAL),
+                this.buttonTestingConfig
         );
     }
 
     @Override
     public void initBinding() {
+        this.sliderMinWordPredictionScoreThreshold.disableProperty().bind(this.toggleEnableMinWordPredictionScoreThreshold.selectedProperty().not());
+        this.labelMinWordPredictionScoreThreshold.disableProperty().bind(this.toggleEnableMinWordPredictionScoreThreshold.selectedProperty().not());
         this.toggleAddNewWord.disableProperty().bind(this.toggleDynamicModelEnabled.selectedProperty().not());
         this.spinnerMinUseCountToValidateNewWord.disableProperty()
                 .bind(this.toggleDynamicModelEnabled.selectedProperty().not().or(this.toggleAddNewWord.selectedProperty().not()));
@@ -210,6 +248,8 @@ public class Predict4AllRootEntryConfigurationView extends VBox implements Gener
         try {
             this.predictorModelDto = Predict4AllWordPredictorHelper.loadData(model.getID());
             // Update configuration
+            this.toggleEnableMinWordPredictionScoreThreshold.setSelected(currentConfiguration.getPredictionParameters().enableMinWordPredictionScoreThresholdProperty().get());
+            this.sliderMinWordPredictionScoreThreshold.setValue(currentConfiguration.getPredictionParameters().minWordPredictionScoreThresholdProperty().get());
             this.toggleAddNewWord.setSelected(this.predictorModelDto.getPredictionParameter().isAddNewWordsEnabled());
             this.toggleDynamicModelEnabled.setSelected(this.predictorModelDto.getPredictionParameter().isDynamicModelEnabled());
             this.spinnerMinUseCountToValidateNewWord.getValueFactory().setValue(this.predictorModelDto.getPredictionParameter().getMinUseCountToValidateNewWord());
@@ -230,6 +270,8 @@ public class Predict4AllRootEntryConfigurationView extends VBox implements Gener
     @Override
     public void afterHide() {
         if (this.predictorModelDto != null) {
+            this.currentConfiguration.getPredictionParameters().enableMinWordPredictionScoreThresholdProperty().set(this.toggleEnableMinWordPredictionScoreThreshold.isSelected());
+            this.currentConfiguration.getPredictionParameters().minWordPredictionScoreThresholdProperty().set(this.sliderMinWordPredictionScoreThreshold.getValue());
             this.predictorModelDto.getPredictionParameter().setAddNewWordsEnabled(this.toggleAddNewWord.isSelected());
             this.predictorModelDto.getPredictionParameter().setDynamicModelEnabled(this.toggleDynamicModelEnabled.isSelected());
             this.predictorModelDto.getPredictionParameter().setMinUseCountToValidateNewWord(this.spinnerMinUseCountToValidateNewWord.getValue());
@@ -238,4 +280,31 @@ public class Predict4AllRootEntryConfigurationView extends VBox implements Gener
             this.predictorModelDto.getPredictionParameter().setMinCountToProvideCorrection(this.comboboxMinCountCorrection.getValue());
         }
     }
+
+
+    // STRING CONVERTER COST
+    //========================================================================
+    private static final StringConverter<Double> STR_CONVERTER_THRESHOLD = new StringConverter<>() {
+        @Override
+        public String toString(final Double val) {
+            double valI = val != null ? val : 0.0;
+            if (valI < PredictionParameterI.DEFAULT_MIN_WORD_SCORE_THRESHOLD) {
+                return Translation.getText("predict4all.config.min.word.prediction.score.threshold.tick.level.low");
+            }
+            if (valI < PredictionParameterI.MAX_MIN_WORD_SCORE_THRESHOLD) {
+                return Translation.getText("predict4all.config.min.word.prediction.score.threshold.tick.level.medium");
+            }
+            return Translation.getText("predict4all.config.min.word.prediction.score.threshold.tick.level.hight");
+        }
+
+
+        @Override
+        public Double fromString(final String string) {
+            return 0.0;
+        }
+    };
+
+
+    //========================================================================
+
 }

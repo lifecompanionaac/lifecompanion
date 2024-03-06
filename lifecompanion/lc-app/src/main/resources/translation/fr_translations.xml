@@ -853,6 +853,10 @@
 		le même comportement que l'appui de la touche
 		"Retour arrière" sur un
 		clavier</text>
+
+  <text key="action.delete.last.word.prediction.name">Supprimer la dernière prédiction</text>
+  <text key="action.delete.last.word.prediction.description">Supprime la dernière prédiction de mot sélectionnée. Permet donc "d'annuler" sa dernière sélection de prédiction de mots.</text>
+
   <text key="action.delete.last.char.name">Supprimer le caractère précédent</text>
   <text key="action.delete.last.entry.description">Supprime la dernière entrée ajoutée. L'entrée supprimée
 		ne dépend pas de la position du curseur.</text>
@@ -1862,6 +1866,13 @@
   <text key="predict4all.config.count.use">Mot personnel utilisé {} fois</text>
   <text key="predict4all.config.enable.correction">Activer la correction personnalisée</text>
   <text key="predict4all.config.enable.dynamic.model">Activer le modèle utilisateur dynamique</text>
+
+  <text key="predict4all.config.enable.min.word.prediction.score.threshold">Conserver uniquement les mots les plus pertinents</text>
+  <text key="predict4all.config.slider.min.word.prediction.score.threshold">Filtre de pertinence</text>
+  <text key="predict4all.config.min.word.prediction.score.threshold.tick.level.low">Faible</text>
+  <text key="predict4all.config.min.word.prediction.score.threshold.tick.level.medium">Classique</text>
+  <text key="predict4all.config.min.word.prediction.score.threshold.tick.level.hight">Fort</text>
+
   <text key="predict4all.config.file.chooser.import.words.extension">.txt - liste de mots (un par ligne)</text>
   <text key="predict4all.config.file.chooser.import.words.title">Choisir un fichier de liste de mots</text>
   <text key="predict4all.config.filter.vocabulary.percentage">Limiter le dictionnaire (%)</text>

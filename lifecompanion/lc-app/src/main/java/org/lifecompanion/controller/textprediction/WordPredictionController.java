@@ -35,6 +35,7 @@ import org.lifecompanion.util.javafx.FXThreadUtils;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Controller for word prediction.
@@ -100,9 +101,23 @@ public class WordPredictionController extends AbstractPredictionController<WordP
     protected List<WordPredictionI> predict(String textBeforeCaret, String textAfterCaret, int count) {
         synchronized (this.currentPredictor) {
             this.lastPredictionResult = this.currentPredictor.predict(textBeforeCaret, textAfterCaret, count);
-            return lastPredictionResult.getPredictions();
+            if (this.parameter.enableMinWordPredictionScoreThresholdProperty().get()) {
+                double maxScore = lastPredictionResult.getPredictions()
+                        .stream()
+                        .mapToDouble(WordPredictionI::getScore)
+                        .max().orElse(0.0);
+
+                double scoreThreshold = maxScore * this.parameter.minWordPredictionScoreThresholdProperty().get(); // defined the threshold min score to display a prediction
+                return lastPredictionResult.getPredictions()
+                        .stream()
+                        .filter(pred -> pred.getScore() >= scoreThreshold)
+                        .collect(Collectors.toList());
+            } else {
+                return lastPredictionResult.getPredictions();
+            }
         }
     }
+
 
     @Override
     protected void dispatchPredictionResult(List<WordPredictionI> result, boolean waitingDispatch) {

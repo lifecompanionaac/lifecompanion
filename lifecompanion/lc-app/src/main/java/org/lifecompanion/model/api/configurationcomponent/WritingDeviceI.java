@@ -40,6 +40,12 @@ public interface WritingDeviceI {
     void removeLastWord(WritingEventSource src);
 
     /**
+     * To remove the last selected word prediction (if existing)<br>
+     * @param src event source
+     */
+    void removeLastWordPrediction(WritingEventSource src);
+
+    /**
      * To remove every entries from this writer
      */
     void removeAll(WritingEventSource src);

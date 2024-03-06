@@ -194,8 +194,8 @@ public enum WritingStateController implements ModeListenerI, WritingStateControl
     public int getCaretEntryIndex(final int caretPosition) {
         return writingStateEntryContainer.getCaretEntryIndex(caretPosition);
     }
-    //========================================================================
 
+    //========================================================================
     // BASICS ACTIONS
     //========================================================================
     @Override
@@ -256,6 +256,26 @@ public enum WritingStateController implements ModeListenerI, WritingStateControl
     @Override
     public void switchCapitalizeNext(WritingEventSource src) {
         this.writingStateEntryContainer.switchCapitalizeNext(src);
+    }
+
+    @Override
+    public void enableAutoSavedStateCleaning() {
+        this.writingStateEntryContainer.enableAutoSavedStateCleaning();
+    }
+
+    @Override
+    public void disableAutoSavedStateCleaning() {
+        this.writingStateEntryContainer.disableAutoSavedStateCleaning();
+    }
+
+    @Override
+    public void restoreState() {
+        this.writingStateEntryContainer.restoreState();
+    }
+
+    @Override
+    public void saveState() {
+        this.writingStateEntryContainer.saveState();
     }
 
     @Override
@@ -333,7 +353,6 @@ public enum WritingStateController implements ModeListenerI, WritingStateControl
         }
     }
 
-
     @Override
     public void removeLastWord(WritingEventSource src) {
         final int lastWordAndStopCharCount = writingStateEntryContainer.getLastWordAndStopCharCount();
@@ -343,6 +362,13 @@ public enum WritingStateController implements ModeListenerI, WritingStateControl
             } else {
                 d.removeLastWord(src);
             }
+        }, src, WritingEventType.DELETION, FluentHashMap.mapStrObj("type", DeletionTypes.LAST_WORD));
+    }
+
+    @Override
+    public void removeLastWordPrediction(WritingEventSource src) {
+        this.executeEvent(d -> {
+            d.removeLastWordPrediction(src);
         }, src, WritingEventType.DELETION, FluentHashMap.mapStrObj("type", DeletionTypes.LAST_WORD));
     }
 

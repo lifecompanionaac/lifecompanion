@@ -227,6 +227,11 @@ public enum VirtualKeyboardController implements WritingDeviceI, ModeListenerI {
     }
 
     @Override
+    public void removeLastWordPrediction(WritingEventSource src) {
+
+    }
+
+    @Override
     public void removeAll(WritingEventSource src) {
 
     }

@@ -34,13 +34,16 @@ import org.lifecompanion.model.api.textcomponent.WritingEventSource;
 import org.lifecompanion.model.api.textcomponent.WritingStateControllerI;
 import org.lifecompanion.model.api.textprediction.WordPredictionI;
 import org.lifecompanion.model.impl.configurationcomponent.WriterEntry;
+import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.impl.textcomponent.TextDisplayerLineHelper;
+import org.lifecompanion.util.CopyUtils;
 import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.predict4all.nlp.Separator;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
@@ -59,7 +62,11 @@ public class WritingStateEntryContainer implements WritingStateControllerI {
     private final StringProperty currentWord, currentChar, lastCompleteWord;
     private final BooleanProperty upperCase;
     private final BooleanProperty capitalizeNext;
+
     private boolean nextCapitalizedAutoEnabled = false;
+    private boolean autoSavedStateCleaning;
+
+    private WritingStateEntryContainerState savedState;
 
     private final ChangeListener<String> changeListenerTextBeforeCaret;
 
@@ -370,16 +377,22 @@ public class WritingStateEntryContainer implements WritingStateControllerI {
     //========================================================================
     @Override
     public void newLine(WritingEventSource src) {
+        cleanSavedState();
+        this.disableCapitalizeNext();
         this.insert(src, new WriterEntry("\n", false), WriteSpecialChar.ENTER);
     }
 
     @Override
     public void tab(WritingEventSource src) {
+        cleanSavedState();
+        this.disableCapitalizeNext();
         this.insert(src, new WriterEntry("\t", false), WriteSpecialChar.TAB);
     }
 
     @Override
     public void space(WritingEventSource src) {
+        cleanSavedState();
+        this.disableCapitalizeNext();
         this.insert(src, new WriterEntry(" ", false), WriteSpecialChar.SPACE);
     }
 
@@ -465,16 +478,19 @@ public class WritingStateEntryContainer implements WritingStateControllerI {
 
     @Override
     public void insertWordPrediction(WritingEventSource src, String toInsert, WordPredictionI originalPrediction) {
+        cleanSavedState();
         this.insertText(src, toInsert);
     }
 
     @Override
     public void insertCharPrediction(WritingEventSource src, String toInsert) {
+        cleanSavedState();
         this.insertText(src, toInsert);
     }
 
     @Override
     public void removeLastChar(WritingEventSource src) {
+        cleanSavedState();
         int caret = this.caretPosition().get();
         WriterEntryI entryBeofre = this.getEntryBeforeCaretPosition(caret);
         if (caret != 0) {
@@ -489,6 +505,7 @@ public class WritingStateEntryContainer implements WritingStateControllerI {
 
     @Override
     public void removeNextChars(WritingEventSource src, final int n) {
+        cleanSavedState();
         for (int i = 0; i < n; i++) {
             this.removeNextChar(src);
         }
@@ -496,6 +513,7 @@ public class WritingStateEntryContainer implements WritingStateControllerI {
 
     @Override
     public void removeLastChars(WritingEventSource src, final int n) {
+        cleanSavedState();
         for (int i = 0; i < n; i++) {
             this.removeLastChar(src);
         }
@@ -503,6 +521,7 @@ public class WritingStateEntryContainer implements WritingStateControllerI {
 
     @Override
     public void removeNextChar(WritingEventSource src) {
+        cleanSavedState();
         int caret = this.caretPosition().get();
         WriterEntryI entryAfter = this.getEntryAfterCaretPosition(caret);
         removeChar(entryAfter, 0, (entry) -> {
@@ -514,11 +533,13 @@ public class WritingStateEntryContainer implements WritingStateControllerI {
     }
 
     public void insert(WritingEventSource src, final WriterEntryI entryP) {
+        cleanSavedState();
         insert(src, entryP, null);
     }
 
     @Override
     public void insert(WritingEventSource src, final WriterEntryI entryP, final WriteSpecialChar specialChar) {
+        cleanSavedState();
         if (this.capitalizeNext.get()) {
             entryP.capitalize();
         }
@@ -556,6 +577,7 @@ public class WritingStateEntryContainer implements WritingStateControllerI {
 
     @Override
     public void insertText(WritingEventSource src, String text) {
+        cleanSavedState();
         if (this.capitalizeNext.get()) {
             text = StringUtils.capitalize(text);
         }
@@ -600,6 +622,7 @@ public class WritingStateEntryContainer implements WritingStateControllerI {
 
     @Override
     public void removeLastEntry(WritingEventSource src) {
+        cleanSavedState();
         if (!this.getWriterEntries().isEmpty()) {
             this.getWriterEntries().remove(this.getLastEntry());
             // Place the caret at the end
@@ -610,7 +633,14 @@ public class WritingStateEntryContainer implements WritingStateControllerI {
 
     @Override
     public void removeLastWord(WritingEventSource src) {
+        cleanSavedState();
         this.removeLastChars(src, getLastWordAndStopCharCount());
+    }
+
+    @Override
+    public void removeLastWordPrediction(WritingEventSource src) {
+        restoreState();
+        this.savedState = null;
     }
 
     int getLastWordAndStopCharCount() {
@@ -637,6 +667,52 @@ public class WritingStateEntryContainer implements WritingStateControllerI {
 
     //========================================================================
 
+
+    // STATE
+    //========================================================================
+    @Override
+    public void enableAutoSavedStateCleaning() {
+        this.autoSavedStateCleaning = true;
+    }
+
+    @Override
+    public void disableAutoSavedStateCleaning() {
+        this.autoSavedStateCleaning = false;
+    }
+
+    @Override
+    public void saveState() {
+        this.savedState = new WritingStateEntryContainerState(this.entries.stream().map(e -> {
+            try {
+                return CopyUtils.createSimpleCopy(e, null, WriterEntry::new);
+            } catch (LCException ex) {
+                return null;
+            }
+        }).collect(Collectors.toList()), this.caretPosition.get());
+    }
+
+    @Override
+    public void restoreState() {
+        if (containsSavedState()) {
+            this.entries.setAll(savedState.getEntries());
+            if (savedState.getCaretPosition() >= 0 && savedState.getCaretPosition() <= this.currentText.get().length()) {
+                this.caretPosition.set(savedState.getCaretPosition());
+            }
+        }
+    }
+
+    private boolean containsSavedState() {
+        return savedState != null;
+    }
+
+    private void cleanSavedState() {
+        if (this.autoSavedStateCleaning) {
+            this.savedState = null;
+        }
+    }
+    //========================================================================
+
+
     // PRIVATE ACTIONS
     //========================================================================
     @Override
@@ -648,6 +724,7 @@ public class WritingStateEntryContainer implements WritingStateControllerI {
     public void removeAll(WritingEventSource src) {
         this.entries.clear();
         this.caretPosition.set(0);
+        this.savedState = null;
     }
 
     private void enableUpperCase() {
@@ -677,6 +754,7 @@ public class WritingStateEntryContainer implements WritingStateControllerI {
     }
 
     private void removeChar(final WriterEntryI entry, final int caretAdd, final Function<WriterEntryI, String> entryChanging) {
+        cleanSavedState();
         if (entry != null) {
             // Move the caret
             if (this.caretPosition.get() != 0) {

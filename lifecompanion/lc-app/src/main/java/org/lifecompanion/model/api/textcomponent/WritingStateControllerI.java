@@ -100,8 +100,25 @@ public interface WritingStateControllerI extends WritingDeviceI {
     void switchCapitalizeNext(WritingEventSource src);
     //========================================================================
 
+    // STATE
+    //========================================================================
+    void enableAutoSavedStateCleaning();
 
-    //
+    void disableAutoSavedStateCleaning();
+
+    /**
+     * Save the current writing state to be later restored by {@link #restoreState()}.<br>
+     * If {@link #enableAutoSavedStateCleaning()}, any text modifying action will clean the saved state.
+     */
+    void saveState();
+
+    /**
+     * Restore the saved state (if present)
+     */
+    void restoreState();
+    //========================================================================
+
+
     //========================================================================
 
     /**
