@@ -99,7 +99,7 @@ public enum ScanningMouseController implements ModeListenerI {
     /**
      * Visibility of the mouse accuracy
      */
-    private final BooleanProperty visibilityMouseX, visibilityMouseY, visibilityMouseXAccuracy, visibilityMouseYAccuracy, mouseAccuracy;
+    private final BooleanProperty visibilityMouseX, visibilityMouseY, visibilityMouseYAccuracy, visibilityMouseXAccuracy, mouseAccuracy;
 
     private final IntegerProperty maxLoop;
 
@@ -129,8 +129,8 @@ public enum ScanningMouseController implements ModeListenerI {
         this.mouseType = new SimpleObjectProperty<>();
         this.visibilityMouseX = new SimpleBooleanProperty(false);
         this.visibilityMouseY = new SimpleBooleanProperty(false);
-        this.visibilityMouseXAccuracy = new SimpleBooleanProperty(false);
         this.visibilityMouseYAccuracy = new SimpleBooleanProperty(false);
+        this.visibilityMouseXAccuracy = new SimpleBooleanProperty(false);
         this.mouseAccuracy = new SimpleBooleanProperty();
         this.maxLoop = new SimpleIntegerProperty();
         //Check frame position
@@ -200,24 +200,23 @@ public enum ScanningMouseController implements ModeListenerI {
     //========================================================================
     private void movingCursorStrip(Runnable action) {
         if (checkIfVirtualMouseEnabled()) {
-            this.visibilityMouseX.set(true);
             this.visibilityMouseY.set(true);
             if (this.mouseAccuracy.get()) {
-                this.visibilityMouseXAccuracy.set(true);
                 this.visibilityMouseYAccuracy.set(true);
                 this.lineAccuracy = false;
                 this.currentLoopCount = 0;
                 startMovingLineRight();
                 SelectionModeController.INSTANCE.pauseCurrentScanningUntilNextSelection(() -> {
                     stopMovingMouse();
-                    System.out.println("oscar : " + sizeLine);
                     this.mouseXAccuracy.set(this.mouseXAccuracy.get() - sizeLine);
                     this.lineAccuracy = true;
                     this.currentLoopCount = 0;
                     startMovingLineRight();
                     SelectionModeController.INSTANCE.pauseCurrentScanningUntilNextSelection(() -> {
                         stopMovingMouse();
-                        this.visibilityMouseXAccuracy.set(false);
+                        this.visibilityMouseX.set(true);
+                        this.visibilityMouseXAccuracy.set(true);
+                        this.visibilityMouseYAccuracy.set(false);
                         this.lineAccuracy = false;
                         this.currentLoopCount = 0;
                         startMovingLineBottom();
@@ -246,6 +245,7 @@ public enum ScanningMouseController implements ModeListenerI {
                 this.currentLoopCount = 0;
                 SelectionModeController.INSTANCE.pauseCurrentScanningUntilNextSelection(() -> {
                     stopMovingMouse();
+                    this.visibilityMouseX.set(true);
                     this.currentLoopCount = 0;
                     startMovingLineBottom();
                     SelectionModeController.INSTANCE.pauseCurrentScanningUntilNextSelection(() -> {
@@ -345,8 +345,8 @@ public enum ScanningMouseController implements ModeListenerI {
         SelectionModeController.INSTANCE.restartCurrentScanning();
         this.visibilityMouseX.set(false);
         this.visibilityMouseY.set(false);
-        this.visibilityMouseXAccuracy.set(false);
         this.visibilityMouseYAccuracy.set(false);
+        this.visibilityMouseXAccuracy.set(false);
         this.mouseX.set(0);
         this.mouseY.set(0);
         this.mouseXAccuracy.set(0);

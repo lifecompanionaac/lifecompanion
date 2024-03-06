@@ -74,22 +74,22 @@ public class CrossScanningView extends Pane implements ScanningMouseDrawingI {
         accuracyLeft.startXProperty().bind(mouseController.mouseXAccuracyProperty());
         accuracyLeft.endXProperty().bind(mouseController.mouseXAccuracyProperty());
         accuracyLeft.setEndY(this.windowsHeight);
-        accuracyLeft.visibleProperty().bind(mouseController.visibilityMouseXAccuracyProperty());
+        accuracyLeft.visibleProperty().bind(mouseController.visibilityMouseYAccuracyProperty());
 
         accuracyRight.startXProperty().bind(mouseController.mouseXAccuracyProperty().add(mouseController.sizeScaleProperty().multiply(DEFAULT_LINE_SIZE+DEFAULT_LINE_SIZE)).add(INTERNAL_GAP_LINE));
         accuracyRight.endXProperty().bind(mouseController.mouseXAccuracyProperty().add(mouseController.sizeScaleProperty().multiply(DEFAULT_LINE_SIZE+DEFAULT_LINE_SIZE)).add(INTERNAL_GAP_LINE));
         accuracyRight.setEndY(this.windowsHeight);
-        accuracyRight.visibleProperty().bind(mouseController.visibilityMouseXAccuracyProperty());
+        accuracyRight.visibleProperty().bind(mouseController.visibilityMouseYAccuracyProperty());
 
         accuracyTop.startYProperty().bind(mouseController.mouseYAccuracyProperty());
         accuracyTop.endYProperty().bind(mouseController.mouseYAccuracyProperty());
         accuracyTop.setEndX(this.windowsWidth);
-        accuracyTop.visibleProperty().bind(mouseController.visibilityMouseYAccuracyProperty());
+        accuracyTop.visibleProperty().bind(mouseController.visibilityMouseXAccuracyProperty());
 
         accuracyBottom.startYProperty().bind(mouseController.mouseYAccuracyProperty().add(mouseController.sizeScaleProperty().multiply(DEFAULT_LINE_SIZE+DEFAULT_LINE_SIZE)).add(INTERNAL_GAP_LINE));
         accuracyBottom.endYProperty().bind(mouseController.mouseYAccuracyProperty().add(mouseController.sizeScaleProperty().multiply(DEFAULT_LINE_SIZE+DEFAULT_LINE_SIZE)).add(INTERNAL_GAP_LINE));
         accuracyBottom.setEndX(this.windowsWidth);
-        accuracyBottom.visibleProperty().bind(mouseController.visibilityMouseYAccuracyProperty());
+        accuracyBottom.visibleProperty().bind(mouseController.visibilityMouseXAccuracyProperty());
     }
 
     @Override
