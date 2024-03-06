@@ -101,10 +101,9 @@ public class LCConfigurationComponent extends CoreDisplayableComponentBaseImpl i
      */
     private final BooleanProperty fixedSize;
 
-    private final BooleanProperty changeFrameOpacityEnabled;
-
-    private final DoubleProperty changeFrameOpacityValue;
-    private final DoubleProperty latencyFrameOpacityValue;
+    private final BooleanProperty autoChangeFrameOpacityOnMouseExited;
+    private final DoubleProperty frameOpacityOnMouseExited;
+    private final IntegerProperty autoChangeFrameOpacityDelay;
 
     /**
      * If grid is use, the size of the grid.
@@ -217,9 +216,9 @@ public class LCConfigurationComponent extends CoreDisplayableComponentBaseImpl i
         this.computedHeight = new SimpleDoubleProperty(this, "computedHeight", 0.0);
         this.framePositionOnLaunch = new SimpleObjectProperty<>(this, "framePositionOnLaunch", FramePosition.CENTER);
         this.fixedSize = new SimpleBooleanProperty(this, "fixedSize", false);
-        this.changeFrameOpacityEnabled = new SimpleBooleanProperty(this, "changeFrameOpacityEnabled", false);
-        this.changeFrameOpacityValue = new SimpleDoubleProperty(this, "changeFrameOpacityValue", 0.5);
-        this.latencyFrameOpacityValue = new SimpleDoubleProperty(this, "latencyFrameOpacityValue", 0.5);
+        this.autoChangeFrameOpacityOnMouseExited = new SimpleBooleanProperty(this, "changeFrameOpacityEnabled", false);
+        this.frameOpacityOnMouseExited = new SimpleDoubleProperty(this, "changeFrameOpacityValue", 0.5);
+        this.autoChangeFrameOpacityDelay = new SimpleIntegerProperty(this, "latencyFrameOpacityValue", 500);
         this.virtualKeyboard = new SimpleBooleanProperty(this, "virtualKeyboard", false);
         this.useGrid = new SimpleBooleanProperty(this, "useGrid", true);
         this.useParentSelectionMode = new SimpleBooleanProperty(this, "useParentSelectionMode", false);
@@ -443,18 +442,18 @@ public class LCConfigurationComponent extends CoreDisplayableComponentBaseImpl i
     }
 
     @Override
-    public BooleanProperty changeFrameOpacityEnabledProperty() {
-        return this.changeFrameOpacityEnabled;
+    public BooleanProperty autoChangeFrameOpacityOnMouseExitedProperty() {
+        return this.autoChangeFrameOpacityOnMouseExited;
     }
 
     @Override
-    public DoubleProperty changeFrameOpacityValueProperty() {
-        return this.changeFrameOpacityValue;
+    public DoubleProperty frameOpacityOnMouseExitedProperty() {
+        return this.frameOpacityOnMouseExited;
     }
 
     @Override
-    public DoubleProperty latencyFrameOpacityValueProperty() {
-        return this.latencyFrameOpacityValue;
+    public IntegerProperty autoChangeFrameOpacityDelayProperty() {
+        return this.autoChangeFrameOpacityDelay;
     }
 
     /**

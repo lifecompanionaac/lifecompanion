@@ -112,21 +112,21 @@ public interface LCConfigurationI extends DisplayableComponentI, VoiceSynthesize
      *
      * @return true if the configuration is use as a opacity window
      */
-    BooleanProperty changeFrameOpacityEnabledProperty();
+    BooleanProperty autoChangeFrameOpacityOnMouseExitedProperty();
 
     /**
      * if the window opacity is enabled, this property will contain the value of the opacity.
      *
      * @return the window opacity value
      */
-    DoubleProperty changeFrameOpacityValueProperty();
+    DoubleProperty frameOpacityOnMouseExitedProperty();
 
     /**
      * if the window opacity is enabled, this property will contain the value of the latency for the opacity change.
      *
      * @return the window opacity latency value
      */
-    DoubleProperty latencyFrameOpacityValueProperty();
+    IntegerProperty autoChangeFrameOpacityDelayProperty();
 
     /**
      * @return a property that can be enable/disable to use a grid when placing the component of this configuration.<br>
