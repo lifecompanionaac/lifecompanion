@@ -24,7 +24,6 @@ import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.collections.ObservableList;
 import org.lifecompanion.model.api.configurationcomponent.WriterEntryI;
 import org.lifecompanion.model.api.configurationcomponent.WritingDeviceI;
-import org.lifecompanion.model.impl.categorizedelement.useaction.available.DeleteLastWordPredictionAction;
 
 /**
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
@@ -101,16 +100,23 @@ public interface WritingStateControllerI extends WritingDeviceI {
     void switchCapitalizeNext(WritingEventSource src);
     //========================================================================
 
-// ici on désactif la réinitlisation détat
-    void enableAutoSavedStateClean();
-    //ici bollean a true ou false
+    // STATE
+    //========================================================================
+    void enableAutoSavedStateCleaning();
 
-    void disableAutoSavedStateClean();
-    //same
+    void disableAutoSavedStateCleaning();
 
+    /**
+     * Save the current writing state to be later restored by {@link #restoreState()}.<br>
+     * If {@link #enableAutoSavedStateCleaning()}, any text modifying action will clean the saved state.
+     */
     void saveState();
 
+    /**
+     * Restore the saved state (if present)
+     */
     void restoreState();
+    //========================================================================
 
 
     //========================================================================

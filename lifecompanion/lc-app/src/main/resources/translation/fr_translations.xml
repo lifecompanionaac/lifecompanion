@@ -811,8 +811,8 @@
 		"Retour arrière" sur un
 		clavier</text>
 
-  <text key="action.delete.last.word.prediction.name">Supprime la dernière prédiction de mot</text>
-  <text key="action.delete.last.word.prediction.description">Supprime la dernière prédiction de mot sélectionnée.</text>
+  <text key="action.delete.last.word.prediction.name">Supprimer la dernière prédiction</text>
+  <text key="action.delete.last.word.prediction.description">Supprime la dernière prédiction de mot sélectionnée. Permet donc "d'annuler" sa dernière sélection de prédiction de mots.</text>
 
   <text key="action.delete.last.char.name">Supprimer le caractère précédent</text>
   <text key="action.delete.last.entry.description">Supprime la dernière entrée ajoutée. L'entrée supprimée

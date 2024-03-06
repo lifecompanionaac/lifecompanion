@@ -16,7 +16,6 @@ public class WritingStateEntryContainerState {
         this.caretPosition = caretPosition;
     }
 
-
     public List<WriterEntryI> getEntries() {
         return entries;
     }

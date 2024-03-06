@@ -64,7 +64,7 @@ public class WritingStateEntryContainer implements WritingStateControllerI {
     private final BooleanProperty capitalizeNext;
 
     private boolean nextCapitalizedAutoEnabled = false;
-    private boolean autoSAvedStateClean ;
+    private boolean autoSavedStateCleaning;
 
     private WritingStateEntryContainerState savedState;
 
@@ -371,21 +371,10 @@ public class WritingStateEntryContainer implements WritingStateControllerI {
         }
         return caretTextflowIndex;
     }
-
-    public boolean containsSavedState (){
-        return (savedState!=null);
-    }
     //========================================================================
 
     // BASICS ACTIONS
     //========================================================================
-
-
-    public void cleanSaveState(){
-        if(this.autoSAvedStateClean){
-            this.savedState = null;    }
-    }
-
     @Override
     public void newLine(WritingEventSource src) {
         cleanSaveState();
@@ -460,37 +449,6 @@ public class WritingStateEntryContainer implements WritingStateControllerI {
     }
 
     @Override
-    public void enableAutoSavedStateClean() {
-        this.autoSAvedStateClean = true;
-    }
-    @Override
-    public void disableAutoSavedStateClean() {
-        this.autoSAvedStateClean = false;
-    }
-
-
-    public void saveState() {
-        this.savedState = new WritingStateEntryContainerState(this.entries.stream().map(e -> {
-            try {
-                return CopyUtils.createSimpleCopy(e, null, WriterEntry::new);
-            } catch (LCException ex) {
-                return null;
-            }
-        }).collect(Collectors.toList()),this.caretPosition.get());
-    }
-
-
-    public void restoreState() {
-        if (containsSavedState()) {
-            this.entries.setAll(savedState.getEntries());
-            if(savedState.getCaretPosition() >= 0 && savedState.getCaretPosition() <= this.currentText.get().length() ){
-                    this.caretPosition.set(savedState.getCaretPosition());}
-        }
-    }
-
-
-
-    @Override
     public void moveCaretUp(WritingEventSource src) {
         cleanSaveState();
         moveCaretOnLine(src, -1);
@@ -499,7 +457,8 @@ public class WritingStateEntryContainer implements WritingStateControllerI {
     @Override
     public void moveCaretDown(WritingEventSource src) {
         cleanSaveState();
-        moveCaretOnLine(src, 1); }
+        moveCaretOnLine(src, 1);
+    }
 
 
     // TODO : move to parent interface
@@ -690,6 +649,11 @@ public class WritingStateEntryContainer implements WritingStateControllerI {
         this.removeLastChars(src, getLastWordAndStopCharCount());
     }
 
+    @Override
+    public void removeLastWordPrediction(WritingEventSource src) {
+        restoreState();
+    }
+
     int getLastWordAndStopCharCount() {
         // Get text before caret
         String textBefore = this.textBeforeCaretProperty().get();
@@ -713,6 +677,52 @@ public class WritingStateEntryContainer implements WritingStateControllerI {
     }
 
     //========================================================================
+
+
+    // STATE
+    //========================================================================
+    @Override
+    public void enableAutoSavedStateCleaning() {
+        this.autoSavedStateCleaning = true;
+    }
+
+    @Override
+    public void disableAutoSavedStateCleaning() {
+        this.autoSavedStateCleaning = false;
+    }
+
+    @Override
+    public void saveState() {
+        this.savedState = new WritingStateEntryContainerState(this.entries.stream().map(e -> {
+            try {
+                return CopyUtils.createSimpleCopy(e, null, WriterEntry::new);
+            } catch (LCException ex) {
+                return null;
+            }
+        }).collect(Collectors.toList()), this.caretPosition.get());
+    }
+
+    @Override
+    public void restoreState() {
+        if (containsSavedState()) {
+            this.entries.setAll(savedState.getEntries());
+            if (savedState.getCaretPosition() >= 0 && savedState.getCaretPosition() <= this.currentText.get().length()) {
+                this.caretPosition.set(savedState.getCaretPosition());
+            }
+        }
+    }
+
+    private boolean containsSavedState() {
+        return savedState != null;
+    }
+
+    private void cleanSaveState() {
+        if (this.autoSavedStateCleaning) {
+            this.savedState = null;
+        }
+    }
+    //========================================================================
+
 
     // PRIVATE ACTIONS
     //========================================================================

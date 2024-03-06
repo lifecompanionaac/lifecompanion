@@ -33,6 +33,8 @@ import javafx.beans.property.StringProperty;
  */
 public interface PredictionParameterI extends XMLSerializable<IOContextI> {
 
+	double DEFAULT_MIN_WORD_SCORE_THRESHOLD = 0.1, MAX_MIN_WORD_SCORE_THRESHOLD = 0.2;
+
 	/**
 	 * @return the word predictor engine id selected for this configuration
 	 */

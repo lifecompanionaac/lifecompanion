@@ -31,6 +31,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
+import org.lifecompanion.model.api.configurationcomponent.PredictionParameterI;
 import org.lifecompanion.ui.controlsfx.control.ToggleSwitch;
 import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
@@ -84,12 +85,12 @@ public class Predict4AllRootEntryConfigurationView extends VBox implements Gener
         // General configuration
         this.toggleEnableMinWordPredictionScoreThreshold = new ToggleSwitch(Translation.getText("predict4all.config.enable.min.word.prediction.score.threshold"));
 
-        this.sliderMinWordPredictionScoreThreshold = FXControlUtils.createBaseSlider(0.0 ,0.20,0.10);
+        this.sliderMinWordPredictionScoreThreshold = FXControlUtils.createBaseSlider(0.0, PredictionParameterI.MAX_MIN_WORD_SCORE_THRESHOLD, PredictionParameterI.DEFAULT_MIN_WORD_SCORE_THRESHOLD);
         this.sliderMinWordPredictionScoreThreshold.setShowTickLabels(true);
         this.sliderMinWordPredictionScoreThreshold.setShowTickMarks(true);
         this.sliderMinWordPredictionScoreThreshold.setMajorTickUnit(0.10);
         this.sliderMinWordPredictionScoreThreshold.setMinorTickCount(5);
-        this.sliderMinWordPredictionScoreThreshold.setLabelFormatter(Predict4AllRootEntryConfigurationView.STR_CONVERTER_COST);
+        this.sliderMinWordPredictionScoreThreshold.setLabelFormatter(Predict4AllRootEntryConfigurationView.STR_CONVERTER_THRESHOLD);
         GridPane.setHgrow(sliderMinWordPredictionScoreThreshold, Priority.ALWAYS);
         sliderMinWordPredictionScoreThreshold.setMaxWidth(Double.MAX_VALUE);
 
@@ -281,17 +282,16 @@ public class Predict4AllRootEntryConfigurationView extends VBox implements Gener
     }
 
 
-
     // STRING CONVERTER COST
     //========================================================================
-    private static final StringConverter<Double> STR_CONVERTER_COST = new StringConverter<Double>() {
+    private static final StringConverter<Double> STR_CONVERTER_THRESHOLD = new StringConverter<>() {
         @Override
         public String toString(final Double val) {
             double valI = val != null ? val : 0.0;
-            if (valI < 0.10) {
+            if (valI < PredictionParameterI.DEFAULT_MIN_WORD_SCORE_THRESHOLD) {
                 return Translation.getText("predict4all.config.min.word.prediction.score.threshold.tick.level.low");
             }
-            if (valI == 0.10) {
+            if (valI < PredictionParameterI.MAX_MIN_WORD_SCORE_THRESHOLD) {
                 return Translation.getText("predict4all.config.min.word.prediction.score.threshold.tick.level.medium");
             }
             return Translation.getText("predict4all.config.min.word.prediction.score.threshold.tick.level.hight");

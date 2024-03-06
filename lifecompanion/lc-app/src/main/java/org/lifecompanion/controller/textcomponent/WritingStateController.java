@@ -18,7 +18,6 @@
  */
 package org.lifecompanion.controller.textcomponent;
 
-import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.collections.ObservableList;
 import org.lifecompanion.model.api.configurationcomponent.*;
@@ -57,7 +56,6 @@ public enum WritingStateController implements ModeListenerI, WritingStateControl
     private final WritingStateEntryContainer writingStateEntryContainer;
     private final Set<Consumer<WritingEventI>> writingEventListeners;
     private final BooleanProperty writingDisabled;
-
 
 
     /**
@@ -191,6 +189,7 @@ public enum WritingStateController implements ModeListenerI, WritingStateControl
     public int getCaretEntryIndex(final int caretPosition) {
         return writingStateEntryContainer.getCaretEntryIndex(caretPosition);
     }
+
     //========================================================================
     // BASICS ACTIONS
     //========================================================================
@@ -255,17 +254,20 @@ public enum WritingStateController implements ModeListenerI, WritingStateControl
     }
 
     @Override
-    public void enableAutoSavedStateClean() {
-        this.writingStateEntryContainer.enableAutoSavedStateClean();
+    public void enableAutoSavedStateCleaning() {
+        this.writingStateEntryContainer.enableAutoSavedStateCleaning();
     }
+
     @Override
-    public void disableAutoSavedStateClean() {
-        this.writingStateEntryContainer.disableAutoSavedStateClean();
+    public void disableAutoSavedStateCleaning() {
+        this.writingStateEntryContainer.disableAutoSavedStateCleaning();
     }
+
     @Override
     public void restoreState() {
         this.writingStateEntryContainer.restoreState();
     }
+
     @Override
     public void saveState() {
         this.writingStateEntryContainer.saveState();
@@ -345,12 +347,11 @@ public enum WritingStateController implements ModeListenerI, WritingStateControl
             }
         }, src, WritingEventType.DELETION, FluentHashMap.mapStrObj("type", DeletionTypes.LAST_WORD));
     }
+
     public void removeLastWordPrediction(WritingEventSource src) {
-        if(writingStateEntryContainer.containsSavedState()){
-         this.executeEvent(d -> {
-             d.restoreState();
-             }, src, WritingEventType.DELETION, FluentHashMap.mapStrObj("type", DeletionTypes.LAST_WORD));
-        }
+        this.executeEvent(d -> {
+            d.removeLastWordPrediction(src);
+        }, src, WritingEventType.DELETION, FluentHashMap.mapStrObj("type", DeletionTypes.LAST_WORD));
     }
 
     @Override

@@ -32,10 +32,8 @@ import org.lifecompanion.model.impl.textprediction.WordPrediction;
 import org.lifecompanion.model.impl.textprediction.predict4all.Predict4AllWordPredictor;
 import org.lifecompanion.util.javafx.FXThreadUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.function.ToDoubleFunction;
 import java.util.stream.Collectors;
 
 /**

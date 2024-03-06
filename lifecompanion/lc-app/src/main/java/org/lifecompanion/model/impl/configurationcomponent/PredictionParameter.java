@@ -20,26 +20,26 @@ package org.lifecompanion.model.impl.configurationcomponent;
 
 import javafx.beans.property.*;
 import org.jdom2.Element;
-import org.lifecompanion.model.api.configurationcomponent.PredictionParameterI;
-import org.lifecompanion.model.impl.exception.LCException;
-import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.controller.textprediction.AutoCharPredictionController;
 import org.lifecompanion.controller.textprediction.WordPredictionController;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
+import org.lifecompanion.model.api.configurationcomponent.PredictionParameterI;
+import org.lifecompanion.model.api.io.IOContextI;
+import org.lifecompanion.model.impl.exception.LCException;
 
 public class PredictionParameter implements PredictionParameterI {
-    private StringProperty selectedWordPredictorId;
-    private StringProperty selectedCharPredictorId;
-    private StringProperty charPredictionSpaceChar;
-    private BooleanProperty enableMinWordPredictionScoreThreshold;
-    private DoubleProperty minWordPredictionScoreThresholdProperty;
+    private final StringProperty selectedWordPredictorId;
+    private final StringProperty selectedCharPredictorId;
+    private final StringProperty charPredictionSpaceChar;
+    private final BooleanProperty enableMinWordPredictionScoreThreshold;
+    private final DoubleProperty minWordPredictionScoreThresholdProperty;
 
     public PredictionParameter() {
         this.selectedCharPredictorId = new SimpleStringProperty(this, "selectedCharPredictorId", AutoCharPredictionController.INSTANCE.getDefaultPredictor().getId());
         this.selectedWordPredictorId = new SimpleStringProperty(this, "selectedWordPredictorId", WordPredictionController.INSTANCE.getDefaultPredictor().getId());
         this.charPredictionSpaceChar = new SimpleStringProperty(this, "charPredictionSpaceChar", "_");
-        this.enableMinWordPredictionScoreThreshold = new SimpleBooleanProperty(this, "enableMinWordPredictionScoreThreshold",false);
-        this.minWordPredictionScoreThresholdProperty = new SimpleDoubleProperty(this, "minWordPredictionScoreThreshold",0.10);
+        this.enableMinWordPredictionScoreThreshold = new SimpleBooleanProperty(false);
+        this.minWordPredictionScoreThresholdProperty = new SimpleDoubleProperty(DEFAULT_MIN_WORD_SCORE_THRESHOLD);
     }
 
     @Override
@@ -59,10 +59,12 @@ public class PredictionParameter implements PredictionParameterI {
 
     @Override
     public BooleanProperty enableMinWordPredictionScoreThresholdProperty() {
-        return enableMinWordPredictionScoreThreshold;    }
+        return enableMinWordPredictionScoreThreshold;
+    }
 
-    public DoubleProperty minWordPredictionScoreThresholdProperty(){
-        return minWordPredictionScoreThresholdProperty;    }
+    public DoubleProperty minWordPredictionScoreThresholdProperty() {
+        return minWordPredictionScoreThresholdProperty;
+    }
 
     // Class part : "IO"
     //========================================================================

@@ -37,7 +37,7 @@ public class DeleteLastWordAction extends SimpleUseActionImpl<UseActionTriggerCo
 		this.nameID = "action.delete.last.word.name";
 		this.staticDescriptionID = "action.delete.last.word.description";
 		this.variableDescriptionProperty().set(this.getStaticDescription());
-		this.configIconPath = "text/icon_delete_last_entry.png";
+		this.configIconPath = "text/icon_delete_last_entry.png";// FIXME : ICON
 		this.parameterizableAction = false;
 		this.order = 1;
 	}
