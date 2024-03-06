@@ -348,6 +348,7 @@ public enum WritingStateController implements ModeListenerI, WritingStateControl
         }, src, WritingEventType.DELETION, FluentHashMap.mapStrObj("type", DeletionTypes.LAST_WORD));
     }
 
+    @Override
     public void removeLastWordPrediction(WritingEventSource src) {
         this.executeEvent(d -> {
             d.removeLastWordPrediction(src);
