@@ -81,7 +81,7 @@ public class MiscConfigSubmenu extends ScrollPane implements LCViewInitHelper, U
      * Button to open folders
      */
     private Button buttonOpenRootFolder, buttonOpenCurrentProfileFolder, buttonOpenCurrentConfigFolder, buttonExecuteGC, buttonOpenConfigCleanXml, buttonDetectKeylistDuplicates, buttonSetKeylistNodesShape,
-            buttonGenerateTechDemoConfiguration, buttonGenerateRandomConfiguration;
+            buttonGenerateTechDemoConfiguration, buttonGenerateRandomConfiguration, buttonGeneratePdf;
 
     private Label labelMemoryInfo;
 
@@ -122,11 +122,7 @@ public class MiscConfigSubmenu extends ScrollPane implements LCViewInitHelper, U
 
         //PDF
         Label labelTitlePdf = FXControlUtils.createTitleLabel("misc.config.tab.part.pdf");
-        Button buttonGeneratePdf = createButton("button.generate.lists.pdf");
-        buttonGeneratePdf.setOnAction(e -> {
-            GridPane gridPaneTotal = new GridPane();
-            ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.ExportEditActionsToPdfAction(gridPaneTotal));
-        });
+        buttonGeneratePdf = createButton("button.generate.lists.pdf");
 
         //Add
         VBox boxChildren = new VBox(10,
@@ -220,6 +216,9 @@ public class MiscConfigSubmenu extends ScrollPane implements LCViewInitHelper, U
         });
         this.buttonSetKeylistNodesShape.setOnAction(e -> {
             setKeylistShapes();
+        });
+        this.buttonGeneratePdf.setOnAction(e -> {
+            ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.ExportEditActionsToPdfAction(buttonGeneratePdf));
         });
     }
 
