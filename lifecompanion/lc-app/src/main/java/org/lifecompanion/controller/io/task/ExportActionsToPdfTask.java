@@ -115,13 +115,13 @@ public class ExportActionsToPdfTask extends LCTask<Void> {
             pdfDoc = pdf;
             updateProgress(progress.get(), totalWork);
             initLcLogo();
-            currentTypeCategory = "Catégorie Actions : ";
+            currentTypeCategory = Translation.getText("export.lists.pdf.name.action.category");
             newCategories(mainCategoriesAction, currentTypeCategory);
-            currentTypeCategory = "Catégorie  Événements : ";
+            currentTypeCategory = Translation.getText("export.lists.pdf.name.event.category");
             newCategories(mainCategoriesEvent, currentTypeCategory);
-            currentTypeCategory = "Catégorie Variables";
+            currentTypeCategory = Translation.getText("export.lists.pdf.name.variable.category");
             initPageLayout();
-            try (PDPageContentStream page = new PDPageContentStream(pdfDoc, pdfPage)) {
+            try (PDPageContentStream page = new PDPageContentStream(pdfDoc, pdfPage, PDPageContentStream.AppendMode.APPEND, true, true)) {
                 this.pageContentStream = page;
                 initContentStream();
 
@@ -129,7 +129,7 @@ public class ExportActionsToPdfTask extends LCTask<Void> {
                 newSection(texts, null, null, true);
 
                 for (UseVariableDefinitionI var : variables) {
-                    texts = new String[][] {var.getName().split("\\s+"), var.getDescription().split("\\s+"), ("Example : "+var.getExampleValueToString()).split("\\s+"), ("ID : {"+var.getId()+"}").split("\\s+")};
+                    texts = new String[][] {var.getName().split("\\s+"), var.getDescription().split("\\s+"), (Translation.getText("export.lists.pdf.example")+var.getExampleValueToString()).split("\\s+"), (Translation.getText("export.lists.pdf.id") + "{"+var.getId()+"}").split("\\s+")};
                     newSection(texts, null, null, false);
                 }
 
@@ -171,7 +171,7 @@ public class ExportActionsToPdfTask extends LCTask<Void> {
         if (this.pageContentStream != null) {
             insertFooter();
         }
-        this.pageContentStream = new PDPageContentStream(pdfDoc, pdfPage);
+        this.pageContentStream = new PDPageContentStream(pdfDoc, pdfPage, PDPageContentStream.AppendMode.APPEND, true, true);
         this.currentYPosition = pdfPage.getMediaBox().getHeight() - HEADER_MARGIN;
     }
 
@@ -245,7 +245,7 @@ public class ExportActionsToPdfTask extends LCTask<Void> {
     private void newCategories(ObservableList <? extends MainCategoryI<? extends SubCategoryI<? extends MainCategoryI, ?>>> mainCategories, String titleType) throws IOException {
         for (MainCategoryI mainCategory : mainCategories) {
             initPageLayout();
-            try (PDPageContentStream page = new PDPageContentStream(pdfDoc, pdfPage)) {
+            try (PDPageContentStream page = new PDPageContentStream(pdfDoc, pdfPage, PDPageContentStream.AppendMode.APPEND, true, true)) {
                 this.pageContentStream = page;
                 initContentStream();
 

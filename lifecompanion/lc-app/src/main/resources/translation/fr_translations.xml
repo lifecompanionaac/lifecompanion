@@ -1375,6 +1375,12 @@
   <text key="pdf.export.lists.file.title">Export des listes - action - événement - variable</text>
   <text key="task.export.grids.pdf.name">Export des grilles en PDF</text>
   <text key="task.export.lists.pdf.name">Export des listes en PDF</text>
+  <text key="export.lists.pdf.name.action.category">Catégorie Actions : </text>
+  <text key="export.lists.pdf.name.event.category">Catégorie Événements : </text>
+  <text key="export.lists.pdf.name.variable.category">Catégorie Variables</text>
+  <text key="export.lists.pdf.example">Example : </text>
+  <text key="export.lists.pdf.id">ID : </text>
+
   <!--org.lifecompanion.config.data.config.task-->
   <text key="task.title.load.user.config">Chargement des préférences</text>
   <text key="task.title.save.user.config">Sauvegarde des préférences</text>
