@@ -1692,6 +1692,11 @@
 		remplir la fenêtre.\nEn revanche, si désactivé, la configuration sera
 		étirée de manière à remplir complètement
 		l'espace dans la fenêtre.</text>
+  <text key="tooltip.explain.configuration.style.opacity">Défini l'opacité de la fenêtre en mode
+        utilisation.\nDiminuer la valeur permet d'obtenir une fenêtre
+        transparente, afin de voir les élements derrière la fenêtre,
+        très utile
+        en mode "clavier virtuel".</text>
   <text key="tooltip.explain.use.param.first.part">Permet de définir la grille de départ de la
 		configuration.\nCette grille sera affichée au démarrage du mode
 		utilisation. Si la sélection est en défilement, le
@@ -1778,7 +1783,7 @@
   <text key="use.event.on.ua.sequence.finished.name">Fin d'une séquence</text>
   <text key="use.event.on.ua.sequence.finished.description">Cet événement est généré à la fin d'une séquence et permet donc d'ajouter des actions en conséquences, par exemple revenir à la sélection des séquences ou encore prononcer un message de fin.</text>
   <text key="use.event.main.category.sequence.description">Contient les événements générés par l'interaction avec les fonctions de séquences. Permet par exemple de réagir à la fin d'une séquence.</text>
-    <text key="user.action.display.filter.both">Toutes (étapes et sous-étapes)</text>
+  <text key="user.action.display.filter.both">Toutes (étapes et sous-étapes)</text>
   <text key="user.action.display.filter.only.sub">Uniquement les sous-étapes</text>
   <text key="user.action.display.filter.only.not.sub">Uniquement les étapes</text>
   <text key="user.action.sequence.item.display.filter.field">Mode d'affichage</text>
