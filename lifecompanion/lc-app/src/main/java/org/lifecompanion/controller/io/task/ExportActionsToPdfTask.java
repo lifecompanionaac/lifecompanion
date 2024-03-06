@@ -61,7 +61,7 @@ public class ExportActionsToPdfTask extends LCTask<Void> {
 
     private static final float MAIN_TITLE_FONT_SIZE = 15, MAIN_DESCRIPTION_FONT_SIZE =12, SUB_TITLE_FONT_SIZE = 10, BODY_TITLE_FONT_SIZE = 12, BODY_DESCRIPTION_FONT_SIZE = 12, BODY_EXEMPLE_FONT_SIZE = 12, BODY_ID_FONT_SIZE = 12, FOOTER_FONT_SIZE = 9,
             RIGHT_OFFSET_FROM_TEXT = 50, OFFSET_IMAGE_TO_TEXT = 8, HEADER_MARGIN = 15f, LATERAL_MARIN = 35f, FOOTER_MARGIN = 30f, SPACE_BETWEEN_BODY = 20,
-             ICON_SIZE = 32, RECTANGLE_SIZE = 40, CERCLE_DIAMETER = 44, KAPPA= 0.552284749831f,
+             ICON_SIZE = 32, RECTANGLE_SIZE = 40, CERCLE_DIAMETER = 46, KAPPA= 0.552284749831f, RECTANGLE_BORDER_RADIUS = 10f,
             FOOTER_LINE_HEIGHT = 12f, LOGO_HEIGHT = 25f, LINE_SIZE = 1f,
             COLOR_GRAY = 0.4f, COLOR_BLACK = 0f;
     private static final PDFont MAIN_TITLE_FONT = PDType1Font.HELVETICA_BOLD;
@@ -293,6 +293,13 @@ public class ExportActionsToPdfTask extends LCTask<Void> {
     }
 
     private void newSubTitle(String[] word) throws IOException {
+        if (currentYPosition - SUB_TITLE_FONT_SIZE < FOOTER_MARGIN) {
+            initPageLayout();
+            initContentStream();
+        }
+        if (pageHeightF - currentYPosition >= pageHeightF - HEADER_MARGIN - SUB_TITLE_FONT_SIZE * 2) {
+            currentYPosition -= SUB_TITLE_FONT_SIZE * 2;
+        }
         this.pageContentStream.setNonStrokingColor(COLOR_GRAY, COLOR_GRAY, COLOR_GRAY);
          insertText(word, SUB_TITLE_FONT, SUB_TITLE_FONT_SIZE, LATERAL_MARIN, SUB_TITLE_FONT_SIZE * 1.5f);
          currentYPosition -= SUB_TITLE_FONT_SIZE *0.5f;
@@ -342,7 +349,23 @@ public class ExportActionsToPdfTask extends LCTask<Void> {
     }
 
     private void drawRect() throws IOException {
-        this.pageContentStream.addRect(LATERAL_MARIN, this.currentYPosition - RECTANGLE_SIZE, RECTANGLE_SIZE, RECTANGLE_SIZE);
+        float roundness = RECTANGLE_BORDER_RADIUS;
+        float x = LATERAL_MARIN;
+        float y = this.currentYPosition - RECTANGLE_SIZE;
+        float w = RECTANGLE_SIZE;
+        float h = RECTANGLE_SIZE;
+
+        // Start at the top left corner and move clockwise
+        this.pageContentStream.moveTo(x + roundness, y + h);
+        this.pageContentStream.lineTo(x + w - roundness, y + h);
+        this.pageContentStream.curveTo(x + w, y + h, x + w, y + h, x + w, y + h - roundness);
+        this.pageContentStream.lineTo(x + w, y + roundness);
+        this.pageContentStream.curveTo(x + w, y, x + w, y, x + w - roundness, y);
+        this.pageContentStream.lineTo(x + roundness, y);
+        this.pageContentStream.curveTo(x, y, x, y, x, y + roundness);
+        this.pageContentStream.lineTo(x, y + h - roundness);
+        this.pageContentStream.curveTo(x, y + h, x, y + h, x + roundness, y + h);
+        this.pageContentStream.closePath();
     }
 
     /**
