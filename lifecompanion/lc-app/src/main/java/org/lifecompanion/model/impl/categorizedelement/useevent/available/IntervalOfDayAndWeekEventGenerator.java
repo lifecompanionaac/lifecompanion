@@ -154,31 +154,31 @@ public class IntervalOfDayAndWeekEventGenerator extends BaseUseEventGeneratorImp
                                                 null);
                             } else if (
                                     IntervalOfDayAndWeekEventGenerator.this.startTimeOfDay.compareTo(nowTimeOfDay) > 0
-                                            || IntervalOfDayAndWeekEventGenerator.this.endTimeOfDay.compareTo(nowTimeOfDay) < 0
                             ) {
                                 this.generated = false;
-                               // Wait till next day start
-                                Calendar calendar = Calendar.getInstance();
-                                calendar.add(Calendar.DATE, 1);
-                                calendar.set(Calendar.HOUR_OF_DAY, 0);
-                                calendar.set(Calendar.MINUTE, 0);
-                                calendar.set(Calendar.SECOND, 0);
-                                ThreadUtils.safeSleep(calendar.getTimeInMillis() - System.currentTimeMillis() + IntervalOfDayAndWeekEventGenerator.DELAY_ON_NEW_DAY);
+                            } else if (
+                                    IntervalOfDayAndWeekEventGenerator.this.endTimeOfDay.compareTo(nowTimeOfDay) < 0
+                            ) {
+                                this.generated = false;
+                                nextDay();
                             }
                         }
                     }, DELAY_BEFORE_GENERATE_MS, 1000);
                } else {
-                    // Wait till next day start
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.add(Calendar.DATE, 1);
-                    calendar.set(Calendar.HOUR_OF_DAY, 0);
-                    calendar.set(Calendar.MINUTE, 0);
-                    calendar.set(Calendar.SECOND, 0);
-                    ThreadUtils.safeSleep(calendar.getTimeInMillis() - System.currentTimeMillis() + IntervalOfDayAndWeekEventGenerator.DELAY_ON_NEW_DAY);
+                    nextDay();
                 }
             }
         });
         checkCurrentDayThread.start();
+    }
+
+    private void nextDay() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DATE, 1);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        ThreadUtils.safeSleep(calendar.getTimeInMillis() - System.currentTimeMillis() + IntervalOfDayAndWeekEventGenerator.DELAY_ON_NEW_DAY);
     }
 
     @Override
