@@ -220,6 +220,11 @@ public enum GlobalRuntimeConfiguration implements GlobalRuntimeConfigurationI {
             "foobar123",
             1
     ),
+    USE_HUB_IMAGES(
+            "useHubImages",
+            GlobalRuntimeConfigurationType.COMMAND_LINE,
+            "When enabled, LifeCompanion images will be downloaded on runtime from the hub and not from local image dictionaries (except for user dictionary). This can only be enabled if the hub URL has been provided."
+    ),
 
     // TODO : image repository from backoffice
 

@@ -323,7 +323,7 @@ public enum ImageDictionaries implements LCStateListener, ModeListenerI {
         File[] potentialDictionaries = imageDictionariesRoot.listFiles();
         if (potentialDictionaries != null) {
             for (File potentialDictionary : potentialDictionaries) {
-                if (potentialDictionary.isDirectory()) {
+                if (potentialDictionary.isFile() && StringUtils.isEqualsIgnoreCase("json", FileNameUtils.getExtension(potentialDictionary))) {
                     loadImageDictionary(potentialDictionary);
                 }
             }
@@ -347,18 +347,17 @@ public enum ImageDictionaries implements LCStateListener, ModeListenerI {
         LOGGER.info("Image dictionaries loading done in {} s", (System.currentTimeMillis() - start) / 1000.0);
     }
 
-    private ImageDictionary loadImageDictionary(File potentialDictionaryDirectory) {
-        File dictionaryFile = new File(potentialDictionaryDirectory.getParentFile().getPath() + File.separator + FileNameUtils.getNameWithoutExtension(potentialDictionaryDirectory) + ".json");
+    private ImageDictionary loadImageDictionary(File dictionaryFile) {
         if (dictionaryFile.exists()) {
             try (Reader is = new BufferedReader(new InputStreamReader(new FileInputStream(dictionaryFile), StandardCharsets.UTF_8))) {
                 ImageDictionary imageDictionary = JsonHelper.GSON.fromJson(is, ImageDictionary.class);
-                imageDictionary.setImageDirectory(potentialDictionaryDirectory);
+                imageDictionary.setImageDirectory(new File(dictionaryFile.getParentFile() + File.separator + FileNameUtils.getNameWithoutExtension(dictionaryFile)));
                 imageDictionary.loaded(this.allImages);
                 this.dictionaries.add(imageDictionary);
                 LOGGER.info("Image dictionary {} loaded from {} ({} images)", imageDictionary.getName(), dictionaryFile, imageDictionary.getImages().size());
                 return imageDictionary;
             } catch (Exception e) {
-                LOGGER.error("Couldn't load dictionary from {}", potentialDictionaryDirectory, e);
+                LOGGER.error("Couldn't load dictionary from {}", dictionaryFile, e);
             }
         } else {
             LOGGER.warn("Found a folder in image dictionary folder, but didn't find its description file {}", dictionaryFile);

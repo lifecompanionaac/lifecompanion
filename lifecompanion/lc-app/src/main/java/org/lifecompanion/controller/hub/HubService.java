@@ -218,6 +218,24 @@ public enum HubService implements LCStateListener {
 
     // INTERNAL
     //========================================================================
+    public boolean downloadImageFromHub(String imageId, File filePath) throws Exception {
+        OkHttpClient downloadClient = AppServerClient.initializeClientForExternalCalls().build();
+        downloadFile(downloadClient, () -> {
+            try (Response response = getHubClient().newCall(new Request.Builder().url(getHubUrl() + "/api/v1/-actions/lc-resources/" + imageId + "/url")
+                    .build()).execute()) {
+                if (checkResponse(response)) {
+                    return JsonHelper.GSON.fromJson(response.body().string(), HubData.FileGetEndpointResult.class).data.endpoint;
+                }
+                return null;
+            }
+        }, imageId, HashType.SHA256, filePath);
+        return true;
+    }
+    //========================================================================
+
+
+    // INTERNAL
+    //========================================================================
     private boolean checkResponse(Response response) throws Exception {
         if (!response.isSuccessful()) {
             ResponseBody body = response.body();
@@ -263,14 +281,31 @@ public enum HubService implements LCStateListener {
                     }
                     return null;
                 }
-            }, updatedFileData.hash, new File(tempDir + File.separator + relativePath));
+            }, updatedFileData.hash, HashType.MD5, new File(tempDir + File.separator + relativePath));
             if (PAUSE_BETWEEN_DOWNLOAD > 0) {
                 Thread.sleep(PAUSE_BETWEEN_DOWNLOAD);
             }
         }
     }
 
-    private void downloadFile(OkHttpClient client, UrlSupplier urlSupplier, String hash, File destPath) throws Exception {
+    interface HashMethod {
+        String hash(File file) throws Exception;
+    }
+
+    enum HashType {
+        MD5(IOUtils::fileMd5HexToString), SHA256(IOUtils::fileSha256HexToString);
+        private final HashMethod hashMethod;
+
+        HashType(HashMethod hashMethod) {
+            this.hashMethod = hashMethod;
+        }
+
+        String hash(File file) throws Exception {
+            return hashMethod.hash(file);
+        }
+    }
+
+    private void downloadFile(OkHttpClient client, UrlSupplier urlSupplier, String hash, HashType hashType, File destPath) throws Exception {
         String url = null;
         for (int i = 0; i < MAX_ATTEMPT_COUNT; ++i) {
             Throwable error = null;
@@ -287,7 +322,7 @@ public enum HubService implements LCStateListener {
                         diff,
                         FileNameUtils.getFileSize(destPath.length()),
                         FileNameUtils.getFileSize((long) ((double) destPath.length() / ((double) diff / 1000.0))));
-                String fileHash = IOUtils.fileMd5HexToString(destPath);
+                String fileHash = hashType.hash(destPath);
                 if (StringUtils.isEquals(hash, fileHash)) {
                     return;
                 }

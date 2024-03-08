@@ -36,6 +36,7 @@ LifeCompanion can be launched using command line arguments to configure some of 
 |`-hubAuthToken token`|`AbCdEf123456`|The auth token to be used when connecting to the LifeCompanion hub. Will overwrite any token that could be used while using the app (even if the user connects manually).|
 |`-deviceSyncMode`|*`NONE`*|Enable the "device synchronization mode" : will launch directly LifeCompanion in use mode and will try to sync the current used configuration with the device default configuration from LifeCompanion HUB. This should be used only the HUB is connected and the device ID is injected.|
 |`-deviceLocalId deviceLocalId`|`foobar123`|Set the device local ID to be used by the `deviceSyncMode` when enabled. Allow launching LifeCompanion with a device local ID already set.|
+|`-useHubImages`|*`NONE`*|When enabled, LifeCompanion images will be downloaded on runtime from the hub and not from local image dictionaries (except for user dictionary). This can only be enabled if the hub URL has been provided.|
 
 
 ## LifeCompanion JVM properties
