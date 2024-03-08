@@ -1134,6 +1134,9 @@
   <text key="action.key.image.change.color.replace.threshold">Changer la tolérance du remplacement de couleur</text>
   <text key="action.key.image.change.preserve.ratio">Changer la conservation du ratio de l'image</text>
   <text key="action.key.image.change.rotate">Changer la rotation de l'image</text>
+  <text key="action.key.image.change.flip.horizontal">Inverse l'image sur l'axe horizontal</text>
+  <text key="action.key.image.change.flip.vertical">Inverse l'image sur l'axe vertical</text>
+  <text key="action.key.image.change.colour.to.grey">Activer/désactiver l'image en nuance de gris</text>
   <text key="action.key.image.change.viewport">Activer/désactiver le recadrage de l'image</text>
   <text key="action.key.image.change.viewport.value">Modifier le recadrage de l'image</text>
   <text key="action.key.option.change.correction.color">Changer la couleur de correction</text>

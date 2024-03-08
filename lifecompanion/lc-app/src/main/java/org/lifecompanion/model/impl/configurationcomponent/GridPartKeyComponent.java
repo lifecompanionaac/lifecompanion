@@ -24,6 +24,7 @@ import javafx.beans.property.*;
 import javafx.beans.value.ObservableBooleanValue;
 import javafx.collections.ObservableList;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.effect.Effect;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import org.jdom2.Element;
@@ -146,6 +147,15 @@ public class GridPartKeyComponent extends GridPartComponentBaseImpl implements G
     public DoubleProperty rotateProperty() {
         return this.imageUseComponentPropertyWrapper.rotateProperty();
     }
+
+    @Override
+    public DoubleProperty scaleXProperty() {return this.imageUseComponentPropertyWrapper.scaleXProperty();}
+
+    @Override
+    public DoubleProperty scaleYProperty() {return this.imageUseComponentPropertyWrapper.scaleYProperty();}
+
+    @Override
+    public ObjectProperty<Effect> colourToGreyProperty() {return this.imageUseComponentPropertyWrapper.colourToGreyProperty();}
 
     @Override
     public SimpleObjectProperty<ImageElementI> imageVTwoProperty() {

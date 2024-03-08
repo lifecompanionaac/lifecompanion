@@ -22,6 +22,7 @@ package org.lifecompanion.model.api.configurationcomponent;
 import javafx.beans.property.*;
 import javafx.beans.value.ObservableBooleanValue;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.effect.Effect;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import org.lifecompanion.model.api.imagedictionary.ImageElementI;
@@ -53,6 +54,21 @@ public interface ImageUseComponentI extends IdentifiableComponentI {
      * @return the rotate value for the image
      */
     DoubleProperty rotateProperty();
+
+    /**
+     * @return the scale X value for the image
+     */
+    DoubleProperty scaleXProperty();
+
+    /**
+     * @return the scale Y value for the image
+     */
+    DoubleProperty scaleYProperty();
+
+    /**
+     * @return the saturation value for the image
+     */
+    ObjectProperty<Effect> colourToGreyProperty();
 
     /**
      * @return if this image uses a viewport to define how the image is displayed

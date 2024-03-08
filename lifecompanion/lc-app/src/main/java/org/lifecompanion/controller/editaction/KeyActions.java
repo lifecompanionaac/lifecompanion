@@ -18,10 +18,10 @@
  */
 package org.lifecompanion.controller.editaction;
 
-import javafx.beans.value.WritableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.TextInputControl;
+import javafx.scene.effect.Effect;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
@@ -52,7 +52,6 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -112,6 +111,9 @@ public class KeyActions {
         private ImageUseComponentI imageUseComponent;
         private PositionSize savedViewport;
         private double previousRotate;
+        private double previousScaleX;
+        private double previousScaleY;
+        private Effect previousColourToGrey;
         private boolean previousEnableColorReplace;
         private boolean previousPreserveRatio;
         private Runnable textPositionUndoKey, textPositionUndoKeyContent;
@@ -131,12 +133,18 @@ public class KeyActions {
                 this.imageUseComponent.useViewPortProperty().set(false);
             }
             previousRotate = this.imageUseComponent.rotateProperty().get();
+            previousScaleX = this.imageUseComponent.scaleXProperty().get();
+            previousScaleY = this.imageUseComponent.scaleYProperty().get();
+            previousColourToGrey = this.imageUseComponent.colourToGreyProperty().get();
             previousEnableColorReplace = this.imageUseComponent.enableReplaceColorProperty().get();
             previousPreserveRatio = this.imageUseComponent.preserveRatioProperty().get();
             previousAutoSelected = this.imageUseComponent.imageAutomaticallySelectedProperty().get();
 
             // Set default
             this.imageUseComponent.rotateProperty().set(0.0);
+            this.imageUseComponent.scaleXProperty().set(1.0);
+            this.imageUseComponent.scaleYProperty().set(1.0);
+            this.imageUseComponent.colourToGreyProperty().set(null);
             this.imageUseComponent.enableReplaceColorProperty().set(false);
             this.imageUseComponent.preserveRatioProperty().set(true);
 
@@ -175,6 +183,9 @@ public class KeyActions {
                 this.savedViewport.setPositionAndSizeOn(this.imageUseComponent);
             }
             this.imageUseComponent.rotateProperty().set(previousRotate);
+            this.imageUseComponent.scaleXProperty().set(previousScaleX);
+            this.imageUseComponent.scaleYProperty().set(previousScaleY);
+            this.imageUseComponent.colourToGreyProperty().set(previousColourToGrey);
             this.imageUseComponent.enableReplaceColorProperty().set(previousEnableColorReplace);
             this.imageUseComponent.preserveRatioProperty().set(previousPreserveRatio);
             this.imageUseComponent.imageAutomaticallySelectedProperty().set(previousAutoSelected);
@@ -352,6 +363,40 @@ public class KeyActions {
             return "action.key.image.change.rotate";
         }
 
+    }
+
+        public static class FlipImageHorizontalAction extends BasePropertyChangeAction<Number> {
+        public FlipImageHorizontalAction(final ImageUseComponentI keyP, final Number wantedFlipP) {
+            super(keyP.scaleYProperty(), wantedFlipP);
+        }
+        @Override
+        public String getNameID() {
+            return "action.key.image.change.flip.horizontal";
+        }
+    }
+
+    public static class FlipImageVerticalAction extends BasePropertyChangeAction<Number> {
+
+        public FlipImageVerticalAction(final ImageUseComponentI keyP, final Number wantedFlipP) {
+            super(keyP.scaleXProperty(), wantedFlipP);
+        }
+
+        @Override
+        public String getNameID() {
+            return "action.key.image.change.flip.vertical";
+        }
+    }
+
+    public static class colourToGreyAction extends BasePropertyChangeAction<Effect> {
+
+        public colourToGreyAction(final ImageUseComponentI keyP, Effect wantedFlipP) {
+            super(keyP.colourToGreyProperty(), wantedFlipP);
+        }
+
+        @Override
+        public String getNameID() {
+            return "action.key.image.change.colour.to.grey";
+        }
     }
 
     public static class ChangeEnableReplaceColorAction extends BasePropertyChangeAction<Boolean> {

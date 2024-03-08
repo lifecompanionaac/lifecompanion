@@ -26,11 +26,11 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import org.lifecompanion.controller.editaction.KeyActions;
-import org.lifecompanion.controller.editaction.KeyOptionActions;
 import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.framework.commons.translation.Translation;
@@ -264,11 +264,22 @@ public class ImageUseComponentConfigurationView extends BaseConfigurationViewBor
         //Actions
         this.buttonRotateLeft.setOnAction(ev -> {
             ImageUseComponentI imageUseComp = this.model.get();
-            ConfigActionController.INSTANCE.executeAction(new KeyActions.ChangeImageRotateAction(imageUseComp, imageUseComp.rotateProperty().get() - 90.0));
+//            ConfigActionController.INSTANCE.executeAction(new KeyActions.ChangeImageRotateAction(imageUseComp, imageUseComp.rotateProperty().get() - 90.0));
+            ConfigActionController.INSTANCE.executeAction(new KeyActions.FlipImageHorizontalAction(imageUseComp, imageUseComp.scaleYProperty().get() * -1));
+            ConfigActionController.INSTANCE.executeAction(new KeyActions.FlipImageVerticalAction(imageUseComp, imageUseComp.scaleXProperty().get() * -1));
+
         });
         this.buttonRotateRight.setOnAction(ev -> {
             ImageUseComponentI imageUseComp = this.model.get();
-            ConfigActionController.INSTANCE.executeAction(new KeyActions.ChangeImageRotateAction(imageUseComp, imageUseComp.rotateProperty().get() + 90.0));
+//            ConfigActionController.INSTANCE.executeAction(new KeyActions.ChangeImageRotateAction(imageUseComp, imageUseComp.rotateProperty().get() + 90.0));
+            ColorAdjust desaturateEffect = new ColorAdjust();
+            if ( imageUseComp.colourToGreyProperty().get() != null ) {
+                desaturateEffect = null;
+            } else {
+                desaturateEffect.setSaturation(-1);
+            }
+            ConfigActionController.INSTANCE.executeAction(new KeyActions.colourToGreyAction(imageUseComp, desaturateEffect));
+
         });
         this.buttonConfigureViewport.disableProperty().bind(toggleUseViewport.selectedProperty().not());
         this.buttonOk.setOnAction(ev -> FXUtils.getSourceWindow(this).hide());

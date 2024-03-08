@@ -23,6 +23,7 @@ import javafx.beans.WeakInvalidationListener;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.effect.Effect;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import org.jdom2.Element;
@@ -77,6 +78,15 @@ public class ImageUseComponentPropertyWrapper {
      */
     @XMLIgnoreDefaultDoubleValue(0.0)
     private final DoubleProperty rotate;
+
+    @XMLIgnoreDefaultDoubleValue(1.0)
+    private final DoubleProperty scaleX;
+
+    @XMLIgnoreDefaultDoubleValue(1.0)
+    private final DoubleProperty scaleY;
+
+    @XMLIgnoreDefaultBooleanValue(false)
+    private final ObjectProperty<Effect> colourToGreyProperty;
 
     /**
      * The gallery image used by this comp..<br>
@@ -167,6 +177,9 @@ public class ImageUseComponentPropertyWrapper {
         this.viewportHeightPercent = new SimpleDoubleProperty(0.0);
         this.imageAutomaticallySelected = new SimpleBooleanProperty(false);
         this.rotate = new SimpleDoubleProperty(0.0);
+        this.scaleX = new SimpleDoubleProperty(1.0);
+        this.scaleY = new SimpleDoubleProperty(1.0);
+        this.colourToGreyProperty = new SimpleObjectProperty<>(null);
         this.previousWidthUpdate = new AtomicInteger();
         this.previousHeightUpdate = new AtomicInteger();
         this.externalLoadingRequest = new HashSet<>();
@@ -339,6 +352,17 @@ public class ImageUseComponentPropertyWrapper {
 
     public DoubleProperty rotateProperty() {
         return this.rotate;
+    }
+
+    public DoubleProperty scaleXProperty() {
+        return this.scaleX;
+    }
+    public DoubleProperty scaleYProperty() {
+        return this.scaleY;
+    }
+
+    public ObjectProperty<Effect> colourToGreyProperty() {
+        return this.colourToGreyProperty;
     }
 
     public BooleanProperty enableReplaceColorProperty() {

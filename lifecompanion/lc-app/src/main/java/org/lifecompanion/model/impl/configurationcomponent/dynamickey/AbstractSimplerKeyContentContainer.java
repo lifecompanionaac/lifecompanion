@@ -22,31 +22,30 @@ package org.lifecompanion.model.impl.configurationcomponent.dynamickey;
 import javafx.beans.property.*;
 import javafx.beans.value.ObservableBooleanValue;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.effect.Effect;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import org.jdom2.Element;
 import org.lifecompanion.controller.io.ConfigurationComponentIOHelper;
-import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
-import org.lifecompanion.model.api.configurationcomponent.*;
-import org.lifecompanion.model.api.configurationcomponent.dynamickey.SimplerKeyContentContainerI;
-import org.lifecompanion.model.api.style.ShapeStyle;
-import org.lifecompanion.model.api.style.TextPosition;
-import org.lifecompanion.model.impl.configurationcomponent.VideoUseComponentPropertyWrapper;
-import org.lifecompanion.model.impl.exception.LCException;
-import org.lifecompanion.model.api.imagedictionary.ImageElementI;
-import org.lifecompanion.model.api.io.IOContextI;
-import org.lifecompanion.model.impl.configurationcomponent.ImageUseComponentPropertyWrapper;
 import org.lifecompanion.framework.commons.fx.io.XMLGenericProperty;
 import org.lifecompanion.framework.commons.fx.io.XMLIgnoreNullValue;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.model.api.configurationcomponent.*;
+import org.lifecompanion.model.api.configurationcomponent.dynamickey.SimplerKeyContentContainerI;
+import org.lifecompanion.model.api.imagedictionary.ImageElementI;
+import org.lifecompanion.model.api.io.IOContextI;
+import org.lifecompanion.model.api.style.ShapeStyle;
+import org.lifecompanion.model.api.style.TextPosition;
+import org.lifecompanion.model.impl.configurationcomponent.ImageUseComponentPropertyWrapper;
+import org.lifecompanion.model.impl.configurationcomponent.VideoUseComponentPropertyWrapper;
+import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.util.binding.BindingUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 
 public abstract class AbstractSimplerKeyContentContainer implements SimplerKeyContentContainerI {
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractSimplerKeyContentContainer.class);
@@ -212,6 +211,19 @@ public abstract class AbstractSimplerKeyContentContainer implements SimplerKeyCo
     public DoubleProperty rotateProperty() {
         return imageUseComponentPropertyWrapper.rotateProperty();
     }
+
+    @Override
+    public DoubleProperty scaleXProperty() {
+        return imageUseComponentPropertyWrapper.scaleXProperty();
+    }
+
+    @Override
+    public DoubleProperty scaleYProperty() {
+        return imageUseComponentPropertyWrapper.scaleYProperty();
+    }
+
+    @Override
+    public ObjectProperty<Effect> colourToGreyProperty(){return imageUseComponentPropertyWrapper.colourToGreyProperty();}
 
     @Override
     public BooleanProperty useViewPortProperty() {
