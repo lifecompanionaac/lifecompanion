@@ -541,6 +541,8 @@ public class FontAwesomeCreationScript extends Application {
         icons(icons, FontAwesome.Glyph.ROCKET, "fusée");
         icons(icons, FontAwesome.Glyph.ROTATE_LEFT, "tourne à gauche");
         icons(icons, FontAwesome.Glyph.ROTATE_RIGHT, "tourner à droite");
+        icons(icons, FontAwesome.Glyph.MIRROR_HORIZONTAL, "effet miroir horizontal");
+        icons(icons, FontAwesome.Glyph.MIRROR_VERTICAL, "effet miroir vertical");
         icons(icons, FontAwesome.Glyph.ROUBLE, "rouble");
         icons(icons, FontAwesome.Glyph.RSS, "rss");
         icons(icons, FontAwesome.Glyph.RSS_SQUARE, "carré rss");

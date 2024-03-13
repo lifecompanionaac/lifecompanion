@@ -21,7 +21,6 @@ package org.lifecompanion.controller.editaction;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.TextInputControl;
-import javafx.scene.effect.Effect;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
@@ -113,7 +112,7 @@ public class KeyActions {
         private double previousRotate;
         private double previousScaleX;
         private double previousScaleY;
-        private Effect previousColourToGrey;
+        private Boolean previousColourToGrey;
         private boolean previousEnableColorReplace;
         private boolean previousPreserveRatio;
         private Runnable textPositionUndoKey, textPositionUndoKeyContent;
@@ -144,7 +143,7 @@ public class KeyActions {
             this.imageUseComponent.rotateProperty().set(0.0);
             this.imageUseComponent.scaleXProperty().set(1.0);
             this.imageUseComponent.scaleYProperty().set(1.0);
-            this.imageUseComponent.colourToGreyProperty().set(null);
+            this.imageUseComponent.colourToGreyProperty().set(false);
             this.imageUseComponent.enableReplaceColorProperty().set(false);
             this.imageUseComponent.preserveRatioProperty().set(true);
 
@@ -387,9 +386,9 @@ public class KeyActions {
         }
     }
 
-    public static class colourToGreyAction extends BasePropertyChangeAction<Effect> {
+    public static class colourToGreyAction extends BasePropertyChangeAction<Boolean> {
 
-        public colourToGreyAction(final ImageUseComponentI keyP, Effect wantedFlipP) {
+        public colourToGreyAction(final ImageUseComponentI keyP, Boolean wantedFlipP) {
             super(keyP.colourToGreyProperty(), wantedFlipP);
         }
 
@@ -442,6 +441,31 @@ public class KeyActions {
 
         public ChangeReplaceColorThresholdAction(final ImageUseComponentI keyP, final Number wantedValue) {
             super(keyP.replaceColorThresholdProperty(), wantedValue);
+        }
+
+        @Override
+        public String getNameID() {
+            return "action.key.image.change.color.replace.threshold";
+        }
+
+    }
+
+    public static class ChangeRemoveBackground extends BasePropertyChangeAction<Boolean> {
+
+        public ChangeRemoveBackground(final ImageUseComponentI keyP, final boolean wantedValue) {
+            super(keyP.enableRemoveBackgroundProperty(), wantedValue);
+        }
+
+        @Override
+        public String getNameID() {
+            return "action.key.image.change.remove.background";
+        }
+    }
+
+     public static class ChangeRemoveBackgroundThresholdAction extends BasePropertyChangeAction<Number> {
+
+        public ChangeRemoveBackgroundThresholdAction(final ImageUseComponentI keyP, final Number wantedValue) {
+            super(keyP.replaceRemoveBackgroundThresholdProperty(), wantedValue);
         }
 
         @Override

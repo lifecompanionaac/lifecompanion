@@ -23,7 +23,6 @@ import javafx.beans.WeakInvalidationListener;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.effect.Effect;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import org.jdom2.Element;
@@ -86,7 +85,7 @@ public class ImageUseComponentPropertyWrapper {
     private final DoubleProperty scaleY;
 
     @XMLIgnoreDefaultBooleanValue(false)
-    private final ObjectProperty<Effect> colourToGreyProperty;
+    private final BooleanProperty enableReplaceColourToGrey;
 
     /**
      * The gallery image used by this comp..<br>
@@ -132,6 +131,12 @@ public class ImageUseComponentPropertyWrapper {
     @XMLIgnoreNullValue
     private final IntegerProperty replaceColorThreshold;
 
+    @XMLIgnoreDefaultBooleanValue(false)
+    private final BooleanProperty enableRemoveBackground;
+
+    @XMLIgnoreNullValue
+    private final IntegerProperty replaceRemoveBackgroundThreshold;
+
     /**
      * Image use component associated
      */
@@ -171,6 +176,8 @@ public class ImageUseComponentPropertyWrapper {
         this.replacingColor = new SimpleObjectProperty<>(Color.TRANSPARENT);
         this.viewport = new SimpleObjectProperty<>();
         this.replaceColorThreshold = new SimpleIntegerProperty(LCConstant.DEFAULT_COLOR_REPLACE_THRESHOLD);
+        this.enableRemoveBackground = new SimpleBooleanProperty();
+        this.replaceRemoveBackgroundThreshold = new SimpleIntegerProperty(LCConstant.DEFAULT_COLOR_REPLACE_THRESHOLD);
         this.viewportXPercent = new SimpleDoubleProperty(0.0);
         this.viewportYPercent = new SimpleDoubleProperty(0.0);
         this.viewportWidthPercent = new SimpleDoubleProperty(0.0);
@@ -179,7 +186,7 @@ public class ImageUseComponentPropertyWrapper {
         this.rotate = new SimpleDoubleProperty(0.0);
         this.scaleX = new SimpleDoubleProperty(1.0);
         this.scaleY = new SimpleDoubleProperty(1.0);
-        this.colourToGreyProperty = new SimpleObjectProperty<>(null);
+        this.enableReplaceColourToGrey = new SimpleBooleanProperty(false);
         this.previousWidthUpdate = new AtomicInteger();
         this.previousHeightUpdate = new AtomicInteger();
         this.externalLoadingRequest = new HashSet<>();
@@ -361,8 +368,8 @@ public class ImageUseComponentPropertyWrapper {
         return this.scaleY;
     }
 
-    public ObjectProperty<Effect> colourToGreyProperty() {
-        return this.colourToGreyProperty;
+    public BooleanProperty colourToGreyProperty() {
+        return this.enableReplaceColourToGrey;
     }
 
     public BooleanProperty enableReplaceColorProperty() {
@@ -380,6 +387,11 @@ public class ImageUseComponentPropertyWrapper {
     public IntegerProperty replaceColorThresholdProperty() {
         return this.replaceColorThreshold;
     }
+
+    public BooleanProperty enableRemoveBackgroundProperty() {
+        return this.enableRemoveBackground;
+    }
+    public IntegerProperty replaceRemoveBackgroundThresholdProperty() {return this.replaceRemoveBackgroundThreshold;}
 
     public BooleanProperty imageAutomaticallySelectedProperty() {
         return imageAutomaticallySelected;
@@ -407,6 +419,9 @@ public class ImageUseComponentPropertyWrapper {
                 element.removeAttribute("colorToReplace");
                 element.removeAttribute("replacingColor");
                 element.removeAttribute("replaceColorThreshold");
+                element.removeAttribute("enableRemoveBackground");
+                element.removeAttribute("replaceRemoveBackgroundThreshold");
+                element.removeAttribute("enableReplaceColourToGrey");
             }
 
             //Image saving : just set the id and delegate to root action the "real" saving

@@ -22,7 +22,6 @@ package org.lifecompanion.model.impl.configurationcomponent.dynamickey;
 import javafx.beans.property.*;
 import javafx.beans.value.ObservableBooleanValue;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.effect.Effect;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import org.jdom2.Element;
@@ -223,7 +222,7 @@ public abstract class AbstractSimplerKeyContentContainer implements SimplerKeyCo
     }
 
     @Override
-    public ObjectProperty<Effect> colourToGreyProperty(){return imageUseComponentPropertyWrapper.colourToGreyProperty();}
+    public BooleanProperty colourToGreyProperty(){return imageUseComponentPropertyWrapper.colourToGreyProperty();}
 
     @Override
     public BooleanProperty useViewPortProperty() {
@@ -253,6 +252,16 @@ public abstract class AbstractSimplerKeyContentContainer implements SimplerKeyCo
     @Override
     public IntegerProperty replaceColorThresholdProperty() {
         return imageUseComponentPropertyWrapper.replaceColorThresholdProperty();
+    }
+
+    @Override
+    public BooleanProperty enableRemoveBackgroundProperty() {
+        return imageUseComponentPropertyWrapper.enableRemoveBackgroundProperty();
+    }
+
+    @Override
+    public IntegerProperty replaceRemoveBackgroundThresholdProperty() {
+        return imageUseComponentPropertyWrapper.replaceRemoveBackgroundThresholdProperty();
     }
 
     @Override

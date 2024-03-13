@@ -22,7 +22,6 @@ package org.lifecompanion.model.api.configurationcomponent;
 import javafx.beans.property.*;
 import javafx.beans.value.ObservableBooleanValue;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.effect.Effect;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import org.lifecompanion.model.api.imagedictionary.ImageElementI;
@@ -66,9 +65,9 @@ public interface ImageUseComponentI extends IdentifiableComponentI {
     DoubleProperty scaleYProperty();
 
     /**
-     * @return the saturation value for the image
+     * @return a property enabling the grey image to be activated
      */
-    ObjectProperty<Effect> colourToGreyProperty();
+    BooleanProperty colourToGreyProperty();
 
     /**
      * @return if this image uses a viewport to define how the image is displayed
@@ -100,6 +99,16 @@ public interface ImageUseComponentI extends IdentifiableComponentI {
      * @return the color threshold to find pixel to replace
      */
     IntegerProperty replaceColorThresholdProperty();
+
+    /**
+     * @return to enable the remove background
+     */
+    BooleanProperty enableRemoveBackgroundProperty();
+
+    /**
+     * @return the colour threshold to determine the background colour to be removed
+     */
+    IntegerProperty replaceRemoveBackgroundThresholdProperty();
 
     /**
      * @return the viewport x position in percent relative to the image width

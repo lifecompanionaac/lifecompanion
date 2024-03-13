@@ -2363,6 +2363,8 @@
   <text key="field.grid.key.hgap">Espacement horizontal</text>
   <text key="field.grid.key.vgap">Espacement vertical</text>
   <!--org.lifecompanion.config.view.pane.tabs.selected.part.imageusecomp-->
+    <text key="image.use.enable.grey.color">Changer l'image en gris</text>
+    <text key="image.use.enable.remove.background">Supprimer la couleur de fond</text>
   <text key="image.use.color.replace.threshold.field">Tolérance</text>
   <text key="image.use.color.replacing.field">Couleur de remplacement</text>
   <text key="image.use.color.to.replace.field">Couleur à remplacer</text>
@@ -2370,6 +2372,8 @@
   <text key="image.use.preserve.ratio">Conserver les proportions</text>
   <text key="image.use.use.viewport">Activer</text>
   <text key="image.use.rotation.label.current">Rotation de l'image : {} degrés</text>
+  <text key="mirror.image.horizontal">Inverser horizontalement</text>
+  <text key="mirror.image.vertical">Inverser verticalement</text>
   <text key="rotate.image.left">Tourner à gauche</text>
   <text key="rotate.image.right">Tourner à droite</text>
   <text key="tooltip.explain.image.color.replace">La couleur qui devra être supprimée de l'image puis
@@ -2378,6 +2382,8 @@
   <text key="tooltip.explain.image.color.replace.threshold">Permet de tolérer un remplacement plus important.\nPlus
 		la tolérance est élevée, plus les couleurs similaires à la couleur à
 		remplacer seront remplacées.</text>
+    <text key="tooltip.explain.image.enable.grey.color">Si activé, permet de remplacer les couleurs de l'image par des nuances de gris.</text>
+    <text key="tooltip.explain.image.enable.remove.background">Si activé, permet de remplacer la couleur de fond de l'image par une couleur transparente.</text>
   <text key="tooltip.explain.image.color.replacing">La couleur qui va être mise à la place de l'ancienne
 		couleur. Vous pouvez choisir du transparent grâce aux couleurs
 		personnalisées.</text>
@@ -2389,6 +2395,8 @@
   <text key="tooltip.explain.image.use.viewport">Permet de recadrer l'image.\nTrès pratique pour ajouter
 		des bordures autour de l'image, ou n'afficher qu'une partie de
 		celle-ci.</text>
+  <text key="tooltip.mirror.image.horizontal">Permet d'inverser symétriquement l'image horizontalement</text>
+  <text key="tooltip.mirror.image.vertical">Permet d'inverser symétriquement l'image verticalement</text>
   <text key="tooltip.rotate.image.left">Permet de pivoter l'image de 90° vers la gauche</text>
   <text key="tooltip.rotate.image.right">Permet de pivoter l'image de 90° vers la droite</text>
   <!--org.lifecompanion.config.view.pane.tabs.selected.part.imageusecomp, org.lifecompanion.config.view.pane.bottom-->

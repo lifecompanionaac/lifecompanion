@@ -24,6 +24,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ObservableMap;
 import javafx.scene.Node;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -294,15 +295,30 @@ public class ConfigurationComponentUtils {
         imageView.rotateProperty().bind(imageUseComponent.rotateProperty());
         imageView.scaleXProperty().bind(imageUseComponent.scaleXProperty());
         imageView.scaleYProperty().bind(imageUseComponent.scaleYProperty());
-        imageView.effectProperty().bind(imageUseComponent.colourToGreyProperty());
+        imageView.effectProperty().bind(Bindings.createObjectBinding(() -> {
+            if (imageUseComponent.colourToGreyProperty().get()) {
+                return new ColorAdjust(0.0, -1.0, 0.0, 0.0);
+            } else {
+                return null;
+            }
+        }, imageUseComponent.colourToGreyProperty()));
         imageView.viewportProperty().bind(imageUseComponent.viewportProperty());
         imageView.imageProperty().bind(Bindings.createObjectBinding(() -> {
-                    Image img = imageUseComponent.loadedImageProperty().get();
-                    return img == null || !imageUseComponent.enableReplaceColorProperty().get() ? img
-                            : ImageUtils.replaceColorInImage(img, imageUseComponent.colorToReplaceProperty().get(), imageUseComponent.replacingColorProperty().get(),
-                            imageUseComponent.replaceColorThresholdProperty().get());
-                }, imageUseComponent.loadedImageProperty(), imageUseComponent.enableReplaceColorProperty(), imageUseComponent.colorToReplaceProperty(),
-                imageUseComponent.replacingColorProperty(), imageUseComponent.replaceColorThresholdProperty()));
+        Image img = imageUseComponent.loadedImageProperty().get();
+        if (img == null) {
+            return null;
+        } else {
+            if (imageUseComponent.enableReplaceColorProperty().get()) {
+                img = ImageUtils.replaceColorInImage(img, imageUseComponent.colorToReplaceProperty().get(), imageUseComponent.replacingColorProperty().get(),
+                        imageUseComponent.replaceColorThresholdProperty().get());
+            }
+            if (imageUseComponent.enableRemoveBackgroundProperty().get()) {
+                img = ImageUtils.removeBackground(img, imageUseComponent.replaceRemoveBackgroundThresholdProperty().get());
+            }
+            return img;
+        }
+    }, imageUseComponent.loadedImageProperty(), imageUseComponent.enableReplaceColorProperty(), imageUseComponent.colorToReplaceProperty(),
+            imageUseComponent.replacingColorProperty(), imageUseComponent.replaceColorThresholdProperty(), imageUseComponent.enableRemoveBackgroundProperty(), imageUseComponent.replaceRemoveBackgroundThresholdProperty()));
     }
 
     public static void unbindImageViewFromImageUseComponent(ImageView imageView) {

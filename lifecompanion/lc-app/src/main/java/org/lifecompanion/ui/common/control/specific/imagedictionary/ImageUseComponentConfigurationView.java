@@ -26,7 +26,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -58,7 +57,7 @@ public class ImageUseComponentConfigurationView extends BaseConfigurationViewBor
     /**
      * Button to rotate image
      */
-    private Button buttonRotateLeft, buttonRotateRight;
+    private Button buttonRotateLeft, buttonRotateRight, buttonMirrorHorizontal, buttonMirrorVertical;
 
     /**
      * Button to hide the stage
@@ -78,9 +77,9 @@ public class ImageUseComponentConfigurationView extends BaseConfigurationViewBor
     private ToggleSwitch toggleUseViewport;
 
     /**
-     * Toggle to enable/disable color replacement
+     * Toggle to enable/disable color change
      */
-    private ToggleSwitch toggleEnableReplaceColor;
+    private ToggleSwitch toggleEnableReplaceColor, toggleEnableGreyColor, toggleEnableRemoveBackGround;
 
     private ToggleSwitch toggleSwitchMuteVideo;
     private ComboBox<VideoDisplayMode> comboBoxVideoDisplayMode;
@@ -99,7 +98,7 @@ public class ImageUseComponentConfigurationView extends BaseConfigurationViewBor
     /**
      * Change listener for preserve ratio property/enable color replace
      */
-    private ChangeListener<Boolean> changeListenerPreserveRatio, changeListenerEnableColorReplace, changeListenerVideoMute;
+    private ChangeListener<Boolean> changeListenerPreserveRatio, changeListenerEnableColorReplace, changeListenerEnableGreyColor, changeListenerEnableRemoveBackGround, changeListenerVideoMute;
 
     private ChangeListener<VideoDisplayMode> changeListenerVideoDisplayMode;
     private ChangeListener<VideoPlayMode> changeListenerVideoPlayMode;
@@ -107,12 +106,12 @@ public class ImageUseComponentConfigurationView extends BaseConfigurationViewBor
     /**
      * Change listener to replace color threshold
      */
-    private ChangeListener<Number> changeListenerReplaceThreshold;
+    private ChangeListener<Number> changeListenerReplaceThreshold, changeListenerRemoveBackgroundThreshold;
 
     /**
      * Slider for replace color threshold
      */
-    private Slider sliderReplaceThreshold;
+    private Slider sliderReplaceThreshold, sliderRemoveBackgroundThreshold;
 
     /**
      * Change listener for viewport changes
@@ -128,7 +127,7 @@ public class ImageUseComponentConfigurationView extends BaseConfigurationViewBor
 
     private List<Node> imageOnlyNodes, videoOnlyNodes;
     private Label labelTitle;
-    private GridPane paneColorSelection;
+    private GridPane paneColorReplace;
 
     public ImageUseComponentConfigurationView() {
         initAll();
@@ -162,7 +161,14 @@ public class ImageUseComponentConfigurationView extends BaseConfigurationViewBor
                 "tooltip.rotate.image.right");
         HBox rotateButtonBox = new HBox(this.buttonRotateLeft, this.buttonRotateRight);
         rotateButtonBox.setAlignment(Pos.CENTER);
-
+        this.buttonMirrorHorizontal = FXControlUtils.createTextButtonWithGraphics(Translation.getText("mirror.image.horizontal"),
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.MIRROR_HORIZONTAL).size(20.0).color(LCGraphicStyle.SECOND_DARK),
+                "tooltip.mirror.image.horizontal");
+        this.buttonMirrorVertical = FXControlUtils.createTextButtonWithGraphics(Translation.getText("mirror.image.vertical"),
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.MIRROR_VERTICAL).size(20.0).color(LCGraphicStyle.SECOND_DARK),
+                "tooltip.mirror.image.vertical");
+        HBox mirrorButtonBox = new HBox(this.buttonMirrorHorizontal, this.buttonMirrorVertical);
+        mirrorButtonBox.setAlignment(Pos.CENTER);
         // Video configuration
         Label labelTitleVideo = FXControlUtils.createTitleLabel(Translation.getText("image.use.config.part.video.title"));
         toggleSwitchMuteVideo = FXControlUtils.createToggleSwitch("image.use.video.mute.toggle",
@@ -176,7 +182,6 @@ public class ImageUseComponentConfigurationView extends BaseConfigurationViewBor
         this.comboBoxVideoPlayMode.setButtonCell(new SimpleTextListCell<>(VideoPlayMode::getTitle));
         this.comboBoxVideoPlayMode.setPrefWidth(180);
         GridPane paneVideoConfig = new GridPane();
-        paneVideoConfig.setVgap(10.0);
         paneVideoConfig.setVgap(3.0);
         Label labelVideoDisplayMode = new Label(Translation.getText("image.use.video.display.mode"));
         paneVideoConfig.add(labelVideoDisplayMode, 0, 0);
@@ -189,6 +194,17 @@ public class ImageUseComponentConfigurationView extends BaseConfigurationViewBor
 
         //Color replacement
         Label labelTitleColorReplace = FXControlUtils.createTitleLabel(Translation.getText("image.use.config.part.color.replace.title"));
+        this.toggleEnableRemoveBackGround = FXControlUtils.createToggleSwitch("image.use.enable.remove.background",
+                "tooltip.explain.image.enable.remove.background");
+        Label labelBackgroundThreshold = new Label(Translation.getText("image.use.color.replace.threshold.field"));
+         this.sliderRemoveBackgroundThreshold = FXControlUtils.createBaseSlider(0.0, 200.0, 10.0);
+          FXControlUtils.createAndAttachTooltip(sliderRemoveBackgroundThreshold, "tooltip.explain.image.color.replace.threshold");
+        this.sliderRemoveBackgroundThreshold.setMajorTickUnit(20);
+        BorderPane borderPaneRemoveBackgroundThreshold = new BorderPane();
+        borderPaneRemoveBackgroundThreshold.setLeft(labelBackgroundThreshold);
+        borderPaneRemoveBackgroundThreshold.setRight(sliderRemoveBackgroundThreshold);
+        this.toggleEnableGreyColor = FXControlUtils.createToggleSwitch("image.use.enable.grey.color",
+                "tooltip.explain.image.enable.grey.color");
         this.toggleEnableReplaceColor = FXControlUtils.createToggleSwitch("image.use.enable.color.replace",
                 "tooltip.explain.image.enable.color.replace");
         this.pickerColorToReplace = new LCColorPicker();
@@ -198,16 +214,15 @@ public class ImageUseComponentConfigurationView extends BaseConfigurationViewBor
         this.sliderReplaceThreshold = FXControlUtils.createBaseSlider(0.0, 200.0, 10.0);
         FXControlUtils.createAndAttachTooltip(sliderReplaceThreshold, "tooltip.explain.image.color.replace.threshold");
         this.sliderReplaceThreshold.setMajorTickUnit(20);
-        paneColorSelection = new GridPane();
-        paneColorSelection.setVgap(10.0);
-        paneColorSelection.setVgap(3.0);
+        paneColorReplace = new GridPane();
+        paneColorReplace.setVgap(3.0);
         Label labelColorToReplace = new Label(Translation.getText("image.use.color.to.replace.field"));
-        paneColorSelection.add(labelColorToReplace, 0, 0);
-        paneColorSelection.add(this.pickerColorToReplace, 1, 0);
-        paneColorSelection.add(new Label(Translation.getText("image.use.color.replacing.field")), 0, 1);
-        paneColorSelection.add(this.pickerReplacingColor, 1, 1);
-        paneColorSelection.add(new Label(Translation.getText("image.use.color.replace.threshold.field")), 0, 2);
-        paneColorSelection.add(this.sliderReplaceThreshold, 1, 2);
+        paneColorReplace.add(labelColorToReplace, 0, 0);
+        paneColorReplace.add(this.pickerColorToReplace, 1, 0);
+        paneColorReplace.add(new Label(Translation.getText("image.use.color.replacing.field")), 0, 1);
+        paneColorReplace.add(this.pickerReplacingColor, 1, 1);
+        paneColorReplace.add(new Label(Translation.getText("image.use.color.replace.threshold.field")), 0, 2);
+        paneColorReplace.add(this.sliderReplaceThreshold, 1, 2);
         GridPane.setHgrow(labelColorToReplace, Priority.ALWAYS);
 
         //Viewport selector
@@ -226,20 +241,24 @@ public class ImageUseComponentConfigurationView extends BaseConfigurationViewBor
         buttonBox.setAlignment(Pos.CENTER_RIGHT);
         BorderPane.setMargin(buttonBox, new Insets(0.0, 0.0, 5.0, 0.0));
 
-        imageOnlyNodes = List.of(labelTitleColorReplace, toggleEnableReplaceColor, paneColorSelection, labelTitleViewport, toggleUseViewport, boxConfigureViewPort);
+        imageOnlyNodes = List.of(labelTitleColorReplace, toggleEnableRemoveBackGround, borderPaneRemoveBackgroundThreshold, toggleEnableGreyColor, toggleEnableReplaceColor, paneColorReplace, labelTitleViewport, toggleUseViewport, boxConfigureViewPort);
         videoOnlyNodes = List.of(labelTitleVideo, toggleSwitchMuteVideo, paneVideoConfig);
 
         // Total
-        VBox paneParameters = new VBox(5.0,
+        VBox paneParameters = new VBox(3.0,
                 labelTitleRatioRotate,
                 togglePreserveRatio,
                 rotateButtonBox,
+                mirrorButtonBox,
                 labelTitleVideo,
                 toggleSwitchMuteVideo,
                 paneVideoConfig,
                 labelTitleColorReplace,
-                this.toggleEnableReplaceColor,
-                paneColorSelection,
+                toggleEnableRemoveBackGround,
+                borderPaneRemoveBackgroundThreshold ,
+                toggleEnableGreyColor,
+                toggleEnableReplaceColor,
+                paneColorReplace,
                 labelTitleViewport,
                 toggleUseViewport,
                 boxConfigureViewPort
@@ -259,26 +278,30 @@ public class ImageUseComponentConfigurationView extends BaseConfigurationViewBor
 
     @Override
     public void initListener() {
-        this.paneColorSelection.disableProperty().bind(this.toggleEnableReplaceColor.selectedProperty().not());
+        this.sliderRemoveBackgroundThreshold.disableProperty().bind(this.toggleEnableRemoveBackGround.selectedProperty().not());
+        this.paneColorReplace.disableProperty().bind(this.toggleEnableReplaceColor.selectedProperty().not());
         this.comboBoxVideoPlayMode.disableProperty().bind(this.comboBoxVideoDisplayMode.getSelectionModel().selectedItemProperty().isNotEqualTo(VideoDisplayMode.IN_KEY));
         //Actions
         this.buttonRotateLeft.setOnAction(ev -> {
             ImageUseComponentI imageUseComp = this.model.get();
-//            ConfigActionController.INSTANCE.executeAction(new KeyActions.ChangeImageRotateAction(imageUseComp, imageUseComp.rotateProperty().get() - 90.0));
-            ConfigActionController.INSTANCE.executeAction(new KeyActions.FlipImageHorizontalAction(imageUseComp, imageUseComp.scaleYProperty().get() * -1));
-            ConfigActionController.INSTANCE.executeAction(new KeyActions.FlipImageVerticalAction(imageUseComp, imageUseComp.scaleXProperty().get() * -1));
-
+            ConfigActionController.INSTANCE.executeAction(new KeyActions.ChangeImageRotateAction(imageUseComp, imageUseComp.rotateProperty().get() - 90.0));
         });
         this.buttonRotateRight.setOnAction(ev -> {
             ImageUseComponentI imageUseComp = this.model.get();
-//            ConfigActionController.INSTANCE.executeAction(new KeyActions.ChangeImageRotateAction(imageUseComp, imageUseComp.rotateProperty().get() + 90.0));
-            ColorAdjust desaturateEffect = new ColorAdjust();
-            if ( imageUseComp.colourToGreyProperty().get() != null ) {
-                desaturateEffect = null;
-            } else {
-                desaturateEffect.setSaturation(-1);
-            }
-            ConfigActionController.INSTANCE.executeAction(new KeyActions.colourToGreyAction(imageUseComp, desaturateEffect));
+            ConfigActionController.INSTANCE.executeAction(new KeyActions.ChangeImageRotateAction(imageUseComp, imageUseComp.rotateProperty().get() + 90.0));
+        });
+        this.buttonMirrorHorizontal.setOnAction(ev -> {
+            ImageUseComponentI imageUseComp = this.model.get();
+            ConfigActionController.INSTANCE.executeAction(new KeyActions.FlipImageHorizontalAction(imageUseComp, imageUseComp.scaleYProperty().get() * -1));
+        });
+        this.buttonMirrorVertical.setOnAction(ev -> {
+            ImageUseComponentI imageUseComp = this.model.get();
+            ConfigActionController.INSTANCE.executeAction(new KeyActions.FlipImageVerticalAction(imageUseComp, imageUseComp.scaleXProperty().get() * -1));
+
+        });
+        this.toggleEnableGreyColor.selectedProperty().addListener((obs, ov, nv) -> {
+            ImageUseComponentI imageUseComp = this.model.get();
+            ConfigActionController.INSTANCE.executeAction(new KeyActions.colourToGreyAction(imageUseComp, this.toggleEnableGreyColor.selectedProperty().get()));
 
         });
         this.buttonConfigureViewport.disableProperty().bind(toggleUseViewport.selectedProperty().not());
@@ -295,6 +318,12 @@ public class ImageUseComponentConfigurationView extends BaseConfigurationViewBor
     public void initBinding() {
         this.changeListenerPreserveRatio = EditActionUtils.createSimpleBinding(this.togglePreserveRatio.selectedProperty(), this.model,
                 m -> m.preserveRatioProperty().get(), KeyActions.ChangePreserveRatioAction::new);
+        this.changeListenerEnableRemoveBackGround = EditActionUtils.createSimpleBinding(this.toggleEnableRemoveBackGround.selectedProperty(), this.model,
+                m -> m.enableRemoveBackgroundProperty().get(), KeyActions.ChangeRemoveBackground::new);
+        this.changeListenerRemoveBackgroundThreshold = EditActionUtils.createSliderBindingWithScale(0, this.sliderRemoveBackgroundThreshold, this.model,
+                ImageUseComponentI::replaceRemoveBackgroundThresholdProperty, (model, nv) -> new KeyActions.ChangeRemoveBackgroundThresholdAction(model, nv.intValue()));
+        this.changeListenerEnableGreyColor = EditActionUtils.createSimpleBinding(this.toggleEnableGreyColor.selectedProperty(), this.model,
+                m -> m.colourToGreyProperty().get(), KeyActions.colourToGreyAction::new);
         this.changeListenerEnableColorReplace = EditActionUtils.createSimpleBinding(this.toggleEnableReplaceColor.selectedProperty(), this.model,
                 m -> m.enableReplaceColorProperty().get(), KeyActions.ChangeEnableReplaceColorAction::new);
         this.changeListenerUseViewport = EditActionUtils.createSimpleBinding(this.toggleUseViewport.selectedProperty(), this.model,
@@ -329,6 +358,9 @@ public class ImageUseComponentConfigurationView extends BaseConfigurationViewBor
     public void bind(VideoUseComponentI model) {
         binding = true;
         ConfigurationComponentUtils.bindImageViewWithImageUseComponent(this.imageViewPreview, model);
+        model.enableRemoveBackgroundProperty().addListener(this.changeListenerEnableRemoveBackGround);
+        model.replaceRemoveBackgroundThresholdProperty().addListener(this.changeListenerRemoveBackgroundThreshold);
+        model.colourToGreyProperty().addListener(this.changeListenerEnableGreyColor);
         model.enableReplaceColorProperty().addListener(this.changeListenerEnableColorReplace);
         model.colorToReplaceProperty().addListener(this.changeListenerColorToReplace);
         model.replacingColorProperty().addListener(this.changeListenerReplacingColor);
@@ -340,6 +372,8 @@ public class ImageUseComponentConfigurationView extends BaseConfigurationViewBor
         model.muteVideoProperty().addListener(this.changeListenerVideoMute);
         this.togglePreserveRatio.setSelected(model.preserveRatioProperty().get());
         this.toggleUseViewport.setSelected(model.useViewPortProperty().get());
+        this.toggleEnableRemoveBackGround.setSelected(model.enableRemoveBackgroundProperty().get());
+        this.sliderRemoveBackgroundThreshold.setValue(model.replaceRemoveBackgroundThresholdProperty().get());
         this.toggleEnableReplaceColor.setSelected(model.enableReplaceColorProperty().get());
         this.pickerColorToReplace.setValue(model.colorToReplaceProperty().get());
         this.pickerReplacingColor.setValue(model.replacingColorProperty().get());
@@ -358,6 +392,9 @@ public class ImageUseComponentConfigurationView extends BaseConfigurationViewBor
         ConfigurationComponentUtils.unbindImageViewFromImageUseComponent(this.imageViewPreview);
         model.preserveRatioProperty().removeListener(this.changeListenerPreserveRatio);
         model.useViewPortProperty().removeListener(this.changeListenerUseViewport);
+        model.colourToGreyProperty().removeListener(this.changeListenerEnableGreyColor);
+        model.enableRemoveBackgroundProperty().removeListener(this.changeListenerEnableRemoveBackGround);
+        model.replaceRemoveBackgroundThresholdProperty().removeListener(this.changeListenerRemoveBackgroundThreshold);
         model.enableReplaceColorProperty().removeListener(this.changeListenerEnableColorReplace);
         model.replaceColorThresholdProperty().removeListener(this.changeListenerReplaceThreshold);
         model.colorToReplaceProperty().removeListener(this.changeListenerColorToReplace);
