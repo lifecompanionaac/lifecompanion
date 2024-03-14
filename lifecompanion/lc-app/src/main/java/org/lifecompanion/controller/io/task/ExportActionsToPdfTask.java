@@ -34,7 +34,6 @@ import org.lifecompanion.controller.appinstallation.InstallationController;
 import org.lifecompanion.controller.categorizedelement.useaction.AvailableUseActionController;
 import org.lifecompanion.controller.categorizedelement.useevent.AvailableUseEventController;
 import org.lifecompanion.controller.resource.IconHelper;
-import org.lifecompanion.controller.resource.ResourceHelper;
 import org.lifecompanion.controller.usevariable.UseVariableController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
@@ -52,16 +51,17 @@ import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ExportActionsToPdfTask extends LCTask<Void> {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExportActionsToPdfTask.class);
 
-    private static final float MAIN_TITLE_FONT_SIZE = 15, MAIN_DESCRIPTION_FONT_SIZE = 12, SUB_TITLE_FONT_SIZE = 10, BODY_TITLE_FONT_SIZE = 12, BODY_DESCRIPTION_FONT_SIZE = 12, BODY_EXEMPLE_FONT_SIZE = 12, BODY_ID_FONT_SIZE = 12, FOOTER_FONT_SIZE = 9,
+    private static final float MAIN_TITLE_FONT_SIZE = 15, MAIN_DESCRIPTION_FONT_SIZE =12, SUB_TITLE_FONT_SIZE = 10, BODY_TITLE_FONT_SIZE = 12, BODY_DESCRIPTION_FONT_SIZE = 12, BODY_EXEMPLE_FONT_SIZE = 12, BODY_ID_FONT_SIZE = 12, FOOTER_FONT_SIZE = 9,
             RIGHT_OFFSET_FROM_TEXT = 50, OFFSET_IMAGE_TO_TEXT = 8, HEADER_MARGIN = 15f, LATERAL_MARIN = 35f, FOOTER_MARGIN = 30f, SPACE_BETWEEN_BODY = 20,
-            ICON_SIZE = 32, RECTANGLE_SIZE = 40, CERCLE_DIAMETER = 46, KAPPA = 0.552284749831f, RECTANGLE_BORDER_RADIUS = 10f,
+             ICON_SIZE = 32, RECTANGLE_SIZE = 40, CERCLE_DIAMETER = 46, KAPPA= 0.552284749831f, RECTANGLE_BORDER_RADIUS = 10f,
             FOOTER_LINE_HEIGHT = 12f, LOGO_HEIGHT = 25f, LINE_SIZE = 1f,
             COLOR_GRAY = 0.4f, COLOR_BLACK = 0f;
     private static final PDFont MAIN_TITLE_FONT = PDType1Font.HELVETICA_BOLD;
@@ -79,19 +79,14 @@ public class ExportActionsToPdfTask extends LCTask<Void> {
 
     private int totalWork;
 
-    private PDDocument pdfDoc;
-    private PDPage pdfPage;
-    private PDPageContentStream pageContentStream;
     private float pageWidthF, pageHeightF;
     private float currentYPosition;
-    private float spaceWidth;
-    private String currentTypeCategory;
     private PDImageXObject logoImage;
     private float logoDrawWidth;
 
 
     public ExportActionsToPdfTask(File destPdf) {
-        super("task.export.lists.pdf.name");
+        super("task.export.lists.pdfDoc.name");
         this.exportedImageDir = IOUtils.getTempDir("export-images-for-config");
         this.exportedImageDir.mkdirs();
         this.destPdf = destPdf;
@@ -101,44 +96,42 @@ public class ExportActionsToPdfTask extends LCTask<Void> {
     @Override
     protected Void call() throws Exception {
         // Lists containing all actions, events and variables
-        ObservableList<UseActionMainCategoryI> mainCategoriesAction = AvailableUseActionController.INSTANCE.getMainCategories();
-        ObservableList<UseEventMainCategoryI> mainCategoriesEvent = AvailableUseEventController.INSTANCE.getMainCategories();
+        ObservableList<UseActionMainCategoryI> mainCategoriesAction  = AvailableUseActionController.INSTANCE.getMainCategories();
+        ObservableList<UseEventMainCategoryI> mainCategoriesEvent  = AvailableUseEventController.INSTANCE.getMainCategories();
         ObservableList<UseVariableDefinitionI> variables = UseVariableController.INSTANCE.getPossibleVariables();
-        int totalWork = calculateNumberOfActions(mainCategoriesAction);
-        totalWork += calculateNumberOfActions(mainCategoriesEvent);
-        totalWork += variables.size();
+        int numberOfActions = calculateNumberOfActions(mainCategoriesAction);
+        numberOfActions += calculateNumberOfActions(mainCategoriesEvent);
+        numberOfActions += variables.size();
+        totalWork = numberOfActions;
         updateProgress(0, totalWork);
 
         // Try to save a PDF
-        try (PDDocument pdf = new PDDocument()) {
-            pdfDoc = pdf;
+        try (PDDocument pdfDoc = new PDDocument()) {
             updateProgress(progress.get(), totalWork);
-            initLcLogo();
-            currentTypeCategory = Translation.getText("export.lists.pdf.name.action.category");
-            newCategories(mainCategoriesAction, currentTypeCategory);
-            currentTypeCategory = Translation.getText("export.lists.pdf.name.event.category");
-            newCategories(mainCategoriesEvent, currentTypeCategory);
-            currentTypeCategory = Translation.getText("export.lists.pdf.name.variable.category");
-            initPageLayout();
-            try (PDPageContentStream page = new PDPageContentStream(pdfDoc, pdfPage, PDPageContentStream.AppendMode.APPEND, true, true)) {
-                this.pageContentStream = page;
-                initContentStream();
+            initLcLogo(pdfDoc);
+            newCategories(mainCategoriesAction, Translation.getText("export.lists.pdfDoc.name.action.category"), pdfDoc);
+            newCategories(mainCategoriesEvent, Translation.getText("export.lists.pdfDoc.name.event.category"), pdfDoc);
+            try {
+                PDPage pdfPage = initPageLayout(pdfDoc);
+                PDPageContentStream pageStream = new PDPageContentStream(pdfDoc, pdfPage, PDPageContentStream.AppendMode.APPEND, true, true);
+                pageStream = initContentStream(Translation.getText("export.lists.pdfDoc.name.variable.category"), pageStream, pdfDoc, pdfPage);
 
-                String[][] texts = {new String[]{currentTypeCategory}, Translation.getText("use.variable.select.dialog.header.text").split("\\s+")};
-                newSection(texts, null, null, true);
+                String[][] texts = {new String [] {Translation.getText("export.lists.pdfDoc.name.variable.category")}, Translation.getText("use.variable.select.dialog.header.text").split("\\s+")};
+                pageStream = newSection(texts, null, null, true, Translation.getText("export.lists.pdfDoc.name.variable.category"), pageStream, pdfDoc, pdfPage);
 
                 for (UseVariableDefinitionI var : variables) {
-                    texts = new String[][]{var.getName().split("\\s+"), var.getDescription().split("\\s+"), (Translation.getText("export.lists.pdf.example") + var.getExampleValueToString()).split(
-                            "\\s+"), (Translation.getText("export.lists.pdf.id") + "{" + var.getId() + "}").split("\\s+")};
-                    newSection(texts, null, null, false);
+                    texts = new String[][] {var.getName().split("\\s+"), var.getDescription().split("\\s+"), (Translation.getText("export.lists.pdfDoc.example")+var.getExampleValueToString()).split("\\s+"), (Translation.getText("export.lists.pdfDoc.id") + "{"+var.getId()+"}").split("\\s+")};
+                    pageStream = newSection(texts, null, null, false, Translation.getText("export.lists.pdfDoc.name.variable.category"), pageStream, pdfDoc, pdfPage);
                 }
 
                 // FOOTER
-                insertFooter();
+                insertFooter(Translation.getText("export.lists.pdfDoc.name.variable.category"), pageStream);
+            } catch (IOException e) {
+                LOGGER.error("Error while adding variable section to PDF", e);
             }
             PDDocumentInformation pdi = pdfDoc.getDocumentInformation();
             pdi.setAuthor(LCConstant.NAME);
-            pdi.setTitle(Translation.getText("pdf.export.lists.file.title"));
+            pdi.setTitle(Translation.getText("pdfDoc.export.lists.file.title"));
             pdi.setCreator(LCConstant.NAME);
             pdfDoc.save(destPdf);
         }
@@ -158,54 +151,56 @@ public class ExportActionsToPdfTask extends LCTask<Void> {
         return numberOfActions;
     }
 
-    private void initPageLayout() {
-        pdfPage = new PDPage(PDRectangle.A4);
+    private PDPage initPageLayout(PDDocument pdfDoc) {
+        PDPage pdfPage = new PDPage(PDRectangle.A4);
         pdfDoc.addPage(pdfPage);
         PDRectangle pageSize = pdfPage.getMediaBox();
         pageWidthF = pageSize.getWidth();
         pageHeightF = pageSize.getHeight();
         updateProgress(progress.incrementAndGet(), totalWork);
+        return pdfPage;
     }
 
-    private void initContentStream() throws IOException {
-        if (this.pageContentStream != null) {
-            insertFooter();
+    private PDPageContentStream initContentStream(String typeCategory, PDPageContentStream pageStream, PDDocument pdfDoc, PDPage pdfPage) throws IOException {
+        if (pageStream != null) {
+            insertFooter(typeCategory, pageStream);
         }
-        this.pageContentStream = new PDPageContentStream(pdfDoc, pdfPage, PDPageContentStream.AppendMode.APPEND, true, true);
         this.currentYPosition = pdfPage.getMediaBox().getHeight() - HEADER_MARGIN;
+        return new PDPageContentStream(pdfDoc, pdfPage, PDPageContentStream.AppendMode.APPEND, true, true);
     }
 
-    private void checkAvailableSpace(String[][] texts, boolean main, boolean img) throws IOException {
+    private PageStreamAndPdfPage checkAvailableSpace(String[][] texts, boolean main, boolean img, String typeCategory, PDPageContentStream pageStream, PDDocument pdfDoc, PDPage pdfPage) throws IOException {
         float size = BODY_TITLE_FONT_SIZE * 1.5f;
         PDFont font = main ? MAIN_TITLE_FONT : BODY_TITLE_FONT;
         float fontSize = main ? MAIN_TITLE_FONT_SIZE : BODY_TITLE_FONT_SIZE;
         float colorSize = main ? RECTANGLE_SIZE : CERCLE_DIAMETER;
-        float startX = img ? LATERAL_MARIN + colorSize + OFFSET_IMAGE_TO_TEXT : LATERAL_MARIN;
+        float startX = img ? LATERAL_MARIN+colorSize+OFFSET_IMAGE_TO_TEXT : LATERAL_MARIN;
         float tx = startX;
-        initSpaceWidth(font, fontSize);
+        float spaceWidth = initSpaceWidth(font, fontSize);
         for (String[] text : texts) {
-            for (String word : text) {
+            for (String word :  text) {
                 float wordWidth = BODY_TITLE_FONT.getStringWidth(word) / 1000 * BODY_TITLE_FONT_SIZE;
                 if (tx + wordWidth > pageWidthF - LATERAL_MARIN) {
                     tx = startX;
                     size += BODY_TITLE_FONT_SIZE * 1.5f;
                 }
-                tx += wordWidth + this.spaceWidth;
+                tx += wordWidth + spaceWidth;
             }
             tx = startX;
             size += BODY_TITLE_FONT_SIZE * 1.5f;
         }
         if (this.currentYPosition - size <= FOOTER_MARGIN) {
-            initPageLayout();
-            initContentStream();
+            pdfPage = initPageLayout(pdfDoc);
+            pageStream = initContentStream(typeCategory, pageStream, pdfDoc, pdfPage);
         }
+        return new PageStreamAndPdfPage(pageStream, pdfPage);
     }
 
-    private void initSpaceWidth(PDFont font, float fontSize) throws IOException {
-        this.spaceWidth = font.getStringWidth(" ") / 1000 * fontSize;
+    private float initSpaceWidth(PDFont font, float fontSize) throws IOException {
+        return font.getStringWidth(" ") / 1000 * fontSize;
     }
 
-    private void initLcLogo() throws IOException {
+    private void initLcLogo(PDDocument pdfDoc) throws IOException {
         File logoFile = new File(exportedImageDir.getPath() + File.separator + "lc_logo.png");
         BufferedImage logoBuffImage = SwingFXUtils.fromFXImage(IconHelper.get(LCConstant.LC_BIG_ICON_PATH), null);
         ImageIO.write(logoBuffImage, "png", logoFile);
@@ -213,148 +208,153 @@ public class ExportActionsToPdfTask extends LCTask<Void> {
         this.logoImage = PDImageXObject.createFromFile(logoFile.getAbsolutePath(), pdfDoc);
     }
 
-    private void insertText(String[] words, PDFont font, float fontSize, float startX, float startY) throws IOException {
+    private PDPageContentStream insertText(String[] words, PDFont font, float fontSize, float startX, float startY, String typeCategory, PDPageContentStream pageStream, PDDocument pdfDoc, PDPage pdfPage) throws IOException {
         float tx = startX;
         float ty = startY;
-        initSpaceWidth(font, fontSize);
+        float spaceWidth = initSpaceWidth(font, fontSize);
         for (String word : words) {
             float wordWidth = font.getStringWidth(word) / 1000 * fontSize;
             if (tx + wordWidth > pageWidthF - LATERAL_MARIN) {
                 tx = startX;
-                ty = fontSize * 1.5f;
+                ty =  fontSize* 1.5f;
             }
             if (this.currentYPosition - fontSize < FOOTER_MARGIN) {
-                initPageLayout();
-                initContentStream();
+                initPageLayout(pdfDoc);
+                pageStream = initContentStream(typeCategory, pageStream, pdfDoc, pdfPage);
             } else {
                 this.currentYPosition -= ty;
             }
-            this.pageContentStream.beginText();
-            this.pageContentStream.newLineAtOffset(tx, this.currentYPosition);
-            this.pageContentStream.setFont(font, fontSize);
-            this.pageContentStream.showText(word);
-            this.pageContentStream.endText();
-            tx += wordWidth + this.spaceWidth;
+            pageStream.beginText();
+            pageStream.newLineAtOffset(tx, this.currentYPosition);
+            pageStream.setFont(font, fontSize);
+            pageStream.showText(word);
+            pageStream.endText();
+            tx += wordWidth + spaceWidth;
             ty = 0;
         }
+        return pageStream;
     }
 
     /**
      * This method is used to add the title section and the action section for items that are linked to the MainCategoryI interface.
      */
-    private void newCategories(ObservableList<? extends MainCategoryI<? extends SubCategoryI<? extends MainCategoryI, ?>>> mainCategories, String titleType) throws IOException {
+    private void newCategories(ObservableList <? extends MainCategoryI<? extends SubCategoryI<? extends MainCategoryI, ?>>> mainCategories, String typeCategory, PDDocument pdfDoc) {
         for (MainCategoryI mainCategory : mainCategories) {
-            initPageLayout();
-            try (PDPageContentStream page = new PDPageContentStream(pdfDoc, pdfPage, PDPageContentStream.AppendMode.APPEND, true, true)) {
-                this.pageContentStream = page;
-                initContentStream();
+            PDPage pdfPage = initPageLayout(pdfDoc);
+            try {
+                PDPageContentStream pageStream = new PDPageContentStream(pdfDoc, pdfPage, PDPageContentStream.AppendMode.APPEND, true, true);
+                pageStream = initContentStream(typeCategory, pageStream, pdfDoc, pdfPage);
 
                 // MAIN
-                String[][] texts = {(titleType + mainCategory.getName()).split("\\s+"), mainCategory.getStaticDescription().split("\\s+")};
-                newSection(texts, mainCategory.getConfigIconPath(), mainCategory.getColor(), true);
-                if (currentYPosition > pageHeightF - HEADER_MARGIN - RECTANGLE_SIZE) currentYPosition = pageHeightF - HEADER_MARGIN - RECTANGLE_SIZE;
+                String[][] texts = {(typeCategory + mainCategory.getName()).split("\\s+"), mainCategory.getStaticDescription().split("\\s+")};
+                pageStream = newSection(texts, mainCategory.getConfigIconPath(), mainCategory.getColor(), true, typeCategory, pageStream, pdfDoc, pdfPage);
+                if ( currentYPosition > pageHeightF - HEADER_MARGIN - RECTANGLE_SIZE) currentYPosition = pageHeightF - HEADER_MARGIN - RECTANGLE_SIZE;
                 //SUB
                 ObservableList<? extends SubCategoryI> subCategories = mainCategory.getSubCategories();
                 for (SubCategoryI subCategory : subCategories) {
-                    newSubTitle(subCategory.getName().split("\\s+"));
+                    pageStream = newSubTitle(subCategory.getName().split("\\s+") , typeCategory, pageStream, pdfDoc, pdfPage);
 
                     // ACTIONS
                     ObservableList<? extends CategorizedElementI> actions = subCategory.getContent();
                     for (CategorizedElementI event : actions) {
-                        texts = new String[][]{event.getName().split("\\s+"), event.getStaticDescription().split("\\s+")};
-                        newSection(texts, event.getConfigIconPath(), event.getCategory().getColor(), false);
+                        texts = new String[][] {event.getName().split("\\s+"),event.getStaticDescription().split("\\s+")};
+                        pageStream = newSection(texts, event.getConfigIconPath(), event.getCategory().getColor(), false, typeCategory, pageStream, pdfDoc, pdfPage);
                     }
                 }
                 // FOOTER
-                insertFooter();
+                insertFooter(typeCategory, pageStream);
+            } catch (IOException e) {
+                LOGGER.error("Error while adding category section to PDF", e);
             }
         }
     }
 
-    private void newSection(String[][] word, String iconPath, Color backgroundColor, boolean main) throws IOException {
+    private PDPageContentStream newSection(String[][] word, String iconPath, Color backgroundColor, boolean main, String typeCategory, PDPageContentStream pageStream, PDDocument pdfDoc, PDPage pdfPage) throws IOException {
         boolean boolImg = iconPath != null;
-        checkAvailableSpace(word, main, boolImg);
-        if (boolImg) insertIcon(iconPath, backgroundColor, main);
-        for (int i = 0; i < word.length; i++) {
-            if (i == 0) newTitle(word[i], main, boolImg);
-            else if (i == 1) newDescription(word[i], main, boolImg);
-            else if (i == 2) newExemple(word[i]);
-            else if (i == 3) newId(word[i]);
+        PageStreamAndPdfPage pageAndPdfPage = checkAvailableSpace(word, main, boolImg, typeCategory, pageStream, pdfDoc, pdfPage);
+        pageStream = pageAndPdfPage.getPageStream();
+        pdfPage = pageAndPdfPage.getPdfPage();
+         if (boolImg) insertIcon(iconPath, backgroundColor, main, pageStream, pdfDoc);
+        for ( int i = 0; i < word.length; i++) {
+            if ( i == 0) pageStream = newTitle(word[i], main,boolImg, typeCategory, pageStream, pdfDoc, pdfPage);
+            else if ( i == 1) pageStream = newDescription(word[i], main, boolImg, typeCategory, pageStream, pdfDoc, pdfPage);
+            else if ( i == 2) pageStream = newExemple(word[i], typeCategory, pageStream, pdfDoc, pdfPage);
+            else if ( i == 3) pageStream = newId(word[i], typeCategory, pageStream, pdfDoc, pdfPage);
         }
         currentYPosition -= SPACE_BETWEEN_BODY;
+        return pageStream;
     }
 
-    private void newTitle(String[] word, boolean main, boolean boolImg) throws IOException {
+    private PDPageContentStream newTitle(String[] word, boolean main, boolean boolImg, String typeCategory, PDPageContentStream pageStream, PDDocument pdfDoc, PDPage pdfPage) throws IOException {
         PDFont font = main ? MAIN_TITLE_FONT : BODY_TITLE_FONT;
         float fontSize = main ? MAIN_TITLE_FONT_SIZE : BODY_TITLE_FONT_SIZE;
-        float startX = boolImg ? LATERAL_MARIN + CERCLE_DIAMETER + OFFSET_IMAGE_TO_TEXT : LATERAL_MARIN;
-        float startY = main ? HEADER_MARGIN : fontSize;
-        insertText(word, font, fontSize, startX, startY);
+        float startX = boolImg ? LATERAL_MARIN+CERCLE_DIAMETER+OFFSET_IMAGE_TO_TEXT : LATERAL_MARIN;
+        float startY = main ? HEADER_MARGIN : fontSize ;
+        pageStream = insertText(word, font, fontSize, startX, startY, typeCategory, pageStream, pdfDoc, pdfPage);
+        return pageStream;
     }
 
-    private void newSubTitle(String[] word) throws IOException {
+    private PDPageContentStream newSubTitle(String[] word, String typeCategory, PDPageContentStream pageStream,PDDocument pdfDoc, PDPage pdfPage) throws IOException {
         if (currentYPosition - SUB_TITLE_FONT_SIZE < FOOTER_MARGIN) {
-            initPageLayout();
-            initContentStream();
+            pdfPage = initPageLayout(pdfDoc);
+            pageStream = initContentStream(typeCategory, pageStream, pdfDoc, pdfPage);
         }
         if (pageHeightF - currentYPosition >= pageHeightF - HEADER_MARGIN - SUB_TITLE_FONT_SIZE * 2) {
             currentYPosition -= SUB_TITLE_FONT_SIZE * 2;
         }
-        this.pageContentStream.setNonStrokingColor(COLOR_GRAY, COLOR_GRAY, COLOR_GRAY);
-        insertText(word, SUB_TITLE_FONT, SUB_TITLE_FONT_SIZE, LATERAL_MARIN, SUB_TITLE_FONT_SIZE * 1.5f);
-        currentYPosition -= SUB_TITLE_FONT_SIZE * 0.5f;
-        this.pageContentStream.addRect(LATERAL_MARIN, currentYPosition, pageWidthF - LATERAL_MARIN - LATERAL_MARIN, LINE_SIZE);
-        this.pageContentStream.fill();
-        this.pageContentStream.setNonStrokingColor(COLOR_BLACK, COLOR_BLACK, COLOR_BLACK);
+        pageStream.setNonStrokingColor(COLOR_GRAY, COLOR_GRAY, COLOR_GRAY);
+        pageStream = insertText(word, SUB_TITLE_FONT, SUB_TITLE_FONT_SIZE, LATERAL_MARIN, SUB_TITLE_FONT_SIZE * 1.5f, typeCategory, pageStream, pdfDoc, pdfPage);
+        currentYPosition -= SUB_TITLE_FONT_SIZE *0.5f;
+        pageStream.addRect(LATERAL_MARIN, currentYPosition, pageWidthF-LATERAL_MARIN-LATERAL_MARIN, LINE_SIZE);
+        pageStream.fill();
+        pageStream.setNonStrokingColor(COLOR_BLACK, COLOR_BLACK, COLOR_BLACK);
         currentYPosition -= SUB_TITLE_FONT_SIZE * 1.5f;
+        return pageStream;
     }
 
-    private void newDescription(String[] word, boolean main, boolean boolImg) throws IOException {
+    private PDPageContentStream newDescription(String[] word, boolean main, boolean boolImg, String typeCategory, PDPageContentStream pageStream, PDDocument pdfDoc, PDPage pdfPage) throws IOException {
         PDFont font = main ? MAIN_DESCRIPTION_FONT : BODY_DESCRIPTION_FONT;
-        float startX = boolImg ? LATERAL_MARIN + CERCLE_DIAMETER + OFFSET_IMAGE_TO_TEXT : LATERAL_MARIN;
+        float startX = boolImg ? LATERAL_MARIN+CERCLE_DIAMETER+OFFSET_IMAGE_TO_TEXT : LATERAL_MARIN;
         float fontSize = main ? MAIN_DESCRIPTION_FONT_SIZE : BODY_DESCRIPTION_FONT_SIZE;
-        insertText(word, font, fontSize, startX, fontSize * 1.5f);
+        pageStream = insertText(word, font, fontSize, startX, fontSize * 1.5f, typeCategory, pageStream, pdfDoc, pdfPage);
+        return pageStream;
+    }
+    private PDPageContentStream newExemple(String[] word, String typeCategory, PDPageContentStream pageStream, PDDocument pdfDoc, PDPage pdfPage) throws IOException {
+        pageStream = insertText(word, BODY_EXEMPLE_FONT, BODY_EXEMPLE_FONT_SIZE, LATERAL_MARIN, BODY_EXEMPLE_FONT_SIZE * 1.5f, typeCategory, pageStream, pdfDoc, pdfPage);
+        return pageStream;
     }
 
-    private void newExemple(String[] word) throws IOException {
-        insertText(word, BODY_EXEMPLE_FONT, BODY_EXEMPLE_FONT_SIZE, LATERAL_MARIN, BODY_EXEMPLE_FONT_SIZE * 1.5f);
+    private PDPageContentStream newId(String[] word, String typeCategory, PDPageContentStream pageStream, PDDocument pdfDoc, PDPage pdfPage) throws IOException {
+        pageStream = insertText(word, BODY_ID_FONT, BODY_ID_FONT_SIZE, LATERAL_MARIN, BODY_ID_FONT_SIZE * 1.5f, typeCategory, pageStream, pdfDoc, pdfPage);
+        return pageStream;
     }
 
-    private void newId(String[] word) throws IOException {
-        insertText(word, BODY_ID_FONT, BODY_ID_FONT_SIZE, LATERAL_MARIN, BODY_ID_FONT_SIZE * 1.5f);
-    }
-
-    private void insertIcon(String iconPath, Color backgroundColor, boolean mainIcon) {
+    private void insertIcon(String iconPath, Color backgroundColor, boolean mainIcon, PDPageContentStream pageStream, PDDocument pdfDoc) {
         try {
-            // Copy to temp file
             File iconFile = new File(exportedImageDir.getPath() + File.separator + "icon.png");
-            try (InputStream is = ResourceHelper.getInputStreamForPath(LCConstant.INT_PATH_ICONS + iconPath)) {
-                try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(iconFile))) {
-                    org.lifecompanion.framework.commons.utils.io.IOUtils.copyStream(is, bos);
-                }
-            }
+            BufferedImage iconBuffImage = SwingFXUtils.fromFXImage(IconHelper.get(iconPath), null);
+            ImageIO.write(iconBuffImage, "png", iconFile);
 
-            // Load image
             PDImageXObject pdImage = PDImageXObject.createFromFile(iconFile.getAbsolutePath(), pdfDoc);
 
             float imageWidth = pdImage.getWidth() > ICON_SIZE ? ICON_SIZE : pdImage.getWidth();
             float imageHeight = pdImage.getHeight() > ICON_SIZE ? ICON_SIZE : pdImage.getHeight();
 
             float startX = mainIcon ? LATERAL_MARIN + (RECTANGLE_SIZE - imageWidth) / 2 : LATERAL_MARIN + (CERCLE_DIAMETER - imageWidth) / 2;
-            float startY = mainIcon ? this.currentYPosition - RECTANGLE_SIZE + (RECTANGLE_SIZE - imageHeight) / 2 : this.currentYPosition - CERCLE_DIAMETER + (CERCLE_DIAMETER - imageHeight) / 2;
+            float startY = mainIcon ? this.currentYPosition - RECTANGLE_SIZE + (RECTANGLE_SIZE -  imageHeight)/2 : this.currentYPosition - CERCLE_DIAMETER + (CERCLE_DIAMETER - imageHeight)/2;
 
-            this.pageContentStream.setNonStrokingColor((float) backgroundColor.getRed(), (float) backgroundColor.getGreen(), (float) backgroundColor.getBlue());
-            if (mainIcon) drawRect();
-            else drawCircle();
-            this.pageContentStream.fill();
-            this.pageContentStream.drawImage(pdImage, startX, startY, imageWidth, imageHeight);
-            this.pageContentStream.setNonStrokingColor(0f, 0f, 0f);
+            pageStream.setNonStrokingColor((float) backgroundColor.getRed(), (float) backgroundColor.getGreen(), (float) backgroundColor.getBlue());
+            if (mainIcon) drawRect(pageStream);
+            else drawCircle(pageStream);
+            pageStream.fill();
+            pageStream.drawImage(pdImage, startX, startY, imageWidth, imageHeight);
+            pageStream.setNonStrokingColor(0f, 0f, 0f);
         } catch (IOException e) {
             LOGGER.error("Error while adding icon to PDF", e);
         }
     }
 
-    private void drawRect() throws IOException {
+    private void drawRect(PDPageContentStream pageStream) throws IOException {
         float roundness = RECTANGLE_BORDER_RADIUS;
         float x = LATERAL_MARIN;
         float y = this.currentYPosition - RECTANGLE_SIZE;
@@ -362,61 +362,79 @@ public class ExportActionsToPdfTask extends LCTask<Void> {
         float h = RECTANGLE_SIZE;
 
         // Start at the top left corner and move clockwise
-        this.pageContentStream.moveTo(x + roundness, y + h);
-        this.pageContentStream.lineTo(x + w - roundness, y + h);
-        this.pageContentStream.curveTo(x + w, y + h, x + w, y + h, x + w, y + h - roundness);
-        this.pageContentStream.lineTo(x + w, y + roundness);
-        this.pageContentStream.curveTo(x + w, y, x + w, y, x + w - roundness, y);
-        this.pageContentStream.lineTo(x + roundness, y);
-        this.pageContentStream.curveTo(x, y, x, y, x, y + roundness);
-        this.pageContentStream.lineTo(x, y + h - roundness);
-        this.pageContentStream.curveTo(x, y + h, x, y + h, x + roundness, y + h);
-        this.pageContentStream.closePath();
+        pageStream.moveTo(x + roundness, y + h);
+        pageStream.lineTo(x + w - roundness, y + h);
+        pageStream.curveTo(x + w, y + h, x + w, y + h, x + w, y + h - roundness);
+        pageStream.lineTo(x + w, y + roundness);
+        pageStream.curveTo(x + w, y, x + w, y, x + w - roundness, y);
+        pageStream.lineTo(x + roundness, y);
+        pageStream.curveTo(x, y, x, y, x, y + roundness);
+        pageStream.lineTo(x, y + h - roundness);
+        pageStream.curveTo(x, y + h, x, y + h, x + roundness, y + h);
+        pageStream.closePath();
     }
 
     /**
-     * The circle is created using cubic Bézier curves to approximate the shape of a circle.
-     * Four curve segments are used to form a complete circle by connecting four control points.
-     */
-    public void drawCircle() throws IOException {
-        float radius = CERCLE_DIAMETER / 2;
+    * The circle is created using cubic Bézier curves to approximate the shape of a circle.
+    * Four curve segments are used to form a complete circle by connecting four control points.
+    */
+    public void drawCircle(PDPageContentStream pageStream) throws IOException {
+        float radius = CERCLE_DIAMETER/2;
         float centerX = LATERAL_MARIN + radius;
         float centerY = this.currentYPosition - radius;
 
         float controlDistance = KAPPA * radius;
 
         float[][] points = {
-                {centerX + controlDistance, centerY + radius, centerX + radius, centerY + controlDistance, centerX + radius, centerY}, // Top right
-                {centerX + radius, centerY - controlDistance, centerX + controlDistance, centerY - radius, centerX, centerY - radius}, // Bottom right
-                {centerX - controlDistance, centerY - radius, centerX - radius, centerY - controlDistance, centerX - radius, centerY}, // Bottom left
-                {centerX - radius, centerY + controlDistance, centerX - controlDistance, centerY + radius, centerX, centerY + radius}  // Top left
+            {centerX + controlDistance, centerY + radius, centerX + radius, centerY + controlDistance, centerX + radius, centerY}, // Top right
+            {centerX + radius, centerY - controlDistance, centerX + controlDistance, centerY - radius, centerX, centerY - radius}, // Bottom right
+            {centerX - controlDistance, centerY - radius, centerX - radius, centerY - controlDistance, centerX - radius, centerY}, // Bottom left
+            {centerX - radius, centerY + controlDistance, centerX - controlDistance, centerY + radius, centerX, centerY + radius}  // Top left
         };
 
-        this.pageContentStream.moveTo(centerX, centerY + radius);
+        pageStream.moveTo(centerX, centerY + radius);
         for (float[] point : points) {
-            this.pageContentStream.curveTo(point[0], point[1], point[2], point[3], point[4], point[5]);
+            pageStream.curveTo(point[0], point[1], point[2], point[3], point[4], point[5]);
         }
-        this.pageContentStream.closePath();
-        this.pageContentStream.fill();
+        pageStream.closePath();
+        pageStream.fill();
     }
 
-    private void insertFooter() throws IOException {
+    private void insertFooter(String typeCategory, PDPageContentStream pageStream) throws IOException {
         // FOOTER
-        this.pageContentStream.setNonStrokingColor(COLOR_GRAY, COLOR_GRAY, COLOR_GRAY);
-        this.pageContentStream.addRect(0, FOOTER_MARGIN, pageHeightF, LINE_SIZE);
-        this.pageContentStream.fill();
-        this.pageContentStream.beginText();
-        this.pageContentStream.newLineAtOffset(RIGHT_OFFSET_FROM_TEXT, FOOTER_MARGIN - FOOTER_LINE_HEIGHT);
-        this.pageContentStream.setFont(FOOTER_FONT, FOOTER_FONT_SIZE);
-        this.pageContentStream.showText(currentTypeCategory + StringUtils.dateToStringDateWithHour(new Date()));
-        this.pageContentStream.newLineAtOffset(0, -FOOTER_LINE_HEIGHT);
-        this.pageContentStream.showText(LCConstant.NAME + " v" + InstallationController.INSTANCE.getBuildProperties().getVersionLabel() + " - " + InstallationController.INSTANCE.getBuildProperties()
-                .getAppServerUrl());
-        this.pageContentStream.endText();
-        this.pageContentStream.setNonStrokingColor(COLOR_BLACK, COLOR_BLACK, COLOR_BLACK);
+        pageStream.setNonStrokingColor(COLOR_GRAY, COLOR_GRAY, COLOR_GRAY);
+        pageStream.addRect(0, FOOTER_MARGIN, pageHeightF, LINE_SIZE);
+        pageStream.fill();
+        pageStream.beginText();
+        pageStream.newLineAtOffset(RIGHT_OFFSET_FROM_TEXT, FOOTER_MARGIN - FOOTER_LINE_HEIGHT);
+        pageStream.setFont(FOOTER_FONT, FOOTER_FONT_SIZE);
+        pageStream.showText(typeCategory + StringUtils.dateToStringDateWithHour(new Date()));
+        pageStream.newLineAtOffset(0, -FOOTER_LINE_HEIGHT);
+        pageStream.showText(LCConstant.NAME + " v" + InstallationController.INSTANCE.getBuildProperties().getVersionLabel() + " - " + InstallationController.INSTANCE.getBuildProperties().getAppServerUrl());
+        pageStream.endText();
+        pageStream.setNonStrokingColor(COLOR_BLACK, COLOR_BLACK, COLOR_BLACK);
 
         // Temp save LC logo
-        this.pageContentStream.drawImage(this.logoImage, pageWidthF - this.logoDrawWidth - RIGHT_OFFSET_FROM_TEXT, FOOTER_MARGIN / 2f - LOGO_HEIGHT / 2f, this.logoDrawWidth, LOGO_HEIGHT);
-        this.pageContentStream.close();
+        pageStream.drawImage(this.logoImage, pageWidthF - this.logoDrawWidth - RIGHT_OFFSET_FROM_TEXT, FOOTER_MARGIN / 2f - LOGO_HEIGHT / 2f, this.logoDrawWidth, LOGO_HEIGHT);
+        pageStream.close();
+    }
+    public class PageStreamAndPdfPage {
+        private PDPageContentStream pageStream;
+        private PDPage pdfPage;
+
+        public PageStreamAndPdfPage(PDPageContentStream pageStream, PDPage pdfPage) {
+            this.pageStream = pageStream;
+            this.pdfPage = pdfPage;
+        }
+
+        public PDPageContentStream getPageStream() {
+            return pageStream;
+        }
+
+        public PDPage getPdfPage() {
+            return pdfPage;
+        }
     }
 }
+
+
