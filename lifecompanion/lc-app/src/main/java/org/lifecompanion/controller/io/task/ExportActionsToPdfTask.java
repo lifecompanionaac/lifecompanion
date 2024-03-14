@@ -332,8 +332,11 @@ public class ExportActionsToPdfTask extends LCTask<Void> {
     private void insertIcon(String iconPath, Color backgroundColor, boolean mainIcon, PDPageContentStream pageStream, PDDocument pdfDoc) {
         try {
             File iconFile = new File(exportedImageDir.getPath() + File.separator + "icon.png");
-            BufferedImage iconBuffImage = SwingFXUtils.fromFXImage(IconHelper.get(iconPath), null);
-            ImageIO.write(iconBuffImage, "png", iconFile);
+            try (InputStream is = ResourceHelper.getInputStreamForPath(LCConstant.INT_PATH_ICONS + iconPath)) {
+                try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(iconFile))) {
+                    org.lifecompanion.framework.commons.utils.io.IOUtils.copyStream(is, bos);
+                }
+            }
 
             PDImageXObject pdImage = PDImageXObject.createFromFile(iconFile.getAbsolutePath(), pdfDoc);
 
