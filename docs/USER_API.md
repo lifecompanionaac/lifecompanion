@@ -35,6 +35,7 @@ LifeCompanion can be launched using command line arguments to configure some of 
 |`-hubUrl url`|`https://hub.lifecompanionaac.org`|The hub URL for syncing features. When not specified, the default LifeCompanion hub will be used.|
 |`-hubAuthToken token`|`AbCdEf123456`|The auth token to be used when connecting to the LifeCompanion hub. Will overwrite any token that could be used while using the app (even if the user connects manually).|
 |`-deviceSyncMode`|*`NONE`*|Enable the "device synchronization mode" : will launch directly LifeCompanion in use mode and will try to sync the current used configuration with the device default configuration from LifeCompanion HUB. This should be used only the HUB is connected and the device ID is injected.|
+|`-deviceSyncAutoRefresh`|*`NONE`*|When the "deviceSyncMode" is enable, will launch an auto sync Thread that will for a new selected device configuration every 10 seconds. If not enabled, the update should be manually triggered with the control server service.|
 |`-deviceLocalId deviceLocalId`|`foobar123`|Set the device local ID to be used by the `deviceSyncMode` when enabled. Allow launching LifeCompanion with a device local ID already set.|
 |`-useHubImages`|*`NONE`*|When enabled, LifeCompanion images will be downloaded on runtime from the hub and not from local image dictionaries (except for user dictionary). This can only be enabled if the hub URL has been provided.|
 
@@ -135,6 +136,7 @@ Returns from server can depend on the sent request, but a lot of request will re
 - **[selection/start](#selectionstart)**
 - **[selection/simulate/press](#selectionsimulatepress)**
 - **[selection/simulate/release](#selectionsimulaterelease)**
+- **[selection/config](#selectionconfig)**
 - **[media/stop](#mediastop)**
 - **[hub/update/device-local-id](#hubupdatedevice-local-id)**
 
@@ -345,6 +347,51 @@ NONE
 {
   "done": false,
   "message": "Current selection mode is not a scanning selection mode"
+}
+```
+### /selection/config
+
+**Description** : Configure the current selection mode and restart it with the new configuration. Allow configuring the selection mode (direct, scanning, etc.) and some selection mode parameters (scanning loops, time...). Available mode : MOUSE_CLIC, AUTO_MOUSE_CLIC, SCAN_KEY_HORIZONTAL, SCAN_ROW_COLUMN, SCAN_KEY_VERTICAL, SCAN_COLUMN_ROW
+
+**Url structure** : `/api/v1/selection/config`
+
+**Method** : `POST`
+
+**Parameters** :
+```json
+{
+  "mode": "MOUSE_CLIC",
+  "scanLoop": null,
+  "scanTime": null
+}
+```
+```json
+{
+  "mode": "SCAN_ROW_COLUMN",
+  "scanLoop": 2,
+  "scanTime": 2500
+}
+```
+```json
+{
+  "mode": null,
+  "scanLoop": 2,
+  "scanTime": 1800
+}
+```
+```json
+{
+  "mode": "SCAN_KEY_HORIZONTAL",
+  "scanLoop": 1,
+  "scanTime": 1500
+}
+```
+
+**Returns** : 
+```json
+{
+  "done": true,
+  "message": "OK"
 }
 ```
 ### /media/stop

@@ -4,10 +4,8 @@ import org.lifecompanion.controller.useapi.LifeCompanionControlServerController;
 import org.lifecompanion.framework.commons.utils.lang.CollectionUtils;
 import org.lifecompanion.model.api.useapi.EndpointHttpMethod;
 import org.lifecompanion.model.api.useapi.LifeCompanionControlServerEndpointI;
-import org.lifecompanion.model.impl.useapi.dto.ActionConfirmationDto;
-import org.lifecompanion.model.impl.useapi.dto.AppStatusDto;
-import org.lifecompanion.model.impl.useapi.dto.SetDeviceLocalIdDto;
-import org.lifecompanion.model.impl.useapi.dto.WindowBoundsDto;
+import org.lifecompanion.model.impl.selectionmode.SelectionModeEnum;
+import org.lifecompanion.model.impl.useapi.dto.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -75,6 +73,15 @@ public enum LifeCompanionControlServerEndpoint implements LifeCompanionControlSe
             "Simulate the selection release if the current selection mode is a scanning selection. Should be called only after calling `selection/simulate/press`. Calling this service on a direct selection mode will have no effect.",
             null,
             List.of(ActionConfirmationDto.ok(), ActionConfirmationDto.nok("Current selection mode is not a scanning selection mode"))
+    ),
+    SELECTION_CONFIG("selection/config",
+            EndpointHttpMethod.POST,
+            "Configure the current selection mode and restart it with the new configuration. Allow configuring the selection mode (direct, scanning, etc.) and some selection mode parameters (scanning loops, time...). Available mode : "+SelectionModeEnum.listForDocs(),
+            List.of(new SelectionConfigDto(SelectionModeEnum.MOUSE_CLIC),
+                    new SelectionConfigDto(SelectionModeEnum.SCAN_ROW_COLUMN, 2, 2500),
+                    new SelectionConfigDto(2, 1800),
+                    new SelectionConfigDto(SelectionModeEnum.SCAN_KEY_HORIZONTAL, 1, 1500)),
+            List.of(ActionConfirmationDto.ok())
     ),
     // Media
     MEDIA_STOP("media/stop",
