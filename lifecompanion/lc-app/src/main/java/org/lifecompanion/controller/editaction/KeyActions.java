@@ -112,8 +112,9 @@ public class KeyActions {
         private double previousRotate;
         private double previousScaleX;
         private double previousScaleY;
-        private Boolean previousColourToGrey;
+        private boolean previousColourToGrey;
         private boolean previousEnableColorReplace;
+        private boolean previousEnableRemoveBackground;
         private boolean previousPreserveRatio;
         private Runnable textPositionUndoKey, textPositionUndoKeyContent;
         private boolean autoSelected, previousAutoSelected;
@@ -134,8 +135,9 @@ public class KeyActions {
             previousRotate = this.imageUseComponent.rotateProperty().get();
             previousScaleX = this.imageUseComponent.scaleXProperty().get();
             previousScaleY = this.imageUseComponent.scaleYProperty().get();
-            previousColourToGrey = this.imageUseComponent.colourToGreyProperty().get();
+            previousColourToGrey = this.imageUseComponent.enableColourToGreyProperty().get();
             previousEnableColorReplace = this.imageUseComponent.enableReplaceColorProperty().get();
+            previousEnableRemoveBackground = this.imageUseComponent.enableRemoveBackgroundProperty().get();
             previousPreserveRatio = this.imageUseComponent.preserveRatioProperty().get();
             previousAutoSelected = this.imageUseComponent.imageAutomaticallySelectedProperty().get();
 
@@ -143,8 +145,9 @@ public class KeyActions {
             this.imageUseComponent.rotateProperty().set(0.0);
             this.imageUseComponent.scaleXProperty().set(1.0);
             this.imageUseComponent.scaleYProperty().set(1.0);
-            this.imageUseComponent.colourToGreyProperty().set(false);
+            this.imageUseComponent.enableColourToGreyProperty().set(false);
             this.imageUseComponent.enableReplaceColorProperty().set(false);
+            this.imageUseComponent.enableRemoveBackgroundProperty().set(false);
             this.imageUseComponent.preserveRatioProperty().set(true);
 
             // Automatic text position : when it's a key and a image is set (and wasn't set before)
@@ -184,8 +187,9 @@ public class KeyActions {
             this.imageUseComponent.rotateProperty().set(previousRotate);
             this.imageUseComponent.scaleXProperty().set(previousScaleX);
             this.imageUseComponent.scaleYProperty().set(previousScaleY);
-            this.imageUseComponent.colourToGreyProperty().set(previousColourToGrey);
+            this.imageUseComponent.enableColourToGreyProperty().set(previousColourToGrey);
             this.imageUseComponent.enableReplaceColorProperty().set(previousEnableColorReplace);
+            this.imageUseComponent.enableRemoveBackgroundProperty().set(previousEnableRemoveBackground);
             this.imageUseComponent.preserveRatioProperty().set(previousPreserveRatio);
             this.imageUseComponent.imageAutomaticallySelectedProperty().set(previousAutoSelected);
 
@@ -386,10 +390,10 @@ public class KeyActions {
         }
     }
 
-    public static class colourToGreyAction extends BasePropertyChangeAction<Boolean> {
+    public static class enableColourToGreyAction extends BasePropertyChangeAction<Boolean> {
 
-        public colourToGreyAction(final ImageUseComponentI keyP, Boolean wantedFlipP) {
-            super(keyP.colourToGreyProperty(), wantedFlipP);
+        public enableColourToGreyAction(final ImageUseComponentI keyP, Boolean wantedFlipP) {
+            super(keyP.enableColourToGreyProperty(), wantedFlipP);
         }
 
         @Override
@@ -450,9 +454,9 @@ public class KeyActions {
 
     }
 
-    public static class ChangeRemoveBackground extends BasePropertyChangeAction<Boolean> {
+    public static class ChangeEnableRemoveBackground extends BasePropertyChangeAction<Boolean> {
 
-        public ChangeRemoveBackground(final ImageUseComponentI keyP, final boolean wantedValue) {
+        public ChangeEnableRemoveBackground(final ImageUseComponentI keyP, final boolean wantedValue) {
             super(keyP.enableRemoveBackgroundProperty(), wantedValue);
         }
 
@@ -462,15 +466,15 @@ public class KeyActions {
         }
     }
 
-     public static class ChangeRemoveBackgroundThresholdAction extends BasePropertyChangeAction<Number> {
+     public static class RemoveBackgroundThresholdAction extends BasePropertyChangeAction<Number> {
 
-        public ChangeRemoveBackgroundThresholdAction(final ImageUseComponentI keyP, final Number wantedValue) {
-            super(keyP.replaceRemoveBackgroundThresholdProperty(), wantedValue);
+        public RemoveBackgroundThresholdAction(final ImageUseComponentI keyP, final Number wantedValue) {
+            super(keyP.removeBackgroundThresholdProperty(), wantedValue);
         }
 
         @Override
         public String getNameID() {
-            return "action.key.image.change.color.replace.threshold";
+            return "action.key.image.change.remove.background.threshold";
         }
 
     }

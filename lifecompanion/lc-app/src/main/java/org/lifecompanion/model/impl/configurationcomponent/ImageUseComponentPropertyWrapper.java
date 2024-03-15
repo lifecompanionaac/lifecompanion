@@ -135,7 +135,7 @@ public class ImageUseComponentPropertyWrapper {
     private final BooleanProperty enableRemoveBackground;
 
     @XMLIgnoreNullValue
-    private final IntegerProperty replaceRemoveBackgroundThreshold;
+    private final IntegerProperty removeBackgroundThreshold;
 
     /**
      * Image use component associated
@@ -177,7 +177,7 @@ public class ImageUseComponentPropertyWrapper {
         this.viewport = new SimpleObjectProperty<>();
         this.replaceColorThreshold = new SimpleIntegerProperty(LCConstant.DEFAULT_COLOR_REPLACE_THRESHOLD);
         this.enableRemoveBackground = new SimpleBooleanProperty();
-        this.replaceRemoveBackgroundThreshold = new SimpleIntegerProperty(LCConstant.DEFAULT_COLOR_REPLACE_THRESHOLD);
+        this.removeBackgroundThreshold = new SimpleIntegerProperty(LCConstant.DEFAULT_COLOR_REPLACE_THRESHOLD);
         this.viewportXPercent = new SimpleDoubleProperty(0.0);
         this.viewportYPercent = new SimpleDoubleProperty(0.0);
         this.viewportWidthPercent = new SimpleDoubleProperty(0.0);
@@ -368,7 +368,7 @@ public class ImageUseComponentPropertyWrapper {
         return this.scaleY;
     }
 
-    public BooleanProperty colourToGreyProperty() {
+    public BooleanProperty enableColourToGreyProperty() {
         return this.enableReplaceColourToGrey;
     }
 
@@ -391,7 +391,7 @@ public class ImageUseComponentPropertyWrapper {
     public BooleanProperty enableRemoveBackgroundProperty() {
         return this.enableRemoveBackground;
     }
-    public IntegerProperty replaceRemoveBackgroundThresholdProperty() {return this.replaceRemoveBackgroundThreshold;}
+    public IntegerProperty removeBackgroundThresholdProperty() {return this.removeBackgroundThreshold;}
 
     public BooleanProperty imageAutomaticallySelectedProperty() {
         return imageAutomaticallySelected;
@@ -420,7 +420,7 @@ public class ImageUseComponentPropertyWrapper {
                 element.removeAttribute("replacingColor");
                 element.removeAttribute("replaceColorThreshold");
                 element.removeAttribute("enableRemoveBackground");
-                element.removeAttribute("replaceRemoveBackgroundThreshold");
+                element.removeAttribute("removeBackgroundThreshold");
                 element.removeAttribute("enableReplaceColourToGrey");
             }
 

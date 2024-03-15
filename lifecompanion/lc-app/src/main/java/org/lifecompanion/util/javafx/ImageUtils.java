@@ -112,6 +112,7 @@ public class ImageUtils {
 
         Queue<Point> queueNeighbours = new LinkedList<>();
         boolean[][] pointVisited = new boolean[imgWidth][imgHeight];
+        boolean[][] borderPointVisited = new boolean[imgWidth][imgHeight];
 
         Point startPoint = findPixelStart(wO, wR, wG, wB, reader, threshold, imgWidth, imgHeight);
         queueNeighbours.add(startPoint);
@@ -124,11 +125,16 @@ public class ImageUtils {
                 int newX = point.x + direction[0];
                 int newY = point.y + direction[1];
 
-                if (newX >= 0 && newX < imgWidth && newY >= 0 && newY < imgHeight && !pointVisited[newX][newY]) {
+                if (newX >= 0 && newX < imgWidth && newY >= 0 && newY < imgHeight && !pointVisited[newX][newY] && !borderPointVisited[newX][newY]) {
                     if (isSameColor(wO, wR, wG, wB, reader.getArgb(newX, newY), threshold)) {
                         queueNeighbours.add(new Point(newX, newY));
                         pointVisited[newX][newY] = true;
                         writer.setColor(newX, newY, Color.TRANSPARENT);
+                    } else {
+                        Color originalColor = reader.getColor(newX, newY);
+                        Color borderColor = Color.color(originalColor.getRed(), originalColor.getGreen(), originalColor.getBlue(), 0.3);
+                        borderPointVisited[newX][newY] = true;
+                        writer.setColor(newX, newY,borderColor);
                     }
                 }
             }
@@ -147,7 +153,7 @@ public class ImageUtils {
 
          for (int y = 0; y < imgHeight; y++) {
             for (int x = 0; x < imgWidth; x++) {
-                if (!pointVisited[x][y]) {
+                if (!pointVisited[x][y] && !borderPointVisited[x][y]) {
                     writer.setColor(x, y, reader.getColor(x, y));
                 }
             }

@@ -222,7 +222,7 @@ public abstract class AbstractSimplerKeyContentContainer implements SimplerKeyCo
     }
 
     @Override
-    public BooleanProperty colourToGreyProperty(){return imageUseComponentPropertyWrapper.colourToGreyProperty();}
+    public BooleanProperty enableColourToGreyProperty(){return imageUseComponentPropertyWrapper.enableColourToGreyProperty();}
 
     @Override
     public BooleanProperty useViewPortProperty() {
@@ -260,8 +260,8 @@ public abstract class AbstractSimplerKeyContentContainer implements SimplerKeyCo
     }
 
     @Override
-    public IntegerProperty replaceRemoveBackgroundThresholdProperty() {
-        return imageUseComponentPropertyWrapper.replaceRemoveBackgroundThresholdProperty();
+    public IntegerProperty removeBackgroundThresholdProperty() {
+        return imageUseComponentPropertyWrapper.removeBackgroundThresholdProperty();
     }
 
     @Override

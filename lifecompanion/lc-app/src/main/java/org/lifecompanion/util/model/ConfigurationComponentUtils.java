@@ -296,12 +296,12 @@ public class ConfigurationComponentUtils {
         imageView.scaleXProperty().bind(imageUseComponent.scaleXProperty());
         imageView.scaleYProperty().bind(imageUseComponent.scaleYProperty());
         imageView.effectProperty().bind(Bindings.createObjectBinding(() -> {
-            if (imageUseComponent.colourToGreyProperty().get()) {
+            if (imageUseComponent.enableColourToGreyProperty().get()) {
                 return new ColorAdjust(0.0, -1.0, 0.0, 0.0);
             } else {
                 return null;
             }
-        }, imageUseComponent.colourToGreyProperty()));
+        }, imageUseComponent.enableColourToGreyProperty()));
         imageView.viewportProperty().bind(imageUseComponent.viewportProperty());
         imageView.imageProperty().bind(Bindings.createObjectBinding(() -> {
         Image img = imageUseComponent.loadedImageProperty().get();
@@ -313,12 +313,12 @@ public class ConfigurationComponentUtils {
                         imageUseComponent.replaceColorThresholdProperty().get());
             }
             if (imageUseComponent.enableRemoveBackgroundProperty().get()) {
-                img = ImageUtils.removeBackground(img, imageUseComponent.replaceRemoveBackgroundThresholdProperty().get());
+                img = ImageUtils.removeBackground(img, imageUseComponent.removeBackgroundThresholdProperty().get());
             }
             return img;
         }
     }, imageUseComponent.loadedImageProperty(), imageUseComponent.enableReplaceColorProperty(), imageUseComponent.colorToReplaceProperty(),
-            imageUseComponent.replacingColorProperty(), imageUseComponent.replaceColorThresholdProperty(), imageUseComponent.enableRemoveBackgroundProperty(), imageUseComponent.replaceRemoveBackgroundThresholdProperty()));
+            imageUseComponent.replacingColorProperty(), imageUseComponent.replaceColorThresholdProperty(), imageUseComponent.enableRemoveBackgroundProperty(), imageUseComponent.removeBackgroundThresholdProperty()));
     }
 
     public static void unbindImageViewFromImageUseComponent(ImageView imageView) {

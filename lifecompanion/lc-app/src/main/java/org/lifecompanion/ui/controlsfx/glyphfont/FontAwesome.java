@@ -501,8 +501,6 @@ public class FontAwesome extends GlyphFont {
         ROCKET('\uf135'),
         ROTATE_LEFT('\uf0E2'),
         ROTATE_RIGHT('\uf01E'),
-        MIRROR_HORIZONTAL('\uf0E2'),
-        MIRROR_VERTICAL('\uf01E'),
         ROUBLE('\uf158'),
         RSS('\uf09E'),
         RSS_SQUARE('\uf143'),

@@ -1132,11 +1132,13 @@
   <text key="autocomplete.keyboard.quick.words.name">Communication rapide</text>
   <text key="action.key.image.change">Modification de l'image de la case</text>
   <text key="action.key.image.change.color.replace.threshold">Changer la tolérance du remplacement de couleur</text>
+  <text key="action.key.image.change.remove.background">Activer/désactiver la suppression de l'arrière plan</text>
+    <text key="action.key.image.change.remove.background.threshold">Changer la tolérance de la suppression de l'arrière-plan</text>
   <text key="action.key.image.change.preserve.ratio">Changer la conservation du ratio de l'image</text>
   <text key="action.key.image.change.rotate">Changer la rotation de l'image</text>
   <text key="action.key.image.change.flip.horizontal">Inverse l'image sur l'axe horizontal</text>
   <text key="action.key.image.change.flip.vertical">Inverse l'image sur l'axe vertical</text>
-  <text key="action.key.image.change.colour.to.grey">Activer/désactiver l'image en nuance de gris</text>
+  <text key="action.key.image.change.colour.to.grey">Activer/désactiver l'image en noir et blanc</text>
   <text key="action.key.image.change.viewport">Activer/désactiver le recadrage de l'image</text>
   <text key="action.key.image.change.viewport.value">Modifier le recadrage de l'image</text>
   <text key="action.key.option.change.correction.color">Changer la couleur de correction</text>
@@ -2363,12 +2365,12 @@
   <text key="field.grid.key.hgap">Espacement horizontal</text>
   <text key="field.grid.key.vgap">Espacement vertical</text>
   <!--org.lifecompanion.config.view.pane.tabs.selected.part.imageusecomp-->
-    <text key="image.use.enable.grey.color">Changer l'image en gris</text>
+    <text key="image.use.enable.grey.color">Changer l'image en noir et blanc</text>
     <text key="image.use.enable.remove.background">Supprimer la couleur de fond</text>
   <text key="image.use.color.replace.threshold.field">Tolérance</text>
   <text key="image.use.color.replacing.field">Couleur de remplacement</text>
   <text key="image.use.color.to.replace.field">Couleur à remplacer</text>
-  <text key="image.use.enable.color.replace">Activer</text>
+  <text key="image.use.enable.color.replace">Activer le remplacement de couleur</text>
   <text key="image.use.preserve.ratio">Conserver les proportions</text>
   <text key="image.use.use.viewport">Activer</text>
   <text key="image.use.rotation.label.current">Rotation de l'image : {} degrés</text>
@@ -2382,7 +2384,7 @@
   <text key="tooltip.explain.image.color.replace.threshold">Permet de tolérer un remplacement plus important.\nPlus
 		la tolérance est élevée, plus les couleurs similaires à la couleur à
 		remplacer seront remplacées.</text>
-    <text key="tooltip.explain.image.enable.grey.color">Si activé, permet de remplacer les couleurs de l'image par des nuances de gris.</text>
+    <text key="tooltip.explain.image.enable.grey.color">Si activé, permet de passer l'image en noir et blanc.</text>
     <text key="tooltip.explain.image.enable.remove.background">Si activé, permet de remplacer la couleur de fond de l'image par une couleur transparente.</text>
   <text key="tooltip.explain.image.color.replacing">La couleur qui va être mise à la place de l'ancienne
 		couleur. Vous pouvez choisir du transparent grâce aux couleurs
@@ -3731,6 +3733,7 @@
     <text key="video.analyze.message">Analyse de la vidéo</text>
     <text key="image.use.config.part.ratio.rotate.title">Rotation et ratio</text>
     <text key="image.use.config.part.preview.title">Aperçu</text>
+    <text key="image.use.config.part.remove.background.title">Suppression de l'arrière-plan</text>
     <text key="image.use.config.part.color.replace.title">Changement de couleur</text>
     <text key="image.use.config.part.viewport.title">Recadrer</text>
     <text key="image.configure.viewport">Configurer</text>

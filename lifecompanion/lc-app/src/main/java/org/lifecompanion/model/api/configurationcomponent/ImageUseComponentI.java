@@ -67,7 +67,7 @@ public interface ImageUseComponentI extends IdentifiableComponentI {
     /**
      * @return a property enabling the grey image to be activated
      */
-    BooleanProperty colourToGreyProperty();
+    BooleanProperty enableColourToGreyProperty();
 
     /**
      * @return if this image uses a viewport to define how the image is displayed
@@ -108,7 +108,7 @@ public interface ImageUseComponentI extends IdentifiableComponentI {
     /**
      * @return the colour threshold to determine the background colour to be removed
      */
-    IntegerProperty replaceRemoveBackgroundThresholdProperty();
+    IntegerProperty removeBackgroundThresholdProperty();
 
     /**
      * @return the viewport x position in percent relative to the image width

@@ -154,7 +154,7 @@ public class GridPartKeyComponent extends GridPartComponentBaseImpl implements G
     public DoubleProperty scaleYProperty() {return this.imageUseComponentPropertyWrapper.scaleYProperty();}
 
     @Override
-    public BooleanProperty colourToGreyProperty() {return this.imageUseComponentPropertyWrapper.colourToGreyProperty();}
+    public BooleanProperty enableColourToGreyProperty() {return this.imageUseComponentPropertyWrapper.enableColourToGreyProperty();}
 
     @Override
     public SimpleObjectProperty<ImageElementI> imageVTwoProperty() {
@@ -388,8 +388,8 @@ public class GridPartKeyComponent extends GridPartComponentBaseImpl implements G
     }
 
     @Override
-    public IntegerProperty replaceRemoveBackgroundThresholdProperty() {
-        return this.imageUseComponentPropertyWrapper.replaceRemoveBackgroundThresholdProperty();
+    public IntegerProperty removeBackgroundThresholdProperty() {
+        return this.imageUseComponentPropertyWrapper.removeBackgroundThresholdProperty();
     }
 
     @Override
