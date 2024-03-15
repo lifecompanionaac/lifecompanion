@@ -42,7 +42,7 @@ import java.util.function.Supplier;
 public enum HubController implements ModeListenerI, LCStateListener {
     INSTANCE;
 
-    private static final long CONFIG_CHECK_INTERVAL = 10_000;
+    private static final long CONFIG_CHECK_INTERVAL_USE_MODE = 10_000, CONFIG_CHECK_INTERVAL_STARTING = 1000;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HubController.class);
 
@@ -61,9 +61,12 @@ public enum HubController implements ModeListenerI, LCStateListener {
     public void lcStart() {
         if (GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DEVICE_SYNC_MODE)) {
             if (GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DEVICE_LOCAL_ID)) {
-                this.currentDeviceId = GlobalRuntimeConfigurationController.INSTANCE.getParameter(GlobalRuntimeConfiguration.DEVICE_LOCAL_ID);
+                String injectedDeviceId = GlobalRuntimeConfigurationController.INSTANCE.getParameter(GlobalRuntimeConfiguration.DEVICE_LOCAL_ID);
+                requestDeviceIdChange.set(() -> injectedDeviceId);
             }
-            LOGGER.info("{} detected, will launch background config sync thread", GlobalRuntimeConfiguration.DEVICE_SYNC_MODE.getName());
+            LOGGER.info("{} detected, will launch background config sync thread (auto sync = {})",
+                    GlobalRuntimeConfiguration.DEVICE_SYNC_MODE.getName(),
+                    GlobalRuntimeConfiguration.DEVICE_SYNC_AUTO_REFRESH.getName());
             this.autoSyncService = Executors.newSingleThreadExecutor(LCNamedThreadFactory.daemonThreadFactory("HubController-config-sync"));
             this.autoSyncService.submit(() -> {
                 while (true) {
@@ -72,13 +75,13 @@ public enum HubController implements ModeListenerI, LCStateListener {
                         Supplier<String> requestDeviceIdChangeVal = requestDeviceIdChange.getAndSet(null);
                         if (requestDeviceIdChangeVal != null) {
                             refreshDeviceLocalId(requestDeviceIdChangeVal.get());
-                        } else {
+                        } else if (GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DEVICE_SYNC_AUTO_REFRESH)) {
                             refreshDeviceLocalId(currentDeviceId);
                         }
-                        // Wait (allows to be notified when a change should be immediately done)
-                        synchronized (waitLock) {
-                            waitLock.wait(CONFIG_CHECK_INTERVAL);
-                        }
+                    }
+                    // Wait (allows to be notified when a change should be immediately done)
+                    synchronized (waitLock) {
+                        waitLock.wait(AppModeController.INSTANCE.isUseMode() ? CONFIG_CHECK_INTERVAL_USE_MODE : CONFIG_CHECK_INTERVAL_STARTING);
                     }
                 }
             });
