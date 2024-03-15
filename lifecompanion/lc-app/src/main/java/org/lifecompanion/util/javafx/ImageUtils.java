@@ -63,7 +63,12 @@ public class ImageUtils {
         for (int y = 0; y < imgHeight; y++) {
             for (int x = 0; x < imgWidth; x++) {
                 int argb = reader.getArgb(x, y);
-                if (isSameColor(wO, wR, wG, wB, argb, threshold)) {
+                int o = argb >> 24 & 0xFF;
+                int r = argb >> 16 & 0xFF;
+                int g = argb >> 8 & 0xFF;
+                int b = argb & 0xFF;
+                if (isEgalsTo(o, wO, threshold) && isEgalsTo(r, wR, threshold) && isEgalsTo(g, wG, threshold)
+                        && isEgalsTo(b, wB, threshold)) {
                     argb = destArgb;
                 }
                 writer.setArgb(x, y, argb);
@@ -96,11 +101,16 @@ public class ImageUtils {
         PixelWriter writer = outputImage.getPixelWriter();
 
         Color backgroundColor = findBackgroundColor(reader, imgWidth, imgHeight);
-        int wO = backgroundColor == null ? 255 : (int) (backgroundColor.getOpacity() * 255);//Issue #186, opacity should be tested
-        int wR = backgroundColor == null ? 255 : (int) (backgroundColor.getRed() * 255);
-        int wG = backgroundColor == null ? 255 : (int) (backgroundColor.getGreen() * 255);
-        int wB = backgroundColor == null ? 255 : (int) (backgroundColor.getBlue() * 255);
+        int backgroundO = backgroundColor == null ? 255 : (int) (backgroundColor.getOpacity() * 255);//Issue #186, opacity should be tested
+        int backgroundR = backgroundColor == null ? 255 : (int) (backgroundColor.getRed() * 255);
+        int backgroundG = backgroundColor == null ? 255 : (int) (backgroundColor.getGreen() * 255);
+        int backgroundB = backgroundColor == null ? 255 : (int) (backgroundColor.getBlue() * 255);
 
+        Color currentColour;
+        int currentO = 0;
+        int currentR = 0;
+        int currentG = 0;
+        int currentB = 0;
         List<Point> edgePoints = new LinkedList<>();
         for (int y = 0; y < imgHeight; y++) {
             for (int x = 0; x < imgWidth; x++) {
@@ -112,9 +122,9 @@ public class ImageUtils {
 
         Queue<Point> queueNeighbours = new LinkedList<>();
         boolean[][] pointVisited = new boolean[imgWidth][imgHeight];
-        boolean[][] borderPointVisited = new boolean[imgWidth][imgHeight];
+        boolean[][] InvalidVisitedPoint = new boolean[imgWidth][imgHeight];
 
-        Point startPoint = findPixelStart(wO, wR, wG, wB, reader, threshold, imgWidth, imgHeight);
+        Point startPoint = findPixelStart(backgroundO, backgroundR, backgroundG, backgroundB, reader, threshold, imgWidth, imgHeight);
         queueNeighbours.add(startPoint);
         pointVisited[startPoint.x][startPoint.y] = true;
 
@@ -125,15 +135,20 @@ public class ImageUtils {
                 int newX = point.x + direction[0];
                 int newY = point.y + direction[1];
 
-                if (newX >= 0 && newX < imgWidth && newY >= 0 && newY < imgHeight && !pointVisited[newX][newY] && !borderPointVisited[newX][newY]) {
-                    if (isSameColor(wO, wR, wG, wB, reader.getArgb(newX, newY), threshold)) {
+                if (newX >= 0 && newX < imgWidth && newY >= 0 && newY < imgHeight && !pointVisited[newX][newY] && !InvalidVisitedPoint[newX][newY]) {
+                    currentColour = reader.getColor(newX, newY);
+                    currentO = currentColour == null ? 255 : (int) (currentColour.getOpacity() * 255);//Issue #186, opacity should be tested
+                    currentR = currentColour == null ? 255 : (int) (currentColour.getRed() * 255);
+                    currentG = currentColour == null ? 255 : (int) (currentColour.getGreen() * 255);
+                    currentB = currentColour == null ? 255 : (int) (currentColour.getBlue() * 255);
+                    if (isEgalsTo(backgroundO, currentO, threshold) && isEgalsTo(backgroundR, currentR, threshold) && isEgalsTo(backgroundG, currentG, threshold) && isEgalsTo(backgroundB, currentB, threshold)) {
                         queueNeighbours.add(new Point(newX, newY));
                         pointVisited[newX][newY] = true;
                         writer.setColor(newX, newY, Color.TRANSPARENT);
                     } else {
                         Color originalColor = reader.getColor(newX, newY);
                         Color borderColor = Color.color(originalColor.getRed(), originalColor.getGreen(), originalColor.getBlue(), 0.3);
-                        borderPointVisited[newX][newY] = true;
+                        InvalidVisitedPoint[newX][newY] = true;
                         writer.setColor(newX, newY,borderColor);
                     }
                 }
@@ -141,7 +156,12 @@ public class ImageUtils {
 
             if (queueNeighbours.isEmpty()) {
                 for (Point edgePoint : edgePoints) {
-                    if (!pointVisited[edgePoint.x][edgePoint.y] && isSameColor(wO, wR, wG, wB, reader.getArgb(edgePoint.x, edgePoint.y), threshold)) {
+                    currentColour = reader.getColor(edgePoint.x, edgePoint.y);
+                    currentO = currentColour == null ? 255 : (int) (currentColour.getOpacity() * 255);//Issue #186, opacity should be tested
+                    currentR = currentColour == null ? 255 : (int) (currentColour.getRed() * 255);
+                    currentG = currentColour == null ? 255 : (int) (currentColour.getGreen() * 255);
+                    currentB = currentColour == null ? 255 : (int) (currentColour.getBlue() * 255);
+                    if (!pointVisited[edgePoint.x][edgePoint.y] && isEgalsTo(backgroundO, currentO, threshold) && isEgalsTo(backgroundR, currentR, threshold) && isEgalsTo(backgroundG, currentG, threshold) && isEgalsTo(backgroundB, currentB, threshold)) {
                         queueNeighbours.add(edgePoint);
                         pointVisited[edgePoint.x][edgePoint.y] = true;
                         writer.setColor(edgePoint.x, edgePoint.y, Color.TRANSPARENT);
@@ -153,7 +173,7 @@ public class ImageUtils {
 
          for (int y = 0; y < imgHeight; y++) {
             for (int x = 0; x < imgWidth; x++) {
-                if (!pointVisited[x][y] && !borderPointVisited[x][y]) {
+                if (!pointVisited[x][y] && !InvalidVisitedPoint[x][y]) {
                     writer.setColor(x, y, reader.getColor(x, y));
                 }
             }
