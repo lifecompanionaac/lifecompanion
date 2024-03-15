@@ -419,6 +419,8 @@ public class ImageUseComponentPropertyWrapper {
                 element.removeAttribute("colorToReplace");
                 element.removeAttribute("replacingColor");
                 element.removeAttribute("replaceColorThreshold");
+            }
+            if(!enableRemoveBackground.get()) {
                 element.removeAttribute("enableRemoveBackground");
                 element.removeAttribute("removeBackgroundThreshold");
                 element.removeAttribute("enableReplaceColourToGrey");
