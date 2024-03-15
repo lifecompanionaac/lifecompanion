@@ -215,7 +215,7 @@ public enum GlobalRuntimeConfiguration implements GlobalRuntimeConfigurationI {
     DEVICE_SYNC_AUTO_REFRESH(
             "deviceSyncAutoRefresh",
             GlobalRuntimeConfigurationType.COMMAND_LINE,
-            "When the \"deviceSyncMode\" is enable, will launch an auto sync Thread that will for a new selected device configuration every 10 seconds. If not enabled, the update should be manually triggered with the control server service."
+            "When the `deviceSyncMode` is enabled, will launch an auto sync Thread that will for a new selected device configuration every 10 seconds. If not enabled, the update should be manually triggered with the control server service."
     ),
     DEVICE_LOCAL_ID(
             "deviceLocalId",
@@ -230,8 +230,6 @@ public enum GlobalRuntimeConfiguration implements GlobalRuntimeConfigurationI {
             GlobalRuntimeConfigurationType.COMMAND_LINE,
             "When enabled, LifeCompanion images will be downloaded on runtime from the hub and not from local image dictionaries (except for user dictionary). This can only be enabled if the hub URL has been provided."
     ),
-
-    // TODO : image repository from backoffice
 
     // Dev env
     PROP_DEV_MODE(

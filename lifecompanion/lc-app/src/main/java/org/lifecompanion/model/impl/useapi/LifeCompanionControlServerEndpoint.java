@@ -49,7 +49,6 @@ public enum LifeCompanionControlServerEndpoint implements LifeCompanionControlSe
             List.of(ActionConfirmationDto.ok())
     ),
     // Selection mode
-    // TODO : change selection mode type and configuration ?
     SELECTION_STOP("selection/stop",
             EndpointHttpMethod.POST,
             "Stop the current selection mode (if applicable). Will disable any user interaction with LifeCompanion UI no matter the current selection mode type (scanning, direct, etc.). To restore a working selection mode, `selection/start` should be called.",
