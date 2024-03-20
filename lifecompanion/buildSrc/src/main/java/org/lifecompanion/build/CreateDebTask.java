@@ -67,6 +67,17 @@ public abstract class CreateDebTask extends DefaultTask {
         File destAppDataDir = new File(destDir + File.separator + DIR_NAME_APPLICATION_DATA);
         IOUtils.copyDirectory(new File(offlineDirFor + File.separator + DIR_NAME_APPLICATION_DATA), destAppDataDir);
 
+        // Remove image directory contents
+        File imageDirectoryRoot = new File(destDir + File.separator + DIR_NAME_APPLICATION_DATA + File.separator + "resources" + File.separator + "images");
+        File[] imageDirectoryFiles = imageDirectoryRoot.listFiles();
+        if (imageDirectoryFiles != null) {
+            for (File imageDirectoryFile : imageDirectoryFiles) {
+                if (imageDirectoryFile.isDirectory()) {
+                    IOUtils.deleteDirectoryAndChildren(imageDirectoryFile);
+                }
+            }
+        }
+
         // Custom install configuration
         InstallationConfiguration installConfig = new InstallationConfiguration("2048m", "~/Documents/LifeCompanion");
         installConfig.save(new File(destAppDataDir + File.separator + "installation.properties"));
