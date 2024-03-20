@@ -19,7 +19,7 @@
 
 package org.lifecompanion.model.impl.categorizedelement.useaction.available;
 
-import org.lifecompanion.controller.virtualmouse.DirectionalMouseController;
+import org.lifecompanion.controller.virtualmouse.ScanningMouseController;
 import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseActionSubCategories;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
@@ -28,24 +28,21 @@ import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseAction
 
 import java.util.Map;
 
-/**
- * @author Mathieu THEBAUD <math.thebaud@gmail.com>
- */
-public class ClicMouseScrollAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
+public class ScanningMousePrimaryClic extends SimpleUseActionImpl<UseActionTriggerComponentI> {
 
-    public ClicMouseScrollAction() {
+    public ScanningMousePrimaryClic() {
         super(UseActionTriggerComponentI.class);
-        this.category = DefaultUseActionSubCategories.MOUSE_ACTION_DIRECT;
-        this.nameID = "action.clic.mouse.scroll.name";
-        this.order = 0;
-        this.staticDescriptionID = "action.clic.mouse.scroll.static.description";
-        this.configIconPath = "computeraccess/icon_mouse_clic_scroll_direct.png";
+        this.category = DefaultUseActionSubCategories.CURSOR_STRIP;
+        this.nameID = "action.cursor.strip.validate.mouse.clic.name";
+        this.order = 1000;
+        this.staticDescriptionID = "action.cursor.strip.validate.mouse.clic.description";
+        this.configIconPath = "computeraccess/icon_mouse_clic_primary.png";
         this.parameterizableAction = false;
         this.variableDescriptionProperty().set(this.getStaticDescription());
     }
 
     @Override
     public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
-        DirectionalMouseController.INSTANCE.pressMouseMiddleClicWithoutNoVirtualPosition();
+        ScanningMouseController.INSTANCE.executePrimaryMouseClic();
     }
 }

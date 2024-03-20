@@ -43,7 +43,12 @@ public interface VirtualMouseParameterI extends XMLSerializable<IOContextI> {
 	/**
 	 * @return the type of drawing we want for the mouse
 	 */
-	ObjectProperty<VirtualMouseDrawing> mouseDrawingProperty();
+	ObjectProperty<VirtualMouseType> virtualMouseTypeProperty();
+
+	/**
+	 * @return the type of drawing we want for the mouse
+	 */
+	ObjectProperty<DirectionalMouseDrawing> directionalMouseDrawingProperty();
 
 	/**
 	 * @return the size of virtual mouse drawing
@@ -54,4 +59,14 @@ public interface VirtualMouseParameterI extends XMLSerializable<IOContextI> {
 	 * @return the mouse speed on move
 	 */
 	IntegerProperty mouseSpeedProperty();
+
+	/**
+	 * @return the mouse accuracy
+	 */
+	ObjectProperty<Boolean> mouseAccuracyProperty();
+
+	/**
+	 * @return the maximum loop
+	 */
+	IntegerProperty mouseMaxLoopProperty();
 }

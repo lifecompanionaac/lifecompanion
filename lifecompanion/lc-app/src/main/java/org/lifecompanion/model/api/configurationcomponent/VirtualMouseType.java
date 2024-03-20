@@ -23,22 +23,24 @@ import org.lifecompanion.framework.commons.translation.Translation;
 
 /**
  * Represent the different way of drawing the virtual mouse.
+ *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
-public enum VirtualMouseDrawing {
-	SIMPLE_CIRCLE("virtual.mouse.drawing.simple.circle"), TARGET("virtual.mouse.drawing.target");
+public enum VirtualMouseType {
+    DIRECTIONAL("virtual.mouse.type.directional"),
+    CROSS_SCANNING("virtual.mouse.type.cross.scanning");
 
-	private String text;
+    private String text;
 
-	VirtualMouseDrawing(final String textP) {
-		this.text = textP;
-	}
+    VirtualMouseType(final String textP) {
+        this.text = textP;
+    }
 
-	public String getText() {
-		return Translation.getText(this.text);
-	}
+    public String getText() {
+        return Translation.getText(this.text);
+    }
 
-	public String getImagePath() {
-		return "mouse-drawing/" + this.name().toLowerCase() + ".png";
-	}
+    public String getImagePath() {
+        return "mouse-type/" + this.name().toLowerCase() + ".png";
+    }
 }
