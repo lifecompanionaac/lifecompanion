@@ -34,6 +34,7 @@ import org.lifecompanion.controller.appinstallation.InstallationController;
 import org.lifecompanion.controller.categorizedelement.useaction.AvailableUseActionController;
 import org.lifecompanion.controller.categorizedelement.useevent.AvailableUseEventController;
 import org.lifecompanion.controller.resource.IconHelper;
+import org.lifecompanion.controller.resource.ResourceHelper;
 import org.lifecompanion.controller.usevariable.UseVariableController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
@@ -51,8 +52,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -86,7 +86,7 @@ public class ExportActionsToPdfTask extends LCTask<Void> {
 
 
     public ExportActionsToPdfTask(File destPdf) {
-        super("task.export.lists.pdfDoc.name");
+        super("task.export.lists.pdf.name");
         this.exportedImageDir = IOUtils.getTempDir("export-images-for-config");
         this.exportedImageDir.mkdirs();
         this.destPdf = destPdf;
@@ -109,23 +109,23 @@ public class ExportActionsToPdfTask extends LCTask<Void> {
         try (PDDocument pdfDoc = new PDDocument()) {
             updateProgress(progress.get(), totalWork);
             initLcLogo(pdfDoc);
-            newCategories(mainCategoriesAction, Translation.getText("export.lists.pdfDoc.name.action.category"), pdfDoc);
-            newCategories(mainCategoriesEvent, Translation.getText("export.lists.pdfDoc.name.event.category"), pdfDoc);
+            newCategories(mainCategoriesAction, Translation.getText("export.lists.pdf.name.action.category"), pdfDoc);
+            newCategories(mainCategoriesEvent, Translation.getText("export.lists.pdf.name.event.category"), pdfDoc);
             try {
                 PDPage pdfPage = initPageLayout(pdfDoc);
                 PDPageContentStream pageStream = new PDPageContentStream(pdfDoc, pdfPage, PDPageContentStream.AppendMode.APPEND, true, true);
-                pageStream = initContentStream(Translation.getText("export.lists.pdfDoc.name.variable.category"), pageStream, pdfDoc, pdfPage);
+                pageStream = initContentStream(Translation.getText("export.lists.pdf.name.variable.category"), pageStream, pdfDoc, pdfPage);
 
-                String[][] texts = {new String [] {Translation.getText("export.lists.pdfDoc.name.variable.category")}, Translation.getText("use.variable.select.dialog.header.text").split("\\s+")};
-                pageStream = newSection(texts, null, null, true, Translation.getText("export.lists.pdfDoc.name.variable.category"), pageStream, pdfDoc, pdfPage);
+                String[][] texts = {new String [] {Translation.getText("export.lists.pdf.name.variable.category")}, Translation.getText("use.variable.select.dialog.header.text").split("\\s+")};
+                pageStream = newSection(texts, null, null, true, Translation.getText("export.lists.pdf.name.variable.category"), pageStream, pdfDoc, pdfPage);
 
                 for (UseVariableDefinitionI var : variables) {
-                    texts = new String[][] {var.getName().split("\\s+"), var.getDescription().split("\\s+"), (Translation.getText("export.lists.pdfDoc.example")+var.getExampleValueToString()).split("\\s+"), (Translation.getText("export.lists.pdfDoc.id") + "{"+var.getId()+"}").split("\\s+")};
-                    pageStream = newSection(texts, null, null, false, Translation.getText("export.lists.pdfDoc.name.variable.category"), pageStream, pdfDoc, pdfPage);
+                    texts = new String[][] {var.getName().split("\\s+"), var.getDescription().split("\\s+"), (Translation.getText("export.lists.pdf.example")+var.getExampleValueToString()).split("\\s+"), (Translation.getText("export.lists.pdf.id") + "{"+var.getId()+"}").split("\\s+")};
+                    pageStream = newSection(texts, null, null, false, Translation.getText("export.lists.pdf.name.variable.category"), pageStream, pdfDoc, pdfPage);
                 }
 
                 // FOOTER
-                insertFooter(Translation.getText("export.lists.pdfDoc.name.variable.category"), pageStream);
+                insertFooter(Translation.getText("export.lists.pdf.name.variable.category"), pageStream);
             } catch (IOException e) {
                 LOGGER.error("Error while adding variable section to PDF", e);
             }
