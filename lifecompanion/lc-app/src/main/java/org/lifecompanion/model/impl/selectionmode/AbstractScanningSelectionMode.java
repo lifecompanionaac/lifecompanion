@@ -22,6 +22,8 @@ package org.lifecompanion.model.impl.selectionmode;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.beans.InvalidationListener;
+import javafx.beans.WeakInvalidationListener;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -61,10 +63,7 @@ public abstract class AbstractScanningSelectionMode<T extends AbstractSelectionM
      */
     private final Timeline scanningTimeLine;
 
-    /**
-     * The keyframe currently used with {@link #scanningTimeLine}
-     */
-    private KeyFrame currentScanningKeyFrame;
+    private InvalidationListener scanPauseInvalidationListener;
 
     /**
      * Property that contains the current scanned part
@@ -324,15 +323,23 @@ public abstract class AbstractScanningSelectionMode<T extends AbstractSelectionM
     @Override
     public void parameterChanged(final SelectionModeParameterI parameters) {
         AbstractScanningSelectionMode.LOGGER.info("Parameters changed for mode {}", parameters);
-        synchronized (this.scanningTimeLine) {
-            if (this.currentScanningKeyFrame != null) {
-                this.scanningTimeLine.getKeyFrames().remove(this.currentScanningKeyFrame);
+        updateKeyFrames(parameters.scanPauseProperty().get(), parameters.scanningModeProperty().get() == ScanningMode.AUTO);
+        this.scanPauseInvalidationListener = inv -> {
+            synchronized (scanningTimeLine) {
+                boolean wasRunning = scanningTimeLine.getStatus() == Animation.Status.RUNNING;
+                scanningTimeLine.stop();
+                updateKeyFrames(parameters.scanPauseProperty().get(), parameters.scanningModeProperty().get() == ScanningMode.AUTO);
+                if (wasRunning) scanningTimeLine.play();
             }
-            if (parameters.scanningModeProperty().get() == ScanningMode.AUTO) {
-                this.currentScanningKeyFrame = new KeyFrame(Duration.millis(parameters.scanPauseProperty().get()), (ae) -> {
-                    this.updateNextMove();
-                });
-                this.scanningTimeLine.getKeyFrames().add(this.currentScanningKeyFrame);
+        };
+        parameters.scanPauseProperty().addListener(new WeakInvalidationListener(scanPauseInvalidationListener));
+    }
+
+    private void updateKeyFrames(int timeInMs, boolean add) {
+        synchronized (this.scanningTimeLine) {
+            this.scanningTimeLine.getKeyFrames().clear();
+            if (add) {
+                this.scanningTimeLine.getKeyFrames().add(new KeyFrame(Duration.millis(timeInMs), (ae) -> this.updateNextMove()));
             }
         }
     }

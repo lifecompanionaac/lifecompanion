@@ -44,6 +44,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.List;
+import java.util.function.BiConsumer;
 
 /**
  * An abstract class just to provide configuration loading commons between every loading task.<br>
@@ -61,6 +62,10 @@ public abstract class AbstractLoadUtilsTask<T> extends LCTask<T> {
     // Class part : "Configuration load"
     //========================================================================
 
+    protected LCConfigurationI loadConfiguration(final File directory, final LCConfigurationDescriptionI configurationDescription) throws Exception {
+        return loadConfiguration(directory, configurationDescription, this::updateProgress);
+    }
+
     /**
      * Load a configuration from a directory
      *
@@ -69,9 +74,9 @@ public abstract class AbstractLoadUtilsTask<T> extends LCTask<T> {
      * @return the loaded configuration
      * @throws Exception if loading fail
      */
-    protected LCConfigurationI loadConfiguration(final File directory, final LCConfigurationDescriptionI configurationDescription) throws Exception {
+    public static LCConfigurationI loadConfiguration(final File directory, final LCConfigurationDescriptionI configurationDescription, BiConsumer<Double, Double> progress) throws Exception {
         LCConfigurationI config = new LCConfigurationComponent();
-        this.loadElementIn(config, directory, LCConstant.CONFIGURATION_XML_NAME);
+        loadElementIn(config, directory, LCConstant.CONFIGURATION_XML_NAME, progress);
 
         // Load keylist
         final KeyListNodeI keyListNode = ThreadUtils.executeInCurrentThread(IOHelper.createLoadKeyListTask(directory));
@@ -82,13 +87,19 @@ public abstract class AbstractLoadUtilsTask<T> extends LCTask<T> {
         config.userActionSequencesProperty().set(sequences);
 
         AbstractLoadUtilsTask.LOGGER.info("Configuration successfully loaded from {}", directory);
-        configurationDescription.loadedConfigurationProperty().set(config);
+        if (configurationDescription != null) {
+            configurationDescription.loadedConfigurationProperty().set(config);
+        }
         return config;
     }
 
-    protected <K extends XMLSerializable<IOContextI>> void loadElementIn(final K element, final File directory, final String xmlName)
+    protected <K extends XMLSerializable<IOContextI>> void loadElementIn(final K element, final File directory, final String xmlName) throws Exception {
+        loadElementIn(element, directory, xmlName, this::updateProgress);
+    }
+
+    protected static <K extends XMLSerializable<IOContextI>> void loadElementIn(final K element, final File directory, final String xmlName, BiConsumer<Double, Double> progress)
             throws Exception {
-        this.updateProgress(0, 3);
+        updateProgress(progress, 0.0, 3.0);
         AbstractLoadUtilsTask.LOGGER.info("A element will be loaded from {}", directory);
         //Load images
         IOContext ioContext = new IOContext(directory);
@@ -96,23 +107,29 @@ public abstract class AbstractLoadUtilsTask<T> extends LCTask<T> {
         File[] imagePaths = imageDirectory.listFiles();
         if (imagePaths != null) {
             for (File imagePath : imagePaths) {
-                this.loadImage(imagePath, ioContext);
+                loadImage(imagePath, ioContext);
             }
         }
-        this.loadVideos(directory, ioContext);
-        this.updateProgress(1, 3);
-        this.loadResources(directory, ioContext);
+        loadVideos(directory, ioContext);
+        updateProgress(progress, 1.0, 3.0);
+        loadResources(directory, ioContext);
         AbstractLoadUtilsTask.LOGGER.info("Loaded {} resources", ioContext.getIOResource().size());
-        this.updateProgress(2, 3);
+        updateProgress(progress, 2.0, 3.0);
 
         //Load xml
         long start = System.currentTimeMillis();
         XMLHelper.loadXMLSerializable(new File(directory.getPath() + File.separator + xmlName), element, ioContext);
         LOGGER.info("Loading took {} ms", (System.currentTimeMillis() - start));
-        this.updateProgress(3, 3);
+        updateProgress(progress, 3.0, 3.0);
     }
 
-    private void loadVideos(File directory, IOContext ioContext) {
+    private static void updateProgress(BiConsumer<Double, Double> progress, double workDone, double max) {
+        if (progress != null) {
+            progress.accept(workDone, max);
+        }
+    }
+
+    private static void loadVideos(File directory, IOContext ioContext) {
         File videoDirectory = new File(directory.getPath() + File.separator + LCConstant.CONFIGURATION_VIDEO_DIRECTORY + File.separator);
         File[] videoFiles = videoDirectory.listFiles();
         if (videoFiles != null) {
@@ -132,7 +149,7 @@ public abstract class AbstractLoadUtilsTask<T> extends LCTask<T> {
      * @param context   the io context
      * @throws Exception if the resource loading fails
      */
-    private void loadResources(final File directory, final IOContextI context) throws Exception {
+    private static void loadResources(final File directory, final IOContextI context) throws Exception {
         File resourceDirectory = new File(directory.getPath() + File.separator + LCConstant.CONFIGURATION_RESOURCE_DIRECTORY + File.separator);
         Element rootElement = XMLHelper.readXml(new File(resourceDirectory.getPath() + File.separator + LCConstant.CONFIGURATION_RESOURCE_XML));
         //Load each resource
@@ -152,7 +169,7 @@ public abstract class AbstractLoadUtilsTask<T> extends LCTask<T> {
      *
      * @param image the path to image
      */
-    private void loadImage(final File image, IOContextI ioContext) {
+    private static void loadImage(final File image, IOContextI ioContext) {
         try {
             ImageElementI addedImage = ImageDictionaries.INSTANCE.getOrAddToConfigurationImageDictionary(image);
             String oldId = FileNameUtils.getNameWithoutExtension(image);

@@ -137,7 +137,6 @@ public class AppServerService {
                 } else {
                     throw new IllegalStateException("Didn't get any file download URL from urlGenerator");
                 }
-                Thread.sleep(ApplicationConstant.PAUSE_BEFORE_NEXT_ATTEMPT);
             } catch (Throwable t) {
                 error = t;
                 if (client.isClosed()) {
@@ -146,6 +145,11 @@ public class AppServerService {
                 }
             }
             LOGGER.warn("Download/hash checking failed for file {} (last supplied URL {}) / {} attempt left", filePath, url, attemptCount - i - 1, error);
+            try {
+                Thread.sleep(ApplicationConstant.PAUSE_BEFORE_NEXT_ATTEMPT);
+            } catch (InterruptedException e) {
+                // Ignore InterruptedException
+            }
         }
         throw new ApiException("Download failed after " + attemptCount + " attempt");
     }

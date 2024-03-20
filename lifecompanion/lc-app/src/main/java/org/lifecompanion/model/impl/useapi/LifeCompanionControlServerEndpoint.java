@@ -4,9 +4,8 @@ import org.lifecompanion.controller.useapi.LifeCompanionControlServerController;
 import org.lifecompanion.framework.commons.utils.lang.CollectionUtils;
 import org.lifecompanion.model.api.useapi.EndpointHttpMethod;
 import org.lifecompanion.model.api.useapi.LifeCompanionControlServerEndpointI;
-import org.lifecompanion.model.impl.useapi.dto.ActionConfirmationDto;
-import org.lifecompanion.model.impl.useapi.dto.AppStatusDto;
-import org.lifecompanion.model.impl.useapi.dto.WindowBoundsDto;
+import org.lifecompanion.model.impl.selectionmode.SelectionModeEnum;
+import org.lifecompanion.model.impl.useapi.dto.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -18,7 +17,9 @@ public enum LifeCompanionControlServerEndpoint implements LifeCompanionControlSe
             EndpointHttpMethod.GET,
             "To get the LifeCompanion current status, will return containing information about the running instance (can be `STARTING`,`IN_USE_MODE`,`IN_EDIT_MODE` or `STOPPING`)",
             null,
-            List.of(new AppStatusDto(AppStatusDto.Status.STARTING), new AppStatusDto(AppStatusDto.Status.IN_USE_MODE), new AppStatusDto(AppStatusDto.Status.STOPPING))
+            List.of(new AppStatusDto(AppStatusDto.Status.STARTING, AppStatusDto.SelectionModeStatus.PAUSED),
+                    new AppStatusDto(AppStatusDto.Status.IN_USE_MODE, AppStatusDto.SelectionModeStatus.PLAYING),
+                    new AppStatusDto(AppStatusDto.Status.STOPPING, AppStatusDto.SelectionModeStatus.PAUSED))
     ),
     // Window
     WINDOW_MINIMIZE("window/minimize",
@@ -48,7 +49,6 @@ public enum LifeCompanionControlServerEndpoint implements LifeCompanionControlSe
             List.of(ActionConfirmationDto.ok())
     ),
     // Selection mode
-    // TODO : change selection mode type and configuration ?
     SELECTION_STOP("selection/stop",
             EndpointHttpMethod.POST,
             "Stop the current selection mode (if applicable). Will disable any user interaction with LifeCompanion UI no matter the current selection mode type (scanning, direct, etc.). To restore a working selection mode, `selection/start` should be called.",
@@ -61,6 +61,27 @@ public enum LifeCompanionControlServerEndpoint implements LifeCompanionControlSe
             null,
             List.of(ActionConfirmationDto.ok())
     ),
+    SELECTION_SIMULATE_PRESS("selection/simulate/press",
+            EndpointHttpMethod.POST,
+            "Simulate the selection press if the current selection mode is a scanning selection. The caller is responsible for later calling `selection/simulate/release`. Calling this service on a direct selection mode will have no effect.",
+            null,
+            List.of(ActionConfirmationDto.ok(), ActionConfirmationDto.nok("Current selection mode is not a scanning selection mode"))
+    ),
+    SELECTION_SIMULATE_RELEASE("selection/simulate/release",
+            EndpointHttpMethod.POST,
+            "Simulate the selection release if the current selection mode is a scanning selection. Should be called only after calling `selection/simulate/press`. Calling this service on a direct selection mode will have no effect.",
+            null,
+            List.of(ActionConfirmationDto.ok(), ActionConfirmationDto.nok("Current selection mode is not a scanning selection mode"))
+    ),
+    SELECTION_CONFIG("selection/config",
+            EndpointHttpMethod.POST,
+            "Configure the current selection mode and restart it with the new configuration. Allow configuring the selection mode (direct, scanning, etc.) and some selection mode parameters (scanning loops, time...). Available mode : "+SelectionModeEnum.listForDocs(),
+            List.of(new SelectionConfigDto(SelectionModeEnum.MOUSE_CLIC),
+                    new SelectionConfigDto(SelectionModeEnum.SCAN_ROW_COLUMN, 2, 2500),
+                    new SelectionConfigDto(2, 1800),
+                    new SelectionConfigDto(SelectionModeEnum.SCAN_KEY_HORIZONTAL, 1, 1500)),
+            List.of(ActionConfirmationDto.ok())
+    ),
     // Media
     MEDIA_STOP("media/stop",
             EndpointHttpMethod.POST,
@@ -68,9 +89,13 @@ public enum LifeCompanionControlServerEndpoint implements LifeCompanionControlSe
             null,
             List.of(ActionConfirmationDto.ok())
     ),
-    // TODO : configuration synchronization, backoffice secrets refresh, etc ?
-
-    ;
+    // HUB
+    HUB_REFRESH_DEVICE_LOCAL_ID("hub/update/device-local-id",
+            EndpointHttpMethod.POST,
+            "Request the local device ID update to be used to sync the used configuration with default configuration for this device set on LifeCompanion Hub. Note that this should be combined with the `deviceSyncMode` parameter. The method will always immediately returns even if the change can be later considered by the app (config synchronization is async).",
+            List.of(new SetDeviceLocalIdDto("foobar123")),
+            List.of(ActionConfirmationDto.ok())
+    );
 
     public final static String URL_PREFIX = "/api/v1/";
 

@@ -24,6 +24,9 @@ import javafx.beans.property.ReadOnlyBooleanWrapper;
 import org.lifecompanion.model.api.selectionmode.SelectionModeI;
 import org.lifecompanion.framework.commons.translation.Translation;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 /**
  * Enum for every available selection modes.
  *
@@ -62,6 +65,10 @@ public enum SelectionModeEnum {
         this.useAutoClic = new ReadOnlyBooleanWrapper(autoClicMode);
         this.useScanning = new ReadOnlyBooleanWrapper(scanningMode);
         this.usePointer = new ReadOnlyBooleanWrapper(usePointer);
+    }
+
+    public static String listForDocs() {
+        return Arrays.stream(SelectionModeEnum.values()).map(SelectionModeEnum::name).collect(Collectors.joining(", "));
     }
 
     public Class<? extends SelectionModeI> getModeClass() {

@@ -19,22 +19,23 @@
 
 package org.lifecompanion.controller.lifecycle;
 
-import org.lifecompanion.controller.training.TrainingController;
-import org.lifecompanion.controller.useapi.LifeCompanionControlServerController;
-import org.lifecompanion.model.api.lifecycle.LCStateListener;
-import org.lifecompanion.controller.editaction.AsyncExecutorController;
+import org.lifecompanion.controller.appinstallation.InstallationController;
 import org.lifecompanion.controller.categorizedelement.useaction.UseActionController;
+import org.lifecompanion.controller.editaction.AsyncExecutorController;
+import org.lifecompanion.controller.editmode.ErrorHandlingController;
+import org.lifecompanion.controller.editmode.LCStateController;
+import org.lifecompanion.controller.hub.HubController;
+import org.lifecompanion.controller.hub.HubService;
+import org.lifecompanion.controller.metrics.SessionStatsController;
+import org.lifecompanion.controller.plugin.PluginController;
+import org.lifecompanion.controller.profile.UserCompController;
 import org.lifecompanion.controller.textprediction.AutoCharPredictionController;
 import org.lifecompanion.controller.textprediction.CustomCharPredictionController;
 import org.lifecompanion.controller.textprediction.WordPredictionController;
-import org.lifecompanion.controller.metrics.SessionStatsController;
-import org.lifecompanion.controller.appinstallation.InstallationController;
-import org.lifecompanion.model.impl.imagedictionary.ImageDictionaries;
-import org.lifecompanion.controller.plugin.PluginController;
+import org.lifecompanion.controller.training.TrainingController;
 import org.lifecompanion.controller.voicesynthesizer.VoiceSynthesizerController;
-import org.lifecompanion.controller.editmode.ErrorHandlingController;
-import org.lifecompanion.controller.editmode.LCStateController;
-import org.lifecompanion.controller.profile.UserCompController;
+import org.lifecompanion.model.api.lifecycle.LCStateListener;
+import org.lifecompanion.model.impl.imagedictionary.ImageDictionaries;
 import org.lifecompanion.ui.notification.LCNotificationController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,6 +72,9 @@ public enum LifeCompanionController {
             UserCompController.INSTANCE,
             LCNotificationController.INSTANCE,
             ErrorHandlingController.INSTANCE,
+
+            HubController.INSTANCE,
+            HubService.INSTANCE,
 
             TrainingController.INSTANCE,
     };

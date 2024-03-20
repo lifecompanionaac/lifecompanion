@@ -269,6 +269,33 @@ public enum SelectionModeController implements ModeListenerI {
         }
     }
 
+    public boolean simulateScanSelectionPress() {
+        return executeIfScanningSelection(scanningSelection -> {
+            this.pressStarted();
+            scanningSelection.selectionPress(false);
+        });
+    }
+
+    public boolean simulateScanSelectionRelease() {
+        return executeIfScanningSelection(scanningSelection -> {
+            boolean skipAction = this.pressReleased();
+            scanningSelection.selectionRelease(skipAction);
+        });
+    }
+
+    private boolean executeIfScanningSelection(Consumer<ScanningSelectionModeI> action) {
+        SelectionModeI selectionMode = this.getSelectionModeConfiguration();
+        if (AppModeController.INSTANCE.isUseMode() && selectionMode != null) {
+            if (selectionMode instanceof ScanningSelectionModeI) {
+                ScanningSelectionModeI scanningSelection = (ScanningSelectionModeI) selectionMode;
+                action.accept(scanningSelection);
+                return true;
+            }
+        }
+        return false;
+    }
+
+
     private boolean isValidSelectionModeKeyboardEvent(final GlobalKeyEventController.LCKeyEvent keyEvent) {
         SelectionModeI selectionModeConfiguration = this.getSelectionModeConfiguration();
         return selectionModeConfiguration != null && keyEvent.getKeyCode() == getSelectionKeyCodeIfEnabled();
@@ -431,6 +458,7 @@ public enum SelectionModeController implements ModeListenerI {
             this.action = action;
             this.onRelease = onRelease;
         }
+
     }
 
     public void changeTempStrokeColor(final Color newColor) {

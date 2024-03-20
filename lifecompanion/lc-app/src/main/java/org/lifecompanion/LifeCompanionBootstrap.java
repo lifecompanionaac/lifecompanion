@@ -48,8 +48,11 @@ import org.lifecompanion.framework.utils.LCNamedThreadFactory;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
 import org.lifecompanion.model.api.profile.LCProfileI;
+import org.lifecompanion.model.impl.configurationcomponent.LCConfigurationComponent;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
+import org.lifecompanion.model.impl.profile.LCConfigurationDescription;
+import org.lifecompanion.model.impl.profile.LCProfile;
 import org.lifecompanion.model.impl.useapi.GlobalRuntimeConfiguration;
 import org.lifecompanion.ui.EditModeScene;
 import org.lifecompanion.ui.LoadingStage;
@@ -193,38 +196,46 @@ public class LifeCompanionBootstrap {
     }
 
     private AfterLoad getAfterLoad() throws Exception {
-        // First, load all profile
-        final List<LCProfileI> profiles = ThreadUtils.executeInCurrentThread(IOHelper.createLoadAllProfileDescriptionTask());
-        ProfileController.INSTANCE.getProfiles().setAll(profiles);// it is ok to set profile outside FXThread because there is no UI displayed at this time
+        if (!GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DEVICE_SYNC_MODE)) {
+            // First, load all profile
+            final List<LCProfileI> profiles = ThreadUtils.executeInCurrentThread(IOHelper.createLoadAllProfileDescriptionTask());
+            ProfileController.INSTANCE.getProfiles().setAll(profiles);// it is ok to set profile outside FXThread because there is no UI displayed at this time
 
-        // Check if profile to import
-        final File profileFile = IOHelper.getFirstProfileFile(args);
-        if (profileFile != null) return new AfterLoad(AfterLoadAction.IMPORT_PROFILE, null, null, null, profileFile);
+            // Check if profile to import
+            final File profileFile = IOHelper.getFirstProfileFile(args);
+            if (profileFile != null) return new AfterLoad(AfterLoadAction.IMPORT_PROFILE, null, null, null, profileFile);
 
-        // Check profile to select
-        final String profileIDToSelect = getProfileIDToSelect();
-        if (profileIDToSelect != null) {
-            try {
-                LCProfileI profileToSelect = ProfileController.INSTANCE.getByID(profileIDToSelect);
-                profileToSelect = ThreadUtils.executeInCurrentThread(IOHelper.createLoadFullProfileTask(profileToSelect, false));
+            // Check profile to select
+            final String profileIDToSelect = getProfileIDToSelect();
+            if (profileIDToSelect != null) {
+                try {
+                    LCProfileI profileToSelect = ProfileController.INSTANCE.getByID(profileIDToSelect);
+                    profileToSelect = ThreadUtils.executeInCurrentThread(IOHelper.createLoadFullProfileTask(profileToSelect, false));
 
-                // Check if a configuration is imported
-                File configurationFile = IOHelper.getFirstConfigurationFile(args);
-                if (configurationFile != null) {
-                    return new AfterLoad(AfterLoadAction.IMPORT_CONFIG, null, null, profileToSelect, configurationFile);
+                    // Check if a configuration is imported
+                    File configurationFile = IOHelper.getFirstConfigurationFile(args);
+                    if (configurationFile != null) {
+                        return new AfterLoad(AfterLoadAction.IMPORT_CONFIG, null, null, profileToSelect, configurationFile);
+                    }
+
+                    // Try to launch a configuration in use mode
+                    final Pair<LCConfigurationDescriptionI, LCConfigurationI> configurationToLaunchFor = getConfigurationToLaunchFor(profileToSelect);
+                    if (configurationToLaunchFor != null) {
+                        return new AfterLoad(AfterLoadAction.LAUNCH_USE, configurationToLaunchFor.getKey(), configurationToLaunchFor.getValue(), profileToSelect, null);
+                    }
+
+                    // Default : select a configuration
+                    return new AfterLoad(AfterLoadAction.SELECT_CONFIGURATION, null, null, profileToSelect, null);
+                } catch (Exception ep) {
+                    LOGGER.warn("Couldn't select profile or detect launch args", ep);
                 }
-
-                // Try to launch a configuration in use mode
-                final Pair<LCConfigurationDescriptionI, LCConfigurationI> configurationToLaunchFor = getConfigurationToLaunchFor(profileToSelect);
-                if (configurationToLaunchFor != null) {
-                    return new AfterLoad(AfterLoadAction.LAUNCH_USE, configurationToLaunchFor.getKey(), configurationToLaunchFor.getValue(), profileToSelect, null);
-                }
-
-                // Default : select a configuration
-                return new AfterLoad(AfterLoadAction.SELECT_CONFIGURATION, null, null, profileToSelect, null);
-            } catch (Exception ep) {
-                LOGGER.warn("Couldn't select profile or detect launch args", ep);
             }
+        } else {
+            LOGGER.info("{} mode detected, will create a default empty profile/config and launch them in use mode", GlobalRuntimeConfiguration.DEVICE_SYNC_MODE.getName());
+            LCProfile emptyProfile = new LCProfile();
+            emptyProfile.nameProperty().set(GlobalRuntimeConfiguration.DEVICE_SYNC_MODE.getName() + " profile");
+            LCConfigurationI emptyConfig = new LCConfigurationComponent();
+            return new AfterLoad(AfterLoadAction.LAUNCH_USE, null, emptyConfig, emptyProfile, null);
         }
         return DEFAULT_AFTERLOAD;
     }
@@ -277,10 +288,10 @@ public class LifeCompanionBootstrap {
         if (GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DIRECT_LAUNCH_CONFIGURATION)) {
             final String configIdToSearch = GlobalRuntimeConfigurationController.INSTANCE.getParameters(GlobalRuntimeConfiguration.DIRECT_LAUNCH_CONFIGURATION).get(1);
             final LCConfigurationDescriptionI configurationFromId = profile.getConfiguration()
-                                                                           .stream()
-                                                                           .filter(configDesc -> StringUtils.isEquals(configIdToSearch, configDesc.getConfigurationId()))
-                                                                           .findAny()
-                                                                           .orElse(null);
+                    .stream()
+                    .filter(configDesc -> StringUtils.isEquals(configIdToSearch, configDesc.getConfigurationId()))
+                    .findAny()
+                    .orElse(null);
             if (configurationFromId != null) {
                 return loadConfigurationFromProfile(profile, configurationFromId);
             }

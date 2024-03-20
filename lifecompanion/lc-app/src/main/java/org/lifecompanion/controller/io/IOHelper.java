@@ -88,6 +88,21 @@ public class IOHelper {
                 + File.separator;
     }
 
+    public static File getConfigurationHubSyncDirectoryPath(final String deviceLocalId, final String configurationId) {
+        return new File(InstallationConfigurationController.INSTANCE.getUserDirectory()
+                .getAbsolutePath() + File.separator + LCConstant.SYNC_CONFIGURATIONS + File.separator + deviceLocalId + File.separator + configurationId);
+    }
+
+    public static File getConfigurationHubSyncInfoPath(final String deviceLocalId, final String configurationId) {
+        return new File(InstallationConfigurationController.INSTANCE.getUserDirectory()
+                .getAbsolutePath() + File.separator + LCConstant.SYNC_CONFIGURATIONS + File.separator + deviceLocalId + File.separator + configurationId + ".json");
+    }
+
+    public static File getDeviceLocalDataPath(final String deviceLocalId) {
+        return new File(InstallationConfigurationController.INSTANCE.getUserDirectory()
+                .getAbsolutePath() + File.separator + LCConstant.SYNC_CONFIGURATIONS + File.separator + deviceLocalId + File.separator + "device.json");
+    }
+
     public static File getBackupProfileDestinationPath(final LCProfileI profile) {
         return new File(getBackupRootDirectory() + LCConstant.PROFILE_DIRECTORY + File.separator + profile.getID() + File.separator + DATE_FORMAT_FILENAME_WITH_TIME_SECOND.format(
                 new Date()) + "_" + org.lifecompanion.util.IOUtils.getValidFileName(profile.nameProperty().get()) + "." + LCConstant.PROFILE_FILE_EXTENSION);

@@ -22,6 +22,12 @@ package org.lifecompanion.model.impl.imagedictionary;
 import javafx.beans.property.ObjectProperty;
 import javafx.concurrent.Task;
 import javafx.scene.image.Image;
+import org.lifecompanion.controller.hub.HubService;
+import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
+import org.lifecompanion.framework.commons.utils.io.FileNameUtils;
+import org.lifecompanion.framework.commons.utils.io.IOUtils;
+import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.model.impl.useapi.GlobalRuntimeConfiguration;
 import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +51,14 @@ public class ImageLoadingTask extends Task<Image> {
     // Added as this task is finished when runOnFXThread is executed so original isCancelled wasn't working (as the task is terminated)
     private final AtomicBoolean cancelTaskAndSetTarget;
 
-    public ImageLoadingTask(final String imageId, final ObjectProperty<Image> targetP, final File pathP, final double widthP, final double heightP, final boolean keepRatioP, final boolean smoothP, final Runnable callbackP) {
+    public ImageLoadingTask(final String imageId,
+                            final ObjectProperty<Image> targetP,
+                            final File pathP,
+                            final double widthP,
+                            final double heightP,
+                            final boolean keepRatioP,
+                            final boolean smoothP,
+                            final Runnable callbackP) {
         this.imageId = imageId;
         this.target = targetP;
         this.path = pathP;
@@ -76,7 +89,27 @@ public class ImageLoadingTask extends Task<Image> {
     @Override
     public Image call() {
         if (!isCancelled()) {
-            try (FileInputStream fis = new FileInputStream(this.path)) {
+            File imagePath;
+            // Try to load from HUB when needed
+            if (GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.USE_HUB_IMAGES) && !this.path.exists()) {
+                String extension = FileNameUtils.getExtension(path);
+                File imageTempCacheFolder = new File(System.getProperty("java.io.tmpdir") + File.separator + "LifeCompanion" + File.separator + "tmp" + File.separator + "downloaded-image-cache");
+                imageTempCacheFolder.mkdirs();
+                imagePath = new File(imageTempCacheFolder + File.separator + imageId + "." + extension);
+                try {
+                    if (!imagePath.exists() || StringUtils.isDifferent(imageId, IOUtils.fileSha256HexToString(imagePath))) {
+                        LOGGER.info("Will try to download image {} from hub to {}", imageId, imagePath);
+                        HubService.INSTANCE.downloadImageFromHub(imageId, imagePath);
+                    }
+                } catch (Exception e) {
+                    LOGGER.warn("Image download {} from hub failed", imageId, e);
+                }
+            } else {
+                imagePath = this.path;
+            }
+
+            // Load from stream
+            try (FileInputStream fis = new FileInputStream(imagePath)) {
                 Image image = new Image(fis, this.width, this.height, this.keepRatio, this.smooth);
                 if (!isCancelled()) {
                     FXThreadUtils.runOnFXThread(() -> {

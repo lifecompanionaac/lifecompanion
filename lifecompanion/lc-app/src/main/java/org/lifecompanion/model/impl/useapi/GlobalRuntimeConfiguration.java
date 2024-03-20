@@ -189,8 +189,47 @@ public enum GlobalRuntimeConfiguration implements GlobalRuntimeConfigurationI {
             "Enable LifeCompanion preview updates. This can be useful to test update before their production version to be ready."
     ),
 
-    // TODO : server side configuration synchronization
-    // TODO : image repository from backoffice
+    // Hub
+    HUB_URL(
+            "hubUrl",
+            GlobalRuntimeConfigurationType.COMMAND_LINE,
+            "url",
+            "The hub URL for syncing features. When not specified, the default LifeCompanion hub will be used.",
+            "https://hub.lifecompanionaac.org",
+            1
+    ),
+    HUB_AUTH_TOKEN(
+            "hubAuthToken",
+            GlobalRuntimeConfigurationType.COMMAND_LINE,
+            "token",
+            "The auth token to be used when connecting to the LifeCompanion hub. Will overwrite any token that could be used while using the app (even if the user connects manually).",
+            "AbCdEf123456",
+            1,
+            true
+    ),
+    DEVICE_SYNC_MODE(
+            "deviceSyncMode",
+            GlobalRuntimeConfigurationType.COMMAND_LINE,
+            "Enable the \"device synchronization mode\" : will launch directly LifeCompanion in use mode and will try to sync the current used configuration with the device default configuration from LifeCompanion HUB. This should be used only the HUB is connected and the device ID is injected."
+    ),
+    DEVICE_SYNC_AUTO_REFRESH(
+            "deviceSyncAutoRefresh",
+            GlobalRuntimeConfigurationType.COMMAND_LINE,
+            "When the `deviceSyncMode` is enabled, will launch an auto sync Thread that will for a new selected device configuration every 10 seconds. If not enabled, the update should be manually triggered with the control server service."
+    ),
+    DEVICE_LOCAL_ID(
+            "deviceLocalId",
+            GlobalRuntimeConfigurationType.COMMAND_LINE,
+            "deviceLocalId",
+            "Set the device local ID to be used by the `deviceSyncMode` when enabled. Allow launching LifeCompanion with a device local ID already set.",
+            "foobar123",
+            1
+    ),
+    USE_HUB_IMAGES(
+            "useHubImages",
+            GlobalRuntimeConfigurationType.COMMAND_LINE,
+            "When enabled, LifeCompanion images will be downloaded on runtime from the hub and not from local image dictionaries (except for user dictionary). This can only be enabled if the hub URL has been provided."
+    ),
 
     // Dev env
     PROP_DEV_MODE(
