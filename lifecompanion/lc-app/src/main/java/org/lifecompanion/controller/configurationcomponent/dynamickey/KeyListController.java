@@ -337,7 +337,7 @@ public enum KeyListController implements ModeListenerI {
             }
         }
         int columnCountEstF = columnCountEst;
-        FXThreadUtils.runOnFXThread(() -> columnCountEstimation.set(Math.min(columnCountEstF, 4)));
+        FXThreadUtils.runOnFXThread(() -> columnCountEstimation.set(Math.max(columnCountEstF, 4)));
 
         // TODO : should never leave blank keys ? (sublevel...)
         KeyListNodeI nodeToSetAsCurrent = previouslySelectedNodeIdToRestore != null ? findNodeByIdInSubtree(rootKeyListNode, previouslySelectedNodeIdToRestore) : null;
