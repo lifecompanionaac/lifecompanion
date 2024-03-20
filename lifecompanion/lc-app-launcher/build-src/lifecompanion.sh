@@ -49,4 +49,4 @@ $PATH_TO_CMD -Djava.net.useSystemProxies=true\
   -splash:data/lifecompanion_splashscreen.png\
   -m org.lifecompanion.app/org.lifecompanion.LifeCompanion\
 	${UPDATE_DOWNLOAD_FINISHED_FLAG-''}\
-	"$@" &
+	"$@"

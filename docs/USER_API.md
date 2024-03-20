@@ -35,7 +35,7 @@ LifeCompanion can be launched using command line arguments to configure some of 
 |`-hubUrl url`|`https://hub.lifecompanionaac.org`|The hub URL for syncing features. When not specified, the default LifeCompanion hub will be used.|
 |`-hubAuthToken token`|`AbCdEf123456`|The auth token to be used when connecting to the LifeCompanion hub. Will overwrite any token that could be used while using the app (even if the user connects manually).|
 |`-deviceSyncMode`|*`NONE`*|Enable the "device synchronization mode" : will launch directly LifeCompanion in use mode and will try to sync the current used configuration with the device default configuration from LifeCompanion HUB. This should be used only the HUB is connected and the device ID is injected.|
-|`-deviceSyncAutoRefresh`|*`NONE`*|When the "deviceSyncMode" is enable, will launch an auto sync Thread that will for a new selected device configuration every 10 seconds. If not enabled, the update should be manually triggered with the control server service.|
+|`-deviceSyncAutoRefresh`|*`NONE`*|When the `deviceSyncMode` is enabled, will launch an auto sync Thread that will for a new selected device configuration every 10 seconds. If not enabled, the update should be manually triggered with the control server service.|
 |`-deviceLocalId deviceLocalId`|`foobar123`|Set the device local ID to be used by the `deviceSyncMode` when enabled. Allow launching LifeCompanion with a device local ID already set.|
 |`-useHubImages`|*`NONE`*|When enabled, LifeCompanion images will be downloaded on runtime from the hub and not from local image dictionaries (except for user dictionary). This can only be enabled if the hub URL has been provided.|
 
@@ -416,7 +416,7 @@ NONE
 ```
 ### /hub/update/device-local-id
 
-**Description** : Request the local device ID update to be used to sync the used configuration with default configuration for this device set on LifeCompanion Hub. Note that this should be combined with the `deviceSyncMode` parameter. The method will always immediately returns even if the change can be later considered by the app (config synchronization is async).
+**Description** : Request the local device ID update to be used to sync the used configuration with default configuration for this device set on LifeCompanion Hub. Note that this should be combined with the `deviceSyncMode` parameter. The method will always immediately returns even if the change can be later considered by the app (config synchronization is async). This can also be called to update the configuration for the device when `deviceSyncAutoRefresh` parameter is not enabled.
 
 **Url structure** : `/api/v1/hub/update/device-local-id`
 

@@ -92,7 +92,7 @@ public enum LifeCompanionControlServerEndpoint implements LifeCompanionControlSe
     // HUB
     HUB_REFRESH_DEVICE_LOCAL_ID("hub/update/device-local-id",
             EndpointHttpMethod.POST,
-            "Request the local device ID update to be used to sync the used configuration with default configuration for this device set on LifeCompanion Hub. Note that this should be combined with the `deviceSyncMode` parameter. The method will always immediately returns even if the change can be later considered by the app (config synchronization is async).",
+            "Request the local device ID update to be used to sync the used configuration with default configuration for this device set on LifeCompanion Hub. Note that this should be combined with the `deviceSyncMode` parameter. The method will always immediately returns even if the change can be later considered by the app (config synchronization is async). This can also be called to update the configuration for the device when `deviceSyncAutoRefresh` parameter is not enabled.",
             List.of(new SetDeviceLocalIdDto("foobar123")),
             List.of(ActionConfirmationDto.ok())
     );
