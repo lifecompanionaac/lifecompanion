@@ -1011,7 +1011,7 @@
   <text key="use.variable.time.of.day.displayable.hour.example">10h30</text>
   <text key="use.variable.time.of.day.displayable.hour.name">Heure atteinte</text>
   <text key="use.event.interval.of.day.generator.name">Intervalle de temps dans la journée</text>
-  <text key="use.event.interval.of.day.generator.static.description">Génére un événement lorsque l'on se situe entre dans un intervalle de temps défini de la journée.</text>
+  <text key="use.event.interval.of.day.generator.static.description">Génére un événement lorsque l'on se situe dans un intervalle de temps défini de la journée.</text>
   <text key="use.event.interval.of.day.generator.variable.description">Génére un événement lorsqu'il est entre {} et {}.</text>
   <text key="use.event.interval.of.day.start.time.field">Heure de début de l'intervalle</text>
   <text key="use.event.interval.of.day.end.time.field">Heure de fin de l'intervalle</text>
@@ -1024,6 +1024,9 @@
   <text key="use.variable.interval.of.day.displayable.start.hour.example">10h30</text>
   <text key="use.variable.interval.of.day.displayable.end.hour.example">11h30</text>
   <text key="use.event.interval.of.day.generator.hour.format">{}</text>
+  <text key="use.event.interval.of.day.and.week.generator.variable.description">Génére un événement lorsqu'on est {} entre {} et {}.</text>
+    <text key="use.event.interval.of.day.and.week.generator.name">Intervalle de temps pour un jour de la semaine</text>
+  <text key="use.event.interval.of.day.and.week.generator.static.description">Génére un événement lorsque l'on se situe dans un intervalle de temps défini pour un jour de la semaine.</text>
   <!--org.lifecompanion.base.data.voice-->
   <text key="macos.say.voice.description">Synthèse vocale utilisant les voix de la commande "Say" sur
 		MacOS.\nLes voix MacOS Say ne prennent pas en compte les paramètres "volume", "débit" et "hauteur".</text>
