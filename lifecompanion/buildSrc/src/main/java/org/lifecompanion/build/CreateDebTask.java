@@ -77,6 +77,7 @@ public abstract class CreateDebTask extends DefaultTask {
                 }
             }
         }
+        // TODO : Remove Windows resources
 
         // Custom install configuration
         InstallationConfiguration installConfig = new InstallationConfiguration("2048m", "~/Documents/LifeCompanion");
