@@ -91,7 +91,9 @@ public class ImageUtils {
      *
      * @param inputImage the input image
      * @param threshold the threshold to detect the color to replace
+     * @author Oscar PAVOINE
      */
+    // TODO : optimize performance and object creation
     public static Image removeBackground(final Image inputImage, final int threshold) {
         int imgWidth = (int) inputImage.getWidth();
         int imgHeight = (int) inputImage.getHeight();
@@ -123,6 +125,7 @@ public class ImageUtils {
         Queue<Point> queueNeighbours = new LinkedList<>();
         boolean[][] pointVisited = new boolean[imgWidth][imgHeight];
         boolean[][] InvalidVisitedPoint = new boolean[imgWidth][imgHeight];
+        int[][] directions = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
 
         Point startPoint = findPixelStart(backgroundO, backgroundR, backgroundG, backgroundB, reader, threshold, imgWidth, imgHeight);
         queueNeighbours.add(startPoint);
@@ -130,7 +133,6 @@ public class ImageUtils {
 
         while (!queueNeighbours.isEmpty()) {
             Point point = queueNeighbours.poll();
-            int[][] directions = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
             for (int[] direction : directions) {
                 int newX = point.x + direction[0];
                 int newY = point.y + direction[1];
@@ -196,13 +198,11 @@ public class ImageUtils {
         int edgeHeight = (int) (imgHeight * 0.05);
 
         Map<Color, Integer> colorFrequency = new HashMap<>();
-        List<Point> edgePoints = new LinkedList<>();
         for (int y = 0; y < imgHeight; y++) {
             for (int x = 0; x < imgWidth; x++) {
                 if (y < edgeHeight || y >= imgHeight - edgeHeight || x < edgeWidth || x >= imgWidth - edgeWidth) {
                     Color color = reader.getColor(x, y);
                     colorFrequency.put(color, colorFrequency.getOrDefault(color, 0) + 1);
-                    edgePoints.add(new Point(x, y));
                 }
             }
         }
