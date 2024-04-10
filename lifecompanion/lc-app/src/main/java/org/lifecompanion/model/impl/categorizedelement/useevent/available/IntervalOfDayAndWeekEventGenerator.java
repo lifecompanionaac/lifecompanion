@@ -37,19 +37,24 @@ import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.impl.usevariable.StringUseVariable;
 import org.lifecompanion.model.impl.usevariable.UseVariableDefinition;
 import org.lifecompanion.util.ThreadUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.TextStyle;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 /**
- * Generate a event when a hour in the day is reached.
- *
+ * @author Oscar PAVOINE
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public class IntervalOfDayAndWeekEventGenerator extends BaseUseEventGeneratorImpl {
-    private static final long DELAY_ON_START = 4000;
+    private static final Logger LOGGER = LoggerFactory.getLogger(IntervalOfDayAndWeekEventGenerator.class);
+
     private static final long DELAY_ON_NEW_DAY = 4000;
 
     private final TimeOfDay startTimeOfDay;
@@ -73,20 +78,16 @@ public class IntervalOfDayAndWeekEventGenerator extends BaseUseEventGeneratorImp
         this.endTimeOfDay = new TimeOfDay();
         this.endTimeOfDay.hoursProperty().set(13);
         this.wantedDay = new SimpleIntegerProperty(1);
-        this.variableDescriptionProperty()
-                .bind(
-                        TranslationFX.getTextBinding("use.event.interval.of.day.and.week.generator.variable.description",
-                                Bindings.createStringBinding(() -> {
-                                if (this.wantedDay.get() >= Calendar.SUNDAY && this.wantedDay.get() <= Calendar.SATURDAY) {
-                                    return DayOfWeek.of(this.wantedDay.get()).getDisplayName(TextStyle.FULL, Locale.getDefault());
-                                } else {
-                                    return "";
-                                }
-                            }, this.wantedDay),
-                                Bindings.createStringBinding(this.startTimeOfDay::getHumanReadableString,
-                                        this.startTimeOfDay.hoursProperty(), this.startTimeOfDay.minutesProperty()),
-                                Bindings.createStringBinding(this.endTimeOfDay::getHumanReadableString,
-                                        this.endTimeOfDay.hoursProperty(), this.endTimeOfDay.minutesProperty())));
+        this.variableDescriptionProperty().bind(TranslationFX.getTextBinding("use.event.interval.of.day.and.week.generator.variable.description",
+                Bindings.createStringBinding(() -> {
+                    if (this.wantedDay.get() >= Calendar.SUNDAY && this.wantedDay.get() <= Calendar.SATURDAY) {
+                        return DayOfWeek.of(this.wantedDay.get()).getDisplayName(TextStyle.FULL, Locale.getDefault());
+                    } else {
+                        return "";
+                    }
+                }, this.wantedDay),
+                Bindings.createStringBinding(this.startTimeOfDay::getHumanReadableString, this.startTimeOfDay.hoursProperty(), this.startTimeOfDay.minutesProperty()),
+                Bindings.createStringBinding(this.endTimeOfDay::getHumanReadableString, this.endTimeOfDay.hoursProperty(), this.endTimeOfDay.minutesProperty())));
         this.useVariableWantedStartHour = new UseVariableDefinition("WantedStartHourDisplayableFormat",
                 "use.variable.interval.of.day.displayable.start.hour.name",
                 "use.variable.interval.of.day.displayable.start.hour.description",
@@ -97,8 +98,10 @@ public class IntervalOfDayAndWeekEventGenerator extends BaseUseEventGeneratorImp
                 "use.variable.interval.of.day.displayable.end.hour.description",
                 "use.variable.interval.of.day.displayable.end.hour.example");
         this.generatedVariables.add(this.useVariableWantedEndHour);
-        this.useVariableWantedDayLabel = new UseVariableDefinition("WantedDayDisplayableFormat", "use.variable.day.of.week.displayable.day.name",
-                "use.variable.day.of.week.displayable.day.description", "use.variable.day.of.week.displayable.day.example");
+        this.useVariableWantedDayLabel = new UseVariableDefinition("WantedDayDisplayableFormat",
+                "use.variable.day.of.week.displayable.day.name",
+                "use.variable.day.of.week.displayable.day.description",
+                "use.variable.day.of.week.displayable.day.example");
         this.generatedVariables.add(this.useVariableWantedDayLabel);
 
     }
@@ -119,74 +122,59 @@ public class IntervalOfDayAndWeekEventGenerator extends BaseUseEventGeneratorImp
 
     // Class part : "Mode start/stop"
     // ========================================================================
-    private Timer timer;
+    private boolean generated = false;
 
     @Override
     public void modeStart(final LCConfigurationI configuration) {
-        checkCurrentDayThread = LCNamedThreadFactory.daemonThreadFactory("DayOfWeekEventGenerator").newThread(() -> {
-            ThreadUtils.safeSleep(IntervalOfDayAndWeekEventGenerator.DELAY_ON_START);//Delay on start
+        generated = false;
+        checkCurrentDayThread = LCNamedThreadFactory.daemonThreadFactory("IntervalOfDayAndWeekEventGenerator").newThread(() -> {
+            ThreadUtils.safeSleep(DELAY_BEFORE_GENERATE_MS);
             while (checkCurrentDayThread != null) {
-                // Check if current day
+                // Interval is on today
                 if (LocalDate.now().getDayOfWeek().getValue() == this.wantedDay.get()) {
-                    // Change implementation to only instantiate one timer
-                    this.timer = new Timer(true);
-                    this.timer.scheduleAtFixedRate(new TimerTask() {
-                        private boolean generated = false;
-
-                        @Override
-                        public void run() {
-                            TimeOfDay nowTimeOfDay = TimeOfDay.now();
-                            if ( IntervalOfDayAndWeekEventGenerator.this.useEventListener != null
-                                    && !this.generated
-                                    && IntervalOfDayAndWeekEventGenerator.this.startTimeOfDay.compareTo(nowTimeOfDay) <= 0
-                                    && IntervalOfDayAndWeekEventGenerator.this.endTimeOfDay.compareTo(nowTimeOfDay) >= 0
-                            ) {
-                                this.generated = true;
-                                IntervalOfDayAndWeekEventGenerator.this.useEventListener
-                                        .fireEvent(IntervalOfDayAndWeekEventGenerator.this,
-                                                List.of(
-                                                        new StringUseVariable(IntervalOfDayAndWeekEventGenerator.this.useVariableWantedStartHour,
-                                                                Translation.getText("use.event.interval.of.day.generator.hour.format",
-                                                                        IntervalOfDayAndWeekEventGenerator.this.startTimeOfDay.getHumanReadableString())),
-                                                        new StringUseVariable(IntervalOfDayAndWeekEventGenerator.this.useVariableWantedEndHour,
-                                                                Translation.getText("use.event.interval.of.day.generator.hour.format",
-                                                                        IntervalOfDayAndWeekEventGenerator.this.endTimeOfDay.getHumanReadableString()))),
-                                                null);
-                            } else if (
-                                    IntervalOfDayAndWeekEventGenerator.this.startTimeOfDay.compareTo(nowTimeOfDay) > 0
-                            ) {
-                                this.generated = false;
-                            } else if (
-                                    IntervalOfDayAndWeekEventGenerator.this.endTimeOfDay.compareTo(nowTimeOfDay) < 0
-                            ) {
-                                this.generated = false;
-                                nextDay();
-                            }
+                    if (!generated) {
+                        long timeToStartTime = startTimeOfDay.getDateForToday().getTime() - new Date().getTime();
+                        // When it doesn't start yet, will wait till the start time
+                        if (timeToStartTime > 0) {
+                            LOGGER.info("Will wait {} ms till the correct interval in current day", timeToStartTime);
+                            ThreadUtils.safeSleep(timeToStartTime);
                         }
-                    }, DELAY_BEFORE_GENERATE_MS, 1000);
-               } else {
-                    nextDay();
+                        // Already behind the start time, check that we are still in the interval
+                        else if (IntervalOfDayAndWeekEventGenerator.this.endTimeOfDay.compareTo(TimeOfDay.now()) >= 0) {
+                            generated = true;
+                            IntervalOfDayAndWeekEventGenerator.this.useEventListener.fireEvent(IntervalOfDayAndWeekEventGenerator.this,
+                                    List.of(new StringUseVariable(IntervalOfDayAndWeekEventGenerator.this.useVariableWantedStartHour,
+                                                    Translation.getText("use.event.interval.of.day.generator.hour.format",
+                                                            IntervalOfDayAndWeekEventGenerator.this.startTimeOfDay.getHumanReadableString())),
+                                            new StringUseVariable(IntervalOfDayAndWeekEventGenerator.this.useVariableWantedDayLabel,
+                                                    DayOfWeek.of(wantedDay.get()).getDisplayName(TextStyle.FULL, Locale.getDefault())),
+                                            new StringUseVariable(IntervalOfDayAndWeekEventGenerator.this.useVariableWantedEndHour,
+                                                    Translation.getText("use.event.interval.of.day.generator.hour.format",
+                                                            IntervalOfDayAndWeekEventGenerator.this.endTimeOfDay.getHumanReadableString()))), null);
+                        }
+                    } else {
+                        ThreadUtils.safeSleep(5000);
+                    }
+                }
+                // Not the day, wait till then
+                else {
+                    generated = false;
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.add(Calendar.DATE, 1);
+                    calendar.set(Calendar.HOUR_OF_DAY, 0);
+                    calendar.set(Calendar.MINUTE, 0);
+                    calendar.set(Calendar.SECOND, 0);
+                    long waitingTime = calendar.getTimeInMillis() - System.currentTimeMillis() + IntervalOfDayAndWeekEventGenerator.DELAY_ON_NEW_DAY;
+                    LOGGER.info("Will wait {} ms till the correct day", waitingTime);
+                    ThreadUtils.safeSleep(waitingTime);
                 }
             }
         });
         checkCurrentDayThread.start();
     }
 
-    private void nextDay() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DATE, 1);
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        ThreadUtils.safeSleep(calendar.getTimeInMillis() - System.currentTimeMillis() + IntervalOfDayAndWeekEventGenerator.DELAY_ON_NEW_DAY);
-    }
-
     @Override
     public void modeStop(final LCConfigurationI configuration) {
-        if ( this.timer != null) {
-            this.timer.cancel();
-            this.timer = null;
-        }
         if (this.checkCurrentDayThread != null) {
             this.checkCurrentDayThread.interrupt();
             this.checkCurrentDayThread = null;

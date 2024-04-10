@@ -79,6 +79,7 @@ public class TimeOfDayEventGenerator extends BaseUseEventGeneratorImpl {
 
     @Override
     public void modeStart(final LCConfigurationI configuration) {
+        //TODO : use Thread sleep implementation (see IntervalOfDayAndWeekEventGenerator)
         //Change implementation to only instantiate one timer
         this.timer = new Timer(true);
         this.timer.scheduleAtFixedRate(new TimerTask() {
