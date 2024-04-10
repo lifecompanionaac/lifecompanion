@@ -135,7 +135,7 @@ public class KeyActions {
             previousRotate = this.imageUseComponent.rotateProperty().get();
             previousScaleX = this.imageUseComponent.scaleXProperty().get();
             previousScaleY = this.imageUseComponent.scaleYProperty().get();
-            previousColourToGrey = this.imageUseComponent.enableColourToGreyProperty().get();
+            previousColourToGrey = this.imageUseComponent.enableColorToGreyProperty().get();
             previousEnableColorReplace = this.imageUseComponent.enableReplaceColorProperty().get();
             previousEnableRemoveBackground = this.imageUseComponent.enableRemoveBackgroundProperty().get();
             previousPreserveRatio = this.imageUseComponent.preserveRatioProperty().get();
@@ -145,7 +145,7 @@ public class KeyActions {
             this.imageUseComponent.rotateProperty().set(0.0);
             this.imageUseComponent.scaleXProperty().set(1.0);
             this.imageUseComponent.scaleYProperty().set(1.0);
-            this.imageUseComponent.enableColourToGreyProperty().set(false);
+            this.imageUseComponent.enableColorToGreyProperty().set(false);
             this.imageUseComponent.enableReplaceColorProperty().set(false);
             this.imageUseComponent.enableRemoveBackgroundProperty().set(false);
             this.imageUseComponent.preserveRatioProperty().set(true);
@@ -187,7 +187,7 @@ public class KeyActions {
             this.imageUseComponent.rotateProperty().set(previousRotate);
             this.imageUseComponent.scaleXProperty().set(previousScaleX);
             this.imageUseComponent.scaleYProperty().set(previousScaleY);
-            this.imageUseComponent.enableColourToGreyProperty().set(previousColourToGrey);
+            this.imageUseComponent.enableColorToGreyProperty().set(previousColourToGrey);
             this.imageUseComponent.enableReplaceColorProperty().set(previousEnableColorReplace);
             this.imageUseComponent.enableRemoveBackgroundProperty().set(previousEnableRemoveBackground);
             this.imageUseComponent.preserveRatioProperty().set(previousPreserveRatio);
@@ -368,10 +368,11 @@ public class KeyActions {
 
     }
 
-        public static class FlipImageHorizontalAction extends BasePropertyChangeAction<Number> {
+    public static class FlipImageHorizontalAction extends BasePropertyChangeAction<Number> {
         public FlipImageHorizontalAction(final ImageUseComponentI keyP, final Number wantedFlipP) {
-            super(keyP.scaleYProperty(), wantedFlipP);
+            super(keyP.scaleXProperty(), wantedFlipP);
         }
+
         @Override
         public String getNameID() {
             return "action.key.image.change.flip.horizontal";
@@ -381,7 +382,7 @@ public class KeyActions {
     public static class FlipImageVerticalAction extends BasePropertyChangeAction<Number> {
 
         public FlipImageVerticalAction(final ImageUseComponentI keyP, final Number wantedFlipP) {
-            super(keyP.scaleXProperty(), wantedFlipP);
+            super(keyP.scaleYProperty(), wantedFlipP);
         }
 
         @Override
@@ -390,10 +391,10 @@ public class KeyActions {
         }
     }
 
-    public static class enableColourToGreyAction extends BasePropertyChangeAction<Boolean> {
+    public static class ChangeEnableColorToGreyAction extends BasePropertyChangeAction<Boolean> {
 
-        public enableColourToGreyAction(final ImageUseComponentI keyP, Boolean wantedFlipP) {
-            super(keyP.enableColourToGreyProperty(), wantedFlipP);
+        public ChangeEnableColorToGreyAction(final ImageUseComponentI keyP, Boolean enabled) {
+            super(keyP.enableColorToGreyProperty(), enabled);
         }
 
         @Override
@@ -466,7 +467,7 @@ public class KeyActions {
         }
     }
 
-     public static class RemoveBackgroundThresholdAction extends BasePropertyChangeAction<Number> {
+    public static class RemoveBackgroundThresholdAction extends BasePropertyChangeAction<Number> {
 
         public RemoveBackgroundThresholdAction(final ImageUseComponentI keyP, final Number wantedValue) {
             super(keyP.removeBackgroundThresholdProperty(), wantedValue);

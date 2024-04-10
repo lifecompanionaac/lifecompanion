@@ -154,7 +154,7 @@ public class GridPartKeyComponent extends GridPartComponentBaseImpl implements G
     public DoubleProperty scaleYProperty() {return this.imageUseComponentPropertyWrapper.scaleYProperty();}
 
     @Override
-    public BooleanProperty enableColourToGreyProperty() {return this.imageUseComponentPropertyWrapper.enableColourToGreyProperty();}
+    public BooleanProperty enableColorToGreyProperty() {return this.imageUseComponentPropertyWrapper.enableColorToGreyProperty();}
 
     @Override
     public SimpleObjectProperty<ImageElementI> imageVTwoProperty() {

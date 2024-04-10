@@ -2365,17 +2365,17 @@
   <text key="field.grid.key.hgap">Espacement horizontal</text>
   <text key="field.grid.key.vgap">Espacement vertical</text>
   <!--org.lifecompanion.config.view.pane.tabs.selected.part.imageusecomp-->
-    <text key="image.use.enable.grey.color">Changer l'image en noir et blanc</text>
-    <text key="image.use.enable.remove.background">Supprimer la couleur de fond</text>
-  <text key="image.use.color.replace.threshold.field">Tolérance</text>
+    <text key="image.use.enable.grey.color">Mettre en noir et blanc</text>
+    <text key="image.use.enable.remove.background">Activer</text>
+  <text key="image.use.color.replace.threshold.field">Sensibilité</text>
   <text key="image.use.color.replacing.field">Couleur de remplacement</text>
   <text key="image.use.color.to.replace.field">Couleur à remplacer</text>
-  <text key="image.use.enable.color.replace">Activer le remplacement de couleur</text>
+  <text key="image.use.enable.color.replace">Remplacer une couleur</text>
   <text key="image.use.preserve.ratio">Conserver les proportions</text>
   <text key="image.use.use.viewport">Activer</text>
   <text key="image.use.rotation.label.current">Rotation de l'image : {} degrés</text>
-  <text key="mirror.image.horizontal">Inverser horizontalement</text>
-  <text key="mirror.image.vertical">Inverser verticalement</text>
+  <text key="mirror.image.horizontal">Retourner horizontalement</text>
+  <text key="mirror.image.vertical">Retourner verticalement</text>
   <text key="rotate.image.left">Tourner à gauche</text>
   <text key="rotate.image.right">Tourner à droite</text>
   <text key="tooltip.explain.image.color.replace">La couleur qui devra être supprimée de l'image puis

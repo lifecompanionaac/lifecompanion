@@ -85,7 +85,7 @@ public class ImageUseComponentPropertyWrapper {
     private final DoubleProperty scaleY;
 
     @XMLIgnoreDefaultBooleanValue(false)
-    private final BooleanProperty enableReplaceColourToGrey;
+    private final BooleanProperty enableReplaceColorToGrey;
 
     /**
      * The gallery image used by this comp..<br>
@@ -186,7 +186,7 @@ public class ImageUseComponentPropertyWrapper {
         this.rotate = new SimpleDoubleProperty(0.0);
         this.scaleX = new SimpleDoubleProperty(1.0);
         this.scaleY = new SimpleDoubleProperty(1.0);
-        this.enableReplaceColourToGrey = new SimpleBooleanProperty(false);
+        this.enableReplaceColorToGrey = new SimpleBooleanProperty(false);
         this.previousWidthUpdate = new AtomicInteger();
         this.previousHeightUpdate = new AtomicInteger();
         this.externalLoadingRequest = new HashSet<>();
@@ -368,8 +368,8 @@ public class ImageUseComponentPropertyWrapper {
         return this.scaleY;
     }
 
-    public BooleanProperty enableColourToGreyProperty() {
-        return this.enableReplaceColourToGrey;
+    public BooleanProperty enableColorToGreyProperty() {
+        return this.enableReplaceColorToGrey;
     }
 
     public BooleanProperty enableReplaceColorProperty() {
@@ -423,8 +423,8 @@ public class ImageUseComponentPropertyWrapper {
             if(!enableRemoveBackground.get()) {
                 element.removeAttribute("enableRemoveBackground");
                 element.removeAttribute("removeBackgroundThreshold");
-                element.removeAttribute("enableReplaceColourToGrey");
             }
+            element.removeAttribute("enableReplaceColorToGrey");
 
             //Image saving : just set the id and delegate to root action the "real" saving
             serializeImageUse(this.imageVTwo.get(), element, contextP);

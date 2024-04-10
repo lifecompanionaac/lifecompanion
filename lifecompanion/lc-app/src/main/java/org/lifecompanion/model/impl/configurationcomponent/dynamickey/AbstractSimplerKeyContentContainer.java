@@ -222,7 +222,7 @@ public abstract class AbstractSimplerKeyContentContainer implements SimplerKeyCo
     }
 
     @Override
-    public BooleanProperty enableColourToGreyProperty(){return imageUseComponentPropertyWrapper.enableColourToGreyProperty();}
+    public BooleanProperty enableColorToGreyProperty(){return imageUseComponentPropertyWrapper.enableColorToGreyProperty();}
 
     @Override
     public BooleanProperty useViewPortProperty() {

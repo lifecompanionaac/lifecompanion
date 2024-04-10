@@ -296,29 +296,35 @@ public class ConfigurationComponentUtils {
         imageView.scaleXProperty().bind(imageUseComponent.scaleXProperty());
         imageView.scaleYProperty().bind(imageUseComponent.scaleYProperty());
         imageView.effectProperty().bind(Bindings.createObjectBinding(() -> {
-            if (imageUseComponent.enableColourToGreyProperty().get()) {
+            if (imageUseComponent.enableColorToGreyProperty().get()) {
                 return new ColorAdjust(0.0, -1.0, 0.0, 0.0);
             } else {
                 return null;
             }
-        }, imageUseComponent.enableColourToGreyProperty()));
+        }, imageUseComponent.enableColorToGreyProperty()));
         imageView.viewportProperty().bind(imageUseComponent.viewportProperty());
         imageView.imageProperty().bind(Bindings.createObjectBinding(() -> {
-        Image img = imageUseComponent.loadedImageProperty().get();
-        if (img == null) {
-            return null;
-        } else {
-            if (imageUseComponent.enableReplaceColorProperty().get()) {
-                img = ImageUtils.replaceColorInImage(img, imageUseComponent.colorToReplaceProperty().get(), imageUseComponent.replacingColorProperty().get(),
-                        imageUseComponent.replaceColorThresholdProperty().get());
-            }
-            if (imageUseComponent.enableRemoveBackgroundProperty().get()) {
-                img = ImageUtils.removeBackground(img, imageUseComponent.removeBackgroundThresholdProperty().get());
-            }
-            return img;
-        }
-    }, imageUseComponent.loadedImageProperty(), imageUseComponent.enableReplaceColorProperty(), imageUseComponent.colorToReplaceProperty(),
-            imageUseComponent.replacingColorProperty(), imageUseComponent.replaceColorThresholdProperty(), imageUseComponent.enableRemoveBackgroundProperty(), imageUseComponent.removeBackgroundThresholdProperty()));
+                    Image img = imageUseComponent.loadedImageProperty().get();
+                    if (img == null) {
+                        return null;
+                    } else {
+                        if (imageUseComponent.enableRemoveBackgroundProperty().get()) {
+                            img = ImageUtils.removeBackground(img, imageUseComponent.removeBackgroundThresholdProperty().get());
+                        }
+                        if (imageUseComponent.enableReplaceColorProperty().get()) {
+                            img = ImageUtils.replaceColorInImage(img, imageUseComponent.colorToReplaceProperty().get(), imageUseComponent.replacingColorProperty().get(),
+                                    imageUseComponent.replaceColorThresholdProperty().get());
+                        }
+                        return img;
+                    }
+                },
+                imageUseComponent.loadedImageProperty(),
+                imageUseComponent.enableReplaceColorProperty(),
+                imageUseComponent.colorToReplaceProperty(),
+                imageUseComponent.replacingColorProperty(),
+                imageUseComponent.replaceColorThresholdProperty(),
+                imageUseComponent.enableRemoveBackgroundProperty(),
+                imageUseComponent.removeBackgroundThresholdProperty()));
     }
 
     public static void unbindImageViewFromImageUseComponent(ImageView imageView) {

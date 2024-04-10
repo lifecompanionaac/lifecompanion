@@ -67,7 +67,7 @@ public interface ImageUseComponentI extends IdentifiableComponentI {
     /**
      * @return a property enabling the grey image to be activated
      */
-    BooleanProperty enableColourToGreyProperty();
+    BooleanProperty enableColorToGreyProperty();
 
     /**
      * @return if this image uses a viewport to define how the image is displayed
