@@ -113,6 +113,7 @@ public abstract class AbstractScanningSelectionMode<T extends AbstractSelectionM
     private boolean pauseForMousePress;
 
     private boolean pauseForUntilNextSelection;
+    protected boolean skipNextPauseOnRestart;
 
     protected AbstractScanningSelectionMode() {
         this.scanningTimeLine = new Timeline();
@@ -306,7 +307,7 @@ public abstract class AbstractScanningSelectionMode<T extends AbstractSelectionM
         this.nextSelectionListener = null;
         this.pauseForUntilNextSelection = false;
         // When a listener is present, call it
-        boolean restart = savedNextSelectionListener == null || savedNextSelectionListener.get();
+        boolean restart = !parameters.startScanningOnClicProperty().get() && (savedNextSelectionListener == null || savedNextSelectionListener.get());
         // Calling the listener may add another listener, we should then reconsider the value for "pauseForUntilNextSelection"
         if (!pauseForUntilNextSelection) {
             if (restart) {
@@ -424,10 +425,11 @@ public abstract class AbstractScanningSelectionMode<T extends AbstractSelectionM
         if (!this.executingActionOnCurrentPart && !this.pauseToExecuteSimpleActions && !this.disposed) {
             synchronized (this.scanningTimeLine) {
                 this.scanningTimeLine.stop();
-                if ((this.parameters.startScanningOnClicProperty().get() && this.parameters.scanningModeProperty().get() != ScanningMode.MANUAL) && !this.restartScanningOnNextAction) {
+                if ((this.parameters.startScanningOnClicProperty().get() && this.parameters.scanningModeProperty().get() != ScanningMode.MANUAL) && !this.restartScanningOnNextAction && !skipNextPauseOnRestart) {
                     this.restartScanningOnNextAction = true;
                     this.playingProperty.set(false);
                 } else {
+                    this.skipNextPauseOnRestart = false;
                     this.restartScanningOnNextAction = false;
                     this.scanningTimeLine.setDelay(Duration.millis(this.parameters.scanFirstPauseProperty().get()));
                     this.scanningTimeLine.playFrom(Duration.ZERO);

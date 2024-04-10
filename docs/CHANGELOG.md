@@ -20,6 +20,7 @@
 
 - Correction d'un rare problème avec la souris virtuelle
 - *(Oscar P.)* Ticket #270 : ajout de la possibilité de glisser des images de l'ordinateur dans les listes de cases
+- Correction qui faisait que le paramètre en défilement "Ne pas démarrer automatiquement" ne fonctionnait plus
 
 ## 1.6.0 - 24/01/2024
 

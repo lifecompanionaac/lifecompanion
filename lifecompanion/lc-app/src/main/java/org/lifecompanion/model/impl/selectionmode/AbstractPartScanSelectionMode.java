@@ -196,6 +196,7 @@ public abstract class AbstractPartScanSelectionMode<T extends AbstractPartScanSe
                 this.deselectAndUpdateCurrentPartOnNextPlay = uniqueCompInside instanceof GridPartKeyComponentI;
                 return true;
             } else {
+                this.skipNextPauseOnRestart = true;
                 //This select the first part of the current line, so scanning time should restart
                 this.updateCurrentComponent(true);
             }

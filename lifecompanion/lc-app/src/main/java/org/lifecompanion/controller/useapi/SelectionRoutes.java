@@ -47,6 +47,9 @@ public class SelectionRoutes {
                 if (selectionConfigDto.getScanTime() != null) {
                     configuration.getSelectionModeParameter().scanPauseProperty().set(selectionConfigDto.getScanTime());
                 }
+                if (selectionConfigDto.getDisableAutoStart() != null) {
+                    configuration.getSelectionModeParameter().startScanningOnClicProperty().set(selectionConfigDto.getDisableAutoStart());
+                }
             }
             // Try to change the mode
             if (selectionConfigDto.getMode() != null) {

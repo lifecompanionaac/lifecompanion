@@ -25,19 +25,21 @@ public class SelectionConfigDto {
     private SelectionModeEnum mode;
     private Integer scanLoop;
     private Integer scanTime;
+    private Boolean disableAutoStart;
 
-    public SelectionConfigDto(SelectionModeEnum mode, Integer scanLoop, Integer scanTime) {
+    public SelectionConfigDto(SelectionModeEnum mode, Integer scanLoop, Integer scanTime, Boolean disableAutoStart) {
         this.mode = mode;
         this.scanLoop = scanLoop;
         this.scanTime = scanTime;
+        this.disableAutoStart = disableAutoStart;
     }
 
     public SelectionConfigDto(Integer scanLoop, Integer scanTime) {
-        this(null, scanLoop, scanTime);
+        this(null, scanLoop, scanTime, true);
     }
 
     public SelectionConfigDto(SelectionModeEnum mode) {
-        this(mode, null, null);
+        this(mode, null, null, null);
     }
 
     public SelectionModeEnum getMode() {
@@ -64,7 +66,11 @@ public class SelectionConfigDto {
         this.scanTime = scanTime;
     }
 
-    public boolean changeDetected() {
-        return mode != null || scanLoop != null || scanTime != null;
+    public Boolean getDisableAutoStart() {
+        return disableAutoStart;
+    }
+
+    public void setDisableAutoStart(Boolean disableAutoStart) {
+        this.disableAutoStart = disableAutoStart;
     }
 }

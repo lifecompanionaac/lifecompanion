@@ -362,28 +362,32 @@ NONE
 {
   "mode": "MOUSE_CLIC",
   "scanLoop": null,
-  "scanTime": null
+  "scanTime": null,
+  "disableAutoStart": null
 }
 ```
 ```json
 {
   "mode": "SCAN_ROW_COLUMN",
   "scanLoop": 2,
-  "scanTime": 2500
+  "scanTime": 2500,
+  "disableAutoStart": true
 }
 ```
 ```json
 {
   "mode": null,
   "scanLoop": 2,
-  "scanTime": 1800
+  "scanTime": 1800,
+  "disableAutoStart": true
 }
 ```
 ```json
 {
   "mode": "SCAN_KEY_HORIZONTAL",
   "scanLoop": 1,
-  "scanTime": 1500
+  "scanTime": 1500,
+  "disableAutoStart": false
 }
 ```
 

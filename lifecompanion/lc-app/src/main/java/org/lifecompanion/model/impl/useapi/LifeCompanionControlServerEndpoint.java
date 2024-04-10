@@ -75,11 +75,11 @@ public enum LifeCompanionControlServerEndpoint implements LifeCompanionControlSe
     ),
     SELECTION_CONFIG("selection/config",
             EndpointHttpMethod.POST,
-            "Configure the current selection mode and restart it with the new configuration. Allow configuring the selection mode (direct, scanning, etc.) and some selection mode parameters (scanning loops, time...). Available mode : "+SelectionModeEnum.listForDocs(),
+            "Configure the current selection mode and restart it with the new configuration. Allow configuring the selection mode (direct, scanning, etc.) and some selection mode parameters (scanning loops, time...). Available mode : " + SelectionModeEnum.listForDocs(),
             List.of(new SelectionConfigDto(SelectionModeEnum.MOUSE_CLIC),
-                    new SelectionConfigDto(SelectionModeEnum.SCAN_ROW_COLUMN, 2, 2500),
+                    new SelectionConfigDto(SelectionModeEnum.SCAN_ROW_COLUMN, 2, 2500, true),
                     new SelectionConfigDto(2, 1800),
-                    new SelectionConfigDto(SelectionModeEnum.SCAN_KEY_HORIZONTAL, 1, 1500)),
+                    new SelectionConfigDto(SelectionModeEnum.SCAN_KEY_HORIZONTAL, 1, 1500, false)),
             List.of(ActionConfirmationDto.ok())
     ),
     // Media
