@@ -60,7 +60,7 @@ public enum HubService implements LCStateListener {
     /**
      * Cached hub client
      */
-    private OkHttpClient hubClient2;
+    private OkHttpClient hubClient;
 
     HubService() {
     }
@@ -68,8 +68,8 @@ public enum HubService implements LCStateListener {
     // HTTP CLIENT
     //========================================================================
     private OkHttpClient getHubClient() {
-        if (hubClient2 == null) {
-            hubClient2 = AppServerClient.initializeClientForExternalCalls().addInterceptor((chain) -> {
+        if (hubClient == null) {
+            hubClient = AppServerClient.initializeClientForExternalCalls().addInterceptor((chain) -> {
                 Request request = chain.request();
                 if (StringUtils.isNotBlank(hubApiToken)) {
                     request = request.newBuilder().addHeader("Authorization", "Bearer " + this.hubApiToken).build();
@@ -77,7 +77,7 @@ public enum HubService implements LCStateListener {
                 return chain.proceed(request.newBuilder().addHeader("Content-Type", "application/vnd.api+json").addHeader("Accept", "application/vnd.api+json").build());
             }).build();
         }
-        return hubClient2;
+        return hubClient;
     }
 
 
