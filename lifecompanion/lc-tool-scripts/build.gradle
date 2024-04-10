@@ -15,7 +15,7 @@ dependencies {
     implementation 'org.jsoup:jsoup:1.14.2'
 }
 
-mainClassName = "scripts.IconUniqueFileGenerator"
+mainClassName = "scripts.LCAutoTranslation"
 
 application {
     applicationDefaultJvmArgs = [

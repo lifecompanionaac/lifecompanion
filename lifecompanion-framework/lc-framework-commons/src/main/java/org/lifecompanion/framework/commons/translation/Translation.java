@@ -150,7 +150,7 @@ public enum Translation {
             List<Element> children = root.getChildren(Translation.NODE_ELEM);
             for (Element child : children) {
                 String key = child.getAttribute(Translation.ATB_KEY).getValue();
-                String value = this.cleanText(child.getText());
+                String value = cleanText(child.getText());
                 if (this.texts.containsKey(key)) {
                     LOGGER.warn("Found a duplicated translation entry : {} - {}", id, key);
                 }
@@ -168,7 +168,7 @@ public enum Translation {
      * @param text the text to clean
      * @return the cleaned text
      */
-    private String cleanText(final String text) {
+    public static String cleanText(final String text) {
         return text.replace("\t", "").replace("\n", " ").replace("\r", "").replace("\\t", "\t").replace("\\n", "\n");
     }
 }
