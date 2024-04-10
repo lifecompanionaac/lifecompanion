@@ -78,6 +78,15 @@ public class ImageUseComponentPropertyWrapper {
     @XMLIgnoreDefaultDoubleValue(0.0)
     private final DoubleProperty rotate;
 
+    @XMLIgnoreDefaultDoubleValue(1.0)
+    private final DoubleProperty scaleX;
+
+    @XMLIgnoreDefaultDoubleValue(1.0)
+    private final DoubleProperty scaleY;
+
+    @XMLIgnoreDefaultBooleanValue(false)
+    private final BooleanProperty enableReplaceColorToGrey;
+
     /**
      * The gallery image used by this comp..<br>
      * Sometime, the image can not exist into gallery, if the user set a image and delete it from gallery.
@@ -122,6 +131,12 @@ public class ImageUseComponentPropertyWrapper {
     @XMLIgnoreNullValue
     private final IntegerProperty replaceColorThreshold;
 
+    @XMLIgnoreDefaultBooleanValue(false)
+    private final BooleanProperty enableRemoveBackground;
+
+    @XMLIgnoreNullValue
+    private final IntegerProperty removeBackgroundThreshold;
+
     /**
      * Image use component associated
      */
@@ -161,12 +176,17 @@ public class ImageUseComponentPropertyWrapper {
         this.replacingColor = new SimpleObjectProperty<>(Color.TRANSPARENT);
         this.viewport = new SimpleObjectProperty<>();
         this.replaceColorThreshold = new SimpleIntegerProperty(LCConstant.DEFAULT_COLOR_REPLACE_THRESHOLD);
+        this.enableRemoveBackground = new SimpleBooleanProperty();
+        this.removeBackgroundThreshold = new SimpleIntegerProperty(LCConstant.DEFAULT_COLOR_REPLACE_THRESHOLD);
         this.viewportXPercent = new SimpleDoubleProperty(0.0);
         this.viewportYPercent = new SimpleDoubleProperty(0.0);
         this.viewportWidthPercent = new SimpleDoubleProperty(0.0);
         this.viewportHeightPercent = new SimpleDoubleProperty(0.0);
         this.imageAutomaticallySelected = new SimpleBooleanProperty(false);
         this.rotate = new SimpleDoubleProperty(0.0);
+        this.scaleX = new SimpleDoubleProperty(1.0);
+        this.scaleY = new SimpleDoubleProperty(1.0);
+        this.enableReplaceColorToGrey = new SimpleBooleanProperty(false);
         this.previousWidthUpdate = new AtomicInteger();
         this.previousHeightUpdate = new AtomicInteger();
         this.externalLoadingRequest = new HashSet<>();
@@ -341,6 +361,17 @@ public class ImageUseComponentPropertyWrapper {
         return this.rotate;
     }
 
+    public DoubleProperty scaleXProperty() {
+        return this.scaleX;
+    }
+    public DoubleProperty scaleYProperty() {
+        return this.scaleY;
+    }
+
+    public BooleanProperty enableColorToGreyProperty() {
+        return this.enableReplaceColorToGrey;
+    }
+
     public BooleanProperty enableReplaceColorProperty() {
         return this.enableReplaceColor;
     }
@@ -356,6 +387,11 @@ public class ImageUseComponentPropertyWrapper {
     public IntegerProperty replaceColorThresholdProperty() {
         return this.replaceColorThreshold;
     }
+
+    public BooleanProperty enableRemoveBackgroundProperty() {
+        return this.enableRemoveBackground;
+    }
+    public IntegerProperty removeBackgroundThresholdProperty() {return this.removeBackgroundThreshold;}
 
     public BooleanProperty imageAutomaticallySelectedProperty() {
         return imageAutomaticallySelected;
@@ -383,6 +419,10 @@ public class ImageUseComponentPropertyWrapper {
                 element.removeAttribute("colorToReplace");
                 element.removeAttribute("replacingColor");
                 element.removeAttribute("replaceColorThreshold");
+            }
+            if(!enableRemoveBackground.get()) {
+                element.removeAttribute("enableRemoveBackground");
+                element.removeAttribute("removeBackgroundThreshold");
             }
 
             //Image saving : just set the id and delegate to root action the "real" saving

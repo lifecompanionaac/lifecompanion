@@ -28,26 +28,26 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import org.jdom2.Element;
 import org.lifecompanion.controller.io.ConfigurationComponentIOHelper;
+import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.framework.commons.fx.io.XMLUtils;
+import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.framework.utils.Pair;
 import org.lifecompanion.model.api.categorizedelement.useaction.ActionEventType;
-import org.lifecompanion.model.api.configurationcomponent.*;
-import org.lifecompanion.model.api.configurationcomponent.keyoption.KeyOptionI;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionManagerI;
-import org.lifecompanion.model.api.style.TextPosition;
-import org.lifecompanion.model.impl.exception.LCException;
+import org.lifecompanion.model.api.configurationcomponent.*;
+import org.lifecompanion.model.api.configurationcomponent.keyoption.KeyOptionI;
 import org.lifecompanion.model.api.imagedictionary.ImageElementI;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.io.XMLSerializable;
-import org.lifecompanion.model.impl.configurationcomponent.keyoption.BasicKeyOption;
-import org.lifecompanion.model.impl.configurationcomponent.keyoption.QuickComKeyOption;
+import org.lifecompanion.model.api.style.TextPosition;
 import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionManager;
 import org.lifecompanion.model.impl.categorizedelement.useaction.available.WriteCharPredictionAction;
-import org.lifecompanion.model.impl.categorizedelement.useaction.available.WriteWordPredictionAction;
 import org.lifecompanion.model.impl.categorizedelement.useaction.available.WriteLabelAction;
-import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
-import org.lifecompanion.framework.commons.utils.lang.StringUtils;
-import org.lifecompanion.framework.utils.Pair;
+import org.lifecompanion.model.impl.categorizedelement.useaction.available.WriteWordPredictionAction;
+import org.lifecompanion.model.impl.configurationcomponent.keyoption.BasicKeyOption;
+import org.lifecompanion.model.impl.configurationcomponent.keyoption.QuickComKeyOption;
+import org.lifecompanion.model.impl.exception.LCException;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -146,6 +146,15 @@ public class GridPartKeyComponent extends GridPartComponentBaseImpl implements G
     public DoubleProperty rotateProperty() {
         return this.imageUseComponentPropertyWrapper.rotateProperty();
     }
+
+    @Override
+    public DoubleProperty scaleXProperty() {return this.imageUseComponentPropertyWrapper.scaleXProperty();}
+
+    @Override
+    public DoubleProperty scaleYProperty() {return this.imageUseComponentPropertyWrapper.scaleYProperty();}
+
+    @Override
+    public BooleanProperty enableColorToGreyProperty() {return this.imageUseComponentPropertyWrapper.enableColorToGreyProperty();}
 
     @Override
     public SimpleObjectProperty<ImageElementI> imageVTwoProperty() {
@@ -371,6 +380,16 @@ public class GridPartKeyComponent extends GridPartComponentBaseImpl implements G
     @Override
     public IntegerProperty replaceColorThresholdProperty() {
         return this.imageUseComponentPropertyWrapper.replaceColorThresholdProperty();
+    }
+
+    @Override
+    public BooleanProperty enableRemoveBackgroundProperty() {
+        return this.imageUseComponentPropertyWrapper.enableRemoveBackgroundProperty();
+    }
+
+    @Override
+    public IntegerProperty removeBackgroundThresholdProperty() {
+        return this.imageUseComponentPropertyWrapper.removeBackgroundThresholdProperty();
     }
 
     @Override

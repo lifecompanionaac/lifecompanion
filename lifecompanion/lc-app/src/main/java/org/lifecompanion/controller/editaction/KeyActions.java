@@ -18,7 +18,6 @@
  */
 package org.lifecompanion.controller.editaction;
 
-import javafx.beans.value.WritableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.TextInputControl;
@@ -52,7 +51,6 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -112,7 +110,11 @@ public class KeyActions {
         private ImageUseComponentI imageUseComponent;
         private PositionSize savedViewport;
         private double previousRotate;
+        private double previousScaleX;
+        private double previousScaleY;
+        private boolean previousColourToGrey;
         private boolean previousEnableColorReplace;
+        private boolean previousEnableRemoveBackground;
         private boolean previousPreserveRatio;
         private Runnable textPositionUndoKey, textPositionUndoKeyContent;
         private boolean autoSelected, previousAutoSelected;
@@ -131,13 +133,21 @@ public class KeyActions {
                 this.imageUseComponent.useViewPortProperty().set(false);
             }
             previousRotate = this.imageUseComponent.rotateProperty().get();
+            previousScaleX = this.imageUseComponent.scaleXProperty().get();
+            previousScaleY = this.imageUseComponent.scaleYProperty().get();
+            previousColourToGrey = this.imageUseComponent.enableColorToGreyProperty().get();
             previousEnableColorReplace = this.imageUseComponent.enableReplaceColorProperty().get();
+            previousEnableRemoveBackground = this.imageUseComponent.enableRemoveBackgroundProperty().get();
             previousPreserveRatio = this.imageUseComponent.preserveRatioProperty().get();
             previousAutoSelected = this.imageUseComponent.imageAutomaticallySelectedProperty().get();
 
             // Set default
             this.imageUseComponent.rotateProperty().set(0.0);
+            this.imageUseComponent.scaleXProperty().set(1.0);
+            this.imageUseComponent.scaleYProperty().set(1.0);
+            this.imageUseComponent.enableColorToGreyProperty().set(false);
             this.imageUseComponent.enableReplaceColorProperty().set(false);
+            this.imageUseComponent.enableRemoveBackgroundProperty().set(false);
             this.imageUseComponent.preserveRatioProperty().set(true);
 
             // Automatic text position : when it's a key and a image is set (and wasn't set before)
@@ -175,7 +185,11 @@ public class KeyActions {
                 this.savedViewport.setPositionAndSizeOn(this.imageUseComponent);
             }
             this.imageUseComponent.rotateProperty().set(previousRotate);
+            this.imageUseComponent.scaleXProperty().set(previousScaleX);
+            this.imageUseComponent.scaleYProperty().set(previousScaleY);
+            this.imageUseComponent.enableColorToGreyProperty().set(previousColourToGrey);
             this.imageUseComponent.enableReplaceColorProperty().set(previousEnableColorReplace);
+            this.imageUseComponent.enableRemoveBackgroundProperty().set(previousEnableRemoveBackground);
             this.imageUseComponent.preserveRatioProperty().set(previousPreserveRatio);
             this.imageUseComponent.imageAutomaticallySelectedProperty().set(previousAutoSelected);
 
@@ -354,6 +368,41 @@ public class KeyActions {
 
     }
 
+    public static class FlipImageHorizontalAction extends BasePropertyChangeAction<Number> {
+        public FlipImageHorizontalAction(final ImageUseComponentI keyP, final Number wantedFlipP) {
+            super(keyP.scaleXProperty(), wantedFlipP);
+        }
+
+        @Override
+        public String getNameID() {
+            return "action.key.image.change.flip.horizontal";
+        }
+    }
+
+    public static class FlipImageVerticalAction extends BasePropertyChangeAction<Number> {
+
+        public FlipImageVerticalAction(final ImageUseComponentI keyP, final Number wantedFlipP) {
+            super(keyP.scaleYProperty(), wantedFlipP);
+        }
+
+        @Override
+        public String getNameID() {
+            return "action.key.image.change.flip.vertical";
+        }
+    }
+
+    public static class ChangeEnableColorToGreyAction extends BasePropertyChangeAction<Boolean> {
+
+        public ChangeEnableColorToGreyAction(final ImageUseComponentI keyP, Boolean enabled) {
+            super(keyP.enableColorToGreyProperty(), enabled);
+        }
+
+        @Override
+        public String getNameID() {
+            return "action.key.image.change.colour.to.grey";
+        }
+    }
+
     public static class ChangeEnableReplaceColorAction extends BasePropertyChangeAction<Boolean> {
 
         public ChangeEnableReplaceColorAction(final ImageUseComponentI keyP, final Boolean wantedValue) {
@@ -402,6 +451,31 @@ public class KeyActions {
         @Override
         public String getNameID() {
             return "action.key.image.change.color.replace.threshold";
+        }
+
+    }
+
+    public static class ChangeEnableRemoveBackground extends BasePropertyChangeAction<Boolean> {
+
+        public ChangeEnableRemoveBackground(final ImageUseComponentI keyP, final boolean wantedValue) {
+            super(keyP.enableRemoveBackgroundProperty(), wantedValue);
+        }
+
+        @Override
+        public String getNameID() {
+            return "action.key.image.change.remove.background";
+        }
+    }
+
+    public static class RemoveBackgroundThresholdAction extends BasePropertyChangeAction<Number> {
+
+        public RemoveBackgroundThresholdAction(final ImageUseComponentI keyP, final Number wantedValue) {
+            super(keyP.removeBackgroundThresholdProperty(), wantedValue);
+        }
+
+        @Override
+        public String getNameID() {
+            return "action.key.image.change.remove.background.threshold";
         }
 
     }

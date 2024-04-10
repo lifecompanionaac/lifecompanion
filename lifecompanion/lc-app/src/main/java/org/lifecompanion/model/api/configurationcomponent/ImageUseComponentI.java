@@ -55,6 +55,21 @@ public interface ImageUseComponentI extends IdentifiableComponentI {
     DoubleProperty rotateProperty();
 
     /**
+     * @return the scale X value for the image
+     */
+    DoubleProperty scaleXProperty();
+
+    /**
+     * @return the scale Y value for the image
+     */
+    DoubleProperty scaleYProperty();
+
+    /**
+     * @return a property enabling the grey image to be activated
+     */
+    BooleanProperty enableColorToGreyProperty();
+
+    /**
      * @return if this image uses a viewport to define how the image is displayed
      */
     BooleanProperty useViewPortProperty();
@@ -84,6 +99,16 @@ public interface ImageUseComponentI extends IdentifiableComponentI {
      * @return the color threshold to find pixel to replace
      */
     IntegerProperty replaceColorThresholdProperty();
+
+    /**
+     * @return to enable the remove background
+     */
+    BooleanProperty enableRemoveBackgroundProperty();
+
+    /**
+     * @return the colour threshold to determine the background colour to be removed
+     */
+    IntegerProperty removeBackgroundThresholdProperty();
 
     /**
      * @return the viewport x position in percent relative to the image width

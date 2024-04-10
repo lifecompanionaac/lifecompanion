@@ -88,8 +88,12 @@ public abstract class AbstractSimplerKeyContentContainerKeyOption<T extends Simp
                 key.imageVTwoProperty().set(null);
                 key.preserveRatioProperty().set(true);
                 key.rotateProperty().set(0.0);
+                key.scaleXProperty().set(1.0);
+                key.scaleYProperty().set(1.0);
+                key.enableColorToGreyProperty().set(false);
                 key.useViewPortProperty().set(false);
                 key.enableReplaceColorProperty().set(false);
+                key.enableRemoveBackgroundProperty().set(false);
                 // Video content
                 key.videoProperty().set(null);
                 // Style
@@ -105,12 +109,17 @@ public abstract class AbstractSimplerKeyContentContainerKeyOption<T extends Simp
                 key.imageVTwoProperty().set(simplerKeyContentContainer.imageVTwoProperty().get());
                 key.preserveRatioProperty().set(simplerKeyContentContainer.preserveRatioProperty().get());
                 key.rotateProperty().set(simplerKeyContentContainer.rotateProperty().get());
+                key.scaleXProperty().set(simplerKeyContentContainer.scaleXProperty().get());
+                key.scaleYProperty().set(simplerKeyContentContainer.scaleYProperty().get());
+                key.enableColorToGreyProperty().set(simplerKeyContentContainer.enableColorToGreyProperty().get());
                 key.useViewPortProperty().set(simplerKeyContentContainer.useViewPortProperty().get());
                 key.viewportXPercentProperty().set(simplerKeyContentContainer.viewportXPercentProperty().get());
                 key.viewportYPercentProperty().set(simplerKeyContentContainer.viewportYPercentProperty().get());
                 key.viewportWidthPercentProperty().set(simplerKeyContentContainer.viewportWidthPercentProperty().get());
                 key.viewportHeightPercentProperty().set(simplerKeyContentContainer.viewportHeightPercentProperty().get());
                 key.replaceColorThresholdProperty().set(simplerKeyContentContainer.replaceColorThresholdProperty().get());
+                key.removeBackgroundThresholdProperty().set(simplerKeyContentContainer.removeBackgroundThresholdProperty().get());
+                key.enableRemoveBackgroundProperty().set(simplerKeyContentContainer.enableRemoveBackgroundProperty().get());
                 key.replacingColorProperty().set(simplerKeyContentContainer.replacingColorProperty().get());
                 key.colorToReplaceProperty().set(simplerKeyContentContainer.colorToReplaceProperty().get());
                 key.enableReplaceColorProperty().set(simplerKeyContentContainer.enableReplaceColorProperty().get());
