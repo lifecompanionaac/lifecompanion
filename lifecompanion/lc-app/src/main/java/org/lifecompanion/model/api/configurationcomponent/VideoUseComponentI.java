@@ -46,5 +46,7 @@ public interface VideoUseComponentI extends ImageUseComponentI, IdentifiableComp
         mediaPlayer.setMute(muteVideoProperty().get());
         mediaView.setPreserveRatio(preserveRatioProperty().get());
         mediaView.setRotate(rotateProperty().get());
+        mediaView.setScaleX(scaleXProperty().get());
+        mediaView.setScaleY(scaleYProperty().get());
     }
 }

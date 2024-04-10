@@ -424,7 +424,6 @@ public class ImageUseComponentPropertyWrapper {
                 element.removeAttribute("enableRemoveBackground");
                 element.removeAttribute("removeBackgroundThreshold");
             }
-            element.removeAttribute("enableReplaceColorToGrey");
 
             //Image saving : just set the id and delegate to root action the "real" saving
             serializeImageUse(this.imageVTwo.get(), element, contextP);
