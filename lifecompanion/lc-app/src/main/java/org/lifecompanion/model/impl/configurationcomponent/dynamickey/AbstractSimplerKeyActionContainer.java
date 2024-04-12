@@ -24,21 +24,23 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.jdom2.Element;
-import org.lifecompanion.model.api.configurationcomponent.SoundResourceHolderI;
-import org.lifecompanion.model.api.configurationcomponent.dynamickey.SimplerKeyActionContainerI;
-import org.lifecompanion.model.impl.exception.LCException;
-import org.lifecompanion.model.api.io.IOContextI;
-import org.lifecompanion.model.impl.configurationcomponent.SoundResourceHolder;
 import org.lifecompanion.framework.commons.fx.io.XMLIgnoreDefaultBooleanValue;
+import org.lifecompanion.framework.commons.fx.io.XMLIgnoreEmptyString;
 import org.lifecompanion.framework.commons.fx.io.XMLIgnoreNullValue;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.model.api.configurationcomponent.SoundResourceHolderI;
+import org.lifecompanion.model.api.configurationcomponent.dynamickey.SimplerKeyActionContainerI;
+import org.lifecompanion.model.api.io.IOContextI;
+import org.lifecompanion.model.impl.configurationcomponent.SoundResourceHolder;
+import org.lifecompanion.model.impl.exception.LCException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public abstract class AbstractSimplerKeyActionContainer extends AbstractSimplerKeyContentContainer implements SimplerKeyActionContainerI {
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractSimplerKeyActionContainer.class);
 
+    @XMLIgnoreEmptyString
     @XMLIgnoreNullValue
     private final StringProperty textToWrite, textToSpeak, textSpeakOnOver;
 
@@ -135,6 +137,16 @@ public abstract class AbstractSimplerKeyActionContainer extends AbstractSimplerK
     public Element serialize(IOContextI context) {
         Element node = super.serialize(context);
         XMLObjectSerializer.serializeInto(AbstractSimplerKeyActionContainer.class, this, node);
+        // Optimization, when all textes are the same, save only one
+        if (!StringUtils.isEmpty(textProperty().get())
+                && StringUtils.isEquals(textProperty().get(), textToWrite.get())
+                && StringUtils.isEquals(textToWrite.get(), textToSpeak.get())
+                && StringUtils.isEquals(textToSpeak.get(), textSpeakOnOver.get())) {
+            node.removeAttribute("textToWrite");
+            node.removeAttribute("textToSpeak");
+            node.removeAttribute("textSpeakOnOver");
+            node.setAttribute("samTxts", "");
+        }
         this.soundResourceHolder.serializeIfNeeded(node, context);
         return node;
     }
@@ -143,6 +155,13 @@ public abstract class AbstractSimplerKeyActionContainer extends AbstractSimplerK
     public void deserialize(Element node, IOContextI context) throws LCException {
         super.deserialize(node, context);
         XMLObjectSerializer.deserializeInto(AbstractSimplerKeyActionContainer.class, this, node);
+        // Check for the optimization
+        if (node.getAttribute("samTxts") != null) {
+            String textVal = textProperty().get();
+            textToWrite.set(textVal);
+            textToSpeak.set(textVal);
+            textSpeakOnOver.set(textVal);
+        }
         this.soundResourceHolder.deserializeIfNeeded(node, context, "recordedSoundResourceId", "recordedSoundDurationInSecond");
     }
     //========================================================================

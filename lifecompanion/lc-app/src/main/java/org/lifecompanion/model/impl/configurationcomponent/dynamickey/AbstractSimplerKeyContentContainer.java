@@ -27,6 +27,7 @@ import javafx.scene.paint.Color;
 import org.jdom2.Element;
 import org.lifecompanion.controller.io.ConfigurationComponentIOHelper;
 import org.lifecompanion.framework.commons.fx.io.XMLGenericProperty;
+import org.lifecompanion.framework.commons.fx.io.XMLIgnoreEmptyString;
 import org.lifecompanion.framework.commons.fx.io.XMLIgnoreNullValue;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
@@ -55,6 +56,7 @@ public abstract class AbstractSimplerKeyContentContainer implements SimplerKeyCo
     private transient final DoubleProperty wantedImageHeight;
     private transient final BooleanProperty imageUseComponentDisplayed;
 
+    @XMLIgnoreEmptyString
     @XMLIgnoreNullValue
     private final StringProperty text;
 

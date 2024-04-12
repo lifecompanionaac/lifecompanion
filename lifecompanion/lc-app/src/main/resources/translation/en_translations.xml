@@ -262,7 +262,7 @@
   <text key="action.spell.text.variable.description">Spell the text "{}"</text>
   <text key="user.config.stage.height">Window height</text>
   <text key="go.parent.list.current.list.name">Go to the next level</text>
-  <text key="predict4all.config.button.save">To safeguard</text>
+  <text key="predict4all.config.button.save">Save</text>
   <text key="predict4all.predictor.name">Predict4All</text>
   <text key="menu.select.clear">Clear selection</text>
   <text key="configuration.menu.label.no.last.date">Not yet saved</text>
@@ -1760,7 +1760,7 @@
   <text key="predict4all.config.import.custom.list.button.prio">Import a favorite list</text>
   <text key="task.save.keylist.title">Saving key lists</text>
   <text key="general.configuration.view.step.use.event.explain">Configuration events allow you to perform one or more actions when a general event occurs on the configuration, without necessarily being linked to the selection of a key. This makes it possible, for example, to perform an action with each letter entered on the keyboard, with each new word entered in the text field, or even when selection mode is started.\nEach event when it occurs will then trigger the actions associated with it.\nSome events can also generate variables for use in actions (for example, the letter entered in the editor)</text>
-  <text key="configuration.menu.item.save">To safeguard</text>
+  <text key="configuration.menu.item.save">Save</text>
   <text key="profile.label.level">User level</text>
   <text key="action.delete.plugin.used.other.confirm">\nDeleting this extension will therefore also remove the extensions listed above.</text>
   <text key="virtual.mouse.drawing.target">Target</text>
@@ -2050,12 +2050,12 @@
   <text key="text.style.name">Name</text>
   <text key="tooltip.keylist.button.copy">Copy selected item</text>
   <text key="task.cleanup.temp.file">Cleaning temporary files</text>
-  <text key="user.comp.save.button">To safeguard</text>
+  <text key="user.comp.save.button">Save</text>
   <text key="new.config.action.confirm.message">Do you want to save before creating a new configuration?</text>
   <text key="user.config.tips.show.startup">Show tips and tricks on startup</text>
   <text key="configuration.import.version.error.message">This configuration was carried out with version {} of LifeCompanion.\n To ensure optimal operation, you must update LifeCompanion in order to import it.</text>
   <text key="notification.action.export.profile.failed.message">Unable to export profile to file "{}"</text>
-  <text key="user.config.save.button">To safeguard</text>
+  <text key="user.config.save.button">Save</text>
   <text key="action.remove.config.confirm.header">Confirm deletion</text>
   <text key="tooltip.explain.selection.mode.param.background.reduction.enabled">Helps identify the element being hovered over when selecting by reducing the elements in the background</text>
   <text key="panel.title.text.popover.title.infos">Text style</text>
@@ -2068,7 +2068,7 @@
   <text key="tooltip.explain.configuration.size.auto">If activated, the size of the configuration will be automatically defined according to the elements that compose it.\nOtherwise, this allows you to manually adjust the configuration size.</text>
   <text key="notification.action.import.profile.failed.title">Import failed</text>
   <text key="tooltip.explain.prediction.param.char.space.value">Allows you to define how the space will be written when predicted by character prediction.\nFor example, you can choose to display "Space" rather than a single character.</text>
-  <text key="action.save.name">To safeguard</text>
+  <text key="action.save.name">Save</text>
   <text key="action.voice.synthesizer.remove.pronunciation.exception">Remove a different pronunciation for synthesis</text>
   <text key="configuration.background.color">Configuration background color</text>
   <text key="configuration.backup.task">Creating a backup backup of the configuration</text>
@@ -2430,7 +2430,7 @@
   <text key="action.add.folder.image.gallery">Add a folder to the image gallery</text>
   <text key="keylist.config.show.key.properties">Show configuration of selected item</text>
   <text key="use.event.sub.category.clic.name">Mouse/pointer</text>
-  <text key="menu.file.item.save">To safeguard</text>
+  <text key="menu.file.item.save">Save</text>
   <text key="use.event.main.category.sequence.name">Sequences</text>
   <text key="print.use.action.finished">Printing finished</text>
   <text key="use.variable.periodic.time.number.of.generated.event.description">Number of times the event has happened, the first time gives 1, then 2, etc...</text>
@@ -2447,7 +2447,7 @@
   <text key="tooltip.redo.action.button">Redo the previously undone action</text>
   <text key="action.simulate.key.over.variable.description">Simulates hovering over the “{}” key</text>
   <text key="use.event.configuration.started.description">Event when starting configuration in use mode, after a user-defined delay</text>
-  <text key="notification.warning.unsaved.changes.action.name">To safeguard</text>
+  <text key="notification.warning.unsaved.changes.action.name">Save</text>
   <text key="plugin.no.selected.label">No extension selected</text>
   <text key="action.selectionmode.change.start.scanning.on.clic">Enable/disable auto-scroll start</text>
   <text key="menu.edit.item.redo">Redo</text>

@@ -21,6 +21,7 @@ package org.lifecompanion.framework.commons.fx.io;
 import javafx.beans.property.*;
 import org.jdom2.Attribute;
 import org.jdom2.Element;
+import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -250,6 +251,11 @@ public class XMLObjectSerializer {
         if (value instanceof Double) {
             final XMLIgnoreDefaultDoubleValue xmlIgnoreDefaultDoubleValue = field.getAnnotation(XMLIgnoreDefaultDoubleValue.class);
             if (xmlIgnoreDefaultDoubleValue != null && Objects.equals(value, xmlIgnoreDefaultDoubleValue.value())) {
+                return false;
+            }
+        }
+        if (value instanceof String) {
+            if (field.getAnnotation(XMLIgnoreEmptyString.class) != null && ((String) value).isEmpty()) {
                 return false;
             }
         }

@@ -28,6 +28,8 @@ import org.lifecompanion.model.api.io.XMLSerializable;
 import org.lifecompanion.model.api.selectionmode.SelectionModeI;
 import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionManager;
 import org.lifecompanion.model.impl.configurationcomponent.GridPartKeyComponent;
+import org.lifecompanion.model.impl.configurationcomponent.dynamickey.KeyListLeaf;
+import org.lifecompanion.model.impl.configurationcomponent.dynamickey.KeyListNode;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.impl.plugin.PluginInfo;
 import org.slf4j.Logger;
@@ -149,6 +151,8 @@ public class ConfigurationComponentIOHelper {
         if (!optimizedTypeInitialized.getAndSet(true)) {
             optimizedTypeAlias = new HashMap<>(10);
             optimizedTypeAlias.put(GridPartKeyComponent.class, "GPKC");
+            optimizedTypeAlias.put(KeyListLeaf.class, "KLL");
+            optimizedTypeAlias.put(KeyListNode.class, "KLN");
             optimizedTypeAlias.put(SimpleUseActionManager.class, "SUAM");
         }
         return optimizedTypeAlias;

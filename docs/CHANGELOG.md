@@ -27,6 +27,7 @@
 - Ticket #321 : correction d'un rare bug à la suppression d'une case dans les listes de case
 - Ticket #322 : il est maintenant possible de faire plusieurs copier/coller avec la même case dans les listes de cases
 - Ticket #336 : ajustement des sélections dans la configuration des listes de case
+- Optimisation des configurations avec de très nombreuses listes de cases
 
 ## 1.6.0 - 24/01/2024
 
