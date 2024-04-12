@@ -36,6 +36,7 @@ import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.systemvk.SystemVirtualKeyboardController;
 import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
 import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
+import org.lifecompanion.controller.virtualmouse.VirtualMouseController;
 import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
@@ -89,6 +90,7 @@ public class CommonActions {
                     final TextInputDialog dialog = DialogUtils
                             .textInputDialogWithSource(StageUtils.getEditOrUseStageVisible())
                             .withContentText(Translation.getText("action.confirm.go.config.message", n1, n2))
+                            .withOnHidden(VirtualMouseController.INSTANCE::centerMouseOnStage)
                             .build();
                     dialog.headerTextProperty().bind(TranslationFX.getTextBinding("action.confirm.go.config.header", timeLeft));
                     timeLineAutoHide.setOnFinished(e -> dialog.hide());
