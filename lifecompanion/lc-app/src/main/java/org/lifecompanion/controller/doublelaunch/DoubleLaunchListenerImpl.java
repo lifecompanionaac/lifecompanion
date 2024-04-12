@@ -20,7 +20,6 @@ package org.lifecompanion.controller.doublelaunch;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.control.Alert;
@@ -62,6 +61,17 @@ public class DoubleLaunchListenerImpl implements DoubleLaunchListener {
             FXThreadUtils.runOnFXThread(() -> {
                 LOGGER.info("Double launch will be notified, args is param is = {}", Arrays.toString(args));
 
+                // Detect if launching with a valid config file : then import it !
+                if (args != null && AppModeController.INSTANCE.isEditMode()) {
+                    ArrayList<String> argCollection = new ArrayList<>(Arrays.asList(args));
+                    File configurationFile = IOHelper.getFirstConfigurationFile(argCollection);
+                    if (configurationFile != null) {
+                        LCConfigurationActions.ImportOpenEditAction importOpenConfig = new LCConfigurationActions.ImportOpenEditAction(configurationFile);
+                        ConfigActionController.INSTANCE.executeAction(importOpenConfig);
+                        return;
+                    }
+                }
+
                 //Show main frame
                 Stage stage = StageUtils.getEditOrUseStageVisible();
                 stage.setIconified(false);
@@ -73,7 +83,7 @@ public class DoubleLaunchListenerImpl implements DoubleLaunchListener {
                 Timeline timeLineAutoHide = new Timeline(new KeyFrame(Duration.seconds(1), (e) -> timeLeft.set(timeLeft.get() - 1)));
                 timeLineAutoHide.setCycleCount(LCConstant.DOUBLE_LAUNCH_DISPLAY_DELAY);
 
-                //When a double run is detected, show a dialog to user
+                // When a double run is detected, show a dialog to user
                 final Alert dialog = DialogUtils.alertWithSourceAndType(StageUtils.getOnTopWindowExcludingNotification(), AlertType.ERROR)
                         .withContentText(Translation.getText("double.run.detected.message"))
                         .build();
@@ -84,20 +94,6 @@ public class DoubleLaunchListenerImpl implements DoubleLaunchListener {
                     }
                 });
                 timeLineAutoHide.play();
-
-                // On dialog hidden, execute the action
-                dialog.setOnHidden(e -> {
-                    if (args != null && AppModeController.INSTANCE.isEditMode()) {
-                        Platform.runLater(() -> { // Should be explicitly delayed as this can be called on an Animation
-                            ArrayList<String> argCollection = new ArrayList<>(Arrays.asList(args));
-                            File configurationFile = IOHelper.getFirstConfigurationFile(argCollection);
-                            if (configurationFile != null) {
-                                LCConfigurationActions.ImportOpenEditAction importOpenConfig = new LCConfigurationActions.ImportOpenEditAction(configurationFile);
-                                ConfigActionController.INSTANCE.executeAction(importOpenConfig);
-                            }
-                        });
-                    }
-                });
 
                 dialog.show();
             });

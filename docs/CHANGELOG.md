@@ -31,6 +31,7 @@
 - Ticket #336 : ajustement des sélections dans la configuration des listes de case
 - Optimisation des configurations avec de très nombreuses listes de cases
 - Ticket #316 : lorsque le code pour passer en mode édition n'est pas entré, la souris est de nouveau placée sur la fenêtre ensuite
+- Ticket #333 : le message d'avertissement de double lancement n'est plus affiché lorsque cela déclenche un import de configuration
 
 ## 1.6.0 - 24/01/2024
 
