@@ -612,10 +612,12 @@
   <text key="action.change.frame.position.static.description">Déplacer la fenêtre de LifeCompanion à un emplacement
 		voulu (au centre, à droite, etc...)</text>
   <text key="action.change.frame.position.variable.description">Déplacer la fenêtre de LifeCompanion {}</text>
-  <text key="action.switch.fullscreen.frame.description">Change le mode de la fenêtre entre plein écran ou non, change
-		pour l'inverse du mode actuel.</text>
-  <text key="action.switch.fullscreen.frame.name">Activer/désactiver le plein écran</text>
-  <text key="action.change.stage.size.name">Changer la taille de la fenêtre</text>
+  <text key="action.switch.maximized.description">Change la taille de la fenêtre pour la mettre en taille maximale (avec barre de titre) ou à sa taille de base si celle-ci était déjà en taille maximale.</text>
+  <text key="action.switch.maximized.name">Activer/désactiver la taille maximale</text>
+    <text key="action.switch.fullscreen.description">Active ou désactive le plein écran complet pour la fenêtre actuelle.</text>
+    <text key="action.switch.fullscreen.name">Activer/désactiver le plein écran</text>
+
+    <text key="action.change.stage.size.name">Changer la taille de la fenêtre</text>
   <text key="action.change.stage.size.description">Augmente la taille de la fenêtre de la configuration par le pourcentage spécifié.</text>
   <text key="action.minimize.stage.name">Minimiser la fenêtre</text>
   <text key="action.minimize.stage.description">Minimise la fenêtre de la configuration LifeCompanion.</text>
