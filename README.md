@@ -36,6 +36,10 @@ If needed, LifeCompanion can be configured and controlled on runtime with the [L
 
 ![LifeCompanion screenshots](docs/res/lifecompanion-configs.png)
 
+These images are example of possible LifeCompanion "configuration" for different uses and access modes.
+
+You can find more example configuration [in the configuration repository](https://lifecompanionaac.org/repository).
+
 ## Changelog
 
 - [LifeCompanion feature changelog (french)](https://lifecompanionaac.org/categories/documentations/lifecompanion-changelog)
