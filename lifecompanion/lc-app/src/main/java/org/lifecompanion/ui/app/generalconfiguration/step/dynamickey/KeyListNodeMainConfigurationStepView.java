@@ -101,20 +101,19 @@ public class KeyListNodeMainConfigurationStepView extends BorderPane implements 
 
     @Override
     public void beforeShow(Object[] stepArgs) {
-        String nodeId = findCurrentNodeId(stepArgs);
-        if (nodeId != null) {
-            final KeyListNodeI nodeToEditInCurrentTree = KeyListController.findNodeByIdInSubtree(editedRoot, nodeId);
-            if (nodeToEditInCurrentTree != null) {
-                keyListContentConfigView.select(nodeToEditInCurrentTree);
-            }
-        }
-    }
-
-    private String findCurrentNodeId(Object[] stepArgs) {
         if (stepArgs != null && stepArgs.length > 0) {
-            return (String) stepArgs[0];
+            String nodeId = (String) stepArgs[0];
+            if (nodeId != null) {
+                final KeyListNodeI nodeToEditInCurrentTree = KeyListController.findNodeByIdInSubtree(editedRoot, nodeId);
+                if (nodeToEditInCurrentTree != null) {
+                    keyListContentConfigView.select(nodeToEditInCurrentTree);
+                }
+            }
         } else {
-            return KeyListController.INSTANCE.getCurrentNodeId();
+            String nodeId = KeyListController.INSTANCE.getCurrentNodeId();
+            if (nodeId != null) {
+                keyListContentConfigView.openById(nodeId);
+            }
         }
     }
 }
