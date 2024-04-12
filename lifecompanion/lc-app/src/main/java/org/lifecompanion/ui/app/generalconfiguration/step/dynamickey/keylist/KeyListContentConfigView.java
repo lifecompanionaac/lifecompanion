@@ -56,7 +56,6 @@ import org.lifecompanion.util.javafx.FXControlUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
@@ -82,6 +81,7 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
     private final ObjectProperty<KeyListNodeI> dragged;
 
     private KeyListContentPane keyListContentPane;
+    private KeyListTreeView keyListTreeView;
     private KeyListSelectionSearchView searchView;
 
     public KeyListContentConfigView() {
@@ -139,7 +139,7 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         HBox.setHgrow(boxActionButtons, Priority.SOMETIMES);
         boxActionButtons.setMinWidth(40.0);
 
-        KeyListTreeView keyListTreeView = new KeyListTreeView(this);
+        keyListTreeView = new KeyListTreeView(this);
         keyListTreeView.setMaxHeight(Double.MAX_VALUE);
         HBox.setHgrow(keyListTreeView, Priority.SOMETIMES);
 
@@ -297,7 +297,12 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
 
         // Delete the selected node
         final KeyListNodeI parentNode = selectedNode.parentProperty().get();
-        parentNode.getChildren().remove(selectedNode);
+        try {
+            keyListTreeView.setDisableSelectionSync(true);
+            parentNode.getChildren().remove(selectedNode);
+        } finally {
+            keyListTreeView.setDisableSelectionSync(false);
+        }
 
         clearSelection();
         searchView.executeSearch(true);

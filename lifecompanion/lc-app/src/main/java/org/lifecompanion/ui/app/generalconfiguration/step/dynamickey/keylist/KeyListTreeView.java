@@ -13,13 +13,17 @@ import java.util.Map;
 
 public class KeyListTreeView extends TreeView<KeyListNodeI> implements LCViewInitHelper {
     private final KeyListContentConfigView keyListContentConfigView;
-
     private final Map<KeyListNodeI, KeyListNodeTreeItem> treeItems;
+    private boolean disableSelectionSync;
 
     KeyListTreeView(KeyListContentConfigView keyListContentConfigView) {
         this.keyListContentConfigView = keyListContentConfigView;
         this.treeItems = new HashMap<>();
         initAll();
+    }
+
+    public void setDisableSelectionSync(boolean disableSelectionSync) {
+        this.disableSelectionSync = disableSelectionSync;
     }
 
     @Override
@@ -33,11 +37,13 @@ public class KeyListTreeView extends TreeView<KeyListNodeI> implements LCViewIni
     @Override
     public void initListener() {
         this.getSelectionModel()
-            .selectedItemProperty()
-            .addListener((obs, ov, nv) -> {
-                // Select (excluding the root)
-                keyListContentConfigView.select(nv != null && nv.getValue() != keyListContentConfigView.rootProperty().get() ? nv.getValue() : null);
-            });
+                .selectedItemProperty()
+                .addListener((obs, ov, nv) -> {
+                    // Select (excluding the root)
+                    if (!disableSelectionSync) {
+                        keyListContentConfigView.select(nv != null && nv.getValue() != keyListContentConfigView.rootProperty().get() ? nv.getValue() : null);
+                    }
+                });
     }
 
     @Override
