@@ -21,6 +21,8 @@ package org.lifecompanion.model.impl.imagedictionary;
 
 import javafx.scene.image.Image;
 
+import java.io.File;
+
 public class StaticImageElement extends ImageElement {
 
     public StaticImageElement(Image image) {
@@ -44,5 +46,10 @@ public class StaticImageElement extends ImageElement {
     @Override
     public boolean shouldSaveImageId() {
         return false;
+    }
+
+    @Override
+    public File getRealFilePath() {
+        return null;
     }
 }
