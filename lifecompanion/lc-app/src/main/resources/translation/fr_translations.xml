@@ -3814,4 +3814,6 @@
     <text key="language.translation.description.fr">Langue de base de LifeCompanion : tous les éléments seront fonctionnels dans cette langue. Le Français est la langue originale de LifeCompanion.</text>
     <text key="language.translation.title.en">Anglais (beta)</text>
     <text key="language.translation.description.en">Traduction générée par un traducteur automatique : la précision et la qualité des éléments peut être très variable. La prédiciton de mots ou la recherche d'images ne supportent pas encore cette langue.</text>
+    <text key="enable.speech.optimization.control">Activer l'optimisation de la synthèse vocale</text>
+    <text key="enable.speech.optimization.control.description">Si activé, les pauses avant et après une prononciation par la synthèse vocale sont supprimées. Cela permet une meilleure réactivité. Peut être utile à désactiver si LifeCompanion est utilisé avec des dispositifs audio externes (ex : Bluetooth).</text>
 </texts>

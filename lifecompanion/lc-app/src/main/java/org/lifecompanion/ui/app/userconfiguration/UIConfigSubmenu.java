@@ -78,6 +78,8 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
 
     private ToggleSwitch toggleAutoSelectImages;
 
+    private ToggleSwitch toggleEnableSpeechOptimization;
+
     /**
      * To enable/disable tips on startup
      */
@@ -167,6 +169,11 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
         toggleAutoSelectImages = FXControlUtils.createToggleSwitch("auto.select.key.image.config", null);
         Label labelExplainAutoSelectImages = new Label(Translation.getText("auto.select.key.image.config.description"));
         labelExplainAutoSelectImages.getStyleClass().addAll("text-wrap-enabled", "text-font-italic", "text-fill-gray");
+
+        toggleEnableSpeechOptimization = FXControlUtils.createToggleSwitch("enable.speech.optimization.control", null);
+        Label labelExplainSpeechOptimization = new Label(Translation.getText("enable.speech.optimization.control.description"));
+        labelExplainSpeechOptimization.getStyleClass().addAll("text-wrap-enabled", "text-font-italic", "text-fill-gray");
+
         GridPane.setHgrow(labelUnsavedThreshold, Priority.ALWAYS);
         GridPane gridPaneConfiguration = createConfigPane();
         int rowConfig = 0;
@@ -174,6 +181,8 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
         gridPaneConfiguration.add(this.spinnerUnsavedModification, 1, rowConfig++);
         gridPaneConfiguration.add(toggleAutoSelectImages, 0, rowConfig++, 2, 1);
         gridPaneConfiguration.add(labelExplainAutoSelectImages, 0, rowConfig++, 2, 1);
+        gridPaneConfiguration.add(toggleEnableSpeechOptimization, 0, rowConfig++, 2, 1);
+        gridPaneConfiguration.add(labelExplainSpeechOptimization, 0, rowConfig++, 2, 1);
 
         //Tips
         Label labelConfigTips = FXControlUtils.createTitleLabel("user.config.tips.title");
@@ -231,6 +240,7 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
         this.toggleAutoConfigurationProfileBackup.setSelected(UserConfigurationController.INSTANCE.autoConfigurationProfileBackupProperty().get());
         this.toggleAutoSelectImages.setSelected(UserConfigurationController.INSTANCE.autoSelectImagesProperty().get());
         this.comboBoxLanguage.getSelectionModel().select(UserConfigurationController.INSTANCE.userLanguageProperty().get());
+        this.toggleEnableSpeechOptimization.setSelected(UserConfigurationController.INSTANCE.enableSpeechOptimizationProperty().get());
     }
 
     @Override
@@ -250,6 +260,7 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
         UserConfigurationController.INSTANCE.autoConfigurationProfileBackupProperty().set(this.toggleAutoConfigurationProfileBackup.isSelected());
         UserConfigurationController.INSTANCE.autoSelectImagesProperty().set(this.toggleAutoSelectImages.isSelected());
         UserConfigurationController.INSTANCE.userLanguageProperty().set(this.comboBoxLanguage.getValue());
+        UserConfigurationController.INSTANCE.enableSpeechOptimizationProperty().set(this.toggleEnableSpeechOptimization.isSelected());
     }
 
     @Override

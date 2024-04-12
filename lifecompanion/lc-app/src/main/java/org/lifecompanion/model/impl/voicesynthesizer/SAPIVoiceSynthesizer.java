@@ -21,6 +21,7 @@ package org.lifecompanion.model.impl.voicesynthesizer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import okhttp3.*;
+import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
 import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
@@ -298,7 +299,11 @@ public class SAPIVoiceSynthesizer extends AbstractVoiceSynthesizer {
             if (StringUtils.isNotBlank(wavFilePath)) {
                 File wavFile = new File(wavFilePath);
                 if (wavFile.exists()) {
-                    playWavFileSync(SoundUtils.trimSilences(wavFile, 0.02));
+                    if (UserConfigurationController.INSTANCE.enableSpeechOptimizationProperty().get()) {
+                        playWavFileSync(SoundUtils.trimSilences(wavFile, 0.02));
+                    } else {
+                        playWavFileSync(wavFile);
+                    }
                 } else {
                     throw new IOException("Given wav file \"" + wavFilePath + "\" doesn't exist");
                 }
