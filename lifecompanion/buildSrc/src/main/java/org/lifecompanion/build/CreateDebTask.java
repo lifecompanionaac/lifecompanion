@@ -29,6 +29,7 @@ import org.lifecompanion.framework.commons.utils.io.IOUtils;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 import static org.lifecompanion.framework.commons.ApplicationConstant.DIR_NAME_APPLICATION;
 import static org.lifecompanion.framework.commons.ApplicationConstant.DIR_NAME_APPLICATION_DATA;
@@ -50,7 +51,9 @@ public abstract class CreateDebTask extends DefaultTask {
 
         // Create specific launcher
         LOGGER.lifecycle("Prepare specific launcher");
-        File unixSrc = new File(getProject().getRootProject().getProjectDir().getAbsolutePath() + File.separator + "lc-app-launcher" + File.separator + "build-src" + File.separator + "lifecompanion.sh");
+        File unixSrc = new File(getProject().getRootProject()
+                .getProjectDir()
+                .getAbsolutePath() + File.separator + "lc-app-launcher" + File.separator + "build-src" + File.separator + "lifecompanion.sh");
         String unixLauncherContent = readContent(unixSrc);
         unixLauncherContent = unixLauncherContent.replace("cd ${0%/*}/..", "cd " + APP_DIR_PATH);
         File destCmdFile = new File(debContentDir + CMD_PATH);
@@ -77,7 +80,15 @@ public abstract class CreateDebTask extends DefaultTask {
                 }
             }
         }
-        // TODO : Remove Windows resources
+        // Remove various useless resources
+        for (String toDelete : List.of(
+                "lifecompanion_splashscreen.png",
+                "voice-synthesizer",
+                "win-input-gap",
+                "ee-jpd"
+        )) {
+            IOUtils.deleteDirectoryAndChildren(new File(destDir + File.separator + DIR_NAME_APPLICATION_DATA + File.separator + toDelete));
+        }
 
         // Custom install configuration
         InstallationConfiguration installConfig = new InstallationConfiguration("2048m", "~/Documents/LifeCompanion");
@@ -94,7 +105,11 @@ public abstract class CreateDebTask extends DefaultTask {
 
         // Create the debian package
         LOGGER.lifecycle("Will run dpkg-deb command");
-        Process start = new ProcessBuilder().command("dpkg-deb", "--build", debContentDir.getName()).directory(debianDir).redirectError(ProcessBuilder.Redirect.INHERIT).redirectOutput(ProcessBuilder.Redirect.INHERIT).start();
+        Process start = new ProcessBuilder().command("dpkg-deb", "--build", debContentDir.getName())
+                .directory(debianDir)
+                .redirectError(ProcessBuilder.Redirect.INHERIT)
+                .redirectOutput(ProcessBuilder.Redirect.INHERIT)
+                .start();
         if (start.waitFor() != 0) throw new Exception("dpkg-deb command failed !");
     }
 
