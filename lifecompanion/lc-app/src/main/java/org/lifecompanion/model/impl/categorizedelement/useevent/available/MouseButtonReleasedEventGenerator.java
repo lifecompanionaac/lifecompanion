@@ -60,7 +60,7 @@ public class MouseButtonReleasedEventGenerator extends BaseUseEventGeneratorImpl
     public void modeStart(final LCConfigurationI configuration) {
         SelectionModeController.INSTANCE.addMouseEventListener((mouseEvent) -> {
             //Filter on event type and button if set
-            if (mouseEvent.getEventType() == MouseEvent.MOUSE_RELEASED && (this.wantedButton.get().checkEvent(mouseEvent))) {
+            if (useEventListener != null && mouseEvent.getEventType() == MouseEvent.MOUSE_RELEASED && (this.wantedButton.get().checkEvent(mouseEvent))) {
                 this.useEventListener.fireEvent(this, null, null);
             }
         });
