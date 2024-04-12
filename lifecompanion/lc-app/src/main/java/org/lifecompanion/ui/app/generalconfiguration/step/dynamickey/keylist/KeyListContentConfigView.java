@@ -68,7 +68,7 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
     private final ObjectProperty<KeyListNodeI> root;
 
     private boolean dirty;
-    private final ObjectProperty<KeyListNodeI> cutOrCopiedNode;
+    private final ObjectProperty<KeyListNodeI> copiedNode, cutNode;
 
     private Button buttonDelete, buttonMoveUp, buttonMoveDown, buttonCut, buttonCopy, buttonPaste, buttonExportKeys, buttonImportKeys, buttonShowHideProperties;
 
@@ -88,7 +88,8 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         this.root = new SimpleObjectProperty<>();
         this.selected = new SimpleObjectProperty<>();
         this.currentList = new SimpleObjectProperty<>();
-        this.cutOrCopiedNode = new SimpleObjectProperty<>();
+        this.cutNode = new SimpleObjectProperty<>();
+        this.copiedNode = new SimpleObjectProperty<>();
         this.propertiesShowing = new SimpleBooleanProperty(true);
         this.dragged = new SimpleObjectProperty<>();
         initAll();
@@ -208,18 +209,23 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
         this.buttonMoveDown.setOnAction(createMoveNodeListener(+1));
         this.buttonDelete.setOnAction(e -> ifSelectedItemNotNull(selectedNode -> removeNode(selectedNode, "keylist.action.removed.action.notification.title")));
         this.buttonCopy.setOnAction(e -> ifSelectedItemNotNull(selectedNode -> {
-            KeyListNodeI duplicated = (KeyListNodeI) selectedNode.duplicate(true);
-            cutOrCopiedNode.set(duplicated);
+            cutNode.set(null);
+            copiedNode.set(selectedNode);
         }));
         this.buttonCut.setOnAction(e -> ifSelectedItemNotNull(selectedNode -> {
-            cutOrCopiedNode.set(selectedNode);
+            cutNode.set(selectedNode);
+            copiedNode.set(null);
             removeNode(selectedNode, "keylist.action.cut.action.notification.title");
         }));
         this.buttonPaste.setOnAction(e -> {
-            final KeyListNodeI toPaste = cutOrCopiedNode.get();
-            if (toPaste != null) {
-                cutOrCopiedNode.set(null);
-                keyListContentPane.addNode(toPaste);
+            final KeyListNodeI toPasteCut = cutNode.get();
+            if (toPasteCut != null) {
+                cutNode.set(null);
+                keyListContentPane.addNode(toPasteCut);
+            }
+            final KeyListNodeI toPasteCopied = copiedNode.get();
+            if (toPasteCopied != null) {
+                keyListContentPane.addNode((KeyListNodeI) toPasteCopied.duplicate(true));
             }
         });
         this.buttonExportKeys.setOnAction(e ->
@@ -347,14 +353,15 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
     @Override
     public void initBinding() {
         this.root.addListener((obs, ov, nv) -> {
-            cutOrCopiedNode.set(null);
+            copiedNode.set(null);
+            cutNode.set(null);
             this.dirty = false;
             selected.set(null);
             dragged.set(null);
             currentList.set(nv);
         });
         this.keyListNodePropertiesEditionView.selectedNodeProperty().bind(selected);
-        this.buttonPaste.disableProperty().bind(this.cutOrCopiedNode.isNull());
+        this.buttonPaste.disableProperty().bind(this.cutNode.isNull().and(this.copiedNode.isNull()));
         this.buttonCopy.disableProperty().bind(selected.isNull());
         this.buttonCut.disableProperty().bind(selected.isNull());
         this.buttonMoveUp.disableProperty().bind(selected.isNull());
