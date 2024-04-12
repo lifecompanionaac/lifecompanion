@@ -34,6 +34,7 @@ import org.lifecompanion.util.binding.BindingUtils;
 import org.lifecompanion.util.binding.ListBindingWithMapper;
 import org.lifecompanion.util.javafx.FXControlUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -140,14 +141,16 @@ public class KeyListContentPane extends StackPane implements LCViewInitHelper {
             }
         }));
         keyListContentConfigView.selectedProperty().addListener((obs, ov, nv) -> {
-            if (ov != null) {
-                getChildrenPaneCellStream()
-                        .filter(cell -> cell.itemProperty().get() == ov)
-                        .forEach(cell -> cell.selectedProperty().set(false));
-            }
-            if (nv != null) {
-                // Platform.runLater ensure that the layout is done before computing cell position
-                Platform.runLater(() -> {
+            // Platform.runLater ensure that the layout is done before computing cell position
+            // Keep it there and DON'T replace with FXThreadUtils.runOnFXThread(...)
+            Platform.runLater(() -> {
+                if (ov != null) {
+                    getChildrenPaneCellStream()
+                            .filter(cell -> cell.itemProperty().get() == ov)
+                            .forEach(cell -> cell.selectedProperty().set(false));
+                }
+
+                if (nv != null) {
                     getChildrenPaneCellStream()
                             .filter(cell -> cell.itemProperty().get() == nv)
                             .peek(cell -> cell.selectedProperty().set(true))
@@ -161,8 +164,9 @@ public class KeyListContentPane extends StackPane implements LCViewInitHelper {
                                     scrollPane.setVvalue(scrollPane.getVmax() * ((y - 0.5 * v) / (h - v)));
                                 }
                             });
-                });
-            }
+
+                }
+            });
         });
         keyListContentConfigView.currentListProperty().addListener((obs, ov, nv) -> {
             // Unbind previous
@@ -186,7 +190,7 @@ public class KeyListContentPane extends StackPane implements LCViewInitHelper {
     }
 
     private Stream<KeyListContentPaneCell> getChildrenPaneCellStream() {
-        return tilePane.getChildren()
+        return new ArrayList<>(tilePane.getChildren())
                 .stream()
                 .filter(node -> node instanceof KeyListContentPaneCell)
                 .map(node -> (KeyListContentPaneCell) node);

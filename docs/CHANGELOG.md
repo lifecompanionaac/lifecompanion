@@ -23,6 +23,8 @@
 - *(Oscar P.)* Ticket #270 : ajout de la possibilité de glisser des images de l'ordinateur dans les listes de cases
 - Correction qui faisait que le paramètre en défilement "Ne pas démarrer automatiquement" ne fonctionnait plus
 - Ticket #324 : correction d'un problème lors d'une copie de case "Bloc note"
+- Ticket #335 : correction d'un bug d'affichage sur les listes de case
+- Ticket #321 : correction d'un rare bug à la suppression d'une case dans les listes de case
 
 ## 1.6.0 - 24/01/2024
 
