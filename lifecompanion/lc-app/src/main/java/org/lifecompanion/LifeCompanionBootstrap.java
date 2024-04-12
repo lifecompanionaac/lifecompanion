@@ -108,11 +108,19 @@ public class LifeCompanionBootstrap {
         } catch (Exception e) {
             LOGGER.warn("The user configuration can't be loaded", e);
         }
-        //Load text
-        String language = UserConfigurationController.INSTANCE.userLanguageProperty().get();
+        //Load default language
         for (String languageFile : LCConstant.INT_PATH_TEXT_FILES) {
-            TranslationLoader.loadLanguageResource(language, languageFile);
+            TranslationLoader.loadLanguageResource(LCConstant.DEFAULT_LANGUAGE, languageFile, true);
         }
+        // Then load the user language if different from default language
+        String userLanguage = UserConfigurationController.INSTANCE.userLanguageProperty().get();
+        if (!StringUtils.isEqualsIgnoreCase(LCConstant.DEFAULT_LANGUAGE, userLanguage)) {
+            LOGGER.info("Detect another language requested {} different than default language {}, will try to load it", userLanguage, LCConstant.DEFAULT_LANGUAGE);
+            for (String languageFile : LCConstant.INT_PATH_TEXT_FILES) {
+                TranslationLoader.loadLanguageResource(StringUtils.toLowerCase(userLanguage), languageFile, false);
+            }
+        }
+
         GlyphFontHelper.loadFont();
         LOGGER.info("Preload done in {}s", (System.currentTimeMillis() - startAt) / 1000.0);
     }

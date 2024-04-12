@@ -135,12 +135,16 @@ public enum Translation {
     }
 
 
+    public void load(final String id, final InputStream file) throws Exception {
+        load(id, file, true);
+    }
+
     /**
      * Load the given XML and put key/value in map
      *
      * @param file the file to load
      */
-    public void load(final String id, final InputStream file) throws Exception {
+    public void load(final String id, final InputStream file, boolean warnOnDuplicates) throws Exception {
         if (this.loadedResourcesIds.contains(id)) {
             LOGGER.info("Didn't load {} because it was already loaded", id);
         } else {
@@ -151,7 +155,7 @@ public enum Translation {
             for (Element child : children) {
                 String key = child.getAttribute(Translation.ATB_KEY).getValue();
                 String value = cleanText(child.getText());
-                if (this.texts.containsKey(key)) {
+                if (this.texts.containsKey(key) && warnOnDuplicates) {
                     LOGGER.warn("Found a duplicated translation entry : {} - {}", id, key);
                 }
                 this.texts.put(key, value);

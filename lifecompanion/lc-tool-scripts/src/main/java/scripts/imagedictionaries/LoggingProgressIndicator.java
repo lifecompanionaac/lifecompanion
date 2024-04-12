@@ -22,7 +22,7 @@ package scripts.imagedictionaries;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
-class LoggingProgressIndicator {
+public class LoggingProgressIndicator {
     private final String name;
     private final long max;
     private AtomicLong count;

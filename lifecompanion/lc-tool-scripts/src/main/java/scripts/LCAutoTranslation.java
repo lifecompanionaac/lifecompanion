@@ -28,41 +28,60 @@ import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 import org.lifecompanion.framework.commons.translation.Translation;
+import scripts.imagedictionaries.LoggingProgressIndicator;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class LCAutoTranslation {
     private static final Format FORMAT = Format
             .getPrettyFormat()
             .setEncoding(StandardCharsets.UTF_8.name());
 
+    static Translate translate;
+
     public static void main(String[] args) throws Exception {
-        System.out.println(generateAutoTranslation("ceci est une édition spéciale !"));
+        translate = TranslateOptions.getDefaultInstance().getService();
 
-//        Map<String, String> texts = loadTexts();
-//        texts.entrySet().stream().limit(10).forEach(entry -> {
-//            System.out.println(entry.getKey() + " = " + entry.getValue());
-//        });
-//
-//        System.out.println(texts.values().stream().mapToInt(String::length).sum());
+        Map<String, String> texts = loadTexts();
+//        String prev = texts.get("action.import.existing.configuration.message");
+//        texts.clear();
+//        texts.put("action.import.existing.configuration.message", prev);
+        LoggingProgressIndicator pi = new LoggingProgressIndicator(texts.size(), "Translation");
 
-        //saveResult(texts);
+        Map<String, String> translated = new HashMap<>();
+
+        for (Map.Entry<String, String> idAndText : texts.entrySet()) {
+            try {
+                String originalText = idAndText.getValue();
+                String id = idAndText.getKey();
+                String translation = generateAutoTranslation(originalText);
+                translated.put(id, translation);
+                System.out.println("\n" + id + "\n===== FR =====\n" + originalText);
+                System.out.println("\n===== EN =====\n" + translation + "\n==============");
+                pi.increment();
+            } catch (Throwable t) {
+                t.printStackTrace();
+                break;
+            }
+        }
+        saveResult(translated);
     }
 
     private static void saveResult(Map<String, String> texts) throws IOException {
         Element textsElement = new Element("texts");
-        texts.entrySet().stream().limit(10).forEach(entry -> {
+        texts.entrySet().stream().forEach(entry -> {
             Element textElement = new Element("text");
-            textElement.setText(entry.getValue());
+            textElement.setText(entry.getValue().replace("\n", "\\n"));
             textElement.setAttribute("key", entry.getKey());
             textsElement.addContent(textElement);
         });
         XMLOutputter xmlOutputter = new XMLOutputter(FORMAT);
-        try (OutputStream os = new FileOutputStream("result.xml")) {
+        try (OutputStream os = new FileOutputStream("..\\lc-app\\src\\main\\resources\\translation\\en_translations.xml")) {
             xmlOutputter.output(textsElement, os);
         }
     }
@@ -85,12 +104,12 @@ public class LCAutoTranslation {
 
     // GOOGLE_APPLICATION_CREDENTIALS to credentials json (ex : E:\Desktop\temp\translation-test-36d46f42a839.json)
     static String generateAutoTranslation(String text) {
-        Translate translate = TranslateOptions.getDefaultInstance().getService();
         com.google.cloud.translate.Translation translation = translate.translate(
                 text,
                 Translate.TranslateOption.sourceLanguage("fr"),
                 Translate.TranslateOption.targetLanguage("en"),
+                Translate.TranslateOption.format("text"),
                 Translate.TranslateOption.model("base"));
-        return translation.getTranslatedText().replace("&#39;", "'");
+        return translation.getTranslatedText();//.replace("&#39;", "'").replace("&quot;", "\"")
     }
 }

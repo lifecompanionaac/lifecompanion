@@ -30,10 +30,10 @@ public class TranslationLoader {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(TranslationLoader.class);
 
-    public static void loadLanguageResource(String code, String name) {
+    public static void loadLanguageResource(String code, String name, boolean warnOnDuplicates) {
         String resourcePath = "/translation/" + code + name;
         try (InputStream inputStreamForPath = ResourceHelper.getInputStreamForPath(resourcePath)) {
-            Translation.INSTANCE.load(resourcePath, inputStreamForPath);
+            Translation.INSTANCE.load(resourcePath, inputStreamForPath, warnOnDuplicates);
             LOGGER.debug("Translation resource loaded : {} - {}", code, name);
         } catch (Exception e) {
             LOGGER.error("Couldn't not load translation resource : {} - {}", name, code, e);

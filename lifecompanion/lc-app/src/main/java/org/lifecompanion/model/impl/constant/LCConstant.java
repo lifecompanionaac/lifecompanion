@@ -51,6 +51,8 @@ public class LCConstant {
 
     public static final String ARG_LAUNCH_CONFIG = "-directLaunchOn";
     public static final String ARG_IMPORT_LAUNCH_CONFIG = "-directImportAndLaunch";
+
+    public static final String DEFAULT_LANGUAGE = "fr";
     // ========================================================================
 
     // Class part : "Files constant"

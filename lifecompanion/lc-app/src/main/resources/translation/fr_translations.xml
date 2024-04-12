@@ -3809,4 +3809,9 @@
     <text key="task.import.keylist.from.json.title">Importer une liste de case en json</text>
     <text key="task.import.keylist.from.json.title">Importer une liste de case en json</text>
     <text key="keylist.json.selector.title">Importer une liste de case en json</text>
+    <text key="user.config.language">Langue (après redémarrage)</text>
+    <text key="language.translation.title.fr">Français (par défaut)</text>
+    <text key="language.translation.description.fr">Langue de base de LifeCompanion : tous les éléments seront fonctionnels dans cette langue. Le Français est la langue originale de LifeCompanion.</text>
+    <text key="language.translation.title.en">Anglais (beta)</text>
+    <text key="language.translation.description.en">Traduction générée par un traducteur automatique : la précision et la qualité des éléments peut être très variable. La prédiciton de mots ou la recherche d'images ne supportent pas encore cette langue.</text>
 </texts>

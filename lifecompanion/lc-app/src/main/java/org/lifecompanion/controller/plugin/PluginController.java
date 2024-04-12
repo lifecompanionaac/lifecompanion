@@ -328,17 +328,12 @@ public enum PluginController implements LCStateListener, ModeListenerI {
 
     private void startPlugin(PluginInfo pluginInfo, PluginI plugin) {
         plugin.start(getPluginDataFolder(pluginInfo.getPluginId()));
-        // Load language
-        String[] languageFiles = plugin.getLanguageFiles(UserConfigurationController.INSTANCE.userLanguageProperty().get());
-        if (languageFiles != null) {
-            for (String languageFilePath : languageFiles) {
-                try (InputStream fis = plugin.getClass().getResourceAsStream(languageFilePath)) {
-                    Translation.INSTANCE.load(languageFilePath, fis);
-                    PluginController.LOGGER.info("Plugin language file {} loaded for {}", languageFilePath, pluginInfo.getPluginName());
-                } catch (Exception e) {
-                    PluginController.LOGGER.error("Couldn't load the {} plugin language file {}", pluginInfo.getPluginId(), languageFilePath, e);
-                }
-            }
+        // Load default language
+        loadLanguage(pluginInfo, plugin, plugin.getLanguageFiles(LCConstant.DEFAULT_LANGUAGE), true);
+        // Load user language
+        String userLanguage = UserConfigurationController.INSTANCE.userLanguageProperty().get();
+        if (!StringUtils.isEqualsIgnoreCase(LCConstant.DEFAULT_LANGUAGE, userLanguage)) {
+            loadLanguage(pluginInfo, plugin, plugin.getLanguageFiles(userLanguage), false);
         }
 
         // Load JavaFX stylesheets
@@ -352,6 +347,19 @@ public enum PluginController implements LCStateListener, ModeListenerI {
         if (LangUtils.isNotEmpty(definedVariables)) {
             LOGGER.info("Found {} use variable definition in plugin {}", definedVariables.size(), pluginInfo.getPluginId());
             useVariableDefinitions.elementAdded(pluginInfo.getPluginId(), definedVariables);
+        }
+    }
+
+    private static void loadLanguage(PluginInfo pluginInfo, PluginI plugin, String[] languageFiles, boolean warnOnDuplicates) {
+        if (languageFiles != null) {
+            for (String languageFilePath : languageFiles) {
+                try (InputStream fis = plugin.getClass().getResourceAsStream(languageFilePath)) {
+                    Translation.INSTANCE.load(languageFilePath, fis);
+                    PluginController.LOGGER.info("Plugin language file {} loaded for {}", languageFilePath, pluginInfo.getPluginName());
+                } catch (Exception e) {
+                    PluginController.LOGGER.error("Couldn't load the {} plugin language file {}", pluginInfo.getPluginId(), languageFilePath, e);
+                }
+            }
         }
     }
 

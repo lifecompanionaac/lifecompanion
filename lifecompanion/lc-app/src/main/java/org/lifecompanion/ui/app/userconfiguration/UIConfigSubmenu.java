@@ -18,13 +18,11 @@
  */
 package org.lifecompanion.ui.app.userconfiguration;
 
+import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Spinner;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
@@ -34,8 +32,11 @@ import org.lifecompanion.controller.io.task.CleanupTempFileTask;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.framework.commons.utils.io.FileNameUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.model.impl.notification.LCNotification;
+import org.lifecompanion.ui.common.pane.specific.cell.SimpleTextListCell;
+import org.lifecompanion.ui.common.pane.specific.cell.TitleAndDescriptionListCell;
 import org.lifecompanion.ui.controlsfx.control.ToggleSwitch;
 import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
 import org.lifecompanion.framework.commons.SystemType;
@@ -47,6 +48,7 @@ import org.lifecompanion.util.IOUtils;
 import org.lifecompanion.util.javafx.FXControlUtils;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * Stage configuration
@@ -88,6 +90,8 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
     private ToggleSwitch toggleAutoConfigurationProfileBackup;
 
     private Button buttonCleanupFiles;
+
+    private ComboBox<String> comboBoxLanguage;
 
     public UIConfigSubmenu() {
         this.initAll();
@@ -142,6 +146,13 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
         gridPaneStageParam.add(this.spinnerFrameHeight, 1, rowStage++);
         Label labelStagePart = FXControlUtils.createTitleLabel("user.config.stage.title");
 
+        comboBoxLanguage = new ComboBox<>(FXCollections.observableArrayList(LCConstant.DEFAULT_LANGUAGE, "en"));
+        comboBoxLanguage.setButtonCell(new SimpleTextListCell<>(this::getLanguageTitle));
+        comboBoxLanguage.setCellFactory(lv -> new TitleAndDescriptionListCell<>(this::getLanguageTitle, this::getLanguageDescription));
+        Label labelLanguage = new Label(Translation.getText("user.config.language"));
+        gridPaneStageParam.add(labelLanguage, 0, rowStage);
+        gridPaneStageParam.add(this.comboBoxLanguage, 1, rowStage++);
+
         Label labelConfigFiles = FXControlUtils.createTitleLabel("user.config.part.file.config");
         buttonCleanupFiles = FXControlUtils.createLeftTextButton(Translation.getText("button.cleanup.temp.file"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.TRASH_ALT).size(16).color(LCGraphicStyle.MAIN_DARK), "button.cleanup.temp.file.tooltip");
@@ -187,9 +198,17 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
     }
     //========================================================================
 
+    private String getLanguageTitle(String id) {
+        return Translation.getText("language.translation.title." + id);
+    }
+
+    private String getLanguageDescription(String id) {
+        return Translation.getText("language.translation.description." + id);
+    }
+
     private GridPane createConfigPane() {
         GridPane gridPaneStageParam = new GridPane();
-        gridPaneStageParam.setVgap(3.0);
+        gridPaneStageParam.setVgap(5.0);
         gridPaneStageParam.setHgap(5.0);
         return gridPaneStageParam;
     }
@@ -211,6 +230,7 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
         this.toggleSecureGoToEditModeProperty.setSelected(UserConfigurationController.INSTANCE.secureGoToEditModeProperty().get());
         this.toggleAutoConfigurationProfileBackup.setSelected(UserConfigurationController.INSTANCE.autoConfigurationProfileBackupProperty().get());
         this.toggleAutoSelectImages.setSelected(UserConfigurationController.INSTANCE.autoSelectImagesProperty().get());
+        this.comboBoxLanguage.getSelectionModel().select(UserConfigurationController.INSTANCE.userLanguageProperty().get());
     }
 
     @Override
@@ -229,6 +249,7 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
         UserConfigurationController.INSTANCE.secureGoToEditModeProperty().set(this.toggleSecureGoToEditModeProperty.isSelected());
         UserConfigurationController.INSTANCE.autoConfigurationProfileBackupProperty().set(this.toggleAutoConfigurationProfileBackup.isSelected());
         UserConfigurationController.INSTANCE.autoSelectImagesProperty().set(this.toggleAutoSelectImages.isSelected());
+        UserConfigurationController.INSTANCE.userLanguageProperty().set(this.comboBoxLanguage.getValue());
     }
 
     @Override
