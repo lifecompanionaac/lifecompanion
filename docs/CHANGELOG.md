@@ -32,6 +32,7 @@
 - Optimisation des configurations avec de très nombreuses listes de cases
 - Ticket #316 : lorsque le code pour passer en mode édition n'est pas entré, la souris est de nouveau placée sur la fenêtre ensuite
 - Ticket #333 : le message d'avertissement de double lancement n'est plus affiché lorsque cela déclenche un import de configuration
+- Ticket #317 : la fenêtre de création/mise à jour de profil affiche maintenant un titre plus explicite
 
 ## 1.6.0 - 24/01/2024
 

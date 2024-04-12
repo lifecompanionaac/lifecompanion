@@ -18,6 +18,7 @@
  */
 package org.lifecompanion.ui.app.profileconfigselect;
 
+import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -83,6 +84,8 @@ public class ProfileEditionView extends BorderPane implements LCViewInitHelper, 
     private Button buttonValidate;
     private List<Node> editionActionNodes;
 
+    private Label labelStepTitle;
+
     private DefaultConfigurationListPane defaultConfigurationListPane;
 
 
@@ -99,6 +102,7 @@ public class ProfileEditionView extends BorderPane implements LCViewInitHelper, 
     @Override
     public void initUI() {
         Triple<HBox, Label, Node> header = FXControlUtils.createHeader("profile.edition.view.title.config", node -> closeCurrentEdit(false, true));
+        labelStepTitle = header.getMiddle();
 
         //Profile name
         Label labelName = new Label(Translation.getText("profile.label.name"));
@@ -173,13 +177,13 @@ public class ProfileEditionView extends BorderPane implements LCViewInitHelper, 
 
     @Override
     public void initBinding() {
-        BooleanBinding profileCreateBooleanBinding = ProfileConfigSelectionController.INSTANCE.currentStepProperty().isEqualTo(ProfileConfigStep.PROFILE_CREATE).not();
+        BooleanBinding notOnProfileCreateBinding = ProfileConfigSelectionController.INSTANCE.currentStepProperty().isEqualTo(ProfileConfigStep.PROFILE_CREATE).not();
         for (Node editionActionNode : editionActionNodes) {
             editionActionNode.managedProperty().bind(editionActionNode.visibleProperty());
-            editionActionNode.visibleProperty().bind(profileCreateBooleanBinding);
+            editionActionNode.visibleProperty().bind(notOnProfileCreateBinding);
         }
         defaultConfigurationListPane.managedProperty().bind(defaultConfigurationListPane.visibleProperty());
-        defaultConfigurationListPane.visibleProperty().bind(profileCreateBooleanBinding.not());
+        defaultConfigurationListPane.visibleProperty().bind(notOnProfileCreateBinding.not());
         this.profileIconView.profileProperty().bind(this.editedProfile);
         //On created profile change, bind field
         this.editedProfile.addListener((obs, ov, nv) -> {
@@ -192,6 +196,9 @@ public class ProfileEditionView extends BorderPane implements LCViewInitHelper, 
                 this.fieldColor.valueProperty().bindBidirectional(nv.colorProperty());
             }
         });
+        this.labelStepTitle.textProperty()
+                .bind(Bindings.createStringBinding(() -> Translation.getText(notOnProfileCreateBinding.get() ? "profile.edition.view.title.config" : "profile.creation.view.title.config"),
+                        notOnProfileCreateBinding));
     }
     //========================================================================
 

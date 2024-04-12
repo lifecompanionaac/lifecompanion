@@ -2074,6 +2074,7 @@
   <text key="profile.edition.view.title">Modification des informations d'un profil</text>
     <text key="profile.edition.configuration.repository.link">Plus de configuration sur le répertoire de la plateforme LifeCompanion</text>
   <text key="profile.edition.view.title.config">Édition du profil utilisateur</text>
+  <text key="profile.creation.view.title.config">Création de profil utilisateur</text>
   <text key="profile.label.color">Couleur du profil</text>
   <text key="profile.label.name">Nom du profil</text>
   <text key="profile.selection.add.profile.button">Ajouter un profil utilisateur</text>
