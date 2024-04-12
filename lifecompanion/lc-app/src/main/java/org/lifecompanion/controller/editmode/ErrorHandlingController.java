@@ -73,6 +73,7 @@ public enum ErrorHandlingController implements LCStateListener {
 
     /**
      * Display an error notification that will contain a button allowing the user to see the error detail
+     *
      * @param title the notification title
      * @param cause the error cause that will be used for details
      */
@@ -80,8 +81,12 @@ public enum ErrorHandlingController implements LCStateListener {
         LOGGER.info("Error is reported with a notification (title {})", title, cause);
         if (this.displayedErrorNotificationCount < MAX_ERROR_DISPLAY_COUNT) {
             this.displayedErrorNotificationCount++;
-            LCNotificationController.INSTANCE
-                    .showNotification(LCNotification.createError(title, "notification.error.details.action", () -> this.showExceptionDialog(cause)));
+            if (cause instanceof LCException && ((LCException) cause).containsOnCatchAction()) {
+                FXThreadUtils.runOnFXThread(((LCException) cause).getOnCatchCallback());
+            } else {
+                LCNotificationController.INSTANCE
+                        .showNotification(LCNotification.createError(title, "notification.error.details.action", () -> this.showExceptionDialog(cause)));
+            }
         }
     }
 

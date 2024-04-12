@@ -20,6 +20,7 @@
 
 ### Corrections/ajustements
 
+- L'avertissement lors de l'import d'une configuration de version plus récente est maintenant plus clair et propose de vérifier directement les versions
 - Correction d'un rare problème avec la souris virtuelle
 - *(Oscar P.)* Ticket #270 : ajout de la possibilité de glisser des images de l'ordinateur dans les listes de cases
 - Correction qui faisait que le paramètre en défilement "Ne pas démarrer automatiquement" ne fonctionnait plus

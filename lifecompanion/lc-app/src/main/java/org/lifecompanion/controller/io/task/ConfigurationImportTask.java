@@ -18,7 +18,12 @@
  */
 package org.lifecompanion.controller.io.task;
 
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
 import javafx.util.Pair;
+import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
+import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.impl.exception.LCException;
@@ -26,7 +31,13 @@ import org.lifecompanion.controller.appinstallation.InstallationController;
 import org.lifecompanion.framework.commons.utils.app.VersionUtils;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.ui.app.userconfiguration.AboutSubmenu;
+import org.lifecompanion.ui.app.userconfiguration.PluginConfigSubmenu;
+import org.lifecompanion.ui.app.userconfiguration.UserConfigurationView;
 import org.lifecompanion.util.ThreadUtils;
+import org.lifecompanion.util.javafx.AbstractAlertBuilder;
+import org.lifecompanion.util.javafx.DialogUtils;
+import org.lifecompanion.util.javafx.StageUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -88,8 +99,18 @@ public class ConfigurationImportTask extends AbstractLoadUtilsTask<Pair<LCConfig
         // Issue #182 : if a configuration is imported from a newer version
         if (VersionUtils.compare(loadedTempDescription.getTechInfo().getVersion(), InstallationController.INSTANCE.getBuildProperties().getVersionLabel()) > 0) {
             LCException.newException()
-                    .withHeaderId("configuration.import.version.error.header")
-                    .withMessage("configuration.import.version.error.message", loadedTempDescription.getTechInfo().getVersion())
+                    .withOnCatchCallback(() -> {
+                        ButtonType typeTryUpdate = new ButtonType(Translation.getText("button.type.try.update"), ButtonBar.ButtonData.YES);
+                        if (typeTryUpdate == DialogUtils.alertWithSourceAndType(StageUtils.getOnTopWindowExcludingNotification(), Alert.AlertType.ERROR)
+                                .withHeaderText(Translation.getText("configuration.import.version.error.header"))
+                                .withContentText(Translation.getText("configuration.import.version.error.message", loadedTempDescription.getTechInfo().getVersion()))
+                                .withButtonTypes(ButtonType.CLOSE, typeTryUpdate)
+                                .showAndWait()) {
+                            UserConfigurationView userConfigurationView = UserConfigurationController.INSTANCE.getUserConfigurationView();
+                            userConfigurationView.showView(() -> userConfigurationView.showTab(AboutSubmenu.class,
+                                    AboutSubmenu::startUpdateCheckIfPossible));
+                        }
+                    })
                     .buildAndThrow();
         }
 

@@ -402,10 +402,7 @@
   <text key="config.export.title">Export de la configuration</text>
   <text key="configuration.duplicated.prefix">[COPIE]</text>
   <text key="configuration.import.version.error.header">Configuration réalisée avec une autre version</text>
-  <text key="configuration.import.version.error.message">Cette configuration a été réalisée avec la version {} de
-		LifeCompanion.\n
-		Afin de vous assurer un fonctionnement optimal, vous
-		devez mettre à jour LifeCompanion afin de pouvoir importer celle-ci.</text>
+  <text key="configuration.import.version.error.message">Cette configuration a été réalisée avec une version plus récente de LifeCompanion ({}). Vous devez mettre à jour LifeCompanion avant de pouvoir l'utiliser (connexion internet nécessaire).</text>
   <text key="profile.export.title">Export du profil</text>
   <text key="task.check.plugin.usage.title">Vérification des extensions utilisées</text>
   <text key="task.cleanup.temp.file">Nettoyage des fichiers temporaires</text>
@@ -3816,4 +3813,5 @@
     <text key="language.translation.description.en">Traduction générée par un traducteur automatique : la précision et la qualité des éléments peut être très variable. La prédiciton de mots ou la recherche d'images ne supportent pas encore cette langue.</text>
     <text key="enable.speech.optimization.control">Activer l'optimisation de la synthèse vocale</text>
     <text key="enable.speech.optimization.control.description">Si activé, les pauses avant et après une prononciation par la synthèse vocale sont supprimées. Cela permet une meilleure réactivité. Peut être utile à désactiver si LifeCompanion est utilisé avec des dispositifs audio externes (ex : Bluetooth).</text>
+    <text key="button.type.try.update">Vérifier les mises à jour</text>
 </texts>

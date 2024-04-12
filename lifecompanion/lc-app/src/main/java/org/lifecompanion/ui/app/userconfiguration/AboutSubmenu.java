@@ -128,7 +128,24 @@ public class AboutSubmenu extends VBox implements LCViewInitHelper, UserConfigSu
 
         this.setAlignment(Pos.CENTER);
         this.setSpacing(10.0);
-        this.getChildren().addAll(boxImages, new Separator(Orientation.HORIZONTAL), labelGeneralInfo, linkWebsite, new Separator(Orientation.HORIZONTAL), labelVersionInfo, labelUpdateWebsite, buttonInstallationId, buttonDeviceId, new Separator(Orientation.HORIZONTAL), this.labelLastUpdateDate, buttonCheckUpdate, progressBarUpdateTask, labelUpdateTaskMessage, new Separator(Orientation.HORIZONTAL), buttonLicense, buttonThirdPartyLicenses);
+        this.getChildren()
+                .addAll(boxImages,
+                        new Separator(Orientation.HORIZONTAL),
+                        labelGeneralInfo,
+                        linkWebsite,
+                        new Separator(Orientation.HORIZONTAL),
+                        labelVersionInfo,
+                        labelUpdateWebsite,
+                        buttonInstallationId,
+                        buttonDeviceId,
+                        new Separator(Orientation.HORIZONTAL),
+                        this.labelLastUpdateDate,
+                        buttonCheckUpdate,
+                        progressBarUpdateTask,
+                        labelUpdateTaskMessage,
+                        new Separator(Orientation.HORIZONTAL),
+                        buttonLicense,
+                        buttonThirdPartyLicenses);
     }
 
     @Override
@@ -143,10 +160,18 @@ public class AboutSubmenu extends VBox implements LCViewInitHelper, UserConfigSu
             }
         });
         this.buttonLicense.setOnAction(e -> StageUtils.centerOnOwnerOrOnCurrentStageAndShow(new LicenseShowStage(FXUtils.getSourceWindow(buttonLicense), "LICENSE")));
-        this.buttonThirdPartyLicenses.setOnAction(e -> StageUtils.centerOnOwnerOrOnCurrentStageAndShow(new LicenseShowStage(FXUtils.getSourceWindow(buttonThirdPartyLicenses), "custom-THIRD-PARTY-NOTICES.txt", "THIRD-PARTY-NOTICES.txt")));
+        this.buttonThirdPartyLicenses.setOnAction(e -> StageUtils.centerOnOwnerOrOnCurrentStageAndShow(new LicenseShowStage(FXUtils.getSourceWindow(buttonThirdPartyLicenses),
+                "custom-THIRD-PARTY-NOTICES.txt",
+                "THIRD-PARTY-NOTICES.txt")));
         buttonDeviceId.setOnAction(e -> setContentInfoWith(InstallationController.InstallationRegistrationInformation::getDeviceId));
         buttonInstallationId.setOnAction(e -> setContentInfoWith(InstallationController.InstallationRegistrationInformation::getInstallationId));
-        buttonCheckUpdate.setOnAction(e -> InstallationController.INSTANCE.launchUpdateCheckProcess(true));
+        buttonCheckUpdate.setOnAction(e -> startUpdateCheckIfPossible());
+    }
+
+    public void startUpdateCheckIfPossible() {
+        if (!InstallationController.INSTANCE.updateTaskRunningProperty().get()) {
+            InstallationController.INSTANCE.launchUpdateCheckProcess(true);
+        }
     }
 
 
@@ -161,7 +186,8 @@ public class AboutSubmenu extends VBox implements LCViewInitHelper, UserConfigSu
 
         labelLastUpdateDate.textProperty().bind(Bindings.createStringBinding(() -> {
             Date lastUpdateCheckDate = InstallationController.INSTANCE.lastUpdateCheckDateProperty().get();
-            return Translation.getText("update.status.last.check.date", lastUpdateCheckDate != null ? StringUtils.dateToStringDateWithHour(lastUpdateCheckDate) : Translation.getText("about.tab.last.update.check.never"));
+            return Translation.getText("update.status.last.check.date",
+                    lastUpdateCheckDate != null ? StringUtils.dateToStringDateWithHour(lastUpdateCheckDate) : Translation.getText("about.tab.last.update.check.never"));
         }, InstallationController.INSTANCE.lastUpdateCheckDateProperty()));
     }
 
@@ -189,7 +215,8 @@ public class AboutSubmenu extends VBox implements LCViewInitHelper, UserConfigSu
 
         // Registration info
         registrationInformation = InstallationController.INSTANCE.getInstallationRegistrationInformation();
-        buttonInstallationId.setText(Translation.getText("about.tab.button.installation.id", registrationInformation != null ? registrationInformation.getInstallationId() : Translation.getText("about.tab.id.null")));
+        buttonInstallationId.setText(Translation.getText("about.tab.button.installation.id",
+                registrationInformation != null ? registrationInformation.getInstallationId() : Translation.getText("about.tab.id.null")));
         buttonDeviceId.setText(Translation.getText("about.tab.button.device.id", registrationInformation != null ? registrationInformation.getDeviceId() : Translation.getText("about.tab.id.null")));
     }
 

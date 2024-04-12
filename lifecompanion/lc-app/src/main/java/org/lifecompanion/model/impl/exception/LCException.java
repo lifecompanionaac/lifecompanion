@@ -34,13 +34,15 @@ public class LCException extends Exception {
     private final String headerId;
     private final String header;
     private final String message;
+    private final Runnable onCatchCallback;
 
-    private LCException(Throwable cause, String messageId, String headerId, String header, String message) {
+    private LCException(Throwable cause, String messageId, String headerId, String header, String message, Runnable onCatchCallback) {
         super(cause);
         this.messageId = messageId;
         this.headerId = headerId;
         this.header = header;
         this.message = message;
+        this.onCatchCallback = onCatchCallback;
     }
 
     public String getUserMessage() {
@@ -51,6 +53,14 @@ public class LCException extends Exception {
         return this.header != null ? this.header : this.headerId != null ? Translation.getText(this.headerId) : null;
     }
 
+    public Runnable getOnCatchCallback() {
+        return onCatchCallback;
+    }
+
+    public boolean containsOnCatchAction() {
+        return onCatchCallback != null;
+    }
+
     public static LCExceptionBuilder newException() {
         return new LCExceptionBuilder();
     }
@@ -59,6 +69,7 @@ public class LCException extends Exception {
         private Throwable cause;
         private String messageId, message;
         private String headerId, header;
+        private Runnable onCatchCallback;
 
         private LCExceptionBuilder() {
         }
@@ -83,13 +94,18 @@ public class LCException extends Exception {
             return this;
         }
 
+        public LCExceptionBuilder withOnCatchCallback(Runnable onCatchCallback) {
+            this.onCatchCallback = onCatchCallback;
+            return this;
+        }
+
         public LCExceptionBuilder withHeader(String headerId, Object... args) {
             this.header = Translation.getText(headerId, args);
             return this;
         }
 
         public LCException build() {
-            return new LCException(cause, messageId, headerId, header, message);
+            return new LCException(cause, messageId, headerId, header, message, onCatchCallback);
         }
 
         public void buildAndThrow() throws LCException {
