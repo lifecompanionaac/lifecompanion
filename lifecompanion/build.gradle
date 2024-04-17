@@ -17,11 +17,11 @@ subprojects {
         env = project.hasProperty('env') ? project.property('env') : 'local'
     }
 
-    sourceCompatibility = 12
-    targetCompatibility = 16
+    sourceCompatibility = 21
+    targetCompatibility = 21
 
     dependencies {
-        implementation 'org.slf4j:slf4j-api:2.0.0-alpha1'
+        implementation 'org.slf4j:slf4j-api:2.0.13'
     }
 
     // Publish every sub projects (only really useful for api, config and app)

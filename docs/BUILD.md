@@ -8,13 +8,13 @@ Used JDK (in IntelliJ and builds) is [Eclipse Temurin™](https://adoptium.net/t
 
 ### To use it directly on Gradle (optional)
 
-1. Download **JDK 18** for your platform : [Eclipse Temurin™](https://adoptium.net/temurin/releases/)
+1. Download **JDK 21** for your platform : [Eclipse Temurin™](https://adoptium.net/temurin/releases/)
 1. Configuration Gradle to run with the installed JDK (**~/.gradle/gradle.properties** : add _org.gradle.java.home_)
 1. This can sometimes be useful to configure **JAVA_HOME** env configuration
 
 ### To use it in IntelliJ
 
-1. Install **[IntelliJ IDEA Community Edition](https://www.jetbrains.com/fr-fr/)** (> 2019.2.4)
+1. Install **[IntelliJ IDEA Community Edition](https://www.jetbrains.com/fr-fr/)** (> 2024.1)
 1. Open **lifecompanion-framework** project : File > Open
 1. Add module **lifecompanion** : File > New > Module from existing sources
 1. Configure **IntelliJ project JDK** : File > Project Structure > Project settings / Project

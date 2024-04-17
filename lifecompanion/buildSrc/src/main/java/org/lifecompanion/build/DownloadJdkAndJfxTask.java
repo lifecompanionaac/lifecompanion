@@ -116,10 +116,10 @@ public abstract class DownloadJdkAndJfxTask extends DefaultTask {
     enum DestPlatform {
         WIN_X64(
                 "zip",
-                "https://github.com/adoptium/temurin18-binaries/releases/download/jdk-18.0.2.1%2B1/OpenJDK18U-jdk_x64_windows_hotspot_18.0.2.1_1.zip",
-                "https://download2.gluonhq.com/openjfx/21.0.1/openjfx-21.0.1_windows-x64_bin-jmods.zip",
-                "jdk-18.0.2.1+1",
-                "javafx-jmods-21.0.1"
+                "https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.2%2B13/OpenJDK21U-jdk_x64_windows_hotspot_21.0.2_13.zip",
+                "https://download2.gluonhq.com/openjfx/22/openjfx-22_windows-x64_bin-jmods.zip",
+                "jdk-21.0.2+13",
+                "javafx-jmods-22"
         ),
         LINUX_X64(
                 "tar.gz",

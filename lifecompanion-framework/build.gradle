@@ -5,7 +5,7 @@ buildscript {
     }
   }
   dependencies {
-    classpath 'org.javamodularity:moduleplugin:1.6.0'
+    classpath 'org.javamodularity:moduleplugin:1.8.15'
   }
 }
 
@@ -13,8 +13,8 @@ subprojects {
     apply plugin: 'java-library'
     apply plugin: 'org.javamodularity.moduleplugin'
     
-    sourceCompatibility = 11
-    targetCompatibility = 11
+    sourceCompatibility = 21
+    targetCompatibility = 21
       
 	repositories {
         mavenCentral()
@@ -22,6 +22,6 @@ subprojects {
     }
     
     dependencies {
-    	api 'org.slf4j:slf4j-api:2.0.0-alpha1'
+    	api 'org.slf4j:slf4j-api:2.0.13'
     }
 }

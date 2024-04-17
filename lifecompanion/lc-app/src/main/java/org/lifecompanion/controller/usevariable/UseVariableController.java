@@ -96,6 +96,7 @@ public enum UseVariableController implements ModeListenerI {
     private final Map<String, Pair<Long, UseVariableI<?>>> cachedVariableValues;
 
     private InvalidationListener listenerCurrentOverPart, listenerCurrentText, listenerCurrentWord, listenerCurrentChar, listenerLastCompleteWord;
+    private final Set<String> alreadyWarnedIds;
 
     UseVariableController() {
         this.variablesInformationKeyOptions = new ArrayList<>();
@@ -105,6 +106,7 @@ public enum UseVariableController implements ModeListenerI {
                 event -> UseVariableController.this.updateInformationKeyOptions(true)));
         this.keyUpdateTimeLine.setCycleCount(Animation.INDEFINITE);
         this.patternCache = new HashMap<>();
+        this.alreadyWarnedIds = new HashSet<>();
         initListeners();
     }
 
@@ -239,7 +241,12 @@ public enum UseVariableController implements ModeListenerI {
             vars.put(varDef.getId(), value);
             LOGGER.debug("\t{} computed in {} ms", id, System.currentTimeMillis() - start);
         } else {
-            LOGGER.warn("Didn't find any use variable definition or supplier for variable {}", id);
+            if (id != null) {
+                if (!this.alreadyWarnedIds.contains(id)) {
+                    this.alreadyWarnedIds.add(id);
+                    LOGGER.warn("Didn't find any use variable definition or supplier for variable {}", id);
+                }
+            }
         }
     }
 
