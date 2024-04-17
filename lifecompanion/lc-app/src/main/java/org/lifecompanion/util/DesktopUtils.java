@@ -42,7 +42,7 @@ public class DesktopUtils {
         Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
         if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
             final String validatedUri;
-            if (URI_SCHEMES.stream().filter(scheme -> StringUtils.startWithIgnoreCase(url, scheme + "://")).findAny().isEmpty()) {
+            if (URI_SCHEMES.stream().filter(scheme -> StringUtils.startWithIgnoreCase(url, scheme + "://") || StringUtils.startWithIgnoreCase(url, scheme + ":/")).findAny().isEmpty()) {
                 LOGGER.warn("The given url to open \"{}\" didn't have any valid {} scheme, will automatically add it", url, URI_SCHEMES);
                 validatedUri = "https://" + url;
             } else validatedUri = url;

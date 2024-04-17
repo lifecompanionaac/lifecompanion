@@ -1,6 +1,8 @@
 package org.lifecompanion.plugin.spellgame.controller.task;
 
+import javafx.stage.Stage;
 import org.lifecompanion.controller.io.JsonHelper;
+import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.resource.ResourceHelper;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
@@ -10,6 +12,7 @@ import org.lifecompanion.plugin.spellgame.controller.SpellGameController;
 import org.lifecompanion.plugin.spellgame.model.SpellGameResult;
 import org.lifecompanion.plugin.spellgame.model.SpellGameStepResult;
 import org.lifecompanion.util.DesktopUtils;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.util.model.LCTask;
 
 import java.io.File;
@@ -58,7 +61,8 @@ public class ExportGameResultTask extends LCTask<Void> {
         String resultHtml = replace(reportTemplate,
                 FluentHashMap.map("wordListName", spellGameResult.getListName())
                         .with("wordListSize", spellGameResult.getDoneCount() + " / " + spellGameResult.getListSize())
-                        .with("ignoreAccents", Translation.getText(spellGameResult.isIgnoreAccents() ? "spellgame.plugin.report.field.ignore.accent.true" : "spellgame.plugin.report.field.ignore.accent.false"))
+                        .with("ignoreAccents",
+                                Translation.getText(spellGameResult.isIgnoreAccents() ? "spellgame.plugin.report.field.ignore.accent.true" : "spellgame.plugin.report.field.ignore.accent.false"))
                         .with("testDate", StringUtils.dateToStringDateWithHour(new Date()))
                         .with("testDuration", org.lifecompanion.util.StringUtils.durationToString((int) (spellGameResult.getDuration() / 1000.0)))
                         .with("testScore", spellGameResult.getScore() + " / " + spellGameResult.getDoneCount() * SpellGameController.WORD_MAX_SCORE)
@@ -71,6 +75,13 @@ public class ExportGameResultTask extends LCTask<Void> {
         final File destHtmlFile = new File(destinationDirectory.getAbsolutePath() + File.separator + RESULT_HTML_FILE_NAME);
         IOUtils.writeToFile(destHtmlFile, resultHtml, "UTF-8");
         DesktopUtils.openUrlInDefaultBrowser(destHtmlFile.toURI().toURL().toString());
+
+        FXThreadUtils.runOnFXThread(() -> {
+            final Stage stage = AppModeController.INSTANCE.getUseModeContext().getStage();
+            if (stage != null) {
+                stage.setIconified(true);
+            }
+        });
 
         return null;
     }

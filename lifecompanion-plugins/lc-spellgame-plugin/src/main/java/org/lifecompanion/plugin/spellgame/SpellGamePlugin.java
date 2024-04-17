@@ -76,23 +76,28 @@ public class SpellGamePlugin implements PluginI {
                 new UseVariableDefinition(SpellGameController.VAR_ID_USER_SCORE,
                         "spellgame.plugin.use.variable.user.score.name",
                         "spellgame.plugin.use.variable.user.score.description",
-                        "spellgame.plugin.use.variable.user.score.example"),
+                        "spellgame.plugin.use.variable.user.score.example",
+                        1000),
                 new UseVariableDefinition(SpellGameController.VAR_ID_WORD_INDEX,
                         "spellgame.plugin.use.variable.word.index.name",
                         "spellgame.plugin.use.variable.word.index.description",
-                        "spellgame.plugin.use.variable.word.index.example"),
+                        "spellgame.plugin.use.variable.word.index.example",
+                        1000),
                 new UseVariableDefinition(SpellGameController.VAR_ID_WORD_COUNT,
                         "spellgame.plugin.use.variable.word.count.name",
                         "spellgame.plugin.use.variable.word.count.description",
-                        "spellgame.plugin.use.variable.word.count.example"),
+                        "spellgame.plugin.use.variable.word.count.example",
+                        1000),
                 new UseVariableDefinition(SpellGameController.VAR_ID_CURRENT_STEP_INSTRUCTION_WITH_WORD,
                         "spellgame.plugin.use.variable.current.step.instruction.with.word.name",
                         "spellgame.plugin.use.variable.current.step.instruction.with.word.description",
-                        "spellgame.plugin.use.variable.current.step.instruction.with.word.example"),
+                        "spellgame.plugin.use.variable.current.step.instruction.with.word.example",
+                        1000),
                 new UseVariableDefinition(SpellGameController.VAR_ID_CURRENT_STEP_INSTRUCTION,
                         "spellgame.plugin.use.variable.current.step.instruction.name",
                         "spellgame.plugin.use.variable.current.step.instruction.description",
-                        "spellgame.plugin.use.variable.current.step.instruction.example"));
+                        "spellgame.plugin.use.variable.current.step.instruction.example",
+                        1000));
     }
 
     @Override
