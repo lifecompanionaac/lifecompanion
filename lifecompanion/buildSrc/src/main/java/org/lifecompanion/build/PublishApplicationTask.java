@@ -61,9 +61,9 @@ public abstract class PublishApplicationTask extends DefaultTask {
     private static final Logger LOGGER = Logging.getLogger(PublishApplicationTask.class);
 
     private static final Map<SystemType, String> PATH_TO_BUILD = FluentHashMap
-            .map(SystemType.WINDOWS, "win_x64");
-//            .with(SystemType.UNIX, "linux_x64")
-//            .with(SystemType.MAC, "mac_x64");
+            .map(SystemType.WINDOWS, "win_x64")
+            .with(SystemType.UNIX, "linux_x64")
+            .with(SystemType.MAC, "mac_x64");
 
     private static final Map<SystemType, String> PATH_TO_LAUNCHER = FluentHashMap
             .map(SystemType.WINDOWS, "launchers/WINDOWS/LifeCompanion.exe")

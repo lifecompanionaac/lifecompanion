@@ -123,16 +123,16 @@ public abstract class DownloadJdkAndJfxTask extends DefaultTask {
         ),
         LINUX_X64(
                 "tar.gz",
-                "https://github.com/adoptium/temurin18-binaries/releases/download/jdk-18.0.2.1%2B1/OpenJDK18U-jdk_x64_linux_hotspot_18.0.2.1_1.tar.gz",
-                "https://download2.gluonhq.com/openjfx/18.0.2/openjfx-18.0.2_linux-x64_bin-jmods.zip",
-                "jdk-18.0.2.1+1",
-                "javafx-jmods-18.0.2"
+                "https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.2%2B13/OpenJDK21U-jdk_x64_linux_hotspot_21.0.2_13.tar.gz",
+                "https://download2.gluonhq.com/openjfx/22/openjfx-22_linux-x64_bin-jmods.zip",
+                "jdk-21.0.2+13",
+                "javafx-jmods-22"
         ),
         MAC_X64("tar.gz",
-                "https://github.com/adoptium/temurin18-binaries/releases/download/jdk-18.0.2.1%2B1/OpenJDK18U-jdk_x64_mac_hotspot_18.0.2.1_1.tar.gz",
-                "https://download2.gluonhq.com/openjfx/18.0.2/openjfx-18.0.2_osx-x64_bin-jmods.zip",
-                "jdk-18.0.2.1+1/Contents/Home",
-                "javafx-jmods-18.0.2"
+                "https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.2%2B13/OpenJDK21U-jdk_x64_mac_hotspot_21.0.2_13.tar.gz",
+                "https://download2.gluonhq.com/openjfx/22/openjfx-22_osx-x64_bin-jmods.zip",
+                "jdk-21.0.2+13/Contents/Home",
+                "javafx-jmods-22"
         );
 
         private final String jdkUrl, jdkExt, jfxUrl, internalJdkPath, internalJfxPath;

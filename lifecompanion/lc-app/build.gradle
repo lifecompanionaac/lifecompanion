@@ -5,7 +5,7 @@ plugins {
     id 'org.openjfx.javafxplugin' version '0.1.0'
     id 'org.javamodularity.moduleplugin' version '1.8.15'
     id 'org.beryx.jlink' version '3.0.1'
-    id 'com.github.jk1.dependency-license-report' version '2.5'
+    id 'com.github.jk1.dependency-license-report' version '2.7'
     id 'org.lifecompanion.gradle.plugin.env-conf'
     id 'org.lifecompanion.gradle.plugin.download-jdk-jfx'
     id 'org.lifecompanion.gradle.plugin.publish-application'
@@ -123,17 +123,17 @@ jlink {
         jdkHome = "${project.property('jdk_win_x64')}"
         addExtraModulePath("${project.property('jfx_win_x64')}")
     }
-//    targetPlatform('linux_x64') {
-//        jdkHome = "${project.property('jdk_linux_x64')}"
-//        addExtraModulePath("${project.property('jfx_linux_x64')}")
-//    }
-//    targetPlatform('mac_x64') {
-//        jdkHome = "${project.property('jdk_mac_x64')}"
-//        addExtraModulePath("${project.property('jfx_mac_x64')}")
-//    }
+    targetPlatform('linux_x64') {
+        jdkHome = "${project.property('jdk_linux_x64')}"
+        addExtraModulePath("${project.property('jfx_linux_x64')}")
+    }
+    targetPlatform('mac_x64') {
+        jdkHome = "${project.property('jdk_mac_x64')}"
+        addExtraModulePath("${project.property('jfx_mac_x64')}")
+    }
     options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages',
                '--add-modules', 'java.base,jdk.localedata,jdk.crypto.cryptoki,jdk.crypto.ec']
-// locale data - translations / crypto - email
+    // locale data - translations / crypto - email
 }
 
 licenseReport {
