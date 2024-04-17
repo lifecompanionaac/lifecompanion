@@ -95,7 +95,18 @@ public enum LifeCompanionControlServerEndpoint implements LifeCompanionControlSe
             "Request the local device ID update to be used to sync the used configuration with default configuration for this device set on LifeCompanion Hub. Note that this should be combined with the `deviceSyncMode` parameter. The method will always immediately returns even if the change can be later considered by the app (config synchronization is async). This can also be called to update the configuration for the device when `deviceSyncAutoRefresh` parameter is not enabled.",
             List.of(new SetDeviceLocalIdDto("foobar123")),
             List.of(ActionConfirmationDto.ok())
-    );
+    ),
+    // MOUSE
+    MOUSE_MOVE("mouse/move",
+            EndpointHttpMethod.POST,
+            "TODO",
+            List.of(new MoveMouseDto(50, 120)),
+            List.of(ActionConfirmationDto.ok())),
+    MOUSE_ACTIVATION_PRIMARY("mouse/activation/primary",
+            EndpointHttpMethod.POST,
+            "TODO",
+            null,
+            List.of(ActionConfirmationDto.ok()));
 
     public final static String URL_PREFIX = "/api/v1/";
 

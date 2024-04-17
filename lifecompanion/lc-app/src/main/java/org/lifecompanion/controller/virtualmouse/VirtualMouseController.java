@@ -365,6 +365,32 @@ public enum VirtualMouseController implements ModeListenerI {
     }
     //========================================================================
 
+    // TO BE MOVED - DIRECT MOUSE MOVE (without virtual mouse)
+    //========================================================================
+    public void moveMouseTo(final int x, int y) {
+        if (checkIfVirtualMouseEnabled()) {
+            checkRobotInit();
+            this.robot.mouseMove((int) (x / this.frameXScale), (int) (y / this.frameYScale));
+        }
+    }
+
+    public void moveMouse(final int dx, int dy) {
+        if (checkIfVirtualMouseEnabled()) {
+            Point previousPos = MouseInfo.getPointerInfo().getLocation();
+            checkRobotInit();
+            this.robot.mouseMove((int) ((dx + previousPos.x * frameXScale) / frameXScale), (int) ((dy + previousPos.y * frameYScale) / frameYScale));
+        }
+    }
+
+    public void mousePrimaryClic() {
+        this.executeMouseClic(MouseEvent.BUTTON1);
+    }
+
+    public void mouseSecondaryClic() {
+        this.executeMouseClic(MouseEvent.BUTTON3);
+    }
+    //========================================================================
+
     // Class part : "Internal mouse event API"
     //========================================================================
     private void moveMouseToWithDelay(final double x, final double y) {
