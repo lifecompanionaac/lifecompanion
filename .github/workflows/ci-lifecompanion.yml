@@ -54,12 +54,12 @@ jobs:
         shell: bash
 
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       
       - name: Set up JDK
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
-          java-version: '18'
+          java-version: '21'
           distribution: 'temurin'
       
       - name : Add +X on Gradle scripts
@@ -93,14 +93,14 @@ jobs:
           LIFECOMPANION_AWS_SECRET: ${{secrets.aws_secret}}
             
       - name: Build LifeCompanion framework
-        uses: gradle/gradle-build-action@v2.4.2
+        uses: gradle/actions/setup-gradle@v3
         with:
           build-root-directory: lifecompanion-framework
           arguments: publishToMavenLocal
 
       - name: Build LifeCompanion app
         if: ${{inputs.plugin_dir_name}}
-        uses: gradle/gradle-build-action@v2.4.2
+        uses: gradle/actions/setup-gradle@v3
         with:
           build-root-directory: lifecompanion
           arguments: publishToMavenLocal
@@ -111,13 +111,13 @@ jobs:
 
       - name: Execute plugin build command
         if: ${{inputs.plugin_dir_name}}
-        uses: gradle/gradle-build-action@v2.4.2
+        uses: gradle/actions/setup-gradle@v3
         with:
           build-root-directory: lifecompanion-plugins/${{inputs.plugin_dir_name}}
           arguments: clean jar
           
       - name: Call update build and publish command
-        uses: gradle/gradle-build-action@v2.4.2
+        uses: gradle/actions/setup-gradle@v3
         with:
           build-root-directory: lifecompanion
           arguments: |
