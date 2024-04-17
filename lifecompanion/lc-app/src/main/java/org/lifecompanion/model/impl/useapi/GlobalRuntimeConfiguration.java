@@ -138,6 +138,9 @@ public enum GlobalRuntimeConfiguration implements GlobalRuntimeConfigurationI {
             "0.8",
             1
     ),
+    RESET_WINDOW_VIRTUAL_KEYBOARD("resetWindowVirtualKeyboard",
+            GlobalRuntimeConfigurationType.COMMAND_LINE,
+            "Will try to reset window size and location when the configuration is a virtual keyboard configuration. Can be useful on slow computers or computers managing the system windows in a custom way."),
     DISABLE_WINDOW_ALWAYS_ON_TOP(
             "disableWindowAlwaysOnTop",
             GlobalRuntimeConfigurationType.COMMAND_LINE,
