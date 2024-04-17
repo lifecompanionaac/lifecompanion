@@ -76,53 +76,56 @@ public class ChangeStageSizeAction extends SimpleUseActionImpl<UseActionTriggerC
     //========================================================================
     @Override
     public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
-        if (!GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.FORCE_WINDOW_SIZE) && !GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.FORCE_WINDOW_LOCATION)) {
+        if (!GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.FORCE_WINDOW_SIZE) && !GlobalRuntimeConfigurationController.INSTANCE.isPresent(
+                GlobalRuntimeConfiguration.FORCE_WINDOW_LOCATION)) {
             FXThreadUtils.runOnFXThread(() -> {
                 final Stage stage = AppModeController.INSTANCE.getUseModeContext().getStage();
-                double x = stage.getX();
-                double y = stage.getY();
-                double stageWidth = stage.getWidth();
-                double stageHeight = stage.getHeight();
-                double changeRatio = this.changeRatioPercent.get() / 100;
+                if (stage != null) {
+                    double x = stage.getX();
+                    double y = stage.getY();
+                    double stageWidth = stage.getWidth();
+                    double stageHeight = stage.getHeight();
+                    double changeRatio = this.changeRatioPercent.get() / 100;
 
-                // Handling the Fullscreen/Maximized status
-                if (stage.isFullScreen() || stage.isMaximized()) {
-                    if (changeRatio < 1) {
-                        stage.setFullScreen(false);
-                        stage.setMaximized(false);
+                    // Handling the Fullscreen/Maximized status
+                    if (stage.isFullScreen() || stage.isMaximized()) {
+                        if (changeRatio < 1) {
+                            stage.setFullScreen(false);
+                            stage.setMaximized(false);
+                        } else {
+                            return;
+                        }
                     } else {
-                        return;
-                    }
-                } else {
-                    // Getting the screen the config resides in
-                    Rectangle2D stageCenterPoint = new Rectangle2D(x + stageWidth / 2, y + stageHeight / 2, 1, 1);
+                        // Getting the screen the config resides in
+                        Rectangle2D stageCenterPoint = new Rectangle2D(x + stageWidth / 2, y + stageHeight / 2, 1, 1);
 
-                    ObservableList<Screen> screensContainingStage = Screen.getScreensForRectangle(stageCenterPoint);
-                    Screen stageScreen;
-                    if (screensContainingStage.size() == 0) {
-                        // Handles when the central point of the stage isn't on any screen
-                        Rectangle2D stageBounds = new Rectangle2D(x, y, stageWidth, stageHeight);
-                        screensContainingStage = Screen.getScreensForRectangle(stageBounds);
-                    }
-                    if (screensContainingStage.size() == 0) {
-                        stageScreen = Screen.getPrimary();
-                    } else {
-                        stageScreen = screensContainingStage.get(0);
-                    }
-                    Rectangle2D stageScreenBounds = stageScreen.getBounds();
-                    double maxAvailableWidth = stageScreenBounds.getWidth();
-                    double maxAvailableHeight = stageScreenBounds.getHeight();
+                        ObservableList<Screen> screensContainingStage = Screen.getScreensForRectangle(stageCenterPoint);
+                        Screen stageScreen;
+                        if (screensContainingStage.size() == 0) {
+                            // Handles when the central point of the stage isn't on any screen
+                            Rectangle2D stageBounds = new Rectangle2D(x, y, stageWidth, stageHeight);
+                            screensContainingStage = Screen.getScreensForRectangle(stageBounds);
+                        }
+                        if (screensContainingStage.size() == 0) {
+                            stageScreen = Screen.getPrimary();
+                        } else {
+                            stageScreen = screensContainingStage.get(0);
+                        }
+                        Rectangle2D stageScreenBounds = stageScreen.getBounds();
+                        double maxAvailableWidth = stageScreenBounds.getWidth();
+                        double maxAvailableHeight = stageScreenBounds.getHeight();
 
-                    // Change window size
-                    double newStageWidth = Math.max(Math.min(stageWidth * changeRatio, maxAvailableWidth), maxAvailableWidth / 10);
-                    double newStageHeight = Math.max(Math.min(stageHeight * changeRatio, maxAvailableHeight), maxAvailableHeight / 10);
-                    stage.setWidth(newStageWidth);
-                    stage.setHeight(newStageHeight);
-                    if (newStageWidth > maxAvailableWidth - 1 && newStageHeight > maxAvailableHeight - 1) {
-                        stage.setMaximized(true);
+                        // Change window size
+                        double newStageWidth = Math.max(Math.min(stageWidth * changeRatio, maxAvailableWidth), maxAvailableWidth / 10);
+                        double newStageHeight = Math.max(Math.min(stageHeight * changeRatio, maxAvailableHeight), maxAvailableHeight / 10);
+                        stage.setWidth(newStageWidth);
+                        stage.setHeight(newStageHeight);
+                        if (newStageWidth > maxAvailableWidth - 1 && newStageHeight > maxAvailableHeight - 1) {
+                            stage.setMaximized(true);
+                        }
                     }
+                    VirtualMouseController.INSTANCE.centerMouseOnStage();
                 }
-                VirtualMouseController.INSTANCE.centerMouseOnStage();
             });
         } else {
             LOGGER.info("ChangeStageSizeAction action ignored because {} or {} are enabled", GlobalRuntimeConfiguration.FORCE_WINDOW_SIZE, GlobalRuntimeConfiguration.FORCE_WINDOW_LOCATION);

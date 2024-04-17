@@ -75,7 +75,7 @@ public class SaveUserTextAction extends SimpleUseActionImpl<UseActionTriggerComp
     }
 
     private void checkDestinationFolder() {
-        if (StringUtils.isBlank(destinationFolder)) {
+        if (StringUtils.isBlank(destinationFolder) || !new File(destinationFolder).exists()) {
             this.destinationFolder = System.getProperty("user.home") + File.separator + Translation.getText("default.user.text.directory.name")
                     + File.separator;
         }

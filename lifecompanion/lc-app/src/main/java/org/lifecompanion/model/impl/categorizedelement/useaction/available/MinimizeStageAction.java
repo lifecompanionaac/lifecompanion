@@ -61,10 +61,13 @@ public class MinimizeStageAction extends SimpleUseActionImpl<UseActionTriggerCom
     //========================================================================
     @Override
     public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
-        if (!GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.FORCE_WINDOW_SIZE) && !GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.FORCE_WINDOW_LOCATION)) {
+        if (!GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.FORCE_WINDOW_SIZE) && !GlobalRuntimeConfigurationController.INSTANCE.isPresent(
+                GlobalRuntimeConfiguration.FORCE_WINDOW_LOCATION)) {
             FXThreadUtils.runOnFXThread(() -> {
                 final Stage stage = AppModeController.INSTANCE.getUseModeContext().getStage();
-                stage.setIconified(true);
+                if (stage != null) {
+                    stage.setIconified(true);
+                }
             });
         } else {
             LOGGER.info("MinimizeStageAction action ignored because {} or {} are enabled", GlobalRuntimeConfiguration.FORCE_WINDOW_SIZE, GlobalRuntimeConfiguration.FORCE_WINDOW_LOCATION);

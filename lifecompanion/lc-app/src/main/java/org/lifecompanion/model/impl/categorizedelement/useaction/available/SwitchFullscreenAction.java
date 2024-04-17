@@ -55,13 +55,17 @@ public class SwitchFullscreenAction extends SimpleUseActionImpl<UseActionTrigger
 
     @Override
     public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
-        List<GlobalRuntimeConfiguration> shouldBeNotActivated = List.of(GlobalRuntimeConfiguration.FORCE_WINDOW_LOCATION, GlobalRuntimeConfiguration.FORCE_WINDOW_SIZE, GlobalRuntimeConfiguration.DISABLE_WINDOW_FULLSCREEN);
+        List<GlobalRuntimeConfiguration> shouldBeNotActivated = List.of(GlobalRuntimeConfiguration.FORCE_WINDOW_LOCATION,
+                GlobalRuntimeConfiguration.FORCE_WINDOW_SIZE,
+                GlobalRuntimeConfiguration.DISABLE_WINDOW_FULLSCREEN);
         if (shouldBeNotActivated.stream().anyMatch(GlobalRuntimeConfigurationController.INSTANCE::isPresent)) {
             LOGGER.info("SwitchFullscreenAction action ignored because one of the following configuration {} is enabled", shouldBeNotActivated);
         } else {
             FXThreadUtils.runOnFXThread(() -> {
                 final Stage stage = AppModeController.INSTANCE.getUseModeContext().stageProperty().get();
-                stage.setMaximized(!stage.isMaximized());
+                if (stage != null) {
+                    stage.setMaximized(!stage.isMaximized());
+                }
             });
         }
 

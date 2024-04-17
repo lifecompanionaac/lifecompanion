@@ -57,7 +57,9 @@ public class SwitchRealFullscreenAction extends SimpleUseActionImpl<UseActionTri
         } else {
             FXThreadUtils.runOnFXThread(() -> {
                 final Stage stage = AppModeController.INSTANCE.getUseModeContext().stageProperty().get();
-                stage.setFullScreen(!stage.isFullScreen());
+                if (stage != null) {
+                    stage.setFullScreen(!stage.isFullScreen());
+                }
             });
         }
 

@@ -77,15 +77,19 @@ public class ChangeFramePositionAction extends SimpleUseActionImpl<UseActionTrig
 
     @Override
     public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
-        List<GlobalRuntimeConfiguration> shouldBeNotActivated = List.of(GlobalRuntimeConfiguration.FORCE_WINDOW_LOCATION, GlobalRuntimeConfiguration.FORCE_WINDOW_SIZE, GlobalRuntimeConfiguration.DISABLE_WINDOW_FULLSCREEN);
+        List<GlobalRuntimeConfiguration> shouldBeNotActivated = List.of(GlobalRuntimeConfiguration.FORCE_WINDOW_LOCATION,
+                GlobalRuntimeConfiguration.FORCE_WINDOW_SIZE,
+                GlobalRuntimeConfiguration.DISABLE_WINDOW_FULLSCREEN);
         if (shouldBeNotActivated.stream().anyMatch(GlobalRuntimeConfigurationController.INSTANCE::isPresent)) {
             LOGGER.info("ChangeFramePositionAction action ignored because one of the following configuration {} is enabled", shouldBeNotActivated);
         } else if (this.framePosition.get() != null) {
-            final Stage stage = AppModeController.INSTANCE.getUseModeContext().getStage();
             FXThreadUtils.runOnFXThread(() -> {
-                if (!stage.isFullScreen() && !stage.isMaximized()) {
-                    StageUtils.moveStageTo(stage, this.framePosition.get());
-                    VirtualMouseController.INSTANCE.centerMouseOnStage();
+                final Stage stage = AppModeController.INSTANCE.getUseModeContext().getStage();
+                if (stage != null) {
+                    if (!stage.isFullScreen() && !stage.isMaximized()) {
+                        StageUtils.moveStageTo(stage, this.framePosition.get());
+                        VirtualMouseController.INSTANCE.centerMouseOnStage();
+                    }
                 }
             });
         }
