@@ -117,9 +117,9 @@ public abstract class DownloadJdkAndJfxTask extends DefaultTask {
         WIN_X64(
                 "zip",
                 "https://github.com/adoptium/temurin18-binaries/releases/download/jdk-18.0.2.1%2B1/OpenJDK18U-jdk_x64_windows_hotspot_18.0.2.1_1.zip",
-                "https://download2.gluonhq.com/openjfx/18.0.2/openjfx-18.0.2_windows-x64_bin-jmods.zip",
+                "https://download2.gluonhq.com/openjfx/21.0.1/openjfx-21.0.1_windows-x64_bin-jmods.zip",
                 "jdk-18.0.2.1+1",
-                "javafx-jmods-18.0.2"
+                "javafx-jmods-21.0.1"
         ),
         LINUX_X64(
                 "tar.gz",

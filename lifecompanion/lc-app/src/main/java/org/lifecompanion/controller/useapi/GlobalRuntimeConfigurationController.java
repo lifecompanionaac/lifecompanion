@@ -34,16 +34,16 @@ public enum GlobalRuntimeConfigurationController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GlobalRuntimeConfigurationController.class);
 
-    private Map<GlobalRuntimeConfiguration, List<String>> globalRuntimeConfigurations;
+    private final Map<GlobalRuntimeConfiguration, List<String>> globalRuntimeConfigurations;
 
     GlobalRuntimeConfigurationController() {
+        this.globalRuntimeConfigurations = new HashMap<>();
     }
 
     public void init(List<String> argsCollection) {
-        if (globalRuntimeConfigurations != null) {
+        if (!globalRuntimeConfigurations.isEmpty()) {
             throw new IllegalStateException("Can't init global runtime configuration twice");
         }
-        globalRuntimeConfigurations = new HashMap<>();
         detectJavaProperties();
         detectCommandLine(argsCollection);
 
