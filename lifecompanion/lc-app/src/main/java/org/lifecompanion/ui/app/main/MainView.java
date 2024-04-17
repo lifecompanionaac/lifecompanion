@@ -140,7 +140,6 @@ public class MainView extends StackPane implements LCViewInitHelper {
         button.setCenterShape(true);
         button.getStyleClass().addAll("opacity-90", "hidden-disabled");
         button.setStyle("-fx-background-color: " + (primary ? "-fx-main-dark" : "-fx-second-dark"));
-        button.setPrefSize(12.0, 12.0);
         return button;
     }
 

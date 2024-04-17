@@ -49,8 +49,8 @@ public class GridPartGridViewConfig extends GridPartGridViewBase {
         // Select grid
         this.buttonSelectGrid = new ToggleButton();
         ButtonComponentOption.applyComponentOptionButtonStyle(this.buttonSelectGrid, LCGraphicStyle.THIRD_DARK, FontAwesome.Glyph.TH_LARGE);
-        this.buttonSelectGrid.translateXProperty().bind(widthProperty().subtract(buttonSelectGrid.getPrefWidth() + 5));
-        this.buttonSelectGrid.translateYProperty().bind(heightProperty().subtract(buttonSelectGrid.getPrefHeight() + 5));
+        this.buttonSelectGrid.translateXProperty().bind(widthProperty().subtract(buttonSelectGrid.widthProperty()).add(-5));
+        this.buttonSelectGrid.translateYProperty().bind(heightProperty().subtract(buttonSelectGrid.heightProperty()).add(-5));
         this.getChildren().add(this.buttonSelectGrid);
     }
 

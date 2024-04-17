@@ -199,8 +199,6 @@ public class ButtonComponentOption extends BaseOptionRegion<SelectableComponentI
         button.setCenterShape(true);
         button.getStyleClass().addAll("content-display-graphic-only", "opacity-30", "opacity-60-pressed", "opacity-80-hover", "opacity-40-disabled", "opacity-100-selected");
         button.setStyle("-fx-background-color:" + ColorUtils.toCssColor(backgroundColor));
-        //FIX : when adding a group to root, if the pref size is not set, the button is not visible ?
-        button.setPrefSize(24.0, 24.0);
         button.setMaxWidth(Double.MAX_VALUE);
         button.setMaxHeight(Double.MAX_VALUE);
     }
