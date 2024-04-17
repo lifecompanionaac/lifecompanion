@@ -41,6 +41,7 @@ import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.util.DesktopUtils;
 import org.lifecompanion.util.javafx.FXControlUtils;
 
+import java.util.Date;
 import java.util.function.Consumer;
 
 /**
@@ -191,9 +192,8 @@ public class ConfigurationDescriptionAdvancedListCell extends ListCell<LCConfigu
                                     StringUtils.isBlank(itemP.configurationDescriptionProperty().get()) ?
                                             Translation.getText("configuration.empty.description.filler") : itemP.configurationDescriptionProperty().get(), itemP.configurationDescriptionProperty(),
                             itemP.configurationDescriptionProperty()));
-            this.labelConfigDate.textProperty().bind(
-                    Bindings.createStringBinding(() -> StringUtils.dateToStringDateWithHour(itemP.configurationLastDateProperty().get())
-                            , itemP.configurationLastDateProperty()));
+            Date lastDate = itemP.configurationLastDateProperty().get();
+            this.labelConfigDate.setText(lastDate != null ? StringUtils.dateToStringDateWithHour(lastDate) : "");
             this.labelConfigAuthor.textProperty().bind(itemP.configurationAuthorProperty());
             this.linkConfigWebsiteUrl.textProperty().bind(itemP.configurationWebsiteUrlProperty());
             this.setGraphic(this.gridPaneContent);
