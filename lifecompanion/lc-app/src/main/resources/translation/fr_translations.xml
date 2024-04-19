@@ -1673,6 +1673,7 @@
   <text key="user.comp.empty.list">Aucun modèle pour le type recherché</text>
   <text key="general.configuration.info.label.no.information">Configuration non sauvegardée</text>
   <text key="general.configuration.mouse.config.part.circle.mouse.explain">Permet de configurer la souris virtuelle, qui peut être utilisée grâce aux actions des catégories "Actions de souris virtuelle (en pointage directionnel)","Déplacement de souris virtuelle (en pointage directionnel)", "Souris virtuelle (pointage défilement par lignes croisées)", de la catégorie "Accès à l'ordinateur"</text>
+  <text key="general.configuration.mouse.config.part.circle.mouse.explain2">Permet de configurer la souris virtuelle qui peut être utilisée grâce aux actions des catégories "Actions de souris virtuelle (en pointage directionnel)","Déplacement de souris virtuelle (en pointage directionnel)" de la catégorie "Accès à l'ordinateur"</text>
   <text key="general.configuration.mouse.config.part.circle.mouse.title">Configuration générale de la souris virtuelle</text>
   <text key="general.configuration.mouse.config.part.arrow.mouse.title">Configuration du pointage directionnel</text>
   <text key="general.configuration.mouse.config.part.cursor.strip.mouse.title">Configuration du pointage par défilement avec lignes croisées</text>

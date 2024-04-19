@@ -105,8 +105,9 @@ public enum DefaultUseActionSubCategories implements UseActionSubCategoryI {
             CategorizedElementColorProvider.nextColor(DefaultUseActionMainCategories.COMPUTER_ACCESS)), //
     MOUSE_ACTION_DIRECT("use.action.sub.category.computer.access.mouse.direct.actions.name", DefaultUseActionMainCategories.COMPUTER_ACCESS,
             CategorizedElementColorProvider.nextColor(DefaultUseActionMainCategories.COMPUTER_ACCESS)), //
-    CURSOR_STRIP("use.action.sub.category.computer.access.cursor.strip.actions.name", DefaultUseActionMainCategories.COMPUTER_ACCESS,
-            CategorizedElementColorProvider.nextColor(DefaultUseActionMainCategories.COMPUTER_ACCESS)), //
+    // TODO : rename
+    //    CURSOR_STRIP("use.action.sub.category.computer.access.cursor.strip.actions.name", DefaultUseActionMainCategories.COMPUTER_ACCESS,
+    //            CategorizedElementColorProvider.nextColor(DefaultUseActionMainCategories.COMPUTER_ACCESS)), //
 
     //Media
     SOUND("use.action.sub.category.sound.name", DefaultUseActionMainCategories.MEDIA, CategorizedElementColorProvider.nextColor(DefaultUseActionMainCategories.MEDIA)), //

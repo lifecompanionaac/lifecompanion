@@ -45,8 +45,8 @@ import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 public class VirtualMouseConfigurationStepView extends BorderPane implements GeneralConfigurationStepViewI, LCViewInitHelper {
     private Slider sliderMouseSpeed, sliderMouseSize;
     private LCColorPicker pickerMouseColor, pickerMouseStrokeColor;
-    private ComboBox<VirtualMouseType> comboboxVirtualMouseType;
-    private ComboBox<DirectionalMouseDrawing> comboboxDirectionalMouseDrawing;
+    private ComboBox<VirtualMouseType> comboBoxVirtualMouseType;
+    private ComboBox<DirectionalMouseDrawing> comboBoxDirectionalMouseDrawing;
     private ToggleSwitch toggleSwitchMouseAccuracy;
     private Spinner<Integer> spinnerMouseMaxLoop;
     private LCConfigurationI model;
@@ -89,16 +89,16 @@ public class VirtualMouseConfigurationStepView extends BorderPane implements Gen
     public void initUI() {
         Label labelMousePartTitle = FXControlUtils.createTitleLabel(Translation.getText("general.configuration.mouse.config.part.circle.mouse.title"));
         GridPane.setHgrow(labelMousePartTitle, Priority.ALWAYS);
-        Label labelMousePartExplain = new Label(Translation.getText("general.configuration.mouse.config.part.circle.mouse.explain"));
+        Label labelMousePartExplain = new Label(Translation.getText("general.configuration.mouse.config.part.circle.mouse.explain2"));
         labelMousePartExplain.getStyleClass().addAll("text-font-italic", "text-fill-gray", "text-wrap-enabled");
         labelMousePartExplain.setMaxWidth(Double.MAX_VALUE);
 
         Label labelMouseType = new Label(Translation.getText("virtual.mouse.type.label"));
-        this.comboboxVirtualMouseType = new ComboBox<>(FXCollections.observableArrayList(VirtualMouseType.values()));
-        this.comboboxVirtualMouseType.setButtonCell(new VirtualMouseDrawingListCell());
-        this.comboboxVirtualMouseType.setCellFactory(lv -> new VirtualMouseDrawingListCell());
-        this.comboboxVirtualMouseType.setMaxWidth(Double.MAX_VALUE);
-        FXControlUtils.createAndAttachTooltip(this.comboboxVirtualMouseType, "tooltip.explain.use.param.virtual.mouse.type");
+        this.comboBoxVirtualMouseType = new ComboBox<>(FXCollections.observableArrayList(VirtualMouseType.values()));
+        this.comboBoxVirtualMouseType.setButtonCell(new VirtualMouseDrawingListCell());
+        this.comboBoxVirtualMouseType.setCellFactory(lv -> new VirtualMouseDrawingListCell());
+        this.comboBoxVirtualMouseType.setMaxWidth(Double.MAX_VALUE);
+        FXControlUtils.createAndAttachTooltip(this.comboBoxVirtualMouseType, "tooltip.explain.use.param.virtual.mouse.type");
 
         this.sliderMouseSpeed = FXControlUtils.createBaseSlider(1, 10, 5);
         FXControlUtils.createAndAttachTooltip(this.sliderMouseSpeed, "tooltip.explain.use.param.virtual.mouse.speed");
@@ -120,11 +120,11 @@ public class VirtualMouseConfigurationStepView extends BorderPane implements Gen
         GridPane.setHgrow(labelMousePartSecondeTitle, Priority.ALWAYS);
 
         Label labelMouseDrawing = new Label(Translation.getText("virtual.mouse.drawing.label"));
-        this.comboboxDirectionalMouseDrawing = new ComboBox<>(FXCollections.observableArrayList(DirectionalMouseDrawing.values()));
-        this.comboboxDirectionalMouseDrawing.setButtonCell(new PointingMouseDrawingListCell());
-        this.comboboxDirectionalMouseDrawing.setCellFactory(lv -> new PointingMouseDrawingListCell());
-        this.comboboxDirectionalMouseDrawing.setMaxWidth(Double.MAX_VALUE);
-        FXControlUtils.createAndAttachTooltip(this.comboboxDirectionalMouseDrawing, "tooltip.explain.use.param.virtual.mouse.draw");
+        this.comboBoxDirectionalMouseDrawing = new ComboBox<>(FXCollections.observableArrayList(DirectionalMouseDrawing.values()));
+        this.comboBoxDirectionalMouseDrawing.setButtonCell(new PointingMouseDrawingListCell());
+        this.comboBoxDirectionalMouseDrawing.setCellFactory(lv -> new PointingMouseDrawingListCell());
+        this.comboBoxDirectionalMouseDrawing.setMaxWidth(Double.MAX_VALUE);
+        FXControlUtils.createAndAttachTooltip(this.comboBoxDirectionalMouseDrawing, "tooltip.explain.use.param.virtual.mouse.draw");
 
         this.pickerMouseStrokeColor = new LCColorPicker(LCColorPicker.ColorPickerMode.DARK);
         FXControlUtils.createAndAttachTooltip(this.pickerMouseStrokeColor, "tooltip.explain.use.param.virtual.mouse.stroke.color");
@@ -152,8 +152,8 @@ public class VirtualMouseConfigurationStepView extends BorderPane implements Gen
         int gridRowIndex = 0;
         gridPaneTotal.add(labelMousePartTitle, 0, gridRowIndex++, 2, 1);
         gridPaneTotal.add(labelMousePartExplain, 0, gridRowIndex++, 2, 1);
-        gridPaneTotal.add(labelMouseType, 0, gridRowIndex);
-        gridPaneTotal.add(this.comboboxVirtualMouseType, 1, gridRowIndex++);
+        // gridPaneTotal.add(labelMouseType, 0, gridRowIndex);
+        // gridPaneTotal.add(this.comboBoxVirtualMouseType, 1, gridRowIndex++);
         gridPaneTotal.add(labelMouseSpeed, 0, gridRowIndex);
         gridPaneTotal.add(this.sliderMouseSpeed, 1, gridRowIndex++);
         gridPaneTotal.add(labelMouseSize, 0, gridRowIndex);
@@ -163,26 +163,26 @@ public class VirtualMouseConfigurationStepView extends BorderPane implements Gen
 
         gridPaneTotal.add(labelMousePartSecondeTitle, 0, gridRowIndex++, 2, 1);
         gridPaneTotal.add(labelMouseDrawing, 0, gridRowIndex);
-        gridPaneTotal.add(this.comboboxDirectionalMouseDrawing, 1, gridRowIndex++);
+        gridPaneTotal.add(this.comboBoxDirectionalMouseDrawing, 1, gridRowIndex++);
         gridPaneTotal.add(labelMouseStrokeColor, 0, gridRowIndex);
         gridPaneTotal.add(this.pickerMouseStrokeColor, 1, gridRowIndex++);
 
-        gridPaneTotal.add(labelMousePartthirdTitle, 0, gridRowIndex++, 2, 1);
-        gridPaneTotal.add(labelMouseAccuracy, 0, gridRowIndex);
-        gridPaneTotal.add(this.toggleSwitchMouseAccuracy, 1, gridRowIndex++);
-        gridPaneTotal.add(labelMouseLoopMax, 0, gridRowIndex);
-        gridPaneTotal.add(this.spinnerMouseMaxLoop, 1, gridRowIndex);
-        gridPaneTotal.setPadding(new Insets(GeneralConfigurationStepViewI.PADDING));
+        //        gridPaneTotal.add(labelMousePartthirdTitle, 0, gridRowIndex++, 2, 1);
+        //        gridPaneTotal.add(labelMouseAccuracy, 0, gridRowIndex);
+        //        gridPaneTotal.add(this.toggleSwitchMouseAccuracy, 1, gridRowIndex++);
+        //        gridPaneTotal.add(labelMouseLoopMax, 0, gridRowIndex);
+        //        gridPaneTotal.add(this.spinnerMouseMaxLoop, 1, gridRowIndex);
+        //        gridPaneTotal.setPadding(new Insets(GeneralConfigurationStepViewI.PADDING));
 
 
         gridPaneTotal.setPadding(new Insets(GeneralConfigurationStepViewI.PADDING));
         setCenter(gridPaneTotal);
 
-        BooleanBinding crossScanningSelected = comboboxVirtualMouseType.getSelectionModel().selectedItemProperty().isEqualTo(VirtualMouseType.CROSS_SCANNING);
+        BooleanBinding crossScanningSelected = comboBoxVirtualMouseType.getSelectionModel().selectedItemProperty().isEqualTo(VirtualMouseType.CROSS_SCANNING);
         this.toggleSwitchMouseAccuracy.disableProperty().bind(crossScanningSelected.not());
         this.spinnerMouseMaxLoop.disableProperty().bind(crossScanningSelected.not());
         this.pickerMouseStrokeColor.disableProperty().bind(crossScanningSelected);
-        this.comboboxDirectionalMouseDrawing.disableProperty().bind(crossScanningSelected);
+        this.comboBoxDirectionalMouseDrawing.disableProperty().bind(crossScanningSelected);
     }
 
     @Override
@@ -192,8 +192,8 @@ public class VirtualMouseConfigurationStepView extends BorderPane implements Gen
         this.pickerMouseStrokeColor.valueProperty().addListener(invalidationListener);
         this.sliderMouseSize.valueProperty().addListener(invalidationListener);
         this.sliderMouseSpeed.valueProperty().addListener(invalidationListener);
-        this.comboboxVirtualMouseType.valueProperty().addListener(invalidationListener);
-        this.comboboxDirectionalMouseDrawing.valueProperty().addListener(invalidationListener);
+        this.comboBoxVirtualMouseType.valueProperty().addListener(invalidationListener);
+        this.comboBoxDirectionalMouseDrawing.valueProperty().addListener(invalidationListener);
         this.toggleSwitchMouseAccuracy.selectedProperty().addListener(invalidationListener);
         this.spinnerMouseMaxLoop.valueProperty().addListener(invalidationListener);
     }
@@ -205,8 +205,8 @@ public class VirtualMouseConfigurationStepView extends BorderPane implements Gen
         this.model.getVirtualMouseParameters().mouseStrokeColorProperty().set(this.pickerMouseStrokeColor.getValue());
         this.model.getVirtualMouseParameters().mouseSizeProperty().set((int) this.sliderMouseSize.getValue());
         this.model.getVirtualMouseParameters().mouseSpeedProperty().set((int) this.sliderMouseSpeed.getValue());
-        this.model.getVirtualMouseParameters().virtualMouseTypeProperty().set(this.comboboxVirtualMouseType.getValue());
-        this.model.getVirtualMouseParameters().directionalMouseDrawingProperty().set(this.comboboxDirectionalMouseDrawing.getValue());
+        this.model.getVirtualMouseParameters().virtualMouseTypeProperty().set(this.comboBoxVirtualMouseType.getValue());
+        this.model.getVirtualMouseParameters().directionalMouseDrawingProperty().set(this.comboBoxDirectionalMouseDrawing.getValue());
         this.model.getVirtualMouseParameters().mouseAccuracyProperty().set(this.toggleSwitchMouseAccuracy.isSelected());
         this.model.getVirtualMouseParameters().mouseMaxLoopProperty().set(this.spinnerMouseMaxLoop.getValue());
     }
@@ -218,8 +218,8 @@ public class VirtualMouseConfigurationStepView extends BorderPane implements Gen
         this.pickerMouseStrokeColor.setValue(this.model.getVirtualMouseParameters().mouseStrokeColorProperty().get());
         this.sliderMouseSize.adjustValue(this.model.getVirtualMouseParameters().mouseSizeProperty().get());
         this.sliderMouseSpeed.adjustValue(this.model.getVirtualMouseParameters().mouseSpeedProperty().get());
-        this.comboboxVirtualMouseType.getSelectionModel().select(this.model.getVirtualMouseParameters().virtualMouseTypeProperty().get());
-        this.comboboxDirectionalMouseDrawing.getSelectionModel().select(this.model.getVirtualMouseParameters().directionalMouseDrawingProperty().get());
+        this.comboBoxVirtualMouseType.getSelectionModel().select(this.model.getVirtualMouseParameters().virtualMouseTypeProperty().get());
+        this.comboBoxDirectionalMouseDrawing.getSelectionModel().select(this.model.getVirtualMouseParameters().directionalMouseDrawingProperty().get());
         this.toggleSwitchMouseAccuracy.setSelected(this.model.getVirtualMouseParameters().mouseAccuracyProperty().get());
         this.spinnerMouseMaxLoop.getValueFactory().setValue(this.model.getVirtualMouseParameters().mouseMaxLoopProperty().get());
         this.dirty = false;

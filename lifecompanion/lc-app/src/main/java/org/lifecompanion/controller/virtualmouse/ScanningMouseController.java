@@ -49,6 +49,7 @@ import java.awt.event.MouseEvent;
 /**
  * @author Oscar PAVOINE
  */
+// TODO : rename
 public enum ScanningMouseController implements ModeListenerI {
     INSTANCE;
 

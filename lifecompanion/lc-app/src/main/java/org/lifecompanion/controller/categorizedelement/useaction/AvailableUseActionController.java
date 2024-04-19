@@ -72,7 +72,7 @@ public enum AvailableUseActionController {
      */
     private void initActionListListener() {
         this.availableAction.addListener(BindingUtils.createListChangeListenerV2(this::addAction, null));
-        PluginController.INSTANCE.getUseActions().registerListenerAndDrainCache(added -> addActionType(added,true));
+        PluginController.INSTANCE.getUseActions().registerListenerAndDrainCache(added -> addActionType(added, true));
     }
 
     /**
@@ -82,13 +82,17 @@ public enum AvailableUseActionController {
      */
     private void addAction(final BaseUseActionI<? extends UseActionTriggerComponentI> action) {
         UseActionSubCategoryI subCategory = action.getCategory();
-        UseActionMainCategoryI mainCategory = subCategory.getMainCategory();
-        //Add the main category
-        if (!this.mainCategories.contains(mainCategory)) {
-            this.mainCategories.add(mainCategory);
+        if (subCategory != null) {
+            UseActionMainCategoryI mainCategory = subCategory.getMainCategory();
+            //Add the main category
+            if (!this.mainCategories.contains(mainCategory)) {
+                this.mainCategories.add(mainCategory);
+            }
+            //Add the action to its subcategory
+            subCategory.getContent().add(action);
+        } else {
+            LOGGER.warn("Action {} doesn't have any sub category, it will not be visible", action.getClass());
         }
-        //Add the action to its subcategory
-        subCategory.getContent().add(action);
     }
     //========================================================================
 
@@ -102,7 +106,7 @@ public enum AvailableUseActionController {
     private void createActions() {
         List<Class<? extends BaseUseActionI>> implementedActions = ReflectionHelper.findImplementationsInModules(BaseUseActionI.class);
         for (Class<? extends BaseUseActionI> possibleAction : implementedActions) {
-            this.addActionType(possibleAction,false);
+            this.addActionType(possibleAction, false);
         }
     }
 

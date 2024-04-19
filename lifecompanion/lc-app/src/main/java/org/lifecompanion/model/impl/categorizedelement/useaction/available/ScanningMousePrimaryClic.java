@@ -32,7 +32,7 @@ public class ScanningMousePrimaryClic extends SimpleUseActionImpl<UseActionTrigg
 
     public ScanningMousePrimaryClic() {
         super(UseActionTriggerComponentI.class);
-        this.category = DefaultUseActionSubCategories.CURSOR_STRIP;
+        // this.category = DefaultUseActionSubCategories.CURSOR_STRIP;
         this.nameID = "action.cursor.strip.validate.mouse.clic.name";
         this.order = 1000;
         this.staticDescriptionID = "action.cursor.strip.validate.mouse.clic.description";
