@@ -17,15 +17,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.lifecompanion.ui.virtualmouse;
+package org.lifecompanion.model.api.configurationcomponent;
 
-import javafx.scene.Node;
-import org.lifecompanion.controller.virtualmouse.VirtualMouseController;
+import org.lifecompanion.framework.commons.translation.Translation;
 
-public interface VirtualMouseDrawingI {
-	Node getView();
+/**
+ * Represent the different way of drawing the virtual mouse.
+ *
+ * @author Mathieu THEBAUD <math.thebaud@gmail.com>
+ */
+public enum DirectionalMouseDrawing {
+    SIMPLE_CIRCLE("virtual.mouse.drawing.simple.circle"),
+    TARGET("virtual.mouse.drawing.target");
 
-	void bind(VirtualMouseController mouseController);
+    private final String text;
 
-	void unbind();
+    DirectionalMouseDrawing(final String textP) {
+        this.text = textP;
+    }
+
+    public String getText() {
+        return Translation.getText(this.text);
+    }
+
+    public String getImagePath() {
+        return "mouse-drawing/" + this.name().toLowerCase() + ".png";
+    }
 }

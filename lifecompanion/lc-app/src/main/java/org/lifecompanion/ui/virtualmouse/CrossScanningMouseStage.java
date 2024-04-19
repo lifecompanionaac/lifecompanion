@@ -20,7 +20,7 @@
 package org.lifecompanion.ui.virtualmouse;
 
 import javafx.geometry.Rectangle2D;
-import javafx.scene.Group;
+import javafx.scene.layout.Pane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -34,31 +34,32 @@ import org.lifecompanion.util.javafx.StageUtils;
  *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
-public class VirtualMouseStage extends Stage {
+public class CrossScanningMouseStage extends Stage {
 
     // Class part : "Singleton"
     //========================================================================
-    private static VirtualMouseStage instance;
+    private static CrossScanningMouseStage instance;
 
     /**
      * <strong>Should be called on the JavaFX Thread !</strong>
      *
      * @return the virtual mouse stage
      */
-    public static VirtualMouseStage getInstance() {
-        if (VirtualMouseStage.instance == null) {
-            VirtualMouseStage.instance = new VirtualMouseStage();
+    public static CrossScanningMouseStage getInstance() {
+        if (CrossScanningMouseStage.instance == null) {
+            CrossScanningMouseStage.instance = new CrossScanningMouseStage();
         }
-        return VirtualMouseStage.instance;
+        return CrossScanningMouseStage.instance;
     }
     //========================================================================
 
     // Class part : "Stage"
     //========================================================================
     @SuppressWarnings("deprecation")
-    private VirtualMouseStage() {
+    private CrossScanningMouseStage() {
         //Stage parameters
         this.initStyle(StageStyle.TRANSPARENT);
+        // FIXME : which stage?
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getBounds();
         this.setWidth(primaryScreenBounds.getWidth());
         this.setHeight(primaryScreenBounds.getHeight());
@@ -69,7 +70,7 @@ public class VirtualMouseStage extends Stage {
         this.setOnShown(e1 -> StageUtils.setFocusableInternalAPI(this, false));
         this.centerOnScreen();
         //Scene
-        this.setScene(new VirtualMouseScene(new Group()));
+        this.setScene(new CrossScanningMouseScene(new Pane()));
     }
     //========================================================================
 

@@ -19,22 +19,22 @@
 
 package org.lifecompanion.ui.common.pane.specific.cell;
 
-import org.lifecompanion.framework.commons.utils.lang.StringUtils;
-import org.lifecompanion.model.api.configurationcomponent.VirtualMouseType;
-import org.lifecompanion.controller.resource.IconHelper;
 import javafx.scene.control.ListCell;
 import javafx.scene.image.ImageView;
+import org.lifecompanion.controller.resource.IconHelper;
+import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.model.api.configurationcomponent.DirectionalMouseDrawing;
 
-public class VirtualMouseDrawingListCell extends ListCell<VirtualMouseType> {
+public class PointingMouseDrawingListCell extends ListCell<DirectionalMouseDrawing> {
 	private ImageView imageView;
 
-	public VirtualMouseDrawingListCell() {
+	public PointingMouseDrawingListCell() {
 		this.imageView = new ImageView();
 		this.setGraphicTextGap(10.0);
 	}
 
 	@Override
-	protected void updateItem(final VirtualMouseType item, final boolean empty) {
+	protected void updateItem(final DirectionalMouseDrawing item, final boolean empty) {
 		super.updateItem(item, empty);
 		if (item == null || empty) {
 			this.setText(null);

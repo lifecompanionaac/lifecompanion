@@ -15,6 +15,8 @@
   <text key="general.config.scene.cancel.warning.header">Configuration modifiée</text>
   <text key="general.config.scene.cancel.warning.message">Vous avez des modifications sur la configuration qui ne sont pas enregistrées. En fermant cette fenêtre, ces changements seront perdus.</text>
   <text key="virtual.mouse.drawing.target">Cible</text>
+  <text key="virtual.mouse.type.directional">Pointage directionnel</text>
+  <text key="virtual.mouse.type.cross.scanning">Pointage par défilement avec lignes croisées</text>
   <text key="tooltip.keylist.drag.drop.swap.keys">Inverser "{}" et "{}"</text>
   <text key="tooltip.keylist.drag.drop.move.to">Déplacer "{}" dans "{}"</text>
   <text key="keylist.content.pane.button.add">Ajouter</text>
@@ -129,7 +131,7 @@
 		dans
 		LifeCompanion (notes, ...)</text>
   <text key="use.action.main.category.app.name">Applications</text>
-  <text key="use.action.main.category.computer.access.description">Contient les actions qui permetttent de contrôle le
+  <text key="use.action.main.category.computer.access.description">Contient les actions qui permettent de contrôle le
 		clavier et la souris virtuelle, de lancer des programmes.\nContient tout ce qui permet de contrôler son
 		ordinateur à l'aide de LifeCompanion.</text>
   <text key="use.action.main.category.computer.access.name">Accès à l'ordinateur</text>
@@ -162,9 +164,10 @@
   <text key="use.action.sub.category.change.page.name">Changer de page</text>
   <text key="use.action.sub.category.computer.access.computer.features.name">Fonctions de l'ordinateur</text>
   <text key="use.action.sub.category.computer.access.keyboard.name">Clavier</text>
-  <text key="use.action.sub.category.computer.access.mouse.actions.name">Action de souris virtuelle</text>
-  <text key="use.action.sub.category.computer.access.mouse.direct.actions.name">Action de souris (direct)</text>
-  <text key="use.action.sub.category.computer.access.mouse.move.name">Déplacement de souris virtuelle</text>
+  <text key="use.action.sub.category.computer.access.mouse.actions.name">Actions de souris virtuelle (en pointage directionnel)</text>
+  <text key="use.action.sub.category.computer.access.cursor.strip.actions.name">Souris virtuelle (pointage défilement par lignes croisées)</text>
+  <text key="use.action.sub.category.computer.access.mouse.direct.actions.name">Actions de souris (direct)</text>
+  <text key="use.action.sub.category.computer.access.mouse.move.name">Déplacement de souris virtuelle (en pointage directionnel)</text>
   <text key="use.action.sub.category.configuration.change.name">Changer des éléments</text>
   <text key="use.action.sub.category.configuration.frame.name">Fenêtre</text>
   <text key="use.action.sub.category.delete.text.name">Supprimer du texte</text>
@@ -562,6 +565,10 @@
   <text key="action.mouse.scroll.up.description">Reproduit l'action de la molette de souris vers le haut (pour monter
 		dans un élément défilable)</text>
   <text key="action.mouse.scroll.up.name">Molette vers le haut</text>
+
+    <text key="action.cursor.strip.validate.mouse.clic.name">Clic gauche</text>
+    <text key="action.cursor.strip.validate.mouse.clic.description">Permet de déclencher la souris en pointage par défilement avec lignes croisées, de l'arrêter et de faire un clic gauche au croisement des deux lignes.</text>
+
   <!--org.lifecompanion.base.data.useaction.impl.computera.mousemove-->
   <text key="action.move.mouse.down.name">Déplacer vers le bas</text>
   <text key="action.move.mouse.down.static.description">Permet de déplacer le curseur de la souris virtuelle vers le
@@ -1387,6 +1394,8 @@
   <text key="virtual.mouse.stroke.color">Couleur du contour du curseur virtuel</text>
   <text key="virtual.mouse.size">Taille du curseur virtuel</text>
   <text key="virtual.mouse.speed">Vitesse de déplacement</text>
+  <text key="virtual.mouse.accuracy">Mode précision de la bande-curseur</text>
+  <text key="virtual.mouse.loop.max">Boucle maximale de la bande-curseur</text>
   <!--org.lifecompanion.config.data.component.profile-->
   <text key="profile.alert.no.selected.header">Aucun profil sélectionné</text>
   <text key="profile.alert.no.selected.message">Vous devez créer ou sélectionner un profil pour pouvoir utiliser LifeCompanion.\nVoulez vous quitter l'application ?</text>
@@ -1663,9 +1672,10 @@
   <text key="general.configuration.info.label.name">Nom</text>
   <text key="user.comp.empty.list">Aucun modèle pour le type recherché</text>
   <text key="general.configuration.info.label.no.information">Configuration non sauvegardée</text>
-  <text key="general.configuration.mouse.config.part.circle.mouse.explain">Permet de configurer la souris virtuelle,
-		qui peut être utilisée grâce aux actions "Actions de souris" de la catégorie "Accès à l'ordinateur"</text>
-  <text key="general.configuration.mouse.config.part.circle.mouse.title">Configuration de la souris "flèches"</text>
+  <text key="general.configuration.mouse.config.part.circle.mouse.explain">Permet de configurer la souris virtuelle, qui peut être utilisée grâce aux actions des catégories "Actions de souris virtuelle (en pointage directionnel)","Déplacement de souris virtuelle (en pointage directionnel)", "Souris virtuelle (pointage défilement par lignes croisées)", de la catégorie "Accès à l'ordinateur"</text>
+  <text key="general.configuration.mouse.config.part.circle.mouse.title">Configuration générale de la souris virtuelle</text>
+  <text key="general.configuration.mouse.config.part.arrow.mouse.title">Configuration du pointage directionnel</text>
+  <text key="general.configuration.mouse.config.part.cursor.strip.mouse.title">Configuration du pointage par défilement avec lignes croisées</text>
   <text key="general.configuration.predictors.button.configure.char.prediction">Configurer la prédiction de
 		caractères</text>
   <text key="general.configuration.predictors.button.configure.word.prediction">Configurer la prédiction de mots</text>
@@ -1753,8 +1763,11 @@
 		détecter d'appui de touches de clavier.</text>
   <text key="tooltip.explain.use.param.virtual.mouse.color">La couleur du curseur de la souris virtuelle.</text>
   <text key="tooltip.explain.use.param.virtual.mouse.stroke.color">La couleur du contour du curseur de la souris virtuelle.</text>
-  <text key="tooltip.explain.use.param.virtual.mouse.draw">Permet de changer le dessin du curseur de la souris
+  <text key="tooltip.explain.use.param.virtual.mouse.type">Permet de choisir le type de souris virtuelle.</text>
+    <text key="tooltip.explain.use.param.virtual.mouse.type">Permet de changer le type de souris virtuelle.</text>
+    <text key="tooltip.explain.use.param.virtual.mouse.draw">Permet de changer le dessin du curseur de la souris
 		virtuelle.</text>
+    <text key="tooltip.explain.use.param.virtual.mouse.loop.max">Permet de limiter le nombre de fois que la ligne fait une aller/retour avant de s'arrêter.</text>
   <text key="tooltip.explain.use.param.virtual.mouse.size">La taille de la souris virtuelle affichée (plus la
 		valeur est élevée, plus le curseur virtuel sera grand)</text>
   <text key="tooltip.explain.use.param.virtual.mouse.speed">La vitesse de déplacement de la souris virtuelle (plus
@@ -1772,7 +1785,8 @@
   <text key="tooltip.voice.play.example">Prononce la phrase avec les paramètres sélectionnés</text>
   <text key="useevent.part.action.title">Actions au déclenchement de l'événement sélectionné</text>
   <text key="useevent.part.event.title">Événements déclencheur</text>
-  <text key="virtual.mouse.drawing.label">Type de curseur virtuel</text>
+  <text key="virtual.mouse.type.label">Type de souris virtuelle</text>
+  <text key="virtual.mouse.drawing.label">Dessin du curseur virtuel</text>
   <text key="voice.synthesizer.configure.pron.exceptions">Modifier la prononciation de la synthèse</text>
   <text key="voice.synthesizer.engine">Moteur</text>
   <text key="voice.synthesizer.pitch">Hauteur</text>
@@ -1814,8 +1828,10 @@
   <text key="progress.display.mode.empty">Vider</text>
   <text key="use.event.sub.category.sequence.general.name">Général</text>
   <text key="use.event.main.category.sequence.name">Séquences</text>
-  <text key="use.event.on.ua.sequence.finished.name">Fin d'une séquence</text>
+    <text key="use.event.on.ua.sequence.finished.name">Fin d'une séquence</text>
   <text key="use.event.on.ua.sequence.finished.description">Cet événement est généré à la fin d'une séquence et permet donc d'ajouter des actions en conséquences, par exemple revenir à la sélection des séquences ou encore prononcer un message de fin.</text>
+    <text key="use.event.main.category.sequence.description">Contient les événements générés par l'interaction avec les fonctions de séquences. Permet par exemple de réagir à la fin d'une séquence.</text>
+
   <text key="use.event.main.category.sequence.description">Contient les événements générés par l'interaction avec les fonctions de séquences. Permet par exemple de réagir à la fin d'une séquence.</text>
 
     <text key="use.event.main.category.misc.name">Divers</text>

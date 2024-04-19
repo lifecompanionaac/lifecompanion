@@ -39,7 +39,9 @@ public enum DefaultUseEventMainCategories implements UseEventMainCategoryI {
 	KEY_LIST("use.event.main.category.key.list.name", "use.event.main.category.show.description", "icon_key_list.png",
 			CategorizedElementColorProvider.nextColor(DefaultUseEventMainCategories.class)), //
 	UA_SEQUENCE("use.event.main.category.sequence.name", "use.event.main.category.sequence.description", "icon_user_action_sequence.png",
-			CategorizedElementColorProvider.nextColor(DefaultUseEventMainCategories.class)), //
+			CategorizedElementColorProvider.nextColor(DefaultUseActionMainCategories.class)), //
+	CURSOR_STRIP("use.event.main.category.scanning.name", "use.event.main.category.scanning.description", "icon_user_action_sequence.png",
+			CategorizedElementColorProvider.nextColor(DefaultUseActionMainCategories.class)), //
 	MISCELLANEOUS("use.event.main.category.misc.name", "use.event.main.category.misc.description", "icon_miscellaneous.png",
 			CategorizedElementColorProvider.nextColor(DefaultUseEventMainCategories.class)), //
 	;
