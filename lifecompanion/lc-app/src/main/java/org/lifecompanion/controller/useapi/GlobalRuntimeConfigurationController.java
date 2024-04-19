@@ -18,8 +18,10 @@
  */
 package org.lifecompanion.controller.useapi;
 
+import org.lifecompanion.controller.editaction.LCConfigurationActions;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.model.api.useapi.GlobalRuntimeConfigurationType;
+import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.useapi.GlobalRuntimeConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +49,7 @@ public enum GlobalRuntimeConfigurationController {
         detectJavaProperties();
         detectCommandLine(argsCollection);
 
-        if (isPresent(GlobalRuntimeConfiguration.PROP_DEV_MODE)) {
+        if (LCConstant.GENERATE_DEV_DOCS && isPresent(GlobalRuntimeConfiguration.PROP_DEV_MODE)) {
             for (GlobalRuntimeConfigurationType type : GlobalRuntimeConfigurationType.values()) {
                 LOGGER.info("{} documentation\n{}", type, GlobalRuntimeConfiguration.getMarkdownDocumentation(type));
             }

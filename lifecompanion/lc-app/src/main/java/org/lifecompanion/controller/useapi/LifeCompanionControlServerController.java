@@ -3,6 +3,7 @@ package org.lifecompanion.controller.useapi;
 import org.lifecompanion.controller.io.JsonHelper;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.useapi.GlobalRuntimeConfiguration;
 import org.lifecompanion.model.impl.useapi.LifeCompanionControlServerEndpoint;
 import org.lifecompanion.model.impl.useapi.LifeCompanionControlServerException;
@@ -102,7 +103,7 @@ public enum LifeCompanionControlServerController implements ResponseTransformer 
             after((req, res) -> res.type("application/json"));
             started = true;
 
-            if (GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.PROP_DEV_MODE)) {
+            if (LCConstant.GENERATE_DEV_DOCS && GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.PROP_DEV_MODE)) {
                 LOGGER.info("LifeCompanion server API documentation\n{}\n", LifeCompanionControlServerEndpoint.getAllMarkdownDocumentation());
             }
         }

@@ -210,4 +210,6 @@ public class LCConstant {
     public static final String SESSION_DATA_FILENAME = "data.json";
     //========================================================================
 
+    public static final boolean GENERATE_DEV_DOCS = false;
+
 }
