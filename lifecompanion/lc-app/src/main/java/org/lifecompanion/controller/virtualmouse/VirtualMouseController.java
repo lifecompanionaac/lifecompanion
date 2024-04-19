@@ -29,6 +29,7 @@ import org.lifecompanion.util.javafx.StageUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.awt.*;
 import java.awt.event.InputEvent;
 
 /**
@@ -71,7 +72,7 @@ public enum VirtualMouseController {
      * @param x x pos, should be always positive
      * @param y y pos, should be always positive
      */
-    public void moveMouseRelativeScreen(double x, double y) {
+    public void moveMouseRelativeToScreen(double x, double y) {
         checkGraphicContextInit();
         graphicContext.getRobot()
                 .mouseMove(graphicContext.getAwtBounds().x + (int) (x * this.graphicContext.getJfxXScale() / graphicContext.getAwtXScale()),
@@ -83,12 +84,27 @@ public enum VirtualMouseController {
         graphicContext.getRobot().delay(MOUSE_ACTION_DELAY);
     }
 
-    public String mouseMoveRelativeScreenUnscaled(double x, double y) {
+    public String moveMouseRelativeToScreenUnscaled(double x, double y) {
         checkGraphicContextInit();
         if (x > 0 && y > 0 && x < graphicContext.getUnscaledScreenWidth() && y < graphicContext.getUnscaledScreenHeight()) {
-            graphicContext.getRobot().mouseMove((int) (x / graphicContext.getAwtXScale()), (int) (y / graphicContext.getAwtYScale()));
+            graphicContext.getRobot()
+                    .mouseMove(graphicContext.getAwtBounds().x + (int) (x / graphicContext.getAwtXScale()), graphicContext.getAwtBounds().y + (int) (y / graphicContext.getAwtYScale()));
         } else {
             return "Coord out of current, constraint are : 0 < x < " + graphicContext.getUnscaledScreenWidth() + " and 0 < y < " + graphicContext.getUnscaledScreenHeight();
+        }
+        return null;
+    }
+
+    public String moveMouseRelativeToMouseUnscaled(double dx, double dy) {
+        checkGraphicContextInit();
+        Point mouseLocation = MouseInfo.getPointerInfo().getLocation();
+        double nX = mouseLocation.x + (dx / graphicContext.getAwtXScale());
+        double nY = mouseLocation.y + (dy / graphicContext.getAwtYScale());
+        System.out.println(graphicContext.getAwtBounds());
+        if (graphicContext.getAwtBounds().contains(nX, nY)) {
+            graphicContext.getRobot().mouseMove((int) nX, (int) nY);
+        } else {
+            return "Changes would move the mouse out of screen";
         }
         return null;
     }
@@ -130,7 +146,7 @@ public enum VirtualMouseController {
             y -= 10.0;
         }
         if (x > 0 && y > 0) {
-            this.moveMouseRelativeScreen(x, y);
+            this.moveMouseRelativeToScreen(x, y);
             graphicContext.getRobot().delay(MOUSE_SCROLL_DELAY);
             graphicContext.getRobot().mouseWheel(amount);
             centerMouseOnStage();
@@ -144,7 +160,7 @@ public enum VirtualMouseController {
         if (stage != null) {
             //            LOGGER.info("Stage\n\tlocation {},{}\n\tsize {},{}", stage.getX(), stage.getY(), stage.getWidth(), stage.getHeight());
             //            LOGGER.info("Converted location : {},{}", graphicContext.getJfxBounds().getMinX() + stage.getX(), graphicContext.getJfxBounds().getMinY() + stage.getY());
-            this.moveMouseRelativeScreen(stage.getX() - graphicContext.getJfxBounds().getMinX() + stage.getWidth() / 2.0,
+            this.moveMouseRelativeToScreen(stage.getX() - graphicContext.getJfxBounds().getMinX() + stage.getWidth() / 2.0,
                     stage.getY() - graphicContext.getJfxBounds().getMinY() + stage.getHeight() / 2.0);
         }
     }

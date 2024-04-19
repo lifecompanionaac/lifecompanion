@@ -27,6 +27,7 @@ LifeCompanion can be launched using command line arguments to configure some of 
 |`-resetWindowVirtualKeyboard`|*`NONE`*|Will try to reset window size and location when the configuration is a virtual keyboard configuration. Can be useful on slow computers or computers managing the system windows in a custom way.|
 |`-disableWindowAlwaysOnTop`|*`NONE`*|Will force the use mode window to not always be on top of the other window. This change the default LifeCompanion behavior that set the use mode window always on top.|
 |`-forceWindowMinimized`|*`NONE`*|Will start use mode with the LifeCompanion window iconified. Useful if you don't want the LifeCompanion window to pop on start.|
+|`-forceScreenIndex screenIndex`|`1`|Will force LifeCompanion to be used on the specified screen. 0 represents the primary computer screen and 1 the secondary screen.|
 |`-enableControlServer`|*`NONE`*|Will enable the API server to control LifeCompanion while running. To get details on control feature, check the "LifeCompanion control server API" part of documentation.API server will run on its default port (8648) if enable expect if the port is specific with its own parameter.|
 |`-controlServerPort port`|`8080`|The port for the API server to run. Will be ignored if the API server is not enabled (check the parameter above to enable it). If not specified, server will run on its default port.|
 |`-controlServerAuthToken token`|`AbCdEf123456`|If you want your control server to be secured with a `Authorization: Bearer <token>` header on each request. If enabled, any request without the same matching token will be rejected with 401 code|
@@ -39,7 +40,6 @@ LifeCompanion can be launched using command line arguments to configure some of 
 |`-deviceSyncAutoRefresh`|*`NONE`*|When the `deviceSyncMode` is enabled, will launch an auto sync Thread that will for a new selected device configuration every 10 seconds. If not enabled, the update should be manually triggered with the control server service.|
 |`-deviceLocalId deviceLocalId`|`foobar123`|Set the device local ID to be used by the `deviceSyncMode` when enabled. Allow launching LifeCompanion with a device local ID already set.|
 |`-useHubImages`|*`NONE`*|When enabled, LifeCompanion images will be downloaded on runtime from the hub and not from local image dictionaries (except for user dictionary). This can only be enabled if the hub URL has been provided.|
-
 
 ## LifeCompanion JVM properties
 
@@ -140,6 +140,11 @@ Returns from server can depend on the sent request, but a lot of request will re
 - **[selection/config](#selectionconfig)**
 - **[media/stop](#mediastop)**
 - **[hub/update/device-local-id](#hubupdatedevice-local-id)**
+- **[mouse/move/absolute](#mousemoveabsolute)**
+- **[mouse/move/relative](#mousemoverelative)**
+- **[mouse/info](#mouseinfo)**
+- **[mouse/activation/primary](#mouseactivationprimary)**
+- **[mouse/activation/secondary](#mouseactivationsecondary)**
 
 ### /app/status
 
@@ -432,6 +437,126 @@ NONE
 {
   "deviceLocalId": "foobar123"
 }
+```
+
+**Returns** : 
+```json
+{
+  "done": true,
+  "message": "OK"
+}
+```
+### /mouse/move/absolute
+
+**Description** : Move the mouse to an absolute position on the used screen to display LifeCompanion. The given position should be absolute no matter the screen scaling factor. Coordinates are relative to the top left corner.
+
+**Url structure** : `/api/v1/mouse/move/absolute`
+
+**Method** : `POST`
+
+**Parameters** :
+```json
+{
+  "x": 689,
+  "y": 383
+}
+```
+
+**Returns** : 
+```json
+{
+  "done": true,
+  "message": "OK"
+}
+```
+```json
+{
+  "done": false,
+  "message": "Incorrect position"
+}
+```
+### /mouse/move/relative
+
+**Description** : Move the mouse by a given x and y difference that can be positive/negative/null. The given values should be absolute pixel values no matter the screen scaling factor. Positive values means a move to right or bottom, negative values means a move to left or top. The mouse will be blocked to avoid going "out" of screen bounds.
+
+**Url structure** : `/api/v1/mouse/move/relative`
+
+**Method** : `POST`
+
+**Parameters** :
+```json
+{
+  "dx": 15,
+  "dy": -15
+}
+```
+```json
+{
+  "dx": -60,
+  "dy": null
+}
+```
+
+**Returns** : 
+```json
+{
+  "done": true,
+  "message": "OK"
+}
+```
+### /mouse/info
+
+**Description** : Return information about the current mouse position and screen size.
+
+**Url structure** : `/api/v1/mouse/info`
+
+**Method** : `GET`
+
+**Parameters** :
+```
+NONE
+```
+
+**Returns** : 
+```json
+{
+  "screenWidth": 1920.0,
+  "screenHeight": 1080.0,
+  "mouseX": 564.0,
+  "mouseY": 855.0
+}
+```
+### /mouse/activation/primary
+
+**Description** : Immediately active the mouse primary (eg left button) button to the current mouse position.
+
+**Url structure** : `/api/v1/mouse/activation/primary`
+
+**Method** : `POST`
+
+**Parameters** :
+```
+NONE
+```
+
+**Returns** : 
+```json
+{
+  "done": true,
+  "message": "OK"
+}
+```
+### /mouse/activation/secondary
+
+**Description** : Immediately active the mouse secondary (eg right button) button to the current mouse position.
+
+**Url structure** : `/api/v1/mouse/activation/secondary`
+
+**Method** : `POST`
+
+**Parameters** :
+```
+NONE
 ```
 
 **Returns** : 

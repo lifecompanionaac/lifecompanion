@@ -386,7 +386,7 @@ public enum ScanningMouseController implements ModeListenerI {
     public void executePrimaryMouseClic() {
         if (isCurrentCursor() && checkIfVirtualMouseEnabled()) {
             movingCursorStrip(() -> {
-                VirtualMouseController.INSTANCE.moveMouseRelativeScreen(this.mouseX.get(), this.mouseY.get());
+                VirtualMouseController.INSTANCE.moveMouseRelativeToScreen(this.mouseX.get(), this.mouseY.get());
                 VirtualMouseController.INSTANCE.executeMouseClic(MouseEvent.BUTTON1);
                 this.frameToFrontAndFocus();
             });

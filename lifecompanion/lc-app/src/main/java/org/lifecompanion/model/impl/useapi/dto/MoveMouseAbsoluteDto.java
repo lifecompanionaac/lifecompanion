@@ -1,9 +1,9 @@
 package org.lifecompanion.model.impl.useapi.dto;
 
-public class MoveMouseDto {
+public class MoveMouseAbsoluteDto {
     private Integer x, y;
 
-    public MoveMouseDto(Integer x, Integer y) {
+    public MoveMouseAbsoluteDto(Integer x, Integer y) {
         this.x = x;
         this.y = y;
     }

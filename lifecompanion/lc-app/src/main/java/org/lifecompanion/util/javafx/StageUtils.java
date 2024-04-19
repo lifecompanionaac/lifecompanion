@@ -30,12 +30,15 @@ import org.lifecompanion.controller.appinstallation.InstallationController;
 import org.lifecompanion.controller.lifecycle.AppMode;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.resource.IconHelper;
+import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
 import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
 import org.lifecompanion.framework.utils.Pair;
 import org.lifecompanion.model.api.configurationcomponent.FramePosition;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
+import org.lifecompanion.model.impl.useapi.GlobalRuntimeConfiguration;
 import org.lifecompanion.ui.notification.NotificationStage;
+import org.lifecompanion.util.LangUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -198,22 +201,21 @@ public class StageUtils {
     }
 
     public static Screen getDestinationScreen() {
-        int screenIndex = UserConfigurationController.INSTANCE.screenIndexProperty().get();
+        int screenIndex = getScreenIndex();
         Screen found = null;
         ObservableList<Screen> screens = Screen.getScreens();
         Screen primaryScreen = Screen.getPrimary();
         if (screenIndex >= 1) {
             found = screens.stream().skip(screenIndex).filter(s -> s != primaryScreen).findFirst().orElse(null);
+            if (found == null) {
+                LOGGER.warn("Ignored user config screen index {} as the JFX screen list doesn't match, will return the primary screen", screenIndex);
+            }
         }
-        if (found == null) {
-            LOGGER.warn("Ignored user config screen index {} as the JFX screen list doesn't match, will return the primary screen", screenIndex);
-            found = primaryScreen;
-        }
-        return found;
+        return found != null ? found : primaryScreen;
     }
 
     public static GraphicsDevice getDestinationGraphicDevice() {
-        int screenIndex = UserConfigurationController.INSTANCE.screenIndexProperty().get();
+        int screenIndex = getScreenIndex();
         GraphicsEnvironment localGraphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
         if (localGraphicsEnvironment != null) {
             GraphicsDevice found = null;
@@ -221,14 +223,23 @@ public class StageUtils {
             GraphicsDevice[] screenDevices = localGraphicsEnvironment.getScreenDevices();
             if (screenIndex >= 1) {
                 found = Arrays.stream(screenDevices).filter(s -> s != defaultScreenDevice).findFirst().orElse(null);
+                if (found == null) {
+                    LOGGER.warn("Ignored user config screen index {} as the AWT screen list doesn't match, will return the primary screen", screenIndex);
+                }
             }
-            if (found == null) {
-                LOGGER.warn("Ignored user config screen index {} as the AWT screen list doesn't match, will return the primary screen", screenIndex);
-                found = defaultScreenDevice;
-            }
-            return found;
+            return found != null ? found : defaultScreenDevice;
         }
         return null;
+    }
+
+    public static int getScreenIndex() {
+        if (GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.FORCE_SCREEN_INDEX)) {
+            int screenIndex = LangUtils.nullToZero(LangUtils.safeParseInt(GlobalRuntimeConfigurationController.INSTANCE.getParameter(GlobalRuntimeConfiguration.FORCE_SCREEN_INDEX)));
+            LOGGER.info("Screen index was set to {} as the {} parameter is enabled", screenIndex, GlobalRuntimeConfiguration.FORCE_SCREEN_INDEX);
+            return screenIndex;
+        } else {
+            return UserConfigurationController.INSTANCE.screenIndexProperty().get();
+        }
     }
 
     public static void fixMaximizedVisualBounds(Stage stage) {

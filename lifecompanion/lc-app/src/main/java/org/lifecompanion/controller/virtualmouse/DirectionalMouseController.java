@@ -29,7 +29,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.paint.Color;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.lifecompanion.controller.lifecycle.AppModeController;
@@ -42,7 +41,6 @@ import org.lifecompanion.model.api.lifecycle.ModeListenerI;
 import org.lifecompanion.model.impl.useapi.GlobalRuntimeConfiguration;
 import org.lifecompanion.ui.virtualmouse.DirectionalMouseStage;
 import org.lifecompanion.util.javafx.FXThreadUtils;
-import org.lifecompanion.util.javafx.StageUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -274,7 +272,7 @@ public enum DirectionalMouseController implements ModeListenerI {
     public void executePrimaryMouseClic() {
         if (isCurrentType()) {
             this.checkInitFrame(() -> {
-                VirtualMouseController.INSTANCE.moveMouseRelativeScreen(this.mouseX.get(), this.mouseY.get());
+                VirtualMouseController.INSTANCE.moveMouseRelativeToScreen(this.mouseX.get(), this.mouseY.get());
                 VirtualMouseController.INSTANCE.pauseBeforeNext();
                 VirtualMouseController.INSTANCE.executeMouseClic(MouseEvent.BUTTON1);
                 this.frameToFrontAndFocus();
@@ -286,7 +284,7 @@ public enum DirectionalMouseController implements ModeListenerI {
     public void executeDoubleMouseClic() {
         if (isValidAction()) {
             this.checkInitFrame(() -> {
-                VirtualMouseController.INSTANCE.moveMouseRelativeScreen(this.mouseX.get(), this.mouseY.get());
+                VirtualMouseController.INSTANCE.moveMouseRelativeToScreen(this.mouseX.get(), this.mouseY.get());
                 VirtualMouseController.INSTANCE.pauseBeforeNext();
                 VirtualMouseController.INSTANCE.executeMouseClic(MouseEvent.BUTTON1);
                 VirtualMouseController.INSTANCE.pauseBeforeNext();
@@ -299,7 +297,7 @@ public enum DirectionalMouseController implements ModeListenerI {
     public void executeSecondaryMouseClic() {
         if (isValidAction()) {
             this.checkInitFrame(() -> {
-                VirtualMouseController.INSTANCE.moveMouseRelativeScreen(this.mouseX.get(), this.mouseY.get());
+                VirtualMouseController.INSTANCE.moveMouseRelativeToScreen(this.mouseX.get(), this.mouseY.get());
                 VirtualMouseController.INSTANCE.pauseBeforeNext();
                 VirtualMouseController.INSTANCE.executeMouseClic(MouseEvent.BUTTON3);
                 this.frameToFrontAndFocus();
