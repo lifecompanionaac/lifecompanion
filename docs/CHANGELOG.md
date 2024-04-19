@@ -22,6 +22,7 @@
 
 ### Corrections/ajustements
 
+- Les polices installées sur le système sont maintenant disponibles dans LifeCompanion
 - L'avertissement lors de l'import d'une configuration de version plus récente est maintenant plus clair et propose de vérifier directement les versions
 - Correction d'un rare problème avec la souris virtuelle
 - *(Oscar P.)* Ticket #270 : ajout de la possibilité de glisser des images de l'ordinateur dans les listes de cases
