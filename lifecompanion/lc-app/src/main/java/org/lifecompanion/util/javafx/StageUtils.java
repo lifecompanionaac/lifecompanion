@@ -40,7 +40,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.*;
+import java.lang.reflect.Array;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 
 @SuppressWarnings("restriction")
 public class StageUtils {
@@ -96,11 +98,11 @@ public class StageUtils {
 
     public static Stage getEditOrUseStageVisible() {
         return AppModeController.INSTANCE.modeProperty().get() == AppMode.EDIT || AppModeController.INSTANCE.getUseModeContext()
-                                                                                                            .stageProperty()
-                                                                                                            .get() == null ? AppModeController.INSTANCE.getEditModeContext()
-                                                                                                                                                       .getStage() : AppModeController.INSTANCE.getUseModeContext()
-                                                                                                                                                                                               .stageProperty()
-                                                                                                                                                                                               .get();
+                .stageProperty()
+                .get() == null ? AppModeController.INSTANCE.getEditModeContext()
+                .getStage() : AppModeController.INSTANCE.getUseModeContext()
+                .stageProperty()
+                .get();
     }
 
     public static javafx.stage.Window getOnTopWindowExcludingNotification() {
@@ -197,13 +199,36 @@ public class StageUtils {
 
     public static Screen getDestinationScreen() {
         int screenIndex = UserConfigurationController.INSTANCE.screenIndexProperty().get();
+        Screen found = null;
         ObservableList<Screen> screens = Screen.getScreens();
-        if (screenIndex >= 0 && screenIndex < screens.size()) {
-            return screens.get(screenIndex);
-        } else {
-            LOGGER.warn("Ignored user config screen index {} as the screen list doesn't match, will return the primary screen", screenIndex);
-            return Screen.getPrimary();
+        Screen primaryScreen = Screen.getPrimary();
+        if (screenIndex >= 1) {
+            found = screens.stream().skip(screenIndex).filter(s -> s != primaryScreen).findFirst().orElse(null);
         }
+        if (found == null) {
+            LOGGER.warn("Ignored user config screen index {} as the JFX screen list doesn't match, will return the primary screen", screenIndex);
+            found = primaryScreen;
+        }
+        return found;
+    }
+
+    public static GraphicsDevice getDestinationGraphicDevice() {
+        int screenIndex = UserConfigurationController.INSTANCE.screenIndexProperty().get();
+        GraphicsEnvironment localGraphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        if (localGraphicsEnvironment != null) {
+            GraphicsDevice found = null;
+            GraphicsDevice defaultScreenDevice = localGraphicsEnvironment.getDefaultScreenDevice();
+            GraphicsDevice[] screenDevices = localGraphicsEnvironment.getScreenDevices();
+            if (screenIndex >= 1) {
+                found = Arrays.stream(screenDevices).filter(s -> s != defaultScreenDevice).findFirst().orElse(null);
+            }
+            if (found == null) {
+                LOGGER.warn("Ignored user config screen index {} as the AWT screen list doesn't match, will return the primary screen", screenIndex);
+                found = defaultScreenDevice;
+            }
+            return found;
+        }
+        return null;
     }
 
     public static void fixMaximizedVisualBounds(Stage stage) {

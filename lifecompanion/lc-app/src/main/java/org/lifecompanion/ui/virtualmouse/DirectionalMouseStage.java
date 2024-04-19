@@ -25,6 +25,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.lifecompanion.controller.resource.IconHelper;
+import org.lifecompanion.controller.virtualmouse.VirtualMouseController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.util.javafx.StageUtils;
@@ -55,19 +56,18 @@ public class DirectionalMouseStage extends Stage {
 
     // Class part : "Stage"
     //========================================================================
-    @SuppressWarnings("deprecation")
     private DirectionalMouseStage() {
         //Stage parameters
         this.initStyle(StageStyle.TRANSPARENT);
-        Rectangle2D primaryScreenBounds = Screen.getPrimary().getBounds();
-        this.setWidth(primaryScreenBounds.getWidth());
-        this.setHeight(primaryScreenBounds.getHeight());
+        Rectangle2D screenBounds = VirtualMouseController.INSTANCE.getGraphicContext().getJfxBounds();
+        this.setWidth(screenBounds.getWidth());
+        this.setHeight(screenBounds.getHeight());
         this.getIcons().add(IconHelper.get(LCConstant.LC_ICON_PATH));
         this.setAlwaysOnTop(true);
         this.setMaximized(true);
         this.setTitle(LCConstant.NAME + " - " + Translation.getText("virtual.mouse.stage.title.com"));
         this.setOnShown(e1 -> StageUtils.setFocusableInternalAPI(this, false));
-        this.centerOnScreen();
+        StageUtils.centerOnScreen( VirtualMouseController.INSTANCE.getGraphicContext().getScreen(), this);
         //Scene
         this.setScene(new DirectionalMouseScene(new Group()));
     }

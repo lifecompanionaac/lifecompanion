@@ -42,6 +42,7 @@ import org.lifecompanion.model.api.lifecycle.ModeListenerI;
 import org.lifecompanion.model.impl.useapi.GlobalRuntimeConfiguration;
 import org.lifecompanion.ui.virtualmouse.DirectionalMouseStage;
 import org.lifecompanion.util.javafx.FXThreadUtils;
+import org.lifecompanion.util.javafx.StageUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -129,14 +130,12 @@ public enum DirectionalMouseController implements ModeListenerI {
     }
 
     private void checkFramePositionWithMouse() {
-        Rectangle2D frameBounds = VirtualMouseController.INSTANCE.getMainFrameBounds();
+        Rectangle2D frameBounds = VirtualMouseController.INSTANCE.getStageBoundsRelativeCurrentScreen();
         if (frameBounds.contains(this.mouseX.get(), this.mouseY.get())) {
             VirtualMouseController.INSTANCE.moveFrameToAvoidMouse(this.frameWidth, this.frameHeight, this.mouseX.get(), this.mouseY.get());
         }
     }
 
-    // Class part : "Properties"
-    //========================================================================
     public ReadOnlyDoubleProperty mouseXProperty() {
         return this.mouseX;
     }
@@ -160,12 +159,9 @@ public enum DirectionalMouseController implements ModeListenerI {
     public ReadOnlyObjectProperty<DirectionalMouseDrawing> mouseDrawingProperty() {
         return this.mouseDrawing;
     }
-    //========================================================================
 
-    // Class part : "Moving API"
-    //========================================================================
     public void startMovingMouseTop() {
-        if (isCurrentCursor() && checkIfVirtualMouseEnabled()) {
+        if (isValidAction()) {
             this.checkInitFrame(() -> {
                 this.addKeyFrame(this.mouseY.get(), 0.0, this.mouseY);
                 this.startMoving();
@@ -174,7 +170,7 @@ public enum DirectionalMouseController implements ModeListenerI {
     }
 
     public void startMovingMouseBottom() {
-        if (isCurrentCursor() && checkIfVirtualMouseEnabled()) {
+        if (isValidAction()) {
             this.checkInitFrame(() -> {
                 this.addKeyFrame(this.frameHeight - this.mouseY.get(), this.frameHeight, this.mouseY);
                 this.startMoving();
@@ -183,7 +179,7 @@ public enum DirectionalMouseController implements ModeListenerI {
     }
 
     public void startMovingMouseRight() {
-        if (isCurrentCursor() && checkIfVirtualMouseEnabled()) {
+        if (isValidAction()) {
             this.checkInitFrame(() -> {
                 this.addKeyFrame(this.frameWidth - this.mouseX.get(), this.frameWidth, this.mouseX);
                 this.startMoving();
@@ -192,7 +188,7 @@ public enum DirectionalMouseController implements ModeListenerI {
     }
 
     public void startMovingMouseLeft() {
-        if (isCurrentCursor() && checkIfVirtualMouseEnabled()) {
+        if (isValidAction()) {
             this.checkInitFrame(() -> {
                 this.addKeyFrame(this.mouseX.get(), 0.0, this.mouseX);
                 this.startMoving();
@@ -201,7 +197,7 @@ public enum DirectionalMouseController implements ModeListenerI {
     }
 
     public void startMovingMouseTopLeft() {
-        if (isCurrentCursor() && checkIfVirtualMouseEnabled()) {
+        if (isValidAction()) {
             this.checkInitFrame(() -> {
                 double diff = Math.max(this.mouseX.get(), this.mouseY.get());
                 this.addKeyFrame(diff, 0.0, this.mouseX);
@@ -212,7 +208,7 @@ public enum DirectionalMouseController implements ModeListenerI {
     }
 
     public void startMovingMouseTopRight() {
-        if (isCurrentCursor() && checkIfVirtualMouseEnabled()) {
+        if (isValidAction()) {
             this.checkInitFrame(() -> {
                 double diff = Math.max(this.frameWidth - this.mouseX.get(), this.mouseY.get());
                 this.addKeyFrame(diff, this.frameWidth, this.mouseX);
@@ -223,7 +219,7 @@ public enum DirectionalMouseController implements ModeListenerI {
     }
 
     public void startMovingMouseBottomRight() {
-        if (isCurrentCursor() && checkIfVirtualMouseEnabled()) {
+        if (isValidAction()) {
             this.checkInitFrame(() -> {
                 double diff = Math.max(this.frameWidth - this.mouseX.get(), this.frameHeight - this.mouseY.get());
                 this.addKeyFrame(diff, this.frameWidth, this.mouseX);
@@ -234,7 +230,7 @@ public enum DirectionalMouseController implements ModeListenerI {
     }
 
     public void startMovingMouseBottomLeft() {
-        if (isCurrentCursor() && checkIfVirtualMouseEnabled()) {
+        if (isValidAction()) {
             this.checkInitFrame(() -> {
                 double diff = Math.max(this.mouseX.get(), this.frameHeight - this.mouseY.get());
                 this.addKeyFrame(diff, 0.0, this.mouseX);
@@ -275,13 +271,11 @@ public enum DirectionalMouseController implements ModeListenerI {
         this.timeline.getKeyFrames().clear();
     }
 
-    //========================================================================
-    // Class part : "Clic API"
-    //========================================================================
     public void executePrimaryMouseClic() {
-        if (isCurrentCursor()) {
+        if (isCurrentType()) {
             this.checkInitFrame(() -> {
-                VirtualMouseController.INSTANCE.moveMouseToWithDelay(this.mouseX.get(), this.mouseY.get());
+                VirtualMouseController.INSTANCE.moveMouseRelativeScreen(this.mouseX.get(), this.mouseY.get());
+                VirtualMouseController.INSTANCE.pauseBeforeNext();
                 VirtualMouseController.INSTANCE.executeMouseClic(MouseEvent.BUTTON1);
                 this.frameToFrontAndFocus();
             });
@@ -290,10 +284,12 @@ public enum DirectionalMouseController implements ModeListenerI {
     }
 
     public void executeDoubleMouseClic() {
-        if (isCurrentCursor() && checkIfVirtualMouseEnabled()) {
+        if (isValidAction()) {
             this.checkInitFrame(() -> {
-                VirtualMouseController.INSTANCE.moveMouseToWithDelay(this.mouseX.get(), this.mouseY.get());
+                VirtualMouseController.INSTANCE.moveMouseRelativeScreen(this.mouseX.get(), this.mouseY.get());
+                VirtualMouseController.INSTANCE.pauseBeforeNext();
                 VirtualMouseController.INSTANCE.executeMouseClic(MouseEvent.BUTTON1);
+                VirtualMouseController.INSTANCE.pauseBeforeNext();
                 VirtualMouseController.INSTANCE.executeMouseClic(MouseEvent.BUTTON1);
                 this.frameToFrontAndFocus();
             });
@@ -301,9 +297,10 @@ public enum DirectionalMouseController implements ModeListenerI {
     }
 
     public void executeSecondaryMouseClic() {
-        if (isCurrentCursor() && checkIfVirtualMouseEnabled()) {
+        if (isValidAction()) {
             this.checkInitFrame(() -> {
-                VirtualMouseController.INSTANCE.moveMouseToWithDelay(this.mouseX.get(), this.mouseY.get());
+                VirtualMouseController.INSTANCE.moveMouseRelativeScreen(this.mouseX.get(), this.mouseY.get());
+                VirtualMouseController.INSTANCE.pauseBeforeNext();
                 VirtualMouseController.INSTANCE.executeMouseClic(MouseEvent.BUTTON3);
                 this.frameToFrontAndFocus();
             });
@@ -311,17 +308,9 @@ public enum DirectionalMouseController implements ModeListenerI {
     }
 
     public void pressMouseMiddleClicWithoutNoVirtualPosition() {
-        if (isCurrentCursor() && checkIfVirtualMouseEnabled()) {
+        if (isValidAction()) {
             VirtualMouseController.INSTANCE.executeMouseClic(MouseEvent.BUTTON2);
         }
-    }
-
-    private static boolean checkIfVirtualMouseEnabled() {
-        boolean enabled = !GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DISABLE_VIRTUAL_MOUSE);
-        if (!enabled) {
-            LOGGER.info("Ignored virtual mouse action because {} is enabled", GlobalRuntimeConfiguration.DISABLE_VIRTUAL_MOUSE);
-        }
-        return enabled;
     }
 
     private void frameToFrontAndFocus() {
@@ -337,10 +326,6 @@ public enum DirectionalMouseController implements ModeListenerI {
             VirtualMouseController.INSTANCE.centerMouseOnStage();
         });
     }
-    //========================================================================
-
-    // Class part : "Internal mouse event API"
-    //========================================================================
 
     /**
      * Initialize mouse stage.
@@ -358,10 +343,9 @@ public enum DirectionalMouseController implements ModeListenerI {
             }
         } else {
             FXThreadUtils.runOnFXThread(() -> {
-                Screen primaryScreen = Screen.getPrimary();
                 this.directionalMouseStage = DirectionalMouseStage.getInstance();
                 this.directionalMouseStage.show();
-                final Rectangle2D screenBounds = primaryScreen.getBounds();
+                final Rectangle2D screenBounds = VirtualMouseController.INSTANCE.getGraphicContext().getJfxBounds();
                 this.mouseX.set(screenBounds.getWidth() / 2.0);
                 this.mouseY.set(screenBounds.getHeight() / 2.0);
                 this.frameToFrontAndFocus();
@@ -371,20 +355,28 @@ public enum DirectionalMouseController implements ModeListenerI {
         }
     }
 
-    //========================================================================
-    private boolean isCurrentCursor() {
+    private boolean isValidAction() {
+        return isCurrentType() && checkIfVirtualMouseEnabled();
+    }
+
+    private boolean isCurrentType() {
         return this.configuration.getVirtualMouseParameters().virtualMouseTypeProperty().get() == VirtualMouseType.DIRECTIONAL;
     }
 
-    // Class part : "Mode listener"
-    //========================================================================
+    private boolean checkIfVirtualMouseEnabled() {
+        boolean enabled = !GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DISABLE_VIRTUAL_MOUSE);
+        if (!enabled) {
+            LOGGER.info("Ignored virtual mouse action because {} is enabled", GlobalRuntimeConfiguration.DISABLE_VIRTUAL_MOUSE);
+        }
+        return enabled;
+    }
+
     @Override
     public void modeStart(final LCConfigurationI configuration) {
         this.configuration = configuration;
-        Screen primaryScreen = Screen.getPrimary();
-        Rectangle2D primaryScreenBounds = primaryScreen.getBounds();
-        this.frameWidth = primaryScreenBounds.getWidth();
-        this.frameHeight = primaryScreenBounds.getHeight();
+        GraphicContext graphicContext = VirtualMouseController.INSTANCE.getGraphicContext();
+        this.frameWidth = graphicContext.getJfxBounds().getWidth();
+        this.frameHeight = graphicContext.getJfxBounds().getHeight();
         this.sizeScale.bind(configuration.getVirtualMouseParameters().mouseSizeProperty().divide(10.0));
         this.timePerPixelSpeed.bind(Bindings.createDoubleBinding(
                 () -> 1.0 / configuration.getVirtualMouseParameters().mouseSpeedProperty().get() * DirectionalMouseController.TIME_PER_PIXEL,
@@ -407,5 +399,4 @@ public enum DirectionalMouseController implements ModeListenerI {
         this.hideMouseFrame();
         this.configuration = null;
     }
-    //========================================================================
 }

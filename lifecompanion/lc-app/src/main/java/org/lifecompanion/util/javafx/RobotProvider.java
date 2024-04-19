@@ -26,20 +26,21 @@ import java.awt.*;
 
 /**
  * Just a simple class to provide the AWT {@link Robot} instance.
+ *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public class RobotProvider {
-	private final static Logger LOGGER = LoggerFactory.getLogger(RobotProvider.class);
-	private static Robot instance;
+    private final static Logger LOGGER = LoggerFactory.getLogger(RobotProvider.class);
+    private static Robot instance;
 
-	public static Robot getInstance() {
-		if (RobotProvider.instance == null) {
-			try {
-				RobotProvider.instance = new Robot();
-			} catch (Throwable t) {
-				RobotProvider.LOGGER.warn("Couldn't create the AWT robot instance", t);
-			}
-		}
-		return RobotProvider.instance;
-	}
+    public static Robot getInstance() {
+        if (RobotProvider.instance == null) {
+            try {
+                RobotProvider.instance = new Robot();
+            } catch (Throwable t) {
+                RobotProvider.LOGGER.warn("Couldn't create the AWT robot instance", t);
+            }
+        }
+        return RobotProvider.instance;
+    }
 }

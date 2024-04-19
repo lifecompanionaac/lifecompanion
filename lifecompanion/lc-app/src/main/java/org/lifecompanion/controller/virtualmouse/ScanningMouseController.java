@@ -138,7 +138,7 @@ public enum ScanningMouseController implements ModeListenerI {
     }
 
     private void checkFramePositionWithMouse() {
-        Rectangle2D frameBounds = VirtualMouseController.INSTANCE.getMainFrameBounds();
+        Rectangle2D frameBounds = VirtualMouseController.INSTANCE.getStageBoundsRelativeCurrentScreen();
         if (frameBounds.contains(this.mouseX.get(), this.mouseY.get())) {
             VirtualMouseController.INSTANCE.moveFrameToAvoidMouse(this.frameWidth, this.frameHeight, this.mouseX.get(), this.mouseY.get());
         }
@@ -385,7 +385,7 @@ public enum ScanningMouseController implements ModeListenerI {
     public void executePrimaryMouseClic() {
         if (isCurrentCursor() && checkIfVirtualMouseEnabled()) {
             movingCursorStrip(() -> {
-                VirtualMouseController.INSTANCE.moveMouseToWithDelay(this.mouseX.get(), this.mouseY.get());
+                VirtualMouseController.INSTANCE.moveMouseRelativeScreen(this.mouseX.get(), this.mouseY.get());
                 VirtualMouseController.INSTANCE.executeMouseClic(MouseEvent.BUTTON1);
                 this.frameToFrontAndFocus();
             });
