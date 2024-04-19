@@ -16,11 +16,11 @@ public class MouseRoutes {
         post(MOUSE_MOVE.getUrl(), (req, res) -> checkUseMode(() -> {
             MoveMouseDto moveMouseDto = fromJson(MoveMouseDto.class, req);
             // TODO : validate coords
-            VirtualMouseController.INSTANCE.moveMouse(moveMouseDto.getX(), moveMouseDto.getY());
+            //VirtualMouseController.INSTANCE.moveMouse(moveMouseDto.getX(), moveMouseDto.getY());
             return ActionConfirmationDto.ok();
         }));
         post(MOUSE_ACTIVATION_PRIMARY.getUrl(), (req, res) -> checkUseMode(() -> {
-            VirtualMouseController.INSTANCE.mousePrimaryClic();
+            // VirtualMouseController.INSTANCE.mousePrimaryClic();
             return ActionConfirmationDto.ok();
         }));
     }

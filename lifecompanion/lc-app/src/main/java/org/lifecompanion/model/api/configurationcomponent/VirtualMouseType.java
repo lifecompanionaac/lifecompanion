@@ -30,7 +30,7 @@ public enum VirtualMouseType {
     DIRECTIONAL("virtual.mouse.type.directional"),
     CROSS_SCANNING("virtual.mouse.type.cross.scanning");
 
-    private String text;
+    private final String text;
 
     VirtualMouseType(final String textP) {
         this.text = textP;
