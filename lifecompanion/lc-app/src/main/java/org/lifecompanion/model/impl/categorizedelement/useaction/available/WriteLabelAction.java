@@ -73,6 +73,7 @@ public class WriteLabelAction extends SimpleUseActionImpl<GridPartKeyComponentI>
                     WriterEntry entry = new WriterEntry(toWrite, true);
                     if (key.imageVTwoProperty().get() != null) {
                         entry.imageProperty().set(key.imageVTwoProperty().get());
+                        entry.sourceImageUseComponentProperty().set(key);
                     }
                     WritingStateController.INSTANCE.insert(WritingEventSource.USER_ACTIONS, entry);
                 }

@@ -290,6 +290,11 @@ public class ConfigurationComponentUtils {
                 .orElse(null);
     }
 
+    public static void setImageViewWithImageUseComponent(ImageView imageView, ImageUseComponentI imageUseComponent) {
+        bindImageViewWithImageUseComponent(imageView, imageUseComponent);
+        unbindOnlyImageViewFromImageUseComponent(imageView);
+    }
+
     public static void bindImageViewWithImageUseComponent(ImageView imageView, ImageUseComponentI imageUseComponent) {
         imageView.preserveRatioProperty().bind(imageUseComponent.preserveRatioProperty());
         imageView.rotateProperty().bind(imageUseComponent.rotateProperty());
@@ -335,6 +340,16 @@ public class ConfigurationComponentUtils {
         BindingUtils.unbindAndSet(imageView.scaleYProperty(), 1.0);
         BindingUtils.unbindAndSetNull(imageView.effectProperty());
         BindingUtils.unbindAndSetNull(imageView.viewportProperty());
+    }
+
+    public static void unbindOnlyImageViewFromImageUseComponent(ImageView imageView) {
+        imageView.imageProperty().unbind();
+        imageView.preserveRatioProperty().unbind();
+        imageView.rotateProperty().unbind();
+        imageView.scaleXProperty().unbind();
+        imageView.scaleYProperty().unbind();
+        imageView.effectProperty().unbind();
+        imageView.viewportProperty().unbind();
     }
 
 }

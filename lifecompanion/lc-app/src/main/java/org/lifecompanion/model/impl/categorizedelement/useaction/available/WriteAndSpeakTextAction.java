@@ -102,6 +102,7 @@ public class WriteAndSpeakTextAction extends SimpleUseActionImpl<UseActionTrigge
                 GridPartKeyComponentI currentKey = (GridPartKeyComponentI) this.parentComponentProperty().get();
                 if (currentKey != null && currentKey.imageVTwoProperty().get() != null) {
                     textEntry.imageProperty().set(currentKey.imageVTwoProperty().get());
+                    textEntry.sourceImageUseComponentProperty().set(currentKey);
                 }
             }
             WritingStateController.INSTANCE.insert(WritingEventSource.USER_ACTIONS, textEntry, null);

@@ -38,6 +38,7 @@
 - Ticket #333 : le message d'avertissement de double lancement n'est plus affiché lorsque cela déclenche un import de configuration
 - Ticket #317 : la fenêtre de création/mise à jour de profil affiche maintenant un titre plus explicite
 - Ticket #338 : correction de rares problèmes sur les actions liées aux fenêtres
+- Ticket #303 : les paramètres des images sont maintenant utilisés lorsque l'image est affichée dans l'éditeur
 
 ## 1.6.0 - 24/01/2024
 

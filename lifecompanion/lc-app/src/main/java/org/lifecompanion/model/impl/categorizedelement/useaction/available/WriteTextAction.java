@@ -31,6 +31,7 @@ import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
 import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseActionSubCategories;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
+import org.lifecompanion.model.api.configurationcomponent.ImageUseComponentI;
 import org.lifecompanion.model.api.imagedictionary.ImageElementI;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.textcomponent.WritingEventSource;
@@ -49,6 +50,7 @@ import java.util.Map;
 public class WriteTextAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
     private final StringProperty textToWrite;
     private final SimpleObjectProperty<ImageElementI> imageToWrite;
+    private final SimpleObjectProperty<ImageUseComponentI> sourceImageUseComponent;
 
     //TODO : add text style configuration
 
@@ -58,6 +60,7 @@ public class WriteTextAction extends SimpleUseActionImpl<UseActionTriggerCompone
         this.order = 1;
         this.textToWrite = new SimpleStringProperty("");
         this.imageToWrite = new SimpleObjectProperty<>();
+        this.sourceImageUseComponent = new SimpleObjectProperty<>();
         this.nameID = "action.simple.write.text.name";
         this.staticDescriptionID = "action.simple.write.text.static.description";
         this.configIconPath = "text/icon_write_text.png";
@@ -72,6 +75,10 @@ public class WriteTextAction extends SimpleUseActionImpl<UseActionTriggerCompone
     public Property<ImageElementI> imageToWriteProperty() {
         return this.imageToWrite;
     }
+    
+    public Property<ImageUseComponentI> sourceImageUseComponentProperty(){
+        return this.sourceImageUseComponent;
+    }
 
     // Class part : "Execute"
     //========================================================================
@@ -85,6 +92,7 @@ public class WriteTextAction extends SimpleUseActionImpl<UseActionTriggerCompone
                 final WriterEntry entryP = new WriterEntry(toWrite, true);
                 if (this.imageToWrite.get() != null) {
                     entryP.imageProperty().set(imageToWrite.get());
+                    entryP.sourceImageUseComponentProperty().set(this.sourceImageUseComponent.get());
                 }
                 WritingStateController.INSTANCE.insert(WritingEventSource.USER_ACTIONS, entryP);
             }

@@ -33,12 +33,14 @@ import javafx.scene.text.TextAlignment;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.textcomponent.WritingStateController;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.model.api.configurationcomponent.ImageUseComponentI;
 import org.lifecompanion.model.api.configurationcomponent.WriterDisplayerI;
 import org.lifecompanion.model.api.imagedictionary.ImageElementI;
 import org.lifecompanion.model.api.style.TextCompStyleI;
 import org.lifecompanion.model.api.textcomponent.*;
 import org.lifecompanion.model.impl.textcomponent.TextDisplayerLineHelper;
 import org.lifecompanion.util.javafx.FXThreadUtils;
+import org.lifecompanion.util.model.ConfigurationComponentUtils;
 import org.predict4all.nlp.Separator;
 
 import java.util.ArrayList;
@@ -160,7 +162,7 @@ public class TextDisplayer extends Pane implements LCViewInitHelper {
                 for (TextDisplayerWordPartI part : parts) {
                     if (textDisplayer.enableImageProperty().get() && part.isImageStart() && part.getEntry().imageProperty().get() != null) {
                         ImageElementI imageForPart = part.getEntry().imageProperty().get();
-                        if(!toPrint) {
+                        if (!toPrint) {
                             imageForPart.requestImageLoad(textDisplayer.getID(), part.getImageWidth(), part.getHeight(), true, true);
                         }
                         Image loadedImage = imageForPart.loadedImageProperty().get();
@@ -173,6 +175,10 @@ public class TextDisplayer extends Pane implements LCViewInitHelper {
                             imageView.setLayoutY(imgBounds.getMinY());
                             imageView.setFitWidth(imgBounds.getWidth());
                             imageView.setFitHeight(imgBounds.getHeight());
+                            ImageUseComponentI sourceImageUseComponent = part.getEntry().sourceImageUseComponentProperty().get();
+                            if (sourceImageUseComponent != null) {
+                                ConfigurationComponentUtils.setImageViewWithImageUseComponent(imageView, sourceImageUseComponent);
+                            }
                             previousChildren.add(imageView);
                         } else {
                             // TODO : what if image is not yet loaded ?
@@ -223,7 +229,7 @@ public class TextDisplayer extends Pane implements LCViewInitHelper {
         }
 
         // Update image loading request
-        if(!toPrint) {
+        if (!toPrint) {
             this.currentImagesInEditor.removeIf(imageElement -> {
                 if (!newImagesInEditor.contains(imageElement)) {
                     imageElement.requestImageUnload(textDisplayer.getID());

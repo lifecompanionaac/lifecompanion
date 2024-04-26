@@ -21,30 +21,31 @@ package org.lifecompanion.model.impl.configurationcomponent;
 import javafx.beans.property.*;
 import javafx.scene.paint.Color;
 import org.jdom2.Element;
-import org.lifecompanion.model.api.configurationcomponent.WriterEntryI;
-import org.lifecompanion.model.impl.exception.LCException;
-import org.lifecompanion.model.api.imagedictionary.ImageElementI;
-import org.lifecompanion.model.impl.imagedictionary.ImageDictionaries;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.framework.commons.fx.io.XMLUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.model.api.configurationcomponent.ImageUseComponentI;
+import org.lifecompanion.model.api.configurationcomponent.WriterEntryI;
+import org.lifecompanion.model.api.imagedictionary.ImageElementI;
+import org.lifecompanion.model.impl.exception.LCException;
+import org.lifecompanion.model.impl.imagedictionary.ImageDictionaries;
 
 /**
- * Base implementation for {@link WriterI} {@link WriterEntryI}
- *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public class WriterEntry implements WriterEntryI {
-    private StringProperty entryText;
-    private ObjectProperty<ImageElementI> image;
-    private BooleanProperty disableAppend;
-    private ObjectProperty<Color> fontColor;
+    private final StringProperty entryText;
+    private final ObjectProperty<ImageElementI> image;
+    private final ObjectProperty<ImageUseComponentI> sourceImageUseComponent;
+    private final BooleanProperty disableAppend;
+    private final ObjectProperty<Color> fontColor;
 
     public WriterEntry() {
-        this.entryText = new SimpleStringProperty(this, "entryText", "");
-        this.image = new SimpleObjectProperty<>(this, "image", null);
-        this.disableAppend = new SimpleBooleanProperty(this, "disableAppend", false);
-        this.fontColor = new SimpleObjectProperty<>(this, "fontColor", null);
+        this.entryText = new SimpleStringProperty("");
+        this.image = new SimpleObjectProperty<>(null);
+        this.sourceImageUseComponent = new SimpleObjectProperty<>(null);
+        this.disableAppend = new SimpleBooleanProperty(false);
+        this.fontColor = new SimpleObjectProperty<>(null);
     }
 
     public WriterEntry(final String text, final boolean disableAppend) {
@@ -61,6 +62,11 @@ public class WriterEntry implements WriterEntryI {
     @Override
     public ObjectProperty<ImageElementI> imageProperty() {
         return this.image;
+    }
+
+    @Override
+    public ObjectProperty<ImageUseComponentI> sourceImageUseComponentProperty() {
+        return sourceImageUseComponent;
     }
 
     @Override

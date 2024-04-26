@@ -44,6 +44,11 @@ public interface WriterEntryI extends XMLSerializable<Void> {
     ObjectProperty<ImageElementI> imageProperty();
 
     /**
+     * @return when an image is associated from an {@link ImageUseComponentI}, should return this component
+     */
+    ObjectProperty<ImageUseComponentI> sourceImageUseComponentProperty();
+
+    /**
      * @return if the insert is disabled for this entry (you don't want the text to be inserted into this entry text property)
      */
     BooleanProperty disableInsertProperty();
