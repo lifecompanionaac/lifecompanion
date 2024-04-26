@@ -40,7 +40,7 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 public class KeyListContentPane extends StackPane implements LCViewInitHelper {
-
+    private static final double AUTOSCROLL_TOP_THRESHOLD = 25.0, AUTOSCROLL_BOTTOM_THRESHOLD = 45.0, AUTOSCROLL_STEP = 0.015;
     private boolean tempDisableScrollTo;
 
     private final KeyListContentConfigView keyListContentConfigView;
@@ -76,7 +76,7 @@ public class KeyListContentPane extends StackPane implements LCViewInitHelper {
                 "keylist.content.pane.button.add",
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.PLUS).size(16).color(Color.WHITE));
         StackPane.setAlignment(buttonShowAddChoices, Pos.BOTTOM_RIGHT);
-        StackPane.setMargin(buttonShowAddChoices, new Insets(0.0, 18.0, 4.0, 0.0));
+        StackPane.setMargin(buttonShowAddChoices, new Insets(0.0, 18.0, 18.0, 0.0));
 
         this.buttonAddCategory = createFloatingButton("background-primary-dark-light",
                 "keylist.content.pane.button.add.list",
@@ -93,7 +93,7 @@ public class KeyListContentPane extends StackPane implements LCViewInitHelper {
         });
         boxAddButtons.setAlignment(Pos.BOTTOM_RIGHT);
         StackPane.setAlignment(boxAddButtons, Pos.BOTTOM_RIGHT);
-        StackPane.setMargin(boxAddButtons, new Insets(0.0, 18.0, 40, 0.0));
+        StackPane.setMargin(boxAddButtons, new Insets(0.0, 18.0, 18.0 + 36.0, 0.0));
         boxAddButtons.setVisible(false);
 
         this.getChildren().addAll(scrollPane, buttonParentNode, buttonShowAddChoices, boxAddButtons);
@@ -117,12 +117,23 @@ public class KeyListContentPane extends StackPane implements LCViewInitHelper {
         this.buttonAddCategory.setOnAction(createAddNodeListener(KeyListNode::new));
         this.setOnMouseClicked(e -> hideAddChoices());
 
-        buttonParentNode.setOnDragOver(ea -> {
-            if (keyListContentConfigView.draggedProperty().get() != null) {
-                ea.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+        // Disable move on parent button
+        // buttonParentNode.setOnDragOver(ea -> {
+        //     if (keyListContentConfigView.draggedProperty().get() != null) {
+        //         ea.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+        //     }
+        // });
+        // buttonParentNode.setOnDragDropped(ea -> keyListContentConfigView.dragDroppedOn(keyListContentConfigView.currentListProperty().get().parentProperty().get()));
+
+        // Autoscroll when dragging
+        scrollPane.setOnDragOver(event -> {
+            double y = event.getY();
+            if (y < AUTOSCROLL_TOP_THRESHOLD) {
+                scrollPane.setVvalue(scrollPane.getVvalue() - AUTOSCROLL_STEP);
+            } else if (y > scrollPane.getBoundsInLocal().getHeight() - AUTOSCROLL_BOTTOM_THRESHOLD) {
+                scrollPane.setVvalue(scrollPane.getVvalue() + AUTOSCROLL_STEP);
             }
         });
-        buttonParentNode.setOnDragDropped(ea -> keyListContentConfigView.dragDroppedOn(keyListContentConfigView.currentListProperty().get().parentProperty().get()));
     }
 
 

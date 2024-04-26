@@ -423,18 +423,21 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
     public void dragDroppedOn(KeyListNodeI destNode) {
         if (dragged.get() != null && destNode != null && dragged.get() != destNode) {
             KeyListNodeI draggedVal = dragged.get();
-            if (!destNode.isLeafNode()) {
-                if (!draggedVal.containsChild(destNode)) {
-                    removeAndGetIndex(draggedVal);
-                    destNode.getChildren().add(draggedVal);
-                }
-            } else {
-                Pair<List<KeyListNodeI>, Integer> draggedData = removeAndGetIndex(draggedVal);
-                Pair<List<KeyListNodeI>, Integer> destData = removeAndGetIndex(destNode);
-                destData.getLeft().add(destData.getRight(), draggedVal);
-                draggedData.getLeft().add(draggedData.getRight(), destNode);
-            }
+            // Disable moving folders : just swap items
+            // if (!destNode.isLeafNode()) {
+            //     if (!draggedVal.containsChild(destNode)) {
+            //         removeAndGetIndex(draggedVal);
+            //         destNode.getChildren().add(draggedVal);
+            //     }
+            // } else {
+            Pair<List<KeyListNodeI>, Integer> draggedData = removeAndGetIndex(draggedVal);
+            Pair<List<KeyListNodeI>, Integer> destData = removeAndGetIndex(destNode);
+            destData.getLeft().add(destData.getRight(), draggedVal);
+            draggedData.getLeft().add(draggedData.getRight(), destNode);
+            // }
             dragged.set(null);
+
+            select(draggedVal);
         }
     }
 
@@ -467,7 +470,7 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
             KeyListNodeI draggedItem = keyListContentConfigView.draggedProperty().get();
             if (draggedItem != null && destItem != null && draggedItem != destItem) {
                 // Show information tooltip
-                String message = Translation.getText(destItem.isLeafNode() ? "tooltip.keylist.drag.drop.swap.keys" : "tooltip.keylist.drag.drop.move.to",
+                String message = Translation.getText("tooltip.keylist.drag.drop.swap.keys",// "tooltip.keylist.drag.drop.move.to",
                         draggedItem.getHumanReadableText(),
                         destItem.getHumanReadableText());
                 Tooltip tooltip = new Tooltip(message);
