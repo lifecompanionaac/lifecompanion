@@ -1,10 +1,10 @@
 plugins {
     id 'java-library'
-    id 'org.openjfx.javafxplugin' version '0.0.13'
+    id 'org.openjfx.javafxplugin' version '0.1.0'
 }
 
 javafx {
-    version = '18'
+    version = '22'
     modules = ['javafx.controls']
     configuration = 'compileOnly'
 }
@@ -26,7 +26,7 @@ dependencies {
     implementation 'org.apache.commons:commons-lang3:3.8.1'
 }
 
-version = "1.4.2"
+version = "1.4.3"
 
 jar {
     duplicatesStrategy DuplicatesStrategy.WARN
