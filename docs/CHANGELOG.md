@@ -39,6 +39,7 @@
 - Ticket #317 : la fenêtre de création/mise à jour de profil affiche maintenant un titre plus explicite
 - Ticket #338 : correction de rares problèmes sur les actions liées aux fenêtres
 - Ticket #303 : les paramètres des images sont maintenant utilisés lorsque l'image est affichée dans l'éditeur
+- Ticket #341 : les paramètres des images sont maintenant utilisés dans la prévisualisation des listes de cases
 
 ## 1.6.0 - 24/01/2024
 

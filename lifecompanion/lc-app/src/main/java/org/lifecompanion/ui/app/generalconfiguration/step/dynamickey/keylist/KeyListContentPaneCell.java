@@ -25,6 +25,7 @@ import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.ui.configurationcomponent.editmode.componentoption.ButtonComponentOption;
 import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.util.binding.BindingUtils;
+import org.lifecompanion.util.model.ConfigurationComponentUtils;
 
 public class KeyListContentPaneCell extends StackPane implements LCViewInitHelper {
     private static final double CELL_WIDTH = 75, CELL_HEIGHT = 75;
@@ -148,7 +149,7 @@ public class KeyListContentPaneCell extends StackPane implements LCViewInitHelpe
     public void initBinding() {
         item.addListener((obs, ov, nv) -> {
             if (ov != null) {
-                BindingUtils.unbindAndSetNull(imageView.imageProperty());
+                ConfigurationComponentUtils.unbindImageViewFromImageUseComponent(imageView);
                 BindingUtils.unbindAndSet(imageView.visibleProperty(), false);
                 BindingUtils.unbindAndSetNull(labelText.textProperty());
                 BindingUtils.unbindAndSetNull(labelText.textFillProperty());
@@ -161,7 +162,7 @@ public class KeyListContentPaneCell extends StackPane implements LCViewInitHelpe
             }
             if (nv != null) {
                 glyphPane.getChildren().clear();
-                imageView.imageProperty().bind(nv.loadedImageProperty());
+                ConfigurationComponentUtils.bindImageViewWithImageUseComponent(imageView, nv);
                 imageView.visibleProperty().bind(nv.loadedImageProperty().isNotNull());
                 glyphPane.getChildren().add(nv.isLinkNode() ? linkGlyph : nv.isLeafNode() ? keyGlyph : listGlyph);
                 rectangleColors.strokeProperty().bind(Bindings.createObjectBinding(() -> selected.get() ? LCGraphicStyle.SECOND_DARK : nv.strokeColorProperty().get(),

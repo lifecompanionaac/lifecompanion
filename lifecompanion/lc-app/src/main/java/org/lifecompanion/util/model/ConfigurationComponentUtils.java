@@ -342,7 +342,7 @@ public class ConfigurationComponentUtils {
         BindingUtils.unbindAndSetNull(imageView.viewportProperty());
     }
 
-    public static void unbindOnlyImageViewFromImageUseComponent(ImageView imageView) {
+    private static void unbindOnlyImageViewFromImageUseComponent(ImageView imageView) {
         imageView.imageProperty().unbind();
         imageView.preserveRatioProperty().unbind();
         imageView.rotateProperty().unbind();
