@@ -38,6 +38,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.lifecompanion.util.LangUtils.isEgalsTo;
 import static org.lifecompanion.util.javafx.ImageUtils.convertTo32Argb;
@@ -68,15 +69,15 @@ public class ImageDictionariesCreationScript {
         DicInfo arasaac = new DicInfo(
                 new ImageDictionary("ARASAAC", "image.dictionary.description.arasaac", "image.dictionary.author.arasaac",
                         "png", "http://www.arasaac.org/", false),
-                new File("D:\\ARASAAC\\FR_Pictogrammes_couleur"), "arasaac", true, true, true, false, false, false);
+                new File("D:\\ARASAAC\\FR_Pictogrammes_couleur"), "arasaac", "png", true, true, true, false, false, false, null);
         DicInfo sclera = new DicInfo(
                 new ImageDictionary("SCLERA", "image.dictionary.description.sclera", "image.dictionary.author.sclera",
                         "png", "https://www.sclera.be/fr/picto/overview", false),
-                new File("D:\\ARASAAC\\picto_fr\\francais"), "sclera", false, false, false, true, false, false);
+                new File("D:\\ARASAAC\\picto_fr\\francais"), "sclera", "png", false, false, false, true, false, false, null);
         DicInfo parlerPicto = new DicInfo(
                 new ImageDictionary("Parler Pictos", "image.dictionary.description.parlerpictos", "image.dictionary.author.parlerpictos",
                         "png", "http://recitas.ca/parlerpictos/", false),
-                new File("D:\\ARASAAC\\Parlerpictos_sc\\All"), "parlerpictos", false, true, true, true, true, true);
+                new File("D:\\ARASAAC\\Parlerpictos_sc\\All"), "parlerpictos", "png", false, true, true, true, true, true, null);
 
         //        generateImageDictionary(sclera);
         //        generateImageDictionary(arasaac);
@@ -85,7 +86,7 @@ public class ImageDictionariesCreationScript {
     }
 
     public static void generateImageDictionary(DicInfo dictionaryInformation) throws FileNotFoundException, UnsupportedEncodingException {
-        File outputDir = new File("D:\\ARASAAC\\OUT\\" + dictionaryInformation.dicId);
+        File outputDir = new File(dictionaryInformation.inputdir.getParentFile()+"/lifecompanion-dictionary/" + dictionaryInformation.dicId);
         outputDir.mkdirs();
 
         Map<String, List<Pair<File, String>>> imageFileAndNamesByHash = new ConcurrentHashMap<>();
@@ -97,7 +98,7 @@ public class ImageDictionariesCreationScript {
         LoggingProgressIndicator pi = new LoggingProgressIndicator(Math.min(MAX_COUNT, files.length), "Image search");
         Arrays.stream(files).limit(MAX_COUNT).parallel().forEach(file -> {
             pi.increment();
-            if (getExtension(file.getPath()).equalsIgnoreCase(dictionaryInformation.dictionary.imageExtension) && (!dictionaryInformation.deleteNB || !file.getName().contains("_NB"))) {
+            if ((getExtension(file.getPath()).equalsIgnoreCase(dictionaryInformation.dictionary.imageExtension) || getExtension(file.getPath()).equalsIgnoreCase(dictionaryInformation.inExt) )&& (!dictionaryInformation.deleteNB || !file.getName().contains("_NB"))) {
                 if (!dictionaryInformation.checkSim || percentEgals(getImageMultiplePart(file), similarityReference) < SIM_THRESHOLD) {
                     try {
                         String fileSha256HexToString = fileSha256HexToString(file);
@@ -140,7 +141,12 @@ public class ImageDictionariesCreationScript {
                 ImageElement imageElement = new ImageElement();
                 imageElement.id = sha256;
                 imageElement.keywords = FluentHashMap.map(LANGUAGE_CODE,
-                        entry.getValue().stream().map(Pair::getValue).map(s -> s.replaceAll("_\\d+", " ").replaceAll("\\(\\d+\\)", " ").replace('_', ' ').replace('-', ' ').trim().toLowerCase()).toArray(l -> new String[l]));
+                        entry.getValue()
+                                .stream()
+                                .flatMap(e -> dictionaryInformation.fileKeywords == null ? Stream.of(e.getValue()) : dictionaryInformation.fileKeywords.getOrDefault(e.getKey(),
+                                        Set.of("")).stream())
+                                .map(s -> s.replaceAll("_\\d+", " ").replaceAll("\\(\\d+\\)", " ").replace('_', ' ').replace('-', ' ').trim().toLowerCase())
+                                .toArray(l -> new String[l]));
                 imageElement.name = imageElement.keywords.get(LANGUAGE_CODE)[0];
                 return imageElement;
             } catch (Exception e) {

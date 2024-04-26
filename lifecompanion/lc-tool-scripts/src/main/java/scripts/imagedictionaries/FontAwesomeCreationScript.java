@@ -118,7 +118,7 @@ public class FontAwesomeCreationScript extends Application {
         DicInfo fontAwesome = new DicInfo(
                 new ImageDictionary("fontawesome", "image.dictionary.description.fontawesome", "image.dictionary.author.fontawesome",
                         "png", "https://fontawesome.com/", false),
-                new File("D:\\ARASAAC\\FR_Pictogrammes_couleur"), "fontawesome", true, true, true, false, false, false);
+                new File("D:\\ARASAAC\\FR_Pictogrammes_couleur"), "fontawesome","png", true, true, true, false, false, false,null);
 
         Map<Character, String[]> icons = new HashMap<>();
 

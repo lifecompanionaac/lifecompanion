@@ -54,7 +54,7 @@ public class MulberrySymbolsCreationScript {
         DicInfo mulberrySymbols = new DicInfo(
                 new ImageDictionary("Mulberry Symbols", "image.dictionary.description.mulberry.symbols", "image.dictionary.author.mulberry.symbols",
                         "png", "https://mulberrysymbols.org/", false),
-                new File("D:\\ARASAAC\\mulberry-symbols\\EN-symbols"), "mulberry-symbols", true, true, true, false, false, false);
+                new File("D:\\ARASAAC\\mulberry-symbols\\EN-symbols"), "mulberry-symbols", "png",true, true, true, false, false, false,null);
         generateImageDictionary(mulberrySymbols);
     }
 

@@ -20,6 +20,8 @@
 package scripts.imagedictionaries;
 
 import java.io.File;
+import java.util.Map;
+import java.util.Set;
 
 public class DicInfo {
     final ImageDictionary dictionary;
@@ -31,16 +33,30 @@ public class DicInfo {
     final boolean logDouble;
     boolean deleteImageIntegratedLabel;
     boolean deleteNB;
+    String inExt;
+    Map<File, Set<String>> fileKeywords;
 
-    DicInfo(ImageDictionary dictionary, File inputdir, String dicId, boolean checkSim, boolean replaceBackground, boolean resize, boolean logDouble, boolean deleteImageIntegratedLabel, boolean deleteNB) {
+    DicInfo(ImageDictionary dictionary,
+            File inputdir,
+            String dicId,
+            String inExt,
+            boolean checkSim,
+            boolean replaceBackground,
+            boolean resize,
+            boolean logDouble,
+            boolean deleteImageIntegratedLabel,
+            boolean deleteNB,
+            Map<File, Set<String>> fileKeywords) {
         this.dictionary = dictionary;
         this.inputdir = inputdir;
         this.dicId = dicId;
+        this.inExt = inExt;
         this.checkSim = checkSim;
         this.replaceBackground = replaceBackground;
         this.resize = resize;
         this.logDouble = logDouble;
         this.deleteImageIntegratedLabel = deleteImageIntegratedLabel;
         this.deleteNB = deleteNB;
+        this.fileKeywords = fileKeywords;
     }
 }
