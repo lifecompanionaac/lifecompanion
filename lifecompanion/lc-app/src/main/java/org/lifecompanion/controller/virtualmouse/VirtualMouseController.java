@@ -50,8 +50,6 @@ public enum VirtualMouseController {
     VirtualMouseController() {
     }
 
-    // Class part : "Clic API"
-    //========================================================================
     private static boolean checkIfVirtualMouseEnabled() {
         boolean enabled = !GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DISABLE_VIRTUAL_MOUSE);
         if (!enabled) {
@@ -59,9 +57,6 @@ public enum VirtualMouseController {
         }
         return enabled;
     }
-
-    // Class part : "Internal mouse event API"
-    //========================================================================
 
     /**
      * Move the mouse to the given screen position.<br>
@@ -73,47 +68,57 @@ public enum VirtualMouseController {
      * @param y y pos, should be always positive
      */
     public void moveMouseRelativeToScreen(double x, double y) {
-        checkGraphicContextInit();
-        graphicContext.getRobot()
-                .mouseMove(graphicContext.getAwtBounds().x + (int) (x * this.graphicContext.getJfxXScale() / graphicContext.getAwtXScale()),
-                        graphicContext.getAwtBounds().y + (int) (y * this.graphicContext.getJfxYScale() / graphicContext.getAwtYScale()));
+        if (checkIfVirtualMouseEnabled()) {
+            checkGraphicContextInit();
+            graphicContext.getRobot()
+                    .mouseMove(graphicContext.getAwtBounds().x + (int) (x * this.graphicContext.getJfxXScale() / graphicContext.getAwtXScale()),
+                            graphicContext.getAwtBounds().y + (int) (y * this.graphicContext.getJfxYScale() / graphicContext.getAwtYScale()));
+        }
     }
 
     public void pauseBeforeNext() {
-        checkGraphicContextInit();
-        graphicContext.getRobot().delay(MOUSE_ACTION_DELAY);
+        if (checkIfVirtualMouseEnabled()) {
+            checkGraphicContextInit();
+            graphicContext.getRobot().delay(MOUSE_ACTION_DELAY);
+        }
     }
 
     public String moveMouseRelativeToScreenUnscaled(double x, double y) {
-        checkGraphicContextInit();
-        if (x > 0 && y > 0 && x < graphicContext.getUnscaledScreenWidth() && y < graphicContext.getUnscaledScreenHeight()) {
-            graphicContext.getRobot()
-                    .mouseMove(graphicContext.getAwtBounds().x + (int) (x / graphicContext.getAwtXScale()), graphicContext.getAwtBounds().y + (int) (y / graphicContext.getAwtYScale()));
-        } else {
-            return "Coord out of current, constraint are : 0 < x < " + graphicContext.getUnscaledScreenWidth() + " and 0 < y < " + graphicContext.getUnscaledScreenHeight();
+        if (checkIfVirtualMouseEnabled()) {
+            checkGraphicContextInit();
+            if (x > 0 && y > 0 && x < graphicContext.getUnscaledScreenWidth() && y < graphicContext.getUnscaledScreenHeight()) {
+                graphicContext.getRobot()
+                        .mouseMove(graphicContext.getAwtBounds().x + (int) (x / graphicContext.getAwtXScale()), graphicContext.getAwtBounds().y + (int) (y / graphicContext.getAwtYScale()));
+            } else {
+                return "Coordinates out of current, constraint are : 0 < x < " + graphicContext.getUnscaledScreenWidth() + " and 0 < y < " + graphicContext.getUnscaledScreenHeight();
+            }
         }
         return null;
     }
 
     public String moveMouseRelativeToMouseUnscaled(double dx, double dy) {
-        checkGraphicContextInit();
-        Point mouseLocation = MouseInfo.getPointerInfo().getLocation();
-        double nX = mouseLocation.x + (dx / graphicContext.getAwtXScale());
-        double nY = mouseLocation.y + (dy / graphicContext.getAwtYScale());
-        System.out.println(graphicContext.getAwtBounds());
-        if (graphicContext.getAwtBounds().contains(nX, nY)) {
-            graphicContext.getRobot().mouseMove((int) nX, (int) nY);
-        } else {
-            return "Changes would move the mouse out of screen";
+        if (checkIfVirtualMouseEnabled()) {
+            checkGraphicContextInit();
+            Point mouseLocation = MouseInfo.getPointerInfo().getLocation();
+            double nX = mouseLocation.x + (dx / graphicContext.getAwtXScale());
+            double nY = mouseLocation.y + (dy / graphicContext.getAwtYScale());
+            System.out.println(graphicContext.getAwtBounds());
+            if (graphicContext.getAwtBounds().contains(nX, nY)) {
+                graphicContext.getRobot().mouseMove((int) nX, (int) nY);
+            } else {
+                return "Changes would move the mouse out of screen";
+            }
         }
         return null;
     }
 
     public void executeMouseClic(final int mouseButton) {
-        checkGraphicContextInit();
-        graphicContext.getRobot().mousePress(InputEvent.getMaskForButton(mouseButton));
-        graphicContext.getRobot().delay(VirtualMouseController.MOUSE_ACTION_DELAY);
-        graphicContext.getRobot().mouseRelease(InputEvent.getMaskForButton(mouseButton));
+        if (checkIfVirtualMouseEnabled()) {
+            checkGraphicContextInit();
+            graphicContext.getRobot().mousePress(InputEvent.getMaskForButton(mouseButton));
+            graphicContext.getRobot().delay(VirtualMouseController.MOUSE_ACTION_DELAY);
+            graphicContext.getRobot().mouseRelease(InputEvent.getMaskForButton(mouseButton));
+        }
     }
 
     public void executeMouseWheelDown(final int amount) {
@@ -155,39 +160,41 @@ public enum VirtualMouseController {
     }
 
     public void centerMouseOnStage() {
-        checkGraphicContextInit();
-        Stage stage = AppModeController.INSTANCE.getUseModeContext().getStage();
-        if (stage != null) {
-            //            LOGGER.info("Stage\n\tlocation {},{}\n\tsize {},{}", stage.getX(), stage.getY(), stage.getWidth(), stage.getHeight());
-            //            LOGGER.info("Converted location : {},{}", graphicContext.getJfxBounds().getMinX() + stage.getX(), graphicContext.getJfxBounds().getMinY() + stage.getY());
-            this.moveMouseRelativeToScreen(stage.getX() - graphicContext.getJfxBounds().getMinX() + stage.getWidth() / 2.0,
-                    stage.getY() - graphicContext.getJfxBounds().getMinY() + stage.getHeight() / 2.0);
+        if (checkIfVirtualMouseEnabled()) {
+            checkGraphicContextInit();
+            Stage stage = AppModeController.INSTANCE.getUseModeContext().getStage();
+            if (stage != null) {
+                this.moveMouseRelativeToScreen(stage.getX() - graphicContext.getJfxBounds().getMinX() + stage.getWidth() / 2.0,
+                        stage.getY() - graphicContext.getJfxBounds().getMinY() + stage.getHeight() / 2.0);
+            }
         }
     }
 
     public void moveFrameToAvoidMouse(double fxStageWidth, double fxStageHeight, double mouseX, double mouseY) {
-        Stage stage = AppModeController.INSTANCE.getUseModeContext().getStage();
-        //Top left
-        FramePosition framePosition = null;
-        if (new Rectangle2D(0, 0, fxStageWidth / 2, fxStageHeight / 2).contains(mouseX, mouseY)) {
-            framePosition = FramePosition.BOTTOM_RIGHT;
-        }
-        //Top right
-        else if (new Rectangle2D(fxStageWidth / 2, 0, fxStageWidth / 2, fxStageHeight / 2).contains(mouseX, mouseY)) {
-            framePosition = FramePosition.BOTTOM_LEFT;
-        }
-        //Bottom right
-        else if (new Rectangle2D(fxStageWidth / 2, fxStageHeight / 2, fxStageWidth / 2, fxStageHeight / 2).contains(mouseX,
-                mouseY)) {
-            framePosition = FramePosition.TOP_LEFT;
-        }
-        //Bottom left
-        else if (new Rectangle2D(0, fxStageHeight / 2, fxStageWidth / 2, fxStageHeight / 2).contains(mouseX, mouseY)) {
-            framePosition = FramePosition.TOP_RIGHT;
-        }
-        if (framePosition != null) {
-            StageUtils.moveStageTo(stage, framePosition);
-            centerMouseOnStage();
+        if (checkIfVirtualMouseEnabled()) {
+            Stage stage = AppModeController.INSTANCE.getUseModeContext().getStage();
+            //Top left
+            FramePosition framePosition = null;
+            if (new Rectangle2D(0, 0, fxStageWidth / 2, fxStageHeight / 2).contains(mouseX, mouseY)) {
+                framePosition = FramePosition.BOTTOM_RIGHT;
+            }
+            //Top right
+            else if (new Rectangle2D(fxStageWidth / 2, 0, fxStageWidth / 2, fxStageHeight / 2).contains(mouseX, mouseY)) {
+                framePosition = FramePosition.BOTTOM_LEFT;
+            }
+            //Bottom right
+            else if (new Rectangle2D(fxStageWidth / 2, fxStageHeight / 2, fxStageWidth / 2, fxStageHeight / 2).contains(mouseX,
+                    mouseY)) {
+                framePosition = FramePosition.TOP_LEFT;
+            }
+            //Bottom left
+            else if (new Rectangle2D(0, fxStageHeight / 2, fxStageWidth / 2, fxStageHeight / 2).contains(mouseX, mouseY)) {
+                framePosition = FramePosition.TOP_RIGHT;
+            }
+            if (framePosition != null) {
+                StageUtils.moveStageTo(stage, framePosition);
+                centerMouseOnStage();
+            }
         }
     }
 
