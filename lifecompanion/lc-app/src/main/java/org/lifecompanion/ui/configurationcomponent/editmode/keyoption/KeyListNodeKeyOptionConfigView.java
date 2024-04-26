@@ -25,6 +25,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
+import org.lifecompanion.controller.configurationcomponent.dynamickey.KeyListController;
 import org.lifecompanion.ui.controlsfx.control.ToggleSwitch;
 import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
@@ -92,15 +93,7 @@ public class KeyListNodeKeyOptionConfigView extends BaseKeyOptionConfigView<KeyL
                 m -> m.displayLevelBellowProperty().get(), KeyOptionActions.ChangeKeyListOptionDisplayLevelBellowAction::new);
         changeListenerSpecificLevel = EditActionUtils.createSimpleBinding(this.toggleSwitchSpecificLevel.selectedProperty(), this.model,
                 m -> m.specificLevelProperty().get(), KeyOptionActions.ChangeKeyListOptionSpecificLevelAction::new);
-        this.buttonConfigureKeyList.setOnAction(e -> {
-            final KeyListNodeKeyOption keyOption = this.model.get();
-            final KeyListNodeI keyListNode = keyOption.currentSimplerKeyContentContainerProperty().get();
-            if (keyListNode != null) {
-                GeneralConfigurationController.INSTANCE.showStep(GeneralConfigurationStep.KEY_LIST_NODE, keyListNode.getID());
-            } else {
-                GeneralConfigurationController.INSTANCE.showStep(GeneralConfigurationStep.KEY_LIST_NODE);
-            }
-        });
+        this.buttonConfigureKeyList.setOnAction(e -> KeyListController.INSTANCE.openKeyListConfigFor(model.get()));
     }
 
     @Override

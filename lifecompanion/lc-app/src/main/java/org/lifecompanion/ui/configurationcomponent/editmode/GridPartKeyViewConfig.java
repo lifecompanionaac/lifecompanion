@@ -28,45 +28,34 @@ import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
-import javafx.scene.paint.Color;
 import javafx.util.Duration;
-import org.lifecompanion.controller.resource.GlyphFontHelper;
-import org.lifecompanion.framework.commons.translation.Translation;
-import org.lifecompanion.model.impl.configurationcomponent.keyoption.BasicKeyOption;
-import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
-import org.lifecompanion.model.api.editaction.BaseEditActionI;
-import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
-import org.lifecompanion.model.api.configurationcomponent.GridPartComponentI;
-import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
-import org.lifecompanion.model.api.configurationcomponent.StackComponentI;
-import org.lifecompanion.model.api.configurationcomponent.keyoption.KeyOptionI;
-import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
-import org.lifecompanion.model.api.imagedictionary.ImageElementI;
-import org.lifecompanion.model.api.ui.editmode.AddTypeEnum;
-import org.lifecompanion.model.impl.constant.LCGraphicStyle;
-import org.lifecompanion.ui.controlsfx.glyphfont.Glyph;
-import org.lifecompanion.util.IOUtils;
-import org.lifecompanion.model.impl.configurationcomponent.keyoption.dynamickey.KeyListNodeKeyOption;
-import org.lifecompanion.model.impl.configurationcomponent.GridPartKeyComponent;
-import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.controller.configurationcomponent.dynamickey.KeyListController;
-import org.lifecompanion.model.impl.imagedictionary.ImageDictionaries;
-import org.lifecompanion.model.impl.categorizedelement.useaction.available.MoveToGridAction;
-import org.lifecompanion.model.impl.categorizedelement.useaction.available.MoveToKeyAction;
-import org.lifecompanion.model.impl.categorizedelement.useaction.available.MoveToGridAndGoBackAction;
-import org.lifecompanion.model.impl.categorizedelement.useaction.available.NextPageAndLoopInStackAction;
-import org.lifecompanion.model.impl.categorizedelement.useaction.available.NextPageInStackAction;
-import org.lifecompanion.model.impl.categorizedelement.useaction.available.PreviousPageInStackAction;
-import org.lifecompanion.ui.configurationcomponent.base.GridPartKeyViewBase;
-import org.lifecompanion.controller.editaction.GridActions;
 import org.lifecompanion.controller.editaction.GridActions.InverseKeyAction;
-import org.lifecompanion.controller.editaction.GridActions.SetComponentAction;
 import org.lifecompanion.controller.editaction.KeyActions.ChangeImageAction;
 import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.controller.editmode.DragController;
 import org.lifecompanion.controller.editmode.SelectionController;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
+import org.lifecompanion.controller.resource.IconHelper;
+import org.lifecompanion.framework.commons.translation.Translation;
+import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
+import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
+import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
+import org.lifecompanion.model.api.configurationcomponent.StackComponentI;
+import org.lifecompanion.model.api.configurationcomponent.keyoption.KeyOptionI;
+import org.lifecompanion.model.api.imagedictionary.ImageElementI;
+import org.lifecompanion.model.impl.categorizedelement.useaction.available.*;
+import org.lifecompanion.model.impl.configurationcomponent.GridPartKeyComponent;
+import org.lifecompanion.model.impl.configurationcomponent.keyoption.BasicKeyOption;
+import org.lifecompanion.model.impl.configurationcomponent.keyoption.dynamickey.KeyListNodeKeyOption;
+import org.lifecompanion.model.impl.constant.LCGraphicStyle;
+import org.lifecompanion.model.impl.imagedictionary.ImageDictionaries;
+import org.lifecompanion.ui.configurationcomponent.base.GridPartKeyViewBase;
 import org.lifecompanion.ui.configurationcomponent.editmode.componentoption.ButtonComponentOption;
 import org.lifecompanion.ui.configurationcomponent.editmode.componentoption.SelectableOption;
+import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
+import org.lifecompanion.ui.controlsfx.glyphfont.Glyph;
+import org.lifecompanion.util.IOUtils;
 import org.lifecompanion.util.javafx.FXControlUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -83,7 +72,7 @@ import java.util.function.Consumer;
 public class GridPartKeyViewConfig extends GridPartKeyViewBase {
     private final static Logger LOGGER = LoggerFactory.getLogger(GridPartKeyViewConfig.class);
     private ImageView imageViewOptionType;
-    private Button buttonSimulateActions;
+    private Button buttonSimulateActions, buttonEditKeyList;
     private Glyph warningGlyphNoAction;
 
     @Override
@@ -129,14 +118,25 @@ public class GridPartKeyViewConfig extends GridPartKeyViewBase {
         // Execute move action
         this.buttonSimulateActions = new Button();
         ButtonComponentOption.applyButtonBaseStyle(this.buttonSimulateActions, LCGraphicStyle.SECOND_DARK, FontAwesome.Glyph.SHARE);
+        this.buttonSimulateActions.setTranslateY(5.0);
         this.buttonSimulateActions.translateXProperty().bind(widthProperty().subtract(buttonSimulateActions.getPrefWidth() + 5));
         this.getChildren().add(this.buttonSimulateActions);
+
+        // Edit key list
+        this.buttonEditKeyList = new Button();
+        ButtonComponentOption.applyButtonBaseStyle(this.buttonEditKeyList, LCGraphicStyle.MAIN_DARK, FontAwesome.Glyph.BARS);
+        this.buttonEditKeyList.translateXProperty().bind(widthProperty().subtract(buttonEditKeyList.getPrefWidth() + 5));
+        this.buttonEditKeyList.translateYProperty()
+                .bind(Bindings.createDoubleBinding(() -> buttonSimulateActions.isVisible() ? buttonSimulateActions.getTranslateY() + buttonSimulateActions.getPrefHeight() + 5 : 5.0,
+                        buttonSimulateActions.visibleProperty()));
+        this.getChildren().add(this.buttonEditKeyList);
     }
 
     @Override
     public void initBinding() {
         super.initBinding();
         InvalidationListener invalidationListenerMoveAction = inv -> {
+            this.buttonEditKeyList.setVisible(model != null && model.keyOptionProperty().get() instanceof KeyListNodeKeyOption);
             this.buttonSimulateActions.setVisible(
                     // Key list actions
                     KeyListController.INSTANCE.isKeySimulatedAsKeyListActions(this.model)
@@ -233,6 +233,12 @@ public class GridPartKeyViewConfig extends GridPartKeyViewBase {
             DragController.INSTANCE.currentDraggedKeyProperty().set(this.model);
         });
         this.buttonSimulateActions.setOnAction(e -> executeActionSimulations());
+
+        this.buttonEditKeyList.setOnAction(e -> {
+            if (model.keyOptionProperty().get() instanceof KeyListNodeKeyOption) {
+                KeyListController.INSTANCE.openKeyListConfigFor((KeyListNodeKeyOption) model.keyOptionProperty().get());
+            }
+        });
     }
 
     private boolean isCopyingRawImagesFromComputer(DragEvent ea) {

@@ -20,6 +20,7 @@ package org.lifecompanion.controller.configurationcomponent.dynamickey;
 
 import javafx.beans.property.*;
 import javafx.collections.ObservableList;
+import org.lifecompanion.controller.editmode.GeneralConfigurationController;
 import org.lifecompanion.controller.editmode.SelectionController;
 import org.lifecompanion.controller.lifecycle.AppMode;
 import org.lifecompanion.controller.lifecycle.AppModeController;
@@ -37,6 +38,7 @@ import org.lifecompanion.model.api.lifecycle.ModeListenerI;
 import org.lifecompanion.model.api.selectionmode.ComponentToScanI;
 import org.lifecompanion.model.impl.categorizedelement.useaction.available.*;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.dynamickey.KeyListNodeKeyOption;
+import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStep;
 import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.util.model.ConfigurationComponentUtils;
 import org.lifecompanion.util.model.SelectionModeUtils;
@@ -216,6 +218,17 @@ public enum KeyListController implements ModeListenerI {
 
     public void previousOnLevel(int level) {
         findAllNodeForExactLevel(level).forEach(n -> this.previousIn(n, true));
+    }
+
+    public void openKeyListConfigFor(KeyListNodeKeyOption keyListNodeKeyOption){
+        if(keyListNodeKeyOption!=null) {
+            final KeyListNodeI keyListNode = keyListNodeKeyOption.currentSimplerKeyContentContainerProperty().get();
+            if (keyListNode != null) {
+                GeneralConfigurationController.INSTANCE.showStep(GeneralConfigurationStep.KEY_LIST_NODE, keyListNode.getID());
+            } else {
+                GeneralConfigurationController.INSTANCE.showStep(GeneralConfigurationStep.KEY_LIST_NODE);
+            }
+        }
     }
     //========================================================================
 

@@ -210,7 +210,7 @@ public class ButtonComponentOption extends BaseOptionRegion<SelectableComponentI
      * @param glyph
      */
     public static void applyButtonBaseStyle(final ButtonBase button, Color backgroundColor, final Enum<?> glyph) {
-        applyButtonBaseStyle(button, backgroundColor, glyph, 14, 14, 24);
+        applyButtonBaseStyle(button, backgroundColor, glyph, 14, 14, 26);
     }
 
     public static void applyButtonBaseStyle(final ButtonBase button, Color backgroundColor, final Enum<?> glyph, double iconSize, double circleSize, double prefSize) {

@@ -19,7 +19,8 @@
 - Ajout de la possibilité de désactiver l'optimisation de la synthèse vocale
 - Ajout d'une nouvelle action **Activer/désactiver le plein écran** (pour compléter l'ancienne action "Activer/désactiver la taille maximale")
 - Ajout de nouveaux paramètres au lancement et  de nouveaux services sur le serveur de contrôle
-- Migration des versions de Java (18 > 21) et JavaFX (18 > 22)
+- Ajout d'un bouton permettant d'éditer directement les listes de cases depuis une case
+- Migration des versions de Java (18 > 21) et JavaFX (18 > 22) 
 
 ### Corrections/ajustements
 
