@@ -45,6 +45,7 @@ public enum HubController implements ModeListenerI, LCStateListener {
     private static final long CONFIG_CHECK_INTERVAL_USE_MODE = 10_000, CONFIG_CHECK_INTERVAL_STARTING = 1000;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HubController.class);
+    public static final int GET_CONFIG_INFO_TRIES = 2;
 
     private String currentRunningConfigurationId, currentDeviceId;
     private ExecutorService autoSyncService;
@@ -118,7 +119,16 @@ public enum HubController implements ModeListenerI, LCStateListener {
         if (StringUtils.isNotBlank(deviceLocalId)) {
             LOGGER.info("Starting config sync for device {}", deviceLocalId);
             try {
-                HubData.HubConfigInfo configInfo = HubService.INSTANCE.getHubConfigInfoForDeviceLocalId(deviceLocalId);
+                HubData.HubConfigInfo configInfo = null;
+                // Retry twice as a rare problem happen when sync (Issue #332)
+                for (int i = 1; i <= GET_CONFIG_INFO_TRIES; i++) {
+                    try {
+                        configInfo = HubService.INSTANCE.getHubConfigInfoForDeviceLocalId(deviceLocalId);
+                        if (configInfo != null) break;
+                    } catch (Exception e) {
+                        LOGGER.warn("Can't get hub config info for device, {} tries left", GET_CONFIG_INFO_TRIES - i, e);
+                    }
+                }
                 if (configInfo != null) {
                     // Get/create the configuration directory to synchronize files
                     File configurationDirectory = IOHelper.getConfigurationHubSyncDirectoryPath(deviceLocalId, configInfo.configurationId);
