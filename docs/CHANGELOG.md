@@ -14,7 +14,7 @@
 	- Convertir une image en noir et blanc
 - *(Lisa H)* Ajout d'une fonction de "seuil de pertinence" sur la prédiction de mots pour ne conserver que les mots les plus pertinents dans la prédiction
 - *(Lisa H)* Ajout de l'action "Supprimer la dernière prédiction de mots"
-- Ajout de nouveaux services dans serveur de contrôle de LifeCompanion et de nouveaux arguments au lancement
+- Ajout de nouveaux services dans le serveur de contrôle de LifeCompanion et de nouveaux arguments au lancement
 - Ajout d'une **traduction en Anglais** des interfaces de LifeCompanion (version Beta générée par un traducteur automatique)
 - Ajout de la possibilité de désactiver l'optimisation de la synthèse vocale
 - Ajout d'une nouvelle action **Activer/désactiver le plein écran** (pour compléter l'ancienne action "Activer/désactiver la taille maximale")

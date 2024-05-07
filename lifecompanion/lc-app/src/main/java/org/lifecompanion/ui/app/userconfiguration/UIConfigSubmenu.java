@@ -19,6 +19,7 @@
 package org.lifecompanion.ui.app.userconfiguration;
 
 import javafx.collections.FXCollections;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -133,7 +134,9 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
 
         //Frame parameter
         this.spinnerFrameWidth = FXControlUtils.createIntSpinner(10, Integer.MAX_VALUE, 50, 100, 110);
+        GridPane.setHalignment(spinnerFrameWidth, HPos.RIGHT);
         this.spinnerFrameHeight = FXControlUtils.createIntSpinner(10, Integer.MAX_VALUE, 50, 100, 110);
+        GridPane.setHalignment(spinnerFrameHeight, HPos.RIGHT);
         Label labelWidth = new Label(Translation.getText("user.config.stage.width"));
         GridPane.setHgrow(labelWidth, Priority.ALWAYS);
         Label labelHeight = new Label(Translation.getText("user.config.stage.height"));
@@ -151,6 +154,8 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
         comboBoxLanguage = new ComboBox<>(FXCollections.observableArrayList(LCConstant.DEFAULT_LANGUAGE, "en"));
         comboBoxLanguage.setButtonCell(new SimpleTextListCell<>(this::getLanguageTitle));
         comboBoxLanguage.setCellFactory(lv -> new TitleAndDescriptionListCell<>(this::getLanguageTitle, this::getLanguageDescription));
+        comboBoxLanguage.setPrefWidth(250.0);
+        GridPane.setHalignment(comboBoxLanguage, HPos.RIGHT);
         Label labelLanguage = new Label(Translation.getText("user.config.language"));
         gridPaneStageParam.add(labelLanguage, 0, rowStage);
         gridPaneStageParam.add(this.comboBoxLanguage, 1, rowStage++);
