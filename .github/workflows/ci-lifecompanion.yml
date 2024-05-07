@@ -96,14 +96,14 @@ jobs:
         uses: gradle/actions/setup-gradle@v3
         with:
           build-root-directory: lifecompanion-framework
-          arguments: publishToMavenLocal
+          arguments: publishToMavenLocal --info
 
       - name: Build LifeCompanion app
         if: ${{inputs.plugin_dir_name}}
         uses: gradle/actions/setup-gradle@v3
         with:
           build-root-directory: lifecompanion
-          arguments: publishToMavenLocal
+          arguments: publishToMavenLocal --info
 
       - name : Add +X on plugin Gradle scripts
         if: ${{inputs.plugin_dir_name}}
@@ -114,7 +114,7 @@ jobs:
         uses: gradle/actions/setup-gradle@v3
         with:
           build-root-directory: lifecompanion-plugins/${{inputs.plugin_dir_name}}
-          arguments: clean jar
+          arguments: clean jar --info
           
       - name: Call update build and publish command
         uses: gradle/actions/setup-gradle@v3
