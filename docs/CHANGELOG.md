@@ -7,7 +7,7 @@
 - *(Oscar P.)* Ajout d'une fonction permettant l'export de toutes les actions, événements et variables de LifeCompanion (dans le menu Préférences & Infos)
 - *(Oscar P.)* Ajout d'actions "Démarrer/arrêter le minuteur" afin de pouvoir utiliser les cases de type "Indicateur de progression"
 - *(Oscar P.)* Ajout de la fonction de **changement dynamique de l'opacité** en mode utilisation : permet de modifier l'opacité de fenêtre lorsque la souris sort de LifeCompanion
-- *(Oscar P.)* Ajout d'un événement **"Intervalle de temps pour un jour de la semaine"** : permet de générer un événement à une heure précise d'un jour, très utile pour faire un emploi du temps interactif
+- *(Oscar P.)* Ajout d'un événement **"intervalle de temps pour un jour de la semaine"** : permet de générer un événement à une heure précise d'un jour, très utile pour faire un emploi du temps interactif
 - *(Oscar P.)* Ajout de **nouveaux paramètres sur les images**
 	- Retourner horizontalement/verticalement une image
 	- Supprimer automatiquement l'arrière plan d'une image !
