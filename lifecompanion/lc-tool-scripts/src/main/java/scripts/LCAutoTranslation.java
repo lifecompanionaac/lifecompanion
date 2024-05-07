@@ -21,6 +21,7 @@ package scripts;
 
 import com.google.cloud.translate.Translate;
 import com.google.cloud.translate.TranslateOptions;
+import org.apache.xmlbeans.SchemaStringEnumEntry;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
@@ -47,11 +48,14 @@ public class LCAutoTranslation {
     public static void main(String[] args) throws Exception {
         translate = TranslateOptions.getDefaultInstance().getService();
 
-        Map<String, String> texts = loadTexts();
-//        String prev = texts.get("action.import.existing.configuration.message");
-//        texts.clear();
-//        texts.put("action.import.existing.configuration.message", prev);
+        // Load source translations
+        Map<String, String> texts = loadTexts("fr_translations.xml");
         LoggingProgressIndicator pi = new LoggingProgressIndicator(texts.size(), "Translation");
+
+        // Load already translated
+        Map<String, String> alreadyTranslated = loadTexts("en_translations.xml");
+        System.out.println(texts.size() - alreadyTranslated.size());
+        //System.out.println(alreadyTranslated);
 
         Map<String, String> translated = new HashMap<>();
 
@@ -59,17 +63,22 @@ public class LCAutoTranslation {
             try {
                 String originalText = idAndText.getValue();
                 String id = idAndText.getKey();
-                String translation = generateAutoTranslation(originalText);
-                translated.put(id, translation);
-                System.out.println("\n" + id + "\n===== FR =====\n" + originalText);
-                System.out.println("\n===== EN =====\n" + translation + "\n==============");
+                if (!alreadyTranslated.containsKey(id)) {
+                    // System.out.println("Missing  " + id);
+                    String translation = generateAutoTranslation(originalText);
+                    translated.put(id, translation);
+                    System.out.println("\n" + id + "\n===== FR =====\n" + originalText);
+                    System.out.println("\n===== EN =====\n" + translation + "\n==============");
+                } else {
+                    translated.put(id, alreadyTranslated.get(id));
+                }
                 pi.increment();
             } catch (Throwable t) {
                 t.printStackTrace();
                 break;
             }
         }
-        saveResult(translated);
+         saveResult(translated);
     }
 
     private static void saveResult(Map<String, String> texts) throws IOException {
@@ -86,8 +95,8 @@ public class LCAutoTranslation {
         }
     }
 
-    private static Map<String, String> loadTexts() throws IOException, JDOMException {
-        try (InputStreamReader inputStreamForPath = new InputStreamReader(new FileInputStream(new File("..\\lc-app\\src\\main\\resources\\translation\\fr_translations.xml")))) {
+    private static Map<String, String> loadTexts(String name) throws IOException, JDOMException {
+        try (InputStreamReader inputStreamForPath = new InputStreamReader(new FileInputStream(new File("..\\lc-app\\src\\main\\resources\\translation\\" + name)))) {
             SAXBuilder sxb = new SAXBuilder();
             Document doc = sxb.build(inputStreamForPath);
             Element root = doc.getRootElement();
@@ -102,7 +111,7 @@ public class LCAutoTranslation {
         }
     }
 
-    // GOOGLE_APPLICATION_CREDENTIALS to credentials json (ex : E:\Desktop\temp\translation-test-36d46f42a839.json)
+    // GOOGLE_APPLICATION_CREDENTIALS to credentials json (ex : "C:\Users\Mathieu\Desktop\temp\translation-test\lifecompanion-translation-0107269dcca5.json")
     static String generateAutoTranslation(String text) {
         com.google.cloud.translate.Translation translation = translate.translate(
                 text,
