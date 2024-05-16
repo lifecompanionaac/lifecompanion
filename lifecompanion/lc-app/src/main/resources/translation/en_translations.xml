@@ -316,7 +316,7 @@
   <text key="use.event.interval.of.day.end.time.field">Interval end time</text>
   <text key="action.change.configuration.frame.position.on.launch">Change window position on launch</text>
   <text key="action.start.timer.name">Start or restart the timer</text>
-  <text key="buttons.add.actions.activation">Action\nupon activation</text>
+  <text key="buttons.add.actions.activation">Action\non activation</text>
   <text key="use.variable.current.date.example">06/15/2016</text>
   <text key="video.display.mode.fullscreen.description">When the key is selected, the video will play in full screen. The full screen will be automatically closed at the end of the video or any mouse or keyboard press.</text>
   <text key="tooltip.explain.configuration.frame.position">Allows you to automatically position the window on the screen when starting the configuration.</text>
