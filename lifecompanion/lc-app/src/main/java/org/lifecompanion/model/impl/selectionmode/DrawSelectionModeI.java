@@ -35,6 +35,8 @@ public interface DrawSelectionModeI {
 
 	BooleanBinding currentPartNotNullProperty();
 
+	ObjectProperty<Color> strokeBackgroundProperty();
+
 	ObjectProperty<Color> strokeFillProperty();
 
 	ObjectProperty<Color> progressFillProperty();

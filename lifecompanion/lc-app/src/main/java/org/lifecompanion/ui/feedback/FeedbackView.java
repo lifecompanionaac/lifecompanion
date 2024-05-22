@@ -19,44 +19,20 @@
 
 package org.lifecompanion.ui.feedback;
 
-import javafx.animation.*;
-import javafx.beans.binding.BooleanBinding;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.value.WritableValue;
-import javafx.collections.ObservableList;
-import javafx.geometry.Bounds;
+import javafx.animation.FadeTransition;
 import javafx.scene.Group;
-import javafx.scene.Node;
-import javafx.scene.control.Label;
-import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
 import javafx.util.Duration;
 import javafx.util.Pair;
 import org.lifecompanion.controller.feedback.FeedbackController;
-import org.lifecompanion.controller.lifecycle.AppMode;
-import org.lifecompanion.controller.lifecycle.AppModeController;
-import org.lifecompanion.model.api.configurationcomponent.*;
-import org.lifecompanion.model.api.selectionmode.ProgressDrawMode;
-import org.lifecompanion.model.api.selectionmode.ScanningDirection;
+import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
 import org.lifecompanion.model.api.style.ShapeStyle;
 import org.lifecompanion.model.api.style.StylePropertyI;
-import org.lifecompanion.model.api.ui.configurationcomponent.ViewProviderI;
-import org.lifecompanion.model.impl.configurationcomponent.GridPartKeyComponent;
-import org.lifecompanion.model.impl.useapi.dto.ShowFeedbackDto;
-import org.lifecompanion.ui.configurationcomponent.base.LCConfigurationChildContainerPane;
 import org.lifecompanion.util.LangUtils;
-import org.lifecompanion.util.ThreadUtils;
-import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.util.model.ConfigurationComponentLayoutUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
 
 /**
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
@@ -66,6 +42,7 @@ public class FeedbackView extends Group {
     private static final Logger LOGGER = LoggerFactory.getLogger(FeedbackView.class);
 
     private final Rectangle strokeRectangle;
+    private final FadeTransition fadeTransition;
 
     public FeedbackView() {
         FeedbackController.INSTANCE.setFeedbackView(this);
@@ -74,13 +51,16 @@ public class FeedbackView extends Group {
         this.strokeRectangle.setFill(Color.TRANSPARENT);
         this.strokeRectangle.setOpacity(0.0);
         this.getChildren().add(this.strokeRectangle);
+        this.fadeTransition = new FadeTransition(Duration.millis(500), this.strokeRectangle);
     }
 
     public void dispose() {
-        FeedbackController.INSTANCE.setFeedbackView(null);
+        this.fadeTransition.stop();
     }
 
     public void showFeedback(GridPartKeyComponentI key, Color strokeColor, double strokeSize) {
+
+        fadeTransition.stop();
 
         Pair<Double, Double> position = ConfigurationComponentLayoutUtils.getConfigurationPosition(key);
         Pair<Double, Double> size = new Pair<>(key.layoutWidthProperty().get(), key.layoutHeightProperty().get());
@@ -97,6 +77,21 @@ public class FeedbackView extends Group {
         strokeRectangle.setTranslateY(position.getValue());
         strokeRectangle.setWidth(size.getKey());
         strokeRectangle.setHeight(size.getValue());
-        strokeRectangle.setOpacity(1.0);
+
+        if (strokeRectangle.getOpacity() < 1.0) {
+            fadeTransition.setToValue(1.0);
+            fadeTransition.play();
+        }
+
+    }
+
+    public void hideFeedback() {
+        fadeTransition.stop();
+
+        if (strokeRectangle.getOpacity() > 0.0) {
+            fadeTransition.setToValue(0.0);
+            fadeTransition.play();
+        }
+
     }
 }

@@ -250,7 +250,7 @@ public class AbstractSelectionModeView<T extends DrawSelectionModeI> extends Gro
     protected void configureAndAddScanningRectangles(final Rectangle strokeRectangle, final BooleanBinding visibleBindingStroke,
                                                      final BooleanProperty progressVisibleProperty, final Rectangle progressRectangle, final Rectangle clipRectangle) {
         //Stroke rectangle
-        strokeRectangle.setFill(null);
+        strokeRectangle.fillProperty().bind(this.selectionMode.strokeBackgroundProperty());
         strokeRectangle.setPickOnBounds(false);
         strokeRectangle.strokeProperty().bind(this.selectionMode.strokeFillProperty());
         strokeRectangle.visibleProperty().bind(visibleBindingStroke);

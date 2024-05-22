@@ -471,6 +471,16 @@ public enum SelectionModeController implements ModeListenerI {
             });
         }
     }
+
+    public void changeStrokeBackgroundColor(final Color newColor) {
+        SelectionModeI selectionMode = this.getSelectionModeConfiguration();
+        if (selectionMode instanceof DrawSelectionModeI) {
+            DrawSelectionModeI drawSelectionMode = (DrawSelectionModeI) selectionMode;
+            FXThreadUtils.runOnFXThread(() -> {
+                drawSelectionMode.strokeBackgroundProperty().set(newColor);
+            });
+        }
+    }
     //========================================================================
 
     /**

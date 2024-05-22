@@ -1,11 +1,13 @@
 package org.lifecompanion.model.impl.useapi;
 
+import javafx.scene.paint.Color;
 import org.lifecompanion.controller.useapi.LifeCompanionControlServerController;
 import org.lifecompanion.framework.commons.utils.lang.CollectionUtils;
 import org.lifecompanion.model.api.useapi.EndpointHttpMethod;
 import org.lifecompanion.model.api.useapi.LifeCompanionControlServerEndpointI;
 import org.lifecompanion.model.impl.selectionmode.SelectionModeEnum;
 import org.lifecompanion.model.impl.useapi.dto.*;
+import org.lifecompanion.util.javafx.ColorUtils;
 
 import java.util.Arrays;
 import java.util.List;
@@ -17,9 +19,9 @@ public enum LifeCompanionControlServerEndpoint implements LifeCompanionControlSe
             EndpointHttpMethod.GET,
             "To get the LifeCompanion current status, will return containing information about the running instance (can be `STARTING`,`IN_USE_MODE`,`IN_EDIT_MODE` or `STOPPING`)",
             null,
-            List.of(new AppStatusDto(AppStatusDto.Status.STARTING, AppStatusDto.SelectionModeStatus.PAUSED),
-                    new AppStatusDto(AppStatusDto.Status.IN_USE_MODE, AppStatusDto.SelectionModeStatus.PLAYING),
-                    new AppStatusDto(AppStatusDto.Status.STOPPING, AppStatusDto.SelectionModeStatus.PAUSED))
+            List.of(new AppStatusDto(AppStatusDto.Status.STARTING, AppStatusDto.SelectionModeStatus.PAUSED, null),
+                    new AppStatusDto(AppStatusDto.Status.IN_USE_MODE, AppStatusDto.SelectionModeStatus.PLAYING, new GridDto("Clavier", "1fee441b-b261-4fe4-85fd-13572f0a1aa3", 4, 6)),
+                    new AppStatusDto(AppStatusDto.Status.STOPPING, AppStatusDto.SelectionModeStatus.PAUSED, null))
     ),
     // Window
     WINDOW_MINIMIZE("window/minimize",
@@ -121,7 +123,29 @@ public enum LifeCompanionControlServerEndpoint implements LifeCompanionControlSe
             EndpointHttpMethod.POST,
             "Immediately active the mouse secondary (eg right button) button to the current mouse position.",
             null,
-            List.of(ActionConfirmationDto.ok()));
+            List.of(ActionConfirmationDto.ok())),
+    // FEEDBACK
+    FEEDBACK_TARGET_SHOW("feedback/target/show",
+            EndpointHttpMethod.POST,
+            "TODO",
+            List.of(new ShowFeedbackTargetDto(ColorUtils.toWebColorWithAlpha(Color.GREEN), 5.0, 2, 4), new ShowFeedbackTargetDto(null, null, 1, 3)),
+            List.of(ActionConfirmationDto.ok())),
+    FEEDBACK_TARGET_HIDE("feedback/target/hide",
+            EndpointHttpMethod.POST,
+            "TODO",
+            null,
+            List.of(ActionConfirmationDto.ok())),
+    FEEDBACK_ACTIVATION_SHOW("feedback/activation/show",
+            EndpointHttpMethod.POST,
+            "TODO",
+            List.of(new ShowFeedbackActivationDto("#2517c263")),
+            List.of(ActionConfirmationDto.ok())),
+    FEEDBACK_ACTIVATION_HIDE("feedback/activation/hide",
+            EndpointHttpMethod.POST,
+            "TODO",
+            null,
+            List.of(ActionConfirmationDto.ok())),
+    ;
 
     public final static String URL_PREFIX = "/api/v1/";
 

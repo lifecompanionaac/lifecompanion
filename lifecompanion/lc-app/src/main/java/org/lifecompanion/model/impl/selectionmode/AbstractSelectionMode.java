@@ -51,7 +51,7 @@ public abstract class AbstractSelectionMode<T extends AbstractSelectionModeView<
     /**
      * To change the activation color
      */
-    protected final ObjectProperty<Color> strokeColor, progressColor;
+    protected final ObjectProperty<Color> strokeColor, strokeBackground, progressColor;
     protected final BooleanProperty drawProgress;
     protected final BooleanProperty playingProperty;
     protected final BooleanProperty backgroundReductionEnabled;
@@ -75,6 +75,7 @@ public abstract class AbstractSelectionMode<T extends AbstractSelectionModeView<
     AbstractSelectionMode() {
         this.currentGrid = new SimpleObjectProperty<>();
         this.strokeColor = new SimpleObjectProperty<>();
+        this.strokeBackground = new SimpleObjectProperty<>();
         this.progressColor = new SimpleObjectProperty<>();
         this.drawProgress = new SimpleBooleanProperty();
         this.backgroundReductionLevel = new SimpleDoubleProperty();
@@ -186,6 +187,11 @@ public abstract class AbstractSelectionMode<T extends AbstractSelectionModeView<
     @Override
     public ObjectProperty<Color> strokeFillProperty() {
         return this.strokeColor;
+    }
+
+    @Override
+    public ObjectProperty<Color> strokeBackgroundProperty() {
+        return this.strokeBackground;
     }
 
     @Override

@@ -19,47 +19,31 @@
 
 package org.lifecompanion.model.impl.useapi.dto;
 
-public class ShowFeedbackDto {
-    private String color;
-    private Double strokeSize;
-    private int row, column;
+public class GridDto {
+    private String name;
+    private String id;
+    private int rowCount, columnCount;
 
-    public ShowFeedbackDto(String color, Double strokeSize, int row, int column) {
-        this.color = color;
-        this.strokeSize = strokeSize;
-        this.row = row;
-        this.column = column;
+    public GridDto(String name, String id, int rowCount, int columnCount) {
+        this.name = name;
+        this.id = id;
+        this.rowCount = rowCount;
+        this.columnCount = columnCount;
     }
 
-    public String getColor() {
-        return color;
+    public String getName() {
+        return name;
     }
 
-    public Double getStrokeSize() {
-        return strokeSize;
+    public String getId() {
+        return id;
     }
 
-    public int getRow() {
-        return row;
+    public int getRowCount() {
+        return rowCount;
     }
 
-    public int getColumn() {
-        return column;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
-    }
-
-    public void setStrokeSize(Double strokeSize) {
-        this.strokeSize = strokeSize;
-    }
-
-    public void setRow(int row) {
-        this.row = row;
-    }
-
-    public void setColumn(int column) {
-        this.column = column;
+    public int getColumnCount() {
+        return columnCount;
     }
 }

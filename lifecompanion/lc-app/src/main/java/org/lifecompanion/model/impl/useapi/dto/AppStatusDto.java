@@ -3,12 +3,14 @@ package org.lifecompanion.model.impl.useapi.dto;
 public class AppStatusDto {
     private Status status;
     private SelectionModeStatus selectionModeStatus;
+    private GridDto mainCurrentGrid;
 
     // Todo : current configuration, current profile, session duration ?
 
-    public AppStatusDto(Status status, SelectionModeStatus selectionModeStatus) {
+    public AppStatusDto(Status status, SelectionModeStatus selectionModeStatus, GridDto mainCurrentGrid) {
         this.status = status;
         this.selectionModeStatus = selectionModeStatus;
+        this.mainCurrentGrid = mainCurrentGrid;
     }
 
     public Status getStatus() {
@@ -25,6 +27,14 @@ public class AppStatusDto {
 
     public void setSelectionModeStatus(SelectionModeStatus selectionModeStatus) {
         this.selectionModeStatus = selectionModeStatus;
+    }
+
+    public GridDto getMainCurrentGrid() {
+        return mainCurrentGrid;
+    }
+
+    public void setMainCurrentGrid(GridDto mainCurrentGrid) {
+        this.mainCurrentGrid = mainCurrentGrid;
     }
 
     public enum Status {

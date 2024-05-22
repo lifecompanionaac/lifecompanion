@@ -63,13 +63,23 @@ public class ColorUtils {
         }
     }
 
-    public static Color fromWebColor(String webColor){
-        // TODO : handle alpha or not
-        return Color.rgb(
-                Integer.valueOf(webColor.substring(1, 3), 16),
-                Integer.valueOf(webColor.substring(3, 5), 16),
-                Integer.valueOf(webColor.substring(5, 7), 16),
-                Integer.valueOf(webColor.substring(7, 9), 16) / 255.0);
+    public static Color fromWebColor(String webColor) {
+        try {
+            if (webColor.length() >= 8) {
+                return Color.rgb(
+                        Integer.valueOf(webColor.substring(1, 3), 16),
+                        Integer.valueOf(webColor.substring(3, 5), 16),
+                        Integer.valueOf(webColor.substring(5, 7), 16),
+                        Integer.valueOf(webColor.substring(7), 16) / 255.0);
+            } else {
+                return Color.rgb(
+                        Integer.valueOf(webColor.substring(1, 3), 16),
+                        Integer.valueOf(webColor.substring(3, 5), 16),
+                        Integer.valueOf(webColor.substring(5, 7), 16));
+            }
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Incorrect color format, expecting color with #RRGGBB or #RRGGBBAA format");
+        }
     }
 
     /**
