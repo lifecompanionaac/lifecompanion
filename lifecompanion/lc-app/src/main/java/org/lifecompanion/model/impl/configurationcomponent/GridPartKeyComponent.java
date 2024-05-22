@@ -42,9 +42,7 @@ import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.io.XMLSerializable;
 import org.lifecompanion.model.api.style.TextPosition;
 import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionManager;
-import org.lifecompanion.model.impl.categorizedelement.useaction.available.WriteCharPredictionAction;
-import org.lifecompanion.model.impl.categorizedelement.useaction.available.WriteLabelAction;
-import org.lifecompanion.model.impl.categorizedelement.useaction.available.WriteWordPredictionAction;
+import org.lifecompanion.model.impl.categorizedelement.useaction.available.*;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.BasicKeyOption;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.QuickComKeyOption;
 import org.lifecompanion.model.impl.exception.LCException;
@@ -532,6 +530,8 @@ public class GridPartKeyComponent extends GridPartComponentBaseImpl implements G
         textContentWritten |= this.actionManager.getFirstActionOfType(UseActionEvent.ACTIVATION, WriteLabelAction.class) != null;
         textContentWritten |= this.actionManager.getFirstActionOfType(UseActionEvent.ACTIVATION, WriteCharPredictionAction.class) != null;
         textContentWritten |= this.actionManager.getFirstActionOfType(UseActionEvent.ACTIVATION, WriteWordPredictionAction.class) != null;
+        textContentWritten |= this.actionManager.getFirstActionOfType(UseActionEvent.ACTIVATION, WriteAndSpeakLabelActionInText.class) != null;
+        textContentWritten |= this.actionManager.getFirstActionOfType(UseActionEvent.ACTIVATION, WriteAndSpeakLabelActionInSound.class) != null;
         return textContentWritten;
     }
     //========================================================================
