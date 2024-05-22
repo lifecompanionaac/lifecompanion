@@ -24,6 +24,7 @@ import javafx.scene.Node;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.selectionmode.SelectionModeI;
 import org.lifecompanion.ui.configurationcomponent.base.LCConfigurationViewBase;
+import org.lifecompanion.ui.feedback.FeedbackView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,11 +42,15 @@ public class LCConfigurationViewUse extends LCConfigurationViewBase {
     private ChangeListener<SelectionModeI> selectionModeViewChangeListener, directSelectionMouse;
     private ChangeListener<Boolean> hideMainSelectionChangeListener;
 
+    private FeedbackView feedbackView;
+
     @Override
     public void unbindComponentAndChildren() {
         this.model.selectionModeProperty().removeListener(selectionModeViewChangeListener);
         this.model.directSelectionOnMouseOnScanningSelectionModeProperty().removeListener(directSelectionMouse);
         this.model.hideMainSelectionModeViewProperty().removeListener(hideMainSelectionChangeListener);
+        this.feedbackView.dispose();
+        this.feedbackView = null;
         super.unbindComponentAndChildren();
     }
 
@@ -66,6 +71,8 @@ public class LCConfigurationViewUse extends LCConfigurationViewBase {
                 lastSecondarySelectionMode.setVisible(nv);
             }
         });
+        this.feedbackView = new FeedbackView();
+        this.getChildren().add(feedbackView);
     }
 
     private ChangeListener<SelectionModeI> createSelectionModeViewChangeListener(boolean mainSelectionMode) {

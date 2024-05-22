@@ -63,6 +63,15 @@ public class ColorUtils {
         }
     }
 
+    public static Color fromWebColor(String webColor){
+        // TODO : handle alpha or not
+        return Color.rgb(
+                Integer.valueOf(webColor.substring(1, 3), 16),
+                Integer.valueOf(webColor.substring(3, 5), 16),
+                Integer.valueOf(webColor.substring(5, 7), 16),
+                Integer.valueOf(webColor.substring(7, 9), 16) / 255.0);
+    }
+
     /**
      * Compare using web string as double are "to precise" for 0-255 values of colors.
      * Note that it doesn't compare opacity
