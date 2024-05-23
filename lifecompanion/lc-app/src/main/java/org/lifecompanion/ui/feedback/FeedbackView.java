@@ -51,7 +51,7 @@ public class FeedbackView extends Group {
         this.strokeRectangle.setFill(Color.TRANSPARENT);
         this.strokeRectangle.setOpacity(0.0);
         this.getChildren().add(this.strokeRectangle);
-        this.fadeTransition = new FadeTransition(Duration.millis(500), this.strokeRectangle);
+        this.fadeTransition = new FadeTransition(Duration.millis(FeedbackController.TRANSITION_TIME_MS), this.strokeRectangle);
     }
 
     public void dispose() {

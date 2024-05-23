@@ -472,14 +472,19 @@ public enum SelectionModeController implements ModeListenerI {
         }
     }
 
-    public void changeStrokeBackgroundColor(final Color newColor) {
-        SelectionModeI selectionMode = this.getSelectionModeConfiguration();
-        if (selectionMode instanceof DrawSelectionModeI) {
-            DrawSelectionModeI drawSelectionMode = (DrawSelectionModeI) selectionMode;
-            FXThreadUtils.runOnFXThread(() -> {
-                drawSelectionMode.strokeBackgroundProperty().set(newColor);
-            });
+    public void showActivationRequest(Color color) {
+        SelectionModeI selectionModeConfiguration = this.getSelectionModeConfiguration();
+        if (selectionModeConfiguration != null) {
+            selectionModeConfiguration.showActivationRequest(color);
         }
+    }
+
+    public void hideActivationRequest() {
+        SelectionModeI selectionModeConfiguration = this.getSelectionModeConfiguration();
+        if (selectionModeConfiguration != null) {
+            selectionModeConfiguration.hideActivationRequest();
+        }
+
     }
     //========================================================================
 

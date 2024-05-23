@@ -23,6 +23,7 @@ import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
 import org.lifecompanion.model.api.configurationcomponent.GridPartComponentI;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.Node;
+import javafx.scene.paint.Color;
 
 /**
  * Represent a selection mode.<br>
@@ -88,4 +89,7 @@ public interface SelectionModeI {
 	 * @return true if a new activation can be done, if the configured time before repeat is correct.
 	 */
 	boolean isTimeBeforeRepeatCorrect();
+
+	void showActivationRequest(Color color);
+	void hideActivationRequest();
 }

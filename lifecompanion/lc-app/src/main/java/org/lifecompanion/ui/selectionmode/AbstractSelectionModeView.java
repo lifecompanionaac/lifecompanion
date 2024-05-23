@@ -34,6 +34,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.util.Duration;
 import javafx.util.Pair;
+import org.lifecompanion.controller.feedback.FeedbackController;
 import org.lifecompanion.model.api.configurationcomponent.*;
 import org.lifecompanion.model.api.selectionmode.ProgressDrawMode;
 import org.lifecompanion.model.api.selectionmode.ScanningDirection;
@@ -107,6 +108,8 @@ public class AbstractSelectionModeView<T extends DrawSelectionModeI> extends Gro
 
     private final Rectangle backgroundReductionRectangle;
 
+    private final FillTransition fillTransition;
+
     public AbstractSelectionModeView(final T selectionModeP, final ScanningDirection direction) {
         this.setPickOnBounds(false);
         this.setMouseTransparent(true);
@@ -144,6 +147,8 @@ public class AbstractSelectionModeView<T extends DrawSelectionModeI> extends Gro
                 this.timeLineProgress.pause();
             }
         });
+
+        this.fillTransition = new FillTransition(Duration.millis(FeedbackController.TRANSITION_TIME_MS), this.keyStrokeRectangle);
     }
 
     /**
@@ -218,6 +223,7 @@ public class AbstractSelectionModeView<T extends DrawSelectionModeI> extends Gro
 
     public void dispose() {
         this.scaleDownPreviousViews();
+        this.fillTransition.stop();
     }
     //========================================================================
 
@@ -250,7 +256,7 @@ public class AbstractSelectionModeView<T extends DrawSelectionModeI> extends Gro
     protected void configureAndAddScanningRectangles(final Rectangle strokeRectangle, final BooleanBinding visibleBindingStroke,
                                                      final BooleanProperty progressVisibleProperty, final Rectangle progressRectangle, final Rectangle clipRectangle) {
         //Stroke rectangle
-        strokeRectangle.fillProperty().bind(this.selectionMode.strokeBackgroundProperty());
+        strokeRectangle.setFill(Color.TRANSPARENT);
         strokeRectangle.setPickOnBounds(false);
         strokeRectangle.strokeProperty().bind(this.selectionMode.strokeFillProperty());
         strokeRectangle.visibleProperty().bind(visibleBindingStroke);
@@ -436,5 +442,24 @@ public class AbstractSelectionModeView<T extends DrawSelectionModeI> extends Gro
         return kf;
     }
     //========================================================================
+
+    public void showActivationRequest(Color color) {
+        this.fillTransition.stop();
+        if (keyStrokeRectangle.getFill() != color) {
+            fillTransition.setToValue(color);
+            fillTransition.play();
+            System.out.println("Playing fill");
+        }
+
+
+    }
+
+    public void hideActivationRequest() {
+        this.fillTransition.stop();
+        if (keyStrokeRectangle.getFill() != Color.TRANSPARENT) {
+            fillTransition.setToValue(Color.TRANSPARENT);
+            fillTransition.play();
+        }
+    }
 
 }

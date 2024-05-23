@@ -23,8 +23,6 @@ import javafx.beans.property.*;
 import javafx.scene.paint.Color;
 import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
 import org.lifecompanion.model.api.configurationcomponent.GridPartComponentI;
-import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
-import org.lifecompanion.model.api.configurationcomponent.WriterDisplayerI;
 import org.lifecompanion.model.api.selectionmode.ScanningMode;
 import org.lifecompanion.model.api.selectionmode.SelectionModeI;
 import org.lifecompanion.model.api.selectionmode.SelectionModeParameterI;
@@ -51,7 +49,7 @@ public abstract class AbstractSelectionMode<T extends AbstractSelectionModeView<
     /**
      * To change the activation color
      */
-    protected final ObjectProperty<Color> strokeColor, strokeBackground, progressColor;
+    protected final ObjectProperty<Color> strokeColor, progressColor;
     protected final BooleanProperty drawProgress;
     protected final BooleanProperty playingProperty;
     protected final BooleanProperty backgroundReductionEnabled;
@@ -75,7 +73,6 @@ public abstract class AbstractSelectionMode<T extends AbstractSelectionModeView<
     AbstractSelectionMode() {
         this.currentGrid = new SimpleObjectProperty<>();
         this.strokeColor = new SimpleObjectProperty<>();
-        this.strokeBackground = new SimpleObjectProperty<>();
         this.progressColor = new SimpleObjectProperty<>();
         this.drawProgress = new SimpleBooleanProperty();
         this.backgroundReductionLevel = new SimpleDoubleProperty();
@@ -190,11 +187,6 @@ public abstract class AbstractSelectionMode<T extends AbstractSelectionModeView<
     }
 
     @Override
-    public ObjectProperty<Color> strokeBackgroundProperty() {
-        return this.strokeBackground;
-    }
-
-    @Override
     public ObjectProperty<Color> progressFillProperty() {
         return this.progressColor;
     }
@@ -215,4 +207,14 @@ public abstract class AbstractSelectionMode<T extends AbstractSelectionModeView<
     }
     //========================================================================
 
+
+    @Override
+    public void showActivationRequest(Color color) {
+        if (this.view != null) this.view.showActivationRequest(color);
+    }
+
+    @Override
+    public void hideActivationRequest() {
+        if (this.view != null) this.view.hideActivationRequest();
+    }
 }

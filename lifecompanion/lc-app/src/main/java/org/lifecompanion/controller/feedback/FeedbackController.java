@@ -42,6 +42,8 @@ public enum FeedbackController implements ModeListenerI {
     INSTANCE;
     private static final Color DEFAULT_STROKE_COLOR = Color.RED;
     private static final double DEFAULT_STROKE_SIZE = 5;
+    public static final long TRANSITION_TIME_MS = 500;
+
     private static final Color DEFAULT_ACTIVATION_COLOR = ColorUtils.fromWebColor("#2517c263");
     private final Logger LOGGER = LoggerFactory.getLogger(FeedbackController.class);
     private FeedbackView feedbackView;
@@ -108,10 +110,10 @@ public enum FeedbackController implements ModeListenerI {
 
     public void showActivation(ShowFeedbackActivationDto showFeedbackActivationDto) {
         Color activationColor = showFeedbackActivationDto.getColor() != null ? ColorUtils.fromWebColor(showFeedbackActivationDto.getColor()) : DEFAULT_ACTIVATION_COLOR;
-        SelectionModeController.INSTANCE.changeStrokeBackgroundColor(activationColor);
+        SelectionModeController.INSTANCE.showActivationRequest(activationColor);
     }
 
     public void hideActivation() {
-        SelectionModeController.INSTANCE.changeStrokeBackgroundColor(null);
+        SelectionModeController.INSTANCE.hideActivationRequest();
     }
 }
