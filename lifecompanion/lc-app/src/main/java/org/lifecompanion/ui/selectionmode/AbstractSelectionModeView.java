@@ -34,7 +34,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.util.Duration;
 import javafx.util.Pair;
-import org.lifecompanion.controller.feedback.FeedbackController;
+import org.lifecompanion.controller.feedback.IndicationController;
 import org.lifecompanion.model.api.configurationcomponent.*;
 import org.lifecompanion.model.api.selectionmode.ProgressDrawMode;
 import org.lifecompanion.model.api.selectionmode.ScanningDirection;
@@ -148,7 +148,7 @@ public class AbstractSelectionModeView<T extends DrawSelectionModeI> extends Gro
             }
         });
 
-        this.fillTransition = new FillTransition(Duration.millis(FeedbackController.TRANSITION_TIME_MS), this.keyStrokeRectangle);
+        this.fillTransition = new FillTransition(Duration.millis(IndicationController.TRANSITION_TIME_MS), this.keyStrokeRectangle);
     }
 
     /**

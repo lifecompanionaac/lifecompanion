@@ -99,7 +99,7 @@ public enum LifeCompanionControlServerController implements ResponseTransformer 
                 MediaRoutes.init();
                 HubRoutes.init();
                 MouseRoutes.init();
-                FeedbackRoutes.init();
+                IndicationRoutes.init();
             });
             after((req, res) -> res.type("application/json"));
             started = true;

@@ -30,7 +30,7 @@ import org.lifecompanion.controller.configurationcomponent.dynamickey.UserAction
 import org.lifecompanion.controller.editaction.AsyncExecutorController;
 import org.lifecompanion.controller.editaction.LCConfigurationActions;
 import org.lifecompanion.controller.editmode.ConfigActionController;
-import org.lifecompanion.controller.feedback.FeedbackController;
+import org.lifecompanion.controller.feedback.IndicationController;
 import org.lifecompanion.controller.hub.HubController;
 import org.lifecompanion.controller.io.IOHelper;
 import org.lifecompanion.controller.media.SoundPlayerController;
@@ -191,7 +191,7 @@ public enum AppModeController {
             GlobalKeyEventController.INSTANCE,//
             UseTimerController.INSTANCE,//
             HubController.INSTANCE,//
-            FeedbackController.INSTANCE, //
+            IndicationController.INSTANCE, //
             SelectionModeController.INSTANCE,// Selection in last, because it will start scanning
             WinAutoHotKeyKeyboardReceiverController.INSTANCE // Need the "blocked keys" from other modes
     );

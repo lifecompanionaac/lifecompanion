@@ -4,13 +4,15 @@ public class AppStatusDto {
     private Status status;
     private SelectionModeStatus selectionModeStatus;
     private GridDto mainCurrentGrid;
+    private GridPartDto currentOverPart;
 
     // Todo : current configuration, current profile, session duration ?
 
-    public AppStatusDto(Status status, SelectionModeStatus selectionModeStatus, GridDto mainCurrentGrid) {
+    public AppStatusDto(Status status, SelectionModeStatus selectionModeStatus, GridDto mainCurrentGrid, GridPartDto currentOverPart) {
         this.status = status;
         this.selectionModeStatus = selectionModeStatus;
         this.mainCurrentGrid = mainCurrentGrid;
+        this.currentOverPart = currentOverPart;
     }
 
     public Status getStatus() {
@@ -31,6 +33,14 @@ public class AppStatusDto {
 
     public GridDto getMainCurrentGrid() {
         return mainCurrentGrid;
+    }
+
+    public GridPartDto getCurrentOverPart() {
+        return currentOverPart;
+    }
+
+    public void setCurrentOverPart(GridPartDto currentOverPart) {
+        this.currentOverPart = currentOverPart;
     }
 
     public void setMainCurrentGrid(GridDto mainCurrentGrid) {

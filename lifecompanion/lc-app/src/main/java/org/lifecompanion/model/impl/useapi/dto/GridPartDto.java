@@ -19,18 +19,48 @@
 
 package org.lifecompanion.model.impl.useapi.dto;
 
-public class ShowFeedbackActivationDto {
-    private String color;
+public class GridPartDto {
+    private String name;
+    private String id;
+    private int row, colum;
 
-    public ShowFeedbackActivationDto(String color) {
-        this.color = color;
+    public GridPartDto(String name, String id, int row, int colum) {
+        this.name = name;
+        this.id = id;
+        this.row = row;
+        this.colum = colum;
     }
 
-    public String getColor() {
-        return color;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setColor(String color) {
-        this.color = color;
+    public void setId(String id) {
+        this.id = id;
     }
+
+    public int getRow() {
+        return row;
+    }
+
+    public void setRow(int row) {
+        this.row = row;
+    }
+
+    public int getColum() {
+        return colum;
+    }
+
+    public void setColum(int colum) {
+        this.colum = colum;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getId() {
+        return id;
+    }
+
 }

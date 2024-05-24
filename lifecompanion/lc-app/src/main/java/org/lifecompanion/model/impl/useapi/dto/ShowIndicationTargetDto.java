@@ -19,12 +19,12 @@
 
 package org.lifecompanion.model.impl.useapi.dto;
 
-public class ShowFeedbackTargetDto {
+public class ShowIndicationTargetDto {
     private String color;
     private Double strokeSize;
     private int row, column;
 
-    public ShowFeedbackTargetDto(String color, Double strokeSize, int row, int column) {
+    public ShowIndicationTargetDto(String color, Double strokeSize, int row, int column) {
         this.color = color;
         this.strokeSize = strokeSize;
         this.row = row;

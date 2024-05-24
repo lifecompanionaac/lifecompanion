@@ -25,7 +25,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import javafx.util.Pair;
-import org.lifecompanion.controller.feedback.FeedbackController;
+import org.lifecompanion.controller.feedback.IndicationController;
 import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
 import org.lifecompanion.model.api.style.ShapeStyle;
 import org.lifecompanion.model.api.style.StylePropertyI;
@@ -37,21 +37,21 @@ import org.slf4j.LoggerFactory;
 /**
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
-public class FeedbackView extends Group {
+public class IndicationView extends Group {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(FeedbackView.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(IndicationView.class);
 
     private final Rectangle strokeRectangle;
     private final FadeTransition fadeTransition;
 
-    public FeedbackView() {
-        FeedbackController.INSTANCE.setFeedbackView(this);
+    public IndicationView() {
+        IndicationController.INSTANCE.setIndicationView(this);
         this.setMouseTransparent(true);
         this.strokeRectangle = new Rectangle();
         this.strokeRectangle.setFill(Color.TRANSPARENT);
         this.strokeRectangle.setOpacity(0.0);
         this.getChildren().add(this.strokeRectangle);
-        this.fadeTransition = new FadeTransition(Duration.millis(FeedbackController.TRANSITION_TIME_MS), this.strokeRectangle);
+        this.fadeTransition = new FadeTransition(Duration.millis(IndicationController.TRANSITION_TIME_MS), this.strokeRectangle);
     }
 
     public void dispose() {
