@@ -1368,7 +1368,7 @@
   <text key="pdf.export.chooser.dialog.title">Exporter les grilles en PDF</text>
   <text key="pdf.export.default.file.name">{}-{}-Grilles-LifeCompanion</text>
   <text key="pdf.export.chooser.dialog.title.lists">Exporter les listes en PDF</text>
-  <text key="pdf.export.lists.file.name">{}-Actions-Évènements-Variables de LifeCompanion</text>
+  <text key="pdf.export.lists.file.name">{}-Actions-Événements-Variables de LifeCompanion</text>
   <text key="plugin.error.unknown.error">Erreur inconnue au chargement de l'extension {}</text>
   <text key="plugin.installation.dialog.selection.header">Installer une extension</text>
   <text key="plugin.installation.dialog.selection.message">Entrez l'identifiant de l'extension à installer</text>
@@ -3834,4 +3834,8 @@
     <text key="enable.speech.optimization.control">Activer l'optimisation de la synthèse vocale</text>
     <text key="enable.speech.optimization.control.description">Si activé, les pauses avant et après une prononciation par la synthèse vocale sont supprimées. Cela permet une meilleure réactivité. Peut être utile à désactiver si LifeCompanion est utilisé avec des dispositifs audio externes (ex : Bluetooth).</text>
     <text key="button.type.try.update">Vérifier les mises à jour</text>
+    <text key="use.event.on.target.indication.reached.name">Cible de déplacement atteinte</text>
+    <text key="use.event.on.target.indication.reached.description">Se produit lorsque la cible de déplacement définie est atteinte.</text>
+    <text key="use.event.on.activation.indication.done.name">Demande d'activation effectuée</text>
+    <text key="use.event.on.activation.indication.done.description">Se produit lorsque la demande d'activation est effectuée au bon moment.</text>
 </texts>

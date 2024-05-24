@@ -31,8 +31,8 @@ import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Comparator;
-import java.util.Objects;
+import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * Controller that manage indications that can be displayed to user in use mode.
@@ -52,17 +52,37 @@ public enum IndicationController implements ModeListenerI {
     private GridPartKeyComponentI currentTargetedKey;
     private LCConfigurationI configuration;
     private final InvalidationListener listenerCurrentOverPart;
+    private final Runnable listenerActivationDone;
+    private final Set<Runnable> onTargetKeyReachedListeners;
+    private final Set<Runnable> onActivationDoneListeners;
+    private boolean activationRequested;
 
 
     IndicationController() {
         listenerCurrentOverPart = inv -> checkCurrentPartOver();
+        this.onTargetKeyReachedListeners = new HashSet<>();
+        this.onActivationDoneListeners = new HashSet<>();
+        this.listenerActivationDone = () -> {
+            if (activationRequested) {
+                hideActivation();
+                onActivationDoneListeners.forEach(Runnable::run);
+            }
+        };
+    }
+
+    public Set<Runnable> getOnTargetKeyReachedListeners() {
+        return onTargetKeyReachedListeners;
+    }
+
+    public Set<Runnable> getOnActivationDoneListeners() {
+        return onActivationDoneListeners;
     }
 
     private void checkCurrentPartOver() {
         GridPartComponentI currentOverPart = SelectionModeController.INSTANCE.currentOverPartProperty().get();
         if (currentTargetedKey != null && currentOverPart == currentTargetedKey) {
             hideTarget();
-            // TODO : fire listener
+            this.onTargetKeyReachedListeners.forEach(Runnable::run);
         }
     }
 
@@ -127,11 +147,22 @@ public enum IndicationController implements ModeListenerI {
 
 
     public void showActivation(ShowIndicationActivationDto showIndicationActivationDto) {
+        this.activationRequested = true;
+        executeForCurrentModeActivationListeners(s -> s.add(this.listenerActivationDone));
         Color activationColor = showIndicationActivationDto.getColor() != null ? ColorUtils.fromWebColor(showIndicationActivationDto.getColor()) : DEFAULT_ACTIVATION_COLOR;
         SelectionModeController.INSTANCE.showActivationRequest(activationColor);
     }
 
     public void hideActivation() {
+        this.activationRequested = false;
+        executeForCurrentModeActivationListeners(s -> s.remove(this.listenerActivationDone));
         SelectionModeController.INSTANCE.hideActivationRequest();
     }
+
+    private void executeForCurrentModeActivationListeners(Consumer<Set<Runnable>> action) {
+        Set<Runnable> listeners = SelectionModeController.INSTANCE.getActivationDoneListenerForCurrentMode();
+        if (listeners != null) action.accept(listeners);
+    }
+
+
 }

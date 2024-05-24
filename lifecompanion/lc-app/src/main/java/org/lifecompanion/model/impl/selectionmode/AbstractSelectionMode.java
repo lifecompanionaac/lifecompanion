@@ -29,6 +29,9 @@ import org.lifecompanion.model.api.selectionmode.SelectionModeParameterI;
 import org.lifecompanion.ui.selectionmode.AbstractSelectionModeView;
 import org.lifecompanion.util.model.SelectionModeUtils;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Abstract implementation that just take care of parameters holding.
  *
@@ -70,6 +73,8 @@ public abstract class AbstractSelectionMode<T extends AbstractSelectionModeView<
      */
     private long lastActivationTime;
 
+    private final Set<Runnable> activationDoneListeners;
+
     AbstractSelectionMode() {
         this.currentGrid = new SimpleObjectProperty<>();
         this.strokeColor = new SimpleObjectProperty<>();
@@ -78,6 +83,7 @@ public abstract class AbstractSelectionMode<T extends AbstractSelectionModeView<
         this.backgroundReductionLevel = new SimpleDoubleProperty();
         this.backgroundReductionEnabled = new SimpleBooleanProperty();
         this.playingProperty = new SimpleBooleanProperty(false);
+        this.activationDoneListeners = new HashSet<>();
         //Currently scanned grid
         this.currentGrid.addListener((obs, ov, nv) -> {
             if (nv != null) {
@@ -138,6 +144,12 @@ public abstract class AbstractSelectionMode<T extends AbstractSelectionModeView<
     @Override
     public void activationDone() {
         this.lastActivationTime = System.currentTimeMillis();
+        this.activationDoneListeners.forEach(Runnable::run);
+    }
+
+    @Override
+    public Set<Runnable> getActivationDoneListener() {
+        return this.activationDoneListeners;
     }
 
     protected boolean isTimeToActivationCorrect() {

@@ -448,7 +448,6 @@ public class AbstractSelectionModeView<T extends DrawSelectionModeI> extends Gro
         if (keyStrokeRectangle.getFill() != color) {
             fillTransition.setToValue(color);
             fillTransition.play();
-            System.out.println("Playing fill");
         }
 
 

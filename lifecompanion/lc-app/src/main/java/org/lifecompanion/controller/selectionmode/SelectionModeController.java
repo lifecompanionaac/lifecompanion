@@ -444,6 +444,11 @@ public enum SelectionModeController implements ModeListenerI {
         this.clicTimeListeners.add(new WaitingClicListener(clickTime, action, true));
     }
 
+    public Set<Runnable> getActivationDoneListenerForCurrentMode() {
+        SelectionModeI selectionModeConfiguration = getSelectionModeConfiguration();
+        return selectionModeConfiguration != null ? selectionModeConfiguration.getActivationDoneListener() : null;
+    }
+
     /**
      * Represent a clic time listener.<br>
      * The {@link #onRelease} value indicates if the event if fired when time is reached, or if the time is reached and press released
