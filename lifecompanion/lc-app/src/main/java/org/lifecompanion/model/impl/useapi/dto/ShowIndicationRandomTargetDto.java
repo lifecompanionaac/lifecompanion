@@ -19,28 +19,28 @@
 
 package org.lifecompanion.model.impl.useapi.dto;
 
-public class ShowIndicationTargetDto extends ShowIndicationRandomTargetDto {
-    private int row, column;
+public class ShowIndicationRandomTargetDto {
+    private String color;
+    private Double strokeSize;
 
-    public ShowIndicationTargetDto(String color, Double strokeSize, int row, int column) {
-        super(color, strokeSize);
-        this.row = row;
-        this.column = column;
+    public ShowIndicationRandomTargetDto(String color, Double strokeSize) {
+        this.color = color;
+        this.strokeSize = strokeSize;
     }
 
-    public int getRow() {
-        return row;
+    public String getColor() {
+        return color;
     }
 
-    public int getColumn() {
-        return column;
+    public Double getStrokeSize() {
+        return strokeSize;
     }
 
-    public void setRow(int row) {
-        this.row = row;
+    public void setColor(String color) {
+        this.color = color;
     }
 
-    public void setColumn(int column) {
-        this.column = column;
+    public void setStrokeSize(Double strokeSize) {
+        this.strokeSize = strokeSize;
     }
 }

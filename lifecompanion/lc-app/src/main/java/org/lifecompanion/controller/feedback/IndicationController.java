@@ -24,6 +24,7 @@ import org.lifecompanion.controller.selectionmode.SelectionModeController;
 import org.lifecompanion.model.api.configurationcomponent.*;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
 import org.lifecompanion.model.impl.useapi.dto.ShowIndicationActivationDto;
+import org.lifecompanion.model.impl.useapi.dto.ShowIndicationRandomTargetDto;
 import org.lifecompanion.model.impl.useapi.dto.ShowIndicationTargetDto;
 import org.lifecompanion.ui.feedback.IndicationView;
 import org.lifecompanion.util.javafx.ColorUtils;
@@ -46,6 +47,7 @@ public enum IndicationController implements ModeListenerI {
     private static final Color DEFAULT_STROKE_COLOR = Color.RED;
     private static final double DEFAULT_STROKE_SIZE = 5;
     public static final long TRANSITION_TIME_MS = 500;
+    public static final int MAX_RANDOM_LOOP = 20;
     private static final Color DEFAULT_ACTIVATION_COLOR = ColorUtils.fromWebColor("#2517c263");
 
     private IndicationView indicationView;
@@ -110,18 +112,38 @@ public enum IndicationController implements ModeListenerI {
             GridComponentI targetedGrid = getTargetedGrid();
             if (targetedGrid != null) {
                 GridPartComponentI component = targetedGrid.getGrid().getComponent(showIndicationTargetDto.getRow(), showIndicationTargetDto.getColumn());
-                if (component instanceof GridPartKeyComponentI) {
-                    Color strokeColor = showIndicationTargetDto.getColor() != null ? ColorUtils.fromWebColor(showIndicationTargetDto.getColor()) : DEFAULT_STROKE_COLOR;
-                    double strokeSize = showIndicationTargetDto.getStrokeSize() != null ? showIndicationTargetDto.getStrokeSize() : DEFAULT_STROKE_SIZE;
-                    this.currentTargetedKey = (GridPartKeyComponentI) component;
-                    FXThreadUtils.runOnFXThread(() -> this.indicationView.showFeedback(currentTargetedKey, strokeColor, strokeSize));
-                    checkCurrentPartOver();
-                } else {
-                    throw new IllegalArgumentException("Targeted component in the grid is not a key, the component is an instance of " + component.getClass().getSimpleName());
-                }
+                tryToShowTargetOn(showIndicationTargetDto, component);
             } else {
                 throw new IllegalArgumentException("Can't find any target grid");
             }
+        }
+    }
+
+    private void tryToShowTargetOn(ShowIndicationRandomTargetDto showIndicationTargetDto, GridPartComponentI component) {
+        if (component instanceof GridPartKeyComponentI) {
+            Color strokeColor = showIndicationTargetDto.getColor() != null ? ColorUtils.fromWebColor(showIndicationTargetDto.getColor()) : DEFAULT_STROKE_COLOR;
+            double strokeSize = showIndicationTargetDto.getStrokeSize() != null ? showIndicationTargetDto.getStrokeSize() : DEFAULT_STROKE_SIZE;
+            this.currentTargetedKey = (GridPartKeyComponentI) component;
+            FXThreadUtils.runOnFXThread(() -> this.indicationView.showFeedback(currentTargetedKey, strokeColor, strokeSize));
+            checkCurrentPartOver();
+        } else {
+            throw new IllegalArgumentException("Targeted component in the grid is not a key, the component is an instance of " + component.getClass().getSimpleName());
+        }
+    }
+
+    public void showRandomTarget(ShowIndicationRandomTargetDto showIndicationRandomTargetDto) {
+        GridComponentI targetedGrid = getTargetedGrid();
+        if (targetedGrid != null) {
+            GridPartComponentI currentOverPart = SelectionModeController.INSTANCE.currentOverPartProperty().get();
+            GridPartComponentI targetedPart = null;
+            int i = 0;
+            Random random = new Random();
+            while ((targetedPart == null || targetedPart == currentOverPart) && i++ < MAX_RANDOM_LOOP) {
+                int r = random.nextInt(targetedGrid.getGrid().getRow());
+                int c = random.nextInt(targetedGrid.getGrid().getColumn());
+                targetedPart = targetedGrid.getGrid().getComponent(r, c);
+            }
+            tryToShowTargetOn(showIndicationRandomTargetDto, targetedPart);
         }
     }
 
@@ -163,6 +185,4 @@ public enum IndicationController implements ModeListenerI {
         Set<Runnable> listeners = SelectionModeController.INSTANCE.getActivationDoneListenerForCurrentMode();
         if (listeners != null) action.accept(listeners);
     }
-
-
 }

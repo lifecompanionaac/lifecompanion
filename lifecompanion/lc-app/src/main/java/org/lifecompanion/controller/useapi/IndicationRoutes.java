@@ -3,6 +3,7 @@ package org.lifecompanion.controller.useapi;
 import org.lifecompanion.controller.feedback.IndicationController;
 import org.lifecompanion.model.impl.useapi.dto.ActionConfirmationDto;
 import org.lifecompanion.model.impl.useapi.dto.ShowIndicationActivationDto;
+import org.lifecompanion.model.impl.useapi.dto.ShowIndicationRandomTargetDto;
 import org.lifecompanion.model.impl.useapi.dto.ShowIndicationTargetDto;
 
 import static org.lifecompanion.controller.useapi.LifeCompanionControlServerController.checkUseMode;
@@ -15,6 +16,11 @@ public class IndicationRoutes {
         post(INDICATION_TARGET_SHOW_LOCATION.getUrl(), (req, res) -> checkUseMode(() -> {
             ShowIndicationTargetDto showIndicationTargetDto = fromJson(ShowIndicationTargetDto.class, req);
             IndicationController.INSTANCE.showTarget(showIndicationTargetDto);
+            return ActionConfirmationDto.ok();
+        }));
+        post(INDICATION_TARGET_SHOW_RANDOM.getUrl(), (req, res) -> checkUseMode(() -> {
+            ShowIndicationRandomTargetDto showIndicationRandomTargetDto = fromJson(ShowIndicationRandomTargetDto.class, req);
+            IndicationController.INSTANCE.showRandomTarget(showIndicationRandomTargetDto);
             return ActionConfirmationDto.ok();
         }));
         post(INDICATION_TARGET_HIDE.getUrl(), (req, res) -> checkUseMode(() -> {

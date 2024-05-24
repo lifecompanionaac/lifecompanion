@@ -145,6 +145,11 @@ Returns from server can depend on the sent request, but a lot of request will re
 - **[mouse/info](#mouseinfo)**
 - **[mouse/activation/primary](#mouseactivationprimary)**
 - **[mouse/activation/secondary](#mouseactivationsecondary)**
+- **[indication/target/show/location](#indicationtargetshowlocation)**
+- **[indication/target/show/random](#indicationtargetshowrandom)**
+- **[indication/target/hide](#indicationtargethide)**
+- **[indication/activation/show](#indicationactivationshow)**
+- **[indication/activation/hide](#indicationactivationhide)**
 
 ### /app/status
 
@@ -163,19 +168,35 @@ NONE
 ```json
 {
   "status": "STARTING",
-  "selectionModeStatus": "PAUSED"
+  "selectionModeStatus": "PAUSED",
+  "mainCurrentGrid": null,
+  "currentOverPart": null
 }
 ```
 ```json
 {
   "status": "IN_USE_MODE",
-  "selectionModeStatus": "PLAYING"
+  "selectionModeStatus": "PLAYING",
+  "mainCurrentGrid": {
+    "name": "Clavier",
+    "id": "1fee441b-b261-4fe4-85fd-13572f0a1aa3",
+    "rowCount": 4,
+    "columnCount": 6
+  },
+  "currentOverPart": {
+    "name": "A",
+    "id": "003f6ba7-ff0e-4d1e-893e-8a7d7df880b0",
+    "row": 1,
+    "colum": 2
+  }
 }
 ```
 ```json
 {
   "status": "STOPPING",
-  "selectionModeStatus": "PAUSED"
+  "selectionModeStatus": "PAUSED",
+  "mainCurrentGrid": null,
+  "currentOverPart": null
 }
 ```
 ### /window/minimize
@@ -551,6 +572,130 @@ NONE
 **Description** : Immediately active the mouse secondary (eg right button) button to the current mouse position.
 
 **Url structure** : `/api/v1/mouse/activation/secondary`
+
+**Method** : `POST`
+
+**Parameters** :
+```
+NONE
+```
+
+**Returns** : 
+```json
+{
+  "done": true,
+  "message": "OK"
+}
+```
+### /indication/target/show/location
+
+**Description** : Show the target indication to a specific location in the current main grid. If the target is reached, an specific use event is generated (Cible de déplacement atteinte) and the target is hidden.
+
+**Url structure** : `/api/v1/indication/target/show/location`
+
+**Method** : `POST`
+
+**Parameters** :
+```json
+{
+  "row": 2,
+  "column": 4,
+  "color": "#008000ff",
+  "strokeSize": 5.0
+}
+```
+```json
+{
+  "row": 1,
+  "column": 3,
+  "color": null,
+  "strokeSize": null
+}
+```
+
+**Returns** : 
+```json
+{
+  "done": true,
+  "message": "OK"
+}
+```
+### /indication/target/show/random
+
+**Description** : Show the target indication to a random location in the current main grid. If the target is reached, an specific use event is generated (Cible de déplacement atteinte) and the target is hidden.
+
+**Url structure** : `/api/v1/indication/target/show/random`
+
+**Method** : `POST`
+
+**Parameters** :
+```json
+{
+  "color": "#008000ff",
+  "strokeSize": 5.0
+}
+```
+```json
+{
+  "color": null,
+  "strokeSize": null
+}
+```
+
+**Returns** : 
+```json
+{
+  "done": true,
+  "message": "OK"
+}
+```
+### /indication/target/hide
+
+**Description** : Hide the currently showing target indication. Noop if no target is showing.
+
+**Url structure** : `/api/v1/indication/target/hide`
+
+**Method** : `POST`
+
+**Parameters** :
+```
+NONE
+```
+
+**Returns** : 
+```json
+{
+  "done": true,
+  "message": "OK"
+}
+```
+### /indication/activation/show
+
+**Description** : Show the activation indication on the current overed part of the selection mode. The activation indication will "follow" the selection mode indicator.  If the selection mode is activated while showing this indication, an specific use event is generated (Demande d'activation effectuée) and the indication is hidden.
+
+**Url structure** : `/api/v1/indication/activation/show`
+
+**Method** : `POST`
+
+**Parameters** :
+```json
+{
+  "color": "#2517c263"
+}
+```
+
+**Returns** : 
+```json
+{
+  "done": true,
+  "message": "OK"
+}
+```
+### /indication/activation/hide
+
+**Description** : Hide the currently showing activation indication. Noop if no target is showing.
+
+**Url structure** : `/api/v1/indication/activation/hide`
 
 **Method** : `POST`
 
