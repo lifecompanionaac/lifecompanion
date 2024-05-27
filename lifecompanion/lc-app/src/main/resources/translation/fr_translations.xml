@@ -3838,4 +3838,6 @@
     <text key="use.event.on.target.indication.reached.description">Se produit lorsque la cible de déplacement définie est atteinte.</text>
     <text key="use.event.on.activation.indication.done.name">Demande d'activation effectuée</text>
     <text key="use.event.on.activation.indication.done.description">Se produit lorsque la demande d'activation est effectuée au bon moment.</text>
+    <text key="alert.message.warn.action.on.keylist.header">Attention aux actions</text>
+    <text key="alert.message.warn.action.on.keylist.message">Vous allez ajouter une action sur une/des case(s) de liste de cases. Cette action sera associée à la case dans la grille et non à son contenu (son texte, son image, etc.).</text>
 </texts>

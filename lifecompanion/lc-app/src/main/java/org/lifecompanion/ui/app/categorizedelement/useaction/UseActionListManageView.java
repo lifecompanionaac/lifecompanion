@@ -24,15 +24,18 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ListView;
+import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
 import org.lifecompanion.model.api.editaction.BaseEditActionI;
 import org.lifecompanion.model.api.categorizedelement.useevent.UseEventGeneratorI;
 import org.lifecompanion.controller.editaction.UseActionConfigActions.*;
+import org.lifecompanion.model.impl.configurationcomponent.keyoption.dynamickey.KeyListNodeKeyOption;
 import org.lifecompanion.ui.app.categorizedelement.AbstractCategorizedListManageView;
 import org.lifecompanion.ui.app.categorizedelement.AbstractCategorizedMainView;
 import org.lifecompanion.ui.common.pane.specific.cell.AbstractCategorizedElementListCellView;
 import org.lifecompanion.ui.common.pane.specific.cell.BaseUseActionElementListCellView;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.model.api.categorizedelement.useaction.*;
+import org.lifecompanion.util.javafx.AbstractAlertBuilder;
 import org.lifecompanion.util.javafx.DialogUtils;
 
 import java.util.function.BiConsumer;
@@ -67,7 +70,8 @@ public class UseActionListManageView
     }
 
     @Override
-    protected AbstractCategorizedElementListCellView<BaseUseActionI<?>> createCategorizedListCellView(ListView<BaseUseActionI<?>> listView, final BiConsumer<Node, BaseUseActionI<?>> selectionCallback) {
+    protected AbstractCategorizedElementListCellView<BaseUseActionI<?>> createCategorizedListCellView(ListView<BaseUseActionI<?>> listView,
+                                                                                                      final BiConsumer<Node, BaseUseActionI<?>> selectionCallback) {
         return new BaseUseActionElementListCellView(listView, selectionCallback);
     }
 
@@ -117,5 +121,28 @@ public class UseActionListManageView
             return false;
         }
         return true;
+    }
+
+    @Override
+    protected void checkBeforeAdd(Node source) {
+        if (isKeyListWarningPresentFor(this.model.get())) {
+            showKeyListActionWarning(source);
+        }
+    }
+
+    static void showKeyListActionWarning(Node source) {
+        DialogUtils.alertWithSourceAndType(source, AlertType.WARNING)
+                .withHeaderText(Translation.getText("alert.message.warn.action.on.keylist.header"))
+                .withContentText(Translation.getText("alert.message.warn.action.on.keylist.message"))
+                .showAndWait();
+    }
+
+    static boolean isKeyListWarningPresentFor(UseActionTriggerComponentI component) {
+        if (component instanceof GridPartKeyComponentI key) {
+            if (key.getActionManager().countAllActions() <= 0) {
+                return key.keyOptionProperty().get() instanceof KeyListNodeKeyOption;
+            }
+        }
+        return false;
     }
 }

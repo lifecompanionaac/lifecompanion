@@ -1,14 +1,14 @@
 # LIFECOMPANION CHANGELOG
 
-## 1.6.X - XX/XX/2024
+## 1.6.2 - XX/XX/2024
 
 ### Fonctionnalités
 
-- ...
+- Ajout de l'API des consignes dans le [serveur de contrôle de LifeCompanion](../docs/USER_API.md#lifecompanion-control-server-api)
 
 ### Corrections/ajustements
 
-- ...
+- Ajout d'un avertissement si ajout d'une action sur une case de liste de cases
 
 ## 1.6.1 - 07/05/2024
 

@@ -145,6 +145,18 @@ public class MultiUseActionListManageView extends AbstractCategorizedListManageV
         return true;
     }
 
+    @Override
+    protected void checkBeforeAdd(Node source) {
+        boolean warning = false;
+        ObservableList<? extends UseActionTriggerComponentI> elements = this.currentMultiActionManagerContentHelper.getSourceList();
+        for (UseActionTriggerComponentI element : elements) {
+            warning |= UseActionListManageView.isKeyListWarningPresentFor(element);
+        }
+        if(warning){
+            UseActionListManageView.showKeyListActionWarning(source);
+        }
+    }
+
     private boolean oneOfTheActionsHasKeyOptionAttached(final Class<? extends BaseUseActionI> actionType) {
         ObservableList<? extends UseActionTriggerComponentI> elements = this.currentMultiActionManagerContentHelper.getSourceList();
         for (UseActionTriggerComponentI element : elements) {

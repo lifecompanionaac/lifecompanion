@@ -221,6 +221,7 @@ public abstract class AbstractCategorizedListManageView<M, V extends Categorized
      * Prepare the add action of a use action
      */
     private void prepareAdd(Node source) {
+        this.checkBeforeAdd(source);
         this.categorizedElementMainView.addElement((addedElement) -> {
             if (addedElement != null && this.model.get() != null) {
                 ConfigActionController.INSTANCE.executeAction(this.createAddAction(source, this.model.get(), addedElement));
@@ -253,6 +254,8 @@ public abstract class AbstractCategorizedListManageView<M, V extends Categorized
     protected boolean editActionForHistoryOnly() {
         return true;
     }
+
+    protected void checkBeforeAdd(Node source){}
 
     public ReadOnlyObjectProperty<V> selectedItemProperty() {
         return this.elementListView.selectedItemProperty();
