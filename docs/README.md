@@ -47,6 +47,7 @@ welcome to contribute !**
 - [Building/running LifeCompanion](BUILD.md)
 - [Publishing updates (official devs)](UPDATE.md)
 - [Extending LifeCompanion with plugins](PLUGIN.md)
+- [Controlling LifeCompanion directly or from another app](USER_API.md)
 
 ## Others
 
