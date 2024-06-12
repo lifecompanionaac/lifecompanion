@@ -3840,4 +3840,6 @@
     <text key="use.event.on.activation.indication.done.description">Se produit lorsque la demande d'activation est effectuée au bon moment.</text>
     <text key="alert.message.warn.action.on.keylist.header">Attention aux actions</text>
     <text key="alert.message.warn.action.on.keylist.message">Vous allez ajouter une action sur une/des case(s) de liste de cases. Cette action sera associée à la case dans la grille et non à son contenu (son texte, son image, etc.).</text>
+    <text key="selection.mode.virtual.cursor.name">Curseur virtuel</text>
+    <text key="selection.mode.virtual.cursor.description">Permet de sélectionner en utilisant un curseur virtuel qui n'est pas celui de la souris. Celui-ci peut être déplacé par différentes méthodes d'interaction.</text>
 </texts>

@@ -127,6 +127,12 @@ public enum LifeCompanionControlServerEndpoint implements LifeCompanionControlSe
             "Immediately active the mouse secondary (eg right button) button to the current mouse position.",
             null,
             List.of(ActionConfirmationDto.ok())),
+    // VIRTUAL CURSOR
+    VIRTUAL_CURSOR_INFO("virtual-cursor/info",
+            EndpointHttpMethod.GET,
+            "Return information about the virtual cursor position and scene size.",
+            null,
+            List.of(new VirtualCursorInfoDto(745, 552, 50, 150))),
     // FEEDBACK
     INDICATION_TARGET_SHOW_LOCATION("indication/target/show/location",
             EndpointHttpMethod.POST,
@@ -154,6 +160,8 @@ public enum LifeCompanionControlServerEndpoint implements LifeCompanionControlSe
             null,
             List.of(ActionConfirmationDto.ok())),
     ;
+
+    // FIXME : EXIT APP
 
     public final static String URL_PREFIX = "/api/v1/";
 

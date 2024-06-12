@@ -44,6 +44,7 @@ import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.controller.selectionmode.SelectionModeController;
 import org.lifecompanion.controller.textcomponent.WritingStateController;
+import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
 import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
@@ -51,6 +52,7 @@ import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.textcomponent.WritingEventSource;
 import org.lifecompanion.model.api.ui.configurationcomponent.ViewProviderI;
 import org.lifecompanion.model.impl.constant.LCConstant;
+import org.lifecompanion.model.impl.useapi.GlobalRuntimeConfiguration;
 import org.lifecompanion.ui.easteregg.JPDRetirementView;
 import org.lifecompanion.util.binding.BindingUtils;
 import org.lifecompanion.util.javafx.FXThreadUtils;
@@ -207,6 +209,34 @@ public class UseModeConfigurationDisplayer extends Group implements LCViewInitHe
                 this.cancelNextKeyTypedEvent = false;
             }
         });
+        // To test virtual cursor mode - FIXME : delete
+        if (GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.PROP_DEV_MODE)) {
+            this.addEventFilter(KeyEvent.ANY, ke -> {
+                if (ke.getEventType() == KeyEvent.KEY_PRESSED) {
+                    if (ke.getCode() == KeyCode.RIGHT) {
+                        SelectionModeController.INSTANCE.moveVirtualCursorRight(null);
+                    }
+                    if (ke.getCode() == KeyCode.LEFT) {
+                        SelectionModeController.INSTANCE.moveVirtualCursorLeft(null);
+                    }
+                    if (ke.getCode() == KeyCode.UP) {
+                        SelectionModeController.INSTANCE.moveVirtualCursorUp(null);
+                    }
+                    if (ke.getCode() == KeyCode.DOWN) {
+                        SelectionModeController.INSTANCE.moveVirtualCursorDown(null);
+                    }
+                }
+                if (ke.getCode() == KeyCode.SPACE) {
+                    if (ke.getEventType() == KeyEvent.KEY_PRESSED) {
+                        SelectionModeController.INSTANCE.virtualCursorPressed();
+                    }
+                    if (ke.getEventType() == KeyEvent.KEY_RELEASED) {
+                        SelectionModeController.INSTANCE.virtualCursorReleased();
+                    }
+                }
+                ke.consume();
+            });
+        }
 
     }
 

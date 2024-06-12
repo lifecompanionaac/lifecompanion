@@ -23,9 +23,9 @@ import javafx.beans.value.ChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.util.Pair;
 import org.lifecompanion.controller.categorizedelement.useaction.UseActionController;
 import org.lifecompanion.controller.configurationcomponent.GlobalKeyEventController;
 import org.lifecompanion.controller.io.IOHelper;
@@ -448,6 +448,56 @@ public enum SelectionModeController implements ModeListenerI {
         SelectionModeI selectionModeConfiguration = getSelectionModeConfiguration();
         return selectionModeConfiguration != null ? selectionModeConfiguration.getActivationDoneListener() : null;
     }
+
+    public void moveVirtualCursorDown(Double amount) {
+        this.executeIfVirtualCursorSelectionMode(mode -> mode.moveDown(amount));
+    }
+
+    public void moveVirtualCursorUp(Double amount) {
+        this.executeIfVirtualCursorSelectionMode(mode -> mode.moveUp(amount));
+    }
+
+    public void moveVirtualCursorLeft(Double amount) {
+        this.executeIfVirtualCursorSelectionMode(mode -> mode.moveLeft(amount));
+    }
+
+    public void moveVirtualCursorRight(Double amount) {
+        this.executeIfVirtualCursorSelectionMode(mode -> mode.moveRight(amount));
+    }
+
+    public void virtualCursorPressed() {
+        this.executeIfVirtualCursorSelectionMode(VirtualCursorSelectionModeI::pressed);
+    }
+
+    public void virtualCursorReleased() {
+        this.executeIfVirtualCursorSelectionMode(VirtualCursorSelectionModeI::released);
+    }
+
+    public Pair<Double, Double> getVirtualCursorPosition() {
+        return this.executeAndGetIfVirtualCursorSelectionMode(mode -> new Pair<>(mode.getCursorX(), mode.getCursorY()));
+    }
+
+    public Pair<Double, Double> getVirtualCursorSceneSize() {
+        return this.executeAndGetIfVirtualCursorSelectionMode(mode -> new Pair<>(mode.getSceneWidth(), mode.getSceneHeight()));
+    }
+
+    private void executeIfVirtualCursorSelectionMode(Consumer<VirtualCursorSelectionModeI> action) {
+        executeAndGetIfVirtualCursorSelectionMode(s -> {
+            action.accept(s);
+            return null;
+        });
+    }
+
+    private <T> T executeAndGetIfVirtualCursorSelectionMode(Function<VirtualCursorSelectionModeI, T> action) {
+        final SelectionModeI selectionMode = this.getSelectionModeConfiguration();
+        if (selectionMode instanceof VirtualCursorSelectionModeI) {
+            return action.apply((VirtualCursorSelectionModeI) selectionMode);
+        }
+        return null;
+    }
+
+
+
 
     /**
      * Represent a clic time listener.<br>

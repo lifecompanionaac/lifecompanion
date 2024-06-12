@@ -37,6 +37,8 @@ public enum SelectionModeEnum {
             DirectActivationSelectionMode.class, true, false, false, false), //
     AUTO_MOUSE_CLIC("selection.mode.auto.mouse.clic", "selection.mode.auto.mouse.clic.description", "icon_select_auto_activation.png",
             AutoActivationSelectionMode.class, true, true, true, false), //
+    VIRTUAL_DIRECTIONAL_CURSOR("selection.mode.virtual.cursor.name", "selection.mode.virtual.cursor.description", "icon_select_auto_activation.png",// FIXME icon
+            VirtualDirectionalCursorSelectionMode.class, true, false, false, false), //
     SCAN_KEY_HORIZONTAL("selection.mode.scan.direct.key.horizontal", "selection.mode.scan.direct.key.horizontal.description",
             "icon_selection_key_horizontal.png", HorizontalDirectKeyScanSelectionMode.class, false, true, false, true), //
     SCAN_ROW_COLUMN("selection.mode.scan.row.column.name", "selection.mode.scan.row.column.description", "icon_selection_row_column.png",
