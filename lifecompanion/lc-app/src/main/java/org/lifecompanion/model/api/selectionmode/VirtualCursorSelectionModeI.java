@@ -20,16 +20,24 @@
 package org.lifecompanion.model.api.selectionmode;
 
 /**
+ * TODO later, add the external device that should control the virtual cursor :
+ * - mouse
+ * - joystick
+ * - API
+ * - headtracking
+ * - eyetracking...
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
-public interface VirtualCursorSelectionModeI extends DirectSelectionModeI {
-    void moveRight(Double amount);
+public interface VirtualCursorSelectionModeI extends AutoDirectSelectionModeI {
+    void moveRight(Integer amount);
 
-    void moveLeft(Double amount);
+    void moveLeft(Integer amount);
 
-    void moveUp(Double amount);
+    void moveUp(Integer amount);
 
-    void moveDown(Double amount);
+    void moveDown(Integer amount);
+
+    void moveRelative(Integer dx, Integer dy);
 
     void pressed();
 
@@ -42,4 +50,6 @@ public interface VirtualCursorSelectionModeI extends DirectSelectionModeI {
     double getSceneWidth();
 
     double getSceneHeight();
+
+    void moveCenter();
 }

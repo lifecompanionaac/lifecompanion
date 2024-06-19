@@ -40,7 +40,7 @@ public class WindowRoutes {
         });
     }
 
-    private static ActionConfirmationDto executeOnUseStage(Consumer<Stage> operation) {
+    private static Object executeOnUseStage(Consumer<Stage> operation) {
         return checkUseMode(() -> {
             Stage stage = AppModeController.INSTANCE.getUseModeContext().getStage();
             if (stage != null) {

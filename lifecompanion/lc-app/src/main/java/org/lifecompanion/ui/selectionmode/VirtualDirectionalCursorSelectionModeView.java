@@ -31,6 +31,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import org.lifecompanion.model.api.selectionmode.VirtualCursorSelectionModeI;
 import org.lifecompanion.model.impl.selectionmode.VirtualDirectionalCursorSelectionMode;
 
 import java.util.List;
@@ -38,13 +39,13 @@ import java.util.List;
 /**
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
-public class VirtualDirectionalCursorSelectionModeView extends AbstractSelectionModeView<VirtualDirectionalCursorSelectionMode> {
+public class VirtualDirectionalCursorSelectionModeView extends AbstractAutoActivationSelectionModeView<VirtualDirectionalCursorSelectionMode> {
 
     private final Node virtualCursorNode;
     private final ObjectProperty<Node> currentOverNode;
 
     public VirtualDirectionalCursorSelectionModeView(final VirtualDirectionalCursorSelectionMode selectionMode) {
-        super(selectionMode, null);
+        super(selectionMode);
         this.currentOverNode = new SimpleObjectProperty<>();
         this.virtualCursorNode = new Circle(10, Color.BLUE);
         this.getChildren().add(virtualCursorNode);
@@ -56,6 +57,7 @@ public class VirtualDirectionalCursorSelectionModeView extends AbstractSelection
         virtualCursorNode.layoutXProperty().bind(selectionMode.cursorXProperty());
         virtualCursorNode.layoutYProperty().bind(selectionMode.cursorYProperty());
 
+        // FIXME : as the final target component is not the same, the entered can be fired multiple times on the same component, should be fixed
         // Detect enter/exit on current node
         currentOverNode.addListener((obs, ov, nv) -> {
             if (ov != null) {

@@ -95,6 +95,10 @@ public abstract class AbstractSelectionMode<T extends AbstractSelectionModeView<
     protected void scannedGridChanged(final GridComponentI gridP) {
     }
 
+    @Override
+    public void viewDisplayed() {
+    }
+
     /**
      * To check if a grid part is empty.<br>
      * Subclass that want to skip empty part should call this method to do the part checking on scanning generation.<br>

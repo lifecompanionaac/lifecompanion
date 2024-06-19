@@ -26,6 +26,13 @@ public enum LifeCompanionControlServerEndpoint implements LifeCompanionControlSe
                             new GridPartDto("A", "003f6ba7-ff0e-4d1e-893e-8a7d7df880b0", 1, 2)),
                     new AppStatusDto(AppStatusDto.Status.STOPPING, AppStatusDto.SelectionModeStatus.PAUSED, null, null))
     ),
+    APP_EXIT(
+            "app/exit",
+            EndpointHttpMethod.POST,
+            "To stop LifeCompanion. This call will return before the exit is real.",
+            null,
+            List.of(ActionConfirmationDto.ok())
+    ),
     // Window
     WINDOW_MINIMIZE("window/minimize",
             EndpointHttpMethod.POST,
@@ -87,7 +94,28 @@ public enum LifeCompanionControlServerEndpoint implements LifeCompanionControlSe
                     new SelectionConfigDto(SelectionModeEnum.SCAN_KEY_HORIZONTAL, 1, 1500, false)),
             List.of(ActionConfirmationDto.ok())
     ),
-    // Media
+    // SELECTION : VIRTUAL CURSOR
+    SELECTION_VIRTUAL_CURSOR_INFO("selection/virtual-cursor/info",
+            EndpointHttpMethod.GET,
+            "Return information about the virtual cursor position and scene size.",
+            null,
+            List.of(new VirtualCursorInfoDto(745, 552, 50, 150))),
+    SELECTION_VIRTUAL_CURSOR_MOVE_RELATIVE("selection/virtual-cursor/move/relative",
+            EndpointHttpMethod.POST,
+            "If the selection mode is set to virtual cursor, move the virtual cursor relative to its current position",
+            List.of(new MoveVirtualCursorRelativeDto(20, -10), new MoveVirtualCursorRelativeDto(null, 80)),
+            List.of(ActionConfirmationDto.ok())),
+    SELECTION_VIRTUAL_CURSOR_PRESS("selection/virtual-cursor/press",
+            EndpointHttpMethod.POST,
+            "If the selection mode is set to virtual cursor, start press simulation for the cursor. Note that it's the caller responsibility to then release the virtual cursor.",
+            null,
+            List.of(ActionConfirmationDto.ok())),
+    SELECTION_VIRTUAL_CURSOR_RELEASE("selection/virtual-cursor/release",
+            EndpointHttpMethod.POST,
+            "If the selection mode is set to virtual cursor, end press simulation for the cursor. Note that this should be called after the press call if you want to simulate activations.",
+            null,
+            List.of(ActionConfirmationDto.ok())),
+    // MEDIA
     MEDIA_STOP("media/stop",
             EndpointHttpMethod.POST,
             "Stop any playing media (sound, video, etc.) and empty the media players queue to be sure that no media will be played without a new play request.",
@@ -127,12 +155,6 @@ public enum LifeCompanionControlServerEndpoint implements LifeCompanionControlSe
             "Immediately active the mouse secondary (eg right button) button to the current mouse position.",
             null,
             List.of(ActionConfirmationDto.ok())),
-    // VIRTUAL CURSOR
-    VIRTUAL_CURSOR_INFO("virtual-cursor/info",
-            EndpointHttpMethod.GET,
-            "Return information about the virtual cursor position and scene size.",
-            null,
-            List.of(new VirtualCursorInfoDto(745, 552, 50, 150))),
     // FEEDBACK
     INDICATION_TARGET_SHOW_LOCATION("indication/target/show/location",
             EndpointHttpMethod.POST,

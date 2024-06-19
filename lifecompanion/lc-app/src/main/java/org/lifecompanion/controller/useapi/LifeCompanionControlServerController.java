@@ -128,7 +128,7 @@ public enum LifeCompanionControlServerController implements ResponseTransformer 
 
     // COMMONS
     //========================================================================
-    static ActionConfirmationDto checkUseMode(Supplier<ActionConfirmationDto> ifUseMode) {
+    static Object checkUseMode(Supplier<Object> ifUseMode) {
         if (AppModeController.INSTANCE.isUseMode()) {
             return ifUseMode.get();
         } else {

@@ -44,6 +44,8 @@ public interface SelectionModeI {
      */
     Node getSelectionView();
 
+    void viewDisplayed();
+
     /**
      * To change the selection mode parameters for this selection mode.<br>
      * Typically, the given parameters have the {@link SelectionModeParameterI#selectionModeTypeProperty()} equals to this mode.

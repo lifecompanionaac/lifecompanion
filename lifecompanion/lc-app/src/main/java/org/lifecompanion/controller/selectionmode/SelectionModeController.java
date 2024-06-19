@@ -449,20 +449,28 @@ public enum SelectionModeController implements ModeListenerI {
         return selectionModeConfiguration != null ? selectionModeConfiguration.getActivationDoneListener() : null;
     }
 
-    public void moveVirtualCursorDown(Double amount) {
+    public void moveVirtualCursorDown(Integer amount) {
         this.executeIfVirtualCursorSelectionMode(mode -> mode.moveDown(amount));
     }
 
-    public void moveVirtualCursorUp(Double amount) {
+    public void moveVirtualCursorUp(Integer amount) {
         this.executeIfVirtualCursorSelectionMode(mode -> mode.moveUp(amount));
     }
 
-    public void moveVirtualCursorLeft(Double amount) {
+    public void moveVirtualCursorLeft(Integer amount) {
         this.executeIfVirtualCursorSelectionMode(mode -> mode.moveLeft(amount));
     }
 
-    public void moveVirtualCursorRight(Double amount) {
+    public void moveVirtualCursorRight(Integer amount) {
         this.executeIfVirtualCursorSelectionMode(mode -> mode.moveRight(amount));
+    }
+
+    public void moveVirtualCursorRelative(Integer dx, Integer dy) {
+        this.executeIfVirtualCursorSelectionMode(mode -> mode.moveRelative(dx, dy));
+    }
+
+    public void moveVirtualCursorCenter() {
+        this.executeIfVirtualCursorSelectionMode(VirtualCursorSelectionModeI::moveCenter);
     }
 
     public void virtualCursorPressed() {
@@ -475,6 +483,10 @@ public enum SelectionModeController implements ModeListenerI {
 
     public Pair<Double, Double> getVirtualCursorPosition() {
         return this.executeAndGetIfVirtualCursorSelectionMode(mode -> new Pair<>(mode.getCursorX(), mode.getCursorY()));
+    }
+
+    public boolean isVirtualCursorSelectionMode() {
+        return this.executeAndGetIfVirtualCursorSelectionMode(mode -> true) != null;
     }
 
     public Pair<Double, Double> getVirtualCursorSceneSize() {
@@ -495,9 +507,6 @@ public enum SelectionModeController implements ModeListenerI {
         }
         return null;
     }
-
-
-
 
     /**
      * Represent a clic time listener.<br>

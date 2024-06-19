@@ -16,18 +16,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.lifecompanion.model.impl.selectionmode;
+package org.lifecompanion.ui.selectionmode;
 
-import org.lifecompanion.ui.selectionmode.AutoActivationSelectionModeView;
+
+import org.lifecompanion.model.api.selectionmode.ScanningDirection;
+import org.lifecompanion.model.impl.selectionmode.AbstractAutoActivationSelectionMode;
 
 /**
- * Selection mode with a selection done with a time that cursor stay over the key
+ * View for the automatic activation selection mode
  *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
-public class AutoActivationSelectionMode extends AbstractAutoActivationSelectionMode<AutoActivationSelectionModeView> {
+public class AbstractAutoActivationSelectionModeView<T extends AbstractAutoActivationSelectionMode<?>> extends AbstractSelectionModeView<T> {
 
-    public AutoActivationSelectionMode() {
-        this.view = new AutoActivationSelectionModeView(this);
+    public AbstractAutoActivationSelectionModeView(final T selectionModeP) {
+        super(selectionModeP, ScanningDirection.HORIZONTAL);
     }
+
 }

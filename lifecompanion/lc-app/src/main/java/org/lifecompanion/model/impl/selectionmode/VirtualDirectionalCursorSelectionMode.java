@@ -24,12 +24,11 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Node;
 import org.lifecompanion.model.api.selectionmode.VirtualCursorSelectionModeI;
 import org.lifecompanion.ui.selectionmode.VirtualDirectionalCursorSelectionModeView;
-import org.lifecompanion.util.LangUtils;
 
 /**
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
-public class VirtualDirectionalCursorSelectionMode extends AbstractDirectSelectionMode<VirtualDirectionalCursorSelectionModeView> implements VirtualCursorSelectionModeI {
+public class VirtualDirectionalCursorSelectionMode extends AbstractAutoActivationSelectionMode<VirtualDirectionalCursorSelectionModeView> implements VirtualCursorSelectionModeI {
 
     private static final double MOVING_SPEED = 5.0; // FIXME : param
 
@@ -39,7 +38,6 @@ public class VirtualDirectionalCursorSelectionMode extends AbstractDirectSelecti
     private final DoubleProperty cursorX, cursorY;
 
     public VirtualDirectionalCursorSelectionMode() {
-        super(true);
         this.cursorX = new SimpleDoubleProperty(0.0);
         this.cursorY = new SimpleDoubleProperty(0.0);
         this.view = new VirtualDirectionalCursorSelectionModeView(this);
@@ -47,8 +45,9 @@ public class VirtualDirectionalCursorSelectionMode extends AbstractDirectSelecti
     }
 
     @Override
-    public Node getSelectionView() {
-        return this.view;
+    public void viewDisplayed() {
+        moveCenter();
+        System.out.println(getSceneWidth()+" x "+getSceneHeight());
     }
 
     public DoubleProperty cursorXProperty() {
@@ -59,25 +58,34 @@ public class VirtualDirectionalCursorSelectionMode extends AbstractDirectSelecti
         return cursorY;
     }
 
-
     @Override
-    public void moveRight(Double amount) {
+    public void moveRight(Integer amount) {
         cursorX.set(cursorX.get() + (amount != null ? amount : MOVING_SPEED));
     }
 
     @Override
-    public void moveLeft(Double amount) {
+    public void moveLeft(Integer amount) {
         cursorX.set(cursorX.get() - (amount != null ? amount : MOVING_SPEED));
     }
 
     @Override
-    public void moveUp(Double amount) {
+    public void moveUp(Integer amount) {
         cursorY.set(cursorY.get() - (amount != null ? amount : MOVING_SPEED));
     }
 
     @Override
-    public void moveDown(Double amount) {
+    public void moveDown(Integer amount) {
         cursorY.set(cursorY.get() + (amount != null ? amount : MOVING_SPEED));
+    }
+
+    @Override
+    public void moveRelative(Integer dx, Integer dy) {
+        if (dx != null) {
+            cursorX.set(cursorX.get() + dx);
+        }
+        if (dy != null) {
+            cursorY.set(cursorY.get() + dy);
+        }
     }
 
     @Override
@@ -102,6 +110,12 @@ public class VirtualDirectionalCursorSelectionMode extends AbstractDirectSelecti
 
     public double getSceneHeight() {
         return view.getScene().getHeight();
+    }
+
+    @Override
+    public void moveCenter() {
+        this.cursorX.set(getSceneWidth() / 2.0);
+        this.cursorY.set(getSceneHeight() / 2.0);
     }
 
     @Override

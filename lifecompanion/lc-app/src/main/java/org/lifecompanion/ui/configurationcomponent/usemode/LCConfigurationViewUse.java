@@ -19,6 +19,7 @@
 
 package org.lifecompanion.ui.configurationcomponent.usemode;
 
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Node;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
@@ -87,6 +88,7 @@ public class LCConfigurationViewUse extends LCConfigurationViewBase {
                 this.getChildren().add(selectionView);
                 if (mainSelectionMode) lastMainSelectionMode = selectionView;
                 else lastSecondarySelectionMode = selectionView;
+                Platform.runLater(nv::viewDisplayed);// runLater is important here : this need to be called on the next pulse
             }
         };
     }

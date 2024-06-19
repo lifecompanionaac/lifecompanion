@@ -20,6 +20,7 @@ package org.lifecompanion.ui.selectionmode;
 
 
 import org.lifecompanion.model.api.selectionmode.ScanningDirection;
+import org.lifecompanion.model.impl.selectionmode.AbstractAutoActivationSelectionMode;
 import org.lifecompanion.model.impl.selectionmode.AutoActivationSelectionMode;
 
 /**
@@ -27,10 +28,10 @@ import org.lifecompanion.model.impl.selectionmode.AutoActivationSelectionMode;
  *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
-public class AutoActivationSelectionModeView extends AbstractSelectionModeView<AutoActivationSelectionMode> {
+public class AutoActivationSelectionModeView extends AbstractAutoActivationSelectionModeView<AutoActivationSelectionMode> {
 
     public AutoActivationSelectionModeView(final AutoActivationSelectionMode selectionModeP) {
-        super(selectionModeP, ScanningDirection.HORIZONTAL);
+        super(selectionModeP);
     }
 
 }
