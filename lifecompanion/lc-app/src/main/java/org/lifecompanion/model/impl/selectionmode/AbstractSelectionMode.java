@@ -24,6 +24,7 @@ import javafx.scene.paint.Color;
 import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
 import org.lifecompanion.model.api.configurationcomponent.GridPartComponentI;
 import org.lifecompanion.model.api.selectionmode.ScanningMode;
+import org.lifecompanion.model.api.selectionmode.ScanningSelectionModeI;
 import org.lifecompanion.model.api.selectionmode.SelectionModeI;
 import org.lifecompanion.model.api.selectionmode.SelectionModeParameterI;
 import org.lifecompanion.ui.selectionmode.AbstractSelectionModeView;
@@ -120,7 +121,7 @@ public abstract class AbstractSelectionMode<T extends AbstractSelectionModeView<
     public void setParameters(final SelectionModeParameterI parametersP) {
         this.parameters = parametersP;
         this.setDefaultColors();
-        this.drawProgress.set(this.parameters.drawProgressProperty().get() && this.parameters.scanningModeProperty().get() != ScanningMode.MANUAL);
+        this.drawProgress.set(this.parameters.drawProgressProperty().get() && (!(this instanceof ScanningSelectionModeI) || this.parameters.scanningModeProperty().get() != ScanningMode.MANUAL));
         this.backgroundReductionEnabled.set(this.parameters.backgroundReductionEnabledProperty().get());
         this.backgroundReductionLevel.set(this.parameters.backgroundReductionLevelProperty().get());
         this.parameterChanged(parametersP);

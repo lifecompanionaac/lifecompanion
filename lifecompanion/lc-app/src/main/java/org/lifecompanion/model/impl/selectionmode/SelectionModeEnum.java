@@ -34,19 +34,19 @@ import java.util.stream.Collectors;
  */
 public enum SelectionModeEnum {
     MOUSE_CLIC("selection.mode.direct.mouse.clic", "selection.mode.direct.mouse.clic.description", "icon_selection_mode_clic.png",
-            DirectActivationSelectionMode.class, true, false, false, false), //
+            DirectActivationSelectionMode.class, true, false, false, false, false), //
     AUTO_MOUSE_CLIC("selection.mode.auto.mouse.clic", "selection.mode.auto.mouse.clic.description", "icon_select_auto_activation.png",
-            AutoActivationSelectionMode.class, true, true, true, false), //
+            AutoActivationSelectionMode.class, true, true, true, false, false), //
     VIRTUAL_DIRECTIONAL_CURSOR("selection.mode.virtual.cursor.name", "selection.mode.virtual.cursor.description", "icon_select_auto_activation.png",// FIXME icon
-            VirtualDirectionalCursorSelectionMode.class, true, false, false, false), //
+            VirtualDirectionalCursorSelectionMode.class, true, false, false, false, true), //
     SCAN_KEY_HORIZONTAL("selection.mode.scan.direct.key.horizontal", "selection.mode.scan.direct.key.horizontal.description",
-            "icon_selection_key_horizontal.png", HorizontalDirectKeyScanSelectionMode.class, false, true, false, true), //
+            "icon_selection_key_horizontal.png", HorizontalDirectKeyScanSelectionMode.class, false, true, false, true, false), //
     SCAN_ROW_COLUMN("selection.mode.scan.row.column.name", "selection.mode.scan.row.column.description", "icon_selection_row_column.png",
-            RowColumnScanSelectionMode.class, false, true, false, true), //
+            RowColumnScanSelectionMode.class, false, true, false, true, false), //
     SCAN_KEY_VERTICAL("selection.mode.scan.direct.key.vertical", "selection.mode.scan.direct.key.vertical.description",
-            "icon_selection_key_vertical.png", VerticalDirectKeyScanSelectionMode.class, false, true, false, true), //
+            "icon_selection_key_vertical.png", VerticalDirectKeyScanSelectionMode.class, false, true, false, true, false), //
     SCAN_COLUMN_ROW("selection.mode.scan.column.row.name", "selection.mode.scan.column.row.description", "icon_selection_column_row.png",
-            ColumnRowScanSelectionMode.class, false, true, false, true);
+            ColumnRowScanSelectionMode.class, false, true, false, true, false);
 
     public static final String ICON_URL_SELECTION_MODE = "selection-mode/";
 
@@ -55,10 +55,10 @@ public enum SelectionModeEnum {
     private final String logoUrl;
     private final Class<? extends SelectionModeI> modeClass;
 
-    private final ReadOnlyBooleanProperty useProgressDraw, useAutoClic, useScanning, usePointer;
+    private final ReadOnlyBooleanProperty useProgressDraw, useAutoClic, useScanning, usePointer, useVirtualCursor;
 
     SelectionModeEnum(final String nameIdP, final String descriptionIdP, final String logoUrlP, final Class<? extends SelectionModeI> modeClassP,
-                      final boolean usePointer, final boolean progressDrawMode, final boolean autoClicMode, final boolean scanningMode) {
+                      final boolean usePointer, final boolean progressDrawMode, final boolean autoClicMode, final boolean scanningMode, boolean useVirtualCursor) {
         this.nameId = nameIdP;
         this.descriptionId = descriptionIdP;
         this.logoUrl = logoUrlP;
@@ -67,6 +67,7 @@ public enum SelectionModeEnum {
         this.useAutoClic = new ReadOnlyBooleanWrapper(autoClicMode);
         this.useScanning = new ReadOnlyBooleanWrapper(scanningMode);
         this.usePointer = new ReadOnlyBooleanWrapper(usePointer);
+        this.useVirtualCursor = new ReadOnlyBooleanWrapper(useVirtualCursor);
     }
 
     public static String listForDocs() {

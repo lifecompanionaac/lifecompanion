@@ -21,7 +21,6 @@ package org.lifecompanion.model.impl.selectionmode;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.scene.Node;
 import org.lifecompanion.model.api.selectionmode.VirtualCursorSelectionModeI;
 import org.lifecompanion.ui.selectionmode.VirtualDirectionalCursorSelectionModeView;
 
@@ -29,8 +28,6 @@ import org.lifecompanion.ui.selectionmode.VirtualDirectionalCursorSelectionModeV
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public class VirtualDirectionalCursorSelectionMode extends AbstractAutoActivationSelectionMode<VirtualDirectionalCursorSelectionModeView> implements VirtualCursorSelectionModeI {
-
-    private static final double MOVING_SPEED = 5.0; // FIXME : param
 
     /**
      * Cursor position in scene (relative to global scene)
@@ -47,7 +44,6 @@ public class VirtualDirectionalCursorSelectionMode extends AbstractAutoActivatio
     @Override
     public void viewDisplayed() {
         moveCenter();
-        System.out.println(getSceneWidth()+" x "+getSceneHeight());
     }
 
     public DoubleProperty cursorXProperty() {
@@ -59,26 +55,6 @@ public class VirtualDirectionalCursorSelectionMode extends AbstractAutoActivatio
     }
 
     @Override
-    public void moveRight(Integer amount) {
-        cursorX.set(cursorX.get() + (amount != null ? amount : MOVING_SPEED));
-    }
-
-    @Override
-    public void moveLeft(Integer amount) {
-        cursorX.set(cursorX.get() - (amount != null ? amount : MOVING_SPEED));
-    }
-
-    @Override
-    public void moveUp(Integer amount) {
-        cursorY.set(cursorY.get() - (amount != null ? amount : MOVING_SPEED));
-    }
-
-    @Override
-    public void moveDown(Integer amount) {
-        cursorY.set(cursorY.get() + (amount != null ? amount : MOVING_SPEED));
-    }
-
-    @Override
     public void moveRelative(Integer dx, Integer dy) {
         if (dx != null) {
             cursorX.set(cursorX.get() + dx);
@@ -86,6 +62,11 @@ public class VirtualDirectionalCursorSelectionMode extends AbstractAutoActivatio
         if (dy != null) {
             cursorY.set(cursorY.get() + dy);
         }
+    }
+
+    @Override
+    public void moveAbsolute(Integer x, Integer y) {
+
     }
 
     @Override

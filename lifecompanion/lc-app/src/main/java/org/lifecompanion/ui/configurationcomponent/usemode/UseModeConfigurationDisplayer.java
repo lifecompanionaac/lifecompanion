@@ -214,16 +214,16 @@ public class UseModeConfigurationDisplayer extends Group implements LCViewInitHe
             this.addEventFilter(KeyEvent.ANY, ke -> {
                 if (ke.getEventType() == KeyEvent.KEY_PRESSED) {
                     if (ke.getCode() == KeyCode.RIGHT) {
-                        SelectionModeController.INSTANCE.moveVirtualCursorRight(null);
+                        SelectionModeController.INSTANCE.moveVirtualCursorRelative(5, null);
                     }
                     if (ke.getCode() == KeyCode.LEFT) {
-                        SelectionModeController.INSTANCE.moveVirtualCursorLeft(null);
+                        SelectionModeController.INSTANCE.moveVirtualCursorRelative(-5, null);
                     }
                     if (ke.getCode() == KeyCode.UP) {
-                        SelectionModeController.INSTANCE.moveVirtualCursorUp(null);
+                        SelectionModeController.INSTANCE.moveVirtualCursorRelative(null, -5);
                     }
                     if (ke.getCode() == KeyCode.DOWN) {
-                        SelectionModeController.INSTANCE.moveVirtualCursorDown(null);
+                        SelectionModeController.INSTANCE.moveVirtualCursorRelative(null, 5);
                     }
                 }
                 if (ke.getCode() == KeyCode.SPACE) {

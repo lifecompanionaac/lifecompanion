@@ -8,7 +8,7 @@
 
 ### Corrections/ajustements
 
-- ...
+- Correction de l'affichage de la progression qui pouvait ne pas apparaître dans de rares cas
 
 ## 1.6.2 - 28/05/2024
 

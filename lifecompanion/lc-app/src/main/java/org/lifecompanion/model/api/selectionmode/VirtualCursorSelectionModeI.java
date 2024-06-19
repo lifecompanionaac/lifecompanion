@@ -26,18 +26,13 @@ package org.lifecompanion.model.api.selectionmode;
  * - API
  * - headtracking
  * - eyetracking...
+ *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public interface VirtualCursorSelectionModeI extends AutoDirectSelectionModeI {
-    void moveRight(Integer amount);
-
-    void moveLeft(Integer amount);
-
-    void moveUp(Integer amount);
-
-    void moveDown(Integer amount);
-
     void moveRelative(Integer dx, Integer dy);
+
+    void moveAbsolute(Integer x, Integer y);
 
     void pressed();
 
