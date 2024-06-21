@@ -129,6 +129,7 @@ Returns from server can depend on the sent request, but a lot of request will re
 ### Available services
 
 - **[app/status](#appstatus)**
+- **[app/exit](#appexit)**
 - **[window/minimize](#windowminimize)**
 - **[window/show](#windowshow)**
 - **[window/bounds](#windowbounds)**
@@ -138,6 +139,11 @@ Returns from server can depend on the sent request, but a lot of request will re
 - **[selection/simulate/press](#selectionsimulatepress)**
 - **[selection/simulate/release](#selectionsimulaterelease)**
 - **[selection/config](#selectionconfig)**
+- **[selection/virtual-cursor/info](#selectionvirtual-cursorinfo)**
+- **[selection/virtual-cursor/move/relative](#selectionvirtual-cursormoverelative)**
+- **[selection/virtual-cursor/move/absolute](#selectionvirtual-cursormoveabsolute)**
+- **[selection/virtual-cursor/press](#selectionvirtual-cursorpress)**
+- **[selection/virtual-cursor/release](#selectionvirtual-cursorrelease)**
 - **[media/stop](#mediastop)**
 - **[hub/update/device-local-id](#hubupdatedevice-local-id)**
 - **[mouse/move/absolute](#mousemoveabsolute)**
@@ -181,7 +187,11 @@ NONE
     "name": "Clavier",
     "id": "1fee441b-b261-4fe4-85fd-13572f0a1aa3",
     "rowCount": 4,
-    "columnCount": 6
+    "columnCount": 6,
+    "firstKeyCenterX": 150,
+    "firstKeyCenterY": 100,
+    "keysCenterXSpacing": 65,
+    "keysCenterYSpacing": 85
   },
   "currentOverPart": {
     "name": "A",
@@ -197,6 +207,26 @@ NONE
   "selectionModeStatus": "PAUSED",
   "mainCurrentGrid": null,
   "currentOverPart": null
+}
+```
+### /app/exit
+
+**Description** : To stop LifeCompanion. This call will return before the exit is real.
+
+**Url structure** : `/api/v1/app/exit`
+
+**Method** : `POST`
+
+**Parameters** :
+```
+NONE
+```
+
+**Returns** : 
+```json
+{
+  "done": true,
+  "message": "OK"
 }
 ```
 ### /window/minimize
@@ -378,7 +408,7 @@ NONE
 ```
 ### /selection/config
 
-**Description** : Configure the current selection mode and restart it with the new configuration. Allow configuring the selection mode (direct, scanning, etc.) and some selection mode parameters (scanning loops, time...). Available mode : MOUSE_CLIC, AUTO_MOUSE_CLIC, SCAN_KEY_HORIZONTAL, SCAN_ROW_COLUMN, SCAN_KEY_VERTICAL, SCAN_COLUMN_ROW
+**Description** : Configure the current selection mode and restart it with the new configuration. Allow configuring the selection mode (direct, scanning, etc.) and some selection mode parameters (scanning loops, time...). Available mode : MOUSE_CLIC, AUTO_MOUSE_CLIC, VIRTUAL_DIRECTIONAL_CURSOR, SCAN_KEY_HORIZONTAL, SCAN_ROW_COLUMN, SCAN_KEY_VERTICAL, SCAN_COLUMN_ROW
 
 **Url structure** : `/api/v1/selection/config`
 
@@ -416,6 +446,120 @@ NONE
   "scanTime": 1500,
   "disableAutoStart": false
 }
+```
+
+**Returns** : 
+```json
+{
+  "done": true,
+  "message": "OK"
+}
+```
+### /selection/virtual-cursor/info
+
+**Description** : Return information about the virtual cursor position and selection zone size. Note that the size should be used to define the virtual cursor bounds. It does not depend from the real size on screen (as the stage size can change if the stage is resized/moved).
+
+**Url structure** : `/api/v1/selection/virtual-cursor/info`
+
+**Method** : `GET`
+
+**Parameters** :
+```
+NONE
+```
+
+**Returns** : 
+```json
+{
+  "selectionZoneWidth": 745.0,
+  "selectionZoneHeight": 552.0,
+  "cursorX": 50.0,
+  "cursorY": 150.0
+}
+```
+### /selection/virtual-cursor/move/relative
+
+**Description** : If the selection mode is set to virtual cursor, move the virtual cursor relative to its current position
+
+**Url structure** : `/api/v1/selection/virtual-cursor/move/relative`
+
+**Method** : `POST`
+
+**Parameters** :
+```json
+{
+  "dx": 20,
+  "dy": -10
+}
+```
+```json
+{
+  "dx": null,
+  "dy": 80
+}
+```
+
+**Returns** : 
+```json
+{
+  "done": true,
+  "message": "OK"
+}
+```
+### /selection/virtual-cursor/move/absolute
+
+**Description** : If the selection mode is set to virtual cursor, move the virtual cursor to the given position
+
+**Url structure** : `/api/v1/selection/virtual-cursor/move/absolute`
+
+**Method** : `POST`
+
+**Parameters** :
+```json
+{
+  "x": 56,
+  "y": 76
+}
+```
+
+**Returns** : 
+```json
+{
+  "done": true,
+  "message": "OK"
+}
+```
+### /selection/virtual-cursor/press
+
+**Description** : If the selection mode is set to virtual cursor, start press simulation for the cursor. Note that it's the caller responsibility to then release the virtual cursor.
+
+**Url structure** : `/api/v1/selection/virtual-cursor/press`
+
+**Method** : `POST`
+
+**Parameters** :
+```
+NONE
+```
+
+**Returns** : 
+```json
+{
+  "done": true,
+  "message": "OK"
+}
+```
+### /selection/virtual-cursor/release
+
+**Description** : If the selection mode is set to virtual cursor, end press simulation for the cursor. Note that this should be called after the press call if you want to simulate activations.
+
+**Url structure** : `/api/v1/selection/virtual-cursor/release`
+
+**Method** : `POST`
+
+**Parameters** :
+```
+NONE
 ```
 
 **Returns** : 
