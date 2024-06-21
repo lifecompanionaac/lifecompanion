@@ -23,6 +23,7 @@ import java.util.List;
 
 import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
 import org.lifecompanion.model.api.configurationcomponent.GridPartComponentI;
+import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.impl.configurationcomponent.GridComponentInformation;
 import org.lifecompanion.model.api.selectionmode.SelectionModeI;
 import org.lifecompanion.ui.selectionmode.DirectKeyScanSelectionModeView;
@@ -124,8 +125,8 @@ public abstract class AbstractDirectKeyScanSelectionMode extends AbstractScannin
     }
 
     @Override
-    public void init(SelectionModeI previousSelectionMode) {
-        super.init(previousSelectionMode);
+    public void init(LCConfigurationI configuration, SelectionModeI previousSelectionMode) {
+        super.init(configuration, previousSelectionMode);
         this.currentIndex = 0;
         this.currentPart.set(null);
     }

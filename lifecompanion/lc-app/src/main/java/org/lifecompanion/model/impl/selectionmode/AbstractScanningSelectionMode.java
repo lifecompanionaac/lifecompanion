@@ -37,6 +37,7 @@ import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
 import org.lifecompanion.controller.selectionmode.SelectionModeController;
 import org.lifecompanion.controller.categorizedelement.useaction.UseActionController;
+import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.ui.selectionmode.AbstractSelectionModeView;
 import org.lifecompanion.model.api.selectionmode.*;
 import org.slf4j.Logger;
@@ -353,8 +354,8 @@ public abstract class AbstractScanningSelectionMode<T extends AbstractSelectionM
     }
 
     @Override
-    public void init(SelectionModeI previousSelectionMode) {
-        super.init(previousSelectionMode);
+    public void init(LCConfigurationI configuration, SelectionModeI previousSelectionMode) {
+        super.init(configuration, previousSelectionMode);
         AbstractScanningSelectionMode.LOGGER.info("Initialize scanning selection mode {}", this.getClass().getSimpleName());
         this.disposed = false;
     }
@@ -425,7 +426,8 @@ public abstract class AbstractScanningSelectionMode<T extends AbstractSelectionM
         if (!this.executingActionOnCurrentPart && !this.pauseToExecuteSimpleActions && !this.disposed) {
             synchronized (this.scanningTimeLine) {
                 this.scanningTimeLine.stop();
-                if ((this.parameters.startScanningOnClicProperty().get() && this.parameters.scanningModeProperty().get() != ScanningMode.MANUAL) && !this.restartScanningOnNextAction && !skipNextPauseOnRestart) {
+                if ((this.parameters.startScanningOnClicProperty().get() && this.parameters.scanningModeProperty()
+                        .get() != ScanningMode.MANUAL) && !this.restartScanningOnNextAction && !skipNextPauseOnRestart) {
                     this.restartScanningOnNextAction = true;
                     this.playingProperty.set(false);
                 } else {

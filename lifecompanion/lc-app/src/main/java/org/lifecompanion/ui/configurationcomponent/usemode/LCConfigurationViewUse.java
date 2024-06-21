@@ -88,7 +88,6 @@ public class LCConfigurationViewUse extends LCConfigurationViewBase {
                 this.getChildren().add(selectionView);
                 if (mainSelectionMode) lastMainSelectionMode = selectionView;
                 else lastSecondarySelectionMode = selectionView;
-                Platform.runLater(nv::viewDisplayed);// runLater is important here : this need to be called on the next pulse
             }
         };
     }

@@ -22,7 +22,7 @@ public enum LifeCompanionControlServerEndpoint implements LifeCompanionControlSe
             List.of(new AppStatusDto(AppStatusDto.Status.STARTING, AppStatusDto.SelectionModeStatus.PAUSED, null, null),
                     new AppStatusDto(AppStatusDto.Status.IN_USE_MODE,
                             AppStatusDto.SelectionModeStatus.PLAYING,
-                            new GridDto("Clavier", "1fee441b-b261-4fe4-85fd-13572f0a1aa3", 4, 6),
+                            new GridDto("Clavier", "1fee441b-b261-4fe4-85fd-13572f0a1aa3", 4, 6, 150, 100, 65, 85),
                             new GridPartDto("A", "003f6ba7-ff0e-4d1e-893e-8a7d7df880b0", 1, 2)),
                     new AppStatusDto(AppStatusDto.Status.STOPPING, AppStatusDto.SelectionModeStatus.PAUSED, null, null))
     ),
@@ -94,16 +94,22 @@ public enum LifeCompanionControlServerEndpoint implements LifeCompanionControlSe
                     new SelectionConfigDto(SelectionModeEnum.SCAN_KEY_HORIZONTAL, 1, 1500, false)),
             List.of(ActionConfirmationDto.ok())
     ),
+
     // SELECTION : VIRTUAL CURSOR
     SELECTION_VIRTUAL_CURSOR_INFO("selection/virtual-cursor/info",
             EndpointHttpMethod.GET,
-            "Return information about the virtual cursor position and scene size.",
+            "Return information about the virtual cursor position and selection zone size. Note that the size should be used to define the virtual cursor bounds. It does not depend from the real size on screen (as the stage size can change if the stage is resized/moved).",
             null,
             List.of(new VirtualCursorInfoDto(745, 552, 50, 150))),
     SELECTION_VIRTUAL_CURSOR_MOVE_RELATIVE("selection/virtual-cursor/move/relative",
             EndpointHttpMethod.POST,
             "If the selection mode is set to virtual cursor, move the virtual cursor relative to its current position",
             List.of(new MoveVirtualCursorRelativeDto(20, -10), new MoveVirtualCursorRelativeDto(null, 80)),
+            List.of(ActionConfirmationDto.ok())),
+    SELECTION_VIRTUAL_CURSOR_MOVE_ABSOLUTE("selection/virtual-cursor/move/absolute",
+            EndpointHttpMethod.POST,
+            "If the selection mode is set to virtual cursor, move the virtual cursor to the given position",
+            List.of(new MoveVirtualCursorAbsoluteDto(56, 76)),
             List.of(ActionConfirmationDto.ok())),
     SELECTION_VIRTUAL_CURSOR_PRESS("selection/virtual-cursor/press",
             EndpointHttpMethod.POST,
@@ -115,6 +121,7 @@ public enum LifeCompanionControlServerEndpoint implements LifeCompanionControlSe
             "If the selection mode is set to virtual cursor, end press simulation for the cursor. Note that this should be called after the press call if you want to simulate activations.",
             null,
             List.of(ActionConfirmationDto.ok())),
+
     // MEDIA
     MEDIA_STOP("media/stop",
             EndpointHttpMethod.POST,

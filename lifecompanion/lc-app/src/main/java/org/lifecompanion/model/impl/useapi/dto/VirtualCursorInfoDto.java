@@ -1,22 +1,22 @@
 package org.lifecompanion.model.impl.useapi.dto;
 
 public class VirtualCursorInfoDto {
-    private double sceneWidth, sceneHeight;
+    private double selectionZoneWidth, selectionZoneHeight;
     private double cursorX, cursorY;
 
-    public VirtualCursorInfoDto(double sceneWidth, double sceneHeight, double cursorX, double cursorY) {
-        this.sceneWidth = sceneWidth;
-        this.sceneHeight = sceneHeight;
+    public VirtualCursorInfoDto(double selectionZoneWidth, double selectionZoneHeight, double cursorX, double cursorY) {
+        this.selectionZoneWidth = selectionZoneWidth;
+        this.selectionZoneHeight = selectionZoneHeight;
         this.cursorX = cursorX;
         this.cursorY = cursorY;
     }
 
-    public double getSceneWidth() {
-        return sceneWidth;
+    public double getSelectionZoneWidth() {
+        return selectionZoneWidth;
     }
 
-    public double getSceneHeight() {
-        return sceneHeight;
+    public double getSelectionZoneHeight() {
+        return selectionZoneHeight;
     }
 
     public double getCursorX() {

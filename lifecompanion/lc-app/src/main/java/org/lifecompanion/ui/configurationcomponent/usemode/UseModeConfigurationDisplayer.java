@@ -209,35 +209,6 @@ public class UseModeConfigurationDisplayer extends Group implements LCViewInitHe
                 this.cancelNextKeyTypedEvent = false;
             }
         });
-        // To test virtual cursor mode - FIXME : delete
-        if (GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.PROP_DEV_MODE)) {
-            this.addEventFilter(KeyEvent.ANY, ke -> {
-                if (ke.getEventType() == KeyEvent.KEY_PRESSED) {
-                    if (ke.getCode() == KeyCode.RIGHT) {
-                        SelectionModeController.INSTANCE.moveVirtualCursorRelative(5, null);
-                    }
-                    if (ke.getCode() == KeyCode.LEFT) {
-                        SelectionModeController.INSTANCE.moveVirtualCursorRelative(-5, null);
-                    }
-                    if (ke.getCode() == KeyCode.UP) {
-                        SelectionModeController.INSTANCE.moveVirtualCursorRelative(null, -5);
-                    }
-                    if (ke.getCode() == KeyCode.DOWN) {
-                        SelectionModeController.INSTANCE.moveVirtualCursorRelative(null, 5);
-                    }
-                }
-                if (ke.getCode() == KeyCode.SPACE) {
-                    if (ke.getEventType() == KeyEvent.KEY_PRESSED) {
-                        SelectionModeController.INSTANCE.virtualCursorPressed();
-                    }
-                    if (ke.getEventType() == KeyEvent.KEY_RELEASED) {
-                        SelectionModeController.INSTANCE.virtualCursorReleased();
-                    }
-                }
-                ke.consume();
-            });
-        }
-
     }
 
     public void addMouseListener(final Scene element, final Predicate<MouseEvent> eventFilter) {

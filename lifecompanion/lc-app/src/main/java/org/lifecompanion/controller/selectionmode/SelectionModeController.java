@@ -457,6 +457,10 @@ public enum SelectionModeController implements ModeListenerI {
         this.executeIfVirtualCursorSelectionMode(VirtualCursorSelectionModeI::moveCenter);
     }
 
+    public void moveVirtualCursorAbsolute(Integer x, Integer y) {
+        this.executeIfVirtualCursorSelectionMode(mode -> mode.moveAbsolute(x, y));
+    }
+
     public void virtualCursorPressed() {
         this.executeIfVirtualCursorSelectionMode(VirtualCursorSelectionModeI::pressed);
     }
@@ -473,13 +477,13 @@ public enum SelectionModeController implements ModeListenerI {
         return this.executeAndGetIfVirtualCursorSelectionMode(mode -> true) != null;
     }
 
-    public Pair<Double, Double> getVirtualCursorSceneSize() {
-        return this.executeAndGetIfVirtualCursorSelectionMode(mode -> new Pair<>(mode.getSceneWidth(), mode.getSceneHeight()));
+    public Pair<Double, Double> getVirtualCursorSelectionZoneSize() {
+        return this.executeAndGetIfVirtualCursorSelectionMode(mode -> new Pair<>(mode.getSelectionZoneWidth(), mode.getSelectionZoneHeight()));
     }
 
     private void executeIfVirtualCursorSelectionMode(Consumer<VirtualCursorSelectionModeI> action) {
         executeAndGetIfVirtualCursorSelectionMode(s -> {
-            action.accept(s);
+            FXThreadUtils.runOnFXThread(() -> action.accept(s));
             return null;
         });
     }
@@ -491,6 +495,7 @@ public enum SelectionModeController implements ModeListenerI {
         }
         return null;
     }
+
 
     /**
      * Represent a clic time listener.<br>
@@ -843,7 +848,7 @@ public enum SelectionModeController implements ModeListenerI {
         }
         //Set and init
         SelectionModeI newSelectionMode = this.selectionModes.get(parameters);
-        newSelectionMode.init(this.getSelectionModeConfiguration());
+        newSelectionMode.init(configuration, this.getSelectionModeConfiguration());
         newSelectionMode.currentGridProperty().set(grid);
 
         newSelectionMode.currentGridProperty().addListener(this.changeListenerGrid);
@@ -877,7 +882,7 @@ public enum SelectionModeController implements ModeListenerI {
             //parameterForDirectSelectionMode.timeBeforeRepeatProperty().set(0);
             // Set parameters and init
             directActivationSelectionMode.setParameters(parameterForDirectSelectionMode);
-            directActivationSelectionMode.init(null);
+            directActivationSelectionMode.init(configuration, null);
             // Set on configuration
             FXThreadUtils.runOnFXThread(() -> configuration.directSelectionOnMouseOnScanningSelectionModeProperty().set(directActivationSelectionMode));
         }

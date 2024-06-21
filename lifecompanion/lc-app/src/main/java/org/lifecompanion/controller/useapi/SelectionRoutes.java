@@ -1,13 +1,10 @@
 package org.lifecompanion.controller.useapi;
 
-import org.lifecompanion.controller.hub.HubController;
-import org.lifecompanion.controller.lifecycle.AppMode;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.selectionmode.SelectionModeController;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.impl.useapi.dto.ActionConfirmationDto;
 import org.lifecompanion.model.impl.useapi.dto.SelectionConfigDto;
-import org.lifecompanion.model.impl.useapi.dto.SetDeviceLocalIdDto;
 import org.lifecompanion.util.javafx.FXThreadUtils;
 
 import static org.lifecompanion.controller.useapi.LifeCompanionControlServerController.checkUseMode;

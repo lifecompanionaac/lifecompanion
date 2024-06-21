@@ -23,6 +23,7 @@ import org.lifecompanion.controller.categorizedelement.useaction.UseActionContro
 import org.lifecompanion.model.api.categorizedelement.useaction.ActionExecutionResultI;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
+import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.selectionmode.AutoDirectSelectionModeI;
 import org.lifecompanion.model.api.selectionmode.DirectSelectionModeI;
 import org.lifecompanion.model.api.selectionmode.SelectionModeI;
@@ -91,8 +92,8 @@ public abstract class AbstractAutoActivationSelectionMode<T extends AbstractSele
     }
 
     @Override
-    public void init(SelectionModeI previousSelectionMode) {
-        super.init(previousSelectionMode);
+    public void init(LCConfigurationI configuration, SelectionModeI previousSelectionMode) {
+        super.init(configuration, previousSelectionMode);
         this.playingProperty.set(true);
     }
 

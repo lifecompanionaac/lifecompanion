@@ -19,11 +19,12 @@
 
 package org.lifecompanion.model.api.selectionmode;
 
-import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
-import org.lifecompanion.model.api.configurationcomponent.GridPartComponentI;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
+import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
+import org.lifecompanion.model.api.configurationcomponent.GridPartComponentI;
+import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 
 import java.util.Set;
 
@@ -43,8 +44,6 @@ public interface SelectionModeI {
      * @return the selection mode view
      */
     Node getSelectionView();
-
-    void viewDisplayed();
 
     /**
      * To change the selection mode parameters for this selection mode.<br>
@@ -66,7 +65,7 @@ public interface SelectionModeI {
      *
      * @param previousSelectionMode the previous used selection mode (can be null)
      */
-    void init(SelectionModeI previousSelectionMode);
+    void init(LCConfigurationI configuration, SelectionModeI previousSelectionMode);
 
     /**
      * Should close and dispose all the data used by the mode.<br>

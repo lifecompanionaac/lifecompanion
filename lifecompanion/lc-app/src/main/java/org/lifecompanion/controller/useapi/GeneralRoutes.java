@@ -1,6 +1,7 @@
 package org.lifecompanion.controller.useapi;
 
 import javafx.application.Platform;
+import javafx.util.Pair;
 import org.lifecompanion.controller.feedback.IndicationController;
 import org.lifecompanion.controller.lifecycle.AppMode;
 import org.lifecompanion.controller.lifecycle.AppModeController;
@@ -12,6 +13,8 @@ import org.lifecompanion.model.impl.useapi.dto.ActionConfirmationDto;
 import org.lifecompanion.model.impl.useapi.dto.AppStatusDto;
 import org.lifecompanion.model.impl.useapi.dto.GridDto;
 import org.lifecompanion.model.impl.useapi.dto.GridPartDto;
+import org.lifecompanion.util.LangUtils;
+import org.lifecompanion.util.model.ConfigurationComponentLayoutUtils;
 
 import static org.lifecompanion.model.impl.useapi.LifeCompanionControlServerEndpoint.APP_EXIT;
 import static org.lifecompanion.model.impl.useapi.LifeCompanionControlServerEndpoint.APP_STATUS;
@@ -49,6 +52,23 @@ public class GeneralRoutes {
 
     private static GridDto getMainCurrentGrid() {
         GridComponentI targetedGrid = IndicationController.INSTANCE.getTargetedGrid();
-        return targetedGrid != null ? new GridDto(targetedGrid.nameProperty().get(), targetedGrid.getID(), targetedGrid.rowCountProperty().get(), targetedGrid.columnCountProperty().get()) : null;
+        if (targetedGrid != null) {
+            GridPartComponentI firstComponent = targetedGrid.getGrid().getComponent(0, 0);
+            // Define first element in grid
+            Pair<Double, Double> firstKeyPosition = ConfigurationComponentLayoutUtils.getConfigurationPosition(firstComponent);
+            Pair<Double, Double> size = new Pair<>(firstComponent.layoutWidthProperty().get(), firstComponent.layoutHeightProperty().get());
+            // Define space between keys
+            return new GridDto(targetedGrid.nameProperty().get(),
+                    targetedGrid.getID(),
+                    targetedGrid.rowCountProperty().get(),
+                    targetedGrid.columnCountProperty().get(),
+                    LangUtils.nullToZeroInt(firstKeyPosition.getKey() + size.getKey() / 2.0),
+                    LangUtils.nullToZeroInt(firstKeyPosition.getValue() + size.getValue() / 2.0),
+                    (int) (targetedGrid.caseWidthProperty().get() + targetedGrid.getGridShapeStyle().hGapProperty().valueAsInt().get()),
+                    (int) (targetedGrid.caseHeightProperty().get() + targetedGrid.getGridShapeStyle().vGapProperty().valueAsInt().get())
+            );
+        }
+        return null;
+
     }
 }

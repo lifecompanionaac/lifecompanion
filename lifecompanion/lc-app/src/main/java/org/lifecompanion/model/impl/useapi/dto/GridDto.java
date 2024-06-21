@@ -23,12 +23,18 @@ public class GridDto {
     private String name;
     private String id;
     private int rowCount, columnCount;
+    private int firstKeyCenterX, firstKeyCenterY;
+    private int keysCenterXSpacing, keysCenterYSpacing;
 
-    public GridDto(String name, String id, int rowCount, int columnCount) {
+    public GridDto(String name, String id, int rowCount, int columnCount, int firstKeyCenterX, int firstKeyCenterY, int keysCenterXSpacing, int keysCenterYSpacing) {
         this.name = name;
         this.id = id;
         this.rowCount = rowCount;
         this.columnCount = columnCount;
+        this.firstKeyCenterX = firstKeyCenterX;
+        this.firstKeyCenterY = firstKeyCenterY;
+        this.keysCenterXSpacing = keysCenterXSpacing;
+        this.keysCenterYSpacing = keysCenterYSpacing;
     }
 
     public String getName() {
@@ -45,5 +51,21 @@ public class GridDto {
 
     public int getColumnCount() {
         return columnCount;
+    }
+
+    public int getFirstKeyCenterX() {
+        return firstKeyCenterX;
+    }
+
+    public int getFirstKeyCenterY() {
+        return firstKeyCenterY;
+    }
+
+    public int getKeysCenterXSpacing() {
+        return keysCenterXSpacing;
+    }
+
+    public int getKeysCenterYSpacing() {
+        return keysCenterYSpacing;
     }
 }

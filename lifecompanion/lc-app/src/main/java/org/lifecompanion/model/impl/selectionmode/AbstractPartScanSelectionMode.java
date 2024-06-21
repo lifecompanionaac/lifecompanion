@@ -24,6 +24,7 @@ import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTrigger
 import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
 import org.lifecompanion.model.api.configurationcomponent.GridPartComponentI;
 import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
+import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.selectionmode.ComponentToScanI;
 import org.lifecompanion.model.api.selectionmode.SelectionModeI;
 import org.lifecompanion.model.impl.configurationcomponent.GridComponentInformation;
@@ -141,8 +142,8 @@ public abstract class AbstractPartScanSelectionMode<T extends AbstractPartScanSe
     }
 
     @Override
-    public void init(SelectionModeI previousSelectionMode) {
-        super.init(previousSelectionMode);
+    public void init(LCConfigurationI configuration, SelectionModeI previousSelectionMode) {
+        super.init(configuration, previousSelectionMode);
         this.reinitParts();
     }
 

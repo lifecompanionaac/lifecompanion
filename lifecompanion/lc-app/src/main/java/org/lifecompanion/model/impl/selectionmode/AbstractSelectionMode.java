@@ -23,6 +23,7 @@ import javafx.beans.property.*;
 import javafx.scene.paint.Color;
 import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
 import org.lifecompanion.model.api.configurationcomponent.GridPartComponentI;
+import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.selectionmode.*;
 import org.lifecompanion.ui.selectionmode.AbstractSelectionModeView;
 import org.lifecompanion.util.model.SelectionModeUtils;
@@ -97,10 +98,6 @@ public abstract class AbstractSelectionMode<T extends AbstractSelectionModeView<
     }
 
     protected void scannedGridChanged(final GridComponentI gridP) {
-    }
-
-    @Override
-    public void viewDisplayed() {
     }
 
     /**
@@ -190,7 +187,7 @@ public abstract class AbstractSelectionMode<T extends AbstractSelectionModeView<
     protected abstract void parameterChanged(SelectionModeParameterI parameters);
 
     @Override
-    public void init(SelectionModeI previousSelectionMode) {
+    public void init(LCConfigurationI configuration, SelectionModeI previousSelectionMode) {
         //Fix Issue #177 : when a selection mode change, the last activation time should be copied to be able to eliminate new invalid selection
         if (previousSelectionMode instanceof AbstractSelectionMode<?>) {
             this.lastActivationTime = ((AbstractSelectionMode<?>) previousSelectionMode).lastActivationTime;

@@ -58,6 +58,10 @@ public enum LifeCompanionControlServerController implements ResponseTransformer 
             port(port);
             defaultResponseTransformer(this);
 
+            if (GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.PROP_DEV_MODE)) {
+                enableCors();
+            }
+
             // Error handling
             notFound((req, res) -> render(new ErrorDto("error.not.found", "Requested URL not found, check the docs !")));
             internalServerError((req, res) -> render(new ErrorDto("error.internal.error", "Unknown internal server error...")));
@@ -100,7 +104,7 @@ public enum LifeCompanionControlServerController implements ResponseTransformer 
                 HubRoutes.init();
                 MouseRoutes.init();
                 IndicationRoutes.init();
-                VirtualCursorRoutes.init();
+                SelectionVirtualCursorRoutes.init();
             });
             after((req, res) -> res.type("application/json"));
             started = true;
@@ -109,6 +113,26 @@ public enum LifeCompanionControlServerController implements ResponseTransformer 
                 LOGGER.info("LifeCompanion server API documentation\n{}\n", LifeCompanionControlServerEndpoint.getAllMarkdownDocumentation());
             }
         }
+    }
+
+    private static void enableCors() {
+        options("/*",
+                (request, response) -> {
+                    String accessControlRequestHeaders = request
+                            .headers("Access-Control-Request-Headers");
+                    if (accessControlRequestHeaders != null) {
+                        response.header("Access-Control-Allow-Headers",
+                                accessControlRequestHeaders);
+                    }
+                    String accessControlRequestMethod = request
+                            .headers("Access-Control-Request-Method");
+                    if (accessControlRequestMethod != null) {
+                        response.header("Access-Control-Allow-Methods",
+                                accessControlRequestMethod);
+                    }
+                    return "OK";
+                });
+        before((request, response) -> response.header("Access-Control-Allow-Origin", "*"));
     }
 
 

@@ -42,9 +42,9 @@ public interface VirtualCursorSelectionModeI extends AutoDirectSelectionModeI {
 
     double getCursorY();
 
-    double getSceneWidth();
+    double getSelectionZoneWidth();
 
-    double getSceneHeight();
+    double getSelectionZoneHeight();
 
     void moveCenter();
 }

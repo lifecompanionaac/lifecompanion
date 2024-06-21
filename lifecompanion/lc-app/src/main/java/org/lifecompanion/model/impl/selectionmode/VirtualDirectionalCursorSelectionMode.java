@@ -21,9 +21,12 @@ package org.lifecompanion.model.impl.selectionmode;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
+import org.lifecompanion.model.api.selectionmode.SelectionModeI;
 import org.lifecompanion.model.api.selectionmode.SelectionModeParameterI;
 import org.lifecompanion.model.api.selectionmode.VirtualCursorSelectionModeI;
 import org.lifecompanion.ui.selectionmode.VirtualDirectionalCursorSelectionModeView;
+import org.lifecompanion.util.LangUtils;
 
 /**
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
@@ -35,9 +38,13 @@ public class VirtualDirectionalCursorSelectionMode extends AbstractAutoActivatio
      */
     private final DoubleProperty cursorX, cursorY;
 
+    private final DoubleProperty selectionZoneWidth, selectionZoneHeight;
+
     public VirtualDirectionalCursorSelectionMode() {
         this.cursorX = new SimpleDoubleProperty(0.0);
         this.cursorY = new SimpleDoubleProperty(0.0);
+        this.selectionZoneWidth = new SimpleDoubleProperty(0.0);
+        this.selectionZoneHeight = new SimpleDoubleProperty(0.0);
         this.view = new VirtualDirectionalCursorSelectionModeView(this);
         this.drawProgress.set(false);
     }
@@ -45,11 +52,6 @@ public class VirtualDirectionalCursorSelectionMode extends AbstractAutoActivatio
     @Override
     protected boolean shouldExecuteAutoActivation(SelectionModeParameterI parameters) {
         return parameters.enableAutoActivationProperty().get();
-    }
-
-    @Override
-    public void viewDisplayed() {
-        moveCenter();
     }
 
     public DoubleProperty cursorXProperty() {
@@ -72,7 +74,8 @@ public class VirtualDirectionalCursorSelectionMode extends AbstractAutoActivatio
 
     @Override
     public void moveAbsolute(Integer x, Integer y) {
-
+        cursorX.set(LangUtils.nullToZero(x));
+        cursorY.set(LangUtils.nullToZero(y));
     }
 
     @Override
@@ -91,22 +94,32 @@ public class VirtualDirectionalCursorSelectionMode extends AbstractAutoActivatio
         return cursorX.get();
     }
 
-    public double getSceneWidth() {
-        return view.getScene().getWidth();
+    @Override
+    public double getSelectionZoneWidth() {
+        return selectionZoneWidth.get();
     }
 
-    public double getSceneHeight() {
-        return view.getScene().getHeight();
+    @Override
+    public double getSelectionZoneHeight() {
+        return selectionZoneHeight.get();
     }
 
     @Override
     public void moveCenter() {
-        this.cursorX.set(getSceneWidth() / 2.0);
-        this.cursorY.set(getSceneHeight() / 2.0);
+        this.cursorX.set(getSelectionZoneWidth() / 2.0);
+        this.cursorY.set(getSelectionZoneHeight() / 2.0);
     }
 
     @Override
     public double getCursorY() {
         return cursorY.get();
+    }
+
+    @Override
+    public void init(LCConfigurationI configuration, SelectionModeI previousSelectionMode) {
+        super.init(configuration, previousSelectionMode);
+        this.selectionZoneWidth.set(configuration.computedWidthProperty().get());
+        this.selectionZoneHeight.set(configuration.computedHeightProperty().get());
+        moveCenter();
     }
 }
