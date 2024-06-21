@@ -151,7 +151,7 @@ public class SelectionModeParameter implements SelectionModeParameterI {
         this.mouseButtonActivation = new SimpleObjectProperty<>(MouseButton.ANY);
         this.mouseButtonNextScan = new SimpleObjectProperty<>(MouseButton.SECONDARY);
         this.virtualCursorColor = new SimpleObjectProperty<>(Color.web("#1565C0"));
-        this.virtualCursorSize = new SimpleDoubleProperty(20.0);
+        this.virtualCursorSize = new SimpleDoubleProperty(6.0);
         this.enableAutoActivation = new SimpleBooleanProperty(false);
         this.showVirtualCursor = new SimpleBooleanProperty(true);
     }
