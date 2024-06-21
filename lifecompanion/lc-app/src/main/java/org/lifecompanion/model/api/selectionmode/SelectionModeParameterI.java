@@ -219,4 +219,14 @@ public interface SelectionModeParameterI extends XMLSerializable<IOContextI> {
     BooleanProperty selectionModeParameterAreSystemDefinedProperty();
     //========================================================================
 
+    // Virtual cursor
+    //========================================================================
+    BooleanProperty enableAutoActivationProperty();
+
+    BooleanProperty showVirtualCursorProperty();
+
+    DoubleProperty virtualCursorSizeProperty();
+
+    ObjectProperty<Color> virtualCursorColorProperty();
+    //========================================================================
 }

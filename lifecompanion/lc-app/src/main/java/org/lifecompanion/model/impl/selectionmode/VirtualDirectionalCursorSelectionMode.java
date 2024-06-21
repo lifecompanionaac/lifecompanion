@@ -21,6 +21,7 @@ package org.lifecompanion.model.impl.selectionmode;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import org.lifecompanion.model.api.selectionmode.SelectionModeParameterI;
 import org.lifecompanion.model.api.selectionmode.VirtualCursorSelectionModeI;
 import org.lifecompanion.ui.selectionmode.VirtualDirectionalCursorSelectionModeView;
 
@@ -39,6 +40,11 @@ public class VirtualDirectionalCursorSelectionMode extends AbstractAutoActivatio
         this.cursorY = new SimpleDoubleProperty(0.0);
         this.view = new VirtualDirectionalCursorSelectionModeView(this);
         this.drawProgress.set(false);
+    }
+
+    @Override
+    protected boolean shouldExecuteAutoActivation(SelectionModeParameterI parameters) {
+        return parameters.enableAutoActivationProperty().get();
     }
 
     @Override

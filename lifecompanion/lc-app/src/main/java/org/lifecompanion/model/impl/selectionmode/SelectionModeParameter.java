@@ -108,6 +108,15 @@ public class SelectionModeParameter implements SelectionModeParameterI {
 
     private final transient BooleanProperty selectionModeParameterAreSystemDefined;
 
+    private final BooleanProperty enableAutoActivation;
+
+    private final BooleanProperty showVirtualCursor;
+
+    private final DoubleProperty virtualCursorSize;
+
+    @XMLGenericProperty(Color.class)
+    private final ObjectProperty<Color> virtualCursorColor;
+
     public SelectionModeParameter() {
         this.selectionModeType = new SimpleObjectProperty<>(this, "selectionModeType", DirectActivationSelectionMode.class);
         this.fireActivationEvent = new SimpleObjectProperty<>(this, "fireActionEvent", FireActionEvent.ON_RELEASE);
@@ -141,6 +150,10 @@ public class SelectionModeParameter implements SelectionModeParameterI {
         this.selectionModeParameterAreSystemDefined = new SimpleBooleanProperty(false);
         this.mouseButtonActivation = new SimpleObjectProperty<>(MouseButton.ANY);
         this.mouseButtonNextScan = new SimpleObjectProperty<>(MouseButton.SECONDARY);
+        this.virtualCursorColor = new SimpleObjectProperty<>(Color.web("#1565C0"));
+        this.virtualCursorSize = new SimpleDoubleProperty(20.0);
+        this.enableAutoActivation = new SimpleBooleanProperty(false);
+        this.showVirtualCursor = new SimpleBooleanProperty(true);
     }
 
     // Class part : "Properties"
@@ -336,11 +349,35 @@ public class SelectionModeParameter implements SelectionModeParameterI {
         this.mouseButtonActivationProperty().set(parameters.mouseButtonActivationProperty().get());
         this.mouseButtonNextScanProperty().set(parameters.mouseButtonNextScanProperty().get());
         this.hideMouseCursorProperty().set(parameters.hideMouseCursorProperty().get());
+        this.virtualCursorColorProperty().set(parameters.virtualCursorColorProperty().get());
+        this.virtualCursorSizeProperty().set(parameters.virtualCursorSizeProperty().get());
+        this.enableAutoActivationProperty().set(parameters.enableAutoActivationProperty().get());
+        this.showVirtualCursorProperty().set(parameters.showVirtualCursorProperty().get());
     }
 
     @Override
     public BooleanProperty selectionModeParameterAreSystemDefinedProperty() {
         return selectionModeParameterAreSystemDefined;
+    }
+
+    @Override
+    public BooleanProperty enableAutoActivationProperty() {
+        return enableAutoActivation;
+    }
+
+    @Override
+    public BooleanProperty showVirtualCursorProperty() {
+        return showVirtualCursor;
+    }
+
+    @Override
+    public DoubleProperty virtualCursorSizeProperty() {
+        return virtualCursorSize;
+    }
+
+    @Override
+    public ObjectProperty<Color> virtualCursorColorProperty() {
+        return virtualCursorColor;
     }
     //========================================================================
 

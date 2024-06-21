@@ -4,7 +4,7 @@
 
 ### Fonctionnalités
 
-- ...
+- Ajout d'un nouveau mode de sélection "curseur virtuel" : pour l'instant expérimental, pourra servir à l'intégration de périphériques externes (eyetracking, headtracking...)
 
 ### Corrections/ajustements
 

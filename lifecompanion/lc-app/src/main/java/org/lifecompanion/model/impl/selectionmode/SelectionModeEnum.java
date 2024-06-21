@@ -37,8 +37,8 @@ public enum SelectionModeEnum {
             DirectActivationSelectionMode.class, true, false, false, false, false), //
     AUTO_MOUSE_CLIC("selection.mode.auto.mouse.clic", "selection.mode.auto.mouse.clic.description", "icon_select_auto_activation.png",
             AutoActivationSelectionMode.class, true, true, true, false, false), //
-    VIRTUAL_DIRECTIONAL_CURSOR("selection.mode.virtual.cursor.name", "selection.mode.virtual.cursor.description", "icon_select_auto_activation.png",// FIXME icon
-            VirtualDirectionalCursorSelectionMode.class, true, false, false, false, true), //
+    VIRTUAL_DIRECTIONAL_CURSOR("selection.mode.virtual.cursor.name", "selection.mode.virtual.cursor.description", "icon_selection_virtual_cursor.png",//
+            VirtualDirectionalCursorSelectionMode.class, true, true, true, false, true), //
     SCAN_KEY_HORIZONTAL("selection.mode.scan.direct.key.horizontal", "selection.mode.scan.direct.key.horizontal.description",
             "icon_selection_key_horizontal.png", HorizontalDirectKeyScanSelectionMode.class, false, true, false, true, false), //
     SCAN_ROW_COLUMN("selection.mode.scan.row.column.name", "selection.mode.scan.row.column.description", "icon_selection_row_column.png",
@@ -104,6 +104,10 @@ public enum SelectionModeEnum {
 
     public ReadOnlyBooleanProperty usePointerProperty() {
         return this.usePointer;
+    }
+
+    public ReadOnlyBooleanProperty useVirtualCursorProperty() {
+        return useVirtualCursor;
     }
 
     public static SelectionModeEnum getEnumFor(final Class<? extends SelectionModeI> type) {

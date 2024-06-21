@@ -31,7 +31,6 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import org.lifecompanion.model.api.selectionmode.VirtualCursorSelectionModeI;
 import org.lifecompanion.model.impl.selectionmode.VirtualDirectionalCursorSelectionMode;
 
 import java.util.List;
@@ -41,21 +40,24 @@ import java.util.List;
  */
 public class VirtualDirectionalCursorSelectionModeView extends AbstractAutoActivationSelectionModeView<VirtualDirectionalCursorSelectionMode> {
 
-    private final Node virtualCursorNode;
+    private final Circle virtualCursorView;
     private final ObjectProperty<Node> currentOverNode;
 
     public VirtualDirectionalCursorSelectionModeView(final VirtualDirectionalCursorSelectionMode selectionMode) {
         super(selectionMode);
         this.currentOverNode = new SimpleObjectProperty<>();
-        this.virtualCursorNode = new Circle(10, Color.BLUE);
-        this.getChildren().add(virtualCursorNode);
+        this.virtualCursorView = new Circle();
+        this.virtualCursorView.radiusProperty().bind(selectionMode.virtualCursorSizeProperty());
+        this.virtualCursorView.fillProperty().bind(selectionMode.virtualCursorColorProperty());
+        this.virtualCursorView.visibleProperty().bind(selectionMode.showVirtualCursorProperty());
+        this.getChildren().add(virtualCursorView);
         initCursorBinding();
     }
 
     private void initCursorBinding() {
         // Position bound on model value
-        virtualCursorNode.layoutXProperty().bind(selectionMode.cursorXProperty());
-        virtualCursorNode.layoutYProperty().bind(selectionMode.cursorYProperty());
+        virtualCursorView.layoutXProperty().bind(selectionMode.cursorXProperty());
+        virtualCursorView.layoutYProperty().bind(selectionMode.cursorYProperty());
 
         // FIXME : as the final target component is not the same, the entered can be fired multiple times on the same component, should be fixed
         // Detect enter/exit on current node
@@ -87,7 +89,7 @@ public class VirtualDirectionalCursorSelectionModeView extends AbstractAutoActiv
     }
 
     private Node simulateMouseEvent(EventType<MouseEvent> event) {
-        return simulateMouseEvent(virtualCursorNode, event);
+        return simulateMouseEvent(virtualCursorView, event);
     }
 
     private Node simulateMouseEvent(Node target, EventType<MouseEvent> event) {

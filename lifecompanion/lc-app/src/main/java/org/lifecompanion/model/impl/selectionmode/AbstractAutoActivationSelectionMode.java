@@ -19,15 +19,15 @@
 package org.lifecompanion.model.impl.selectionmode;
 
 import javafx.scene.Node;
-import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
+import org.lifecompanion.controller.categorizedelement.useaction.UseActionController;
 import org.lifecompanion.model.api.categorizedelement.useaction.ActionExecutionResultI;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
+import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
 import org.lifecompanion.model.api.selectionmode.AutoDirectSelectionModeI;
 import org.lifecompanion.model.api.selectionmode.DirectSelectionModeI;
 import org.lifecompanion.model.api.selectionmode.SelectionModeI;
-import org.lifecompanion.controller.categorizedelement.useaction.UseActionController;
+import org.lifecompanion.model.api.selectionmode.SelectionModeParameterI;
 import org.lifecompanion.ui.selectionmode.AbstractSelectionModeView;
-import org.lifecompanion.ui.selectionmode.AutoActivationSelectionModeView;
 
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
@@ -37,7 +37,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
-public class AbstractAutoActivationSelectionMode<T extends AbstractSelectionModeView<?>> extends AbstractDirectSelectionMode<T>
+public abstract class AbstractAutoActivationSelectionMode<T extends AbstractSelectionModeView<?>> extends AbstractDirectSelectionMode<T>
         implements DirectSelectionModeI, DrawSelectionModeI, AutoDirectSelectionModeI {
 
     /**
@@ -64,9 +64,11 @@ public class AbstractAutoActivationSelectionMode<T extends AbstractSelectionMode
         if (!this.ignoreNextSelectionEnter) {
             this.playingProperty.set(true);
             super.selectionEnter(key);
-            currentActivationTask = new ActivationTask(key);
-            this.currentScheduledActivation = this.scheduledExecutor.schedule(currentActivationTask,
-                    this.parameters.autoActivationTimeProperty().get(), TimeUnit.MILLISECONDS);
+            if (shouldExecuteAutoActivation(parameters)) {
+                currentActivationTask = new ActivationTask(key);
+                this.currentScheduledActivation = this.scheduledExecutor.schedule(currentActivationTask,
+                        this.parameters.autoActivationTimeProperty().get(), TimeUnit.MILLISECONDS);
+            }
         }
     }
 
@@ -79,6 +81,8 @@ public class AbstractAutoActivationSelectionMode<T extends AbstractSelectionMode
             this.currentActivationTask = null;
         }
     }
+
+    protected abstract boolean shouldExecuteAutoActivation(SelectionModeParameterI parameters);
 
     @Override
     public void dispose() {

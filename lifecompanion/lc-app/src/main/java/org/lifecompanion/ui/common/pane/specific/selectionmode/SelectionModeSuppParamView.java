@@ -76,7 +76,7 @@ public class SelectionModeSuppParamView extends BaseConfigurationViewBorderPane<
     /**
      * Color pickers
      */
-    private LCColorPicker colorPickerSelection, colorPickerActivation, colorPickerProgressColor;
+    private LCColorPicker colorPickerSelection, colorPickerActivation, colorPickerProgressColor, colorPickerVirtualCursorColor;
 
     /**
      * Slider for the selection view size
@@ -89,6 +89,8 @@ public class SelectionModeSuppParamView extends BaseConfigurationViewBorderPane<
     private Slider sliderProgressBarSize;
 
     private Slider sliderBackgroundReductionLevel;
+
+    private Slider sliderVirtualCursorSize;
 
     /**
      * Spinner for scan pause, and pause on first
@@ -103,7 +105,7 @@ public class SelectionModeSuppParamView extends BaseConfigurationViewBorderPane<
     /**
      * To enable/disable properties
      */
-    private ToggleSwitch toggleEnableProgressDrawing, toggleSkipEmptyCells, toggleManifyKeyOver, toggleEnableActivationWithSelection, toggleEnableDirectSelectionOnMouseOnScanningSelectionMode, toggleHideMouseCursor;
+    private ToggleSwitch toggleEnableProgressDrawing, toggleSkipEmptyCells, toggleManifyKeyOver, toggleEnableActivationWithSelection, toggleEnableDirectSelectionOnMouseOnScanningSelectionMode, toggleHideMouseCursor, toggleShowVirtualCursor, toggleEnableAutoActivation;
 
 
     private List<Node> keyboardControlNodes;
@@ -121,13 +123,12 @@ public class SelectionModeSuppParamView extends BaseConfigurationViewBorderPane<
 
     private Label labelSelectionModeSelectedDesc, titlePartActivation, labelTimeActivation, labelTimeOver, titlePartScanning, titlePartManualScanning, labelScanPause, labelScanFirstPause,
             labelScanMaxSame, titlePartStyle, labelColorSelection, labelColorActivation, labelSelectionViewSize, titlePartProgressStyle, labelProgressColor, labelDrawProgressMode,
-            labelProgressBarSize, labelScanningMode, labelNextScanEventInput, labelKeyboardNextScanKey, titlePartAutoScanning, labelBackgroundReductionLevel, labelMouseButton;
+            labelProgressBarSize, labelScanningMode, labelNextScanEventInput, labelKeyboardNextScanKey, titlePartAutoScanning, labelBackgroundReductionLevel, labelMouseButton, labelVirtualCursorSize, titlePartVirtualCursor, labelVirtualCursorColor;
 
     private final ObjectProperty<SelectionModeEnum> selectedMode;
 
     private GridPane gridPaneConfiguration;
     private boolean dirty;
-
 
     public SelectionModeSuppParamView() {
         this.selectedMode = new SimpleObjectProperty<>();
@@ -147,6 +148,7 @@ public class SelectionModeSuppParamView extends BaseConfigurationViewBorderPane<
         this.toggleSkipEmptyCells.setSelected(model.getSelectionModeParameter().skipEmptyComponentProperty().get());
         this.comboboxDrawProgressMode.getSelectionModel().select(model.getSelectionModeParameter().progressDrawModeProperty().get());
         this.spinnerAutoActivation.getValueFactory().setValue(model.getSelectionModeParameter().autoActivationTimeProperty().get() / 1000.0);
+        this.toggleEnableAutoActivation.setSelected(model.getSelectionModeParameter().enableAutoActivationProperty().get());
         this.spinnerAutoOver.getValueFactory().setValue(model.getSelectionModeParameter().autoOverTimeProperty().get() / 1000.0);
         this.toggleStartScanningOnClic.setSelected(model.getSelectionModeParameter().startScanningOnClicProperty().get());
         this.toggleEnableActivationWithSelection.setSelected(model.getSelectionModeParameter().enableActivationWithSelectionProperty().get());
@@ -160,6 +162,9 @@ public class SelectionModeSuppParamView extends BaseConfigurationViewBorderPane<
         this.sliderBackgroundReductionLevel.setValue(model.getSelectionModeParameter().backgroundReductionLevelProperty().get());
         this.mouseButtonSelectorControl.setValue(model.getSelectionModeParameter().mouseButtonNextScanProperty().get());
         this.toggleHideMouseCursor.setSelected(model.getSelectionModeParameter().hideMouseCursorProperty().get());
+        this.toggleShowVirtualCursor.setSelected(model.getSelectionModeParameter().showVirtualCursorProperty().get());
+        this.colorPickerVirtualCursorColor.setValue(model.getSelectionModeParameter().virtualCursorColorProperty().get());
+        this.sliderVirtualCursorSize.setValue(model.getSelectionModeParameter().virtualCursorSizeProperty().get());
         dirty = false;
     }
 
@@ -174,6 +179,7 @@ public class SelectionModeSuppParamView extends BaseConfigurationViewBorderPane<
         model.get().getSelectionModeParameter().scanPauseProperty().set((int) (spinnerScanPause.getValue() * 1000.0));
         model.get().getSelectionModeParameter().scanFirstPauseProperty().set((int) (spinnerFirstPause.getValue() * 1000.0));
         model.get().getSelectionModeParameter().autoActivationTimeProperty().set((int) (spinnerAutoActivation.getValue() * 1000.0));
+        model.get().getSelectionModeParameter().enableAutoActivationProperty().set(toggleEnableAutoActivation.isSelected());
         model.get().getSelectionModeParameter().autoOverTimeProperty().set((int) (spinnerAutoOver.getValue() * 1000.0));
         model.get().getSelectionModeParameter().progressViewColorProperty().set(this.colorPickerProgressColor.getValue());
         model.get().getSelectionModeParameter().maxScanBeforeStopProperty().set(this.spinnerMaxScan.getValueFactory().getValue());
@@ -192,6 +198,9 @@ public class SelectionModeSuppParamView extends BaseConfigurationViewBorderPane<
         model.get().getSelectionModeParameter().enableDirectSelectionOnMouseOnScanningSelectionModeProperty().set(toggleEnableDirectSelectionOnMouseOnScanningSelectionMode.isSelected());
         model.get().getSelectionModeParameter().mouseButtonNextScanProperty().set(mouseButtonSelectorControl.getValue());
         model.get().getSelectionModeParameter().hideMouseCursorProperty().set(toggleHideMouseCursor.isSelected());
+        model.get().getSelectionModeParameter().showVirtualCursorProperty().set(toggleShowVirtualCursor.isSelected());
+        model.get().getSelectionModeParameter().virtualCursorColorProperty().set(this.colorPickerVirtualCursorColor.getValue());
+        model.get().getSelectionModeParameter().virtualCursorSizeProperty().set(this.sliderVirtualCursorSize.getValue());
     }
 
     public void setSelectedSelectionMode(SelectionModeEnum selectionMode) {
@@ -201,7 +210,7 @@ public class SelectionModeSuppParamView extends BaseConfigurationViewBorderPane<
     @Override
     public void initUI() {
         labelSelectedMode = new Label();
-        labelSelectedMode.setStyle("-fx-font-weight: bold;");
+        labelSelectedMode.getStyleClass().add("text-weight-bold");
         labelSelectionModeSelectedDesc = new Label(Translation.getText("selection.mode.param.selected.selection.mode.label"));
         labelSelectionModeSelectedDesc.setMinWidth(GeneralConfigurationStepViewI.LEFT_COLUMN_MIN_WIDTH);
         labelSelectedMode.setMaxWidth(Double.MAX_VALUE);
@@ -244,6 +253,7 @@ public class SelectionModeSuppParamView extends BaseConfigurationViewBorderPane<
 
         // Auto activation
         titlePartActivation = FXControlUtils.createTitleLabel("selection.mode.param.title.part.activation.configuration");
+        this.toggleEnableAutoActivation = FXControlUtils.createToggleSwitch("selection.mode.enable.auto.activation", "selection.mode.enable.auto.activation.tooltip");
         this.spinnerAutoActivation = FXControlUtils.createDoubleSpinner(0.0, 100.0, 2.0, 0.1, GeneralConfigurationStepViewI.FIELD_WIDTH);
         FXControlUtils.createAndAttachTooltip(spinnerAutoActivation, "tooltip.explain.auto.activation.time");
         labelTimeActivation = new Label(Translation.getText("selection.mode.auto.time.activation"));
@@ -258,6 +268,16 @@ public class SelectionModeSuppParamView extends BaseConfigurationViewBorderPane<
         GridPane.setHgrow(labelTimeOver, Priority.ALWAYS);
         FXControlUtils.createAndAttachTooltip(spinnerAutoOver, "tooltip.explain.auto.over.time");
         GridPane.setHalignment(this.spinnerAutoOver, HPos.RIGHT);
+
+        // Virtual cursor
+        titlePartVirtualCursor = FXControlUtils.createTitleLabel("selection.mode.param.title.part.virtual.cursor");
+        this.toggleShowVirtualCursor = FXControlUtils.createToggleSwitch("selection.mode.show.virtual.cursor", null);
+        labelVirtualCursorSize = new Label(Translation.getText("selection.mode.virtual.cursor.size"));
+        this.sliderVirtualCursorSize = FXControlUtils.createBaseSlider(4.0, 60.0, 5);
+        this.sliderVirtualCursorSize.setMajorTickUnit(5);
+        this.sliderVirtualCursorSize.setMinorTickCount(2);
+        labelVirtualCursorColor = new Label(Translation.getText("selection.mode.virtual.cursor.color"));
+        colorPickerVirtualCursorColor = new LCColorPicker();
 
         // Auto scanning
         titlePartAutoScanning = FXControlUtils.createTitleLabel("selection.mode.param.title.part.auto.scanning.configuration");
@@ -362,9 +382,14 @@ public class SelectionModeSuppParamView extends BaseConfigurationViewBorderPane<
 
         sliderBackgroundReductionLevel.disableProperty().bind(toggleBackgroundReductionEnabled.selectedProperty().not());
 
-        // Progress display
+        // Progress display : when auto scanning, or virtual cursor with auto activation or only auto clic mode
         BooleanBinding progressDisplayDisabled = this.comboBoxScanningMode.valueProperty().isEqualTo(ScanningMode.AUTO)
-                .or(Bindings.createBooleanBinding(() -> selectedMode.get() != null ? selectedMode.get().useAutoClicProperty().get() : false, selectedMode)).not();
+                .or(Bindings.createBooleanBinding(() -> selectedMode.get() != null && selectedMode.get().useVirtualCursorProperty().get(), selectedMode)
+                        .and(toggleEnableAutoActivation.selectedProperty()))
+                .or(Bindings.createBooleanBinding(() -> selectedMode.get() != null && selectedMode.get().useAutoClicProperty().get() && !selectedMode.get().useVirtualCursorProperty().get(),
+                        selectedMode))
+                .not();
+
         this.toggleEnableProgressDrawing.disableProperty().bind(progressDisplayDisabled);
         BooleanBinding progressDisabledBinding = this.toggleEnableProgressDrawing.selectedProperty().not().or(progressDisplayDisabled);
         this.colorPickerProgressColor.disableProperty().bind(progressDisabledBinding);
@@ -383,6 +408,12 @@ public class SelectionModeSuppParamView extends BaseConfigurationViewBorderPane<
         this.spinnerScanPause.disableProperty().bind(comboBoxScanningMode.valueProperty().isNotEqualTo(ScanningMode.AUTO));
         this.toggleStartScanningOnClic.disableProperty().bind(comboBoxScanningMode.valueProperty().isNotEqualTo(ScanningMode.AUTO));
 
+        // Virtual cursor style, if showing
+        this.colorPickerVirtualCursorColor.disableProperty().bind(toggleShowVirtualCursor.selectedProperty().not());
+        this.labelVirtualCursorColor.disableProperty().bind(colorPickerVirtualCursorColor.disabledProperty());
+        this.sliderVirtualCursorSize.disableProperty().bind(toggleShowVirtualCursor.selectedProperty().not());
+        this.labelVirtualCursorSize.disableProperty().bind(sliderVirtualCursorSize.disabledProperty());
+
         // Keyboard key selection hidden if not selected
         for (Node n : this.keyboardControlNodes)
             n.visibleProperty().bind(comboBoxNextScanEventInput.valueProperty().isEqualTo(FireEventInput.KEYBOARD));
@@ -395,6 +426,7 @@ public class SelectionModeSuppParamView extends BaseConfigurationViewBorderPane<
         this.comboboxDrawProgressMode.valueProperty().addListener(invalidationListener);
         this.comboBoxScanningMode.valueProperty().addListener(invalidationListener);
         this.spinnerAutoActivation.valueProperty().addListener(invalidationListener);
+        this.toggleEnableAutoActivation.selectedProperty().addListener(invalidationListener);
         this.spinnerAutoOver.valueProperty().addListener(invalidationListener);
         this.spinnerFirstPause.valueProperty().addListener(invalidationListener);
         this.spinnerMaxScan.valueProperty().addListener(invalidationListener);
@@ -413,6 +445,9 @@ public class SelectionModeSuppParamView extends BaseConfigurationViewBorderPane<
         this.toggleStartScanningOnClic.selectedProperty().addListener(invalidationListener);
         this.mouseButtonSelectorControl.valueProperty().addListener(invalidationListener);
         this.keySelectorControlKeyboardNextScanKeyCode.valueProperty().addListener(invalidationListener);
+        this.toggleShowVirtualCursor.selectedProperty().addListener(invalidationListener);
+        this.colorPickerVirtualCursorColor.valueProperty().addListener(invalidationListener);
+        this.sliderVirtualCursorSize.valueProperty().addListener(invalidationListener);
     }
 
 
@@ -447,6 +482,9 @@ public class SelectionModeSuppParamView extends BaseConfigurationViewBorderPane<
             // Activation configuration
             if (selectionModeEnum.useAutoClicProperty().get() || selectionModeEnum.usePointerProperty().get()) {
                 gridPaneConfiguration.add(titlePartActivation, 0, gridRowIndex++, 2, 1);
+            }
+            if (selectionModeEnum.useVirtualCursorProperty().get()) {
+                gridPaneConfiguration.add(toggleEnableAutoActivation, 0, gridRowIndex++, 2, 1);
             }
             if (selectionModeEnum.useAutoClicProperty().get()) {
                 gridPaneConfiguration.add(labelTimeActivation, 0, gridRowIndex);
@@ -488,6 +526,16 @@ public class SelectionModeSuppParamView extends BaseConfigurationViewBorderPane<
             gridPaneConfiguration.add(labelBackgroundReductionLevel, 0, gridRowIndex, 1, 1);
             gridPaneConfiguration.add(sliderBackgroundReductionLevel, 1, gridRowIndex++, 1, 1);
             gridPaneConfiguration.add(toggleSkipEmptyCells, 0, gridRowIndex++, 2, 1);
+
+            // Virtual cursor
+            if (selectionModeEnum.useVirtualCursorProperty().get()) {
+                gridPaneConfiguration.add(titlePartVirtualCursor, 0, gridRowIndex++, 2, 1);
+                gridPaneConfiguration.add(toggleShowVirtualCursor, 0, gridRowIndex++, 2, 1);
+                gridPaneConfiguration.add(labelVirtualCursorColor, 0, gridRowIndex);
+                gridPaneConfiguration.add(colorPickerVirtualCursorColor, 1, gridRowIndex++);
+                gridPaneConfiguration.add(labelVirtualCursorSize, 0, gridRowIndex, 1, 1);
+                gridPaneConfiguration.add(sliderVirtualCursorSize, 1, gridRowIndex++, 1, 1);
+            }
 
             // Progress
             if (selectionModeEnum.useProgressDrawProperty().get()) {

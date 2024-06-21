@@ -2117,7 +2117,7 @@
   <text key="general.configuration.selection.mode.title.part.input.type">Périphérique d'activation</text>
   <text key="general.configuration.selection.input.type.label">Périphérique d'entrée</text>
   <text key="selection.mode.auto.enable.direct.activation">Permettre une sélection directe</text>
-  <text key="selection.mode.auto.time.activation">Déclenchement d'activation (s)</text>
+  <text key="selection.mode.auto.time.activation">Déclenchement d'activation automatique après (s)</text>
   <text key="selection.mode.auto.time.over">Déclenchement du survol après (s)</text>
   <text key="selection.mode.button.param.show.advanced.parameter">Réglages du mode de sélection</text>
   <text key="selection.mode.draw.progress.mode">Affichage de la progression</text>
@@ -3841,5 +3841,11 @@
     <text key="alert.message.warn.action.on.keylist.header">Attention aux actions</text>
     <text key="alert.message.warn.action.on.keylist.message">Vous allez ajouter une action sur une/des case(s) de liste de cases. Cette action sera associée à la case dans la grille et non à son contenu (son texte, son image, etc.).</text>
     <text key="selection.mode.virtual.cursor.name">Curseur virtuel</text>
-    <text key="selection.mode.virtual.cursor.description">Permet de sélectionner en utilisant un curseur virtuel qui n'est pas celui de la souris. Celui-ci peut être déplacé par différentes méthodes d'interaction (système de pointage par les yeux, la tête, API...)</text>
+    <text key="selection.mode.virtual.cursor.description">Permet de sélectionner en utilisant un curseur virtuel qui n'est pas celui de la souris. Celui-ci peut être déplacé par différentes méthodes d'interaction (système de pointage par les yeux, la tête, API...). Mode de sélection en cours de développement.</text>
+    <text key="selection.mode.enable.auto.activation">Activation automatique</text>
+    <text key="selection.mode.enable.auto.activation.tooltip">Si activé, lorsque la sélection reste "sur" une case pour un temps défini, cela activera la case. Très utile lorsqu'on ne peut pas valider la sélection.</text>
+    <text key="selection.mode.param.title.part.virtual.cursor">Curseur virtuel</text>
+    <text key="selection.mode.show.virtual.cursor">Afficher le curseur virtuel</text>
+    <text key="selection.mode.virtual.cursor.size">Taille</text>
+    <text key="selection.mode.virtual.cursor.color">Couleur</text>
 </texts>

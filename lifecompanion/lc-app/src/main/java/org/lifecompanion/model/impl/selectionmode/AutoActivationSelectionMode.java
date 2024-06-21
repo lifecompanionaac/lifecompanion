@@ -18,6 +18,7 @@
  */
 package org.lifecompanion.model.impl.selectionmode;
 
+import org.lifecompanion.model.api.selectionmode.SelectionModeParameterI;
 import org.lifecompanion.ui.selectionmode.AutoActivationSelectionModeView;
 
 /**
@@ -29,5 +30,10 @@ public class AutoActivationSelectionMode extends AbstractAutoActivationSelection
 
     public AutoActivationSelectionMode() {
         this.view = new AutoActivationSelectionModeView(this);
+    }
+
+    @Override
+    protected boolean shouldExecuteAutoActivation(SelectionModeParameterI parameters) {
+        return true;
     }
 }

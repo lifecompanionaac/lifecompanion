@@ -20,30 +20,35 @@
 package org.lifecompanion.model.impl.selectionmode;
 
 import javafx.beans.binding.BooleanBinding;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyBooleanProperty;
-import javafx.beans.property.ReadOnlyDoubleProperty;
+import javafx.beans.property.*;
 import javafx.scene.paint.Color;
 import org.lifecompanion.model.api.selectionmode.SelectionModeParameterI;
 
 /**
  * Define common method for selection mode that can be draw with the same UI component.
+ *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public interface DrawSelectionModeI {
-	ReadOnlyBooleanProperty playingProperty();
+    ReadOnlyBooleanProperty playingProperty();
 
-	BooleanBinding currentPartNotNullProperty();
+    BooleanBinding currentPartNotNullProperty();
 
-	ObjectProperty<Color> strokeFillProperty();
+    ObjectProperty<Color> strokeFillProperty();
 
-	ObjectProperty<Color> progressFillProperty();
+    ObjectProperty<Color> progressFillProperty();
 
-	ReadOnlyBooleanProperty drawProgressProperty();
+    ReadOnlyBooleanProperty drawProgressProperty();
 
-	ReadOnlyBooleanProperty backgroundReductionEnabledProperty();
+    ReadOnlyBooleanProperty backgroundReductionEnabledProperty();
 
-	ReadOnlyDoubleProperty backgroundReductionLevelProperty();
+    ReadOnlyDoubleProperty backgroundReductionLevelProperty();
 
-	SelectionModeParameterI getParameters();
+    ReadOnlyBooleanProperty showVirtualCursorProperty();
+
+    ReadOnlyDoubleProperty virtualCursorSizeProperty();
+
+    ReadOnlyObjectProperty<Color> virtualCursorColorProperty();
+
+    SelectionModeParameterI getParameters();
 }

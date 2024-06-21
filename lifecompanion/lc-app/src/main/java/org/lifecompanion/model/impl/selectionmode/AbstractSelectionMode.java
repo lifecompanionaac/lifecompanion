@@ -23,10 +23,7 @@ import javafx.beans.property.*;
 import javafx.scene.paint.Color;
 import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
 import org.lifecompanion.model.api.configurationcomponent.GridPartComponentI;
-import org.lifecompanion.model.api.selectionmode.ScanningMode;
-import org.lifecompanion.model.api.selectionmode.ScanningSelectionModeI;
-import org.lifecompanion.model.api.selectionmode.SelectionModeI;
-import org.lifecompanion.model.api.selectionmode.SelectionModeParameterI;
+import org.lifecompanion.model.api.selectionmode.*;
 import org.lifecompanion.ui.selectionmode.AbstractSelectionModeView;
 import org.lifecompanion.util.model.SelectionModeUtils;
 
@@ -58,6 +55,9 @@ public abstract class AbstractSelectionMode<T extends AbstractSelectionModeView<
     protected final BooleanProperty playingProperty;
     protected final BooleanProperty backgroundReductionEnabled;
     protected final DoubleProperty backgroundReductionLevel;
+    private final ObjectProperty<Color> virtualCursorColor;
+    private final DoubleProperty virtualCursorSize;
+    private final BooleanProperty showVirtualCursor;
 
     /**
      * Selection mode view
@@ -83,6 +83,9 @@ public abstract class AbstractSelectionMode<T extends AbstractSelectionModeView<
         this.drawProgress = new SimpleBooleanProperty();
         this.backgroundReductionLevel = new SimpleDoubleProperty();
         this.backgroundReductionEnabled = new SimpleBooleanProperty();
+        this.virtualCursorColor = new SimpleObjectProperty<>();
+        this.virtualCursorSize = new SimpleDoubleProperty();
+        this.showVirtualCursor = new SimpleBooleanProperty();
         this.playingProperty = new SimpleBooleanProperty(false);
         this.activationDoneListeners = new HashSet<>();
         //Currently scanned grid
@@ -121,9 +124,13 @@ public abstract class AbstractSelectionMode<T extends AbstractSelectionModeView<
     public void setParameters(final SelectionModeParameterI parametersP) {
         this.parameters = parametersP;
         this.setDefaultColors();
-        this.drawProgress.set(this.parameters.drawProgressProperty().get() && (!(this instanceof ScanningSelectionModeI) || this.parameters.scanningModeProperty().get() != ScanningMode.MANUAL));
+        this.drawProgress.set(this.parameters.drawProgressProperty().get() && (!(this instanceof ScanningSelectionModeI) || this.parameters.scanningModeProperty()
+                .get() != ScanningMode.MANUAL) && (!(this instanceof VirtualCursorSelectionModeI) || this.parameters.enableAutoActivationProperty().get()));
         this.backgroundReductionEnabled.set(this.parameters.backgroundReductionEnabledProperty().get());
         this.backgroundReductionLevel.set(this.parameters.backgroundReductionLevelProperty().get());
+        this.virtualCursorColor.set(this.parameters.virtualCursorColorProperty().get());
+        this.virtualCursorSize.set(this.parameters.virtualCursorSizeProperty().get());
+        this.showVirtualCursor.set(this.parameters.showVirtualCursorProperty().get());
         this.parameterChanged(parametersP);
     }
 
@@ -222,6 +229,22 @@ public abstract class AbstractSelectionMode<T extends AbstractSelectionModeView<
     public ReadOnlyDoubleProperty backgroundReductionLevelProperty() {
         return backgroundReductionLevel;
     }
+
+    @Override
+    public ReadOnlyBooleanProperty showVirtualCursorProperty() {
+        return showVirtualCursor;
+    }
+
+    @Override
+    public ReadOnlyDoubleProperty virtualCursorSizeProperty() {
+        return virtualCursorSize;
+    }
+
+    @Override
+    public ReadOnlyObjectProperty<Color> virtualCursorColorProperty() {
+        return virtualCursorColor;
+    }
+
     //========================================================================
 
 
