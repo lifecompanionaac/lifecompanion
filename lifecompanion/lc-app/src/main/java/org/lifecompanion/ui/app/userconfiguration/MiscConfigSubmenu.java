@@ -28,6 +28,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
+import javafx.util.Pair;
 import org.jdom2.Document;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
@@ -40,6 +41,7 @@ import org.lifecompanion.controller.editmode.ErrorHandlingController;
 import org.lifecompanion.controller.editmode.FileChooserType;
 import org.lifecompanion.controller.editmode.LCFileChoosers;
 import org.lifecompanion.controller.io.IOHelper;
+import org.lifecompanion.controller.io.task.ChangeImageDictionaryTask;
 import org.lifecompanion.controller.io.task.GenerateRandomConfigurationTask;
 import org.lifecompanion.controller.io.task.GenerateTechDemoConfigurationTask;
 import org.lifecompanion.controller.io.task.ImportKeylistFromJsonTask;
@@ -50,17 +52,23 @@ import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.io.FileNameUtils;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
+import org.lifecompanion.framework.commons.utils.lang.CollectionUtils;
 import org.lifecompanion.model.api.configurationcomponent.IdentifiableComponentI;
+import org.lifecompanion.model.api.configurationcomponent.ImageUseComponentI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
+import org.lifecompanion.model.api.imagedictionary.ImageDictionaryI;
+import org.lifecompanion.model.api.imagedictionary.ImageElementI;
 import org.lifecompanion.model.api.style.ShapeStyle;
 import org.lifecompanion.model.impl.configurationcomponent.dynamickey.KeyListLeaf;
 import org.lifecompanion.model.impl.exception.LCException;
+import org.lifecompanion.model.impl.imagedictionary.ImageDictionaries;
 import org.lifecompanion.model.impl.useapi.GlobalRuntimeConfiguration;
 import org.lifecompanion.util.DesktopUtils;
 import org.lifecompanion.util.javafx.FXControlUtils;
 import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.util.javafx.FXUtils;
+import org.lifecompanion.util.model.ConfigurationComponentUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -86,7 +94,7 @@ public class MiscConfigSubmenu extends ScrollPane implements LCViewInitHelper, U
      * Button to open folders
      */
     private Button buttonOpenRootFolder, buttonOpenCurrentProfileFolder, buttonOpenCurrentConfigFolder, buttonExecuteGC, buttonOpenConfigCleanXml, buttonDetectKeylistDuplicates, buttonSetKeylistNodesShape,
-            buttonGenerateTechDemoConfiguration, buttonGenerateRandomConfiguration,buttonImportJsonFile, buttonGeneratePdf;
+            buttonGenerateTechDemoConfiguration, buttonGenerateRandomConfiguration, buttonImportJsonFile, buttonGeneratePdf, buttonChangeImageDatabase;
 
     private Label labelMemoryInfo;
 
@@ -129,6 +137,8 @@ public class MiscConfigSubmenu extends ScrollPane implements LCViewInitHelper, U
         Label labelTitlePdf = FXControlUtils.createTitleLabel("misc.config.tab.part.pdf");
         buttonGeneratePdf = createButton("button.generate.lists.pdf");
 
+        buttonChangeImageDatabase = createButton("button.change.image.database.dev");
+
         //Add
         VBox boxChildren = new VBox(10,
                 labelExplain,
@@ -161,7 +171,13 @@ public class MiscConfigSubmenu extends ScrollPane implements LCViewInitHelper, U
         // Developers : to test your feature, create and add your nodes here and make sure "org.lifecompanion.debug.dev.env" property is enabled
         if (GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.PROP_DEV_MODE)) {
             boxChildren.getChildren()
-                    .addAll(labelTitleTesting, buttonGenerateTechDemoConfiguration, buttonDetectKeylistDuplicates, buttonGenerateRandomConfiguration, buttonSetKeylistNodesShape, buttonImportJsonFile);
+                    .addAll(labelTitleTesting,
+                            buttonGenerateTechDemoConfiguration,
+                            buttonDetectKeylistDuplicates,
+                            buttonGenerateRandomConfiguration,
+                            buttonSetKeylistNodesShape,
+                            buttonImportJsonFile,
+                            buttonChangeImageDatabase);
         }
     }
 
@@ -245,6 +261,9 @@ public class MiscConfigSubmenu extends ScrollPane implements LCViewInitHelper, U
         this.buttonGeneratePdf.setOnAction(e -> {
             ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.ExportEditActionsToPdfAction(buttonGeneratePdf));
         });
+        this.buttonChangeImageDatabase.setOnAction(e -> {
+            ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.ChangeImageDictionaryAction(buttonChangeImageDatabase));
+        });
     }
 
     private void setKeylistShapes() {
@@ -259,7 +278,6 @@ public class MiscConfigSubmenu extends ScrollPane implements LCViewInitHelper, U
             });
         }
     }
-
 
     private static final Format PRETTY_XML_FORMAT = Format.getPrettyFormat()
             .setEncoding(StandardCharsets.UTF_8.name());

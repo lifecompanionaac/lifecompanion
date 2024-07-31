@@ -2772,7 +2772,13 @@
   <!--org.predict4all.lc.plugin.study.event.categories, org.predict4all.lc.plugin.study.action.categories-->
   <text key="predict4all.action.category.main.name">Predict4All</text>
   <!--scripts.imagedictionaries-->
-  <text key="image.dictionary.author.arasaac">Députation Générale d'Aragon, Sergio Palao</text>
+    <text key="image.dictionary.change.dictionary.header">Changer les images de la configuration</text>
+    <text key="image.dictionary.change.dictionary.explain">Permet de basculer automatiquement d'une banque d'images à une autre : pour chaque image issue de la banque originale, une image de la banque de remplacement sera proposée si disponible.</text>
+    <text key="image.dictionary.change.dictionary.no.source.filter">Issues de toutes les banques</text>
+    <text key="image.dictionary.change.dictionary.source">Changer les images issues de la banque</text>
+    <text key="image.dictionary.change.dictionary.destination">Pour des images de la banque</text>
+
+    <text key="image.dictionary.author.arasaac">Députation Générale d'Aragon, Sergio Palao</text>
   <text key="image.dictionary.author.mulberry.symbols">Copyright 2008-2017 Garry Paxton | Copyright 2018 Steve Lee</text>
   <text key="image.dictionary.author.parlerpictos">© 2020 Parlerpictos | RECIT Adaptation Scolaire</text>
   <text key="image.dictionary.author.sclera">Sclera asb</text>

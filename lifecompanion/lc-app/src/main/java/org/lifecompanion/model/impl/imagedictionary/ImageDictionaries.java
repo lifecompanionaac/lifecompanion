@@ -126,6 +126,10 @@ public enum ImageDictionaries implements LCStateListener, ModeListenerI {
         this.hiddenImageDictionary.setCustomDictionary(true);
     }
 
+    public List<ImageDictionary> getDictionaries() {
+        return dictionaries;
+    }
+
     // ADD/GET IMAGE
     //========================================================================
     public ImageElementI getOrAddToUserImagesDictionary(File imagePath) {

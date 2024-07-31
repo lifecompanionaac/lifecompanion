@@ -53,6 +53,7 @@ import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.impl.notification.LCNotification;
 import org.lifecompanion.model.impl.profile.LCConfigurationDescription;
 import org.lifecompanion.ui.app.profileconfigselect.DuplicateConfigAlertContent;
+import org.lifecompanion.ui.common.control.specific.imagedictionary.ChangeImageDictionarySelectorDialog;
 import org.lifecompanion.ui.common.control.specific.selector.ConfigurationSelectorControl;
 import org.lifecompanion.ui.notification.LCNotificationController;
 import org.lifecompanion.util.DesktopUtils;
@@ -65,6 +66,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.Date;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import static org.lifecompanion.controller.editmode.FileChooserType.EXPORT_PDF;
@@ -642,6 +644,30 @@ public class LCConfigurationActions {
                 exportGridsToPdfTask.setOnSucceeded(ev -> DesktopUtils.openFile(pdfFile));
                 AsyncExecutorController.INSTANCE.addAndExecute(true, false, exportGridsToPdfTask);
             }
+        }
+
+        @Override
+        public String getNameID() {
+            return "config.action.export.lists.pdf";
+        }
+    }
+
+    public static class ChangeImageDictionaryAction implements BaseEditActionI {
+        private final Node source;
+
+        public ChangeImageDictionaryAction(Node source) {
+            this.source = source;
+        }
+
+        @Override
+        public void doAction() throws LCException {
+            ChangeImageDictionarySelectorDialog changeDictionarySelectorDialog = new ChangeImageDictionarySelectorDialog();
+            changeDictionarySelectorDialog.initOwner(FXUtils.getSourceWindow(source));
+            Optional<Pair<String, String>> replacing = changeDictionarySelectorDialog.showAndWait();
+
+            final LCConfigurationI configuration = AppModeController.INSTANCE.getEditModeContext()
+                    .getConfiguration();
+            AsyncExecutorController.INSTANCE.addAndExecute(true, false, new ChangeImageDictionaryTask(configuration, null, null));
         }
 
         @Override
