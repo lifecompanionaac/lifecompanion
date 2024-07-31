@@ -35,6 +35,7 @@ public class LCFileChoosers {
     private static FileChooser keylistFileChooser;
     private static FileChooser profileFileChooser;
     private static FileChooser imageFileChooser;
+    private static FileChooser videoFileChooser;
     private static FileChooser otherFileChooser;
     private static DirectoryChooser directoryChooser;
 
@@ -81,16 +82,16 @@ public class LCFileChoosers {
     }
 
     private static FileChooser getOrInitVideoFileChooser() {
-        if (imageFileChooser == null) {
-            LCFileChoosers.imageFileChooser = new FileChooser();
-            LCFileChoosers.imageFileChooser.setTitle(Translation.getText("file.chooser.video.title"));
+        if (videoFileChooser == null) {
+            LCFileChoosers.videoFileChooser = new FileChooser();
+            LCFileChoosers.videoFileChooser.setTitle(Translation.getText("file.chooser.video.title"));
             String[] exts = new String[LCConstant.VIDEO_EXTENSIONS.length];
             for (int i = 0; i < exts.length; i++) {
                 exts[i] = "*." + LCConstant.VIDEO_EXTENSIONS[i];
             }
-            LCFileChoosers.imageFileChooser.getExtensionFilters().add(new ExtensionFilter(Translation.getText("file.chooser.video.description"), exts));
+            LCFileChoosers.videoFileChooser.getExtensionFilters().add(new ExtensionFilter(Translation.getText("file.chooser.video.description"), exts));
         }
-        return imageFileChooser;
+        return videoFileChooser;
     }
 
     private static DirectoryChooser getOrInitDirectoryChooser() {
