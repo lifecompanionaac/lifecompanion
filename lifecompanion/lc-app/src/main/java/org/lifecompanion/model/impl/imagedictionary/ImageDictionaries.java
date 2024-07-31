@@ -147,6 +147,7 @@ public enum ImageDictionaries implements LCStateListener, ModeListenerI {
 
     private ImageElementI getOrAdd(File imagePath, ImageDictionaryI dictionary, String forceName) {
         try {
+            String originalFileName = FileNameUtils.getNameWithoutExtension(imagePath);
 
             // Hash image to find its ID
             final String id = IOUtils.fileSha256HexToString(imagePath);
@@ -164,7 +165,7 @@ public enum ImageDictionaries implements LCStateListener, ModeListenerI {
                     imagePath = copiedImageTargetForCustomDir;
                 }
                 // Create the updated/new image
-                final String imageName = forceName != null ? forceName : FileNameUtils.getNameWithoutExtension(imagePath);
+                final String imageName = forceName != null ? forceName : originalFileName;
                 ImageElement newerImage = new ImageElement(id,
                         imageName,
                         FluentHashMap.map(UserConfigurationController.INSTANCE.userLanguageProperty().get(), new String[]{imageName}),

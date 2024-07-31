@@ -4,11 +4,15 @@
 
 ### Fonctionnalités
 
+- Ajout d'une action **"Changer de banque d'images"** (dans Paramètres Généraux) : permet d'effectuer un remplacement général d'une banque par une autre
+	- Cela cherche pour la meilleure image de remplacement dans la nouvelle banque
+	- Des corrections manuelles sont ensuite à faire mais cela permet d'automatiser une bonne partie du changement
 - Ajout d'un nouveau mode de sélection "curseur virtuel" : pour l'instant expérimental, pourra servir à l'intégration de périphériques externes (eyetracking, headtracking...)
 
 ### Corrections/ajustements
 
 - Correction de l'affichage de la progression qui pouvait ne pas apparaître dans de rares cas
+- Ticket #363 : les images ajoutées à la main dans une configuration n'utilisaient plus le nom du fichier
 
 ## 1.6.2 - 28/05/2024
 
