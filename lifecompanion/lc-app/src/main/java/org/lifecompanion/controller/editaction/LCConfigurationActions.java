@@ -664,6 +664,8 @@ public class LCConfigurationActions {
 
         @Override
         public void doAction() throws LCException {
+            // TODO : when displayed on general param config, keylist are replaced and then unreplaced because of node duplication
+
             final LCConfigurationI configuration = AppModeController.INSTANCE.getEditModeContext().getConfiguration();
             ChangeImageDictionarySelectorDialog changeDictionarySelectorDialog = new ChangeImageDictionarySelectorDialog(configuration);
             StageUtils.centerOnOwnerOrOnCurrentStage(changeDictionarySelectorDialog);

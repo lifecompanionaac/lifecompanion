@@ -3125,6 +3125,9 @@
   <text key="configuration.selection.print.grids.pdf.configuration.button.title">Exporter les grilles en PDF</text>
   <text key="configuration.selection.change.image.dictionary.button.description">Permet de changer la banque d'images de la configuration en essayant de remplacer les images déjà présentes par celles d'une autre banque d'images.</text>
   <text key="configuration.selection.change.image.dictionary.button.title">Changer de banque d'images</text>
+    <text key="user.config.part.ui.optional.resource">Ressources supplémentaires</text>
+    <text key="optional.resource.explain.label">Permet d'ajouter des ressources supplémentaires à LifeCompanion. Par exemple, permet d'ajouter la base d'image de Makaton pour les adhérents de l'association.</text>
+    <text key="button.add.optional.resource">Ajouter une ressource</text>
   <text key="configuration.selection.remove.configuration.button.description">Supprime la configuration du profil
 		utilisateur actuel.</text>
   <text key="configuration.selection.remove.configuration.button.title">Supprimer la configuration</text>

@@ -92,7 +92,7 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
     private ToggleSwitch toggleSecureGoToEditModeProperty;
     private ToggleSwitch toggleAutoConfigurationProfileBackup;
 
-    private Button buttonCleanupFiles;
+    private Button buttonCleanupFiles, buttonAddOptionalResource;
 
     private ComboBox<String> comboBoxLanguage;
 
@@ -108,6 +108,13 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
         toggleEnableLaunchLCSystemStartup = FXControlUtils.createToggleSwitch("user.config.launch.lc.startup", null);
         toggleEnableRecordAndSendSessionStats = FXControlUtils.createToggleSwitch("user.config.enable.session.stats", null);
         toggleEnableAutoShowVirtualKeyboard = FXControlUtils.createToggleSwitch("user.config.auto.show.virtual.keyboard", null);
+
+        // Optional resource
+        Label labelOptionalResource = FXControlUtils.createTitleLabel("user.config.part.ui.optional.resource");
+        Label labelExplainOptionalResource = new Label(Translation.getText("optional.resource.explain.label"));
+        labelExplainOptionalResource.getStyleClass().addAll("text-wrap-enabled", "text-font-italic", "text-fill-gray");
+        buttonAddOptionalResource = FXControlUtils.createLeftTextButton(Translation.getText("button.add.optional.resource"),
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.PLUS).size(16).color(LCGraphicStyle.MAIN_DARK), null);
 
         // Use mode
         Label labelUseMode = FXControlUtils.createTitleLabel("user.config.part.ui.use.mode");
@@ -199,6 +206,7 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
         VBox totalBox = new VBox(10.0,
                 labelConfigGeneral, toggleEnableAutoShowVirtualKeyboard, toggleEnableLaunchLCSystemStartup, toggleEnableRecordAndSendSessionStats,
                 labelUseMode, toggleSecureGoToEditModeProperty, labelExplainSecuredConfigMode, toggleDisabledExitInUseMode, labelExplainExitUseMode,
+                labelOptionalResource, labelExplainOptionalResource, buttonAddOptionalResource,
                 labelConfigStylePart, gridPaneStyleParam,
                 labelConfigTitle, gridPaneConfiguration,
                 labelConfigFiles,
@@ -286,6 +294,9 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
             cleanupTempFileTask.setOnSucceeded(et -> LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo(Translation.getText("notification.cleanup.file.success",
                     FileNameUtils.getFileSize(cleanupTempFileTask.getValue())))));
             AsyncExecutorController.INSTANCE.addAndExecute(true, false, cleanupTempFileTask);
+        });
+        buttonAddOptionalResource.setOnAction(e -> {
+
         });
     }
 

@@ -234,6 +234,7 @@ public enum InstallationController implements LCStateListener {
     }
 
     public void setInstallationRegistrationInformationSetCallback(Runnable installationRegistrationInformationSetCallback) {
+        // TODO list + call it immediately if already filled
         this.installationRegistrationInformationSetCallback = installationRegistrationInformationSetCallback;
     }
 

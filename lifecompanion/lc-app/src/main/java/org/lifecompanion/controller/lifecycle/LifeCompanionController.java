@@ -20,6 +20,7 @@
 package org.lifecompanion.controller.lifecycle;
 
 import org.lifecompanion.controller.appinstallation.InstallationController;
+import org.lifecompanion.controller.appinstallation.OptionalResourceController;
 import org.lifecompanion.controller.categorizedelement.useaction.UseActionController;
 import org.lifecompanion.controller.editaction.AsyncExecutorController;
 import org.lifecompanion.controller.editmode.ErrorHandlingController;
@@ -75,6 +76,8 @@ public enum LifeCompanionController {
 
             HubController.INSTANCE,
             HubService.INSTANCE,
+
+            OptionalResourceController.INSTANCE,
 
             TrainingController.INSTANCE,
     };
