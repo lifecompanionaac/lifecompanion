@@ -100,7 +100,7 @@ public class GeneralInformationConfigurationStepView extends BorderPane implemen
         labelName = createInfoLabel();
         linkWebsiteUrl = new Hyperlink();
         linkWebsiteUrl.setAlignment(Pos.CENTER_RIGHT);
-        GridPane.setHalignment(linkWebsiteUrl,HPos.RIGHT);
+        GridPane.setHalignment(linkWebsiteUrl, HPos.RIGHT);
         Label labelNameField = new Label(Translation.getText("general.configuration.info.label.name"));
         labelNameField.setMinWidth(GeneralConfigurationStepViewI.LEFT_COLUMN_MIN_WIDTH);
         Label labelAuthorField = new Label(Translation.getText("general.configuration.info.label.author"));
@@ -158,7 +158,10 @@ public class GeneralInformationConfigurationStepView extends BorderPane implemen
         final Node pdfActionNode = FXControlUtils.createActionTableEntry("configuration.selection.print.grids.pdf.configuration.button",
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.FILE_PDF_ALT).size(30).color(LCGraphicStyle.SECOND_DARK),
                 () -> ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.ExportEditGridsToPdfAction(gridPaneTotal)));
-        VBox boxActions = new VBox(GeneralConfigurationStepViewI.GRID_V_GAP, labelPartActions, pdfActionNode);
+        final Node changeImageDictionaryAction = FXControlUtils.createActionTableEntry("configuration.selection.change.image.dictionary.button",
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.IMAGE).size(30).color(LCGraphicStyle.MAIN_DARK),
+                () -> ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.ChangeImageDictionaryAction(gridPaneTotal)));
+        VBox boxActions = new VBox(GeneralConfigurationStepViewI.GRID_V_GAP, labelPartActions, pdfActionNode, changeImageDictionaryAction);
         gridPaneTotal.add(boxActions, 0, gridRowIndex, 2, 2);
 
         gridPaneTotal.setPadding(new Insets(GeneralConfigurationStepViewI.PADDING));

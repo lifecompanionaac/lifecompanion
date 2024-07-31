@@ -34,7 +34,7 @@ import java.util.Map;
 
 public class ImageDictionary implements ImageDictionaryI {
     private static final Logger LOGGER = LoggerFactory.getLogger(ImageDictionary.class);
-
+    private String id;
     private String name;
     private String description;
     private String author;
@@ -48,6 +48,15 @@ public class ImageDictionary implements ImageDictionaryI {
 
     public ImageDictionary() {
         images = FXCollections.observableArrayList();
+    }
+
+    @Override
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     @Override

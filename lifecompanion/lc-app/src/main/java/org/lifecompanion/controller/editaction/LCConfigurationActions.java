@@ -45,6 +45,7 @@ import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.framework.utils.LCNamedThreadFactory;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.editaction.BaseEditActionI;
+import org.lifecompanion.model.api.imagedictionary.ImageDictionaryI;
 import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
 import org.lifecompanion.model.api.profile.LCProfileI;
 import org.lifecompanion.model.impl.configurationcomponent.LCConfigurationComponent;
@@ -61,11 +62,13 @@ import org.lifecompanion.util.ThreadUtils;
 import org.lifecompanion.util.javafx.DialogUtils;
 import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.util.javafx.FXUtils;
+import org.lifecompanion.util.javafx.StageUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -661,13 +664,24 @@ public class LCConfigurationActions {
 
         @Override
         public void doAction() throws LCException {
-            ChangeImageDictionarySelectorDialog changeDictionarySelectorDialog = new ChangeImageDictionarySelectorDialog();
-            changeDictionarySelectorDialog.initOwner(FXUtils.getSourceWindow(source));
-            Optional<Pair<String, String>> replacing = changeDictionarySelectorDialog.showAndWait();
+            final LCConfigurationI configuration = AppModeController.INSTANCE.getEditModeContext().getConfiguration();
+            ChangeImageDictionarySelectorDialog changeDictionarySelectorDialog = new ChangeImageDictionarySelectorDialog(configuration);
+            StageUtils.centerOnOwnerOrOnCurrentStage(changeDictionarySelectorDialog);
 
-            final LCConfigurationI configuration = AppModeController.INSTANCE.getEditModeContext()
-                    .getConfiguration();
-            AsyncExecutorController.INSTANCE.addAndExecute(true, false, new ChangeImageDictionaryTask(configuration, null, null));
+            changeDictionarySelectorDialog.showAndWait().ifPresent(replacing -> {
+                if (replacing.getValue() != null) {
+                    ChangeImageDictionaryTask changeImageDictionaryTask = new ChangeImageDictionaryTask(configuration, replacing.getKey(), replacing.getValue());
+                    changeImageDictionaryTask.setOnSucceeded(e -> {
+                        List<KeyActions.ChangeImageAction> changeImageActions = changeImageDictionaryTask.getValue();
+                        ConfigActionController.INSTANCE.executeAction(new UndoRedoActions.MultiActionWrapperAction("task.change.image.dictionary.name", changeImageActions));
+                        LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo(Translation.getText("notification.info.image.dictionary.changes.done",
+                                changeImageActions.size())));
+                    });
+                    AsyncExecutorController.INSTANCE.addAndExecute(true, false, changeImageDictionaryTask);
+                } else {
+                    LCNotificationController.INSTANCE.showNotification(LCNotification.createWarning("notification.warn.no.dictionary.selected"));
+                }
+            });
         }
 
         @Override

@@ -31,6 +31,7 @@ public interface ImageDictionaryI {
 
     // INFO
     //========================================================================
+    String getId();
 
     /**
      * @return the name of this dictionary

@@ -32,25 +32,38 @@ import javafx.stage.StageStyle;
 import javafx.util.Pair;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.imagedictionary.ImageDictionaryI;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.imagedictionary.ImageDictionaries;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStepViewI;
 import org.lifecompanion.ui.common.pane.specific.cell.SimpleTextListCell;
+import org.lifecompanion.ui.common.pane.specific.cell.TitleAndDescriptionListCell;
 import org.lifecompanion.ui.controlsfx.control.ToggleSwitch;
 import org.lifecompanion.util.javafx.FXControlUtils;
+import org.lifecompanion.util.model.CountingMap;
+import org.lifecompanion.util.model.ImageDictionaryUtils;
 
-public class ChangeImageDictionarySelectorDialog extends Dialog<Pair<String, String>> implements LCViewInitHelper {
+public class ChangeImageDictionarySelectorDialog extends Dialog<Pair<ImageDictionaryI, ImageDictionaryI>> implements LCViewInitHelper {
 
 
-    public ChangeImageDictionarySelectorDialog() {
+    private final LCConfigurationI configuration;
+
+    public ChangeImageDictionarySelectorDialog(LCConfigurationI configuration) {
+        this.configuration = configuration;
         initAll();
     }
 
 
     @Override
     public void initUI() {
+        // Init data
         ObservableList<ImageDictionaryI> dictionaryList = FXCollections.observableArrayList(ImageDictionaries.INSTANCE.getDictionaries());
+        CountingMap<ImageDictionaryI> counts = new CountingMap<>();
+        ImageDictionaryUtils.forEachImageUseComponentWithImage(configuration, (comp, image) -> {
+            if (image.getDictionary() != null)
+                counts.increment(image.getDictionary());
+        });
 
         // Dialog config
         this.setTitle(LCConstant.NAME);
@@ -64,7 +77,7 @@ public class ChangeImageDictionarySelectorDialog extends Dialog<Pair<String, Str
 
         Label labelSource = new Label(Translation.getText("image.dictionary.change.dictionary.source"));
         labelSource.getStyleClass().addAll("text-weight-bold");
-        ComboBox<ImageDictionaryI> comboBoxSource = createImageDictionaryCombobox(dictionaryList);
+        ComboBox<ImageDictionaryI> comboBoxSource = createCombobox(dictionaryList, counts);
 
         ToggleSwitch toggleSwitchNoSourceFilter = FXControlUtils.createToggleSwitch("image.dictionary.change.dictionary.no.source.filter", null);
         GridPane.setMargin(toggleSwitchNoSourceFilter, new Insets(0, 0, 10.0, 0));
@@ -73,7 +86,7 @@ public class ChangeImageDictionarySelectorDialog extends Dialog<Pair<String, Str
 
         Label labelDestination = new Label(Translation.getText("image.dictionary.change.dictionary.destination"));
         labelDestination.getStyleClass().addAll("text-weight-bold");
-        ComboBox<ImageDictionaryI> comboBoxReplacing = createImageDictionaryCombobox(dictionaryList);
+        ComboBox<ImageDictionaryI> comboBoxReplacing = createCombobox(dictionaryList, null);
 
         GridPane gridPaneContent = new GridPane();
         gridPaneContent.setVgap(GeneralConfigurationStepViewI.GRID_V_GAP);
@@ -91,19 +104,25 @@ public class ChangeImageDictionarySelectorDialog extends Dialog<Pair<String, Str
         this.getDialogPane().setHeaderText(Translation.getText("image.dictionary.change.dictionary.header"));
         this.getDialogPane().setContent(gridPaneContent);
         this.getDialogPane().getStylesheets().addAll(LCConstant.CSS_STYLE_PATH);
-        this.setResultConverter(dialogButton -> dialogButton == ButtonType.OK ? new Pair<>(toggleSwitchNoSourceFilter.isSelected() ? null : comboBoxSource.getValue().getName(),
-                comboBoxReplacing.getValue().getName()) : null);
+        this.setResultConverter(dialogButton -> dialogButton == ButtonType.OK ? new Pair<>(toggleSwitchNoSourceFilter.isSelected() ? null : comboBoxSource.getValue(),
+                comboBoxReplacing.getValue()) : null);
     }
 
-    private static ComboBox<ImageDictionaryI> createImageDictionaryCombobox(ObservableList<ImageDictionaryI> dictionaryList) {
-        ComboBox<ImageDictionaryI> comboBoxSource = new ComboBox<>(dictionaryList);
-        comboBoxSource.setButtonCell(new ImageDictionaryListCell());
-        comboBoxSource.setCellFactory(lv -> new ImageDictionaryListCell());
-        return comboBoxSource;
+    private static ComboBox<ImageDictionaryI> createCombobox(ObservableList<ImageDictionaryI> dictionaryList, CountingMap<ImageDictionaryI> counts) {
+        ComboBox<ImageDictionaryI> comboBox = new ComboBox<>(dictionaryList);
+        comboBox.setPrefWidth(485);
+        comboBox.setButtonCell(new ImageDictionaryListCell());
+        comboBox.setCellFactory(counts != null ? lv -> new ImageDictionaryWithCountListCell(counts) : lv -> new ImageDictionaryListCell());
+        return comboBox;
+    }
+
+    private static class ImageDictionaryWithCountListCell extends TitleAndDescriptionListCell<ImageDictionaryI> {
+        public ImageDictionaryWithCountListCell(CountingMap<ImageDictionaryI> counts) {
+            super(ImageDictionaryI::getName, d -> Translation.getText("image.dictionary.change.dictionary.usage.count", counts.getCount(d)));
+        }
     }
 
     private static class ImageDictionaryListCell extends SimpleTextListCell<ImageDictionaryI> {
-
         public ImageDictionaryListCell() {
             super(ImageDictionaryI::getName);
         }

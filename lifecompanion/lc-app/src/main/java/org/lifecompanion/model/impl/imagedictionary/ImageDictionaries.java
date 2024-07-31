@@ -58,6 +58,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -234,6 +235,14 @@ public enum ImageDictionaries implements LCStateListener, ModeListenerI {
     private static final Comparator<Pair<ImageElementI, Double>> ALPHABETICAL_MAP_COMPARATOR = Comparator.comparing(e -> StringUtils.trimToEmpty(e.getKey().getName()));
 
     public List<Pair<ImageDictionaryI, List<List<ImageElementI>>>> searchImage(String rawSearchString, boolean displayAll, double minScore) {
+        return searchImage(rawSearchString, displayAll, minScore, null);
+    }
+
+    public List<Pair<ImageDictionaryI, List<List<ImageElementI>>>> searchImage(String rawSearchString) {
+        return searchImage(rawSearchString, StringUtils.isBlank(rawSearchString), ConfigurationComponentUtils.SIMILARITY_CONTAINS / 2.0);
+    }
+
+    public List<Pair<ImageDictionaryI, List<List<ImageElementI>>>> searchImage(String rawSearchString, boolean displayAll, double minScore, Predicate<? super ImageDictionary> imageDictionaryFilter) {
         long start = System.currentTimeMillis();
         List<Pair<ImageDictionaryI, List<List<ImageElementI>>>> result = new ArrayList<>();
         String searchFull = StringUtils.stripToEmpty(rawSearchString).toLowerCase();
@@ -241,6 +250,7 @@ public enum ImageDictionaries implements LCStateListener, ModeListenerI {
         // TODO : convert to full stream implementation with map ?
         this.dictionaries
                 .stream()
+                .filter(d -> imageDictionaryFilter == null || imageDictionaryFilter.test(d))
                 .sorted((d1, d2) ->
                         Boolean.compare(LCStateController.INSTANCE.getFavoriteImageDictionaries().contains(d2.getName()),
                                 LCStateController.INSTANCE.getFavoriteImageDictionaries().contains(d1.getName()))
@@ -269,10 +279,6 @@ public enum ImageDictionaries implements LCStateListener, ModeListenerI {
                 result.size(),
                 rawSearchString);
         return result;
-    }
-
-    public List<Pair<ImageDictionaryI, List<List<ImageElementI>>>> searchImage(String rawSearchString) {
-        return searchImage(rawSearchString, StringUtils.isBlank(rawSearchString), ConfigurationComponentUtils.SIMILARITY_CONTAINS / 2.0);
     }
 
     public double getSimilarityScore(String[] keywords, String searchFull) {
@@ -336,6 +342,7 @@ public enum ImageDictionaries implements LCStateListener, ModeListenerI {
                 .getPath() + LCConstant.IMAGE_RESOURCES_DIR_NAME + LCConstant.DICTIONARY_NAME_USER_IMAGES));
         if (userImagesDictionary == null) {
             userImagesDictionary = new ImageDictionary();
+            this.userImagesDictionary.setId(LCConstant.DICTIONARY_ID_USER_IMAGES);
             this.userImagesDictionary.setName(Translation.getText("image.dictionary.default.custom.dic"));
             this.userImagesDictionary.setCustomDictionary(true);
             this.dictionaries.add(userImagesDictionary);
@@ -344,6 +351,7 @@ public enum ImageDictionaries implements LCStateListener, ModeListenerI {
                 .getPath() + LCConstant.IMAGE_RESOURCES_DIR_NAME + LCConstant.DICTIONARY_NAME_CONFIGURATION_IMAGES));
         if (configurationImageDictionary == null) {
             configurationImageDictionary = new ImageDictionary();
+            this.userImagesDictionary.setId(LCConstant.DICTIONARY_ID_CONFIGURATION_IMAGES);
             this.configurationImageDictionary.setName(Translation.getText("image.dictionary.default.imported.dic"));
             this.configurationImageDictionary.setCustomDictionary(true);
             this.dictionaries.add(configurationImageDictionary);
@@ -355,6 +363,7 @@ public enum ImageDictionaries implements LCStateListener, ModeListenerI {
         if (dictionaryFile.exists()) {
             try (Reader is = new BufferedReader(new InputStreamReader(new FileInputStream(dictionaryFile), StandardCharsets.UTF_8))) {
                 ImageDictionary imageDictionary = JsonHelper.GSON.fromJson(is, ImageDictionary.class);
+                imageDictionary.setId(FileNameUtils.getNameWithoutExtension(dictionaryFile));
                 imageDictionary.setImageDirectory(new File(dictionaryFile.getParentFile() + File.separator + FileNameUtils.getNameWithoutExtension(dictionaryFile)));
                 imageDictionary.loaded(this.allImages);
                 this.dictionaries.add(imageDictionary);

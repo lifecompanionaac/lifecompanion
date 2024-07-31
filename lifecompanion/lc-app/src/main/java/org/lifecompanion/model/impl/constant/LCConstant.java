@@ -184,8 +184,10 @@ public class LCConstant {
     public static final String DEFAULT_IMAGE_DICTIONARIES = ApplicationConstant.DIR_NAME_APPLICATION_DATA + IMAGE_RESOURCES_DIR_NAME;
     public static final String THUMBNAIL_DIR_NAME = "thumbnails";
     public static final String VIDEO_THUMBNAIL_DIR_NAME = "videos-thumbnails";
-    public static final String DICTIONARY_NAME_USER_IMAGES = "user-images.json";
-    public static final String DICTIONARY_NAME_CONFIGURATION_IMAGES = "configuration-images.json";
+    public static final String DICTIONARY_ID_USER_IMAGES = "user-images";
+    public static final String DICTIONARY_NAME_USER_IMAGES = DICTIONARY_ID_USER_IMAGES + ".json";
+    public static final String DICTIONARY_ID_CONFIGURATION_IMAGES = "configuration-images";
+    public static final String DICTIONARY_NAME_CONFIGURATION_IMAGES = DICTIONARY_ID_CONFIGURATION_IMAGES + ".json";
     //========================================================================
 
     // PLUGINS

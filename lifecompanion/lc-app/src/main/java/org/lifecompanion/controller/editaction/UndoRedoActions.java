@@ -93,9 +93,9 @@ public class UndoRedoActions {
 
     public static class MultiActionWrapperAction implements UndoRedoActionI {
         private final String nameId;
-        private final List<UndoRedoActionI> actions;
+        private final List<? extends UndoRedoActionI> actions;
 
-        public MultiActionWrapperAction(String nameId, List<UndoRedoActionI> actions) {
+        public MultiActionWrapperAction(String nameId, List<? extends UndoRedoActionI> actions) {
             this.nameId = nameId;
             this.actions = actions;
         }

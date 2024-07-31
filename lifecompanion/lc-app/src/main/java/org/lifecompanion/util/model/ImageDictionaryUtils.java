@@ -19,12 +19,43 @@
 
 package org.lifecompanion.util.model;
 
+import org.lifecompanion.model.api.configurationcomponent.DisplayableComponentI;
 import org.lifecompanion.model.api.configurationcomponent.ImageUseComponentI;
+import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.configurationcomponent.TreeDisplayableComponentI;
+import org.lifecompanion.model.api.imagedictionary.ImageElementI;
 import org.lifecompanion.model.impl.imagedictionary.ImageDictionaries;
+import org.lifecompanion.model.impl.imagedictionary.ImageElement;
 import org.lifecompanion.util.ThreadUtils;
 
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+
 public class ImageDictionaryUtils {
+
+    public static void forEachImageUseComponentWithImage(LCConfigurationI configuration, BiConsumer<ImageUseComponentI, ImageElementI> action) {
+        forEachImageUseComponent(configuration, imageUseComponent -> {
+            ImageElementI imageElement = imageUseComponent.imageVTwoProperty().get();
+            if (imageElement != null) {
+                action.accept(imageUseComponent, imageElement);
+            }
+        });
+    }
+
+    public static void forEachImageUseComponent(LCConfigurationI configuration, Consumer<ImageUseComponentI> action) {
+        for (DisplayableComponentI comp : configuration.getAllComponent().values()) {
+            ifImageUseComponent(comp, action);
+        }
+        configuration.rootKeyListNodeProperty().get().traverseTreeToBottom(node -> ifImageUseComponent(node, action));
+    }
+
+    private static void ifImageUseComponent(Object object, Consumer<ImageUseComponentI> action) {
+        if (object instanceof ImageUseComponentI imageUseComponent) {
+            action.accept(imageUseComponent);
+        }
+    }
+
+
     public static void loadAllImagesIn(String loadRequestId, long timeout, TreeDisplayableComponentI component) {
         ConfigurationComponentUtils.exploreTree(component, node -> {
             if (node instanceof ImageUseComponentI) {

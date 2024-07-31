@@ -2774,9 +2774,13 @@
   <!--scripts.imagedictionaries-->
     <text key="image.dictionary.change.dictionary.header">Changer les images de la configuration</text>
     <text key="image.dictionary.change.dictionary.explain">Permet de basculer automatiquement d'une banque d'images à une autre : pour chaque image issue de la banque originale, une image de la banque de remplacement sera proposée si disponible.</text>
-    <text key="image.dictionary.change.dictionary.no.source.filter">Issues de toutes les banques</text>
+    <text key="image.dictionary.change.dictionary.no.source.filter">Toutes les images</text>
     <text key="image.dictionary.change.dictionary.source">Changer les images issues de la banque</text>
     <text key="image.dictionary.change.dictionary.destination">Pour des images de la banque</text>
+    <text key="image.dictionary.change.dictionary.usage.count">{} image(s) de cette banque utilisée(s) dans la configuration</text>
+    <text key="notification.warn.no.dictionary.selected">Pas de banque de remplacement sélectionnée</text>
+    <text key="notification.info.image.dictionary.changes.done">{} remplacement(s) d'image effectué(s)</text>
+    <text key="task.change.image.dictionary.name">Remplacement des image(s) de la configuration</text>
 
     <text key="image.dictionary.author.arasaac">Députation Générale d'Aragon, Sergio Palao</text>
   <text key="image.dictionary.author.mulberry.symbols">Copyright 2008-2017 Garry Paxton | Copyright 2018 Steve Lee</text>
@@ -3119,6 +3123,8 @@
   <text key="configuration.selection.duplicate.configuration.button.description">Permet de dupliquer cette configuration et ainsi faire des modifications sur une nouvelle version sans modifier la version actuelle. La configuration dupliquée sera ajoutée dans les configurations du profil.</text>
   <text key="configuration.selection.print.grids.pdf.configuration.button.description">Permet d'exporter toutes les grilles de la configuration dans un fichier PDF pour par exemple les imprimer.</text>
   <text key="configuration.selection.print.grids.pdf.configuration.button.title">Exporter les grilles en PDF</text>
+  <text key="configuration.selection.change.image.dictionary.button.description">Permet de changer la banque d'images de la configuration en essayant de remplacer les images déjà présentes par celles d'une autre banque d'images.</text>
+  <text key="configuration.selection.change.image.dictionary.button.title">Changer de banque d'images</text>
   <text key="configuration.selection.remove.configuration.button.description">Supprime la configuration du profil
 		utilisateur actuel.</text>
   <text key="configuration.selection.remove.configuration.button.title">Supprimer la configuration</text>
