@@ -125,8 +125,9 @@ public class PronunciationExceptionView extends BorderPane implements LCViewInit
         this.buttonAdd.setOnAction((event) -> {
             PronunciationException added = new PronunciationException();
             items.add(added);
-            // TODO : focus on original field
-            this.tableViewExceptions.edit(items.indexOf(added), this.originalWordColumn);
+            int row = items.indexOf(added);
+            this.tableViewExceptions.edit(row, this.originalWordColumn);
+            this.tableViewExceptions.getFocusModel().focus(row,this.originalWordColumn);
         });
         this.buttonRemove.setOnAction((event) -> {
             PronunciationExceptionI selectedItem = this.tableViewExceptions.getSelectionModel().getSelectedItem();
