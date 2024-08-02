@@ -30,7 +30,7 @@ import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
 import org.lifecompanion.model.impl.categorizedelement.useaction.available.TimerStartAction;
 import org.lifecompanion.ui.common.control.generic.DurationPickerControl;
 
-public class TimerActionConfigView extends VBox implements UseActionConfigurationViewI<TimerStartAction> {
+public class TimerStartConfigView extends VBox implements UseActionConfigurationViewI<TimerStartAction> {
 
     private DurationPickerControl durationPickerAutomaticItemTimeMs;
 
