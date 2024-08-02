@@ -18,6 +18,7 @@
 - Ticket #362 : correction d'un problème qui n'ouvrait parfois pas le bon sélecteur de fichiers images/vidéos
 - Ticket #363 : les images ajoutées à la main dans une configuration n'utilisaient plus le nom du fichier
 - Ticket #367 : ajout d'un bouton "Fermer" sur la fenêtre d'information sur les formations
+- Ticket #358 : correction d'un problème d'affichage sur une action
 
 ## 1.6.2 - 28/05/2024
 
