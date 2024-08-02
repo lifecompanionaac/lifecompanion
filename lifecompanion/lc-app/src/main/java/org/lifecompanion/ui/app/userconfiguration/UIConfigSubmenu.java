@@ -258,6 +258,10 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
         this.comboBoxLanguage.getSelectionModel().select(UserConfigurationController.INSTANCE.userLanguageProperty().get());
         this.toggleEnableSpeechOptimization.setSelected(UserConfigurationController.INSTANCE.enableSpeechOptimizationProperty().get());
 
+        updateInstalledOptions();
+    }
+
+    private void updateInstalledOptions() {
         boolean makatonInstalled = OptionalResourceController.INSTANCE.getInstalledResource().contains(OptionalResourceEnum.MAKATON);
         buttonAddMakaton.visibleProperty().set(!makatonInstalled);
         labelMakatonEnabled.visibleProperty().set(makatonInstalled);
@@ -308,11 +312,7 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
             LargeTextInputDialog emailDialog = new LargeTextInputDialog(Translation.getText("optional.resource.add.makaton.message"), "Email adhérent");
             emailDialog.setHeaderText(Translation.getText("optional.resource.add.makaton.header"));
             StageUtils.centerOnOwnerOrOnCurrentStage(emailDialog);
-            emailDialog.showAndWait().ifPresent(email -> {
-                InstallOptionalResourceTask installOptionalResourceTask = OptionalResourceController.INSTANCE.installResource(OptionalResourceEnum.MAKATON, email);
-                AsyncExecutorController.INSTANCE.addAndExecute(true, false, installOptionalResourceTask);
-            });
-
+            emailDialog.showAndWait().ifPresent(email -> AsyncExecutorController.INSTANCE.addAndExecute(true, false, OptionalResourceController.INSTANCE.installResource(OptionalResourceEnum.MAKATON, this::updateInstalledOptions, email)));
         });
     }
 

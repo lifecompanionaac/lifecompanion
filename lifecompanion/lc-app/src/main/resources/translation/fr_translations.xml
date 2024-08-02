@@ -3864,11 +3864,11 @@
     <text key="selection.mode.virtual.cursor.size">Taille</text>
     <text key="selection.mode.virtual.cursor.color">Couleur</text>
     <text key="exception.makaton.400.header">Vous n'avez pas accès à la banque Makaton</text>
-    <text key="exception.makaton.400.message">Il semblerait que l'email entré "{}" n'a pas accès à la banque Makaton. Vous pouvez vérifier :\n - que vous avez bien inscrit le même email que celui utilisé pour vous connecter à l'espace adhérent AAD Makaton\n - que votre abonnement est à jour\n\nSi votre abonnement vient d'être créé ou renouvelé, il peut parfois être nécessaire d'attendre 24h avant d'avoir accès à la banque Makaton pour LifeCompanion.</text>
+    <text key="exception.makaton.400.message">Il semblerait que l'email entré "{}" n'a pas accès à la banque Makaton. Vous pouvez vérifier :\n - que vous avez bien inscrit le même email que celui utilisé pour vous connecter à l'espace adhérent AAD Makaton\n - que votre adhésion est en cours de validité\n\nSi votre adhésion vient d'être créée ou renouvelée, il peut parfois être nécessaire d'attendre 24h avant d'avoir accès à la banque Makaton pour LifeCompanion.</text>
     <text key="exception.makaton.other.header">Une erreur inconnue s'est produite</text>
     <text key="exception.makaton.other.message">Il n'est pas possible de vérifier votre accès à la banque Makaton. Veuillez réessayer plus tard. Si le problème persiste, n'hésitez pas à nous contacter.</text>
     <text key="optional.resource.add.makaton.header">Ajouter la banque Makaton</text>
-    <text key="optional.resource.add.makaton.message">Afin d'ajouter la banque Makaton, vous devez entrer l'email utilisé pour vous connecter à votre espace adhérent AAD Makaton. Votre abonnement doit être valide et avoir été créé/renouvelé depuis au moins 24h.\nL'utilisation de la banque Makaton est limité à trois installations de LifeCompanion.</text>
+    <text key="optional.resource.add.makaton.message">Afin d'ajouter la banque Makaton, vous devez entrer l'email utilisé pour vous connecter à votre espace adhérent AAD Makaton. Votre adhésion doit être en cours de validité et avoir été créée/renouvelée depuis au moins 24h.\nL'utilisation de la banque Makaton est limité à trois installations de LifeCompanion.</text>
     <text key="makaton.too.many.install.header">Limite d'installation atteinte</text>
     <text key="button.type.manage.installation">Gérer les installations</text>
     <text key="button.type.contact.lifecompanion">Nous contacter</text>

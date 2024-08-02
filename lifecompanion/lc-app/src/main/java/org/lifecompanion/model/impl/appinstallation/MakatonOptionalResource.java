@@ -48,6 +48,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.BiConsumer;
 
 import static org.lifecompanion.model.impl.constant.LCConstant.URL_CONTACT_US;
@@ -104,8 +105,9 @@ public class MakatonOptionalResource implements OptionalResourceI {
         LCProfileI currentProfile = ProfileController.INSTANCE.currentProfileProperty().get();
         String installationId = InstallationController.INSTANCE.getInstallationRegistrationInformation().getInstallationId();//"207-816"
         final ApplicationBuildProperties buildProperties = InstallationController.INSTANCE.getBuildProperties();
-        String name = (currentProfile != null ? currentProfile.nameProperty().get() : "") + " / " + System.getProperty("user.name") + " / " + Translation.getText(SystemType.current()
-                .getLabelID());
+        String name = StringUtils.safeSubstring((currentProfile != null ? currentProfile.nameProperty()
+                .get() : "") + " / " + System.getProperty("user.name") + " / " + Translation.getText(SystemType.current()
+                .getLabelID()), 0, 255);
         File zipFileTempDir = org.lifecompanion.util.IOUtils.getTempFile("makaton", ".zip");
 
         LOGGER.info("Will try to install makaton for email {} and installation id {}", email, installationId);
@@ -122,12 +124,14 @@ public class MakatonOptionalResource implements OptionalResourceI {
                 // Download
                 String deliverFileUrl = JsonHelper.GSON.fromJson(installResponse.body().string(), InstallSuccessDto.class).data.deliverFile;
                 LOGGER.info("Start downloading makaton to {}", deliverFileUrl);
-                downloadToFile(okHttpClient, progress, deliverFileUrl, zipFileTempDir);
+                long totalSize = downloadToFile(okHttpClient, progress, deliverFileUrl, zipFileTempDir);
 
                 // Unzip
                 File imageDictionariesRoot = new File(LCConstant.DEFAULT_IMAGE_DICTIONARIES);
                 LOGGER.info("Download finished, will now install it in image dictionary folder : {}", imageDictionariesRoot.getAbsolutePath());
-                IOUtils.unzipInto(zipFileTempDir, imageDictionariesRoot, null); // TODO : progress ?
+                AtomicLong totalCount = new AtomicLong(totalSize);
+                long totalProgress = totalSize * 2;
+                IOUtils.unzipIntoCounting(zipFileTempDir, imageDictionariesRoot, null, p -> progress.accept(totalCount.addAndGet(p), totalProgress));
 
                 // Install
                 ImageDictionaries.INSTANCE.loadImageDictionary(getMakatonDictionaryFile());
@@ -165,19 +169,22 @@ public class MakatonOptionalResource implements OptionalResourceI {
         LCException.newException().withDirectlyShowExceptionDialog(true).withHeaderId("exception.makaton.400.header").withMessage("exception.makaton.400.message", email).buildAndThrow();
     }
 
-    private void downloadToFile(OkHttpClient okHttpClient, BiConsumer<Long, Long> progress, String deliverFileUrl, File zipFileTempDir) throws IOException {
+    private long downloadToFile(OkHttpClient okHttpClient, BiConsumer<Long, Long> progress, String deliverFileUrl, File zipFileTempDir) throws IOException {
+        AtomicLong totalCount = new AtomicLong();
         try (Response downloadResponse = okHttpClient.newCall(new Request.Builder()
                 .url(deliverFileUrl)
                 .addHeader("Connection", "close")
                 .build()).execute()) {
             if (downloadResponse.isSuccessful()) {
+                long totalSize = Long.parseLong(downloadResponse.header("Content-Length")) * 2;
                 try (OutputStream os = new BufferedOutputStream(new FileOutputStream(zipFileTempDir))) {
                     try (InputStream is = new BufferedInputStream(downloadResponse.body().byteStream())) {
-                        IOUtils.copyStreamCounting(is, os, null);// TODO : progress ?
+                        IOUtils.copyStreamCounting(is, os, p -> progress.accept(totalCount.addAndGet(p), totalSize));
                     }
                 }
             }
         }
+        return totalCount.get();
     }
 
     private static class ErrorsDto {

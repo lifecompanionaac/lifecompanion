@@ -73,7 +73,12 @@ public enum OptionalResourceController implements LCStateListener {
     public void lcExit() {
     }
 
-    public InstallOptionalResourceTask installResource(OptionalResourceEnum optionalResourceEnum, Object... args) {
-        return new InstallOptionalResourceTask(optionalResourceEnum, args);
+    public InstallOptionalResourceTask installResource(OptionalResourceEnum optionalResourceEnum, Runnable onSuccess, Object... args) {
+        InstallOptionalResourceTask installOptionalResourceTask = new InstallOptionalResourceTask(optionalResourceEnum, args);
+        installOptionalResourceTask.setOnSucceeded(e -> {
+            installedResource.add(optionalResourceEnum);
+            onSuccess.run();
+        });
+        return installOptionalResourceTask;
     }
 }
