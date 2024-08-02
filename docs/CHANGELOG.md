@@ -8,6 +8,9 @@
 	- Cela cherche pour la meilleure image de remplacement dans la nouvelle banque
 	- Des corrections manuelles sont ensuite à faire mais cela permet d'automatiser une bonne partie du changement
 - Ajout d'un nouveau mode de sélection "curseur virtuel" : pour l'instant expérimental, pourra servir à l'intégration de périphériques externes (eyetracking, headtracking...)
+- Ajout de la possibilité d'intégrer **[la base de pictogramme de Makaton](https://www.makaton.fr/)** !
+	- Pour cela vous devez avoir une adhésion valide à AAD Makaton
+	- Puis l'ajouter avec votre identifiant de l'espace adhérent dans "Préférences & Infos"
 
 ### Corrections/ajustements
 

@@ -216,7 +216,7 @@ public class GeneralConfigurationScene extends Scene implements LCViewInitHelper
         clearCurrentStepAndDoOnEverySteps(GeneralConfigurationStepViewI::cancelChanges);
     }
 
-    void okSelected() {
+   public void okSelected() {
         clearCurrentStepAndDoOnEverySteps(GeneralConfigurationStepViewI::saveChanges);
         AppModeController.INSTANCE.getEditModeContext().increaseUnsavedActionOnCurrentConfiguration();
     }

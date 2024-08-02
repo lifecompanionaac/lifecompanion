@@ -41,6 +41,7 @@ import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
+import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationScene;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStep;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStepViewI;
 import org.lifecompanion.ui.common.control.generic.colorpicker.LCColorPicker;
@@ -160,7 +161,11 @@ public class GeneralInformationConfigurationStepView extends BorderPane implemen
                 () -> ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.ExportEditGridsToPdfAction(gridPaneTotal)));
         final Node changeImageDictionaryAction = FXControlUtils.createActionTableEntry("configuration.selection.change.image.dictionary.button",
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.IMAGE).size(30).color(LCGraphicStyle.MAIN_DARK),
-                () -> ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.ChangeImageDictionaryAction(gridPaneTotal)));
+                () -> {
+                    GeneralConfigurationScene generalConfigurationScene = (GeneralConfigurationScene) this.getScene();
+                    generalConfigurationScene.okSelected();
+                    ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.ChangeImageDictionaryAction(gridPaneTotal));
+                });
         VBox boxActions = new VBox(GeneralConfigurationStepViewI.GRID_V_GAP, labelPartActions, pdfActionNode, changeImageDictionaryAction);
         gridPaneTotal.add(boxActions, 0, gridRowIndex, 2, 2);
 
