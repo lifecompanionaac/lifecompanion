@@ -3127,7 +3127,7 @@
   <text key="configuration.selection.change.image.dictionary.button.title">Changer de banque d'images</text>
     <text key="user.config.part.ui.optional.resource">Ressources supplémentaires</text>
     <text key="optional.resource.explain.label">Permet d'ajouter des ressources supplémentaires à LifeCompanion. Par exemple, permet d'ajouter la base d'image de Makaton pour les adhérents de l'association.</text>
-    <text key="button.add.optional.resource">Ajouter une ressource</text>
+    <text key="button.add.optional.resource.makaton">Ajouter la banque d'image Makaton</text>
   <text key="configuration.selection.remove.configuration.button.description">Supprime la configuration du profil
 		utilisateur actuel.</text>
   <text key="configuration.selection.remove.configuration.button.title">Supprimer la configuration</text>
@@ -3863,4 +3863,18 @@
     <text key="selection.mode.show.virtual.cursor">Afficher le curseur virtuel</text>
     <text key="selection.mode.virtual.cursor.size">Taille</text>
     <text key="selection.mode.virtual.cursor.color">Couleur</text>
+    <text key="exception.makaton.400.header">Vous n'avez pas accès à la banque Makaton</text>
+    <text key="exception.makaton.400.message">Il semblerait que l'email entré "{}" n'a pas accès à la banque Makaton. Vous pouvez vérifier :\n - que vous avez bien inscrit le même email que celui utilisé pour vous connecter à l'espace adhérent AAD Makaton\n - que votre abonnement est à jour\n\nSi votre abonnement vient d'être créé ou renouvelé, il peut parfois être nécessaire d'attendre 24h avant d'avoir accès à la banque Makaton pour LifeCompanion.</text>
+    <text key="exception.makaton.other.header">Une erreur inconnue s'est produite</text>
+    <text key="exception.makaton.other.message">Il n'est pas possible de vérifier votre accès à la banque Makaton. Veuillez réessayer plus tard. Si le problème persiste, n'hésitez pas à nous contacter.</text>
+    <text key="optional.resource.add.makaton.header">Ajouter la banque Makaton</text>
+    <text key="optional.resource.add.makaton.message">Afin d'ajouter la banque Makaton, vous devez entrer l'email utilisé pour vous connecter à votre espace adhérent AAD Makaton. Votre abonnement doit être valide et avoir été créé/renouvelé depuis au moins 24h.\nL'utilisation de la banque Makaton est limité à trois installations de LifeCompanion.</text>
+    <text key="makaton.too.many.install.header">Limite d'installation atteinte</text>
+    <text key="button.type.manage.installation">Gérer les installations</text>
+    <text key="button.type.contact.lifecompanion">Nous contacter</text>
+    <text key="makaton.too.many.install.message">Vous avez atteint le nombre maximal d'installations de LifeCompanion pouvant utiliser la banque Makaton avec votre compte adhérent. Vous pouvez vous connecter ou créer un compte sur la plateforme LifeCompanion afin de supprimer des installations. Vous pouvez également nous contacter si vous souhaitez que nous le fassions pour vous.</text>
+    <text key="makaton.notification.installed.message">Installation de Makaton réussie</text>
+    <text key="makaton.notification.installed.restart.button">Redémarrer</text>
+    <text key="optional.resource.makaton.enabled">Banque d'images Makaton activée</text>
+    <text key="makaton.task.install.resource">Installation de la banque Makaton</text>
 </texts>

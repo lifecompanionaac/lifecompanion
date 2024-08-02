@@ -25,15 +25,17 @@ import org.lifecompanion.util.model.LCTask;
 public class InstallOptionalResourceTask extends LCTask<Void> {
 
     private final OptionalResourceEnum optionalResource;
+    private final Object[] args;
 
-    public InstallOptionalResourceTask(OptionalResourceEnum optionalResource) {
-        super("TODO");
+    public InstallOptionalResourceTask(OptionalResourceEnum optionalResource, Object... args) {
+        super("makaton.task.install.resource");
         this.optionalResource = optionalResource;
+        this.args = args;
     }
 
     @Override
     protected Void call() throws Exception {
-        this.optionalResource.getResource().install(this::updateProgress, "mathieu.thebaud@vyv3.fr");
+        this.optionalResource.getResource().install(this::updateProgress, args);
         return null;
     }
 }

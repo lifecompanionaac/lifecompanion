@@ -19,9 +19,6 @@
 
 package org.lifecompanion.model.api.appinstallation;
 
-import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
-
-import java.io.IOException;
 import java.util.function.BiConsumer;
 
 public interface OptionalResourceI {
@@ -30,8 +27,6 @@ public interface OptionalResourceI {
     boolean validateInstallation() throws Exception;
 
     void uninstall();
-
-    boolean isUsedOn(LCConfigurationI configuration);
 
     void install(BiConsumer<Long, Long> progress, Object... args) throws Exception;
 }

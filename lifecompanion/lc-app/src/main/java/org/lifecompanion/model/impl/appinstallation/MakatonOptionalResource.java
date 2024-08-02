@@ -19,12 +19,15 @@
 
 package org.lifecompanion.model.impl.appinstallation;
 
-import okhttp3.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 import org.lifecompanion.controller.appinstallation.InstallationController;
-import org.lifecompanion.controller.appinstallation.OptionalResourceController;
-import org.lifecompanion.controller.appinstallation.task.GetInstallationIdTask;
 import org.lifecompanion.controller.io.JsonHelper;
-import org.lifecompanion.controller.metrics.SendPendingSessionStatsRunnable;
 import org.lifecompanion.controller.profile.ProfileController;
 import org.lifecompanion.framework.client.http.AppServerClient;
 import org.lifecompanion.framework.client.props.ApplicationBuildProperties;
@@ -32,24 +35,39 @@ import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
-import org.lifecompanion.framework.model.server.update.ApplicationInstaller;
 import org.lifecompanion.model.api.appinstallation.OptionalResourceI;
-import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.profile.LCProfileI;
 import org.lifecompanion.model.impl.constant.LCConstant;
+import org.lifecompanion.model.impl.exception.LCException;
+import org.lifecompanion.model.impl.imagedictionary.ImageDictionaries;
+import org.lifecompanion.util.DesktopUtils;
+import org.lifecompanion.util.javafx.DialogUtils;
+import org.lifecompanion.util.javafx.StageUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.util.List;
 import java.util.function.BiConsumer;
+
+import static org.lifecompanion.model.impl.constant.LCConstant.URL_CONTACT_US;
 
 public class MakatonOptionalResource implements OptionalResourceI {
     private static final Logger LOGGER = LoggerFactory.getLogger(MakatonOptionalResource.class);
 
     @Override
     public boolean isInstalled() {
-        // check for image database files : check also for renamed files
-        return false;
+        File makatonFile = getMakatonDictionaryFile();
+        File[] makatonDirectoryChildren = getMakatonDictionaryDirectory().listFiles();
+        return makatonFile.exists() && makatonDirectoryChildren != null && makatonDirectoryChildren.length > 0;
+    }
+
+    private static File getMakatonDictionaryDirectory() {
+        return new File(LCConstant.DEFAULT_IMAGE_DICTIONARIES + File.separator + "makaton");
+    }
+
+    private static File getMakatonDictionaryFile() {
+        return new File(LCConstant.DEFAULT_IMAGE_DICTIONARIES + File.separator + "makaton.json");
     }
 
     @Override
@@ -62,30 +80,29 @@ public class MakatonOptionalResource implements OptionalResourceI {
                 .post(RequestBody.create(JsonHelper.GSON.toJson(new DataDto(new CheckMakatonDto("makaton", installationId))), null))
                 .addHeader("Content-Type", "application/vnd.api+json")
                 .build();
+
         try (Response response = okHttpClient.newCall(installRequest).execute()) {
-
+            return JsonHelper.GSON.fromJson(response.body().string(), ValidDataDto.class).data.valid;
         }
-
-
-        return false;
     }
 
     @Override
     public void uninstall() {
-        // delete image database files
+        // TODO : delete files
+        ImageDictionaries.INSTANCE.removeDictionary("makaton");
     }
 
-    @Override
-    public boolean isUsedOn(LCConfigurationI configuration) {
-        // TODO : like PluginController.serializePluginInformation
-        return false;
-    }
+    //    @Override
+    //    public boolean isUsedOn(LCConfigurationI configuration) {
+    //        // TODO : like PluginController.serializePluginInformation
+    //        return false;
+    //    }
 
     @Override
     public void install(BiConsumer<Long, Long> progress, Object... args) throws Exception {
         String email = (String) args[0];
         LCProfileI currentProfile = ProfileController.INSTANCE.currentProfileProperty().get();
-        String installationId = InstallationController.INSTANCE.getInstallationRegistrationInformation().getInstallationId();
+        String installationId = InstallationController.INSTANCE.getInstallationRegistrationInformation().getInstallationId();//"207-816"
         final ApplicationBuildProperties buildProperties = InstallationController.INSTANCE.getBuildProperties();
         String name = (currentProfile != null ? currentProfile.nameProperty().get() : "") + " / " + System.getProperty("user.name") + " / " + Translation.getText(SystemType.current()
                 .getLabelID());
@@ -101,27 +118,54 @@ public class MakatonOptionalResource implements OptionalResourceI {
         try (Response installResponse = okHttpClient.newCall(installRequest).execute()) {
             LOGGER.info("Response to install request is {}", installResponse.code());
             if (installResponse.isSuccessful()) {
+
+                // Download
                 String deliverFileUrl = JsonHelper.GSON.fromJson(installResponse.body().string(), InstallSuccessDto.class).data.deliverFile;
                 LOGGER.info("Start downloading makaton to {}", deliverFileUrl);
                 downloadToFile(okHttpClient, progress, deliverFileUrl, zipFileTempDir);
 
+                // Unzip
                 File imageDictionariesRoot = new File(LCConstant.DEFAULT_IMAGE_DICTIONARIES);
                 LOGGER.info("Download finished, will now install it in image dictionary folder : {}", imageDictionariesRoot.getAbsolutePath());
                 IOUtils.unzipInto(zipFileTempDir, imageDictionariesRoot, null); // TODO : progress ?
 
+                // Install
+                ImageDictionaries.INSTANCE.loadImageDictionary(getMakatonDictionaryFile());
+
             } else if (installResponse.code() >= 400 && installResponse.code() < 500) {
-                if (installResponse.code() == 409) {
-                    System.out.println(installResponse.body().string());
-                    // {"errors":[{"status":"409","title":"Conflict","detail":"You've reached the 1 installations limit for service Makaton.","meta":{"resolve":{"title":"Reassign your devices","description":"To solve this problem, remove some of your devices for service Makaton on your LifeCompanion account.","url":"https:\/\/lifecompanionaac.org\/auth\/register?redirectUrl=%2Faccount%2Fsoftware%2Fassociations&guarded=auth&email=mathieu.thebaud%40vyv3.fr"}}}]}
-                }
-                // TODO : Exception to explain process
+                handle400Errors(installResponse, email);
             } else {
-                // TODO : Exception on unexplained error
+                LCException.newException().withDirectlyShowExceptionDialog(true).withHeaderId("exception.makaton.other.header").withMessage("exception.makaton.other.message").buildAndThrow();
             }
         }
     }
 
-    private static void downloadToFile(OkHttpClient okHttpClient, BiConsumer<Long, Long> progress, String deliverFileUrl, File zipFileTempDir) throws IOException {
+    private void handle400Errors(Response installResponse, String email) throws IOException, LCException {
+        if (installResponse.code() == 409) {
+            ErrorsDto errorDtos = JsonHelper.GSON.fromJson(installResponse.body().string(), ErrorsDto.class);
+            if (errorDtos != null && !errorDtos.errors.isEmpty()) {
+                String manageUrl = errorDtos.errors.getFirst().meta.resolve.url;
+                LCException.newException().withOnCatchCallback(() -> {
+                    ButtonType typeCancel = new ButtonType(Translation.getText("button.type.cancel"), ButtonBar.ButtonData.CANCEL_CLOSE);
+                    ButtonType typeManageInstallation = new ButtonType(Translation.getText("button.type.manage.installation"), ButtonBar.ButtonData.YES);
+                    ButtonType typeContactUs = new ButtonType(Translation.getText("button.type.contact.lifecompanion"), ButtonBar.ButtonData.YES);
+                    ButtonType tooManyInstallationChoice = DialogUtils.alertWithSourceAndType(StageUtils.getOnTopWindowExcludingNotification(), Alert.AlertType.ERROR)
+                            .withHeaderText(Translation.getText("makaton.too.many.install.header"))
+                            .withContentText(Translation.getText("makaton.too.many.install.message"))
+                            .withButtonTypes(typeCancel, typeManageInstallation, typeContactUs)
+                            .showAndWait();
+                    String url = tooManyInstallationChoice == typeManageInstallation ? manageUrl : tooManyInstallationChoice == typeContactUs ? InstallationController.INSTANCE.getBuildProperties()
+                            .getAppServerUrl() + URL_CONTACT_US : null;
+                    if (url != null) {
+                        DesktopUtils.openUrlInDefaultBrowser(url);
+                    }
+                }).buildAndThrow();
+            }
+        }
+        LCException.newException().withDirectlyShowExceptionDialog(true).withHeaderId("exception.makaton.400.header").withMessage("exception.makaton.400.message", email).buildAndThrow();
+    }
+
+    private void downloadToFile(OkHttpClient okHttpClient, BiConsumer<Long, Long> progress, String deliverFileUrl, File zipFileTempDir) throws IOException {
         try (Response downloadResponse = okHttpClient.newCall(new Request.Builder()
                 .url(deliverFileUrl)
                 .addHeader("Connection", "close")
@@ -136,8 +180,33 @@ public class MakatonOptionalResource implements OptionalResourceI {
         }
     }
 
+    private static class ErrorsDto {
+        private List<ErrorDto> errors;
+    }
+
+    private static class ErrorDto {
+        private String title, detail;
+        private ErrorMeta meta;
+    }
+
+    private static class ErrorMeta {
+        private ErrorMetaResolve resolve;
+    }
+
+    private static class ErrorMetaResolve {
+        private String title, description, url;
+    }
+
     private static class InstallSuccessDto {
         private InstallSuccessDataDto data;
+    }
+
+    private static class ValidDataDto {
+        ValidDto data;
+    }
+
+    private static class ValidDto {
+        private boolean valid;
     }
 
     private static class InstallSuccessDataDto {

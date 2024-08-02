@@ -172,6 +172,8 @@ public class LCConstant {
     public final static String URL_PATH_CHANGELOG = "/categories/documentations/lifecompanion-changelog";
     public final static String URL_PATH_GET_STARTED = "/categories/documentations/get-started-guide";
     public final static String URL_TRAININGS = "/formations";
+    public final static String URL_CONTACT_US = "/contact-us";
+
     //========================================================================
 
     // IMAGE DICTIONARIES

@@ -363,7 +363,16 @@ public enum ImageDictionaries implements LCStateListener, ModeListenerI {
         LOGGER.info("Image dictionaries loading done in {} s", (System.currentTimeMillis() - start) / 1000.0);
     }
 
-    private ImageDictionary loadImageDictionary(File dictionaryFile) {
+    public void removeDictionary(String id) {
+        this.dictionaries.stream().filter(dic -> id.equals(dic.getId())).findAny().ifPresent(dictionaryToRemove -> {
+            dictionaryToRemove.getImages().forEach(imageElement -> {
+                allImages.remove(imageElement.getId());
+            });
+            this.dictionaries.remove(dictionaryToRemove);
+        });
+    }
+
+    public ImageDictionary loadImageDictionary(File dictionaryFile) {
         if (dictionaryFile.exists()) {
             try (Reader is = new BufferedReader(new InputStreamReader(new FileInputStream(dictionaryFile), StandardCharsets.UTF_8))) {
                 ImageDictionary imageDictionary = JsonHelper.GSON.fromJson(is, ImageDictionary.class);

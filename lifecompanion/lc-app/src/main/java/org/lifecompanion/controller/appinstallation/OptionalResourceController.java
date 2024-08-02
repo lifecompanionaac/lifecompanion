@@ -26,45 +26,54 @@ import org.lifecompanion.model.impl.appinstallation.OptionalResourceEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public enum OptionalResourceController implements LCStateListener {
     INSTANCE;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OptionalResourceController.class);
 
+    private final Set<OptionalResourceEnum> installedResource;
+
     OptionalResourceController() {
+        installedResource = new HashSet<>();
+    }
+
+    public Set<OptionalResourceEnum> getInstalledResource() {
+        return installedResource;
     }
 
     @Override
     public void lcStart() {
-        // TODO : Should be done after : setInstallationRegistrationInformationSetCallback
-        // checkForInstalledResources();
+        InstallationController.INSTANCE.addInstallationRegistrationInformationSetCallback(() -> {
+            for (OptionalResourceEnum optionalResourceEnum : OptionalResourceEnum.values()) {
+                LOGGER.info("Will check if optional resource {} is installed", optionalResourceEnum.getId());
+                boolean installed = optionalResourceEnum.getResource().isInstalled();
+                if (installed) {
+                    LOGGER.info("{} is installed, will be validated", optionalResourceEnum.getId());
+                    try {
+                        if (!optionalResourceEnum.getResource().validateInstallation()) {
+                            LOGGER.info("{} is installed but is not valid anymore, resource will be uninstalled", optionalResourceEnum.getId());
+                            optionalResourceEnum.getResource().uninstall();
+                            // TODO store invalidated installation in a list to display it to user
+                        } else {
+                            LOGGER.info("{} is validated!", optionalResourceEnum.getId());
+                            installedResource.add(optionalResourceEnum);
+                        }
+                    } catch (Exception e) {
+                        LOGGER.warn("Could not check resource {}", optionalResourceEnum.getId(), e);
+                    }
+                }
+            }
+        });
     }
 
     @Override
     public void lcExit() {
     }
 
-    public InstallOptionalResourceTask installResource(OptionalResourceEnum optionalResourceEnum) {
-        return new InstallOptionalResourceTask(optionalResourceEnum);
+    public InstallOptionalResourceTask installResource(OptionalResourceEnum optionalResourceEnum, Object... args) {
+        return new InstallOptionalResourceTask(optionalResourceEnum, args);
     }
-
-    private void checkForInstalledResources() {
-        for (OptionalResourceEnum optionalResourceEnum : OptionalResourceEnum.values()) {
-            LOGGER.info("Will check if optional resource {} is installed", optionalResourceEnum.getId());
-            boolean installed = optionalResourceEnum.getResource().isInstalled();
-            if (installed) {
-                LOGGER.info("{} is installed, will be validated", optionalResourceEnum.getId());
-                try {
-                    if (!optionalResourceEnum.getResource().validateInstallation()) {
-                        LOGGER.info("{} is installed but could not be validated, resource will be uninstalled", optionalResourceEnum.getId());
-                        optionalResourceEnum.getResource().uninstall();
-                        // TODO store invalidated installation in a list to display it to user
-                    }
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }
-    }
-
 }

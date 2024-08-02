@@ -72,7 +72,7 @@ public enum SessionStatsController implements LCStateListener {
     SessionStatsController() {
         currentUserInteractionInLastMinute = new AtomicInteger();
         registredScenes = new HashMap<>();
-        InstallationController.INSTANCE.setInstallationRegistrationInformationSetCallback(() -> {
+        InstallationController.INSTANCE.addInstallationRegistrationInformationSetCallback(() -> {
             if (UserConfigurationController.INSTANCE.recordAndSendSessionStatsProperty().get()) {
                 LCNamedThreadFactory.daemonThreadFactoryWithPriority("SendPendingSessionStats", Thread.MIN_PRIORITY).newThread(new SendPendingSessionStatsRunnable()).start();
                 LCNamedThreadFactory.daemonThreadFactoryWithPriority("RegisterUserInteractionForSessionStats", Thread.MIN_PRIORITY).newThread(new RegisterUserInteractionRunnable()).start();

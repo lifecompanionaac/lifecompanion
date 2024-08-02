@@ -24,17 +24,15 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import org.lifecompanion.controller.appinstallation.OptionalResourceController;
+import org.lifecompanion.controller.appinstallation.task.InstallOptionalResourceTask;
 import org.lifecompanion.controller.editaction.AsyncExecutorController;
+import org.lifecompanion.controller.editaction.GlobalActions;
+import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.controller.io.task.CleanupTempFileTask;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.framework.commons.utils.io.FileNameUtils;
-import org.lifecompanion.framework.commons.utils.lang.StringUtils;
-import org.lifecompanion.model.impl.appinstallation.MakatonOptionalResource;
 import org.lifecompanion.model.impl.appinstallation.OptionalResourceEnum;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
@@ -48,11 +46,7 @@ import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.ui.notification.LCNotificationController;
-import org.lifecompanion.util.IOUtils;
-import org.lifecompanion.util.javafx.FXControlUtils;
-
-import java.io.File;
-import java.util.List;
+import org.lifecompanion.util.javafx.*;
 
 /**
  * Stage configuration
@@ -95,9 +89,11 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
     private ToggleSwitch toggleSecureGoToEditModeProperty;
     private ToggleSwitch toggleAutoConfigurationProfileBackup;
 
-    private Button buttonCleanupFiles, buttonAddOptionalResource;
+    private Button buttonCleanupFiles, buttonAddMakaton;
 
     private ComboBox<String> comboBoxLanguage;
+
+    private Label labelMakatonEnabled;
 
     public UIConfigSubmenu() {
         this.initAll();
@@ -116,8 +112,12 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
         Label labelOptionalResource = FXControlUtils.createTitleLabel("user.config.part.ui.optional.resource");
         Label labelExplainOptionalResource = new Label(Translation.getText("optional.resource.explain.label"));
         labelExplainOptionalResource.getStyleClass().addAll("text-wrap-enabled", "text-font-italic", "text-fill-gray");
-        buttonAddOptionalResource = FXControlUtils.createLeftTextButton(Translation.getText("button.add.optional.resource"),
+
+        labelMakatonEnabled = new Label(Translation.getText("optional.resource.makaton.enabled"));
+        labelMakatonEnabled.getStyleClass().add("text-weight-bold");
+        buttonAddMakaton = FXControlUtils.createLeftTextButton(Translation.getText("button.add.optional.resource.makaton"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.PLUS).size(16).color(LCGraphicStyle.MAIN_DARK), null);
+        TilePane paneMakaton = new TilePane(buttonAddMakaton, labelMakatonEnabled);
 
         // Use mode
         Label labelUseMode = FXControlUtils.createTitleLabel("user.config.part.ui.use.mode");
@@ -209,7 +209,7 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
         VBox totalBox = new VBox(10.0,
                 labelConfigGeneral, toggleEnableAutoShowVirtualKeyboard, toggleEnableLaunchLCSystemStartup, toggleEnableRecordAndSendSessionStats,
                 labelUseMode, toggleSecureGoToEditModeProperty, labelExplainSecuredConfigMode, toggleDisabledExitInUseMode, labelExplainExitUseMode,
-                labelOptionalResource, labelExplainOptionalResource, buttonAddOptionalResource,
+                labelOptionalResource, labelExplainOptionalResource, paneMakaton,
                 labelConfigStylePart, gridPaneStyleParam,
                 labelConfigTitle, gridPaneConfiguration,
                 labelConfigFiles,
@@ -257,6 +257,10 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
         this.toggleAutoSelectImages.setSelected(UserConfigurationController.INSTANCE.autoSelectImagesProperty().get());
         this.comboBoxLanguage.getSelectionModel().select(UserConfigurationController.INSTANCE.userLanguageProperty().get());
         this.toggleEnableSpeechOptimization.setSelected(UserConfigurationController.INSTANCE.enableSpeechOptimizationProperty().get());
+
+        boolean makatonInstalled = OptionalResourceController.INSTANCE.getInstalledResource().contains(OptionalResourceEnum.MAKATON);
+        buttonAddMakaton.visibleProperty().set(!makatonInstalled);
+        labelMakatonEnabled.visibleProperty().set(makatonInstalled);
     }
 
     @Override
@@ -283,6 +287,8 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
     public void initBinding() {
         configurationManagedAndVisibleOnWindowsOnly(toggleEnableAutoShowVirtualKeyboard);
         configurationManagedAndVisibleOnWindowsOnly(toggleEnableLaunchLCSystemStartup);
+        buttonAddMakaton.managedProperty().bind(buttonAddMakaton.visibleProperty());
+        labelMakatonEnabled.managedProperty().bind(labelMakatonEnabled.visibleProperty());
     }
 
     private void configurationManagedAndVisibleOnWindowsOnly(Node node) {
@@ -298,8 +304,16 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
                     FileNameUtils.getFileSize(cleanupTempFileTask.getValue())))));
             AsyncExecutorController.INSTANCE.addAndExecute(true, false, cleanupTempFileTask);
         });
-        buttonAddOptionalResource.setOnAction(e -> AsyncExecutorController.INSTANCE.addAndExecute(true, false, OptionalResourceController.INSTANCE.installResource(OptionalResourceEnum.MAKATON)));
-        // TODO : inform to restart for the dictionary to be installed
+        buttonAddMakaton.setOnAction(e -> {
+            LargeTextInputDialog emailDialog = new LargeTextInputDialog(Translation.getText("optional.resource.add.makaton.message"), "Email adhérent");
+            emailDialog.setHeaderText(Translation.getText("optional.resource.add.makaton.header"));
+            StageUtils.centerOnOwnerOrOnCurrentStage(emailDialog);
+            emailDialog.showAndWait().ifPresent(email -> {
+                InstallOptionalResourceTask installOptionalResourceTask = OptionalResourceController.INSTANCE.installResource(OptionalResourceEnum.MAKATON, email);
+                AsyncExecutorController.INSTANCE.addAndExecute(true, false, installOptionalResourceTask);
+            });
+
+        });
     }
 
     @Override

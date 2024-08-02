@@ -81,12 +81,17 @@ public enum ErrorHandlingController implements LCStateListener {
         LOGGER.info("Error is reported with a notification (title {})", title, cause);
         if (this.displayedErrorNotificationCount < MAX_ERROR_DISPLAY_COUNT) {
             this.displayedErrorNotificationCount++;
-            if (cause instanceof LCException && ((LCException) cause).containsOnCatchAction()) {
-                FXThreadUtils.runOnFXThread(((LCException) cause).getOnCatchCallback());
-            } else {
-                LCNotificationController.INSTANCE
-                        .showNotification(LCNotification.createError(title, "notification.error.details.action", () -> this.showExceptionDialog(cause)));
+            if (cause instanceof LCException lcException) {
+                if (lcException.containsOnCatchAction()) {
+                    FXThreadUtils.runOnFXThread(lcException.getOnCatchCallback());
+                    return;
+                } else if (lcException.isDirectlyShowExceptionDialog()) {
+                    this.showExceptionDialog(cause);
+                    return;
+                }
             }
+            LCNotificationController.INSTANCE
+                    .showNotification(LCNotification.createError(title, "notification.error.details.action", () -> this.showExceptionDialog(cause)));
         }
     }
 

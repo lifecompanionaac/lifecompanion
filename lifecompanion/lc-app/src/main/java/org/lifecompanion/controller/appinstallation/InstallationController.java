@@ -54,10 +54,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
@@ -88,18 +85,13 @@ public enum InstallationController implements LCStateListener {
 
     private final ApplicationBuildProperties buildProperties;
 
-    //    private boolean updateDownloadFinished;
-    //    private boolean updateFinished;
-    //    private boolean enablePreviewUpdates;
-    //    private boolean skipUpdates;
-
     private final StringProperty updateTaskMessage;
     private final BooleanProperty updateTaskRunning;
     private final DoubleProperty updateTaskProgress;
 
     private final ObjectProperty<Date> lastUpdateCheckDate;
 
-    private Runnable installationRegistrationInformationSetCallback;
+    private final Set<Runnable> installationRegistrationInformationSetCallbacks;
 
     private InstallationRegistrationInformation installationRegistrationInformation;
 
@@ -110,6 +102,7 @@ public enum InstallationController implements LCStateListener {
         this.updateTaskRunning = new SimpleBooleanProperty();
         this.updateTaskProgress = new SimpleDoubleProperty(-1.0);
         this.lastUpdateCheckDate = new SimpleObjectProperty<>();
+        this.installationRegistrationInformationSetCallbacks = new HashSet<>();
         // WARNING : implementation relies on the fact that this is a SINGLE thread executor
         // See lcStart() to understand
         this.executorService = Executors.newSingleThreadExecutor(LCNamedThreadFactory.daemonThreadFactoryWithPriority("InstallationController", Thread.MIN_PRIORITY));
@@ -227,15 +220,16 @@ public enum InstallationController implements LCStateListener {
         this.installationRegistrationInformation = installationRegistrationInformation;
         if (this.installationRegistrationInformation != null) {
             this.appServerClient.setInstallationIdForHeader(this.installationRegistrationInformation.getInstallationId());
-            if (this.installationRegistrationInformationSetCallback != null) {
-                this.installationRegistrationInformationSetCallback.run();
-            }
+            this.installationRegistrationInformationSetCallbacks.forEach(Runnable::run);
         }
     }
 
-    public void setInstallationRegistrationInformationSetCallback(Runnable installationRegistrationInformationSetCallback) {
-        // TODO list + call it immediately if already filled
-        this.installationRegistrationInformationSetCallback = installationRegistrationInformationSetCallback;
+    public void addInstallationRegistrationInformationSetCallback(Runnable installationRegistrationInformationSetCallback) {
+        if (this.installationRegistrationInformation != null) {
+            installationRegistrationInformationSetCallback.run();
+        } else {
+            this.installationRegistrationInformationSetCallbacks.add(installationRegistrationInformationSetCallback);
+        }
     }
 
     public void tryToSendUpdateStats() {
