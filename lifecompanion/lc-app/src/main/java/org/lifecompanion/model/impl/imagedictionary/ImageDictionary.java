@@ -23,9 +23,11 @@ import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
+import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.model.api.imagedictionary.ImageDictionaryI;
 import org.lifecompanion.model.api.imagedictionary.ImageElementI;
 import org.lifecompanion.framework.commons.translation.Translation;
+import org.lifecompanion.model.api.imagedictionary.PathSupplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,6 +44,7 @@ public class ImageDictionary implements ImageDictionaryI {
     private String url;
     private boolean customDictionary;
     private boolean optionalDictionary;
+    private String idCheck;
     private final ObservableList<ImageElementI> images;
 
     private transient File imageDirectory;
@@ -87,6 +90,16 @@ public class ImageDictionary implements ImageDictionaryI {
     @Override
     public String getUrl() {
         return url;
+    }
+
+    @Override
+    public String getIdCheck() {
+        return idCheck;
+    }
+
+    @Override
+    public boolean isEncodedDictionary() {
+        return StringUtils.isNotBlank(idCheck);
     }
 
     @Override
@@ -138,8 +151,8 @@ public class ImageDictionary implements ImageDictionaryI {
     }
 
     @Override
-    public void loadImage(String imageId, ObjectProperty<Image> target, File path, double width, double height, boolean keepRatio, boolean smooth, Runnable callback) {
-        ImageDictionaries.INSTANCE.requestImageLoading(new ImageLoadingTask(imageId,target, path, width, height, keepRatio, smooth, callback));
+    public void loadImage(String imageId, ObjectProperty<Image> target, PathSupplier pathSupplier, double width, double height, boolean keepRatio, boolean smooth, Runnable callback) {
+        ImageDictionaries.INSTANCE.requestImageLoading(new ImageLoadingTask(imageId, target, pathSupplier, width, height, keepRatio, smooth, callback));
     }
 
     public void loaded(Map<String, ImageElementI> allImageMap) {

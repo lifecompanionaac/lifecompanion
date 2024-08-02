@@ -62,6 +62,10 @@ public interface ImageDictionaryI {
      * @return true if this dictionary is an optional dictionary : its images should be saved within configurations files
      */
     boolean isOptionalDictionary();
+
+    String getIdCheck();
+
+    boolean isEncodedDictionary();
     //========================================================================
 
     // CONTENT
@@ -75,7 +79,7 @@ public interface ImageDictionaryI {
 
     // IMAGE LOADING
     //========================================================================
-    void loadImage(String imageId, final ObjectProperty<Image> target, final File path, final double width, final double height, final boolean keepRatio,
+    void loadImage(String imageId, final ObjectProperty<Image> target, final PathSupplier pathSupplier, final double width, final double height, final boolean keepRatio,
                    final boolean smooth, final Runnable callback);
 
     void cancelLoadImage(String imageId);

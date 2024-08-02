@@ -19,6 +19,8 @@
 
 package org.lifecompanion.controller.appinstallation;
 
+import javafx.concurrent.Task;
+import org.lifecompanion.controller.appinstallation.task.InstallOptionalResourceTask;
 import org.lifecompanion.model.api.lifecycle.LCStateListener;
 import org.lifecompanion.model.impl.appinstallation.OptionalResourceEnum;
 import org.slf4j.Logger;
@@ -34,7 +36,16 @@ public enum OptionalResourceController implements LCStateListener {
 
     @Override
     public void lcStart() {
-        checkForInstalledResources();
+        // TODO : Should be done after : setInstallationRegistrationInformationSetCallback
+        // checkForInstalledResources();
+    }
+
+    @Override
+    public void lcExit() {
+    }
+
+    public InstallOptionalResourceTask installResource(OptionalResourceEnum optionalResourceEnum) {
+        return new InstallOptionalResourceTask(optionalResourceEnum);
     }
 
     private void checkForInstalledResources() {
@@ -43,18 +54,17 @@ public enum OptionalResourceController implements LCStateListener {
             boolean installed = optionalResourceEnum.getResource().isInstalled();
             if (installed) {
                 LOGGER.info("{} is installed, will be validated", optionalResourceEnum.getId());
-                if (!optionalResourceEnum.getResource().validateInstallation()) {
-                    LOGGER.info("{} is installed but could not be validated, resource will be uninstalled", optionalResourceEnum.getId());
-                    optionalResourceEnum.getResource().uninstall();
-                    // TODO store invalidated installation in a list to display it to user
+                try {
+                    if (!optionalResourceEnum.getResource().validateInstallation()) {
+                        LOGGER.info("{} is installed but could not be validated, resource will be uninstalled", optionalResourceEnum.getId());
+                        optionalResourceEnum.getResource().uninstall();
+                        // TODO store invalidated installation in a list to display it to user
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
                 }
             }
-
         }
     }
 
-    @Override
-    public void lcExit() {
-
-    }
 }

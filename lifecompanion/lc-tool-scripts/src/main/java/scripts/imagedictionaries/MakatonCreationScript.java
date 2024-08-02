@@ -25,6 +25,7 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.lifecompanion.framework.commons.utils.lang.CryptUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -76,6 +77,7 @@ public class MakatonCreationScript {
     }};
 
     private static final boolean DISPLAY_MISSING_FILES = true;
+    private static final int LIMIT = 500_000;
 
     public static void main(String[] args) throws Exception {
         File outputDir = new File("C:\\Users\\Mathieu\\Desktop\\temp\\makaton\\out");
@@ -133,9 +135,9 @@ public class MakatonCreationScript {
         // Associate each file with its keywords
         Map<File, Set<String>> keywords = new HashMap<>();
         picPerFile.forEach((file, pictListForFile) -> {
-            if (keywords.size() < 500_000)//LIMIT
-            {
+            if (keywords.size() < LIMIT) {
                 Set<String> keywordForPics = pictListForFile.stream().map(MakatonPic::name).map(StringUtils::trimToEmpty).collect(Collectors.toSet());
+                // If the category should be used as keyword
                 //                pictListForFile.stream().map(MakatonPic::category).distinct().forEach(cat -> {
                 //                    List<String> otherKeywords = CATEGORY_KEYWORDS.get(cat);
                 //                    if (otherKeywords != null) keywordForPics.addAll(otherKeywords);
@@ -173,9 +175,13 @@ public class MakatonCreationScript {
         // Unique file count
         LOGGER.info("Found {} unique file (over {} rows)", perHash.size(), keywords.size());
 
+        ImageDictionary dictionary = new ImageDictionary("Makaton", "image.dictionary.description.makaton", "image.dictionary.author.makaton",
+                "png", "https://www.makaton.fr/", false);
+        dictionary.idCheck = "LgkOAh8GAA==";
+
+
         DicInfo dicInfo = new DicInfo(
-                new ImageDictionary("Makaton", "image.dictionary.description.makaton", "image.dictionary.author.makaton",
-                        "png", "https://www.makaton.fr/", false),
+                dictionary,
                 uniqueDir, "makaton", "jpg", false, true, true, true, false, false, fileAndKeywords);
         ImageDictionariesCreationScript.generateImageDictionary(dicInfo);
     }

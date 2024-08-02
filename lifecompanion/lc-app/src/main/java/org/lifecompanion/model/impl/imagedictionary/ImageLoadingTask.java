@@ -27,6 +27,7 @@ import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
 import org.lifecompanion.framework.commons.utils.io.FileNameUtils;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.model.api.imagedictionary.PathSupplier;
 import org.lifecompanion.model.impl.useapi.GlobalRuntimeConfiguration;
 import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.slf4j.Logger;
@@ -35,13 +36,14 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Supplier;
 
 public class ImageLoadingTask extends Task<Image> {
     private static final Logger LOGGER = LoggerFactory.getLogger(ImageLoadingTask.class);
 
     private final String imageId;
     private final ObjectProperty<Image> target;
-    private final File path;
+    private final PathSupplier pathSupplier;
     private final double width;
     private final double height;
     private final boolean keepRatio;
@@ -59,9 +61,20 @@ public class ImageLoadingTask extends Task<Image> {
                             final boolean keepRatioP,
                             final boolean smoothP,
                             final Runnable callbackP) {
+        this(imageId, targetP, () -> pathP, widthP, heightP, keepRatioP, smoothP, callbackP);
+    }
+
+    public ImageLoadingTask(final String imageId,
+                            final ObjectProperty<Image> targetP,
+                            PathSupplier pathSupplier,
+                            final double widthP,
+                            final double heightP,
+                            final boolean keepRatioP,
+                            final boolean smoothP,
+                            final Runnable callbackP) {
         this.imageId = imageId;
         this.target = targetP;
-        this.path = pathP;
+        this.pathSupplier = pathSupplier;
         this.width = widthP;
         this.height = heightP;
         this.keepRatio = keepRatioP;
@@ -83,48 +96,56 @@ public class ImageLoadingTask extends Task<Image> {
     }
 
     public File getPath() {
-        return path;
+        try {
+            return pathSupplier.getPath();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public Image call() {
-        if (!isCancelled()) {
-            File imagePath;
-            // Try to load from HUB when needed
-            if (GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.USE_HUB_IMAGES) && !this.path.exists()) {
-                String extension = FileNameUtils.getExtension(path);
-                File imageTempCacheFolder = new File(System.getProperty("java.io.tmpdir") + File.separator + "LifeCompanion" + File.separator + "tmp" + File.separator + "downloaded-image-cache");
-                imageTempCacheFolder.mkdirs();
-                imagePath = new File(imageTempCacheFolder + File.separator + imageId + "." + extension);
-                try {
-                    if (!imagePath.exists() || StringUtils.isDifferent(imageId, IOUtils.fileSha256HexToString(imagePath))) {
-                        LOGGER.info("Will try to download image {} from hub to {}", imageId, imagePath);
-                        HubService.INSTANCE.downloadImageFromHub(imageId, imagePath);
-                    }
-                } catch (Exception e) {
-                    LOGGER.warn("Image download {} from hub failed", imageId, e);
-                }
-            } else {
-                imagePath = this.path;
-            }
-
-            // Load from stream
-            try (FileInputStream fis = new FileInputStream(imagePath)) {
-                Image image = new Image(fis, this.width, this.height, this.keepRatio, this.smooth);
-                if (!isCancelled()) {
-                    FXThreadUtils.runOnFXThread(() -> {
-                        if (target != null && !isCancelled()) {
-                            this.target.set(image);
+        try {
+            if (!isCancelled()) {
+                File path = pathSupplier.getPath();
+                File imagePath;
+                // Try to load from HUB when needed
+                if (GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.USE_HUB_IMAGES) && !path.exists()) {
+                    String extension = FileNameUtils.getExtension(path);
+                    File imageTempCacheFolder = new File(System.getProperty("java.io.tmpdir") + File.separator + "LifeCompanion" + File.separator + "tmp" + File.separator + "downloaded-image-cache");
+                    imageTempCacheFolder.mkdirs();
+                    imagePath = new File(imageTempCacheFolder + File.separator + imageId + "." + extension);
+                    try {
+                        if (!imagePath.exists() || StringUtils.isDifferent(imageId, IOUtils.fileSha256HexToString(imagePath))) {
+                            LOGGER.info("Will try to download image {} from hub to {}", imageId, imagePath);
+                            HubService.INSTANCE.downloadImageFromHub(imageId, imagePath);
                         }
-                    });
-                    if (callback != null) {
-                        this.callback.run();
+                    } catch (Exception e) {
+                        LOGGER.warn("Image download {} from hub failed", imageId, e);
                     }
-                    return image;
+                } else {
+                    imagePath = path;
                 }
-            } catch (Exception e) {
-                LOGGER.info("Couldn't load the image {}", this.path, e);
+
+                // Load from stream
+                try (FileInputStream fis = new FileInputStream(imagePath)) {
+                    Image image = new Image(fis, this.width, this.height, this.keepRatio, this.smooth);
+                    if (!isCancelled()) {
+                        FXThreadUtils.runOnFXThread(() -> {
+                            if (target != null && !isCancelled()) {
+                                this.target.set(image);
+                            }
+                        });
+                        if (callback != null) {
+                            this.callback.run();
+                        }
+                        return image;
+                    }
+
+                }
             }
+        } catch (Exception e) {
+            LOGGER.info("Couldn't load the image {}", imageId, e);
         }
         return null;
     }

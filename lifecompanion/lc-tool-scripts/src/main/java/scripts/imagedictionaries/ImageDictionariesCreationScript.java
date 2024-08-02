@@ -31,6 +31,8 @@ import javafx.util.Pair;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
 import org.lifecompanion.framework.utils.FluentHashMap;
 
+import javax.crypto.*;
+import javax.crypto.spec.DESKeySpec;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -86,7 +88,7 @@ public class ImageDictionariesCreationScript {
     }
 
     public static void generateImageDictionary(DicInfo dictionaryInformation) throws FileNotFoundException, UnsupportedEncodingException {
-        File outputDir = new File(dictionaryInformation.inputdir.getParentFile()+"/lifecompanion-dictionary/" + dictionaryInformation.dicId);
+        File outputDir = new File(dictionaryInformation.inputdir.getParentFile() + "/lifecompanion-dictionary/" + dictionaryInformation.dicId);
         outputDir.mkdirs();
 
         Map<String, List<Pair<File, String>>> imageFileAndNamesByHash = new ConcurrentHashMap<>();
@@ -98,7 +100,8 @@ public class ImageDictionariesCreationScript {
         LoggingProgressIndicator pi = new LoggingProgressIndicator(Math.min(MAX_COUNT, files.length), "Image search");
         Arrays.stream(files).limit(MAX_COUNT).parallel().forEach(file -> {
             pi.increment();
-            if ((getExtension(file.getPath()).equalsIgnoreCase(dictionaryInformation.dictionary.imageExtension) || getExtension(file.getPath()).equalsIgnoreCase(dictionaryInformation.inExt) )&& (!dictionaryInformation.deleteNB || !file.getName().contains("_NB"))) {
+            if ((getExtension(file.getPath()).equalsIgnoreCase(dictionaryInformation.dictionary.imageExtension) || getExtension(file.getPath()).equalsIgnoreCase(dictionaryInformation.inExt)) && (!dictionaryInformation.deleteNB || !file.getName()
+                    .contains("_NB"))) {
                 if (!dictionaryInformation.checkSim || percentEgals(getImageMultiplePart(file), similarityReference) < SIM_THRESHOLD) {
                     try {
                         String fileSha256HexToString = fileSha256HexToString(file);
@@ -132,9 +135,24 @@ public class ImageDictionariesCreationScript {
                 File tempOutputImage = File.createTempFile("lcimage", "." + dictionaryInformation.dictionary.imageExtension);
                 ImageIO.write(buffImage, dictionaryInformation.dictionary.imageExtension, tempOutputImage);
 
-                // Hash and copy to final directory
+                // Hash and copy to final directory (encrypt if needed)
                 String sha256 = fileSha256HexToString(tempOutputImage);
-                IOUtils.copyFiles(tempOutputImage, new File(outputDir.getPath() + File.separator + sha256 + "." + dictionaryInformation.dictionary.imageExtension));
+                File finalDestFile = new File(outputDir.getPath() + File.separator + sha256 + "." + dictionaryInformation.dictionary.imageExtension);
+                if (dictionaryInformation.dictionary.idCheck == null) {
+                    IOUtils.copyFiles(tempOutputImage, finalDestFile);
+                } else {
+                    // Init cipher
+                    DESKeySpec keySpec = new DESKeySpec(dictionaryInformation.dictionary.idCheck.getBytes("UTF8"));
+                    SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");
+                    SecretKey key = keyFactory.generateSecret(keySpec);
+                    Cipher cipher = Cipher.getInstance("DES");
+                    cipher.init(Cipher.ENCRYPT_MODE, key);
+                    try(CipherOutputStream cipherOutputStream = new CipherOutputStream(new FileOutputStream(finalDestFile), cipher)){
+                        try(FileInputStream fisTempOutputImage = new FileInputStream(tempOutputImage)) {
+                            IOUtils.copyStream(fisTempOutputImage,cipherOutputStream);
+                        }
+                    }
+                }
                 pi2.increment();
 
                 // Create associated element

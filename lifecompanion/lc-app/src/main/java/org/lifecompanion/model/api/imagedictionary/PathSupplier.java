@@ -2,7 +2,7 @@
  * LifeCompanion AAC and its sub projects
  *
  * Copyright (C) 2014 to 2019 Mathieu THEBAUD
- * Copyright (C) 2020 to 2021 CMRRF KERPAPE (Lorient, France)
+ * Copyright (C) 2020 to 2023 CMRRF KERPAPE (Lorient, France) and CoWork'HIT (Lorient, France)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,26 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package scripts.imagedictionaries;
+package org.lifecompanion.model.api.imagedictionary;
 
-import java.util.List;
+import java.io.File;
 
-public class ImageDictionary {
-    String name;
-    String description;
-    String author;
-    String imageExtension;
-    String url;
-    boolean customDictionary;
-    String idCheck;
-    List<ImageElement> images;
-
-    public ImageDictionary(String name, String description, String author, String imageExtension, String url, boolean customDictionary) {
-        this.name = name;
-        this.description = description;
-        this.author = author;
-        this.imageExtension = imageExtension;
-        this.url = url;
-        this.customDictionary = customDictionary;
-    }
+public interface PathSupplier {
+    File getPath() throws Exception;
 }

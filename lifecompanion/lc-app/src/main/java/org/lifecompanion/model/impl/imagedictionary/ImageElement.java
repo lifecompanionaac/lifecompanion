@@ -26,12 +26,17 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.image.Image;
 import org.lifecompanion.model.api.imagedictionary.ImageDictionaryI;
 import org.lifecompanion.model.api.imagedictionary.ImageElementI;
+import org.lifecompanion.util.IOUtils;
 import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
 import org.lifecompanion.framework.commons.utils.io.FileNameUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 
-import java.io.File;
+import javax.crypto.*;
+import javax.crypto.spec.DESKeySpec;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -110,7 +115,10 @@ public class ImageElement implements ImageElementI {
 
     @Override
     public String getDescription() {
-        return StringUtils.isNotBlank(description) ? description : StringUtils.stripToEmpty(getName()) + "\n" + Arrays.stream(getKeywords()).filter(e -> !e.equals(getName())).map(String::toLowerCase).collect(Collectors.joining("\n"));
+        return StringUtils.isNotBlank(description) ? description : StringUtils.stripToEmpty(getName()) + "\n" + Arrays.stream(getKeywords())
+                .filter(e -> !e.equals(getName()))
+                .map(String::toLowerCase)
+                .collect(Collectors.joining("\n"));
     }
 
     @Override
@@ -154,6 +162,29 @@ public class ImageElement implements ImageElementI {
     }
 
     @Override
+    public File getOrGenerateDecodedFilePath() throws Exception {
+        File realFilePath = getRealFilePath();
+        if (dictionary.isEncodedDictionary()) {
+            File decodedFile = new File(IOUtils.getTempDir("decoded-image") + File.separator + realFilePath.getName());
+            org.lifecompanion.framework.commons.utils.io.IOUtils.createParentDirectoryIfNeeded(decodedFile);
+            if (!decodedFile.exists()) {
+                DESKeySpec keySpec = new DESKeySpec(dictionary.getIdCheck().getBytes(StandardCharsets.UTF_8));
+                SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");
+                SecretKey key = keyFactory.generateSecret(keySpec);
+                Cipher cipher = Cipher.getInstance("DES");
+                cipher.init(Cipher.DECRYPT_MODE, key);
+                try (CipherInputStream cipherInputStream = new CipherInputStream(new BufferedInputStream(new FileInputStream(realFilePath)), cipher)) {
+                    try (BufferedOutputStream fos = new BufferedOutputStream(new FileOutputStream(decodedFile))) {
+                        org.lifecompanion.framework.commons.utils.io.IOUtils.copyStream(cipherInputStream, fos);
+                    }
+                }
+            }
+            return decodedFile;
+        }
+        return realFilePath;
+    }
+
+    @Override
     public boolean isImageFileExist() {
         return this.getRealFilePath().exists();
     }
@@ -193,7 +224,7 @@ public class ImageElement implements ImageElementI {
             if (this.loadedImage.get() == null || (lastRequestedWidth < width || lastRequestedHeight < height)) {
                 lastRequestedWidth = Math.max(width, lastRequestedWidth);
                 lastRequestedHeight = Math.max(height, lastRequestedHeight);
-                this.dictionary.loadImage(id, loadedImage, getRealFilePath(), lastRequestedWidth, lastRequestedHeight, cachedKeepRatio, cachedSmooth, null);
+                this.dictionary.loadImage(id, loadedImage, this::getOrGenerateDecodedFilePath, lastRequestedWidth, lastRequestedHeight, cachedKeepRatio, cachedSmooth, null);
             }
         } else {
             lastRequestedWidth = 0.0;

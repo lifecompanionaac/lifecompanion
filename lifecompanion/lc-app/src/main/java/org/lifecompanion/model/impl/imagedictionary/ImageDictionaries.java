@@ -32,6 +32,7 @@ import org.lifecompanion.controller.userconfiguration.UserConfigurationControlle
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.io.FileNameUtils;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
+import org.lifecompanion.framework.commons.utils.lang.CryptUtils;
 import org.lifecompanion.framework.commons.utils.lang.LangUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.framework.utils.FluentHashMap;
@@ -70,6 +71,7 @@ public enum ImageDictionaries implements LCStateListener, ModeListenerI {
     public static final int THUMBNAIL_WIDTH = 100, THUMBNAIL_HEIGHT = 100;
     public static final int SEARCH_PAGE_SIZE = 12;
     public static final int ALL_PAGE_SIZE = 18;
+    private static final String CHECKING_ID_PASS_UNSAFE = "CheckingImage123456!";
 
     /**
      * Available dictionaries
@@ -219,6 +221,7 @@ public enum ImageDictionaries implements LCStateListener, ModeListenerI {
             } else {
                 ThumbnailGenerationTask thumbnailGenerationTask = new ThumbnailGenerationTask(imageElementI, thumbnailPath);
                 thumbnailGenerationTask.setOnSucceeded(e -> this.loadingService.submit(imageLoadingTask));
+                thumbnailGenerationTask.setOnFailed(e -> LOGGER.warn("Could not generate thumbnail {}", thumbnailPath, e.getSource().getException()));
                 thumbnailService.submit(thumbnailGenerationTask);
             }
         }
@@ -365,6 +368,13 @@ public enum ImageDictionaries implements LCStateListener, ModeListenerI {
             try (Reader is = new BufferedReader(new InputStreamReader(new FileInputStream(dictionaryFile), StandardCharsets.UTF_8))) {
                 ImageDictionary imageDictionary = JsonHelper.GSON.fromJson(is, ImageDictionary.class);
                 imageDictionary.setId(FileNameUtils.getNameWithoutExtension(dictionaryFile));
+                // If id check is present, check that the dictionary has the right ID / simple protection to avoid unauthorized dictionary copy
+                if (imageDictionary.isEncodedDictionary()) {
+                    if (!StringUtils.isEquals(imageDictionary.getId(), CryptUtils.xorDecrypt(imageDictionary.getIdCheck(), CHECKING_ID_PASS_UNSAFE))) {
+                        LOGGER.warn("Could not load image dictionary from {} as the id check didn't match, dictionary will not be loaded", dictionaryFile);
+                        return null;
+                    }
+                }
                 imageDictionary.setImageDirectory(new File(dictionaryFile.getParentFile() + File.separator + FileNameUtils.getNameWithoutExtension(dictionaryFile)));
                 imageDictionary.loaded(this.allImages);
                 this.dictionaries.add(imageDictionary);

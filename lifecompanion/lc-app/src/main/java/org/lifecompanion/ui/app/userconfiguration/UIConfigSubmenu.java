@@ -28,11 +28,14 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import org.lifecompanion.controller.appinstallation.OptionalResourceController;
 import org.lifecompanion.controller.editaction.AsyncExecutorController;
 import org.lifecompanion.controller.io.task.CleanupTempFileTask;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.framework.commons.utils.io.FileNameUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.model.impl.appinstallation.MakatonOptionalResource;
+import org.lifecompanion.model.impl.appinstallation.OptionalResourceEnum;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.model.impl.notification.LCNotification;
@@ -295,9 +298,8 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
                     FileNameUtils.getFileSize(cleanupTempFileTask.getValue())))));
             AsyncExecutorController.INSTANCE.addAndExecute(true, false, cleanupTempFileTask);
         });
-        buttonAddOptionalResource.setOnAction(e -> {
-
-        });
+        buttonAddOptionalResource.setOnAction(e -> AsyncExecutorController.INSTANCE.addAndExecute(true, false, OptionalResourceController.INSTANCE.installResource(OptionalResourceEnum.MAKATON)));
+        // TODO : inform to restart for the dictionary to be installed
     }
 
     @Override

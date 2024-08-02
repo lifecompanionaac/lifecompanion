@@ -17,21 +17,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.lifecompanion.model.api.appinstallation;
+package org.lifecompanion.controller.appinstallation.task;
 
-import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
+import org.lifecompanion.model.impl.appinstallation.OptionalResourceEnum;
+import org.lifecompanion.util.model.LCTask;
 
-import java.io.IOException;
-import java.util.function.BiConsumer;
+public class InstallOptionalResourceTask extends LCTask<Void> {
 
-public interface OptionalResourceI {
-    boolean isInstalled();
+    private final OptionalResourceEnum optionalResource;
 
-    boolean validateInstallation() throws Exception;
+    public InstallOptionalResourceTask(OptionalResourceEnum optionalResource) {
+        super("TODO");
+        this.optionalResource = optionalResource;
+    }
 
-    void uninstall();
-
-    boolean isUsedOn(LCConfigurationI configuration);
-
-    void install(BiConsumer<Long, Long> progress, Object... args) throws Exception;
+    @Override
+    protected Void call() throws Exception {
+        this.optionalResource.getResource().install(this::updateProgress, "mathieu.thebaud@vyv3.fr");
+        return null;
+    }
 }

@@ -74,6 +74,8 @@ public interface ImageElementI {
      */
     File getRealFilePath();
 
+    File getOrGenerateDecodedFilePath() throws Exception ;
+
     /**
      * @return true if this image file still exists (because it can be removed after add).
      */

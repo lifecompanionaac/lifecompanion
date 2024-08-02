@@ -25,6 +25,7 @@ import javafx.scene.image.Image;
 import org.lifecompanion.model.api.imagedictionary.ImageElementI;
 import org.lifecompanion.framework.commons.utils.io.FileNameUtils;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
+import org.lifecompanion.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,7 +48,7 @@ class ThumbnailGenerationTask extends Task<Void> {
 
     @Override
     protected Void call() throws Exception {
-        File imagePath = imageElement.getRealFilePath();
+        File imagePath = imageElement.getOrGenerateDecodedFilePath();
         IOUtils.createParentDirectoryIfNeeded(thumbnailPath);
         try (FileInputStream fis = new FileInputStream(imagePath)) {
             Image image = new Image(fis, ImageDictionaries.THUMBNAIL_WIDTH, ImageDictionaries.THUMBNAIL_HEIGHT, true, true);
