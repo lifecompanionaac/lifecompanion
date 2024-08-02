@@ -16,11 +16,12 @@ import org.lifecompanion.util.javafx.FXControlUtils;
 import static org.lifecompanion.model.impl.constant.LCConstant.URL_TRAININGS;
 
 public class TrainingInformationPane extends VBox implements LCViewInitHelper {
-
+    private final TrainingInformationStage trainingInformationStage;
     private CheckBox checkboxNeverShowAgain;
-    private Button buttonTrain;
+    private Button buttonTrain, buttonClose;
 
-    TrainingInformationPane() {
+    TrainingInformationPane(TrainingInformationStage trainingInformationStage) {
+        this.trainingInformationStage = trainingInformationStage;
         initAll();
     }
 
@@ -40,7 +41,11 @@ public class TrainingInformationPane extends VBox implements LCViewInitHelper {
 
         buttonTrain = FXControlUtils.createTextButtonWithBackground(Translation.getText("training.information.button.train"));
         buttonTrain.setPrefWidth(150.0);
-        HBox boxTrain = new HBox(buttonTrain);
+
+        buttonClose = FXControlUtils.createTextButtonWithBorder(Translation.getText("training.information.button.close"));
+        buttonClose.setPrefWidth(150.0);
+
+        HBox boxTrain = new HBox(10, buttonClose, buttonTrain);
         boxTrain.setAlignment(Pos.CENTER);
         VBox.setMargin(boxTrain, new Insets(10));
 
@@ -60,6 +65,7 @@ public class TrainingInformationPane extends VBox implements LCViewInitHelper {
     @Override
     public void initListener() {
         buttonTrain.setOnAction(e -> DesktopUtils.openUrlInDefaultBrowser(InstallationController.INSTANCE.getBuildProperties().getAppServerUrl() + URL_TRAININGS));
+        buttonClose.setOnAction(e -> trainingInformationStage.hide());
     }
 
     public CheckBox getCheckboxNeverShowAgain() {

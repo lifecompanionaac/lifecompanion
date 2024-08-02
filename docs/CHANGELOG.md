@@ -17,6 +17,7 @@
 - Correction de l'affichage de la progression qui pouvait ne pas apparaître dans de rares cas
 - Ticket #362 : correction d'un problème qui n'ouvrait parfois pas le bon sélecteur de fichiers images/vidéos
 - Ticket #363 : les images ajoutées à la main dans une configuration n'utilisaient plus le nom du fichier
+- Ticket #367 : ajout d'un bouton "Fermer" sur la fenêtre d'information sur les formations
 
 ## 1.6.2 - 28/05/2024
 

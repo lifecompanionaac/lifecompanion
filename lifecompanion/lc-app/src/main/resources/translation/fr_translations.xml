@@ -3877,4 +3877,5 @@
     <text key="makaton.notification.installed.restart.button">Redémarrer</text>
     <text key="optional.resource.makaton.enabled">Banque d'images Makaton activée</text>
     <text key="makaton.task.install.resource">Installation de la banque Makaton</text>
+    <text key="training.information.button.close">Fermer</text>
 </texts>

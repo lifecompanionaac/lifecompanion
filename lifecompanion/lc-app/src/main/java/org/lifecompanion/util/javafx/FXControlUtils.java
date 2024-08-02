@@ -174,9 +174,16 @@ public class FXControlUtils {
     public static Button createTextButtonWithBackground(final String label) {
         Button button = new Button(label);
         button.setContentDisplay(ContentDisplay.CENTER);
-        button.getStyleClass().addAll("text-weight-bold","text-font-size-120", "text-fill-white", "background-primary-dark", "opacity-80-hover", "opacity-60-pressed");
+        button.getStyleClass().addAll("text-weight-bold", "text-font-size-120", "text-fill-white", "background-primary-dark", "opacity-80-hover", "opacity-60-pressed");
         button.setContentDisplay(ContentDisplay.TOP);
         return button;
+    }
+
+    public static Button createTextButtonWithBorder(final String label) {
+        Button textButtonWithBackground = createTextButtonWithBackground(label);
+        textButtonWithBackground.getStyleClass().removeAll("background-primary-dark", "text-fill-white","text-weight-bold");
+        textButtonWithBackground.getStyleClass().addAll("border-lightgrey", "background-none");
+        return textButtonWithBackground;
     }
 
     public static Button createLeftTextButton(final String label, final Node graphics, final String tooltipTranslationID) {

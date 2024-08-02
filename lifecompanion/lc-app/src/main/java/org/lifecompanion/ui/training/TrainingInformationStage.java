@@ -21,7 +21,7 @@ public class TrainingInformationStage extends Stage {
         this.setWidth(450);
         this.setHeight(400);
         this.setResizable(LCGraphicStyle.TOOL_STAGE_RESIZABLE);
-        TrainingInformationPane trainingInformationPane = new TrainingInformationPane();
+        TrainingInformationPane trainingInformationPane = new TrainingInformationPane(this);
         Scene scene = new Scene(trainingInformationPane);
         scene.getStylesheets().addAll(LCConstant.CSS_STYLE_PATH);
         this.setScene(scene);
