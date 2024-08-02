@@ -7,8 +7,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.StageStyle;
+import org.lifecompanion.controller.systemvk.SystemVirtualKeyboardController;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.model.impl.constant.LCConstant;
+import org.lifecompanion.util.binding.Unbindable;
 
 public class LargeTextInputDialog extends Dialog<String> implements LCViewInitHelper {
     private final String content, fieldName;
@@ -33,7 +35,7 @@ public class LargeTextInputDialog extends Dialog<String> implements LCViewInitHe
         int rowIndex = 0;
 
         Label labelContent = new Label(content);
-        labelContent.getStyleClass().addAll( "text-fill-gray", "text-wrap-enabled");
+        labelContent.getStyleClass().addAll("text-fill-gray", "text-wrap-enabled");
         labelContent.setPrefWidth(400);
         gridPane.add(labelContent, 0, rowIndex++, 2, 1);
         gridPane.add(new Label(fieldName), 0, rowIndex);
@@ -43,5 +45,10 @@ public class LargeTextInputDialog extends Dialog<String> implements LCViewInitHe
         this.getDialogPane().setContent(gridPane);
         this.getDialogPane().getStylesheets().addAll(LCConstant.CSS_STYLE_PATH);
         this.setResultConverter(dialogButton -> dialogButton == ButtonType.OK ? textField.getText() : null);
+
+        Unbindable unbindable = SystemVirtualKeyboardController.INSTANCE.registerSceneFromDialog(this);
+        this.setOnHidden(e -> {
+            if (unbindable != null) unbindable.unbind();
+        });
     }
 }
