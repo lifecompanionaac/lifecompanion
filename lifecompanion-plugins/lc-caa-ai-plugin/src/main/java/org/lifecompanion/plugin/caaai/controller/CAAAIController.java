@@ -17,14 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.lifecompanion.plugin.spellgame.controller;
+package org.lifecompanion.plugin.caaai.controller;
 
 import javafx.beans.InvalidationListener;
 import org.lifecompanion.controller.textcomponent.WritingStateController;
 import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
-import org.lifecompanion.model.impl.configurationcomponent.keyoption.WordPredictionKeyOption;
 import org.lifecompanion.plugin.caaai.CAAAIPlugin;
 import org.lifecompanion.plugin.caaai.CAAAIPluginProperties;
 import org.lifecompanion.plugin.caaai.model.keyoption.SuggestedSentenceKeyOption;
@@ -34,11 +33,11 @@ import org.lifecompanion.util.model.ConfigurationComponentUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-/**
- *
- */
 public enum CAAAIController implements ModeListenerI {
     INSTANCE;
     private static final Logger LOGGER = LoggerFactory.getLogger(CAAAIController.class);
@@ -46,7 +45,7 @@ public enum CAAAIController implements ModeListenerI {
     private CAAAIPluginProperties currentCAAAIPluginProperties;
     private final List<SuggestedSentenceKeyOption> suggestedSentenceKeys;
     private final InvalidationListener textChangedListener;
-    private int predictionCount = 0;
+
 
     CAAAIController() {
         suggestedSentenceKeys = new ArrayList<>();
@@ -55,20 +54,18 @@ public enum CAAAIController implements ModeListenerI {
         };
     }
 
-
-
     private void launchSuggestion() {
         ThreadUtils.debounce(500, "caa-ai", () -> {
             // Make a call to get suggestions
             String textBeforeCaret = WritingStateController.INSTANCE.textBeforeCaretProperty().get();
 
             // Get the suggestions
-            List<String> suggested = List.of((predictionCount++) + " ça va et toi ?", "Je commence à avoir faim", "Tout roule");
+            List<String> suggestions = SuggestionService.INSTANCE.getSuggestions(textBeforeCaret, suggestedSentenceKeys.size());
 
             // Dispatch in keys
             for (int i = 0; i < suggestedSentenceKeys.size(); i++) {
                 final int index = i;
-                FXThreadUtils.runOnFXThread(() -> suggestedSentenceKeys.get(index).suggestionUpdated(index < suggested.size() ? suggested.get(index) : null));
+                FXThreadUtils.runOnFXThread(() -> suggestedSentenceKeys.get(index).suggestionUpdated(index < suggestions.size() ? suggestions.get(index) : null));
             }
         });
     }

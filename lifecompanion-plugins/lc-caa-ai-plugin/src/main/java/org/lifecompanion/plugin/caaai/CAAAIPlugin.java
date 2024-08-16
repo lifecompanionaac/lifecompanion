@@ -6,7 +6,7 @@ import org.lifecompanion.model.api.plugin.PluginConfigPropertiesI;
 import org.lifecompanion.model.api.plugin.PluginI;
 import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
-import org.lifecompanion.plugin.spellgame.controller.CAAAIController;
+import org.lifecompanion.plugin.caaai.controller.CAAAIController;
 
 import java.io.File;
 import java.util.List;
