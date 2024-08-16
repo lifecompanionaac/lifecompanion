@@ -164,25 +164,28 @@ public enum GlobalRuntimeConfiguration implements GlobalRuntimeConfigurationI {
     ENABLE_CONTROL_SERVER(
             "enableControlServer",
             GlobalRuntimeConfigurationType.COMMAND_LINE,
-            "Will enable the API server to control LifeCompanion while running. To get details on control feature, check the \"LifeCompanion control server API\" part of documentation."+
+            "Will enable the API server to control LifeCompanion while running. To get details on control feature, check the \"LifeCompanion control server API\" part of documentation." +
                     "API server will run on its default port (8648) if enable expect if the port is specific with its own parameter."
     ),
 
     CONTROL_SERVER_PORT("controlServerPort",
-                        GlobalRuntimeConfigurationType.COMMAND_LINE,
+            GlobalRuntimeConfigurationType.COMMAND_LINE,
             "port",
-                                "The port for the API server to run. Will be ignored if the API server is not enabled (check the parameter above to enable it). If not specified, server will run on its default port.",
-                                "8080",
-                                1
+            "The port for the API server to run. Will be ignored if the API server is not enabled (check the parameter above to enable it). If not specified, server will run on its default port.",
+            "8080",
+            1
     ),
-
     CONTROL_SERVER_AUTH_TOKEN("controlServerAuthToken",
-                              GlobalRuntimeConfigurationType.COMMAND_LINE,
+            GlobalRuntimeConfigurationType.COMMAND_LINE,
             "token",
-                                      "If you want your control server to be secured with a `Authorization: Bearer <token>` header on each request. If enabled, any request without the same matching token will be rejected with 401 code",
-                                      "AbCdEf123456",
-                                      1,
-                                      true
+            "If you want your control server to be secured with a `Authorization: Bearer <token>` header on each request. If enabled, any request without the same matching token will be rejected with 401 code",
+            "AbCdEf123456",
+            1,
+            true
+    ),
+    CONTROL_SERVER_ENABLE_CORS("controlServerEnableCors",
+            GlobalRuntimeConfigurationType.COMMAND_LINE,
+            "If you want that the control server allows request from all origin"
     ),
 
     // Updates,
@@ -209,19 +212,19 @@ public enum GlobalRuntimeConfiguration implements GlobalRuntimeConfigurationI {
             "hubUrl",
             GlobalRuntimeConfigurationType.COMMAND_LINE,
             "url",
-                    "The hub URL for syncing features. When not specified, the default LifeCompanion hub will be used.",
-                    "https://hub.lifecompanionaac.org",
-                    1
+            "The hub URL for syncing features. When not specified, the default LifeCompanion hub will be used.",
+            "https://hub.lifecompanionaac.org",
+            1
     ),
 
     HUB_AUTH_TOKEN(
             "hubAuthToken",
             GlobalRuntimeConfigurationType.COMMAND_LINE,
             "token",
-                    "The auth token to be used when connecting to the LifeCompanion hub. Will overwrite any token that could be used while using the app (even if the user connects manually).",
-                    "AbCdEf123456",
-                    1,
-                    true
+            "The auth token to be used when connecting to the LifeCompanion hub. Will overwrite any token that could be used while using the app (even if the user connects manually).",
+            "AbCdEf123456",
+            1,
+            true
     ),
 
     DEVICE_SYNC_MODE(
@@ -240,9 +243,9 @@ public enum GlobalRuntimeConfiguration implements GlobalRuntimeConfigurationI {
             "deviceLocalId",
             GlobalRuntimeConfigurationType.COMMAND_LINE,
             "deviceLocalId",
-                    "Set the device local ID to be used by the `deviceSyncMode` when enabled. Allow launching LifeCompanion with a device local ID already set.",
-                    "foobar123",
-                    1
+            "Set the device local ID to be used by the `deviceSyncMode` when enabled. Allow launching LifeCompanion with a device local ID already set.",
+            "foobar123",
+            1
     ),
 
     USE_HUB_IMAGES(
@@ -255,14 +258,14 @@ public enum GlobalRuntimeConfiguration implements GlobalRuntimeConfigurationI {
     PROP_DEV_MODE(
             "org.lifecompanion.dev.mode",
             GlobalRuntimeConfigurationType.JAVA_PROPERTY,
-            "A general configuration that can be used to check if we are running LifeCompanion in a dev context."+
+            "A general configuration that can be used to check if we are running LifeCompanion in a dev context." +
                     "This can be useful to add currently developed feature with this check, this will secure for an unfinished feature to be pushed in production."
     ),
 
     PROP_DISABLE_UPDATES(
             "org.lifecompanion.disable.updates",
             GlobalRuntimeConfigurationType.JAVA_PROPERTY,
-            "Will disable all the update checking process (for both app and plugins). "+
+            "Will disable all the update checking process (for both app and plugins). " +
                     "Will not try to reach the update server at all."
     ),
 
@@ -283,7 +286,7 @@ public enum GlobalRuntimeConfiguration implements GlobalRuntimeConfigurationI {
             GlobalRuntimeConfigurationType.JAVA_PROPERTY,
             "When enabled, a checking Thread is launched in background to display the loaded configuration count. This can be useful to detect memory leaks on configuration (for example, if a configuration is not released on configuration changed). See [`ConfigurationMemoryLeakChecker`](../lifecompanion/lc-app/src/main/java/org/lifecompanion/util/debug/ConfigurationMemoryLeakChecker.java) for details"
     ),
-            ;
+    ;
 
     private final String name, parameters, description, parametersExample;
     private final int expectedParameterCount;

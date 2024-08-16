@@ -26,8 +26,7 @@ public enum LifeCompanionControlServerController implements ResponseTransformer 
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LifeCompanionControlServerController.class);
 
-    // TODO : replace with main branch when ready
-    public static final String DOC_URL = "https://github.com/lifecompanionaac/lifecompanion/blob/develop/docs/USER_API.md#lifecompanion-control-server-api";
+    public static final String DOC_URL = "https://github.com/lifecompanionaac/lifecompanion/blob/main/docs/USER_API.md#lifecompanion-control-server-api";
 
     private boolean started = false;
     private boolean appStopping = false;
@@ -58,7 +57,7 @@ public enum LifeCompanionControlServerController implements ResponseTransformer 
             port(port);
             defaultResponseTransformer(this);
 
-            if (GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.PROP_DEV_MODE)) {
+            if (GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.CONTROL_SERVER_ENABLE_CORS)) {
                 enableCors();
             }
 
