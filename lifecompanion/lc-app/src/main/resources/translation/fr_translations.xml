@@ -1425,7 +1425,7 @@
   <text key="notification.error.details.action">Détails</text>
   <text key="exception.dialog.stacktrace.label">Détail de l'erreur</text>
   <text key="unknown.error.on.fx.thread.message">Une erreur inattendue s'est produite dans
-		LifeCompanion, nous en sommes désolés.\n Merci de relancer LifeCompanion.</text>
+		LifeCompanion, nous en sommes désolés.</text>
   <text key="unknown.error.on.fx.thread.title">Une erreur inattendue s'est produite...</text>
   <!--org.lifecompanion.config.data.mode-->
   <text key="action.confirm.go.config.error">Le code entré est incorrect.</text>

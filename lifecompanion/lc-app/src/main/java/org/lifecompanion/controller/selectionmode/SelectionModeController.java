@@ -50,6 +50,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -137,6 +138,11 @@ public enum SelectionModeController implements ModeListenerI {
      */
     private final Set<Consumer<Boolean>> configurationChangingListeners;
 
+    /**
+     * Listener for scanned part changes
+     */
+    private final Set<BiConsumer<GridComponentI, ComponentToScanI>> scannedPartChangedListeners;
+
     SelectionModeController() {
         this.currentOverPart = new SimpleObjectProperty<>(this, "currentOverPart", null);
         this.playingProperty = new SimpleBooleanProperty(false);
@@ -147,6 +153,7 @@ public enum SelectionModeController implements ModeListenerI {
         this.mouseEventListener = new ArrayList<>();
         this.currentPressComponents = new HashSet<>();
         this.keyEventListener = this::globalKeyboardEvent;
+        this.scannedPartChangedListeners = new HashSet<>();
         this.changeListenerGrid = (obs, ov, nv) -> {
             if (nv != null) {
                 this.gridChanged(nv);
@@ -1136,4 +1143,15 @@ public enum SelectionModeController implements ModeListenerI {
     }
     //========================================================================
 
+    public void addScannedPartChangedListeners(BiConsumer<GridComponentI, ComponentToScanI> listener) {
+        this.scannedPartChangedListeners.add(listener);
+    }
+
+    public void removeScannedPartChangedListeners(BiConsumer<GridComponentI, ComponentToScanI> listener) {
+        this.scannedPartChangedListeners.remove(listener);
+    }
+
+    public void fireScannedPartChangedListeners(GridComponentI grid, ComponentToScanI selectedComponentToScan) {
+        this.scannedPartChangedListeners.forEach(listener -> listener.accept(grid, selectedComponentToScan));
+    }
 }
