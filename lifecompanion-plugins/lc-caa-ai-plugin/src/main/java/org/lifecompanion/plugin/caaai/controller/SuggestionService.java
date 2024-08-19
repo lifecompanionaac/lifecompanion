@@ -60,7 +60,7 @@ public enum SuggestionService {
                 .addHeader("Content-Type", "application/vnd.api+json")
                 .build()).execute()) {
             if (response.isSuccessful()) {
-                suggested = JsonHelper.GSON.fromJson(response.body().string(), SuggestionResponseDto.class).suggestions();
+                suggested = gson.fromJson(response.body().string(), SuggestionResponseDto.class).suggestions();
             }
         } catch (Exception e) {
             LOGGER.warn("Error when calling : {}", e.getMessage());

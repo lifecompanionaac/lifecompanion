@@ -49,9 +49,7 @@ public enum CAAAIController implements ModeListenerI {
 
     CAAAIController() {
         suggestedSentenceKeys = new ArrayList<>();
-        this.textChangedListener = (inv) -> {
-            this.launchSuggestion();
-        };
+        this.textChangedListener = (inv) -> this.launchSuggestion();
     }
 
     private void launchSuggestion() {
