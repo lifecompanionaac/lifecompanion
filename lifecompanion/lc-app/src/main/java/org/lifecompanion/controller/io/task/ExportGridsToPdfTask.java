@@ -34,6 +34,7 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.pdmodel.font.encoding.WinAnsiEncoding;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.apache.pdfbox.util.Matrix;
 import org.lifecompanion.controller.appinstallation.InstallationController;
@@ -103,13 +104,13 @@ public class ExportGridsToPdfTask extends LCTask<Void> {
     protected Void call() throws Exception {
         // Find all grid by stacks in configuration
         final Map<String, List<GridComponentI>> gridByStack = configuration.getAllComponent()
-                                                                           .values()
-                                                                           .stream()
-                                                                           .filter(comp -> comp instanceof GridComponentI)
-                                                                           .map(comp -> (GridComponentI) comp)
-                                                                           .collect(Collectors.groupingBy(g -> g.stackParentProperty().get() != null ? g.stackParentProperty()
-                                                                                                                                                        .get()
-                                                                                                                                                        .getID() : NO_STACK_ID));
+                .values()
+                .stream()
+                .filter(comp -> comp instanceof GridComponentI)
+                .map(comp -> (GridComponentI) comp)
+                .collect(Collectors.groupingBy(g -> g.stackParentProperty().get() != null ? g.stackParentProperty()
+                        .get()
+                        .getID() : NO_STACK_ID));
 
         // Sort each grid by its order in stack and make a final lit
         List<GridComponentI> gridsToSnap = new ArrayList<>();
@@ -223,8 +224,8 @@ public class ExportGridsToPdfTask extends LCTask<Void> {
                     pageContentStream.showText(profileName + " - " + configName + " - " + StringUtils.dateToStringDateWithHour(exportDate));
                     pageContentStream.newLineAtOffset(0, -FOOTER_LINE_HEIGHT);
                     pageContentStream.showText(LCConstant.NAME + " v" + InstallationController.INSTANCE.getBuildProperties()
-                                                                                                       .getVersionLabel() + " - " + InstallationController.INSTANCE.getBuildProperties()
-                                                                                                                                                                   .getAppServerUrl());
+                            .getVersionLabel() + " - " + InstallationController.INSTANCE.getBuildProperties()
+                            .getAppServerUrl());
                     pageContentStream.endText();
                     pageContentStream.drawImage(logoImage, pageWidthF - logoDrawWidth - TEXT_LEFT_OFFSET, FOOTER_SIZE / 2f - LOGO_HEIGHT / 2f, logoDrawWidth, LOGO_HEIGHT);
                 }
@@ -291,10 +292,10 @@ public class ExportGridsToPdfTask extends LCTask<Void> {
     }
 
     private ImageExportResult printGrid(GridPrintTask printTask, int taskIndex, int pageIndex) {
-        String gridName = printTask.gridToSnap.nameProperty().get() + (printTask.nodeToSelect != null ? (" - " + printTask.nodeToSelect.textProperty()
-                                                                                                                                       .get() + " (" + (pageIndex + 1) + "/" + printTask.pageCount + ")") : "");
+        String gridName = cleanTextForPdf(printTask.gridToSnap.nameProperty().get() + (printTask.nodeToSelect != null ? (" - " + StringUtils.trimToEmpty(printTask.nodeToSelect.textProperty()
+                .get()) + " (" + (pageIndex + 1) + "/" + printTask.pageCount + ")") : ""));
         final String fileName = IOUtils.getValidFileName(taskIndex + "_" + printTask.gridToSnap.nameProperty().get() + "_" + (printTask.nodeToSelect != null ? (printTask.nodeToSelect.textProperty()
-                                                                                                                                                                                      .get() + "_" + pageIndex) : ""));
+                .get() + "_" + pageIndex) : ""));
         File imageFile = new File(exportedImageDir + File.separator + fileName + ".png");
         AtomicBoolean landscape = new AtomicBoolean();
         final Image image = FXThreadUtils.runOnFXThreadAndWaitFor(() -> {
@@ -332,5 +333,18 @@ public class ExportGridsToPdfTask extends LCTask<Void> {
             LOGGER.error("Exception when saving snapshot to {}", imageFile, e);
         }
         return new ImageExportResult(gridName, imageFile, landscape.get());
+    }
+
+    private String cleanTextForPdf(String text) {
+        StringBuilder b = new StringBuilder();
+        for (int i = 0; i < text.length(); i++) {
+            char charAt = text.charAt(i);
+            if (WinAnsiEncoding.INSTANCE.contains(charAt)) {
+                b.append(charAt);
+            } else {
+                b.append("?");
+            }
+        }
+        return b.toString();
     }
 }
