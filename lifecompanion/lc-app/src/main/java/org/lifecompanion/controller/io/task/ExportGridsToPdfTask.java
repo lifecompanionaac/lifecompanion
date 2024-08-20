@@ -26,6 +26,7 @@ import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Region;
+import javafx.scene.paint.Color;
 import javafx.scene.transform.Scale;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentInformation;
@@ -68,7 +69,7 @@ import java.util.stream.Collectors;
 public class ExportGridsToPdfTask extends LCTask<Void> {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExportGridsToPdfTask.class);
 
-    private static final float HEADER_SIZE = 35f, FOOTER_SIZE = 30f, IMAGE_BORDER = 20f, HEADER_FONT_SIZE = 16, FOOTER_FONT_SIZE = 9, TEXT_LEFT_OFFSET = 50, FOOTER_LINE_HEIGHT = 12f, LOGO_HEIGHT = 25f, LINE_SIZE = 1f, COLOR_GRAY = 0.4f;
+    private static final float HEADER_SIZE = 35f, FOOTER_SIZE = 30f, IMAGE_BORDER = 20f, BACKGROUND_COLOR_BORDER = 3f, HEADER_FONT_SIZE = 16, FOOTER_FONT_SIZE = 9, TEXT_LEFT_OFFSET = 50, FOOTER_LINE_HEIGHT = 12f, LOGO_HEIGHT = 25f, LINE_SIZE = 1f, COLOR_GRAY = 0.4f;
     private static final PDFont HEADER_FONT = PDType1Font.HELVETICA_BOLD;
     private static final PDFont FOOTER_FONT = PDType1Font.HELVETICA;
     private static final String EXPORT_IMAGE_LOADING_KEY = "export-to-pdf";
@@ -205,6 +206,16 @@ public class ExportGridsToPdfTask extends LCTask<Void> {
                     pageContentStream.endText();
 
                     // GRID IMAGE
+                    Color color = configuration.backgroundColorProperty().get();
+                    if (color != null) {
+                        pageContentStream.setNonStrokingColor((float) color.getRed(), (float) color.getGreen(), (float) color.getBlue());
+                        float contentWidth = pageWidthF - BACKGROUND_COLOR_BORDER * 2f, contentHeight = pageHeightF - HEADER_SIZE - FOOTER_SIZE - BACKGROUND_COLOR_BORDER * 2f;
+                        pageContentStream.addRect((float) (BACKGROUND_COLOR_BORDER + (pageWidthF - 2 * BACKGROUND_COLOR_BORDER) / 2.0 - contentWidth / 2.0),
+                                pageHeightF - HEADER_SIZE - BACKGROUND_COLOR_BORDER - contentHeight - ((pageHeightF - HEADER_SIZE - FOOTER_SIZE - 2f * BACKGROUND_COLOR_BORDER) - contentHeight) / 2f,
+                                contentWidth, contentHeight);
+                        pageContentStream.fill();
+                    }
+
                     PDImageXObject pdImage = PDImageXObject.createFromFile(exportResult.imageFile.getAbsolutePath(), doc);
                     float imageDestWidth = pageWidthF - IMAGE_BORDER * 2f, imageDestHeight = pageHeightF - HEADER_SIZE - FOOTER_SIZE - IMAGE_BORDER * 2f;
                     float widthRatio = imageDestWidth / pdImage.getWidth(), heightRatio = imageDestHeight / pdImage.getHeight();
@@ -214,6 +225,9 @@ public class ExportGridsToPdfTask extends LCTask<Void> {
                             (float) (IMAGE_BORDER + (pageWidthF - 2 * IMAGE_BORDER) / 2.0 - imageDrawWidth / 2.0),
                             pageHeightF - HEADER_SIZE - IMAGE_BORDER - imageDrawHeight - ((pageHeightF - HEADER_SIZE - FOOTER_SIZE - 2f * IMAGE_BORDER) - imageDrawHeight) / 2f,
                             imageDrawWidth, imageDrawHeight);
+
+
+                    pageContentStream.setNonStrokingColor(COLOR_GRAY, COLOR_GRAY, COLOR_GRAY);
 
                     // FOOTER
                     pageContentStream.addRect(0, FOOTER_SIZE, pageWidthF, LINE_SIZE);
