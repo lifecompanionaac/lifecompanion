@@ -38,6 +38,7 @@ import org.lifecompanion.ui.notification.LCNotificationController;
 import org.lifecompanion.framework.commons.translation.Translation;
 
 import java.util.Map;
+import java.util.function.Function;
 
 public class EditModeContext extends AbstractModeContext {
 
@@ -58,7 +59,8 @@ public class EditModeContext extends AbstractModeContext {
             // Value become larger than threshold : show a warning notification that suggest saving
             if (LangUtils.nullToZeroInt(ov) < threshold && LangUtils.nullToZeroInt(nv) >= threshold && AppModeController.INSTANCE.isEditMode()) {
                 LCNotificationController.INSTANCE.showNotification(LCNotification.createWarning(Translation.getText("notification.warning.unsaved.changes.configuration.title", nv),
-                        "notification.warning.unsaved.changes.action.name", () -> ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.SaveAction(getStage().getScene().getRoot()))));
+                        "notification.warning.unsaved.changes.action.name",
+                        () -> ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.SaveAction(getStage().getScene().getRoot()))));
             }
         });
     }
@@ -149,16 +151,21 @@ public class EditModeContext extends AbstractModeContext {
     }
 
     public void increaseUnsavedActionOnCurrentConfiguration() {
-        final LCConfigurationI configuration = AppModeController.INSTANCE.getEditModeContext().getConfiguration();
-        if (configuration != null) {
-            FXThreadUtils.runOnFXThread(() -> configuration.unsavedActionProperty().set(configuration.unsavedActionProperty().get() + 1));
-        }
+        changeUnsavedActionOnCurrentConfiguration(c -> c + 1);
+    }
+
+    public void decreaseUnsavedActionOnCurrentConfiguration() {
+        changeUnsavedActionOnCurrentConfiguration(c -> c > 0 ? c - 1 : 0);
     }
 
     public void resetUnsavedActionOnCurrentConfiguration() {
+        changeUnsavedActionOnCurrentConfiguration(c -> 0);
+    }
+
+    private static void changeUnsavedActionOnCurrentConfiguration(Function<Integer, Integer> function) {
         final LCConfigurationI configuration = AppModeController.INSTANCE.getEditModeContext().getConfiguration();
         if (configuration != null) {
-            FXThreadUtils.runOnFXThread(() -> configuration.unsavedActionProperty().set(0));
+            FXThreadUtils.runOnFXThread(() -> configuration.unsavedActionProperty().set(function.apply(configuration.unsavedActionProperty().get())));
         }
     }
     //========================================================================

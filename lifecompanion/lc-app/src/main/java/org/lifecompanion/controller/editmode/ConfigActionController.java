@@ -151,6 +151,7 @@ public enum ConfigActionController {
                 this.LOGGER.info("Action will be undone : \"{}\"", Translation.getText(action.getNameID()));
                 action.undoAction();
                 this.redoActions.add(action);
+                AppModeController.INSTANCE.getEditModeContext().decreaseUnsavedActionOnCurrentConfiguration();
             } catch (LCException e) {
                 reportErrorOnConfigActionDoRedoUndo(action, e, "undoAction()", "error.config.action.while.undo");
             }
@@ -167,6 +168,7 @@ public enum ConfigActionController {
                 this.LOGGER.info("Action will be redone : \"{}\"", Translation.getText(action.getNameID()));
                 action.redoAction();
                 this.undoActions.add(action);
+                AppModeController.INSTANCE.getEditModeContext().increaseUnsavedActionOnCurrentConfiguration();
             } catch (LCException e) {
                 reportErrorOnConfigActionDoRedoUndo(action, e, "redoAction()", "error.config.action.while.redo");
             }

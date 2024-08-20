@@ -220,8 +220,8 @@ public enum KeyListController implements ModeListenerI {
         findAllNodeForExactLevel(level).forEach(n -> this.previousIn(n, true));
     }
 
-    public void openKeyListConfigFor(KeyListNodeKeyOption keyListNodeKeyOption){
-        if(keyListNodeKeyOption!=null) {
+    public void openKeyListConfigFor(KeyListNodeKeyOption keyListNodeKeyOption) {
+        if (keyListNodeKeyOption != null) {
             final KeyListNodeI keyListNode = keyListNodeKeyOption.currentSimplerKeyContentContainerProperty().get();
             if (keyListNode != null) {
                 GeneralConfigurationController.INSTANCE.showStep(GeneralConfigurationStep.KEY_LIST_NODE, keyListNode.getID());

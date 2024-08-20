@@ -21,6 +21,7 @@
 - Ticket #367 : ajout d'un bouton "Fermer" sur la fenêtre d'information sur les formations
 - Ticket #358 : correction d'un problème d'affichage sur une action
 - Ticket #374 : les cases des séquences affichaient un texte même lorsqu'elles étaient vides
+- Ticket #360 : correction de l'affichage des listes de cases dans certaines situations
 
 ## 1.6.2 - 28/05/2024
 
