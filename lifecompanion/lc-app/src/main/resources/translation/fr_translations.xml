@@ -3879,4 +3879,9 @@
     <text key="makaton.task.install.resource">Installation de la banque Makaton</text>
     <text key="training.information.button.close">Fermer</text>
     <text key="use.action.timer.time">Durée du minuteur</text>
+    <text key="use.action.start.dynamic.key.fill.name">Marquer comme case à remplir</text>
+    <text key="use.action.start.dynamic.key.fill.description">Permet d'indiquer cette case comme étant la prochaine à remplir : cette action permet d'utiliser le contenu de la prochaine case ayant pour action "Remplir la case marquée" (texte, image, vidéo...).</text>
+    <text key="use.action.end.dynamic.key.fill.name">Remplir la case marquée</text>
+    <text key="use.action.end.dynamic.key.fill.description">Permet de remplir la dernière case sélectionnée avec "Marquer comme case à remplir" avec le contenu de cette case.</text>
+
 </texts>

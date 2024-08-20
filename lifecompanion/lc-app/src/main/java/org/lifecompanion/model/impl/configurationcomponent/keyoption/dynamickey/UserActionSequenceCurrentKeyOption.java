@@ -44,7 +44,7 @@ public class UserActionSequenceCurrentKeyOption extends AbstractSimplerKeyConten
 
     @Override
     protected String getDefaultTextContentProperty() {
-        return AppModeController.INSTANCE.modeProperty().get() == AppMode.EDIT ? Translation.getText("key.option.user.action.current.key.default.text") : "";
+        return AppModeController.INSTANCE.isEditMode() ? Translation.getText("key.option.user.action.current.key.default.text") : "";
     }
 
     public List<BaseUseActionI<UseActionTriggerComponentI>> getActionsToExecuteOnStart() {

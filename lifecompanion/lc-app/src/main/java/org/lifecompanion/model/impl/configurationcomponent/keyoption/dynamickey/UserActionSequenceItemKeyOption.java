@@ -64,7 +64,7 @@ public class UserActionSequenceItemKeyOption extends AbstractSimplerKeyContentCo
 
     @Override
     protected String getDefaultTextContentProperty() {
-        return AppModeController.INSTANCE.modeProperty().get() == AppMode.EDIT ? Translation.getText("key.option.user.action.items.key.default.text") : "";
+        return AppModeController.INSTANCE.isEditMode() ? Translation.getText("key.option.user.action.items.key.default.text") : "";
     }
     //========================================================================
 

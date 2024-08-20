@@ -20,6 +20,7 @@ package org.lifecompanion.model.impl.configurationcomponent.keyoption.dynamickey
 
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
+import javafx.beans.WeakInvalidationListener;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import org.jdom2.Element;
@@ -58,6 +59,7 @@ public abstract class AbstractSimplerKeyContentContainerKeyOption<T extends Simp
         // Key update handling
         InvalidationListener invUpdateKey = this::updateKeyFromCurrentContent;
         currentSimplerKeyContentContainer.addListener(invUpdateKey);
+        AppModeController.INSTANCE.modeProperty().addListener(new WeakInvalidationListener(invUpdateKey));
         attachedKey.addListener(invUpdateKey);
 
         // Unbind from when needed

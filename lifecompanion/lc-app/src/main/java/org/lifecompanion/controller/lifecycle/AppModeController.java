@@ -182,6 +182,7 @@ public enum AppModeController {
             UseVariableController.INSTANCE, //
             KeyListController.INSTANCE, //
             ConfigListController.INSTANCE,//
+            DynamicKeyFillController.INSTANCE,//
             UserActionSequenceController.INSTANCE, //
             UseModeProgressDisplayerController.INSTANCE, //
             SoundPlayerController.INSTANCE, //

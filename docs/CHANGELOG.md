@@ -11,6 +11,7 @@
 - Ajout de la possibilité d'intégrer **[la base de pictogramme de Makaton](https://www.makaton.fr/)** !
 	- Pour cela vous devez avoir une adhésion valide à AAD Makaton
 	- Puis l'ajouter avec votre identifiant de l'espace adhérent dans "Préférences & Infos"
+- Ajout de deux actions "Marquer comme case à remplir" et "Remplir la case marquée" afin de pouvoir créer des configurations dynamique à l'utilisation (exemple : faire des choix)
 
 ### Corrections/ajustements
 
@@ -19,6 +20,7 @@
 - Ticket #363 : les images ajoutées à la main dans une configuration n'utilisaient plus le nom du fichier
 - Ticket #367 : ajout d'un bouton "Fermer" sur la fenêtre d'information sur les formations
 - Ticket #358 : correction d'un problème d'affichage sur une action
+- Ticket #374 : les cases des séquences affichaient un texte même lorsqu'elles étaient vides
 
 ## 1.6.2 - 28/05/2024
 
