@@ -21,17 +21,27 @@ package org.lifecompanion.plugin.caaai.model.keyoption;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import org.jdom2.Element;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
+import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
 import org.lifecompanion.model.api.io.IOContextI;
+import org.lifecompanion.model.impl.categorizedelement.useaction.available.WriteWordPredictionAction;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.AbstractKeyOption;
 import org.lifecompanion.model.impl.exception.LCException;
+import org.lifecompanion.plugin.caaai.model.useaction.WriteSuggestedSentenceAction;
 
 
 public class SuggestedSentenceKeyOption extends AbstractKeyOption {
 
     private final BooleanProperty exampleProperty;
+
+    private final StringProperty suggestion;
+
+    private WriteSuggestedSentenceAction writeSuggestedSentenceAction;
+
 
     public SuggestedSentenceKeyOption() {
         super();
@@ -40,20 +50,35 @@ public class SuggestedSentenceKeyOption extends AbstractKeyOption {
         this.optionDescriptionId = "caa.ai.plugin.todo";
         this.iconName = "filler_icon_32px.png";
         this.disableTextContent.set(true);
-        this.exampleProperty = new SimpleBooleanProperty();
-    }
 
-    public BooleanProperty examplePropertyProperty() {
-        return exampleProperty;
+        this.exampleProperty = new SimpleBooleanProperty();
+        this.suggestion = new SimpleStringProperty();
+
+        this.suggestion.addListener((obs, ov, pred) -> {
+            final GridPartKeyComponentI key = this.attachedKeyProperty().get();
+            if (key != null) {
+                key.textContentProperty().set(pred);
+            }
+        });
     }
 
     @Override
     public void attachToImpl(final GridPartKeyComponentI key) {
+        this.writeSuggestedSentenceAction = key.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION, WriteSuggestedSentenceAction.class);
+        if (this.writeSuggestedSentenceAction == null) {
+            this.writeSuggestedSentenceAction = new WriteSuggestedSentenceAction();
+            key.getActionManager().componentActions().get(UseActionEvent.ACTIVATION).add(0, this.writeSuggestedSentenceAction);
+        }
+        this.writeSuggestedSentenceAction.attachedToKeyOptionProperty().set(true);
+
+        // TODO Translated "(suggestion IA)".
         key.textContentProperty().set(null);
     }
 
     @Override
     public void detachFromImpl(final GridPartKeyComponentI key) {
+        key.getActionManager().componentActions().get(UseActionEvent.ACTIVATION).remove(this.writeSuggestedSentenceAction);
+        key.textContentProperty().set("");
     }
 
     @Override
@@ -69,7 +94,16 @@ public class SuggestedSentenceKeyOption extends AbstractKeyOption {
         XMLObjectSerializer.deserializeInto(SuggestedSentenceKeyOption.class, this, node);
     }
 
+    public StringProperty suggestionProperty() {
+        return this.suggestion;
+    }
+
+    public BooleanProperty examplePropertyProperty() {
+        return this.exampleProperty;
+    }
+
     public void suggestionUpdated(String suggestion) {
+        this.suggestion.set(suggestion);
         GridPartKeyComponentI keyComponent = this.attachedKeyProperty().get();
         if (keyComponent != null) {
             keyComponent.textContentProperty().set(suggestion);

@@ -27,6 +27,7 @@ import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
 import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
 import org.lifecompanion.model.impl.exception.LCException;
+import org.lifecompanion.plugin.caaai.controller.CAAAIController;
 
 import java.util.Map;
 
@@ -45,7 +46,7 @@ public class ChangeSuggestedSentencesAction extends SimpleUseActionImpl<UseActio
 
     @Override
     public void execute(UseActionEvent event, Map<String, UseVariableI<?>> variables) {
-        // TODO : implementation
+        CAAAIController.INSTANCE.updateSuggestions();
     }
 
     @Override

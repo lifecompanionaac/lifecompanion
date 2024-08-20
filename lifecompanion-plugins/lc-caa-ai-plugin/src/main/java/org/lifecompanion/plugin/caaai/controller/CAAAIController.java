@@ -49,23 +49,29 @@ public enum CAAAIController implements ModeListenerI {
 
     CAAAIController() {
         suggestedSentenceKeys = new ArrayList<>();
-        this.textChangedListener = (inv) -> this.launchSuggestion();
+        this.textChangedListener = (inv) -> this.debounceSuggestionsUpdate();
     }
 
-    private void launchSuggestion() {
-        ThreadUtils.debounce(500, "caa-ai", () -> {
-            // Make a call to get suggestions
-            String textBeforeCaret = WritingStateController.INSTANCE.textBeforeCaretProperty().get();
+    public void updateSuggestions() {
+        // Make a call to get suggestions
+        String textBeforeCaret = WritingStateController.INSTANCE.textBeforeCaretProperty().get();
 
-            // Get the suggestions
-            List<String> suggestions = SuggestionService.INSTANCE.getSuggestions(textBeforeCaret, suggestedSentenceKeys.size());
+        // Get the suggestions
+        List<String> suggestions = SuggestionService.INSTANCE.getSuggestions(
+                currentCAAAIPluginProperties.apiEndpointProperty().get(),
+                currentCAAAIPluginProperties.apiTokenProperty().get(),
+                textBeforeCaret,
+                suggestedSentenceKeys.size());
 
-            // Dispatch in keys
-            for (int i = 0; i < suggestedSentenceKeys.size(); i++) {
-                final int index = i;
-                FXThreadUtils.runOnFXThread(() -> suggestedSentenceKeys.get(index).suggestionUpdated(index < suggestions.size() ? suggestions.get(index) : null));
-            }
-        });
+        // Dispatch in keys
+        for (int i = 0; i < suggestedSentenceKeys.size(); i++) {
+            final int index = i;
+            FXThreadUtils.runOnFXThread(() -> suggestedSentenceKeys.get(index).suggestionProperty().set(index < suggestions.size() ? suggestions.get(index) : ""));
+        }
+    }
+
+    private void debounceSuggestionsUpdate() {
+        ThreadUtils.debounce(500, "caa-ai", this::updateSuggestions);
     }
 
     @Override
@@ -81,7 +87,7 @@ public enum CAAAIController implements ModeListenerI {
 
         // Add listener
         WritingStateController.INSTANCE.textBeforeCaretProperty().addListener(this.textChangedListener);
-        this.launchSuggestion();
+        this.debounceSuggestionsUpdate();
     }
 
     @Override
