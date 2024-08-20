@@ -16,7 +16,7 @@ dependencies {
     implementation 'org.apache.poi:poi-ooxml:5.2.2'
 }
 
-mainClassName = "scripts.imagedictionaries.MakatonCreationScript"
+mainClassName = "scripts.LCAutoTranslation"
 
 application {
     applicationDefaultJvmArgs = [

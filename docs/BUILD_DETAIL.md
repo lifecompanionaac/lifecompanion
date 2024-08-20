@@ -14,8 +14,8 @@
 1. Open a terminal
     1. `cd ~/dev`
     1. `mkdir workspace && cd workspace`
-    1. Check last app release in prod on [release page](https://github.com/lifecompanionaac/lifecompanion/tags) : search for *lifecompanion/lc-app/x.x.x-prod* tag, let take *lifecompanion/lc-app/1.4.4-prod* for this example
-    1. Clone repo with `git clone https://github.com/lifecompanionaac/lifecompanion.git --branch lifecompanion/lc-app/1.4.4-prod` (replace the tag with the last production version)
+    1. Check last app release in prod on [release page](https://github.com/lifecompanionaac/lifecompanion/tags) : search for *lifecompanion/lc-app/x.x.x-prod* tag, let take *lifecompanion/lc-app/1.6.3-prod* for this example
+    1. Clone repo with `git clone https://github.com/lifecompanionaac/lifecompanion.git --branch lifecompanion/lc-app/1.6.3-prod` (replace the tag with the last production version)
 1. Run IntelliJ (in its installation directory or add it to the path): `bin/idea.sh`
     1. Click on "Open"
     1. Select **~/dev/workspace/lifecompanion/lifecompanion-framework**
@@ -44,7 +44,7 @@ The example is done with **lc-spellgame-plugin** but should work with any plugin
     1. Click "Menu > New > Module from Existing Sources..."
     1. Select **~/dev/workspace/lifecompanion/lifecompanion-plugins/lc-spellgame-plugin**
     1. Select "Import module from external model" and "Gradle", then click "Create"
-    1. Check that **~/dev/workspace/lifecompanion/lifecompanion-plugins/lc-spellgame-plugin/gradle.properties** has the same LifeCompanion version number in, for example `lifecompanionAppVersion=1.4.4` (this should match the selected version tag)
+    1. Check that **~/dev/workspace/lifecompanion/lifecompanion-plugins/lc-spellgame-plugin/gradle.properties** has the same LifeCompanion version number in, for example `lifecompanionAppVersion=1.6.3` (this should match the selected version tag)
     1. In Gradle part of the IDE (right side), you can run **lc-spellgame-plugin > Tasks > build > jar**, build should be successful
 1. Create your dev workflow
     1. In run configuration selector (top right part), click on "Edit Configurations"

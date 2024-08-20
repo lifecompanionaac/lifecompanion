@@ -18,12 +18,13 @@ Used JDK (in IntelliJ and builds) is [Eclipse Temurin™](https://adoptium.net/t
 1. Open **lifecompanion-framework** project : File > Open
 1. Add module **lifecompanion** : File > New > Module from existing sources
 1. Configure **IntelliJ project JDK** : File > Project Structure > Project settings / Project
-   1. Language level : select 16 (not preview)
+   1. Language level : select 21
 
 ### How to build/run LifeCompanion application
 
 1. Build and publish **lifecompanion-framework** libs : run task `gradlew publishToMavenLocal` in **lifecompanion-framework**
 1. Copy **data** folder from an official LifeCompanion installation in **lifecompanion/lc-app/data** - (you can copy it from S3 resource bucket, if you have access to it)
+1. Do not modify **data/installation.properties** file unless you need to modify your user data directory (be attentive, do not commit the modified file)
 1. Run task `gradlew :lc-app:run` in **lifecompanion**
 
 If you need to pass argument to your instance, you can do it with `gradlew :lc-app:run --args="a configuration.lcc"`
@@ -92,6 +93,10 @@ The debian package will install LifeCompanion in :
 Note that in the following document, when we say "run gradle task... in XXX" you should then run the gradle task in the given folder (lifecompanion or lifecompanion-framework) from your command line or IDE. For example, to run LifeCompanion from command line : `cd lifecompanion` then `gradlew :lc-app:run`
 
 Also note than `gradlew` command should be adapted to your system : `gradlew.bat` (Windows) and `gradlew` (Unix/Mac)
+
+### Gradle build is working but the IDE shows errors
+
+Cache should then be cleaned in InteliJ : **File > Invalidate Caches.**
 
 ### Cannot run JLink on Unix
 

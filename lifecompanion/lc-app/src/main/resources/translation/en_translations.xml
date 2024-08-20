@@ -95,6 +95,7 @@
   <text key="keylist.key.option.field.level.value.spinner">Level of displayed lists</text>
   <text key="action.move.mouse.up.static.description">Allows you to move the virtual mouse cursor to the top of the screen</text>
   <text key="general.configuration.view.step.selection.mode.supp.configuration.title">Selection mode settings</text>
+  <text key="exception.makaton.400.header">You do not have access to Makaton Bank</text>
   <text key="download.plugin.task.title">Downloading the plugin “{}”</text>
   <text key="dev.stage.tab.memory">Memory</text>
   <text key="action.import.existing.configuration.message">Configuration in profile\n"{}", modified on {} to "{}"\n\nImported configuration\n"{}", modified on {} to "{}"\n\nWhat do you want to do ?</text>
@@ -180,6 +181,7 @@
   <text key="rotate.image.right">Turn right</text>
   <text key="user.config.proxy.use.proxy">Use a proxy</text>
   <text key="select.current.keylist.keyoption.name">Select displayed list</text>
+  <text key="image.dictionary.change.dictionary.no.source.filter">All images</text>
   <text key="action.pause.variable.description">Performs a {} second timeout</text>
   <text key="ribbon.part.create.grid">Create grids</text>
   <text key="component.name.custom">Custom name for this item</text>
@@ -251,6 +253,7 @@
   <text key="predict4all.action.toggle.clinical.study.name">Enable/disable recording</text>
   <text key="component.grid.in.stack">Grid\nin a pile</text>
   <text key="predict4all.default.rule.button.add">Add</text>
+  <text key="configuration.selection.change.image.dictionary.button.description">Allows you to change the image bank of the configuration by trying to replace the images already present with those from another image bank.</text>
   <text key="tooltip.add.keys.shift">Opens the menu to add a key next to the selected key and shift the grid keys</text>
   <text key="predict4all.config.prompt.add.user.word">Add a personal word (Enter to validate)</text>
   <text key="label.sequence.name.title">Configuring the sequence "{}"</text>
@@ -323,6 +326,7 @@
   <text key="use.variable.current.date.example">06/15/2016</text>
   <text key="video.display.mode.fullscreen.description">When the key is selected, the video will play in full screen. The full screen will be automatically closed at the end of the video or any mouse or keyboard press.</text>
   <text key="tooltip.explain.configuration.frame.position">Allows you to automatically position the window on the screen when starting the configuration.</text>
+  <text key="image.dictionary.change.dictionary.header">Change configuration images</text>
   <text key="predict4all.config.force.invalid.word">Never offer</text>
   <text key="action.import.priorized.word.notif.ok.message">{} words to prioritize imported</text>
   <text key="scanning.mode.draw.progress.bar">Progress bar in key</text>
@@ -635,6 +639,7 @@
   <text key="about.tab.button.installation.id">Installation ID: {}</text>
   <text key="predict4all.config.part.title.correction.rules">Custom correction rules</text>
   <text key="action.change.key.style.static.description">Changes the style of a chosen key, replaces the existing style with a chosen style.</text>
+  <text key="notification.warn.no.dictionary.selected">No replacement bank selected</text>
   <text key="use.variable.current.text.in.clipboard.name">Clipboard contents</text>
   <text key="task.export.lists.pdf.name">Exporting lists to PDF</text>
   <text key="action.open.url.in.browser.static.description">Allows you to open an Internet address in the system's default Internet browser.</text>
@@ -743,6 +748,7 @@
   <text key="notification.action.export.profile.failed.title">Export failed</text>
   <text key="config.tips.clone.key.style.title">Clone key styles</text>
   <text key="action.style.remove">Delete a style</text>
+  <text key="makaton.too.many.install.message">You have reached the maximum number of LifeCompanion installations that can use Makaton Bank with your member account. You can log in or create an account on the LifeCompanion platform to remove installations. You can also contact us if you would like us to do this for you.</text>
   <text key="predict4all.comment.dialog.field.name">Your name</text>
   <text key="use.variable.current.day.of.week.description">Contains the day of the week in a readable format.</text>
   <text key="text.location.top">Up</text>
@@ -852,6 +858,7 @@
   <text key="configuration.selection.create.desktop.link.button.title">Create a desktop shortcut</text>
   <text key="task.export.grids.pdf.name">Exporting grids to PDF</text>
   <text key="keyboard.key.tab">Tabulation</text>
+  <text key="image.dictionary.change.dictionary.source">Change images from the bank</text>
   <text key="notification.action.export.profile.message">Profile exported to file "{}"</text>
   <text key="selection.mode.scan.direct.key.vertical">Vertical scrolling key by key</text>
   <text key="configuration.edition.general.changelog.entries">History of configuration changes</text>
@@ -863,6 +870,7 @@
   <text key="use.event.time.of.day.and.day.of.week.generator.static.description">Allows you to generate an event if the configuration is launched on a specified day of the week and a specific time is reached.</text>
   <text key="action.remove.profile.confirm.header">Confirm deletion</text>
   <text key="default.style.name.key.style">Key style</text>
+  <text key="configuration.selection.change.image.dictionary.button.title">Change image bank</text>
   <text key="predict4all.action.toggle.clinical.study.description">Enables or disables recording for a clinical study session. This will then make it possible to use the study recordings to produce statistics.</text>
   <text key="use.variable.interval.of.day.displayable.end.hour.description">The end time of the desired time interval in the event, in a readable format.</text>
   <text key="selection.mode.auto.time.over">Trigger hover after(s)</text>
@@ -900,6 +908,7 @@
   <text key="pane.text.clear">To erase</text>
   <text key="system.type.android">Android mobiles and tablets</text>
   <text key="image.dictionary.default.custom.dic">Personal images</text>
+  <text key="makaton.notification.installed.message">Makaton installation successful</text>
   <text key="action.remove.image.ask.message">There are {} items selected ({} image(s) in total)\nAre you sure you want to delete them?\nImages contained in the selected folders will also be deleted.</text>
   <text key="task.load.in.progress">Reading the configuration...</text>
   <text key="selection.mode.param.show.advanced.parameter">Selection mode settings</text>
@@ -963,6 +972,7 @@
   <text key="use.action.sub.category.computer.access.mouse.move.name">Virtual mouse movement</text>
   <text key="action.key.option.quick.com.change.enable.speak">Enable/disable pronunciation of communication key text</text>
   <text key="selection.mode.param.activation.color">Color on activation</text>
+  <text key="button.add.optional.resource.makaton">Add Makaton image bank</text>
   <text key="use.event.sub.category.status.name">Status</text>
   <text key="action.speak.key.label.static.description">Speaks the text written in the key with the currently selected text-to-speech.</text>
   <text key="action.move.mouse.sw.name">Move down left</text>
@@ -975,6 +985,7 @@
   <text key="tooltip.virtual.mouse.parameter.button">Opens the virtual mouse settings.\nThis allows you to modify its speed, appearance, etc.</text>
   <text key="configuration.opacity.on.exit.value">Window opacity (when mouse out)</text>
   <text key="use.variable.current.over.part.name">Name of hovered element</text>
+  <text key="use.action.end.dynamic.key.fill.name">Fill in the marked box</text>
   <text key="autocomplete.keyboard.accents0.name">Accents</text>
   <text key="tooltip.explain.gallery.element">You can add the image to a key by dragging it onto it.\nYou can also organize your gallery by dragging items into its folders.\nClick on an item to rename it.</text>
   <text key="action.style.edit">Edit a style</text>
@@ -993,6 +1004,7 @@
   <text key="default.text.style.name1">Default text style</text>
   <text key="user.config.tips.title">Tips and tricks</text>
   <text key="user.action.display.filter.only.not.sub">Only the steps</text>
+  <text key="optional.resource.explain.label">Allows you to add additional resources to LifeCompanion. For example, allows you to add the Makaton image base for association members.</text>
   <text key="tooltip.collapse.top">Reduces the size of the selected item from above. This will add items underneath to fill the space</text>
   <text key="update.status.name.updating">downloading</text>
   <text key="predict4all.config.search.word.hide.disabled.words">Hide disabled words</text>
@@ -1050,6 +1062,7 @@
   <text key="predict4all.rule.translate.rule.or.name">Or</text>
   <text key="error.config.action.while.redo">Problem redoing "{}"</text>
   <text key="lc.colorpicker.null.value">None</text>
+  <text key="image.dictionary.change.dictionary.explain">Allows you to automatically switch from one image bank to another: for each image from the original bank, an image from the replacement bank will be proposed if available.</text>
   <text key="action.write.label.variable.description">Writes the label ("{}") of the key</text>
   <text key="action.new.confirm.message">You have {} unsaved modification(s) in the current configuration, these will be lost.\nDo you really want to continue?</text>
   <text key="image.dictionary.take.image.webcam.tooltip">Allows you to take an image from the cameras available on your system</text>
@@ -1200,6 +1213,7 @@
   <text key="config.duplicate.question.select.profile">Select the profile to duplicate</text>
   <text key="action.write.and.speak.text.variable.description.write.only">Writes the text "{}" in the text editor</text>
   <text key="use.variable.interval.of.day.displayable.start.hour.name">Start time</text>
+  <text key="task.change.image.dictionary.name">Replacing the configuration image(s)</text>
   <text key="image.use.config.part.preview.title">Preview</text>
   <text key="button.add.key.generic.action">Add and shift keys</text>
   <text key="action.simple.write.text.variable.description">Writes the text "{}"</text>
@@ -1221,6 +1235,7 @@
   <text key="configuration.selection.print.grids.pdf.configuration.button.title">Export grids to PDF</text>
   <text key="action.move.mouse.nw.static.description">Allows you to move the virtual mouse cursor to the top left of the screen</text>
   <text key="action.spell.key.label.variable.description">Spell the text "{}"</text>
+  <text key="user.config.part.ui.optional.resource">Additional Resources</text>
   <text key="action.simulate.key.activation.name">Simulate the activation of a key</text>
   <text key="configuration.launch.in.use.mode.indicator.text">(by default)</text>
   <text key="tooltip.explain.image.color.replacing">The color that will be put in place of the old color. You can choose transparent with custom colors.</text>
@@ -1245,6 +1260,7 @@
   <text key="action.plugin.delete.ok.message">The extension(s) was successfully removed.</text>
   <text key="voice.synthesizer.test">Test speech synthesis</text>
   <text key="use.variable.periodic.time.period.name">Interval between two events</text>
+  <text key="button.type.contact.lifecompanion">Contact us</text>
   <text key="key.list.selector.control.no.value">No list selected</text>
   <text key="action.selectionmode.select.scan.first.pause">Change extra time on first element</text>
   <text key="action.selectionmode.change.auto.activation.time">Change activation trigger time</text>
@@ -1315,6 +1331,7 @@
   <text key="predict4all.default.rule.forget.accent.example">was &gt; was\nthat &gt; that</text>
   <text key="action.voice.synthesizer.add.pronunciation.exception">Add a different pronunciation for the summary</text>
   <text key="sequence.configuration.view.field.text.to.speak">Pronounce at the start of the step</text>
+  <text key="use.action.start.dynamic.key.fill.description">Allows you to indicate this box as the next one to fill: this action allows you to use the contents of the next box with the action "Fill the marked box" (text, image, video, etc.).</text>
   <text key="predict4all.clinical.study.var.status.example">Waiting | Currently recording</text>
   <text key="task.image.loading.image.title">Loading gallery</text>
   <text key="use.variable.day.of.week.displayable.day.name">Day reached</text>
@@ -1324,6 +1341,7 @@
   <text key="image.dictionary.default.imported.dic">Configuration images</text>
   <text key="predict4all.default.rule.added.letter.name">Letters added</text>
   <text key="action.previous.key.in.keylist.in.selected.level.description">Allows you to move to previous keys in all lists of a specific level (or lower)</text>
+  <text key="use.action.start.dynamic.key.fill.name">Mark as box to be filled</text>
   <text key="misc.submenu.explain.text">This menu is reserved for experienced users! Do not use these options unless you know their consequences.</text>
   <text key="predict4all.default.rule.sequence.of.value">Sequence {}</text>
   <text key="configuration.description.cell.author.field">Author</text>
@@ -1348,6 +1366,7 @@
   <text key="predict4all.rule.edit.type.confusion.label">Confused elements (letters, words, etc.)</text>
   <text key="tooltip.profile.list.edit">Edit this profile information</text>
   <text key="tooltip.set.key.option">Opens the menu to change the type of all selected keys.\nAllows you to change to a key for prediction, quick communication, etc.</text>
+  <text key="exception.makaton.400.message">It seems that the email entered "{}" does not have access to Makaton Bank. You can check:\n- that you have entered the same email as the one used to log in to the AAD Makaton member area\n- that your membership is valid\n\nIf your membership has just been created or renewed, it may sometimes be necessary to wait 24 hours before having access to Makaton Bank for LifeCompanion.</text>
   <text key="key.option.variable.information.description">Allows you to use variables in the key text and have the key automatically updated by LifeCompanion.</text>
   <text key="gallery.root.name">Gallery root</text>
   <text key="action.import.directories.task.progress.message">{}/{} image(s) added to gallery...</text>
@@ -1428,11 +1447,14 @@
   <text key="default.style.name.text.style.quick">Quick Text Style</text>
   <text key="keylist.action.field.specific.level.selection">Perform the action for the level (or lower)</text>
   <text key="user.config.configuration.title">Settings</text>
+  <text key="image.dictionary.change.dictionary.usage.count">{} image(s) from this bank used in the configuration</text>
   <text key="default.style.name.shape.style.quick">Quick Shape Style</text>
+  <text key="makaton.task.install.resource">Makaton Bank Installation</text>
   <text key="use.action.sub.category.application.name">LifeCompanion</text>
   <text key="reset.zoom.level.label">Reset</text>
   <text key="video.display.mode.in.key.description">The video will be played and displayed directly in the key. The reading mode will allow you to choose when to trigger the reading.</text>
   <text key="char.to.speech.special.e.umlaut">E umlaut</text>
+  <text key="exception.makaton.other.header">An unknown error has occurred</text>
   <text key="selection.mode.param.selected.selection.mode.label">Selection mode</text>
   <text key="duration.unit.hour">Hour</text>
   <text key="action.create.or.update.user.comp">Create or update a template</text>
@@ -1458,6 +1480,7 @@
   <text key="predict4all.rule.sep.translate.apostrophe">Apostrophe</text>
   <text key="progress.display.type.vertical.bar">Vertical progress bar</text>
   <text key="component.quick.communication.key.name">Key of\ncommunication</text>
+  <text key="image.dictionary.change.dictionary.destination">For bank images</text>
   <text key="use.action.sub.category.key.list.keys">List of keys</text>
   <text key="use.variable.current.over.part.description">Name of the element currently hovered over (by mouse in direct selection, or while scrolling for other modes)</text>
   <text key="action.create.or.update.user.comp.success.title">Saved model</text>
@@ -1695,7 +1718,9 @@
   <text key="grid.part.split.keys">Divide into keys</text>
   <text key="shape.comp.style.default.name">Shape style {}</text>
   <text key="general.configuration.mouse.config.part.circle.mouse.title">Configuring the “arrows” mouse</text>
+  <text key="use.action.timer.time">Timer duration</text>
   <text key="button.open.current.config.clean.xml.folder">Open the configuration XML (formatted)</text>
+  <text key="makaton.notification.installed.restart.button">Restart</text>
   <text key="tooltip.explain.quick.communication.speak">If activated, the text entered in the "Speak" field will be spoken by voice synthesis, otherwise, it will not be taken into account.</text>
   <text key="sequence.configuration.item.auto.time">Step with timer (in s)</text>
   <text key="key.option.user.action.sequence.current.key.option.name">Step in process</text>
@@ -1814,6 +1839,7 @@
   <text key="text.style.font.bold">Fat</text>
   <text key="tooltip.explain.image.enable.color.replace">If enabled, replaces one color in the image with another.\nThis function is very useful if you want to remove the background from an image.</text>
   <text key="profile.level.beginner">Beginner</text>
+  <text key="notification.info.image.dictionary.changes.done">{} image replacement(s) performed</text>
   <text key="action.next.key.in.keylist.in.current.noloop.name">Next keys without looping (current list)</text>
   <text key="stage.mode.fullscreen">Complete full screen window (without title bar)</text>
   <text key="general.configuration.view.key.list.field.stroke.color">Outline color</text>
@@ -1844,6 +1870,7 @@
   <text key="keylist.linktype.type.grid.name">To another grid</text>
   <text key="general.configuration.view.keylist.empty.node.text">List</text>
   <text key="use.variable.battery.level.percent.description">Contains the percentage of battery currently remaining. Only valid for machines with a battery.</text>
+  <text key="optional.resource.add.makaton.message">In order to add Makaton Bank, you must enter the email used to log in to your AAD Makaton member area. Your membership must be valid and have been created/renewed for at least 24 hours.\nUse of Makaton Bank is limited to three installations of LifeCompanion.</text>
   <text key="dev.stage.run.gc">Run the Garbage Collector</text>
   <text key="tooltip.explain.style.delete.selected.value">Allows you to reset the default value to the style that will be changed.</text>
   <text key="keyboard.quick.word.please">Please</text>
@@ -1888,6 +1915,7 @@
   <text key="configuration.latency.frame.opacity">Delay before opacity change(s)</text>
   <text key="action.add.image.error.message">Image "{}" could not be added to the gallery.\nVerify that this is a valid image.</text>
   <text key="predict4all.plugin.config.view.title">Configuration</text>
+  <text key="makaton.too.many.install.header">Installation limit reached</text>
   <text key="double.run.detected.header">LifeCompanion was already launched\nThis dialog will be automatically hidden in {} seconds</text>
   <text key="action.remove.profile.confirm.current.profile">Are you sure you want to delete the current profile "{}".\nThis action will result in the deletion of {} configurations associated with this profile. Changes made to the current configuration will be lost.\nYou will need to select another profile to continue using LifeCompanion.</text>
   <text key="use.action.spell.text.to.spell">Text to spell</text>
@@ -2132,6 +2160,7 @@
   <text key="virtual.mouse.type.cross.scanning">Scroll Pointing with Crossed Lines</text>
   <text key="previous.page.in.stack.variable.description">Go to previous grid in stack "{}"</text>
   <text key="style.ribbon.part.key.style">Key style</text>
+  <text key="exception.makaton.other.message">It is not possible to verify your access to Makaton Bank. Please try again later. If the problem persists, please do not hesitate to contact us.</text>
   <text key="general.configuration.mouse.config.part.arrow.mouse.title">Configuring Directional Pointing</text>
   <text key="autocomplete.keyboard.quick.words.name">Fast communication</text>
   <text key="action.change.configuration.frame.width">Change window width</text>
@@ -2413,6 +2442,7 @@
   <text key="use.event.on.target.indication.reached.description">Occurs when the set move target is reached.</text>
   <text key="use.event.main.category.configuration.name">Configuration</text>
   <text key="action.import.directories.success.message">{} image(s) imported into gallery</text>
+  <text key="use.action.end.dynamic.key.fill.description">Allows you to fill the last box selected with "Mark as box to fill" with the contents of this box.</text>
   <text key="ribbon.part.create.root">Create basic elements</text>
   <text key="button.type.duplicate">Duplicate</text>
   <text key="tooltip.explain.configuration.size.height">Allows you to adjust the height of the configuration (and therefore add or remove margins around the components)</text>
@@ -2479,6 +2509,7 @@
   <text key="selection.mode.enable.auto.activation.tooltip">If enabled, when the selection remains "on" a box for a set time, this will activate the box. Very useful when you cannot validate the selection.</text>
   <text key="predict4all.config.view.misc.title">Miscellaneous</text>
   <text key="manage.style.ribbon.part.manage.key.style">Manage key styles</text>
+  <text key="button.type.manage.installation">Manage facilities</text>
   <text key="profile.menu.link.lifecompanion.preferences">Preferences &amp; Info</text>
   <text key="tooltip.redo.action.button">Redo the previously undone action</text>
   <text key="action.simulate.key.over.variable.description">Simulates hovering over the “{}” key</text>
@@ -2533,6 +2564,7 @@
   <text key="keylist.action.removed.action.notification.title">"{}" deleted</text>
   <text key="predict4all.action.button.testing.configuration.explain">Allows you to try word prediction to check the suggestions displayed</text>
   <text key="tooltip.expand.bottom">Increases the size of the selected item from below. This may reduce the height of the elements below, or remove some</text>
+  <text key="optional.resource.makaton.enabled">Makaton Image Bank Enabled</text>
   <text key="task.load.title">Loading the configuration</text>
   <text key="use.variable.current.text.in.clipboard.description">Contains the textual content of the clipboard. If the user copies text, then the variable will contain that text.</text>
   <text key="image.dictionary.author.parlerpictos">© 2020 Parlerpictos | RECIT School Adaptation</text>
@@ -2564,6 +2596,7 @@
   <text key="next.page.in.stack.variable.description">Go to the next grid in the stack "{}"</text>
   <text key="predict4all.default.rule.homophone.description">Corrects confusions between homophones of a finite list</text>
   <text key="action.use.action.remove">Delete an action</text>
+  <text key="optional.resource.add.makaton.header">Add Makaton Bank</text>
   <text key="action.export.name">Exporting a configuration</text>
   <text key="mouse.button.middle">Middle button (wheel click)</text>
   <text key="action.change.key.background.color.name">Change the background color of a key</text>

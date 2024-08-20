@@ -25,7 +25,7 @@ Be familiar with Java and JavaFX development.
 1. Duplicate the [**lifecompanion-plugins/lc-spellgame-plugin**](../lifecompanion-plugins/lc-spellgame-plugin/) folder to a folder named with your plugin ID - let's call it `lc-example-plugin` for the next steps
 1. Change Gralde project name in *settings.gradle* to `rootProject.name = 'lc-example-plugin'`
 1. Enter plugin metadata in *build.gradle*, especially `"LifeCompanion-Plugin-Id": "lc-example-plugin"`
-1. Check in *gradle.properties* that the LifeCompanion version is the same that the pulled version `lifecompanionAppVersion=1.4.3`
+1. Check in *gradle.properties* that the LifeCompanion version is the same that the pulled version `lifecompanionAppVersion=1.6.3`
 1. You can then build your plugin jar with `gradlew jar`
 
 Follow the next section to be able to quickly develop your plugin in InteliJ
