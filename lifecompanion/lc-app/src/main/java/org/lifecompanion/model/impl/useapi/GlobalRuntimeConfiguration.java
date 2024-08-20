@@ -112,7 +112,7 @@ public enum GlobalRuntimeConfiguration implements GlobalRuntimeConfigurationI {
             "forceWindowUndecorated",
             GlobalRuntimeConfigurationType.COMMAND_LINE,
             "Will force the use mode window to be \"undecorated\" " +
-                    "as stated in [JavaFX documentation](https://openjfx.io/javadoc/18/javafx.graphics/javafx/stage/Stage.html) on stage style. "
+                    "as stated in [JavaFX documentation](https://openjfx.io/javadoc/21/javafx.graphics/javafx/stage/Stage.html) on stage style. "
     ),
     FORCE_WINDOW_SIZE(
             "forceWindowSize",

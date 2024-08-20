@@ -2,7 +2,7 @@
 
 ## TL;DR
 
-LifeCompanion app and components are built using Gralde and Java+JavaFX 18.
+LifeCompanion app and components are built using Gralde and Java+JavaFX 22.
 
 To build and run LifeCompanion, you should be familiar with these technologies.
 
