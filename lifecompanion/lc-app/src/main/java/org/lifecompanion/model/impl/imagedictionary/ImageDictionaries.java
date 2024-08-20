@@ -160,7 +160,7 @@ public enum ImageDictionaries implements LCStateListener, ModeListenerI {
                     .getPath() + LCConstant.IMPORTED_IMAGE_DIR_NAME + File.separator + id + "." + FileNameUtils.getExtension(imagePath));
 
             // Add or replace with newer element if previous don't exist / is not present anymore / wasn't already copied
-            if (previousImage == null || !previousImage.isImageFileExist() || (dictionary.isCustomDictionary() && !copiedImageTargetForCustomDir.exists())) {
+            if (previousImage == null || !previousImage.isImageFileExist() || (previousImage.getDictionary().isCustomDictionary() && dictionary.isCustomDictionary() && !copiedImageTargetForCustomDir.exists())) {
                 // Copy the source image if imported (will not depend anymore on the real image source)
                 if (dictionary.isCustomDictionary()) {
                     IOUtils.copyFiles(imagePath, copiedImageTargetForCustomDir);

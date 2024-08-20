@@ -24,6 +24,7 @@
 - Ticket #360 : correction de l'affichage des listes de cases dans certaines situations
 - Ticket #348 : correction d'un problème lors de l'export PDF à cause de certains caractères
 - Ticket #355 : l'export PDF des grilles utilise maintenant la couleur d'arrière-plan de la configuration
+- Certaines images des configurations pouvaient être accidentellement dupliquées
 
 ## 1.6.2 - 28/05/2024
 
