@@ -48,6 +48,8 @@ public class CAAAIGeneralConfigurationView extends BorderPane implements General
     private Button button;
     private ToggleSwitch toggleSwitch;
     private TextField textField;
+    private TextField apiEndpoint;
+    private TextField apiToken;
 
     public CAAAIGeneralConfigurationView() {
         initAll();
@@ -97,6 +99,9 @@ public class CAAAIGeneralConfigurationView extends BorderPane implements General
         HBox.setHgrow(comboBox, Priority.ALWAYS);
         comboBox.setMaxWidth(Double.MAX_VALUE);
 
+        apiEndpoint = new TextField();
+        apiToken = new TextField();
+
         int gridRowIndex = 0;
         gridPaneConfiguration.add(FXControlUtils.createTitleLabel("caa.ai.plugin.todo"), 0, gridRowIndex++, 2, 1);
         gridPaneConfiguration.add(labelExample, 0, gridRowIndex);
@@ -104,6 +109,12 @@ public class CAAAIGeneralConfigurationView extends BorderPane implements General
         gridPaneConfiguration.add(toggleSwitch, 0, gridRowIndex++, 2, 1);
         gridPaneConfiguration.add(new Label(Translation.getText("caa.ai.plugin.todo")), 0, gridRowIndex);
         gridPaneConfiguration.add(button, 1, gridRowIndex++);
+
+        gridPaneConfiguration.add(FXControlUtils.createTitleLabel("caa.ai.plugin.general.config.api.title"), 0, gridRowIndex++, 2, 1);
+        gridPaneConfiguration.add(new Label(Translation.getText("caa.ai.plugin.general.config.api.field.endpoint")), 0, gridRowIndex);
+        gridPaneConfiguration.add(apiEndpoint, 1, gridRowIndex++);
+        gridPaneConfiguration.add(new Label(Translation.getText("caa.ai.plugin.general.config.api.field.token")), 0, gridRowIndex);
+        gridPaneConfiguration.add(apiToken, 1, gridRowIndex++);
 
         gridPaneConfiguration.setPadding(new Insets(GeneralConfigurationStepViewI.PADDING));
         this.setCenter(gridPaneConfiguration);
@@ -126,14 +137,16 @@ public class CAAAIGeneralConfigurationView extends BorderPane implements General
     @Override
     public void saveChanges() {
         CAAAIPluginProperties pluginConfigProperties = configuration.getPluginConfigProperties(CAAAIPlugin.ID, CAAAIPluginProperties.class);
-        // TODO : set from view to model
+        pluginConfigProperties.apiEndpointProperty().set(apiEndpoint.getText());
+        pluginConfigProperties.apiTokenProperty().set(apiToken.getText());
     }
 
     @Override
     public void bind(LCConfigurationI model) {
         this.configuration = model;
         CAAAIPluginProperties pluginConfigProperties = configuration.getPluginConfigProperties(CAAAIPlugin.ID, CAAAIPluginProperties.class);
-        // TODO : set from model to view
+        apiEndpoint.setText(pluginConfigProperties.apiEndpointProperty().get());
+        apiToken.setText(pluginConfigProperties.apiTokenProperty().get());
     }
 
     @Override

@@ -1,6 +1,9 @@
 <texts>
-   <text key="caa.ai.plugin.general.config.view.title">CAA-AI</text>
-   <text key="caa.ai.plugin.todo">TODO CAA-AI</text>
+    <text key="caa.ai.plugin.todo">TODO CAA-AI</text>
 
-
+    <!-- UI -->
+    <text key="caa.ai.plugin.general.config.view.title">CAA-AI</text>
+    <text key="caa.ai.plugin.general.config.api.title">Accès API</text>
+    <text key="caa.ai.plugin.general.config.api.field.endpoint">Endpoint</text>
+    <text key="caa.ai.plugin.general.config.api.field.token">Token</text>
 </texts>
