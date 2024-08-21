@@ -64,9 +64,6 @@ public class SuggestionService {
     }
 
     public void initConversation(Integer wantedCount) {
-        // TODO System message.
-        // TODO First user message (backstory, etc.).
-
         String systemMessage = "Tu es un assistant intégré dans un outil de communication alternative et amélioré (CAA). Ton rôle est de me faciliter l'accès à la communication. Il peut y avoir une conversation engagée avec plusieurs utilisateurs différents : me correspond à moi-même (l'utilisateur courant) et other est un intervenant externe. Tu peux aussi simplement compléter les mots ou les phrases que je souhaite écrire. Propose à chaque fois "
                 + wantedCount
                 + " alternatives dans un tableau JSON. Ces propositions doivent être courtes (3-5 mots), compréhensibles et toujours en français.";
@@ -102,14 +99,7 @@ public class SuggestionService {
     public List<Suggestion> suggestSentences(String text) {
         List<OpenAiDto.Message> requestMessages = new ArrayList<>(this.messages);
 
-        if (!text.isBlank()) {
-            requestMessages.add(new OpenAiDto.Message("user", "me", "Propose-moi des alternatives pour compléter ma phrase."));
-            requestMessages.add(new OpenAiDto.Message("user", "me", text));
-        } else if (this.messages.size() > 2) {
-            requestMessages.add(new OpenAiDto.Message("user", "me", "Propose-moi des alternatives pour continuer la discussion."));
-        } else {
-            requestMessages.add(new OpenAiDto.Message("user", "me", "Propose-moi des alternatives pour engager une conversation ou exprimer un besoin lié à ma situation."));
-        }
+        requestMessages.addAll(this.getInteractionalMessages(text));
 
         for (OpenAiDto.Message message : requestMessages) {
             LOGGER.info("Message from {}: {}", message.name, message.content);
@@ -118,13 +108,37 @@ public class SuggestionService {
         return this.fetchSuggestions(requestMessages);
     }
 
-    public List<Suggestion> retrySuggestSentences() {
-        // TODO
-        return null;
+    public List<Suggestion> retrySuggestSentences(String text) {
+        List<OpenAiDto.Message> requestMessages = new ArrayList<>(this.messages);
+
+        requestMessages.addAll(this.getInteractionalMessages(text));
+        requestMessages.add(new OpenAiDto.Message("assistant", gson.toJson(Map.of("options", this.suggestions.stream().map(Suggestion::content).toList()))));
+        requestMessages.add(new OpenAiDto.Message("user", "me", "Propose-moi des alternatives différentes" ));
+
+        for (OpenAiDto.Message message : requestMessages) {
+            LOGGER.info("Message from {}: {}", message.name, message.content);
+        }
+
+        return this.fetchSuggestions(requestMessages);
+    }
+
+    private List<OpenAiDto.Message> getInteractionalMessages(String text){
+        List<OpenAiDto.Message> interactionalMessages = new ArrayList<>();
+
+        if (!text.isBlank()) {
+            interactionalMessages.add(new OpenAiDto.Message("user", "me", "Propose-moi des alternatives pour compléter ma phrase."));
+            interactionalMessages.add(new OpenAiDto.Message("user", "me", text));
+        } else if (this.messages.size() > 2) {
+            interactionalMessages.add(new OpenAiDto.Message("user", "me", "Propose-moi des alternatives pour continuer la discussion."));
+        } else {
+            interactionalMessages.add(new OpenAiDto.Message("user", "me", "Propose-moi des alternatives pour engager une conversation ou exprimer un besoin lié à ma situation."));
+        }
+
+        return interactionalMessages;
     }
 
     private List<Suggestion> fetchSuggestions(List<OpenAiDto.Message> messages) {
-        List<Suggestion> suggested = List.of();
+        this.suggestions.clear();
 
         OkHttpClient okHttpClient = AppServerClient.initializeClientForExternalCalls().build();
         try (Response response = okHttpClient.newCall(new Request.Builder().url(this.endpoint)
@@ -134,9 +148,9 @@ public class SuggestionService {
                 .addHeader("Content-Type", "application/json")
                 .build()).execute()) {
             if (response.isSuccessful()) {
-                suggested = gson.fromJson(
+                this.suggestions.addAll(gson.fromJson(
                         gson.fromJson(response.body().string(), OpenAiDto.Response.class).choices.getFirst().message.content,
-                        OpenAiDto.SuggestionsChoice.class).suggestions;
+                        OpenAiDto.SuggestionsChoice.class).suggestions);
             } else {
                 LOGGER.warn("Error when calling : {}", response.body().string());
             }
@@ -144,13 +158,11 @@ public class SuggestionService {
             LOGGER.warn("Error when calling : {}", e.getMessage());
         }
 
-        for (Suggestion suggestion : suggested) {
+        for (Suggestion suggestion : this.suggestions) {
             LOGGER.warn("Suggestion : {}", suggestion.content());
         }
 
-        this.suggestions.addAll(suggested);
-
-        return suggested;
+        return this.suggestions;
     }
 
     private OpenAiDto.SuggestionsRequest prepareSuggestionsRequest(List<OpenAiDto.Message> messages) {
