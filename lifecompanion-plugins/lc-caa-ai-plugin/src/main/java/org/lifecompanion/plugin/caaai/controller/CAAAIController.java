@@ -23,6 +23,8 @@ import javafx.beans.InvalidationListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.lifecompanion.controller.textcomponent.WritingStateController;
+import org.lifecompanion.framework.commons.utils.io.IOUtils;
+import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
@@ -38,10 +40,12 @@ import org.lifecompanion.util.model.ConfigurationComponentUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public enum CAAAIController implements ModeListenerI {
     INSTANCE;
@@ -55,6 +59,7 @@ public enum CAAAIController implements ModeListenerI {
     private final InvalidationListener textChangedListener;
 
     private final ObservableList<ConversationMessage> conversationMessages;
+    private SpeechToTextService speechToTextService;
 
     CAAAIController() {
         suggestedSentenceKeys = new ArrayList<>();
@@ -72,6 +77,29 @@ public enum CAAAIController implements ModeListenerI {
         this.conversationMessages.add(new ConversationMessage(ConversationMessageAuthor.ME, content));
         this.suggestionService.handleOwnMessage(content);
         this.debouncedUpdateSuggestions();
+    }
+
+    public void toggleSpeechToTextRecognition() {
+        if (this.speechToTextService.recordingProperty().get()) {
+            this.speechToTextService.stopRecording();
+        } else {
+            this.startSpeechToTextRecognition();
+        }
+    }
+
+    public void startSpeechToTextRecognition() {
+        if (!this.speechToTextService.recordingProperty().get()) {
+            this.speechToTextService.startRecording(sentenceDetected -> {
+                // TODO : can be displayed to current user to inform him that the speech is currently detecting something
+                LOGGER.info("Sentence detected : {}", sentenceDetected);
+            }, allSentences -> {
+                String interlocutorMessage = String.join("\n", allSentences);
+                if (StringUtils.isNotBlank(interlocutorMessage)) {
+                    LOGGER.info("Speech finished : {}", interlocutorMessage);
+                    addInterlocutorMessage(interlocutorMessage);
+                }
+            });
+        }
     }
 
     public void addInterlocutorMessage(String content) {
@@ -104,6 +132,10 @@ public enum CAAAIController implements ModeListenerI {
         // Get plugin properties for current configuration
         currentCAAAIPluginProperties = configuration.getPluginConfigProperties(CAAAIPlugin.ID, CAAAIPluginProperties.class);
 
+        // TODO : should be replaced by a plugin property containing the json content
+        String jsonCredentialsContent = IOUtils.getFileContent(new File("C:\\Users\\Mathieu\\Desktop\\temp\\translation-test\\lifecompanion-312812-450f3762ec2e.json"));
+        this.speechToTextService = new SpeechToTextService(jsonCredentialsContent);
+
         this.suggestionService = new SuggestionService(
                 currentCAAAIPluginProperties.apiEndpointProperty().get(),
                 currentCAAAIPluginProperties.apiTokenProperty().get());
@@ -129,5 +161,7 @@ public enum CAAAIController implements ModeListenerI {
         this.currentCAAAIPluginProperties = null;
         suggestedSentenceKeys.clear();
         this.configuration = null;
+
+        this.speechToTextService.dispose();
     }
 }
