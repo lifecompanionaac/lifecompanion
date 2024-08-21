@@ -34,6 +34,7 @@ import java.lang.reflect.Type;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 public enum SuggestionService {
@@ -43,10 +44,19 @@ public enum SuggestionService {
 
     private final Gson gson;
 
+    private List<SpokenMessage> spokenMessages;
+
     SuggestionService() {
         gson = JsonHelper.GSON.newBuilder()
                 .registerTypeAdapter(ObservableList.class, new MyCustomJsonAdapter())
                 .create();
+
+        this.spokenMessages = new ArrayList<>();
+    }
+
+    public void addSpokenMessage(String name, String message) {
+        LOGGER.info("Add spoken message: {}", message);
+        this.spokenMessages.add(new SpokenMessage(name, message));
     }
 
     public List<String> getSuggestions(String endpoint, String token, String textBeforeCaret, int wantedCount) {
@@ -81,44 +91,48 @@ public enum SuggestionService {
                 "json_schema",
                 new OpenAiJsonSchemaDto("suggestions", true, schema));
 
-        StringBuilder systemMessage = new StringBuilder();
+        StringBuilder systemMessage = new StringBuilder()
+                .append("Tu es un assistant intégré dans un outil de communication alternative et amélioré (CAA). Ton rôle est de me faciliter l'accès à la communication. Il peut y avoir une conversation engagée avec plusieurs utilisateurs différents : me correspond à moi-même (l'utilisateur courant) et other est un intervenant externe. Tu peux aussi simplement compléter les mots ou les phrases que je souhaite écrire. Propose à chaque fois ")
+                .append(wantedCount)
+                .append(" alternatives dans un tableau JSON. Ces propositions doivent être courtes (3-5 mots), compréhensibles et toujours en français.");
 
-        systemMessage.append("Tu m'aides à finir mes phrases.\n");
-        systemMessage.append("Propose ");
-        systemMessage.append(wantedCount);
-        systemMessage.append(" suggestions dans un tableau JSON.\n");
-        systemMessage.append("Les suggestions doivent être courtes et simples.\n");
-
-        // Context.
+        // Initial context for user.
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
-        List<String> contextValues = List.of(
+        List<String> userOriginalContextValues = List.of(
                 "je suis chez moi",
-                "je discute avec un ami",
+                "je suis de bonne humeur",
                 "il est " + dtf.format(ZonedDateTime.now(ZoneId.of("Europe/Paris"))));
 
-        systemMessage.append("Voici le contexte : ");
-        systemMessage.append(String.join(", ", contextValues));
-        systemMessage.append("\n");
+        StringBuilder userOriginalMessage = new StringBuilder()
+                .append("Je suis en situation de handicap et j'ai des difficultés dans la compréhension et/ou la production du langage.").append(' ')
+                .append(String.join(", ", userOriginalContextValues)).append(".");
 
-        // Conversation.
-        /*
-        List<String> contextConversation = List.of(
-                "salut ça va ?",
-                "ça va bien et toi ?",
-                "ça va merci.");
+        List<OpenAiMessageDto> messages = new ArrayList<>(List.of(
+                new OpenAiMessageDto("system", systemMessage.toString()),
+                new OpenAiMessageDto("user", "me", userOriginalMessage.toString())));
 
-        systemMessage.append("Voici l'historique de discussion :\n");
-        systemMessage.append(String.join("\n", contextConversation));
-         */
+        LOGGER.info("Spoken message count: {}", this.spokenMessages.size());
+        for (SpokenMessage prevMessage : this.spokenMessages) {
+            messages.add(new OpenAiMessageDto("user", prevMessage.name, prevMessage.message));
+        }
 
-        LOGGER.info("System prompt: {}", systemMessage);
+        if (!textBeforeCaret.isBlank()) {
+            messages.add(new OpenAiMessageDto("user", "me", "Propose-moi des alternatives pour compléter ma phrase."));
+            messages.add(new OpenAiMessageDto("user", "me", textBeforeCaret));
+        } else if (!this.spokenMessages.isEmpty()) {
+            messages.add(new OpenAiMessageDto("user", "me", "Propose-moi des alternatives pour continuer la discussion."));
+        } else {
+            messages.add(new OpenAiMessageDto("user", "me", "Propose-moi des alternatives pour engager une conversation ou exprimer un besoin lié à ma situation."));
+        }
 
-        return new OpenAiRequestDto(
-                "gpt-4o-mini",
-                responseFormat,
-                List.of(
-                        new OpenAiMessageDto("system", systemMessage.toString()),
-                        new OpenAiMessageDto("user", textBeforeCaret)));
+        for (OpenAiMessageDto message : messages) {
+            LOGGER.info("Message: {}", message.content);
+        }
+
+        return new OpenAiRequestDto("gpt-4o-mini", responseFormat, messages);
+    }
+
+    private record SpokenMessage(String name, String message) {
     }
 
     private record JsonSchemaDto(
@@ -167,11 +181,18 @@ public enum SuggestionService {
 
     private static final class OpenAiMessageDto {
         private String role;
+        private String name;
         private String content;
 
         public OpenAiMessageDto(String role, String content) {
             this.role = role;
             this.content = content;
+        }
+
+        public OpenAiMessageDto(String role, String name, String content) {
+            this(role, content);
+
+            this.name = name;
         }
 
         public String getRole() {
@@ -180,6 +201,14 @@ public enum SuggestionService {
 
         public void setRole(String role) {
             this.role = role;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
         }
 
         public String getContent() {

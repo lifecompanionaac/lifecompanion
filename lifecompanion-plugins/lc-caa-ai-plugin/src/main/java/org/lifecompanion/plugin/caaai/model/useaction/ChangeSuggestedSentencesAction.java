@@ -37,10 +37,10 @@ public class ChangeSuggestedSentencesAction extends SimpleUseActionImpl<UseActio
         super(UseActionTriggerComponentI.class);
         this.order = 0;
         this.category = CAAAIActionSubCategories.TODO;
-        this.parameterizableAction = true;
-        this.nameID = "caa.ai.plugin.todo";
+        this.nameID = "caa.ai.plugin.todo.change";
         this.staticDescriptionID = "caa.ai.plugin.todo";
         this.configIconPath = "filler_icon_32px.png";
+        this.parameterizableAction = true;
         this.variableDescriptionProperty().set(getStaticDescription());
     }
 

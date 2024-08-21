@@ -18,27 +18,23 @@
  */
 package org.lifecompanion.plugin.caaai.model.useaction;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import org.lifecompanion.controller.textcomponent.WritingStateController;
-import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseActionSubCategories;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
 import org.lifecompanion.model.api.textcomponent.WritingEventSource;
-import org.lifecompanion.model.api.textprediction.WordPredictionI;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
 import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
-import org.lifecompanion.model.impl.configurationcomponent.keyoption.WordPredictionKeyOption;
+import org.lifecompanion.plugin.caaai.controller.SuggestionService;
 import org.lifecompanion.plugin.caaai.model.keyoption.SuggestedSentenceKeyOption;
 
 import java.util.Map;
 
-public class WriteSuggestedSentenceAction extends SimpleUseActionImpl<GridPartKeyComponentI> {
+public class SaveTextAsSpokenAction extends SimpleUseActionImpl<GridPartKeyComponentI> {
 
-    public WriteSuggestedSentenceAction() {
+    public SaveTextAsSpokenAction() {
         super(GridPartKeyComponentI.class);
         this.category = CAAAIActionSubCategories.TODO;
-        this.nameID = "caa.ai.plugin.todo.write";
+        this.nameID = "caa.ai.plugin.todo.save";
         this.staticDescriptionID = "caa.ai.plugin.todo";
         this.configIconPath = "filler_icon_32px.png";
         this.parameterizableAction = false;
@@ -49,18 +45,7 @@ public class WriteSuggestedSentenceAction extends SimpleUseActionImpl<GridPartKe
     // ========================================================================
     @Override
     public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
-        GridPartKeyComponentI parentKey = this.parentComponentProperty().get();
-        if (parentKey != null) {
-            if (parentKey.keyOptionProperty().get() instanceof SuggestedSentenceKeyOption suggestionOption) {
-                String suggestion = suggestionOption.suggestionProperty().get();
-                if (suggestion != null) {
-                    WritingStateController.INSTANCE.saveState();
-                    WritingStateController.INSTANCE.disableAutoSavedStateCleaning();
-                    WritingStateController.INSTANCE.insertText(WritingEventSource.USER_ACTIONS, " " + suggestion);
-                    WritingStateController.INSTANCE.enableAutoSavedStateCleaning();
-                }
-            }
-        }
+        SuggestionService.INSTANCE.addSpokenMessage("me", WritingStateController.INSTANCE.currentTextProperty().get());
     }
 
 
