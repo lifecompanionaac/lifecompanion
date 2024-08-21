@@ -20,12 +20,17 @@
 package org.lifecompanion.plugin.caaai.controller;
 
 import javafx.beans.InvalidationListener;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import org.lifecompanion.controller.textcomponent.WritingStateController;
 import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
 import org.lifecompanion.plugin.caaai.CAAAIPlugin;
 import org.lifecompanion.plugin.caaai.CAAAIPluginProperties;
+import org.lifecompanion.plugin.caaai.model.ConversationMessage;
+import org.lifecompanion.plugin.caaai.model.ConversationMessageAuthor;
+import org.lifecompanion.plugin.caaai.model.Suggestion;
 import org.lifecompanion.plugin.caaai.model.keyoption.SuggestedSentenceKeyOption;
 import org.lifecompanion.util.ThreadUtils;
 import org.lifecompanion.util.javafx.FXThreadUtils;
@@ -43,13 +48,36 @@ public enum CAAAIController implements ModeListenerI {
     private static final Logger LOGGER = LoggerFactory.getLogger(CAAAIController.class);
     private LCConfigurationI configuration;
     private CAAAIPluginProperties currentCAAAIPluginProperties;
-    private final List<SuggestedSentenceKeyOption> suggestedSentenceKeys;// TODO : change it for a grid to avoid having different suggestion on each grid
+    private SuggestionService suggestionService;
+
+    // TODO : change it for a grid to avoid having different suggestion on each grid
+    private final List<SuggestedSentenceKeyOption> suggestedSentenceKeys;
     private final InvalidationListener textChangedListener;
 
+    private final ObservableList<ConversationMessage> conversationMessages;
 
     CAAAIController() {
         suggestedSentenceKeys = new ArrayList<>();
-        this.textChangedListener = (inv) -> this.debounceSuggestionsUpdate();
+
+        this.conversationMessages = FXCollections.observableArrayList();
+
+        this.textChangedListener = (inv) -> this.debouncedUpdateSuggestions();
+    }
+
+    public ObservableList<ConversationMessage> conversationMessages() {
+        return this.conversationMessages;
+    }
+
+    public void addOwnMessage(String content) {
+        this.conversationMessages.add(new ConversationMessage(ConversationMessageAuthor.ME, content));
+        this.suggestionService.handleOwnMessage(content);
+        this.debouncedUpdateSuggestions();
+    }
+
+    public void addInterlocutorMessage(String content) {
+        this.conversationMessages.add(new ConversationMessage(ConversationMessageAuthor.INTERLOCUTOR, content));
+        this.suggestionService.handleInterlocutorMessage(content);
+        this.debouncedUpdateSuggestions();
     }
 
     public void updateSuggestions() {
@@ -57,20 +85,16 @@ public enum CAAAIController implements ModeListenerI {
         String textBeforeCaret = WritingStateController.INSTANCE.textBeforeCaretProperty().get();
 
         // Get the suggestions
-        List<String> suggestions = SuggestionService.INSTANCE.getSuggestions(
-                currentCAAAIPluginProperties.apiEndpointProperty().get(),
-                currentCAAAIPluginProperties.apiTokenProperty().get(),
-                textBeforeCaret,
-                suggestedSentenceKeys.size());
+        List<Suggestion> suggestions = this.suggestionService.suggestSentences(textBeforeCaret);
 
         // Dispatch in keys
         for (int i = 0; i < suggestedSentenceKeys.size(); i++) {
             final int index = i;
-            FXThreadUtils.runOnFXThread(() -> suggestedSentenceKeys.get(index).suggestionProperty().set(index < suggestions.size() ? suggestions.get(index) : ""));
+            FXThreadUtils.runOnFXThread(() -> suggestedSentenceKeys.get(index).suggestionProperty().set(index < suggestions.size() ? suggestions.get(index).content() : ""));
         }
     }
 
-    private void debounceSuggestionsUpdate() {
+    private void debouncedUpdateSuggestions() {
         ThreadUtils.debounce(500, "caa-ai", this::updateSuggestions);
     }
 
@@ -80,18 +104,27 @@ public enum CAAAIController implements ModeListenerI {
         // Get plugin properties for current configuration
         currentCAAAIPluginProperties = configuration.getPluginConfigProperties(CAAAIPlugin.ID, CAAAIPluginProperties.class);
 
+        this.suggestionService = new SuggestionService(
+                currentCAAAIPluginProperties.apiEndpointProperty().get(),
+                currentCAAAIPluginProperties.apiTokenProperty().get());
+
         // Find all the keys that can display the current word
         Map<GridComponentI, List<SuggestedSentenceKeyOption>> keys = new HashMap<>();
         ConfigurationComponentUtils.findKeyOptionsByGrid(SuggestedSentenceKeyOption.class, configuration, keys, null);
         keys.values().stream().flatMap(List::stream).distinct().forEach(suggestedSentenceKeys::add);
 
+        this.suggestionService.initConversation(this.suggestedSentenceKeys.size());
+
         // Add listener
         WritingStateController.INSTANCE.textBeforeCaretProperty().addListener(this.textChangedListener);
-        this.debounceSuggestionsUpdate();
+        this.debouncedUpdateSuggestions();
     }
 
     @Override
     public void modeStop(LCConfigurationI configuration) {
+        this.suggestionService.stopConversation();
+        this.suggestionService = null;
+
         WritingStateController.INSTANCE.textBeforeCaretProperty().removeListener(this.textChangedListener);
         this.currentCAAAIPluginProperties = null;
         suggestedSentenceKeys.clear();

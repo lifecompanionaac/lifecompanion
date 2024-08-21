@@ -27,6 +27,8 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import org.lifecompanion.controller.io.JsonHelper;
 import org.lifecompanion.framework.client.http.AppServerClient;
+import org.lifecompanion.plugin.caaai.model.Suggestion;
+import org.lifecompanion.plugin.caaai.model.dto.OpenAiDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,65 +38,38 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-public enum SuggestionService {
-    INSTANCE;
-
+public class SuggestionService {
     private static final Logger LOGGER = LoggerFactory.getLogger(SuggestionService.class);
 
     private final Gson gson;
 
-    private List<SpokenMessage> spokenMessages;
+    private final String endpoint;
+    private final String token;
 
-    SuggestionService() {
+    private final List<Suggestion> suggestions;
+    private final List<OpenAiDto.Message> messages;
+
+    public SuggestionService(String endpoint, String token) {
         gson = JsonHelper.GSON.newBuilder()
                 .registerTypeAdapter(ObservableList.class, new MyCustomJsonAdapter())
                 .create();
 
-        this.spokenMessages = new ArrayList<>();
+        this.endpoint = endpoint;
+        this.token = token;
+
+        this.messages = new ArrayList<>();
+        this.suggestions = new ArrayList<>();
     }
 
-    public void addSpokenMessage(String name, String message) {
-        LOGGER.info("Add spoken message: {}", message);
-        this.spokenMessages.add(new SpokenMessage(name, message));
-    }
+    public void initConversation(Integer wantedCount) {
+        // TODO System message.
+        // TODO First user message (backstory, etc.).
 
-    public List<String> getSuggestions(String endpoint, String token, String textBeforeCaret, int wantedCount) {
-        List<String> suggested = List.of();
-
-        OkHttpClient okHttpClient = AppServerClient.initializeClientForExternalCalls().build();
-        try (Response response = okHttpClient.newCall(new Request.Builder().url(endpoint)
-                .post(RequestBody.create(gson.toJson(this.makeOpenAiRequest(textBeforeCaret, wantedCount)), null))
-                .addHeader("Authorization", "Bearer " + token)
-                .addHeader("Accept", "application/json")
-                .addHeader("Content-Type", "application/json")
-                .build()).execute()) {
-            if (response.isSuccessful()) {
-                suggested = gson.fromJson(
-                        gson.fromJson(response.body().string(), OpenAiResponseDto.class).choices.getFirst().message.content,
-                        OpenAiSuggestions.class).suggestions;
-            }
-        } catch (Exception e) {
-            LOGGER.warn("Error when calling : {}", e.getMessage());
-        }
-
-        return suggested;
-    }
-
-    private OpenAiRequestDto makeOpenAiRequest(String textBeforeCaret, int wantedCount) {
-        JsonSchemaDto schema = new JsonSchemaDto(
-                "object",
-                new JsonSchemaPropertiesDto(new JsonSchemaArrayPropDto("array", new JsonSchemaArrayItemsDto("string"))),
-                List.of("suggestions"),
-                false);
-        OpenAiResponseFormatDto responseFormat = new OpenAiResponseFormatDto(
-                "json_schema",
-                new OpenAiJsonSchemaDto("suggestions", true, schema));
-
-        StringBuilder systemMessage = new StringBuilder()
-                .append("Tu es un assistant intégré dans un outil de communication alternative et amélioré (CAA). Ton rôle est de me faciliter l'accès à la communication. Il peut y avoir une conversation engagée avec plusieurs utilisateurs différents : me correspond à moi-même (l'utilisateur courant) et other est un intervenant externe. Tu peux aussi simplement compléter les mots ou les phrases que je souhaite écrire. Propose à chaque fois ")
-                .append(wantedCount)
-                .append(" alternatives dans un tableau JSON. Ces propositions doivent être courtes (3-5 mots), compréhensibles et toujours en français.");
+        String systemMessage = "Tu es un assistant intégré dans un outil de communication alternative et amélioré (CAA). Ton rôle est de me faciliter l'accès à la communication. Il peut y avoir une conversation engagée avec plusieurs utilisateurs différents : me correspond à moi-même (l'utilisateur courant) et other est un intervenant externe. Tu peux aussi simplement compléter les mots ou les phrases que je souhaite écrire. Propose à chaque fois "
+                + wantedCount
+                + " alternatives dans un tableau JSON. Ces propositions doivent être courtes (3-5 mots), compréhensibles et toujours en français.";
 
         // Initial context for user.
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
@@ -103,179 +78,107 @@ public enum SuggestionService {
                 "je suis de bonne humeur",
                 "il est " + dtf.format(ZonedDateTime.now(ZoneId.of("Europe/Paris"))));
 
-        StringBuilder userOriginalMessage = new StringBuilder()
-                .append("Je suis en situation de handicap et j'ai des difficultés dans la compréhension et/ou la production du langage.").append(' ')
-                .append(String.join(", ", userOriginalContextValues)).append(".");
+        String userOriginalMessage =
+                "Je suis en situation de handicap et j'ai des difficultés dans la compréhension et/ou la production du langage. "
+                        + String.join(", ", userOriginalContextValues) + ".";
 
-        List<OpenAiMessageDto> messages = new ArrayList<>(List.of(
-                new OpenAiMessageDto("system", systemMessage.toString()),
-                new OpenAiMessageDto("user", "me", userOriginalMessage.toString())));
+        this.messages.add(new OpenAiDto.Message("system", systemMessage));
+        this.handleOwnMessage(userOriginalMessage);
+    }
 
-        LOGGER.info("Spoken message count: {}", this.spokenMessages.size());
-        for (SpokenMessage prevMessage : this.spokenMessages) {
-            messages.add(new OpenAiMessageDto("user", prevMessage.name, prevMessage.message));
-        }
+    public void stopConversation() {
+        this.messages.clear();
+        this.suggestions.clear();
+    }
 
-        if (!textBeforeCaret.isBlank()) {
-            messages.add(new OpenAiMessageDto("user", "me", "Propose-moi des alternatives pour compléter ma phrase."));
-            messages.add(new OpenAiMessageDto("user", "me", textBeforeCaret));
-        } else if (!this.spokenMessages.isEmpty()) {
-            messages.add(new OpenAiMessageDto("user", "me", "Propose-moi des alternatives pour continuer la discussion."));
+    public void handleOwnMessage(String content) {
+        this.messages.add(new OpenAiDto.Message("user", "me", content));
+    }
+
+    public void handleInterlocutorMessage(String content) {
+        this.messages.add(new OpenAiDto.Message("user", "other", content));
+    }
+
+    public List<Suggestion> suggestSentences(String text) {
+        List<OpenAiDto.Message> requestMessages = new ArrayList<>(this.messages);
+
+        if (!text.isBlank()) {
+            requestMessages.add(new OpenAiDto.Message("user", "me", "Propose-moi des alternatives pour compléter ma phrase."));
+            requestMessages.add(new OpenAiDto.Message("user", "me", text));
+        } else if (this.messages.size() > 2) {
+            requestMessages.add(new OpenAiDto.Message("user", "me", "Propose-moi des alternatives pour continuer la discussion."));
         } else {
-            messages.add(new OpenAiMessageDto("user", "me", "Propose-moi des alternatives pour engager une conversation ou exprimer un besoin lié à ma situation."));
+            requestMessages.add(new OpenAiDto.Message("user", "me", "Propose-moi des alternatives pour engager une conversation ou exprimer un besoin lié à ma situation."));
         }
 
-        for (OpenAiMessageDto message : messages) {
-            LOGGER.info("Message: {}", message.content);
+        for (OpenAiDto.Message message : requestMessages) {
+            LOGGER.info("Message from {}: {}", message.name, message.content);
         }
 
-        return new OpenAiRequestDto("gpt-4o-mini", responseFormat, messages);
+        return this.fetchSuggestions(requestMessages);
     }
 
-    private record SpokenMessage(String name, String message) {
+    public List<Suggestion> retrySuggestSentences() {
+        // TODO
+        return null;
     }
 
-    private record JsonSchemaDto(
-            String type,
-            JsonSchemaPropertiesDto properties,
-            List<String> required,
-            boolean additionalProperties
-    ) {
+    private List<Suggestion> fetchSuggestions(List<OpenAiDto.Message> messages) {
+        List<Suggestion> suggested = List.of();
+
+        OkHttpClient okHttpClient = AppServerClient.initializeClientForExternalCalls().build();
+        try (Response response = okHttpClient.newCall(new Request.Builder().url(this.endpoint)
+                .post(RequestBody.create(this.gson.toJson(this.prepareSuggestionsRequest(messages)), null))
+                .addHeader("Authorization", "Bearer " + this.token)
+                .addHeader("Accept", "application/json")
+                .addHeader("Content-Type", "application/json")
+                .build()).execute()) {
+            if (response.isSuccessful()) {
+                suggested = gson.fromJson(
+                        gson.fromJson(response.body().string(), OpenAiDto.Response.class).choices.getFirst().message.content,
+                        OpenAiDto.SuggestionsChoice.class).suggestions;
+            } else {
+                LOGGER.warn("Error when calling : {}", response.body().string());
+            }
+        } catch (Exception e) {
+            LOGGER.warn("Error when calling : {}", e.getMessage());
+        }
+
+        for (Suggestion suggestion : suggested) {
+            LOGGER.warn("Suggestion : {}", suggestion.content());
+        }
+
+        this.suggestions.addAll(suggested);
+
+        return suggested;
     }
 
-    private record JsonSchemaPropertiesDto(
-            JsonSchemaArrayPropDto suggestions
-    ) {
-    }
+    private OpenAiDto.SuggestionsRequest prepareSuggestionsRequest(List<OpenAiDto.Message> messages) {
+        Map<String, Object> jsonSchema = Map.of(
+                "type", "object",
+                "required", List.of("suggestions"),
+                "additionalProperties", false,
+                "properties", Map.of(
+                        "suggestions", Map.of(
+                                "type", "array",
+                                "items", Map.of(
+                                        "type", "object",
+                                        "required", List.of("content"),
+                                        "additionalProperties", false,
+                                        "properties", Map.of(
+                                                "content", Map.of(
+                                                        "type", "string"
+                                                )
+                                        )
+                                )
+                        )
+                ));
 
-    private record JsonSchemaArrayPropDto(
-            String type,
-            JsonSchemaArrayItemsDto items
-    ) {
-    }
+        OpenAiDto.ResponseFormat responseFormat = new OpenAiDto.ResponseFormat(
+                "json_schema",
+                new OpenAiDto.JsonSchema("suggestions", true, jsonSchema));
 
-    private record JsonSchemaArrayItemsDto(
-            String type
-    ) {
-    }
-
-    private record OpenAiJsonSchemaDto(
-            String name,
-            boolean strict,
-            JsonSchemaDto schema
-    ) {
-    }
-
-    private record OpenAiResponseFormatDto(
-            String type,
-            OpenAiJsonSchemaDto json_schema
-    ) {
-    }
-
-    private record OpenAiRequestDto(
-            String model,
-            OpenAiResponseFormatDto response_format,
-            List<OpenAiMessageDto> messages
-    ) {
-    }
-
-    private static final class OpenAiMessageDto {
-        private String role;
-        private String name;
-        private String content;
-
-        public OpenAiMessageDto(String role, String content) {
-            this.role = role;
-            this.content = content;
-        }
-
-        public OpenAiMessageDto(String role, String name, String content) {
-            this(role, content);
-
-            this.name = name;
-        }
-
-        public String getRole() {
-            return role;
-        }
-
-        public void setRole(String role) {
-            this.role = role;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getContent() {
-            return content;
-        }
-
-        public void setContent(String content) {
-            this.content = content;
-        }
-    }
-
-    private static final class OpenAiChoiceDto {
-        private Integer index;
-        private OpenAiMessageDto message;
-
-        public OpenAiChoiceDto(Integer index, OpenAiMessageDto message) {
-            this.index = index;
-            this.message = message;
-        }
-
-        public Integer getIndex() {
-            return index;
-        }
-
-        public void setIndex(Integer index) {
-            this.index = index;
-        }
-
-        public OpenAiMessageDto getMessage() {
-            return message;
-        }
-
-        public void setMessage(OpenAiMessageDto message) {
-            this.message = message;
-        }
-    }
-
-    private static final class OpenAiResponseDto {
-        private List<OpenAiChoiceDto> choices;
-
-        public OpenAiResponseDto(List<OpenAiChoiceDto> choices) {
-            this.choices = choices;
-        }
-
-        public List<OpenAiChoiceDto> getChoices() {
-            return choices;
-        }
-
-        public void setChoices(List<OpenAiChoiceDto> choices) {
-            this.choices = choices;
-        }
-    }
-
-    private static final class OpenAiSuggestions {
-        private List<String> suggestions;
-
-        public OpenAiSuggestions(List<String> suggestions) {
-            this.suggestions = suggestions;
-        }
-
-        public List<String> getSuggestions() {
-            return suggestions;
-        }
-
-        public void setSuggestions(List<String> suggestions) {
-            this.suggestions = suggestions;
-        }
+        return new OpenAiDto.SuggestionsRequest("gpt-4o-mini", responseFormat, messages);
     }
 
     private static class MyCustomJsonAdapter implements JsonSerializer<ZonedDateTime>, JsonDeserializer<ZonedDateTime> {

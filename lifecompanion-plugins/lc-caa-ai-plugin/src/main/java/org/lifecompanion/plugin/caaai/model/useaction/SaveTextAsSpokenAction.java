@@ -21,11 +21,9 @@ package org.lifecompanion.plugin.caaai.model.useaction;
 import org.lifecompanion.controller.textcomponent.WritingStateController;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
-import org.lifecompanion.model.api.textcomponent.WritingEventSource;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
 import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
-import org.lifecompanion.plugin.caaai.controller.SuggestionService;
-import org.lifecompanion.plugin.caaai.model.keyoption.SuggestedSentenceKeyOption;
+import org.lifecompanion.plugin.caaai.controller.CAAAIController;
 
 import java.util.Map;
 
@@ -45,7 +43,7 @@ public class SaveTextAsSpokenAction extends SimpleUseActionImpl<GridPartKeyCompo
     // ========================================================================
     @Override
     public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
-        SuggestionService.INSTANCE.addSpokenMessage("me", WritingStateController.INSTANCE.currentTextProperty().get());
+        CAAAIController.INSTANCE.addOwnMessage(WritingStateController.INSTANCE.currentTextProperty().get());
     }
 
 

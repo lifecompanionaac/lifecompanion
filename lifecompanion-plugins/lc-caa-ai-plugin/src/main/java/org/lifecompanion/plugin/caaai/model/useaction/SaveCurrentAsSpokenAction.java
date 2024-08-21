@@ -18,13 +18,11 @@
  */
 package org.lifecompanion.plugin.caaai.model.useaction;
 
-import org.lifecompanion.controller.textcomponent.WritingStateController;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
 import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
 import org.lifecompanion.plugin.caaai.controller.CAAAIController;
-import org.lifecompanion.plugin.caaai.controller.SuggestionService;
 
 import java.util.Map;
 
@@ -44,8 +42,7 @@ public class SaveCurrentAsSpokenAction extends SimpleUseActionImpl<GridPartKeyCo
     // ========================================================================
     @Override
     public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
-        SuggestionService.INSTANCE.addSpokenMessage("other", this.parentComponentProperty().get().textContentProperty().get());
-        CAAAIController.INSTANCE.updateSuggestions();
+        CAAAIController.INSTANCE.addInterlocutorMessage(this.parentComponentProperty().get().textContentProperty().get());
     }
 
 
