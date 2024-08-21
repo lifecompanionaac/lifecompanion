@@ -122,6 +122,19 @@ public enum CAAAIController implements ModeListenerI {
         }
     }
 
+    public void retrySuggestions(){
+        // Make a call to get suggestions
+        String textBeforeCaret = WritingStateController.INSTANCE.textBeforeCaretProperty().get();
+
+        List<Suggestion> suggestions = this.suggestionService.retrySuggestSentences(textBeforeCaret);
+
+        // Dispatch in keys
+        for (int i = 0; i < suggestedSentenceKeys.size(); i++) {
+            final int index = i;
+            FXThreadUtils.runOnFXThread(() -> suggestedSentenceKeys.get(index).suggestionProperty().set(index < suggestions.size() ? suggestions.get(index).content() : ""));
+        }
+    }
+
     private void debouncedUpdateSuggestions() {
         ThreadUtils.debounce(500, "caa-ai", this::updateSuggestions);
     }
