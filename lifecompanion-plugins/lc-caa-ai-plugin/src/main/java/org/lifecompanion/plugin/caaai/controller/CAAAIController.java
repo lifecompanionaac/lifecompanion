@@ -43,7 +43,7 @@ public enum CAAAIController implements ModeListenerI {
     private static final Logger LOGGER = LoggerFactory.getLogger(CAAAIController.class);
     private LCConfigurationI configuration;
     private CAAAIPluginProperties currentCAAAIPluginProperties;
-    private final List<SuggestedSentenceKeyOption> suggestedSentenceKeys;
+    private final List<SuggestedSentenceKeyOption> suggestedSentenceKeys;// TODO : change it for a grid to avoid having different suggestion on each grid
     private final InvalidationListener textChangedListener;
 
 
