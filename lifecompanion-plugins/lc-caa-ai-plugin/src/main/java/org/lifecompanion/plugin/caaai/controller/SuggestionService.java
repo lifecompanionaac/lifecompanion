@@ -48,6 +48,7 @@ public class SuggestionService {
     private final String endpoint;
     private final String token;
 
+    private Integer numberOfSuggestions = 5;
     private final List<Suggestion> suggestions;
     private final List<OpenAiDto.Message> messages;
 
@@ -63,12 +64,12 @@ public class SuggestionService {
         this.suggestions = new ArrayList<>();
     }
 
-    public void initConversation(Integer wantedCount) {
+    public void initConversation() {
         String systemMessage = "Tu es un assistant intégré dans un outil de communication alternative et amélioré (CAA). " +
                 "Ton rôle est de me faciliter l'accès à la communication en me proposant des suggestion de phrase ou de fin de phrase qui prennent en compte ce que j'ai commencé à saisir. " +
                 "Il peut y avoir une conversation engagée avec plusieurs utilisateurs différents : " +
                 "me correspond à moi-même (l'utilisateur courant) et other est un intervenant externe. " +
-                "Propose à chaque fois " + wantedCount + " suggestions dans un tableau JSON. " +
+                "Propose à chaque fois " + this.numberOfSuggestions + " suggestions dans un tableau JSON. " +
                 "Ces suggestions doivent être courtes (3-5 mots), compréhensibles, sans ponctiations finales et toujours en français.";
 
         // Initial context for user.
@@ -86,9 +87,19 @@ public class SuggestionService {
         this.handleOwnMessage(userOriginalMessage);
     }
 
+    public void initConversation(Integer numberOfSuggestions) {
+        this.numberOfSuggestions = numberOfSuggestions;
+        this.initConversation();
+    }
+
     public void stopConversation() {
         this.messages.clear();
         this.suggestions.clear();
+    }
+
+    public void clearConversation() {
+        this.messages.clear();
+        this.initConversation();
     }
 
     public void handleOwnMessage(String content) {

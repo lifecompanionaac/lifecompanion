@@ -110,6 +110,12 @@ public enum CAAAIController implements ModeListenerI {
         this.debouncedUpdateSuggestions();
     }
 
+    public void clearConversation(){
+        this.conversationMessages.clear();
+        this.suggestionService.clearConversation();
+        this.debouncedUpdateSuggestions();
+    }
+
     //========================================================================
 
     // Class part : "Speech to text"
