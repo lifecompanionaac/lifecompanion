@@ -66,11 +66,11 @@ public class SuggestionService {
 
     public void initConversation() {
         String systemMessage = "Tu es un assistant intégré dans un outil de communication alternative et amélioré (CAA). " +
-                "Ton rôle est de me faciliter l'accès à la communication en me proposant des suggestion de phrase ou de fin de phrase qui prennent en compte ce que j'ai commencé à saisir. " +
+                "Ton rôle est de me faciliter l'accès à la communication en me proposant des suggestions de phrase ou de fin de phrase qui prennent en compte ce que j'ai commencé à saisir. " +
                 "Il peut y avoir une conversation engagée avec plusieurs utilisateurs différents : " +
                 "me correspond à moi-même (l'utilisateur courant) et other est un intervenant externe. " +
                 "Propose à chaque fois " + this.numberOfSuggestions + " suggestions dans un tableau JSON. " +
-                "Ces suggestions doivent être courtes (3-5 mots), compréhensibles, sans ponctiations finales et toujours en français.";
+                "Ces suggestions doivent être courtes (3-5 mots), compréhensibles, sans ponctuations finales et toujours en français.";
 
         // Initial context for user.
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
@@ -143,7 +143,10 @@ public class SuggestionService {
             interactionalMessages.add(new OpenAiDto.Message("user", "me", "Propose-moi des suggestions pour compléter ma phrase."));
             interactionalMessages.add(new OpenAiDto.Message("user", "me", text));
         } else if (this.messages.size() > 2) {
-            interactionalMessages.add(new OpenAiDto.Message("user", "me", "Propose-moi des suggestions pour continuer la discussion."));
+            interactionalMessages.add(new OpenAiDto.Message("user", "me",
+                    "Propose-moi des suggestions pour continuer la discussion. " +
+                    "Ces suggestions ne doivent pas être des questions qui me sont dirigées."
+            ));
         } else {
             interactionalMessages.add(new OpenAiDto.Message("user", "me", "Propose-moi des suggestions pour engager une conversation."));
         }
