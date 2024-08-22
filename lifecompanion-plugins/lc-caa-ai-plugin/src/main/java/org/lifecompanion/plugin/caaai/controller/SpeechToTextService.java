@@ -46,16 +46,16 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class SpeechToTextService {
-    private static final long SILENCE_DURATION = 10_000;
-    private static final int SILENCE_DETECTION_INTERVAL = 4;
-    private static final double SILENCE_THRESHOLD = 127.0 * 0.1;
-    private static final long MAX_DURATION = 2 * 60 * 1_000;
-    private static final boolean DEBUG_AUDIO_FILE = false;
+    private static final long SILENCE_DURATION = 8_000; // 8 second of continuous silence to stop
+    private static final int SILENCE_DETECTION_INTERVAL = 4; // every 4 requests
+    private static final double SILENCE_THRESHOLD = 127.0 * 0.1; // 10% of max volume
+    private static final long MAX_DURATION = 2 * 60 * 1_000; // speech detection can last 2 minutes
+    private static final boolean DEBUG_AUDIO_FILE = true;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SpeechToTextService.class);
 
     private final static AudioFormat[] AUDIO_FORMATS = {
-            //new AudioFormat(32000, 16, 1, true, false),
+            new AudioFormat(32000, 16, 1, true, false),
             new AudioFormat(16000, 16, 1, true, false)};
 
     private Consumer<String> onSentenceDetected;
@@ -82,8 +82,8 @@ public class SpeechToTextService {
 
     public void stopRecording() {
         if (this.currentSpeechToTextThread != null) {
-            recording.set(false);
             currentSpeechToTextThread.stopRecording();
+            recording.set(false);
             this.currentSpeechToTextThread = null;
             this.onSpeechFinished = null;
             this.onSentenceDetected = null;
@@ -138,7 +138,7 @@ public class SpeechToTextService {
                     RecognitionConfig recognitionConfig = RecognitionConfig.newBuilder()
                             .setEncoding(RecognitionConfig.AudioEncoding.LINEAR16)
                             .setLanguageCode("en")
-                            .setSampleRateHertz(16000)
+                            .setSampleRateHertz((int) format.getSampleRate())
                             .addAlternativeLanguageCodes("fr")
                             .build();
                     clientStream.send(StreamingRecognizeRequest.newBuilder()
@@ -163,13 +163,12 @@ public class SpeechToTextService {
                         }
 
                         // Send request
-                        if (recording.get()) {
-                            clientStream.send(StreamingRecognizeRequest.newBuilder()
-                                    .setAudioContent(ByteString.copyFrom(buff))
-                                    .build());
-                        }
+                        clientStream.send(StreamingRecognizeRequest.newBuilder()
+                                .setAudioContent(ByteString.copyFrom(buff))
+                                .build());
                     }
                     LOGGER.info("Recording finished");
+                    clientStream.closeSend();
                     this.onComplete();
                     if (DEBUG_AUDIO_FILE) {
                         File debugFile = IOUtils.getTempFile("speech-to-text-wav", ".wav");
