@@ -65,14 +65,12 @@ public class CAAAIPlugin implements PluginI {
     //========================================================================
     @Override
     public List<UseVariableDefinitionI> getDefinedVariables() {
-        return null;
+        return CAAAIController.INSTANCE.getDefinedVariables();
     }
 
     @Override
     public Function<UseVariableDefinitionI, UseVariableI<?>> getSupplierForUseVariable(String id) {
-        return switch (id) {
-            default -> null;
-        };
+        return CAAAIController.INSTANCE.getSupplierForUseVariable(id);
     }
     //========================================================================
 

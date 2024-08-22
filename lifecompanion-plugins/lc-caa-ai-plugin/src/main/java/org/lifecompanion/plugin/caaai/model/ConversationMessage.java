@@ -5,18 +5,18 @@ import javafx.beans.property.StringProperty;
 
 public class ConversationMessage {
     private final ConversationMessageAuthor author;
-    private final StringProperty message;
+    private final StringProperty content;
 
-    public ConversationMessage(ConversationMessageAuthor author, String message) {
+    public ConversationMessage(ConversationMessageAuthor author, String content) {
         this.author = author;
-        this.message = new SimpleStringProperty(message);
+        this.content = new SimpleStringProperty(content);
     }
 
     public ConversationMessageAuthor author() {
         return this.author;
     }
 
-    public StringProperty message() {
-        return this.message;
+    public StringProperty content() {
+        return this.content;
     }
 }

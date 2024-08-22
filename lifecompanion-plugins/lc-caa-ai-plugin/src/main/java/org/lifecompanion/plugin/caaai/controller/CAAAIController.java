@@ -28,6 +28,10 @@ import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
+import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
+import org.lifecompanion.model.api.usevariable.UseVariableI;
+import org.lifecompanion.model.impl.usevariable.StringUseVariable;
+import org.lifecompanion.model.impl.usevariable.UseVariableDefinition;
 import org.lifecompanion.plugin.caaai.CAAAIPlugin;
 import org.lifecompanion.plugin.caaai.CAAAIPluginProperties;
 import org.lifecompanion.plugin.caaai.model.ConversationMessage;
@@ -41,33 +45,50 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 public enum CAAAIController implements ModeListenerI {
     INSTANCE;
+
+    public static final String VAR_LAST_CONVERSATION_MESSAGE = "CAAAILastConversationMessage";
+
     private static final Logger LOGGER = LoggerFactory.getLogger(CAAAIController.class);
+
     private LCConfigurationI configuration;
     private CAAAIPluginProperties currentCAAAIPluginProperties;
+
     private SuggestionService suggestionService;
+    private SpeechToTextService speechToTextService;
+
+    private final ObservableList<ConversationMessage> conversationMessages;
+
+    private final Set<Consumer<Boolean>> speechRecordingChangeListeners;
+    private final Set<Consumer<ConversationMessageAuthor>> conversationAuthorChangeListeners;
+
+    private final InvalidationListener speechRecordingChangeListener;
+    private final InvalidationListener conversationMessagesChangeListener;
+    private final InvalidationListener textChangeListener;
 
     // TODO : change it for a grid to avoid having different suggestion on each grid
     private final List<SuggestedSentenceKeyOption> suggestedSentenceKeys;
-    private final InvalidationListener textChangedListener;
-
-    private final ObservableList<ConversationMessage> conversationMessages;
-    private SpeechToTextService speechToTextService;
 
     CAAAIController() {
         suggestedSentenceKeys = new ArrayList<>();
 
         this.conversationMessages = FXCollections.observableArrayList();
 
-        this.textChangedListener = (inv) -> this.debouncedUpdateSuggestions();
+        this.speechRecordingChangeListeners = new HashSet<>();
+        this.conversationAuthorChangeListeners = new HashSet<>();
+
+        this.speechRecordingChangeListener = (inv) -> this.onSpeechRecordingChange();
+        this.conversationMessagesChangeListener = (inv) -> this.onConversationAuthorChange();
+        this.textChangeListener = (inv) -> this.debouncedUpdateSuggestions();
     }
+
+    // Class part : "Conversations"
+    //========================================================================
 
     public ObservableList<ConversationMessage> conversationMessages() {
         return this.conversationMessages;
@@ -78,6 +99,17 @@ public enum CAAAIController implements ModeListenerI {
         this.suggestionService.handleOwnMessage(content);
         this.debouncedUpdateSuggestions();
     }
+
+    public void addInterlocutorMessage(String content) {
+        this.conversationMessages.add(new ConversationMessage(ConversationMessageAuthor.INTERLOCUTOR, content));
+        this.suggestionService.handleInterlocutorMessage(content);
+        this.debouncedUpdateSuggestions();
+    }
+
+    //========================================================================
+
+    // Class part : "Speech to text"
+    //========================================================================
 
     public void toggleSpeechToTextRecognition() {
         if (this.speechToTextService.recordingProperty().get()) {
@@ -102,11 +134,10 @@ public enum CAAAIController implements ModeListenerI {
         }
     }
 
-    public void addInterlocutorMessage(String content) {
-        this.conversationMessages.add(new ConversationMessage(ConversationMessageAuthor.INTERLOCUTOR, content));
-        this.suggestionService.handleInterlocutorMessage(content);
-        this.debouncedUpdateSuggestions();
-    }
+    //========================================================================
+
+    // Class part : "Suggestions"
+    //========================================================================
 
     public void updateSuggestions() {
         // Make a call to get suggestions
@@ -122,7 +153,7 @@ public enum CAAAIController implements ModeListenerI {
         }
     }
 
-    public void retrySuggestions(){
+    public void retrySuggestions() {
         // Make a call to get suggestions
         String textBeforeCaret = WritingStateController.INSTANCE.textBeforeCaretProperty().get();
 
@@ -138,6 +169,46 @@ public enum CAAAIController implements ModeListenerI {
     private void debouncedUpdateSuggestions() {
         ThreadUtils.debounce(500, "caa-ai", this::updateSuggestions);
     }
+
+    //========================================================================
+
+    // Class part : "Listeners"
+    //========================================================================
+
+    public void addConversationAuthorChangeListener(Consumer<ConversationMessageAuthor> callback) {
+        this.conversationAuthorChangeListeners.add(callback);
+    }
+
+    public void removeConversationAuthorChangeListener(Consumer<ConversationMessageAuthor> callback) {
+        this.conversationAuthorChangeListeners.remove(callback);
+    }
+
+    public void onConversationAuthorChange() {
+        ConversationMessage message = this.conversationMessages.isEmpty() ? null : this.conversationMessages.getLast();
+
+        if (message != null) {
+            this.conversationAuthorChangeListeners.forEach(callback -> callback.accept(message.author()));
+        }
+    }
+
+    public void addSpeechRecordingChangeListener(Consumer<Boolean> callback) {
+        this.speechRecordingChangeListeners.add(callback);
+    }
+
+    public void removeSpeechRecordingChangeListener(Consumer<Boolean> callback) {
+        this.speechRecordingChangeListeners.remove(callback);
+    }
+
+    public void onSpeechRecordingChange() {
+        Boolean recording = this.speechToTextService.recordingProperty().get();
+
+        this.speechRecordingChangeListeners.forEach(callback -> callback.accept(recording));
+    }
+
+    //========================================================================
+
+    // Class part : "Start/stop"
+    //========================================================================
 
     @Override
     public void modeStart(LCConfigurationI configuration) {
@@ -159,7 +230,10 @@ public enum CAAAIController implements ModeListenerI {
         this.suggestionService.initConversation(this.suggestedSentenceKeys.size());
 
         // Add listener
-        WritingStateController.INSTANCE.textBeforeCaretProperty().addListener(this.textChangedListener);
+        this.speechToTextService.recordingProperty().addListener(this.speechRecordingChangeListener);
+        this.conversationMessages.addListener(this.conversationMessagesChangeListener);
+        WritingStateController.INSTANCE.textBeforeCaretProperty().addListener(this.textChangeListener);
+
         this.debouncedUpdateSuggestions();
     }
 
@@ -168,11 +242,43 @@ public enum CAAAIController implements ModeListenerI {
         this.suggestionService.stopConversation();
         this.suggestionService = null;
 
-        WritingStateController.INSTANCE.textBeforeCaretProperty().removeListener(this.textChangedListener);
+        WritingStateController.INSTANCE.textBeforeCaretProperty().removeListener(this.textChangeListener);
         this.currentCAAAIPluginProperties = null;
         suggestedSentenceKeys.clear();
         this.configuration = null;
 
         this.speechToTextService.dispose();
     }
+
+    //========================================================================
+
+    // Class part : "Use variables"
+    //========================================================================
+
+    public List<UseVariableDefinitionI> getDefinedVariables() {
+        return List.of(
+                new UseVariableDefinition(
+                        VAR_LAST_CONVERSATION_MESSAGE,
+                        "caa.ai.plugin.variables.last_conversation_message.name",
+                        "caa.ai.plugin.variables.last_conversation_message.description",
+                        "caa.ai.plugin.variables.last_conversation_message.example",
+                        500)
+        );
+    }
+
+    public Function<UseVariableDefinitionI, UseVariableI<?>> getSupplierForUseVariable(String id) {
+        return switch (id) {
+            case VAR_LAST_CONVERSATION_MESSAGE ->
+                    def -> new StringUseVariable(def, this.generateLastConversationMessageVariable());
+            default -> null;
+        };
+    }
+
+    private String generateLastConversationMessageVariable() {
+        ConversationMessage message = this.conversationMessages.isEmpty() ? null : this.conversationMessages.getLast();
+
+        return message != null ? message.content().get() : "";
+    }
+
+    //========================================================================
 }

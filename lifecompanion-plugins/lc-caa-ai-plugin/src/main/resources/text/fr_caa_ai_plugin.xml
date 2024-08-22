@@ -8,4 +8,25 @@
     <text key="caa.ai.plugin.general.config.api.field.token">Token</text>
     <text key="caa.ai.plugin.general.config.speechToText.title">SpeechToText</text>
     <text key="caa.ai.plugin.general.config.speechToText.field.jsonConfig">Json configuration</text>
+
+    <!-- Variables -->
+
+    <text key="caa.ai.plugin.variables.last_conversation_message.name">Dernier message connu</text>
+    <text key="caa.ai.plugin.variables.last_conversation_message.description">Le dernier message produit par l'utilisateur ou enregistré par la reconnaissance vocale.</text>
+    <text key="caa.ai.plugin.variables.last_conversation_message.example">Bonjour, tu vas bien ?</text>
+
+    <!-- Events -->
+
+    <text key="caa.ai.plugin.events.last_message_author_me.name">Dernier message par l'utilisateur</text>
+    <text key="caa.ai.plugin.events.last_message_author_me.description">L'auteur du dernier message enregistré est l'utilisateur.</text>
+
+    <text key="caa.ai.plugin.events.last_message_author_interlocutor.name">Dernier message par l'interlocuteur</text>
+    <text key="caa.ai.plugin.events.last_message_author_interlocutor.description">L'auteur du dernier message enregistré est l'interlocuteur.</text>
+
+    <text key="caa.ai.plugin.events.speech_recording_on.name">Reconnaissance vocale activée</text>
+    <text key="caa.ai.plugin.events.speech_recording_on.description">La reconnaissance vocale des phrases de l'interlocuteur est activée.</text>
+
+    <text key="caa.ai.plugin.events.speech_recording_off.name">Reconnaissance vocale désactivée</text>
+    <text key="caa.ai.plugin.events.speech_recording_off.description">La reconnaissance vocale des phrases de l'interlocuteur est désactivée.</text>
+
 </texts>
