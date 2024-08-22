@@ -58,11 +58,6 @@ public class SpeechToTextService {
             //new AudioFormat(32000, 16, 1, true, false),
             new AudioFormat(16000, 16, 1, true, false)};
 
-    static {
-        LoadBalancerRegistry.getDefaultRegistry().register(new GrpclbLoadBalancerProvider());
-        LoadBalancerRegistry.getDefaultRegistry().register(new PickFirstLoadBalancerProvider());
-    }
-
     private Consumer<String> onSentenceDetected;
     private Consumer<List<String>> onSpeechFinished;
 
@@ -168,9 +163,11 @@ public class SpeechToTextService {
                         }
 
                         // Send request
-                        clientStream.send(StreamingRecognizeRequest.newBuilder()
-                                .setAudioContent(ByteString.copyFrom(buff))
-                                .build());
+                        if (recording.get()) {
+                            clientStream.send(StreamingRecognizeRequest.newBuilder()
+                                    .setAudioContent(ByteString.copyFrom(buff))
+                                    .build());
+                        }
                     }
                     LOGGER.info("Recording finished");
                     this.onComplete();
