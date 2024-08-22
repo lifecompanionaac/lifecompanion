@@ -20,11 +20,9 @@
 package org.lifecompanion.plugin.caaai.controller;
 
 import javafx.beans.InvalidationListener;
-import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.lifecompanion.controller.textcomponent.WritingStateController;
-import org.lifecompanion.framework.commons.utils.io.IOUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
@@ -46,7 +44,6 @@ import org.lifecompanion.util.model.ConfigurationComponentUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -73,12 +70,11 @@ public enum CAAAIController implements ModeListenerI {
     private final InvalidationListener conversationMessagesChangeListener;
     private final InvalidationListener textChangeListener;
 
-    // TODO : change it for a grid to avoid having different suggestion on each grid
-    private final List<SuggestedSentenceKeyOption> suggestedSentenceKeys;
+    private final Map<GridComponentI, List<SuggestedSentenceKeyOption>> suggestionKeyOptionsByGrid;
     private final List<RecordedVolumeIndicatorKeyOption> recordedVolumeIndicatorKeys;
 
     CAAAIController() {
-        suggestedSentenceKeys = new ArrayList<>();
+        suggestionKeyOptionsByGrid = new HashMap<>();
         recordedVolumeIndicatorKeys = new ArrayList<>();
 
         this.conversationMessages = FXCollections.observableArrayList();
@@ -150,30 +146,24 @@ public enum CAAAIController implements ModeListenerI {
     //========================================================================
 
     public void updateSuggestions() {
-        // Make a call to get suggestions
         String textBeforeCaret = WritingStateController.INSTANCE.textBeforeCaretProperty().get();
-
-        // Get the suggestions
-        List<Suggestion> suggestions = this.suggestionService.suggestSentences(textBeforeCaret);
-
-        // Dispatch in keys
-        for (int i = 0; i < suggestedSentenceKeys.size(); i++) {
-            final int index = i;
-            FXThreadUtils.runOnFXThread(() -> suggestedSentenceKeys.get(index).suggestionProperty().set(index < suggestions.size() ? suggestions.get(index).content() : ""));
-        }
+        this.dispatchSuggestions(this.suggestionService.suggestSentences(textBeforeCaret));
     }
 
     public void retrySuggestions() {
-        // Make a call to get suggestions
         String textBeforeCaret = WritingStateController.INSTANCE.textBeforeCaretProperty().get();
+        this.dispatchSuggestions(this.suggestionService.retrySuggestSentences(textBeforeCaret));
+    }
 
-        List<Suggestion> suggestions = this.suggestionService.retrySuggestSentences(textBeforeCaret);
-
-        // Dispatch in keys
-        for (int i = 0; i < suggestedSentenceKeys.size(); i++) {
-            final int index = i;
-            FXThreadUtils.runOnFXThread(() -> suggestedSentenceKeys.get(index).suggestionProperty().set(index < suggestions.size() ? suggestions.get(index).content() : ""));
-        }
+    private void dispatchSuggestions(List<Suggestion> suggestions) {
+        this.suggestionKeyOptionsByGrid.forEach((grid, keyOptions) -> {
+            for (int i = 0; i < keyOptions.size(); i++) {
+                final int index = i;
+                FXThreadUtils.runOnFXThread(() -> keyOptions.get(index).suggestionProperty().set(
+                        index < suggestions.size() ? suggestions.get(index).content() : "")
+                );
+            }
+        });
     }
 
     private void debouncedUpdateSuggestions() {
@@ -237,17 +227,14 @@ public enum CAAAIController implements ModeListenerI {
                 currentCAAAIPluginProperties.apiEndpointProperty().get(),
                 currentCAAAIPluginProperties.apiTokenProperty().get());
 
-        // Find all the keys that can display the current word
-        Map<GridComponentI, List<SuggestedSentenceKeyOption>> keys = new HashMap<>();
-        ConfigurationComponentUtils.findKeyOptionsByGrid(SuggestedSentenceKeyOption.class, configuration, keys, null);
-        keys.values().stream().flatMap(List::stream).distinct().forEach(suggestedSentenceKeys::add);
+        // Find all the keys option by grid that can display the suggestions
+        ConfigurationComponentUtils.findKeyOptionsByGrid(SuggestedSentenceKeyOption.class, configuration, this.suggestionKeyOptionsByGrid, null);
 
         Map<GridComponentI, List<RecordedVolumeIndicatorKeyOption>> keys2 = new HashMap<>();
         ConfigurationComponentUtils.findKeyOptionsByGrid(RecordedVolumeIndicatorKeyOption.class, configuration, keys2, null);
         keys2.values().stream().flatMap(List::stream).distinct().forEach(recordedVolumeIndicatorKeys::add);
 
-
-        this.suggestionService.initConversation(this.suggestedSentenceKeys.size());
+        this.suggestionService.initConversation(this.suggestionKeyOptionsByGrid.entrySet().iterator().next().getValue().size());
 
         // Add listener
         this.speechToTextService.recordingProperty().addListener(this.speechRecordingChangeListener);
@@ -264,7 +251,7 @@ public enum CAAAIController implements ModeListenerI {
 
         WritingStateController.INSTANCE.textBeforeCaretProperty().removeListener(this.textChangeListener);
         this.currentCAAAIPluginProperties = null;
-        suggestedSentenceKeys.clear();
+        suggestionKeyOptionsByGrid.clear();
         recordedVolumeIndicatorKeys.clear();
         this.configuration = null;
 
