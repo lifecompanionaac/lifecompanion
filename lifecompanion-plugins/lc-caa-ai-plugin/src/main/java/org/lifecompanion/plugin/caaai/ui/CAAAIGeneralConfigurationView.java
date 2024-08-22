@@ -50,6 +50,7 @@ public class CAAAIGeneralConfigurationView extends BorderPane implements General
     private TextField textField;
     private TextField apiEndpoint;
     private TextField apiToken;
+    private TextField speechToTextJsonConfig;
 
     public CAAAIGeneralConfigurationView() {
         initAll();
@@ -101,6 +102,7 @@ public class CAAAIGeneralConfigurationView extends BorderPane implements General
 
         apiEndpoint = new TextField();
         apiToken = new TextField();
+        speechToTextJsonConfig = new TextField();
 
         int gridRowIndex = 0;
         gridPaneConfiguration.add(FXControlUtils.createTitleLabel("caa.ai.plugin.todo"), 0, gridRowIndex++, 2, 1);
@@ -115,6 +117,10 @@ public class CAAAIGeneralConfigurationView extends BorderPane implements General
         gridPaneConfiguration.add(apiEndpoint, 1, gridRowIndex++);
         gridPaneConfiguration.add(new Label(Translation.getText("caa.ai.plugin.general.config.api.field.token")), 0, gridRowIndex);
         gridPaneConfiguration.add(apiToken, 1, gridRowIndex++);
+
+        gridPaneConfiguration.add(FXControlUtils.createTitleLabel("caa.ai.plugin.general.config.speechToText.title"), 0, gridRowIndex++, 2, 1);
+        gridPaneConfiguration.add(new Label(Translation.getText("caa.ai.plugin.general.config.speechToText.field.jsonConfig")), 0, gridRowIndex);
+        gridPaneConfiguration.add(speechToTextJsonConfig, 1, gridRowIndex++);
 
         gridPaneConfiguration.setPadding(new Insets(GeneralConfigurationStepViewI.PADDING));
         this.setCenter(gridPaneConfiguration);
@@ -139,6 +145,7 @@ public class CAAAIGeneralConfigurationView extends BorderPane implements General
         CAAAIPluginProperties pluginConfigProperties = configuration.getPluginConfigProperties(CAAAIPlugin.ID, CAAAIPluginProperties.class);
         pluginConfigProperties.apiEndpointProperty().set(apiEndpoint.getText());
         pluginConfigProperties.apiTokenProperty().set(apiToken.getText());
+        pluginConfigProperties.speechToTextJsonConfig().set(speechToTextJsonConfig.getText());
     }
 
     @Override
@@ -147,6 +154,7 @@ public class CAAAIGeneralConfigurationView extends BorderPane implements General
         CAAAIPluginProperties pluginConfigProperties = configuration.getPluginConfigProperties(CAAAIPlugin.ID, CAAAIPluginProperties.class);
         apiEndpoint.setText(pluginConfigProperties.apiEndpointProperty().get());
         apiToken.setText(pluginConfigProperties.apiTokenProperty().get());
+        speechToTextJsonConfig.setText(pluginConfigProperties.speechToTextJsonConfig().get());
     }
 
     @Override

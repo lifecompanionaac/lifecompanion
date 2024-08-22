@@ -145,9 +145,7 @@ public enum CAAAIController implements ModeListenerI {
         // Get plugin properties for current configuration
         currentCAAAIPluginProperties = configuration.getPluginConfigProperties(CAAAIPlugin.ID, CAAAIPluginProperties.class);
 
-        // TODO : should be replaced by a plugin property containing the json content
-        String jsonCredentialsContent = IOUtils.getFileContent(new File("C:\\Users\\Mathieu\\Desktop\\temp\\translation-test\\lifecompanion-312812-450f3762ec2e.json"));
-        this.speechToTextService = new SpeechToTextService(jsonCredentialsContent);
+        this.speechToTextService = new SpeechToTextService(currentCAAAIPluginProperties.speechToTextJsonConfig().get());
 
         this.suggestionService = new SuggestionService(
                 currentCAAAIPluginProperties.apiEndpointProperty().get(),

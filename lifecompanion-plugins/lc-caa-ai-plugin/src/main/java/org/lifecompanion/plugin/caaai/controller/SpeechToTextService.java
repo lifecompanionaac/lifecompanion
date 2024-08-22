@@ -78,6 +78,8 @@ public class SpeechToTextService {
         if (recording.get()) {
             stopRecording();
         }
+        this.onSpeechFinished = null;
+        this.onSentenceDetected = null;
     }
 
     public void stopRecording() {
@@ -85,8 +87,6 @@ public class SpeechToTextService {
             currentSpeechToTextThread.stopRecording();
             recording.set(false);
             this.currentSpeechToTextThread = null;
-            this.onSpeechFinished = null;
-            this.onSentenceDetected = null;
         }
     }
 

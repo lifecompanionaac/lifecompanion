@@ -14,16 +14,20 @@ public class CAAAIPluginProperties extends AbstractPluginConfigProperties {
 
     private final StringProperty apiEndpoint;
     private final StringProperty apiToken;
+    private final StringProperty speechToTextJsonConfig;
 
     protected CAAAIPluginProperties(ObjectProperty<LCConfigurationI> parentConfiguration) {
         super(parentConfiguration);
         this.apiEndpoint = new SimpleStringProperty();
         this.apiToken = new SimpleStringProperty();
+        this.speechToTextJsonConfig = new SimpleStringProperty();
     }
 
     public StringProperty apiEndpointProperty() { return apiEndpoint; }
 
     public StringProperty apiTokenProperty() { return apiToken; }
+
+    public StringProperty speechToTextJsonConfig() { return speechToTextJsonConfig; }
 
     @Override
     public Element serialize(final IOContextI context) {
