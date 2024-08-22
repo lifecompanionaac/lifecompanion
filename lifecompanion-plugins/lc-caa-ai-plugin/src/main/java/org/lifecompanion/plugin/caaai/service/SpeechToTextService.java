@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.lifecompanion.plugin.caaai.controller;
+package org.lifecompanion.plugin.caaai.service;
 
 import com.google.api.gax.rpc.ClientStream;
 import com.google.api.gax.rpc.ResponseObserver;
@@ -63,13 +63,13 @@ public class SpeechToTextService {
 
     private final DoubleProperty currentRecordedVolume;
 
-    SpeechToTextService(String jsonCredentialsContent) {
+    public SpeechToTextService(String jsonCredentialsContent) {
         this.recording = new SimpleBooleanProperty();
         this.currentRecordedVolume = new SimpleDoubleProperty();
         this.jsonCredentialsContent = jsonCredentialsContent;
     }
 
-    ReadOnlyBooleanProperty recordingProperty() {
+    public ReadOnlyBooleanProperty recordingProperty() {
         return this.recording;
     }
 

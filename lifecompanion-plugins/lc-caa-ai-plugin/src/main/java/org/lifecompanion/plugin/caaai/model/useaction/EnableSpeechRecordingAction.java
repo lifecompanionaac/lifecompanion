@@ -18,24 +18,21 @@
  */
 package org.lifecompanion.plugin.caaai.model.useaction;
 
-import org.lifecompanion.controller.textcomponent.WritingStateController;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
-import org.lifecompanion.model.api.textcomponent.WritingEventSource;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
 import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
 import org.lifecompanion.plugin.caaai.controller.CAAAIController;
-import org.lifecompanion.plugin.caaai.model.keyoption.SuggestedSentenceKeyOption;
 
 import java.util.Map;
 
-public class ToggleSpeechToTextAction extends SimpleUseActionImpl<GridPartKeyComponentI> {
+public class EnableSpeechRecordingAction extends SimpleUseActionImpl<GridPartKeyComponentI> {
 
-    public ToggleSpeechToTextAction() {
+    public EnableSpeechRecordingAction() {
         super(GridPartKeyComponentI.class);
         this.category = CAAAIActionSubCategories.TODO;
-        this.nameID = "caa.ai.plugin.todo.toggle.speech";
-        this.staticDescriptionID = "caa.ai.plugin.todo";
+        this.nameID = "caa.ai.plugin.actions.enable_speech_recording.name";
+        this.staticDescriptionID = "caa.ai.plugin.actions.enable_speech_recording.description";
         this.configIconPath = "filler_icon_32px.png";
         this.parameterizableAction = false;
         this.variableDescriptionProperty().set(getStaticDescription());
@@ -45,7 +42,7 @@ public class ToggleSpeechToTextAction extends SimpleUseActionImpl<GridPartKeyCom
     // ========================================================================
     @Override
     public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
-        CAAAIController.INSTANCE.toggleSpeechToTextRecognition();
+        CAAAIController.INSTANCE.enableSpeechToTextRecognition();
     }
     // ========================================================================
 }

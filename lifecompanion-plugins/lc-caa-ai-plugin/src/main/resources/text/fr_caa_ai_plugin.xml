@@ -11,9 +11,14 @@
 
     <!-- Variables -->
 
-    <text key="caa.ai.plugin.variables.last_conversation_message.name">Dernier message connu</text>
-    <text key="caa.ai.plugin.variables.last_conversation_message.description">Le dernier message produit par l'utilisateur ou enregistré par la reconnaissance vocale.</text>
-    <text key="caa.ai.plugin.variables.last_conversation_message.example">Bonjour, tu vas bien ?</text>
+    <text key="caa.ai.plugin.variables.last_conversation_message_author.name">Dernier auteur</text>
+    <text key="caa.ai.plugin.variables.last_conversation_message_author.description">L'auteur ayant produit ou enregistré le dernier message.</text>
+    <text key="caa.ai.plugin.variables.last_conversation_message_author.values.me">Moi</text>
+    <text key="caa.ai.plugin.variables.last_conversation_message_author.values.interlocutor">Interlocuteur</text>
+
+    <text key="caa.ai.plugin.variables.last_conversation_message_content.name">Dernier message</text>
+    <text key="caa.ai.plugin.variables.last_conversation_message_content.description">Le dernier message produit par l'utilisateur ou enregistré par la reconnaissance vocale.</text>
+    <text key="caa.ai.plugin.variables.last_conversation_message_content.example">Bonjour, tu vas bien ?</text>
 
     <!-- Events -->
 

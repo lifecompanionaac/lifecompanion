@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.lifecompanion.plugin.caaai.controller;
+package org.lifecompanion.plugin.caaai.service;
 
 import com.google.gson.*;
 import javafx.collections.ObservableList;
@@ -98,7 +98,7 @@ public class SuggestionService {
     }
 
     public void clearConversation() {
-        this.messages.clear();
+        this.stopConversation();
         this.initConversation();
     }
 

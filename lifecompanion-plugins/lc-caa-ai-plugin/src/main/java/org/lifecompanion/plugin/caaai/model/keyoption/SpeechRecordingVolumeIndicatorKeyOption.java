@@ -23,36 +23,29 @@ import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyDoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
-import javafx.util.Pair;
 import org.jdom2.Element;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.AbstractKeyOption;
 import org.lifecompanion.model.impl.exception.LCException;
-import org.lifecompanion.model.impl.style.ShapeStyleBinder;
-import org.lifecompanion.util.ThreadUtils;
-import org.lifecompanion.util.binding.Unbindable;
 import org.lifecompanion.util.javafx.FXThreadUtils;
 
 
-public class RecordedVolumeIndicatorKeyOption extends AbstractKeyOption {
+public class SpeechRecordingVolumeIndicatorKeyOption extends AbstractKeyOption {
 
     private Runnable unbindCurrentProgress;
 
-    public RecordedVolumeIndicatorKeyOption() {
+    public SpeechRecordingVolumeIndicatorKeyOption() {
         super();
-        this.optionNameId = "caa.ai.plugin.todo.volume";
-        this.optionDescriptionId = "caa.ai.plugin.todo";
+        this.optionNameId = "caa.ai.plugin.keys.speech_recording_volume_indicator.name";
+        this.optionDescriptionId = "caa.ai.plugin.keys.speech_recording_volume_indicator.description";
         this.iconName = "filler_icon_32px.png";
     }
 
@@ -68,14 +61,14 @@ public class RecordedVolumeIndicatorKeyOption extends AbstractKeyOption {
     @Override
     public Element serialize(IOContextI context) {
         final Element node = super.serialize(context);
-        XMLObjectSerializer.serializeInto(RecordedVolumeIndicatorKeyOption.class, this, node);
+        XMLObjectSerializer.serializeInto(SpeechRecordingVolumeIndicatorKeyOption.class, this, node);
         return node;
     }
 
     @Override
     public void deserialize(Element node, IOContextI context) throws LCException {
         super.deserialize(node, context);
-        XMLObjectSerializer.deserializeInto(RecordedVolumeIndicatorKeyOption.class, this, node);
+        XMLObjectSerializer.deserializeInto(SpeechRecordingVolumeIndicatorKeyOption.class, this, node);
     }
 
     public void showVolume(ReadOnlyDoubleProperty volume) {
@@ -97,7 +90,7 @@ public class RecordedVolumeIndicatorKeyOption extends AbstractKeyOption {
 
     public Pane createVolumeIndicatorView(GridPartKeyComponentI key, ReadOnlyDoubleProperty volume) {
         Circle circle = new Circle();
-        circle.setFill(Color.rgb(80, 167, 186, 0.58));
+        circle.setFill(Color.rgb(128, 203, 196, 1));
 
         final Timeline timeline = new Timeline();
         timeline.setCycleCount(Timeline.INDEFINITE);

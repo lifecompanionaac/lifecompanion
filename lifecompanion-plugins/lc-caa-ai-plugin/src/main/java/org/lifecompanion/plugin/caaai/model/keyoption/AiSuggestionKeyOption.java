@@ -28,26 +28,25 @@ import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
 import org.lifecompanion.model.api.io.IOContextI;
-import org.lifecompanion.model.impl.categorizedelement.useaction.available.WriteWordPredictionAction;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.AbstractKeyOption;
 import org.lifecompanion.model.impl.exception.LCException;
-import org.lifecompanion.plugin.caaai.model.useaction.WriteSuggestedSentenceAction;
+import org.lifecompanion.plugin.caaai.model.useaction.WriteKeySuggestionAction;
 
 
-public class SuggestedSentenceKeyOption extends AbstractKeyOption {
+public class AiSuggestionKeyOption extends AbstractKeyOption {
 
     private final BooleanProperty exampleProperty;
 
     private final StringProperty suggestion;
 
-    private WriteSuggestedSentenceAction writeSuggestedSentenceAction;
+    private WriteKeySuggestionAction writeSuggestedSentenceAction;
 
 
-    public SuggestedSentenceKeyOption() {
+    public AiSuggestionKeyOption() {
         super();
         this.disableTextContent.set(true);
-        this.optionNameId = "caa.ai.plugin.todo";
-        this.optionDescriptionId = "caa.ai.plugin.todo";
+        this.optionNameId = "caa.ai.plugin.keys.ai_suggestion.name";
+        this.optionDescriptionId = "caa.ai.plugin.keys.ai_suggestion.description";
         this.iconName = "filler_icon_32px.png";
         this.disableTextContent.set(true);
 
@@ -64,9 +63,9 @@ public class SuggestedSentenceKeyOption extends AbstractKeyOption {
 
     @Override
     public void attachToImpl(final GridPartKeyComponentI key) {
-        this.writeSuggestedSentenceAction = key.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION, WriteSuggestedSentenceAction.class);
+        this.writeSuggestedSentenceAction = key.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION, WriteKeySuggestionAction.class);
         if (this.writeSuggestedSentenceAction == null) {
-            this.writeSuggestedSentenceAction = new WriteSuggestedSentenceAction();
+            this.writeSuggestedSentenceAction = new WriteKeySuggestionAction();
             key.getActionManager().componentActions().get(UseActionEvent.ACTIVATION).add(0, this.writeSuggestedSentenceAction);
         }
         this.writeSuggestedSentenceAction.attachedToKeyOptionProperty().set(true);
@@ -84,14 +83,14 @@ public class SuggestedSentenceKeyOption extends AbstractKeyOption {
     @Override
     public Element serialize(IOContextI context) {
         final Element node = super.serialize(context);
-        XMLObjectSerializer.serializeInto(SuggestedSentenceKeyOption.class, this, node);
+        XMLObjectSerializer.serializeInto(AiSuggestionKeyOption.class, this, node);
         return node;
     }
 
     @Override
     public void deserialize(Element node, IOContextI context) throws LCException {
         super.deserialize(node, context);
-        XMLObjectSerializer.deserializeInto(SuggestedSentenceKeyOption.class, this, node);
+        XMLObjectSerializer.deserializeInto(AiSuggestionKeyOption.class, this, node);
     }
 
     public StringProperty suggestionProperty() {

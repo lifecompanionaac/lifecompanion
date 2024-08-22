@@ -20,13 +20,13 @@
 package org.lifecompanion.plugin.caaai.ui.keyoption;
 
 import javafx.beans.value.ChangeListener;
-import org.lifecompanion.plugin.caaai.model.keyoption.SuggestedSentenceKeyOption;
+import org.lifecompanion.plugin.caaai.model.keyoption.AiSuggestionKeyOption;
 import org.lifecompanion.ui.configurationcomponent.editmode.keyoption.BaseKeyOptionConfigView;
 import org.lifecompanion.ui.controlsfx.control.ToggleSwitch;
 import org.lifecompanion.util.binding.EditActionUtils;
 import org.lifecompanion.util.javafx.FXControlUtils;
 
-public class SuggestedSentenceKeyOptionConfigView extends BaseKeyOptionConfigView<SuggestedSentenceKeyOption> {
+public class SuggestedSentenceKeyOptionConfigView extends BaseKeyOptionConfigView<AiSuggestionKeyOption> {
     private ToggleSwitch toggleExample;
     private ChangeListener<Boolean> changeListenerExample;
 
@@ -44,18 +44,18 @@ public class SuggestedSentenceKeyOptionConfigView extends BaseKeyOptionConfigVie
     }
 
     @Override
-    public Class<SuggestedSentenceKeyOption> getConfiguredKeyOptionType() {
-        return SuggestedSentenceKeyOption.class;
+    public Class<AiSuggestionKeyOption> getConfiguredKeyOptionType() {
+        return AiSuggestionKeyOption.class;
     }
 
     @Override
-    public void bind(SuggestedSentenceKeyOption model) {
+    public void bind(AiSuggestionKeyOption model) {
         this.toggleExample.setSelected(model.examplePropertyProperty().get());
         model.examplePropertyProperty().addListener(changeListenerExample);
     }
 
     @Override
-    public void unbind(SuggestedSentenceKeyOption model) {
+    public void unbind(AiSuggestionKeyOption model) {
         model.examplePropertyProperty().removeListener(changeListenerExample);
     }
 }

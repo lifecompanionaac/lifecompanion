@@ -18,6 +18,7 @@
  */
 package org.lifecompanion.plugin.caaai.model.useaction;
 
+import org.lifecompanion.controller.textcomponent.WritingStateController;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
@@ -26,13 +27,13 @@ import org.lifecompanion.plugin.caaai.controller.CAAAIController;
 
 import java.util.Map;
 
-public class ClearConversationAction extends SimpleUseActionImpl<GridPartKeyComponentI> {
+public class SaveAllTextForNextSuggestionsAction extends SimpleUseActionImpl<GridPartKeyComponentI> {
 
-    public ClearConversationAction() {
+    public SaveAllTextForNextSuggestionsAction() {
         super(GridPartKeyComponentI.class);
         this.category = CAAAIActionSubCategories.TODO;
-        this.nameID = "caa.ai.plugin.todo.clear.conversation";
-        this.staticDescriptionID = "caa.ai.plugin.todo";
+        this.nameID = "caa.ai.plugin.actions.save_text_for_next_suggestions.name";
+        this.staticDescriptionID = "caa.ai.plugin.actions.save_text_for_next_suggestions.description";
         this.configIconPath = "filler_icon_32px.png";
         this.parameterizableAction = false;
         this.variableDescriptionProperty().set(getStaticDescription());
@@ -40,9 +41,11 @@ public class ClearConversationAction extends SimpleUseActionImpl<GridPartKeyComp
 
     // Class part : "Execute"
     // ========================================================================
+
     @Override
     public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
-        CAAAIController.INSTANCE.clearConversation();
+        CAAAIController.INSTANCE.addOwnMessage(WritingStateController.INSTANCE.currentTextProperty().get());
     }
+
     // ========================================================================
 }

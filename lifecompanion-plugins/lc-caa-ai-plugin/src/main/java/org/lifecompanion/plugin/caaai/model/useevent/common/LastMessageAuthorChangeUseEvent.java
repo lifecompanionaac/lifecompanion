@@ -7,12 +7,12 @@ import org.lifecompanion.plugin.caaai.model.ConversationMessageAuthor;
 
 import java.util.function.Consumer;
 
-public abstract class CAAAILastMessageAuthorChangeUseEvent extends BaseUseEventGeneratorImpl {
+public abstract class LastMessageAuthorChangeUseEvent extends BaseUseEventGeneratorImpl {
     private final ConversationMessageAuthor targetAuthor;
 
     private final Consumer<ConversationMessageAuthor> lastMessageAuthorChange;
 
-    public CAAAILastMessageAuthorChangeUseEvent(ConversationMessageAuthor targetAuthor) {
+    public LastMessageAuthorChangeUseEvent(ConversationMessageAuthor targetAuthor) {
         super();
 
         this.parameterizableAction = false;

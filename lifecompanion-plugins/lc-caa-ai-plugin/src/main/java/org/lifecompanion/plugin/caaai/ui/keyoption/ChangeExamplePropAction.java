@@ -20,10 +20,10 @@
 package org.lifecompanion.plugin.caaai.ui.keyoption;
 
 import org.lifecompanion.model.impl.editaction.BasePropertyChangeAction;
-import org.lifecompanion.plugin.caaai.model.keyoption.SuggestedSentenceKeyOption;
+import org.lifecompanion.plugin.caaai.model.keyoption.AiSuggestionKeyOption;
 
 public class ChangeExamplePropAction extends BasePropertyChangeAction<Boolean> {
-    public ChangeExamplePropAction(SuggestedSentenceKeyOption option, Boolean wantedValueP) {
+    public ChangeExamplePropAction(AiSuggestionKeyOption option, Boolean wantedValueP) {
         super(option.examplePropertyProperty(), wantedValueP);
     }
 

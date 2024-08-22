@@ -26,13 +26,13 @@ import org.lifecompanion.plugin.caaai.controller.CAAAIController;
 
 import java.util.Map;
 
-public class RetrySuggestionsAction extends SimpleUseActionImpl<GridPartKeyComponentI> {
+public class ToggleSpeechRecordingAction extends SimpleUseActionImpl<GridPartKeyComponentI> {
 
-    public RetrySuggestionsAction() {
+    public ToggleSpeechRecordingAction() {
         super(GridPartKeyComponentI.class);
         this.category = CAAAIActionSubCategories.TODO;
-        this.nameID = "caa.ai.plugin.todo.retrySuggestion";
-        this.staticDescriptionID = "caa.ai.plugin.todo";
+        this.nameID = "caa.ai.plugin.actions.toggle_speech_recording.name";
+        this.staticDescriptionID = "caa.ai.plugin.actions.toggle_speech_recording.description";
         this.configIconPath = "filler_icon_32px.png";
         this.parameterizableAction = false;
         this.variableDescriptionProperty().set(getStaticDescription());
@@ -42,9 +42,7 @@ public class RetrySuggestionsAction extends SimpleUseActionImpl<GridPartKeyCompo
     // ========================================================================
     @Override
     public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
-        CAAAIController.INSTANCE.retrySuggestions();
+        CAAAIController.INSTANCE.toggleSpeechToTextRecognition();
     }
-
-
     // ========================================================================
 }

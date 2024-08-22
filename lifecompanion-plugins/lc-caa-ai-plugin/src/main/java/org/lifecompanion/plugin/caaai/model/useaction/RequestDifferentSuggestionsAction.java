@@ -18,7 +18,6 @@
  */
 package org.lifecompanion.plugin.caaai.model.useaction;
 
-import org.lifecompanion.controller.textcomponent.WritingStateController;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
@@ -27,13 +26,13 @@ import org.lifecompanion.plugin.caaai.controller.CAAAIController;
 
 import java.util.Map;
 
-public class SaveTextAsSpokenAction extends SimpleUseActionImpl<GridPartKeyComponentI> {
+public class RequestDifferentSuggestionsAction extends SimpleUseActionImpl<GridPartKeyComponentI> {
 
-    public SaveTextAsSpokenAction() {
+    public RequestDifferentSuggestionsAction() {
         super(GridPartKeyComponentI.class);
         this.category = CAAAIActionSubCategories.TODO;
-        this.nameID = "caa.ai.plugin.todo.save";
-        this.staticDescriptionID = "caa.ai.plugin.todo";
+        this.nameID = "caa.ai.plugin.actions.request_different_suggestions.name";
+        this.staticDescriptionID = "caa.ai.plugin.actions.request_different_suggestions.description";
         this.configIconPath = "filler_icon_32px.png";
         this.parameterizableAction = false;
         this.variableDescriptionProperty().set(getStaticDescription());
@@ -43,7 +42,7 @@ public class SaveTextAsSpokenAction extends SimpleUseActionImpl<GridPartKeyCompo
     // ========================================================================
     @Override
     public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
-        CAAAIController.INSTANCE.addOwnMessage(WritingStateController.INSTANCE.currentTextProperty().get());
+        CAAAIController.INSTANCE.retrySuggestions();
     }
 
 

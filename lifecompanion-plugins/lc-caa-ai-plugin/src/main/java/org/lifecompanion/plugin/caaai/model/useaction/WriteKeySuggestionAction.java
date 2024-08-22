@@ -18,21 +18,23 @@
  */
 package org.lifecompanion.plugin.caaai.model.useaction;
 
+import org.lifecompanion.controller.textcomponent.WritingStateController;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
+import org.lifecompanion.model.api.textcomponent.WritingEventSource;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
 import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
-import org.lifecompanion.plugin.caaai.controller.CAAAIController;
+import org.lifecompanion.plugin.caaai.model.keyoption.AiSuggestionKeyOption;
 
 import java.util.Map;
 
-public class SaveCurrentAsSpokenAction extends SimpleUseActionImpl<GridPartKeyComponentI> {
+public class WriteKeySuggestionAction extends SimpleUseActionImpl<GridPartKeyComponentI> {
 
-    public SaveCurrentAsSpokenAction() {
+    public WriteKeySuggestionAction() {
         super(GridPartKeyComponentI.class);
         this.category = CAAAIActionSubCategories.TODO;
-        this.nameID = "caa.ai.plugin.todo.other";
-        this.staticDescriptionID = "caa.ai.plugin.todo";
+        this.nameID = "caa.ai.plugin.actions.write_key_suggestion.name";
+        this.staticDescriptionID = "caa.ai.plugin.actions.write_key_suggestion.description";
         this.configIconPath = "filler_icon_32px.png";
         this.parameterizableAction = false;
         this.variableDescriptionProperty().set(getStaticDescription());
@@ -42,7 +44,18 @@ public class SaveCurrentAsSpokenAction extends SimpleUseActionImpl<GridPartKeyCo
     // ========================================================================
     @Override
     public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
-        CAAAIController.INSTANCE.addInterlocutorMessage(this.parentComponentProperty().get().textContentProperty().get());
+        GridPartKeyComponentI parentKey = this.parentComponentProperty().get();
+        if (parentKey != null) {
+            if (parentKey.keyOptionProperty().get() instanceof AiSuggestionKeyOption suggestionOption) {
+                String suggestion = suggestionOption.suggestionProperty().get();
+                if (suggestion != null) {
+                    WritingStateController.INSTANCE.saveState();
+                    WritingStateController.INSTANCE.disableAutoSavedStateCleaning();
+                    WritingStateController.INSTANCE.insertText(WritingEventSource.USER_ACTIONS, " " + suggestion);
+                    WritingStateController.INSTANCE.enableAutoSavedStateCleaning();
+                }
+            }
+        }
     }
 
 

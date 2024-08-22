@@ -6,12 +6,12 @@ import org.lifecompanion.plugin.caaai.controller.CAAAIController;
 
 import java.util.function.Consumer;
 
-public abstract class CAAAISpeechRecordingChangeUseEvent extends BaseUseEventGeneratorImpl {
+public abstract class SpeechRecordingChangeUseEvent extends BaseUseEventGeneratorImpl {
     private final Boolean targetRecording;
 
     private final Consumer<Boolean> recordingChange;
 
-    public CAAAISpeechRecordingChangeUseEvent(Boolean targetRecording) {
+    public SpeechRecordingChangeUseEvent(Boolean targetRecording) {
         super();
 
         this.parameterizableAction = false;
