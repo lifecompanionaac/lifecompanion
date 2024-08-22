@@ -20,6 +20,7 @@
 package org.lifecompanion.plugin.caaai.controller;
 
 import javafx.beans.InvalidationListener;
+import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.lifecompanion.controller.textcomponent.WritingStateController;
@@ -37,6 +38,7 @@ import org.lifecompanion.plugin.caaai.CAAAIPluginProperties;
 import org.lifecompanion.plugin.caaai.model.ConversationMessage;
 import org.lifecompanion.plugin.caaai.model.ConversationMessageAuthor;
 import org.lifecompanion.plugin.caaai.model.Suggestion;
+import org.lifecompanion.plugin.caaai.model.keyoption.RecordedVolumeIndicatorKeyOption;
 import org.lifecompanion.plugin.caaai.model.keyoption.SuggestedSentenceKeyOption;
 import org.lifecompanion.util.ThreadUtils;
 import org.lifecompanion.util.javafx.FXThreadUtils;
@@ -73,9 +75,11 @@ public enum CAAAIController implements ModeListenerI {
 
     // TODO : change it for a grid to avoid having different suggestion on each grid
     private final List<SuggestedSentenceKeyOption> suggestedSentenceKeys;
+    private final List<RecordedVolumeIndicatorKeyOption> recordedVolumeIndicatorKeys;
 
     CAAAIController() {
         suggestedSentenceKeys = new ArrayList<>();
+        recordedVolumeIndicatorKeys = new ArrayList<>();
 
         this.conversationMessages = FXCollections.observableArrayList();
 
@@ -201,6 +205,11 @@ public enum CAAAIController implements ModeListenerI {
 
     public void onSpeechRecordingChange() {
         Boolean recording = this.speechToTextService.recordingProperty().get();
+        if(recording){
+            recordedVolumeIndicatorKeys.forEach(k -> k.showVolume(speechToTextService.currentRecordedVolumeProperty()));
+        }else {
+            recordedVolumeIndicatorKeys.forEach(RecordedVolumeIndicatorKeyOption::hideVolume);
+        }
 
         this.speechRecordingChangeListeners.forEach(callback -> callback.accept(recording));
     }
@@ -227,6 +236,11 @@ public enum CAAAIController implements ModeListenerI {
         ConfigurationComponentUtils.findKeyOptionsByGrid(SuggestedSentenceKeyOption.class, configuration, keys, null);
         keys.values().stream().flatMap(List::stream).distinct().forEach(suggestedSentenceKeys::add);
 
+        Map<GridComponentI, List<RecordedVolumeIndicatorKeyOption>> keys2 = new HashMap<>();
+        ConfigurationComponentUtils.findKeyOptionsByGrid(RecordedVolumeIndicatorKeyOption.class, configuration, keys2, null);
+        keys2.values().stream().flatMap(List::stream).distinct().forEach(recordedVolumeIndicatorKeys::add);
+
+
         this.suggestionService.initConversation(this.suggestedSentenceKeys.size());
 
         // Add listener
@@ -245,6 +259,7 @@ public enum CAAAIController implements ModeListenerI {
         WritingStateController.INSTANCE.textBeforeCaretProperty().removeListener(this.textChangeListener);
         this.currentCAAAIPluginProperties = null;
         suggestedSentenceKeys.clear();
+        recordedVolumeIndicatorKeys.clear();
         this.configuration = null;
 
         this.speechToTextService.dispose();
@@ -268,8 +283,7 @@ public enum CAAAIController implements ModeListenerI {
 
     public Function<UseVariableDefinitionI, UseVariableI<?>> getSupplierForUseVariable(String id) {
         return switch (id) {
-            case VAR_LAST_CONVERSATION_MESSAGE ->
-                    def -> new StringUseVariable(def, this.generateLastConversationMessageVariable());
+            case VAR_LAST_CONVERSATION_MESSAGE -> def -> new StringUseVariable(def, this.generateLastConversationMessageVariable());
             default -> null;
         };
     }

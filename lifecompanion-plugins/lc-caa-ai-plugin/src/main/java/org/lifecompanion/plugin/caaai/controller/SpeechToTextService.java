@@ -25,10 +25,9 @@ import com.google.api.gax.rpc.StreamController;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.speech.v1.*;
 import com.google.protobuf.ByteString;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ReadOnlyBooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.*;
 import org.lifecompanion.util.IOUtils;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,9 +42,9 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class SpeechToTextService {
-    private static final long SILENCE_DURATION = 8_000; // 8 second of continuous silence to stop
     private static final int SILENCE_DETECTION_INTERVAL = 4; // every 4 requests
-    private static final double SILENCE_THRESHOLD = 127.0 * 0.1; // 10% of max volume
+    private static final long SILENCE_DURATION = 5_000; // 5 second of continuous silence to stop
+    private static final double SILENCE_THRESHOLD = 127.0 * 0.12; // 10% of max volume
     private static final long MAX_DURATION = 2 * 60 * 1_000; // speech detection can last 2 minutes
     private static final boolean DEBUG_AUDIO_FILE = true;
 
@@ -62,13 +61,20 @@ public class SpeechToTextService {
     private final String jsonCredentialsContent;
     private SpeechToTextThread currentSpeechToTextThread;
 
+    private final DoubleProperty currentRecordedVolume;
+
     SpeechToTextService(String jsonCredentialsContent) {
         this.recording = new SimpleBooleanProperty();
+        this.currentRecordedVolume = new SimpleDoubleProperty();
         this.jsonCredentialsContent = jsonCredentialsContent;
     }
 
     ReadOnlyBooleanProperty recordingProperty() {
         return this.recording;
+    }
+
+    public ReadOnlyDoubleProperty currentRecordedVolumeProperty() {
+        return currentRecordedVolume;
     }
 
     public void dispose() {
@@ -83,6 +89,7 @@ public class SpeechToTextService {
         if (this.currentSpeechToTextThread != null) {
             currentSpeechToTextThread.stopRecording();
             recording.set(false);
+            updateCurrentRecordedVolume(0.0);
             this.currentSpeechToTextThread = null;
         }
     }
@@ -98,6 +105,9 @@ public class SpeechToTextService {
         this.currentSpeechToTextThread.start();
     }
 
+    private void updateCurrentRecordedVolume(double vol) {
+        FXThreadUtils.runOnFXThread(() -> currentRecordedVolume.set(Math.min(1.0, Math.max(0.0, vol * 1.2))));
+    }
 
     public class SpeechToTextThread extends Thread implements ResponseObserver<StreamingRecognizeResponse> {
         private TargetDataLine line;
@@ -144,8 +154,8 @@ public class SpeechToTextService {
 
                     // Stream line to request
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    long i = 0;
                     long lastPeak = System.currentTimeMillis();
+                    long i = 0;
                     while (recording.get() && System.currentTimeMillis() - recordingStarted < MAX_DURATION) {
                         // Read buffer
                         byte[] buff = new byte[4096];
@@ -155,7 +165,7 @@ public class SpeechToTextService {
                         }
 
                         // Detect silence to stop if needed
-                        if ((i++) % SILENCE_DETECTION_INTERVAL == 0 && read > 0) {
+                        if ((i++) % SILENCE_DETECTION_INTERVAL == 0 ) {
                             lastPeak = detectSilence(buff, lastPeak);
                         }
 
@@ -164,6 +174,7 @@ public class SpeechToTextService {
                                 .setAudioContent(ByteString.copyFrom(buff))
                                 .build());
                     }
+                    updateCurrentRecordedVolume(0);
                     LOGGER.info("Recording finished");
                     clientStream.closeSend();
                     this.onComplete();
@@ -208,7 +219,7 @@ public class SpeechToTextService {
             return SpeechSettings.newBuilder().setCredentialsProvider(() -> credentials).build();
         }
 
-        private static double computeRms(byte[] buff) {
+        private double computeRms(byte[] buff) {
             double sum = 0d;
             for (byte value : buff) {
                 sum += value;
@@ -218,7 +229,9 @@ public class SpeechToTextService {
             for (byte b : buff) {
                 sumMeanSquare += Math.pow(b - average, 2d);
             }
-            return Math.sqrt(sumMeanSquare / buff.length);
+            double rms = Math.sqrt(sumMeanSquare / buff.length);
+            updateCurrentRecordedVolume(rms / 127.0);
+            return rms;
         }
 
         @Override

@@ -19,13 +19,19 @@
 
 package org.lifecompanion.plugin.caaai.model.keyoption;
 
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 import javafx.util.Pair;
 import org.jdom2.Element;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
@@ -84,16 +90,46 @@ public class RecordedVolumeIndicatorKeyOption extends AbstractKeyOption {
         FXThreadUtils.runOnFXThread(() -> this.keyViewAddedNodeProperty().set(null));
     }
 
+    long lastUpdate;
+    double sumFromLast;
+    int countFromLast;
+    private static final long UPDATE_DELAY = 500;
+
     public Pane createVolumeIndicatorView(GridPartKeyComponentI key, ReadOnlyDoubleProperty volume) {
         Circle circle = new Circle();
         circle.setFill(Color.rgb(80, 167, 186, 0.58));
+
+        final Timeline timeline = new Timeline();
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();
+        ChangeListener<Number> volumeListener = (obs, ov, nv) -> {
+            if (System.currentTimeMillis() - lastUpdate > UPDATE_DELAY) {
+                timeline.stop();
+                double endValue = (Math.min(key.layoutHeightProperty().get(), key.layoutWidthProperty().get()) / 2.0) * (sumFromLast / countFromLast);
+                if (Double.isFinite(endValue)) {
+                    timeline.getKeyFrames()
+                            .setAll(new KeyFrame(Duration.millis(UPDATE_DELAY * 0.8),
+                                    new KeyValue(circle.radiusProperty(),
+                                            endValue,
+                                            Interpolator.EASE_BOTH)));
+                }
+                timeline.play();
+                lastUpdate = System.currentTimeMillis();
+                sumFromLast = 0.0;
+                countFromLast = 0;
+            } else {
+                sumFromLast += nv.doubleValue();
+                countFromLast++;
+            }
+        };
+        volume.addListener(volumeListener);
         circle.centerXProperty().bind(key.layoutWidthProperty().divide(2.0).subtract(key.getKeyStyle().strokeSizeProperty().valueAsInt().get() * 2.0));
         circle.centerYProperty().bind(key.layoutHeightProperty().divide(2.0).subtract(key.getKeyStyle().strokeSizeProperty().valueAsInt().get() * 2.0));
-        circle.radiusProperty().bind(Bindings.min(key.layoutWidthProperty(), key.layoutHeightProperty()).divide(2.0).multiply(volume));
         this.unbindCurrentProgress = () -> {
+            timeline.stop();
+            volume.removeListener(volumeListener);
             circle.centerXProperty().unbind();
             circle.centerYProperty().unbind();
-            circle.radiusProperty().unbind();
         };
         return new Pane(circle);
     }
