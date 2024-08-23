@@ -23,6 +23,13 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.ProgressIndicator;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import org.jdom2.Element;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
@@ -31,15 +38,16 @@ import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.AbstractKeyOption;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.plugin.caaai.model.useaction.WriteKeySuggestionAction;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 
 
 public class AiSuggestionKeyOption extends AbstractKeyOption {
 
-    private final BooleanProperty exampleProperty;
-
     private final StringProperty suggestion;
 
     private WriteKeySuggestionAction writeSuggestedSentenceAction;
+
+    private final BooleanProperty exampleProperty;
 
 
     public AiSuggestionKeyOption() {
@@ -51,14 +59,20 @@ public class AiSuggestionKeyOption extends AbstractKeyOption {
         this.disableTextContent.set(true);
 
         this.exampleProperty = new SimpleBooleanProperty();
+
         this.suggestion = new SimpleStringProperty();
 
         this.suggestion.addListener((obs, ov, pred) -> {
             final GridPartKeyComponentI key = this.attachedKeyProperty().get();
             if (key != null) {
+                stopLoading();
                 key.textContentProperty().set(pred);
             }
         });
+    }
+
+    public BooleanProperty examplePropertyProperty() {
+        return this.exampleProperty;
     }
 
     @Override
@@ -97,15 +111,21 @@ public class AiSuggestionKeyOption extends AbstractKeyOption {
         return this.suggestion;
     }
 
-    public BooleanProperty examplePropertyProperty() {
-        return this.exampleProperty;
+    public void startLoading() {
+        FXThreadUtils.runOnFXThread(() -> {
+            ProgressIndicator progressIndicator = new ProgressIndicator(-1);
+            progressIndicator.setStyle("-fx-progress-color: white;");
+            progressIndicator.setPrefSize(20, 20);
+
+            AnchorPane loadingPane = new AnchorPane(progressIndicator);
+            AnchorPane.setTopAnchor(progressIndicator, 5.0);
+            AnchorPane.setRightAnchor(progressIndicator, 5.0);
+
+            this.keyViewAddedNodeProperty().set(loadingPane);
+        });
     }
 
-    public void suggestionUpdated(String suggestion) {
-        this.suggestion.set(suggestion);
-        GridPartKeyComponentI keyComponent = this.attachedKeyProperty().get();
-        if (keyComponent != null) {
-            keyComponent.textContentProperty().set(suggestion);
-        }
+    private void stopLoading() {
+        this.keyViewAddedNodeProperty().set(null);
     }
 }

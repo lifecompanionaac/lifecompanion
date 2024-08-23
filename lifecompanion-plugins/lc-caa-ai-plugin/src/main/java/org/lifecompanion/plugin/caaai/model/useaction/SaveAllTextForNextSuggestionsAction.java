@@ -19,8 +19,10 @@
 package org.lifecompanion.plugin.caaai.model.useaction;
 
 import org.lifecompanion.controller.textcomponent.WritingStateController;
+import org.lifecompanion.controller.voicesynthesizer.VoiceSynthesizerController;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
+import org.lifecompanion.model.api.textcomponent.WritingEventSource;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
 import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
 import org.lifecompanion.plugin.caaai.controller.CAAAIController;
@@ -44,7 +46,12 @@ public class SaveAllTextForNextSuggestionsAction extends SimpleUseActionImpl<Gri
 
     @Override
     public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
-        CAAAIController.INSTANCE.addOwnMessage(WritingStateController.INSTANCE.currentTextProperty().get());
+        String allText = WritingStateController.INSTANCE.currentTextProperty().get();
+        CAAAIController.INSTANCE.setPauseUpdateSuggestion(true);
+        WritingStateController.INSTANCE.removeAll(WritingEventSource.SYSTEM);
+        CAAAIController.INSTANCE.addOwnMessage(allText);
+        VoiceSynthesizerController.INSTANCE.speakSync(allText);
+        CAAAIController.INSTANCE.setPauseUpdateSuggestion(false);
     }
 
     // ========================================================================

@@ -24,6 +24,7 @@ import com.google.api.gax.rpc.ResponseObserver;
 import com.google.api.gax.rpc.StreamController;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.speech.v1.*;
+import com.google.protobuf.BoolValue;
 import com.google.protobuf.ByteString;
 import javafx.beans.property.*;
 import org.lifecompanion.util.IOUtils;
@@ -43,8 +44,9 @@ import java.util.function.Consumer;
 
 public class SpeechToTextService {
     private static final int SILENCE_DETECTION_INTERVAL = 4; // every 4 requests
-    private static final long SILENCE_DURATION = 5_000; // 5 second of continuous silence to stop
-    private static final double SILENCE_THRESHOLD = 127.0 * 0.12; // 10% of max volume
+    private static final long SILENCE_DURATION = 1_000; // 5 second of continuous silence to stop
+    private static final long SILENCE_DETECTION_OFFSET = 2_000; // 1 second before detecting silences
+    private static final double SILENCE_THRESHOLD = 127.0 * 0.15; // 10% of max volume
     private static final long MAX_DURATION = 2 * 60 * 1_000; // speech detection can last 2 minutes
     private static final boolean DEBUG_AUDIO_FILE = true;
 
@@ -113,6 +115,7 @@ public class SpeechToTextService {
         private TargetDataLine line;
         private AudioFormat format;
         private final List<String> accumulatedSentences;
+        private long recordingStarted;
 
         public SpeechToTextThread() {
             super("CAA-AI-SpeechToTextThread");
@@ -136,7 +139,7 @@ public class SpeechToTextService {
                 // Open and start
                 line.open(format);
                 line.start();
-                long recordingStarted = System.currentTimeMillis();
+                recordingStarted = System.currentTimeMillis();
                 AudioInputStream audioInputStream = new AudioInputStream(line);
 
                 try (SpeechClient client = SpeechClient.create(getSettings())) {
@@ -144,9 +147,10 @@ public class SpeechToTextService {
                     // Init request
                     RecognitionConfig recognitionConfig = RecognitionConfig.newBuilder()
                             .setEncoding(RecognitionConfig.AudioEncoding.LINEAR16)
-                            .setLanguageCode("en")
+                            .setLanguageCode("fr-FR")
+                            .setModel("latest_long")
                             .setSampleRateHertz((int) format.getSampleRate())
-                            .addAlternativeLanguageCodes("fr")
+                            // .setEnableAutomaticPunctuation(true) not working...
                             .build();
                     clientStream.send(StreamingRecognizeRequest.newBuilder()
                             .setStreamingConfig(StreamingRecognitionConfig.newBuilder().setConfig(recognitionConfig).build())
@@ -165,7 +169,7 @@ public class SpeechToTextService {
                         }
 
                         // Detect silence to stop if needed
-                        if ((i++) % SILENCE_DETECTION_INTERVAL == 0 ) {
+                        if ((i++) % SILENCE_DETECTION_INTERVAL == 0) {
                             lastPeak = detectSilence(buff, lastPeak);
                         }
 
@@ -190,9 +194,9 @@ public class SpeechToTextService {
         }
 
         private long detectSilence(byte[] buff, long lastPeak) {
-            double rms = computeRms(buff);
+            double rms = computeRmsAndUpdateVolume(buff);
             if (rms < SILENCE_THRESHOLD) {
-                if (System.currentTimeMillis() - lastPeak > SILENCE_DURATION) {
+                if (System.currentTimeMillis() - recordingStarted > SILENCE_DETECTION_OFFSET && System.currentTimeMillis() - lastPeak > SILENCE_DURATION) {
                     LOGGER.info("Silence detected, will stop recording");
                     SpeechToTextService.this.stopRecording();
                 }
@@ -219,7 +223,7 @@ public class SpeechToTextService {
             return SpeechSettings.newBuilder().setCredentialsProvider(() -> credentials).build();
         }
 
-        private double computeRms(byte[] buff) {
+        private double computeRmsAndUpdateVolume(byte[] buff) {
             double sum = 0d;
             for (byte value : buff) {
                 sum += value;
