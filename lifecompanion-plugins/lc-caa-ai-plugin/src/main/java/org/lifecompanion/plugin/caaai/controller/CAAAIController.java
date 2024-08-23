@@ -98,20 +98,31 @@ public enum CAAAIController implements ModeListenerI {
     }
 
     public void addOwnMessage(String content) {
-        this.conversationMessages.add(new ConversationMessage(ConversationMessageAuthor.ME, content));
-        this.suggestionService.handleOwnMessage(content);
-        this.debouncedUpdateSuggestions();
+        if (!content.isBlank()) {
+            this.conversationMessages.add(new ConversationMessage(ConversationMessageAuthor.ME, content));
+            this.suggestionService.handleOwnMessage(content);
+            this.debouncedUpdateSuggestions();
+        }
     }
 
     public void replaceInterlocutorMessage(Function<String, String> callback) {
+        boolean shouldAppend = false;
         ConversationMessage conversationMessage = this.lastConversationMessage();
         if (conversationMessage == null || conversationMessage.author() != ConversationMessageAuthor.INTERLOCUTOR) {
             conversationMessage = new ConversationMessage(ConversationMessageAuthor.INTERLOCUTOR, "");
 
-            this.conversationMessages.add(conversationMessage);
+            shouldAppend = true;
         }
 
-        conversationMessage.content().set(callback.apply(conversationMessage.content().get()));
+        String nextContent = callback.apply(conversationMessage.content().get());
+
+        if (!nextContent.isBlank()) {
+            conversationMessage.content().set(nextContent);
+
+            if (shouldAppend) {
+                this.conversationMessages.add(conversationMessage);
+            }
+        }
     }
 
     private ConversationMessage lastConversationMessage() {
@@ -146,12 +157,11 @@ public enum CAAAIController implements ModeListenerI {
     public void startSpeechToTextRecognition() {
         if (!this.speechToTextService.recordingProperty().get()) {
             this.speechToTextService.startRecording(sentenceDetected -> {
-                // TODO : can be displayed to current user to inform him that the speech is currently detecting something
-                this.replaceInterlocutorMessage(content -> content + sentenceDetected);
+                this.replaceInterlocutorMessage(content -> String.join(" ", content + sentenceDetected).trim());
 
                 LOGGER.info("Speech detected : {}", sentenceDetected);
             }, allSentences -> {
-                String interlocutorMessage = String.join("\n", allSentences);
+                String interlocutorMessage = String.join("\n", allSentences).trim();
                 if (!interlocutorMessage.isBlank()) {
                     this.replaceInterlocutorMessage(content -> interlocutorMessage);
 
