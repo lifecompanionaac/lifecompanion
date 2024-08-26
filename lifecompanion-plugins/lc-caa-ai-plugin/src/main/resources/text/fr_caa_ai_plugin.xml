@@ -34,4 +34,9 @@
     <text key="caa.ai.plugin.events.speech_recording_off.name">Reconnaissance vocale désactivée</text>
     <text key="caa.ai.plugin.events.speech_recording_off.description">La reconnaissance vocale des phrases de l'interlocuteur est désactivée.</text>
 
+    <!-- Events -->
+    <text key="caa.ai.plugin.contexts.mood.happy">Je suis d'humeur joyeuse.</text>
+    <text key="caa.ai.plugin.contexts.mood.neutral">Je suis d'humeur neutre.</text>
+    <text key="caa.ai.plugin.contexts.mood.sad">Je suis d'humeur triste.</text>
+
 </texts>

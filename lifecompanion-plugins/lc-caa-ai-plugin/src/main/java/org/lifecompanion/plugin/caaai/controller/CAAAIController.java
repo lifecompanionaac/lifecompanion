@@ -20,6 +20,8 @@
 package org.lifecompanion.plugin.caaai.controller;
 
 import javafx.beans.InvalidationListener;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.lifecompanion.controller.textcomponent.WritingStateController;
@@ -35,6 +37,7 @@ import org.lifecompanion.plugin.caaai.CAAAIPlugin;
 import org.lifecompanion.plugin.caaai.CAAAIPluginProperties;
 import org.lifecompanion.plugin.caaai.model.ConversationMessage;
 import org.lifecompanion.plugin.caaai.model.ConversationMessageAuthor;
+import org.lifecompanion.plugin.caaai.model.MoodAiContextValue;
 import org.lifecompanion.plugin.caaai.model.Suggestion;
 import org.lifecompanion.plugin.caaai.model.keyoption.AiSuggestionKeyOption;
 import org.lifecompanion.plugin.caaai.model.keyoption.SpeechRecordingVolumeIndicatorKeyOption;
@@ -71,6 +74,8 @@ public enum CAAAIController implements ModeListenerI {
     private final Set<Consumer<Boolean>> speechRecordingChangeListeners;
     private final Set<Consumer<ConversationMessageAuthor>> conversationAuthorChangeListeners;
 
+    private final ObjectProperty<MoodAiContextValue> moodContextValue;
+
     private final InvalidationListener speechRecordingChangeListener;
     private final InvalidationListener conversationMessagesChangeListener;
     private final InvalidationListener textChangeListener;
@@ -89,6 +94,8 @@ public enum CAAAIController implements ModeListenerI {
         this.speechRecordingChangeListeners = new HashSet<>();
         this.conversationAuthorChangeListeners = new HashSet<>();
 
+        this.moodContextValue = new SimpleObjectProperty<>();
+
         this.speechRecordingChangeListener = (inv) -> this.onSpeechRecordingChange();
         this.conversationMessagesChangeListener = (inv) -> this.onConversationChange();
         this.textChangeListener = (inv) -> this.updateSuggestions();
@@ -97,6 +104,16 @@ public enum CAAAIController implements ModeListenerI {
     public void setPauseUpdateSuggestion(boolean pauseUpdateSuggestion) {
         this.pauseUpdateSuggestion = pauseUpdateSuggestion;
     }
+
+    // Class part : "Context values"
+    //========================================================================
+
+    public void defineMoodContextValue(MoodAiContextValue value) {
+        this.suggestionService.handleOwnMessage(value.getTextValue());
+        this.updateSuggestions();
+    }
+
+    //========================================================================
 
     // Class part : "Conversations"
     //========================================================================
@@ -265,6 +282,8 @@ public enum CAAAIController implements ModeListenerI {
     @Override
     public void modeStart(LCConfigurationI configuration) {
         this.pauseUpdateSuggestion = false;
+        this.moodContextValue.set(null);
+
         this.configuration = configuration;
         // Get plugin properties for current configuration
         currentCAAAIPluginProperties = configuration.getPluginConfigProperties(CAAAIPlugin.ID, CAAAIPluginProperties.class);
@@ -335,8 +354,10 @@ public enum CAAAIController implements ModeListenerI {
 
     public Function<UseVariableDefinitionI, UseVariableI<?>> getSupplierForUseVariable(String id) {
         return switch (id) {
-            case VAR_LAST_CONVERSATION_MESSAGE_AUTHOR -> def -> new StringUseVariable(def, this.generateLastConversationMessageAuthorVariable());
-            case VAR_LAST_CONVERSATION_MESSAGE_CONTENT -> def -> new StringUseVariable(def, this.generateLastConversationMessageContentVariable());
+            case VAR_LAST_CONVERSATION_MESSAGE_AUTHOR ->
+                    def -> new StringUseVariable(def, this.generateLastConversationMessageAuthorVariable());
+            case VAR_LAST_CONVERSATION_MESSAGE_CONTENT ->
+                    def -> new StringUseVariable(def, this.generateLastConversationMessageContentVariable());
             default -> null;
         };
     }
