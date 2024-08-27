@@ -161,8 +161,14 @@ public enum CAAAIController implements ModeListenerI {
     }
 
     public void clearConversation() {
+        MoodAiContextValue prevMood = this.moodContextValue.get();
+        this.moodContextValue.set(null);
+
         this.conversationMessages.clear();
         this.suggestionService.clearConversation();
+
+        this.moodContextValue.set(prevMood);
+
         this.updateSuggestions();
     }
 
