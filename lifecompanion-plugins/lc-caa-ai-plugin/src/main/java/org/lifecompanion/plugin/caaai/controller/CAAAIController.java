@@ -161,7 +161,6 @@ public enum CAAAIController implements ModeListenerI {
     }
 
     public void clearConversation() {
-        this.moodContextValue.set(null);
         this.conversationMessages.clear();
         this.suggestionService.clearConversation();
         this.updateSuggestions();
