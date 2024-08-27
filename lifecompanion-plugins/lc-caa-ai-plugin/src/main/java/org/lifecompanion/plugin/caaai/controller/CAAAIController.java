@@ -22,6 +22,7 @@ package org.lifecompanion.plugin.caaai.controller;
 import javafx.beans.InvalidationListener;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.lifecompanion.controller.textcomponent.WritingStateController;
@@ -35,10 +36,7 @@ import org.lifecompanion.model.impl.usevariable.StringUseVariable;
 import org.lifecompanion.model.impl.usevariable.UseVariableDefinition;
 import org.lifecompanion.plugin.caaai.CAAAIPlugin;
 import org.lifecompanion.plugin.caaai.CAAAIPluginProperties;
-import org.lifecompanion.plugin.caaai.model.ConversationMessage;
-import org.lifecompanion.plugin.caaai.model.ConversationMessageAuthor;
-import org.lifecompanion.plugin.caaai.model.MoodAiContextValue;
-import org.lifecompanion.plugin.caaai.model.Suggestion;
+import org.lifecompanion.plugin.caaai.model.*;
 import org.lifecompanion.plugin.caaai.model.keyoption.AiSuggestionKeyOption;
 import org.lifecompanion.plugin.caaai.model.keyoption.SpeechRecordingVolumeIndicatorKeyOption;
 import org.lifecompanion.plugin.caaai.service.SpeechToTextService;
@@ -79,6 +77,7 @@ public enum CAAAIController implements ModeListenerI {
     private final InvalidationListener speechRecordingChangeListener;
     private final InvalidationListener conversationMessagesChangeListener;
     private final InvalidationListener textChangeListener;
+    private final ChangeListener<AiContextValue> contextValueChangeListener;
 
     private final Map<GridComponentI, List<AiSuggestionKeyOption>> suggestionKeyOptionsByGrid;
     private final List<SpeechRecordingVolumeIndicatorKeyOption> recordedVolumeIndicatorKeys;
@@ -99,6 +98,12 @@ public enum CAAAIController implements ModeListenerI {
         this.speechRecordingChangeListener = (inv) -> this.onSpeechRecordingChange();
         this.conversationMessagesChangeListener = (inv) -> this.onConversationChange();
         this.textChangeListener = (inv) -> this.updateSuggestions();
+        this.contextValueChangeListener = (obs, prev, next) -> {
+            if (next != null) {
+                this.suggestionService.handleOwnMessage(next.getTextValue());
+                this.updateSuggestions();
+            }
+        };
     }
 
     public void setPauseUpdateSuggestion(boolean pauseUpdateSuggestion) {
@@ -109,8 +114,7 @@ public enum CAAAIController implements ModeListenerI {
     //========================================================================
 
     public void defineMoodContextValue(MoodAiContextValue value) {
-        this.suggestionService.handleOwnMessage(value.getTextValue());
-        this.updateSuggestions();
+        this.moodContextValue.set(value);
     }
 
     //========================================================================
@@ -157,6 +161,7 @@ public enum CAAAIController implements ModeListenerI {
     }
 
     public void clearConversation() {
+        this.moodContextValue.set(null);
         this.conversationMessages.clear();
         this.suggestionService.clearConversation();
         this.updateSuggestions();
@@ -306,6 +311,7 @@ public enum CAAAIController implements ModeListenerI {
         // Add listener
         this.speechToTextService.recordingProperty().addListener(this.speechRecordingChangeListener);
         this.conversationMessages.addListener(this.conversationMessagesChangeListener);
+        this.moodContextValue.addListener(this.contextValueChangeListener);
         WritingStateController.INSTANCE.textBeforeCaretProperty().addListener(this.textChangeListener);
 
         this.updateSuggestions();
@@ -315,6 +321,7 @@ public enum CAAAIController implements ModeListenerI {
     public void modeStop(LCConfigurationI configuration) {
         this.speechToTextService.recordingProperty().removeListener(this.speechRecordingChangeListener);
         this.conversationMessages.removeListener(this.conversationMessagesChangeListener);
+        this.moodContextValue.removeListener(this.contextValueChangeListener);
         WritingStateController.INSTANCE.textBeforeCaretProperty().removeListener(this.textChangeListener);
 
         this.conversationMessages.clear();
