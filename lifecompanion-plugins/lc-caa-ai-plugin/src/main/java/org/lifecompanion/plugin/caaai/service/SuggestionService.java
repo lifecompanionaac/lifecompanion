@@ -76,10 +76,6 @@ public class SuggestionService {
 
         // Initial context for user.
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
-        List<String> userOriginalContextValues = List.of(
-                "je suis chez moi",
-                "il est " + dtf.format(ZonedDateTime.now(ZoneId.of("Europe/Paris"))));
-
         String userOriginalMessage =
                 "Il est " + dtf.format(ZonedDateTime.now(ZoneId.of("Europe/Paris"))) + "." +
                         "Je suis en situation de handicap et j'ai des difficultés dans la compréhension et/ou la production du langage."
