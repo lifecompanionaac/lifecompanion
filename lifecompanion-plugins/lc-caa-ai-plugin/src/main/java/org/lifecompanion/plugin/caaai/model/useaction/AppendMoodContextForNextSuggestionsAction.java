@@ -40,7 +40,8 @@ import org.lifecompanion.plugin.caaai.model.useaction.common.AppendContextForNex
 
 import java.util.Map;
 
-public class AppendMoodContextForNextSuggestionsAction extends SimpleUseActionImpl<UseActionTriggerComponentI> implements AppendContextForNextSuggestionsAction<UseActionTriggerComponentI, MoodAiContextValue> {
+public class AppendMoodContextForNextSuggestionsAction extends SimpleUseActionImpl<UseActionTriggerComponentI>
+        implements AppendContextForNextSuggestionsAction<UseActionTriggerComponentI, MoodAiContextValue> {
     @XMLGenericProperty(MoodAiContextValue.class)
     private final ObjectProperty<MoodAiContextValue> contextValue;
 
@@ -91,21 +92,22 @@ public class AppendMoodContextForNextSuggestionsAction extends SimpleUseActionIm
             configuration.getAllComponent().values().stream().filter(c -> c instanceof UseActionTriggerComponentI).forEach(c -> {
                 UseActionManagerI actionManager = ((UseActionTriggerComponentI) c).getActionManager();
                 AppendMoodContextForNextSuggestionsAction appendMoodAction = actionManager.getFirstActionOfType(UseActionEvent.ACTIVATION, AppendMoodContextForNextSuggestionsAction.class);
-                if (appendMoodAction != null ) {
-                    if(appendMoodAction.contextValue.get() == contextValue.get()){
-                        setColorOn(c, Color.RED);
-                    }else {
-                        setColorOn(c, null);
+                if (appendMoodAction != null) {
+                    if (appendMoodAction.contextValue.get() == contextValue.get()) {
+                        setStrokeOn(c, STROKE_COLOR_SELECTION);
+                    } else {
+                        setStrokeOn(c, null);
                     }
-
                 }
             });
         }
     }
 
-    private void setColorOn(DisplayableComponentI c, Color o) {
-        if(c instanceof GridPartKeyComponentI key){
-            key.getKeyStyle().backgroundColorProperty().forced().setValue(o);
+    static Color STROKE_COLOR_SELECTION = Color.web("#848484");
+
+    static void setStrokeOn(DisplayableComponentI c, Color o) {
+        if (c instanceof GridPartKeyComponentI key) {
+            key.getKeyStyle().strokeColorProperty().forced().setValue(o);
         }
     }
 }

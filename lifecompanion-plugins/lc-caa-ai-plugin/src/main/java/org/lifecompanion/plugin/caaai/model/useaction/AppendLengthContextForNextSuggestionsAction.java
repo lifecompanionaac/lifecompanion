@@ -40,7 +40,10 @@ import org.lifecompanion.plugin.caaai.model.useaction.common.AppendContextForNex
 
 import java.util.Map;
 
-public class AppendLengthContextForNextSuggestionsAction extends SimpleUseActionImpl<UseActionTriggerComponentI> implements AppendContextForNextSuggestionsAction<UseActionTriggerComponentI, LengthAiContextValue> {
+import static org.lifecompanion.plugin.caaai.model.useaction.AppendMoodContextForNextSuggestionsAction.STROKE_COLOR_SELECTION;
+
+public class AppendLengthContextForNextSuggestionsAction extends SimpleUseActionImpl<UseActionTriggerComponentI>
+        implements AppendContextForNextSuggestionsAction<UseActionTriggerComponentI, LengthAiContextValue> {
     @XMLGenericProperty(LengthAiContextValue.class)
     private final ObjectProperty<LengthAiContextValue> contextValue;
 
@@ -91,21 +94,14 @@ public class AppendLengthContextForNextSuggestionsAction extends SimpleUseAction
             configuration.getAllComponent().values().stream().filter(c -> c instanceof UseActionTriggerComponentI).forEach(c -> {
                 UseActionManagerI actionManager = ((UseActionTriggerComponentI) c).getActionManager();
                 AppendLengthContextForNextSuggestionsAction appendLengthContext = actionManager.getFirstActionOfType(UseActionEvent.ACTIVATION, AppendLengthContextForNextSuggestionsAction.class);
-                if (appendLengthContext != null ) {
-                    if(appendLengthContext.contextValue.get() == contextValue.get()){
-                        setColorOn(c, Color.RED);
-                    }else {
-                        setColorOn(c, null);
+                if (appendLengthContext != null) {
+                    if (appendLengthContext.contextValue.get() == contextValue.get()) {
+                        AppendMoodContextForNextSuggestionsAction.setStrokeOn(c, STROKE_COLOR_SELECTION);
+                    } else {
+                        AppendMoodContextForNextSuggestionsAction.setStrokeOn(c, null);
                     }
-
                 }
             });
-        }
-    }
-
-    private void setColorOn(DisplayableComponentI c, Color o) {
-        if(c instanceof GridPartKeyComponentI key){
-            key.getKeyStyle().backgroundColorProperty().forced().setValue(o);
         }
     }
 }

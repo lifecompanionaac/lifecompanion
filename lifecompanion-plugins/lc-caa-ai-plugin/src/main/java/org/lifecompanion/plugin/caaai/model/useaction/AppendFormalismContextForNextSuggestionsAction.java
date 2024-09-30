@@ -40,7 +40,10 @@ import org.lifecompanion.plugin.caaai.model.useaction.common.AppendContextForNex
 
 import java.util.Map;
 
-public class AppendFormalismContextForNextSuggestionsAction extends SimpleUseActionImpl<UseActionTriggerComponentI> implements AppendContextForNextSuggestionsAction<UseActionTriggerComponentI, FormalismAiContextValue> {
+import static org.lifecompanion.plugin.caaai.model.useaction.AppendMoodContextForNextSuggestionsAction.STROKE_COLOR_SELECTION;
+
+public class AppendFormalismContextForNextSuggestionsAction extends SimpleUseActionImpl<UseActionTriggerComponentI>
+        implements AppendContextForNextSuggestionsAction<UseActionTriggerComponentI, FormalismAiContextValue> {
     @XMLGenericProperty(FormalismAiContextValue.class)
     private final ObjectProperty<FormalismAiContextValue> contextValue;
 
@@ -90,22 +93,16 @@ public class AppendFormalismContextForNextSuggestionsAction extends SimpleUseAct
             LCConfigurationI configuration = parentComp.configurationParentProperty().get();
             configuration.getAllComponent().values().stream().filter(c -> c instanceof UseActionTriggerComponentI).forEach(c -> {
                 UseActionManagerI actionManager = ((UseActionTriggerComponentI) c).getActionManager();
-                AppendFormalismContextForNextSuggestionsAction appendFormalismContext = actionManager.getFirstActionOfType(UseActionEvent.ACTIVATION, AppendFormalismContextForNextSuggestionsAction.class);
-                if (appendFormalismContext != null ) {
-                    if(appendFormalismContext.contextValue.get() == contextValue.get()){
-                        setColorOn(c, Color.RED);
-                    }else {
-                        setColorOn(c, null);
+                AppendFormalismContextForNextSuggestionsAction appendFormalismContext = actionManager.getFirstActionOfType(UseActionEvent.ACTIVATION,
+                        AppendFormalismContextForNextSuggestionsAction.class);
+                if (appendFormalismContext != null) {
+                    if (appendFormalismContext.contextValue.get() == contextValue.get()) {
+                        AppendMoodContextForNextSuggestionsAction.setStrokeOn(c, STROKE_COLOR_SELECTION);
+                    } else {
+                        AppendMoodContextForNextSuggestionsAction.setStrokeOn(c, null);
                     }
-
                 }
             });
-        }
-    }
-
-    private void setColorOn(DisplayableComponentI c, Color o) {
-        if(c instanceof GridPartKeyComponentI key){
-            key.getKeyStyle().backgroundColorProperty().forced().setValue(o);
         }
     }
 }
