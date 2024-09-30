@@ -73,6 +73,8 @@ public enum CAAAIController implements ModeListenerI {
     private final Set<Consumer<ConversationMessageAuthor>> conversationAuthorChangeListeners;
 
     private final ObjectProperty<MoodAiContextValue> moodContextValue;
+    private final ObjectProperty<FormalismAiContextValue> formalismContextValue;
+    private final ObjectProperty<LengthAiContextValue> lengthContextValue;
 
     private final InvalidationListener speechRecordingChangeListener;
     private final InvalidationListener conversationMessagesChangeListener;
@@ -94,6 +96,8 @@ public enum CAAAIController implements ModeListenerI {
         this.conversationAuthorChangeListeners = new HashSet<>();
 
         this.moodContextValue = new SimpleObjectProperty<>();
+        this.formalismContextValue = new SimpleObjectProperty<>();
+        this.lengthContextValue = new SimpleObjectProperty<>();
 
         this.speechRecordingChangeListener = (inv) -> this.onSpeechRecordingChange();
         this.conversationMessagesChangeListener = (inv) -> this.onConversationChange();
@@ -115,6 +119,14 @@ public enum CAAAIController implements ModeListenerI {
 
     public void defineMoodContextValue(MoodAiContextValue value) {
         this.moodContextValue.set(value);
+    }
+
+    public void defineFormalismContextValue(FormalismAiContextValue value) {
+        this.formalismContextValue.set(value);
+    }
+
+    public void defineLengthContextValue(LengthAiContextValue value) {
+        this.lengthContextValue.set(value);
     }
 
     //========================================================================
@@ -162,12 +174,18 @@ public enum CAAAIController implements ModeListenerI {
 
     public void clearConversation() {
         MoodAiContextValue prevMood = this.moodContextValue.get();
+        FormalismAiContextValue prevFormalism = this.formalismContextValue.get();
+        LengthAiContextValue prevLength = this.lengthContextValue.get();
         this.moodContextValue.set(null);
+        this.formalismContextValue.set(null);
+        this.lengthContextValue.set(null);
 
         this.conversationMessages.clear();
         this.suggestionService.clearConversation(currentCAAAIPluginProperties);
 
         this.moodContextValue.set(prevMood);
+        this.formalismContextValue.set(prevFormalism);
+        this.lengthContextValue.set(prevLength);
 
         this.updateSuggestions();
     }
@@ -292,6 +310,8 @@ public enum CAAAIController implements ModeListenerI {
     public void modeStart(LCConfigurationI configuration) {
         this.pauseUpdateSuggestion = false;
         this.moodContextValue.set(null);
+        this.formalismContextValue.set(null);
+        this.lengthContextValue.set(null);
 
         this.configuration = configuration;
         // Get plugin properties for current configuration
@@ -316,6 +336,8 @@ public enum CAAAIController implements ModeListenerI {
         this.speechToTextService.recordingProperty().addListener(this.speechRecordingChangeListener);
         this.conversationMessages.addListener(this.conversationMessagesChangeListener);
         this.moodContextValue.addListener(this.contextValueChangeListener);
+        this.formalismContextValue.addListener(this.contextValueChangeListener);
+        this.lengthContextValue.addListener(this.contextValueChangeListener);
         WritingStateController.INSTANCE.textBeforeCaretProperty().addListener(this.textChangeListener);
 
         this.updateSuggestions();
@@ -326,6 +348,8 @@ public enum CAAAIController implements ModeListenerI {
         this.speechToTextService.recordingProperty().removeListener(this.speechRecordingChangeListener);
         this.conversationMessages.removeListener(this.conversationMessagesChangeListener);
         this.moodContextValue.removeListener(this.contextValueChangeListener);
+        this.formalismContextValue.removeListener(this.contextValueChangeListener);
+        this.lengthContextValue.removeListener(this.contextValueChangeListener);
         WritingStateController.INSTANCE.textBeforeCaretProperty().removeListener(this.textChangeListener);
 
         this.conversationMessages.clear();

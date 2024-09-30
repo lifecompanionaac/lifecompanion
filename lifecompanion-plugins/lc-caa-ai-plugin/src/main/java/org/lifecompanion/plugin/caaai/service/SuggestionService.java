@@ -72,10 +72,13 @@ public class SuggestionService {
                 "Il peut y avoir une conversation engagée avec plusieurs utilisateurs différents : " +
                 "me correspond à moi-même (l'utilisateur courant) et other est un intervenant externe. " +
                 "Propose à chaque fois " + this.numberOfSuggestions + " suggestions dans un tableau JSON. " +
-                "Ces suggestions doivent être courtes (3-5 mots), compréhensibles, sans ponctuations finales et toujours en français.";
+                "Ces suggestions doivent être compréhensibles, sans ponctuations finales et toujours en français.";
 
         // Initial context for user.
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
+        List<String> userOriginalContextValues = List.of(
+                "je suis chez moi",
+                "il est " + dtf.format(ZonedDateTime.now(ZoneId.of("Europe/Paris"))));
 
         String userOriginalMessage =
                 "Il est " + dtf.format(ZonedDateTime.now(ZoneId.of("Europe/Paris"))) + "." +

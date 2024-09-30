@@ -37,8 +37,16 @@
     <text key="caa.ai.plugin.events.speech_recording_off.description">La reconnaissance vocale des phrases de l'interlocuteur est désactivée.</text>
 
     <!-- Events -->
-    <text key="caa.ai.plugin.contexts.mood.happy">Je suis d'humeur joyeuse.</text>
-    <text key="caa.ai.plugin.contexts.mood.neutral">Je suis d'humeur neutre.</text>
-    <text key="caa.ai.plugin.contexts.mood.sad">Je suis d'humeur triste.</text>
+    <text key="caa.ai.plugin.contexts.mood.happy">Je suis maintenant d'humeur joyeuse.</text>
+    <text key="caa.ai.plugin.contexts.mood.neutral">Je suis maintenant d'humeur neutre.</text>
+    <text key="caa.ai.plugin.contexts.mood.sad">Je suis maintenant d'humeur triste.</text>
+
+    <text key="caa.ai.plugin.contexts.formalism.formal">Je souhaite maintenant employer un ton formel.</text>
+    <text key="caa.ai.plugin.contexts.formalism.neutral">Je souhaite maintenant employer un ton neutre.</text>
+    <text key="caa.ai.plugin.contexts.formalism.familiar">Je souhaite maintenant employer un ton familier.</text>
+
+    <text key="caa.ai.plugin.contexts.length.short">Propose moi à partir de maintenant des suggestions courtes (de minimum 3 mots à 6 mots maximum).</text>
+    <text key="caa.ai.plugin.contexts.length.normal">Propose moi à partir de maintenant des suggestions moyennes (de minimum 5 mots à 10 mots maximum).</text>
+    <text key="caa.ai.plugin.contexts.length.long">Propose moi à partir de maintenant des suggestions longues (de minimum 10 mots à 15 mots maximum).</text>
 
 </texts>
