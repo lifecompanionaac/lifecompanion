@@ -89,8 +89,8 @@ public class SpeechToTextService {
 
     public void stopRecording() {
         if (this.currentSpeechToTextThread != null) {
-            currentSpeechToTextThread.stopRecording();
             recording.set(false);
+            currentSpeechToTextThread.stopRecording();
             updateCurrentRecordedVolume(0.0);
             this.currentSpeechToTextThread = null;
         }

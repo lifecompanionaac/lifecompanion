@@ -165,7 +165,7 @@ public enum CAAAIController implements ModeListenerI {
         this.moodContextValue.set(null);
 
         this.conversationMessages.clear();
-        this.suggestionService.clearConversation();
+        this.suggestionService.clearConversation(currentCAAAIPluginProperties);
 
         this.moodContextValue.set(prevMood);
 
@@ -195,7 +195,6 @@ public enum CAAAIController implements ModeListenerI {
         if (!this.speechToTextService.recordingProperty().get()) {
             this.speechToTextService.startRecording(sentenceDetected -> {
                 this.replaceInterlocutorMessage(content -> String.join(" ", content + sentenceDetected).trim());
-
                 LOGGER.info("Speech detected : {}", sentenceDetected);
             }, allSentences -> {
                 String interlocutorMessage = String.join("\n", allSentences).trim();
@@ -311,7 +310,7 @@ public enum CAAAIController implements ModeListenerI {
         ConfigurationComponentUtils.findKeyOptionsByGrid(SpeechRecordingVolumeIndicatorKeyOption.class, configuration, keys2, null);
         keys2.values().stream().flatMap(List::stream).distinct().forEach(recordedVolumeIndicatorKeys::add);
 
-        this.suggestionService.initConversation(this.suggestionKeyOptionsByGrid.entrySet().iterator().next().getValue().size());
+        this.suggestionService.initConversation(this.suggestionKeyOptionsByGrid.entrySet().iterator().next().getValue().size(), currentCAAAIPluginProperties);
 
         // Add listener
         this.speechToTextService.recordingProperty().addListener(this.speechRecordingChangeListener);
@@ -366,10 +365,8 @@ public enum CAAAIController implements ModeListenerI {
 
     public Function<UseVariableDefinitionI, UseVariableI<?>> getSupplierForUseVariable(String id) {
         return switch (id) {
-            case VAR_LAST_CONVERSATION_MESSAGE_AUTHOR ->
-                    def -> new StringUseVariable(def, this.generateLastConversationMessageAuthorVariable());
-            case VAR_LAST_CONVERSATION_MESSAGE_CONTENT ->
-                    def -> new StringUseVariable(def, this.generateLastConversationMessageContentVariable());
+            case VAR_LAST_CONVERSATION_MESSAGE_AUTHOR -> def -> new StringUseVariable(def, this.generateLastConversationMessageAuthorVariable());
+            case VAR_LAST_CONVERSATION_MESSAGE_CONTENT -> def -> new StringUseVariable(def, this.generateLastConversationMessageContentVariable());
             default -> null;
         };
     }

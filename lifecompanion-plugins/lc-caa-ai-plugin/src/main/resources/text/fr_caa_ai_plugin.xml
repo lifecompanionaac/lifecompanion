@@ -8,6 +8,8 @@
     <text key="caa.ai.plugin.general.config.api.field.token">Token</text>
     <text key="caa.ai.plugin.general.config.speechToText.title">SpeechToText</text>
     <text key="caa.ai.plugin.general.config.speechToText.field.jsonConfig">Json configuration</text>
+    <text key="caa.ai.plugin.general.config.user.title">Paramètres utilisateurs</text>
+    <text key="caa.ai.plugin.general.config.user.profile.field">Profil de l'utilisateur</text>
 
     <!-- Variables -->
 

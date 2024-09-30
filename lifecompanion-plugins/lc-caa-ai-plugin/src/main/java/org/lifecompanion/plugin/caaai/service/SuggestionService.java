@@ -20,6 +20,7 @@
 package org.lifecompanion.plugin.caaai.service;
 
 import com.google.gson.*;
+import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -27,6 +28,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import org.lifecompanion.controller.io.JsonHelper;
 import org.lifecompanion.framework.client.http.AppServerClient;
+import org.lifecompanion.plugin.caaai.CAAAIPluginProperties;
 import org.lifecompanion.plugin.caaai.model.Suggestion;
 import org.lifecompanion.plugin.caaai.model.dto.OpenAiDto;
 import org.slf4j.Logger;
@@ -64,7 +66,7 @@ public class SuggestionService {
         this.suggestions = new ArrayList<>();
     }
 
-    public void initConversation() {
+    public void initConversation(String userProfile) {
         String systemMessage = "Tu es un assistant intégré dans un outil de communication alternative et amélioré (CAA). " +
                 "Ton rôle est de me faciliter l'accès à la communication en me proposant des suggestions de phrase ou de fin de phrase qui prennent en compte ce que j'ai commencé à saisir. " +
                 "Il peut y avoir une conversation engagée avec plusieurs utilisateurs différents : " +
@@ -74,22 +76,19 @@ public class SuggestionService {
 
         // Initial context for user.
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
-        List<String> userOriginalContextValues = List.of(
-                "je suis chez moi",
-                "je suis de bonne humeur",
-                "il est " + dtf.format(ZonedDateTime.now(ZoneId.of("Europe/Paris"))));
 
         String userOriginalMessage =
-                "Je suis en situation de handicap et j'ai des difficultés dans la compréhension et/ou la production du langage. "
-                        + String.join(", ", userOriginalContextValues) + ".";
+                "Il est " + dtf.format(ZonedDateTime.now(ZoneId.of("Europe/Paris"))) + "." +
+                        "Je suis en situation de handicap et j'ai des difficultés dans la compréhension et/ou la production du langage."
+                        + "Voici quelques informations à mon sujet :\n" + userProfile;
 
         this.messages.add(new OpenAiDto.Message("system", systemMessage));
         this.handleOwnMessage(userOriginalMessage);
     }
 
-    public void initConversation(Integer numberOfSuggestions) {
+    public void initConversation(Integer numberOfSuggestions, CAAAIPluginProperties caaaiPluginProperties) {
         this.numberOfSuggestions = numberOfSuggestions;
-        this.initConversation();
+        this.initConversation(caaaiPluginProperties.userProfileProperty().get());
     }
 
     public void stopConversation() {
@@ -97,9 +96,9 @@ public class SuggestionService {
         this.suggestions.clear();
     }
 
-    public void clearConversation() {
+    public void clearConversation(CAAAIPluginProperties caaaiPluginProperties) {
         this.stopConversation();
-        this.initConversation();
+        this.initConversation(caaaiPluginProperties.userProfileProperty().get());
     }
 
     public void handleOwnMessage(String content) {
@@ -127,7 +126,7 @@ public class SuggestionService {
 
         requestMessages.addAll(this.getInteractionalMessages(text));
         requestMessages.add(new OpenAiDto.Message("assistant", gson.toJson(Map.of("options", this.suggestions.stream().map(Suggestion::content).toList()))));
-        requestMessages.add(new OpenAiDto.Message("user", "me", "Propose-moi des suggestions différentes" ));
+        requestMessages.add(new OpenAiDto.Message("user", "me", "Propose-moi des suggestions différentes"));
 
         for (OpenAiDto.Message message : requestMessages) {
             LOGGER.info("Message from {}: {}", message.name, message.content);
@@ -136,7 +135,7 @@ public class SuggestionService {
         return this.fetchSuggestions(requestMessages);
     }
 
-    private List<OpenAiDto.Message> getInteractionalMessages(String text){
+    private List<OpenAiDto.Message> getInteractionalMessages(String text) {
         List<OpenAiDto.Message> interactionalMessages = new ArrayList<>();
 
         if (!text.isBlank()) {
@@ -145,7 +144,7 @@ public class SuggestionService {
         } else if (this.messages.size() > 2) {
             interactionalMessages.add(new OpenAiDto.Message("user", "me",
                     "Propose-moi des suggestions pour continuer la discussion. " +
-                    "Ces suggestions ne doivent pas être des questions qui me sont dirigées."
+                            "Ces suggestions ne doivent pas être des questions qui me sont dirigées."
             ));
         } else {
             interactionalMessages.add(new OpenAiDto.Message("user", "me", "Propose-moi des suggestions pour engager une conversation."));
