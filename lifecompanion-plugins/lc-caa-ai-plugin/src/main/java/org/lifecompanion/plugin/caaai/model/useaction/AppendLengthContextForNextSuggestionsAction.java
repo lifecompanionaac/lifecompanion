@@ -20,11 +20,16 @@ package org.lifecompanion.plugin.caaai.model.useaction;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.scene.paint.Color;
 import org.jdom2.Element;
 import org.lifecompanion.framework.commons.fx.io.XMLGenericProperty;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
+import org.lifecompanion.model.api.categorizedelement.useaction.UseActionManagerI;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
+import org.lifecompanion.model.api.configurationcomponent.DisplayableComponentI;
+import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
+import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
 import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
@@ -62,6 +67,7 @@ public class AppendLengthContextForNextSuggestionsAction extends SimpleUseAction
     public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
         if (this.contextValue.get() != null) {
             CAAAIController.INSTANCE.defineLengthContextValue(this.contextValue.get());
+            this.updateActionColors();
         }
     }
 
@@ -76,5 +82,30 @@ public class AppendLengthContextForNextSuggestionsAction extends SimpleUseAction
     public void deserialize(final Element nodeP, final IOContextI contextP) throws LCException {
         super.deserialize(nodeP, contextP);
         XMLObjectSerializer.deserializeInto(AppendLengthContextForNextSuggestionsAction.class, this, nodeP);
+    }
+
+    public void updateActionColors() {
+        UseActionTriggerComponentI parentComp = parentComponentProperty().get();
+        if (parentComp != null && parentComp.configurationParentProperty().get() != null) {
+            LCConfigurationI configuration = parentComp.configurationParentProperty().get();
+            configuration.getAllComponent().values().stream().filter(c -> c instanceof UseActionTriggerComponentI).forEach(c -> {
+                UseActionManagerI actionManager = ((UseActionTriggerComponentI) c).getActionManager();
+                AppendLengthContextForNextSuggestionsAction appendLengthContext = actionManager.getFirstActionOfType(UseActionEvent.ACTIVATION, AppendLengthContextForNextSuggestionsAction.class);
+                if (appendLengthContext != null ) {
+                    if(appendLengthContext.contextValue.get() == contextValue.get()){
+                        setColorOn(c, Color.RED);
+                    }else {
+                        setColorOn(c, null);
+                    }
+
+                }
+            });
+        }
+    }
+
+    private void setColorOn(DisplayableComponentI c, Color o) {
+        if(c instanceof GridPartKeyComponentI key){
+            key.getKeyStyle().backgroundColorProperty().forced().setValue(o);
+        }
     }
 }
