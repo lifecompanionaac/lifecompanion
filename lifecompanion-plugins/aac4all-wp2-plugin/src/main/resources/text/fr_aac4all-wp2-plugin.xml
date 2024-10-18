@@ -1,0 +1,58 @@
+<texts>
+    <text key="aac4all.wp2.plugin.example">TODO</text>
+    <text key="aac4all.wp2.plugin.current.word.key.option.RéoLocL.name">RéoLocL</text>
+    <text key="aac4all.wp2.plugin.current.word.key.option.RéoLocL.description">Réorganisation Locale des caractères interne aux lignes. Cette réorganisation intervient uniquement avec un défilement ligne colonne ou colonne ligne. </text>
+
+    <text key="aac4all.wp2.plugin.current.word.key.option.RéoLocG.name">RéoLocG</text>
+    <text key="aac4all.wp2.plugin.current.word.key.option.RéoLocG.description">Réorganisation Locale des caractères interne aux lignes. Cette réorganisation intervient uniquement avec un défilement ligne colonne ou colonne ligne. </text>
+
+    <text key="aac4all.wp2.plugin.general.config.view.title">Configuration AAC4ALL WP2</text>
+
+    <text key="aac4all.wp2.plugin.variable.current.sentence.name">Phrase courrante</text>
+    <text key="aac4all.wp2.plugin.variable.current.sentence.description">TODO description : affiche la phrase à saisir par l'utilisateur</text>
+    <text key="aac4all.wp2.plugin.variable.current.sentence.example">TOOD Example</text>
+
+    <text key="aac4all.wp2.plugin.variable.functional.current.keyboard.name">Fonctionnement du clavier courant</text>
+    <text key="aac4all.wp2.plugin.variable.functional.current.keyboard.description">TODO description : Décrit le fonctionnement du clavier qui va être utilisé par la suite. </text>
+    <text key="aac4all.wp2.plugin.variable.functional.current.keyboard.example">TODO example</text>
+
+    <text key="aac4all.wp2.plugin.variable.instruction.current.keyboard.name">Consigne du clavier courant</text>
+    <text key="aac4all.wp2.plugin.variable.instruction.current.keyboard.description">TODO description : Décrit les consignes pour le clavier qui va être utilisé par la suite. </text>
+    <text key="aac4all.wp2.plugin.variable.instruction.current.keyboard.example">TODO example</text>
+
+
+    <text key="aac4aal.wp2.plugin.main.action.category.description"> TODO DESCRIP AAC4All évaluation WP2 </text>
+    <text key="aac4aal.wp2.plugin.main.action.category.name">TODO NOM   AAC4All évaluation WP2 </text>
+
+    <text key="aac4aal.wp2.plugin.action.display.sentence.name">Affichage de la phrase</text>
+    <text key="aac4aal.wp2.plugin.action.display.sentence.description">Permet de valider la saisie et de passer à la prochaine phrase à saisir</text>
+
+    <text key="aac4aal.wp2.plugin.action.next.eval.name">Prochaine config à tester</text>
+    <text key="aac4aal.wp2.plugin.action.next.eval.description">Permet de choisir aléatoirement le prochain clavier à tester</text>
+
+    <text key="aac4aal.wp2.plugin.action.start.eval.name">Première config à tester</text>
+    <text key="aac4aal.wp2.plugin.action.start.eval.description">Permet de choisir aléatoirement le premier clavier à tester. S'il n'y a pas de prochaine, ferme LifeCompanion</text>
+
+    <text key="aac4aal.wp2.plugin.action.start.training.name">Lancer le clavier à tester</text>
+    <text key="aac4aal.wp2.plugin.action.start.training.description">Lance la configuration à tester et les actions associées</text>
+
+
+    <text key="aac4all.wp2.plugin.instruction.description.RéoLocL">Vous allez utiliser le clavier RéoLoc Ligne.\nLors de cet exercice vous allez devoir recopier le plus fidèlement possible un maximum de phrases. Les phrases à recopier seront présentées au-dessus de votre éditeur de texte.\nPhrase pour dire pas de pression. </text>
+    <text key="aac4all.wp2.plugin.instruction.description.RéoLocG">Vous allez utiliser le clavier RéoLoc Globale.\nLors de cet exercice vous allez devoir recopier le plus fidèlement possible un maximum de phrases. Les phrases à recopier seront présentées au-dessus de votre éditeur de texte.\nPhrase pour dire pas de pression. </text>
+    <text key="aac4all.wp2.plugin.instruction.description.Statique">Vous allez utiliser le clavier Statique. \nLors de cet exercice vous allez devoir recopier le plus fidèlement possible un maximum de phrases. Les phrases à recopier seront présentées au-dessus de votre éditeur de texte.\nPhrase pour dire pas de pression. </text>
+    <text key="aac4all.wp2.plugin.instruction.description.CurSta">Vous allez utiliser le clavier Curseur Statique.\nLors de cet exercice vous allez devoir recopier le plus fidèlement possible un maximum de phrases. Les phrases à recopier seront présentées au-dessus de votre éditeur de texte.\nPhrase pour dire pas de pression. </text>
+    <text key="aac4all.wp2.plugin.instruction.description.DyLin">Vous allez utiliser le clavier Dynamique Linéaire.\nLors de cet exercice vous allez devoir recopier le plus fidèlement possible un maximum de phrases. Les phrases à recopier seront présentées au-dessus de votre éditeur de texte.\nPhrase pour dire pas de pression. </text>
+
+
+    <text key="aac4all.wp2.plugin.functional.description.RéoLocL">Clavier RéoLocLigne : \nCe clavier comprend de la prédiction de caractères.\nAvec RéoLocLigne, la prédiction intervient après la sélection de la ligne. En d'autres termes, une fois la ligne sélectionnée celle-ci et uniquement celle-ci se réorganise de sorte à avoir les caractères du plus au moins probable de gauche à droite. \nAprès chaque saisie de caractère et lors du parcours des lignes, l'organisation des caractères suit l'ordre alphabétique classique.</text>
+    <text key="aac4all.wp2.plugin.functional.description.RéoLocG">Clavier RéoLocGlobale : \nCe clavier comprend de la prédiction de caractères.\nAvec RéoLocGlobale, après chaque saisie de caractère l'ensemble des lignes se réorganisent. Néanmoins un caractère, peu importe sa probabilité, se trouvera toujours sur la même ligne. \nLorsqu'une ligne est sélectionnée, l'organisation des caractères reste inchangée.\nL'organisation des caractères avant prédiction suit l'ordre alphabétique classique. </text>
+    <text key="aac4all.wp2.plugin.functional.description.Statique">Clavier Statique : \nCe clavier ne comprend pas de prédiction de caractères.\nAvec Statique, l'organisation des caractères suit un ordre alphabétique classique. \nTout au long de la saisie de texte, l'organisation des caractères reste inchangée.</text>
+    <text key="aac4all.wp2.plugin.functional.description.CurSta">Clavier Curseur Statique : \nCe clavier comprend de la prédiction de caractères. \nAvec Curseur Statique, ce sont les caractères qui vont défiler sous le curseur. Après chaque saisie de caractère, l'anneau de caratères qui défile sous le curseur va se réorganiser de sorte à avoir le caractères le plus probable en premier et ainsi de suite. Pour sélectionner un caractère, il vous suffit de le valider au moment où elle se trouve sous le curseur statique.  </text>
+    <text key="aac4all.wp2.plugin.functional.description.DyLin">Clavier Dynimique Linéaire : \nCe clavier comprend de la prédiction de caractères. \nAvec Dynamique Linéaire, le défilement est linéaire. Le curseur parcours les touches une à une, de gauche à droite, puis de haut en bas. Après chaque sélection de caractères, l'ensemble des caractères du clavier se réorganise du plus au moins probable. Pour sélectionner un caractère, il vous suffit de le valider au moment où elle se trouve sous le curseur statique. </text>
+
+    <text key="use.action.eva.categorie">Catégorie pour EVA</text>
+    <text key="use.action.eva.score">Score pour EVA</text>
+    <text key="action.simple.set.eva.value.variable.description">Catégorie et score : </text>
+
+
+</texts>
