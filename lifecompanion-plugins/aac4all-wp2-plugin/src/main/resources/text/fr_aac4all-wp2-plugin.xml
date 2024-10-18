@@ -6,6 +6,8 @@
     <text key="aac4all.wp2.plugin.current.word.key.option.RéoLocG.name">RéoLocG</text>
     <text key="aac4all.wp2.plugin.current.word.key.option.RéoLocG.description">Réorganisation Locale des caractères interne aux lignes. Cette réorganisation intervient uniquement avec un défilement ligne colonne ou colonne ligne. </text>
 
+    <text key="aac4all.wp2.plugin.current.word.key.option.cursta.name">CurSta</text>
+
     <text key="aac4all.wp2.plugin.general.config.view.title">Configuration AAC4ALL WP2</text>
 
     <text key="aac4all.wp2.plugin.variable.current.sentence.name">Phrase courrante</text>

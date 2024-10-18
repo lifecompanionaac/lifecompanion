@@ -9,11 +9,12 @@ import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
 import org.lifecompanion.model.api.selectionmode.ComponentToScanI;
 import org.lifecompanion.model.api.selectionmode.SelectionModeI;
-import org.lifecompanion.model.impl.selectionmode.AbstractPartScanSelectionMode;
 import org.lifecompanion.model.impl.textprediction.charprediction.LCCharPredictor;
+import org.lifecompanion.plugin.aac4all.wp2.model.keyoption.AAC4AllKeyOptionCurSta;
 import org.lifecompanion.plugin.aac4all.wp2.model.keyoption.AAC4AllKeyOptionReolocG;
 import org.lifecompanion.plugin.aac4all.wp2.model.keyoption.AAC4AllKeyOptionReolocL;
 import org.lifecompanion.util.javafx.FXThreadUtils;
+import org.lifecompanion.util.model.ConfigurationComponentUtils;
 import org.lifecompanion.util.model.SelectionModeUtils;
 
 import java.util.*;
@@ -33,9 +34,60 @@ public enum AAC4AllWp2Controller implements ModeListenerI {
     public void modeStart(LCConfigurationI configuration) {
         SelectionModeController.INSTANCE.addScannedPartChangedListeners(this.scannedPartChangedListener);
         initRelocG(configuration);
+        initCurSta(configuration);
+    }
+
+    // TODO : replace with content from char prediction
+    private List<String> curStaContent = List.of("b", "o", "n", "j", "o", "u", "r", " ", "à", " ", "t", "o", "u", "s");
+    private int curStaIndex = 0;
+    private List<AAC4AllKeyOptionCurSta> curStaKeys;
+
+    private void initCurSta(LCConfigurationI configuration) {
+        Map<GridComponentI, List<AAC4AllKeyOptionCurSta>> curStaKeyOptions = new HashMap<>();
+        ConfigurationComponentUtils.findKeyOptionsByGrid(AAC4AllKeyOptionCurSta.class, configuration, curStaKeyOptions, null);
+        curStaKeys = curStaKeyOptions.values().stream().flatMap(Collection::stream).toList();
+        updateCurSta();
+    }
+
+    private void updateCurSta() {
+        FXThreadUtils.runOnFXThread(() -> {
+            if (curStaKeys != null) {
+                int middleIndex = curStaKeys.size() / 2;
+                // From middle to end : display current index to end
+                for (int i = middleIndex; i < curStaKeys.size(); i++) {
+                    AAC4AllKeyOptionCurSta key = curStaKeys.get(i);
+                    if (curStaIndex + i - middleIndex < curStaContent.size()) {
+                        key.predictionProperty().set(curStaContent.get(curStaIndex + i - middleIndex));
+                    } else {
+                        key.predictionProperty().set("");
+                    }
+                }
+                // From middle to start : display previous keys
+                int curStaBackIndex = curStaIndex - 1;
+                for (int i = middleIndex - 1; i >= 0; i--) {
+                    AAC4AllKeyOptionCurSta key = curStaKeys.get(i);
+                    if (curStaBackIndex < curStaContent.size() && curStaBackIndex >= 0) {
+                        key.predictionProperty().set(curStaContent.get(curStaBackIndex));
+                    } else {
+                        key.predictionProperty().set("");
+                    }
+                    curStaBackIndex--;
+                }
+            }
+        });
+    }
+
+    public void shiftCurSta() {
+        if (curStaIndex + 1 < curStaContent.size()) {
+            curStaIndex++;
+        } else {
+            curStaIndex = 0;
+        }
+        this.updateCurSta();
     }
 
     private Map<AAC4AllKeyOptionReolocG, String> previousLineG;
+
 
     private void initRelocG(LCConfigurationI configuration) {
         WritingStateController.INSTANCE.textBeforeCaretProperty().addListener((obs, ov, nv) -> {
@@ -93,6 +145,7 @@ public enum AAC4AllWp2Controller implements ModeListenerI {
     @Override
     public void modeStop(LCConfigurationI configuration) {
         SelectionModeController.INSTANCE.removeScannedPartChangedListeners(this.scannedPartChangedListener);
+        curStaKeys = null;
     }
 
     private Map<AAC4AllKeyOptionReolocL, String> previousLine;

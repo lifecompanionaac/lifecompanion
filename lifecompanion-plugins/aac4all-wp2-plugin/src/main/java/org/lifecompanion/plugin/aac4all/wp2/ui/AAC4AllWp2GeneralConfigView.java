@@ -106,7 +106,6 @@ public class AAC4AllWp2GeneralConfigView extends BorderPane implements GeneralCo
         gridPaneConfiguration.add(comboBoxRandomType, 1, gridRowIndex);
 
 
-
     }
 
     @Override
@@ -126,7 +125,9 @@ public class AAC4AllWp2GeneralConfigView extends BorderPane implements GeneralCo
     public void saveChanges() {
         AAC4AllWp2PluginProperties pluginConfigProperties = configuration.getPluginConfigProperties(AAC4AllWp2Plugin.ID, AAC4AllWp2PluginProperties.class);
         pluginConfigProperties.patientIdProperty().set(textFieldPatientId.getText());
-        pluginConfigProperties.getRandomTypeEval().set(comboBoxRandomType.getValue().getName());
+        if (comboBoxRandomType.getValue() != null) {
+            pluginConfigProperties.getRandomTypeEval().set(comboBoxRandomType.getValue().getName());
+        }
     }
 
     @Override
@@ -134,7 +135,10 @@ public class AAC4AllWp2GeneralConfigView extends BorderPane implements GeneralCo
         this.configuration = model;
         AAC4AllWp2PluginProperties pluginConfigProperties = configuration.getPluginConfigProperties(AAC4AllWp2Plugin.ID, AAC4AllWp2PluginProperties.class);
         textFieldPatientId.setText(pluginConfigProperties.patientIdProperty().get());
-        comboBoxRandomType.setValue(RandomType.fromName(pluginConfigProperties.getRandomTypeEval().getValue()));
+        String randomTypeEval = pluginConfigProperties.getRandomTypeEval().getValue();
+        if (randomTypeEval != null) {
+            comboBoxRandomType.setValue(RandomType.fromName(randomTypeEval));
+        }
 
     }
 
