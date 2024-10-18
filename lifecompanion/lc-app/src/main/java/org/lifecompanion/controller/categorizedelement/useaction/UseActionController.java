@@ -38,6 +38,7 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 
@@ -75,6 +76,8 @@ public enum UseActionController implements LCStateListener, ModeListenerI {
      */
     private final Map<UseActionEvent, List<Consumer<ActionExecutionResultI>>> endOfSimpleActionExecutionListener;
 
+    private final Set<BiConsumer<UseActionTriggerComponentI, UseActionEvent>> actionExecutionListeners;
+
     /**
      * To pause new action launch : useful when changing current configuration (reset in modeStart())
      */
@@ -86,6 +89,7 @@ public enum UseActionController implements LCStateListener, ModeListenerI {
     UseActionController() {
         this.nextSimpleActionExecutionListener = new HashMap<>();
         this.endOfSimpleActionExecutionListener = new HashMap<>();
+        this.actionExecutionListeners = new HashSet<>();
         for (UseActionEvent event : UseActionEvent.values()) {
             this.nextSimpleActionExecutionListener.put(event, new ArrayList<>());
             this.endOfSimpleActionExecutionListener.put(event, new ArrayList<>());
@@ -100,6 +104,14 @@ public enum UseActionController implements LCStateListener, ModeListenerI {
             }
             this.executeSimpleOn(generator, UseActionEvent.EVENT, variablesMap, callback);
         };
+    }
+
+    public void addActionExecutionListener(BiConsumer<UseActionTriggerComponentI, UseActionEvent> listener) {
+        actionExecutionListeners.add(listener);
+    }
+
+    public void removeActionExecutionListener(BiConsumer<UseActionTriggerComponentI, UseActionEvent> listener) {
+        actionExecutionListeners.remove(listener);
     }
 
     // Class part : "Properties"
@@ -257,6 +269,16 @@ public enum UseActionController implements LCStateListener, ModeListenerI {
                     }
                 }
             };
+            // Fire listener
+            try {
+                for (BiConsumer<UseActionTriggerComponentI, UseActionEvent> listener : this.actionExecutionListeners) {
+                    listener.accept(useActionTriggerComponent, event);
+                }
+            } catch (Throwable t) {
+                LOGGER.error("Error on action execution listener", t);
+            }
+
+            // Launch
             if (inNewThread) {
                 this.threadPool.submit(actionExecutable);
             } else {

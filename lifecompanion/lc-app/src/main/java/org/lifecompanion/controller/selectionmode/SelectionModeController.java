@@ -143,6 +143,8 @@ public enum SelectionModeController implements ModeListenerI {
      */
     private final Set<BiConsumer<GridComponentI, ComponentToScanI>> scannedPartChangedListeners;
 
+    private final Set<Consumer<ComponentToScanI>> overScannedPartChangedListeners;
+
     SelectionModeController() {
         this.currentOverPart = new SimpleObjectProperty<>(this, "currentOverPart", null);
         this.playingProperty = new SimpleBooleanProperty(false);
@@ -154,6 +156,7 @@ public enum SelectionModeController implements ModeListenerI {
         this.currentPressComponents = new HashSet<>();
         this.keyEventListener = this::globalKeyboardEvent;
         this.scannedPartChangedListeners = new HashSet<>();
+        this.overScannedPartChangedListeners = new HashSet<>();
         this.changeListenerGrid = (obs, ov, nv) -> {
             if (nv != null) {
                 this.gridChanged(nv);
@@ -1153,5 +1156,17 @@ public enum SelectionModeController implements ModeListenerI {
 
     public void fireScannedPartChangedListeners(GridComponentI grid, ComponentToScanI selectedComponentToScan) {
         this.scannedPartChangedListeners.forEach(listener -> listener.accept(grid, selectedComponentToScan));
+    }
+
+    public void addOverScannedPartChangedListener(Consumer<ComponentToScanI> listener) {
+        this.overScannedPartChangedListeners.add(listener);
+    }
+
+    public void removeOverScannedPartChangedListener(Consumer<ComponentToScanI> listener) {
+        this.overScannedPartChangedListeners.remove(listener);
+    }
+
+    public void fireOverScannedPartChangedListeners(ComponentToScanI overScannedPart) {
+        this.overScannedPartChangedListeners.forEach(listener -> listener.accept(overScannedPart));
     }
 }
