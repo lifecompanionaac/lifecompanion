@@ -19,6 +19,7 @@ LifeCompanion can be launched using command line arguments to configure some of 
 |`-disableLoadingWindow`|*`NONE`*|Don't show any loading window on LifeCompanion startup. Even if this parameter is enabled, the first splashscreen on launch will still be displayed|
 |`-disableSelectionAutostart`|*`NONE`*|If enabled, the selection mode will not automatically start on each started configuration. It will be able to be activated only when the control server is enabled and `selection/start` is called.|
 |`-forceVolumeLevel level`|`0.5`|Will force the sound on speech synthesizer, medias, etc to be at a certain level (range 0.0 to 1.0).|
+|`-disableErrorNotification`|*`NONE`*|If enabled, error notification will never be showed in use mode (but will be still showed in edit mode).|
 |`-disableFullscreen`|*`NONE`*|Disable the user ability to switch from decorated/fullscreen mode on the use mode window. Will disable the fullscreen button, but also the keyboard shortcut|
 |`-forceWindowUndecorated`|*`NONE`*|Will force the use mode window to be "undecorated" as stated in [JavaFX documentation](https://openjfx.io/javadoc/21/javafx.graphics/javafx/stage/Stage.html) on stage style. |
 |`-forceWindowSize width height`|`1200 800`|Will force the use mode window to be as the specified size (in pixel). The given size will respect the screen scaling. The user will then not be able to resize the use mode window.|

@@ -9,6 +9,7 @@
 ### Corrections/ajustements
 
 - Ticket #387 : amélioration de la création de grille directement dans l'action "Aller dans la grille"
+- Ticket #385 : ajout d'un service pour désactiver les notifications d'erreur en mode utilisation
 
 ## 1.6.3 - 20/08/2024
 

@@ -23,8 +23,11 @@ import javafx.animation.KeyValue;
 import javafx.beans.value.WritableValue;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import org.lifecompanion.controller.lifecycle.AppMode;
 import org.lifecompanion.controller.lifecycle.AppModeController;
+import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
 import org.lifecompanion.model.api.lifecycle.LCStateListener;
+import org.lifecompanion.model.impl.useapi.GlobalRuntimeConfiguration;
 import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.controller.editaction.AsyncExecutorController;
 import org.lifecompanion.model.impl.notification.LCNotification;
@@ -85,6 +88,9 @@ public enum LCNotificationController implements LCStateListener {
     // NOTIFICATION UI
     //========================================================================
     public void showNotification(LCNotification notification) {
+        if (GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DISABLE_ERROR_NOTIFICATION) && AppModeController.INSTANCE.isUseMode() && notification.getType() == LCNotification.LCNotificationType.ERROR) {
+            return;
+        }
         FXThreadUtils.runOnFXThread(() -> {
             notificationToShow.add(() -> {
                 handlingQueueItem.set(true);
