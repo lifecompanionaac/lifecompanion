@@ -8,7 +8,7 @@
 
 ### Corrections/ajustements
 
-- ...
+- Ticket #387 : amélioration de la création de grille directement dans l'action "Aller dans la grille"
 
 ## 1.6.3 - 20/08/2024
 

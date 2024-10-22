@@ -44,18 +44,23 @@ public class GridStackActions {
     public static class AddGridInStackAction implements UndoRedoActionI {
         private final StackComponentI stack;
         private GridComponentI component;
-        private boolean select, notify;
+        private boolean select, notify, display;
 
         public AddGridInStackAction(final StackComponentI stackP, final GridComponentI componentP, final boolean select, final boolean notify) {
-            this(stackP, select, notify);
+            this(stackP, select, notify, true);
             this.component = componentP;
 
         }
 
-        public AddGridInStackAction(final StackComponentI stackP, final boolean select, final boolean notify) {
+        public AddGridInStackAction(final StackComponentI stackP, final boolean select, final boolean notify, boolean display) {
             this.stack = stackP;
             this.select = select;
             this.notify = notify;
+            this.display = display;
+        }
+
+        public AddGridInStackAction(final StackComponentI stackP, final boolean select, final boolean notify) {
+            this(stackP, select, notify, true);
         }
 
         public GridComponentI getComponent() {
@@ -72,8 +77,8 @@ public class GridStackActions {
             }
             this.component.dispatchRemovedPropertyValue(false);
             this.stack.getComponentList().add(this.component);
-            // TODO : should displayed be updated ?
-            this.stack.displayedComponentProperty().set(this.component);
+            if (this.display)
+                this.stack.displayedComponentProperty().set(this.component);
             if (this.select)
                 SelectionController.INSTANCE.selectDisplayableComponent(this.component, true);
             if (notify)
