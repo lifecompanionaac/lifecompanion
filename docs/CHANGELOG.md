@@ -4,7 +4,7 @@
 
 ### Fonctionnalités
 
-- ...
+- Ticket #369 : ajout d'une **action "Ouvrir un dossier"**
 
 ### Corrections/ajustements
 

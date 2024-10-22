@@ -3883,5 +3883,7 @@
     <text key="use.action.start.dynamic.key.fill.description">Permet d'indiquer cette case comme étant la prochaine à remplir : cette action permet d'utiliser le contenu de la prochaine case ayant pour action "Remplir la case marquée" (texte, image, vidéo...).</text>
     <text key="use.action.end.dynamic.key.fill.name">Remplir la case marquée</text>
     <text key="use.action.end.dynamic.key.fill.description">Permet de remplir la dernière case sélectionnée avec "Marquer comme case à remplir" avec le contenu de cette case.</text>
-
+    <text key="action.open.folder.name">Ouvrir un dossier</text>
+    <text key="action.open.folder.description">Ouvre un dossier spécifié dans l'explorateur de fichiers du système</text>
+    <text key="label.field.folder.to.open">Dossier à ouvrir</text>
 </texts>
