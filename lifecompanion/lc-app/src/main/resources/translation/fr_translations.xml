@@ -3894,4 +3894,23 @@
     <text key="save.user.item.in.notification">Sauvegardé dans {}</text>
     <text key="action.save.config.pdf.document.name">Image de la configuration - {} - {}</text>
     <text key="action.save.config.pdf.page.name">Le {} à {}</text>
+    <text key="default.whiteboard.image.directory.name">LifeCompanion-Tableaux-Images</text>
+    <text key="action.whiteboard.clear.name">Effacer le tableau</text>
+    <text key="action.whiteboard.clear.description">Efface la totalité du tableau</text>
+    <text key="action.save.whiteboard.image.name">Sauvegarder l'image du tableau</text>
+    <text key="action.save.whiteboard.image.description">Sauvegarde l'image du tableau dans un dossier choisi</text>
+    <text key="save.whiteboard.image.directory.name">Dossier de sauvegarde des images</text>
+    <text key="save.whiteboard.image.directory.dialog.title">Sélectionner le dossier de sauvegarde</text>
+    <text key="field.action.whiteboard.set.color.picker">Couleur du crayon</text>
+    <text key="action.whiteboard.set.color.name">Changer la couleur du crayon</text>
+    <text key="action.whiteboard.set.color.description">Change la couleur du crayon pour une couleur sélectionnée</text>
+    <text key="action.whiteboard.set.pencil.size.name">Changer la taille du crayon</text>
+    <text key="action.whiteboard.set.pencil.size.description">Change la taille du crayon pour une taille sélectionnée</text>
+    <text key="action.whiteboard.tool.to.eraser.name">Sélectionner la gomme</text>
+    <text key="action.whiteboard.tool.to.eraser.description">Sélectionne la gomme pour le tableau</text>
+    <text key="action.whiteboard.tool.to.pencil.name">Sélectionner le crayon</text>
+    <text key="action.whiteboard.tool.to.pencil.description">Sélectionne le crayon pour le tableau</text>
+    <text key="key.option.whiteboard.name">Tableau/Ardoise</text>
+    <text key="key.option.whiteboard.description">Permet de dessiner dans la case à l'aide des actions liées à "Tableau/Ardoise" (catégorie "Divers").</text>
+    <text key="use.action.sub.category.whiteboard.name">Tableau/Ardoise</text>
 </texts>

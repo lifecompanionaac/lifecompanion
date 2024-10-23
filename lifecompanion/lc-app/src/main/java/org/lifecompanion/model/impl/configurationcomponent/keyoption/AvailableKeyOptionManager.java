@@ -73,6 +73,7 @@ public enum AvailableKeyOptionManager {
                         new KeyListNodeKeyOption(),
                         new VariableInformationKeyOption(),
                         new NoteKeyOption(),
+                        new WhiteboardKeyOption(),
                         new UserActionSequenceItemKeyOption(),
                         new UserActionSequenceCurrentKeyOption(),
                         new ConfigListKeyOption(),

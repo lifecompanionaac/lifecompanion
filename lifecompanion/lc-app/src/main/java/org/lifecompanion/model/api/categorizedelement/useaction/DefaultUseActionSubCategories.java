@@ -120,6 +120,8 @@ public enum DefaultUseActionSubCategories implements UseActionSubCategoryI {
             CategorizedElementColorProvider.nextColor(DefaultUseActionMainCategories.MISCELLANEOUS)),//
     NOTE("use.action.sub.category.note.name", DefaultUseActionMainCategories.MISCELLANEOUS,
             CategorizedElementColorProvider.nextColor(DefaultUseActionMainCategories.MISCELLANEOUS)),//
+    WHITEBOARD("use.action.sub.category.whiteboard.name", DefaultUseActionMainCategories.MISCELLANEOUS,
+            CategorizedElementColorProvider.nextColor(DefaultUseActionMainCategories.MISCELLANEOUS)),//
     SCRIPT("use.action.sub.category.script.name", DefaultUseActionMainCategories.MISCELLANEOUS,
             CategorizedElementColorProvider.nextColor(DefaultUseActionMainCategories.MISCELLANEOUS)),//
     TIMER("use.action.sub.category.timer.name", DefaultUseActionMainCategories.MISCELLANEOUS,

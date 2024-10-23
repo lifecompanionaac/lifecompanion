@@ -126,7 +126,8 @@ public enum AppModeController {
                     if (configurationById != null) {
                         ConfigActionController.INSTANCE.executeAction(
                                 new LCConfigurationActions.OpenConfigurationAction(editModeContext.getStage().getScene().getRoot(), configurationById, false, loaded -> {
-                                    if (loaded) editModeContext.tryToRestoreUseModeStateInEditMode(useModeContext.getUseStateAndClear());
+                                    if (loaded)
+                                        editModeContext.tryToRestoreUseModeStateInEditMode(useModeContext.getUseStateAndClear());
                                 })
                         );
                     }
@@ -185,6 +186,7 @@ public enum AppModeController {
             DynamicKeyFillController.INSTANCE,//
             UserActionSequenceController.INSTANCE, //
             UseModeProgressDisplayerController.INSTANCE, //
+            UseModeWhiteboardController.INSTANCE,//
             SoundPlayerController.INSTANCE, //
             VoiceSynthesizerController.INSTANCE, //
             NoteKeyController.INSTANCE, //
