@@ -214,6 +214,7 @@ public class ConfigurationEditionView extends BorderPane implements ProfileConfi
         });
         this.nodeExportAction.disableProperty().bind(ProfileConfigSelectionController.INSTANCE.currentStepProperty().isEqualTo(ProfileConfigStep.CONFIGURATION_CREATE));
         this.nodeRemoveAction.disableProperty().bind(ProfileConfigSelectionController.INSTANCE.currentStepProperty().isEqualTo(ProfileConfigStep.CONFIGURATION_CREATE));
+        this.nodeDuplicateAction.disableProperty().bind(ProfileConfigSelectionController.INSTANCE.currentStepProperty().isEqualTo(ProfileConfigStep.CONFIGURATION_CREATE));
         if (this.nodeDesktopShortcut != null) {
             this.nodeDesktopShortcut.disableProperty().bind(ProfileConfigSelectionController.INSTANCE.currentStepProperty().isEqualTo(ProfileConfigStep.CONFIGURATION_CREATE));
         }
