@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   version="1.1"
+   id="svg20777"
+   width="32"
+   height="32"
+   sodipodi:docname="icon_print_config_pdf_action.svg"
+   inkscape:version="1.1.2 (b8e25be833, 2022-02-05)"
+   inkscape:export-filename="C:\Users\Mathieu\Desktop\icon_print_config_pdf_action.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs20781" />
+  <sodipodi:namedview
+     id="namedview20779"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     showgrid="false"
+     width="32px"
+     inkscape:zoom="4.9474769"
+     inkscape:cx="7.7817443"
+     inkscape:cy="39.41403"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg20777" />
+  <inkscape:clipboard
+     style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:#d2d2d2;fill-opacity:1;stroke-width:0.24615288;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000;stop-opacity:1"
+     min="3310.5318,925.69766"
+     max="3423.4175,1044.4664"
+     geom-min="3310.5318,925.69766"
+     geom-max="3423.4175,1044.4664" />
+  <path
+     fill-rule="evenodd"
+     clip-rule="evenodd"
+     d="m 1.295397,4.9544157 c 0,-1.5225838 1.2342912,-2.7568837 2.7568835,-2.7568837 H 19.136294 l 6.052091,6.052074 v 18.75988 c 0,1.522531 -1.234343,2.756883 -2.756883,2.756883 H 4.0522805 c -1.5225923,0 -2.7568835,-1.234352 -2.7568835,-2.756883 z M 5.8902003,13.225067 H 3.1333166 v 9.189615 h 1.8379276 v -3.675848 h 0.9189561 c 1.5225925,0 2.7568833,-1.234291 2.7568833,-2.756884 0,-1.522592 -1.2342908,-2.756883 -2.7568833,-2.756883 z m 7.3516957,0 h -2.756883 v 9.189615 h 2.756883 c 1.522583,0 2.756883,-1.234352 2.756883,-2.756884 V 15.98195 c 0,-1.522592 -1.2343,-2.756883 -2.756883,-2.756883 z m 4.594803,9.189615 v -9.189615 h 5.513767 v 1.83792 h -3.675847 v 1.837927 h 1.837927 v 1.83792 h -1.837927 v 3.675848 z"
+     fill="#000000"
+     id="path6"
+     style="fill:#d2d2d2;fill-opacity:1;stroke-width:1.83791" />
+  <path
+     id="path5448-7-83"
+     d="m 31.466333,29.911956 v -7.584093 c 0,-0.695208 -0.568807,-1.264015 -1.264015,-1.264015 H 18.826179 c -0.695209,0 -1.264016,0.568807 -1.264016,1.264015 v 7.584093 c 0,0.695209 0.568807,1.264015 1.264016,1.264015 h 11.376139 c 0.695208,0 1.264015,-0.568806 1.264015,-1.264015 z m -9.164112,-3.476042 1.58002,1.902343 2.212026,-2.850355 2.844035,3.792047 h -8.848108 z"
+     inkscape:connector-curvature="0"
+     style="fill:#aeaeae;fill-opacity:1;stroke-width:0.632005"
+     inkscape:export-filename="C:\Users\Mathieu\tmp\icon_add_basic_key.png"
+     inkscape:export-xdpi="19.333334"
+     inkscape:export-ydpi="19.333334" />
+</svg>

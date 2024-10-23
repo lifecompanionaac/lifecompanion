@@ -27,6 +27,7 @@ import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionConfigurationViewI;
 import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
+import org.lifecompanion.model.impl.categorizedelement.useaction.available.SaveConfigToPdfAction;
 import org.lifecompanion.model.impl.categorizedelement.useaction.available.SaveUserTextAction;
 import org.lifecompanion.ui.common.control.generic.FileSelectorControl;
 import org.lifecompanion.ui.common.control.generic.FileSelectorControl.FileSelectorControlMode;
@@ -34,14 +35,12 @@ import org.lifecompanion.ui.common.control.generic.FileSelectorControl.FileSelec
 import java.io.File;
 
 /**
- * Action configuration view for {@link SaveUserTextAction}
- *
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
-public class SaveUserTextConfigView extends VBox implements UseActionConfigurationViewI<SaveUserTextAction> {
+public class SaveConfigToPdfActionConfigView extends VBox implements UseActionConfigurationViewI<SaveConfigToPdfAction> {
     private FileSelectorControl fileSelectorControl;
 
-    public SaveUserTextConfigView() {
+    public SaveConfigToPdfActionConfigView() {
     }
 
     @Override
@@ -50,7 +49,7 @@ public class SaveUserTextConfigView extends VBox implements UseActionConfigurati
     }
 
     @Override
-    public void editStarts(final SaveUserTextAction action, final ObservableList<UseVariableDefinitionI> possibleVariables) {
+    public void editStarts(final SaveConfigToPdfAction action, final ObservableList<UseVariableDefinitionI> possibleVariables) {
         if (StringUtils.isNotBlank(action.getDestinationFolder())) {
             File destinationFolderFile = new File(action.getDestinationFolder());
             this.fileSelectorControl.valueProperty().set(destinationFolderFile);
@@ -58,20 +57,20 @@ public class SaveUserTextConfigView extends VBox implements UseActionConfigurati
     }
 
     @Override
-    public void editEnds(final SaveUserTextAction action) {
+    public void editEnds(final SaveConfigToPdfAction action) {
         File selectedFolder = this.fileSelectorControl.valueProperty().get();
         action.setDestinationFolder(selectedFolder != null ? selectedFolder.getAbsolutePath() : null);
     }
 
     @Override
-    public Class<SaveUserTextAction> getConfiguredActionType() {
-        return SaveUserTextAction.class;
+    public Class<SaveConfigToPdfAction> getConfiguredActionType() {
+        return SaveConfigToPdfAction.class;
     }
 
     @Override
     public void initUI() {
-        this.fileSelectorControl = new FileSelectorControl(Translation.getText("save.user.text.save.directory.name"), FileSelectorControlMode.FOLDER, FileChooserType.SAVE_USER_TEXT, true);
-        this.fileSelectorControl.setOpenDialogTitle(Translation.getText("save.user.text.save.directory.dialog.title"));
+        this.fileSelectorControl = new FileSelectorControl(Translation.getText("save.config.pdf.save.directory.name"), FileSelectorControlMode.FOLDER, FileChooserType.SAVE_USER_TEXT, true);
+        this.fileSelectorControl.setOpenDialogTitle(Translation.getText("save.config.pdf.save.directory.dialog.title"));
         this.getChildren().addAll(this.fileSelectorControl);
     }
 

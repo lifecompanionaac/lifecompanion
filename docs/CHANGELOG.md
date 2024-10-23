@@ -4,12 +4,16 @@
 
 ### Fonctionnalités
 
-- Ticket #369 : ajout d'une **action "Ouvrir un dossier"**
+- Ticket #369 : ajout d'une **action "Ouvrir un dossier"** : permet d'ouvrir un dossier de l'ordinateur dans l'explorateur de fichiers
+- Ticket #379 : ajout d'une **action "Sauvegarder la configuration en PDF** : permet de sauvegarder un PDF de la configuration lorsqu'elle est en mode utilisation
 
 ### Corrections/ajustements
 
+- Ticket #380 : amélioration de la qualité des PDF exportés
 - Ticket #387 : amélioration de la création de grille directement dans l'action "Aller dans la grille"
 - Ticket #385 : ajout d'un service pour désactiver les notifications d'erreur en mode utilisation
+- Les textes sauvegardés par l'action "Sauvegarder le texte" sont maintenant sauvegardés par défaut dans le dossier "Mes documents"
+- Correction d'un rare problème qui réduisait la fenêtre en mode utilisation si elle était en plein écran
 
 ## 1.6.3 - 20/08/2024
 

@@ -3886,4 +3886,12 @@
     <text key="action.open.folder.name">Ouvrir un dossier</text>
     <text key="action.open.folder.description">Ouvre un dossier spécifié dans l'explorateur de fichiers du système</text>
     <text key="label.field.folder.to.open">Dossier à ouvrir</text>
+    <text key="default.user.grid.pdf.directory.name">LifeCompanion-Grilles-Pdf</text>
+    <text key="action.save.config.pdf.name">Sauvegarder la configuration en PDF</text>
+    <text key="action.save.config.pdf.description">Sauvegarde un PDF contenant une image de la configuration actuelle en PDF. Permet par exemple de sauvegarder la configuration lorsque des éléments sont dynamiquement changés.</text>
+    <text key="save.config.pdf.save.directory.name">Dossier de sauvegarde des PDF de la configuration</text>
+    <text key="save.config.pdf.save.directory.dialog.title">Sélectionner le dossier de sauvegarde</text>
+    <text key="save.user.item.in.notification">Sauvegardé dans {}</text>
+    <text key="action.save.config.pdf.document.name">Image de la configuration - {} - {}</text>
+    <text key="action.save.config.pdf.page.name">Le {} à {}</text>
 </texts>

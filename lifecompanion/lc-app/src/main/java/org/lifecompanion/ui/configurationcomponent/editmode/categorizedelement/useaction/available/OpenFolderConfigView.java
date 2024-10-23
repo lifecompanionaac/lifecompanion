@@ -68,7 +68,7 @@ public class OpenFolderConfigView extends VBox implements UseActionConfiguration
     public void initUI() {
         this.setSpacing(10.0);
         this.setPadding(new Insets(10.0));
-        fileSelectorProgramPath = new FileSelectorControl(Translation.getText("label.field.folder.to.open"), FileSelectorControl.FileSelectorControlMode.FOLDER, FileChooserType.OPEN_FOLDER);
+        fileSelectorProgramPath = new FileSelectorControl(Translation.getText("label.field.folder.to.open"), FileSelectorControl.FileSelectorControlMode.FOLDER, FileChooserType.OPEN_FOLDER, true);
         this.getChildren().addAll(fileSelectorProgramPath);
     }
 
