@@ -18,23 +18,32 @@
  */
 package org.lifecompanion.ui;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.WeakChangeListener;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.input.*;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import org.lifecompanion.controller.metrics.SessionStatsController;
 import org.lifecompanion.controller.textcomponent.WritingStateController;
 import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
+import org.lifecompanion.model.api.selectionmode.SelectionModeI;
 import org.lifecompanion.model.api.textcomponent.WritingEventSource;
 import org.lifecompanion.model.impl.configurationcomponent.WriterEntry;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.editaction.CommonActions;
+import org.lifecompanion.model.impl.selectionmode.DrawSelectionModeI;
 import org.lifecompanion.model.impl.useapi.GlobalRuntimeConfiguration;
 import org.lifecompanion.ui.configurationcomponent.usemode.UseModeConfigurationDisplayer;
+import org.lifecompanion.ui.selectionmode.AbstractSelectionModeView;
+import org.lifecompanion.util.binding.BindingUtils;
 import org.lifecompanion.util.javafx.FXControlUtils;
 
 /**
@@ -66,7 +75,11 @@ public class UseModeScene extends Scene implements LCViewInitHelper {
      */
     private Button buttonFullscreen;
 
+    private Rectangle backgroundReductionRectangle;
+    private ChangeListener<SelectionModeI> selectionModeChangeListener;
+
     private final LCConfigurationI configuration;
+
 
     public UseModeScene(LCConfigurationI configuration) {
         super(new Group());
@@ -77,8 +90,15 @@ public class UseModeScene extends Scene implements LCViewInitHelper {
 
     @Override
     public void initUI() {
+        this.backgroundReductionRectangle = new Rectangle();
+        this.backgroundReductionRectangle.setStrokeWidth(0.0);
+        this.backgroundReductionRectangle.widthProperty().bind(widthProperty());
+        this.backgroundReductionRectangle.heightProperty().bind(heightProperty());
+        this.root.getChildren().add(this.backgroundReductionRectangle);
+
         this.configurationDisplayer = new UseModeConfigurationDisplayer(this.configuration, this.widthProperty(), this.heightProperty());
         this.root.getChildren().add(this.configurationDisplayer);
+
 
         // Button go config mode
         this.buttonGoToConfigMode = FXControlUtils.createTextButtonWithIcon(null, "actions/icon_go_back_config_mode.png", null);
@@ -107,6 +127,14 @@ public class UseModeScene extends Scene implements LCViewInitHelper {
     @Override
     public void initBinding() {
         this.fillProperty().bind(this.configurationDisplayer.backgroundColorProperty());
+        this.selectionModeChangeListener = (obs, ov, nv) -> {
+            if (nv != null && nv.getSelectionView() instanceof AbstractSelectionModeView<?> selectionModeView) {
+                this.backgroundReductionRectangle.visibleProperty().bind(selectionModeView.getBackgroundReductionRectangle().visibleProperty());
+                this.backgroundReductionRectangle.opacityProperty().bind(selectionModeView.getBackgroundReductionRectangle().opacityProperty().multiply(0.8));
+                this.backgroundReductionRectangle.fillProperty().bind(selectionModeView.getBackgroundReductionRectangle().fillProperty());
+            }
+        };
+        this.configuration.selectionModeProperty().addListener(new WeakChangeListener<>(selectionModeChangeListener));
     }
 
     @Override
@@ -161,6 +189,10 @@ public class UseModeScene extends Scene implements LCViewInitHelper {
     }
 
     public void unbindAndClean() {
+        this.selectionModeChangeListener = null;
+        BindingUtils.unbindAndSet(this.backgroundReductionRectangle.visibleProperty(), false);
+        BindingUtils.unbindAndSet(this.backgroundReductionRectangle.opacityProperty(), 0.0);
+        BindingUtils.unbindAndSetNull(this.backgroundReductionRectangle.fillProperty());
         SessionStatsController.INSTANCE.unregisterScene(this);
         this.configurationDisplayer.unbindAndClean();
     }

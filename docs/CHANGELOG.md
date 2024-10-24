@@ -21,6 +21,7 @@
 - Ticket #388 : le bouton "Dupliquer" n'était pas désactiver lors de la création d'une configuration
 - Ticket #390 : le bouton de sélection d'une vidéo est maintenant désactivée en même temps que celui des images (quand cela est nécessaire)
 - Ticket #350 : ajout d'une action "Actions des listes de cases" pour indiquer la présence des actions liées aux listes de cases
+- Correction de l'affichage du paramètre du mode de sélection "Réduction de l'affichage au survol"
 - Les textes sauvegardés par l'action "Sauvegarder le texte" sont maintenant sauvegardés par défaut dans le dossier "Mes documents"
 - Correction d'un rare problème qui réduisait la fenêtre en mode utilisation si elle était en plein écran
 
