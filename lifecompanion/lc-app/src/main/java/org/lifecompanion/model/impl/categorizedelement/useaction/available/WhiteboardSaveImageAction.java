@@ -21,11 +21,14 @@ package org.lifecompanion.model.impl.categorizedelement.useaction.available;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
 import org.lifecompanion.controller.configurationcomponent.UseModeWhiteboardController;
+import org.lifecompanion.controller.lifecycle.AppMode;
+import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseActionSubCategories;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
+import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
 import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.WhiteboardKeyOption;
@@ -75,15 +78,18 @@ public class WhiteboardSaveImageAction extends SimpleUseActionImpl<UseActionTrig
     public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
         if (!GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DISABLE_EXTERNAL_ACTIONS)) {
             WhiteboardKeyOption keyOption = UseModeWhiteboardController.INSTANCE.getFirstWhiteboardKeyOption();
-            if (keyOption != null && keyOption.getDrawingCanvas() != null) {
-                try {
-                    File outputFile = IOUtils.getUserUseModeDestination(destinationFolder, Translation.getText("default.whiteboard.image.directory.name"), "png");
-                    Image image = FXThreadUtils.runOnFXThreadAndWaitFor(() -> SnapshotUtils.executeSnapshot(keyOption.getDrawingCanvas(), 1920, 1080, true, 1.0));
-                    BufferedImage buffImage = SwingFXUtils.fromFXImage(image, null);
-                    ImageIO.write(buffImage, "png", outputFile);
-                    LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo(Translation.getText("save.user.item.in.notification", outputFile.getParentFile().getPath())));
-                } catch (Throwable t) {
-                    LOGGER.warn("Couldn't whiteboard to image", t);
+            if (keyOption != null) {
+                GridPartKeyComponentI key = keyOption.attachedKeyProperty().get();
+                if (key != null) {
+                    try {
+                        File outputFile = IOUtils.getUserUseModeDestination(destinationFolder, Translation.getText("default.whiteboard.image.directory.name"), "png");
+                        Image image = FXThreadUtils.runOnFXThreadAndWaitFor(() -> SnapshotUtils.executeSnapshot(key.getDisplay(AppMode.USE.getViewProvider(), true).getView(), 1920, 1080, true, 1.0));
+                        BufferedImage buffImage = SwingFXUtils.fromFXImage(image, null);
+                        ImageIO.write(buffImage, "png", outputFile);
+                        LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo(Translation.getText("save.user.item.in.notification", outputFile.getParentFile().getPath())));
+                    } catch (Throwable t) {
+                        LOGGER.warn("Couldn't whiteboard to image", t);
+                    }
                 }
             }
         }

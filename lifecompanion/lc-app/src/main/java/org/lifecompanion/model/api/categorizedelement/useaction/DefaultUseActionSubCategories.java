@@ -91,6 +91,8 @@ public enum DefaultUseActionSubCategories implements UseActionSubCategoryI {
             CategorizedElementColorProvider.nextColor(DefaultUseActionMainCategories.CONFIGURATION)), //
     FRAME("use.action.sub.category.configuration.frame.name", DefaultUseActionMainCategories.CONFIGURATION,
             CategorizedElementColorProvider.nextColor(DefaultUseActionMainCategories.CONFIGURATION)),//
+    DYNAMIC_KEYS("use.action.sub.category.configuration.dynamic.key", DefaultUseActionMainCategories.CONFIGURATION,
+            CategorizedElementColorProvider.nextColor(DefaultUseActionMainCategories.CONFIGURATION)), //
     CONFIG_LIST("use.action.sub.category.configuration.config.list.name", DefaultUseActionMainCategories.CONFIGURATION,
             CategorizedElementColorProvider.nextColor(DefaultUseActionMainCategories.CONFIGURATION)),//
 

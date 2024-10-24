@@ -4,8 +4,14 @@
 
 ### Fonctionnalités
 
+- Ajout d'une **fonctionnalité "Tableau blanc / Ardoise"** ! permet de dessiner dans sa configuration. [Configuration d'exemple à télécharger](https://lifecompanionaac.org/repository/7609f911-864c-4298-ba79-03b0e80f7b79).
 - Ticket #369 : ajout d'une **action "Ouvrir un dossier"** : permet d'ouvrir un dossier de l'ordinateur dans l'explorateur de fichiers
 - Ticket #379 : ajout d'une **action "Sauvegarder la configuration en PDF** : permet de sauvegarder un PDF de la configuration lorsqu'elle est en mode utilisation
+- Nouvelles actions autour des "cases à remplir" pour créer des configurations dynamiques
+  - Action "Vider la case marquée"
+  - Action "Marquer une case comme à remplir"
+  - Action "Remplir une case choisie"
+  - Action "Vider une case sélectionnée"
 
 ### Corrections/ajustements
 

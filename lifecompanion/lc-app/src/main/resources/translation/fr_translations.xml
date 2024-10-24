@@ -3879,11 +3879,23 @@
     <text key="makaton.task.install.resource">Installation de la banque Makaton</text>
     <text key="training.information.button.close">Fermer</text>
     <text key="use.action.timer.time">Durée du minuteur</text>
-    <text key="use.action.start.dynamic.key.fill.name">Marquer comme case à remplir</text>
+    <text key="use.action.start.dynamic.key.fill.name">Marquer cette case comme "à remplir"</text>
     <text key="use.action.start.dynamic.key.fill.description">Permet d'indiquer cette case comme étant la prochaine à remplir : cette action permet d'utiliser le contenu de la prochaine case ayant pour action "Remplir la case marquée" (texte, image, vidéo...).</text>
+    <text key="use.action.start.dynamic.key.fill.on.selected.key.name">Marquer une case comme "à remplir"</text>
+    <text key="use.action.start.dynamic.key.fill.on.selected.key.description">Permet d'indiquer une case sélectionnée case comme étant la prochaine à remplir : cette action permet d'utiliser le contenu de la prochaine case ayant pour action "Remplir la case marquée" (texte, image, vidéo...).</text>
     <text key="use.action.end.dynamic.key.fill.name">Remplir la case marquée</text>
-    <text key="use.action.end.dynamic.key.fill.description">Permet de remplir la dernière case sélectionnée avec "Marquer comme case à remplir" avec le contenu de cette case.</text>
+    <text key="use.action.end.dynamic.key.fill.description">Permet de remplir la dernière case sélectionnée avec "marquée comme à remplir" avec le contenu de cette case.</text>
+    <text key="use.action.clear.current.dynamic.key.fill.name">Vider la case marquée</text>
+    <text key="use.action.clear.current.dynamic.key.fill.description">Permet de vider la dernière case sélectionnée avec "marquée comme à remplir" (efface l'image et le texte).</text>
+    <text key="use.action.clear.selected.dynamic.key.fill.name">Vider une case sélectionnée</text>
+    <text key="use.action.clear.selected.dynamic.key.fill.description">Permet de vider une case sélectionnée (efface l'image, le texte et le style).</text>
+    <text key="use.action.start.dynamic.key.fill.on.selected.target.key">Case à marquer comme "à remplir"</text>
+    <text key="use.action.fill.dynamic.key.on.selected.key.name">Remplir une case choisie</text>
+    <text key="use.action.fill.dynamic.key.on.selected.key.description">Permet de remplir une case sélectionnée avec le contenu de cette case.</text>
+    <text key="use.action.clear.selected.dynamic.key.target.key">Case à vider</text>
+    <text key="use.action.dynamic.key.fill.selected.target.key">Case à remplir</text>
     <text key="action.open.folder.name">Ouvrir un dossier</text>
+    <text key="use.action.sub.category.configuration.dynamic.key">Case à remplir</text>
     <text key="action.open.folder.description">Ouvre un dossier spécifié dans l'explorateur de fichiers du système</text>
     <text key="label.field.folder.to.open">Dossier à ouvrir</text>
     <text key="default.user.grid.pdf.directory.name">LifeCompanion-Grilles-Pdf</text>
@@ -3913,4 +3925,5 @@
     <text key="key.option.whiteboard.name">Tableau/Ardoise</text>
     <text key="key.option.whiteboard.description">Permet de dessiner dans la case à l'aide des actions liées à "Tableau/Ardoise" (catégorie "Divers").</text>
     <text key="use.action.sub.category.whiteboard.name">Tableau/Ardoise</text>
+
 </texts>

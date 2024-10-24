@@ -59,6 +59,7 @@ public class WhiteboardKeyOption extends AbstractKeyOption {
         this.optionDescriptionId = "key.option.whiteboard.description";
         this.iconName = "icon_type_whiteboard.png";
         this.disableTextContent.set(true);
+        this.considerKeyEmpty.set(true);
     }
 
     @Override

@@ -53,21 +53,33 @@ public enum DynamicKeyFillController implements ModeListenerI {
 
     public void endFill(GridPartKeyComponentI key) {
         GridPartKeyComponentI sourceKeyV = sourceKey.get();
-        if (sourceKeyV != null && key != null) {
+        if (sourceKeyV != null) {
             sourceKey.set(null);
-            FXThreadUtils.runOnFXThread(() -> {
-                setIfNotBound(sourceKeyV.textContentProperty(), key.textContentProperty());
-                setIfNotBound(sourceKeyV.imageVTwoProperty(), key.imageVTwoProperty());
-                setIfNotBound(sourceKeyV.videoProperty(), key.videoProperty());
-                sourceKeyV.getKeyStyle().copyChanges(key.getKeyStyle(), true);
-                sourceKeyV.getKeyTextStyle().copyChanges(key.getKeyTextStyle(), true);
-            });
+            fillWith(sourceKeyV, key);
         }
+    }
+
+    public void clearFillOn(GridPartKeyComponentI targetKeyComp) {
+        fillWith(targetKeyComp, null);
+    }
+
+    public void clearFill() {
+        endFill(null);
+    }
+
+    public void fillWith(GridPartKeyComponentI destinationKey, GridPartKeyComponentI sourceKey) {
+        FXThreadUtils.runOnFXThread(() -> {
+            setIfNotBound(destinationKey.textContentProperty(), sourceKey != null ? sourceKey.textContentProperty() : null);
+            setIfNotBound(destinationKey.imageVTwoProperty(), sourceKey != null ? sourceKey.imageVTwoProperty() : null);
+            setIfNotBound(destinationKey.videoProperty(), sourceKey != null ? sourceKey.videoProperty() : null);
+            destinationKey.getKeyStyle().copyChanges(sourceKey != null ? sourceKey.getKeyStyle() : null, true);
+            destinationKey.getKeyTextStyle().copyChanges(sourceKey != null ? sourceKey.getKeyTextStyle() : null, true);
+        });
     }
 
     private <T> void setIfNotBound(Property<T> toSet, Property<T> toGet) {
         if (!toSet.isBound()) {
-            toSet.setValue(toGet.getValue());
+            toSet.setValue(toGet != null ? toGet.getValue() : null);
         }
     }
 }
