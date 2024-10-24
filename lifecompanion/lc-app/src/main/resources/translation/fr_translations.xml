@@ -3925,5 +3925,7 @@
     <text key="key.option.whiteboard.name">Tableau/Ardoise</text>
     <text key="key.option.whiteboard.description">Permet de dessiner dans la case à l'aide des actions liées à "Tableau/Ardoise" (catégorie "Divers").</text>
     <text key="use.action.sub.category.whiteboard.name">Tableau/Ardoise</text>
+    <text key="action.keylist.indicator.name">Actions des listes de cases</text>
+    <text key="action.keylist.indicator.description">Execute les actions de la case/la liste/le lien en fonction du paramétrage effectué dans la vue de configuration des listes de case.</text>
 
 </texts>
