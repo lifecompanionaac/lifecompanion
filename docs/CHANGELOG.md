@@ -19,6 +19,7 @@
 - Ticket #387 : amélioration de la création de grille directement dans l'action "Aller dans la grille"
 - Ticket #385 : ajout d'un service pour désactiver les notifications d'erreur en mode utilisation
 - Ticket #388 : le bouton "Dupliquer" n'était pas désactiver lors de la création d'une configuration
+- Ticket #390 : le bouton de sélection d'une vidéo est maintenant désactivée en même temps que celui des images (quand cela est nécessaire)
 - Les textes sauvegardés par l'action "Sauvegarder le texte" sont maintenant sauvegardés par défaut dans le dossier "Mes documents"
 - Correction d'un rare problème qui réduisait la fenêtre en mode utilisation si elle était en plein écran
 

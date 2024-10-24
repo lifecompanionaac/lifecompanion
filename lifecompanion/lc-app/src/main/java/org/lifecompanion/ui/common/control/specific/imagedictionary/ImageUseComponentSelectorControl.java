@@ -95,7 +95,7 @@ public class ImageUseComponentSelectorControl extends BaseConfigurationViewBorde
     public void initListener() {
         //Disable remove when there is no image
         this.buttonParameters.disableProperty().bind(this.disableImageSelection.or(this.imageSelectorControl.selectedImageProperty().isNull()));
-        this.imageSelectorControl.disableImageSelectionProperty().bind(this.disableImageSelection);
+        this.imageSelectorControl.disableSelectionProperty().bind(this.disableImageSelection);
         this.imageSelectorControl.setDefaultSearchTextSupplier(() -> {
             final ImageUseComponentI imageUseComponent = model.get();
             if (imageUseComponent != null) {
