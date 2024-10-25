@@ -48,6 +48,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 
 /**
  * Abstract prediction controller.
@@ -117,12 +118,18 @@ public abstract class AbstractPredictionController<T extends BasePredictorI, K, 
     private String lastPredictionRequestId;
     private String lastTextBeforeCaret;
 
+    private boolean forcePredictionLoad;
+
+    private final Set<Consumer<T>> predictorStartedListeners;
+    private boolean modeStarted;
+
     protected AbstractPredictionController(final Class<V> keyOptionTypeP) {
         this.keyOptionType = keyOptionTypeP;
         this.availablePredictor = FXCollections.observableArrayList();
         this.scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
         this.predictionOptions = new HashMap<>();
         this.predictorFromPluginIds = new HashMap<>();
+        this.predictorStartedListeners = new HashSet<>();
         this.predictionTask = new AtomicReference<>();
         this.disableTrainingOnThisSession = new SimpleBooleanProperty();
         this.textChangedListener = (inv) -> {
@@ -142,6 +149,26 @@ public abstract class AbstractPredictionController<T extends BasePredictorI, K, 
                     }
                 }
         );
+    }
+
+    public void forcePredictionLoad() {
+        this.forcePredictionLoad = true;
+    }
+
+    public void addPredictorStartedListener(Consumer<T> predictorStartedListener) {
+        this.predictorStartedListeners.add(predictorStartedListener);
+        if (this.modeStarted) {
+            firePredictorLoadedListener();
+        }
+    }
+
+    private void firePredictorLoadedListener() {
+        if (this.currentPredictor != null && this.currentPredictor.isInitialized()) {
+            HashSet<Consumer<T>> listeners = new HashSet<>(this.predictorStartedListeners);
+            for (Consumer<T> listener : listeners) {
+                listener.accept(this.currentPredictor);
+            }
+        }
     }
 
     public String getPluginIdForPredictor(String predictorId) {
@@ -257,7 +284,7 @@ public abstract class AbstractPredictionController<T extends BasePredictorI, K, 
                 this.getClass().getSimpleName());
 
         //Initialize if needed
-        if (!this.currentPredictor.isInitialized() && this.wantedPredictionCount > 0) {
+        if (!this.currentPredictor.isInitialized() && (this.wantedPredictionCount > 0 || forcePredictionLoad)) {
             try {
                 this.currentPredictor.initialize();
                 this.LOGGER.info("Prediction {} initialized : {}", this.currentPredictor.getClass().getSimpleName(),
@@ -269,20 +296,24 @@ public abstract class AbstractPredictionController<T extends BasePredictorI, K, 
         //Mode start if needed
         if (this.currentPredictor.isInitialized()) {
             this.currentPredictor.modeStart(configuration);
+            this.firePredictorLoadedListener();
         }
         //First prediction
         this.launchPrediction();
         //Bind current text
         WritingStateController.INSTANCE.textBeforeCaretProperty().addListener(this.textChangedListener);
+        this.modeStarted = true;
     }
 
     @Override
     public void modeStop(final LCConfigurationI configuration) {
+        this.modeStarted = false;
         if (this.currentPredictor.isInitialized()) {
             this.currentPredictor.modeStop(configuration);
         }
         this.predictionOptions.clear();
         WritingStateController.INSTANCE.textBeforeCaretProperty().removeListener(this.textChangedListener);
+        this.predictorStartedListeners.clear();
     }
 
     @Override
