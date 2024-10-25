@@ -23,6 +23,7 @@ import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.lang.LangUtils;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
+import org.lifecompanion.model.impl.configurationcomponent.dynamickey.KeyListFileDirectoryNode;
 import org.lifecompanion.model.impl.configurationcomponent.dynamickey.KeyListLeaf;
 import org.lifecompanion.model.impl.configurationcomponent.dynamickey.KeyListLinkLeaf;
 import org.lifecompanion.model.impl.configurationcomponent.dynamickey.KeyListNode;
@@ -46,7 +47,7 @@ public class KeyListContentPane extends StackPane implements LCViewInitHelper {
     private final KeyListContentConfigView keyListContentConfigView;
     private Runnable previousContentViewUnbind;
     private Button buttonParentNode, buttonShowAddChoices;
-    private Button buttonAddKey, buttonAddCategory, buttonAddLinkKey;
+    private Button buttonAddKey, buttonAddCategory, buttonAddLinkKey, buttonAddDirectory;
     private VBox boxAddButtons;
     private TilePane tilePane;
     private ScrollPane scrollPane;
@@ -85,8 +86,11 @@ public class KeyListContentPane extends StackPane implements LCViewInitHelper {
         this.buttonAddLinkKey = createFloatingButton("background-primary-dark-light",
                 "keylist.content.pane.button.add.link",
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.LINK).size(16).color(Color.GRAY));
+        this.buttonAddDirectory = createFloatingButton("background-primary-dark-light",
+                "keylist.content.pane.button.add.file.directory",
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.FOLDER).size(16).color(Color.GRAY));
         boxAddButtons = new VBox(4.0);
-        List.of(buttonAddLinkKey, buttonAddCategory, buttonAddKey).forEach(button -> {
+        List.of(buttonAddLinkKey, buttonAddCategory, buttonAddKey, buttonAddDirectory).forEach(button -> {
             button.getStyleClass().remove("text-fill-white");
             button.getStyleClass().add("text-fill-dimgrey");
             boxAddButtons.getChildren().add(button);
@@ -115,6 +119,7 @@ public class KeyListContentPane extends StackPane implements LCViewInitHelper {
         this.buttonAddKey.setOnAction(createAddNodeListener(KeyListLeaf::new));
         this.buttonAddLinkKey.setOnAction(createAddNodeListener(KeyListLinkLeaf::new));
         this.buttonAddCategory.setOnAction(createAddNodeListener(KeyListNode::new));
+        this.buttonAddDirectory.setOnAction(createAddNodeListener(KeyListFileDirectoryNode::new));
         this.setOnMouseClicked(e -> hideAddChoices());
 
         // Disable move on parent button
