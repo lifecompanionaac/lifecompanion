@@ -55,6 +55,9 @@ import org.lifecompanion.util.IOUtils;
 import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.util.model.ImageDictionaryUtils;
 import org.lifecompanion.util.model.LCTask;
+import org.lifecompanion.util.pdf.DocumentConfiguration;
+import org.lifecompanion.util.pdf.DocumentImagePage;
+import org.lifecompanion.util.pdf.PdfUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,9 +72,6 @@ import java.util.stream.Collectors;
 public class ExportGridsToPdfTask extends LCTask<Void> {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExportGridsToPdfTask.class);
 
-    private static final float HEADER_SIZE = 35f, FOOTER_SIZE = 30f, IMAGE_BORDER = 20f, BACKGROUND_COLOR_BORDER = 3f, HEADER_FONT_SIZE = 16, FOOTER_FONT_SIZE = 9, TEXT_LEFT_OFFSET = 50, FOOTER_LINE_HEIGHT = 12f, LOGO_HEIGHT = 25f, LINE_SIZE = 1f, COLOR_GRAY = 0.4f;
-    private static final PDFont HEADER_FONT = PDType1Font.HELVETICA_BOLD;
-    private static final PDFont FOOTER_FONT = PDType1Font.HELVETICA;
     private static final String EXPORT_IMAGE_LOADING_KEY = "export-to-pdf";
     private static final long MAX_IMAGE_LOADING_TIME = 10_000;
     private static final String NO_STACK_ID = "nostack";
@@ -83,6 +83,8 @@ public class ExportGridsToPdfTask extends LCTask<Void> {
     private final LCProfileI profile;
     private final LCConfigurationDescriptionI configurationDescription;
     private final LCConfigurationI configuration;
+
+    private final PDRectangle pageSize = PDRectangle.A4;
 
     private int totalWork;
     private Group fxGroupAttachedToScene;
@@ -145,12 +147,12 @@ public class ExportGridsToPdfTask extends LCTask<Void> {
         });
 
         // Determine max printing dimensions
-        maxImageSize = PDRectangle.A4.getHeight() * 2 - IMAGE_OFFSET * 2.0;
+        maxImageSize = pageSize.getHeight() * 2 - IMAGE_OFFSET * 2.0;
 
         totalWork = gridPrintTasks.stream().mapToInt(pt -> pt.pageCount).sum();
         updateProgress(0, totalWork);
 
-        List<ImageExportResult> exportResults = new ArrayList<>();
+        List<DocumentImagePage> exportResults = new ArrayList<>();
         for (int i = 0; i < gridPrintTasks.size(); i++) {
             GridPrintTask gridPrintTask = gridPrintTasks.get(i);
             if (gridPrintTask.nodeToSelect == null) {
@@ -163,102 +165,22 @@ public class ExportGridsToPdfTask extends LCTask<Void> {
                 }
             }
         }
+        totalWork += exportResults.size();
 
-        // TODO : default names
         final String profileName = profile != null ? profile.nameProperty().get() : "PROFILE?";
         final String configName = configurationDescription != null ? configurationDescription.configurationNameProperty().get() : "CONFIGURATION?";
-        final Date exportDate = new Date();
 
-        // Temp save LC logo
-        File logoFile = new File(exportedImageDir.getPath() + File.separator + "lc_logo.png");
-        BufferedImage logoBuffImage = SwingFXUtils.fromFXImage(IconHelper.get(LCConstant.LC_BIG_ICON_PATH), null);
-        ImageIO.write(logoBuffImage, "png", logoFile);
-        float logoDrawWidth = LOGO_HEIGHT / logoBuffImage.getHeight() * logoBuffImage.getWidth();
+        PdfUtils.createPdfDocument(
+                new DocumentConfiguration(configuration.backgroundColorProperty().get(), pageSize, profileName, configName, "pdf.export.file.title"),
+                destPdf, exportResults, (prog, total) -> updateProgress(progress.get() + prog, totalWork));
 
-        // Try to save a PDF
-        try (PDDocument doc = new PDDocument()) {
-            PDImageXObject logoImage = PDImageXObject.createFromFile(logoFile.getAbsolutePath(), doc);
-
-            updateProgress(progress.get(), totalWork + exportResults.size());
-            for (ImageExportResult exportResult : exportResults) {
-
-                PDPage gridPage = new PDPage(PDRectangle.A4);
-                doc.addPage(gridPage);
-                if (exportResult.landscape) gridPage.setRotation(90);
-                PDRectangle pageSize = gridPage.getMediaBox();
-                float pageWidth = pageSize.getWidth();
-
-                float pageWidthF = exportResult.landscape ? pageSize.getHeight() : pageSize.getWidth();
-                float pageHeightF = exportResult.landscape ? pageSize.getWidth() : pageSize.getHeight();
-
-                try (PDPageContentStream pageContentStream = new PDPageContentStream(doc, gridPage)) {
-                    if (exportResult.landscape) pageContentStream.transform(new Matrix(0, 1, -1, 0, pageWidth, 0));
-
-                    pageContentStream.setNonStrokingColor(COLOR_GRAY, COLOR_GRAY, COLOR_GRAY);
-
-                    // HEADER
-                    pageContentStream.addRect(0, pageHeightF - HEADER_SIZE, pageWidthF, LINE_SIZE);
-                    pageContentStream.fill();
-                    pageContentStream.beginText();
-                    pageContentStream.setFont(HEADER_FONT, HEADER_FONT_SIZE);
-                    pageContentStream.newLineAtOffset(TEXT_LEFT_OFFSET, pageHeightF - HEADER_SIZE / 1.5f);
-                    pageContentStream.showText(exportResult.title);
-                    pageContentStream.endText();
-
-                    // GRID IMAGE
-                    Color color = configuration.backgroundColorProperty().get();
-                    if (color != null) {
-                        pageContentStream.setNonStrokingColor((float) color.getRed(), (float) color.getGreen(), (float) color.getBlue());
-                        float contentWidth = pageWidthF - BACKGROUND_COLOR_BORDER * 2f, contentHeight = pageHeightF - HEADER_SIZE - FOOTER_SIZE - BACKGROUND_COLOR_BORDER * 2f;
-                        pageContentStream.addRect((float) (BACKGROUND_COLOR_BORDER + (pageWidthF - 2 * BACKGROUND_COLOR_BORDER) / 2.0 - contentWidth / 2.0),
-                                pageHeightF - HEADER_SIZE - BACKGROUND_COLOR_BORDER - contentHeight - ((pageHeightF - HEADER_SIZE - FOOTER_SIZE - 2f * BACKGROUND_COLOR_BORDER) - contentHeight) / 2f,
-                                contentWidth, contentHeight);
-                        pageContentStream.fill();
-                    }
-
-                    PDImageXObject pdImage = PDImageXObject.createFromFile(exportResult.imageFile.getAbsolutePath(), doc);
-                    float imageDestWidth = pageWidthF - IMAGE_BORDER * 2f, imageDestHeight = pageHeightF - HEADER_SIZE - FOOTER_SIZE - IMAGE_BORDER * 2f;
-                    float widthRatio = imageDestWidth / pdImage.getWidth(), heightRatio = imageDestHeight / pdImage.getHeight();
-                    float bestRatio = Math.min(widthRatio, heightRatio);
-                    float imageDrawWidth = bestRatio * pdImage.getWidth(), imageDrawHeight = bestRatio * pdImage.getHeight();
-                    pageContentStream.drawImage(pdImage,
-                            (float) (IMAGE_BORDER + (pageWidthF - 2 * IMAGE_BORDER) / 2.0 - imageDrawWidth / 2.0),
-                            pageHeightF - HEADER_SIZE - IMAGE_BORDER - imageDrawHeight - ((pageHeightF - HEADER_SIZE - FOOTER_SIZE - 2f * IMAGE_BORDER) - imageDrawHeight) / 2f,
-                            imageDrawWidth, imageDrawHeight);
-
-
-                    pageContentStream.setNonStrokingColor(COLOR_GRAY, COLOR_GRAY, COLOR_GRAY);
-
-                    // FOOTER
-                    pageContentStream.addRect(0, FOOTER_SIZE, pageWidthF, LINE_SIZE);
-                    pageContentStream.fill();
-                    pageContentStream.beginText();
-                    pageContentStream.setFont(FOOTER_FONT, FOOTER_FONT_SIZE);
-                    pageContentStream.newLineAtOffset(TEXT_LEFT_OFFSET, FOOTER_SIZE - FOOTER_LINE_HEIGHT);
-                    pageContentStream.showText(profileName + " - " + configName + " - " + StringUtils.dateToStringDateWithHour(exportDate));
-                    pageContentStream.newLineAtOffset(0, -FOOTER_LINE_HEIGHT);
-                    pageContentStream.showText(LCConstant.NAME + " v" + InstallationController.INSTANCE.getBuildProperties()
-                            .getVersionLabel() + " - " + InstallationController.INSTANCE.getBuildProperties()
-                            .getAppServerUrl());
-                    pageContentStream.endText();
-                    pageContentStream.drawImage(logoImage, pageWidthF - logoDrawWidth - TEXT_LEFT_OFFSET, FOOTER_SIZE / 2f - LOGO_HEIGHT / 2f, logoDrawWidth, LOGO_HEIGHT);
-                }
-                updateProgress(progress.incrementAndGet(), totalWork + exportResults.size());
-            }
-            // Document info and save
-            PDDocumentInformation pdi = doc.getDocumentInformation();
-            pdi.setAuthor(LCConstant.NAME);
-            pdi.setTitle(Translation.getText("pdf.export.file.title", profileName, configName));
-            pdi.setCreator(LCConstant.NAME);
-            doc.save(destPdf);
-        }
         return null;
     }
 
 
-    private ImageExportResult executePrint(GridPrintTask gridPrintTask, int taskIndex, int pageIndex) {
+    private DocumentImagePage executePrint(GridPrintTask gridPrintTask, int taskIndex, int pageIndex) {
         ImageDictionaryUtils.loadAllImagesIn(EXPORT_IMAGE_LOADING_KEY, MAX_IMAGE_LOADING_TIME, gridPrintTask.gridToSnap);
-        ImageExportResult result = printGrid(gridPrintTask, taskIndex, pageIndex);
+        DocumentImagePage result = printGrid(gridPrintTask, taskIndex, pageIndex);
         ImageDictionaryUtils.unloadAllImagesIn(EXPORT_IMAGE_LOADING_KEY, gridPrintTask.gridToSnap);
         updateProgress(progress.incrementAndGet(), totalWork);
         return result;
@@ -293,19 +215,7 @@ public class ExportGridsToPdfTask extends LCTask<Void> {
         }
     }
 
-    private static class ImageExportResult {
-        private final String title;
-        private final File imageFile;
-        private final boolean landscape;
-
-        public ImageExportResult(String title, File imageFile, boolean landscape) {
-            this.title = title;
-            this.imageFile = imageFile;
-            this.landscape = landscape;
-        }
-    }
-
-    private ImageExportResult printGrid(GridPrintTask printTask, int taskIndex, int pageIndex) {
+    private DocumentImagePage printGrid(GridPrintTask printTask, int taskIndex, int pageIndex) {
         String gridName = cleanTextForPdf(printTask.gridToSnap.nameProperty().get() + (printTask.nodeToSelect != null ? (" - " + StringUtils.trimToEmpty(printTask.nodeToSelect.textProperty()
                 .get()) + " (" + (pageIndex + 1) + "/" + printTask.pageCount + ")") : ""));
         final String fileName = IOUtils.getValidFileName(taskIndex + "_" + printTask.gridToSnap.nameProperty().get() + "_" + (printTask.nodeToSelect != null ? (printTask.nodeToSelect.textProperty()
@@ -346,7 +256,7 @@ public class ExportGridsToPdfTask extends LCTask<Void> {
         } catch (Exception e) {
             LOGGER.error("Exception when saving snapshot to {}", imageFile, e);
         }
-        return new ImageExportResult(gridName, imageFile, landscape.get());
+        return new DocumentImagePage(gridName, imageFile, landscape.get());
     }
 
     private String cleanTextForPdf(String text) {

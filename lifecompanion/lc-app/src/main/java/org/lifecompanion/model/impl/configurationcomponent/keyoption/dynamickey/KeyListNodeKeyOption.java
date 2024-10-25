@@ -23,9 +23,11 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import org.jdom2.Element;
+import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
 import org.lifecompanion.model.api.categorizedelement.useaction.BaseUseActionI;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
+import org.lifecompanion.model.impl.categorizedelement.useaction.available.KeyListIndicatorAction;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.impl.categorizedelement.useaction.available.SelectKeyNodeAction;
@@ -41,6 +43,7 @@ public class KeyListNodeKeyOption extends AbstractSimplerKeyActionContainerKeyOp
     private final IntegerProperty selectedLevel;
     private final BooleanProperty specificLevel;
     private final BooleanProperty displayLevelBellow;
+    private KeyListIndicatorAction keyListIndicatorActionActivation, keyListIndicatorActionOver;
 
     public KeyListNodeKeyOption() {
         super();
@@ -66,6 +69,30 @@ public class KeyListNodeKeyOption extends AbstractSimplerKeyActionContainerKeyOp
 
     public BooleanProperty displayLevelBellowProperty() {
         return displayLevelBellow;
+    }
+
+    @Override
+    public void attachToImpl(GridPartKeyComponentI key) {
+        super.attachToImpl(key);
+        this.keyListIndicatorActionActivation = addKeylistIndicatorAction(key, UseActionEvent.ACTIVATION);
+        this.keyListIndicatorActionOver = addKeylistIndicatorAction(key, UseActionEvent.OVER);
+    }
+
+    private KeyListIndicatorAction addKeylistIndicatorAction(GridPartKeyComponentI key, UseActionEvent event) {
+        KeyListIndicatorAction indicatorAction = key.getActionManager().getFirstActionOfType(event, KeyListIndicatorAction.class);
+        if (indicatorAction == null) {
+            indicatorAction = new KeyListIndicatorAction();
+            key.getActionManager().componentActions().get(event).add(0, indicatorAction);
+        }
+        indicatorAction.attachedToKeyOptionProperty().set(true);
+        return indicatorAction;
+    }
+
+    @Override
+    public void detachFromImpl(GridPartKeyComponentI key) {
+        super.detachFromImpl(key);
+        key.getActionManager().componentActions().get(UseActionEvent.ACTIVATION).remove(this.keyListIndicatorActionActivation);
+        key.getActionManager().componentActions().get(UseActionEvent.OVER).remove(this.keyListIndicatorActionOver);
     }
 
     @Override

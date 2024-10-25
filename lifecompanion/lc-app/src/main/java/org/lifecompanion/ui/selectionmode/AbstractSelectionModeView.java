@@ -128,6 +128,7 @@ public class AbstractSelectionModeView<T extends DrawSelectionModeI> extends Gro
 
         // Rectangle for background reduction (if enabled)
         backgroundReductionRectangle = new Rectangle();
+        backgroundReductionRectangle.setStrokeWidth(0.0);
         backgroundReductionRectangle.setFill(Color.BLACK);
         this.getChildren().add(backgroundReductionRectangle);
         backgroundReductionRectangle.toBack();
@@ -161,6 +162,9 @@ public class AbstractSelectionModeView<T extends DrawSelectionModeI> extends Gro
         return null;
     }
 
+    public Rectangle getBackgroundReductionRectangle() {
+        return backgroundReductionRectangle;
+    }
 
     protected void requestBackgroundReductionUpdate() {
         if (backgroundReductionRectangle.isVisible() && this.getParent() != null) {

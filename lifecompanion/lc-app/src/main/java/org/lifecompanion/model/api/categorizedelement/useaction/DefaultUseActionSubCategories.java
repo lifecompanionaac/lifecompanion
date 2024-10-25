@@ -91,6 +91,8 @@ public enum DefaultUseActionSubCategories implements UseActionSubCategoryI {
             CategorizedElementColorProvider.nextColor(DefaultUseActionMainCategories.CONFIGURATION)), //
     FRAME("use.action.sub.category.configuration.frame.name", DefaultUseActionMainCategories.CONFIGURATION,
             CategorizedElementColorProvider.nextColor(DefaultUseActionMainCategories.CONFIGURATION)),//
+    DYNAMIC_KEYS("use.action.sub.category.configuration.dynamic.key", DefaultUseActionMainCategories.CONFIGURATION,
+            CategorizedElementColorProvider.nextColor(DefaultUseActionMainCategories.CONFIGURATION)), //
     CONFIG_LIST("use.action.sub.category.configuration.config.list.name", DefaultUseActionMainCategories.CONFIGURATION,
             CategorizedElementColorProvider.nextColor(DefaultUseActionMainCategories.CONFIGURATION)),//
 
@@ -119,6 +121,8 @@ public enum DefaultUseActionSubCategories implements UseActionSubCategoryI {
     APPLICATION("use.action.sub.category.application.name", DefaultUseActionMainCategories.MISCELLANEOUS,
             CategorizedElementColorProvider.nextColor(DefaultUseActionMainCategories.MISCELLANEOUS)),//
     NOTE("use.action.sub.category.note.name", DefaultUseActionMainCategories.MISCELLANEOUS,
+            CategorizedElementColorProvider.nextColor(DefaultUseActionMainCategories.MISCELLANEOUS)),//
+    WHITEBOARD("use.action.sub.category.whiteboard.name", DefaultUseActionMainCategories.MISCELLANEOUS,
             CategorizedElementColorProvider.nextColor(DefaultUseActionMainCategories.MISCELLANEOUS)),//
     SCRIPT("use.action.sub.category.script.name", DefaultUseActionMainCategories.MISCELLANEOUS,
             CategorizedElementColorProvider.nextColor(DefaultUseActionMainCategories.MISCELLANEOUS)),//

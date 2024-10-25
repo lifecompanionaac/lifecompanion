@@ -101,6 +101,9 @@ public enum GlobalRuntimeConfiguration implements GlobalRuntimeConfigurationI {
             "0.5",
             1
     ),
+    DISABLE_ERROR_NOTIFICATION("disableErrorNotification",
+            GlobalRuntimeConfigurationType.COMMAND_LINE,
+            "If enabled, error notification will never be showed in use mode (but will be still showed in edit mode)."),
     // Window configuration
     DISABLE_WINDOW_FULLSCREEN(
             "disableFullscreen",

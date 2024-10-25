@@ -35,6 +35,7 @@ import javafx.stage.StageStyle;
 import javafx.stage.Window;
 import javafx.util.Duration;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
+import org.lifecompanion.ui.UseModeStage;
 import org.lifecompanion.util.javafx.StageUtils;
 import org.lifecompanion.controller.editmode.ErrorHandlingController;
 import org.lifecompanion.model.impl.notification.LCNotification;
@@ -48,7 +49,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static javafx.concurrent.Worker.State.*;
 
 /**
- * Note that notification doesn't have an owner because we don't want the notification input to be block if the source window is not focused
+ * In edit mode, note that notification doesn't have an owner because we don't want the notification input to be blocked if the source window is not focused.
  */
 public class NotificationStage extends Stage {
     private final static AtomicInteger SESSION_NOTIFICATION_COUNT = new AtomicInteger(0);
@@ -67,6 +68,10 @@ public class NotificationStage extends Stage {
         this.scene.setCloseRequestListener(this::hideWithAnimation);
 
         Stage sourceWindow = StageUtils.getEditOrUseStageVisible();
+        // In use mode : init owner to avoid minimizing if stage is in fullscreen
+        if (sourceWindow instanceof UseModeStage) {
+            this.initOwner(sourceWindow);
+        }
         this.setTitle(Translation.getText("notification.stage.win.title", SESSION_NOTIFICATION_COUNT.incrementAndGet()));
         this.initStyle(StageStyle.TRANSPARENT);
         this.setAlwaysOnTop(true);

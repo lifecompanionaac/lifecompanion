@@ -36,9 +36,9 @@ public class EndDynamicKeyFillAction extends SimpleUseActionImpl<GridPartKeyComp
     @SuppressWarnings("FieldCanBeLocal")
     public EndDynamicKeyFillAction() {
         super(GridPartKeyComponentI.class);
-        this.order = 31;
+        this.order = 10;
         this.parameterizableAction = false;
-        this.category = DefaultUseActionSubCategories.CHANGE;
+        this.category = DefaultUseActionSubCategories.DYNAMIC_KEYS;
         this.nameID = "use.action.end.dynamic.key.fill.name";
         this.staticDescriptionID = "use.action.end.dynamic.key.fill.description";
         this.configIconPath = "configuration/icon_end_key_fill.png";

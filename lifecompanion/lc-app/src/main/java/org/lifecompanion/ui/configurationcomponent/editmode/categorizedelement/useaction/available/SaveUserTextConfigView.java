@@ -70,7 +70,7 @@ public class SaveUserTextConfigView extends VBox implements UseActionConfigurati
 
     @Override
     public void initUI() {
-        this.fileSelectorControl = new FileSelectorControl(Translation.getText("save.user.text.save.directory.name"), FileSelectorControlMode.FOLDER, FileChooserType.SAVE_USER_TEXT);
+        this.fileSelectorControl = new FileSelectorControl(Translation.getText("save.user.text.save.directory.name"), FileSelectorControlMode.FOLDER, FileChooserType.SAVE_USER_TEXT, true);
         this.fileSelectorControl.setOpenDialogTitle(Translation.getText("save.user.text.save.directory.dialog.title"));
         this.getChildren().addAll(this.fileSelectorControl);
     }

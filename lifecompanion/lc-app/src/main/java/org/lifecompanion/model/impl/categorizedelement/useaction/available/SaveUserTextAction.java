@@ -31,7 +31,9 @@ import org.lifecompanion.model.api.profile.LCProfileI;
 import org.lifecompanion.controller.textcomponent.WritingStateController;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.profile.ProfileController;
+import org.lifecompanion.model.impl.notification.LCNotification;
 import org.lifecompanion.model.impl.useapi.GlobalRuntimeConfiguration;
+import org.lifecompanion.ui.notification.LCNotificationController;
 import org.lifecompanion.util.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,15 +72,8 @@ public class SaveUserTextAction extends SimpleUseActionImpl<UseActionTriggerComp
         this.staticDescriptionID = "action.save.user.editor.text.to.txt.file.static.description";
         this.configIconPath = "computeraccess/icon_save_editor_to_file.png";
         this.parameterizableAction = true;
+        this.destinationFolder = IOUtils.getDefaultDestinationFolder(Translation.getText("default.user.text.directory.name")).getPath();
         this.variableDescriptionProperty().set(this.getStaticDescription());
-        this.checkDestinationFolder();
-    }
-
-    private void checkDestinationFolder() {
-        if (StringUtils.isBlank(destinationFolder) || !new File(destinationFolder).exists()) {
-            this.destinationFolder = System.getProperty("user.home") + File.separator + Translation.getText("default.user.text.directory.name")
-                    + File.separator;
-        }
     }
 
     public String getDestinationFolder() {
@@ -95,26 +90,13 @@ public class SaveUserTextAction extends SimpleUseActionImpl<UseActionTriggerComp
     public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
         if (!GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DISABLE_EXTERNAL_ACTIONS)) {
             try {
-                // Generate file name and path
-                StringBuilder fileName = new StringBuilder(DATE_FORMAT_FILENAME.format(new Date()));
-
-                LCProfileI profile = ProfileController.INSTANCE.currentProfileProperty().get();
-                if (profile != null) {
-                    fileName.append("_").append(profile.nameProperty().get());
-                }
-                LCConfigurationDescriptionI configDescription = AppModeController.INSTANCE.getEditModeContext().configurationDescriptionProperty().get();
-                if (configDescription != null) {
-                    fileName.append("_").append(IOUtils.getValidFileName(configDescription.configurationNameProperty().get()));
-                }
-                fileName.append(".txt");
-                this.checkDestinationFolder();
-                File outputFile = new File(this.destinationFolder + File.separator + fileName.toString());
-                outputFile.getParentFile().mkdirs();
+                File outputFile = IOUtils.getUserUseModeDestination(destinationFolder, Translation.getText("default.user.text.directory.name"), "txt");
                 // Save text content
                 String currentText = WritingStateController.INSTANCE.currentTextProperty().get();
                 try (PrintWriter pw = new PrintWriter(outputFile)) {
                     pw.println(currentText);
                 }
+                LCNotificationController.INSTANCE.showNotification(LCNotification.createInfo(Translation.getText("save.user.item.in.notification",outputFile.getParentFile().getPath())));
                 LOGGER.info("User text will saved to {}", outputFile.getAbsolutePath());
             } catch (Throwable t) {
                 LOGGER.warn("Couldn't save user text", t);

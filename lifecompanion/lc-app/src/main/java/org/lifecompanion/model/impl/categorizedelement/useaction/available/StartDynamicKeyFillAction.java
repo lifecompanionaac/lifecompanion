@@ -36,8 +36,8 @@ public class StartDynamicKeyFillAction extends SimpleUseActionImpl<GridPartKeyCo
     @SuppressWarnings("FieldCanBeLocal")
     public StartDynamicKeyFillAction() {
         super(GridPartKeyComponentI.class);
-        this.order = 30;
-        this.category = DefaultUseActionSubCategories.CHANGE;
+        this.order = 0;
+        this.category = DefaultUseActionSubCategories.DYNAMIC_KEYS;
         this.parameterizableAction = false;
         this.nameID = "use.action.start.dynamic.key.fill.name";
         this.staticDescriptionID = "use.action.start.dynamic.key.fill.description";

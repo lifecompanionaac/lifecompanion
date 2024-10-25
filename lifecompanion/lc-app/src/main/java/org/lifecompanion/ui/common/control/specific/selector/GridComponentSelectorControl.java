@@ -21,9 +21,12 @@ package org.lifecompanion.ui.common.control.specific.selector;
 
 import org.lifecompanion.controller.editaction.GridStackActions;
 import org.lifecompanion.controller.editmode.ConfigActionController;
+import org.lifecompanion.controller.editmode.SelectionController;
 import org.lifecompanion.controller.lifecycle.AppModeController;
+import org.lifecompanion.controller.selectionmode.SelectionModeController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
+import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.configurationcomponent.StackComponentI;
 import org.lifecompanion.util.javafx.DialogUtils;
@@ -34,7 +37,10 @@ public class GridComponentSelectorControl extends ComponentSelectorControl<GridC
     public GridComponentSelectorControl(String labelText, boolean enableAddButton) {
         super(GridComponentI.class, labelText, enableAddButton ? Translation.getText("field.grid.component.selector.add.grid.button") : null, sourceNode -> {
             LCConfigurationI configuration = AppModeController.INSTANCE.getEditModeContext().getConfiguration();
-            StackComponentI destStack = (StackComponentI) configuration.getAllComponent().values().stream()
+
+            // Try to find the parent stack of selected part : take the same stack as selected keys or take the stack with the highest number of grid
+            GridPartKeyComponentI selectedKey = SelectionController.INSTANCE.selectedKeyHelperProperty().get();
+            StackComponentI destStack = selectedKey != null && selectedKey.stackParentProperty().get() != null ? selectedKey.stackParentProperty().get() : (StackComponentI) configuration.getAllComponent().values().stream()
                     .filter(d -> d instanceof StackComponentI)
                     .max(Comparator.comparingInt(d -> ((StackComponentI) d).getComponentList().size()))
                     .orElse(null);
@@ -44,7 +50,7 @@ public class GridComponentSelectorControl extends ComponentSelectorControl<GridC
                         .withContentText(Translation.getText("field.grid.component.selector.add.grid.name.text"))
                         .showAndWait();
                 if (gridName != null) {
-                    GridStackActions.AddGridInStackAction addAction = new GridStackActions.AddGridInStackAction(destStack, false, true);
+                    GridStackActions.AddGridInStackAction addAction = new GridStackActions.AddGridInStackAction(destStack, false, true, false);
                     ConfigActionController.INSTANCE.executeAction(addAction);
                     GridComponentI addedGrid = addAction.getComponent();
                     addedGrid.userNameProperty().set(gridName);

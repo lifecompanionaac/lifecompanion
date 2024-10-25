@@ -49,27 +49,35 @@ import java.io.File;
  */
 public class FileSelectorControl extends VBox implements LCViewInitHelper {
     private final FileSelectorControlMode mode;
-    private ObjectProperty<File> value;
-    private StringProperty fileName;
+    private final ObjectProperty<File> value;
+    private final StringProperty fileName, filePathOrName;
     private ExtensionFilter extensionFilter;
     private String openDialogTitle;
-    private String labelText;
+    private final String labelText;
     private Button buttonSelectFile, buttonRemoveFile;
     private TextField fieldFileName;
     private final FileChooserType fileChooserType;
+    private final boolean displayFullPath;
 
-    public FileSelectorControl(final String labelTextP, FileSelectorControlMode mode, FileChooserType fileChooserType) {
+    public FileSelectorControl(final String labelTextP, FileSelectorControlMode mode, FileChooserType fileChooserType, boolean displayFullPath) {
         this.fileChooserType = fileChooserType;
         this.mode = mode;
         this.labelText = labelTextP;
+        this.displayFullPath = displayFullPath;
         this.value = new SimpleObjectProperty<>();
         this.fileName = new SimpleStringProperty();
+        this.filePathOrName = new SimpleStringProperty();
         this.initAll();
     }
 
     public FileSelectorControl(final String labelTextP, FileChooserType fileChooserType) {
-        this(labelTextP, FileSelectorControlMode.FILE, fileChooserType);
+        this(labelTextP, FileSelectorControlMode.FILE, fileChooserType, false);
     }
+
+    public FileSelectorControl(final String labelTextP, FileChooserType fileChooserType, boolean displayFullPath) {
+        this(labelTextP, FileSelectorControlMode.FILE, fileChooserType, displayFullPath);
+    }
+
 
     // Class part : "Public API"
     //========================================================================
@@ -106,7 +114,7 @@ public class FileSelectorControl extends VBox implements LCViewInitHelper {
         Label labelTitle = new Label(this.labelText);
         this.fieldFileName = new TextField();
         this.fieldFileName.setEditable(false);
-        this.fieldFileName.textProperty().bind(this.fileName);
+        this.fieldFileName.textProperty().bind(this.filePathOrName);
         this.buttonSelectFile = FXControlUtils.createGraphicButton(
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.FILE).sizeFactor(1).color(LCGraphicStyle.MAIN_PRIMARY),
                 "tooltip.file.selector.select.file");
@@ -143,8 +151,11 @@ public class FileSelectorControl extends VBox implements LCViewInitHelper {
             if (nv != null) {
                 LCStateController.INSTANCE.updateDefaultDirectory(fileChooserType, nv.getParentFile());
                 this.fileName.set(nv.getName());
+                this.filePathOrName.set(displayFullPath ? nv.getAbsolutePath() : nv.getName());
+                this.fieldFileName.end();
             } else {
                 this.fileName.set(null);
+                this.filePathOrName.set(null);
             }
         });
     }
@@ -152,7 +163,7 @@ public class FileSelectorControl extends VBox implements LCViewInitHelper {
 
     // Class part : "File selector mode"
     //========================================================================
-    public static enum FileSelectorControlMode {
+    public enum FileSelectorControlMode {
         FILE, FOLDER;
     }
     //========================================================================

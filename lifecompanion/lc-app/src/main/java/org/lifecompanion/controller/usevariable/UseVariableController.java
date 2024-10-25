@@ -76,7 +76,7 @@ public enum UseVariableController implements ModeListenerI {
 
     public final static String VARIABLE_OPEN_CHAR = "{", VARIABLE_CLOSE_CHAR = "}";
     public final static long MILLIS_TIME_UPDATE_INFO_KEY = 1000;
-    private static final SimpleDateFormat DATE_ONLY_HOURS_MIN = new SimpleDateFormat("HH:mm");
+    public static final SimpleDateFormat DATE_ONLY_HOURS_MIN = new SimpleDateFormat("HH:mm");
 
     /**
      * Contains definition ID -> definition

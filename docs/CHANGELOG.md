@@ -4,11 +4,26 @@
 
 ### Fonctionnalités
 
-- ...
+- Ajout d'une **fonctionnalité "Tableau blanc / Ardoise"** ! permet de dessiner dans sa configuration. [Configuration d'exemple à télécharger](https://lifecompanionaac.org/repository/7609f911-864c-4298-ba79-03b0e80f7b79).
+- Ticket #369 : ajout d'une **action "Ouvrir un dossier"** : permet d'ouvrir un dossier de l'ordinateur dans l'explorateur de fichiers
+- Ticket #379 : ajout d'une **action "Sauvegarder la configuration en PDF** : permet de sauvegarder un PDF de la configuration lorsqu'elle est en mode utilisation
+- Nouvelles actions autour des "cases à remplir" pour créer des configurations dynamiques
+  - Action "Vider la case marquée"
+  - Action "Marquer une case comme à remplir"
+  - Action "Remplir une case choisie"
+  - Action "Vider une case sélectionnée"
 
 ### Corrections/ajustements
 
-- ...
+- Ticket #380 : amélioration de la qualité des PDF exportés
+- Ticket #387 : amélioration de la création de grille directement dans l'action "Aller dans la grille"
+- Ticket #385 : ajout d'un service pour désactiver les notifications d'erreur en mode utilisation
+- Ticket #388 : le bouton "Dupliquer" n'était pas désactiver lors de la création d'une configuration
+- Ticket #390 : le bouton de sélection d'une vidéo est maintenant désactivée en même temps que celui des images (quand cela est nécessaire)
+- Ticket #350 : ajout d'une action "Actions des listes de cases" pour indiquer la présence des actions liées aux listes de cases
+- Correction de l'affichage du paramètre du mode de sélection "Réduction de l'affichage au survol"
+- Les textes sauvegardés par l'action "Sauvegarder le texte" sont maintenant sauvegardés par défaut dans le dossier "Mes documents"
+- Correction d'un rare problème qui réduisait la fenêtre en mode utilisation si elle était en plein écran
 
 ## 1.6.3 - 20/08/2024
 

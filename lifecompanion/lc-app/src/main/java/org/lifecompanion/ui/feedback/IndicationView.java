@@ -62,27 +62,28 @@ public class IndicationView extends Group {
 
         fadeTransition.stop();
 
-        Pair<Double, Double> position = ConfigurationComponentLayoutUtils.getConfigurationPosition(key);
-        Pair<Double, Double> size = new Pair<>(key.layoutWidthProperty().get(), key.layoutHeightProperty().get());
-        StylePropertyI<Number> radiusProp = key.getKeyStyle().shapeRadiusProperty();
-        ShapeStyle shapeStyle = key.getKeyStyle().shapeStyleProperty().value().getValue();
+        if (key != null) {
+            Pair<Double, Double> position = ConfigurationComponentLayoutUtils.getConfigurationPosition(key);
+            Pair<Double, Double> size = new Pair<>(key.layoutWidthProperty().get(), key.layoutHeightProperty().get());
+            StylePropertyI<Number> radiusProp = key.getKeyStyle().shapeRadiusProperty();
+            ShapeStyle shapeStyle = key.getKeyStyle().shapeStyleProperty().value().getValue();
 
-        double arcValue = ConfigurationComponentLayoutUtils.computeArcAndStroke(LangUtils.nullToZeroDouble(radiusProp.value().getValue()), size.getKey(), size.getValue(), strokeSize, shapeStyle);
+            double arcValue = ConfigurationComponentLayoutUtils.computeArcAndStroke(LangUtils.nullToZeroDouble(radiusProp.value().getValue()), size.getKey(), size.getValue(), strokeSize, shapeStyle);
 
-        strokeRectangle.setStrokeWidth(strokeSize);
-        strokeRectangle.setStroke(strokeColor);
-        strokeRectangle.setArcWidth(arcValue);
-        strokeRectangle.setArcHeight(arcValue);
-        strokeRectangle.setTranslateX(position.getKey());
-        strokeRectangle.setTranslateY(position.getValue());
-        strokeRectangle.setWidth(size.getKey());
-        strokeRectangle.setHeight(size.getValue());
+            strokeRectangle.setStrokeWidth(strokeSize);
+            strokeRectangle.setStroke(strokeColor);
+            strokeRectangle.setArcWidth(arcValue);
+            strokeRectangle.setArcHeight(arcValue);
+            strokeRectangle.setTranslateX(position.getKey());
+            strokeRectangle.setTranslateY(position.getValue());
+            strokeRectangle.setWidth(size.getKey());
+            strokeRectangle.setHeight(size.getValue());
 
-        if (strokeRectangle.getOpacity() < 1.0) {
-            fadeTransition.setToValue(1.0);
-            fadeTransition.play();
+            if (strokeRectangle.getOpacity() < 1.0) {
+                fadeTransition.setToValue(1.0);
+                fadeTransition.play();
+            }
         }
-
     }
 
     public void hideFeedback() {

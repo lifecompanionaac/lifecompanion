@@ -80,6 +80,7 @@ public interface CategorizedElementI<K extends SubCategoryI<?, ?>> extends XMLSe
      * For example, an action "Write text" have the text to write as parameter, while a command "Next page" doesn't have any parameter.<br>
      * This will be use to know if the element is directly added to its parent, or if a configuration screen is displayed before.
      */
+    // FIXME : could be dynamically detected and deprecated
     public boolean isParameterizableElement();
     //========================================================================
 }

@@ -87,7 +87,7 @@ public class Image2SelectorControl extends BorderPane implements LCViewInitHelpe
     /**
      * Property to disable image selection
      */
-    private final BooleanProperty disableImageSelection;
+    private final BooleanProperty disableSelection;
 
     /**
      * Default text supplier
@@ -102,7 +102,7 @@ public class Image2SelectorControl extends BorderPane implements LCViewInitHelpe
 
     public Image2SelectorControl() {
         this.nodeIdForImageLoading = "Image2SelectorControl" + this.hashCode();
-        this.disableImageSelection = new SimpleBooleanProperty(false);
+        this.disableSelection = new SimpleBooleanProperty(false);
         this.selectedImage = new SimpleObjectProperty<>();
         this.selectedVideo = new SimpleObjectProperty<>();
         this.imageUseComponent = new SimpleObjectProperty<>();
@@ -146,8 +146,9 @@ public class Image2SelectorControl extends BorderPane implements LCViewInitHelpe
     public void initBinding() {
         bindImageViewToCurrentSelection();
         //Disable remove when there is no image
-        this.buttonRemoveImage.disableProperty().bind(this.disableImageSelection.or(this.imageViewSelected.imageProperty().isNull()));
-        this.buttonSelectImage.disableProperty().bind(this.disableImageSelection);
+        this.buttonRemoveImage.disableProperty().bind(this.disableSelection.or(this.imageViewSelected.imageProperty().isNull()));
+        this.buttonSelectImage.disableProperty().bind(this.disableSelection);
+        this.buttonSelectVideo.disableProperty().bind(this.disableSelection);
 
         this.buttonSelectVideo.managedProperty().bind(buttonSelectVideo.visibleProperty());
         buttonSelectVideo.visibleProperty().bind(hideVideoSelection.not());
@@ -234,8 +235,8 @@ public class Image2SelectorControl extends BorderPane implements LCViewInitHelpe
         return this.imageUseComponent;
     }
 
-    public BooleanProperty disableImageSelectionProperty() {
-        return this.disableImageSelection;
+    public BooleanProperty disableSelectionProperty() {
+        return this.disableSelection;
     }
 
     public void setDefaultSearchTextSupplier(Supplier<String> defaultSearchTextSupplier) {

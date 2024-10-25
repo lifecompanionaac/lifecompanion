@@ -27,20 +27,25 @@ import javafx.scene.SnapshotParameters;
 import javafx.scene.image.Image;
 import javafx.scene.transform.Scale;
 import org.lifecompanion.model.impl.constant.LCConstant;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SnapshotUtils {
     private static final double MAX_SCALE_RATIO = 5.0;
+    private static final Logger LOGGER = LoggerFactory.getLogger(SnapshotUtils.class);
 
     public static Image executeSnapshot(final Node node, double wantedWidth, double wantedHeight, boolean canScaleUp, double minScale) {
         Bounds nodeBounds = node.getBoundsInParent();
+        double originalWidth = Math.max(nodeBounds.getWidth(), 1.0);
+        double originalHeight = Math.max(nodeBounds.getHeight(), 1.0);
         SnapshotParameters snapParams = null;
         // Fix only width or height ? (if needed)
         if (wantedHeight > 0 || wantedWidth > 0) {
-            wantedWidth = wantedWidth <= 0 ? nodeBounds.getWidth() : wantedWidth;
-            wantedHeight = wantedHeight <= 0 ? nodeBounds.getHeight() : wantedHeight;
+            wantedWidth = wantedWidth <= 0 ? originalWidth : wantedWidth;
+            wantedHeight = wantedHeight <= 0 ? originalHeight : wantedHeight;
             // Compute scale to keep ratio
-            double originalRatio = nodeBounds.getWidth() / nodeBounds.getHeight();
-            double scale = Math.min(MAX_SCALE_RATIO, Math.max(minScale, wantedWidth / wantedHeight > originalRatio ? wantedHeight / wantedWidth : wantedWidth / wantedHeight));
+            double scale = Math.min(MAX_SCALE_RATIO, Math.max(minScale, Math.max(wantedWidth / originalWidth, wantedHeight / originalHeight)));
+            LOGGER.info("Will scale snapshot to {}", scale);
             // Only scale down if wanted (keep lowest memory footprint)
             if (scale < 1 || canScaleUp) {
                 snapParams = new SnapshotParameters();

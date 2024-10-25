@@ -45,6 +45,7 @@ public enum FileChooserType {
     SAVE_USER_TEXT(false),
     RUN_PROGRAM(false),
     OPEN_WITH_DEFAULT_APP(false),
+    OPEN_FOLDER(false),
 
     OTHER_MISC_NO_EXTERNAL(false),
     OTHER_MISC_EXTERNAL(true),
