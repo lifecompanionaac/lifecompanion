@@ -22,6 +22,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.lifecompanion.model.api.configurationcomponent.keyoption.KeyOptionI;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.dynamickey.KeyListNodeKeyOption;
+import org.lifecompanion.model.impl.configurationcomponent.keyoption.dynamickey.UserActionSequenceListKeyOption;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.note.NoteKeyOption;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.dynamickey.UserActionSequenceCurrentKeyOption;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.dynamickey.UserActionSequenceItemKeyOption;
@@ -74,6 +75,7 @@ public enum AvailableKeyOptionManager {
                         new VariableInformationKeyOption(),
                         new NoteKeyOption(),
                         new WhiteboardKeyOption(),
+                        new UserActionSequenceListKeyOption(),
                         new UserActionSequenceItemKeyOption(),
                         new UserActionSequenceCurrentKeyOption(),
                         new ConfigListKeyOption(),

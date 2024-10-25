@@ -63,7 +63,7 @@ public class UserActionSequenceSelectorControl extends VBox implements LCViewIni
         searchComboBox = new SearchComboBox<>(
                 lv -> new UserActionSequenceListCell(),
                 searchText -> StringUtils.isBlank(searchText) ? null : c -> ConfigurationComponentUtils.getSimilarityScoreFor(searchText, c, getNameGetterForCategory()) > 0
-                , comp -> comp != null ? comp.nameProperty().get() : Translation.getText("key.list.selector.control.no.value"),
+                , comp -> comp != null ? comp.textProperty().get() : Translation.getText("key.list.selector.control.no.value"),
                 searchText -> StringUtils.isBlank(searchText) ? null : (c1, c2) -> Double.compare(
                         ConfigurationComponentUtils.getSimilarityScoreFor(searchText, c2, getNameGetterForCategory()),
                         ConfigurationComponentUtils.getSimilarityScoreFor(searchText, c1, getNameGetterForCategory())
@@ -79,7 +79,7 @@ public class UserActionSequenceSelectorControl extends VBox implements LCViewIni
     }
 
     private Function<UserActionSequenceI, Pair<String, Double>>[] getNameGetterForCategory() {
-        Function<UserActionSequenceI, Pair<String, Double>> getter = klc -> Pair.of(klc.nameProperty().get(), 1.0);
+        Function<UserActionSequenceI, Pair<String, Double>> getter = klc -> Pair.of(klc.textProperty().get(), 1.0);
         return new Function[]{getter};
     }
 

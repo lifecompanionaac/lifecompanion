@@ -21,14 +21,14 @@ package org.lifecompanion.ui.app.generalconfiguration.step.dynamickey.useraction
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.geometry.Insets;
-import javafx.geometry.Orientation;
-import javafx.geometry.Pos;
+import javafx.collections.FXCollections;
+import javafx.geometry.*;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import org.lifecompanion.controller.editaction.KeyActions;
+import org.lifecompanion.model.api.style.TextPosition;
+import org.lifecompanion.ui.common.control.specific.imagedictionary.ImageUseComponentSelectorControl;
+import org.lifecompanion.ui.common.pane.specific.cell.TextPositionListCell;
 import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.UserActionSequenceI;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.UserActionSequenceItemI;
@@ -49,6 +49,8 @@ public class UserActionSequenceItemsEditionView extends ScrollPane implements LC
     private ListView<UserActionSequenceItemI> listViewItems;
     private Label labelSequenceTitle;
     private TextField fieldSequenceName;
+    private ImageUseComponentSelectorControl imageUseComponentSelectorControl;
+    private ComboBox<TextPosition> comboBoxTextPosition;
     private Button buttonAddItem;
     private CommonListViewActionContainer<UserActionSequenceItemI> commonListViewActionContainer;
 
@@ -66,10 +68,38 @@ public class UserActionSequenceItemsEditionView extends ScrollPane implements LC
     @Override
     public void initUI() {
         // Sequence props
+        GridPane gridPaneSequenceProps = new GridPane();
+        gridPaneSequenceProps.setHgap(GeneralConfigurationStepViewI.GRID_H_GAP);
+        gridPaneSequenceProps.setVgap(5.0);
+        ColumnConstraints firstColumn = new ColumnConstraints();
+        firstColumn.setPercentWidth(50);
+        gridPaneSequenceProps.getColumnConstraints().add(firstColumn);
+
         labelSequenceTitle = FXControlUtils.createTitleLabel(null);
+        Label labelSequenceName = new Label(Translation.getText("sequence.configuration.view.field.sequence.name"));
         fieldSequenceName = new TextField();
         fieldSequenceName.setPromptText(Translation.getText("sequence.configuration.view.field.sequence.name"));
-        VBox.setMargin(fieldSequenceName, new Insets(0, 10, 0, 10));
+        GridPane.setValignment(fieldSequenceName, VPos.TOP);
+
+        Label labelTextPosition = new Label(Translation.getText("sequence.configuration.view.field.text.position"));
+        comboBoxTextPosition = new ComboBox<>(FXCollections.observableArrayList(TextPosition.values()));
+        this.comboBoxTextPosition.setButtonCell(new TextPositionListCell(false));
+        this.comboBoxTextPosition.setCellFactory(lv -> new TextPositionListCell(true));
+        comboBoxTextPosition.setMaxWidth(Double.MAX_VALUE);
+        GridPane.setValignment(comboBoxTextPosition, VPos.TOP);
+
+        imageUseComponentSelectorControl = new ImageUseComponentSelectorControl();
+        GridPane.setHalignment(imageUseComponentSelectorControl, HPos.RIGHT);
+        GridPane.setMargin(imageUseComponentSelectorControl, new Insets(0, 10, 0, 0));
+
+        gridPaneSequenceProps.add(labelSequenceName, 0, 0);
+        gridPaneSequenceProps.add(fieldSequenceName, 0, 1);
+        gridPaneSequenceProps.add(labelTextPosition, 0, 2);
+        gridPaneSequenceProps.add(comboBoxTextPosition, 0, 3);
+        Pane filler = new Pane();
+        GridPane.setHgrow(filler, Priority.ALWAYS);
+        gridPaneSequenceProps.add(filler, 1, 0, 1, 4);
+        gridPaneSequenceProps.add(imageUseComponentSelectorControl, 2, 0, 1, 4);
 
         buttonAddItem = FXControlUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.PLUS_CIRCLE).size(18).color(LCGraphicStyle.MAIN_DARK), null);
 
@@ -77,8 +107,8 @@ public class UserActionSequenceItemsEditionView extends ScrollPane implements LC
         listViewItems = new ListView<>();
         this.commonListViewActionContainer = new CommonListViewActionContainer<>(listViewItems);
         listViewItems.setOrientation(Orientation.HORIZONTAL);
-        listViewItems.setMaxHeight(DetailledSimplerKeyContentContainerListCell.CELL_HEIGHT + 20.0);
-        listViewItems.setPrefHeight(DetailledSimplerKeyContentContainerListCell.CELL_HEIGHT + 20.0);
+        listViewItems.setMaxHeight(DetailledSimplerKeyContentContainerListCell.CELL_HEIGHT + 40.0);
+        listViewItems.setPrefHeight(DetailledSimplerKeyContentContainerListCell.CELL_HEIGHT + 40.0);
         listViewItems.setCellFactory(lv -> new DetailledSimplerKeyContentContainerListCell<>(commonListViewActionContainer));
         HBox.setHgrow(listViewItems, Priority.ALWAYS);
         HBox boxItems = new HBox(5.0, listViewItems, buttonAddItem);
@@ -89,7 +119,7 @@ public class UserActionSequenceItemsEditionView extends ScrollPane implements LC
 
         // Total
         this.setFitToWidth(true);
-        this.setContent(new VBox(GeneralConfigurationStepViewI.GRID_V_GAP, labelSequenceTitle, fieldSequenceName, boxItems, userActionSequenceItemPropertiesEditionView));
+        this.setContent(new VBox(GeneralConfigurationStepViewI.GRID_V_GAP, labelSequenceTitle, gridPaneSequenceProps, FXControlUtils.createTitleLabel("sequence.configuration.view.item.list.title"), boxItems, userActionSequenceItemPropertiesEditionView));
     }
 
     @Override
@@ -102,24 +132,29 @@ public class UserActionSequenceItemsEditionView extends ScrollPane implements LC
             duplicated.textProperty().set(Translation.getText("general.configuration.view.user.action.copy.label.key.text") + " " + duplicated.textProperty().get());
             return duplicated;
         });
+        KeyActions.installImageAutoSelect(fieldSequenceName, editedSequence::get);
     }
 
     @Override
     public void initBinding() {
         this.editedSequence.addListener((obs, ov, nv) -> {
             if (ov != null) {
-                fieldSequenceName.textProperty().unbindBidirectional(ov.nameProperty());
+                fieldSequenceName.textProperty().unbindBidirectional(ov.textProperty());
                 this.listViewItems.setItems(null);
+                comboBoxTextPosition.valueProperty().unbindBidirectional(ov.textPositionProperty());
+                comboBoxTextPosition.setValue(null);
             }
             this.labelSequenceTitle.textProperty().unbind();
             if (nv != null) {
-                fieldSequenceName.textProperty().bindBidirectional(nv.nameProperty());
-                this.labelSequenceTitle.textProperty().bind(TranslationFX.getTextBinding("label.sequence.name.title", nv.nameProperty()));
+                fieldSequenceName.textProperty().bindBidirectional(nv.textProperty());
+                comboBoxTextPosition.valueProperty().bindBidirectional(nv.textPositionProperty());
+                this.labelSequenceTitle.textProperty().bind(TranslationFX.getTextBinding("label.sequence.name.title", nv.textProperty()));
                 this.listViewItems.setItems(nv.getItems());
             } else {
                 this.labelSequenceTitle.setText(Translation.getText("label.sequence.name.title.none.selected"));
             }
         });
+        this.imageUseComponentSelectorControl.modelProperty().bind(this.editedSequence);
         userActionSequenceItemPropertiesEditionView.selectedNodeProperty().bind(this.listViewItems.getSelectionModel().selectedItemProperty());
 
     }

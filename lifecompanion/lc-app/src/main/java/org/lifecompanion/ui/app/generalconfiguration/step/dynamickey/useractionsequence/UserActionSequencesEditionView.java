@@ -28,14 +28,14 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
-import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
-import org.lifecompanion.model.api.configurationcomponent.dynamickey.UserActionSequenceI;
-import org.lifecompanion.model.impl.configurationcomponent.dynamickey.UserActionSequence;
-import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.lang.LangUtils;
+import org.lifecompanion.model.api.configurationcomponent.dynamickey.UserActionSequenceI;
+import org.lifecompanion.model.impl.configurationcomponent.dynamickey.UserActionSequence;
+import org.lifecompanion.model.impl.constant.LCGraphicStyle;
+import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.util.javafx.FXControlUtils;
 import org.lifecompanion.util.javafx.FXUtils;
 
@@ -64,7 +64,7 @@ public class UserActionSequencesEditionView extends BorderPane implements LCView
 
         final HBox boxTop = new HBox(5.0, labelEdited, comboBoxSequences, buttonAddSequence, buttonRemoveSequence);
         boxTop.setAlignment(Pos.CENTER);
-        BorderPane.setMargin(boxTop,new Insets(0,0,10,0));
+        BorderPane.setMargin(boxTop, new Insets(0, 0, 10, 0));
         this.setTop(boxTop);
 
         userActionSequenceItemsEditionView = new UserActionSequenceItemsEditionView();
@@ -81,7 +81,7 @@ public class UserActionSequencesEditionView extends BorderPane implements LCView
         });
         this.buttonAddSequence.setOnAction(e -> {
             final UserActionSequence added = new UserActionSequence();
-            added.nameProperty().set(Translation.getText("user.action.sequence.default.text.value"));
+            added.textProperty().set(Translation.getText("user.action.sequence.default.text.value"));
             comboBoxSequences.getItems().add(added);
             comboBoxSequences.getSelectionModel().select(added);
         });

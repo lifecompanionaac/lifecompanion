@@ -23,8 +23,11 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 import org.jdom2.Element;
 import org.lifecompanion.controller.io.ConfigurationComponentIOHelper;
+import org.lifecompanion.framework.commons.fx.io.XMLUtils;
 import org.lifecompanion.model.api.configurationcomponent.TreeIdentifiableComponentI;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.UserActionSequenceI;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.UserActionSequenceItemI;
@@ -37,20 +40,13 @@ import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import java.util.List;
 import java.util.Map;
 
-public class UserActionSequence implements UserActionSequenceI {
+public class UserActionSequence extends AbstractSimplerKeyActionContainer implements UserActionSequenceI {
     private String id;
-    private final StringProperty name;
     private final ObservableList<UserActionSequenceItemI> items;
 
     public UserActionSequence() {
         this.generateID();
-        this.name = new SimpleStringProperty();
         this.items = FXCollections.observableArrayList();
-    }
-
-    @Override
-    public StringProperty nameProperty() {
-        return name;
     }
 
     @Override
@@ -93,10 +89,13 @@ public class UserActionSequence implements UserActionSequenceI {
     private static final String NODE_NAME = "UserActionSequence";
 
     @Override
+    protected String getNodeName() {
+        return NODE_NAME;
+    }
+
+    @Override
     public Element serialize(IOContextI context) {
-        Element node = new Element(NODE_NAME);
-        ConfigurationComponentIOHelper.addTypeAlias(this, node, context);
-        XMLObjectSerializer.serializeInto(UserActionSequence.class, this, node);
+        Element node = super.serialize(context);
         for (UserActionSequenceItemI item : items) {
             node.addContent(item.serialize(context));
         }
@@ -105,7 +104,11 @@ public class UserActionSequence implements UserActionSequenceI {
 
     @Override
     public void deserialize(Element node, IOContextI context) throws LCException {
-        XMLObjectSerializer.deserializeInto(UserActionSequence.class, this, node);
+        super.deserialize(node, context);
+        // backwards compatibility with "name"
+        if (node.getAttribute("name") != null) {
+            XMLUtils.read(textProperty(), "name", node);
+        }
         for (Element child : node.getChildren()) {
             UserActionSequenceItemI item = new UserActionSequenceItem();
             item.deserialize(child, context);
@@ -113,13 +116,5 @@ public class UserActionSequence implements UserActionSequenceI {
         }
     }
     //========================================================================
-
-
-    @Override
-    public String toString() {
-        return "UserActionSequence{" +
-                "name=" + name.get() +
-                '}';
-    }
 
 }

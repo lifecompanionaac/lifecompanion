@@ -31,7 +31,7 @@ public class UserActionSequenceListCell extends ListCell<UserActionSequenceI> {
             this.textProperty().unbind();
             this.setText(null);
         } else {
-            this.textProperty().bind(itemP.nameProperty());
+            this.textProperty().bind(itemP.textProperty());
         }
     }
 }

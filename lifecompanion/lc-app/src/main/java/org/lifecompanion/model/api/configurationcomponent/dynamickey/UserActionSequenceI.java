@@ -19,7 +19,6 @@
 
 package org.lifecompanion.model.api.configurationcomponent.dynamickey;
 
-import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import org.lifecompanion.model.api.configurationcomponent.DuplicableComponentI;
 import org.lifecompanion.model.api.configurationcomponent.IdentifiableComponentI;
@@ -30,10 +29,7 @@ import org.lifecompanion.model.api.io.XMLSerializable;
 /**
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
-public interface UserActionSequenceI extends XMLSerializable<IOContextI>, DuplicableComponentI, IdentifiableComponentI, TreeIdentifiableComponentI {
-    StringProperty nameProperty();
-
+public interface UserActionSequenceI extends XMLSerializable<IOContextI>, DuplicableComponentI, IdentifiableComponentI, TreeIdentifiableComponentI, SimplerKeyActionContainerI {
     ObservableList<UserActionSequenceItemI> getItems();
-
     // TODO : action on finish ?
 }

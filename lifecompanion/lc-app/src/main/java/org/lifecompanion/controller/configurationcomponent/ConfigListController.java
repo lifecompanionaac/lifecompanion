@@ -19,79 +19,52 @@
 
 package org.lifecompanion.controller.configurationcomponent;
 
-import javafx.beans.property.SimpleIntegerProperty;
 import org.lifecompanion.controller.profile.ProfileController;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
-import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
 import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
 import org.lifecompanion.model.api.profile.LCProfileI;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.ConfigListKeyOption;
-import org.lifecompanion.util.javafx.FXThreadUtils;
-import org.lifecompanion.util.model.ConfigurationComponentUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public enum ConfigListController implements ModeListenerI {
     INSTANCE;
 
-    private final List<ConfigListKeyOption> configKeyOptions;
-    private List<LCConfigurationDescriptionI> configurations;
-    private final SimpleIntegerProperty pageIndex;
-
+    private final DynamicListHelper<ConfigListKeyOption, LCConfigurationDescriptionI> dynamicListHelper;
 
     ConfigListController() {
-        this.configKeyOptions = new ArrayList<>();
-        this.pageIndex = new SimpleIntegerProperty(-1);
-        this.pageIndex.addListener(inv -> refreshConfigurationList());
+        dynamicListHelper = new DynamicListHelper<>(ConfigListKeyOption.class) {
+            @Override
+            protected List<LCConfigurationDescriptionI> getItemsFromConfiguration(LCConfigurationI configuration) {
+                LCProfileI profile = ProfileController.INSTANCE.currentProfileProperty().get();
+                return profile != null ? profile.getConfiguration().stream().filter(cd -> StringUtils.isDifferent(configuration.getID(), cd.getConfigurationId())).collect(Collectors.toList()) : null;
+            }
+
+            @Override
+            protected void updateKeyOption(ConfigListKeyOption keyOption, LCConfigurationDescriptionI item) {
+                keyOption.updateConfiguration(item);
+            }
+        };
     }
 
     public void nextPage() {
-        int pageSize = configKeyOptions.size();
-        int maxPageCount = (int) Math.ceil((1.0 * configurations.size()) / (1.0 * pageSize));
-        if (pageIndex.get() + 1 < maxPageCount) {
-            pageIndex.set(pageIndex.get() + 1);
-        }
+        this.dynamicListHelper.nextPageWithoutLoop();
     }
 
     public void previousPage() {
-        if (pageIndex.get() - 1 >= 0) {
-            pageIndex.set(pageIndex.get() - 1);
-        }
-    }
-
-    private void refreshConfigurationList() {
-        int pageIndexV = pageIndex.get();
-        for (int i = 0; i < configKeyOptions.size(); i++) {
-            int index = pageIndexV * configKeyOptions.size() + i;
-            ConfigListKeyOption keyOption = configKeyOptions.get(i);
-            FXThreadUtils.runOnFXThread(() -> keyOption.updateConfiguration(index >= 0 && index < configurations.size() ? configurations.get(index) : null));
-        }
+        this.dynamicListHelper.previousPageWithoutLoop();
     }
 
     @Override
     public void modeStart(LCConfigurationI configuration) {
-        LCProfileI profile = ProfileController.INSTANCE.currentProfileProperty().get();
-        if (profile != null) {
-            configurations = profile.getConfiguration().stream().filter(cd -> StringUtils.isDifferent(configuration.getID(), cd.getConfigurationId())).collect(Collectors.toList());
-
-            Map<GridComponentI, List<ConfigListKeyOption>> groupKeysMap = new HashMap<>();
-            ConfigurationComponentUtils.findKeyOptionsByGrid(ConfigListKeyOption.class, configuration, groupKeysMap, null);
-            groupKeysMap.values().stream().flatMap(List::stream).distinct().forEach(configKeyOptions::add);
-
-            this.pageIndex.set(0);
-        }
+        this.dynamicListHelper.modeStart(configuration);
     }
 
     @Override
     public void modeStop(LCConfigurationI configuration) {
-        this.configurations = null;
-        this.configKeyOptions.clear();
-        this.pageIndex.set(-1);
+        this.dynamicListHelper.modeStop(configuration);
     }
 }

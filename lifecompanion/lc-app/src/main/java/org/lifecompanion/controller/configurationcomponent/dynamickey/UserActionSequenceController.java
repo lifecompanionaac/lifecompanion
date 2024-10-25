@@ -19,9 +19,11 @@
 package org.lifecompanion.controller.configurationcomponent.dynamickey;
 
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import org.lifecompanion.controller.categorizedelement.useaction.UseActionController;
+import org.lifecompanion.controller.configurationcomponent.DynamicListHelper;
 import org.lifecompanion.controller.configurationcomponent.UseModeProgressDisplayerController;
 import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
 import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
@@ -29,6 +31,9 @@ import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.UserActionSequenceI;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.UserActionSequenceItemI;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
+import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
+import org.lifecompanion.model.impl.configurationcomponent.keyoption.ConfigListKeyOption;
+import org.lifecompanion.model.impl.configurationcomponent.keyoption.dynamickey.UserActionSequenceListKeyOption;
 import org.lifecompanion.util.model.ConfigurationComponentUtils;
 import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.dynamickey.UserActionSequenceCurrentKeyOption;
@@ -61,6 +66,8 @@ public enum UserActionSequenceController implements ModeListenerI {
 
     private final Set<Consumer<String>> onSequenceFinishedListeners;
 
+    private final DynamicListHelper<UserActionSequenceListKeyOption, UserActionSequenceI> dynamicListHelper;
+
     // TODO : add use variable with current sequence name
 
     UserActionSequenceController() {
@@ -72,6 +79,17 @@ public enum UserActionSequenceController implements ModeListenerI {
         this.onSequenceFinishedListeners = new HashSet<>();
         this.currentSequence.addListener((obs, ov, nv) -> currentSequenceChanged());
         this.currentItem.addListener((obs, ov, nv) -> currentItemChanged());
+        this.dynamicListHelper = new DynamicListHelper<>(UserActionSequenceListKeyOption.class) {
+            @Override
+            protected List<UserActionSequenceI> getItemsFromConfiguration(LCConfigurationI configuration) {
+                return configuration.userActionSequencesProperty().get().getUserActionSequences();
+            }
+
+            @Override
+            protected void updateKeyOption(UserActionSequenceListKeyOption keyOption, UserActionSequenceI item) {
+                keyOption.currentSimplerKeyContentContainerProperty().set(item);
+            }
+        };
     }
 
     public Set<Consumer<String>> getOnSequenceFinishedListeners() {
@@ -86,10 +104,14 @@ public enum UserActionSequenceController implements ModeListenerI {
     //========================================================================
     public void startSequenceById(String sequenceId) {
         if (this.currentConfiguration != null && StringUtils.isNotBlank(sequenceId)) {
-            currentConfiguration.userActionSequencesProperty().get().getUserActionSequences().stream().filter(s -> StringUtils.isEquals(s.getID(), sequenceId)).findAny().ifPresent(sequence -> {
-                this.tempDisableNextAndPrevious.set(0);
-                currentSequence.set(sequence);
-            });
+            currentConfiguration.userActionSequencesProperty().get().getUserActionSequences().stream().filter(s -> StringUtils.isEquals(s.getID(), sequenceId)).findAny().ifPresent(this::startSequence);
+        }
+    }
+
+    public void startSequence(UserActionSequenceI sequence) {
+        if (this.currentConfiguration != null) {
+            this.tempDisableNextAndPrevious.set(0);
+            currentSequence.set(sequence);
         }
     }
 
@@ -130,6 +152,10 @@ public enum UserActionSequenceController implements ModeListenerI {
     public void cancelRunningSequence() {
         tempDisableNextAndPrevious.set(0);
         this.currentSequence.set(null);
+    }
+
+    public void nextSequencePage(){
+        this.dynamicListHelper.nextPageWithLoop();
     }
     //========================================================================
 
@@ -254,6 +280,8 @@ public enum UserActionSequenceController implements ModeListenerI {
     public void modeStart(LCConfigurationI configuration) {
         currentConfiguration = configuration;
 
+        this.dynamicListHelper.modeStart(configuration);
+
         ConfigurationComponentUtils.findKeyOptionsByGrid(UserActionSequenceCurrentKeyOption.class, configuration, currentItemKeyOptions, null);
         ConfigurationComponentUtils.findKeyOptionsByGrid(UserActionSequenceItemKeyOption.class, configuration, currentSequenceItemKeyOptions, null);
 
@@ -274,6 +302,7 @@ public enum UserActionSequenceController implements ModeListenerI {
 
     @Override
     public void modeStop(LCConfigurationI configuration) {
+        this.dynamicListHelper.modeStop(configuration);
         this.currentConfiguration = null;
         currentItemKeyOptions.clear();
         currentSequenceItemKeyOptions.clear();

@@ -1855,6 +1855,7 @@
   <text key="general.configuration.view.key.list.field.text.color">Couleur du texte</text>
   <text key="general.configuration.view.key.list.field.text">Texte de la case</text>
   <text key="general.configuration.view.key.list.field.text.position">Position du texte</text>
+    <text key="sequence.configuration.view.field.text.position">Position du texte</text>
   <text key="general.configuration.view.key.list.field.text.to.speak">Prononcer à la sélection</text>
   <text key="general.configuration.view.key.list.field.text.to.write">Écrire à la sélection</text>
   <text key="general.configuration.view.key.list.no.selected">Aucun élément sélectionné</text>
@@ -3927,5 +3928,13 @@
     <text key="use.action.sub.category.whiteboard.name">Tableau/Ardoise</text>
     <text key="action.keylist.indicator.name">Actions des listes de cases</text>
     <text key="action.keylist.indicator.description">Execute les actions de la case/la liste/le lien en fonction du paramétrage effectué dans la vue de configuration des listes de case.</text>
-
+    <text key="sequence.configuration.view.item.list.title">Étapes de la séquence</text>
+    <text key="next.page.with.loop.user.action.sequence.name">Page suivante dans la liste des séquences (en bouclant)</text>
+    <text key="next.page.with.loop.user.action.sequence.description">Permet d'aller à la page suivante de la liste des séquences. Si la dernière page est atteinte, revient à la première page.</text>
+    <text key="use.action.sub.category.user.action.sequence.sub.list">Liste des séquences</text>
+    <text key="start.current.user.action.sequence.name">Démarrer la séquence</text>
+    <text key="start.current.user.action.sequence.description">Démarre la séquence associée à la case courante (si la case est de type "Liste des séquences")</text>
+    <text key="key.option.user.action.sequence.list.name">Liste des séquences</text>
+    <text key="key.option.user.action.sequence.list.description">Affiche les différentes séquences disponibles dans la configuration. Un appui sur la case permet de démarrer la séquence.</text>
+    <text key="key.option.user.action.sequence.list.example.text">Nom de la séquence</text>
 </texts>

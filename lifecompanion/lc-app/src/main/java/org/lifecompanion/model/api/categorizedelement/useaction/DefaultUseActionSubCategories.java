@@ -68,6 +68,8 @@ public enum DefaultUseActionSubCategories implements UseActionSubCategoryI {
             CategorizedElementColorProvider.nextColor(DefaultUseActionMainCategories.USER_ACTION_SEQUENCE)),//
     UA_SEQUENCE_CURRENT("use.action.sub.category.user.action.sequence.sub.current", DefaultUseActionMainCategories.USER_ACTION_SEQUENCE,
             CategorizedElementColorProvider.nextColor(DefaultUseActionMainCategories.USER_ACTION_SEQUENCE)),//
+    UA_SEQUENCE_LIST("use.action.sub.category.user.action.sequence.sub.list", DefaultUseActionMainCategories.USER_ACTION_SEQUENCE,
+            CategorizedElementColorProvider.nextColor(DefaultUseActionMainCategories.USER_ACTION_SEQUENCE)),//
 
 
     //Selection

@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   version="1.1"
+   id="svg23242"
+   width="32"
+   height="32"
+   sodipodi:docname="start_current_sequence.svg"
+   inkscape:export-filename="E:\dev-lifecompanion\workspace\lifecompanion\res\icons\lc-app\use-actions\categories\sequence\start_current_sequence.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
+   inkscape:version="1.1.2 (b8e25be833, 2022-02-05)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs23246" />
+  <sodipodi:namedview
+     id="namedview23244"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     showgrid="false"
+     inkscape:zoom="3.1059173"
+     inkscape:cx="77.754807"
+     inkscape:cy="101.74128"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g23248" />
+  <inkscape:clipboard
+     min="1506.6949,3566.2779"
+     max="1678.7858,3698.5911"
+     geom-min="1506.6949,3566.2779"
+     geom-max="1678.7858,3698.5911" />
+  <g
+     id="g23248"
+     transform="translate(-1506.6949,-3566.2779)">
+    <g
+       id="g863"
+       transform="matrix(0.22935465,0,0,0.22935465,1153.6576,2748.7618)">
+      <rect
+         style="opacity:1;vector-effect:none;fill:#d2d2d2;fill-opacity:1;stroke:none;stroke-width:0.120049;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:0.120049, 0.120049;stroke-dashoffset:0;stroke-opacity:1"
+         id="rect8828-0-0"
+         width="35"
+         height="35"
+         x="1549.7858"
+         y="3663.5911"
+         ry="6.3134522"
+         inkscape:export-filename="C:\Users\Mathieu\Dev\LC2\workspace\lifecompanion-k\lifecompanion\lc-app\src\main\resources\icons\use-actions\categories\user_action_sequence\start_ua_sequence.png"
+         inkscape:export-xdpi="17.85104"
+         inkscape:export-ydpi="17.85104" />
+      <rect
+         style="opacity:1;vector-effect:none;fill:#d2d2d2;fill-opacity:1;stroke:none;stroke-width:0.120049;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:0.120049, 0.120049;stroke-dashoffset:0;stroke-opacity:1"
+         id="rect8828-1-35-3"
+         width="35"
+         height="35"
+         x="1596.7858"
+         y="3663.5911"
+         ry="6.3134522"
+         inkscape:export-filename="C:\Users\Mathieu\Dev\LC2\workspace\lifecompanion-k\lifecompanion\lc-app\src\main\resources\icons\use-actions\categories\user_action_sequence\start_ua_sequence.png"
+         inkscape:export-xdpi="17.85104"
+         inkscape:export-ydpi="17.85104" />
+      <rect
+         style="opacity:1;vector-effect:none;fill:#d2d2d2;fill-opacity:1;stroke:none;stroke-width:0.120049;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:0.120049, 0.120049;stroke-dashoffset:0;stroke-opacity:1"
+         id="rect8828-6-4-0"
+         width="35"
+         height="35"
+         x="1643.7858"
+         y="3663.5911"
+         ry="6.3134522"
+         inkscape:export-filename="C:\Users\Mathieu\Dev\LC2\workspace\lifecompanion-k\lifecompanion\lc-app\src\main\resources\icons\use-actions\categories\user_action_sequence\start_ua_sequence.png"
+         inkscape:export-xdpi="17.85104"
+         inkscape:export-ydpi="17.85104" />
+      <g
+         id="g3103-4-7-7"
+         transform="matrix(0,0.17522304,-0.17522304,0,1624.11,3569.7692)"
+         style="fill:#d2d2d2;fill-opacity:1"
+         inkscape:export-filename="C:\Users\Mathieu\Dev\LC2\workspace\lifecompanion-k\lifecompanion\lc-app\src\main\resources\icons\use-actions\categories\user_action_sequence\start_ua_sequence.png"
+         inkscape:export-xdpi="17.85104"
+         inkscape:export-ydpi="17.85104">
+        <g
+           id="g3063-3-5-8"
+           style="fill:#d2d2d2;fill-opacity:1">
+          <path
+             id="path3065-6-8-9"
+             d="M 506.206,179.012 360.025,32.834 c -3.617,-3.617 -7.898,-5.426 -12.847,-5.426 -4.949,0 -9.233,1.809 -12.847,5.426 -3.617,3.619 -5.428,7.902 -5.428,12.85 v 73.089 H 264.95 c -135.716,0 -218.984,38.354 -249.823,115.06 C 5.042,259.335 0,291.03 0,328.907 c 0,31.594 12.087,74.514 36.259,128.762 0.57,1.335 1.566,3.614 2.996,6.849 1.429,3.233 2.712,6.088 3.854,8.565 1.146,2.471 2.384,4.565 3.715,6.276 2.282,3.237 4.948,4.859 7.994,4.859 2.855,0 5.092,-0.951 6.711,-2.854 1.615,-1.902 2.424,-4.284 2.424,-7.132 0,-1.718 -0.238,-4.236 -0.715,-7.569 -0.476,-3.333 -0.715,-5.564 -0.715,-6.708 -0.953,-12.938 -1.429,-24.653 -1.429,-35.114 0,-19.223 1.668,-36.449 4.996,-51.675 3.333,-15.229 7.948,-28.407 13.85,-39.543 5.901,-11.14 13.512,-20.745 22.841,-28.835 9.325,-8.09 19.364,-14.702 30.118,-19.842 10.756,-5.141 23.413,-9.186 37.974,-12.135 14.56,-2.95 29.215,-4.997 43.968,-6.14 14.753,-1.143 31.455,-1.711 50.109,-1.711 h 63.953 v 73.091 c 0,4.948 1.807,9.232 5.421,12.847 3.62,3.613 7.901,5.424 12.847,5.424 4.948,0 9.232,-1.811 12.854,-5.424 L 506.203,204.715 c 3.617,-3.617 5.424,-7.898 5.424,-12.847 -0.001,-4.948 -1.807,-9.232 -5.421,-12.856 z"
+             inkscape:connector-curvature="0"
+             style="fill:#d2d2d2;fill-opacity:1" />
+        </g>
+        <g
+           id="g3067-9-5-2"
+           style="fill:#d2d2d2;fill-opacity:1" />
+        <g
+           id="g3069-6-7-2"
+           style="fill:#d2d2d2;fill-opacity:1" />
+        <g
+           id="g3071-7-7-5"
+           style="fill:#d2d2d2;fill-opacity:1" />
+        <g
+           id="g3073-3-7-0"
+           style="fill:#d2d2d2;fill-opacity:1" />
+        <g
+           id="g3075-5-3-1"
+           style="fill:#d2d2d2;fill-opacity:1" />
+        <g
+           id="g3077-9-0-5"
+           style="fill:#d2d2d2;fill-opacity:1" />
+        <g
+           id="g3079-3-8-2"
+           style="fill:#d2d2d2;fill-opacity:1" />
+        <g
+           id="g3081-7-5-2"
+           style="fill:#d2d2d2;fill-opacity:1" />
+        <g
+           id="g3083-4-5-2"
+           style="fill:#d2d2d2;fill-opacity:1" />
+        <g
+           id="g3085-2-4-3"
+           style="fill:#d2d2d2;fill-opacity:1" />
+        <g
+           id="g3087-1-2-5"
+           style="fill:#d2d2d2;fill-opacity:1" />
+        <g
+           id="g3089-2-7-5"
+           style="fill:#d2d2d2;fill-opacity:1" />
+        <g
+           id="g3091-0-6-4"
+           style="fill:#d2d2d2;fill-opacity:1" />
+        <g
+           id="g3093-0-4-2"
+           style="fill:#d2d2d2;fill-opacity:1" />
+        <g
+           id="g3095-9-9-1"
+           style="fill:#d2d2d2;fill-opacity:1" />
+      </g>
+    </g>
+  </g>
+</svg>
