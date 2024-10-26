@@ -2,6 +2,7 @@ package org.lifecompanion.plugin.aac4all.wp2.controller;
 
 import org.lifecompanion.controller.selectionmode.SelectionModeController;
 import org.lifecompanion.controller.textcomponent.WritingStateController;
+import org.lifecompanion.controller.textprediction.CustomCharPredictionController;
 import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
 import org.lifecompanion.model.api.configurationcomponent.GridPartComponentI;
 import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
@@ -9,7 +10,6 @@ import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
 import org.lifecompanion.model.api.selectionmode.ComponentToScanI;
 import org.lifecompanion.model.api.selectionmode.SelectionModeI;
-import org.lifecompanion.model.api.textcomponent.WritingEventSource;
 import org.lifecompanion.model.impl.textprediction.charprediction.LCCharPredictor;
 import org.lifecompanion.plugin.aac4all.wp2.model.keyoption.AAC4AllKeyOptionCurSta;
 import org.lifecompanion.plugin.aac4all.wp2.model.keyoption.AAC4AllKeyOptionReolocG;
@@ -33,52 +33,38 @@ public enum AAC4AllWp2Controller implements ModeListenerI {
 
     @Override
     public void modeStart(LCConfigurationI configuration) {
+        CustomCharPredictionController.INSTANCE.forcePredictionLoad();
         SelectionModeController.INSTANCE.addScannedPartChangedListeners(this.scannedPartChangedListener);
-        initRelocG(configuration);
-        initCurSta(configuration);
+        CustomCharPredictionController.INSTANCE.addPredictorStartedListener(predictor -> {
+            System.out.println("force la prediction");
+            initRelocG(configuration);
+            initCurSta(configuration);
+        });
     }
 
     // TODO : replace with content from char prediction
-    //private List<String> curStaContent = List.of("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "é", "è", "à", "ê", " ", "'");
     private String curStaCharacters = "abcdefghijklmnopqrstuvwxyzéèàê' ";
-    private List<Character> predict;
+    private List<Character> predict = List.of('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'é', 'è', 'à', 'ê', '\'', ' ');
     private int curStaIndex = 0;
     private List<AAC4AllKeyOptionCurSta> curStaKeys;
 
 
      private void initCurSta(LCConfigurationI configuration) {
-       /*HashSet<Character> acceptedCharact = new HashSet<>(curStaCharacters.chars().mapToObj(c -> (char) c).collect(Collectors.toSet()));
-        predict = LCCharPredictor.INSTANCE.predict(WritingStateController.INSTANCE.textBeforeCaretProperty().get(), acceptedCharact.size(), acceptedCharact);
-       // LinkedList<Character> charForKeys = new LinkedList<>(acceptedCharact);
-        System.out.println("la prédiction est " + predict);
-        ConfigurationComponentUtils.findKeyOptionsByGrid(AAC4AllKeyOptionCurSta.class, configuration, curStaKeyOptions, null);
-        curStaKeys = curStaKeyOptions.values().stream().flatMap(Collection::stream).toList();
-        System.out.println("dans la V0 de l'init");*/
-         if (predict == null) {
-             //predict = List.of('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'é', 'è', 'à', 'ê', '\'', ' ');
+
+         Map<GridComponentI, List<AAC4AllKeyOptionCurSta>> curStaKeyOptions = new HashMap<>();
+         ConfigurationComponentUtils.findKeyOptionsByGrid(AAC4AllKeyOptionCurSta.class, configuration, curStaKeyOptions, null);
+         curStaKeys = curStaKeyOptions.values().stream().flatMap(Collection::stream).toList();
+         curStaIndex = 0;
+         updateCurSta();
+
+         WritingStateController.INSTANCE.textBeforeCaretProperty().addListener((obs, ov, nv) -> {
              HashSet<Character> acceptedCharact = new HashSet<>(curStaCharacters.chars().mapToObj(c -> (char) c).collect(Collectors.toSet()));
              predict = LCCharPredictor.INSTANCE.predict(WritingStateController.INSTANCE.textBeforeCaretProperty().get(), acceptedCharact.size(), acceptedCharact);
-             Map<GridComponentI, List<AAC4AllKeyOptionCurSta>> curStaKeyOptions = new HashMap<>();
-             ConfigurationComponentUtils.findKeyOptionsByGrid(AAC4AllKeyOptionCurSta.class, configuration, curStaKeyOptions, null);
-             curStaKeys = curStaKeyOptions.values().stream().flatMap(Collection::stream).toList();
+             List<Character> predict = LCCharPredictor.INSTANCE.predict(WritingStateController.INSTANCE.textBeforeCaretProperty().get(), acceptedCharact.size(), acceptedCharact);
              curStaIndex = 0;
              updateCurSta();
-             System.out.println("sur le premier");
-         }
-         else{
-             WritingStateController.INSTANCE.textBeforeCaretProperty().addListener((obs, ov, nv) -> {
-                 System.out.println("on est après la saisie d'un caractère");
-                 HashSet<Character> acceptedCharact = new HashSet<>(curStaCharacters.chars().mapToObj(c -> (char) c).collect(Collectors.toSet()));
-                 predict = LCCharPredictor.INSTANCE.predict(WritingStateController.INSTANCE.textBeforeCaretProperty().get(), acceptedCharact.size(), acceptedCharact);
-                 List<Character> predict = LCCharPredictor.INSTANCE.predict(WritingStateController.INSTANCE.textBeforeCaretProperty().get(), acceptedCharact.size(), acceptedCharact);
-                 Map<GridComponentI, List<AAC4AllKeyOptionCurSta>> curStaKeyOptions = new HashMap<>();
-                 //System.out.println("la prédiction est " + predict);
-                 ConfigurationComponentUtils.findKeyOptionsByGrid(AAC4AllKeyOptionCurSta.class, configuration, curStaKeyOptions, null);
-                 curStaKeys = curStaKeyOptions.values().stream().flatMap(Collection::stream).toList();
-                 curStaIndex = 0;
-                 updateCurSta();
-             });
-         }
+         });
+
      }
 
 
@@ -119,8 +105,8 @@ public enum AAC4AllWp2Controller implements ModeListenerI {
         this.updateCurSta();
     }
 
-    private Map<AAC4AllKeyOptionReolocG, String> previousLineG;
 
+    private Map<AAC4AllKeyOptionReolocG, String> previousLineG;
 
     private void initRelocG(LCConfigurationI configuration) {
         WritingStateController.INSTANCE.textBeforeCaretProperty().addListener((obs, ov, nv) -> {
