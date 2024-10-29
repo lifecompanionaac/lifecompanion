@@ -27,13 +27,19 @@ import org.lifecompanion.model.impl.imagedictionary.StaticLocalImageElement;
 import org.lifecompanion.util.IOUtils;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class KeyListFileDirectoryNode extends AbstractKeyListNode {
     // Configuration : create subdirectory / flat directory / just directory
     // Default to "My Images" on computer
     // Write text / Speak text
 
-    private File directory = new File("D:\\Data\\Images\\test-directory");
+    private static final long CACHE_EXPIRATION_MS = 10_000;
+    private List<KeyListNodeI> cachedChildren;
+    private long cachedChildrenLastUpdatedAt;
+
+    private File targetDirectory = new File("D:\\Data\\Images\\test-directory");
 
     public KeyListFileDirectoryNode() {
         super(false, false);
@@ -44,9 +50,22 @@ public class KeyListFileDirectoryNode extends AbstractKeyListNode {
 
     @Override
     public ObservableList<KeyListNodeI> getChildren() {
-        System.out.println("Get children() dynamic");
         ObservableList<KeyListNodeI> children = super.getChildren();
-        children.clear();
+        // Update only when no cache or cache is too old
+        if (cachedChildren == null || (System.currentTimeMillis() - cachedChildrenLastUpdatedAt) > CACHE_EXPIRATION_MS) {
+            children.setAll(updateCachedChildren(createChildren(targetDirectory)));
+        }
+        return children;
+    }
+
+    private List<KeyListNodeI> updateCachedChildren(List<KeyListNodeI> cache) {
+        this.cachedChildren = cache;
+        this.cachedChildrenLastUpdatedAt = System.currentTimeMillis();
+        return cache;
+    }
+
+    private List<KeyListNodeI> createChildren(File directory) {
+        List<KeyListNodeI> children = new ArrayList<>();
         File[] files = directory.listFiles();
         if (files != null) {
             for (File file : files) {
@@ -58,6 +77,11 @@ public class KeyListFileDirectoryNode extends AbstractKeyListNode {
                     leaf.textToSpeakProperty().set(name);
                     leaf.imageVTwoProperty().set(new StaticLocalImageElement(file));
                     children.add(leaf);
+                } else if (file.isDirectory()) {
+                    KeyListNode node = new KeyListNode();
+                    node.textProperty().set( FileNameUtils.getNameWithoutExtension(file));
+                    node.getChildren().addAll(createChildren(file));
+                    children.add(node);
                 }
             }
         }
