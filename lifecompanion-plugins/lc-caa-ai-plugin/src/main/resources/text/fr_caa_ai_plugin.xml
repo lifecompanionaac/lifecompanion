@@ -1,6 +1,52 @@
 <texts>
-   <text key="caa.ai.plugin.general.config.view.title">CAA-AI</text>
-   <text key="caa.ai.plugin.todo">TODO CAA-AI</text>
+    <text key="caa.ai.plugin.todo">TODO CAA-AI</text>
 
+    <!-- UI -->
+    <text key="caa.ai.plugin.general.config.view.title">CAA-AI</text>
+    <text key="caa.ai.plugin.general.config.api.title">Accès API</text>
+    <text key="caa.ai.plugin.general.config.api.field.endpoint">Endpoint</text>
+    <text key="caa.ai.plugin.general.config.api.field.token">Token</text>
+    <text key="caa.ai.plugin.general.config.speechToText.title">SpeechToText</text>
+    <text key="caa.ai.plugin.general.config.speechToText.field.jsonConfig">Json configuration</text>
+    <text key="caa.ai.plugin.general.config.user.title">Paramètres utilisateurs</text>
+    <text key="caa.ai.plugin.general.config.user.profile.field">Profil de l'utilisateur</text>
+
+    <!-- Variables -->
+
+    <text key="caa.ai.plugin.variables.last_conversation_message_author.name">Dernier auteur</text>
+    <text key="caa.ai.plugin.variables.last_conversation_message_author.description">L'auteur ayant produit ou enregistré le dernier message.</text>
+    <text key="caa.ai.plugin.variables.last_conversation_message_author.values.me">Moi</text>
+    <text key="caa.ai.plugin.variables.last_conversation_message_author.values.interlocutor">Interlocuteur</text>
+
+    <text key="caa.ai.plugin.variables.last_conversation_message_content.name">Dernier message</text>
+    <text key="caa.ai.plugin.variables.last_conversation_message_content.description">Le dernier message produit par l'utilisateur ou enregistré par la reconnaissance vocale.</text>
+    <text key="caa.ai.plugin.variables.last_conversation_message_content.example">Bonjour, tu vas bien ?</text>
+
+    <!-- Events -->
+
+    <text key="caa.ai.plugin.events.last_message_author_me.name">Dernier message par l'utilisateur</text>
+    <text key="caa.ai.plugin.events.last_message_author_me.description">L'auteur du dernier message enregistré est l'utilisateur.</text>
+
+    <text key="caa.ai.plugin.events.last_message_author_interlocutor.name">Dernier message par l'interlocuteur</text>
+    <text key="caa.ai.plugin.events.last_message_author_interlocutor.description">L'auteur du dernier message enregistré est l'interlocuteur.</text>
+
+    <text key="caa.ai.plugin.events.speech_recording_on.name">Reconnaissance vocale activée</text>
+    <text key="caa.ai.plugin.events.speech_recording_on.description">La reconnaissance vocale des phrases de l'interlocuteur est activée.</text>
+
+    <text key="caa.ai.plugin.events.speech_recording_off.name">Reconnaissance vocale désactivée</text>
+    <text key="caa.ai.plugin.events.speech_recording_off.description">La reconnaissance vocale des phrases de l'interlocuteur est désactivée.</text>
+
+    <!-- Events -->
+    <text key="caa.ai.plugin.contexts.mood.happy">Je suis maintenant d'humeur joyeuse.</text>
+    <text key="caa.ai.plugin.contexts.mood.neutral">Je suis maintenant d'humeur neutre.</text>
+    <text key="caa.ai.plugin.contexts.mood.sad">Je suis maintenant d'humeur triste.</text>
+
+    <text key="caa.ai.plugin.contexts.formalism.formal">Je souhaite maintenant employer un ton formel.</text>
+    <text key="caa.ai.plugin.contexts.formalism.neutral">Je souhaite maintenant employer un ton neutre.</text>
+    <text key="caa.ai.plugin.contexts.formalism.familiar">Je souhaite maintenant employer un ton familier.</text>
+
+    <text key="caa.ai.plugin.contexts.length.short">Propose moi à partir de maintenant des suggestions courtes (de minimum 3 mots à 6 mots maximum).</text>
+    <text key="caa.ai.plugin.contexts.length.normal">Propose moi à partir de maintenant des suggestions moyennes (de minimum 5 mots à 10 mots maximum).</text>
+    <text key="caa.ai.plugin.contexts.length.long">Propose moi à partir de maintenant des suggestions longues (de minimum 10 mots à 15 mots maximum).</text>
 
 </texts>

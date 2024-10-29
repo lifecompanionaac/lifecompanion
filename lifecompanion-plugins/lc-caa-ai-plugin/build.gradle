@@ -1,6 +1,7 @@
 plugins {
     id 'java-library'
     id 'org.openjfx.javafxplugin' version '0.1.0'
+    id 'com.gradleup.shadow' version '8.3.0'
 }
 
 javafx {
@@ -19,6 +20,7 @@ version = "0.1.0"
 
 dependencies {
     compileOnly "org.lifecompanion:lc-app:$lifecompanionAppVersion"
+    implementation 'com.google.cloud:google-cloud-speech:4.41.0'
     // If you need to add plugin dependencies, add them with "implementation"
     // Note that you should check that the dependency is not already integrated in LifeCompanion core (if so, use "compileOnly" instead)
 }
@@ -40,9 +42,7 @@ jar {
                 "LifeCompanion-Min-App-Version": "$lifecompanionAppVersion"
         )
     }
-    from {
-        configurations.runtimeClasspath.collect {
-            it.isDirectory() ? it : zipTree(it)
-        }
+    from(configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }) {
+        exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
     }
 }
