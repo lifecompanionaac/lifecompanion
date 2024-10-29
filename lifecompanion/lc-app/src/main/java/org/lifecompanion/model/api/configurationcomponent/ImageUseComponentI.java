@@ -150,7 +150,14 @@ public interface ImageUseComponentI extends IdentifiableComponentI {
      */
     BooleanProperty imageAutomaticallySelectedProperty();
 
+    /**
+     * @return true if this image component should be displayed on fullscreen on activation
+     */
+    BooleanProperty displayInFullScreenProperty();
+
     void addExternalLoadingRequest(String id);
+
+    void addExternalLoadingRequest(String id, double width, double height);
 
     void removeExternalLoadingRequest(String id);
 }

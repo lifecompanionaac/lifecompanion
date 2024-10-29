@@ -35,6 +35,7 @@ import org.lifecompanion.model.api.imagedictionary.ImageElementI;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.imagedictionary.ImageDictionaries;
+import org.lifecompanion.util.LangUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -159,6 +160,9 @@ public class ImageUseComponentPropertyWrapper {
     @XMLIgnoreDefaultBooleanValue(false)
     private final BooleanProperty enableReplaceColor;
 
+    @XMLIgnoreDefaultBooleanValue(false)
+    private final BooleanProperty displayInFullScreen;
+
     private final Set<String> externalLoadingRequest;
 
     private final InvalidationListener invalidationListenerForAppMode;
@@ -190,6 +194,7 @@ public class ImageUseComponentPropertyWrapper {
         this.previousWidthUpdate = new AtomicInteger();
         this.previousHeightUpdate = new AtomicInteger();
         this.externalLoadingRequest = new HashSet<>();
+        this.displayInFullScreen = new SimpleBooleanProperty(false);
         this.invalidationListenerForAppMode = inv -> this.requestImageLoadingForThisImageUseComponentIfNeeded();
         this.initImageBinding();
         this.initViewportBinding();
@@ -265,13 +270,17 @@ public class ImageUseComponentPropertyWrapper {
 
     private void requestImageLoadingForThisImageUseComponentIfNeeded() {
         if (this.imageUseComponent.imageUseComponentDisplayedProperty().get()) {
-            this.requestImageLoadingForComponentWithId(getImageUseComponentID());
+            this.requestImageLoadingForComponentWithId(getImageUseComponentID(), null, null);
         }
     }
 
     private void requestImageLoadingForComponentWithId(String id) {
+        requestImageLoadingForComponentWithId(id, null, null);
+    }
+
+    private void requestImageLoadingForComponentWithId(String id, Double width, Double height) {
         if (imageVTwo.get() != null) {
-            imageVTwo.get().requestImageLoad(id, getWantedImageWidthValue(), getWantedImageHeightValue(), true, true);
+            imageVTwo.get().requestImageLoad(id, width != null ? width : getWantedImageWidthValue(), height != null ? height : getWantedImageHeightValue(), true, true);
         }
     }
 
@@ -279,6 +288,13 @@ public class ImageUseComponentPropertyWrapper {
         externalLoadingRequest.add(id);
         if (imageVTwo.get() != null) {
             this.requestImageLoadingForComponentWithId(id);
+        }
+    }
+
+    public void addExternalLoadingRequest(String id, double width, double height) {
+        externalLoadingRequest.add(id);
+        if (imageVTwo.get() != null) {
+            this.requestImageLoadingForComponentWithId(id, width, height);
         }
     }
 
@@ -364,6 +380,7 @@ public class ImageUseComponentPropertyWrapper {
     public DoubleProperty scaleXProperty() {
         return this.scaleX;
     }
+
     public DoubleProperty scaleYProperty() {
         return this.scaleY;
     }
@@ -391,10 +408,17 @@ public class ImageUseComponentPropertyWrapper {
     public BooleanProperty enableRemoveBackgroundProperty() {
         return this.enableRemoveBackground;
     }
-    public IntegerProperty removeBackgroundThresholdProperty() {return this.removeBackgroundThreshold;}
+
+    public IntegerProperty removeBackgroundThresholdProperty() {
+        return this.removeBackgroundThreshold;
+    }
 
     public BooleanProperty imageAutomaticallySelectedProperty() {
         return imageAutomaticallySelected;
+    }
+
+    public BooleanProperty displayInFullScreenProperty() {
+        return this.displayInFullScreen;
     }
     //========================================================================
 
@@ -420,7 +444,7 @@ public class ImageUseComponentPropertyWrapper {
                 element.removeAttribute("replacingColor");
                 element.removeAttribute("replaceColorThreshold");
             }
-            if(!enableRemoveBackground.get()) {
+            if (!enableRemoveBackground.get()) {
                 element.removeAttribute("enableRemoveBackground");
                 element.removeAttribute("removeBackgroundThreshold");
             }

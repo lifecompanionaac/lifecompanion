@@ -174,6 +174,11 @@ public class GridPartKeyComponent extends GridPartComponentBaseImpl implements G
         return this.imageUseComponentPropertyWrapper.imageAutomaticallySelectedProperty();
     }
 
+    @Override
+    public BooleanProperty displayInFullScreenProperty() {
+        return this.imageUseComponentPropertyWrapper.displayInFullScreenProperty();
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -348,6 +353,11 @@ public class GridPartKeyComponent extends GridPartComponentBaseImpl implements G
     @Override
     public void addExternalLoadingRequest(String id) {
         imageUseComponentPropertyWrapper.addExternalLoadingRequest(id);
+    }
+
+    @Override
+    public void addExternalLoadingRequest(String id, double width, double height) {
+        imageUseComponentPropertyWrapper.addExternalLoadingRequest(id, width, height);
     }
 
     @Override

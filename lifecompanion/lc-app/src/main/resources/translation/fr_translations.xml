@@ -3791,7 +3791,7 @@
     <text key="field.grid.component.selector.add.grid.name.header">Nom de la nouvelle grille ?</text>
     <text key="field.grid.component.selector.add.grid.name.text">Nommez la grille ajoutée pour la retrouver facilement plus tard.</text>
     <text key="video.analyze.message">Analyse de la vidéo</text>
-    <text key="image.use.config.part.ratio.rotate.title">Rotation et ratio</text>
+    <text key="image.use.config.part.ratio.rotate.title">Affichage</text>
     <text key="image.use.config.part.preview.title">Aperçu</text>
     <text key="image.use.config.part.remove.background.title">Suppression de l'arrière-plan</text>
     <text key="image.use.config.part.color.replace.title">Changement de couleur</text>
@@ -3937,4 +3937,7 @@
     <text key="key.option.user.action.sequence.list.name">Liste des séquences</text>
     <text key="key.option.user.action.sequence.list.description">Affiche les différentes séquences disponibles dans la configuration. Un appui sur la case permet de démarrer la séquence.</text>
     <text key="key.option.user.action.sequence.list.example.text">Nom de la séquence</text>
+    <text key="image.use.use.display.fullscreen">Afficher en plein écran à l'activation</text>
+    <text key="tooltip.image.use.use.display.fullscreen">Si activé, l'activation de la touche affichera l'image en plein écran. Lors d'une nouvelle activation, l'image sera masquée.</text>
+    <text key="action.key.image.display.fullscreen">Activation/désactivation de l'affichage de l'image en plein écran</text>
 </texts>

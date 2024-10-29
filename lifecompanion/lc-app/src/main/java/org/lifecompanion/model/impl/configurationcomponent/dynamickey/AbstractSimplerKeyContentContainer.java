@@ -189,6 +189,11 @@ public abstract class AbstractSimplerKeyContentContainer implements SimplerKeyCo
     }
 
     @Override
+    public void addExternalLoadingRequest(String id, double width, double height) {
+        imageUseComponentPropertyWrapper.addExternalLoadingRequest(id, width, height);
+    }
+
+    @Override
     public void removeExternalLoadingRequest(String id) {
         imageUseComponentPropertyWrapper.removeExternalLoadingRequest(id);
     }
@@ -224,7 +229,9 @@ public abstract class AbstractSimplerKeyContentContainer implements SimplerKeyCo
     }
 
     @Override
-    public BooleanProperty enableColorToGreyProperty(){return imageUseComponentPropertyWrapper.enableColorToGreyProperty();}
+    public BooleanProperty enableColorToGreyProperty() {
+        return imageUseComponentPropertyWrapper.enableColorToGreyProperty();
+    }
 
     @Override
     public BooleanProperty useViewPortProperty() {
@@ -234,6 +241,11 @@ public abstract class AbstractSimplerKeyContentContainer implements SimplerKeyCo
     @Override
     public ReadOnlyObjectProperty<Rectangle2D> viewportProperty() {
         return imageUseComponentPropertyWrapper.viewportProperty();
+    }
+
+    @Override
+    public BooleanProperty displayInFullScreenProperty() {
+        return imageUseComponentPropertyWrapper.displayInFullScreenProperty();
     }
 
     @Override

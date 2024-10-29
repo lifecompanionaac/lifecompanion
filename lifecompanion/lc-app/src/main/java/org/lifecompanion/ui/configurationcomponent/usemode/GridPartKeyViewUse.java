@@ -21,17 +21,18 @@ package org.lifecompanion.ui.configurationcomponent.usemode;
 
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.paint.Color;
 import org.fxmisc.easybind.EasyBind;
 import org.fxmisc.easybind.monadic.MonadicBinding;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.media.AutoRetryVideoPlayerView;
+import org.lifecompanion.controller.media.ImagePlayerStage;
 import org.lifecompanion.controller.media.VideoPlayerStage;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.model.api.categorizedelement.useaction.ActionEventType;
@@ -164,6 +165,13 @@ public class GridPartKeyViewUse extends GridPartKeyViewBase {
                             StageUtils.centerOnOwnerOrOnCurrentStageAndShow(videoPlayerStage);
                         });
                     }
+                }
+            } else if (model.imageVTwoProperty().get() != null) {
+                if (model.displayInFullScreenProperty().get() && type == ActionEventType.SIMPLE && event == UseActionEvent.ACTIVATION) {
+                    FXThreadUtils.runOnFXThread(() -> {
+                        ImagePlayerStage imagePlayerStage = new ImagePlayerStage(this.model, model.getKeyStyle().backgroundColorProperty().value().getValue());
+                        StageUtils.centerOnOwnerOrOnCurrentStageAndShow(imagePlayerStage);
+                    });
                 }
             }
         };

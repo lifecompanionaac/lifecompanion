@@ -78,6 +78,8 @@ public class ImageUseComponentConfigurationView extends BaseConfigurationViewBor
      */
     private ToggleSwitch toggleUseViewport;
 
+    private ToggleSwitch toggleDisplayFullscreen;
+
     /**
      * Toggle to enable/disable color change
      */
@@ -100,7 +102,7 @@ public class ImageUseComponentConfigurationView extends BaseConfigurationViewBor
     /**
      * Change listener for preserve ratio property/enable color replace
      */
-    private ChangeListener<Boolean> changeListenerPreserveRatio, changeListenerEnableColorReplace, changeListenerEnableColorToGrey, changeListenerEnableRemoveBackground, changeListenerVideoMute;
+    private ChangeListener<Boolean> changeListenerPreserveRatio, changeListenerEnableColorReplace, changeListenerEnableColorToGrey, changeListenerEnableRemoveBackground, changeListenerVideoMute, changeListenerDisplayFullscreen;
 
     private ChangeListener<VideoDisplayMode> changeListenerVideoDisplayMode;
     private ChangeListener<VideoPlayMode> changeListenerVideoPlayMode;
@@ -243,6 +245,9 @@ public class ImageUseComponentConfigurationView extends BaseConfigurationViewBor
         paneColorReplace.add(this.sliderReplaceThreshold, 1, 2);
         GridPane.setHgrow(labelColorToReplace, Priority.ALWAYS);
 
+        // Fullscreen
+        toggleDisplayFullscreen = FXControlUtils.createToggleSwitch("image.use.use.display.fullscreen", "tooltip.image.use.use.display.fullscreen");
+
         //Viewport selector
         Label labelTitleViewport = FXControlUtils.createTitleLabel(Translation.getText("image.use.config.part.viewport.title"));
         this.toggleUseViewport = FXControlUtils.createToggleSwitch("image.use.use.viewport", "tooltip.explain.image.use.viewport");
@@ -267,6 +272,7 @@ public class ImageUseComponentConfigurationView extends BaseConfigurationViewBor
                 toggleEnableReplaceColor,
                 paneColorReplace,
                 labelTitleViewport,
+                toggleDisplayFullscreen,
                 toggleUseViewport,
                 boxConfigureViewPort);
         videoOnlyNodes = List.of(labelTitleVideo, toggleSwitchMuteVideo, paneVideoConfig);
@@ -274,6 +280,7 @@ public class ImageUseComponentConfigurationView extends BaseConfigurationViewBor
         // Total
         VBox paneParameters = new VBox(5.0,
                 labelTitleRatioRotate,
+                toggleDisplayFullscreen,
                 togglePreserveRatio,
                 rotateAndMirrorNode,
                 labelTitleVideo,
@@ -330,6 +337,10 @@ public class ImageUseComponentConfigurationView extends BaseConfigurationViewBor
             ImageUseComponentI imageUseComp = this.model.get();
             ConfigActionController.INSTANCE.executeAction(new KeyActions.ChangeEnableColorToGreyAction(imageUseComp, this.toggleEnableColorToGrey.selectedProperty().get()));
         });
+        this.toggleDisplayFullscreen.selectedProperty().addListener((obs, ov, nv) -> {
+            ImageUseComponentI imageUseComp = this.model.get();
+            ConfigActionController.INSTANCE.executeAction(new KeyActions.ChangeDisplayInFullscreenImageAction(imageUseComp, this.toggleEnableColorToGrey.selectedProperty().get()));
+        });
         this.buttonConfigureViewport.disableProperty().bind(toggleUseViewport.selectedProperty().not());
         this.buttonOk.setOnAction(ev -> FXUtils.getSourceWindow(this).hide());
         this.toggleUseViewport.selectedProperty().addListener((obs, ov, nv) -> {
@@ -350,6 +361,8 @@ public class ImageUseComponentConfigurationView extends BaseConfigurationViewBor
                 ImageUseComponentI::removeBackgroundThresholdProperty, (model, nv) -> new KeyActions.RemoveBackgroundThresholdAction(model, nv.intValue()));
         this.changeListenerEnableColorToGrey = EditActionUtils.createSimpleBinding(this.toggleEnableColorToGrey.selectedProperty(), this.model,
                 m -> m.enableColorToGreyProperty().get(), KeyActions.ChangeEnableColorToGreyAction::new);
+        this.changeListenerDisplayFullscreen = EditActionUtils.createSimpleBinding(this.toggleDisplayFullscreen.selectedProperty(), this.model,
+                m -> m.displayInFullScreenProperty().get(), KeyActions.ChangeDisplayInFullscreenImageAction::new);
         this.changeListenerEnableColorReplace = EditActionUtils.createSimpleBinding(this.toggleEnableReplaceColor.selectedProperty(), this.model,
                 m -> m.enableReplaceColorProperty().get(), KeyActions.ChangeEnableReplaceColorAction::new);
         this.changeListenerUseViewport = EditActionUtils.createSimpleBinding(this.toggleUseViewport.selectedProperty(), this.model,
@@ -396,6 +409,7 @@ public class ImageUseComponentConfigurationView extends BaseConfigurationViewBor
         model.videoDisplayModeProperty().addListener(this.changeListenerVideoDisplayMode);
         model.videoPlayModeProperty().addListener(this.changeListenerVideoPlayMode);
         model.muteVideoProperty().addListener(this.changeListenerVideoMute);
+        model.displayInFullScreenProperty().addListener(this.changeListenerDisplayFullscreen);
         this.togglePreserveRatio.setSelected(model.preserveRatioProperty().get());
         this.toggleUseViewport.setSelected(model.useViewPortProperty().get());
         this.toggleEnableRemoveBackground.setSelected(model.enableRemoveBackgroundProperty().get());
@@ -408,6 +422,7 @@ public class ImageUseComponentConfigurationView extends BaseConfigurationViewBor
         this.comboBoxVideoDisplayMode.getSelectionModel().select(model.videoDisplayModeProperty().get());
         this.comboBoxVideoPlayMode.getSelectionModel().select(model.videoPlayModeProperty().get());
         this.toggleSwitchMuteVideo.setSelected(model.muteVideoProperty().get());
+        this.toggleDisplayFullscreen.setSelected(model.displayInFullScreenProperty().get());
         imageOnlyNodes.forEach(n -> n.setVisible(model.videoProperty().get() == null));
         videoOnlyNodes.forEach(n -> n.setVisible(model.videoProperty().get() != null));
         labelTitle.setText(Translation.getText("image.use.config.view.title.for." + (model.videoProperty().get() != null ? "video" : "image")));
@@ -429,6 +444,7 @@ public class ImageUseComponentConfigurationView extends BaseConfigurationViewBor
         model.videoDisplayModeProperty().removeListener(this.changeListenerVideoDisplayMode);
         model.videoPlayModeProperty().removeListener(this.changeListenerVideoPlayMode);
         model.muteVideoProperty().removeListener(this.changeListenerVideoMute);
+        model.displayInFullScreenProperty().removeListener(this.changeListenerDisplayFullscreen);
     }
 
     public ObjectProperty<VideoUseComponentI> modelProperty() {

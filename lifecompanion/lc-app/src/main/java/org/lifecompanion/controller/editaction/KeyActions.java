@@ -403,6 +403,18 @@ public class KeyActions {
         }
     }
 
+    public static class ChangeDisplayInFullscreenImageAction extends BasePropertyChangeAction<Boolean> {
+
+        public ChangeDisplayInFullscreenImageAction(final ImageUseComponentI keyP, Boolean enabled) {
+            super(keyP.displayInFullScreenProperty(), enabled);
+        }
+
+        @Override
+        public String getNameID() {
+            return "action.key.image.display.fullscreen";
+        }
+    }
+
     public static class ChangeEnableReplaceColorAction extends BasePropertyChangeAction<Boolean> {
 
         public ChangeEnableReplaceColorAction(final ImageUseComponentI keyP, final Boolean wantedValue) {
