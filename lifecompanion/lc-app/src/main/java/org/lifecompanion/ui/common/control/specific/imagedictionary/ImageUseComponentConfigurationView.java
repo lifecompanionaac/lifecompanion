@@ -331,15 +331,6 @@ public class ImageUseComponentConfigurationView extends BaseConfigurationViewBor
         this.buttonMirrorVertical.setOnAction(ev -> {
             ImageUseComponentI imageUseComp = this.model.get();
             ConfigActionController.INSTANCE.executeAction(new KeyActions.FlipImageVerticalAction(imageUseComp, imageUseComp.scaleYProperty().get() * -1));
-
-        });
-        this.toggleEnableColorToGrey.selectedProperty().addListener((obs, ov, nv) -> {
-            ImageUseComponentI imageUseComp = this.model.get();
-            ConfigActionController.INSTANCE.executeAction(new KeyActions.ChangeEnableColorToGreyAction(imageUseComp, this.toggleEnableColorToGrey.selectedProperty().get()));
-        });
-        this.toggleDisplayFullscreen.selectedProperty().addListener((obs, ov, nv) -> {
-            ImageUseComponentI imageUseComp = this.model.get();
-            ConfigActionController.INSTANCE.executeAction(new KeyActions.ChangeDisplayInFullscreenImageAction(imageUseComp, this.toggleEnableColorToGrey.selectedProperty().get()));
         });
         this.buttonConfigureViewport.disableProperty().bind(toggleUseViewport.selectedProperty().not());
         this.buttonOk.setOnAction(ev -> FXUtils.getSourceWindow(this).hide());
@@ -422,6 +413,7 @@ public class ImageUseComponentConfigurationView extends BaseConfigurationViewBor
         this.comboBoxVideoDisplayMode.getSelectionModel().select(model.videoDisplayModeProperty().get());
         this.comboBoxVideoPlayMode.getSelectionModel().select(model.videoPlayModeProperty().get());
         this.toggleSwitchMuteVideo.setSelected(model.muteVideoProperty().get());
+        System.out.println("fullscreen = "+model.displayInFullScreenProperty().get());
         this.toggleDisplayFullscreen.setSelected(model.displayInFullScreenProperty().get());
         imageOnlyNodes.forEach(n -> n.setVisible(model.videoProperty().get() == null));
         videoOnlyNodes.forEach(n -> n.setVisible(model.videoProperty().get() != null));
