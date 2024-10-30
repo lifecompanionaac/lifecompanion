@@ -413,7 +413,6 @@ public class ImageUseComponentConfigurationView extends BaseConfigurationViewBor
         this.comboBoxVideoDisplayMode.getSelectionModel().select(model.videoDisplayModeProperty().get());
         this.comboBoxVideoPlayMode.getSelectionModel().select(model.videoPlayModeProperty().get());
         this.toggleSwitchMuteVideo.setSelected(model.muteVideoProperty().get());
-        System.out.println("fullscreen = "+model.displayInFullScreenProperty().get());
         this.toggleDisplayFullscreen.setSelected(model.displayInFullScreenProperty().get());
         imageOnlyNodes.forEach(n -> n.setVisible(model.videoProperty().get() == null));
         videoOnlyNodes.forEach(n -> n.setVisible(model.videoProperty().get() != null));
