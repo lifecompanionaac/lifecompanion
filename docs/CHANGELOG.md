@@ -1,14 +1,10 @@
 # LIFECOMPANION CHANGELOG
 
-## 1.6.5 - XX/XX/2025
-
-### Fonctionnalités
-
-- ...
+## 1.6.5 - 31/10/2025
 
 ### Corrections/ajustements
 
-- ...
+- Intégration de nouvelles APIs
 
 ## 1.6.4 - 30/10/2024
 
