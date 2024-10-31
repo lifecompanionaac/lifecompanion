@@ -3,7 +3,7 @@ name: ci-aac4all-wp2-plugin
 on:
   push:
     tags:        
-      - 'lifecompanion-plugins/ci-aac4all-wp2-plugin/*-prod'
+      - 'lifecompanion-plugins/aac4all-wp2-plugin/*-prod'
       
 jobs:
   call-workflow-passing-data:
