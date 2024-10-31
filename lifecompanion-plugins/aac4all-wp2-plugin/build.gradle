@@ -38,8 +38,8 @@ jar {
                 "LifeCompanion-Plugin-Author": "Lisa Hoiry, IRIT",
                 "LifeCompanion-Plugin-Version": project.version,
                 "LifeCompanion-Plugin-Build-Date": new Date().getTime(),
-                "LifeCompanion-Plugin-Name": "TODO",
-                "LifeCompanion-Plugin-Description": "TODO",
+                "LifeCompanion-Plugin-Name": "Étude SK4ALL",
+                "LifeCompanion-Plugin-Description": "Plugin de l'étude SKY4ALL dans le cadre du projet de recherche AAC4ALL.",
                 "LifeCompanion-Min-App-Version": "$lifecompanionAppVersion"
         )
     }

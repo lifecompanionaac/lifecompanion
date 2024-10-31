@@ -1,0 +1,19 @@
+name: ci-aac4all-wp2-plugin
+
+on:
+  push:
+    tags:        
+      - 'lifecompanion-plugins/ci-aac4all-wp2-plugin/*-prod'
+      
+jobs:
+  call-workflow-passing-data:
+    uses: ./.github/workflows/ci-lifecompanion.yml
+    with:
+      target_env: prod
+      runs_on: ubuntu-22.04
+      plugin_dir_name: ci-aac4all-wp2-plugin
+      gradle_command: publishPluginJar -PpluginDir=../lifecompanion-plugins/ci-aac4all-wp2-plugin
+    secrets:
+      framework_server_url: ${{ secrets.LIFECOMPANION_FRAMEWORK_SERVER_URL_PROD }}
+      framework_server_login: ${{ secrets.LIFECOMPANION_FRAMEWORK_SERVER_LOGIN_PROD }}
+      framework_server_password: ${{ secrets.LIFECOMPANION_FRAMEWORK_SERVER_PASSWORD_PROD }}
