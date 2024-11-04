@@ -52,7 +52,7 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
 
     private Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter()).setPrettyPrinting().create();
 
-    private final long TRAINING_DURATION_MS = (long) 20 * 1000; //  min à passer en 10 min
+    private final long TRAINING_DURATION_MS = (long) 10* 60 * 1000; //  min à passer en 10 min
     private final long EVALUATION_DURATION_MS = (long) 15 * 60 * 1000;//15 min
 
     private boolean evaluationMode = false;
@@ -216,7 +216,6 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
     public void modeStop(LCConfigurationI configuration) {
         this.configuration = null;
         this.currentAAC4AllWp2PluginProperties = null;
-        // this.randomType = null;
         //TODO ; vide tout ce qui est rempli dans modeStart()
     }
 
@@ -295,19 +294,13 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
 
     public void setEvaFatigueScore(int score) {
         currentKeyboardEvaluation.setFatigueScore(score);
-        recordLogs();
-        System.out.println("Fatigue avec score de " + currentKeyboardEvaluation.getFatigueScore());
-    }
+        recordLogs();}
     public void setEvaFatigueInitScore(int score) {
         currentKeyboardEvaluation.setFatigueInitScore(score);
-        recordLogs();
-        System.out.println("Fatigue init avec score de " + currentKeyboardEvaluation.getFatigueInitScore());
-    }
+        recordLogs();}
     public void setEvaSatisfactionScore(Integer score) {
         currentKeyboardEvaluation.setSatisfactionScore(score);
-        recordLogs();
-        System.out.println("Satisfaction avec score de " + currentKeyboardEvaluation.getSatisfactionScore());
-    }
+        recordLogs();}
 
 
     public void initCurrentKeyboard(){
@@ -351,14 +344,12 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
         //TODO stop eyetracking logs
         if (scheduledEyetrackingTask != null && !scheduledEyetrackingTask.isCancelled()) {
             scheduler.shutdown();
-            System.out.println("Tâche arrêtée");
         }
         //currentSentenceEvaluation = null;
         SelectionModeController.INSTANCE.removeScannedPartChangedListeners(validationRow);
         SelectionModeController.INSTANCE.currentOverPartProperty().removeListener(highlightKey);
         UseActionController.INSTANCE.removeActionExecutionListener(validationKey);
-        SelectionModeController.INSTANCE.addOverScannedPartChangedListener(highlightRow);
-        System.out.println("stop log ici ");
+        SelectionModeController.INSTANCE.removeOverScannedPartChangedListener(highlightRow);
     }
 
 
@@ -382,10 +373,8 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
         long time;
         if (evaluationMode) {
             time = EVALUATION_DURATION_MS;
-            System.out.println("mode évaluation");
         } else {
             time = TRAINING_DURATION_MS;
-            System.out.println("training de " + time);
         }
 
         // TODO: go to currentKeyboardEvaluation
