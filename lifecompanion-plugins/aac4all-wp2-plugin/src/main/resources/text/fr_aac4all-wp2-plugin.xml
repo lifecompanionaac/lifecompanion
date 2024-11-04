@@ -38,6 +38,8 @@
     <text key="aac4aal.wp2.plugin.action.start.training.name">Lancer le clavier à tester</text>
     <text key="aac4aal.wp2.plugin.action.start.training.description">Lance la configuration à tester et les actions associées</text>
 
+    <text key="aac4aal.wp2.plugin.action.init.current.keyboard.name">Initialise le clavier courant</text>
+    <text key="aac4aal.wp2.plugin.action.init.current.keyboard.description">Permet d'initialiser le clavier courant dans les logs</text>
 
     <text key="aac4all.wp2.plugin.instruction.description.RéoLocL">Vous allez utiliser le clavier RéoLoc Ligne.\nLors de cet exercice vous allez devoir recopier le plus fidèlement possible un maximum de phrases. Les phrases à recopier seront présentées au-dessus de votre éditeur de texte.\nPhrase pour dire pas de pression. </text>
     <text key="aac4all.wp2.plugin.instruction.description.RéoLocG">Vous allez utiliser le clavier RéoLoc Globale.\nLors de cet exercice vous allez devoir recopier le plus fidèlement possible un maximum de phrases. Les phrases à recopier seront présentées au-dessus de votre éditeur de texte.\nPhrase pour dire pas de pression. </text>

@@ -5,7 +5,8 @@ import java.util.List;
 
 public class WP2KeyboardEvaluation {
     private KeyboardType type;
-    private int fatigueScore;
+    private int fatigueInitScore;
+    private int fatiguePostScore;
     private int satisfactionScore;
     private List<WP2SentenceEvaluation> sentences = new ArrayList<>();
 
@@ -13,13 +14,15 @@ public class WP2KeyboardEvaluation {
         this.type = type;
     }
 
-    public int getFatigueScore() {
-        return fatigueScore;
-    }
+    public int getFatigueScore() { return fatiguePostScore;}
 
     public void setFatigueScore(int fatigueScore) {
-        this.fatigueScore = fatigueScore;
+        this.fatiguePostScore = fatigueScore;
     }
+
+    public int getFatigueInitScore(){return fatigueInitScore;}
+
+    public void setFatigueInitScore(int fatigueInitScore){this.fatigueInitScore=fatigueInitScore;}
 
     public int getSatisfactionScore() {
         return satisfactionScore;

@@ -92,14 +92,20 @@ public class SetEvaValueUseAction extends SimpleUseActionImpl<UseActionTriggerCo
     @Override
     public void execute(final UseActionEvent event, final Map<String, UseVariableI<?>> variables) {
         if (this.evaCategoryType.get() != null) {
-            if (evaCategoryType.get() == EvaCategoryType.FATIGUE) {
+            if (evaCategoryType.get() == EvaCategoryType.FATIGUE_POST) {
                 if (evaScoreType.get() != null) {
                     updateColor();
-                    AAC4AllWp2EvaluationController.INSTANCE.setEvaFatigueScore(evaScoreType.get().getScore());
-                }
+                    AAC4AllWp2EvaluationController.INSTANCE.setEvaFatigueScore(evaScoreType.get().getScore());}
+
             } else if (evaCategoryType.get() == EvaCategoryType.SATISFACTION) {
+                if (evaScoreType.get() != null) {
                 updateColor();
-                AAC4AllWp2EvaluationController.INSTANCE.setEvaSatisfactionScore(evaScoreType.get().getScore());
+                AAC4AllWp2EvaluationController.INSTANCE.setEvaSatisfactionScore(evaScoreType.get().getScore());}
+
+            } else if (evaCategoryType.get()== EvaCategoryType.FATIGUE_INIT) {
+                if (evaScoreType.get() != null) {
+                updateColor();
+                AAC4AllWp2EvaluationController.INSTANCE.setEvaFatigueInitScore(evaScoreType.get().getScore());}
             }
         }
     }

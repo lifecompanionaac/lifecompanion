@@ -52,7 +52,7 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
 
     private Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter()).setPrettyPrinting().create();
 
-    private final long TRAINING_DURATION_MS = (long) 4 * 60 * 1000; //à passer en 10 min
+    private final long TRAINING_DURATION_MS = (long) 20 * 1000; //  min à passer en 10 min
     private final long EVALUATION_DURATION_MS = (long) 15 * 60 * 1000;//15 min
 
     private boolean evaluationMode = false;
@@ -122,7 +122,6 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
             if (newValue != null) {
                 HighLightLog log = new HighLightLog(newValue.nameProperty().getValue(), newValue.columnProperty().getValue());
                 currentSentenceEvaluation.getLogs().add(new WP2Logs(LocalDateTime.now(), LogType.HIGHLIGHT, log));
-
             }
         }
     };
@@ -285,6 +284,7 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
             }
         }
 
+
             if (!goToNextKeyboardToEvaluate()) {
             SelectionModeController.INSTANCE.goToGridPart(endGrid);
         } else {
@@ -298,15 +298,24 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
         recordLogs();
         System.out.println("Fatigue avec score de " + currentKeyboardEvaluation.getFatigueScore());
     }
+    public void setEvaFatigueInitScore(int score) {
+        currentKeyboardEvaluation.setFatigueInitScore(score);
+        recordLogs();
+        System.out.println("Fatigue init avec score de " + currentKeyboardEvaluation.getFatigueInitScore());
+    }
     public void setEvaSatisfactionScore(Integer score) {
         currentKeyboardEvaluation.setSatisfactionScore(score);
         recordLogs();
         System.out.println("Satisfaction avec score de " + currentKeyboardEvaluation.getSatisfactionScore());
+    }
 
+
+    public void initCurrentKeyboard(){
+        currentKeyboardEvaluation = new WP2KeyboardEvaluation(currentKeyboardType);
     }
 
     public void startLogListener() {
-        currentKeyboardEvaluation = new WP2KeyboardEvaluation(currentKeyboardType);
+        //currentKeyboardEvaluation = new WP2KeyboardEvaluation(currentKeyboardType);
 
         if (currentKeyboardEvaluation != null) {
 
@@ -331,22 +340,11 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
                 //System.out.println(rawGazeY);
                 currentSentenceEvaluation.getLogs().add(new WP2Logs(LocalDateTime.now(), LogType.EYETRACKING_POSITION, new EyetrackingPosition(gazeX, gazeY)));
             }, 0, 100, TimeUnit.MILLISECONDS); //0, 20, TimeUnit.MILLISECONDS);
-
-
-            /*
-            WritingStateController.INSTANCE.currentWordProperty().addListener((obs, ov, nv) -> {
-                //TODO : enregistrer le fichier à chaque nouveau mot saisie
-                System.out.println("un mot est écrit "+nv);
-            });
-            */
-
-
         }
     }
 
     public void stopLogListener() {
         //TODO stopper les
-
         //recupérer l'état final de l'éditeur de texte avant clean
         currentSentenceEvaluation.setTextEntry(WritingStateController.INSTANCE.getLastSentence());
 
@@ -356,15 +354,11 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
             System.out.println("Tâche arrêtée");
         }
         //currentSentenceEvaluation = null;
-
         SelectionModeController.INSTANCE.removeScannedPartChangedListeners(validationRow);
         SelectionModeController.INSTANCE.currentOverPartProperty().removeListener(highlightKey);
         UseActionController.INSTANCE.removeActionExecutionListener(validationKey);
         SelectionModeController.INSTANCE.addOverScannedPartChangedListener(highlightRow);
-
-
-
-
+        System.out.println("stop log ici ");
     }
 
 
@@ -382,6 +376,8 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
 
     }
 
+
+
     public void startTraining() {
         long time;
         if (evaluationMode) {
@@ -389,7 +385,7 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
             System.out.println("mode évaluation");
         } else {
             time = TRAINING_DURATION_MS;
-            System.out.println("mode training");
+            System.out.println("training de " + time);
         }
 
         // TODO: go to currentKeyboardEvaluation
@@ -404,7 +400,7 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
         // TODO : démarer le listener log
         startLogListener();
 
-        // chrono 10 mins
+        // chrono
         Timer timer = new Timer();
         TimerTask timerTask = new TimerTask() {
             @Override
