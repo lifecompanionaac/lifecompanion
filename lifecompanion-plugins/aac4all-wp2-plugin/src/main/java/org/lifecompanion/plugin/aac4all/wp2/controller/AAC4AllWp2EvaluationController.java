@@ -264,12 +264,7 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
         }
     }
 
-    public void nextDailyTraining() {
-        currentEvaluation.getEvaluations().add(currentKeyboardEvaluation);
-        recordLogs();
-        currentKeyboardEvaluation = null;
-
-        //emptyAllColors();
+    public void emptyAllColors(){
         SelectionModeI selectionMode = configuration.selectionModeProperty().get();
         List<ComponentToScanI> rows = null;
         if (selectionMode != null && selectionMode.currentGridProperty().get() != null) {
@@ -282,6 +277,15 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
                 }
             }
         }
+    }
+
+    public void nextDailyTraining() {
+        currentEvaluation.getEvaluations().add(currentKeyboardEvaluation);
+        recordLogs();
+        currentKeyboardEvaluation = null;
+
+        emptyAllColors();
+
 
 
             if (!goToNextKeyboardToEvaluate()) {
@@ -376,6 +380,11 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
         } else {
             time = TRAINING_DURATION_MS;
         }
+
+        emptyAllColors();
+
+
+
 
         // TODO: go to currentKeyboardEvaluation
         SelectionModeController.INSTANCE.goToGridPart(currentKeyboard);
