@@ -229,7 +229,7 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
             randomType = randonTypePossible.get(indexTrainingKeyboard);
         }
         currentRandomIndex = 0;
-        currentEvaluation = new WP2Evaluation(LocalDateTime.now(), patientID.toString());
+        currentEvaluation = new WP2Evaluation(LocalDateTime.now(), patientID.get());
 
         goToNextKeyboardToEvaluate();
 
