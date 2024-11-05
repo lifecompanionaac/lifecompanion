@@ -58,8 +58,8 @@ public class SetEvaValueUseAction extends SimpleUseActionImpl<UseActionTriggerCo
         this.evaScoreType = new SimpleObjectProperty<>();
         this.evaCategoryType = new SimpleObjectProperty<>();
 
-        this.nameID = "todo-eva";
-        this.staticDescriptionID = "todo";
+        this.nameID = "aac4aal.wp2.plugin.action.set.eva.values.name";
+        this.staticDescriptionID = "aac4aal.wp2.plugin.action.set.eva.values.description";
         this.configIconPath = "filler_icon_32px.png";
         this.variableDescriptionProperty().bind(TranslationFX.getTextBinding("action.simple.set.eva.value.variable.description", this.evaCategoryType, this.evaScoreType));
 

@@ -23,23 +23,40 @@
     <text key="aac4all.wp2.plugin.variable.instruction.current.keyboard.example">TODO example</text>
 
 
-    <text key="aac4aal.wp2.plugin.main.action.category.description"> TODO DESCRIP AAC4All évaluation WP2 </text>
-    <text key="aac4aal.wp2.plugin.main.action.category.name">TODO NOM   AAC4All évaluation WP2 </text>
+    <text key="aac4aal.wp2.plugin.main.action.category.description"> Actions relatives aux évaluation du WP2 du projet AAC4All</text>
+    <text key="aac4aal.wp2.plugin.main.action.category.name">AAC4All évaluation WP2 </text>
 
     <text key="aac4aal.wp2.plugin.action.display.sentence.name">Affichage de la phrase</text>
     <text key="aac4aal.wp2.plugin.action.display.sentence.description">Permet de valider la saisie et de passer à la prochaine phrase à saisir</text>
 
-    <text key="aac4aal.wp2.plugin.action.next.eval.name">Prochaine config à tester</text>
-    <text key="aac4aal.wp2.plugin.action.next.eval.description">Permet de choisir aléatoirement le prochain clavier à tester</text>
+    <text key="aac4aal.wp2.plugin.action.next.eval.name">Prochaine configuration à tester </text>
+    <text key="aac4aal.wp2.plugin.action.next.eval.description">Permet de lancer le prochain clavier à tester</text>
 
-    <text key="aac4aal.wp2.plugin.action.start.eval.name">Première config à tester</text>
-    <text key="aac4aal.wp2.plugin.action.start.eval.description">Permet de choisir aléatoirement le premier clavier à tester. S'il n'y a pas de prochaine, ferme LifeCompanion</text>
+    <text key="aac4aal.wp2.plugin.action.start.eval.name">Démarrer les entrainements</text>
+    <text key="aac4aal.wp2.plugin.action.start.eval.description">Lance les actions associées aux entrainement en choisissant aléatoirement le premier clavier à tester</text>
 
-    <text key="aac4aal.wp2.plugin.action.start.training.name">Lancer le clavier à tester</text>
+    <text key="aac4aal.wp2.plugin.action.start.training.name">Lancer le clavier</text>
     <text key="aac4aal.wp2.plugin.action.start.training.description">Lance la configuration à tester et les actions associées</text>
+
+    <text key="aac4aal.wp2.plugin.action.start.evalutation.name">Démarrer les évaluations</text>
+    <text key="aac4aal.wp2.plugin.action.start.training.description">Lance les actions associées aux évaluations en récupérant l'ordre des paramètres</text>
 
     <text key="aac4aal.wp2.plugin.action.init.current.keyboard.name">Initialise le clavier courant</text>
     <text key="aac4aal.wp2.plugin.action.init.current.keyboard.description">Permet d'initialiser le clavier courant dans les logs</text>
+
+    <text key="aac4aal.wp2.plugin.action.write.prediction.name">Touche CurSta</text>
+    <text key="aac4aal.wp2.plugin.action.write.prediction.description">Action à associer à toutes les touches du clavier CurSta</text>
+
+    <text key="aac4aal.wp2.plugin.action.cur.sta.use.action.name">Curseur Statique de CurSta</text>
+    <text key="aac4aal.wp2.plugin.action.write.prediction.description">Action à associer au survol sur la touches du curseur statique du clavier CurSta</text>
+
+
+    <text key="aac4aal.wp2.plugin.action.set.eva.values.name">Touche EVA</text>
+    <text key="aac4aal.wp2.plugin.action.write.prediction.description">Choix de la catégorie et du score à associer à la touhce pour renseigner les évaluations de ressenti</text>
+
+
+
+
 
     <text key="aac4all.wp2.plugin.instruction.description.RéoLocL">Vous allez utiliser le clavier RéoLoc Ligne.\nLors de cet exercice vous allez devoir recopier le plus fidèlement possible un maximum de phrases. Les phrases à recopier seront présentées au-dessus de votre éditeur de texte.\nPhrase pour dire pas de pression. </text>
     <text key="aac4all.wp2.plugin.instruction.description.RéoLocG">Vous allez utiliser le clavier RéoLoc Globale.\nLors de cet exercice vous allez devoir recopier le plus fidèlement possible un maximum de phrases. Les phrases à recopier seront présentées au-dessus de votre éditeur de texte.\nPhrase pour dire pas de pression. </text>
