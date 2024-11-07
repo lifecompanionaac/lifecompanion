@@ -68,6 +68,7 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
     private WP2SentenceEvaluation currentSentenceEvaluation;
 
     private final List<String> phraseSetFR;
+    private List<String> currentPhraseSet;
 
     private String currentSentence = "";
 
@@ -184,6 +185,8 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
         File pathToDestinationDir = InstallationConfigurationController.INSTANCE.getUserDirectory();
         filePathLogs = String.format("%s%s_%s.json", pathToDestinationDir + "/lifecompanion-plugins/aac4all-wp2-plugin/result/", patientID.getValue(), now.format(formatter));
 
+            currentPhraseSet = new ArrayList<>(phraseSetFR);;
+
         this.keyboardConsigne = this.configuration.getAllComponent().values().stream()
                 .filter(d -> d instanceof GridPartComponentI)
                 .filter(c -> c.nameProperty().get().startsWith("Consigne"))
@@ -293,9 +296,7 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
 
         emptyAllColors();
 
-
-
-            if (!goToNextKeyboardToEvaluate()) {
+        if (!goToNextKeyboardToEvaluate()) {
             SelectionModeController.INSTANCE.goToGridPart(endGrid);
         } else {
             SelectionModeController.INSTANCE.goToGridPart(keyboardConsigne);
@@ -430,17 +431,22 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
 
 
     public void StartDislaySentence() {
-
+        int randomIndexSentence=0;
         if (currentSentenceEvaluation == null) {
             currentSentenceEvaluation = new WP2SentenceEvaluation(currentSentence, new Date());
             currentKeyboardEvaluation.getSentenceLogs().add(currentSentenceEvaluation);
-            currentSentence = phraseSetFR.get(new Random().nextInt(phraseSetFR.size()));
+            randomIndexSentence= new Random().nextInt(currentPhraseSet.size());
+            currentSentence = currentPhraseSet.get(randomIndexSentence);
+            currentPhraseSet.remove(currentPhraseSet.get(randomIndexSentence));
             UseVariableController.INSTANCE.requestVariablesUpdate();
         } else {
             recordLogs();
             currentSentenceEvaluation.setTextEntry(WritingStateController.INSTANCE.getLastSentence());
-            currentSentence = phraseSetFR.get(new Random().nextInt(phraseSetFR.size()));
+            randomIndexSentence= new Random().nextInt(currentPhraseSet.size());
+            currentSentence = currentPhraseSet.get(randomIndexSentence);
+            currentPhraseSet.remove(currentPhraseSet.get(randomIndexSentence));
             UseVariableController.INSTANCE.requestVariablesUpdate();
+
             currentSentenceEvaluation = new WP2SentenceEvaluation(currentSentence, new Date());
             currentKeyboardEvaluation.getSentenceLogs().add(currentSentenceEvaluation);
             WritingStateController.INSTANCE.removeAll(WritingEventSource.USER_ACTIONS);
