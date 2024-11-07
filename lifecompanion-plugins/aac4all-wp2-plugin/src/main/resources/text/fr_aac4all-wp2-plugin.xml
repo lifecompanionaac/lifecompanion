@@ -54,7 +54,8 @@
     <text key="aac4aal.wp2.plugin.action.set.eva.values.name">Touche EVA</text>
     <text key="aac4aal.wp2.plugin.action.write.prediction.description">Choix de la catégorie et du score à associer à la touhce pour renseigner les évaluations de ressenti</text>
 
-
+    <text key="aac4all.wp2.plugin.general.config.view.field.patient.id">Identifiant du participant</text>
+    <text key="aac4all.wp2.plugin.general.config.combo.box.random.type">Aléatoire de l'évaluation</text>
 
 
 

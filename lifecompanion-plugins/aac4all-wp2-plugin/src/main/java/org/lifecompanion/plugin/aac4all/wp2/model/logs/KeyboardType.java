@@ -4,8 +4,8 @@ public enum KeyboardType {
     REOLOC_L("Clavier RéoLocLigne", "RéoLocL"),
     REOLOC_G("Clavier RéoLocGlobale", "RéoLocG"),
     STATIC("Clavier Statique", "Statique"),
-    CUR_STA("Clavier CurSta", "TODO CurSta"),
-    DY_LIN("Clavier DyLin", "TODO DyLin");
+    CUR_STA("Clavier CurSta", "CurSta"),
+    DY_LIN("Clavier DyLin", "DyLin");
 
     private final String gridName;
     private final String translationId;
