@@ -39,6 +39,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -178,8 +179,10 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
         patientID = currentAAC4AllWp2PluginProperties.patientIdProperty();
 
         //TODO : nom de fichier log variable avec date id et patient
+            LocalDateTime now = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm");
         File pathToDestinationDir = InstallationConfigurationController.INSTANCE.getUserDirectory();
-        filePathLogs = String.format("%s%s_%s.json", pathToDestinationDir + "/lifecompanion-plugins/aac4all-wp2-plugin/result/", patientID.getValue(), LocalDate.now().toString());
+        filePathLogs = String.format("%s%s_%s.json", pathToDestinationDir + "/lifecompanion-plugins/aac4all-wp2-plugin/result/", patientID.getValue(), now.format(formatter));
 
         this.keyboardConsigne = this.configuration.getAllComponent().values().stream()
                 .filter(d -> d instanceof GridPartComponentI)
