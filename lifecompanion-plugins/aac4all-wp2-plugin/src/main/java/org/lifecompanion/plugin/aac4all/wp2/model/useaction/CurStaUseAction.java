@@ -3,6 +3,7 @@ package org.lifecompanion.plugin.aac4all.wp2.model.useaction;
 import org.lifecompanion.controller.lifecycle.AppMode;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.selectionmode.SelectionModeController;
+import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
 import org.lifecompanion.model.impl.categorizedelement.useaction.BaseUseActionImpl;
@@ -20,16 +21,23 @@ public class CurStaUseAction extends BaseUseActionImpl<GridPartKeyComponentI> {
         this.variableDescriptionProperty().set(this.getStaticDescription());
     }
 
+    String lastText;
+
     @Override
     public void eventStarts(UseActionEvent useActionEvent) {
-
+        GridPartKeyComponentI key = parentComponentProperty().get();
+        if (key != null && AppModeController.INSTANCE.isUseMode()) {
+            this.lastText = key.textContentProperty().get();
+        }
     }
 
     @Override
     public void eventEnds(UseActionEvent useActionEvent) {
         GridPartKeyComponentI key = parentComponentProperty().get();
-        AAC4AllWp2Controller.INSTANCE.shiftCurSta();
         if (key != null && AppModeController.INSTANCE.isUseMode()) {
+            if (StringUtils.isEquals(lastText, key.textContentProperty().get())) {
+                AAC4AllWp2Controller.INSTANCE.shiftCurSta();
+            }
             SelectionModeController.INSTANCE.goToGridPart(key);
         }
     }

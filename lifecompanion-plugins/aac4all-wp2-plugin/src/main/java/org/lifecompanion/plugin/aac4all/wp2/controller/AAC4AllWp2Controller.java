@@ -44,28 +44,51 @@ public enum AAC4AllWp2Controller implements ModeListenerI {
 
     // TODO : replace with content from char prediction
     private String curStaCharacters = "abcdefghijklmnopqrstuvwxyzéèàê' ";
-    private List<Character> predict = List.of('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'é', 'è', 'à', 'ê', '\'', ' ');
+    private List<PredictResult> predict = transformResult(List.of('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'é', 'è', 'à', 'ê', '\'', ' '));
     private int curStaIndex = 0;
     private List<AAC4AllKeyOptionCurSta> curStaKeys;
 
 
-     private void initCurSta(LCConfigurationI configuration) {
+    private void initCurSta(LCConfigurationI configuration) {
 
-         Map<GridComponentI, List<AAC4AllKeyOptionCurSta>> curStaKeyOptions = new HashMap<>();
-         ConfigurationComponentUtils.findKeyOptionsByGrid(AAC4AllKeyOptionCurSta.class, configuration, curStaKeyOptions, null);
-         curStaKeys = curStaKeyOptions.values().stream().flatMap(Collection::stream).toList();
-         curStaIndex = 0;
-         updateCurSta();
+        Map<GridComponentI, List<AAC4AllKeyOptionCurSta>> curStaKeyOptions = new HashMap<>();
+        ConfigurationComponentUtils.findKeyOptionsByGrid(AAC4AllKeyOptionCurSta.class, configuration, curStaKeyOptions, null);
+        curStaKeys = curStaKeyOptions.values().stream().flatMap(Collection::stream).toList();
+        curStaIndex = 0;
+        // TODO : appeler la prédiction ici
+        updateCurSta();
 
-         WritingStateController.INSTANCE.textBeforeCaretProperty().addListener((obs, ov, nv) -> {
-             HashSet<Character> acceptedCharact = new HashSet<>(curStaCharacters.chars().mapToObj(c -> (char) c).collect(Collectors.toSet()));
-             predict = LCCharPredictor.INSTANCE.predict(WritingStateController.INSTANCE.textBeforeCaretProperty().get(), acceptedCharact.size(), acceptedCharact);
-             List<Character> predict = LCCharPredictor.INSTANCE.predict(WritingStateController.INSTANCE.textBeforeCaretProperty().get(), acceptedCharact.size(), acceptedCharact);
-             curStaIndex = 0;
-             updateCurSta();
-         });
+        WritingStateController.INSTANCE.textBeforeCaretProperty().addListener((obs, ov, nv) -> {
+            HashSet<Character> acceptedCharact = new HashSet<>(curStaCharacters.chars().mapToObj(c -> (char) c).collect(Collectors.toSet()));
+            predict = transformResult(LCCharPredictor.INSTANCE.predict(WritingStateController.INSTANCE.textBeforeCaretProperty().get(), acceptedCharact.size(), acceptedCharact));
+            curStaIndex = 0;
+            updateCurSta();
+        });
+    }
 
-     }
+    private static List<PredictResult> transformResult(List<Character> prediction) {
+        List<PredictResult> result = new ArrayList<>();
+        int j = 0;
+        for (int i = 0; i < prediction.size(); i++) {
+            result.add(new PredictResult(AAC4AllKeyOptionCurSta.ActionType.WRITE_PRED, String.valueOf(prediction.get(i))));
+            if (j++ % 3 == 0) {
+                result.add(new PredictResult(AAC4AllKeyOptionCurSta.ActionType.MOVE_BACK, ""));
+            }
+        }
+        return result;
+    }
+
+    private final static PredictResult EMPTY = new PredictResult(AAC4AllKeyOptionCurSta.ActionType.WRITE_PRED, "");
+
+    private static class PredictResult {
+        private AAC4AllKeyOptionCurSta.ActionType actionType;
+        private String predict;
+
+        public PredictResult(AAC4AllKeyOptionCurSta.ActionType actionType, String predict) {
+            this.actionType = actionType;
+            this.predict = predict;
+        }
+    }
 
 
     private void updateCurSta() {
@@ -76,9 +99,9 @@ public enum AAC4AllWp2Controller implements ModeListenerI {
                 for (int i = middleIndex; i < curStaKeys.size(); i++) {
                     AAC4AllKeyOptionCurSta key = curStaKeys.get(i);
                     if (curStaIndex + i - middleIndex < predict.size()) {
-                        key.predictionProperty().set(String.valueOf(predict.get(curStaIndex + i - middleIndex)));
+                        updateKeyWith(key, predict.get(curStaIndex + i - middleIndex));
                     } else {
-                        key.predictionProperty().set("");
+                        updateKeyWith(key, EMPTY);
                     }
                 }
                 // From middle to start : display previous keys
@@ -86,14 +109,19 @@ public enum AAC4AllWp2Controller implements ModeListenerI {
                 for (int i = middleIndex - 1; i >= 0; i--) {
                     AAC4AllKeyOptionCurSta key = curStaKeys.get(i);
                     if (curStaBackIndex < predict.size() && curStaBackIndex >= 0) {
-                        key.predictionProperty().set(String.valueOf(predict.get(curStaBackIndex)));
+                        updateKeyWith(key, predict.get(curStaBackIndex));
                     } else {
-                        key.predictionProperty().set("");
+                        updateKeyWith(key, EMPTY);
                     }
                     curStaBackIndex--;
                 }
             }
         });
+    }
+
+    private static void updateKeyWith(AAC4AllKeyOptionCurSta key, PredictResult predictResult) {
+        key.predictionProperty().set(predictResult.actionType != AAC4AllKeyOptionCurSta.ActionType.WRITE_PRED ? predictResult.actionType.getText() : predictResult.predict);
+        key.actionTypeProperty().set(predictResult.actionType);
     }
 
     public void shiftCurSta() {
@@ -102,6 +130,11 @@ public enum AAC4AllWp2Controller implements ModeListenerI {
         } else {
             curStaIndex = 0;
         }
+        this.updateCurSta();
+    }
+
+    public void moveBackCurSta() {
+        this.curStaIndex = Math.max(0,this.curStaIndex - 3);
         this.updateCurSta();
     }
 

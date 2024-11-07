@@ -26,6 +26,9 @@ import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
 import org.lifecompanion.model.api.textcomponent.WritingEventSource;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
 import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
+import org.lifecompanion.plugin.aac4all.wp2.controller.AAC4AllWp2Controller;
+import org.lifecompanion.plugin.aac4all.wp2.controller.AAC4AllWp2EvaluationController;
+import org.lifecompanion.plugin.aac4all.wp2.model.keyoption.AAC4AllKeyOptionCurSta;
 import org.lifecompanion.plugin.aac4all.wp2.model.keyoption.AAC4AllKeyOptionReolocL;
 import org.lifecompanion.plugin.aac4all.wp2.model.keyoption.AbstractAAC4AllKeyOption;
 
@@ -52,6 +55,19 @@ public class WriteAAC4AllPredictionAction extends SimpleUseActionImpl<GridPartKe
             if (parentKey.keyOptionProperty().get() instanceof AbstractAAC4AllKeyOption) {
                 AbstractAAC4AllKeyOption predOption = (AbstractAAC4AllKeyOption) parentKey.keyOptionProperty().get();
                 prediction = predOption.predictionProperty().get();
+            }
+            if (parentKey.keyOptionProperty().get() instanceof AAC4AllKeyOptionCurSta curStaKeyOption) {
+                AAC4AllKeyOptionCurSta.ActionType actionType = curStaKeyOption.actionTypeProperty().get();
+                if (actionType != AAC4AllKeyOptionCurSta.ActionType.WRITE_PRED) {
+                    prediction = null;
+                    switch (actionType) {
+                        case VALIDATE -> AAC4AllWp2EvaluationController.INSTANCE.StartDislaySentence();
+                        case DELETE_LAST_CHAR -> {
+
+                        }
+                        case MOVE_BACK -> AAC4AllWp2Controller.INSTANCE.moveBackCurSta();
+                    }
+                }
             }
             if (prediction != null) {
                 if (!prediction.isEmpty() && StringUtils.isEquals(prediction,

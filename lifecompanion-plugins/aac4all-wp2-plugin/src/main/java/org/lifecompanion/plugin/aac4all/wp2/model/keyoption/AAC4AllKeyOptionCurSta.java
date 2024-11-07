@@ -19,8 +19,32 @@
 
 package org.lifecompanion.plugin.aac4all.wp2.model.keyoption;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+
 public class AAC4AllKeyOptionCurSta extends AbstractAAC4AllKeyOption {
+    private final ObjectProperty<ActionType> actionType;
+
     public AAC4AllKeyOptionCurSta() {
         this.optionNameId = "aac4all.wp2.plugin.current.word.key.option.cursta.name";
+        this.actionType = new SimpleObjectProperty<>();
+    }
+
+    public ObjectProperty<ActionType> actionTypeProperty() {
+        return actionType;
+    }
+
+    public enum ActionType {
+        WRITE_PRED(""), DELETE_LAST_CHAR("<"), MOVE_BACK("retour"), VALIDATE("Valider");
+
+        private final String text;
+
+        ActionType(String text) {
+            this.text = text;
+        }
+
+        public String getText() {
+            return text;
+        }
     }
 }

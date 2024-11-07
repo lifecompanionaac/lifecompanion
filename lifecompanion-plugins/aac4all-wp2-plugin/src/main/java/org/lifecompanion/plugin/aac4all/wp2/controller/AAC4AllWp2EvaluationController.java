@@ -6,6 +6,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import org.lifecompanion.controller.appinstallation.InstallationConfigurationController;
 import org.lifecompanion.controller.categorizedelement.useaction.UseActionController;
 import org.lifecompanion.controller.resource.ResourceHelper;
 import org.lifecompanion.controller.selectionmode.SelectionModeController;
@@ -19,6 +20,7 @@ import org.lifecompanion.model.api.configurationcomponent.*;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
 import org.lifecompanion.model.api.selectionmode.ComponentToScanI;
 import org.lifecompanion.model.api.selectionmode.SelectionModeI;
+import org.lifecompanion.model.api.selectionmode.SelectionModeParameterI;
 import org.lifecompanion.model.api.textcomponent.WritingEventSource;
 import org.lifecompanion.plugin.aac4all.wp2.AAC4AllWp2Plugin;
 import org.lifecompanion.plugin.aac4all.wp2.AAC4AllWp2PluginProperties;
@@ -176,7 +178,8 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
         patientID = currentAAC4AllWp2PluginProperties.patientIdProperty();
 
         //TODO : nom de fichier log variable avec date id et patient
-        filePathLogs = String.format("%s%s_%s.json", "../../lifecompanion-plugins/aac4all-wp2-plugin/result/", patientID.getValue(), LocalDate.now().toString());
+        File pathToDestinationDir = InstallationConfigurationController.INSTANCE.getUserDirectory();
+        filePathLogs = String.format("%s%s_%s.json", pathToDestinationDir + "/lifecompanion-plugins/aac4all-wp2-plugin/result/", patientID.getValue(), LocalDate.now().toString());
 
         this.keyboardConsigne = this.configuration.getAllComponent().values().stream()
                 .filter(d -> d instanceof GridPartComponentI)
@@ -229,7 +232,8 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
             randomType = randonTypePossible.get(indexTrainingKeyboard);
         }
         currentRandomIndex = 0;
-        currentEvaluation = new WP2Evaluation(LocalDateTime.now(), patientID.get());
+        SelectionModeParameterI selectionModeParameter = configuration.getSelectionModeParameter();
+        currentEvaluation = new WP2Evaluation(LocalDateTime.now(), patientID.get(), selectionModeParameter.scanPauseProperty().get(), selectionModeParameter.scanFirstPauseProperty().get(), selectionModeParameter.maxScanBeforeStopProperty().get());
 
         goToNextKeyboardToEvaluate();
 
@@ -365,7 +369,8 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
 
 
         currentRandomIndex = 0;
-        currentEvaluation = new WP2Evaluation(LocalDateTime.now(), patientID.toString());
+        SelectionModeParameterI selectionModeParameter = configuration.getSelectionModeParameter();
+        currentEvaluation = new WP2Evaluation(LocalDateTime.now(), patientID.toString(), selectionModeParameter.scanPauseProperty().get(), selectionModeParameter.scanFirstPauseProperty().get(), selectionModeParameter.maxScanBeforeStopProperty().get());
         goToNextKeyboardToEvaluate();
         recordLogs();
 
