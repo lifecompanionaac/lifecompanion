@@ -134,9 +134,10 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
         public void accept(ComponentToScanI rowScanned) {
             String rowValues = "";
             if (rowScanned != null) {
-                for (int i = 0; i < rowScanned.getComponents().size(); i++) {// attention car pout l'espace on a Case(1,1) on pourrait le remplavcer à la main par _ ou par " " par exemple
-                    //rowValues = rowScanned.getPartIn(configuration.selectionModeProperty().get().currentGridProperty().get(), i).nameProperty().getValue() + "-";
-                    rowValues = rowValues + rowScanned.getPartIn(configuration.selectionModeProperty().get().currentGridProperty().get(), i).nameProperty().getValue() + "-";
+                for (int i = 0; i < rowScanned.getComponents().size(); i++) {
+                    if (configuration!=null) {// attention car pout l'espace on a Case(1,1) on pourrait le remplavcer à la main par _ ou par " " par exemple
+                        rowValues = rowValues + rowScanned.getPartIn(configuration.selectionModeProperty().get().currentGridProperty().get(), i).nameProperty().getValue() + "-";
+                    }
                 }
                 HighLightLog log = new HighLightLog(rowValues, rowScanned.getIndex());
                 currentSentenceEvaluation.getLogs().add(new WP2Logs(LocalDateTime.now(), LogType.HIGHLIGHT, log));
