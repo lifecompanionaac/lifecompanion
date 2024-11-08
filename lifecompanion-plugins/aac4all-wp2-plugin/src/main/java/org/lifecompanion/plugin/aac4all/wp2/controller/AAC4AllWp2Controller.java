@@ -10,6 +10,7 @@ import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
 import org.lifecompanion.model.api.selectionmode.ComponentToScanI;
 import org.lifecompanion.model.api.selectionmode.SelectionModeI;
+import org.lifecompanion.model.api.textcomponent.WritingEventSource;
 import org.lifecompanion.model.impl.textprediction.charprediction.LCCharPredictor;
 import org.lifecompanion.plugin.aac4all.wp2.model.keyoption.AAC4AllKeyOptionCurSta;
 import org.lifecompanion.plugin.aac4all.wp2.model.keyoption.AAC4AllKeyOptionReolocG;
@@ -44,7 +45,7 @@ public enum AAC4AllWp2Controller implements ModeListenerI {
 
     // TODO : replace with content from char prediction
     private String curStaCharacters = "abcdefghijklmnopqrstuvwxyzéèàê' ";
-    private List<PredictResult> predict = transformResult(List.of('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'é', 'è', 'à', 'ê', '\'', ' '));
+    private List<PredictResult> predict = transformResult(List.of(' ','a', 'à',  'b', 'c','ç', 'd', 'e','é', 'è','ê', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '\''));
     private int curStaIndex = 0;
     private List<AAC4AllKeyOptionCurSta> curStaKeys;
 
@@ -53,9 +54,14 @@ public enum AAC4AllWp2Controller implements ModeListenerI {
 
         Map<GridComponentI, List<AAC4AllKeyOptionCurSta>> curStaKeyOptions = new HashMap<>();
         ConfigurationComponentUtils.findKeyOptionsByGrid(AAC4AllKeyOptionCurSta.class, configuration, curStaKeyOptions, null);
+
+        // TODO : appeler la prédiction ici
+        //HashSet<Character> acceptedCharact = new HashSet<>(curStaCharacters.chars().mapToObj(c -> (char) c).collect(Collectors.toSet()));
+        //predict = transformResult(LCCharPredictor.INSTANCE.predict(WritingStateController.INSTANCE.textBeforeCaretProperty().get(), acceptedCharact.size(), acceptedCharact));
+
         curStaKeys = curStaKeyOptions.values().stream().flatMap(Collection::stream).toList();
         curStaIndex = 0;
-        // TODO : appeler la prédiction ici
+
         updateCurSta();
 
         WritingStateController.INSTANCE.textBeforeCaretProperty().addListener((obs, ov, nv) -> {
@@ -68,17 +74,24 @@ public enum AAC4AllWp2Controller implements ModeListenerI {
 
     private static List<PredictResult> transformResult(List<Character> prediction) {
         List<PredictResult> result = new ArrayList<>();
-        int j = 0;
         for (int i = 0; i < prediction.size(); i++) {
             result.add(new PredictResult(AAC4AllKeyOptionCurSta.ActionType.WRITE_PRED, String.valueOf(prediction.get(i))));
-            if (j++ % 3 == 0) {
-                result.add(new PredictResult(AAC4AllKeyOptionCurSta.ActionType.MOVE_BACK, ""));
-            }
+        }
+        result.add(6,new PredictResult(AAC4AllKeyOptionCurSta.ActionType.DELETE_LAST_CHAR,""));
+        result.add(13,new PredictResult(AAC4AllKeyOptionCurSta.ActionType.VALIDATE,""));
+
+        for (int i = 0; i <result.size() ; i++) {
+            if ((i - 7)%8 == 0 && i >= 7 ){
+                result.add(i,new PredictResult(AAC4AllKeyOptionCurSta.ActionType.MOVE_BACK, ""));
+
+                System.out.println(i+" le i ");}
         }
         return result;
     }
 
     private final static PredictResult EMPTY = new PredictResult(AAC4AllKeyOptionCurSta.ActionType.WRITE_PRED, "");
+
+
 
     private static class PredictResult {
         private AAC4AllKeyOptionCurSta.ActionType actionType;
@@ -134,7 +147,19 @@ public enum AAC4AllWp2Controller implements ModeListenerI {
     }
 
     public void moveBackCurSta() {
-        this.curStaIndex = Math.max(0,this.curStaIndex - 3);
+        this.curStaIndex = Math.max(0,this.curStaIndex - 8);
+        this.updateCurSta();
+    }
+
+    public void validerCurSta(){
+        AAC4AllWp2EvaluationController.INSTANCE.StartDislaySentence();
+        this.curStaIndex=0;
+        this.updateCurSta();
+    }
+
+    public void deleteLastCharCurSta() {
+        WritingStateController.INSTANCE.removeLastChar(WritingEventSource.USER_ACTIONS);
+        this.curStaIndex=0;
         this.updateCurSta();
     }
 

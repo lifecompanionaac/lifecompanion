@@ -61,10 +61,8 @@ public class WriteAAC4AllPredictionAction extends SimpleUseActionImpl<GridPartKe
                 if (actionType != AAC4AllKeyOptionCurSta.ActionType.WRITE_PRED) {
                     prediction = null;
                     switch (actionType) {
-                        case VALIDATE -> AAC4AllWp2EvaluationController.INSTANCE.StartDislaySentence();
-                        case DELETE_LAST_CHAR -> {
-
-                        }
+                        case VALIDATE -> AAC4AllWp2Controller.INSTANCE.validerCurSta();
+                        case DELETE_LAST_CHAR -> AAC4AllWp2Controller.INSTANCE.deleteLastCharCurSta();
                         case MOVE_BACK -> AAC4AllWp2Controller.INSTANCE.moveBackCurSta();
                     }
                 }
