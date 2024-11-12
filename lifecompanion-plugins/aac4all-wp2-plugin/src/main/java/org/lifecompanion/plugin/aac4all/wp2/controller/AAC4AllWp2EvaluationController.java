@@ -12,6 +12,7 @@ import org.lifecompanion.controller.resource.ResourceHelper;
 import org.lifecompanion.controller.selectionmode.SelectionModeController;
 import org.lifecompanion.controller.textcomponent.WritingStateController;
 import org.lifecompanion.controller.usevariable.UseVariableController;
+import org.lifecompanion.controller.voicesynthesizer.VoiceSynthesizerController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
@@ -22,6 +23,7 @@ import org.lifecompanion.model.api.selectionmode.ComponentToScanI;
 import org.lifecompanion.model.api.selectionmode.SelectionModeI;
 import org.lifecompanion.model.api.selectionmode.SelectionModeParameterI;
 import org.lifecompanion.model.api.textcomponent.WritingEventSource;
+import org.lifecompanion.model.impl.selectionmode.RowColumnScanSelectionMode;
 import org.lifecompanion.plugin.aac4all.wp2.AAC4AllWp2Plugin;
 import org.lifecompanion.plugin.aac4all.wp2.AAC4AllWp2PluginProperties;
 import org.lifecompanion.plugin.aac4all.wp2.model.logs.*;
@@ -295,6 +297,8 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
         recordLogs();
         currentKeyboardEvaluation = null;
 
+        // VoiceSynthesizerController.INSTANCE.speakSync("Merci de remplir les évaluations");
+
         emptyAllColors();
 
         if (!goToNextKeyboardToEvaluate()) {
@@ -397,6 +401,9 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
 
 
         // TODO: go to currentKeyboardEvaluation
+        if(this.currentKeyboardType!=null){
+            SelectionModeController.INSTANCE.changeUseModeSelectionModeTo(this.currentKeyboardType.getSelectionMode());
+        }
         SelectionModeController.INSTANCE.goToGridPart(currentKeyboard);
 
         // TODO: clean l'éditeur
@@ -420,6 +427,7 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
                 recordLogs();
 
                 // go to EVA interface
+                SelectionModeController.INSTANCE.changeUseModeSelectionModeTo(RowColumnScanSelectionMode.class);
                 SelectionModeController.INSTANCE.goToGridPart(keyboardEVA);
                 //stop sentence display and clean editor
                 StopDislaySentence();

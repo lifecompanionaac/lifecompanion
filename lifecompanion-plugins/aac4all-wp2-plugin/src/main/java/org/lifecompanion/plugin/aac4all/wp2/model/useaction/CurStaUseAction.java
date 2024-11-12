@@ -23,6 +23,10 @@ public class CurStaUseAction extends BaseUseActionImpl<GridPartKeyComponentI> {
 
     String lastText;
 
+    public void cleanLastText(){
+        this.lastText = null;
+    }
+
     @Override
     public void eventStarts(UseActionEvent useActionEvent) {
         GridPartKeyComponentI key = parentComponentProperty().get();

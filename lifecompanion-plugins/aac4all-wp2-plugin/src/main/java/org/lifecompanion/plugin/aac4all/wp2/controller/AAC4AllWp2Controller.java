@@ -3,6 +3,8 @@ package org.lifecompanion.plugin.aac4all.wp2.controller;
 import org.lifecompanion.controller.selectionmode.SelectionModeController;
 import org.lifecompanion.controller.textcomponent.WritingStateController;
 import org.lifecompanion.controller.textprediction.CustomCharPredictionController;
+import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
+import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
 import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
 import org.lifecompanion.model.api.configurationcomponent.GridPartComponentI;
 import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
@@ -15,6 +17,7 @@ import org.lifecompanion.model.impl.textprediction.charprediction.LCCharPredicto
 import org.lifecompanion.plugin.aac4all.wp2.model.keyoption.AAC4AllKeyOptionCurSta;
 import org.lifecompanion.plugin.aac4all.wp2.model.keyoption.AAC4AllKeyOptionReolocG;
 import org.lifecompanion.plugin.aac4all.wp2.model.keyoption.AAC4AllKeyOptionReolocL;
+import org.lifecompanion.plugin.aac4all.wp2.model.useaction.CurStaUseAction;
 import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.util.model.ConfigurationComponentUtils;
 import org.lifecompanion.util.model.SelectionModeUtils;
@@ -32,8 +35,11 @@ public enum AAC4AllWp2Controller implements ModeListenerI {
         scannedPartChangedListener = this::partScanComponentChanged;
     }
 
+    private LCConfigurationI configuration;
+
     @Override
     public void modeStart(LCConfigurationI configuration) {
+        this.configuration = configuration;
         CustomCharPredictionController.INSTANCE.forcePredictionLoad();
         SelectionModeController.INSTANCE.addScannedPartChangedListeners(this.scannedPartChangedListener);
         CustomCharPredictionController.INSTANCE.addPredictorStartedListener(predictor -> {
@@ -148,6 +154,17 @@ public enum AAC4AllWp2Controller implements ModeListenerI {
 
     public void moveBackCurSta() {
         this.curStaIndex = Math.max(0,this.curStaIndex - 8);
+        if (this.configuration != null) {
+            this.configuration.getAllComponent()
+                    .values()
+                    .stream()
+                    .filter(c -> c instanceof UseActionTriggerComponentI)
+                    .map(c -> (UseActionTriggerComponentI) c)
+                    .map(c -> c.getActionManager().getFirstActionOfType(
+                            UseActionEvent.OVER, CurStaUseAction.class))
+                    .filter(Objects::nonNull)
+                    .forEach(CurStaUseAction::cleanLastText);
+        }
         this.updateCurSta();
     }
 
@@ -223,6 +240,7 @@ public enum AAC4AllWp2Controller implements ModeListenerI {
     public void modeStop(LCConfigurationI configuration) {
         SelectionModeController.INSTANCE.removeScannedPartChangedListeners(this.scannedPartChangedListener);
         curStaKeys = null;
+        this.configuration = null;
     }
 
     private Map<AAC4AllKeyOptionReolocL, String> previousLine;
