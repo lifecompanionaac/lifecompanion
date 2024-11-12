@@ -18,8 +18,8 @@
 1. Open a terminal
     1. `cd ~/dev`
     1. `mkdir workspace && cd workspace`
-    1. Check last app release in prod on [release page](https://github.com/lifecompanionaac/lifecompanion/tags) : search for *lifecompanion/lc-app/x.x.x-prod* tag, let's take *lifecompanion/lc-app/1.6.3-prod* for this example
-    1. Clone repo with `git clone https://github.com/lifecompanionaac/lifecompanion.git --branch lifecompanion/lc-app/1.6.3-prod` (replace the tag with the last production version)
+    1. Check last app release in prod on [release page](https://github.com/lifecompanionaac/lifecompanion/tags) : search for *lifecompanion/lc-app/x.x.x-prod* tag, let's take *lifecompanion/lc-app/1.6.5-prod* for this example
+    1. Clone repo with `git clone https://github.com/lifecompanionaac/lifecompanion.git --branch lifecompanion/lc-app/1.6.5-prod` (replace the tag with the last production version)
 1. Run IntelliJ (in its installation directory or add it to the path): `bin/idea.sh`
     1. Click on "Open"
     1. Select **~/dev/workspace/lifecompanion/lifecompanion-framework**
@@ -44,15 +44,15 @@
 1. Download [VS Code](https://code.visualstudio.com/download)
 1. Open a terminal in your documents (latest PowerShell is recommended for tilde expansion and ease of running commands, either install with `winget install --id Microsoft.PowerShell --source winget` or get the MSI from [here](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows#installing-the-msi-package); Windows Terminal is also recommended since it can hold multiple tabs, usually preinstalled, if not do <kbd>Win</kbd>+<kbd>R</kbd>
 and paste `ms-windows-store://pdp/?ProductId=9n0dx20hk701`)
-    1. Check latest app release in prod on the [release page](https://github.com/lifecompanionaac/lifecompanion/tags) : search for *lifecompanion/lc-app/x.x.x-prod* tag, let's take *lifecompanion/lc-app/1.6.3-prod* for this example
-    1. Clone the repo with `git clone https://github.com/lifecompanionaac/lifecompanion.git --branch lifecompanion/lc-app/1.6.3-prod` (replace the tag with the last production version)
+    1. Check latest app release in prod on the [release page](https://github.com/lifecompanionaac/lifecompanion/tags) : search for *lifecompanion/lc-app/x.x.x-prod* tag, let's take *lifecompanion/lc-app/1.6.5-prod* for this example
+    1. Clone the repo with `git clone https://github.com/lifecompanionaac/lifecompanion.git --branch lifecompanion/lc-app/1.6.5-prod` (replace the tag with the last production version)
 1. In VS Code
     1. Do <kbd>Ctrl</kbd>+<kbd>K</kbd>, <kbd>Ctrl</kbd>+<kbd>O</kbd> and select **~/Documents/lifecompanion**
     1. At the root of the project, create a folder called `.vscode`. Inside create 2 files, one called `settings.json` and the other called `extensions.json`. Paste the content shown just after. Then in the Extensions pane click on the three dots and "Install recommended extensions", and once done click on "Restart Extensions" to load them. Some tasks will run (check the Status Bar), let them finsh before working on the project
     1. In the Gradle pane, click on **lifecompanion-framework > lifecompanion-framework > Tasks > publishing > publishToMavenLocal**, build should be successful
 1. Before running LifeCompanion, prepare
     1. Copy the app data from the installation directory (defaults to `C:\ProgramData\LifeCompanion\data`) to **~/Documents/lifecompanion/lifecompanion/lc-app/data**, replace files if needed
-    1. Avoid committing the settings with `git update-index --skip-worktree ~/dev/workspace/lifecompanion/lifecompanion/lc-app/data/installation.properties`
+    1. Avoid committing the settings with `git update-index --skip-worktree ~/Documents/lifecompanion/lifecompanion/lc-app/data/installation.properties`
 1. In VS Code
     1. In the Gradle pane, run LifeCompanion with **lifecompanion > lc-app > Tasks > application > run**
     1. LifeCompanion is now running !
@@ -243,7 +243,7 @@ The example is done with **lc-spellgame-plugin** but should work with any plugin
     1. Click "Menu > New > Module from Existing Sources..."
     1. Select **~/dev/workspace/lifecompanion/lifecompanion-plugins/lc-spellgame-plugin**
     1. Select "Import module from external model" and "Gradle", then click "Create"
-    1. Check that **~/dev/workspace/lifecompanion/lifecompanion-plugins/lc-spellgame-plugin/gradle.properties** has the same LifeCompanion version number in, for example `lifecompanionAppVersion=1.6.3` (this should match the selected version tag)
+    1. Check that **~/dev/workspace/lifecompanion/lifecompanion-plugins/lc-spellgame-plugin/gradle.properties** has the same LifeCompanion version number in, for example `lifecompanionAppVersion=1.6.5` (this should match the selected version tag)
     1. In Gradle part of the IDE (right side), you can run **lc-spellgame-plugin > Tasks > build > jar**, build should be successful
 1. Create your dev workflow
     1. In run configuration selector (top right part), click on "Edit Configurations"
@@ -261,7 +261,7 @@ The example is done with **lc-spellgame-plugin** but should work with any plugin
     1. You have 2 keys to change in `.vscode/settings.json`
        1. `gradle.nestedProjects` should contain also the path of the plugin you're going to develop, let's say here `lifecompanion-plugins/lc-spellgame-plugin`. Keep `lifecompanion` and `lifecompanion-framework`. This is to avoid gradle taking time to be ready and build projects you're not working with
        1. `java.diagnostic.filter` should have all the paths of the folders you're NOT working with. This is to avoid having the Java extension reportig issues for projects you're not working with. The default config above already exclude all plugins, so here we just have to remove `**/lc-spellgame-plugin`
-    1. Check that **~/Documents/lifecompanion/lifecompanion-plugins/lc-spellgame-plugin/gradle.properties** has the same LifeCompanion version number in, for example `lifecompanionAppVersion=1.6.3` (this should match the selected version tag)
+    1. Check that **~/Documents/lifecompanion/lifecompanion-plugins/lc-spellgame-plugin/gradle.properties** has the same LifeCompanion version number in, for example `lifecompanionAppVersion=1.6.5` (this should match the selected version tag)
     1. In the Gradle pane, run **lc-spellgame-plugin > Tasks > build > jar**, build should be successful
 1. Create your dev workflow
     1. We have to set an environment variable to tell LifeCompanion where to fetch the freshly created jar. Since the Gradle extension doesn't handle it yet (check https://github.com/microsoft/vscode-gradle/issues/1624), you have to set it yourself.
