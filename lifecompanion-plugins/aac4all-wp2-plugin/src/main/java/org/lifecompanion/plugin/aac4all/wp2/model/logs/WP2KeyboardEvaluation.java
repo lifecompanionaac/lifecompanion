@@ -36,4 +36,10 @@ public class WP2KeyboardEvaluation {
         return sentences;
     }
 
+    public void resetEva(){
+        this.fatigueInitScore =-1;
+        this.fatiguePostScore=-1;
+        this.satisfactionScore=-1;
+    }
+
 }

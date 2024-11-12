@@ -35,7 +35,7 @@ public class AAC4AllKeyOptionCurSta extends AbstractAAC4AllKeyOption {
     }
 
     public enum ActionType {
-        WRITE_PRED(""), DELETE_LAST_CHAR("<"), MOVE_BACK("retour"), VALIDATE("Valider");
+        WRITE_PRED(""), DELETE_LAST_CHAR("Supprimer"), MOVE_BACK("Retour"), VALIDATE("Valider");
 
         private final String text;
 

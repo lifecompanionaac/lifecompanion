@@ -149,46 +149,46 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
         }
     };
     private BiConsumer<GridComponentI, ComponentToScanI> validationRow = new BiConsumer<GridComponentI, ComponentToScanI>() {
-            @Override
-            public void accept(GridComponentI gridComponentI, ComponentToScanI componentToScanI) {
-                if (componentToScanI != null) {
-                    String rowValues = "";
-                    for (int i = 0; i < componentToScanI.getComponents().size(); i++) {// attention car pout l'espace on a Case(1,1) on pourrait le remplavcer à la main par _ ou par " " par exemple
-                        rowValues = rowValues + componentToScanI.getPartIn(gridComponentI, i).nameProperty().getValue() + "-";
-                    }
-                    ValidationLog log = new ValidationLog(rowValues, componentToScanI.getIndex());
-                    currentSentenceEvaluation.getLogs().add(new WP2Logs(LocalDateTime.now(), LogType.VALIDATION, log));
-                    recordLogs();
-                }
-            }
-        };
-    private BiConsumer<UseActionTriggerComponentI, UseActionEvent> validationKey = new BiConsumer<UseActionTriggerComponentI, UseActionEvent>() {
-            @Override
-            public void accept(UseActionTriggerComponentI component, UseActionEvent event) {
-                if (component instanceof GridPartKeyComponentI && event == UseActionEvent.ACTIVATION) {
-                    GridPartKeyComponentI key = (GridPartKeyComponentI) component;
-                    ValidationLog log = new ValidationLog(key.nameProperty().getValue(),key.columnProperty().getValue());
-                    currentSentenceEvaluation.getLogs().add(new WP2Logs(LocalDateTime.now(), LogType.VALIDATION,log));
-                    recordLogs();
-                }
-
-            }
-        };
-
-
         @Override
+        public void accept(GridComponentI gridComponentI, ComponentToScanI componentToScanI) {
+            if (componentToScanI != null) {
+                String rowValues = "";
+                for (int i = 0; i < componentToScanI.getComponents().size(); i++) {// attention car pout l'espace on a Case(1,1) on pourrait le remplavcer à la main par _ ou par " " par exemple
+                    rowValues = rowValues + componentToScanI.getPartIn(gridComponentI, i).nameProperty().getValue() + "-";
+                }
+                ValidationLog log = new ValidationLog(rowValues, componentToScanI.getIndex());
+                currentSentenceEvaluation.getLogs().add(new WP2Logs(LocalDateTime.now(), LogType.VALIDATION, log));
+                recordLogs();
+            }
+        }
+    };
+    private BiConsumer<UseActionTriggerComponentI, UseActionEvent> validationKey = new BiConsumer<UseActionTriggerComponentI, UseActionEvent>() {
+        @Override
+        public void accept(UseActionTriggerComponentI component, UseActionEvent event) {
+            if (component instanceof GridPartKeyComponentI && event == UseActionEvent.ACTIVATION) {
+                GridPartKeyComponentI key = (GridPartKeyComponentI) component;
+                ValidationLog log = new ValidationLog(key.nameProperty().getValue(),key.columnProperty().getValue());
+                currentSentenceEvaluation.getLogs().add(new WP2Logs(LocalDateTime.now(), LogType.VALIDATION,log));
+                recordLogs();
+            }
+
+        }
+    };
+
+
+    @Override
     public void modeStart(LCConfigurationI configuration) {
         this.configuration = configuration;
         currentAAC4AllWp2PluginProperties = configuration.getPluginConfigProperties(AAC4AllWp2Plugin.ID, AAC4AllWp2PluginProperties.class);
         patientID = currentAAC4AllWp2PluginProperties.patientIdProperty();
 
         //TODO : nom de fichier log variable avec date id et patient
-            LocalDateTime now = LocalDateTime.now();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm");
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm");
         File pathToDestinationDir = InstallationConfigurationController.INSTANCE.getUserDirectory();
         filePathLogs = String.format("%s%s_%s.json", pathToDestinationDir + "/lifecompanion-plugins/aac4all-wp2-plugin/result/", patientID.getValue(), now.format(formatter));
 
-            currentPhraseSet = new ArrayList<>(phraseSetFR);;
+        currentPhraseSet = new ArrayList<>(phraseSetFR);;
 
         this.keyboardConsigne = this.configuration.getAllComponent().values().stream()
                 .filter(d -> d instanceof GridPartComponentI)
@@ -263,9 +263,9 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
         currentKeyboardEvaluation = new WP2KeyboardEvaluation(currentKeyboardType);
         functionalCurrentKeyboard = Translation.getText("aac4all.wp2.plugin.functional.description." + currentKeyboardType.getTranslationId());
         instructionCurrentKeyboard = Translation.getText("aac4all.wp2.plugin.instruction.description." + currentKeyboardType.getTranslationId());
+        currentKeyboardEvaluation.resetEva();
         UseVariableController.INSTANCE.requestVariablesUpdate();
     }
-
 
     public void recordLogs() {
         File resultFile = new File(filePathLogs);
@@ -293,18 +293,23 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
     }
 
     public void nextDailyTraining() {
-        currentEvaluation.getEvaluations().add(currentKeyboardEvaluation);
-        recordLogs();
-        currentKeyboardEvaluation = null;
+        if (currentKeyboardEvaluation!=null){
+            if (currentKeyboardEvaluation.getFatigueScore()==-1 || currentKeyboardEvaluation.getSatisfactionScore()==-1){
+                VoiceSynthesizerController.INSTANCE.speakSync("Merci de remplir les évaluations");
+            }else {
 
-        // VoiceSynthesizerController.INSTANCE.speakSync("Merci de remplir les évaluations");
+                currentEvaluation.getEvaluations().add(currentKeyboardEvaluation);
+                recordLogs();
+                currentKeyboardEvaluation = null;
 
-        emptyAllColors();
+                emptyAllColors();
 
-        if (!goToNextKeyboardToEvaluate()) {
-            SelectionModeController.INSTANCE.goToGridPart(endGrid);
-        } else {
-            SelectionModeController.INSTANCE.goToGridPart(keyboardConsigne);
+                if (!goToNextKeyboardToEvaluate()) {
+                    SelectionModeController.INSTANCE.goToGridPart(endGrid);
+                } else {
+                    SelectionModeController.INSTANCE.goToGridPart(keyboardConsigne);
+                }
+            }
         }
     }
 
@@ -395,47 +400,51 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
             time = TRAINING_DURATION_MS;
         }
 
-        emptyAllColors();
+
+        if (currentKeyboardEvaluation.getFatigueInitScore()==-1){
+            VoiceSynthesizerController.INSTANCE.speakSync("Merci de remplir l'évaluations");
+
+        }else {
+            emptyAllColors();
 
 
-
-
-        // TODO: go to currentKeyboardEvaluation
-        if(this.currentKeyboardType!=null){
-            SelectionModeController.INSTANCE.changeUseModeSelectionModeTo(this.currentKeyboardType.getSelectionMode());
-        }
-        SelectionModeController.INSTANCE.goToGridPart(currentKeyboard);
-
-        // TODO: clean l'éditeur
-        WritingStateController.INSTANCE.removeAll(WritingEventSource.USER_ACTIONS);
-
-        //TODO : affiche les phrases à saisir
-        StartDislaySentence();
-
-        // TODO : démarer le listener log
-        startLogListener();
-
-        // chrono
-        Timer timer = new Timer();
-        TimerTask timerTask = new TimerTask() {
-            @Override
-            public void run() {
-
-                //TODO stopper le listener validation, hightligh etc
-                stopLogListener();
-
-                recordLogs();
-
-                // go to EVA interface
-                SelectionModeController.INSTANCE.changeUseModeSelectionModeTo(RowColumnScanSelectionMode.class);
-                SelectionModeController.INSTANCE.goToGridPart(keyboardEVA);
-                //stop sentence display and clean editor
-                StopDislaySentence();
-                timer.cancel();
-
+            // TODO: go to currentKeyboardEvaluation
+            if (this.currentKeyboardType != null) {
+                SelectionModeController.INSTANCE.changeUseModeSelectionModeTo(this.currentKeyboardType.getSelectionMode());
             }
-        };
-        timer.schedule(timerTask, time);
+            SelectionModeController.INSTANCE.goToGridPart(currentKeyboard);
+
+            // TODO: clean l'éditeur
+            WritingStateController.INSTANCE.removeAll(WritingEventSource.USER_ACTIONS);
+
+            //TODO : affiche les phrases à saisir
+            StartDislaySentence();
+
+            // TODO : démarer le listener log
+            startLogListener();
+
+            // chrono
+            Timer timer = new Timer();
+            TimerTask timerTask = new TimerTask() {
+                @Override
+                public void run() {
+
+                    //TODO stopper le listener validation, hightligh etc
+                    stopLogListener();
+
+                    recordLogs();
+
+                    // go to EVA interface
+                    SelectionModeController.INSTANCE.changeUseModeSelectionModeTo(RowColumnScanSelectionMode.class);
+                    SelectionModeController.INSTANCE.goToGridPart(keyboardEVA);
+                    //stop sentence display and clean editor
+                    StopDislaySentence();
+                    timer.cancel();
+
+                }
+            };
+            timer.schedule(timerTask, time);
+        }
     }
 
 
