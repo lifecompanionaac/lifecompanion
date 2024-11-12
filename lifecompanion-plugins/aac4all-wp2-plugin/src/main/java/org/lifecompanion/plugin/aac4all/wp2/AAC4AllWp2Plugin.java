@@ -34,10 +34,10 @@ public class AAC4AllWp2Plugin implements PluginI {
 
     @Override
     public String[] getDefaultConfigurations(String languageCode) {
-        return new String[]{"/configurations/Configuration RéoLoc Training.lcc",
-                "/configurations/Configuration RéoLoc Evaluation.lcc",
-                "/configurations/Configuration CurSta Training.lcc",
-                "/configurations/Configuration CurSta Evaluation.lcc"};
+        return new String[]{"/configurations/J0-J7_CurSta_DyLin.lcc",
+                "/configurations/J8_CurSta_DyLin.lcc",
+                "/configurations/J9-J15_RéoLocL_RéoLocG_Statique.lcc",
+                "/configurations/J16_RéoLocL_RéoLocG_Statique.lcc"};
     }
     //========================================================================
 
