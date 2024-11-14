@@ -1,4 +1,4 @@
-package org.lifecompanion.plugin.phonecontrol.ui;
+package org.lifecompanion.plugin.phonecontrol2.ui;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -13,9 +13,9 @@ import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
-import org.lifecompanion.plugin.phonecontrol.PhoneControlPlugin;
-import org.lifecompanion.plugin.phonecontrol.PhoneControlPluginProperties;
-import org.lifecompanion.plugin.phonecontrol.controller.PhoneControlController;
+import org.lifecompanion.plugin.phonecontrol2.PhoneControlPlugin;
+import org.lifecompanion.plugin.phonecontrol2.PhoneControlPluginProperties;
+import org.lifecompanion.plugin.phonecontrol2.controller.PhoneControlController;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStepViewI;
 import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.util.javafx.FXControlUtils;
@@ -40,7 +40,7 @@ public class PhoneControlGeneralConfigView extends BorderPane implements General
 
     @Override
     public String getTitleId() {
-        return "phonecontrol.plugin.config.view.general.title";
+        return "phonecontrol2.plugin.config.view.general.title";
     }
 
     @Override
@@ -68,7 +68,7 @@ public class PhoneControlGeneralConfigView extends BorderPane implements General
         int gridRowIndex = 0;
 
         // Category title
-        gridPaneConfiguration.add(FXControlUtils.createTitleLabel("phonecontrol.plugin.config.test.adb.connection.title.part"), 0, gridRowIndex++, 2, 1);
+        gridPaneConfiguration.add(FXControlUtils.createTitleLabel("phonecontrol2.plugin.config.test.adb.connection.title.part"), 0, gridRowIndex++, 2, 1);
 
         // ComboBox for selecting connected devices
         comboBoxDevices = new ComboBox<>();
@@ -77,7 +77,7 @@ public class PhoneControlGeneralConfigView extends BorderPane implements General
 
         // Button to refresh the list of connected devices
         buttonRefresh = FXControlUtils.createLeftTextButton(
-                Translation.getText("phonecontrol.plugin.config.button.refresh.devices"),
+                Translation.getText("phonecontrol2.plugin.config.button.refresh.devices"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.REFRESH).size(16).color(LCGraphicStyle.MAIN_DARK),
                 null
         );
@@ -91,7 +91,7 @@ public class PhoneControlGeneralConfigView extends BorderPane implements General
 
         // Button to choose the selected device
         buttonChooseDevice = FXControlUtils.createLeftTextButton(
-                Translation.getText("phonecontrol.plugin.config.button.choose.device"),
+                Translation.getText("phonecontrol2.plugin.config.button.choose.device"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CHECK).size(16).color(LCGraphicStyle.MAIN_DARK),
                 null
         );
@@ -139,7 +139,7 @@ public class PhoneControlGeneralConfigView extends BorderPane implements General
         } else {
             // Update the label to show no device connected
             labelConnectedDevice.setText(
-                    Translation.getText("phonecontrol.plugin.config.label.no.device.connected")
+                    Translation.getText("phonecontrol2.plugin.config.label.no.device.connected")
             );
         }
     }
@@ -165,7 +165,7 @@ public class PhoneControlGeneralConfigView extends BorderPane implements General
                 updateDeviceLabel(selectedDevice);
             } else {
                 labelConnectedDevice.setText(
-                        Translation.getText("phonecontrol.plugin.config.label.no.device.selected")
+                        Translation.getText("phonecontrol2.plugin.config.label.no.device.selected")
                 );
             }
         });
@@ -177,11 +177,11 @@ public class PhoneControlGeneralConfigView extends BorderPane implements General
     private void updateDeviceLabel(String device) {
         if (device != null && !device.equals("Aucun appareil connecté")) {
             labelConnectedDevice.setText(
-                    Translation.getText("phonecontrol.plugin.config.label.device.selected") + " " + device
+                    Translation.getText("phonecontrol2.plugin.config.label.device.selected") + " " + device
             );
         } else {
             labelConnectedDevice.setText(
-                    Translation.getText("phonecontrol.plugin.config.label.no.device.connected")
+                    Translation.getText("phonecontrol2.plugin.config.label.no.device.connected")
             );
         }
     }

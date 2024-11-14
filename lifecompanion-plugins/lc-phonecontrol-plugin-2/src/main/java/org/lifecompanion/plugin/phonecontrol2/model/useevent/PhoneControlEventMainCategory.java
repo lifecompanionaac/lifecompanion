@@ -1,4 +1,4 @@
-package org.lifecompanion.plugin.phonecontrol.model.useevent;
+package org.lifecompanion.plugin.phonecontrol2.model.useevent;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -18,12 +18,12 @@ public enum PhoneControlEventMainCategory implements UseEventMainCategoryI, UseE
 
     @Override
     public String getStaticDescription() {
-        return Translation.getText("phonecontrol.plugin.main.event.category.description");
+        return Translation.getText("phonecontrol2.plugin.main.event.category.description");
     }
 
     @Override
     public String getName() {
-        return Translation.getText("phonecontrol.plugin.main.event.category.name");
+        return Translation.getText("phonecontrol2.plugin.main.event.category.name");
     }
 
     @Override

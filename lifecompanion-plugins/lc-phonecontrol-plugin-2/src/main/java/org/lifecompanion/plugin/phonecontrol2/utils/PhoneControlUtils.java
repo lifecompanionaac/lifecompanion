@@ -1,4 +1,4 @@
-package org.lifecompanion.plugin.phonecontrol.utils;
+package org.lifecompanion.plugin.phonecontrol2.utils;
 
 import java.util.Set;
 

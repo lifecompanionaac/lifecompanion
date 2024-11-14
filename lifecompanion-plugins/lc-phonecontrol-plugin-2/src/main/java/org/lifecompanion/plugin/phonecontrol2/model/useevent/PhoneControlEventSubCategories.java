@@ -1,4 +1,4 @@
-package org.lifecompanion.plugin.phonecontrol.model.useevent;
+package org.lifecompanion.plugin.phonecontrol2.model.useevent;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -10,7 +10,7 @@ import org.lifecompanion.model.api.categorizedelement.useevent.UseEventMainCateg
 import org.lifecompanion.model.api.categorizedelement.useevent.UseEventSubCategoryI;
 
 public enum PhoneControlEventSubCategories implements UseEventSubCategoryI {
-    GENERAL("phonecontrol.plugin.sub.event.category.general.name", CategorizedElementColorProvider.nextColor(PhoneControlEventMainCategory.INSTANCE)),
+    GENERAL("phonecontrol2.plugin.sub.event.category.general.name", CategorizedElementColorProvider.nextColor(PhoneControlEventMainCategory.INSTANCE)),
     ;
 
     private final String nameId;

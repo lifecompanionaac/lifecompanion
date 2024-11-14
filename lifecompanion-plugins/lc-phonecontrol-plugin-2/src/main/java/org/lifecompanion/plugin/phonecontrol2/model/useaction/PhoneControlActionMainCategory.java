@@ -1,4 +1,4 @@
-package org.lifecompanion.plugin.phonecontrol.model.useaction;
+package org.lifecompanion.plugin.phonecontrol2.model.useaction;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,12 +17,12 @@ public enum PhoneControlActionMainCategory implements UseActionMainCategoryI {
 
     @Override
     public String getStaticDescription() {
-        return Translation.getText("phonecontrol.plugin.main.action.category.description");
+        return Translation.getText("phonecontrol2.plugin.main.action.category.description");
     }
 
     @Override
     public String getName() {
-        return Translation.getText("phonecontrol.plugin.main.action.category.name");
+        return Translation.getText("phonecontrol2.plugin.main.action.category.name");
     }
 
     @Override

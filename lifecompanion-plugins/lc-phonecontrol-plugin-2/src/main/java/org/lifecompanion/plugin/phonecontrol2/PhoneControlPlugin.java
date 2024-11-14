@@ -1,4 +1,4 @@
-package org.lifecompanion.plugin.phonecontrol;
+package org.lifecompanion.plugin.phonecontrol2;
 
 import javafx.beans.property.ObjectProperty;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
@@ -6,17 +6,13 @@ import org.lifecompanion.model.api.plugin.PluginConfigPropertiesI;
 import org.lifecompanion.model.api.plugin.PluginI;
 import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
-import org.lifecompanion.model.impl.usevariable.IntegerUseVariable;
-import org.lifecompanion.model.impl.usevariable.LongUseVariable;
 import org.lifecompanion.model.impl.usevariable.StringUseVariable;
 import org.lifecompanion.model.impl.usevariable.UseVariableDefinition;
-import org.lifecompanion.plugin.phonecontrol.controller.PhoneControlController;
+import org.lifecompanion.plugin.phonecontrol2.controller.PhoneControlController;
 
 import java.io.File;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Function;
 
 public class PhoneControlPlugin implements PluginI {
@@ -73,49 +69,49 @@ public class PhoneControlPlugin implements PluginI {
     public List<UseVariableDefinitionI> getDefinedVariables() {
         return Arrays.asList(
                 new UseVariableDefinition(PhoneControlController.VAR_ID_CONNECTED_DEVICE,
-                        "phonecontrol.plugin.use.variable.connected.device.name",
-                        "phonecontrol.plugin.use.variable.connected.device.description",
-                        "phonecontrol.plugin.use.variable.connected.device.example"),
+                        "phonecontrol2.plugin.use.variable.connected.device.name",
+                        "phonecontrol2.plugin.use.variable.connected.device.description",
+                        "phonecontrol2.plugin.use.variable.connected.device.example"),
                 new UseVariableDefinition(PhoneControlController.VAR_ID_CONTACTS_LIST,
-                        "phonecontrol.plugin.use.variable.contacts.list.name",
-                        "phonecontrol.plugin.use.variable.contacts.list.description",
-                        "phonecontrol.plugin.use.variable.contacts.list.example"),
+                        "phonecontrol2.plugin.use.variable.contacts.list.name",
+                        "phonecontrol2.plugin.use.variable.contacts.list.description",
+                        "phonecontrol2.plugin.use.variable.contacts.list.example"),
                 new UseVariableDefinition(PhoneControlController.VAR_ID_CALL_NUMBER,
-                        "phonecontrol.plugin.use.variable.call.number.name",
-                        "phonecontrol.plugin.use.variable.call.number.description",
-                        "phonecontrol.plugin.use.variable.call.number.example"),
+                        "phonecontrol2.plugin.use.variable.call.number.name",
+                        "phonecontrol2.plugin.use.variable.call.number.description",
+                        "phonecontrol2.plugin.use.variable.call.number.example"),
                 new UseVariableDefinition(PhoneControlController.VAR_ID_CONTACTS_LETTRES,
-                        "phonecontrol.plugin.use.variable.contacts.lettres.name",
-                        "phonecontrol.plugin.use.variable.contacts.lettres.description",
-                        "phonecontrol.plugin.use.variable.contacts.lettres.example"),
+                        "phonecontrol2.plugin.use.variable.contacts.lettres.name",
+                        "phonecontrol2.plugin.use.variable.contacts.lettres.description",
+                        "phonecontrol2.plugin.use.variable.contacts.lettres.example"),
                 new UseVariableDefinition(PhoneControlController.VAR_ID_NB_CONTACTS_LETTRES,
-                        "phonecontrol.plugin.use.variable.nb.contacts.lettres.name",
-                        "phonecontrol.plugin.use.variable.nb.contacts.lettres.description",
-                        "phonecontrol.plugin.use.variable.nb.contacts.lettres.example"),
+                        "phonecontrol2.plugin.use.variable.nb.contacts.lettres.name",
+                        "phonecontrol2.plugin.use.variable.nb.contacts.lettres.description",
+                        "phonecontrol2.plugin.use.variable.nb.contacts.lettres.example"),
                 new UseVariableDefinition(PhoneControlController.VAR_ID_CONTACT,
-                        "phonecontrol.plugin.use.variable.contact.name",
-                        "phonecontrol.plugin.use.variable.contact.description",
-                        "phonecontrol.plugin.use.variable.contact.example",
+                        "phonecontrol2.plugin.use.variable.contact.name",
+                        "phonecontrol2.plugin.use.variable.contact.description",
+                        "phonecontrol2.plugin.use.variable.contact.example",
                         100),
                 new UseVariableDefinition(PhoneControlController.VAR_ID_CONTACT_PRECEDENT,
-                        "phonecontrol.plugin.use.variable.contact.precedent.name",
-                        "phonecontrol.plugin.use.variable.contact.precedent.description",
-                        "phonecontrol.plugin.use.variable.contact.precedent.example",
+                        "phonecontrol2.plugin.use.variable.contact.precedent.name",
+                        "phonecontrol2.plugin.use.variable.contact.precedent.description",
+                        "phonecontrol2.plugin.use.variable.contact.precedent.example",
                         100),
                 new UseVariableDefinition(PhoneControlController.VAR_ID_CONTACT_SUIVANT,
-                        "phonecontrol.plugin.use.variable.contact.suivant.name",
-                        "phonecontrol.plugin.use.variable.contact.suivant.description",
-                        "phonecontrol.plugin.use.variable.contact.suivant.example",
+                        "phonecontrol2.plugin.use.variable.contact.suivant.name",
+                        "phonecontrol2.plugin.use.variable.contact.suivant.description",
+                        "phonecontrol2.plugin.use.variable.contact.suivant.example",
                         100),
                 new UseVariableDefinition(PhoneControlController.VAR_ID_CALL_TIME,
-                        "phonecontrol.plugin.use.variable.call.time.name",
-                        "phonecontrol.plugin.use.variable.call.time.description",
-                        "phonecontrol.plugin.use.variable.call.time.example",
+                        "phonecontrol2.plugin.use.variable.call.time.name",
+                        "phonecontrol2.plugin.use.variable.call.time.description",
+                        "phonecontrol2.plugin.use.variable.call.time.example",
                         100),
                 new UseVariableDefinition(PhoneControlController.VAR_ID_CONTACT_RECHERCHE,
-                        "phonecontrol.plugin.use.variable.contact.recherche.name",
-                        "phonecontrol.plugin.use.variable.contact.recherche.description",
-                        "phonecontrol.plugin.use.variable.contact.recherche.example",
+                        "phonecontrol2.plugin.use.variable.contact.recherche.name",
+                        "phonecontrol2.plugin.use.variable.contact.recherche.description",
+                        "phonecontrol2.plugin.use.variable.contact.recherche.example",
                         100)
         );
     }

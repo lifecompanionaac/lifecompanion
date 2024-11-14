@@ -1,11 +1,8 @@
-package org.lifecompanion.plugin.phonecontrol;
+package org.lifecompanion.plugin.phonecontrol2;
 
 import javafx.beans.property.*;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import org.jdom2.Element;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
-import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.impl.exception.LCException;

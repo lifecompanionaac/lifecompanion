@@ -1,120 +1,120 @@
 <texts>
     <!-- UI -->
-    <text key="phonecontrol.plugin.config.view.general.title">Contrôle du téléphone</text>
-    <text key="phonecontrol.plugin.config.general.configuration.title.part">Configuration générale</text>
+    <text key="phonecontrol2.plugin.config.view.general.title">Contrôle du téléphone</text>
+    <text key="phonecontrol2.plugin.config.general.configuration.title.part">Configuration générale</text>
 
     // POUR L'EXTENSION PHONE CONTROL
-    <text key="phonecontrol.plugin.main.action.category.name">Contrôle du téléphone</text>
-    <text key="phonecontrol.plugin.main.action.category.description">Contient toutes les actions nécessaires pour contrôler un téléphone</text>
+    <text key="phonecontrol2.plugin.main.action.category.name">Contrôle du téléphone</text>
+    <text key="phonecontrol2.plugin.main.action.category.description">Contient toutes les actions nécessaires pour contrôler un téléphone</text>
 
-    <text key="phonecontrol.plugin.sub.action.category.appel.name">Appel</text>
+    <text key="phonecontrol2.plugin.sub.action.category.appel.name">Appel</text>
 
-    <text key="phonecontrol.plugin.sub.action.category.volume.name">Volume</text>
+    <text key="phonecontrol2.plugin.sub.action.category.volume.name">Volume</text>
 
-    <text key="phonecontrol.plugin.sub.action.category.contact.name">Contacts</text>
+    <text key="phonecontrol2.plugin.sub.action.category.contact.name">Contacts</text>
 
-    <text key="phonecontrol.plugin.use.variable.contacts.lettres.name">Liste des contacts dont le nom commence par les lettres validées précédemment</text>
-    <text key="phonecontrol.plugin.use.variable.contacts.lettres.description">Contient la liste des contacts dont le nom commence par les lettres validées précédemment</text>
-    <text key="phonecontrol.plugin.use.variable.contacts.lettres.example">Antoine | 0102030405, Benjamin | 0102030405, ...</text>
+    <text key="phonecontrol2.plugin.use.variable.contacts.lettres.name">Liste des contacts dont le nom commence par les lettres validées précédemment</text>
+    <text key="phonecontrol2.plugin.use.variable.contacts.lettres.description">Contient la liste des contacts dont le nom commence par les lettres validées précédemment</text>
+    <text key="phonecontrol2.plugin.use.variable.contacts.lettres.example">Antoine | 0102030405, Benjamin | 0102030405, ...</text>
 
-    <text key="phonecontrol.plugin.use.variable.nb.contacts.lettres.name">Nombre de contacts dont le nom commence par les lettres affectées précédemment</text>
-    <text key="phonecontrol.plugin.use.variable.nb.contacts.lettres.description">Contient le nombre de contacts dont le nom commence par les lettres affectées précédemment</text>
-    <text key="phonecontrol.plugin.use.variable.nb.contacts.lettres.example">3 contacts</text>
+    <text key="phonecontrol2.plugin.use.variable.nb.contacts.lettres.name">Nombre de contacts dont le nom commence par les lettres affectées précédemment</text>
+    <text key="phonecontrol2.plugin.use.variable.nb.contacts.lettres.description">Contient le nombre de contacts dont le nom commence par les lettres affectées précédemment</text>
+    <text key="phonecontrol2.plugin.use.variable.nb.contacts.lettres.example">3 contacts</text>
 
-    <text key="phonecontrol.plugin.action.hangup.name">Raccrocher/Rejeter un appel</text>
-    <text key="phonecontrol.plugin.action.hangup.description">Permet de raccrocher un appel en cours/rejeter un appel entrant</text>
+    <text key="phonecontrol2.plugin.action.hangup.name">Raccrocher/Rejeter un appel</text>
+    <text key="phonecontrol2.plugin.action.hangup.description">Permet de raccrocher un appel en cours/rejeter un appel entrant</text>
 
-    <text key="phonecontrol.plugin.action.pick.up.name">Décrocher un appel</text>
-    <text key="phonecontrol.plugin.action.pick.up.description">Permet de décrocher un appel entrant</text>
+    <text key="phonecontrol2.plugin.action.pick.up.name">Décrocher un appel</text>
+    <text key="phonecontrol2.plugin.action.pick.up.description">Permet de décrocher un appel entrant</text>
 
-    <text key="phonecontrol.plugin.use.variable.contacts.list.name">Liste des contacts</text>
-    <text key="phonecontrol.plugin.use.variable.contacts.list.description">Contient la liste des contacts du téléphone</text>
-    <text key="phonecontrol.plugin.use.variable.contacts.list.example">Antoine | 0102030405, Benjamin | 0102030405, ...</text>
+    <text key="phonecontrol2.plugin.use.variable.contacts.list.name">Liste des contacts</text>
+    <text key="phonecontrol2.plugin.use.variable.contacts.list.description">Contient la liste des contacts du téléphone</text>
+    <text key="phonecontrol2.plugin.use.variable.contacts.list.example">Antoine | 0102030405, Benjamin | 0102030405, ...</text>
 
-    <text key="phonecontrol.plugin.action.affectletters.name">Valider les lettres des initiales des contacts</text>
-    <text key="phonecontrol.plugin.action.affectletters.description">Permet de valider les lettres des initiales des contacts</text>
+    <text key="phonecontrol2.plugin.action.affectletters.name">Valider les lettres des initiales des contacts</text>
+    <text key="phonecontrol2.plugin.action.affectletters.description">Permet de valider les lettres des initiales des contacts</text>
 
-    <text key="phonecontrol.plugin.action.callContactRecherche.name">Appeler le contact recherché</text>
-    <text key="phonecontrol.plugin.action.callContactRecherche.description">Permet d'appeler le contact recherché</text>
+    <text key="phonecontrol2.plugin.action.callContactRecherche.name">Appeler le contact recherché</text>
+    <text key="phonecontrol2.plugin.action.callContactRecherche.description">Permet d'appeler le contact recherché</text>
 
-    <text key="phonecontrol.plugin.use.variable.call.number.name">Numéro de l'appel</text>
-    <text key="phonecontrol.plugin.use.variable.call.number.description">Contient le numéro de l'appel</text>
-    <text key="phonecontrol.plugin.use.variable.call.number.example">0102030405</text>
+    <text key="phonecontrol2.plugin.use.variable.call.number.name">Numéro de l'appel</text>
+    <text key="phonecontrol2.plugin.use.variable.call.number.description">Contient le numéro de l'appel</text>
+    <text key="phonecontrol2.plugin.use.variable.call.number.example">0102030405</text>
 
-    <text key="phonecontrol.plugin.config.label.connected.device">Appareil : </text>
-    <text key="phonecontrol.plugin.config.test.adb.connection.title.part">Connexion au téléphone</text>
-    <text key="phonecontrol.plugin.config.button.test.adb.connection">Tester la connexion</text>
-    <text key="phonecontrol.plugin.config.button.test.adb.connection.loading">Test en cours...</text>
+    <text key="phonecontrol2.plugin.config.label.connected.device">Appareil : </text>
+    <text key="phonecontrol2.plugin.config.test.adb.connection.title.part">Connexion au téléphone</text>
+    <text key="phonecontrol2.plugin.config.button.test.adb.connection">Tester la connexion</text>
+    <text key="phonecontrol2.plugin.config.button.test.adb.connection.loading">Test en cours...</text>
 
-    <text key="phonecontrol.plugin.config.label.no.device.connected">Aucun appareil connecté</text>
-    <text key="phonecontrol.plugin.config.label.no.device.selected">Aucun appareil selectionné</text>
-
-
-    <text key="phonecontrol.plugin.config.button.choose.device">Choisir cet appareil</text>
-    <text key="phonecontrol.plugin.config.label.device.used">Appareil utilisé : </text>
-    <text key="phonecontrol.plugin.config.label.device.selected">Appareil selectionné : </text>
-    <text key="phonecontrol.plugin.config.button.refresh.devices">Rafraîchir la liste</text>
-
-    <text key="phonecontrol.plugin.action.call.the.number.in.the.input.box.name">Appeler le numéro dans la zone de saisie</text>
-    <text key="phonecontrol.plugin.action.call.the.number.in.the.input.box.description">Permet d'appeler le numéro de téléphone dans la zone de saisie</text>
-
-    <text key="phonecontrol.plugin.action.call.the.name.in.the.input.box.name">Appeler le numéro associé au nom dans la zone de saisie</text>
-    <text key="phonecontrol.plugin.action.call.the.name.in.the.input.box.description">Permet d'appeler le numéro associé au nom dans la zone de saisie</text>
-
-    <text key="phonecontrol.plugin.action.volume.up.name">Augmenter le volume</text>
-    <text key="phonecontrol.plugin.action.volume.up.description">Permet d'augmenter le volume du téléphone</text>
-
-    <text key="phonecontrol.plugin.action.volume.down.name">Diminuer le volume</text>
-    <text key="phonecontrol.plugin.action.volume.down.description">Permet de diminuer le volume du téléphone</text>
-
-    <text key="phonecontrol.plugin.action.update.contact.recherche.name">Mettre à jour le contact recherché</text>
-    <text key="phonecontrol.plugin.action.update.contact.recherche.description">Permet de mettre à jour le contact recherché</text>
-
-    <text key="phonecontrol.plugin.use.variable.connected.device.name">Appareil connecté</text>
-    <text key="phonecontrol.plugin.use.variable.connected.device.description">Contient le nom de l'appareil connecté</text>
-    <text key="phonecontrol.plugin.use.variable.connected.device.example">OnePlus 6T de Jean</text>
-
-    <text key="phonecontrol.plugin.event.incomingcall.name">Réception d'un appel</text>
-    <text key="phonecontrol.plugin.event.incomingcall.description">Se déclenche lors de la réception d'un appel</text>
-
-    <text key="phonecontrol.plugin.event.endcall.name">Fin d'un appel</text>
-    <text key="phonecontrol.plugin.event.endcall.description">Se déclenche lors de la fin d'un appel</text>
-
-    <text key="phonecontrol.plugin.action.incoming.call.name">Vérifier si quelqu'un essaie d'appeler</text>
-    <text key="phonecontrol.plugin.action.incoming.call.description">Permet de vérifier si quelqu'un essaie d'appeler</text>
+    <text key="phonecontrol2.plugin.config.label.no.device.connected">Aucun appareil connecté</text>
+    <text key="phonecontrol2.plugin.config.label.no.device.selected">Aucun appareil selectionné</text>
 
 
-    <text key="phonecontrol.plugin.main.event.category.name">Contrôle du téléphone</text>
-    <text key="phonecontrol.plugin.main.event.category.description">Contient tous les événements nécessaires pour contrôler un téléphone</text>
+    <text key="phonecontrol2.plugin.config.button.choose.device">Choisir cet appareil</text>
+    <text key="phonecontrol2.plugin.config.label.device.used">Appareil utilisé : </text>
+    <text key="phonecontrol2.plugin.config.label.device.selected">Appareil selectionné : </text>
+    <text key="phonecontrol2.plugin.config.button.refresh.devices">Rafraîchir la liste</text>
 
-    <text key="phonecontrol.plugin.sub.event.category.general.name">Appel</text>
+    <text key="phonecontrol2.plugin.action.call.the.number.in.the.input.box.name">Appeler le numéro dans la zone de saisie</text>
+    <text key="phonecontrol2.plugin.action.call.the.number.in.the.input.box.description">Permet d'appeler le numéro de téléphone dans la zone de saisie</text>
 
-    <text key="phonecontrol.plugin.use.variable.contact.name">Contact</text>
-    <text key="phonecontrol.plugin.use.variable.contact.description">Contient le contact actuellement selectionné dans la liste</text>
-    <text key="phonecontrol.plugin.use.variable.contact.example">Antoine | 0102030405</text>
+    <text key="phonecontrol2.plugin.action.call.the.name.in.the.input.box.name">Appeler le numéro associé au nom dans la zone de saisie</text>
+    <text key="phonecontrol2.plugin.action.call.the.name.in.the.input.box.description">Permet d'appeler le numéro associé au nom dans la zone de saisie</text>
 
-    <text key="phonecontrol.plugin.action.call.the.contact.name">Appeler le contact selectionné dans la liste des contacts</text>
-    <text key="phonecontrol.plugin.action.call.the.contact.description">Permet d'appeler le contact selectionné dans la liste des contacts</text>
+    <text key="phonecontrol2.plugin.action.volume.up.name">Augmenter le volume</text>
+    <text key="phonecontrol2.plugin.action.volume.up.description">Permet d'augmenter le volume du téléphone</text>
 
-    <text key="phonecontrol.plugin.use.variable.contact.suivant.name">Contact suivant</text>
-    <text key="phonecontrol.plugin.use.variable.contact.suivant.description">Contient le contact suivant dans la liste</text>
-    <text key="phonecontrol.plugin.use.variable.contact.suivant.example">Antoine | 0102030405</text>
+    <text key="phonecontrol2.plugin.action.volume.down.name">Diminuer le volume</text>
+    <text key="phonecontrol2.plugin.action.volume.down.description">Permet de diminuer le volume du téléphone</text>
 
-    <text key="phonecontrol.plugin.use.variable.contact.precedent.name">Contact précédent</text>
-    <text key="phonecontrol.plugin.use.variable.contact.precedent.description">Contient le contact précédent dans la liste</text>
-    <text key="phonecontrol.plugin.use.variable.contact.precedent.example">Céline | 0102030405</text>
+    <text key="phonecontrol2.plugin.action.update.contact.recherche.name">Mettre à jour le contact recherché</text>
+    <text key="phonecontrol2.plugin.action.update.contact.recherche.description">Permet de mettre à jour le contact recherché</text>
 
-    <text key="phonecontrol.plugin.action.contact.suivant.name">Contact suivant</text>
-    <text key="phonecontrol.plugin.action.contact.suivant.description">Permet de passer au contact suivant</text>
+    <text key="phonecontrol2.plugin.use.variable.connected.device.name">Appareil connecté</text>
+    <text key="phonecontrol2.plugin.use.variable.connected.device.description">Contient le nom de l'appareil connecté</text>
+    <text key="phonecontrol2.plugin.use.variable.connected.device.example">OnePlus 6T de Jean</text>
 
-    <text key="phonecontrol.plugin.action.contact.precedent.name">Contact précédent</text>
-    <text key="phonecontrol.plugin.action.contact.precedent.description">Permet de passer au contact précédent</text>
+    <text key="phonecontrol2.plugin.event.incomingcall.name">Réception d'un appel</text>
+    <text key="phonecontrol2.plugin.event.incomingcall.description">Se déclenche lors de la réception d'un appel</text>
 
-    <text key="phonecontrol.plugin.use.variable.call.time.name">Durée de l'appel</text>
-    <text key="phonecontrol.plugin.use.variable.call.time.description">Contient la durée de l'appel</text>
-    <text key="phonecontrol.plugin.use.variable.call.time.example">02:30</text>
+    <text key="phonecontrol2.plugin.event.endcall.name">Fin d'un appel</text>
+    <text key="phonecontrol2.plugin.event.endcall.description">Se déclenche lors de la fin d'un appel</text>
 
-    <text key="phonecontrol.plugin.use.variable.contact.recherche.name">Contact recherché</text>
-    <text key="phonecontrol.plugin.use.variable.contact.recherche.description">Contient le contact le plus proche de la recherche</text>
-    <text key="phonecontrol.plugin.use.variable.contact.recherche.example">Antoine | 0102030405</text>
+    <text key="phonecontrol2.plugin.action.incoming.call.name">Vérifier si quelqu'un essaie d'appeler</text>
+    <text key="phonecontrol2.plugin.action.incoming.call.description">Permet de vérifier si quelqu'un essaie d'appeler</text>
+
+
+    <text key="phonecontrol2.plugin.main.event.category.name">Contrôle du téléphone</text>
+    <text key="phonecontrol2.plugin.main.event.category.description">Contient tous les événements nécessaires pour contrôler un téléphone</text>
+
+    <text key="phonecontrol2.plugin.sub.event.category.general.name">Appel</text>
+
+    <text key="phonecontrol2.plugin.use.variable.contact.name">Contact</text>
+    <text key="phonecontrol2.plugin.use.variable.contact.description">Contient le contact actuellement selectionné dans la liste</text>
+    <text key="phonecontrol2.plugin.use.variable.contact.example">Antoine | 0102030405</text>
+
+    <text key="phonecontrol2.plugin.action.call.the.contact.name">Appeler le contact selectionné dans la liste des contacts</text>
+    <text key="phonecontrol2.plugin.action.call.the.contact.description">Permet d'appeler le contact selectionné dans la liste des contacts</text>
+
+    <text key="phonecontrol2.plugin.use.variable.contact.suivant.name">Contact suivant</text>
+    <text key="phonecontrol2.plugin.use.variable.contact.suivant.description">Contient le contact suivant dans la liste</text>
+    <text key="phonecontrol2.plugin.use.variable.contact.suivant.example">Antoine | 0102030405</text>
+
+    <text key="phonecontrol2.plugin.use.variable.contact.precedent.name">Contact précédent</text>
+    <text key="phonecontrol2.plugin.use.variable.contact.precedent.description">Contient le contact précédent dans la liste</text>
+    <text key="phonecontrol2.plugin.use.variable.contact.precedent.example">Céline | 0102030405</text>
+
+    <text key="phonecontrol2.plugin.action.contact.suivant.name">Contact suivant</text>
+    <text key="phonecontrol2.plugin.action.contact.suivant.description">Permet de passer au contact suivant</text>
+
+    <text key="phonecontrol2.plugin.action.contact.precedent.name">Contact précédent</text>
+    <text key="phonecontrol2.plugin.action.contact.precedent.description">Permet de passer au contact précédent</text>
+
+    <text key="phonecontrol2.plugin.use.variable.call.time.name">Durée de l'appel</text>
+    <text key="phonecontrol2.plugin.use.variable.call.time.description">Contient la durée de l'appel</text>
+    <text key="phonecontrol2.plugin.use.variable.call.time.example">02:30</text>
+
+    <text key="phonecontrol2.plugin.use.variable.contact.recherche.name">Contact recherché</text>
+    <text key="phonecontrol2.plugin.use.variable.contact.recherche.description">Contient le contact le plus proche de la recherche</text>
+    <text key="phonecontrol2.plugin.use.variable.contact.recherche.example">Antoine | 0102030405</text>
 </texts>
