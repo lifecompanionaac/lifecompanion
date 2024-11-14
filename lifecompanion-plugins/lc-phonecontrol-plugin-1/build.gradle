@@ -29,8 +29,8 @@ jar {
     duplicatesStrategy DuplicatesStrategy.WARN
     manifest {
         attributes(
-                "LifeCompanion-Plugin-Class": "org.lifecompanion.plugin.phonecontrol.PhoneControlPlugin",
-                "LifeCompanion-Plugin-Package-Scanning-Base": "org.lifecompanion.plugin.phonecontrol",
+                "LifeCompanion-Plugin-Class": "org.lifecompanion.plugin.phonecontrol1.PhoneControlPlugin",
+                "LifeCompanion-Plugin-Package-Scanning-Base": "org.lifecompanion.plugin.phonecontrol1",
                 "LifeCompanion-Plugin-Id": "lc-phonecontrol-plugin-1",
                 "LifeCompanion-Plugin-Author": "Etudiants IUT Vannes",
                 "LifeCompanion-Plugin-Version": project.version,
