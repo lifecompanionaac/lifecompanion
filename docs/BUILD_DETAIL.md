@@ -266,7 +266,7 @@ The example is done with **lc-spellgame-plugin** but should work with any plugin
 1. Create your dev workflow
     1. We have to set an environment variable to tell LifeCompanion where to fetch the freshly created jar. Since the Gradle extension doesn't handle it yet (check https://github.com/microsoft/vscode-gradle/issues/1624), you have to set it yourself.
        1. Open a PowerShell in **~/Documents/lifecompanion/lifecompanion**, and type `[System.Environment]::SetEnvironmentVariable("org.lifecompanion.dev.cp.arg", "../../lifecompanion-plugins/lc-spellgame-plugin/build/libs/*", "User")` (if you work on multiple plugins, separate their path with a semicolon)
-       1. Run `./gradlew.bat --stop && pwsh`. This ensures that the env var is indeed loaded correctly
+       1. Run `./gradlew.bat --stop` and open a new PowerShell. This ensures that the env var is indeed loaded correctly
     1. You can now run **lifecompanion > lc-app > Tasks > application > run**, LifeCompanion is now running with your plugin !
        1. You just have to redo the `jar` task every time you need it (and eventually change the env var if you switch project, note that it stays persistent between restarts), and then the `run` task
        1. If your plugin doesn't appear, in the Gradle pane click on "Gradle Daemons" at the bottom and the red button to stop the existing processes. If it still doen't work, open a PowerShell in **~/Documents/lifecompanion/lifecompanion** and type `./gradlew.bat :lc-app:run`
