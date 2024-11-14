@@ -36,7 +36,8 @@ public class SelectConversationFromListAction extends SimpleUseActionImpl<GridPa
         GridPartKeyComponentI parentKey = this.parentComponentProperty().get();
         if (parentKey != null) {
             if (parentKey.keyOptionProperty().get() instanceof ConversationListKeyOption) {
-                ConversationListKeyOption conversationListKeyOption = (ConversationListKeyOption) parentKey.keyOptionProperty().get();
+                ConversationListKeyOption conversationListKeyOption = (ConversationListKeyOption) parentKey
+                        .keyOptionProperty().get();
                 String phoneNumber = conversationListKeyOption.convProperty().get().getPhoneNumber();
                 String phoneNumberOrContactName = conversationListKeyOption.convProperty().get().getContactName();
                 PhoneControlController.INSTANCE.selectConv(phoneNumber, phoneNumberOrContactName);

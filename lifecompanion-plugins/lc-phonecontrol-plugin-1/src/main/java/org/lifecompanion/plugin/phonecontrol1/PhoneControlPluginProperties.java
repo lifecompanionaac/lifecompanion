@@ -75,10 +75,12 @@ public class PhoneControlPluginProperties extends AbstractPluginConfigProperties
     }
 
     @Override
-    public void serializeUseInformation(Map<String, Element> elements) {}
+    public void serializeUseInformation(Map<String, Element> elements) {
+    }
 
     @Override
-    public void deserializeUseInformation(Map<String, Element> elements) throws LCException {}
+    public void deserializeUseInformation(Map<String, Element> elements) throws LCException {
+    }
 
     //========================================================================
 }

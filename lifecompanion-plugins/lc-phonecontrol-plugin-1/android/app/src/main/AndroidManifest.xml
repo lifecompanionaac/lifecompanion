@@ -37,12 +37,12 @@
             android:name=".services.SMSSenderService"
             android:exported="true"
             android:foregroundServiceType="dataSync"
-            tools:ignore="ExportedService"/>
+            tools:ignore="ExportedService" />
         <service
             android:name=".services.SMSReaderService"
             android:exported="true"
             android:foregroundServiceType="dataSync"
-            tools:ignore="ExportedService"/>
+            tools:ignore="ExportedService" />
         <service
             android:name=".services.CallService"
             android:exported="true"

@@ -24,11 +24,12 @@ public class PhoneControlPlugin implements PluginI {
 
     public PhoneControlPlugin() {
     }
+
     // CONFIG
     //========================================================================
     @Override
     public String[] getLanguageFiles(final String languageCode) {
-        return new String[]{"/text/" + languageCode + "_phonecontrol_plugin.xml"};
+        return new String[] { "/text/" + languageCode + "_phonecontrol_plugin.xml" };
     }
 
     @Override
@@ -38,10 +39,9 @@ public class PhoneControlPlugin implements PluginI {
 
     @Override
     public String[] getDefaultConfigurations(String languageCode) {
-        return new String[]{"/configurations/" + languageCode + "_phonecontrol-example1.lcc"};
+        return new String[] { "/configurations/" + languageCode + "_phonecontrol-example1.lcc" };
     }
     //========================================================================
-
 
     // PLUGIN START/STOP
     //========================================================================
@@ -69,7 +69,6 @@ public class PhoneControlPlugin implements PluginI {
     }
     //========================================================================
 
-
     // VARIABLES
     //========================================================================
     @Override
@@ -89,16 +88,18 @@ public class PhoneControlPlugin implements PluginI {
                         PhoneControlController.VAR_PHONE_NUMBER_OR_CONTACT_NAME,
                         "phonecontrol1.plugin.use.variable.phone.number.or.contact.name.name",
                         "phonecontrol1.plugin.use.variable.phone.number.or.contact.name.description",
-                        "phonecontrol1.plugin.use.variable.phone.number.or.contact.name.example")
-        );
+                        "phonecontrol1.plugin.use.variable.phone.number.or.contact.name.example"));
     }
 
     @Override
     public Function<UseVariableDefinitionI, UseVariableI<?>> getSupplierForUseVariable(String id) {
         return switch (id) {
-            case PhoneControlController.VAR_SMS_UNREAD -> def -> new IntegerUseVariable(def, PhoneControlController.INSTANCE.getSmsUnread());
-            case PhoneControlController.VAR_CALL_DURATION -> def -> new StringUseVariable(def, PhoneControlController.INSTANCE.getCallDuration());
-            case PhoneControlController.VAR_PHONE_NUMBER_OR_CONTACT_NAME -> def -> new StringUseVariable(def, PhoneControlController.INSTANCE.getPhoneNumberOrContactName());
+            case PhoneControlController.VAR_SMS_UNREAD ->
+                def -> new IntegerUseVariable(def, PhoneControlController.INSTANCE.getSmsUnread());
+            case PhoneControlController.VAR_CALL_DURATION ->
+                def -> new StringUseVariable(def, PhoneControlController.INSTANCE.getCallDuration());
+            case PhoneControlController.VAR_PHONE_NUMBER_OR_CONTACT_NAME ->
+                def -> new StringUseVariable(def, PhoneControlController.INSTANCE.getPhoneNumberOrContactName());
             default -> null;
         };
     }

@@ -137,7 +137,8 @@ public enum ADBService {
      */
     public boolean isAppInstalled(String deviceSerialNumber) {
         try {
-            ProcessBuilder processBuilder = new ProcessBuilder(adbPath, "-s", deviceSerialNumber, "shell", "pm", "list", "packages", "org.lifecompanion");
+            ProcessBuilder processBuilder = new ProcessBuilder(adbPath, "-s", deviceSerialNumber, "shell", "pm", "list",
+                    "packages", "org.lifecompanion");
             Process process = processBuilder.start();
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String line = reader.readLine();
@@ -246,7 +247,8 @@ public enum ADBService {
         LOGGER.info("Hanging up");
         try {
             ProcessBuilder processBuilder = new ProcessBuilder(adbPath, "-s", deviceSerialNumber, "shell",
-                    "am", "start-foreground-service", "-n", "org.lifecompanion/.services.CallService", "--ez", "stop", "True");
+                    "am", "start-foreground-service", "-n", "org.lifecompanion/.services.CallService", "--ez", "stop",
+                    "True");
             Process process = processBuilder.start();
             process.waitFor();
         } catch (IOException | InterruptedException e) {
@@ -373,7 +375,8 @@ public enum ADBService {
             // Read the logcat output
             BufferedReader reader = new BufferedReader(new InputStreamReader(logcatProcess.getInputStream()));
             String line;
-            while ((line = reader.readLine()) != null && ret.size() < indexMax - indexMin && !line.equals("+33000000000")) {
+            while ((line = reader.readLine()) != null && ret.size() < indexMax - indexMin
+                    && !line.equals("+33000000000")) {
                 if (line.startsWith(phoneNumber)) {
                     ret.add(line);
                 }
@@ -414,7 +417,8 @@ public enum ADBService {
 
         try {
             // Logcat
-            Process logcatProcess = new ProcessBuilder(adbPath, "-s", deviceSerialNumber, "logcat", "-v", "raw", "SmsSenderServiceCallBack:I", "*:S").start();
+            Process logcatProcess = new ProcessBuilder(adbPath, "-s", deviceSerialNumber, "logcat", "-v", "raw",
+                    "SmsSenderServiceCallBack:I", "*:S").start();
 
             // Call the android app
             String encodedMessage = Base64.getEncoder().encodeToString(message.getBytes());

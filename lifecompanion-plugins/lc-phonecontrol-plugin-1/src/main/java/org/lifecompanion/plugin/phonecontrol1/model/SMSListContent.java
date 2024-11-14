@@ -14,7 +14,8 @@ public class SMSListContent {
 	private final String sentDate;
 	private final boolean sendByMe;
 
-	public SMSListContent(String phoneNumber, String phoneNumberOrContactName, String SMS, String sentDate, boolean sendByMe) {
+	public SMSListContent(String phoneNumber, String phoneNumberOrContactName, String SMS, String sentDate,
+			boolean sendByMe) {
 		this.phoneNumber = phoneNumber;
 		this.phoneNumberOrContactName = phoneNumberOrContactName;
 		this.SMS = SMS;
@@ -84,11 +85,12 @@ public class SMSListContent {
 				return "A l'instant";
 			} else if (currentDayOfWeek == smsDayOfWeek && days < 2) {
 				return new SimpleDateFormat("HH:mm", Locale.getDefault()).format(date);
-			} else if ((currentDayOfWeek-smsDayOfWeek==1 || currentDayOfWeek-smsDayOfWeek==-6) && days < 3) {
+			} else if ((currentDayOfWeek - smsDayOfWeek == 1 || currentDayOfWeek - smsDayOfWeek == -6) && days < 3) {
 				return "Hier à " + new SimpleDateFormat("HH:mm", Locale.getDefault()).format(date);
 			} else if (days < 7) {
-				String[] daysOfWeek = {"", "Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"};
-				return daysOfWeek[smsDayOfWeek] + " à " + new SimpleDateFormat("HH:mm", Locale.getDefault()).format(date);
+				String[] daysOfWeek = { "", "Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi" };
+				return daysOfWeek[smsDayOfWeek] + " à "
+						+ new SimpleDateFormat("HH:mm", Locale.getDefault()).format(date);
 			} else if (weeks < 4) {
 				return "Il y a " + weeks + " semaines";
 			} else if (months < 12) {

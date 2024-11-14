@@ -68,7 +68,9 @@ public class PhoneControlGeneralConfigView extends BorderPane implements General
         int gridRowIndex = 0;
 
         // Category title
-        gridPaneConfiguration.add(FXControlUtils.createTitleLabel("phonecontrol2.plugin.config.test.adb.connection.title.part"), 0, gridRowIndex++, 2, 1);
+        gridPaneConfiguration.add(
+                FXControlUtils.createTitleLabel("phonecontrol2.plugin.config.test.adb.connection.title.part"), 0,
+                gridRowIndex++, 2, 1);
 
         // ComboBox for selecting connected devices
         comboBoxDevices = new ComboBox<>();
@@ -79,8 +81,7 @@ public class PhoneControlGeneralConfigView extends BorderPane implements General
         buttonRefresh = FXControlUtils.createLeftTextButton(
                 Translation.getText("phonecontrol2.plugin.config.button.refresh.devices"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.REFRESH).size(16).color(LCGraphicStyle.MAIN_DARK),
-                null
-        );
+                null);
 
         // HBox to contain ComboBox and Refresh button side by side
         HBox hboxComboAndRefresh = new HBox(5, comboBoxDevices, buttonRefresh); // 5 is the spacing between elements
@@ -93,8 +94,7 @@ public class PhoneControlGeneralConfigView extends BorderPane implements General
         buttonChooseDevice = FXControlUtils.createLeftTextButton(
                 Translation.getText("phonecontrol2.plugin.config.button.choose.device"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.CHECK).size(16).color(LCGraphicStyle.MAIN_DARK),
-                null
-        );
+                null);
 
         gridPaneConfiguration.add(buttonChooseDevice, 0, gridRowIndex++, 2, 1);
 
@@ -117,8 +117,7 @@ public class PhoneControlGeneralConfigView extends BorderPane implements General
     private void updateConnectedDevices() {
         // Get the list of connected devices
         ObservableList<String> connectedDevices = FXCollections.observableArrayList(
-                PhoneControlController.getConnectedDevices()
-        );
+                PhoneControlController.getConnectedDevices());
 
         // Check if the list is empty
         if (connectedDevices.isEmpty()) {
@@ -139,8 +138,7 @@ public class PhoneControlGeneralConfigView extends BorderPane implements General
         } else {
             // Update the label to show no device connected
             labelConnectedDevice.setText(
-                    Translation.getText("phonecontrol2.plugin.config.label.no.device.connected")
-            );
+                    Translation.getText("phonecontrol2.plugin.config.label.no.device.connected"));
         }
     }
 
@@ -165,8 +163,7 @@ public class PhoneControlGeneralConfigView extends BorderPane implements General
                 updateDeviceLabel(selectedDevice);
             } else {
                 labelConnectedDevice.setText(
-                        Translation.getText("phonecontrol2.plugin.config.label.no.device.selected")
-                );
+                        Translation.getText("phonecontrol2.plugin.config.label.no.device.selected"));
             }
         });
 
@@ -177,12 +174,10 @@ public class PhoneControlGeneralConfigView extends BorderPane implements General
     private void updateDeviceLabel(String device) {
         if (device != null && !device.equals("Aucun appareil connecté")) {
             labelConnectedDevice.setText(
-                    Translation.getText("phonecontrol2.plugin.config.label.device.selected") + " " + device
-            );
+                    Translation.getText("phonecontrol2.plugin.config.label.device.selected") + " " + device);
         } else {
             labelConnectedDevice.setText(
-                    Translation.getText("phonecontrol2.plugin.config.label.no.device.connected")
-            );
+                    Translation.getText("phonecontrol2.plugin.config.label.no.device.connected"));
         }
     }
 
@@ -190,13 +185,15 @@ public class PhoneControlGeneralConfigView extends BorderPane implements General
 
     @Override
     public void saveChanges() {
-        PhoneControlPluginProperties pluginConfigProperties = configuration.getPluginConfigProperties(PhoneControlPlugin.ID, PhoneControlPluginProperties.class);
+        PhoneControlPluginProperties pluginConfigProperties = configuration
+                .getPluginConfigProperties(PhoneControlPlugin.ID, PhoneControlPluginProperties.class);
     }
 
     @Override
     public void bind(LCConfigurationI model) {
         this.configuration = model;
-        PhoneControlPluginProperties pluginConfigProperties = configuration.getPluginConfigProperties(PhoneControlPlugin.ID, PhoneControlPluginProperties.class);
+        PhoneControlPluginProperties pluginConfigProperties = configuration
+                .getPluginConfigProperties(PhoneControlPlugin.ID, PhoneControlPluginProperties.class);
     }
 
     @Override

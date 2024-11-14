@@ -16,7 +16,8 @@ import org.lifecompanion.framework.commons.translation.Translation;
  * @author Etudiants IUT Vannes : HASCOËT Anthony, GUERNY Baptiste,
  *         Le CHANU Simon, PAVOINE Oscar
  */
-public class SelectConversationManualActionConfigView extends VBox implements UseActionConfigurationViewI<SelectConversationManualAction> {
+public class SelectConversationManualActionConfigView extends VBox
+        implements UseActionConfigurationViewI<SelectConversationManualAction> {
 
     private TextField fieldPhoneNumber, fieldContactName;
 
@@ -28,7 +29,8 @@ public class SelectConversationManualActionConfigView extends VBox implements Us
         this.fieldPhoneNumber.setPromptText("+33612345678");
         this.fieldContactName = new TextField();
         this.fieldContactName.setPromptText("John Doe");
-        this.getChildren().addAll(new Label(Translation.getText("phonecontrol.view.useaction.phonenumber")), this.fieldPhoneNumber,
+        this.getChildren().addAll(new Label(Translation.getText("phonecontrol.view.useaction.phonenumber")),
+                this.fieldPhoneNumber,
                 new Label(Translation.getText("phonecontrol.view.useaction.contactname")), this.fieldContactName);
     }
 
@@ -38,7 +40,8 @@ public class SelectConversationManualActionConfigView extends VBox implements Us
     }
 
     @Override
-    public void editStarts(final SelectConversationManualAction action, final ObservableList<UseVariableDefinitionI> possibleVariables) {
+    public void editStarts(final SelectConversationManualAction action,
+            final ObservableList<UseVariableDefinitionI> possibleVariables) {
         this.fieldPhoneNumber.setText(action.phoneNumberProperty().get());
         this.fieldContactName.setText(action.contactNameProperty().get());
     }

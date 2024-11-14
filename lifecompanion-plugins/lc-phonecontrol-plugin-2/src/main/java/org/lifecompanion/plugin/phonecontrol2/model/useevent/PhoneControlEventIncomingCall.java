@@ -15,7 +15,9 @@ public class PhoneControlEventIncomingCall extends BaseUseEventGeneratorImpl {
         this.nameID = "phonecontrol2.plugin.event.incomingcall.name";
         this.staticDescriptionID = "phonecontrol2.plugin.event.incomingcall.description";
         this.variableDescriptionProperty().set(this.getStaticDescription());
-        callEnterCallback = () -> { this.useEventListener.fireEvent(this, null, null); };
+        callEnterCallback = () -> {
+            this.useEventListener.fireEvent(this, null, null);
+        };
     }
 
     @Override

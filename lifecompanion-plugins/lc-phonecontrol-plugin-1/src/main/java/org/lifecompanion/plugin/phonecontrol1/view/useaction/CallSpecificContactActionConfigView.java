@@ -15,7 +15,8 @@ import org.lifecompanion.plugin.phonecontrol1.action.CallSpecificContactAction;
  * @author Etudiants IUT Vannes : HASCOËT Anthony, GUERNY Baptiste,
  *         Le CHANU Simon, PAVOINE Oscar
  */
-public class CallSpecificContactActionConfigView extends VBox implements UseActionConfigurationViewI<CallSpecificContactAction> {
+public class CallSpecificContactActionConfigView extends VBox
+        implements UseActionConfigurationViewI<CallSpecificContactAction> {
 
     private TextField fieldPhoneNumber, fieldContactName;
 
@@ -27,7 +28,8 @@ public class CallSpecificContactActionConfigView extends VBox implements UseActi
         this.fieldPhoneNumber.setPromptText("+33612345678");
         this.fieldContactName = new TextField();
         this.fieldContactName.setPromptText("John Doe");
-        this.getChildren().addAll(new Label(Translation.getText("phonecontrol.view.useaction.phonenumber")), this.fieldPhoneNumber,
+        this.getChildren().addAll(new Label(Translation.getText("phonecontrol.view.useaction.phonenumber")),
+                this.fieldPhoneNumber,
                 new Label(Translation.getText("phonecontrol.view.useaction.contactname")), this.fieldContactName);
     }
 
@@ -37,7 +39,8 @@ public class CallSpecificContactActionConfigView extends VBox implements UseActi
     }
 
     @Override
-    public void editStarts(final CallSpecificContactAction action, final ObservableList<UseVariableDefinitionI> possibleVariables) {
+    public void editStarts(final CallSpecificContactAction action,
+            final ObservableList<UseVariableDefinitionI> possibleVariables) {
         this.fieldPhoneNumber.setText(action.phoneNumberProperty().get());
         this.fieldContactName.setText(action.contactNameProperty().get());
     }

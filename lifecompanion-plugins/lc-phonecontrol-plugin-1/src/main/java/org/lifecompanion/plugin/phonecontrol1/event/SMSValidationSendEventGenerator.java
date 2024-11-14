@@ -34,7 +34,8 @@ public class SMSValidationSendEventGenerator extends BaseUseEventGeneratorImpl {
         this.staticDescriptionID = "phonecontrol1.plugin.event.misc.sms.validation.send.description";
         this.condition = new SimpleObjectProperty<>(ValidationSendCondition.ALWAYS);
         this.variableDescriptionProperty()
-                .bind(TranslationFX.getTextBinding("phonecontrol1.plugin.event.misc.sms.validation.send.variable.description", this.condition));
+                .bind(TranslationFX.getTextBinding(
+                        "phonecontrol1.plugin.event.misc.sms.validation.send.variable.description", this.condition));
         validationSendSMSCallback = (validationSend) -> {
             final ValidationSendCondition cond = this.condition.get();
             if (cond == ValidationSendCondition.ALWAYS || (validationSend > 0 && cond == ValidationSendCondition.SENT)
@@ -75,6 +76,7 @@ public class SMSValidationSendEventGenerator extends BaseUseEventGeneratorImpl {
         ALWAYS("phonecontrol1.plugin.sms.validation.send.condition.always"),
         SENT("phonecontrol1.plugin.sms.validation.send.condition.sent"),
         NOT_SENT("phonecontrol1.plugin.sms.validation.send.condition.not.sent");
+
         private final String textId;
 
         private ValidationSendCondition(String textId) {

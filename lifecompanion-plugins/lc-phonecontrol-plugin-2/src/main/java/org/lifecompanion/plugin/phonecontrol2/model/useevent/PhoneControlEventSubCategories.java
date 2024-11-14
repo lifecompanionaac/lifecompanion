@@ -10,8 +10,9 @@ import org.lifecompanion.model.api.categorizedelement.useevent.UseEventMainCateg
 import org.lifecompanion.model.api.categorizedelement.useevent.UseEventSubCategoryI;
 
 public enum PhoneControlEventSubCategories implements UseEventSubCategoryI {
-    GENERAL("phonecontrol2.plugin.sub.event.category.general.name", CategorizedElementColorProvider.nextColor(PhoneControlEventMainCategory.INSTANCE)),
-    ;
+    GENERAL("phonecontrol2.plugin.sub.event.category.general.name",
+            CategorizedElementColorProvider.nextColor(PhoneControlEventMainCategory.INSTANCE)),
+            ;
 
     private final String nameId;
     private final String id;

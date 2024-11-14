@@ -31,24 +31,28 @@ public class OnUnreadSMSCountUpdatedConfigView extends VBox
 
     @Override
     public void initUI() {
-        this.choiceGenerateCondition = new ChoiceBox<>(FXCollections.observableArrayList(OnUnreadSMSCountUpdatedEventGenerator.UnreadEventGenerateCondition.values()));
-        this.choiceGenerateCondition.setConverter(new StringConverter<OnUnreadSMSCountUpdatedEventGenerator.UnreadEventGenerateCondition>() {
-            @Override
-            public String toString(OnUnreadSMSCountUpdatedEventGenerator.UnreadEventGenerateCondition value) {
-                return value != null ? value.getText() : null;
-            }
-
-            @Override
-            public OnUnreadSMSCountUpdatedEventGenerator.UnreadEventGenerateCondition fromString(String value) {
-                for (OnUnreadSMSCountUpdatedEventGenerator.UnreadEventGenerateCondition cond : OnUnreadSMSCountUpdatedEventGenerator.UnreadEventGenerateCondition.values()) {
-                    if (cond.getText().equals(value)) {
-                        return cond;
+        this.choiceGenerateCondition = new ChoiceBox<>(FXCollections
+                .observableArrayList(OnUnreadSMSCountUpdatedEventGenerator.UnreadEventGenerateCondition.values()));
+        this.choiceGenerateCondition.setConverter(
+                new StringConverter<OnUnreadSMSCountUpdatedEventGenerator.UnreadEventGenerateCondition>() {
+                    @Override
+                    public String toString(OnUnreadSMSCountUpdatedEventGenerator.UnreadEventGenerateCondition value) {
+                        return value != null ? value.getText() : null;
                     }
-                }
-                return null;
-            }
-        });
-        this.getChildren().addAll(new Label(Translation.getText("phonecontrol1.plugin.unread.count.condition.label")), this.choiceGenerateCondition);
+
+                    @Override
+                    public OnUnreadSMSCountUpdatedEventGenerator.UnreadEventGenerateCondition fromString(String value) {
+                        for (OnUnreadSMSCountUpdatedEventGenerator.UnreadEventGenerateCondition cond : OnUnreadSMSCountUpdatedEventGenerator.UnreadEventGenerateCondition
+                                .values()) {
+                            if (cond.getText().equals(value)) {
+                                return cond;
+                            }
+                        }
+                        return null;
+                    }
+                });
+        this.getChildren().addAll(new Label(Translation.getText("phonecontrol1.plugin.unread.count.condition.label")),
+                this.choiceGenerateCondition);
     }
 
     @Override

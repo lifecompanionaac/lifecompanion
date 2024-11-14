@@ -22,20 +22,19 @@ public class PhoneControlPlugin implements PluginI {
     //========================================================================
     @Override
     public String[] getLanguageFiles(final String languageCode) {
-        return new String[]{"/text/" + languageCode + "_phonecontrol_plugin.xml"};
+        return new String[] { "/text/" + languageCode + "_phonecontrol_plugin.xml" };
     }
 
     @Override
     public String[] getJavaFXStylesheets() {
-        return new String[]{"/style/phonecontrol_plugin.css"};
+        return new String[] { "/style/phonecontrol_plugin.css" };
     }
 
     @Override
     public String[] getDefaultConfigurations(String languageCode) {
-        return new String[]{"/configurations/phonecontrol-configuration_principal.lcc"};
+        return new String[] { "/configurations/phonecontrol-configuration_principal.lcc" };
     }
     //========================================================================
-
 
     // PLUGIN START/STOP
     //========================================================================
@@ -112,23 +111,32 @@ public class PhoneControlPlugin implements PluginI {
                         "phonecontrol2.plugin.use.variable.contact.recherche.name",
                         "phonecontrol2.plugin.use.variable.contact.recherche.description",
                         "phonecontrol2.plugin.use.variable.contact.recherche.example",
-                        100)
-        );
+                        100));
     }
 
     @Override
     public Function<UseVariableDefinitionI, UseVariableI<?>> getSupplierForUseVariable(String id) {
         return switch (id) {
-            case PhoneControlController.VAR_ID_CONNECTED_DEVICE -> def -> new StringUseVariable(def, PhoneControlController.INSTANCE.getSelectedDeviceName());
-            case PhoneControlController.VAR_ID_CALL_NUMBER -> def -> new StringUseVariable(def, PhoneControlController.INSTANCE.getCallNumber());
-            case PhoneControlController.VAR_ID_CONTACTS_LIST -> def -> new StringUseVariable(def, PhoneControlController.INSTANCE.listContactsString());
-            case PhoneControlController.VAR_ID_CONTACTS_LETTRES -> def -> new StringUseVariable(def, PhoneControlController.INSTANCE.getContactsByFirstLetter());
-            case PhoneControlController.VAR_ID_NB_CONTACTS_LETTRES -> def -> new StringUseVariable(def, PhoneControlController.INSTANCE.getNbContactsByFirstLetter());
-            case PhoneControlController.VAR_ID_CONTACT -> def -> new StringUseVariable(def, PhoneControlController.INSTANCE.getContact());
-            case PhoneControlController.VAR_ID_CONTACT_PRECEDENT -> def -> new StringUseVariable(def, PhoneControlController.INSTANCE.getContactPrecedent());
-            case PhoneControlController.VAR_ID_CONTACT_SUIVANT -> def -> new StringUseVariable(def, PhoneControlController.INSTANCE.getContactSuivant());
-            case PhoneControlController.VAR_ID_CALL_TIME -> def -> new StringUseVariable(def, PhoneControlController.INSTANCE.getCallTime());
-            case PhoneControlController.VAR_ID_CONTACT_RECHERCHE -> def -> new StringUseVariable(def, PhoneControlController.INSTANCE.getContactRecherche());
+            case PhoneControlController.VAR_ID_CONNECTED_DEVICE ->
+                def -> new StringUseVariable(def, PhoneControlController.INSTANCE.getSelectedDeviceName());
+            case PhoneControlController.VAR_ID_CALL_NUMBER ->
+                def -> new StringUseVariable(def, PhoneControlController.INSTANCE.getCallNumber());
+            case PhoneControlController.VAR_ID_CONTACTS_LIST ->
+                def -> new StringUseVariable(def, PhoneControlController.INSTANCE.listContactsString());
+            case PhoneControlController.VAR_ID_CONTACTS_LETTRES ->
+                def -> new StringUseVariable(def, PhoneControlController.INSTANCE.getContactsByFirstLetter());
+            case PhoneControlController.VAR_ID_NB_CONTACTS_LETTRES ->
+                def -> new StringUseVariable(def, PhoneControlController.INSTANCE.getNbContactsByFirstLetter());
+            case PhoneControlController.VAR_ID_CONTACT ->
+                def -> new StringUseVariable(def, PhoneControlController.INSTANCE.getContact());
+            case PhoneControlController.VAR_ID_CONTACT_PRECEDENT ->
+                def -> new StringUseVariable(def, PhoneControlController.INSTANCE.getContactPrecedent());
+            case PhoneControlController.VAR_ID_CONTACT_SUIVANT ->
+                def -> new StringUseVariable(def, PhoneControlController.INSTANCE.getContactSuivant());
+            case PhoneControlController.VAR_ID_CALL_TIME ->
+                def -> new StringUseVariable(def, PhoneControlController.INSTANCE.getCallTime());
+            case PhoneControlController.VAR_ID_CONTACT_RECHERCHE ->
+                def -> new StringUseVariable(def, PhoneControlController.INSTANCE.getContactRecherche());
             default -> null;
         };
     }

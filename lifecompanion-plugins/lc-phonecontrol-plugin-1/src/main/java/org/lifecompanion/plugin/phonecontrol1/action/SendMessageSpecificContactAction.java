@@ -23,7 +23,7 @@ public class SendMessageSpecificContactAction extends SimpleUseActionImpl<UseAct
 
     private final StringProperty phoneNumber, contactName;
 
-    public SendMessageSpecificContactAction () {
+    public SendMessageSpecificContactAction() {
         super(UseActionTriggerComponentI.class);
         this.order = 0;
         this.category = PhoneControlActionSubCategories.SMS;

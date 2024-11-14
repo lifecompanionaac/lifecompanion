@@ -21,7 +21,9 @@ public class OnCallEnterEventGenerator extends BaseUseEventGeneratorImpl {
         this.nameID = "phonecontrol1.plugin.event.misc.call.enter.name";
         this.staticDescriptionID = "phonecontrol1.plugin.event.misc.call.enter.description";
         this.variableDescriptionProperty().set(this.getStaticDescription());
-        callEnterCallback = () -> { this.useEventListener.fireEvent(this, null, null); };
+        callEnterCallback = () -> {
+            this.useEventListener.fireEvent(this, null, null);
+        };
     }
 
     @Override

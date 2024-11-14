@@ -34,7 +34,8 @@ public class SelectConversationManualAction extends SimpleUseActionImpl<UseActio
         this.staticDescriptionID = "phonecontrol1.plugin.action.misc.select.conversation.manual.description";
         this.phoneNumber = new SimpleStringProperty();
         this.contactName = new SimpleStringProperty();
-        this.variableDescriptionProperty().bind(TranslationFX.getTextBinding("phonecontrol1.plugin.action.misc.select.conversation.manual.variable.description", this.contactName));
+        this.variableDescriptionProperty().bind(TranslationFX.getTextBinding(
+                "phonecontrol1.plugin.action.misc.select.conversation.manual.variable.description", this.contactName));
     }
 
     public StringProperty phoneNumberProperty() {

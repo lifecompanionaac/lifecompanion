@@ -11,11 +11,15 @@ import org.lifecompanion.model.api.categorizedelement.useaction.UseActionSubCate
 
 public enum PhoneControlActionSubCategories implements UseActionSubCategoryI {
     // POUR L'EXTENSION PHONE CONTROL
-    APPEL("phonecontrol2.plugin.sub.action.category.appel.name", CategorizedElementColorProvider.nextColor(PhoneControlActionMainCategory.INSTANCE)),
+    APPEL("phonecontrol2.plugin.sub.action.category.appel.name",
+            CategorizedElementColorProvider.nextColor(PhoneControlActionMainCategory.INSTANCE)),
 
-    VOLUME("phonecontrol2.plugin.sub.action.category.volume.name", CategorizedElementColorProvider.nextColor(PhoneControlActionMainCategory.INSTANCE)),
+    VOLUME("phonecontrol2.plugin.sub.action.category.volume.name",
+            CategorizedElementColorProvider.nextColor(PhoneControlActionMainCategory.INSTANCE)),
 
-    CONTACT("phonecontrol2.plugin.sub.action.category.contact.name", CategorizedElementColorProvider.nextColor(PhoneControlActionMainCategory.INSTANCE));
+    CONTACT("phonecontrol2.plugin.sub.action.category.contact.name",
+            CategorizedElementColorProvider.nextColor(PhoneControlActionMainCategory.INSTANCE));
+
     private final String nameId;
     private final String id;
     private final Color color;

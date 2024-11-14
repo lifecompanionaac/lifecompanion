@@ -14,7 +14,6 @@ import org.lifecompanion.plugin.phonecontrol1.model.ConversationListContent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
  * @author Etudiants IUT Vannes : HASCOËT Anthony, GUERNY Baptiste,
  *         Le CHANU Simon, PAVOINE Oscar
@@ -48,18 +47,22 @@ public class ConversationListKeyOption extends AbstractKeyOption {
     @Override
     protected void attachToImpl(final GridPartKeyComponentI key) {
         //Get the existing action, or create new one
-        this.selectConversationFromListAction = key.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION, SelectConversationFromListAction.class);
+        this.selectConversationFromListAction = key.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION,
+                SelectConversationFromListAction.class);
         if (this.selectConversationFromListAction == null) {
             this.selectConversationFromListAction = new SelectConversationFromListAction();
-            key.getActionManager().componentActions().get(UseActionEvent.ACTIVATION).add(this.selectConversationFromListAction);
+            key.getActionManager().componentActions().get(UseActionEvent.ACTIVATION)
+                    .add(this.selectConversationFromListAction);
         }
         this.selectConversationFromListAction.attachedToKeyOptionProperty().set(true);
-        key.textContentProperty().set(AppModeController.INSTANCE.isUseMode() ? null : Translation.getText("phonecontrol1.plugin.key.option.conversation.list.default.text"));
+        key.textContentProperty().set(AppModeController.INSTANCE.isUseMode() ? null
+                : Translation.getText("phonecontrol1.plugin.key.option.conversation.list.default.text"));
     }
 
     @Override
     protected void detachFromImpl(final GridPartKeyComponentI key) {
-        key.getActionManager().componentActions().get(UseActionEvent.ACTIVATION).remove(this.selectConversationFromListAction);
+        key.getActionManager().componentActions().get(UseActionEvent.ACTIVATION)
+                .remove(this.selectConversationFromListAction);
         key.textContentProperty().set(null);
     }
 
@@ -70,9 +73,11 @@ public class ConversationListKeyOption extends AbstractKeyOption {
                 if (nv == PhoneControlController.CONV_LOADING) {
                     key.textContentProperty().set(Translation.getText("phonecontrol1.plugin.key.option.list.loading"));
                 } else if (nv == PhoneControlController.CONV_NOT_CONNECTED) {
-                    key.textContentProperty().set(Translation.getText("phonecontrol1.plugin.key.option.list.not.connected"));
+                    key.textContentProperty()
+                            .set(Translation.getText("phonecontrol1.plugin.key.option.list.not.connected"));
                 } else if (nv == PhoneControlController.CONV_END_MESSAGE) {
-                    key.textContentProperty().set(Translation.getText("phonecontrol1.plugin.key.option.conversation.list.empty"));
+                    key.textContentProperty()
+                            .set(Translation.getText("phonecontrol1.plugin.key.option.conversation.list.empty"));
                 } else {
                     key.textContentProperty().set(getConversationCellString(nv));
                     key.getKeyTextStyle().boldProperty().forced().setValue(!nv.isSeen());

@@ -56,7 +56,8 @@ public class SMSListKeyOption extends AbstractKeyOption {
 
     @Override
     protected void attachToImpl(final GridPartKeyComponentI key) {
-        key.textContentProperty().set(AppModeController.INSTANCE.isUseMode() ? null : Translation.getText("phonecontrol1.plugin.key.option.sms.list.default.text"));
+        key.textContentProperty().set(AppModeController.INSTANCE.isUseMode() ? null
+                : Translation.getText("phonecontrol1.plugin.key.option.sms.list.default.text"));
         // No action to attach
     }
 
@@ -74,9 +75,11 @@ public class SMSListKeyOption extends AbstractKeyOption {
                     key.textContentProperty().set(Translation.getText("phonecontrol1.plugin.key.option.list.loading"));
                     dateNode.set(null); // Clear date node
                 } else if (nv == PhoneControlController.SMS_NOT_CONNECTED) {
-                    key.textContentProperty().set(Translation.getText("phonecontrol1.plugin.key.option.list.not.connected"));
+                    key.textContentProperty()
+                            .set(Translation.getText("phonecontrol1.plugin.key.option.list.not.connected"));
                 } else if (nv == PhoneControlController.SMS_END_MESSAGE) {
-                    key.textContentProperty().set(Translation.getText("phonecontrol1.plugin.key.option.sms.list.empty"));
+                    key.textContentProperty()
+                            .set(Translation.getText("phonecontrol1.plugin.key.option.sms.list.empty"));
                 } else {
                     // ------------ Set text content ------------
                     key.textContentProperty().set(nv.getSMS());

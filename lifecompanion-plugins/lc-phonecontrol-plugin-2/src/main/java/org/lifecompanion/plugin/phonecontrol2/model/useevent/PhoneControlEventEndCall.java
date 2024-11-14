@@ -4,7 +4,6 @@ import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.impl.categorizedelement.useevent.BaseUseEventGeneratorImpl;
 import org.lifecompanion.plugin.phonecontrol2.controller.PhoneControlController;
 
-
 public class PhoneControlEventEndCall extends BaseUseEventGeneratorImpl {
 
     private final Runnable callEndedCallback;
@@ -17,7 +16,9 @@ public class PhoneControlEventEndCall extends BaseUseEventGeneratorImpl {
         this.nameID = "phonecontrol2.plugin.event.endcall.name";
         this.staticDescriptionID = "phonecontrol2.plugin.event.endcall.description";
         this.variableDescriptionProperty().set(this.getStaticDescription());
-        callEndedCallback = () -> { this.useEventListener.fireEvent(this, null, null); };
+        callEndedCallback = () -> {
+            this.useEventListener.fireEvent(this, null, null);
+        };
     }
 
     @Override

@@ -27,24 +27,28 @@ public class SMSValidationSendConfigView extends VBox
 
     @Override
     public void initUI() {
-        this.choiceGenerateCondition = new ChoiceBox<>(FXCollections.observableArrayList(SMSValidationSendEventGenerator.ValidationSendCondition.values()));
-        this.choiceGenerateCondition.setConverter(new StringConverter<SMSValidationSendEventGenerator.ValidationSendCondition>() {
-            @Override
-            public String toString(SMSValidationSendEventGenerator.ValidationSendCondition value) {
-                return value != null ? value.getText() : null;
-            }
-
-            @Override
-            public SMSValidationSendEventGenerator.ValidationSendCondition fromString(String value) {
-                for (SMSValidationSendEventGenerator.ValidationSendCondition cond : SMSValidationSendEventGenerator.ValidationSendCondition.values()) {
-                    if (cond.getText().equals(value)) {
-                        return cond;
+        this.choiceGenerateCondition = new ChoiceBox<>(
+                FXCollections.observableArrayList(SMSValidationSendEventGenerator.ValidationSendCondition.values()));
+        this.choiceGenerateCondition
+                .setConverter(new StringConverter<SMSValidationSendEventGenerator.ValidationSendCondition>() {
+                    @Override
+                    public String toString(SMSValidationSendEventGenerator.ValidationSendCondition value) {
+                        return value != null ? value.getText() : null;
                     }
-                }
-                return null;
-            }
-        });
-        this.getChildren().addAll(new Label(Translation.getText("phonecontrol1.plugin.unread.count.condition.label")), this.choiceGenerateCondition);
+
+                    @Override
+                    public SMSValidationSendEventGenerator.ValidationSendCondition fromString(String value) {
+                        for (SMSValidationSendEventGenerator.ValidationSendCondition cond : SMSValidationSendEventGenerator.ValidationSendCondition
+                                .values()) {
+                            if (cond.getText().equals(value)) {
+                                return cond;
+                            }
+                        }
+                        return null;
+                    }
+                });
+        this.getChildren().addAll(new Label(Translation.getText("phonecontrol1.plugin.unread.count.condition.label")),
+                this.choiceGenerateCondition);
     }
 
     @Override

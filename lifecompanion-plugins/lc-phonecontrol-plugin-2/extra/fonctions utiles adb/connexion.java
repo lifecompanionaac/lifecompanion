@@ -68,7 +68,7 @@ public class connexion {
 
         // On arrête le serveur ADB
         stopADBServer();
-    }    
+    }
 
     /**
      * Lance le serveur ADB
@@ -173,7 +173,7 @@ public class connexion {
         while ((line = r.readLine()) != null) {
             System.out.println(line);
         }
-        
+
     }
 
     /**
@@ -184,7 +184,8 @@ public class connexion {
      */
     public static void sms(String number, String message) throws IOException {
         // Prépare le SMS en utilisant la commande ADB
-        String prepareCommand = "adb shell am start -a android.intent.action.SENDTO -d sms:" + number + " --es sms_body \"" + message + "\"";
+        String prepareCommand = "adb shell am start -a android.intent.action.SENDTO -d sms:" + number
+                + " --es sms_body \"" + message + "\"";
         try {
             Process prepareProcess = Runtime.getRuntime().exec(prepareCommand);
             prepareProcess.waitFor();
@@ -211,7 +212,7 @@ public class connexion {
         while ((line = r.readLine()) != null) {
             System.out.println(line);
         }
-        
+
     }
 
     /**
@@ -231,7 +232,7 @@ public class connexion {
         // On affiche la sortie de la commande
         while ((line = r.readLine()) != null) {
             System.out.println(line);
-        }        
+        }
     }
 
     /**
@@ -241,24 +242,24 @@ public class connexion {
      */
     public static ArrayList<String> listContacts() throws IOException {
         ArrayList<String> contactsList = new ArrayList<>();
-    
+
         // Utilisez la commande adb pour extraire la liste des contacts
         String cmd = "adb shell content query --uri content://contacts/phones/ --projection display_name:number";
         ProcessBuilder builder = new ProcessBuilder("cmd.exe", "/c", cmd);
-    
+
         builder.redirectErrorStream(true);
         Process process = builder.start();
         BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
         String line;
-    
+
         // Utilisez des expressions régulières pour extraire le nom et le numéro
         Pattern namePattern = Pattern.compile("display_name=(.*?),");
         Pattern numberPattern = Pattern.compile("number=(.*?)$");
-    
+
         while ((line = reader.readLine()) != null) {
             Matcher nameMatcher = namePattern.matcher(line);
             Matcher numberMatcher = numberPattern.matcher(line);
-    
+
             if (nameMatcher.find() && numberMatcher.find()) {
                 String name = "name:" + nameMatcher.group(1);
                 String originalNumber = numberMatcher.group(1);
@@ -266,7 +267,7 @@ public class connexion {
                 contactsList.add(name + ", number:" + formattedNumber);
             }
         }
-    
+
         return contactsList;
     }
 
@@ -292,7 +293,6 @@ public class connexion {
         }
     }
 
-
     /**
      * Formate le numéro de téléphone pour qu'il soit au format "XXXXXXXXXX"
      * @param originalNumber le numéro de téléphone à formater
@@ -301,17 +301,17 @@ public class connexion {
     private static String formatPhoneNumber(String originalNumber) {
         // Supprimer les caractères non numériques (espaces, +, etc.)
         String cleanedNumber = originalNumber.replaceAll("[^0-9]", "");
-    
+
         // Si le numéro commence par "+33", remplacer "+33" par "0"
         if (cleanedNumber.startsWith("33") && cleanedNumber.length() >= 11) {
             return "0" + cleanedNumber.substring(2);
         }
-    
+
         // Si le numéro commence par "0", a déjà le format "XXXXXXXXXX", laisser tel quel
         if (cleanedNumber.startsWith("0") && cleanedNumber.length() == 10) {
             return cleanedNumber;
         }
-    
+
         // Si le numéro ne correspond à aucun des cas précédents, renvoyer le numéro original
         return originalNumber;
     }
@@ -343,8 +343,8 @@ public class connexion {
         }
         // Si le numéro n'est pas trouvé, retourne null
         return null;
-    }    
- 
+    }
+
     /**
      * Donne le statut de l'appel en cours
      * 0 : aucun appel en cours
@@ -354,17 +354,17 @@ public class connexion {
      */
     public static int getCallStatus() {
         int callStatus = 0; // Par défaut, pas d'appel en cours
-    
+
         try {
             String adbCommand = "adb shell dumpsys telephony.registry";
             Process process = Runtime.getRuntime().exec(adbCommand);
-    
+
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String line;
             Pattern callStatePattern = Pattern.compile("mCallState=(\\d+)");
-    
+
             boolean statusFound = false;
-    
+
             while (!statusFound && (line = reader.readLine()) != null) {
                 Matcher matcher = callStatePattern.matcher(line);
                 if (matcher.find()) {
@@ -386,7 +386,7 @@ public class connexion {
             e.printStackTrace();
             // En cas d'erreur, le statut reste à sa valeur par défaut (0)
         }
-    
+
         return callStatus;
     }
 
@@ -397,7 +397,7 @@ public class connexion {
      */
     public static String getCallerNumber() throws IOException {
         String callerNumber = null;
-    
+
         try {
             String adbCommand = "adb shell dumpsys telephony.registry | findstr mCallIncomingNumber";
             ProcessBuilder builder = new ProcessBuilder("cmd.exe", "/c", adbCommand);
@@ -421,7 +421,7 @@ public class connexion {
         if (callerNumber.startsWith("+33")) {
             callerNumber = callerNumber.replace("+33", "0");
         }
-    
+
         return callerNumber;
     }
 

@@ -65,7 +65,6 @@ public enum PhoneControlController implements ModeListenerI {
     private boolean topConvReached;
     private boolean topSmsReached;
 
-
     // CALLBACKS
     private Runnable callEnterCallback;
     private Runnable callEndedCallback;
@@ -83,7 +82,9 @@ public enum PhoneControlController implements ModeListenerI {
 
     // VARIABLES
     //========================================================================
-    public double getDurationInterval() { return durationInterval; }
+    public double getDurationInterval() {
+        return durationInterval;
+    }
 
     public int getSmsUnread() {
         return smsUnreadCount;
@@ -153,7 +154,8 @@ public enum PhoneControlController implements ModeListenerI {
     //========================================================================
     @Override
     public void modeStart(LCConfigurationI configuration) {
-        this.currentPhoneControlPluginProperties = configuration.getPluginConfigProperties(PhoneControlPlugin.PLUGIN_ID, PhoneControlPluginProperties.class);
+        this.currentPhoneControlPluginProperties = configuration.getPluginConfigProperties(PhoneControlPlugin.PLUGIN_ID,
+                PhoneControlPluginProperties.class);
         resetVariables();
 
         // Start app on phone if needed
@@ -180,7 +182,8 @@ public enum PhoneControlController implements ModeListenerI {
         //----------------------------------------
         // Find every conv list cells
         Map<GridComponentI, List<ConversationListKeyOption>> convKeys = new HashMap<>();
-        ConfigurationComponentUtils.findKeyOptionsByGrid(ConversationListKeyOption.class, configuration, convKeys, null);
+        ConfigurationComponentUtils.findKeyOptionsByGrid(ConversationListKeyOption.class, configuration, convKeys,
+                null);
         convKeys.values().stream().flatMap(List::stream).distinct().forEach(convCells::add);
         setLoadingConvList();
         refreshConvList(); // First load of conversations
@@ -285,7 +288,7 @@ public enum PhoneControlController implements ModeListenerI {
         }
     }
 
-    public String convertTime(int duration){
+    public String convertTime(int duration) {
         int hours = duration / 3600;
         int minutes = (duration % 3600) / 60;
         int seconds = duration % 60;
@@ -293,12 +296,12 @@ public enum PhoneControlController implements ModeListenerI {
         return String.format("%02d:%02d:%02d", hours, minutes, seconds);
     }
 
-    public void timer(){
+    public void timer() {
         CompletableFuture.runAsync(() -> {
 
             int duration = 0;
-            while(onCall){
-                try{
+            while (onCall) {
+                try {
                     Thread.sleep(1000);
                     duration++;
                     this.callDuration = convertTime(duration);
@@ -306,13 +309,14 @@ public enum PhoneControlController implements ModeListenerI {
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                     LOGGER.error("Call duration monitoring interrupted", e);
-                } catch (Exception e){
+                } catch (Exception e) {
                     LOGGER.error("error while monitoring call duration");
                 }
             }
             this.callDuration = "00:00:00";
         });
     }
+
     /**
      * Call the current selected conversation (phone number)
      */
@@ -392,9 +396,11 @@ public enum PhoneControlController implements ModeListenerI {
                     String message = new String(decodedBytes);
                     boolean isSeen = Boolean.parseBoolean(convData[3]);
                     boolean isSendByMe = Boolean.parseBoolean(convData[4]);
-                    if (!isSeen) unreadConvCount++;
+                    if (!isSeen)
+                        unreadConvCount++;
 
-                    ConversationListContent cellContent = new ConversationListContent(convData[0], convData[1], message, isSeen, isSendByMe);
+                    ConversationListContent cellContent = new ConversationListContent(convData[0], convData[1], message,
+                            isSeen, isSendByMe);
                     Platform.runLater(() -> cell.convProperty().set(cellContent));
                     topConvReached = false;
                 } else {
@@ -453,7 +459,8 @@ public enum PhoneControlController implements ModeListenerI {
                     String message = new String(Base64.getDecoder().decode(smsData[2]));
                     boolean sendByMe = Boolean.parseBoolean(smsData[4]);
 
-                    SMSListContent cellContent = new SMSListContent(smsData[0], smsData[1], message, smsData[3], sendByMe);
+                    SMSListContent cellContent = new SMSListContent(smsData[0], smsData[1], message, smsData[3],
+                            sendByMe);
                     Platform.runLater(() -> cell.smsProperty().set(cellContent));
                     topSmsReached = false;
                 } else {
@@ -567,7 +574,8 @@ public enum PhoneControlController implements ModeListenerI {
      */
     public void selectConv(String phoneNumber, String phoneNumberOrContactName) {
         phoneNumber = phoneNumber.replace(" ", "");
-        if (phoneNumber.startsWith("0")) phoneNumber = "+33" + phoneNumber.substring(1);
+        if (phoneNumber.startsWith("0"))
+            phoneNumber = "+33" + phoneNumber.substring(1);
 
         this.phoneNumber = phoneNumber;
         this.phoneNumberOrContactName = phoneNumberOrContactName;
