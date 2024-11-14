@@ -93,15 +93,13 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
     private String instructionCurrentKeyboard = "";
 
     public String getInstructionCurrentKeyboard() {
-        return instructionCurrentKeyboard;
-    }
+        return instructionCurrentKeyboard; }
 
     private GridPartComponentI currentKeyboard;
 
     public GridPartComponentI getCurrentKeyboard() {
         return currentKeyboard;
     }
-
 
     AAC4AllWp2EvaluationController() {
         phraseSetFR = new ArrayList<>();
@@ -113,9 +111,7 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
     }
 
     public String getCurrentSentence() {
-        return currentSentence;
-    }
-
+        return currentSentence;}
 
     private LCConfigurationI configuration;
 
@@ -222,6 +218,7 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
             }
         }
 
+        WritingStateController.INSTANCE.removeAll(WritingEventSource.USER_ACTIONS);
     }
 
     @Override
@@ -243,10 +240,7 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
         currentRandomIndex = 0;
         SelectionModeParameterI selectionModeParameter = configuration.getSelectionModeParameter();
         currentEvaluation = new WP2Evaluation(LocalDateTime.now(), patientID.get(), selectionModeParameter.scanPauseProperty().get(), selectionModeParameter.scanFirstPauseProperty().get(), selectionModeParameter.maxScanBeforeStopProperty().get());
-
         goToNextKeyboardToEvaluate();
-
-
     }
 
     private boolean goToNextKeyboardToEvaluate() {
@@ -378,14 +372,14 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
     public void startEvaluation() {
         evaluationMode = true;
 
-        // TODO : lancer les claviers en fonction de RandomType donnée dans les réglages.
         randomType = RandomType.fromName(currentAAC4AllWp2PluginProperties.getRandomTypeEval().getValue());
 
 
         currentRandomIndex = 0;
         SelectionModeParameterI selectionModeParameter = configuration.getSelectionModeParameter();
-        currentEvaluation = new WP2Evaluation(LocalDateTime.now(), patientID.toString(), selectionModeParameter.scanPauseProperty().get(), selectionModeParameter.scanFirstPauseProperty().get(), selectionModeParameter.maxScanBeforeStopProperty().get());
+        currentEvaluation = new WP2Evaluation(LocalDateTime.now(), patientID.get(), selectionModeParameter.scanPauseProperty().get(), selectionModeParameter.scanFirstPauseProperty().get(), selectionModeParameter.maxScanBeforeStopProperty().get());
         goToNextKeyboardToEvaluate();
+
         recordLogs();
 
     }
@@ -400,9 +394,8 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
             time = TRAINING_DURATION_MS;
         }
 
-
         if (currentKeyboardEvaluation.getFatigueInitScore()==-1){
-            VoiceSynthesizerController.INSTANCE.speakSync("Merci de remplir l'évaluations");
+            VoiceSynthesizerController.INSTANCE.speakSync("Merci de remplir l'évaluation");
 
         }else {
             emptyAllColors();
@@ -414,10 +407,10 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
             }
             SelectionModeController.INSTANCE.goToGridPart(currentKeyboard);
 
-            // TODO: clean l'éditeur
+            // TODO: clean editor
             WritingStateController.INSTANCE.removeAll(WritingEventSource.USER_ACTIONS);
 
-            //TODO : affiche les phrases à saisir
+            //TODO : display sentence for text entry
             StartDislaySentence();
 
             // TODO : démarer le listener log
@@ -429,7 +422,6 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
                 @Override
                 public void run() {
 
-                    //TODO stopper le listener validation, hightligh etc
                     stopLogListener();
 
                     recordLogs();
@@ -451,6 +443,7 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
     public void StartDislaySentence() {
         int randomIndexSentence=0;
         if (currentSentenceEvaluation == null) {
+            WritingStateController.INSTANCE.removeAll(WritingEventSource.USER_ACTIONS);
             currentSentenceEvaluation = new WP2SentenceEvaluation(currentSentence, new Date());
             currentKeyboardEvaluation.getSentenceLogs().add(currentSentenceEvaluation);
             randomIndexSentence= new Random().nextInt(currentPhraseSet.size());
