@@ -8,6 +8,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import org.lifecompanion.controller.appinstallation.InstallationConfigurationController;
 import org.lifecompanion.controller.categorizedelement.useaction.UseActionController;
+import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.resource.ResourceHelper;
 import org.lifecompanion.controller.selectionmode.SelectionModeController;
 import org.lifecompanion.controller.textcomponent.WritingStateController;
@@ -182,7 +183,11 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm");
         File pathToDestinationDir = InstallationConfigurationController.INSTANCE.getUserDirectory();
-        filePathLogs = String.format("%s%s_%s.json", pathToDestinationDir + "/lifecompanion-plugins/aac4all-wp2-plugin/result/", patientID.getValue(), now.format(formatter));
+        String configName = AppModeController.INSTANCE.getUseModeContext().getConfigurationDescription() != null ? AppModeController.INSTANCE.getUseModeContext()
+                .getConfigurationDescription()
+                .configurationNameProperty()
+                .get() : "?";
+        filePathLogs = String.format("%s%s_%s_%s.json", pathToDestinationDir + "/lifecompanion-plugins/aac4all-wp2-plugin/result/", patientID.getValue(), now.format(formatter), configName);
 
         currentPhraseSet = new ArrayList<>(phraseSetFR);;
 
