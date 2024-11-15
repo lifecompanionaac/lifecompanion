@@ -70,6 +70,7 @@ public enum AAC4AllWp2Controller implements ModeListenerI {
 
         WritingStateController.INSTANCE.textBeforeCaretProperty().addListener((obs, ov, nv) -> {
             //HashSet<Character> acceptedCharact = new HashSet<>(curStaCharacters.chars().mapToObj(c -> (char) c).collect(Collectors.toSet()));
+           if(this.configuration!= null){
             this.configuration.getAllComponent()
                     .values()
                     .stream()
@@ -78,7 +79,7 @@ public enum AAC4AllWp2Controller implements ModeListenerI {
                     .map(c -> c.getActionManager().getFirstActionOfType(
                             UseActionEvent.OVER, CurStaUseAction.class))
                     .filter(Objects::nonNull)
-                    .forEach(CurStaUseAction::cleanLastText);
+                    .forEach(CurStaUseAction::cleanLastText);}
             predict = transformResult(LCCharPredictor.INSTANCE.predict(WritingStateController.INSTANCE.textBeforeCaretProperty().get(), acceptedCharact.size(), acceptedCharact));
             curStaIndex = 0;
             updateCurSta();
