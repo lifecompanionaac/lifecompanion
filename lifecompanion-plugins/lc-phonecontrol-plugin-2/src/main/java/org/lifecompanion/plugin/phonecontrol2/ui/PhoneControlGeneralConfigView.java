@@ -185,6 +185,7 @@ public class PhoneControlGeneralConfigView extends BorderPane implements General
 
     @Override
     public void saveChanges() {
+        @SuppressWarnings("unused")
         PhoneControlPluginProperties pluginConfigProperties = configuration
                 .getPluginConfigProperties(PhoneControlPlugin.ID, PhoneControlPluginProperties.class);
     }
@@ -192,6 +193,7 @@ public class PhoneControlGeneralConfigView extends BorderPane implements General
     @Override
     public void bind(LCConfigurationI model) {
         this.configuration = model;
+        @SuppressWarnings("unused")
         PhoneControlPluginProperties pluginConfigProperties = configuration
                 .getPluginConfigProperties(PhoneControlPlugin.ID, PhoneControlPluginProperties.class);
     }

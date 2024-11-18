@@ -76,7 +76,8 @@ public class connexion {
     public static void startADBServer() {
         try {
             System.out.println("Serveur ADB lancé\n");
-            Process process = Runtime.getRuntime().exec("adb start-server");
+            ProcessBuilder builder = new ProcessBuilder("adb", "start-server");
+            Process process = builder.start();
             process.waitFor();
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
@@ -89,7 +90,8 @@ public class connexion {
     public static void stopADBServer() {
         try {
             System.out.println("\nServeur ADB arrêté");
-            Process process = Runtime.getRuntime().exec("adb kill-server");
+            ProcessBuilder builder = new ProcessBuilder("adb", "kill-server");
+            Process process = builder.start();
             process.waitFor();
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
@@ -102,7 +104,8 @@ public class connexion {
      */
     public static String checkConnectedDevice() {
         try {
-            Process process = Runtime.getRuntime().exec("adb devices");
+            ProcessBuilder builder = new ProcessBuilder("adb", "devices");
+            Process process = builder.start();
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
             String line;
@@ -133,7 +136,8 @@ public class connexion {
      */
     public static String checkConnectedDeviceName() {
         try {
-            Process process = Runtime.getRuntime().exec("adb shell settings get global device_name");
+            ProcessBuilder builder = new ProcessBuilder("adb", "shell", "settings", "get", "global", "device_name");
+            Process process = builder.start();
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
             String line;
@@ -187,7 +191,8 @@ public class connexion {
         String prepareCommand = "adb shell am start -a android.intent.action.SENDTO -d sms:" + number
                 + " --es sms_body \"" + message + "\"";
         try {
-            Process prepareProcess = Runtime.getRuntime().exec(prepareCommand);
+            ProcessBuilder prepareBuilder = new ProcessBuilder("cmd.exe", "/c", prepareCommand);
+            Process prepareProcess = prepareBuilder.start();
             prepareProcess.waitFor();
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -357,7 +362,8 @@ public class connexion {
 
         try {
             String adbCommand = "adb shell dumpsys telephony.registry";
-            Process process = Runtime.getRuntime().exec(adbCommand);
+            ProcessBuilder builder = new ProcessBuilder("cmd.exe", "/c", adbCommand);
+            Process process = builder.start();
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String line;

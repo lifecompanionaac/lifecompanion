@@ -8,8 +8,6 @@ import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
 import org.lifecompanion.plugin.phonecontrol2.PhoneControlPlugin;
 import org.lifecompanion.plugin.phonecontrol2.PhoneControlPluginProperties;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.*;
@@ -29,10 +27,7 @@ import java.util.HashSet;
 public enum PhoneControlController implements ModeListenerI {
     INSTANCE;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(PhoneControlController.class);
-
     // POUR L'EXTENSION PHONE CONTROL
-
     public static final String VAR_ID_CONNECTED_DEVICE = "PhoneControlConnectedDevice";
     public static final String VAR_ID_CALL_NUMBER = "PhoneControlCallNumber";
     public static final String VAR_ID_CONTACTS_LIST = "PhoneControlContactsList";
@@ -43,8 +38,9 @@ public enum PhoneControlController implements ModeListenerI {
     public static final String VAR_ID_CONTACT_SUIVANT = "PhoneControlContactSuivant";
     public static final String VAR_ID_CALL_TIME = "PhoneControlCallTime";
     public static final String VAR_ID_CONTACT_RECHERCHE = "PhoneControlContactRecherche";
+    @SuppressWarnings("unused")
     private PhoneControlPluginProperties currentPhoneControlPluginProperties;
-
+    @SuppressWarnings("unused")
     private LCConfigurationI configuration;
 
     PhoneControlController() {
@@ -105,7 +101,8 @@ public enum PhoneControlController implements ModeListenerI {
 
         try {
             // Étape 1 : Obtenir la liste des appareils connectés
-            Process process = Runtime.getRuntime().exec("adb devices");
+            ProcessBuilder builder = new ProcessBuilder("adb", "devices");
+            Process process = builder.start();
 
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
                 String line;
@@ -145,8 +142,8 @@ public enum PhoneControlController implements ModeListenerI {
 
         try {
             // Exécuter la commande adb pour obtenir le nom de l'appareil
-            Process process = Runtime.getRuntime()
-                    .exec("adb -s " + deviceId + " shell settings get global device_name");
+            ProcessBuilder builder = new ProcessBuilder("adb", "-s", deviceId, "shell", "settings", "get", "global", "device_name");
+            Process process = builder.start();
 
             // Lire la sortie du processus pour obtenir le nom de l'appareil
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
@@ -181,8 +178,8 @@ public enum PhoneControlController implements ModeListenerI {
         String deviceId = getSelectedDeviceId();
         if (!deviceId.equals("Aucun appareil connecté")) {
             try {
-                Process process = Runtime.getRuntime()
-                        .exec("adb -s " + deviceId + " shell input keyevent KEYCODE_CALL");
+                ProcessBuilder builder = new ProcessBuilder("adb", "-s", deviceId, "shell", "input", "keyevent", "KEYCODE_CALL");
+                Process process = builder.start();
                 process.waitFor();
                 this.onCall = true;
                 startCallTimeUpdater(); // Démarrer la mise à jour du temps de l'appel
@@ -199,8 +196,8 @@ public enum PhoneControlController implements ModeListenerI {
         String deviceId = getSelectedDeviceId();
         if (!deviceId.equals("Aucun appareil connecté")) {
             try {
-                Process process = Runtime.getRuntime()
-                        .exec("adb -s " + deviceId + " shell input keyevent KEYCODE_ENDCALL");
+                ProcessBuilder builder = new ProcessBuilder("adb", "-s", deviceId, "shell", "input", "keyevent", "KEYCODE_ENDCALL");
+                Process process = builder.start();
                 process.waitFor();
                 this.onCall = false;
                 stopCallTimeUpdater(); // Arrêter la mise à jour du temps de l'appel
@@ -281,8 +278,8 @@ public enum PhoneControlController implements ModeListenerI {
             String deviceId = getSelectedDeviceId();
             if (!deviceId.equals("Aucun appareil connecté")) {
                 try {
-                    Process process = Runtime.getRuntime().exec(
-                            "adb -s " + deviceId + " shell am start -a android.intent.action.CALL -d tel:" + number);
+                    ProcessBuilder builder = new ProcessBuilder("adb", "-s", deviceId, "shell", "am", "start", "-a", "android.intent.action.CALL", "-d", "tel:" + number);
+                    Process process = builder.start();
                     process.waitFor();
                     this.onCall = true;
                     startCallTimeUpdater(); // Démarrer la mise à jour du temps de l'appel
@@ -323,8 +320,8 @@ public enum PhoneControlController implements ModeListenerI {
                     String deviceId = getSelectedDeviceId();
                     if (!deviceId.equals("Aucun appareil connecté")) {
                         try {
-                            Process process = Runtime.getRuntime().exec("adb -s " + deviceId
-                                    + " shell am start -a android.intent.action.CALL -d tel:" + number);
+                            ProcessBuilder builder = new ProcessBuilder("adb", "-s", deviceId, "shell", "am", "start", "-a", "android.intent.action.CALL", "-d", "tel:" + number);
+                            Process process = builder.start();
                             process.waitFor();
                             this.onCall = true;
                             startCallTimeUpdater(); // Démarrer la mise à jour du temps de l'appel
@@ -368,8 +365,8 @@ public enum PhoneControlController implements ModeListenerI {
                     String deviceId = getSelectedDeviceId();
                     if (!deviceId.equals("Aucun appareil connecté")) {
                         try {
-                            Process process = Runtime.getRuntime().exec("adb -s " + deviceId
-                                    + " shell am start -a android.intent.action.CALL -d tel:" + number);
+                            ProcessBuilder builder = new ProcessBuilder("adb", "-s", deviceId, "shell", "am", "start", "-a", "android.intent.action.CALL", "-d", "tel:" + number);
+                            Process process = builder.start();
                             process.waitFor();
                             this.onCall = true;
                             startCallTimeUpdater(); // Démarrer la mise à jour du temps de l'appel
@@ -395,7 +392,8 @@ public enum PhoneControlController implements ModeListenerI {
     private void executeAdbCommand(String deviceId, String command) {
         if (!deviceId.equals("Aucun appareil connecté")) {
             try {
-                Process process = Runtime.getRuntime().exec("adb -s " + deviceId + " shell " + command);
+                ProcessBuilder builder = new ProcessBuilder("adb", "-s", deviceId, "shell", command);
+                Process process = builder.start();
                 process.waitFor();
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
@@ -598,8 +596,8 @@ public enum PhoneControlController implements ModeListenerI {
         if (!deviceId.equals("Aucun appareil connecté")) {
             System.out.println("Appareil connecté : " + deviceId);
             try {
-                Process process = Runtime.getRuntime().exec("adb -s " + deviceId
-                        + " shell content query --uri content://contacts/phones/ --projection display_name:number");
+                ProcessBuilder builder = new ProcessBuilder("adb", "-s", deviceId, "shell", "content", "query", "--uri", "content://contacts/phones/", "--projection", "display_name:number");
+                Process process = builder.start();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
                 String line;
@@ -812,8 +810,8 @@ public enum PhoneControlController implements ModeListenerI {
                     String deviceId = getSelectedDeviceId();
                     if (!deviceId.equals("Aucun appareil connecté")) {
                         try {
-                            Process process = Runtime.getRuntime().exec("adb -s " + deviceId
-                                    + " shell am start -a android.intent.action.CALL -d tel:" + number);
+                            ProcessBuilder builder = new ProcessBuilder("adb", "-s", deviceId, "shell", "am", "start", "-a", "android.intent.action.CALL", "-d", "tel:" + number);
+                            Process process = builder.start();
                             process.waitFor();
                             this.onCall = true;
                             startCallTimeUpdater(); // Démarrer la mise à jour du temps de l'appel
@@ -888,7 +886,8 @@ public enum PhoneControlController implements ModeListenerI {
 
         try {
             String adbCommand = "adb -s " + getSelectedDeviceId() + " shell dumpsys telephony.registry";
-            Process process = Runtime.getRuntime().exec(adbCommand);
+            ProcessBuilder builder = new ProcessBuilder("cmd.exe", "/c", adbCommand);
+            Process process = builder.start();
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String line;
