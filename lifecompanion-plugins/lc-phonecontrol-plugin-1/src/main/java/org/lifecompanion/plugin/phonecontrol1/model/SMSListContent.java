@@ -63,7 +63,7 @@ public class SMSListContent {
 	 */
 	private String formatSMSDate(String smsDate) {
 		try {
-			Date date = this.dateFormat.parse(smsDate);
+			Date date = SMSListContent.dateFormat.parse(smsDate);
 			long currentTime = System.currentTimeMillis();
 			long timeDifference = currentTime - date.getTime();
 

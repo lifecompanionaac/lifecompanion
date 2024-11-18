@@ -17,16 +17,12 @@ import org.lifecompanion.model.api.style.TextCompStyleI;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.AbstractKeyOption;
 import org.lifecompanion.plugin.phonecontrol1.PhoneControlController;
 import org.lifecompanion.plugin.phonecontrol1.model.SMSListContent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author Etudiants IUT Vannes : HASCOËT Anthony, GUERNY Baptiste,
  *         Le CHANU Simon, PAVOINE Oscar
  */
 public class SMSListKeyOption extends AbstractKeyOption {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SMSListKeyOption.class);
-
     private final ObjectProperty<SMSListContent> sms;
     private final ObjectProperty<Node> dateNode;
 
@@ -120,9 +116,5 @@ public class SMSListKeyOption extends AbstractKeyOption {
             }
             return null;
         }, dateNode));
-    }
-
-    private String getSMSCellString(SMSListContent sms) {
-        return sms.toString();
     }
 }

@@ -13,7 +13,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import org.lifecompanion.framework.commons.translation.Translation;
-import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.plugin.phonecontrol1.ADBService;
 import org.lifecompanion.plugin.phonecontrol1.PhoneControlController;
@@ -30,8 +29,7 @@ import java.util.ArrayList;
  * @author Etudiants IUT Vannes : HASCOËT Anthony, GUERNY Baptiste,
  *         Le CHANU Simon, PAVOINE Oscar
  */
-public class PhoneControlGeneralConfigView extends BorderPane
-        implements GeneralConfigurationStepViewI, LCViewInitHelper {
+public class PhoneControlGeneralConfigView extends BorderPane implements GeneralConfigurationStepViewI {
 
     // == UI Elements ============================
     // Select device

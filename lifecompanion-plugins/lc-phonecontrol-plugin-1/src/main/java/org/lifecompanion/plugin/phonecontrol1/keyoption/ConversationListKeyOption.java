@@ -11,16 +11,12 @@ import org.lifecompanion.model.impl.configurationcomponent.keyoption.AbstractKey
 import org.lifecompanion.plugin.phonecontrol1.PhoneControlController;
 import org.lifecompanion.plugin.phonecontrol1.action.SelectConversationFromListAction;
 import org.lifecompanion.plugin.phonecontrol1.model.ConversationListContent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author Etudiants IUT Vannes : HASCOËT Anthony, GUERNY Baptiste,
  *         Le CHANU Simon, PAVOINE Oscar
  */
 public class ConversationListKeyOption extends AbstractKeyOption {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ConversationListKeyOption.class);
-
     private final ObjectProperty<ConversationListContent> conv;
     private SelectConversationFromListAction selectConversationFromListAction;
 
