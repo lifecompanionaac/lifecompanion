@@ -22,7 +22,7 @@ import org.lifecompanion.util.javafx.FXControlUtils;
 
 public class PhoneControlGeneralConfigView extends BorderPane implements GeneralConfigurationStepViewI {
 
-    static final String STEP_ID = "PhoneControlGeneralConfigView";
+    static final String STEP_ID = "PhoneControlGeneralConfigView2";
 
     private Label labelConnectedDevice;
     private Button buttonChooseDevice;

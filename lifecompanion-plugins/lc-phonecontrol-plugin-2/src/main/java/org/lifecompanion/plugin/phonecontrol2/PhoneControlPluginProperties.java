@@ -40,7 +40,7 @@ public class PhoneControlPluginProperties extends AbstractPluginConfigProperties
     @Override
     public Element serialize(final IOContextI context) {
         Element element = XMLObjectSerializer.serializeInto(PhoneControlPluginProperties.class, this,
-                new Element("PhoneControlPluginProperties"));
+                new Element("PhoneControl2PluginProperties"));
         return element;
     }
 

@@ -68,7 +68,7 @@ public class PhoneControlGeneralConfigView extends BorderPane
 
     @Override
     public String getStep() {
-        return "PhoneControlGeneralConfigView";
+        return "PhoneControlGeneralConfigView1";
     }
 
     @Override

@@ -12,7 +12,7 @@ import org.lifecompanion.model.api.categorizedelement.useevent.UseEventSubCatego
 public enum PhoneControlEventMainCategory implements UseEventMainCategoryI, UseEventSubCategoryI {
     INSTANCE;
 
-    private static final String ID = "PHONECONTROL_EVENT_MAIN_CATEGORY";
+    private static final String ID = "PHONECONTROL2_EVENT_MAIN_CATEGORY";
 
     private final ObservableList<UseEventSubCategoryI> subCategories = FXCollections.observableArrayList();
 

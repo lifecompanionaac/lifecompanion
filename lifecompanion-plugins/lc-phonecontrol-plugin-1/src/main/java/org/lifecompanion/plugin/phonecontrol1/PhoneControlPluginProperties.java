@@ -17,7 +17,7 @@ import java.util.Map;
  */
 public class PhoneControlPluginProperties extends AbstractPluginConfigProperties {
 
-    public static final String NODE_PHONECONTROL_PLUGIN = "PhoneControlPluginInformations";
+    public static final String NODE_PHONECONTROL_PLUGIN = "PhoneControl1PluginInformations";
 
     // CONFIG VARIABLES
     private final StringProperty deviceSerialNumber;
@@ -45,7 +45,7 @@ public class PhoneControlPluginProperties extends AbstractPluginConfigProperties
 
     @Override
     public String toString() {
-        return "PhoneControlPluginProperties{" +
+        return "PhoneControl1PluginProperties{" +
                 "deviceSerialNumber=" + this.deviceSerialNumber +
                 ", speakerOn=" + this.speakerOn +
                 ", labelDurationIntervalPicker=" + this.durationInternal +

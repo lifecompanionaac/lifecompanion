@@ -39,7 +39,7 @@ jar {
                 "LifeCompanion-Plugin-Author": "LifeCompanion AAC",
                 "LifeCompanion-Plugin-Version": project.version,
                 "LifeCompanion-Plugin-Build-Date": new Date().getTime(),
-                "LifeCompanion-Plugin-Name": "Phone Control",
+                "LifeCompanion-Plugin-Name": "2 - Phone Control",
                 "LifeCompanion-Plugin-Description": "Ajoute à LifeCompanion la possibilité de contrôler un smartphone Android",
                 "LifeCompanion-Min-App-Version": "$lifecompanionAppVersion"
         )

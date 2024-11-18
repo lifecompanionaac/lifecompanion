@@ -28,9 +28,9 @@ public class SendMessageSpecificContactActionConfigView extends VBox
         this.fieldPhoneNumber.setPromptText("+33612345678");
         this.fieldContactName = new TextField();
         this.fieldContactName.setPromptText("John Doe");
-        this.getChildren().addAll(new Label(Translation.getText("phonecontrol.view.useaction.phonenumber")),
+        this.getChildren().addAll(new Label(Translation.getText("phonecontrol1.view.useaction.phonenumber")),
                 this.fieldPhoneNumber,
-                new Label(Translation.getText("phonecontrol.view.useaction.contactname")), this.fieldContactName);
+                new Label(Translation.getText("phonecontrol1.view.useaction.contactname")), this.fieldContactName);
     }
 
     @Override

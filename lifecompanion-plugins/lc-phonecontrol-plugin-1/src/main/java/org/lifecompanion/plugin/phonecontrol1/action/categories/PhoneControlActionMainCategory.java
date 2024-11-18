@@ -11,7 +11,7 @@ import org.lifecompanion.model.api.categorizedelement.useaction.UseActionSubCate
 public enum PhoneControlActionMainCategory implements UseActionMainCategoryI {
     INSTANCE;
 
-    private static final String ID = "PHONECONTROL_ACTION_MAIN_CATEGORY";
+    private static final String ID = "PHONECONTROL1_ACTION_MAIN_CATEGORY";
 
     private final ObservableList<UseActionSubCategoryI> subCategories = FXCollections.observableArrayList();
 

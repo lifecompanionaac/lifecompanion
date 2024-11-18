@@ -35,7 +35,7 @@ jar {
                 "LifeCompanion-Plugin-Author": "Etudiants IUT Vannes",
                 "LifeCompanion-Plugin-Version": project.version,
                 "LifeCompanion-Plugin-Build-Date": new Date().getTime(),
-                "LifeCompanion-Plugin-Name": "Contrôle de téléphone",
+                "LifeCompanion-Plugin-Name": "1 - Contrôle de téléphone",
                 "LifeCompanion-Plugin-Description": "Ajoute à LifeCompanion la possibilité de controller son téléphone via l'application comme l'envoi, la lecture, et la réception de SMS et d'appels.",
                 "LifeCompanion-Min-App-Version": "$lifecompanionAppVersion"
         )

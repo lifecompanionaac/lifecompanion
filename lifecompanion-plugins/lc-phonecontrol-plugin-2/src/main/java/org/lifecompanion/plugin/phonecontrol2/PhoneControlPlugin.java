@@ -22,7 +22,7 @@ public class PhoneControlPlugin implements PluginI {
     //========================================================================
     @Override
     public String[] getLanguageFiles(final String languageCode) {
-        return new String[] { "/text/" + languageCode + "_phonecontrol_plugin.xml" };
+        return new String[] { "/text/" + languageCode + "_phonecontrol2_plugin.xml" };
     }
 
     @Override

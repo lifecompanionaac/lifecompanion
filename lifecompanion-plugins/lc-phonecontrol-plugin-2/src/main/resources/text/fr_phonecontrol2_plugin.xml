@@ -1,10 +1,10 @@
 <texts>
     <!-- UI -->
-    <text key="phonecontrol2.plugin.config.view.general.title">Contrôle du téléphone</text>
+    <text key="phonecontrol2.plugin.config.view.general.title">Contrôle du téléphone Plugin 2</text>
     <text key="phonecontrol2.plugin.config.general.configuration.title.part">Configuration générale</text>
 
     <!-- POUR L'EXTENSION PHONE CONTROL -->
-    <text key="phonecontrol2.plugin.main.action.category.name">Contrôle du téléphone</text>
+    <text key="phonecontrol2.plugin.main.action.category.name">Contrôle du téléphone Plugin 2</text>
     <text key="phonecontrol2.plugin.main.action.category.description">Contient toutes les actions nécessaires pour contrôler un téléphone</text>
 
     <text key="phonecontrol2.plugin.sub.action.category.appel.name">Appel</text>

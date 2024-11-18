@@ -28,7 +28,7 @@
 
 
     <!-- USE ACTIONS -->
-    <text key="phonecontrol1.plugin.action.main.category.name">Contrôle du téléphone</text>
+    <text key="phonecontrol1.plugin.action.main.category.name">Contrôle du téléphone Plugin 1</text>
     <text key="phonecontrol1.plugin.action.main.category.description">Contient toutes les actions relatives au contrôle du téléphone, pour envoyer/lire un SMS, ...</text>
     <text key="phonecontrol1.plugin.action.sub.category.sms.name">SMS</text>
     <text key="phonecontrol1.plugin.action.sub.category.misc.name">Général</text>
@@ -74,7 +74,7 @@
     <text key="phonecontrol1.plugin.action.refresh.sms.list.description">Actualise les des SMS de la conversation sélectionné</text>
 
     <!-- USE EVENTS -->
-    <text key="phonecontrol1.plugin.event.main.category.name">Contrôle du téléphone</text>
+    <text key="phonecontrol1.plugin.event.main.category.name">Contrôle du téléphone Plugin 1</text>
     <text key="phonecontrol1.plugin.event.main.category.description">Contient tous les événements relatifs au contrôle du téléphone, comme la détection de la réception d'un appel, etc...</text>
     <text key="phonecontrol1.plugin.sub.event.category.general.name">Général</text>
     <text key="phonecontrol1.plugin.event.sub.category.misc.name">Divers</text>
