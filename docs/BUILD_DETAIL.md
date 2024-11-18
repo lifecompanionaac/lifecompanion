@@ -227,7 +227,17 @@ and paste `ms-windows-store://pdp/?ProductId=9n0dx20hk701`)
 
 > [!WARNING]  
 > At the time of writing this, the `Gradle for Java` extension by Microsoft have an issue that prevents it from working correctly with this project. If after installing it the `lifecompanion` project doesn't appear in its pane, go in extensions, right click on it and "Install Specific Version", and choose the `v3.15.0` (last known working version).  
-> In such case, keep in mind to **not** upgrade this extension.
+> In such case, keep in mind to **not** upgrade this extension.  
+>
+> **TIP**  
+> A workaround have been found that allows to use the latest version of the extension. However after opening VS Code you may encounter a message saying that the Gradle wrapper/extension couldn't start. Just click on the button to reload it properly.  
+> The trick is to add the following content to the `settings.json` file :  
+> ```json
+> "java.import.gradle.java.home": "C:\\Program Files\\Eclipse Adoptium\\jdk-21.0.5.11-hotspot",
+> "java.import.gradle.user.home": "C:\\Program Files\\Gradle",
+> "java.jdt.ls.java.home": "C:\\Program Files\\Eclipse Adoptium\\jdk-21.0.5.11-hotspot",
+> ```
+> These are example paths, change them according to your own installation.
 
 ### Install and run a plugin
 
