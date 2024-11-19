@@ -58,7 +58,7 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
 
     private Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter()).setPrettyPrinting().create();
 
-    private final long TRAINING_DURATION_MS = (long) 10* 60 * 1000; //  min à passer en 10 min
+    private final long TRAINING_DURATION_MS = (long) 10 * 60 * 1000; //  min à passer en 10 min
     private final long EVALUATION_DURATION_MS = (long) 15 * 60 * 1000;//15 min
 
     private boolean evaluationMode = false;
