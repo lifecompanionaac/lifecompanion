@@ -18,5 +18,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "bluetask"
+rootProject.name = "android"
 include(":app")
