@@ -42,7 +42,9 @@ public abstract class DownloadJdkAndJfxTask extends DefaultTask {
     void downloadJdkAndJfx() throws Exception {
         for (DestPlatform platform : DestPlatform.values()) {
             downloadForPlatform(platform, DlType.JDK);
-            downloadForPlatform(platform, DlType.JFX);
+            if (platform.hasJfx()) {
+                downloadForPlatform(platform, DlType.JFX);
+            }
         }
     }
 
@@ -133,7 +135,15 @@ public abstract class DownloadJdkAndJfxTask extends DefaultTask {
                 "https://download2.gluonhq.com/openjfx/22/openjfx-22_osx-x64_bin-jmods.zip",
                 "jdk-21.0.2+13/Contents/Home",
                 "javafx-jmods-22"
-        );
+        ),
+        WIN_AARCH64(
+                "zip",
+                "https://download.bell-sw.com/java/21.0.5+11/bellsoft-jdk21.0.5+11-windows-aarch64-full.zip",
+                null,
+                "jdk-21.0.5-full",
+                null
+        ),
+        ;
 
         private final String jdkUrl, jdkExt, jfxUrl, internalJdkPath, internalJfxPath;
 
@@ -143,6 +153,10 @@ public abstract class DownloadJdkAndJfxTask extends DefaultTask {
             this.jfxUrl = jfxUrl;
             this.internalJdkPath = internalJdkPath;
             this.internalJfxPath = internalJfxPath;
+        }
+
+        public boolean hasJfx() {
+            return jfxUrl != null;
         }
 
         public String getId() {
