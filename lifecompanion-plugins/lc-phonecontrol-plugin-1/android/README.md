@@ -7,14 +7,14 @@ You can use Android Studio if you have it. However, it takes a lot of space so y
 1. **Prepare VS Code**
     1. Follow the instructions in [BUILD_DETAIL.md](../../../docs/BUILD_DETAIL.md) to setup VS Code for the codebase AND to setup a working environment for working with plugins.
     2. Install the following extensions : `esafirm.kotlin-formatter` and `mathiasfrohlich.Kotlin`.
-    3. Go on the three dots in the Extensions pane, "Install from VSIX" and install the `kotlin-0.3.0.vsix` file inside of `extra`. This is a custom compiled version of `fwcd.kotlin`, patched by `@maksimr` to work with latest versions of VS Code and fix some bugs, and patched by `@EDM115` on top to fix an issue with spaces in the path. **Keep in mind** that VS Code may rollback this extension to a previous version, so you may have to reinstall it from time to time.
+    3. Go on the three dots in the Extensions pane, "Install from VSIX" and install the `kotlin-0.3.0.vsix` file inside of `extra`. This is a custom compiled version of `fwcd.kotlin`, patched by [`@maksimr`](https://github.com/maksimr/vscode-kotlin) to work with latest versions of VS Code and fix some bugs, and patched by [`@EDM115`](https://github.com/EDM115) on top to fix an issue with spaces in the path. **Keep in mind** that VS Code may rollback this extension to a previous version, so you may have to reinstall it from time to time.
     4. In the `.vscode/settings.json` file, add the following lines :
         ```json
           "kotlin.compiler.jvm.target": "1.8",
           "kotlin.inlayHints.chainedHints": true,
           "kotlin.inlayHints.parameterHints": true,
         ```
-        You also need to add `"lifecompanion-plugins/lc-phonecontrol-plugin-/android",` to the array of the `gradle.nestedProjects` key for the gradle tasks to appear.
+        You also need to add `"lifecompanion-plugins/lc-phonecontrol-plugin/android",` to the array of the `gradle.nestedProjects` key for the gradle tasks to appear.
 2. **Install the SDK**
     1. Create a new folder to hold the SDK (usually `C:\Android\`, however we don't agree with softwares creating their folders to the root. imagine if an app on linux created their folder at `/` ! This is why we wil go with `C:\Program Files\Android`, but you can change it to any folder, even on another drive).
     2. Download the command line tools from [here](https://developer.android.com/studio/index.html#command-line-tools-only). Extract it to the previously created folder so you have a directory structure like `C:\Program Files\Android\cmdline-tools\bin`.
