@@ -3937,4 +3937,9 @@
     <text key="key.option.user.action.sequence.list.name">Liste des séquences</text>
     <text key="key.option.user.action.sequence.list.description">Affiche les différentes séquences disponibles dans la configuration. Un appui sur la case permet de démarrer la séquence.</text>
     <text key="key.option.user.action.sequence.list.example.text">Nom de la séquence</text>
+    <text key="keylist.dynamic.local.directory.change.warning.content">En changeant le dossier local associé, les éléments précédents du dossier actuel seront supprimés</text>
+    <text key="keylist.dynamic.local.directory.change.warning.header">Attention, vous pourriez perdre des données</text>
+    <text key="keylist.dynamic.local.directory.cant.do.operation">Impossible d'effectuer l'opération sur cet élément : il est associé à un fichier ou dossier local de votre ordinateur.</text>
+    <text key="general.configuration.view.key.list.field.target.path.directory">Dossier de l'ordinateur à utiliser</text>
+    <text key="keylist.content.pane.button.add.dynamic.local.file.directory">Une liste dynamique depuis un dossier</text>
 </texts>

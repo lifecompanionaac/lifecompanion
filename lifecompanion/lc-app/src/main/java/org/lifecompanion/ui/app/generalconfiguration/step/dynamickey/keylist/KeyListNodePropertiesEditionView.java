@@ -25,29 +25,41 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
+import org.lifecompanion.controller.editmode.FileChooserType;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.LinkType;
+import org.lifecompanion.model.impl.configurationcomponent.dynamickey.DynamicLocalFileNodeI;
+import org.lifecompanion.model.impl.configurationcomponent.dynamickey.KeyListLocalDirectoryNode;
 import org.lifecompanion.ui.app.generalconfiguration.step.dynamickey.AbstractSimplerKeyActionContainerPropertiesEditionView;
+import org.lifecompanion.ui.common.control.generic.FileSelectorControl;
 import org.lifecompanion.ui.common.control.specific.selector.ComponentSelectorControl;
 import org.lifecompanion.ui.common.control.specific.selector.KeyListSelectorControl;
 import org.lifecompanion.ui.common.pane.specific.cell.LinkTypeDetailListCell;
 import org.lifecompanion.ui.common.pane.specific.cell.LinkTypeSimpleListCell;
 import org.lifecompanion.util.binding.BindingUtils;
+import org.lifecompanion.util.javafx.DialogUtils;
+
+import java.io.File;
 
 public class KeyListNodePropertiesEditionView extends AbstractSimplerKeyActionContainerPropertiesEditionView<KeyListNodeI> {
     private BooleanProperty selectedNodeIsLeaf;
     private BooleanProperty selectedNodeIsLink;
+    private BooleanProperty selectedNodeIsDynamicLocalDirectory;
     private ObjectProperty<LinkType> selectedNodeLinkType;
 
     private KeyListSelectorControl linkedNodeSelector;
     private ComponentSelectorControl<GridComponentI> gridSelector;
     private ComboBox<LinkType> comboBoxLinkType;
+
+    private FileSelectorControl fileSelectorControlLocalDirectory;
 
     public BooleanProperty selectedNodeIsLeafProperty() {
         return selectedNodeIsLeaf == null ? selectedNodeIsLeaf = new SimpleBooleanProperty(false) : selectedNodeIsLeaf;
@@ -57,10 +69,13 @@ public class KeyListNodePropertiesEditionView extends AbstractSimplerKeyActionCo
         return selectedNodeIsLink == null ? selectedNodeIsLink = new SimpleBooleanProperty(false) : selectedNodeIsLink;
     }
 
+    public BooleanProperty selectedNodeIsDynamicLocalDirectoryProperty() {
+        return selectedNodeIsDynamicLocalDirectory == null ? selectedNodeIsDynamicLocalDirectory = new SimpleBooleanProperty(false) : selectedNodeIsDynamicLocalDirectory;
+    }
+
     public ObjectProperty<LinkType> selectedNodeLinkType() {
         return selectedNodeLinkType == null ? selectedNodeLinkType = new SimpleObjectProperty<>() : selectedNodeLinkType;
     }
-
 
     @Override
     protected int addFieldsAfterTextInGeneralPart(GridPane gridPaneConfiguration, int rowIndex, final int columnCount) {
@@ -92,6 +107,13 @@ public class KeyListNodePropertiesEditionView extends AbstractSimplerKeyActionCo
         labelLinkedGrid.visibleProperty().bind(gridSelector.visibleProperty());
         labelLinkedGrid.managedProperty().bind(gridSelector.managedProperty());
 
+        Label labelFileSelector = new Label(Translation.getText("general.configuration.view.key.list.field.target.path.directory"));
+        fileSelectorControlLocalDirectory = new FileSelectorControl(null, FileSelectorControl.FileSelectorControlMode.FOLDER, FileChooserType.OPEN_FOLDER, true);
+        gridPaneConfiguration.add(labelFileSelector, 0, rowIndex);
+        gridPaneConfiguration.add(fileSelectorControlLocalDirectory, 1, rowIndex++, 2, 1);
+        labelFileSelector.visibleProperty().bind(fileSelectorControlLocalDirectory.visibleProperty());
+        labelFileSelector.managedProperty().bind(fileSelectorControlLocalDirectory.managedProperty());
+
         return rowIndex;
     }
 
@@ -107,6 +129,9 @@ public class KeyListNodePropertiesEditionView extends AbstractSimplerKeyActionCo
 
         gridSelector.visibleProperty().bind(this.selectedNode.isNotNull().and(selectedNodeIsLinkProperty()).and(selectedNodeLinkType().isEqualTo(LinkType.GRID)));
         gridSelector.managedProperty().bind(gridSelector.visibleProperty());
+
+        fileSelectorControlLocalDirectory.visibleProperty().bind(this.selectedNode.isNotNull().and(selectedNodeIsDynamicLocalDirectoryProperty()));
+        fileSelectorControlLocalDirectory.managedProperty().bind(fileSelectorControlLocalDirectory.visibleProperty());
     }
 
     @Override
@@ -126,6 +151,7 @@ public class KeyListNodePropertiesEditionView extends AbstractSimplerKeyActionCo
 
     private ChangeListener<GridComponentI> gridChangeListener;
     private ChangeListener<String> gridIdChangeListener;
+    private ChangeListener<File> fileChangeListener;
 
     @Override
     protected void bindBidirectionalContent(KeyListNodeI ov, KeyListNodeI nv) {
@@ -137,6 +163,7 @@ public class KeyListNodePropertiesEditionView extends AbstractSimplerKeyActionCo
             linkedNodeSelector.selectedKeylistCategoryIdProperty().bindBidirectional(nv.linkedNodeIdProperty());
             this.selectedNodeIsLinkProperty().set(nv.isLinkNode());
             this.selectedNodeIsLeafProperty().set(nv.isLeafNode());
+            this.selectedNodeIsDynamicLocalDirectoryProperty().set(nv instanceof DynamicLocalFileNodeI dynamicLocalFileNode && !dynamicLocalFileNode.isGeneratedChild());
 
             comboBoxLinkType.valueProperty().bindBidirectional(nv.linkTypeProperty());
 
@@ -145,6 +172,18 @@ public class KeyListNodePropertiesEditionView extends AbstractSimplerKeyActionCo
             gridSelector.selectedComponentProperty().addListener(gridChangeListener);
             gridIdChangeListener = (obs, oGridId, nGridId) -> gridSelector.selectById(nGridId);
             nv.linkedGridIdProperty().addListener(gridIdChangeListener);
+
+            if (nv instanceof DynamicLocalFileNodeI dynamicLocalFileNode && dynamicLocalFileNode.getTargetPath() != null) {
+                fileSelectorControlLocalDirectory.valueProperty().set(new File(dynamicLocalFileNode.getTargetPath()));
+            } else {
+                fileSelectorControlLocalDirectory.valueProperty().set(null);
+            }
+            fileChangeListener = (obs, ovF, nvF) -> {
+                if (nv instanceof DynamicLocalFileNodeI dynamicLocalFileNode) {
+                    dynamicLocalFileNode.setTargetPath(nvF != null ? nvF.getPath() : null);
+                }
+            };
+            fileSelectorControlLocalDirectory.valueProperty().addListener(fileChangeListener);
         }
     }
 
@@ -161,10 +200,25 @@ public class KeyListNodePropertiesEditionView extends AbstractSimplerKeyActionCo
             gridChangeListener = null;
             ov.linkedGridIdProperty().removeListener(gridIdChangeListener);
             gridIdChangeListener = null;
+
+            fileSelectorControlLocalDirectory.valueProperty().removeListener(fileChangeListener);
+            fileChangeListener = null;
         }
         gridSelector.clearSelection();
         linkedNodeSelector.setInputKeyNode(null);
     }
 
-
+    @Override
+    public void initListener() {
+        super.initListener();
+        fileSelectorControlLocalDirectory.setBeforeSelectionValidator(() -> {
+            if (fileSelectorControlLocalDirectory.valueProperty().get() != null) {
+                return DialogUtils.alertWithSourceAndType(this.fileSelectorControlLocalDirectory, Alert.AlertType.CONFIRMATION)
+                        .withContentText(Translation.getText("keylist.dynamic.local.directory.change.warning.content"))
+                        .withHeaderText(Translation.getText("keylist.dynamic.local.directory.change.warning.header"))
+                        .showAndWait() == ButtonType.OK;
+            }
+            return true;
+        });
+    }
 }

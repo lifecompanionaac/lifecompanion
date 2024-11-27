@@ -90,10 +90,14 @@ public class KeyListNodeMainConfigurationStepView extends BorderPane implements 
         this.model = model;
         editedRoot = (KeyListNodeI) model.rootKeyListNodeProperty().get().duplicate(false);
         this.keyListContentConfigView.rootProperty().set(editedRoot);
+        KeyListController.INSTANCE.setDynamicNodeUpdateListener(()->{
+            if(editedRoot!=null)editedRoot.updateDynamicNode();
+        });
     }
 
     @Override
     public void unbind(LCConfigurationI model) {
+        KeyListController.INSTANCE.setDynamicNodeUpdateListener(null);
         this.model = null;
         this.editedRoot = null;
         keyListContentConfigView.rootProperty().set(null);

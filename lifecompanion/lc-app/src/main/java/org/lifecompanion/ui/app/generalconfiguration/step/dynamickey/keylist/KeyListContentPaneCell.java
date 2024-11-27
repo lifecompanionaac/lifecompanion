@@ -21,6 +21,7 @@ import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
+import org.lifecompanion.model.impl.configurationcomponent.dynamickey.DynamicLocalFileNodeI;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.ui.configurationcomponent.editmode.componentoption.ButtonComponentOption;
 import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
@@ -36,7 +37,7 @@ public class KeyListContentPaneCell extends StackPane implements LCViewInitHelpe
 
 
     private ImageView imageView;
-    private Node listGlyph, keyGlyph, linkGlyph;
+    private Node listGlyph, keyGlyph, linkGlyph, dynamicLocalFileGlyph;
     private HBox glyphPane;
     private Label labelText;
     private Rectangle rectangleColors;
@@ -73,6 +74,7 @@ public class KeyListContentPaneCell extends StackPane implements LCViewInitHelpe
         iconTypeLeaf.getStyleClass().add("padding-3_5");
         this.keyGlyph = iconTypeLeaf;
         linkGlyph = GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.LINK).size(14).color(LCGraphicStyle.LC_GRAY);
+        dynamicLocalFileGlyph = GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.REFRESH).size(14).color(LCGraphicStyle.LC_GRAY);
         glyphPane = new HBox();
 
         this.buttonOpenOrFollowLink = new Button();
@@ -164,7 +166,7 @@ public class KeyListContentPaneCell extends StackPane implements LCViewInitHelpe
                 glyphPane.getChildren().clear();
                 ConfigurationComponentUtils.bindImageViewWithImageUseComponent(imageView, nv);
                 imageView.visibleProperty().bind(nv.loadedImageProperty().isNotNull());
-                glyphPane.getChildren().add(nv.isLinkNode() ? linkGlyph : nv.isLeafNode() ? keyGlyph : listGlyph);
+                glyphPane.getChildren().add(nv instanceof DynamicLocalFileNodeI ? dynamicLocalFileGlyph : nv.isLinkNode() ? linkGlyph : nv.isLeafNode() ?  keyGlyph : listGlyph);
                 rectangleColors.strokeProperty().bind(Bindings.createObjectBinding(() -> selected.get() ? LCGraphicStyle.SECOND_DARK : nv.strokeColorProperty().get(),
                         selected, nv.strokeColorProperty()));
                 rectangleColors.fillProperty().bind(nv.backgroundColorProperty());

@@ -41,6 +41,8 @@ import org.lifecompanion.util.javafx.FXControlUtils;
 import org.lifecompanion.util.javafx.FXUtils;
 
 import java.io.File;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * Component to select a file from current file system.
@@ -58,6 +60,7 @@ public class FileSelectorControl extends VBox implements LCViewInitHelper {
     private TextField fieldFileName;
     private final FileChooserType fileChooserType;
     private final boolean displayFullPath;
+    private Supplier<Boolean> beforeSelectionValidator;
 
     public FileSelectorControl(final String labelTextP, FileSelectorControlMode mode, FileChooserType fileChooserType, boolean displayFullPath) {
         this.fileChooserType = fileChooserType;
@@ -81,6 +84,14 @@ public class FileSelectorControl extends VBox implements LCViewInitHelper {
 
     // Class part : "Public API"
     //========================================================================
+    public Supplier<Boolean> getBeforeSelectionValidator() {
+        return beforeSelectionValidator;
+    }
+
+    public void setBeforeSelectionValidator(Supplier<Boolean> beforeSelectionValidator) {
+        this.beforeSelectionValidator = beforeSelectionValidator;
+    }
+
     public ExtensionFilter getExtensionFilter() {
         return this.extensionFilter;
     }
@@ -131,12 +142,14 @@ public class FileSelectorControl extends VBox implements LCViewInitHelper {
     @Override
     public void initListener() {
         this.buttonSelectFile.setOnAction((ea) -> {
-            if (mode == FileSelectorControlMode.FILE) {
-                this.value.set(LCFileChoosers.getOtherFileChooser(this.openDialogTitle, this.extensionFilter, this.fileChooserType)
-                        .showOpenDialog(FXUtils.getSourceWindow(buttonSelectFile)));
-            } else {
-                this.value.set(LCFileChoosers.getChooserDirectory(this.fileChooserType, this.openDialogTitle)
-                        .showDialog(FXUtils.getSourceWindow(buttonSelectFile)));
+            if (beforeSelectionValidator == null || beforeSelectionValidator.get()) {
+                if (mode == FileSelectorControlMode.FILE) {
+                    this.value.set(LCFileChoosers.getOtherFileChooser(this.openDialogTitle, this.extensionFilter, this.fileChooserType)
+                            .showOpenDialog(FXUtils.getSourceWindow(buttonSelectFile)));
+                } else {
+                    this.value.set(LCFileChoosers.getChooserDirectory(this.fileChooserType, this.openDialogTitle)
+                            .showDialog(FXUtils.getSourceWindow(buttonSelectFile)));
+                }
             }
         });
         this.buttonRemoveFile.setOnAction((ea) -> {

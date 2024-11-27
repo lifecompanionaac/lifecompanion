@@ -53,6 +53,8 @@ public interface KeyListNodeI extends SimplerKeyActionContainerI {
 
     ObservableList<KeyListNodeI> getChildren();
 
+    int updateDynamicNode();
+
     ReadOnlyObjectProperty<KeyListNodeI> parentProperty();
 
     ReadOnlyIntegerProperty levelProperty();

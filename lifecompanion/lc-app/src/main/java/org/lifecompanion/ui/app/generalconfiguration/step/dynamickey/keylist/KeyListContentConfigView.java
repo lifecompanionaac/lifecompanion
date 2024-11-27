@@ -26,10 +26,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.*;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Separator;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -38,12 +35,15 @@ import org.lifecompanion.controller.configurationcomponent.dynamickey.KeyListCon
 import org.lifecompanion.controller.editaction.KeyListActions;
 import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.controller.io.ConfigurationComponentIOHelper;
+import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.utils.Pair;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
 import org.lifecompanion.model.api.imagedictionary.ImageElementI;
+import org.lifecompanion.model.impl.configurationcomponent.dynamickey.DynamicLocalFileNodeI;
+import org.lifecompanion.model.impl.configurationcomponent.dynamickey.KeyListLocalDirectoryNode;
 import org.lifecompanion.model.impl.configurationcomponent.dynamickey.KeyListNode;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.model.impl.imagedictionary.ImageDictionaries;
@@ -52,6 +52,7 @@ import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.ui.notification.LCNotificationController;
 import org.lifecompanion.util.CopyUtils;
 import org.lifecompanion.util.IOUtils;
+import org.lifecompanion.util.javafx.DialogUtils;
 import org.lifecompanion.util.javafx.FXControlUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -203,20 +204,31 @@ public class KeyListContentConfigView extends VBox implements LCViewInitHelper {
 
     // LISTENER
     //========================================================================
+    private void ifAuthorizedOperationOnLocalDirectory(KeyListNodeI selectedNode, Consumer<KeyListNodeI> action) {
+        if (selectedNode instanceof DynamicLocalFileNodeI dynamicLocalFileNode && dynamicLocalFileNode.isGeneratedChild()) {
+            DialogUtils.alertWithSourceAndType(buttonDelete, Alert.AlertType.WARNING)
+                    .withContentText(Translation.getText("keylist.dynamic.local.directory.cant.do.operation"))
+                    .build()
+                    .showAndWait();
+        } else {
+            action.accept(selectedNode);
+        }
+    }
+
     @Override
     public void initListener() {
         this.buttonMoveUp.setOnAction(createMoveNodeListener(-1));
         this.buttonMoveDown.setOnAction(createMoveNodeListener(+1));
-        this.buttonDelete.setOnAction(e -> ifSelectedItemNotNull(selectedNode -> removeNode(selectedNode, "keylist.action.removed.action.notification.title")));
-        this.buttonCopy.setOnAction(e -> ifSelectedItemNotNull(selectedNode -> {
+        this.buttonDelete.setOnAction(e -> ifSelectedItemNotNull(selectedNode -> ifAuthorizedOperationOnLocalDirectory(selectedNode, selectedNode2 -> removeNode(selectedNode2, "keylist.action.removed.action.notification.title"))));
+        this.buttonCopy.setOnAction(e -> ifSelectedItemNotNull(selectedNode -> ifAuthorizedOperationOnLocalDirectory(selectedNode, selectedNode2 -> {
             cutNode.set(null);
-            copiedNode.set(selectedNode);
-        }));
-        this.buttonCut.setOnAction(e -> ifSelectedItemNotNull(selectedNode -> {
-            cutNode.set(selectedNode);
+            copiedNode.set(selectedNode2);
+        })));
+        this.buttonCut.setOnAction(e -> ifSelectedItemNotNull(selectedNode -> ifAuthorizedOperationOnLocalDirectory(selectedNode, selectedNode2 -> {
+            cutNode.set(selectedNode2);
             copiedNode.set(null);
-            removeNode(selectedNode, "keylist.action.cut.action.notification.title");
-        }));
+            removeNode(selectedNode2, "keylist.action.cut.action.notification.title");
+        })));
         this.buttonPaste.setOnAction(e -> {
             final KeyListNodeI toPasteCut = cutNode.get();
             if (toPasteCut != null) {

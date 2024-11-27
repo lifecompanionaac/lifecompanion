@@ -26,6 +26,7 @@ import org.lifecompanion.controller.lifecycle.AppMode;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.selectionmode.SelectionModeController;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.framework.utils.LCNamedThreadFactory;
 import org.lifecompanion.framework.utils.Pair;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
@@ -39,6 +40,7 @@ import org.lifecompanion.model.api.selectionmode.ComponentToScanI;
 import org.lifecompanion.model.impl.categorizedelement.useaction.available.*;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.dynamickey.KeyListNodeKeyOption;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStep;
+import org.lifecompanion.util.ThreadUtils;
 import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.util.model.ConfigurationComponentUtils;
 import org.lifecompanion.util.model.SelectionModeUtils;
@@ -97,6 +99,30 @@ public enum KeyListController implements ModeListenerI {
                 clearCurrentConfiguration();
             }
         });
+
+        // TODO : better start/stop + on lcStart/stop
+        LCNamedThreadFactory.daemonThreadFactory("KeyListLocalDirectoryNode-Updater").newThread(() -> {
+            while (true) {
+                if (rootKeyListNode != null) {
+                    int changeCount = this.rootKeyListNode.updateDynamicNode();
+                    if (this.dynamicNodeUpdateListener != null) this.dynamicNodeUpdateListener.run();
+                    if (changeCount > 0) {
+                        LCConfigurationI configuration = AppModeController.INSTANCE.isUseMode() ? AppModeController.INSTANCE.getUseModeContext().getConfiguration() : AppModeController.INSTANCE.getEditModeContext().getConfiguration();
+                        if (configuration != null) {
+                            refreshKeyListFromScratch(configuration, true);
+                        }
+
+                    }
+                }
+                ThreadUtils.safeSleep(5000);
+            }
+        }).start();
+    }
+
+    private Runnable dynamicNodeUpdateListener;
+
+    public void setDynamicNodeUpdateListener(Runnable dynamicNodeUpdateListener) {
+        this.dynamicNodeUpdateListener = dynamicNodeUpdateListener;
     }
 
     // LISTENER

@@ -41,9 +41,12 @@ import org.lifecompanion.util.binding.BindingUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public abstract class AbstractKeyListNode extends AbstractSimplerKeyActionContainer implements KeyListNodeI {
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractKeyListNode.class);
@@ -172,7 +175,18 @@ public abstract class AbstractKeyListNode extends AbstractSimplerKeyActionContai
                 "general.configuration.view.keylist.empty.text.in.node");
     }
 
-    //========================================================================
+    @Override
+    public int updateDynamicNode() {
+        int changeCount = 0;
+        if (this.children != null) {
+            List<KeyListNodeI> childrenCopy = new ArrayList<>(this.children);
+            for (KeyListNodeI child : childrenCopy) {
+                changeCount += child.updateDynamicNode();
+            }
+        }
+        return changeCount;
+    }
+//========================================================================
 
     // IO
     //========================================================================

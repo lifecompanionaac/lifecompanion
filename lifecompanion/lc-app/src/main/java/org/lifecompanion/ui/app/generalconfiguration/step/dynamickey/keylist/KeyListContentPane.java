@@ -11,7 +11,6 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.TransferMode;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
@@ -23,7 +22,7 @@ import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.lang.LangUtils;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
-import org.lifecompanion.model.impl.configurationcomponent.dynamickey.KeyListFileDirectoryNode;
+import org.lifecompanion.model.impl.configurationcomponent.dynamickey.KeyListLocalDirectoryNode;
 import org.lifecompanion.model.impl.configurationcomponent.dynamickey.KeyListLeaf;
 import org.lifecompanion.model.impl.configurationcomponent.dynamickey.KeyListLinkLeaf;
 import org.lifecompanion.model.impl.configurationcomponent.dynamickey.KeyListNode;
@@ -35,6 +34,7 @@ import org.lifecompanion.util.binding.BindingUtils;
 import org.lifecompanion.util.binding.ListBindingWithMapper;
 import org.lifecompanion.util.javafx.FXControlUtils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
@@ -47,7 +47,7 @@ public class KeyListContentPane extends StackPane implements LCViewInitHelper {
     private final KeyListContentConfigView keyListContentConfigView;
     private Runnable previousContentViewUnbind;
     private Button buttonParentNode, buttonShowAddChoices;
-    private Button buttonAddKey, buttonAddCategory, buttonAddLinkKey, buttonAddDirectory;
+    private Button buttonAddKey, buttonAddCategory, buttonAddLinkKey, buttonAddDynamicLocalFile;
     private VBox boxAddButtons;
     private TilePane tilePane;
     private ScrollPane scrollPane;
@@ -86,11 +86,11 @@ public class KeyListContentPane extends StackPane implements LCViewInitHelper {
         this.buttonAddLinkKey = createFloatingButton("background-primary-dark-light",
                 "keylist.content.pane.button.add.link",
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.LINK).size(16).color(Color.GRAY));
-        this.buttonAddDirectory = createFloatingButton("background-primary-dark-light",
-                "keylist.content.pane.button.add.file.directory",
-                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.FOLDER).size(16).color(Color.GRAY));
+        this.buttonAddDynamicLocalFile = createFloatingButton("background-primary-dark-light",
+                "keylist.content.pane.button.add.dynamic.local.file.directory",
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.REFRESH).size(16).color(Color.GRAY));
         boxAddButtons = new VBox(4.0);
-        List.of(buttonAddLinkKey, buttonAddCategory, buttonAddKey, buttonAddDirectory).forEach(button -> {
+        List.of(buttonAddLinkKey, buttonAddCategory, buttonAddKey, buttonAddDynamicLocalFile).forEach(button -> {
             button.getStyleClass().remove("text-fill-white");
             button.getStyleClass().add("text-fill-dimgrey");
             boxAddButtons.getChildren().add(button);
@@ -119,7 +119,7 @@ public class KeyListContentPane extends StackPane implements LCViewInitHelper {
         this.buttonAddKey.setOnAction(createAddNodeListener(KeyListLeaf::new));
         this.buttonAddLinkKey.setOnAction(createAddNodeListener(KeyListLinkLeaf::new));
         this.buttonAddCategory.setOnAction(createAddNodeListener(KeyListNode::new));
-        this.buttonAddDirectory.setOnAction(createAddNodeListener(KeyListFileDirectoryNode::new));
+        this.buttonAddDynamicLocalFile.setOnAction(createAddNodeListener(() -> KeyListLocalDirectoryNode.createFrom(new File(System.getProperty("user.home") + File.separator + "Pictures"))));
         this.setOnMouseClicked(e -> hideAddChoices());
 
         // Disable move on parent button

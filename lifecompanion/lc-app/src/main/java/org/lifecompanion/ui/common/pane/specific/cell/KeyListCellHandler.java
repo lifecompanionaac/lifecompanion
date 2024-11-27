@@ -32,6 +32,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import org.lifecompanion.framework.commons.translation.Translation;
+import org.lifecompanion.model.impl.configurationcomponent.dynamickey.DynamicLocalFileNodeI;
 import org.lifecompanion.ui.configurationcomponent.editmode.componentoption.ButtonComponentOption;
 import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
@@ -50,7 +51,7 @@ public class KeyListCellHandler implements LCViewInitHelper {
     private final IndexedCell<? extends KeyListNodeI> thisCell;
 
     private ImageView imageView;
-    private Node listGlyph, keyGlyph, linkGlyph;
+    private Node listGlyph, keyGlyph, linkGlyph,dynamicLocalFileGlyph;
     private HBox graphics;
     private HBox glyphPane;
     private Label labelText;
@@ -77,6 +78,7 @@ public class KeyListCellHandler implements LCViewInitHelper {
         paneImageView.getStyleClass().add("padding-3_5");
         this.keyGlyph = paneImageView;
         linkGlyph = GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.LINK).size(14).color(LCGraphicStyle.LC_GRAY);
+        dynamicLocalFileGlyph = GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.REFRESH).size(14).color(LCGraphicStyle.LC_GRAY);
         glyphPane = new HBox();
         glyphPane.setAlignment(Pos.CENTER);
 
@@ -144,7 +146,7 @@ public class KeyListCellHandler implements LCViewInitHelper {
             glyphPane.getChildren().clear();
             imageView.imageProperty().bind(item.loadedImageProperty());
             imageView.visibleProperty().bind(item.loadedImageProperty().isNotNull());
-            glyphPane.getChildren().add(item.isLinkNode() ? linkGlyph : item.isLeafNode() ? keyGlyph : listGlyph);
+            glyphPane.getChildren().add(item instanceof DynamicLocalFileNodeI ? dynamicLocalFileGlyph : item.isLinkNode() ? linkGlyph : item.isLeafNode() ?  keyGlyph : listGlyph);
             buttonFollowUpLink.visibleProperty().bind(item.linkedNodeIdProperty().isNotEmpty().and(new SimpleBooleanProperty(followUpLinkCallback != null && item.isLinkNode())));
             rectangleColors.strokeProperty().bind(item.strokeColorProperty());
             rectangleColors.fillProperty().bind(item.backgroundColorProperty());
