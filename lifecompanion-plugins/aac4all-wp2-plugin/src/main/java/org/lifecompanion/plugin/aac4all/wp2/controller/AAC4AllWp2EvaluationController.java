@@ -119,11 +119,21 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
     private ScheduledExecutorService scheduler;
     private ScheduledFuture<?> scheduledEyetrackingTask;
 
+
     private ChangeListener highlightKey = new javafx.beans.value.ChangeListener<GridPartComponentI>() {
         @Override
         public void changed(ObservableValue<? extends GridPartComponentI> observable, GridPartComponentI oldValue, GridPartComponentI newValue) {
             if (newValue != null) {
                 HighLightLog log = new HighLightLog(newValue.nameProperty().getValue(), newValue.columnProperty().getValue());
+                currentSentenceEvaluation.getLogs().add(new WP2Logs(LocalDateTime.now(), LogType.HIGHLIGHT, log));
+            }
+        }
+    };
+    private ChangeListener highlightKeyDyLin = new javafx.beans.value.ChangeListener<GridPartComponentI>() {
+        @Override
+        public void changed(ObservableValue<? extends GridPartComponentI> observable, GridPartComponentI oldValue, GridPartComponentI newValue) {
+            if (newValue != null) {
+                HighLightLog log = new HighLightLog(newValue.nameProperty().getValue(), ((newValue.rowProperty().getValue()*7)+newValue.columnProperty().getValue()+newValue.rowProperty().getValue()));
                 currentSentenceEvaluation.getLogs().add(new WP2Logs(LocalDateTime.now(), LogType.HIGHLIGHT, log));
             }
         }
@@ -134,17 +144,17 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
             String rowValues = "";
             if (rowScanned != null) {
                 for (int i = 0; i < rowScanned.getComponents().size(); i++) {
-                    if (configuration!=null) {// attention car pout l'espace on a Case(1,1) on pourrait le remplavcer à la main par _ ou par " " par exemple
+                    if (configuration!=null) {// attention car pout l'espace on a Case(1,1) on pourrait le remplavcer à la main par _ ou par " " par exemple, esapce aussi Case(X,X)
                         rowValues = rowValues + rowScanned.getPartIn(configuration.selectionModeProperty().get().currentGridProperty().get(), i).nameProperty().getValue() + "-";
                     }
                 }
                 HighLightLog log = new HighLightLog(rowValues, rowScanned.getIndex());
                 currentSentenceEvaluation.getLogs().add(new WP2Logs(LocalDateTime.now(), LogType.HIGHLIGHT, log));
-
-
             }
         }
     };
+
+
     private BiConsumer<GridComponentI, ComponentToScanI> validationRow = new BiConsumer<GridComponentI, ComponentToScanI>() {
         @Override
         public void accept(GridComponentI gridComponentI, ComponentToScanI componentToScanI) {
@@ -172,6 +182,18 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
         }
     };
 
+    private BiConsumer<UseActionTriggerComponentI, UseActionEvent> validationKeyDyLin = new BiConsumer<UseActionTriggerComponentI, UseActionEvent>() {
+        @Override
+        public void accept(UseActionTriggerComponentI component, UseActionEvent event) {
+            if (component instanceof GridPartKeyComponentI && event == UseActionEvent.ACTIVATION) {
+                GridPartKeyComponentI key = (GridPartKeyComponentI) component;
+                ValidationLog log = new ValidationLog(key.nameProperty().getValue(), ((key.rowProperty().getValue()*7)+key.columnProperty().getValue()+key.rowProperty().getValue()));
+                currentSentenceEvaluation.getLogs().add(new WP2Logs(LocalDateTime.now(), LogType.VALIDATION,log));
+                recordLogs();
+            }
+
+        }
+    };
 
     @Override
     public void modeStart(LCConfigurationI configuration) {
@@ -228,9 +250,11 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
 
     @Override
     public void modeStop(LCConfigurationI configuration) {
+        WritingStateController.INSTANCE.removeAll(WritingEventSource.USER_ACTIONS);
+        stopLogListener();
         this.configuration = null;
         this.currentAAC4AllWp2PluginProperties = null;
-        //TODO ; vide tout ce qui est rempli dans modeStart()
+
     }
 
     public void startDailyTraining() {
@@ -332,13 +356,24 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
         //currentKeyboardEvaluation = new WP2KeyboardEvaluation(currentKeyboardType);
 
         if (currentKeyboardEvaluation != null) {
-
-            SelectionModeController.INSTANCE.addScannedPartChangedListeners(validationRow);
-            SelectionModeController.INSTANCE.currentOverPartProperty().addListener(highlightKey);
-            UseActionController.INSTANCE.addActionExecutionListener(validationKey);
-            SelectionModeController.INSTANCE.addOverScannedPartChangedListener(highlightRow);
-            // TODO : penser à supprimer les deux nouveaux listeners lorsqu'on termine le log
-
+            switch (currentKeyboardType.getTranslationId()) {
+                case "CurSta": {
+                    System.out.println("on est dans CurSta");
+                    break;
+                }
+                case "DyLin": {
+                    SelectionModeController.INSTANCE.currentOverPartProperty().addListener(highlightKeyDyLin);
+                    UseActionController.INSTANCE.addActionExecutionListener(validationKeyDyLin);
+                    break;
+                }
+                default: {
+                    SelectionModeController.INSTANCE.addScannedPartChangedListeners(validationRow);
+                    SelectionModeController.INSTANCE.currentOverPartProperty().addListener(highlightKey);
+                    UseActionController.INSTANCE.addActionExecutionListener(validationKey);
+                    SelectionModeController.INSTANCE.addOverScannedPartChangedListener(highlightRow);
+                    break;
+                }
+            };
 
 
             scheduler = Executors.newScheduledThreadPool(1);
@@ -367,6 +402,9 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
             scheduler.shutdown();
         }
         //currentSentenceEvaluation = null;
+
+        SelectionModeController.INSTANCE.currentOverPartProperty().removeListener(highlightKeyDyLin);
+        UseActionController.INSTANCE.removeActionExecutionListener(validationKeyDyLin);
         SelectionModeController.INSTANCE.removeScannedPartChangedListeners(validationRow);
         SelectionModeController.INSTANCE.currentOverPartProperty().removeListener(highlightKey);
         UseActionController.INSTANCE.removeActionExecutionListener(validationKey);
