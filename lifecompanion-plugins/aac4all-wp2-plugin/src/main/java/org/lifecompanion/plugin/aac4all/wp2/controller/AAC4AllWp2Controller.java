@@ -1,5 +1,6 @@
 package org.lifecompanion.plugin.aac4all.wp2.controller;
 
+import javafx.beans.value.ChangeListener;
 import org.lifecompanion.controller.selectionmode.SelectionModeController;
 import org.lifecompanion.controller.textcomponent.WritingStateController;
 import org.lifecompanion.controller.textprediction.CustomCharPredictionController;
@@ -30,6 +31,7 @@ public enum AAC4AllWp2Controller implements ModeListenerI {
     INSTANCE;
 
     private final BiConsumer<GridComponentI, ComponentToScanI> scannedPartChangedListener;
+    private ChangeListener<Boolean> capitalizeNextChangeListener;
 
     AAC4AllWp2Controller() {
         scannedPartChangedListener = this::partScanComponentChanged;
@@ -46,13 +48,21 @@ public enum AAC4AllWp2Controller implements ModeListenerI {
             initRelocG(configuration);
             initCurSta(configuration);
         });
+        ChangeListener<Boolean> capitalizeNextChangeListener = (obs, ov, nv) -> {
+            if (nv) {
+                WritingStateController.INSTANCE.switchCapitalizeNext(WritingEventSource.SYSTEM);
+            }
+        };
+        WritingStateController.INSTANCE.capitalizeNextProperty().addListener(capitalizeNextChangeListener);
     }
 
     // TODO : replace with content from char prediction
     private String curStaCharacters = "abcdefghijklmnopqrstuvwxyzéèàê' ";
-    private List<PredictResult> predict = transformResult(List.of(' ','a', 'à',  'b', 'c','ç', 'd', 'e','é', 'è','ê', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '\''));
+    private List<PredictResult> predict = transformResult(List.of(' ', 'a', 'à', 'b', 'c', 'ç', 'd', 'e', 'é', 'è', 'ê', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '\''));
     private int curStaIndex = 0;
     private List<AAC4AllKeyOptionCurSta> curStaKeys;
+
+    private ChangeListener<String> curStaChangeListener;
 
 
     private void initCurSta(LCConfigurationI configuration) {
@@ -68,22 +78,24 @@ public enum AAC4AllWp2Controller implements ModeListenerI {
 
         updateCurSta();
 
-        WritingStateController.INSTANCE.textBeforeCaretProperty().addListener((obs, ov, nv) -> {
+        curStaChangeListener = (obs, ov, nv) -> {
             //HashSet<Character> acceptedCharact = new HashSet<>(curStaCharacters.chars().mapToObj(c -> (char) c).collect(Collectors.toSet()));
-           if(this.configuration!= null){
-            this.configuration.getAllComponent()
-                    .values()
-                    .stream()
-                    .filter(c -> c instanceof UseActionTriggerComponentI)
-                    .map(c -> (UseActionTriggerComponentI) c)
-                    .map(c -> c.getActionManager().getFirstActionOfType(
-                            UseActionEvent.OVER, CurStaUseAction.class))
-                    .filter(Objects::nonNull)
-                    .forEach(CurStaUseAction::cleanLastText);}
+            if (this.configuration != null) {
+                this.configuration.getAllComponent()
+                        .values()
+                        .stream()
+                        .filter(c -> c instanceof UseActionTriggerComponentI)
+                        .map(c -> (UseActionTriggerComponentI) c)
+                        .map(c -> c.getActionManager().getFirstActionOfType(
+                                UseActionEvent.OVER, CurStaUseAction.class))
+                        .filter(Objects::nonNull)
+                        .forEach(CurStaUseAction::cleanLastText);
+            }
             predict = transformResult(LCCharPredictor.INSTANCE.predict(WritingStateController.INSTANCE.textBeforeCaretProperty().get(), acceptedCharact.size(), acceptedCharact));
             curStaIndex = 0;
             updateCurSta();
-        });
+        };
+        WritingStateController.INSTANCE.textBeforeCaretProperty().addListener(curStaChangeListener);
     }
 
     private static List<PredictResult> transformResult(List<Character> prediction) {
@@ -91,12 +103,12 @@ public enum AAC4AllWp2Controller implements ModeListenerI {
         for (int i = 0; i < prediction.size(); i++) {
             result.add(new PredictResult(AAC4AllKeyOptionCurSta.ActionType.WRITE_PRED, String.valueOf(prediction.get(i))));
         }
-        result.add(6,new PredictResult(AAC4AllKeyOptionCurSta.ActionType.DELETE_LAST_CHAR,""));
-        result.add(13,new PredictResult(AAC4AllKeyOptionCurSta.ActionType.VALIDATE,""));
+        result.add(6, new PredictResult(AAC4AllKeyOptionCurSta.ActionType.DELETE_LAST_CHAR, ""));
+        result.add(13, new PredictResult(AAC4AllKeyOptionCurSta.ActionType.VALIDATE, ""));
 
-        for (int i = 0; i <result.size() ; i++) {
-            if ((i - 7)%8 == 0 && i >= 7 ){
-                result.add(i,new PredictResult(AAC4AllKeyOptionCurSta.ActionType.MOVE_BACK, ""));
+        for (int i = 0; i < result.size(); i++) {
+            if ((i - 7) % 8 == 0 && i >= 7) {
+                result.add(i, new PredictResult(AAC4AllKeyOptionCurSta.ActionType.MOVE_BACK, ""));
 
             }
         }
@@ -104,7 +116,6 @@ public enum AAC4AllWp2Controller implements ModeListenerI {
     }
 
     private final static PredictResult EMPTY = new PredictResult(AAC4AllKeyOptionCurSta.ActionType.WRITE_PRED, "");
-
 
 
     private static class PredictResult {
@@ -161,7 +172,7 @@ public enum AAC4AllWp2Controller implements ModeListenerI {
     }
 
     public void moveBackCurSta() {
-        this.curStaIndex = Math.max(0,this.curStaIndex - 8);
+        this.curStaIndex = Math.max(0, this.curStaIndex - 8);
         if (this.configuration != null) {
             this.configuration.getAllComponent()
                     .values()
@@ -176,23 +187,24 @@ public enum AAC4AllWp2Controller implements ModeListenerI {
         this.updateCurSta();
     }
 
-    public void validerCurSta(){
+    public void validerCurSta() {
         AAC4AllWp2EvaluationController.INSTANCE.StartDislaySentence();
-        this.curStaIndex=0;
+        this.curStaIndex = 0;
         this.updateCurSta();
     }
 
     public void deleteLastCharCurSta() {
         WritingStateController.INSTANCE.removeLastChar(WritingEventSource.USER_ACTIONS);
-        this.curStaIndex=0;
+        this.curStaIndex = 0;
         this.updateCurSta();
     }
 
 
     private Map<AAC4AllKeyOptionReolocG, String> previousLineG;
+    private ChangeListener<String> relocGChangeListener;
 
     private void initRelocG(LCConfigurationI configuration) {
-        WritingStateController.INSTANCE.textBeforeCaretProperty().addListener((obs, ov, nv) -> {
+        relocGChangeListener = (obs, ov, nv) -> {
             FXThreadUtils.runOnFXThread(() -> {
                 SelectionModeI selectionMode = configuration.selectionModeProperty().get();
                 List<ComponentToScanI> rows = null;
@@ -240,13 +252,21 @@ public enum AAC4AllWp2Controller implements ModeListenerI {
                     }
                 }
             });
-        });
+        };
+        WritingStateController.INSTANCE.textBeforeCaretProperty().addListener(relocGChangeListener);
     }
 
 
     @Override
     public void modeStop(LCConfigurationI configuration) {
         SelectionModeController.INSTANCE.removeScannedPartChangedListeners(this.scannedPartChangedListener);
+        if (relocGChangeListener != null)
+            WritingStateController.INSTANCE.textBeforeCaretProperty().removeListener(relocGChangeListener);
+        if (curStaChangeListener != null)
+            WritingStateController.INSTANCE.textBeforeCaretProperty().removeListener(curStaChangeListener);
+        if(capitalizeNextChangeListener!=null){
+            WritingStateController.INSTANCE.capitalizeNextProperty().removeListener(capitalizeNextChangeListener);
+        }
         curStaKeys = null;
         this.configuration = null;
     }

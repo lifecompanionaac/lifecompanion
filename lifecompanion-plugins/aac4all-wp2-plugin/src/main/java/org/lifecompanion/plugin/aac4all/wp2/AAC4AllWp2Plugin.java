@@ -6,6 +6,7 @@ import org.lifecompanion.model.api.plugin.PluginConfigPropertiesI;
 import org.lifecompanion.model.api.plugin.PluginI;
 import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
+import org.lifecompanion.model.impl.textprediction.charprediction.CharPredictor;
 import org.lifecompanion.model.impl.usevariable.IntegerUseVariable;
 import org.lifecompanion.model.impl.usevariable.StringUseVariable;
 import org.lifecompanion.model.impl.usevariable.UseVariableDefinition;
@@ -47,6 +48,7 @@ public class AAC4AllWp2Plugin implements PluginI {
     @Override
     public void start(File dataDirectory) {
         // Plugin global init here
+        CharPredictor.FREQUENT_CHAR_SIZE = 100;
     }
 
     @Override
