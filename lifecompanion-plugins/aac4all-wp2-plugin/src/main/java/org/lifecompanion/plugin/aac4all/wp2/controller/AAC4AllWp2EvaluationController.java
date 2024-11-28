@@ -27,6 +27,7 @@ import org.lifecompanion.model.api.textcomponent.WritingEventSource;
 import org.lifecompanion.model.impl.selectionmode.RowColumnScanSelectionMode;
 import org.lifecompanion.plugin.aac4all.wp2.AAC4AllWp2Plugin;
 import org.lifecompanion.plugin.aac4all.wp2.AAC4AllWp2PluginProperties;
+import org.lifecompanion.plugin.aac4all.wp2.model.keyoption.AAC4AllKeyOptionCurSta;
 import org.lifecompanion.plugin.aac4all.wp2.model.logs.*;
 import org.lifecompanion.util.model.SelectionModeUtils;
 import tobii.Tobii;
@@ -120,6 +121,8 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
     private ScheduledFuture<?> scheduledEyetrackingTask;
 
 
+    private int indexCurStaPred = -1;
+
     private ChangeListener highlightKey = new javafx.beans.value.ChangeListener<GridPartComponentI>() {
         @Override
         public void changed(ObservableValue<? extends GridPartComponentI> observable, GridPartComponentI oldValue, GridPartComponentI newValue) {
@@ -135,6 +138,18 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
             if (newValue != null) {
                 HighLightLog log = new HighLightLog(newValue.nameProperty().getValue(), ((newValue.rowProperty().getValue()*7)+newValue.columnProperty().getValue()+newValue.rowProperty().getValue()));
                 currentSentenceEvaluation.getLogs().add(new WP2Logs(LocalDateTime.now(), LogType.HIGHLIGHT, log));
+            }
+        }
+    };
+    private ChangeListener highlightKeyCurSta = new javafx.beans.value.ChangeListener<GridPartComponentI>() {
+        @Override
+        public void changed(ObservableValue<? extends GridPartComponentI> observable, GridPartComponentI oldValue, GridPartComponentI newValue) {
+            if (newValue != null) {
+                if (List.of(" ", "a", "à", "b", "c", "ç", "d", "e", "é", "è", "ê", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "'", "Supprimer", "Valider","Retour").contains(newValue.nameProperty().getValue()) || newValue.nameProperty().getValue().startsWith("Case") ) {
+                    indexCurStaPred++;
+                    HighLightLog log = new HighLightLog(newValue.nameProperty().getValue(), indexCurStaPred);
+                    currentSentenceEvaluation.getLogs().add(new WP2Logs(LocalDateTime.now(), LogType.HIGHLIGHT, log));
+                }
             }
         }
     };
@@ -154,7 +169,47 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
         }
     };
 
+    private BiConsumer<UseActionTriggerComponentI, UseActionEvent> validationKey = new BiConsumer<UseActionTriggerComponentI, UseActionEvent>() {
+        @Override
+        public void accept(UseActionTriggerComponentI component, UseActionEvent event) {
+            if (component instanceof GridPartKeyComponentI && event == UseActionEvent.ACTIVATION) {
+                GridPartKeyComponentI key = (GridPartKeyComponentI) component;
 
+                ValidationLog log = new ValidationLog(key.textContentProperty().getValue(),key.columnProperty().getValue());
+                currentSentenceEvaluation.getLogs().add(new WP2Logs(LocalDateTime.now(), LogType.VALIDATION,log));
+                recordLogs();
+            }
+
+        }
+    };
+    private BiConsumer<UseActionTriggerComponentI, UseActionEvent> validationKeyDyLin = new BiConsumer<UseActionTriggerComponentI, UseActionEvent>() {
+        @Override
+        public void accept(UseActionTriggerComponentI component, UseActionEvent event) {
+            if (component instanceof GridPartKeyComponentI && event == UseActionEvent.ACTIVATION) {
+                GridPartKeyComponentI key = (GridPartKeyComponentI) component;
+                ValidationLog log = new ValidationLog(key.textContentProperty().getValue(), ((key.rowProperty().getValue()*7)+key.columnProperty().getValue()+key.rowProperty().getValue()));
+                currentSentenceEvaluation.getLogs().add(new WP2Logs(LocalDateTime.now(), LogType.VALIDATION,log));
+                recordLogs();
+            }
+
+        }
+    };
+    private BiConsumer<UseActionTriggerComponentI, UseActionEvent> validationKeyCurSta = new BiConsumer<UseActionTriggerComponentI, UseActionEvent>() {
+        @Override
+        public void accept(UseActionTriggerComponentI component, UseActionEvent event) {
+            if (component instanceof GridPartKeyComponentI && event == UseActionEvent.ACTIVATION) {
+                GridPartKeyComponentI key = (GridPartKeyComponentI) component;
+                ValidationLog log = new ValidationLog(key.textContentProperty().getValue(),indexCurStaPred);
+                currentSentenceEvaluation.getLogs().add(new WP2Logs(LocalDateTime.now(), LogType.VALIDATION,log));
+                if (key.textContentProperty().getValue()=="Retour"){
+                    indexCurStaPred= Math.max(-1, indexCurStaPred - 8);
+                }else{
+                    indexCurStaPred=-1;
+                }
+                recordLogs();
+            }
+        }
+    };
     private BiConsumer<GridComponentI, ComponentToScanI> validationRow = new BiConsumer<GridComponentI, ComponentToScanI>() {
         @Override
         public void accept(GridComponentI gridComponentI, ComponentToScanI componentToScanI) {
@@ -167,31 +222,6 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
                 currentSentenceEvaluation.getLogs().add(new WP2Logs(LocalDateTime.now(), LogType.VALIDATION, log));
                 recordLogs();
             }
-        }
-    };
-    private BiConsumer<UseActionTriggerComponentI, UseActionEvent> validationKey = new BiConsumer<UseActionTriggerComponentI, UseActionEvent>() {
-        @Override
-        public void accept(UseActionTriggerComponentI component, UseActionEvent event) {
-            if (component instanceof GridPartKeyComponentI && event == UseActionEvent.ACTIVATION) {
-                GridPartKeyComponentI key = (GridPartKeyComponentI) component;
-                ValidationLog log = new ValidationLog(key.nameProperty().getValue(),key.columnProperty().getValue());
-                currentSentenceEvaluation.getLogs().add(new WP2Logs(LocalDateTime.now(), LogType.VALIDATION,log));
-                recordLogs();
-            }
-
-        }
-    };
-
-    private BiConsumer<UseActionTriggerComponentI, UseActionEvent> validationKeyDyLin = new BiConsumer<UseActionTriggerComponentI, UseActionEvent>() {
-        @Override
-        public void accept(UseActionTriggerComponentI component, UseActionEvent event) {
-            if (component instanceof GridPartKeyComponentI && event == UseActionEvent.ACTIVATION) {
-                GridPartKeyComponentI key = (GridPartKeyComponentI) component;
-                ValidationLog log = new ValidationLog(key.nameProperty().getValue(), ((key.rowProperty().getValue()*7)+key.columnProperty().getValue()+key.rowProperty().getValue()));
-                currentSentenceEvaluation.getLogs().add(new WP2Logs(LocalDateTime.now(), LogType.VALIDATION,log));
-                recordLogs();
-            }
-
         }
     };
 
@@ -212,6 +242,8 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
         filePathLogs = String.format("%s%s_%s_%s.json", pathToDestinationDir + "/lifecompanion-plugins/aac4all-wp2-plugin/result/", patientID.getValue(), now.format(formatter), configName);
 
         currentPhraseSet = new ArrayList<>(phraseSetFR);;
+
+        indexCurStaPred=-1;
 
         this.keyboardConsigne = this.configuration.getAllComponent().values().stream()
                 .filter(d -> d instanceof GridPartComponentI)
@@ -358,7 +390,8 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
         if (currentKeyboardEvaluation != null) {
             switch (currentKeyboardType.getTranslationId()) {
                 case "CurSta": {
-                    System.out.println("on est dans CurSta");
+                    SelectionModeController.INSTANCE.currentOverPartProperty().addListener(highlightKeyCurSta);
+                    UseActionController.INSTANCE.addActionExecutionListener(validationKeyCurSta);
                     break;
                 }
                 case "DyLin": {
@@ -374,7 +407,6 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
                     break;
                 }
             };
-
 
             scheduler = Executors.newScheduledThreadPool(1);
             scheduledEyetrackingTask = scheduler.scheduleAtFixedRate(() -> {
@@ -405,6 +437,8 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
 
         SelectionModeController.INSTANCE.currentOverPartProperty().removeListener(highlightKeyDyLin);
         UseActionController.INSTANCE.removeActionExecutionListener(validationKeyDyLin);
+        SelectionModeController.INSTANCE.currentOverPartProperty().removeListener(highlightKeyCurSta);
+        UseActionController.INSTANCE.removeActionExecutionListener(validationKeyCurSta);
         SelectionModeController.INSTANCE.removeScannedPartChangedListeners(validationRow);
         SelectionModeController.INSTANCE.currentOverPartProperty().removeListener(highlightKey);
         UseActionController.INSTANCE.removeActionExecutionListener(validationKey);
@@ -470,7 +504,8 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
                     recordLogs();
 
                     // go to EVA interface
-                    SelectionModeController.INSTANCE.changeUseModeSelectionModeTo(RowColumnScanSelectionMode.class);
+                    if(configuration!=null){
+                        SelectionModeController.INSTANCE.changeUseModeSelectionModeTo(RowColumnScanSelectionMode.class);}
                     SelectionModeController.INSTANCE.goToGridPart(keyboardEVA);
                     //stop sentence display and clean editor
                     StopDislaySentence();
@@ -485,14 +520,16 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
 
     public void StartDislaySentence() {
         int randomIndexSentence=0;
+
         if (currentSentenceEvaluation == null) {
             WritingStateController.INSTANCE.removeAll(WritingEventSource.USER_ACTIONS);
-            currentSentenceEvaluation = new WP2SentenceEvaluation(currentSentence, new Date());
-            currentKeyboardEvaluation.getSentenceLogs().add(currentSentenceEvaluation);
             randomIndexSentence= new Random().nextInt(currentPhraseSet.size());
             currentSentence = currentPhraseSet.get(randomIndexSentence);
             currentPhraseSet.remove(currentPhraseSet.get(randomIndexSentence));
+            currentSentenceEvaluation = new WP2SentenceEvaluation(currentSentence, new Date());
+            currentKeyboardEvaluation.getSentenceLogs().add(currentSentenceEvaluation);
             UseVariableController.INSTANCE.requestVariablesUpdate();
+
         } else {
             recordLogs();
             currentSentenceEvaluation.setTextEntry(WritingStateController.INSTANCE.getLastSentence());
