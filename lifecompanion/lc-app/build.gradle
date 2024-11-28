@@ -92,8 +92,7 @@ dependencies {
 
     // Select picture with camera
     // Use our own brij implementation (fix found https://github.com/sarxos/webcam-capture/issues/586 until there is a Java9+ release)
-    // api 'com.github.lifecompanionaac:BridJ:1.1.0'
-    api 'com.nativelibs4java:bridj:0.7.0'
+    api 'com.github.lifecompanionaac:BridJ:1.1.0'
     api('com.github.sarxos:webcam-capture:0.3.12') {
         exclude group: 'com.nativelibs4java', module: 'bridj'
         exclude group: 'ch.qos.logback'
