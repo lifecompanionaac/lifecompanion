@@ -244,6 +244,7 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
         currentPhraseSet = new ArrayList<>(phraseSetFR);;
 
         indexCurStaPred=-1;
+        currentSentence = "";
 
         this.keyboardConsigne = this.configuration.getAllComponent().values().stream()
                 .filter(d -> d instanceof GridPartComponentI)
