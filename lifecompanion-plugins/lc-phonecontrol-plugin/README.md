@@ -20,15 +20,15 @@ See [`lc-phonecontrol-plugin-1/README.md`](lc-phonecontrol-plugin-1/README.md) a
 | :x: | Make a configuration | **S** |
 | :x: | List SMS conversations | **A** |
 | :x: | List SMS messages from a conversation | **A** |
-| :x: | Pass the data through `Bluetooth` | **A** |
 | :x: | Turn up or down the volume | **A** |
 | :x: | Numerical keyboard for call services | **B** |
-| :x: | An overall keyboard layout | **B** |
 | :x: | List calls | **B** |
+| :x: | Display the call length | **B** |
 | :x: | Count current/missed calls on the homepage | **B** |
 | :x: | Count unread messages on the homepage | **B** |
+| :x: | Pass the data through `Bluetooth` | **C** |
 | :x: | List contacts | **C** |
-| :x: | Search through contacts | **C** |
 | :x: | Display the current connected phone for easier understanding | **C** |
 | :x: | Call the voicemail (operator dependent ?) | **D** |
-| :x: | Display the call length | **D** |
+| :x: | Search through contacts | **D** |
+| :x: | An overall keyboard layout | **D** |
