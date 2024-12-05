@@ -7,7 +7,7 @@ You can use Android Studio if you have it. However, it takes a lot of space so y
 1. **Prepare VS Code**
     1. Follow the instructions in [BUILD_DETAIL.md](../../../docs/BUILD_DETAIL.md) to setup VS Code for the codebase AND to setup a working environment for working with plugins.
     2. Install the following extensions : `esafirm.kotlin-formatter` and `mathiasfrohlich.Kotlin`.
-    3. Go on the three dots in the Extensions pane, "Install from VSIX" and install the `kotlin-0.3.0.vsix` file inside of `extra`. This is a custom compiled version of `fwcd.kotlin`, patched by [`@maksimr`](https://github.com/maksimr/vscode-kotlin) to work with latest versions of VS Code and fix some bugs, and patched by [`@EDM115`](https://github.com/EDM115) on top to fix an issue with spaces in the path. **Keep in mind** that VS Code may rollback this extension to a previous version, so you may have to reinstall it from time to time.
+    3. Go on the three dots in the Extensions pane, "Install from VSIX" and install the `kotlin-0.3.0.vsix` file inside of `extra`. This is a custom compiled version of `fwcd.kotlin`, patched by [`@maksimr`](https://github.com/maksimr/vscode-kotlin) to work with latest versions of VS Code and fix some bugs, and patched by [`@EDM115`](https://github.com/EDM115) on top to fix an issue with spaces in the path. **Keep in mind** that VS Code may rollback this extension to a previous version, so you may have to reinstall it from time to time (mostly happens if you already had the extension installed prior to using the VSIX).
     4. In the `.vscode/settings.json` file, add the following lines :
         ```json
           "kotlin.compiler.jvm.target": "1.8",

@@ -1,0 +1,48 @@
+plugins {
+    id 'java-library'
+    id 'org.openjfx.javafxplugin' version '0.1.0'
+}
+
+javafx {
+    version = '22'
+    modules = ['javafx.controls', 'javafx.media']
+    configuration = 'compileOnly'
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+}
+
+version = "3.0.0"
+
+dependencies {
+    compileOnly "org.lifecompanion:lc-app:$lifecompanionAppVersion"
+}
+
+clean {
+    delete 'build'
+}
+
+jar {
+    duplicatesStrategy DuplicatesStrategy.WARN
+    manifest {
+        attributes(
+                "LifeCompanion-Plugin-Class": "org.lifecompanion.plugin.phonecontrol.PhoneControlPlugin",
+                "LifeCompanion-Plugin-Package-Scanning-Base": "org.lifecompanion.plugin.phonecontrol",
+                "LifeCompanion-Plugin-Id": "lc-phonecontrol-plugin",
+                "LifeCompanion-Plugin-Author": "Etudiants IUT Vannes",
+                "LifeCompanion-Plugin-Version": project.version,
+                "LifeCompanion-Plugin-Build-Date": new Date().getTime(),
+                "LifeCompanion-Plugin-Name": "Contrôle de téléphone",
+                "LifeCompanion-Plugin-Description": "Ajoute à LifeCompanion la possibilité de controller son téléphone via l'application comme l'envoi, la lecture, et la réception de SMS et le passage d'appels.",
+                "LifeCompanion-Min-App-Version": "$lifecompanionAppVersion"
+        )
+    }
+    from {
+        configurations.runtimeClasspath.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+}
