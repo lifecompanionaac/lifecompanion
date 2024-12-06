@@ -34,8 +34,6 @@ public class BluetoothCommunicationProtocol implements PhoneCommunicationProtoco
         try (PrintWriter writer = new PrintWriter(new OutputStreamWriter(outputStream))) {
             writer.write(data);
             writer.flush();
-        } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Error while sending data via Bluetooth", e);
         }
     }
 
@@ -81,29 +79,62 @@ public class BluetoothCommunicationProtocol implements PhoneCommunicationProtoco
         return connectionOpen;
     }
 
-    @Override
-    public boolean isValid(String data) {
-        // Simple validation to check if the data starts with '{' and ends with '}'
-        return data != null && data.startsWith("{") && data.endsWith("}");
-    }
-
     /**
      * Establish a Bluetooth connection.
      * 
      * @param deviceAddress The address of the Bluetooth device to connect to.
      * @return True if the connection was successfully opened, false otherwise.
      */
-    public boolean openConnection(String deviceAddress) {
+    public boolean openConnection(String deviceAddress) throws BluetoothStateException {
         try {
-            String connectionURL = "btspp://" + deviceAddress + ":1;authenticate=false;encrypt=false;master=false";
+            RemoteDevice remoteDevice = findDeviceByAddress(deviceAddress);
+            if (remoteDevice == null) {
+                LOGGER.log(Level.WARNING, "Device with address " + deviceAddress + " not found.");
+                return false;
+            }
+
+            // Create a connection URL using the provided device address
+            LocalDevice localDevice = LocalDevice.getLocalDevice();
+            DiscoveryAgent agent = localDevice.getDiscoveryAgent();
+            String connectionURL = agent.selectService(new UUID(0x1101), ServiceRecord.NOAUTHENTICATE_NOENCRYPT, false);
+            if (connectionURL == null) {
+                LOGGER.log(Level.WARNING, "Could not find suitable service on the device.");
+                return false;
+            }
+
             connection = (StreamConnection) Connector.open(connectionURL);
             inputStream = connection.openInputStream();
             outputStream = connection.openOutputStream();
             connectionOpen = true;
+            LOGGER.log(Level.INFO, "Successfully connected to device: " + deviceAddress);
             return true;
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, "Error while establishing Bluetooth connection", e);
         }
         return false;
+    }
+
+    /**
+     * Finds a Bluetooth device by its address.
+     * 
+     * @param deviceAddress The address of the Bluetooth device.
+     * @return The RemoteDevice if found, otherwise null.
+     */
+    public RemoteDevice findDeviceByAddress(String deviceAddress) {
+        try {
+            LocalDevice localDevice = LocalDevice.getLocalDevice();
+            DiscoveryAgent agent = localDevice.getDiscoveryAgent();
+            RemoteDevice[] devices = agent.retrieveDevices(DiscoveryAgent.CACHED);
+            if (devices != null) {
+                for (RemoteDevice device : devices) {
+                    if (device.getBluetoothAddress().equals(deviceAddress)) {
+                        return device;
+                    }
+                }
+            }
+        } catch (BluetoothStateException e) {
+            LOGGER.log(Level.SEVERE, "Error while searching for Bluetooth devices", e);
+        }
+        return null;
     }
 }

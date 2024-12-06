@@ -3,8 +3,6 @@ package org.lifecompanion.plugin.phonecontrol.server;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -35,14 +33,14 @@ public class AdbCommunicationProtocol implements PhoneCommunicationProtocol {
         }
         try {
             ProcessBuilder processBuilder = new ProcessBuilder(adbPath, "shell", "echo", data, ">",
-                    "/sdcard/phonecontrol/input.json");
+                    "/data/local/tmp/phonecontrol/input.json");
             Process process = processBuilder.start();
             process.waitFor();
         } catch (IOException | InterruptedException e) {
             LOGGER.log(Level.SEVERE, "Error while sending data via ADB", e);
         }
     }
-
+    
     @Override
     public String receive() {
         if (!isOpen()) {
@@ -51,7 +49,7 @@ public class AdbCommunicationProtocol implements PhoneCommunicationProtocol {
         }
         try {
             ProcessBuilder processBuilder = new ProcessBuilder(adbPath, "shell", "cat",
-                    "/sdcard/phonecontrol/output.json");
+                    "/data/local/tmp/phonecontrol/output.json");
             Process process = processBuilder.start();
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             StringBuilder output = new StringBuilder();
@@ -75,12 +73,6 @@ public class AdbCommunicationProtocol implements PhoneCommunicationProtocol {
     @Override
     public boolean isOpen() {
         return connectionOpen;
-    }
-
-    @Override
-    public boolean isValid(String data) {
-        // Simple validation to check if the data starts with '{' and ends with '}'
-        return data != null && data.startsWith("{") && data.endsWith("}");
     }
 
     /**

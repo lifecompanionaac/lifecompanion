@@ -21,6 +21,7 @@ dependencies {
     compileOnly "org.lifecompanion:lc-app:$lifecompanionAppVersion"
 
     implementation 'io.ultreia:bluecove:2.1.1'
+    implementation 'org.json:json:20240303'
 }
 
 clean {
