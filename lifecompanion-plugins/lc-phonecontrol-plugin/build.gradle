@@ -15,10 +15,12 @@ repositories {
     maven { url 'https://jitpack.io' }
 }
 
-version = "3.0.0"
+version = "1.0.0"
 
 dependencies {
     compileOnly "org.lifecompanion:lc-app:$lifecompanionAppVersion"
+
+    implementation 'io.ultreia:bluecove:2.1.1'
 }
 
 clean {

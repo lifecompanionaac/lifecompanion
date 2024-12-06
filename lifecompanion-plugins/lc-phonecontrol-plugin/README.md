@@ -8,7 +8,8 @@ An easy way to connect your Android phone to LifeCompanion for receiving and sen
 - Nathan Secrétin ([`@MichelBanane`](https://github.com/MichelBanane))
 
 ## Dev
-See [`lc-phonecontrol-plugin-1/README.md`](lc-phonecontrol-plugin-1/README.md) and [`lc-phonecontrol-plugin-2/README.md`](lc-phonecontrol-plugin-2/README.md) for more now.
+See [`lc-phonecontrol-plugin-1/README.md`](../lc-phonecontrol-plugin-1/README.md) and [`lc-phonecontrol-plugin-2/README.md`](../lc-phonecontrol-plugin-2/README.md) for more now.  
+Some complementary information can be found in the [`lc-phonecontrol-plugin/DEV.md`](DEV.md) file.
 
 ## Roadmap (priorities)
 | State | Task  | Priority |
