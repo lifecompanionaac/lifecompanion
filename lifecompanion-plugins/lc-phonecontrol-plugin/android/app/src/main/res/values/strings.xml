@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">LC Service</string>
+    <string name="call_channel_name">Call Service</string>
+    <string name="sms_channel_name">SMS Service</string>
+    <string name="credits">Crédits</string>
+    <string name="description">Application associée au plugin PhoneControl de Life Companion. Elle permet d\'appeler/recevoir des appels et d\'envoyer/recevoir/lire les SMS du téléphone.</string>
+    <string name="life_companion_logo">Life Companion Logo</string>
+    <string name="version">Version 1.0.0</string>
+</resources>
