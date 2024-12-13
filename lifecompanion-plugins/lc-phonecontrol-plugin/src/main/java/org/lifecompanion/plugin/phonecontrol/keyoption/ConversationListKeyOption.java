@@ -38,38 +38,35 @@ public class ConversationListKeyOption extends AbstractKeyOption {
 
     @Override
     protected void attachToImpl(final GridPartKeyComponentI key) {
-        //Get the existing action, or create new one
-        this.selectConversationFromListAction = key.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION,
-                SelectConversationFromListAction.class);
+        // Get the existing action, or create new one
+        this.selectConversationFromListAction = key.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION, SelectConversationFromListAction.class);
+
         if (this.selectConversationFromListAction == null) {
             this.selectConversationFromListAction = new SelectConversationFromListAction();
-            key.getActionManager().componentActions().get(UseActionEvent.ACTIVATION)
-                    .add(this.selectConversationFromListAction);
+            key.getActionManager().componentActions().get(UseActionEvent.ACTIVATION).add(this.selectConversationFromListAction);
         }
+
         this.selectConversationFromListAction.attachedToKeyOptionProperty().set(true);
-        key.textContentProperty().set(AppModeController.INSTANCE.isUseMode() ? null
-                : Translation.getText("phonecontrol.plugin.key.option.conversation.list.default.text"));
+        key.textContentProperty().set(AppModeController.INSTANCE.isUseMode() ? null : Translation.getText("phonecontrol.plugin.key.option.conversation.list.default.text"));
     }
 
     @Override
     protected void detachFromImpl(final GridPartKeyComponentI key) {
-        key.getActionManager().componentActions().get(UseActionEvent.ACTIVATION)
-                .remove(this.selectConversationFromListAction);
+        key.getActionManager().componentActions().get(UseActionEvent.ACTIVATION).remove(this.selectConversationFromListAction);
         key.textContentProperty().set(null);
     }
 
     private void initConvBinding() {
         this.conv.addListener((obs, ov, nv) -> {
             final GridPartKeyComponentI key = this.attachedKey.get();
+
             if (nv != null) {
                 if (nv == PhoneControlController.CONV_LOADING) {
                     key.textContentProperty().set(Translation.getText("phonecontrol.plugin.key.option.list.loading"));
                 } else if (nv == PhoneControlController.CONV_NOT_CONNECTED) {
-                    key.textContentProperty()
-                            .set(Translation.getText("phonecontrol.plugin.key.option.list.not.connected"));
+                    key.textContentProperty().set(Translation.getText("phonecontrol.plugin.key.option.list.not.connected"));
                 } else if (nv == PhoneControlController.CONV_END_MESSAGE) {
-                    key.textContentProperty()
-                            .set(Translation.getText("phonecontrol.plugin.key.option.conversation.list.empty"));
+                    key.textContentProperty().set(Translation.getText("phonecontrol.plugin.key.option.conversation.list.empty"));
                 } else {
                     key.textContentProperty().set(getConversationCellString(nv));
                     key.getKeyTextStyle().boldProperty().forced().setValue(!nv.isSeen());

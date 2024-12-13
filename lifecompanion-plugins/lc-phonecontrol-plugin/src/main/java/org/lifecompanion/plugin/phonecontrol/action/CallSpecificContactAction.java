@@ -16,7 +16,6 @@ import org.lifecompanion.plugin.phonecontrol.action.categories.PhoneControlActio
 import java.util.Map;
 
 public class CallSpecificContactAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
-
     private final StringProperty phoneNumber, contactName;
 
     public CallSpecificContactAction() {
@@ -54,6 +53,7 @@ public class CallSpecificContactAction extends SimpleUseActionImpl<UseActionTrig
     public Element serialize(IOContextI contextP) {
         Element node = super.serialize(contextP);
         XMLObjectSerializer.serializeInto(CallSpecificContactAction.class, this, node);
+
         return node;
     }
 

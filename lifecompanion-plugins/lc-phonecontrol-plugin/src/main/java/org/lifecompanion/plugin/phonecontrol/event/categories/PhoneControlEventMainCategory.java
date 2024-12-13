@@ -41,7 +41,7 @@ public enum PhoneControlEventMainCategory implements UseEventMainCategoryI {
 
     @Override
     public int order() {
-        return 1000;//at the end
+        return 1000;  // at the end
     }
 
     @Override
@@ -53,5 +53,4 @@ public enum PhoneControlEventMainCategory implements UseEventMainCategoryI {
     public String generateID() {
         return PhoneControlEventMainCategory.ID;
     }
-
 }

@@ -19,7 +19,6 @@ import org.lifecompanion.framework.commons.translation.Translation;
 import java.util.function.Consumer;
 
 public class OnUnreadSMSCountUpdatedEventGenerator extends BaseUseEventGeneratorImpl {
-
     @XMLGenericProperty(UnreadEventGenerateCondition.class)
     private ObjectProperty<UnreadEventGenerateCondition> condition;
 
@@ -34,14 +33,14 @@ public class OnUnreadSMSCountUpdatedEventGenerator extends BaseUseEventGenerator
         this.staticDescriptionID = "phonecontrol.plugin.event.misc.sms.unread.count.description";
         this.condition = new SimpleObjectProperty<>(UnreadEventGenerateCondition.ALWAYS);
         this.variableDescriptionProperty()
-                .bind(TranslationFX.getTextBinding(
-                        "phonecontrol.plugin.event.misc.sms.unread.count.updated.variable.description",
-                        this.condition));
+            .bind(TranslationFX.getTextBinding("phonecontrol.plugin.event.misc.sms.unread.count.updated.variable.description", this.condition));
         unreadCountUpdatedCallback = (unreadCount) -> {
             final UnreadEventGenerateCondition cond = this.condition.get();
+
             if (cond == UnreadEventGenerateCondition.ALWAYS
-                    || (unreadCount > 0 && cond == UnreadEventGenerateCondition.UNREAD)
-                    || (unreadCount == 0 && cond == UnreadEventGenerateCondition.NONE)) {
+                || (unreadCount > 0 && cond == UnreadEventGenerateCondition.UNREAD)
+                || (unreadCount == 0 && cond == UnreadEventGenerateCondition.NONE)
+            ) {
                 this.useEventListener.fireEvent(this, null, null);
             }
         };
@@ -57,7 +56,6 @@ public class OnUnreadSMSCountUpdatedEventGenerator extends BaseUseEventGenerator
     }
 
     // Class part : "Mode start/stop"
-    //========================================================================
     @Override
     public void modeStart(final LCConfigurationI configuration) {
         PhoneControlController.INSTANCE.addUnreadCountUpdateCallback(unreadCountUpdatedCallback);
@@ -70,10 +68,8 @@ public class OnUnreadSMSCountUpdatedEventGenerator extends BaseUseEventGenerator
     public void modeStop(final LCConfigurationI configuration) {
         PhoneControlController.INSTANCE.removeUnreadCountUpdateCallback(unreadCountUpdatedCallback);
     }
-    //========================================================================
 
     // Class part : "Generation condition"
-    //========================================================================
     public static enum UnreadEventGenerateCondition {
         ALWAYS("phonecontrol.plugin.unread.count.condition.always"),
         UNREAD("phonecontrol.plugin.unread.count.condition.unread.positive"),
@@ -94,14 +90,13 @@ public class OnUnreadSMSCountUpdatedEventGenerator extends BaseUseEventGenerator
             return getText();
         }
     }
-    //========================================================================
 
     // Class part : "IO"
-    //========================================================================
     @Override
     public Element serialize(final IOContextI context) {
         final Element element = super.serialize(context);
         XMLObjectSerializer.serializeInto(OnUnreadSMSCountUpdatedEventGenerator.class, this, element);
+
         return element;
     }
 
@@ -110,5 +105,4 @@ public class OnUnreadSMSCountUpdatedEventGenerator extends BaseUseEventGenerator
         super.deserialize(node, context);
         XMLObjectSerializer.deserializeInto(OnUnreadSMSCountUpdatedEventGenerator.class, this, node);
     }
-    //========================================================================
 }

@@ -10,7 +10,6 @@ import org.lifecompanion.plugin.phonecontrol.action.categories.PhoneControlActio
 import java.util.Map;
 
 public class RefreshSMSAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
-
     public RefreshSMSAction() {
         super(UseActionTriggerComponentI.class);
         this.order = 0;

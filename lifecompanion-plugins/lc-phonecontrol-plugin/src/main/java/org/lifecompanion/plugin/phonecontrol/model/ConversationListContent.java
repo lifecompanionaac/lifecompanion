@@ -7,8 +7,7 @@ public class ConversationListContent {
 	private boolean isSeen;
 	private boolean isSendByMe;
 
-	public ConversationListContent(String phoneNumber, String contactName, String lastSMS, boolean isSeen,
-			boolean isSendByMe) {
+	public ConversationListContent(String phoneNumber, String contactName, String lastSMS, boolean isSeen, boolean isSendByMe) {
 		this.phoneNumber = phoneNumber;
 		this.contactName = contactName;
 		this.lastSMS = lastSMS;
@@ -53,15 +52,19 @@ public class ConversationListContent {
 	@Override
 	public String toString() {
 		String ret = "";
+
 		if (phoneNumber != null) {
 			ret = contactName + "\n";
+
 			if (isSendByMe) {
 				ret += "Vous : ";
 			} else {
 				ret += "Reçu : ";
 			}
+
 			ret += lastSMS;
 		}
+
 		return ret;
 	}
 }

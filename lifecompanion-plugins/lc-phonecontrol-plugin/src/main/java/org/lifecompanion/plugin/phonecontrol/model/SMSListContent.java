@@ -14,16 +14,17 @@ public class SMSListContent {
 	private final String sentDate;
 	private final boolean sendByMe;
 
-	public SMSListContent(String phoneNumber, String phoneNumberOrContactName, String SMS, String sentDate,
-			boolean sendByMe) {
+	public SMSListContent(String phoneNumber, String phoneNumberOrContactName, String SMS, String sentDate, boolean sendByMe) {
 		this.phoneNumber = phoneNumber;
 		this.phoneNumberOrContactName = phoneNumberOrContactName;
 		this.SMS = SMS;
+
 		if (sentDate != null) {
 			this.sentDate = this.formatSMSDate(sentDate);
 		} else {
 			this.sentDate = null;
 		}
+
 		this.sendByMe = sendByMe;
 	}
 
@@ -89,8 +90,8 @@ public class SMSListContent {
 				return "Hier à " + new SimpleDateFormat("HH:mm", Locale.getDefault()).format(date);
 			} else if (days < 7) {
 				String[] daysOfWeek = { "", "Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi" };
-				return daysOfWeek[smsDayOfWeek] + " à "
-						+ new SimpleDateFormat("HH:mm", Locale.getDefault()).format(date);
+
+				return daysOfWeek[smsDayOfWeek] + " à " + new SimpleDateFormat("HH:mm", Locale.getDefault()).format(date);
 			} else if (weeks < 4) {
 				return "Il y a " + weeks + " semaines";
 			} else if (months < 12) {
@@ -100,6 +101,7 @@ public class SMSListContent {
 			}
 		} catch (ParseException e) {
 			e.printStackTrace();
+
 			return null;
 		}
 	}

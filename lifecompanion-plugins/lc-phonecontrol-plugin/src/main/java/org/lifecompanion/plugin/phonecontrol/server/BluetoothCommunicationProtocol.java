@@ -29,8 +29,10 @@ public class BluetoothCommunicationProtocol implements PhoneCommunicationProtoco
     public void send(String data) {
         if (!isOpen()) {
             LOGGER.log(Level.WARNING, "Connection is not open. Unable to send data.");
+
             return;
         }
+
         try (PrintWriter writer = new PrintWriter(new OutputStreamWriter(outputStream))) {
             writer.write(data);
             writer.flush();
@@ -41,18 +43,23 @@ public class BluetoothCommunicationProtocol implements PhoneCommunicationProtoco
     public String receive() {
         if (!isOpen()) {
             LOGGER.log(Level.WARNING, "Connection is not open. Unable to receive data.");
+
             return null;
         }
+
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
             StringBuilder output = new StringBuilder();
             String line;
+
             while ((line = reader.readLine()) != null) {
                 output.append(line);
             }
+
             return output.toString();
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, "Error while receiving data via Bluetooth", e);
         }
+
         return null;
     }
 
@@ -62,12 +69,15 @@ public class BluetoothCommunicationProtocol implements PhoneCommunicationProtoco
             if (inputStream != null) {
                 inputStream.close();
             }
+
             if (outputStream != null) {
                 outputStream.close();
             }
+
             if (connection != null) {
                 connection.close();
             }
+
             connectionOpen = false;
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, "Error while closing Bluetooth connection", e);
@@ -88,8 +98,10 @@ public class BluetoothCommunicationProtocol implements PhoneCommunicationProtoco
     public boolean openConnection(String deviceAddress) throws BluetoothStateException {
         try {
             RemoteDevice remoteDevice = findDeviceByAddress(deviceAddress);
+
             if (remoteDevice == null) {
                 LOGGER.log(Level.WARNING, "Device with address " + deviceAddress + " not found.");
+
                 return false;
             }
 
@@ -97,8 +109,10 @@ public class BluetoothCommunicationProtocol implements PhoneCommunicationProtoco
             LocalDevice localDevice = LocalDevice.getLocalDevice();
             DiscoveryAgent agent = localDevice.getDiscoveryAgent();
             String connectionURL = agent.selectService(new UUID(0x1101), ServiceRecord.NOAUTHENTICATE_NOENCRYPT, false);
+
             if (connectionURL == null) {
                 LOGGER.log(Level.WARNING, "Could not find suitable service on the device.");
+
                 return false;
             }
 
@@ -107,10 +121,12 @@ public class BluetoothCommunicationProtocol implements PhoneCommunicationProtoco
             outputStream = connection.openOutputStream();
             connectionOpen = true;
             LOGGER.log(Level.INFO, "Successfully connected to device: " + deviceAddress);
+
             return true;
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, "Error while establishing Bluetooth connection", e);
         }
+
         return false;
     }
 
@@ -125,6 +141,7 @@ public class BluetoothCommunicationProtocol implements PhoneCommunicationProtoco
             LocalDevice localDevice = LocalDevice.getLocalDevice();
             DiscoveryAgent agent = localDevice.getDiscoveryAgent();
             RemoteDevice[] devices = agent.retrieveDevices(DiscoveryAgent.CACHED);
+
             if (devices != null) {
                 for (RemoteDevice device : devices) {
                     if (device.getBluetoothAddress().equals(deviceAddress)) {
@@ -135,6 +152,7 @@ public class BluetoothCommunicationProtocol implements PhoneCommunicationProtoco
         } catch (BluetoothStateException e) {
             LOGGER.log(Level.SEVERE, "Error while searching for Bluetooth devices", e);
         }
+
         return null;
     }
 }

@@ -10,14 +10,10 @@ import org.lifecompanion.model.api.categorizedelement.useaction.UseActionMainCat
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionSubCategoryI;
 
 public enum PhoneControlActionSubCategories implements UseActionSubCategoryI {
-    MISC("phonecontrol.plugin.action.sub.category.misc.name",
-            CategorizedElementColorProvider.nextColor(PhoneControlActionMainCategory.INSTANCE)),
-    SMS("phonecontrol.plugin.action.sub.category.sms.name",
-            CategorizedElementColorProvider.nextColor(PhoneControlActionMainCategory.INSTANCE)),
-    CALL("phonecontrol.plugin.action.sub.category.call.name",
-            CategorizedElementColorProvider.nextColor(PhoneControlActionMainCategory.INSTANCE)),
-    REFRESH("phonecontrol.plugin.action.sub.category.refresh.name",
-            CategorizedElementColorProvider.nextColor(PhoneControlActionMainCategory.INSTANCE));
+    MISC("phonecontrol.plugin.action.sub.category.misc.name", CategorizedElementColorProvider.nextColor(PhoneControlActionMainCategory.INSTANCE)),
+    SMS("phonecontrol.plugin.action.sub.category.sms.name", CategorizedElementColorProvider.nextColor(PhoneControlActionMainCategory.INSTANCE)),
+    CALL("phonecontrol.plugin.action.sub.category.call.name", CategorizedElementColorProvider.nextColor(PhoneControlActionMainCategory.INSTANCE)),
+    REFRESH("phonecontrol.plugin.action.sub.category.refresh.name", CategorizedElementColorProvider.nextColor(PhoneControlActionMainCategory.INSTANCE));
 
     private final String nameId;
     private final String id;

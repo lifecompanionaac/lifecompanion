@@ -6,7 +6,6 @@ import org.lifecompanion.plugin.phonecontrol.PhoneControlController;
 import org.lifecompanion.plugin.phonecontrol.event.categories.PhoneControlEventSubCategories;
 
 public class OnCallEndedEventGenerator extends BaseUseEventGeneratorImpl {
-
     private final Runnable callEndedCallback;
 
     public OnCallEndedEventGenerator() {
@@ -28,14 +27,11 @@ public class OnCallEndedEventGenerator extends BaseUseEventGeneratorImpl {
     }
 
     // Class part : "Mode start/stop"
-    //========================================================================
     @Override
     public void modeStart(final LCConfigurationI configuration) {
         PhoneControlController.INSTANCE.addCallEndedCallback(callEndedCallback);
     }
 
     @Override
-    public void modeStop(final LCConfigurationI configuration) {
-    }
-    //========================================================================
+    public void modeStop(final LCConfigurationI configuration) { }
 }

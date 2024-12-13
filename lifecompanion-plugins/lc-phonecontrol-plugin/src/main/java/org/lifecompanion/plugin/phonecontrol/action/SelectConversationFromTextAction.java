@@ -12,7 +12,6 @@ import org.lifecompanion.controller.textcomponent.WritingStateController;
 import java.util.Map;
 
 public class SelectConversationFromTextAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
-
     public SelectConversationFromTextAction() {
         super(UseActionTriggerComponentI.class);
         this.order = 0;

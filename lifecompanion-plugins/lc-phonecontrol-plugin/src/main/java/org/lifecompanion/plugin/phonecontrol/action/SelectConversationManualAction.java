@@ -18,7 +18,6 @@ import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
 import java.util.Map;
 
 public class SelectConversationManualAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
-
     private final StringProperty phoneNumber, contactName;
 
     public SelectConversationManualAction() {
@@ -30,8 +29,7 @@ public class SelectConversationManualAction extends SimpleUseActionImpl<UseActio
         this.staticDescriptionID = "phonecontrol.plugin.action.misc.select.conversation.manual.description";
         this.phoneNumber = new SimpleStringProperty();
         this.contactName = new SimpleStringProperty();
-        this.variableDescriptionProperty().bind(TranslationFX.getTextBinding(
-                "phonecontrol.plugin.action.misc.select.conversation.manual.variable.description", this.contactName));
+        this.variableDescriptionProperty().bind(TranslationFX.getTextBinding("phonecontrol.plugin.action.misc.select.conversation.manual.variable.description", this.contactName));
     }
 
     public StringProperty phoneNumberProperty() {
@@ -56,6 +54,7 @@ public class SelectConversationManualAction extends SimpleUseActionImpl<UseActio
     public Element serialize(IOContextI contextP) {
         Element node = super.serialize(contextP);
         XMLObjectSerializer.serializeInto(SelectConversationManualAction.class, this, node);
+
         return node;
     }
 

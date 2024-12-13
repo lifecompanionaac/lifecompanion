@@ -35,8 +35,8 @@ public class PhoneControlGeneralConfigView extends BorderPane implements General
     private ProgressIndicator progressIndicatorRefresh;
 
     // Settings
-    private ToggleSwitch speakerToggleButton; // Determine if the speaker is activated or not in a call
-    private DurationPickerControl durationIntervalPicker; // The refresh interval
+    private ToggleSwitch speakerToggleButton;  // Determine if the speaker is activated or not in a call
+    private DurationPickerControl durationIntervalPicker;  // The refresh interval
 
     // Install App
     private Button installAppButton;
@@ -93,8 +93,7 @@ public class PhoneControlGeneralConfigView extends BorderPane implements General
 
         // Duration picker
         this.durationIntervalPicker = new DurationPickerControl();
-        Label labelDurationIntervalPicker = new Label(
-                Translation.getText("phonecontrol.plugin.config.label.duration"));
+        Label labelDurationIntervalPicker = new Label(Translation.getText("phonecontrol.plugin.config.label.duration"));
         labelDurationIntervalPicker.setMaxWidth(Double.MAX_VALUE);
         HBox durationRow = new HBox(10.0, labelDurationIntervalPicker, durationIntervalPicker);
 
@@ -116,16 +115,15 @@ public class PhoneControlGeneralConfigView extends BorderPane implements General
 
         // Main pane
         VBox vboxTotal = new VBox(5.0,
-                FXControlUtils.createTitleLabel(
-                        Translation.getText("phonecontrol.plugin.config.category.device.selection.title")),
-                new Label(Translation.getText("phonecontrol.plugin.config.label.device.selection")),
-                boxDeviceSelection,
-                speakerToggleButton,
-                durationRow,
-                FXControlUtils.createTitleLabel(
-                        Translation.getText("phonecontrol.plugin.config.category.install.app.title")),
-                new Label(Translation.getText("phonecontrol.plugin.config.label.install.app")),
-                boxInstalling);
+            FXControlUtils.createTitleLabel(Translation.getText("phonecontrol.plugin.config.category.device.selection.title")),
+            new Label(Translation.getText("phonecontrol.plugin.config.label.device.selection")),
+            boxDeviceSelection,
+            speakerToggleButton,
+            durationRow,
+            FXControlUtils.createTitleLabel(Translation.getText("phonecontrol.plugin.config.category.install.app.title")),
+            new Label(Translation.getText("phonecontrol.plugin.config.label.install.app")),
+            boxInstalling
+        );
 
         vboxTotal.setPadding(new Insets(5.0));
         this.setPadding(new Insets(GeneralConfigurationStepViewI.PADDING));
@@ -167,14 +165,13 @@ public class PhoneControlGeneralConfigView extends BorderPane implements General
             saveChanges();
 
             Thread installThread = new Thread(() -> {
-                String deviceSerialNumber = selectDeviceComboBox.getSelectionModel().getSelectedItem()
-                        .getSerialNumber();
+                String deviceSerialNumber = selectDeviceComboBox.getSelectionModel().getSelectedItem().getSerialNumber();
                 if (deviceSerialNumber != null) {
                     boolean isInstalled = PhoneControlController.INSTANCE.installApp(deviceSerialNumber);
                     Platform.runLater(() -> {
-                        labelInstallResult.setText(Translation
-                                .getText(isInstalled ? "phonecontrol.plugin.config.label.install.app.success"
-                                        : "phonecontrol.plugin.config.label.install.app.error"));
+                        labelInstallResult.setText(Translation.getText(
+                            isInstalled ? "phonecontrol.plugin.config.label.install.app.success": "phonecontrol.plugin.config.label.install.app.error"
+                        ));
                     });
                 } else {
                     Platform.runLater(() -> {
@@ -202,10 +199,8 @@ public class PhoneControlGeneralConfigView extends BorderPane implements General
 
     @Override
     public void saveChanges() {
-        PhoneControlPluginProperties phoneControlPluginProperties = configuration
-                .getPluginConfigProperties(PhoneControlPlugin.PLUGIN_ID, PhoneControlPluginProperties.class);
-        phoneControlPluginProperties.deviceProperty()
-                .set(selectDeviceComboBox.getSelectionModel().getSelectedItem().getSerialNumber());
+        PhoneControlPluginProperties phoneControlPluginProperties = configuration.getPluginConfigProperties(PhoneControlPlugin.PLUGIN_ID, PhoneControlPluginProperties.class);
+        phoneControlPluginProperties.deviceProperty().set(selectDeviceComboBox.getSelectionModel().getSelectedItem().getSerialNumber());
         phoneControlPluginProperties.speakerOnProperty().set(speakerToggleButton.isSelected());
         phoneControlPluginProperties.durationInternalProperty().set(durationIntervalPicker.durationProperty().get());
     }
@@ -216,11 +211,9 @@ public class PhoneControlGeneralConfigView extends BorderPane implements General
     @Override
     public void bind(LCConfigurationI model) {
         this.configuration = model;
-        PhoneControlPluginProperties phoneControlPluginProperties = configuration
-                .getPluginConfigProperties(PhoneControlPlugin.PLUGIN_ID, PhoneControlPluginProperties.class);
+        PhoneControlPluginProperties phoneControlPluginProperties = configuration.getPluginConfigProperties(PhoneControlPlugin.PLUGIN_ID, PhoneControlPluginProperties.class);
         this.speakerToggleButton.setSelected(phoneControlPluginProperties.speakerOnProperty().get());
-        this.durationIntervalPicker.durationProperty()
-                .set(phoneControlPluginProperties.durationInternalProperty().get());
+        this.durationIntervalPicker.durationProperty().set(phoneControlPluginProperties.durationInternalProperty().get());
         refreshDeviceList();
     }
 
@@ -250,6 +243,7 @@ public class PhoneControlGeneralConfigView extends BorderPane implements General
                 String deviceName = ADBService.INSTANCE.getDeviceName(deviceSerialNumber);
                 observableDevicesList.add(new Device(deviceName, deviceSerialNumber));
             }
+
             selectDeviceComboBox.getItems().setAll(observableDevicesList);
         }
 
@@ -258,25 +252,28 @@ public class PhoneControlGeneralConfigView extends BorderPane implements General
         selectDeviceComboBox.getItems().add(noDeviceSelected);
 
         // Device selection / Search by serial number
-        PhoneControlPluginProperties phoneControlPluginProperties = configuration
-                .getPluginConfigProperties(PhoneControlPlugin.PLUGIN_ID, PhoneControlPluginProperties.class);
+        PhoneControlPluginProperties phoneControlPluginProperties = configuration.getPluginConfigProperties(PhoneControlPlugin.PLUGIN_ID, PhoneControlPluginProperties.class);
         String deviceSerialNumber = phoneControlPluginProperties.deviceProperty().get();
-        if (deviceSerialNumber == null) { // If no device was selected
+        if (deviceSerialNumber == null) {  // If no device was selected
             selectDeviceComboBox.getSelectionModel().select(noDeviceSelected);
-        } else { // If a device was selected, we try to find it in the list
+        } else {  // If a device was selected, we try to find it in the list
             Device selectedDevice = null;
+
             for (Device device : selectDeviceComboBox.getItems()) {
                 // If the device is found, we save it in variable
                 if (device.getSerialNumber() != null && device.getSerialNumber().equals(deviceSerialNumber)) {
                     selectedDevice = device;
+
                     break;
                 }
             }
-            if (selectedDevice != null) { // If the device was found, we select it
+
+            if (selectedDevice != null) {  // If the device was found, we select it
                 selectDeviceComboBox.getSelectionModel().select(selectedDevice);
-            } else { // If the device was not found, we add a "selected device not found" device
+            } else {  // If the device was not found, we add a "selected device not found" device
                 selectDeviceComboBox.getItems().add(new Device(
-                        Translation.getText("phonecontrol.plugin.config.label.device.unfound"), deviceSerialNumber));
+                    Translation.getText("phonecontrol.plugin.config.label.device.unfound"), deviceSerialNumber
+                ));
                 selectDeviceComboBox.getSelectionModel().selectLast();
             }
         }

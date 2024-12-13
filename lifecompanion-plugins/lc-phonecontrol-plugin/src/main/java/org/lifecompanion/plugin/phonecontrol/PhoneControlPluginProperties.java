@@ -40,10 +40,10 @@ public class PhoneControlPluginProperties extends AbstractPluginConfigProperties
     @Override
     public String toString() {
         return "PhoneControlPluginProperties{" +
-                "deviceSerialNumber=" + this.deviceSerialNumber +
-                ", speakerOn=" + this.speakerOn +
-                ", labelDurationIntervalPicker=" + this.durationInternal +
-                '}';
+            "deviceSerialNumber=" + this.deviceSerialNumber +
+            ", speakerOn=" + this.speakerOn +
+            ", labelDurationIntervalPicker=" + this.durationInternal +
+            '}';
     }
 
     public boolean isPhoneControlConfigurationSet() {
@@ -54,6 +54,7 @@ public class PhoneControlPluginProperties extends AbstractPluginConfigProperties
     public Element serialize(final IOContextI context) {
         Element element = new Element(NODE_PHONECONTROL_PLUGIN);
         XMLObjectSerializer.serializeInto(PhoneControlPluginProperties.class, this, element);
+
         return element;
     }
 

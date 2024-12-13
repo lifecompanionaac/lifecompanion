@@ -107,6 +107,7 @@ public enum PhoneControlController implements ModeListenerI {
 
         File adbZip = new File(dataDirectory + File.separator + "platform-tools.zip");
         File adbFolder = new File(dataDirectory + File.separator + "platform-tools");
+
         if (!adbFolder.exists()) {
             try {
                 if (inputFolder != null) {
@@ -137,8 +138,7 @@ public enum PhoneControlController implements ModeListenerI {
 
     @Override
     public void modeStart(LCConfigurationI configuration) {
-        this.currentPhoneControlPluginProperties = configuration.getPluginConfigProperties(PhoneControlPlugin.PLUGIN_ID,
-                PhoneControlPluginProperties.class);
+        this.currentPhoneControlPluginProperties = configuration.getPluginConfigProperties(PhoneControlPlugin.PLUGIN_ID, PhoneControlPluginProperties.class);
         resetVariables();
 
         // Start app on phone if needed
@@ -154,6 +154,7 @@ public enum PhoneControlController implements ModeListenerI {
                 LOGGER.info("Refreshing phone control plugin");
                 refreshCallStatus();
                 refreshConvListExec();
+
                 // Refresh only if we are not in call, if we have a selected conversation and if we are at the top of the list
                 if (phoneNumber != null && !onCall && smsIndexMin == 0) {
                     refreshSMSList();
@@ -162,14 +163,12 @@ public enum PhoneControlController implements ModeListenerI {
         }, 500, durationInterval);
 
         // Lists KeyOptions
-        //----------------------------------------
         // Find every conv list cells
         Map<GridComponentI, List<ConversationListKeyOption>> convKeys = new HashMap<>();
-        ConfigurationComponentUtils.findKeyOptionsByGrid(ConversationListKeyOption.class, configuration, convKeys,
-                null);
+        ConfigurationComponentUtils.findKeyOptionsByGrid(ConversationListKeyOption.class, configuration, convKeys, null);
         convKeys.values().stream().flatMap(List::stream).distinct().forEach(convCells::add);
         setLoadingConvList();
-        refreshConvList(); // First load of conversations
+        refreshConvList();  // First load of conversations
 
         // Find every sms list cells
         Map<GridComponentI, List<SMSListKeyOption>> smsKeys = new HashMap<>();
@@ -192,7 +191,6 @@ public enum PhoneControlController implements ModeListenerI {
         this.refreshTimer = null;
 
         // Lists KeyOptions
-        //----------------------------------------
         convCells.clear();
         smsCells.clear();
     }
@@ -219,6 +217,7 @@ public enum PhoneControlController implements ModeListenerI {
         if (deviceSerialNumber == null) {
             deviceSerialNumber = currentPhoneControlPluginProperties.deviceProperty().get();
         }
+
         File apkPath = new File(org.lifecompanion.util.IOUtils.getTempDir("apk") + File.separator + "lc-service.apk");
         IOUtils.createParentDirectoryIfNeeded(apkPath);
 
@@ -226,12 +225,12 @@ public enum PhoneControlController implements ModeListenerI {
             FileOutputStream fos = new FileOutputStream(apkPath);
             InputStream is = ResourceHelper.getInputStreamForPath("/apk/lc-service.apk");
             IOUtils.copyStream(is, fos);
-
         } catch (Exception e) {
             LOGGER.error("Error while copying apk file", e);
         }
 
         boolean isInstalled = ADBService.INSTANCE.installApp(deviceSerialNumber, apkPath.toString());
+
         if (isInstalled) {
             LOGGER.info("App installed");
             ADBService.INSTANCE.startApp(deviceSerialNumber); // To ask permission
@@ -251,18 +250,18 @@ public enum PhoneControlController implements ModeListenerI {
     public void refreshCallStatus() {
         String callStateOrPhoneNumber = ADBService.INSTANCE.getCallStatus();
 
-        if (callStateOrPhoneNumber.equals("0")) { // No call on the phone
+        if (callStateOrPhoneNumber.equals("0")) {  // No call on the phone
             if (this.onCall) {
                 this.onCall = false;
                 callEndedCallback.run();
             }
-        } else if (callStateOrPhoneNumber.equals("1")) { // Current call on the phone
+        } else if (callStateOrPhoneNumber.equals("1")) {  // Current call on the phone
             this.onCall = true;
-        } else { // Incoming call
+        } else {  // Incoming call
             this.onCall = true;
             this.phoneNumberOrContactName = callStateOrPhoneNumber;
-            UseVariableController.INSTANCE.requestVariablesUpdate(); // Update variables (to show the phone number)
-            callEnterCallback.run(); // Launch event "OnCallEnter"
+            UseVariableController.INSTANCE.requestVariablesUpdate();  // Update variables (to show the phone number)
+            callEnterCallback.run();  // Launch event "OnCallEnter"
         }
     }
 
@@ -276,8 +275,8 @@ public enum PhoneControlController implements ModeListenerI {
 
     public void timer() {
         CompletableFuture.runAsync(() -> {
-
             int duration = 0;
+
             while (onCall) {
                 try {
                     Thread.sleep(1000);
@@ -291,6 +290,7 @@ public enum PhoneControlController implements ModeListenerI {
                     LOGGER.error("error while monitoring call duration");
                 }
             }
+
             this.callDuration = "00:00:00";
         });
     }
@@ -354,7 +354,7 @@ public enum PhoneControlController implements ModeListenerI {
         // Get conv
         ArrayList<String> convStr = ADBService.INSTANCE.getConvList(convIndexMin, convIndexMax);
         ConversationListContent emptyContent = new ConversationListContent(null, null, null, true, false);
-        boolean emptyConvSet = false; // To detect the first empty conv
+        boolean emptyConvSet = false;  // To detect the first empty conv
 
         if (convStr.isEmpty()) {
             for (final ConversationListKeyOption cell : convCells) {
@@ -363,28 +363,30 @@ public enum PhoneControlController implements ModeListenerI {
         } else {
             // Analyse each convStrings
             for (int i = 0; i < convCells.size(); i++) {
-                ConversationListKeyOption cell = this.convCells.get(i); // Get the cell
+                ConversationListKeyOption cell = this.convCells.get(i);  // Get the cell
 
                 if (i < convStr.size()) {
-                    String[] convData = convStr.get(i).split("\\|"); // Split data
-                    byte[] decodedBytes = Base64.getDecoder().decode(convData[2]); // Get message body
+                    String[] convData = convStr.get(i).split("\\|");  // Split data
+                    byte[] decodedBytes = Base64.getDecoder().decode(convData[2]);  // Get message body
                     String message = new String(decodedBytes);
                     boolean isSeen = Boolean.parseBoolean(convData[3]);
                     boolean isSendByMe = Boolean.parseBoolean(convData[4]);
-                    if (!isSeen)
-                        unreadConvCount++;
 
-                    ConversationListContent cellContent = new ConversationListContent(convData[0], convData[1], message,
-                            isSeen, isSendByMe);
+                    if (!isSeen) {
+                        unreadConvCount++;
+                    }
+
+                    ConversationListContent cellContent = new ConversationListContent(convData[0], convData[1], message, isSeen, isSendByMe);
                     Platform.runLater(() -> cell.convProperty().set(cellContent));
                     topConvReached = false;
                 } else {
-                    if (!emptyConvSet) { // Fill the first empty cell with an alert message
+                    if (!emptyConvSet) {  // Fill the first empty cell with an alert message
                         Platform.runLater(() -> cell.convProperty().set(CONV_END_MESSAGE));
                         emptyConvSet = true;
-                    } else { // Fill cell with empty data
+                    } else {  // Fill cell with empty data
                         Platform.runLater(() -> cell.convProperty().set(emptyContent));
                     }
+
                     topConvReached = true;
                 }
             }
@@ -418,7 +420,7 @@ public enum PhoneControlController implements ModeListenerI {
         // Get conv
         ArrayList<String> smsStr = ADBService.INSTANCE.getSMSList(this.phoneNumber, smsIndexMin, smsIndexMax);
         SMSListContent emptyContent = new SMSListContent(null, null, null, null, false);
-        boolean emptyMessageSet = false; // To detect the first empty message
+        boolean emptyMessageSet = false;  // To detect the first empty message
 
         if (smsStr.isEmpty()) {
             for (final SMSListKeyOption cell : smsCells) {
@@ -426,29 +428,31 @@ public enum PhoneControlController implements ModeListenerI {
             }
         } else {
             int smsStrSize = smsStr.size();
+
             for (int i = 0; i < smsCells.size(); i++) {
-                SMSListKeyOption cell = this.smsCells.get(smsCells.size() - 1 - i); // Start from the end of smsCells
+                SMSListKeyOption cell = this.smsCells.get(smsCells.size() - 1 - i);  // Start from the end of smsCells
 
                 if (i < smsStrSize) {
-                    String[] smsData = smsStr.get(i).split("\\|"); // Split data
+                    String[] smsData = smsStr.get(i).split("\\|");  // Split data
                     String message = new String(Base64.getDecoder().decode(smsData[2]));
                     boolean sendByMe = Boolean.parseBoolean(smsData[4]);
 
-                    SMSListContent cellContent = new SMSListContent(smsData[0], smsData[1], message, smsData[3],
-                            sendByMe);
+                    SMSListContent cellContent = new SMSListContent(smsData[0], smsData[1], message, smsData[3], sendByMe);
                     Platform.runLater(() -> cell.smsProperty().set(cellContent));
                     topSmsReached = false;
                 } else {
-                    if (!emptyMessageSet) { // Fill the first empty cell with an alert message
+                    if (!emptyMessageSet) {  // Fill the first empty cell with an alert message
                         Platform.runLater(() -> cell.smsProperty().set(SMS_END_MESSAGE));
                         emptyMessageSet = true;
-                    } else { // Fill cell with empty data
+                    } else {  // Fill cell with empty data
                         Platform.runLater(() -> cell.smsProperty().set(emptyContent));
                     }
+
                     topSmsReached = true;
                 }
             }
         }
+
         LOGGER.info("{} SMS loaded", smsStr.size());
     }
 
@@ -477,12 +481,13 @@ public enum PhoneControlController implements ModeListenerI {
     }
 
     public void upConvIndex() {
-        if (this.convIndexMin != 0) { // Si c'est déja à 0 on charge pas
+        if (this.convIndexMin != 0) {  // Si c'est déja à 0 on charge pas
             if (this.convIndexMin > convCells.size()) {
                 this.convIndexMin -= convCells.size();
             } else {
                 this.convIndexMin = 0;
             }
+
             setLoadingConvList();
             refreshConvList();
         }
@@ -541,8 +546,10 @@ public enum PhoneControlController implements ModeListenerI {
      */
     public void selectConv(String phoneNumber, String phoneNumberOrContactName) {
         phoneNumber = phoneNumber.replace(" ", "");
-        if (phoneNumber.startsWith("0"))
+
+        if (phoneNumber.startsWith("0")) {
             phoneNumber = "+33" + phoneNumber.substring(1);
+        }
 
         this.phoneNumber = phoneNumber;
         this.phoneNumberOrContactName = phoneNumberOrContactName;

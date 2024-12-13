@@ -11,7 +11,6 @@ import org.lifecompanion.plugin.phonecontrol.keyoption.ConversationListKeyOption
 import java.util.Map;
 
 public class SelectConversationFromListAction extends SimpleUseActionImpl<GridPartKeyComponentI> {
-
     public SelectConversationFromListAction() {
         super(GridPartKeyComponentI.class);
         this.order = 0;
@@ -30,14 +29,12 @@ public class SelectConversationFromListAction extends SimpleUseActionImpl<GridPa
     @Override
     public void execute(UseActionEvent event, Map<String, UseVariableI<?>> variables) {
         GridPartKeyComponentI parentKey = this.parentComponentProperty().get();
-        if (parentKey != null) {
-            if (parentKey.keyOptionProperty().get() instanceof ConversationListKeyOption) {
-                ConversationListKeyOption conversationListKeyOption = (ConversationListKeyOption) parentKey
-                        .keyOptionProperty().get();
-                String phoneNumber = conversationListKeyOption.convProperty().get().getPhoneNumber();
-                String phoneNumberOrContactName = conversationListKeyOption.convProperty().get().getContactName();
-                PhoneControlController.INSTANCE.selectConv(phoneNumber, phoneNumberOrContactName);
-            }
+
+        if (parentKey != null && parentKey.keyOptionProperty().get() instanceof ConversationListKeyOption) {
+            ConversationListKeyOption conversationListKeyOption = (ConversationListKeyOption) parentKey.keyOptionProperty().get();
+            String phoneNumber = conversationListKeyOption.convProperty().get().getPhoneNumber();
+            String phoneNumberOrContactName = conversationListKeyOption.convProperty().get().getContactName();
+            PhoneControlController.INSTANCE.selectConv(phoneNumber, phoneNumberOrContactName);
         }
     }
 }

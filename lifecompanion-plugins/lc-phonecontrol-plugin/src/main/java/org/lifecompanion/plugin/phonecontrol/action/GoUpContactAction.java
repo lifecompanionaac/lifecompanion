@@ -10,7 +10,6 @@ import org.lifecompanion.plugin.phonecontrol.action.categories.PhoneControlActio
 import java.util.Map;
 
 public class GoUpContactAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
-
     public GoUpContactAction() {
         super(UseActionTriggerComponentI.class);
         this.order = 0;

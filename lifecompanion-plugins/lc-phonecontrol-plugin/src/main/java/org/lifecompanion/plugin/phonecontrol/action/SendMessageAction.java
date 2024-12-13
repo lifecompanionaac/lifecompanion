@@ -10,7 +10,6 @@ import org.lifecompanion.plugin.phonecontrol.action.categories.PhoneControlActio
 import java.util.Map;
 
 public class SendMessageAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
-
     public SendMessageAction() {
         super(UseActionTriggerComponentI.class);
         this.order = 0;

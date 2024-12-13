@@ -58,21 +58,25 @@ public class PhoneControlPlugin implements PluginI {
     @Override
     public List<UseVariableDefinitionI> getDefinedVariables() {
         return Arrays.asList(
-                new UseVariableDefinition(
-                        PhoneControlController.VAR_SMS_UNREAD,
-                        "phonecontrol.plugin.use.variable.sms.unread.name",
-                        "phonecontrol.plugin.use.variable.sms.unread.description",
-                        "phonecontrol.plugin.use.variable.sms.unread.example"),
-                new UseVariableDefinition(
-                        PhoneControlController.VAR_CALL_DURATION,
-                        "phonecontrol.plugin.use.variable.call.duration.name",
-                        "phonecontrol.plugin.use.variable.call.duration.description",
-                        "phonecontrol.plugin.use.variable.call.duration.example"),
-                new UseVariableDefinition(
-                        PhoneControlController.VAR_PHONE_NUMBER_OR_CONTACT_NAME,
-                        "phonecontrol.plugin.use.variable.phone.number.or.contact.name.name",
-                        "phonecontrol.plugin.use.variable.phone.number.or.contact.name.description",
-                        "phonecontrol.plugin.use.variable.phone.number.or.contact.name.example"));
+            new UseVariableDefinition(
+                PhoneControlController.VAR_SMS_UNREAD,
+                "phonecontrol.plugin.use.variable.sms.unread.name",
+                "phonecontrol.plugin.use.variable.sms.unread.description",
+                "phonecontrol.plugin.use.variable.sms.unread.example"
+            ),
+            new UseVariableDefinition(
+                PhoneControlController.VAR_CALL_DURATION,
+                "phonecontrol.plugin.use.variable.call.duration.name",
+                "phonecontrol.plugin.use.variable.call.duration.description",
+                "phonecontrol.plugin.use.variable.call.duration.example"
+            ),
+            new UseVariableDefinition(
+                PhoneControlController.VAR_PHONE_NUMBER_OR_CONTACT_NAME,
+                "phonecontrol.plugin.use.variable.phone.number.or.contact.name.name",
+                "phonecontrol.plugin.use.variable.phone.number.or.contact.name.description",
+                "phonecontrol.plugin.use.variable.phone.number.or.contact.name.example"
+            )
+        );
     }
 
     @Override

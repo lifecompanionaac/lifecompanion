@@ -12,9 +12,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import org.lifecompanion.framework.commons.translation.Translation;
 
-public class SelectConversationManualActionConfigView extends VBox
-        implements UseActionConfigurationViewI<SelectConversationManualAction> {
-
+public class SelectConversationManualActionConfigView extends VBox implements UseActionConfigurationViewI<SelectConversationManualAction> {
     private TextField fieldPhoneNumber, fieldContactName;
 
     @Override
@@ -25,9 +23,12 @@ public class SelectConversationManualActionConfigView extends VBox
         this.fieldPhoneNumber.setPromptText("+33612345678");
         this.fieldContactName = new TextField();
         this.fieldContactName.setPromptText("John Doe");
-        this.getChildren().addAll(new Label(Translation.getText("phonecontrol.view.useaction.phonenumber")),
-                this.fieldPhoneNumber,
-                new Label(Translation.getText("phonecontrol.view.useaction.contactname")), this.fieldContactName);
+        this.getChildren().addAll(
+            new Label(Translation.getText("phonecontrol.view.useaction.phonenumber")),
+            this.fieldPhoneNumber,
+            new Label(Translation.getText("phonecontrol.view.useaction.contactname")),
+            this.fieldContactName
+        );
     }
 
     @Override
@@ -36,8 +37,7 @@ public class SelectConversationManualActionConfigView extends VBox
     }
 
     @Override
-    public void editStarts(final SelectConversationManualAction action,
-            final ObservableList<UseVariableDefinitionI> possibleVariables) {
+    public void editStarts(final SelectConversationManualAction action, final ObservableList<UseVariableDefinitionI> possibleVariables) {
         this.fieldPhoneNumber.setText(action.phoneNumberProperty().get());
         this.fieldContactName.setText(action.contactNameProperty().get());
     }

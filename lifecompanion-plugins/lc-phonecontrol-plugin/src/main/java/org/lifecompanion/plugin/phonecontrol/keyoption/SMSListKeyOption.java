@@ -28,10 +28,8 @@ public class SMSListKeyOption extends AbstractKeyOption {
         this.optionDescriptionId = "phonecontrol.plugin.key.option.sms.list.description";
         this.disableTextContent.set(true);
         this.disableImage.set(true);
-
         this.sms = new SimpleObjectProperty<>();
         this.dateNode = new SimpleObjectProperty<>();
-
         this.considerKeyEmpty.set(false);
         this.initSMSBinding();
         this.initNode();
@@ -48,8 +46,7 @@ public class SMSListKeyOption extends AbstractKeyOption {
 
     @Override
     protected void attachToImpl(final GridPartKeyComponentI key) {
-        key.textContentProperty().set(AppModeController.INSTANCE.isUseMode() ? null
-                : Translation.getText("phonecontrol.plugin.key.option.sms.list.default.text"));
+        key.textContentProperty().set(AppModeController.INSTANCE.isUseMode() ? null : Translation.getText("phonecontrol.plugin.key.option.sms.list.default.text"));
         // No action to attach
     }
 
@@ -62,19 +59,19 @@ public class SMSListKeyOption extends AbstractKeyOption {
     private void initSMSBinding() {
         this.sms.addListener((obs, ov, nv) -> {
             final GridPartKeyComponentI key = this.attachedKey.get();
+
             if (nv != null) {
                 if (nv == PhoneControlController.SMS_LOADING) {
                     key.textContentProperty().set(Translation.getText("phonecontrol.plugin.key.option.list.loading"));
                     dateNode.set(null); // Clear date node
                 } else if (nv == PhoneControlController.SMS_NOT_CONNECTED) {
-                    key.textContentProperty()
-                            .set(Translation.getText("phonecontrol.plugin.key.option.list.not.connected"));
+                    key.textContentProperty().set(Translation.getText("phonecontrol.plugin.key.option.list.not.connected"));
                 } else if (nv == PhoneControlController.SMS_END_MESSAGE) {
-                    key.textContentProperty()
-                            .set(Translation.getText("phonecontrol.plugin.key.option.sms.list.empty"));
+                    key.textContentProperty().set(Translation.getText("phonecontrol.plugin.key.option.sms.list.empty"));
                 } else {
-                    // ------------ Set text content ------------
+                    // Set text content
                     key.textContentProperty().set(nv.getSMS());
+
                     // Align text to the right if the SMS is sent by me
                     if (nv.isSendByMe()) {
                         key.getKeyTextStyle().textAlignmentProperty().forced().setValue(TextAlignment.RIGHT);
@@ -82,7 +79,7 @@ public class SMSListKeyOption extends AbstractKeyOption {
                         key.getKeyTextStyle().textAlignmentProperty().forced().setValue(TextAlignment.LEFT);
                     }
 
-                    // ------------ Set date node ------------
+                    // Set date node
                     Text dateText = new Text(nv.getSentDate());
                     final TextCompStyleI keyTextStyle = attachedKey.get().getKeyTextStyle();
                     final Font font = keyTextStyle.fontProperty().get();
@@ -104,12 +101,15 @@ public class SMSListKeyOption extends AbstractKeyOption {
         keyViewAddedNodeProperty().bind(Bindings.createObjectBinding(() -> {
             if (dateNode.get() != null) {
                 StackPane detailNode = new StackPane();
+
                 if (dateNode.get() != null) {
                     StackPane.setAlignment(dateNode.get(), Pos.TOP_LEFT);
                     detailNode.getChildren().add(dateNode.get());
                 }
+
                 return detailNode;
             }
+
             return null;
         }, dateNode));
     }

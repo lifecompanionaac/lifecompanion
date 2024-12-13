@@ -42,7 +42,7 @@ public enum PhoneControlActionMainCategory implements UseActionMainCategoryI {
 
     @Override
     public int order() {
-        return 2000;  //at the end
+        return 2000;  // at the end
     }
 
     @Override

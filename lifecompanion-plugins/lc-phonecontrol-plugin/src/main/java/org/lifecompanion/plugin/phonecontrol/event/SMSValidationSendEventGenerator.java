@@ -19,7 +19,6 @@ import org.lifecompanion.framework.commons.translation.Translation;
 import java.util.function.Consumer;
 
 public class SMSValidationSendEventGenerator extends BaseUseEventGeneratorImpl {
-
     @XMLGenericProperty(ValidationSendCondition.class)
     private ObjectProperty<ValidationSendCondition> condition;
 
@@ -34,12 +33,14 @@ public class SMSValidationSendEventGenerator extends BaseUseEventGeneratorImpl {
         this.staticDescriptionID = "phonecontrol.plugin.event.misc.sms.validation.send.description";
         this.condition = new SimpleObjectProperty<>(ValidationSendCondition.ALWAYS);
         this.variableDescriptionProperty()
-                .bind(TranslationFX.getTextBinding(
-                        "phonecontrol.plugin.event.misc.sms.validation.send.variable.description", this.condition));
+            .bind(TranslationFX.getTextBinding("phonecontrol.plugin.event.misc.sms.validation.send.variable.description", this.condition));
         validationSendSMSCallback = (validationSend) -> {
             final ValidationSendCondition cond = this.condition.get();
-            if (cond == ValidationSendCondition.ALWAYS || (validationSend > 0 && cond == ValidationSendCondition.SENT)
-                    || (validationSend == 0 && cond == ValidationSendCondition.NOT_SENT)) {
+
+            if (cond == ValidationSendCondition.ALWAYS
+                || (validationSend > 0 && cond == ValidationSendCondition.SENT)
+                || (validationSend == 0 && cond == ValidationSendCondition.NOT_SENT)
+            ) {
                 this.useEventListener.fireEvent(this, null, null);
             }
         };
@@ -55,7 +56,6 @@ public class SMSValidationSendEventGenerator extends BaseUseEventGeneratorImpl {
     }
 
     // Class part : "Mode start/stop"
-    //========================================================================
     @Override
     public void modeStart(final LCConfigurationI configuration) {
         PhoneControlController.INSTANCE.addValidationSendSMSCallback(validationSendSMSCallback);
@@ -68,10 +68,8 @@ public class SMSValidationSendEventGenerator extends BaseUseEventGeneratorImpl {
     public void modeStop(final LCConfigurationI configuration) {
         PhoneControlController.INSTANCE.removeValidationSendSMSCallback(validationSendSMSCallback);
     }
-    //========================================================================
 
     // Class part : "Generation condition"
-    //========================================================================
     public static enum ValidationSendCondition {
         ALWAYS("phonecontrol.plugin.sms.validation.send.condition.always"),
         SENT("phonecontrol.plugin.sms.validation.send.condition.sent"),
@@ -92,14 +90,13 @@ public class SMSValidationSendEventGenerator extends BaseUseEventGeneratorImpl {
             return getText();
         }
     }
-    //========================================================================
 
     // Class part : "IO"
-    //========================================================================
     @Override
     public Element serialize(final IOContextI context) {
         final Element element = super.serialize(context);
         XMLObjectSerializer.serializeInto(SMSValidationSendEventGenerator.class, this, element);
+
         return element;
     }
 
@@ -108,5 +105,4 @@ public class SMSValidationSendEventGenerator extends BaseUseEventGeneratorImpl {
         super.deserialize(node, context);
         XMLObjectSerializer.deserializeInto(SMSValidationSendEventGenerator.class, this, node);
     }
-    //========================================================================
 }

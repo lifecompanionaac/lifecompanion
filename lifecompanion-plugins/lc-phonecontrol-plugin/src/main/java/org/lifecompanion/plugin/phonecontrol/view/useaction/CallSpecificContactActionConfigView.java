@@ -11,9 +11,7 @@ import org.lifecompanion.model.api.categorizedelement.useaction.UseActionConfigu
 import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
 import org.lifecompanion.plugin.phonecontrol.action.CallSpecificContactAction;
 
-public class CallSpecificContactActionConfigView extends VBox
-        implements UseActionConfigurationViewI<CallSpecificContactAction> {
-
+public class CallSpecificContactActionConfigView extends VBox implements UseActionConfigurationViewI<CallSpecificContactAction> {
     private TextField fieldPhoneNumber, fieldContactName;
 
     @Override
@@ -24,9 +22,12 @@ public class CallSpecificContactActionConfigView extends VBox
         this.fieldPhoneNumber.setPromptText("+33612345678");
         this.fieldContactName = new TextField();
         this.fieldContactName.setPromptText("John Doe");
-        this.getChildren().addAll(new Label(Translation.getText("phonecontrol.view.useaction.phonenumber")),
-                this.fieldPhoneNumber,
-                new Label(Translation.getText("phonecontrol.view.useaction.contactname")), this.fieldContactName);
+        this.getChildren().addAll(
+            new Label(Translation.getText("phonecontrol.view.useaction.phonenumber")),
+            this.fieldPhoneNumber,
+            new Label(Translation.getText("phonecontrol.view.useaction.contactname")),
+            this.fieldContactName
+        );
     }
 
     @Override
@@ -35,8 +36,7 @@ public class CallSpecificContactActionConfigView extends VBox
     }
 
     @Override
-    public void editStarts(final CallSpecificContactAction action,
-            final ObservableList<UseVariableDefinitionI> possibleVariables) {
+    public void editStarts(final CallSpecificContactAction action, final ObservableList<UseVariableDefinitionI> possibleVariables) {
         this.fieldPhoneNumber.setText(action.phoneNumberProperty().get());
         this.fieldContactName.setText(action.contactNameProperty().get());
     }

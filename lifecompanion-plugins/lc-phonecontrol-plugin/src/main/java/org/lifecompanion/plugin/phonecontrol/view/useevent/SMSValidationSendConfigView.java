@@ -10,9 +10,7 @@ import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.model.api.categorizedelement.useevent.UseEventGeneratorConfigurationViewI;
 import org.lifecompanion.plugin.phonecontrol.event.SMSValidationSendEventGenerator;
 
-public class SMSValidationSendConfigView extends VBox
-        implements UseEventGeneratorConfigurationViewI<SMSValidationSendEventGenerator> {
-
+public class SMSValidationSendConfigView extends VBox implements UseEventGeneratorConfigurationViewI<SMSValidationSendEventGenerator> {
     private ChoiceBox<SMSValidationSendEventGenerator.ValidationSendCondition> choiceGenerateCondition;
 
     @Override
@@ -28,27 +26,30 @@ public class SMSValidationSendConfigView extends VBox
     @Override
     public void initUI() {
         this.choiceGenerateCondition = new ChoiceBox<>(
-                FXCollections.observableArrayList(SMSValidationSendEventGenerator.ValidationSendCondition.values()));
-        this.choiceGenerateCondition
-                .setConverter(new StringConverter<SMSValidationSendEventGenerator.ValidationSendCondition>() {
-                    @Override
-                    public String toString(SMSValidationSendEventGenerator.ValidationSendCondition value) {
-                        return value != null ? value.getText() : null;
+            FXCollections.observableArrayList(SMSValidationSendEventGenerator.ValidationSendCondition.values())
+        );
+        this.choiceGenerateCondition.setConverter(
+            new StringConverter<SMSValidationSendEventGenerator.ValidationSendCondition>() {
+                @Override
+                public String toString(SMSValidationSendEventGenerator.ValidationSendCondition value) {
+                    return value != null ? value.getText() : null;
+                }
+
+                @Override
+                public SMSValidationSendEventGenerator.ValidationSendCondition fromString(String value) {
+                    for (SMSValidationSendEventGenerator.ValidationSendCondition cond : SMSValidationSendEventGenerator.ValidationSendCondition.values()) {
+                        if (cond.getText().equals(value)) {
+                            return cond;
+                        }
                     }
 
-                    @Override
-                    public SMSValidationSendEventGenerator.ValidationSendCondition fromString(String value) {
-                        for (SMSValidationSendEventGenerator.ValidationSendCondition cond : SMSValidationSendEventGenerator.ValidationSendCondition
-                                .values()) {
-                            if (cond.getText().equals(value)) {
-                                return cond;
-                            }
-                        }
-                        return null;
-                    }
-                });
-        this.getChildren().addAll(new Label(Translation.getText("phonecontrol.plugin.unread.count.condition.label")),
-                this.choiceGenerateCondition);
+                    return null;
+                }
+            });
+        this.getChildren().addAll(
+            new Label(Translation.getText("phonecontrol.plugin.unread.count.condition.label")),
+            this.choiceGenerateCondition
+        );
     }
 
     @Override

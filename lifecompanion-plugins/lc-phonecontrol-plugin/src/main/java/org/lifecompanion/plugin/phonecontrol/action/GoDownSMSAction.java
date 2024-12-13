@@ -10,7 +10,6 @@ import org.lifecompanion.plugin.phonecontrol.action.categories.PhoneControlActio
 import java.util.Map;
 
 public class GoDownSMSAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
-
     public GoDownSMSAction() {
         super(UseActionTriggerComponentI.class);
         this.order = 0;
