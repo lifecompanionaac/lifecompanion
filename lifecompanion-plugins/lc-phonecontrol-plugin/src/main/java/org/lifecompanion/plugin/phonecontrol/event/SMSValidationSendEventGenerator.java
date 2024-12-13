@@ -30,12 +30,12 @@ public class SMSValidationSendEventGenerator extends BaseUseEventGeneratorImpl {
         this.parameterizableAction = true;
         this.order = 20;
         this.category = PhoneControlEventSubCategories.MISC;
-        this.nameID = "phonecontrol1.plugin.event.misc.sms.validation.send.name";
-        this.staticDescriptionID = "phonecontrol1.plugin.event.misc.sms.validation.send.description";
+        this.nameID = "phonecontrol.plugin.event.misc.sms.validation.send.name";
+        this.staticDescriptionID = "phonecontrol.plugin.event.misc.sms.validation.send.description";
         this.condition = new SimpleObjectProperty<>(ValidationSendCondition.ALWAYS);
         this.variableDescriptionProperty()
                 .bind(TranslationFX.getTextBinding(
-                        "phonecontrol1.plugin.event.misc.sms.validation.send.variable.description", this.condition));
+                        "phonecontrol.plugin.event.misc.sms.validation.send.variable.description", this.condition));
         validationSendSMSCallback = (validationSend) -> {
             final ValidationSendCondition cond = this.condition.get();
             if (cond == ValidationSendCondition.ALWAYS || (validationSend > 0 && cond == ValidationSendCondition.SENT)
@@ -73,9 +73,9 @@ public class SMSValidationSendEventGenerator extends BaseUseEventGeneratorImpl {
     // Class part : "Generation condition"
     //========================================================================
     public static enum ValidationSendCondition {
-        ALWAYS("phonecontrol1.plugin.sms.validation.send.condition.always"),
-        SENT("phonecontrol1.plugin.sms.validation.send.condition.sent"),
-        NOT_SENT("phonecontrol1.plugin.sms.validation.send.condition.not.sent");
+        ALWAYS("phonecontrol.plugin.sms.validation.send.condition.always"),
+        SENT("phonecontrol.plugin.sms.validation.send.condition.sent"),
+        NOT_SENT("phonecontrol.plugin.sms.validation.send.condition.not.sent");
 
         private final String textId;
 

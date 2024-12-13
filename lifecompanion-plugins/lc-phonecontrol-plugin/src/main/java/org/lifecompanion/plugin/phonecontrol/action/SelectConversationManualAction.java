@@ -26,12 +26,12 @@ public class SelectConversationManualAction extends SimpleUseActionImpl<UseActio
         this.order = 0;
         this.category = PhoneControlActionSubCategories.MISC;
         this.parameterizableAction = true;
-        this.nameID = "phonecontrol1.plugin.action.misc.select.conversation.manual.name";
-        this.staticDescriptionID = "phonecontrol1.plugin.action.misc.select.conversation.manual.description";
+        this.nameID = "phonecontrol.plugin.action.misc.select.conversation.manual.name";
+        this.staticDescriptionID = "phonecontrol.plugin.action.misc.select.conversation.manual.description";
         this.phoneNumber = new SimpleStringProperty();
         this.contactName = new SimpleStringProperty();
         this.variableDescriptionProperty().bind(TranslationFX.getTextBinding(
-                "phonecontrol1.plugin.action.misc.select.conversation.manual.variable.description", this.contactName));
+                "phonecontrol.plugin.action.misc.select.conversation.manual.variable.description", this.contactName));
     }
 
     public StringProperty phoneNumberProperty() {

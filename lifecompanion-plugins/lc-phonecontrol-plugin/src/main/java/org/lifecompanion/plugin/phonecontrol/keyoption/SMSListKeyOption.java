@@ -24,8 +24,8 @@ public class SMSListKeyOption extends AbstractKeyOption {
 
     public SMSListKeyOption() {
         super();
-        this.optionNameId = "phonecontrol1.plugin.key.option.sms.list.name";
-        this.optionDescriptionId = "phonecontrol1.plugin.key.option.sms.list.description";
+        this.optionNameId = "phonecontrol.plugin.key.option.sms.list.name";
+        this.optionDescriptionId = "phonecontrol.plugin.key.option.sms.list.description";
         this.disableTextContent.set(true);
         this.disableImage.set(true);
 
@@ -49,7 +49,7 @@ public class SMSListKeyOption extends AbstractKeyOption {
     @Override
     protected void attachToImpl(final GridPartKeyComponentI key) {
         key.textContentProperty().set(AppModeController.INSTANCE.isUseMode() ? null
-                : Translation.getText("phonecontrol1.plugin.key.option.sms.list.default.text"));
+                : Translation.getText("phonecontrol.plugin.key.option.sms.list.default.text"));
         // No action to attach
     }
 
@@ -64,14 +64,14 @@ public class SMSListKeyOption extends AbstractKeyOption {
             final GridPartKeyComponentI key = this.attachedKey.get();
             if (nv != null) {
                 if (nv == PhoneControlController.SMS_LOADING) {
-                    key.textContentProperty().set(Translation.getText("phonecontrol1.plugin.key.option.list.loading"));
+                    key.textContentProperty().set(Translation.getText("phonecontrol.plugin.key.option.list.loading"));
                     dateNode.set(null); // Clear date node
                 } else if (nv == PhoneControlController.SMS_NOT_CONNECTED) {
                     key.textContentProperty()
-                            .set(Translation.getText("phonecontrol1.plugin.key.option.list.not.connected"));
+                            .set(Translation.getText("phonecontrol.plugin.key.option.list.not.connected"));
                 } else if (nv == PhoneControlController.SMS_END_MESSAGE) {
                     key.textContentProperty()
-                            .set(Translation.getText("phonecontrol1.plugin.key.option.sms.list.empty"));
+                            .set(Translation.getText("phonecontrol.plugin.key.option.sms.list.empty"));
                 } else {
                     // ------------ Set text content ------------
                     key.textContentProperty().set(nv.getSMS());

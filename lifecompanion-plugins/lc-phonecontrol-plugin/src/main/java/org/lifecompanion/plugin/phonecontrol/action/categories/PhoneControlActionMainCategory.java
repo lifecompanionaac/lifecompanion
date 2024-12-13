@@ -11,18 +11,18 @@ import org.lifecompanion.model.api.categorizedelement.useaction.UseActionSubCate
 public enum PhoneControlActionMainCategory implements UseActionMainCategoryI {
     INSTANCE;
 
-    private static final String ID = "PHONECONTROL1_ACTION_MAIN_CATEGORY";
+    private static final String ID = "phonecontrol_ACTION_MAIN_CATEGORY";
 
     private final ObservableList<UseActionSubCategoryI> subCategories = FXCollections.observableArrayList();
 
     @Override
     public String getName() {
-        return Translation.getText("phonecontrol1.plugin.action.main.category.name");
+        return Translation.getText("phonecontrol.plugin.action.main.category.name");
     }
 
     @Override
     public String getStaticDescription() {
-        return Translation.getText("phonecontrol1.plugin.action.main.category.description");
+        return Translation.getText("phonecontrol.plugin.action.main.category.description");
     }
 
     @Override
@@ -42,7 +42,7 @@ public enum PhoneControlActionMainCategory implements UseActionMainCategoryI {
 
     @Override
     public int order() {
-        return 2000;//at the end
+        return 2000;  //at the end
     }
 
     @Override

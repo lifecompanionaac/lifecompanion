@@ -30,12 +30,12 @@ public class OnUnreadSMSCountUpdatedEventGenerator extends BaseUseEventGenerator
         this.parameterizableAction = true;
         this.order = 20;
         this.category = PhoneControlEventSubCategories.MISC;
-        this.nameID = "phonecontrol1.plugin.event.misc.sms.unread.count.name";
-        this.staticDescriptionID = "phonecontrol1.plugin.event.misc.sms.unread.count.description";
+        this.nameID = "phonecontrol.plugin.event.misc.sms.unread.count.name";
+        this.staticDescriptionID = "phonecontrol.plugin.event.misc.sms.unread.count.description";
         this.condition = new SimpleObjectProperty<>(UnreadEventGenerateCondition.ALWAYS);
         this.variableDescriptionProperty()
                 .bind(TranslationFX.getTextBinding(
-                        "phonecontrol1.plugin.event.misc.sms.unread.count.updated.variable.description",
+                        "phonecontrol.plugin.event.misc.sms.unread.count.updated.variable.description",
                         this.condition));
         unreadCountUpdatedCallback = (unreadCount) -> {
             final UnreadEventGenerateCondition cond = this.condition.get();
@@ -75,9 +75,9 @@ public class OnUnreadSMSCountUpdatedEventGenerator extends BaseUseEventGenerator
     // Class part : "Generation condition"
     //========================================================================
     public static enum UnreadEventGenerateCondition {
-        ALWAYS("phonecontrol1.plugin.unread.count.condition.always"),
-        UNREAD("phonecontrol1.plugin.unread.count.condition.unread.positive"),
-        NONE("phonecontrol1.plugin.unread.count.condition.unread.none");
+        ALWAYS("phonecontrol.plugin.unread.count.condition.always"),
+        UNREAD("phonecontrol.plugin.unread.count.condition.unread.positive"),
+        NONE("phonecontrol.plugin.unread.count.condition.unread.none");
 
         private final String textId;
 

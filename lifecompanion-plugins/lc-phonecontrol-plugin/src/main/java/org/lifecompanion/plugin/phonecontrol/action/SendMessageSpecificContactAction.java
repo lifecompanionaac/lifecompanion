@@ -24,8 +24,8 @@ public class SendMessageSpecificContactAction extends SimpleUseActionImpl<UseAct
         this.order = 0;
         this.category = PhoneControlActionSubCategories.SMS;
         this.parameterizableAction = true;
-        this.nameID = "phonecontrol1.plugin.action.sms.send.specific.contact.name";
-        this.staticDescriptionID = "phonecontrol1.plugin.action.sms.send.specific.contact.description";
+        this.nameID = "phonecontrol.plugin.action.sms.send.specific.contact.name";
+        this.staticDescriptionID = "phonecontrol.plugin.action.sms.send.specific.contact.description";
         this.phoneNumber = new SimpleStringProperty();
         this.contactName = new SimpleStringProperty();
         this.variableDescriptionProperty().set(this.getStaticDescription());

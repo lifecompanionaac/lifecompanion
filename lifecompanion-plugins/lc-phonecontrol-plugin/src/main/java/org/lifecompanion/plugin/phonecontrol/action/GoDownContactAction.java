@@ -16,8 +16,8 @@ public class GoDownContactAction extends SimpleUseActionImpl<UseActionTriggerCom
         this.order = 0;
         this.category = PhoneControlActionSubCategories.SMS;
         this.parameterizableAction = false;
-        this.nameID = "phonecontrol1.plugin.action.contact.down.list.name";
-        this.staticDescriptionID = "phonecontrol1.plugin.action.contact.down.list.description";
+        this.nameID = "phonecontrol.plugin.action.contact.down.list.name";
+        this.staticDescriptionID = "phonecontrol.plugin.action.contact.down.list.description";
         this.variableDescriptionProperty().set(this.getStaticDescription());
     }
 

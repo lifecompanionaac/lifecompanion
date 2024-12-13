@@ -24,8 +24,8 @@ public class CallSpecificContactAction extends SimpleUseActionImpl<UseActionTrig
         this.order = 0;
         this.category = PhoneControlActionSubCategories.CALL;
         this.parameterizableAction = true;
-        this.nameID = "phonecontrol1.plugin.action.call.specific.contact.name";
-        this.staticDescriptionID = "phonecontrol1.plugin.action.call.specific.contact.description";
+        this.nameID = "phonecontrol.plugin.action.call.specific.contact.name";
+        this.staticDescriptionID = "phonecontrol.plugin.action.call.specific.contact.description";
         this.phoneNumber = new SimpleStringProperty();
         this.contactName = new SimpleStringProperty();
         this.variableDescriptionProperty().set(this.getStaticDescription());

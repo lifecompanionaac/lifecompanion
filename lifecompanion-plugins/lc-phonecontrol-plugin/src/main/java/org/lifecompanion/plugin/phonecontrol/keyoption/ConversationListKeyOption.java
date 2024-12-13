@@ -18,8 +18,8 @@ public class ConversationListKeyOption extends AbstractKeyOption {
 
     public ConversationListKeyOption() {
         super();
-        this.optionNameId = "phonecontrol1.plugin.key.option.conversation.list.name";
-        this.optionDescriptionId = "phonecontrol1.plugin.key.option.conversation.list.description";
+        this.optionNameId = "phonecontrol.plugin.key.option.conversation.list.name";
+        this.optionDescriptionId = "phonecontrol.plugin.key.option.conversation.list.description";
         this.disableTextContent.set(true);
         this.disableImage.set(true);
         this.conv = new SimpleObjectProperty<>();
@@ -48,7 +48,7 @@ public class ConversationListKeyOption extends AbstractKeyOption {
         }
         this.selectConversationFromListAction.attachedToKeyOptionProperty().set(true);
         key.textContentProperty().set(AppModeController.INSTANCE.isUseMode() ? null
-                : Translation.getText("phonecontrol1.plugin.key.option.conversation.list.default.text"));
+                : Translation.getText("phonecontrol.plugin.key.option.conversation.list.default.text"));
     }
 
     @Override
@@ -63,13 +63,13 @@ public class ConversationListKeyOption extends AbstractKeyOption {
             final GridPartKeyComponentI key = this.attachedKey.get();
             if (nv != null) {
                 if (nv == PhoneControlController.CONV_LOADING) {
-                    key.textContentProperty().set(Translation.getText("phonecontrol1.plugin.key.option.list.loading"));
+                    key.textContentProperty().set(Translation.getText("phonecontrol.plugin.key.option.list.loading"));
                 } else if (nv == PhoneControlController.CONV_NOT_CONNECTED) {
                     key.textContentProperty()
-                            .set(Translation.getText("phonecontrol1.plugin.key.option.list.not.connected"));
+                            .set(Translation.getText("phonecontrol.plugin.key.option.list.not.connected"));
                 } else if (nv == PhoneControlController.CONV_END_MESSAGE) {
                     key.textContentProperty()
-                            .set(Translation.getText("phonecontrol1.plugin.key.option.conversation.list.empty"));
+                            .set(Translation.getText("phonecontrol.plugin.key.option.conversation.list.empty"));
                 } else {
                     key.textContentProperty().set(getConversationCellString(nv));
                     key.getKeyTextStyle().boldProperty().forced().setValue(!nv.isSeen());

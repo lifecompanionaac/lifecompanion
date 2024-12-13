@@ -16,8 +16,8 @@ public class GoUpContactAction extends SimpleUseActionImpl<UseActionTriggerCompo
         this.order = 0;
         this.category = PhoneControlActionSubCategories.SMS;
         this.parameterizableAction = false;
-        this.nameID = "phonecontrol1.plugin.action.contact.up.list.name";
-        this.staticDescriptionID = "phonecontrol1.plugin.action.contact.up.list.description";
+        this.nameID = "phonecontrol.plugin.action.contact.up.list.name";
+        this.staticDescriptionID = "phonecontrol.plugin.action.contact.up.list.description";
         this.variableDescriptionProperty().set(this.getStaticDescription());
     }
 

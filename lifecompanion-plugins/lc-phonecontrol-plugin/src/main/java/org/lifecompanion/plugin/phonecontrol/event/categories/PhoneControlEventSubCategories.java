@@ -8,7 +8,7 @@ import org.lifecompanion.model.api.categorizedelement.useevent.UseEventGenerator
 import org.lifecompanion.model.api.categorizedelement.useevent.UseEventSubCategoryI;
 
 public enum PhoneControlEventSubCategories implements UseEventSubCategoryI {
-    MISC("phonecontrol1.plugin.event.sub.category.misc.name", Color.web("#8BC34A"));
+    MISC("phonecontrol.plugin.event.sub.category.misc.name", Color.web("#8BC34A"));
 
     private String nameId;
     private String id;

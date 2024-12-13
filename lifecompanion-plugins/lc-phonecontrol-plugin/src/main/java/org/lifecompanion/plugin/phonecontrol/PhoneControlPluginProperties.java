@@ -14,13 +14,40 @@ import java.util.Map;
 public class PhoneControlPluginProperties extends AbstractPluginConfigProperties {
     public static final String NODE_PHONECONTROL_PLUGIN = "PhoneControlPluginInformations";
 
+    private final StringProperty deviceSerialNumber;
+    private final BooleanProperty speakerOn;
+    private final IntegerProperty durationInternal;
+
     protected PhoneControlPluginProperties(ObjectProperty<LCConfigurationI> parentConfiguration) {
         super(parentConfiguration);
+        this.deviceSerialNumber = new SimpleStringProperty();
+        this.speakerOn = new SimpleBooleanProperty();
+        this.durationInternal = new SimpleIntegerProperty();
+    }
+
+    public StringProperty deviceProperty() {
+        return this.deviceSerialNumber;
+    }
+
+    public BooleanProperty speakerOnProperty() {
+        return this.speakerOn;
+    }
+
+    public IntegerProperty durationInternalProperty() {
+        return this.durationInternal;
     }
 
     @Override
     public String toString() {
-        return "PhoneControlPluginProperties{}";
+        return "PhoneControlPluginProperties{" +
+                "deviceSerialNumber=" + this.deviceSerialNumber +
+                ", speakerOn=" + this.speakerOn +
+                ", labelDurationIntervalPicker=" + this.durationInternal +
+                '}';
+    }
+
+    public boolean isPhoneControlConfigurationSet() {
+        return StringUtils.isNotBlank(this.deviceSerialNumber.get());
     }
 
     @Override
@@ -36,10 +63,8 @@ public class PhoneControlPluginProperties extends AbstractPluginConfigProperties
     }
 
     @Override
-    public void serializeUseInformation(Map<String, Element> elements) {
-    }
+    public void serializeUseInformation(Map<String, Element> elements) { }
 
     @Override
-    public void deserializeUseInformation(Map<String, Element> elements) throws LCException {
-    }
+    public void deserializeUseInformation(Map<String, Element> elements) throws LCException { }
 }

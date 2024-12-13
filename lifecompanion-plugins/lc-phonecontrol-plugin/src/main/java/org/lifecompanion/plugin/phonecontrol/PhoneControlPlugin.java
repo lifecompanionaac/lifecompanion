@@ -57,12 +57,35 @@ public class PhoneControlPlugin implements PluginI {
 
     @Override
     public List<UseVariableDefinitionI> getDefinedVariables() {
-        return null;
+        return Arrays.asList(
+                new UseVariableDefinition(
+                        PhoneControlController.VAR_SMS_UNREAD,
+                        "phonecontrol.plugin.use.variable.sms.unread.name",
+                        "phonecontrol.plugin.use.variable.sms.unread.description",
+                        "phonecontrol.plugin.use.variable.sms.unread.example"),
+                new UseVariableDefinition(
+                        PhoneControlController.VAR_CALL_DURATION,
+                        "phonecontrol.plugin.use.variable.call.duration.name",
+                        "phonecontrol.plugin.use.variable.call.duration.description",
+                        "phonecontrol.plugin.use.variable.call.duration.example"),
+                new UseVariableDefinition(
+                        PhoneControlController.VAR_PHONE_NUMBER_OR_CONTACT_NAME,
+                        "phonecontrol.plugin.use.variable.phone.number.or.contact.name.name",
+                        "phonecontrol.plugin.use.variable.phone.number.or.contact.name.description",
+                        "phonecontrol.plugin.use.variable.phone.number.or.contact.name.example"));
     }
 
     @Override
     public Function<UseVariableDefinitionI, UseVariableI<?>> getSupplierForUseVariable(String id) {
-        return null;
+        return switch (id) {
+            case PhoneControlController.VAR_SMS_UNREAD ->
+                def -> new IntegerUseVariable(def, PhoneControlController.INSTANCE.getSmsUnread());
+            case PhoneControlController.VAR_CALL_DURATION ->
+                def -> new StringUseVariable(def, PhoneControlController.INSTANCE.getCallDuration());
+            case PhoneControlController.VAR_PHONE_NUMBER_OR_CONTACT_NAME ->
+                def -> new StringUseVariable(def, PhoneControlController.INSTANCE.getPhoneNumberOrContactName());
+            default -> null;
+        };
     }
 
     @Override
