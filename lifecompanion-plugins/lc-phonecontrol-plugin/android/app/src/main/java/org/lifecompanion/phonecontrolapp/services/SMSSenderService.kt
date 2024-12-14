@@ -13,7 +13,6 @@ import android.util.Base64
 import org.lifecompanion.phonecontrolapp.R
 
 class SMSSenderService : Service() {
-
     private lateinit var smsChannelName: String
     private val smsChannelId = "smsChannel"
 
@@ -54,6 +53,7 @@ class SMSSenderService : Service() {
         }
 
         Log.d("SmsSenderService", "SMSSender Service ended")
+
         return START_NOT_STICKY
     }
 

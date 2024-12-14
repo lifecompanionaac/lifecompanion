@@ -8,7 +8,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 
 class MainActivity : Activity() {
-
     private val PERMISSION_REQUEST_CODE = 14122004
 
     /**
@@ -36,11 +35,10 @@ class MainActivity : Activity() {
         )
 
         for (permission in permissions) {
-            if (ContextCompat.checkSelfPermission(this, permission)
-                != PackageManager.PERMISSION_GRANTED
-            ) {
+            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
                 // Show the popup
                 ActivityCompat.requestPermissions(this, permissions, PERMISSION_REQUEST_CODE)
+
                 return
             }
         }
@@ -65,8 +63,8 @@ class MainActivity : Activity() {
                     return
                 }
             }
+
             finish()
         }
     }
-
 }

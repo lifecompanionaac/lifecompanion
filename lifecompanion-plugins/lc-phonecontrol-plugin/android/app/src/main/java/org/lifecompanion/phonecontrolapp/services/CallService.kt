@@ -14,7 +14,6 @@ import androidx.core.content.ContextCompat.checkSelfPermission
 import org.lifecompanion.phonecontrolapp.R
 
 class CallService : Service() {
-
     private lateinit var callChannelName: String
     private val callChannelId = "callChannel"
 
@@ -42,13 +41,14 @@ class CallService : Service() {
         }
 
         Log.d("CallService", "Call Service ended")
+
         return START_NOT_STICKY
     }
 
     private fun answerCall() {
         val telecomManager = this.getSystemService(Context.TELECOM_SERVICE) as TelecomManager
-        if (checkSelfPermission(this, Manifest.permission.ANSWER_PHONE_CALLS)
-            == PackageManager.PERMISSION_GRANTED) {
+
+        if (checkSelfPermission(this, Manifest.permission.ANSWER_PHONE_CALLS) == PackageManager.PERMISSION_GRANTED) {
             telecomManager.acceptRingingCall()
         } else {
             Log.d("CallService", "Permission to answer call not granted")
@@ -58,16 +58,16 @@ class CallService : Service() {
     private fun startCall(phoneNumber: String, speaker: Boolean) {
         val telecomManager = this.getSystemService(Context.TELECOM_SERVICE) as TelecomManager
 
-        if (checkSelfPermission(this, Manifest.permission.CALL_PHONE)
-            == PackageManager.PERMISSION_GRANTED) {
+        if (checkSelfPermission(this, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
             telecomManager.let {
                 Log.d("CallService", "Call started with telecomManager")
-
                 val extra = Bundle()
+
                 if (speaker) {
                     Log.d("CallService", "WITH SPEAKERPHONE")
                     extra.putBoolean(TelecomManager.EXTRA_START_CALL_WITH_SPEAKERPHONE, true)
                 }
+
                 val uri = Uri.fromParts("tel", phoneNumber, null)
                 it.placeCall(uri, extra)
             }
@@ -78,8 +78,8 @@ class CallService : Service() {
 
     private fun stopCall() {
         val telecomManager = getSystemService(Context.TELECOM_SERVICE) as TelecomManager
-        if (checkSelfPermission(this, Manifest.permission.ANSWER_PHONE_CALLS)
-            == PackageManager.PERMISSION_GRANTED) {
+
+        if (checkSelfPermission(this, Manifest.permission.ANSWER_PHONE_CALLS) == PackageManager.PERMISSION_GRANTED) {
             telecomManager.endCall()
         } else {
             Log.d("CallService", "Permission to end call not granted")

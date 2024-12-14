@@ -15,7 +15,6 @@ import java.util.Date
 import java.util.Locale
 
 class SMSReaderService : Service() {
-
     private lateinit var smsChannelName: String
     private val smsChannelId = "smsChannel"
     private lateinit var db: SharedPreferences
@@ -48,6 +47,7 @@ class SMSReaderService : Service() {
         }
 
         Log.d("SMSReaderService", "SMSReader Service ended")
+
         return START_NOT_STICKY
     }
 
@@ -80,40 +80,42 @@ class SMSReaderService : Service() {
             // Check the first message if it's unread and save to the database
             if (it.moveToFirst()) {
                 val firstReadStatus = it.getInt(readIndex)
+
                 if (firstReadStatus == 0) {
                     val firstId = it.getString(idIndex)
                     db.edit().putString(phoneNumber, firstId).apply()
                 }
             }
-            it.moveToPosition(-1) // Reset cursor position
+
+            it.moveToPosition(-1)  // Reset cursor position
 
             while (it.moveToNext() && count < end) {
-                if (count >= start) { // We start to log
-                    // --------- Get values ---------
-                    var address = it.getString(addressIndex) // Phone number
-                    val body = it.getString(bodyIndex) // Message body
-                    val type = it.getInt(typeIndex) // Message type (Sent=2 or Received=1)
+                if (count >= start) {  // We start to log
+                    // Get values
+                    var address = it.getString(addressIndex)  // Phone number
+                    val body = it.getString(bodyIndex)  // Message body
+                    val type = it.getInt(typeIndex)  // Message type (Sent=2 or Received=1)
                     val dateMillis = it.getLong(dateIndex)
 
-                    // --------- Convert values ---------
+                    // Convert values
                     if (address.startsWith("0")) {
                         address = "+33" + address.substring(1)
                     }
+
                     val body64 = encodeToBase64(body)
                     val isSendByMe = if (type == 2) "true" else "false"
-                    val date = SimpleDateFormat(
-                        "dd-MM-yyyy HH:mm:ss",
-                        Locale.getDefault()
-                    ).format(Date(dateMillis))
+                    val date = SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.getDefault()).format(Date(dateMillis))
                     val contactName = getContactName(phoneNumber)
 
-                    // --------- Send values (by log) ---------
+                    // Send values (by log)
                     val smsInfo = "$address|$contactName|$body64|$date|$isSendByMe"
                     Log.i("SMSReaderServiceSMS", smsInfo)
                 }
+
                 count++
             }
         }
+
         // Log a guardrail indicating there are not enough messages to send
         Log.i("SMSReaderServiceSMS", "+33000000000")
     }
@@ -144,6 +146,7 @@ class SMSReaderService : Service() {
             while (it.moveToNext() && count < end - start) {
                 // Get the phoneNumber
                 var phoneNumber = it.getString(addressIndex)
+
                 if (phoneNumber.startsWith("0")) {
                     phoneNumber = "+33" + phoneNumber.substring(1)
                 }
@@ -151,13 +154,13 @@ class SMSReaderService : Service() {
                 // Try to add it, return false is already in list
                 val isAdded = uniqueAddresses.add(phoneNumber)
 
-                if (isAdded && uniqueAddresses.size > start) { // We start to log
-                    // --------- Get values ---------
-                    val body = it.getString(bodyIndex) // Message body
-                    val isRead = it.getInt(readIndex) // Message read status (unread=0, read=1)
-                    val type = it.getInt(typeIndex) // Message type (Sent=2 or Received=1)
+                if (isAdded && uniqueAddresses.size > start) {  // We start to log
+                    // Get values
+                    val body = it.getString(bodyIndex)  // Message body
+                    val isRead = it.getInt(readIndex)  // Message read status (unread=0, read=1)
+                    val type = it.getInt(typeIndex)  // Message type (Sent=2 or Received=1)
 
-                    // --------- Convert values ----------
+                    // Convert values
                     val isSendByMe = if (type == 2) "true" else "false"
                     var isSeen = if (isRead == 1) "true" else "false"
                     val contactName = getContactName(phoneNumber)
@@ -173,18 +176,19 @@ class SMSReaderService : Service() {
                         // If the last message is the same, the conversation is seen
                         if (storedId.equals(lastId)) {
                             isSeen = "true"
-                        } else { // We clear the stored conversation, it's a new sms
+                        } else {  // We clear the stored conversation, it's a new sms
                             db.edit().remove(phoneNumber).apply()
                         }
                     }
 
-                    // --------- Send values (by log) ---------
+                    //Send values (by log)
                     val convInfo = "$phoneNumber|$contactName|$body64|$isSeen|$isSendByMe"
                     Log.i("SMSReaderServiceConv", convInfo)
                     count++
                 }
             }
         }
+
         // Log a guardrail indicating there are not enough messages to send
         Log.i("SMSReaderServiceConv", "+33000000000")
     }
@@ -196,10 +200,7 @@ class SMSReaderService : Service() {
      * @return The contact name if exists, else the phoneNumber
      */
     private fun getContactName(phoneNumber: String): String {
-        val uri = Uri.withAppendedPath(
-            ContactsContract.PhoneLookup.CONTENT_FILTER_URI,
-            Uri.encode(phoneNumber)
-        )
+        val uri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(phoneNumber))
         val projection = arrayOf(ContactsContract.PhoneLookup.DISPLAY_NAME)
         val cursor = contentResolver.query(uri, projection, null, null, null)
 
@@ -208,6 +209,7 @@ class SMSReaderService : Service() {
                 return it.getString(it.getColumnIndexOrThrow(ContactsContract.PhoneLookup.DISPLAY_NAME))
             }
         }
+
         return phoneNumber
     }
 
@@ -219,6 +221,7 @@ class SMSReaderService : Service() {
     private fun encodeToBase64(input: String): String {
         val bytes = input.toByteArray(Charsets.UTF_8)
         val encodedString = Base64.encodeToString(bytes, Base64.NO_WRAP)
+
         return encodedString
     }
 
