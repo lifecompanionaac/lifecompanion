@@ -89,16 +89,6 @@ The JSON format is structured to contain metadata about the sender, the type of 
   1. **"get_contacts"**
      - Description : Requests the contact list from the phone.
      - Data example : `{}` (Empty data)
-  2. **"update_contact"**
-     - Description : Updates a specific contact.
-     - Data example :
-       ```json
-       {
-         "contact_id": "123",
-         "name": "John Doe",
-         "phone_number": "+987654321"
-       }
-       ```
 
 #### Type : **system**
 - **Subtypes** :
@@ -107,8 +97,7 @@ The JSON format is structured to contain metadata about the sender, the type of 
      - Data example :
        ```json
        {
-         "level": 5,  // Volume level (0-10)
-         "mode": "increase"  // Values can be "increase", "decrease", or "set"
+         "mode": "increase"  // Values can be "increase" or "decrease"
        }
        ```
   2. **"connection_status"**
@@ -146,7 +135,6 @@ The JSON format is structured to contain metadata about the sender, the type of 
      "type": "system",
      "subtype": "adjust_volume",
      "data": {
-       "level": 3,
        "mode": "decrease"
      }
    }

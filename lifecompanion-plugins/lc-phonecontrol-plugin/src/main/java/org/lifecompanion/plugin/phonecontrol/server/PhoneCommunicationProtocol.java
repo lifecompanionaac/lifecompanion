@@ -2,6 +2,9 @@ package org.lifecompanion.plugin.phonecontrol.server;
 
 import org.json.JSONObject;
 import org.json.JSONException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * PhoneCommunicationProtocol is an interface representing the blueprint for different types of communication protocols
@@ -104,6 +107,24 @@ public interface PhoneCommunicationProtocol {
             return true;
         } catch (JSONException e) {
             return false;
+        }
+    }
+
+    /**
+     * Adds a timestamp to a given JSON object.
+     * 
+     * @param data The JSON object to which a timestamp will be added.
+     * @return The updated JSON object with a timestamp field added.
+     */
+    default public String addTimestamp(String data) {
+        try {
+            JSONObject json = new JSONObject(data);
+            String timestamp = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault()).format(new Date());
+            json.put("timestamp", timestamp);
+
+            return json.toString();
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Invalid JSON format: " + e.getMessage());
         }
     }
 }

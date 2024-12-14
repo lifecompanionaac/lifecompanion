@@ -17,12 +17,12 @@ import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.plugin.phonecontrol.PhoneControlController;
 import org.lifecompanion.plugin.phonecontrol.PhoneControlPlugin;
 import org.lifecompanion.plugin.phonecontrol.PhoneControlPluginProperties;
+import org.lifecompanion.plugin.phonecontrol.PhoneCommunicationManager;
+import org.lifecompanion.plugin.phonecontrol.PhoneCommunicationManager.ProtocolType;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStepViewI;
 import org.lifecompanion.ui.controlsfx.control.ToggleSwitch;
 import org.lifecompanion.ui.common.control.generic.DurationPickerControl;
 import org.lifecompanion.util.javafx.FXControlUtils;
-
-import com.github.sarxos.webcam.ds.buildin.natives.Device;
 
 import java.util.ArrayList;
 
@@ -42,6 +42,9 @@ public class PhoneControlGeneralConfigView extends BorderPane implements General
     private Button installAppButton;
     private ProgressIndicator installingProgressIndicator;
     private Label labelInstallResult;
+
+    // Communication Protocol
+    private ComboBox<ProtocolType> protocolSelectionComboBox;
 
     public PhoneControlGeneralConfigView() {
         initAll();
@@ -113,6 +116,17 @@ public class PhoneControlGeneralConfigView extends BorderPane implements General
         HBox boxInstalling = new HBox(10.0, installAppButton, paneProgressInstalling, labelInstallResult);
         boxInstalling.setAlignment(Pos.CENTER_LEFT);
 
+        // Communication protocol selection
+        protocolSelectionComboBox = new ComboBox<>();
+        protocolSelectionComboBox.getItems().addAll(ProtocolType.ADB, ProtocolType.BLUETOOTH);
+        protocolSelectionComboBox.setValue(PhoneCommunicationManager.getInstance().getCurrentProtocolType());
+        protocolSelectionComboBox.setOnAction(event -> onProtocolSelectionChanged());
+
+        HBox protocolSelectionBox = new HBox(10, new Label(Translation.getText("phonecontrol.plugin.config.label.protocol.selection")), protocolSelectionComboBox);
+        protocolSelectionBox.setAlignment(Pos.CENTER_LEFT);
+        protocolSelectionBox.setPadding(new Insets(10));
+        HBox.setHgrow(protocolSelectionComboBox, Priority.ALWAYS);
+
         // Main pane
         VBox vboxTotal = new VBox(5.0,
             FXControlUtils.createTitleLabel(Translation.getText("phonecontrol.plugin.config.category.device.selection.title")),
@@ -120,6 +134,8 @@ public class PhoneControlGeneralConfigView extends BorderPane implements General
             boxDeviceSelection,
             speakerToggleButton,
             durationRow,
+            FXControlUtils.createTitleLabel(Translation.getText("phonecontrol.plugin.config.category.protocol.selection.title")),
+            protocolSelectionBox,
             FXControlUtils.createTitleLabel(Translation.getText("phonecontrol.plugin.config.category.install.app.title")),
             new Label(Translation.getText("phonecontrol.plugin.config.label.install.app")),
             boxInstalling
@@ -131,6 +147,13 @@ public class PhoneControlGeneralConfigView extends BorderPane implements General
         scrollPane.setFitToWidth(true);
 
         this.setCenter(scrollPane);
+    }
+
+    private void onProtocolSelectionChanged() {
+        ProtocolType selectedProtocol = protocolSelectionComboBox.getValue();
+        if (selectedProtocol != null) {
+            PhoneCommunicationManager.getInstance().setProtocolType(selectedProtocol);
+        }
     }
 
     @Override

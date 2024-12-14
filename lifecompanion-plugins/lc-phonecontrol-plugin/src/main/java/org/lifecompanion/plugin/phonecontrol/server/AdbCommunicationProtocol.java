@@ -108,4 +108,38 @@ public class AdbCommunicationProtocol implements PhoneCommunicationProtocol {
 
         return false;
     }
+
+    public String pollDirectoryViaAdb(String directoryPath, String adbPath) {
+        try {
+            ProcessBuilder processBuilder = new ProcessBuilder(adbPath, "shell", "ls", directoryPath);
+            Process process = processBuilder.start();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String fileName;
+
+            while ((fileName = reader.readLine()) != null) {
+                if (!fileName.trim().isEmpty()) {
+                    // Retrieve the file content
+                    ProcessBuilder pullBuilder = new ProcessBuilder(adbPath, "shell", "cat", directoryPath + "/" + fileName);
+                    Process pullProcess = pullBuilder.start();
+                    BufferedReader pullReader = new BufferedReader(new InputStreamReader(pullProcess.getInputStream()));
+
+                    StringBuilder content = new StringBuilder();
+                    String line;
+
+                    while ((line = pullReader.readLine()) != null) {
+                        content.append(line);
+                    }
+
+                    // Delete the file from the device
+                    new ProcessBuilder(adbPath, "shell", "rm", directoryPath + "/" + fileName).start().waitFor();
+
+                    return content.toString();
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error polling directory via ADB: " + e.getMessage(), e);
+        }
+
+        return null;
+    }
 }

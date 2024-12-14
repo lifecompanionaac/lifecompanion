@@ -3,6 +3,9 @@ package org.lifecompanion.plugin.phonecontrol.server;
 import javax.bluetooth.*;
 import javax.microedition.io.Connector;
 import javax.microedition.io.StreamConnection;
+
+import org.json.JSONObject;
+
 import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -151,6 +154,41 @@ public class BluetoothCommunicationProtocol implements PhoneCommunicationProtoco
             }
         } catch (BluetoothStateException e) {
             LOGGER.log(Level.SEVERE, "Error while searching for Bluetooth devices", e);
+        }
+
+        return null;
+    }
+
+    public String pollDirectoryViaBluetooth(String directoryPath, BluetoothCommunicationProtocol bluetoothConnection) {
+        if (!bluetoothConnection.isOpen()) {
+            throw new IllegalStateException("Bluetooth connection is not open.");
+        }
+
+        try {
+            // Send a command to list files in the directory
+            bluetoothConnection.send(new JSONObject().put("command", "list_files").put("path", directoryPath).toString());
+            String response = bluetoothConnection.receive();
+
+            if (response != null) {
+                JSONObject jsonResponse = new JSONObject(response);
+
+                if (jsonResponse.has("files")) {
+                    String fileName = jsonResponse.getJSONArray("files").optString(0, null);
+
+                    if (fileName != null) {
+                        // Request the file content
+                        bluetoothConnection.send(new JSONObject().put("command", "get_file").put("path", directoryPath + "/" + fileName).toString());
+                        String fileContent = bluetoothConnection.receive();
+
+                        // Delete the file after retrieving
+                        bluetoothConnection.send(new JSONObject().put("command", "delete_file").put("path", directoryPath + "/" + fileName).toString());
+
+                        return fileContent;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error polling directory via Bluetooth: " + e.getMessage(), e);
         }
 
         return null;
