@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
  * SystemController handles all system-related operations.
  */
 public class SystemController {
-
     private static final Logger LOGGER = LoggerFactory.getLogger(SystemController.class);
     private final PhoneCommunicationProtocol communicationProtocol;
 
