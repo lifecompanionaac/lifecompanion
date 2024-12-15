@@ -2,10 +2,23 @@
 An easy way to connect your Android phone to LifeCompanion for receiving and sending SMS, making calls, and more.
 
 ## Team
+**Students from IUT Vannes, 2024** :
 - Lussandre Lederrey ([`@EDM115`](https://github.com/EDM115))
 - Allan Maccrez ([`@EuphoriaReal`](https://github.com/EuphoriaReal))
 - Théophile Delattre ([`@TheophileDelattre`](https://github.com/TheophileDelattre))
 - Nathan Secrétin ([`@MichelBanane`](https://github.com/MichelBanane))
+
+This plugin is based off the work of the 2 other teams of students from IUT Vannes, 2023 :
+- **Plugin 1** : [lifecompanion/lifecompanion@5fb8344/lifecompanion-plugins/lc-phonecontrol-plugin-1](https://github.com/lifecompanion/lifecompanion/tree/5fb83449e301e1850938433c139b520efed5a9e6/lifecompanion-plugins/lc-phonecontrol-plugin-1)
+  - Oscar Pavoine ([`@OscarGitH`](https://github.com/OscarGitH))
+  - Baptiste Guerny ([`@BatLeDev`](https://github.com/BatLeDev))
+  - Simon Le Chanu
+  - Anthony Hascöet
+- **Plugin 2** : [lifecompanion/lifecompanion@5fb8344/lifecompanion-plugins/lc-phonecontrol-plugin-2](https://github.com/lifecompanion/lifecompanion/tree/5fb83449e301e1850938433c139b520efed5a9e6/lifecompanion-plugins/lc-phonecontrol-plugin-2)
+  - Noé Pierre ([`@noepierre`](https://github.com/noepierre))
+  - Maxime Hermier ([`@Siiiil3nt`](https://github.com/Siiiil3nt))
+  - Clément Bellier
+  - Anatole Derrien
 
 ## Dev
 See [`lc-phonecontrol-plugin-1/README.md`](../lc-phonecontrol-plugin-1/README.md) and [`lc-phonecontrol-plugin-2/README.md`](../lc-phonecontrol-plugin-2/README.md) for more now.  
