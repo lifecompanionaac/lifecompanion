@@ -23,4 +23,6 @@ Thumbs.db
 .env.*
 !.env.example
 local.properties
+keystore.properties
 .kotlin
+*.jks

@@ -13,7 +13,7 @@ This plugin is based off the work of the 2 other teams of students from IUT Vann
   - Oscar Pavoine ([`@OscarGitH`](https://github.com/OscarGitH))
   - Baptiste Guerny ([`@BatLeDev`](https://github.com/BatLeDev))
   - Simon Le Chanu
-  - Anthony Hascöet
+  - Anthony Hascöet ([`@Anthony1406`](https://github.com/Anthony1406))
 - **Plugin 2** : [lifecompanion/lifecompanion@5fb8344/lifecompanion-plugins/lc-phonecontrol-plugin-2](https://github.com/lifecompanion/lifecompanion/tree/5fb83449e301e1850938433c139b520efed5a9e6/lifecompanion-plugins/lc-phonecontrol-plugin-2)
   - Noé Pierre ([`@noepierre`](https://github.com/noepierre))
   - Maxime Hermier ([`@Siiiil3nt`](https://github.com/Siiiil3nt))
@@ -40,6 +40,7 @@ Some complementary information can be found in the [`lc-phonecontrol-plugin/DEV.
 | :x: | Display the call length | **B** |
 | :x: | Count current/missed calls on the homepage | **B** |
 | :x: | Count unread messages on the homepage | **B** |
+| :white_check_mark: | Coherent icons | **B** |
 | :x: | Pass the data through `Bluetooth` | **C** |
 | :x: | List contacts | **C** |
 | :x: | Display the current connected phone for easier understanding | **C** |

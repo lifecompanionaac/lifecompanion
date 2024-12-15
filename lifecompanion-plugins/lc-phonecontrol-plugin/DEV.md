@@ -156,3 +156,7 @@ To ensure robustness, the data must be validated :
 - **Field presence** : All fields (`sender`, `type`, `subtype`, `data`) must be present.
 - **Correct values** : Values like `sender`, `type`, and `subtype` should be limited to pre-defined values.
 - **Data format** : Ensure that phone numbers are in valid international formats, timestamps follow ISO 8601, and volume levels are within 0-10.
+
+### Android app
+The Android app is responsible for handling the phone's functionalities. It communicates with the server to perform actions like sending SMS, making calls, and adjusting volume. The app is built using Kotlin and requires the Android SDK to compile and run.  
+More information can be found in its respective [README](android/README.md).
