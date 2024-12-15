@@ -1,4 +1,4 @@
-## phonecontrol-plugin : Android app
+## `lc-phonecontrol-plugin` : Android app
 
 ### Dev
 You can use Android Studio if you have it. However, it takes a lot of space so you can just get started with CLI tools.  
