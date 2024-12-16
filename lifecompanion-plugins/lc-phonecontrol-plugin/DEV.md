@@ -10,7 +10,7 @@ The JSON format is structured to contain metadata about the sender, the type of 
 ```json
 {
   "sender": "<pc|phone>",
-  "type": "<call|sms|contacts|system>",
+  "type": "<call|sms|system>",
   "subtype": "<specific subtype>",
   "data": {
     "<object containing>": "<specific information>"
@@ -20,7 +20,7 @@ The JSON format is structured to contain metadata about the sender, the type of 
 - **sender**: Indicates which entity is initiating the transmission.
   - Values: `"pc"` or `"phone"`
 - **type**: Represents the type of transmission.
-  - Values: `"call"`, `"sms"`, `"contacts"`, `"system"`
+  - Values: `"call"`, `"sms"`, `"system"`
 - **subtype**: Provides more specific information related to the type.
   - Subtype values vary depending on `type`.
 - **data**: Contains a JSON object relevant to the action.
@@ -84,12 +84,6 @@ The JSON format is structured to contain metadata about the sender, the type of 
        }
        ```
 
-#### Type : **contacts**
-- **Subtypes** :
-  1. **"get_contacts"**
-     - Description : Requests the contact list from the phone.
-     - Data example : `{}` (Empty data)
-
 #### Type : **system**
 - **Subtypes** :
   1. **"adjust_volume"**
@@ -118,16 +112,7 @@ The JSON format is structured to contain metadata about the sender, the type of 
      }
    }
    ```
-2. **Receiving contacts list**
-   ```json
-   {
-     "sender": "phone",
-     "type": "contacts",
-     "subtype": "get_contacts",
-     "data": {}
-   }
-   ```
-3. **Adjusting volume**
+2. **Adjusting volume**
 
    ```json
    {
@@ -139,7 +124,7 @@ The JSON format is structured to contain metadata about the sender, the type of 
      }
    }
    ```
-4. **Making a call**
+3. **Making a call**
    ```json
    {
      "sender": "pc",

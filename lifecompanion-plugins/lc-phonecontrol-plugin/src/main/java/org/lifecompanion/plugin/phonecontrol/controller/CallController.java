@@ -1,5 +1,6 @@
 package org.lifecompanion.plugin.phonecontrol.controller;
 
+import org.lifecompanion.model.api.lifecycle.ModeListenerI;
 import org.lifecompanion.plugin.phonecontrol.server.PhoneCommunicationProtocol;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -8,7 +9,7 @@ import org.slf4j.LoggerFactory;
 /**
  * CallController handles all call-related operations.
  */
-public class CallController {
+public class CallController implements ModeListenerI {
     private static final Logger LOGGER = LoggerFactory.getLogger(CallController.class);
     private final PhoneCommunicationProtocol communicationProtocol;
 

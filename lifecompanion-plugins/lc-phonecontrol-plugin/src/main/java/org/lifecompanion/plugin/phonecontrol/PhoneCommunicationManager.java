@@ -9,7 +9,9 @@ import org.slf4j.LoggerFactory;
 /**
  * PhoneCommunicationManager handles the selection and initialization of the communication protocol (ADB or Bluetooth).
  */
-public class PhoneCommunicationManager {
+public enum PhoneCommunicationManager {
+    INSTANCE;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(PhoneCommunicationManager.class);
 
     public enum ProtocolType {
@@ -17,30 +19,12 @@ public class PhoneCommunicationManager {
         BLUETOOTH
     }
 
-    private static PhoneCommunicationManager instance;
-
     private ProtocolType currentProtocolType;
     private PhoneCommunicationProtocol communicationProtocol;
 
-    /**
-     * Private constructor to enforce singleton pattern.
-     */
-    private PhoneCommunicationManager() {
+    PhoneCommunicationManager() {
         // Default to ADB
         setProtocolType(ProtocolType.ADB);
-    }
-
-    /**
-     * Gets the singleton instance of the manager.
-     *
-     * @return The singleton instance.
-     */
-    public static synchronized PhoneCommunicationManager getInstance() {
-        if (instance == null) {
-            instance = new PhoneCommunicationManager();
-        }
-
-        return instance;
     }
 
     /**

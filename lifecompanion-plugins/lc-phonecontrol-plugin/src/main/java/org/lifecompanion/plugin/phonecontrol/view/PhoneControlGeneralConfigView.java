@@ -14,11 +14,11 @@ import javafx.collections.ObservableList;
 
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
+import org.lifecompanion.plugin.phonecontrol.PhoneCommunicationManager;
+import org.lifecompanion.plugin.phonecontrol.PhoneCommunicationManager.ProtocolType;
 import org.lifecompanion.plugin.phonecontrol.PhoneControlController;
 import org.lifecompanion.plugin.phonecontrol.PhoneControlPlugin;
 import org.lifecompanion.plugin.phonecontrol.PhoneControlPluginProperties;
-import org.lifecompanion.plugin.phonecontrol.PhoneCommunicationManager;
-import org.lifecompanion.plugin.phonecontrol.PhoneCommunicationManager.ProtocolType;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStepViewI;
 import org.lifecompanion.ui.controlsfx.control.ToggleSwitch;
 import org.lifecompanion.ui.common.control.generic.DurationPickerControl;
@@ -44,7 +44,7 @@ public class PhoneControlGeneralConfigView extends BorderPane implements General
     private Label labelInstallResult;
 
     // Communication Protocol
-    private ComboBox<ProtocolType> protocolSelectionComboBox;
+    private ComboBox<PhoneCommunicationManager.ProtocolType> protocolSelectionComboBox;
 
     public PhoneControlGeneralConfigView() {
         initAll();
@@ -119,7 +119,7 @@ public class PhoneControlGeneralConfigView extends BorderPane implements General
         // Communication protocol selection
         protocolSelectionComboBox = new ComboBox<>();
         protocolSelectionComboBox.getItems().addAll(ProtocolType.ADB, ProtocolType.BLUETOOTH);
-        protocolSelectionComboBox.setValue(PhoneCommunicationManager.getInstance().getCurrentProtocolType());
+        protocolSelectionComboBox.setValue(PhoneCommunicationManager.INSTANCE.getCurrentProtocolType());
         protocolSelectionComboBox.setOnAction(event -> onProtocolSelectionChanged());
 
         HBox protocolSelectionBox = new HBox(10, new Label(Translation.getText("phonecontrol.plugin.config.label.protocol.selection")), protocolSelectionComboBox);
@@ -152,7 +152,7 @@ public class PhoneControlGeneralConfigView extends BorderPane implements General
     private void onProtocolSelectionChanged() {
         ProtocolType selectedProtocol = protocolSelectionComboBox.getValue();
         if (selectedProtocol != null) {
-            PhoneCommunicationManager.getInstance().setProtocolType(selectedProtocol);
+            PhoneCommunicationManager.INSTANCE.setProtocolType(selectedProtocol);
         }
     }
 
