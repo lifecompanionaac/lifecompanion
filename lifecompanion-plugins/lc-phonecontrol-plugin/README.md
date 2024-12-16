@@ -12,7 +12,7 @@ This plugin is based off the work of the 2 other teams of students from IUT Vann
 - **Plugin 1** : [lifecompanion/lifecompanion@5fb8344/lifecompanion-plugins/lc-phonecontrol-plugin-1](https://github.com/lifecompanion/lifecompanion/tree/5fb83449e301e1850938433c139b520efed5a9e6/lifecompanion-plugins/lc-phonecontrol-plugin-1)
   - Oscar Pavoine ([`@OscarGitH`](https://github.com/OscarGitH))
   - Baptiste Guerny ([`@BatLeDev`](https://github.com/BatLeDev))
-  - Simon Le Chanu
+  - Simon Le Chanu ([`@Sh3spas`](https://github.com/Sh3spas))
   - Anthony Hascöet ([`@Anthony1406`](https://github.com/Anthony1406))
 - **Plugin 2** : [lifecompanion/lifecompanion@5fb8344/lifecompanion-plugins/lc-phonecontrol-plugin-2](https://github.com/lifecompanion/lifecompanion/tree/5fb83449e301e1850938433c139b520efed5a9e6/lifecompanion-plugins/lc-phonecontrol-plugin-2)
   - Noé Pierre ([`@noepierre`](https://github.com/noepierre))

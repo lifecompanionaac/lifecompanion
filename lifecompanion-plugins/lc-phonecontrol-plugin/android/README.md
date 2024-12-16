@@ -19,7 +19,7 @@ For this we will setup the dev environment on Windows and provide instructions f
 2. **Install the SDK**
     1. Create a new folder to hold the SDK (usually `C:\Android\`, however we don't agree with softwares creating their folders to the root. imagine if an app on linux created their folder at `/` ! This is why we wil go with `C:\Program Files\Android`, but you can change it to any folder, even on another drive).
     2. Download the command line tools from [here](https://developer.android.com/studio/index.html#command-line-tools-only). Extract it to the previously created folder so you have a directory structure like `C:\Program Files\Android\cmdline-tools\bin`.
-    3. Open a PowerShell in `C:\Program Files\Android\` and type the following :
+    3. Open a PowerShell as admin in `C:\Program Files\Android\` and type the following :
         ```pwsh
         cmdline-tools/bin/sdkmanager --sdk_root="C:\Program Files\Android" --install "platform-tools" "build-tools;35.0.0" "platforms;android-26" "platforms;android-35"
         cmdline-tools/bin/sdkmanager --sdk_root="C:\Program Files\Android" --update

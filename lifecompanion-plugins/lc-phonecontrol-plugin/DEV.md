@@ -160,3 +160,7 @@ To ensure robustness, the data must be validated :
 ### Android app
 The Android app is responsible for handling the phone's functionalities. It communicates with the server to perform actions like sending SMS, making calls, and adjusting volume. The app is built using Kotlin and requires the Android SDK to compile and run.  
 More information can be found in its respective [README](android/README.md).
+
+### ADB
+Get latest from https://dl.google.com/android/repository/platform-tools-latest-windows.zip and https://dl.google.com/android/repository/platform-tools-latest-linux.zip  
+Maybe check https://developer.android.com/tools/adb#wireless-android11-command-line in place of Bluetooth connexion.
