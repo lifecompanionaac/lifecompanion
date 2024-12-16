@@ -1,5 +1,8 @@
 package org.lifecompanion.plugin.phonecontrol;
 
+import java.io.File;
+
+import org.lifecompanion.plugin.phonecontrol.controller.ConnexionController;
 import org.lifecompanion.plugin.phonecontrol.server.AdbCommunicationProtocol;
 import org.lifecompanion.plugin.phonecontrol.server.BluetoothCommunicationProtocol;
 import org.lifecompanion.plugin.phonecontrol.server.PhoneCommunicationProtocol;
@@ -20,25 +23,24 @@ public enum PhoneCommunicationManager {
     }
 
     private ProtocolType currentProtocolType;
+    private ConnexionController connexionController;
     private PhoneCommunicationProtocol communicationProtocol;
-
-    PhoneCommunicationManager() {
-        // Default to ADB
-        setProtocolType(ProtocolType.ADB);
-    }
 
     /**
      * Sets the communication protocol type and initializes the corresponding protocol.
      *
      * @param protocolType The selected protocol type (ADB or Bluetooth).
      */
-    public void setProtocolType(ProtocolType protocolType) {
+    public void setProtocolType(ProtocolType protocolType, File dataDirectory) {
         this.currentProtocolType = protocolType;
 
         switch (protocolType) {
             case ADB:
                 LOGGER.info("Initializing ADB protocol.");
-                this.communicationProtocol = new AdbCommunicationProtocol("/path/to/adb"); // Update path as needed
+                this.communicationProtocol = new AdbCommunicationProtocol(dataDirectory);
+                this.connexionController = new ConnexionController();
+                this.connexionController.installAdb(dataDirectory);
+                ((AdbCommunicationProtocol) this.communicationProtocol).openConnection();
 
                 break;
             case BLUETOOTH:

@@ -37,7 +37,7 @@ public class PhoneControlPlugin implements PluginI {
 
     @Override
     public void start(File dataDirectory) {
-        PhoneControlController.INSTANCE.start(dataDirectory);
+        PhoneCommunicationManager.INSTANCE.setProtocolType(PhoneCommunicationManager.ProtocolType.ADB, dataDirectory);
     }
 
     @Override

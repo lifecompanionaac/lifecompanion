@@ -1,6 +1,7 @@
 package org.lifecompanion.plugin.phonecontrol.server;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.logging.Level;
@@ -12,6 +13,7 @@ import java.util.logging.Logger;
  */
 public class AdbCommunicationProtocol implements PhoneCommunicationProtocol {
     private static final Logger LOGGER = Logger.getLogger(AdbCommunicationProtocol.class.getName());
+    private File adb;
     private String adbPath;
     private boolean connectionOpen;
 
@@ -20,9 +22,14 @@ public class AdbCommunicationProtocol implements PhoneCommunicationProtocol {
      * 
      * @param adbPath The path to the ADB executable.
      */
-    public AdbCommunicationProtocol(String adbPath) {
-        this.adbPath = adbPath;
+    public AdbCommunicationProtocol(File adb) {
+        this.adb = adb;
+        this.adbPath = adb.getPath();
         this.connectionOpen = false;
+    }
+
+    public File getAdbPath() {
+        return adb;
     }
 
     @Override
@@ -81,12 +88,25 @@ public class AdbCommunicationProtocol implements PhoneCommunicationProtocol {
         return connectionOpen;
     }
 
+    private void startAdb() {
+        LOGGER.info("Starting ADB");
+        try {
+            ProcessBuilder processBuilder = new ProcessBuilder(adbPath, "start-server");
+            Process process = processBuilder.start();
+            process.waitFor();
+        } catch (Exception e) {
+            LOGGER.severe("Error starting ADB: " + e);
+        }
+    }
+
     /**
      * Establish a connection via ADB.
      * 
      * @return True if the connection was successfully opened, false otherwise.
      */
     public boolean openConnection() {
+        startAdb();
+        
         try {
             ProcessBuilder processBuilder = new ProcessBuilder(adbPath, "devices");
             Process process = processBuilder.start();

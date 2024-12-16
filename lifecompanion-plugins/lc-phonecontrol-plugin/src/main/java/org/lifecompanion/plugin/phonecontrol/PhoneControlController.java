@@ -99,8 +99,6 @@ public enum PhoneControlController implements ModeListenerI {
             adbFileName += ".exe";
         } else if (systemType == SystemType.UNIX) {
             inputFolder = "/adb/platform-tools-linux.zip";
-        } else if (systemType == SystemType.MAC) {
-            inputFolder = "/adb/platform-tools-mac.zip";
         } else {
             LOGGER.error("Unsupported system type");
         }

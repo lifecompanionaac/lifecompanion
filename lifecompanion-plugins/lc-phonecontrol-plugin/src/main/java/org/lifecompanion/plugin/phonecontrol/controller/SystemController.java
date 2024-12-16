@@ -1,5 +1,6 @@
 package org.lifecompanion.plugin.phonecontrol.controller;
 
+import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
 import org.lifecompanion.plugin.phonecontrol.server.PhoneCommunicationProtocol;
 import org.json.JSONObject;
@@ -8,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * SystemController handles all system-related operations.
+ * It is also the main controller to instanciate the communication protocol.
  */
 public class SystemController implements ModeListenerI {
     private static final Logger LOGGER = LoggerFactory.getLogger(SystemController.class);
@@ -65,5 +67,17 @@ public class SystemController implements ModeListenerI {
         } catch (Exception e) {
             LOGGER.error("Error requesting connection status", e);
         }
+    }
+
+    @Override
+    public void modeStart(LCConfigurationI arg0) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'modeStart'");
+    }
+
+    @Override
+    public void modeStop(LCConfigurationI arg0) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'modeStop'");
     }
 }
