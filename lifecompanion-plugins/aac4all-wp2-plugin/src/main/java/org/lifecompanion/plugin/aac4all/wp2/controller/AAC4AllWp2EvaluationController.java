@@ -283,11 +283,10 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
 
     @Override
     public void modeStop(LCConfigurationI configuration) {
-        WritingStateController.INSTANCE.removeAll(WritingEventSource.USER_ACTIONS);
         stopLogListener();
+        WritingStateController.INSTANCE.removeAll(WritingEventSource.USER_ACTIONS);
         this.configuration = null;
         this.currentAAC4AllWp2PluginProperties = null;
-
     }
 
     public void startDailyTraining() {
@@ -502,7 +501,7 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
 
                     stopLogListener();
 
-                    recordLogs();
+
 
                     // go to EVA interface
                     if(configuration!=null){

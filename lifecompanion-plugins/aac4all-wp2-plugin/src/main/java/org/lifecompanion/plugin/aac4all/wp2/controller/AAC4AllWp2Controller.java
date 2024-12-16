@@ -218,11 +218,13 @@ public enum AAC4AllWp2Controller implements ModeListenerI {
 
                         //saving the configuration of the line.
                         for (int j = 0; j < selectedComponentToScan.getComponents().size(); j++) {
-                            GridPartComponentI gridPartComponent = selectedComponentToScan.getPartIn(selectionMode.currentGridProperty().get(), j);
-                            if (gridPartComponent instanceof GridPartKeyComponentI key) {
-                                if (key.keyOptionProperty().get() instanceof AAC4AllKeyOptionReolocG aac4AllKeyOptionReolocG) {
-                                    previousLineG.put(aac4AllKeyOptionReolocG, aac4AllKeyOptionReolocG.predictionProperty().get());
-                                    charsPreviousLineG = charsPreviousLineG + aac4AllKeyOptionReolocG.predictionProperty().get();
+                            if(selectionMode!=null) {
+                                GridPartComponentI gridPartComponent = selectedComponentToScan.getPartIn(selectionMode.currentGridProperty().get(), j);
+                                if (gridPartComponent instanceof GridPartKeyComponentI key) {
+                                    if (key.keyOptionProperty().get() instanceof AAC4AllKeyOptionReolocG aac4AllKeyOptionReolocG) {
+                                        previousLineG.put(aac4AllKeyOptionReolocG, aac4AllKeyOptionReolocG.predictionProperty().get());
+                                        charsPreviousLineG = charsPreviousLineG + aac4AllKeyOptionReolocG.predictionProperty().get();
+                                    }
                                 }
                             }
                         }
@@ -233,20 +235,22 @@ public enum AAC4AllWp2Controller implements ModeListenerI {
                         //modifing the line with character predictionwha
                         int indexPosition = 0; // for save index of prediction for RéoLoc keys
                         for (int j = 0; j < selectedComponentToScan.getComponents().size(); j++) {
-                            GridPartComponentI gridPartComponent = selectedComponentToScan.getPartIn(selectionMode.currentGridProperty().get(), j);
-                            if (gridPartComponent instanceof GridPartKeyComponentI key) {
-                                if (key.keyOptionProperty().get() instanceof AAC4AllKeyOptionReolocG aac4AllKeyOptionReolocG) {
-                                    // There is a prediction
-                                    if (j - indexPosition < predict.size()) {
-                                        Character pred = predict.get(j - indexPosition);
-                                        charForKeys.remove(pred);
-                                        aac4AllKeyOptionReolocG.predictionProperty().set(String.valueOf(pred));
-                                    }
-                                    // No prediction: take char left
-                                    else {
-                                        aac4AllKeyOptionReolocG.predictionProperty().set(String.valueOf(charForKeys.poll()));
-                                    }
-                                } else indexPosition++;
+                            if(selectionMode!=null) {
+                                GridPartComponentI gridPartComponent = selectedComponentToScan.getPartIn(selectionMode.currentGridProperty().get(), j);
+                                if (gridPartComponent instanceof GridPartKeyComponentI key) {
+                                    if (key.keyOptionProperty().get() instanceof AAC4AllKeyOptionReolocG aac4AllKeyOptionReolocG) {
+                                        // There is a prediction
+                                        if (j - indexPosition < predict.size()) {
+                                            Character pred = predict.get(j - indexPosition);
+                                            charForKeys.remove(pred);
+                                            aac4AllKeyOptionReolocG.predictionProperty().set(String.valueOf(pred));
+                                        }
+                                        // No prediction: take char left
+                                        else {
+                                            aac4AllKeyOptionReolocG.predictionProperty().set(String.valueOf(charForKeys.poll()));
+                                        }
+                                    } else indexPosition++;
+                                }
                             }
                         }
                     }
