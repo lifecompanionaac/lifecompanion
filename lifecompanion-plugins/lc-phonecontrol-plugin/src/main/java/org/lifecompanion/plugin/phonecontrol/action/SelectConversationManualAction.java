@@ -6,8 +6,8 @@ import org.jdom2.Element;
 
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.impl.exception.LCException;
-import org.lifecompanion.plugin.phonecontrol.PhoneControlController;
 import org.lifecompanion.plugin.phonecontrol.action.categories.PhoneControlActionSubCategories;
+import org.lifecompanion.plugin.phonecontrol.controller.ConnexionController;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
@@ -47,7 +47,7 @@ public class SelectConversationManualAction extends SimpleUseActionImpl<UseActio
 
     @Override
     public void execute(UseActionEvent event, Map<String, UseVariableI<?>> variables) {
-        PhoneControlController.INSTANCE.selectConv(phoneNumber.get(), contactName.get());
+        ConnexionController.INSTANCE.selectConv(phoneNumber.get(), contactName.get());
     }
 
     @Override

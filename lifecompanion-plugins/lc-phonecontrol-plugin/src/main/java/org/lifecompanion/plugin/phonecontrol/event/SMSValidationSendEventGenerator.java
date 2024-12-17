@@ -4,7 +4,8 @@ import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.impl.categorizedelement.useevent.BaseUseEventGeneratorImpl;
 import org.lifecompanion.model.impl.exception.LCException;
-import org.lifecompanion.plugin.phonecontrol.PhoneControlController;
+import org.lifecompanion.plugin.phonecontrol.controller.ConnexionController;
+import org.lifecompanion.plugin.phonecontrol.controller.SMSController;
 import org.lifecompanion.plugin.phonecontrol.event.categories.PhoneControlEventSubCategories;
 
 import javafx.beans.property.ObjectProperty;
@@ -58,15 +59,15 @@ public class SMSValidationSendEventGenerator extends BaseUseEventGeneratorImpl {
     // Class part : "Mode start/stop"
     @Override
     public void modeStart(final LCConfigurationI configuration) {
-        PhoneControlController.INSTANCE.addValidationSendSMSCallback(validationSendSMSCallback);
+        SMSController.INSTANCE.addValidationSendSMSCallback(validationSendSMSCallback);
         // On start, fire first event
-        int unreadCount = PhoneControlController.INSTANCE.getSmsUnread();
+        int unreadCount = ConnexionController.INSTANCE.getSmsUnread();
         validationSendSMSCallback.accept(unreadCount);
     }
 
     @Override
     public void modeStop(final LCConfigurationI configuration) {
-        PhoneControlController.INSTANCE.removeValidationSendSMSCallback(validationSendSMSCallback);
+        SMSController.INSTANCE.removeValidationSendSMSCallback(validationSendSMSCallback);
     }
 
     // Class part : "Generation condition"

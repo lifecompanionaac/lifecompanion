@@ -8,8 +8,8 @@ import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.AbstractKeyOption;
-import org.lifecompanion.plugin.phonecontrol.PhoneControlController;
 import org.lifecompanion.plugin.phonecontrol.action.SelectConversationFromListAction;
+import org.lifecompanion.plugin.phonecontrol.controller.ConnexionController;
 import org.lifecompanion.plugin.phonecontrol.model.ConversationListContent;
 
 public class ConversationListKeyOption extends AbstractKeyOption {
@@ -61,11 +61,11 @@ public class ConversationListKeyOption extends AbstractKeyOption {
             final GridPartKeyComponentI key = this.attachedKey.get();
 
             if (nv != null) {
-                if (nv == PhoneControlController.CONV_LOADING) {
+                if (nv == ConnexionController.CONV_LOADING) {
                     key.textContentProperty().set(Translation.getText("phonecontrol.plugin.key.option.list.loading"));
-                } else if (nv == PhoneControlController.CONV_NOT_CONNECTED) {
+                } else if (nv == ConnexionController.CONV_NOT_CONNECTED) {
                     key.textContentProperty().set(Translation.getText("phonecontrol.plugin.key.option.list.not.connected"));
-                } else if (nv == PhoneControlController.CONV_END_MESSAGE) {
+                } else if (nv == ConnexionController.CONV_END_MESSAGE) {
                     key.textContentProperty().set(Translation.getText("phonecontrol.plugin.key.option.conversation.list.empty"));
                 } else {
                     key.textContentProperty().set(getConversationCellString(nv));

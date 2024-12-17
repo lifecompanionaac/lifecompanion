@@ -4,8 +4,8 @@ import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
 import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
 import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
-import org.lifecompanion.plugin.phonecontrol.PhoneControlController;
 import org.lifecompanion.plugin.phonecontrol.action.categories.PhoneControlActionSubCategories;
+import org.lifecompanion.plugin.phonecontrol.controller.ConnexionController;
 import org.lifecompanion.plugin.phonecontrol.keyoption.ConversationListKeyOption;
 
 import java.util.Map;
@@ -34,7 +34,7 @@ public class SelectConversationFromListAction extends SimpleUseActionImpl<GridPa
             ConversationListKeyOption conversationListKeyOption = (ConversationListKeyOption) parentKey.keyOptionProperty().get();
             String phoneNumber = conversationListKeyOption.convProperty().get().getPhoneNumber();
             String phoneNumberOrContactName = conversationListKeyOption.convProperty().get().getContactName();
-            PhoneControlController.INSTANCE.selectConv(phoneNumber, phoneNumberOrContactName);
+            ConnexionController.INSTANCE.selectConv(phoneNumber, phoneNumberOrContactName);
         }
     }
 }

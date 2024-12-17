@@ -4,8 +4,8 @@ import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
 import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
-import org.lifecompanion.plugin.phonecontrol.PhoneControlController;
 import org.lifecompanion.plugin.phonecontrol.action.categories.PhoneControlActionSubCategories;
+import org.lifecompanion.plugin.phonecontrol.controller.SMSController;
 
 import java.util.Map;
 
@@ -27,6 +27,6 @@ public class SendMessageAction extends SimpleUseActionImpl<UseActionTriggerCompo
 
     @Override
     public void execute(UseActionEvent event, Map<String, UseVariableI<?>> variables) {
-        PhoneControlController.INSTANCE.sendSMS();
+        SMSController.INSTANCE.sendSMS();
     }
 }

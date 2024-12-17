@@ -1,7 +1,7 @@
 package org.lifecompanion.plugin.phonecontrol.action;
 
-import org.lifecompanion.plugin.phonecontrol.PhoneControlController;
 import org.lifecompanion.plugin.phonecontrol.action.categories.PhoneControlActionSubCategories;
+import org.lifecompanion.plugin.phonecontrol.controller.ConnexionController;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
@@ -30,7 +30,7 @@ public class SelectConversationFromTextAction extends SimpleUseActionImpl<UseAct
     @Override
     public void execute(UseActionEvent event, Map<String, UseVariableI<?>> variables) {
         String phoneNumber = WritingStateController.INSTANCE.currentTextProperty().get();
-        PhoneControlController.INSTANCE.selectConv(phoneNumber, phoneNumber);
+        ConnexionController.INSTANCE.selectConv(phoneNumber, phoneNumber);
         WritingStateController.INSTANCE.removeAll(WritingEventSource.SYSTEM);
     }
 }

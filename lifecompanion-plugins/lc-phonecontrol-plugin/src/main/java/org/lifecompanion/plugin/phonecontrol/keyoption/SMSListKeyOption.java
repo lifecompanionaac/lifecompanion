@@ -15,7 +15,7 @@ import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
 import org.lifecompanion.model.api.style.TextCompStyleI;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.AbstractKeyOption;
-import org.lifecompanion.plugin.phonecontrol.PhoneControlController;
+import org.lifecompanion.plugin.phonecontrol.controller.ConnexionController;
 import org.lifecompanion.plugin.phonecontrol.model.SMSListContent;
 
 public class SMSListKeyOption extends AbstractKeyOption {
@@ -61,12 +61,12 @@ public class SMSListKeyOption extends AbstractKeyOption {
             final GridPartKeyComponentI key = this.attachedKey.get();
 
             if (nv != null) {
-                if (nv == PhoneControlController.SMS_LOADING) {
+                if (nv == ConnexionController.SMS_LOADING) {
                     key.textContentProperty().set(Translation.getText("phonecontrol.plugin.key.option.list.loading"));
                     dateNode.set(null); // Clear date node
-                } else if (nv == PhoneControlController.SMS_NOT_CONNECTED) {
+                } else if (nv == ConnexionController.SMS_NOT_CONNECTED) {
                     key.textContentProperty().set(Translation.getText("phonecontrol.plugin.key.option.list.not.connected"));
-                } else if (nv == PhoneControlController.SMS_END_MESSAGE) {
+                } else if (nv == ConnexionController.SMS_END_MESSAGE) {
                     key.textContentProperty().set(Translation.getText("phonecontrol.plugin.key.option.sms.list.empty"));
                 } else {
                     // Set text content

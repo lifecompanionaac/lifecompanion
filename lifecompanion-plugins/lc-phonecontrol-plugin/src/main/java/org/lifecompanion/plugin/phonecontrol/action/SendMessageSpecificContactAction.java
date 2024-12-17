@@ -10,8 +10,9 @@ import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
 import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
 import org.lifecompanion.model.impl.exception.LCException;
-import org.lifecompanion.plugin.phonecontrol.PhoneControlController;
 import org.lifecompanion.plugin.phonecontrol.action.categories.PhoneControlActionSubCategories;
+import org.lifecompanion.plugin.phonecontrol.controller.ConnexionController;
+import org.lifecompanion.plugin.phonecontrol.controller.SMSController;
 
 import java.util.Map;
 
@@ -45,8 +46,8 @@ public class SendMessageSpecificContactAction extends SimpleUseActionImpl<UseAct
 
     @Override
     public void execute(UseActionEvent event, Map<String, UseVariableI<?>> variables) {
-        PhoneControlController.INSTANCE.selectConv(phoneNumber.get(), contactName.get());
-        PhoneControlController.INSTANCE.sendSMS();
+        ConnexionController.INSTANCE.selectConv(phoneNumber.get(), contactName.get());
+        SMSController.INSTANCE.sendSMS();
     }
 
     @Override

@@ -58,26 +58,6 @@ public enum CallController {
     }
 
     /**
-     * Calls the voicemail service.
-     */
-    public void callVoicemail() {
-        try {
-            JSONObject json = new JSONObject();
-            json.put("sender", "pc");
-            json.put("type", "call");
-            json.put("subtype", "call_messagerie");
-            json.put("data", new JSONObject());
-
-            String jsonWithTimestamp = GlobalState.INSTANCE.getCommunicationProtocol().addTimestamp(json.toString());
-            GlobalState.INSTANCE.getCommunicationProtocol().send(jsonWithTimestamp);
-
-            LOGGER.info("Called voicemail service.");
-        } catch (Exception e) {
-            LOGGER.error("Error calling voicemail", e);
-        }
-    }
-
-    /**
      * Sends DTMF (Dual-Tone Multi-Frequency) input during a call.
      *
      * @param dtmf The DTMF input sequence.
