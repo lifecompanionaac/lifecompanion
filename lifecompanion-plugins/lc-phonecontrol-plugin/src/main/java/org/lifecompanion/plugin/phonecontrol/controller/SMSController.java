@@ -1,6 +1,5 @@
 package org.lifecompanion.plugin.phonecontrol.controller;
 
-import org.lifecompanion.model.api.lifecycle.ModeListenerI;
 import org.lifecompanion.plugin.phonecontrol.server.PhoneCommunicationProtocol;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -9,17 +8,18 @@ import org.slf4j.LoggerFactory;
 /**
  * SMSController handles all SMS-related operations.
  */
-public class SMSController implements ModeListenerI {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SMSController.class);
-    private final PhoneCommunicationProtocol communicationProtocol;
+public enum SMSController {
+    INSTANCE;
 
-    /**
-     * Constructor to initialize the SMSController with a communication protocol.
-     *
-     * @param communicationProtocol The protocol used for communication with the phone.
-     */
-    public SMSController(PhoneCommunicationProtocol communicationProtocol) {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SMSController.class);
+    private PhoneCommunicationProtocol communicationProtocol;
+
+    public void setCommunicationProtocol(PhoneCommunicationProtocol communicationProtocol) {
         this.communicationProtocol = communicationProtocol;
+    }
+
+    public PhoneCommunicationProtocol getCommunicationProtocol() {
+        return communicationProtocol;
     }
 
     /**

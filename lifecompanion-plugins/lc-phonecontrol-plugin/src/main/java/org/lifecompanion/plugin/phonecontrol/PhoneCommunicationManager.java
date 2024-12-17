@@ -1,6 +1,7 @@
 package org.lifecompanion.plugin.phonecontrol;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import org.lifecompanion.plugin.phonecontrol.controller.ConnexionController;
 import org.lifecompanion.plugin.phonecontrol.server.AdbCommunicationProtocol;
@@ -23,8 +24,8 @@ public enum PhoneCommunicationManager {
     }
 
     private ProtocolType currentProtocolType;
-    private ConnexionController connexionController;
     private PhoneCommunicationProtocol communicationProtocol;
+    private String deviceSerialNumber;
 
     /**
      * Sets the communication protocol type and initializes the corresponding protocol.
@@ -38,9 +39,10 @@ public enum PhoneCommunicationManager {
             case ADB:
                 LOGGER.info("Initializing ADB protocol.");
                 this.communicationProtocol = new AdbCommunicationProtocol(dataDirectory);
-                this.connexionController = new ConnexionController();
-                this.connexionController.installAdb(dataDirectory);
+                ConnexionController.INSTANCE.startController(this.communicationProtocol);
+                ConnexionController.INSTANCE.installAdb(dataDirectory);
                 ((AdbCommunicationProtocol) this.communicationProtocol).openConnection();
+                ((AdbCommunicationProtocol) this.communicationProtocol).installApk();
 
                 break;
             case BLUETOOTH:
@@ -69,5 +71,40 @@ public enum PhoneCommunicationManager {
      */
     public ProtocolType getCurrentProtocolType() {
         return currentProtocolType;
+    }
+
+    public void stop() {
+        if (communicationProtocol != null) {
+            communicationProtocol.close();
+            communicationProtocol = null;
+        }
+    }
+
+    public ArrayList<String> getDevices() {
+        // TODO
+        return new ArrayList<>();
+    }
+
+    public String getDeviceSerialNumber() {
+        return deviceSerialNumber;
+    }
+
+    public String getDeviceName(String deviceSerialNumber) {
+        // TODO
+        return "";
+    }
+
+    public boolean installApp(String deviceSerialNumber, String apkPath) {
+        // TODO
+        return false;
+    }
+
+    public boolean isAppInstalled(String deviceSerialNumber) {
+        // TODO
+        return false;
+    }
+
+    public void startApp(String deviceSerialNumber) {
+        // TODO
     }
 }

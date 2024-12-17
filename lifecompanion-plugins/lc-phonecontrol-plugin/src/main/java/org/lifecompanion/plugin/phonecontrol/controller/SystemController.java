@@ -1,7 +1,5 @@
 package org.lifecompanion.plugin.phonecontrol.controller;
 
-import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
-import org.lifecompanion.model.api.lifecycle.ModeListenerI;
 import org.lifecompanion.plugin.phonecontrol.server.PhoneCommunicationProtocol;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -11,17 +9,18 @@ import org.slf4j.LoggerFactory;
  * SystemController handles all system-related operations.
  * It is also the main controller to instanciate the communication protocol.
  */
-public class SystemController implements ModeListenerI {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SystemController.class);
-    private final PhoneCommunicationProtocol communicationProtocol;
+public enum SystemController {
+    INSTANCE;
 
-    /**
-     * Constructor to initialize the SystemController with a communication protocol.
-     *
-     * @param communicationProtocol The protocol used for communication with the phone.
-     */
-    public SystemController(PhoneCommunicationProtocol communicationProtocol) {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SystemController.class);
+    private PhoneCommunicationProtocol communicationProtocol;
+
+    public void setCommunicationProtocol(PhoneCommunicationProtocol communicationProtocol) {
         this.communicationProtocol = communicationProtocol;
+    }
+
+    public PhoneCommunicationProtocol getCommunicationProtocol() {
+        return communicationProtocol;
     }
 
     /**
@@ -67,17 +66,5 @@ public class SystemController implements ModeListenerI {
         } catch (Exception e) {
             LOGGER.error("Error requesting connection status", e);
         }
-    }
-
-    @Override
-    public void modeStart(LCConfigurationI arg0) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'modeStart'");
-    }
-
-    @Override
-    public void modeStop(LCConfigurationI arg0) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'modeStop'");
     }
 }

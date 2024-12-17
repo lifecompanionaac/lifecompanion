@@ -9,6 +9,7 @@ import org.lifecompanion.model.api.usevariable.UseVariableI;
 import org.lifecompanion.model.impl.usevariable.IntegerUseVariable;
 import org.lifecompanion.model.impl.usevariable.StringUseVariable;
 import org.lifecompanion.model.impl.usevariable.UseVariableDefinition;
+import org.lifecompanion.plugin.phonecontrol.controller.ConnexionController;
 
 import java.io.File;
 import java.util.Arrays;
@@ -42,36 +43,36 @@ public class PhoneControlPlugin implements PluginI {
 
     @Override
     public void stop(File dataDirectory) {
-        PhoneControlController.INSTANCE.stop();
+        PhoneCommunicationManager.INSTANCE.stop();
     }
 
     @Override
     public void modeStart(LCConfigurationI configuration) {
-        PhoneControlController.INSTANCE.modeStart(configuration);
+        ConnexionController.INSTANCE.modeStart(configuration);
     }
 
     @Override
     public void modeStop(LCConfigurationI configuration) {
-        PhoneControlController.INSTANCE.modeStop(configuration);
+        ConnexionController.INSTANCE.modeStop(configuration);
     }
 
     @Override
     public List<UseVariableDefinitionI> getDefinedVariables() {
         return Arrays.asList(
             new UseVariableDefinition(
-                PhoneControlController.VAR_SMS_UNREAD,
+                ConnexionController.VAR_SMS_UNREAD,
                 "phonecontrol.plugin.use.variable.sms.unread.name",
                 "phonecontrol.plugin.use.variable.sms.unread.description",
                 "phonecontrol.plugin.use.variable.sms.unread.example"
             ),
             new UseVariableDefinition(
-                PhoneControlController.VAR_CALL_DURATION,
+                ConnexionController.VAR_CALL_DURATION,
                 "phonecontrol.plugin.use.variable.call.duration.name",
                 "phonecontrol.plugin.use.variable.call.duration.description",
                 "phonecontrol.plugin.use.variable.call.duration.example"
             ),
             new UseVariableDefinition(
-                PhoneControlController.VAR_PHONE_NUMBER_OR_CONTACT_NAME,
+                ConnexionController.VAR_PHONE_NUMBER_OR_CONTACT_NAME,
                 "phonecontrol.plugin.use.variable.phone.number.or.contact.name.name",
                 "phonecontrol.plugin.use.variable.phone.number.or.contact.name.description",
                 "phonecontrol.plugin.use.variable.phone.number.or.contact.name.example"
@@ -82,12 +83,12 @@ public class PhoneControlPlugin implements PluginI {
     @Override
     public Function<UseVariableDefinitionI, UseVariableI<?>> getSupplierForUseVariable(String id) {
         return switch (id) {
-            case PhoneControlController.VAR_SMS_UNREAD ->
-                def -> new IntegerUseVariable(def, PhoneControlController.INSTANCE.getSmsUnread());
-            case PhoneControlController.VAR_CALL_DURATION ->
-                def -> new StringUseVariable(def, PhoneControlController.INSTANCE.getCallDuration());
-            case PhoneControlController.VAR_PHONE_NUMBER_OR_CONTACT_NAME ->
-                def -> new StringUseVariable(def, PhoneControlController.INSTANCE.getPhoneNumberOrContactName());
+            case ConnexionController.VAR_SMS_UNREAD ->
+                def -> new IntegerUseVariable(def, ConnexionController.INSTANCE.getSmsUnread());
+            case ConnexionController.VAR_CALL_DURATION ->
+                def -> new StringUseVariable(def, ConnexionController.INSTANCE.getCallDuration());
+            case ConnexionController.VAR_PHONE_NUMBER_OR_CONTACT_NAME ->
+                def -> new StringUseVariable(def, ConnexionController.INSTANCE.getPhoneNumberOrContactName());
             default -> null;
         };
     }
