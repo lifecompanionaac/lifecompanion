@@ -1,6 +1,5 @@
 package org.lifecompanion.plugin.phonecontrol.controller;
 
-import org.lifecompanion.plugin.phonecontrol.server.PhoneCommunicationProtocol;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,15 +12,6 @@ public enum SystemController {
     INSTANCE;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SystemController.class);
-    private PhoneCommunicationProtocol communicationProtocol;
-
-    public void setCommunicationProtocol(PhoneCommunicationProtocol communicationProtocol) {
-        this.communicationProtocol = communicationProtocol;
-    }
-
-    public PhoneCommunicationProtocol getCommunicationProtocol() {
-        return communicationProtocol;
-    }
 
     /**
      * Adjusts the phone's volume.
@@ -39,8 +29,8 @@ public enum SystemController {
             data.put("mode", mode);
             json.put("data", data);
 
-            String jsonWithTimestamp = communicationProtocol.addTimestamp(json.toString());
-            communicationProtocol.send(jsonWithTimestamp);
+            String jsonWithTimestamp = GlobalState.INSTANCE.getCommunicationProtocol().addTimestamp(json.toString());
+            GlobalState.INSTANCE.getCommunicationProtocol().send(jsonWithTimestamp);
 
             LOGGER.info("Adjusted volume: {}", mode);
         } catch (Exception e) {
@@ -59,8 +49,8 @@ public enum SystemController {
             json.put("subtype", "connection_status");
             json.put("data", new JSONObject());
 
-            String jsonWithTimestamp = communicationProtocol.addTimestamp(json.toString());
-            communicationProtocol.send(jsonWithTimestamp);
+            String jsonWithTimestamp = GlobalState.INSTANCE.getCommunicationProtocol().addTimestamp(json.toString());
+            GlobalState.INSTANCE.getCommunicationProtocol().send(jsonWithTimestamp);
 
             LOGGER.info("Requested connection status.");
         } catch (Exception e) {

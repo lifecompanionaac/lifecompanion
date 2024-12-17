@@ -10,6 +10,7 @@ import org.lifecompanion.model.impl.usevariable.IntegerUseVariable;
 import org.lifecompanion.model.impl.usevariable.StringUseVariable;
 import org.lifecompanion.model.impl.usevariable.UseVariableDefinition;
 import org.lifecompanion.plugin.phonecontrol.controller.ConnexionController;
+import org.lifecompanion.plugin.phonecontrol.controller.GlobalState;
 
 import java.io.File;
 import java.util.Arrays;
@@ -38,7 +39,8 @@ public class PhoneControlPlugin implements PluginI {
 
     @Override
     public void start(File dataDirectory) {
-        PhoneCommunicationManager.INSTANCE.setProtocolType(PhoneCommunicationManager.ProtocolType.ADB, dataDirectory);
+        GlobalState.INSTANCE.setDataDirectory(dataDirectory);
+        PhoneCommunicationManager.INSTANCE.setProtocolType(PhoneCommunicationManager.ProtocolType.ADB);
     }
 
     @Override
@@ -95,6 +97,9 @@ public class PhoneControlPlugin implements PluginI {
 
     @Override
     public PluginConfigPropertiesI newPluginConfigProperties(ObjectProperty<LCConfigurationI> parentConfiguration) {
-        return new PhoneControlPluginProperties(parentConfiguration);
+        PluginConfigPropertiesI pluginConfigProperties = new PhoneControlPluginProperties(parentConfiguration);
+        GlobalState.INSTANCE.setPluginProperties((PhoneControlPluginProperties) pluginConfigProperties);
+
+        return pluginConfigProperties;
     }
 }

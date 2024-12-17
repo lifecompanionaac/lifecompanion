@@ -1,6 +1,5 @@
 package org.lifecompanion.plugin.phonecontrol.controller;
 
-import org.lifecompanion.plugin.phonecontrol.server.PhoneCommunicationProtocol;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,15 +11,6 @@ public enum CallController {
     INSTANCE;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CallController.class);
-    private PhoneCommunicationProtocol communicationProtocol;
-
-    public void setCommunicationProtocol(PhoneCommunicationProtocol communicationProtocol) {
-        this.communicationProtocol = communicationProtocol;
-    }
-
-    public PhoneCommunicationProtocol getCommunicationProtocol() {
-        return communicationProtocol;
-    }
 
     /**
      * Initiates a phone call to the specified number.
@@ -38,8 +28,8 @@ public enum CallController {
             data.put("phone_number", phoneNumber);
             json.put("data", data);
 
-            String jsonWithTimestamp = communicationProtocol.addTimestamp(json.toString());
-            communicationProtocol.send(jsonWithTimestamp);
+            String jsonWithTimestamp = GlobalState.INSTANCE.getCommunicationProtocol().addTimestamp(json.toString());
+            GlobalState.INSTANCE.getCommunicationProtocol().send(jsonWithTimestamp);
 
             LOGGER.info("Initiated call to {}.", phoneNumber);
         } catch (Exception e) {
@@ -58,8 +48,8 @@ public enum CallController {
             json.put("subtype", "hang_up");
             json.put("data", new JSONObject());
 
-            String jsonWithTimestamp = communicationProtocol.addTimestamp(json.toString());
-            communicationProtocol.send(jsonWithTimestamp);
+            String jsonWithTimestamp = GlobalState.INSTANCE.getCommunicationProtocol().addTimestamp(json.toString());
+            GlobalState.INSTANCE.getCommunicationProtocol().send(jsonWithTimestamp);
 
             LOGGER.info("Sent hang-up command.");
         } catch (Exception e) {
@@ -78,8 +68,8 @@ public enum CallController {
             json.put("subtype", "call_messagerie");
             json.put("data", new JSONObject());
 
-            String jsonWithTimestamp = communicationProtocol.addTimestamp(json.toString());
-            communicationProtocol.send(jsonWithTimestamp);
+            String jsonWithTimestamp = GlobalState.INSTANCE.getCommunicationProtocol().addTimestamp(json.toString());
+            GlobalState.INSTANCE.getCommunicationProtocol().send(jsonWithTimestamp);
 
             LOGGER.info("Called voicemail service.");
         } catch (Exception e) {
@@ -103,8 +93,8 @@ public enum CallController {
             data.put("dtmf", dtmf);
             json.put("data", data);
 
-            String jsonWithTimestamp = communicationProtocol.addTimestamp(json.toString());
-            communicationProtocol.send(jsonWithTimestamp);
+            String jsonWithTimestamp = GlobalState.INSTANCE.getCommunicationProtocol().addTimestamp(json.toString());
+            GlobalState.INSTANCE.getCommunicationProtocol().send(jsonWithTimestamp);
 
             LOGGER.info("Sent DTMF input: {}.", dtmf);
         } catch (Exception e) {

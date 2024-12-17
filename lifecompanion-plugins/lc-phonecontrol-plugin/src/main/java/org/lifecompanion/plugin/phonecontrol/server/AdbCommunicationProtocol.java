@@ -7,30 +7,29 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.lifecompanion.controller.resource.ResourceHelper;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
+import org.lifecompanion.plugin.phonecontrol.controller.GlobalState;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * AdbCommunicationProtocol is an implementation of PhoneCommunicationProtocol using ADB (Android Debug Bridge).
  * It handles sending and receiving JSON data to/from an Android device via ADB.
  */
 public class AdbCommunicationProtocol implements PhoneCommunicationProtocol {
-    private static final Logger LOGGER = Logger.getLogger(AdbCommunicationProtocol.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(AdbCommunicationProtocol.class.getName());
     private File adb;
     private String adbPath;
     private boolean connectionOpen;
 
     /**
      * Constructor for AdbCommunicationProtocol.
-     * 
-     * @param adbPath The path to the ADB executable.
      */
-    public AdbCommunicationProtocol(File adb) {
-        this.adb = adb;
-        this.adbPath = adb.getPath();
+    public AdbCommunicationProtocol() {
+        this.adb = GlobalState.INSTANCE.getDataDirectory();
+        this.adbPath = this.adb.getPath();
         this.connectionOpen = false;
     }
 
@@ -41,7 +40,7 @@ public class AdbCommunicationProtocol implements PhoneCommunicationProtocol {
     @Override
     public void send(String data) {
         if (!isOpen()) {
-            LOGGER.log(Level.WARNING, "Connection is not open. Unable to send data.");
+            LOGGER.warn("Connection is not open. Unable to send data.");
 
             return;
         }
@@ -51,14 +50,14 @@ public class AdbCommunicationProtocol implements PhoneCommunicationProtocol {
             Process process = processBuilder.start();
             process.waitFor();
         } catch (IOException | InterruptedException e) {
-            LOGGER.log(Level.SEVERE, "Error while sending data via ADB", e);
+            LOGGER.error("Error while sending data via ADB", e);
         }
     }
     
     @Override
     public String receive() {
         if (!isOpen()) {
-            LOGGER.log(Level.WARNING, "Connection is not open. Unable to receive data.");
+            LOGGER.warn("Connection is not open. Unable to receive data.");
 
             return null;
         }
@@ -78,7 +77,7 @@ public class AdbCommunicationProtocol implements PhoneCommunicationProtocol {
 
             return output.toString();
         } catch (IOException | InterruptedException e) {
-            LOGGER.log(Level.SEVERE, "Error while receiving data via ADB", e);
+            LOGGER.error("Error while receiving data via ADB", e);
         }
 
         return null;
@@ -102,7 +101,7 @@ public class AdbCommunicationProtocol implements PhoneCommunicationProtocol {
             Process process = processBuilder.start();
             process.waitFor();
         } catch (Exception e) {
-            LOGGER.severe("Error starting ADB: " + e);
+            LOGGER.error("Error starting ADB", e);
         }
     }
 
@@ -113,7 +112,7 @@ public class AdbCommunicationProtocol implements PhoneCommunicationProtocol {
             Process process = processBuilder.start();
             process.waitFor();
         } catch (Exception e) {
-            LOGGER.severe("Error stopping ADB: " + e);
+            LOGGER.error("Error stopping ADB", e);
         }
     }
 
@@ -141,7 +140,7 @@ public class AdbCommunicationProtocol implements PhoneCommunicationProtocol {
 
             process.waitFor();
         } catch (IOException | InterruptedException e) {
-            LOGGER.log(Level.SEVERE, "Error while establishing connection via ADB", e);
+            LOGGER.error("Error while establishing connection via ADB", e);
         }
 
         return false;
@@ -184,11 +183,12 @@ public class AdbCommunicationProtocol implements PhoneCommunicationProtocol {
     /**
      * Install the app on the selected device
      */
-    public boolean installApk(String deviceSerialNumber) {
+    public boolean installApk() {
+        String deviceSerialNumber = GlobalState.INSTANCE.getDeviceSerialNumber();
         LOGGER.info("Installing app on phone...");
 
         if (deviceSerialNumber == null) {
-            deviceSerialNumber = currentPhoneControlPluginProperties.deviceProperty().get();
+            deviceSerialNumber = GlobalState.INSTANCE.getPluginProperties().deviceProperty().get();
         }
 
         File apkPath = new File(org.lifecompanion.util.IOUtils.getTempDir("apk") + File.separator + "lc-service.apk");
@@ -199,7 +199,7 @@ public class AdbCommunicationProtocol implements PhoneCommunicationProtocol {
             InputStream is = ResourceHelper.getInputStreamForPath("/apk/lc-service.apk");
             IOUtils.copyStream(is, fos);
         } catch (Exception e) {
-            LOGGER.severe("Error while copying apk file: " + e);
+            LOGGER.error("Error while copying apk file", e);
         }
 
         boolean isInstalled = false;
@@ -213,7 +213,7 @@ public class AdbCommunicationProtocol implements PhoneCommunicationProtocol {
                 isInstalled = true;
             }
         } catch (IOException | InterruptedException e) {
-            LOGGER.severe("Error installing app " + e);
+            LOGGER.error("Error installing app", e);
         }
 
         if (isInstalled) {
@@ -248,7 +248,7 @@ public class AdbCommunicationProtocol implements PhoneCommunicationProtocol {
 
             process.waitFor();
         } catch (IOException | InterruptedException e) {
-            LOGGER.severe("Error getting devices list: " + e);
+            LOGGER.error("Error getting devices list", e);
         }
 
         return devicesList;
@@ -269,7 +269,7 @@ public class AdbCommunicationProtocol implements PhoneCommunicationProtocol {
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             deviceName = reader.readLine();
         } catch (IOException e) {
-            LOGGER.severe("Error getting devices names : " + e);
+            LOGGER.error("Error getting devices names", e);
         }
 
         return deviceName;
@@ -293,7 +293,7 @@ public class AdbCommunicationProtocol implements PhoneCommunicationProtocol {
                 return true;
             }
         } catch (IOException e) {
-            LOGGER.severe("Error checking if app is installed : " + e);
+            LOGGER.error("Error checking if app is installed", e);
         }
 
         return false;
@@ -310,7 +310,7 @@ public class AdbCommunicationProtocol implements PhoneCommunicationProtocol {
             Process startServiceProcess = processBuilder.start();
             startServiceProcess.waitFor();
         } catch (IOException | InterruptedException e) {
-            LOGGER.severe("Error starting app : " +  e);
+            LOGGER.error("Error starting app", e);
         }
     }
 }

@@ -1,6 +1,5 @@
 package org.lifecompanion.plugin.phonecontrol.controller;
 
-import org.lifecompanion.plugin.phonecontrol.server.PhoneCommunicationProtocol;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,15 +11,6 @@ public enum SMSController {
     INSTANCE;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SMSController.class);
-    private PhoneCommunicationProtocol communicationProtocol;
-
-    public void setCommunicationProtocol(PhoneCommunicationProtocol communicationProtocol) {
-        this.communicationProtocol = communicationProtocol;
-    }
-
-    public PhoneCommunicationProtocol getCommunicationProtocol() {
-        return communicationProtocol;
-    }
 
     /**
      * Sends an SMS to the specified recipient.
@@ -40,8 +30,8 @@ public enum SMSController {
             data.put("message", message);
             json.put("data", data);
 
-            String jsonWithTimestamp = communicationProtocol.addTimestamp(json.toString());
-            communicationProtocol.send(jsonWithTimestamp);
+            String jsonWithTimestamp = GlobalState.INSTANCE.getCommunicationProtocol().addTimestamp(json.toString());
+            GlobalState.INSTANCE.getCommunicationProtocol().send(jsonWithTimestamp);
 
             LOGGER.info("SMS sent to {}: {}", recipient, message);
         } catch (Exception e) {
@@ -60,8 +50,8 @@ public enum SMSController {
             json.put("subtype", "get_sms_conversations");
             json.put("data", new JSONObject());
 
-            String jsonWithTimestamp = communicationProtocol.addTimestamp(json.toString());
-            communicationProtocol.send(jsonWithTimestamp);
+            String jsonWithTimestamp = GlobalState.INSTANCE.getCommunicationProtocol().addTimestamp(json.toString());
+            GlobalState.INSTANCE.getCommunicationProtocol().send(jsonWithTimestamp);
 
             LOGGER.info("Requested SMS conversations.");
         } catch (Exception e) {
@@ -85,8 +75,8 @@ public enum SMSController {
             data.put("contact_number", contactNumber);
             json.put("data", data);
 
-            String jsonWithTimestamp = communicationProtocol.addTimestamp(json.toString());
-            communicationProtocol.send(jsonWithTimestamp);
+            String jsonWithTimestamp = GlobalState.INSTANCE.getCommunicationProtocol().addTimestamp(json.toString());
+            GlobalState.INSTANCE.getCommunicationProtocol().send(jsonWithTimestamp);
 
             LOGGER.info("Requested messages from conversation with {}.", contactNumber);
         } catch (Exception e) {

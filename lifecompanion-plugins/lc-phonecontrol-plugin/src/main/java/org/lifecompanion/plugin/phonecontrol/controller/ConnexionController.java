@@ -48,10 +48,9 @@ public enum ConnexionController implements ModeListenerI {
     INSTANCE;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ConnexionController.class);
-    private File adb = null;
-    private PhoneCommunicationProtocol communicationProtocol;
 
     private Timer refreshTimer;
+    private PhoneControlPluginProperties currentPhoneControlPluginProperties;
 
     public static final String VAR_SMS_UNREAD = "SMSUnread";
     public static final String VAR_CALL_DURATION = "CallDuration";
@@ -83,22 +82,11 @@ public enum ConnexionController implements ModeListenerI {
     private Set<Consumer<Integer>> unreadCountUpdateCallback;
     private Set<Consumer<Integer>> validationSendSMSCallback;
 
-    private PhoneControlPluginProperties currentPhoneControlPluginProperties;
-
-    public void startController(PhoneCommunicationProtocol communicationProtocol) {
-        this.communicationProtocol = communicationProtocol;
+    public void startController() {
         this.convCells = new ArrayList<>();
         this.smsCells = new ArrayList<>();
         this.unreadCountUpdateCallback = new HashSet<>(5);
         this.validationSendSMSCallback = new HashSet<>(1);
-  
-        CallController.INSTANCE.setCommunicationProtocol(communicationProtocol);
-        SMSController.INSTANCE.setCommunicationProtocol(communicationProtocol);
-        SystemController.INSTANCE.setCommunicationProtocol(communicationProtocol);
-    }
-
-    public PhoneCommunicationProtocol getCommunicationProtocol() {
-        return communicationProtocol;
     }
 
     public double getDurationInterval() {
@@ -119,7 +107,8 @@ public enum ConnexionController implements ModeListenerI {
 
     @Override
     public void modeStart(LCConfigurationI configuration) {
-        this.currentPhoneControlPluginProperties = configuration.getPluginConfigProperties(PhoneControlPlugin.PLUGIN_ID, PhoneControlPluginProperties.class);
+        GlobalState.INSTANCE.setPluginProperties((PhoneControlPluginProperties) configuration.getPluginConfigProperties(PhoneControlPlugin.PLUGIN_ID, PhoneControlPluginProperties.class));
+        this.currentPhoneControlPluginProperties = GlobalState.INSTANCE.getPluginProperties();
         resetVariables();
 
         // Start app on phone if needed
@@ -160,6 +149,7 @@ public enum ConnexionController implements ModeListenerI {
 
     @Override
     public void modeStop(LCConfigurationI configuration) {
+        GlobalState.INSTANCE.setPluginProperties(null);
         this.currentPhoneControlPluginProperties = null;
         resetVariables();
 
@@ -188,7 +178,8 @@ public enum ConnexionController implements ModeListenerI {
         this.topSmsReached = false;
     }
     
-    public void installAdb(File dataDirectory) {
+    public void installAdb() {
+        File dataDirectory = GlobalState.INSTANCE.getDataDirectory();
         String inputFolder = null;
         String adbFileName = "adb";
         SystemType systemType = SystemType.current();

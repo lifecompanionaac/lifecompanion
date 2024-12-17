@@ -7,15 +7,15 @@ import javax.microedition.io.StreamConnection;
 import org.json.JSONObject;
 
 import java.io.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * BluetoothCommunicationProtocol is an implementation of PhoneCommunicationProtocol using Bluetooth.
  * It handles sending and receiving JSON data to/from an Android device via Bluetooth.
  */
 public class BluetoothCommunicationProtocol implements PhoneCommunicationProtocol {
-    private static final Logger LOGGER = Logger.getLogger(BluetoothCommunicationProtocol.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(BluetoothCommunicationProtocol.class.getName());
     private StreamConnection connection;
     private InputStream inputStream;
     private OutputStream outputStream;
@@ -31,7 +31,7 @@ public class BluetoothCommunicationProtocol implements PhoneCommunicationProtoco
     @Override
     public void send(String data) {
         if (!isOpen()) {
-            LOGGER.log(Level.WARNING, "Connection is not open. Unable to send data.");
+            LOGGER.warn("Connection is not open. Unable to send data.");
 
             return;
         }
@@ -45,7 +45,7 @@ public class BluetoothCommunicationProtocol implements PhoneCommunicationProtoco
     @Override
     public String receive() {
         if (!isOpen()) {
-            LOGGER.log(Level.WARNING, "Connection is not open. Unable to receive data.");
+            LOGGER.warn("Connection is not open. Unable to receive data.");
 
             return null;
         }
@@ -60,7 +60,7 @@ public class BluetoothCommunicationProtocol implements PhoneCommunicationProtoco
 
             return output.toString();
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Error while receiving data via Bluetooth", e);
+            LOGGER.error("Error while receiving data via Bluetooth", e);
         }
 
         return null;
@@ -83,7 +83,7 @@ public class BluetoothCommunicationProtocol implements PhoneCommunicationProtoco
 
             connectionOpen = false;
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Error while closing Bluetooth connection", e);
+            LOGGER.error("Error while closing Bluetooth connection", e);
         }
     }
 
@@ -103,7 +103,7 @@ public class BluetoothCommunicationProtocol implements PhoneCommunicationProtoco
             RemoteDevice remoteDevice = findDeviceByAddress(deviceAddress);
 
             if (remoteDevice == null) {
-                LOGGER.log(Level.WARNING, "Device with address " + deviceAddress + " not found.");
+                LOGGER.warn("Device with address " + deviceAddress + " not found.");
 
                 return false;
             }
@@ -114,7 +114,7 @@ public class BluetoothCommunicationProtocol implements PhoneCommunicationProtoco
             String connectionURL = agent.selectService(new UUID(0x1101), ServiceRecord.NOAUTHENTICATE_NOENCRYPT, false);
 
             if (connectionURL == null) {
-                LOGGER.log(Level.WARNING, "Could not find suitable service on the device.");
+                LOGGER.warn("Could not find suitable service on the device.");
 
                 return false;
             }
@@ -123,11 +123,11 @@ public class BluetoothCommunicationProtocol implements PhoneCommunicationProtoco
             inputStream = connection.openInputStream();
             outputStream = connection.openOutputStream();
             connectionOpen = true;
-            LOGGER.log(Level.INFO, "Successfully connected to device: " + deviceAddress);
+            LOGGER.info("Successfully connected to device: " + deviceAddress);
 
             return true;
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Error while establishing Bluetooth connection", e);
+            LOGGER.error("Error while establishing Bluetooth connection", e);
         }
 
         return false;
@@ -153,7 +153,7 @@ public class BluetoothCommunicationProtocol implements PhoneCommunicationProtoco
                 }
             }
         } catch (BluetoothStateException e) {
-            LOGGER.log(Level.SEVERE, "Error while searching for Bluetooth devices", e);
+            LOGGER.error("Error while searching for Bluetooth devices", e);
         }
 
         return null;

@@ -1,9 +1,9 @@
 package org.lifecompanion.plugin.phonecontrol;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import org.lifecompanion.plugin.phonecontrol.controller.ConnexionController;
+import org.lifecompanion.plugin.phonecontrol.controller.GlobalState;
 import org.lifecompanion.plugin.phonecontrol.server.AdbCommunicationProtocol;
 import org.lifecompanion.plugin.phonecontrol.server.BluetoothCommunicationProtocol;
 import org.lifecompanion.plugin.phonecontrol.server.PhoneCommunicationProtocol;
@@ -23,31 +23,28 @@ public enum PhoneCommunicationManager {
         BLUETOOTH
     }
 
-    private ProtocolType currentProtocolType;
-    private PhoneCommunicationProtocol communicationProtocol;
-    private String deviceSerialNumber;
-
     /**
      * Sets the communication protocol type and initializes the corresponding protocol.
      *
      * @param protocolType The selected protocol type (ADB or Bluetooth).
      */
-    public void setProtocolType(ProtocolType protocolType, File dataDirectory) {
-        this.currentProtocolType = protocolType;
+    public void setProtocolType(ProtocolType protocolType) {
+        GlobalState.INSTANCE.setProtocolType(protocolType);
 
         switch (protocolType) {
             case ADB:
                 LOGGER.info("Initializing ADB protocol.");
-                this.communicationProtocol = new AdbCommunicationProtocol(dataDirectory);
-                ConnexionController.INSTANCE.startController(this.communicationProtocol);
-                ConnexionController.INSTANCE.installAdb(dataDirectory);
-                ((AdbCommunicationProtocol) this.communicationProtocol).openConnection();
-                ((AdbCommunicationProtocol) this.communicationProtocol).installApk();
+                GlobalState.INSTANCE.setCommunicationProtocol(new AdbCommunicationProtocol());
+                ConnexionController.INSTANCE.startController();
+                ConnexionController.INSTANCE.installAdb();
+                ((AdbCommunicationProtocol) GlobalState.INSTANCE.getCommunicationProtocol()).openConnection();
+                ((AdbCommunicationProtocol) GlobalState.INSTANCE.getCommunicationProtocol()).installApk();
 
                 break;
             case BLUETOOTH:
                 LOGGER.info("Initializing Bluetooth protocol.");
-                this.communicationProtocol = new BluetoothCommunicationProtocol();
+                GlobalState.INSTANCE.setCommunicationProtocol(new BluetoothCommunicationProtocol());
+                // TODO
 
                 break;
             default:
@@ -55,38 +52,18 @@ public enum PhoneCommunicationManager {
         }
     }
 
-    /**
-     * Gets the currently selected communication protocol.
-     *
-     * @return The active communication protocol.
-     */
-    public PhoneCommunicationProtocol getCommunicationProtocol() {
-        return communicationProtocol;
-    }
-
-    /**
-     * Gets the current protocol type.
-     *
-     * @return The currently selected protocol type.
-     */
-    public ProtocolType getCurrentProtocolType() {
-        return currentProtocolType;
-    }
-
     public void stop() {
+        PhoneCommunicationProtocol communicationProtocol = GlobalState.INSTANCE.getCommunicationProtocol();
+
         if (communicationProtocol != null) {
             communicationProtocol.close();
-            communicationProtocol = null;
+            GlobalState.INSTANCE.setCommunicationProtocol(null);
         }
     }
 
     public ArrayList<String> getDevices() {
         // TODO
         return new ArrayList<>();
-    }
-
-    public String getDeviceSerialNumber() {
-        return deviceSerialNumber;
     }
 
     public String getDeviceName(String deviceSerialNumber) {

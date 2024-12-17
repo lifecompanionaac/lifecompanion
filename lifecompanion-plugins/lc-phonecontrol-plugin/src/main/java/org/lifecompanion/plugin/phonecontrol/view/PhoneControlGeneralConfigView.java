@@ -16,7 +16,7 @@ import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.plugin.phonecontrol.PhoneCommunicationManager;
 import org.lifecompanion.plugin.phonecontrol.PhoneCommunicationManager.ProtocolType;
-import org.lifecompanion.plugin.phonecontrol.PhoneControlController;
+import org.lifecompanion.plugin.phonecontrol.controller.GlobalState;
 import org.lifecompanion.plugin.phonecontrol.PhoneControlPlugin;
 import org.lifecompanion.plugin.phonecontrol.PhoneControlPluginProperties;
 import org.lifecompanion.ui.app.generalconfiguration.GeneralConfigurationStepViewI;
@@ -119,7 +119,7 @@ public class PhoneControlGeneralConfigView extends BorderPane implements General
         // Communication protocol selection
         protocolSelectionComboBox = new ComboBox<>();
         protocolSelectionComboBox.getItems().addAll(ProtocolType.ADB, ProtocolType.BLUETOOTH);
-        protocolSelectionComboBox.setValue(PhoneCommunicationManager.INSTANCE.getCurrentProtocolType());
+        protocolSelectionComboBox.setValue(GlobalState.INSTANCE.getProtocolType());
         protocolSelectionComboBox.setOnAction(event -> onProtocolSelectionChanged());
 
         HBox protocolSelectionBox = new HBox(10, new Label(Translation.getText("phonecontrol.plugin.config.label.protocol.selection")), protocolSelectionComboBox);
@@ -151,6 +151,7 @@ public class PhoneControlGeneralConfigView extends BorderPane implements General
 
     private void onProtocolSelectionChanged() {
         ProtocolType selectedProtocol = protocolSelectionComboBox.getValue();
+
         if (selectedProtocol != null) {
             PhoneCommunicationManager.INSTANCE.setProtocolType(selectedProtocol);
         }
@@ -189,8 +190,9 @@ public class PhoneControlGeneralConfigView extends BorderPane implements General
 
             Thread installThread = new Thread(() -> {
                 String deviceSerialNumber = selectDeviceComboBox.getSelectionModel().getSelectedItem().getSerialNumber();
+
                 if (deviceSerialNumber != null) {
-                    boolean isInstalled = PhoneControlController.INSTANCE.installApp(deviceSerialNumber);
+                    boolean isInstalled = PhoneCommunicationManager.INSTANCE.installApp(deviceSerialNumber, PhoneControlPlugin.APK_PATH);
                     Platform.runLater(() -> {
                         labelInstallResult.setText(Translation.getText(
                             isInstalled ? "phonecontrol.plugin.config.label.install.app.success": "phonecontrol.plugin.config.label.install.app.error"
@@ -255,7 +257,7 @@ public class PhoneControlGeneralConfigView extends BorderPane implements General
      * - Add il all situation a "no device selected" device with a null serial number
      */
     private void refreshDeviceList() {
-        ArrayList<String> devicesList = ADBService.INSTANCE.getDevices();
+        ArrayList<String> devicesList = PhoneCommunicationManager.INSTANCE.getDevices();
         selectDeviceComboBox.getItems().clear();
 
         if (!devicesList.isEmpty()) {
@@ -263,7 +265,7 @@ public class PhoneControlGeneralConfigView extends BorderPane implements General
 
             // Add all devices with its name to the ComboBox
             for (String deviceSerialNumber : devicesList) {
-                String deviceName = ADBService.INSTANCE.getDeviceName(deviceSerialNumber);
+                String deviceName = PhoneCommunicationManager.INSTANCE.getDeviceName(deviceSerialNumber);
                 observableDevicesList.add(new Device(deviceName, deviceSerialNumber));
             }
 
@@ -277,6 +279,7 @@ public class PhoneControlGeneralConfigView extends BorderPane implements General
         // Device selection / Search by serial number
         PhoneControlPluginProperties phoneControlPluginProperties = configuration.getPluginConfigProperties(PhoneControlPlugin.PLUGIN_ID, PhoneControlPluginProperties.class);
         String deviceSerialNumber = phoneControlPluginProperties.deviceProperty().get();
+
         if (deviceSerialNumber == null) {  // If no device was selected
             selectDeviceComboBox.getSelectionModel().select(noDeviceSelected);
         } else {  // If a device was selected, we try to find it in the list
