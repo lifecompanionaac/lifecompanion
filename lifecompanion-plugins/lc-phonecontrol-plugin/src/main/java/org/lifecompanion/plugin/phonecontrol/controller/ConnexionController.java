@@ -18,7 +18,6 @@ import java.util.TimerTask;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
-import org.lifecompanion.controller.resource.ResourceHelper;
 import org.lifecompanion.controller.textcomponent.WritingStateController;
 import org.lifecompanion.controller.usevariable.UseVariableController;
 import org.lifecompanion.framework.commons.SystemType;
@@ -27,13 +26,13 @@ import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
 import org.lifecompanion.model.api.textcomponent.WritingEventSource;
+import org.lifecompanion.plugin.phonecontrol.PhoneCommunicationManager;
 import org.lifecompanion.plugin.phonecontrol.PhoneControlPlugin;
 import org.lifecompanion.plugin.phonecontrol.PhoneControlPluginProperties;
 import org.lifecompanion.plugin.phonecontrol.keyoption.ConversationListKeyOption;
 import org.lifecompanion.plugin.phonecontrol.keyoption.SMSListKeyOption;
 import org.lifecompanion.plugin.phonecontrol.model.ConversationListContent;
 import org.lifecompanion.plugin.phonecontrol.model.SMSListContent;
-import org.lifecompanion.plugin.phonecontrol.server.PhoneCommunicationProtocol;
 import org.lifecompanion.util.model.ConfigurationComponentUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -113,7 +112,7 @@ public enum ConnexionController implements ModeListenerI {
 
         // Start app on phone if needed
         String deviceSerialNumber = currentPhoneControlPluginProperties.deviceProperty().get();
-        ADBService.INSTANCE.startApp(deviceSerialNumber);
+        PhoneCommunicationManager.INSTANCE.startApp(deviceSerialNumber);
 
         // Set up the interval of refresh
         this.durationInterval = currentPhoneControlPluginProperties.durationInternalProperty().get();
@@ -178,7 +177,7 @@ public enum ConnexionController implements ModeListenerI {
         this.topSmsReached = false;
     }
     
-    public void installAdb() {
+    public File installAdb() {
         File dataDirectory = GlobalState.INSTANCE.getDataDirectory();
         String inputFolder = null;
         String adbFileName = "adb";
@@ -192,7 +191,7 @@ public enum ConnexionController implements ModeListenerI {
         } else {
             LOGGER.error("Unsupported system type");
 
-            return;
+            return null;
         }
 
         File adbZip = new File(dataDirectory + File.separator + "platform-tools.zip");
@@ -218,8 +217,10 @@ public enum ConnexionController implements ModeListenerI {
             installAdbFromInputFolder(inputFolder, adbZip, adbFolder);
         }
 
-        adb = new File(dataDirectory + File.separator + "platform-tools" + File.separator + adbFileName);
+        File adb = new File(dataDirectory + File.separator + "platform-tools" + File.separator + adbFileName);
         adb.setExecutable(true);
+        
+        return adb;
     }
 
     private void installAdbFromInputFolder(String inputFolder, File adbZip, File adbFolder) {
@@ -235,10 +236,6 @@ public enum ConnexionController implements ModeListenerI {
         } catch (Exception e) {
             LOGGER.error("Failed to install ADB from input folder.", e);
         }
-    }
-
-    public String getAdbPath() {
-        return adb.toString();
     }
 
     /**
@@ -351,7 +348,8 @@ public enum ConnexionController implements ModeListenerI {
         int unreadConvCount = 0;
 
         // Get conv
-        ArrayList<String> convStr = SMSController.INSTANCE.getConvList(convIndexMin, convIndexMax);
+        SMSController.INSTANCE.getConvList(convIndexMin, convIndexMax);
+        ArrayList<String> convStr = SMSController.INSTANCE.requestGetConvList();
         ConversationListContent emptyContent = new ConversationListContent(null, null, null, true, false);
         boolean emptyConvSet = false;  // To detect the first empty conv
 
@@ -417,7 +415,8 @@ public enum ConnexionController implements ModeListenerI {
         int smsIndexMax = smsIndexMin + smsCells.size();
 
         // Get conv
-        ArrayList<String> smsStr = SMSController.INSTANCE.getSMSList(this.phoneNumber, smsIndexMin, smsIndexMax);
+        SMSController.INSTANCE.getSMSList(this.phoneNumber, smsIndexMin, smsIndexMax);
+        ArrayList<String> smsStr = SMSController.INSTANCE.requestGetSMSList();
         SMSListContent emptyContent = new SMSListContent(null, null, null, null, false);
         boolean emptyMessageSet = false;  // To detect the first empty message
 
@@ -473,7 +472,8 @@ public enum ConnexionController implements ModeListenerI {
      */
     public void sendSMS() {
         String message = WritingStateController.INSTANCE.currentTextProperty().get();
-        int val = SMSController.INSTANCE.sendSMS(this.phoneNumber, message);
+        SMSController.INSTANCE.sendSMS(this.phoneNumber, message);
+        int val = SMSController.INSTANCE.requestSendSMS();
         validationSendSMSCallback.forEach((callback) -> callback.accept(val));
         WritingStateController.INSTANCE.removeAll(WritingEventSource.SYSTEM);
         this.smsIndexMin = 0;

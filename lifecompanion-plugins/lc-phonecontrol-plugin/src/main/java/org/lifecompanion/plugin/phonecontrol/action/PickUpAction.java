@@ -27,6 +27,6 @@ public class PickUpAction extends SimpleUseActionImpl<UseActionTriggerComponentI
 
     @Override
     public void execute(UseActionEvent event, Map<String, UseVariableI<?>> variables) {
-        CallController.INSTANCE.pickUp();
+        CallController.INSTANCE.pickUp(true);
     }
 }

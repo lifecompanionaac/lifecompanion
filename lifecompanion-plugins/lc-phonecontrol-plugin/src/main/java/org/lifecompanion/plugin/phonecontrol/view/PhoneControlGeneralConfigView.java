@@ -192,7 +192,7 @@ public class PhoneControlGeneralConfigView extends BorderPane implements General
                 String deviceSerialNumber = selectDeviceComboBox.getSelectionModel().getSelectedItem().getSerialNumber();
 
                 if (deviceSerialNumber != null) {
-                    boolean isInstalled = PhoneCommunicationManager.INSTANCE.installApp(deviceSerialNumber, PhoneControlPlugin.APK_PATH);
+                    boolean isInstalled = PhoneCommunicationManager.INSTANCE.installApp(deviceSerialNumber);
                     Platform.runLater(() -> {
                         labelInstallResult.setText(Translation.getText(
                             isInstalled ? "phonecontrol.plugin.config.label.install.app.success": "phonecontrol.plugin.config.label.install.app.error"

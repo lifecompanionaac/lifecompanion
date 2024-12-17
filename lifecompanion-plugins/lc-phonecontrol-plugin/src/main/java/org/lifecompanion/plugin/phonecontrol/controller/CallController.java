@@ -17,7 +17,7 @@ public enum CallController {
      *
      * @param phoneNumber The phone number to call.
      */
-    public void makeCall(String phoneNumber) {
+    public void call(String phoneNumber, boolean speakerOn) {
         try {
             JSONObject json = new JSONObject();
             json.put("sender", "pc");
@@ -26,6 +26,7 @@ public enum CallController {
 
             JSONObject data = new JSONObject();
             data.put("phone_number", phoneNumber);
+            data.put("speaker_on", speakerOn);
             json.put("data", data);
 
             String jsonWithTimestamp = GlobalState.INSTANCE.getCommunicationProtocol().addTimestamp(json.toString());
@@ -34,6 +35,30 @@ public enum CallController {
             LOGGER.info("Initiated call to {}.", phoneNumber);
         } catch (Exception e) {
             LOGGER.error("Error initiating call", e);
+        }
+    }
+
+    public void callContact() {
+        // TODO
+    }
+
+    public void pickUp(boolean speakerOn) {
+        try {
+            JSONObject json = new JSONObject();
+            json.put("sender", "pc");
+            json.put("type", "call");
+            json.put("subtype", "pickup");
+
+            JSONObject data = new JSONObject();
+            data.put("speaker_on", speakerOn);
+            json.put("data", data);
+
+            String jsonWithTimestamp = GlobalState.INSTANCE.getCommunicationProtocol().addTimestamp(json.toString());
+            GlobalState.INSTANCE.getCommunicationProtocol().send(jsonWithTimestamp);
+
+            LOGGER.info("Picked up call.");
+        } catch (Exception e) {
+            LOGGER.error("Error picking up call", e);
         }
     }
 
@@ -80,5 +105,35 @@ public enum CallController {
         } catch (Exception e) {
             LOGGER.error("Error sending DTMF input", e);
         }
+    }
+
+    public void requestGetCallStatus() {
+        try {
+            JSONObject json = new JSONObject();
+            json.put("sender", "pc");
+            json.put("type", "call");
+            json.put("subtype", "get_call_status");
+            json.put("data", new JSONObject());
+
+            String jsonWithTimestamp = GlobalState.INSTANCE.getCommunicationProtocol().addTimestamp(json.toString());
+            GlobalState.INSTANCE.getCommunicationProtocol().send(jsonWithTimestamp);
+
+            LOGGER.info("Requested call status.");
+        } catch (Exception e) {
+            LOGGER.error("Error requesting call status", e);
+        }
+    }
+
+    public String getCallStatus() {
+        // TODO : callback (poll)
+        return "";
+    }
+
+    public void addCallEnterCallback(Runnable callEnterCallback) {
+        // TODO
+    }
+
+    public void addCallEndedCallback(Runnable callEndedCallback) {
+        // TODO
     }
 }

@@ -1,5 +1,8 @@
 package org.lifecompanion.plugin.phonecontrol.controller;
 
+import java.util.ArrayList;
+import java.util.function.Consumer;
+
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,16 +42,30 @@ public enum SMSController {
         }
     }
 
+    public int requestSendSMS() {
+        // TODO : callback (poll)
+        return 0;
+    }
+
+    public void sendSMS() {
+        // TODO
+        // global selected contact
+    }
+
     /**
      * Retrieves SMS conversations from the phone.
      */
-    public void getConversations() {
+    public void getConvList(int convIndexMin, int convIndexMax) {
         try {
             JSONObject json = new JSONObject();
             json.put("sender", "pc");
             json.put("type", "sms");
             json.put("subtype", "get_sms_conversations");
-            json.put("data", new JSONObject());
+            
+            JSONObject data = new JSONObject();
+            data.put("conv_index_min", convIndexMin);
+            data.put("conv_index_max", convIndexMax);
+            json.put("data", data);
 
             String jsonWithTimestamp = GlobalState.INSTANCE.getCommunicationProtocol().addTimestamp(json.toString());
             GlobalState.INSTANCE.getCommunicationProtocol().send(jsonWithTimestamp);
@@ -59,12 +76,17 @@ public enum SMSController {
         }
     }
 
+    public ArrayList<String> requestGetConvList() {
+        // TODO : callback (poll)
+        return new ArrayList<>();
+    }
+
     /**
      * Fetches all messages from a specific conversation.
      *
-     * @param contactNumber The phone number or contact identifier.
+     * @param phoneNumber The phone number or contact identifier.
      */
-    public void getMessagesFromConversation(String contactNumber) {
+    public void getSMSList(String phoneNumber, int msgIndexMin, int msgIndexMax) {
         try {
             JSONObject json = new JSONObject();
             json.put("sender", "pc");
@@ -72,15 +94,38 @@ public enum SMSController {
             json.put("subtype", "get_conversation_messages");
 
             JSONObject data = new JSONObject();
-            data.put("contact_number", contactNumber);
+            data.put("contact_number", phoneNumber);
+            data.put("msg_index_min", msgIndexMin);
+            data.put("msg_index_max", msgIndexMax);
             json.put("data", data);
 
             String jsonWithTimestamp = GlobalState.INSTANCE.getCommunicationProtocol().addTimestamp(json.toString());
             GlobalState.INSTANCE.getCommunicationProtocol().send(jsonWithTimestamp);
 
-            LOGGER.info("Requested messages from conversation with {}.", contactNumber);
+            LOGGER.info("Requested messages from conversation with {}.", phoneNumber);
         } catch (Exception e) {
             LOGGER.error("Error requesting messages from conversation", e);
         }
+    }
+
+    public ArrayList<String> requestGetSMSList() {
+        // TODO : callback (poll)
+        return new ArrayList<>();
+    }
+
+    public void addUnreadCountUpdateCallback(Consumer<Integer> unreadCountUpdatedCallback) {
+        // TODO
+    }
+
+    public void removeUnreadCountUpdateCallback(Consumer<Integer> unreadCountUpdatedCallback) {
+        // TODO
+    }
+
+    public void addValidationSendSMSCallback(Consumer<Integer> validationSendSMSCallback) {
+        // TODO
+    }
+
+    public void removeValidationSendSMSCallback(Consumer<Integer> validationSendSMSCallback) {
+        // TODO
     }
 }

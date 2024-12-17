@@ -27,9 +27,9 @@ public class AdbCommunicationProtocol implements PhoneCommunicationProtocol {
     /**
      * Constructor for AdbCommunicationProtocol.
      */
-    public AdbCommunicationProtocol() {
-        this.adb = GlobalState.INSTANCE.getDataDirectory();
-        this.adbPath = this.adb.getPath();
+    public AdbCommunicationProtocol(File adb) {
+        this.adb = adb;
+        this.adbPath = adb.getPath();
         this.connectionOpen = false;
     }
 

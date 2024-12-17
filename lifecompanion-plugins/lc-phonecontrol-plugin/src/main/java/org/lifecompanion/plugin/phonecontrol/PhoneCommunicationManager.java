@@ -1,5 +1,6 @@
 package org.lifecompanion.plugin.phonecontrol;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import org.lifecompanion.plugin.phonecontrol.controller.ConnexionController;
@@ -34,9 +35,9 @@ public enum PhoneCommunicationManager {
         switch (protocolType) {
             case ADB:
                 LOGGER.info("Initializing ADB protocol.");
-                GlobalState.INSTANCE.setCommunicationProtocol(new AdbCommunicationProtocol());
+                File adb = ConnexionController.INSTANCE.installAdb();
+                GlobalState.INSTANCE.setCommunicationProtocol(new AdbCommunicationProtocol(adb));
                 ConnexionController.INSTANCE.startController();
-                ConnexionController.INSTANCE.installAdb();
                 ((AdbCommunicationProtocol) GlobalState.INSTANCE.getCommunicationProtocol()).openConnection();
                 ((AdbCommunicationProtocol) GlobalState.INSTANCE.getCommunicationProtocol()).installApk();
 
@@ -71,8 +72,10 @@ public enum PhoneCommunicationManager {
         return "";
     }
 
-    public boolean installApp(String deviceSerialNumber, String apkPath) {
+    public boolean installApp(String deviceSerialNumber) {
         // TODO
+        // apkPath is GlobalState.INSTANCE.getDataDirectory() + "/apk/lc-service.apk"
+    
         return false;
     }
 
