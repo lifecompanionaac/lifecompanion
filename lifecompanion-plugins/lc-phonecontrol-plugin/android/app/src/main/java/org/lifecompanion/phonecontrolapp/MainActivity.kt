@@ -2,26 +2,32 @@ package org.lifecompanion.phonecontrolapp
 
 import android.Manifest
 import android.app.Activity
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import org.lifecompanion.phonecontrolapp.services.JSONProcessingService
 
 class MainActivity : Activity() {
-    private val PERMISSION_REQUEST_CODE = 14122004
 
-    /**
-     * Called when the activity is created.
-     */
+    private val PERMISSION_REQUEST_CODE = 14122004
+    private val TAG = "MainActivity"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main) // Show the main view
+        setContentView(R.layout.activity_main) // Set the main view
+
+        // Check and request permissions
         checkPermissions()
+
+        // Start the JSONProcessingService
+        startJsonProcessingService()
     }
 
     /**
-     * Ask to the user the permissions needed by the app.
-     * Show an android popup which ask the user to grant the permissions.
+     * Checks if all required permissions are granted. If not, requests them.
      */
     private fun checkPermissions() {
         val permissions = arrayOf(
@@ -34,37 +40,43 @@ class MainActivity : Activity() {
             Manifest.permission.FOREGROUND_SERVICE
         )
 
-        for (permission in permissions) {
-            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
-                // Show the popup
-                ActivityCompat.requestPermissions(this, permissions, PERMISSION_REQUEST_CODE)
+        val permissionsToRequest = permissions.filter {
+            ContextCompat.checkSelfPermission(this, it) != PackageManager.PERMISSION_GRANTED
+        }
 
-                return
+        if (permissionsToRequest.isNotEmpty()) {
+            ActivityCompat.requestPermissions(this, permissionsToRequest.toTypedArray(), PERMISSION_REQUEST_CODE)
+        }
+    }
+
+    /**
+     * Handles the result of permission requests.
+     * If permissions are denied, logs a warning and does not start the app functionality.
+     */
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            if (grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
+                Log.i(TAG, "All permissions granted.")
+                startJsonProcessingService()
+            } else {
+                Log.w(TAG, "Required permissions denied by user. Exiting app.")
+                finish() // Close the app if permissions are not granted
             }
         }
     }
 
     /**
-     * Called when the user has granted or denied the permissions.
-     * If the user has denied the permissions, close the app.
+     * Starts the JSONProcessingService in the background to handle file watching.
      */
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String?>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
-        // Check if the result is related to the permissions asked
-        if (requestCode == PERMISSION_REQUEST_CODE) {
-            for (result in grantResults) {
-                if (result != PackageManager.PERMISSION_GRANTED) {
-                    // The user has denied the permissions
-                    return
-                }
-            }
-
-            finish()
+    private fun startJsonProcessingService() {
+        try {
+            val serviceIntent = Intent(this, JSONProcessingService::class.java)
+            startService(serviceIntent)
+            Log.i(TAG, "JSONProcessingService started successfully.")
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to start JSONProcessingService: ${e.message}", e)
         }
     }
 }

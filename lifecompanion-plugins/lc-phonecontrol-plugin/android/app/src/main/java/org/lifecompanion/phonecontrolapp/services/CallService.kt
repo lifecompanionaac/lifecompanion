@@ -1,95 +1,85 @@
 package org.lifecompanion.phonecontrolapp.services
 
-import android.Manifest
 import android.app.Service
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.IBinder
+import android.telecom.Call
+import android.telecom.InCallService
 import android.telecom.TelecomManager
 import android.util.Log
-import androidx.core.content.ContextCompat.checkSelfPermission
-import org.lifecompanion.phonecontrolapp.R
+import org.json.JSONObject
 
 class CallService : Service() {
-    private lateinit var callChannelName: String
-    private val callChannelId = "callChannel"
 
-    override fun onCreate() {
-        super.onCreate()
-        callChannelName = getString(R.string.call_channel_name)
-        Notify.createNotificationChannel(callChannelName, callChannelId, this)
+    companion object {
+        private const val TAG = "CallService"
     }
 
+    private var currentCall: Call? = null
+
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        startForeground(1, Notify.createNotification(callChannelName, callChannelId, this))
-        Log.d("CallService", "Call Service started")
+        val jsonString = intent.getStringExtra("json") ?: return START_NOT_STICKY
+        val json = JSONObject(jsonString)
+        val subtype = json.optString("subtype")
+        val data = json.optJSONObject("data")
 
-        // Get parameters from the ADB command
-        val phoneNumber = intent.getStringExtra("phoneNumber")
-        val speaker = intent.getBooleanExtra("speaker", false)
-        val stop = intent.getBooleanExtra("stop", false)
-
-        if (phoneNumber!=null) {
-            startCall(phoneNumber, speaker)
-        } else if (stop) {
-            stopCall()
-        } else {
-            answerCall()
+        if (data == null) {
+            Log.e(TAG, "No data provided for call subtype: $subtype")
+            return START_NOT_STICKY
         }
 
-        Log.d("CallService", "Call Service ended")
+        when (subtype) {
+            "make_call" -> startCall(data.optString("phone_number"), data.optBoolean("speaker", false))
+            "hang_up" -> endCall()
+            "numpad_input" -> sendDtmf(data.optString("dtmf"))
+            else -> Log.e(TAG, "Unknown call subtype: $subtype")
+        }
 
         return START_NOT_STICKY
     }
 
-    private fun answerCall() {
-        val telecomManager = this.getSystemService(Context.TELECOM_SERVICE) as TelecomManager
-
-        if (checkSelfPermission(this, Manifest.permission.ANSWER_PHONE_CALLS) == PackageManager.PERMISSION_GRANTED) {
-            telecomManager.acceptRingingCall()
-        } else {
-            Log.d("CallService", "Permission to answer call not granted")
-        }
-    }
-
     private fun startCall(phoneNumber: String, speaker: Boolean) {
-        val telecomManager = this.getSystemService(Context.TELECOM_SERVICE) as TelecomManager
-
-        if (checkSelfPermission(this, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
-            telecomManager.let {
-                Log.d("CallService", "Call started with telecomManager")
-                val extra = Bundle()
-
-                if (speaker) {
-                    Log.d("CallService", "WITH SPEAKERPHONE")
-                    extra.putBoolean(TelecomManager.EXTRA_START_CALL_WITH_SPEAKERPHONE, true)
-                }
-
-                val uri = Uri.fromParts("tel", phoneNumber, null)
-                it.placeCall(uri, extra)
-            }
-        } else {
-            Log.d("CallService", "Permission to start call not granted")
-        }
-    }
-
-    private fun stopCall() {
+        JSONProcessingService().setCallActive(true)
         val telecomManager = getSystemService(Context.TELECOM_SERVICE) as TelecomManager
+        val bundle = Bundle().apply { putBoolean(TelecomManager.EXTRA_START_CALL_WITH_SPEAKERPHONE, speaker) }
+        val uri = Uri.fromParts("tel", phoneNumber, null)
 
-        if (checkSelfPermission(this, Manifest.permission.ANSWER_PHONE_CALLS) == PackageManager.PERMISSION_GRANTED) {
-            telecomManager.endCall()
-        } else {
-            Log.d("CallService", "Permission to end call not granted")
+        try {
+            telecomManager.placeCall(uri, bundle)
+            Log.i(TAG, "Call initiated to $phoneNumber with speaker: $speaker")
+        } catch (e: SecurityException) {
+            Log.e(TAG, "Permission to make calls not granted", e)
         }
     }
 
-    /**
-     * This method is necessary to respect the interface Service, but we don't use it here.
-     * it's return always null because clients are not allowed to bind to this service.
-     */
+    private fun endCall() {
+        JSONProcessingService().setCallActive(false)
+        currentCall?.disconnect()
+        Log.i(TAG, "Call ended")
+    }
+
+    private fun sendDtmf(dtmf: String) {
+        if (currentCall == null) {
+            Log.e(TAG, "No active call to send DTMF tones")
+            return
+        }
+
+        try {
+            for (tone in dtmf) {
+                val dtmfTone = tone.toString()[0]
+                currentCall?.playDtmfTone(dtmfTone)
+                Thread.sleep(500) // Pause between tones to ensure proper transmission
+                currentCall?.stopDtmfTone()
+            }
+            Log.i(TAG, "DTMF tones sent: $dtmf")
+        } catch (e: Exception) {
+            Log.e(TAG, "Error sending DTMF tones", e)
+        }
+    }
+
     override fun onBind(intent: Intent?): IBinder? {
         return null
     }
