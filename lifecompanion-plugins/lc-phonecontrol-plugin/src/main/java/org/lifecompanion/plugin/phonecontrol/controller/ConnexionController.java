@@ -188,7 +188,7 @@ public enum ConnexionController implements ModeListenerI {
         SystemType systemType = SystemType.current();
 
         if (systemType == SystemType.WINDOWS) {
-            inputFolder = "/adb/platform-tools-latest-win.zip";
+            inputFolder = "/adb/platform-tools-latest-windows.zip";
             adbFileName += ".exe";
         } else if (systemType == SystemType.UNIX) {
             inputFolder = "/adb/platform-tools-latest-linux.zip";
@@ -212,13 +212,13 @@ public enum ConnexionController implements ModeListenerI {
                     Files.copy(in, adbZip.toPath(), StandardCopyOption.REPLACE_EXISTING);
                 }
 
-                IOUtils.unzipInto(adbZip, adbFolder, null);
+                IOUtils.unzipInto(adbZip, adbFolder.getParentFile(), null);
                 adbZip.delete();
             } catch (Exception e) {
                 LOGGER.error("Failed to download the latest ADB version.", e);
             }
         } else {
-            installAdbFromInputFolder(inputFolder, adbZip, adbFolder);
+            installAdbFromInputFolder(inputFolder, adbZip, adbFolder.getParentFile());
         }
 
         File adb = new File(dataDirectory + File.separator + "platform-tools" + File.separator + adbFileName);

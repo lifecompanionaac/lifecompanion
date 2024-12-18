@@ -222,6 +222,12 @@ public class AdbCommunicationProtocol implements PhoneCommunicationProtocol {
         LOGGER.info("Installing app on phone...");
 
         if (deviceSerialNumber == null) {
+            if (GlobalState.INSTANCE.getPluginProperties() == null) {
+                LOGGER.error("Plugin properties not set");
+
+                return false;
+            }
+
             deviceSerialNumber = GlobalState.INSTANCE.getPluginProperties().deviceProperty().get();
         }
 
