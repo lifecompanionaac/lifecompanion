@@ -2,8 +2,10 @@ package org.lifecompanion.plugin.phonecontrol.controller;
 
 import java.util.ArrayList;
 import java.util.function.Consumer;
+import java.util.UUID;
 
 import org.json.JSONObject;
+import org.lifecompanion.controller.textcomponent.WritingStateController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,64 +23,83 @@ public enum SMSController {
      * @param recipient The phone number of the recipient.
      * @param message   The message content.
      */
-    public void sendSMS(String recipient, String message) {
+    public int sendSMS(String recipient, String message) {
         try {
+            String uuid = UUID.randomUUID().toString();
             JSONObject json = new JSONObject();
             json.put("sender", "pc");
             json.put("type", "sms");
             json.put("subtype", "send_sms");
+            json.put("request_id", uuid);
 
             JSONObject data = new JSONObject();
             data.put("recipient", recipient);
             data.put("message", message);
             json.put("data", data);
 
-            String jsonWithTimestamp = GlobalState.INSTANCE.getCommunicationProtocol().addTimestamp(json.toString());
-            GlobalState.INSTANCE.getCommunicationProtocol().send(jsonWithTimestamp);
+            String result = GlobalState.INSTANCE.getCommunicationProtocol().send(json.toString(), uuid);
 
             LOGGER.info("SMS sent to {}: {}", recipient, message);
+
+            // TODO (get something meaningful from the result)
+            return 0;
+        } catch (Exception e) {
+            LOGGER.error("Error sending SMS", e);
+        }
+
+        return -1;
+    }
+
+    public void sendSMS() {
+        try {
+            String uuid = UUID.randomUUID().toString();
+            JSONObject json = new JSONObject();
+            json.put("sender", "pc");
+            json.put("type", "sms");
+            json.put("subtype", "send_sms");
+            json.put("request_id", uuid);
+
+            JSONObject data = new JSONObject();
+            data.put("recipient", ConnexionController.INSTANCE.getPhoneNumber());
+            data.put("message", WritingStateController.INSTANCE.currentTextProperty().get());
+            json.put("data", data);
+
+            String result = GlobalState.INSTANCE.getCommunicationProtocol().send(json.toString(), uuid);
+
+            LOGGER.info("SMS sent to {}: {}", ConnexionController.INSTANCE.getPhoneNumber(), WritingStateController.INSTANCE.currentTextProperty().get());
         } catch (Exception e) {
             LOGGER.error("Error sending SMS", e);
         }
     }
 
-    public int requestSendSMS() {
-        // TODO : callback (poll)
-        return 0;
-    }
-
-    public void sendSMS() {
-        // TODO
-        // global selected contact
-    }
-
     /**
      * Retrieves SMS conversations from the phone.
      */
-    public void getConvList(int convIndexMin, int convIndexMax) {
+    public ArrayList<String> getConvList(int convIndexMin, int convIndexMax) {
         try {
+            String uuid = UUID.randomUUID().toString();
             JSONObject json = new JSONObject();
             json.put("sender", "pc");
             json.put("type", "sms");
             json.put("subtype", "get_sms_conversations");
+            json.put("request_id", uuid);
             
             JSONObject data = new JSONObject();
             data.put("conv_index_min", convIndexMin);
             data.put("conv_index_max", convIndexMax);
             json.put("data", data);
 
-            String jsonWithTimestamp = GlobalState.INSTANCE.getCommunicationProtocol().addTimestamp(json.toString());
-            GlobalState.INSTANCE.getCommunicationProtocol().send(jsonWithTimestamp);
+            String result = GlobalState.INSTANCE.getCommunicationProtocol().send(json.toString(), uuid);
 
             LOGGER.info("Requested SMS conversations.");
+
+            // TODO
+            return new ArrayList<>();
         } catch (Exception e) {
             LOGGER.error("Error requesting SMS conversations", e);
         }
-    }
 
-    public ArrayList<String> requestGetConvList() {
-        // TODO : callback (poll)
-        return new ArrayList<>();
+        return null;
     }
 
     /**
@@ -86,12 +107,14 @@ public enum SMSController {
      *
      * @param phoneNumber The phone number or contact identifier.
      */
-    public void getSMSList(String phoneNumber, int msgIndexMin, int msgIndexMax) {
+    public ArrayList<String> getSMSList(String phoneNumber, int msgIndexMin, int msgIndexMax) {
         try {
+            String uuid = UUID.randomUUID().toString();
             JSONObject json = new JSONObject();
             json.put("sender", "pc");
             json.put("type", "sms");
             json.put("subtype", "get_conversation_messages");
+            json.put("request_id", uuid);
 
             JSONObject data = new JSONObject();
             data.put("contact_number", phoneNumber);
@@ -99,33 +122,16 @@ public enum SMSController {
             data.put("msg_index_max", msgIndexMax);
             json.put("data", data);
 
-            String jsonWithTimestamp = GlobalState.INSTANCE.getCommunicationProtocol().addTimestamp(json.toString());
-            GlobalState.INSTANCE.getCommunicationProtocol().send(jsonWithTimestamp);
+            String result = GlobalState.INSTANCE.getCommunicationProtocol().send(json.toString(), uuid);
 
             LOGGER.info("Requested messages from conversation with {}.", phoneNumber);
+
+            // TODO
+            return new ArrayList<>();
         } catch (Exception e) {
             LOGGER.error("Error requesting messages from conversation", e);
         }
-    }
 
-    public ArrayList<String> requestGetSMSList() {
-        // TODO : callback (poll)
-        return new ArrayList<>();
-    }
-
-    public void addUnreadCountUpdateCallback(Consumer<Integer> unreadCountUpdatedCallback) {
-        // TODO
-    }
-
-    public void removeUnreadCountUpdateCallback(Consumer<Integer> unreadCountUpdatedCallback) {
-        // TODO
-    }
-
-    public void addValidationSendSMSCallback(Consumer<Integer> validationSendSMSCallback) {
-        // TODO
-    }
-
-    public void removeValidationSendSMSCallback(Consumer<Integer> validationSendSMSCallback) {
-        // TODO
+        return null;
     }
 }

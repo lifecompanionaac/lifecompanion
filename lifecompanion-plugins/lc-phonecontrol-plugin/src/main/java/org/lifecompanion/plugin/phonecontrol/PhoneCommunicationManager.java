@@ -63,28 +63,93 @@ public enum PhoneCommunicationManager {
     }
 
     public ArrayList<String> getDevices() {
-        // TODO
-        return new ArrayList<>();
+        ArrayList<String> devices = new ArrayList<>();
+
+        switch(GlobalState.INSTANCE.getProtocolType()) {
+            case ADB:
+                devices = ((AdbCommunicationProtocol) GlobalState.INSTANCE.getCommunicationProtocol()).getDevices();
+            case BLUETOOTH:
+                // TODO
+
+                break;
+            default:
+                LOGGER.warn("Unsupported communication protocol.");
+
+                break;
+        }
+
+        return devices;
     }
 
     public String getDeviceName(String deviceSerialNumber) {
-        // TODO
-        return "";
+        String deviceName = null;
+
+        switch(GlobalState.INSTANCE.getProtocolType()) {
+            case ADB:
+                deviceName = ((AdbCommunicationProtocol) GlobalState.INSTANCE.getCommunicationProtocol()).getDeviceName(deviceSerialNumber);
+            case BLUETOOTH:
+                // TODO
+
+                break;
+            default:
+                LOGGER.warn("Unsupported communication protocol.");
+
+                break;
+        }
+
+        return deviceName;
     }
 
-    public boolean installApp(String deviceSerialNumber) {
-        // TODO
-        // apkPath is GlobalState.INSTANCE.getDataDirectory() + "/apk/lc-service.apk"
-    
-        return false;
+    public boolean installApp() {
+        boolean success = false;
+
+        switch(GlobalState.INSTANCE.getProtocolType()) {
+            case ADB:
+                success = ((AdbCommunicationProtocol) GlobalState.INSTANCE.getCommunicationProtocol()).installApk();
+            case BLUETOOTH:
+                // TODO
+
+                break;
+            default:
+                LOGGER.warn("Unsupported communication protocol.");
+
+                break;
+        }
+
+        return success;
     }
 
     public boolean isAppInstalled(String deviceSerialNumber) {
-        // TODO
-        return false;
+        boolean installed = false;
+
+        switch(GlobalState.INSTANCE.getProtocolType()) {
+            case ADB:
+                installed = ((AdbCommunicationProtocol) GlobalState.INSTANCE.getCommunicationProtocol()).isAppInstalled(deviceSerialNumber);
+            case BLUETOOTH:
+                // TODO
+
+                break;
+            default:
+                LOGGER.warn("Unsupported communication protocol.");
+
+                break;
+        }
+
+        return installed;
     }
 
     public void startApp(String deviceSerialNumber) {
-        // TODO
+        switch(GlobalState.INSTANCE.getProtocolType()) {
+            case ADB:
+                ((AdbCommunicationProtocol) GlobalState.INSTANCE.getCommunicationProtocol()).startApp(deviceSerialNumber);
+            case BLUETOOTH:
+                // TODO
+
+                break;
+            default:
+                LOGGER.warn("Unsupported communication protocol.");
+
+                break;
+        }
     }
 }

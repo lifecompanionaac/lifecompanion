@@ -104,6 +104,10 @@ public enum ConnexionController implements ModeListenerI {
         return phoneNumberOrContactName;
     }
 
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
     @Override
     public void modeStart(LCConfigurationI configuration) {
         GlobalState.INSTANCE.setPluginProperties((PhoneControlPluginProperties) configuration.getPluginConfigProperties(PhoneControlPlugin.PLUGIN_ID, PhoneControlPluginProperties.class));
@@ -348,8 +352,7 @@ public enum ConnexionController implements ModeListenerI {
         int unreadConvCount = 0;
 
         // Get conv
-        SMSController.INSTANCE.getConvList(convIndexMin, convIndexMax);
-        ArrayList<String> convStr = SMSController.INSTANCE.requestGetConvList();
+        ArrayList<String> convStr = SMSController.INSTANCE.getConvList(convIndexMin, convIndexMax);
         ConversationListContent emptyContent = new ConversationListContent(null, null, null, true, false);
         boolean emptyConvSet = false;  // To detect the first empty conv
 
@@ -415,8 +418,7 @@ public enum ConnexionController implements ModeListenerI {
         int smsIndexMax = smsIndexMin + smsCells.size();
 
         // Get conv
-        SMSController.INSTANCE.getSMSList(this.phoneNumber, smsIndexMin, smsIndexMax);
-        ArrayList<String> smsStr = SMSController.INSTANCE.requestGetSMSList();
+        ArrayList<String> smsStr = SMSController.INSTANCE.getSMSList(this.phoneNumber, smsIndexMin, smsIndexMax);
         SMSListContent emptyContent = new SMSListContent(null, null, null, null, false);
         boolean emptyMessageSet = false;  // To detect the first empty message
 
@@ -472,8 +474,7 @@ public enum ConnexionController implements ModeListenerI {
      */
     public void sendSMS() {
         String message = WritingStateController.INSTANCE.currentTextProperty().get();
-        SMSController.INSTANCE.sendSMS(this.phoneNumber, message);
-        int val = SMSController.INSTANCE.requestSendSMS();
+        int val = SMSController.INSTANCE.sendSMS(this.phoneNumber, message);
         validationSendSMSCallback.forEach((callback) -> callback.accept(val));
         WritingStateController.INSTANCE.removeAll(WritingEventSource.SYSTEM);
         this.smsIndexMin = 0;

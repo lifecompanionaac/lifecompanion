@@ -2,7 +2,7 @@ package org.lifecompanion.plugin.phonecontrol.event;
 
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.impl.categorizedelement.useevent.BaseUseEventGeneratorImpl;
-import org.lifecompanion.plugin.phonecontrol.controller.CallController;
+import org.lifecompanion.plugin.phonecontrol.controller.ConnexionController;
 import org.lifecompanion.plugin.phonecontrol.event.categories.PhoneControlEventSubCategories;
 
 public class OnCallEnterEventGenerator extends BaseUseEventGeneratorImpl {
@@ -29,7 +29,7 @@ public class OnCallEnterEventGenerator extends BaseUseEventGeneratorImpl {
     // Class part : "Mode start/stop"
     @Override
     public void modeStart(final LCConfigurationI configuration) {
-        CallController.INSTANCE.addCallEnterCallback(callEnterCallback);
+        ConnexionController.INSTANCE.addCallEnterCallback(callEnterCallback);
     }
 
     @Override

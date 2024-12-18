@@ -8,6 +8,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.lifecompanion.controller.resource.ResourceHelper;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
 import org.lifecompanion.plugin.phonecontrol.controller.GlobalState;
@@ -20,7 +22,6 @@ import org.slf4j.LoggerFactory;
  */
 public class AdbCommunicationProtocol implements PhoneCommunicationProtocol {
     private static final Logger LOGGER = LoggerFactory.getLogger(AdbCommunicationProtocol.class.getName());
-    private File adb;
     private String adbPath;
     private boolean connectionOpen;
 
@@ -28,13 +29,8 @@ public class AdbCommunicationProtocol implements PhoneCommunicationProtocol {
      * Constructor for AdbCommunicationProtocol.
      */
     public AdbCommunicationProtocol(File adb) {
-        this.adb = adb;
         this.adbPath = adb.getPath();
         this.connectionOpen = false;
-    }
-
-    public File getAdbPath() {
-        return adb;
     }
 
     @Override
@@ -46,16 +42,39 @@ public class AdbCommunicationProtocol implements PhoneCommunicationProtocol {
         }
 
         try {
-            ProcessBuilder processBuilder = new ProcessBuilder(adbPath, "shell", "echo", data, ">", "/data/local/tmp/phonecontrol/input.json");
+            String path = "/data/local/tmp/lifecompanion/phonecontrol/input/";
+            String filename = addTimestamp(path);
+            ProcessBuilder processBuilder = new ProcessBuilder(adbPath, "shell", "mkdir", "-p", path);
             Process process = processBuilder.start();
             process.waitFor();
-        } catch (IOException | InterruptedException e) {
+
+            processBuilder = new ProcessBuilder(adbPath, "push", "-", filename);
+            process = processBuilder.start();
+            process.getOutputStream().write(data.getBytes());
+            process.getOutputStream().close();
+            process.waitFor();
+        } catch (IOException e) {
+            // File already exists, wait for 1 second and try again
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ie) {
+                LOGGER.error("Error while sending data via ADB", ie);
+            }
+
+            send(data);
+        } catch (InterruptedException e) {
             LOGGER.error("Error while sending data via ADB", e);
         }
     }
-    
+
     @Override
-    public String receive() {
+    public String send(String data, String requestId) {
+        send(data);
+
+        return receive(requestId);
+    }
+
+    private String receive(String requestId) {
         if (!isOpen()) {
             LOGGER.warn("Connection is not open. Unable to receive data.");
 
@@ -63,19 +82,48 @@ public class AdbCommunicationProtocol implements PhoneCommunicationProtocol {
         }
 
         try {
-            ProcessBuilder processBuilder = new ProcessBuilder(adbPath, "shell", "cat", "/data/local/tmp/phonecontrol/output.json");
-            Process process = processBuilder.start();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            StringBuilder output = new StringBuilder();
-            String line;
+            String path = "/data/local/tmp/lifecompanion/phonecontrol/output/";
+            ArrayList<String> processedFiles = new ArrayList<>();
+            String content = null;
 
-            while ((line = reader.readLine()) != null) {
-                output.append(line);
+            while (content == null) {
+                ArrayList<String> filePaths = pollDirectoryViaAdb(path);
+
+                for (String filePath : filePaths) {
+                    if (!processedFiles.contains(filePath)) {
+                        ProcessBuilder processBuilder = new ProcessBuilder(adbPath, "shell", "cat", filePath);
+                        Process process = processBuilder.start();
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                        StringBuilder fileContent = new StringBuilder();
+                        String line;
+
+                        while ((line = reader.readLine()) != null) {
+                            fileContent.append(line);
+                        }
+
+                        process.waitFor();
+                        processedFiles.add(filePath);
+
+                        try {
+                            JSONObject jsonObject = new JSONObject(fileContent.toString());
+                            if (jsonObject.getString("request_id").equals(requestId)) {
+                                content = jsonObject.toString();
+                                new ProcessBuilder(adbPath, "shell", "rm", filePath).start().waitFor();
+
+                                break;
+                            }
+                        } catch (JSONException e) {
+                            LOGGER.error("Error while parsing JSON", e);
+                        }
+                    }
+                }
+
+                if (content == null) {
+                    Thread.sleep(1000);
+                }
             }
 
-            process.waitFor();
-
-            return output.toString();
+            return content;
         } catch (IOException | InterruptedException e) {
             LOGGER.error("Error while receiving data via ADB", e);
         }
@@ -146,7 +194,8 @@ public class AdbCommunicationProtocol implements PhoneCommunicationProtocol {
         return false;
     }
 
-    public String pollDirectoryViaAdb(String directoryPath, String adbPath) {
+    public ArrayList<String> pollDirectoryViaAdb(String directoryPath) {
+        ArrayList<String> filePaths = new ArrayList<>();
         try {
             ProcessBuilder processBuilder = new ProcessBuilder(adbPath, "shell", "ls", directoryPath);
             Process process = processBuilder.start();
@@ -155,29 +204,14 @@ public class AdbCommunicationProtocol implements PhoneCommunicationProtocol {
 
             while ((fileName = reader.readLine()) != null) {
                 if (!fileName.trim().isEmpty()) {
-                    // Retrieve the file content
-                    ProcessBuilder pullBuilder = new ProcessBuilder(adbPath, "shell", "cat", directoryPath + "/" + fileName);
-                    Process pullProcess = pullBuilder.start();
-                    BufferedReader pullReader = new BufferedReader(new InputStreamReader(pullProcess.getInputStream()));
-
-                    StringBuilder content = new StringBuilder();
-                    String line;
-
-                    while ((line = pullReader.readLine()) != null) {
-                        content.append(line);
-                    }
-
-                    // Delete the file from the device
-                    new ProcessBuilder(adbPath, "shell", "rm", directoryPath + "/" + fileName).start().waitFor();
-
-                    return content.toString();
+                    filePaths.add(directoryPath + "/" + fileName);
                 }
             }
         } catch (Exception e) {
             throw new RuntimeException("Error polling directory via ADB: " + e.getMessage(), e);
         }
 
-        return null;
+        return filePaths;
     }
 
     /**

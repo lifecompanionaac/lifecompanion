@@ -190,9 +190,10 @@ public class PhoneControlGeneralConfigView extends BorderPane implements General
 
             Thread installThread = new Thread(() -> {
                 String deviceSerialNumber = selectDeviceComboBox.getSelectionModel().getSelectedItem().getSerialNumber();
-
+                
                 if (deviceSerialNumber != null) {
-                    boolean isInstalled = PhoneCommunicationManager.INSTANCE.installApp(deviceSerialNumber);
+                    GlobalState.INSTANCE.setDeviceSerialNumber(deviceSerialNumber);
+                    boolean isInstalled = PhoneCommunicationManager.INSTANCE.installApp();
                     Platform.runLater(() -> {
                         labelInstallResult.setText(Translation.getText(
                             isInstalled ? "phonecontrol.plugin.config.label.install.app.success": "phonecontrol.plugin.config.label.install.app.error"

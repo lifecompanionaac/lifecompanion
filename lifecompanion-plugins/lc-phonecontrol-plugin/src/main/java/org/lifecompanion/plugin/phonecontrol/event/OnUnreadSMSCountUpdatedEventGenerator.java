@@ -5,7 +5,6 @@ import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.impl.categorizedelement.useevent.BaseUseEventGeneratorImpl;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.plugin.phonecontrol.controller.ConnexionController;
-import org.lifecompanion.plugin.phonecontrol.controller.SMSController;
 import org.lifecompanion.plugin.phonecontrol.event.categories.PhoneControlEventSubCategories;
 
 import javafx.beans.property.ObjectProperty;
@@ -59,7 +58,7 @@ public class OnUnreadSMSCountUpdatedEventGenerator extends BaseUseEventGenerator
     // Class part : "Mode start/stop"
     @Override
     public void modeStart(final LCConfigurationI configuration) {
-        SMSController.INSTANCE.addUnreadCountUpdateCallback(unreadCountUpdatedCallback);
+        ConnexionController.INSTANCE.addUnreadCountUpdateCallback(unreadCountUpdatedCallback);
         // On start, fire first event
         int unreadCount = ConnexionController.INSTANCE.getSmsUnread();
         unreadCountUpdatedCallback.accept(unreadCount);
@@ -67,7 +66,7 @@ public class OnUnreadSMSCountUpdatedEventGenerator extends BaseUseEventGenerator
 
     @Override
     public void modeStop(final LCConfigurationI configuration) {
-        SMSController.INSTANCE.removeUnreadCountUpdateCallback(unreadCountUpdatedCallback);
+        ConnexionController.INSTANCE.removeUnreadCountUpdateCallback(unreadCountUpdatedCallback);
     }
 
     // Class part : "Generation condition"

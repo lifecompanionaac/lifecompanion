@@ -20,11 +20,13 @@ public interface PhoneCommunicationProtocol {
     void send(String data);
 
     /**
-     * Receive a JSON object from the phone.
+     * Send a JSON object to the phone and wait for a response.
      * 
+     * @param data A JSON-formatted string to be sent to the phone.
+     * @param requestId A unique identifier for the request.
      * @return A JSON-formatted string received from the phone.
      */
-    String receive();
+    String send(String data, String requestId);
 
     /**
      * Close the communication connection between the PC and the phone.
@@ -76,19 +78,13 @@ public interface PhoneCommunicationProtocol {
 
             switch (type) {
                 case "call":
-                    if (!subtype.equals("make_call") && !subtype.equals("hang_up") && !subtype.equals("numpad_input") && !subtype.equals("call_messagerie")) {
+                    if (!subtype.equals("make_call") && !subtype.equals("hang_up") && !subtype.equals("numpad_input")) {
                         return false;
                     }
 
                     break;
                 case "sms":
                     if (!subtype.equals("send_sms") && !subtype.equals("receive_sms") && !subtype.equals("get_sms_conversations") && !subtype.equals("get_conversation_messages")) {
-                        return false;
-                    }
-
-                    break;
-                case "contacts":
-                    if (!subtype.equals("get_contacts") && !subtype.equals("update_contact")) {
                         return false;
                     }
 
@@ -111,20 +107,25 @@ public interface PhoneCommunicationProtocol {
     }
 
     /**
-     * Adds a timestamp to a given JSON object.
+     * Adds a timestamp to a given JSON filepath.
      * 
-     * @param data The JSON object to which a timestamp will be added.
-     * @return The updated JSON object with a timestamp field added.
+     * @param filepath The filepath to which the timestamp should be added. If it is a directory, the timestamp will be added to the end of the path.
+     * @return The filepath with the added timestamp.
      */
-    default public String addTimestamp(String data) {
-        try {
-            JSONObject json = new JSONObject(data);
-            String timestamp = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault()).format(new Date());
-            json.put("timestamp", timestamp);
+    default public String addTimestamp(String filepath) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault());
+        String timestamp = sdf.format(new Date());
 
-            return json.toString();
-        } catch (Exception e) {
-            throw new IllegalArgumentException("Invalid JSON format: " + e.getMessage());
+        if (filepath.endsWith("/")) {
+            return filepath + timestamp + ".json";
+        }
+
+        int index = filepath.lastIndexOf(".");
+
+        if (index == -1) {
+            return filepath + "_" + timestamp;
+        } else {
+            return filepath.substring(0, index) + "_" + timestamp + filepath.substring(index);
         }
     }
 }

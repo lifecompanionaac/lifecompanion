@@ -43,7 +43,13 @@ public class BluetoothCommunicationProtocol implements PhoneCommunicationProtoco
     }
 
     @Override
-    public String receive() {
+    public String send(String data, String requestId) {
+        send(data);
+
+        return receive(requestId);
+    }
+
+    public String receive(String requestId) {
         if (!isOpen()) {
             LOGGER.warn("Connection is not open. Unable to receive data.");
 
@@ -167,7 +173,7 @@ public class BluetoothCommunicationProtocol implements PhoneCommunicationProtoco
         try {
             // Send a command to list files in the directory
             bluetoothConnection.send(new JSONObject().put("command", "list_files").put("path", directoryPath).toString());
-            String response = bluetoothConnection.receive();
+            String response = bluetoothConnection.receive("");
 
             if (response != null) {
                 JSONObject jsonResponse = new JSONObject(response);
@@ -178,7 +184,7 @@ public class BluetoothCommunicationProtocol implements PhoneCommunicationProtoco
                     if (fileName != null) {
                         // Request the file content
                         bluetoothConnection.send(new JSONObject().put("command", "get_file").put("path", directoryPath + "/" + fileName).toString());
-                        String fileContent = bluetoothConnection.receive();
+                        String fileContent = bluetoothConnection.receive("");
 
                         // Delete the file after retrieving
                         bluetoothConnection.send(new JSONObject().put("command", "delete_file").put("path", directoryPath + "/" + fileName).toString());

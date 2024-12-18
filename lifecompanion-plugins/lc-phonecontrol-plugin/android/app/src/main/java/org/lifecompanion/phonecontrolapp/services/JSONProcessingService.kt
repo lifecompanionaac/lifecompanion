@@ -17,7 +17,7 @@ import java.io.IOException;
 public class JSONProcessingService extends Service {
 
     private static final String TAG = "JSONProcessingService";
-    private static final String INPUT_DIR = "/data/local/tmp/phonecontrol/input"; // Directory to watch
+    private static final String INPUT_DIR = "/data/local/tmp/lifecompanion/phonecontrol/input"; // Directory to watch
 
     private FileObserver fileObserver;
 
