@@ -117,5 +117,4 @@
     <text key="phonecontrol.plugin.config.label.speaker.on">Activer automatiquement le haut parleur durant un appel</text>
     <text key="phonecontrol.plugin.config.label.duration">Intervalle de rafraîchissement</text>
     <text key="phonecontrol.plugin.config.button.refresh.list">Actualiser la liste</text>
-
 </texts>

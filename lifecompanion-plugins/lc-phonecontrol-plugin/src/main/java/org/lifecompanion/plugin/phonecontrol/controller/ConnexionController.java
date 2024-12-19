@@ -119,7 +119,7 @@ public enum ConnexionController implements ModeListenerI {
         PhoneCommunicationManager.INSTANCE.startApp(deviceSerialNumber);
 
         // Set up the interval of refresh
-        this.durationInterval = currentPhoneControlPluginProperties.durationInternalProperty().get();
+        this.durationInterval = Math.max(currentPhoneControlPluginProperties.durationInternalProperty().get(), 1000);
         this.refreshTimer = new Timer(true);
         this.refreshTimer.scheduleAtFixedRate(new TimerTask() {
             @Override

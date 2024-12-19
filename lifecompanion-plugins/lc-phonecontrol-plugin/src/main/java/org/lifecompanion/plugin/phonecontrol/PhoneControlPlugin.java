@@ -34,7 +34,7 @@ public class PhoneControlPlugin implements PluginI {
 
     @Override
     public String[] getDefaultConfigurations(String languageCode) {
-        return new String[] { "/configurations/" + languageCode + "_phonecontrol-example.lcc" };
+        return new String[] { "/configurations/" + languageCode + "_phonecontrol-config.lcc" };
     }
 
     @Override
