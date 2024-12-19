@@ -18,6 +18,7 @@ import java.util.TimerTask;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
+import org.json.JSONObject;
 import org.lifecompanion.controller.textcomponent.WritingStateController;
 import org.lifecompanion.controller.usevariable.UseVariableController;
 import org.lifecompanion.framework.commons.SystemType;
@@ -248,18 +249,22 @@ public enum ConnexionController implements ModeListenerI {
      * - No call but "onCall" isn't update : update "onCall" and launch the event "OnCallEnded" <br>
      */
     public void refreshCallStatus() {
-        String callStateOrPhoneNumber = CallController.INSTANCE.getCallStatus();
+        JSONObject callState = CallController.INSTANCE.getCallStatus();
+        String callStatus = callState.getString("call_status");
+        String incomingCallStatus = callState.getString("incoming_call_status");
 
-        if (callStateOrPhoneNumber.equals("0")) {  // No call on the phone
+        if (callStatus.equals("inactive")) {  // No call on the phone
             if (this.onCall) {
                 this.onCall = false;
                 callEndedCallback.run();
             }
-        } else if (callStateOrPhoneNumber.equals("1")) {  // Current call on the phone
+        } else if (callStatus.equals("active")) {  // Current call on the phone
             this.onCall = true;
-        } else {  // Incoming call
+        }
+        
+        if (incomingCallStatus.equals("incoming")) {  // Incoming call
             this.onCall = true;
-            this.phoneNumberOrContactName = callStateOrPhoneNumber;
+            this.phoneNumberOrContactName = callState.getString("phone_number");
             UseVariableController.INSTANCE.requestVariablesUpdate();  // Update variables (to show the phone number)
             callEnterCallback.run();  // Launch event "OnCallEnter"
         }
@@ -342,8 +347,7 @@ public enum ConnexionController implements ModeListenerI {
     }
 
     /**
-     * Refresh the content of conversations cells. <br>
-     * - Only one execution at a time
+     * Refresh the content of conversations cells. Only one execution at a time
      */
     private void refreshConvListExec() {
         LOGGER.info("Loading conversations...");
@@ -352,31 +356,34 @@ public enum ConnexionController implements ModeListenerI {
         int unreadConvCount = 0;
 
         // Get conv
-        ArrayList<String> convStr = SMSController.INSTANCE.getConvList(convIndexMin, convIndexMax);
+        ArrayList<JSONObject> convObj = SMSController.INSTANCE.getConvList(convIndexMin, convIndexMax);
         ConversationListContent emptyContent = new ConversationListContent(null, null, null, true, false);
         boolean emptyConvSet = false;  // To detect the first empty conv
 
-        if (convStr.isEmpty()) {
+        if (convObj == null || convObj.isEmpty()) {
             for (final ConversationListKeyOption cell : convCells) {
                 Platform.runLater(() -> cell.convProperty().set(emptyContent));
             }
+
+            LOGGER.info("No conversation loaded");
         } else {
-            // Analyse each convStrings
             for (int i = 0; i < convCells.size(); i++) {
                 ConversationListKeyOption cell = this.convCells.get(i);  // Get the cell
 
-                if (i < convStr.size()) {
-                    String[] convData = convStr.get(i).split("\\|");  // Split data
-                    byte[] decodedBytes = Base64.getDecoder().decode(convData[2]);  // Get message body
+                if (i < convObj.size()) {
+                    JSONObject jsonObject = convObj.get(i);
+                    String phoneNumber = jsonObject.getString("phone_number");
+                    String contactName = jsonObject.getString("contact_name");
+                    byte[] decodedBytes = Base64.getDecoder().decode(jsonObject.getString("last_message"));
                     String message = new String(decodedBytes);
-                    boolean isSeen = Boolean.parseBoolean(convData[3]);
-                    boolean isSendByMe = Boolean.parseBoolean(convData[4]);
+                    boolean isSeen = jsonObject.getBoolean("is_read");
+                    boolean isSendByMe = jsonObject.getBoolean("is_sent_by_me");
 
                     if (!isSeen) {
                         unreadConvCount++;
                     }
 
-                    ConversationListContent cellContent = new ConversationListContent(convData[0], convData[1], message, isSeen, isSendByMe);
+                    ConversationListContent cellContent = new ConversationListContent(phoneNumber, contactName, message, isSeen, isSendByMe);
                     Platform.runLater(() -> cell.convProperty().set(cellContent));
                     topConvReached = false;
                 } else {
@@ -390,6 +397,8 @@ public enum ConnexionController implements ModeListenerI {
                     topConvReached = true;
                 }
             }
+
+            LOGGER.info("{} Conversations loaded", convObj.size());
         }
 
         // Update variables
@@ -397,8 +406,6 @@ public enum ConnexionController implements ModeListenerI {
         UseVariableController.INSTANCE.requestVariablesUpdate();
         final int finalUnreadConvCount = unreadConvCount;
         unreadCountUpdateCallback.forEach((callback) -> callback.accept(finalUnreadConvCount));
-
-        LOGGER.info("{} Conversations loaded", convStr.size());
     }
 
     /**
@@ -418,26 +425,33 @@ public enum ConnexionController implements ModeListenerI {
         int smsIndexMax = smsIndexMin + smsCells.size();
 
         // Get conv
-        ArrayList<String> smsStr = SMSController.INSTANCE.getSMSList(this.phoneNumber, smsIndexMin, smsIndexMax);
+        ArrayList<JSONObject> smsObj = SMSController.INSTANCE.getSMSList(this.phoneNumber, smsIndexMin, smsIndexMax);
         SMSListContent emptyContent = new SMSListContent(null, null, null, null, false);
         boolean emptyMessageSet = false;  // To detect the first empty message
 
-        if (smsStr.isEmpty()) {
+        if (smsObj == null || smsObj.isEmpty()) {
             for (final SMSListKeyOption cell : smsCells) {
                 Platform.runLater(() -> cell.smsProperty().set(emptyContent));
             }
+
+            LOGGER.info("No SMS loaded");
         } else {
-            int smsStrSize = smsStr.size();
+            int smsObjSize = smsObj.size();
 
             for (int i = 0; i < smsCells.size(); i++) {
                 SMSListKeyOption cell = this.smsCells.get(smsCells.size() - 1 - i);  // Start from the end of smsCells
 
-                if (i < smsStrSize) {
-                    String[] smsData = smsStr.get(i).split("\\|");  // Split data
-                    String message = new String(Base64.getDecoder().decode(smsData[2]));
-                    boolean sendByMe = Boolean.parseBoolean(smsData[4]);
+                if (i < smsObjSize) {
+                    JSONObject jsonObject = smsObj.get(i);
+                    String phoneNumber = jsonObject.getString("phone_number");
+                    String contactName = jsonObject.getString("contact_name");
+                    byte[] decodedBytes = Base64.getDecoder().decode(jsonObject.getString("message"));
+                    String message = new String(decodedBytes);
+                    String timestamp = jsonObject.getString("timestamp");
+                    boolean isSeen = jsonObject.getBoolean("is_read");
+                    boolean isSendByMe = jsonObject.getBoolean("is_sent_by_me");
 
-                    SMSListContent cellContent = new SMSListContent(smsData[0], smsData[1], message, smsData[3], sendByMe);
+                    SMSListContent cellContent = new SMSListContent(phoneNumber, contactName, message, timestamp, isSendByMe);
                     Platform.runLater(() -> cell.smsProperty().set(cellContent));
                     topSmsReached = false;
                 } else {
@@ -451,9 +465,10 @@ public enum ConnexionController implements ModeListenerI {
                     topSmsReached = true;
                 }
             }
+
+            LOGGER.info("{} SMS loaded", smsObj.size());
         }
 
-        LOGGER.info("{} SMS loaded", smsStr.size());
     }
 
     /**

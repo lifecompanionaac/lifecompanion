@@ -18,12 +18,15 @@ class JSONProcessingService : Service() {
         private const val OUTPUT_DIR = "/data/local/tmp/lifecompanion/phonecontrol/output"
     }
 
-    private var isCallActive = false
     private var watcherThread: Thread? = null
     private var pollingInterval = 1000L // Default polling interval in milliseconds
 
     override fun onCreate() {
         super.onCreate()
+        val inputDir = File(INPUT_DIR)
+        if (!inputDir.exists()) inputDir.mkdirs()
+        val outputDir = File(OUTPUT_DIR)
+        if (!outputDir.exists()) outputDir.mkdirs()
         startFileWatcher()
     }
 
@@ -74,10 +77,6 @@ class JSONProcessingService : Service() {
             }
 
             routeJsonToService(json)
-
-            if (json.has("request_id")) {
-                writeResponse(json.optString("request_id"), createResponseData(json))
-            }
         } catch (e: Exception) {
             Log.e(TAG, "Error processing file: ${file.name}", e)
         }
@@ -98,22 +97,21 @@ class JSONProcessingService : Service() {
 
     private fun writeResponse(requestId: String, responseData: JSONObject) {
         val outputDir = File(OUTPUT_DIR)
-        if (!outputDir.exists()) outputDir.mkdirs()
+        if (!outputDir.exists()) {
+            outputDir.mkdirs()
+        }
 
         val responseFile = File(outputDir, "$requestId.json")
-        FileOutputStream(responseFile).use { it.write(responseData.toString().toByteArray()) }
-    }
 
-    private fun createResponseData(request: JSONObject): JSONObject {
-        return JSONObject().apply {
-            put("request_id", request.optString("request_id"))
-            put("status", "success")
-            put("message", "Processed ${request.optString("type")} request.")
+        try {
+            FileOutputStream(responseFile).use { it.write(responseData.toString().toByteArray()) }
+            Log.i(TAG, "Response written to file: $responseFile")
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to write response for requestId: $requestId", e)
         }
     }
 
-    fun setCallActive(active: Boolean) {
-        isCallActive = active
-        pollingInterval = if (active) 100 else 1000
+    public fun setPollingInterval(interval: Long) {
+        pollingInterval = interval
     }
 }

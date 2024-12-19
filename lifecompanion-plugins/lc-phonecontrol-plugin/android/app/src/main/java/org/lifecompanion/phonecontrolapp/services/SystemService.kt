@@ -61,22 +61,25 @@ class SystemService : Service() {
         }
     }
 
-    private fun checkConnectionStatus() {
-        Log.i(TAG, "Checking connection status")
-        // Connection status logic can be added here
-    }
-
     private fun writeResponse(requestId: String, responseData: JSONObject) {
         val outputDir = File(OUTPUT_DIR)
-        if (!outputDir.exists()) outputDir.mkdirs()
+        if (!outputDir.exists()) {
+            outputDir.mkdirs()
+        }
 
         val responseFile = File(outputDir, "$requestId.json")
+
         try {
             FileOutputStream(responseFile).use { it.write(responseData.toString().toByteArray()) }
             Log.i(TAG, "Response written to file: $responseFile")
         } catch (e: Exception) {
             Log.e(TAG, "Failed to write response for requestId: $requestId", e)
         }
+    }
+
+    private fun checkConnectionStatus() {
+        Log.i(TAG, "Checking connection status")
+        // Connection status logic can be added here
     }
 
     override fun onBind(intent: Intent?): IBinder? {

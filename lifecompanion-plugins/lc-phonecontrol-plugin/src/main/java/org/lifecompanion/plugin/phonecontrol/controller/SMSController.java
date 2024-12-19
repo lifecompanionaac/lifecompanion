@@ -75,7 +75,7 @@ public enum SMSController {
     /**
      * Retrieves SMS conversations from the phone.
      */
-    public ArrayList<String> getConvList(int convIndexMin, int convIndexMax) {
+    public ArrayList<JSONObject> getConvList(int convIndexMin, int convIndexMax) {
         try {
             String uuid = UUID.randomUUID().toString();
             JSONObject json = new JSONObject();
@@ -83,18 +83,22 @@ public enum SMSController {
             json.put("type", "sms");
             json.put("subtype", "get_sms_conversations");
             json.put("request_id", uuid);
-            
+
             JSONObject data = new JSONObject();
             data.put("conv_index_min", convIndexMin);
             data.put("conv_index_max", convIndexMax);
             json.put("data", data);
 
             String result = GlobalState.INSTANCE.getCommunicationProtocol().send(json.toString(), uuid);
-
             LOGGER.info("Requested SMS conversations.");
+            JSONObject resultJson = new JSONObject(result);
+            ArrayList<JSONObject> conversations = new ArrayList<>();
 
-            // TODO
-            return new ArrayList<>();
+            for (int i = 0; i < resultJson.getJSONArray("data").length(); i++) {
+                conversations.add(resultJson.getJSONArray("data").getJSONObject(i));
+            }
+
+            return conversations;
         } catch (Exception e) {
             LOGGER.error("Error requesting SMS conversations", e);
         }
@@ -107,7 +111,7 @@ public enum SMSController {
      *
      * @param phoneNumber The phone number or contact identifier.
      */
-    public ArrayList<String> getSMSList(String phoneNumber, int msgIndexMin, int msgIndexMax) {
+    public ArrayList<JSONObject> getSMSList(String phoneNumber, int msgIndexMin, int msgIndexMax) {
         try {
             String uuid = UUID.randomUUID().toString();
             JSONObject json = new JSONObject();
@@ -123,11 +127,16 @@ public enum SMSController {
             json.put("data", data);
 
             String result = GlobalState.INSTANCE.getCommunicationProtocol().send(json.toString(), uuid);
-
             LOGGER.info("Requested messages from conversation with {}.", phoneNumber);
 
-            // TODO
-            return new ArrayList<>();
+            JSONObject resultJson = new JSONObject(result);
+            ArrayList<JSONObject> messages = new ArrayList<>();
+
+            for (int i = 0; i < resultJson.getJSONArray("data").length(); i++) {
+                messages.add(resultJson.getJSONArray("data").getJSONObject(i));
+            }
+
+            return messages;
         } catch (Exception e) {
             LOGGER.error("Error requesting messages from conversation", e);
         }

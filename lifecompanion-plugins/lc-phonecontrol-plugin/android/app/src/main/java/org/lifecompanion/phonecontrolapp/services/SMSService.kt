@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.IBinder
 import android.os.Build
 import android.provider.Telephony
+import android.provider.ContactsContract
 import android.telephony.SmsManager
 import android.util.Base64
 import android.util.Log
@@ -40,7 +41,7 @@ class SMSService : Service() {
         when (subtype) {
             "send_sms" -> sendSMS(data, requestId)
             "receive_sms" -> receiveSMS(data, requestId)
-            "get_sms_conversations" -> getSMSConversations(requestId)
+            "get_sms_conversations" -> getSMSConversations(data, requestId)
             "get_conversation_messages" -> getConversationMessages(data, requestId)
             else -> Log.e(TAG, "Unknown SMS subtype: $subtype")
         }
@@ -99,44 +100,80 @@ class SMSService : Service() {
         }
     }
 
-    private fun getSMSConversations(requestId: String?) {
+    private fun getSMSConversations(data: JSONObject, requestId: String?) {
         val resolver: ContentResolver = contentResolver
         val uri = Uri.parse("content://sms")
-        val projection = arrayOf("address", "body", "date", "read")
+        val projection = arrayOf("address", "body", "date", "read", "type")
         val cursor = resolver.query(uri, projection, null, null, "date DESC")
-
+    
         val conversations = JSONArray()
         val uniqueContacts = mutableSetOf<String>()
-
+    
+        val convIndexMin = data.optInt("conv_index_min", 0)
+        val convIndexMax = data.optInt("conv_index_max", Int.MAX_VALUE)
+    
         cursor?.use {
+            var index = 0
+
             while (it.moveToNext()) {
+                if (index < convIndexMin) {
+                    index++
+
+                    continue
+                }
+
+                if (index > convIndexMax) {
+                    break
+                }
+    
                 val address = it.getString(it.getColumnIndexOrThrow("address"))
+                val contactName = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    val contactUri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(address))
+                    val projection2 = arrayOf(ContactsContract.PhoneLookup.DISPLAY_NAME)
+                    val cursor2 = contentResolver.query(contactUri, projection2, null, null, null)
+                    val name = if (cursor2 != null && cursor2.moveToFirst()) {
+                        cursor2.getString(cursor2.getColumnIndex(ContactsContract.PhoneLookup.DISPLAY_NAME))
+                    } else {
+                        address
+                    }
+                    cursor2?.close()
+                    name
+                } else {
+                    address
+                }
+    
                 if (uniqueContacts.add(address)) {
                     val body = it.getString(it.getColumnIndexOrThrow("body"))
                     val dateMillis = it.getLong(it.getColumnIndexOrThrow("date"))
                     val read = it.getInt(it.getColumnIndexOrThrow("read")) == 1
-
+                    val type = it.getInt(it.getColumnIndexOrThrow("type"))
+                    val isSentByMe = type == 2
+    
                     val date = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault()).format(Date(dateMillis))
                     val conversation = JSONObject().apply {
-                        put("contact", address)
-                        put("last_message", body)
+                        put("phone_number", address)
+                        put("contact_name", contactName)
+                        put("last_message", Base64.encodeToString(body.toByteArray(), Base64.NO_WRAP))
                         put("timestamp", date)
-                        put("read", read)
+                        put("is_read", read)
+                        put("is_sent_by_me", isSentByMe)
                     }
                     conversations.put(conversation)
                 }
+
+                index++
             }
         }
 
         Log.i(TAG, "Retrieved ${conversations.length()} conversations")
 
-        // Write response
         if (requestId != null) {
             val response = JSONObject().apply {
+                put("sender", "phone")
+                put("type", "sms")
+                put("subtype", "get_sms_conversations")
                 put("request_id", requestId)
-                put("status", "success")
-                put("action", "get_sms_conversations")
-                put("conversations", conversations)
+                put("data", conversations)
             }
             writeResponse(requestId, response)
         }
@@ -157,34 +194,64 @@ class SMSService : Service() {
         val cursor = resolver.query(uri, projection, selection, selectionArgs, "date ASC")
 
         val messages = JSONArray()
+        val msgIndexMin = data.optInt("msg_index_min", 0)
+        val msgIndexMax = data.optInt("msg_index_max", Int.MAX_VALUE)
 
         cursor?.use {
+            var index = 0
             while (it.moveToNext()) {
+                if (index < msgIndexMin) {
+                    index++
+                    continue
+                }
+                if (index > msgIndexMax) break
+    
+                val address = it.getString(it.getColumnIndexOrThrow("address"))
                 val body = it.getString(it.getColumnIndexOrThrow("body"))
                 val dateMillis = it.getLong(it.getColumnIndexOrThrow("date"))
+                val read = it.getInt(it.getColumnIndexOrThrow("read")) == 1
                 val type = it.getInt(it.getColumnIndexOrThrow("type"))
+                val isSentByMe = type == Telephony.Sms.MESSAGE_TYPE_SENT
 
                 val date = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault()).format(Date(dateMillis))
-                val isSent = type == Telephony.Sms.MESSAGE_TYPE_SENT
+                val contactName = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    val contactUri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(address))
+                    val projection2 = arrayOf(ContactsContract.PhoneLookup.DISPLAY_NAME)
+                    val cursor2 = contentResolver.query(contactUri, projection2, null, null, null)
+                    val name = if (cursor2 != null && cursor2.moveToFirst()) {
+                        cursor2.getString(cursor2.getColumnIndex(ContactsContract.PhoneLookup.DISPLAY_NAME))
+                    } else {
+                        address
+                    }
+                    cursor2?.close()
+                    name
+                } else {
+                    address
+                }
 
                 val message = JSONObject().apply {
-                    put("body", Base64.encodeToString(body.toByteArray(), Base64.NO_WRAP))
+                    put("phone_number", address)
+                    put("contact_name", contactName)
+                    put("message", Base64.encodeToString(body.toByteArray(), Base64.NO_WRAP))
                     put("timestamp", date)
-                    put("sent", isSent)
+                    put("is_read", read)
+                    put("is_sent_by_me", isSentByMe)
                 }
                 messages.put(message)
+    
+                index++
             }
         }
 
         Log.i(TAG, "Retrieved ${messages.length()} messages for contact: $contactNumber")
 
-        // Write response
         if (requestId != null) {
             val response = JSONObject().apply {
+                put("sender", "phone")
+                put("type", "sms")
+                put("subtype", "get_conversation_messages")
                 put("request_id", requestId)
-                put("status", "success")
-                put("action", "get_conversation_messages")
-                put("messages", messages)
+                put("data", messages)
             }
             writeResponse(requestId, response)
         }

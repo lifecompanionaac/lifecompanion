@@ -124,7 +124,7 @@ public enum CallController {
         }
     }
 
-    public String getCallStatus() {
+    public JSONObject getCallStatus() {
         try {
             String uuid = UUID.randomUUID().toString();
             JSONObject json = new JSONObject();
@@ -135,10 +135,9 @@ public enum CallController {
             json.put("data", new JSONObject());
 
             String status = GlobalState.INSTANCE.getCommunicationProtocol().send(json.toString(), uuid);
-
             LOGGER.info("Requested call status.");
 
-            return status;
+            return new JSONObject(status).getJSONObject("data");
         } catch (Exception e) {
             LOGGER.error("Error requesting call status", e);
         }

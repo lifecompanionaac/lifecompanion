@@ -51,6 +51,9 @@ The JSON format is structured to contain metadata about the sender, the type of 
          "dtmf": "1234"
        }
        ```
+  4. **get_call_status**
+     - Description : Requests the current call status.
+     - Data example : `{}` (Empty data)
 
 #### Type : **sms**
 - **Subtypes** :

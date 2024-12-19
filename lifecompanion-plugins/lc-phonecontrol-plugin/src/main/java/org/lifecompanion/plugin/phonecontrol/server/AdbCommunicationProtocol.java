@@ -243,6 +243,14 @@ public class AdbCommunicationProtocol implements PhoneCommunicationProtocol {
         }
 
         boolean isInstalled = false;
+        String installedVersion = getInstalledAppVersion(deviceSerialNumber);
+        String apkVersion = getApkVersion(apkPath);
+
+        if (installedVersion != null && compareVersions(installedVersion, apkVersion) >= 0) {
+            LOGGER.info("App is already installed with version " + installedVersion + " which is equal or newer than the APK version " + apkVersion);
+
+            return true;
+        }
 
         try {
             ProcessBuilder processBuilder = new ProcessBuilder(adbPath, "-s", deviceSerialNumber, "install", apkPath.getPath());
@@ -262,6 +270,65 @@ public class AdbCommunicationProtocol implements PhoneCommunicationProtocol {
         }
 
         return isInstalled;
+    }
+
+    private String getInstalledAppVersion(String deviceSerialNumber) {
+        try {
+            ProcessBuilder processBuilder = new ProcessBuilder(adbPath, "-s", deviceSerialNumber, "shell", "dumpsys", "package", "org.lifecompanion.service");
+            Process process = processBuilder.start();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                if (line.contains("versionName=")) {
+                    return line.split("=")[1].trim();
+                }
+            }
+
+            process.waitFor();
+        } catch (IOException | InterruptedException e) {
+            LOGGER.error("Error getting installed app version", e);
+        }
+
+        return null;
+    }
+    
+    private String getApkVersion(File apkPath) {
+        try {
+            ProcessBuilder processBuilder = new ProcessBuilder("aapt", "dump", "badging", apkPath.getPath());
+            Process process = processBuilder.start();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                if (line.contains("versionName=")) {
+                    return line.split("'")[1].trim();
+                }
+            }
+
+            process.waitFor();
+
+        } catch (IOException | InterruptedException e) {
+            LOGGER.error("Error getting APK version", e);
+        }
+
+        return null;
+    }
+    
+    private int compareVersions(String version1, String version2) {
+        String[] v1 = version1.split("\\.");
+        String[] v2 = version2.split("\\.");
+
+        for (int i = 0; i < Math.max(v1.length, v2.length); i++) {
+            int num1 = i < v1.length ? Integer.parseInt(v1[i]) : 0;
+            int num2 = i < v2.length ? Integer.parseInt(v2[i]) : 0;
+
+            if (num1 != num2) {
+                return num1 - num2;
+            }
+        }
+
+        return 0;
     }
 
     /**
