@@ -1,63 +1,160 @@
+import java.nio.file.Files
+import java.nio.file.Paths
+
 plugins {
-    id 'java-library'
-    id 'org.openjfx.javafxplugin' version '0.1.0'
+    id "java-library"
+    id "org.openjfx.javafxplugin" version "0.1.0"
 }
 
 javafx {
-    version = '22'
-    modules = ['javafx.controls', 'javafx.media']
-    configuration = 'compileOnly'
+    version = "22"
+    modules = ["javafx.controls", "javafx.media"]
+    configuration = "compileOnly"
 }
 
 repositories {
     mavenLocal()
     mavenCentral()
-    maven { url 'https://jitpack.io' }
+    maven { url "https://jitpack.io" }
 }
 
-version = "1.1.2"
+version = "1.2.0"
 
 dependencies {
     compileOnly "org.lifecompanion:lc-app:$lifecompanionAppVersion"
 
-    implementation 'io.ultreia:bluecove:2.1.1'
-    implementation 'org.json:json:20240303'
+    implementation "io.ultreia:bluecove:2.1.1"
+    implementation "org.json:json:20240303"
 }
 
 clean {
-    delete 'build'
+    delete "build"
+}
+
+def isWindows = System.getProperty("os.name").toLowerCase().contains("windows")
+
+/**
+ * Executes a command and returns its output as a string.
+ */
+def executeCommand(String command, List<String> args, boolean ignoreExitValue = false) {
+    def outputStream = new ByteArrayOutputStream()
+
+    exec {
+        executable = command
+        this.args = args
+        ignoreExitValue = ignoreExitValue
+        standardOutput = outputStream
+    }
+
+    return outputStream.toString().trim()
+}
+
+/**
+ * Finds the locked file path from a build error message.
+ */
+def findLockedFileFromError(Exception buildError) {
+    def lockedFilePattern = ~/Couldn't delete (.+?)\r?\n/
+    def matcher = lockedFilePattern.matcher(buildError.message)
+
+    if (matcher.find()) {
+        return "\"" + matcher.group(1) + "\""
+    }
+
+    throw new GradleException("Unable to locate locked file from error message")
+}
+
+/**
+ * Attempts to unlock a locked file by identifying the process holding it.
+ */
+def unlockLockedFile(String filePath) {
+    println "\nAttempting to unlock the locked file: ${filePath}\n"
+
+    def lsofCommand = isWindows ? "handle.exe" : "lsof"
+    def lsofArgs = isWindows ? [filePath] : ["-t", filePath]
+
+    def output = executeCommand(lsofCommand, lsofArgs, true)
+
+    if (output.isEmpty() || output.contains("No matching handles found.")) {
+        throw new GradleException("Failed to determine the process holding ${filePath}")
+    }
+
+    def pid = isWindows 
+        ? output.split("pid:")[1].split("type:")[0].trim() 
+        : output.split("\n")[0].trim()
+
+    println "Killing process with PID ${pid}\n"
+
+    def killCommand = isWindows ? "taskkill" : "kill"
+    def killArgs = isWindows ? ["/F", "/PID", pid] : ["-9", pid]
+
+    executeCommand(killCommand, killArgs)
+
+    println "Process ${pid} killed. Retrying build...\n"
+}
+
+/**
+ * Executes the Gradle build command and retries if necessary.
+ */
+def executeBuild(String androidDir, String buildCommand, String buildArg) {
+    try {
+        exec {
+            workingDir = file(androidDir)
+            commandLine buildCommand, buildArg
+        }
+    } catch (Exception e) {
+        if (e.message.contains("Couldn't delete")) {
+            // Usually android/app/build/intermediates/compile_and_runtime_not_namespaced_r_class_jar/debug/processDebugResources/R.jar
+            // A file automatically generated and edited by either the IDE or the build system
+            def lockedFile = findLockedFileFromError(e)
+            unlockLockedFile(lockedFile)
+
+            println "Retrying build...\n"
+            exec {
+                workingDir = file(androidDir)
+                commandLine buildCommand, buildArg
+            }
+        } else {
+            throw e
+        }
+    }
+}
+
+/**
+ * Copies the built APK to the resources directory.
+ */
+def copyApk(String apkSourcePath, String apkDestinationPath) {
+    def apkSource = file(apkSourcePath)
+    def apkDestination = file(apkDestinationPath)
+
+    if (!apkSource.exists()) {
+        throw new GradleException("APK file not found: ${apkSource}")
+    }
+
+    apkDestination.parentFile.mkdirs()
+
+    copy {
+        from apkSource
+        into apkDestination.parent
+        rename { "lc-service.apk" }
+    }
+
+    println "\nAPK successfully built and copied to ${apkDestination}\n"
 }
 
 task buildApp {
     description = "Builds the APK and copies it to the resources directory"
 
     doLast {
-        def androidDir = file('android')
-        exec {
-            workingDir = androidDir
-            if (System.getProperty('os.name').toLowerCase().contains('windows')) {
-                commandLine "./gradlew.bat", ":app:assembleDebug"
-            } else {
-                commandLine "./gradlew", ":app:assembleDebug"
-            }
-        }
+        def androidDir = "android"
+        def buildCommand = isWindows ? "./gradlew.bat" : "./gradlew"
+        def buildArg = ":app:assembleDebug"
 
-        def apkSource = file('android/app/build/outputs/apk/debug/app-debug.apk')
-        def apkDestination = file('src/main/resources/apk/lc-service.apk')
+        executeBuild(androidDir, buildCommand, buildArg)
 
-        if (!apkSource.exists()) {
-            throw new GradleException("APK file not found: ${apkSource}")
-        }
+        def apkSourcePath = "android/app/build/outputs/apk/debug/app-debug.apk"
+        def apkDestinationPath = "src/main/resources/apk/lc-service.apk"
 
-        apkDestination.parentFile.mkdirs()
-
-        copy {
-            from apkSource
-            into apkDestination.parent
-            rename { 'lc-service.apk' }
-        }
-
-        println "APK successfully built and copied to ${apkDestination}"
+        copyApk(apkSourcePath, apkDestinationPath)
     }
 }
 

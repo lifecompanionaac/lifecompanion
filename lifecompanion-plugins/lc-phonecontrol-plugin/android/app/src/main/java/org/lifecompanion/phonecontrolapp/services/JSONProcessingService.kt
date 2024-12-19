@@ -14,18 +14,19 @@ class JSONProcessingService : Service() {
 
     companion object {
         private const val TAG = "JSONProcessingService"
-        private const val INPUT_DIR = "/data/local/tmp/lifecompanion/phonecontrol/input"
-        private const val OUTPUT_DIR = "/data/local/tmp/lifecompanion/phonecontrol/output"
     }
+
+    private val inputDirPath: String by lazy { File(filesDir, "input").absolutePath }
+    private val outputDirPath: String by lazy { File(filesDir, "output").absolutePath }
 
     private var watcherThread: Thread? = null
     private var pollingInterval = 1000L // Default polling interval in milliseconds
 
     override fun onCreate() {
         super.onCreate()
-        val inputDir = File(INPUT_DIR)
+        val inputDir = File(inputDirPath)
         if (!inputDir.exists()) inputDir.mkdirs()
-        val outputDir = File(OUTPUT_DIR)
+        val outputDir = File(outputDirPath)
         if (!outputDir.exists()) outputDir.mkdirs()
         startFileWatcher()
     }
@@ -45,7 +46,7 @@ class JSONProcessingService : Service() {
 
     private fun startFileWatcher() {
         watcherThread = Thread {
-            val inputDir = File(INPUT_DIR)
+            val inputDir = File(inputDirPath)
             if (!inputDir.exists()) inputDir.mkdirs()
 
             while (!Thread.currentThread().isInterrupted) {
@@ -67,9 +68,11 @@ class JSONProcessingService : Service() {
     }
 
     private fun processFile(file: File) {
+        Log.i(TAG, "Processing file: ${file.name}")
         try {
             val content = FileInputStream(file).bufferedReader().use { it.readText() }
             val json = JSONObject(content)
+            Log.i(TAG, "Processing JSON: $json")
 
             if (!validateJson(json)) {
                 Log.e(TAG, "Invalid JSON: ${file.name}")
@@ -96,7 +99,7 @@ class JSONProcessingService : Service() {
     }
 
     private fun writeResponse(requestId: String, responseData: JSONObject) {
-        val outputDir = File(OUTPUT_DIR)
+        val outputDir = File(outputDirPath)
         if (!outputDir.exists()) {
             outputDir.mkdirs()
         }

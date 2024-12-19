@@ -14,8 +14,9 @@ class SystemService : Service() {
 
     companion object {
         private const val TAG = "SystemService"
-        private const val OUTPUT_DIR = "/data/local/tmp/lifecompanion/phonecontrol/output"
     }
+
+    private val outputDirPath: String by lazy { File(filesDir, "output").absolutePath }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         val jsonString = intent.getStringExtra("json") ?: return START_NOT_STICKY
@@ -62,7 +63,7 @@ class SystemService : Service() {
     }
 
     private fun writeResponse(requestId: String, responseData: JSONObject) {
-        val outputDir = File(OUTPUT_DIR)
+        val outputDir = File(outputDirPath)
         if (!outputDir.exists()) {
             outputDir.mkdirs()
         }

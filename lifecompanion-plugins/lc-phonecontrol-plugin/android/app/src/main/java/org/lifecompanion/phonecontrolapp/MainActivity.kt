@@ -31,13 +31,15 @@ class MainActivity : Activity() {
      */
     private fun checkPermissions() {
         val permissions = arrayOf(
-            Manifest.permission.SEND_SMS,
-            Manifest.permission.READ_SMS,
+            Manifest.permission.ANSWER_PHONE_CALLS,
+            Manifest.permission.CALL_PHONE,
+            Manifest.permission.FOREGROUND_SERVICE,
+            Manifest.permission.MANAGE_OWN_CALLS,
+            Manifest.permission.READ_CALL_LOG,
             Manifest.permission.READ_CONTACTS,
             Manifest.permission.READ_PHONE_STATE,
-            Manifest.permission.CALL_PHONE,
-            Manifest.permission.ANSWER_PHONE_CALLS,
-            Manifest.permission.FOREGROUND_SERVICE
+            Manifest.permission.READ_SMS,
+            Manifest.permission.SEND_SMS
         )
 
         val permissionsToRequest = permissions.filter {

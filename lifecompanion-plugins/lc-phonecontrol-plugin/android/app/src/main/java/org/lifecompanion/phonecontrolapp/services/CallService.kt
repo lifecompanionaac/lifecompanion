@@ -19,8 +19,9 @@ class CallService : Service(), CallStateListener {
 
     companion object {
         private const val TAG = "CallService"
-        private const val OUTPUT_DIR = "/data/local/tmp/lifecompanion/phonecontrol/output"
     }
+
+    private val outputDirPath: String by lazy { File(filesDir, "output").absolutePath }
 
     private var isCallActive = false
     private var isCallIncoming = false
@@ -125,7 +126,7 @@ class CallService : Service(), CallStateListener {
     }
 
     private fun writeResponse(requestId: String, responseData: JSONObject) {
-        val outputDir = File(OUTPUT_DIR)
+        val outputDir = File(outputDirPath)
         if (!outputDir.exists()) outputDir.mkdirs()
 
         val responseFile = File(outputDir, "$requestId.json")

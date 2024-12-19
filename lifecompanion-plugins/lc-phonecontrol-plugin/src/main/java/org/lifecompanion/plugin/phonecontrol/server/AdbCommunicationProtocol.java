@@ -42,7 +42,7 @@ public class AdbCommunicationProtocol implements PhoneCommunicationProtocol {
         }
 
         try {
-            String path = "/data/local/tmp/lifecompanion/phonecontrol/input/";
+            String path = "/data/data/org.lifecompanion.phonecontrol/files/input/";
             String filename = addTimestamp(path);
             ProcessBuilder processBuilder = new ProcessBuilder(adbPath, "shell", "mkdir", "-p", path);
             Process process = processBuilder.start();
@@ -82,7 +82,7 @@ public class AdbCommunicationProtocol implements PhoneCommunicationProtocol {
         }
 
         try {
-            String path = "/data/local/tmp/lifecompanion/phonecontrol/output/";
+            String path = "/data/data/org.lifecompanion.phonecontrol/files/output/";
             ArrayList<String> processedFiles = new ArrayList<>();
             String content = null;
 
