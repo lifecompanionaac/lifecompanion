@@ -2,9 +2,12 @@ package org.lifecompanion.phonecontrolapp
 
 import android.Manifest
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.PowerManager
+import android.provider.Settings
 import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -21,6 +24,9 @@ class MainActivity : Activity() {
 
         // Check and request permissions
         checkPermissions()
+
+        // Request battery optimization exemption
+        requestBatteryOptimizationExemption(this)
 
         // Start the JSONProcessingService
         startJsonProcessingService()
@@ -79,6 +85,19 @@ class MainActivity : Activity() {
             Log.i(TAG, "JSONProcessingService started successfully.")
         } catch (e: Exception) {
             Log.e(TAG, "Failed to start JSONProcessingService: ${e.message}", e)
+        }
+    }
+
+    /**
+     * Requests battery optimization exemption for the app.
+     */
+    private fun requestBatteryOptimizationExemption(context: Context) {
+        val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager
+        val packageName = context.packageName
+        if (!powerManager.isIgnoringBatteryOptimizations(packageName)) {
+            val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
+                .setData(android.net.Uri.parse("package:$packageName"))
+            context.startActivity(intent)
         }
     }
 }

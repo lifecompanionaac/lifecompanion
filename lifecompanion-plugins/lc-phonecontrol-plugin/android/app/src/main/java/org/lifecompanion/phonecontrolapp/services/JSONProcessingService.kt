@@ -14,6 +14,7 @@ class JSONProcessingService : Service() {
 
     companion object {
         private const val TAG = "JSONProcessingService"
+        private const val CHANNEL_ID = "JSONProcessingServiceChannel"
     }
 
     private val inputDirPath: String by lazy { File(filesDir, "input").absolutePath }
@@ -24,10 +25,15 @@ class JSONProcessingService : Service() {
 
     override fun onCreate() {
         super.onCreate()
+
+        Notify.createNotificationChannel("JSON Processing Service", CHANNEL_ID, this)
+        startForegroundService()
+
         val inputDir = File(inputDirPath)
         if (!inputDir.exists()) inputDir.mkdirs()
         val outputDir = File(outputDirPath)
         if (!outputDir.exists()) outputDir.mkdirs()
+
         startFileWatcher()
     }
 
@@ -42,6 +48,12 @@ class JSONProcessingService : Service() {
     override fun onDestroy() {
         super.onDestroy()
         watcherThread?.interrupt()
+        stopForeground(true)
+    }
+
+    private fun startForegroundService() {
+        val notification = Notify.createNotification("JSON Processing Service", CHANNEL_ID, this)
+        startForeground(1, notification)
     }
 
     private fun startFileWatcher() {
