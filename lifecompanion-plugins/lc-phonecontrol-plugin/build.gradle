@@ -18,7 +18,7 @@ repositories {
     maven { url "https://jitpack.io" }
 }
 
-version = "1.2.0"
+version = "1.2.1"
 
 dependencies {
     compileOnly "org.lifecompanion:lc-app:$lifecompanionAppVersion"
@@ -31,19 +31,26 @@ clean {
     delete "build"
 }
 
-def isWindows = System.getProperty("os.name").toLowerCase().contains("windows")
+ext.isWindows = System.getProperty("os.name").toLowerCase().contains("windows")
 
 /**
  * Executes a command and returns its output as a string.
  */
-def executeCommand(String command, List<String> args, boolean ignoreExitValue = false) {
+def executeCommand(String command, List<String> arguments, boolean ignoreExitValue = false) {
     def outputStream = new ByteArrayOutputStream()
 
-    exec {
-        executable = command
-        this.args = args
-        ignoreExitValue = ignoreExitValue
-        standardOutput = outputStream
+    try {
+        exec {
+            executable = command
+            args = arguments
+            ignoreExitValue = ignoreExitValue
+            standardOutput = outputStream
+        }
+    } catch (Exception e) {
+        if (command == "handle.exe") {
+            throw new GradleException("Failed to kill the process holding a file.\nOn Windows, handle.exe is probably not installed, delete the file manually")
+        }
+        throw new GradleException("Failed to execute command : ${command} ${arguments.join(" ")}\n${e.message}")
     }
 
     return outputStream.toString().trim()
@@ -67,7 +74,7 @@ def findLockedFileFromError(Exception buildError) {
  * Attempts to unlock a locked file by identifying the process holding it.
  */
 def unlockLockedFile(String filePath) {
-    println "\nAttempting to unlock the locked file: ${filePath}\n"
+    println "\n${filePath} is held by another process\nAttempting to unlock it... (this will take some time)\n"
 
     def lsofCommand = isWindows ? "handle.exe" : "lsof"
     def lsofArgs = isWindows ? [filePath] : ["-t", filePath]
@@ -75,7 +82,7 @@ def unlockLockedFile(String filePath) {
     def output = executeCommand(lsofCommand, lsofArgs, true)
 
     if (output.isEmpty() || output.contains("No matching handles found.")) {
-        throw new GradleException("Failed to determine the process holding ${filePath}")
+        throw new GradleException("Failed to determine the process holding ${filePath}\n")
     }
 
     def pid = isWindows 
@@ -96,16 +103,30 @@ def unlockLockedFile(String filePath) {
  * Executes the Gradle build command and retries if necessary.
  */
 def executeBuild(String androidDir, String buildCommand, String buildArg) {
+    def outputStream = new ByteArrayOutputStream()
+    def errorStream = new ByteArrayOutputStream()
+
     try {
         exec {
             workingDir = file(androidDir)
             commandLine buildCommand, buildArg
+            standardOutput = outputStream
+            errorOutput = errorStream
+            ignoreExitValue = true
+        }
+
+        def output = outputStream.toString().trim()
+        def error = errorStream.toString().trim()
+        if (!output.contains("BUILD SUCCESSFUL")) {
+            throw new GradleException("Build failed : ${error}")
         }
     } catch (Exception e) {
-        if (e.message.contains("Couldn't delete")) {
+        def error = errorStream.toString().trim()
+
+        if (error.contains("Couldn't delete")) {
             // Usually android/app/build/intermediates/compile_and_runtime_not_namespaced_r_class_jar/debug/processDebugResources/R.jar
             // A file automatically generated and edited by either the IDE or the build system
-            def lockedFile = findLockedFileFromError(e)
+            def lockedFile = findLockedFileFromError(new GradleException(error))
             unlockLockedFile(lockedFile)
 
             println "Retrying build...\n"
@@ -127,7 +148,7 @@ def copyApk(String apkSourcePath, String apkDestinationPath) {
     def apkDestination = file(apkDestinationPath)
 
     if (!apkSource.exists()) {
-        throw new GradleException("APK file not found: ${apkSource}")
+        throw new GradleException("APK file not found : ${apkSource}")
     }
 
     apkDestination.parentFile.mkdirs()

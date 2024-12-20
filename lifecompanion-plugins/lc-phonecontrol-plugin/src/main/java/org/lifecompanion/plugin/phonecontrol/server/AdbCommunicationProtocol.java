@@ -6,6 +6,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 
 import org.json.JSONException;
@@ -43,15 +46,25 @@ public class AdbCommunicationProtocol implements PhoneCommunicationProtocol {
 
         try {
             String path = "/data/data/org.lifecompanion.phonecontrol/files/input/";
-            String filename = addTimestamp(path);
-            ProcessBuilder processBuilder = new ProcessBuilder(adbPath, "shell", "mkdir", "-p", path);
+            String filename = addTimestamp(path).split("/")[6];
+
+            Path tempFile = Files.createTempFile("lifecompanion", ".json");
+            Files.write(tempFile, data.getBytes());
+
+            Path renamedFile = tempFile.resolveSibling(filename);
+            Files.move(tempFile, renamedFile, StandardCopyOption.REPLACE_EXISTING);
+
+            ProcessBuilder processBuilder = new ProcessBuilder(adbPath, "push", renamedFile.toString(), "/data/local/tmp/" + filename);
             Process process = processBuilder.start();
             process.waitFor();
 
-            processBuilder = new ProcessBuilder(adbPath, "push", "-", filename);
+            processBuilder = new ProcessBuilder(adbPath, "shell", "run-as", "org.lifecompanion.phonecontrol", "cp", "/data/local/tmp/" + filename, path + filename);
             process = processBuilder.start();
-            process.getOutputStream().write(data.getBytes());
-            process.getOutputStream().close();
+            process.waitFor();
+
+            Files.delete(renamedFile);
+            processBuilder = new ProcessBuilder(adbPath, "shell", "rm", "/data/local/tmp/" + filename);
+            process = processBuilder.start();
             process.waitFor();
         } catch (IOException e) {
             // File already exists, wait for 1 second and try again
@@ -91,7 +104,7 @@ public class AdbCommunicationProtocol implements PhoneCommunicationProtocol {
 
                 for (String filePath : filePaths) {
                     if (!processedFiles.contains(filePath)) {
-                        ProcessBuilder processBuilder = new ProcessBuilder(adbPath, "shell", "cat", filePath);
+                        ProcessBuilder processBuilder = new ProcessBuilder(adbPath, "shell", "run-as", "org.lifecompanion.phonecontrol", "cat", filePath);
                         Process process = processBuilder.start();
                         BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
                         StringBuilder fileContent = new StringBuilder();
@@ -108,7 +121,7 @@ public class AdbCommunicationProtocol implements PhoneCommunicationProtocol {
                             JSONObject jsonObject = new JSONObject(fileContent.toString());
                             if (jsonObject.getString("request_id").equals(requestId)) {
                                 content = jsonObject.toString();
-                                new ProcessBuilder(adbPath, "shell", "rm", filePath).start().waitFor();
+                                new ProcessBuilder(adbPath, "shell", "run-as", "org.lifecompanion.phonecontrol", "rm", filePath).start().waitFor();
 
                                 break;
                             }
