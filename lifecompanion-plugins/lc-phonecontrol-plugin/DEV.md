@@ -4,6 +4,15 @@
 This plugin implements a server to connect to an Android phone and control it from LifeCompanion.  
 The server is able to work with ADB and Bluetooth.
 
+### Build the plugin
+The recommended way to build the plugin is to use `./gradlew clean buildApp downloadAdb jar`.  
+- `clean` : Cleans the project, removes any previous build artifacts.
+- `buildApp` : Builds the APK of the Android app (unsigned) and moves it to the plugin's resources.
+- `downloadAdb` : Downloads the ADB binaries for the current platform and moves them to the plugin's resources.
+- `jar` : Builds the plugin JAR file.
+
+If you only made changes to the plugin, you can run only `./gradlew jar`.
+
 ### JSON schema specification
 The plugin and the phone communicate via the server through JSON messages.  
 The JSON format is structured to contain metadata about the sender, the type of transmission, subtype, and the data itself. This allows the server to properly interpret what action is required, be it sending an SMS, making a call, or handling volume settings. Below, we outline all possible fields, their meanings, and examples.

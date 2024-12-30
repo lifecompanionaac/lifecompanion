@@ -3,9 +3,6 @@ package org.lifecompanion.plugin.phonecontrol.controller;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.net.URI;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
@@ -193,6 +190,8 @@ public enum ConnexionController implements ModeListenerI {
             adbFileName += ".exe";
         } else if (systemType == SystemType.UNIX) {
             inputFolder = "/adb/platform-tools-latest-linux.zip";
+        } else if (systemType == SystemType.MAC) {
+            inputFolder = "/adb/platform-tools-latest-macos.zip";
         } else {
             LOGGER.error("Unsupported system type");
 
@@ -202,25 +201,7 @@ public enum ConnexionController implements ModeListenerI {
         File adbZip = new File(dataDirectory + File.separator + "platform-tools.zip");
         File adbFolder = new File(dataDirectory + File.separator + "platform-tools");
 
-        if (adbFolder.exists()) {
-            try {
-                LOGGER.info("ADB folder exists, trying to get the latest version.");
-                String url = systemType == SystemType.WINDOWS ? 
-                    "https://dl.google.com/android/repository/platform-tools-latest-windows.zip" : 
-                    "https://dl.google.com/android/repository/platform-tools-latest-linux.zip";
-
-                try (InputStream in = URI.create(url).toURL().openStream()) {
-                    Files.copy(in, adbZip.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                }
-
-                IOUtils.unzipInto(adbZip, adbFolder.getParentFile(), null);
-                adbZip.delete();
-            } catch (Exception e) {
-                LOGGER.error("Failed to download the latest ADB version.", e);
-            }
-        } else {
-            installAdbFromInputFolder(inputFolder, adbZip, adbFolder.getParentFile());
-        }
+        installAdbFromInputFolder(inputFolder, adbZip, adbFolder.getParentFile());
 
         File adb = new File(dataDirectory + File.separator + "platform-tools" + File.separator + adbFileName);
         adb.setExecutable(true);

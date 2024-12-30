@@ -1,3 +1,4 @@
+import java.net.URL
 import java.nio.file.Files
 import java.nio.file.Paths
 
@@ -18,12 +19,13 @@ repositories {
     maven { url "https://jitpack.io" }
 }
 
-version = "1.2.2"
+version = "1.2.3"
 
 dependencies {
     compileOnly "org.lifecompanion:lc-app:$lifecompanionAppVersion"
 
     implementation "io.ultreia:bluecove:2.1.1"
+    // TODO : maybe use GSON instead
     implementation "org.json:json:20240303"
 }
 
@@ -162,6 +164,39 @@ def copyApk(String apkSourcePath, String apkDestinationPath) {
     println "\nAPK successfully built and copied to ${apkDestination}\n"
 }
 
+/**
+ * Downloads a file from a URL and saves it to a destination.
+ */
+def downloadFile(String urlStr, String destination) {
+    URL url = new URL(urlStr)
+    url.withInputStream { inputStream ->
+        new File(destination).withOutputStream { outputStream ->
+            outputStream << inputStream
+        }
+    }
+}
+
+task downloadAdb {
+    description = "Downloads and installs the latest ADB for all platforms"
+
+    doLast {
+        def adbUrls = [
+            "windows": "https://dl.google.com/android/repository/platform-tools-latest-windows.zip",
+            "linux": "https://dl.google.com/android/repository/platform-tools-latest-linux.zip",
+            "mac": "https://dl.google.com/android/repository/platform-tools-latest-darwin.zip"
+        ]
+
+        adbUrls.each { platform, url ->
+            def adbDestination = "src/main/resources/adb/platform-tools-latest-${platform}.zip"
+            def adbDir = "src/main/resources/adb"
+
+            downloadFile(url, adbDestination)
+
+            println "ADB for ${platform} successfully downloaded."
+        }
+    }
+}
+
 task buildApp {
     description = "Builds the APK and copies it to the resources directory"
 
@@ -184,15 +219,15 @@ jar {
 
     manifest {
         attributes(
-                "LifeCompanion-Plugin-Class": "org.lifecompanion.plugin.phonecontrol.PhoneControlPlugin",
-                "LifeCompanion-Plugin-Package-Scanning-Base": "org.lifecompanion.plugin.phonecontrol",
-                "LifeCompanion-Plugin-Id": "lc-phonecontrol-plugin",
-                "LifeCompanion-Plugin-Author": "Etudiants IUT Vannes",
-                "LifeCompanion-Plugin-Version": project.version,
-                "LifeCompanion-Plugin-Build-Date": new Date().getTime(),
-                "LifeCompanion-Plugin-Name": "Contrôle de téléphone",
-                "LifeCompanion-Plugin-Description": "Ajoute à LifeCompanion la possibilité de controller son téléphone via l'application comme l'envoi, la lecture, et la réception de SMS et le passage d'appels.",
-                "LifeCompanion-Min-App-Version": "$lifecompanionAppVersion"
+            "LifeCompanion-Plugin-Class": "org.lifecompanion.plugin.phonecontrol.PhoneControlPlugin",
+            "LifeCompanion-Plugin-Package-Scanning-Base": "org.lifecompanion.plugin.phonecontrol",
+            "LifeCompanion-Plugin-Id": "lc-phonecontrol-plugin",
+            "LifeCompanion-Plugin-Author": "Etudiants IUT Vannes",
+            "LifeCompanion-Plugin-Version": project.version,
+            "LifeCompanion-Plugin-Build-Date": new Date().getTime(),
+            "LifeCompanion-Plugin-Name": "Contrôle de téléphone",
+            "LifeCompanion-Plugin-Description": "Ajoute à LifeCompanion la possibilité de controller son téléphone via l'application comme l'envoi, la lecture, et la réception de SMS et le passage d'appels.",
+            "LifeCompanion-Min-App-Version": "$lifecompanionAppVersion"
         )
     }
 
