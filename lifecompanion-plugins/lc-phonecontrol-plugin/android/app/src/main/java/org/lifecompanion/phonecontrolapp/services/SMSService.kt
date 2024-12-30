@@ -20,7 +20,6 @@ import java.util.Date
 import java.util.Locale
 
 class SMSService : Service() {
-
     companion object {
         private const val TAG = "SMSService"
     }

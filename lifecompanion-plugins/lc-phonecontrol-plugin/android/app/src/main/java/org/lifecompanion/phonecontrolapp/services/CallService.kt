@@ -16,7 +16,6 @@ import org.json.JSONObject
 import org.lifecompanion.phonecontrolapp.services.CallStateListener
 
 class CallService : Service(), CallStateListener {
-
     companion object {
         private const val TAG = "CallService"
     }
@@ -27,11 +26,6 @@ class CallService : Service(), CallStateListener {
     private var isCallIncoming = false
     private var currentCall: Call? = null
     private var phoneNumber: String? = null
-
-    private fun setCallActive(active: Boolean) {
-        isCallActive = active
-        JSONProcessingService().setPollingInterval(if (active) 100 else 1000)
-    }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         val jsonString = intent.getStringExtra("json") ?: return START_NOT_STICKY
@@ -68,7 +62,7 @@ class CallService : Service(), CallStateListener {
     }
 
     private fun startCall(phoneNumber: String, speaker: Boolean) {
-        setCallActive(true)
+        this.isCallActive = true
         val telecomManager = getSystemService(Context.TELECOM_SERVICE) as TelecomManager
         val bundle = Bundle().apply { putBoolean(TelecomManager.EXTRA_START_CALL_WITH_SPEAKERPHONE, speaker) }
         val uri = Uri.fromParts("tel", phoneNumber, null)
@@ -82,7 +76,7 @@ class CallService : Service(), CallStateListener {
     }
 
     private fun endCall() {
-        setCallActive(false)
+        this.isCallActive = false
         currentCall?.disconnect()
         Log.i(TAG, "Call ended")
     }
@@ -97,7 +91,7 @@ class CallService : Service(), CallStateListener {
             for (tone in dtmf) {
                 val dtmfTone = tone.toString()[0]
                 currentCall?.playDtmfTone(dtmfTone)
-                Thread.sleep(500) // Pause between tones to ensure proper transmission
+                Thread.sleep(200) // Pause between tones to ensure proper transmission
                 currentCall?.stopDtmfTone()
             }
             Log.i(TAG, "DTMF tones sent: $dtmf")

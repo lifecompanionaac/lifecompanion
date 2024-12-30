@@ -11,7 +11,6 @@ import java.io.File
 import java.io.FileOutputStream
 
 class SystemService : Service() {
-
     companion object {
         private const val TAG = "SystemService"
     }
@@ -31,7 +30,6 @@ class SystemService : Service() {
 
         when (subtype) {
             "adjust_volume" -> adjustVolume(data.optString("mode"), data.optString("request_id") ?: null)
-            "connection_status" -> checkConnectionStatus()
             else -> Log.e(TAG, "Unknown system subtype: $subtype")
         }
 
@@ -76,11 +74,6 @@ class SystemService : Service() {
         } catch (e: Exception) {
             Log.e(TAG, "Failed to write response for requestId: $requestId", e)
         }
-    }
-
-    private fun checkConnectionStatus() {
-        Log.i(TAG, "Checking connection status")
-        // Connection status logic can be added here
     }
 
     override fun onBind(intent: Intent?): IBinder? {

@@ -2,34 +2,23 @@ package org.lifecompanion.phonecontrolapp
 
 import android.Manifest
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.os.PowerManager
-import android.provider.Settings
 import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import org.lifecompanion.phonecontrolapp.services.JSONProcessingService
 
 class MainActivity : Activity() {
-
     private val PERMISSION_REQUEST_CODE = 14122004
     private val TAG = "MainActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main) // Set the main view
+        setContentView(R.layout.activity_main)  // Set the main view
 
         // Check and request permissions
         checkPermissions()
-
-        // Request battery optimization exemption
-        requestBatteryOptimizationExemption(this)
-
-        // Start the JSONProcessingService
-        startJsonProcessingService()
     }
 
     /**
@@ -67,37 +56,10 @@ class MainActivity : Activity() {
         if (requestCode == PERMISSION_REQUEST_CODE) {
             if (grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
                 Log.i(TAG, "All permissions granted.")
-                startJsonProcessingService()
             } else {
                 Log.w(TAG, "Required permissions denied by user. Exiting app.")
                 finish() // Close the app if permissions are not granted
             }
-        }
-    }
-
-    /**
-     * Starts the JSONProcessingService in the background to handle file watching.
-     */
-    private fun startJsonProcessingService() {
-        try {
-            val serviceIntent = Intent(this, JSONProcessingService::class.java)
-            startService(serviceIntent)
-            Log.i(TAG, "JSONProcessingService started successfully.")
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to start JSONProcessingService: ${e.message}", e)
-        }
-    }
-
-    /**
-     * Requests battery optimization exemption for the app.
-     */
-    private fun requestBatteryOptimizationExemption(context: Context) {
-        val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager
-        val packageName = context.packageName
-        if (!powerManager.isIgnoringBatteryOptimizations(packageName)) {
-            val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
-                .setData(android.net.Uri.parse("package:$packageName"))
-            context.startActivity(intent)
         }
     }
 }

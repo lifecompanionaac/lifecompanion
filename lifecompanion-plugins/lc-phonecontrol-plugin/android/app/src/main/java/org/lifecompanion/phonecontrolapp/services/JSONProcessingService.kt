@@ -11,33 +11,25 @@ import java.io.FileInputStream
 import java.io.FileOutputStream
 
 class JSONProcessingService : Service() {
-
     companion object {
         private const val TAG = "JSONProcessingService"
-        private const val CHANNEL_ID = "JSONProcessingServiceChannel"
     }
 
-    private val inputDirPath: String by lazy { File(filesDir, "input").absolutePath }
     private val outputDirPath: String by lazy { File(filesDir, "output").absolutePath }
-
-    private var watcherThread: Thread? = null
-    private var pollingInterval = 1000L // Default polling interval in milliseconds
 
     override fun onCreate() {
         super.onCreate()
 
-        Notify.createNotificationChannel("JSON Processing Service", CHANNEL_ID, this)
-        startForegroundService()
-
-        val inputDir = File(inputDirPath)
-        if (!inputDir.exists()) inputDir.mkdirs()
         val outputDir = File(outputDirPath)
         if (!outputDir.exists()) outputDir.mkdirs()
-
-        startFileWatcher()
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+        intent.getStringExtra("extra_data")?.let { encodedData ->
+            val data = String(android.util.Base64.decode(encodedData, android.util.Base64.DEFAULT))
+            processJsonData(data)
+        }
+
         return START_STICKY
     }
 
@@ -47,53 +39,23 @@ class JSONProcessingService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
-        watcherThread?.interrupt()
-        stopForeground(true)
     }
 
-    private fun startForegroundService() {
-        val notification = Notify.createNotification("JSON Processing Service", CHANNEL_ID, this)
-        startForeground(1, notification)
-    }
-
-    private fun startFileWatcher() {
-        watcherThread = Thread {
-            val inputDir = File(inputDirPath)
-            if (!inputDir.exists()) inputDir.mkdirs()
-
-            while (!Thread.currentThread().isInterrupted) {
-                try {
-                    val files = inputDir.listFiles { _, name -> name.endsWith(".json") }
-                    files?.forEach { file ->
-                        processFile(file)
-                        file.delete()
-                    }
-
-                    Thread.sleep(pollingInterval)
-                } catch (e: InterruptedException) {
-                    Thread.currentThread().interrupt()
-                } catch (e: Exception) {
-                    Log.e(TAG, "Error processing files: ${e.message}")
-                }
-            }
-        }.apply { start() }
-    }
-
-    private fun processFile(file: File) {
-        Log.i(TAG, "Processing file: ${file.name}")
+    private fun processJsonData(data: String) {
+        Log.i(TAG, "Processing data: $data")
         try {
-            val content = FileInputStream(file).bufferedReader().use { it.readText() }
-            val json = JSONObject(content)
+            val json = JSONObject(data)
             Log.i(TAG, "Processing JSON: $json")
 
             if (!validateJson(json)) {
-                Log.e(TAG, "Invalid JSON: ${file.name}")
+                Log.e(TAG, "Invalid JSON data")
+
                 return
             }
 
             routeJsonToService(json)
         } catch (e: Exception) {
-            Log.e(TAG, "Error processing file: ${file.name}", e)
+            Log.e(TAG, "Error processing data", e)
         }
     }
 
@@ -124,9 +86,5 @@ class JSONProcessingService : Service() {
         } catch (e: Exception) {
             Log.e(TAG, "Failed to write response for requestId: $requestId", e)
         }
-    }
-
-    public fun setPollingInterval(interval: Long) {
-        pollingInterval = interval
     }
 }

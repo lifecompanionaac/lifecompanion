@@ -6,10 +6,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.Base64;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,37 +47,14 @@ public class AdbCommunicationProtocol implements PhoneCommunicationProtocol {
         }
 
         try {
-            String path = "/data/data/org.lifecompanion.phonecontrol/files/input/";
-            String filename = addTimestamp(path).split("/")[6];
-
-            Path tempFile = Files.createTempFile("lifecompanion", ".json");
-            Files.write(tempFile, data.getBytes());
-
-            Path renamedFile = tempFile.resolveSibling(filename);
-            Files.move(tempFile, renamedFile, StandardCopyOption.REPLACE_EXISTING);
-
-            ProcessBuilder processBuilder = new ProcessBuilder(adbPath, "push", renamedFile.toString(), "/data/local/tmp/" + filename);
+            // Encode the data to be passed as an intent extra
+            String encodedData = Base64.getEncoder().encodeToString(data.getBytes(StandardCharsets.UTF_8));
+            ProcessBuilder processBuilder = new ProcessBuilder(adbPath, "shell", "am", "startservice",
+                "-n", "org.lifecompanion.phonecontrol/.services.JSONProcessingService",
+                "--es", "extra_data", encodedData);
             Process process = processBuilder.start();
             process.waitFor();
-
-            processBuilder = new ProcessBuilder(adbPath, "shell", "run-as", "org.lifecompanion.phonecontrol", "cp", "/data/local/tmp/" + filename, path + filename);
-            process = processBuilder.start();
-            process.waitFor();
-
-            Files.delete(renamedFile);
-            processBuilder = new ProcessBuilder(adbPath, "shell", "rm", "/data/local/tmp/" + filename);
-            process = processBuilder.start();
-            process.waitFor();
-        } catch (IOException e) {
-            // File already exists, wait for 1 second and try again
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException ie) {
-                LOGGER.error("Error while sending data via ADB", ie);
-            }
-
-            send(data);
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             LOGGER.error("Error while sending data via ADB", e);
         }
     }
