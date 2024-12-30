@@ -50,7 +50,7 @@ public class AdbCommunicationProtocol implements PhoneCommunicationProtocol {
             // Encode the data to be passed as an intent extra
             String encodedData = Base64.getEncoder().encodeToString(data.getBytes(StandardCharsets.UTF_8));
             ProcessBuilder processBuilder = new ProcessBuilder(adbPath, "shell", "am", "startservice",
-                "-n", "org.lifecompanion.phonecontrol/.services.JSONProcessingService",
+                "-a", "org.lifecompanion.phonecontrolapp.services.JSONProcessingService",
                 "--es", "extra_data", encodedData);
             Process process = processBuilder.start();
             process.waitFor();

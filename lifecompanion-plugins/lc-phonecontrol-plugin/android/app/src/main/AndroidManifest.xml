@@ -32,9 +32,12 @@
         <service
             android:name=".services.JSONProcessingService"
             android:exported="true"
-            android:foregroundServiceType="dataSync"
             tools:ignore="ExportedService"
-        />
+        >
+            <intent-filter>
+                <action android:name="org.lifecompanion.phonecontrolapp.services.JSONProcessingService" />
+            </intent-filter>
+        </service>
         <service
             android:name=".services.SMSService"
             android:exported="true"
