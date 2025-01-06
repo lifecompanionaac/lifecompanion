@@ -4,10 +4,14 @@ import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import org.lifecompanion.phonecontrolapp.services.Notify
 
 class MainActivity : Activity() {
     private val PERMISSION_REQUEST_CODE = 14122004
@@ -17,8 +21,18 @@ class MainActivity : Activity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)  // Set the main view
 
+        // Initialize notification channel
+        Notify.createNotificationChannel(
+            name = "JSON Processing Service",
+            channelId = "json_service_channel",
+            context = this
+        )
+
         // Check and request permissions
         checkPermissions()
+
+        // Disable battery optimizations
+        disableBatteryOptimizations()
     }
 
     /**
@@ -60,6 +74,14 @@ class MainActivity : Activity() {
                 Log.w(TAG, "Required permissions denied by user. Exiting app.")
                 finish() // Close the app if permissions are not granted
             }
+        }
+    }
+
+    private fun disableBatteryOptimizations() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
+            intent.data = Uri.parse("package:$packageName")
+            startActivity(intent)
         }
     }
 }

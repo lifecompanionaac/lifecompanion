@@ -19,7 +19,7 @@ repositories {
     maven { url "https://jitpack.io" }
 }
 
-version = "1.3.3"
+version = "1.3.4"
 
 dependencies {
     compileOnly "org.lifecompanion:lc-app:$lifecompanionAppVersion"
@@ -129,7 +129,7 @@ def unlockLockedFile(String filePath) {
 
     executeCommand(killCommand, killArgs)
 
-    println "Process ${pid} killed. Retrying build...\n"
+    println "Process ${pid} killed.\n"
 }
 
 /**

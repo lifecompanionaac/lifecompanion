@@ -13,6 +13,8 @@ import java.io.FileOutputStream
 class JSONProcessingService : Service() {
     companion object {
         private const val TAG = "JSONProcessingService"
+        private const val CHANNEL_ID = "json_service_channel"
+        private const val NOTIFICATION_ID = 1
     }
 
     private val outputDirPath: String by lazy { File(filesDir, "output").absolutePath }
@@ -22,6 +24,14 @@ class JSONProcessingService : Service() {
 
         val outputDir = File(outputDirPath)
         if (!outputDir.exists()) outputDir.mkdirs()
+
+        // Start foreground service with a notification
+        val notification = Notify.createNotification(
+            title = "JSON Processing Service Running",
+            channelId = CHANNEL_ID,
+            context = this
+        )
+        startForeground(NOTIFICATION_ID, notification)
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
