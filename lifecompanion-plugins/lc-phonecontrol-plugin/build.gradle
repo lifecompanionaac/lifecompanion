@@ -56,9 +56,7 @@ def checkAndDownloadHandle() {
                 handleDir.mkdirs()
             }
 
-            new URL(handleUrl).withInputStream { inputStream ->
-                Files.copy(inputStream, handleFile.toPath())
-            }
+            downloadFile(handleUrl, handleFile.absolutePath)
 
             println "handle.exe downloaded to ${handleFile.absolutePath}"
         } else {
