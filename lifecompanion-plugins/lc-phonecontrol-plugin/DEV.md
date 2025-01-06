@@ -11,7 +11,7 @@ The recommended way to build the plugin is to use `./gradlew clean buildApp down
 - `downloadAdb` : Downloads the ADB binaries for the current platform and moves them to the plugin's resources.
 - `jar` : Builds the plugin JAR file.
 
-If you only made changes to the plugin, you can run only `./gradlew jar`.
+If you only made changes to the plugin, you can run only `./gradlew jar`. APK and ADB artifacts are kept in the app's resources directory.
 
 ### JSON schema specification
 The plugin and the phone communicate via the server through JSON messages.  
@@ -42,130 +42,121 @@ The JSON format is structured to contain metadata about the sender, the type of 
 #### Type : **call**
 - **Subtypes** :
   1. **"make_call"**
-     - Description : Initiates a call to a specified number.
-     - Data example :
-       ```json
-       {
-         "phone_number": "+123456789"
-       }
-       ```
+    - Description : Initiates a call to a specified number.
+    - Data example :
+      ```json
+      {
+        "phone_number": "+123456789"
+      }
+      ```
   2. **"hang_up"**
-     - Description : Ends an active call.
-     - Data example : `{}` (Empty data)
+    - Description : Ends an active call.
+    - Data example : `{}` (Empty data)
   3. **"numpad_input"**
-     - Description : Sends DTMF (Dual-Tone Multi-Frequency) input, used for interacting with automated systems.
-     - Data example :
-       ```json
-       {
-         "dtmf": "1234"
-       }
-       ```
+    - Description : Sends DTMF (Dual-Tone Multi-Frequency) input, used for interacting with automated systems.
+    - Data example :
+      ```json
+      {
+        "dtmf": "1"
+      }
+      ```
   4. **get_call_status**
-     - Description : Requests the current call status.
-     - Data example : `{}` (Empty data)
+    - Description : Requests the current call status.
+    - Data example : `{}` (Empty data)
 
 #### Type : **sms**
 - **Subtypes** :
   1. **"send_sms"**
-     - Description: Sends an SMS to a specified recipient.
-     - Data example :
-       ```json
-       {
-         "recipient": "+123456789",
-         "message": "Hello, how are you?",
-         "timestamp": "2024-12-06T14:30:00Z"
-       }
-       ```
+    - Description: Sends an SMS to a specified recipient.
+    - Data example :
+      ```json
+      {
+        "recipient": "+123456789",
+        "message": "Hello, how are you?",
+        "timestamp": "2024-12-06T14:30:00Z"
+      }
+      ```
   2. **"receive_sms"**
-     - Description : Receives an SMS from a contact.
-     - Data example :
-       ```json
-       {
-         "sender": "+123456789",
-         "message": "I'm good, thanks!",
-         "timestamp": "2024-12-06T14:32:00Z"
-       }
-       ```
+    - Description : Receives an SMS from a contact.
+    - Data example :
+      ```json
+      {
+        "sender": "+123456789",
+        "message": "I'm good, thanks!",
+        "timestamp": "2024-12-06T14:32:00Z"
+      }
+      ```
   3. **"get_sms_conversations"**
-     - Description : Requests a list of SMS conversations.
-     - Data example : `{}` (Empty data)
+    - Description : Requests a list of SMS conversations.
+    - Data example : `{}` (Empty data)
   4. **"get_conversation_messages"**
-     - Description : Gets all messages from a specific conversation.
-     - Data example :
-       ```json
-       {
-         "contact_number": "+123456789"
-       }
-       ```
+    - Description : Gets all messages from a specific conversation.
+    - Data example :
+      ```json
+      {
+        "contact_number": "+123456789"
+      }
+      ```
 
 #### Type : **system**
-- **Subtypes** :
-  1. **"adjust_volume"**
-     - Description : Adjusts the phone's volume.
-     - Data example :
-       ```json
-       {
-         "mode": "increase"  // Values can be "increase" or "decrease"
-       }
-       ```
-  2. **"connection_status"**
-     - Description : Checks if the connection is active.
-     - Data example : `{}` (Empty data)
+- **Subtype** : **"adjust_volume"**
+  - Description : Adjusts the phone's volume.
+  - Values can be "increase" or "decrease".
+  - Data example :
+    ```json
+    {
+      "mode": "increase"
+    }
+    ```
 
 #### Example JSON objects
 1. **Sending an SMS**
-   ```json
-   {
-     "sender": "pc",
-     "type": "sms",
-     "subtype": "send_sms",
-      "request_id": "123e4567-e89b-12d3-a456-426614174000",
-     "data": {
-       "recipient": "+123456789",
-       "message": "Hello, this is a test message",
-       "timestamp": "2024-12-06T14:30:00Z"
-     }
-   }
-   ```
+  ```json
+  {
+    "sender": "pc",
+    "type": "sms",
+    "subtype": "send_sms",
+    "request_id": "123e4567-e89b-12d3-a456-426614174000",
+    "data": {
+      "recipient": "+123456789",
+      "message": "Hello, this is a test message",
+      "timestamp": "2024-12-06T14:30:00Z"
+    }
+  }
+  ```
 2. **Adjusting volume**
-   ```json
-   {
-     "sender": "pc",
-     "type": "system",
-     "subtype": "adjust_volume",
-     "data": {
-       "mode": "decrease"
-     }
-   }
-   ```
+  ```json
+  {
+    "sender": "pc",
+    "type": "system",
+    "subtype": "adjust_volume",
+    "data": {
+      "mode": "decrease"
+    }
+  }
+  ```
 3. **Making a call**
-   ```json
-   {
-     "sender": "pc",
-     "type": "call",
-     "subtype": "make_call",
-      "request_id": "123e4567-e89b-12d3-a456-426614174000",
-     "data": {
-       "phone_number": "+123456789"
-     }
-   }
-   ```
+  ```json
+  {
+    "sender": "pc",
+    "type": "call",
+    "subtype": "make_call",
+    "request_id": "123e4567-e89b-12d3-a456-426614174000",
+    "data": {
+      "phone_number": "+123456789"
+    }
+  }
+  ```
 4. **List SMS conversations**
-   ```json
-   {
-     "sender": "pc",
-     "type": "sms",
-     "subtype": "get_sms_conversations",
-     "request_id": "123e4567-e89b-12d3-a456-426614174000",
-     "data": {}
-   }
-   ```
-
-#### Validation notes
-To ensure robustness, the data must be validated :
-- **Field presence** : All fields (`sender`, `type`, `subtype`, `data`) must be present.
-- **Correct values** : Values like `sender`, `type`, and `subtype` should be limited to pre-defined values.
-- **Data format** : Ensure that phone numbers are in valid international formats, timestamps follow ISO 8601, and volume levels are within 0-10.
+  ```json
+  {
+    "sender": "pc",
+    "type": "sms",
+    "subtype": "get_sms_conversations",
+    "request_id": "123e4567-e89b-12d3-a456-426614174000",
+    "data": {}
+  }
+  ```
 
 ### Android app
 The Android app is responsible for handling the phone's functionalities. It communicates with the server to perform actions like sending SMS, making calls, and adjusting volume. The app is built using Kotlin and requires the Android SDK to compile and run.  

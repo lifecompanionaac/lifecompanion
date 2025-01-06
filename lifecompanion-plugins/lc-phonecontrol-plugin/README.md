@@ -18,7 +18,7 @@ This plugin is based off the work of the 2 other teams of students from IUT Vann
   - Noé Pierre ([`@noepierre`](https://github.com/noepierre))
   - Maxime Hermier ([`@Siiiil3nt`](https://github.com/Siiiil3nt))
   - Clément Bellier
-  - Anatole Derrien
+  - Anatole Derrien ([`@anatolederr`](https://github.com/anatolederr))
 
 ## Dev
 See [`lc-phonecontrol-plugin-1/README.md`](../lc-phonecontrol-plugin-1/README.md) and [`lc-phonecontrol-plugin-2/README.md`](../lc-phonecontrol-plugin-2/README.md) for more now.  

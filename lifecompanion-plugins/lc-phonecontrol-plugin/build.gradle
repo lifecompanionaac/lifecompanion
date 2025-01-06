@@ -19,7 +19,7 @@ repositories {
     maven { url "https://jitpack.io" }
 }
 
-version = "1.3.1"
+version = "1.3.2"
 
 dependencies {
     compileOnly "org.lifecompanion:lc-app:$lifecompanionAppVersion"
@@ -36,6 +36,42 @@ clean {
 ext.isWindows = System.getProperty("os.name").toLowerCase().contains("windows")
 
 /**
+ * Downloads handle.exe if it is missing and returns its file path.
+ */
+def checkAndDownloadHandle() {
+    def handleUrl = "https://live.sysinternals.com/handle.exe"
+    def handleDir = new File(System.getProperty("java.io.tmpdir"), "gradle-handle")
+    def handleFile = new File(handleDir, "handle.exe")
+
+    try {
+        def process = new ProcessBuilder("handle.exe", "-h").start()
+        process.waitFor()
+        println "handle.exe is already in the system path"
+        handleFile = "handle.exe"
+    } catch (IOException e) {
+        if (!handleFile.exists()) {
+            println "handle.exe not found, downloading from $handleUrl"
+
+            if (!handleDir.exists()) {
+                handleDir.mkdirs()
+            }
+
+            new URL(handleUrl).withInputStream { inputStream ->
+                Files.copy(inputStream, handleFile.toPath())
+            }
+
+            println "handle.exe downloaded to ${handleFile.absolutePath}"
+        } else {
+            println "handle.exe already exists at ${handleFile.absolutePath}"
+        }
+
+        handleFile = handleFile.absolutePath
+    }
+
+    return handleFile
+}
+
+/**
  * Executes a command and returns its output as a string.
  */
 def executeCommand(String command, List<String> arguments, boolean ignoreExitValue = false) {
@@ -49,9 +85,6 @@ def executeCommand(String command, List<String> arguments, boolean ignoreExitVal
             standardOutput = outputStream
         }
     } catch (Exception e) {
-        if (command == "handle.exe") {
-            throw new GradleException("Failed to kill the process holding a file.\nOn Windows, handle.exe is probably not installed, delete the file manually")
-        }
         throw new GradleException("Failed to execute command : ${command} ${arguments.join(" ")}\n${e.message}")
     }
 
@@ -78,7 +111,7 @@ def findLockedFileFromError(Exception buildError) {
 def unlockLockedFile(String filePath) {
     println "\n${filePath} is held by another process\nAttempting to unlock it... (this will take some time)\n"
 
-    def lsofCommand = isWindows ? "handle.exe" : "lsof"
+    def lsofCommand = isWindows ? checkAndDownloadHandle() : "lsof"
     def lsofArgs = isWindows ? [filePath] : ["-t", filePath]
 
     def output = executeCommand(lsofCommand, lsofArgs, true)

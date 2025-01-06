@@ -1,6 +1,5 @@
 package org.lifecompanion.plugin.phonecontrol.controller;
 
-import java.util.UUID;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,27 +34,6 @@ public enum SystemController {
             LOGGER.info("Adjusted volume: {}", mode);
         } catch (Exception e) {
             LOGGER.error("Error adjusting volume", e);
-        }
-    }
-
-    /**
-     * Checks the connection status with the phone.
-     */
-    public void checkConnectionStatus() {
-        try {
-            String uuid = UUID.randomUUID().toString();
-            JSONObject json = new JSONObject();
-            json.put("sender", "pc");
-            json.put("type", "system");
-            json.put("subtype", "connection_status");
-            json.put("request_id", uuid);
-            json.put("data", new JSONObject());
-
-            String status = GlobalState.INSTANCE.getCommunicationProtocol().send(json.toString(), uuid);
-
-            LOGGER.info("Requested connection status.");
-        } catch (Exception e) {
-            LOGGER.error("Error requesting connection status", e);
         }
     }
 }

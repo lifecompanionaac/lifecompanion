@@ -197,19 +197,14 @@ public enum ConnexionController implements ModeListenerI {
 
             return null;
         }
-
-        File adbZip = new File(dataDirectory + File.separator + "platform-tools.zip");
-        File adbFolder = new File(dataDirectory + File.separator + "platform-tools");
-
-        installAdbFromInputFolder(inputFolder, adbZip, adbFolder.getParentFile());
-
-        File adb = new File(dataDirectory + File.separator + "platform-tools" + File.separator + adbFileName);
-        adb.setExecutable(true);
         
-        return adb;
+        return installAdbFromInputFolder(inputFolder, dataDirectory, adbFileName);
     }
 
-    private void installAdbFromInputFolder(String inputFolder, File adbZip, File adbFolder) {
+    private File installAdbFromInputFolder(String inputFolder, File dataDirectory, String adbFileName) {
+        File adbZip = new File(dataDirectory + File.separator + "platform-tools.zip");
+        File adbFolder = new File(dataDirectory + File.separator + "platform-tools").getParentFile();
+
         try {
             if (inputFolder != null) {
                 LOGGER.info("Installing ADB from input folder.");
@@ -219,8 +214,12 @@ public enum ConnexionController implements ModeListenerI {
                 IOUtils.unzipInto(adbZip, adbFolder, null);
                 adbZip.delete();
             }
+
+            return new File(adbFolder.getPath() + File.separator + adbFileName);
         } catch (Exception e) {
             LOGGER.error("Failed to install ADB from input folder.", e);
+
+            return null;
         }
     }
 
