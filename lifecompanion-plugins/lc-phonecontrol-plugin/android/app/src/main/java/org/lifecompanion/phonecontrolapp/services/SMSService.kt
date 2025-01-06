@@ -188,7 +188,7 @@ class SMSService : Service() {
 
         val resolver: ContentResolver = contentResolver
         val uri = Uri.parse("content://sms")
-        val projection = arrayOf("address", "body", "date", "type")
+        val projection = arrayOf("address", "body", "date", "read", "type")
         val selection = "address = ?"
         val selectionArgs = arrayOf(contactNumber)
         val cursor = resolver.query(uri, projection, selection, selectionArgs, "date ASC")
