@@ -1,7 +1,6 @@
 package org.lifecompanion.plugin.phonecontrol.controller;
 
 import java.util.ArrayList;
-import java.util.function.Consumer;
 import java.util.UUID;
 
 import org.json.JSONObject;
@@ -91,6 +90,7 @@ public enum SMSController {
 
             String result = GlobalState.INSTANCE.getCommunicationProtocol().send(json.toString(), uuid);
             LOGGER.info("Requested SMS conversations.");
+            LOGGER.info("Result: {}", result);
             JSONObject resultJson = new JSONObject(result);
             ArrayList<JSONObject> conversations = new ArrayList<>();
 

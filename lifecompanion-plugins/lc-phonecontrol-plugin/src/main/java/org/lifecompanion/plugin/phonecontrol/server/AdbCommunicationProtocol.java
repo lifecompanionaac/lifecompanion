@@ -9,7 +9,6 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Base64;
 
@@ -74,7 +73,8 @@ public class AdbCommunicationProtocol implements PhoneCommunicationProtocol {
         }
 
         try {
-            String path = "/data/data/org.lifecompanion.phonecontrol/files/output/";
+            // /data/data/org.lifecompanion.phonecontrol/files/output, but we use run-as
+            String path = "files/output";
             ArrayList<String> processedFiles = new ArrayList<>();
             String content = null;
 
@@ -83,29 +83,30 @@ public class AdbCommunicationProtocol implements PhoneCommunicationProtocol {
 
                 for (String filePath : filePaths) {
                     if (!processedFiles.contains(filePath)) {
-                        ProcessBuilder processBuilder = new ProcessBuilder(adbPath, "shell", "run-as", "org.lifecompanion.phonecontrol", "cat", filePath);
-                        Process process = processBuilder.start();
-                        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                        StringBuilder fileContent = new StringBuilder();
-                        String line;
-
-                        while ((line = reader.readLine()) != null) {
-                            fileContent.append(line);
-                        }
-
-                        process.waitFor();
                         processedFiles.add(filePath);
 
-                        try {
-                            JSONObject jsonObject = new JSONObject(fileContent.toString());
-                            if (jsonObject.getString("request_id").equals(requestId)) {
+                        if (filePath.contains(requestId)) {
+                            Path tempFile = Files.createTempFile("adb_output_", ".json");
+
+                            ProcessBuilder processBuilder = new ProcessBuilder(adbPath, "shell", "run-as", "org.lifecompanion.phonecontrolapp", "cat", filePath);
+                            processBuilder.redirectOutput(tempFile.toFile());
+                            Process process = processBuilder.start();
+                            process.waitFor();
+
+                            String fileContent = new String(Files.readAllBytes(tempFile), StandardCharsets.UTF_8);
+                            LOGGER.info("File content: " + fileContent);
+
+                            try {
+                                JSONObject jsonObject = new JSONObject(fileContent.toString());
                                 content = jsonObject.toString();
                                 new ProcessBuilder(adbPath, "shell", "run-as", "org.lifecompanion.phonecontrol", "rm", filePath).start().waitFor();
-
-                                break;
+                            } catch (JSONException e) {
+                                LOGGER.error("Error while parsing JSON", e);
                             }
-                        } catch (JSONException e) {
-                            LOGGER.error("Error while parsing JSON", e);
+
+                            Files.delete(tempFile);
+
+                            break;
                         }
                     }
                 }
@@ -189,7 +190,7 @@ public class AdbCommunicationProtocol implements PhoneCommunicationProtocol {
     public ArrayList<String> pollDirectoryViaAdb(String directoryPath) {
         ArrayList<String> filePaths = new ArrayList<>();
         try {
-            ProcessBuilder processBuilder = new ProcessBuilder(adbPath, "shell", "ls", directoryPath);
+            ProcessBuilder processBuilder = new ProcessBuilder(adbPath, "shell", "run-as", "org.lifecompanion.phonecontrolapp", "ls", directoryPath);
             Process process = processBuilder.start();
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String fileName;
