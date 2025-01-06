@@ -16,6 +16,8 @@ on:
         type: boolean
       plugin_dir_name:
         type: string
+      extra_plugin_build_args:
+        type: string
     secrets:
       framework_server_url:
         required: true
@@ -114,7 +116,7 @@ jobs:
         uses: gradle/actions/setup-gradle@v3
         with:
           build-root-directory: lifecompanion-plugins/${{inputs.plugin_dir_name}}
-          arguments: clean jar
+          arguments: ${{ inputs.extra_plugin_build_args || 'clean jar' }}
           
       - name: Call update build and publish command
         uses: gradle/actions/setup-gradle@v3
