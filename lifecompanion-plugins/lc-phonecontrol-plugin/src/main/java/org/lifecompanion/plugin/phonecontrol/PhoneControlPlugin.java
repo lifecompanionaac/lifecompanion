@@ -78,6 +78,12 @@ public class PhoneControlPlugin implements PluginI {
                 "phonecontrol.plugin.use.variable.phone.number.or.contact.name.name",
                 "phonecontrol.plugin.use.variable.phone.number.or.contact.name.description",
                 "phonecontrol.plugin.use.variable.phone.number.or.contact.name.example"
+            ),
+            new UseVariableDefinition(
+                ConnexionController.VAR_PHONE_NAME,
+                "phonecontrol.plugin.use.variable.phone.name.name",
+                "phonecontrol.plugin.use.variable.phone.name.description",
+                "phonecontrol.plugin.use.variable.phone.name.example"
             )
         );
     }
@@ -91,6 +97,8 @@ public class PhoneControlPlugin implements PluginI {
                 def -> new StringUseVariable(def, ConnexionController.INSTANCE.getCallDuration());
             case ConnexionController.VAR_PHONE_NUMBER_OR_CONTACT_NAME ->
                 def -> new StringUseVariable(def, ConnexionController.INSTANCE.getPhoneNumberOrContactName());
+            case ConnexionController.VAR_PHONE_NAME ->
+                def -> new StringUseVariable(def, ConnexionController.INSTANCE.getPhoneName());
             default -> null;
         };
     }

@@ -52,10 +52,12 @@ public enum ConnexionController implements ModeListenerI {
     public static final String VAR_SMS_UNREAD = "SMSUnread";
     public static final String VAR_CALL_DURATION = "CallDuration";
     public static final String VAR_PHONE_NUMBER_OR_CONTACT_NAME = "PhoneNumberOrContactName";
+    public static final String VAR_PHONE_NAME = "PhoneName";
 
     private int smsUnreadCount;
     private String callDuration;
     private String phoneNumberOrContactName;
+    private String phoneName;
 
     public static final ConversationListContent CONV_LOADING = new ConversationListContent();
     public static final ConversationListContent CONV_NOT_CONNECTED = new ConversationListContent();
@@ -102,6 +104,10 @@ public enum ConnexionController implements ModeListenerI {
         return phoneNumberOrContactName;
     }
 
+    public String getPhoneName() {
+        return phoneName;
+    }
+
     public String getPhoneNumber() {
         return phoneNumber;
     }
@@ -115,6 +121,8 @@ public enum ConnexionController implements ModeListenerI {
         // Start app on phone if needed
         String deviceSerialNumber = currentPhoneControlPluginProperties.deviceProperty().get();
         PhoneCommunicationManager.INSTANCE.startApp(deviceSerialNumber);
+
+        this.phoneName = PhoneCommunicationManager.INSTANCE.getDeviceName(deviceSerialNumber);
 
         // Set up the interval of refresh
         this.durationInterval = Math.max(currentPhoneControlPluginProperties.durationInternalProperty().get(), 1000);
@@ -150,27 +158,28 @@ public enum ConnexionController implements ModeListenerI {
 
     @Override
     public void modeStop(LCConfigurationI configuration) {
-        GlobalState.INSTANCE.setPluginProperties(null);
-        this.currentPhoneControlPluginProperties = null;
-        resetVariables();
-
         // Removing callbacks
         this.callEnterCallback = null;
         this.callEndedCallback = null;
-
+        
         // Stopping timer
         this.refreshTimer.cancel();
         this.refreshTimer = null;
-
+        
         // Lists KeyOptions
         convCells.clear();
         smsCells.clear();
+
+        resetVariables();
+        this.currentPhoneControlPluginProperties = null;
+        GlobalState.INSTANCE.setPluginProperties(null);
     }
 
     private void resetVariables() {
         this.smsUnreadCount = 0;
         this.callDuration = "00:00:00";
         this.phoneNumberOrContactName = "--.--.--.--.--";
+        this.phoneName = "";
         this.phoneNumber = null;
         this.onCall = false;
         this.convIndexMin = 0;

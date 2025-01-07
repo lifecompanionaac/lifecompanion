@@ -12,6 +12,10 @@
     <text key="phonecontrol.plugin.use.variable.phone.number.or.contact.name.description">Contient le nom du contact si il existe sinon le numéro de téléphone de l'appel ou de la conversation en cours</text>
     <text key="phonecontrol.plugin.use.variable.phone.number.or.contact.name.example">+33612345678</text>
 
+    <text key="phonecontrol.plugin.use.variable.phone.name.name">Nom du téléphone connecté</text>
+    <text key="phonecontrol.plugin.use.variable.phone.name.description">Nom standard Bluetooth du téléphone connecté</text>
+    <text key="phonecontrol.plugin.use.variable.phone.name.example">Smartphone de Papa</text>
+
     <!-- KEY OPTION -->
     <text key="phonecontrol.plugin.key.option.conversation.list.name">Liste des conversations</text>
     <text key="phonecontrol.plugin.key.option.conversation.list.description">Les dernières conversations avec pour chacune le dernier message envoyé/reçu</text>
