@@ -5,6 +5,11 @@ import android.content.Intent
 import android.os.FileObserver
 import android.os.IBinder
 import android.util.Log
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.io.File
 import java.io.FileInputStream
@@ -19,6 +24,10 @@ class JSONProcessingService : Service() {
 
     private val outputDirPath: String by lazy { File(filesDir, "output").absolutePath }
 
+    private val intentChannel = Channel<Intent>(Channel.UNLIMITED)
+    private val serviceJob = Job()
+    private val serviceScope = CoroutineScope(Dispatchers.IO + serviceJob)
+
     override fun onCreate() {
         super.onCreate()
 
@@ -32,12 +41,18 @@ class JSONProcessingService : Service() {
             context = this
         )
         startForeground(NOTIFICATION_ID, notification)
+
+        // Launch a coroutine to process intents from the channel
+        serviceScope.launch {
+            processQueue()
+        }
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        intent.getStringExtra("extra_data")?.let { encodedData ->
-            val data = String(android.util.Base64.decode(encodedData, android.util.Base64.DEFAULT))
-            processJsonData(data)
+        intent?.let {
+            serviceScope.launch {
+                intentChannel.send(it)
+            }
         }
 
         return START_STICKY
@@ -49,6 +64,17 @@ class JSONProcessingService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
+        serviceJob.cancel() // Cancel all running coroutines
+    }
+
+    private suspend fun processQueue() {
+        for (intent in intentChannel) {
+            val encodedData = intent.getStringExtra("extra_data")
+            if (encodedData != null) {
+                val data = String(android.util.Base64.decode(encodedData, android.util.Base64.DEFAULT))
+                processJsonData(data)
+            }
+        }
     }
 
     private fun processJsonData(data: String) {

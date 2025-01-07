@@ -5,5 +5,5 @@
     <string name="credits">Crédits</string>
     <string name="description">Application associée au plugin PhoneControl de Life Companion. Elle permet d\'appeler/recevoir des appels et d\'envoyer/recevoir/lire les SMS du téléphone.</string>
     <string name="life_companion_logo">Life Companion Logo</string>
-    <string name="version">Version 1.3.5</string>
+    <string name="version">Version 1.3.6</string>
 </resources>
