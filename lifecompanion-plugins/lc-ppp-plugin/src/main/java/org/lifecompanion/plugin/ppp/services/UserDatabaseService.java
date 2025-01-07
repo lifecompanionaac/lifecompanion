@@ -7,9 +7,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.lifecompanion.controller.editaction.AsyncExecutorController;
 import org.lifecompanion.controller.lifecycle.AppModeController;
+import org.lifecompanion.controller.usevariable.UseVariableController;
 import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
+import org.lifecompanion.plugin.ppp.PediatricPainProfilePlugin;
+import org.lifecompanion.plugin.ppp.PediatricPainProfilePluginService;
 import org.lifecompanion.plugin.ppp.keyoption.UserGroupCellKeyOption;
 import org.lifecompanion.plugin.ppp.keyoption.UserProfileCellKeyOption;
 import org.lifecompanion.plugin.ppp.model.Action;
@@ -36,6 +39,7 @@ public enum UserDatabaseService implements ModeListenerI {
     private final List<UserProfileCellKeyOption> userKeyOptions;
     private final ObjectProperty<UserGroup> selectedGroup;
     private final ObjectProperty<UserProfile> selectedProfile;
+    private int currentPageIndex;
 
     UserDatabaseService() {
         this.userKeyOptions = FXCollections.observableArrayList();
@@ -44,6 +48,7 @@ public enum UserDatabaseService implements ModeListenerI {
         this.selectedProfile = new SimpleObjectProperty<>();
 
         this.selectedGroup.addListener((obs, ov, nv) -> {
+            this.currentPageIndex = 0;
             this.updateUserList();
         });
     }
@@ -58,6 +63,8 @@ public enum UserDatabaseService implements ModeListenerI {
 
     @Override
     public void modeStart(LCConfigurationI configuration) {
+        currentPageIndex = -1;
+
         this.configuration = configuration;
         // Find cells
         Map<GridComponentI, List<UserGroupCellKeyOption>> groupKeysMap = new HashMap<>();
@@ -91,6 +98,20 @@ public enum UserDatabaseService implements ModeListenerI {
 
     public void selectUser(UserProfile user) {
         selectedProfile.set(user);
+        UseVariableController.INSTANCE.requestVariablesUpdate();
+    }
+
+    public void nextPageInGroup() {
+        UserGroup userGroup = this.selectedGroup.get();
+        if (userGroup != null) {
+            int maxPageCount = (int) Math.ceil((1.0 * userGroup.getUsers().size()) / (1.0 * userKeyOptions.size()));
+            if (currentPageIndex + 1 < maxPageCount) {
+                currentPageIndex++;
+            } else {
+                currentPageIndex = 0;
+            }
+            this.updateUserList();
+        }
     }
 
     private void updateGroupList() {
@@ -100,11 +121,10 @@ public enum UserDatabaseService implements ModeListenerI {
     private void updateUserList() {
         UserGroup userGroup = this.selectedGroup.get();
         if (userGroup != null) {
-            updateCells(0, userGroup.getUsers(), userKeyOptions, (cell, group) -> cell.userProperty().set(group));
+            updateCells(this.currentPageIndex, userGroup.getUsers(), userKeyOptions, (cell, user) -> cell.userProperty().set(user));
         } else {
             updateCells(0, new ArrayList<>(), userKeyOptions, (cell, user) -> cell.userProperty().set(null));
         }
-
     }
 
     private static <T, E> void updateCells(int currentPageIndex, List<T> sourceList, List<E> cellList, BiConsumer<E, T> setter) {
