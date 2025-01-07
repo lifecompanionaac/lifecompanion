@@ -14,10 +14,9 @@ public class RecordsStage extends Stage {
         this.initModality(Modality.APPLICATION_MODAL);
         this.initStyle(StageStyle.DECORATED);
         this.initOwner(owner);
-        this.setWidth(800);
-        this.setHeight(650);
         this.setMinWidth(560);
         this.setMinHeight(560);
+        this.setMaximized(true);
         this.setForceIntegerRenderScale(LCGraphicStyle.FORCE_INTEGER_RENDER_SCALE);
         this.getIcons().add(IconHelper.get(LCConstant.LC_ICON_PATH));
     }
