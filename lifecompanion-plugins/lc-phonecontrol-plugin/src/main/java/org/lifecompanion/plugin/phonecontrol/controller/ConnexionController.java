@@ -228,6 +228,11 @@ public enum ConnexionController implements ModeListenerI {
                 IOUtils.unzipInto(adbZip, adbFolder, null);
                 adbZip.delete();
             }
+        } catch (java.io.FileNotFoundException e) {
+            // Normal case, happens when the user changed modes : Configuration -> Usage -> Configuration -> Usage
+            if (!e.getMessage().contains("Le processus ne peut pas accéder au fichier car ce fichier est utilisé par un autre processus")) {
+                LOGGER.error("Failed to install ADB from input folder.", e);
+            }
         } catch (Exception e) {
             LOGGER.error("Failed to install ADB from input folder.", e);
         }
@@ -240,6 +245,13 @@ public enum ConnexionController implements ModeListenerI {
      */
     public void refreshCallStatus() {
         JSONObject callState = CallController.INSTANCE.getCallStatus();
+
+        if (callState == null) {
+            this.onCall = false;
+
+            return;
+        }
+
         String callStatus = callState.getString("call_status");
         String incomingCallStatus = callState.getString("incoming_call_status");
 

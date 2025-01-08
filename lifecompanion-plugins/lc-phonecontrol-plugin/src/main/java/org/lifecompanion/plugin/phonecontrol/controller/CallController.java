@@ -20,19 +20,17 @@ public enum CallController {
      */
     public void call(String phoneNumber, boolean speakerOn) {
         try {
-            String uuid = UUID.randomUUID().toString();
             JSONObject json = new JSONObject();
             json.put("sender", "pc");
             json.put("type", "call");
             json.put("subtype", "make_call");
-            json.put("request_id", uuid);
 
             JSONObject data = new JSONObject();
             data.put("phone_number", phoneNumber);
             data.put("speaker_on", speakerOn);
             json.put("data", data);
 
-            String success = GlobalState.INSTANCE.getCommunicationProtocol().send(json.toString(), uuid);
+            GlobalState.INSTANCE.getCommunicationProtocol().send(json.toString());
 
             LOGGER.info("Initiated call to {}.", phoneNumber);
         } catch (Exception e) {
@@ -42,19 +40,17 @@ public enum CallController {
 
     public void callContact() {
         try {
-            String uuid = UUID.randomUUID().toString();
             JSONObject json = new JSONObject();
             json.put("sender", "pc");
             json.put("type", "call");
             json.put("subtype", "make_call");
-            json.put("request_id", uuid);
 
             JSONObject data = new JSONObject();
             data.put("phone_number", ConnexionController.INSTANCE.getPhoneNumber());
             data.put("speaker_on", GlobalState.INSTANCE.getPluginProperties().speakerOnProperty().get());
             json.put("data", data);
 
-            String success = GlobalState.INSTANCE.getCommunicationProtocol().send(json.toString(), uuid);
+            GlobalState.INSTANCE.getCommunicationProtocol().send(json.toString());
 
             LOGGER.info("Initiated call to {}.", ConnexionController.INSTANCE.getPhoneNumber());
         } catch (Exception e) {
@@ -136,6 +132,10 @@ public enum CallController {
 
             String status = GlobalState.INSTANCE.getCommunicationProtocol().send(json.toString(), uuid);
             LOGGER.info("Requested call status.");
+
+            if (new JSONObject(status).getJSONObject("data") == null || new JSONObject(status).getJSONArray("data").length() >= 0) {
+                return null;
+            }
 
             return new JSONObject(status).getJSONObject("data");
         } catch (Exception e) {

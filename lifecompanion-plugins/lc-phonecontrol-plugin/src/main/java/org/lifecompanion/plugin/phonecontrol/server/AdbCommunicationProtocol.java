@@ -11,6 +11,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,6 +29,7 @@ import org.slf4j.LoggerFactory;
  */
 public class AdbCommunicationProtocol implements PhoneCommunicationProtocol {
     private static final Logger LOGGER = LoggerFactory.getLogger(AdbCommunicationProtocol.class.getName());
+    private ExecutorService executorService = Executors.newSingleThreadExecutor();
     private String adbPath;
     private boolean connectionOpen;
 
@@ -62,7 +66,13 @@ public class AdbCommunicationProtocol implements PhoneCommunicationProtocol {
     public String send(String data, String requestId) {
         send(data);
 
-        return receive(requestId);
+        Future<String> future = executorService.submit(() -> receive(requestId));
+        try {
+            return future.get();
+        } catch (Exception e) {
+            LOGGER.error("Error while receiving data via ADB", e);
+            return null;
+        }
     }
 
     private String receive(String requestId) {
@@ -76,6 +86,7 @@ public class AdbCommunicationProtocol implements PhoneCommunicationProtocol {
             // /data/data/org.lifecompanion.phonecontrol/files/output, but we use run-as
             String path = "files/output";
             ArrayList<String> processedFiles = new ArrayList<>();
+            ArrayList<String> erroredFiles = new ArrayList<>();
             String content = null;
 
             while (content == null) {
@@ -102,6 +113,14 @@ public class AdbCommunicationProtocol implements PhoneCommunicationProtocol {
                                 new ProcessBuilder(adbPath, "shell", "run-as", "org.lifecompanion.phonecontrol", "rm", filePath).start().waitFor();
                             } catch (JSONException e) {
                                 LOGGER.error("Error while parsing JSON", e);
+
+                                if (erroredFiles.contains(filePath)) {
+                                    erroredFiles.remove(filePath);
+                                    new ProcessBuilder(adbPath, "shell", "run-as", "org.lifecompanion.phonecontrol", "rm", filePath).start().waitFor();
+                                } else {
+                                    processedFiles.remove(filePath);
+                                    erroredFiles.add(filePath);
+                                }
                             }
 
                             Files.delete(tempFile);

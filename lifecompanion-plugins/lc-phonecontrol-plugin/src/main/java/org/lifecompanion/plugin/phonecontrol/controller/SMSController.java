@@ -90,12 +90,13 @@ public enum SMSController {
 
             String result = GlobalState.INSTANCE.getCommunicationProtocol().send(json.toString(), uuid);
             LOGGER.info("Requested SMS conversations.");
-            LOGGER.info("Result: {}", result);
             JSONObject resultJson = new JSONObject(result);
             ArrayList<JSONObject> conversations = new ArrayList<>();
 
-            for (int i = 0; i < resultJson.getJSONArray("data").length(); i++) {
-                conversations.add(resultJson.getJSONArray("data").getJSONObject(i));
+            if (resultJson.getJSONArray("data") != null || resultJson.getJSONArray("data").length() >= 0) {
+                for (int i = 0; i < resultJson.getJSONArray("data").length(); i++) {
+                    conversations.add(resultJson.getJSONArray("data").getJSONObject(i));
+                }
             }
 
             return conversations;
@@ -132,8 +133,10 @@ public enum SMSController {
             JSONObject resultJson = new JSONObject(result);
             ArrayList<JSONObject> messages = new ArrayList<>();
 
-            for (int i = 0; i < resultJson.getJSONArray("data").length(); i++) {
-                messages.add(resultJson.getJSONArray("data").getJSONObject(i));
+            if (resultJson.getJSONArray("data") != null || resultJson.getJSONArray("data").length() >= 0) {
+                for (int i = 0; i < resultJson.getJSONArray("data").length(); i++) {
+                    messages.add(resultJson.getJSONArray("data").getJSONObject(i));
+                }
             }
 
             return messages;
