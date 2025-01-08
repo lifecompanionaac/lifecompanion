@@ -36,6 +36,7 @@
     <text key="phonecontrol.plugin.action.sub.category.sms.name">SMS</text>
     <text key="phonecontrol.plugin.action.sub.category.misc.name">Général</text>
     <text key="phonecontrol.plugin.action.sub.category.call.name">Appel</text>
+    <text key="phonecontrol.plugin.action.sub.category.system.name">Système</text>
     <text key="phonecontrol.plugin.action.sub.category.refresh.name">Actualisation</text>
 
     <text key="phonecontrol.plugin.action.misc.selectconversationfromlist.name">Sélectionner une conversation (automatique)</text>
@@ -86,6 +87,12 @@
 
     <text key="phonecontrol.plugin.action.refreshsmslist.name">Actualiser la liste des SMS</text>
     <text key="phonecontrol.plugin.action.refreshsmslist.description">Actualise les des SMS de la conversation sélectionnée</text>
+
+    <text key="phonecontrol.plugin.action.increasevolume.name">Augmenter le volume</text>
+    <text key="phonecontrol.plugin.action.increasevolume.description">Augmente le volume du téléphone</text>
+
+    <text key="phonecontrol.plugin.action.decreasevolume.name">Diminuer le volume</text>
+    <text key="phonecontrol.plugin.action.decreasevolume.description">Diminue le volume du téléphone</text>
 
     <!-- USE EVENTS -->
     <text key="phonecontrol.plugin.event.main.category.name">Contrôle du téléphone</text>
