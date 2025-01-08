@@ -15,8 +15,8 @@ public class RefreshSMSAction extends SimpleUseActionImpl<UseActionTriggerCompon
         this.order = 0;
         this.category = PhoneControlActionSubCategories.REFRESH;
         this.parameterizableAction = false;
-        this.nameID = "phonecontrol.plugin.action.refresh.sms.list.name";
-        this.staticDescriptionID = "phonecontrol.plugin.action.refresh.sms.list.description";
+        this.nameID = "phonecontrol.plugin.action.refreshsmslist.name";
+        this.staticDescriptionID = "phonecontrol.plugin.action.refreshsmslist.description";
         this.variableDescriptionProperty().set(this.getStaticDescription());
     }
 

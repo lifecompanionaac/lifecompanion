@@ -15,8 +15,8 @@ public class SendMessageAction extends SimpleUseActionImpl<UseActionTriggerCompo
         this.order = 0;
         this.category = PhoneControlActionSubCategories.SMS;
         this.parameterizableAction = false;
-        this.nameID = "phonecontrol.plugin.action.sms.send.name";
-        this.staticDescriptionID = "phonecontrol.plugin.action.sms.send.description";
+        this.nameID = "phonecontrol.plugin.action.smssend.name";
+        this.staticDescriptionID = "phonecontrol.plugin.action.smssend.description";
         this.variableDescriptionProperty().set(this.getStaticDescription());
     }
 

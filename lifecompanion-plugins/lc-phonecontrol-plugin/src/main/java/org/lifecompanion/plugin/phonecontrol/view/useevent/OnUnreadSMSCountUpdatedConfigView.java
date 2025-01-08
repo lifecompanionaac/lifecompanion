@@ -47,7 +47,7 @@ public class OnUnreadSMSCountUpdatedConfigView extends VBox implements UseEventG
                 }
             });
         this.getChildren().addAll(
-            new Label(Translation.getText("phonecontrol.plugin.unread.count.condition.label")),
+            new Label(Translation.getText("phonecontrol.plugin.unreadcountcondition.label")),
             this.choiceGenerateCondition
         );
     }

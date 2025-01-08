@@ -24,8 +24,8 @@ public class SMSListKeyOption extends AbstractKeyOption {
 
     public SMSListKeyOption() {
         super();
-        this.optionNameId = "phonecontrol.plugin.key.option.sms.list.name";
-        this.optionDescriptionId = "phonecontrol.plugin.key.option.sms.list.description";
+        this.optionNameId = "phonecontrol.plugin.key.option.smslist.name";
+        this.optionDescriptionId = "phonecontrol.plugin.key.option.smslist.description";
         this.disableTextContent.set(true);
         this.disableImage.set(true);
         this.sms = new SimpleObjectProperty<>();
@@ -46,7 +46,7 @@ public class SMSListKeyOption extends AbstractKeyOption {
 
     @Override
     protected void attachToImpl(final GridPartKeyComponentI key) {
-        key.textContentProperty().set(AppModeController.INSTANCE.isUseMode() ? null : Translation.getText("phonecontrol.plugin.key.option.sms.list.default.text"));
+        key.textContentProperty().set(AppModeController.INSTANCE.isUseMode() ? null : Translation.getText("phonecontrol.plugin.key.option.smslist.default.text"));
         // No action to attach
     }
 
@@ -65,9 +65,9 @@ public class SMSListKeyOption extends AbstractKeyOption {
                     key.textContentProperty().set(Translation.getText("phonecontrol.plugin.key.option.list.loading"));
                     dateNode.set(null); // Clear date node
                 } else if (nv == ConnexionController.SMS_NOT_CONNECTED) {
-                    key.textContentProperty().set(Translation.getText("phonecontrol.plugin.key.option.list.not.connected"));
+                    key.textContentProperty().set(Translation.getText("phonecontrol.plugin.key.option.list.notconnected"));
                 } else if (nv == ConnexionController.SMS_END_MESSAGE) {
-                    key.textContentProperty().set(Translation.getText("phonecontrol.plugin.key.option.sms.list.empty"));
+                    key.textContentProperty().set(Translation.getText("phonecontrol.plugin.key.option.smslist.empty"));
                 } else {
                     // Set text content
                     key.textContentProperty().set(nv.getSMS());

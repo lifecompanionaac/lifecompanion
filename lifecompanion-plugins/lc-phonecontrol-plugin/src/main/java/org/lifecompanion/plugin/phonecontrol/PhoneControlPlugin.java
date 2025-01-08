@@ -63,27 +63,27 @@ public class PhoneControlPlugin implements PluginI {
         return Arrays.asList(
             new UseVariableDefinition(
                 ConnexionController.VAR_SMS_UNREAD,
-                "phonecontrol.plugin.use.variable.sms.unread.name",
-                "phonecontrol.plugin.use.variable.sms.unread.description",
-                "phonecontrol.plugin.use.variable.sms.unread.example"
+                "phonecontrol.plugin.use.variable.smsunread.name",
+                "phonecontrol.plugin.use.variable.smsunread.description",
+                "phonecontrol.plugin.use.variable.smsunread.example"
             ),
             new UseVariableDefinition(
                 ConnexionController.VAR_CALL_DURATION,
-                "phonecontrol.plugin.use.variable.call.duration.name",
-                "phonecontrol.plugin.use.variable.call.duration.description",
-                "phonecontrol.plugin.use.variable.call.duration.example"
+                "phonecontrol.plugin.use.variable.callduration.name",
+                "phonecontrol.plugin.use.variable.callduration.description",
+                "phonecontrol.plugin.use.variable.callduration.example"
             ),
             new UseVariableDefinition(
                 ConnexionController.VAR_PHONE_NUMBER_OR_CONTACT_NAME,
-                "phonecontrol.plugin.use.variable.phone.number.or.contact.name.name",
-                "phonecontrol.plugin.use.variable.phone.number.or.contact.name.description",
-                "phonecontrol.plugin.use.variable.phone.number.or.contact.name.example"
+                "phonecontrol.plugin.use.variable.phonenumberorcontactname.name",
+                "phonecontrol.plugin.use.variable.phonenumberorcontactname.description",
+                "phonecontrol.plugin.use.variable.phonenumberorcontactname.example"
             ),
             new UseVariableDefinition(
                 ConnexionController.VAR_PHONE_NAME,
-                "phonecontrol.plugin.use.variable.phone.name.name",
-                "phonecontrol.plugin.use.variable.phone.name.description",
-                "phonecontrol.plugin.use.variable.phone.name.example"
+                "phonecontrol.plugin.use.variable.phonename.name",
+                "phonecontrol.plugin.use.variable.phonename.description",
+                "phonecontrol.plugin.use.variable.phonename.example"
             )
         );
     }

@@ -15,8 +15,8 @@ public class HangUpAction extends SimpleUseActionImpl<UseActionTriggerComponentI
         this.order = 0;
         this.category = PhoneControlActionSubCategories.CALL;
         this.parameterizableAction = false;
-        this.nameID = "phonecontrol.plugin.action.call.hangup.name";
-        this.staticDescriptionID = "phonecontrol.plugin.action.call.hangup.description";
+        this.nameID = "phonecontrol.plugin.action.callhangup.name";
+        this.staticDescriptionID = "phonecontrol.plugin.action.callhangup.description";
         this.variableDescriptionProperty().set(this.getStaticDescription());
     }
 

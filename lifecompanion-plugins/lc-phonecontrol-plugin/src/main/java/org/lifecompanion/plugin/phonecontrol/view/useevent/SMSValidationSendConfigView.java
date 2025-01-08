@@ -47,7 +47,7 @@ public class SMSValidationSendConfigView extends VBox implements UseEventGenerat
                 }
             });
         this.getChildren().addAll(
-            new Label(Translation.getText("phonecontrol.plugin.unread.count.condition.label")),
+            new Label(Translation.getText("phonecontrol.plugin.unreadcountcondition.label")),
             this.choiceGenerateCondition
         );
     }

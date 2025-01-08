@@ -15,8 +15,8 @@ public class UnselectConversationAction extends SimpleUseActionImpl<UseActionTri
         this.order = 0;
         this.category = PhoneControlActionSubCategories.MISC;
         this.parameterizableAction = false;
-        this.nameID = "phonecontrol.plugin.action.misc.unselect.conversation.name";
-        this.staticDescriptionID = "phonecontrol.plugin.action.misc.unselect.conversation.description";
+        this.nameID = "phonecontrol.plugin.action.misc.unselectconversation.name";
+        this.staticDescriptionID = "phonecontrol.plugin.action.misc.unselectconversation.description";
         this.variableDescriptionProperty().set(this.getStaticDescription());
     }
 

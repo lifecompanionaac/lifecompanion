@@ -15,8 +15,8 @@ public class PickUpAction extends SimpleUseActionImpl<UseActionTriggerComponentI
         this.order = 0;
         this.category = PhoneControlActionSubCategories.CALL;
         this.parameterizableAction = false;
-        this.nameID = "phonecontrol.plugin.action.call.pickup.name";
-        this.staticDescriptionID = "phonecontrol.plugin.action.call.pickup.description";
+        this.nameID = "phonecontrol.plugin.action.callpickup.name";
+        this.staticDescriptionID = "phonecontrol.plugin.action.callpickup.description";
         this.variableDescriptionProperty().set(this.getStaticDescription());
     }
 

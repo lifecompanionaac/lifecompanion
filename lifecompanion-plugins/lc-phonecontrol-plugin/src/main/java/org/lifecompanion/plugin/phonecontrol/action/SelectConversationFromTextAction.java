@@ -17,8 +17,8 @@ public class SelectConversationFromTextAction extends SimpleUseActionImpl<UseAct
         this.order = 0;
         this.category = PhoneControlActionSubCategories.MISC;
         this.parameterizableAction = false;
-        this.nameID = "phonecontrol.plugin.action.misc.select.conversation.fromtext.name";
-        this.staticDescriptionID = "phonecontrol.plugin.action.misc.select.conversation.fromtext.description";
+        this.nameID = "phonecontrol.plugin.action.misc.selectconversationfromtext.name";
+        this.staticDescriptionID = "phonecontrol.plugin.action.misc.selectconversationfromtext.description";
         this.variableDescriptionProperty().set(this.getStaticDescription());
     }
 

@@ -13,8 +13,8 @@ public class OnCallEndedEventGenerator extends BaseUseEventGeneratorImpl {
         this.parameterizableAction = false;
         this.order = 20;
         this.category = PhoneControlEventSubCategories.MISC;
-        this.nameID = "phonecontrol.plugin.event.misc.call.hangup.name";
-        this.staticDescriptionID = "phonecontrol.plugin.event.misc.call.hangup.description";
+        this.nameID = "phonecontrol.plugin.event.misc.callhangup.name";
+        this.staticDescriptionID = "phonecontrol.plugin.event.misc.callhangup.description";
         this.variableDescriptionProperty().set(this.getStaticDescription());
         callEndedCallback = () -> {
             this.useEventListener.fireEvent(this, null, null);

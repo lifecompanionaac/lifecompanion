@@ -13,8 +13,8 @@ public class OnCallEnterEventGenerator extends BaseUseEventGeneratorImpl {
         this.parameterizableAction = false;
         this.order = 20;
         this.category = PhoneControlEventSubCategories.MISC;
-        this.nameID = "phonecontrol.plugin.event.misc.call.enter.name";
-        this.staticDescriptionID = "phonecontrol.plugin.event.misc.call.enter.description";
+        this.nameID = "phonecontrol.plugin.event.misc.callenter.name";
+        this.staticDescriptionID = "phonecontrol.plugin.event.misc.callenter.description";
         this.variableDescriptionProperty().set(this.getStaticDescription());
         callEnterCallback = () -> {
             this.useEventListener.fireEvent(this, null, null);

@@ -15,8 +15,8 @@ public class RefreshConversationsAction extends SimpleUseActionImpl<UseActionTri
         this.order = 0;
         this.category = PhoneControlActionSubCategories.REFRESH;
         this.parameterizableAction = false;
-        this.nameID = "phonecontrol.plugin.action.refresh.conversation.list.name";
-        this.staticDescriptionID = "phonecontrol.plugin.action.refresh.conversation.list.description";
+        this.nameID = "phonecontrol.plugin.action.refreshconversationlist.name";
+        this.staticDescriptionID = "phonecontrol.plugin.action.refreshconversationlist.description";
         this.variableDescriptionProperty().set(this.getStaticDescription());
     }
 

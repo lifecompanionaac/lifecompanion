@@ -16,8 +16,8 @@ public class SelectConversationFromListAction extends SimpleUseActionImpl<GridPa
         this.order = 0;
         this.category = PhoneControlActionSubCategories.MISC;
         this.parameterizableAction = false;
-        this.nameID = "phonecontrol.plugin.action.misc.select.conversation.fromlist.name";
-        this.staticDescriptionID = "phonecontrol.plugin.action.misc.select.conversation.fromlist.description";
+        this.nameID = "phonecontrol.plugin.action.misc.selectconversationfromlist.name";
+        this.staticDescriptionID = "phonecontrol.plugin.action.misc.selectconversationfromlist.description";
         this.variableDescriptionProperty().set(this.getStaticDescription());
     }
 
