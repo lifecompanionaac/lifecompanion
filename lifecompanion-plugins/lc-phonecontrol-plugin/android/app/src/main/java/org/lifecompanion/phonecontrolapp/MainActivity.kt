@@ -32,7 +32,12 @@ class MainActivity : Activity() {
         checkPermissions()
 
         // Disable battery optimizations
-        disableBatteryOptimizations()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val pm = getSystemService(POWER_SERVICE) as android.os.PowerManager
+            if (!pm.isIgnoringBatteryOptimizations(packageName)) {
+                disableBatteryOptimizations(packageName)
+            }
+        }
     }
 
     /**
@@ -77,11 +82,9 @@ class MainActivity : Activity() {
         }
     }
 
-    private fun disableBatteryOptimizations() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
-            intent.data = Uri.parse("package:$packageName")
-            startActivity(intent)
-        }
+    private fun disableBatteryOptimizations(packageName: String) {
+        val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
+        intent.data = Uri.parse(packageName)
+        startActivity(intent)
     }
 }
