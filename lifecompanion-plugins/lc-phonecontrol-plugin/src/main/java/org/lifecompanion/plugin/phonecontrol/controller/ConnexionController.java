@@ -286,6 +286,7 @@ public enum ConnexionController implements ModeListenerI {
 
             while (onCall) {
                 try {
+                    // TODO: Run this in another thread
                     Thread.sleep(1000);
                     duration++;
                     this.callDuration = convertTime(duration);
