@@ -133,7 +133,7 @@ public enum CallController {
             String status = GlobalState.INSTANCE.getCommunicationProtocol().send(json.toString(), uuid);
             LOGGER.info("Requested call status.");
 
-            if (new JSONObject(status).getJSONObject("data") == null || new JSONObject(status).getJSONArray("data").length() >= 0) {
+            if (new JSONObject(status).getJSONObject("data") == null) {
                 return null;
             }
 

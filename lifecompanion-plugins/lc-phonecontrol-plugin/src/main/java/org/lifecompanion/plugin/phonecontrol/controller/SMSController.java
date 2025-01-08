@@ -93,7 +93,7 @@ public enum SMSController {
             JSONObject resultJson = new JSONObject(result);
             ArrayList<JSONObject> conversations = new ArrayList<>();
 
-            if (resultJson.getJSONArray("data") != null || resultJson.getJSONArray("data").length() >= 0) {
+            if (resultJson.getJSONArray("data") != null && resultJson.getJSONArray("data").length() >= 0) {
                 for (int i = 0; i < resultJson.getJSONArray("data").length(); i++) {
                     conversations.add(resultJson.getJSONArray("data").getJSONObject(i));
                 }
@@ -133,7 +133,7 @@ public enum SMSController {
             JSONObject resultJson = new JSONObject(result);
             ArrayList<JSONObject> messages = new ArrayList<>();
 
-            if (resultJson.getJSONArray("data") != null || resultJson.getJSONArray("data").length() >= 0) {
+            if (resultJson.getJSONArray("data") != null && resultJson.getJSONArray("data").length() >= 0) {
                 for (int i = 0; i < resultJson.getJSONArray("data").length(); i++) {
                     messages.add(resultJson.getJSONArray("data").getJSONObject(i));
                 }
