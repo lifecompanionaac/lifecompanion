@@ -59,12 +59,13 @@ public class SMSListContent {
 
 	/**
 	 * Format the date of the SMS to a more readable format
-	 * @param smsDate The date of the SMS : "dd-MM-yyyy HH:mm:ss"
+	 * @param smsDate The date of the SMS : "yyyy-MM-dd'T'HH:mm:ss'Z'"
 	 * @return The date of the SMS in a more readable format
 	 */
 	private String formatSMSDate(String smsDate) {
 		try {
-			Date date = SMSListContent.dateFormat.parse(smsDate);
+			SimpleDateFormat inputDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault());
+			Date date = inputDateFormat.parse(smsDate);
 			long currentTime = System.currentTimeMillis();
 			long timeDifference = currentTime - date.getTime();
 
