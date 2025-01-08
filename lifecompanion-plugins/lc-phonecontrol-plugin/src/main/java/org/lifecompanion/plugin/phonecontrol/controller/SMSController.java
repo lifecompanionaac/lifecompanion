@@ -51,19 +51,17 @@ public enum SMSController {
 
     public void sendSMS() {
         try {
-            String uuid = UUID.randomUUID().toString();
             JSONObject json = new JSONObject();
             json.put("sender", "pc");
             json.put("type", "sms");
             json.put("subtype", "send_sms");
-            json.put("request_id", uuid);
 
             JSONObject data = new JSONObject();
             data.put("recipient", ConnexionController.INSTANCE.getPhoneNumber());
             data.put("message", WritingStateController.INSTANCE.currentTextProperty().get());
             json.put("data", data);
 
-            String result = GlobalState.INSTANCE.getCommunicationProtocol().send(json.toString(), uuid);
+            GlobalState.INSTANCE.getCommunicationProtocol().send(json.toString());
 
             LOGGER.info("SMS sent to {}: {}", ConnexionController.INSTANCE.getPhoneNumber(), WritingStateController.INSTANCE.currentTextProperty().get());
         } catch (Exception e) {

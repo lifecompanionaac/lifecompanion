@@ -7,7 +7,6 @@ import java.util.Calendar;
 import java.util.Locale;
 
 public class SMSListContent {
-	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.getDefault());
 	private final String phoneNumber;
 	private final String phoneNumberOrContactName;
 	private final String SMS;

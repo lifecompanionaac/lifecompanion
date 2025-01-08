@@ -27,20 +27,19 @@ Some complementary information can be found in the [`lc-phonecontrol-plugin/DEV.
 ## Roadmap (priorities)
 | State | Task  | Priority |
 | :---: | :---: | :------: |
-| :x: | Call a set number | **S** |
-| :x: | Send a SMS to a set number | **S** |
+| :white_check_mark: | Call a set number | **S** |
+| :white_check_mark: | Send a SMS to a set number | **S** |
 | :x: | Receive a SMS from a set number | **S** |
-| :x: | Pass the data through `ADB` | **S** |
-| :x: | Make a configuration | **S** |
+| :white_check_mark: | Pass the data through `ADB` | **S** |
+| :white_check_mark: | Make a configuration | **S** |
 | :x: | List SMS conversations | **A** |
 | :x: | List SMS messages from a conversation | **A** |
 | :x: | Turn up or down the volume | **A** |
-| :x: | Have a favorites system | **A** |
+| :white_check_mark: | Have a favorites system | **A** |
 | :x: | Numerical keyboard for call services | **B** |
 | :x: | Display the call length | **B** |
-| :x: | Count unread messages on the homepage | **B** |
+| :x: | Count unread conversations on the homepage | **B** |
+| :x: | Count unread messsages per conversation | **B** |
 | :white_check_mark: | Coherent icons | **B** |
 | :x: | Pass the data through `Bluetooth` | **C** |
-| :x: | Display the current connected phone for easier understanding | **C** |
-| :x: | List calls | **D** |
-| :x: | Count current/missed calls on the homepage | **D** |
+| :white_check_mark: | Display the current connected phone for easier understanding | **C** |
