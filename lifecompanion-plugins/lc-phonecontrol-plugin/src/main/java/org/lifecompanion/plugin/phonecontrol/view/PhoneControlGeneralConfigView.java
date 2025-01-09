@@ -134,7 +134,7 @@ public class PhoneControlGeneralConfigView extends BorderPane implements General
             boxDeviceSelection,
             speakerToggleButton,
             durationRow,
-            FXControlUtils.createTitleLabel(Translation.getText("phonecontrol.plugin.config.category.protocol.selection.title")),
+            FXControlUtils.createTitleLabel(Translation.getText("phonecontrol.plugin.config.category.protocolselection.title")),
             protocolSelectionBox,
             FXControlUtils.createTitleLabel(Translation.getText("phonecontrol.plugin.config.category.installapp.title")),
             new Label(Translation.getText("phonecontrol.plugin.config.label.installapp")),

@@ -191,7 +191,7 @@ class SMSService : Service() {
         val projection = arrayOf("address", "body", "date", "read", "type")
         val selection = "address = ?"
         val selectionArgs = arrayOf(contactNumber)
-        val cursor = resolver.query(uri, projection, selection, selectionArgs, "date ASC")
+        val cursor = resolver.query(uri, projection, selection, selectionArgs, "date DESC")
 
         val messages = JSONArray()
         val msgIndexMin = data.optInt("msg_index_min", 0)
