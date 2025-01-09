@@ -127,7 +127,7 @@ public enum AssessmentService implements ModeListenerI {
                                  BiConsumer<AssessmentRecord, Runnable> beforeStopCallback,
                                  Consumer<AssessmentRecord> afterStopCallback) {
         this.assessment.set(new AssessmentRecord(assessmentType, evaluator));
-        this.question.set(assessmentType.getQuestions().get(0));
+        setQuestionAndUpdate(assessmentType.getQuestions().get(0));
         this.internalPainLocalizationCallback = null;
         this.internalAssessmentBeforeStopCallback = beforeStopCallback;
         this.internalAssessmentStopCallback = afterStopCallback;

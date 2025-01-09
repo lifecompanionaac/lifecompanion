@@ -3,6 +3,7 @@ package org.lifecompanion.plugin.ppp.services;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.lifecompanion.controller.textcomponent.WritingStateController;
+import org.lifecompanion.controller.usevariable.UseVariableController;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
@@ -36,6 +37,7 @@ public enum KeyboardInputService implements ModeListenerI {
     public void startInput(Consumer<String> keyboardInputCallback, String keyboardInputRequest, Runnable cancelCallback) {
         this.internalKeyboardInputCallback = keyboardInputCallback;
         this.keyboardInputRequest.set(keyboardInputRequest);
+        UseVariableController.INSTANCE.requestVariablesUpdate();
         this.cancelKeyboardInputCallback = cancelCallback;
 
         this.keyboardContentBackup = WritingStateController.INSTANCE.currentTextProperty().get();

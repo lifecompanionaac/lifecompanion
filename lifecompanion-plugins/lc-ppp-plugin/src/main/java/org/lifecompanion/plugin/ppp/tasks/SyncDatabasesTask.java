@@ -43,7 +43,7 @@ public class SyncDatabasesTask extends LCTask<Boolean> {
             }
         }
         if (extPath == null) {
-            LCException.newException().withMessageId("ppp.plugin.task.sync.cant.find.database.key").buildAndThrow();
+            LCException.newException().withMessageId("ppp.plugin.task.sync.cant.find.database.key").withDirectlyShowExceptionDialog(true).buildAndThrow();
         }
 
         UserDatabase extDatabase = UserDatabaseService.INSTANCE.loadDatabase(extPath.getAbsolutePath());
@@ -73,6 +73,8 @@ public class SyncDatabasesTask extends LCTask<Boolean> {
         File extUsersDir = new File(extPath + File.separator + "users");
         listFilesIn(extUsersDir, extUsersDir, extFiles);
         LOGGER.info("Found {} files in external database in {} ms", extFiles.size(), (System.currentTimeMillis() - start));
+
+        // TODO : on existing file, should compare the last modification date and take the last modified file
 
         Set<String> fromCurrentToExternal = detectMissing(currentFiles, extFiles);
         LOGGER.info("Detect {} changes from current to external database", fromCurrentToExternal.size());
