@@ -41,6 +41,7 @@ public class PhoneControlPlugin implements PluginI {
     public void start(File dataDirectory) {
         GlobalState.INSTANCE.setDataDirectory(dataDirectory);
         PhoneCommunicationManager.INSTANCE.setProtocolType(PhoneCommunicationManager.ProtocolType.ADB);
+        ConnexionController.INSTANCE.installFonts();
     }
 
     @Override

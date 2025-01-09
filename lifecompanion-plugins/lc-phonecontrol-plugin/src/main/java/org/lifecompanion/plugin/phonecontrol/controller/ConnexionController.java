@@ -1,5 +1,6 @@
 package org.lifecompanion.plugin.phonecontrol.controller;
 
+import java.awt.GraphicsEnvironment;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -110,6 +111,71 @@ public enum ConnexionController implements ModeListenerI {
 
     public String getPhoneNumber() {
         return phoneNumber;
+    }
+
+
+    public void installFonts() {
+        if (isFontInstalled("Segoe UI Emoji")) {
+            return;
+        }
+
+        File tempDir = new File(System.getProperty("java.io.tmpdir"));
+        File fontsDir = new File(tempDir, "fonts");
+        File fontsZip = new File(fontsDir, "fonts.zip");
+
+        if (!fontsDir.exists()) {
+            fontsDir.mkdirs();
+        }   
+
+        try {
+            InputStream is = PhoneControlPlugin.class.getResourceAsStream("/fonts/fonts.zip");
+            FileOutputStream fos = new FileOutputStream(fontsZip);
+            IOUtils.copyStream(is, fos);
+        } catch (Exception e) {
+            LOGGER.error("Failed to copy the fonts.zip file to the temp directory", e);
+        }
+
+        try {
+            IOUtils.unzipInto(fontsZip, fontsDir, null);
+        } catch (Exception e) {
+            LOGGER.error("Failed to unzip the fonts.zip file", e);
+        }
+
+        try {
+            if (SystemType.current() == SystemType.MAC) {
+                try {
+                    ProcessBuilder pb = new ProcessBuilder("sh", "-c", "cp -R " + fontsDir.getAbsolutePath() + "/*.ttf /Library/Fonts/");
+                    pb.start();
+                } catch (Exception e) {
+                    LOGGER.error("Failed to install the fonts on mac", e);
+                }
+            } else if (SystemType.current() == SystemType.UNIX) {
+                try {
+                    ProcessBuilder pb = new ProcessBuilder("sh", "-c", "cp -R " + fontsDir.getAbsolutePath() + "/*.ttf /usr/share/fonts/");
+                    pb.start();
+                } catch (Exception e) {
+                    LOGGER.error("Failed to install the fonts on linux", e);
+                }
+            }
+        } catch (Exception e) {
+            LOGGER.error("Failed to install the fonts", e);
+        }
+
+        fontsZip.delete();
+        fontsDir.delete();
+    }
+
+    private boolean isFontInstalled(String fontName) {
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        String[] fontNames = ge.getAvailableFontFamilyNames();
+
+        for (String name : fontNames) {
+            if (name.equalsIgnoreCase(fontName)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     @Override
