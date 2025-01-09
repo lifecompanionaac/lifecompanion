@@ -94,6 +94,10 @@
     <text key="phonecontrol.plugin.action.decreasevolume.name">Diminuer le volume</text>
     <text key="phonecontrol.plugin.action.decreasevolume.description">Diminue le volume du téléphone</text>
 
+    <text key="phonecontrol.plugin.action.sendspecificdtmf.name">Envoyer un DTMF spécifique</text>
+    <text key="phonecontrol.plugin.action.sendspecificdtmf.description">Envoie une tonalité sur le clavier de l'appel en cours</text>
+    <text key="phonecontrol.plugin.action.sendspecificdtmf.variable.description">Envoie la tonalité : "{}"</text>
+
     <!-- USE EVENTS -->
     <text key="phonecontrol.plugin.event.main.category.name">Contrôle du téléphone</text>
     <text key="phonecontrol.plugin.event.main.category.description">Contient tous les événements relatifs au contrôle du téléphone, comme la détection de la réception d'un appel, ...</text>
@@ -124,6 +128,7 @@
     <!-- UI / CONFIG VIEW -->
     <text key="phonecontrol.view.useaction.phonenumber">Numéro de téléphone</text>
     <text key="phonecontrol.view.useaction.contactname">Nom du contact à afficher</text>
+    <text key="phonecontrol.view.useaction.dtmf">Tonalité DTMF</text>
     <text key="phonecontrol.plugin.config.title">Contrôle du téléphone</text>
 
     <text key="phonecontrol.plugin.config.category.deviceselection.title">Paramètres généraux</text>
