@@ -305,9 +305,9 @@ public enum ConnexionController implements ModeListenerI {
     }
 
     /**
-     * Refresh the call status and do actions if needed. <br>
-     * - Incoming call : launch the event "OnCallEnter" <br>
-     * - No call but "onCall" isn't update : update "onCall" and launch the event "OnCallEnded" <br>
+     * Refresh the call status and do actions if needed.
+     * - Incoming call : launch the event "OnCallEnter"
+     * - No call but "onCall" isn't update : update "onCall" and launch the event "OnCallEnded"
      */
     public void refreshCallStatus() {
         JSONObject callState = CallController.INSTANCE.getCallStatus();
@@ -352,7 +352,6 @@ public enum ConnexionController implements ModeListenerI {
 
             while (onCall) {
                 try {
-                    // TODO: Run this in another thread
                     Thread.sleep(1000);
                     duration++;
                     this.callDuration = convertTime(duration);
@@ -404,7 +403,7 @@ public enum ConnexionController implements ModeListenerI {
     private boolean convIsRefreshing = false;
 
     /**
-     * Refresh the content of conversations cells. <br>
+     * Refresh the content of conversations cells.
      * If the list is already refreshing, don't refresh.
      */
     public void refreshConvList() {
@@ -517,7 +516,7 @@ public enum ConnexionController implements ModeListenerI {
                     byte[] decodedBytes = Base64.getDecoder().decode(jsonObject.getString("message"));
                     String message = new String(decodedBytes);
                     String timestamp = jsonObject.getString("timestamp");
-                    boolean isSeen = jsonObject.getBoolean("is_read");
+                    boolean isRead = jsonObject.getBoolean("is_read");
                     boolean isSendByMe = jsonObject.getBoolean("is_sent_by_me");
 
                     SMSListContent cellContent = new SMSListContent(phoneNumber, contactName, message, timestamp, isSendByMe);
@@ -550,10 +549,10 @@ public enum ConnexionController implements ModeListenerI {
     }
 
     /**
-     * Send an SMS to the current selected conversation (phone number). <br>
-     * - Get the message from the WritingStateController, <br>
-     * - send the message, <br>
-     * - then clear the text into the WritingStateController <br>
+     * Send an SMS to the current selected conversation (phone number).
+     * - Get the message from the WritingStateController,
+     * - send the message,
+     * - then clear the text into the WritingStateController
      * - and scroll down in the SMS list.
      */
     public void sendSMS() {

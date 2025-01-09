@@ -374,7 +374,7 @@ public class AdbCommunicationProtocol implements PhoneCommunicationProtocol {
     }
 
     /**
-     * Get the bluetooth device name by its serial number. <br>
+     * Get the bluetooth device name by its serial number.
      * The adb command used is <code>adb -s < deviceSerialNumber > shell settings get secure bluetooth_name</code>
      *
      * @param deviceSerialNumber Serial number of the device
@@ -395,7 +395,7 @@ public class AdbCommunicationProtocol implements PhoneCommunicationProtocol {
     }
 
     /**
-     * Check if the application is installed on the device with the following command : <br>
+     * Check if the application is installed on the device with the following command :
      * <code>adb -s < deviceSerialNumber > shell pm list packages org.lifecompanion.phonecontrolapp</code>
      *
      * @param deviceSerialNumber Serial number of the device

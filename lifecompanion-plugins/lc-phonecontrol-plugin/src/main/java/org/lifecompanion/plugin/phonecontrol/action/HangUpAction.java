@@ -5,7 +5,7 @@ import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTrigger
 import org.lifecompanion.model.api.usevariable.UseVariableI;
 import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
 import org.lifecompanion.plugin.phonecontrol.action.categories.PhoneControlActionSubCategories;
-import org.lifecompanion.plugin.phonecontrol.controller.CallController;
+import org.lifecompanion.plugin.phonecontrol.controller.ConnexionController;
 
 import java.util.Map;
 
@@ -27,6 +27,6 @@ public class HangUpAction extends SimpleUseActionImpl<UseActionTriggerComponentI
 
     @Override
     public void execute(UseActionEvent event, Map<String, UseVariableI<?>> variables) {
-        CallController.INSTANCE.hangUp();
+        ConnexionController.INSTANCE.hangUp();
     }
 }
