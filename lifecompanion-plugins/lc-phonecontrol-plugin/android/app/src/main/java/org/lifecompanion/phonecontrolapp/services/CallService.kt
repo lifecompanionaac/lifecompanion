@@ -12,23 +12,28 @@ import android.telecom.TelecomManager
 import java.io.File
 import java.io.FileOutputStream
 import android.util.Log
+import android.telephony.TelephonyManager
+import android.telephony.PhoneStateListener
 import org.json.JSONObject
-import org.lifecompanion.phonecontrolapp.services.CallStateListener
 
-class CallService : Service(), CallStateListener {
+class CallService : Service() {
     companion object {
         private const val TAG = "CallService"
     }
 
     private val outputDirPath: String by lazy { File(filesDir, "output").absolutePath }
+    private lateinit var telephonyManager: TelephonyManager
 
     private var isCallActive = false
     private var isCallIncoming = false
-    private var currentCall: Call? = null
     private var phoneNumber: String? = null
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         val jsonString = intent.getStringExtra("json") ?: return START_NOT_STICKY
+
+        telephonyManager = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+        telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE)
+
         val json = JSONObject(jsonString)
         val subtype = json.optString("subtype")
         val data = json.optJSONObject("data")
@@ -38,8 +43,6 @@ class CallService : Service(), CallStateListener {
             Log.e(TAG, "No data provided for call subtype: $subtype")
             return START_NOT_STICKY
         }
-
-        CallWatcher.callStateListener = this
 
         when (subtype) {
             "make_call" -> startCall(data.optString("phone_number"), data.optBoolean("speaker", false))
@@ -52,17 +55,33 @@ class CallService : Service(), CallStateListener {
         return START_NOT_STICKY
     }
 
-    override fun onCallStateChanged(call: Call?, isIncoming: Boolean, isActive: Boolean, phoneNumber: String?) {
-        currentCall = call
-        isCallIncoming = isIncoming
-        isCallActive = isActive
-        this.phoneNumber = phoneNumber
-
-        Log.i(TAG, "Call state updated: isIncoming=$isIncoming, isActive=$isActive")
+    private val phoneStateListener = object : PhoneStateListener() {
+        override fun onCallStateChanged(state: Int, phoneNumber: String?) {
+            when (state) {
+                TelephonyManager.CALL_STATE_RINGING -> {
+                    isCallIncoming = true
+                    isCallActive = false
+                    Log.i(TAG, "Incoming call detected: $phoneNumber")
+                    this@CallService.phoneNumber = phoneNumber
+                }
+                TelephonyManager.CALL_STATE_OFFHOOK -> {
+                    isCallActive = true
+                    isCallIncoming = false
+                    Log.i(TAG, "Call is now active")
+                }
+                TelephonyManager.CALL_STATE_IDLE -> {
+                    isCallActive = false
+                    isCallIncoming = false
+                    Log.i(TAG, "Call has ended")
+                    this@CallService.phoneNumber = null
+                }
+            }
+        }
     }
 
     private fun startCall(phoneNumber: String, speaker: Boolean) {
         this.isCallActive = true
+        this.phoneNumber = phoneNumber
         val telecomManager = getSystemService(Context.TELECOM_SERVICE) as TelecomManager
         val bundle = Bundle().apply { putBoolean(TelecomManager.EXTRA_START_CALL_WITH_SPEAKERPHONE, speaker) }
         val uri = Uri.fromParts("tel", phoneNumber, null)
@@ -72,32 +91,29 @@ class CallService : Service(), CallStateListener {
             Log.i(TAG, "Call initiated to $phoneNumber with speaker: $speaker")
         } catch (e: SecurityException) {
             Log.e(TAG, "Permission to make calls not granted", e)
+            isCallActive = false
+            this.phoneNumber = null
         }
     }
 
     private fun endCall() {
         this.isCallActive = false
-        currentCall?.disconnect()
-        Log.i(TAG, "Call ended")
+        this.phoneNumber = null
+
+        val telecomManager = getSystemService(Context.TELECOM_SERVICE) as TelecomManager
+        if (telecomManager.endCall()) {
+            Log.i(TAG, "Call successfully ended")
+        } else {
+            Log.e(TAG, "Failed to end call")
+        }
     }
 
     private fun sendDtmf(dtmf: String) {
-        if (currentCall == null) {
-            Log.e(TAG, "No active call to send DTMF tones")
-            return
-        }
+        val intent = Intent(this, DTMFAccessibilityService::class.java)
+        startService(intent)
 
-        try {
-            for (tone in dtmf) {
-                val dtmfTone = tone.toString()[0]
-                currentCall?.playDtmfTone(dtmfTone)
-                Thread.sleep(200) // Pause between tones to ensure proper transmission
-                currentCall?.stopDtmfTone()
-            }
-            Log.i(TAG, "DTMF tones sent: $dtmf")
-        } catch (e: Exception) {
-            Log.e(TAG, "Error sending DTMF tones", e)
-        }
+        val dtmfService = DTMFAccessibilityService()
+        dtmfService.pressKeypadButton(dtmf)
     }
 
     private fun getCallStatus(requestId: String) {

@@ -2,6 +2,7 @@ package org.lifecompanion.phonecontrolapp
 
 import android.Manifest
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -17,6 +18,7 @@ import java.io.File
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import org.lifecompanion.phonecontrolapp.services.Notify
+import org.lifecompanion.phonecontrolapp.services.DTMFAccessibilityService
 
 class MainActivity : Activity() {
     private val PERMISSION_REQUEST_CODE = 14122004
@@ -48,6 +50,9 @@ class MainActivity : Activity() {
                 disableBatteryOptimizations(packageName)
             }
         }
+
+        // Check and prompt to enable Accessibility Service
+        promptEnableAccessibilityService()
 
         // clean the files/output directory
         File(outputDirPath).deleteRecursively()
@@ -108,6 +113,30 @@ class MainActivity : Activity() {
             if (currentTime - file.lastModified() > fileAgeLimit) {
                 file.delete()
             }
+        }
+    }
+
+    private fun isAccessibilityServiceEnabled(service: Class<*>): Boolean {
+        val enabledServices = Settings.Secure.getString(
+            contentResolver,
+            Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES
+        ) ?: return false
+        val colonSplitter = enabledServices.split(":")
+        val serviceName = componentName.flattenToString().replace(packageName, service.name)
+        return colonSplitter.any { it.equals(serviceName, ignoreCase = true) }
+    }
+    
+    private fun promptEnableAccessibilityService() {
+        if (!isAccessibilityServiceEnabled(DTMFAccessibilityService::class.java)) {
+            AlertDialog.Builder(this)
+                .setTitle("Activer le service d'accessibilité")
+                .setMessage("Cette application nécessite le service d'accessibilité pour émuler les entrées du clavier pendant les appels. Veuillez l'activer dans les paramètres d'accessibilité. Vous devrez peut-être le faire à chaque redémarrage.")
+                .setPositiveButton("Ouvrir les paramètres") { _, _ ->
+                    val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+                    startActivity(intent)
+                }
+                .setNegativeButton("Déjà fait", null)
+                .show()
         }
     }
 
