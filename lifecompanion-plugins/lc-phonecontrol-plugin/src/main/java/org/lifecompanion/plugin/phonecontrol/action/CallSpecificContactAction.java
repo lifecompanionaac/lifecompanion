@@ -45,7 +45,7 @@ public class CallSpecificContactAction extends SimpleUseActionImpl<UseActionTrig
 
     @Override
     public void execute(UseActionEvent event, Map<String, UseVariableI<?>> variables) {
-        ConnexionController.INSTANCE.selectConv(phoneNumber.get(), contactName.get());
+        ConnexionController.INSTANCE.selectConv(phoneNumber.get(), contactName.get(), true);
         ConnexionController.INSTANCE.callContact();
     }
 

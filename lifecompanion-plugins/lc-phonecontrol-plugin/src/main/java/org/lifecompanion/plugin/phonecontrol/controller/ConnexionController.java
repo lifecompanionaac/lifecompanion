@@ -56,6 +56,7 @@ public enum ConnexionController implements ModeListenerI {
     public static final String VAR_PHONE_NAME = "PhoneName";
 
     private int smsUnreadCount;
+    private int callDurationInt;
     private String callDuration;
     private String phoneNumberOrContactName;
     private String phoneName;
@@ -82,6 +83,9 @@ public enum ConnexionController implements ModeListenerI {
     private Set<Consumer<Integer>> unreadCountUpdateCallback;
     private Set<Consumer<Integer>> validationSendSMSCallback;
 
+    /** To handle if the list is already refreshing */
+    private boolean convIsRefreshing = false;
+
     public void startController() {
         this.convCells = new ArrayList<>();
         this.smsCells = new ArrayList<>();
@@ -95,6 +99,10 @@ public enum ConnexionController implements ModeListenerI {
 
     public int getSmsUnread() {
         return smsUnreadCount;
+    }
+
+    public int getCallDurationInt() {
+        return callDurationInt;
     }
 
     public String getCallDuration() {
@@ -243,6 +251,7 @@ public enum ConnexionController implements ModeListenerI {
 
     private void resetVariables() {
         this.smsUnreadCount = 0;
+        this.callDurationInt = -1;
         this.callDuration = "00:00:00";
         this.phoneNumberOrContactName = "--.--.--.--.--";
         this.phoneName = "";
@@ -310,6 +319,13 @@ public enum ConnexionController implements ModeListenerI {
      * - No call but "onCall" isn't update : update "onCall" and launch the event "OnCallEnded"
      */
     public void refreshCallStatus() {
+        // failsafe, sometimes there's a race condition where the phone doesn't told just yet that we're in a call, and the plugin quits to Menu while the call is still ongoing
+        // TODO: this only seems to happen when the SMS list hasn't loaded yet/when we re-call
+        // waits for 10 seconds before considering the call as ended
+        if (this.callDurationInt >= 0 && this.callDurationInt < 10) {
+            return;
+        }
+
         JSONObject callState = CallController.INSTANCE.getCallStatus();
 
         if (callState == null) {
@@ -317,6 +333,10 @@ public enum ConnexionController implements ModeListenerI {
 
             return;
         }
+
+        LOGGER.info("Call state : {}", callState);
+        LOGGER.info("On call : {}", this.onCall);
+        LOGGER.info("Call duration : {}", this.callDurationInt);
 
         String callStatus = callState.getString("call_status");
         String incomingCallStatus = callState.getString("incoming_call_status");
@@ -348,13 +368,13 @@ public enum ConnexionController implements ModeListenerI {
 
     public void timer() {
         CompletableFuture.runAsync(() -> {
-            int duration = 0;
+            this.callDurationInt = 0;
 
             while (onCall) {
                 try {
                     Thread.sleep(1000);
-                    duration++;
-                    this.callDuration = convertTime(duration);
+                    this.callDurationInt++;
+                    this.callDuration = convertTime(this.callDurationInt);
                     UseVariableController.INSTANCE.requestVariablesUpdate();
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
@@ -364,6 +384,7 @@ public enum ConnexionController implements ModeListenerI {
                 }
             }
 
+            this.callDurationInt = -1;
             this.callDuration = "00:00:00";
         });
     }
@@ -372,20 +393,20 @@ public enum ConnexionController implements ModeListenerI {
      * Call the current selected conversation (phone number)
      */
     public void callContact() {
-        boolean speakerOn = currentPhoneControlPluginProperties.speakerOnProperty().get();
-        CallController.INSTANCE.call(this.phoneNumber, speakerOn);
         this.onCall = true;
         this.timer();
+        boolean speakerOn = currentPhoneControlPluginProperties.speakerOnProperty().get();
+        CallController.INSTANCE.call(this.phoneNumber, speakerOn);
     }
 
     /**
      * Pick up the phone and update "onCall" to true
      */
     public void pickUp() {
-        boolean speakerOn = currentPhoneControlPluginProperties.speakerOnProperty().get();
-        CallController.INSTANCE.pickUp(speakerOn);
         this.onCall = true;
         this.timer();
+        boolean speakerOn = currentPhoneControlPluginProperties.speakerOnProperty().get();
+        CallController.INSTANCE.pickUp(speakerOn);
     }
 
     /**
@@ -394,20 +415,17 @@ public enum ConnexionController implements ModeListenerI {
      * - launch the event "OnCallEnded"
      */
     public void hangUp() {
-        CallController.INSTANCE.hangUp();
         this.onCall = false;
+        CallController.INSTANCE.hangUp();
         callEndedCallback.run();
     }
-
-    /** To handle if the list is already refreshing */
-    private boolean convIsRefreshing = false;
 
     /**
      * Refresh the content of conversations cells.
      * If the list is already refreshing, don't refresh.
      */
     public void refreshConvList() {
-        if (!convIsRefreshing) {
+        if (!convIsRefreshing && !onCall) {
             convIsRefreshing = true;
             refreshConvListExec();
             convIsRefreshing = false;
@@ -489,6 +507,10 @@ public enum ConnexionController implements ModeListenerI {
      * Refresh the content of conversations cells.
      */
     public void refreshSMSList() {
+        if (onCall) {
+            return;
+        }
+
         LOGGER.info("Loading sms...");
         int smsIndexMax = smsIndexMin + smsCells.size();
 
@@ -626,8 +648,9 @@ public enum ConnexionController implements ModeListenerI {
      * Select a conversation
      * @param phoneNumber the phone number of the conversation
      * @param phoneNumberOrContactName the phone number or the contact name of the conversation
+     * @param call if selectConv is called to make a call
      */
-    public void selectConv(String phoneNumber, String phoneNumberOrContactName) {
+    public void selectConv(String phoneNumber, String phoneNumberOrContactName, boolean call) {
         phoneNumber = phoneNumber.replace(" ", "");
 
         if (phoneNumber.startsWith("0")) {
@@ -638,8 +661,10 @@ public enum ConnexionController implements ModeListenerI {
         this.phoneNumberOrContactName = phoneNumberOrContactName;
         UseVariableController.INSTANCE.requestVariablesUpdate();
         this.smsIndexMin = 0;
-        setLoadingSMSList();
-        refreshSMSList();
+        if (!call) {
+            setLoadingSMSList();
+            refreshSMSList();
+        }
     }
 
     /**

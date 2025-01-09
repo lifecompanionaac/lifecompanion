@@ -14,6 +14,8 @@ import java.io.FileOutputStream
 import android.util.Log
 import android.telephony.TelephonyManager
 import android.telephony.PhoneStateListener
+import android.media.AudioManager
+import android.media.AudioDeviceInfo
 import org.json.JSONObject
 
 class CallService : Service() {
@@ -45,7 +47,7 @@ class CallService : Service() {
         }
 
         when (subtype) {
-            "make_call" -> startCall(data.optString("phone_number"), data.optBoolean("speaker", false))
+            "make_call" -> startCall(data.optString("phone_number"), data.optBoolean("speaker_on", false))
             "hang_up" -> endCall()
             "numpad_input" -> sendDtmf(data.optString("dtmf"))
             "get_call_status" -> getCallStatus(requestId)
@@ -79,16 +81,35 @@ class CallService : Service() {
         }
     }
 
-    private fun startCall(phoneNumber: String, speaker: Boolean) {
+    private fun startCall(phoneNumber: String, speaker_on: Boolean) {
         this.isCallActive = true
         this.phoneNumber = phoneNumber
         val telecomManager = getSystemService(Context.TELECOM_SERVICE) as TelecomManager
-        val bundle = Bundle().apply { putBoolean(TelecomManager.EXTRA_START_CALL_WITH_SPEAKERPHONE, speaker) }
+        val bundle = Bundle().apply { putBoolean(TelecomManager.EXTRA_START_CALL_WITH_SPEAKERPHONE, speaker_on) }
+        val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        audioManager.setMode(android.media.AudioManager.MODE_IN_CALL)
+
+        var speakerDevice: AudioDeviceInfo? = null
+        val devices = audioManager.availableCommunicationDevices
+        for (device in devices) {
+            if (device.type == AudioDeviceInfo.TYPE_BUILTIN_SPEAKER) {
+                speakerDevice = device
+                break
+            }
+        }
+        speakerDevice?.let {
+            if (speaker_on) {
+                audioManager.setCommunicationDevice(it)
+            } else {
+                audioManager.clearCommunicationDevice()
+            }
+        }
+
         val uri = Uri.fromParts("tel", phoneNumber, null)
 
         try {
             telecomManager.placeCall(uri, bundle)
-            Log.i(TAG, "Call initiated to $phoneNumber with speaker: $speaker")
+            Log.i(TAG, "Call initiated to $phoneNumber with speaker: $speaker_on")
         } catch (e: SecurityException) {
             Log.e(TAG, "Permission to make calls not granted", e)
             isCallActive = false

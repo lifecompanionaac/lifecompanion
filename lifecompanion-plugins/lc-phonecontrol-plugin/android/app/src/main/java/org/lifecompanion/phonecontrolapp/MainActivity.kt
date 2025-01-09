@@ -68,6 +68,7 @@ class MainActivity : Activity() {
             Manifest.permission.CALL_PHONE,
             Manifest.permission.FOREGROUND_SERVICE,
             Manifest.permission.MANAGE_OWN_CALLS,
+            Manifest.permission.MODIFY_AUDIO_SETTINGS,
             Manifest.permission.READ_CALL_LOG,
             Manifest.permission.READ_CONTACTS,
             Manifest.permission.READ_PHONE_STATE,

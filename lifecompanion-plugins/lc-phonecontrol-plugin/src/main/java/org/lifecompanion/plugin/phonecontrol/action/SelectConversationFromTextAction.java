@@ -30,7 +30,7 @@ public class SelectConversationFromTextAction extends SimpleUseActionImpl<UseAct
     @Override
     public void execute(UseActionEvent event, Map<String, UseVariableI<?>> variables) {
         String phoneNumber = WritingStateController.INSTANCE.currentTextProperty().get();
-        ConnexionController.INSTANCE.selectConv(phoneNumber, phoneNumber);
+        ConnexionController.INSTANCE.selectConv(phoneNumber, phoneNumber, false);
         WritingStateController.INSTANCE.removeAll(WritingEventSource.SYSTEM);
     }
 }
