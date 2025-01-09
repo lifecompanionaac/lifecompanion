@@ -133,6 +133,7 @@
 
     <text key="phonecontrol.plugin.config.category.deviceselection.title">Paramètres généraux</text>
     <text key="phonecontrol.plugin.config.category.installapp.title">Installation de l'application</text>
+    <text key="phonecontrol.plugin.config.category.protocol.title">Protocole de communication</text>
 
     <text key="phonecontrol.plugin.config.label.deviceselection">Sélectionner un appareil</text>
     <text key="phonecontrol.plugin.config.label.nodevice">Aucun appareil sélectionné</text>

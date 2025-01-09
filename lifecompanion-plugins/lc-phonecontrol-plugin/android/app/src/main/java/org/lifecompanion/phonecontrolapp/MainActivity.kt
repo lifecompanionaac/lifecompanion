@@ -7,15 +7,25 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.provider.Settings
 import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import java.io.File
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 import org.lifecompanion.phonecontrolapp.services.Notify
 
 class MainActivity : Activity() {
     private val PERMISSION_REQUEST_CODE = 14122004
     private val TAG = "MainActivity"
+    private val outputDirPath: String by lazy { File(filesDir, "output").absolutePath }
+    private val handler = Handler(Looper.getMainLooper())
+    private val checkInterval = 5 * 60 * 1000L // 5 minutes in milliseconds
+    private val fileAgeLimit = 2 * 60 * 1000L // 2 minutes in milliseconds
+    private val executor = Executors.newSingleThreadScheduledExecutor()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +48,10 @@ class MainActivity : Activity() {
                 disableBatteryOptimizations(packageName)
             }
         }
+
+        // clean the files/output directory
+        File(outputDirPath).deleteRecursively()
+        executor.scheduleAtFixedRate(checkAndDeleteOldFiles, 0, checkInterval, TimeUnit.MILLISECONDS)
     }
 
     /**
@@ -86,5 +100,19 @@ class MainActivity : Activity() {
         val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
         intent.data = Uri.parse(packageName)
         startActivity(intent)
+    }
+
+    private val checkAndDeleteOldFiles = Runnable {
+        val currentTime = System.currentTimeMillis()
+        File(outputDirPath).listFiles()?.forEach { file ->
+            if (currentTime - file.lastModified() > fileAgeLimit) {
+                file.delete()
+            }
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        executor.shutdown()
     }
 }
