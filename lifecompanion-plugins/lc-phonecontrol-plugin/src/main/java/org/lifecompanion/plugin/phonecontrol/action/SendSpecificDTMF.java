@@ -47,7 +47,7 @@ public class SendSpecificDTMF extends SimpleUseActionImpl<UseActionTriggerCompon
     @Override
     public Element serialize(IOContextI contextP) {
         Element node = super.serialize(contextP);
-        XMLObjectSerializer.serializeInto(CallSpecificContactAction.class, this, node);
+        XMLObjectSerializer.serializeInto(SendSpecificDTMF.class, this, node);
 
         return node;
     }
@@ -55,6 +55,6 @@ public class SendSpecificDTMF extends SimpleUseActionImpl<UseActionTriggerCompon
     @Override
     public void deserialize(Element node, IOContextI contextP) throws LCException {
         super.deserialize(node, contextP);
-        XMLObjectSerializer.deserializeInto(CallSpecificContactAction.class, this, node);
+        XMLObjectSerializer.deserializeInto(SendSpecificDTMF.class, this, node);
     }
 }

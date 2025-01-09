@@ -114,35 +114,36 @@ class SMSService : Service() {
     
         cursor?.use {
             var index = 0
+            var uniqueIndex = 0
 
             while (it.moveToNext()) {
-                if (index < convIndexMin) {
-                    index++
-
-                    continue
-                }
-
-                if (index > convIndexMax) {
-                    break
-                }
-    
                 val address = it.getString(it.getColumnIndexOrThrow("address"))
-                val contactName = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    val contactUri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(address))
-                    val projection2 = arrayOf(ContactsContract.PhoneLookup.DISPLAY_NAME)
-                    val cursor2 = contentResolver.query(contactUri, projection2, null, null, null)
-                    val name = if (cursor2 != null && cursor2.moveToFirst()) {
-                        cursor2.getString(cursor2.getColumnIndex(ContactsContract.PhoneLookup.DISPLAY_NAME))
+
+                if (uniqueContacts.add(address)) {
+                    if (uniqueIndex < convIndexMin) {
+                        uniqueIndex++
+                        continue
+                    }
+    
+                    if (uniqueIndex > convIndexMax) {
+                        break
+                    }
+    
+                    val contactName = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        val contactUri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(address))
+                        val projection2 = arrayOf(ContactsContract.PhoneLookup.DISPLAY_NAME)
+                        val cursor2 = contentResolver.query(contactUri, projection2, null, null, null)
+                        val name = if (cursor2 != null && cursor2.moveToFirst()) {
+                            cursor2.getString(cursor2.getColumnIndex(ContactsContract.PhoneLookup.DISPLAY_NAME))
+                        } else {
+                            address
+                        }
+                        cursor2?.close()
+                        name
                     } else {
                         address
                     }
-                    cursor2?.close()
-                    name
-                } else {
-                    address
-                }
     
-                if (uniqueContacts.add(address)) {
                     val body = it.getString(it.getColumnIndexOrThrow("body"))
                     val dateMillis = it.getLong(it.getColumnIndexOrThrow("date"))
                     val read = it.getInt(it.getColumnIndexOrThrow("read")) == 1
@@ -159,8 +160,10 @@ class SMSService : Service() {
                         put("is_sent_by_me", isSentByMe)
                     }
                     conversations.put(conversation)
+    
+                    uniqueIndex++
                 }
-
+    
                 index++
             }
         }

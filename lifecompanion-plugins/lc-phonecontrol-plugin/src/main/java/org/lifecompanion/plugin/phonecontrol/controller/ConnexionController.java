@@ -401,7 +401,7 @@ public enum ConnexionController implements ModeListenerI {
                 }
             }
 
-            LOGGER.info("{} Conversations loaded", convObj.size());
+            LOGGER.info("{} conversations loaded", convObj.size());
         }
 
         // Update variables
