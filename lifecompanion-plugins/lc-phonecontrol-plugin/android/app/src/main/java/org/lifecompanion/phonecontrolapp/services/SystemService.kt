@@ -10,7 +10,7 @@ import org.json.JSONObject
 
 class SystemService : Service() {
     companion object {
-        private const val TAG = "SystemService"
+        private const val TAG = "LC-SystemService"
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {

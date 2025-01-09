@@ -44,7 +44,7 @@ public class AdbCommunicationProtocol implements PhoneCommunicationProtocol {
     @Override
     public void send(String data) {
         if (!isOpen()) {
-            LOGGER.warn("Connection is not open. Unable to send data.");
+            LOGGER.warn("Connection is not open, unable to send data");
 
             return;
         }
@@ -77,7 +77,7 @@ public class AdbCommunicationProtocol implements PhoneCommunicationProtocol {
 
     private String receive(String requestId) {
         if (!isOpen()) {
-            LOGGER.warn("Connection is not open. Unable to receive data.");
+            LOGGER.warn("Connection is not open, unable to receive data");
 
             return null;
         }
@@ -105,7 +105,6 @@ public class AdbCommunicationProtocol implements PhoneCommunicationProtocol {
                             process.waitFor();
 
                             String fileContent = new String(Files.readAllBytes(tempFile), StandardCharsets.UTF_8);
-                            LOGGER.info("File content: " + fileContent);
 
                             try {
                                 JSONObject jsonObject = new JSONObject(fileContent.toString());

@@ -7,7 +7,7 @@ import android.view.accessibility.AccessibilityNodeInfo
 
 class DTMFAccessibilityService : AccessibilityService() {
     companion object {
-        private const val TAG = "DTMFAccessibilityService"
+        private const val TAG = "LC-DTMFAccessibilityService"
     }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {

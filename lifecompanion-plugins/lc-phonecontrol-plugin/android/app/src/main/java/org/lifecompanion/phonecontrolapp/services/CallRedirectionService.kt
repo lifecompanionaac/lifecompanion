@@ -7,7 +7,7 @@ import android.util.Log
 
 class CallRedirectionService : CallRedirectionService() {
     companion object {
-        private const val TAG = "CallRedirectionService"
+        private const val TAG = "LC-CallRedirectionService"
     }
 
     override fun onPlaceCall(handle: Uri, initialPhoneAccount: PhoneAccountHandle, allowInteractiveResponse: Boolean) {

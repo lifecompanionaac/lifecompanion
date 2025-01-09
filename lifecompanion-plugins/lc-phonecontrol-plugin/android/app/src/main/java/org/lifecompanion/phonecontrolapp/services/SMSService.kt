@@ -21,7 +21,7 @@ import java.util.Locale
 
 class SMSService : Service() {
     companion object {
-        private const val TAG = "SMSService"
+        private const val TAG = "LC-SMSService"
     }
 
     private val outputDirPath: String by lazy { File(filesDir, "output").absolutePath }

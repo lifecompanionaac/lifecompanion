@@ -31,7 +31,7 @@ public class BluetoothCommunicationProtocol implements PhoneCommunicationProtoco
     @Override
     public void send(String data) {
         if (!isOpen()) {
-            LOGGER.warn("Connection is not open. Unable to send data.");
+            LOGGER.warn("Connection is not open, unable to send data");
 
             return;
         }
@@ -51,7 +51,7 @@ public class BluetoothCommunicationProtocol implements PhoneCommunicationProtoco
 
     public String receive(String requestId) {
         if (!isOpen()) {
-            LOGGER.warn("Connection is not open. Unable to receive data.");
+            LOGGER.warn("Connection is not open, unable to receive data");
 
             return null;
         }
@@ -109,7 +109,7 @@ public class BluetoothCommunicationProtocol implements PhoneCommunicationProtoco
             RemoteDevice remoteDevice = findDeviceByAddress(deviceAddress);
 
             if (remoteDevice == null) {
-                LOGGER.warn("Device with address " + deviceAddress + " not found.");
+                LOGGER.warn("Device with address " + deviceAddress + " not found");
 
                 return false;
             }
@@ -120,7 +120,7 @@ public class BluetoothCommunicationProtocol implements PhoneCommunicationProtoco
             String connectionURL = agent.selectService(new UUID(0x1101), ServiceRecord.NOAUTHENTICATE_NOENCRYPT, false);
 
             if (connectionURL == null) {
-                LOGGER.warn("Could not find suitable service on the device.");
+                LOGGER.warn("Could not find suitable service on the device");
 
                 return false;
             }
@@ -129,7 +129,7 @@ public class BluetoothCommunicationProtocol implements PhoneCommunicationProtoco
             inputStream = connection.openInputStream();
             outputStream = connection.openOutputStream();
             connectionOpen = true;
-            LOGGER.info("Successfully connected to device: " + deviceAddress);
+            LOGGER.info("Successfully connected to device : " + deviceAddress);
 
             return true;
         } catch (IOException e) {

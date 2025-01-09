@@ -31,7 +31,7 @@ public enum SystemController {
 
             GlobalState.INSTANCE.getCommunicationProtocol().send(json.toString());
 
-            LOGGER.info("Adjusted volume: {}", mode);
+            LOGGER.info("Adjusted volume : {}", mode);
         } catch (Exception e) {
             LOGGER.error("Error adjusting volume", e);
         }

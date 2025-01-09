@@ -296,7 +296,7 @@ public enum ConnexionController implements ModeListenerI {
     private void installAdbFromInputFolder(String inputFolder, File adbZip, File adbFolder) {
         try {
             if (inputFolder != null) {
-                LOGGER.info("Installing ADB from input folder.");
+                LOGGER.info("Installing ADB from input folder");
                 InputStream is = PhoneControlPlugin.class.getResourceAsStream(inputFolder);
                 FileOutputStream fos = new FileOutputStream(adbZip);
                 IOUtils.copyStream(is, fos);
@@ -306,10 +306,10 @@ public enum ConnexionController implements ModeListenerI {
         } catch (java.io.FileNotFoundException e) {
             // Normal case, happens when the user changed modes : Configuration -> Usage -> Configuration -> Usage
             if (!e.getMessage().contains("Le processus ne peut pas accéder au fichier car ce fichier est utilisé par un autre processus")) {
-                LOGGER.error("Failed to install ADB from input folder.", e);
+                LOGGER.error("Failed to install ADB from input folder", e);
             }
         } catch (Exception e) {
-            LOGGER.error("Failed to install ADB from input folder.", e);
+            LOGGER.error("Failed to install ADB from input folder", e);
         }
     }
 
@@ -320,10 +320,23 @@ public enum ConnexionController implements ModeListenerI {
      */
     public void refreshCallStatus() {
         // failsafe, sometimes there's a race condition where the phone doesn't told just yet that we're in a call, and the plugin quits to Menu while the call is still ongoing
-        // TODO: this only seems to happen when the SMS list hasn't loaded yet/when we re-call
-        // waits for 10 seconds before considering the call as ended
+        // this is due to the line that follows : "callEndedCallback.run();"
+        // waits for 10 seconds before considering the call as potentially ended
         if (this.callDurationInt >= 0 && this.callDurationInt < 10) {
             return;
+        } else if (this.callDurationInt == -1) {
+            try {
+                // let potentially 2 requests arrive
+                Thread.sleep(2 * durationInterval);
+
+                if (this.callDurationInt != -1) {
+                    return;
+                }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+
+                return;
+            }
         }
 
         JSONObject callState = CallController.INSTANCE.getCallStatus();
@@ -334,15 +347,11 @@ public enum ConnexionController implements ModeListenerI {
             return;
         }
 
-        LOGGER.info("Call state : {}", callState);
-        LOGGER.info("On call : {}", this.onCall);
-        LOGGER.info("Call duration : {}", this.callDurationInt);
-
         String callStatus = callState.getString("call_status");
         String incomingCallStatus = callState.getString("incoming_call_status");
 
         if (callStatus.equals("inactive")) {  // No call on the phone
-            if (this.onCall) {
+            if (this.onCall && callDurationInt == -1) {
                 this.onCall = false;
                 callEndedCallback.run();
             }
@@ -378,9 +387,8 @@ public enum ConnexionController implements ModeListenerI {
                     UseVariableController.INSTANCE.requestVariablesUpdate();
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
-                    LOGGER.error("Call duration monitoring interrupted", e);
                 } catch (Exception e) {
-                    LOGGER.error("error while monitoring call duration");
+                    LOGGER.error("Error while monitoring call duration", e);
                 }
             }
 

@@ -20,7 +20,7 @@ import org.json.JSONObject
 
 class CallService : Service() {
     companion object {
-        private const val TAG = "CallService"
+        private const val TAG = "LC-CallService"
     }
 
     private val outputDirPath: String by lazy { File(filesDir, "output").absolutePath }

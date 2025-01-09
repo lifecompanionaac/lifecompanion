@@ -17,8 +17,8 @@ import java.io.FileOutputStream
 
 class JSONProcessingService : Service() {
     companion object {
-        private const val TAG = "JSONProcessingService"
-        private const val CHANNEL_ID = "json_service_channel"
+        private const val TAG = "LC-JSONProcessingService"
+        private const val CHANNEL_ID = "LC_JSON_PROCESSING_CHANNEL"
         private const val NOTIFICATION_ID = 1
     }
 

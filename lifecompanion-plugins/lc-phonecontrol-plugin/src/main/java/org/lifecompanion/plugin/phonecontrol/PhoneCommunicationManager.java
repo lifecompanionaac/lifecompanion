@@ -34,7 +34,7 @@ public enum PhoneCommunicationManager {
 
         switch (protocolType) {
             case ADB:
-                LOGGER.info("Initializing ADB protocol.");
+                LOGGER.info("Initializing ADB protocol");
                 File adb = ConnexionController.INSTANCE.installAdb();
                 GlobalState.INSTANCE.setCommunicationProtocol(new AdbCommunicationProtocol(adb));
                 ConnexionController.INSTANCE.startController();
@@ -43,7 +43,7 @@ public enum PhoneCommunicationManager {
 
                 break;
             case BLUETOOTH:
-                LOGGER.info("Initializing Bluetooth protocol.");
+                LOGGER.info("Initializing Bluetooth protocol");
                 GlobalState.INSTANCE.setCommunicationProtocol(new BluetoothCommunicationProtocol());
                 // TODO
 
@@ -73,7 +73,7 @@ public enum PhoneCommunicationManager {
 
                 break;
             default:
-                LOGGER.warn("Unsupported communication protocol.");
+                LOGGER.warn("Unsupported communication protocol");
 
                 break;
         }
@@ -92,7 +92,7 @@ public enum PhoneCommunicationManager {
 
                 break;
             default:
-                LOGGER.warn("Unsupported communication protocol.");
+                LOGGER.warn("Unsupported communication protocol");
 
                 break;
         }
@@ -111,7 +111,7 @@ public enum PhoneCommunicationManager {
 
                 break;
             default:
-                LOGGER.warn("Unsupported communication protocol.");
+                LOGGER.warn("Unsupported communication protocol");
 
                 break;
         }
@@ -130,7 +130,7 @@ public enum PhoneCommunicationManager {
 
                 break;
             default:
-                LOGGER.warn("Unsupported communication protocol.");
+                LOGGER.warn("Unsupported communication protocol");
 
                 break;
         }
@@ -147,7 +147,7 @@ public enum PhoneCommunicationManager {
 
                 break;
             default:
-                LOGGER.warn("Unsupported communication protocol.");
+                LOGGER.warn("Unsupported communication protocol");
 
                 break;
         }
