@@ -14,13 +14,13 @@ class DTMFAccessibilityService : AccessibilityService() {
         if (event == null || event.source == null) return
         Log.i(TAG, "Accessibility event received: ${event.eventType}")
 
-        val rootNode = rootInActiveWindow ?: return
+        /* val rootNode = rootInActiveWindow ?: return
         if (isInCallScreen(rootNode)) {
             Log.i(TAG, "In call screen detected")
             if (!isKeypadOpen(rootNode)) {
                 openKeypad(rootNode)
             }
-        }
+        } */
     }
 
     private fun isInCallScreen(node: AccessibilityNodeInfo): Boolean {
@@ -29,10 +29,26 @@ class DTMFAccessibilityService : AccessibilityService() {
     }
 
     private fun isKeypadOpen(node: AccessibilityNodeInfo): Boolean {
-        // Check for the presence of specific keypad elements that are unique to the keypad
+        // Count the number of keypad elements on the screen
+        val initialCount = countKeypadElements(node)
+
+        // Trigger openKeypad and count again
+        openKeypad(node)
+        val afterOpenCount = countKeypadElements(node)
+
+        // Determine if the keypad is open based on the counts
+        val isOpen = afterOpenCount > initialCount
+
+        // Revert the state by triggering openKeypad again
+        openKeypad(node)
+
+        return isOpen
+    }
+
+    private fun countKeypadElements(node: AccessibilityNodeInfo): Int {
         val keypadElements = listOf("1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "*", "#")
-        return keypadElements.any { element ->
-            node.findAccessibilityNodeInfosByText(element).isNotEmpty()
+        return keypadElements.sumBy { element ->
+            node.findAccessibilityNodeInfosByText(element).size
         }
     }
 
