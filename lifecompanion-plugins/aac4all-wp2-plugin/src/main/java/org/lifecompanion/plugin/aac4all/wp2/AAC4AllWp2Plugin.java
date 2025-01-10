@@ -38,7 +38,8 @@ public class AAC4AllWp2Plugin implements PluginI {
         return new String[]{"/configurations/J0-J7_CurSta_DyLin.lcc",
                 "/configurations/J8_CurSta_DyLin.lcc",
                 "/configurations/J9-J15_RéoLocL_RéoLocG_Statique.lcc",
-                "/configurations/J16_RéoLocL_RéoLocG_Statique.lcc"};
+                "/configurations/J16_RéoLocL_RéoLocG_Statique.lcc",
+        "/configurations/Démo_RéoLocL_RéoLocG_Statique_CurSta_DyLin.lcc"};
     }
     //========================================================================
 
