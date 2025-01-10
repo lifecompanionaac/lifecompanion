@@ -4,20 +4,20 @@ import android.app.Service
 import android.content.ContentResolver
 import android.content.Intent
 import android.net.Uri
-import android.os.IBinder
 import android.os.Build
-import android.provider.Telephony
+import android.os.IBinder
 import android.provider.ContactsContract
+import android.provider.Telephony
 import android.telephony.SmsManager
 import android.util.Base64
 import android.util.Log
-import org.json.JSONArray
-import org.json.JSONObject
 import java.io.File
 import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import org.json.JSONArray
+import org.json.JSONObject
 
 class SMSService : Service() {
     companion object {
@@ -28,6 +28,7 @@ class SMSService : Service() {
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         val jsonString = intent.getStringExtra("json") ?: return START_NOT_STICKY
+
         val json = JSONObject(jsonString)
         val subtype = json.optString("subtype")
         val data = json.optJSONObject("data")
@@ -35,14 +36,15 @@ class SMSService : Service() {
 
         if (data == null) {
             Log.e(TAG, "No data provided for call subtype $subtype")
+
             return START_NOT_STICKY
         }
 
         when (subtype) {
             "send_sms" -> sendSMS(data, requestId)
-            "receive_sms" -> receiveSMS(data, requestId)
             "get_sms_conversations" -> getSMSConversations(data, requestId)
             "get_conversation_messages" -> getConversationMessages(data, requestId)
+
             else -> Log.e(TAG, "Unknown SMS subtype $subtype")
         }
 
@@ -52,9 +54,11 @@ class SMSService : Service() {
     private fun sendSMS(data: JSONObject, requestId: String?) {
         val recipient = data.optString("recipient")
         val message = data.optString("message")
+        var isSuccessful = false
 
         if (recipient.isEmpty() || message.isEmpty()) {
             Log.e(TAG, "Recipient or message missing for send_sms")
+
             return
         }
 
@@ -65,38 +69,28 @@ class SMSService : Service() {
                 @Suppress("DEPRECATION")
                 SmsManager.getDefault()
             }
+
             smsManager.sendTextMessage(recipient, null, message, null, null)
             Log.i(TAG, "SMS sent to $recipient: $message")
-
+            isSuccessful = true
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to send SMS to $recipient", e)
+        } finally {
             // Write success response if requestId is provided
             if (requestId != null) {
+                val data = JSONObject().apply {
+                    put("recipient", recipient)
+                    put("is_successful", isSuccessful)
+                }
                 val response = JSONObject().apply {
+                    put("sender", "phone")
+                    put("type", "sms")
+                    put("subtype", "send_sms")
                     put("request_id", requestId)
-                    put("status", "success")
-                    put("action", "send_sms")
+                    put("data", data)
                 }
                 writeResponse(requestId, response)
             }
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to send SMS to $recipient", e)
-        }
-    }
-
-    private fun receiveSMS(data: JSONObject, requestId: String?) {
-        val sender = data.optString("sender")
-        val message = data.optString("message")
-        val timestamp = data.optString("timestamp")
-
-        Log.i(TAG, "Received SMS from $sender at $timestamp: $message")
-
-        // Simulate logging the received SMS
-        if (requestId != null) {
-            val response = JSONObject().apply {
-                put("request_id", requestId)
-                put("status", "success")
-                put("action", "receive_sms")
-            }
-            writeResponse(requestId, response)
         }
     }
 
@@ -122,6 +116,7 @@ class SMSService : Service() {
                 if (uniqueContacts.add(address)) {
                     if (uniqueIndex < convIndexMin) {
                         uniqueIndex++
+
                         continue
                     }
     
@@ -133,11 +128,13 @@ class SMSService : Service() {
                         val contactUri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(address))
                         val projection2 = arrayOf(ContactsContract.PhoneLookup.DISPLAY_NAME)
                         val cursor2 = contentResolver.query(contactUri, projection2, null, null, null)
+
                         val name = if (cursor2 != null && cursor2.moveToFirst()) {
                             cursor2.getString(cursor2.getColumnIndex(ContactsContract.PhoneLookup.DISPLAY_NAME))
                         } else {
                             address
                         }
+
                         cursor2?.close()
                         name
                     } else {
@@ -184,8 +181,10 @@ class SMSService : Service() {
 
     private fun getConversationMessages(data: JSONObject, requestId: String?) {
         val contactNumber = data.optString("contact_number")
+
         if (contactNumber.isEmpty()) {
             Log.e(TAG, "Contact number missing for get_conversation_messages")
+
             return
         }
 
@@ -202,12 +201,17 @@ class SMSService : Service() {
 
         cursor?.use {
             var index = 0
+
             while (it.moveToNext()) {
                 if (index < msgIndexMin) {
                     index++
+
                     continue
                 }
-                if (index > msgIndexMax) break
+
+                if (index > msgIndexMax) {
+                    break
+                }
     
                 val address = it.getString(it.getColumnIndexOrThrow("address"))
                 val body = it.getString(it.getColumnIndexOrThrow("body"))
@@ -217,15 +221,18 @@ class SMSService : Service() {
                 val isSentByMe = type == Telephony.Sms.MESSAGE_TYPE_SENT
 
                 val date = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault()).format(Date(dateMillis))
+
                 val contactName = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     val contactUri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(address))
                     val projection2 = arrayOf(ContactsContract.PhoneLookup.DISPLAY_NAME)
                     val cursor2 = contentResolver.query(contactUri, projection2, null, null, null)
+
                     val name = if (cursor2 != null && cursor2.moveToFirst()) {
                         cursor2.getString(cursor2.getColumnIndex(ContactsContract.PhoneLookup.DISPLAY_NAME))
                     } else {
                         address
                     }
+
                     cursor2?.close()
                     name
                 } else {
@@ -262,9 +269,13 @@ class SMSService : Service() {
 
     private fun writeResponse(requestId: String, responseData: JSONObject) {
         val outputDir = File(outputDirPath)
-        if (!outputDir.exists()) outputDir.mkdirs()
+
+        if (!outputDir.exists()) {
+            outputDir.mkdirs()
+        }
 
         val responseFile = File(outputDir, "$requestId.json")
+
         try {
             FileOutputStream(responseFile).use { it.write(responseData.toString().toByteArray()) }
         } catch (e: Exception) {

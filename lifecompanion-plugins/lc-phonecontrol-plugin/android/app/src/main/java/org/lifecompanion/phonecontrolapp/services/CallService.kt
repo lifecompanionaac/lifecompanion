@@ -3,19 +3,19 @@ package org.lifecompanion.phonecontrolapp.services
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.media.AudioDeviceInfo
+import android.media.AudioManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.IBinder
 import android.telecom.Call
 import android.telecom.InCallService
 import android.telecom.TelecomManager
+import android.telephony.PhoneStateListener
+import android.telephony.TelephonyManager
+import android.util.Log
 import java.io.File
 import java.io.FileOutputStream
-import android.util.Log
-import android.telephony.TelephonyManager
-import android.telephony.PhoneStateListener
-import android.media.AudioManager
-import android.media.AudioDeviceInfo
 import org.json.JSONObject
 
 class CallService : Service() {
@@ -43,6 +43,7 @@ class CallService : Service() {
 
         if (data == null) {
             Log.e(TAG, "No data provided for call subtype $subtype")
+
             return START_NOT_STICKY
         }
 
@@ -51,6 +52,7 @@ class CallService : Service() {
             "hang_up" -> endCall()
             "numpad_input" -> sendDtmf(data.optString("dtmf"))
             "get_call_status" -> getCallStatus(requestId)
+
             else -> Log.e(TAG, "Unknown call subtype $subtype")
         }
 
@@ -84,6 +86,7 @@ class CallService : Service() {
     private fun startCall(phoneNumber: String, speaker_on: Boolean) {
         this.isCallActive = true
         this.phoneNumber = phoneNumber
+
         val telecomManager = getSystemService(Context.TELECOM_SERVICE) as TelecomManager
         val bundle = Bundle().apply { putBoolean(TelecomManager.EXTRA_START_CALL_WITH_SPEAKERPHONE, speaker_on) }
         val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
@@ -91,12 +94,15 @@ class CallService : Service() {
 
         var speakerDevice: AudioDeviceInfo? = null
         val devices = audioManager.availableCommunicationDevices
+
         for (device in devices) {
             if (device.type == AudioDeviceInfo.TYPE_BUILTIN_SPEAKER) {
                 speakerDevice = device
+
                 break
             }
         }
+
         speakerDevice?.let {
             if (speaker_on) {
                 audioManager.setCommunicationDevice(it)
@@ -122,6 +128,7 @@ class CallService : Service() {
         this.phoneNumber = null
 
         val telecomManager = getSystemService(Context.TELECOM_SERVICE) as TelecomManager
+
         if (telecomManager.endCall()) {
             Log.i(TAG, "Call successfully ended")
         } else {
@@ -138,12 +145,25 @@ class CallService : Service() {
     }
 
     private fun getCallStatus(requestId: String) {
-        val callStatus = if (isCallActive) "active" else "inactive"
-        var incomingCallStatus = if (isCallIncoming) "incoming" else "none"
+        val callStatus = if (isCallActive) {
+            "active" 
+        } else {
+            "inactive"
+        }
+
+        var incomingCallStatus = if (isCallIncoming) {
+            "incoming" 
+        } else {
+            "none"
+        }
+
         val status = JSONObject().apply {
             put("call_status", callStatus)
             put("incoming_call_status", incomingCallStatus)
-            if (isCallIncoming) put("phone_number", phoneNumber)
+
+            if (isCallIncoming) {
+                put("phone_number", phoneNumber)
+            }
         }
         val response = JSONObject().apply {
             put("sender", "phone")
@@ -158,9 +178,13 @@ class CallService : Service() {
 
     private fun writeResponse(requestId: String, responseData: JSONObject) {
         val outputDir = File(outputDirPath)
-        if (!outputDir.exists()) outputDir.mkdirs()
+
+        if (!outputDir.exists()) {
+            outputDir.mkdirs()
+        }
 
         val responseFile = File(outputDir, "$requestId.json")
+
         try {
             FileOutputStream(responseFile).use { it.write(responseData.toString().toByteArray()) }
         } catch (e: Exception) {

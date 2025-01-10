@@ -1,6 +1,6 @@
-## `lc-phonecontrol-plugin` : Android app
+# `lc-phonecontrol-plugin` : Android app (`org.lifecompanion.phonecontrolapp`)
 
-### Dev
+## Dev
 You can use Android Studio if you have it. However, it takes a lot of space so you can just get started with CLI tools.  
 This app doesn't have graphical elements nor an interface, its purpose is just to expose services/activities for us to call when needed.  
 For this we will setup the dev environment on Windows and provide instructions for VS Code. Similar things have to be done for other distros and IDEs.

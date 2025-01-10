@@ -10,18 +10,7 @@ class DTMFAccessibilityService : AccessibilityService() {
         private const val TAG = "LC-DTMFAccessibilityService"
     }
 
-    override fun onAccessibilityEvent(event: AccessibilityEvent?) {
-        /* if (event == null || event.source == null) return
-        Log.i(TAG, "Accessibility event received: ${event.eventType}")
-
-        val rootNode = rootInActiveWindow ?: return
-        if (isInCallScreen(rootNode)) {
-            Log.i(TAG, "In call screen detected")
-            if (!isKeypadOpen(rootNode)) {
-                openKeypad(rootNode)
-            }
-        } */
-    }
+    override fun onAccessibilityEvent(event: AccessibilityEvent?) { }
 
     private fun isInCallScreen(node: AccessibilityNodeInfo): Boolean {
         // Check for specific elements that indicate the call screen
@@ -30,6 +19,7 @@ class DTMFAccessibilityService : AccessibilityService() {
 
     private fun isKeypadOpen(node: AccessibilityNodeInfo): Boolean {
         val keypadElements = listOf("1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "*", "#")
+
         return keypadElements.all { element ->
             node.findAccessibilityNodeInfosByText(element).isNotEmpty()
         }
@@ -38,23 +28,29 @@ class DTMFAccessibilityService : AccessibilityService() {
     private fun openKeypad(node: AccessibilityNodeInfo) {
         // Find and click the button to open the keypad
         val keypadButtonTexts = listOf("Keypad", "Clavier")
+
         for (text in keypadButtonTexts) {
             val keypadButton = node.findAccessibilityNodeInfosByText(text).firstOrNull()
+
             if (keypadButton != null) {
                 keypadButton.performAction(AccessibilityNodeInfo.ACTION_CLICK)
                 Log.i(TAG, "Keypad opened with text $text")
+
                 return
             }
         }
+
         Log.i(TAG, "Keypad button not found")
     }
 
     fun pressKeypadButton(buttonText: String) {
         val rootNode = rootInActiveWindow ?: return
+
         if (isInCallScreen(rootNode)) {
             if (!isKeypadOpen(rootNode)) {
                 openKeypad(rootNode)
             }
+
             searchAndClick(rootNode, buttonText)
         }
     }
@@ -63,6 +59,7 @@ class DTMFAccessibilityService : AccessibilityService() {
         if (node.text?.toString() == buttonText && node.isClickable) {
             node.performAction(AccessibilityNodeInfo.ACTION_CLICK)
             Log.i(TAG, "Clicked button $buttonText")
+
             return
         }
 

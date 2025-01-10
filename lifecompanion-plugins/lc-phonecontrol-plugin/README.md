@@ -21,25 +21,24 @@ This plugin is based off the work of the 2 other teams of students from IUT Vann
   - Anatole Derrien ([`@anatolederr`](https://github.com/anatolederr))
 
 ## Dev
-See [`lc-phonecontrol-plugin-1/README.md`](../lc-phonecontrol-plugin-1/README.md) and [`lc-phonecontrol-plugin-2/README.md`](../lc-phonecontrol-plugin-2/README.md) for more now.  
-Some complementary information can be found in the [`lc-phonecontrol-plugin/DEV.md`](DEV.md) file.
+Please check the [`lc-phonecontrol-plugin/DEV.md`](DEV.md) file.
 
-## Roadmap (priorities)
-| State | Task  | Priority |
-| :---: | :---: | :------: |
-| :white_check_mark: | Call a set number | **S** |
-| :white_check_mark: | Send a SMS to a set number | **S** |
-| :x: | Receive a SMS from a set number | **S** |
-| :white_check_mark: | Pass the data through `ADB` | **S** |
-| :white_check_mark: | Make a configuration | **S** |
-| :x: | List SMS conversations | **A** |
-| :x: | List SMS messages from a conversation | **A** |
-| :x: | Turn up or down the volume | **A** |
-| :white_check_mark: | Have a favorites system | **A** |
-| :x: | Numerical keyboard for call services | **B** |
-| :x: | Display the call length | **B** |
-| :x: | Count unread conversations on the homepage | **B** |
-| :x: | Count unread messsages per conversation | **B** |
-| :white_check_mark: | Coherent icons | **B** |
-| :x: | Pass the data through `Bluetooth` | **C** |
-| :white_check_mark: | Display the current connected phone for easier understanding | **C** |
+## Usage
+Once built, open LifeCompanion, and go into "Préférences & Infos" > "Extensions" > "Ajouter par un fichier" and select the JAR file.  
+Relaunch LifeCompanion, and the plugin should be available.  
+
+Our plugin is complete and customizable, but to ease its usage you can find a ready-made configuration that will cover all your needs. It is located at [`src/main/resources/configurations/fr_phonecontrol-config.lcc`](src/main/resources/configurations/fr_phonecontrol-config.lcc).  
+
+Once the configuration loaded *(it is recommended to connect your phone to the PC, either via cable ~~or Bluetooth~~ before starting LifeCompanion)*, go into "Accueil" > "Paramètres généraux" > "Contrôle du téléphone".  
+Here's a quick overview of the available options :  
+
+### Paramètres généraux
+- **Sélectionner un appareil** : Choose the device you want to control on the dropdown list. The "Actualiser la liste" button will refresh the list.
+- **Activer automatiquement le haut parleur durant un appel** : Automatically enable the speakerphone when making a call.
+- **Intervalle de rafraîchissement** : The refresh rate of the plugin, meaning how often it will make requests to the phone to check for the call status and new messages. It is recommended to keep it at 3 seconds to avoid overload and race conditions.
+
+### Protocole de communication
+- **Sélectionner le protocole de communication** : Choose the protocol you want to use to communicate with your phone. The plugin supports both USB ~~and Bluetooth~~.
+
+### Installation de l'application
+- **Installer l'application** : Click to install the app on the selected phone. If the app is already installed, it will update it to the latest bundled version. If the latest version is already installed, it will open the app.

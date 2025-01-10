@@ -15,17 +15,20 @@ class SystemService : Service() {
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         val jsonString = intent.getStringExtra("json") ?: return START_NOT_STICKY
+
         val json = JSONObject(jsonString)
         val subtype = json.optString("subtype")
         val data = json.optJSONObject("data")
 
         if (data == null) {
             Log.e(TAG, "No data provided for call subtype $subtype")
+
             return START_NOT_STICKY
         }
 
         when (subtype) {
             "adjust_volume" -> adjustVolume(data.optString("mode"))
+
             else -> Log.e(TAG, "Unknown system subtype $subtype")
         }
 

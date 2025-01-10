@@ -1,10 +1,10 @@
 package org.lifecompanion.phonecontrolapp
 
-import android.Manifest
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.Manifest
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -17,16 +17,18 @@ import androidx.core.content.ContextCompat
 import java.io.File
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
-import org.lifecompanion.phonecontrolapp.services.Notify
 import org.lifecompanion.phonecontrolapp.services.DTMFAccessibilityService
+import org.lifecompanion.phonecontrolapp.services.Notify
 
 class MainActivity : Activity() {
     private val PERMISSION_REQUEST_CODE = 14122004
     private val TAG = "MainActivity"
+
     private val outputDirPath: String by lazy { File(filesDir, "output").absolutePath }
+
     private val handler = Handler(Looper.getMainLooper())
-    private val checkInterval = 5 * 60 * 1000L // 5 minutes in milliseconds
-    private val fileAgeLimit = 2 * 60 * 1000L // 2 minutes in milliseconds
+    private val checkInterval = 5 * 60 * 1000L  // 5 minutes in milliseconds
+    private val fileAgeLimit = 2 * 60 * 1000L  // 2 minutes in milliseconds
     private val executor = Executors.newSingleThreadScheduledExecutor()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,6 +48,7 @@ class MainActivity : Activity() {
         // Disable battery optimizations
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             val pm = getSystemService(POWER_SERVICE) as android.os.PowerManager
+
             if (!pm.isIgnoringBatteryOptimizations(packageName)) {
                 disableBatteryOptimizations(packageName)
             }
@@ -97,7 +100,7 @@ class MainActivity : Activity() {
                 Log.i(TAG, "All permissions granted")
             } else {
                 Log.w(TAG, "Required permissions denied by user, exiting app...")
-                finish() // Close the app if permissions are not granted
+                finish()  // Close the app if permissions are not granted
             }
         }
     }
@@ -110,6 +113,7 @@ class MainActivity : Activity() {
 
     private val checkAndDeleteOldFiles = Runnable {
         val currentTime = System.currentTimeMillis()
+
         File(outputDirPath).listFiles()?.forEach { file ->
             if (currentTime - file.lastModified() > fileAgeLimit) {
                 file.delete()
@@ -122,8 +126,10 @@ class MainActivity : Activity() {
             contentResolver,
             Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES
         ) ?: return false
+
         val colonSplitter = enabledServices.split(":")
         val serviceName = componentName.flattenToString().replace(packageName, service.name)
+
         return colonSplitter.any { it.equals(serviceName, ignoreCase = true) }
     }
     

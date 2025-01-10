@@ -2,7 +2,7 @@
 ## DEV documentation
 
 This plugin implements a server to connect to an Android phone and control it from LifeCompanion.  
-The server is able to work with ADB and Bluetooth.
+The server is able to work with ADB ~~and Bluetooth~~.
 
 ### Build the plugin
 The recommended way to build the plugin is to use `./gradlew clean buildApp downloadAdb jar`.  
@@ -46,7 +46,8 @@ The JSON format is structured to contain metadata about the sender, the type of 
     - Data example :
       ```json
       {
-        "phone_number": "+123456789"
+        "phone_number": "+123456789",
+        "speaker_on": true
       }
       ```
   2. **"hang_up"**
@@ -72,29 +73,26 @@ The JSON format is structured to contain metadata about the sender, the type of 
       ```json
       {
         "recipient": "+123456789",
-        "message": "Hello, how are you?",
-        "timestamp": "2024-12-06T14:30:00Z"
+        "message": "Hello, how are you?"
       }
       ```
-  2. **"receive_sms"**
-    - Description : Receives an SMS from a contact.
+  2. **"get_sms_conversations"**
+    - Description : Requests a list of SMS conversations within a range.
     - Data example :
       ```json
       {
-        "sender": "+123456789",
-        "message": "I'm good, thanks!",
-        "timestamp": "2024-12-06T14:32:00Z"
+        "conv_index_min": 0,
+        "conv_index_max": 4
       }
       ```
-  3. **"get_sms_conversations"**
-    - Description : Requests a list of SMS conversations.
-    - Data example : `{}` (Empty data)
-  4. **"get_conversation_messages"**
-    - Description : Gets all messages from a specific conversation.
+  3. **"get_conversation_messages"**
+    - Description : Gets messages from a specific conversation within a range.
     - Data example :
       ```json
       {
-        "contact_number": "+123456789"
+        "contact_number": "+123456789",
+        "msg_index_min": 0,
+        "msg_index_max": 3
       }
       ```
 
@@ -109,7 +107,7 @@ The JSON format is structured to contain metadata about the sender, the type of 
     }
     ```
 
-#### Example JSON objects
+#### Example JSON objects - PC to phone
 1. **Sending an SMS**
   ```json
   {
@@ -119,8 +117,7 @@ The JSON format is structured to contain metadata about the sender, the type of 
     "request_id": "123e4567-e89b-12d3-a456-426614174000",
     "data": {
       "recipient": "+123456789",
-      "message": "Hello, this is a test message",
-      "timestamp": "2024-12-06T14:30:00Z"
+      "message": "Hello, this is a test message"
     }
   }
   ```
@@ -143,7 +140,8 @@ The JSON format is structured to contain metadata about the sender, the type of 
     "subtype": "make_call",
     "request_id": "123e4567-e89b-12d3-a456-426614174000",
     "data": {
-      "phone_number": "+123456789"
+      "phone_number": "+123456789",
+      "speaker_on": true
     }
   }
   ```
@@ -154,7 +152,93 @@ The JSON format is structured to contain metadata about the sender, the type of 
     "type": "sms",
     "subtype": "get_sms_conversations",
     "request_id": "123e4567-e89b-12d3-a456-426614174000",
-    "data": {}
+    "data": {
+      "conv_index_min": 0,
+      "conv_index_max": 4
+    }
+  }
+  ```
+
+#### Example JSON objects - Phone to PC
+1. **Get call status**
+  ```json
+  {
+    "sender": "phone",
+    "type": "call",
+    "subtype": "get_call_status",
+    "request_id": "123e4567-e89b-12d3-a456-426614174000",
+    "data": {
+      "call_status": "active", // or "inactive"
+      "incoming_call_status": "incoming", // or "none"
+      "phone_number": "+123456789" // only if incoming_call_status is "incoming"
+    }
+  }
+  ```
+2. **Get a confirmation that an SMS was sent**
+  ```json
+  {
+    "sender": "phone",
+    "type": "sms",
+    "subtype": "send_sms",
+    "request_id": "123e4567-e89b-12d3-a456-426614174000",
+    "data": {
+      "recipient": "+123456789",
+      "is_successful": true
+    }
+  }
+  ```
+3. **List SMS conversations**
+  ```json
+  {
+    "sender": "phone",
+    "type": "sms",
+    "subtype": "get_sms_conversations",
+    "request_id": "123e4567-e89b-12d3-a456-426614174000",
+    "data": [
+      {
+        "phone_number": "+123456789",
+        "contact_name": "John Doe",
+        "last_message": "Hello, how are you?",
+        "timestamp": "2024-12-06T14:30:00Z",
+        "is_read": true,
+        "is_sent_by_me": true
+      },
+      {
+        "phone_number": "+987654321",
+        "contact_name": "Lil Wayne",
+        "last_message": "Yo whatsup G?",
+        "timestamp": "2024-12-06T14:00:00Z",
+        "is_read": false,
+        "is_sent_by_me": false
+      }
+    ]
+  }
+  ```
+4. **List SMS messages from a conversation**
+  ```json
+  {
+    "sender": "phone",
+    "type": "sms",
+    "subtype": "get_conversation_messages",
+    "request_id": "123e4567-e89b-12d3-a456-426614174000",
+    "data": [
+      {
+        "phone_number": "+123456789",
+        "contact_name": "John Doe",
+        "message": "Hello, how are you?",
+        "timestamp": "2024-12-06T14:30:00Z",
+        "is_read": true,
+        "is_sent_by_me": true
+      },
+      {
+        "phone_number": "+234567891",
+        "contact_name": "Jane Doe",
+        "message": "I'm good, thanks for asking!",
+        "timestamp": "2024-12-06T14:31:00Z",
+        "is_read": false,
+        "is_sent_by_me": false
+      }
+    ]
   }
   ```
 
@@ -162,6 +246,16 @@ The JSON format is structured to contain metadata about the sender, the type of 
 The Android app is responsible for handling the phone's functionalities. It communicates with the server to perform actions like sending SMS, making calls, and adjusting volume. The app is built using Kotlin and requires the Android SDK to compile and run.  
 More information can be found in its respective [README](android/README.md).
 
-### ADB
-Get latest from https://dl.google.com/android/repository/platform-tools-latest-windows.zip and https://dl.google.com/android/repository/platform-tools-latest-linux.zip  
-Maybe check https://developer.android.com/tools/adb#wireless-android11-command-line in place of Bluetooth connexion.
+### Version bump
+When making changes to this plugin, you must edit the version in 3 places :  
+- [`build.gradle`](./build.gradle) : Update the `version` field.
+- [`android/app/build.gradle.kts`](./android/app/build.gradle.kts) : Update the `android.defaultConfig.versionName` field.
+- [`android/app/src/main/res/values/strings.xml`](./android/app/src/main/res/values/strings.xml) : Update the `version` field.
+
+This ensures that the plugin and app's version matches, and upon installation you can visually check if the new version is indeed being used.
+
+This plugin follows the [Semantic Versioning](https://semver.org/) guidelines :  
+- **Major (X.0.0)** : Breaking changes.
+- **Minor (0.X.0)** : New features.
+- **Patch (0.0.X)** : Bug fixes.
+Versions `1.X.X` are the ones that were created during the inception of the plugin, and any `2.X.X+` versions are the stable ones that have been created once the plugin was completed.

