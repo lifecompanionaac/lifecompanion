@@ -38,6 +38,12 @@ class JSONProcessingService : Service() {
         }
 
         // Start foreground service with a notification
+        Notify.createNotificationChannel(
+            name = "JSON Processing Channel", 
+            channelId = CHANNEL_ID, 
+            context = this
+        )
+
         val notification = Notify.createNotification(
             title = "JSON Processing Service Running",
             channelId = CHANNEL_ID,
