@@ -21,7 +21,7 @@ This plugin is based off the work of the 2 other teams of students from IUT Vann
   - Anatole Derrien ([`@anatolederr`](https://github.com/anatolederr))
 
 ## Dev
-Please check the [`lc-phonecontrol-plugin/DEV.md`](DEV.md) file.
+Please check the [`DEV.md`](./DEV.md) file.
 
 ## Usage
 Once built, open LifeCompanion, and go into "Préférences & Infos" > "Extensions" > "Ajouter par un fichier" and select the JAR file.  
@@ -42,3 +42,18 @@ Here's a quick overview of the available options :
 
 ### Installation de l'application
 - **Installer l'application** : Click to install the app on the selected phone. If the app is already installed, it will update it to the latest bundled version. If the latest version is already installed, it will open the app.
+
+Now that you started the configuration, the app has opened and it asks for several things...  
+- **Activation de l'usage en arrière-plan** : The app needs to be able to run in the background to be able to handle calls and messages. On the displayed screen, click on the choice where there's No restrictions, and go back.
+- **Autorisations** : The app needs several permissions to work properly. Please accept them all.
+- **Activation de l'accessibilité** : The app needs to be enabled in the accessibility settings to be able to handle keypresses during calls. Please enable it. *(note : you may need to re-enable it after restarting your phone)*
+
+Once you've done all of this, you should be able to control your phone from LifeCompanion.
+
+## Actions
+
+## Events
+
+## Variables
+
+## Models

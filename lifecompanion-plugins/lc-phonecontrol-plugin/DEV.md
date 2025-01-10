@@ -40,7 +40,7 @@ The JSON format is structured to contain metadata about the sender, the type of 
 - **data**: Contains a JSON object relevant to the action :
 
 #### Type : **call**
-- **Subtypes** :
+**Subtypes** :
   1. **"make_call"**
     - Description : Initiates a call to a specified number.
     - Data example :
@@ -66,7 +66,7 @@ The JSON format is structured to contain metadata about the sender, the type of 
     - Data example : `{}` (Empty data)
 
 #### Type : **sms**
-- **Subtypes** :
+**Subtypes** :
   1. **"send_sms"**
     - Description: Sends an SMS to a specified recipient.
     - Data example :
@@ -97,7 +97,7 @@ The JSON format is structured to contain metadata about the sender, the type of 
       ```
 
 #### Type : **system**
-- **Subtype** : **"adjust_volume"**
+**Subtype** : **"adjust_volume"**
   - Description : Adjusts the phone's volume.
   - Values can be "increase" or "decrease".
   - Data example :
@@ -249,13 +249,14 @@ More information can be found in its respective [README](android/README.md).
 ### Version bump
 When making changes to this plugin, you must edit the version in 3 places :  
 - [`build.gradle`](./build.gradle) : Update the `version` field.
-- [`android/app/build.gradle.kts`](./android/app/build.gradle.kts) : Update the `android.defaultConfig.versionName` field.
-- [`android/app/src/main/res/values/strings.xml`](./android/app/src/main/res/values/strings.xml) : Update the `version` field.
+- [`android/app/build.gradle.kts`](android/app/build.gradle.kts) : Update the `android.defaultConfig.versionName` field.
+- [`android/app/src/main/res/values/strings.xml`](android/app/src/main/res/values/strings.xml) : Update the `version` field.
 
 This ensures that the plugin and app's version matches, and upon installation you can visually check if the new version is indeed being used.
 
 This plugin follows the [Semantic Versioning](https://semver.org/) guidelines :  
 - **Major (X.0.0)** : Breaking changes.
 - **Minor (0.X.0)** : New features.
-- **Patch (0.0.X)** : Bug fixes.
+- **Patch (0.0.X)** : Bug fixes.  
+
 Versions `1.X.X` are the ones that were created during the inception of the plugin, and any `2.X.X+` versions are the stable ones that have been created once the plugin was completed.
