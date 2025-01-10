@@ -34,7 +34,7 @@ class SMSService : Service() {
         val requestId = json.optString("request_id")
 
         if (data == null) {
-            Log.e(TAG, "No data provided for call subtype: $subtype")
+            Log.e(TAG, "No data provided for call subtype $subtype")
             return START_NOT_STICKY
         }
 
@@ -43,7 +43,7 @@ class SMSService : Service() {
             "receive_sms" -> receiveSMS(data, requestId)
             "get_sms_conversations" -> getSMSConversations(data, requestId)
             "get_conversation_messages" -> getConversationMessages(data, requestId)
-            else -> Log.e(TAG, "Unknown SMS subtype: $subtype")
+            else -> Log.e(TAG, "Unknown SMS subtype $subtype")
         }
 
         return START_NOT_STICKY
@@ -246,7 +246,7 @@ class SMSService : Service() {
             }
         }
 
-        Log.i(TAG, "Retrieved ${messages.length()} messages for contact: $contactNumber")
+        Log.i(TAG, "Retrieved ${messages.length()} messages for contact $contactNumber")
 
         if (requestId != null) {
             val response = JSONObject().apply {
@@ -267,9 +267,8 @@ class SMSService : Service() {
         val responseFile = File(outputDir, "$requestId.json")
         try {
             FileOutputStream(responseFile).use { it.write(responseData.toString().toByteArray()) }
-            Log.i(TAG, "Response written to file: $responseFile")
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to write response for requestId: $requestId", e)
+            Log.e(TAG, "Failed to write response for requestId $requestId", e)
         }
     }
 

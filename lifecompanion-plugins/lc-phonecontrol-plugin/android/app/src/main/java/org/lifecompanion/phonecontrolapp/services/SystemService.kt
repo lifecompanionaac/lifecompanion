@@ -20,13 +20,13 @@ class SystemService : Service() {
         val data = json.optJSONObject("data")
 
         if (data == null) {
-            Log.e(TAG, "No data provided for call subtype: $subtype")
+            Log.e(TAG, "No data provided for call subtype $subtype")
             return START_NOT_STICKY
         }
 
         when (subtype) {
             "adjust_volume" -> adjustVolume(data.optString("mode"))
-            else -> Log.e(TAG, "Unknown system subtype: $subtype")
+            else -> Log.e(TAG, "Unknown system subtype $subtype")
         }
 
         return START_NOT_STICKY
@@ -40,13 +40,13 @@ class SystemService : Service() {
             "decrease" -> audioManager.adjustVolume(AudioManager.ADJUST_LOWER, AudioManager.FLAG_PLAY_SOUND)
 
             else -> {
-                Log.e(TAG, "Invalid volume adjustment mode: $mode")
+                Log.e(TAG, "Invalid volume adjustment mode $mode")
 
                 return
             }
         }
 
-        Log.i(TAG, "Volume adjusted: $mode")
+        Log.i(TAG, "Volume adjusted to $mode")
     }
 
     override fun onBind(intent: Intent?): IBinder? {

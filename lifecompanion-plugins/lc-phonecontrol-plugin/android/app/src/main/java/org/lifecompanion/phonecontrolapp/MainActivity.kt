@@ -94,9 +94,9 @@ class MainActivity : Activity() {
 
         if (requestCode == PERMISSION_REQUEST_CODE) {
             if (grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
-                Log.i(TAG, "All permissions granted.")
+                Log.i(TAG, "All permissions granted")
             } else {
-                Log.w(TAG, "Required permissions denied by user. Exiting app.")
+                Log.w(TAG, "Required permissions denied by user, exiting app...")
                 finish() // Close the app if permissions are not granted
             }
         }

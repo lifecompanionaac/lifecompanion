@@ -78,13 +78,11 @@ class JSONProcessingService : Service() {
     }
 
     private fun processJsonData(data: String) {
-        Log.i(TAG, "Processing data: $data")
         try {
             val json = JSONObject(data)
-            Log.i(TAG, "Processing JSON: $json")
 
             if (!validateJson(json)) {
-                Log.e(TAG, "Invalid JSON data")
+                Log.e(TAG, "Invalid JSON data : $data")
 
                 return
             }
@@ -104,7 +102,7 @@ class JSONProcessingService : Service() {
             "call" -> startService(Intent(this, CallService::class.java).apply { putExtra("json", json.toString()) })
             "sms" -> startService(Intent(this, SMSService::class.java).apply { putExtra("json", json.toString()) })
             "system" -> startService(Intent(this, SystemService::class.java).apply { putExtra("json", json.toString()) })
-            else -> Log.e(TAG, "Unknown type: ${json.optString("type")}")
+            else -> Log.e(TAG, "Unknown type ${json.optString("type")}")
         }
     }
 
@@ -118,9 +116,8 @@ class JSONProcessingService : Service() {
 
         try {
             FileOutputStream(responseFile).use { it.write(responseData.toString().toByteArray()) }
-            Log.i(TAG, "Response written to file: $responseFile")
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to write response for requestId: $requestId", e)
+            Log.e(TAG, "Failed to write response for requestId $requestId", e)
         }
     }
 }

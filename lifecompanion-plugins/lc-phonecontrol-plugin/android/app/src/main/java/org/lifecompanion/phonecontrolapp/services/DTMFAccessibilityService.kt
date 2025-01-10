@@ -11,10 +11,10 @@ class DTMFAccessibilityService : AccessibilityService() {
     }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
-        if (event == null || event.source == null) return
+        /* if (event == null || event.source == null) return
         Log.i(TAG, "Accessibility event received: ${event.eventType}")
 
-        /* val rootNode = rootInActiveWindow ?: return
+        val rootNode = rootInActiveWindow ?: return
         if (isInCallScreen(rootNode)) {
             Log.i(TAG, "In call screen detected")
             if (!isKeypadOpen(rootNode)) {
@@ -29,26 +29,9 @@ class DTMFAccessibilityService : AccessibilityService() {
     }
 
     private fun isKeypadOpen(node: AccessibilityNodeInfo): Boolean {
-        // Count the number of keypad elements on the screen
-        val initialCount = countKeypadElements(node)
-
-        // Trigger openKeypad and count again
-        openKeypad(node)
-        val afterOpenCount = countKeypadElements(node)
-
-        // Determine if the keypad is open based on the counts
-        val isOpen = afterOpenCount > initialCount
-
-        // Revert the state by triggering openKeypad again
-        openKeypad(node)
-
-        return isOpen
-    }
-
-    private fun countKeypadElements(node: AccessibilityNodeInfo): Int {
         val keypadElements = listOf("1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "*", "#")
-        return keypadElements.sumBy { element ->
-            node.findAccessibilityNodeInfosByText(element).size
+        return keypadElements.all { element ->
+            node.findAccessibilityNodeInfosByText(element).isNotEmpty()
         }
     }
 
@@ -59,7 +42,7 @@ class DTMFAccessibilityService : AccessibilityService() {
             val keypadButton = node.findAccessibilityNodeInfosByText(text).firstOrNull()
             if (keypadButton != null) {
                 keypadButton.performAction(AccessibilityNodeInfo.ACTION_CLICK)
-                Log.i(TAG, "Keypad opened with text: $text")
+                Log.i(TAG, "Keypad opened with text $text")
                 return
             }
         }
@@ -79,7 +62,7 @@ class DTMFAccessibilityService : AccessibilityService() {
     private fun searchAndClick(node: AccessibilityNodeInfo, buttonText: String) {
         if (node.text?.toString() == buttonText && node.isClickable) {
             node.performAction(AccessibilityNodeInfo.ACTION_CLICK)
-            Log.i(TAG, "Clicked button: $buttonText")
+            Log.i(TAG, "Clicked button $buttonText")
             return
         }
 
@@ -89,6 +72,6 @@ class DTMFAccessibilityService : AccessibilityService() {
     }
 
     override fun onInterrupt() {
-        Log.i(TAG, "Accessibility Service Interrupted")
+        Log.i(TAG, "Accessibility service interrupted")
     }
 }

@@ -42,7 +42,7 @@ class CallService : Service() {
         val requestId = json.optString("request_id")
 
         if (data == null) {
-            Log.e(TAG, "No data provided for call subtype: $subtype")
+            Log.e(TAG, "No data provided for call subtype $subtype")
             return START_NOT_STICKY
         }
 
@@ -51,7 +51,7 @@ class CallService : Service() {
             "hang_up" -> endCall()
             "numpad_input" -> sendDtmf(data.optString("dtmf"))
             "get_call_status" -> getCallStatus(requestId)
-            else -> Log.e(TAG, "Unknown call subtype: $subtype")
+            else -> Log.e(TAG, "Unknown call subtype $subtype")
         }
 
         return START_NOT_STICKY
@@ -109,7 +109,7 @@ class CallService : Service() {
 
         try {
             telecomManager.placeCall(uri, bundle)
-            Log.i(TAG, "Call initiated to $phoneNumber with speaker: $speaker_on")
+            Log.i(TAG, "Call initiated to $phoneNumber with speaker $speaker_on")
         } catch (e: SecurityException) {
             Log.e(TAG, "Permission to make calls not granted", e)
             isCallActive = false
@@ -163,9 +163,8 @@ class CallService : Service() {
         val responseFile = File(outputDir, "$requestId.json")
         try {
             FileOutputStream(responseFile).use { it.write(responseData.toString().toByteArray()) }
-            Log.i(TAG, "Response written to file: $responseFile")
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to write response for requestId: $requestId", e)
+            Log.e(TAG, "Failed to write response for requestId $requestId", e)
         }
     }
 
