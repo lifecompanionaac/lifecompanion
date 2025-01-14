@@ -447,6 +447,8 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
         SelectionModeController.INSTANCE.currentOverPartProperty().removeListener(highlightKey);
         UseActionController.INSTANCE.removeActionExecutionListener(validationKey);
         SelectionModeController.INSTANCE.removeOverScannedPartChangedListener(highlightRow);
+
+        recordLogs();
     }
 
 
