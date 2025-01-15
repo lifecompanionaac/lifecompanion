@@ -140,8 +140,7 @@ class CallService : Service() {
         val intent = Intent(this, DTMFAccessibilityService::class.java)
         startService(intent)
 
-        val dtmfService = DTMFAccessibilityService()
-        dtmfService.pressKeypadButton(dtmf)
+        DTMFAccessibilityServiceSingleton.instance?.pressKeypadButton(dtmf)
     }
 
     private fun getCallStatus(requestId: String) {

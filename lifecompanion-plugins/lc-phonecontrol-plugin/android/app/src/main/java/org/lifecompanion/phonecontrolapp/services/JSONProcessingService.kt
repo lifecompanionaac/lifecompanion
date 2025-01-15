@@ -73,6 +73,7 @@ class JSONProcessingService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
+        stopForeground(true)
         serviceJob.cancel()  // Cancel all running coroutines
     }
 
