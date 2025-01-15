@@ -48,7 +48,7 @@ public enum AAC4AllWp2Controller implements ModeListenerI {
             initRelocG(configuration);
             initCurSta(configuration);
         });
-        ChangeListener<Boolean> capitalizeNextChangeListener = (obs, ov, nv) -> {
+        capitalizeNextChangeListener = (obs, ov, nv) -> {
             if (nv) {
                 WritingStateController.INSTANCE.switchCapitalizeNext(WritingEventSource.SYSTEM);
             }

@@ -88,6 +88,8 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
 
     private StringProperty patientID;
 
+    private Timer timer;
+
     public String getFunctionalCurrentKeyboard() {
         return functionalCurrentKeyboard;
     }
@@ -285,6 +287,8 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
     public void modeStop(LCConfigurationI configuration) {
         stopLogListener();
         WritingStateController.INSTANCE.removeAll(WritingEventSource.USER_ACTIONS);
+        timer.cancel();
+        timer = null;
         this.configuration = null;
         this.currentAAC4AllWp2PluginProperties = null;
     }
@@ -443,6 +447,8 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
         SelectionModeController.INSTANCE.currentOverPartProperty().removeListener(highlightKey);
         UseActionController.INSTANCE.removeActionExecutionListener(validationKey);
         SelectionModeController.INSTANCE.removeOverScannedPartChangedListener(highlightRow);
+
+        recordLogs();
     }
 
 
@@ -494,8 +500,8 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
             startLogListener();
 
             // chrono
-            Timer timer = new Timer();
-            TimerTask timerTask = new TimerTask() {
+            timer = new Timer();
+            timer.schedule(new TimerTask() {
                 @Override
                 public void run() {
 
@@ -510,10 +516,9 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
                     //stop sentence display and clean editor
                     StopDislaySentence();
                     timer.cancel();
-
+                    timer = null;
                 }
-            };
-            timer.schedule(timerTask, time);
+            }, time);
         }
     }
 
