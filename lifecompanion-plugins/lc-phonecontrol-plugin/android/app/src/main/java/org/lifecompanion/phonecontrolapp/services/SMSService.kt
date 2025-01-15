@@ -71,7 +71,6 @@ class SMSService : Service() {
             }
 
             smsManager.sendTextMessage(recipient, null, message, null, null)
-            Log.i(TAG, "SMS sent to $recipient: $message")
             isSuccessful = true
         } catch (e: Exception) {
             Log.e(TAG, "Failed to send SMS to $recipient", e)
@@ -164,8 +163,6 @@ class SMSService : Service() {
             }
         }
 
-        Log.i(TAG, "Retrieved ${conversations.length()} conversations")
-
         if (requestId != null) {
             val response = JSONObject().apply {
                 put("sender", "phone")
@@ -251,8 +248,6 @@ class SMSService : Service() {
                 index++
             }
         }
-
-        Log.i(TAG, "Retrieved ${messages.length()} messages for contact $contactNumber")
 
         if (requestId != null) {
             val response = JSONObject().apply {

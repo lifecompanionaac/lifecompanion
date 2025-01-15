@@ -37,7 +37,6 @@ public enum SMSController {
             json.put("data", data);
 
             String result = GlobalState.INSTANCE.getCommunicationProtocol().send(json.toString(), uuid);
-            LOGGER.info("SMS sent to {} : {}", recipient, message);
             JSONObject resultJson = new JSONObject(result);
 
             if (resultJson.getJSONObject("data") != null) {
@@ -65,8 +64,6 @@ public enum SMSController {
             json.put("data", data);
 
             GlobalState.INSTANCE.getCommunicationProtocol().send(json.toString());
-
-            LOGGER.info("SMS sent to {} : {}", ConnexionController.INSTANCE.getPhoneNumber(), WritingStateController.INSTANCE.currentTextProperty().get());
         } catch (Exception e) {
             LOGGER.error("Error sending SMS", e);
         }
@@ -90,7 +87,6 @@ public enum SMSController {
             json.put("data", data);
 
             String result = GlobalState.INSTANCE.getCommunicationProtocol().send(json.toString(), uuid);
-            LOGGER.info("Requested SMS conversations");
             JSONObject resultJson = new JSONObject(result);
             ArrayList<JSONObject> conversations = new ArrayList<>();
 
@@ -129,8 +125,6 @@ public enum SMSController {
             json.put("data", data);
 
             String result = GlobalState.INSTANCE.getCommunicationProtocol().send(json.toString(), uuid);
-            LOGGER.info("Requested messages from conversation with {}", phoneNumber);
-
             JSONObject resultJson = new JSONObject(result);
             ArrayList<JSONObject> messages = new ArrayList<>();
 

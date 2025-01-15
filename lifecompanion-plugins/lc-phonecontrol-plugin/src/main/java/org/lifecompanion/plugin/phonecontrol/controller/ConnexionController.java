@@ -204,7 +204,6 @@ public enum ConnexionController implements ModeListenerI {
         this.refreshTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                LOGGER.info("Refreshing phone control plugin");
                 refreshCallStatus();
                 refreshConvListExec();
 
@@ -215,13 +214,13 @@ public enum ConnexionController implements ModeListenerI {
             }
         }, 500, durationInterval);
 
-        // Lists KeyOptions
-        // Find every conv list cells
+        // Lists KeyOptions, find every conv list cells
         Map<GridComponentI, List<ConversationListKeyOption>> convKeys = new HashMap<>();
         ConfigurationComponentUtils.findKeyOptionsByGrid(ConversationListKeyOption.class, configuration, convKeys, null);
         convKeys.values().stream().flatMap(List::stream).distinct().forEach(convCells::add);
         setLoadingConvList();
-        refreshConvList();  // First load of conversations
+        // First load of conversations
+        refreshConvList();
 
         // Find every sms list cells
         Map<GridComponentI, List<SMSListKeyOption>> smsKeys = new HashMap<>();
@@ -232,11 +231,9 @@ public enum ConnexionController implements ModeListenerI {
 
     @Override
     public void modeStop(LCConfigurationI configuration) {
-        // Removing callbacks
         this.callEnterCallback = null;
         this.callEndedCallback = null;
-        
-        // Stopping timer
+
         this.refreshTimer.cancel();
         this.refreshTimer = null;
         
@@ -296,7 +293,6 @@ public enum ConnexionController implements ModeListenerI {
     private void installAdbFromInputFolder(String inputFolder, File adbZip, File adbFolder) {
         try {
             if (inputFolder != null) {
-                LOGGER.info("Installing ADB from input folder");
                 InputStream is = PhoneControlPlugin.class.getResourceAsStream(inputFolder);
                 FileOutputStream fos = new FileOutputStream(adbZip);
                 IOUtils.copyStream(is, fos);
@@ -350,20 +346,25 @@ public enum ConnexionController implements ModeListenerI {
         String callStatus = callState.getString("call_status");
         String incomingCallStatus = callState.getString("incoming_call_status");
 
-        if (callStatus.equals("inactive")) {  // No call on the phone
+        if (callStatus.equals("inactive")) {
+            // No call on the phone
             if (this.onCall && callDurationInt == -1) {
                 this.onCall = false;
                 callEndedCallback.run();
             }
-        } else if (callStatus.equals("active")) {  // Current call on the phone
+        } else if (callStatus.equals("active")) {
+            // Current call on the phone
             this.onCall = true;
         }
         
-        if (incomingCallStatus.equals("incoming")) {  // Incoming call
+        if (incomingCallStatus.equals("incoming")) {
+            // Incoming call
             this.onCall = true;
             this.phoneNumberOrContactName = callState.getString("phone_number");
-            UseVariableController.INSTANCE.requestVariablesUpdate();  // Update variables (to show the phone number)
-            callEnterCallback.run();  // Launch event "OnCallEnter"
+            // Update variables (to show the phone number)
+            UseVariableController.INSTANCE.requestVariablesUpdate();
+            // Launch event "OnCallEnter"
+            callEnterCallback.run();
         }
     }
 
@@ -444,25 +445,23 @@ public enum ConnexionController implements ModeListenerI {
      * Refresh the content of conversations cells. Only one execution at a time
      */
     private void refreshConvListExec() {
-        LOGGER.info("Loading conversations...");
-
         int convIndexMax = convIndexMin + convCells.size();
         int unreadConvCount = 0;
 
         // Get conv
         ArrayList<JSONObject> convObj = SMSController.INSTANCE.getConvList(convIndexMin, convIndexMax);
         ConversationListContent emptyContent = new ConversationListContent(null, null, null, true, false);
-        boolean emptyConvSet = false;  // To detect the first empty conv
+        // To detect the first empty conv
+        boolean emptyConvSet = false;
 
         if (convObj == null || convObj.isEmpty()) {
             for (final ConversationListKeyOption cell : convCells) {
                 Platform.runLater(() -> cell.convProperty().set(emptyContent));
             }
-
-            LOGGER.info("No conversation loaded");
         } else {
             for (int i = 0; i < convCells.size(); i++) {
-                ConversationListKeyOption cell = this.convCells.get(i);  // Get the cell
+                // Get the cell
+                ConversationListKeyOption cell = this.convCells.get(i);
 
                 if (i < convObj.size()) {
                     JSONObject jsonObject = convObj.get(i);
@@ -481,18 +480,18 @@ public enum ConnexionController implements ModeListenerI {
                     Platform.runLater(() -> cell.convProperty().set(cellContent));
                     topConvReached = false;
                 } else {
-                    if (!emptyConvSet) {  // Fill the first empty cell with an alert message
+                    if (!emptyConvSet) {
+                        // Fill the first empty cell with an alert message
                         Platform.runLater(() -> cell.convProperty().set(CONV_END_MESSAGE));
                         emptyConvSet = true;
-                    } else {  // Fill cell with empty data
+                    } else {
+                        // Fill cell with empty data
                         Platform.runLater(() -> cell.convProperty().set(emptyContent));
                     }
 
                     topConvReached = true;
                 }
             }
-
-            LOGGER.info("{} conversations loaded", convObj.size());
         }
 
         // Update variables
@@ -519,25 +518,24 @@ public enum ConnexionController implements ModeListenerI {
             return;
         }
 
-        LOGGER.info("Loading sms...");
         int smsIndexMax = smsIndexMin + smsCells.size();
 
         // Get conv
         ArrayList<JSONObject> smsObj = SMSController.INSTANCE.getSMSList(this.phoneNumber, smsIndexMin, smsIndexMax);
         SMSListContent emptyContent = new SMSListContent(null, null, null, null, false);
-        boolean emptyMessageSet = false;  // To detect the first empty message
+        // To detect the first empty message
+        boolean emptyMessageSet = false;
 
         if (smsObj == null || smsObj.isEmpty()) {
             for (final SMSListKeyOption cell : smsCells) {
                 Platform.runLater(() -> cell.smsProperty().set(emptyContent));
             }
-
-            LOGGER.info("No SMS loaded");
         } else {
             int smsObjSize = smsObj.size();
 
             for (int i = 0; i < smsCells.size(); i++) {
-                SMSListKeyOption cell = this.smsCells.get(smsCells.size() - 1 - i);  // Start from the end of smsCells
+                // Start from the end of smsCells
+                SMSListKeyOption cell = this.smsCells.get(smsCells.size() - 1 - i);
 
                 if (i < smsObjSize) {
                     JSONObject jsonObject = smsObj.get(i);
@@ -553,18 +551,18 @@ public enum ConnexionController implements ModeListenerI {
                     Platform.runLater(() -> cell.smsProperty().set(cellContent));
                     topSmsReached = false;
                 } else {
-                    if (!emptyMessageSet) {  // Fill the first empty cell with an alert message
+                    if (!emptyMessageSet) {
+                        // Fill the first empty cell with an alert message
                         Platform.runLater(() -> cell.smsProperty().set(SMS_END_MESSAGE));
                         emptyMessageSet = true;
-                    } else {  // Fill cell with empty data
+                    } else {
+                        // Fill cell with empty data
                         Platform.runLater(() -> cell.smsProperty().set(emptyContent));
                     }
 
                     topSmsReached = true;
                 }
             }
-
-            LOGGER.info("{} SMS loaded", smsObj.size());
         }
 
     }
@@ -594,7 +592,8 @@ public enum ConnexionController implements ModeListenerI {
     }
 
     public void upConvIndex() {
-        if (this.convIndexMin != 0) {  // Si c'est déja à 0 on charge pas
+        if (this.convIndexMin != 0) {
+            // Si c'est déja à 0 on charge pas
             if (this.convIndexMin > convCells.size()) {
                 this.convIndexMin -= convCells.size();
             } else {
@@ -679,7 +678,6 @@ public enum ConnexionController implements ModeListenerI {
      * Unselect the current selected conversation
      */
     public void unselectConv() {
-        LOGGER.info("Unselecting conversation");
         this.phoneNumber = null;
         this.phoneNumberOrContactName = "--.--.--.--.--";
         UseVariableController.INSTANCE.requestVariablesUpdate();

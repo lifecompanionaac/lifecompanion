@@ -11,8 +11,6 @@ class CallRedirectionService : CallRedirectionService() {
     }
 
     override fun onPlaceCall(handle: Uri, initialPhoneAccount: PhoneAccountHandle, allowInteractiveResponse: Boolean) {
-        Log.i(TAG, "Outgoing call intercepted : ${handle.schemeSpecificPart}")
-
         // Forward the call directly
         redirectCall(handle, initialPhoneAccount, false)
     }

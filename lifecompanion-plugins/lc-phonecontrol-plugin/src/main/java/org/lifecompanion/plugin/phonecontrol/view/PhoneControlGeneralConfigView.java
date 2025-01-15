@@ -35,8 +35,10 @@ public class PhoneControlGeneralConfigView extends BorderPane implements General
     private ProgressIndicator progressIndicatorRefresh;
 
     // Settings
-    private ToggleSwitch speakerToggleButton;  // Determine if the speaker is activated or not in a call
-    private DurationPickerControl durationIntervalPicker;  // The refresh interval
+    // Determine if the speaker is activated or not in a call
+    private ToggleSwitch speakerToggleButton;
+    // The refresh interval
+    private DurationPickerControl durationIntervalPicker;
 
     // Install App
     private Button installAppButton;
@@ -281,9 +283,11 @@ public class PhoneControlGeneralConfigView extends BorderPane implements General
         PhoneControlPluginProperties phoneControlPluginProperties = configuration.getPluginConfigProperties(PhoneControlPlugin.PLUGIN_ID, PhoneControlPluginProperties.class);
         String deviceSerialNumber = phoneControlPluginProperties.deviceProperty().get();
 
-        if (deviceSerialNumber == null) {  // If no device was selected
+        if (deviceSerialNumber == null) {
+            // If no device was selected
             selectDeviceComboBox.getSelectionModel().select(noDeviceSelected);
-        } else {  // If a device was selected, we try to find it in the list
+        } else {
+            // If a device was selected, we try to find it in the list
             Device selectedDevice = null;
 
             for (Device device : selectDeviceComboBox.getItems()) {
@@ -295,9 +299,11 @@ public class PhoneControlGeneralConfigView extends BorderPane implements General
                 }
             }
 
-            if (selectedDevice != null) {  // If the device was found, we select it
+            if (selectedDevice != null) {
+                // If the device was found, we select it
                 selectDeviceComboBox.getSelectionModel().select(selectedDevice);
-            } else {  // If the device was not found, we add a "selected device not found" device
+            } else {
+                // If the device was not found, we add a "selected device not found" device
                 selectDeviceComboBox.getItems().add(new Device(
                     Translation.getText("phonecontrol.plugin.config.label.devicenotfound"), deviceSerialNumber
                 ));

@@ -48,8 +48,6 @@ class SystemService : Service() {
                 return
             }
         }
-
-        Log.i(TAG, "Volume adjusted to $mode")
     }
 
     override fun onBind(intent: Intent?): IBinder? {

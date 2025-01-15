@@ -44,7 +44,7 @@ public class AdbCommunicationProtocol implements PhoneCommunicationProtocol {
     @Override
     public void send(String data) {
         if (!isOpen()) {
-            LOGGER.warn("Connection is not open, unable to send data");
+            LOGGER.error("Connection is not open, unable to send data");
 
             return;
         }
@@ -77,7 +77,7 @@ public class AdbCommunicationProtocol implements PhoneCommunicationProtocol {
 
     private String receive(String requestId) {
         if (!isOpen()) {
-            LOGGER.warn("Connection is not open, unable to receive data");
+            LOGGER.error("Connection is not open, unable to receive data");
 
             return null;
         }
@@ -154,7 +154,6 @@ public class AdbCommunicationProtocol implements PhoneCommunicationProtocol {
     }
 
     private void startAdb() {
-        LOGGER.info("Starting ADB");
         try {
             ProcessBuilder processBuilder = new ProcessBuilder(adbPath, "start-server");
             Process process = processBuilder.start();
@@ -165,7 +164,6 @@ public class AdbCommunicationProtocol implements PhoneCommunicationProtocol {
     }
 
     private void stopAdb() {
-        LOGGER.info("Stopping ADB");
         try {
             ProcessBuilder processBuilder = new ProcessBuilder(adbPath, "kill-server");
             Process process = processBuilder.start();
@@ -230,7 +228,6 @@ public class AdbCommunicationProtocol implements PhoneCommunicationProtocol {
      */
     public boolean installApk() {
         String deviceSerialNumber = GlobalState.INSTANCE.getDeviceSerialNumber();
-        LOGGER.info("Installing app on phone...");
 
         if (deviceSerialNumber == null) {
             if (GlobalState.INSTANCE.getPluginProperties() == null) {
@@ -258,8 +255,6 @@ public class AdbCommunicationProtocol implements PhoneCommunicationProtocol {
         String apkVersion = getApkVersion(apkPath);
 
         if (installedVersion != null && compareVersions(installedVersion, apkVersion) >= 0) {
-            LOGGER.info("App is already installed with version " + installedVersion + " which is equal or newer than the APK version " + apkVersion);
-
             return true;
         }
 
@@ -276,8 +271,8 @@ public class AdbCommunicationProtocol implements PhoneCommunicationProtocol {
         }
 
         if (isInstalled) {
-            LOGGER.info("App installed");
-            startApp(deviceSerialNumber); // To ask permission
+            // To ask permission
+            startApp(deviceSerialNumber);
         }
 
         return isInstalled;
@@ -353,10 +348,12 @@ public class AdbCommunicationProtocol implements PhoneCommunicationProtocol {
         try {
             Process process = new ProcessBuilder(adbPath, "devices").start();
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            reader.readLine(); // Skip the first output line
+            // Skip the first output line
+            reader.readLine();
             String line;
 
-            while ((line = reader.readLine()) != null) { // Get connected devices
+            while ((line = reader.readLine()) != null) {
+                // Get connected devices
                 String[] parts = line.split("\\s+");
 
                 if (parts.length == 2 && parts[1].equals("device")) {

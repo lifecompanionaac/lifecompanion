@@ -27,13 +27,16 @@ class MainActivity : Activity() {
     private val outputDirPath: String by lazy { File(filesDir, "output").absolutePath }
 
     private val handler = Handler(Looper.getMainLooper())
-    private val checkInterval = 5 * 60 * 1000L  // 5 minutes in milliseconds
-    private val fileAgeLimit = 2 * 60 * 1000L  // 2 minutes in milliseconds
+    // 5 minutes in milliseconds
+    private val checkInterval = 5 * 60 * 1000L
+    // 2 minutes in milliseconds
+    private val fileAgeLimit = 2 * 60 * 1000L
     private val executor = Executors.newSingleThreadScheduledExecutor()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)  // Set the main view
+        // Set the main view
+        setContentView(R.layout.activity_main)
 
         // Initialize notification channel
         Notify.createNotificationChannel(
@@ -97,11 +100,10 @@ class MainActivity : Activity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
         if (requestCode == PERMISSION_REQUEST_CODE) {
-            if (grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
-                Log.i(TAG, "All permissions granted")
-            } else {
+            if (!grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
                 Log.w(TAG, "Required permissions denied by user, exiting app...")
-                finish()  // Close the app if permissions are not granted
+                // Close the app if permissions are not granted
+                finish()
             }
         }
     }

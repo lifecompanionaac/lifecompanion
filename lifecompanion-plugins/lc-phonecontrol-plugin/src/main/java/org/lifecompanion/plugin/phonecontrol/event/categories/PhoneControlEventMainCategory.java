@@ -41,7 +41,8 @@ public enum PhoneControlEventMainCategory implements UseEventMainCategoryI {
 
     @Override
     public int order() {
-        return 1000;  // at the end
+        // at the end
+        return 1000;
     }
 
     @Override

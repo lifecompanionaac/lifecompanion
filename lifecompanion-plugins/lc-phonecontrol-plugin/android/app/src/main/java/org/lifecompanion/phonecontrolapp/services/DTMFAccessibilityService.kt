@@ -81,7 +81,6 @@ class DTMFAccessibilityService : AccessibilityService() {
 
     override fun onServiceConnected() {
         super.onServiceConnected()
-        Log.i(TAG, "DTMFAccessibilityService connected")
         DTMFAccessibilityServiceSingleton.instance = this
     }
 
@@ -132,8 +131,6 @@ class DTMFAccessibilityService : AccessibilityService() {
         val allDigitsPresent = areAllDigitsVisible(rootNode)
 
         if (allDigitsPresent) {
-            Log.i(TAG, "Dial pad appears to be open already.")
-
             return
         }
 
@@ -155,7 +152,6 @@ class DTMFAccessibilityService : AccessibilityService() {
             ) {
                 if (node.isClickable) {
                     node.performAction(AccessibilityNodeInfo.ACTION_CLICK)
-                    Log.i(TAG, "Attempted to open dial pad by clicking: $textStr / $descStr")
                     Thread.sleep(300)
 
                     return
@@ -211,7 +207,6 @@ class DTMFAccessibilityService : AccessibilityService() {
             if (isDialerButtonMatch(textStr, digit) || isDialerButtonMatch(descStr, digit)) {
                 if (node.isClickable) {
                     node.performAction(AccessibilityNodeInfo.ACTION_CLICK)
-                    Log.i(TAG, "Clicked digit : $digit (found text='$textStr' desc='$descStr')")
                     Thread.sleep(300)
 
                     return true
@@ -257,11 +252,7 @@ class DTMFAccessibilityService : AccessibilityService() {
 
                 if (!success) {
                     Log.e(TAG, "Failed to press digit : $dtmfString")
-                } else {
-                    Log.i(TAG, "Successfully pressed digit : $dtmfString")
                 }
-            } else {
-                Log.i(TAG, "Successfully pressed digit : $dtmfString")
             }
         } else {
             Log.e(TAG, "Invalid DTMF char : $dtmfString")
@@ -269,7 +260,6 @@ class DTMFAccessibilityService : AccessibilityService() {
     }
 
     override fun onInterrupt() {
-        Log.i(TAG, "Accessibility service interrupted")
         DTMFAccessibilityServiceSingleton.instance = null
     }
 }

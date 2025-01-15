@@ -58,9 +58,13 @@ Now that you started the configuration, the app has opened and it asks for sever
 Once you've done all of this, you should be able to control your phone from LifeCompanion.
 
 ## Actions
+TODO
 
 ## Events
+TODO
 
 ## Variables
+TODO
 
 ## Models
+TODO

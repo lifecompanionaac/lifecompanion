@@ -65,18 +65,15 @@ class CallService : Service() {
                 TelephonyManager.CALL_STATE_RINGING -> {
                     isCallIncoming = true
                     isCallActive = false
-                    Log.i(TAG, "Incoming call detected: $phoneNumber")
                     this@CallService.phoneNumber = phoneNumber
                 }
                 TelephonyManager.CALL_STATE_OFFHOOK -> {
                     isCallActive = true
                     isCallIncoming = false
-                    Log.i(TAG, "Call is now active")
                 }
                 TelephonyManager.CALL_STATE_IDLE -> {
                     isCallActive = false
                     isCallIncoming = false
-                    Log.i(TAG, "Call has ended")
                     this@CallService.phoneNumber = null
                 }
             }
@@ -115,7 +112,6 @@ class CallService : Service() {
 
         try {
             telecomManager.placeCall(uri, bundle)
-            Log.i(TAG, "Call initiated to $phoneNumber with speaker $speaker_on")
         } catch (e: SecurityException) {
             Log.e(TAG, "Permission to make calls not granted", e)
             isCallActive = false
@@ -128,12 +124,6 @@ class CallService : Service() {
         this.phoneNumber = null
 
         val telecomManager = getSystemService(Context.TELECOM_SERVICE) as TelecomManager
-
-        if (telecomManager.endCall()) {
-            Log.i(TAG, "Call successfully ended")
-        } else {
-            Log.e(TAG, "Failed to end call")
-        }
     }
 
     private fun sendDtmf(dtmf: String) {

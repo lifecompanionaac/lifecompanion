@@ -31,8 +31,6 @@ public enum CallController {
             json.put("data", data);
 
             GlobalState.INSTANCE.getCommunicationProtocol().send(json.toString());
-
-            LOGGER.info("Initiated call to {}", phoneNumber);
         } catch (Exception e) {
             LOGGER.error("Error initiating call", e);
         }
@@ -51,8 +49,6 @@ public enum CallController {
             json.put("data", data);
 
             GlobalState.INSTANCE.getCommunicationProtocol().send(json.toString());
-
-            LOGGER.info("Initiated call to {}", ConnexionController.INSTANCE.getPhoneNumber());
         } catch (Exception e) {
             LOGGER.error("Error initiating call", e);
         }
@@ -70,8 +66,6 @@ public enum CallController {
             json.put("data", data);
 
             GlobalState.INSTANCE.getCommunicationProtocol().send(json.toString());
-
-            LOGGER.info("Picked up call");
         } catch (Exception e) {
             LOGGER.error("Error picking up call", e);
         }
@@ -89,8 +83,6 @@ public enum CallController {
             json.put("data", new JSONObject());
 
             GlobalState.INSTANCE.getCommunicationProtocol().send(json.toString());
-
-            LOGGER.info("Sent hangup command");
         } catch (Exception e) {
             LOGGER.error("Error sending hangup command", e);
         }
@@ -113,8 +105,6 @@ public enum CallController {
             json.put("data", data);
 
             GlobalState.INSTANCE.getCommunicationProtocol().send(json.toString());
-
-            LOGGER.info("Sent DTMF input: {}", dtmf);
         } catch (Exception e) {
             LOGGER.error("Error sending DTMF input", e);
         }
@@ -131,7 +121,6 @@ public enum CallController {
             json.put("data", new JSONObject());
 
             String status = GlobalState.INSTANCE.getCommunicationProtocol().send(json.toString(), uuid);
-            LOGGER.info("Requested call status");
 
             if (new JSONObject(status).getJSONObject("data") == null) {
                 return null;

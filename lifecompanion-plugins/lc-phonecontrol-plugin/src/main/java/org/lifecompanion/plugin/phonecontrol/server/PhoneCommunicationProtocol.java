@@ -99,7 +99,6 @@ public interface PhoneCommunicationProtocol {
                     return false;
             }
 
-            // Additional validation for specific fields ?
             return true;
         } catch (JSONException e) {
             return false;

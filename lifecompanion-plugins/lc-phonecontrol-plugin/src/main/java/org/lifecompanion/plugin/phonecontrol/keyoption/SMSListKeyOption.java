@@ -63,7 +63,8 @@ public class SMSListKeyOption extends AbstractKeyOption {
             if (nv != null) {
                 if (nv == ConnexionController.SMS_LOADING) {
                     key.textContentProperty().set(Translation.getText("phonecontrol.plugin.key.option.list.loading"));
-                    dateNode.set(null); // Clear date node
+                    // Clear date node
+                    dateNode.set(null);
                 } else if (nv == ConnexionController.SMS_NOT_CONNECTED) {
                     key.textContentProperty().set(Translation.getText("phonecontrol.plugin.key.option.list.notconnected"));
                 } else if (nv == ConnexionController.SMS_END_MESSAGE) {
