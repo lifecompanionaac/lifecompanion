@@ -23,7 +23,7 @@ Be familiar with Java and JavaFX development.
 1. First, clone LifeCompanion official repository **from the last release tag** `lifecompanion/lc-app/X.X.X-prod` and make it run locally : [use build documentation](BUILD.md)
 1. Run `gradlew publishToMavenLocal` on **lifecompanion-framework** and **lifecompanion** projects (this will add LifeCompanion API to your local Maven repo)
 1. Duplicate the [**lifecompanion-plugins/lc-spellgame-plugin**](../lifecompanion-plugins/lc-spellgame-plugin/) folder to a folder named with your plugin ID - let's call it `lc-example-plugin` for the next steps
-1. Change Gralde project name in *settings.gradle* to `rootProject.name = 'lc-example-plugin'`
+1. Change Gradle project name in *settings.gradle* to `rootProject.name = 'lc-example-plugin'`
 1. Enter plugin metadata in *build.gradle*, especially `"LifeCompanion-Plugin-Id": "lc-example-plugin"`
 1. Check in *gradle.properties* that the LifeCompanion version is the same that the pulled version `lifecompanionAppVersion=1.6.3`
 1. You can then build your plugin jar with `gradlew jar`
@@ -833,7 +833,7 @@ Note that action and event are mostly generated out of the JavaFX Thread. This m
 
 #### Files
 
-Each language file is a basic XML containing key/value for translation. It is recommanded to prefix all your keys with your plugin context, this will avoid collision with other translations.
+Each language file is a basic XML containing key/value for translation. It is recommended to prefix all your keys with your plugin context, this will avoid collision with other translations.
 
 ```xml
 <texts>

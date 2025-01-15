@@ -16,6 +16,8 @@ on:
         type: boolean
       plugin_dir_name:
         type: string
+      extra_plugin_build_args:
+        type: string
     secrets:
       framework_server_url:
         required: true
@@ -108,13 +110,27 @@ jobs:
       - name : Add +X on plugin Gradle scripts
         if: ${{inputs.plugin_dir_name}}
         run: chmod +x lifecompanion-plugins/${{inputs.plugin_dir_name}}/gradlew
+      
+      - name: Install Android SDK if needed
+        if: ${{inputs.plugin_dir_name == 'lc-phonecontrol-plugin'}}
+        run: |
+          wget https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
+          unzip commandlinetools-linux-11076708_latest.zip -d /opt/android-sdk
+          rm commandlinetools-linux-11076708_latest.zip
+          echo "export ANDROID_HOME=/opt/android-sdk" >> $GITHUB_ENV
+          echo "export PATH=$ANDROID_HOME/cmdline-tools/bin:$ANDROID_HOME/platform-tools:$ANDROID_HOME/build-tools/35.0.0:$PATH" >> $GITHUB_ENV
+          yes | sdkmanager --sdk_root="/opt/android-sdk" --licenses
+          sdkmanager --sdk_root="/opt/android-sdk" "platform-tools" "platforms;android-26" "platforms;android-35" "build-tools;35.0.0"
+          echo "sdk.dir=/opt/android-sdk" > lifecompanion-plugins/${{inputs.plugin_dir_name}}/android/local.properties
+          chmod +x lifecompanion-plugins/${{inputs.plugin_dir_name}}/android/gradlew
+        shell: bash
 
       - name: Execute plugin build command
         if: ${{inputs.plugin_dir_name}}
         uses: gradle/actions/setup-gradle@v3
         with:
           build-root-directory: lifecompanion-plugins/${{inputs.plugin_dir_name}}
-          arguments: clean jar
+          arguments: ${{ inputs.extra_plugin_build_args || 'clean jar' }}
           
       - name: Call update build and publish command
         uses: gradle/actions/setup-gradle@v3

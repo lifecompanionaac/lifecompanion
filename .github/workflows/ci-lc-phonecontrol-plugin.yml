@@ -1,0 +1,20 @@
+name: ci-lc-phonecontrol-plugin
+
+on:
+  push:
+    tags:        
+      - 'lifecompanion-plugins/lc-phonecontrol-plugin/*-prod'
+
+jobs:
+  call-workflow-passing-data:
+    uses: ./.github/workflows/ci-lifecompanion.yml
+    with:
+      target_env: prod
+      runs_on: ubuntu-22.04
+      plugin_dir_name: lc-phonecontrol-plugin
+      gradle_command: publishPluginJar -PpluginDir=../lifecompanion-plugins/lc-phonecontrol-plugin
+      extra_plugin_build_args: clean buildApp downloadAdb jar
+    secrets:
+      framework_server_url: ${{ secrets.LIFECOMPANION_FRAMEWORK_SERVER_URL_PROD }}
+      framework_server_login: ${{ secrets.LIFECOMPANION_FRAMEWORK_SERVER_LOGIN_PROD }}
+      framework_server_password: ${{ secrets.LIFECOMPANION_FRAMEWORK_SERVER_PASSWORD_PROD }}

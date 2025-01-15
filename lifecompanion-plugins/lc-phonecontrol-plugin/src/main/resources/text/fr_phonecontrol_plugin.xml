@@ -1,0 +1,154 @@
+<texts>
+    <!-- VARIABLES -->
+    <text key="phonecontrol.plugin.use.variable.smsunread.name">Nombre de conversations non lues</text>
+    <text key="phonecontrol.plugin.use.variable.smsunread.description">Contient le nombre de conversations que l'utilisateur n'a pas encore lues</text>
+    <text key="phonecontrol.plugin.use.variable.smsunread.example">5</text>
+
+    <text key="phonecontrol.plugin.use.variable.callduration.name">Durée de l'appel</text>
+    <text key="phonecontrol.plugin.use.variable.callduration.description">Contient la durée de l'appel en cours</text>
+    <text key="phonecontrol.plugin.use.variable.callduration.example">02:10:49</text>
+
+    <text key="phonecontrol.plugin.use.variable.phonenumberorcontactname.name">Numéro de téléphone/nom du contact</text>
+    <text key="phonecontrol.plugin.use.variable.phonenumberorcontactname.description">Contient le nom du contact si il existe sinon le numéro de téléphone de l'appel ou de la conversation en cours</text>
+    <text key="phonecontrol.plugin.use.variable.phonenumberorcontactname.example">+33612345678</text>
+
+    <text key="phonecontrol.plugin.use.variable.phonename.name">Nom du téléphone connecté</text>
+    <text key="phonecontrol.plugin.use.variable.phonename.description">Nom standard Bluetooth du téléphone connecté</text>
+    <text key="phonecontrol.plugin.use.variable.phonename.example">Smartphone de Papa</text>
+
+    <!-- KEY OPTION -->
+    <text key="phonecontrol.plugin.key.option.conversationlist.name">Liste des conversations</text>
+    <text key="phonecontrol.plugin.key.option.conversationlist.description">Les dernières conversations avec pour chacune le dernier message envoyé/reçu</text>
+    <text key="phonecontrol.plugin.key.option.conversationlist.default.text">Contact / N° : &lt;contactOrPhoneNumber&gt;\nDernier Message : &lt;lastMessageSend&gt;</text>
+    <text key="phonecontrol.plugin.key.option.conversationlist.empty">Vous avez atteint la dernière conversation</text>
+
+    <text key="phonecontrol.plugin.key.option.smslist.name">Liste des SMS</text>
+    <text key="phonecontrol.plugin.key.option.smslist.description">Affiche les SMS de la conversation sélectionnée, avec sa date d'envoi</text>
+    <text key="phonecontrol.plugin.key.option.smslist.default.text">&lt;message content&gt;</text>
+    <text key="phonecontrol.plugin.key.option.smslist.empty">Il n'y a pas d'autres messages</text>
+
+    <text key="phonecontrol.plugin.key.option.list.loading">Chargement en cours...</text>
+    <text key="phonecontrol.plugin.key.option.list.notconnected">Aucun appareil connecté</text>
+
+    <!-- USE ACTIONS -->
+    <text key="phonecontrol.plugin.action.main.category.name">Contrôle du téléphone</text>
+    <text key="phonecontrol.plugin.action.main.category.description">Contient toutes les actions relatives au contrôle du téléphone, pour envoyer/lire un SMS, passer un appel, ...</text>
+    <text key="phonecontrol.plugin.action.sub.category.sms.name">SMS</text>
+    <text key="phonecontrol.plugin.action.sub.category.misc.name">Général</text>
+    <text key="phonecontrol.plugin.action.sub.category.call.name">Appel</text>
+    <text key="phonecontrol.plugin.action.sub.category.system.name">Système</text>
+    <text key="phonecontrol.plugin.action.sub.category.refresh.name">Actualisation</text>
+
+    <text key="phonecontrol.plugin.action.misc.selectconversationfromlist.name">Sélectionner une conversation (automatique)</text>
+    <text key="phonecontrol.plugin.action.misc.selectconversationfromlist.description">Sélectionne une conversation via la liste de cases</text>
+
+    <text key="phonecontrol.plugin.action.misc.selectconversationfromtext.name">Sélectionner une conversation via le champ de texte</text>
+    <text key="phonecontrol.plugin.action.misc.selectconversationfromtext.description">Sélectionne une conversation via le texte du champ de texte</text>
+
+    <text key="phonecontrol.plugin.action.misc.selectconversationmanual.name">Sélectionner une conversation spécifique</text>
+    <text key="phonecontrol.plugin.action.misc.selectconversationmanual.description">Sélectionne une conversation avec un numéro de téléphone paramétré</text>
+    <text key="phonecontrol.plugin.action.misc.selectconversationmanual.variable.description">Sélectionne le contact : "{}"</text>
+
+    <text key="phonecontrol.plugin.action.misc.unselectconversation.name">Déselectionner une conversation</text>
+    <text key="phonecontrol.plugin.action.misc.unselectconversation.description">Désactive l'actualisation du numéro de téléphone et active l'actualisation générale</text>
+
+    <text key="phonecontrol.plugin.action.smssend.name">Envoyer un message</text>
+    <text key="phonecontrol.plugin.action.smssend.description">Envoie le texte de la zone de texte à la conversation sélectionnée</text>
+
+    <text key="phonecontrol.plugin.action.smssend.specificcontact.name">Envoyer un message à un contact spécifique</text>
+    <text key="phonecontrol.plugin.action.smssend.specificcontact.description">Envoie le texte de la zone de texte à un numéro de téléphone paramétré</text>
+
+    <text key="phonecontrol.plugin.action.smsdownlist.name">Descendre dans la liste de SMS</text>
+    <text key="phonecontrol.plugin.action.smsdownlist.description">Descend dans la liste de SMS</text>
+
+    <text key="phonecontrol.plugin.action.smsuplist.name">Monter dans la liste de SMS</text>
+    <text key="phonecontrol.plugin.action.smsuplist.description">Monte dans la liste de SMS</text>
+
+    <text key="phonecontrol.plugin.action.contactdownlist.name">Descendre dans la liste de contacts</text>
+    <text key="phonecontrol.plugin.action.contactdownlist.description">Descend dans la liste de contacts</text>
+
+    <text key="phonecontrol.plugin.action.contactuplist.name">Monter dans la liste de contacts</text>
+    <text key="phonecontrol.plugin.action.contactuplist.description">Monte dans la liste de contacts</text>
+
+    <text key="phonecontrol.plugin.action.callcontact.name">Appeler</text>
+    <text key="phonecontrol.plugin.action.callcontact.description">Appelle le contact sélectionné</text>
+
+    <text key="phonecontrol.plugin.action.callspecificcontact.name">Appeler le contact spécifique</text>
+    <text key="phonecontrol.plugin.action.callspecificcontact.description">Appelle un contact avec un numéro de téléphone paramétré</text>
+
+    <text key="phonecontrol.plugin.action.callhangup.name">Raccrocher</text>
+    <text key="phonecontrol.plugin.action.callhangup.description">Raccroche l'appel actif ou refuse l'appel entrant</text>
+
+    <text key="phonecontrol.plugin.action.callpickup.name">Décrocher</text>
+    <text key="phonecontrol.plugin.action.callpickup.description">Décroche un appel entrant</text>
+
+    <text key="phonecontrol.plugin.action.refreshconversationlist.name">Actualiser la liste des conversations</text>
+    <text key="phonecontrol.plugin.action.refreshconversationlist.description">Actualise les conversations</text>
+
+    <text key="phonecontrol.plugin.action.refreshsmslist.name">Actualiser la liste des SMS</text>
+    <text key="phonecontrol.plugin.action.refreshsmslist.description">Actualise les des SMS de la conversation sélectionnée</text>
+
+    <text key="phonecontrol.plugin.action.increasevolume.name">Augmenter le volume</text>
+    <text key="phonecontrol.plugin.action.increasevolume.description">Augmente le volume du téléphone</text>
+
+    <text key="phonecontrol.plugin.action.decreasevolume.name">Diminuer le volume</text>
+    <text key="phonecontrol.plugin.action.decreasevolume.description">Diminue le volume du téléphone</text>
+
+    <text key="phonecontrol.plugin.action.sendspecificdtmf.name">Envoyer un DTMF spécifique</text>
+    <text key="phonecontrol.plugin.action.sendspecificdtmf.description">Envoie une tonalité sur le clavier de l'appel en cours</text>
+    <text key="phonecontrol.plugin.action.sendspecificdtmf.variable.description">Envoie la tonalité : "{}"</text>
+
+    <!-- USE EVENTS -->
+    <text key="phonecontrol.plugin.event.main.category.name">Contrôle du téléphone</text>
+    <text key="phonecontrol.plugin.event.main.category.description">Contient tous les événements relatifs au contrôle du téléphone, comme la détection de la réception d'un appel, ...</text>
+    <text key="phonecontrol.plugin.sub.event.category.general.name">Général</text>
+    <text key="phonecontrol.plugin.event.sub.category.misc.name">Divers</text>
+
+    <text key="phonecontrol.plugin.event.misc.smsunreadcount.name">Conversations mises à jour</text>
+    <text key="phonecontrol.plugin.event.misc.smsunreadcount.description">Quand les conversations sont actualisées</text>
+    <text key="phonecontrol.plugin.event.misc.smsunreadcount.updated.variable.description">Quand les conversations sont actualisées, avec pour condition : "{}"</text>
+    <text key="phonecontrol.plugin.unreadcountcondition.label">Condition de génération de l'événement</text>
+    <text key="phonecontrol.plugin.unreadcountcondition.always">Tout le temps</text>
+    <text key="phonecontrol.plugin.unreadcountcondition.unread.positive">Si il y a des SMS non lus</text>
+    <text key="phonecontrol.plugin.unreadcountcondition.unread.none">Si il n'y a aucun SMS non lu</text>
+
+    <text key="phonecontrol.plugin.event.misc.smsvalidationsend.name">Validation de l'envoi de SMS</text>
+    <text key="phonecontrol.plugin.event.misc.smsvalidationsend.description">Evénement généré lors de l'envoi d'un SMS, si il a été bien envoyé ou non</text>
+    <text key="phonecontrol.plugin.event.misc.smsvalidationsend.variable.description">Quand le SMS a été envoyé, avec pour condition : "{}"</text>
+    <text key="phonecontrol.plugin.smsvalidationsendcondition.always">Tout le temps</text>
+    <text key="phonecontrol.plugin.smsvalidationsendcondition.sent">Si le message a été envoyé</text>
+    <text key="phonecontrol.plugin.smsvalidationsendcondition.not.sent">Si le message n'a pas été envoyé</text>
+
+    <text key="phonecontrol.plugin.event.misc.callenter.name">Appel entrant</text>
+    <text key="phonecontrol.plugin.event.misc.callenter.description">Événément généré lorsque le téléphone reçoit un appel</text>
+
+    <text key="phonecontrol.plugin.event.misc.callhangup.name">Appel raccroché</text>
+    <text key="phonecontrol.plugin.event.misc.callhangup.description">Événément généré lorsque un appel est raccroché</text>
+
+    <!-- UI / CONFIG VIEW -->
+    <text key="phonecontrol.view.useaction.phonenumber">Numéro de téléphone</text>
+    <text key="phonecontrol.view.useaction.contactname">Nom du contact à afficher</text>
+    <text key="phonecontrol.view.useaction.dtmf">Tonalité DTMF</text>
+    <text key="phonecontrol.plugin.config.title">Contrôle du téléphone</text>
+
+    <text key="phonecontrol.plugin.config.category.deviceselection.title">Paramètres généraux</text>
+    <text key="phonecontrol.plugin.config.category.installapp.title">Installation de l'application</text>
+    <text key="phonecontrol.plugin.config.category.protocolselection.title">Protocole de communication</text>
+
+    <text key="phonecontrol.plugin.config.label.deviceselection">Sélectionner un appareil</text>
+    <text key="phonecontrol.plugin.config.label.nodevice">Aucun appareil sélectionné</text>
+    <text key="phonecontrol.plugin.config.label.devicenotfound">Appareil introuvable / déconnecté</text>
+    <text key="phonecontrol.plugin.config.button.refreshlist">Actualiser la liste</text>
+
+    <text key="phonecontrol.plugin.config.label.protocol.selection">Sélectionner le protocole de communication</text>
+    <text key="phonecontrol.plugin.config.label.protocol.selection.title">Protocole de communication</text>
+
+    <text key="phonecontrol.plugin.config.label.installapp">Application nécéssaire au bon fonctionnement de l'extension</text>
+    <text key="phonecontrol.plugin.config.button.installapp">Installer l'application</text>
+    <text key="phonecontrol.plugin.config.label.installapp.success">Application installée !</text>
+    <text key="phonecontrol.plugin.config.label.installapp.error">Erreur !</text>
+
+    <text key="phonecontrol.plugin.config.label.speakeron">Activer automatiquement le haut parleur durant un appel</text>
+
+    <text key="phonecontrol.plugin.config.label.duration">Intervalle de rafraîchissement</text>
+</texts>
