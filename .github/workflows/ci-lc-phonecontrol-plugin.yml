@@ -13,7 +13,6 @@ jobs:
       runs_on: ubuntu-22.04
       plugin_dir_name: lc-phonecontrol-plugin
       gradle_command: publishPluginJar -PpluginDir=../lifecompanion-plugins/lc-phonecontrol-plugin
-      # TODO : we may need to install Android SDK or build tools
       extra_plugin_build_args: clean buildApp downloadAdb jar
     secrets:
       framework_server_url: ${{ secrets.LIFECOMPANION_FRAMEWORK_SERVER_URL_PROD }}
