@@ -40,6 +40,13 @@ Here's a quick overview of the available options :
 ### Protocole de communication
 - **Sélectionner le protocole de communication** : Choose the protocol you want to use to communicate with your phone. The plugin supports both USB ~~and Bluetooth~~.
 
+> [!TIP]  
+> **For ADB**  
+> Go on the phone's settings and enable Developer options (usually by tapping 7 times on the Build number in the About phone section).  
+> Then, go into Developer options and enable USB debugging, Install via USB, and USB debugging (security settings). If you can, also enable Disable adb authorization timeout.  
+> Connect your phone to your PC via USB, and authorize the connection on your phone. You may need to authorize the pc from time to time.  
+> If the phone no longer appears in LifeCompanion settings, in the Developer options click on Revoke USB debugging authorizations, unplug/replug the phone and authorize the connection again.
+
 ### Installation de l'application
 - **Installer l'application** : Click to install the app on the selected phone. If the app is already installed, it will update it to the latest bundled version. If the latest version is already installed, it will open the app.
 

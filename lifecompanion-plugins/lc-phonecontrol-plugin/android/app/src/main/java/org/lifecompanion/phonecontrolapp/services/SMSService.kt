@@ -76,9 +76,8 @@ class SMSService : Service() {
         } catch (e: Exception) {
             Log.e(TAG, "Failed to send SMS to $recipient", e)
         } finally {
-            // Write success response if requestId is provided
             if (requestId != null) {
-                val data = JSONObject().apply {
+                val rData = JSONObject().apply {
                     put("recipient", recipient)
                     put("is_successful", isSuccessful)
                 }
@@ -87,7 +86,7 @@ class SMSService : Service() {
                     put("type", "sms")
                     put("subtype", "send_sms")
                     put("request_id", requestId)
-                    put("data", data)
+                    put("data", rData)
                 }
                 writeResponse(requestId, response)
             }

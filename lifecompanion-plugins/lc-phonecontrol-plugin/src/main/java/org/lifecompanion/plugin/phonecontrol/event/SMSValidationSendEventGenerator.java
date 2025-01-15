@@ -22,7 +22,7 @@ public class SMSValidationSendEventGenerator extends BaseUseEventGeneratorImpl {
     @XMLGenericProperty(ValidationSendCondition.class)
     private ObjectProperty<ValidationSendCondition> condition;
 
-    private final Consumer<Integer> validationSendSMSCallback;
+    private final Consumer<Boolean> validationSendSMSCallback;
 
     public SMSValidationSendEventGenerator() {
         super();
@@ -38,8 +38,8 @@ public class SMSValidationSendEventGenerator extends BaseUseEventGeneratorImpl {
             final ValidationSendCondition cond = this.condition.get();
 
             if (cond == ValidationSendCondition.ALWAYS
-                || (validationSend > 0 && cond == ValidationSendCondition.SENT)
-                || (validationSend == 0 && cond == ValidationSendCondition.NOT_SENT)
+                || (validationSend && cond == ValidationSendCondition.SENT)
+                || (!validationSend && cond == ValidationSendCondition.NOT_SENT)
             ) {
                 this.useEventListener.fireEvent(this, null, null);
             }
@@ -59,9 +59,6 @@ public class SMSValidationSendEventGenerator extends BaseUseEventGeneratorImpl {
     @Override
     public void modeStart(final LCConfigurationI configuration) {
         ConnexionController.INSTANCE.addValidationSendSMSCallback(validationSendSMSCallback);
-        // On start, fire first event
-        int unreadCount = ConnexionController.INSTANCE.getSmsUnread();
-        validationSendSMSCallback.accept(unreadCount);
     }
 
     @Override

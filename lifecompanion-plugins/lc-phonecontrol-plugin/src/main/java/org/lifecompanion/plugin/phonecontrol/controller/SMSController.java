@@ -22,7 +22,7 @@ public enum SMSController {
      * @param recipient The phone number of the recipient.
      * @param message   The message content.
      */
-    public int sendSMS(String recipient, String message) {
+    public boolean sendSMS(String recipient, String message) {
         try {
             String uuid = UUID.randomUUID().toString();
             JSONObject json = new JSONObject();
@@ -37,16 +37,19 @@ public enum SMSController {
             json.put("data", data);
 
             String result = GlobalState.INSTANCE.getCommunicationProtocol().send(json.toString(), uuid);
-
             LOGGER.info("SMS sent to {} : {}", recipient, message);
+            JSONObject resultJson = new JSONObject(result);
 
-            // TODO (get something meaningful from the result)
-            return 0;
+            if (resultJson.getJSONObject("data") != null) {
+                return resultJson.getJSONObject("data").getBoolean("is_successful");
+            }
+
+            return false;
         } catch (Exception e) {
             LOGGER.error("Error sending SMS", e);
-        }
 
-        return -1;
+            return false;
+        }
     }
 
     public void sendSMS() {

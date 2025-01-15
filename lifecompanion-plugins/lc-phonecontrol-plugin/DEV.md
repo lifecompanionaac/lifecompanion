@@ -241,6 +241,19 @@ The JSON format is structured to contain metadata about the sender, the type of 
     ]
   }
   ```
+5. **Get a confirmation that the SMS was sent**
+  ```json
+  {
+    "sender": "phone",
+    "type": "sms",
+    "subtype": "send_sms",
+    "request_id": "123e4567-e89b-12d3-a456-426614174000",
+    "data": {
+      "recipient": "+123456789",
+      "is_successful": true
+    }
+  }
+  ```
 
 ### Android app
 The Android app is responsible for handling the phone's functionalities. It communicates with the server to perform actions like sending SMS, making calls, and adjusting volume. The app is built using Kotlin and requires the Android SDK to compile and run.  

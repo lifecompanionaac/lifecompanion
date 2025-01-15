@@ -81,7 +81,7 @@ public enum ConnexionController implements ModeListenerI {
     private Runnable callEnterCallback;
     private Runnable callEndedCallback;
     private Set<Consumer<Integer>> unreadCountUpdateCallback;
-    private Set<Consumer<Integer>> validationSendSMSCallback;
+    private Set<Consumer<Boolean>> validationSendSMSCallback;
 
     /** To handle if the list is already refreshing */
     private boolean convIsRefreshing = false;
@@ -587,7 +587,7 @@ public enum ConnexionController implements ModeListenerI {
      */
     public void sendSMS() {
         String message = WritingStateController.INSTANCE.currentTextProperty().get();
-        int val = SMSController.INSTANCE.sendSMS(this.phoneNumber, message);
+        boolean val = SMSController.INSTANCE.sendSMS(this.phoneNumber, message);
         validationSendSMSCallback.forEach((callback) -> callback.accept(val));
         WritingStateController.INSTANCE.removeAll(WritingEventSource.SYSTEM);
         this.smsIndexMin = 0;
@@ -644,11 +644,11 @@ public enum ConnexionController implements ModeListenerI {
         this.unreadCountUpdateCallback.remove(unreadCountUpdatedCallback);
     }
 
-    public void addValidationSendSMSCallback(Consumer<Integer> validationSendCallback) {
+    public void addValidationSendSMSCallback(Consumer<Boolean> validationSendCallback) {
         this.validationSendSMSCallback.add(validationSendCallback);
     }
 
-    public void removeValidationSendSMSCallback(Consumer<Integer> validationSendCallback) {
+    public void removeValidationSendSMSCallback(Consumer<Boolean> validationSendCallback) {
         this.validationSendSMSCallback.remove(validationSendCallback);
     }
 
