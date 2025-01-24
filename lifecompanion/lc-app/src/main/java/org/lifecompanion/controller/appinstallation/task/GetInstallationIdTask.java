@@ -37,10 +37,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.crypto.Cipher;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyFactory;
 import java.security.PublicKey;
@@ -154,7 +151,13 @@ public class GetInstallationIdTask extends LCTask<InstallationController.Install
     private static String getDeviceId() throws Exception {
         final SystemType current = SystemType.current();
         if (current == SystemType.WINDOWS) {
-            return readCmdResult(Arrays.asList("wmic", "csproduct", "get", "UUID")).split("\n")[2];
+            // If wmic is available
+            try {
+                return readCmdResult(Arrays.asList("wmic", "csproduct", "get", "UUID")).split("\n")[2];
+            } catch (IOException e) {
+                LOGGER.warn("Could not read Windows ID from WMIC, will try powershell", e);
+                return readCmdResult(Arrays.asList("powershell", "Get-WmiObject -Class \"Win32_ComputerSystemProduct\" | Select-Object -Property UUID")).split("\n")[3];
+            }
         } else if (current == SystemType.UNIX) {
             // Don't use readCmdResult(Arrays.asList("cat", "/sys/class/dmi/id/product_uuid")) as product uuid is not given if not root
             // instead, read the command result that was stored in device_id when installed

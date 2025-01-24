@@ -9,7 +9,7 @@
 
 ### Corrections/ajustements
 
-- ...
+- Correction de l'obtention de l'identifiant d'installation sur les dernières versions de Windows 11
 
 ## 1.6.5 - 31/10/2025
 
