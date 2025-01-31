@@ -735,7 +735,7 @@ NONE
 ```
 ### /indication/target/show/location
 
-**Description** : Show the target indication to a specific location in the current main grid. If the target is reached, an specific use event is generated (Cible de déplacement atteinte) and the target is hidden.
+**Description** : Show the target indication to a specific location in the current main grid. If the target is reached, an specific use event is generated (Cible de déplacement atteinte). The behavior can be : HIDE_ON_REACHED (the target is hidden when reached on moving), HIDE_ON_ACTIVATION (the target will be hidden if the cursor is on the target and activated), KEEP (the target will always be showing until hide is called). Default is HIDE_ON_REACHED.
 
 **Url structure** : `/api/v1/indication/target/show/location`
 
@@ -747,7 +747,8 @@ NONE
   "row": 2,
   "column": 4,
   "color": "#008000ff",
-  "strokeSize": 5.0
+  "strokeSize": 5.0,
+  "targetBehavior": "HIDE_ON_REACHED"
 }
 ```
 ```json
@@ -755,7 +756,8 @@ NONE
   "row": 1,
   "column": 3,
   "color": null,
-  "strokeSize": null
+  "strokeSize": null,
+  "targetBehavior": null
 }
 ```
 
@@ -768,7 +770,7 @@ NONE
 ```
 ### /indication/target/show/random
 
-**Description** : Show the target indication to a random location in the current main grid. If the target is reached, an specific use event is generated (Cible de déplacement atteinte) and the target is hidden.
+**Description** : Show the target indication to a random location in the current main grid. If the target is reached, an specific use event is generated (Cible de déplacement atteinte).  The behavior can be : HIDE_ON_REACHED (the target is hidden when reached on moving), HIDE_ON_ACTIVATION (the target will be hidden if the cursor is on the target and activated), KEEP (the target will always be showing until hide is called). Default is HIDE_ON_REACHED.
 
 **Url structure** : `/api/v1/indication/target/show/random`
 
@@ -778,13 +780,15 @@ NONE
 ```json
 {
   "color": "#008000ff",
-  "strokeSize": 5.0
+  "strokeSize": 5.0,
+  "targetBehavior": "HIDE_ON_ACTIVATION"
 }
 ```
 ```json
 {
   "color": null,
-  "strokeSize": null
+  "strokeSize": null,
+  "targetBehavior": null
 }
 ```
 

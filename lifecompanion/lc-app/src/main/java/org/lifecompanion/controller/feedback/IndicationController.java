@@ -23,6 +23,7 @@ import javafx.scene.paint.Color;
 import org.lifecompanion.controller.selectionmode.SelectionModeController;
 import org.lifecompanion.model.api.configurationcomponent.*;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
+import org.lifecompanion.model.impl.useapi.dto.IndicationTargetBehavior;
 import org.lifecompanion.model.impl.useapi.dto.ShowIndicationActivationDto;
 import org.lifecompanion.model.impl.useapi.dto.ShowIndicationRandomTargetDto;
 import org.lifecompanion.model.impl.useapi.dto.ShowIndicationTargetDto;
@@ -46,15 +47,18 @@ public enum IndicationController implements ModeListenerI {
 
     private static final Color DEFAULT_STROKE_COLOR = Color.RED;
     private static final double DEFAULT_STROKE_SIZE = 5;
+    private static final IndicationTargetBehavior DEFAULT_TARGET_BEHAVIOR = IndicationTargetBehavior.HIDE_ON_REACHED;
     public static final long TRANSITION_TIME_MS = 500;
     public static final int MAX_RANDOM_LOOP = 20;
     private static final Color DEFAULT_ACTIVATION_COLOR = ColorUtils.fromWebColor("#2517c263");
 
     private IndicationView indicationView;
     private GridPartKeyComponentI currentTargetedKey;
+    private IndicationTargetBehavior currentIndicationTargetBehavior;
     private LCConfigurationI configuration;
     private final InvalidationListener listenerCurrentOverPart;
     private final Runnable listenerActivationDone;
+    private final Runnable listenerActivationDoneOnTargetKey;
     private final Set<Runnable> onTargetKeyReachedListeners;
     private final Set<Runnable> onActivationDoneListeners;
     private boolean activationRequested;
@@ -64,6 +68,12 @@ public enum IndicationController implements ModeListenerI {
         listenerCurrentOverPart = inv -> checkCurrentPartOver();
         this.onTargetKeyReachedListeners = new HashSet<>();
         this.onActivationDoneListeners = new HashSet<>();
+        this.listenerActivationDoneOnTargetKey = () -> {
+            GridPartComponentI currentOverPart = SelectionModeController.INSTANCE.currentOverPartProperty().get();
+            if (currentTargetedKey != null && currentOverPart == currentTargetedKey && currentIndicationTargetBehavior == IndicationTargetBehavior.HIDE_ON_ACTIVATION) {
+                hideTarget();
+            }
+        };
         this.listenerActivationDone = () -> {
             if (activationRequested) {
                 hideActivation();
@@ -83,7 +93,9 @@ public enum IndicationController implements ModeListenerI {
     private void checkCurrentPartOver() {
         GridPartComponentI currentOverPart = SelectionModeController.INSTANCE.currentOverPartProperty().get();
         if (currentTargetedKey != null && currentOverPart == currentTargetedKey) {
-            hideTarget();
+            if (currentIndicationTargetBehavior == IndicationTargetBehavior.HIDE_ON_REACHED) {
+                hideTarget();
+            }
             this.onTargetKeyReachedListeners.forEach(Runnable::run);
         }
     }
@@ -104,6 +116,7 @@ public enum IndicationController implements ModeListenerI {
         this.configuration = null;
         this.indicationView = null;
         this.currentTargetedKey = null;
+        this.currentIndicationTargetBehavior = null;
     }
 
     public void showTarget(ShowIndicationTargetDto showIndicationTargetDto) {
@@ -123,9 +136,13 @@ public enum IndicationController implements ModeListenerI {
         if (component instanceof GridPartKeyComponentI) {
             Color strokeColor = showIndicationTargetDto.getColor() != null ? ColorUtils.fromWebColor(showIndicationTargetDto.getColor()) : DEFAULT_STROKE_COLOR;
             double strokeSize = showIndicationTargetDto.getStrokeSize() != null ? showIndicationTargetDto.getStrokeSize() : DEFAULT_STROKE_SIZE;
+            this.currentIndicationTargetBehavior = showIndicationTargetDto.getTargetBehavior() != null ? showIndicationTargetDto.getTargetBehavior() : DEFAULT_TARGET_BEHAVIOR;
             this.currentTargetedKey = (GridPartKeyComponentI) component;
             FXThreadUtils.runOnFXThread(() -> this.indicationView.showFeedback(currentTargetedKey, strokeColor, strokeSize));
             checkCurrentPartOver();
+            if (currentIndicationTargetBehavior == IndicationTargetBehavior.HIDE_ON_ACTIVATION) {
+                executeForCurrentModeActivationListeners(s -> s.add(this.listenerActivationDoneOnTargetKey));
+            }
         } else {
             throw new IllegalArgumentException("Targeted component in the grid is not a key, the component is an instance of " + component.getClass().getSimpleName());
         }
@@ -149,9 +166,11 @@ public enum IndicationController implements ModeListenerI {
 
     public void hideTarget() {
         this.currentTargetedKey = null;
+        this.currentIndicationTargetBehavior = null;
         if (this.indicationView != null) {
             FXThreadUtils.runOnFXThread(this.indicationView::hideFeedback);
         }
+        executeForCurrentModeActivationListeners(s -> s.remove(this.listenerActivationDoneOnTargetKey));
     }
 
     public GridComponentI getTargetedGrid() {
