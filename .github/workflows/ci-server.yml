@@ -35,5 +35,5 @@ jobs:
           build-root-directory: lifecompanion-framework
           arguments: |
             :lc-framework-server:publishServerUpdate
-            -Penv=dev
+            -Penv=prod
             --stacktrace
