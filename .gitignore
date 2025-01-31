@@ -1,5 +1,6 @@
 /*/*/build
 /*/*/*/build
+/*/*/*/*/build
 /*/*/target
 /*/bin
 /*/*/*/bin
@@ -17,6 +18,11 @@ Thumbs.db
 **/*.iml
 *.log
 **/.vs
+**/.vscode
 
 .env.*
 !.env.example
+local.properties
+keystore.properties
+.kotlin
+*.jks

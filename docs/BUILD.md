@@ -6,6 +6,9 @@ Used JDK (in IntelliJ and builds) is [Eclipse Temurin™](https://adoptium.net/t
 
 ## Build and run projects
 
+> [!TIP]  
+> Instructions for build in Windows and development in VS Code can be found in [BUILD_DETAIL.md](BUILD_DETAIL.md)
+
 ### To use it directly on Gradle (optional)
 
 1. Download **JDK 21** for your platform : [Eclipse Temurin™](https://adoptium.net/temurin/releases/)
@@ -86,7 +89,7 @@ The debian package will install LifeCompanion in :
 ### Problem with accented char in code (CharacterToSpeechTranslation ...) : bad encoding on Windows dev env
 
 1. For IntelliJ, in **idea64.exe.vmoptions** file, add two lines : `-Dfile.encoding=UTF-8` and `-Dconsole.encoding=UTF-8`
-1. For Gralde, in **HOME/.gradle/gradle.properties**, add one line : `org.gradle.jvmargs=-Dfile.encoding=UTF-8 -Dconsole.encoding=UTF-8`
+1. For Gradle, in **HOME/.gradle/gradle.properties**, add one line : `org.gradle.jvmargs=-Dfile.encoding=UTF-8 -Dconsole.encoding=UTF-8`
 
 ### Cannot run Gradle commands
 
