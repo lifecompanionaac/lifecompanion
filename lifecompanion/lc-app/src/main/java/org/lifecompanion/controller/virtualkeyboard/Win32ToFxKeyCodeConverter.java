@@ -29,6 +29,7 @@ import java.util.Map;
 /**
  * Generated with https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes.<br>
  * Help special key mappings for {@link WinAutoHotKeyKeyboardReceiverController}
+ * Note : this a keyboard layout depending
  */
 public class Win32ToFxKeyCodeConverter {
     public static final Map<Integer, KeyCode> WIN32_TO_JAVAFX = new HashMap<>(200);
@@ -127,6 +128,21 @@ public class Win32ToFxKeyCodeConverter {
         WIN32_TO_JAVAFX.put(0xB1, KeyCode.TRACK_PREV); // 0xB1 - VK_MEDIA_PREV_TRACK - Previous Track key
         WIN32_TO_JAVAFX.put(0xB2, KeyCode.STOP); // 0xB2 - VK_MEDIA_STOP - Stop Media key
         WIN32_TO_JAVAFX.put(0xFA, KeyCode.PLAY); // 0xFA - VK_PLAY - Play key
+
+        // Manually added (AZERTY depending)
+        WIN32_TO_JAVAFX.put(0xBA, KeyCode.DOLLAR);//$
+        WIN32_TO_JAVAFX.put(0xBB, KeyCode.EQUALS);//=
+        WIN32_TO_JAVAFX.put(0xBC, KeyCode.COMMA);//,
+        // WIN32_TO_JAVAFX.put(0xBD, KeyCode.?); // not detected
+        WIN32_TO_JAVAFX.put(0xBE, KeyCode.SEMICOLON);//;
+        WIN32_TO_JAVAFX.put(0xBF, KeyCode.COLON);//:
+        // WIN32_TO_JAVAFX.put(0xC0, KeyCode.ù // doesn't work
+        WIN32_TO_JAVAFX.put(0xDB, KeyCode.RIGHT_PARENTHESIS);//)
+        WIN32_TO_JAVAFX.put(0xDC, KeyCode.ASTERISK);//*
+        WIN32_TO_JAVAFX.put(0xDD, KeyCode.DEAD_CIRCUMFLEX);//^
+        //WIN32_TO_JAVAFX.put(0xDE, KeyCode.² // doesn't work
+        WIN32_TO_JAVAFX.put(0xDF, KeyCode.EXCLAMATION_MARK);//!
+        WIN32_TO_JAVAFX.put(0xE2, KeyCode.LESS);//<
 
         WIN32_TO_JAVAFX.forEach((win32Code, keyCode) -> {
             if (JAVAFX_TO_WIN32.containsKey(keyCode))
