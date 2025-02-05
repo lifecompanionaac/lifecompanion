@@ -3960,4 +3960,5 @@
     <text key="use.variable.game.current.score.percent.description">Contient le pourcentage du score courant par rapport au score maximum possible. Permet d'afficher une "réussite" par rapport à un score maximum attendu.</text>
     <text key="use.variable.game.current.score.percent.example">86%</text>
     <text key="tab.title.grid.over.actions">Action à l'affichage de la grille</text>
+    <text key="action.whiteboard.set.pencil.size.field">Taille du crayon</text>
 </texts>
