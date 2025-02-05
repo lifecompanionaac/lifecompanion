@@ -59,6 +59,8 @@ public enum InstallerManager {
 
     private static final SystemInstallationI DEFAULT_SYSTEM_SPECIFIC = new DefaultSystemInstallation();
 
+    public static final String OFFLINE_INSTALLATION_DATA_PATH = "/offline-installation.zip";
+
     private static final Map<SystemType, SystemInstallationI> SYSTEM_SPECIFICS = FluentHashMap
             .map(SystemType.WINDOWS, (SystemInstallationI) new WindowsSystemInstallation())
             .with(SystemType.UNIX, new UnixSystemInstallation())
@@ -73,6 +75,7 @@ public enum InstallerManager {
     private final ExecutorService executorService;
 
     private final AppServerClient client;
+    private final boolean offlineInstallation;
 
     private boolean installationSuccess;
 
@@ -85,6 +88,7 @@ public enum InstallerManager {
         this.executorService = Executors.newSingleThreadExecutor();
         buildProperties = ApplicationBuildProperties.load(this.getClass().getResourceAsStream("/installer.properties"));
         this.client = new AppServerClient(buildProperties.getUpdateServerUrl());
+        this.offlineInstallation = this.getClass().getResource(OFFLINE_INSTALLATION_DATA_PATH) != null;
     }
 
     public ReadOnlyObjectProperty<InstallerStep> currentStepProperty() {
@@ -93,6 +97,10 @@ public enum InstallerManager {
 
     public InstallerUIConfiguration getConfiguration() {
         return this.configuration;
+    }
+
+    public boolean isOfflineInstallation() {
+        return offlineInstallation;
     }
 
     public void setInstallationSuccess(boolean installationSuccess) {

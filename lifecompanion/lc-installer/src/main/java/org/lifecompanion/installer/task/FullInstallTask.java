@@ -41,9 +41,7 @@ import org.slf4j.LoggerFactory;
 import oshi.SystemInfo;
 import oshi.hardware.HardwareAbstractionLayer;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -116,56 +114,76 @@ public class FullInstallTask extends Task<InstallResult> {
 
 
         // Download files and launcher
-        updateMessage(Translation.getText("lc.installer.task.installing.progress.general.downloading"));
-        ExecutorService downloadExecutorService = AppServerService.createDefaultExecutorService();
-        try {
-            AppServerService appServerService = new AppServerService(client);
-            UpdateFileProgress[] filesToInstall = appServerService.getUpdateDiff(buildProperties.getAppId(), SystemType.current(), "0", false);
+        if (!InstallerManager.INSTANCE.isOfflineInstallation()) {
+            updateMessage(Translation.getText("lc.installer.task.installing.progress.general.downloading"));
+            ExecutorService downloadExecutorService = AppServerService.createDefaultExecutorService();
+            try {
+                AppServerService appServerService = new AppServerService(client);
+                UpdateFileProgress[] filesToInstall = appServerService.getUpdateDiff(buildProperties.getAppId(), SystemType.current(), "0", false);
 
-            final long toDownloadBytes = Arrays.stream(filesToInstall)
-                    .filter(f -> f.getStatus() == UpdateFileProgressType.TO_DOWNLOAD)
-                    .mapToLong(f -> f.isToUnzip() ? f.getFileSize() * 2 : f.getFileSize()).sum();
-            updateProgress(0, toDownloadBytes);
-            final AtomicLong downloadedBytes = new AtomicLong();
+                final long toDownloadBytes = Arrays.stream(filesToInstall)
+                        .filter(f -> f.getStatus() == UpdateFileProgressType.TO_DOWNLOAD)
+                        .mapToLong(f -> f.isToUnzip() ? f.getFileSize() * 2 : f.getFileSize()).sum();
+                updateProgress(0, toDownloadBytes);
+                final AtomicLong downloadedBytes = new AtomicLong();
 
-            AtomicBoolean downloading = new AtomicBoolean(true);
+                AtomicBoolean downloading = new AtomicBoolean(true);
 
-            // Create all download tasks (that can be stopped if one download fail, or if this task is cancelled)
-            List<Callable<Void>> downloadFileCallables = new ArrayList<>();
-            for (UpdateFileProgress fileToInstall : filesToInstall) {
-                // Keep only file to download (as it is a first install)
-                if (fileToInstall.getStatus() == UpdateFileProgressType.TO_DOWNLOAD) {
-                    downloadFileCallables.add(() -> {
-                        if (FullInstallTask.this.isCancelled()) {
-                            downloading.set(false);
-                        }
-                        if (downloading.get()) {
-                            try {
-                                downloadFileToInstall(appServerService, downloadedBytes, toDownloadBytes, fileToInstall);
-                            } catch (Exception e) {
-                                LOGGER.error("Download error", e);
+                // Create all download tasks (that can be stopped if one download fail, or if this task is cancelled)
+                List<Callable<Void>> downloadFileCallables = new ArrayList<>();
+                for (UpdateFileProgress fileToInstall : filesToInstall) {
+                    // Keep only file to download (as it is a first install)
+                    if (fileToInstall.getStatus() == UpdateFileProgressType.TO_DOWNLOAD) {
+                        downloadFileCallables.add(() -> {
+                            if (FullInstallTask.this.isCancelled()) {
                                 downloading.set(false);
                             }
-                        }
-                        return null;
-                    });
+                            if (downloading.get()) {
+                                try {
+                                    downloadFileToInstall(appServerService, downloadedBytes, toDownloadBytes, fileToInstall);
+                                } catch (Exception e) {
+                                    LOGGER.error("Download error", e);
+                                    downloading.set(false);
+                                }
+                            }
+                            return null;
+                        });
+                    }
                 }
-            }
-            downloadExecutorService.invokeAll(downloadFileCallables);
+                downloadExecutorService.invokeAll(downloadFileCallables);
 
-            if (!downloading.get()) {
-                LOGGER.error("Download was cancelled (task or error), task will return failed");
+                if (!downloading.get()) {
+                    LOGGER.error("Download was cancelled (task or error), task will return failed");
+                    return InstallResult.INSTALLATION_FAILED_DOWNLOAD;
+                }
+                updateMessage(Translation.getText("lc.installer.task.installing.progress.general.downloading"));
+                updateProgress(progress++, TASK_COUNT);
+                downloadPluginsToInstall(appServerService);
+                updateProgress(progress++, TASK_COUNT);
+            } catch (Exception e) {
+                LOGGER.error("Error while downloading installation files", e);
+                return InstallResult.INSTALLATION_FAILED_DOWNLOAD;
+            } finally {
+                downloadExecutorService.shutdownNow();
+            }
+        } else {
+            updateMessage(Translation.getText("lc.installer.task.installing.progress.general.copying"));
+            // Copy zip file
+            File destDataZip = new File(System.getProperty("java.io.tmpdir") + "/LifeCompanion/offline-installation.zip");
+            IOUtils.createParentDirectoryIfNeeded(destDataZip);
+            try (BufferedInputStream bis = new BufferedInputStream(this.getClass().getResourceAsStream(InstallerManager.OFFLINE_INSTALLATION_DATA_PATH))) {
+                try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(destDataZip))) {
+                    IOUtils.copyStream(bis, bos);
+                }
+                long totalToUnZip = (long) (destDataZip.length() * 1.3);
+                AtomicLong unzipCount = new AtomicLong(0);
+                IOUtils.unzipIntoCountingAndStoppable(destDataZip, installerConfiguration.getInstallationSoftwareDirectory(), null, p -> {
+                    updateProgress(unzipCount.addAndGet(p), totalToUnZip);
+                }, this::isCancelled);
+            } catch (IOException e) {
+                LOGGER.error("Error while copying offline installation files", e);
                 return InstallResult.INSTALLATION_FAILED_DOWNLOAD;
             }
-            updateMessage(Translation.getText("lc.installer.task.installing.progress.general.downloading"));
-            updateProgress(progress++, TASK_COUNT);
-            downloadPluginsToInstall(appServerService);
-            updateProgress(progress++, TASK_COUNT);
-        } catch (Exception e) {
-            LOGGER.error("Error while downloading installation files", e);
-            return InstallResult.INSTALLATION_FAILED_DOWNLOAD;
-        } finally {
-            downloadExecutorService.shutdownNow();
         }
 
         try {

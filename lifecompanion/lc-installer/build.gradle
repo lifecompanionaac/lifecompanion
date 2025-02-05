@@ -16,7 +16,8 @@ javafx {
     modules = ['javafx.controls']
 }
 
-version = project.property('lifecompanion.installer.version')
+// Use app version as displayed version when needed, but maintain a installer version for update server
+version = project.property('lifecompanion.app.version')
 mainClassName = 'org.lifecompanion.installer.InstallerApp'
 
 application {
@@ -75,6 +76,8 @@ processResources {
     from('../../') {
         include 'LICENSE'
     }
+    // Will be present only when generating offline installer (cf prepareOfflineInstaller task)
+    from("${layout.buildDirectory.get()}/tmp/offline-installation.zip")
 }
 
 task publishWindowsInstaller(type: PublishInstallerTask) {

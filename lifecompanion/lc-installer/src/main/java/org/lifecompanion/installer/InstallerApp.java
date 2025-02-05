@@ -79,6 +79,7 @@ public class InstallerApp extends Application {
                 InstallerManager.INSTANCE.getBuildProperties().getBuildDate(),
                 InstallerManager.INSTANCE.getBuildProperties().getAppId(),
                 args);
+        LOGGER.info("Offline installation : {}",InstallerManager.INSTANCE.isOfflineInstallation());
         launch(args);
     }
 

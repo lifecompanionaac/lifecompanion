@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.function.BooleanSupplier;
 import java.util.function.LongConsumer;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
@@ -184,6 +185,10 @@ public class IOUtils {
      * @throws IOException if a problem happen in unzip
      */
     public static void unzipIntoCounting(final File zipPath, final File directory, final String excludeRegex, LongConsumer counter) throws IOException {
+        unzipIntoCountingAndStoppable(zipPath, directory, excludeRegex, counter, null);
+    }
+
+    public static void unzipIntoCountingAndStoppable(final File zipPath, final File directory, final String excludeRegex, LongConsumer counter, BooleanSupplier shouldBeStopped) throws IOException {
         try (ZipInputStream zis = new ZipInputStream(new FileInputStream(zipPath))) {
             ZipEntry nextEntry = zis.getNextEntry();
             while (nextEntry != null) {
@@ -194,6 +199,7 @@ public class IOUtils {
                     File filePath = new File(directory.getPath() + File.separator + name);
                     File parent = filePath.getParentFile();
                     parent.mkdirs();
+                    if (shouldBeStopped != null && shouldBeStopped.getAsBoolean()) return;
                     if (nextEntry.isDirectory()) {
                         filePath.mkdir();
                     } else {
