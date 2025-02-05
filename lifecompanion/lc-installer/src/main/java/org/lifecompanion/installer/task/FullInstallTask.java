@@ -200,6 +200,7 @@ public class FullInstallTask extends Task<InstallResult> {
             LOGGER.error("Couldn't execute system specific task", e);
             return InstallResult.INSTALLATION_FAILED_SYSTEM_SPECIFIC;
         }
+        updateProgress(1,1);
         updateMessage(Translation.getText("lc.installer.installation.result.success"));
         return InstallResult.INSTALLATION_SUCCESS;
     }
