@@ -28,6 +28,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.scene.input.Clipboard;
 import javafx.util.Duration;
+import org.lifecompanion.controller.gaming.GamingFrameworkController;
 import org.lifecompanion.controller.plugin.PluginController;
 import org.lifecompanion.controller.profile.ProfileController;
 import org.lifecompanion.controller.selectionmode.SelectionModeController;
@@ -53,6 +54,7 @@ import org.slf4j.LoggerFactory;
 import oshi.SystemInfo;
 import oshi.hardware.PowerSource;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.TextStyle;
@@ -77,6 +79,7 @@ public enum UseVariableController implements ModeListenerI {
     public final static String VARIABLE_OPEN_CHAR = "{", VARIABLE_CLOSE_CHAR = "}";
     public final static long MILLIS_TIME_UPDATE_INFO_KEY = 1000;
     public static final SimpleDateFormat DATE_ONLY_HOURS_MIN = new SimpleDateFormat("HH:mm");
+    private static final DecimalFormat INT_PERCENT = new DecimalFormat("##0");
 
     /**
      * Contains definition ID -> definition
@@ -95,7 +98,7 @@ public enum UseVariableController implements ModeListenerI {
 
     private final Map<String, Pair<Long, UseVariableI<?>>> cachedVariableValues;
 
-    private InvalidationListener listenerCurrentOverPart, listenerCurrentText, listenerCurrentWord, listenerCurrentChar, listenerLastCompleteWord;
+    private InvalidationListener listenerCurrentOverPart, listenerCurrentText, listenerCurrentWord, listenerCurrentChar, listenerLastCompleteWord, listenerGameCurrentScore, listenerGameMaxScore;
     private final Set<String> alreadyWarnedIds;
 
     UseVariableController() {
@@ -116,6 +119,8 @@ public enum UseVariableController implements ModeListenerI {
         this.listenerCurrentWord = createListener("CurrentWordInEditor");
         this.listenerCurrentChar = createListener("CurrentCharInEditor");
         this.listenerLastCompleteWord = createListener("LastCompleteWordInEditor");
+        this.listenerGameCurrentScore = createListener("GameCurrentScore", "GameCurrentScorePercent");
+        this.listenerGameMaxScore = createListener("GameMaxScore", "GameCurrentScorePercent");
     }
 
     private InvalidationListener createListener(String... ids) {
@@ -208,6 +213,13 @@ public enum UseVariableController implements ModeListenerI {
                 "use.variable.battery.time.remaining.description", "use.variable.battery.time.remaining.example", 30_000, true));
         this.addDef(new UseVariableDefinition("CurrentProfile", "use.variable.current.profile.name", "use.variable.current.profile.description",
                 "use.variable.current.profile.example"));
+        this.addDef(new UseVariableDefinition("GameCurrentScore", "use.variable.game.current.score.name", "use.variable.game.current.score.description",
+                "use.variable.game.current.score.example"));
+        this.addDef(new UseVariableDefinition("GameMaxScore", "use.variable.game.max.score.name", "use.variable.game.max.score.description",
+                "use.variable.game.max.score.example"));
+        this.addDef(new UseVariableDefinition("GameCurrentScorePercent", "use.variable.game.current.score.percent.name", "use.variable.game.current.score.percent.description",
+                "use.variable.game.current.score.percent.example"));
+
         //Init plugin
         PluginController.INSTANCE.getUseVariableDefinitions().registerListenerAndDrainCache(this::addDef);
     }
@@ -298,7 +310,7 @@ public enum UseVariableController implements ModeListenerI {
                     PowerSource powerSource = powerSources.get(0);
                     double remainingCapacityPercent = powerSource.getRemainingCapacityPercent();
                     double batteryLevel = remainingCapacityPercent != 1.0 ? remainingCapacityPercent : (1.0 * powerSource.getCurrentCapacity()) / powerSource.getMaxCapacity();
-                    return "" + (int) (batteryLevel * 100.0) + "%";
+                    return (int) (batteryLevel * 100.0) + "%";
                 }
             } catch (Throwable t) {
                 LOGGER.warn("Couldn't get power source information", t);
@@ -333,6 +345,10 @@ public enum UseVariableController implements ModeListenerI {
             }
             return "";
         });
+        // Score vars
+        putToVarMap(useCachedValue, "GameCurrentScore", vars, () -> GamingFrameworkController.INSTANCE.currentScoreProperty().get() + "");
+        putToVarMap(useCachedValue, "GameMaxScore", vars, () -> GamingFrameworkController.INSTANCE.maxScoreProperty().get() + "");
+        putToVarMap(useCachedValue, "GameCurrentScorePercent", vars, () -> INT_PERCENT.format(100.0 * (1.0 * GamingFrameworkController.INSTANCE.currentScoreProperty().get() / GamingFrameworkController.INSTANCE.maxScoreProperty().get())) + "%");
 
         // BACKWARD COMPATIBILITY : generate plugin variable and merge
         Map<String, UseVariableI<?>> oldPluginVars = PluginController.INSTANCE.generatePluginsUseVariableBackwardCompatibility();
@@ -524,6 +540,8 @@ public enum UseVariableController implements ModeListenerI {
         WritingStateController.INSTANCE.currentCharProperty().addListener(this.listenerCurrentChar);
         WritingStateController.INSTANCE.lastCompleteWordProperty().addListener(this.listenerLastCompleteWord);
         WritingStateController.INSTANCE.currentTextProperty().addListener(this.listenerCurrentText);
+        GamingFrameworkController.INSTANCE.maxScoreProperty().addListener(this.listenerGameMaxScore);
+        GamingFrameworkController.INSTANCE.currentScoreProperty().addListener(this.listenerGameCurrentScore);
     }
 
     private void removeVariableUpdateListener() {
@@ -532,6 +550,8 @@ public enum UseVariableController implements ModeListenerI {
         WritingStateController.INSTANCE.currentCharProperty().removeListener(this.listenerCurrentChar);
         WritingStateController.INSTANCE.lastCompleteWordProperty().removeListener(this.listenerLastCompleteWord);
         WritingStateController.INSTANCE.currentTextProperty().removeListener(this.listenerCurrentText);
+        GamingFrameworkController.INSTANCE.maxScoreProperty().removeListener(this.listenerGameMaxScore);
+        GamingFrameworkController.INSTANCE.currentScoreProperty().removeListener(this.listenerGameCurrentScore);
     }
     //========================================================================
 

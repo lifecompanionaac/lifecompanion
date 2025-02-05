@@ -40,7 +40,7 @@ import org.lifecompanion.ui.common.pane.specific.cell.UseVariableDefinitionListC
 import java.util.function.Predicate;
 
 public class UseVariableSelectionDialog extends Dialog<UseVariableDefinitionI> implements LCViewInitHelper {
-    private static final double STAGE_WIDTH = 350.0, STAGE_HEIGHT = 400.0;
+    private static final double STAGE_WIDTH = 380.0, STAGE_HEIGHT = 400.0;
     private static UseVariableSelectionDialog instance;
 
     private BorderPane boxSelectVariable;

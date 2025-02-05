@@ -3940,4 +3940,23 @@
     <text key="image.use.use.display.fullscreen">Afficher en plein écran à l'activation</text>
     <text key="tooltip.image.use.use.display.fullscreen">Si activé, l'activation de la touche affichera l'image en plein écran. Lors d'une nouvelle activation, l'image sera masquée.</text>
     <text key="action.key.image.display.fullscreen">Activation/désactivation de l'affichage de l'image en plein écran</text>
+    <text key="use.action.sub.category.gaming.framework.name">Mécaniques de jeux</text>
+    <text key="use.action.game.add.current.score.name">Ajouter/Soustraire au score</text>
+    <text key="use.action.game.add.current.score.description">Permet d'ajouter (ou soustraire) une valeur au score courant</text>
+    <text key="use.action.game.set.current.score.name">Définir le score</text>
+    <text key="use.action.game.set.current.score.description">Permet de définir la valeur du score. Permet par exemple de la remettre à zéro.</text>
+    <text key="use.action.game.set.max.score.name">Définir le score maximum possible</text>
+    <text key="use.action.game.set.max.score.description">Permet de définir la valeur du score maximum possible. Cette valeur permet d'obtenir un pourcentage de score à jour en fonction d'un score maximum possible.</text>
+    <text key="use.action.game.add.current.score.field">Valeur à ajouter</text>
+    <text key="use.action.game.set.current.score.field">Valeur à définir</text>
+    <text key="use.action.game.set.max.score.field">Valeur à définir</text>
+    <text key="use.variable.game.current.score.name">Score</text>
+    <text key="use.variable.game.current.score.description">Contient le score courant (modifié par les actions des "Mécaniques de jeux").</text>
+    <text key="use.variable.game.current.score.example">7</text>
+    <text key="use.variable.game.max.score.name">Score maximum possible</text>
+    <text key="use.variable.game.max.score.description">Contient le score maximum possible (modifié par les actions des "Mécaniques de jeux").</text>
+    <text key="use.variable.game.max.score.example">20</text>
+    <text key="use.variable.game.current.score.percent.name">Score (en pourcentage)</text>
+    <text key="use.variable.game.current.score.percent.description">Contient le pourcentage du score courant par rapport au score maximum possible. Permet d'afficher une "réussite" par rapport à un score maximum attendu.</text>
+    <text key="use.variable.game.current.score.percent.example">86%</text>
 </texts>
