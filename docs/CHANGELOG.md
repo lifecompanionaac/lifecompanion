@@ -15,6 +15,7 @@
 - Ticket #399 : correction de la forme des cases lorsque l'angle était trop grand
 - Ticket #398 : correction d'un problème avec l'action "Action des listes de case"
 - Ticket #396 : correction du nom du champs sur l'action "Changer la taille du crayon"
+- Ticket #414 : correction d'un problème d'affichage sur l'alignement du texte des cases
 
 ## 1.6.5 - 31/10/2025
 

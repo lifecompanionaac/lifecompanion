@@ -106,7 +106,7 @@ public class TextStyleEditView extends AbstractStyleEditView<TextCompStyleI> imp
 
         //Text align
         this.textAlignButtons = new HashMap<>();
-        this.textAlignGroup = FXControlUtils.createAlwaysSelectedToggleGroup();
+        this.textAlignGroup = FXControlUtils.createAlwaysSelectedToggleGroupV2();
         this.boxTextAlign = new HBox();
         this.boxTextAlign.setAlignment(Pos.CENTER_RIGHT);
         this.boxTextAlign.getChildren().add(this.createTextAlignToggle(TextAlignment.LEFT, FontAwesome.Glyph.ALIGN_LEFT, "left"));
