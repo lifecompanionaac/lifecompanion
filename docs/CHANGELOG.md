@@ -12,6 +12,7 @@
 
 - Correction de l'obtention de l'identifiant d'installation sur les dernières versions de Windows 11
 - Ajout/correction sur l'interface de contrôle (API)
+- Ticket #399 : correction de la forme des cases lorsque l'angle était trop grand
 
 ## 1.6.5 - 31/10/2025
 

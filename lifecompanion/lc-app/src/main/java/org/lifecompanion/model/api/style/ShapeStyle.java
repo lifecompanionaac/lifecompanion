@@ -45,7 +45,7 @@ public enum ShapeStyle {
     }
 
     public String getSvgPathFor(int angle) {
-        return useForShape ? dynamicSvgPath.draw(100, 65, angle) : null;
+        return useForShape ? dynamicSvgPath.draw(100, 65, Math.min(angle, 64)) : null;
     }
 
     public String getCellSvg() {
