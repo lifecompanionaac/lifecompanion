@@ -20,6 +20,7 @@
 package org.lifecompanion.installer;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.lifecompanion.framework.commons.doublelaunch.DoubleLaunchController;
@@ -45,6 +46,7 @@ public class InstallerApp extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+        Platform.setImplicitExit(false);
         stage.setTitle(Translation.getText("lc.installer.stage.title"));
         stage.setScene(new InstallerScene());
         stage.setWidth(600);
@@ -56,11 +58,15 @@ public class InstallerApp extends Application {
             InstallerManager.INSTANCE.cancelRequest();
         });
         stage.show();
-        InstallerManager.INSTANCE.start(this.getParameters());
+        InstallerManager.INSTANCE.start(stage, this.getParameters());
     }
 
     @Override
     public void stop() throws Exception {
+        stopAll();
+    }
+
+    public static void stopAll() {
         InstallerManager.INSTANCE.stop();
         DoubleLaunchController.INSTANCE.stop();
         LOGGER.info("Installer stopped");

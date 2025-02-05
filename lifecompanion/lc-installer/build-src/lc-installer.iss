@@ -7,7 +7,7 @@
 
 ; TODO : APP INFORMATIONS
 #define AppName "LifeCompanion"
-#define AppPublisher "CMRRF Kerpape"
+#define AppPublisher "Centre de Kerpape"
 #define AppURL "https://lifecompanionaac.org"
 
 [Setup]
@@ -16,6 +16,7 @@
 AppId={{842428C6-5769-4842-98CF-E784B68CA9C5}}
 AppName={#AppName}
 AppVersion={#AppVersion}
+AppVerName=LifeCompanion
 AppPublisher={#AppPublisher}
 AppPublisherURL={#AppURL}
 AppSupportURL={#AppURL}
@@ -44,5 +45,19 @@ Name: "french"; MessagesFile: "compiler:Languages\French.isl"
 Source: "{#InputDir}\**"; DestDir: "{app}" ; Flags: recursesubdirs
 
 [Run]
-Filename: "{app}\bin\javaw"; Parameters: "-Djava.net.useSystemProxies=true -m org.lifecompanion.installer/org.lifecompanion.installer.InstallerApp {srcexe}"; WorkingDir: "{app}\bin"; Flags: runascurrentuser waituntilterminated hidewizard
+Filename: "{app}\bin\javaw"; Parameters: "-Djava.net.useSystemProxies=true -m org.lifecompanion.installer/org.lifecompanion.installer.InstallerApp {srcexe} {code:DetectSilent}"; WorkingDir: "{app}\bin"; Flags: runascurrentuser waituntilterminated hidewizard
 
+[Code]
+
+function DetectSilent(Param: String): String;
+var
+  i: Integer;
+begin
+  Result := '';
+  for i := 1 to ParamCount do
+    if (CompareText(ParamStr(i), '/verysilent') = 0) or (CompareText(ParamStr(i), '/silent') = 0) then
+    begin
+      Result := '/silent';
+      Exit;
+    end;
+end;

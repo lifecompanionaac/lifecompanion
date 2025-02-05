@@ -27,6 +27,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.concurrent.Task;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.stage.Stage;
 import org.lifecompanion.framework.client.http.AppServerClient;
 import org.lifecompanion.framework.client.props.ApplicationBuildProperties;
 import org.lifecompanion.framework.commons.SystemType;
@@ -35,6 +36,9 @@ import org.lifecompanion.framework.commons.utils.io.FileNameUtils;
 import org.lifecompanion.framework.commons.utils.lang.CollectionUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.framework.utils.FluentHashMap;
+import org.lifecompanion.installer.InstallerApp;
+import org.lifecompanion.installer.task.FullInstallTask;
+import org.lifecompanion.installer.task.InstallResult;
 import org.lifecompanion.installer.ui.InstallerUIConfiguration;
 import org.lifecompanion.installer.ui.model.InstallerStep;
 import org.lifecompanion.installer.ui.model.step.*;
@@ -128,10 +132,10 @@ public enum InstallerManager {
         this.executorService.shutdownNow();
     }
 
-    public void start(Application.Parameters params) {
+    public void start(Stage stage, Application.Parameters params) {
         this.currentStep.set(steps[0]);
-        // Try to find if plugins are given in filename
         if (!CollectionUtils.isEmpty(params.getRaw())) {
+            // Try to find if plugins are given in filename
             // Windows : exe is given as param
             if (SystemType.current() == SystemType.WINDOWS) {
                 params.getRaw().stream().filter(s -> StringUtils.endsWithIgnoreCase(s, ".exe")).findAny().ifPresent(srcExe -> {
@@ -147,7 +151,35 @@ public enum InstallerManager {
             else {
 
             }
+            // Detect silent install
+            if (params.getRaw().stream().anyMatch(s -> StringUtils.isEqualsIgnoreCase(s, "/silent"))) {
+                startSilentInstall(stage);
+            }
         }
+
+    }
+
+    private void startSilentInstall(Stage stage) {
+        LOGGER.info("Silent installation detected, will hide installation stage and launch installation with default configuration");
+        Platform.runLater(stage::hide);
+        FullInstallTask installTask = new FullInstallTask(msg ->
+                LOGGER.info("Installation log {}", msg),
+                InstallerManager.INSTANCE.getConfiguration(),
+                InstallerManager.INSTANCE.getClient(),
+                InstallerManager.INSTANCE.getSpecificOrDefault(),
+                InstallerManager.INSTANCE.getBuildProperties());
+        installTask.setOnFailed(e -> {
+            LOGGER.error("Could not install silently", installTask.getException());
+            InstallerApp.stopAll();
+            System.exit(-1);
+        });
+        installTask.setOnSucceeded(e -> {
+            InstallResult result = installTask.getValue();
+            LOGGER.info("Installation task finished, result : {}", result);
+            InstallerApp.stopAll();
+            System.exit(result == InstallResult.INSTALLATION_SUCCESS ? 0 : -1);
+        });
+        submitTask(installTask);
     }
 
     private String getNameWithoutExtension(String name) {

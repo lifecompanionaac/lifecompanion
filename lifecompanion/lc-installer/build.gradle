@@ -3,15 +3,16 @@ import org.lifecompanion.build.PublishInstallerTask;
 
 plugins {
     id 'application'
-    id 'org.openjfx.javafxplugin' version '0.0.13'
-    id 'org.beryx.jlink' version '2.26.0'
+    id 'org.openjfx.javafxplugin' version '0.1.0'
+    id 'org.beryx.jlink' version '3.0.1'
+    id 'org.javamodularity.moduleplugin' version '1.8.15'
     id 'org.lifecompanion.gradle.plugin.env-conf'
     id 'org.lifecompanion.gradle.plugin.download-jdk-jfx'
     id 'org.lifecompanion.gradle.plugin.publish-installer'
 }
 
 javafx {
-    version = '18'
+    version = '22'
     modules = ['javafx.controls']
 }
 
@@ -25,15 +26,14 @@ application {
 dependencies {
     implementation 'com.github.oshi:oshi-core:4.5.2'
     implementation 'com.github.vatbub:mslinks:1.0.5'
-    implementation 'ch.qos.logback:logback-classic:1.3.0-alpha4'
+    implementation 'ch.qos.logback:logback-classic:1.5.5'
     implementation 'org.lifecompanion:lc-framework-commons-fx:1.0.0'
     implementation 'org.lifecompanion:lc-framework-client:1.0.0'
 }
 
 jlink {
     mergedModule {
-        additive = true
-        requires 'org.slf4j' // needed
+        excludeRequires  'ch.qos.logback.classic'
     }
     targetPlatform('win_x64') {
         jdkHome = "${project.property('jdk_win_x64')}"
