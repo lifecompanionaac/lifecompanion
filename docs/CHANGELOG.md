@@ -18,6 +18,7 @@
 - Ticket #396 : correction du nom du champs sur l'action "Changer la taille du crayon"
 - Ticket #414 : correction d'un problème d'affichage sur l'alignement du texte des cases
 - Ticket #412 : correction de certains problèmes avec les raccourcis clavier générés
+- Ticket #413 : correction de problème sur la taille de certaines fenêtres du mode édition
 
 ## 1.6.5 - 31/10/2025
 

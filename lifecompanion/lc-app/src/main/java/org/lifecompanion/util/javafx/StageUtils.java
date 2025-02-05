@@ -37,6 +37,7 @@ import org.lifecompanion.model.api.configurationcomponent.FramePosition;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.model.impl.useapi.GlobalRuntimeConfiguration;
+import org.lifecompanion.ui.common.control.specific.imagedictionary.WebcamCaptureDialog;
 import org.lifecompanion.ui.notification.NotificationStage;
 import org.lifecompanion.util.LangUtils;
 import org.slf4j.Logger;
@@ -162,6 +163,15 @@ public class StageUtils {
 
     public static Screen getStageScreen(Stage stage) {
         Rectangle2D stageCenterPoint = new Rectangle2D(stage.getX() + stage.getWidth() / 2, stage.getY() + stage.getHeight() / 2, 1, 1);
+        return getScreenForRectangle(stageCenterPoint);
+    }
+
+    public static Screen getDialogScreen(Dialog<?> dialog) {
+        Rectangle2D stageCenterPoint = new Rectangle2D(dialog.getX() + dialog.getWidth() / 2, dialog.getY() + dialog.getHeight() / 2, 1, 1);
+        return getScreenForRectangle(stageCenterPoint);
+    }
+
+    private static Screen getScreenForRectangle(Rectangle2D stageCenterPoint) {
         ObservableList<Screen> screensContainingStage = Screen.getScreensForRectangle(stageCenterPoint);
         return screensContainingStage.isEmpty() ? Screen.getPrimary() : screensContainingStage.get(0);
     }

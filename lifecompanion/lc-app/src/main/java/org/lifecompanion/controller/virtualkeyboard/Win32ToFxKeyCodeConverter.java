@@ -133,7 +133,7 @@ public class Win32ToFxKeyCodeConverter {
         WIN32_TO_JAVAFX.put(0xBA, KeyCode.DOLLAR);//$
         WIN32_TO_JAVAFX.put(0xBB, KeyCode.EQUALS);//=
         WIN32_TO_JAVAFX.put(0xBC, KeyCode.COMMA);//,
-        // WIN32_TO_JAVAFX.put(0xBD, KeyCode.?); // not detected
+        // WIN32_TO_JAVAFX.put(0xBD, KeyCode.); // not detected
         WIN32_TO_JAVAFX.put(0xBE, KeyCode.SEMICOLON);//;
         WIN32_TO_JAVAFX.put(0xBF, KeyCode.COLON);//:
         // WIN32_TO_JAVAFX.put(0xC0, KeyCode.ù // doesn't work
