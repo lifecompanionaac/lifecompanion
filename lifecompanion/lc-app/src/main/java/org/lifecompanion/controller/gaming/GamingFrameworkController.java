@@ -39,7 +39,6 @@ public enum GamingFrameworkController implements ModeListenerI {
 
     @Override
     public void modeStart(LCConfigurationI configuration) {
-
     }
 
     @Override

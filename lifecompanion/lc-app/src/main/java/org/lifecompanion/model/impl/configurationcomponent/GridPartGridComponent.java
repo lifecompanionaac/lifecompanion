@@ -22,15 +22,21 @@ import javafx.beans.property.*;
 import javafx.collections.ObservableList;
 import org.jdom2.Element;
 import org.lifecompanion.framework.commons.fx.io.XMLUtils;
+import org.lifecompanion.model.api.categorizedelement.useaction.ActionEventType;
+import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
+import org.lifecompanion.model.api.categorizedelement.useaction.UseActionManagerI;
 import org.lifecompanion.model.api.configurationcomponent.ComponentGridI;
 import org.lifecompanion.model.api.configurationcomponent.*;
 import org.lifecompanion.model.api.selectionmode.SelectionModeParameterI;
+import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionManager;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.ui.configurationcomponent.ViewProviderI;
 import org.lifecompanion.model.impl.selectionmode.SelectionModeParameter;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 
+import java.util.Map;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 /**
@@ -63,6 +69,9 @@ public class GridPartGridComponent extends GridPartComponentBaseImpl implements 
 
     private final transient BooleanProperty canUseParentSelectionModeConfiguration;
 
+    private final UseActionManagerI actionManager;
+    private final UseActionTriggerEventWrapper useActionTriggerEventWrapper;
+
     /**
      * Create a empty grid part component, without component inside
      */
@@ -76,6 +85,8 @@ public class GridPartGridComponent extends GridPartComponentBaseImpl implements 
         this.columnCount = new SimpleIntegerProperty(0);
         this.caseWidth = new SimpleDoubleProperty();
         this.caseHeight = new SimpleDoubleProperty();
+        this.useActionTriggerEventWrapper = new UseActionTriggerEventWrapper();
+        this.actionManager = new SimpleUseActionManager(this, UseActionEvent.OVER);
         this.initBinding();
     }
 
@@ -89,6 +100,11 @@ public class GridPartGridComponent extends GridPartComponentBaseImpl implements 
         this.columnCount.bind(this.grid.columnProperty());
     }
 
+    @Override
+    public void idsChanged(final Map<String, String> changes) {
+        super.idsChanged(changes);
+        this.actionManager.dispatchIdsChanged(changes);
+    }
 
     // Class part : "Grid properties"
     //========================================================================
@@ -213,6 +229,18 @@ public class GridPartGridComponent extends GridPartComponentBaseImpl implements 
 
     //========================================================================
 
+    @Override
+    public void serializeUseInformation(final Map<String, Element> elements) {
+        super.serializeUseInformation(elements);
+        this.actionManager.serializeUseInformation(elements);
+    }
+
+    @Override
+    public void deserializeUseInformation(final Map<String, Element> elements) throws LCException {
+        super.deserializeUseInformation(elements);
+        this.actionManager.deserializeUseInformation(elements);
+    }
+
     // Class part : "XML"
     //========================================================================
 
@@ -224,6 +252,12 @@ public class GridPartGridComponent extends GridPartComponentBaseImpl implements 
         //Selection mode parameter (only if different from parent mode)
         if (!this.useParentSelectionMode.get()) {
             element.addContent(this.selectionModeParameter.serialize(contextP));
+        }
+
+        //Action
+        Element actionManagerElement = this.actionManager.serialize(contextP);
+        if (actionManagerElement != null) {
+            element.addContent(actionManagerElement);
         }
 
         //Grid
@@ -241,6 +275,11 @@ public class GridPartGridComponent extends GridPartComponentBaseImpl implements 
         Element selectionModeParameter = nodeP.getChild(SelectionModeParameter.NODE_SELECTION_MODE);
         if (selectionModeParameter != null && !useParentSelectionMode.get()) {
             this.selectionModeParameter.deserialize(selectionModeParameter, contextP);
+        }
+
+        Element actionManagerNode = nodeP.getChild(SimpleUseActionManager.NODE_USE_ACTION_MANAGER);
+        if (actionManagerNode != null) {
+            this.actionManager.deserialize(actionManagerNode, contextP);
         }
 
         //Grid
@@ -277,4 +316,28 @@ public class GridPartGridComponent extends GridPartComponentBaseImpl implements 
     }
     //========================================================================
 
+    @Override
+    public UseActionManagerI getActionManager() {
+        return actionManager;
+    }
+
+    @Override
+    public boolean hasEventHandlingFor(ActionEventType type, UseActionEvent event) {
+        return false;
+    }
+
+    @Override
+    public void eventFired(ActionEventType type, UseActionEvent event) {
+        this.useActionTriggerEventWrapper.eventFired(type, event);
+    }
+
+    @Override
+    public void addEventFiredListener(BiConsumer<ActionEventType, UseActionEvent> eventListener) {
+        this.useActionTriggerEventWrapper.addEventFiredListener(eventListener);
+    }
+
+    @Override
+    public void removeEventFiredListener(BiConsumer<ActionEventType, UseActionEvent> eventListener) {
+        this.useActionTriggerEventWrapper.removeEventFiredListener(eventListener);
+    }
 }

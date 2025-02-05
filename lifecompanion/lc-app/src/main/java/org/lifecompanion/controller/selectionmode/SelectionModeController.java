@@ -34,6 +34,7 @@ import org.lifecompanion.controller.lifecycle.AppMode;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.profile.ProfileController;
 import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
+import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.configurationcomponent.*;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
 import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
@@ -824,6 +825,13 @@ public enum SelectionModeController implements ModeListenerI {
     }
 
     private void gridChanged(final GridComponentI newGrid) {
+        // Fire action on grid if needed
+        LOGGER.info("Fire grid actions on {}",newGrid.nameProperty().get());
+        UseActionController.INSTANCE.executeSimpleOn(newGrid, UseActionEvent.OVER, null, true, result->{
+            LOGGER.info("ACTION DONE FOR {}",newGrid.nameProperty().get());
+        });
+
+        // Change selection mode
         LCConfigurationI configuration = AppModeController.INSTANCE.getUseModeContext().configurationProperty().get();
         SelectionModeI currentMode = this.getSelectionModeConfiguration();
         this.LOGGER.debug("Grid changed for a scanning selection mode, current mode is {}", currentMode);

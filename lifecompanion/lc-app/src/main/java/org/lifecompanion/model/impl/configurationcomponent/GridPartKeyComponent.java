@@ -87,7 +87,7 @@ public class GridPartKeyComponent extends GridPartComponentBaseImpl implements G
 
     private final VideoUseComponentPropertyWrapper videoUseComponentPropertyWrapper;
 
-    private final Set<BiConsumer<ActionEventType, UseActionEvent>> eventFiredListeners;
+    private final UseActionTriggerEventWrapper useActionTriggerEventWrapper;
 
     public GridPartKeyComponent() {
         super();
@@ -98,7 +98,7 @@ public class GridPartKeyComponent extends GridPartComponentBaseImpl implements G
         this.wantedImageHeight = new SimpleDoubleProperty(this, "wantedImageHeight");
         this.imageUseComponentPropertyWrapper = new ImageUseComponentPropertyWrapper(this);
         this.videoUseComponentPropertyWrapper = new VideoUseComponentPropertyWrapper(this);
-        this.eventFiredListeners = new HashSet<>(2);
+        this.useActionTriggerEventWrapper = new UseActionTriggerEventWrapper();
         // Binding wanted image size
         this.configurationParent.addListener((obs, ov, nv) -> {
             if (nv != null) {
@@ -209,13 +209,6 @@ public class GridPartKeyComponent extends GridPartComponentBaseImpl implements G
 
 
     @Override
-    public void eventFired(ActionEventType type, UseActionEvent event) {
-        for (BiConsumer<ActionEventType, UseActionEvent> eventFiredListener : eventFiredListeners) {
-            eventFiredListener.accept(type, event);
-        }
-    }
-
-    @Override
     public boolean hasEventHandlingFor(ActionEventType type, UseActionEvent event) {
         if (videoProperty().get() != null) {
             VideoDisplayMode videoDisplayMode = videoDisplayModeProperty().get();
@@ -231,13 +224,18 @@ public class GridPartKeyComponent extends GridPartComponentBaseImpl implements G
     }
 
     @Override
+    public void eventFired(ActionEventType type, UseActionEvent event) {
+        this.useActionTriggerEventWrapper.eventFired(type,event);
+    }
+
+    @Override
     public void addEventFiredListener(BiConsumer<ActionEventType, UseActionEvent> eventListener) {
-        this.eventFiredListeners.add(eventListener);
+        this.useActionTriggerEventWrapper.addEventFiredListener(eventListener);
     }
 
     @Override
     public void removeEventFiredListener(BiConsumer<ActionEventType, UseActionEvent> eventListener) {
-        this.eventFiredListeners.remove(eventListener);
+        this.useActionTriggerEventWrapper.removeEventFiredListener(eventListener);
     }
 
     /**

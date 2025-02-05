@@ -20,11 +20,10 @@ package org.lifecompanion.ui.app.main.ribbon.available;
 
 import org.lifecompanion.model.api.configurationcomponent.DisplayableComponentI;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
+import org.lifecompanion.model.impl.configurationcomponent.GridPartGridComponent;
 import org.lifecompanion.model.impl.configurationcomponent.GridPartKeyComponent;
 import org.lifecompanion.ui.app.main.ribbon.AbstractRibbonTabContent;
 import org.lifecompanion.ui.app.main.ribbon.AbstractSelectionChangeRibbonTab;
-import org.lifecompanion.ui.app.main.ribbon.available.ActionRibbonParts;
-import org.lifecompanion.ui.app.main.ribbon.available.ActionRibbonParts.ActionKeyPart;
 import org.lifecompanion.framework.commons.translation.Translation;
 
 import java.util.HashMap;
@@ -46,14 +45,10 @@ public class RibbonTabAction extends AbstractSelectionChangeRibbonTab {
     @Override
     public Map<Class<?>, AbstractRibbonTabContent> getSelectionComponent() {
         HashMap<Class<?>, AbstractRibbonTabContent> componentSelection = new HashMap<>();
-        componentSelection.put(GridPartKeyComponent.class, new ActionKeyPart());
+        componentSelection.put(GridPartKeyComponent.class, new ActionRibbonParts.ActionKeyPart());
+        componentSelection.put(GridPartGridComponent.class, new ActionRibbonParts.ActionGridPart());
         componentSelection.put(MultiSelection.class, new ActionRibbonParts.MultiKeyActionKey());
         return componentSelection;
-    }
-
-    @Override
-    public String getNoSelectionTabTitle() {
-        return this.tabTitle.get();
     }
 
     @Override

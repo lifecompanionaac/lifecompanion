@@ -18,6 +18,7 @@
  */
 package org.lifecompanion.ui.app.main.ribbon.available;
 
+import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.ui.app.main.ribbon.AbstractRibbonTabContent;
 import org.lifecompanion.ui.app.main.ribbon.available.withselection.useaction.UseActionListRibbonPart;
@@ -35,6 +36,15 @@ public class ActionRibbonParts {
             super(//
                     RibbonTabPart.create(new UseActionListRibbonPart(UseActionEvent.ACTIVATION, false)), //
                     RibbonTabPart.create(new UseActionListRibbonPart(UseActionEvent.OVER, false))//
+            );
+        }
+    }
+
+    public static class ActionGridPart extends AbstractRibbonTabContent {
+
+        public ActionGridPart() {
+            super(//
+                    RibbonTabPart.create(new UseActionListRibbonPart(UseActionEvent.OVER, Translation.getText("tab.title.grid.over.actions"), true))//
             );
         }
     }

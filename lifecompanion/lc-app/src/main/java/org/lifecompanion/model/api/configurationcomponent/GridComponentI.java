@@ -19,6 +19,7 @@
 
 package org.lifecompanion.model.api.configurationcomponent;
 
+import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
 import org.lifecompanion.model.api.style.GridStyleUserI;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ReadOnlyDoubleProperty;
@@ -31,7 +32,7 @@ import javafx.beans.property.ReadOnlyIntegerProperty;
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public interface GridComponentI
-		extends DisplayableComponentI, GridChildComponentI, SelectableComponentI, GridPartComponentI, SelectionModeUserI, GridStyleUserI {
+		extends DisplayableComponentI, GridChildComponentI, SelectableComponentI, GridPartComponentI, SelectionModeUserI, GridStyleUserI, UseActionTriggerComponentI {
 
 	/**
 	 * @return property that represent number of row inside the grid
