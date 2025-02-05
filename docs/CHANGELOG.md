@@ -19,6 +19,7 @@
 - Ticket #414 : correction d'un problème d'affichage sur l'alignement du texte des cases
 - Ticket #412 : correction de certains problèmes avec les raccourcis clavier générés
 - Ticket #413 : correction de problème sur la taille de certaines fenêtres du mode édition
+- Ticket #397 : la fenêtre des paramètres de sélection spécifiques à la grille n'affichait pas les boutons
 
 ## 1.6.5 - 31/10/2025
 
