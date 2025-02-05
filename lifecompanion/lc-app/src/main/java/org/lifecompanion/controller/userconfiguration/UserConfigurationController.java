@@ -26,6 +26,7 @@ import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.metrics.SessionStatsController;
 import org.lifecompanion.controller.systemvk.SystemVirtualKeyboardController;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
+import org.lifecompanion.model.api.style.TextPosition;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.ui.app.userconfiguration.UserConfigStage;
 import org.lifecompanion.ui.app.userconfiguration.UserConfigurationView;
@@ -53,7 +54,7 @@ public enum UserConfigurationController {
             PROP_SCREEN_INDEX = "screen-index",
             PROP_RECORD_SEND_SESSION_STATS = "record-and-send-session-stats", PROP_ENABLE_AUTO_VK_SHOW = "auto-virtual-keyboard-show", PROP_ENABLE_JPD_EASTER_EGG = "enable-jpd-easter-egg",
             PROP_DISABLE_EXIT_USE_MODE = "disable-exit-use-mode", PROP_SECURE_GO_EDIT_MODE = "secure-go-edit-mode", PROP_AUTO_CONFIG_PROFILE_BACKUP = "auto-config-profile-backup",
-            PROP_AUTO_SELECT_IMAGES = "auto-select-images", PROP_ENABLE_SPEECH_OPTIMIZATION = "enable-speech-optimization";
+            PROP_AUTO_SELECT_IMAGES = "auto-select-images", PROP_ENABLE_SPEECH_OPTIMIZATION = "enable-speech-optimization", PROP_DEFAULT_TEXT_POSITION_ON_IMAGE_SELECTION = "default-text-position-on-image-selection";
 
 
     //Properties
@@ -72,6 +73,7 @@ public enum UserConfigurationController {
     private final BooleanProperty autoConfigurationProfileBackup;
     private final BooleanProperty autoSelectImages;
     private final BooleanProperty enableSpeechOptimization;
+    private final ObjectProperty<TextPosition> defaultTextPositionOnImageSelection;
     private IntegerProperty screenIndex;
     private UserConfigurationView userConfigurationView;
 
@@ -94,6 +96,7 @@ public enum UserConfigurationController {
         this.autoSelectImages = new SimpleBooleanProperty(false);
         this.enableSpeechOptimization = new SimpleBooleanProperty(true);
         this.autoConfigurationProfileBackup = new SimpleBooleanProperty(true);
+        this.defaultTextPositionOnImageSelection = new SimpleObjectProperty<>(TextPosition.BOTTOM);
     }
 
     private File getConfigFile() {
@@ -173,6 +176,9 @@ public enum UserConfigurationController {
             if (prop.containsKey(UserConfigurationController.PROP_ENABLE_SPEECH_OPTIMIZATION)) {
                 this.enableSpeechOptimization.set(Boolean.parseBoolean(prop.getProperty(PROP_ENABLE_SPEECH_OPTIMIZATION)));
             }
+            if (prop.containsKey(UserConfigurationController.PROP_DEFAULT_TEXT_POSITION_ON_IMAGE_SELECTION)) {
+                this.defaultTextPositionOnImageSelection.set(TextPosition.valueOf(prop.getProperty(PROP_DEFAULT_TEXT_POSITION_ON_IMAGE_SELECTION)));
+            }
         } catch (FileNotFoundException e) {
             this.LOGGER.warn("Configuration file {} not found", configFile, e);
         }
@@ -204,6 +210,7 @@ public enum UserConfigurationController {
         prop.setProperty(PROP_AUTO_CONFIG_PROFILE_BACKUP, "" + this.autoConfigurationProfileBackup.get());
         prop.setProperty(PROP_AUTO_SELECT_IMAGES, "" + this.autoSelectImages.get());
         prop.setProperty(PROP_ENABLE_SPEECH_OPTIMIZATION, "" + this.enableSpeechOptimization.get());
+        prop.setProperty(PROP_DEFAULT_TEXT_POSITION_ON_IMAGE_SELECTION, "" + this.defaultTextPositionOnImageSelection.get());
         IOUtils.createParentDirectoryIfNeeded(configFile);
         try (FileOutputStream fos = new FileOutputStream(configFile)) {
             prop.store(fos, LCConstant.NAME + " user configuration file");
@@ -281,5 +288,9 @@ public enum UserConfigurationController {
 
     public BooleanProperty enableSpeechOptimizationProperty() {
         return enableSpeechOptimization;
+    }
+
+    public ObjectProperty<TextPosition> defaultTextPositionOnImageSelectionProperty() {
+        return defaultTextPositionOnImageSelection;
     }
 }

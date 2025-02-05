@@ -292,14 +292,14 @@ public class KeyActions {
                                                                                         Predicate<T> propertyChecker) {
         if (type.isAssignableFrom(component.getClass())) {
             TextPosition currentPos = textPositionGetter.apply((T) component);
-            // Set to bottom when setting a new value
+            // Set to default value when setting a new value
             if (wantedValue != null && previousValueGetter.apply((T) component) == null && (currentPos == null || currentPos == TextPosition.CENTER) && propertyChecker.test((T) component)) {
                 Runnable textPositionUndo = () -> {
                     if (propertyChecker.test((T) component)) {
                         textPositionSetter.accept((T) component, currentPos);
                     }
                 };
-                textPositionSetter.accept((T) component, TextPosition.BOTTOM);
+                textPositionSetter.accept((T) component,UserConfigurationController.INSTANCE.defaultTextPositionOnImageSelectionProperty().get());
                 return textPositionUndo;
             }
             // Set to center when deleting a previous value

@@ -7,6 +7,7 @@
 
 - Les **grilles peuvent maintenant avoir des actions "À l'affichage de la grille"** : ces actions seront déclenchées dès que la grille est affiché
 - Ajout d'**actions de "Mécaniques de jeux"** permettant d'intéragir avec un score : disponible dans Actions > Divers > "Mécaniques de jeux"
+- Ajout d'un nouveau paramètres (dans Préférences & Infos) : **Position du texte à la sélection d'une image**. Permet de définir la position du texte qui doit être utilisée lors de la sélection d'une image (par exemple, "en bas" ou "en haut")
 
 ### Corrections/ajustements
 

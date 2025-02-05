@@ -1737,7 +1737,6 @@
   <text key="action.name.change.grid.vgap">Change the vertical spacing of a grid</text>
   <text key="action.simulate.key.over.name">Simulate hovering over a key</text>
   <text key="general.configuration.info.button.edit.information">Edit information</text>
-  <text key="user.config.stage.title">Window</text>
   <text key="disable.exit.use.mode.message">You cannot close LifeCompanion in usage mode. To close LifeCompanion, enter "Edit" mode or turn off this setting.</text>
   <text key="action.remove.config.confirm.title">Delete</text>
   <text key="tooltip.add.key.right">Adds a key from the right to the selected key. This will shift the grid keys to the left and remove the first key</text>

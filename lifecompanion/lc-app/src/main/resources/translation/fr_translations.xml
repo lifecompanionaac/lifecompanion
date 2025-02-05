@@ -1558,7 +1558,7 @@
   <text key="user.config.selection.stroke.size">Taille du contour de sélection</text>
   <text key="user.config.stage.fullscreen">Lancer en plein écran</text>
   <text key="user.config.stage.height">Hauteur de la fenêtre</text>
-  <text key="user.config.stage.title">Fenêtre</text>
+  <text key="user.config.stage.title">Fenêtre en mode édition</text>
   <text key="user.config.stage.width">Largeur de la fenêtre</text>
   <text key="user.config.tab.about">À Propos</text>
   <text key="user.config.tab.misc">Divers</text>
@@ -3961,4 +3961,6 @@
     <text key="use.variable.game.current.score.percent.example">86%</text>
     <text key="tab.title.grid.over.actions">Action à l'affichage de la grille</text>
     <text key="action.whiteboard.set.pencil.size.field">Taille du crayon</text>
+    <text key="default.text.position.image.selection.field">Position du texte à la sélection d'une image</text>
+    <text key="default.text.position.image.selection.explain">Définit la position du texte sur une case par défaut lors de la sélection d'une image. Ce paramètre permet simplement de gagner du temps, la position peut ensuite être changée manuellement.</text>
 </texts>

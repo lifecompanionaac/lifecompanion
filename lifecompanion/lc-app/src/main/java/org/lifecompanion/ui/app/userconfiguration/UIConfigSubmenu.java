@@ -33,11 +33,13 @@ import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.controller.io.task.CleanupTempFileTask;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
 import org.lifecompanion.framework.commons.utils.io.FileNameUtils;
+import org.lifecompanion.model.api.style.TextPosition;
 import org.lifecompanion.model.impl.appinstallation.OptionalResourceEnum;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.model.impl.notification.LCNotification;
 import org.lifecompanion.ui.common.pane.specific.cell.SimpleTextListCell;
+import org.lifecompanion.ui.common.pane.specific.cell.TextPositionListCell;
 import org.lifecompanion.ui.common.pane.specific.cell.TitleAndDescriptionListCell;
 import org.lifecompanion.ui.controlsfx.control.ToggleSwitch;
 import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
@@ -54,6 +56,8 @@ import org.lifecompanion.util.javafx.*;
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
 public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, LCViewInitHelper {
+    private static final double SPINNER_WIDTH = 150.0;
+
     /**
      * Spinner to set the frame width/height
      */
@@ -68,6 +72,8 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
      * Spinner to set config selection size
      */
     private Spinner<Double> spinnerStrokeSize, spinnerDashSize;
+
+    private ComboBox<TextPosition> comboBoxDefaultTextPositionOnImageSelection;
 
     /**
      * To enable/disable fullscreen
@@ -129,11 +135,11 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
         labelExplainSecuredConfigMode.getStyleClass().addAll("text-wrap-enabled", "text-font-italic", "text-fill-gray");
 
         //Selection parameter
-        this.spinnerStrokeSize = FXControlUtils.createDoubleSpinner(1.0, 20.0, 3.0, 1.0, 110.0);
+        this.spinnerStrokeSize = FXControlUtils.createDoubleSpinner(1.0, 20.0, 3.0, 1.0, SPINNER_WIDTH);
         Label labelStrokeSize = new Label(Translation.getText("user.config.selection.stroke.size"));
         GridPane.setHgrow(labelStrokeSize, Priority.ALWAYS);
         Label labelDashSize = new Label(Translation.getText("user.config.selection.dash.size"));
-        this.spinnerDashSize = FXControlUtils.createDoubleSpinner(1.0, 20.0, 3.0, 1.0, 110.0);
+        this.spinnerDashSize = FXControlUtils.createDoubleSpinner(1.0, 20.0, 3.0, 1.0, SPINNER_WIDTH);
         GridPane gridPaneStyleParam = createConfigPane();
         int rowStyle = 0;
         gridPaneStyleParam.add(labelStrokeSize, 0, rowStyle);
@@ -143,9 +149,9 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
         Label labelConfigStylePart = FXControlUtils.createTitleLabel("user.config.part.ui.config");
 
         //Frame parameter
-        this.spinnerFrameWidth = FXControlUtils.createIntSpinner(10, Integer.MAX_VALUE, 50, 100, 110);
+        this.spinnerFrameWidth = FXControlUtils.createIntSpinner(10, Integer.MAX_VALUE, 50, 100, SPINNER_WIDTH);
         GridPane.setHalignment(spinnerFrameWidth, HPos.RIGHT);
-        this.spinnerFrameHeight = FXControlUtils.createIntSpinner(10, Integer.MAX_VALUE, 50, 100, 110);
+        this.spinnerFrameHeight = FXControlUtils.createIntSpinner(10, Integer.MAX_VALUE, 50, 100, SPINNER_WIDTH);
         GridPane.setHalignment(spinnerFrameHeight, HPos.RIGHT);
         Label labelWidth = new Label(Translation.getText("user.config.stage.width"));
         GridPane.setHgrow(labelWidth, Priority.ALWAYS);
@@ -179,21 +185,39 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
 
         //Unsaved modification
         Label labelConfigTitle = FXControlUtils.createTitleLabel("user.config.configuration.title");
-        this.spinnerUnsavedModification = FXControlUtils.createIntSpinner(1, 5000, 5, 10, 110.0);
+        this.spinnerUnsavedModification = FXControlUtils.createIntSpinner(1, 5000, 5, 10, SPINNER_WIDTH);
+        GridPane.setMargin(spinnerUnsavedModification, new Insets(0, 0, 10, 0));
+
         Label labelUnsavedThreshold = new Label(Translation.getText("user.config.unsaved.modification.threshold"));
         toggleAutoSelectImages = FXControlUtils.createToggleSwitch("auto.select.key.image.config", null);
         Label labelExplainAutoSelectImages = new Label(Translation.getText("auto.select.key.image.config.description"));
         labelExplainAutoSelectImages.getStyleClass().addAll("text-wrap-enabled", "text-font-italic", "text-fill-gray");
+        GridPane.setMargin(labelExplainAutoSelectImages, new Insets(0, 0, 10, 0));
 
         toggleEnableSpeechOptimization = FXControlUtils.createToggleSwitch("enable.speech.optimization.control", null);
         Label labelExplainSpeechOptimization = new Label(Translation.getText("enable.speech.optimization.control.description"));
         labelExplainSpeechOptimization.getStyleClass().addAll("text-wrap-enabled", "text-font-italic", "text-fill-gray");
+        GridPane.setMargin(labelExplainSpeechOptimization, new Insets(0, 0, 10, 0));
+
+        Label labelDefaultTextPositionOnImageSelection = new Label(Translation.getText("default.text.position.image.selection.field"));
+        Label labelDefaultTextPositionOnImageSelectionExplain = new Label(Translation.getText("default.text.position.image.selection.explain"));
+        labelDefaultTextPositionOnImageSelectionExplain.getStyleClass().addAll("text-wrap-enabled", "text-font-italic", "text-fill-gray");
+        GridPane.setMargin(labelDefaultTextPositionOnImageSelectionExplain, new Insets(0, 0, 10, 0));
+        this.comboBoxDefaultTextPositionOnImageSelection = new ComboBox<>(FXCollections.observableArrayList(TextPosition.values()));
+        this.comboBoxDefaultTextPositionOnImageSelection.setButtonCell(new TextPositionListCell(false));
+        this.comboBoxDefaultTextPositionOnImageSelection.setCellFactory(lv -> new TextPositionListCell(true));
+        this.comboBoxDefaultTextPositionOnImageSelection.setMaxWidth(Double.MAX_VALUE);
 
         GridPane.setHgrow(labelUnsavedThreshold, Priority.ALWAYS);
         GridPane gridPaneConfiguration = createConfigPane();
         int rowConfig = 0;
         gridPaneConfiguration.add(labelUnsavedThreshold, 0, rowConfig);
         gridPaneConfiguration.add(this.spinnerUnsavedModification, 1, rowConfig++);
+
+        gridPaneConfiguration.add(labelDefaultTextPositionOnImageSelection, 0, rowConfig);
+        gridPaneConfiguration.add(comboBoxDefaultTextPositionOnImageSelection, 1, rowConfig++);
+        gridPaneConfiguration.add(labelDefaultTextPositionOnImageSelectionExplain, 0, rowConfig++, 2, 1);
+
         gridPaneConfiguration.add(toggleAutoSelectImages, 0, rowConfig++, 2, 1);
         gridPaneConfiguration.add(labelExplainAutoSelectImages, 0, rowConfig++, 2, 1);
         gridPaneConfiguration.add(toggleEnableSpeechOptimization, 0, rowConfig++, 2, 1);
@@ -257,7 +281,7 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
         this.toggleAutoSelectImages.setSelected(UserConfigurationController.INSTANCE.autoSelectImagesProperty().get());
         this.comboBoxLanguage.getSelectionModel().select(UserConfigurationController.INSTANCE.userLanguageProperty().get());
         this.toggleEnableSpeechOptimization.setSelected(UserConfigurationController.INSTANCE.enableSpeechOptimizationProperty().get());
-
+        this.comboBoxDefaultTextPositionOnImageSelection.getSelectionModel().select(UserConfigurationController.INSTANCE.defaultTextPositionOnImageSelectionProperty().get());
         updateInstalledOptions();
     }
 
@@ -285,6 +309,7 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
         UserConfigurationController.INSTANCE.autoSelectImagesProperty().set(this.toggleAutoSelectImages.isSelected());
         UserConfigurationController.INSTANCE.userLanguageProperty().set(this.comboBoxLanguage.getValue());
         UserConfigurationController.INSTANCE.enableSpeechOptimizationProperty().set(this.toggleEnableSpeechOptimization.isSelected());
+        UserConfigurationController.INSTANCE.defaultTextPositionOnImageSelectionProperty().set(comboBoxDefaultTextPositionOnImageSelection.getValue());
     }
 
     @Override
