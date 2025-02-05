@@ -81,13 +81,26 @@ public class CharPredictor {
             alreadyPredicted.addAll(currentPrediction);
             lastTextPart = lastTextPart.substring(1);
         }
-        //If ended without matching the wanted prediction count
+        //If ended without matching the wanted prediction count : add default chars
         if (predictions.size() < wantedPrediction) {
             this.firstCharacter.stream()//
                     .filter(w -> !alreadyPredicted.contains(w))//
                     .filter(c -> acceptedCharacters == null || acceptedCharacters.contains(c))//
                     .limit(wantedPrediction - predictions.size())//
-                    .forEachOrdered(w -> predictions.add(w));
+                    .forEachOrdered(p ->{
+                        alreadyPredicted.add(p);
+                        predictions.add(p);
+                    });
+        }
+        //If ended without matching the wanted prediction count : add missing accepted chars
+        if (predictions.size() < wantedPrediction && acceptedCharacters != null) {
+            acceptedCharacters.stream()
+                    .filter(w -> !alreadyPredicted.contains(w))//
+                    .limit(wantedPrediction - predictions.size())//
+                    .forEach(p ->{
+                        alreadyPredicted.add(p);
+                        predictions.add(p);
+                    });
         }
         return predictions;
     }
