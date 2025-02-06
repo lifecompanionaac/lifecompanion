@@ -55,12 +55,14 @@ public class ImageDictionaryUtils {
         }
     }
 
-
     public static void loadAllImagesIn(String loadRequestId, long timeout, TreeDisplayableComponentI component) {
+        loadAllImagesIn(loadRequestId, null, timeout, component);
+    }
+
+    public static void loadAllImagesIn(String loadRequestId, Double scale, long timeout, TreeDisplayableComponentI component) {
         ConfigurationComponentUtils.exploreTree(component, node -> {
-            if (node instanceof ImageUseComponentI) {
-                final ImageUseComponentI imageUseComponent = (ImageUseComponentI) node;
-                imageUseComponent.addExternalLoadingRequest(loadRequestId);
+            if (node instanceof ImageUseComponentI imageUseComponent) {
+                imageUseComponent.addExternalLoadingRequest(loadRequestId, scale != null ? scale : 1.0);
             }
         });
         waitForImageToLoad(timeout);
@@ -68,8 +70,7 @@ public class ImageDictionaryUtils {
 
     public static void unloadAllImagesIn(String loadRequestId, TreeDisplayableComponentI component) {
         ConfigurationComponentUtils.exploreTree(component, node -> {
-            if (node instanceof ImageUseComponentI) {
-                final ImageUseComponentI imageUseComponent = (ImageUseComponentI) node;
+            if (node instanceof ImageUseComponentI imageUseComponent) {
                 imageUseComponent.removeExternalLoadingRequest(loadRequestId);
             }
         });

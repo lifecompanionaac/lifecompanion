@@ -3963,4 +3963,7 @@
     <text key="action.whiteboard.set.pencil.size.field">Taille du crayon</text>
     <text key="default.text.position.image.selection.field">Position du texte à la sélection d'une image</text>
     <text key="default.text.position.image.selection.explain">Définit la position du texte sur une case par défaut lors de la sélection d'une image. Ce paramètre permet simplement de gagner du temps, la position peut ensuite être changée manuellement.</text>
+    <text key="pdf.config.export.dialog.page.size">Taille des pages</text>
+    <text key="pdf.config.export.dialog.enable.footer.header">En-têtes et pieds de page</text>
+    <text key="pdf.config.export.dialog.header">Paramètres de l'export en PDF</text>
 </texts>

@@ -146,13 +146,19 @@ public class GridPartKeyComponent extends GridPartComponentBaseImpl implements G
     }
 
     @Override
-    public DoubleProperty scaleXProperty() {return this.imageUseComponentPropertyWrapper.scaleXProperty();}
+    public DoubleProperty scaleXProperty() {
+        return this.imageUseComponentPropertyWrapper.scaleXProperty();
+    }
 
     @Override
-    public DoubleProperty scaleYProperty() {return this.imageUseComponentPropertyWrapper.scaleYProperty();}
+    public DoubleProperty scaleYProperty() {
+        return this.imageUseComponentPropertyWrapper.scaleYProperty();
+    }
 
     @Override
-    public BooleanProperty enableColorToGreyProperty() {return this.imageUseComponentPropertyWrapper.enableColorToGreyProperty();}
+    public BooleanProperty enableColorToGreyProperty() {
+        return this.imageUseComponentPropertyWrapper.enableColorToGreyProperty();
+    }
 
     @Override
     public SimpleObjectProperty<ImageElementI> imageVTwoProperty() {
@@ -225,7 +231,7 @@ public class GridPartKeyComponent extends GridPartComponentBaseImpl implements G
 
     @Override
     public void eventFired(ActionEventType type, UseActionEvent event) {
-        this.useActionTriggerEventWrapper.eventFired(type,event);
+        this.useActionTriggerEventWrapper.eventFired(type, event);
     }
 
     @Override
@@ -351,6 +357,11 @@ public class GridPartKeyComponent extends GridPartComponentBaseImpl implements G
     @Override
     public void addExternalLoadingRequest(String id) {
         imageUseComponentPropertyWrapper.addExternalLoadingRequest(id);
+    }
+
+    @Override
+    public void addExternalLoadingRequest(String id, double scale) {
+        imageUseComponentPropertyWrapper.addExternalLoadingRequest(id, scale);
     }
 
     @Override

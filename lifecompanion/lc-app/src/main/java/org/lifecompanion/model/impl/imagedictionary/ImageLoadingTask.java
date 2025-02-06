@@ -41,6 +41,9 @@ import java.util.function.Supplier;
 public class ImageLoadingTask extends Task<Image> {
     private static final Logger LOGGER = LoggerFactory.getLogger(ImageLoadingTask.class);
 
+    private static final double IMAGE_MAX_WIDTH = 7680;
+    private static final double IMAGE_MAX_HEIGHT = 4320;
+
     private final String imageId;
     private final ObjectProperty<Image> target;
     private final PathSupplier pathSupplier;
@@ -129,7 +132,7 @@ public class ImageLoadingTask extends Task<Image> {
 
                 // Load from stream
                 try (FileInputStream fis = new FileInputStream(imagePath)) {
-                    Image image = new Image(fis, this.width, this.height, this.keepRatio, this.smooth);
+                    Image image = new Image(fis, Math.min(this.width, IMAGE_MAX_WIDTH), Math.min(this.height, IMAGE_MAX_HEIGHT), this.keepRatio, this.smooth);
                     if (!isCancelled()) {
                         FXThreadUtils.runOnFXThread(() -> {
                             if (target != null && !isCancelled()) {

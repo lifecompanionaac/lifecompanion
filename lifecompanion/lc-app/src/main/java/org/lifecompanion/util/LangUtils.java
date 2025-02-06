@@ -134,7 +134,6 @@ public class LangUtils {
     }
 
     public static String randomAlphabetic(int length) {
-        System.out.println(CHARS_FOR_RANDOM.stream().map(c -> String.valueOf((char) c.intValue())).collect(Collectors.joining()));
         char[] buffer = new char[length];
         for (int i = 0; i < buffer.length; i++) {
             buffer[i] = (char) CHARS_FOR_RANDOM.get(RANDOM.nextInt(CHARS_FOR_RANDOM.size())).intValue();

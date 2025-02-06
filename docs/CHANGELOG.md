@@ -11,9 +11,11 @@
 - Mise à jour de l'installeur de LifeCompanion
 	- Création d'un installeur totalement hors-ligne pour Windows
 	- Ajout de l'option "/silent" et "/verysilent" pour Windows (installation silencieuse)
+- Ajout des **paramètres d'export en PDF** : taille de la page et activation ou non des en-têtes et pieds de page
 
 ### Corrections/ajustements
 
+- **Amélioration de la qualité des images** lors des impressions en PDF
 - Correction de l'obtention de l'identifiant d'installation sur les dernières versions de Windows 11
 - Ajout/correction sur l'interface de contrôle (API)
 - Ticket #399 : correction de la forme des cases lorsque l'angle était trop grand

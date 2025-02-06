@@ -55,6 +55,7 @@ import org.lifecompanion.model.impl.notification.LCNotification;
 import org.lifecompanion.model.impl.profile.LCConfigurationDescription;
 import org.lifecompanion.ui.app.profileconfigselect.DuplicateConfigAlertContent;
 import org.lifecompanion.ui.common.control.specific.imagedictionary.ChangeImageDictionarySelectorDialog;
+import org.lifecompanion.ui.common.control.specific.io.PdfConfigDialog;
 import org.lifecompanion.ui.common.control.specific.selector.ConfigurationSelectorControl;
 import org.lifecompanion.ui.notification.LCNotificationController;
 import org.lifecompanion.util.DesktopUtils;
@@ -615,10 +616,14 @@ public class LCConfigurationActions {
 
             File pdfFile = configChooser.showSaveDialog(FXUtils.getSourceWindow(source));
             if (pdfFile != null) {
-                LCStateController.INSTANCE.updateDefaultDirectory(EXPORT_PDF, pdfFile.getParentFile());
-                ExportGridsToPdfTask exportGridsToPdfTask = new ExportGridsToPdfTask(currentConfiguration, pdfFile, currentProfile, currentConfigurationDescription);
-                exportGridsToPdfTask.setOnSucceeded(ev -> DesktopUtils.openFile(pdfFile));
-                AsyncExecutorController.INSTANCE.addAndExecute(true, false, exportGridsToPdfTask);
+                PdfConfigDialog pdfConfigDialog = new PdfConfigDialog();
+                StageUtils.centerOnOwnerOrOnCurrentStage(pdfConfigDialog);
+                pdfConfigDialog.showAndWait().ifPresent(pdfConfig -> {
+                    LCStateController.INSTANCE.updateDefaultDirectory(EXPORT_PDF, pdfFile.getParentFile());
+                    ExportGridsToPdfTask exportGridsToPdfTask = new ExportGridsToPdfTask(currentConfiguration, pdfFile, currentProfile, currentConfigurationDescription, pdfConfig);
+                    exportGridsToPdfTask.setOnSucceeded(ev -> DesktopUtils.openFile(pdfFile));
+                    AsyncExecutorController.INSTANCE.addAndExecute(true, false, exportGridsToPdfTask);
+                });
             }
         }
 
