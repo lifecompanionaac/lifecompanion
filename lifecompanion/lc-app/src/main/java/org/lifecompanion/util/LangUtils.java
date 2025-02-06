@@ -23,11 +23,24 @@ import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class LangUtils {
+    private static final Random RANDOM = new Random();
+    private static final List<Integer> CHARS_FOR_RANDOM = new ArrayList<>();
+
+    static {
+        IntStream.range(48, 58).forEach(CHARS_FOR_RANDOM::add);
+        IntStream.range(65, 91).forEach(CHARS_FOR_RANDOM::add);
+        IntStream.range(97, 123).forEach(CHARS_FOR_RANDOM::add);
+    }
+
     public static int nullToZero(final Integer i) {
         return i != null ? i : 0;
     }
@@ -118,5 +131,14 @@ public class LangUtils {
                 consumer.accept(item);
             }
         }
+    }
+
+    public static String randomAlphabetic(int length) {
+        System.out.println(CHARS_FOR_RANDOM.stream().map(c -> String.valueOf((char) c.intValue())).collect(Collectors.joining()));
+        char[] buffer = new char[length];
+        for (int i = 0; i < buffer.length; i++) {
+            buffer[i] = (char) CHARS_FOR_RANDOM.get(RANDOM.nextInt(CHARS_FOR_RANDOM.size())).intValue();
+        }
+        return new String(buffer);
     }
 }

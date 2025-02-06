@@ -19,7 +19,6 @@
 
 package org.lifecompanion.util;
 
-import org.jetbrains.annotations.NotNull;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.profile.ProfileController;
 import org.lifecompanion.framework.commons.translation.Translation;
@@ -34,6 +33,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Random;
 import java.util.UUID;
 
 public class IOUtils {
@@ -46,6 +46,7 @@ public class IOUtils {
     }
 
     private static final SimpleDateFormat DATE_FORMAT_FILENAME = new SimpleDateFormat("dd-MM-yyyy_HH-mm");
+    private static final SimpleDateFormat DATE_TEMP_FORMAT = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss-SSS");
 
     public static File getUserUseModeDestination(String destinationFolderPath, String defaultFolderName, String extension) {
         StringBuilder fileName = new StringBuilder(DATE_FORMAT_FILENAME.format(new Date()));
@@ -101,11 +102,11 @@ public class IOUtils {
     }
 
     public static File getTempDir(String name) {
-        return new File(System.getProperty("java.io.tmpdir") + File.separator + "LifeCompanion" + File.separator + "tmp" + File.separator + name + "-" + System.currentTimeMillis() + File.separator);
+        return new File(System.getProperty("java.io.tmpdir") + File.separator + "LifeCompanion" + File.separator + "tmp" + File.separator + DATE_TEMP_FORMAT.format(new Date()) + "_" + name + "_" + LangUtils.randomAlphabetic(4) + File.separator);
     }
 
     public static File getTempFile(String dirName, String suffix) {
-        File file = new File(System.getProperty("java.io.tmpdir") + File.separator + "LifeCompanion" + File.separator + "tmp" + File.separator + dirName + File.separator + UUID.randomUUID() + suffix);
+        File file = new File(System.getProperty("java.io.tmpdir") + File.separator + "LifeCompanion" + File.separator + "tmp" + File.separator + dirName + File.separator + DATE_TEMP_FORMAT.format(new Date()) + "_" + LangUtils.randomAlphabetic(4) + suffix);
         file.getParentFile().mkdirs();
         return file;
     }
