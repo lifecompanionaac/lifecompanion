@@ -127,6 +127,8 @@ public class ButtonComponentOption extends BaseOptionRegion<SelectableComponentI
         //Default : hide
         if (option.hideOnUnselect()) {
             component.setVisible(false);
+            component.managedProperty().bind(component.visibleProperty());
+            component.mouseTransparentProperty().bind(component.visibleProperty().not());
         }
     }
 
