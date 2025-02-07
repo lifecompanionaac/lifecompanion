@@ -12,9 +12,12 @@
 	- Création d'un installeur totalement hors-ligne pour Windows
 	- Ajout de l'option "/silent" et "/verysilent" pour Windows (installation silencieuse)
 - Ajout des **paramètres d'export en PDF** : taille de la page et activation ou non des en-têtes et pieds de page
+- Ajout d'un raccourci automatique permettant d'aller à la configuration précédente lorsque la configuration change en mode utilisation
+- Ajout de la possibilité de désactiver le bouton de mise en plein écran en mode utilisation (dans "Préférences & Infos")
 
 ### Corrections/ajustements
 
+- Mise à jour des boutons du mode utilisation
 - **Amélioration de la qualité des images** lors des impressions en PDF
 - Correction de l'obtention de l'identifiant d'installation sur les dernières versions de Windows 11
 - Ajout/correction sur l'interface de contrôle (API)

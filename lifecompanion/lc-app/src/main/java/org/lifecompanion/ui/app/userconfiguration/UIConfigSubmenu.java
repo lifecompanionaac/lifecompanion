@@ -94,6 +94,8 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
     private ToggleSwitch toggleDisabledExitInUseMode;
     private ToggleSwitch toggleSecureGoToEditModeProperty;
     private ToggleSwitch toggleAutoConfigurationProfileBackup;
+    private ToggleSwitch toggleDisableFullscreenShortcut;
+    private ToggleSwitch toggleEnablePreviousConfigurationShortcut;
 
     private Button buttonCleanupFiles, buttonAddMakaton;
 
@@ -133,6 +135,14 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
         toggleSecureGoToEditModeProperty = FXControlUtils.createToggleSwitch("configuration.secured.config.mode", null);
         Label labelExplainSecuredConfigMode = new Label(Translation.getText("tooltip.explain.use.param.secured.config.mode"));
         labelExplainSecuredConfigMode.getStyleClass().addAll("text-wrap-enabled", "text-font-italic", "text-fill-gray");
+
+        toggleDisableFullscreenShortcut = FXControlUtils.createToggleSwitch("user.config.disable.fullscreen.shortcut", null);
+        Label labelExplainDisableFullscreenShortcut = new Label(Translation.getText("tooltip.user.config.disable.fullscreen.shortcut"));
+        labelExplainDisableFullscreenShortcut.getStyleClass().addAll("text-wrap-enabled", "text-font-italic", "text-fill-gray");
+
+        toggleEnablePreviousConfigurationShortcut = FXControlUtils.createToggleSwitch("user.config.enable.previous.configuration.shortcut", null);
+        Label labelExplainEnablePreviousConfigurationShortcut = new Label(Translation.getText("tooltip.user.config.enable.previous.configuration.shortcut"));
+        labelExplainEnablePreviousConfigurationShortcut.getStyleClass().addAll("text-wrap-enabled", "text-font-italic", "text-fill-gray");
 
         //Selection parameter
         this.spinnerStrokeSize = FXControlUtils.createDoubleSpinner(1.0, 20.0, 3.0, 1.0, SPINNER_WIDTH);
@@ -233,6 +243,7 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
         VBox totalBox = new VBox(10.0,
                 labelConfigGeneral, toggleEnableAutoShowVirtualKeyboard, toggleEnableLaunchLCSystemStartup, toggleEnableRecordAndSendSessionStats,
                 labelUseMode, toggleSecureGoToEditModeProperty, labelExplainSecuredConfigMode, toggleDisabledExitInUseMode, labelExplainExitUseMode,
+                toggleDisableFullscreenShortcut, labelExplainDisableFullscreenShortcut, toggleEnablePreviousConfigurationShortcut, labelExplainEnablePreviousConfigurationShortcut,
                 labelOptionalResource, labelExplainOptionalResource, paneMakaton,
                 labelConfigStylePart, gridPaneStyleParam,
                 labelConfigTitle, gridPaneConfiguration,
@@ -282,6 +293,8 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
         this.comboBoxLanguage.getSelectionModel().select(UserConfigurationController.INSTANCE.userLanguageProperty().get());
         this.toggleEnableSpeechOptimization.setSelected(UserConfigurationController.INSTANCE.enableSpeechOptimizationProperty().get());
         this.comboBoxDefaultTextPositionOnImageSelection.getSelectionModel().select(UserConfigurationController.INSTANCE.defaultTextPositionOnImageSelectionProperty().get());
+        this.toggleDisableFullscreenShortcut.setSelected(UserConfigurationController.INSTANCE.disableFullscreenShortcutProperty().get());
+        this.toggleEnablePreviousConfigurationShortcut.setSelected(UserConfigurationController.INSTANCE.enablePreviousConfigurationShortcutProperty().get());
         updateInstalledOptions();
     }
 
@@ -310,6 +323,8 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
         UserConfigurationController.INSTANCE.userLanguageProperty().set(this.comboBoxLanguage.getValue());
         UserConfigurationController.INSTANCE.enableSpeechOptimizationProperty().set(this.toggleEnableSpeechOptimization.isSelected());
         UserConfigurationController.INSTANCE.defaultTextPositionOnImageSelectionProperty().set(comboBoxDefaultTextPositionOnImageSelection.getValue());
+        UserConfigurationController.INSTANCE.disableFullscreenShortcutProperty().set(this.toggleDisableFullscreenShortcut.isSelected());
+        UserConfigurationController.INSTANCE.enablePreviousConfigurationShortcutProperty().set(this.toggleEnablePreviousConfigurationShortcut.isSelected());
     }
 
     @Override

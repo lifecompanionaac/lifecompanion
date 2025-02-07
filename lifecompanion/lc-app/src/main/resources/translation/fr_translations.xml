@@ -3966,4 +3966,8 @@
     <text key="pdf.config.export.dialog.page.size">Taille des pages</text>
     <text key="pdf.config.export.dialog.enable.footer.header">En-têtes et pieds de page</text>
     <text key="pdf.config.export.dialog.header">Paramètres de l'export en PDF</text>
+    <text key="user.config.disable.fullscreen.shortcut">Désactiver le raccourci de plein écran</text>
+    <text key="tooltip.user.config.disable.fullscreen.shortcut">Permet de masquer le bouton en haut à droite de la configuration permettant de basculer en mode plein écran total.</text>
+    <text key="user.config.enable.previous.configuration.shortcut">Activer le raccourci "Configuration précédente"</text>
+    <text key="tooltip.user.config.enable.previous.configuration.shortcut">Si activé, lorsque l'utilisateur change de configuration en mode utilisation, affiche alors un raccourci en haut à gauche permettant de retourner à la configuration précédente.</text>
 </texts>
