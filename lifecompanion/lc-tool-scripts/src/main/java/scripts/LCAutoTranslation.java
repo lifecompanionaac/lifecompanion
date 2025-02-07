@@ -29,6 +29,7 @@ import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 import org.lifecompanion.framework.commons.translation.Translation;
+import org.lifecompanion.util.ThreadUtils;
 import scripts.imagedictionaries.LoggingProgressIndicator;
 
 import java.io.*;
@@ -54,7 +55,8 @@ public class LCAutoTranslation {
 
         // Load already translated
         Map<String, String> alreadyTranslated = loadTexts("en_translations.xml");
-        System.out.println(texts.size() - alreadyTranslated.size());
+        System.out.println("To translate : " +( texts.size() - alreadyTranslated.size()));
+        ThreadUtils.safeSleep(5_000);
         //System.out.println(alreadyTranslated);
 
         Map<String, String> translated = new HashMap<>();
@@ -75,10 +77,10 @@ public class LCAutoTranslation {
                 pi.increment();
             } catch (Throwable t) {
                 t.printStackTrace();
-                break;
+                return;
             }
         }
-         saveResult(translated);
+        saveResult(translated);
     }
 
     private static void saveResult(Map<String, String> texts) throws IOException {
@@ -111,7 +113,7 @@ public class LCAutoTranslation {
         }
     }
 
-    // GOOGLE_APPLICATION_CREDENTIALS to credentials json (ex : "C:\Users\Mathieu\Desktop\temp\translation-test\lifecompanion-translation-0107269dcca5.json")
+    // GOOGLE_APPLICATION_CREDENTIALS to credentials json (ex : "C:\Users\John\Desktop\cred.json")
     static String generateAutoTranslation(String text) {
         com.google.cloud.translate.Translation translation = translate.translate(
                 text,
