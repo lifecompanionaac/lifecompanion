@@ -287,7 +287,9 @@ public class IOHelper {
 
     public static String getFileID(final File lcFile) throws LCException {
         try {
-            return IOUtils.getZipComment(lcFile);
+            String zipComment = IOUtils.getZipComment(lcFile);
+            if (StringUtils.isBlank(zipComment)) throw new IOException("Empty zip comment");
+            return zipComment;
         } catch (IOException e) {
             throw LCException.newException().withMessageId("exception.invalid.config.profil.file").withCause(e).build();
         }
@@ -359,6 +361,7 @@ public class IOHelper {
                         return path;
                     } catch (LCException e) {
                         //Will return null
+                        LOGGER.warn("Given arg file {} is not a valid {} file", arg, extensionToSearch, e);
                     }
                 }
             }
