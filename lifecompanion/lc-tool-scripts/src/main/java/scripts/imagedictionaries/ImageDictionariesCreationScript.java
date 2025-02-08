@@ -39,6 +39,7 @@ import java.io.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -67,7 +68,7 @@ public class ImageDictionariesCreationScript {
             .create();
 
 
-    public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException {
+    public static void main(String[] args) throws IOException {
         DicInfo arasaac = new DicInfo(
                 new ImageDictionary("ARASAAC", "image.dictionary.description.arasaac", "image.dictionary.author.arasaac",
                         "png", "http://www.arasaac.org/", false),
@@ -81,10 +82,25 @@ public class ImageDictionariesCreationScript {
                         "png", "http://recitas.ca/parlerpictos/", false),
                 new File("D:\\ARASAAC\\Parlerpictos_sc\\All"), "parlerpictos", "png", false, true, true, true, true, true, null);
 
+
+        Arasaac2DownloadScript.ArasaacImage[] images = GSON.fromJson(IOUtils.readFileLines(new File("C:\\Users\\Mathieu\\Desktop\\TMP\\ARASAAC\\arasaac-all-pictograms.json"), "UTF-8"), Arasaac2DownloadScript.ArasaacImage[].class);
+        File imgDir = new File("C:\\Users\\Mathieu\\Desktop\\TMP\\ARASAAC\\images");
+        Map<File, Set<String>> keywords = Arrays.stream(images).collect(Collectors.toMap(val -> new File(imgDir + "/" + val._id + ".png"), val -> {
+            Set<String> words = new HashSet<>();
+            val.keywords.stream().map(k -> k.keyword).filter(Objects::nonNull).forEach(words::add);
+            val.keywords.stream().map(k -> k.plural).filter(Objects::nonNull).forEach(words::add);
+            return words;
+        }));
+
+        DicInfo arasaac2 = new DicInfo(
+                new ImageDictionary("ARASAAC2", "image.dictionary.description.arasaac2", "image.dictionary.author.arasaac2",
+                        "png", "http://www.arasaac.org/", false),
+                imgDir, "arasaac2", "png", false, false, false, true, false, false, keywords);
+
         //        generateImageDictionary(sclera);
         //        generateImageDictionary(arasaac);
 
-        generateImageDictionary(parlerPicto);
+        generateImageDictionary(arasaac2);
     }
 
     public static void generateImageDictionary(DicInfo dictionaryInformation) throws FileNotFoundException, UnsupportedEncodingException {
@@ -147,9 +163,9 @@ public class ImageDictionariesCreationScript {
                     SecretKey key = keyFactory.generateSecret(keySpec);
                     Cipher cipher = Cipher.getInstance("DES");
                     cipher.init(Cipher.ENCRYPT_MODE, key);
-                    try(CipherOutputStream cipherOutputStream = new CipherOutputStream(new FileOutputStream(finalDestFile), cipher)){
-                        try(FileInputStream fisTempOutputImage = new FileInputStream(tempOutputImage)) {
-                            IOUtils.copyStream(fisTempOutputImage,cipherOutputStream);
+                    try (CipherOutputStream cipherOutputStream = new CipherOutputStream(new FileOutputStream(finalDestFile), cipher)) {
+                        try (FileInputStream fisTempOutputImage = new FileInputStream(tempOutputImage)) {
+                            IOUtils.copyStream(fisTempOutputImage, cipherOutputStream);
                         }
                     }
                 }
@@ -165,7 +181,8 @@ public class ImageDictionariesCreationScript {
                                         Set.of("")).stream())
                                 .map(s -> s.replaceAll("_\\d+", " ").replaceAll("\\(\\d+\\)", " ").replace('_', ' ').replace('-', ' ').trim().toLowerCase())
                                 .toArray(l -> new String[l]));
-                imageElement.name = imageElement.keywords.get(LANGUAGE_CODE)[0];
+                String[] keywords = imageElement.keywords.get(LANGUAGE_CODE);
+                imageElement.name = keywords.length > 0 ? keywords[0] : "";
                 return imageElement;
             } catch (Exception e) {
                 System.out.println("Problem with : " + inputImageFile);
