@@ -121,15 +121,23 @@ public class ConfigurationComponentUtils {
     }
 
     public static <T> double getSimilarityScoreFor(String termRaw, T comp, Function<T, org.lifecompanion.framework.utils.Pair<String, Double>>... sourceNameAndFactorGetters) {
+        double withAccent = getSimilarityScoreFor(termRaw, comp, false, sourceNameAndFactorGetters);
+        double withoutAccent = getSimilarityScoreFor(termRaw, comp, true, sourceNameAndFactorGetters);
+        return 0.75 * withAccent + 0.25 * withoutAccent;
+    }
+
+    private static <T> double getSimilarityScoreFor(String termRaw, T comp, boolean stripAccent, Function<T, org.lifecompanion.framework.utils.Pair<String, Double>>... sourceNameAndFactorGetters) {
         // Clean input terms : remove accents and lower case
-        termRaw = StringUtils.stripAccents(StringUtils.toLowerCase(LangUtils.safeTrimToEmpty(termRaw)));
+        String lowerCaseAndTrim = StringUtils.toLowerCase(LangUtils.safeTrimToEmpty(termRaw));
+        termRaw = stripAccent ? StringUtils.stripAccents(lowerCaseAndTrim) : lowerCaseAndTrim;
         final String[] splitTerms = termRaw.split(" ");
         double factorToDivideContains = Arrays.stream(splitTerms).mapToDouble(String::length).sum();
 
         double score = 0.0;
         for (Function<T, org.lifecompanion.framework.utils.Pair<String, Double>> sourceNameAndFactorGetter : sourceNameAndFactorGetters) {
             final org.lifecompanion.framework.utils.Pair<String, Double> nameAndFactor = sourceNameAndFactorGetter.apply(comp);
-            String source = StringUtils.stripAccents(StringUtils.toLowerCase(LangUtils.safeTrimToEmpty(nameAndFactor.getLeft())));
+            String lowerCaseAndTrimName = StringUtils.toLowerCase(LangUtils.safeTrimToEmpty(nameAndFactor.getLeft()));
+            String source = stripAccent ? StringUtils.stripAccents(lowerCaseAndTrimName) : lowerCaseAndTrimName;
             if (StringUtils.isEquals(source, termRaw)) {
                 score += SIMILARITY_EXACT_MATCH * nameAndFactor.getRight();
             }
