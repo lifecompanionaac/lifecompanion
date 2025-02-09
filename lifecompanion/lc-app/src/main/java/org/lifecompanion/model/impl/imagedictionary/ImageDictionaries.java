@@ -288,7 +288,7 @@ public enum ImageDictionaries implements LCStateListener, ModeListenerI {
     public double getSimilarityScore(String[] keywords, String searchFull) {
         double score = 0.0;
         for (String source : keywords) {
-            score += ConfigurationComponentUtils.getSimilarityScoreFor(searchFull, source, s -> org.lifecompanion.framework.utils.Pair.of(s, 1.0));
+            score = Math.max(score, ConfigurationComponentUtils.getSimilarityScoreFor(searchFull, source, s -> org.lifecompanion.framework.utils.Pair.of(s, 1.0)));
         }
         return score;
     }

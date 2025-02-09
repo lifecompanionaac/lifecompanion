@@ -17,6 +17,7 @@
 
 ### Corrections/ajustements
 
+- Amélioration de la recherche d'image dans certains cas
 - Mise à jour des boutons du mode utilisation
 - **Amélioration de la qualité des images** lors des impressions en PDF
 - Correction de l'obtention de l'identifiant d'installation sur les dernières versions de Windows 11
