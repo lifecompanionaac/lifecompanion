@@ -179,6 +179,7 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
 
                 ValidationLog log = new ValidationLog(key.textContentProperty().getValue(),key.columnProperty().getValue());
                 currentSentenceEvaluation.getLogs().add(new WP2Logs(LocalDateTime.now(), LogType.VALIDATION,log));
+                currentEvaluation.getEvaluations().add(currentKeyboardEvaluation);
                 recordLogs();
             }
 
@@ -191,6 +192,7 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
                 GridPartKeyComponentI key = (GridPartKeyComponentI) component;
                 ValidationLog log = new ValidationLog(key.textContentProperty().getValue(), ((key.rowProperty().getValue()*7)+key.columnProperty().getValue()+key.rowProperty().getValue()));
                 currentSentenceEvaluation.getLogs().add(new WP2Logs(LocalDateTime.now(), LogType.VALIDATION,log));
+                currentEvaluation.getEvaluations().add(currentKeyboardEvaluation);
                 recordLogs();
             }
 
@@ -208,6 +210,7 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
                 }else{
                     indexCurStaPred=-1;
                 }
+                currentEvaluation.getEvaluations().add(currentKeyboardEvaluation);
                 recordLogs();
             }
         }
