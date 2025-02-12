@@ -28,7 +28,11 @@ import org.lifecompanion.model.impl.selectionmode.RowColumnScanSelectionMode;
 import org.lifecompanion.plugin.aac4all.wp2.AAC4AllWp2Plugin;
 import org.lifecompanion.plugin.aac4all.wp2.AAC4AllWp2PluginProperties;
 import org.lifecompanion.plugin.aac4all.wp2.model.logs.*;
+import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.util.model.SelectionModeUtils;
+import org.predict4all.nlp.utils.DaemonThreadFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import tobii.Tobii;
 
 
@@ -55,11 +59,13 @@ import java.util.function.Consumer;
 public enum AAC4AllWp2EvaluationController implements ModeListenerI {
     INSTANCE;
 
+    private final Logger LOGGER = LoggerFactory.getLogger(AAC4AllWp2EvaluationController.class);
+
     private Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter()).setPrettyPrinting().create();
 
     // FIXME : rollback duration
-    private static final long TRAINING_DURATION_MS = 1 * 30 * 1000;//(long) 10 * 60 * 1000; //  min à passer en 10 min
-    private static final long EVALUATION_DURATION_MS = 1 * 30 * 1000;//(long) 15 * 60 * 1000;//15 min
+    private static final long TRAINING_DURATION_MS = (long) 10 * 60 * 1000; //  min à passer en 10 min
+    private static final long EVALUATION_DURATION_MS = (long) 15 * 60 * 1000;//15 min
 
     private boolean evaluationMode = false;
     private String filePathLogs;
@@ -92,86 +98,101 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
     private GridPartComponentI currentKeyboard;
     private LCConfigurationI configuration;
     private ScheduledExecutorService scheduler;
-    private ScheduledFuture<?> scheduledEyetrackingTask;
     private int indexCurStaPred = -1;
 
     private ChangeListener highlightKey = new javafx.beans.value.ChangeListener<GridPartComponentI>() {
         @Override
         public void changed(ObservableValue<? extends GridPartComponentI> observable, GridPartComponentI oldValue, GridPartComponentI newValue) {
-            if (newValue != null) {
-                HighLightLog log = new HighLightLog(newValue.nameProperty().getValue(), newValue.columnProperty().getValue());
-                logToCurrentSentence(LogType.HIGHLIGHT, log);
+            try {
+                if (newValue != null) {
+                    HighLightLog log = new HighLightLog(newValue.nameProperty().getValue(), newValue.columnProperty().getValue());
+                    logToCurrentSentence(LogType.HIGHLIGHT, log);
+                }
+            } catch (Throwable t) {
+                LOGGER.error("/!\\ ERROR ON highlightKey listener, CHECK STACKTRACE", t);
             }
         }
     };
     private ChangeListener highlightKeyDyLin = new javafx.beans.value.ChangeListener<GridPartComponentI>() {
         @Override
         public void changed(ObservableValue<? extends GridPartComponentI> observable, GridPartComponentI oldValue, GridPartComponentI newValue) {
-            if (newValue != null) {
-                HighLightLog log = new HighLightLog(newValue.nameProperty().getValue(),
-                        ((newValue.rowProperty().getValue() * 7) + newValue.columnProperty().getValue() + newValue.rowProperty().getValue()));
-                logToCurrentSentence(LogType.HIGHLIGHT, log);
+            try {
+                if (newValue != null) {
+                    HighLightLog log = new HighLightLog(newValue.nameProperty().getValue(),
+                            ((newValue.rowProperty().getValue() * 7) + newValue.columnProperty().getValue() + newValue.rowProperty().getValue()));
+                    logToCurrentSentence(LogType.HIGHLIGHT, log);
+                }
+            } catch (Throwable t) {
+                LOGGER.error("/!\\ ERROR ON highlightKeyDyLin listener, CHECK STACKTRACE", t);
             }
         }
     };
     private ChangeListener highlightKeyCurSta = new javafx.beans.value.ChangeListener<GridPartComponentI>() {
         @Override
         public void changed(ObservableValue<? extends GridPartComponentI> observable, GridPartComponentI oldValue, GridPartComponentI newValue) {
-            if (newValue != null) {
-                if (List.of(" ",
-                        "a",
-                        "à",
-                        "b",
-                        "c",
-                        "ç",
-                        "d",
-                        "e",
-                        "é",
-                        "è",
-                        "ê",
-                        "f",
-                        "g",
-                        "h",
-                        "i",
-                        "j",
-                        "k",
-                        "l",
-                        "m",
-                        "n",
-                        "o",
-                        "p",
-                        "q",
-                        "r",
-                        "s",
-                        "t",
-                        "u",
-                        "v",
-                        "w",
-                        "x",
-                        "y",
-                        "z",
-                        "'",
-                        "Supprimer",
-                        "Valider",
-                        "Retour").contains(newValue.nameProperty().getValue()) || newValue.nameProperty().getValue().startsWith("Case")) {
-                    indexCurStaPred++;
-                    HighLightLog log = new HighLightLog(newValue.nameProperty().getValue(), indexCurStaPred);
-                    logToCurrentSentence(LogType.HIGHLIGHT, log);
+            try {
+                if (newValue != null) {
+                    if (List.of(" ",
+                            "a",
+                            "à",
+                            "b",
+                            "c",
+                            "ç",
+                            "d",
+                            "e",
+                            "é",
+                            "è",
+                            "ê",
+                            "f",
+                            "g",
+                            "h",
+                            "i",
+                            "j",
+                            "k",
+                            "l",
+                            "m",
+                            "n",
+                            "o",
+                            "p",
+                            "q",
+                            "r",
+                            "s",
+                            "t",
+                            "u",
+                            "v",
+                            "w",
+                            "x",
+                            "y",
+                            "z",
+                            "'",
+                            "Supprimer",
+                            "Valider",
+                            "Retour").contains(newValue.nameProperty().getValue()) || newValue.nameProperty().getValue().startsWith("Case")) {
+                        indexCurStaPred++;
+                        HighLightLog log = new HighLightLog(newValue.nameProperty().getValue(), indexCurStaPred);
+                        logToCurrentSentence(LogType.HIGHLIGHT, log);
+                    }
                 }
+            } catch (Throwable t) {
+                LOGGER.error("/!\\ ERROR ON highlightKeyCurSta listener, CHECK STACKTRACE", t);
             }
         }
     };
     private Consumer<ComponentToScanI> highlightRow = new Consumer<ComponentToScanI>() {
         @Override
         public void accept(ComponentToScanI rowScanned) {
-            String rowValues = "";
-            if (rowScanned != null) {
-                for (int i = 0; i < rowScanned.getComponents().size(); i++) {
-                    if (configuration != null) {// attention car pout l'espace on a Case(1,1) on pourrait le remplavcer à la main par _ ou par " " par exemple, esapce aussi Case(X,X)
-                        rowValues = rowValues + rowScanned.getPartIn(configuration.selectionModeProperty().get().currentGridProperty().get(), i).nameProperty().getValue() + "-";
+            try {
+                String rowValues = "";
+                if (rowScanned != null) {
+                    for (int i = 0; i < rowScanned.getComponents().size(); i++) {
+                        if (configuration != null) {// attention car pout l'espace on a Case(1,1) on pourrait le remplavcer à la main par _ ou par " " par exemple, esapce aussi Case(X,X)
+                            rowValues = rowValues + rowScanned.getPartIn(configuration.selectionModeProperty().get().currentGridProperty().get(), i).nameProperty().getValue() + "-";
+                        }
                     }
+                    logToCurrentSentence(LogType.HIGHLIGHT, new HighLightLog(rowValues, rowScanned.getIndex()));
                 }
-                logToCurrentSentence(LogType.HIGHLIGHT, new HighLightLog(rowValues, rowScanned.getIndex()));
+            } catch (Throwable t) {
+                LOGGER.error("/!\\ ERROR ON highlightRow listener, CHECK STACKTRACE", t);
             }
         }
     };
@@ -268,7 +289,11 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
 
     @Override
     public void modeStart(LCConfigurationI configuration) {
-        scheduler = Executors.newScheduledThreadPool(1);
+        scheduler = Executors.newSingleThreadScheduledExecutor(r -> {
+            Thread t = Executors.defaultThreadFactory().newThread(r);
+            t.setDaemon(true);
+            return t;
+        });
         this.configuration = configuration;
         currentAAC4AllWp2PluginProperties = configuration.getPluginConfigProperties(AAC4AllWp2Plugin.ID, AAC4AllWp2PluginProperties.class);
         patientID = currentAAC4AllWp2PluginProperties.patientIdProperty();
@@ -387,8 +412,8 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
             synchronized (logLock) {
                 writer.write(gson.toJson(currentEvaluation));
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Throwable e) {
+            LOGGER.error("Problem when recordLogs()", e);
         }
     }
 
@@ -472,16 +497,13 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
                     break;
                 }
             }
-            scheduledEyetrackingTask = scheduler.scheduleAtFixedRate(() -> {
+            scheduler.scheduleAtFixedRate(() -> {
                 float[] position = Tobii.gazePosition();
                 float rawGazeX = position[0];
                 float rawGazeY = position[1];
                 Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-                //System.out.println(screenSize);
                 int gazeX = (int) (rawGazeX * screenSize.getWidth());
                 int gazeY = (int) (rawGazeY * screenSize.getHeight());
-                //System.out.println(rawGazeX);
-                //System.out.println(rawGazeY);
                 logToCurrentSentence(LogType.EYETRACKING_POSITION, new EyetrackingPosition(gazeX, gazeY));
             }, 0, 100, TimeUnit.MILLISECONDS); //0, 20, TimeUnit.MILLISECONDS);
         }
@@ -542,10 +564,12 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
 
 
             // TODO: go to currentKeyboardEvaluation
-            if (this.currentKeyboardType != null) {
-                SelectionModeController.INSTANCE.changeUseModeSelectionModeTo(this.currentKeyboardType.getSelectionMode());
-            }
-            SelectionModeController.INSTANCE.goToGridPart(currentKeyboard);
+            FXThreadUtils.runOnFXThread(() -> {
+                if (this.currentKeyboardType != null) {
+                    SelectionModeController.INSTANCE.changeUseModeSelectionModeTo(this.currentKeyboardType.getSelectionMode());
+                }
+                SelectionModeController.INSTANCE.goToGridPart(currentKeyboard);
+            });
 
             // TODO: clean editor
             WritingStateController.INSTANCE.removeAll(WritingEventSource.USER_ACTIONS);
@@ -557,7 +581,7 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
             startLogListener();
 
             // chrono
-            timer = new Timer();
+            timer = new Timer(true);
             timer.schedule(new TimerTask() {
                 @Override
                 public void run() {
@@ -572,8 +596,10 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
                     SelectionModeController.INSTANCE.goToGridPart(keyboardEVA);
                     //stop sentence display and clean editor
                     StopDislaySentence();
-                    timer.cancel();
-                    timer = null;
+                    if (timer != null) {
+                        timer.cancel();
+                        timer = null;
+                    }
                 }
             }, time);
         }

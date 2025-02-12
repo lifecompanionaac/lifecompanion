@@ -1,6 +1,7 @@
 package org.lifecompanion.plugin.aac4all.wp2.controller;
 
 import javafx.beans.value.ChangeListener;
+import org.lifecompanion.controller.categorizedelement.useaction.UseActionController;
 import org.lifecompanion.controller.selectionmode.SelectionModeController;
 import org.lifecompanion.controller.textcomponent.WritingStateController;
 import org.lifecompanion.controller.textprediction.CustomCharPredictionController;
@@ -22,6 +23,8 @@ import org.lifecompanion.plugin.aac4all.wp2.model.useaction.CurStaUseAction;
 import org.lifecompanion.util.javafx.FXThreadUtils;
 import org.lifecompanion.util.model.ConfigurationComponentUtils;
 import org.lifecompanion.util.model.SelectionModeUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.function.BiConsumer;
@@ -29,6 +32,9 @@ import java.util.stream.Collectors;
 
 public enum AAC4AllWp2Controller implements ModeListenerI {
     INSTANCE;
+
+    private final Logger LOGGER = LoggerFactory.getLogger(AAC4AllWp2Controller.class);
+
 
     private final BiConsumer<GridComponentI, ComponentToScanI> scannedPartChangedListener;
     private ChangeListener<Boolean> capitalizeNextChangeListener;
@@ -58,7 +64,39 @@ public enum AAC4AllWp2Controller implements ModeListenerI {
 
     // TODO : replace with content from char prediction
     private String curStaCharacters = "abcdefghijklmnopqrstuvwxyzéèàê' ";
-    private List<PredictResult> predict = transformResult(List.of(' ', 'a', 'à', 'b', 'c', 'ç', 'd', 'e', 'é', 'è', 'ê', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '\''));
+    private List<PredictResult> predict = transformResult(List.of(' ',
+            'a',
+            'à',
+            'b',
+            'c',
+            'ç',
+            'd',
+            'e',
+            'é',
+            'è',
+            'ê',
+            'f',
+            'g',
+            'h',
+            'i',
+            'j',
+            'k',
+            'l',
+            'm',
+            'n',
+            'o',
+            'p',
+            'q',
+            'r',
+            's',
+            't',
+            'u',
+            'v',
+            'w',
+            'x',
+            'y',
+            'z',
+            '\''));
     private int curStaIndex = 0;
     private List<AAC4AllKeyOptionCurSta> curStaKeys;
 
@@ -79,21 +117,25 @@ public enum AAC4AllWp2Controller implements ModeListenerI {
         updateCurSta();
 
         curStaChangeListener = (obs, ov, nv) -> {
-            //HashSet<Character> acceptedCharact = new HashSet<>(curStaCharacters.chars().mapToObj(c -> (char) c).collect(Collectors.toSet()));
-            if (this.configuration != null) {
-                this.configuration.getAllComponent()
-                        .values()
-                        .stream()
-                        .filter(c -> c instanceof UseActionTriggerComponentI)
-                        .map(c -> (UseActionTriggerComponentI) c)
-                        .map(c -> c.getActionManager().getFirstActionOfType(
-                                UseActionEvent.OVER, CurStaUseAction.class))
-                        .filter(Objects::nonNull)
-                        .forEach(CurStaUseAction::cleanLastText);
+            try {
+                //HashSet<Character> acceptedCharact = new HashSet<>(curStaCharacters.chars().mapToObj(c -> (char) c).collect(Collectors.toSet()));
+                if (this.configuration != null) {
+                    this.configuration.getAllComponent()
+                            .values()
+                            .stream()
+                            .filter(c -> c instanceof UseActionTriggerComponentI)
+                            .map(c -> (UseActionTriggerComponentI) c)
+                            .map(c -> c.getActionManager().getFirstActionOfType(
+                                    UseActionEvent.OVER, CurStaUseAction.class))
+                            .filter(Objects::nonNull)
+                            .forEach(CurStaUseAction::cleanLastText);
+                }
+                predict = transformResult(LCCharPredictor.INSTANCE.predict(WritingStateController.INSTANCE.textBeforeCaretProperty().get(), acceptedCharact.size(), acceptedCharact));
+                curStaIndex = 0;
+                updateCurSta();
+            } catch (Throwable t) {
+                LOGGER.error("/!\\ ERROR ON initCurSta listener, CHECK STACKTRACE", t);
             }
-            predict = transformResult(LCCharPredictor.INSTANCE.predict(WritingStateController.INSTANCE.textBeforeCaretProperty().get(), acceptedCharact.size(), acceptedCharact));
-            curStaIndex = 0;
-            updateCurSta();
         };
         WritingStateController.INSTANCE.textBeforeCaretProperty().addListener(curStaChangeListener);
     }
@@ -206,54 +248,58 @@ public enum AAC4AllWp2Controller implements ModeListenerI {
     private void initRelocG(LCConfigurationI configuration) {
         relocGChangeListener = (obs, ov, nv) -> {
             FXThreadUtils.runOnFXThread(() -> {
-                SelectionModeI selectionMode = configuration.selectionModeProperty().get();
-                List<ComponentToScanI> rows = null;
-                if (selectionMode != null && selectionMode.currentGridProperty().get() != null) {
-                    rows = SelectionModeUtils.getRowColumnScanningComponents(selectionMode.currentGridProperty().get(), false);
-                    for (int i = 0; i < rows.size(); i++) {
-                        ComponentToScanI selectedComponentToScan = SelectionModeUtils.getRowColumnScanningComponents(selectionMode.currentGridProperty().get(), false).get(i);
+                try {
+                    SelectionModeI selectionMode = configuration.selectionModeProperty().get();
+                    List<ComponentToScanI> rows = null;
+                    if (selectionMode != null && selectionMode.currentGridProperty().get() != null) {
+                        rows = SelectionModeUtils.getRowColumnScanningComponents(selectionMode.currentGridProperty().get(), false);
+                        for (int i = 0; i < rows.size(); i++) {
+                            ComponentToScanI selectedComponentToScan = SelectionModeUtils.getRowColumnScanningComponents(selectionMode.currentGridProperty().get(), false).get(i);
 
-                        previousLineG = new HashMap<>();
-                        String charsPreviousLineG = "";
+                            previousLineG = new HashMap<>();
+                            String charsPreviousLineG = "";
 
-                        //saving the configuration of the line.
-                        for (int j = 0; j < selectedComponentToScan.getComponents().size(); j++) {
-                            if(selectionMode!=null) {
-                                GridPartComponentI gridPartComponent = selectedComponentToScan.getPartIn(selectionMode.currentGridProperty().get(), j);
-                                if (gridPartComponent instanceof GridPartKeyComponentI key) {
-                                    if (key.keyOptionProperty().get() instanceof AAC4AllKeyOptionReolocG aac4AllKeyOptionReolocG) {
-                                        previousLineG.put(aac4AllKeyOptionReolocG, aac4AllKeyOptionReolocG.predictionProperty().get());
-                                        charsPreviousLineG = charsPreviousLineG + aac4AllKeyOptionReolocG.predictionProperty().get();
+                            //saving the configuration of the line.
+                            for (int j = 0; j < selectedComponentToScan.getComponents().size(); j++) {
+                                if (selectionMode != null) {
+                                    GridPartComponentI gridPartComponent = selectedComponentToScan.getPartIn(selectionMode.currentGridProperty().get(), j);
+                                    if (gridPartComponent instanceof GridPartKeyComponentI key) {
+                                        if (key.keyOptionProperty().get() instanceof AAC4AllKeyOptionReolocG aac4AllKeyOptionReolocG) {
+                                            previousLineG.put(aac4AllKeyOptionReolocG, aac4AllKeyOptionReolocG.predictionProperty().get());
+                                            charsPreviousLineG = charsPreviousLineG + aac4AllKeyOptionReolocG.predictionProperty().get();
+                                        }
+                                    }
+                                }
+                            }
+                            HashSet<Character> acceptedCharact = new HashSet<>(charsPreviousLineG.chars().mapToObj(c -> (char) c).collect(Collectors.toSet()));
+                            List<Character> predict = LCCharPredictor.INSTANCE.predict(WritingStateController.INSTANCE.textBeforeCaretProperty().get(), acceptedCharact.size(), acceptedCharact);
+                            LinkedList<Character> charForKeys = new LinkedList<>(acceptedCharact);
+
+                            //modifing the line with character predictionwha
+                            int indexPosition = 0; // for save index of prediction for RéoLoc keys
+                            for (int j = 0; j < selectedComponentToScan.getComponents().size(); j++) {
+                                if (selectionMode != null) {
+                                    GridPartComponentI gridPartComponent = selectedComponentToScan.getPartIn(selectionMode.currentGridProperty().get(), j);
+                                    if (gridPartComponent instanceof GridPartKeyComponentI key) {
+                                        if (key.keyOptionProperty().get() instanceof AAC4AllKeyOptionReolocG aac4AllKeyOptionReolocG) {
+                                            // There is a prediction
+                                            if (j - indexPosition < predict.size()) {
+                                                Character pred = predict.get(j - indexPosition);
+                                                charForKeys.remove(pred);
+                                                aac4AllKeyOptionReolocG.predictionProperty().set(String.valueOf(pred));
+                                            }
+                                            // No prediction: take char left
+                                            else {
+                                                aac4AllKeyOptionReolocG.predictionProperty().set(String.valueOf(charForKeys.poll()));
+                                            }
+                                        } else indexPosition++;
                                     }
                                 }
                             }
                         }
-                        HashSet<Character> acceptedCharact = new HashSet<>(charsPreviousLineG.chars().mapToObj(c -> (char) c).collect(Collectors.toSet()));
-                        List<Character> predict = LCCharPredictor.INSTANCE.predict(WritingStateController.INSTANCE.textBeforeCaretProperty().get(), acceptedCharact.size(), acceptedCharact);
-                        LinkedList<Character> charForKeys = new LinkedList<>(acceptedCharact);
-
-                        //modifing the line with character predictionwha
-                        int indexPosition = 0; // for save index of prediction for RéoLoc keys
-                        for (int j = 0; j < selectedComponentToScan.getComponents().size(); j++) {
-                            if(selectionMode!=null) {
-                                GridPartComponentI gridPartComponent = selectedComponentToScan.getPartIn(selectionMode.currentGridProperty().get(), j);
-                                if (gridPartComponent instanceof GridPartKeyComponentI key) {
-                                    if (key.keyOptionProperty().get() instanceof AAC4AllKeyOptionReolocG aac4AllKeyOptionReolocG) {
-                                        // There is a prediction
-                                        if (j - indexPosition < predict.size()) {
-                                            Character pred = predict.get(j - indexPosition);
-                                            charForKeys.remove(pred);
-                                            aac4AllKeyOptionReolocG.predictionProperty().set(String.valueOf(pred));
-                                        }
-                                        // No prediction: take char left
-                                        else {
-                                            aac4AllKeyOptionReolocG.predictionProperty().set(String.valueOf(charForKeys.poll()));
-                                        }
-                                    } else indexPosition++;
-                                }
-                            }
-                        }
                     }
+                } catch (Throwable t) {
+                    LOGGER.error("/!\\ ERROR ON initRelocG listener, CHECK STACKTRACE", t);
                 }
             });
         };
@@ -268,7 +314,7 @@ public enum AAC4AllWp2Controller implements ModeListenerI {
             WritingStateController.INSTANCE.textBeforeCaretProperty().removeListener(relocGChangeListener);
         if (curStaChangeListener != null)
             WritingStateController.INSTANCE.textBeforeCaretProperty().removeListener(curStaChangeListener);
-        if(capitalizeNextChangeListener!=null){
+        if (capitalizeNextChangeListener != null) {
             WritingStateController.INSTANCE.capitalizeNextProperty().removeListener(capitalizeNextChangeListener);
         }
         curStaKeys = null;
