@@ -178,7 +178,9 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
 
     private void logToCurrentSentence(LogType logType, Object rowValues) {
         if (currentSentenceEvaluation != null) {
-            currentSentenceEvaluation.addAndGetLogs(LocalDateTime.now(), logType, rowValues);
+            synchronized (logLock) {
+                currentSentenceEvaluation.addAndGetLogs(LocalDateTime.now(), logType, rowValues);
+            }
         }
     }
 
@@ -266,6 +268,7 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
 
     @Override
     public void modeStart(LCConfigurationI configuration) {
+        scheduler = Executors.newScheduledThreadPool(1);
         this.configuration = configuration;
         currentAAC4AllWp2PluginProperties = configuration.getPluginConfigProperties(AAC4AllWp2Plugin.ID, AAC4AllWp2PluginProperties.class);
         patientID = currentAAC4AllWp2PluginProperties.patientIdProperty();
@@ -327,6 +330,10 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
         if (this.timer != null) {
             timer.cancel();
         }
+        if (scheduler != null) {
+            this.scheduler.shutdown();
+            this.scheduler = null;
+        }
         timer = null;
         this.configuration = null;
         this.currentAAC4AllWp2PluginProperties = null;
@@ -343,11 +350,13 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
         }
         currentRandomIndex = 0;
         SelectionModeParameterI selectionModeParameter = configuration.getSelectionModeParameter();
-        currentEvaluation = new WP2Evaluation(LocalDateTime.now(),
-                patientID.get(),
-                selectionModeParameter.scanPauseProperty().get(),
-                selectionModeParameter.scanFirstPauseProperty().get(),
-                selectionModeParameter.maxScanBeforeStopProperty().get());
+        synchronized (logLock) {
+            currentEvaluation = new WP2Evaluation(LocalDateTime.now(),
+                    patientID.get(),
+                    selectionModeParameter.scanPauseProperty().get(),
+                    selectionModeParameter.scanFirstPauseProperty().get(),
+                    selectionModeParameter.maxScanBeforeStopProperty().get());
+        }
         goToNextKeyboardToEvaluate();
     }
 
@@ -362,10 +371,12 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
     }
 
     public void updatevariables() {
-        currentKeyboardEvaluation = this.currentEvaluation.addAndGetKeyboardEvaluation(currentKeyboardType);
-        functionalCurrentKeyboard = Translation.getText("aac4all.wp2.plugin.functional.description." + currentKeyboardType.getTranslationId());
-        instructionCurrentKeyboard = Translation.getText("aac4all.wp2.plugin.instruction.description." + currentKeyboardType.getTranslationId());
-        currentKeyboardEvaluation.resetEva();
+        synchronized (logLock) {
+            currentKeyboardEvaluation = this.currentEvaluation.addAndGetKeyboardEvaluation(currentKeyboardType);
+            functionalCurrentKeyboard = Translation.getText("aac4all.wp2.plugin.functional.description." + currentKeyboardType.getTranslationId());
+            instructionCurrentKeyboard = Translation.getText("aac4all.wp2.plugin.instruction.description." + currentKeyboardType.getTranslationId());
+            currentKeyboardEvaluation.resetEva();
+        }
         UseVariableController.INSTANCE.requestVariablesUpdate();
     }
 
@@ -373,7 +384,9 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
         File resultFile = new File(filePathLogs);
         if (!resultFile.getParentFile().exists()) resultFile.getParentFile().mkdirs();
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(resultFile))) {
-            writer.write(gson.toJson(currentEvaluation));
+            synchronized (logLock) {
+                writer.write(gson.toJson(currentEvaluation));
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -431,7 +444,9 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
 
 
     public void initCurrentKeyboard() {
-        this.currentEvaluation.addAndGetKeyboardEvaluation(currentKeyboardType);
+        synchronized (logLock) {
+            this.currentEvaluation.addAndGetKeyboardEvaluation(currentKeyboardType);
+        }
     }
 
     public void startLogListener() {
@@ -457,9 +472,6 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
                     break;
                 }
             }
-            ;
-
-            scheduler = Executors.newScheduledThreadPool(1);
             scheduledEyetrackingTask = scheduler.scheduleAtFixedRate(() -> {
                 float[] position = Tobii.gazePosition();
                 float rawGazeX = position[0];
@@ -476,16 +488,9 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
     }
 
     public void stopLogListener() {
-        //TODO stopper les
-        //recupérer l'état final de l'éditeur de texte avant clean
-        currentSentenceEvaluation.setTextEntry(WritingStateController.INSTANCE.getLastSentence());
-
-        //TODO stop eyetracking logs
-        if (scheduledEyetrackingTask != null && !scheduledEyetrackingTask.isCancelled()) {
-            scheduler.shutdown();
+        synchronized (logLock) {
+            currentSentenceEvaluation.setTextEntry(WritingStateController.INSTANCE.getLastSentence());
         }
-        //currentSentenceEvaluation = null;
-
         SelectionModeController.INSTANCE.currentOverPartProperty().removeListener(highlightKeyDyLin);
         UseActionController.INSTANCE.removeActionExecutionListener(validationKeyDyLin);
         SelectionModeController.INSTANCE.currentOverPartProperty().removeListener(highlightKeyCurSta);
@@ -507,11 +512,13 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
 
         currentRandomIndex = 0;
         SelectionModeParameterI selectionModeParameter = configuration.getSelectionModeParameter();
-        currentEvaluation = new WP2Evaluation(LocalDateTime.now(),
-                patientID.get(),
-                selectionModeParameter.scanPauseProperty().get(),
-                selectionModeParameter.scanFirstPauseProperty().get(),
-                selectionModeParameter.maxScanBeforeStopProperty().get());
+        synchronized (logLock) {
+            currentEvaluation = new WP2Evaluation(LocalDateTime.now(),
+                    patientID.get(),
+                    selectionModeParameter.scanPauseProperty().get(),
+                    selectionModeParameter.scanFirstPauseProperty().get(),
+                    selectionModeParameter.maxScanBeforeStopProperty().get());
+        }
         goToNextKeyboardToEvaluate();
 
         recordLogs();
@@ -581,19 +588,27 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
             randomIndexSentence = new Random().nextInt(currentPhraseSet.size());
             currentSentence = currentPhraseSet.get(randomIndexSentence);
             currentPhraseSet.remove(currentPhraseSet.get(randomIndexSentence));
-            currentKeyboardEvaluation.addAndGetSentenceEvaluation(currentSentence, new Date());
+            synchronized (logLock) {
+                this.currentSentenceEvaluation = currentKeyboardEvaluation.addAndGetSentenceEvaluation(currentSentence, new Date());
+            }
             UseVariableController.INSTANCE.requestVariablesUpdate();
 
         } else {
             recordLogs();
-            currentSentenceEvaluation.setTextEntry(WritingStateController.INSTANCE.getLastSentence());
+            synchronized (logLock) {
+                currentSentenceEvaluation.setTextEntry(WritingStateController.INSTANCE.getLastSentence());
+            }
             randomIndexSentence = new Random().nextInt(currentPhraseSet.size());
             currentSentence = currentPhraseSet.get(randomIndexSentence);
             currentPhraseSet.remove(currentPhraseSet.get(randomIndexSentence));
             UseVariableController.INSTANCE.requestVariablesUpdate();
-            currentKeyboardEvaluation.addAndGetSentenceEvaluation(currentSentence, new Date());
+            synchronized (logLock) {
+                this.currentSentenceEvaluation = currentKeyboardEvaluation.addAndGetSentenceEvaluation(currentSentence, new Date());
+            }
             WritingStateController.INSTANCE.removeAll(WritingEventSource.USER_ACTIONS);
-            currentSentenceEvaluation.setSentence(currentSentence);
+            synchronized (logLock) {
+                currentSentenceEvaluation.setSentence(currentSentence);
+            }
         }
     }
 
