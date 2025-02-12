@@ -166,7 +166,11 @@ public abstract class AbstractPredictionController<T extends BasePredictorI, K, 
         if (this.currentPredictor != null && this.currentPredictor.isInitialized()) {
             HashSet<Consumer<T>> listeners = new HashSet<>(this.predictorStartedListeners);
             for (Consumer<T> listener : listeners) {
-                listener.accept(this.currentPredictor);
+                try {
+                    listener.accept(this.currentPredictor);
+                } catch (Throwable t) {
+                    LOGGER.error("Problem when calling predictor started listener", t);
+                }
             }
         }
     }

@@ -1171,7 +1171,13 @@ public enum SelectionModeController implements ModeListenerI {
     }
 
     public void fireScannedPartChangedListeners(GridComponentI grid, ComponentToScanI selectedComponentToScan) {
-        this.scannedPartChangedListeners.forEach(listener -> listener.accept(grid, selectedComponentToScan));
+        for (BiConsumer<GridComponentI, ComponentToScanI> scannedPartChangedListener : this.scannedPartChangedListeners) {
+            try {
+                scannedPartChangedListener.accept(grid, selectedComponentToScan);
+            } catch (Throwable t) {
+                LOGGER.error("Error while calling fireScannedPartChangedListeners", t);
+            }
+        }
     }
 
     public void addOverScannedPartChangedListener(Consumer<ComponentToScanI> listener) {
@@ -1183,6 +1189,12 @@ public enum SelectionModeController implements ModeListenerI {
     }
 
     public void fireOverScannedPartChangedListeners(ComponentToScanI overScannedPart) {
-        this.overScannedPartChangedListeners.forEach(listener -> listener.accept(overScannedPart));
+        for (Consumer<ComponentToScanI> overScannedPartChangedListener : this.overScannedPartChangedListeners) {
+            try {
+                overScannedPartChangedListener.accept(overScannedPart);
+            } catch (Throwable t) {
+                LOGGER.error("Error while calling fireOverScannedPartChangedListeners", t);
+            }
+        }
     }
 }
