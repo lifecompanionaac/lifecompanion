@@ -1,5 +1,6 @@
 package org.lifecompanion.plugin.aac4all.wp2.model.logs;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -26,13 +27,14 @@ public class WP2SentenceEvaluation {
         this.textEntry = textEntry;
     }
 
-    public WP2SentenceEvaluation(String sentence, Date date) {
+    WP2SentenceEvaluation(String sentence, Date date) {
         this.sentence = sentence;
         this.date = date;
     }
 
-    public List<WP2Logs> getLogs() {
-        return logs;
+    public WP2Logs addAndGetLogs(LocalDateTime timestamp, LogType type, Object data) {
+        WP2Logs log = new WP2Logs(timestamp, type, data);
+        logs.add(log);
+        return log;
     }
-
 }
