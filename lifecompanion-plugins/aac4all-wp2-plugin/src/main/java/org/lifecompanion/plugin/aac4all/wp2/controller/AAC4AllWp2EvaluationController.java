@@ -59,14 +59,16 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
 
     private Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter()).setPrettyPrinting().create();
 
-    private final long TRAINING_DURATION_MS = (long) 10 * 60 * 1000; //  min à passer en 10 min
-    private final long EVALUATION_DURATION_MS = (long) 15 * 60 * 1000;//15 min
+    // FIXME : rollback duration
+    private static final long TRAINING_DURATION_MS = 1 * 30 * 1000;//(long) 10 * 60 * 1000; //  min à passer en 10 min
+    private static final long EVALUATION_DURATION_MS = 1 * 30 * 1000;//(long) 15 * 60 * 1000;//15 min
 
     private boolean evaluationMode = false;
     private String filePathLogs;
     private AAC4AllWp2PluginProperties currentAAC4AllWp2PluginProperties;
     private BooleanProperty evaluationRunning;
 
+    private final Object logLock = new Object();
     private WP2Evaluation currentEvaluation;
     private WP2KeyboardEvaluation currentKeyboardEvaluation;
     private WP2SentenceEvaluation currentSentenceEvaluation;
@@ -87,42 +89,12 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
     private KeyboardType currentKeyboardType;
 
     private StringProperty patientID;
-
     private Timer timer;
-
-    public String getFunctionalCurrentKeyboard() {
-        return functionalCurrentKeyboard;
-    }
-
     private String instructionCurrentKeyboard = "";
-
-    public String getInstructionCurrentKeyboard() {
-        return instructionCurrentKeyboard; }
-
     private GridPartComponentI currentKeyboard;
-
-    public GridPartComponentI getCurrentKeyboard() {
-        return currentKeyboard;
-    }
-
-    AAC4AllWp2EvaluationController() {
-        phraseSetFR = new ArrayList<>();
-        try (Scanner scan = new Scanner(ResourceHelper.getInputStreamForPath("/text/PhraseSetFR.txt"), StandardCharsets.UTF_8)) {
-            while (scan.hasNextLine()) {
-                phraseSetFR.add(StringUtils.trimToEmpty(scan.nextLine()));
-            }
-        }
-    }
-
-    public String getCurrentSentence() {
-        return currentSentence;}
-
     private LCConfigurationI configuration;
-
     private ScheduledExecutorService scheduler;
     private ScheduledFuture<?> scheduledEyetrackingTask;
-
-
     private int indexCurStaPred = -1;
 
     private ChangeListener highlightKey = new javafx.beans.value.ChangeListener<GridPartComponentI>() {
@@ -138,7 +110,8 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
         @Override
         public void changed(ObservableValue<? extends GridPartComponentI> observable, GridPartComponentI oldValue, GridPartComponentI newValue) {
             if (newValue != null) {
-                HighLightLog log = new HighLightLog(newValue.nameProperty().getValue(), ((newValue.rowProperty().getValue()*7)+newValue.columnProperty().getValue()+newValue.rowProperty().getValue()));
+                HighLightLog log = new HighLightLog(newValue.nameProperty().getValue(),
+                        ((newValue.rowProperty().getValue() * 7) + newValue.columnProperty().getValue() + newValue.rowProperty().getValue()));
                 currentSentenceEvaluation.getLogs().add(new WP2Logs(LocalDateTime.now(), LogType.HIGHLIGHT, log));
             }
         }
@@ -147,7 +120,42 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
         @Override
         public void changed(ObservableValue<? extends GridPartComponentI> observable, GridPartComponentI oldValue, GridPartComponentI newValue) {
             if (newValue != null) {
-                if (List.of(" ", "a", "à", "b", "c", "ç", "d", "e", "é", "è", "ê", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "'", "Supprimer", "Valider","Retour").contains(newValue.nameProperty().getValue()) || newValue.nameProperty().getValue().startsWith("Case") ) {
+                if (List.of(" ",
+                        "a",
+                        "à",
+                        "b",
+                        "c",
+                        "ç",
+                        "d",
+                        "e",
+                        "é",
+                        "è",
+                        "ê",
+                        "f",
+                        "g",
+                        "h",
+                        "i",
+                        "j",
+                        "k",
+                        "l",
+                        "m",
+                        "n",
+                        "o",
+                        "p",
+                        "q",
+                        "r",
+                        "s",
+                        "t",
+                        "u",
+                        "v",
+                        "w",
+                        "x",
+                        "y",
+                        "z",
+                        "'",
+                        "Supprimer",
+                        "Valider",
+                        "Retour").contains(newValue.nameProperty().getValue()) || newValue.nameProperty().getValue().startsWith("Case")) {
                     indexCurStaPred++;
                     HighLightLog log = new HighLightLog(newValue.nameProperty().getValue(), indexCurStaPred);
                     currentSentenceEvaluation.getLogs().add(new WP2Logs(LocalDateTime.now(), LogType.HIGHLIGHT, log));
@@ -161,7 +169,7 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
             String rowValues = "";
             if (rowScanned != null) {
                 for (int i = 0; i < rowScanned.getComponents().size(); i++) {
-                    if (configuration!=null) {// attention car pout l'espace on a Case(1,1) on pourrait le remplavcer à la main par _ ou par " " par exemple, esapce aussi Case(X,X)
+                    if (configuration != null) {// attention car pout l'espace on a Case(1,1) on pourrait le remplavcer à la main par _ ou par " " par exemple, esapce aussi Case(X,X)
                         rowValues = rowValues + rowScanned.getPartIn(configuration.selectionModeProperty().get().currentGridProperty().get(), i).nameProperty().getValue() + "-";
                     }
                 }
@@ -177,8 +185,8 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
             if (component instanceof GridPartKeyComponentI && event == UseActionEvent.ACTIVATION) {
                 GridPartKeyComponentI key = (GridPartKeyComponentI) component;
 
-                ValidationLog log = new ValidationLog(key.textContentProperty().getValue(),key.columnProperty().getValue());
-                currentSentenceEvaluation.getLogs().add(new WP2Logs(LocalDateTime.now(), LogType.VALIDATION,log));
+                ValidationLog log = new ValidationLog(key.textContentProperty().getValue(), key.columnProperty().getValue());
+                currentSentenceEvaluation.getLogs().add(new WP2Logs(LocalDateTime.now(), LogType.VALIDATION, log));
                 currentEvaluation.getEvaluations().add(currentKeyboardEvaluation);
                 recordLogs();
             }
@@ -190,8 +198,8 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
         public void accept(UseActionTriggerComponentI component, UseActionEvent event) {
             if (component instanceof GridPartKeyComponentI && event == UseActionEvent.ACTIVATION) {
                 GridPartKeyComponentI key = (GridPartKeyComponentI) component;
-                ValidationLog log = new ValidationLog(key.textContentProperty().getValue(), ((key.rowProperty().getValue()*7)+key.columnProperty().getValue()+key.rowProperty().getValue()));
-                currentSentenceEvaluation.getLogs().add(new WP2Logs(LocalDateTime.now(), LogType.VALIDATION,log));
+                ValidationLog log = new ValidationLog(key.textContentProperty().getValue(), ((key.rowProperty().getValue() * 7) + key.columnProperty().getValue() + key.rowProperty().getValue()));
+                currentSentenceEvaluation.getLogs().add(new WP2Logs(LocalDateTime.now(), LogType.VALIDATION, log));
                 currentEvaluation.getEvaluations().add(currentKeyboardEvaluation);
                 recordLogs();
             }
@@ -203,12 +211,12 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
         public void accept(UseActionTriggerComponentI component, UseActionEvent event) {
             if (component instanceof GridPartKeyComponentI && event == UseActionEvent.ACTIVATION) {
                 GridPartKeyComponentI key = (GridPartKeyComponentI) component;
-                ValidationLog log = new ValidationLog(key.textContentProperty().getValue(),indexCurStaPred);
-                currentSentenceEvaluation.getLogs().add(new WP2Logs(LocalDateTime.now(), LogType.VALIDATION,log));
-                if (key.textContentProperty().getValue()=="Retour"){
-                    indexCurStaPred= Math.max(-1, indexCurStaPred - 8);
-                }else{
-                    indexCurStaPred=-1;
+                ValidationLog log = new ValidationLog(key.textContentProperty().getValue(), indexCurStaPred);
+                currentSentenceEvaluation.getLogs().add(new WP2Logs(LocalDateTime.now(), LogType.VALIDATION, log));
+                if (key.textContentProperty().getValue() == "Retour") {
+                    indexCurStaPred = Math.max(-1, indexCurStaPred - 8);
+                } else {
+                    indexCurStaPred = -1;
                 }
                 currentEvaluation.getEvaluations().add(currentKeyboardEvaluation);
                 recordLogs();
@@ -230,6 +238,34 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
         }
     };
 
+    AAC4AllWp2EvaluationController() {
+        phraseSetFR = new ArrayList<>();
+        try (Scanner scan = new Scanner(ResourceHelper.getInputStreamForPath("/text/PhraseSetFR.txt"), StandardCharsets.UTF_8)) {
+            while (scan.hasNextLine()) {
+                phraseSetFR.add(StringUtils.trimToEmpty(scan.nextLine()));
+            }
+        }
+    }
+
+    public String getFunctionalCurrentKeyboard() {
+        return functionalCurrentKeyboard;
+    }
+
+    public String getInstructionCurrentKeyboard() {
+        return instructionCurrentKeyboard;
+    }
+
+    public GridPartComponentI getCurrentKeyboard() {
+        return currentKeyboard;
+    }
+
+    public String getCurrentSentence() {
+        return currentSentence;
+    }
+
+
+
+
     @Override
     public void modeStart(LCConfigurationI configuration) {
         this.configuration = configuration;
@@ -246,9 +282,8 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
                 .get() : "?";
         filePathLogs = String.format("%s%s_%s_%s.json", pathToDestinationDir + "/lifecompanion-plugins/aac4all-wp2-plugin/result/", patientID.getValue(), now.format(formatter), configName);
 
-        currentPhraseSet = new ArrayList<>(phraseSetFR);;
-
-        indexCurStaPred=-1;
+        currentPhraseSet = new ArrayList<>(phraseSetFR);
+        indexCurStaPred = -1;
         currentSentence = "";
 
         this.keyboardConsigne = this.configuration.getAllComponent().values().stream()
@@ -289,8 +324,11 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
     @Override
     public void modeStop(LCConfigurationI configuration) {
         stopLogListener();
+        // FIXME : should be removed
         WritingStateController.INSTANCE.removeAll(WritingEventSource.USER_ACTIONS);
-        timer.cancel();
+        if (this.timer != null) {
+            timer.cancel();
+        }
         timer = null;
         this.configuration = null;
         this.currentAAC4AllWp2PluginProperties = null;
@@ -307,7 +345,11 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
         }
         currentRandomIndex = 0;
         SelectionModeParameterI selectionModeParameter = configuration.getSelectionModeParameter();
-        currentEvaluation = new WP2Evaluation(LocalDateTime.now(), patientID.get(), selectionModeParameter.scanPauseProperty().get(), selectionModeParameter.scanFirstPauseProperty().get(), selectionModeParameter.maxScanBeforeStopProperty().get());
+        currentEvaluation = new WP2Evaluation(LocalDateTime.now(),
+                patientID.get(),
+                selectionModeParameter.scanPauseProperty().get(),
+                selectionModeParameter.scanFirstPauseProperty().get(),
+                selectionModeParameter.maxScanBeforeStopProperty().get());
         goToNextKeyboardToEvaluate();
     }
 
@@ -339,7 +381,7 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
         }
     }
 
-    public void emptyAllColors(){
+    public void emptyAllColors() {
         SelectionModeI selectionMode = configuration.selectionModeProperty().get();
         List<ComponentToScanI> rows = null;
         if (selectionMode != null && selectionMode.currentGridProperty().get() != null) {
@@ -355,10 +397,10 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
     }
 
     public void nextDailyTraining() {
-        if (currentKeyboardEvaluation!=null){
-            if (currentKeyboardEvaluation.getFatigueScore()==-1 || currentKeyboardEvaluation.getSatisfactionScore()==-1){
+        if (currentKeyboardEvaluation != null) {
+            if (currentKeyboardEvaluation.getFatigueScore() == -1 || currentKeyboardEvaluation.getSatisfactionScore() == -1) {
                 VoiceSynthesizerController.INSTANCE.speakSync("Merci de remplir les évaluations");
-            }else {
+            } else {
 
                 currentEvaluation.getEvaluations().add(currentKeyboardEvaluation);
                 recordLogs();
@@ -378,16 +420,21 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
 
     public void setEvaFatigueScore(int score) {
         currentKeyboardEvaluation.setFatigueScore(score);
-        recordLogs();}
+        recordLogs();
+    }
+
     public void setEvaFatigueInitScore(int score) {
         currentKeyboardEvaluation.setFatigueInitScore(score);
-        recordLogs();}
+        recordLogs();
+    }
+
     public void setEvaSatisfactionScore(Integer score) {
         currentKeyboardEvaluation.setSatisfactionScore(score);
-        recordLogs();}
+        recordLogs();
+    }
 
 
-    public void initCurrentKeyboard(){
+    public void initCurrentKeyboard() {
         currentKeyboardEvaluation = new WP2KeyboardEvaluation(currentKeyboardType);
     }
 
@@ -413,7 +460,8 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
                     SelectionModeController.INSTANCE.addOverScannedPartChangedListener(highlightRow);
                     break;
                 }
-            };
+            }
+            ;
 
             scheduler = Executors.newScheduledThreadPool(1);
             scheduledEyetrackingTask = scheduler.scheduleAtFixedRate(() -> {
@@ -463,13 +511,16 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
 
         currentRandomIndex = 0;
         SelectionModeParameterI selectionModeParameter = configuration.getSelectionModeParameter();
-        currentEvaluation = new WP2Evaluation(LocalDateTime.now(), patientID.get(), selectionModeParameter.scanPauseProperty().get(), selectionModeParameter.scanFirstPauseProperty().get(), selectionModeParameter.maxScanBeforeStopProperty().get());
+        currentEvaluation = new WP2Evaluation(LocalDateTime.now(),
+                patientID.get(),
+                selectionModeParameter.scanPauseProperty().get(),
+                selectionModeParameter.scanFirstPauseProperty().get(),
+                selectionModeParameter.maxScanBeforeStopProperty().get());
         goToNextKeyboardToEvaluate();
 
         recordLogs();
 
     }
-
 
 
     public void startTraining() {
@@ -480,10 +531,10 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
             time = TRAINING_DURATION_MS;
         }
 
-        if (currentKeyboardEvaluation.getFatigueInitScore()==-1){
+        if (currentKeyboardEvaluation.getFatigueInitScore() == -1) {
             VoiceSynthesizerController.INSTANCE.speakSync("Merci de remplir l'évaluation");
 
-        }else {
+        } else {
             emptyAllColors();
 
 
@@ -511,10 +562,10 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
                     stopLogListener();
 
 
-
                     // go to EVA interface
-                    if(configuration!=null){
-                        SelectionModeController.INSTANCE.changeUseModeSelectionModeTo(RowColumnScanSelectionMode.class);}
+                    if (configuration != null) {
+                        SelectionModeController.INSTANCE.changeUseModeSelectionModeTo(RowColumnScanSelectionMode.class);
+                    }
                     SelectionModeController.INSTANCE.goToGridPart(keyboardEVA);
                     //stop sentence display and clean editor
                     StopDislaySentence();
@@ -527,11 +578,11 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
 
 
     public void StartDislaySentence() {
-        int randomIndexSentence=0;
+        int randomIndexSentence = 0;
 
         if (currentSentenceEvaluation == null) {
             WritingStateController.INSTANCE.removeAll(WritingEventSource.USER_ACTIONS);
-            randomIndexSentence= new Random().nextInt(currentPhraseSet.size());
+            randomIndexSentence = new Random().nextInt(currentPhraseSet.size());
             currentSentence = currentPhraseSet.get(randomIndexSentence);
             currentPhraseSet.remove(currentPhraseSet.get(randomIndexSentence));
             currentSentenceEvaluation = new WP2SentenceEvaluation(currentSentence, new Date());
@@ -541,7 +592,7 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
         } else {
             recordLogs();
             currentSentenceEvaluation.setTextEntry(WritingStateController.INSTANCE.getLastSentence());
-            randomIndexSentence= new Random().nextInt(currentPhraseSet.size());
+            randomIndexSentence = new Random().nextInt(currentPhraseSet.size());
             currentSentence = currentPhraseSet.get(randomIndexSentence);
             currentPhraseSet.remove(currentPhraseSet.get(randomIndexSentence));
             UseVariableController.INSTANCE.requestVariablesUpdate();
