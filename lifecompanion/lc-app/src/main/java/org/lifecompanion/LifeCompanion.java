@@ -30,6 +30,7 @@ import org.lifecompanion.controller.useapi.LifeCompanionControlServerController;
 import org.lifecompanion.framework.commons.doublelaunch.DoubleLaunchController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.model.impl.constant.LCConstant;
+import org.lifecompanion.model.impl.useapi.GlobalRuntimeConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,8 +72,13 @@ public class LifeCompanion extends Application {
     public static void main(final String[] args) {
         LOGGER.info("Logs are saved to {}", getLogPath().getAbsolutePath());
         argsCollection = args != null ? new ArrayList<>(Arrays.asList(args)) : new ArrayList<>();
-        boolean doubleRun = DoubleLaunchController.INSTANCE.startAndDetect(new DoubleLaunchListenerImpl(), true, args);
-        if (!doubleRun) {
+
+        // Detect global runtime configurations
+        GlobalRuntimeConfigurationController.INSTANCE.init(argsCollection);
+
+        boolean disableDoubleLaunchCheck = GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DISABLE_DOUBLE_LAUNCH_CHECK);
+        boolean doubleRun = DoubleLaunchController.INSTANCE.startAndDetect(new DoubleLaunchListenerImpl(), !disableDoubleLaunchCheck, args);
+        if (!doubleRun || disableDoubleLaunchCheck) {
             //Start
             Instant startDate = Instant.now();
             LifeCompanion.LOGGER.info("{} version {} (build {}) launching with args\n\t{}",
@@ -80,8 +86,6 @@ public class LifeCompanion extends Application {
                     InstallationController.INSTANCE.getBuildProperties().getVersionLabel(),
                     InstallationController.INSTANCE.getBuildProperties().getBuildDate(),
                     args);
-            // Detect global runtime configurations
-            GlobalRuntimeConfigurationController.INSTANCE.init(argsCollection);
             // Run the service server (if needed)
             LifeCompanionControlServerController.INSTANCE.startControlServer();
             // Run the FX app

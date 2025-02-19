@@ -31,6 +31,8 @@
 - Ticket #397 : la fenêtre des paramètres de sélection spécifiques à la grille n'affichait pas les boutons
 - Correction de rares problèmes de sélection des éléments en mode édition
 - Ticket #417 : correction du message d'erreur lors de l'import d'un fichier de configuration/profil corrompu
+- Conservation d'un plus grand historique des logs
+- Ajout d'un nouveau paramètre `-disableDoubleLaunchCheck` pour lancer deux instances de LifeCompanion en même temps (déconseillé)
 
 ## 1.6.5 - 31/10/2025
 

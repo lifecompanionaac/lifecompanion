@@ -46,6 +46,13 @@ public enum GlobalRuntimeConfiguration implements GlobalRuntimeConfigurationI {
             "C:\\lifecompanion\\my-configuration.lcc",
             1
     ),
+    DISABLE_DOUBLE_LAUNCH_CHECK(
+            "disableDoubleLaunchCheck",
+            GlobalRuntimeConfigurationType.COMMAND_LINE,
+            "Will disable the double launch for this LifeCompanion instance. Will not check that another LifeCompanion is running. This will however create the double launch server" +
+                    "for any new instance that would run without the double launch disabled."
+    ),
+
 
     // Disable features/config/etc
     DISABLE_SWITCH_TO_EDIT_MODE(
