@@ -34,6 +34,7 @@
 - Ticket #420 : correction du message d'avertissement sur l'ajout d'action sur les cases de type listes de cases
 - Conservation d'un plus grand historique des logs
 - Ajout d'un nouveau paramètre `-disableDoubleLaunchCheck` pour lancer deux instances de LifeCompanion en même temps (déconseillé)
+- Ticket #423 : correction d'un rare bug lors du retour en mode édition
 
 ## 1.6.5 - 31/10/2025
 
