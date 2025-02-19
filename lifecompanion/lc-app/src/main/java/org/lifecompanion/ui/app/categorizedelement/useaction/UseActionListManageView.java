@@ -28,6 +28,7 @@ import org.lifecompanion.model.api.configurationcomponent.GridPartKeyComponentI;
 import org.lifecompanion.model.api.editaction.BaseEditActionI;
 import org.lifecompanion.model.api.categorizedelement.useevent.UseEventGeneratorI;
 import org.lifecompanion.controller.editaction.UseActionConfigActions.*;
+import org.lifecompanion.model.impl.categorizedelement.useaction.available.KeyListIndicatorAction;
 import org.lifecompanion.model.impl.configurationcomponent.keyoption.dynamickey.KeyListNodeKeyOption;
 import org.lifecompanion.ui.app.categorizedelement.AbstractCategorizedListManageView;
 import org.lifecompanion.ui.app.categorizedelement.AbstractCategorizedMainView;
@@ -139,9 +140,11 @@ public class UseActionListManageView
 
     static boolean isKeyListWarningPresentFor(UseActionTriggerComponentI component) {
         if (component instanceof GridPartKeyComponentI key) {
-            if (key.getActionManager().countAllActions() <= 0) {
-                return key.keyOptionProperty().get() instanceof KeyListNodeKeyOption;
-            }
+            int actionCount = key.getActionManager().countAllActions();
+            return key.keyOptionProperty().get() instanceof KeyListNodeKeyOption &&
+                    (actionCount <= 0 ||
+                            (actionCount == 2 && key.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION, KeyListIndicatorAction.class) != null && key.getActionManager().getFirstActionOfType(UseActionEvent.OVER, KeyListIndicatorAction.class) != null)
+                    );
         }
         return false;
     }
