@@ -376,7 +376,7 @@ public enum KeyListController implements ModeListenerI {
     //========================================================================
     public boolean simulateKeyListKeyActions(GridPartKeyComponentI key) {
         if (isKeylistKeyOptionWithValidSelectAction(key)) {
-            selectKeyNodeAction(key);
+            return selectKeyNodeAction(key);
         } else {
             NextInCurrentKeyListAction nextInCurrentKeyListAction = key.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION, NextInCurrentKeyListAction.class);
             NextInCurrentKeyListNoLoopAction nextInCurrentKeyListNoLoopAction = key.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION, NextInCurrentKeyListNoLoopAction.class);
@@ -449,7 +449,7 @@ public enum KeyListController implements ModeListenerI {
 
     // KEY ACTIONS
     //========================================================================
-    public void selectKeyNodeAction(GridPartKeyComponentI key) {
+    public boolean selectKeyNodeAction(GridPartKeyComponentI key) {
         if (key != null) {
             final KeyOptionI keyOption = key.keyOptionProperty().get();
             if (keyOption instanceof KeyListNodeKeyOption) {
@@ -467,17 +467,20 @@ public enum KeyListController implements ModeListenerI {
                                     GridComponentI.class);
                             if (targetGrid != null) {
                                 SelectionModeController.INSTANCE.goToGridPart(targetGrid);
+                                return true;
                             }
                         } else if (AppModeController.INSTANCE.isEditMode()) {
                             GridComponentI targetGrid = ConfigurationComponentUtils.findById(AppModeController.INSTANCE.getEditModeContext().getConfiguration(),
                                     node.linkedGridIdProperty().get(),
                                     GridComponentI.class);
                             SelectionController.INSTANCE.selectDisplayableComponent(targetGrid, true);
+                            return true;
                         }
                     }
                 }
             }
         }
+        return false;
     }
     //========================================================================
 
