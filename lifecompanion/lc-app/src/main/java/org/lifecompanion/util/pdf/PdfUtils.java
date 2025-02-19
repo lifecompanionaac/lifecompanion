@@ -29,11 +29,13 @@ public class PdfUtils {
 
     public static final float HEADER_SIZE = 35f,
             FOOTER_SIZE = 30f,
+            MIN_FOOTER_SIZE = 10f,
             IMAGE_BORDER_FULL = 20f,
             IMAGE_BORDER_SMALL = 5f,
             BACKGROUND_COLOR_BORDER = 3f,
             HEADER_FONT_SIZE = 16,
             FOOTER_FONT_SIZE = 9,
+            SMALL_FOOTER_FONT_SIZE = 7,
             TEXT_LEFT_OFFSET = 50,
             FOOTER_LINE_HEIGHT = 12f,
             LOGO_HEIGHT = 25f,
@@ -52,7 +54,7 @@ public class PdfUtils {
         final Date exportDate = new Date();
 
         float headerSize = documentConfiguration.isEnableHeader() ? HEADER_SIZE : 0f;
-        float footerSize = documentConfiguration.isEnableHeader() ? FOOTER_SIZE : 0f;
+        float footerSize = documentConfiguration.isEnableHeader() ? FOOTER_SIZE : MIN_FOOTER_SIZE;
         float imageBorder = documentConfiguration.isEnableFooter() || documentConfiguration.isEnableHeader() ? IMAGE_BORDER_FULL : IMAGE_BORDER_SMALL;
 
         // Temp save LC logo
@@ -133,6 +135,13 @@ public class PdfUtils {
                                 .getAppServerUrl());
                         pageContentStream.endText();
                         pageContentStream.drawImage(logoImage, pageWidthF - logoDrawWidth - TEXT_LEFT_OFFSET, footerSize / 2f - LOGO_HEIGHT / 2f, logoDrawWidth, LOGO_HEIGHT);
+                    } else {
+                        pageContentStream.fill();
+                        pageContentStream.beginText();
+                        pageContentStream.newLineAtOffset(10f, footerSize - 6f);
+                        pageContentStream.setFont(FOOTER_FONT, SMALL_FOOTER_FONT_SIZE);
+                        pageContentStream.showText(Translation.getText("pdf.export.small.footer.label", InstallationController.INSTANCE.getBuildProperties().getAppServerUrl()));
+                        pageContentStream.endText();
                     }
                 }
                 progressIndicator.accept(++progress, documentImagePages.size());
