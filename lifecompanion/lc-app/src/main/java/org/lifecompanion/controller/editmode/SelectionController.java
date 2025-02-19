@@ -26,14 +26,10 @@ import javafx.collections.ObservableList;
 import org.lifecompanion.controller.lifecycle.AppMode;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.model.api.configurationcomponent.*;
-import org.lifecompanion.util.ThreadUtils;
 import org.lifecompanion.util.binding.BindingUtils;
 import org.lifecompanion.util.model.ConfigurationComponentUtils;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Manage the selection of components in edit mode.<br>
@@ -67,6 +63,8 @@ public enum SelectionController {
 
     private final Map<Object, ChangeListener<Boolean>> removedListeners;
 
+    private final LinkedList<GridPartComponentI> selectedPartHistory;
+
     SelectionController() {
         this.selectedKeys = FXCollections.observableArrayList();
         this.listPropertySelectedKeys = new SimpleListProperty<>(this.selectedKeys);
@@ -78,6 +76,8 @@ public enum SelectionController {
         this.selectedDisplayableComponentHelper = new SimpleObjectProperty<>();
 
         this.removedListeners = new HashMap<>();
+
+        this.selectedPartHistory = new LinkedList<>();
 
         initBindings();
     }
@@ -92,7 +92,7 @@ public enum SelectionController {
             } else if (selectedGridPartComponent.get() != null) {
                 return selectedGridPartComponent.get();
             } else if (!selectedKeys.isEmpty()) {
-                return selectedKeys.get(selectedKeys.size() - 1);
+                return selectedKeys.getLast();
             } else return null;
         }, selectedGridPartComponent, selectedKeys, selectedRootComponent));
         selectedKeyHelper.bind(Bindings.createObjectBinding(() -> selectedKeys.isEmpty() ? null : selectedKeys.get(selectedKeys.size() - 1), selectedKeys));
@@ -105,7 +105,16 @@ public enum SelectionController {
         selectedRootComponent.addListener(createChangeListener());
         selectedGridPartComponent.addListener(createChangeListener());
 
-        AppModeController.INSTANCE.getEditModeContext().configurationProperty().addListener((obs, ov, nv) -> this.clearSelection());
+        AppModeController.INSTANCE.getEditModeContext().configurationProperty().addListener((obs, ov, nv) -> {
+            this.selectedPartHistory.clear();
+            this.clearSelection();
+        });
+
+        this.selectedGridPartComponent.addListener((obs, ov, nv) -> {
+            if (nv != null && !nv.equals(selectedPartHistory.peekLast())) {
+                selectedPartHistory.add(nv);
+            }
+        });
     }
 
     private <T extends SelectableComponentI & DisplayableComponentI> ChangeListener<T> createChangeListener() {
@@ -157,6 +166,19 @@ public enum SelectionController {
 
     // PUBLIC API
     //========================================================================
+    public void selectPreviousComponent() {
+        if (this.selectedPartHistory.size() >= 2) {
+            this.selectedPartHistory.removeLast();// the last component is the current grid
+            DisplayableComponentI lastElement = this.selectedPartHistory.removeLast(); // this is the last selected grid before current
+            this.selectDisplayableComponent(lastElement, true);
+        } else {
+            LCConfigurationI configuration = AppModeController.INSTANCE.getEditModeContext().configurationProperty().get();
+            if (configuration != null && configuration.firstSelectionPartProperty().get() != null) {
+                this.selectDisplayableComponent(configuration.firstSelectionPartProperty().get(), true);
+            }
+        }
+    }
+
     public void selectDisplayableComponent(DisplayableComponentI displayableComponent, boolean force) {
         if (displayableComponent != null) {
             if (displayableComponent instanceof GridPartKeyComponentI) {
@@ -242,7 +264,6 @@ public enum SelectionController {
             selectedGridPartComponent.set(gridPartComponent);
         }
     }
-
     //========================================================================
 
 

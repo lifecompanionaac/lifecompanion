@@ -22,6 +22,7 @@
 - **Amélioration de la qualité des images** lors des impressions en PDF
 - Correction de l'obtention de l'identifiant d'installation sur les dernières versions de Windows 11
 - Ajout/correction sur l'interface de contrôle (API)
+- Ticket #427 : l'action "Aller à l'élément précédent" fonctionne maintenant en mode édition
 - Ticket #399 : correction de la forme des cases lorsque l'angle était trop grand
 - Ticket #398 : correction d'un problème avec l'action "Action des listes de case"
 - Ticket #396 : correction du nom du champs sur l'action "Changer la taille du crayon"
