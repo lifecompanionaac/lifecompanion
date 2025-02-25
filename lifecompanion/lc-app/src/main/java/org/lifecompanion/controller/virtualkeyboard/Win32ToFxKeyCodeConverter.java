@@ -161,6 +161,9 @@ public class Win32ToFxKeyCodeConverter {
         JAVAFX_TO_AUTOHOTKEY_MANUAL.put(KeyCode.DELETE, "Delete");
         JAVAFX_TO_AUTOHOTKEY_MANUAL.put(KeyCode.INSERT, "Insert");
         JAVAFX_TO_AUTOHOTKEY_MANUAL.put(KeyCode.WINDOWS, "LWin");
+        JAVAFX_TO_AUTOHOTKEY_MANUAL.put(KeyCode.ALT, "Alt");
+        JAVAFX_TO_AUTOHOTKEY_MANUAL.put(KeyCode.ALT_GRAPH, "RAlt");
+        JAVAFX_TO_AUTOHOTKEY_MANUAL.put(KeyCode.CONTEXT_MENU, "AppsKey");
     }
 
     public static String javaFXKeyCodeToAutoHotKey(KeyCode keyCode, String modifier) {
