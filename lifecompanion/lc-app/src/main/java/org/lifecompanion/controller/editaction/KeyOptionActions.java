@@ -231,40 +231,40 @@ public class KeyOptionActions {
 
     }
 
-    public static class ChangeKeyListOptionSelectedLevelAction extends BasePropertyChangeAction<Number> {
-
-        public ChangeKeyListOptionSelectedLevelAction(final KeyListNodeKeyOption option, final Number wantedValueP) {
-            super(option.selectedLevelProperty(), wantedValueP);
-        }
-
-        @Override
-        public String getNameID() {
-            return "keylist.action.change.keylist.selected.level.name";
-        }
-
-    }
-
-    public static class ChangeKeyListOptionSpecificLevelAction extends BasePropertyChangeAction<Boolean> {
-
-        public ChangeKeyListOptionSpecificLevelAction(final KeyListNodeKeyOption option, final Boolean wantedValueP) {
-            super(option.specificLevelProperty(), wantedValueP);
-        }
-
-        @Override
-        public String getNameID() {
-            return "keylist.action.change.keylist.toggle.specific.level.name";
-        }
-    }
-
-    public static class ChangeKeyListOptionDisplayLevelBellowAction extends BasePropertyChangeAction<Boolean> {
-
-        public ChangeKeyListOptionDisplayLevelBellowAction(final KeyListNodeKeyOption option, final Boolean wantedValueP) {
-            super(option.displayLevelBellowProperty(), wantedValueP);
-        }
-
-        @Override
-        public String getNameID() {
-            return "keylist.action.change.keylist.toggle.level.bellow.name";
-        }
-    }
+//    public static class ChangeKeyListOptionSelectedLevelAction extends BasePropertyChangeAction<Number> {
+//
+//        public ChangeKeyListOptionSelectedLevelAction(final KeyListNodeKeyOption option, final Number wantedValueP) {
+//            super(option.selectedLevelProperty(), wantedValueP);
+//        }
+//
+//        @Override
+//        public String getNameID() {
+//            return "keylist.action.change.keylist.selected.level.name";
+//        }
+//
+//    }
+//
+//    public static class ChangeKeyListOptionSpecificLevelAction extends BasePropertyChangeAction<Boolean> {
+//
+//        public ChangeKeyListOptionSpecificLevelAction(final KeyListNodeKeyOption option, final Boolean wantedValueP) {
+//            super(option.specificLevelProperty(), wantedValueP);
+//        }
+//
+//        @Override
+//        public String getNameID() {
+//            return "keylist.action.change.keylist.toggle.specific.level.name";
+//        }
+//    }
+//
+//    public static class ChangeKeyListOptionDisplayLevelBellowAction extends BasePropertyChangeAction<Boolean> {
+//
+//        public ChangeKeyListOptionDisplayLevelBellowAction(final KeyListNodeKeyOption option, final Boolean wantedValueP) {
+//            super(option.displayLevelBellowProperty(), wantedValueP);
+//        }
+//
+//        @Override
+//        public String getNameID() {
+//            return "keylist.action.change.keylist.toggle.level.bellow.name";
+//        }
+//    }
 }
