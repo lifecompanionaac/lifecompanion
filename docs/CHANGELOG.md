@@ -15,6 +15,7 @@
 - Ajout d'un raccourci automatique permettant d'aller à la configuration précédente lorsque la configuration change en mode utilisation
 - Ajout de la possibilité de désactiver le bouton de mise en plein écran en mode utilisation (dans "Préférences & Infos")
 - Ajout d'une action **"Sauvegarder du texte"** : permet de sauvegarder du texte dans un fichier (incluant des variables)
+- Suppression de la fonctionnalité de "niveau spécifique" sur les listes de cases
 
 ### Corrections/ajustements
 
