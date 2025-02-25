@@ -82,7 +82,11 @@ public class UseModeStage extends Stage {
                 StageUtils.setFocusableInternalAPI(this, false);
             }
             if (!GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.FORCE_WINDOW_MINIMIZED)) {
-                VirtualMouseController.INSTANCE.centerMouseOnStage();
+                try {
+                    VirtualMouseController.INSTANCE.centerMouseOnStage();
+                } catch (Exception e) {
+                    LOGGER.warn("Could not center mouse on stage on use mode start", e);
+                }
                 if (!isVirtualKeyboard) {
                     useModeScene.requestFocus();
                 } else {
