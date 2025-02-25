@@ -32,54 +32,57 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 
 public abstract class AbstractSubCategoriesView<V extends CategorizedElementI<T>, T extends SubCategoryI<K, V>, K extends MainCategoryI<T>>
-		extends ScrollPane implements LCViewInitHelper {
-	/**
-	 * Main category
-	 */
-	private K mainCategory;
+        extends ScrollPane implements LCViewInitHelper {
+    /**
+     * Main category
+     */
+    private K mainCategory;
 
-	/**
-	 * Box that contains every sub categories content
-	 */
-	private VBox boxSubCategories;
+    /**
+     * Box that contains every sub categories content
+     */
+    private VBox boxSubCategories;
 
-	private Consumer<V> selectionCallback;
+    private Consumer<V> selectionCallback;
 
-	/**
-	 * Construct a sub category view for a given main category.<br>
-	 * Display all the use action and sub categories in the given main category.
-	 */
-	public AbstractSubCategoriesView(final K mainCategoryP, final Consumer<V> selectionCallbackP) {
-		this.mainCategory = mainCategoryP;
-		this.selectionCallback = selectionCallbackP;
-		this.initAll();
-	}
+    /**
+     * Construct a sub category view for a given main category.<br>
+     * Display all the use action and sub categories in the given main category.
+     */
+    public AbstractSubCategoriesView(final K mainCategoryP, final Consumer<V> selectionCallbackP) {
+        this.mainCategory = mainCategoryP;
+        this.selectionCallback = selectionCallbackP;
+        this.initAll();
+    }
 
-	// Class part : "UI"
-	//========================================================================
-	@Override
-	public void initUI() {
-		this.boxSubCategories = new VBox();
-		this.boxSubCategories.setAlignment(Pos.TOP_LEFT);
-		//Scroll
-		this.getStyleClass().addAll("background-transparent","border-transparent");
-		this.setContent(this.boxSubCategories);
-		this.setFitToWidth(true);
-	}
+    // Class part : "UI"
+    //========================================================================
+    @Override
+    public void initUI() {
+        this.boxSubCategories = new VBox();
+        this.boxSubCategories.setAlignment(Pos.TOP_LEFT);
+        //Scroll
+        this.getStyleClass().addAll("background-transparent", "border-transparent");
+        this.setContent(this.boxSubCategories);
+        this.setFitToWidth(true);
+    }
 
-	@Override
-	public void initListener() {}
+    @Override
+    public void initListener() {
+    }
 
-	@Override
-	public void initBinding() {
-		//For each sub category, create the component
-		ObservableList<T> subCategories = this.mainCategory.getSubCategories();
-		for (T subCategory : subCategories) {
-			this.boxSubCategories.getChildren().add(this.createContentView(subCategory, this.selectionCallback));
-		}
-	}
+    @Override
+    public void initBinding() {
+        //For each sub category, create the component
+        ObservableList<T> subCategories = this.mainCategory.getSubCategories();
+        for (T subCategory : subCategories) {
+            if (subCategory.getContent().stream().anyMatch(e -> !e.isInternal())) {
+                this.boxSubCategories.getChildren().add(this.createContentView(subCategory, this.selectionCallback));
+            }
+        }
+    }
 
-	protected abstract Node createContentView(T subCategory, Consumer<V> selectionCallback);
-	//========================================================================
+    protected abstract Node createContentView(T subCategory, Consumer<V> selectionCallback);
+    //========================================================================
 
 }

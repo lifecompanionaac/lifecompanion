@@ -49,6 +49,7 @@ public class WriteWordPredictionAction extends SimpleUseActionImpl<GridPartKeyCo
         this.staticDescriptionID = "action.write.word.prediction.description";
         this.configIconPath = "text/icon_write_word_prediction.png";
         this.parameterizableAction = true;
+        this.internal = true;
         this.variableDescriptionProperty().set(this.getStaticDescription());
     }
 
@@ -85,7 +86,6 @@ public class WriteWordPredictionAction extends SimpleUseActionImpl<GridPartKeyCo
             }
         }
     }
-
 
 
     // ========================================================================

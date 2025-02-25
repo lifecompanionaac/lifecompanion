@@ -48,7 +48,7 @@ import java.util.function.BiConsumer;
  */
 public abstract class BaseUseEventGeneratorImpl implements UseEventGeneratorI {
     protected final static long DELAY_BEFORE_GENERATE_MS = 500;
-    protected boolean parameterizableAction = true;
+    protected boolean parameterizableAction = true, internal = false;
     protected int order = Integer.MAX_VALUE;
     protected String staticDescriptionID = "unknow.action.description", nameID = "unknow.action.name", configIconPath;
     private final StringProperty variableDescription;
@@ -75,7 +75,7 @@ public abstract class BaseUseEventGeneratorImpl implements UseEventGeneratorI {
 
     @Override
     public void eventFired(ActionEventType type, UseActionEvent event) {
-        this.useActionTriggerEventWrapper.eventFired(type,event);
+        this.useActionTriggerEventWrapper.eventFired(type, event);
     }
 
     @Override
@@ -126,6 +126,11 @@ public abstract class BaseUseEventGeneratorImpl implements UseEventGeneratorI {
     @Override
     public boolean isParameterizableElement() {
         return this.parameterizableAction;
+    }
+
+    @Override
+    public boolean isInternal() {
+        return internal;
     }
 
     @Override

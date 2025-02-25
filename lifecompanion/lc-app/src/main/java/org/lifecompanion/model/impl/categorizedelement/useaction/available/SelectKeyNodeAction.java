@@ -41,6 +41,7 @@ public class SelectKeyNodeAction extends SimpleUseActionImpl<GridPartKeyComponen
         this.staticDescriptionID = "select.current.keylist.keyoption.description";
         this.configIconPath = "keylist/icon_select_keylist.png";
         this.parameterizableAction = false;
+        this.internal = true;
         this.variableDescriptionProperty().set(this.getStaticDescription());
     }
 

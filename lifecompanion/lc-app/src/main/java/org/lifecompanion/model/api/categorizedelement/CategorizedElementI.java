@@ -82,5 +82,11 @@ public interface CategorizedElementI<K extends SubCategoryI<?, ?>> extends XMLSe
      */
     // FIXME : could be dynamically detected and deprecated
     public boolean isParameterizableElement();
+
+    /**
+     * @return true if this element is only dedicated to internal purposes.
+     * This will hide the element from edition view displayed to user.
+     */
+    boolean isInternal();
     //========================================================================
 }
