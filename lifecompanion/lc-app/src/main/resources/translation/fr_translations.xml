@@ -530,6 +530,8 @@
 		fichier .txt qui sera dans un dossier choisi. Le fichier texte créé sera nommé d'après le nom de la
 		configuration et la
 		date.</text>
+    <text key="action.save.text.to.txt.file.name">Sauvegarder du texte</text>
+    <text key="action.save.text.to.txt.file.static.description">Sauvegarde un texte défini (qui peut intégrer des variables) texte dans un fichier .txt qui sera dans un dossier choisi. Le fichier texte créé sera nommé d'après le nom de la configuration et la date.</text>
   <text key="default.user.text.directory.name">LifeCompanion-Textes</text>
   <!--org.lifecompanion.base.data.useaction.impl.computera.keyboard-->
     <text key="action.simulate.keyboard.key.toggle.action.name">Maintenir/relâcher une touche</text>
@@ -2647,6 +2649,7 @@
   <text key="label.field.file.to.open.with.default.app">Fichier à ouvrir avec l'application par défaut</text>
   <text key="save.user.text.save.directory.dialog.title">Sélectionner le dossier de sauvegarde</text>
   <text key="save.user.text.save.directory.name">Dossier de sauvegarde des fichiers texte</text>
+  <text key="save.text.to.file.field.text">Texte à écrire dans le fichier</text>
   <text key="use.action.open.url.default.browser">URL à ouvrir (doit être valide, ex : "http://google.fr")</text>
   <!--org.lifecompanion.config.view.useaction.impl.computera.keyboard-->
   <text key="use.action.simulate.key.press.label">Touche dont l'appui sera simulé</text>

@@ -14,6 +14,7 @@
 - Ajout des **paramètres d'export en PDF** : taille de la page et activation ou non des en-têtes et pieds de page
 - Ajout d'un raccourci automatique permettant d'aller à la configuration précédente lorsque la configuration change en mode utilisation
 - Ajout de la possibilité de désactiver le bouton de mise en plein écran en mode utilisation (dans "Préférences & Infos")
+- Ajout d'une action **"Sauvegarder du texte"** : permet de sauvegarder du texte dans un fichier (incluant des variables)
 
 ### Corrections/ajustements
 
