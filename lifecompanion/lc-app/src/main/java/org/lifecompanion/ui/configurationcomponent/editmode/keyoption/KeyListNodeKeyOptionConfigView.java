@@ -75,6 +75,7 @@ public class KeyListNodeKeyOptionConfigView extends BaseKeyOptionConfigView<KeyL
 
         GridPane gridPaneConfig = new GridPane();
         gridPaneConfig.setVgap(5.0);
+        gridPaneConfig.setPrefWidth(225.0);
         int rowIndex = 0;
         gridPaneConfig.add(buttonConfigureKeyList, 0, rowIndex++, 2, 1);
 //        gridPaneConfig.add(toggleSwitchSpecificLevel, 0, rowIndex++, 2, 1);
@@ -93,7 +94,7 @@ public class KeyListNodeKeyOptionConfigView extends BaseKeyOptionConfigView<KeyL
 //                m -> m.displayLevelBellowProperty().get(), KeyOptionActions.ChangeKeyListOptionDisplayLevelBellowAction::new);
 //        changeListenerSpecificLevel = EditActionUtils.createSimpleBinding(this.toggleSwitchSpecificLevel.selectedProperty(), this.model,
 //                m -> m.specificLevelProperty().get(), KeyOptionActions.ChangeKeyListOptionSpecificLevelAction::new);
-//        this.buttonConfigureKeyList.setOnAction(e -> KeyListController.INSTANCE.openKeyListConfigFor(model.get()));
+        this.buttonConfigureKeyList.setOnAction(e -> KeyListController.INSTANCE.openKeyListConfigFor(model.get()));
     }
 
     @Override
