@@ -235,11 +235,11 @@ public enum VoiceSynthesizerController implements LCStateListener, ModeListenerI
     private String cleanTextBeforeSpeak(String text, final VoiceSynthesizerParameterI parameters) {
         ObservableList<PronunciationExceptionI> exception = parameters.getPronunciationExceptions();
         String original = text;
-        if(!StringUtils.isEmpty(text)) {
+        if (!StringUtils.isEmpty(text)) {
             for (PronunciationExceptionI exc : exception) {
                 if (!StringUtils.isEmpty(exc.originalTextProperty().get()) && !StringUtils.isEmpty(exc.replaceTextProperty().get())) {
-                    text = text.replaceAll("\\b" + Pattern.quote(exc.originalTextProperty().get()) + "\\b",
-                            Matcher.quoteReplacement(exc.replaceTextProperty().get()));
+                    Pattern pattern = Pattern.compile("\\b" + Pattern.quote(exc.originalTextProperty().get()) + "\\b", Pattern.CASE_INSENSITIVE);
+                    text = pattern.matcher(text).replaceAll(Matcher.quoteReplacement(exc.replaceTextProperty().get()));
                     this.LOGGER.debug("Replace {} with {}", exc.originalTextProperty().get(), exc.replaceTextProperty().get());
                 }
             }

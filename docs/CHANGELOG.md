@@ -39,6 +39,7 @@
 - Ajout d'un nouveau paramètre `-disableDoubleLaunchCheck` pour lancer deux instances de LifeCompanion en même temps (déconseillé)
 - Ticket #423 : correction d'un rare bug lors du retour en mode édition
 - Ticket #429 : certaines actions "internes" à LifeCompanion sont maintenant masquées des listes
+- Ticket #346 : les modifications de prononciation de la synthèse vocale fonctionnent maintenant en ignorant les minuscules/majuscules
 
 ## 1.6.5 - 31/10/2025
 
