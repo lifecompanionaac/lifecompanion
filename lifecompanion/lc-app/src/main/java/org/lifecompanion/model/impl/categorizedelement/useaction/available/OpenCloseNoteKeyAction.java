@@ -72,6 +72,7 @@ public class OpenCloseNoteKeyAction extends SimpleUseActionImpl<GridPartKeyCompo
         currentImage = new SimpleObjectProperty<>();
         savedText = new SimpleStringProperty();
         recordingNote = new SimpleBooleanProperty(false);
+        this.internal = false;
         this.variableDescriptionProperty().set(getStaticDescription());
         this.savedText.addListener(i -> this.updateCurrentImage());
         this.recordingNote.addListener(i -> this.updateCurrentImage());
