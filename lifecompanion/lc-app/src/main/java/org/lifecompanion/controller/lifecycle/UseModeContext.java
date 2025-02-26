@@ -19,6 +19,7 @@
 
 package org.lifecompanion.controller.lifecycle;
 
+import javafx.stage.Stage;
 import org.lifecompanion.controller.configurationcomponent.dynamickey.KeyListController;
 import org.lifecompanion.model.api.configurationcomponent.IdentifiableComponentI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
@@ -34,8 +35,11 @@ public class UseModeContext extends AbstractModeContext {
     public void cleanAfterStop() {
         this.configurationDescription.set(null);
         this.configuration.set(null);
-        if (stage.get() != null) {
-            stage.get().hide();
+        Stage useModeStage = stage.get();
+        if (useModeStage != null) {
+            // Important : avoid keeping the stage in memory because of GlassStage.activeFSWindow
+            useModeStage.setFullScreen(false);
+            useModeStage.hide();
             this.stage.set(null);
         }
     }
