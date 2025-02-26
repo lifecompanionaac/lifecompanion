@@ -64,7 +64,10 @@ Then, run `gradlew prepareOfflineApplication`. This will create in **offline** d
 
 ## Create offline Windows installer
 
-TODO
+This task is based on the offline application package. The offline application package should be configured and running well if you want to create offline Windows installer.
+This task is currently built locally and is not available through Github actions.
+
+To create the offline installer, run `gradlew clean createWindowsOfflineInstaller`.
 
 ## Create offline debian package
 
