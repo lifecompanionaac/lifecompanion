@@ -16,6 +16,7 @@
 - Ajout de la possibilité de désactiver le bouton de mise en plein écran en mode utilisation (dans "Préférences & Infos")
 - Ajout d'une action **"Sauvegarder du texte"** : permet de sauvegarder du texte dans un fichier (incluant des variables)
 - Suppression de la fonctionnalité de "niveau spécifique" sur les listes de cases
+- Suppression de la fonctionnalité de "sous étape" sur les séquences
 
 ### Corrections/ajustements
 
