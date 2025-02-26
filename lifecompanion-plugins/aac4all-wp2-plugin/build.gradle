@@ -10,7 +10,6 @@ javafx {
     configuration = 'compileOnly'
 }
 
-
 repositories {
     mavenLocal()
     mavenCentral()
