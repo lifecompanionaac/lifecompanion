@@ -80,6 +80,7 @@ public enum InstallerManager {
     private boolean installationSuccess;
 
     private final ApplicationBuildProperties buildProperties;
+    private Task<?> runningTask;
 
     InstallerManager() {
         configuration = new InstallerUIConfiguration();
@@ -112,6 +113,7 @@ public enum InstallerManager {
     }
 
     public void submitTask(Task<?> task) {
+        this.runningTask = task;
         this.executorService.submit(task);
     }
 
@@ -136,6 +138,9 @@ public enum InstallerManager {
     }
 
     public void stop() {
+        if (this.runningTask != null) {
+            this.runningTask.cancel();
+        }
         this.client.close();
         this.executorService.shutdownNow();
     }

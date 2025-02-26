@@ -185,23 +185,24 @@ public class FullInstallTask extends Task<InstallResult> {
                 return InstallResult.INSTALLATION_FAILED_DOWNLOAD;
             }
         }
-
-        try {
-            writeInstallationConfiguration();
-            updateProgress(progress++, TASK_COUNT);
-        } catch (Exception e) {
-            LOGGER.error("Couldn't write installation configuration", e);
-            return InstallResult.INSTALLATION_FAILED_SYSTEM_SPECIFIC;
+        if (!this.isCancelled()) {
+            try {
+                writeInstallationConfiguration();
+                updateProgress(progress++, TASK_COUNT);
+            } catch (Exception e) {
+                LOGGER.error("Couldn't write installation configuration", e);
+                return InstallResult.INSTALLATION_FAILED_SYSTEM_SPECIFIC;
+            }
+            try {
+                executeSystemSpecificTasks();
+                updateProgress(progress++, TASK_COUNT);
+            } catch (Exception e) {
+                LOGGER.error("Couldn't execute system specific task", e);
+                return InstallResult.INSTALLATION_FAILED_SYSTEM_SPECIFIC;
+            }
+            updateProgress(1, 1);
+            updateMessage(Translation.getText("lc.installer.installation.result.success"));
         }
-        try {
-            executeSystemSpecificTasks();
-            updateProgress(progress++, TASK_COUNT);
-        } catch (Exception e) {
-            LOGGER.error("Couldn't execute system specific task", e);
-            return InstallResult.INSTALLATION_FAILED_SYSTEM_SPECIFIC;
-        }
-        updateProgress(1,1);
-        updateMessage(Translation.getText("lc.installer.installation.result.success"));
         return InstallResult.INSTALLATION_SUCCESS;
     }
 
