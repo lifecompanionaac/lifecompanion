@@ -24,15 +24,16 @@ import javafx.scene.control.Spinner;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
+import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionConfigurationViewI;
 import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
-import org.lifecompanion.model.impl.categorizedelement.useaction.available.PreviousKeysOnSpecificLevelAction;
-import org.lifecompanion.framework.commons.translation.Translation;
+import org.lifecompanion.model.impl.categorizedelement.useaction.available.GameSetCurrentScoreAction;
+import org.lifecompanion.model.impl.categorizedelement.useaction.available.GameSetMaxScoreAction;
 import org.lifecompanion.util.javafx.FXControlUtils;
 
-public class PreviousKeysOnSpecificLevelActionConfigView extends GridPane implements UseActionConfigurationViewI<PreviousKeysOnSpecificLevelAction> {
+public class GameSetMaxScoreConfigView extends GridPane implements UseActionConfigurationViewI<GameSetMaxScoreAction> {
 
-    private Spinner<Integer> spinnerSelectedLevel;
+    private Spinner<Integer> spinnerScore;
 
     @Override
     public Region getConfigurationView() {
@@ -40,28 +41,27 @@ public class PreviousKeysOnSpecificLevelActionConfigView extends GridPane implem
     }
 
     @Override
-    public Class<PreviousKeysOnSpecificLevelAction> getConfiguredActionType() {
-        return PreviousKeysOnSpecificLevelAction.class;
+    public Class<GameSetMaxScoreAction> getConfiguredActionType() {
+        return GameSetMaxScoreAction.class;
     }
 
     @Override
     public void initUI() {
-        final Label labelLevelSelectionField = new Label(Translation.getText("keylist.action.field.specific.level.selection"));
-        GridPane.setHgrow(labelLevelSelectionField, Priority.ALWAYS);
-        labelLevelSelectionField.setMaxWidth(Double.MAX_VALUE);
-        spinnerSelectedLevel = FXControlUtils.createIntSpinner(1, 999, 1, 1, 120.0);
-        int rowIndex = 0;
-        this.add(labelLevelSelectionField, 0, rowIndex);
-        this.add(spinnerSelectedLevel, 1, rowIndex++);
+        final Label labelField = new Label(Translation.getText("use.action.game.set.max.score.field"));
+        GridPane.setHgrow(labelField, Priority.ALWAYS);
+        labelField.setMaxWidth(Double.MAX_VALUE);
+        spinnerScore = FXControlUtils.createIntSpinner(-1000, 1000, 1, 1, 120.0);
+        this.add(labelField, 0, 0);
+        this.add(spinnerScore, 1, 0);
     }
 
     @Override
-    public void editStarts(final PreviousKeysOnSpecificLevelAction element, final ObservableList<UseVariableDefinitionI> possibleVariables) {
-        spinnerSelectedLevel.getValueFactory().setValue(element.selectedLevelProperty().get());
+    public void editStarts(final GameSetMaxScoreAction element, final ObservableList<UseVariableDefinitionI> possibleVariables) {
+        this.spinnerScore.getValueFactory().setValue(element.scoreProperty().get());
     }
 
     @Override
-    public void editEnds(final PreviousKeysOnSpecificLevelAction element) {
-        element.selectedLevelProperty().set(spinnerSelectedLevel.getValue());
+    public void editEnds(final GameSetMaxScoreAction element) {
+        element.scoreProperty().set(spinnerScore.getValue());
     }
 }

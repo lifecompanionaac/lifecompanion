@@ -45,6 +45,7 @@ public class WriteCharPredictionAction extends SimpleUseActionImpl<GridPartKeyCo
 		this.staticDescriptionID = "action.write.char.prediction.description";
 		this.configIconPath = "text/icon_write_char_prediction.png";
 		this.parameterizableAction = false;
+		this.internal = true;
 		this.variableDescriptionProperty().set(this.getStaticDescription());
 	}
 

@@ -202,9 +202,9 @@ public enum KeyListController implements ModeListenerI {
         updateDisplayedKeys(node);
     }
 
-    public void nextOnLevel(int level) {
-        findAllNodeForExactLevel(level).forEach(n -> this.nextIn(n, true));
-    }
+//    public void nextOnLevel(int level) {
+//        findAllNodeForExactLevel(level).forEach(n -> this.nextIn(n, true));
+//    }
 
     private Set<KeyListNodeI> findAllNodeForExactLevel(int level) {
         Set<KeyListNodeI> nodeToExecuteNextOn = new HashSet<>();
@@ -216,9 +216,9 @@ public enum KeyListController implements ModeListenerI {
         return nodeToExecuteNextOn;
     }
 
-    public void previousOnLevel(int level) {
-        findAllNodeForExactLevel(level).forEach(n -> this.previousIn(n, true));
-    }
+//    public void previousOnLevel(int level) {
+//        findAllNodeForExactLevel(level).forEach(n -> this.previousIn(n, true));
+//    }
 
     public void openKeyListConfigFor(KeyListNodeKeyOption keyListNodeKeyOption) {
         if (keyListNodeKeyOption != null) {
@@ -329,9 +329,7 @@ public enum KeyListController implements ModeListenerI {
         keyOptionsPerGrid.forEach((grid, keyOptions) -> {
             for (KeyListNodeKeyOption keyOption : keyOptions) {
                 rootKeyListNode.traverseTreeToBottom(node -> {
-                    final int nodeLevel = node.levelProperty().get();
-                    if (!node.isLeafNode() && (!keyOption.specificLevelProperty().get() || keyOption.selectedLevelProperty().get() == nodeLevel || (keyOption.displayLevelBellowProperty()
-                            .get() && nodeLevel > keyOption.selectedLevelProperty().get()))) {
+                    if (!node.isLeafNode()) {
                         statusForGridAndCategoryMap.computeIfAbsent(Pair.of(grid, node.getID()), key -> new StatusForGridAndCategory(grid, node)).keyOptions.add(keyOption);
                     }
                 });
@@ -376,7 +374,7 @@ public enum KeyListController implements ModeListenerI {
     //========================================================================
     public boolean simulateKeyListKeyActions(GridPartKeyComponentI key) {
         if (isKeylistKeyOptionWithValidSelectAction(key)) {
-            selectKeyNodeAction(key);
+            return selectKeyNodeAction(key);
         } else {
             NextInCurrentKeyListAction nextInCurrentKeyListAction = key.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION, NextInCurrentKeyListAction.class);
             NextInCurrentKeyListNoLoopAction nextInCurrentKeyListNoLoopAction = key.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION, NextInCurrentKeyListNoLoopAction.class);
@@ -387,8 +385,8 @@ public enum KeyListController implements ModeListenerI {
             GoParentOrExecuteNextCurrentKeyNodeAction goParentOrExecuteNextCurrentKeyNodeAction = key.getActionManager()
                     .getFirstActionOfType(UseActionEvent.ACTIVATION, GoParentOrExecuteNextCurrentKeyNodeAction.class);
             GoRootKeyNodeAction goRootKeyNodeAction = key.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION, GoRootKeyNodeAction.class);
-            NextKeysOnSpecificLevelAction nextKeysOnSpecificLevelAction = key.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION, NextKeysOnSpecificLevelAction.class);
-            PreviousKeysOnSpecificLevelAction previousKeysOnSpecificLevelAction = key.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION, PreviousKeysOnSpecificLevelAction.class);
+//            NextKeysOnSpecificLevelAction nextKeysOnSpecificLevelAction = key.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION, NextKeysOnSpecificLevelAction.class);
+//            PreviousKeysOnSpecificLevelAction previousKeysOnSpecificLevelAction = key.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION, PreviousKeysOnSpecificLevelAction.class);
             SelectSpecificKeyListAction selectSpecificKeyListAction = key.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION, SelectSpecificKeyListAction.class);
             if (nextInCurrentKeyListAction != null) {
                 nextInCurrent();
@@ -406,10 +404,10 @@ public enum KeyListController implements ModeListenerI {
                 if (destLevel > parentLevel) return true;
             } else if (goRootKeyNodeAction != null) {
                 goRootNode();
-            } else if (nextKeysOnSpecificLevelAction != null) {
-                nextOnLevel(nextKeysOnSpecificLevelAction.selectedLevelProperty().get());
-            } else if (previousKeysOnSpecificLevelAction != null) {
-                previousOnLevel(previousKeysOnSpecificLevelAction.selectedLevelProperty().get());
+//            } else if (nextKeysOnSpecificLevelAction != null) {
+//                nextOnLevel(nextKeysOnSpecificLevelAction.selectedLevelProperty().get());
+//            } else if (previousKeysOnSpecificLevelAction != null) {
+//                previousOnLevel(previousKeysOnSpecificLevelAction.selectedLevelProperty().get());
             } else if (selectSpecificKeyListAction != null) {
                 if (StringUtils.isNotBlank(selectSpecificKeyListAction.linkedNodeIdProperty().get())) {
                     selectNodeById(selectSpecificKeyListAction.linkedNodeIdProperty().get());
@@ -429,8 +427,8 @@ public enum KeyListController implements ModeListenerI {
                 || key.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION, GoParentCurrentKeyNodeAction.class) != null
                 || key.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION, GoParentOrExecuteNextCurrentKeyNodeAction.class) != null
                 || key.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION, GoRootKeyNodeAction.class) != null
-                || key.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION, NextKeysOnSpecificLevelAction.class) != null
-                || key.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION, PreviousKeysOnSpecificLevelAction.class) != null
+//                || key.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION, NextKeysOnSpecificLevelAction.class) != null
+//                || key.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION, PreviousKeysOnSpecificLevelAction.class) != null
                 || key.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION, SelectSpecificKeyListAction.class) != null;
     }
 
@@ -449,7 +447,7 @@ public enum KeyListController implements ModeListenerI {
 
     // KEY ACTIONS
     //========================================================================
-    public void selectKeyNodeAction(GridPartKeyComponentI key) {
+    public boolean selectKeyNodeAction(GridPartKeyComponentI key) {
         if (key != null) {
             final KeyOptionI keyOption = key.keyOptionProperty().get();
             if (keyOption instanceof KeyListNodeKeyOption) {
@@ -467,17 +465,20 @@ public enum KeyListController implements ModeListenerI {
                                     GridComponentI.class);
                             if (targetGrid != null) {
                                 SelectionModeController.INSTANCE.goToGridPart(targetGrid);
+                                return true;
                             }
                         } else if (AppModeController.INSTANCE.isEditMode()) {
                             GridComponentI targetGrid = ConfigurationComponentUtils.findById(AppModeController.INSTANCE.getEditModeContext().getConfiguration(),
                                     node.linkedGridIdProperty().get(),
                                     GridComponentI.class);
                             SelectionController.INSTANCE.selectDisplayableComponent(targetGrid, true);
+                            return true;
                         }
                     }
                 }
             }
         }
+        return false;
     }
     //========================================================================
 

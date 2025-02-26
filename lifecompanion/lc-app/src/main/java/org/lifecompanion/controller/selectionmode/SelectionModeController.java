@@ -34,6 +34,7 @@ import org.lifecompanion.controller.lifecycle.AppMode;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.profile.ProfileController;
 import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
+import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.configurationcomponent.*;
 import org.lifecompanion.model.api.lifecycle.ModeListenerI;
 import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
@@ -126,7 +127,8 @@ public enum SelectionModeController implements ModeListenerI {
     /**
      * Previous configuration in use mode : used to go to previous configuration in use mode
      */
-    private LCConfigurationDescriptionI previousConfigurationInUseMode;
+    private final ObjectProperty<LCConfigurationDescriptionI> previousConfigurationInUseMode;
+    private final BooleanProperty hasPreviousConfigInUseMode;
 
     /**
      * Property for playing property of current scanning mode
@@ -157,6 +159,9 @@ public enum SelectionModeController implements ModeListenerI {
         this.keyEventListener = this::globalKeyboardEvent;
         this.scannedPartChangedListeners = new HashSet<>();
         this.overScannedPartChangedListeners = new HashSet<>();
+        this.previousConfigurationInUseMode = new SimpleObjectProperty<>();
+        this.hasPreviousConfigInUseMode = new SimpleBooleanProperty(false);
+        this.previousConfigurationInUseMode.addListener((obs, ov, nv) -> FXThreadUtils.runOnFXThread(() -> hasPreviousConfigInUseMode.set(nv != null)));
         this.changeListenerGrid = (obs, ov, nv) -> {
             if (nv != null) {
                 this.gridChanged(nv);
@@ -165,7 +170,7 @@ public enum SelectionModeController implements ModeListenerI {
         configurationChangingListeners = new HashSet<>();
         AppModeController.INSTANCE.modeProperty().addListener((obs, ov, nv) -> {
             if (nv == AppMode.EDIT) {
-                previousConfigurationInUseMode = null;
+                previousConfigurationInUseMode.set(null);
             }
         });
     }
@@ -195,6 +200,11 @@ public enum SelectionModeController implements ModeListenerI {
     public ReadOnlyBooleanProperty playingProperty() {
         return this.playingProperty;
     }
+
+    public ReadOnlyBooleanProperty hasPreviousConfigInUseModeProperty() {
+        return hasPreviousConfigInUseMode;
+    }
+
     //========================================================================
 
     // Class part : "Mouse events"
@@ -824,10 +834,16 @@ public enum SelectionModeController implements ModeListenerI {
     }
 
     private void gridChanged(final GridComponentI newGrid) {
+        // Fire action on grid if needed
+        UseActionController.INSTANCE.executeSimpleOn(newGrid, UseActionEvent.OVER, null, true, result -> {
+            LOGGER.info("Actions on gridChanged done for {}", newGrid.nameProperty().get());
+        });
+
+        // Change selection mode
         LCConfigurationI configuration = AppModeController.INSTANCE.getUseModeContext().configurationProperty().get();
         SelectionModeI currentMode = this.getSelectionModeConfiguration();
         this.LOGGER.debug("Grid changed for a scanning selection mode, current mode is {}", currentMode);
-        //If there there is a existing mode, but the new grid change the selection mode
+        //If there is an existing mode, but the new grid change the selection mode
         if (currentMode != null && !newGrid.useParentSelectionModeProperty().get()
                 && currentMode.getParameters() != newGrid.getSelectionModeParameter()) {
             this.LOGGER.info("Grid changed and override the current selection parameter, will change for the new ones");
@@ -1075,7 +1091,7 @@ public enum SelectionModeController implements ModeListenerI {
                 LCConfigurationI loadedConfiguration = ThreadUtils.executeInCurrentThread(configurationLoadingTask);
                 final LCConfigurationDescriptionI previous = AppModeController.INSTANCE.getUseModeContext().getConfigurationDescription();
                 AppModeController.INSTANCE.switchUseModeConfiguration(loadedConfiguration, configurationDescription);
-                this.previousConfigurationInUseMode = previous;
+                this.previousConfigurationInUseMode.set(previous);
                 AppModeController.INSTANCE.getEditModeContext().clearPreviouslyEditedConfiguration();
             } catch (Throwable t) {
                 this.LOGGER.warn("Couldn't load the configuration for change configuration use action", t);
@@ -1089,8 +1105,8 @@ public enum SelectionModeController implements ModeListenerI {
      * Go back in the previous configuration before the last call of {@link #changeConfigurationInUseMode(LCConfigurationDescriptionI)}
      */
     public void changeConfigurationForPrevious() {
-        if (this.previousConfigurationInUseMode != null) {
-            this.changeConfigurationInUseMode(this.previousConfigurationInUseMode);
+        if (this.previousConfigurationInUseMode.get() != null) {
+            this.changeConfigurationInUseMode(this.previousConfigurationInUseMode.get());
         }
     }
     //========================================================================
@@ -1155,7 +1171,13 @@ public enum SelectionModeController implements ModeListenerI {
     }
 
     public void fireScannedPartChangedListeners(GridComponentI grid, ComponentToScanI selectedComponentToScan) {
-        this.scannedPartChangedListeners.forEach(listener -> listener.accept(grid, selectedComponentToScan));
+        for (BiConsumer<GridComponentI, ComponentToScanI> scannedPartChangedListener : this.scannedPartChangedListeners) {
+            try {
+                scannedPartChangedListener.accept(grid, selectedComponentToScan);
+            } catch (Throwable t) {
+                LOGGER.error("Error while calling fireScannedPartChangedListeners", t);
+            }
+        }
     }
 
     public void addOverScannedPartChangedListener(Consumer<ComponentToScanI> listener) {
@@ -1167,6 +1189,12 @@ public enum SelectionModeController implements ModeListenerI {
     }
 
     public void fireOverScannedPartChangedListeners(ComponentToScanI overScannedPart) {
-        this.overScannedPartChangedListeners.forEach(listener -> listener.accept(overScannedPart));
+        for (Consumer<ComponentToScanI> overScannedPartChangedListener : this.overScannedPartChangedListeners) {
+            try {
+                overScannedPartChangedListener.accept(overScannedPart);
+            } catch (Throwable t) {
+                LOGGER.error("Error while calling fireOverScannedPartChangedListeners", t);
+            }
+        }
     }
 }

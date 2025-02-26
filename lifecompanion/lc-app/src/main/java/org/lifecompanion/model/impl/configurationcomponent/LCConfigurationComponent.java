@@ -26,6 +26,7 @@ import javafx.scene.paint.Color;
 import org.jdom2.Element;
 import org.lifecompanion.controller.io.ConfigurationComponentIOHelper;
 import org.lifecompanion.framework.commons.fx.io.XMLUtils;
+import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.model.api.configurationcomponent.*;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.UserActionSequencesI;
@@ -1008,7 +1009,9 @@ public class LCConfigurationComponent extends CoreDisplayableComponentBaseImpl i
             for (Element textEntryElement : textEntriesElements) {
                 WriterEntry entry = new WriterEntry();
                 entry.deserialize(textEntryElement, null);
-                useModeWriterEntries.add(entry);
+                if (entry.entryTextProperty().get() != null && !entry.entryTextProperty().get().isEmpty()) {
+                    useModeWriterEntries.add(entry);
+                }
             }
         }
     }

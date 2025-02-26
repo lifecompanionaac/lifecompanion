@@ -26,22 +26,11 @@ import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Region;
-import javafx.scene.paint.Color;
 import javafx.scene.transform.Scale;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDDocumentInformation;
-import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import javafx.util.Pair;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
-import org.apache.pdfbox.pdmodel.font.PDFont;
-import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.font.encoding.WinAnsiEncoding;
-import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
-import org.apache.pdfbox.util.Matrix;
-import org.lifecompanion.controller.appinstallation.InstallationController;
 import org.lifecompanion.controller.configurationcomponent.dynamickey.KeyListController;
-import org.lifecompanion.controller.resource.IconHelper;
-import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.model.api.configurationcomponent.GridComponentI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
@@ -49,7 +38,7 @@ import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNode
 import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
 import org.lifecompanion.model.api.profile.LCProfileI;
 import org.lifecompanion.model.api.ui.configurationcomponent.ComponentViewI;
-import org.lifecompanion.model.impl.constant.LCConstant;
+import org.lifecompanion.model.impl.io.PdfConfig;
 import org.lifecompanion.model.impl.ui.configurationcomponent.UseViewProvider;
 import org.lifecompanion.util.IOUtils;
 import org.lifecompanion.util.javafx.FXThreadUtils;
@@ -75,7 +64,6 @@ public class ExportGridsToPdfTask extends LCTask<Void> {
     private static final String EXPORT_IMAGE_LOADING_KEY = "export-to-pdf";
     private static final long MAX_IMAGE_LOADING_TIME = 10_000;
     private static final String NO_STACK_ID = "nostack";
-    private static final double IMAGE_OFFSET = 20.0;
 
     private final File exportedImageDir;
     private final AtomicInteger progress;
@@ -84,19 +72,18 @@ public class ExportGridsToPdfTask extends LCTask<Void> {
     private final LCConfigurationDescriptionI configurationDescription;
     private final LCConfigurationI configuration;
 
-    private final PDRectangle pageSize = PDRectangle.A4;
-
     private int totalWork;
     private Group fxGroupAttachedToScene;
     private UseViewProvider useViewProviderToSnap;
     private double maxImageSize;
+    private final PdfConfig pdfConfig;
 
-
-    public ExportGridsToPdfTask(LCConfigurationI configuration, File destPdf, LCProfileI profile, LCConfigurationDescriptionI configurationDescription) {
+    public ExportGridsToPdfTask(LCConfigurationI configuration, File destPdf, LCProfileI profile, LCConfigurationDescriptionI configurationDescription, PdfConfig pdfConfig) {
         super("task.export.grids.pdf.name");
         this.configuration = configuration;
         this.profile = profile;
         this.configurationDescription = configurationDescription;
+        this.pdfConfig = pdfConfig;
         this.exportedImageDir = IOUtils.getTempDir("export-images-for-config");
         this.exportedImageDir.mkdirs();
         this.destPdf = destPdf;
@@ -120,7 +107,7 @@ public class ExportGridsToPdfTask extends LCTask<Void> {
         gridByStack.forEach((stackId, grids) -> {
             if (NO_STACK_ID.equals(stackId)) gridsToSnap.addAll(grids);
             else
-                gridsToSnap.addAll(grids.stream().sorted(Comparator.comparingInt(grid -> grid.stackParentProperty().get().getComponentList().indexOf(grid))).collect(Collectors.toList()));
+                gridsToSnap.addAll(grids.stream().sorted(Comparator.comparingInt(grid -> grid.stackParentProperty().get().getComponentList().indexOf(grid))).toList());
         });
 
 
@@ -147,7 +134,7 @@ public class ExportGridsToPdfTask extends LCTask<Void> {
         });
 
         // Determine max printing dimensions
-        maxImageSize = pageSize.getHeight() * 2 - IMAGE_OFFSET * 2.0;
+        maxImageSize = pdfConfig.getPageSize().getHeight() * 2 - (pdfConfig.isEnableHeaderFooter() ? PdfUtils.IMAGE_BORDER_FULL : PdfUtils.IMAGE_BORDER_SMALL) * 2.0;
 
         totalWork = gridPrintTasks.stream().mapToInt(pt -> pt.pageCount).sum();
         updateProgress(0, totalWork);
@@ -170,8 +157,11 @@ public class ExportGridsToPdfTask extends LCTask<Void> {
         final String profileName = profile != null ? profile.nameProperty().get() : "PROFILE?";
         final String configName = configurationDescription != null ? configurationDescription.configurationNameProperty().get() : "CONFIGURATION?";
 
+        DocumentConfiguration documentConfiguration = new DocumentConfiguration(configuration.backgroundColorProperty().get(), pdfConfig.getPageSize(), profileName, configName, "pdf.export.file.title");
+        documentConfiguration.setEnableFooter(pdfConfig.isEnableHeaderFooter());
+        documentConfiguration.setEnableHeader(pdfConfig.isEnableHeaderFooter());
         PdfUtils.createPdfDocument(
-                new DocumentConfiguration(configuration.backgroundColorProperty().get(), pageSize, profileName, configName, "pdf.export.file.title"),
+                documentConfiguration,
                 destPdf, exportResults, (prog, total) -> updateProgress(progress.get() + prog, totalWork));
 
         return null;
@@ -179,8 +169,10 @@ public class ExportGridsToPdfTask extends LCTask<Void> {
 
 
     private DocumentImagePage executePrint(GridPrintTask gridPrintTask, int taskIndex, int pageIndex) {
-        ImageDictionaryUtils.loadAllImagesIn(EXPORT_IMAGE_LOADING_KEY, MAX_IMAGE_LOADING_TIME, gridPrintTask.gridToSnap);
-        DocumentImagePage result = printGrid(gridPrintTask, taskIndex, pageIndex);
+        final ComponentViewI<?> viewForGrid = gridPrintTask.gridToSnap.getDisplay(useViewProviderToSnap, false);
+        Pair<Double, Boolean> scaleAndLandscape = getScaleAndLandscape(viewForGrid);
+        ImageDictionaryUtils.loadAllImagesIn(EXPORT_IMAGE_LOADING_KEY, scaleAndLandscape.getKey(), MAX_IMAGE_LOADING_TIME, gridPrintTask.gridToSnap);
+        DocumentImagePage result = printGrid(gridPrintTask, taskIndex, viewForGrid, scaleAndLandscape.getKey(), scaleAndLandscape.getValue(), pageIndex);
         ImageDictionaryUtils.unloadAllImagesIn(EXPORT_IMAGE_LOADING_KEY, gridPrintTask.gridToSnap);
         updateProgress(progress.incrementAndGet(), totalWork);
         return result;
@@ -215,25 +207,15 @@ public class ExportGridsToPdfTask extends LCTask<Void> {
         }
     }
 
-    private DocumentImagePage printGrid(GridPrintTask printTask, int taskIndex, int pageIndex) {
+    private DocumentImagePage printGrid(GridPrintTask printTask, int taskIndex, ComponentViewI<?> viewForGrid, double scale, boolean landscape, int pageIndex) {
         String gridName = cleanTextForPdf(printTask.gridToSnap.nameProperty().get() + (printTask.nodeToSelect != null ? (" - " + StringUtils.trimToEmpty(printTask.nodeToSelect.textProperty()
                 .get()) + " (" + (pageIndex + 1) + "/" + printTask.pageCount + ")") : ""));
         final String fileName = IOUtils.getValidFileName(taskIndex + "_" + printTask.gridToSnap.nameProperty().get() + "_" + (printTask.nodeToSelect != null ? (printTask.nodeToSelect.textProperty()
                 .get() + "_" + pageIndex) : ""));
         File imageFile = new File(exportedImageDir + File.separator + fileName + ".png");
-        AtomicBoolean landscape = new AtomicBoolean();
         final Image image = FXThreadUtils.runOnFXThreadAndWaitFor(() -> {
             try {
-                final ComponentViewI<?> viewForGrid = printTask.gridToSnap.getDisplay(useViewProviderToSnap, false);
                 final Region regionForGrid = viewForGrid.getView();
-                Bounds regionBounds = regionForGrid.getBoundsInParent();
-                double scale;
-                if (regionBounds.getWidth() > regionBounds.getHeight()) {
-                    landscape.set(true);
-                    scale = maxImageSize / regionBounds.getWidth();
-                } else {
-                    scale = maxImageSize / regionBounds.getHeight();
-                }
                 fxGroupAttachedToScene.getChildren().add(regionForGrid);
                 SnapshotParameters snapParams = new SnapshotParameters();
                 if (scale > 1.0)
@@ -256,7 +238,20 @@ public class ExportGridsToPdfTask extends LCTask<Void> {
         } catch (Exception e) {
             LOGGER.error("Exception when saving snapshot to {}", imageFile, e);
         }
-        return new DocumentImagePage(gridName, imageFile, landscape.get());
+        return new DocumentImagePage(gridName, imageFile, landscape);
+    }
+
+    private Pair<Double, Boolean> getScaleAndLandscape(ComponentViewI<?> componentView) {
+        Bounds regionBounds = componentView.getView().getBoundsInParent();
+        boolean landscape = false;
+        double scale;
+        if (regionBounds.getWidth() > regionBounds.getHeight()) {
+            landscape = true;
+            scale = maxImageSize / regionBounds.getWidth();
+        } else {
+            scale = maxImageSize / regionBounds.getHeight();
+        }
+        return new Pair<>(scale, landscape);
     }
 
     private String cleanTextForPdf(String text) {

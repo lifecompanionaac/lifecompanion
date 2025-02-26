@@ -27,7 +27,20 @@ import java.util.function.BiConsumer;
 
 public class PdfUtils {
 
-    private static final float HEADER_SIZE = 35f, FOOTER_SIZE = 30f, IMAGE_BORDER = 20f, BACKGROUND_COLOR_BORDER = 3f, HEADER_FONT_SIZE = 16, FOOTER_FONT_SIZE = 9, TEXT_LEFT_OFFSET = 50, FOOTER_LINE_HEIGHT = 12f, LOGO_HEIGHT = 25f, LINE_SIZE = 1f, COLOR_GRAY = 0.4f;
+    public static final float HEADER_SIZE = 35f,
+            FOOTER_SIZE = 30f,
+            MIN_FOOTER_SIZE = 10f,
+            IMAGE_BORDER_FULL = 20f,
+            IMAGE_BORDER_SMALL = 5f,
+            BACKGROUND_COLOR_BORDER = 3f,
+            HEADER_FONT_SIZE = 16,
+            FOOTER_FONT_SIZE = 9,
+            SMALL_FOOTER_FONT_SIZE = 7,
+            TEXT_LEFT_OFFSET = 50,
+            FOOTER_LINE_HEIGHT = 12f,
+            LOGO_HEIGHT = 25f,
+            LINE_SIZE = 1f,
+            COLOR_GRAY = 0.4f;
     private static final PDFont HEADER_FONT = PDType1Font.HELVETICA_BOLD;
     private static final PDFont FOOTER_FONT = PDType1Font.HELVETICA;
 
@@ -39,6 +52,10 @@ public class PdfUtils {
 
     public static void createPdfDocument(DocumentConfiguration documentConfiguration, File destinationFile, List<DocumentImagePage> documentImagePages, BiConsumer<Integer, Integer> progressIndicator) throws Exception {
         final Date exportDate = new Date();
+
+        float headerSize = documentConfiguration.isEnableHeader() ? HEADER_SIZE : 0f;
+        float footerSize = documentConfiguration.isEnableHeader() ? FOOTER_SIZE : MIN_FOOTER_SIZE;
+        float imageBorder = documentConfiguration.isEnableFooter() || documentConfiguration.isEnableHeader() ? IMAGE_BORDER_FULL : IMAGE_BORDER_SMALL;
 
         // Temp save LC logo
         File tempDir = IOUtils.getTempDir("lifecompanion-logo");
@@ -72,51 +89,60 @@ public class PdfUtils {
                     pageContentStream.setNonStrokingColor(COLOR_GRAY, COLOR_GRAY, COLOR_GRAY);
 
                     // HEADER
-                    pageContentStream.addRect(0, pageHeightF - HEADER_SIZE, pageWidthF, LINE_SIZE);
-                    pageContentStream.fill();
-                    pageContentStream.beginText();
-                    pageContentStream.setFont(HEADER_FONT, HEADER_FONT_SIZE);
-                    pageContentStream.newLineAtOffset(TEXT_LEFT_OFFSET, pageHeightF - HEADER_SIZE / 1.5f);
-                    pageContentStream.showText(documentImagePage.getTitle());
-                    pageContentStream.endText();
+                    if (documentConfiguration.isEnableHeader()) {
+                        pageContentStream.addRect(0, pageHeightF - headerSize, pageWidthF, LINE_SIZE);
+                        pageContentStream.fill();
+                        pageContentStream.beginText();
+                        pageContentStream.setFont(HEADER_FONT, HEADER_FONT_SIZE);
+                        pageContentStream.newLineAtOffset(TEXT_LEFT_OFFSET, pageHeightF - headerSize / 1.5f);
+                        pageContentStream.showText(documentImagePage.getTitle());
+                        pageContentStream.endText();
+                    }
 
                     // GRID IMAGE
                     Color color = documentConfiguration.getBackgroundColor();
                     if (color != null) {
                         pageContentStream.setNonStrokingColor((float) color.getRed(), (float) color.getGreen(), (float) color.getBlue());
-                        float contentWidth = pageWidthF - BACKGROUND_COLOR_BORDER * 2f, contentHeight = pageHeightF - HEADER_SIZE - FOOTER_SIZE - BACKGROUND_COLOR_BORDER * 2f;
+                        float contentWidth = pageWidthF - BACKGROUND_COLOR_BORDER * 2f, contentHeight = pageHeightF - headerSize - footerSize - BACKGROUND_COLOR_BORDER * 2f;
                         pageContentStream.addRect((float) (BACKGROUND_COLOR_BORDER + (pageWidthF - 2 * BACKGROUND_COLOR_BORDER) / 2.0 - contentWidth / 2.0),
-                                pageHeightF - HEADER_SIZE - BACKGROUND_COLOR_BORDER - contentHeight - ((pageHeightF - HEADER_SIZE - FOOTER_SIZE - 2f * BACKGROUND_COLOR_BORDER) - contentHeight) / 2f,
+                                pageHeightF - headerSize - BACKGROUND_COLOR_BORDER - contentHeight - ((pageHeightF - headerSize - footerSize - 2f * BACKGROUND_COLOR_BORDER) - contentHeight) / 2f,
                                 contentWidth, contentHeight);
                         pageContentStream.fill();
                     }
-
                     PDImageXObject pdImage = PDImageXObject.createFromFile(documentImagePage.getImageFile().getAbsolutePath(), doc);
-                    float imageDestWidth = pageWidthF - IMAGE_BORDER * 2f, imageDestHeight = pageHeightF - HEADER_SIZE - FOOTER_SIZE - IMAGE_BORDER * 2f;
+                    float imageDestWidth = pageWidthF - imageBorder * 2f, imageDestHeight = pageHeightF - headerSize - footerSize - imageBorder * 2f;
                     float widthRatio = imageDestWidth / pdImage.getWidth(), heightRatio = imageDestHeight / pdImage.getHeight();
                     float bestRatio = Math.min(widthRatio, heightRatio);
                     float imageDrawWidth = bestRatio * pdImage.getWidth(), imageDrawHeight = bestRatio * pdImage.getHeight();
                     pageContentStream.drawImage(pdImage,
-                            (float) (IMAGE_BORDER + (pageWidthF - 2 * IMAGE_BORDER) / 2.0 - imageDrawWidth / 2.0),
-                            pageHeightF - HEADER_SIZE - IMAGE_BORDER - imageDrawHeight - ((pageHeightF - HEADER_SIZE - FOOTER_SIZE - 2f * IMAGE_BORDER) - imageDrawHeight) / 2f,
+                            (float) (imageBorder + (pageWidthF - 2 * imageBorder) / 2.0 - imageDrawWidth / 2.0),
+                            pageHeightF - headerSize - imageBorder - imageDrawHeight - ((pageHeightF - headerSize - footerSize - 2f * imageBorder) - imageDrawHeight) / 2f,
                             imageDrawWidth, imageDrawHeight);
-
 
                     pageContentStream.setNonStrokingColor(COLOR_GRAY, COLOR_GRAY, COLOR_GRAY);
 
                     // FOOTER
-                    pageContentStream.addRect(0, FOOTER_SIZE, pageWidthF, LINE_SIZE);
-                    pageContentStream.fill();
-                    pageContentStream.beginText();
-                    pageContentStream.setFont(FOOTER_FONT, FOOTER_FONT_SIZE);
-                    pageContentStream.newLineAtOffset(TEXT_LEFT_OFFSET, FOOTER_SIZE - FOOTER_LINE_HEIGHT);
-                    pageContentStream.showText(documentConfiguration.getProfileName() + " - " + documentConfiguration.getConfigurationName() + " - " + StringUtils.dateToStringDateWithHour(exportDate));
-                    pageContentStream.newLineAtOffset(0, -FOOTER_LINE_HEIGHT);
-                    pageContentStream.showText(LCConstant.NAME + " v" + InstallationController.INSTANCE.getBuildProperties()
-                            .getVersionLabel() + " - " + InstallationController.INSTANCE.getBuildProperties()
-                            .getAppServerUrl());
-                    pageContentStream.endText();
-                    pageContentStream.drawImage(logoImage, pageWidthF - logoDrawWidth - TEXT_LEFT_OFFSET, FOOTER_SIZE / 2f - LOGO_HEIGHT / 2f, logoDrawWidth, LOGO_HEIGHT);
+                    if (documentConfiguration.isEnableFooter()) {
+                        pageContentStream.addRect(0, footerSize, pageWidthF, LINE_SIZE);
+                        pageContentStream.fill();
+                        pageContentStream.beginText();
+                        pageContentStream.setFont(FOOTER_FONT, FOOTER_FONT_SIZE);
+                        pageContentStream.newLineAtOffset(TEXT_LEFT_OFFSET, footerSize - FOOTER_LINE_HEIGHT);
+                        pageContentStream.showText(documentConfiguration.getProfileName() + " - " + documentConfiguration.getConfigurationName() + " - " + StringUtils.dateToStringDateWithHour(exportDate));
+                        pageContentStream.newLineAtOffset(0, -FOOTER_LINE_HEIGHT);
+                        pageContentStream.showText(LCConstant.NAME + " v" + InstallationController.INSTANCE.getBuildProperties()
+                                .getVersionLabel() + " - " + InstallationController.INSTANCE.getBuildProperties()
+                                .getAppServerUrl());
+                        pageContentStream.endText();
+                        pageContentStream.drawImage(logoImage, pageWidthF - logoDrawWidth - TEXT_LEFT_OFFSET, footerSize / 2f - LOGO_HEIGHT / 2f, logoDrawWidth, LOGO_HEIGHT);
+                    } else {
+                        pageContentStream.fill();
+                        pageContentStream.beginText();
+                        pageContentStream.newLineAtOffset(10f, footerSize - 6f);
+                        pageContentStream.setFont(FOOTER_FONT, SMALL_FOOTER_FONT_SIZE);
+                        pageContentStream.showText(Translation.getText("pdf.export.small.footer.label", InstallationController.INSTANCE.getBuildProperties().getAppServerUrl()));
+                        pageContentStream.endText();
+                    }
                 }
                 progressIndicator.accept(++progress, documentImagePages.size());
             }

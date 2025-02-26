@@ -45,7 +45,7 @@ public class WhiteboardSetPencilSizeConfigView extends VBox implements UseAction
 
     @Override
     public void initUI() {
-        Label labelTimeToReach = new Label(Translation.getText("use.action.pause.time"));
+        Label labelTimeToReach = new Label(Translation.getText("action.whiteboard.set.pencil.size.field"));
         this.spinnerPencilSize = FXControlUtils.createDoubleSpinner(1.0, 200, 10.0, 10.0, 120.0);
         this.spinnerPencilSize.setMaxWidth(Double.MAX_VALUE);
         this.getChildren().addAll(labelTimeToReach, this.spinnerPencilSize);

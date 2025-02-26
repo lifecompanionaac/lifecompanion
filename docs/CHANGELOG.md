@@ -1,5 +1,50 @@
 # LIFECOMPANION CHANGELOG
 
+
+## 1.6.6 - XX/XX/2025
+
+### Fonctionnalités
+
+- Les **grilles peuvent maintenant avoir des actions "À l'affichage de la grille"** : ces actions seront déclenchées dès que la grille est affiché
+- Ajout d'**actions de "Mécaniques de jeux"** permettant d'intéragir avec un score : disponible dans Actions > Divers > "Mécaniques de jeux"
+- Ajout d'un nouveau paramètres (dans Préférences & Infos) : **Position du texte à la sélection d'une image**. Permet de définir la position du texte qui doit être utilisée lors de la sélection d'une image (par exemple, "en bas" ou "en haut")
+- Mise à jour de **l'installeur de LifeCompanion**
+	- Création d'un installeur totalement hors-ligne pour Windows
+	- Ajout de l'option "/silent" et "/verysilent" pour Windows (installation silencieuse)
+- Ajout des **paramètres d'export en PDF** : taille de la page et activation ou non des en-têtes et pieds de page
+- Ajout d'un raccourci automatique permettant d'aller à la configuration précédente lorsque la configuration change en mode utilisation
+- Ajout de la possibilité de désactiver le bouton de mise en plein écran en mode utilisation (dans "Préférences & Infos")
+- Ajout d'une action **"Sauvegarder du texte"** : permet de sauvegarder du texte dans un fichier (incluant des variables)
+- Suppression de la fonctionnalité de "niveau spécifique" sur les listes de cases
+- Suppression de la fonctionnalité de "sous étape" sur les séquences
+
+### Corrections/ajustements
+
+- Amélioration de la recherche d'image dans certains cas
+- Mise à jour des boutons du mode utilisation
+- **Amélioration de la qualité des images** lors des impressions en PDF
+- Correction de l'obtention de l'identifiant d'installation sur les dernières versions de Windows 11
+- Ajout/correction sur l'interface de contrôle (API)
+- Ticket #427 : l'action "Aller à l'élément précédent" fonctionne maintenant en mode édition
+- Ticket #399 : correction de la forme des cases lorsque l'angle était trop grand
+- Ticket #398 : correction d'un problème avec l'action "Action des listes de case"
+- Ticket #396 : correction du nom du champs sur l'action "Changer la taille du crayon"
+- Ticket #414 : correction d'un problème d'affichage sur l'alignement du texte des cases
+- Ticket #412 : correction de certains problèmes avec les raccourcis clavier générés
+- Ticket #413 : correction de problème sur la taille de certaines fenêtres du mode édition
+- Ticket #397 : la fenêtre des paramètres de sélection spécifiques à la grille n'affichait pas les boutons
+- Correction de rares problèmes de sélection des éléments en mode édition
+- Ticket #417 : correction du message d'erreur lors de l'import d'un fichier de configuration/profil corrompu
+- Ticket #420 : correction du message d'avertissement sur l'ajout d'action sur les cases de type listes de cases
+- Ticket #421 : le comportement lors du cumul d'une action de liste de cases et de déplacement dans une grille en mode édition a été corrigé
+- Conservation d'un plus grand historique des logs
+- Ajout d'un nouveau paramètre `-disableDoubleLaunchCheck` pour lancer deux instances de LifeCompanion en même temps (déconseillé)
+- Ticket #423 : correction d'un rare bug lors du retour en mode édition
+- Ticket #429 : certaines actions "internes" à LifeCompanion sont maintenant masquées des listes
+- Ticket #346 : les modifications de prononciation de la synthèse vocale fonctionnent maintenant en ignorant les minuscules/majuscules
+- Ticket #432 : la simulation de la touche "Menu contextuel" (clic droit) ne fonctionnait plus
+- Amélioration de la qualité des images avec une rotation
+
 ## 1.6.5 - 31/10/2025
 
 ### Corrections/ajustements

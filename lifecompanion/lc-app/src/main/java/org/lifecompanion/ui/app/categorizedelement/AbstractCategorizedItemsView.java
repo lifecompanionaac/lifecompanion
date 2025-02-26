@@ -58,21 +58,25 @@ public abstract class AbstractCategorizedItemsView<T extends CategorizedElementI
     @Override
     public void initBinding() {
         for (T action : this.items) {
-            AbstractCategorizedItemView<T> cellView = this.createCell(action);
-            this.getChildren().add(cellView);
+            if (!action.isInternal()) {
+                AbstractCategorizedItemView<T> cellView = this.createCell(action);
+                this.getChildren().add(cellView);
+            }
         }
         //On list change
         this.items.addListener(BindingUtils.createListChangeListenerV2((added) -> {
-            //Get view
-            AbstractCategorizedItemView<T> addedView;
-            if (this.itemsView.containsKey(added)) {
-                addedView = this.itemsView.get(added);
-            } else {
-                addedView = this.createCell(added);
-            }
-            //Check
-            if (!this.getChildren().contains(addedView)) {
-                this.getChildren().add(addedView);
+            if (!added.isInternal()) {
+                //Get view
+                AbstractCategorizedItemView<T> addedView;
+                if (this.itemsView.containsKey(added)) {
+                    addedView = this.itemsView.get(added);
+                } else {
+                    addedView = this.createCell(added);
+                }
+                //Check
+                if (!this.getChildren().contains(addedView)) {
+                    this.getChildren().add(addedView);
+                }
             }
         }, (removed) -> {
             this.getChildren().remove(this.itemsView.get(removed));

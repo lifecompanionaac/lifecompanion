@@ -31,6 +31,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.util.Pair;
 import org.lifecompanion.model.impl.selectionmode.VirtualDirectionalCursorSelectionMode;
 
 import java.util.List;
@@ -41,7 +42,7 @@ import java.util.List;
 public class VirtualDirectionalCursorSelectionModeView extends AbstractAutoActivationSelectionModeView<VirtualDirectionalCursorSelectionMode> {
 
     private final Circle virtualCursorView;
-    private final ObjectProperty<Node> currentOverNode;
+    private final ObjectProperty<Pair<Node, Point2D>> currentOverNode;
 
     public VirtualDirectionalCursorSelectionModeView(final VirtualDirectionalCursorSelectionMode selectionMode) {
         super(selectionMode);
@@ -63,16 +64,16 @@ public class VirtualDirectionalCursorSelectionModeView extends AbstractAutoActiv
         // Detect enter/exit on current node
         currentOverNode.addListener((obs, ov, nv) -> {
             if (ov != null) {
-                simulateMouseEvent(ov, MouseEvent.MOUSE_EXITED);
+                simulateMouseEvent(ov.getKey(), MouseEvent.MOUSE_EXITED, ov.getValue());
             }
             if (nv != null) {
-                simulateMouseEvent(nv, MouseEvent.MOUSE_ENTERED);
+                simulateMouseEvent(nv.getKey(), MouseEvent.MOUSE_ENTERED, nv.getValue());
             }
         });
 
         // Fire mouse moved and change current node
-        selectionMode.cursorXProperty().addListener(inv -> this.cursorMoved());
-        selectionMode.cursorYProperty().addListener(inv -> this.cursorMoved());
+        selectionMode.cursorXProperty().addListener((obs, ov, nv) -> this.cursorMoved());
+        selectionMode.cursorYProperty().addListener((obs, ov, nv) -> this.cursorMoved());
     }
 
     public void pressed() {
@@ -84,20 +85,24 @@ public class VirtualDirectionalCursorSelectionModeView extends AbstractAutoActiv
     }
 
     private void cursorMoved() {
-        Node node = simulateMouseEvent(MouseEvent.MOUSE_MOVED);
-        currentOverNode.set(node);
+        Pair<Node, Point2D> nodeAndPosition = simulateMouseEvent(MouseEvent.MOUSE_MOVED);
+        currentOverNode.set(nodeAndPosition);
     }
 
-    private Node simulateMouseEvent(EventType<MouseEvent> event) {
+    private Pair<Node, Point2D> simulateMouseEvent(EventType<MouseEvent> event) {
         return simulateMouseEvent(virtualCursorView, event);
     }
 
-    private Node simulateMouseEvent(Node target, EventType<MouseEvent> event) {
+    private Pair<Node, Point2D> simulateMouseEvent(Node target, EventType<MouseEvent> event) {
         Bounds boundsInLocal = target.getBoundsInLocal();
         Point2D point = target.localToScene(boundsInLocal.getCenterX(), boundsInLocal.getCenterY());
+        return simulateMouseEvent(target, event, point);
+    }
+
+    private Pair<Node, Point2D> simulateMouseEvent(Node target, EventType<MouseEvent> event, Point2D point) {
         Node pick = pick(this.getParent(), point.getX(), point.getY());
         simulateMouseEvent(pick, point, event);
-        return pick;
+        return new Pair<>(pick, point);
     }
 
     private void simulateMouseEvent(Node target, Point2D point, EventType<MouseEvent> event) {

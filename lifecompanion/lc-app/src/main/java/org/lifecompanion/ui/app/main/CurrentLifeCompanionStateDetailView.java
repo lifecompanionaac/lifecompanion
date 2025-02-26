@@ -30,6 +30,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -124,6 +125,7 @@ public class CurrentLifeCompanionStateDetailView extends HBox implements LCViewI
         HBox.setHgrow(boxRight, Priority.ALWAYS);
         HBox.setMargin(boxRight, new Insets(0.0, 5, 0.0, 0.0));
         boxRight.setMaxHeight(30.0);
+        boxRight.setMaxWidth(300.0);
 
         // Init component icons
         for (TreeDisplayableType compTypes : TreeDisplayableType.values()) {
@@ -131,7 +133,9 @@ public class CurrentLifeCompanionStateDetailView extends HBox implements LCViewI
         }
 
         //Add
-        this.getChildren().addAll(boxLeft, boxRight);
+        Pane filler = new Pane();
+        HBox.setHgrow(filler, Priority.ALWAYS);
+        this.getChildren().addAll(boxLeft, filler, boxRight);
     }
 
     @Override

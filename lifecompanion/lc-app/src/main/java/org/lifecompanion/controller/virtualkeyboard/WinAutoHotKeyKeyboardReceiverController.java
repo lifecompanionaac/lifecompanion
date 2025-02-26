@@ -87,7 +87,6 @@ public enum WinAutoHotKeyKeyboardReceiverController implements ModeListenerI {
     }
 
     private void keyDown(String keyCodeAsString) {
-        LOGGER.info("keyDown {}", keyCodeAsString);
         final KeyCode keyCode = getKeyCodeSafe(keyCodeAsString);
         if (GlobalKeyEventController.INSTANCE.getBlockedKeyCodes().contains(keyCode)) {
             if (KeyCodeUtils.isTextGeneratingKeyCode(keyCode)) {
@@ -127,7 +126,6 @@ public enum WinAutoHotKeyKeyboardReceiverController implements ModeListenerI {
     }
 
     private void keyUp(String keyCodeAsString) {
-        LOGGER.info("keyUp {}", keyCodeAsString);
         final KeyCode keyCode = getKeyCodeSafe(keyCodeAsString);
         if (keyCode != null) {
             this.pressedKey.remove(keyCode);

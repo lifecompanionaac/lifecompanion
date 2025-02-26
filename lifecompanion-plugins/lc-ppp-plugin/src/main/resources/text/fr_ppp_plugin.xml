@@ -422,4 +422,10 @@
 	<text key="ppp.plugin.keyoption.user.group.description">Permet d'afficher et de sélectionner un groupe de bénéficiaire</text>
 	<text key="ppp.plugin.keyoption.user.profile.name">Bénéficiaires</text>
 	<text key="ppp.plugin.keyoption.user.profile.description">Permet d'afficher et de sélectionner un bénéficiaire</text>
+
+	<text key="ppp.plugin.task.profile.load.user.database.title">Chargement des données du profil douleur</text>
+	<text key="ppp.plugin.task.save.user.database.title">Sauvegarde des données du profil douleur</text>
+
+	<text key="ppp.plugin.actions.user.profile.next.page.name">Page suivante des utilisateurs</text>
+	<text key="ppp.plugin.actions.user.profile.next.page.description">Passe à la page suivante des utilisateurs du groupe.</text>
 </texts>

@@ -40,10 +40,12 @@ import java.util.List;
  */
 public class KeyListNodeKeyOption extends AbstractSimplerKeyActionContainerKeyOption<KeyListNodeI> {
     private final SelectKeyNodeAction selectKeyNodeAction;
+    private KeyListIndicatorAction keyListIndicatorActionActivation, keyListIndicatorActionOver;
+
+    // Keep for backward compatibility if we want to restore specific level feature
     private final IntegerProperty selectedLevel;
     private final BooleanProperty specificLevel;
     private final BooleanProperty displayLevelBellow;
-    private KeyListIndicatorAction keyListIndicatorActionActivation, keyListIndicatorActionOver;
 
     public KeyListNodeKeyOption() {
         super();
@@ -59,17 +61,17 @@ public class KeyListNodeKeyOption extends AbstractSimplerKeyActionContainerKeyOp
         displayLevelBellow = new SimpleBooleanProperty(true);
     }
 
-    public IntegerProperty selectedLevelProperty() {
-        return selectedLevel;
-    }
-
-    public BooleanProperty specificLevelProperty() {
-        return specificLevel;
-    }
-
-    public BooleanProperty displayLevelBellowProperty() {
-        return displayLevelBellow;
-    }
+//    public IntegerProperty selectedLevelProperty() {
+//        return selectedLevel;
+//    }
+//
+//    public BooleanProperty specificLevelProperty() {
+//        return specificLevel;
+//    }
+//
+//    public BooleanProperty displayLevelBellowProperty() {
+//        return displayLevelBellow;
+//    }
 
     @Override
     public void attachToImpl(GridPartKeyComponentI key) {

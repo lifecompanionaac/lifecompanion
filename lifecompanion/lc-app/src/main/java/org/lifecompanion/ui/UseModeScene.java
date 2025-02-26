@@ -29,8 +29,12 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import org.lifecompanion.controller.metrics.SessionStatsController;
+import org.lifecompanion.controller.resource.GlyphFontHelper;
+import org.lifecompanion.controller.selectionmode.SelectionModeController;
 import org.lifecompanion.controller.textcomponent.WritingStateController;
 import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
+import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
+import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
@@ -38,10 +42,12 @@ import org.lifecompanion.model.api.selectionmode.SelectionModeI;
 import org.lifecompanion.model.api.textcomponent.WritingEventSource;
 import org.lifecompanion.model.impl.configurationcomponent.WriterEntry;
 import org.lifecompanion.model.impl.constant.LCConstant;
+import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.model.impl.editaction.CommonActions;
 import org.lifecompanion.model.impl.selectionmode.DrawSelectionModeI;
 import org.lifecompanion.model.impl.useapi.GlobalRuntimeConfiguration;
 import org.lifecompanion.ui.configurationcomponent.usemode.UseModeConfigurationDisplayer;
+import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.ui.selectionmode.AbstractSelectionModeView;
 import org.lifecompanion.util.binding.BindingUtils;
 import org.lifecompanion.util.javafx.FXControlUtils;
@@ -75,6 +81,8 @@ public class UseModeScene extends Scene implements LCViewInitHelper {
      */
     private Button buttonFullscreen;
 
+    private Button buttonPreviousConfiguration;
+
     private Rectangle backgroundReductionRectangle;
     private ChangeListener<SelectionModeI> selectionModeChangeListener;
 
@@ -101,16 +109,30 @@ public class UseModeScene extends Scene implements LCViewInitHelper {
 
 
         // Button go config mode
-        this.buttonGoToConfigMode = FXControlUtils.createTextButtonWithIcon(null, "actions/icon_go_back_config_mode.png", null);
+        this.buttonGoToConfigMode = FXControlUtils.createGraphicButton(
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.GEAR).size(18).color(LCGraphicStyle.SECOND_DARK),
+                null);
         this.buttonGoToConfigMode.setLayoutX(-5.0);
-        this.buttonGoToConfigMode.setLayoutY(-10.0);
+        this.buttonGoToConfigMode.setLayoutY(-5.0);
         this.buttonGoToConfigMode.setFocusTraversable(false);
 
+        // Button previous configuration
+        this.buttonPreviousConfiguration = FXControlUtils.createGraphicButton(
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.BARS).size(17).color(LCGraphicStyle.SECOND_DARK),
+                null);
+        this.buttonPreviousConfiguration.setLayoutX(-5.0);
+        this.buttonPreviousConfiguration.setLayoutY(18.0);
+        this.buttonPreviousConfiguration.setFocusTraversable(false);
+
+
         // Button to switch fullscreen state
-        buttonFullscreen = FXControlUtils.createTextButtonWithIcon(null, "actions/icon_switch_fullscreen.png", null);
-        this.buttonFullscreen.layoutXProperty().bind(widthProperty().subtract(32.0));
-        this.buttonFullscreen.setLayoutY(-10.0);
+        buttonFullscreen = FXControlUtils.createGraphicButton(
+                GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.EXPAND).size(18).color(LCGraphicStyle.SECOND_DARK),
+                null);
+        this.buttonFullscreen.layoutXProperty().bind(widthProperty().subtract(28.0));
+        this.buttonFullscreen.setLayoutY(-5.0);
         this.buttonFullscreen.setFocusTraversable(false);
+
 
         if (!GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DISABLE_SWITCH_TO_EDIT_MODE)) {
             this.root.getChildren().addAll(this.buttonGoToConfigMode);
@@ -118,6 +140,7 @@ public class UseModeScene extends Scene implements LCViewInitHelper {
         if (!GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DISABLE_WINDOW_FULLSCREEN)) {
             this.root.getChildren().addAll(buttonFullscreen);
         }
+        this.root.getChildren().addAll(buttonPreviousConfiguration);
 
         if (this.configuration.getSelectionModeParameter().hideMouseCursorProperty().get()) {
             this.setCursor(Cursor.NONE);
@@ -135,6 +158,8 @@ public class UseModeScene extends Scene implements LCViewInitHelper {
             }
         };
         this.configuration.selectionModeProperty().addListener(new WeakChangeListener<>(selectionModeChangeListener));
+        this.buttonFullscreen.visibleProperty().bind(UserConfigurationController.INSTANCE.disableFullscreenShortcutProperty().not());
+        this.buttonPreviousConfiguration.visibleProperty().bind(SelectionModeController.INSTANCE.hasPreviousConfigInUseModeProperty().and(UserConfigurationController.INSTANCE.enablePreviousConfigurationShortcutProperty()));
     }
 
     @Override
@@ -163,10 +188,12 @@ public class UseModeScene extends Scene implements LCViewInitHelper {
             }
         });
         //Filter mouse event to keep the goToConfig event
-        this.configurationDisplayer.addMouseListener(this, (mouseEvent) -> mouseEvent.getTarget() != this.buttonGoToConfigMode && mouseEvent.getTarget() != this.buttonFullscreen);
+        this.configurationDisplayer.addMouseListener(this, (mouseEvent) -> mouseEvent.getTarget() != this.buttonGoToConfigMode && mouseEvent.getTarget() != this.buttonFullscreen && this.buttonPreviousConfiguration != mouseEvent.getTarget());
         this.buttonGoToConfigMode.setOnAction(CommonActions.HANDLER_GO_CONFIG_MODE_CHECK);
         // Button to switch fullscreen mode
         this.buttonFullscreen.setOnAction(CommonActions.HANDLER_SWITCH_FULLSCREEN);
+
+        this.buttonPreviousConfiguration.setOnAction(e -> SelectionModeController.INSTANCE.changeConfigurationForPrevious());
 
         SessionStatsController.INSTANCE.registerScene(this);
     }
@@ -195,6 +222,8 @@ public class UseModeScene extends Scene implements LCViewInitHelper {
         BindingUtils.unbindAndSetNull(this.backgroundReductionRectangle.fillProperty());
         SessionStatsController.INSTANCE.unregisterScene(this);
         this.configurationDisplayer.unbindAndClean();
+        this.buttonFullscreen.visibleProperty().unbind();
+        this.buttonPreviousConfiguration.visibleProperty().unbind();
     }
 
     public void requestFocus() {

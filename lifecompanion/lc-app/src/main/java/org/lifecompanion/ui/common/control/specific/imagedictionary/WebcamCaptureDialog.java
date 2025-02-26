@@ -23,6 +23,7 @@ import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Button;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
@@ -35,6 +36,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.Screen;
 import javafx.stage.StageStyle;
 import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.controller.appinstallation.InstallationConfigurationController;
@@ -45,8 +47,10 @@ import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
+import org.lifecompanion.util.javafx.DialogUtils;
 import org.lifecompanion.util.javafx.FXControlUtils;
 import org.lifecompanion.util.javafx.FXThreadUtils;
+import org.lifecompanion.util.javafx.StageUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -148,7 +152,7 @@ public class WebcamCaptureDialog extends Dialog<File> implements LCViewInitHelpe
         dialogContent = new BorderPane();
         dialogContent.setRight(rightBP);
         dialogContent.setCenter(progressIndicatorLoadingWebcam);
-        dialogContent.setPrefSize(ImageSelectorDialog.IMAGE_DIALOGS_WIDTH, ImageSelectorDialog.IMAGE_DIALOGS_HEIGHT);
+        dialogContent.setPrefSize(ImageSelectorDialog.IMAGE_DIALOGS_WIDTH * 3, ImageSelectorDialog.IMAGE_DIALOGS_HEIGHT * 3);
 
         labelNoWebcam = new Label(Translation.getText("image.webcam.capture.no.camera.or.problem"));
         labelNoWebcam.setStyle("-fx-font-size: 16px");
@@ -198,6 +202,7 @@ public class WebcamCaptureDialog extends Dialog<File> implements LCViewInitHelpe
                 updateWebcamTask.switchWebcam();
             }
         });
+        this.showingProperty().addListener(DialogUtils.createScreenBoundsShowingListener(this));
     }
 
     private void setLoadingView() {

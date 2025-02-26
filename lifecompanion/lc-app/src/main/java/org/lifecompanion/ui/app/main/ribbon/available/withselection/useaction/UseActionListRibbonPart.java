@@ -39,6 +39,7 @@ public class UseActionListRibbonPart extends RibbonBasePart<UseActionTriggerComp
 
     private final UseActionEvent eventType;
     private final boolean alwaysDisplay;
+    private final String title;
 
     /**
      * Create a component to manager action
@@ -47,8 +48,13 @@ public class UseActionListRibbonPart extends RibbonBasePart<UseActionTriggerComp
      * @param alwaysDisplayP if we need to display this component when the action list is empty
      */
     public UseActionListRibbonPart(final UseActionEvent eventTypeP, final boolean alwaysDisplayP) {
+        this(eventTypeP, Translation.getText("action.list.title", Translation.getText(eventTypeP.getEventLabelId())), alwaysDisplayP);
+    }
+
+    public UseActionListRibbonPart(final UseActionEvent eventTypeP, final String title, final boolean alwaysDisplayP) {
         this.eventType = eventTypeP;
         this.alwaysDisplay = alwaysDisplayP;
+        this.title = title;
         this.initAll();
     }
 
@@ -58,8 +64,7 @@ public class UseActionListRibbonPart extends RibbonBasePart<UseActionTriggerComp
     public void initUI() {
         this.useActionListManageView = new UseActionListManageView(this.eventType, this.alwaysDisplay, null);
         this.setContent(this.useActionListManageView);
-        //Base for this tab (title with event type)
-        this.setTitle(Translation.getText("action.list.title", Translation.getText(this.eventType.getEventLabelId())));
+        this.setTitle(this.title);
     }
 
     @Override

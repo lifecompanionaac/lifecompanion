@@ -46,7 +46,8 @@ public class KeyListIndicatorAction extends SimpleUseActionImpl<UseActionTrigger
         this.nameID = "action.keylist.indicator.name";
         this.staticDescriptionID = "action.keylist.indicator.description";
         this.configIconPath = "keylist/icon_keylist_actions.png";
-        this.parameterizableAction = true;
+        this.parameterizableAction = false;
+        this.internal = true;
         this.variableDescriptionProperty().set(this.getStaticDescription());
     }
 

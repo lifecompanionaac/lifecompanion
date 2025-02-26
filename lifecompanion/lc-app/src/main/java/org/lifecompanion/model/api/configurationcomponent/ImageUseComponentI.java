@@ -157,6 +157,8 @@ public interface ImageUseComponentI extends IdentifiableComponentI {
 
     void addExternalLoadingRequest(String id);
 
+    void addExternalLoadingRequest(String id, double scale);
+
     void addExternalLoadingRequest(String id, double width, double height);
 
     void removeExternalLoadingRequest(String id);

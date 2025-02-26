@@ -16,63 +16,60 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.lifecompanion.model.impl.categorizedelement.useaction.available;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import org.jdom2.Element;
+import org.lifecompanion.controller.gaming.GamingFrameworkController;
+import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
+import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
+import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseActionSubCategories;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
-import org.lifecompanion.model.api.usevariable.UseVariableI;
-import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.io.IOContextI;
-import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseActionSubCategories;
-import org.lifecompanion.controller.configurationcomponent.dynamickey.KeyListController;
+import org.lifecompanion.model.api.usevariable.UseVariableI;
 import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
-import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
+import org.lifecompanion.model.impl.exception.LCException;
+import org.lifecompanion.util.binding.BindingUtils;
 
 import java.util.Map;
 
 /**
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
  */
-public class PreviousKeysOnSpecificLevelAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
+public class GameAddCurrentScoreAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
+    private final IntegerProperty toAdd;
 
-    private final IntegerProperty selectedLevel;
-
-    public PreviousKeysOnSpecificLevelAction() {
+    public GameAddCurrentScoreAction() {
         super(UseActionTriggerComponentI.class);
         this.order = 0;
-        this.category = DefaultUseActionSubCategories.KEY_LIST_SELECTED;
-        this.nameID = "action.previous.key.in.keylist.in.selected.level.name";
-        this.staticDescriptionID = "action.previous.key.in.keylist.in.selected.level.description";
-        this.configIconPath = "keylist/icon_previous_specific_keylist.png";
+        this.category = DefaultUseActionSubCategories.GAMING_FRAMEWORK;
+        this.toAdd = new SimpleIntegerProperty(1);
+        this.nameID = "use.action.game.add.current.score.name";
+        this.staticDescriptionID = "use.action.game.add.current.score.description";
+        this.configIconPath = "miscellaneous/icon_game_add_current_score.png";
         this.parameterizableAction = true;
-        this.selectedLevel = new SimpleIntegerProperty(1);
-        this.variableDescriptionProperty().set(this.getStaticDescription());
-    }
-
-    public IntegerProperty selectedLevelProperty() {
-        return selectedLevel;
+        this.variableDescriptionProperty().set(getStaticDescription());
     }
 
     @Override
     public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
-        KeyListController.INSTANCE.previousOnLevel(selectedLevel.get());
+        GamingFrameworkController.INSTANCE.addToCurrentScore(this.toAdd.get());
+    }
+
+    public IntegerProperty toAddProperty() {
+        return this.toAdd;
     }
 
     @Override
     public Element serialize(final IOContextI contextP) {
-        Element elem = super.serialize(contextP);
-        XMLObjectSerializer.serializeInto(PreviousKeysOnSpecificLevelAction.class, this, elem);
-        return elem;
+        return XMLObjectSerializer.serializeInto(GameAddCurrentScoreAction.class, this, super.serialize(contextP));
     }
 
     @Override
     public void deserialize(final Element nodeP, final IOContextI contextP) throws LCException {
         super.deserialize(nodeP, contextP);
-        XMLObjectSerializer.deserializeInto(PreviousKeysOnSpecificLevelAction.class, this, nodeP);
+        XMLObjectSerializer.deserializeInto(GameAddCurrentScoreAction.class, this, nodeP);
     }
-
 }

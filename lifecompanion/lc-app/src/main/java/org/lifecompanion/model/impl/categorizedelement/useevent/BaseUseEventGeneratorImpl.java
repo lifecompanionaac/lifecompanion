@@ -34,6 +34,7 @@ import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
 import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionManager;
+import org.lifecompanion.model.impl.configurationcomponent.UseActionTriggerEventWrapper;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.exception.LCException;
 
@@ -47,7 +48,7 @@ import java.util.function.BiConsumer;
  */
 public abstract class BaseUseEventGeneratorImpl implements UseEventGeneratorI {
     protected final static long DELAY_BEFORE_GENERATE_MS = 500;
-    protected boolean parameterizableAction = true;
+    protected boolean parameterizableAction = true, internal = false;
     protected int order = Integer.MAX_VALUE;
     protected String staticDescriptionID = "unknow.action.description", nameID = "unknow.action.name", configIconPath;
     private final StringProperty variableDescription;
@@ -57,21 +58,14 @@ public abstract class BaseUseEventGeneratorImpl implements UseEventGeneratorI {
     private final UseActionManagerI useActionManager;
     private final ObjectProperty<LCConfigurationI> configurationParent;
     protected UseEventListenerI useEventListener;
-    private final Set<BiConsumer<ActionEventType, UseActionEvent>> eventFiredListeners;
+    private final UseActionTriggerEventWrapper useActionTriggerEventWrapper;
 
     protected BaseUseEventGeneratorImpl() {
         this.variableDescription = new SimpleStringProperty(this, "variableDescription");
         this.useActionManager = new SimpleUseActionManager(this, UseActionEvent.EVENT);
         this.generatedVariables = new ArrayList<>(3);
         this.configurationParent = new SimpleObjectProperty<>();
-        this.eventFiredListeners = new HashSet<>(2);
-    }
-
-    @Override
-    public void eventFired(ActionEventType type, UseActionEvent event) {
-        for (BiConsumer<ActionEventType, UseActionEvent> eventFiredListener : eventFiredListeners) {
-            eventFiredListener.accept(type, event);
-        }
+        this.useActionTriggerEventWrapper = new UseActionTriggerEventWrapper();
     }
 
     @Override
@@ -80,13 +74,18 @@ public abstract class BaseUseEventGeneratorImpl implements UseEventGeneratorI {
     }
 
     @Override
+    public void eventFired(ActionEventType type, UseActionEvent event) {
+        this.useActionTriggerEventWrapper.eventFired(type, event);
+    }
+
+    @Override
     public void addEventFiredListener(BiConsumer<ActionEventType, UseActionEvent> eventListener) {
-        this.eventFiredListeners.add(eventListener);
+        this.useActionTriggerEventWrapper.addEventFiredListener(eventListener);
     }
 
     @Override
     public void removeEventFiredListener(BiConsumer<ActionEventType, UseActionEvent> eventListener) {
-        this.eventFiredListeners.remove(eventListener);
+        this.useActionTriggerEventWrapper.removeEventFiredListener(eventListener);
     }
 
     @Override
@@ -127,6 +126,11 @@ public abstract class BaseUseEventGeneratorImpl implements UseEventGeneratorI {
     @Override
     public boolean isParameterizableElement() {
         return this.parameterizableAction;
+    }
+
+    @Override
+    public boolean isInternal() {
+        return internal;
     }
 
     @Override

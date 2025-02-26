@@ -22,8 +22,8 @@ package org.lifecompanion.model.impl.useapi.dto;
 public class ShowIndicationTargetDto extends ShowIndicationRandomTargetDto {
     private int row, column;
 
-    public ShowIndicationTargetDto(String color, Double strokeSize, int row, int column) {
-        super(color, strokeSize);
+    public ShowIndicationTargetDto(String color, Double strokeSize, IndicationTargetBehavior targetBehavior, int row, int column) {
+        super(color, strokeSize, targetBehavior);
         this.row = row;
         this.column = column;
     }

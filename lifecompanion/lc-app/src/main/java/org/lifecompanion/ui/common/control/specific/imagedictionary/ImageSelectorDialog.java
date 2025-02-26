@@ -27,6 +27,7 @@ import org.lifecompanion.model.api.imagedictionary.ImageElementI;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.imagedictionary.ImageDictionaries;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
+import org.lifecompanion.util.javafx.DialogUtils;
 
 public class ImageSelectorDialog extends Dialog<ImageElementI> implements LCViewInitHelper {
     public static final double IMAGE_DIALOGS_WIDTH = 750, IMAGE_DIALOGS_HEIGHT = 600;
@@ -80,6 +81,8 @@ public class ImageSelectorDialog extends Dialog<ImageElementI> implements LCView
             imageSelectorSearchView.clearResult();
             ImageDictionaries.INSTANCE.clearThumbnailCache();
         });
+
+        this.showingProperty().addListener(DialogUtils.createScreenBoundsShowingListener(this));
     }
 
     public ImageSelectorSearchView getImageSelectorSearchView() {

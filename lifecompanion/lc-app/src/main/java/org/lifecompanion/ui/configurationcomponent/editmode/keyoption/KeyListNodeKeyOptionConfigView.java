@@ -75,24 +75,25 @@ public class KeyListNodeKeyOptionConfigView extends BaseKeyOptionConfigView<KeyL
 
         GridPane gridPaneConfig = new GridPane();
         gridPaneConfig.setVgap(5.0);
+        gridPaneConfig.setPrefWidth(225.0);
         int rowIndex = 0;
         gridPaneConfig.add(buttonConfigureKeyList, 0, rowIndex++, 2, 1);
-        gridPaneConfig.add(toggleSwitchSpecificLevel, 0, rowIndex++, 2, 1);
-        gridPaneConfig.add(labelLevelSelectionField, 0, rowIndex);
-        gridPaneConfig.add(spinnerSelectedLevel, 1, rowIndex++);
-        gridPaneConfig.add(toggleDisplayLevelBellow, 0, rowIndex++, 2, 1);
+//        gridPaneConfig.add(toggleSwitchSpecificLevel, 0, rowIndex++, 2, 1);
+//        gridPaneConfig.add(labelLevelSelectionField, 0, rowIndex);
+//        gridPaneConfig.add(spinnerSelectedLevel, 1, rowIndex++);
+//        gridPaneConfig.add(toggleDisplayLevelBellow, 0, rowIndex++, 2, 1);
         this.getChildren().addAll(gridPaneConfig);
     }
 
     @Override
     public void initListener() {
         super.initListener();
-        changeListenerSelectedLevel = EditActionUtils.createIntegerSpinnerBinding(this.spinnerSelectedLevel, this.model,
-                KeyListNodeKeyOption::selectedLevelProperty, KeyOptionActions.ChangeKeyListOptionSelectedLevelAction::new);
-        changeListenerDisplayLevelBellow = EditActionUtils.createSimpleBinding(this.toggleDisplayLevelBellow.selectedProperty(), this.model,
-                m -> m.displayLevelBellowProperty().get(), KeyOptionActions.ChangeKeyListOptionDisplayLevelBellowAction::new);
-        changeListenerSpecificLevel = EditActionUtils.createSimpleBinding(this.toggleSwitchSpecificLevel.selectedProperty(), this.model,
-                m -> m.specificLevelProperty().get(), KeyOptionActions.ChangeKeyListOptionSpecificLevelAction::new);
+//        changeListenerSelectedLevel = EditActionUtils.createIntegerSpinnerBinding(this.spinnerSelectedLevel, this.model,
+//                KeyListNodeKeyOption::selectedLevelProperty, KeyOptionActions.ChangeKeyListOptionSelectedLevelAction::new);
+//        changeListenerDisplayLevelBellow = EditActionUtils.createSimpleBinding(this.toggleDisplayLevelBellow.selectedProperty(), this.model,
+//                m -> m.displayLevelBellowProperty().get(), KeyOptionActions.ChangeKeyListOptionDisplayLevelBellowAction::new);
+//        changeListenerSpecificLevel = EditActionUtils.createSimpleBinding(this.toggleSwitchSpecificLevel.selectedProperty(), this.model,
+//                m -> m.specificLevelProperty().get(), KeyOptionActions.ChangeKeyListOptionSpecificLevelAction::new);
         this.buttonConfigureKeyList.setOnAction(e -> KeyListController.INSTANCE.openKeyListConfigFor(model.get()));
     }
 
@@ -105,19 +106,19 @@ public class KeyListNodeKeyOptionConfigView extends BaseKeyOptionConfigView<KeyL
 
     @Override
     public void bind(final KeyListNodeKeyOption model) {
-        toggleDisplayLevelBellow.setSelected(model.displayLevelBellowProperty().get());
-        toggleSwitchSpecificLevel.setSelected(model.specificLevelProperty().get());
-        spinnerSelectedLevel.getValueFactory().setValue(model.selectedLevelProperty().get());
-        model.selectedLevelProperty().addListener(changeListenerSelectedLevel);
-        model.displayLevelBellowProperty().addListener(changeListenerDisplayLevelBellow);
-        model.specificLevelProperty().addListener(changeListenerSpecificLevel);
+//        toggleDisplayLevelBellow.setSelected(model.displayLevelBellowProperty().get());
+//        toggleSwitchSpecificLevel.setSelected(model.specificLevelProperty().get());
+//        spinnerSelectedLevel.getValueFactory().setValue(model.selectedLevelProperty().get());
+//        model.selectedLevelProperty().addListener(changeListenerSelectedLevel);
+//        model.displayLevelBellowProperty().addListener(changeListenerDisplayLevelBellow);
+//        model.specificLevelProperty().addListener(changeListenerSpecificLevel);
     }
 
     @Override
     public void unbind(final KeyListNodeKeyOption model) {
-        model.selectedLevelProperty().removeListener(changeListenerSelectedLevel);
-        model.displayLevelBellowProperty().removeListener(changeListenerDisplayLevelBellow);
-        model.specificLevelProperty().removeListener(changeListenerSpecificLevel);
+//        model.selectedLevelProperty().removeListener(changeListenerSelectedLevel);
+//        model.displayLevelBellowProperty().removeListener(changeListenerDisplayLevelBellow);
+//        model.specificLevelProperty().removeListener(changeListenerSpecificLevel);
     }
 
 }

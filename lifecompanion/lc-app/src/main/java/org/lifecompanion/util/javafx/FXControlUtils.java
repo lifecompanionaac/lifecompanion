@@ -275,6 +275,16 @@ public class FXControlUtils {
         return group;
     }
 
+    public static ToggleGroup createAlwaysSelectedToggleGroupV2() {
+        ToggleGroup group = new ToggleGroup();
+        group.selectedToggleProperty().addListener((obs, ov, nv) -> {
+            if (nv == null) {
+                group.selectToggle(ov);
+            }
+        });
+        return group;
+    }
+
     public static Spinner<Integer> createIntSpinner(final int min, final int max, final int initialValue, final int step, final double width) {
         Spinner<Integer> spinner = createBaseSpinner(width);
         SpinnerValueFactory.IntegerSpinnerValueFactory integerValueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(min, max,

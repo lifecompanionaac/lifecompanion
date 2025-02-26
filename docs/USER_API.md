@@ -10,6 +10,7 @@ LifeCompanion can be launched using command line arguments to configure some of 
 |-|-|-|
 |`-directLaunchOn profileId configurationId`|`4aab2626-6b72-4e5e-8318-777c3684e8a3 9e94f3c0-e2de-4afb-8b65-8b07a994b3d4`|Try to launch LifeCompanion directly in use mode on a given profile and configuration combination. Profile and configuration should have already been loaded in LifeCompanion on a previous launch.|
 |`-directImportAndLaunch configurationFilePath`|`C:\lifecompanion\my-configuration.lcc`|Try to import a configuration file and launch it directly in use mode. The given configuration will not be added to profile. This can be useful to run LifeCompanion as a "configuration reader only"|
+|`-disableDoubleLaunchCheck`|*`NONE`*|Will disable the double launch for this LifeCompanion instance. Will not check that another LifeCompanion is running. This will however create the double launch serverfor any new instance that would run without the double launch disabled.|
 |`-disableSwitchToEditMode`|*`NONE`*|Disable the switch to edit mode when the use mode is launched. This will hide the edit mode button and disable keyboard shortcuts or any action that could cause a switch to edit mode. Note that this doesn't disable the edit mode itself : on the first launch, LifeCompanion can be used in edit mode.|
 |`-disableUpdates`|*`NONE`*|Will disable all the update checking process (for both app and plugins). Will not try to reach the update server at all.|
 |`-disableVirtualKeyboard`|*`NONE`*|Disable every virtual keyboard mechanism, if enabled, will consider any configuration as a classic configuration even if the virtual keyboard parameter is enabled on it.|
@@ -735,7 +736,7 @@ NONE
 ```
 ### /indication/target/show/location
 
-**Description** : Show the target indication to a specific location in the current main grid. If the target is reached, an specific use event is generated (Cible de déplacement atteinte) and the target is hidden.
+**Description** : Show the target indication to a specific location in the current main grid. If the target is reached, an specific use event is generated (Cible de déplacement atteinte). The behavior can be : HIDE_ON_REACHED (the target is hidden when reached on moving), HIDE_ON_ACTIVATION (the target will be hidden if the cursor is on the target and activated), KEEP (the target will always be showing until hide is called). Default is HIDE_ON_REACHED.
 
 **Url structure** : `/api/v1/indication/target/show/location`
 
@@ -747,7 +748,8 @@ NONE
   "row": 2,
   "column": 4,
   "color": "#008000ff",
-  "strokeSize": 5.0
+  "strokeSize": 5.0,
+  "targetBehavior": "HIDE_ON_REACHED"
 }
 ```
 ```json
@@ -755,7 +757,8 @@ NONE
   "row": 1,
   "column": 3,
   "color": null,
-  "strokeSize": null
+  "strokeSize": null,
+  "targetBehavior": null
 }
 ```
 
@@ -768,7 +771,7 @@ NONE
 ```
 ### /indication/target/show/random
 
-**Description** : Show the target indication to a random location in the current main grid. If the target is reached, an specific use event is generated (Cible de déplacement atteinte) and the target is hidden.
+**Description** : Show the target indication to a random location in the current main grid. If the target is reached, an specific use event is generated (Cible de déplacement atteinte).  The behavior can be : HIDE_ON_REACHED (the target is hidden when reached on moving), HIDE_ON_ACTIVATION (the target will be hidden if the cursor is on the target and activated), KEEP (the target will always be showing until hide is called). Default is HIDE_ON_REACHED.
 
 **Url structure** : `/api/v1/indication/target/show/random`
 
@@ -778,13 +781,15 @@ NONE
 ```json
 {
   "color": "#008000ff",
-  "strokeSize": 5.0
+  "strokeSize": 5.0,
+  "targetBehavior": "HIDE_ON_ACTIVATION"
 }
 ```
 ```json
 {
   "color": null,
-  "strokeSize": null
+  "strokeSize": null,
+  "targetBehavior": null
 }
 ```
 

@@ -8,7 +8,7 @@
 	</appender>
 
 	<appender name="FILE_APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>${java.io.tmpdir}/LifeCompanion/logs/application.log</file>
+		<!--<file>${java.io.tmpdir}/LifeCompanion/logs/application.log</file>-->
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 			<fileNamePattern>${java.io.tmpdir}/LifeCompanion/logs/application.%d{yyyy-MM-dd}.log</fileNamePattern>
 			<maxHistory>60</maxHistory>

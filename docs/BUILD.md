@@ -62,6 +62,13 @@ Before, configure your local.env to add AWS access/secret properties (cf [update
 
 Then, run `gradlew prepareOfflineApplication`. This will create in **offline** directory a subdirectory per system with all the needed element to run LifeCompanion on your computer. When running this task, you can add `lifecompanion.publish.application.persistent.data` Gradle property to avoid downloading fresh data from S3 on each build (run it `gradlew prepareOfflineApplication -Plifecompanion.publish.application.persistent.data`)
 
+## Create offline Windows installer
+
+This task is based on the offline application package. The offline application package should be configured and running well if you want to create offline Windows installer.
+This task is currently built locally and is not available through Github actions.
+
+To create the offline installer, run `gradlew clean createWindowsOfflineInstaller`.
+
 ## Create offline debian package
 
 It is possible to create custom local images packaged as *.deb* on Linux if needed.

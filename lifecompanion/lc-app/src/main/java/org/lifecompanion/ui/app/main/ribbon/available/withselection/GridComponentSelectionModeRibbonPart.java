@@ -148,7 +148,7 @@ public class GridComponentSelectionModeRibbonPart extends RibbonBasePart<Selecti
     private void initConfigStage() {
         if (configStageDialog == null) {
             configStageAnimatedBorderPane = new AnimatedBorderPane();
-            configStageAnimatedBorderPane.setPrefHeight(DIALOG_HEIGHT - 20.0);
+            configStageAnimatedBorderPane.setPrefHeight(DIALOG_HEIGHT - 80);
 
             configStageDialog = DialogUtils.alertWithSourceAndType(buttonOpenSelectionModeConfiguration, null)
                     .withButtonTypes(ButtonType.CANCEL, ButtonType.OK)
@@ -156,6 +156,7 @@ public class GridComponentSelectionModeRibbonPart extends RibbonBasePart<Selecti
                     .withSize(DIALOG_WIDTH, DIALOG_HEIGHT)
                     .build();
             configStageDialog.setResizable(true);
+            configStageDialog.showingProperty().addListener(DialogUtils.createScreenBoundsShowingListener(configStageDialog));
 
             configStageDialog.getDialogPane().getStylesheets().addAll(LCConstant.CSS_STYLE_PATH);
             configStageDialog.getDialogPane().getStyleClass().addAll("content-padding-0");

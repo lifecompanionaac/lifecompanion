@@ -31,6 +31,7 @@ import org.jdom2.Document;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
+import org.lifecompanion.LifeCompanion;
 import org.lifecompanion.controller.editaction.AsyncExecutorController;
 import org.lifecompanion.controller.editaction.GlobalActions;
 import org.lifecompanion.controller.editaction.LCConfigurationActions;
@@ -166,7 +167,7 @@ public class MiscConfigSubmenu extends ScrollPane implements LCViewInitHelper, U
                             buttonGenerateRandomConfiguration,
                             buttonSetKeylistNodesShape,
                             buttonImportJsonFile
-                            );
+                    );
         }
     }
 
@@ -199,10 +200,7 @@ public class MiscConfigSubmenu extends ScrollPane implements LCViewInitHelper, U
                                 .getID()
                 )
         ));
-        this.buttonOpenLogFile.setOnAction(e -> this.openFileOrFolder(buttonOpenLogFile,
-                System.getProperty("java.io.tmpdir") + File.separator + "LifeCompanion" + File.separator + "logs" + File.separator +
-                        "application.log"
-        ));
+        this.buttonOpenLogFile.setOnAction(e -> this.openFileOrFolder(buttonOpenLogFile, LifeCompanion.getLogPath().getAbsolutePath()));
         this.buttonOpenConfigCleanXml.setOnAction(e -> {
             File configurationDirectory = new File(IOHelper.getConfigurationDirectoryPath(ProfileController.INSTANCE.currentProfileProperty()
                             .get()

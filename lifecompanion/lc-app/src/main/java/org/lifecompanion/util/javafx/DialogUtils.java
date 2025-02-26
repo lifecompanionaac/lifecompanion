@@ -19,12 +19,15 @@
 
 package org.lifecompanion.util.javafx;
 
+import javafx.beans.value.ChangeListener;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.Region;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import org.lifecompanion.controller.resource.IconHelper;
@@ -47,5 +50,27 @@ public class DialogUtils {
 
     public static AbstractAlertBuilder.AlertBuilder alertWithSourceAndType(Node source, Alert.AlertType type) {
         return new AbstractAlertBuilder.AlertBuilder(FXUtils.getSourceWindow(source), type);
+    }
+
+    public static ChangeListener<Boolean> createScreenBoundsShowingListener(Dialog<?> dialog) {
+        return (obs, ov, nv) -> {
+            if (nv) {
+                Screen screen = StageUtils.getDialogScreen(dialog);
+                Rectangle2D screenVisualBounds = screen.getVisualBounds();
+                double width = screenVisualBounds.getWidth();
+                boolean change = false;
+                if (dialog.getWidth() > width) {
+                    dialog.setWidth(screenVisualBounds.getWidth() * 0.8);
+                    change = true;
+                }
+                if (dialog.getHeight() > screenVisualBounds.getHeight()) {
+                    dialog.setHeight(screenVisualBounds.getHeight() * 0.8);
+                    change = true;
+                }
+                if (change) {
+                    StageUtils.centerOnOwnerOrOnCurrentStage(dialog);
+                }
+            }
+        };
     }
 }

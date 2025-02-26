@@ -479,7 +479,7 @@ public enum ScanningMouseController implements ModeListenerI {
 
     @Override
     public void modeStop(final LCConfigurationI configuration) {
-        setUpCursorStripView();
+        this.stopMovingMouse();
         this.sizeScale.unbind();
         this.timePerPixelSpeed.unbind();
         this.color.unbind();

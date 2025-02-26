@@ -49,9 +49,9 @@ public class UserActionSequenceItemPropertiesEditionView extends AbstractSimpler
         toggleSubItem.setFocusTraversable(false);
         GridPane.setHalignment(toggleSubItem, HPos.RIGHT);
 
-        gridPaneConfiguration.add(labelSubItem, 0, rowIndex);
-        gridPaneConfiguration.add(toggleSubItem, 1, rowIndex);
-        gridPaneConfiguration.add(labelSubItemToggle, 2, rowIndex++);
+//        gridPaneConfiguration.add(labelSubItem, 0, rowIndex);
+//        gridPaneConfiguration.add(toggleSubItem, 1, rowIndex);
+//        gridPaneConfiguration.add(labelSubItemToggle, 2, rowIndex++);
 
         // Spinner auto time
         durationPickerAutomaticItemTimeMs = new DurationPickerControl();

@@ -22,6 +22,7 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.scene.paint.Color;
 import org.jdom2.Element;
+import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
 import org.lifecompanion.framework.commons.fx.io.XMLGenericProperty;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
@@ -75,8 +76,9 @@ public class NoteKeyOption extends AbstractKeyOption {
         this.saveLoadNoteAction.wantedActivatedColorProperty().bind(wantedActivatedColor);
         this.saveLoadNoteAction.wantedStrokeSizeProperty().bind(wantedStrokeSize);
         key.imageVTwoProperty().bind(this.saveLoadNoteAction.currentImageProperty());
-        if (key.getKeyStyle().textPositionProperty().value().getValue() != TextPosition.BOTTOM) {
-            key.getKeyStyle().textPositionProperty().selected().setValue(TextPosition.BOTTOM);
+        TextPosition defaultTextPosition = UserConfigurationController.INSTANCE.defaultTextPositionOnImageSelectionProperty().get();
+        if (key.getKeyStyle().textPositionProperty().value().getValue() != defaultTextPosition) {
+            key.getKeyStyle().textPositionProperty().selected().setValue(defaultTextPosition);
         }
         key.textContentProperty().bind(Bindings.createStringBinding(
                 () -> displayMode.get() == NoteKeyDisplayMode.CONTENT_TEXT ? saveLoadNoteAction.savedTextProperty().get() : this.keyCustomText.get(),

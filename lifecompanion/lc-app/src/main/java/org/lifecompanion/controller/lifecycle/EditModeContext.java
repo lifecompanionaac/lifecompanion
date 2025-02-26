@@ -93,17 +93,19 @@ public class EditModeContext extends AbstractModeContext {
     //========================================================================
 
     void tryToRestoreUseModeStateInEditMode(UseModeContext.UseModeState useModeState) {
-        LCConfigurationI configuration = this.configuration.get();
-        Map<String, String> displayedGrid = useModeState.getDisplayedComponentInStack();
-        displayedGrid.forEach((stackId, displayedComponentId) -> {
-            DisplayableComponentI displayableComponent = configuration.getAllComponent().get(stackId);
-            if (displayableComponent instanceof StackComponentI) {
-                ((StackComponentI) displayableComponent).displayComponentByIdForEditMode(displayedComponentId);
+        if (useModeState != null) {
+            LCConfigurationI configuration = this.configuration.get();
+            Map<String, String> displayedGrid = useModeState.getDisplayedComponentInStack();
+            displayedGrid.forEach((stackId, displayedComponentId) -> {
+                DisplayableComponentI displayableComponent = configuration.getAllComponent().get(stackId);
+                if (displayableComponent instanceof StackComponentI) {
+                    ((StackComponentI) displayableComponent).displayComponentByIdForEditMode(displayedComponentId);
+                }
+            });
+            String nodeId = useModeState.getCurrentKeyListNodeId();
+            if (StringUtils.isNotBlank(nodeId)) {
+                KeyListController.INSTANCE.selectNodeById(nodeId);
             }
-        });
-        String nodeId = useModeState.getCurrentKeyListNodeId();
-        if (StringUtils.isNotBlank(nodeId)) {
-            KeyListController.INSTANCE.selectNodeById(nodeId);
         }
     }
 

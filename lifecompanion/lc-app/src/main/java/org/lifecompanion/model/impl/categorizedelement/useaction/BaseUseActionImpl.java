@@ -44,7 +44,7 @@ public abstract class BaseUseActionImpl<T extends UseActionTriggerComponentI> im
 
     // Class part : "Attributes, will be filled by subclasses"
     //========================================================================
-    protected boolean simple = false, parameterizableAction = true, movingAction = false;
+    protected boolean simple = false, parameterizableAction = true, movingAction = false, internal = false;
     protected int order = Integer.MAX_VALUE;
     protected String staticDescriptionID = "unknow.action.description", nameID = "unknow.action.name", configIconPath;
     protected SystemType[] allowSystems = SystemType.values();
@@ -135,6 +135,11 @@ public abstract class BaseUseActionImpl<T extends UseActionTriggerComponentI> im
     @Override
     public boolean isParameterizableElement() {
         return this.parameterizableAction;
+    }
+
+    @Override
+    public boolean isInternal() {
+        return internal;
     }
 
     @Override

@@ -49,16 +49,22 @@ public class InitializeInstallationTask extends Task<InitializeResult> {
         LOGGER.info("Default directories set to installation configuration");
 
         // Check internet connection
-        boolean connectedToInternet = client.isConnectedToInternet();
-        LOGGER.info("Internet connection checked : {}", connectedToInternet);
+        boolean connectedToInternet;
+        if (!InstallerManager.INSTANCE.isOfflineInstallation()) {
+            connectedToInternet = client.isConnectedToInternet();
+            LOGGER.info("Internet connection checked : {}", connectedToInternet);
 
-        // Wakeup server
-        try {
-            new AppServerService(client).wakeup();
-            LOGGER.info("Server woken up");
-        } catch (Exception e) {
-            LOGGER.error("Couldn't wake the update server (or timeout ?)", e);
-            //Ignore
+            // Wakeup server
+            try {
+                new AppServerService(client).wakeup();
+                LOGGER.info("Server woken up");
+            } catch (Exception e) {
+                LOGGER.error("Couldn't wake the update server (or timeout ?)", e);
+                //Ignore
+            }
+        } else {
+            LOGGER.info("Connection test has been skipped as offline installation is detected");
+            connectedToInternet = true;
         }
 
         // Double launch

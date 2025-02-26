@@ -530,6 +530,8 @@
 		fichier .txt qui sera dans un dossier choisi. Le fichier texte créé sera nommé d'après le nom de la
 		configuration et la
 		date.</text>
+    <text key="action.save.text.to.txt.file.name">Sauvegarder du texte</text>
+    <text key="action.save.text.to.txt.file.static.description">Sauvegarde un texte défini (qui peut intégrer des variables) texte dans un fichier .txt qui sera dans un dossier choisi. Le fichier texte créé sera nommé d'après le nom de la configuration et la date.</text>
   <text key="default.user.text.directory.name">LifeCompanion-Textes</text>
   <!--org.lifecompanion.base.data.useaction.impl.computera.keyboard-->
     <text key="action.simulate.keyboard.key.toggle.action.name">Maintenir/relâcher une touche</text>
@@ -1558,7 +1560,7 @@
   <text key="user.config.selection.stroke.size">Taille du contour de sélection</text>
   <text key="user.config.stage.fullscreen">Lancer en plein écran</text>
   <text key="user.config.stage.height">Hauteur de la fenêtre</text>
-  <text key="user.config.stage.title">Fenêtre</text>
+  <text key="user.config.stage.title">Fenêtre en mode édition</text>
   <text key="user.config.stage.width">Largeur de la fenêtre</text>
   <text key="user.config.tab.about">À Propos</text>
   <text key="user.config.tab.misc">Divers</text>
@@ -2647,6 +2649,7 @@
   <text key="label.field.file.to.open.with.default.app">Fichier à ouvrir avec l'application par défaut</text>
   <text key="save.user.text.save.directory.dialog.title">Sélectionner le dossier de sauvegarde</text>
   <text key="save.user.text.save.directory.name">Dossier de sauvegarde des fichiers texte</text>
+  <text key="save.text.to.file.field.text">Texte à écrire dans le fichier</text>
   <text key="use.action.open.url.default.browser">URL à ouvrir (doit être valide, ex : "http://google.fr")</text>
   <!--org.lifecompanion.config.view.useaction.impl.computera.keyboard-->
   <text key="use.action.simulate.key.press.label">Touche dont l'appui sera simulé</text>
@@ -3940,4 +3943,35 @@
     <text key="image.use.use.display.fullscreen">Afficher en plein écran à l'activation</text>
     <text key="tooltip.image.use.use.display.fullscreen">Si activé, l'activation de la touche affichera l'image en plein écran. Lors d'une nouvelle activation, l'image sera masquée.</text>
     <text key="action.key.image.display.fullscreen">Activation/désactivation de l'affichage de l'image en plein écran</text>
+    <text key="use.action.sub.category.gaming.framework.name">Mécaniques de jeux</text>
+    <text key="use.action.game.add.current.score.name">Ajouter/Soustraire au score</text>
+    <text key="use.action.game.add.current.score.description">Permet d'ajouter (ou soustraire) une valeur au score courant</text>
+    <text key="use.action.game.set.current.score.name">Définir le score</text>
+    <text key="use.action.game.set.current.score.description">Permet de définir la valeur du score. Permet par exemple de la remettre à zéro.</text>
+    <text key="use.action.game.set.max.score.name">Définir le score maximum possible</text>
+    <text key="use.action.game.set.max.score.description">Permet de définir la valeur du score maximum possible. Cette valeur permet d'obtenir un pourcentage de score à jour en fonction d'un score maximum possible.</text>
+    <text key="use.action.game.add.current.score.field">Valeur à ajouter</text>
+    <text key="use.action.game.set.current.score.field">Valeur à définir</text>
+    <text key="use.action.game.set.max.score.field">Valeur à définir</text>
+    <text key="use.variable.game.current.score.name">Score</text>
+    <text key="use.variable.game.current.score.description">Contient le score courant (modifié par les actions des "Mécaniques de jeux").</text>
+    <text key="use.variable.game.current.score.example">7</text>
+    <text key="use.variable.game.max.score.name">Score maximum possible</text>
+    <text key="use.variable.game.max.score.description">Contient le score maximum possible (modifié par les actions des "Mécaniques de jeux").</text>
+    <text key="use.variable.game.max.score.example">20</text>
+    <text key="use.variable.game.current.score.percent.name">Score (en pourcentage)</text>
+    <text key="use.variable.game.current.score.percent.description">Contient le pourcentage du score courant par rapport au score maximum possible. Permet d'afficher une "réussite" par rapport à un score maximum attendu.</text>
+    <text key="use.variable.game.current.score.percent.example">86%</text>
+    <text key="tab.title.grid.over.actions">Action à l'affichage de la grille</text>
+    <text key="action.whiteboard.set.pencil.size.field">Taille du crayon</text>
+    <text key="default.text.position.image.selection.field">Position du texte à la sélection d'une image</text>
+    <text key="default.text.position.image.selection.explain">Définit la position du texte sur une case par défaut lors de la sélection d'une image. Ce paramètre permet simplement de gagner du temps, la position peut ensuite être changée manuellement.</text>
+    <text key="pdf.config.export.dialog.page.size">Taille des pages</text>
+    <text key="pdf.config.export.dialog.enable.footer.header">En-têtes et pieds de page</text>
+    <text key="pdf.config.export.dialog.header">Paramètres de l'export en PDF</text>
+    <text key="user.config.disable.fullscreen.shortcut">Désactiver le raccourci de plein écran</text>
+    <text key="tooltip.user.config.disable.fullscreen.shortcut">Permet de masquer le bouton en haut à droite de la configuration permettant de basculer en mode plein écran total.</text>
+    <text key="user.config.enable.previous.configuration.shortcut">Activer le raccourci "Configuration précédente"</text>
+    <text key="tooltip.user.config.enable.previous.configuration.shortcut">Si activé, lorsque l'utilisateur change de configuration en mode utilisation, affiche alors un raccourci en haut à gauche permettant de retourner à la configuration précédente.</text>
+    <text key="pdf.export.small.footer.label">Créé avec LifeCompanion ({})</text>
 </texts>

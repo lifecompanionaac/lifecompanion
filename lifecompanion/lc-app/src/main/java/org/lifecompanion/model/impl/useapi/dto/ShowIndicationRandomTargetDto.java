@@ -22,10 +22,12 @@ package org.lifecompanion.model.impl.useapi.dto;
 public class ShowIndicationRandomTargetDto {
     private String color;
     private Double strokeSize;
+    private IndicationTargetBehavior targetBehavior;
 
-    public ShowIndicationRandomTargetDto(String color, Double strokeSize) {
+    public ShowIndicationRandomTargetDto(String color, Double strokeSize, IndicationTargetBehavior targetBehavior) {
         this.color = color;
         this.strokeSize = strokeSize;
+        this.targetBehavior = targetBehavior;
     }
 
     public String getColor() {
@@ -42,5 +44,13 @@ public class ShowIndicationRandomTargetDto {
 
     public void setStrokeSize(Double strokeSize) {
         this.strokeSize = strokeSize;
+    }
+
+    public IndicationTargetBehavior getTargetBehavior() {
+        return targetBehavior;
+    }
+
+    public void setTargetBehavior(IndicationTargetBehavior targetBehavior) {
+        this.targetBehavior = targetBehavior;
     }
 }

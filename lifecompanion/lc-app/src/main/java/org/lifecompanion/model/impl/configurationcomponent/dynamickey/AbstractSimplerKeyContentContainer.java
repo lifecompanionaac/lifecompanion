@@ -184,6 +184,11 @@ public abstract class AbstractSimplerKeyContentContainer implements SimplerKeyCo
     }
 
     @Override
+    public void addExternalLoadingRequest(String id, double scale) {
+        imageUseComponentPropertyWrapper.addExternalLoadingRequest(id, scale);
+    }
+
+    @Override
     public void addExternalLoadingRequest(String id) {
         imageUseComponentPropertyWrapper.addExternalLoadingRequest(id);
     }

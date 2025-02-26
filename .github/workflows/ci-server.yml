@@ -10,30 +10,30 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       
       - name: Set up JDK
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v4
         with:
-          java-version: '18'
+          java-version: '21'
           distribution: 'temurin'
       
       - name : Add +X on Gradle scripts
         run: chmod +x lifecompanion-framework/gradlew
             
       - name: Build LifeCompanion framework
-        uses: gradle/gradle-build-action@v2.4.2
+        uses: gradle/actions/setup-gradle@v3
         with:
           build-root-directory: lifecompanion-framework
           arguments: publishToMavenLocal
           
       - name: Call update build and publish command
-        uses: gradle/gradle-build-action@v2.4.2
+        uses: gradle/actions/setup-gradle@v3
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         with:
           build-root-directory: lifecompanion-framework
           arguments: |
             :lc-framework-server:publishServerUpdate
-            -Penv=dev
+            -Penv=prod
             --stacktrace

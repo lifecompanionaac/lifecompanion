@@ -30,14 +30,17 @@ import org.lifecompanion.controller.useapi.LifeCompanionControlServerController;
 import org.lifecompanion.framework.commons.doublelaunch.DoubleLaunchController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.model.impl.constant.LCConstant;
+import org.lifecompanion.model.impl.useapi.GlobalRuntimeConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -67,10 +70,15 @@ public class LifeCompanion extends Application {
      * @param args the path to a configuration to load
      */
     public static void main(final String[] args) {
-        LOGGER.info("Logs are saved to {}", new File(System.getProperty("java.io.tmpdir") + "/LifeCompanion/logs/application.log").getAbsolutePath());
+        LOGGER.info("Logs are saved to {}", getLogPath().getAbsolutePath());
         argsCollection = args != null ? new ArrayList<>(Arrays.asList(args)) : new ArrayList<>();
-        boolean doubleRun = DoubleLaunchController.INSTANCE.startAndDetect(new DoubleLaunchListenerImpl(), true, args);
-        if (!doubleRun) {
+
+        // Detect global runtime configurations
+        GlobalRuntimeConfigurationController.INSTANCE.init(argsCollection);
+
+        boolean disableDoubleLaunchCheck = GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.DISABLE_DOUBLE_LAUNCH_CHECK);
+        boolean doubleRun = DoubleLaunchController.INSTANCE.startAndDetect(new DoubleLaunchListenerImpl(), !disableDoubleLaunchCheck, args);
+        if (!doubleRun || disableDoubleLaunchCheck) {
             //Start
             Instant startDate = Instant.now();
             LifeCompanion.LOGGER.info("{} version {} (build {}) launching with args\n\t{}",
@@ -78,8 +86,6 @@ public class LifeCompanion extends Application {
                     InstallationController.INSTANCE.getBuildProperties().getVersionLabel(),
                     InstallationController.INSTANCE.getBuildProperties().getBuildDate(),
                     args);
-            // Detect global runtime configurations
-            GlobalRuntimeConfigurationController.INSTANCE.init(argsCollection);
             // Run the service server (if needed)
             LifeCompanionControlServerController.INSTANCE.startControlServer();
             // Run the FX app
@@ -102,5 +108,12 @@ public class LifeCompanion extends Application {
         DoubleLaunchController.INSTANCE.stop();
         LifeCompanionControlServerController.INSTANCE.stopControlServer();
         LifeCompanion.LOGGER.info("Every exit task are done, LifeCompanion will close...");
+    }
+
+    private static final SimpleDateFormat LOG_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+
+    public static File getLogPath() {
+        return new File(System.getProperty("java.io.tmpdir") + File.separator + "LifeCompanion" + File.separator + "logs" + File.separator +
+                "application." + LOG_DATE_FORMAT.format(new Date()) + ".log");
     }
 }

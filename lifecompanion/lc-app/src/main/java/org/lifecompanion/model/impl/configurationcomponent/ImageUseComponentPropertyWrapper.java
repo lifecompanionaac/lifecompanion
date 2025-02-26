@@ -270,31 +270,39 @@ public class ImageUseComponentPropertyWrapper {
 
     private void requestImageLoadingForThisImageUseComponentIfNeeded() {
         if (this.imageUseComponent.imageUseComponentDisplayedProperty().get()) {
-            this.requestImageLoadingForComponentWithId(getImageUseComponentID(), null, null);
+            this.requestImageLoadingForComponentWithId(getImageUseComponentID(), null, null, null);
         }
     }
 
     private void requestImageLoadingForComponentWithId(String id) {
-        requestImageLoadingForComponentWithId(id, null, null);
+        requestImageLoadingForComponentWithId(id, null, null, null);
     }
 
-    private void requestImageLoadingForComponentWithId(String id, Double width, Double height) {
+    private void requestImageLoadingForComponentWithId(String id, Double width, Double height, Double scale) {
         if (imageVTwo.get() != null) {
-            imageVTwo.get().requestImageLoad(id, width != null ? width : getWantedImageWidthValue(), height != null ? height : getWantedImageHeightValue(), true, true);
+            boolean invertWidthHeight = rotate.get() % 90 == 0;
+            double computeWidth = width != null ? width : getWantedImageWidthValue();
+            double computedHeight = height != null ? height : getWantedImageHeightValue();
+            imageVTwo.get().requestImageLoad(id, (scale != null ? scale : 1.0) * (invertWidthHeight ? computedHeight : computeWidth), (scale != null ? scale : 1.0) * (invertWidthHeight ? computeWidth : computedHeight), true, true);
         }
     }
 
     public void addExternalLoadingRequest(String id) {
-        externalLoadingRequest.add(id);
-        if (imageVTwo.get() != null) {
-            this.requestImageLoadingForComponentWithId(id);
-        }
+        addExternalLoadingRequest(id, null, null, null);
+    }
+
+    public void addExternalLoadingRequest(String id, double scale) {
+        addExternalLoadingRequest(id, null, null, scale);
     }
 
     public void addExternalLoadingRequest(String id, double width, double height) {
+        addExternalLoadingRequest(id, width, height, null);
+    }
+
+    public void addExternalLoadingRequest(String id, Double width, Double height, Double scale) {
         externalLoadingRequest.add(id);
         if (imageVTwo.get() != null) {
-            this.requestImageLoadingForComponentWithId(id, width, height);
+            this.requestImageLoadingForComponentWithId(id, width, height, scale);
         }
     }
 

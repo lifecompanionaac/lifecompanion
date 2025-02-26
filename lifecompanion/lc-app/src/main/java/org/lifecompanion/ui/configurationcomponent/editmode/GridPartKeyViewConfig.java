@@ -147,6 +147,7 @@ public class GridPartKeyViewConfig extends GridPartKeyViewBase {
                             || this.model.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION, PreviousPageInStackAction.class) != null
                             || this.model.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION, NextPageAndLoopInStackAction.class) != null
                             || this.model.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION, MoveToGridAndGoBackAction.class) != null
+                            || this.model.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION, MoveToPreviousPartAction.class) != null
             );
         };
         invalidationListenerMoveAction.invalidated(null);
@@ -262,6 +263,7 @@ public class GridPartKeyViewConfig extends GridPartKeyViewBase {
         NextPageAndLoopInStackAction nextPageAndLoopInStackAction = this.model.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION, NextPageAndLoopInStackAction.class);
         PreviousPageInStackAction previousPageAction = this.model.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION, PreviousPageInStackAction.class);
         MoveToGridAndGoBackAction moveToGridAndGoBackAction = this.model.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION, MoveToGridAndGoBackAction.class);
+        MoveToPreviousPartAction moveToPreviousPartAction = this.model.getActionManager().getFirstActionOfType(UseActionEvent.ACTIVATION, MoveToPreviousPartAction.class);
         if (moveGrid != null) {
             GridComponentI targetGrid = moveGrid.targetGridProperty().get();
             if (targetGrid != null) {
@@ -303,6 +305,8 @@ public class GridPartKeyViewConfig extends GridPartKeyViewBase {
             if (targetGrid != null) {
                 SelectionController.INSTANCE.selectDisplayableComponent(targetGrid, true);
             }
+        } else if (moveToPreviousPartAction != null) {
+            SelectionController.INSTANCE.selectPreviousComponent();
         }
     }
 }

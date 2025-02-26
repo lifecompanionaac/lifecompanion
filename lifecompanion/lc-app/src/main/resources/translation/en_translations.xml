@@ -1,7 +1,9 @@
 <texts>
   <text key="user.config.part.ui.use.mode">Usage mode</text>
+  <text key="action.whiteboard.tool.to.eraser.description">Select the eraser for the table</text>
   <text key="search.component.selection.tree">Search for an item</text>
   <text key="training.information.stage.introduction.text">We offer training for people who use and configure LifeCompanion (professional speech therapists, occupational therapists, educators, caregivers, etc.)</text>
+  <text key="action.keylist.indicator.description">Executes the actions of the box/list/link according to the setting made in the box lists configuration view.</text>
   <text key="task.save.in.progress">Writing the current configuration...</text>
   <text key="action.key.change.option">Change key type</text>
   <text key="selection.mode.show.event.parameters">Trigger Settings</text>
@@ -33,6 +35,7 @@
   <text key="menu.file.item.saveas">Save as...</text>
   <text key="action.import.existing.profile.header">Profile already exists</text>
   <text key="configuration.secured.config.mode">Request a simple operation to edit</text>
+  <text key="action.whiteboard.clear.name">Clear the board</text>
   <text key="plugin.error.min.app.version.without.number">Unable to load the plugin because your version of LifeCompanion is too old.</text>
   <text key="remove.actions.from.selected.keys">Remove actions from selected keys</text>
   <text key="action.remove.config.confirm.message">Are you sure you want to delete the "{}" configuration?\nIf this configuration is the currently loaded configuration, it will also be lost.</text>
@@ -50,6 +53,7 @@
   <text key="use.action.open.url.default.browser">URL to open (must be valid, e.g.: "http://google.fr")</text>
   <text key="action.remove.grid.to.stack">Remove a grid from the stack</text>
   <text key="predict4all.default.rule.phonem.confusion.aou">Rounded posterior closed vowel [u]</text>
+  <text key="use.action.game.set.current.score.name">Set the score</text>
   <text key="action.expand.right">Increase from the right</text>
   <text key="config.selection.add.from.default.config.button.description">Allows you to create a configuration starting from a model selected from a list of models offered by LifeCompanion. The configuration can then be modified to be suitable.</text>
   <text key="predict4all.default.rule.phonem.confusion.n.mm">Voiced bilabial nasal plosive consonant [m]</text>
@@ -61,6 +65,7 @@
   <text key="action.style.add">Add a style</text>
   <text key="config.list.key.default.text">Name of a configuration</text>
   <text key="action.previous.key.in.keylist.in.selected.level.name">Previous keys (selected level)</text>
+  <text key="use.action.fill.dynamic.key.on.selected.key.name">Fill in a selected box</text>
   <text key="ribbon.part.plugin.informations">Information</text>
   <text key="action.pause.current.scanning.description">Pauses the current scroll. Scrolling will resume from the beginning at the next selection.</text>
   <text key="use.event.interval.of.day.start.time.field">Interval start time</text>
@@ -70,10 +75,12 @@
   <text key="action.style.remove.confirm.header">Confirm style deletion</text>
   <text key="pane.title.key.option.title">Box type</text>
   <text key="image.use.button.ok">OK</text>
+  <text key="tooltip.image.use.use.display.fullscreen">If enabled, pressing the key will display the image in full screen. When pressed again, the image will be hidden.</text>
   <text key="dev.stage.tab.log">Logs (Logback)</text>
   <text key="config.tips.handle.synthesizer.exception.title">Fix text-to-speech mispronunciation</text>
   <text key="file.type.plugin.jar">Extension file</text>
   <text key="action.select.profile.notif.title">Profile "{}" selected</text>
+  <text key="action.whiteboard.tool.to.eraser.name">Select eraser</text>
   <text key="previous.page.in.stack.name">Previous grid</text>
   <text key="use.action.change.key.style.wanted.style">New style for the key</text>
   <text key="training.information.stage.diff.types">Different formats are offered:\n  - Online video training (autonomous) [200€/person]\n  - Group face-to-face training [400€/person]\n  - Tailor-made training on site [on quote]</text>
@@ -95,6 +102,7 @@
   <text key="keylist.key.option.field.level.value.spinner">Level of displayed lists</text>
   <text key="action.move.mouse.up.static.description">Allows you to move the virtual mouse cursor to the top of the screen</text>
   <text key="general.configuration.view.step.selection.mode.supp.configuration.title">Selection mode settings</text>
+  <text key="use.variable.game.current.score.percent.example">86%</text>
   <text key="exception.makaton.400.header">You do not have access to Makaton Bank</text>
   <text key="download.plugin.task.title">Downloading the plugin “{}”</text>
   <text key="dev.stage.tab.memory">Memory</text>
@@ -133,6 +141,7 @@
   <text key="use.event.main.category.control.name">Controls</text>
   <text key="go.to.grid.variable.description">Go to grid "{}"</text>
   <text key="launcher.update.download.last">Launcher Download</text>
+  <text key="image.use.use.display.fullscreen">Show full screen on activation</text>
   <text key="task.title.config.description.loading">Loading the configuration</text>
   <text key="action.move.mouse.down.static.description">Allows you to move the virtual mouse cursor to the bottom of the screen</text>
   <text key="char.prediction.engine">Character prediction engine</text>
@@ -165,10 +174,13 @@
   <text key="tooltip.explain.configuration.style.keep.ratio">If enabled, the configuration will not be distorted to fill the window.\nOn the other hand, if disabled, the configuration will be stretched to completely fill the space in the window.</text>
   <text key="predict4all.default.rule.phonem.confusion.c.ss.s">voiceless alveolar fricative consonant [s]</text>
   <text key="launcher.update.check.task.title">Checking for a launcher update</text>
+  <text key="action.whiteboard.tool.to.pencil.description">Select the pencil for the table</text>
   <text key="use.action.sub.category.selection.keys.name">Keys</text>
   <text key="tooltip.useaction.ok.button">Save the action and close the actions menu</text>
   <text key="use.variable.current.time.name">Hour (with second)</text>
   <text key="button.cleanup.temp.file">Clean temporary files</text>
+  <text key="key.option.user.action.sequence.list.name">List of sequences</text>
+  <text key="action.key.image.display.fullscreen">Enable/disable full screen image display</text>
   <text key="predict4all.default.rule.mbp.example">example &gt; example\nambiance &gt; atmosphere</text>
   <text key="profile.selection.create.import.profile.button.description">Imports a user profile from an "lcp" file and adds it to the LifeCompanion user profile list.</text>
   <text key="key.shape.tp.angle.cut">Top/right angle</text>
@@ -211,6 +223,7 @@
   <text key="predict4all.config.tick.rule.leaf.frequency.high">Frequent</text>
   <text key="task.title.profile.loading">Loading profile</text>
   <text key="action.selectionmode.change.selection.view.size">Change the size of the selection outline</text>
+  <text key="use.action.clear.selected.dynamic.key.fill.name">Empty a selected box</text>
   <text key="keylist.key.option.button.configuration.key">Configure in key list</text>
   <text key="action.add.image.error.title">Problem adding</text>
   <text key="component.selector.no.component.placeholder">No item selected</text>
@@ -228,6 +241,7 @@
   <text key="tooltip.explain.use.param.virtual.mouse.type">Allows you to change the type of virtual mouse.</text>
   <text key="generaL.configuration.view.key.list.search.empty">0/0</text>
   <text key="predict4all.action.button.dictionary.configuration">Configure the dictionary</text>
+  <text key="use.action.game.add.current.score.name">Add/Subtract to score</text>
   <text key="field.grid.component.selector.add.grid.button">New grid</text>
   <text key="action.key.text.position.change">Changing the text position</text>
   <text key="style.ribbon.part.key.style.single">Box style</text>
@@ -275,6 +289,7 @@
   <text key="menu.select.clear">Clear selection</text>
   <text key="configuration.menu.label.no.last.date">Not yet saved</text>
   <text key="use.event.key.pressed.block.key.explain">If the key is blocked, then it will not have its usual behavior. For example, you can block the "Enter" key if you no longer want to have a line break when you press it.</text>
+  <text key="use.action.sub.category.configuration.dynamic.key">Box to fill in</text>
   <text key="tooltip.keylist.drag.drop.move.to">Move "{}" into "{}"</text>
   <text key="action.change.configuration.frame.height">Change window height</text>
   <text key="tooltip.buttons.zoom.reset">Resets zoom</text>
@@ -287,6 +302,7 @@
   <text key="action.selectionmode.keyboard.fire.key">Change the trigger key</text>
   <text key="tooltip.add.key.top">Adds a key from above to the selected key. This will shift the grid keys down and remove the last key</text>
   <text key="action.load.config.dialog.name">Opening the configuration selection dialog</text>
+  <text key="default.whiteboard.image.directory.name">LifeCompanion-Tableaux-Images</text>
   <text key="action.image.change.enable.replace.color">Enable/disable replacing one color with another</text>
   <text key="general.configuration.stage.configuration.size.explain">The size of a configuration is by default automatically determined and adapted to the window. However, if you want to add "empty" borders around a configuration, it is possible to adjust it manually.</text>
   <text key="image.dictionary.current.page.index">{}/{}</text>
@@ -302,11 +318,13 @@
   <text key="action.replace.component.in.grid">Replacing an element in a grid</text>
   <text key="predict4all.config.version.check.name">Releases\nLifeCompanion: {} ({})\nPredict4All extension: {}\nPredict4All: {} ({})</text>
   <text key="tooltip.add.key.word.auto">Add a key, this key will contain words automatically determined by word prediction</text>
+  <text key="action.save.config.pdf.description">Saves a PDF containing an image of the current configuration as a PDF. For example, allows you to save the configuration when elements are dynamically changed.</text>
   <text key="user.config.enable.profile.configuration.auto.backup">Create emergency backups when deleting/importing configurations/profiles</text>
   <text key="use.event.main.category.time.description">Contains time-related event triggers. For example to trigger an event at a given time, or every 5 minutes...</text>
   <text key="task.load.available.default.configuration.list">Loading configuration templates</text>
   <text key="go.previous.configuration.description">Returns to the previous configuration if the configuration was loaded following the "Change configuration" action.</text>
   <text key="go.to.previous.part.description">Allows you to go to the previous element (the grid, the grid stack...)\nIf this function is used several times, this will bring up the history of movements in the elements of the application.</text>
+  <text key="use.action.fill.dynamic.key.on.selected.key.description">Allows you to fill a selected box with the contents of that box.</text>
   <text key="use.event.configuration.voice.synthesizer.disable.name">Text-to-speech disabled</text>
   <text key="component.grid.in.key">Grid\nin a key</text>
   <text key="tooltip.explain.delete.grid.stack">Deletes the currently displayed grid.</text>
@@ -330,6 +348,7 @@
   <text key="predict4all.config.force.invalid.word">Never offer</text>
   <text key="action.import.priorized.word.notif.ok.message">{} words to prioritize imported</text>
   <text key="scanning.mode.draw.progress.bar">Progress bar in key</text>
+  <text key="start.current.user.action.sequence.description">Starts the sequence associated with the current box (if the box is of type "List of sequences")</text>
   <text key="action.save.config.dialog.header">Save current configuration</text>
   <text key="tooltip.add.key.auto.char">Add a key, this key will contain letters which will be automatically determined by letter prediction</text>
   <text key="predict4all.default.rule.missing.letter.name">Letters omitted</text>
@@ -372,6 +391,7 @@
   <text key="misc.config.tab.memory.button.gc">Run the GC</text>
   <text key="tooltip.key.selector.select.button">Will allow you to select the keyboard key by pressing it</text>
   <text key="action.add.image">Add an image to the gallery</text>
+  <text key="use.variable.game.max.score.name">Maximum possible score</text>
   <text key="next.page.in.stack.static.description">Allows you to go to the next grid in a selected grid stack.\nIf the selection mode is a scrolling mode, scrolling will begin at the start of the next grid.</text>
   <text key="style.change.selected.style.value">Change base style</text>
   <text key="plugin.installation.exception.unknown.plugin.id">No extension found for id {}</text>
@@ -408,10 +428,12 @@
   <text key="action.restart.current.scanning.name">Start scrolling again</text>
   <text key="predict4all.config.part.title.dynamic.model">User model</text>
   <text key="general.configuration.selection.mode.title.filter.actions.field">Triggering of actions</text>
+  <text key="tooltip.user.config.disable.fullscreen.shortcut">Hides the button at the top right of the configuration to switch to full screen mode.</text>
   <text key="general.configuration.mouse.config.part.circle.mouse.explain">Allows you to configure the virtual mouse, which can be used using the "Mouse Actions" actions in the "Computer Access" category</text>
   <text key="action.saveas.problem.notif.title">Error while saving</text>
   <text key="action.set.keys.option">Change the key type to multiple keys.</text>
   <text key="predict4all.default.rule.azerty.name">Typing errors (Azerty keyboard)</text>
+  <text key="action.save.whiteboard.image.name">Save the table image</text>
   <text key="image.use.color.to.replace.field">Color to replace</text>
   <text key="key.option.auto.char.name">Automatic predicted character</text>
   <text key="config.duplicate.task.title">Duplicating the configuration</text>
@@ -431,6 +453,7 @@
   <text key="action.speak.text.static.description">Speaks a chosen text with the currently selected speech synthesis.</text>
   <text key="action.key.option.change.correction.color">Change correction color</text>
   <text key="select.video.component">Video</text>
+  <text key="use.action.clear.current.dynamic.key.fill.name">Empty the marked box</text>
   <text key="tooltip.style.ok.button">Save and close the style screen</text>
   <text key="training.information.button.train">Form</text>
   <text key="predict4all.config.testing.col.prediction">Prediction</text>
@@ -468,6 +491,7 @@
   <text key="action.select.all">Select all items in current folder</text>
   <text key="sapi.voice.description">Speech synthesis using SAPI voices installed on Windows.\nThe installed voices must be available to the system and can be 32/64 bit.\nSAPI voices do not take the "height" parameter into account.</text>
   <text key="use.event.time.of.day.and.day.of.week.generator.variable.description">Generates an event if the configuration is started on {} and the time {}:{} is reached.</text>
+  <text key="use.action.game.set.current.score.field">Value to be defined</text>
   <text key="action.import.profile.name">Import a profile</text>
   <text key="configuration.selection.add.configuration.button">Add configuration</text>
   <text key="use.action.change.key.image.wanted.image">Desired image</text>
@@ -496,6 +520,7 @@
   <text key="use.action.sub.category.key.list.general.name">General</text>
   <text key="profile.creation.view.title">Creating a profile</text>
   <text key="frame.position.bottom">down</text>
+  <text key="sequence.configuration.view.item.list.title">Steps of the sequence</text>
   <text key="profile.selection.profile.list.empty">No existing profiles.\nYou can create a new one to use LifeCompanion.</text>
   <text key="video.display.mode.in.key.title">In the case</text>
   <text key="action.spell.key.label">Spell key text</text>
@@ -522,6 +547,7 @@
   <text key="image.use.config.part.video.title">Video</text>
   <text key="use.action.sub.category.notepad.name">Notepad</text>
   <text key="video.play.mode.while.over.title">When hovering</text>
+  <text key="use.action.game.add.current.score.field">Value to add</text>
   <text key="use.variable.insert.to.text.button">Insert a variable</text>
   <text key="use.event.on.previous.and.start.reached.event.description">This event is generated when the start of the current list is reached and the user asks again to go to the previous item.</text>
   <text key="tooltip.explain.use.param.virtual.mouse.color">The color of the virtual mouse cursor.</text>
@@ -545,6 +571,7 @@
   <text key="about.tab.update.info">Version : {} ({})</text>
   <text key="user.config.proxy.part">Proxy settings</text>
   <text key="action.import.name">Importing a configuration</text>
+  <text key="use.action.clear.selected.dynamic.key.fill.description">Clears a selected box (erases image, text and style).</text>
   <text key="notification.action.save.profile.failed.title">Backup failed</text>
   <text key="general.configuration.view.key.list.field.text.color">Text color</text>
   <text key="action.restart.current.scanning.description">Restarts scrolling. This returns to the start of the currently scrolling grid.</text>
@@ -615,6 +642,7 @@
   <text key="config.tips.use.mode.frame.message">By default, LifeCompanion configurations are launched in full screen when in use mode.\nThis may not be suitable, especially when LifeCompanion is used to access the computer. It is therefore possible to adjust the parameters of the configuration window: deactivate the full screen, adjust its size and choose an initial positioning.\nThis configuration can also be modified during use using the "Move window" or "Enable/disable full screen" actions.</text>
   <text key="component.select.tree">Select an item</text>
   <text key="use.event.sub.category.cyclic.name">Cycle</text>
+  <text key="sequence.configuration.view.field.text.position">Text position</text>
   <text key="use.action.search.field.prompt">Search for stocks</text>
   <text key="use.action.go.to.key.key.to.display">Arrival key</text>
   <text key="config.tips.stack.in.grid.message">It is entirely possible to add batteries into grids.\nThis is very practical if you want to have certain keys visible and accessible all the time, while varying only part of a grid.\nIn order to add a stack to a grid, you can first enlarge the grid key that will receive your stack. Once expanded, simply drag and drop the stack into this key. You now have a stack in a grid!\n\nYou can therefore add several grids in this stack, and thus change only a sub-part of your main grid (thanks to the "Go to grid" actions).</text>
@@ -643,6 +671,7 @@
   <text key="use.variable.current.text.in.clipboard.name">Clipboard contents</text>
   <text key="task.export.lists.pdf.name">Exporting lists to PDF</text>
   <text key="action.open.url.in.browser.static.description">Allows you to open an Internet address in the system's default Internet browser.</text>
+  <text key="user.config.disable.fullscreen.shortcut">Disable full screen shortcut</text>
   <text key="next.in.current.user.action.sequence.action.description">Allows you to move to the next step in the current sequence</text>
   <text key="text.editor.example.line2">\non several lines to know how the text is displayed...</text>
   <text key="action.move.mouse.ne.static.description">Allows you to move the virtual mouse cursor to the top right of the screen</text>
@@ -650,6 +679,7 @@
   <text key="component.stack.name">Grid stack</text>
   <text key="tooltip.text.position.center">Overlay the text in the center on top of the image</text>
   <text key="action.style.set.use.parent">Enable/disable use of parent style</text>
+  <text key="default.user.grid.pdf.directory.name">LifeCompanion-Grids-Pdf</text>
   <text key="tooltip.user.comp.remove">Delete selected templates</text>
   <text key="key.option.custom.char.description">Allows you to rearrange keys of the same type based on the characters currently entered in the editor. Differs from "Automatic predicted character" in that the characters proposed are among keys of the same type and not free.</text>
   <text key="select.current.keylist.keyoption.description">Action intended to be associated with a key list key, in order to select the sublist or link displayed.</text>
@@ -661,6 +691,7 @@
   <text key="use.action.sub.category.timer.name">Timer</text>
   <text key="use.action.change.key.text.target.key">Key to change</text>
   <text key="configuration.selection.create.desktop.link.button.description">Allows you to create a shortcut on the desktop to directly open this configuration in use mode from the desktop.\nThis allows the launch of a specific configuration to be integrated into the system icons.</text>
+  <text key="key.option.whiteboard.name">Blackboard/Slate</text>
   <text key="button.add.key.on.left.grid">To the left</text>
   <text key="keyboard.key.period">Point</text>
   <text key="use.action.main.category.user.action.sequence.name">Sequences</text>
@@ -686,6 +717,7 @@
   <text key="action.change.configuration.size">Change configuration size</text>
   <text key="selection.mode.virtual.cursor.color">Color</text>
   <text key="action.delete.all.text.description">Deletes all text currently present in the editors.</text>
+  <text key="action.save.whiteboard.image.description">Save the board image to a chosen folder</text>
   <text key="notification.info.plugin.update.done.title">Extension "{}" updated to version {}</text>
   <text key="action.move.mouse.nw.name">Move up left</text>
   <text key="prediction.auto.char.default.text">(character)</text>
@@ -737,6 +769,7 @@
   <text key="image.use.config.part.remove.background.title">Background Removal</text>
   <text key="sequence.configuration.item.sub.item">Sub-step (based on the last step which was not a sub-step)</text>
   <text key="user.config.tab.misc">Miscellaneous</text>
+  <text key="use.action.sub.category.user.action.sequence.sub.list">List of sequences</text>
   <text key="tooltip.collapse.right">Reduces the size of the right-selected item. This will add elements to the right to fill the space</text>
   <text key="selection.mode.scanning.mode.label">Scroll Type</text>
   <text key="predict4all.default.rule.mbp.m">Before an “m”</text>
@@ -748,6 +781,7 @@
   <text key="notification.action.export.profile.failed.title">Export failed</text>
   <text key="config.tips.clone.key.style.title">Clone key styles</text>
   <text key="action.style.remove">Delete a style</text>
+  <text key="user.config.enable.previous.configuration.shortcut">Enable the “Previous configuration” shortcut</text>
   <text key="makaton.too.many.install.message">You have reached the maximum number of LifeCompanion installations that can use Makaton Bank with your member account. You can log in or create an account on the LifeCompanion platform to remove installations. You can also contact us if you would like us to do this for you.</text>
   <text key="predict4all.comment.dialog.field.name">Your name</text>
   <text key="use.variable.current.day.of.week.description">Contains the day of the week in a readable format.</text>
@@ -778,6 +812,7 @@
   <text key="plugin.error.unknown.error.header">Loading error</text>
   <text key="predict4all.config.button.cancel">Cancel</text>
   <text key="plugin.load.success.base.message">Extension "{}" ({}) added successfully. This extension will be loaded the next time you start the application.</text>
+  <text key="use.action.game.set.max.score.field">Value to be defined</text>
   <text key="predict4all.comment.dialog.status.ok">The comment has been sent, thank you!</text>
   <text key="update.status.name.checking">verification in progress</text>
   <text key="image.webcam.capture.webcam.informations">{} - {}x{} - {} FPS</text>
@@ -808,6 +843,7 @@
   <text key="button.request.update.check.on.next.start">Check for updates on next startup</text>
   <text key="tooltip.selection.mode.scanning.manual.input.type">Allows you to select the trigger device for moving to the next element: a mouse click or a keyboard key</text>
   <text key="task.load.user.sequence.title">Loading sequences</text>
+  <text key="use.variable.game.current.score.example">7</text>
   <text key="action.expand.bottom">Increase from below</text>
   <text key="use.variable.last.complete.word.in.editor.description">The last word completed in the text editor</text>
   <text key="action.run.command.name">Run an executable command</text>
@@ -817,10 +853,12 @@
   <text key="predict4all.action.import.words.failed">Problem importing words, please check the file</text>
   <text key="keyboard.key.page.up">Top page</text>
   <text key="action.export.config.has.unsaved.message">The configuration has {} unsaved changes, if you export it like this, the unsaved changes will not be taken into account in the exported configuration.\nDo you want to save the configuration before exporting?</text>
+  <text key="tab.title.grid.over.actions">Action on grid display</text>
   <text key="image.webcam.button.take.picture">To take a picture</text>
   <text key="action.notif.export.nok.message">Problem exporting configuration {}</text>
   <text key="action.move.caret.backward.description">Moves the cursor back one character. If the cursor is at the beginning of the text, this action has no effect.</text>
   <text key="predict4all.config.testing.chart.title.memory">Memory</text>
+  <text key="default.text.position.image.selection.explain">Sets the text position to a default box when selecting an image. This setting is just to save time, the position can then be changed manually.</text>
   <text key="action.write.word.prediction.name">Write word prediction</text>
   <text key="action.change.voice.parameter.variable.description">Changes the voice used by the synthesis for "{}".</text>
   <text key="use.variable.current.month.of.year.example">January</text>
@@ -960,6 +998,7 @@
   <text key="use.event.keyboard.key.typed.variable.description">When the "{}" key is pressed</text>
   <text key="file.chooser.video.description">Video files</text>
   <text key="selection.mode.scan.direct.key.vertical.description">Allows you to select keys by automatic vertical scrolling. The keys scroll first on the first column, then on the following ones.\n Hover actions will be triggered when the scroll reaches above the key.</text>
+  <text key="use.variable.game.current.score.description">Contains the current score (modified by "Game Mechanics" actions).</text>
   <text key="install.failed.no.unzip.directory">{} could not be installed because it is not possible to create temporary installation folders.\nPlease restart the installation with administrator rights.</text>
   <text key="tooltip.explain.selection.param.activation.color">Sets the color of the outline when the user makes a selection.</text>
   <text key="keyboard.key.less">Chevron</text>
@@ -968,6 +1007,7 @@
   <text key="use.variable.current.text.in.editor.description">Contains the text currently entered in the configuration's text editor.</text>
   <text key="component.type.stack">Grid stack</text>
   <text key="tooltip.useaction.list.search">Search for an action by name or description</text>
+  <text key="use.variable.game.current.score.percent.description">Contains the percentage of the current score compared to the maximum possible score. Allows to display a "success" compared to an expected maximum score.</text>
   <text key="record.sound.action.not.available.title">Unable to record sound, check computer microphone</text>
   <text key="use.action.sub.category.computer.access.mouse.move.name">Virtual mouse movement</text>
   <text key="action.key.option.quick.com.change.enable.speak">Enable/disable pronunciation of communication key text</text>
@@ -991,6 +1031,7 @@
   <text key="action.style.edit">Edit a style</text>
   <text key="use.action.sub.category.configuration.change.name">Change items</text>
   <text key="image.gallery.pane.title">Pictures</text>
+  <text key="save.user.item.in.notification">Saved in {}</text>
   <text key="action.run.command.description">Allows you to launch a command and arguments from LifeCompanion. The action will complete directly (even if the command execution is not completed). Errors and I/O are ignored.</text>
   <text key="task.import.keylist.from.json.title">Import a list of cases in json</text>
   <text key="use.event.sub.category.periodic.name">Periodic</text>
@@ -1076,6 +1117,7 @@
   <text key="alert.message.invalid.action.parent.message">Cannot add action "{}" because it is incompatible with the element you are trying to add it to.</text>
   <text key="user.config.proxy.config.proxy.user">User</text>
   <text key="training.information.button.close">Close</text>
+  <text key="action.whiteboard.set.color.name">Change pencil color</text>
   <text key="file.chooser.profile.description">LifeCompanion profile file</text>
   <text key="key.style.auto.font.size.explain">When this option is activated, the font size will be determined automatically so that the entire text fits into the key if it is too large. This will not enlarge the text if it is too small.</text>
   <text key="predict4all.config.link.source.word.list">Source</text>
@@ -1236,6 +1278,7 @@
   <text key="action.move.mouse.nw.static.description">Allows you to move the virtual mouse cursor to the top left of the screen</text>
   <text key="action.spell.key.label.variable.description">Spell the text "{}"</text>
   <text key="user.config.part.ui.optional.resource">Additional Resources</text>
+  <text key="save.config.pdf.save.directory.dialog.title">Select the backup folder</text>
   <text key="action.simulate.key.activation.name">Simulate the activation of a key</text>
   <text key="configuration.launch.in.use.mode.indicator.text">(by default)</text>
   <text key="tooltip.explain.image.color.replacing">The color that will be put in place of the old color. You can choose transparent with custom colors.</text>
@@ -1251,6 +1294,7 @@
   <text key="use.variable.current.number.of.day.example">22</text>
   <text key="general.configuration.view.step.use.event.no.event.placeholder">Select an event to be able to add actions to it.</text>
   <text key="action.exit.application.description">Exits LifeCompanion: closes the window and exits without asking for confirmation</text>
+  <text key="use.action.game.set.max.score.description">Allows you to set the maximum possible score value. This value allows you to obtain an up-to-date score percentage based on a maximum possible score.</text>
   <text key="change.key.type.button.label">Change keys</text>
   <text key="tooltip.explain.grid.column.spinner">Allows you to add/remove columns to the selected grid.\nColumns are added/removed to the right of the grid.</text>
   <text key="action.delete.plugin.confirm.message">Are you sure you want to remove the "{}" extension?</text>
@@ -1339,15 +1383,18 @@
   <text key="tooltip.explain.selection.param.manify.key">Allows you to enlarge the key currently hovered over by the pointer or by scrolling.</text>
   <text key="label.field.run.program.args.explain">You can separate the different arguments with spaces. If you want to have an argument containing spaces, surround it with quotes. For example, the argument: read "My file", will give two arguments: "read" and "My file"</text>
   <text key="image.dictionary.default.imported.dic">Configuration images</text>
+  <text key="pdf.config.export.dialog.enable.footer.header">Headers and Footers</text>
   <text key="predict4all.default.rule.added.letter.name">Letters added</text>
   <text key="action.previous.key.in.keylist.in.selected.level.description">Allows you to move to previous keys in all lists of a specific level (or lower)</text>
   <text key="use.action.start.dynamic.key.fill.name">Mark as box to be filled</text>
   <text key="misc.submenu.explain.text">This menu is reserved for experienced users! Do not use these options unless you know their consequences.</text>
   <text key="predict4all.default.rule.sequence.of.value">Sequence {}</text>
+  <text key="action.keylist.indicator.name">Box List Actions</text>
   <text key="configuration.description.cell.author.field">Author</text>
   <text key="predict4all.plugin.info.description">Integration of word prediction from the PREDICT4ALL project.</text>
   <text key="tooltip.quick.com.play.example">Speaks the text set for this key</text>
   <text key="config.tips.use.user.components.title">Use your templates</text>
+  <text key="action.save.config.pdf.document.name">Configuration Image - {} - {}</text>
   <text key="alert.message.disable.edit.action.header">Unable to edit</text>
   <text key="no.configuration.placeholder.link.create.from.model">Create a configuration from a template</text>
   <text key="use.event.press.time.reached.static.description">When the pressure (the click, the pressure on the screen...) is maintained for a defined time, this event is generated.\nIt is generated as soon as the timer is reached, which means that even if several triggers of the same type are added, they will all send events in turn.</text>
@@ -1369,6 +1416,7 @@
   <text key="exception.makaton.400.message">It seems that the email entered "{}" does not have access to Makaton Bank. You can check:\n- that you have entered the same email as the one used to log in to the AAD Makaton member area\n- that your membership is valid\n\nIf your membership has just been created or renewed, it may sometimes be necessary to wait 24 hours before having access to Makaton Bank for LifeCompanion.</text>
   <text key="key.option.variable.information.description">Allows you to use variables in the key text and have the key automatically updated by LifeCompanion.</text>
   <text key="gallery.root.name">Gallery root</text>
+  <text key="key.option.user.action.sequence.list.example.text">Sequence Name</text>
   <text key="action.import.directories.task.progress.message">{}/{} image(s) added to gallery...</text>
   <text key="predict4all.default.rule.apostrophe.missing">Omitting the apostrophe</text>
   <text key="keyboard.key.right">Right directional arrow</text>
@@ -1444,6 +1492,7 @@
   <text key="user.config.tab.stage">Interface</text>
   <text key="use.event.time.of.day.and.day.of.week.generator.name">Time and day of the week</text>
   <text key="tooltip.keylist.drag.drop.swap.keys">Reverse "{}" and "{}"</text>
+  <text key="use.variable.game.max.score.description">Contains the maximum possible score (modified by "Game Mechanics" actions).</text>
   <text key="default.style.name.text.style.quick">Quick Text Style</text>
   <text key="keylist.action.field.specific.level.selection">Perform the action for the level (or lower)</text>
   <text key="user.config.configuration.title">Settings</text>
@@ -1508,6 +1557,7 @@
   <text key="predict4all.config.view.label.prediction.count">Number of predictions to display (testing)</text>
   <text key="use.action.change.key.style.target.key">Key to change</text>
   <text key="use.event.main.category.misc.description">Contains events generated by interaction with LifeCompanion functions. For example, allows you to react to the end of a timer.</text>
+  <text key="default.text.position.image.selection.field">Text position when selecting an image</text>
   <text key="task.save.title">Saving the configuration</text>
   <text key="action.next.key.in.keylist.in.current.name">Next keys while looping (current list)</text>
   <text key="predict4all.default.rule.accent.e.char">Accents of “e”</text>
@@ -1543,6 +1593,7 @@
   <text key="action.open.confirm.header">Do you want to open a configuration?</text>
   <text key="tooltip.explain.grid.hgap.spinner">Changes the horizontal space between grid lines</text>
   <text key="selection.mode.scan.direct.key.horizontal.description">Allows you to select keys by automatic horizontal scrolling. The keys scroll first on the first line, then on the following ones.\n Hover actions will be triggered when the scroll reaches above the key.</text>
+  <text key="use.action.start.dynamic.key.fill.on.selected.target.key">Box to be marked as "to be filled in"</text>
   <text key="tooltip.explain.selection.mode.param.background.reduction.level">The higher the level, the more elements that are not on hover will be hidden</text>
   <text key="profile.edition.general.default.configuration.link.select.all">Select all</text>
   <text key="use.action.main.category.media.name">Media</text>
@@ -1555,6 +1606,8 @@
   <text key="default.key.style.name1">Default key style</text>
   <text key="action.use.event.remove">Delete an event</text>
   <text key="predict4all.rule.translate.rule.insert.element">Insert ({})</text>
+  <text key="use.variable.game.max.score.example">20</text>
+  <text key="use.action.sub.category.gaming.framework.name">Game mechanics</text>
   <text key="action.change.virtual.mouse.color">Change virtual mouse color</text>
   <text key="action.save.note.description">This action opens the notepad with the note saved on this key, then closes it the second time. Be careful, opening Notepad erases the text currently in the editor.</text>
   <text key="general.configuration.view.step.plugin.list.title">Extensions</text>
@@ -1563,6 +1616,7 @@
   <text key="select.specific.keylist.action.name">Select a chosen list</text>
   <text key="tooltip.explain.use.param.first.part">Allows you to define the starting grid of the configuration.\nThis grid will be displayed when user mode starts. If the selection is scrolling, scrolling will begin for that grid.</text>
   <text key="tooltip.style.control.add">Adds a new style to the profile styles list</text>
+  <text key="save.config.pdf.save.directory.name">Configuration PDF backup folder</text>
   <text key="unknown.error.happened.notif.title">An unexpected error has occurred</text>
   <text key="action.change.configuration.auto.size">Enable/disable automatic configuration size</text>
   <text key="action.clic.mouse.simple.name">Left click</text>
@@ -1605,6 +1659,7 @@
   <text key="fire.event.type.mouse">Mouse</text>
   <text key="tooltip.configuration.list.duplicate">Allows you to duplicate the selected configuration so that you can have two versions of the same configuration.</text>
   <text key="action.change.char.predictor.id">Change character prediction engine</text>
+  <text key="use.variable.game.current.score.name">Score</text>
   <text key="general.configuration.view.step.selection.mode.title">Selection mode</text>
   <text key="configuration.warning.plugin.message">Please note, extensions necessary for the proper functioning of this configuration are not loaded. You can try to install them (internet connection required) or continue without: you will be able to use the configuration but it may not be loaded correctly.</text>
   <text key="use.event.main.category.sequence.description">Contains events generated by interaction with sequence functions. For example, allows you to react at the end of a sequence.</text>
@@ -1632,6 +1687,7 @@
   <text key="config.tips.change.profile.level.message">Your profile indicates a user level (Beginner, Normal or Expert).\n\nDepending on the level chosen on the profile, different elements of the configuration interface will be displayed or hidden.\n\nYou can change your profile level in the Profile Manager.\nPlease note: an "Expert" profile will allow you to access all possible parameters, but the configuration interface will be more complex.</text>
   <text key="action.notif.export.ok.title">Exported configuration</text>
   <text key="general.configuration.selection.mode.title.filter.actions">Filter entries</text>
+  <text key="use.action.start.dynamic.key.fill.on.selected.key.description">Allows you to indicate a selected box as the next one to fill: this action allows you to use the contents of the next box with the action "Fill the marked box" (text, image, video, etc.).</text>
   <text key="tooltip.explain.grid.vgap.spinner">Changes the vertical space between grid lines</text>
   <text key="action.change.prediction.char.space">Change the representation of space</text>
   <text key="action.delete.last.char.name">Delete previous character</text>
@@ -1737,7 +1793,7 @@
   <text key="action.name.change.grid.vgap">Change the vertical spacing of a grid</text>
   <text key="action.simulate.key.over.name">Simulate hovering over a key</text>
   <text key="general.configuration.info.button.edit.information">Edit information</text>
-  <text key="user.config.stage.title">Window</text>
+  <text key="user.config.stage.title">Window in edit mode</text>
   <text key="disable.exit.use.mode.message">You cannot close LifeCompanion in usage mode. To close LifeCompanion, enter "Edit" mode or turn off this setting.</text>
   <text key="action.remove.config.confirm.title">Delete</text>
   <text key="tooltip.add.key.right">Adds a key from the right to the selected key. This will shift the grid keys to the left and remove the first key</text>
@@ -1838,7 +1894,9 @@
   <text key="general.configuration.view.step.voice.synthesizer.title">Vocal synthesis</text>
   <text key="text.style.font.bold">Fat</text>
   <text key="tooltip.explain.image.enable.color.replace">If enabled, replaces one color in the image with another.\nThis function is very useful if you want to remove the background from an image.</text>
+  <text key="use.action.sub.category.whiteboard.name">Blackboard/Slate</text>
   <text key="profile.level.beginner">Beginner</text>
+  <text key="action.open.folder.description">Opens a specified folder in the system's file explorer</text>
   <text key="notification.info.image.dictionary.changes.done">{} image replacement(s) performed</text>
   <text key="action.next.key.in.keylist.in.current.noloop.name">Next keys without looping (current list)</text>
   <text key="stage.mode.fullscreen">Complete full screen window (without title bar)</text>
@@ -1863,7 +1921,9 @@
   <text key="action.start.timer.static.description">Counts down from a chosen duration and updates the displayed progress bars.</text>
   <text key="next.page.and.loop.in.stack.variable.description">Go to the next grid in the stack "{}"</text>
   <text key="task.load.ended.nok">Failed to load.</text>
+  <text key="next.page.with.loop.user.action.sequence.description">Goes to the next page in the sequence list. If the last page is reached, returns to the first page.</text>
   <text key="autocomplete.keyboard.numbers0.name">0-9</text>
+  <text key="field.action.whiteboard.set.color.picker">Pencil color</text>
   <text key="field.grid.key.vgap">Vertical spacing</text>
   <text key="predict4all.comment.dialog.status.nok">Failed to send comment, please try again later.</text>
   <text key="action.plugin.delete.ok.title">Extension(s) removed</text>
@@ -1876,6 +1936,7 @@
   <text key="keyboard.quick.word.please">Please</text>
   <text key="action.simulate.key.over.static.description">Simulates hovering over a selected key, as if the user had hovered over it with the mouse or scrolled using configuration selection mode</text>
   <text key="use.action.search.no.result">No result</text>
+  <text key="action.open.folder.name">Open a file</text>
   <text key="task.add.available.default.configuration.list">Adding configuration templates</text>
   <text key="changelog.entry.profile.user.system">by {} (on {} - {})</text>
   <text key="action.move.caret.start.description">Moves the cursor to the beginning of the text in the editor.</text>
@@ -1887,6 +1948,7 @@
   <text key="use.event.clic.mouse.button.released.description">Event generated when a mouse button is released. Be careful, this may conflict with the current selection mode if it uses the mouse.</text>
   <text key="config.selection.create.new.config.button.description">Initializes a new configuration in the current user profile, and then allows you to use it. This configuration will be empty and will need to be completed.</text>
   <text key="system.type.mac">Mac OS</text>
+  <text key="pdf.config.export.dialog.header">PDF export settings</text>
   <text key="predict4all.default.rule.phonem.confusion.om.on">Rounded posterior nasal vowel [ɔ]</text>
   <text key="general.configuration.predictors.part.word.predictor">Word prediction</text>
   <text key="predict4all.config.view.testing.title">Test</text>
@@ -1927,6 +1989,7 @@
   <text key="user.action.display.filter.both">All (steps and sub-steps)</text>
   <text key="use.variable.current.number.of.month.example">01</text>
   <text key="action.run.program.name">Start a program</text>
+  <text key="action.whiteboard.clear.description">Clear the entire board</text>
   <text key="autocomplete.keyboard.suggest.button.complete">AUTO FILL</text>
   <text key="action.change.virtual.mouse.speed">Change virtual mouse speed</text>
   <text key="user.config.enable.session.stats">Send usage data</text>
@@ -1942,6 +2005,7 @@
   <text key="action.open.url.in.browser.variable.description">Opens "{}" in the system's default Internet browser.</text>
   <text key="tooltip.split.key.part">Divides the selected element to have keys again in place of an element that takes up more than one key in height or width</text>
   <text key="key.action.change.background.color.field.wanted.color">New background color</text>
+  <text key="action.whiteboard.set.pencil.size.field">Pencil size</text>
   <text key="use.variable.battery.time.remaining.description">Contains the remaining battery time estimated by the system. Only valid for machines with a battery.</text>
   <text key="label.field.run.command.explain">You can separate the different arguments with spaces. If you want to have an argument containing spaces, surround it with quotes. For example, the argument: read "My file", will give two arguments: "read" and "My file"</text>
   <text key="use.event.periodic.time.name">Regular interval</text>
@@ -1972,6 +2036,7 @@
   <text key="use.action.simulate.key.press.second.label">Second touch (not obligatory)</text>
   <text key="action.remove.column.index.action">Remove a column from a key</text>
   <text key="predict4all.default.rule.phonem.confusion.s.z.x">Voiced alveolar fricative consonant [z]</text>
+  <text key="use.variable.game.current.score.percent.name">Score (in percentage)</text>
   <text key="task.title.load.multiple.user.comp">Loading templates</text>
   <text key="general.configuration.change.opacity.exit.title">Dynamic change of opacity</text>
   <text key="panel.title.keyshape.style">Key style</text>
@@ -2004,6 +2069,7 @@
   <text key="action.simulate.key.activation.static.description">Simulates the activation of a selected key, as if the user had activated it using configuration selection mode</text>
   <text key="about.tab.file.header.license">========= LIFECOMPANION LICENSE =========</text>
   <text key="progress.display.keyoption.field.progress.type">Kind</text>
+  <text key="tooltip.user.config.enable.previous.configuration.shortcut">If enabled, when the user changes configuration in usage mode, then displays a shortcut at the top left to return to the previous configuration.</text>
   <text key="predict4all.config.enable.debug">Enable “debug mode”</text>
   <text key="action.view.save">Save</text>
   <text key="my.configurations.menu.item.import">Import</text>
@@ -2056,6 +2122,7 @@
   <text key="predict4all.default.rule.homophone.name">Homophones</text>
   <text key="tooltip.explain.disable.exit.use.mode">If enabled, prevents the user from closing LifeCompanion when it is in use mode. Can be useful when you only want to use hardware for LifeCompanion and not allow the user to "exit" into the system.</text>
   <text key="predict4all.config.part.title.words.depriorized">Disadvantaging vocabulary</text>
+  <text key="pdf.config.export.dialog.page.size">Page size</text>
   <text key="config.duplicated.for.import.prefix">[ANCIENT]</text>
   <text key="action.speak.last.word.static.description">Allows you to say the last word in the editor.</text>
   <text key="tooltip.remove.column.comp">Remove column from selected item</text>
@@ -2098,6 +2165,7 @@
   <text key="predict4all.config.file.chooser.import.words.title">Choose a word list file</text>
   <text key="action.simulate.keyboard.key.until.release.action.name">Simulate key press(s) until released</text>
   <text key="notification.action.export.profile.title">Export successful</text>
+  <text key="save.whiteboard.image.directory.name">Image backup folder</text>
   <text key="general.configuration.view.key.list.category.key.count.in.list">{} key(es) in this list</text>
   <text key="use.action.main.category.show.name">Display</text>
   <text key="word.prediction.add.space.after">Add auto space</text>
@@ -2109,6 +2177,7 @@
   <text key="user.comp.save.button">Save</text>
   <text key="new.config.action.confirm.message">Do you want to save before creating a new configuration?</text>
   <text key="user.config.tips.show.startup">Show tips and tricks on startup</text>
+  <text key="next.page.with.loop.user.action.sequence.name">Next page in sequence list (looping)</text>
   <text key="configuration.import.version.error.message">This configuration was carried out with version {} of LifeCompanion.\n To ensure optimal operation, you must update LifeCompanion in order to import it.</text>
   <text key="notification.action.export.profile.failed.message">Unable to export profile to file "{}"</text>
   <text key="user.config.save.button">Save</text>
@@ -2127,6 +2196,7 @@
   <text key="action.save.name">Save</text>
   <text key="action.voice.synthesizer.remove.pronunciation.exception">Remove a different pronunciation for synthesis</text>
   <text key="configuration.background.color">Configuration background color</text>
+  <text key="action.whiteboard.set.color.description">Changes the pencil color to a selected color</text>
   <text key="configuration.backup.task">Creating a backup backup of the configuration</text>
   <text key="action.write.text.new.line.description">Inserts a line break at the cursor location.</text>
   <text key="predict4all.config.rule.type.confusion.name">Correction of confusions</text>
@@ -2152,6 +2222,7 @@
   <text key="lc.colorpicker.previous.value">Current</text>
   <text key="use.action.main.category.computer.access.description">Contains actions that allow you to control the keyboard and virtual mouse and launch programs.\nContains everything you need to control your computer using LifeCompanion.</text>
   <text key="keyboard.key.add">Add (number pad)</text>
+  <text key="use.action.dynamic.key.fill.selected.target.key">Box to fill in</text>
   <text key="tooltip.config.tip.next.button">Show next tip</text>
   <text key="tooltip.explain.selection.param.progress.draw.mode">Sets how visual feedback from scrolling is displayed</text>
   <text key="button.type.try.install">Try to install</text>
@@ -2159,6 +2230,7 @@
   <text key="tooltip.open.event.params.selection.mode">Allows you to select the trigger for a selection: mouse, keyboard, etc.\nAlso defines the parameters of the chosen trigger (on release, press time, etc.)</text>
   <text key="virtual.mouse.type.cross.scanning">Scroll Pointing with Crossed Lines</text>
   <text key="previous.page.in.stack.variable.description">Go to previous grid in stack "{}"</text>
+  <text key="save.whiteboard.image.directory.dialog.title">Select the backup folder</text>
   <text key="style.ribbon.part.key.style">Key style</text>
   <text key="exception.makaton.other.message">It is not possible to verify your access to Makaton Bank. Please try again later. If the problem persists, please do not hesitate to contact us.</text>
   <text key="general.configuration.mouse.config.part.arrow.mouse.title">Configuring Directional Pointing</text>
@@ -2173,6 +2245,7 @@
   <text key="action.delete.last.word.description">Deletes the last word before the cursor present in the text editor.</text>
   <text key="go.root.list.current.list.name">Return to initial level</text>
   <text key="tooltip.use.variable.add.to.text">Allows you to insert a variable into the text. A variable is a value that will be replaced by its current value when using the text. For example the current time when the text is used.</text>
+  <text key="action.save.config.pdf.name">Save configuration as PDF</text>
   <text key="tooltip.buttons.paste.key.style">Applies the initially copied style to the selected elements (stacks, grids, keys, etc.)</text>
   <text key="image.use.video.display.mode">Display</text>
   <text key="config.tips.add.image.computer.message">If you have images on your computer that you want to use in your setup, you don't necessarily have to import them into LifeCompanion's gallery.\nSimply open the folder containing the images, then drag and drop images into the keys that should contain them. The images will then be automatically added to the gallery and placed on the key. Practical !</text>
@@ -2373,6 +2446,7 @@
   <text key="text.location.center">In the center</text>
   <text key="general.configuration.styles.general.explain">This part allows you to manage the general styles used in the configuration. A change here will change all elements of the configuration that do not have a particular style.</text>
   <text key="predict4all.spinner.min.count.provide.correction">Include custom fixes</text>
+  <text key="use.action.game.set.max.score.name">Set the maximum possible score</text>
   <text key="button.package.log.debug">Create a ZIP file of LifeCompanion logs</text>
   <text key="tooltip.clear.key.text.button">Delete the text in this key</text>
   <text key="action.move.name">Moving an element</text>
@@ -2382,6 +2456,7 @@
   <text key="action.cancel.confirm.title">To leave {}</text>
   <text key="profile.edition.general.default.configuration.title">Configuration templates</text>
   <text key="default.style.name.key.style.quick">Quick key style</text>
+  <text key="use.action.game.add.current.score.description">Allows you to add (or subtract) a value to the current score</text>
   <text key="text.style.font.color">Color</text>
   <text key="wanted.mouse.button.no.selected.one">If you do not select any button, the event will be triggered regardless of which mouse button is pressed.</text>
   <text key="action.remove.user.comp.message">There are {} model(s) selected.\nAre you sure you want to delete them?</text>
@@ -2398,6 +2473,7 @@
   <text key="use.event.key.pressed.select.key.label">Filter if the key pressed is</text>
   <text key="use.action.event.type.scan">on scroll</text>
   <text key="use.action.main.category.speak.description">Contains all actions related to speech synthesis, to speak text, words and more.</text>
+  <text key="use.action.start.dynamic.key.fill.on.selected.key.name">Mark a box as "to be filled"</text>
   <text key="tooltip.open.advanced.params.selection.mode">Opens the advanced settings screen for the chosen selection mode, in order to configure the selection more precisely.</text>
   <text key="use.event.sub.category.keys.name">Keyboard</text>
   <text key="duration.unit.millisecond">Millisecond</text>
@@ -2451,6 +2527,7 @@
   <text key="next.page.and.loop.in.stack.name">Next grid and start again</text>
   <text key="pane.title.grid.gap">Grid Spacing</text>
   <text key="user.config.load.problem.title">Failed to load.</text>
+  <text key="label.field.folder.to.open">File to open</text>
   <text key="scanning.mode.draw.fill.part">Filling the key</text>
   <text key="change.key.to.stack">Transform into grid stack</text>
   <text key="general.configuration.view.key.list.field.space.after">Add a space after written text</text>
@@ -2468,6 +2545,7 @@
   <text key="tooltip.explain.configuration.frame.width">Allows you to adjust the width of the window in use mode</text>
   <text key="button.collapse.title">Reduce space</text>
   <text key="config.selection.create.duplicate.config.button.title">Duplicate a configuration</text>
+  <text key="action.whiteboard.tool.to.pencil.name">Select the pencil</text>
   <text key="action.change.config.virtual.keyboard">Enable/disable virtual keyboard mode</text>
   <text key="go.parent.list.current.or.execute.next.action.description">Allows you to go back to the level above (front list) in the current list, in order to go back to a certain defined level. As long as it is possible to go back, the actions to follow are not executed. If the desired level is reached, the next actions in the key are executed.</text>
   <text key="action.add.image.task.title">Adding images</text>
@@ -2485,9 +2563,12 @@
   <text key="tooltip.pronunciation.exception.remove.button">Removes the currently selected edit</text>
   <text key="use.action.sub.category.sound.name">Sound/Music</text>
   <text key="predict4all.config.part.title.words.priorized">Promote vocabulary</text>
+  <text key="key.option.whiteboard.description">Allows you to draw in the box using the actions linked to "Table/Slate" (category "Miscellaneous").</text>
   <text key="image.use.color.replace.threshold.field">Sensitivity</text>
+  <text key="use.action.clear.current.dynamic.key.fill.description">Clears the last selected box with "marked as fillable" (clears image and text).</text>
   <text key="misc.config.tab.part.logs">Logs</text>
   <text key="use.action.main.category.configuration.description">Contains all actions relating to the configuration parameters or to the configuration itself. For example change the size or position of the window, deactivate the sound...</text>
+  <text key="use.action.clear.selected.dynamic.key.target.key">Empty box</text>
   <text key="tooltip.configuration.list.add">Create a new configuration</text>
   <text key="use.event.clic.mouse.button.released.name">Mouse button released</text>
   <text key="update.task.title">Update</text>
@@ -2566,6 +2647,7 @@
   <text key="tooltip.expand.bottom">Increases the size of the selected item from below. This may reduce the height of the elements below, or remove some</text>
   <text key="optional.resource.makaton.enabled">Makaton Image Bank Enabled</text>
   <text key="task.load.title">Loading the configuration</text>
+  <text key="action.save.config.pdf.page.name">The {} to {}</text>
   <text key="use.variable.current.text.in.clipboard.description">Contains the textual content of the clipboard. If the user copies text, then the variable will contain that text.</text>
   <text key="image.dictionary.author.parlerpictos">© 2020 Parlerpictos | RECIT School Adaptation</text>
   <text key="config.export.title">Exporting the configuration</text>
@@ -2574,6 +2656,7 @@
   <text key="use.variable.current.date.name">Date</text>
   <text key="config.tips.clone.key.style.message">It is not uncommon to have to use the same key style on several different keys.\nIn order to apply the same style to all your keys, it is very simple to modify the style on a single key, then apply it to several other keys. You can select the key whose style should be copied, then select as many keys as you want where the style will be applied.</text>
   <text key="label.grid.size">Spacing</text>
+  <text key="use.action.game.set.current.score.description">Allows you to set the score value. For example, allows you to reset it to zero.</text>
   <text key="tooltip.explain.selection.param.selection.color">Set the outline color when hovering over elements.</text>
   <text key="configuration.frame.size">Window size</text>
   <text key="action.name.change.notekey.custom.text">Changing the text to display on the notepad key</text>
@@ -2637,6 +2720,7 @@
   <text key="action.key.image.change">Changing the key image</text>
   <text key="button.add.key.on.right.grid">To the right</text>
   <text key="action.use.shift.up">Move an action up</text>
+  <text key="action.whiteboard.set.pencil.size.name">Change pencil size</text>
   <text key="predict4all.config.learn.new.words">Learn new words automatically</text>
   <text key="config.selection.create.duplicate.config.button.description">Duplicates an existing configuration on the user profile. Allows you to create a new configuration from an existing base. The two configurations will then be considered different and can be exported/imported independently.</text>
   <text key="text.location.left">To the left</text>
@@ -2680,6 +2764,7 @@
   <text key="predict4all.default.rule.phonem.confusion.a.ai">Mid-open front unrounded vowel [ɛ]</text>
   <text key="button.open.log.folder">Open the logs folder</text>
   <text key="keylist.content.pane.button.add.key">A key</text>
+  <text key="start.current.user.action.sequence.name">Start the sequence</text>
   <text key="install.message.create.directories">Creating application folders</text>
   <text key="style.use.parent.grid.style">Default Grid Style</text>
   <text key="config.tips.add.long.selection.message">It can be convenient to have global actions in LifeCompanion, without having to program a key to do so, especially when the user selects keys while scrolling. It is possible to trigger actions when the user holds the selection for a certain time.\n\nThis behavior uses LifeCompanion events:\n 1. Add a “Pressure maintained X seconds” event: it is this event which will define the visual/audible feedback of our maintained selection\n 2. Associate the desired actions with this event. It is convenient to add the "Change selection mode activation color" action because the selection outline will change color when the selection is held long enough. You can also add a sound, or a speech synthesis output.\n 3. Add an event “Pressure held for X seconds and released”: it is to this event that our actions to the prolonged selection will be added.\n 4. Associate the extended selection actions: it is common to associate global actions such as "Speak all text" or "Start scrolling again".\n\nNote that it is possible to have the same event several times: for example, you can say all the text at 2 seconds, and start scrolling again at 5 seconds.</text>
@@ -2722,6 +2807,7 @@
   <text key="action.change.voice.and.restore.parameter.name">Change the synthesis voice then return to the old one</text>
   <text key="action.key.image.change.remove.background.threshold">Change background removal tolerance</text>
   <text key="action.enable.upper.case.name">Write in capital letters</text>
+  <text key="key.option.user.action.sequence.list.description">Displays the different sequences available in the configuration. Pressing the box starts the sequence.</text>
   <text key="predict4all.event.clinical.study.log.started.name">Session recording started</text>
   <text key="file.chooser.image.title">Image selection</text>
   <text key="voice.synthesizer.rate">Speed</text>
@@ -2729,6 +2815,7 @@
   <text key="action.move.mouse.se.name">Move down right</text>
   <text key="predict4all.config.correct.accent">Correct forgotten accents</text>
   <text key="action.selectionmode.select.enable.manify.key">Enable/disable enlargement of keys on hover</text>
+  <text key="action.whiteboard.set.pencil.size.description">Changes the pencil size to a selected size</text>
   <text key="action.key.change.text">Editing the key text</text>
   <text key="update.task.check.plugin.update">Checking for extension updates</text>
   <text key="image.webcam.capture.no.camera.or.problem">The camera is not connected or it is inaccessible. Check the connections or that it is not open in another application.</text>
