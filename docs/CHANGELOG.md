@@ -42,6 +42,7 @@
 - Ticket #429 : certaines actions "internes" à LifeCompanion sont maintenant masquées des listes
 - Ticket #346 : les modifications de prononciation de la synthèse vocale fonctionnent maintenant en ignorant les minuscules/majuscules
 - Ticket #432 : la simulation de la touche "Menu contextuel" (clic droit) ne fonctionnait plus
+- Amélioration de la qualité des images avec une rotation
 
 ## 1.6.5 - 31/10/2025
 

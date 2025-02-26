@@ -280,20 +280,23 @@ public class ImageUseComponentPropertyWrapper {
 
     private void requestImageLoadingForComponentWithId(String id, Double width, Double height, Double scale) {
         if (imageVTwo.get() != null) {
-            imageVTwo.get().requestImageLoad(id, (scale != null ? scale : 1.0) * (width != null ? width : getWantedImageWidthValue()), (scale != null ? scale : 1.0) * (height != null ? height : getWantedImageHeightValue()), true, true);
+            boolean invertWidthHeight = rotate.get() % 90 == 0;
+            double computeWidth = width != null ? width : getWantedImageWidthValue();
+            double computedHeight = height != null ? height : getWantedImageHeightValue();
+            imageVTwo.get().requestImageLoad(id, (scale != null ? scale : 1.0) * (invertWidthHeight ? computedHeight : computeWidth), (scale != null ? scale : 1.0) * (invertWidthHeight ? computeWidth : computedHeight), true, true);
         }
     }
 
     public void addExternalLoadingRequest(String id) {
-        addExternalLoadingRequest(id,null,null,null);
+        addExternalLoadingRequest(id, null, null, null);
     }
 
     public void addExternalLoadingRequest(String id, double scale) {
-        addExternalLoadingRequest(id,null,null,scale);
+        addExternalLoadingRequest(id, null, null, scale);
     }
 
     public void addExternalLoadingRequest(String id, double width, double height) {
-        addExternalLoadingRequest(id,width,height,null);
+        addExternalLoadingRequest(id, width, height, null);
     }
 
     public void addExternalLoadingRequest(String id, Double width, Double height, Double scale) {
