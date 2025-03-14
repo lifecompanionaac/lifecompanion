@@ -38,7 +38,7 @@ public class CurStaUseAction extends BaseUseActionImpl<GridPartKeyComponentI> {
     @Override
     public void eventEnds(UseActionEvent useActionEvent) {
         GridPartKeyComponentI key = parentComponentProperty().get();
-        if (key != null && AppModeController.INSTANCE.isUseMode()) {
+        if (key != null && AppModeController.INSTANCE.isUseMode() && AAC4AllWp2Controller.INSTANCE.curStaPlaying) {
             if (StringUtils.isEquals(lastText, key.textContentProperty().get())) {
                 AAC4AllWp2Controller.INSTANCE.shiftCurSta();
             }

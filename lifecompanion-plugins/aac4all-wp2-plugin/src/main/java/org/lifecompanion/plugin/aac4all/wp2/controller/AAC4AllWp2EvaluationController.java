@@ -565,6 +565,7 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
 
             // TODO: go to currentKeyboardEvaluation
             FXThreadUtils.runOnFXThread(() -> {
+                AAC4AllWp2Controller.INSTANCE.curStaPlaying=true;
                 if (this.currentKeyboardType != null) {
                     SelectionModeController.INSTANCE.changeUseModeSelectionModeTo(this.currentKeyboardType.getSelectionMode());
                 }
@@ -585,7 +586,7 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
             timer.schedule(new TimerTask() {
                 @Override
                 public void run() {
-
+                    AAC4AllWp2Controller.INSTANCE.curStaPlaying=false;
                     stopLogListener();
 
 

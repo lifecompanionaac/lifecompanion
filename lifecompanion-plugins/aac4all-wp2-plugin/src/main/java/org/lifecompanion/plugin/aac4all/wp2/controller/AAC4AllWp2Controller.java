@@ -45,6 +45,8 @@ public enum AAC4AllWp2Controller implements ModeListenerI {
 
     private LCConfigurationI configuration;
 
+    public boolean curStaPlaying;
+
     @Override
     public void modeStart(LCConfigurationI configuration) {
         this.configuration = configuration;
