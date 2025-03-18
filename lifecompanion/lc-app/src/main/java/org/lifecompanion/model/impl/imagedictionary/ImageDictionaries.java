@@ -246,6 +246,16 @@ public enum ImageDictionaries implements LCStateListener, ModeListenerI {
         return searchImage(rawSearchString, StringUtils.isBlank(rawSearchString), ConfigurationComponentUtils.SIMILARITY_CONTAINS / 2.0);
     }
 
+    public Pair<ImageElementI, Double> getFirstImageToMatch(String rawSearchString, ImageDictionaryI dictionary) {
+        String searchFull = StringUtils.stripToEmpty(rawSearchString).toLowerCase();
+        return dictionary.getImages()
+                .parallelStream()
+                .map(e -> new Pair<>(e, getSimilarityScore(e.getKeywords(), searchFull)))
+                .sorted(SCORE_MAP_COMPARATOR)
+                .limit(1)
+                .findFirst().orElse(null);
+    }
+
     public List<Pair<ImageDictionaryI, List<List<ImageElementI>>>> searchImage(String rawSearchString, boolean displayAll, double minScore, Predicate<? super ImageDictionary> imageDictionaryFilter) {
         long start = System.currentTimeMillis();
         List<Pair<ImageDictionaryI, List<List<ImageElementI>>>> result = new ArrayList<>();
