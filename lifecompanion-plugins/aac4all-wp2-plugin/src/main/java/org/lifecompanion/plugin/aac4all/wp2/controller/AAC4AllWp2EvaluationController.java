@@ -565,7 +565,8 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
 
             // TODO: go to currentKeyboardEvaluation
             FXThreadUtils.runOnFXThread(() -> {
-                AAC4AllWp2Controller.INSTANCE.curStaPlaying=true;
+                LOGGER.info("curStaPlaying {} to true", AAC4AllWp2Controller.INSTANCE.curStaPlaying);
+                AAC4AllWp2Controller.INSTANCE.curStaPlaying = true;
                 if (this.currentKeyboardType != null) {
                     SelectionModeController.INSTANCE.changeUseModeSelectionModeTo(this.currentKeyboardType.getSelectionMode());
                 }
@@ -586,15 +587,17 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
             timer.schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    AAC4AllWp2Controller.INSTANCE.curStaPlaying=false;
+                    LOGGER.info("curStaPlaying {} to false", AAC4AllWp2Controller.INSTANCE.curStaPlaying);
+                    AAC4AllWp2Controller.INSTANCE.curStaPlaying = false;
                     stopLogListener();
 
-
                     // go to EVA interface
-                    if (configuration != null) {
-                        SelectionModeController.INSTANCE.changeUseModeSelectionModeTo(RowColumnScanSelectionMode.class);
-                    }
-                    SelectionModeController.INSTANCE.goToGridPart(keyboardEVA);
+                    FXThreadUtils.runOnFXThread(() -> {
+                        if (configuration != null) {
+                            SelectionModeController.INSTANCE.changeUseModeSelectionModeTo(RowColumnScanSelectionMode.class);
+                        }
+                        SelectionModeController.INSTANCE.goToGridPart(keyboardEVA);
+                    });
                     //stop sentence display and clean editor
                     StopDislaySentence();
                     if (timer != null) {
