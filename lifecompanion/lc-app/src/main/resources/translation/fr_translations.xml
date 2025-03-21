@@ -3974,4 +3974,5 @@
     <text key="user.config.enable.previous.configuration.shortcut">Activer le raccourci "Configuration précédente"</text>
     <text key="tooltip.user.config.enable.previous.configuration.shortcut">Si activé, lorsque l'utilisateur change de configuration en mode utilisation, affiche alors un raccourci en haut à gauche permettant de retourner à la configuration précédente.</text>
     <text key="pdf.export.small.footer.label">Créé avec LifeCompanion ({})</text>
+    <text key="button.disable.speak.key.leaves">Désactiver "Prononcer" sur les cases de listes de cases</text>
 </texts>

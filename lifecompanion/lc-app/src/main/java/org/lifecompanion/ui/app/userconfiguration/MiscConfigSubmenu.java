@@ -86,7 +86,7 @@ public class MiscConfigSubmenu extends ScrollPane implements LCViewInitHelper, U
      * Button to open folders
      */
     private Button buttonOpenRootFolder, buttonOpenCurrentProfileFolder, buttonOpenCurrentConfigFolder, buttonExecuteGC, buttonOpenConfigCleanXml, buttonDetectKeylistDuplicates, buttonSetKeylistNodesShape,
-            buttonGenerateTechDemoConfiguration, buttonGenerateRandomConfiguration, buttonImportJsonFile, buttonGeneratePdf;
+            buttonGenerateTechDemoConfiguration, buttonGenerateRandomConfiguration, buttonImportJsonFile, buttonGeneratePdf, buttonDisableSpeakOnKeyLeaves;
 
     private Label labelMemoryInfo;
 
@@ -157,6 +157,7 @@ public class MiscConfigSubmenu extends ScrollPane implements LCViewInitHelper, U
         this.buttonDetectKeylistDuplicates = this.createButton("button.detect.keylist.duplicates");
         this.buttonSetKeylistNodesShape = this.createButton("button.set.keylist.node.shape");
         this.buttonImportJsonFile = this.createButton("button.import.json.file.keylist");
+        this.buttonDisableSpeakOnKeyLeaves = this.createButton("button.disable.speak.key.leaves");
 
         // Developers : to test your feature, create and add your nodes here and make sure "org.lifecompanion.debug.dev.env" property is enabled
         if (GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.PROP_DEV_MODE)) {
@@ -166,7 +167,8 @@ public class MiscConfigSubmenu extends ScrollPane implements LCViewInitHelper, U
                             buttonDetectKeylistDuplicates,
                             buttonGenerateRandomConfiguration,
                             buttonSetKeylistNodesShape,
-                            buttonImportJsonFile
+                            buttonImportJsonFile,
+                            buttonDisableSpeakOnKeyLeaves
                     );
         }
     }
@@ -226,6 +228,9 @@ public class MiscConfigSubmenu extends ScrollPane implements LCViewInitHelper, U
         this.buttonSetKeylistNodesShape.setOnAction(e -> {
             setKeylistShapes();
         });
+        this.buttonDisableSpeakOnKeyLeaves.setOnAction(e -> {
+            disableSpeakOnKeyLeaves();
+        });
         this.buttonImportJsonFile.setOnAction(e -> {
             File jsonFile = LCFileChoosers.getOtherFileChooser(Translation.getText("keylist.json.selector.title"),
                     new FileChooser.ExtensionFilter("JSON", List.of("*.json")),
@@ -248,6 +253,19 @@ public class MiscConfigSubmenu extends ScrollPane implements LCViewInitHelper, U
         this.buttonGeneratePdf.setOnAction(e -> {
             ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.ExportEditActionsToPdfAction(buttonGeneratePdf));
         });
+    }
+
+    private void disableSpeakOnKeyLeaves() {
+        final LCConfigurationI configuration = AppModeController.INSTANCE.getEditModeContext()
+                .getConfiguration();
+        if (configuration != null) {
+            final KeyListNodeI keyListNodes = configuration.rootKeyListNodeProperty().get();
+            keyListNodes.traverseTreeToBottom(n -> {
+                if (n.isLeafNode()) {
+                    n.enableSpeakProperty().set(false);
+                }
+            });
+        }
     }
 
     private void setKeylistShapes() {
