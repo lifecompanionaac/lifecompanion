@@ -121,7 +121,7 @@ public enum AAC4AllWp2Controller implements ModeListenerI {
         curStaChangeListener = (obs, ov, nv) -> {
             try {
                 //HashSet<Character> acceptedCharact = new HashSet<>(curStaCharacters.chars().mapToObj(c -> (char) c).collect(Collectors.toSet()));
-                if (this.configuration != null) {
+                if (this.configuration != null && curStaPlaying==true ) {
                     this.configuration.getAllComponent()
                             .values()
                             .stream()
