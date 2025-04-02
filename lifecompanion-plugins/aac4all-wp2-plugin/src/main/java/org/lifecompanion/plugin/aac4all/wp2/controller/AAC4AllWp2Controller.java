@@ -65,7 +65,7 @@ public enum AAC4AllWp2Controller implements ModeListenerI {
     }
 
     // TODO : replace with content from char prediction
-    private String curStaCharacters = "abcdefghijklmnopqrstuvwxyzéèàê' ";
+    private String curStaCharacters = "abcdefghijklmnopqrstuvwxyzéèàêç' ";
     private List<PredictResult> predict = transformResult(List.of(' ',
             'a',
             'à',
