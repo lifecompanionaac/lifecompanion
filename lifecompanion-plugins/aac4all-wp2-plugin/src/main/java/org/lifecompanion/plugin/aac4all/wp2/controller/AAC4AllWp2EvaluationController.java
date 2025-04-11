@@ -456,7 +456,6 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
         currentKeyboardEvaluation.setFatigueScore(score);
         recordLogs();
     }
-
     public void setEvaFatigueInitScore(int score) {
         currentKeyboardEvaluation.setFatigueInitScore(score);
         recordLogs();
@@ -511,7 +510,8 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
 
     public void stopLogListener() {
         synchronized (logLock) {
-            currentSentenceEvaluation.setTextEntry(WritingStateController.INSTANCE.getLastSentence());
+            if (currentSentenceEvaluation != null)
+                currentSentenceEvaluation.setTextEntry(WritingStateController.INSTANCE.getLastSentence());
         }
         SelectionModeController.INSTANCE.currentOverPartProperty().removeListener(highlightKeyDyLin);
         UseActionController.INSTANCE.removeActionExecutionListener(validationKeyDyLin);
@@ -615,6 +615,7 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
 
         if (currentSentenceEvaluation == null) {
             WritingStateController.INSTANCE.removeAll(WritingEventSource.USER_ACTIONS);
+
             randomIndexSentence = new Random().nextInt(currentPhraseSet.size());
             currentSentence = currentPhraseSet.get(randomIndexSentence);
             currentPhraseSet.remove(currentPhraseSet.get(randomIndexSentence));
@@ -626,19 +627,24 @@ public enum AAC4AllWp2EvaluationController implements ModeListenerI {
         } else {
             recordLogs();
             synchronized (logLock) {
-                currentSentenceEvaluation.setTextEntry(WritingStateController.INSTANCE.getLastSentence());
+                currentSentenceEvaluation.setTextEntry(WritingStateController.INSTANCE.getLastSentence());// la saisie de l'utilisateur
             }
+
+            synchronized (logLock) {
+                currentSentenceEvaluation.setSentence(currentSentence); //
+            }
+
+            WritingStateController.INSTANCE.removeAll(WritingEventSource.USER_ACTIONS);
+
             randomIndexSentence = new Random().nextInt(currentPhraseSet.size());
             currentSentence = currentPhraseSet.get(randomIndexSentence);
             currentPhraseSet.remove(currentPhraseSet.get(randomIndexSentence));
-            UseVariableController.INSTANCE.requestVariablesUpdate();
             synchronized (logLock) {
                 this.currentSentenceEvaluation = currentKeyboardEvaluation.addAndGetSentenceEvaluation(currentSentence, new Date());
             }
-            WritingStateController.INSTANCE.removeAll(WritingEventSource.USER_ACTIONS);
-            synchronized (logLock) {
-                currentSentenceEvaluation.setSentence(currentSentence);
-            }
+            UseVariableController.INSTANCE.requestVariablesUpdate();
+
+
         }
     }
 

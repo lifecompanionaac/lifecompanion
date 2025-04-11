@@ -53,7 +53,7 @@ public enum AAC4AllWp2Controller implements ModeListenerI {
         CustomCharPredictionController.INSTANCE.forcePredictionLoad();
         SelectionModeController.INSTANCE.addScannedPartChangedListeners(this.scannedPartChangedListener);
         CustomCharPredictionController.INSTANCE.addPredictorStartedListener(predictor -> {
-            initRelocG(configuration);
+            initReolocG(configuration);
             initCurSta(configuration);
         });
         capitalizeNextChangeListener = (obs, ov, nv) -> {
@@ -247,7 +247,7 @@ public enum AAC4AllWp2Controller implements ModeListenerI {
     private Map<AAC4AllKeyOptionReolocG, String> previousLineG;
     private ChangeListener<String> relocGChangeListener;
 
-    private void initRelocG(LCConfigurationI configuration) {
+    private void initReolocG(LCConfigurationI configuration) {
         relocGChangeListener = (obs, ov, nv) -> {
             FXThreadUtils.runOnFXThread(() -> {
                 try {
