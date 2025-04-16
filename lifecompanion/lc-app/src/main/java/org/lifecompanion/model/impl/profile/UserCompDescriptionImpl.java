@@ -178,7 +178,7 @@ public class UserCompDescriptionImpl implements UserCompDescriptionI {
         this.imagePath = new File(context + File.separator + LCConstant.USERCOMP_SCREENSHOT_NAME).getAbsolutePath();
 
         try {
-            IOContextI ioContext = new IOContext(context);
+            IOContextI ioContext = new IOContext(context, false);
             ioContext.setFallbackOnDefaultInstanceOnFail(false);
             Element displayableCompElement = UserCompImpl.getElementFromRootXml(XMLHelper.readXml(new File(context + File.separator + LCConstant.USER_COMP_XML_NAME)));
             DisplayableComponentI componentToLoad = (DisplayableComponentI) ConfigurationComponentIOHelper.create(displayableCompElement, ioContext, null).getRight();

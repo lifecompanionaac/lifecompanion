@@ -18,6 +18,7 @@
  */
 package org.lifecompanion.model.impl.io;
 
+import org.lifecompanion.model.api.configurationcomponent.ImageUseComponentI;
 import org.lifecompanion.model.api.configurationcomponent.VideoElementI;
 import org.lifecompanion.model.api.imagedictionary.ImageElementI;
 import org.lifecompanion.model.api.io.IOContextI;
@@ -39,6 +40,8 @@ public class IOContext implements IOContextI {
 
     private final Set<String> pluginIdDependencies;
 
+    private final Map<ImageElementI, List<ImageUseComponentI>> imagesV3;
+
     /**
      * Resources associated to this configuration
      */
@@ -55,14 +58,17 @@ public class IOContext implements IOContextI {
 
     private boolean fallbackOnDefaultInstanceOnFail = true;
 
+    private final boolean mobileVersion;
 
-    public IOContext(final File directoryP) {
-        imagesV2 = new ArrayList<>();
+    public IOContext(final File directoryP, boolean mobileVersion) {
+        this.imagesV2 = new ArrayList<>();
         this.resources = new HashMap<>();
-        backwardImageCompatibilityIdsMap = new HashMap<>();
+        this.backwardImageCompatibilityIdsMap = new HashMap<>();
         this.pluginIdDependencies = new HashSet<>();
         this.videos = new HashMap<>();
+        this.imagesV3 = new HashMap<>();
         this.directory = directoryP;
+        this.mobileVersion = mobileVersion;
     }
 
     // Class part : "Interface implementation"
@@ -83,8 +89,26 @@ public class IOContext implements IOContextI {
     }
 
     @Override
+    public Map<ImageElementI, List<ImageUseComponentI>> getImages() {
+        return imagesV3;
+    }
+
+    @Override
+    public void addImage(ImageElementI imageElement, ImageUseComponentI imageUseComponent) {
+        List<ImageUseComponentI> imageUseComponents = imagesV3.computeIfAbsent(imageElement, k -> new ArrayList<>());
+        if (imageUseComponent != null) {
+            imageUseComponents.add(imageUseComponent);
+        }
+    }
+
+    @Override
     public Map<String, String> getBackwardImageCompatibilityIdsMap() {
         return backwardImageCompatibilityIdsMap;
+    }
+
+    @Override
+    public boolean isMobileVersion() {
+        return mobileVersion;
     }
 
     @Override

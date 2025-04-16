@@ -283,7 +283,12 @@ public class ImageUseComponentPropertyWrapper {
             boolean invertWidthHeight = rotate.get() % 90 == 0;
             double computeWidth = width != null ? width : getWantedImageWidthValue();
             double computedHeight = height != null ? height : getWantedImageHeightValue();
-            imageVTwo.get().requestImageLoad(id, (scale != null ? scale : 1.0) * (invertWidthHeight ? computedHeight : computeWidth), (scale != null ? scale : 1.0) * (invertWidthHeight ? computeWidth : computedHeight), true, true);
+            imageVTwo.get()
+                    .requestImageLoad(id,
+                            (scale != null ? scale : 1.0) * (invertWidthHeight ? computedHeight : computeWidth),
+                            (scale != null ? scale : 1.0) * (invertWidthHeight ? computeWidth : computedHeight),
+                            true,
+                            true);
         }
     }
 
@@ -458,7 +463,7 @@ public class ImageUseComponentPropertyWrapper {
             }
 
             //Image saving : just set the id and delegate to root action the "real" saving
-            serializeImageUse(this.imageVTwo.get(), element, contextP);
+            serializeImageUse(this.imageVTwo.get(), this.imageUseComponent, element, contextP);
         }
     }
 
@@ -478,14 +483,18 @@ public class ImageUseComponentPropertyWrapper {
 
     // Class part : "Public API : image user"
     //========================================================================
-    public static void serializeImageUse(ImageElementI image, final Element element, final IOContextI contextP) {
-        contextP.getImagesToSaveV2().add(image);
+    public static void serializeImageUse(ImageElementI image, ImageUseComponentI imageUseComponent, final Element element, final IOContextI contextP) {
+        contextP.addImage(image, imageUseComponent);
         if (image.shouldSaveImageId()) {
             XMLUtils.write(image.getId(), ImageUseComponentPropertyWrapper.ATB_IMAGE_ID2, element);
             XMLUtils.write(image.getName(), ImageUseComponentPropertyWrapper.ATB_IMAGE_NAME, element);
         } else {
             XMLUtils.write("null", ImageUseComponentPropertyWrapper.ATB_IMAGE_ID2, element);
         }
+    }
+
+    public static void serializeImageUse(ImageElementI image, final Element element, final IOContextI contextP) {
+        serializeImageUse(image, null, element, contextP);
     }
 
     public static ImageElementI deserializeImageUseV2(final Element element, IOContextI contextP) {

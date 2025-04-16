@@ -25,7 +25,12 @@ import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
+import org.lifecompanion.model.impl.configurationcomponent.ImageUseComponentPropertyWrapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -35,6 +40,7 @@ import java.util.Queue;
 import static org.lifecompanion.util.LangUtils.isEgalsTo;
 
 public class ImageUtils {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ImageUtils.class);
 
     // IMAGE TRANSFORM
     //========================================================================
@@ -79,18 +85,18 @@ public class ImageUtils {
 
     /**
      * Removes the background from a given image using an approach based on the colour threshold and the BFS algorithm.
-     *
+     * <p>
      * This method works in several stages:
      * 1. it first determines the background colour by analysing the colours present at the edges of the image.
      * 2. It initializes a queue with the edge points of the image that have the same colour as the background.
      * 3. It then enters a while loop that continues until the queue is empty.
      * In this loop, it removes a point from the queue, examines its neighbours (points to the left, right, top and bottom), and if a neighbour has the same colour as the background, it is added to the queue.
      * 4 Finally, it scans all the points in the image and makes transparent those that have been visited (i.e. those that are part of the background), leaving the image without a background.
-     *
+     * <p>
      * This approach is effective for images with a background of a uniform colour that is distinct from the main object in the image.
      *
      * @param inputImage the input image
-     * @param threshold the threshold to detect the color to replace
+     * @param threshold  the threshold to detect the color to replace
      * @author Oscar PAVOINE
      */
     // TODO : optimize performance and object creation
@@ -143,7 +149,9 @@ public class ImageUtils {
                     currentR = currentColour == null ? 255 : (int) (currentColour.getRed() * 255);
                     currentG = currentColour == null ? 255 : (int) (currentColour.getGreen() * 255);
                     currentB = currentColour == null ? 255 : (int) (currentColour.getBlue() * 255);
-                    if (isEgalsTo(backgroundO, currentO, threshold) && isEgalsTo(backgroundR, currentR, threshold) && isEgalsTo(backgroundG, currentG, threshold) && isEgalsTo(backgroundB, currentB, threshold)) {
+                    if (isEgalsTo(backgroundO, currentO, threshold) && isEgalsTo(backgroundR, currentR, threshold) && isEgalsTo(backgroundG, currentG, threshold) && isEgalsTo(backgroundB,
+                            currentB,
+                            threshold)) {
                         queueNeighbours.add(new Point(newX, newY));
                         pointVisited[newX][newY] = true;
                         writer.setColor(newX, newY, Color.TRANSPARENT);
@@ -151,7 +159,7 @@ public class ImageUtils {
                         Color originalColor = reader.getColor(newX, newY);
                         Color borderColor = Color.color(originalColor.getRed(), originalColor.getGreen(), originalColor.getBlue(), 0.3);
                         InvalidVisitedPoint[newX][newY] = true;
-                        writer.setColor(newX, newY,borderColor);
+                        writer.setColor(newX, newY, borderColor);
                     }
                 }
             }
@@ -163,7 +171,9 @@ public class ImageUtils {
                     currentR = currentColour == null ? 255 : (int) (currentColour.getRed() * 255);
                     currentG = currentColour == null ? 255 : (int) (currentColour.getGreen() * 255);
                     currentB = currentColour == null ? 255 : (int) (currentColour.getBlue() * 255);
-                    if (!pointVisited[edgePoint.x][edgePoint.y] && isEgalsTo(backgroundO, currentO, threshold) && isEgalsTo(backgroundR, currentR, threshold) && isEgalsTo(backgroundG, currentG, threshold) && isEgalsTo(backgroundB, currentB, threshold)) {
+                    if (!pointVisited[edgePoint.x][edgePoint.y] && isEgalsTo(backgroundO, currentO, threshold) && isEgalsTo(backgroundR, currentR, threshold) && isEgalsTo(backgroundG,
+                            currentG,
+                            threshold) && isEgalsTo(backgroundB, currentB, threshold)) {
                         queueNeighbours.add(edgePoint);
                         pointVisited[edgePoint.x][edgePoint.y] = true;
                         writer.setColor(edgePoint.x, edgePoint.y, Color.TRANSPARENT);
@@ -173,7 +183,7 @@ public class ImageUtils {
             }
         }
 
-         for (int y = 0; y < imgHeight; y++) {
+        for (int y = 0; y < imgHeight; y++) {
             for (int x = 0; x < imgWidth; x++) {
                 if (!pointVisited[x][y] && !InvalidVisitedPoint[x][y]) {
                     writer.setColor(x, y, reader.getColor(x, y));
@@ -193,7 +203,7 @@ public class ImageUtils {
         }
     }
 
-    private  static Color findBackgroundColor(PixelReader reader, double imgWidth, double imgHeight) {
+    private static Color findBackgroundColor(PixelReader reader, double imgWidth, double imgHeight) {
         int edgeWidth = (int) (imgWidth * 0.05);
         int edgeHeight = (int) (imgHeight * 0.05);
 
@@ -218,7 +228,7 @@ public class ImageUtils {
         return backgroundColor;
     }
 
-    private static Point findPixelStart( int wO, int wR, int wG, int wB, PixelReader reader, int threshold, int imgWidth, int imgHeight) {
+    private static Point findPixelStart(int wO, int wR, int wG, int wB, PixelReader reader, int threshold, int imgWidth, int imgHeight) {
         boolean start = false;
         int retX = 0;
         int retY = 0;
@@ -279,5 +289,46 @@ public class ImageUtils {
         } else {
             return null;
         }
+    }
+
+    public static BufferedImage cropImage(
+            BufferedImage image,
+            double viewportXPercent,
+            double viewportYPercent,
+            double viewportWidthPercent,
+            double viewportHeightPercent
+    ) {
+
+        int imgWidth = image.getWidth();
+        int imgHeight = image.getHeight();
+
+        int targetWidth = (int) Math.round(viewportWidthPercent * imgWidth);
+        int targetHeight = (int) Math.round(viewportHeightPercent * imgHeight);
+        int x = (int) Math.round(viewportXPercent * imgWidth);
+        int y = (int) Math.round(viewportYPercent * imgHeight);
+
+        BufferedImage result = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = result.createGraphics();
+
+        g.setComposite(AlphaComposite.Src);
+
+        int srcX = Math.max(0, x);
+        int srcY = Math.max(0, y);
+        int srcWidth = Math.min(imgWidth - srcX, targetWidth - Math.max(0, -x));
+        int srcHeight = Math.min(imgHeight - srcY, targetHeight - Math.max(0, -y));
+
+        int destX = Math.max(0, -x);
+        int destY = Math.max(0, -y);
+
+        if (srcWidth >= 0 && srcHeight >= 0) {
+            g.drawImage(
+                    image,
+                    destX, destY, destX + srcWidth, destY + srcHeight,
+                    srcX, srcY, srcX + srcWidth, srcY + srcHeight,
+                    null
+            );
+        }
+        g.dispose();
+        return result;
     }
 }

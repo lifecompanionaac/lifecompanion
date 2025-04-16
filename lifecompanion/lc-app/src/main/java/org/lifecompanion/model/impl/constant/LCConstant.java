@@ -41,6 +41,7 @@ public class LCConstant {
     public final static String LC_BIG_ICON_ONLY_PATH = "lifecompanion_icon_128px.png";
     public final static String LC_COPYRIGHT_ICON_PATH = "lifecompanion_copyright_300.png";
     public final static String CONFIG_FILE_EXTENSION = "lcc";
+    public final static String MOBILE_CONFIG_FILE_EXTENSION = "lccm";
     public final static String PROFILE_FILE_EXTENSION = "lcp";
     public final static String KEYLIST_FILE_EXTENSION = "lckl";
 

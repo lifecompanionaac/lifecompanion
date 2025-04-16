@@ -74,7 +74,7 @@ public class CopyUtils {
      */
     public static <T extends DuplicableComponentI & XMLSerializable<IOContextI>> DuplicableComponentI createDeepCopyViaXMLSerialization(
             final T source, final boolean changeID, BiConsumer<Element, IOContextI> serializeTransformer) {
-        IOContext context = new IOContext(IOUtils.getTempDir("componentcopy"));
+        IOContext context = new IOContext(IOUtils.getTempDir("componentcopy"),false);
         context.setFallbackOnDefaultInstanceOnFail(false);
         //Serialize element to copy
         Element serialized = source.serialize(context);

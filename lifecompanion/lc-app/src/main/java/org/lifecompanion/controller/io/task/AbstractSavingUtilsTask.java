@@ -18,13 +18,19 @@
  */
 package org.lifecompanion.controller.io.task;
 
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.image.Image;
 import org.jdom2.Element;
 import org.lifecompanion.controller.io.XMLHelper;
+import org.lifecompanion.framework.commons.utils.lang.CollectionUtils;
+import org.lifecompanion.model.api.configurationcomponent.ImageUseComponentI;
 import org.lifecompanion.model.api.configurationcomponent.VideoElementI;
 import org.lifecompanion.model.api.imagedictionary.ImageElementI;
 import org.lifecompanion.model.api.io.IOContextI;
 import org.lifecompanion.model.api.io.IOResourceI;
 import org.lifecompanion.model.api.io.XMLSerializable;
+import org.lifecompanion.model.impl.imagedictionary.StaticImageElement;
+import org.lifecompanion.util.javafx.ImageUtils;
 import org.lifecompanion.util.model.LCTask;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.io.IOContext;
@@ -33,10 +39,9 @@ import org.lifecompanion.framework.commons.utils.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -56,11 +61,11 @@ public abstract class AbstractSavingUtilsTask<T> extends LCTask<T> {
         super(title);
     }
 
-    protected void saveXmlSerializable(final XMLSerializable<IOContextI> element, final File directory, final String xmlName) throws Exception {
+    protected void saveXmlSerializable(final XMLSerializable<IOContextI> element, boolean mobileVersion, final File directory, final String xmlName) throws Exception {
         File file = new File(directory.getPath() + File.separator + xmlName);
         IOUtils.createParentDirectoryIfNeeded(file);
         //Save the XML
-        IOContext context = new IOContext(directory);
+        IOContext context = new IOContext(directory, mobileVersion);
         LOGGER.info("XML tree created from the element.");
         this.updateProgress(1, 6);
         XMLHelper.saveXMLSerializable(file, element, context);
@@ -76,20 +81,37 @@ public abstract class AbstractSavingUtilsTask<T> extends LCTask<T> {
         this.updateProgress(5, 6);
     }
 
+    protected void saveXmlSerializable(final XMLSerializable<IOContextI> element, final File directory, final String xmlName) throws Exception {
+        saveXmlSerializable(element, true, directory, xmlName);//FIXME : set to true/false
+    }
+
     private void saveImages(final File directory, IOContext context) {
         //Images saving
         File imageDirectory = new File(directory.getPath() + File.separator + LCConstant.CONFIGURATION_IMAGE_DIRECTORY + File.separator);
         if (!imageDirectory.exists()) {
             imageDirectory.mkdirs();
         }
-        List<ImageElementI> images = context.getImagesToSaveV2();
+        Map<ImageElementI, List<ImageUseComponentI>> images = context.getImages();
         LOGGER.info("Will save {} images for the element", images.size());
         long start = System.currentTimeMillis();
         HashSet<String> imageIds = new HashSet<>();
-        for (ImageElementI image : images) {
-            if (image.shouldSaveImage()) {
-                this.saveImage(imageDirectory, context, image);
-                imageIds.add(image.getId());
+        for (Map.Entry<ImageElementI, List<ImageUseComponentI>> imageEntry : images.entrySet()) {
+            ImageElementI imageElement = imageEntry.getKey();
+            if (imageElement.shouldSaveImage() || (context.isMobileVersion() && !(imageElement instanceof StaticImageElement))) {
+                List<ImageUseComponentI> imageUseComponents = imageEntry.getValue();
+                if (CollectionUtils.isEmpty(imageUseComponents)) {
+                    String imageId = this.saveImage(imageDirectory, context, imageElement, null);
+                    if (imageId != null) {
+                        imageIds.add(imageId);
+                    }
+                } else {
+                    for (ImageUseComponentI imageUseComponent : imageUseComponents) {
+                        String imageId = this.saveImage(imageDirectory, context, imageElement, imageUseComponent);
+                        if (imageId != null) {
+                            imageIds.add(imageId);
+                        }
+                    }
+                }
             }
         }
         //Clean images
@@ -122,7 +144,45 @@ public abstract class AbstractSavingUtilsTask<T> extends LCTask<T> {
      * @param context        the saving context
      * @param image          the image to save
      */
-    private void saveImage(final File imageDirectory, final IOContextI context, final ImageElementI image) {
+    private String saveImage(final File imageDirectory, final IOContextI context, final ImageElementI image, ImageUseComponentI imageUseComponent) {
+        // Image should be exported with modification
+        if (imageUseComponent != null && (imageUseComponent.enableRemoveBackgroundProperty().get() ||
+                imageUseComponent.enableReplaceColorProperty().get() ||
+                imageUseComponent.useViewPortProperty().get())) {
+            // Load
+            try (FileInputStream fisOriginalImage = new FileInputStream(image.getRealFilePath())) {
+                Image imageFx = new Image(fisOriginalImage);
+
+                // Modification
+                if (imageUseComponent.enableRemoveBackgroundProperty().get()) {
+                    imageFx = ImageUtils.removeBackground(imageFx, imageUseComponent.removeBackgroundThresholdProperty().get());
+                }
+                if (imageUseComponent.enableReplaceColorProperty().get()) {
+                    imageFx = ImageUtils.replaceColorInImage(imageFx, imageUseComponent.colorToReplaceProperty().get(), imageUseComponent.replacingColorProperty().get(),
+                            imageUseComponent.replaceColorThresholdProperty().get());
+                }
+                BufferedImage buffImage = SwingFXUtils.fromFXImage(imageFx, null);
+                if (imageUseComponent.useViewPortProperty().get()) {
+                    buffImage = ImageUtils.cropImage(buffImage,
+                            imageUseComponent.viewportXPercentProperty().get(),
+                            imageUseComponent.viewportYPercentProperty().get(),
+                            imageUseComponent.viewportWidthPercentProperty().get(),
+                            imageUseComponent.viewportHeightPercentProperty().get());
+                }
+
+                // Save
+                String modifiedImageId = image.getId() + "_" + imageUseComponent.getID();
+                File imageFile = new File(imageDirectory.getPath() + File.separator + modifiedImageId + ".png");
+                LOGGER.info("Image {} will be saved {}", modifiedImageId, imageFile);
+                boolean write = ImageIO.write(buffImage, "png", imageFile);
+                LOGGER.info("Success : {}", write);
+
+                return modifiedImageId;
+            } catch (Exception e) {
+                LOGGER.warn("The modified image {} was not save!", image.getId(), e);
+            }
+        }
+        // Image modification failed or is not needed
         File imageFile = new File(imageDirectory.getPath() + File.separator + image.getId() + "." + image.getExtension());
         if (!imageFile.exists()) {
             try {
@@ -136,13 +196,14 @@ public abstract class AbstractSavingUtilsTask<T> extends LCTask<T> {
                 try (FileOutputStream fos = new FileOutputStream(imageFile)) {
                     try (FileInputStream fis = new FileInputStream(image.getRealFilePath())) {
                         IOUtils.copyStream(fis, fos);
+                        return image.getId();
                     }
                 }
             } catch (Exception e) {
                 LOGGER.warn("The given image {} was not save!", image.getId(), e);
             }
         }
-
+        return image.getId();
     }
 
     private void saveVideos(final File directory, IOContext context) {

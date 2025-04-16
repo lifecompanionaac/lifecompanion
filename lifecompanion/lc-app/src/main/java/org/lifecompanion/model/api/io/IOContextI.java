@@ -18,8 +18,10 @@
  */
 package org.lifecompanion.model.api.io;
 
+import org.lifecompanion.model.api.configurationcomponent.ImageUseComponentI;
 import org.lifecompanion.model.api.configurationcomponent.VideoElementI;
 import org.lifecompanion.model.api.imagedictionary.ImageElementI;
+import org.lifecompanion.model.impl.configurationcomponent.ImageUseComponentPropertyWrapper;
 import org.slf4j.Marker;
 
 import java.io.File;
@@ -40,6 +42,8 @@ public interface IOContextI {
     String NODE_USE_INFO = "UseInformation";
     String ATB_ID = "id";
 
+    boolean isMobileVersion();
+
     // PLUGIN
     //========================================================================
     Set<String> getAutomaticPluginDependencyIds();
@@ -51,6 +55,7 @@ public interface IOContextI {
 
     // Class part : "Styles"
     //========================================================================
+
     /**
      * Directory where associated XML file is saved/loaded.<br>
      * <strong>This shouldn't be used to load/save images or resources</strong> : use {@link #getImagesToSave()} or {@link #addResourceToSave(String, String, File)} instead
@@ -62,9 +67,11 @@ public interface IOContextI {
 
     // Class part : "Resources"
     //========================================================================
-    List<ImageElementI> getImagesToSaveV2();
+    Map<ImageElementI, List<ImageUseComponentI>> getImages();
 
-    Map<String,VideoElementI> getVideos();
+    void addImage(ImageElementI imageElement, ImageUseComponentI imageUseComponent);
+
+    Map<String, VideoElementI> getVideos();
 
     /**
      * To add a resource that should be saved by LifeCompanion<br>
@@ -87,6 +94,13 @@ public interface IOContextI {
 
     // RETRO COMPATIBILITY
     //========================================================================
+
+    /**
+     * @deprecated should now use {@link #getImages()}
+     */
+    @Deprecated
+    List<ImageElementI> getImagesToSaveV2();
+
     Map<String, String> getBackwardImageCompatibilityIdsMap();
     //========================================================================
 }

@@ -102,7 +102,7 @@ public abstract class AbstractLoadUtilsTask<T> extends LCTask<T> {
         updateProgress(progress, 0.0, 3.0);
         AbstractLoadUtilsTask.LOGGER.info("A element will be loaded from {}", directory);
         //Load images
-        IOContext ioContext = new IOContext(directory);
+        IOContext ioContext = new IOContext(directory,false);
         File imageDirectory = new File(directory.getPath() + File.separator + LCConstant.CONFIGURATION_IMAGE_DIRECTORY + File.separator);
         File[] imagePaths = imageDirectory.listFiles();
         if (imagePaths != null) {
