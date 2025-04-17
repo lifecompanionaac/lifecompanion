@@ -161,6 +161,10 @@
     -fx-background-color: transparent;
 }
 
+.background-almost-transparent {
+    -fx-background-color: rgba(255,255,255,0.01);
+}
+
 .background-none {
     -fx-background-color: none;
 }

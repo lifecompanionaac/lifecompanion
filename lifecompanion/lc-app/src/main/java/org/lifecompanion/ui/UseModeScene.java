@@ -22,11 +22,10 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.WeakChangeListener;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.input.*;
-import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import org.lifecompanion.controller.metrics.SessionStatsController;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
@@ -34,7 +33,6 @@ import org.lifecompanion.controller.selectionmode.SelectionModeController;
 import org.lifecompanion.controller.textcomponent.WritingStateController;
 import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
 import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
-import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
@@ -44,7 +42,6 @@ import org.lifecompanion.model.impl.configurationcomponent.WriterEntry;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.model.impl.editaction.CommonActions;
-import org.lifecompanion.model.impl.selectionmode.DrawSelectionModeI;
 import org.lifecompanion.model.impl.useapi.GlobalRuntimeConfiguration;
 import org.lifecompanion.ui.configurationcomponent.usemode.UseModeConfigurationDisplayer;
 import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
@@ -112,6 +109,7 @@ public class UseModeScene extends Scene implements LCViewInitHelper {
         this.buttonGoToConfigMode = FXControlUtils.createGraphicButton(
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.GEAR).size(18).color(LCGraphicStyle.SECOND_DARK),
                 null);
+        this.buttonGoToConfigMode.getStyleClass().add("background-almost-transparent");
         this.buttonGoToConfigMode.setLayoutX(-5.0);
         this.buttonGoToConfigMode.setLayoutY(-5.0);
         this.buttonGoToConfigMode.setFocusTraversable(false);
@@ -120,6 +118,7 @@ public class UseModeScene extends Scene implements LCViewInitHelper {
         this.buttonPreviousConfiguration = FXControlUtils.createGraphicButton(
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.BARS).size(17).color(LCGraphicStyle.SECOND_DARK),
                 null);
+        this.buttonPreviousConfiguration.getStyleClass().add("background-almost-transparent");
         this.buttonPreviousConfiguration.setLayoutX(-5.0);
         this.buttonPreviousConfiguration.setLayoutY(18.0);
         this.buttonPreviousConfiguration.setFocusTraversable(false);
@@ -129,6 +128,7 @@ public class UseModeScene extends Scene implements LCViewInitHelper {
         buttonFullscreen = FXControlUtils.createGraphicButton(
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.EXPAND).size(18).color(LCGraphicStyle.SECOND_DARK),
                 null);
+        this.buttonFullscreen.getStyleClass().add("background-almost-transparent");
         this.buttonFullscreen.layoutXProperty().bind(widthProperty().subtract(28.0));
         this.buttonFullscreen.setLayoutY(-5.0);
         this.buttonFullscreen.setFocusTraversable(false);
@@ -188,7 +188,12 @@ public class UseModeScene extends Scene implements LCViewInitHelper {
             }
         });
         //Filter mouse event to keep the goToConfig event
-        this.configurationDisplayer.addMouseListener(this, (mouseEvent) -> mouseEvent.getTarget() != this.buttonGoToConfigMode && mouseEvent.getTarget() != this.buttonFullscreen && this.buttonPreviousConfiguration != mouseEvent.getTarget());
+        this.configurationDisplayer.addMouseListener(this, mouseEvent -> {
+            if (mouseEvent.getTarget() instanceof Node target) {
+                return !isChildOf(target, this.buttonGoToConfigMode) && !isChildOf(target, this.buttonFullscreen) && !isChildOf(target, buttonPreviousConfiguration);
+            }
+            return true;
+        });
         this.buttonGoToConfigMode.setOnAction(CommonActions.HANDLER_GO_CONFIG_MODE_CHECK);
         // Button to switch fullscreen mode
         this.buttonFullscreen.setOnAction(CommonActions.HANDLER_SWITCH_FULLSCREEN);
@@ -196,6 +201,12 @@ public class UseModeScene extends Scene implements LCViewInitHelper {
         this.buttonPreviousConfiguration.setOnAction(e -> SelectionModeController.INSTANCE.changeConfigurationForPrevious());
 
         SessionStatsController.INSTANCE.registerScene(this);
+    }
+
+    private boolean isChildOf(Node node, Node parent) {
+        if (node == parent) return true;
+        if (node.getParent() != null) return isChildOf(node.getParent(), parent);
+        return false;
     }
 
     private void pasteToCurrentTextEditor() {

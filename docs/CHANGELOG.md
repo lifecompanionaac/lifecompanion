@@ -8,7 +8,7 @@
 
 ### Corrections/ajustements
 
-- ...
+- Ticket #445 : Correction de la possibilité de sélection les boutons "Mode édition" et "Plein écran" lors de l'utilisation de configuration par défilement
 
 ## 1.6.6 - 26/02/2025
 
