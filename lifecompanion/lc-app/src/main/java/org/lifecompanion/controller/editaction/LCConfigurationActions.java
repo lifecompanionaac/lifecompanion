@@ -38,6 +38,7 @@ import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.profile.ProfileController;
 import org.lifecompanion.controller.profileconfigselect.ProfileConfigSelectionController;
 import org.lifecompanion.controller.profileconfigselect.ProfileConfigStep;
+import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
 import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
@@ -53,6 +54,7 @@ import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.impl.notification.LCNotification;
 import org.lifecompanion.model.impl.profile.LCConfigurationDescription;
+import org.lifecompanion.model.impl.useapi.GlobalRuntimeConfiguration;
 import org.lifecompanion.ui.app.profileconfigselect.DuplicateConfigAlertContent;
 import org.lifecompanion.ui.common.control.specific.imagedictionary.ChangeImageDictionarySelectorDialog;
 import org.lifecompanion.ui.common.control.specific.io.PdfConfigDialog;
@@ -89,7 +91,7 @@ public class LCConfigurationActions {
     public static final EventHandler<ActionEvent> HANDLER_MANAGE = (ea) -> ConfigActionController.INSTANCE.executeAction(new ManageConfigurationDialogAction());
     public static final EventHandler<ActionEvent> HANDLER_SAVE = (ea) -> {
         if (AppModeController.INSTANCE.getEditModeContext().getConfigurationDescription() != null) {
-            ConfigActionController.INSTANCE.executeAction(new SaveAction(getSourceFromEvent(ea)));
+            ConfigActionController.INSTANCE.executeAction(new SaveAction(getSourceFromEvent(ea), false));
         }
     };
 
@@ -214,7 +216,7 @@ public class LCConfigurationActions {
             currentProfile.getConfiguration().add(0, this.configDescription);
             //Save the configuration
             ConfigurationSavingTask saveTask = IOHelper
-                    .createSaveConfigurationTask(this.configDescription.loadedConfigurationProperty().get(), currentProfile);
+                    .createSaveConfigurationTask(this.configDescription.loadedConfigurationProperty().get(), currentProfile, false);
             try {
                 ThreadUtils.executeInCurrentThread(saveTask);
                 LCConfigurationActions.LOGGER.info("New configuration saved after the edit screen displayed");
@@ -269,18 +271,20 @@ public class LCConfigurationActions {
     public static class SaveAction implements BaseEditActionI {
         private final Consumer<Boolean> callback;
         private final Node source;
+        private final boolean mobileVersion;
 
         //        public SaveAction() {
         //            this(AppController.INSTANCE.getMainStageRoot(), null);
         //        }
 
-        public SaveAction(final Node source) {
-            this(source, null);
+        public SaveAction(final Node source, boolean mobileVersion) {
+            this(source, null, mobileVersion);
         }
 
-        public SaveAction(final Node source, final Consumer<Boolean> callbackP) {
+        public SaveAction(final Node source, final Consumer<Boolean> callbackP, boolean mobileVersion) {
             this.source = source;
             this.callback = callbackP;
+            this.mobileVersion = mobileVersion;
         }
 
         @Override
@@ -289,7 +293,7 @@ public class LCConfigurationActions {
             LCProfileI currentProfile = ProfileController.INSTANCE.currentProfileProperty().get();
 
             //Create the task
-            ConfigurationSavingTask saveConfigTask = IOHelper.createSaveConfigurationTask(configuration, currentProfile);
+            ConfigurationSavingTask saveConfigTask = IOHelper.createSaveConfigurationTask(configuration, currentProfile, mobileVersion);
             LCConfigurationDescriptionI configDescription = AppModeController.INSTANCE.getEditModeContext().configurationDescriptionProperty().get();
 
             // Update the config description image because we are on JavaFX Thread
@@ -567,19 +571,24 @@ public class LCConfigurationActions {
                 configurationDescription = currentProfile.getConfigurationById(currentConfiguration.getID());
             }
 
+            // TODO : on next version, user will be asked for expected version (only on current configuration)
+            boolean mobileVersion = AppModeController.INSTANCE.getEditModeContext().getConfiguration() != null && GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.EXPORT_FOR_MOBILE);
+
+            // Save when needed (or forced)
             GlobalActions.checkModificationForCurrentConfiguration(currentConfiguration == null || StringUtils.isEquals(configurationDescription.getConfigurationId(), currentConfiguration.getID()),
                     this,
                     source,
                     Translation.getText("export.config.action.confirm.message"),
                     "export.config.action.confirm.button",
                     () -> {
-                        FileChooser configChooser = LCFileChoosers.getChooserConfiguration(FileChooserType.CONFIG_EXPORT);
+                        FileChooserType fileChooserType = mobileVersion ? FileChooserType.CONFIG_MOBILE_EXPORT : FileChooserType.CONFIG_EXPORT;
+                        FileChooser configChooser = mobileVersion ? LCFileChoosers.getChooserMobileConfiguration(fileChooserType) : LCFileChoosers.getChooserConfiguration(fileChooserType);
                         // Issue #139 : default name for configuration
                         configChooser.setInitialFileName(IOHelper.DATE_FORMAT_FILENAME_WITHOUT_TIME.format(new Date()) + "_"
                                 + org.lifecompanion.util.IOUtils.getValidFileName(configurationDescription.configurationNameProperty().get()));
                         File configExportFile = configChooser.showSaveDialog(FXUtils.getSourceWindow(source));
                         if (configExportFile != null) {
-                            LCStateController.INSTANCE.updateDefaultDirectory(FileChooserType.CONFIG_EXPORT, configExportFile.getParentFile());
+                            LCStateController.INSTANCE.updateDefaultDirectory(fileChooserType, configExportFile.getParentFile());
                             ConfigurationExportTask exportConfigTask = IOHelper.createConfigurationExportTask(configurationDescription, currentProfile,
                                     configExportFile);
                             //Execute
@@ -587,7 +596,7 @@ public class LCConfigurationActions {
                         } else {
                             LCConfigurationActions.LOGGER.info("Configuration will no be exported because user cancelled the save dialog");
                         }
-                    });
+                    }, mobileVersion);
         }
 
         @Override
@@ -755,7 +764,7 @@ public class LCConfigurationActions {
                             });
                             AsyncExecutorController.INSTANCE.addAndExecute(true, false, loadTask);
                         });
-            });
+            }, false);
         }
 
         @Override

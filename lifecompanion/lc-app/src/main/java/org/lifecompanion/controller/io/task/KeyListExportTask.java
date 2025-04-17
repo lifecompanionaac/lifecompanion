@@ -42,7 +42,7 @@ public class KeyListExportTask extends KeyListSavingTask {
     private final List<KeyListNodeI> keyListNodes;
 
     public KeyListExportTask(final File destFile, final List<KeyListNodeI> keyListNodes) {
-        super(org.lifecompanion.util.IOUtils.getTempDir("keylist-export"), null);
+        super(org.lifecompanion.util.IOUtils.getTempDir("keylist-export"), null, false);
         updateTitle(Translation.getText("task.export.keylist.title"));
         this.destFile = destFile;
         this.keyListNodes = keyListNodes;

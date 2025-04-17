@@ -32,6 +32,7 @@ import org.lifecompanion.framework.commons.translation.Translation;
 public class LCFileChoosers {
 
     private static FileChooser configurationFileChooser;
+    private static FileChooser mobileConfigurationFileChooser;
     private static FileChooser keylistFileChooser;
     private static FileChooser profileFileChooser;
     private static FileChooser imageFileChooser;
@@ -48,6 +49,15 @@ public class LCFileChoosers {
                     .add(new ExtensionFilter(Translation.getText("file.chooser.config.description"), "*." + LCConstant.CONFIG_FILE_EXTENSION));
         }
         return configurationFileChooser;
+    }
+
+    private static FileChooser getOrInitMobileConfigurationFileChooser() {
+        if (LCFileChoosers.mobileConfigurationFileChooser == null) {
+            LCFileChoosers.mobileConfigurationFileChooser = new FileChooser();
+            LCFileChoosers.mobileConfigurationFileChooser.getExtensionFilters()
+                    .add(new ExtensionFilter(Translation.getText("file.chooser.config.description"), "*." + LCConstant.MOBILE_CONFIG_FILE_EXTENSION));
+        }
+        return mobileConfigurationFileChooser;
     }
 
     private static FileChooser getOrInitKeyListFileChooser() {
@@ -108,6 +118,10 @@ public class LCFileChoosers {
     //========================================================================
     public static FileChooser getChooserConfiguration(final FileChooserType fileChooserType) {
         return initializeDirectory(LCFileChoosers.getOrInitConfigurationFileChooser(), fileChooserType);
+    }
+
+    public static FileChooser getChooserMobileConfiguration(final FileChooserType fileChooserType) {
+        return initializeDirectory(LCFileChoosers.getOrInitMobileConfigurationFileChooser(), fileChooserType);
     }
 
     public static FileChooser getChooserKeyList(final FileChooserType fileChooserType) {

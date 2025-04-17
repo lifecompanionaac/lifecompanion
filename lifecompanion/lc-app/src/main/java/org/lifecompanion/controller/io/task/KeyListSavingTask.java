@@ -38,8 +38,8 @@ public class KeyListSavingTask extends AbstractSavingUtilsTask<Void> {
     protected final File directory;
     protected KeyListNodeI keyListNode;
 
-    public KeyListSavingTask(final File directoryP, final KeyListNodeI keyListNode) {
-        super("task.save.keylist.title");
+    public KeyListSavingTask(final File directoryP, final KeyListNodeI keyListNode, boolean mobileVersion) {
+        super("task.save.keylist.title", mobileVersion);
         this.directory = directoryP;
         this.keyListNode = keyListNode;
     }

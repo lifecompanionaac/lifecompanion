@@ -52,7 +52,11 @@ public class ConfigurationSavingTask extends AbstractSavingUtilsTask<Void> {
     private final LCProfileI configurationProfile;
 
     public ConfigurationSavingTask(final File directoryP, final LCConfigurationI configurationP, final LCProfileI configurationProfile) {
-        super("task.save.title");
+        this(directoryP, configurationP, configurationProfile, false);
+    }
+
+    public ConfigurationSavingTask(final File directoryP, final LCConfigurationI configurationP, final LCProfileI configurationProfile, boolean mobileVersion) {
+        super("task.save.title", mobileVersion);
         this.directory = directoryP;
         this.configuration = configurationP;
         this.configurationProfile = configurationProfile;
@@ -70,10 +74,10 @@ public class ConfigurationSavingTask extends AbstractSavingUtilsTask<Void> {
         this.saveXmlSerializable(this.configuration, this.directory, LCConstant.CONFIGURATION_XML_NAME);
 
         // Save key list
-        ThreadUtils.executeInCurrentThread(IOHelper.createSaveKeyListTask(configuration, this.directory));
+        ThreadUtils.executeInCurrentThread(IOHelper.createSaveKeyListTask(configuration, this.directory, this.mobileVersion));
 
         // Save sequences
-        ThreadUtils.executeInCurrentThread(IOHelper.createSaveSequenceTask(configuration, this.directory));
+        ThreadUtils.executeInCurrentThread(IOHelper.createSaveSequenceTask(configuration, this.directory, this.mobileVersion));
 
         // Generate changelog entry
         ChangelogEntry changelogEntry = new ChangelogEntry(

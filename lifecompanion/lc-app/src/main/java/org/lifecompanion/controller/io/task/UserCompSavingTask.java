@@ -38,8 +38,8 @@ public class UserCompSavingTask extends AbstractSavingUtilsTask<Void> {
     private final File directory;
     private final UserCompDescriptionI userComponent;
 
-    public UserCompSavingTask(final File directory, final UserCompDescriptionI comp) {
-        super("task.save.user.comp.title");
+    public UserCompSavingTask(final File directory, final UserCompDescriptionI comp, boolean mobileVersion) {
+        super("task.save.user.comp.title", mobileVersion);
         this.directory = directory;
         this.userComponent = comp;
     }

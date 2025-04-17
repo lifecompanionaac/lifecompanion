@@ -257,7 +257,7 @@ public class LCProfileActions {
                             } else {
                                 afterPreviousProfileHandled.run();
                             }
-                        });
+                        }, false);
             }
         }
 

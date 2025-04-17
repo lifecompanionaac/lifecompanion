@@ -60,7 +60,7 @@ public class EditModeContext extends AbstractModeContext {
             if (LangUtils.nullToZeroInt(ov) < threshold && LangUtils.nullToZeroInt(nv) >= threshold && AppModeController.INSTANCE.isEditMode()) {
                 LCNotificationController.INSTANCE.showNotification(LCNotification.createWarning(Translation.getText("notification.warning.unsaved.changes.configuration.title", nv),
                         "notification.warning.unsaved.changes.action.name",
-                        () -> ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.SaveAction(getStage().getScene().getRoot()))));
+                        () -> ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.SaveAction(getStage().getScene().getRoot(), false))));
             }
         });
     }

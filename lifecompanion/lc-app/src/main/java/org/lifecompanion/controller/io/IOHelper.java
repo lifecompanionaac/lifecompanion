@@ -143,9 +143,9 @@ public class IOHelper {
     // CONFIGURATIONS
     //========================================================================
     //Note : profile must contains configuration description before call
-    public static ConfigurationSavingTask createSaveConfigurationTask(final LCConfigurationI configuration, final LCProfileI profile) {
+    public static ConfigurationSavingTask createSaveConfigurationTask(final LCConfigurationI configuration, final LCProfileI profile, boolean mobileVersion) {
         File configurationDirectory = getConfigurationPath(profile.getID(), configuration.getID());
-        return new ConfigurationSavingTask(configurationDirectory, configuration, profile);
+        return new ConfigurationSavingTask(configurationDirectory, configuration, profile, mobileVersion);
     }
 
     public static ConfigurationLoadingTask createLoadConfigurationTask(final LCConfigurationDescriptionI configDescription, final LCProfileI profile) {
@@ -170,8 +170,12 @@ public class IOHelper {
     // KEYLIST
     //========================================================================
     public static KeyListSavingTask createSaveKeyListTask(LCConfigurationI configuration, File configurationDirectory) {
+        return createSaveKeyListTask(configuration, configurationDirectory, false);
+    }
+
+    public static KeyListSavingTask createSaveKeyListTask(LCConfigurationI configuration, File configurationDirectory, boolean mobileVersion) {
         File keyListDir = new File(configurationDirectory + File.separator + LCConstant.CONFIGURATION_KEYLIST_DIRECTORY);
-        return new KeyListSavingTask(keyListDir, configuration.rootKeyListNodeProperty().get());
+        return new KeyListSavingTask(keyListDir, configuration.rootKeyListNodeProperty().get(), mobileVersion);
     }
 
     public static KeyListLoadingTask createLoadKeyListTask(File configurationDirectory) {
@@ -191,8 +195,12 @@ public class IOHelper {
     // SEQUENCES
     //========================================================================
     public static UserActionSequenceSavingTask createSaveSequenceTask(LCConfigurationI configuration, File configurationDirectory) {
+        return createSaveSequenceTask(configuration, configurationDirectory, false);
+    }
+
+    public static UserActionSequenceSavingTask createSaveSequenceTask(LCConfigurationI configuration, File configurationDirectory, boolean mobileVersion) {
         File keyListDir = new File(configurationDirectory + File.separator + LCConstant.CONFIGURATION_SEQUENCE_DIRECTORY);
-        return new UserActionSequenceSavingTask(keyListDir, configuration.userActionSequencesProperty().get());
+        return new UserActionSequenceSavingTask(keyListDir, configuration.userActionSequencesProperty().get(), mobileVersion);
     }
 
     public static UserActionSequenceLoadingTask createLoadSequenceTask(File configurationDirectory) {
@@ -208,7 +216,8 @@ public class IOHelper {
         return new ProfileExportTask(profile, profileDirectory, exportFile);
     }
 
-    public static ProfileBackupAndThenTask createProfileBackupTask(final LCProfileI profile, final File exportFile, Runnable postBackupAction) {
+    public static ProfileBackupAndThenTask createProfileBackupTask(final LCProfileI profile,
+                                                                   final File exportFile, Runnable postBackupAction) {
         File profileDirectory = new File(getProfileDirectoryPath(profile.getID()));
         return new ProfileBackupAndThenTask(profile, profileDirectory, exportFile, postBackupAction);
     }
@@ -217,55 +226,68 @@ public class IOHelper {
     // Class part : "User comp."
     //========================================================================
     public static UserCompSavingTask createUserCompSavingTask(final UserCompDescriptionI userComp, final LCProfileI profile) {
-        return new UserCompSavingTask(getUserCompPath(profile.getID(), userComp.getSavedComponentId()), userComp);
+        return createUserCompSavingTask(userComp, profile, false);
     }
 
-    public static MultiUserCompDescriptionLoadingTask createMultiUserCompDescriptionLoadingTask(final LCProfileI profile) {
+    public static UserCompSavingTask createUserCompSavingTask(final UserCompDescriptionI userComp, final LCProfileI profile, boolean mobileVersion) {
+        return new UserCompSavingTask(getUserCompPath(profile.getID(), userComp.getSavedComponentId()), userComp, mobileVersion);
+    }
+
+    public static MultiUserCompDescriptionLoadingTask createMultiUserCompDescriptionLoadingTask(
+            final LCProfileI profile) {
         return new MultiUserCompDescriptionLoadingTask(new File(getUserCompDirectory(profile.getID())));
     }
 
-    public static UserCompLoadingTask createUserCompLoadingTask(final UserCompDescriptionI userComp, final LCProfileI profile) {
+    public static UserCompLoadingTask createUserCompLoadingTask(final UserCompDescriptionI userComp,
+                                                                final LCProfileI profile) {
         return new UserCompLoadingTask(getUserCompPath(profile.getID(), userComp.getSavedComponentId()), userComp);
     }
     //========================================================================
 
     // Class part : "Import/export configuration"
     //========================================================================
-    public static ConfigurationExportTask createConfigurationExportTask(final LCConfigurationDescriptionI configurationDescription, final LCProfileI profile, final File exportFile) {
+    public static ConfigurationExportTask createConfigurationExportTask(
+            final LCConfigurationDescriptionI configurationDescription, final LCProfileI profile, final File exportFile) {
         File configurationDirectory = new File(getConfigurationDirectoryPath(profile.getID(), configurationDescription.getConfigurationId()));
         return new ConfigurationExportTask(configurationDescription, configurationDirectory, exportFile);
     }
 
-    public static ConfigurationBackupAndThenTask createConfigurationBackupTask(final LCConfigurationDescriptionI configurationDescription,
-                                                                               final LCProfileI profile,
-                                                                               final File exportFile,
-                                                                               Runnable postBackupAction) {
+    public static ConfigurationBackupAndThenTask createConfigurationBackupTask(
+            final LCConfigurationDescriptionI configurationDescription,
+            final LCProfileI profile,
+            final File exportFile,
+            Runnable postBackupAction) {
         File configurationDirectory = new File(getConfigurationDirectoryPath(profile.getID(), configurationDescription.getConfigurationId()));
         return new ConfigurationBackupAndThenTask(configurationDescription, configurationDirectory, exportFile, postBackupAction);
     }
 
-    public static ConfigurationDuplicateTask createConfigurationDuplicateTaskFromCurrentProfile(LCConfigurationDescriptionI configurationDescription, LCProfileI profile) {
+    public static ConfigurationDuplicateTask createConfigurationDuplicateTaskFromCurrentProfile
+            (LCConfigurationDescriptionI configurationDescription, LCProfileI profile) {
         return getConfigurationDuplicateTask(configurationDescription, profile, ConfigurationDuplicateTask.DuplicateMode.IN_PROFILE);
     }
 
-    public static ConfigurationDuplicateTask createConfigurationDuplicateTaskFromCurrentProfileChangeIdOnly(LCConfigurationDescriptionI configurationDescription, LCProfileI profile) {
+    public static ConfigurationDuplicateTask createConfigurationDuplicateTaskFromCurrentProfileChangeIdOnly
+            (LCConfigurationDescriptionI configurationDescription, LCProfileI profile) {
         return getConfigurationDuplicateTask(configurationDescription, profile, ConfigurationDuplicateTask.DuplicateMode.CHANGE_ID_ONLY);
     }
 
-    private static ConfigurationDuplicateTask getConfigurationDuplicateTask(LCConfigurationDescriptionI configurationDescription, LCProfileI profile, ConfigurationDuplicateTask.DuplicateMode mode) {
+    private static ConfigurationDuplicateTask getConfigurationDuplicateTask(LCConfigurationDescriptionI
+                                                                                    configurationDescription, LCProfileI profile, ConfigurationDuplicateTask.DuplicateMode mode) {
         String newConfigId = StringUtils.getNewID();
         File destDirectory = new File(getConfigurationDirectoryPath(profile.getID(), newConfigId));
         File currentConfigDirectory = new File(getConfigurationDirectoryPath(profile.getID(), configurationDescription.getConfigurationId()));
         return new ConfigurationDuplicateTask(configurationDescription, newConfigId, destDirectory, currentConfigDirectory, mode);
     }
 
-    public static ConfigurationDuplicateTask createConfigurationDuplicateTaskFromDefaultConfigurationDir(LCConfigurationDescriptionI configurationDescription, File configPath, LCProfileI profile) {
+    public static ConfigurationDuplicateTask createConfigurationDuplicateTaskFromDefaultConfigurationDir
+            (LCConfigurationDescriptionI configurationDescription, File configPath, LCProfileI profile) {
         String newConfigId = StringUtils.getNewID();
         File destDirectory = new File(getConfigurationDirectoryPath(profile.getID(), newConfigId));
         return new ConfigurationDuplicateTask(configurationDescription, newConfigId, destDirectory, configPath, ConfigurationDuplicateTask.DuplicateMode.FROM_DEFAULT);
     }
 
-    public static ConfigurationImportTask createConfigurationImport(final LCProfileI profil, final File configFile) throws LCException {
+    public static ConfigurationImportTask createConfigurationImport(final LCProfileI profil, final File configFile) throws
+            LCException {
         String configurationID = getFileID(configFile);
         File configurationDirectory = new File(getConfigurationDirectoryPath(profil.getID(), configurationID));
         final LCConfigurationDescriptionI currentDefaultConfiguration = profil.getCurrentDefaultConfiguration();
@@ -273,7 +295,9 @@ public class IOHelper {
                 currentDefaultConfiguration != null ? currentDefaultConfiguration.getConfigurationId() : null);
     }
 
-    public static ConfigurationImportTask createCustomConfigurationImport(final File configurationImportRootDirectory, final File configFile, boolean loadConfiguration) throws LCException {
+    public static ConfigurationImportTask createCustomConfigurationImport(
+            final File configurationImportRootDirectory, final File configFile, boolean loadConfiguration) throws
+            LCException {
         String configurationID = getFileID(configFile);
         File configurationDirectory = new File(configurationImportRootDirectory.getPath() + File.separator + configurationID);
         return new ConfigurationImportTask(configurationDirectory, configFile, configurationID, loadConfiguration, null);

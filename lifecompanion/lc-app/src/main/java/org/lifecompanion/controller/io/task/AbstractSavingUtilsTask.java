@@ -57,11 +57,14 @@ public abstract class AbstractSavingUtilsTask<T> extends LCTask<T> {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(AbstractSavingUtilsTask.class);
 
-    protected AbstractSavingUtilsTask(String title) {
+    protected final boolean mobileVersion;
+
+    protected AbstractSavingUtilsTask(String title, boolean mobileVersion) {
         super(title);
+        this.mobileVersion = mobileVersion;
     }
 
-    protected void saveXmlSerializable(final XMLSerializable<IOContextI> element, boolean mobileVersion, final File directory, final String xmlName) throws Exception {
+    protected void saveXmlSerializable(final XMLSerializable<IOContextI> element, final File directory, final String xmlName) throws Exception {
         File file = new File(directory.getPath() + File.separator + xmlName);
         IOUtils.createParentDirectoryIfNeeded(file);
         //Save the XML
@@ -79,10 +82,6 @@ public abstract class AbstractSavingUtilsTask<T> extends LCTask<T> {
         Map<String, IOResourceI> resources = context.getIOResource();
         this.saveResources(directory, resources);
         this.updateProgress(5, 6);
-    }
-
-    protected void saveXmlSerializable(final XMLSerializable<IOContextI> element, final File directory, final String xmlName) throws Exception {
-        saveXmlSerializable(element, true, directory, xmlName);//FIXME : set to true/false
     }
 
     private void saveImages(final File directory, IOContext context) {

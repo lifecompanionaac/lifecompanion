@@ -93,7 +93,7 @@ public class UserCompActions {
     private static void saveUserComp(final UserCompDescriptionI userComp) {
         LCProfileI profile = ProfileController.INSTANCE.currentProfileProperty().get();
         //Save the comp
-        UserCompSavingTask savingTask = IOHelper.createUserCompSavingTask(userComp, profile);
+        UserCompSavingTask savingTask = IOHelper.createUserCompSavingTask(userComp, profile, false);
         AsyncExecutorController.INSTANCE.addAndExecute(true, false, savingTask);
     }
 

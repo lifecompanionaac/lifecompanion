@@ -38,8 +38,8 @@ public class UserActionSequenceSavingTask extends AbstractSavingUtilsTask<Void> 
     protected final File directory;
     protected final UserActionSequencesI userActionSequences;
 
-    public UserActionSequenceSavingTask(final File directoryP, UserActionSequencesI userActionSequences) {
-        super("task.save.user.action.sequences.title");
+    public UserActionSequenceSavingTask(final File directoryP, UserActionSequencesI userActionSequences, boolean mobileVersion) {
+        super("task.save.user.action.sequences.title", mobileVersion);
         this.directory = directoryP;
         this.userActionSequences = userActionSequences;
     }
