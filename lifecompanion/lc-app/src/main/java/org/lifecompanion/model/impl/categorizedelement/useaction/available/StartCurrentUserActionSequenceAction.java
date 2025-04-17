@@ -52,6 +52,7 @@ public class StartCurrentUserActionSequenceAction extends SimpleUseActionImpl<Gr
         this.staticDescriptionID = "start.current.user.action.sequence.description";
         this.configIconPath = "sequence/start_current_sequence.png";
         this.parameterizableAction = false;
+        this.internal = true;
         this.variableDescriptionProperty().set(this.getStaticDescription());
     }
 
