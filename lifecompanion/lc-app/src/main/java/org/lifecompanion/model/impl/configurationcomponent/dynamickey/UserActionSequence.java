@@ -96,6 +96,7 @@ public class UserActionSequence extends AbstractSimplerKeyActionContainer implem
     @Override
     public Element serialize(IOContextI context) {
         Element node = super.serialize(context);
+        XMLObjectSerializer.serializeInto(UserActionSequence.class, this, node);
         for (UserActionSequenceItemI item : items) {
             node.addContent(item.serialize(context));
         }
@@ -105,9 +106,14 @@ public class UserActionSequence extends AbstractSimplerKeyActionContainer implem
     @Override
     public void deserialize(Element node, IOContextI context) throws LCException {
         super.deserialize(node, context);
+        XMLObjectSerializer.deserializeInto(UserActionSequence.class, this, node);
         // backwards compatibility with "name"
         if (node.getAttribute("name") != null) {
             XMLUtils.read(textProperty(), "name", node);
+        }
+        // Bug fixe : on a previous version, sequence could miss ID
+        if (StringUtils.isBlank(id)) {
+            generateID();
         }
         for (Element child : node.getChildren()) {
             UserActionSequenceItemI item = new UserActionSequenceItem();
