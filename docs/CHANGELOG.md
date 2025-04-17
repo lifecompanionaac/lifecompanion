@@ -11,6 +11,7 @@
 - Ticket #445 : correction de la possibilité de sélection les boutons "Mode édition" et "Plein écran" lors de l'utilisation de configuration par défilement
 - Ticket #440 : l'action "Démarrer la séquence" est maintenant masquée de la liste
 - Ticket #442 : correction de problèmes sur les séquences
+- Ticket #447 : le bouton de "Configuration précédente" ne s'affiche plus après un retour déjà effectué
 
 ## 1.6.6 - 26/02/2025
 

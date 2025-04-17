@@ -1107,6 +1107,7 @@ public enum SelectionModeController implements ModeListenerI {
     public void changeConfigurationForPrevious() {
         if (this.previousConfigurationInUseMode.get() != null) {
             this.changeConfigurationInUseMode(this.previousConfigurationInUseMode.get());
+            previousConfigurationInUseMode.set(null);
         }
     }
     //========================================================================
