@@ -154,7 +154,7 @@ public enum UserActionSequenceController implements ModeListenerI {
         this.currentSequence.set(null);
     }
 
-    public void nextSequencePage(){
+    public void nextSequencePage() {
         this.dynamicListHelper.nextPageWithLoop();
     }
     //========================================================================
@@ -177,18 +177,21 @@ public enum UserActionSequenceController implements ModeListenerI {
                         item.currentActionProperty().set(false);
                         item.actionExecutedProperty().set(false);
                     });
-                    currentItem.currentActionProperty().set(true);
-                    int currentIndex = sequenceItems.indexOf(currentItem);
-                    boolean currentItemIsSub = currentItem.subItemProperty().get();
-                    boolean foundNotSub = !currentItemIsSub;
-                    // Going back to set executed
-                    for (int i = currentIndex - 1; i >= 0; i--) {
-                        final UserActionSequenceItemI prevItem = sequenceItems.get(i);
-                        if (prevItem.subItemProperty().get() || foundNotSub) {
-                            prevItem.actionExecutedProperty().set(true);
-                        } else if (!prevItem.subItemProperty().get()) {
-                            prevItem.currentActionProperty().set(true);
-                            foundNotSub = true;
+                    boolean currentItemIsSub = false;
+                    if (currentItem != null) {
+                        currentItem.currentActionProperty().set(true);
+                        int currentIndex = sequenceItems.indexOf(currentItem);
+                        currentItemIsSub = currentItem.subItemProperty().get();
+                        boolean foundNotSub = !currentItemIsSub;
+                        // Going back to set executed
+                        for (int i = currentIndex - 1; i >= 0; i--) {
+                            final UserActionSequenceItemI prevItem = sequenceItems.get(i);
+                            if (prevItem.subItemProperty().get() || foundNotSub) {
+                                prevItem.actionExecutedProperty().set(true);
+                            } else if (!prevItem.subItemProperty().get()) {
+                                prevItem.currentActionProperty().set(true);
+                                foundNotSub = true;
+                            }
                         }
                     }
                     showItemsFromSequenceInWithFilter(UserActionSequenceDisplayFilter.BOTH, sequenceItems, keyOptions);
@@ -206,7 +209,7 @@ public enum UserActionSequenceController implements ModeListenerI {
                 });
                 if (currentItemKeyAndKeyOption.get() != null) {
                     tempDisableNextAndPrevious.incrementAndGet();
-                    if (currentItem.enableAutomaticItemProperty().get()) {
+                    if (currentItem != null && currentItem.enableAutomaticItemProperty().get()) {
                         tempDisableNextAndPrevious.incrementAndGet();
                         UseModeProgressDisplayerController.INSTANCE.launchTimer(currentItem.automaticItemTimeMsProperty().get(), tempDisableNextAndPrevious::decrementAndGet);
                     } else {
