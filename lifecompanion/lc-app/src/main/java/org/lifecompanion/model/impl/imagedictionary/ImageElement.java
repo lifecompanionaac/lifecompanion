@@ -197,8 +197,8 @@ public class ImageElement implements ImageElementI {
 
     // LOADING
     //========================================================================
-    private double lastRequestedWidth, lastRequestedHeight;
-    private boolean cachedKeepRatio, cachedSmooth;
+    private transient double lastRequestedWidth, lastRequestedHeight;
+    private transient boolean cachedKeepRatio, cachedSmooth;
 
     @Override
     public void requestImageLoad(String componentId, double width, double height, boolean keepRatio, boolean smooth) {
