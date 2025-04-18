@@ -354,6 +354,8 @@ public enum SpellGameController implements ModeListenerI {
         // Show word when needed
         if (displayMode == StepDisplayMode.SHOWN || displayMode == StepDisplayMode.TIMER) {
             wordDisplayKeyOptions.forEach(currentWordDisplayKeyOption -> currentWordDisplayKeyOption.showWord(currentWord));
+        } else if (displayMode == StepDisplayMode.HIDDEN) {
+            wordDisplayKeyOptions.forEach(CurrentWordDisplayKeyOption::hideWord);
         }
         // If the step is a timer step, we should block user input word is hidden
         if (displayMode == StepDisplayMode.TIMER) {
