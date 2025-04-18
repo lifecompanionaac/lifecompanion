@@ -14,11 +14,13 @@ dependencies {
     implementation 'org.apache.commons:commons-csv:1.8'
     implementation 'org.jsoup:jsoup:1.14.2'
     implementation 'org.apache.poi:poi-ooxml:5.2.2'
+    implementation 'org.imgscalr:imgscalr-lib:4.2'
 }
 
-mainClassName = "scripts.LCAutoTranslation"
+mainClassName = "scripts.imagedictionaries.ArasaacUpdater"
 
 application {
     applicationDefaultJvmArgs = [
+            "-Xmx16G"
     ]
 }
