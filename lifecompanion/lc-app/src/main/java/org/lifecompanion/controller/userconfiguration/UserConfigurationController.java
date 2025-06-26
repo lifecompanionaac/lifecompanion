@@ -55,7 +55,7 @@ public enum UserConfigurationController {
             PROP_RECORD_SEND_SESSION_STATS = "record-and-send-session-stats", PROP_ENABLE_AUTO_VK_SHOW = "auto-virtual-keyboard-show", PROP_ENABLE_JPD_EASTER_EGG = "enable-jpd-easter-egg",
             PROP_DISABLE_EXIT_USE_MODE = "disable-exit-use-mode", PROP_SECURE_GO_EDIT_MODE = "secure-go-edit-mode", PROP_AUTO_CONFIG_PROFILE_BACKUP = "auto-config-profile-backup",
             PROP_AUTO_SELECT_IMAGES = "auto-select-images", PROP_ENABLE_SPEECH_OPTIMIZATION = "enable-speech-optimization", PROP_DEFAULT_TEXT_POSITION_ON_IMAGE_SELECTION = "default-text-position-on-image-selection",
-            PROP_DISABLE_FULLSCREEN_SHORTCUT = "disable-fullscreen-shortcut", PROP_ENABLE_PREVIOUS_CONFIGURATION_SHORTCUT = "enable-previous-configuration-shortcut";
+            PROP_DISABLE_FULLSCREEN_SHORTCUT = "disable-fullscreen-shortcut", PROP_ENABLE_PREVIOUS_CONFIGURATION_SHORTCUT = "enable-previous-configuration-shortcut", PROP_ENABLE_EXPORT_MOBILE_CONFIGURATION = "enable-export-mobile-configuration";
 
 
     //Properties
@@ -76,6 +76,7 @@ public enum UserConfigurationController {
     private final BooleanProperty enableSpeechOptimization;
     private final BooleanProperty disableFullscreenShortcut;
     private final BooleanProperty enablePreviousConfigurationShortcut;
+    private final BooleanProperty enableExportMobileConfiguration;
     private final ObjectProperty<TextPosition> defaultTextPositionOnImageSelection;
     private IntegerProperty screenIndex;
     private UserConfigurationView userConfigurationView;
@@ -101,6 +102,7 @@ public enum UserConfigurationController {
         this.autoConfigurationProfileBackup = new SimpleBooleanProperty(true);
         this.disableFullscreenShortcut = new SimpleBooleanProperty(false);
         this.enablePreviousConfigurationShortcut = new SimpleBooleanProperty(true);
+        this.enableExportMobileConfiguration = new SimpleBooleanProperty(false);
         this.defaultTextPositionOnImageSelection = new SimpleObjectProperty<>(TextPosition.BOTTOM);
     }
 
@@ -190,6 +192,9 @@ public enum UserConfigurationController {
             if (prop.containsKey(PROP_ENABLE_PREVIOUS_CONFIGURATION_SHORTCUT)) {
                 this.enablePreviousConfigurationShortcut.set(Boolean.parseBoolean(prop.getProperty(PROP_ENABLE_PREVIOUS_CONFIGURATION_SHORTCUT)));
             }
+            if (prop.containsKey(PROP_ENABLE_EXPORT_MOBILE_CONFIGURATION)) {
+                this.enableExportMobileConfiguration.set(Boolean.parseBoolean(prop.getProperty(PROP_ENABLE_EXPORT_MOBILE_CONFIGURATION)));
+            }
         } catch (FileNotFoundException e) {
             this.LOGGER.warn("Configuration file {} not found", configFile, e);
         }
@@ -224,6 +229,7 @@ public enum UserConfigurationController {
         prop.setProperty(PROP_DEFAULT_TEXT_POSITION_ON_IMAGE_SELECTION, "" + this.defaultTextPositionOnImageSelection.get());
         prop.setProperty(PROP_DISABLE_FULLSCREEN_SHORTCUT, "" + this.disableFullscreenShortcut.get());
         prop.setProperty(PROP_ENABLE_PREVIOUS_CONFIGURATION_SHORTCUT, "" + this.enablePreviousConfigurationShortcut.get());
+        prop.setProperty(PROP_ENABLE_EXPORT_MOBILE_CONFIGURATION, "" + this.enableExportMobileConfiguration.get());
         IOUtils.createParentDirectoryIfNeeded(configFile);
         try (FileOutputStream fos = new FileOutputStream(configFile)) {
             prop.store(fos, LCConstant.NAME + " user configuration file");
@@ -313,5 +319,9 @@ public enum UserConfigurationController {
 
     public BooleanProperty enablePreviousConfigurationShortcutProperty() {
         return enablePreviousConfigurationShortcut;
+    }
+
+    public BooleanProperty enableExportMobileConfigurationProperty() {
+        return enableExportMobileConfiguration;
     }
 }

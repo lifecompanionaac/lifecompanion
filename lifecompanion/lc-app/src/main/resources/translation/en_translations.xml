@@ -782,6 +782,7 @@
   <text key="config.tips.clone.key.style.title">Clone key styles</text>
   <text key="action.style.remove">Delete a style</text>
   <text key="user.config.enable.previous.configuration.shortcut">Enable the “Previous configuration” shortcut</text>
+  <text key="user.config.enable.export.mobile.configuration">Enable mobile configuration export (.lccm)</text>
   <text key="makaton.too.many.install.message">You have reached the maximum number of LifeCompanion installations that can use Makaton Bank with your member account. You can log in or create an account on the LifeCompanion platform to remove installations. You can also contact us if you would like us to do this for you.</text>
   <text key="predict4all.comment.dialog.field.name">Your name</text>
   <text key="use.variable.current.day.of.week.description">Contains the day of the week in a readable format.</text>
@@ -2070,6 +2071,7 @@
   <text key="about.tab.file.header.license">========= LIFECOMPANION LICENSE =========</text>
   <text key="progress.display.keyoption.field.progress.type">Kind</text>
   <text key="tooltip.user.config.enable.previous.configuration.shortcut">If enabled, when the user changes configuration in usage mode, then displays a shortcut at the top left to return to the previous configuration.</text>
+  <text key="tooltip.user.config.enable.export.mobile.configuration">If enabled, when the user exports a configuration, it can be used on the mobile version of LifeCompanion.</text>
   <text key="predict4all.config.enable.debug">Enable “debug mode”</text>
   <text key="action.view.save">Save</text>
   <text key="my.configurations.menu.item.import">Import</text>

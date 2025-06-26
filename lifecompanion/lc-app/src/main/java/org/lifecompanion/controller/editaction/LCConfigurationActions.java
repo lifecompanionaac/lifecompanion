@@ -571,8 +571,7 @@ public class LCConfigurationActions {
                 configurationDescription = currentProfile.getConfigurationById(currentConfiguration.getID());
             }
 
-            // TODO : on next version, user will be asked for expected version (only on current configuration)
-            boolean mobileVersion = AppModeController.INSTANCE.getEditModeContext().getConfiguration() != null && GlobalRuntimeConfigurationController.INSTANCE.isPresent(GlobalRuntimeConfiguration.EXPORT_FOR_MOBILE);
+            boolean mobileVersion = AppModeController.INSTANCE.getEditModeContext().getConfiguration() != null && UserConfigurationController.INSTANCE.enableExportMobileConfigurationProperty().get();
 
             // Save when needed (or forced)
             GlobalActions.checkModificationForCurrentConfiguration(currentConfiguration == null || StringUtils.isEquals(configurationDescription.getConfigurationId(), currentConfiguration.getID()),

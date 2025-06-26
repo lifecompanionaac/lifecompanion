@@ -3973,6 +3973,8 @@
     <text key="tooltip.user.config.disable.fullscreen.shortcut">Permet de masquer le bouton en haut à droite de la configuration permettant de basculer en mode plein écran total.</text>
     <text key="user.config.enable.previous.configuration.shortcut">Activer le raccourci "Configuration précédente"</text>
     <text key="tooltip.user.config.enable.previous.configuration.shortcut">Si activé, lorsque l'utilisateur change de configuration en mode utilisation, affiche alors un raccourci en haut à gauche permettant de retourner à la configuration précédente.</text>
+    <text key="user.config.enable.export.mobile.configuration">Activer l'export de la configuration pour mobile (.lccm)</text>
+    <text key="tooltip.user.config.enable.export.mobile.configuration">Si activé, lorsque l'utilisateur exporte une configuration, celle-ci pourra être utilisée sur la version mobile de LifeCompanion.</text>
     <text key="pdf.export.small.footer.label">Créé avec LifeCompanion ({})</text>
     <text key="button.disable.speak.key.leaves">Désactiver "Prononcer" sur les cases de listes de cases</text>
 </texts>
