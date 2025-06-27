@@ -580,8 +580,8 @@ public class LCConfigurationActions {
                     Translation.getText("export.config.action.confirm.message"),
                     "export.config.action.confirm.button",
                     () -> {
-                        FileChooserType fileChooserType = mobileVersion ? FileChooserType.CONFIG_MOBILE_EXPORT : FileChooserType.CONFIG_EXPORT;
-                        FileChooser configChooser = mobileVersion ? LCFileChoosers.getChooserMobileConfiguration(fileChooserType) : LCFileChoosers.getChooserConfiguration(fileChooserType);
+                        FileChooserType fileChooserType = mobileVersion ? FileChooserType.CONFIG_MOBILE_EXPORT : FileChooserType.CONFIG_DESKTOP_EXPORT;
+                        FileChooser configChooser = mobileVersion ? LCFileChoosers.getChooserMobileConfiguration(fileChooserType) : LCFileChoosers.getChooserDesktopConfiguration(fileChooserType);
                         // Issue #139 : default name for configuration
                         configChooser.setInitialFileName(IOHelper.DATE_FORMAT_FILENAME_WITHOUT_TIME.format(new Date()) + "_"
                                 + org.lifecompanion.util.IOUtils.getValidFileName(configurationDescription.configurationNameProperty().get()));
