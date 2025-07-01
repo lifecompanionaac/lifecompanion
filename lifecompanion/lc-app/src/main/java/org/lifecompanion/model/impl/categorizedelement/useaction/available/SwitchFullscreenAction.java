@@ -21,6 +21,7 @@ package org.lifecompanion.model.impl.categorizedelement.useaction.available;
 
 import javafx.stage.Stage;
 import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
+import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
@@ -51,6 +52,7 @@ public class SwitchFullscreenAction extends SimpleUseActionImpl<UseActionTrigger
         this.configIconPath = "configuration/icon_enable_fullscreen.png";
         this.parameterizableAction = false;
         this.variableDescriptionProperty().set(this.getStaticDescription());
+        this.allowSystems = SystemType.allExpectMobile();
     }
 
     @Override

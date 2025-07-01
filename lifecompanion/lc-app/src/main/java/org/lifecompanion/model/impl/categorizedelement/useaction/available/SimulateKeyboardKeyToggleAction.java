@@ -28,6 +28,7 @@ import javafx.scene.paint.Color;
 import org.jdom2.Element;
 import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
 import org.lifecompanion.controller.virtualkeyboard.VirtualKeyboardController;
+import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.framework.commons.fx.io.XMLGenericProperty;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
@@ -64,6 +65,7 @@ public class SimulateKeyboardKeyToggleAction extends SimpleUseActionImpl<UseActi
         this.variableDescriptionProperty()
                 .bind(TranslationFX.getTextBinding("action.simulate.keyboard.key.toggle.action.description.variable",
                         Bindings.createStringBinding(() -> KeyCodeUtils.getTranslatedKeyCodeName(keyToToggle.get(), "no.keyboard.key.selected"), keyToToggle)));
+        this.allowSystems = SystemType.allExpectMobile();
     }
 
     public ObjectProperty<KeyCode> keyToToggleProperty() {

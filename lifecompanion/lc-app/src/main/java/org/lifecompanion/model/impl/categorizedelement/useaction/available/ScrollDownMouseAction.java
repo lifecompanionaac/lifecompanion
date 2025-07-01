@@ -24,6 +24,7 @@ import java.util.Map;
 import org.jdom2.Element;
 
 import org.lifecompanion.controller.virtualmouse.VirtualMouseController;
+import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
@@ -52,6 +53,7 @@ public class ScrollDownMouseAction extends SimpleUseActionImpl<UseActionTriggerC
 		this.parameterizableAction = true;
 		scrollAmount = new SimpleDoubleProperty(5);
 		this.variableDescriptionProperty().set(this.getStaticDescription());
+		this.allowSystems = SystemType.allExpectMobile();
 	}
 
 	// Class part : "Execute"

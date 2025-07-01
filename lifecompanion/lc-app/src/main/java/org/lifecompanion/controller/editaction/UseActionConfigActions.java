@@ -20,17 +20,22 @@ package org.lifecompanion.controller.editaction;
 
 import javafx.scene.Node;
 import javafx.scene.control.Alert.AlertType;
+import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.model.api.editaction.BaseEditActionI;
 import org.lifecompanion.model.api.editaction.UndoRedoActionI;
 import org.lifecompanion.model.api.categorizedelement.useaction.BaseUseActionI;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionManagerI;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
+import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.utils.Pair;
+import org.lifecompanion.model.impl.notification.LCNotification;
+import org.lifecompanion.ui.notification.LCNotificationController;
 import org.lifecompanion.util.javafx.DialogUtils;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -239,6 +244,11 @@ public class UseActionConfigActions {
         public void doAction() throws LCException {
             if (this.useAction.allowedParent().isAssignableFrom(this.useActionManager.getActionParent().getClass())) {
                 this.useActionManager.componentActions().get(this.eventType).add(this.useAction);
+                if (Arrays.equals(this.useAction.allowedSystemType(), SystemType.allExpectComputer())) {
+                    final LCNotification notif = LCNotification.createInfo(Translation.getText("notification.action.only.mobile.title"));
+                    notif.setMsDuration(LCGraphicStyle.SHORT_NOTIFICATION_DURATION_MS);
+                    LCNotificationController.INSTANCE.showNotification(notif);
+                }
             } else {
                 DialogUtils.alertWithSourceAndType(source, AlertType.WARNING)
                         .withHeaderText(Translation.getText("alert.message.invalid.action.parent.header"))

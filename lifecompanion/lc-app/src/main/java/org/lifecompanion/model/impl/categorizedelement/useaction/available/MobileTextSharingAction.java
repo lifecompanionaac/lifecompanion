@@ -19,6 +19,7 @@
 package org.lifecompanion.model.impl.categorizedelement.useaction.available;
 
 
+import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseActionSubCategories;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
@@ -41,6 +42,7 @@ public class MobileTextSharingAction extends SimpleUseActionImpl<UseActionTrigge
         this.configIconPath = "mobile/icon_text_sharing_action.png";
         this.parameterizableAction = false;
         this.variableDescriptionProperty().set(this.getStaticDescription());
+        this.allowSystems = SystemType.allExpectComputer();
     }
 
     @Override

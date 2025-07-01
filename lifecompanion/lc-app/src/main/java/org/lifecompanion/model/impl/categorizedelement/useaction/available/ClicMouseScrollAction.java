@@ -20,6 +20,7 @@
 package org.lifecompanion.model.impl.categorizedelement.useaction.available;
 
 import org.lifecompanion.controller.virtualmouse.DirectionalMouseController;
+import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseActionSubCategories;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
@@ -42,6 +43,7 @@ public class ClicMouseScrollAction extends SimpleUseActionImpl<UseActionTriggerC
         this.configIconPath = "computeraccess/icon_mouse_clic_scroll_direct.png";
         this.parameterizableAction = false;
         this.variableDescriptionProperty().set(this.getStaticDescription());
+        this.allowSystems = SystemType.allExpectMobile();
     }
 
     @Override

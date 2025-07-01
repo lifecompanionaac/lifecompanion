@@ -22,6 +22,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.jdom2.Element;
 import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
+import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseActionSubCategories;
@@ -55,6 +56,7 @@ public class OpenWithDefaultAppAction extends SimpleUseActionImpl<UseActionTrigg
         this.parameterizableAction = true;
         filePath = new SimpleStringProperty();
         this.variableDescriptionProperty().set(getStaticDescription());
+        this.allowSystems = SystemType.allExpectMobile();
     }
 
     public StringProperty filePathProperty() {

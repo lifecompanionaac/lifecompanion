@@ -226,6 +226,7 @@
 <text key="notification.grid.removed.from.stack">Grille supprimée de la pile de grille</text>
 <text key="notification.undo.done.title">Dernière action annulée</text>
 <text key="notification.redo.done.title">Dernière action refaite</text>
+<text key="notification.action.only.mobile.title">Action disponible uniquement sur la version mobile de LifeCompanion</text>
   <text key="main.ui.loading">Chargement de LifeCompanion</text>
   <text key="unknown.error.happened.notif.title">Une erreur inattendue s'est produite</text>
   <text key="updating.lc.loading">Mise à jour en cours, veuillez ne pas fermer LifeCompanion\nUn redémarrage

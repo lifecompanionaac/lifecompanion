@@ -26,6 +26,7 @@ import javafx.scene.input.KeyCode;
 import org.jdom2.Element;
 import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
 import org.lifecompanion.controller.virtualkeyboard.VirtualKeyboardController;
+import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.framework.commons.fx.io.XMLGenericProperty;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
@@ -65,6 +66,7 @@ public class SimulateKeyboardKeyPressedAction extends SimpleUseActionImpl<UseAct
         this.variableDescriptionProperty()
                 .bind(TranslationFX.getTextBinding("action.simulate.keyboard.key.press.action.description.variable", Bindings.createStringBinding(() -> this.getKeyText(this.keyPressed1, false) + this.getKeyText(this.keyPressed2, true)
                         + this.getKeyText(this.keyPressed3, true), this.keyPressed1, this.keyPressed2, this.keyPressed3)));
+        this.allowSystems = SystemType.allExpectMobile();
     }
 
 
