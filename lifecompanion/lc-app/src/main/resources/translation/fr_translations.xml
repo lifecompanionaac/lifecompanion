@@ -148,6 +148,8 @@
   <text key="use.action.main.category.miscellaneous.name">Divers</text>
   <text key="use.action.main.category.selection.description">Contient les actions relatives au mode de sélection de la
 		configuration. Permet de modifier son comportement, par exemple mettre en pause le défilement...</text>
+  <text key="use.action.main.category.mobile.name">Mobile</text>
+  <text key="use.action.main.category.mobile.description">Contient des actions destinées exclusivement à la version mobile de LifeCompanion.</text>
   <text key="use.action.main.category.selection.name">Mode de sélection</text>
   <text key="use.action.main.category.show.description">Contient toutes les actions pour afficher une grille, se
 		déplacer d'une grille à l'autre, aller à la page suivante...</text>
@@ -181,6 +183,7 @@
   <text key="use.action.sub.category.prediction.name">Prédiction</text>
   <text key="use.action.sub.category.script.name">Script et combinaison d'actions</text>
   <text key="use.action.sub.category.timer.name">Minuteur</text>
+  <text key="use.action.sub.category.mobile.name">Partager</text>
   <text key="use.action.sub.category.selection.keys.name">Cases</text>
   <text key="use.action.sub.category.selection.scanning.mode.name">Défilement</text>
   <text key="use.action.sub.category.selection.mode.general.name">Général</text>
@@ -648,6 +651,8 @@
   <text key="go.parent.list.current.list.description">Permet dans la liste courante, de remonter au niveau au dessus
 		(liste avant), afin de revenir en arrière</text>
   <text key="go.parent.list.current.list.name">Remonter au niveau supérieur</text>
+  <text key="action.mobile.text.sharing.name">Partager le texte de l'éditeur</text>
+  <text key="action.mobile.text.sharing.static.description">Permet de partager le texte de l'éditeur via les applications de messagerie installé sur le mobile.</text>
   <text key="select.current.keylist.keyoption.description">Action destinée à être associée à une case de liste de
 		cases, afin de sélectionner la sous-liste ou le lien affiché.</text>
   <text key="select.current.keylist.keyoption.name">Sélectionner la liste affichée</text>

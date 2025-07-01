@@ -53,6 +53,8 @@ public enum DefaultUseActionMainCategories implements UseActionMainCategoryI {
 	APP("use.action.main.category.app.name", "use.action.main.category.app.description", "icon_show.png",
 			CategorizedElementColorProvider.nextColor(DefaultUseActionMainCategories.class)), //
 	MISCELLANEOUS("use.action.main.category.miscellaneous.name", "use.action.main.category.miscellaneous.description", "icon_miscellaneous.png",
+			CategorizedElementColorProvider.nextColor(DefaultUseActionMainCategories.class)), //
+	MOBILE("use.action.main.category.mobile.name", "use.action.main.category.mobile.description", "icon_mobile.png",
 			CategorizedElementColorProvider.nextColor(DefaultUseActionMainCategories.class));
 	//========================================================================
 

@@ -284,6 +284,7 @@
   <text key="action.spell.text.variable.description">Spell the text "{}"</text>
   <text key="user.config.stage.height">Window height</text>
   <text key="go.parent.list.current.list.name">Go to the next level</text>
+  <text key="action.mobile.text.sharing.name">Share the editor's text</text>
   <text key="predict4all.config.button.save">Save</text>
   <text key="predict4all.predictor.name">Predict4All</text>
   <text key="menu.select.clear">Clear selection</text>
@@ -689,6 +690,7 @@
   <text key="save.and.then.message.first.part">You have {} unsaved modification(s) in the current configuration.\n{}</text>
   <text key="predict4all.default.rule.word.ends.description">Correct confused verbal/nominal inflections at the end of words (typically gender/number agreements as well as conjugations)</text>
   <text key="use.action.sub.category.timer.name">Timer</text>
+  <text key="use.action.sub.category.mobile.name">Share</text>
   <text key="use.action.change.key.text.target.key">Key to change</text>
   <text key="configuration.selection.create.desktop.link.button.description">Allows you to create a shortcut on the desktop to directly open this configuration in use mode from the desktop.\nThis allows the launch of a specific configuration to be integrated into the system icons.</text>
   <text key="key.option.whiteboard.name">Blackboard/Slate</text>
@@ -934,6 +936,7 @@
   <text key="configuration.menu.item.export">Export</text>
   <text key="action.remove.image.ask.header">Deleting images</text>
   <text key="use.action.main.category.miscellaneous.name">Miscellaneous</text>
+  <text key="use.action.main.category.mobile.name">Mobile</text>
   <text key="time.picker.control.hour">H</text>
   <text key="error.config.action.while.undo">Problem canceling "{}"</text>
   <text key="general.configuration.view.step.use.event.title">Events</text>
@@ -1291,6 +1294,7 @@
   <text key="predict4all.config.ui.field.user.id">User ID</text>
   <text key="text.displayer.enable.word.wrap">Don't cut words</text>
   <text key="use.action.main.category.miscellaneous.description">Contains general actions which allow actions to be combined with each other, or other...</text>
+  <text key="use.action.main.category.mobile.description">Contains actions intended exclusively for the mobile version of LifeCompanion.</text>
   <text key="tooltip.text.position.bottom">Place the text below the image</text>
   <text key="use.variable.current.number.of.day.example">22</text>
   <text key="general.configuration.view.step.use.event.no.event.placeholder">Select an event to be able to add actions to it.</text>
@@ -1425,6 +1429,7 @@
   <text key="general.configuration.selection.input.type.label">Input device</text>
   <text key="keyboard.key.right.parenthesis">Closing parenthesis</text>
   <text key="go.parent.list.current.list.description">Allows in the current list to go back to the level above (front list), in order to go back</text>
+  <text key="action.mobile.text.sharing.static.description">Allows you to share editor text via the messaging applications installed on your mobile.</text>
   <text key="config.selection.create.import.config.button.title">Import a configuration</text>
   <text key="label.use.grid">Use the grid</text>
   <text key="pane.title.selection.mode">Selection mode</text>
