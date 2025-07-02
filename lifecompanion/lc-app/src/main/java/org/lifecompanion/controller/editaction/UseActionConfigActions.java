@@ -20,6 +20,7 @@ package org.lifecompanion.controller.editaction;
 
 import javafx.scene.Node;
 import javafx.scene.control.Alert.AlertType;
+import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.model.api.editaction.BaseEditActionI;
 import org.lifecompanion.model.api.editaction.UndoRedoActionI;

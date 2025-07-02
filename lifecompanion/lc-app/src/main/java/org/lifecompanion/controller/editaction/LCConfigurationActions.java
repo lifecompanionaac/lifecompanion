@@ -18,6 +18,7 @@
  */
 package org.lifecompanion.controller.editaction;
 
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
@@ -40,10 +41,14 @@ import org.lifecompanion.controller.profileconfigselect.ProfileConfigSelectionCo
 import org.lifecompanion.controller.profileconfigselect.ProfileConfigStep;
 import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
 import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
+import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.framework.utils.LCNamedThreadFactory;
+import org.lifecompanion.model.api.categorizedelement.useaction.BaseUseActionI;
+import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
+import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.editaction.BaseEditActionI;
 import org.lifecompanion.model.api.imagedictionary.ImageDictionaryI;
@@ -70,10 +75,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import static org.lifecompanion.controller.editmode.FileChooserType.EXPORT_PDF;
 import static org.lifecompanion.util.javafx.FXUtils.getSourceFromEvent;
@@ -582,18 +586,84 @@ public class LCConfigurationActions {
                     () -> {
                         FileChooserType fileChooserType = mobileVersion ? FileChooserType.CONFIG_MOBILE_EXPORT : FileChooserType.CONFIG_DESKTOP_EXPORT;
                         FileChooser configChooser = mobileVersion ? LCFileChoosers.getChooserMobileConfiguration(fileChooserType) : LCFileChoosers.getChooserDesktopConfiguration(fileChooserType);
-                        // Issue #139 : default name for configuration
-                        configChooser.setInitialFileName(IOHelper.DATE_FORMAT_FILENAME_WITHOUT_TIME.format(new Date()) + "_"
-                                + org.lifecompanion.util.IOUtils.getValidFileName(configurationDescription.configurationNameProperty().get()));
-                        File configExportFile = configChooser.showSaveDialog(FXUtils.getSourceWindow(source));
-                        if (configExportFile != null) {
-                            LCStateController.INSTANCE.updateDefaultDirectory(fileChooserType, configExportFile.getParentFile());
-                            ConfigurationExportTask exportConfigTask = IOHelper.createConfigurationExportTask(configurationDescription, currentProfile,
-                                    configExportFile);
-                            //Execute
-                            AsyncExecutorController.INSTANCE.addAndExecute(true, false, exportConfigTask);
+
+                        LCConfigurationI configuration = AppModeController.INSTANCE.getEditModeContext().getConfiguration();
+                        Set<BaseUseActionI<?>> uniqueActions = configuration.getAllComponent().values().stream()
+                                .filter(UseActionTriggerComponentI.class::isInstance)
+                                .map(UseActionTriggerComponentI.class::cast)
+                                .flatMap(triggerComp -> Arrays.stream(UseActionEvent.values())
+                                        .map(event -> triggerComp.getActionManager().componentActions().get(event))
+                                        .filter(Objects::nonNull)
+                                        .flatMap(List::stream))
+                                .collect(Collectors.toSet());
+
+                        List<BaseUseActionI<?>> incompatibleActions = new ArrayList<>();
+                        SystemType[] incompatibleType;
+
+                        if (fileChooserType == FileChooserType.CONFIG_MOBILE_EXPORT) {
+                            incompatibleType = SystemType.allExpectMobile();
                         } else {
-                            LCConfigurationActions.LOGGER.info("Configuration will no be exported because user cancelled the save dialog");
+                            incompatibleType = SystemType.allExpectComputer();
+                        }
+
+                        for (BaseUseActionI<?> action : uniqueActions) {
+                            org.lifecompanion.framework.commons.SystemType[] types = null;
+                            try {
+                                types = (org.lifecompanion.framework.commons.SystemType[])
+                                        action.getClass().getMethod("allowedSystemType").invoke(action);
+                            } catch (Exception e) {
+                                System.out.println("Erreur lors de la récupération des allowedSystemType pour " + action + " : " + e.getMessage());
+                                continue;
+                            }
+
+                            if (Arrays.equals(types, incompatibleType)) {
+                                incompatibleActions.add(action);
+                            }
+                        }
+
+                        System.out.println("incompatibleActions :");
+                        incompatibleActions.forEach(action -> System.out.println(" - " + action.getName()));
+
+                        if (!incompatibleActions.isEmpty()) {
+                            String actionNames = incompatibleActions.stream()
+                                    .map(BaseUseActionI::getName)
+                                    .collect(Collectors.joining("\n - ", " - ", ""));
+
+                            if (DialogUtils
+                                    .alertWithSourceAndType(source, Alert.AlertType.INFORMATION)
+                                    .withContentText(Translation.getText("general.config.scene.cancel.warning.message") + "\n" + actionNames)
+                                    .withHeaderText(Translation.getText("general.config.scene.cancel.warning.header"))
+                                    .withButtonTypes(ButtonType.OK, ButtonType.CANCEL)
+                                    .showAndWait() == ButtonType.OK)
+                            {
+                                // Issue #139 : default name for configuration
+                                configChooser.setInitialFileName(IOHelper.DATE_FORMAT_FILENAME_WITHOUT_TIME.format(new Date()) + "_"
+                                        + org.lifecompanion.util.IOUtils.getValidFileName(configurationDescription.configurationNameProperty().get()));
+                                File configExportFile = configChooser.showSaveDialog(FXUtils.getSourceWindow(source));
+                                if (configExportFile != null) {
+                                    LCStateController.INSTANCE.updateDefaultDirectory(fileChooserType, configExportFile.getParentFile());
+                                    ConfigurationExportTask exportConfigTask = IOHelper.createConfigurationExportTask(configurationDescription, currentProfile,
+                                            configExportFile);
+                                    //Execute
+                                    AsyncExecutorController.INSTANCE.addAndExecute(true, false, exportConfigTask);
+                                } else {
+                                    LCConfigurationActions.LOGGER.info("Configuration will no be exported because user cancelled the save dialog");
+                                }
+                            }
+                        } else {
+                            // Issue #139 : default name for configuration
+                            configChooser.setInitialFileName(IOHelper.DATE_FORMAT_FILENAME_WITHOUT_TIME.format(new Date()) + "_"
+                                    + org.lifecompanion.util.IOUtils.getValidFileName(configurationDescription.configurationNameProperty().get()));
+                            File configExportFile = configChooser.showSaveDialog(FXUtils.getSourceWindow(source));
+                            if (configExportFile != null) {
+                                LCStateController.INSTANCE.updateDefaultDirectory(fileChooserType, configExportFile.getParentFile());
+                                ConfigurationExportTask exportConfigTask = IOHelper.createConfigurationExportTask(configurationDescription, currentProfile,
+                                        configExportFile);
+                                //Execute
+                                AsyncExecutorController.INSTANCE.addAndExecute(true, false, exportConfigTask);
+                            } else {
+                                LCConfigurationActions.LOGGER.info("Configuration will no be exported because user cancelled the save dialog");
+                            }
                         }
                     }, mobileVersion);
         }
