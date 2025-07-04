@@ -20,7 +20,6 @@ package org.lifecompanion.controller.editaction;
 
 import javafx.scene.Node;
 import javafx.scene.control.Alert.AlertType;
-import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.model.api.editaction.BaseEditActionI;
 import org.lifecompanion.model.api.editaction.UndoRedoActionI;
@@ -245,9 +244,15 @@ public class UseActionConfigActions {
         public void doAction() throws LCException {
             if (this.useAction.allowedParent().isAssignableFrom(this.useActionManager.getActionParent().getClass())) {
                 this.useActionManager.componentActions().get(this.eventType).add(this.useAction);
+                String notifText = null;
                 if (Arrays.equals(this.useAction.allowedSystemType(), SystemType.allExpectComputer())) {
-                    final LCNotification notif = LCNotification.createInfo(Translation.getText("notification.action.only.mobile.title"));
-                    notif.setMsDuration(LCGraphicStyle.SHORT_NOTIFICATION_DURATION_MS);
+                    notifText = "notification.action.only.mobile.title";
+                } else if (Arrays.equals(this.useAction.allowedSystemType(), SystemType.allExpectMobile())) {
+                    notifText = "notification.action.only.computer.title";
+                }
+                if (notifText != null) {
+                    LCNotification notif = LCNotification.createInfo(Translation.getText(notifText));
+                    notif.setMsDuration(LCGraphicStyle.BRIEF_NOTIFICATION_DURATION_MS);
                     LCNotificationController.INSTANCE.showNotification(notif);
                 }
             } else {

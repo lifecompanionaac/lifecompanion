@@ -14,6 +14,8 @@
   <text key="virtual.mouse.drawing.simple.circle">Cercle simple</text>
   <text key="general.config.scene.cancel.warning.header">Configuration modifiée</text>
   <text key="general.config.scene.cancel.warning.message">Vous avez des modifications sur la configuration qui ne sont pas enregistrées. En fermant cette fenêtre, ces changements seront perdus.</text>
+  <text key="incompatible.actions.warning.header">Actions incompatibles</text>
+  <text key="incompatible.actions.warning.message">Certaines actions sont incompatibles avec le type de la configuration sélectionné :\n{}</text>
   <text key="virtual.mouse.drawing.target">Cible</text>
   <text key="virtual.mouse.type.directional">Pointage directionnel</text>
   <text key="virtual.mouse.type.cross.scanning">Pointage par défilement avec lignes croisées</text>
@@ -227,6 +229,7 @@
 <text key="notification.undo.done.title">Dernière action annulée</text>
 <text key="notification.redo.done.title">Dernière action refaite</text>
 <text key="notification.action.only.mobile.title">Action disponible uniquement sur la version mobile de LifeCompanion</text>
+<text key="notification.action.only.computer.title">Action disponible uniquement sur la version PC de LifeCompanion</text>
   <text key="main.ui.loading">Chargement de LifeCompanion</text>
   <text key="unknown.error.happened.notif.title">Une erreur inattendue s'est produite</text>
   <text key="updating.lc.loading">Mise à jour en cours, veuillez ne pas fermer LifeCompanion\nUn redémarrage

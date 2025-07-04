@@ -482,6 +482,7 @@
   <text key="action.name.change.notekey.stroke.color">Change the color of a note activation</text>
   <text key="notification.redo.done.title">Last action redone</text>
   <text key="notification.action.only.mobile.title">Action only available on the mobile version of LifeCompanion</text>
+  <text key="notification.action.only.computer.title">Action only available on the desktop version of LifeCompanion</text>
   <text key="pane.column.count">Columns</text>
   <text key="update.task.check.plugin.update.download">Download extension {} - {} ({})</text>
   <text key="predict4all.comment.dialog.status.title">Sending the comment</text>
