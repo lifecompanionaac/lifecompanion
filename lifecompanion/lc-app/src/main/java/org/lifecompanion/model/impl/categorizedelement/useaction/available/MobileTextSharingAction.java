@@ -20,11 +20,15 @@ package org.lifecompanion.model.impl.categorizedelement.useaction.available;
 
 
 import org.lifecompanion.framework.commons.SystemType;
+import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseActionSubCategories;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
 import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
+import org.lifecompanion.model.impl.constant.LCGraphicStyle;
+import org.lifecompanion.model.impl.notification.LCNotification;
+import org.lifecompanion.ui.notification.LCNotificationController;
 
 import java.util.Map;
 
@@ -46,5 +50,9 @@ public class MobileTextSharingAction extends SimpleUseActionImpl<UseActionTrigge
     }
 
     @Override
-    public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {}
+    public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
+        LCNotification notif = LCNotification.createInfo(Translation.getText("notification.action.only.mobile.title"));
+        notif.setMsDuration(LCGraphicStyle.BRIEF_NOTIFICATION_DURATION_MS);
+        LCNotificationController.INSTANCE.showNotification(notif);
+    }
 }
