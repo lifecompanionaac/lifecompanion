@@ -5,6 +5,7 @@
 ### Corrections/ajustements
 
 - Ajout des fonctionnalités permettant les essais de la version mobile (réservé pour l'instant à quelques utilisateurs)
+- Ticket #449 : les valeurs des grilles/cases transparentes sont maintenant prise en compte lors de l'export en PDF
 
 ## 1.6.7 - 18/04/2025
 

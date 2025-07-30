@@ -26,6 +26,7 @@ import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Region;
+import javafx.scene.paint.Color;
 import javafx.scene.transform.Scale;
 import javafx.util.Pair;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
@@ -218,6 +219,7 @@ public class ExportGridsToPdfTask extends LCTask<Void> {
                 final Region regionForGrid = viewForGrid.getView();
                 fxGroupAttachedToScene.getChildren().add(regionForGrid);
                 SnapshotParameters snapParams = new SnapshotParameters();
+                snapParams.setFill(Color.TRANSPARENT);
                 if (scale > 1.0)
                     snapParams.setTransform(new Scale(scale, scale));
                 LOGGER.info("Scale to {}", scale);
