@@ -46,8 +46,7 @@ public class LCFileChoosers {
     private static FileChooser getOrInitConfigurationFileChooser() {
         if (LCFileChoosers.configurationFileChooser == null) {
             LCFileChoosers.configurationFileChooser = new FileChooser();
-            // TODO : translate
-            extensionFilterMobileConfiguration = new ExtensionFilter(Translation.getText("file.chooser.config.description"), "*." + LCConstant.MOBILE_CONFIG_FILE_EXTENSION);
+            extensionFilterMobileConfiguration = new ExtensionFilter(Translation.getText("file.chooser.mobile.config.description"), "*." + LCConstant.MOBILE_CONFIG_FILE_EXTENSION);
             LCFileChoosers.configurationFileChooser.getExtensionFilters()
                     .add(new ExtensionFilter(Translation.getText("file.chooser.config.description"), "*." + LCConstant.CONFIG_FILE_EXTENSION));
         }

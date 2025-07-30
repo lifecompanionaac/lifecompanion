@@ -1450,6 +1450,7 @@
   <text key="notification.warning.unsaved.changes.configuration.title">{} modifications non sauvegardées</text>
   <!--org.lifecompanion.config.view.common-->
   <text key="file.chooser.config.description">Fichier de configuration LifeCompanion</text>
+  <text key="file.chooser.mobile.config.description">Fichier de configuration pour LifeCompanion Mobile</text>
   <text key="file.chooser.directory">Sélection de dossiers</text>
   <text key="file.chooser.image.description">Fichier d'images</text>
   <text key="file.chooser.image.title">Sélection d'images</text>
