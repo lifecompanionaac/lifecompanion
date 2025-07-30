@@ -43,7 +43,6 @@ LifeCompanion can be launched using command line arguments to configure some of 
 |`-deviceSyncAutoRefresh`|*`NONE`*|When the `deviceSyncMode` is enabled, will launch an auto sync Thread that will for a new selected device configuration every 10 seconds. If not enabled, the update should be manually triggered with the control server service.|
 |`-deviceLocalId deviceLocalId`|`foobar123`|Set the device local ID to be used by the `deviceSyncMode` when enabled. Allow launching LifeCompanion with a device local ID already set.|
 |`-useHubImages`|*`NONE`*|When enabled, LifeCompanion images will be downloaded on runtime from the hub and not from local image dictionaries (except for user dictionary). This can only be enabled if the hub URL has been provided.|
-|`-exportForMobile`|*`NONE`*|When enable, all configuration will be exported for mobile version (including all images and modified images)|
 
 ## LifeCompanion JVM properties
 

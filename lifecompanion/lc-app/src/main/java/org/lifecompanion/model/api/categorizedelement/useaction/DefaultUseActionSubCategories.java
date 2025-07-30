@@ -134,7 +134,8 @@ public enum DefaultUseActionSubCategories implements UseActionSubCategoryI {
             CategorizedElementColorProvider.nextColor(DefaultUseActionMainCategories.MISCELLANEOUS)),//
 
     //Mobile
-    MOBILE("use.action.sub.category.mobile.name", DefaultUseActionMainCategories.MOBILE, CategorizedElementColorProvider.nextColor(DefaultUseActionMainCategories.MOBILE)), //
+    MOBILE_SYSTEM("use.action.sub.category.mobile.system.name", DefaultUseActionMainCategories.MOBILE,
+            CategorizedElementColorProvider.nextColor(DefaultUseActionMainCategories.MOBILE)), //
 
     ;
     //========================================================================

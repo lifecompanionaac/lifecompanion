@@ -30,7 +30,6 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
-import org.jetbrains.annotations.NotNull;
 import org.lifecompanion.controller.appinstallation.InstallationController;
 import org.lifecompanion.controller.categorizedelement.useaction.AvailableUseActionController;
 import org.lifecompanion.controller.categorizedelement.useevent.AvailableUseEventController;
@@ -55,9 +54,7 @@ import org.slf4j.LoggerFactory;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -290,9 +287,9 @@ public class ExportActionsToPdfTask extends LCTask<Void> {
     }
 
     private static String findCompatibleSystem(CategorizedElementI<?> event) {
-        if (Arrays.equals(event.allowedSystemType(), SystemType.allExpectMobile()))
+        if (SystemType.isForComputerOnly(event.allowedSystemType()))
             return " " + Translation.getText("available.comp.list.alert.only.desktop");
-        if (Arrays.equals(event.allowedSystemType(), SystemType.allExpectComputer()))
+        if (SystemType.isForMobileOnly(event.allowedSystemType()))
             return " " + Translation.getText("available.comp.list.alert.only.mobile");
         return "";
     }

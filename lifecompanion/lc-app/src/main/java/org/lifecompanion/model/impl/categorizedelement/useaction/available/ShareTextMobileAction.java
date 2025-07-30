@@ -35,12 +35,12 @@ import java.util.Map;
 /**
  * @author Oscar PAVOINE
  */
-public class MobileTextSharingAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
+public class ShareTextMobileAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
 
-    public MobileTextSharingAction() {
+    public ShareTextMobileAction() {
         super(UseActionTriggerComponentI.class);
         this.order = 0;
-        this.category = DefaultUseActionSubCategories.MOBILE;
+        this.category = DefaultUseActionSubCategories.MOBILE_SYSTEM;
         this.nameID = "action.mobile.text.sharing.name";
         this.staticDescriptionID = "action.mobile.text.sharing.static.description";
         this.configIconPath = "mobile/icon_text_sharing_action.png";

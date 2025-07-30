@@ -1,14 +1,10 @@
 # LIFECOMPANION CHANGELOG
 
-## 1.6.8 - XX/XX/2025
-
-### Fonctionnalités
-
-- ...
+## 1.6.8 - XX/08/2025
 
 ### Corrections/ajustements
 
-- ...
+- Ajout des fonctionnalités permettant les essais de la version mobile (réservé pour l'instant à quelques utilisateurs)
 
 ## 1.6.7 - 18/04/2025
 

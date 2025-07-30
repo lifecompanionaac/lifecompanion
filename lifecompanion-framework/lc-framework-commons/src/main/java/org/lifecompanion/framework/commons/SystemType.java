@@ -23,6 +23,8 @@ import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
+
 /**
  * Enum that define the current system type.
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
@@ -82,6 +84,14 @@ public enum SystemType {
 
 	public static SystemType[] allExpectComputer() {
 		return new SystemType[] { IOS, ANDROID };
+	}
+
+	public static boolean isForMobileOnly(SystemType[] systemTypes){
+		return systemTypes!=null && Arrays.equals(systemTypes, SystemType.allExpectComputer());
+	}
+
+	public static boolean isForComputerOnly(SystemType[] systemTypes){
+		return systemTypes!=null && Arrays.equals(systemTypes, SystemType.allExpectMobile());
 	}
 
 	public static void setCurrentSystem(final SystemType currentP) {
