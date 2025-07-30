@@ -43,6 +43,7 @@ import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
 import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
 import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.framework.commons.translation.Translation;
+import org.lifecompanion.framework.commons.utils.io.FileNameUtils;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.framework.utils.LCNamedThreadFactory;
@@ -105,36 +106,6 @@ public class LCConfigurationActions {
     public static final KeyCombination KEY_COMBINATION_NEW = new KeyCodeCombination(KeyCode.N, KeyCombination.SHORTCUT_DOWN);
     public static final KeyCombination KEY_COMBINATION_OPEN = new KeyCodeCombination(KeyCode.O, KeyCombination.SHORTCUT_DOWN);
     public static final KeyCombination KEY_COMBINATION_SAVE = new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN);
-
-    private static Set<BaseUseActionI<?>> findIncompatibleActions(LCConfigurationI config, FileChooserType chooserType) {
-        Set<SystemType> incompatibleSystemTypeSet = (chooserType == FileChooserType.CONFIG_MOBILE_EXPORT)
-            ? Set.of(SystemType.allExpectMobile())
-            : Set.of(SystemType.allExpectComputer());
-
-        return config.getAllComponent().values().stream()
-            .filter(UseActionTriggerComponentI.class::isInstance)
-            .map(UseActionTriggerComponentI.class::cast)
-            .flatMap(triggerComp -> Arrays.stream(UseActionEvent.values())
-                    .map(event -> triggerComp.getActionManager().componentActions().get(event))
-                    .filter(Objects::nonNull)
-                    .flatMap(List::stream))
-            .filter(action -> Set.of(action.allowedSystemType()).equals(incompatibleSystemTypeSet))
-            .collect(Collectors.toSet());
-    }
-
-    private static boolean confirmIncompatibleActions(Set<BaseUseActionI<?>> actions, Node source) {
-        String actionNames = actions.stream()
-                .map(BaseUseActionI::getName)
-                .distinct()
-                .collect(Collectors.joining("\n - ", " - ", ""));
-
-        return DialogUtils
-                .alertWithSourceAndType(source, Alert.AlertType.INFORMATION)
-                .withHeaderText(Translation.getText("incompatible.actions.warning.header"))
-                .withContentText(Translation.getText("incompatible.actions.warning.message", actionNames))
-                .withButtonTypes(ButtonType.OK, ButtonType.CANCEL)
-                .showAndWait() != ButtonType.OK;
-    }
 
     public static class ShowNewEditAction implements BaseEditActionI {
         private final Node source;
@@ -604,40 +575,49 @@ public class LCConfigurationActions {
                 configurationDescription = currentProfile.getConfigurationById(currentConfiguration.getID());
             }
 
-            boolean mobileVersion = AppModeController.INSTANCE.getEditModeContext().getConfiguration() != null && UserConfigurationController.INSTANCE.enableExportMobileConfigurationProperty().get();
-
             // Save when needed (or forced)
             GlobalActions.checkModificationForCurrentConfiguration(currentConfiguration == null || StringUtils.isEquals(configurationDescription.getConfigurationId(), currentConfiguration.getID()),
-                this,
-                source,
-                Translation.getText("export.config.action.confirm.message"),
-                "export.config.action.confirm.button",
-                () -> {
-                    FileChooserType fileChooserType = mobileVersion ? FileChooserType.CONFIG_MOBILE_EXPORT : FileChooserType.CONFIG_DESKTOP_EXPORT;
-                    FileChooser configChooser = mobileVersion ? LCFileChoosers.getChooserMobileConfiguration(fileChooserType) : LCFileChoosers.getChooserDesktopConfiguration(fileChooserType);
+                    this,
+                    source,
+                    Translation.getText("export.config.action.confirm.message"),
+                    "export.config.action.confirm.button",
+                    () -> {
+                        FileChooserType fileChooserType = FileChooserType.CONFIG_EXPORT;
+                        FileChooser configChooser = LCFileChoosers.getChooserConfiguration(fileChooserType);
 
-                    Set<BaseUseActionI<?>> incompatibleActions = findIncompatibleActions(currentConfiguration, fileChooserType);
+                        // Issue #139 : default name for configuration
+                        configChooser.setInitialFileName(IOHelper.DATE_FORMAT_FILENAME_WITHOUT_TIME.format(new Date()) + "_"
+                                + org.lifecompanion.util.IOUtils.getValidFileName(configurationDescription.configurationNameProperty().get()));
+                        File configExportFile = configChooser.showSaveDialog(FXUtils.getSourceWindow(source));
 
-                    if (!incompatibleActions.isEmpty()) {
-                        boolean exportIsCancel = confirmIncompatibleActions(incompatibleActions, source);
-                        if (exportIsCancel) {
-                            return;
+                        if (configExportFile != null) {
+                            // Check if exported file is for mobile version
+                            boolean mobileVersion2 = StringUtils.isEqualsIgnoreCase(LCConstant.MOBILE_CONFIG_FILE_EXTENSION, FileNameUtils.getExtension(configExportFile));
+
+                            // Prepare next step : after saving (or nothing), launch export
+                            Runnable postContinueAction = () -> {
+                                LCStateController.INSTANCE.updateDefaultDirectory(fileChooserType, configExportFile.getParentFile());
+                                ConfigurationExportTask exportConfigTask = IOHelper.createConfigurationExportTask(configurationDescription, currentProfile,
+                                        configExportFile);
+                                //Execute
+                                AsyncExecutorController.INSTANCE.addAndExecute(true, false, exportConfigTask);
+                            };
+
+                            // For mobile, configuration should be saved just before export
+                            if (mobileVersion2) {
+                                LCConfigurationActions.SaveAction saveAction = new LCConfigurationActions.SaveAction(source, success -> {
+                                    if (success) { // errors are handled by the action
+                                        postContinueAction.run();
+                                    }
+                                }, true);
+                                saveAction.doAction();
+                            } else {
+                                postContinueAction.run();
+                            }
+                        } else {
+                            LCConfigurationActions.LOGGER.info("Configuration will no be exported because user cancelled the save dialog");
                         }
-                    }
-                    // Issue #139 : default name for configuration
-                    configChooser.setInitialFileName(IOHelper.DATE_FORMAT_FILENAME_WITHOUT_TIME.format(new Date()) + "_"
-                            + org.lifecompanion.util.IOUtils.getValidFileName(configurationDescription.configurationNameProperty().get()));
-                    File configExportFile = configChooser.showSaveDialog(FXUtils.getSourceWindow(source));
-                    if (configExportFile != null) {
-                        LCStateController.INSTANCE.updateDefaultDirectory(fileChooserType, configExportFile.getParentFile());
-                        ConfigurationExportTask exportConfigTask = IOHelper.createConfigurationExportTask(configurationDescription, currentProfile,
-                                configExportFile);
-                        //Execute
-                        AsyncExecutorController.INSTANCE.addAndExecute(true, false, exportConfigTask);
-                    } else {
-                        LCConfigurationActions.LOGGER.info("Configuration will no be exported because user cancelled the save dialog");
-                    }
-                }, mobileVersion);
+                    }, false);
         }
 
         @Override
@@ -645,6 +625,37 @@ public class LCConfigurationActions {
             return "action.export.name";
         }
     }
+
+    // Restore it later ?
+//    private static Set<BaseUseActionI<?>> findIncompatibleActions(LCConfigurationI config, FileChooserType chooserType) {
+//        Set<SystemType> incompatibleSystemTypeSet = (chooserType == FileChooserType.CONFIG_EXPORT)
+//                ? Set.of(SystemType.allExpectMobile())
+//                : Set.of(SystemType.allExpectComputer());
+//
+//        return config.getAllComponent().values().stream()
+//                .filter(UseActionTriggerComponentI.class::isInstance)
+//                .map(UseActionTriggerComponentI.class::cast)
+//                .flatMap(triggerComp -> Arrays.stream(UseActionEvent.values())
+//                        .map(event -> triggerComp.getActionManager().componentActions().get(event))
+//                        .filter(Objects::nonNull)
+//                        .flatMap(List::stream))
+//                .filter(action -> Set.of(action.allowedSystemType()).equals(incompatibleSystemTypeSet))
+//                .collect(Collectors.toSet());
+//    }
+//
+//    private static boolean confirmIncompatibleActions(Set<BaseUseActionI<?>> actions, Node source) {
+//        String actionNames = actions.stream()
+//                .map(BaseUseActionI::getName)
+//                .distinct()
+//                .collect(Collectors.joining("\n - ", " - ", ""));
+//
+//        return DialogUtils
+//                .alertWithSourceAndType(source, Alert.AlertType.INFORMATION)
+//                .withHeaderText(Translation.getText("incompatible.actions.warning.header"))
+//                .withContentText(Translation.getText("incompatible.actions.warning.message", actionNames))
+//                .withButtonTypes(ButtonType.OK, ButtonType.CANCEL)
+//                .showAndWait() != ButtonType.OK;
+//    }
 
     public static class ExportEditGridsToPdfAction implements BaseEditActionI {
         private final Node source;

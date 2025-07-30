@@ -30,12 +30,14 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
+import org.jetbrains.annotations.NotNull;
 import org.lifecompanion.controller.appinstallation.InstallationController;
 import org.lifecompanion.controller.categorizedelement.useaction.AvailableUseActionController;
 import org.lifecompanion.controller.categorizedelement.useevent.AvailableUseEventController;
 import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.controller.resource.ResourceHelper;
 import org.lifecompanion.controller.usevariable.UseVariableController;
+import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.model.api.categorizedelement.CategorizedElementI;
@@ -53,7 +55,9 @@ import org.slf4j.LoggerFactory;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -272,7 +276,7 @@ public class ExportActionsToPdfTask extends LCTask<Void> {
 
                         // ELEMENTS
                         for (CategorizedElementI<?> event : elements) {
-                            texts = new String[][]{event.getName().split("\\s+"), event.getStaticDescription().split("\\s+")};
+                            texts = new String[][]{(event.getName() + findCompatibleSystem(event)).split("\\s+"), event.getStaticDescription().split("\\s+")};
                             pageStream = newSection(texts, event.getConfigIconPath(), event.getCategory().getColor(), false, typeCategory, pageStream, pdfDoc, pdfPage);
                         }
                     }
@@ -283,6 +287,14 @@ public class ExportActionsToPdfTask extends LCTask<Void> {
                 LOGGER.error("Error while adding category section to PDF", e);
             }
         }
+    }
+
+    private static String findCompatibleSystem(CategorizedElementI<?> event) {
+        if (Arrays.equals(event.allowedSystemType(), SystemType.allExpectMobile()))
+            return " " + Translation.getText("available.comp.list.alert.only.desktop");
+        if (Arrays.equals(event.allowedSystemType(), SystemType.allExpectComputer()))
+            return " " + Translation.getText("available.comp.list.alert.only.mobile");
+        return "";
     }
 
     private PDPageContentStream newSection(String[][] word,

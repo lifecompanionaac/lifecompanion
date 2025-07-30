@@ -21,6 +21,7 @@ package org.lifecompanion.controller.editmode;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.framework.commons.translation.Translation;
 
@@ -32,42 +33,32 @@ import org.lifecompanion.framework.commons.translation.Translation;
 public class LCFileChoosers {
 
     private static FileChooser configurationFileChooser;
-    private static FileChooser desktopConfigurationFileChooser;
-    private static FileChooser mobileConfigurationFileChooser;
     private static FileChooser keylistFileChooser;
     private static FileChooser profileFileChooser;
     private static FileChooser imageFileChooser;
     private static FileChooser videoFileChooser;
     private static FileChooser otherFileChooser;
     private static DirectoryChooser directoryChooser;
+    private static ExtensionFilter extensionFilterMobileConfiguration;
 
     // PRIVATE
     //========================================================================
     private static FileChooser getOrInitConfigurationFileChooser() {
         if (LCFileChoosers.configurationFileChooser == null) {
             LCFileChoosers.configurationFileChooser = new FileChooser();
+            // TODO : translate
+            extensionFilterMobileConfiguration = new ExtensionFilter(Translation.getText("file.chooser.config.description"), "*." + LCConstant.MOBILE_CONFIG_FILE_EXTENSION);
             LCFileChoosers.configurationFileChooser.getExtensionFilters()
-                    .add(new ExtensionFilter(Translation.getText("file.chooser.config.description"), "*." + LCConstant.CONFIG_FILE_EXTENSION, "*." + LCConstant.MOBILE_CONFIG_FILE_EXTENSION));
-        }
-        return configurationFileChooser;
-    }
-
-    private static FileChooser getOrInitDesktopConfigurationFileChooser() {
-        if (LCFileChoosers.desktopConfigurationFileChooser == null) {
-            LCFileChoosers.desktopConfigurationFileChooser = new FileChooser();
-            LCFileChoosers.desktopConfigurationFileChooser.getExtensionFilters()
                     .add(new ExtensionFilter(Translation.getText("file.chooser.config.description"), "*." + LCConstant.CONFIG_FILE_EXTENSION));
         }
-        return desktopConfigurationFileChooser;
-    }
-
-    private static FileChooser getOrInitMobileConfigurationFileChooser() {
-        if (LCFileChoosers.mobileConfigurationFileChooser == null) {
-            LCFileChoosers.mobileConfigurationFileChooser = new FileChooser();
-            LCFileChoosers.mobileConfigurationFileChooser.getExtensionFilters()
-                    .add(new ExtensionFilter(Translation.getText("file.chooser.config.description"), "*." + LCConstant.MOBILE_CONFIG_FILE_EXTENSION));
+        if (UserConfigurationController.INSTANCE.enableExportMobileConfigurationProperty().get()) {
+            if(!LCFileChoosers.configurationFileChooser.getExtensionFilters().contains(extensionFilterMobileConfiguration)){
+                LCFileChoosers.configurationFileChooser.getExtensionFilters().add(extensionFilterMobileConfiguration);
+            }
+        } else {
+            LCFileChoosers.configurationFileChooser.getExtensionFilters().remove(extensionFilterMobileConfiguration);
         }
-        return mobileConfigurationFileChooser;
+        return configurationFileChooser;
     }
 
     private static FileChooser getOrInitKeyListFileChooser() {
@@ -128,14 +119,6 @@ public class LCFileChoosers {
     //========================================================================
     public static FileChooser getChooserConfiguration(final FileChooserType fileChooserType) {
         return initializeDirectory(LCFileChoosers.getOrInitConfigurationFileChooser(), fileChooserType);
-    }
-
-    public static FileChooser getChooserDesktopConfiguration(final FileChooserType fileChooserType) {
-        return initializeDirectory(LCFileChoosers.getOrInitDesktopConfigurationFileChooser(), fileChooserType);
-    }
-
-    public static FileChooser getChooserMobileConfiguration(final FileChooserType fileChooserType) {
-        return initializeDirectory(LCFileChoosers.getOrInitMobileConfigurationFileChooser(), fileChooserType);
     }
 
     public static FileChooser getChooserKeyList(final FileChooserType fileChooserType) {

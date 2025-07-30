@@ -204,21 +204,21 @@ public class GlobalActions {
         checkModificationForCurrentConfiguration(action, source, message, thenButtonNameId, postContinueAction, false);
     }
 
-    public static void checkModificationForCurrentConfiguration(BaseEditActionI action, Node source, String message, String thenButtonNameId, PostCheckModificationAction postContinueAction, boolean mobileVersion) throws LCException {
-        checkModificationForCurrentConfiguration(true, action, source, message, thenButtonNameId, postContinueAction, mobileVersion);
+    public static void checkModificationForCurrentConfiguration(BaseEditActionI action, Node source, String message, String thenButtonNameId, PostCheckModificationAction postContinueAction, boolean forceSave) throws LCException {
+        checkModificationForCurrentConfiguration(true, action, source, message, thenButtonNameId, postContinueAction, forceSave);
     }
 
-    public static void checkModificationForCurrentConfiguration(boolean condition, BaseEditActionI action, Node source, String message, String thenButtonNameId, PostCheckModificationAction postContinueAction, boolean mobileVersion) throws LCException {
+    public static void checkModificationForCurrentConfiguration(boolean condition, BaseEditActionI action, Node source, String message, String thenButtonNameId, PostCheckModificationAction postContinueAction, boolean forceSave) throws LCException {
         if (condition && AppModeController.INSTANCE.modeProperty().get() != AppMode.USE) {
             //Confirm
             if (AppModeController.INSTANCE.getEditModeContext().getConfiguration() != null) {
                 int unsaved = AppModeController.INSTANCE.getEditModeContext().getConfigurationUnsavedAction();
-                if (unsaved > 0 || mobileVersion) {
+                if (unsaved > 0 || forceSave) {
                     ButtonType typeYes = new ButtonType(Translation.getText("button.type.save.and.then", Translation.getText(thenButtonNameId)), ButtonBar.ButtonData.YES);
                     ButtonType typeNo = new ButtonType(Translation.getText("button.type.then.only", StringUtils.capitalize(Translation.getText(thenButtonNameId))), ButtonBar.ButtonData.NO);
                     ButtonType typeCancel = new ButtonType(Translation.getText("button.type.cancel"), ButtonBar.ButtonData.CANCEL_CLOSE);
 
-                    final ButtonType result = mobileVersion ? typeYes : DialogUtils
+                    final ButtonType result = forceSave ? typeYes : DialogUtils
                             .alertWithSourceAndType(source, Alert.AlertType.CONFIRMATION)
                             .withContentText(Translation.getText("save.and.then.message.first.part", unsaved, message))
                             .withHeaderText(Translation.getText("save.and.then.header"))
@@ -233,7 +233,7 @@ public class GlobalActions {
                                     ConfigActionController.INSTANCE.reportErrorOnConfigActionDoRedoUndo(action, e, "doAction()", "error.config.action.while.do");
                                 }
                             }
-                        }, mobileVersion);
+                        }, forceSave);
                         saveAction.doAction();
                         return;
                     } else if (result != typeNo) {
