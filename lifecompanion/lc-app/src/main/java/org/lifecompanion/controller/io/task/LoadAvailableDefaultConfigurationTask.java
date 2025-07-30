@@ -88,8 +88,9 @@ public class LoadAvailableDefaultConfigurationTask extends LCTask<List<Pair<Stri
                                             .filter(r -> StringUtils.isEquals(r.id, fileId))
                                             .filter(r -> StringUtils.isEquals(r.type, "files"))
 
-                                    )
-                                    .filter(file -> file.attributes.metadata.containsKey("configurationId")))
+                                    ).filter(file -> file.attributes.metadata != null && file.attributes.metadata.containsKey("configurationId"))
+                                    .filter(file -> StringUtils.endsWithIgnoreCase(file.attributes.originalName,"lcc"))
+                            )
                             .filter(file -> VersionUtils.compare(currentVersion, String.valueOf(file.attributes.metadata.get("version"))) >= 0)
                             .min((file1, file2) ->
                                     VersionUtils.compare(
@@ -251,6 +252,7 @@ public class LoadAvailableDefaultConfigurationTask extends LCTask<List<Pair<Stri
     private static class AppServerFileAttributes {
         private String url;
         private String hash;
+        private String originalName;
         private Map<String, Object> metadata;
     }
 
