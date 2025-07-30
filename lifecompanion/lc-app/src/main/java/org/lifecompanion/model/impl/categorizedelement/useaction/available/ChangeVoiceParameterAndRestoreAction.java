@@ -19,6 +19,7 @@
 
 package org.lifecompanion.model.impl.categorizedelement.useaction.available;
 
+import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
 import javafx.beans.binding.Bindings;
 
@@ -35,5 +36,6 @@ public class ChangeVoiceParameterAndRestoreAction extends ChangeVoiceParameterAc
 				.bind(TranslationFX.getTextBinding("action.change.voice.and.restore.parameter.variable.description", Bindings.createStringBinding(() -> {
 					return this.selectedVoice.get() != null ? this.selectedVoice.get().getDisplayableLabel() : "null";
 				}, this.selectedVoice)));
+		this.allowSystems = SystemType.allExpectMobile();
 	}
 }

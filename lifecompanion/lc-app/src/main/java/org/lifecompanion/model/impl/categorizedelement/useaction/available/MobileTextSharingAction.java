@@ -16,38 +16,43 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.lifecompanion.model.impl.categorizedelement.useaction.available;
 
-import org.lifecompanion.controller.virtualmouse.DirectionalMouseController;
+
 import org.lifecompanion.framework.commons.SystemType;
+import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseActionSubCategories;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
 import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
+import org.lifecompanion.model.impl.constant.LCGraphicStyle;
+import org.lifecompanion.model.impl.notification.LCNotification;
+import org.lifecompanion.ui.notification.LCNotificationController;
 
 import java.util.Map;
 
 /**
- * @author Mathieu THEBAUD <math.thebaud@gmail.com>
+ * @author Oscar PAVOINE
  */
-public class ClicMouseScrollAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
+public class MobileTextSharingAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
 
-    public ClicMouseScrollAction() {
+    public MobileTextSharingAction() {
         super(UseActionTriggerComponentI.class);
-        this.category = DefaultUseActionSubCategories.MOUSE_ACTION_DIRECT;
-        this.nameID = "action.clic.mouse.scroll.name";
         this.order = 0;
-        this.staticDescriptionID = "action.clic.mouse.scroll.static.description";
-        this.configIconPath = "computeraccess/icon_mouse_clic_scroll_direct.png";
+        this.category = DefaultUseActionSubCategories.MOBILE;
+        this.nameID = "action.mobile.text.sharing.name";
+        this.staticDescriptionID = "action.mobile.text.sharing.static.description";
+        this.configIconPath = "mobile/icon_text_sharing_action.png";
         this.parameterizableAction = false;
         this.variableDescriptionProperty().set(this.getStaticDescription());
-        this.allowSystems = SystemType.allExpectMobile();
+        this.allowSystems = SystemType.allExpectComputer();
     }
 
     @Override
     public void execute(final UseActionEvent eventP, final Map<String, UseVariableI<?>> variables) {
-        DirectionalMouseController.INSTANCE.pressMouseMiddleClicWithoutNoVirtualPosition();
+        LCNotification notif = LCNotification.createInfo(Translation.getText("notification.action.only.mobile.title"));
+        notif.setMsDuration(LCGraphicStyle.BRIEF_NOTIFICATION_DURATION_MS);
+        LCNotificationController.INSTANCE.showNotification(notif);
     }
 }

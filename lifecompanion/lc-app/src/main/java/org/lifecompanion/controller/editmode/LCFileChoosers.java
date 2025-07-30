@@ -32,6 +32,7 @@ import org.lifecompanion.framework.commons.translation.Translation;
 public class LCFileChoosers {
 
     private static FileChooser configurationFileChooser;
+    private static FileChooser desktopConfigurationFileChooser;
     private static FileChooser mobileConfigurationFileChooser;
     private static FileChooser keylistFileChooser;
     private static FileChooser profileFileChooser;
@@ -46,9 +47,18 @@ public class LCFileChoosers {
         if (LCFileChoosers.configurationFileChooser == null) {
             LCFileChoosers.configurationFileChooser = new FileChooser();
             LCFileChoosers.configurationFileChooser.getExtensionFilters()
-                    .add(new ExtensionFilter(Translation.getText("file.chooser.config.description"), "*." + LCConstant.CONFIG_FILE_EXTENSION));
+                    .add(new ExtensionFilter(Translation.getText("file.chooser.config.description"), "*." + LCConstant.CONFIG_FILE_EXTENSION, "*." + LCConstant.MOBILE_CONFIG_FILE_EXTENSION));
         }
         return configurationFileChooser;
+    }
+
+    private static FileChooser getOrInitDesktopConfigurationFileChooser() {
+        if (LCFileChoosers.desktopConfigurationFileChooser == null) {
+            LCFileChoosers.desktopConfigurationFileChooser = new FileChooser();
+            LCFileChoosers.desktopConfigurationFileChooser.getExtensionFilters()
+                    .add(new ExtensionFilter(Translation.getText("file.chooser.config.description"), "*." + LCConstant.CONFIG_FILE_EXTENSION));
+        }
+        return desktopConfigurationFileChooser;
     }
 
     private static FileChooser getOrInitMobileConfigurationFileChooser() {
@@ -118,6 +128,10 @@ public class LCFileChoosers {
     //========================================================================
     public static FileChooser getChooserConfiguration(final FileChooserType fileChooserType) {
         return initializeDirectory(LCFileChoosers.getOrInitConfigurationFileChooser(), fileChooserType);
+    }
+
+    public static FileChooser getChooserDesktopConfiguration(final FileChooserType fileChooserType) {
+        return initializeDirectory(LCFileChoosers.getOrInitDesktopConfigurationFileChooser(), fileChooserType);
     }
 
     public static FileChooser getChooserMobileConfiguration(final FileChooserType fileChooserType) {

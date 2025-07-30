@@ -131,7 +131,10 @@ public enum DefaultUseActionSubCategories implements UseActionSubCategoryI {
     SCRIPT("use.action.sub.category.script.name", DefaultUseActionMainCategories.MISCELLANEOUS,
             CategorizedElementColorProvider.nextColor(DefaultUseActionMainCategories.MISCELLANEOUS)),//
     TIMER("use.action.sub.category.timer.name", DefaultUseActionMainCategories.MISCELLANEOUS,
-            CategorizedElementColorProvider.nextColor(DefaultUseActionMainCategories.MISCELLANEOUS))//
+            CategorizedElementColorProvider.nextColor(DefaultUseActionMainCategories.MISCELLANEOUS)),//
+
+    //Mobile
+    MOBILE("use.action.sub.category.mobile.name", DefaultUseActionMainCategories.MOBILE, CategorizedElementColorProvider.nextColor(DefaultUseActionMainCategories.MOBILE)), //
 
     ;
     //========================================================================

@@ -24,6 +24,7 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
 import org.lifecompanion.controller.virtualmouse.VirtualMouseController;
+import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
@@ -66,6 +67,7 @@ public class ChangeStageSizeAction extends SimpleUseActionImpl<UseActionTriggerC
         this.parameterizableAction = true;
         this.changeRatioPercent = new SimpleDoubleProperty(100);
         this.variableDescriptionProperty().set(getStaticDescription());
+        this.allowSystems = SystemType.allExpectMobile();
     }
 
     public DoubleProperty changeRatioProperty() {

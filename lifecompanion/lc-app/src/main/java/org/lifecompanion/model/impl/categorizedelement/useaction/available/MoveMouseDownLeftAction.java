@@ -21,6 +21,7 @@ package org.lifecompanion.model.impl.categorizedelement.useaction.available;
 
 import java.util.Map;
 
+import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
@@ -43,6 +44,7 @@ public class MoveMouseDownLeftAction extends SimpleUseActionImpl<UseActionTrigge
 		this.configIconPath = "computeraccess/icon_arrow_sw.png";
 		this.parameterizableAction = false;
 		this.variableDescriptionProperty().set(this.getStaticDescription());
+		this.allowSystems = SystemType.allExpectMobile();
 	}
 
 	// Class part : "Execute"

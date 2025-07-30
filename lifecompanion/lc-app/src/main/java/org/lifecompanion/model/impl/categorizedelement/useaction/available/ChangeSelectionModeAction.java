@@ -25,6 +25,7 @@ import org.lifecompanion.controller.io.ConfigurationComponentIOHelper;
 import org.lifecompanion.controller.selectionmode.SelectionModeController;
 import org.lifecompanion.controller.textcomponent.WritingStateController;
 import org.lifecompanion.controller.usevariable.UseVariableController;
+import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.framework.commons.fx.io.XMLUtils;
 import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
@@ -67,6 +68,7 @@ public class ChangeSelectionModeAction extends SimpleUseActionImpl<UseActionTrig
         this.configIconPath = "selection/icon_change_selection_mode.png";
         this.parameterizableAction = true;
         this.variableDescriptionProperty().set(getStaticDescription());
+        this.allowSystems = SystemType.allExpectMobile();
     }
 
     @Override

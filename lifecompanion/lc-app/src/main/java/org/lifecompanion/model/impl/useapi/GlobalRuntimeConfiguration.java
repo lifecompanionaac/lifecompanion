@@ -264,13 +264,6 @@ public enum GlobalRuntimeConfiguration implements GlobalRuntimeConfigurationI {
             "When enabled, LifeCompanion images will be downloaded on runtime from the hub and not from local image dictionaries (except for user dictionary). This can only be enabled if the hub URL has been provided."
     ),
 
-    // Mobile
-    EXPORT_FOR_MOBILE(
-            "exportForMobile",
-            GlobalRuntimeConfigurationType.COMMAND_LINE,
-            "When enable, all configuration will be exported for mobile version (including all images and modified images)"
-    ),
-
     // Dev env
     PROP_DEV_MODE(
             "org.lifecompanion.dev.mode",

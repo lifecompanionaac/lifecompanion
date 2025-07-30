@@ -22,6 +22,7 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import org.jdom2.Element;
+import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
@@ -65,6 +66,7 @@ public class ChangeVoiceParameterAction extends SimpleUseActionImpl<UseActionTri
                 .bind(TranslationFX.getTextBinding("action.change.voice.parameter.variable.description", Bindings.createStringBinding(() -> {
                     return this.selectedVoice.get() != null ? this.selectedVoice.get().getDisplayableLabel() : "null";
                 }, this.selectedVoice)));
+        this.allowSystems = SystemType.allExpectMobile();
     }
 
     public ObjectProperty<VoiceAndSynthesizerInfoI> selectedVoiceProperty() {

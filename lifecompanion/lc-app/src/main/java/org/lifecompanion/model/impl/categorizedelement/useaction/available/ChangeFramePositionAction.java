@@ -26,6 +26,7 @@ import javafx.stage.Stage;
 import org.jdom2.Element;
 import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
 import org.lifecompanion.controller.virtualmouse.VirtualMouseController;
+import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.model.api.configurationcomponent.FramePosition;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
@@ -73,6 +74,7 @@ public class ChangeFramePositionAction extends SimpleUseActionImpl<UseActionTrig
                         return Translation.getText("frame.position.none");
                     }
                 }, this.framePosition)));
+        this.allowSystems = SystemType.allExpectMobile();
     }
 
     @Override
