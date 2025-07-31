@@ -20,6 +20,7 @@
 package org.lifecompanion.model.impl.categorizedelement.useevent.available;
 
 import org.lifecompanion.controller.feedback.IndicationController;
+import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.model.api.categorizedelement.useevent.DefaultUseEventSubCategories;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.impl.categorizedelement.useevent.BaseUseEventGeneratorImpl;
@@ -35,6 +36,7 @@ public class OnTargetIndicationReachedEventGenerator extends BaseUseEventGenerat
         this.staticDescriptionID = "use.event.on.target.indication.reached.description";
         this.configIconPath = "miscellaneous/icon_on_target_reached.png";
         this.variableDescriptionProperty().set(this.getStaticDescription());
+        this.allowSystems = SystemType.allExpectMobile();
     }
 
     private Runnable listener;

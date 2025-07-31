@@ -23,6 +23,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.input.MouseEvent;
 import org.jdom2.Element;
+import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.selectionmode.MouseButton;
 import org.lifecompanion.model.impl.exception.LCException;
@@ -48,6 +49,7 @@ public class MouseButtonPressedEventGenerator extends BaseUseEventGeneratorImpl 
         this.staticDescriptionID = "use.event.clic.mouse.button.pressed.description";
         this.variableDescriptionProperty().set(this.getStaticDescription());
         this.configIconPath = "control/icon_mouse_button_pressed.png";
+        this.allowSystems = SystemType.allExpectMobile();
     }
 
     public ObjectProperty<MouseButton> wantedButtonProperty() {

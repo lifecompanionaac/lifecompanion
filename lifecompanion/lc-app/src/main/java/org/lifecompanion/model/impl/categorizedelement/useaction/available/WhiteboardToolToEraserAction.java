@@ -19,6 +19,7 @@
 package org.lifecompanion.model.impl.categorizedelement.useaction.available;
 
 import org.lifecompanion.controller.configurationcomponent.UseModeWhiteboardController;
+import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseActionSubCategories;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
@@ -41,6 +42,7 @@ public class WhiteboardToolToEraserAction extends SimpleUseActionImpl<UseActionT
         this.configIconPath = "miscellaneous/icon_whiteboard_to_eraser.png";
         this.parameterizableAction = false;
         this.variableDescriptionProperty().set(getStaticDescription());
+        this.allowSystems = SystemType.allExpectComputer();
     }
 
     @Override

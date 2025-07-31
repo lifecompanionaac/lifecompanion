@@ -21,6 +21,7 @@ package org.lifecompanion.model.impl.categorizedelement.useevent.available;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import org.jdom2.Element;
+import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.impl.exception.LCException;
 import org.lifecompanion.model.api.io.IOContextI;
@@ -46,6 +47,7 @@ public class PressTimeReachedEventGenerator extends BaseUseEventGeneratorImpl {
 		this.configIconPath = "control/icon_press_reach_time.png";
 		this.variableDescriptionProperty()
 				.bind(TranslationFX.getTextBinding("use.event.press.time.reached.variable.description", BindingUtils.createDivide1000Binding(this.timeToReach)));
+		this.allowSystems = SystemType.allExpectMobile();
 	}
 
 	public IntegerProperty timeToReachProperty() {

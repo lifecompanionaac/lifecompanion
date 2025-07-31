@@ -23,6 +23,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.paint.Color;
 import org.jdom2.Element;
 import org.lifecompanion.controller.configurationcomponent.UseModeWhiteboardController;
+import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.framework.commons.fx.io.XMLGenericProperty;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseActionSubCategories;
@@ -53,6 +54,7 @@ public class WhiteboardSetColorAction extends SimpleUseActionImpl<UseActionTrigg
         this.parameterizableAction = true;
         this.drawingColor = new SimpleObjectProperty<>(Color.RED);
         this.variableDescriptionProperty().set(getStaticDescription());
+        this.allowSystems = SystemType.allExpectComputer();
     }
 
     public ObjectProperty<Color> drawingColorProperty() {

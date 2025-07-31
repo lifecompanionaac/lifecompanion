@@ -20,6 +20,7 @@
 package org.lifecompanion.model.impl.categorizedelement.useevent.available;
 
 import org.lifecompanion.controller.feedback.IndicationController;
+import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.model.api.categorizedelement.useevent.DefaultUseEventSubCategories;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.impl.categorizedelement.useevent.BaseUseEventGeneratorImpl;
@@ -35,6 +36,7 @@ public class OnActivationDoneEventGenerator extends BaseUseEventGeneratorImpl {
         this.staticDescriptionID = "use.event.on.activation.indication.done.description";
         this.configIconPath = "miscellaneous/icon_on_activation_done.png";
         this.variableDescriptionProperty().set(this.getStaticDescription());
+        this.allowSystems = SystemType.allExpectMobile();
     }
 
     private Runnable listener;

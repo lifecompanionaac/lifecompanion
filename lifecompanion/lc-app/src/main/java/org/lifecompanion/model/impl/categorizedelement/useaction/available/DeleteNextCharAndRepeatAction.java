@@ -19,6 +19,7 @@
 
 package org.lifecompanion.model.impl.categorizedelement.useaction.available;
 
+import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
 import org.lifecompanion.model.api.textcomponent.WritingEventSource;
@@ -42,6 +43,7 @@ public class DeleteNextCharAndRepeatAction extends RepeatActionBaseImpl<UseActio
 		this.configIconPath = "text/icon_delete_next_char_and_repeat.png";
 		this.parameterizableAction = false;
 		this.order = 6;
+		this.allowSystems = SystemType.allExpectMobile();
 	}
 
 	// Class part : "Execute"
