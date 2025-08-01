@@ -32,6 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.Map;
 
 public class ImageDictionary implements ImageDictionaryI {
@@ -46,11 +47,13 @@ public class ImageDictionary implements ImageDictionaryI {
     private boolean optionalDictionary;
     private String idCheck;
     private final ObservableList<ImageElementI> images;
+    private final Map<String, String> patched;
 
     private transient File imageDirectory;
 
     public ImageDictionary() {
         images = FXCollections.observableArrayList();
+        patched = new HashMap<>();
     }
 
     @Override
@@ -160,6 +163,12 @@ public class ImageDictionary implements ImageDictionaryI {
         this.images.forEach(e -> {
             e.setDictionary(this);
             allImageMap.put(e.getId(), e);
+        });
+        patched.forEach((previousId, newId) -> {
+            ImageElementI updatedImage = allImageMap.get(newId);
+            if (updatedImage != null) {
+                allImageMap.put(previousId, updatedImage);
+            }
         });
     }
     //========================================================================

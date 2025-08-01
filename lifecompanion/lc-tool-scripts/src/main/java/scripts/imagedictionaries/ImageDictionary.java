@@ -20,6 +20,7 @@
 package scripts.imagedictionaries;
 
 import java.util.List;
+import java.util.Map;
 
 public class ImageDictionary {
     String name;
@@ -30,6 +31,11 @@ public class ImageDictionary {
     boolean customDictionary;
     String idCheck;
     List<ImageElement> images;
+    Map<String, String> patched;
+
+    public ImageDictionary() {
+
+    }
 
     public ImageDictionary(String name, String description, String author, String imageExtension, String url, boolean customDictionary) {
         this.name = name;

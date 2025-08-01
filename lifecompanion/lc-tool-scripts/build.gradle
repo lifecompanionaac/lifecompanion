@@ -17,10 +17,10 @@ dependencies {
     implementation 'org.imgscalr:imgscalr-lib:4.2'
 }
 
-mainClassName = "scripts.imagedictionaries.MakatonCreationScript"
+mainClassName = "scripts.imagedictionaries.DictionaryUpdater"
 
 application {
     applicationDefaultJvmArgs = [
-            "-Xmx16G"
+            "-Xmx28G"
     ]
 }
