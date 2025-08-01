@@ -4,8 +4,9 @@
 
 ### Corrections/ajustements
 
-- Ajout des fonctionnalités permettant les essais de la version mobile (réservé pour l'instant à quelques utilisateurs)
+- Ajout des fonctionnalités permettant les essais de la [version mobile](https://lifecompanionaac.org/categories/documentations/life-companion-pour-mobile-android) (réservé pour l'instant à quelques utilisateurs)
 - Ticket #449 : les valeurs des grilles/cases transparentes sont maintenant prise en compte lors de l'export en PDF
+- Ajout d'un bouton pour supprimer la base Makaton
 
 ## 1.6.7 - 18/04/2025
 

@@ -21,6 +21,7 @@ package org.lifecompanion.controller.appinstallation;
 
 import javafx.concurrent.Task;
 import org.lifecompanion.controller.appinstallation.task.InstallOptionalResourceTask;
+import org.lifecompanion.controller.appinstallation.task.UninstallOptionalResourceTask;
 import org.lifecompanion.model.api.lifecycle.LCStateListener;
 import org.lifecompanion.model.impl.appinstallation.OptionalResourceEnum;
 import org.slf4j.Logger;
@@ -80,5 +81,14 @@ public enum OptionalResourceController implements LCStateListener {
             onSuccess.run();
         });
         return installOptionalResourceTask;
+    }
+
+    public UninstallOptionalResourceTask uninstallRessource(OptionalResourceEnum optionalResourceEnum, Runnable onSuccess) {
+        UninstallOptionalResourceTask uninstallOptionalResourceTask = new UninstallOptionalResourceTask(optionalResourceEnum);
+        uninstallOptionalResourceTask.setOnSucceeded(e -> {
+            installedResource.remove(optionalResourceEnum);
+            onSuccess.run();
+        });
+        return uninstallOptionalResourceTask;
     }
 }

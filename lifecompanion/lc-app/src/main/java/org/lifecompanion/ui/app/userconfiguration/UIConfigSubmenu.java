@@ -103,6 +103,7 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
     private ComboBox<String> comboBoxLanguage;
 
     private Label labelMakatonEnabled;
+    private Button buttonDeleteMakaton;
 
     public UIConfigSubmenu() {
         this.initAll();
@@ -126,7 +127,8 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
         labelMakatonEnabled.getStyleClass().add("text-weight-bold");
         buttonAddMakaton = FXControlUtils.createLeftTextButton(Translation.getText("button.add.optional.resource.makaton"),
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.PLUS).size(16).color(LCGraphicStyle.MAIN_DARK), null);
-        TilePane paneMakaton = new TilePane(buttonAddMakaton, labelMakatonEnabled);
+        this.buttonDeleteMakaton = FXControlUtils.createGraphicButton(GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.TRASH_ALT).size(16).color(LCGraphicStyle.SECOND_DARK), null);
+        TilePane paneMakaton = new TilePane(buttonAddMakaton, labelMakatonEnabled, buttonDeleteMakaton);
 
         // Use mode
         Label labelUseMode = FXControlUtils.createTitleLabel("user.config.part.ui.use.mode");
@@ -308,6 +310,7 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
         boolean makatonInstalled = OptionalResourceController.INSTANCE.getInstalledResource().contains(OptionalResourceEnum.MAKATON);
         buttonAddMakaton.visibleProperty().set(!makatonInstalled);
         labelMakatonEnabled.visibleProperty().set(makatonInstalled);
+        buttonDeleteMakaton.visibleProperty().set(makatonInstalled);
     }
 
     @Override
@@ -340,6 +343,7 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
         configurationManagedAndVisibleOnWindowsOnly(toggleEnableLaunchLCSystemStartup);
         buttonAddMakaton.managedProperty().bind(buttonAddMakaton.visibleProperty());
         labelMakatonEnabled.managedProperty().bind(labelMakatonEnabled.visibleProperty());
+        buttonDeleteMakaton.managedProperty().bind(buttonDeleteMakaton.visibleProperty());
     }
 
     private void configurationManagedAndVisibleOnWindowsOnly(Node node) {
@@ -360,6 +364,14 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
             emailDialog.setHeaderText(Translation.getText("optional.resource.add.makaton.header"));
             StageUtils.centerOnOwnerOrOnCurrentStage(emailDialog);
             emailDialog.showAndWait().ifPresent(email -> AsyncExecutorController.INSTANCE.addAndExecute(true, false, OptionalResourceController.INSTANCE.installResource(OptionalResourceEnum.MAKATON, this::updateInstalledOptions, email)));
+        });
+        buttonDeleteMakaton.setOnAction(e -> {
+            if (DialogUtils.alertWithSourceAndType(buttonDeleteMakaton, Alert.AlertType.CONFIRMATION)
+                    .withContentText(Translation.getText("action.confirm.remove.makaton.resource.description"))
+                    .withHeaderText(Translation.getText("action.confirm.remove.makaton.resource.header"))
+                    .showAndWait() == ButtonType.OK) {
+                AsyncExecutorController.INSTANCE.addAndExecute(true, false, OptionalResourceController.INSTANCE.uninstallRessource(OptionalResourceEnum.MAKATON, this::updateInstalledOptions));
+            }
         });
     }
 

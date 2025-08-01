@@ -3891,6 +3891,7 @@
     <text key="makaton.notification.installed.restart.button">Redémarrer</text>
     <text key="optional.resource.makaton.enabled">Banque d'images Makaton activée</text>
     <text key="makaton.task.install.resource">Installation de la banque Makaton</text>
+    <text key="makaton.task.uninstall.resource">Suppression de la banque Makaton</text>
     <text key="training.information.button.close">Fermer</text>
     <text key="use.action.timer.time">Durée du minuteur</text>
     <text key="use.action.start.dynamic.key.fill.name">Marquer cette case comme "à remplir"</text>
@@ -3989,4 +3990,6 @@
     <text key="button.disable.speak.key.leaves">Désactiver "Prononcer" sur les cases de listes de cases</text>
     <text key="available.comp.list.alert.only.desktop">[Non compatible mobile]</text>
     <text key="available.comp.list.alert.only.mobile">[Uniquement sur mobile]</text>
+    <text key="action.confirm.remove.makaton.resource.description">Êtes vous sûr de vouloir supprimer la base Makaton ? Celle-ci pourra être de nouveau ajoutée si nécessaire.</text>
+    <text key="action.confirm.remove.makaton.resource.header">Confirmez vous la suppression de la base Makaton</text>
 </texts>

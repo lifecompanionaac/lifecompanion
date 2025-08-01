@@ -39,7 +39,6 @@ import java.io.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -55,6 +54,7 @@ import static org.lifecompanion.framework.commons.utils.io.IOUtils.fileSha256Hex
 public class ImageDictionariesCreationScript {
 
     private static final int WIDTH = 400;
+    private static final int ALIASING_WIDTH = WIDTH * 4;
     private static final int THRESHOLD = 60;
     private static final int SIM_SQUARE_SIZE = 80;
     private static final double SIM_THRESHOLD = 0.95;
@@ -140,7 +140,7 @@ public class ImageDictionariesCreationScript {
             File inputImageFile = entry.getValue().get(0).getKey();
             try (InputStream fis = new BufferedInputStream(new FileInputStream(inputImageFile))) {
                 // Read and resize
-                Image inputImage = new Image(fis, dictionaryInformation.resize ? WIDTH : -1, -1, true, true);
+                Image inputImage = new Image(fis, dictionaryInformation.resize ? (dictionaryInformation.antialiasing ? ALIASING_WIDTH : WIDTH) : -1, -1, true, true);
                 // Delete label when needed
                 inputImage = dictionaryInformation.deleteImageIntegratedLabel ? deleteLabelInImage(inputImage) : inputImage;
                 // Replace background when needed
@@ -150,6 +150,15 @@ public class ImageDictionariesCreationScript {
                 BufferedImage buffImage = SwingFXUtils.fromFXImage(inputImage, null);
                 File tempOutputImage = File.createTempFile("lcimage", "." + dictionaryInformation.dictionary.imageExtension);
                 ImageIO.write(buffImage, dictionaryInformation.dictionary.imageExtension, tempOutputImage);
+
+                // Load again and save again
+                if (dictionaryInformation.antialiasing) {
+                    try (FileInputStream fis2 = new FileInputStream(tempOutputImage)) {
+                        inputImage = new Image(fis2, dictionaryInformation.resize ? WIDTH : -1, -1, true, true);
+                        buffImage = SwingFXUtils.fromFXImage(inputImage, null);
+                        ImageIO.write(buffImage, dictionaryInformation.dictionary.imageExtension, tempOutputImage);
+                    }
+                }
 
                 // Hash and copy to final directory (encrypt if needed)
                 String sha256 = fileSha256HexToString(tempOutputImage);
@@ -307,7 +316,7 @@ public class ImageDictionariesCreationScript {
                 if (isEgalsTo(o, wO, threshold) && isEgalsTo(r, wR, threshold) && isEgalsTo(g, wG, threshold) && isEgalsTo(b, wB, threshold)) {
                     argb = destArgb;
                     coordToExplore.addToExplore(toExplore, imgWidth, imgHeight);
-                } else {
+                } else if (coordToExplore.x > 0 && coordToExplore.y > 0 && coordToExplore.x < imgWidth - 2 && coordToExplore.y < imgHeight - 2) {
                     argb = convertTo32Argb(new Color(r / 255.0, g / 255.0, b / 255.0, 0.3));
                 }
                 writer.setArgb(coordToExplore.x, coordToExplore.y, argb);

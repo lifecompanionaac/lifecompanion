@@ -25,6 +25,8 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.bridj.util.Pair;
+import org.lifecompanion.framework.commons.utils.io.FileNameUtils;
 import org.lifecompanion.framework.commons.utils.lang.CryptUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +45,9 @@ import static org.lifecompanion.framework.commons.utils.io.IOUtils.fileSha256Hex
  * 2) clean each cat sheet in Excel : remove first columns/rows, keep only the three data columns + rows
  * 3) clean sheet names if needed (remove spaces before/after)
  * 4) manually add missing CAT if needed
+ * OPTIONAL
+ * 5) Install https://imagemagick.org/script/download.php
+ * 6) Install https://ghostscript.com/releases/gsdnld.html
  */
 public class MakatonCreationScript {
     private final static Logger LOGGER = LoggerFactory.getLogger(MakatonCreationScript.class);
@@ -80,13 +85,18 @@ public class MakatonCreationScript {
     private static final int LIMIT = 500_000;
 
     public static void main(String[] args) throws Exception {
-        File outputDir = new File("C:\\Users\\Mathieu\\Desktop\\temp\\makaton\\out");
-        File inputDir = new File("C:\\Users\\Mathieu\\Desktop\\temp\\makaton\\in");
+        File outputDir = new File("C:\\Users\\Mathieu\\Desktop\\TMP\\makaton\\out");
+        File inputDir = new File("C:\\Users\\Mathieu\\Desktop\\TMP\\makaton\\2025-08-01-makaton-raw-data\\");
+        File inputPicAndTable = new File(inputDir + "\\6900 pictogrammes Makaton");
+        File rootVocDir = new File(inputDir + "\\Vocabulaire de base - Format PNG");
 
         List<MakatonPic> makatonPicList = new ArrayList<>();
 
+        // Try to read and convert EPS/AI to PNG
+        // magick.exe -density 200x200 test-ai.ai -background none -alpha on -flatten test-ai-converted.pn
+
         // Read datas
-        try (FileInputStream fis = new FileInputStream(inputDir + "/6900 pictogrammes Makaton - Index.xlsx")) {
+        try (FileInputStream fis = new FileInputStream(inputPicAndTable + "/6900 pictogrammes Makaton - Index-nettoye.xlsx")) {
             XSSFWorkbook wb = new XSSFWorkbook(fis);
             for (String category : CATEGORIES) {
                 XSSFSheet sheet = wb.getSheet(category);
@@ -119,7 +129,7 @@ public class MakatonCreationScript {
         Map<File, List<MakatonPic>> picPerFile = new HashMap<>();
         int missingFilesCount = 0;
         for (MakatonPic makatonPic : makatonPicList) {
-            List<File> foundFiles = makatonPic.findFiles(inputDir);
+            List<File> foundFiles = makatonPic.findFiles(inputPicAndTable);
             if (foundFiles.isEmpty()) {
                 missingFilesCount++;
                 if (DISPLAY_MISSING_FILES)
@@ -132,16 +142,16 @@ public class MakatonCreationScript {
         }
         LOGGER.info("{} missing files", missingFilesCount);
 
+        // Try to detect and convert root voc
+        Set<File> rootVocFiles = new HashSet<>();
+        detectFiles(rootVocDir, rootVocFiles);
+        LOGGER.info("{} root voc files detected", rootVocFiles.size());
+
         // Associate each file with its keywords
         Map<File, Set<String>> keywords = new HashMap<>();
         picPerFile.forEach((file, pictListForFile) -> {
             if (keywords.size() < LIMIT) {
                 Set<String> keywordForPics = pictListForFile.stream().map(MakatonPic::name).map(StringUtils::trimToEmpty).collect(Collectors.toSet());
-                // If the category should be used as keyword
-                //                pictListForFile.stream().map(MakatonPic::category).distinct().forEach(cat -> {
-                //                    List<String> otherKeywords = CATEGORY_KEYWORDS.get(cat);
-                //                    if (otherKeywords != null) keywordForPics.addAll(otherKeywords);
-                //                });
                 keywords.put(file, keywordForPics);
             }
         });
@@ -152,12 +162,17 @@ public class MakatonCreationScript {
             String sha256File = fileSha256HexToString(fileSetEntry.getKey());
             perHash.computeIfAbsent(sha256File, f -> new ArrayList<>()).add(fileSetEntry);
         }
+        for (File rootVocFile : rootVocFiles) {
+            String sha256File = fileSha256HexToString(rootVocFile);
+            perHash.computeIfAbsent(sha256File, f -> new ArrayList<>()).add(new Pair<>(rootVocFile, Set.of(FileNameUtils.getNameWithoutExtension(rootVocFile))));
+        }
 
         // Copy in a unique directory + keep all the associated keywords
         File uniqueDir = new File(outputDir + "/ALL");
         uniqueDir.mkdirs();
         Map<File, Set<String>> fileAndKeywords = new HashMap<>();
-        for (Map.Entry<String, List<Map.Entry<File, Set<String>>>> hashAndFiles : perHash.entrySet()) {
+        for (
+                Map.Entry<String, List<Map.Entry<File, Set<String>>>> hashAndFiles : perHash.entrySet()) {
             // Copy the first file in the list
             File key = hashAndFiles.getValue().get(0).getKey();
             File targetFile = new File(uniqueDir + "/" + hashAndFiles.getKey() + ".jpg");
@@ -182,8 +197,26 @@ public class MakatonCreationScript {
 
         DicInfo dicInfo = new DicInfo(
                 dictionary,
-                uniqueDir, "makaton", "jpg", false, true, true, true, false, false, fileAndKeywords);
+                uniqueDir, "makaton", "jpg", false, true, true, true, false, false, fileAndKeywords).withAntialiasing(true);
         ImageDictionariesCreationScript.generateImageDictionary(dicInfo);
+    }
+
+    private static final Set<String> EXTENSIONS = Set.of("png", "tif");
+
+    private static void detectFiles(File file, Set<File> detected) {
+        if (file.isDirectory()) {
+            File[] files = file.listFiles();
+            if (files != null) {
+                for (File child : files) {
+                    detectFiles(child, detected);
+                }
+            }
+        } else {
+            String extension = FileNameUtils.getExtension(file);
+            if (EXTENSIONS.contains(StringUtils.lowerCase(extension)) && detected.size() < LIMIT) {
+                detected.add(file);
+            }
+        }
     }
 
     private static String getStringCellValue(XSSFCell cell) {

@@ -30,6 +30,7 @@ public class DicInfo {
     final boolean checkSim;
     final boolean replaceBackground;
     final boolean resize;
+    boolean antialiasing;
     final boolean logDouble;
     boolean deleteImageIntegratedLabel;
     boolean deleteNB;
@@ -58,5 +59,10 @@ public class DicInfo {
         this.deleteImageIntegratedLabel = deleteImageIntegratedLabel;
         this.deleteNB = deleteNB;
         this.fileKeywords = fileKeywords;
+    }
+
+    public DicInfo withAntialiasing(boolean antialiasing) {
+        this.antialiasing = antialiasing;
+        return this;
     }
 }

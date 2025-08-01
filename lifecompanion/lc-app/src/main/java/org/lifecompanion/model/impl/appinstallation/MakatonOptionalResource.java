@@ -89,8 +89,13 @@ public class MakatonOptionalResource implements OptionalResourceI {
 
     @Override
     public void uninstall() {
-        // TODO : delete files
-        ImageDictionaries.INSTANCE.removeDictionary("makaton");
+        String id = "makaton";
+        ImageDictionaries.INSTANCE.removeDictionary(id);
+        File makatonFileJson = new File(LCConstant.DEFAULT_IMAGE_DICTIONARIES + File.separator + id + ".json");
+        boolean delete = makatonFileJson.delete();
+        LOGGER.info("Makaton directory file deleted : {}, will now delete images", delete);
+        File makatonDirectory = new File(LCConstant.DEFAULT_IMAGE_DICTIONARIES + File.separator + id);
+        IOUtils.deleteDirectoryAndChildren(makatonDirectory);
     }
 
     //    @Override
