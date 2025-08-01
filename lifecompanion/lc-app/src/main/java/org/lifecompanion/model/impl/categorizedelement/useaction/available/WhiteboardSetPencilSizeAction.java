@@ -22,6 +22,7 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import org.jdom2.Element;
 import org.lifecompanion.controller.configurationcomponent.UseModeWhiteboardController;
+import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseActionSubCategories;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
@@ -50,6 +51,7 @@ public class WhiteboardSetPencilSizeAction extends SimpleUseActionImpl<UseAction
         this.parameterizableAction = true;
         this.pencilSize = new SimpleDoubleProperty(20.0);
         this.variableDescriptionProperty().set(getStaticDescription());
+        this.allowSystems = SystemType.allExpectComputer();
     }
 
     public DoubleProperty pencilSizeProperty() {

@@ -24,6 +24,7 @@ import org.lifecompanion.controller.configurationcomponent.UseModeWhiteboardCont
 import org.lifecompanion.controller.lifecycle.AppMode;
 import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
+import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseActionSubCategories;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
@@ -64,6 +65,7 @@ public class WhiteboardSaveImageAction extends SimpleUseActionImpl<UseActionTrig
         this.parameterizableAction = true;
         this.destinationFolder = IOUtils.getDefaultDestinationFolder(Translation.getText("default.whiteboard.image.directory.name")).getPath();
         this.variableDescriptionProperty().set(this.getStaticDescription());
+        this.allowSystems = SystemType.allExpectComputer();
     }
 
     public String getDestinationFolder() {

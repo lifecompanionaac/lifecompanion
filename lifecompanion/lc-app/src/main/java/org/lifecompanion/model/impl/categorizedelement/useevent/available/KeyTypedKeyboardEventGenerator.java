@@ -27,6 +27,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.input.KeyCode;
 import org.jdom2.Element;
 import org.lifecompanion.controller.configurationcomponent.GlobalKeyEventController;
+import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.framework.commons.fx.io.XMLGenericProperty;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
@@ -69,6 +70,7 @@ public class KeyTypedKeyboardEventGenerator extends BaseUseEventGeneratorImpl {
                 .bind(TranslationFX.getTextBinding("use.event.keyboard.key.typed.variable.description",
                         Bindings.createStringBinding(() -> KeyCodeUtils.getTranslatedKeyCodeName(this.keyPressed.get(), "no.keyboard.key.selected"),
                                 this.keyPressed)));
+        this.allowSystems = SystemType.allExpectMobile();
     }
 
     public ObjectProperty<KeyCode> keyPressedProperty() {

@@ -20,6 +20,7 @@ package org.lifecompanion.model.impl.categorizedelement.useevent.available;
 
 import org.jdom2.Element;
 
+import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.framework.commons.fx.translation.TranslationFX;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
@@ -47,6 +48,7 @@ public class PressTimeReachedAndReleaseEventGenerator extends BaseUseEventGenera
 		this.configIconPath = "control/icon_press_release_reach_time.png";
 		this.variableDescriptionProperty().bind(TranslationFX.getTextBinding("use.event.press.time.reached.and.released.variable.description",
 				BindingUtils.createDivide1000Binding(this.timeToReach)));
+		this.allowSystems = SystemType.allExpectMobile();
 	}
 
 	public IntegerProperty timeToReachProperty() {

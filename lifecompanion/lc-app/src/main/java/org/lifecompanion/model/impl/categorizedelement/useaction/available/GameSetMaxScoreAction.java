@@ -22,6 +22,7 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import org.jdom2.Element;
 import org.lifecompanion.controller.gaming.GamingFrameworkController;
+import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.framework.commons.fx.io.XMLObjectSerializer;
 import org.lifecompanion.model.api.categorizedelement.useaction.DefaultUseActionSubCategories;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
@@ -49,6 +50,7 @@ public class GameSetMaxScoreAction extends SimpleUseActionImpl<UseActionTriggerC
         this.configIconPath = "miscellaneous/icon_game_set_max_score.png";
         this.parameterizableAction = true;
         this.variableDescriptionProperty().set(getStaticDescription());
+        this.allowSystems = SystemType.allExpectMobile();
     }
 
     @Override
