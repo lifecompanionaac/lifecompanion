@@ -50,14 +50,17 @@ public class LCFileChoosers {
             LCFileChoosers.configurationFileChooser.getExtensionFilters()
                     .add(new ExtensionFilter(Translation.getText("file.chooser.config.description"), "*." + LCConstant.CONFIG_FILE_EXTENSION));
         }
-        if (UserConfigurationController.INSTANCE.enableExportMobileConfigurationProperty().get()) {
-            if(!LCFileChoosers.configurationFileChooser.getExtensionFilters().contains(extensionFilterMobileConfiguration)){
+        return configurationFileChooser;
+    }
+
+    private static void updateMobileExportFeature(boolean forceDisable) {
+        if (UserConfigurationController.INSTANCE.enableExportMobileConfigurationProperty().get() && !forceDisable) {
+            if (!LCFileChoosers.configurationFileChooser.getExtensionFilters().contains(extensionFilterMobileConfiguration)) {
                 LCFileChoosers.configurationFileChooser.getExtensionFilters().add(extensionFilterMobileConfiguration);
             }
         } else {
             LCFileChoosers.configurationFileChooser.getExtensionFilters().remove(extensionFilterMobileConfiguration);
         }
-        return configurationFileChooser;
     }
 
     private static FileChooser getOrInitKeyListFileChooser() {
@@ -117,7 +120,13 @@ public class LCFileChoosers {
     // PUBLIC
     //========================================================================
     public static FileChooser getChooserConfiguration(final FileChooserType fileChooserType) {
-        return initializeDirectory(LCFileChoosers.getOrInitConfigurationFileChooser(), fileChooserType);
+        return getChooserConfiguration(fileChooserType, false);
+    }
+
+    public static FileChooser getChooserConfiguration(final FileChooserType fileChooserType, boolean disableMobileExport) {
+        FileChooser configurationFileChooser = initializeDirectory(LCFileChoosers.getOrInitConfigurationFileChooser(), fileChooserType);
+        updateMobileExportFeature(disableMobileExport);
+        return configurationFileChooser;
     }
 
     public static FileChooser getChooserKeyList(final FileChooserType fileChooserType) {
