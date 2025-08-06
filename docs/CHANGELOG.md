@@ -1,5 +1,15 @@
 # LIFECOMPANION CHANGELOG
 
+## 1.6.9 - XX/XX/2025
+
+### Fonctionnalités
+
+- ...
+
+### Corrections/ajustements
+
+- ...
+
 ## 1.6.8 - 06/08/2025
 
 ### Corrections/ajustements
