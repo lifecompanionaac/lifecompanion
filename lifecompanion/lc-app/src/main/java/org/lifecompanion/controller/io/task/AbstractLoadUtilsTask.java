@@ -102,7 +102,7 @@ public abstract class AbstractLoadUtilsTask<T> extends LCTask<T> {
         updateProgress(progress, 0.0, 3.0);
         AbstractLoadUtilsTask.LOGGER.info("A element will be loaded from {}", directory);
         //Load images
-        IOContext ioContext = new IOContext(directory,false);
+        IOContext ioContext = new IOContext(directory, false);
         File imageDirectory = new File(directory.getPath() + File.separator + LCConstant.CONFIGURATION_IMAGE_DIRECTORY + File.separator);
         File[] imagePaths = imageDirectory.listFiles();
         if (imagePaths != null) {
@@ -173,6 +173,10 @@ public abstract class AbstractLoadUtilsTask<T> extends LCTask<T> {
         try {
             ImageElementI addedImage = ImageDictionaries.INSTANCE.getOrAddToConfigurationImageDictionary(image);
             String oldId = FileNameUtils.getNameWithoutExtension(image);
+            // For modified mobile images : the id is composed of previous id + use component
+            if (oldId.contains("_")) {
+                oldId = oldId.split("_")[0];
+            }
             ioContext.getBackwardImageCompatibilityIdsMap().put(oldId, addedImage.getId());
         } catch (Exception e) {
             AbstractLoadUtilsTask.LOGGER.error("Problem when adding the loaded image {} to the gallery", image, e);

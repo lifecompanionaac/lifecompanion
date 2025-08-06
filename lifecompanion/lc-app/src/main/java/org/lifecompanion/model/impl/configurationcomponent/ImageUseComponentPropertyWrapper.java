@@ -508,6 +508,10 @@ public class ImageUseComponentPropertyWrapper {
         }
         // Image was loaded by the task before going into this part (see AbstractLoadUtilsTask)
         ImageElementI imageElement = ImageDictionaries.INSTANCE.getById(imageId);
+        // Can happen for mobile import
+        if (StringUtils.isNotBlank(imageId) && imageElement == null) {
+            imageElement = ImageDictionaries.INSTANCE.getById(contextP.getBackwardImageCompatibilityIdsMap().get(imageId));
+        }
         String imageName = XMLUtils.readString(ImageUseComponentPropertyWrapper.ATB_IMAGE_NAME, element);
         if (StringUtils.isNotBlank(imageName) && imageElement != null && (imageElement.getDictionary() == null || imageElement.getDictionary().isCustomDictionary())) {
             imageElement.updateNameAndKeywords(imageName, UserConfigurationController.INSTANCE.userLanguageProperty().get(), new String[]{imageName});

@@ -19,11 +19,18 @@
 
 package org.lifecompanion.controller.io.task;
 
+import javafx.util.Pair;
+import org.lifecompanion.controller.editmode.LCStateController;
 import org.lifecompanion.controller.io.JsonHelper;
+import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
 import org.lifecompanion.framework.commons.utils.lang.CollectionUtils;
+import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
+import org.lifecompanion.model.api.imagedictionary.ImageDictionaryI;
+import org.lifecompanion.model.api.imagedictionary.ImageElementI;
 import org.lifecompanion.model.impl.configurationcomponent.dynamickey.KeyListLeaf;
 import org.lifecompanion.model.impl.configurationcomponent.dynamickey.KeyListNode;
+import org.lifecompanion.model.impl.imagedictionary.ImageDictionaries;
 import org.lifecompanion.util.model.LCTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,9 +56,13 @@ public class ImportKeylistFromJsonTask extends LCTask<List<KeyListNodeI>> {
 
     @Override
     protected List<KeyListNodeI> call() throws Exception {
+        ImageDictionaryI imageDictionary = ImageDictionaries.INSTANCE.getDictionaries().stream().sorted((d1, d2) ->
+                Boolean.compare(LCStateController.INSTANCE.getFavoriteImageDictionaries().contains(d2.getName()),
+                        LCStateController.INSTANCE.getFavoriteImageDictionaries().contains(d1.getName()))).findFirst().orElse(null);
+
         try (Reader is = new BufferedReader(new InputStreamReader(new FileInputStream(jsonFile), StandardCharsets.UTF_8))) {
             KeyListNodeInJson[] keyListNodeInJson = JsonHelper.GSON.fromJson(is, KeyListNodeInJson[].class);
-            return Arrays.stream(keyListNodeInJson).map(KeyListNodeInJson::toKeyListNode).collect(Collectors.toList());
+            return Arrays.stream(keyListNodeInJson).map(k -> k.toKeyListNode(imageDictionary)).collect(Collectors.toList());
         }
     }
 
@@ -59,17 +70,26 @@ public class ImportKeylistFromJsonTask extends LCTask<List<KeyListNodeI>> {
         String text;
         List<KeyListNodeInJson> children;
 
-        KeyListNodeI toKeyListNode() {
+        KeyListNodeI toKeyListNode(ImageDictionaryI imageDictionary) {
             KeyListNodeI node;
             if (CollectionUtils.isEmpty(children)) {
                 node = new KeyListLeaf();
             } else {
                 node = new KeyListNode();
-                node.getChildren().addAll(children.stream().map(KeyListNodeInJson::toKeyListNode).collect(Collectors.toList()));
+                node.getChildren().addAll(children.stream().map(k -> k.toKeyListNode(imageDictionary)).collect(Collectors.toList()));
             }
-            node.textProperty().set(text);
+            node.textProperty().set(StringUtils.toLowerCase(text));
             node.textToWriteProperty().set(text);
             node.textToSpeakProperty().set(text);
+
+            if (StringUtils.isNotBlank(text)) {
+                Pair<ImageElementI, Double> firstImageToMatch = ImageDictionaries.INSTANCE.getFirstImageToMatch(text, imageDictionary);
+                if (firstImageToMatch != null) {
+                    node.textPositionProperty().setValue(UserConfigurationController.INSTANCE.defaultTextPositionOnImageSelectionProperty().get());
+                    node.imageVTwoProperty().set(firstImageToMatch.getKey());
+                }
+            }
+
             return node;
         }
     }
