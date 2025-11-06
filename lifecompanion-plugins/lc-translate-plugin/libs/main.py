@@ -18,7 +18,7 @@ app = FastAPI(title="Argos Translate Server")
 class TranslateRequest(BaseModel):
     from_code: str = Field(..., examples=["fr"])
     to_code: str = Field(..., examples=["en"])
-    text: str = Field(..., min_length=1, examples=["J'ai besoin d'aller aux toilettes"])
+    text: str = Field(..., min_length=1, examples=["Salut, comment ça va ?"])
 
 class TranslateResponse(BaseModel):
     translated_text: str

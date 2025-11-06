@@ -6,6 +6,7 @@ import org.lifecompanion.model.api.plugin.PluginConfigPropertiesI;
 import org.lifecompanion.model.api.plugin.PluginI;
 import org.lifecompanion.model.api.usevariable.UseVariableDefinitionI;
 import org.lifecompanion.model.api.usevariable.UseVariableI;
+import org.lifecompanion.plugin.translate.controller.TranslateController;
 
 import java.io.File;
 import java.util.List;
@@ -50,12 +51,12 @@ public class TranslatePlugin implements PluginI {
     //========================================================================
     @Override
     public void modeStart(LCConfigurationI configuration) {
-
+        TranslateController.INSTANCE.modeStart(configuration);
     }
 
     @Override
     public void modeStop(LCConfigurationI configuration) {
-
+        TranslateController.INSTANCE.modeStop(configuration);
     }
     //========================================================================
 

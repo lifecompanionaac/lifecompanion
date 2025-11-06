@@ -42,7 +42,12 @@ public class TranslateConfigurationToAction extends SimpleUseActionImpl<UseActio
 
     @Override
     public void execute(UseActionEvent event, Map<String, UseVariableI<?>> variables) {
-        TranslateController.INSTANCE.testTranslate();
+        String currentLanguage = TranslateController.INSTANCE.currentLanguageProperty().get();
+        if("en".equals(currentLanguage)){
+            TranslateController.INSTANCE.switchToLanguage("fr");
+        }else {
+            TranslateController.INSTANCE.switchToLanguage("en");
+        }
     }
 
 }
