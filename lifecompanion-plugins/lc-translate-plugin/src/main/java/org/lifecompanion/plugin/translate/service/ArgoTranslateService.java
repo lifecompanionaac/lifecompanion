@@ -24,17 +24,26 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import org.lifecompanion.controller.io.JsonHelper;
+import org.lifecompanion.plugin.translate.controller.TranslateController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 public class ArgoTranslateService implements TranslationServiceI {
+    private final Logger LOGGER = LoggerFactory.getLogger(ArgoTranslateService.class);
     private static final String MEDIA_TYPE_JSON = "application/json";
     private static final int PORT = 8000;
     private static final String URL = "http://localhost:" + PORT + "/";
     private OkHttpClient httpClient;
 
+    private Process translateProcess;
+
     @Override
     public String translate(String sourceLanguageCode, String targetLanguageCode, String textToTranslate) throws Exception {
+        LOGGER.info("Will request translation of\n\t\"{}\"\n\t{} > {}", textToTranslate, sourceLanguageCode, targetLanguageCode);
         try (Response response = httpClient.newCall(new Request.Builder().url(URL + "translate")
                 .post(RequestBody.create(JsonHelper.GSON.toJson(new TranslateRequest(sourceLanguageCode, targetLanguageCode, textToTranslate)), null))
                 .addHeader("Accept", MEDIA_TYPE_JSON)
@@ -51,6 +60,17 @@ public class ArgoTranslateService implements TranslationServiceI {
     @Override
     public void initialize() {
         // TODO : create translate process
+        try {
+            this.translateProcess = new ProcessBuilder()
+                    .command("PATH",
+                            "MODEL",
+                            "--port", "" + PORT)
+                    .redirectError(ProcessBuilder.Redirect.PIPE)
+                    .redirectOutput(ProcessBuilder.Redirect.PIPE)
+                    .start();
+        } catch (IOException e) {
+            LOGGER.info("Could not create translate process");
+        }
         this.httpClient = new OkHttpClient.Builder()
                 .connectTimeout(30, TimeUnit.SECONDS)
                 .writeTimeout(0, TimeUnit.SECONDS)
@@ -60,12 +80,20 @@ public class ArgoTranslateService implements TranslationServiceI {
 
     @Override
     public boolean isInitialized() {
-        return httpClient != null;
+        return httpClient != null && translateProcess != null && translateProcess.isAlive();
     }
 
     @Override
     public void dispose() {
+        this.killProcess();
         this.httpClient = null;
+    }
+
+    private void killProcess() {
+        if (this.translateProcess != null) {
+            this.translateProcess.destroy();
+            this.translateProcess = null;
+        }
     }
 
     private static final class TranslateRequest {

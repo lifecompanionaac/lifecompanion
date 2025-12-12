@@ -25,6 +25,7 @@ import org.lifecompanion.model.api.usevariable.UseVariableI;
 import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseActionImpl;
 import org.lifecompanion.plugin.translate.controller.TranslateController;
 
+import java.util.List;
 import java.util.Map;
 
 public class TranslateConfigurationToAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
@@ -43,10 +44,13 @@ public class TranslateConfigurationToAction extends SimpleUseActionImpl<UseActio
     @Override
     public void execute(UseActionEvent event, Map<String, UseVariableI<?>> variables) {
         String currentLanguage = TranslateController.INSTANCE.currentLanguageProperty().get();
-        if("en".equals(currentLanguage)){
-            TranslateController.INSTANCE.switchToLanguage("fr");
-        }else {
-            TranslateController.INSTANCE.switchToLanguage("en");
+        String[] languages = {"fr", "en", "es", "ro"};
+        int indexOf = List.of(languages).indexOf(currentLanguage);
+        System.out.println("Index of " + indexOf + " " + currentLanguage);
+        if (indexOf + 1 < languages.length) {
+            TranslateController.INSTANCE.switchToLanguage(languages[indexOf + 1]);
+        } else {
+            TranslateController.INSTANCE.switchToLanguage(languages[0]);
         }
     }
 
