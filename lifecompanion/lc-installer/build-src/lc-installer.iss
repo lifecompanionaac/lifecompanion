@@ -35,7 +35,7 @@ DisableFinishedPage=yes
 LanguageDetectionMethod=uilanguage
 ShowLanguageDialog=auto
 SetupIconFile=lifecompanion_icon.ico
-ArchitecturesAllowed=x64
+ArchitecturesAllowed=x64compatible
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"

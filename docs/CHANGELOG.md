@@ -4,7 +4,7 @@
 
 ### Fonctionnalités
 
-- ...
+- LifeCompanion est maintenant directement compatible avec les tablettes sous Windows ARM 64 (par exemple, les nouvelles Surface Pro)
 
 ### Corrections/ajustements
 
