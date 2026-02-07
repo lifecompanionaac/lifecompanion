@@ -17,7 +17,7 @@ dependencies {
     implementation 'org.imgscalr:imgscalr-lib:4.2'
 }
 
-mainClassName = "scripts.imagedictionaries.DictionaryUpdater"
+mainClassName = "scripts.imagedictionaries.MakatonV2CreationScript"
 
 application {
     applicationDefaultJvmArgs = [
