@@ -3948,6 +3948,8 @@
     <text key="use.action.sub.category.user.action.sequence.sub.list">Liste des séquences</text>
     <text key="start.current.user.action.sequence.name">Démarrer la séquence</text>
     <text key="start.current.user.action.sequence.description">Démarre la séquence associée à la case courante (si la case est de type "Liste des séquences")</text>
+    <text key="stop.current.user.action.sequence.name">Arrêter la séquence</text>
+    <text key="stop.current.user.action.sequence.description">Arrêter la séquence en cours</text>
     <text key="key.option.user.action.sequence.list.name">Liste des séquences</text>
     <text key="key.option.user.action.sequence.list.description">Affiche les différentes séquences disponibles dans la configuration. Un appui sur la case permet de démarrer la séquence.</text>
     <text key="key.option.user.action.sequence.list.example.text">Nom de la séquence</text>
