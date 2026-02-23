@@ -33,6 +33,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Popup;
@@ -142,7 +143,11 @@ public class LCColorPickerPopup extends Popup implements LCViewInitHelper {
 
     private Rectangle createColorRectangle(Color color, Map<String, Rectangle> colorMap) {
         Rectangle rectangle = new Rectangle(COLOR_SQUARE_SIZE, COLOR_SQUARE_SIZE);
-        rectangle.setFill(color);
+        if (color.getOpacity() == 0.0) {
+            rectangle.setFill(new ImagePattern(IconHelper.get("transparent-background.png")));
+        } else {
+            rectangle.setFill(color);
+        }
         rectangle.setOnMouseClicked(me -> colorSelectedAndHide(color));
         rectangle.getStyleClass().addAll("scale-130-hover", "stroke-hover", "stroke-selected", "scale-130-selected");
         colorMap.put(ColorUtils.toWebColorWithAlpha(color), rectangle);
