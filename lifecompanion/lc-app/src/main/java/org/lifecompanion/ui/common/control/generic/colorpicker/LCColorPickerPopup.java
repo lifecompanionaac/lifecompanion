@@ -63,6 +63,9 @@ public class LCColorPickerPopup extends Popup implements LCViewInitHelper {
     private final static int USER_COLOR_ROWS = 1;
 
     private Button customColorButton;
+    private final HBox boxSpecialColors = new HBox(5);
+    private HBox boxWhite;
+    private HBox boxBlack;
     private HBox boxTransparent;
     private TilePane tilePaneUserColors;
 
@@ -106,6 +109,24 @@ public class LCColorPickerPopup extends Popup implements LCViewInitHelper {
             }
         }
 
+        // White button
+        final Rectangle whiteRect = new Rectangle(COLOR_SQUARE_SIZE, COLOR_SQUARE_SIZE);
+        whiteRect.setFill(Color.WHITE);
+        boxWhite = new HBox(5.0, whiteRect, new Text(Translation.getText("lc.colorpicker.white.value")));
+        boxWhite.setAlignment(Pos.CENTER);
+        boxWhite.getStyleClass().add("border-hover");
+        final Group groupWhite = new Group(boxWhite);
+        groupWhite.getStyleClass().addAll("scale-110-hover", "text-font-size-90");
+
+        // Black button
+        final Rectangle blackRect = new Rectangle(COLOR_SQUARE_SIZE, COLOR_SQUARE_SIZE);
+        blackRect.setFill(Color.BLACK);
+        boxBlack = new HBox(5.0, blackRect, new Text(Translation.getText("lc.colorpicker.black.value")));
+        boxBlack.setAlignment(Pos.CENTER);
+        boxBlack.getStyleClass().add("border-hover");
+        final Group groupBlack = new Group(boxBlack);
+        groupBlack.getStyleClass().addAll("scale-110-hover", "text-font-size-90");
+
         // Transparent button
         final ImageView transparent = new ImageView(IconHelper.get("transparent-background.png"));
         transparent.setFitHeight(COLOR_SQUARE_SIZE);
@@ -113,8 +134,15 @@ public class LCColorPickerPopup extends Popup implements LCViewInitHelper {
         boxTransparent = new HBox(5.0, transparent, new Text(Translation.getText("lc.colorpicker.transparent.value")));
         boxTransparent.setAlignment(Pos.CENTER);
         boxTransparent.getStyleClass().add("border-hover");
-        final Group groupBoxTransparent = new Group(boxTransparent);
-        groupBoxTransparent.getStyleClass().addAll("scale-110-hover", "text-font-size-90");
+        final Group groupTransparent = new Group(boxTransparent);
+        groupTransparent.getStyleClass().addAll("scale-110-hover", "text-font-size-90");
+
+        boxSpecialColors.setAlignment(Pos.CENTER);
+        boxSpecialColors.getChildren().addAll(
+                groupWhite,
+                groupBlack,
+                groupTransparent
+        );
 
         // User defined colors
         tilePaneUserColors = new TilePane();
@@ -131,7 +159,7 @@ public class LCColorPickerPopup extends Popup implements LCViewInitHelper {
         // Pick a color button ?
         // Brighter/darker on a color
 
-        total.getChildren().addAll(tilePaneBaseColors, groupBoxTransparent, new Separator(Orientation.HORIZONTAL), tilePaneUserColors, new Separator(Orientation.HORIZONTAL), customColorButton);
+        total.getChildren().addAll(tilePaneBaseColors, boxSpecialColors, new Separator(Orientation.HORIZONTAL), tilePaneUserColors, new Separator(Orientation.HORIZONTAL), customColorButton);
         this.getContent().add(total);
 
         // Custom color dialog
@@ -157,6 +185,8 @@ public class LCColorPickerPopup extends Popup implements LCViewInitHelper {
     @Override
     public void initListener() {
         this.customColorButton.setOnAction(e -> colorCustomColorDialog.showCustomDialog(previousColor, this.onNextSelection));
+        this.boxWhite.setOnMouseClicked(me -> colorSelectedAndHide(Color.WHITE));
+        this.boxBlack.setOnMouseClicked(me -> colorSelectedAndHide(Color.BLACK));
         this.boxTransparent.setOnMouseClicked(me -> colorSelectedAndHide(Color.TRANSPARENT));
         this.setOnHidden(e -> onNextSelection = null);
     }
