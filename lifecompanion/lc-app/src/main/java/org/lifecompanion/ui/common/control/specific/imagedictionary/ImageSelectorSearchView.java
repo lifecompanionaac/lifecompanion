@@ -60,6 +60,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.function.Consumer;
 
+import static org.lifecompanion.util.IOUtils.isSupportedImage;
+
 public class ImageSelectorSearchView extends BorderPane implements LCViewInitHelper {
     private static final SimpleDateFormat DATE_FORMAT_FILENAME = new SimpleDateFormat("yyyyMMdd-HH-mm-ss");
 
@@ -159,13 +161,23 @@ public class ImageSelectorSearchView extends BorderPane implements LCViewInitHel
             // Use AWT clipboard instead of JavaFX clipboard due to issue #156
             // more info https://stackoverflow.com/questions/54995198/how-do-i-correctly-get-an-image-from-the-clipboard-in-javafx-what-is-the-differ
             final Transferable contents = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(null);
-            if (selectionCallback != null && contents != null && contents.isDataFlavorSupported(DataFlavor.imageFlavor)) {
+            if (selectionCallback != null && contents != null) {
                 try {
-                    File destinationFile = new File(InstallationConfigurationController.INSTANCE.getUserDirectory()
-                            .getPath() + LCConstant.CLIPBOARD_CAPTURE_DIR_NAME + DATE_FORMAT_FILENAME.format(new Date()) + ".png");
-                    destinationFile.getParentFile().mkdirs();
-                    ImageIO.write((java.awt.image.BufferedImage) contents.getTransferData(DataFlavor.imageFlavor), "png", destinationFile);
-                    selectionCallback.accept(ImageDictionaries.INSTANCE.getOrAddToUserImagesDictionary(destinationFile));
+                    if (contents.isDataFlavorSupported(DataFlavor.imageFlavor)) {
+                        File destinationFile = new File(InstallationConfigurationController.INSTANCE.getUserDirectory().getPath() + LCConstant.CLIPBOARD_CAPTURE_DIR_NAME + DATE_FORMAT_FILENAME.format(new Date()) + ".png");
+                        destinationFile.getParentFile().mkdirs();
+                        ImageIO.write((java.awt.image.BufferedImage) contents.getTransferData(DataFlavor.imageFlavor), "png", destinationFile);
+                        selectionCallback.accept(ImageDictionaries.INSTANCE.getOrAddToUserImagesDictionary(destinationFile));
+                    } else if (contents.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
+                        Object data = contents.getTransferData(DataFlavor.javaFileListFlavor);
+                        if (data instanceof List<?> list && !list.isEmpty()) {
+                            Object last = list.getLast();
+                            if (last instanceof File lastFile && isSupportedImage(lastFile)) {
+                                LCStateController.INSTANCE.updateDefaultDirectory(FileChooserType.SELECT_IMAGES, lastFile.getParentFile());
+                                selectionCallback.accept(ImageDictionaries.INSTANCE.getOrAddToUserImagesDictionary(lastFile));
+                            }
+                        }
+                    }
                 } catch (Exception ex) {
                     LOGGER.warn("Couldn't write image from clipboard to temp image to import", ex);
                 }
