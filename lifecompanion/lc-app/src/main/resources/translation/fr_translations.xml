@@ -66,6 +66,8 @@
   <text key="no.configuration.placeholder.link.import.configuration">Importer une configuration à partir d'un fichier</text>
   <text key="notification.key.list.paste">Cases collées dans la grille</text>
   <text key="lc.colorpicker.null.value">Aucune</text>
+  <text key="lc.colorpicker.white.value">Blanc</text>
+  <text key="lc.colorpicker.black.value">Noir</text>
   <text key="lc.colorpicker.transparent.value">Transparent</text>
   <text key="lc.colorpicker.previous.value">Actuelle</text>
   <text key="lc.colorpicker.current.value">Nouvelle</text>
