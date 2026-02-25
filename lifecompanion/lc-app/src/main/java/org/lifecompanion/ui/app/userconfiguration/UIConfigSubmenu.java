@@ -96,7 +96,6 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
     private ToggleSwitch toggleAutoConfigurationProfileBackup;
     private ToggleSwitch toggleDisableFullscreenShortcut;
     private ToggleSwitch toggleEnablePreviousConfigurationShortcut;
-    private ToggleSwitch toggleEnableExportMobileConfiguration;
 
     private Button buttonCleanupFiles, buttonAddMakaton;
 
@@ -146,10 +145,6 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
         toggleEnablePreviousConfigurationShortcut = FXControlUtils.createToggleSwitch("user.config.enable.previous.configuration.shortcut", null);
         Label labelExplainEnablePreviousConfigurationShortcut = new Label(Translation.getText("tooltip.user.config.enable.previous.configuration.shortcut"));
         labelExplainEnablePreviousConfigurationShortcut.getStyleClass().addAll("text-wrap-enabled", "text-font-italic", "text-fill-gray");
-
-        toggleEnableExportMobileConfiguration = FXControlUtils.createToggleSwitch("user.config.enable.export.mobile.configuration", null);
-        Label labelExplainEnableExportMobileConfiguration = new Label(Translation.getText("tooltip.user.config.enable.export.mobile.configuration"));
-        labelExplainEnableExportMobileConfiguration.getStyleClass().addAll("text-wrap-enabled", "text-font-italic", "text-fill-gray");
 
         //Selection parameter
         this.spinnerStrokeSize = FXControlUtils.createDoubleSpinner(1.0, 20.0, 3.0, 1.0, SPINNER_WIDTH);
@@ -250,7 +245,7 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
         VBox totalBox = new VBox(10.0,
                 labelConfigGeneral, toggleEnableAutoShowVirtualKeyboard, toggleEnableLaunchLCSystemStartup, toggleEnableRecordAndSendSessionStats,
                 labelUseMode, toggleSecureGoToEditModeProperty, labelExplainSecuredConfigMode, toggleDisabledExitInUseMode, labelExplainExitUseMode,
-                toggleDisableFullscreenShortcut, labelExplainDisableFullscreenShortcut, toggleEnablePreviousConfigurationShortcut, labelExplainEnablePreviousConfigurationShortcut, toggleEnableExportMobileConfiguration, labelExplainEnableExportMobileConfiguration,
+                toggleDisableFullscreenShortcut, labelExplainDisableFullscreenShortcut, toggleEnablePreviousConfigurationShortcut, labelExplainEnablePreviousConfigurationShortcut,
                 labelOptionalResource, labelExplainOptionalResource, paneMakaton,
                 labelConfigStylePart, gridPaneStyleParam,
                 labelConfigTitle, gridPaneConfiguration,
@@ -302,7 +297,6 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
         this.comboBoxDefaultTextPositionOnImageSelection.getSelectionModel().select(UserConfigurationController.INSTANCE.defaultTextPositionOnImageSelectionProperty().get());
         this.toggleDisableFullscreenShortcut.setSelected(UserConfigurationController.INSTANCE.disableFullscreenShortcutProperty().get());
         this.toggleEnablePreviousConfigurationShortcut.setSelected(UserConfigurationController.INSTANCE.enablePreviousConfigurationShortcutProperty().get());
-        this.toggleEnableExportMobileConfiguration.setSelected(UserConfigurationController.INSTANCE.enableExportMobileConfigurationProperty().get());
         updateInstalledOptions();
     }
 
@@ -334,7 +328,6 @@ public class UIConfigSubmenu extends ScrollPane implements UserConfigSubmenuI, L
         UserConfigurationController.INSTANCE.defaultTextPositionOnImageSelectionProperty().set(comboBoxDefaultTextPositionOnImageSelection.getValue());
         UserConfigurationController.INSTANCE.disableFullscreenShortcutProperty().set(this.toggleDisableFullscreenShortcut.isSelected());
         UserConfigurationController.INSTANCE.enablePreviousConfigurationShortcutProperty().set(this.toggleEnablePreviousConfigurationShortcut.isSelected());
-        UserConfigurationController.INSTANCE.enableExportMobileConfigurationProperty().set(this.toggleEnableExportMobileConfiguration.isSelected());
     }
 
     @Override

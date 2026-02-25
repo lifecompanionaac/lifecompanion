@@ -320,8 +320,4 @@ public enum UserConfigurationController {
     public BooleanProperty enablePreviousConfigurationShortcutProperty() {
         return enablePreviousConfigurationShortcut;
     }
-
-    public BooleanProperty enableExportMobileConfigurationProperty() {
-        return enableExportMobileConfiguration;
-    }
 }

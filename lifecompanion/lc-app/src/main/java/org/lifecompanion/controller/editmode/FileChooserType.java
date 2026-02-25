@@ -22,6 +22,7 @@ package org.lifecompanion.controller.editmode;
 public enum FileChooserType {
 
     CONFIG_EXPORT(true),
+    CONFIG_EXPORT_MOBILE(true),
     CONFIG_IMPORT(true),
 
     KEYLIST_EXPORT(true),

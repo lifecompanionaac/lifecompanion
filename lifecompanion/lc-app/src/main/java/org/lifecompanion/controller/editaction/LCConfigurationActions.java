@@ -18,7 +18,6 @@
  */
 package org.lifecompanion.controller.editaction;
 
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
@@ -39,31 +38,24 @@ import org.lifecompanion.controller.lifecycle.AppModeController;
 import org.lifecompanion.controller.profile.ProfileController;
 import org.lifecompanion.controller.profileconfigselect.ProfileConfigSelectionController;
 import org.lifecompanion.controller.profileconfigselect.ProfileConfigStep;
-import org.lifecompanion.controller.useapi.GlobalRuntimeConfigurationController;
 import org.lifecompanion.controller.userconfiguration.UserConfigurationController;
-import org.lifecompanion.framework.commons.SystemType;
 import org.lifecompanion.framework.commons.translation.Translation;
-import org.lifecompanion.framework.commons.utils.io.FileNameUtils;
 import org.lifecompanion.framework.commons.utils.io.IOUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
 import org.lifecompanion.framework.utils.LCNamedThreadFactory;
-import org.lifecompanion.model.api.categorizedelement.useaction.BaseUseActionI;
-import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
-import org.lifecompanion.model.api.categorizedelement.useaction.UseActionTriggerComponentI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.editaction.BaseEditActionI;
-import org.lifecompanion.model.api.imagedictionary.ImageDictionaryI;
 import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
 import org.lifecompanion.model.api.profile.LCProfileI;
 import org.lifecompanion.model.impl.configurationcomponent.LCConfigurationComponent;
 import org.lifecompanion.model.impl.constant.LCConstant;
 import org.lifecompanion.model.impl.exception.LCException;
+import org.lifecompanion.model.impl.io.PdfConfig;
 import org.lifecompanion.model.impl.notification.LCNotification;
 import org.lifecompanion.model.impl.profile.LCConfigurationDescription;
-import org.lifecompanion.model.impl.useapi.GlobalRuntimeConfiguration;
 import org.lifecompanion.ui.app.profileconfigselect.DuplicateConfigAlertContent;
 import org.lifecompanion.ui.common.control.specific.imagedictionary.ChangeImageDictionarySelectorDialog;
-import org.lifecompanion.ui.common.control.specific.io.PdfConfigDialog;
+import org.lifecompanion.ui.common.control.specific.io.ExportConfigStage;
 import org.lifecompanion.ui.common.control.specific.selector.ConfigurationSelectorControl;
 import org.lifecompanion.ui.notification.LCNotificationController;
 import org.lifecompanion.util.DesktopUtils;
@@ -76,9 +68,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 import static org.lifecompanion.controller.editmode.FileChooserType.EXPORT_PDF;
 import static org.lifecompanion.util.javafx.FXUtils.getSourceFromEvent;
@@ -100,7 +92,7 @@ public class LCConfigurationActions {
         }
     };
 
-    public static final EventHandler<ActionEvent> HANDLER_EXPORT = (ea) -> ConfigActionController.INSTANCE.executeAction(new ExportEditAction(getSourceFromEvent(ea)));
+    public static final EventHandler<ActionEvent> HANDLER_EXPORT = (ea) -> ExportConfigStage.getInstance().show();
     public static final EventHandler<ActionEvent> HANDLER_IMPORT_OPEN = (ea) -> ConfigActionController.INSTANCE.executeAction(new ImportOpenEditAction(getSourceFromEvent(ea)));
 
     public static final KeyCombination KEY_COMBINATION_NEW = new KeyCodeCombination(KeyCode.N, KeyCombination.SHORTCUT_DOWN);
@@ -554,14 +546,16 @@ public class LCConfigurationActions {
     public static class ExportEditAction implements BaseEditActionI {
         private LCConfigurationDescriptionI configurationDescription;
         private final Node source;
+        private final boolean mobileFormat;
 
-        public ExportEditAction(Node source, LCConfigurationDescriptionI configurationDescription) {
+        public ExportEditAction(Node source, LCConfigurationDescriptionI configurationDescription, boolean mobileFormat) {
             this.source = source;
             this.configurationDescription = configurationDescription;
+            this.mobileFormat = mobileFormat;
         }
 
-        public ExportEditAction(Node source) {
-            this(source, null);
+        public ExportEditAction(Node source, boolean mobileFormat) {
+            this(source, null, mobileFormat);
         }
 
         @Override
@@ -575,8 +569,6 @@ public class LCConfigurationActions {
                 configurationDescription = currentProfile.getConfigurationById(currentConfiguration.getID());
             }
 
-            boolean configurationIsNotOpened = currentConfiguration == null || StringUtils.isDifferent(currentConfiguration.getID(), configurationDescription.getConfigurationId());
-
             // Save when needed (or forced)
             GlobalActions.checkModificationForCurrentConfiguration(currentConfiguration == null || StringUtils.isEquals(configurationDescription.getConfigurationId(), currentConfiguration.getID()),
                     this,
@@ -584,8 +576,8 @@ public class LCConfigurationActions {
                     Translation.getText("export.config.action.confirm.message"),
                     "export.config.action.confirm.button",
                     () -> {
-                        FileChooserType fileChooserType = FileChooserType.CONFIG_EXPORT;
-                        FileChooser configChooser = LCFileChoosers.getChooserConfiguration(fileChooserType, configurationIsNotOpened);
+                        FileChooserType fileChooserType = mobileFormat ? FileChooserType.CONFIG_EXPORT_MOBILE : FileChooserType.CONFIG_EXPORT;
+                        FileChooser configChooser = mobileFormat ? LCFileChoosers.getChooserMobileConfiguration(fileChooserType) : LCFileChoosers.getChooserConfiguration(fileChooserType);
 
                         // Issue #139 : default name for configuration
                         configChooser.setInitialFileName(IOHelper.DATE_FORMAT_FILENAME_WITHOUT_TIME.format(new Date()) + "_"
@@ -593,9 +585,6 @@ public class LCConfigurationActions {
                         File configExportFile = configChooser.showSaveDialog(FXUtils.getSourceWindow(source));
 
                         if (configExportFile != null) {
-                            // Check if exported file is for mobile version
-                            boolean mobileVersion2 = StringUtils.isEqualsIgnoreCase(LCConstant.MOBILE_CONFIG_FILE_EXTENSION, FileNameUtils.getExtension(configExportFile));
-
                             // Prepare next step : after saving (or nothing), launch export
                             Runnable postContinueAction = () -> {
                                 LCStateController.INSTANCE.updateDefaultDirectory(fileChooserType, configExportFile.getParentFile());
@@ -606,7 +595,7 @@ public class LCConfigurationActions {
                             };
 
                             // For mobile, configuration should be saved just before export
-                            if (mobileVersion2) {
+                            if (mobileFormat) {
                                 LCConfigurationActions.SaveAction saveAction = new LCConfigurationActions.SaveAction(source, success -> {
                                     if (success) { // errors are handled by the action
                                         postContinueAction.run();
@@ -661,9 +650,11 @@ public class LCConfigurationActions {
 
     public static class ExportEditGridsToPdfAction implements BaseEditActionI {
         private final Node source;
+        private final PdfConfig pdfConfig;
 
-        public ExportEditGridsToPdfAction(Node source) {
+        public ExportEditGridsToPdfAction(Node source, PdfConfig pdfConfig) {
             this.source = source;
+            this.pdfConfig = pdfConfig;
         }
 
         @Override
@@ -679,14 +670,10 @@ public class LCConfigurationActions {
 
             File pdfFile = configChooser.showSaveDialog(FXUtils.getSourceWindow(source));
             if (pdfFile != null) {
-                PdfConfigDialog pdfConfigDialog = new PdfConfigDialog();
-                StageUtils.centerOnOwnerOrOnCurrentStage(pdfConfigDialog);
-                pdfConfigDialog.showAndWait().ifPresent(pdfConfig -> {
-                    LCStateController.INSTANCE.updateDefaultDirectory(EXPORT_PDF, pdfFile.getParentFile());
-                    ExportGridsToPdfTask exportGridsToPdfTask = new ExportGridsToPdfTask(currentConfiguration, pdfFile, currentProfile, currentConfigurationDescription, pdfConfig);
-                    exportGridsToPdfTask.setOnSucceeded(ev -> DesktopUtils.openFile(pdfFile));
-                    AsyncExecutorController.INSTANCE.addAndExecute(true, false, exportGridsToPdfTask);
-                });
+                LCStateController.INSTANCE.updateDefaultDirectory(EXPORT_PDF, pdfFile.getParentFile());
+                ExportGridsToPdfTask exportGridsToPdfTask = new ExportGridsToPdfTask(currentConfiguration, pdfFile, currentProfile, currentConfigurationDescription, pdfConfig);
+                exportGridsToPdfTask.setOnSucceeded(ev -> DesktopUtils.openFile(pdfFile));
+                AsyncExecutorController.INSTANCE.addAndExecute(true, false, exportGridsToPdfTask);
             }
         }
 

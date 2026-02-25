@@ -49,6 +49,8 @@ import org.lifecompanion.ui.common.control.specific.selector.ComponentSelectorCo
 import org.lifecompanion.ui.controlsfx.control.ToggleSwitch;
 import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.util.DesktopUtils;
+import org.lifecompanion.util.javafx.AbstractAlertBuilder;
+import org.lifecompanion.util.javafx.DialogUtils;
 import org.lifecompanion.util.javafx.FXControlUtils;
 
 public class GeneralInformationConfigurationStepView extends BorderPane implements GeneralConfigurationStepViewI, LCViewInitHelper {
@@ -158,7 +160,12 @@ public class GeneralInformationConfigurationStepView extends BorderPane implemen
         Label labelPartActions = FXControlUtils.createTitleLabel(Translation.getText("general.configuration.info.general.configuration.actions"));
         final Node pdfActionNode = FXControlUtils.createActionTableEntry("configuration.selection.print.grids.pdf.configuration.button",
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.FILE_PDF_ALT).size(30).color(LCGraphicStyle.SECOND_DARK),
-                () -> ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.ExportEditGridsToPdfAction(gridPaneTotal)));
+                () -> {
+                    DialogUtils.alertWithSourceAndType(gridPaneTotal, Alert.AlertType.WARNING)
+                            .withContentText(Translation.getText("configuration.selection.print.grids.pdf.configuration.button.moved.alert"))
+                            .show();
+                    // ConfigActionController.INSTANCE.executeAction(new LCConfigurationActions.ExportEditGridsToPdfAction(gridPaneTotal))
+                });
         final Node changeImageDictionaryAction = FXControlUtils.createActionTableEntry("configuration.selection.change.image.dictionary.button",
                 GlyphFontHelper.FONT_AWESOME.create(FontAwesome.Glyph.IMAGE).size(30).color(LCGraphicStyle.MAIN_DARK),
                 () -> {

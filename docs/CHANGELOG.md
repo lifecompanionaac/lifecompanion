@@ -4,6 +4,8 @@
 
 ### Fonctionnalités
 
+- LifeCompanion publie **officiellement la version mobile Android** sur le PlayStore !
+- **Changement de l'écran "Exporter"** : dispose maintenant de trois possibilité (pour Windows, Android ou PDF) - le précédent bouton depuis "Paramètres généraux" n'est plus actif
 - LifeCompanion est maintenant directement compatible avec les tablettes sous Windows ARM 64 (par exemple, les nouvelles Surface Pro)
 - Ticket #441 : ajout d'une nouvelle action "Arrêter la séquence"
 - Ticket #453 : les cases vides dans les listes de cases sont maintenant transparentes par défaut

@@ -3136,10 +3136,9 @@
   <text key="configuration.selection.export.configuration.button.description">Exporte la configuration dans un fichier
 		"lcc" et permet ainsi de l'importer dans LifeCompanion sur une autre machine.</text>
   <text key="configuration.selection.export.configuration.button.title">Exporter la configuration</text>
-  <text key="configuration.selection.print.grids.pdf.configuration.button.description">Permet d'exporter toutes les grilles de la configuration dans un fichier PDF pour par exemple les imprimer.</text>
+  <text key="configuration.selection.print.grids.pdf.configuration.button.description">Permet d'exporter toutes les grilles de la configuration dans un fichier PDF. Cela permet ensuite de les imprimer.</text>
   <text key="configuration.selection.duplicate.configuration.button.title">Dupliquer la configuration</text>
   <text key="configuration.selection.duplicate.configuration.button.description">Permet de dupliquer cette configuration et ainsi faire des modifications sur une nouvelle version sans modifier la version actuelle. La configuration dupliquée sera ajoutée dans les configurations du profil.</text>
-  <text key="configuration.selection.print.grids.pdf.configuration.button.description">Permet d'exporter toutes les grilles de la configuration dans un fichier PDF pour par exemple les imprimer.</text>
   <text key="configuration.selection.print.grids.pdf.configuration.button.title">Exporter les grilles en PDF</text>
   <text key="configuration.selection.change.image.dictionary.button.description">Permet de changer la banque d'images de la configuration en essayant de remplacer les images déjà présentes par celles d'une autre banque d'images.</text>
   <text key="configuration.selection.change.image.dictionary.button.title">Changer de banque d'images</text>
@@ -3998,4 +3997,12 @@
     <text key="available.comp.list.alert.only.mobile">[Uniquement sur mobile]</text>
     <text key="action.confirm.remove.makaton.resource.description">Êtes vous sûr de vouloir supprimer la base Makaton ? Celle-ci pourra être de nouveau ajoutée si nécessaire.</text>
     <text key="action.confirm.remove.makaton.resource.header">Confirmez vous la suppression de la base Makaton</text>
+    <text key="config.export.dialog.part.config.file">Transférer la configuration</text>
+    <text key="config.export.dialog.part.pdf.file">Exporter les grilles en PDF</text>
+    <text key="config.export.dialog.export.lcc.button.title">Exporter pour Windows (.lcc)</text>
+    <text key="config.export.dialog.export.lcc.button.description">Permet d'exporter la configuration afin de l'importer dans un autre LifeCompanion (Windows) pour la modifier ou l'utiliser. Ce format est modifiable.</text>
+    <text key="config.export.dialog.export.lccm.button.title">Exporter pour Android (.lccm)</text>
+    <text key="config.export.dialog.export.lccm.button.description">Permet d'exporter la configuration pour l'utiliser sur la version mobile (tablettes et téléphones Android). Ce format n'est pas modifiable.</text>
+    <text key="config.export.dialog.export.lccm.documentation.link">En savoir plus sur la version Android</text>
+    <text key="configuration.selection.print.grids.pdf.configuration.button.moved.alert">Action déplacée : vous pouvez la retrouver depuis le menu principal (bouton bleu en haut à gauche) puis "Exporter".</text>
 </texts>
