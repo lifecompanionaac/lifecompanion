@@ -6,6 +6,7 @@
 
 - LifeCompanion est maintenant directement compatible avec les tablettes sous Windows ARM 64 (par exemple, les nouvelles Surface Pro)
 - Ticket #441 : ajout d'une nouvelle action "Arrêter la séquence"
+- Ticket #453 : les cases vides dans les listes de cases sont maintenant transparentes par défaut
 
 ### Corrections/ajustements
 
