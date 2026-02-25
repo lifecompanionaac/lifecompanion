@@ -8,10 +8,12 @@
 - Ticket #441 : ajout d'une nouvelle action "Arrêter la séquence"
 - Ticket #453 : les cases vides dans les listes de cases sont maintenant transparentes par défaut
 - Ticket #462 : ajout d'une action "Nettoyer l'historique de navigation" pour les listes de cases
+- Ticket #457 : ajout des couleurs "noir/blanc" directement accessible à la sélection
 
 ### Corrections/ajustements
 
 - Ticket #458 : le bouton "Depuis le presse papier" pour une image fonctionne maintenant si l'élément copié est un fichier de l'ordinateur
+- Ticket #459 : meilleure identification des couleurs avec transparence dans les couleurs déjà utilisées
 
 ## 1.6.8 - 06/08/2025
 
