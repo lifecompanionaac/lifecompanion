@@ -39,7 +39,7 @@ public class CleanHistoryKeyListAction extends SimpleUseActionImpl<UseActionTrig
         this.category = DefaultUseActionSubCategories.KEY_LIST_GENERAL;
         this.nameID = "clean.history.keylist.name";
         this.staticDescriptionID = "clean.history.keylist.description";
-        this.configIconPath = "keylist/iconc_clean_history_keylist.png";
+        this.configIconPath = "keylist/icon_clean_history_keylist.png";
         this.parameterizableAction = false;
         this.variableDescriptionProperty().set(this.getStaticDescription());
     }
