@@ -7,6 +7,7 @@
 - LifeCompanion est maintenant directement compatible avec les tablettes sous Windows ARM 64 (par exemple, les nouvelles Surface Pro)
 - Ticket #441 : ajout d'une nouvelle action "Arrêter la séquence"
 - Ticket #453 : les cases vides dans les listes de cases sont maintenant transparentes par défaut
+- Ticket #458 : le bouton "Depuis le presse papier" pour une image fonctionne maintenant si l'élément copié est un fichier de l'ordinateur
 
 ### Corrections/ajustements
 
