@@ -665,6 +665,8 @@
   <!--org.lifecompanion.base.data.useaction.impl.keylist.general-->
   <text key="go.root.list.current.list.description">Permet d'afficher le niveau initial des listes de cases</text>
   <text key="go.root.list.current.list.name">Remonter au niveau initial</text>
+  <text key="clean.history.keylist.description"> Supprime l'historique de navigation jusqu'à la liste actuelle. Les appuis ultérieurs sur "Remonter au niveau supérieur" iront directement au parent de la liste.</text>
+  <text key="clean.history.keylist.name">Nettoyer l'historique de navigation</text>
   <!--org.lifecompanion.base.data.useaction.impl.keylist.selected-->
   <text key="action.next.key.in.keylist.in.selected.level.description">Permet de passer aux cases suivantes dans
 		toutes les listes d'un niveau spécifique (ou inférieur)</text>
