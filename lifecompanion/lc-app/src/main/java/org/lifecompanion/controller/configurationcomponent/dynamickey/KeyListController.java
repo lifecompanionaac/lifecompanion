@@ -145,7 +145,9 @@ public enum KeyListController implements ModeListenerI {
 
     public void clearHistoryToCurrentNode() {
         nodeHistory.clear();
-        nodeHistory.add(currentNode.get());
+        if (currentNode.get() != null) {
+            nodeHistory.add(currentNode.get());
+        }
     }
 
     public int goParentKeyNode() {

@@ -29,7 +29,7 @@ import org.lifecompanion.model.impl.categorizedelement.useaction.SimpleUseAction
 import java.util.Map;
 
 /**
- * @author Mathieu THEBAUD <math.thebaud@gmail.com>
+ * @author Oscar PAVOINE
  */
 public class CleanHistoryKeyListAction extends SimpleUseActionImpl<UseActionTriggerComponentI> {
 
