@@ -1,10 +1,11 @@
 # LIFECOMPANION CHANGELOG
 
-## 1.6.9 - XX/XX/2025
+## 1.6.9 - XX/04/2025
 
 ### Fonctionnalités
 
 - LifeCompanion est maintenant directement compatible avec les tablettes sous Windows ARM 64 (par exemple, les nouvelles Surface Pro)
+- Ticket #441 : ajout d'une nouvelle action "Arrêter la séquence"
 
 ### Corrections/ajustements
 
