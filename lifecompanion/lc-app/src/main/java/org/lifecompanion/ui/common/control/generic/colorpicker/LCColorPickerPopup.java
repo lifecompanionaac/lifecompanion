@@ -30,23 +30,24 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Separator;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Text;
 import javafx.stage.Popup;
 import javafx.stage.Window;
-import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
-import org.lifecompanion.controller.resource.IconHelper;
-import org.lifecompanion.model.impl.constant.LCConstant;
-import org.lifecompanion.model.impl.constant.LCGraphicStyle;
 import org.lifecompanion.controller.resource.GlyphFontHelper;
+import org.lifecompanion.controller.resource.IconHelper;
 import org.lifecompanion.framework.commons.translation.Translation;
 import org.lifecompanion.framework.commons.ui.LCViewInitHelper;
 import org.lifecompanion.framework.commons.utils.lang.LangUtils;
 import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.model.impl.constant.LCConstant;
+import org.lifecompanion.model.impl.constant.LCGraphicStyle;
+import org.lifecompanion.ui.controlsfx.glyphfont.FontAwesome;
 import org.lifecompanion.util.javafx.ColorUtils;
 import org.lifecompanion.util.javafx.FXControlUtils;
 
@@ -76,7 +77,7 @@ public class LCColorPickerPopup extends Popup implements LCViewInitHelper {
 
     private LCColorCustomColorStage colorCustomColorDialog;
 
-    private final Map<String, Rectangle> baseColorNodes, mostUsedColorNodes;
+    private final Map<String, Pane> baseColorNodes, mostUsedColorNodes;
 
     public LCColorPickerPopup(LCColorPicker.ColorPickerMode mode) {
         this.mode = mode;
@@ -112,6 +113,8 @@ public class LCColorPickerPopup extends Popup implements LCViewInitHelper {
         // White button
         final Rectangle whiteRect = new Rectangle(COLOR_SQUARE_SIZE, COLOR_SQUARE_SIZE);
         whiteRect.setFill(Color.WHITE);
+        whiteRect.setStroke(Color.GRAY);
+        whiteRect.setStrokeWidth(1.0);
         boxWhite = new HBox(5.0, whiteRect, new Text(Translation.getText("lc.colorpicker.white.value")));
         boxWhite.setAlignment(Pos.CENTER);
         boxWhite.getStyleClass().add("border-hover");
@@ -169,17 +172,19 @@ public class LCColorPickerPopup extends Popup implements LCViewInitHelper {
 
     private static final double COLOR_SQUARE_SIZE = 16;
 
-    private Rectangle createColorRectangle(Color color, Map<String, Rectangle> colorMap) {
+    private Pane createColorRectangle(Color color, Map<String, Pane> colorMap) {
         Rectangle rectangle = new Rectangle(COLOR_SQUARE_SIZE, COLOR_SQUARE_SIZE);
-        if (color.getOpacity() == 0.0) {
-            rectangle.setFill(new ImagePattern(IconHelper.get("transparent-background.png")));
-        } else {
-            rectangle.setFill(color);
-        }
-        rectangle.setOnMouseClicked(me -> colorSelectedAndHide(color));
-        rectangle.getStyleClass().addAll("scale-130-hover", "stroke-hover", "stroke-selected", "scale-130-selected");
-        colorMap.put(ColorUtils.toWebColorWithAlpha(color), rectangle);
-        return rectangle;
+        rectangle.setStrokeWidth(0.2);
+        rectangle.setStroke(Color.DIMGRAY);
+        rectangle.setStrokeType(StrokeType.INSIDE);
+        rectangle.setFill(color);
+
+        Pane panePreview = new Pane(rectangle);
+        panePreview.getStyleClass().add("background-image-transparent");
+        panePreview.setOnMouseClicked(me -> colorSelectedAndHide(color));
+        panePreview.getStyleClass().addAll("scale-130-hover", "stroke-hover", "stroke-selected", "scale-130-selected");
+        colorMap.put(ColorUtils.toWebColorWithAlpha(color), panePreview);
+        return panePreview;
     }
 
     @Override
@@ -225,12 +230,12 @@ public class LCColorPickerPopup extends Popup implements LCViewInitHelper {
         updateSelectedForHex(mostUsedColorNodes, previousColor);
     }
 
-    private void updateSelectedForHex(Map<String, Rectangle> baseColorNodes, Color color) {
+    private void updateSelectedForHex(Map<String, Pane> baseColorNodes, Color color) {
         baseColorNodes.values().forEach(n -> n.pseudoClassStateChanged(PseudoClass.getPseudoClass("selected"), false));
         if (color != null) {
             String colorHex = ColorUtils.toWebColorWithAlpha(color);
-            Rectangle rectangle = baseColorNodes.get(colorHex);
-            if (rectangle != null) rectangle.pseudoClassStateChanged(PseudoClass.getPseudoClass("selected"), true);
+            Pane pane = baseColorNodes.get(colorHex);
+            if (pane != null) pane.pseudoClassStateChanged(PseudoClass.getPseudoClass("selected"), true);
         }
     }
 
