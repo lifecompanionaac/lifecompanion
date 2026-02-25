@@ -44,6 +44,7 @@ public class TranslatePlugin implements PluginI {
     @Override
     public void stop(File dataDirectory) {
         // Plugin global stop here
+        TranslateController.INSTANCE.exit();
     }
     //========================================================================
 

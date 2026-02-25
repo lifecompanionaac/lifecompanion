@@ -1,3 +1,14 @@
 <texts>
-    <text key="todo">todo</text>
+    <text key="lc.translate.plugin.lang.en">Anglais</text>
+    <text key="lc.translate.plugin.lang.fr">Français</text>
+    <text key="lc.translate.plugin.lang.ru">Russe</text>
+    <text key="lc.translate.plugin.lang.ro">Roumain</text>
+    <text key="lc.translate.plugin.lang.es">Espagnol</text>
+    <text key="lc.translate.plugin.lang.it">Italien</text>
+    <text key="lc.translate.plugin.lang.de">Allemand</text>
+    <text key="lc.translate.plugin.lang.pt">Portugais</text>
+    <text key="lc.translate.plugin.use.action.category">Traduction</text>
+    <text key="lc.translate.plugin.field.target.language">Langue cible</text>
+    <text key="lc.translate.plugin.use.action.switch.to.language.name">Changer de langue</text>
+    <text key="lc.translate.plugin.use.action.switch.to.language.description">Change la langue courante pour la langue cible.</text>
 </texts>

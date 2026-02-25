@@ -28,6 +28,8 @@ def load_models(models_dir: pathlib.Path) -> None:
         argostranslate.package.install_from_path(path)
     # print("Available packages "+str(argostranslate.package.get_available_packages()))
     
+
+
 @app.post("/translate", response_model=TranslateResponse)
 def translate(req: TranslateRequest):
     try:

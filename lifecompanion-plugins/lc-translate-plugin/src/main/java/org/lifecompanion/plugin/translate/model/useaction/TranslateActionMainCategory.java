@@ -17,12 +17,12 @@ public enum TranslateActionMainCategory implements UseActionMainCategoryI {
 
     @Override
     public String getStaticDescription() {
-        return Translation.getText("todo");
+        return Translation.getText("lc.translate.plugin.use.action.category");
     }
 
     @Override
     public String getName() {
-        return Translation.getText("todo");
+        return Translation.getText("lc.translate.plugin.use.action.category");
     }
 
     @Override

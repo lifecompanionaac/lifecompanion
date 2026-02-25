@@ -237,6 +237,21 @@ public enum KeyListController implements ModeListenerI {
             }
         }
     }
+
+    /**
+     * @deprecated internal API for translate plugin
+     */
+    @Deprecated
+    public void updateKeysFromNodes() {
+        for (List<KeyListNodeKeyOption> keyOptionList : keyOptionsPerGrid.values()) {
+            for (KeyListNodeKeyOption keyListNodeKeyOption : keyOptionList) {
+                FXThreadUtils.runOnFXThread(keyListNodeKeyOption::fireUpdateFromContent);
+            }
+        }
+        if (AppModeController.INSTANCE.modeProperty().get() == AppMode.USE) {
+            FXThreadUtils.runOnFXThread(SelectionModeController.INSTANCE::generateScanningForCurrentGridAndRestart);
+        }
+    }
     //========================================================================
 
 

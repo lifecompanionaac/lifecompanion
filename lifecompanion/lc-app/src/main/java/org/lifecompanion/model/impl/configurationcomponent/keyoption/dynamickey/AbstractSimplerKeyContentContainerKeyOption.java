@@ -76,6 +76,10 @@ public abstract class AbstractSimplerKeyContentContainerKeyOption<T extends Simp
     public ObjectProperty<T> currentSimplerKeyContentContainerProperty() {
         return currentSimplerKeyContentContainer;
     }
+
+    public void fireUpdateFromContent() {
+        this.updateKeyFromCurrentContent(null);
+    }
     //========================================================================
 
     // UPDATE KEY

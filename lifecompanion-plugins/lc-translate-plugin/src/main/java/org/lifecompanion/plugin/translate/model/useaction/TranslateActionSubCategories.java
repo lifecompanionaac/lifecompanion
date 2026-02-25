@@ -10,7 +10,7 @@ import org.lifecompanion.model.api.categorizedelement.useaction.UseActionMainCat
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionSubCategoryI;
 
 public enum TranslateActionSubCategories implements UseActionSubCategoryI {
-    GENERAL("todo", CategorizedElementColorProvider.nextColor(TranslateActionMainCategory.INSTANCE)),
+    GENERAL("lc.translate.plugin.use.action.category", CategorizedElementColorProvider.nextColor(TranslateActionMainCategory.INSTANCE)),
     ;
 
     private final String nameId;

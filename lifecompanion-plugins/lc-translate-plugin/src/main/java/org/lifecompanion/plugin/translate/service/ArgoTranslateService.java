@@ -39,11 +39,9 @@ public class ArgoTranslateService implements TranslationServiceI {
     private static final String URL = "http://localhost:" + PORT + "/";
     private OkHttpClient httpClient;
 
-    private Process translateProcess;
-
     @Override
     public String translate(String sourceLanguageCode, String targetLanguageCode, String textToTranslate) throws Exception {
-        LOGGER.info("Will request translation of\n\t\"{}\"\n\t{} > {}", textToTranslate, sourceLanguageCode, targetLanguageCode);
+        //LOGGER.info("Will request translation of\n\t\"{}\"\n\t{} > {}", textToTranslate, sourceLanguageCode, targetLanguageCode);
         try (Response response = httpClient.newCall(new Request.Builder().url(URL + "translate")
                 .post(RequestBody.create(JsonHelper.GSON.toJson(new TranslateRequest(sourceLanguageCode, targetLanguageCode, textToTranslate)), null))
                 .addHeader("Accept", MEDIA_TYPE_JSON)
@@ -59,41 +57,20 @@ public class ArgoTranslateService implements TranslationServiceI {
 
     @Override
     public void initialize() {
-        // TODO : create translate process
-        try {
-            this.translateProcess = new ProcessBuilder()
-                    .command("PATH",
-                            "MODEL",
-                            "--port", "" + PORT)
-                    .redirectError(ProcessBuilder.Redirect.PIPE)
-                    .redirectOutput(ProcessBuilder.Redirect.PIPE)
-                    .start();
-        } catch (IOException e) {
-            LOGGER.info("Could not create translate process");
-        }
         this.httpClient = new OkHttpClient.Builder()
                 .connectTimeout(30, TimeUnit.SECONDS)
-                .writeTimeout(0, TimeUnit.SECONDS)
-                .readTimeout(0, TimeUnit.SECONDS)
+                .callTimeout(10, TimeUnit.SECONDS)
                 .build();
     }
 
     @Override
     public boolean isInitialized() {
-        return httpClient != null && translateProcess != null && translateProcess.isAlive();
+        return httpClient != null;
     }
 
     @Override
     public void dispose() {
-        this.killProcess();
         this.httpClient = null;
-    }
-
-    private void killProcess() {
-        if (this.translateProcess != null) {
-            this.translateProcess.destroy();
-            this.translateProcess = null;
-        }
     }
 
     private static final class TranslateRequest {
