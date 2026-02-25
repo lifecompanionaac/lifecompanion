@@ -23,6 +23,7 @@ import javafx.beans.Observable;
 import javafx.beans.WeakInvalidationListener;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.scene.paint.Color;
 import org.jdom2.Element;
 import org.lifecompanion.controller.lifecycle.AppMode;
 import org.lifecompanion.controller.lifecycle.AppModeController;
@@ -100,8 +101,8 @@ public abstract class AbstractSimplerKeyContentContainerKeyOption<T extends Simp
                 // Video content
                 key.videoProperty().set(null);
                 // Style
-                key.getKeyStyle().backgroundColorProperty().forced().setValue(null);
-                key.getKeyStyle().strokeColorProperty().forced().setValue(null);
+                key.getKeyStyle().backgroundColorProperty().forced().setValue(Color.TRANSPARENT);
+                key.getKeyStyle().strokeColorProperty().forced().setValue(Color.TRANSPARENT);
                 key.getKeyStyle().textPositionProperty().forced().setValue(null);
                 key.getKeyStyle().shapeStyleProperty().forced().setValue(null);
                 key.getKeyTextStyle().colorProperty().forced().setValue(null);
