@@ -8,6 +8,8 @@
 
 - Run  `python translation-server.py ./models/ --port 8000`
 
-## Run LifeCompanion
+## Setup with LifeCompanion
 
 - Set `LIFECOMPANION_TRANSLATION_SERVER_FOLDER` env var to python server app
+- Install [offline translations models](https://www.argosopentech.com/argospm/index/)
+- Run a first translation with an internet connection to initialize local spacy cache
