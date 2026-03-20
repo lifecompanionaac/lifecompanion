@@ -34,12 +34,14 @@ import org.jdom2.output.XMLOutputter;
 import org.lifecompanion.LifeCompanion;
 import org.lifecompanion.controller.editaction.AsyncExecutorController;
 import org.lifecompanion.controller.editaction.GlobalActions;
+import org.lifecompanion.controller.editaction.KeyListActions;
 import org.lifecompanion.controller.editaction.LCConfigurationActions;
 import org.lifecompanion.controller.editmode.ConfigActionController;
 import org.lifecompanion.controller.editmode.ErrorHandlingController;
 import org.lifecompanion.controller.editmode.FileChooserType;
 import org.lifecompanion.controller.editmode.LCFileChoosers;
 import org.lifecompanion.controller.io.IOHelper;
+import org.lifecompanion.controller.io.task.ExportKeylistToJsonTask;
 import org.lifecompanion.controller.io.task.GenerateRandomConfigurationTask;
 import org.lifecompanion.controller.io.task.GenerateTechDemoConfigurationTask;
 import org.lifecompanion.controller.io.task.ImportKeylistFromJsonTask;
@@ -53,6 +55,7 @@ import org.lifecompanion.framework.commons.utils.io.IOUtils;
 import org.lifecompanion.model.api.configurationcomponent.IdentifiableComponentI;
 import org.lifecompanion.model.api.configurationcomponent.LCConfigurationI;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
+import org.lifecompanion.model.api.profile.LCConfigurationDescriptionI;
 import org.lifecompanion.model.api.style.ShapeStyle;
 import org.lifecompanion.model.impl.configurationcomponent.dynamickey.KeyListLeaf;
 import org.lifecompanion.model.impl.exception.LCException;
@@ -86,7 +89,7 @@ public class MiscConfigSubmenu extends ScrollPane implements LCViewInitHelper, U
      * Button to open folders
      */
     private Button buttonOpenRootFolder, buttonOpenCurrentProfileFolder, buttonOpenCurrentConfigFolder, buttonExecuteGC, buttonOpenConfigCleanXml, buttonDetectKeylistDuplicates, buttonSetKeylistNodesShape,
-            buttonGenerateTechDemoConfiguration, buttonGenerateRandomConfiguration, buttonImportJsonFile, buttonGeneratePdf, buttonDisableSpeakOnKeyLeaves;
+            buttonGenerateTechDemoConfiguration, buttonGenerateRandomConfiguration, buttonImportJsonFile, buttonExportJsonFile, buttonGeneratePdf, buttonDisableSpeakOnKeyLeaves;
 
     private Label labelMemoryInfo;
 
@@ -157,6 +160,7 @@ public class MiscConfigSubmenu extends ScrollPane implements LCViewInitHelper, U
         this.buttonDetectKeylistDuplicates = this.createButton("button.detect.keylist.duplicates");
         this.buttonSetKeylistNodesShape = this.createButton("button.set.keylist.node.shape");
         this.buttonImportJsonFile = this.createButton("button.import.json.file.keylist");
+        this.buttonExportJsonFile = this.createButton("button.export.json.file.keylist");
         this.buttonDisableSpeakOnKeyLeaves = this.createButton("button.disable.speak.key.leaves");
 
         // Developers : to test your feature, create and add your nodes here and make sure "org.lifecompanion.debug.dev.env" property is enabled
@@ -168,6 +172,7 @@ public class MiscConfigSubmenu extends ScrollPane implements LCViewInitHelper, U
                             buttonGenerateRandomConfiguration,
                             buttonSetKeylistNodesShape,
                             buttonImportJsonFile,
+                            buttonExportJsonFile,
                             buttonDisableSpeakOnKeyLeaves
                     );
         }
@@ -248,6 +253,40 @@ public class MiscConfigSubmenu extends ScrollPane implements LCViewInitHelper, U
                     }
                 });
                 AsyncExecutorController.INSTANCE.addAndExecute(true, false, task);
+            }
+        });
+        this.buttonExportJsonFile.setOnAction(e -> {
+            final LCConfigurationI configuration = AppModeController.INSTANCE
+                    .getEditModeContext()
+                    .getConfiguration();
+
+            if (configuration != null) {
+                final FileChooser jsonFileChooser = LCFileChoosers.getOtherFileChooser(Translation.getText("keylist.json.export.selector.title"),
+                        new FileChooser.ExtensionFilter("JSON", List.of("*.json")),
+                        FileChooserType.EXPORT_OTHER_MISC
+                );
+                final LCConfigurationDescriptionI configurationDescription = AppModeController.INSTANCE
+                        .getEditModeContext()
+                        .getConfigurationDescription();
+
+                final String defaultFileName = org.lifecompanion.util.IOUtils.getValidFileName(
+                        "Export_KeyList_" + (configurationDescription != null
+                                ? configurationDescription.configurationNameProperty().get()
+                                : null)
+                );
+                jsonFileChooser.setInitialFileName(defaultFileName);
+
+                File jsonFile = jsonFileChooser.showSaveDialog(FXUtils.getSourceWindow(buttonExportJsonFile));
+                if (jsonFile != null) {
+                    final KeyListNodeI root = configuration.rootKeyListNodeProperty().get();
+
+                    ExportKeylistToJsonTask task = new ExportKeylistToJsonTask(
+                            jsonFile,
+                            root
+                    );
+
+                    AsyncExecutorController.INSTANCE.addAndExecute(true, false, task);
+                }
             }
         });
         this.buttonGeneratePdf.setOnAction(e -> {
