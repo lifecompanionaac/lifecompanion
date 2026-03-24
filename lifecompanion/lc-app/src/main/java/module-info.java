@@ -24,4 +24,5 @@ open module org.lifecompanion.app {
     requires org.lifecompanion.framework.commons;
     requires org.lifecompanion.framework.commons.fx;
     requires com.github.oshi;
+    requires org.apache.commons.io;
 }

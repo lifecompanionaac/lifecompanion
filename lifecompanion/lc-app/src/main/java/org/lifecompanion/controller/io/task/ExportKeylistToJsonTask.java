@@ -19,9 +19,11 @@
 
 package org.lifecompanion.controller.io.task;
 
+import org.apache.commons.io.FileUtils;
 import org.lifecompanion.controller.io.JsonHelper;
 import org.lifecompanion.framework.commons.utils.lang.CollectionUtils;
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.KeyListNodeI;
+import org.lifecompanion.model.api.configurationcomponent.dynamickey.LinkType;
 import org.lifecompanion.model.api.imagedictionary.ImageElementI;
 import org.lifecompanion.util.javafx.ColorUtils;
 import org.lifecompanion.util.model.LCTask;
@@ -31,6 +33,7 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,6 +41,7 @@ import java.util.stream.Collectors;
 
 /**
  * @author Mathieu THEBAUD <math.thebaud@gmail.com>
+ * @author Oscar PAVOINE <oscar.pavoine@coworkhit.com>
  */
 public class ExportKeylistToJsonTask extends LCTask<List<KeyListNodeI>> {
     private final static Logger LOGGER = LoggerFactory.getLogger(ExportKeylistToJsonTask.class);
@@ -49,6 +53,14 @@ public class ExportKeylistToJsonTask extends LCTask<List<KeyListNodeI>> {
         this.jsonFile = jsonFile;
         this.root = root;
     }
+
+    /*
+     * TODO :
+     *  - link with ID instead of children
+     *  - null write/speak when not enable
+     *  - image in base64
+     *
+     */
 
     @Override
     protected List<KeyListNodeI> call() throws Exception {
@@ -73,7 +85,7 @@ public class ExportKeylistToJsonTask extends LCTask<List<KeyListNodeI>> {
         String textToSpeak;
         String textToWrite;
         String speakOnOver;
-        String imageId2;
+        String imageBase64;
         String imageName;
         String backgroundColor;
         String textPosition;
@@ -81,19 +93,30 @@ public class ExportKeylistToJsonTask extends LCTask<List<KeyListNodeI>> {
         String strokeColor;
         String textColor;
         List<KeyListNodeToJson> children;
+        String linkTo;
 
         static KeyListNodeToJson from(final KeyListNodeI sourceNode) {
             KeyListNodeToJson targetNode = new KeyListNodeToJson();
 
             targetNode.id = sourceNode.getID();
             targetNode.text = sourceNode.textProperty().get();
-            targetNode.textToSpeak = sourceNode.textToSpeakProperty().get();
-            targetNode.textToWrite = sourceNode.textToWriteProperty().get();
-            targetNode.speakOnOver = sourceNode.textSpeakOnOverProperty().get();
+            targetNode.textToSpeak = sourceNode.enableSpeakProperty().get() ? sourceNode.textToSpeakProperty().get() : null;
+            targetNode.textToWrite = sourceNode.enableWriteProperty().get() ? sourceNode.textToWriteProperty().get() : null;
+            targetNode.speakOnOver = sourceNode.enableSpeakOnOverProperty().get() ? sourceNode.textSpeakOnOverProperty().get() : null;
 
             final ImageElementI image = sourceNode.imageVTwoProperty().get();
-            targetNode.imageId2 = image != null ? image.getId() : null;
-            targetNode.imageName = image != null ? image.getName() : null;
+            if (image != null) {
+                File srcImage = image.getRealFilePath();
+                if (srcImage.exists()) {
+                    try {
+                        byte[] fileContent = FileUtils.readFileToByteArray(srcImage);
+                        targetNode.imageBase64 = Base64.getEncoder().encodeToString(fileContent);
+                        targetNode.imageName = image.getName();
+                    } catch (Exception e) {
+                        LOGGER.error("Can't export image content", e);
+                    }
+                }
+            }
 
             targetNode.backgroundColor = ColorUtils.toWebColorWithAlpha(sourceNode.backgroundColorProperty().get());
             targetNode.textPosition = sourceNode.textPositionProperty().get() != null ? sourceNode.textPositionProperty().get().name() : null;
@@ -101,13 +124,19 @@ public class ExportKeylistToJsonTask extends LCTask<List<KeyListNodeI>> {
             targetNode.strokeColor = ColorUtils.toWebColorWithAlpha(sourceNode.strokeColorProperty().get());
             targetNode.textColor = ColorUtils.toWebColorWithAlpha(sourceNode.textColorProperty().get());
 
-
-            if (!CollectionUtils.isEmpty(sourceNode.getChildren())) {
-                targetNode.children = sourceNode.getChildren()
-                        .stream()
-                        .map(KeyListNodeToJson::from)
-                        .collect(Collectors.toList());
+            if (sourceNode.isLinkNode()) {
+                if (sourceNode.linkTypeProperty().get() == LinkType.KEYLIST) {
+                    targetNode.linkTo = sourceNode.linkedNodeIdProperty().get();
+                }
+            } else if (!sourceNode.isLeafNode()) {
+                if (!CollectionUtils.isEmpty(sourceNode.getChildren())) {
+                    targetNode.children = sourceNode.getChildren()
+                            .stream()
+                            .map(KeyListNodeToJson::from)
+                            .collect(Collectors.toList());
+                }
             }
+
             return targetNode;
         }
 
