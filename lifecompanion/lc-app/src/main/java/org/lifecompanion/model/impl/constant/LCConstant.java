@@ -172,7 +172,7 @@ public class LCConstant {
     public final static String NAME = "LifeCompanion";
     public final static String URL_PATH_CHANGELOG = "/categories/documentations/lifecompanion-changelog";
     public final static String URL_PATH_GET_STARTED = "/categories/documentations/get-started-guide";
-    public final static String URL_PATH_ANDROID_GUIDE = "/categories/documentations/life-companion-pour-mobile-android";
+    public final static String URL_PATH_ANDROID_GUIDE = "/categories/documentations/doc-lifecompanion-android";
     public final static String URL_TRAININGS = "/formations";
     public final static String URL_CONTACT_US = "/contact-us";
 
