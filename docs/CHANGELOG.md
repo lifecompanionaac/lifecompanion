@@ -9,6 +9,7 @@
 ### Corrections/ajustements
 
 - Correction de l'export des pictogrammes Makaton sur Android
+- Ticket #474 : correction de certains problèmes lors de l'export en PDF
 
 ## 1.7.0 - 18/04/2026
 

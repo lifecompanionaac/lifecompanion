@@ -158,7 +158,11 @@ public class ExportGridsToPdfTask extends LCTask<Void> {
         final String profileName = profile != null ? profile.nameProperty().get() : "PROFILE?";
         final String configName = configurationDescription != null ? configurationDescription.configurationNameProperty().get() : "CONFIGURATION?";
 
-        DocumentConfiguration documentConfiguration = new DocumentConfiguration(configuration.backgroundColorProperty().get(), pdfConfig.getPageSize(), profileName, configName, "pdf.export.file.title");
+        DocumentConfiguration documentConfiguration = new DocumentConfiguration(configuration.backgroundColorProperty().get(),
+                pdfConfig.getPageSize(),
+                profileName,
+                configName,
+                "pdf.export.file.title");
         documentConfiguration.setEnableFooter(pdfConfig.isEnableHeaderFooter());
         documentConfiguration.setEnableHeader(pdfConfig.isEnableHeaderFooter());
         PdfUtils.createPdfDocument(
@@ -220,9 +224,11 @@ public class ExportGridsToPdfTask extends LCTask<Void> {
                 fxGroupAttachedToScene.getChildren().add(regionForGrid);
                 SnapshotParameters snapParams = new SnapshotParameters();
                 snapParams.setFill(Color.TRANSPARENT);
-                if (scale > 1.0)
-                    snapParams.setTransform(new Scale(scale, scale));
-                LOGGER.info("Scale to {}", scale);
+                if (scale > 1.0) {
+                    double fScale = Math.min(scale, 10.0);
+                    snapParams.setTransform(new Scale(fScale, fScale));
+                    LOGGER.info("Scale to {}", fScale);
+                }
                 final Image tmpImage = regionForGrid.snapshot(snapParams, null);
                 fxGroupAttachedToScene.getChildren().remove(regionForGrid);
                 viewForGrid.unbindComponentAndChildren();
