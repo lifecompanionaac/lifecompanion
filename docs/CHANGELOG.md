@@ -8,7 +8,7 @@
 
 ### Corrections/ajustements
 
-- ...
+- Correction de l'export des pictogrammes Makaton sur Android
 
 ## 1.7.0 - 18/04/2026
 

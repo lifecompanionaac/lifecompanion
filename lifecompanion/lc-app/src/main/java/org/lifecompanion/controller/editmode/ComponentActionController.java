@@ -111,10 +111,14 @@ public enum ComponentActionController {
             ImageUseComponentI imageUseComponent = (ImageUseComponentI) component;
             if (imageUseComponent.imageVTwoProperty().get() != null) {
                 final ClipboardContent content = new ClipboardContent();
-                File imagePath = imageUseComponent.imageVTwoProperty().get().getRealFilePath();
-                if (imagePath != null && imagePath.exists()) {
-                    content.putFiles(List.of(imagePath));
-                    FXThreadUtils.runOnFXThread(() -> Clipboard.getSystemClipboard().setContent(content));
+                try {
+                    File imagePath = imageUseComponent.imageVTwoProperty().get().getOrGenerateDecodedFilePath();
+                    if (imagePath != null && imagePath.exists()) {
+                        content.putFiles(List.of(imagePath));
+                        FXThreadUtils.runOnFXThread(() -> Clipboard.getSystemClipboard().setContent(content));
+                    }
+                } catch (Exception e) {
+                    LOGGER.warn("Could not prepare image for clipboard", e);
                 }
             }
         }

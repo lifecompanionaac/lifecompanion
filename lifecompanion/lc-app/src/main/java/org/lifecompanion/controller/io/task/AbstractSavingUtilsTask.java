@@ -149,7 +149,7 @@ public abstract class AbstractSavingUtilsTask<T> extends LCTask<T> {
                 imageUseComponent.enableReplaceColorProperty().get() ||
                 imageUseComponent.useViewPortProperty().get())) {
             // Load
-            try (FileInputStream fisOriginalImage = new FileInputStream(image.getRealFilePath())) {
+            try (FileInputStream fisOriginalImage = new FileInputStream(image.getOrGenerateDecodedFilePath())) {
                 Image imageFx = new Image(fisOriginalImage);
 
                 // Modification
@@ -193,7 +193,7 @@ public abstract class AbstractSavingUtilsTask<T> extends LCTask<T> {
                  */
                 //Copy the image in configuration directory
                 try (FileOutputStream fos = new FileOutputStream(imageFile)) {
-                    try (FileInputStream fis = new FileInputStream(image.getRealFilePath())) {
+                    try (FileInputStream fis = new FileInputStream(image.getOrGenerateDecodedFilePath())) {
                         IOUtils.copyStream(fis, fos);
                         return image.getId();
                     }
