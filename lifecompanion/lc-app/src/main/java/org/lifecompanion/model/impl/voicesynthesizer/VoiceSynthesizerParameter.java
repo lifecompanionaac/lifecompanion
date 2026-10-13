@@ -68,6 +68,17 @@ public class VoiceSynthesizerParameter implements VoiceSynthesizerParameterI {
         this.selectedVoiceSynthesizer.set(VoiceSynthesizerController.INSTANCE.getSystemDefault());
     }
 
+    public VoiceSynthesizerParameter(VoiceSynthesizerParameterI parameters) {
+        this();
+        this.volume.set(parameters.volumeProperty().get());
+        this.rate.set(parameters.rateProperty().get());
+        this.pitch.set(parameters.pitchProperty().get());
+        this.selectedVoiceSynthesizer.set(parameters.selectedVoiceSynthesizerProperty().get());
+        parameters.getPronunciationExceptions().forEach(exception ->
+                this.pronunciationExceptions.add(exception.clone()));
+        this.voiceParameter.selectedVoiceInfoProperty().set(parameters.getVoiceParameter().selectedVoiceInfoProperty().get());
+    }
+
     private void selectVoiceClosestVoice(final VoiceSynthesizerI nv) {
         VoiceSynthesizerController.INSTANCE.selectCorrectVoice(this.voiceParameter, nv);
     }

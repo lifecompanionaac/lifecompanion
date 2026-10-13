@@ -186,7 +186,7 @@ public class VoiceSynthesizerMainConfigurationStepView extends BorderPane implem
             }
         });
         //Button to test voice
-        this.buttonPlayExample.setOnAction((ea) -> VoiceSynthesizerController.INSTANCE.speakAsync(this.fieldExample.getText(), applyUIChangeTo(new VoiceSynthesizerParameter()), null));
+        this.buttonPlayExample.setOnAction((ea) -> VoiceSynthesizerController.INSTANCE.speakAsync(this.fieldExample.getText(), applyUIChangeTo(new VoiceSynthesizerParameter(model.getVoiceSynthesizerParameter())), null));
     }
 
     @Override
