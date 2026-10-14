@@ -280,7 +280,7 @@ public class ImageUseComponentPropertyWrapper {
 
     private void requestImageLoadingForComponentWithId(String id, Double width, Double height, Double scale) {
         if (imageVTwo.get() != null) {
-            boolean invertWidthHeight = rotate.get() % 90 == 0;
+            boolean invertWidthHeight = Math.abs(rotate.get() % 180) == 90;
             double computeWidth = width != null ? width : getWantedImageWidthValue();
             double computedHeight = height != null ? height : getWantedImageHeightValue();
             imageVTwo.get()
