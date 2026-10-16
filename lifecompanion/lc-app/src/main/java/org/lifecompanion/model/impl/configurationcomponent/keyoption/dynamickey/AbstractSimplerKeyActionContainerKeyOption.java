@@ -21,6 +21,8 @@ package org.lifecompanion.model.impl.configurationcomponent.keyoption.dynamickey
 import org.lifecompanion.model.api.configurationcomponent.dynamickey.SimplerKeyActionContainerI;
 import org.lifecompanion.model.api.categorizedelement.useaction.BaseUseActionI;
 import org.lifecompanion.model.api.categorizedelement.useaction.UseActionEvent;
+import org.lifecompanion.framework.commons.utils.lang.StringUtils;
+import org.lifecompanion.model.api.imagedictionary.ImageElementI;
 import org.lifecompanion.model.impl.categorizedelement.useaction.available.PlaySoundAction;
 import org.lifecompanion.model.impl.categorizedelement.useaction.available.SpeakTextAction;
 import org.lifecompanion.model.impl.categorizedelement.useaction.available.WriteTextAction;
@@ -52,19 +54,24 @@ public abstract class AbstractSimplerKeyActionContainerKeyOption<T extends Simpl
         final T simplerKeyContentContainerV = currentSimplerKeyContentContainer.get();
         if (simplerKeyContentContainerV != null) {
             if (event == UseActionEvent.ACTIVATION) {
-                if (simplerKeyContentContainerV.enableWriteProperty().get()) {
+                final String textToWrite = simplerKeyContentContainerV.textToWriteProperty().get();
+                final ImageElementI imageToWrite = simplerKeyContentContainerV.imageVTwoProperty().get();
+                if (simplerKeyContentContainerV.enableWriteProperty().get() && (textToWrite != null || imageToWrite != null)) {
                     WriteTextAction writeTextAction = new WriteTextAction();
                     writeTextAction.attachedToKeyOptionProperty().set(true);
-                    writeTextAction.imageToWriteProperty().setValue(simplerKeyContentContainerV.imageVTwoProperty().get());
+                    writeTextAction.imageToWriteProperty().setValue(imageToWrite);
                     writeTextAction.sourceImageUseComponentProperty().setValue(simplerKeyContentContainerV);
-                    writeTextAction.textToWriteProperty().set(simplerKeyContentContainerV.textToWriteProperty().get() + (simplerKeyContentContainerV.enableSpaceAfterWriteProperty().get() ? " " : ""));
+                    writeTextAction.textToWriteProperty().set(textToWrite == null ? "" :
+                            textToWrite + (simplerKeyContentContainerV.enableSpaceAfterWriteProperty().get() ? " " : ""));
                     actionsToAddFor.add(writeTextAction);
                     actionsOnActivation.add(writeTextAction);
                 }
-                if (simplerKeyContentContainerV.enableSpeakProperty().get()) {
+                final String textToSpeak = simplerKeyContentContainerV.textToSpeakProperty().get();
+                if (simplerKeyContentContainerV.enableSpeakProperty().get()
+                        && StringUtils.isNotBlank(textToSpeak)) {
                     SpeakTextAction speakTextAction = new SpeakTextAction();
                     speakTextAction.attachedToKeyOptionProperty().set(true);
-                    speakTextAction.textToSpeakProperty().set(simplerKeyContentContainerV.textToSpeakProperty().get());
+                    speakTextAction.textToSpeakProperty().set(textToSpeak);
                     actionsToAddFor.add(speakTextAction);
                     actionsOnActivation.add(speakTextAction);
                 }
@@ -77,10 +84,12 @@ public abstract class AbstractSimplerKeyActionContainerKeyOption<T extends Simpl
                     actionsOnActivation.add(playSoundAction);
                 }
             } else if (event == UseActionEvent.OVER) {
-                if (simplerKeyContentContainerV.enableSpeakOnOverProperty().get()) {
+                final String textSpeakOnOver = simplerKeyContentContainerV.textSpeakOnOverProperty().get();
+                if (simplerKeyContentContainerV.enableSpeakOnOverProperty().get()
+                        && StringUtils.isNotBlank(textSpeakOnOver)) {
                     SpeakTextAction speakTextActionForOver = new SpeakTextAction();
                     speakTextActionForOver.attachedToKeyOptionProperty().set(true);
-                    speakTextActionForOver.textToSpeakProperty().set(simplerKeyContentContainerV.textSpeakOnOverProperty().get());
+                    speakTextActionForOver.textToSpeakProperty().set(textSpeakOnOver);
                     actionsToAddFor.add(speakTextActionForOver);
                     actionsOnOver.add(speakTextActionForOver);
                 }
