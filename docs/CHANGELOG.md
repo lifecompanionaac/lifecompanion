@@ -11,6 +11,29 @@
 - Correction de l'export des pictogrammes Makaton sur Android
 - Ticket #474 : correction de certains problèmes lors de l'export en PDF
 
+### VERSION MOBILE
+
+#### Fonctionnalités
+
+- Ticket #94 : ajout de la gestion des exceptions de prononciation pour la synthèse vocale.
+  Les exceptions de prononciation sont maintenant chargées depuis la configuration et appliquées automatiquement lors de la lecture vocale.
+
+#### Corrections/ajustements
+
+- Ticket #89 : les fichiers des modèles de prédiction sont maintenant stockés dans un répertoire persistant et copiés de manière atomique.
+- Ticket #89 : amélioration de la gestion des erreurs lors de l'initialisation des modèles de prédiction.
+- Ticket #84 : les actions « Écrire » et « Prononcer » ne sont plus effectuées lorsqu'aucun texte ou aucune image n'est disponible.
+- Ticket #85 : amélioration de l'affichage des images dans les cases, notamment pour les transformations et les changements de taille.
+- Ticket #93 : correction du recadrage des images lorsqu'elles sont pivotées.
+- Ticket #93 : suppression de l'atténuation automatique du volume des autres applications pendant la synthèse vocale.
+- Correction de l'affichage de l'image dans l'éditeur de mots : prise en compte de la rotation, du retournement horizontal ou vertical, du redimensionnement et du remplacement des couleurs par des niveaux de gris.
+- Correction de l'affichage de la progression : la progression s'affiche maintenant correctement au-dessus du texte et des images.
+- Amélioration des workflows de compilation et de déploiement Android :
+  - libération automatique d'espace disque avant la compilation ;
+  - exécution de Gradle sans daemon ;
+  - vérification de la présence du fichier APK généré ;
+  - affichage de l'espace disque restant, y compris en cas d'échec de la compilation.
+
 ## 1.7.0 - 18/04/2026
 
 ### Fonctionnalités
