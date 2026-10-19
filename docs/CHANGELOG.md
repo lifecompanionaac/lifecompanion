@@ -1,5 +1,15 @@
 # LIFECOMPANION CHANGELOG
 
+## 1.7.X - XX/XX/2027
+
+### Fonctionnalités
+
+- ...
+
+### Corrections/ajustements
+
+- ...
+
 ## 1.7.1 - 19/10/2026
 
 ### Corrections/ajustements
@@ -966,6 +976,16 @@
 - Résolution d'un problème sur les variables générées
 
 # LIFECOMPANION ANDROID CHANGELOG
+
+## 1.1.0-beta.X - XX/XX/2027
+
+### Fonctionnalités
+
+- ...
+
+### Corrections/ajustements
+
+- ...
 
 ## 1.1.0-beta.5 - 19/10/2026
 
